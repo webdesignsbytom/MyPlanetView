@@ -1,14 +1,10 @@
 // Mock mode only. Roles and response shapes, following docs/API.md (and the
 // server's utils/access.js and utils/mapStats.js) so the client can't tell the difference.
 import { COUNTRIES } from '@/utils/map/countries';
+import { posterUrl } from '@/utils/map/posterData';
 import { projectToMap } from '@/utils/map/projection';
 import { LANDMARKS } from './data/landmarks';
 import { getDb, me, session } from './store';
-
-// Poster images stand in for demo photos (thumb = 400 px, display = 800 px)
-const POSTER_400 = import.meta.glob('/src/assets/images/posters/*-400.avif', { eager: true, import: 'default', query: '?url' });
-const POSTER_800 = import.meta.glob('/src/assets/images/posters/*-800.avif', { eager: true, import: 'default', query: '?url' });
-const posterUrl = (table, name, width) => table[`/src/assets/images/posters/${name}-${width}.avif`] || null;
 
 export const slugify = (text) =>
   String(text)
@@ -65,12 +61,10 @@ export const userName = (id) => getDb().users.find((u) => u.id === id)?.name || 
 
 // Photos
 function photoUrls(photo) {
+  // A poster stands in for a demo photo, at every size
   if (photo.image?.kind === 'asset') {
-    return {
-      thumb: posterUrl(POSTER_400, photo.image.name, 400),
-      display: posterUrl(POSTER_800, photo.image.name, 800),
-      original: posterUrl(POSTER_800, photo.image.name, 800),
-    };
+    const url = posterUrl(photo.image.name, 'avif');
+    return { thumb: url, display: url, original: url };
   }
   return {
     thumb: session.blobs.get(photo.image?.thumbKey) || null,

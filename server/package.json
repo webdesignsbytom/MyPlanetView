@@ -31,11 +31,11 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.2",
+    "handlebars": "^4.7.10",
     "helmet": "^8.1.0",
     "morgan": "^1.10.1",
-    "nodemailer": "^7.0.12",
-    "nodemailer-express-handlebars": "^7.0.0",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "resend": "^6.38.1"
   },
   "devDependencies": {
     "@better-auth/cli": "1.4.13",

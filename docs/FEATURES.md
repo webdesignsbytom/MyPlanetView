@@ -14,7 +14,7 @@ What each My Planet View feature is made of: the client files, the server files,
   - client: `components/forms/ContactForm.jsx`, admin view `pages/contact/admin/` and `components/contact/admin/`;
   - server: `src/routes|controllers|domain/contact.js`, `src/event/contactUtils.js`, `src/services/email/contact/`;
   - table: `ContactForm`;
-  - env: `CONTACT_ADMIN_EMAIL`, `CONTACT_ADMIN_PASS`, `CONTACT_ADMIN_RECIEVER_EMAIL`.
+  - env: `RESEND_API_KEY`, `EMAIL_FROM`, `CONTACT_ADMIN_RECIEVER_EMAIL`.
 
 ## Accounts and onboarding
 
@@ -29,7 +29,7 @@ What each My Planet View feature is made of: the client files, the server files,
   - `src/routes|controllers|domain/users.js`, `src/middleware/auth.js`;
   - `src/services/email/users/` (verification and reset).
 - **Tables:** `User`, `Session`, `Account`, `Verification`, `Profile`.
-- **Env:** `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `FRONTEND_ORIGIN`, `USER_VERIFY_*`, `USER_RESET_*`.
+- **Env:** `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `FRONTEND_ORIGIN`, `RESEND_API_KEY`, `EMAIL_FROM`.
 
 ## Travel maps, travellers and countries visited
 
@@ -88,7 +88,7 @@ What each My Planet View feature is made of: the client files, the server files,
   - `src/services/email/users/shareEmail.handlebars`;
   - `src/middleware/dbRateLimit.js`.
 - **Tables:** `MapMember`, `TripMember`, `ShareInvite`, `RateLimit`.
-- **Env:** `USER_ADMIN_EMAIL` and `USER_ADMIN_PASS` (the mailbox share emails come from).
+- **Env:** `RESEND_API_KEY` and `EMAIL_FROM` (share emails come from that address).
 
 ## Admin and audit log
 

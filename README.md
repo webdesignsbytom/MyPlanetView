@@ -3,7 +3,7 @@
 A private travel map of the world. People mark the countries they've been to, add photos from their trips (matched to landmarks from each photo's location), plan new trips, and share a map or a single trip with friends, Google Docs style. A map can be for a solo traveller, a couple or a family.
 
 - **client/**: React 19 + Vite + Tailwind 4. The public pages (home, about, FAQ, contact, legal) are pre-rendered at build; the map app runs in the browser. Hosted on InMotion (cPanel).
-- **server/**: Express 5 API with Prisma 7 (Postgres), better-auth accounts, Cloudflare R2 storage (a public and a private bucket) and SMTP email. Hosted on Vercel.
+- **server/**: Express 5 API with Prisma 7 (Postgres), better-auth accounts, Cloudflare R2 storage (a public and a private bucket) and email through Resend. Hosted on Vercel.
 - **docs/** (repository root): `SITE-DESIGN.md` (decisions and reasons) and `API.md` (the travel API contract).
 
 ## Set up
@@ -15,7 +15,7 @@ A private travel map of the world. People mark the countries they've been to, ad
      - `BETTER_AUTH_SECRET` and `BETTER_AUTH_URL`;
      - `FRONTEND_ORIGIN` (comma-separated);
      - `CRON_SECRET` and `IS_PRODUCTION_DATABASE`;
-     - `EMAIL_HOST` and `EMAIL_PORT`, plus `USER_ADMIN_*`, `USER_VERIFY_*`, `USER_RESET_*`, `CONTACT_ADMIN_*` and `CONTACT_ADMIN_RECIEVER_EMAIL`;
+     - `RESEND_API_KEY`, `EMAIL_FROM` and `CONTACT_ADMIN_RECIEVER_EMAIL` (email through Resend);
      - `STORAGE_*` (the public bucket) and `STORAGE_PRIVATE_*` (the photos bucket; each falls back to its `STORAGE_*` twin).
 
      Then run `npm run env:check` in `server/`. It lists missing keys by name, never values.

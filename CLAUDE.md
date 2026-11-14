@@ -19,14 +19,14 @@ Guidance for Claude Code working in this repository.
 - `npx vite build --mode verify --outDir <scratch dir> --emptyOutDir`
   - Vite always loads `.env` and `.env.local`; `client/` has neither, and no `.env.verify` exists, so no env file is read.
   - Delete the output afterwards.
-- `npm run dev:mock` (`vite --mode mock`; no `.env.mock` exists, so it reads no env file either): the site with no server, for looking at pages and flows (e.g. headless Playwright screenshots). Use a free port (`npx vite --mode mock --port 5174 --strictPort`) and stop it afterwards.
+- `npm run dev:mock` (`vite --mode mock`; no `.env.mock` exists, so it reads no env file either): the site with no server, for looking at pages and flows (e.g. headless Playwright screenshots). Use a free port (`npx vite --mode mock --port 5174 --strictPort --open false`; without `--open false` the config's `open: true` opens a tab in the user's browser) and stop it afterwards.
 
 **Server** (`server/`):
 - `node --check <file>` on any source file.
-- Vitest for pure tests only. Write a config in a scratch folder with `root` set to `server/` and `envDir` set to an empty folder, include only test files that import nothing loading dotenv (not `email.test.js` or `errorHandler.test.js`), exclude `tests/integration/**`, then run `npx vitest run --config <that file>` from `server/`.
+- Vitest for pure tests only. Write a config in a scratch folder with `root` set to `server/` and `envDir` set to an empty folder, exclude `tests/integration/**`, then run `node <server>/node_modules/vitest/vitest.mjs run --config <that file>` **from that scratch folder**, so `dotenv/config` (which reads the env file in the working folder) loads nothing. `email.test.js` and `errorHandler.test.js` run this way too; `errorHandler.test.js` imports the app, so pass placeholder `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `FRONTEND_ORIGIN` and `DATABASE_URL` on the command line.
 - **Integration tests** (`tests/integration/`, `vitest.integration.config.js`: supertest against the real app and a real Postgres; only the private-bucket S3 client and email sending are mocked in `tests/integration/setup.js`):
   - they refuse to run unless `DATABASE_URL` names a database ending in `_test` (checked in `globalSetup.js` and again in `helpers.js`), and clean up only the users they created;
-  - Claude runs them from a folder with no env file (so `dotenv/config` loads nothing), passing local values on the command line: `DATABASE_URL` (a migrated `*_test` database), `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL=http://localhost:4000`, `FRONTEND_ORIGIN=http://localhost:5173`, `EMAIL_HOST`/`EMAIL_PORT` and placeholder `STORAGE_*` values, then `node <server>/node_modules/vitest/vitest.mjs run --root <server> --config <server>/vitest.integration.config.js`. The config's `envDir` is an empty folder;
+  - Claude runs them from a folder with no env file (so `dotenv/config` loads nothing), passing local values on the command line: `DATABASE_URL` (a migrated `*_test` database), `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL=http://localhost:4000`, `FRONTEND_ORIGIN=http://localhost:5173` and placeholder `STORAGE_*` values, then `node <server>/node_modules/vitest/vitest.mjs run --root <server> --config <server>/vitest.integration.config.js`. The config's `envDir` is an empty folder;
   - migrate the test database with Prisma from a scratch folder (above), with that database's URL.
 - **Prisma, only from a scratch folder:**
   - copy `prisma/schema.prisma` there;
@@ -47,7 +47,7 @@ My Planet View: people keep a private travel map of the world. They mark the cou
 | Folder | What |
 | --- | --- |
 | `client/` | Vite 7 + React 19 SPA, Tailwind 4, React Router 7. Public pages are pre-rendered at build. Hosted on InMotion (cPanel): build locally, upload `dist/`. |
-| `server/` | Express 5 API, Prisma 7 (Postgres), better-auth 1.4.13, S3-compatible storage (Cloudflare R2), SMTP email. Hosted on Vercel. |
+| `server/` | Express 5 API, Prisma 7 (Postgres), better-auth 1.4.13, S3-compatible storage (Cloudflare R2), email through Resend. Hosted on Vercel. |
 | `docs/` (repo root) | `SITE-DESIGN.md`, `API.md`. |
 | `documents/` | `SEO-PLAYBOOK.md` (read sections 1, 3 and 6.22 before SEO work), `SECURITY-BASELINE.md` (from NextDummy; a checklist, not this code), `site/SiteInfo.md`. |
 | `images/` | Standalone image toolchain (`npm run img:gen`): makes `<name>-<width>.{avif,webp,jpg}` sets. |
@@ -181,8 +181,12 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
 - **Identity** comes from `utils/constants/constants.js` (name, URL, operator, address, theme colour), never a literal in a component. The domain `myplanetview.com` is the intended one, not registered yet. `server/src/utils/constants/siteConstants.js` must use the same host (`server/tests/siteUrl.test.js`).
 - **Images:**
   - `ResponsiveImage` and `AppImage` use the `<name>-<width>.<ext>` sets under `src/assets/images/<folder>/` (`lib/media/imageManifest.js`, avif/webp/jpg only);
-  - the posters (`posters/<iso>-400|800.avif` plus `-400.webp`; index in `utils/map/posterData.js`, 167 countries, a placeholder card for the rest), the home artwork (`pages/home/`), the map-style backgrounds and the detailed preview (`map-styles/`) and the logo (`brand/`) come from my_planet, converted with `images/`;
-  - the navbar logo and the home artwork import their files directly: the image manifest (`getImageSets`) indexes every poster, so keep it out of eager pages.
+  - the home artwork (`pages/home/`), the map-style backgrounds and the detailed preview (`map-styles/`) and the logo (`brand/`) come from my_planet, converted with `images/`;
+  - the navbar logo and the home artwork import their files directly, keeping the image manifest out of eager pages.
+- **Country posters** are not in the build. They're in the public bucket as `visitCountryPosters/<name>-800.avif` plus an 800 px WebP fallback, and the repo's `media/` folder (outside `client/`) holds the same files to upload.
+  - `utils/map/posterData.js` lists them (167 countries, a placeholder card for the rest) and builds their URLs with `posterUrl()` from `VITE_MEDIA_CDN` (`utils/media/mediaUrl.js`); `components/map/PosterImage.jsx` draws one.
+  - In development without `VITE_MEDIA_CDN`, `mediaUrl.js` falls back to `/local-media`, which a dev-only plugin in `vite.config.js` serves from `media/`. Mock-mode demo photos are posters too.
+  - One size (800) on purpose; a replaced poster gets a new name, as browsers cache them.
 
 ### Colour and layout (house rules)
 
@@ -252,7 +256,11 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   - both clients set `requestChecksumCalculation`/`responseChecksumValidation: 'WHEN_REQUIRED'`. Without it, AWS SDK 3.729+ signs an empty-body CRC32 into every presigned PUT URL, so browser uploads fail. The buckets are in R2's EU jurisdiction, so the endpoint is `https://<account-id>.eu.r2.cloudflarestorage.com`;
   - `MEDIA_CFG` in `mediaService.js` sets each resource's visibility and types. No SVG anywhere: it can carry scripts.
   - The daily Vercel cron (`/api/media-services/cron/cleanup-orphans`, `CRON_SECRET`) deletes unattached uploads and expired rate-limit rows.
-- **Email** (SMTP, `services/email/emailHandler.js`): mailbox profiles `userAdmin` (share invites, `users/shareEmail.handlebars`), `userVerify`, `userReset` and `contact`. It throws at import without `EMAIL_HOST`/`EMAIL_PORT`.
+- **Email** (Resend, `services/email/emailHandler.js`): renders the handlebars templates in `users/` and `contact/` and sends them with the `resend` SDK from `EMAIL_FROM`, using `RESEND_API_KEY`.
+  - Profiles: `userAdmin` (share invites, `users/shareEmail.handlebars`), `userVerify`, `userReset` and `contact` (reply-to is the person who sent the form).
+  - Network, rate-limit and 5xx failures retry twice under one idempotency key; quota and validation errors don't.
+  - In production it throws at import without both keys; locally it logs each email and its link instead of sending.
+  - Until a domain is verified in Resend, `EMAIL_FROM=onboarding@resend.dev` only delivers to the Resend account's own address.
 
 ## Known gaps
 

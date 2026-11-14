@@ -1,6 +1,9 @@
-// Travel posters per country (generated from my_planet's posters; images in
-// src/assets/images/posters/<name>-<width>.{avif,webp}). The first is the main one.
-// ratio is width/height. Countries not listed have no poster yet and get a placeholder.
+// Travel posters per country, from my_planet's posters. The files are in the public
+// bucket (copied in the repo's media/ folder) as visitCountryPosters/<name>-800.avif and
+// <name>-800.webp. The first is the main one; ratio is width/height. Countries not listed
+// have no poster yet and get a placeholder.
+import { mediaUrlFrom } from '@/utils/media/mediaUrl';
+
 export const POSTERS_BY_CODE = {
   AF: [{ name: 'af', ratio: '1024/1792' }],
   AG: [{ name: 'ag', ratio: '1024/1792' }],
@@ -175,3 +178,9 @@ export const POSTERS_BY_CODE = {
 export const EXTRA_POSTERS = [{ name: 'antarctica', ratio: '1024/1024' }];
 
 export const postersFor = (code) => POSTERS_BY_CODE[code] || [];
+
+// One size (800px, sharp on retina screens at the sizes posters are shown), as AVIF
+// with a WebP fallback. Replacing a poster? Give it a new name: browsers cache these.
+const POSTER_FOLDER = 'visitCountryPosters';
+const POSTER_WIDTH = 800;
+export const posterUrl = (name, format) => mediaUrlFrom({ objectKey: `${POSTER_FOLDER}/${name}-${POSTER_WIDTH}.${format}` });

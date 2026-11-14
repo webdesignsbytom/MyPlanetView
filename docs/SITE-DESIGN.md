@@ -113,7 +113,8 @@ The red poster frame's corners are brass corner protectors, like an old steamer 
   - **Grid lines.** The old latitude/longitude lines were drawn as a straight even grid. On a Robinson map they're redrawn from the projection.
 - **Country posters:**
   - my_planet's 170 posters cover 167 countries (`client/src/utils/map/posterData.js`). They show in the hover box (when you have no photos from there) and in the country panel.
-  - Each is AVIF at 400 and 800 px, plus a 400 px WebP fallback.
+  - They live in the public bucket, not the client build: `visitCountryPosters/<name>-800.avif` with an 800 px WebP fallback (`<name>-800.webp`), loaded from `VITE_MEDIA_CDN`. The repo's `media/` folder holds the same files to upload, and serves them in development when `VITE_MEDIA_CDN` isn't set.
+  - One size only: 800 px is sharp on retina screens at the sizes posters are shown (the hover box and the 24rem panel), and 400 px looked soft. They're cached for good, so a replaced poster gets a new name.
   - The 57 countries without a poster get a placeholder card with their name in the travel face, never another country's poster.
 - **Backgrounds:** the home artwork, the map styles' backgrounds and the "detailed" preview are image sets too.
 
@@ -243,7 +244,10 @@ It works like Google Docs.
 
 ## Open items
 
-- **Nothing has run for real yet.** The API, the database, R2 and the browser app have only been checked statically (lint, builds, syntax and import checks, pure-logic tests). Run the migration, the seed and the server tests, and try every flow in a browser.
+- **Not yet tried for real: R2 and the app against the real API.** The API has run end to end against local Postgres (`npm run test:integration`), and the local database, `myplanetview`, is migrated and seeded. Uploads to R2, signed photo URLs and the browser app talking to the real server haven't been tried; the app has only run in mock mode.
+- **Test database.** There's one local database, `myplanetview`, and no separate `_test` or shadow copy (one shadow database is shared by every project). The integration tests still refuse any database whose name doesn't end in `_test`, so that guard has to change before they can run against it.
+- **Pages not restyled yet.** The welcome, invite, account and admin pages don't have the travel-paperwork look yet (welcome and invite still use `AppPageShell`).
+- **The Regular map-type preview** in the settings picker is a placeholder box (sea with a land block); the Detailed type has a real picture.
 - **The domain name.** The API, share and media subdomains hang off it. `myplanetview.com` is the intended domain (not registered yet), already in the client and server constants.
 - **Landmark coordinates.** 161 of the 177 landmarks were checked against Wikidata on 14 Nov 2026, and each entry names its Wikidata item. The 16 marked `// unverified` (ranges, trails, and names Wikidata couldn't match) still need checking by hand: a photo is matched by distance.
 - **GA4 setting.** In the GA4 property, turn off "page changes based on browser history events". Otherwise a tag loaded earlier can record a share or invite address after an in-app navigation.

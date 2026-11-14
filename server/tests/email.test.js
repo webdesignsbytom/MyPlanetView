@@ -1,86 +1,109 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { sendContactEmail } from '../src/services/email/emailHandler.js';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-// Fake nodemailer transport (real templates still render)
-const sentEmails = [];
+// Settings so the handler sends (to the fake client below) instead of only logging
+vi.hoisted(() => {
+  process.env.RESEND_API_KEY = 're_test_key';
+  process.env.EMAIL_FROM = 'hello@example.test';
+});
 
-vi.mock('nodemailer', () => ({
-  default: {
-    createTransport: () => {
-      const plugins = {};
-      const transporter = {
-        use(step, plugin) {
-          (plugins[step] ||= []).push(plugin);
-          return transporter;
-        },
-        async sendMail(mailOptions) {
-          const mail = { data: { ...mailOptions } };
-          for (const plugin of plugins.compile || []) {
-            await new Promise((resolve, reject) => {
-              plugin(mail, (err) => (err ? reject(err) : resolve()));
-            });
-          }
-          sentEmails.push(mail.data);
-          return { messageId: 'test-message-id' };
+// Fake Resend client: records each send and answers with the next queued result
+// (success when the queue is empty). The real templates still render.
+const fake = vi.hoisted(() => ({ sent: [], results: [] }));
+vi.mock('resend', () => ({
+  Resend: class {
+    constructor() {
+      this.emails = {
+        send: async (payload, options) => {
+          fake.sent.push({ ...payload, options });
+          return fake.results.shift() ?? { data: { id: 'test-id' }, error: null };
         },
       };
-      return transporter;
-    },
+    }
   },
 }));
 
+const { sendContactEmail, sendUserEmail } = await import('../src/services/email/emailHandler.js');
+
+const CONTACT = {
+  title: 'New Contact Form Received',
+  name: 'Ada Lovelace',
+  email: 'ada@example.test',
+  message: 'Hello from the contact form',
+  businessName: 'Test Co',
+  businessUrl: 'https://example.test',
+  year: 2026,
+};
+
+const failure = (name, statusCode) => ({ data: null, error: { name, statusCode, message: name } });
+
 beforeEach(() => {
-  sentEmails.length = 0;
+  fake.sent.length = 0;
+  fake.results.length = 0;
+  vi.spyOn(console, 'log').mockImplementation(() => {});
+  vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
-describe('emailHandler — real templates, faked transport', () => {
-  it('renders the real contactFormNotification.handlebars with the given data', async () => {
-    const ok = await sendContactEmail(
-      'admin@example.test',
-      'New Contact Form Received',
-      'contactFormNotification',
-      {
-        title: 'New Contact Form Received',
-        name: 'Ada Lovelace',
-        email: 'ada@example.test',
-        message: 'Hello from the contact form',
-        businessName: 'Test Co',
-        businessUrl: 'https://example.test',
-        year: 2026,
-      }
-    );
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
+describe('emailHandler: real templates, faked Resend', () => {
+  it('renders contactFormNotification.handlebars and sends it from EMAIL_FROM', async () => {
+    const ok = await sendContactEmail('admin@example.test', 'New Contact Form Received', 'contactFormNotification', CONTACT);
 
     expect(ok).toBe(true);
-    expect(sentEmails).toHaveLength(1);
-
-    const [sent] = sentEmails;
+    expect(fake.sent).toHaveLength(1);
+    const [sent] = fake.sent;
     expect(sent.to).toBe('admin@example.test');
+    expect(sent.from).toMatch(/<hello@example\.test>$/);
     expect(sent.subject).toBe('New Contact Form Received');
-    // Template rendered with data
     expect(sent.html).toContain('Ada Lovelace');
     expect(sent.html).toContain('ada@example.test');
     expect(sent.html).toContain('Hello from the contact form');
     expect(sent.html).toContain('Test Co');
   });
 
-  it('omits the image block when no image was attached (handlebars {{#if}})', async () => {
-    await sendContactEmail('admin@example.test', 'x', 'contactFormNotification', {
-      name: 'Ada Lovelace',
-      email: 'ada@example.test',
-      message: 'no image attached',
-      businessName: 'Test Co',
-      businessUrl: 'https://example.test',
-      year: 2026,
-      // imageUrl deliberately omitted
-    });
+  it('sets reply-to on a contact notification to the person who sent the form', async () => {
+    await sendContactEmail('admin@example.test', 'x', 'contactFormNotification', CONTACT);
+    expect(fake.sent[0].replyTo).toBe('ada@example.test');
+  });
 
-    const [sent] = sentEmails;
-    expect(sent.html).not.toContain('<img');
+  it('omits the image block when no image was attached (handlebars {{#if}})', async () => {
+    await sendContactEmail('admin@example.test', 'x', 'contactFormNotification', { ...CONTACT, message: 'no image attached' });
+    expect(fake.sent[0].html).not.toContain('<img');
   });
 
   it('returns false (does not throw) for a template that does not exist', async () => {
     const ok = await sendContactEmail('admin@example.test', 'x', 'does-not-exist', {});
     expect(ok).toBe(false);
-    expect(sentEmails).toHaveLength(0);
+    expect(fake.sent).toHaveLength(0);
+  });
+
+  it('returns false without sending when there is no recipient', async () => {
+    const ok = await sendContactEmail(undefined, 'x', 'contactFormNotification', CONTACT);
+    expect(ok).toBe(false);
+    expect(fake.sent).toHaveLength(0);
+  });
+
+  // Waits the real one-second retry delay
+  it('retries a Resend server error with the same idempotency key, then succeeds', async () => {
+    fake.results.push(failure('internal_server_error', 500));
+    const ok = await sendUserEmail('friend@example.test', 'Shared', 'shareEmail', { title: 'Shared', email: 'friend@example.test' });
+
+    expect(ok).toBe(true);
+    expect(fake.sent).toHaveLength(2);
+    expect(fake.sent[0].options.idempotencyKey).toBeTruthy();
+    expect(fake.sent[1].options.idempotencyKey).toBe(fake.sent[0].options.idempotencyKey);
+  });
+
+  it('does not retry a validation error or a used-up quota', async () => {
+    fake.results.push(failure('validation_error', 422));
+    expect(await sendUserEmail('friend@example.test', 'x', 'shareEmail', {})).toBe(false);
+    expect(fake.sent).toHaveLength(1);
+
+    fake.sent.length = 0;
+    fake.results.push(failure('daily_quota_exceeded', 429));
+    expect(await sendUserEmail('friend@example.test', 'x', 'shareEmail', {})).toBe(false);
+    expect(fake.sent).toHaveLength(1);
   });
 });

@@ -1,10 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
 import request from 'supertest';
-// Placeholder SMTP settings so emailHandler can load (nothing is sent)
-vi.hoisted(() => {
-  process.env.EMAIL_HOST ??= 'smtp.example.test';
-  process.env.EMAIL_PORT ??= '465';
-});
 // No DB writes from the handler under test
 const createAppEvent = vi.fn(async () => ({}));
 vi.mock('../src/event/events.js', async (importOriginal) => ({

@@ -1,6 +1,6 @@
 # Server
 
-Express 5 API (Prisma 7 / Postgres, better-auth, S3-compatible storage, SMTP email), deployed to Vercel. Setup and commands are in the root `README.md`; architecture notes are in `CLAUDE.md`.
+Express 5 API (Prisma 7 / Postgres, better-auth, S3-compatible storage, email through Resend), deployed to Vercel. Setup and commands are in the root `README.md`; architecture notes are in `CLAUDE.md`.
 
 ## Uploads
 

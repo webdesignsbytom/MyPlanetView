@@ -1,6 +1,6 @@
 import React from 'react';
 // Components
-import ResponsiveImage from '@/components/common/ResponsiveImage';
+import PosterImage from './PosterImage';
 import PosterPlaceholder from './PosterPlaceholder';
 // Data
 import { postersFor } from '@/utils/map/posterData';
@@ -12,12 +12,9 @@ function CountryPoster({ code, countryName }) {
   return (
     <figure className='grid gap-1'>
       {poster ? (
-        <ResponsiveImage
-          folder='posters'
-          name={poster.name}
-          ratio={poster.ratio}
+        <PosterImage
+          poster={poster}
           alt={`Travel poster for ${countryName}`}
-          sizes='(min-width: 768px) 24rem, 90vw'
           className='overflow-hidden border-8 border-poster-cream shadow-paper'
         />
       ) : (

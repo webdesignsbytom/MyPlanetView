@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // Components
-import ResponsiveImage from '@/components/common/ResponsiveImage';
+import PosterImage from './PosterImage';
 import PosterPlaceholder from './PosterPlaceholder';
 import Postmark from './Postmark';
 import { StarBadgeIcon } from './StarBadge';
@@ -90,15 +90,7 @@ function HoverPreview({ code, status, thumbs = [], showPhotos }) {
         </div>
       ) : showPhotos && poster ? (
         <div className='grid bg-poster-cream p-1.5 shadow-paper'>
-          <ResponsiveImage
-            folder='posters'
-            name={poster.name}
-            ratio='1/1'
-            alt=''
-            sizes='16rem'
-            className='overflow-hidden'
-            imgClassName='object-cover object-top'
-          />
+          <PosterImage poster={poster} ratio='1/1' alt='' className='overflow-hidden' imgClassName='object-cover object-top' />
         </div>
       ) : showPhotos ? (
         <PosterPlaceholder countryName={name} compact />

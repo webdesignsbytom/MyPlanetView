@@ -1,29 +1,3 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// ProjectWorld database (agreed 14 Nov 2026)
-//
-// Base: DummyFullstack's schema (better-auth tables, MediaItem, ContactForm,
-// AppEvent), plus RateLimit from NextDummy, plus the travel models below.
-// Removed from the dummy: CallbackForm, GuestBookMessage, NewsletterSubscriber,
-// Newsletter, Booking*, Review, Blog*, and the old ProjectWorld Event table.
-//
-// Sharing works like Google Docs:
-//   - Everything is private. A map or a trip has one owner.
-//   - The owner adds people by email as VIEWER or EDITOR.
-//   - "General access" is RESTRICTED (only people added) or ANYONE_WITH_LINK
-//     (anyone holding the share code can VIEW; a link never grants EDITOR).
-//   - "Reset link" regenerates the share code, so old links stop working.
-//   - Access to a trip = owner of its map, a member of its map, or a member of
-//     the trip itself. The highest role wins.
-//
-// Rules the schema can't express, done in the migration SQL or in code:
-//   - One default map per user: in code, in the same transaction that sets it
-//     (a partial unique index would be dropped by Prisma's next migration).
-//   - ShareInvite targets exactly one of map or trip: a CHECK constraint in
-//     the init migration (Prisma leaves CHECK constraints alone).
-//   - Deleting an account hands each shared map to an editor first, or refuses,
-//     so a partner's photos are never deleted with someone else's account.
-// ─────────────────────────────────────────────────────────────────────────────
-
 generator client {
   provider      = "prisma-client-js"
   engineType    = "library"
@@ -157,8 +131,6 @@ enum Continent {
   SOUTH_AMERICA
 }
 
-// The SVG shapes stay in the client's data file, keyed by this same code.
-// The old map keyed countries by name ('Afghanistan'); it moves to ISO codes.
 model Country {
   code      String    @id @db.Char(2) // ISO 3166-1 alpha-2, e.g. "JP"
   name      String    @unique

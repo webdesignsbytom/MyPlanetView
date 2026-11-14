@@ -111,6 +111,25 @@ const hostLikePreview = () => ({
   },
 });
 
+// Development only: the repo's media/ folder (a copy of the public bucket) at /local-media,
+// used when VITE_MEDIA_CDN isn't set (src/utils/media/mediaUrl.js)
+const MEDIA_DIR = path.resolve(__dirname, '../media');
+const MEDIA_TYPES = { '.avif': 'image/avif', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png' };
+
+const localMedia = () => ({
+  name: 'local-media',
+  apply: 'serve',
+  configureServer(server) {
+    server.middlewares.use('/local-media', (req, res, next) => {
+      const file = path.join(MEDIA_DIR, decodeURIComponent((req.url || '').split('?')[0]));
+      const type = MEDIA_TYPES[path.extname(file).toLowerCase()];
+      if (!type || !file.startsWith(MEDIA_DIR + path.sep) || !fs.existsSync(file)) return next();
+      res.setHeader('Content-Type', type);
+      fs.createReadStream(file).pipe(res);
+    });
+  },
+});
+
 // A NODE_ENV=development line in a client env file makes vite build ship React's slow development build
 const requireProductionBuild = () => ({
   name: 'require-production-build',
@@ -131,6 +150,7 @@ export default defineConfig({
     requireProductionBuild(),
     siteHeadDefaults(),
     siteManifest(),
+    localMedia(),
     hostLikePreview(),
     process.env.ANALYZE &&
       visualizer({

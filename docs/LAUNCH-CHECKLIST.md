@@ -9,7 +9,7 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
   - `server/src/utils/constants/siteConstants.js`: `BusinessUrl`, which must be the same host (`server/tests/siteUrl.test.js` checks it).
 - [ ] **[block]** The operator details in `constants.js` (`OperatorName`, director, address lines) are the ones you want published. The legal page and the structured data print them.
 - [ ] **[block]** The travel font's licence allows web use on a public site. `client/src/assets/fonts/TravelFont/SFComicScript-Bold.ttf` (SF Comic Script, ShyFonts) came from the old my_planet site with no licence file. Check it, buy a licence, or swap the face in `styles/fonts.css`. It also ships as a 46 KB TTF; convert it to woff2 once it's cleared.
-- [ ] **[block]** The posters and backgrounds from my_planet (`client/src/assets/images/posters/`, `pages/home/`, `map-styles/`, `brand/logo-*`) are yours to publish: AI-generated or licensed. 57 countries still have no poster and show a placeholder card (`utils/map/posterData.js` lists the ones that do).
+- [ ] **[block]** The posters and backgrounds from my_planet (`media/visitCountryPosters/`, `client/src/assets/images/pages/home/`, `map-styles/`, `brand/logo-*`) are yours to publish: AI-generated or licensed. 57 countries still have no poster and show a placeholder card (`utils/map/posterData.js` lists the ones that do).
 - [ ] **[block]** Replace ByteToast's brand assets (the camera logo from my_planet is in `client/src/assets/images/brand/` and is what the navbar uses):
   - `client/public/brand/logo.png`;
   - `client/public/brand/og-default.jpg` (1200 × 630, the share image);
@@ -23,8 +23,9 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
 ## 2. Storage (Cloudflare R2)
 
 - [ ] **[block]** Two buckets for My Planet View, not shared with another site:
-  - a public one (avatars, contact images), served from a **custom domain**. `r2.dev` addresses are rate-limited and meant for development;
+  - a public one (country posters, avatars, contact images), served from a **custom domain**. `r2.dev` addresses are rate-limited and meant for development;
   - a private one (travel photos).
+- [ ] **[block]** The country posters are uploaded to the public bucket: the contents of the repo's `media/` folder, keeping its paths, so each poster's key is `visitCountryPosters/<name>-800.avif` (and `.webp`). The site no longer bundles them, so without this every poster is a broken image.
 - [ ] **[block]** CORS on the private bucket allows `PUT` with `Content-Type` from the site's origin (`node ./src/services/s3/setPrivateBucketCors.js` from `server/`; it prints bucket details, so run it yourself). Check the public bucket too (`checkBucketCors.js`).
 - [ ] **[block]** The CSP in `client/public/.htaccess` names the real hosts. It still has the template's placeholders (`api.client.com`, `nbg1.your-objectstorage.com`). It needs:
   - `connect-src`: the API, and the R2 endpoint the browser `PUT`s to;
@@ -45,7 +46,7 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
 - [ ] **[block]** The API is on a subdomain of the site (`api.<domain>`), so the login cookie is same-site.
 - [ ] **[block]** `npx prisma migrate deploy` against production, with `IS_PRODUCTION_DATABASE=true` set so the seed can never run there. Never seed production. Then `npm run db:reference` (in `server/`) to load the countries and landmarks: it creates or updates rows and never deletes, so it's safe there. Run it again whenever `prisma/seed/data/` changes.
 - [ ] A real admin account exists, promoted on the database user. Sign-up only makes `USER`.
-- [ ] SMTP: one verification email, one password reset, one share invite and one contact-form notification each arrive in your own inbox.
+- [ ] **[block]** Email: myplanetview.com is verified in Resend (its DNS records added), `EMAIL_FROM` is an address on it and `RESEND_API_KEY` is set in Vercel. Then one verification email, one password reset, one share invite and one contact-form notification each arrive in your own inbox.
 - [ ] `npm test` passes in `server/`.
 
 ## 4. Client build and hosting (InMotion / cPanel)
