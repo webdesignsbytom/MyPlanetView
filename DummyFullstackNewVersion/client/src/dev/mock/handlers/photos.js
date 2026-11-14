@@ -1,0 +1,84 @@
+// Mock mode only: one photo (open, edit, delete) and its landmark matches.
+import { deny, fail, ok, route } from '../mockAdapter';
+import { getDb } from '../store';
+import { atLeast, canSeePhoto, countryExists, landmarkById, mapRole, markVisited, photoDetail, photoRole } from '../views';
+
+const NOT_FOUND = 'This photo could not be found.';
+
+// Viewers can't see hidden photos, so for them a hidden photo doesn't exist
+function loadPhoto(photoId, needed) {
+  const photo = getDb().photos.find((p) => p.id === photoId) || null;
+  const role = photo ? photoRole(photo) : null;
+  if (photo && role && !canSeePhoto(photo, role)) return { reply: fail(404, NOT_FOUND) };
+  const reply = deny(role, needed, NOT_FOUND);
+  return reply ? { reply } : { photo, role };
+}
+
+export function registerPhotoRoutes() {
+  route('GET', '/api/photos/:photoId', ({ params }) => {
+    const { photo, role, reply } = loadPhoto(params.photoId, 'VIEWER');
+    return reply || ok({ photo: photoDetail(photo, role) });
+  });
+
+  route('PATCH', '/api/photos/:photoId', ({ params, body }) => {
+    const db = getDb();
+    const { photo, role, reply } = loadPhoto(params.photoId, 'EDITOR');
+    if (reply) return reply;
+    if (body.caption !== undefined) photo.caption = typeof body.caption === 'string' && body.caption.trim() ? body.caption.trim().slice(0, 300) : null;
+    if (body.takenAt !== undefined) photo.takenAt = body.takenAt || null;
+    if (body.hidden !== undefined) photo.hidden = Boolean(body.hidden);
+    if (body.countryCode !== undefined) {
+      const code = body.countryCode ? String(body.countryCode).toUpperCase() : null;
+      if (code && !countryExists(code)) return fail(400, 'Unknown country.');
+      photo.countryCode = code;
+      markVisited(photo.mapId, code, 'PHOTO');
+    }
+    if (body.tripId !== undefined) {
+      // Moving a photo between trips needs editor on the map, not just the trip
+      if (!atLeast(mapRole(db.maps.find((m) => m.id === photo.mapId)), 'EDITOR')) return fail(403, 'Only the map’s editors can move photos between trips.');
+      if (body.tripId && !db.trips.some((t) => t.id === body.tripId && t.mapId === photo.mapId)) return fail(400, 'That trip is not on this map.');
+      photo.tripId = body.tripId || null;
+    }
+    return ok({ photo: photoDetail(photo, role) });
+  });
+
+  route('DELETE', '/api/photos/:photoId', ({ params }) => {
+    const db = getDb();
+    const { photo, reply } = loadPhoto(params.photoId, 'EDITOR');
+    if (reply) return reply;
+    db.photos = db.photos.filter((p) => p.id !== photo.id);
+    db.photoLandmarks = db.photoLandmarks.filter((pl) => pl.photoId !== photo.id);
+    db.trips.forEach((t) => {
+      if (t.coverPhotoId === photo.id) t.coverPhotoId = null;
+    });
+    return ok({ message: 'Photo deleted.' });
+  });
+
+  route('POST', '/api/photos/:photoId/landmarks', ({ params, body }) => {
+    const db = getDb();
+    const { photo, role, reply } = loadPhoto(params.photoId, 'EDITOR');
+    if (reply) return reply;
+    if (!landmarkById(body.landmarkId)) return fail(400, 'Unknown landmark.');
+    const existing = db.photoLandmarks.find((pl) => pl.photoId === photo.id && pl.landmarkId === body.landmarkId);
+    if (existing) existing.confirmed = true;
+    else db.photoLandmarks.push({ photoId: photo.id, landmarkId: body.landmarkId, source: 'MANUAL', distanceM: null, confirmed: true });
+    return ok({ photo: photoDetail(photo, role) }, 201);
+  });
+
+  route('PATCH', '/api/photos/:photoId/landmarks/:landmarkId', ({ params }) => {
+    const { photo, role, reply } = loadPhoto(params.photoId, 'EDITOR');
+    if (reply) return reply;
+    const match = getDb().photoLandmarks.find((pl) => pl.photoId === photo.id && pl.landmarkId === params.landmarkId);
+    if (!match) return fail(404, 'That landmark match could not be found.');
+    match.confirmed = true;
+    return ok({ photo: photoDetail(photo, role) });
+  });
+
+  route('DELETE', '/api/photos/:photoId/landmarks/:landmarkId', ({ params }) => {
+    const db = getDb();
+    const { photo, reply } = loadPhoto(params.photoId, 'EDITOR');
+    if (reply) return reply;
+    db.photoLandmarks = db.photoLandmarks.filter((pl) => !(pl.photoId === photo.id && pl.landmarkId === params.landmarkId));
+    return ok({ message: 'Landmark match removed.' });
+  });
+}

@@ -1,0 +1,89 @@
+# Pre-launch checklist
+
+Work through this before My Planet View goes live. Items marked **[block]** stop the launch until they're done. The reasons behind the SEO items are in `documents/SEO-PLAYBOOK.md`: the rules in section 3, its own launch checklist in section 4.1, and section 6.22 for a pre-rendered site like this one.
+
+## 1. Identity and content
+
+- [ ] **[block]** Register `myplanetview.com` (not registered yet). It is already the domain in the client and server constants; use the bare domain, with `www.` redirecting to it.
+  - `client/src/utils/constants/constants.js`: `FULL_BUSINESS_URL`, `SHORT_BUSINESS_URL`, `DISPLAY_BUSINESS_URL`, `CompanyEmailAddress`.
+  - `server/src/utils/constants/siteConstants.js`: `BusinessUrl`, which must be the same host (`server/tests/siteUrl.test.js` checks it).
+- [ ] **[block]** The operator details in `constants.js` (`OperatorName`, director, address lines) are the ones you want published. The legal page and the structured data print them.
+- [ ] **[block]** The travel font's licence allows web use on a public site. `client/src/assets/fonts/TravelFont/SFComicScript-Bold.ttf` (SF Comic Script, ShyFonts) came from the old my_planet site with no licence file. Check it, buy a licence, or swap the face in `styles/fonts.css`. It also ships as a 46 KB TTF; convert it to woff2 once it's cleared.
+- [ ] **[block]** The posters and backgrounds from my_planet (`client/src/assets/images/posters/`, `pages/home/`, `map-styles/`, `brand/logo-*`) are yours to publish: AI-generated or licensed. 57 countries still have no poster and show a placeholder card (`utils/map/posterData.js` lists the ones that do).
+- [ ] **[block]** Replace ByteToast's brand assets (the camera logo from my_planet is in `client/src/assets/images/brand/` and is what the navbar uses):
+  - `client/public/brand/logo.png`;
+  - `client/public/brand/og-default.jpg` (1200 × 630, the share image);
+  - everything in `client/public/favicon/` (ico, svg, 96 px, apple-touch, and the 192 and 512 manifest icons).
+- [ ] **[block]** The legal text (`client/src/utils/data/termsData.js`) has been reviewed by you, or someone qualified. It's a plain-English draft covering R2 storage, GPS kept only on originals, analytics only after consent, account deletion and the shared-map hand-over.
+- [ ] **[block]** The 16 landmarks marked `// unverified` in `server/prisma/seed/data/landmarks.js` are checked by hand: Badaling (Great Wall), Malabo Cathedral, Fort George, Copán, Petra, Tien Shan, Ohrid, Timbuktu, Aïr and Ténéré, Kokoda Track, Jesuit Missions (Trinidad), La Soufrière, Papaseea, Alhambra, Pamir, Old City of Sanaa. The other 161 were checked against Wikidata on 14 Nov 2026. Photos are matched by distance, so a wrong point means missed matches. Ranges and trails (Tien Shan, Pamir, Kokoda) may be better removed or given a point the photos are likely to be near. Re-copy the file to `client/src/dev/mock/data/landmarks.js` after changes.
+- [ ] `client/src/utils/constants/links.js` holds real profile URLs, or stays empty (an empty URL hides the link).
+- [ ] Every claim on the home, about and FAQ pages matches what the app actually does.
+- [ ] Each indexable page's description says what the page answers, with a fact from the page. The build checks length and uniqueness, not wording.
+
+## 2. Storage (Cloudflare R2)
+
+- [ ] **[block]** Two buckets for My Planet View, not shared with another site:
+  - a public one (avatars, contact images), served from a **custom domain**. `r2.dev` addresses are rate-limited and meant for development;
+  - a private one (travel photos).
+- [ ] **[block]** CORS on the private bucket allows `PUT` with `Content-Type` from the site's origin (`node ./src/services/s3/setPrivateBucketCors.js` from `server/`; it prints bucket details, so run it yourself). Check the public bucket too (`checkBucketCors.js`).
+- [ ] **[block]** The CSP in `client/public/.htaccess` names the real hosts. It still has the template's placeholders (`api.client.com`, `nbg1.your-objectstorage.com`). It needs:
+  - `connect-src`: the API, and the R2 endpoint the browser `PUT`s to;
+  - `img-src`: the public media domain and the R2 endpoint the signed photo URLs point at.
+
+  Without these, uploads and photos are blocked.
+- [ ] `STORAGE_PUBLIC_HOST` (server) and `VITE_MEDIA_CDN` (client) are the public bucket's custom domain.
+
+## 3. Server, database and email (Vercel)
+
+- [ ] **[block]** Production env on Vercel has every key in `server/.env.example`:
+  - `NODE_ENV=production`;
+  - `BETTER_AUTH_URL` = the API's public URL, plus a fresh `BETTER_AUTH_SECRET`;
+  - `FRONTEND_ORIGIN` = the bare domain;
+  - `CRON_SECRET`;
+  - `IS_PRODUCTION_DATABASE=true`;
+  - `STORAGE_*` and `STORAGE_PRIVATE_*`.
+- [ ] **[block]** The API is on a subdomain of the site (`api.<domain>`), so the login cookie is same-site.
+- [ ] **[block]** `npx prisma migrate deploy` against production, with `IS_PRODUCTION_DATABASE=true` set so the seed can never run there. Never seed production. Then `npm run db:reference` (in `server/`) to load the countries and landmarks: it creates or updates rows and never deletes, so it's safe there. Run it again whenever `prisma/seed/data/` changes.
+- [ ] A real admin account exists, promoted on the database user. Sign-up only makes `USER`.
+- [ ] SMTP: one verification email, one password reset, one share invite and one contact-form notification each arrive in your own inbox.
+- [ ] `npm test` passes in `server/`.
+
+## 4. Client build and hosting (InMotion / cPanel)
+
+- [ ] **[block]** The client env files have no `NODE_ENV`, and `client/.env.development.example` and `client/.env.production.example` keep only the keys the code reads: `VITE_API_URL`, `VITE_MEDIA_CDN`, `VITE_ANALYTICS_ID`. Remove the YouTube, Spotify, Sentry, refresh-token and PayPal keys.
+- [ ] **[block]** `npm run build` passes: `check:meta`, `check:house-rules`, pre-render and `check-seo`.
+- [ ] **[block]** Upload everything in `client/dist/`, including `.htaccess`, `404.html` and `app-shell.html`. `www.` and `http://` redirect to the bare domain with a 301 (`.htaccess` does it).
+- [ ] **[block]** After deploying, `npm run check:seo -- --live https://<domain>` passes (from `client/`). It checks that:
+  - every sitemap URL answers 200 with its own head tags;
+  - unknown URLs 404;
+  - redirects work;
+  - robots.txt names the sitemap;
+  - the search, AI and link-preview bots get a 200.
+- [ ] The app pages (`/map`, `/maps/…`, `/trips/…`, `/shared/…`, `/invite/…`, `/welcome`) load from a direct link (the app shell), and they aren't in the sitemap.
+- [ ] Lighthouse on mobile, median of three runs, on each public page: SEO 100, accessibility 95 or more, CLS near 0.
+
+## 5. The app, on real devices
+
+Test signed out, as a brand-new account, and on a phone in portrait:
+
+- [ ] Sign up → verify → onboarding (solo, couple, family; travellers) → reset password → change email → delete account. The account with shared maps hands them to an editor.
+- [ ] Map: pan and zoom with a mouse, a trackpad, one finger and two fingers; all four styles; the settings save and come back after signing in on another device.
+- [ ] Countries: mark visited, lived and want to go from the map and the country list; the stats add up.
+- [ ] Uploads: JPEG, PNG and **HEIC** from an iPhone (in Safari and in Chrome); a photo with GPS lands in the right country with landmark suggestions; one without GPS asks for a country; the original downloads, and the copies carry no location data.
+- [ ] Trips: create, add and reorder stops, mark completed (its countries become visited), photos into a trip.
+- [ ] Sharing:
+  - add a viewer and an editor by email, both existing users and a new address (the invite turns into access after sign-up and verification);
+  - "Anyone with the link" on and off;
+  - reset link (old links stop working);
+  - a trip shared on its own;
+  - viewers never see hidden photos, GPS or originals.
+- [ ] Link previews: a shared link pasted into WhatsApp or iMessage shows a sensible preview.
+
+## 6. Measurement, before launch day
+
+- [ ] Google Search Console: Domain property verified, `sitemap.xml` submitted.
+- [ ] Bing Webmaster Tools: imported from Search Console, sitemap submitted.
+- [ ] **[block]** GA4: `VITE_ANALYTICS_ID` is set; analytics starts only after cookie consent (accept and decline once each). In the property, "page changes based on browser history events" is **off**, so share and invite addresses are never recorded.
+- [ ] The privacy policy names the cookies and analytics the site actually uses (`COOKIE_CONSENT_STYLE` is `'banner'`).
+- [ ] Launch-day baseline recorded: indexed pages, Lighthouse scores, brand searches. Search Console checked weekly for the first two months.
+- [ ] A plan for the first outside links, and the brand name searched to see what else owns the results.

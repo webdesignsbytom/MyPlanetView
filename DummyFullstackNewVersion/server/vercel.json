@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/server.js",
+      "use": "@vercel/node",
+      "config": {
+        "maxDuration": 60,
+        "includeFiles": [
+          "prisma/**",
+          "node_modules/.prisma/**"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "src/server.js" }
+  ],
+  "crons": [
+    { "path": "/api/media-services/cron/cleanup-orphans", "schedule": "0 4 * * *" }
+  ]
+}

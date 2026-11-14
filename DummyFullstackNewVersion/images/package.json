@@ -1,0 +1,21 @@
+{
+  "name": "images",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "img:gen": "node src/tools/gen-images.mjs src/raw-images src/created-images \"800,1200,2000\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "fast-glob": "^3.3.3",
+    "sharp": "^0.34.4"
+  },
+  "dependencies": {
+    "heic-convert": "^2.1.0"
+  }
+}

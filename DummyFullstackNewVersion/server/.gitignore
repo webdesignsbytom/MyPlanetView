@@ -1,0 +1,13 @@
+# Environment files
+.env
+.env.local
+.env.test
+.env.production
+.env.*.local
+
+node_modules
+
+/generated/prisma
+
+# Bucket policy output (contains account identifiers)
+src/services/s3/policy.json

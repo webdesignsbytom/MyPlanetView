@@ -1,0 +1,168 @@
+# 0) One host: www goes to the bare domain in one hop (match FULL_BUSINESS_URL)
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule (.*) https://%1%{REQUEST_URI} [L,R=301]
+
+# 1) Force HTTPS (keep)
+RewriteCond %{HTTPS} !on
+RewriteCond %{REQUEST_URI} !^/[0-9]+\..+\.cpaneldcv$
+RewriteCond %{REQUEST_URI} !^/\.well-known/pki-validation/[A-F0-9]{32}\.txt(?:\ Comodo\ DCV)?$
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# 2) Pre-rendered pages (<route>.html), the app shell for browser-only pages, a real 404 for the rest
+Options -Indexes
+<IfModule mod_dir.c>
+  DirectorySlash Off
+</IfModule>
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  RewriteRule ^(index|404|app-shell)\.html$ - [L]
+
+  # Never rewrite static assets
+  RewriteRule ^assets/ - [L]
+  RewriteRule \.(js|mjs|css|map|json|txt|xml|png|jpg|jpeg|gif|webp|avif|svg|ico|woff|woff2|ttf|otf|eot|mp4|mov|webm)$ - [L,NC]
+
+  # /about/ -> /about (one URL per page)
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  # /about -> about.html
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+)$ /$1.html [L]
+
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule . - [L]
+
+  # Browser-only pages (filled in at build from CLIENT_ONLY_ROUTE_PREFIXES)
+  #__CLIENT_ONLY_REWRITES__
+</IfModule>
+ErrorDocument 404 /404.html
+
+# 3) Limit HTTP methods (keep)
+<IfModule mod_rewrite.c>
+  RewriteCond %{REQUEST_METHOD} !^(GET|POST|HEAD|OPTIONS)$
+  RewriteRule .* - [F]
+</IfModule>
+
+# 4) Security headers (keep)
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'self'; \
+    script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; \
+    style-src  'self' 'unsafe-inline' https://fonts.googleapis.com; \
+    font-src   'self' https://fonts.gstatic.com; \
+    img-src    'self' https://nbg1.your-objectstorage.com data: blob:; \
+    connect-src 'self' \
+      https://api.client.com \
+      https://nbg1.your-objectstorage.com \
+      https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; \
+    media-src  'self' https://nbg1.your-objectstorage.com blob: data:; \
+    worker-src 'self' blob:; \
+    frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
+  Header always set X-Content-Type-Options nosniff
+  Header always set X-Frame-Options DENY
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# Optionally enforce HSTS (only if your domain is *always* HTTPS)
+# <IfModule mod_headers.c>
+#   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+# </IfModule>
+
+# 5) Compression (Brotli, Gzip fallback) + Vary
+<IfModule mod_brotli.c>
+  BrotliCompressionQuality 5
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Ensure correct caching per encoding
+  Header append Vary Accept-Encoding
+</IfModule>
+
+# 6) Access hardening (keep)
+<FilesMatch "\.(htaccess|htpasswd|env|ini|log|sh|php)$">
+  Require all denied
+</FilesMatch>
+
+# 7) Charset + MIME types (keep)
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+  AddType text/javascript .js
+  AddType text/javascript .mjs
+  AddType image/avif .avif
+  AddType font/woff2 .woff2
+  AddType font/woff .woff
+  AddType application/vnd.ms-fontobject .eot
+  AddType font/ttf .ttf
+  AddType font/otf .otf
+  AddType video/mp4 .mp4
+  AddType video/quicktime .mov
+  AddType video/webm .webm
+</IfModule>
+
+# 8) Caching
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # HTML revalidates
+  ExpiresByType text/html "access plus 0 seconds"
+
+  # Hashed static assets
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png  "access plus 1 year"
+  ExpiresByType image/gif  "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 1 year"
+  ExpiresByType video/quicktime "access plus 1 year"
+  ExpiresByType video/webm "access plus 1 year"
+
+  # Non-hashed metadata
+  ExpiresByType application/manifest+json "access plus 1 hour"
+  ExpiresByType application/json "access plus 1 hour"
+  ExpiresByType text/plain "access plus 1 hour"
+  # (covers robots.txt, sitemap.xml via their MIME on many hosts)
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Long cache + immutable for static assets
+  <FilesMatch "\.(css|js|mjs|svg|avif|webp|jpg|jpeg|png|gif|ico|woff2?|mp4|mov|webm)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # HTML must revalidate
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # Metadata files (non-hashed) — short cache
+  <FilesMatch "^(manifest\.json|robots\.txt|sitemap\.xml)$">
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+</IfModule>
+
+# 9) Simple bot ban (no generic words like "crawler": real search bots use them)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_USER_AGENT} (badbot|spambot) [NC]
+  RewriteRule .* - [F,L]
+</IfModule>
+
+# 10) PHP handler (keep)
+# php -- BEGIN cPanel-generated handler, do not edit
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php74 .php .php7 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

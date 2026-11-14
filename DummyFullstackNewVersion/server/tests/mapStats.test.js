@@ -1,0 +1,64 @@
+import { describe, it, expect } from 'vitest';
+import { buildMapStats } from '../src/utils/mapStats.js';
+
+const continentByCode = new Map([
+  ['FR', 'EUROPE'],
+  ['IT', 'EUROPE'],
+  ['JP', 'ASIA'],
+  ['PE', 'SOUTH_AMERICA'],
+]);
+
+describe('buildMapStats', () => {
+  it('counts visited and lived-in countries, not wish-list ones', () => {
+    const stats = buildMapStats({
+      visits: [
+        { countryCode: 'FR', status: 'VISITED' },
+        { countryCode: 'IT', status: 'LIVED' },
+        { countryCode: 'JP', status: 'WANT_TO_GO' },
+      ],
+      continentByCode,
+    });
+    expect(stats.countries).toBe(2);
+    expect(stats.continents).toBe(1);
+  });
+
+  it('counts continents across visited countries', () => {
+    const stats = buildMapStats({
+      visits: [
+        { countryCode: 'FR', status: 'VISITED' },
+        { countryCode: 'JP', status: 'VISITED' },
+        { countryCode: 'PE', status: 'VISITED' },
+      ],
+      continentByCode,
+    });
+    expect(stats.continents).toBe(3);
+  });
+
+  it('gives each traveller the countries of the completed trips they went on', () => {
+    const stats = buildMapStats({
+      travellers: [
+        { id: 't1', name: 'Sarah' },
+        { id: 't2', name: 'Tom' },
+      ],
+      completedTrips: [
+        { travellerIds: ['t1', 't2'], countryCodes: ['FR', 'IT'] },
+        { travellerIds: ['t1'], countryCodes: ['JP', 'FR'] },
+      ],
+    });
+    expect(stats.byTraveller).toEqual([
+      { travellerId: 't1', name: 'Sarah', countries: 3 },
+      { travellerId: 't2', name: 'Tom', countries: 2 },
+    ]);
+  });
+
+  it('passes the counts through and starts at zero', () => {
+    expect(buildMapStats({ photoCount: 12, landmarkCount: 3, tripCount: 2 })).toEqual({
+      countries: 0,
+      continents: 0,
+      photos: 12,
+      landmarks: 3,
+      trips: 2,
+      byTraveller: [],
+    });
+  });
+});

@@ -1,0 +1,167 @@
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import { toNodeHandler } from 'better-auth/node';
+import morgan from 'morgan';
+
+// Path
+import { join } from 'path';
+import * as url from 'url';
+
+import { auth } from './auth.js';
+import eventRouter from './routes/events.js';
+import userRouter from './routes/users.js';
+import contactRouter from './routes/contact.js';
+import mediaRouter from './routes/mediaGeneric.js';
+// Travel
+import placesRouter from './routes/places.js';
+import mapRouter from './routes/maps.js';
+import tripRouter from './routes/trips.js';
+import photoRouter from './routes/photos.js';
+import sharedRouter from './routes/shared.js';
+import inviteRouter from './routes/invites.js';
+import {
+  EVENT_MESSAGES,
+  RESPONSE_MESSAGES,
+  sendMessageResponse,
+} from './utils/responses/responses.js';
+import { FRONTEND_ORIGINS } from './utils/config.js';
+import { requestContextMiddleware } from './utils/requestContext.js';
+import { createAppEvent } from './event/events.js';
+import { globalRateLimiter } from './middleware/rateLimit.js';
+
+const app = express();
+
+// Real client IP from Vercel's proxy (rate limits are per visitor)
+app.set('trust proxy', 1);
+
+const PORT = process.env.PORT || 4000;
+const HTTP_URL = process.env.HTTP_URL || 'http://localhost:';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+// Global middleware
+
+// Security headers (CSP off: status page uses Google Fonts)
+app.use(helmet({ contentSecurityPolicy: false }));
+
+// The API (and its status page) never belongs in search results
+app.use((_req, res, next) => {
+  res.set('X-Robots-Tag', 'noindex, nofollow');
+  next();
+});
+
+// Per-request requestId (X-Request-Id)
+app.use(requestContextMiddleware);
+
+// Request logger
+app.use(morgan('dev'));
+
+const allowedOrigins = new Set(FRONTEND_ORIGINS);
+
+app.use(
+  cors({
+    origin(origin, cb) {
+      // allow server-to-server tools (no Origin header)
+      if (!origin) return cb(null, true);
+
+      const ok = allowedOrigins.has(origin);
+      if (!ok) {
+        console.warn('[CORS] rejected origin:', origin);
+      }
+      return cb(null, ok);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+);
+
+app.use(express.json({ limit: '2000kb' }));
+app.use(express.urlencoded({ extended: true, limit: '2000kb' }));
+
+// Global rate limit
+app.use(globalRateLimiter);
+
+// Better Auth routes (mount first is fine)
+app.all('/api/auth/*splat', toNodeHandler(auth));
+
+// Routes
+
+app.use('/api/events', eventRouter);
+app.use('/api/users', userRouter);
+app.use('/api/contact', contactRouter);
+app.use('/api/media-services', mediaRouter);
+
+// Travel (contract: docs/API.md)
+app.use('/api', placesRouter); // /api/countries, /api/landmarks
+app.use('/api/maps', mapRouter);
+app.use('/api/trips', tripRouter);
+app.use('/api/photos', photoRouter);
+app.use('/api/shared', sharedRouter);
+app.use('/api/invites', inviteRouter);
+
+app.get('/', (_req, res) => {
+  res.sendFile('index.html', { root: join(__dirname, 'views') });
+});
+
+app.get('/health', (_req, res) => res.json({ ok: true }));
+
+// 404
+app.use((req, res) => {
+  res.status(404);
+
+  if (req.accepts('html')) {
+    res.sendFile(join(__dirname, 'views', '404.html'));
+  } else if (req.accepts('json')) {
+    sendMessageResponse(res, 404, '404 Not Found');
+  } else {
+    res.type('txt').send('404 Not Found');
+  }
+});
+
+// Global error handler (anything a controller didn't catch)
+app.use((error, req, res, _next) => {
+  // Body-parser errors are the client's (bad JSON, body too large): no 500, no CRITICAL event
+  const clientStatus = error?.status >= 400 && error?.status < 500 ? error.status : null;
+  if (clientStatus) {
+    if (res.headersSent) return;
+    if (clientStatus === 413) return sendMessageResponse(res, 413, 'Request body is too large.');
+    return sendMessageResponse(res, 400, EVENT_MESSAGES.malformedData);
+  }
+
+  console.error('[ERROR HANDLER]', error);
+
+  createAppEvent({
+    level: 'CRITICAL',
+    domain: 'system',
+    action: 'uncaught-error',
+    message: error?.message || 'Unhandled server error',
+    statusCode: 500,
+    stack: error?.stack,
+    path: req.originalUrl,
+    method: req.method,
+  }).catch((e) =>
+    console.error('[ERROR HANDLER] failed to persist AppEvent:', e)
+  );
+
+  if (res.headersSent) return;
+
+  // Prisma errors a controller let through
+  if (error.code === 'P2002') return sendMessageResponse(res, 409, RESPONSE_MESSAGES.ConflictEvent);
+  if (error.code === 'P2025') return sendMessageResponse(res, 404, 'That record does not exist.');
+
+  return sendMessageResponse(res, 500, RESPONSE_MESSAGES.ServerErrorEvent);
+});
+
+// Skip listen() under test
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(
+      `\nServer is running on ${HTTP_URL}${PORT}\nThis no longer consumes souls\n`,
+    );
+  });
+}
+
+export default app;

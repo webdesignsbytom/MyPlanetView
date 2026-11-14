@@ -1,0 +1,19 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/main.jsx",
+    "scripts/*.mjs",
+    "vite.config.js",
+    "eslint.config.js"
+  ],
+  "project": [
+    "src/**/*.{js,jsx}",
+    "scripts/**/*.mjs"
+  ],
+  "ignoreDependencies": [
+    "@tailwindcss/aspect-ratio",
+    "@tailwindcss/forms",
+    "@tailwindcss/typography",
+    "tailwindcss"
+  ]
+}

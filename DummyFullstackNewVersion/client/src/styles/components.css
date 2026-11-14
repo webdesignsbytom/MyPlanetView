@@ -1,0 +1,15 @@
+/* Stops the tap flash and long-press menu on buttons and the map */
+.no__highlights {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.invisible_scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.invisible_scrollbar {
+  scrollbar-width: none; /* Firefox */
+}

@@ -1,0 +1,34 @@
+import { Link } from 'react-router-dom';
+
+export default function AppLink({
+  to,
+  label,
+  description,
+  className,
+  ariaLabel,
+  titleAttr,
+  onClick,
+  state,
+  replace,
+}) {
+  const defaultClass = 'text-colour6 hover:brightness-75';
+
+  // Compute fallback values
+  const computedAria =
+    ariaLabel || (description ? `Go to ${description}` : undefined);
+  const computedTitle = titleAttr || description || undefined;
+
+  return (
+    <Link
+      to={to}
+      className={className || defaultClass}
+      {...(computedAria ? { 'aria-label': computedAria } : {})}
+      {...(computedTitle ? { title: computedTitle } : {})}
+      {...(onClick ? { onClick } : {})}
+      {...(state !== undefined ? { state } : {})}
+      {...(replace !== undefined ? { replace } : {})}
+    >
+      {label}
+    </Link>
+  );
+}

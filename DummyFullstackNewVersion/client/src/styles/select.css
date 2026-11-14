@@ -1,0 +1,184 @@
+/* Dropdowns: PlainOptionSelect, RichOptionSelect and GroupedOptionSelect (components/ui).
+   Tune these in the dev lab (/dev/select-lab), which writes this block for you. Every
+   colour is a theme token (NextDummy's values), so light and dark mode both follow. */
+:root {
+  --select-bg: var(--field);
+  --select-text: var(--colour4);
+  --select-border: color-mix(in oklab, var(--colour5) 25%, transparent);
+  --select-list-bg: var(--field);
+  --select-list-text: var(--colour4);
+  --select-hover-bg: var(--colour6);
+  --select-hover-text: var(--colour1);
+  --select-checked-bg: var(--colour4);
+  --select-checked-text: var(--colour1);
+  --select-focus: var(--colour6);
+  --select-radius: 8px;
+  --select-padding: 4px;
+  --select-gap: 6px;
+  --select-arrow: '▾';
+  --select-checkmark: inline;
+  --select-fade: 0.18s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --select-fade: 0s;
+  }
+}
+
+@layer components {
+  /* The closed box, in every browser */
+  .app-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid var(--select-border);
+    border-radius: var(--select-radius);
+    background-color: var(--select-bg);
+    color: var(--select-text);
+    cursor: pointer;
+  }
+
+  /* One focus indicator: the forms plugin adds a blue ring and border */
+  .app-select:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: var(--select-border);
+  }
+
+  .app-select:focus-visible {
+    outline: 2px solid var(--select-focus);
+    outline-offset: 0;
+  }
+
+  .app-select[aria-invalid='true'] {
+    border-color: var(--error-red);
+  }
+
+  .app-select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Fully styled list where the browser supports customizable select (Chrome/Edge); others keep the native one */
+  @supports (appearance: base-select) {
+    .app-select,
+    .app-select::picker(select) {
+      appearance: base-select;
+    }
+
+    /* base-select draws its own arrow, so drop the forms plugin's */
+    .app-select {
+      background-image: none;
+      padding-right: 0.75rem;
+    }
+
+    .app-select:open {
+      outline: 2px solid var(--select-focus);
+      outline-offset: 0;
+    }
+
+    .app-select::picker-icon {
+      content: var(--select-arrow);
+      transition: rotate 0.2s;
+    }
+
+    .app-select:open::picker-icon {
+      rotate: 180deg;
+    }
+
+    .app-select::picker(select) {
+      max-height: 20rem;
+      margin-block: var(--select-gap);
+      padding: var(--select-padding);
+      border: 2px solid var(--select-border);
+      border-radius: var(--select-radius);
+      background: var(--select-list-bg);
+      color: var(--select-list-text);
+      box-shadow: var(--lift);
+      opacity: 0;
+      translate: 0 -0.5rem;
+      transition:
+        opacity var(--select-fade),
+        translate var(--select-fade),
+        display var(--select-fade) allow-discrete,
+        overlay var(--select-fade) allow-discrete;
+    }
+
+    .app-select:open::picker(select) {
+      opacity: 1;
+      translate: 0 0;
+    }
+
+    @starting-style {
+      .app-select:open::picker(select) {
+        opacity: 0;
+        translate: 0 -0.5rem;
+      }
+    }
+
+    .app-select option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: calc(var(--select-radius) / 2);
+    }
+
+    .app-select option:hover,
+    .app-select option:focus-visible {
+      background: var(--select-hover-bg);
+      color: var(--select-hover-text);
+    }
+
+    .app-select option:checked {
+      background: var(--select-checked-bg);
+      color: var(--select-checked-text);
+      font-weight: 600;
+    }
+
+    .app-select option:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .app-select option::checkmark {
+      display: var(--select-checkmark);
+    }
+
+    /* GroupedOptionSelect headings */
+    .app-select optgroup {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Options under a heading don't inherit its small capitals */
+    .app-select optgroup option {
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: normal;
+      text-transform: none;
+    }
+
+    /* RichOptionSelect: icon, title and description; the closed box shows the icon and title */
+    .app-select-option-text {
+      display: grid;
+    }
+
+    .app-select-option-description {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+
+    .app-select selectedcontent {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .app-select selectedcontent .app-select-option-description {
+      display: none;
+    }
+  }
+}

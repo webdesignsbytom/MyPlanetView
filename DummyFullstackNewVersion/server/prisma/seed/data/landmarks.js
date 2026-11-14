@@ -1,0 +1,193 @@
+// Landmarks seeded into the Landmark table: the 177 monuments from the old map
+// data (one per country), cleaned up. Fixes: the UAE had Qatar's Al Zubarah
+// (now the Burj Khalifa); "Prince", "St. Peter", "Ha" and "Banc d`Arguin" were
+// names cut short by apostrophes.
+//
+// COORDINATES were checked against Wikidata (P625) on 14 Nov 2026: each entry's
+// comment gives the Wikidata item it now uses. Entries marked "unverified" keep
+// the original estimate and still need checking by hand before launch: a photo is
+// matched when it was taken within `matchRadiusM` of the point.
+//
+// `category` isn't stored (the schema has no column for it); it explains the radius:
+//   building 300–800 m · site / old town 1–3 km · park, range, archipelago 10–60 km.
+// pinX/pinY on the SVG map are computed from latitude/longitude by the seed.
+
+export const LANDMARKS = [
+  { countryCode: 'AF', name: 'Minaret of Jam', category: 'site', latitude: 34.39639, longitude: 64.51589, matchRadiusM: 1000 }, // Wikidata Q192981
+  { countryCode: 'AL', name: 'Butrint', category: 'site', latitude: 39.75707, longitude: 20.01663, matchRadiusM: 1500 }, // Wikidata Q188694
+  { countryCode: 'AO', name: 'Kissama National Park', category: 'park', latitude: -9.75, longitude: 13.58333, matchRadiusM: 40000 }, // Wikidata Q3179197
+  { countryCode: 'AR', name: 'Perito Moreno Glacier', category: 'natural', latitude: -50.49322, longitude: -73.12798, matchRadiusM: 5000 }, // Wikidata Q367943
+  { countryCode: 'AM', name: 'Geghard Monastery', category: 'building', latitude: 40.14047, longitude: 44.81859, matchRadiusM: 500 }, // Wikidata Q499285
+  { countryCode: 'AU', name: 'Sydney Opera House', category: 'building', latitude: -33.85706, longitude: 151.2149, matchRadiusM: 400 }, // Wikidata Q45178
+  { countryCode: 'AT', name: 'Schönbrunn Palace', category: 'building', latitude: 48.18479, longitude: 16.31227, matchRadiusM: 800 }, // Wikidata Q131330
+  { countryCode: 'AZ', name: 'Gobustan Rock Art', category: 'site', latitude: 40.125, longitude: 49.375, matchRadiusM: 3000 }, // Wikidata Q4313909
+  { countryCode: 'BD', name: 'Sundarbans', category: 'park', latitude: 21.75, longitude: 88.75, matchRadiusM: 40000 }, // Wikidata Q4526
+  { countryCode: 'BE', name: 'Grand Place', category: 'site', latitude: 50.84671, longitude: 4.35254, matchRadiusM: 300 }, // Wikidata Q215429
+  { countryCode: 'BR', name: 'Christ the Redeemer', category: 'monument', latitude: -22.95192, longitude: -43.21046, matchRadiusM: 500 }, // Wikidata Q79961
+  { countryCode: 'BG', name: 'Rila Monastery', category: 'building', latitude: 42.13438, longitude: 23.33955, matchRadiusM: 600 }, // Wikidata Q207945
+  { countryCode: 'BF', name: 'Ruins of Loropéni', category: 'site', latitude: 10.31028, longitude: -3.56306, matchRadiusM: 1000 }, // Wikidata Q1269931
+  { countryCode: 'BI', name: 'Kibira National Park', category: 'park', latitude: -2.91466, longitude: 29.43361, matchRadiusM: 25000 }, // Wikidata Q3084668
+  { countryCode: 'KH', name: 'Angkor Wat', category: 'site', latitude: 13.4125, longitude: 103.86667, matchRadiusM: 1500 }, // Wikidata Q43473
+  { countryCode: 'CM', name: 'Dja Faunal Reserve', category: 'park', latitude: 3.0167, longitude: 12.9833, matchRadiusM: 50000 }, // Wikidata Q843147
+  { countryCode: 'CA', name: 'CN Tower', category: 'building', latitude: 43.64275, longitude: -79.38715, matchRadiusM: 400 }, // Wikidata Q134883
+  { countryCode: 'CV', name: 'Cidade Velha', category: 'old town', latitude: 14.91667, longitude: -23.60417, matchRadiusM: 1000 }, // Wikidata Q464913
+  { countryCode: 'CF', name: 'Manovo-Gounda St Floris National Park', category: 'park', latitude: 8.5, longitude: 21.5, matchRadiusM: 60000 }, // Wikidata Q503835
+  { countryCode: 'TD', name: 'Zakouma National Park', category: 'park', latitude: 10.84778, longitude: 19.64778, matchRadiusM: 30000 }, // Wikidata Q1561524
+  { countryCode: 'CL', name: 'Easter Island', category: 'island', latitude: -27.12, longitude: -109.35, matchRadiusM: 15000 }, // Wikidata Q14452
+  { countryCode: 'CN', name: 'Great Wall of China (Badaling)', category: 'monument', latitude: 40.3587, longitude: 116.017, matchRadiusM: 3000 }, // unverified: Wikidata hit is the town of Badaling
+  { countryCode: 'CO', name: 'Lost City (Ciudad Perdida)', category: 'site', latitude: 11.038, longitude: -73.92519, matchRadiusM: 1500 }, // Wikidata Q1094367
+  { countryCode: 'KM', name: 'Mount Karthala', category: 'mountain', latitude: -11.76028, longitude: 43.35306, matchRadiusM: 8000 }, // Wikidata Q527548
+  { countryCode: 'CG', name: 'Odzala National Park', category: 'park', latitude: 0.8, longitude: 14.9, matchRadiusM: 60000 }, // Wikidata Q263883
+  { countryCode: 'CR', name: 'Pre-Columbian Chiefdom Settlements with Stone Spheres', category: 'site', latitude: 8.93845, longitude: -83.50254, matchRadiusM: 3000 }, // Wikidata Q65114170
+  { countryCode: 'HR', name: 'Plitvice Lakes National Park', category: 'park', latitude: 44.88045, longitude: 15.61604, matchRadiusM: 10000 }, // Wikidata Q189849
+  { countryCode: 'CU', name: 'Old Havana', category: 'old town', latitude: 23.13594, longitude: -82.35833, matchRadiusM: 1500 }, // Wikidata Q1165566
+  { countryCode: 'CY', name: 'Paphos Archaeological Park', category: 'site', latitude: 34.75567, longitude: 32.40417, matchRadiusM: 1000 }, // Wikidata Q12065255
+  { countryCode: 'CZ', name: 'Prague Castle', category: 'building', latitude: 50.09, longitude: 14.4, matchRadiusM: 600 }, // Wikidata Q193369
+  { countryCode: 'DK', name: 'Tivoli Gardens', category: 'site', latitude: 55.67361, longitude: 12.56833, matchRadiusM: 400 }, // Wikidata Q110289
+  { countryCode: 'DJ', name: 'Lake Assal', category: 'natural', latitude: 11.65, longitude: 42.41667, matchRadiusM: 8000 }, // Wikidata Q81239
+  { countryCode: 'DM', name: 'Morne Trois Pitons National Park', category: 'park', latitude: 15.26667, longitude: -61.28333, matchRadiusM: 8000 }, // Wikidata Q629436
+  { countryCode: 'DO', name: 'Colonial City of Santo Domingo', category: 'old town', latitude: 18.473, longitude: -69.883, matchRadiusM: 1200 }, // Wikidata Q2470834
+  { countryCode: 'EC', name: 'Galápagos Islands', category: 'archipelago', latitude: -0.66667, longitude: -90.55, matchRadiusM: 60000 }, // Wikidata Q38095
+  { countryCode: 'EG', name: 'Pyramids of Giza', category: 'site', latitude: 29.97611, longitude: 31.13278, matchRadiusM: 1500 }, // Wikidata Q12508
+  { countryCode: 'SV', name: 'Joya de Cerén', category: 'site', latitude: 13.82749, longitude: -89.35616, matchRadiusM: 600 }, // Wikidata Q27985
+  { countryCode: 'GQ', name: 'Malabo Cathedral', category: 'building', latitude: 3.7533, longitude: 8.7836, matchRadiusM: 300 }, // unverified: not found on Wikidata
+  { countryCode: 'ER', name: 'Asmara', category: 'old town', latitude: 15.33333, longitude: 38.91667, matchRadiusM: 5000 }, // Wikidata Q3642
+  { countryCode: 'EE', name: 'Tallinn Old Town', category: 'old town', latitude: 59.43722, longitude: 24.74528, matchRadiusM: 1200 }, // Wikidata Q726803
+  { countryCode: 'SZ', name: 'Mlilwane Wildlife Sanctuary', category: 'park', latitude: -26.49783, longitude: 31.18572, matchRadiusM: 6000 }, // Wikidata Q1941204
+  { countryCode: 'ET', name: 'Rock-Hewn Churches of Lalibela', category: 'site', latitude: 12.02935, longitude: 39.04042, matchRadiusM: 1000 }, // Wikidata Q642979
+  { countryCode: 'FJ', name: 'Sigatoka Sand Dunes', category: 'natural', latitude: -18.17, longitude: 177.48889, matchRadiusM: 3000 }, // Wikidata Q7511961
+  { countryCode: 'FI', name: 'Suomenlinna', category: 'site', latitude: 60.14361, longitude: 24.98444, matchRadiusM: 1500 }, // Wikidata Q1292442
+  { countryCode: 'FR', name: 'Eiffel Tower', category: 'building', latitude: 48.8583, longitude: 2.29448, matchRadiusM: 400 }, // Wikidata Q243
+  { countryCode: 'GA', name: 'Loango National Park', category: 'park', latitude: -2.16667, longitude: 9.56667, matchRadiusM: 25000 }, // Wikidata Q1756690
+  { countryCode: 'GM', name: 'Kunta Kinteh Island', category: 'site', latitude: 13.31753, longitude: -16.36144, matchRadiusM: 500 }, // Wikidata Q213188
+  { countryCode: 'GE', name: 'Gelati Monastery', category: 'building', latitude: 42.29472, longitude: 42.76806, matchRadiusM: 500 }, // Wikidata Q679979
+  { countryCode: 'DE', name: 'Brandenburg Gate', category: 'monument', latitude: 52.51627, longitude: 13.37772, matchRadiusM: 300 }, // Wikidata Q82425
+  { countryCode: 'GH', name: 'Cape Coast Castle', category: 'building', latitude: 5.10358, longitude: -1.24125, matchRadiusM: 400 }, // Wikidata Q1254826
+  { countryCode: 'GR', name: 'Acropolis of Athens', category: 'site', latitude: 37.97167, longitude: 23.72611, matchRadiusM: 600 }, // Wikidata Q131013
+  { countryCode: 'GD', name: 'Fort George', category: 'building', latitude: 12.0475, longitude: -61.7525, matchRadiusM: 400 }, // unverified: not found on Wikidata
+  { countryCode: 'GT', name: 'Tikal', category: 'site', latitude: 17.22209, longitude: -89.62361, matchRadiusM: 3000 }, // Wikidata Q181172
+  { countryCode: 'GN', name: 'Fouta Djallon Highlands', category: 'range', latitude: 11.315, longitude: -12.2975, matchRadiusM: 60000 }, // Wikidata Q850245
+  { countryCode: 'GW', name: 'Bijagós Archipelago', category: 'archipelago', latitude: 11.25, longitude: -16.08333, matchRadiusM: 60000 }, // Wikidata Q63353195
+  { countryCode: 'GY', name: 'Kaieteur Falls', category: 'natural', latitude: 5.17811, longitude: -59.48228, matchRadiusM: 3000 }, // Wikidata Q38120
+  { countryCode: 'HT', name: 'Citadelle Laferrière', category: 'building', latitude: 19.57361, longitude: -72.24389, matchRadiusM: 1000 }, // Wikidata Q206194
+  { countryCode: 'HN', name: 'Copán', category: 'site', latitude: 14.84, longitude: -89.1417, matchRadiusM: 1500 }, // unverified: Wikidata matched the department, not the ruins
+  { countryCode: 'HU', name: 'Buda Castle', category: 'building', latitude: 47.49611, longitude: 19.03972, matchRadiusM: 600 }, // Wikidata Q46313
+  { countryCode: 'IS', name: 'Þingvellir National Park', category: 'park', latitude: 64.25806, longitude: -21.125, matchRadiusM: 8000 }, // Wikidata Q107370
+  { countryCode: 'IN', name: 'Taj Mahal', category: 'building', latitude: 27.175, longitude: 78.04194, matchRadiusM: 600 }, // Wikidata Q9141
+  { countryCode: 'ID', name: 'Borobudur Temple', category: 'building', latitude: -7.60793, longitude: 110.20384, matchRadiusM: 600 }, // Wikidata Q42798
+  { countryCode: 'IR', name: 'Persepolis', category: 'site', latitude: 29.935, longitude: 52.89, matchRadiusM: 1000 }, // Wikidata Q129072
+  { countryCode: 'IQ', name: 'Hatra', category: 'site', latitude: 35.58806, longitude: 42.71833, matchRadiusM: 1500 }, // Wikidata Q466614
+  { countryCode: 'IE', name: 'Cliffs of Moher', category: 'natural', latitude: 52.93611, longitude: -9.47083, matchRadiusM: 3000 }, // Wikidata Q239477
+  { countryCode: 'IL', name: 'Western Wall', category: 'monument', latitude: 31.77695, longitude: 35.23425, matchRadiusM: 300 }, // Wikidata Q134821
+  { countryCode: 'IT', name: 'Colosseum', category: 'building', latitude: 41.89028, longitude: 12.49222, matchRadiusM: 400 }, // Wikidata Q10285
+  { countryCode: 'JM', name: 'Blue and John Crow Mountains', category: 'park', latitude: 18.0775, longitude: -76.57111, matchRadiusM: 25000 }, // Wikidata Q24082981
+  { countryCode: 'JP', name: 'Mount Fuji', category: 'mountain', latitude: 35.36056, longitude: 138.7275, matchRadiusM: 20000 }, // Wikidata Q39231
+  { countryCode: 'JO', name: 'Petra', category: 'site', latitude: 30.3285, longitude: 35.4444, matchRadiusM: 3000 }, // unverified: not found on Wikidata
+  { countryCode: 'KZ', name: 'Mausoleum of Khoja Ahmed Yasawi', category: 'building', latitude: 43.29764, longitude: 68.27104, matchRadiusM: 500 }, // Wikidata Q46069
+  { countryCode: 'KE', name: 'Maasai Mara', category: 'park', latitude: -1.49, longitude: 35.14, matchRadiusM: 30000 }, // Wikidata Q207724
+  { countryCode: 'KW', name: 'Kuwait Towers', category: 'building', latitude: 29.39, longitude: 48.00306, matchRadiusM: 400 }, // Wikidata Q1335640
+  { countryCode: 'KG', name: 'Tien Shan Mountains', category: 'range', latitude: 42.0, longitude: 76.5, matchRadiusM: 60000 }, // unverified: a mountain range; one point cannot describe it
+  { countryCode: 'LA', name: 'Wat Phou', category: 'site', latitude: 14.84892, longitude: 105.81572, matchRadiusM: 1000 }, // Wikidata Q579860
+  { countryCode: 'LV', name: 'Historic Centre of Riga', category: 'old town', latitude: 56.9485, longitude: 24.1082, matchRadiusM: 1200 }, // Wikidata Q1026415
+  { countryCode: 'LB', name: 'Baalbek', category: 'site', latitude: 34.00611, longitude: 36.20861, matchRadiusM: 600 }, // Wikidata Q178835
+  { countryCode: 'LS', name: 'Thaba-Bosiu', category: 'site', latitude: -29.35361, longitude: 27.67083, matchRadiusM: 1500 }, // Wikidata Q2408243
+  { countryCode: 'LR', name: 'Providence Island', category: 'site', latitude: 6.31976, longitude: -10.80126, matchRadiusM: 400 }, // Wikidata Q27459317
+  { countryCode: 'LY', name: 'Leptis Magna', category: 'site', latitude: 32.63833, longitude: 14.2905, matchRadiusM: 1500 }, // Wikidata Q191504
+  { countryCode: 'LI', name: 'Vaduz Castle', category: 'building', latitude: 47.13944, longitude: 9.52444, matchRadiusM: 400 }, // Wikidata Q694782
+  { countryCode: 'LT', name: 'Trakai Castle', category: 'building', latitude: 54.6525, longitude: 24.93306, matchRadiusM: 600 }, // Wikidata Q1482013
+  { countryCode: 'LU', name: 'Bock Casemates', category: 'site', latitude: 49.61174, longitude: 6.13715, matchRadiusM: 400 }, // Wikidata Q125561209
+  { countryCode: 'MK', name: 'Ohrid Region', category: 'old town', latitude: 41.1172, longitude: 20.8016, matchRadiusM: 10000 }, // unverified: Wikidata hit is the lake, not the town
+  { countryCode: 'MG', name: 'Tsingy de Bemaraha', category: 'park', latitude: -18.66667, longitude: 44.75, matchRadiusM: 15000 }, // Wikidata Q1405154
+  { countryCode: 'MW', name: 'Lake Malawi National Park', category: 'park', latitude: -14.03333, longitude: 34.88333, matchRadiusM: 8000 }, // Wikidata Q1077596
+  { countryCode: 'MY', name: 'Petronas Towers', category: 'building', latitude: 3.15778, longitude: 101.71167, matchRadiusM: 400 }, // Wikidata Q83063
+  { countryCode: 'MV', name: 'Muliaage Palace', category: 'building', latitude: 4.17739, longitude: 73.51249, matchRadiusM: 300 }, // Wikidata Q3327612
+  { countryCode: 'ML', name: 'Timbuktu', category: 'old town', latitude: 16.7735, longitude: -3.0074, matchRadiusM: 3000 }, // unverified: Wikidata matched the region, not the city
+  { countryCode: 'MT', name: 'Hypogeum of Ħal-Saflieni', category: 'site', latitude: 35.86956, longitude: 14.50688, matchRadiusM: 300 }, // Wikidata Q755514
+  { countryCode: 'MH', name: 'Bikini Atoll', category: 'archipelago', latitude: 11.6, longitude: 165.4, matchRadiusM: 30000 }, // Wikidata Q152225
+  { countryCode: 'MR', name: "Banc d'Arguin National Park", category: 'park', latitude: 20.23472, longitude: -16.10889, matchRadiusM: 60000 }, // Wikidata Q539518
+  { countryCode: 'MU', name: 'Le Morne Cultural Landscape', category: 'site', latitude: -20.46056, longitude: 57.31361, matchRadiusM: 3000 }, // Wikidata Q1129992
+  { countryCode: 'MX', name: 'Chichen Itza', category: 'site', latitude: 20.68306, longitude: -88.56861, matchRadiusM: 1500 }, // Wikidata Q5859
+  { countryCode: 'MD', name: 'Orheiul Vechi', category: 'site', latitude: 47.30139, longitude: 28.9725, matchRadiusM: 2000 }, // Wikidata Q2382751
+  { countryCode: 'MC', name: "Prince's Palace of Monaco", category: 'building', latitude: 43.73142, longitude: 7.42028, matchRadiusM: 300 }, // Wikidata Q1164788
+  { countryCode: 'MN', name: 'Orkhon Valley', category: 'park', latitude: 47.55667, longitude: 102.83139, matchRadiusM: 30000 }, // Wikidata Q1453235
+  { countryCode: 'ME', name: 'Bay of Kotor', category: 'natural', latitude: 42.45, longitude: 18.67, matchRadiusM: 12000 }, // Wikidata Q207468
+  { countryCode: 'MA', name: 'Jemaa el-Fnaa', category: 'site', latitude: 31.62597, longitude: -7.9891, matchRadiusM: 400 }, // Wikidata Q258348
+  { countryCode: 'MZ', name: 'Island of Mozambique', category: 'old town', latitude: -15.03667, longitude: 40.73278, matchRadiusM: 2000 }, // Wikidata Q331099
+  { countryCode: 'MM', name: 'Bagan', category: 'site', latitude: 21.1725, longitude: 94.86, matchRadiusM: 6000 }, // Wikidata Q29317
+  { countryCode: 'NA', name: 'Etosha National Park', category: 'park', latitude: -18.78528, longitude: 16.26389, matchRadiusM: 60000 }, // Wikidata Q675633
+  { countryCode: 'NR', name: 'Command Ridge', category: 'site', latitude: -0.53055, longitude: 166.91692, matchRadiusM: 500 }, // Wikidata Q2667931
+  { countryCode: 'NP', name: 'Kathmandu Valley', category: 'old town', latitude: 27.71, longitude: 85.32, matchRadiusM: 15000 }, // Wikidata Q3037
+  { countryCode: 'NL', name: 'Rijksmuseum', category: 'building', latitude: 52.36, longitude: 4.88528, matchRadiusM: 300 }, // Wikidata Q190804
+  { countryCode: 'NZ', name: 'Milford Sound', category: 'natural', latitude: -44.61667, longitude: 167.86667, matchRadiusM: 8000 }, // Wikidata Q187197
+  { countryCode: 'NI', name: 'Ruins of León Viejo', category: 'site', latitude: 12.40055, longitude: -86.6178, matchRadiusM: 1000 }, // Wikidata Q1422898
+  { countryCode: 'NE', name: 'Aïr and Ténéré Natural Reserves', category: 'park', latitude: 18.3, longitude: 9.6, matchRadiusM: 60000 }, // unverified: not found on Wikidata
+  { countryCode: 'NG', name: 'Sukur Cultural Landscape', category: 'site', latitude: 10.74056, longitude: 13.57167, matchRadiusM: 3000 }, // Wikidata Q1123956
+  { countryCode: 'KP', name: 'Kaesong', category: 'old town', latitude: 37.97167, longitude: 126.55278, matchRadiusM: 6000 }, // Wikidata Q109079
+  { countryCode: 'NO', name: 'Bryggen', category: 'old town', latitude: 60.3975, longitude: 5.32333, matchRadiusM: 400 }, // Wikidata Q153430
+  { countryCode: 'OM', name: 'Bahla Fort', category: 'building', latitude: 22.9644, longitude: 57.3007, matchRadiusM: 800 }, // Wikidata Q1408909
+  { countryCode: 'PK', name: 'Mohenjo-daro', category: 'site', latitude: 27.32917, longitude: 68.13889, matchRadiusM: 1500 }, // Wikidata Q5725
+  { countryCode: 'PW', name: 'Rock Islands Southern Lagoon', category: 'archipelago', latitude: 7.2469, longitude: 134.3525, matchRadiusM: 20000 }, // Wikidata Q17215490
+  { countryCode: 'PS', name: 'Church of the Nativity', category: 'building', latitude: 31.70431, longitude: 35.20758, matchRadiusM: 300 }, // Wikidata Q194504
+  { countryCode: 'PA', name: 'Panama Canal (Miraflores Locks)', category: 'site', latitude: 8.99724, longitude: -79.59093, matchRadiusM: 10000 }, // Wikidata Q100144719
+  { countryCode: 'PG', name: 'Kokoda Track', category: 'range', latitude: -9.0, longitude: 147.7, matchRadiusM: 50000 }, // unverified: a 96 km trail; one point cannot describe it
+  { countryCode: 'PY', name: 'Jesuit Missions of La Santísima Trinidad de Paraná', category: 'site', latitude: -27.1306, longitude: -55.7, matchRadiusM: 1000 }, // unverified: Wikidata point is the joint listing with Jesús
+  { countryCode: 'PE', name: 'Machu Picchu', category: 'site', latitude: -13.16333, longitude: -72.54556, matchRadiusM: 1500 }, // Wikidata Q676203
+  { countryCode: 'PH', name: 'Banaue Rice Terraces', category: 'natural', latitude: 16.93472, longitude: 121.13472, matchRadiusM: 6000 }, // Wikidata Q826551
+  { countryCode: 'PL', name: 'Wieliczka Salt Mine', category: 'site', latitude: 49.98305, longitude: 20.05566, matchRadiusM: 600 }, // Wikidata Q454019
+  { countryCode: 'PT', name: 'Tower of Belém', category: 'building', latitude: 38.69139, longitude: -9.21583, matchRadiusM: 300 }, // Wikidata Q215003
+  { countryCode: 'QA', name: 'Al Zubarah', category: 'site', latitude: 25.98339, longitude: 51.02722, matchRadiusM: 2000 }, // Wikidata Q2727469
+  { countryCode: 'RO', name: 'Peleș Castle', category: 'building', latitude: 45.35972, longitude: 25.54278, matchRadiusM: 500 }, // Wikidata Q917702
+  { countryCode: 'RU', name: 'Red Square', category: 'site', latitude: 55.75417, longitude: 37.62, matchRadiusM: 500 }, // Wikidata Q41116
+  { countryCode: 'RW', name: 'Volcanoes National Park', category: 'park', latitude: -1.4675, longitude: 29.4925, matchRadiusM: 12000 }, // Wikidata Q932736
+  { countryCode: 'KN', name: 'Brimstone Hill Fortress', category: 'building', latitude: 17.347, longitude: -62.836, matchRadiusM: 600 }, // Wikidata Q200521
+  { countryCode: 'LC', name: 'Pitons', category: 'mountain', latitude: 13.80708, longitude: -61.07036, matchRadiusM: 3000 }, // Wikidata Q639487
+  { countryCode: 'VC', name: 'La Soufrière Volcano', category: 'mountain', latitude: 13.3347, longitude: -61.1806, matchRadiusM: 5000 }, // unverified: not found on Wikidata
+  { countryCode: 'WS', name: 'Papaseea Sliding Rocks', category: 'natural', latitude: -13.8792, longitude: -171.8022, matchRadiusM: 500 }, // unverified: not found on Wikidata
+  { countryCode: 'SM', name: 'Guaita Tower', category: 'building', latitude: 43.9354, longitude: 12.4496, matchRadiusM: 300 }, // Wikidata Q2711604
+  { countryCode: 'ST', name: 'Obo National Park', category: 'park', latitude: 0.15, longitude: 6.56667, matchRadiusM: 15000 }, // Wikidata Q2943640
+  { countryCode: 'SA', name: 'Al-Hijr (Madain Salih)', category: 'site', latitude: 26.81417, longitude: 37.9475, matchRadiusM: 6000 }, // Wikidata Q27356
+  { countryCode: 'SN', name: 'Island of Gorée', category: 'old town', latitude: 14.66694, longitude: -17.39833, matchRadiusM: 1000 }, // Wikidata Q244347
+  { countryCode: 'RS', name: 'Studenica Monastery', category: 'building', latitude: 43.48672, longitude: 20.53164, matchRadiusM: 500 }, // Wikidata Q143042
+  { countryCode: 'SC', name: 'Vallée de Mai Nature Reserve', category: 'park', latitude: -4.32917, longitude: 55.7375, matchRadiusM: 1500 }, // Wikidata Q573558
+  { countryCode: 'SL', name: 'Bunce Island', category: 'site', latitude: 8.56987, longitude: -13.04027, matchRadiusM: 600 }, // Wikidata Q1004939
+  { countryCode: 'SG', name: 'Marina Bay Sands', category: 'building', latitude: 1.2825, longitude: 103.86, matchRadiusM: 500 }, // Wikidata Q548679
+  { countryCode: 'SK', name: 'Spiš Castle', category: 'building', latitude: 49.00056, longitude: 20.76833, matchRadiusM: 700 }, // Wikidata Q205558
+  { countryCode: 'SI', name: 'Lake Bled', category: 'natural', latitude: 46.36444, longitude: 14.09472, matchRadiusM: 2000 }, // Wikidata Q648902
+  { countryCode: 'SB', name: 'East Rennell', category: 'island', latitude: -11.68333, longitude: 160.33333, matchRadiusM: 30000 }, // Wikidata Q852433
+  { countryCode: 'SO', name: 'Laas Geel', category: 'site', latitude: 9.78028, longitude: 44.44333, matchRadiusM: 1500 }, // Wikidata Q1799347
+  { countryCode: 'ZA', name: 'Table Mountain', category: 'mountain', latitude: -33.96216, longitude: 18.41352, matchRadiusM: 6000 }, // Wikidata Q213360
+  { countryCode: 'KR', name: 'Gyeongbokgung Palace', category: 'building', latitude: 37.57988, longitude: 126.9768, matchRadiusM: 600 }, // Wikidata Q482485
+  { countryCode: 'SS', name: 'Boma National Park', category: 'park', latitude: 6.489, longitude: 33.914, matchRadiusM: 60000 }, // Wikidata Q891743
+  { countryCode: 'ES', name: 'Alhambra', category: 'building', latitude: 37.1761, longitude: -3.5881, matchRadiusM: 800 }, // unverified: Wikidata matched a different Alhambra
+  { countryCode: 'LK', name: 'Sigiriya', category: 'site', latitude: 7.95694, longitude: 80.75972, matchRadiusM: 1000 }, // Wikidata Q272153
+  { countryCode: 'SD', name: 'Meroë', category: 'site', latitude: 16.93514, longitude: 33.75075, matchRadiusM: 2500 }, // Wikidata Q5780
+  { countryCode: 'SR', name: 'Central Suriname Nature Reserve', category: 'park', latitude: 4, longitude: -56.5, matchRadiusM: 60000 }, // Wikidata Q189934
+  { countryCode: 'SE', name: 'Drottningholm Palace', category: 'building', latitude: 59.32169, longitude: 17.88638, matchRadiusM: 800 }, // Wikidata Q208559
+  { countryCode: 'CH', name: 'Château de Chillon', category: 'building', latitude: 46.41417, longitude: 6.9275, matchRadiusM: 400 }, // Wikidata Q372647
+  { countryCode: 'SY', name: 'Palmyra', category: 'site', latitude: 34.55038, longitude: 38.26979, matchRadiusM: 2500 }, // Wikidata Q5747
+  { countryCode: 'TW', name: 'Taroko Gorge', category: 'park', latitude: 24.177, longitude: 121.5195, matchRadiusM: 15000 }, // Wikidata Q101217786
+  { countryCode: 'TJ', name: 'Pamir Mountains', category: 'range', latitude: 38.5, longitude: 73.0, matchRadiusM: 60000 }, // unverified: a mountain range; one point cannot describe it
+  { countryCode: 'TZ', name: 'Mount Kilimanjaro', category: 'mountain', latitude: -3.06667, longitude: 37.35917, matchRadiusM: 20000 }, // Wikidata Q7296
+  { countryCode: 'TH', name: 'Historic City of Ayutthaya', category: 'old town', latitude: 14.35163, longitude: 100.55751, matchRadiusM: 3000 }, // Wikidata Q1025100
+  { countryCode: 'TG', name: 'Koutammakou', category: 'site', latitude: 10.1, longitude: 1.06667, matchRadiusM: 30000 }, // Wikidata Q508040
+  { countryCode: 'TO', name: "Ha'amonga 'a Maui", category: 'monument', latitude: -21.13667, longitude: -175.04806, matchRadiusM: 400 }, // Wikidata Q1433433
+  { countryCode: 'TT', name: 'Pitch Lake', category: 'natural', latitude: 10.2325, longitude: -61.62806, matchRadiusM: 1000 }, // Wikidata Q717351
+  { countryCode: 'TN', name: 'Amphitheatre of El Jem', category: 'building', latitude: 35.29639, longitude: 10.70694, matchRadiusM: 400 }, // Wikidata Q2914326
+  { countryCode: 'TR', name: 'Hagia Sophia', category: 'building', latitude: 41.00833, longitude: 28.98, matchRadiusM: 400 }, // Wikidata Q12506
+  { countryCode: 'TM', name: 'Darvaza Gas Crater', category: 'natural', latitude: 40.25263, longitude: 58.43939, matchRadiusM: 1500 }, // Wikidata Q70458
+  { countryCode: 'TV', name: 'Funafuti Conservation Area', category: 'park', latitude: -8.51667, longitude: 179.05, matchRadiusM: 10000 }, // Wikidata Q5508708
+  { countryCode: 'UG', name: 'Bwindi Impenetrable National Park', category: 'park', latitude: -1.05, longitude: 29.71667, matchRadiusM: 15000 }, // Wikidata Q500397
+  { countryCode: 'UA', name: 'Saint Sophia Cathedral', category: 'building', latitude: 50.45278, longitude: 30.51444, matchRadiusM: 300 }, // Wikidata Q830054
+  { countryCode: 'AE', name: 'Burj Khalifa', category: 'building', latitude: 25.19722, longitude: 55.27417, matchRadiusM: 500 }, // Wikidata Q12495
+  { countryCode: 'GB', name: 'Stonehenge', category: 'monument', latitude: 51.17889, longitude: -1.82611, matchRadiusM: 800 }, // Wikidata Q39671
+  { countryCode: 'US', name: 'Statue of Liberty', category: 'monument', latitude: 40.68921, longitude: -74.04443, matchRadiusM: 500 }, // Wikidata Q9202
+  { countryCode: 'UY', name: 'Historic Quarter of Colonia del Sacramento', category: 'old town', latitude: -34.46989, longitude: -57.84337, matchRadiusM: 1200 }, // Wikidata Q56064
+  { countryCode: 'UZ', name: 'Samarkand – Crossroad of Cultures', category: 'old town', latitude: 39.66861, longitude: 67, matchRadiusM: 4000 }, // Wikidata Q17255582
+  { countryCode: 'VU', name: "Chief Roi Mata's Domain", category: 'site', latitude: -17.69364, longitude: 168.23399, matchRadiusM: 15000 }, // Wikidata Q1072369
+  { countryCode: 'VA', name: "St. Peter's Basilica", category: 'building', latitude: 41.90222, longitude: 12.45342, matchRadiusM: 400 }, // Wikidata Q12512
+  { countryCode: 'VE', name: 'Angel Falls', category: 'natural', latitude: 5.97006, longitude: -62.53622, matchRadiusM: 5000 }, // Wikidata Q80299
+  { countryCode: 'VN', name: 'Ha Long Bay', category: 'natural', latitude: 20.9, longitude: 107.2, matchRadiusM: 25000 }, // Wikidata Q190128
+  { countryCode: 'YE', name: 'Old City of Sanaa', category: 'old town', latitude: 15.355, longitude: 44.215, matchRadiusM: 1500 }, // unverified: not found on Wikidata
+  { countryCode: 'ZM', name: 'Victoria Falls', category: 'natural', latitude: -17.92478, longitude: 25.85806, matchRadiusM: 4000 }, // Wikidata Q43278
+  { countryCode: 'ZW', name: 'Great Zimbabwe National Monument', category: 'site', latitude: -20.27, longitude: 30.933, matchRadiusM: 1500 }, // Wikidata Q209217
+];

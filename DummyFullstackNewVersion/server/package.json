@@ -1,0 +1,47 @@
+{
+  "name": "byte-toast-studio",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "postinstall": "prisma generate",
+    "start": "node src/server.js",
+    "dev": "nodemon --watch src --ext js,handlebars src/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.js",
+    "env:check": "node scripts/check-env.mjs",
+    "env:check:strict": "node scripts/check-env.mjs --strict",
+    "media:cleanup": "node scripts/cleanup-orphan-uploads.mjs",
+    "db:reference": "node scripts/load-reference-data.mjs"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1079.0",
+    "@aws-sdk/s3-request-presigner": "^3.1079.0",
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.4.2",
+    "@vercel/functions": "^3.9.9",
+    "better-auth": "1.4.13",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1",
+    "nodemailer": "^7.0.12",
+    "nodemailer-express-handlebars": "^7.0.0",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@better-auth/cli": "1.4.13",
+    "nodemon": "^3.1.11",
+    "prisma": "^7.4.2",
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.9"
+  }
+}

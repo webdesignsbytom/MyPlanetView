@@ -1,0 +1,20 @@
+# Pre-rendering needs Chromium at build time (kept in node_modules so Netlify caches it)
+[build]
+  command = "npx playwright install chromium && npm run build"
+  publish = "dist"
+
+[build.environment]
+  PLAYWRIGHT_BROWSERS_PATH = "0"
+
+# Redirects: dist/_redirects is written at build (browser-only pages -> app shell, the rest 404.html)
+# Retired URLs: add a 301 per old path, e.g.
+# [[redirects]]
+#   from = "/old-path"
+#   to = "/new-path"
+#   status = 301
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
