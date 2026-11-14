@@ -1,3 +1,11 @@
-# https://www.robotstxt.org/robotstxt.html
+# Dev fallback only; the build writes dist/robots.txt (scripts/generate-robots.mjs)
 User-agent: *
-Disallow:
+Allow: /
+
+Disallow: /admin
+Disallow: /account
+Disallow: /blog/admin
+Disallow: /blog/create-new-post
+Disallow: /blog/edit
+
+Sitemap: https://bytetoast-studio.com/sitemap.xml

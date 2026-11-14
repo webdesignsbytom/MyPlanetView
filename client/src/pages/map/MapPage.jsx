@@ -1,138 +1,104 @@
-import React, { useContext, useState } from 'react';
-// Data
-import { CountriesDataArray } from '../../utils/data/CountriesData';
-// Functions
-import { createLongAndLatLines } from '../../utils/map/MapFunctions';
-// Context
-import { MapContext } from '../../context/MapContext';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+// Api
+import { getMyMaps } from '@/api/travelApi';
+// Constants
+import { MAP_PAGE_URL, WELCOME_PAGE_URL } from '@/utils/constants/routes';
+// Auth
+import { useAuth } from '@/auth/AuthContext';
+// Hooks
+import useTravelMap from '@/hooks/useTravelMap';
+import useMapSettings from '@/hooks/useMapSettings';
 // Components
-import CountryObject from '../../components/countries/CountryObject';
-import SettingsMainContainer from '../../components/settings/SettingsMainContainer';
-import RightSideQatToolbar from '../../components/settings/RightSideQatToolbar';
-import StatisticsContainer from '../../components/overlays/StatisticsContainer';
-import UploadImagesContainer from '../../components/settings/UploadImagesContainer';
-import WelcomeBackContainer from '../../components/overlays/WelcomeBackContainer';
-import CountryInformationContainer from '../../components/overlays/CountryInformationContainer';
-import CountriesListContainer from '../../components/overlays/CountriesListContainer';
-import CountrySlideshowContainer from '../../components/overlays/CountrySlideshowContainer';
+import AppPageHead from '@/components/utils/AppPageHead';
+import MapExperience from '@/components/map/MapExperience';
+import MapStatusScreen from '@/components/map/MapStatusScreen';
 
+// Your default map (/map), or any map you can open (/maps/:mapId).
 function MapPage() {
-  const { mapPageSettings, toggleCountryInfoContainer } = useContext(MapContext);
+  const { mapId: routeMapId } = useParams();
+  const { user } = useAuth();
+  const [defaultMapId, setDefaultMapId] = useState(null);
+  const [lookupError, setLookupError] = useState(null);
+  const [noMap, setNoMap] = useState(false);
 
-  // Mouse position data
-  const [activeCountry, setActiveCountry] = useState(null);
-  const [hoveredCountry, setHoveredCountry] = useState(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-
-  // Mouse position
-  const handleMouseOver = (countryId) => {
-    setHoveredCountry(countryId);
-    setActiveCountry(countryId);
-
-    window.onmousemove = (e) => {
-      setTooltipPosition({ x: e.clientX, y: e.clientY });
+  // /map: find your default map (else the first you own, else the first you can open)
+  useEffect(() => {
+    if (routeMapId) return undefined;
+    let cancelled = false;
+    getMyMaps()
+      .then(({ maps }) => {
+        if (cancelled) return;
+        const list = maps || [];
+        const pick =
+          list.find((m) => m.isDefault && m.role === 'OWNER') || list.find((m) => m.role === 'OWNER') || list[0];
+        if (pick) setDefaultMapId(pick.id);
+        else setNoMap(true);
+      })
+      .catch((err) => {
+        if (!cancelled) setLookupError(err.friendlyMessage || 'Your maps could not be loaded.');
+      });
+    return () => {
+      cancelled = true;
     };
-  };
+  }, [routeMapId]);
 
-  const handleMouseLeave = () => {
-    setHoveredCountry(null);
-    setActiveCountry(null);
+  const mapId = routeMapId || defaultMapId;
+  const travelMap = useTravelMap(mapId);
+  const { settings, updateSetting } = useMapSettings({ remote: true });
 
-    window.onmousemove = null;
-  };
+  if (noMap) {
+    return (
+      <>
+        <AppPageHead route={MAP_PAGE_URL} />
+        <MapStatusScreen title='No map yet' message='Set one up and start colouring in the world.'>
+          <Link to={WELCOME_PAGE_URL} className='btn-poster'>
+            Set up my map
+          </Link>
+        </MapStatusScreen>
+      </>
+    );
+  }
+
+  const error = lookupError || travelMap.error;
+  if (error) {
+    return (
+      <>
+        <AppPageHead route={MAP_PAGE_URL} />
+        <MapStatusScreen title='This map can’t be opened' message={error}>
+          {routeMapId ? (
+            <Link to={MAP_PAGE_URL} className='btn-poster'>
+              Go to your own map
+            </Link>
+          ) : null}
+        </MapStatusScreen>
+      </>
+    );
+  }
+
+  if (!travelMap.map) {
+    return (
+      <>
+        <AppPageHead route={MAP_PAGE_URL} />
+        <MapStatusScreen loading />
+      </>
+    );
+  }
 
   return (
-    <div className='grid relative overflow-hidden h-full w-full'>
-      {/* Rotate device notice */}
-      <div className='landscape-warning text-center'>
-        <span className='px-4'>
-          Please rotate your device to landscape mode.
-        </span>
-      </div>
-
-      {/* Map container */}
-      <div
-        className={`grid h-screen w-full overflow-hidden md:p-1 ${
-          mapPageSettings.animatedSea && 'animate-ocean-animation'
-        }`}
-        style={{
-          backgroundImage: `url(${mapPageSettings.selectedStyle.backgroundImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        <div className='grid h-full w-full overflow-hidden'>
-          {/* Map */}
-          <svg
-            id='allSvg'
-            baseProfile='tiny'
-            fill='transparent'
-            stroke='red'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            version='1.2'
-            viewBox='0 0 2000 1000'
-            xmlns='http://www.w3.org/2000/svg'
-            className='h-full w-full cursor-pointer no__highlights'
-          >
-            {/* Long and lat lines */}
-            {mapPageSettings.displayLongitudeAndLatitude &&
-              createLongAndLatLines(
-                mapPageSettings.includeLongitudeAndLatitudeText
-              )}
-
-            {/* Countries Array */}
-            {CountriesDataArray.map((country) =>
-              country.countryBorderPaths.map((territory, territoryIndex) => (
-                <CountryObject
-                  country={country}
-                  territoryIndex={territoryIndex}
-                  territory={territory}
-                  hoveredCountry={hoveredCountry}
-                  activeCountry={activeCountry}
-                  handleMouseOver={handleMouseOver}
-                  handleMouseLeave={handleMouseLeave}
-                  visited={country.visited}
-                  exploreCountry={toggleCountryInfoContainer}
-                />
-              ))
-            )}
-          </svg>
-        </div>
-      </div>
-
-      {/* Settings container */}
-      {mapPageSettings.settingsMenuIsOpen && <SettingsMainContainer />}
-
-      {/* Right hand settings and other menu */}
-      {mapPageSettings.rightQatMenu && <RightSideQatToolbar />}
-
-      {/* Stats container */}
-      {mapPageSettings.statisticsContainer && <StatisticsContainer />}
-
-      {/* Upload images container */}
-      {mapPageSettings.imagesContainer && <UploadImagesContainer />}
-
-      {/* Welcome back message container */}
-      {mapPageSettings.welcomeContainer && <WelcomeBackContainer />}
-
-      {/* Country list container */}
-      {mapPageSettings.countryListContainer && <CountriesListContainer />}
-
-      {/* Country information container */}
-      {mapPageSettings.countryInfoDisplayIsOpen && (
-        <CountryInformationContainer />
-      )}
-
-      {/* Display Box - images and songs */}
-      {hoveredCountry && (
-        <CountrySlideshowContainer
-          tooltipPosition={tooltipPosition}
-          hoveredCountry={hoveredCountry}
-        />
-      )}
-    </div>
+    <>
+      <AppPageHead route={MAP_PAGE_URL} title={travelMap.map.name} />
+      <MapExperience
+        key={travelMap.map.id}
+        map={travelMap.map}
+        trips={travelMap.trips}
+        role={travelMap.map.role}
+        actions={travelMap}
+        currentUser={user}
+        settings={settings}
+        onChangeSetting={updateSetting}
+      />
+    </>
   );
 }
 

@@ -1,8 +1,10 @@
 # My Planet View: site design
 
-How the site is built and why. Update this file whenever a decision changes. The database is [`server/prisma/schema.prisma`](../DummyFullstackNewVersion/server/prisma/schema.prisma) (in `DummyFullstackNewVersion/` until the port finishes and it moves to the project root).
+How the site is built and why. Update this file whenever a decision changes. The database is [`server/prisma/schema.prisma`](../server/prisma/schema.prisma).
 
 Last updated: 14 November 2026.
+
+Planned features, and the decisions below they will change, are in [FEATURE-PLAN.md](FEATURE-PLAN.md).
 
 ## What the site does
 
@@ -12,7 +14,7 @@ People keep a travel map of the world: the countries they've been to, photos fro
 
 | Part | What | Where |
 | --- | --- | --- |
-| Client | React 19 + Vite, from the DummyFullstack template (in `DummyFullstackNewVersion/`). Public pages are pre-rendered at build time. | InMotion Hosting (cPanel). Build locally, upload `dist/` including `.htaccess`. |
+| Client | React 19 + Vite, from the DummyFullstack template. Public pages are pre-rendered at build time. | InMotion Hosting (cPanel). Build locally, upload `dist/` including `.htaccess`. |
 | API | Express 5, Prisma 7 (Postgres), better-auth | Vercel, on `api.<domain>` so the login cookie is same-site |
 | Files | Cloudflare R2: one private bucket (photos), one public bucket (site images) | Public bucket on a custom domain; `r2.dev` addresses are rate-limited and meant for development |
 
@@ -24,13 +26,15 @@ People keep a travel map of the world: the countries they've been to, photos fro
 | --- | --- |
 | Home, About, FAQ, Contact, Privacy, Terms | Login, sign-up, password reset, email verification, the maps, trips, shared views, account, admin |
 
-The SEO playbook (`DummyFullstackNewVersion/documents/SEO-PLAYBOOK.md`) applies to the indexed pages:
+The SEO playbook (`documents/SEO-PLAYBOOK.md`) applies to the indexed pages:
 - titles of 60 characters or fewer;
 - descriptions of 120–156 characters, in whole sentences;
 - every page's content in the pre-rendered HTML;
 - the sitemap lists only the pages above.
 
 Analytics never runs on a share page, because the share code is in the address.
+
+**Planned:** public country pages (`/countries/<slug>`) and a Pricing page, indexed and in the sitemap. See [FEATURE-PLAN.md](FEATURE-PLAN.md#country-pages-culture-and-seasons).
 
 ## Look
 
@@ -51,7 +55,8 @@ Shared CSS pieces in `client/src/styles/index.css`:
 - `ticket-edge`: a 2px brown border, a dashed "printed" line just inside it, and a warm shadow;
 - `paper-aged`: parchment with a browned vignette;
 - tokens `paper-cream` (follows light and dark mode) and `shadow-paper`;
-- `btn-poster` (primary: poster red, brown edge, travel font, paper shadow, like the nav buttons) and `btn-paper` (secondary, on parchment), for every form submit and call to action.
+- `btn-poster` (primary: poster red, brown edge, travel font, paper shadow, like the nav buttons) and `btn-paper` (secondary, on parchment), for every form submit and call to action;
+- **square corners everywhere**: Tailwind's `--radius-*` tokens are set to 0 in `@theme`, so every `rounded-*` class, the buttons and the dropdowns are square. Only true circles (`rounded-full`) stay round: stamps, badges, rivets, notches.
 
 The red poster frame's corners are brass corner protectors, like an old steamer trunk's (`components/common/BrassCorner.jsx`, placed by `BrassCorners.jsx`; `--brass-*` tokens). They replaced the flat gold triangles. The navbar sits above them.
 
@@ -180,11 +185,11 @@ It works like Google Docs.
 
 - **Signed URLs:** files are served through short-lived signed URLs, so removing someone's access really cuts it off.
 - **Viewers** get the thumbnail and display sizes only. They never get hidden photos or GPS coordinates.
-- **The original** is always kept. Only the owner and editors can download it, because it still contains its location.
+- **The original** is always kept. Only the owner and editors can download it, because it still contains its location. (Planned: kept only on Business and First Class. Economy keeps a 2,400 px JPEG print copy instead, so it's still three files per photo. See [FEATURE-PLAN.md](FEATURE-PLAN.md#which-copies-each-tier-keeps).)
 
 ## Storage use and future paid tiers
 
-**There are no storage caps for now.** The design keeps tiers easy to add later:
+**There are no storage caps for now.** (Planned for launch: three tiers, Economy (free), Business and First Class, each with a cap per country. See [FEATURE-PLAN.md](FEATURE-PLAN.md#tiers-economy-business-and-first-class).) The design keeps tiers easy to add later:
 
 - **Usage is already measured.** Every file's real size is stored in `MediaItem.bytes` when its upload is confirmed. An account's usage is the sum of `bytes` for files it uploaded, so caps can be added later without backfilling anything.
 - **Usage counts against the uploader**, not the map owner. On a shared map, each person's uploads count against their own account.
@@ -207,11 +212,12 @@ It works like Google Docs.
 - Everything is private by default.
 - GPS coordinates are shown only to the owner and editors. They are never inside a file a viewer can open.
 - Share pages are `noindex`, and analytics doesn't run on them.
+- Planned: Economy maps show travel affiliate cards to everyone viewing them, and Business maps show fewer to non-paying viewers. They're plain links with no ad scripts or tracking. Paying members never see them, and a Travel Desk button opens offers on request. See [FEATURE-PLAN.md](FEATURE-PLAN.md#ads-by-tier).
 - Deleting an account deletes that person's uploads. A map with other editors is handed to one of them first, or the deletion is refused, so nobody loses photos with someone else's account.
 
 ## Database
 
-- **The schema:** see [`schema.prisma`](../DummyFullstackNewVersion/server/prisma/schema.prisma), checked with Prisma 7.4.2, with one fresh `init` migration. The old database only held fake seed data, so the site starts on a fresh database with a new seed. No old data or passwords are carried over.
+- **The schema:** see [`schema.prisma`](../server/prisma/schema.prisma), checked with Prisma 7.4.2, with one fresh `init` migration. The old database only held fake seed data, so the site starts on a fresh database with a new seed. No old data or passwords are carried over.
 - **Kept from the template:** the better-auth tables, `Profile`, `MediaItem`, `AvatarMediaItem`, a trimmed `ContactForm`, `AppEvent`, and `RateLimit` (from NextDummy).
 - **New:**
   - `Country` and `Landmark` (seeded);

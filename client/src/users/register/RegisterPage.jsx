@@ -1,34 +1,49 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
+// Constants
+import { SIGN_UP_PAGE_URL } from '@/utils/constants/routes';
+import { CompanyName } from '@/utils/constants/constants';
+// Data
+import { helmetData } from '@/utils/data/helmetData';
+import {
+  registerPageAdditionalMeta,
+  registerPageStructuredData,
+} from '@/utils/data/metaData';
 // Components
-import RegisterForm from '../../components/forms/RegisterForm';
-import Navbar from '../../components/nav/Navbar';
-// Context
-import { ToggleContext } from '../../context/ToggleContext';
+import { HelmetItem } from '@/components/utils/HelmetItem';
+import AuthPageLayout from '@/components/auth/AuthPageLayout';
+import TravelTicket from '@/components/auth/TravelTicket';
+import RegisterForm from '@/components/forms/RegisterForm';
 
 function RegisterPage() {
-  const { setActiveNav } = useContext(ToggleContext);
-
-  useEffect(() => {
-    setActiveNav('/sign-up');
-  }, []);
+  const pageHelmet = helmetData[SIGN_UP_PAGE_URL];
 
   return (
-    <div className='bg-black main__bg h-screen grid'>
-      <section className='grid h-full overflow-hidden grid-rows-reg'>
-        <Navbar />
-        <main className='grid bg-white h-full items-center justify-center'>
-          <section className='bg-white rounded p-4 shadow my-10 lg:my-0 grid justify-center'>
-            <article className='text-center my-4'>
-              <h1 className='text-2xl font-semibold'>Sign Up Now</h1>
-              <h2 className='text-xl font-semibold'>
-                Start your travel record!
-              </h2>
-            </article>
+    <>
+      <HelmetItem
+        PageName={pageHelmet.pageName}
+        desc={pageHelmet.desc}
+        indexing={pageHelmet.indexing}
+        additionalMeta={registerPageAdditionalMeta}
+        structuredData={registerPageStructuredData}
+        canonicalPath={SIGN_UP_PAGE_URL}
+      />
+
+      <AuthPageLayout mainProps={{ 'aria-labelledby': 'register-page-heading', 'aria-describedby': 'register-page-subtitle' }}>
+        <TravelTicket
+          kicker='New passport'
+          title={`Join ${CompanyName}`}
+          headingId='register-page-heading'
+          subtitle='Make your free account. Your map stays private until you choose to share it.'
+          subtitleId='register-page-subtitle'
+          route={{ from: 'Home', to: 'Everywhere' }}
+          stub={['First flight', 'Class: Explorer', 'Seat: Window']}
+        >
+          <section aria-label='Registration form'>
             <RegisterForm />
           </section>
-        </main>
-      </section>
-    </div>
+        </TravelTicket>
+      </AuthPageLayout>
+    </>
   );
 }
 
