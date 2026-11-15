@@ -6,6 +6,8 @@ export const COUNTRY_SELECT = {
   code: true,
   name: true,
   slug: true,
+  // COUNTRY, or SPECIAL for Antarctica and the poles (utils/specialPlaces.js)
+  kind: true,
   continent: true,
   pinX: true,
   pinY: true,

@@ -2,6 +2,7 @@
 import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb } from '../store';
 import { atLeast, canSeePhoto, countryExists, landmarkById, mapRole, markVisited, photoDetail, photoRole } from '../views';
+import { POSITION_FIELD, firstPosition, movePhotoAfter } from '../photoOrder';
 
 const NOT_FOUND = 'This photo could not be found.';
 
@@ -30,16 +31,42 @@ export function registerPhotoRoutes() {
     if (body.countryCode !== undefined) {
       const code = body.countryCode ? String(body.countryCode).toUpperCase() : null;
       if (code && !countryExists(code)) return fail(400, 'Unknown country.');
-      photo.countryCode = code;
+      // A new gallery (another country, or none): it goes first there, as on the server
+      if (code !== (photo.countryCode || null)) {
+        photo.countryCode = code;
+        photo.countryPosition = firstPosition(db.photos, 'country', photo);
+      }
       markVisited(photo.mapId, code, 'PHOTO');
     }
     if (body.tripId !== undefined) {
       // Moving a photo between trips needs editor on the map, not just the trip
       if (!atLeast(mapRole(db.maps.find((m) => m.id === photo.mapId)), 'EDITOR')) return fail(403, 'Only the map’s editors can move photos between trips.');
       if (body.tripId && !db.trips.some((t) => t.id === body.tripId && t.mapId === photo.mapId)) return fail(400, 'That trip is not on this map.');
+      const moved = (body.tripId || null) !== (photo.tripId || null);
       photo.tripId = body.tripId || null;
+      if (moved && photo.tripId) photo.tripPosition = firstPosition(db.photos, 'trip', photo);
     }
     return ok({ photo: photoDetail(photo, role) });
+  });
+
+  // Rearranging a gallery, as the server: the country's gallery needs editor on the map,
+  // the trip's an editor of the trip (a trip-only editor too)
+  route('POST', '/api/photos/:photoId/move', ({ params, body }) => {
+    const db = getDb();
+    const { photo, role, reply } = loadPhoto(params.photoId, 'VIEWER');
+    if (reply) return reply;
+    const { gallery } = body || {};
+    if (!POSITION_FIELD[gallery] || (gallery === 'trip' && !photo.tripId)) {
+      return fail(400, 'Say which gallery to rearrange: "country", or "trip" for a photo on a trip.');
+    }
+    const galleryRole = gallery === 'trip' ? role : mapRole(db.maps.find((m) => m.id === photo.mapId));
+    if (!atLeast(galleryRole, 'EDITOR')) return fail(403, 'You don’t have permission to do that.');
+    const afterId = body.afterId ?? null;
+    if (afterId !== null && (typeof afterId !== 'string' || afterId === photo.id)) return fail(400, 'Malformed data.');
+    if (!movePhotoAfter(db.photos, gallery, photo, afterId)) {
+      return fail(409, 'The photo it was dropped next to has moved or gone. Reload and try again.');
+    }
+    return ok({ message: 'Photo moved.' });
   });
 
   route('DELETE', '/api/photos/:photoId', ({ params }) => {

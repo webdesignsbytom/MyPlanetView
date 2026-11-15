@@ -5,66 +5,19 @@
 export const THUMB_EDGE = 400;
 export const DISPLAY_EDGE = 1600;
 
-// What the server accepts as an original (server mediaConstants.js PHOTO_CONTENT_TYPES)
-export const ORIGINAL_TYPES = ['image/jpeg', 'image/webp', 'image/png', 'image/heic', 'image/heif'];
+// What the server accepts as an original (server mediaConstants.js PHOTO_CONTENT_TYPES).
+// No HEIC: iPhones turn their HEIC photos into JPEGs when one is picked in a browser, and
+// converting HEIC elsewhere needed a 1.3 MB library whose worker the CSP blocks.
+export const ORIGINAL_TYPES = ['image/jpeg', 'image/webp', 'image/png'];
 
-const isHeic = (file) => /image\/hei[cf]/i.test(file.type) || /\.(heic|heif)$/i.test(file.name);
+/** An iPhone's own format, by type or by name (Windows often gives HEIC files no type). */
+export const isHeic = (file) => /image\/hei[cf]/i.test(file.type) || /\.(heic|heif)$/i.test(file.name);
 
-/** The original's content type (Windows often gives HEIC files no type at all). */
-export function originalContentType(file) {
-  if (file.type) return file.type.toLowerCase();
-  if (/\.heic$/i.test(file.name)) return 'image/heic';
-  if (/\.heif$/i.test(file.name)) return 'image/heif';
-  return '';
-}
-
-// heic2any converts in a worker that can hang for good (under a CSP without
-// 'unsafe-eval' it never answers), so each conversion gets a deadline: half a minute,
-// plus 2 s per MB for big files. Once one has run out, the others in this page view fail
-// at once rather than each waiting, and the rest of the upload batch carries on.
-const HEIC_BASE_MS = 30000;
-const HEIC_MS_PER_MB = 2000;
-const HEIC_STUCK_MESSAGE =
-  'This HEIC photo couldn’t be converted in this browser. Try again in Safari, or save it as a JPEG first.';
-let heicStuck = false;
-
-const heicDeadline = (file) => HEIC_BASE_MS + (file.size / (1024 * 1024)) * HEIC_MS_PER_MB;
-
-async function convertHeic(file) {
-  if (heicStuck) throw new Error(HEIC_STUCK_MESSAGE);
-  let heic2any;
-  try {
-    ({ default: heic2any } = await import('heic2any'));
-  } catch {
-    throw new Error('The HEIC converter couldn’t be downloaded. Check your connection and try again.');
-  }
-  let timer;
-  const deadline = new Promise((_, reject) => {
-    timer = setTimeout(() => {
-      heicStuck = true;
-      reject(new Error(HEIC_STUCK_MESSAGE));
-    }, heicDeadline(file));
-  });
-  try {
-    const converted = await Promise.race([heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 }), deadline]);
-    return Array.isArray(converted) ? converted[0] : converted;
-  } catch (err) {
-    // heic2any rejects with a plain object ({ code, message }) for a file it can't read
-    throw err instanceof Error ? err : new Error('This HEIC file couldn’t be read. It may be damaged.');
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-// Decode to pixels. Only Safari reads HEIC itself; elsewhere heic2any converts it
-// (a large library, so it's fetched only for those files).
 async function decode(file) {
   try {
     return await createImageBitmap(file, { imageOrientation: 'from-image' });
   } catch {
-    if (!isHeic(file)) throw new Error('This browser can’t read that file as a photo.');
-    const blob = await convertHeic(file);
-    return createImageBitmap(blob, { imageOrientation: 'from-image' });
+    throw new Error('This browser can’t read that file as a photo.');
   }
 }
 

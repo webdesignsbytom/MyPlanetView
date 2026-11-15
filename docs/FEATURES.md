@@ -65,7 +65,7 @@ What each My Planet View feature is made of: the client files, the server files,
   - `components/photos/` (uploader, grid, viewer, edit form, landmark list);
   - `utils/photos/`: EXIF, copies made in the browser, upload;
   - `hooks/usePhotoPage.js`, `useLandmarks.js`;
-  - dependencies `exifr` and `heic2any`, both lazy-loaded.
+  - dependency `exifr` (its lite build), lazy-loaded.
 - **Server:**
   - `src/routes/photos.js` plus the photo routes in `src/routes/maps.js`;
   - `src/controllers|domain/photos.js`;

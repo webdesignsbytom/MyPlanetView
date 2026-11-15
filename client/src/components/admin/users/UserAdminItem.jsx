@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { IoIosCloseCircleOutline } from 'react-icons/io';
 // Components
+import CloseStamp from '@/components/common/CloseStamp';
 import FormField from '@/components/ui/FormField';
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
+
+// The site's buttons at components/common/Button's `small` size
+const SMALL = '[--btn-leading:1.25rem] [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:1rem] pointer-coarse:[--btn-pad-y:0.5rem]';
 
 const badgeClass = (tone) =>
   ({
@@ -26,7 +29,8 @@ function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDe
 
   return (
     <article
-      className='grid grid-cols-rev bg-colour1 text-colour4 border-2 border-colour6 px-4 py-4 h-fit rounded-md shadow gap-x-2'
+      // A slip of paper in the card (dashed brown edge, like a trip's traveller fieldset)
+      className='grid grid-cols-[minmax(0,1fr)_auto] content-start gap-x-2 border-2 border-dashed border-poster-brown/60 bg-paper-cream px-4 py-4'
       aria-labelledby={`user-heading-${user.id}`}
       aria-busy={busy ? 'true' : 'false'}
     >
@@ -35,13 +39,13 @@ function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDe
           {user.name || '—'}
         </h3>
         <p className='break-all'>
-          <strong className='text-colour6'>Email:</strong> {user.email}
+          <strong className='text-colour9'>Email:</strong> {user.email}
         </p>
         <p>
-          <strong className='text-colour6'>Joined:</strong> {joined}
+          <strong className='text-colour9'>Joined:</strong> {joined}
         </p>
 
-        <div className='mt-1 flex flex-wrap gap-2 text-xs'>
+        <div className='grid grid-row-wrap gap-2 pt-1 text-xs'>
           <span className={`px-2 py-0.5 rounded ${badgeClass('info')}`}>{currentRole}</span>
           <span className={`px-2 py-0.5 rounded ${badgeClass(isActive ? 'good' : 'bad')}`}>
             {isActive ? 'Active' : 'Deactivated'}
@@ -52,7 +56,7 @@ function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDe
         </div>
 
         {/* Role + status actions */}
-        <div className='mt-3 grid gap-3 sm:grid-cols-reg items-end'>
+        <div className='grid items-end gap-3 pt-3 sm:grid-cols-reg'>
           <FormField id={`user-role-${user.id}`} label='Role' className='grid gap-y-1'>
             <PlainOptionSelect
               name='role'
@@ -64,12 +68,12 @@ function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDe
             />
           </FormField>
 
-          <div className='flex flex-wrap gap-2'>
+          <div className='grid grid-row-wrap gap-2'>
             <button
               type='button'
               onClick={() => onSaveRole(user, draftRole)}
               disabled={isLocked || busy || !roleChanged}
-              className='bg-colour6 text-colour1 font-bold py-1.5 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed'
+              className={`btn-poster ${SMALL}`}
               aria-label={`Save role for ${name}`}
             >
               Save role
@@ -80,7 +84,7 @@ function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDe
                 type='button'
                 onClick={() => onDeactivate(user)}
                 disabled={isLocked || busy}
-                className='solid-warn font-semibold py-1.5 px-4 rounded hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed'
+                className={`btn-paper [--btn-ink:var(--poster-red-deep)] ${SMALL}`}
                 aria-label={`Deactivate ${name}`}
               >
                 Deactivate
@@ -90,7 +94,7 @@ function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDe
                 type='button'
                 onClick={() => onReactivate(user)}
                 disabled={isLocked || busy}
-                className='bg-status-good text-colour1 font-semibold py-1.5 px-4 rounded hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed'
+                className={`btn-paper ${SMALL}`}
                 aria-label={`Reactivate ${name}`}
               >
                 Reactivate
@@ -100,24 +104,15 @@ function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDe
         </div>
 
         {isLocked && (
-          <p id={noteId} className='text-xs text-colour5 mt-1'>
+          <p id={noteId} className='pt-1 text-xs text-colour5'>
             {lockedReason}
           </p>
         )}
       </section>
 
       {/* Delete */}
-      <section className='flex justify-end items-start'>
-        <button
-          type='button'
-          onClick={() => onDelete(user)}
-          disabled={isLocked || busy}
-          className='text-status-critical hover:opacity-75 disabled:opacity-40 disabled:cursor-not-allowed'
-          title={`Delete ${name}`}
-          aria-label={`Delete user ${name}`}
-        >
-          <IoIosCloseCircleOutline size={32} />
-        </button>
+      <section className='grid content-start'>
+        <CloseStamp onClick={() => onDelete(user)} disabled={isLocked || busy} hint={`Delete ${name}`} label={`Delete user ${name}`} />
       </section>
     </article>
   );

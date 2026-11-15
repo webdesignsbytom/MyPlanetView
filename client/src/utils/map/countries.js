@@ -1,6 +1,10 @@
 // The countries on the world map: ISO code, name, continent and pin position.
 // A copy of server/prisma/seed/data/countries.js (the Country table); keep the two in step.
-// Pins are in the map's own coordinates (viewBox 0 0 2000 857).
+// Pins are in the map's own coordinates (Robinson; the countries span y 0 to 857, the
+// pole lines are at -16.6 and 1020.6). Countries have no `kind`; special places are
+// 'SPECIAL' (utils/map/specialPlaces.js).
+import { isPole } from './specialPlaces.js';
+
 export const COUNTRIES = [
   { code: 'AF', name: "Afghanistan", slug: 'afghanistan', continent: 'ASIA', pinX: 1340.9, pinY: 284.6 },
   { code: 'AL', name: "Albania", slug: 'albania', continent: 'EUROPE', pinX: 1090.4, pinY: 237.9 },
@@ -226,6 +230,16 @@ export const COUNTRIES = [
   { code: 'YE', name: "Yemen", slug: 'yemen', continent: 'ASIA', pinX: 1252.8, pinY: 399.7 },
   { code: 'ZM', name: "Zambia", slug: 'zambia', continent: 'AFRICA', pinX: 1142.3, pinY: 587.9 },
   { code: 'ZW', name: "Zimbabwe", slug: 'zimbabwe', continent: 'AFRICA', pinX: 1152.5, pinY: 623.2 },
+  // Special places (15 Nov 2026): not countries, so they're left out of the country count.
+  // Antarctica (its real ISO code) is a drawn shape and counts as a continent; the poles are
+  // points, with codes from ISO 3166's user-assigned range (X = geographic, Q = magnetic).
+  // The magnetic poles drift: their pins are NOAA's World Magnetic Model positions for 2025
+  // (WMM2025: 85.762°N 139.298°E and 63.851°S 135.078°E); move them once a year.
+  { code: 'AQ', name: "Antarctica", slug: 'antarctica', continent: 'ANTARCTICA', kind: 'SPECIAL', pinX: 987.1, pinY: 960.2 },
+  { code: 'XN', name: "North Pole", slug: 'north-pole', continent: null, kind: 'SPECIAL', pinX: 987.1, pinY: -16.6 },
+  { code: 'QN', name: "Magnetic North Pole", slug: 'magnetic-north-pole', continent: null, kind: 'SPECIAL', pinX: 1435.1, pinY: -6.1 },
+  { code: 'XS', name: "South Pole", slug: 'south-pole', continent: 'ANTARCTICA', kind: 'SPECIAL', pinX: 987.1, pinY: 1020.6 },
+  { code: 'QS', name: "Magnetic South Pole", slug: 'magnetic-south-pole', continent: null, kind: 'SPECIAL', pinX: 1576.9, pinY: 905.2 },
 ];
 
 export const COUNTRY_BY_CODE = Object.fromEntries(COUNTRIES.map((country) => [country.code, country]));
@@ -240,7 +254,25 @@ export const CONTINENT_LABELS = {
   SOUTH_AMERICA: 'South America',
 };
 
-// For selects: { value: code, label: name }, alphabetical
-export const COUNTRY_OPTIONS = COUNTRIES.map((country) => ({ value: country.code, label: country.name }));
+// The 224 countries, and the five special places (Antarctica and the poles), each in
+// the list's order
+export const PLAIN_COUNTRIES = COUNTRIES.filter((country) => country.kind !== 'SPECIAL');
+export const SPECIAL_PLACES = COUNTRIES.filter((country) => country.kind === 'SPECIAL');
+// The four poles: points with a marker, not shapes
+export const POLE_PLACES = SPECIAL_PLACES.filter((place) => isPole(place.code));
+
+const toOption = (country) => ({ value: country.code, label: country.name });
+
+// For selects: { value: code, label: name }. Where you can go (trip stops, a photo's
+// place): the countries alphabetically, then the special places.
+export const COUNTRY_OPTIONS = COUNTRIES.map(toOption);
+// The same, under two headings (GroupedOptionSelect)
+export const COUNTRY_OPTION_GROUPS = [
+  { label: 'Countries', options: PLAIN_COUNTRIES.map(toOption) },
+  { label: 'Special places', options: SPECIAL_PLACES.map(toOption) },
+];
+// Where someone was born or likes best: the countries and Antarctica, never a pole (the
+// server refuses one there)
+export const HOME_COUNTRY_OPTIONS = COUNTRIES.filter((country) => !isPole(country.code)).map(toOption);
 
 export const countryName = (code) => COUNTRY_BY_CODE[code]?.name ?? code;

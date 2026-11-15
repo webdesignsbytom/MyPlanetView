@@ -6,7 +6,7 @@ import { MAP_TYPES } from '@/utils/map/mapTypes';
 
 const previewUrl = (name) => {
   const sets = getImageSets(name, { dir: '/src/assets/images/map-styles' });
-  return sets.pick('avif', 949) || sets.pick('webp', 949);
+  return sets.pick('avif', 949) || sets.pick('webp', 949) || sets.pick('jpg', 949);
 };
 
 const DESCRIPTIONS = {
@@ -35,13 +35,8 @@ function MapTypePicker({ value, onChange }) {
               onChange={() => onChange(type.id)}
               className='sr-only'
             />
-            {type.preview ? (
-              <img src={previewUrl(type.preview)} alt='' className='h-16 w-full object-cover' loading='lazy' />
-            ) : (
-              <span aria-hidden='true' className='grid h-16 w-full place-items-center bg-map-sea'>
-                <span className='h-8 w-14 rounded-sm bg-map-land' />
-              </span>
-            )}
+            <img src={previewUrl(type.preview)} alt='' className='h-16 w-full object-cover' loading='lazy' />
+
             <span className='grid gap-0.5 px-2 pb-1.5'>
               <span className='font-travel text-base uppercase tracking-wide'>{type.label}</span>
               <span className='text-2xs opacity-80'>{DESCRIPTIONS[type.id]}</span>

@@ -36,7 +36,7 @@ const MAP_SETTING_KEYS = {
   style: ['animated', 'old-map', 'jupiter', 'galaxy'],
   mapType: ['regular', 'detailed'],
 };
-const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner'];
+const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica'];
 
 // The test user's password: the seeded one until changed or reset here. Sign-in isn't
 // held to the rules below (the seeded one doesn't meet them, as on the server).
@@ -229,7 +229,21 @@ export function registerAccountRoutes() {
   route('DELETE', '/api/media-services/delete-object', () => raw({ ok: true }));
 
   // Reference data
-  route('GET', '/api/countries', () => ok({ countries: COUNTRIES }));
+  // As the server: every row has its kind (COUNTRY, or SPECIAL for Antarctica and the
+  // poles); the North Pole and the magnetic poles have no continent
+  route('GET', '/api/countries', () =>
+    ok({
+      countries: COUNTRIES.map(({ code, name, slug, kind, continent, pinX, pinY }) => ({
+        code,
+        name,
+        slug,
+        kind: kind || 'COUNTRY',
+        continent,
+        pinX,
+        pinY,
+      })),
+    }),
+  );
   route('GET', '/api/landmarks', ({ query }) =>
     ok({ landmarks: query.country ? LANDMARK_ROWS.filter((l) => l.countryCode === query.country) : LANDMARK_ROWS }),
   );

@@ -8,7 +8,7 @@ import VisitStatusSelect from './VisitStatusSelect';
 import FirstVisitDateField from './FirstVisitDateField';
 import CountryPoster from './CountryPoster';
 import CountryLandmarks from './CountryLandmarks';
-import { StarBadgeIcon } from './StarBadge';
+import { ExpeditionStampIcon, PlaceBadgeIcon } from './StarBadge';
 import VerifyFirstNote from './VerifyFirstNote';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import FormField from '@/components/ui/FormField';
@@ -16,9 +16,11 @@ import FormField from '@/components/ui/FormField';
 import { CONTINENT_LABELS, COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { VISIT_STATUS_LABELS, countsAsVisited } from '@/utils/map/visitStatus';
 import { formatDay } from '@/utils/functions/dates';
+import { isMagneticPole, isSpecialPlace } from '@/utils/map/specialPlaces';
 
 // One country on this map: its status, when you first went, your photos from there,
-// its landmarks, and a poster if you haven't been yet.
+// its landmarks, and a poster if you haven't been yet. A special place (Antarctica or a
+// pole) says so with a stamp, and a magnetic pole that it moves.
 function CountryPanel({ code, visit, canEdit, locked = false, onSetVisit, photoSource, photosVersion, onOpenPhoto, onAddPhotos, onClose }) {
   const country = COUNTRY_BY_CODE[code];
   const [error, setError] = useState(null);
@@ -36,6 +38,8 @@ function CountryPanel({ code, visit, canEdit, locked = false, onSetVisit, photoS
 
   if (!country) return null;
   const status = visit?.status || null;
+  const special = isSpecialPlace(code);
+  const continent = CONTINENT_LABELS[country.continent];
 
   const save = async (nextStatus, extra) => {
     setSaving(true);
@@ -53,10 +57,25 @@ function CountryPanel({ code, visit, canEdit, locked = false, onSetVisit, photoS
     <MapPanel title={country.name} onClose={onClose}>
       <div className='grid grid-cols-reg items-center gap-2'>
         {countsAsVisited(status) ? (
-          <StarBadgeIcon lived={status === 'LIVED'} className='h-9 w-9 -rotate-6 drop-shadow-md' />
+          <PlaceBadgeIcon code={code} lived={status === 'LIVED'} className='h-9 w-9 -rotate-6 drop-shadow-md' />
         ) : null}
-        <p className='text-sm opacity-80'>{CONTINENT_LABELS[country.continent]}</p>
+        {special ? (
+          <p className='grid grid-row items-center justify-start gap-2 text-sm'>
+            <span className='grid -rotate-2 grid-cols-reg items-center gap-1.5 border-2 border-double border-colour9 px-2 py-0.5 font-travel text-xs uppercase tracking-wide text-colour9'>
+              <ExpeditionStampIcon className='h-4 w-4' />
+              Special place
+            </span>
+            {continent ? <span className='opacity-80'>{continent}</span> : null}
+          </p>
+        ) : (
+          <p className='text-sm opacity-80'>{continent}</p>
+        )}
       </div>
+      {isMagneticPole(code) ? (
+        <p className='text-sm'>
+          The magnetic poles wander, tens of kilometres a year. This is where NOAA’s World Magnetic Model puts it for 2025.
+        </p>
+      ) : null}
 
       {canEdit ? (
         // Never disabled while saving (that drops focus); the saves are optimistic
@@ -101,6 +120,7 @@ function CountryPanel({ code, visit, canEdit, locked = false, onSetVisit, photoS
           hasMore={Boolean(photos.nextCursor)}
           onLoadMore={photos.loadMore}
           onOpen={onOpenPhoto}
+          onMove={canEdit ? (photoId, afterId) => photos.movePhoto(photoId, afterId, 'country') : undefined}
           emptyText={`No photos from ${country.name} yet.`}
         />
         {canEdit && onAddPhotos ? (

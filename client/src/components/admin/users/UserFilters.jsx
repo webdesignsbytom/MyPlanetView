@@ -9,7 +9,7 @@ function UserFilters({ search, role, status, roleOptions, statusOptions, onSearc
     <form
       role='search'
       aria-label='Filter users'
-      className='grid gap-4 md:grid-cols-3 bg-colour1 text-colour4 border-2 border-colour6 rounded-md shadow px-4 py-4'
+      className='grid gap-4 border-2 border-dashed border-poster-brown/60 px-4 py-4 md:grid-cols-3'
       onSubmit={(e) => e.preventDefault()}
     >
       <FormField id='user-search' label='Search name or email'>

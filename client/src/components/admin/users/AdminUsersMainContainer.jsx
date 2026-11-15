@@ -14,6 +14,7 @@ import {
 } from '@/utils/constants/apiRoutes';
 // Components
 import ConfirmModal from '@/components/modals/ConfirmModal';
+import PaperCard from '@/components/common/PaperCard';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import AdminPagination from './AdminPagination';
 import UserAdminItem from './UserAdminItem';
@@ -211,25 +212,11 @@ function AdminUsersMainContainer() {
     setPage(1);
   };
 
+  // A paper card (inside AppPageShell's <main>, under the page's title), its inputs and
+  // dropdowns on the paper (paper-fields)
   return (
-    <main
-      id='main-content'
-      tabIndex={-1}
-      role='main'
-      className='grid w-full h-full gap-y-6 bg-colour3 pb-12 text-colour4'
-      aria-label='User admin'
-    >
-      {/* Header */}
-      <section
-        className='grid w-full bg-colour6 px-4 lg:px-6 py-3 h-fit border-b-4 border-solid border-colour6'
-        aria-label='User admin header'
-      >
-        <h2 className='sm:text-lg md:text-xl lg:text-2xl font-semibold text-colour1'>
-          Users
-        </h2>
-      </section>
-
-      <div className='grid w-full mx-auto max-w-6xl px-4 gap-y-4 h-fit'>
+    <PaperCard title='Users' titleId='admin-users-list-heading' className='paper-fields'>
+      <div className='grid w-full gap-y-4'>
         <UserFilters
           search={searchInput}
           role={roleFilter}
@@ -264,9 +251,9 @@ function AdminUsersMainContainer() {
               <p>No users match these filters.</p>
             </div>
           ) : (
-            <ul className='grid gap-y-2 lg:grid-cols-2 gap-x-2'>
+            <ul className='grid gap-3 lg:grid-cols-2'>
               {users.map((u) => (
-                <li key={`${u.id}-${u.role}`}>
+                <li key={`${u.id}-${u.role}`} className='grid'>
                   <UserAdminItem
                     user={u}
                     roleOptions={roleOptionsFor(u)}
@@ -302,7 +289,7 @@ function AdminUsersMainContainer() {
           message={modalContent.message}
         />
       )}
-    </main>
+    </PaperCard>
   );
 }
 

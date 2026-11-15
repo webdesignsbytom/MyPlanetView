@@ -57,6 +57,16 @@ describe('photo upload', () => {
         ],
       })).status
     ).toBe(400);
+    // No HEIC, not even as the original (the client refuses it; docs/SITE-DESIGN.md)
+    expect(
+      (await owner.agent.post(url).send({
+        files: [
+          { size: 'THUMB', contentType: 'image/jpeg', bytes: 10 },
+          { size: 'DISPLAY', contentType: 'image/jpeg', bytes: 10 },
+          { size: 'ORIGINAL', contentType: 'image/heic', bytes: 10 },
+        ],
+      })).status
+    ).toBe(400);
     expect(
       (await owner.agent.post(url).send({
         files: [
@@ -310,5 +320,26 @@ describe('a trip-only member', () => {
     expect((await guest.agent.get(`/api/photos/${loose.id}`)).status).toBe(404);
     // Filtering the trip's list by another trip doesn't escape it
     expect(data(await guest.agent.get(`/api/trips/${tripA.id}/photos?tripId=${tripB.id}`)).photos.map((p) => p.id)).not.toContain(inB.id);
+  });
+});
+
+describe('a trip cover', () => {
+  it('is cleared when its photo moves to another trip, and kept when another photo moves', async () => {
+    const { agent } = await signUp('Cover');
+    const map = await defaultMapOf(agent);
+    const newTrip = async (title) => data(await agent.post(`/api/maps/${map.id}/trips`).send({ title })).trip;
+    const [rome, lisbon] = [await newTrip('Rome'), await newTrip('Lisbon')];
+    const cover = data(await uploadPhoto(agent, map.id, { tripId: rome.id, countryCode: 'IT' })).photo;
+    const other = data(await uploadPhoto(agent, map.id, { tripId: rome.id, countryCode: 'IT' })).photo;
+    expect((await agent.patch(`/api/trips/${rome.id}`).send({ coverPhotoId: cover.id })).status).toBe(200);
+
+    // Another photo leaving the trip leaves the cover alone
+    expect((await agent.patch(`/api/photos/${other.id}`).send({ tripId: lisbon.id })).status).toBe(200);
+    expect((await prisma.trip.findUnique({ where: { id: rome.id } })).coverPhotoId).toBe(cover.id);
+
+    // The cover itself moving to Lisbon: Rome has no cover, and Lisbon doesn't gain one
+    expect((await agent.patch(`/api/photos/${cover.id}`).send({ tripId: lisbon.id })).status).toBe(200);
+    expect((await prisma.trip.findUnique({ where: { id: rome.id } })).coverPhotoId).toBe(null);
+    expect((await prisma.trip.findUnique({ where: { id: lisbon.id } })).coverPhotoId).toBe(null);
   });
 });

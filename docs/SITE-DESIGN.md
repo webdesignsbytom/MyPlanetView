@@ -2,7 +2,7 @@
 
 How the site is built and why. Update this file whenever a decision changes. The database is [`server/prisma/schema.prisma`](../server/prisma/schema.prisma).
 
-Last updated: 14 November 2026.
+Last updated: 15 November 2026.
 
 Planned features, and the decisions below they will change, are in [FEATURE-PLAN.md](FEATURE-PLAN.md).
 
@@ -179,7 +179,8 @@ It works like Google Docs.
 
 - **Speed.** A grid of 50 photos is about 2 MB of thumbnails, against about 250 MB of originals.
 - **Privacy.** An original carries GPS precise to a few metres. A viewer who downloads a photo taken at someone's home would have their address.
-- **Compatibility.** iPhone originals can be HEIC, which most browsers can't display. The copies are in formats every browser shows.
+- **Compatibility.** The copies are in formats every browser shows.
+- **No HEIC** (decided 15 Nov 2026). iPhones save HEIC, but an iPhone sends a JPEG when a photo is picked in a browser, and Safari on a Mac does too when the file picker doesn't list HEIC. Only a HEIC file copied to a computer and uploaded from Chrome, Edge or Firefox would need converting, which took a 1.3 MB library whose worker the CSP blocks. So the uploader takes JPEG, PNG and WebP, and a HEIC file gets a message saying to save it as a JPEG first, or add it from the iPhone. The server refuses HEIC for every size.
 - **Cost.** The copies add roughly 10% to storage. Resizing on request instead (Cloudflare or Vercel image services) bills per transformation and gets complicated with private files.
 
 ### Viewing
@@ -187,6 +188,17 @@ It works like Google Docs.
 - **Signed URLs:** files are served through short-lived signed URLs, so removing someone's access really cuts it off.
 - **Viewers** get the thumbnail and display sizes only. They never get hidden photos or GPS coordinates.
 - **The original** is always kept. Only the owner and editors can download it, because it still contains its location. (Planned: kept only on Business and First Class. Economy keeps a 2,400 px JPEG print copy instead, so it's still three files per photo. See [FEATURE-PLAN.md](FEATURE-PLAN.md#which-copies-each-tier-keeps).)
+
+### Gallery order
+
+Editors drag photos into the order they want, in every gallery: a country's on the map, the unplaced photos, and a trip's.
+
+- **Two orders per photo:** its place in its country's gallery and its place in its trip's (`Photo.countryPosition`, `Photo.tripPosition`). The same photo can be first on the trip and last in its country.
+- **New photos go first,** as the lists were newest-first before; the migration kept every gallery's old order. A photo moved to another country or trip goes first there.
+- **Moving one photo writes one row.** Positions are numbers with gaps, and a moved photo takes the halfway point between its new neighbours. Only when two neighbours have no room left between them (after dozens of moves into the same gap) is the gallery renumbered, in the same transaction.
+- **Who:** a country's order belongs to the map (its editors); a trip's to the trip (a trip-only editor too). Viewers see the order, without the hidden photos.
+- **In the browser:** "Rearrange photos" above a gallery switches it to dragging: the mouse, a press and hold on a touch screen (a quick swipe still scrolls), or the keyboard (Space, the arrow keys, Space; a screen reader hears each step). The list moves at once and saves behind it; if the save fails, the list is loaded again. The drag code (dnd-kit, about 16 kB gzipped) loads only then.
+- **The whole map's list** (the hover postcards) stays newest upload first.
 
 ## Storage use and future paid tiers
 
@@ -218,7 +230,7 @@ It works like Google Docs.
 
 ## Database
 
-- **The schema:** see [`schema.prisma`](../server/prisma/schema.prisma), checked with Prisma 7.4.2, with one fresh `init` migration. The old database only held fake seed data, so the site starts on a fresh database with a new seed. No old data or passwords are carried over.
+- **The schema:** see [`schema.prisma`](../server/prisma/schema.prisma) (Prisma 7.10.1), with five migrations so far. The old database only held fake seed data, so the site starts on a fresh database with a new seed. No old data or passwords are carried over. Reviewed before the Phase 1 features in [DATABASE-REVIEW.md](DATABASE-REVIEW.md).
 - **Kept from the template:** the better-auth tables, `Profile`, `MediaItem`, `AvatarMediaItem`, a trimmed `ContactForm`, `AppEvent`, and `RateLimit` (from NextDummy).
 - **New:**
   - `Country` and `Landmark` (seeded);
@@ -246,14 +258,12 @@ It works like Google Docs.
 
 - **Not yet tried for real: R2 and the app against the real API.** The API has run end to end against local Postgres (`npm run test:integration`), and the local database, `myplanetview`, is migrated and seeded. Uploads to R2, signed photo URLs and the browser app talking to the real server haven't been tried; the app has only run in mock mode.
 - **Test database.** There's one local database, `myplanetview`, and no separate `_test` or shadow copy (one shadow database is shared by every project). The integration tests still refuse any database whose name doesn't end in `_test`, so that guard has to change before they can run against it.
-- **Pages not restyled yet.** The welcome, invite, account and admin pages don't have the travel-paperwork look yet (welcome and invite still use `AppPageShell`).
-- **The Regular map-type preview** in the settings picker is a placeholder box (sea with a land block); the Detailed type has a real picture.
 - **The domain name.** The API, share and media subdomains hang off it. `myplanetview.com` is the intended domain (not registered yet), already in the client and server constants.
-- **Landmark coordinates.** 161 of the 177 landmarks were checked against Wikidata on 14 Nov 2026, and each entry names its Wikidata item. The 16 marked `// unverified` (ranges, trails, and names Wikidata couldn't match) still need checking by hand: a photo is matched by distance.
+- **Landmark coordinates.** All 177 landmarks were checked against Wikidata (14–15 Nov 2026), and each entry names its Wikidata item. For ranges and trails the point is a place travellers photograph (the file's header lists them; the ranges are named after it, e.g. "Pamir (Lake Karakul)"), since a photo is matched by distance.
 - **GA4 setting.** In the GA4 property, turn off "page changes based on browser history events". Otherwise a tag loaded earlier can record a share or invite address after an in-app navigation.
 - **Who has access.** Editors and viewers can't yet see who else has access: `GET …/sharing` is owner-only, so they see only their own role and a "leave" button.
 - **Coarse borders.** A photo taken near a border can be placed in the neighbouring country, because the map's shapes are coarse (Victoria Falls, Kaesong and the Western Wall do). Users can correct the country.
 - **Missing shapes.** Bioko island (Equatorial Guinea) has no shape, and nor do Liechtenstein, Monaco, San Marino, Singapore and the Vatican. The micro-states are drawn as dots; the server places photos in all of these with circles around known positions.
 - **Brand assets.** The logo, favicons and share image (`client/public/brand/`, `client/public/favicon/`) are still ByteToast's.
 - **Client env examples.** `client/.env.development.example` and `client/.env.production.example` still list keys nothing reads. Keep only `VITE_API_URL`, `VITE_MEDIA_CDN` and `VITE_ANALYTICS_ID`.
-- **HEIC.** Check that iPhone photos upload correctly in browsers other than Safari (they're converted in the browser for the copies; the original is kept as uploaded).
+- **iPhone uploads.** Check on a real iPhone that a photo picked in Safari and in Chrome arrives as a JPEG with its date. Reports say iPhone browsers strip GPS from photos picked in the browser since iOS 16.4; if so, those photos get their country from the uploader's choice and no landmark suggestions.

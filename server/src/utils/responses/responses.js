@@ -86,6 +86,7 @@ export const EVENT_MESSAGES = {
   avatarInvalid: `Upload an avatar image first, then save it.`,
   // Places
   countryNotFound: `That country isn't on the map.`,
+  poleNotATravellerCountry: 'Choose a country or Antarctica, not a pole.',
   landmarkNotFound: `That landmark doesn't exist.`,
   // Maps
   mapNotFound: `That map doesn't exist, or it hasn't been shared with you.`,
@@ -118,6 +119,8 @@ export const EVENT_MESSAGES = {
   photoPositionInvalid: `The photo's position must be a real latitude and longitude.`,
   photoAlreadySaved: `That photo has already been saved.`,
   photoUploadExpired: `This upload took too long to finish. Please try again.`,
+  photoGalleryInvalid: `Say which gallery to rearrange: "country", or "trip" for a photo on a trip.`,
+  photoMoveTargetGone: `The photo it was dropped next to has moved or gone. Reload and try again.`,
   // Sharing
   invalidShareRole: `Role must be VIEWER or EDITOR.`,
   invalidLinkAccess: `General access must be RESTRICTED or ANYONE_WITH_LINK.`,

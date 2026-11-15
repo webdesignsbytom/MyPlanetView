@@ -1,28 +1,27 @@
 import React from 'react';
 // Auth
 import { useAuth } from '@/auth/AuthContext';
+// Components
+import PageTitleCard from '@/components/common/PageTitleCard';
 
+// The account page's title, in the boarding pass's style (the page's <main> is labelled
+// by it, in AccountPage)
 function AccountPageHeader() {
   const { user } = useAuth();
 
   return (
-    <header
-      className='grid w-full'
-      aria-labelledby='account-title'
-      aria-describedby='account-subtitle'
-    >
-      <div className='grid gap-6 px-6 max-w-lg mx-auto text-center py-12'>
-        <h1
-          id='account-title'
-          className='font-titleFont text-4xl uppercase md:text-5xl font-extrabold'
-        >
-          Your account
-        </h1>
-        <p id='account-subtitle' className='text-lg md:text-xl leading-snug'>
+    <PageTitleCard
+      page='Passport office'
+      title='Your account'
+      headingId='account-title'
+      subtitle={
+        <>
           Signed in as <span className='font-semibold'>{user?.email}</span>
-        </p>
-      </div>
-    </header>
+        </>
+      }
+      subtitleId='account-subtitle'
+      stamp={['Approved']}
+    />
   );
 }
 

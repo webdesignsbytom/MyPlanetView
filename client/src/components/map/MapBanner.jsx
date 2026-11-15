@@ -1,8 +1,6 @@
 import React from 'react';
 // Utils
 import { initialOf, joinNames } from '@/utils/map/travellerNames';
-// Components
-import CloseStamp from '@/components/common/CloseStamp';
 
 const GROUP_TAGLINES = {
   SOLO: 'See the world!',
@@ -19,8 +17,9 @@ const INITIAL_CLASS =
 
 // my_planet's user banner (OwnerDisplayContainer): the map's travellers on a parchment
 // ribbon with notched red tails, the names in the travel face and their initials as
-// rubber stamps, top centre. Hidden with the "Map banner" setting, or its close stamp.
-function MapBanner({ map, onHide }) {
+// rubber stamps, top centre. Hidden only with its switch in the map settings (no close
+// stamp on the banner itself).
+function MapBanner({ map }) {
   const names = map.travellers.map((t) => t.name).filter(Boolean);
   const people = names.length ? joinNames(names) : map.name;
   const firstTwo = names.slice(0, 2);
@@ -41,11 +40,6 @@ function MapBanner({ map, onHide }) {
         </span>
       </div>
       <span aria-hidden='true' className={`-ml-3 ${TAIL_CLASS} ${RIGHT_TAIL}`} />
-      {onHide ? (
-        <span className='absolute -top-3 right-4 z-20 grid'>
-          <CloseStamp small label='Hide the map banner' hint='Hide the banner (turn it back on in Settings)' onClick={onHide} />
-        </span>
-      ) : null}
     </section>
   );
 }

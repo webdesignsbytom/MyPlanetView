@@ -18,6 +18,9 @@ export const DEFAULT_MAP_SETTINGS = {
   showVisited: true,
   showUnvisited: true,
   showUserBanner: true,
+  // Antarctica, the South Pole and the Magnetic South Pole, and the map's extent down to
+  // them (projection.js mapExtent). Only the view changes: visits and stats don't.
+  showAntarctica: true,
 };
 
 // Grouped as the settings panel shows them.
@@ -26,6 +29,7 @@ export const DEFAULT_MAP_SETTINGS = {
 export const MAP_SETTING_TOGGLES = [
   { key: 'showVisited', label: 'Countries you have been to', group: 'countries' },
   { key: 'showUnvisited', label: 'Countries you have not been to', group: 'countries' },
+  { key: 'showAntarctica', label: 'Antarctica', group: 'countries' },
   { key: 'showGrid', label: 'Latitude and longitude lines', group: 'map', detailed: true },
   { key: 'showGridLabels', label: 'Label the lines', group: 'map', detailed: true },
   { key: 'showCountryNames', label: 'Country names', group: 'map', detailed: true },

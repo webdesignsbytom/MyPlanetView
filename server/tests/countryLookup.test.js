@@ -24,6 +24,23 @@ describe('countryAtPosition (map shapes, no external service)', () => {
     expect(countryAtPosition(4.0167, 9.2)).toBe('CM'); // Limbe
   });
 
+  it('finds Antarctica from its shape, and the geographic poles by latitude', () => {
+    expect(countryAtPosition(-77.846, 166.676)).toBe('AQ'); // McMurdo Station
+    expect(countryAtPosition(-64.774, -64.053)).toBe('AQ'); // Palmer Station, Antarctic Peninsula
+    expect(countryAtPosition(-81.5, -175)).toBe('AQ'); // on the Ross Ice Shelf
+    expect(countryAtPosition(-90, 0)).toBe('XS');
+    expect(countryAtPosition(-89.95, 120)).toBe('XS');
+    expect(countryAtPosition(89.95, -30)).toBe('XN');
+    expect(countryAtPosition(90, 0)).toBe('XN');
+  });
+
+  it('never places a photo at a magnetic pole (they drift), and stops short of the North Pole', () => {
+    const atMagneticNorth = countryAtPosition(85.762, 139.298);
+    expect(atMagneticNorth).not.toBe('QN');
+    expect(countryAtPosition(-63.851, 135.078)).not.toBe('QS');
+    expect(countryAtPosition(89.8, 0)).toBe(null);
+  });
+
   it('returns null in open sea', () => {
     expect(countryAtPosition(30, -40)).toBeNull();
     expect(countryAtPosition(-40, -120)).toBeNull();

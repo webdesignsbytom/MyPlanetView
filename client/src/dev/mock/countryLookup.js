@@ -1,10 +1,13 @@
 // Mock mode only. Which country a GPS position is in, worked out as the server does
-// (server/src/utils/countryLookup.js): project onto the map, then point-in-polygon against
-// the map's own shapes, the smallest containing shape winning enclaves, then the nearest
-// coast within a tolerance; circles for the micro-states and for Bioko. The polygons are
-// parsed from the client's path strings exactly as server/src/data/countryShapes.json was
-// made from them, so both give the same answers. Loaded only when a photo first needs it.
+// (server/src/utils/countryLookup.js): a geographic pole by latitude alone, then circles
+// for the micro-states and for Bioko, then project onto the map and point-in-polygon
+// against the map's own shapes (Antarctica's too), the smallest containing shape winning
+// enclaves, then the nearest coast within a tolerance. The magnetic poles are never found
+// from GPS (they drift). The polygons are parsed from the client's path strings exactly
+// as server/src/data/countryShapes.json was made from them, so both give the same
+// answers. Loaded only when a photo first needs it.
 import { projectToMap } from '@/utils/map/projection';
+import { poleAt } from '@/utils/map/specialPlaces';
 
 const COASTLINE_TOLERANCE = 6;
 const EARTH_RADIUS_M = 6371000;
@@ -178,11 +181,13 @@ function countryAtMapPoint(countries, x, y) {
   return nearest?.code ?? null;
 }
 
-/** Country code for a real position, or null (open sea, Antarctica). */
+/** Country (or special place) code for a real position, or null (open sea). */
 export async function countryAtPosition(latitude, longitude) {
-  const countries = await loadIndex();
   const point = projectToMap(latitude, longitude);
   if (!point) return null;
+  const pole = poleAt(latitude);
+  if (pole) return pole;
+  const countries = await loadIndex();
   const shaped = new Set(countries.map((c) => c.code));
   const small = [...SMALL_COUNTRIES.filter((c) => !shaped.has(c.code)), ...UNDRAWN_ISLANDS].find(
     (c) => haversineMeters(latitude, longitude, c.latitude, c.longitude) <= c.radiusM,

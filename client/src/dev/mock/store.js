@@ -3,6 +3,7 @@
 // for the session only, so photos uploaded in mock mode are dropped on reload.
 import { getStoredItem, removeStoredItem, setStoredItem } from '@/utils/functions/safeStorage';
 import { buildSeed } from './seed';
+import { fillPhotoPositions } from './photoOrder';
 
 const STORE_KEY = 'mpvMockStore.v1';
 const ROLE_KEY = 'mpvMockRole';
@@ -49,6 +50,8 @@ export function loadStore() {
   [...db.maps, ...db.trips].forEach((item) => {
     item.shareCode = fixCode(item.shareCode);
   });
+  // The seed, and stores saved before photos could be rearranged
+  fillPhotoPositions(db.photos);
   db.users[0].role = getMockRole();
   saveStore();
   return db;
@@ -61,6 +64,7 @@ export function saveStore() {
 export function resetStore() {
   removeStoredItem(STORE_KEY);
   db = buildSeed();
+  fillPhotoPositions(db.photos);
   db.users[0].role = getMockRole();
   saveStore();
 }

@@ -4,9 +4,10 @@ import FormField from '@/components/ui/FormField';
 import TextInput from '@/components/ui/TextInput';
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 // Utils
-import { COUNTRY_OPTIONS } from '@/utils/map/countries';
+import { HOME_COUNTRY_OPTIONS } from '@/utils/map/countries';
 
-const COUNTRY_CHOICES = [{ value: '', label: 'Not set' }, ...COUNTRY_OPTIONS];
+// The countries and Antarctica: nobody is born at a pole (the server refuses one here)
+const COUNTRY_CHOICES = [{ value: '', label: 'Not set' }, ...HOME_COUNTRY_OPTIONS];
 
 // One traveller on a map: a name, and (as on the old set-up form) where they were born
 // and their favourite country. No login needed: children can be travellers too.

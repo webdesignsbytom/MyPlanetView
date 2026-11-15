@@ -123,6 +123,10 @@
   --map-visit-5: #73b76a;
   --map-visit-6: #b1a2ca;
   --map-visit-7: #e3b5d1;
+  /* Antarctica's ice sheet and shelves, and their outline, as a printed atlas draws them:
+     not a pastel, so it never reads as a country you've coloured in */
+  --map-ice: #f4f9ff;
+  --map-ice-edge: #8fb3d1;
 }
 
 [data-map-style='old-map'] {
@@ -132,6 +136,8 @@
   --map-sea-ink: #000000;
   --map-land: #ecd9b4;
   --map-land-edge: #7c2d12;
+  --map-ice: #eef1ea;
+  --map-ice-edge: #8c9a96;
 }
 
 [data-map-style='jupiter'] {
@@ -141,6 +147,8 @@
   --map-sea-ink: #000000;
   --map-land: #efdcc0;
   --map-land-edge: #7c2d12;
+  --map-ice: #f7f2ea;
+  --map-ice-edge: #a08a72;
 }
 
 /* my_planet's galaxy: white ink and white outlines on the night sky */
@@ -154,6 +162,8 @@
   --map-land: #3a4a78;
   --map-land-edge: #93c5fd;
   --map-wish: #fbbf24;
+  --map-ice: #b9cdee;
+  --map-ice-edge: #dbeafe;
 }
 
 @theme {
@@ -228,6 +238,8 @@
   --color-map-visit-5: var(--map-visit-5);
   --color-map-visit-6: var(--map-visit-6);
   --color-map-visit-7: var(--map-visit-7);
+  --color-map-ice: var(--map-ice);
+  --color-map-ice-edge: var(--map-ice-edge);
 
   --shadow-lift: var(--lift);
   --shadow-lift-sm: var(--lift-sm);
@@ -655,6 +667,14 @@ textarea:-webkit-autofill {
 @utility paper-aged {
   background-color: var(--poster-paper);
   background-image: radial-gradient(ellipse at center, transparent 55%, var(--paper-burn) 100%);
+}
+
+/* Paperwork for what can't be undone (deleting the account): the same paper, edged and
+   ruled in deep red instead of brown. It repoints the brown that ticket-edge, the btn-*
+   buttons and the *-poster-brown utilities read, for this element and everything in it. */
+@utility paper-danger {
+  --poster-brown: var(--poster-red-deep);
+  --color-poster-brown: var(--poster-red-deep);
 }
 
 

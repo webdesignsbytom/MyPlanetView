@@ -14,14 +14,24 @@ import {
 } from '@/api/travelApi';
 // Utils
 import { forgetMapLists } from '@/utils/map/mapListCache';
+import { impliedVisits } from '@/utils/map/specialPlaces';
 
 const EMPTY = { map: null, trips: [], loading: true, error: null };
+
+// Visits put in place of the ones with the same country (or added)
+const withVisits = (visits, changed) => {
+  if (!changed?.length) return visits;
+  const codes = new Set(changed.map((v) => v.countryCode));
+  return [...visits.filter((v) => !codes.has(v.countryCode)), ...changed];
+};
 
 /**
  * One travel map: its details, travellers, visited countries, stats and trips, with
  * the changes an editor can make. Visit changes show at once and roll back on failure;
  * with `optimistic: false` (an email address not verified yet, which the server refuses)
- * they wait for the server, so nothing flickers on and off.
+ * they wait for the server, so nothing flickers on and off. A visit that brings another
+ * with it (the South Pole visited: Antarctica too, the server's `implied`) shows both
+ * together, and rolls both back together.
  */
 export default function useTravelMap(mapId, { optimistic = true } = {}) {
   const [state, setState] = useState(EMPTY);
@@ -79,16 +89,24 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
           const others = prev.map.visits.filter((v) => v.countryCode !== countryCode);
           const current = prev.map.visits.find((v) => v.countryCode === countryCode);
           const visits = status
-            ? [...others, { ...(current || { source: 'MANUAL', firstVisitedOn: null, notes: null }), countryCode, status, ...extra }]
+            ? withVisits(
+                [...others, { ...(current || { source: 'MANUAL', firstVisitedOn: null, notes: null }), countryCode, status, ...extra }],
+                impliedVisits(prev.map.visits, countryCode, status),
+              )
             : others;
           return { ...prev, map: { ...prev.map, visits } };
         });
+      // The server's word on what the change brought with it
+      const showImplied = (implied) =>
+        setState((prev) =>
+          prev.map && implied?.length ? { ...prev, map: { ...prev.map, visits: withVisits(prev.map.visits, implied) } } : prev,
+        );
       const optimisticNow = optimisticRef.current;
       if (optimisticNow) show();
       try {
-        if (status) await putVisit(mapId, countryCode, { status, ...extra });
-        else await deleteVisit(mapId, countryCode);
+        const answer = status ? await putVisit(mapId, countryCode, { status, ...extra }) : await deleteVisit(mapId, countryCode);
         if (!optimisticNow) show();
+        showImplied(answer?.implied);
         refreshStats();
       } catch (err) {
         setState((prev) => (prev.map && previous ? { ...prev, map: { ...prev.map, visits: previous } } : prev));

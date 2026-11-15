@@ -43,10 +43,10 @@ function AccountSessionsSection() {
         Signed in on a shared or lost device? Sign out of every other browser and
         device.
       </p>
-      <div className='flex flex-wrap justify-center gap-3'>
+      <div className='grid justify-center gap-3 sm:grid-flow-col sm:auto-cols-max'>
         <button
           type='button'
-          className='py-2 px-4 bg-colour6 cursor-pointer text-colour1 shadow-lift-sm rounded-md hover:brightness-110 active:scale-95 disabled:opacity-60'
+          className='btn-poster'
           onClick={onRevoke}
           disabled={busy}
         >
@@ -54,7 +54,7 @@ function AccountSessionsSection() {
         </button>
         <button
           type='button'
-          className='py-2 px-4 rounded-md border-2 border-solid border-colour6 hover:brightness-110'
+          className='btn-paper'
           onClick={onLogout}
           aria-busy={loggingOut}
         >

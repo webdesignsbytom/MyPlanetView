@@ -1,5 +1,6 @@
 import { prisma } from '../prisma.js';
 import { COUNTED_VISIT_STATUSES } from '../utils/travelValidation.js';
+import { PARENT_PLACE, SPECIAL_PLACE_CODES, withParentPlaces } from '../utils/specialPlaces.js';
 import { canEdit } from '../utils/access.js';
 import { countPerParent, countPhotosPer } from './counts.js';
 
@@ -52,7 +53,11 @@ const mapSummarySelect = {
 async function withMapCounts(maps, includeHidden) {
   const ids = maps.map((m) => m.id);
   const [countries, photos, trips] = await Promise.all([
-    countPerParent('countryVisit', 'mapId', ids, { status: { in: [...COUNTED_VISIT_STATUSES] } }),
+    // Countries only: special places (Antarctica, the poles) have their own stat
+    countPerParent('countryVisit', 'mapId', ids, {
+      status: { in: [...COUNTED_VISIT_STATUSES] },
+      countryCode: { notIn: [...SPECIAL_PLACE_CODES] },
+    }),
     countPhotosPer('mapId', ids, includeHidden),
     countPerParent('trip', 'mapId', ids),
   ]);
@@ -196,18 +201,35 @@ export const deleteTravellerInDB = (travellerId) => prisma.traveller.delete({ wh
 
 const VISIT_SELECT = { countryCode: true, status: true, source: true, firstVisitedOn: true, notes: true };
 
-export const upsertVisitInDB = ({ mapId, countryCode, status, firstVisitedOn, notes }) =>
-  prisma.countryVisit.upsert({
-    where: { mapId_countryCode: { mapId, countryCode } },
-    create: { mapId, countryCode, status, source: 'MANUAL', firstVisitedOn: firstVisitedOn ?? null, notes: notes ?? null },
-    update: {
-      status,
-      source: 'MANUAL',
-      ...(firstVisitedOn !== undefined ? { firstVisitedOn } : {}),
-      ...(notes !== undefined ? { notes } : {}),
-    },
-    select: VISIT_SELECT,
+/**
+ * Set a visit by hand -> { visit, implied }. Visiting a place inside another (the South
+ * Pole, in Antarctica) also visits that one, in the same transaction: `implied` is those
+ * visits as they now are, when the rule changed them (else []).
+ */
+export const upsertVisitInDB = async ({ mapId, countryCode, status, firstVisitedOn, notes }) => {
+  const upsert = (db) =>
+    db.countryVisit.upsert({
+      where: { mapId_countryCode: { mapId, countryCode } },
+      create: { mapId, countryCode, status, source: 'MANUAL', firstVisitedOn: firstVisitedOn ?? null, notes: notes ?? null },
+      update: {
+        status,
+        source: 'MANUAL',
+        ...(firstVisitedOn !== undefined ? { firstVisitedOn } : {}),
+        ...(notes !== undefined ? { notes } : {}),
+      },
+      select: VISIT_SELECT,
+    });
+  const parent = PARENT_PLACE[countryCode];
+  if (!parent || !COUNTED_VISIT_STATUSES.includes(status)) return { visit: await upsert(prisma), implied: [] };
+  return prisma.$transaction(async (tx) => {
+    const visit = await upsert(tx);
+    const { count } = await createMissingVisits(mapId, [parent], 'MANUAL', tx);
+    const implied = count
+      ? await tx.countryVisit.findMany({ where: { mapId, countryCode: parent }, select: VISIT_SELECT })
+      : [];
+    return { visit, implied };
   });
+};
 
 export const deleteVisitInDB = (mapId, countryCode) =>
   prisma.countryVisit.deleteMany({ where: { mapId, countryCode } });
@@ -218,7 +240,9 @@ export const deleteVisitInDB = (mapId, countryCode) =>
  * added as VISITED, and "want to go" ones become VISITED. VISITED and LIVED
  * (set by hand or earlier) are left as they are.
  */
-export const createMissingVisits = async (mapId, countryCodes, source, db = prisma) => {
+export const createMissingVisits = async (mapId, places, source, db = prisma) => {
+  // The South Pole brings Antarctica with it (utils/specialPlaces.js)
+  const countryCodes = withParentPlaces(places);
   if (!countryCodes.length) return { count: 0 };
   const upgraded = await db.countryVisit.updateMany({
     where: { mapId, countryCode: { in: countryCodes }, status: 'WANT_TO_GO' },

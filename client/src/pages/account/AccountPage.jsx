@@ -5,10 +5,9 @@ import { ACCOUNT_PAGE_URL } from '@/utils/constants/routes';
 import { helmetData } from '@/utils/data/helmetData';
 // Components
 import { HelmetItem } from '@/components/utils/HelmetItem';
-import Navbar from '@/components/nav/Navbar';
+import AppPageShell from '@/components/common/AppPageShell';
 import AccountPageHeader from '@/components/account/AccountPageHeader';
 import AccountPageMainContainer from '@/components/account/AccountPageMainContainer';
-import FooterComponent from '@/components/footer/FooterComponent';
 
 function AccountPage() {
   const pageHelmet = helmetData[ACCOUNT_PAGE_URL];
@@ -24,18 +23,10 @@ function AccountPage() {
         canonicalPath={ACCOUNT_PAGE_URL}
       />
 
-      <div className='grid min-h-screen overflow-hidden'>
-        <div className='grid grid-rows-reg'>
-          <Navbar />
-          <AccountPageHeader />
-        </div>
-
+      <AppPageShell width='max-w-3xl' mainProps={{ 'aria-labelledby': 'account-title', 'aria-describedby': 'account-subtitle' }}>
+        <AccountPageHeader />
         <AccountPageMainContainer />
-
-        <div className='pt-12'>
-          <FooterComponent />
-        </div>
-      </div>
+      </AppPageShell>
     </>
   );
 }

@@ -1,4 +1,5 @@
 // Maps, their travellers and countries visited
+import { isPole } from '../utils/specialPlaces.js';
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
 import { logEvent } from '../utils/events/logEvent.js';
 import { createMapEvent } from '../event/travelUtils.js';
@@ -49,6 +50,8 @@ async function parseTraveller(body, { partial = false } = {}) {
   for (const field of ['birthCountryCode', 'favouriteCountryCode']) {
     const parsed = await parseOptionalCountry(body[field]);
     if (!parsed.ok) return { error: EVENT_MESSAGES.countryNotFound };
+    // Antarctica can be a birth or favourite place; a pole can't
+    if (isPole(parsed.value)) return { error: EVENT_MESSAGES.poleNotATravellerCountry };
     if (parsed.value !== undefined) out[field] = parsed.value;
   }
   if (body.position !== undefined) {
@@ -250,7 +253,7 @@ export const putVisitHandler = handler(D, 'Save visit', async (req, res) => {
   if (!firstVisitedOn.ok) return badRequest(req, res, D, EVENT_MESSAGES.invalidDate);
   const notes = body.notes === undefined ? undefined : sanitizeText(body.notes, { maxLength: NOTES_MAX });
 
-  const visit = await upsertVisitInDB({
+  const { visit, implied } = await upsertVisitInDB({
     mapId: map.id,
     countryCode,
     status: body.status,
@@ -258,7 +261,7 @@ export const putVisitHandler = handler(D, 'Save visit', async (req, res) => {
     notes,
   });
   logEvent(createMapEvent({ user: req.user, action: 'Visit Save Success', id: map.id, detail: `${countryCode}=${body.status}` }));
-  return sendDataResponse(res, 200, { visit: visitView(visit) });
+  return sendDataResponse(res, 200, { visit: visitView(visit), implied: implied.map(visitView) });
 });
 
 export const deleteVisitHandler = handler(D, 'Delete visit', async (req, res) => {

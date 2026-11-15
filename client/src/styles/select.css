@@ -7,10 +7,12 @@
   --select-border: color-mix(in oklab, var(--colour5) 25%, transparent);
   --select-list-bg: var(--field);
   --select-list-text: var(--colour4);
-  --select-hover-bg: var(--colour6);
-  --select-hover-text: var(--colour1);
-  --select-checked-bg: var(--colour4);
-  --select-checked-text: var(--colour1);
+  /* Travel paperwork: hover is parchment (the nav and panel headers) with ink; the chosen
+     option is poster red on cream. Both about 6:1 or better in light and dark mode. */
+  --select-hover-bg: var(--colour8);
+  --select-hover-text: var(--colour4);
+  --select-checked-bg: var(--colour6);
+  --select-checked-text: var(--paper-cream);
   --select-focus: var(--colour6);
   --select-radius: var(--radius-lg); /* follows the site's corner setting */
   --select-padding: 4px;

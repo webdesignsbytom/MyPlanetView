@@ -81,6 +81,10 @@ export const presignPhoto = (mapId, body) => data(client.post(`${MAPS_API}/${enc
 export const createPhoto = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/photos`, body));
 export const updatePhoto = (photoId, body) => data(client.patch(`${PHOTOS_API}/${enc(photoId)}`, body));
 export const deletePhoto = (photoId) => data(client.delete(`${PHOTOS_API}/${enc(photoId)}`));
+// Rearranging: put the photo straight after `afterId` in its country's ('country') or its
+// trip's ('trip') gallery, or first there when `afterId` is null
+export const movePhoto = (photoId, { gallery, afterId }) =>
+  data(client.post(`${PHOTOS_API}/${enc(photoId)}/move`, { gallery, afterId: afterId ?? null }));
 export const addPhotoLandmark = (photoId, landmarkId) =>
   data(client.post(`${PHOTOS_API}/${enc(photoId)}/landmarks`, { landmarkId }));
 export const confirmPhotoLandmark = (photoId, landmarkId) =>

@@ -180,7 +180,8 @@ export function registerSharingRoutes() {
     const shared = resolveCode(params.code);
     if (!shared) return fail(404, NOT_FOUND);
     const photos = getDb().photos.filter((p) => (shared.kind === 'map' ? p.mapId === shared.item.id : p.tripId === shared.item.id));
-    const page = photoPage(photos, shared.role, query);
+    // A shared trip's photos come in the trip's order
+    const page = photoPage(photos, shared.role, shared.kind === 'trip' ? { ...query, tripId: shared.item.id } : query);
     return page.error ? fail(400, page.error) : ok(page);
   });
 

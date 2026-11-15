@@ -1,4 +1,6 @@
 import React, { useEffect, useId, useRef } from 'react';
+// Components
+import Button from '@/components/common/Button';
 
 function ConfirmModal({ onClose, onConfirm, header, message }) {
   const titleId = useId();
@@ -62,43 +64,40 @@ function ConfirmModal({ onClose, onConfirm, header, message }) {
     };
   }, [onClose]);
 
+  // Travel paperwork, like components/common/Modal: cream paper in the ticket edge with a
+  // parchment title strip, over the dark scrim; Cancel is the quiet parchment button
   return (
-    <div className='fixed inset-0 z-50 bg-colour2/90 flex items-center justify-center px-8'>
+    <div className='fixed inset-0 z-50 grid place-items-center-safe overflow-y-auto bg-scrim px-4 py-6'>
       <div
         ref={dialogRef}
         role='dialog'
         aria-modal='true'
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className='bg-colour1 grid h-fit gap-y-2 rounded-2xl shadow-lg border-2 border-colour6 w-full max-w-md p-6'
+        className='ticket-edge grid w-full max-w-md overflow-hidden bg-paper-cream text-colour4'
       >
-        <div className='grid h-fit gap-y-2'>
-          <h2 id={titleId} className='text-xl font-semibold text-colour6'>
+        <div className='paper-aged border-b-2 border-dashed border-poster-brown px-5 pb-3 pt-4'>
+          <h2 id={titleId} className='font-travel text-2xl uppercase leading-tight tracking-wide text-poster-red-deep'>
             {header}
           </h2>
-          <p id={descId} className=''>
+        </div>
+        <div className='grid gap-4 px-5 pb-6 pt-5'>
+          <p id={descId} className='leading-relaxed'>
             {message}
           </p>
-        </div>
-        <div className='flex justify-end gap-3'>
-          <button
-            ref={cancelButtonRef}
-            type='button'
-            className='px-4 py-2 bg-status-critical rounded text-colour1 hover:brightness-75'
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-          <button
-            type='button'
-            className='px-4 py-2 bg-colour6 text-colour1 rounded hover:brightness-110'
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
-          >
-            Confirm
-          </button>
+          <div className='grid grid-row justify-end gap-3'>
+            <Button ref={cancelButtonRef} quiet onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                onConfirm();
+                onClose();
+              }}
+            >
+              Confirm
+            </Button>
+          </div>
         </div>
       </div>
     </div>

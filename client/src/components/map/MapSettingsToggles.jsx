@@ -14,13 +14,15 @@ function MapSettingsToggles({ settings, onChange }) {
   const detailed = settings.mapType === 'detailed';
 
   return (
-    <div className='grid gap-4'>
+    <div className='grid gap-6'>
       {MAP_SETTING_GROUPS.map((group) => {
         const toggles = MAP_SETTING_TOGGLES.filter((toggle) => toggle.group === group.id);
         const showNote = detailed && toggles.some((toggle) => toggle.detailed);
         return (
           <fieldset key={group.id} className='grid gap-3'>
-            <legend className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>{group.legend}</legend>
+            {/* A legend sits outside the fieldset's grid, so gap-3 doesn't reach it: its
+                own bottom padding gives the same space before the first switch. */}
+            <legend className='pb-3 font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>{group.legend}</legend>
             {showNote ? (
               <p id={detailedNoteId} className='text-sm'>
                 The Detailed map always shows these. Pick Regular under Map type to choose for yourself.

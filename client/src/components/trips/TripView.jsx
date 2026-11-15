@@ -18,8 +18,9 @@ import { canEditRole } from '@/utils/sharing/shareRoles';
  * a share-link visitor (`shareCode`) only views. `onDelete` returns a promise that
  * removes the trip. An editor whose email address isn't verified yet (`locked`) sees it
  * as a viewer would, with the reason where the edit controls would be.
+ * `styleId` and `showAntarctica` are the viewer's map settings, for the route map.
  */
-function TripView({ trip, onTripChange, shareCode = null, styleId, currentUser = null, onDelete, onLeft }) {
+function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctica = true, currentUser = null, onDelete, onLeft }) {
   const roleCanEdit = !shareCode && canEditRole(trip.role);
   const mustVerify = useMustVerifyEmail();
   const locked = roleCanEdit && mustVerify;
@@ -67,7 +68,7 @@ function TripView({ trip, onTripChange, shareCode = null, styleId, currentUser =
         </div>
       ) : null}
 
-      <TripMiniMap trip={trip} styleId={styleId} />
+      <TripMiniMap trip={trip} styleId={styleId} showAntarctica={showAntarctica} />
       <TripStopList trip={trip} canEdit={canEdit} onChanged={onTripChange} />
       <TripPhotosSection trip={trip} canEdit={canEdit} locked={locked} shareCode={shareCode} />
 

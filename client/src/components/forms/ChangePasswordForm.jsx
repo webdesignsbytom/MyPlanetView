@@ -148,11 +148,11 @@ function ChangePasswordForm() {
 
       <button
         type='submit'
-        className='py-2 bg-colour6 cursor-pointer text-colour1 shadow-lift-sm rounded-md hover:brightness-110 active:scale-95 active:brightness-90 disabled:opacity-60'
+        className='btn-poster'
         disabled={inProgress}
       >
         {inProgress ? (
-          <span className='flex justify-center items-center gap-2' aria-live='polite'>
+          <span className='grid grid-row place-content-center items-center gap-2' aria-live='polite'>
             <LoadingSpinner xs />
             <span className='sr-only'>Updating password…</span>
           </span>

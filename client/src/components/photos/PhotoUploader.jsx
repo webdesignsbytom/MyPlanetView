@@ -96,13 +96,13 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
         }`}
       >
         <span className='font-travel text-xl uppercase tracking-wide text-colour6'>Choose photos</span>
-        <span className='opacity-80'>or drop them here. JPEG, PNG, WebP or HEIC, up to 50 MB each.</span>
+        <span className='opacity-80'>or drop them here. JPEG, PNG or WebP, up to 50 MB each.</span>
       </label>
       <input
         ref={inputRef}
         id={inputId}
         type='file'
-        accept='image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif'
+        accept='image/jpeg,image/png,image/webp'
         multiple
         className='sr-only'
         onChange={(e) => {

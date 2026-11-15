@@ -22,6 +22,7 @@ Last updated: 15 November 2026.
 | Printing | An affiliate link to a print company first; ordering through the site later. |
 | Promotion | Give a few complimentary memberships to influencers who promote the site. |
 | Installable app | A PWA (15 Nov): installable from the browser, online only at first. No app store, no Next.js. |
+| Moments | Life events and notes on a country or landmark, e.g. "Had a baby in Canada" (15 Nov). Free on every tier. |
 
 ## The pitch
 
@@ -282,6 +283,63 @@ A **Travel Desk** button on trip pages, the map's country panel and the country 
 - **No ads** inside the passport.
 - **Later:** print the passport as a real photobook (see Printing).
 
+## Moments (life events and notes on the map)
+
+The map shows more than where you've been: it shows where life happened. "Had a baby in Canada." "Got engaged at the Eiffel Tower." "Lived in Lisbon, 2015–2018." "Best pizza of my life, Naples." A moment is a note pinned to a country, a landmark or a place, usually dated, with the people and photos it's about.
+
+In the code it's called a **moment**, not an event, because "event" already means the app's log (`AppEvent`, `server/src/event/`).
+
+**What a moment has:**
+- **Where:**
+  - a country;
+  - optionally a seeded landmark or a place name, as trip stops have now.
+- **When:**
+  - a date to the day, the month or only the year ("2019"), as people often don't remember the day;
+  - a plain note can have no date.
+- **Kind:**
+  - it sets the moment's stamp icon and wording;
+  - the starter list: born, moved here, wedding, engagement, graduated, new job, met someone, celebration, and **note** (a comment about the place);
+  - it's stored as text checked against a list in the code, not a Prisma enum, so adding a kind needs no migration.
+- **Title and text:** a short title and an optional longer story, both plain text, cleaned like captions.
+- **Who:** which of the map's travellers it's about (optional).
+- **Photos:** optional, chosen from the map's existing photos. Nothing new is uploaded, so moments cost no storage.
+- **Trip:** optional, when it happened during a trip.
+- **Hidden:** shown to editors only, like hidden photos.
+
+**"Had a baby in Canada":**
+- a "born" moment offers to add the baby as a new traveller on the map, with Canada as their birth country (`Traveller.birthCountryCode` exists already);
+- a moment in a country that isn't on the map yet offers to mark it Visited or Lived. A birth or a move suggests Lived.
+
+**Where moments show:**
+- **The country panel:** the country's moments in date order, with "Add a moment" for editors.
+- **Landmarks:** the landmark's card and its passport stamp show the moments that happened there.
+- **The map:** a small marker beside the country's badge or at the landmark, which a viewer setting turns on and off, like the country names.
+- **A timeline panel:**
+  - the whole map's moments and trips in date order, filtered by traveller: the family's story;
+  - it opens from the toolbar, like the other panels.
+- **Share links:** viewers see moments unless they're hidden.
+- **Later:** slideshows show moments as title cards between the photos.
+
+**Who can do what:**
+- **The rules are the same as for photos:**
+  - map editors add, edit and delete moments;
+  - a trip-only editor can do the same for moments linked to their trip;
+  - viewers only read them.
+- **Comments are moments of the note kind.**
+  - `CountryVisit.notes` (one note per country) is already in the API, but no screen shows it.
+  - Moments replace it: a migration turns each existing note into an undated note moment, then drops the field.
+  - A "Want to go" note such as "Cherry blossom season" becomes a note moment too.
+- **Replies from other people** ("Congratulations!") are a separate, later feature.
+  - They'd come only from people the map is shared with, so they don't break the "not a social network" pitch.
+  - They need notifications, and a way to remove what others wrote on your map.
+
+**Privacy.** Moments can be very personal: a birth, a home.
+- In version 1 a place is a landmark or a name, never coordinates, so a shared map can't show where someone lives.
+- Picking a spot on the map is a later option, and viewers would see it rounded.
+- Hidden moments, like hidden photos, never reach viewers or share links.
+
+**Tiers:** free on every tier. A moment is a row of text, and its photos already count toward the photo limits.
+
 ## Travel challenges
 
 **Shared rules:**
@@ -383,7 +441,7 @@ A fixed list kept in one file of code:
 1. A **Print** button on a photo, a selection, an album or a trip opens a dialog.
 2. The dialog downloads the chosen photos as JPEGs in a zip made in the browser from signed URLs, so Vercel does no work:
    - Economy photos come from their print copy (good up to about A4);
-   - Business and First Class photos come from the original. HEIC originals are converted to JPEG first, with the converter the upload already uses.
+   - Business and First Class photos come from the original (always JPEG, PNG or WebP: uploads take no HEIC).
 3. It then links to the print partner with the affiliate code. The user uploads and orders there.
 
 **Candidate partners** (check their current affiliate terms): UK photo printers such as Photobox, CEWE and Snapfish.
@@ -443,6 +501,8 @@ The site becomes installable: "Install app" in Chrome and Edge on Android and de
 
 ## Database additions (draft)
 
+Reviewed on 15 Nov 2026 in [DATABASE-REVIEW.md](DATABASE-REVIEW.md), which changes parts of this table (plans in their own tables, `PhotoLandmark.mapId`, `Photo.shotAt`, ad clicks counted per day) and lists the decisions it needs.
+
 | Model or field | For |
 | --- | --- |
 | `User.plan` (`FREE` / `REGULAR` / `PREMIUM`), `planSource` (`STRIPE` / `COMPLIMENTARY`), `planEndsAt` | Tiers, complimentary memberships |
@@ -457,6 +517,7 @@ The site becomes installable: "Install app" in Chrome and Edge on Android and de
 | `FriendChallenge`, `FriendChallengeEntry` (challenge, user, map) | Friends challenges |
 | `PhotoTheme` (month, title, blurb), `PhotoThemeEntry` (theme, photo) | Monthly themes |
 | `AffiliateOffer` (partner, kind, country, title, image key, URL, weight, active) | Ad cards and the Travel Desk |
+| `Moment` (map, kind, title, text, `happenedOn` with `datePrecision` `DAY` / `MONTH` / `YEAR`, country, landmark?, place name?, trip?, hidden, created by), indexed `[mapId, happenedOn]` and `[mapId, countryCode, happenedOn]`; `MomentTraveller` (moment, traveller); `MomentPhoto` (moment, photo, position). Drops `CountryVisit.notes` once its notes are moved | Moments |
 
 Ad and Travel Desk clicks go into the existing `AppEvent` table. The per-country cap counts existing `Photo` rows.
 
@@ -476,6 +537,11 @@ When each part is built, update these sections there:
   - the referrer policy.
 - **Removed from the template:** Stripe comes back.
 - **Stack and hosting:** the service worker, and `sw.js` served with `no-cache` (`.htaccess`, `netlify.toml`). What it never caches goes under the privacy rules.
+- **Moments:**
+  - `docs/API.md`: the moment routes (per map, per country, and through share links);
+  - the access rules: as for photos, hidden ones for editors only;
+  - the mock handlers;
+  - `CountryVisit.notes` leaves the visit routes.
 - **Home, About and FAQ copy:** the pitch above.
 
 ## Phases
@@ -483,9 +549,9 @@ When each part is built, update these sections there:
 | Phase | What | Why this order |
 | --- | --- | --- |
 | 0. Finish the port | SITE-DESIGN.md's open items: run everything for real, the domain, the brand assets | Nothing above works until the base does |
-| 1. Launch | <ul><li>the pitch copy and a Pricing page</li><li>the three tiers with Stripe, the print copy and complimentary memberships</li><li>First Class videos</li><li>ad cards and the Travel Desk</li><li>slideshows</li><li>the passport, with the landmark expansion</li><li>site badges and personal goals</li><li>the first ~20 country pages</li><li>influencer outreach</li><li>the installable app (PWA), online only</li></ul> | <ul><li>The tier rules must exist from day one.</li><li>Videos are First Class's main draw.</li><li>Memberships, cards and the Travel Desk are the income.</li><li>The passport and slideshows are the headline features.</li><li>Country pages start the slow SEO clock and help affiliate applications.</li><li>The PWA is a small job once the brand icons exist, and makes the map feel like an app on a phone.</li></ul> |
+| 1. Launch | <ul><li>the pitch copy and a Pricing page</li><li>the three tiers with Stripe, the print copy and complimentary memberships</li><li>First Class videos</li><li>ad cards and the Travel Desk</li><li>slideshows</li><li>the passport, with the landmark expansion</li><li>site badges and personal goals</li><li>the first ~20 country pages</li><li>influencer outreach</li><li>the installable app (PWA), online only</li><li>moments, with the timeline panel</li></ul> | <ul><li>The tier rules must exist from day one.</li><li>Videos are First Class's main draw.</li><li>Memberships, cards and the Travel Desk are the income.</li><li>The passport and slideshows are the headline features.</li><li>Country pages start the slow SEO clock and help affiliate applications.</li><li>The PWA is a small job once the brand icons exist, and makes the map feel like an app on a phone.</li><li>Moments cost no storage and make the map a family's story, not only a list of countries.</li></ul> |
 | 2. After launch | <ul><li>print link and download</li><li>monthly themes</li><li>friends challenges</li><li>more country pages</li></ul> | Each builds on the launch features; friends challenges need people already using the site |
-| 3. Later | <ul><li>"Where to go in <month>" pages</li><li>ordering prints and photobooks through the site, with the First Class discount</li><li>climate tables</li><li>per-traveller badges</li><li>video transcoding if needed</li><li>Infrequent Access storage for originals</li><li>the last map offline (PWA)</li></ul> | More work, more risk, or waiting on demand |
+| 3. Later | <ul><li>"Where to go in <month>" pages</li><li>ordering prints and photobooks through the site, with the First Class discount</li><li>climate tables</li><li>per-traveller badges</li><li>video transcoding if needed</li><li>Infrequent Access storage for originals</li><li>the last map offline (PWA)</li><li>replies to moments from the people a map is shared with</li><li>moments on a spot picked on the map</li></ul> | More work, more risk, or waiting on demand |
 
 ## Open decisions
 
@@ -504,6 +570,9 @@ Still to decide:
 - **First country pages:** which 20 countries come first.
 - **Themes:** who writes the year of monthly themes.
 - **VAT:** whether to handle VAT yourself or use a merchant of record; ask an accountant.
+- **Moments:**
+  - the starter list of kinds and their stamp icons;
+  - whether moments replace `CountryVisit.notes` (proposed) or the one country note stays as well.
 
 ## Risks
 

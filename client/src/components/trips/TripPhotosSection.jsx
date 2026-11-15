@@ -31,6 +31,7 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
         hasMore={Boolean(photos.nextCursor)}
         onLoadMore={photos.loadMore}
         onOpen={(photo) => setOpenId(photo.id)}
+        onMove={canEdit && !shareCode ? (photoId, afterId) => photos.movePhoto(photoId, afterId, 'trip') : undefined}
         emptyText='No photos from this trip yet.'
       />
 

@@ -11,6 +11,7 @@ import { forgetMapLists } from '@/utils/map/mapListCache';
 // Components
 import AppPageHead from '@/components/utils/AppPageHead';
 import AppPageShell from '@/components/common/AppPageShell';
+import TravelTicket from '@/components/auth/TravelTicket';
 import InlineAlert from '@/components/common/InlineAlert';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 
@@ -50,28 +51,40 @@ function InviteAcceptPage() {
   return (
     <>
       <AppPageHead route={INVITE_PAGE_URL} />
-      <AppPageShell width='max-w-xl'>
-        <h1 className='text-3xl font-semibold'>You’ve been invited</h1>
-        {loading || (isAuthenticated && !error) ? (
-          <div className='grid place-items-center py-10' role='status'>
-            <LoadingSpinner md />
-            <span className='sr-only'>Accepting the invite…</span>
-          </div>
-        ) : null}
-        <InlineAlert>{error}</InlineAlert>
-        {!loading && !isAuthenticated ? (
+      <AppPageShell width='max-w-2xl' mainProps={{ 'aria-labelledby': 'invite-heading' }}>
+        {/* A guest pass: the sign-in pages' boarding pass, stamped "Admit one" */}
+        <TravelTicket
+          kicker='Invitation'
+          title='You’ve been invited'
+          headingId='invite-heading'
+          stub={['Guest pass', 'Shared with you', 'Seat: Window']}
+          widthClassName=''
+        >
           <div className='grid gap-4'>
-            <p>Sign in to see what’s been shared with you. New here? Create an account with the email address the invite was sent to.</p>
-            <div className='grid grid-row-wrap gap-3'>
-              <Link to={LOGIN_PAGE_URL} state={back} className='rounded-lg bg-colour6 px-4 py-2 font-medium text-colour1 hover:brightness-110'>
-                Sign in
-              </Link>
-              <Link to={SIGN_UP_PAGE_URL} state={back} className='rounded-lg border border-colour5/40 px-4 py-2 font-medium hover:bg-colour3'>
-                Create an account
-              </Link>
-            </div>
+            {loading || (isAuthenticated && !error) ? (
+              <div className='grid place-items-center py-10' role='status'>
+                <LoadingSpinner md />
+                <span className='sr-only'>Accepting the invite…</span>
+              </div>
+            ) : null}
+            <InlineAlert>{error}</InlineAlert>
+            {!loading && !isAuthenticated ? (
+              <>
+                <p className='leading-relaxed'>
+                  Sign in to see what’s been shared with you. New here? Create an account with the email address the invite was sent to.
+                </p>
+                <div className='grid gap-3 sm:grid-cols-2'>
+                  <Link to={LOGIN_PAGE_URL} state={back} className='btn-poster'>
+                    Sign in
+                  </Link>
+                  <Link to={SIGN_UP_PAGE_URL} state={back} className='btn-paper'>
+                    Create an account
+                  </Link>
+                </div>
+              </>
+            ) : null}
           </div>
-        ) : null}
+        </TravelTicket>
       </AppPageShell>
     </>
   );

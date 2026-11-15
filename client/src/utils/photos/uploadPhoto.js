@@ -2,7 +2,7 @@
 // PUT the three files to the private bucket, then confirm so the server records it.
 import { createPhoto, presignPhoto } from '@/api/travelApi';
 import { readPhotoMeta } from './readPhotoMeta';
-import { ORIGINAL_TYPES, makePhotoCopies, originalContentType } from './makePhotoCopies';
+import { ORIGINAL_TYPES, isHeic, makePhotoCopies } from './makePhotoCopies';
 import { putFile } from './putFile';
 
 const MB = 1024 * 1024;
@@ -16,9 +16,12 @@ export const PHOTO_MAX_BYTES = { THUMB: 1 * MB, DISPLAY: 5 * MB, ORIGINAL: 50 * 
  * Resolves { photo, hadLocation }; rejects with a message people can read.
  */
 export async function uploadPhoto({ mapId, tripId, file, countryCode, onStage, onProgress }) {
-  const originalType = originalContentType(file);
+  if (isHeic(file)) {
+    throw new Error('This is a HEIC photo, which can’t be added. Save it as a JPEG first, or add it from your iPhone, which sends a JPEG.');
+  }
+  const originalType = file.type.toLowerCase();
   if (!ORIGINAL_TYPES.includes(originalType)) {
-    throw new Error('Only JPEG, PNG, WebP and HEIC photos can be added.');
+    throw new Error('Only JPEG, PNG and WebP photos can be added.');
   }
   if (file.size > PHOTO_MAX_BYTES.ORIGINAL) throw new Error('This photo is over 50 MB.');
 

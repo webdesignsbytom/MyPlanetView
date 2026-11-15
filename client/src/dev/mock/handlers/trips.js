@@ -125,7 +125,7 @@ export function registerTripRoutes() {
   route('GET', '/api/trips/:tripId/photos', ({ params, query }) => {
     const { trip, role, reply } = loadTrip(params.tripId, 'VIEWER');
     if (reply) return reply;
-    const page = photoPage(getDb().photos.filter((p) => p.tripId === trip.id), role, query);
+    const page = photoPage(getDb().photos.filter((p) => p.tripId === trip.id), role, { ...query, tripId: trip.id });
     return page.error ? fail(400, page.error) : ok(page);
   });
 

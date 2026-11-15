@@ -15,7 +15,9 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
   - `client/public/brand/og-default.jpg` (1200 × 630, the share image);
   - everything in `client/public/favicon/` (ico, svg, 96 px, apple-touch, and the 192 and 512 manifest icons), plus a maskable 512 px icon for the installable app (`docs/FEATURE-PLAN.md`, "Installable app").
 - [ ] **[block]** The legal text (`client/src/utils/data/termsData.js`) has been reviewed by you, or someone qualified. It's a plain-English draft covering R2 storage, GPS kept only on originals, analytics only after consent, account deletion and the shared-map hand-over.
-- [ ] **[block]** The 16 landmarks marked `// unverified` in `server/prisma/seed/data/landmarks.js` are checked by hand: Badaling (Great Wall), Malabo Cathedral, Fort George, Copán, Petra, Tien Shan, Ohrid, Timbuktu, Aïr and Ténéré, Kokoda Track, Jesuit Missions (Trinidad), La Soufrière, Papaseea, Alhambra, Pamir, Old City of Sanaa. The other 161 were checked against Wikidata on 14 Nov 2026. Photos are matched by distance, so a wrong point means missed matches. Ranges and trails (Tien Shan, Pamir, Kokoda) may be better removed or given a point the photos are likely to be near. Re-copy the file to `client/src/dev/mock/data/landmarks.js` after changes.
+- [x] **[block]** Every landmark in `server/prisma/seed/data/landmarks.js` is checked against Wikidata, each with its `// Wikidata Q…` item: 161 on 14 Nov 2026, the last 16 (Badaling, Malabo Cathedral, Fort George, Copán, Petra, Tien Shan, Ohrid, Timbuktu, Aïr and Ténéré, Kokoda Track, Trinidad, La Soufrière, Papaseʻea, Alhambra, Pamir, Old Sanaa) on 15 Nov. `client/src/dev/mock/data/landmarks.js` is a fresh copy.
+  - Where one point can't describe the place, the file's header names a stand-in that travellers photograph, and the two ranges are named after theirs: "Tien Shan (Ala-Archa)" (15 km) and "Pamir (Lake Karakul)" (30 km). Kokoda Track is centred on Efogi, half-way, with 35 km reaching both trailheads. Papaseʻea's Wikidata item has no coordinate, so its point is OpenStreetMap's. Re-copy the file to the mock after any change.
+- [ ] The magnetic poles' pins (`QN`, `QS` in both country lists) are this year's positions from NOAA's World Magnetic Model; they were set to 2025's on 15 Nov 2026. Repeat every January.
 - [ ] `client/src/utils/constants/links.js` holds real profile URLs, or stays empty (an empty URL hides the link).
 - [ ] Every claim on the home, about and FAQ pages matches what the app actually does.
 - [ ] Each indexable page's description says what the page answers, with a fact from the page. The build checks length and uniqueness, not wording.
@@ -55,6 +57,7 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
 - [ ] **[block]** The client env files have no `NODE_ENV`, and `client/.env.development.example` and `client/.env.production.example` keep only the keys the code reads: `VITE_API_URL`, `VITE_MEDIA_CDN`, `VITE_ANALYTICS_ID`. Remove the YouTube, Spotify, Sentry, refresh-token and PayPal keys.
 - [ ] **[block]** `npm run build` passes: `check:meta`, `check:house-rules`, pre-render and `check-seo`.
 - [ ] **[block]** Upload everything in `client/dist/`, including `.htaccess`, `404.html` and `app-shell.html`. `www.` and `http://` redirect to the bare domain with a 301 (`.htaccess` does it).
+- [ ] **[block]** Every subdomain opens over `https://` with a padlock: `api.`, `www.`, and cPanel's `mail.`, `webmail.` and `cpanel.` (InMotion's AutoSSL normally covers them). `.htaccess` sends HSTS with `includeSubDomains`, so once a browser has seen the site it refuses plain `http://` on every subdomain for a year.
 - [ ] **[block]** After deploying, `npm run check:seo -- --live https://<domain>` passes (from `client/`). It checks that:
   - every sitemap URL answers 200 with its own head tags;
   - unknown URLs 404;
@@ -71,7 +74,7 @@ Test signed out, as a brand-new account, and on a phone in portrait:
 - [ ] Sign up → verify → onboarding (solo, couple, family; travellers) → reset password → change email → delete account. The account with shared maps hands them to an editor.
 - [ ] Map: pan and zoom with a mouse, a trackpad, one finger and two fingers; all four styles; the settings save and come back after signing in on another device.
 - [ ] Countries: mark visited, lived and want to go from the map and the country list; the stats add up.
-- [ ] Uploads: JPEG, PNG and **HEIC** from an iPhone (in Safari and in Chrome); a photo with GPS lands in the right country with landmark suggestions; one without GPS asks for a country; the original downloads, and the copies carry no location data.
+- [ ] Uploads: JPEG and PNG; photos from an iPhone (in Safari and in Chrome) arrive as JPEGs, and a `.heic` file from a computer gets the "save it as a JPEG" message; a photo with GPS lands in the right country with landmark suggestions (reports say iPhone browsers strip GPS from photos picked in the browser since iOS 16.4: check whether it survives); one without GPS asks for a country; the original downloads, and the copies carry no location data.
 - [ ] Trips: create, add and reorder stops, mark completed (its countries become visited), photos into a trip.
 - [ ] Sharing:
   - add a viewer and an editor by email, both existing users and a new address (the invite turns into access after sign-up and verification);

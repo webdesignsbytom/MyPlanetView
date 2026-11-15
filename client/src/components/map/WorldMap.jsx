@@ -8,21 +8,28 @@ import CountryNameLabels from './CountryNameLabels';
 import LandmarkPins from './LandmarkPins';
 import StopMarkers from './StopMarkers';
 import VisitBadges from './VisitBadges';
+import PoleNameLabels from './PoleNameLabels';
 import { StarBadgeSymbols } from './StarBadge';
+import { PoleMarkerSymbols } from './PoleMarker';
 
 const NO_VISITS = {};
-// The badge art, defined once in the SVG; a constant element, so zoom re-renders skip it
+// The badge and pole art, defined once in the SVG; constant elements, so zoom re-renders
+// skip them
 const BADGE_SYMBOLS = <StarBadgeSymbols />;
+const POLE_SYMBOLS = <PoleMarkerSymbols />;
 
 // An open hand over the sea, and a closed one over everything while a mouse button is held
 // (useMapViewport sets data-grabbing), beating the countries' pointer
 const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[data-grabbing]_*]:cursor-grabbing';
 
 /**
- * The SVG world map (viewBox 2000 x 857, Robinson). Pan and zoom come from a
- * useMapViewport() owned by the page, so the page can also move the view. The viewport
+ * The SVG world map (Robinson, 2000 wide; from y -30 to 1034 with Antarctica, to 857
+ * without: projection.js mapExtent). Pan and zoom come from a useMapViewport() owned by
+ * the page, so the page can also move the view; give it the same extent. The viewport
  * sets the viewBox itself; this re-renders only when the zoom changes (for the layers
  * drawn by zoom), never while panning.
+ * `showAntarctica` off: Antarctica and the poles beside it aren't drawn (the
+ * showAntarctica map setting; only the view changes).
  */
 function WorldMap({
   viewport,
@@ -35,6 +42,7 @@ function WorldMap({
   showCountryNames = false,
   showVisited = true,
   showUnvisited = true,
+  showAntarctica = true,
   landmarks = null,
   alwaysShowLandmarks = false,
   stops = null,
@@ -61,7 +69,8 @@ function WorldMap({
         {...(panZoom ? viewport.handlers : {})}
       >
         {BADGE_SYMBOLS}
-        {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} /> : null}
+        {POLE_SYMBOLS}
+        {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} showAntarctica={showAntarctica} /> : null}
         <CountryLayer
           visitsByCode={visitsByCode}
           selectedCode={selectedCode}
@@ -71,16 +80,18 @@ function WorldMap({
           afterTap={afterTap}
           showVisited={showVisited}
           showUnvisited={showUnvisited}
+          showAntarctica={showAntarctica}
         />
-        {showCountryNames ? <CountryNameLabels zoom={zoom} visitsByCode={visitsByCode} /> : null}
-        <VisitBadges visitsByCode={visitsByCode} zoom={zoom} faded={!showVisited} />
+        {showCountryNames ? <CountryNameLabels zoom={zoom} visitsByCode={visitsByCode} showAntarctica={showAntarctica} /> : null}
+        <VisitBadges visitsByCode={visitsByCode} zoom={zoom} faded={!showVisited} showAntarctica={showAntarctica} />
+        <PoleNameLabels zoom={zoom} visitsByCode={visitsByCode} always={showCountryNames} showAntarctica={showAntarctica} />
         {landmarks?.length ? <LandmarkPins landmarks={landmarks} zoom={zoom} always={alwaysShowLandmarks} onSelectCountry={onSelectCountry} afterTap={afterTap} /> : null}
         {stops?.length ? <StopMarkers stops={stops} zoom={zoom} /> : null}
       </svg>
       {panZoom ? (
         <p id={hintId} className='sr-only'>
           Drag, or use the arrow keys, to move the map. Plus and minus zoom, as does a double-tap; 0 shows the whole
-          world. Every country is also in the country list.
+          world. Every country and special place is also in the country list.
         </p>
       ) : null}
     </>

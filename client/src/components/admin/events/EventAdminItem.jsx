@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { IoIosCloseCircleOutline } from 'react-icons/io';
 // Components
+import CloseStamp from '@/components/common/CloseStamp';
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 
 const LEVEL_BADGES = {
@@ -26,7 +26,7 @@ const personLabel = (person, fallbackId) => {
 function DetailRow({ label, children }) {
   return (
     <div className='grid sm:grid-cols-[9rem_1fr] gap-x-2'>
-      <dt className='font-semibold text-colour6'>{label}</dt>
+      <dt className='font-semibold text-colour9'>{label}</dt>
       <dd className='break-all'>{children ?? '—'}</dd>
     </div>
   );
@@ -41,14 +41,15 @@ function EventAdminItem({ event, statusOptions, busy, onStatusChange, onDelete }
 
   return (
     <article
-      className='grid gap-y-3 bg-colour1 text-colour4 border-2 border-colour6 px-4 py-4 h-fit rounded-md shadow'
+      // A slip of paper in the card (dashed brown edge, like a trip's traveller fieldset)
+      className='grid content-start gap-y-3 border-2 border-dashed border-poster-brown/60 bg-paper-cream px-4 py-4'
       aria-labelledby={`event-heading-${event.id}`}
       aria-busy={busy ? 'true' : 'false'}
     >
       {/* Summary */}
-      <div className='grid grid-cols-rev gap-x-2'>
+      <div className='grid grid-cols-[minmax(0,1fr)_auto] gap-x-2'>
         <div className='grid gap-y-1 min-w-0'>
-          <div className='flex flex-wrap items-center gap-2 text-xs'>
+          <div className='grid grid-row-wrap items-center gap-2 text-xs'>
             <span className={`px-2 py-0.5 rounded font-semibold ${LEVEL_BADGES[event.level] || LEVEL_BADGES.INFO}`}>
               {event.level}
             </span>
@@ -68,20 +69,13 @@ function EventAdminItem({ event, statusOptions, busy, onStatusChange, onDelete }
           <p className={`break-words ${isOpen ? '' : 'line-clamp-2'}`}>{event.message}</p>
         </div>
 
-        <button
-          type='button'
-          onClick={() => onDelete(event)}
-          disabled={busy}
-          className='self-start text-status-critical hover:opacity-75 disabled:opacity-40'
-          title='Delete event'
-          aria-label={`Delete event ${event.action}`}
-        >
-          <IoIosCloseCircleOutline size={30} />
-        </button>
+        <div className='grid content-start'>
+          <CloseStamp onClick={() => onDelete(event)} disabled={busy} hint='Delete event' label={`Delete event ${event.action}`} />
+        </div>
       </div>
 
       {/* Triage + expand */}
-      <div className='flex flex-wrap items-center gap-3'>
+      <div className='grid grid-cols-[auto_auto_minmax(0,1fr)] items-center gap-3'>
         <label htmlFor={`event-status-${event.id}`} className='text-sm font-medium'>
           Status
         </label>
@@ -99,7 +93,7 @@ function EventAdminItem({ event, statusOptions, busy, onStatusChange, onDelete }
           onClick={() => setIsOpen((open) => !open)}
           aria-expanded={isOpen ? 'true' : 'false'}
           aria-controls={detailsId}
-          className='ml-auto text-sm font-semibold text-colour6 hover:underline'
+          className='justify-self-end text-sm font-semibold text-colour6 hover:underline'
         >
           {isOpen ? 'Hide details' : 'Show details'}
         </button>
@@ -107,7 +101,7 @@ function EventAdminItem({ event, statusOptions, busy, onStatusChange, onDelete }
 
       {/* Details */}
       {isOpen && (
-        <dl id={detailsId} className='grid gap-y-1 text-sm border-t border-colour3 pt-3'>
+        <dl id={detailsId} className='grid gap-y-1 border-t-2 border-dashed border-poster-brown/60 pt-3 text-sm'>
           <DetailRow label='Message'>{event.message}</DetailRow>
           <DetailRow label='Action'>{event.action}</DetailRow>
           <DetailRow label='Status code'>{event.statusCode}</DetailRow>

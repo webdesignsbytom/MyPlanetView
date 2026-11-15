@@ -4,6 +4,7 @@ import {
   confirmPhotoLandmarkHandler,
   deletePhotoHandler,
   getPhotoHandler,
+  movePhotoHandler,
   removePhotoLandmarkHandler,
   updatePhotoHandler,
 } from '../controllers/photos.js';
@@ -18,6 +19,8 @@ router.use(validateAuthentication);
 router.get('/:photoId', getPhotoHandler);
 router.patch('/:photoId', verified, updatePhotoHandler);
 router.delete('/:photoId', verified, deletePhotoHandler);
+// Rearranging a gallery (its country's on the map, or its trip's)
+router.post('/:photoId/move', verified, movePhotoHandler);
 
 // Landmark matches
 router.post('/:photoId/landmarks', verified, addPhotoLandmarkHandler);

@@ -5,12 +5,12 @@ import { ADMIN_USERS_PAGE_URL } from '@/utils/constants/routes';
 import { helmetData } from '@/utils/data/helmetData';
 // Components
 import { HelmetItem } from '@/components/utils/HelmetItem';
-import Navbar from '@/components/nav/Navbar';
+import AppPageShell from '@/components/common/AppPageShell';
+import PageTitleCard from '@/components/common/PageTitleCard';
 import AdminUsersMainContainer from '@/components/admin/users/AdminUsersMainContainer';
 
 function AdminUsersPage() {
   const pageHelmet = helmetData[ADMIN_USERS_PAGE_URL];
-
 
   return (
     <>
@@ -23,27 +23,10 @@ function AdminUsersPage() {
         canonicalPath={ADMIN_USERS_PAGE_URL}
       />
 
-      <div
-        className='grid min-h-screen overflow-hidden'
-        role='document'
-        aria-label='User admin page'
-      >
-        <div className='grid grid-rows-reg w-full'>
-          <div className='grid grid-rows-reg w-full'>
-            <Navbar />
-
-            <header className='grid w-screen h-fit border-b-4 border-t-4 border-colour6'>
-              <div className='grid gap-6 px-6 sm:px-10 md:px-16 lg:px-20 xl:px-24 bg-colour3 text-center h-fit py-8'>
-                <h1 className='font-titleFont text-4xl font-extrabold'>
-                  User Admin
-                </h1>
-              </div>
-            </header>
-          </div>
-
-          <AdminUsersMainContainer />
-        </div>
-      </div>
+      <AppPageShell width='max-w-6xl' mainProps={{ 'aria-labelledby': 'admin-users-heading' }}>
+        <PageTitleCard page='Head office' title='User Admin' headingId='admin-users-heading' />
+        <AdminUsersMainContainer />
+      </AppPageShell>
     </>
   );
 }

@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 // Api
-import { getPhotoPage } from '@/api/travelApi';
+import { getPhotoPage, movePhoto as movePhotoRequest } from '@/api/travelApi';
+
+// The list with `photoId` moved to straight after `afterId` (first when it's null)
+const placeAfter = (list, photoId, afterId) => {
+  const moving = list.find((p) => p.id === photoId);
+  if (!moving) return list;
+  const rest = list.filter((p) => p.id !== photoId);
+  const at = afterId ? rest.findIndex((p) => p.id === afterId) + 1 : 0;
+  return [...rest.slice(0, at), moving, ...rest.slice(at)];
+};
 
 // First pages asked for before their list mounted (MapPage starts the map's lists alongside
 // the map itself). Each is taken once, by the first list with the same filters, while fresh.
@@ -28,7 +37,8 @@ function takePreloaded(filters) {
 }
 
 /**
- * Photos of a map, a trip, or a share link, newest first, a page at a time.
+ * Photos of a map, a trip, or a share link, a page at a time, in the gallery's order
+ * (a country's or a trip's as its editors arranged it; the whole map's newest first).
  * Filters: `country` (ISO code), or `unplaced` (only the photos with no country), and,
  * on a map, `tripId`. Nothing loads while `enabled` is false.
  */
@@ -60,12 +70,18 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, unplac
     [mapId, tripId, shareCode, country, unplaced, limit],
   );
 
+  // Which list is on screen. Loading the same one again (after a change in the viewer, say)
+  // keeps it there until the new page arrives, so its thumbnails stay mounted and the one
+  // the viewer was opened from can take focus back; other filters start from an empty list.
+  const listKeyRef = useRef(null);
   const reload = useCallback(() => {
     generationRef.current += 1;
-    setPhotos([]);
+    const key = enabled ? keyOf({ mapId, tripId, shareCode, country, unplaced, limit }) : null;
+    if (key === null || key !== listKeyRef.current) setPhotos([]);
+    listKeyRef.current = key;
     setNextCursor(null);
     if (enabled) fetchPage(null);
-  }, [enabled, fetchPage]);
+  }, [enabled, fetchPage, mapId, tripId, shareCode, country, unplaced, limit]);
 
   useEffect(() => {
     reload();
@@ -82,9 +98,26 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, unplac
   const removePhoto = useCallback((photoId) => {
     setPhotos((prev) => prev.filter((p) => p.id !== photoId));
   }, []);
+  // New photos go first, as the server puts them
   const addPhotos = useCallback((added) => {
     setPhotos((prev) => [...added, ...prev.filter((p) => !added.some((a) => a.id === p.id))]);
   }, []);
 
-  return { photos, nextCursor, loading, error, loadMore, reload, replacePhoto, removePhoto, addPhotos };
+  // Rearranging (editors): the list moves at once, then the server is told. If it says
+  // no, the list is loaded again, so it shows the order that was really saved; the
+  // error is thrown on for the grid to show.
+  const movePhoto = useCallback(
+    async (photoId, afterId, gallery) => {
+      setPhotos((prev) => placeAfter(prev, photoId, afterId));
+      try {
+        await movePhotoRequest(photoId, { gallery, afterId });
+      } catch (err) {
+        reload();
+        throw err;
+      }
+    },
+    [reload],
+  );
+
+  return { photos, nextCursor, loading, error, loadMore, reload, replacePhoto, removePhoto, addPhotos, movePhoto };
 }

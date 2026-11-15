@@ -3,9 +3,13 @@ import React from 'react';
 import MapPanel from './MapPanel';
 import StatTile from './StatTile';
 import UnplacedPhotosButton from './UnplacedPhotosButton';
+// Utils
+import { CONTINENT_TOTAL, SPECIAL_PLACE_TOTAL } from '@/utils/map/specialPlaces';
 
-// Travel statistics, counted by the server from what this viewer may see. The photos
-// with no country (counted, but on no country) are a button away.
+// Travel statistics, counted by the server from what this viewer may see. Countries
+// leave out the special places (Antarctica and the poles), which have their own count;
+// continents count them (Antarctica is the seventh). The photos with no country
+// (counted, but on no country) are a button away.
 function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onClose }) {
   const byTraveller = stats?.byTraveller || [];
   return (
@@ -14,7 +18,8 @@ function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = 
         <>
           <dl className='grid grid-cols-2 gap-3'>
             <StatTile label='Countries' value={stats.countries} />
-            <StatTile label='Continents' value={stats.continents} />
+            <StatTile label='Continents' value={stats.continents} outOf={CONTINENT_TOTAL} />
+            <StatTile label='Special places' value={stats.specialPlaces} outOf={SPECIAL_PLACE_TOTAL} />
             <StatTile label='Photos' value={stats.photos} />
             <StatTile label='Landmarks' value={stats.landmarks} />
             <StatTile label='Trips' value={stats.trips} />

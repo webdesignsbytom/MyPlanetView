@@ -20,7 +20,8 @@ function ShareLinkBox({ shareUrl, shareCode, busy, canReset = true, onReset }) {
 
   return (
     <div className='grid gap-2'>
-      <div className='grid gap-2 sm:grid-cols-rev sm:items-center'>
+      {/* Items stretch: the link box and Copy link are the same height */}
+      <div className='grid gap-2 sm:grid-cols-rev'>
         <input
           readOnly
           value={shareUrl}

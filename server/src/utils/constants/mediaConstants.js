@@ -16,21 +16,19 @@ export const PHOTO_MAX_BYTES = {
   ORIGINAL: 50 * MB,
 };
 
-// The copies the browser makes are plain web images; the original can also be
-// an iPhone's HEIC (stored and downloadable, never shown in the browser)
+// Every size is a plain web image. No HEIC: iPhones send a JPEG when a photo is
+// picked in a browser, and the client refuses HEIC files (docs/SITE-DESIGN.md)
 const WEB_IMAGE_TYPES = ['image/jpeg', 'image/webp', 'image/png'];
 export const PHOTO_CONTENT_TYPES = {
   THUMB: WEB_IMAGE_TYPES,
   DISPLAY: WEB_IMAGE_TYPES,
-  ORIGINAL: [...WEB_IMAGE_TYPES, 'image/heic', 'image/heif'],
+  ORIGINAL: WEB_IMAGE_TYPES,
 };
 
 export const PHOTO_EXTENSIONS = {
   'image/jpeg': 'jpg',
   'image/webp': 'webp',
   'image/png': 'png',
-  'image/heic': 'heic',
-  'image/heif': 'heif',
 };
 
 // Signed photo URLs: signed at the start of the hour, valid for two, so a file

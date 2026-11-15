@@ -3,8 +3,10 @@
 import { COUNTRIES } from '@/utils/map/countries';
 import { posterUrl } from '@/utils/map/posterData';
 import { projectToMap } from '@/utils/map/projection';
+import { PARENT_PLACE, isSpecialPlace, withParentPlaces } from '@/utils/map/specialPlaces';
 import { LANDMARKS } from './data/landmarks';
 import { getDb, me, session } from './store';
+import { byPosition } from './photoOrder';
 
 export const slugify = (text) =>
   String(text)
@@ -117,18 +119,25 @@ export function photoDetail(photo, role) {
   return detail;
 }
 
-// Newest first (by upload); cursor = the id of the last photo of the previous page.
+// In the gallery's order, as the server: a trip's list in the trip's order, a country's
+// (or the unplaced photos) in that gallery's order, the whole map's newest upload first.
+// cursor = the id of the last photo of the previous page.
 // `unplaced=1`: only the photos with no country. Returns { error } for a bad filter.
 export function photoPage(photos, role, { country, unplaced, tripId, cursor, limit }) {
   const size = Math.min(Math.max(Number(limit) || 30, 1), 60);
   const onlyUnplaced = unplaced === '1' || unplaced === 'true';
   if (unplaced !== undefined && !onlyUnplaced && unplaced !== '0' && unplaced !== 'false') return { error: 'Malformed data.' };
   if (onlyUnplaced && country !== undefined) return { error: 'Malformed data.' };
+  const order = tripId
+    ? byPosition('tripPosition')
+    : onlyUnplaced || country
+      ? byPosition('countryPosition')
+      : (a, b) => (a.createdAt < b.createdAt ? 1 : -1);
   const list = photos
     .filter((p) => canSeePhoto(p, role))
     .filter((p) => (onlyUnplaced ? !p.countryCode : !country || p.countryCode === country))
     .filter((p) => !tripId || p.tripId === tripId)
-    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+    .sort(order);
   const start = cursor ? list.findIndex((p) => p.id === cursor) + 1 : 0;
   const page = list.slice(start, start + size);
   const nextCursor = start + size < list.length ? page[page.length - 1].id : null;
@@ -138,11 +147,16 @@ export function photoPage(photos, role, { country, unplaced, tripId, cursor, lim
 // Maps
 const visibleMapPhotos = (map, role) => getDb().photos.filter((p) => p.mapId === map.id && canSeePhoto(p, role));
 
+// As the server's utils/mapStats.js: countries leave out the special places (Antarctica
+// and the poles), which have their own count; the continents count every visit (Antarctica
+// and the South Pole give the seventh); per person, countries only
 export function mapStats(map, role) {
   const db = getDb();
   const counted = new Set(
     db.visits.filter((v) => v.mapId === map.id && (v.status === 'VISITED' || v.status === 'LIVED')).map((v) => v.countryCode),
   );
+  const countries = [...counted].filter((c) => !isSpecialPlace(c));
+  const specialPlaces = [...counted].filter(isSpecialPlace);
   const continents = new Set([...counted].map((c) => continentByCode.get(c)).filter(Boolean));
   const photos = visibleMapPhotos(map, role);
   const photoIds = new Set(photos.map((p) => p.id));
@@ -153,14 +167,17 @@ export function mapStats(map, role) {
     .map((t) => ({ travellerIds: t.travellerIds, countryCodes: db.stops.filter((s) => s.tripId === t.id).map((s) => s.countryCode) }));
   const travellers = db.travellers.filter((t) => t.mapId === map.id).sort((a, b) => a.position - b.position);
   return {
-    countries: counted.size,
+    countries: countries.length,
+    specialPlaces: specialPlaces.length,
     continents: continents.size,
     photos: photos.length,
     landmarks: landmarks.size,
     trips: trips.length,
     byTraveller: travellers.map((t) => {
       const countries = new Set();
-      completed.forEach((trip) => trip.travellerIds.includes(t.id) && trip.countryCodes.forEach((c) => countries.add(c)));
+      completed.forEach(
+        (trip) => trip.travellerIds.includes(t.id) && trip.countryCodes.forEach((c) => !isSpecialPlace(c) && countries.add(c)),
+      );
       return { travellerId: t.id, name: t.name, countries: countries.size };
     }),
   };
@@ -275,13 +292,33 @@ export function tripView(trip, role, { viaShareLink = false } = {}) {
 
 // As the server's createMissingVisits (domain/maps.js): a WANT_TO_GO country becomes
 // VISITED, a missing one is added as VISITED (no first-visit date), and an existing
-// VISITED or LIVED one is left alone
+// VISITED or LIVED one is left alone. The South Pole brings Antarctica with it, the same
+// way (utils/map/specialPlaces.js). Returns the visits it added or changed.
 export function markVisited(mapId, countryCode, source) {
-  if (!countryCode) return;
+  if (!countryCode) return [];
   const db = getDb();
-  const visit = db.visits.find((v) => v.mapId === mapId && v.countryCode === countryCode);
-  if (!visit) db.visits.push({ mapId, countryCode, status: 'VISITED', source, firstVisitedOn: null, notes: null });
-  else if (visit.status === 'WANT_TO_GO') Object.assign(visit, { status: 'VISITED', source });
+  const changed = [];
+  for (const code of withParentPlaces([countryCode])) {
+    const visit = db.visits.find((v) => v.mapId === mapId && v.countryCode === code);
+    if (!visit) {
+      const added = { mapId, countryCode: code, status: 'VISITED', source, firstVisitedOn: null, notes: null };
+      db.visits.push(added);
+      changed.push(added);
+    } else if (visit.status === 'WANT_TO_GO') {
+      Object.assign(visit, { status: 'VISITED', source });
+      changed.push(visit);
+    }
+  }
+  return changed;
+}
+
+// A status set by hand: the places it brings with it (the South Pole visited or lived:
+// Antarctica), added or turned VISITED as markVisited does. As the server's upsertVisit,
+// the `implied` of PUT /maps/:mapId/visits/:countryCode.
+export function markParentsVisited(mapId, countryCode, status) {
+  const parent = PARENT_PLACE[countryCode];
+  if (!parent || (status !== 'VISITED' && status !== 'LIVED')) return [];
+  return markVisited(mapId, parent, 'MANUAL');
 }
 
 export function distanceM(lat1, lng1, lat2, lng2) {

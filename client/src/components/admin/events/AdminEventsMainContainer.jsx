@@ -10,10 +10,15 @@ import {
 } from '@/utils/constants/apiRoutes';
 // Components
 import ConfirmModal from '@/components/modals/ConfirmModal';
+import PaperCard from '@/components/common/PaperCard';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import AdminPagination from '@/components/admin/users/AdminPagination';
 import EventAdminItem from './EventAdminItem';
 import EventFilters from './EventFilters';
+
+// components/common/Button's `danger` at its `small` size: parchment, deep-red ink
+const DANGER_BUTTON =
+  'btn-paper [--btn-ink:var(--poster-red-deep)] [--btn-leading:1.25rem] [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:1rem] pointer-coarse:[--btn-pad-y:0.5rem]';
 
 const PAGE_SIZE = 25;
 const SEARCH_DELAY_MS = 350;
@@ -168,42 +173,32 @@ function AdminEventsMainContainer() {
     });
   };
 
+  // A paper card (inside AppPageShell's <main>, under the page's title) with "Delete All"
+  // on its title strip, its inputs and dropdowns on the paper (paper-fields)
   return (
-    <main
-      id='main-content'
-      tabIndex={-1}
-      role='main'
-      className='grid w-full h-full gap-y-6 bg-colour3 pb-12 text-colour4'
-      aria-label='Audit log'
+    <PaperCard
+      title='Events'
+      titleId='admin-events-list-heading'
+      className='paper-fields'
+      action={
+        total > 0 ? (
+          <div className='grid'>
+            <button
+              type='button'
+              onClick={handleDeleteAll}
+              className={DANGER_BUTTON}
+              aria-describedby='delete-all-events-description'
+            >
+              Delete All
+            </button>
+            <span id='delete-all-events-description' className='sr-only'>
+              Deletes every event in the audit log permanently
+            </span>
+          </div>
+        ) : null
+      }
     >
-      {/* Header */}
-      <section
-        className='grid w-full bg-colour6 px-4 lg:px-6 py-3 h-fit border-b-4 border-solid border-colour6'
-        aria-label='Audit log header'
-      >
-        <div className='grid grid-flow-col items-center justify-between'>
-          <h2 className='sm:text-lg md:text-xl lg:text-2xl font-semibold text-colour1'>
-            Events
-          </h2>
-          {total > 0 && (
-            <div>
-              <button
-                type='button'
-                onClick={handleDeleteAll}
-                className='solid-danger hover:brightness-110 font-semibold py-1 px-4 rounded'
-                aria-describedby='delete-all-events-description'
-              >
-                Delete All
-              </button>
-              <span id='delete-all-events-description' className='sr-only'>
-                Deletes every event in the audit log permanently
-              </span>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <div className='grid w-full mx-auto max-w-6xl px-4 gap-y-4 h-fit'>
+      <div className='grid w-full gap-y-4'>
         <EventFilters
           filters={filters}
           search={searchInput}
@@ -235,9 +230,9 @@ function AdminEventsMainContainer() {
               <p>No events match these filters.</p>
             </div>
           ) : (
-            <ul className='grid gap-y-2'>
+            <ul className='grid gap-3'>
               {events.map((event) => (
-                <li key={event.id}>
+                <li key={event.id} className='grid'>
                   <EventAdminItem
                     event={event}
                     statusOptions={STATUS_OPTIONS}
@@ -270,7 +265,7 @@ function AdminEventsMainContainer() {
           message={modalContent.message}
         />
       )}
-    </main>
+    </PaperCard>
   );
 }
 

@@ -63,7 +63,7 @@ ErrorDocument 404 /404.html
       https://nbg1.your-objectstorage.com \
       https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; \
     media-src  'self' https://nbg1.your-objectstorage.com blob: data:; \
-    worker-src 'self' blob:; \
+    worker-src 'self'; \
     form-action 'self'; \
     frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
   Header always set X-Content-Type-Options nosniff

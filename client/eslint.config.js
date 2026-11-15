@@ -27,8 +27,9 @@ export default defineConfig([
     },
   },
   {
-    // Config files and build scripts run under Node, not the browser.
-    files: ['*.config.js', 'scripts/**/*.{js,mjs}'],
+    // Config files, build scripts and the Playwright tests run under Node, not the browser
+    // (the tests' page.evaluate callbacks keep the browser globals from above).
+    files: ['*.config.js', 'scripts/**/*.{js,mjs}', 'tests/**/*.js'],
     languageOptions: {
       globals: globals.node,
     },

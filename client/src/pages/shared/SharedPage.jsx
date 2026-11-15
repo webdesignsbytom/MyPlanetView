@@ -77,6 +77,7 @@ function SharedPage() {
             trip={{ ...shared.trip, role: shared.role }}
             shareCode={code}
             styleId={settings.style}
+            showAntarctica={settings.showAntarctica}
             onTripChange={() => {}}
           />
         </PublicPageLayout>

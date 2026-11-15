@@ -1,8 +1,8 @@
 // Countries on the SVG world map, seeded into the Country table.
 // Generated from the old map data (client/src/utils/data/CountriesData.jsx):
 // codes are ISO 3166-1 alpha-2 (plus IC Canary Islands and XK Kosovo), pins are
-// the centre of each country's largest shape on the map (viewBox 2000 x 1000,
-// Robinson projection). Micro-states with no shape, and Chile (whose mainland is
+// the centre of each country's largest shape on the map (Robinson projection; the
+// shapes span y 0 to 857, the pole lines are at -16.6 and 1020.6). Micro-states with no shape, and Chile (whose mainland is
 // missing from the old map), are pinned from their real position instead.
 export const COUNTRIES = [
   { code: 'AF', name: "Afghanistan", slug: 'afghanistan', continent: 'ASIA', pinX: 1340.9, pinY: 284.6 },
@@ -228,5 +228,14 @@ export const COUNTRIES = [
   { code: 'EH', name: "Western Sahara", slug: 'western-sahara', continent: 'AFRICA', pinX: 919.2, pinY: 345.9 },
   { code: 'YE', name: "Yemen", slug: 'yemen', continent: 'ASIA', pinX: 1252.8, pinY: 399.7 },
   { code: 'ZM', name: "Zambia", slug: 'zambia', continent: 'AFRICA', pinX: 1142.3, pinY: 587.9 },
-  { code: 'ZW', name: "Zimbabwe", slug: 'zimbabwe', continent: 'AFRICA', pinX: 1152.5, pinY: 623.2 },
+  { code: 'ZW', name: "Zimbabwe", slug: 'zimbabwe', continent: 'AFRICA', pinX: 1152.5, pinY: 623.2 },  // Special places (15 Nov 2026): not countries, so they're left out of the country count.
+  // Antarctica (its real ISO code) is a drawn shape and counts as a continent; the poles are
+  // points, with codes from ISO 3166's user-assigned range (X = geographic, Q = magnetic).
+  // The magnetic poles drift: their pins are NOAA's World Magnetic Model positions for 2025
+  // (WMM2025: 85.762°N 139.298°E and 63.851°S 135.078°E); move them once a year.
+  { code: 'AQ', name: "Antarctica", slug: 'antarctica', continent: 'ANTARCTICA', kind: 'SPECIAL', pinX: 987.1, pinY: 960.2 },
+  { code: 'XN', name: "North Pole", slug: 'north-pole', continent: null, kind: 'SPECIAL', pinX: 987.1, pinY: -16.6 },
+  { code: 'QN', name: "Magnetic North Pole", slug: 'magnetic-north-pole', continent: null, kind: 'SPECIAL', pinX: 1435.1, pinY: -6.1 },
+  { code: 'XS', name: "South Pole", slug: 'south-pole', continent: 'ANTARCTICA', kind: 'SPECIAL', pinX: 987.1, pinY: 1020.6 },
+  { code: 'QS', name: "Magnetic South Pole", slug: 'magnetic-south-pole', continent: null, kind: 'SPECIAL', pinX: 1576.9, pinY: 905.2 },
 ];

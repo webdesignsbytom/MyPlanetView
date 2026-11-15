@@ -44,7 +44,7 @@ export const COUNTRIES_API = '/api/countries';
 export const LANDMARKS_API = '/api/landmarks'; // ?country=JP
 export const MAPS_API = '/api/maps'; // /:mapId, /:mapId/stats|travellers|visits|trips|photos|sharing|members|invites
 export const TRIPS_API = '/api/trips'; // /:tripId, /:tripId/stops|travellers|photos|sharing|members|invites, /shared-with-me
-export const PHOTOS_API = '/api/photos'; // /:photoId, /:photoId/landmarks
+export const PHOTOS_API = '/api/photos'; // /:photoId, /:photoId/landmarks, /:photoId/move
 export const SHARED_API = '/api/shared'; // /:code, /:code/photos, /:code/photos/:photoId
 export const ACCEPT_INVITE_API = '/api/invites/accept'; // POST { token }
 export const MAP_SETTINGS_API = '/api/users/map-settings'; // GET, PUT { mapSettings }

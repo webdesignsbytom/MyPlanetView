@@ -1,6 +1,7 @@
 // Which country a real position falls in, using the map's own country shapes
 // (src/data/countryShapes.json: polygons in SVG map units, keyed by ISO code).
 // No external service: project the point onto the map, then point-in-polygon.
+import { poleAt } from './specialPlaces.js';
 import COUNTRY_SHAPES from '../data/countryShapes.json' with { type: 'json' };
 import { projectToMap } from './projection.js';
 import { haversineMeters } from './landmarkMatch.js';
@@ -117,14 +118,16 @@ export function countryAtMapPoint(x, y) {
 }
 
 /**
- * Country code for a real position, or null. Accurate to the map's resolution
+ * Country (or special place) code for a real position, or null: a geographic pole
+ * (utils/specialPlaces.js), then the small countries' circles, then the shapes (which
+ * include Antarctica). Accurate to the map's resolution
  * (roughly 20–35 km): right by a border it can pick the neighbour, so users
  * can correct a photo's country.
  */
 export function countryAtPosition(latitude, longitude) {
   const point = projectToMap(latitude, longitude);
   if (!point) return null;
-  return smallCountryAt(latitude, longitude) ?? countryAtMapPoint(point.x, point.y);
+  return poleAt(latitude) ?? smallCountryAt(latitude, longitude) ?? countryAtMapPoint(point.x, point.y);
 }
 
 /**

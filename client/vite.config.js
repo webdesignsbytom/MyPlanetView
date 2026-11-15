@@ -183,7 +183,7 @@ export default defineConfig({
 
           // Every other package goes with the code that imports it, so a page downloads only
           // what it uses: axios and react-head with the entry, icons with their pages, and the
-          // lazily imported ones (heic2any, exifr, react-ga4, web-vitals) only when needed.
+          // lazily imported ones (exifr, react-ga4, web-vitals) only when needed.
           // Don't manually chunk eager imports (past regression); let Rollup decide the rest.
         },
       },

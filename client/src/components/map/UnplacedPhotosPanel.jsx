@@ -23,6 +23,8 @@ function UnplacedPhotosPanel({ photos, canEdit, onOpenPhoto, onClose }) {
         hasMore={Boolean(photos.nextCursor)}
         onLoadMore={photos.loadMore}
         onOpen={onOpenPhoto}
+        // The unplaced photos are one gallery on the server, as a country's are
+        onMove={canEdit ? (photoId, afterId) => photos.movePhoto(photoId, afterId, 'country') : undefined}
         emptyText='Every photo has a country now.'
       />
     </MapPanel>

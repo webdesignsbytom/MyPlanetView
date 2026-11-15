@@ -20,7 +20,7 @@ import InlineAlert from '@/components/common/InlineAlert';
 import AppLink from '@/components/common/AppLink';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import ShareAddPersonForm from './ShareAddPersonForm';
-import ShareMemberRow from './ShareMemberRow';
+import ShareMemberRow, { ACCESS_ROW_CLASS } from './ShareMemberRow';
 import ShareInviteRow from './ShareInviteRow';
 import ShareGeneralAccess from './ShareGeneralAccess';
 import ShareLinkBox from './ShareLinkBox';
@@ -134,9 +134,10 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose 
               People with access
             </h3>
             <ul className='grid divide-y divide-dashed divide-poster-brown/40'>
-              <li className='grid grid-cols-rev items-center gap-2 py-2 text-sm'>
+              {/* "Owner" sits in the role column, where the members' dropdowns are */}
+              <li className={ACCESS_ROW_CLASS}>
                 <span className='font-medium'>You</span>
-                <span className='opacity-80'>Owner</span>
+                <span className='px-3.5 opacity-80'>Owner</span>
               </li>
               {sharing.members.map((member) => (
                 <ShareMemberRow

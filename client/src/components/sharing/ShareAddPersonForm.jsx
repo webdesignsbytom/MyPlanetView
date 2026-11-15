@@ -28,7 +28,10 @@ function ShareAddPersonForm({ onAdd }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className='grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end' noValidate>
+    // The same columns as the "People with access" rows (ACCESS_ROW_CLASS), so the role
+    // dropdowns line up down the dialog; the row's items stretch, so the input, the
+    // dropdown and the button are all the same height
+    <form onSubmit={handleSubmit} className='grid gap-2 sm:grid-cols-[minmax(0,1fr)_9rem_6rem]' noValidate>
       <label htmlFor='share-email' className='sr-only'>
         Email address
       </label>

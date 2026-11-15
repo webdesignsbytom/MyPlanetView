@@ -3,6 +3,8 @@ import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb, me, newId, newShareCode, session } from '../store';
 import { declaredSizeProblem, presignMockUpload } from '../uploads';
 import { countryAtPosition } from '../countryLookup';
+import { firstPosition } from '../photoOrder';
+import { isPole } from '@/utils/map/specialPlaces';
 import {
   LANDMARK_ROWS,
   atLeast,
@@ -12,6 +14,7 @@ import {
   mapStats,
   mapSummary,
   mapView,
+  markParentsVisited,
   markVisited,
   photoDetail,
   photoPage,
@@ -24,7 +27,6 @@ const GROUP_TYPES = ['SOLO', 'COUPLE', 'FAMILY'];
 const VISIT_STATUSES = ['VISITED', 'LIVED', 'WANT_TO_GO'];
 const TRIP_STATUSES = ['PLANNED', 'ACTIVE', 'COMPLETED'];
 const PHOTO_TYPES = ['image/jpeg', 'image/webp', 'image/png'];
-const ORIGINAL_TYPES = [...PHOTO_TYPES, 'image/heic', 'image/heif'];
 const MB = 1024 * 1024;
 // Server mediaConstants.js PHOTO_MAX_BYTES
 const PHOTO_MAX_BYTES = { THUMB: 1 * MB, DISPLAY: 5 * MB, ORIGINAL: 50 * MB };
@@ -35,18 +37,25 @@ const NOT_FOUND = 'This map could not be found.';
 const MAP_CREATE_DAILY_LIMIT = 20;
 const DAY_MS = 86400000;
 const signedOut = () => fail(401, 'No valid session. Please sign in.');
+// As the server's EVENT_MESSAGES.poleNotATravellerCountry: Antarctica can be a birth or
+// favourite place, a pole can't
+const POLE_NOT_A_HOME = 'Choose a country or Antarctica, not a pole.';
+const TRAVELLER_COUNTRY_FIELDS = ['birthCountryCode', 'favouriteCountryCode'];
+const hasPole = (traveller) => TRAVELLER_COUNTRY_FIELDS.some((field) => isPole(cleanCountry(traveller?.[field])));
 
 const findMap = (id) => getDb().maps.find((m) => m.id === id) || null;
 const cleanText = (value, max) => (typeof value === 'string' && value.trim() ? value.trim().slice(0, max) : null);
 const cleanCountry = (code) => (typeof code === 'string' && countryExists(code.toUpperCase()) ? code.toUpperCase() : null);
 
+// -> { fields } or { error } (a pole as a birth or favourite place: 400)
 function travellerFields(body) {
   const out = {};
   if (body.name !== undefined) out.name = cleanText(body.name, 60);
+  if (hasPole(body)) return { error: POLE_NOT_A_HOME };
   if (body.birthCountryCode !== undefined) out.birthCountryCode = cleanCountry(body.birthCountryCode);
   if (body.favouriteCountryCode !== undefined) out.favouriteCountryCode = cleanCountry(body.favouriteCountryCode);
   if (body.position !== undefined && Number.isInteger(body.position)) out.position = body.position;
-  return out;
+  return { fields: out };
 }
 
 export function createMapRecord({ name, groupType, isDefault = false, travellers = [] }) {
@@ -82,7 +91,9 @@ export function registerMapRoutes() {
     const name = cleanText(body.name, 80);
     if (!name) return fail(400, 'Give the map a name.');
     if (!GROUP_TYPES.includes(body.groupType)) return fail(400, 'Choose solo, couple or family.');
-    const map = createMapRecord({ name, groupType: body.groupType, travellers: Array.isArray(body.travellers) ? body.travellers : [] });
+    const travellers = Array.isArray(body.travellers) ? body.travellers : [];
+    if (travellers.some(hasPole)) return fail(400, POLE_NOT_A_HOME);
+    const map = createMapRecord({ name, groupType: body.groupType, travellers });
     return ok({ map: mapView(map, 'OWNER') }, 201);
   });
 
@@ -142,7 +153,8 @@ export function registerMapRoutes() {
     const map = findMap(params.mapId);
     const denied = deny(mapRole(map), 'EDITOR', NOT_FOUND);
     if (denied) return denied;
-    const fields = travellerFields(body);
+    const { fields, error } = travellerFields(body);
+    if (error) return fail(400, error);
     if (!fields.name) return fail(400, 'Add the traveller’s name.');
     const position = fields.position ?? db.travellers.filter((t) => t.mapId === map.id).length;
     const traveller = { id: newId(), mapId: map.id, userId: null, birthCountryCode: null, favouriteCountryCode: null, ...fields, position };
@@ -156,7 +168,8 @@ export function registerMapRoutes() {
     if (denied) return denied;
     const traveller = getDb().travellers.find((t) => t.id === params.travellerId && t.mapId === map.id);
     if (!traveller) return fail(404, 'That traveller could not be found.');
-    const fields = travellerFields(body);
+    const { fields, error } = travellerFields(body);
+    if (error) return fail(400, error);
     if ('name' in fields && !fields.name) return fail(400, 'Add the traveller’s name.');
     Object.assign(traveller, fields);
     return ok({ traveller });
@@ -194,8 +207,10 @@ export function registerMapRoutes() {
     Object.assign(visit, { status: body.status, source: 'MANUAL' });
     if (body.firstVisitedOn !== undefined) visit.firstVisitedOn = body.firstVisitedOn || null;
     if (body.notes !== undefined) visit.notes = cleanText(body.notes, 500);
-    const { countryCode, status, source, firstVisitedOn, notes } = visit;
-    return ok({ visit: { countryCode, status, source, firstVisitedOn, notes } });
+    // The South Pole visited or lived brings Antarctica with it (as the server: `implied`)
+    const implied = markParentsVisited(map.id, code, body.status);
+    const view = ({ countryCode, status, source, firstVisitedOn, notes }) => ({ countryCode, status, source, firstVisitedOn, notes });
+    return ok({ visit: view(visit), implied: implied.map(view) });
   });
 
   route('DELETE', '/api/maps/:mapId/visits/:countryCode', ({ params }) => {
@@ -273,8 +288,8 @@ export function registerMapRoutes() {
     const sizes = files.map((f) => f.size);
     if (!sizes.includes('THUMB') || !sizes.includes('DISPLAY')) return fail(400, 'A photo needs its thumbnail and display copies.');
     for (const f of files) {
-      const allowed = f.size === 'ORIGINAL' ? ORIGINAL_TYPES : PHOTO_TYPES;
-      if (!allowed.includes(f.contentType)) return fail(400, `That file type can't be uploaded as ${f.size.toLowerCase()}.`);
+      // Every size takes the same web types, as the server's PHOTO_CONTENT_TYPES (no HEIC)
+      if (!PHOTO_TYPES.includes(f.contentType)) return fail(400, `That file type can't be uploaded as ${f.size.toLowerCase()}.`);
       // As the server: the size is required, capped, and signed into the URL (../uploads.js)
       const sizeProblem = declaredSizeProblem(f.bytes, PHOTO_MAX_BYTES[f.size]);
       if (sizeProblem) return fail(...sizeProblem);
@@ -330,6 +345,9 @@ export function registerMapRoutes() {
       image: { kind: 'blob', thumbKey: pending.keys.THUMB, displayKey: pending.keys.DISPLAY, originalKey: pending.keys.ORIGINAL || null },
       createdAt: new Date().toISOString(),
     };
+    // First in its country's gallery and its trip's, as the server puts a new photo
+    photo.countryPosition = firstPosition(db.photos, 'country', photo);
+    photo.tripPosition = photo.tripId ? firstPosition(db.photos, 'trip', photo) : 0;
     db.photos.push(photo);
     session.presigned.delete(body.photoId);
     markVisited(map.id, countryCode, 'PHOTO');

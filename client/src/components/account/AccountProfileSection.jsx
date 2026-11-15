@@ -14,8 +14,6 @@ import LoadingSpinner from '@/components/utils/LoadingSpinner';
 // Raster images only (no SVG)
 const AVATAR_ACCEPT = 'image/png,image/jpeg,image/webp,image/gif';
 
-const buttonClass =
-  'py-2 px-4 bg-colour6 cursor-pointer text-colour1 shadow-lift-sm rounded-md hover:brightness-110 active:scale-95 active:brightness-90 disabled:opacity-60';
 
 function AccountProfileSection() {
   const { user, updateName, updateAvatar, removeAvatar } = useAuth();
@@ -83,7 +81,8 @@ function AccountProfileSection() {
     <div className='grid gap-6'>
       {/* Avatar */}
       <div className='grid justify-items-center gap-3'>
-        <div className='w-24 h-24 rounded-full overflow-hidden bg-colour3 grid place-items-center'>
+        {/* A round stamp on the paper, like the nav's MENU stamp */}
+        <div className='grid h-24 w-24 place-items-center overflow-hidden rounded-full border-4 border-double border-poster-brown bg-poster-paper text-poster-ink shadow-paper'>
           {user?.image ? (
             <AppImage
               src={mediaUrlFrom({ objectKey: user.image })}
@@ -93,13 +92,13 @@ function AccountProfileSection() {
               imgClassName='object-cover'
             />
           ) : (
-            <span className='text-3xl font-semibold' aria-hidden='true'>
+            <span className='font-travel text-4xl' aria-hidden='true'>
               {initial}
             </span>
           )}
         </div>
 
-        <div className='flex flex-wrap justify-center gap-3'>
+        <div className='grid justify-center gap-3 sm:grid-flow-col sm:auto-cols-max'>
           <input
             ref={fileRef}
             type='file'
@@ -111,7 +110,7 @@ function AccountProfileSection() {
           />
           <button
             type='button'
-            className={`${buttonClass} aria-disabled:cursor-not-allowed aria-disabled:opacity-60`}
+            className='btn-poster aria-disabled:cursor-not-allowed aria-disabled:opacity-60'
             onClick={() => {
               if (!uploadLocked) fileRef.current?.click();
             }}
@@ -124,7 +123,7 @@ function AccountProfileSection() {
           {user?.image ? (
             <button
               type='button'
-              className='py-2 px-4 rounded-md border-2 border-solid border-colour6 hover:brightness-110 disabled:opacity-60'
+              className='btn-paper'
               onClick={onRemoveAvatar}
               disabled={busy === 'avatar'}
             >
@@ -156,7 +155,7 @@ function AccountProfileSection() {
             required
           />
         </FormField>
-        <button type='submit' className={buttonClass} disabled={busy === 'name'}>
+        <button type='submit' className='btn-poster' disabled={busy === 'name'}>
           {busy === 'name' ? <LoadingSpinner xs /> : 'Save name'}
         </button>
       </form>

@@ -5,12 +5,14 @@ import useLandmarks from '@/hooks/useLandmarks';
 import FormField from '@/components/ui/FormField';
 import TextInput from '@/components/ui/TextInput';
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
+import GroupedOptionSelect from '@/components/ui/GroupedOptionSelect';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
 // Utils
-import { COUNTRY_OPTIONS } from '@/utils/map/countries';
+import { COUNTRY_OPTION_GROUPS } from '@/utils/map/countries';
 
-// A stop on a trip: a country, optionally one of its landmarks or a place name, dates and notes.
+// A stop on a trip: a country (or a special place: Antarctica or a pole, listed after the
+// countries), optionally one of its landmarks or a place name, dates and notes.
 function TripStopForm({ initial = {}, onSubmit, onCancel, submitLabel = 'Add stop', idPrefix = 'stop' }) {
   const [form, setForm] = useState({
     countryCode: initial.countryCode || '',
@@ -54,7 +56,13 @@ function TripStopForm({ initial = {}, onSubmit, onCancel, submitLabel = 'Add sto
     <form onSubmit={handleSubmit} className='grid gap-3' noValidate>
       <div className='grid gap-3 sm:grid-cols-2'>
         <FormField id={`${idPrefix}-country`} label='Country' required>
-          <PlainOptionSelect value={form.countryCode} onChange={set('countryCode')} options={COUNTRY_OPTIONS} placeholder='Choose a country' required />
+          <GroupedOptionSelect
+            value={form.countryCode}
+            onChange={set('countryCode')}
+            groups={COUNTRY_OPTION_GROUPS}
+            placeholder='Choose a country'
+            required
+          />
         </FormField>
         <FormField id={`${idPrefix}-landmark`} label='Landmark'>
           <PlainOptionSelect

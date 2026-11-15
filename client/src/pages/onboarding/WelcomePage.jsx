@@ -9,6 +9,7 @@ import { useAuth } from '@/auth/AuthContext';
 // Components
 import AppPageHead from '@/components/utils/AppPageHead';
 import AppPageShell from '@/components/common/AppPageShell';
+import TravelTicket from '@/components/auth/TravelTicket';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
 import InlineAlert from '@/components/common/InlineAlert';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
@@ -61,40 +62,48 @@ function WelcomePage() {
   return (
     <>
       <AppPageHead route={WELCOME_PAGE_URL} />
-      <AppPageShell width='max-w-2xl'>
-        <header className='grid gap-2'>
-          <h1 className='text-3xl font-semibold'>Welcome{user?.name ? `, ${user.name}` : ''}</h1>
-          <p className='max-w-prose'>
-            Tell us who this map is for. A couple or a family share one map: add everyone who travels, children
-            included. Anyone can have their own login later, and you can change all of this in the map’s settings.
-          </p>
-          {user?.emailVerified === false ? (
-            <p className='max-w-prose'>
-              We’ve emailed a link to {user.email}. Setting up your map works now; once you’ve verified your address,
-              you can add countries, trips and photos.
-            </p>
-          ) : null}
-        </header>
-        <InlineAlert>{error}</InlineAlert>
-        {map === undefined && !error ? (
-          <div className='grid place-items-center py-10' role='status'>
-            <LoadingSpinner md />
-            <span className='sr-only'>Loading…</span>
+      <AppPageShell width='max-w-3xl' mainProps={{ 'aria-labelledby': 'welcome-heading', 'aria-describedby': 'welcome-intro' }}>
+        {/* Check-in after the sign-up page's boarding pass: the same ticket, with the map's
+            set-up (the settings panel's form, so its paper fields too) on the cream */}
+        <TravelTicket
+          kicker='Check-in'
+          title={`Welcome${user?.name ? `, ${user.name}` : ''}`}
+          headingId='welcome-heading'
+          subtitle='Tell us who this map is for. A couple or a family share one map: add everyone who travels, children included. Anyone can have their own login later, and you can change all of this in the map’s settings.'
+          subtitleId='welcome-intro'
+          stub={['Check-in', 'Gate: Your map', 'Seat: Window']}
+          stamp={['Bon', 'voyage']}
+          widthClassName=''
+        >
+          <div className='paper-fields grid gap-5'>
+            {user?.emailVerified === false ? (
+              <p className='tone-info border px-3 py-2 text-sm leading-relaxed'>
+                We’ve emailed a link to {user.email}. Setting up your map works now; once you’ve verified your address,
+                you can add countries, trips and photos.
+              </p>
+            ) : null}
+            <InlineAlert>{error}</InlineAlert>
+            {map === undefined && !error ? (
+              <div className='grid place-items-center py-10' role='status'>
+                <LoadingSpinner md />
+                <span className='sr-only'>Loading…</span>
+              </div>
+            ) : null}
+            {map !== undefined ? (
+              <MapSetupForm
+                initial={
+                  map || {
+                    name: '',
+                    groupType: 'SOLO',
+                    travellers: [{ name: user?.name || '', birthCountryCode: '', favouriteCountryCode: '' }],
+                  }
+                }
+                submitLabel='Start my map'
+                onSubmit={handleSubmit}
+              />
+            ) : null}
           </div>
-        ) : null}
-        {map !== undefined ? (
-          <MapSetupForm
-            initial={
-              map || {
-                name: '',
-                groupType: 'SOLO',
-                travellers: [{ name: user?.name || '', birthCountryCode: '', favouriteCountryCode: '' }],
-              }
-            }
-            submitLabel='Start my map'
-            onSubmit={handleSubmit}
-          />
-        ) : null}
+        </TravelTicket>
       </AppPageShell>
     </>
   );

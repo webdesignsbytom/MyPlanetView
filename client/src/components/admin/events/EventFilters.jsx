@@ -9,7 +9,7 @@ function EventFilters({ filters, search, options, onFilterChange, onSearchChange
     <form
       role='search'
       aria-label='Filter audit log'
-      className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4 bg-colour1 text-colour4 border-2 border-colour6 rounded-md shadow px-4 py-4'
+      className='grid gap-4 border-2 border-dashed border-poster-brown/60 px-4 py-4 sm:grid-cols-2 lg:grid-cols-4'
       onSubmit={(e) => e.preventDefault()}
     >
       <FormField id='event-search' label='Search message or action'>

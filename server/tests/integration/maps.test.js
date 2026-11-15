@@ -1,6 +1,6 @@
 // Maps, onboarding, travellers, visits, stats and map settings, end to end.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { anon, cleanUp, data, defaultMapOf, prisma, signUp } from './helpers.js';
+import { anon, cleanUp, data, defaultMapOf, prisma, signUp, uploadPhoto } from './helpers.js';
 
 afterAll(cleanUp);
 
@@ -141,13 +141,64 @@ describe('countries visited and stats', () => {
     expect(detail.visits.map((v) => v.countryCode).sort()).toEqual(['BR', 'FR', 'JP']);
     expect(detail.stats.countries).toBe(2);
   });
+
+  it('counts Antarctica and the poles as special places, and the South Pole brings Antarctica', async () => {
+    const { agent } = await signUp('Polar');
+    const map = await defaultMapOf(agent);
+    await agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'VISITED' });
+
+    // The South Pole is in Antarctica: marking it adds Antarctica, and says so
+    let res = await agent.put(`/api/maps/${map.id}/visits/XS`).send({ status: 'VISITED' });
+    expect(res.status).toBe(200);
+    expect(data(res).implied).toEqual([expect.objectContaining({ countryCode: 'AQ', status: 'VISITED', source: 'MANUAL' })]);
+    // Already there: nothing more to add
+    res = await agent.put(`/api/maps/${map.id}/visits/XS`).send({ status: 'LIVED' });
+    expect(data(res).implied).toEqual([]);
+    // Wanting to go to a pole changes nothing else
+    res = await agent.put(`/api/maps/${map.id}/visits/QN`).send({ status: 'WANT_TO_GO' });
+    expect(data(res).implied).toEqual([]);
+
+    const stats = data(await agent.get(`/api/maps/${map.id}/stats`)).stats;
+    expect(stats).toMatchObject({ countries: 1, specialPlaces: 2, continents: 2 });
+    const listed = data(await agent.get('/api/maps')).maps.find((m) => m.id === map.id);
+    expect(listed.counts.countries).toBe(1);
+
+    // Removing the South Pole leaves Antarctica
+    await agent.delete(`/api/maps/${map.id}/visits/XS`);
+    const codes = data(await agent.get(`/api/maps/${map.id}`)).map.visits.map((v) => v.countryCode).sort();
+    expect(codes).toEqual(['AQ', 'FR', 'QN']);
+  });
+
+  it('places a photo taken at the South Pole there, and in Antarctica', async () => {
+    const { agent } = await signUp('PolePhoto');
+    const map = await defaultMapOf(agent);
+    const photo = data(await uploadPhoto(agent, map.id, { latitude: -89.997, longitude: 139.27 })).photo;
+    expect(photo.countryCode).toBe('XS');
+    const visits = await prisma.countryVisit.findMany({ where: { mapId: map.id }, orderBy: { countryCode: 'asc' } });
+    expect(visits.map((v) => [v.countryCode, v.source])).toEqual([['AQ', 'PHOTO'], ['XS', 'PHOTO']]);
+
+    // McMurdo, on the coast: Antarctica from its shape
+    expect(data(await uploadPhoto(agent, map.id, { latitude: -77.846, longitude: 166.676 })).photo.countryCode).toBe('AQ');
+  });
+
+  it("lets a traveller be born in Antarctica, but not at a pole", async () => {
+    const { agent } = await signUp('Born');
+    const map = await defaultMapOf(agent);
+    const ok = await agent.post(`/api/maps/${map.id}/travellers`).send({ name: 'Emilio', birthCountryCode: 'AQ' });
+    expect(ok.status).toBe(201);
+    const pole = await agent.post(`/api/maps/${map.id}/travellers`).send({ name: 'Santa', birthCountryCode: 'XN' });
+    expect(pole.status).toBe(400);
+    expect(pole.body.message).toBe('Choose a country or Antarctica, not a pole.');
+  });
 });
 
 describe('reference data', () => {
   it('serves countries and landmarks to anyone', async () => {
     const countries = data(await anon().get('/api/countries')).countries;
     expect(countries.length).toBeGreaterThanOrEqual(224);
-    expect(countries.find((c) => c.code === 'FR')).toMatchObject({ name: 'France', continent: 'EUROPE' });
+    expect(countries.find((c) => c.code === 'FR')).toMatchObject({ name: 'France', continent: 'EUROPE', kind: 'COUNTRY' });
+    expect(countries.filter((c) => c.kind === 'SPECIAL').map((c) => c.code).sort()).toEqual(['AQ', 'QN', 'QS', 'XN', 'XS']);
+    expect(countries.find((c) => c.code === 'XN')).toMatchObject({ name: 'North Pole', continent: null });
 
     const landmarks = data(await anon().get('/api/landmarks?country=FR')).landmarks;
     expect(landmarks.some((l) => l.name === 'Eiffel Tower')).toBe(true);
@@ -162,9 +213,11 @@ describe('map settings', () => {
     expect(empty.status).toBe(200);
     expect(data(empty).mapSettings).toBeNull();
 
-    const saved = await agent.put('/api/users/map-settings').send({ mapSettings: { style: 'galaxy', showGrid: false, sneaky: 'x' } });
+    const saved = await agent
+      .put('/api/users/map-settings')
+      .send({ mapSettings: { style: 'galaxy', showGrid: false, showAntarctica: false, sneaky: 'x' } });
     expect(saved.status).toBe(200);
-    expect(data(saved).mapSettings).toMatchObject({ style: 'galaxy', showGrid: false });
+    expect(data(saved).mapSettings).toMatchObject({ style: 'galaxy', showGrid: false, showAntarctica: false });
     expect(data(saved).mapSettings).not.toHaveProperty('sneaky');
 
     const bad = await agent.put('/api/users/map-settings').send({ mapSettings: { style: 'neon' } });

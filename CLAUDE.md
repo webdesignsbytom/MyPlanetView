@@ -19,7 +19,8 @@ Guidance for Claude Code working in this repository.
 - `npx vite build --mode verify --outDir <scratch dir> --emptyOutDir`
   - Vite always loads `.env` and `.env.local`; `client/` has neither, and no `.env.verify` exists, so no env file is read.
   - Delete the output afterwards.
-- `npm run dev:mock` (`vite --mode mock`; no `.env.mock` exists, so it reads no env file either): the site with no server, for looking at pages and flows (e.g. headless Playwright screenshots). Use a free port (`BROWSER=none npx vite --mode mock --port 5174 --strictPort`) and stop it afterwards. `BROWSER=none` is what stops the config's `open: true` opening a tab in the user's browser; `--open false` doesn't work (Vite reads `false` as a path and opens `/false`).
+- `npm run dev:mock` (`vite --mode mock`; no `.env.mock` exists, so it reads no env file either): the site with no server, for looking at pages and flows (e.g. headless Playwright screenshots). Use a free port (`BROWSER=none npx vite --mode mock --port 5174 --strictPort`) and stop it afterwards. `BROWSER=none` is what stops the config's `open: true` opening a tab in the user's browser; `--open false` doesn't work (Vite reads `false` as a path and opens `/false`). Start it from `C:/Users/…/client` with a capital drive letter: from `c:\…` (how the shell starts) the `import.meta.glob` imports resolve to broken paths and the signed-in pages show the error screen. The same goes for a Playwright `webServer`: give it `cwd: 'C:/…/client'`. The mock-mode e2e suite (`playwright.app.config.js`, `tests/e2e-app/`) reads no env file either.
+- `npm run test:e2e:app` (`playwright test --config playwright.app.config.js`): the travel pages' Playwright tests (`tests/e2e-app/`, desktop Chrome plus a Pixel 7 for the `@phone` tests) against mock mode. The config starts its own Vite and stops it afterwards: `vite.e2e-app.config.js` (the site's config with its own dependency cache `node_modules/.vite-e2e-app`, every file transformed at start-up, no tab), `--mode mock`, port 5195, `BROWSER=none`, never reusing a running server. `tests/e2e-app/warm-up.js` waits out the cold start, and the tests' pages ignore Vite's hot reload. It reads no env file. One run at a time (port 5195).
 
 **Server** (`server/`):
 - `node --check <file>` on any source file.
@@ -28,7 +29,7 @@ Guidance for Claude Code working in this repository.
   - they refuse to run unless `DATABASE_URL` names a database ending in `_test` (checked in `globalSetup.js` and again in `helpers.js`), and clean up only the users they created;
   - Claude runs them from a folder with no env file (so `dotenv/config` loads nothing), passing local values on the command line: `DATABASE_URL` (a migrated `*_test` database), `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL=http://localhost:4000`, `FRONTEND_ORIGIN=http://localhost:5173` and placeholder `STORAGE_*` values, then `node <server>/node_modules/vitest/vitest.mjs run --root <server> --config <server>/vitest.integration.config.js`. The config's `envDir` is an empty folder;
   - migrate the test database with Prisma from a scratch folder (above), with that database's URL;
-  - **with no `_test` database** (the user keeps none locally): run them against a throwaway in-memory PGlite. In a scratch folder, install `@electric-sql/pglite` and `@electric-sql/pglite-socket`; a small script runs every `prisma/migrations/*/migration.sql` with `db.exec`, then serves it with `PGLiteSocketServer` on a free port (`maxConnections: 8`). Point `DATABASE_URL` at `postgresql://postgres:postgres@127.0.0.1:<port>/myplanetview_test?sslmode=disable` (PGlite ignores the name; the guard wants `_test`) and set `DB_POOL_MAX=1`. All 73 tests pass this way (15 Nov 2026). Nothing touches the user's Postgres.
+  - **with no `_test` database** (the user keeps none locally): run them against a throwaway in-memory PGlite. In a scratch folder, install `@electric-sql/pglite` and `@electric-sql/pglite-socket`; a small script runs every `prisma/migrations/*/migration.sql` with `db.exec`, then serves it with `PGLiteSocketServer` on a free port (`maxConnections: 8`). Point `DATABASE_URL` at `postgresql://postgres:postgres@127.0.0.1:<port>/myplanetview_test?sslmode=disable` (PGlite ignores the name; the guard wants `_test`) and set `DB_POOL_MAX=1`. All 127 tests pass this way (15 Nov 2026). Nothing touches the user's Postgres.
 - **Prisma, only from a scratch folder:**
   - copy `prisma/schema.prisma` there;
   - add a plain `prisma.config.mjs` exporting `{ schema: 'schema.prisma', datasource: { url: 'postgresql://placeholder:placeholder@localhost:5432/placeholder' } }`;
@@ -60,7 +61,7 @@ No CI runs. `.github/ci.example.yml` is an example kept outside `workflows/` on 
 - **`TravelMap`**: one owner. It has a `groupType` (`SOLO`, `COUPLE`, `FAMILY`), a `linkAccess` (`RESTRICTED` or `ANYONE_WITH_LINK`) and a unique `shareCode`.
   - Every user gets a default map ("My map", `isDefault`) from a better-auth hook at sign-up. There's one default per user, enforced by the database: `defaultForOwnerId` (the owner's id on the default map, null elsewhere) is unique, and a CHECK (`travel_map_default_owner`) keeps it in step with `isDefault`. Set or clear both together; `ensureDefaultMap` uses the winner when two requests race (P2002).
   - The default map can't be deleted.
-- **`Traveller`**: the people a map is for (no login needed; `userId` when linked), with birth and favourite countries. A couple or family can share one login, or each adult has their own and is added as `EDITOR`.
+- **`Traveller`**: the people a map is for (no login needed; `userId` when linked), with birth and favourite countries (a country or Antarctica, never a pole). One traveller per account per map (`@@unique([mapId, userId])`). A couple or family can share one login, or each adult has their own and is added as `EDITOR`.
 - **Who has access:**
   - **`MapMember`** and **`TripMember`**: people added as `VIEWER` or `EDITOR`. The owner is never a member row.
   - **`ShareInvite`**: an emailed invite for an address with no verified, active account. The token is stored hashed, and a CHECK constraint in the init migration makes it target exactly one of a map or a trip. It turns into a member when that address signs up and is verified.
@@ -74,20 +75,25 @@ No CI runs. `.github/ci.example.yml` is an example kept outside `workflows/` on 
   - **`PhotoVariant`**: one per size, `THUMB`, `DISPLAY` or `ORIGINAL`, each a `MediaItem`.
   - **`PhotoLandmark`**: `GPS` suggestions with `confirmed: false`, or `MANUAL` matches.
 - **Reference data:**
-  - **`Country`** (PK = ISO alpha-2, plus `IC` Canary Islands and `XK` Kosovo) and **`Landmark`** (lat/lng, `matchRadiusM`, map pin) are seeded and never edited by users.
+  - **`Country`** (PK = ISO alpha-2, plus `IC` Canary Islands and `XK` Kosovo) and **`Landmark`** (lat/lng, `matchRadiusM`, map pin, `wikidataId`, unique) are seeded and never edited by users.
+  - **Special places** are `Country` rows with `kind: SPECIAL`: Antarctica (`AQ`, a drawn shape, continent `ANTARCTICA`) and four poles, which are points with codes from ISO's user-assigned range: `XN` North Pole, `QN` Magnetic North Pole, `XS` South Pole, `QS` Magnetic South Pole (`continent` null except `XS`). The rules are in `server/src/utils/specialPlaces.js` (the client's copy is `client/src/utils/map/specialPlaces.js`):
+    - stats count them apart (`countries` leaves them out, `specialPlaces` counts them; Antarctica and the South Pole give the seventh continent), and so do `GET /maps` counts;
+    - a visit to `XS` that counts adds `AQ` (`withParentPlaces`, in `createMissingVisits` and the manual `PUT …/visits`, which answers `{ visit, implied }`);
+    - GPS: latitude ≥ 89.9 is `XN`, ≤ −89.9 is `XS` (`poleAt`, before the shapes); a magnetic pole is never found from GPS;
+    - the magnetic poles' pins are NOAA's WMM2025 positions for 2025: move them once a year (both country lists).
 - **Stats** (countries, continents, photos, landmarks, per traveller) are computed, never stored (`server/src/utils/mapStats.js`).
 
 The template's `User`/`Session`/`Account`/`Verification` (owned by better-auth), `Profile` (username, home country and `mapSettings` JSON), `MediaItem`, `AvatarMediaItem`, `ContactForm` (name, email, message, optional image), `RateLimit` and `AppEvent` remain. `AuthRateLimit` (`auth_rate_limit`) is better-auth's own limiter table (shape set by better-auth: `key`, `count`, `lastRequest` in epoch ms).
 
 **Indexes** (`20261114210000_audit_indexes`, audit B3):
 - every foreign key that a cascade or `SET NULL` follows has one (`Trip.coverPhotoId`/`createdById`, `ShareInvite.mapId`/`tripId`/`invitedById`, `AppEvent.actorId`/`targetId`): without them, deleting a 20k-photo map scanned every trip per photo;
-- `Photo` has `[mapId, createdAt desc, id desc]`, `[tripId, createdAt desc, id desc]` and `[mapId, countryCode, createdAt desc]`, matching the photo lists' order (newest upload first, keyset on id); they also serve the photo counts;
+- `Photo` has `[mapId, createdAt desc, id desc]` (the whole map's list, newest upload first), `[tripId, tripPosition, id]` and `[mapId, countryCode, countryPosition, id]` (a trip's and a country's gallery order, from `20261115210000_photo_order`), matching the photo lists' order (keyset on id); they also serve the photo counts;
 - `AppEvent` has `[createdAt]` (newest first, retention) and `[level, createdAt]`;
 - `MediaItem` has `[ownerId, createdAt]` (the cap on unfinished uploads) and `ContactForm` has `[imageKey]` (the orphan clean-up and the contact image rules), from `20261115190000_upload_indexes`.
 
 A new query that filters or sorts a big table should match one of these, or add its own.
 
-**Migrations.** There are four: `init`, `audit_indexes`, `auth_rate_limit_default_map` (better-auth's limiter table, and `defaultForOwnerId` with its backfill and CHECK) and `upload_indexes`. Make new ones without a database: run `migrate diff --from-schema <copy of the old schema> --to-schema prisma/schema.prisma --script` from a scratch folder (see above) into `prisma/migrations/<timestamp>_<name>/migration.sql`. Prisma can't express partial indexes, and drops unknown ones on the next diff: enforce such rules in code. CHECK constraints are safe.
+**Migrations.** There are six: `init`, `audit_indexes`, `auth_rate_limit_default_map` (better-auth's limiter table, and `defaultForOwnerId` with its backfill and CHECK), `upload_indexes`, `photo_order` (the gallery positions, backfilled newest-first, and their indexes) and `special_places_checks` (`Country.kind`, nullable `continent`, `Landmark.wikidataId` backfilled by slug, the traveller rule, and CHECKs for trip and stop date order, a photo's latitude and longitude both or neither and in range, a `MANUAL` landmark match being confirmed, and the known `User.role` values; docs/DATABASE-REVIEW.md). After a schema change, regenerate the client from a scratch folder too: a `prisma.config.mjs` there whose `schema` is the absolute path of `server/prisma/schema.prisma`, then `generate` (it writes into `server/node_modules/@prisma/client`; no env file is read). Make new ones without a database: run `migrate diff --from-schema <copy of the old schema> --to-schema prisma/schema.prisma --script` from a scratch folder (see above) into `prisma/migrations/<timestamp>_<name>/migration.sql`. Prisma can't express partial indexes, and drops unknown ones on the next diff: enforce such rules in code. CHECK constraints are safe.
 
 ## Access and sharing
 
@@ -120,8 +126,9 @@ The full rules are in `docs/API.md`, under "Access":
 ## The photo pipeline
 
 1. **In the browser** (`client/src/utils/photos/`):
-   - `readPhotoMeta.js` reads the date and GPS with `exifr`'s lite build (lazy-loaded; JPEG and HEIC, not PNG);
-   - `makePhotoCopies.js` draws `THUMB` (400 px) and `DISPLAY` (1600 px) on a canvas, which drops all EXIF. HEIC that the browser can't decode goes through a lazy-loaded `heic2any`, with a deadline (30 s plus 2 s per MB): its worker can hang for good (D3 in `docs/AUDIT.md`). Once one runs out, the other HEIC files in that page view fail at once with a message, and the rest of the batch carries on. The original is kept untouched.
+   - `readPhotoMeta.js` reads the date and GPS with `exifr`'s lite build (lazy-loaded; JPEG, not PNG);
+   - `makePhotoCopies.js` draws `THUMB` (400 px) and `DISPLAY` (1600 px) on a canvas, which drops all EXIF. The original is kept untouched;
+   - **no HEIC** (`docs/SITE-DESIGN.md`): an iPhone sends a JPEG when a photo is picked in a browser, so every size is JPEG, PNG or WebP, on the client, the server (`PHOTO_CONTENT_TYPES`) and the mock. A `.heic` file gets a message to save it as a JPEG.
 2. **Upload** (`uploadPhoto.js` → `POST /api/maps/:mapId/photos/presign`): the browser `PUT`s each file straight to the **private** bucket (`putFile.js`, XHR for progress). Keys are `myplanetview/photos/<mapId>/<photoId>/<size>-<random>.<ext>`.
    - The presign takes each file's `contentType` and exact `bytes` (within `PHOTO_MAX_BYTES`), and the URL signs both (see Storage), so the `PUT` must send that type and a body of exactly that size. `putFile` refuses a blob whose size isn't the declared one.
    - A user may have at most 60 photo files presigned and not saved over the last 24 hours (`UNCONFIRMED_UPLOAD_LIMIT`); a presign above that answers 429.
@@ -132,6 +139,7 @@ The full rules are in `docs/API.md`, under "Access":
    - the client always sends the uploader's chosen `countryCode`: it's used without GPS, or when the GPS position is in no country (at sea);
    - a photo left with no country is listed by `GET …/photos?unplaced=1`, the map page's "Unplaced photos" (`components/map/UnplacedPhotosPanel.jsx`, opened from the stats and the country list), where an editor gives it a country.
 4. **Viewing:** signed GETs (`signPhotoUrl`), signed at the start of the hour and valid for two (`PHOTO_URL_TTL_SECONDS`), so the browser cache works.
+   - **Gallery order:** each photo has a `countryPosition` (its country's gallery on the map; the unplaced photos are one gallery) and a `tripPosition`, smallest first. A new photo, or one moved to another country or trip, goes first there. `POST /api/photos/:photoId/move` (`{ gallery: 'country' | 'trip', afterId }`) gives the photo the halfway point between its new neighbours (`utils/photoOrder.js`), renumbering the gallery only when there's no room. A country's order needs editor on the map, a trip's editor of the trip. In the client, `PhotoGrid`'s "Rearrange photos" (with `onMove`) swaps in `SortablePhotoGrid` (dnd-kit, lazy-loaded; mouse, long press on touch, keyboard, spoken steps); `usePhotoPage().movePhoto` moves the list at once, then saves, and reloads it if the save fails. The mock keeps the same order (`dev/mock/photoOrder.js`).
    - The `photo` entry in `MEDIA_CFG` is private, and the generic `/api/media-services` routes refuse its keys.
    - The daily cron never deletes media a `PhotoVariant` uses.
 
@@ -148,8 +156,8 @@ The full rules are in `docs/API.md`, under "Access":
   - `client/src/utils/map/countryStyle.js` is generated by `node scripts/generate-country-style.mjs` (in `client/`; re-run it if the shapes change). It gives every country one of the old map's seven pastels (`--map-visit-1`…`7`), chosen so touching countries never match, plus the width of its main shape so a name is only drawn once it fits.
   - Visited and lived-in countries carry a 1950s star-sticker badge at their pin: `components/map/StarBadge.jsx` (SVG `<symbol>`s plus an HTML icon for the key), placed by `VisitBadges.jsx`, with sizes and ids in `utils/map/badges.js`. "Want to go" is a dashed outline.
   - Liechtenstein, Monaco, San Marino, Singapore, the Vatican and Bioko island have no shape. The client draws the micro-states as dots (`MicroStateDot`); the server uses circles.
-- **Country lists.** `server/prisma/seed/data/countries.js` (seeded into `Country`) and `client/src/utils/map/countries.js` are copies of each other: 224 countries with code, name, slug, continent and pin. Keep them in step.
-- **Landmarks** are in `server/prisma/seed/data/landmarks.js`, 177 of them. 161 have coordinates checked against Wikidata (14 Nov 2026), each with a `// Wikidata Q…` comment. The 16 marked `// unverified` still need checking by hand before launch. Pins are computed from lat/lng by the seed.
+- **Country lists.** `server/prisma/seed/data/countries.js` (seeded into `Country`) and `client/src/utils/map/countries.js` are copies of each other: 224 countries plus the five special places (`kind: 'SPECIAL'`, at the end), with code, name, slug, continent and pin. Keep them in step.
+- **Landmarks** are in `server/prisma/seed/data/landmarks.js`, 177 of them, every coordinate checked against Wikidata (14–15 Nov 2026), each with a `// Wikidata Q…` comment naming the item it uses. Where one point can't describe the place, the file's header names a stand-in travellers photograph (Tien Shan → Ala-Archa and Pamir → Lake Karakul, both named so; Kokoda Track → Efogi, half-way along); Papaseʻea's item has no coordinate, so its point is OpenStreetMap's. Pins are computed from lat/lng by the seed.
 
 ## Seed
 
@@ -160,7 +168,7 @@ The full rules are in `docs/API.md`, under "Access":
 4. demo travel data (`seed/travel.js`): the USER's map becomes a couple's map, with the ADMIN as editor, 9 countries, one completed and one planned trip, and no photos;
 5. one contact form.
 
-Production never gets the seed. Its countries and landmarks come from `npm run db:reference` (`scripts/load-reference-data.mjs` → `prisma/seed/reference.js`), which upserts countries by `code` and landmarks by `slug` and never deletes. Renaming a landmark therefore makes a new row; remove the old one by hand.
+Production never gets the seed. Its countries and landmarks come from `npm run db:reference` (`scripts/load-reference-data.mjs` → `prisma/seed/reference.js`), which upserts countries by `code` and landmarks by `wikidataId` (each entry's Wikidata item) and never deletes. Renaming a landmark updates its row; a landmark taken out of the data stays in the table until removed by hand.
 
 ## Client architecture
 
@@ -195,7 +203,7 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   - Production builds compile `DEV` to false, so none of it ships (checked: no mock strings in `dist/`, including `mpv:apiSource`).
   - It puts an Axios adapter (`mockAdapter.js`) on the exported `httpClient` and on the global axios, and patches XHR for the presigned-upload host (`mockXhr.js`), so no request leaves the browser. Like R2, the mock bucket refuses (403) a `PUT` whose `Content-Type` or size isn't the presigned one (`dev/mock/uploads.js`).
   - The handlers in `src/dev/mock/handlers/` follow `docs/API.md` and the access rules. The store (`store.js`, seeded by `seed.js`) lives in localStorage; uploaded files are session blob URLs.
-  - `data/landmarks.js` copies the server's landmark data; re-copy it when that changes. **When an endpoint or response shape changes, update its mock handler too.**
+  - `data/landmarks.js` copies the server's landmark data; re-copy it when that changes. **When an endpoint or response shape changes, update its mock handler too.** When a flow, a control's name or `seed.js` changes, update `tests/e2e-app/` too.
   - As on the server:
     - a GPS position finds its country by point-in-polygon on the map's own shapes (`countryLookup.js`, loaded on first use; it parses the client's paths exactly as `countryShapes.json` was made, and gave the server's answer for 3,012 test points);
     - share codes are shown and linked as `XXXX-XXXX-XXXX` and normalised on lookup, and anything that can't be a code finds nothing;
@@ -206,7 +214,7 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   - The writes that need a verified email are listed in `mockAdapter.js` (`NEEDS_VERIFIED_EMAIL`, the server's `requireVerifiedEmail` routes) and answer the server's 403 before any lookup. The badge's "Email verified" switch makes the test user unverified and back; the seeded users are verified.
 - **API layer:**
   - `api/client.js` is one Axios instance: errors become `error.friendlyMessage`, payloads are at `res.data.data`;
-  - **bundles** (`vite.config.js` `manualChunks`): only React, React DOM and the router are grouped (`react-*.js`, cached across deploys); every other package goes with the code that imports it, so heic2any, exifr, react-ga4 and web-vitals load only when used, and React DOM's server renderer only at build;
+  - **bundles** (`vite.config.js` `manualChunks`): only React, React DOM and the router are grouped (`react-*.js`, cached across deploys); every other package goes with the code that imports it, so exifr, react-ga4 and web-vitals load only when used, and React DOM's server renderer only at build;
   - form rules the server also checks live in `utils/regex/regex.js`: `isValidEmail` (the server's `normalizeEmail`), `serverText` (what `sanitizeText` keeps), and `PASSWORD_REGEX` with `PASSWORD_RULE`, the one wording of the password rule for hints and errors;
   - `api/travelApi.js` wraps every travel endpoint;
   - endpoint paths are constants in `utils/constants/apiRoutes.js`.
@@ -227,11 +235,11 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   **An unverified email address** (`hooks/useMustVerifyEmail.js`): the server refuses every change to content (Access and sharing, above). The map and trip pages show `components/map/VerifyEmailBanner.jsx` (a luggage tag that can send the link again; on wide screens the map's panels open below it, through `--map-panel-top`), and the controls that would fail are locked where they're used, each with a `VerifyFirstNote` saying why: statuses in the country panel and list, uploads, new trips and maps, trip and stop editing, photo editing and landmark actions, and every sharing change (the link can still be copied). Visit changes wait for the server instead of showing at once (`useTravelMap(mapId, { optimistic })`). Setting a map up, map settings and `/welcome` stay open.
 
   Panel state lives in the page (`useReducer`). Use functional state updates.
-- **Components:** one per file, under `components/map|photos|trips|sharing|onboarding/` and the template's folders. Pages follow the PageHeader + MainContainer pattern. Every page renders exactly one `<main id="main-content" tabIndex={-1}>`. Modals use `hooks/useModalA11y.js`. Form inputs go in `components/ui/FormField`. Dropdowns are the `components/ui/*OptionSelect` components, never a bare `<select>`.
+- **Components:** one per file, under `components/map|photos|trips|sharing|onboarding/` and the template's folders. Pages follow the PageHeader + MainContainer pattern. Every page renders exactly one `<main id="main-content" tabIndex={-1}>`. Modals use `hooks/useModalA11y.js`. Form inputs go in `components/ui/FormField`. Dropdowns are the `components/ui/*OptionSelect` components, never a bare `<select>`. Signed-in pages that aren't the map or a trip (`/welcome`, `/invite/:token`, `/account`, the admin pages) use `components/common/AppPageShell` (poster frame, column nav, one `<main>` taking `mainProps`, footer) with a `TravelTicket`, or a `PageTitleCard` and `PaperCard`s; `PaperCard`'s `action` puts a button on its title strip.
 - **Identity** comes from `utils/constants/constants.js` (name, URL, operator, address, theme colour), never a literal in a component. The domain `myplanetview.com` is the intended one, not registered yet. `server/src/utils/constants/siteConstants.js` must use the same host (`server/tests/siteUrl.test.js`).
 - **Images:**
   - `ResponsiveImage` and `AppImage` use the `<name>-<width>.<ext>` sets under `src/assets/images/<folder>/` (`lib/media/imageManifest.js`, avif/webp/jpg only);
-  - the home artwork (`pages/home/`), the map-style backgrounds and the detailed preview (`map-styles/`) and the logo (`brand/`) come from my_planet, converted with `images/`;
+  - the home artwork (`pages/home/`), the map-style backgrounds and the detailed preview (`map-styles/`) and the logo (`brand/`) come from my_planet, converted with `images/`; the Regular preview (`map-styles/regular-949`) is a screenshot of the mock map (Regular type, default style, whole world), made with `images/`'s `gen-images.mjs` at width 949;
   - the navbar logo and the home artwork import their files directly, keeping the image manifest out of eager pages;
   - one set per real width: an image narrower than the requested widths gets a single set at its own width (the 404 cat is `-366`), never copies under bigger names. AVIF is encoded 4:2:0 (`images/`); 4:4:4 made textured artwork bigger than its WebP. An AVIF should be smaller than its WebP, or the browser downloads the bigger file.
 - **Country posters** are not in the build. They're in the public bucket as `visitCountryPosters/<name>-800.avif` plus an 800 px WebP fallback, and the repo's `media/` folder (outside `client/`) holds the same files to upload.
@@ -246,12 +254,12 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   - `colour6`–`colour9` are the theme, from my_planet's travel-poster look: poster red, ocean blue, parchment, saddle brown;
   - `poster-*` are fixed artwork colours (frame red, gold corners, nav paper, brown edge, ink, cream), the same in both themes;
   - fonts (`styles/fonts.css`): `font-travel` / `font-titleFont` (TravelFont, SF Comic Script; licence to check before launch, so the 46 KB TTF stays unconverted) for headings and the nav, Poppins (`font-main`) for text. Poppins ships only the weights in use, 400, 500, 600 and 700 (no italics, no 800: add a face back before using one, or the browser fakes it), each subset to Latin (Latin-1, Latin Extended-A, Ș/Ț, General Punctuation, € ™ −) at about 10 KB, with a matching `unicode-range`. `index.html` preloads Poppins 400 and the TravelFont TTF, which every first view draws;
-  - also `field`, `status-critical|warning|minor|good`, `scrim`, the `lift` shadows, and the `tone-*`/`solid-*` utilities.
+  - also `field`, `status-critical|warning|minor|good`, `scrim`, the `lift` shadows, the `tone-*`/`solid-*` utilities, and `paper-danger` (deep-red edges and rules instead of brown, for what can't be undone: the account deletion card).
 - **Map styles.** The map page sets `data-map-style='animated'|'old-map'|'jupiter'|'galaxy'` (`utils/map/mapStyles.js`), which switches the `--map-*` tokens the drawing uses (`map-sea`, `map-land`, `map-visit-*`, `map-ink`, `map-edge` and so on). The containers over the map don't change with the style: they're travel paperwork in every style (`ticket-edge`, `paper-aged`, `bg-paper-cream`; `MapPanel`, `common/CloseStamp`, `common/PaperStripHeader`, `map/LuggageTag` for the floating labels; inputs inside a `paper-fields` scope). The map type (`regular` or `detailed`, `utils/map/mapTypes.js`) and my_planet's filters, banner, sun and moon and sea waves are viewer settings (`utils/map/mapSettings.js`).
   - **The animated sea is on by default, so keep it cheap.** `animate-ocean` (an `@utility` in `index.css`) fades two full-size layers of the darker sea shades in and out by opacity, which the compositor runs; never animate `background-color` on a full-screen element. `SeaWaves.jsx` draws its canvas at most 1.5× the screen density, about 30 times a second, and pauses while a finger, mouse button or the wheel is moving the map.
 - **`scripts/check-house-rules.mjs`** (in `prebuild`):
   - **fails** on any hex, `rgb()`/`hsl()`, or white/black/Tailwind palette class in components;
-  - **warns** on flex and vertical margins (41 in older template code).
+  - **warns** on flex and vertical margins (21 left in older template code, 15 Nov 2026).
   - New code uses grid and gap, inline classes and Tailwind sizes, and adds no warnings.
 - **Base resets** stay inside `@layer base`: unlayered CSS beats every utility.
 
@@ -345,9 +353,9 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   - the domain;
   - the brand assets (`client/public/brand/`, `client/public/favicon/`), still ByteToast's;
   - the CSP hosts in `.htaccess`.
-- **Data:** 16 landmarks are marked `// unverified`; border photos can land in the neighbouring country.
+- **Data:** border photos can land in the neighbouring country.
 - **Sharing:** editors can't see who else has access.
 - **Account enumeration:** sign-up still answers 422 for an address that has an account. better-auth only hides it with `requireEmailVerification: true` (no session until the address is verified), which would change the sign-up → `/welcome` flow; not decided (`docs/AUDIT.md`, E).
 - **Unused code:** a few client files are kept on purpose although nothing imports them: `Breadcrumbs`, spare UI inputs and `deleteMediaObject`.
-- **Tests:** no Playwright tests cover the travel pages.
+- **Tests:** the travel pages' Playwright tests (`tests/e2e-app/`) run in mock mode only, not against the real API, R2 or a production build. They find controls by role and name and count the seeded demo data, so a renamed control or a changed `seed.js` means updating them.
 - **Analytics:** turn GA4's "page changes based on browser history events" off. The app sends its own redacted page views; GA's history ones would double them and could carry a secret address as the referrer.

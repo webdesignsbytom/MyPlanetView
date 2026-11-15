@@ -45,9 +45,15 @@ Emails and share URLs point at these client routes, built from `server/src/utils
 
 ## Reference data (public, cacheable)
 
+**Special places** are rows of the country list with `kind: 'SPECIAL'`: Antarctica (`AQ`, a shape on the map) and four poles, which are points: the North Pole (`XN`), the Magnetic North Pole (`QN`), the South Pole (`XS`) and the Magnetic South Pole (`QS`). They take visits, trip stops and photos like countries, with these differences (`server/src/utils/specialPlaces.js`):
+- **Stats** count them apart: `countries` leaves them out and `specialPlaces` counts them. Antarctica and the South Pole count towards the continents (the seventh).
+- **The South Pole is in Antarctica:** any visit to `XS` that counts (by hand, a completed trip, a photo) also adds `AQ` if it's missing, or turns a "want to go" one into `VISITED`. Removing `XS` leaves `AQ`.
+- **From a photo's GPS:** latitude 89.9° or more is `XN`, −89.9° or less is `XS`, and Antarctica is found from its shape. A magnetic pole is never found from GPS, as it moves tens of kilometres a year; people mark it by hand or choose it for a photo.
+- **Travellers** can be born in, or favour, Antarctica, but not a pole (400 `Choose a country or Antarctica, not a pole.`).
+
 | Method and path | Returns |
 | --- | --- |
-| `GET /countries` | `{ countries: [{ code, name, slug, continent, pinX, pinY }] }` |
+| `GET /countries` | `{ countries: [{ code, name, slug, kind, continent, pinX, pinY }] }`. `kind` is `COUNTRY`, or `SPECIAL` for the five special places (below); `continent` is null for the North Pole and the magnetic poles. |
 | `GET /landmarks?country=JP` | `{ landmarks: [{ id, name, slug, countryCode, latitude, longitude, pinX, pinY, matchRadiusM }] }`. `country` is optional. |
 
 - **Caching:** both send `Cache-Control: public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400` and `Vary: Origin`. Browsers keep them an hour; Vercel's CDN keeps one copy per origin (each carries that origin's CORS header) and strips `s-maxage` before the browser sees it. A 400 isn't cached.
@@ -61,7 +67,7 @@ Emails and share URLs point at these client routes, built from `server/src/utils
 | `GET /maps/:mapId` | viewer | `{ map: { id, name, groupType, isDefault, role, ownerName, travellers: [{ id, name, position, birthCountryCode, favouriteCountryCode, userId (editors only) }], visits: [{ countryCode, status, source, firstVisitedOn, notes }], stats } }` |
 | `PATCH /maps/:mapId` | owner | `{ name?, groupType? }` → `{ map }` |
 | `DELETE /maps/:mapId` | owner | Refused (409) for the default map. Deletes the map's rows, then its photos' files, up to 1,000 per DeleteObjects request; a file that can't be deleted is left for the daily clean-up. |
-| `GET /maps/:mapId/stats` | viewer | `{ stats: { countries, continents, photos, landmarks, trips, byTraveller: [{ travellerId, name, countries }] } }` |
+| `GET /maps/:mapId/stats` | viewer | `{ stats: { countries, specialPlaces, continents, photos, landmarks, trips, byTraveller: [{ travellerId, name, countries }] } }`. `countries` (and each traveller's) counts countries only; `specialPlaces` counts Antarctica and the poles. |
 
 - **The default map** is created by a better-auth `user.create.after` hook: "My map", `SOLO`, with one traveller named after the user. Onboarding then edits it with `PATCH` and the traveller routes. `GET /maps` also creates it if it's somehow missing. There's never more than one: the database refuses a second (`TravelMap.defaultForOwnerId` is unique), and a request that loses that race uses the one that won.
 - **Visited countries** in stats count `VISITED` and `LIVED`, not `WANT_TO_GO`.
@@ -78,7 +84,7 @@ Emails and share URLs point at these client routes, built from `server/src/utils
 
 | Method and path | Role | Body |
 | --- | --- | --- |
-| `PUT /maps/:mapId/visits/:countryCode` | editor | `{ status, firstVisitedOn?, notes? }`: creates or updates, `source: MANUAL` |
+| `PUT /maps/:mapId/visits/:countryCode` | editor | `{ status, firstVisitedOn?, notes? }`: creates or updates, `source: MANUAL` → `{ visit, implied }`. `implied` lists the other visits this one added or changed, in the same shape: `[]`, or Antarctica's for a South Pole visit (see "Special places") |
 | `DELETE /maps/:mapId/visits/:countryCode` | editor | |
 
 ## Map settings
@@ -94,7 +100,8 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
   - `style`: `animated`, `old-map`, `jupiter` or `galaxy`;
   - `mapType`: `regular`, or `detailed` (country names, grid lines and landmarks at every zoom);
   - the booleans `showGrid`, `showGridLabels`, `animatedSea`, `sunAndMoon`, `showCountryNames` and `hoverPreview`;
-  - from my_planet, the booleans `showVisited` and `showUnvisited` (when off, those countries fade back on the map) and `showUserBanner` (the map's banner at the top).
+  - from my_planet, the booleans `showVisited` and `showUnvisited` (when off, those countries fade back on the map) and `showUserBanner` (the map's banner at the top);
+  - `showAntarctica` (on unless set to `false`): draws Antarctica and the two South Poles, and extends the map down to them. It changes only the view, never visits or stats.
 - **Unknown keys** are dropped. A known key with the wrong kind of value is refused (400).
 - **The whole object is replaced** on each `PUT`. Send every setting, not just the one that changed.
 
@@ -132,9 +139,7 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
    - Returns `{ photoId, uploads: [{ size, key, url, method: 'PUT', headers: { 'Content-Type' }, bytes, expiresIn }] }`.
    - Each upload URL lasts 10 minutes and signs the `Content-Type` and the `Content-Length` (`X-Amz-SignedHeaders=content-length;content-type;host`). The `PUT` must send exactly that type and a body of exactly `bytes` bytes, or R2 refuses it (403).
    - Files go to the **private** bucket at `<BucketNamespace>/photos/<mapId>/<photoId>/<size>-<random>.<ext>`.
-   - Types:
-     - `THUMB` and `DISPLAY`: `image/jpeg`, `image/webp` or `image/png`;
-     - `ORIGINAL`: those, or `image/heic`/`image/heif`.
+   - Types: `image/jpeg`, `image/webp` or `image/png` for every size. No HEIC (SITE-DESIGN.md, "Why three files per photo").
    - Size caps (in `mediaConstants.js`): `THUMB` 1 MB, `DISPLAY` 5 MB, `ORIGINAL` 50 MB.
    - **Unfinished uploads:** a user may have at most 60 files presigned and not yet saved, counted over the last 24 hours (`UNCONFIRMED_UPLOAD_LIMIT.photo`). A presign that would go over → 429 `{ message: 'Too many unfinished uploads. Please try again later.' }`. Saving a photo frees its files from the count.
    - Rate limited.
@@ -153,9 +158,10 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
 
 | Method and path | Role | Body / returns |
 | --- | --- | --- |
-| `GET /maps/:mapId/photos?country=&unplaced=&tripId=&cursor=&limit=` | viewer | `{ photos: [{ id, caption, takenAt, countryCode, tripId, width, height, thumbUrl, landmarks: [{ id, name, confirmed }], hidden (editors only) }], nextCursor }`. Newest first (by upload), `limit` 1–60 (default 30). `unplaced=1` lists only the photos with no country (no location and none chosen, or a location at sea), so they can be found and placed; it can't be combined with `country` (400). Viewers never get `hidden` photos, and see confirmed landmarks only. |
+| `GET /maps/:mapId/photos?country=&unplaced=&tripId=&cursor=&limit=` | viewer | `{ photos: [{ id, caption, takenAt, countryCode, tripId, width, height, thumbUrl, landmarks: [{ id, name, confirmed }], hidden (editors only) }], nextCursor }`. In the gallery's order (see `POST /photos/:photoId/move`): with `tripId`, or on a trip's list, the trip's order; with `country` or `unplaced`, that gallery's order; with neither, the whole map newest upload first (the hover postcards). A new photo goes first everywhere. `limit` 1–60 (default 30). `unplaced=1` lists only the photos with no country (no location and none chosen, or a location at sea), so they can be found and placed; it can't be combined with `country` (400). Viewers never get `hidden` photos, and see confirmed landmarks only. |
 | `GET /photos/:photoId` | viewer | `{ photo: { ..., displayUrl } }`. Editors also get `originalUrl`, `latitude`, `longitude`, and every landmark match with its `source` and `distanceM`. |
-| `PATCH /photos/:photoId` | editor | `{ caption?, countryCode?, tripId?, takenAt?, hidden? }`. Moving a photo between trips (`tripId`) needs editor on the map, not just the trip. A new `countryCode` marks that country visited (`source: PHOTO`), in the same transaction. → `{ photo }` |
+| `PATCH /photos/:photoId` | editor | `{ caption?, countryCode?, tripId?, takenAt?, hidden? }`. Moving a photo between trips (`tripId`) needs editor on the map, not just the trip. A new `countryCode` marks that country visited (`source: PHOTO`), in the same transaction. A photo that lands in another gallery (a new country, no country, or a new trip) goes first there; sending its current country again changes nothing. → `{ photo }` |
+| `POST /photos/:photoId/move` | editor of that gallery | Rearranging. `{ gallery, afterId }`: `gallery` is `'country'` (the photo's country on its map; the unplaced photos are one gallery) or `'trip'` (its trip; 400 if it has none). The photo goes straight after `afterId` in that gallery, or first when `afterId` is null. A country's gallery needs editor on the map; a trip's needs editor of the trip (a trip-only editor too). Only the photo's own position changes, unless its new neighbours have no room left between them (then the gallery is renumbered, in the same transaction). 400 for a bad gallery or `afterId` (not an id, or the photo itself); 409 if `afterId` isn't in that gallery any more. → `{ message }` |
 | `DELETE /photos/:photoId` | editor | Deletes the rows, then the files from R2 (one DeleteObjects request). A file that can't be deleted is left for the daily clean-up. |
 | `POST /photos/:photoId/landmarks` | editor | `{ landmarkId }`: a manual match, confirmed → 201 `{ photo }` |
 | `PATCH /photos/:photoId/landmarks/:landmarkId` | editor | `{ confirmed: true }` → `{ photo }`. 404 if the photo has no such match. |

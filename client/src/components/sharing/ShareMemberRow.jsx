@@ -1,15 +1,30 @@
 import React from 'react';
+// Icons
+import { FiTrash2 } from 'react-icons/fi';
 // Components
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 // Utils
 import { SHARE_ROLE_OPTIONS } from '@/utils/sharing/shareRoles';
 
+// The columns every "People with access" row shares (you, members, invites): name, a
+// fixed-width role column, a bin. Fixed widths keep the dropdowns, "Owner" and the bins
+// lined up down the list whatever the names or roles say. From sm up they're the
+// add-person form's columns too (ShareAddPersonForm), so its dropdown sits above these
+// and each bin under its Share button; phones keep a narrow bin column for the names.
+export const ACCESS_ROW_CLASS =
+  'grid grid-cols-[minmax(0,1fr)_9rem_2.5rem] items-center gap-2 py-2 sm:grid-cols-[minmax(0,1fr)_9rem_6rem]';
+
+// The bin button that takes someone off the list (a member, or an invite)
+export const BIN_BUTTON_CLASS =
+  'grid h-10 w-10 justify-self-center place-items-center rounded-full text-xl text-status-critical transition hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-colour6 disabled:opacity-50 disabled:hover:scale-100';
+
 // Someone with access: change their role, or remove them.
 function ShareMemberRow({ member, busy, onChangeRole, onRemove }) {
+  const who = member.name || member.email;
   return (
-    <li className='grid grid-cols-[1fr_auto_auto] items-center gap-2 py-2'>
+    <li className={ACCESS_ROW_CLASS}>
       <span className='grid min-w-0'>
-        <span className='truncate font-medium'>{member.name || member.email}</span>
+        <span className='truncate font-medium'>{who}</span>
         {member.name ? <span className='truncate text-xs opacity-80'>{member.email}</span> : null}
       </span>
       <PlainOptionSelect
@@ -17,17 +32,11 @@ function ShareMemberRow({ member, busy, onChangeRole, onRemove }) {
         value={member.role}
         options={SHARE_ROLE_OPTIONS}
         disabled={busy}
-        ariaLabel={`Role for ${member.name || member.email}`}
+        ariaLabel={`Role for ${who}`}
         onChange={(e) => onChangeRole(e.target.value)}
       />
-      <button
-        type='button'
-        onClick={onRemove}
-        disabled={busy}
-        className='text-sm text-status-critical underline underline-offset-2 disabled:opacity-50'
-        aria-label={`Remove ${member.name || member.email}`}
-      >
-        Remove
+      <button type='button' onClick={onRemove} disabled={busy} className={BIN_BUTTON_CLASS} aria-label={`Remove ${who}`} title={`Remove ${who}`}>
+        <FiTrash2 aria-hidden='true' />
       </button>
     </li>
   );

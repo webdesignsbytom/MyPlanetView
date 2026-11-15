@@ -40,7 +40,7 @@ function AccountEmailSection() {
           </p>
           <button
             type='button'
-            className='py-2 px-4 bg-colour6 cursor-pointer text-colour1 shadow-lift-sm rounded-md hover:brightness-110 active:scale-95 disabled:opacity-60'
+            className='btn-poster'
             onClick={onResend}
             disabled={sending}
           >

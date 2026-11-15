@@ -10,9 +10,16 @@ import {
 import { CompanyName } from '@/utils/constants/constants';
 // Components
 import ConfirmModal from '@/components/modals/ConfirmModal';
+import PaperCard from '@/components/common/PaperCard';
 import ContactFormItem from './ContactFormItem';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 
+// components/common/Button's `danger` at its `small` size: parchment, deep-red ink
+const DANGER_BUTTON =
+  'btn-paper [--btn-ink:var(--poster-red-deep)] [--btn-leading:1.25rem] [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:1rem] pointer-coarse:[--btn-pad-y:0.5rem]';
+
+// The contact form submissions (the admin dashboard and its contact forms page), as a
+// paper card with "Delete All" on its title strip
 function ContactFormDataSection() {
   const [contactForms, setContactForms] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -89,68 +96,58 @@ function ContactFormDataSection() {
   };
 
   return (
-    <section className='grid w-full gap-y-6'>
-      {/* Header */}
-      <section
-        className='grid w-full bg-colour6 px-4 lg:px-6 py-3 h-fit border-b-4 border-solid border-colour6'
-        aria-label='Contact form admin header'
-      >
-        <div className='grid grid-flow-col items-center justify-between'>
-          <div>
-            <h2 className='sm:text-lg md:text-xl lg:text-2xl font-semibold text-colour1'>
-              Contact Forms
-            </h2>
-          </div>
-          {contactForms.length > 0 && (
-            <div>
-              <button
-                onClick={handleDeleteAll}
-                className='solid-danger hover:brightness-110 font-semibold py-1 px-4 rounded'
-                aria-describedby='delete-all-description'
-              >
-                Delete All
-              </button>
-              <span id='delete-all-description' className='sr-only'>
-                Deletes all stored contact form submissions permanently
-              </span>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <div className='grid w-full mx-auto max-w-6xl px-4'>
-        {/* Contact forms */}
-        <section
-          className='grid w-full h-fit'
-          aria-label={`List of submitted contact forms for ${CompanyName}`}
-        >
-          {isLoading ? (
-            <div className='grid w-full items-center justify-center'>
-              <LoadingSpinner lg />
-            </div>
-          ) : contactForms.length === 0 ? (
-            <section
-              className='grid items-center justify-center h-full w-full'
-              role='status'
-              aria-live='polite'
+    <PaperCard
+      title='Contact Forms'
+      titleId='contact-forms-heading'
+      action={
+        contactForms.length > 0 ? (
+          <div className='grid'>
+            <button
+              type='button'
+              onClick={handleDeleteAll}
+              className={DANGER_BUTTON}
+              aria-describedby='delete-all-description'
             >
-              <p>No contact forms found.</p>
-            </section>
-          ) : (
-            <ul className='grid gap-y-2 lg:grid-cols-2 gap-x-2'>
-              {contactForms.map((form, index) => (
-                <li key={form.id}>
-                  <ContactFormItem
-                    id={index}
-                    form={form}
-                    handleDelete={handleDelete}
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      </div>
+              Delete All
+            </button>
+            <span id='delete-all-description' className='sr-only'>
+              Deletes all stored contact form submissions permanently
+            </span>
+          </div>
+        ) : null
+      }
+    >
+      {/* Contact forms */}
+      <section
+        className='grid w-full'
+        aria-label={`List of submitted contact forms for ${CompanyName}`}
+      >
+        {isLoading ? (
+          <div className='grid w-full place-items-center'>
+            <LoadingSpinner lg />
+          </div>
+        ) : contactForms.length === 0 ? (
+          <section
+            className='grid w-full place-items-center'
+            role='status'
+            aria-live='polite'
+          >
+            <p>No contact forms found.</p>
+          </section>
+        ) : (
+          <ul className='grid gap-3 lg:grid-cols-2'>
+            {contactForms.map((form, index) => (
+              <li key={form.id} className='grid'>
+                <ContactFormItem
+                  id={index}
+                  form={form}
+                  handleDelete={handleDelete}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
       {/* Confirm Modal */}
       {modalOpen && (
         <ConfirmModal
@@ -160,7 +157,7 @@ function ContactFormDataSection() {
           message={modalContent.message}
         />
       )}
-    </section>
+    </PaperCard>
   );
 }
 

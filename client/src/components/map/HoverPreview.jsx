@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import PosterImage from './PosterImage';
 import PosterPlaceholder from './PosterPlaceholder';
 import Postmark from './Postmark';
-import { StarBadgeIcon } from './StarBadge';
+import { PlaceBadgeIcon } from './StarBadge';
 // Data
 import { postersFor } from '@/utils/map/posterData';
 // Utils
@@ -14,8 +14,8 @@ const CYCLE_MS = 2500;
 const OFFSET = 18;
 
 // The name shares its row with the postmark, and a word can't wrap, so the longest
-// word sets the size. Measured in the travel face against the 140 px name cell
-// (14 Nov 2026), leaving at least 7 px spare for every country on the map:
+// word sets the size. Measured in the travel face against the 140 px name cell of a
+// starred card, the narrowest (14 Nov 2026), leaving at least 7 px spare for every country:
 // "Cameroon" fits at 2xl, "Macedonia" needs xl, "Herzegovina" lg, "Liechtenstein" base.
 function nameSize(name) {
   const longest = Math.max(0, ...String(name).split(/[\s-]+/).map((word) => word.length));
@@ -68,6 +68,7 @@ function HoverPreview({ code, status, thumbs = [], showPhotos }) {
   const current = photos[index % Math.max(photos.length, 1)];
   const [poster] = postersFor(code);
   const name = countryName(code);
+  const starred = countsAsVisited(status);
 
   return (
     <div
@@ -75,12 +76,14 @@ function HoverPreview({ code, status, thumbs = [], showPhotos }) {
       style={style}
       className='pointer-events-none fixed z-20 grid w-64 grid-cols-1 gap-3 border-2 border-poster-brown bg-paper-cream p-3 text-colour4 shadow-paper'
     >
-      {/* Visited: the map's star badge, stuck on the card's corner like a stamp */}
-      {countsAsVisited(status) ? (
-        <StarBadgeIcon lived={status === 'LIVED'} className='absolute -right-4 -top-4 h-12 w-12 rotate-12 drop-shadow-md' />
+      {/* Visited: the map's badge (the star, or a special place's expedition stamp), stuck
+          on the card's corner like a stamp */}
+      {starred ? (
+        <PlaceBadgeIcon code={code} lived={status === 'LIVED'} className='absolute -right-4 -top-4 h-12 w-12 rotate-12 drop-shadow-md' />
       ) : null}
-      {/* minmax(0, 1fr): a long name must never widen the card (and the poster with it) */}
-      <div className='grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 pr-6'>
+      {/* minmax(0, 1fr): a long name must never widen the card (and the poster with it).
+          pr-6 keeps the postmark clear of the star; with no star it goes to the edge. */}
+      <div className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 ${starred ? 'pr-6' : ''}`}>
         <p className={`break-words font-travel ${nameSize(name)} uppercase leading-tight tracking-wide text-colour6`}>{name}</p>
         <Postmark>{status ? VISIT_STATUS_LABELS[status] : 'Not been yet'}</Postmark>
       </div>

@@ -131,13 +131,25 @@ enum Continent {
   SOUTH_AMERICA
 }
 
-model Country {
-  code      String    @id @db.Char(2) // ISO 3166-1 alpha-2, e.g. "JP"
-  name      String    @unique
-  slug      String    @unique
-  continent Continent
+// COUNTRY: the 224 countries (ISO codes, plus IC Canary Islands and XK Kosovo).
+// SPECIAL: places worth marking that aren't countries, left out of the country count
+// (docs/SITE-DESIGN.md, "Special places"): Antarctica (AQ, a shape, the 7th continent)
+// and the four poles (XN, QN, XS, QS: points, codes from ISO's user-assigned range).
+enum PlaceKind {
+  COUNTRY
+  SPECIAL
+}
 
-  // Pin position on the SVG map (viewBox 2000 x 1000), from the old pinX/pinY
+model Country {
+  code      String     @id @db.Char(2) // ISO 3166-1 alpha-2, e.g. "JP"
+  name      String     @unique
+  slug      String     @unique
+  kind      PlaceKind  @default(COUNTRY)
+  // Null for the North Pole and the magnetic poles, which are on no continent
+  continent Continent?
+
+  // Pin position on the SVG map (Robinson: the countries span y 0 to 857, the pole
+  // lines are at -16.6 and 1020.6)
   pinX Float?
   pinY Float?
 
@@ -158,6 +170,10 @@ model Landmark {
   name        String
   slug        String  @unique
   description String?
+
+  // The Wikidata item the coordinates were checked against (e.g. "Q5788"). The
+  // reference loader upserts by it, so renaming a landmark updates its row.
+  wikidataId String @unique
 
   countryCode String  @db.Char(2)
   country     Country @relation(fields: [countryCode], references: [code], onDelete: Restrict)
@@ -261,6 +277,8 @@ model Traveller {
   updatedAt DateTime @updatedAt
 
   @@index([mapId, position])
+  // One traveller per account on a map (rows with no login are unaffected)
+  @@unique([mapId, userId])
   @@index([userId])
   @@map("traveller")
 }
@@ -479,6 +497,13 @@ model Photo {
   // hashtags" idea)
   hidden Boolean @default(false)
 
+  // Where the photo sits in its galleries, smallest first: its country's on the map
+  // (the unplaced photos, with no country, are one gallery too), and its trip's.
+  // Editors drag photos to rearrange them; a new photo goes first. Moving one photo
+  // writes only its own position (between its new neighbours): utils/photoOrder.js.
+  countryPosition Float @default(0)
+  tripPosition    Float @default(0)
+
   variants  PhotoVariant[]
   landmarks PhotoLandmark[]
   coverOf   Trip[]          @relation("TripCover")
@@ -486,11 +511,12 @@ model Photo {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // The photo lists' order (newest upload first, keyset on id), per map, per
-  // trip and per map + country; they also serve the photo counts
+  // The photo lists' order, keyset on id: the whole map's newest upload first (the
+  // hover postcards), a country's and a trip's in their own order. They also serve
+  // the photo counts.
   @@index([mapId, createdAt(sort: Desc), id(sort: Desc)])
-  @@index([tripId, createdAt(sort: Desc), id(sort: Desc)])
-  @@index([mapId, countryCode, createdAt(sort: Desc)])
+  @@index([tripId, tripPosition, id])
+  @@index([mapId, countryCode, countryPosition, id])
   @@index([uploaderId])
   @@map("photo")
 }

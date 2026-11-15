@@ -35,9 +35,11 @@ import {
   findPhotoDetail,
   findPhotoFileKeys,
   findPhotosPage,
+  movePhotoInDB,
   updatePhotoInDB,
   upsertPhotoLandmarkInDB,
 } from '../domain/photos.js';
+import { PHOTO_GALLERIES } from '../utils/photoOrder.js';
 import { findTripAccess } from '../domain/trips.js';
 import {
   badRequest,
@@ -328,6 +330,30 @@ export const updatePhotoHandler = handler(D, 'Update photo', async (req, res) =>
     logEvent(createPhotoEvent({ user: req.user, action: 'Update Success', id: photo.id, detail: Object.keys(data).join(',') }));
   }
   return sendDataResponse(res, 200, { photo: await photoDetailView(await findPhotoDetail(photo.id), role) });
+});
+
+// Rearranging a gallery: `{ gallery: 'country' | 'trip', afterId }` puts the photo
+// straight after `afterId` there, or first when it's null. The country gallery is the
+// map's (editor on the map); the trip's gallery is the trip's (a trip-only editor too).
+export const movePhotoHandler = handler(D, 'Move photo', async (req, res) => {
+  const { photo, mapRole, role } = await loadPhoto(req, req.params.photoId);
+  if (!canSeePhoto(role, photo)) return notFound(req, res, D, EVENT_MESSAGES.photoNotFound);
+
+  const body = req.body || {};
+  const { gallery } = body;
+  if (!PHOTO_GALLERIES.includes(gallery) || (gallery === 'trip' && !photo.tripId)) {
+    return badRequest(req, res, D, EVENT_MESSAGES.photoGalleryInvalid);
+  }
+  if (!canEdit(gallery === 'trip' ? role : mapRole)) return forbidden(req, res, D);
+  const afterId = body.afterId ?? null;
+  if (afterId !== null && (!isUuid(afterId) || afterId === photo.id)) {
+    return badRequest(req, res, D, EVENT_MESSAGES.malformedData);
+  }
+
+  const result = await movePhotoInDB({ photo, gallery, afterId });
+  if (result.targetGone) return conflict(req, res, D, EVENT_MESSAGES.photoMoveTargetGone);
+  logEvent(createPhotoEvent({ user: req.user, action: 'Move Success', id: photo.id, detail: `gallery=${gallery}` }));
+  return sendDataResponse(res, 200, { message: 'Photo moved.' });
 });
 
 export const deletePhotoHandler = handler(D, 'Delete photo', async (req, res) => {

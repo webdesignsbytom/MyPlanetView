@@ -6,8 +6,10 @@ import { countryAtPosition, distanceToCountry } from '../src/utils/countryLookup
 import { projectToMap } from '../src/utils/projection.js';
 import { MAX_MATCH_RADIUS_M } from '../src/utils/landmarkMatch.js';
 import { slugify } from '../src/utils/slug.js';
+import { SPECIAL_PLACE_CODES } from '../src/utils/specialPlaces.js';
 
 const countryCodes = new Set(COUNTRIES.map((c) => c.code));
+const COUNTRY_BY_CODE = Object.fromEntries(COUNTRIES.map((c) => [c.code, c]));
 
 describe('countries seed', () => {
   it('has unique codes, names and slugs, each with a pin on the map', () => {
@@ -16,9 +18,29 @@ describe('countries seed', () => {
     for (const c of COUNTRIES) {
       expect(c.pinX).toBeGreaterThan(0);
       expect(c.pinX).toBeLessThan(2000);
-      expect(c.pinY).toBeGreaterThan(0);
-      expect(c.pinY).toBeLessThan(1000);
+      // Countries sit within the shapes (y 0 to 857); special places reach the pole lines
+      expect(c.pinY, c.code).toBeGreaterThanOrEqual(c.kind === 'SPECIAL' ? -16.6 : 0);
+      expect(c.pinY, c.code).toBeLessThanOrEqual(c.kind === 'SPECIAL' ? 1020.6 : 857);
     }
+  });
+
+  it('has 224 countries and the five special places, matching utils/specialPlaces.js', () => {
+    const special = COUNTRIES.filter((c) => c.kind === 'SPECIAL');
+    expect(COUNTRIES.length - special.length).toBe(224);
+    expect(special.map((c) => c.code).sort()).toEqual([...SPECIAL_PLACE_CODES].sort());
+    // Antarctica and the South Pole give the seventh continent; the others have none
+    expect(Object.fromEntries(special.map((c) => [c.code, c.continent]))).toEqual({
+      AQ: 'ANTARCTICA',
+      XN: null,
+      QN: null,
+      XS: 'ANTARCTICA',
+      QS: null,
+    });
+    // Each pole's pin is its real position on the map
+    expect([COUNTRY_BY_CODE.XN.pinX, COUNTRY_BY_CODE.XN.pinY]).toEqual(Object.values(projectToMap(90, 0)));
+    expect([COUNTRY_BY_CODE.XS.pinX, COUNTRY_BY_CODE.XS.pinY]).toEqual(Object.values(projectToMap(-90, 0)));
+    expect([COUNTRY_BY_CODE.QN.pinX, COUNTRY_BY_CODE.QN.pinY]).toEqual(Object.values(projectToMap(85.762, 139.298)));
+    expect([COUNTRY_BY_CODE.QS.pinX, COUNTRY_BY_CODE.QS.pinY]).toEqual(Object.values(projectToMap(-63.851, 135.078)));
   });
 });
 
@@ -26,6 +48,11 @@ describe('landmarks seed', () => {
   it('keeps all 177 monuments from the old map, one name each', () => {
     expect(LANDMARKS).toHaveLength(177);
     expect(new Set(LANDMARKS.map((l) => slugify(l.name))).size).toBe(LANDMARKS.length);
+  });
+
+  it('gives each landmark its own Wikidata item (the reference loader upserts by it)', () => {
+    for (const l of LANDMARKS) expect(l.wikidataId, l.name).toMatch(/^Q\d+$/);
+    expect(new Set(LANDMARKS.map((l) => l.wikidataId)).size).toBe(LANDMARKS.length);
   });
 
   it('puts every landmark in a seeded country, at a real position, with a sensible radius', () => {

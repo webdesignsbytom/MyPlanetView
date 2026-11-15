@@ -51,9 +51,28 @@ describe('buildMapStats', () => {
     ]);
   });
 
+  it('counts special places apart from countries, and Antarctica as a continent', () => {
+    const stats = buildMapStats({
+      visits: [
+        { countryCode: 'FR', status: 'VISITED' },
+        { countryCode: 'AQ', status: 'VISITED' },
+        { countryCode: 'XS', status: 'LIVED' },
+        { countryCode: 'XN', status: 'WANT_TO_GO' },
+        { countryCode: 'QN', status: 'VISITED' },
+      ],
+      continentByCode: new Map([['FR', 'EUROPE'], ['AQ', 'ANTARCTICA'], ['XS', 'ANTARCTICA'], ['XN', null], ['QN', null]]),
+      travellers: [{ id: 't1', name: 'Sam' }],
+      completedTrips: [{ travellerIds: ['t1'], countryCodes: ['FR', 'AQ', 'XS'] }],
+    });
+    expect(stats).toMatchObject({ countries: 1, specialPlaces: 3, continents: 2 });
+    // A traveller's countries are countries only
+    expect(stats.byTraveller).toEqual([{ travellerId: 't1', name: 'Sam', countries: 1 }]);
+  });
+
   it('passes the counts through and starts at zero', () => {
     expect(buildMapStats({ photoCount: 12, landmarkCount: 3, tripCount: 2 })).toEqual({
       countries: 0,
+      specialPlaces: 0,
       continents: 0,
       photos: 12,
       landmarks: 3,

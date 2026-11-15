@@ -44,6 +44,8 @@ import { PREVIEW_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 import { forgetMapLists } from '@/utils/map/mapListCache';
 import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole } from '@/utils/sharing/shareRoles';
+import { mapExtent } from '@/utils/map/projection';
+import { isAntarctic } from '@/utils/map/specialPlaces';
 
 const PREVIEW_PER_COUNTRY = 6;
 const CLUSTER_RADIUS = 220; // map units: countries this close count as one region
@@ -53,9 +55,13 @@ const atLandmarkZoom = (zoom) => zoom >= LANDMARK_MIN_ZOOM;
 const warmCountryPanel = () => CountryPanel.preload().catch(() => {});
 
 // Where a portrait screen opens: the middle of the biggest group of visited countries
-// (so a map of European trips opens on Europe), or Europe when nothing is visited yet
-function homeFromVisits(visits) {
-  const pins = visits.filter((v) => VISITED.has(v.status)).map((v) => COUNTRY_BY_CODE[v.countryCode]).filter(Boolean);
+// (so a map of European trips opens on Europe), or Europe when nothing is visited yet.
+// Antarctica's places count only while it's drawn.
+function homeFromVisits(visits, showAntarctica) {
+  const pins = visits
+    .filter((v) => VISITED.has(v.status) && (showAntarctica || !isAntarctic(v.countryCode)))
+    .map((v) => COUNTRY_BY_CODE[v.countryCode])
+    .filter(Boolean);
   if (!pins.length) return undefined;
   let best = [];
   for (const pin of pins) {
@@ -100,8 +106,11 @@ function uiReducer(state, action) {
  */
 function MapExperience({ map, trips, role, actions = null, shareCode = null, currentUser = null, settings, onChangeSetting }) {
   const navigate = useNavigate();
-  const home = useMemo(() => homeFromVisits(map.visits), [map.visits]);
-  const viewport = useMapViewport({ home });
+  const { showAntarctica } = settings;
+  const home = useMemo(() => homeFromVisits(map.visits, showAntarctica), [map.visits, showAntarctica]);
+  // The map reaches further down with Antarctica; the viewport re-fits when it's toggled
+  const extent = useMemo(() => mapExtent(showAntarctica), [showAntarctica]);
+  const viewport = useMapViewport({ home, extent });
   const [ui, dispatch] = useReducer(uiReducer, initialUi);
   // The country under the pointer: followed by the hover postcard only (MapHoverLayer)
   const [hover] = useState(() => createValueStore(null));
@@ -287,6 +296,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           showCountryNames={settings.showCountryNames || detailed}
           showVisited={settings.showVisited}
           showUnvisited={settings.showUnvisited}
+          showAntarctica={showAntarctica}
           landmarks={landmarks}
           alwaysShowLandmarks={detailed}
           label={`${map.name}: world map`}
@@ -307,7 +317,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
       {settings.showUserBanner ? (
         <div className='pointer-events-none absolute inset-x-0 top-3 hidden justify-items-center lg:grid'>
-          <MapBanner map={map} onHide={() => onChangeSetting('showUserBanner', false)} />
+          <MapBanner map={map} />
         </div>
       ) : null}
 
@@ -321,7 +331,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         />
       </div>
 
-      <div className='pointer-events-none absolute bottom-24 right-3 grid md:bottom-6'>
+      {/* Wide screens: as far from the bottom as the toolbar is from the top (both 3) */}
+      <div className='pointer-events-none absolute bottom-24 right-3 grid md:bottom-3'>
         <div className='pointer-events-auto'>
           <MapZoomControls viewport={viewport} />
         </div>
@@ -329,7 +340,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
       {/* The key hides while a panel is open: the panel covers that corner */}
       {panel ? null : (
-        <div className='pointer-events-none absolute bottom-6 left-3 hidden md:grid'>
+        <div className='pointer-events-none absolute bottom-3 left-3 hidden md:grid'>
           <MapLegend />
         </div>
       )}

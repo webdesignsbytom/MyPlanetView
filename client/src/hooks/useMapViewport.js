@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useSyncExternalStore } from 'react';
 // Utils
-import { MAP_HEIGHT, MAP_WIDTH } from '@/utils/map/projection';
+import { MAP_WIDTH, mapExtent } from '@/utils/map/projection';
 
-const ASPECT = MAP_HEIGHT / MAP_WIDTH;
 const MIN_WIDTH = 80; // the closest zoom: 25 times
-const FULL = { x: 0, y: 0, w: MAP_WIDTH, h: MAP_HEIGHT };
+const FULL_EXTENT = mapExtent(true);
 const DRAG_THRESHOLD_PX = 5;
 // Double-tap (or double-click) zooms in on the spot: two taps this close in time and space
 const DOUBLE_TAP_MS = 300;
@@ -31,29 +30,35 @@ function afterThisTask(fn) {
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 const viewBoxOf = (v) => `${v.x} ${v.y} ${v.w} ${v.h}`;
 
+// The map's extent ({ top, bottom }: with or without Antarctica, projection.js mapExtent)
+const heightOf = (extent) => extent.bottom - extent.top;
+const mapAspect = (extent) => heightOf(extent) / MAP_WIDTH;
+const fullView = (extent) => ({ x: 0, y: extent.top, w: MAP_WIDTH, h: heightOf(extent) });
+
 // The view's shape (height / width). On a landscape screen it's the map's own, so the whole
 // world fits. On a portrait one it's the screen's, so the map fills the height and the
 // view is a slice of the world you pan across, instead of a thin strip mid-screen.
-const viewAspectFor = (screenAspect) => (screenAspect > 1 ? screenAspect : ASPECT);
+// (No screen measured yet: the map's own.)
+const viewAspectFor = (screenAspect, extent) => (screenAspect > 1 ? screenAspect : mapAspect(extent));
 
 // Keep the view on the map: never wider or taller than the whole map, never panned off it
-function fit({ x, y, w }, aspect = ASPECT) {
-  const maxWidth = Math.min(MAP_WIDTH, MAP_HEIGHT / aspect);
+function fit({ x, y, w }, aspect, extent) {
+  const maxWidth = Math.min(MAP_WIDTH, heightOf(extent) / aspect);
   const width = clamp(w, Math.min(MIN_WIDTH, maxWidth), maxWidth);
   const height = width * aspect;
   return {
     x: clamp(x, 0, MAP_WIDTH - width),
-    y: clamp(y, 0, MAP_HEIGHT - height),
+    y: clamp(y, extent.top, extent.bottom - height),
     w: width,
     h: height,
   };
 }
 
 // The starting view: the whole map, or on a portrait screen the full height centred on home
-function homeView(aspect, home) {
-  if (aspect === ASPECT) return FULL;
-  const w = MAP_HEIGHT / aspect;
-  return fit({ x: home.x - w / 2, y: home.y - (w * aspect) / 2, w }, aspect);
+function homeView(aspect, home, extent) {
+  if (aspect === mapAspect(extent)) return fullView(extent);
+  const w = heightOf(extent) / aspect;
+  return fit({ x: home.x - w / 2, y: home.y - (w * aspect) / 2, w }, aspect, extent);
 }
 
 /**
@@ -73,12 +78,16 @@ function homeView(aspect, home) {
  * click that ends a drag or a double-tap, and holds the action back until no second tap
  * can follow, so a double-tap only zooms.
  * `home` ({ x, y } in map units) is where a portrait screen opens, e.g. the visited countries.
+ * `extent` ({ top, bottom } in map units, from projection.js mapExtent) is how far the map
+ * reaches: further down with Antarctica. A new extent re-fits the view before the next
+ * paint (the whole map again, unless the user has moved it).
  * The returned object never changes, so it can be passed to memoised components.
  */
-export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME } = {}) {
+export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME, extent = FULL_EXTENT } = {}) {
   const svgNodeRef = useRef(null);
+  const extentRef = useRef({ top: extent.top, bottom: extent.bottom });
   // The live view, and the zoom the subscribers last saw
-  const viewRef = useRef(FULL);
+  const viewRef = useRef(fullView(extentRef.current));
   const zoomRef = useRef(1);
   const listenersRef = useRef(new Set());
   const pendingRef = useRef(false);
@@ -91,8 +100,10 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
   const lastTapRef = useRef(null);
   const doubleTapRef = useRef(false);
   const pendingTapRef = useRef(null);
-  // The view's shape, from the SVG's size on screen; and whether the user has moved it yet
-  const aspectRef = useRef(ASPECT);
+  // The view's shape, from the SVG's size on screen (and that size's own shape, once
+  // measured); and whether the user has moved it yet
+  const aspectRef = useRef(mapAspect(extentRef.current));
+  const screenAspectRef = useRef(0);
   const movedRef = useRef(false);
   const homeRef = useRef({ x: home?.x ?? DEFAULT_HOME.x, y: home?.y ?? DEFAULT_HOME.y });
   const homeX = home?.x ?? DEFAULT_HOME.x;
@@ -133,11 +144,13 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
     (first = false) => {
       const rect = svgNodeRef.current?.getBoundingClientRect();
       if (!rect?.width || !rect?.height) return;
-      const aspect = viewAspectFor(rect.height / rect.width);
+      screenAspectRef.current = rect.height / rect.width;
+      const extent = extentRef.current;
+      const aspect = viewAspectFor(screenAspectRef.current, extent);
       if (aspect === aspectRef.current && !first) return;
       aspectRef.current = aspect;
       const prev = viewRef.current;
-      apply(movedRef.current ? fit({ x: prev.x, y: prev.y, w: prev.w }, aspect) : homeView(aspect, homeRef.current), first);
+      apply(movedRef.current ? fit(prev, aspect, extent) : homeView(aspect, homeRef.current, extent), first);
     },
     [apply],
   );
@@ -166,8 +179,23 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
   // A new home (the visits arrived or changed) moves the view only if the user hasn't yet
   useEffect(() => {
     homeRef.current = { x: homeX, y: homeY };
-    if (!movedRef.current) apply(homeView(aspectRef.current, homeRef.current));
+    if (!movedRef.current) apply(homeView(aspectRef.current, homeRef.current, extentRef.current));
   }, [homeX, homeY, apply]);
+
+  // A new extent (Antarctica shown or hidden): the view's shape follows the map's on a
+  // landscape screen, and the view is kept on the map. Before the paint that draws the
+  // map without (or with) Antarctica, so it never shows a gap.
+  const extentTop = extent.top;
+  const extentBottom = extent.bottom;
+  useLayoutEffect(() => {
+    const prev = extentRef.current;
+    if (prev.top === extentTop && prev.bottom === extentBottom) return;
+    const next = { top: extentTop, bottom: extentBottom };
+    extentRef.current = next;
+    const aspect = viewAspectFor(screenAspectRef.current, next);
+    aspectRef.current = aspect;
+    apply(movedRef.current ? fit(viewRef.current, aspect, next) : homeView(aspect, homeRef.current, next), true);
+  }, [extentTop, extentBottom, apply]);
 
   // Screen position -> map position, from the live view (the SVG's viewBox can be a task
   // behind) and its box on screen, drawn "meet" and centred (xMidYMid)
@@ -188,9 +216,10 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
       const prev = viewRef.current;
       const a = aspectRef.current;
       const at = centre || { x: prev.x + prev.w / 2, y: prev.y + prev.h / 2 };
-      const w = clamp(prev.w / factor, MIN_WIDTH, Math.min(MAP_WIDTH, MAP_HEIGHT / a));
+      const extent = extentRef.current;
+      const w = clamp(prev.w / factor, MIN_WIDTH, Math.min(MAP_WIDTH, heightOf(extent) / a));
       const ratio = w / prev.w;
-      apply(fit({ x: at.x - (at.x - prev.x) * ratio, y: at.y - (at.y - prev.y) * ratio, w }, a));
+      apply(fit({ x: at.x - (at.x - prev.x) * ratio, y: at.y - (at.y - prev.y) * ratio, w }, a, extent));
     },
     [apply],
   );
@@ -199,7 +228,7 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
   const zoomOut = useCallback(() => zoomAround(1 / 1.6), [zoomAround]);
   const reset = useCallback(() => {
     movedRef.current = false;
-    apply(homeView(aspectRef.current, homeRef.current));
+    apply(homeView(aspectRef.current, homeRef.current, extentRef.current));
   }, [apply]);
 
   // Centre on a point at a given width (a country picked from the list)
@@ -208,7 +237,7 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
       movedRef.current = true;
       const a = aspectRef.current;
       const w = clamp(width, MIN_WIDTH, MAP_WIDTH);
-      apply(fit({ x: x - w / 2, y: y - (w * a) / 2, w }, a));
+      apply(fit({ x: x - w / 2, y: y - (w * a) / 2, w }, a, extentRef.current));
     },
     [apply],
   );
@@ -217,7 +246,9 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
     (dxFraction, dyFraction) => {
       movedRef.current = true;
       const prev = viewRef.current;
-      apply(fit({ x: prev.x + prev.w * dxFraction, y: prev.y + prev.h * dyFraction, w: prev.w }, aspectRef.current));
+      apply(
+        fit({ x: prev.x + prev.w * dxFraction, y: prev.y + prev.h * dyFraction, w: prev.w }, aspectRef.current, extentRef.current),
+      );
     },
     [apply],
   );
@@ -306,7 +337,7 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
         // Map units per screen pixel (the map is drawn "meet": the tighter side decides)
         const base = gesture.view;
         const scale = Math.max(base.w / rect.width, base.h / rect.height);
-        apply(fit({ x: base.x - dx * scale, y: base.y - dy * scale, w: base.w }, aspectRef.current));
+        apply(fit({ x: base.x - dx * scale, y: base.y - dy * scale, w: base.w }, aspectRef.current, extentRef.current));
       } else if (gesture.kind === 'pinch' && pointers.length === 2) {
         const [a, b] = pointers;
         const distance = Math.hypot(a.x - b.x, a.y - b.y);

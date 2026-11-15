@@ -75,7 +75,8 @@ function AccountDeleteSection() {
 
       <button
         type='submit'
-        className='py-2 solid-danger cursor-pointer shadow-lift-sm rounded-md hover:brightness-110 active:scale-95 disabled:opacity-60'
+        // The danger button (components/common/Button's `danger`): parchment, deep-red ink
+        className='btn-paper [--btn-ink:var(--poster-red-deep)]'
         disabled={busy}
       >
         {busy ? <LoadingSpinner xs /> : 'Delete my account'}

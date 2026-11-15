@@ -1,18 +1,14 @@
 import React from 'react';
+// Components
+import PaperCard from '@/components/common/PaperCard';
 
+// One section of the account page, as a paper card with its title on the parchment strip.
+// `danger` (deleting the account) edges and rules it in deep red instead of brown.
 function AccountCard({ id, title, danger = false, children }) {
   return (
-    <section
-      aria-labelledby={`${id}-heading`}
-      className={`grid gap-4 p-6 lg:p-8 rounded-2xl shadow-lift bg-colour1 ${
-        danger ? 'border-2 border-solid border-status-critical' : ''
-      }`}
-    >
-      <h2 id={`${id}-heading`} className='text-xl font-semibold text-center'>
-        {title}
-      </h2>
+    <PaperCard title={title} titleId={`${id}-heading`} className={danger ? 'paper-danger' : ''}>
       {children}
-    </section>
+    </PaperCard>
   );
 }
 
