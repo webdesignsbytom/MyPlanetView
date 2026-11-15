@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 // Auth
 import { useAuth } from '@/auth/AuthContext';
 // Constants
@@ -29,8 +29,12 @@ import LoadingSpinner from '@/components/utils/LoadingSpinner';
 function VerifyEmailPage() {
   const pageHelmet = helmetData[VERIFY_EMAIL_PAGE_URL];
 
-  // Link format: /verify-email-address/:userId/:token
+  // Link format: /verify-email-address/:userId/:token. `?change=confirm` is the link
+  // sent to the current address before an email change: this click only confirms it,
+  // and the server then emails the new address
   const { uniqueString: token } = useParams();
+  const [searchParams] = useSearchParams();
+  const confirmingChange = searchParams.get('change') === 'confirm';
   const { verifyEmail } = useAuth();
   const navigateToPage = useNavigateToPage();
 
@@ -77,7 +81,11 @@ function VerifyEmailPage() {
       const destination = result.signedIn ? ACCOUNT_PAGE_URL : LOGIN_PAGE_URL;
       setNextPage(destination);
       setStatus('success');
-      setMessage('Your email has been verified successfully.');
+      setMessage(
+        confirmingChange
+          ? "Thanks, the change is confirmed. We've emailed a link to your new address: your email changes once you click it."
+          : 'Your email has been verified successfully.',
+      );
       startRedirectCountdown(destination);
     } else {
       setStatus('error');
@@ -144,7 +152,7 @@ function VerifyEmailPage() {
                 isVerifying
                   ? 'Verifying your email address'
                   : isSuccess
-                    ? 'Email verified'
+                    ? confirmingChange ? 'Change confirmed' : 'Email verified'
                     : 'Email verification failed'
               }
               headingId='verify-email-heading'

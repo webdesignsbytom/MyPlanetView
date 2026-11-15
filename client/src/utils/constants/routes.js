@@ -74,8 +74,24 @@ export const CLIENT_ONLY_ROUTE_PREFIXES = [
   INVITE_PAGE_URL.split('/:')[0],
 ];
 
-// Pages whose address carries a secret (share code, invite token): analytics never runs there
-export const ANALYTICS_EXCLUDED_PREFIXES = [SHARED_PAGE_URL.split('/:')[0], INVITE_PAGE_URL.split('/:')[0]];
+// Pages whose address carries a secret (share code, invite token, password-reset or
+// email-verification link): analytics is paused there (utils/analytics/privacy.js)
+export const ANALYTICS_EXCLUDED_PREFIXES = [
+  SHARED_PAGE_URL.split('/:')[0],
+  INVITE_PAGE_URL.split('/:')[0],
+  RESET_PASS_PAGE_URL.split('/:')[0],
+  VERIFY_EMAIL_PAGE_URL.split('/:')[0],
+];
+
+// Pages with an id or a secret in the address: analytics only ever sees the pattern
+export const ANALYTICS_REDACTED_ROUTES = [
+  SHARED_PAGE_URL,
+  INVITE_PAGE_URL,
+  RESET_PASS_PAGE_URL,
+  VERIFY_EMAIL_PAGE_URL,
+  MAP_BY_ID_PAGE_URL,
+  TRIP_PAGE_URL,
+];
 
 // Sitemap lastmod per page (YYYY-MM-DD); set only when the content really changes
 export const ROUTE_SITEMAP_META = {};

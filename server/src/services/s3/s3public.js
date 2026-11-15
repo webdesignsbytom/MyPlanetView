@@ -6,6 +6,7 @@ import {
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { signedPutInput, signedPutOptions } from './signedUpload.js';
 
 const s3 = new S3Client({
   region: process.env.STORAGE_REGION,
@@ -29,21 +30,21 @@ if (!PUBLIC_BUCKET) {
 
 // Public presigners
 
-// Presign a PUT (browser upload)
+// Presign a PUT (browser upload). Signs ContentType and ContentLength (signedUpload.js):
+// the PUT must send exactly `contentType` and exactly `contentLength` bytes.
 export const s3PresignPut = async ({
   bucket,
   key,
   contentType,
-  cacheControl,        // optional
+  contentLength,       // bytes, required
+  cacheControl,        // optional; the presigner never signs it, so R2 doesn't get it
   expiresIn = 600,     // 10 minutes
 }) => {
   const cmd = new PutObjectCommand({
-    Bucket: bucket,
-    Key: key,
-    ContentType: contentType,
+    ...signedPutInput({ bucket, key, contentType, contentLength }),
     ...(cacheControl ? { CacheControl: cacheControl } : {}),
   });
-  const url = await getSignedUrl(s3, cmd, { expiresIn });
+  const url = await getSignedUrl(s3, cmd, signedPutOptions(expiresIn));
   return { url, expiresIn };
 };
 

@@ -6,6 +6,8 @@ import { acceptInvite } from '@/api/travelApi';
 import { INVITE_PAGE_URL, LOGIN_PAGE_URL, SIGN_UP_PAGE_URL, mapPath, tripPath } from '@/utils/constants/routes';
 // Auth
 import { useAuth } from '@/auth/AuthContext';
+// Utils
+import { forgetMapLists } from '@/utils/map/mapListCache';
 // Components
 import AppPageHead from '@/components/utils/AppPageHead';
 import AppPageShell from '@/components/common/AppPageShell';
@@ -26,7 +28,11 @@ function InviteAcceptPage() {
     if (loading || !isAuthenticated || triedRef.current) return;
     triedRef.current = true;
     acceptInvite(token)
-      .then(({ resource, id }) => navigate(resource === 'trip' ? tripPath(id) : mapPath(id), { replace: true }))
+      .then(({ resource, id }) => {
+        // The new map or trip isn't in the lists kept for this session yet
+        forgetMapLists();
+        navigate(resource === 'trip' ? tripPath(id) : mapPath(id), { replace: true });
+      })
       .catch((err) => {
         const status = err.response?.status;
         setError(

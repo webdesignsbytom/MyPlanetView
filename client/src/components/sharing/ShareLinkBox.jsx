@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 // Components
 import Button from '@/components/common/Button';
 
-// The share link and its code, with copy, and "reset link" (a new code; old links stop working).
-function ShareLinkBox({ shareUrl, shareCode, busy, onReset }) {
+// The share link and its code, with copy, and "reset link" (a new code; old links stop
+// working), offered only when `canReset` (a verified email address).
+function ShareLinkBox({ shareUrl, shareCode, busy, canReset = true, onReset }) {
   const [copied, setCopied] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
 
@@ -34,7 +35,7 @@ function ShareLinkBox({ shareUrl, shareCode, busy, onReset }) {
       <p className='text-xs opacity-80'>
         Share code <span className='font-mono font-semibold'>{shareCode}</span>
       </p>
-      {confirmingReset ? (
+      {!canReset ? null : confirmingReset ? (
         <div className='grid gap-2 rounded-lg border px-3 py-2 text-sm tone-warn'>
           <p>Make a new link? Anyone using the old one loses access, unless they were added by email.</p>
           <div className='grid grid-row gap-2'>

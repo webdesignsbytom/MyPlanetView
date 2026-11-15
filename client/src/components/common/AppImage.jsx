@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useId } from 'react';
-import PropTypes from 'prop-types';
 import AppAnchor from './AppAnchor';
 
 // Accessible image with ratio box, lazy load and fallback
@@ -145,36 +144,3 @@ export default function AppImage({
 
   return Wrapped;
 }
-
-AppImage.propTypes = {
-  src: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired,
-  ratio: PropTypes.string, // e.g. "3/2", "16/9", "9/16"
-  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  sizes: PropTypes.string,
-  srcSet: PropTypes.string,
-  sources: PropTypes.arrayOf(PropTypes.shape({
-    type: PropTypes.string,
-    media: PropTypes.string,
-    sizes: PropTypes.string,
-    srcSet: PropTypes.string,
-  })),
-  loading: PropTypes.oneOf(['lazy', 'eager']),
-  decoding: PropTypes.oneOf(['async', 'auto', 'sync']),
-  priority: PropTypes.bool,
-  fetchPriority: PropTypes.oneOf(['high', 'low', 'auto']),
-  className: PropTypes.string,
-  imgClassName: PropTypes.string,
-  style: PropTypes.object,
-  caption: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  figure: PropTypes.bool,
-  linkTo: PropTypes.string,
-  target: PropTypes.string,
-  rel: PropTypes.string,
-  fallbackSrc: PropTypes.string,
-  onLoad: PropTypes.func,
-  onError: PropTypes.func,
-  referrerPolicy: PropTypes.string,
-  draggable: PropTypes.bool,
-};

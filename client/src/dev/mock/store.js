@@ -46,6 +46,9 @@ export function loadStore() {
     }
   }
   if (!db) db = buildSeed();
+  [...db.maps, ...db.trips].forEach((item) => {
+    item.shareCode = fixCode(item.shareCode);
+  });
   db.users[0].role = getMockRole();
   saveStore();
   return db;
@@ -68,12 +71,27 @@ export const me = () => db.users[0];
 export const newId = () =>
   typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `mock-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
+// Share codes, as server/src/utils/shareCodes.js: stored as 12 characters with no
+// lookalikes, shown and linked as XXXX-XXXX-XXXX, and normalised on lookup (case, spaces
+// and dashes don't matter; anything that can't be a code finds nothing).
 const CODE_ALPHABET = '23456789ABCDEFGHJKMNPQRSTVWXYZ';
+const CODE_LENGTH = 12;
 export function newShareCode() {
   let code = '';
-  for (let i = 0; i < 12; i++) code += CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)];
+  for (let i = 0; i < CODE_LENGTH; i++) code += CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)];
   return code;
 }
 
-export const normaliseCode = (code) => String(code || '').toUpperCase().replace(/[\s-]/g, '');
-export const shareUrlFor = (code) => `${window.location.origin}/shared/${code}`;
+export const formatShareCode = (code) => String(code || '').match(/.{1,4}/g)?.join('-') ?? '';
+
+export function normaliseShareCode(input) {
+  const code = String(input ?? '').toUpperCase().replace(/[\s-]/g, '');
+  if (code.length !== CODE_LENGTH || [...code].some((char) => !CODE_ALPHABET.includes(char))) return null;
+  return code;
+}
+
+export const shareUrlFor = (code) => `${window.location.origin}/shared/${formatShareCode(code)}`;
+
+// Stores saved before the codes were checked had some with lookalike letters
+const LOOKALIKES = { L: 'K', I: 'J', O: 'Q', U: 'V', 0: 'D', 1: 'T' };
+const fixCode = (code) => [...String(code)].map((char) => LOOKALIKES[char] || char).join('');

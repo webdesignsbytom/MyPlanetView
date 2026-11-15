@@ -22,14 +22,15 @@ const PHOTO_LIST_SELECT = {
 
 /**
  * One page of a map's (or trip's) photos, newest first.
- * `cursor` is the last photo id of the previous page.
+ * `cursor` is the last photo id of the previous page. `unplaced` keeps only the photos
+ * with no country (no location in the file and none chosen, or a location at sea).
  */
-export const findPhotosPage = ({ mapId, tripId, countryCode, includeHidden, cursor, limit }) =>
+export const findPhotosPage = ({ mapId, tripId, countryCode, unplaced = false, includeHidden, cursor, limit }) =>
   prisma.photo.findMany({
     where: {
       ...(mapId ? { mapId } : {}),
       ...(tripId ? { tripId } : {}),
-      ...(countryCode ? { countryCode } : {}),
+      ...(unplaced ? { countryCode: null } : countryCode ? { countryCode } : {}),
       ...(includeHidden ? {} : { hidden: false }),
     },
     select: PHOTO_LIST_SELECT,
@@ -38,24 +39,29 @@ export const findPhotosPage = ({ mapId, tripId, countryCode, includeHidden, curs
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
   });
 
-/** Enough to decide the caller's role on a photo. */
-export const findPhotoAccess = (photoId, userId) =>
-  prisma.photo.findUnique({
-    where: { id: photoId },
-    select: {
-      id: true,
-      mapId: true,
-      tripId: true,
-      hidden: true,
-      map: {
-        select: {
-          ownerId: true,
-          ...(userId ? { members: { where: { userId }, select: { role: true } } } : {}),
-        },
-      },
-      trip: userId ? { select: { members: { where: { userId }, select: { role: true } } } } : false,
-    },
-  });
+/**
+ * Enough to decide the caller's role on a photo: the photo, its map's owner, and the
+ * caller's own map and trip memberships, read side by side (one round trip, not a
+ * nested read three levels deep). Memberships are read only when there's a user: a
+ * filter with `userId: undefined` means no filter, and an anonymous caller would get
+ * the first member's role.
+ * -> `{ id, mapId, tripId, hidden, map: { ownerId, members }, trip: { members } | null }`, or null
+ */
+export const findPhotoAccess = async (photoId, userId) => {
+  const ofPhoto = { photos: { some: { id: photoId } } };
+  const [photo, map, mapMember, tripMember] = await Promise.all([
+    prisma.photo.findUnique({ where: { id: photoId }, select: { id: true, mapId: true, tripId: true, hidden: true } }),
+    prisma.travelMap.findFirst({ where: ofPhoto, select: { ownerId: true } }),
+    userId ? prisma.mapMember.findFirst({ where: { userId, map: ofPhoto }, select: { role: true } }) : null,
+    userId ? prisma.tripMember.findFirst({ where: { userId, trip: ofPhoto }, select: { role: true } }) : null,
+  ]);
+  if (!photo || !map) return null;
+  return {
+    ...photo,
+    map: { ...map, members: mapMember ? [mapMember] : [] },
+    trip: photo.tripId ? { members: tripMember ? [tripMember] : [] } : null,
+  };
+};
 
 export const findPhotoDetail = (photoId) =>
   prisma.photo.findUnique({
@@ -75,11 +81,11 @@ export const findPhotoDetail = (photoId) =>
 export const findPhotoById = (photoId) =>
   prisma.photo.findUnique({ where: { id: photoId }, select: { id: true } });
 
-/** The MediaItem rows for an upload's keys (to check owner and resource). */
+/** The MediaItem rows for an upload's keys (to check owner, resource and age). */
 export const findMediaItemsByKeys = (keys) =>
   prisma.mediaItem.findMany({
     where: { key: { in: keys } },
-    select: { id: true, key: true, resource: true, ownerId: true, bytes: true },
+    select: { id: true, key: true, resource: true, ownerId: true, bytes: true, createdAt: true },
   });
 
 /**
@@ -111,26 +117,38 @@ export const createPhotoInDB = ({ photo, variants, landmarkMatches }) =>
     return { id: photo.id };
   });
 
-export const updatePhotoInDB = (photoId, data) =>
-  prisma.photo.update({ where: { id: photoId }, data, select: { id: true, mapId: true } });
+/**
+ * Change a photo; a new country counts as visited on its map (as at upload). One
+ * transaction, so the photo never moves without its visit.
+ */
+export const updatePhotoInDB = (photoId, data) => {
+  const select = { id: true, mapId: true };
+  if (!data.countryCode) return prisma.photo.update({ where: { id: photoId }, data, select });
+  return prisma.$transaction(async (tx) => {
+    const photo = await tx.photo.update({ where: { id: photoId }, data, select });
+    await createMissingVisits(photo.mapId, [data.countryCode], 'PHOTO', tx);
+    return photo;
+  });
+};
 
 export const deletePhotoInDB = (photoId) => prisma.photo.delete({ where: { id: photoId } });
 
-export const findPhotoFileKeys = async (photoId) =>
+// The stored files of some photos, in one query (a relation filter, not nested reads)
+const photoFileKeys = async (photoWhere) =>
   (
-    await prisma.photoVariant.findMany({ where: { photoId }, select: { media: { select: { key: true } } } })
-  ).map((v) => v.media.key);
+    await prisma.mediaItem.findMany({ where: { photoVariant: { photo: photoWhere } }, select: { key: true } })
+  ).map((item) => item.key);
 
-/** Every stored file of every photo a user uploaded (account deletion). */
-export const findUploadedPhotoFiles = async (userId) => {
-  const photos = await prisma.photo.findMany({
-    where: { uploaderId: userId },
-    select: { id: true, variants: { select: { media: { select: { key: true } } } } },
-  });
-  return { photoIds: photos.map((p) => p.id), keys: photos.flatMap((p) => p.variants.map((v) => v.media.key)) };
-};
+export const findPhotoFileKeys = (photoId) => photoFileKeys({ id: photoId });
 
-export const deletePhotosInDB = (photoIds) => prisma.photo.deleteMany({ where: { id: { in: photoIds } } });
+/** Every stored file of every photo a user uploaded, on any map (account deletion). */
+export const findUploadedPhotoFiles = (userId) => photoFileKeys({ uploaderId: userId });
+
+/** Every stored file of every photo on a map, or on several (read before deleting them). */
+export const findMapPhotoKeys = (mapIds) => photoFileKeys({ mapId: Array.isArray(mapIds) ? { in: mapIds } : mapIds });
+
+/** Every photo a user uploaded, on any map (account deletion; their files go after). */
+export const deletePhotosByUploader = (userId) => prisma.photo.deleteMany({ where: { uploaderId: userId } });
 
 // Landmark matches
 

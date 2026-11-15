@@ -47,11 +47,16 @@ ErrorDocument 404 /404.html
 </IfModule>
 
 # 4) Security headers (keep)
+# CSP: no inline script anywhere (the pages' only inline <script>s are JSON-LD, which is
+# data, not code), so script-src has no 'unsafe-inline'. style-src keeps it for React's
+# style attributes. Forms only post to this site (the app sends its data with fetch/XHR).
+# The two placeholder hosts (api.client.com, nbg1.your-objectstorage.com) must become the
+# real API, R2 endpoint and media host before launch (docs/AUDIT.md, D1).
 <IfModule mod_headers.c>
   Header always set Content-Security-Policy "default-src 'self'; \
-    script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; \
-    style-src  'self' 'unsafe-inline' https://fonts.googleapis.com; \
-    font-src   'self' https://fonts.gstatic.com; \
+    script-src 'self' https://www.googletagmanager.com; \
+    style-src  'self' 'unsafe-inline'; \
+    font-src   'self'; \
     img-src    'self' https://nbg1.your-objectstorage.com data: blob:; \
     connect-src 'self' \
       https://api.client.com \
@@ -59,27 +64,31 @@ ErrorDocument 404 /404.html
       https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; \
     media-src  'self' https://nbg1.your-objectstorage.com blob: data:; \
     worker-src 'self' blob:; \
+    form-action 'self'; \
     frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
   Header always set X-Content-Type-Options nosniff
   Header always set X-Frame-Options DENY
-  Header always set X-XSS-Protection "1; mode=block"
+  # The old XSS filter is gone from current browsers and could be abused where it's left: off
+  Header always set X-XSS-Protection "0"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  # Pages from other sites opened from here (or opening this site) get no handle on its windows
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  # HTTPS only, for a year, subdomains included (so every subdomain must serve HTTPS: the
+  # API, mail, cPanel's own). Not "preload": that is hard to undo; add it only once sure.
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 </IfModule>
 
-# Optionally enforce HSTS (only if your domain is *always* HTTPS)
-# <IfModule mod_headers.c>
-#   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-# </IfModule>
-
 # 5) Compression (Brotli, Gzip fallback) + Vary
+# The types must match what section 7 serves: .js and .mjs go out as text/javascript, and
+# TravelFont is a .ttf (font/ttf), which compresses by about a third (woff2 is already compressed).
 <IfModule mod_brotli.c>
   BrotliCompressionQuality 5
-  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css application/javascript application/json image/svg+xml
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css application/javascript text/javascript application/json application/manifest+json image/svg+xml font/ttf
 </IfModule>
 
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json image/svg+xml
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript text/javascript application/json application/manifest+json image/svg+xml font/ttf
 </IfModule>
 
 <IfModule mod_headers.c>
@@ -137,9 +146,13 @@ AddDefaultCharset UTF-8
 </IfModule>
 
 <IfModule mod_headers.c>
-  # Long cache + immutable for static assets
-  <FilesMatch "\.(css|js|mjs|svg|avif|webp|jpg|jpeg|png|gif|ico|woff2?|mp4|mov|webm)$">
-    Header set Cache-Control "public, max-age=31536000, immutable"
+  # Static files (these Cache-Control headers win over the Expires headers above).
+  # Only Vite's build output under /assets/ has a content hash in its name, so only it is
+  # cached for good. Everything copied from public/ (favicon/, brand/, pages/...) keeps
+  # its name when it changes, so browsers check it again after a day.
+  <FilesMatch "\.(css|js|mjs|svg|avif|webp|jpg|jpeg|png|gif|ico|woff2?|ttf|mp4|mov|webm)$">
+    Header set Cache-Control "public, max-age=86400"
+    Header set Cache-Control "public, max-age=31536000, immutable" "expr=%{REQUEST_URI} =~ m#^/assets/#"
   </FilesMatch>
 
   # HTML must revalidate

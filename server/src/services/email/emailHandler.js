@@ -3,8 +3,6 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import Handlebars from 'handlebars';
-import { Resend } from 'resend';
 // Constants
 import { BusinessName } from '../../utils/constants/siteConstants.js';
 
@@ -28,11 +26,29 @@ const EMAIL_PROFILES = {
   userAdmin: { templatesDir: 'users' }, // share invites
   userVerify: { templatesDir: 'users' },
   userReset: { templatesDir: 'users' },
+  userChangeEmail: { templatesDir: 'users' }, // to the current address before an email change
   contact: { templatesDir: 'contact' },
 };
 
-let client = null;
-const getClient = () => (client ||= new Resend(RESEND_API_KEY));
+// The Resend SDK and Handlebars load on the first email, not at start-up: most requests
+// send none, and both slow a cold start.
+let clientPromise = null;
+const getClient = () =>
+  (clientPromise ??= import('resend')
+    .then(({ Resend }) => new Resend(RESEND_API_KEY))
+    .catch((err) => {
+      clientPromise = null;
+      throw err;
+    }));
+
+let handlebarsPromise = null;
+const getHandlebars = () =>
+  (handlebarsPromise ??= import('handlebars')
+    .then((mod) => mod.default ?? mod)
+    .catch((err) => {
+      handlebarsPromise = null;
+      throw err;
+    }));
 
 // Compiled templates, by file. Template names come from the code, never from a request.
 const TEMPLATE_NAME = /^[A-Za-z0-9-]+$/;
@@ -43,6 +59,7 @@ async function renderTemplate(templatesDir, template, context) {
   const file = path.join(__dirname, templatesDir, `${template}.handlebars`);
   let compiled = templateCache.get(file);
   if (!compiled) {
+    const Handlebars = await getHandlebars();
     compiled = Handlebars.compile(await fs.readFile(file, 'utf8'));
     templateCache.set(file, compiled);
   }
@@ -101,7 +118,7 @@ async function sendEmail(profileKey, recipient, subject, template, context = {},
   for (let attempt = 1; attempt <= MAX_SEND_ATTEMPTS; attempt++) {
     let error;
     try {
-      ({ error } = await getClient().emails.send(payload, { idempotencyKey }));
+      ({ error } = await (await getClient()).emails.send(payload, { idempotencyKey }));
     } catch (err) {
       error = { name: 'application_error', statusCode: null, message: err?.message || String(err) };
     }
@@ -133,6 +150,9 @@ export const sendUserVerificationEmail = (recipient, subject, template, context)
 
 export const sendUserPasswordResetEmail = (recipient, subject, template, context) =>
   sendEmail('userReset', recipient, subject, template, context);
+
+export const sendUserChangeEmailConfirmation = (recipient, subject, template, context) =>
+  sendEmail('userChangeEmail', recipient, subject, template, context);
 
 // Replying to a contact-form notification goes to the person who sent the form
 export const sendContactEmail = (recipient, subject, template, context = {}) =>

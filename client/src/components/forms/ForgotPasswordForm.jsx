@@ -4,6 +4,7 @@ import client from '@/api/client';
 // Constants
 import { LOGIN_PAGE_URL, SIGN_UP_PAGE_URL } from '@/utils/constants/routes';
 import { RESET_PASSWORD_REQUEST_API } from '@/utils/constants/apiRoutes';
+import { EMAIL_MAX_LENGTH, isValidEmail } from '@/utils/regex/regex';
 // Components
 import AppLink from '@/components/common/AppLink';
 import FormField from '@/components/ui/FormField';
@@ -16,6 +17,8 @@ function ForgotPasswordForm() {
   const [resetRequestError, setResetRequestError] = useState(null);
   const [resetRequestSuccess, setResetRequestSuccess] = useState(null);
   const [resetFormData, setResetFormData] = useState({ email: '' });
+  // The address is checked here first: an empty or partial one is never sent
+  const [fieldError, setFieldError] = useState('');
 
   const emailRef = useRef(null);
   const alertRef = useRef(null);
@@ -31,12 +34,19 @@ function ForgotPasswordForm() {
 
   const handleResetRequest = (event) => {
     event.preventDefault();
-    setResetRequestInProgress(true);
     setResetRequestError(null);
     setResetRequestSuccess(null);
 
+    const email = resetFormData.email.trim();
+    if (!email || !isValidEmail(email)) {
+      setFieldError(email ? 'Please enter a full email address, like name@example.com' : 'Please enter your email address');
+      emailRef.current?.focus();
+      return;
+    }
+
+    setResetRequestInProgress(true);
     client
-      .post(RESET_PASSWORD_REQUEST_API, resetFormData, false)
+      .post(RESET_PASSWORD_REQUEST_API, { email }, false)
       .then(() => {
         setResetRequestInProgress(false);
         setResetRequestSuccess(
@@ -55,6 +65,7 @@ function ForgotPasswordForm() {
   const handleChange = (event) => {
     setResetRequestError(null);
     setResetRequestSuccess(null);
+    setFieldError('');
     const { name, value } = event.target;
     setResetFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -76,7 +87,8 @@ function ForgotPasswordForm() {
         id='email'
         label='Email'
         hint='Enter the email you used to sign up.'
-        error={Boolean(resetRequestError)}
+        required
+        error={fieldError || Boolean(resetRequestError)}
       >
         <TextInput
           refProp={emailRef}
@@ -86,6 +98,7 @@ function ForgotPasswordForm() {
           value={resetFormData.email}
           onChange={handleChange}
           placeholder='name@email.com'
+          maxLength={EMAIL_MAX_LENGTH}
           required
           inputMode='email'
           autoComplete='email'

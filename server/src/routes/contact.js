@@ -8,12 +8,14 @@ import {
 } from '../controllers/contact.js';
 
 import { validateAuthentication, validateAdminRole } from '../middleware/auth.js';
-import { createStrictRateLimiter } from '../middleware/rateLimit.js';
+import { createDbRateLimiter } from '../middleware/dbRateLimit.js';
+import { CONTACT_FORM_RATE_LIMIT } from '../utils/constants/rateLimitConstants.js';
 
 const router = Router();
-const contactFormLimiter = createStrictRateLimiter();
+// Each form emails the inbox: 5 per 15 minutes per IP, counted in the database
+const contactFormLimiter = createDbRateLimiter(CONTACT_FORM_RATE_LIMIT);
 
-// Public (strict limiter)
+// Public (strict limit)
 router.post('/create-new-contact-form', contactFormLimiter, createNewContactFormHandler);
 
 // Admin read (auth + admin)

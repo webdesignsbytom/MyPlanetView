@@ -1,5 +1,6 @@
 import { prisma } from '../prisma.js';
 import { getRequestContext } from '../utils/requestContext.js';
+import { redactUrl } from '../utils/redactUrl.js';
 
 // Persist an AppEvent (always pass a single object)
 export const createAppEvent = async ({
@@ -27,9 +28,11 @@ export const createAppEvent = async ({
       statusCode: statusCode ?? null,
       actorId: actorId ?? null,
       targetId: targetId ?? null,
-      path: path ?? ctx.path ?? null,
+      // Never a share code, token or query value (server.js passes req.originalUrl)
+      path: redactUrl(path ?? ctx.path ?? null),
       method: method ?? ctx.method ?? null,
-      stack: stack ?? null,
+      // No stack for client errors (4xx): it says nothing useful and fills the table
+      stack: statusCode >= 400 && statusCode < 500 ? null : (stack ?? null),
       requestId: requestId ?? ctx.requestId ?? null,
       metadata: metadata ?? undefined,
     },

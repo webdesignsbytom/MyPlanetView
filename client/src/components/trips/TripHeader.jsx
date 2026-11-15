@@ -13,13 +13,16 @@ import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
 import PaperCard from '@/components/common/PaperCard';
 import PageTitleCard from '@/components/common/PageTitleCard';
+import VerifyFirstNote from '@/components/map/VerifyFirstNote';
 // Utils
 import { TRIP_STATUS_LABELS } from '@/utils/trips/tripStatus';
 import { formatDayRange } from '@/utils/functions/dates';
-import { ROLE_LABELS } from '@/utils/sharing/shareRoles';
 
 // The action buttons: two to a row, filling it, on a phone; side by side from sm up
 const ACTIONS_ROW = 'grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-2 sm:grid-row sm:grid-cols-none';
+
+// What someone added to the trip (not its owner) may do, in the title card's summary line
+const ROLE_SUMMARY = { EDITOR: 'You can edit', VIEWER: 'You can view' };
 
 // The rubber stamp beside the title, by trip status
 const STATUS_STAMPS = {
@@ -32,7 +35,8 @@ const STATUS_STAMPS = {
 // parchment with its status stamp, then a cream body with the way back to its map, the
 // notes, who's going and the actions. Editors edit it in the same card, so the h1 stays.
 // Every change hands back the whole trip.
-function TripHeader({ trip, canEdit, linkToMap = true, onChanged, onShare, onDelete }) {
+// `locked`: an editor whose email address isn't verified yet; the actions say why they're missing.
+function TripHeader({ trip, canEdit, locked = false, linkToMap = true, onChanged, onShare, onDelete }) {
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState(null);
   const [savingTravellers, setSavingTravellers] = useState(false);
@@ -53,7 +57,7 @@ function TripHeader({ trip, canEdit, linkToMap = true, onChanged, onShare, onDel
   const summary = [
     TRIP_STATUS_LABELS[trip.status],
     formatDayRange(trip.startDate, trip.endDate),
-    trip.role !== 'OWNER' ? `You’re ${ROLE_LABELS[trip.role]?.toLowerCase()}` : null,
+    ROLE_SUMMARY[trip.role] || null,
   ]
     .filter(Boolean)
     .join(' · ');
@@ -67,7 +71,8 @@ function TripHeader({ trip, canEdit, linkToMap = true, onChanged, onShare, onDel
         <PageTitleCard embedded page='Trip' title={trip.title} headingId='trip-title' subtitle={summary} stamp={STATUS_STAMPS[trip.status]} />
       }
     >
-      {linkToMap && trip.mapName ? (
+      {/* Only for people who can open the map: a trip-only member would hit a dead end */}
+      {linkToMap && trip.canOpenMap && trip.mapName ? (
         <Link
           to={mapPath(trip.mapId)}
           className='grid grid-row items-center gap-2 justify-self-start font-travel text-base uppercase tracking-wide text-poster-red-deep underline underline-offset-4 hover:no-underline'
@@ -104,6 +109,7 @@ function TripHeader({ trip, canEdit, linkToMap = true, onChanged, onShare, onDel
             disabled={savingTravellers}
           />
           <InlineAlert>{error}</InlineAlert>
+          {locked ? <VerifyFirstNote action='change this trip, its stops or its photos' /> : null}
           {canEdit || onShare ? (
             <div className={`${ACTIONS_ROW} border-t-2 border-dashed border-poster-brown/60 pt-5`}>
               {canEdit ? (
@@ -116,7 +122,8 @@ function TripHeader({ trip, canEdit, linkToMap = true, onChanged, onShare, onDel
                   Share
                 </Button>
               ) : null}
-              {canEdit && onDelete ? (
+              {/* Only the map's owner and editors may (the server's canDelete); not someone added to the trip alone */}
+              {canEdit && trip.canDelete && onDelete ? (
                 <Button danger onClick={onDelete}>
                   Delete trip
                 </Button>

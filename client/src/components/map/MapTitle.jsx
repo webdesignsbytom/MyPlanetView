@@ -8,8 +8,9 @@ import LuggageTag from './LuggageTag';
 
 const GROUP_LABELS = { SOLO: 'Solo', COUPLE: 'Couple', FAMILY: 'Family' };
 
-// The map's name, top left, on a luggage tag. Opens the map switcher when there's one to open.
-function MapTitle({ map, role, onOpenSwitcher, shared = false }) {
+// The map's name, top left, on a luggage tag. Opens the map switcher when there's one to open
+// (`onIntent`: hovered, focused or pressed, to fetch the switcher's code first).
+function MapTitle({ map, role, onOpenSwitcher, onIntent, shared = false }) {
   const detail = [
     GROUP_LABELS[map.groupType],
     role !== 'OWNER' ? `${ROLE_LABELS[role] || 'Viewer'}${shared ? ', from a shared link' : ''}` : null,
@@ -20,7 +21,16 @@ function MapTitle({ map, role, onOpenSwitcher, shared = false }) {
   return (
     <LuggageTag
       as={onOpenSwitcher ? 'button' : 'div'}
-      {...(onOpenSwitcher ? { type: 'button', onClick: onOpenSwitcher, 'aria-label': `${map.name}. Switch map` } : {})}
+      {...(onOpenSwitcher
+        ? {
+            type: 'button',
+            onClick: onOpenSwitcher,
+            onPointerEnter: onIntent,
+            onFocus: onIntent,
+            onPointerDown: onIntent,
+            'aria-label': `${map.name}. Switch map`,
+          }
+        : {})}
       className={onOpenSwitcher ? 'transition hover:brightness-105' : ''}
     >
       <span className='grid grid-cols-rev items-center gap-2'>

@@ -29,15 +29,26 @@ describe('photo upload', () => {
       expect(upload.key).toMatch(new RegExp(`^myplanetview/photos/${map.id}/${photoId}/${upload.size.toLowerCase()}-`));
       expect(upload.url).toContain('X-Amz-Signature=');
       expect(upload.headers['Content-Type']).toBeTruthy();
+      // The PUT must send exactly this type and this many bytes
+      expect(new URL(upload.url).searchParams.get('X-Amz-SignedHeaders')).toBe('content-length;content-type;host');
+      expect(upload.bytes).toBe(upload.size === 'THUMB' ? 1000 : 5000);
     }
     // Recorded, but not confirmed (no size yet)
     const items = await prisma.mediaItem.findMany({ where: { key: { in: uploads.map((u) => u.key) } } });
     expect(items.every((i) => i.bytes === null && i.visibility === 'PRIVATE' && i.ownerId === owner.user.id)).toBe(true);
   });
 
-  it('refuses a presign without both copies, with a bad type or over the size cap', async () => {
+  it('refuses a presign without both copies, with a bad type, without a size or over the size cap', async () => {
     const url = `/api/maps/${map.id}/photos/presign`;
     expect((await owner.agent.post(url).send({ files: [{ size: 'THUMB', contentType: 'image/jpeg', bytes: 10 }] })).status).toBe(400);
+    expect(
+      (await owner.agent.post(url).send({
+        files: [
+          { size: 'THUMB', contentType: 'image/jpeg' },
+          { size: 'DISPLAY', contentType: 'image/jpeg', bytes: 10 },
+        ],
+      })).status
+    ).toBe(400);
     expect(
       (await owner.agent.post(url).send({
         files: [
@@ -89,6 +100,29 @@ describe('photo upload', () => {
     const res = await uploadPhoto(owner.agent, map.id, { countryCode: 'PE' });
     expect(res.status).toBe(201);
     expect(data(res).photo).toMatchObject({ countryCode: 'PE', latitude: null, longitude: null, landmarks: [] });
+  });
+
+  it('takes the chosen country when the GPS position is at sea, and lists photos with no country', async () => {
+    const AT_SEA = { latitude: 0, longitude: -30 }; // the middle of the Atlantic
+    const fallback = data(await uploadPhoto(owner.agent, map.id, { ...AT_SEA, countryCode: 'PT' })).photo;
+    expect(fallback).toMatchObject({ countryCode: 'PT', latitude: AT_SEA.latitude });
+    // A GPS country always wins over the chosen one
+    expect(data(await uploadPhoto(owner.agent, map.id, { ...NEAR_EIFFEL, countryCode: 'PT' })).photo.countryCode).toBe('FR');
+
+    const atSea = data(await uploadPhoto(owner.agent, map.id, AT_SEA)).photo;
+    const noLocation = data(await uploadPhoto(owner.agent, map.id, {})).photo;
+    expect(atSea.countryCode).toBeNull();
+    expect(noLocation.countryCode).toBeNull();
+
+    const unplaced = data(await owner.agent.get(`/api/maps/${map.id}/photos?unplaced=1`)).photos;
+    expect(unplaced.map((p) => p.id).sort()).toEqual([atSea.id, noLocation.id].sort());
+    expect((await owner.agent.get(`/api/maps/${map.id}/photos?unplaced=1&country=FR`)).status).toBe(400);
+    expect((await owner.agent.get(`/api/maps/${map.id}/photos?unplaced=maybe`)).status).toBe(400);
+
+    // Choosing a country places it
+    await owner.agent.patch(`/api/photos/${noLocation.id}`).send({ countryCode: 'IS' });
+    const after = data(await owner.agent.get(`/api/maps/${map.id}/photos?unplaced=1`)).photos;
+    expect(after.map((p) => p.id)).toEqual([atSea.id]);
   });
 
   it('a photo from a "want to go" country marks it visited, but never downgrades "lived"', async () => {
@@ -169,8 +203,9 @@ describe('what viewers see', () => {
   let hiddenPhoto;
 
   beforeAll(async () => {
-    owner = await signUp('Own');
-    viewer = await signUp('Look');
+    // Verified, so the viewer is added directly
+    owner = await signUp('Own', { verified: true });
+    viewer = await signUp('Look', { verified: true });
     map = await defaultMapOf(owner.agent);
     expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: viewer.email, role: 'VIEWER' })).status).toBe(201);
 
@@ -238,8 +273,8 @@ describe('what viewers see', () => {
 
 describe('a trip-only member', () => {
   it('sees and edits that trip and its photos, and nothing else on the map', async () => {
-    const owner = await signUp('Host');
-    const guest = await signUp('Guest');
+    const owner = await signUp('Host', { verified: true });
+    const guest = await signUp('Guest', { verified: true });
     const map = await defaultMapOf(owner.agent);
     const tripA = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Shared trip' })).trip;
     const tripB = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Private trip' })).trip;
@@ -249,8 +284,9 @@ describe('a trip-only member', () => {
 
     expect((await owner.agent.post(`/api/trips/${tripA.id}/members`).send({ email: guest.email, role: 'EDITOR' })).status).toBe(201);
 
-    // The trip, yes
-    expect(data(await guest.agent.get(`/api/trips/${tripA.id}`)).trip).toMatchObject({ title: 'Shared trip', role: 'EDITOR' });
+    // The trip, yes (but not its map, so the page doesn't link back to it)
+    expect(data(await guest.agent.get(`/api/trips/${tripA.id}`)).trip).toMatchObject({ title: 'Shared trip', role: 'EDITOR', canOpenMap: false });
+    expect(data(await owner.agent.get(`/api/trips/${tripA.id}`)).trip.canOpenMap).toBe(true);
     const shared = data(await guest.agent.get('/api/trips/shared-with-me')).trips;
     expect(shared.map((t) => t.id)).toEqual([tripA.id]);
     const photos = data(await guest.agent.get(`/api/trips/${tripA.id}/photos`)).photos;

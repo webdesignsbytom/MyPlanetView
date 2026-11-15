@@ -5,11 +5,12 @@ import usePhotoPage from '@/hooks/usePhotoPage';
 import MapPanel from './MapPanel';
 import MapActionButton from './MapActionButton';
 import VisitStatusSelect from './VisitStatusSelect';
+import FirstVisitDateField from './FirstVisitDateField';
 import CountryPoster from './CountryPoster';
 import CountryLandmarks from './CountryLandmarks';
 import { StarBadgeIcon } from './StarBadge';
+import VerifyFirstNote from './VerifyFirstNote';
 import PhotoGrid from '@/components/photos/PhotoGrid';
-import TextInput from '@/components/ui/TextInput';
 import FormField from '@/components/ui/FormField';
 // Utils
 import { CONTINENT_LABELS, COUNTRY_BY_CODE } from '@/utils/map/countries';
@@ -18,7 +19,7 @@ import { formatDay } from '@/utils/functions/dates';
 
 // One country on this map: its status, when you first went, your photos from there,
 // its landmarks, and a poster if you haven't been yet.
-function CountryPanel({ code, visit, canEdit, onSetVisit, photoSource, photosVersion, onOpenPhoto, onAddPhotos, onClose }) {
+function CountryPanel({ code, visit, canEdit, locked = false, onSetVisit, photoSource, photosVersion, onOpenPhoto, onAddPhotos, onClose }) {
   const country = COUNTRY_BY_CODE[code];
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -58,32 +59,30 @@ function CountryPanel({ code, visit, canEdit, onSetVisit, photoSource, photosVer
       </div>
 
       {canEdit ? (
-        <div className='grid gap-3 sm:grid-cols-2'>
+        // Never disabled while saving (that drops focus); the saves are optimistic
+        <div className='grid items-start gap-3 sm:grid-cols-2' aria-busy={saving ? 'true' : undefined}>
           <FormField id={`visit-${code}`} label='Status'>
             <VisitStatusSelect
               countryName={country.name}
               status={status}
-              disabled={saving}
               onChange={(next) => save(next, next ? { firstVisitedOn: visit?.firstVisitedOn || undefined } : undefined)}
             />
           </FormField>
           {status && status !== 'WANT_TO_GO' ? (
-            <FormField id={`first-visit-${code}`} label='First went'>
-              <TextInput
-                type='date'
-                value={visit?.firstVisitedOn || ''}
-                disabled={saving}
-                onChange={(e) => save(status, { firstVisitedOn: e.target.value || null })}
-              />
-            </FormField>
+            <FirstVisitDateField
+              id={`first-visit-${code}`}
+              value={visit?.firstVisitedOn || ''}
+              onSave={(date) => save(status, { firstVisitedOn: date })}
+            />
           ) : null}
         </div>
       ) : (
         <p className='text-sm font-medium'>
           {status ? VISIT_STATUS_LABELS[status] : 'Not been yet'}
-          {visit?.firstVisitedOn ? `, first in ${formatDay(visit.firstVisitedOn)}` : ''}
+          {visit?.firstVisitedOn ? `, first on ${formatDay(visit.firstVisitedOn)}` : ''}
         </p>
       )}
+      {locked ? <VerifyFirstNote action='mark countries or add photos' /> : null}
       {error ? (
         <p role='alert' className='rounded-lg border px-3 py-2 text-sm tone-danger'>
           {error}

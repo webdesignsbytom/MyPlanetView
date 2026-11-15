@@ -19,15 +19,16 @@ Guidance for Claude Code working in this repository.
 - `npx vite build --mode verify --outDir <scratch dir> --emptyOutDir`
   - Vite always loads `.env` and `.env.local`; `client/` has neither, and no `.env.verify` exists, so no env file is read.
   - Delete the output afterwards.
-- `npm run dev:mock` (`vite --mode mock`; no `.env.mock` exists, so it reads no env file either): the site with no server, for looking at pages and flows (e.g. headless Playwright screenshots). Use a free port (`npx vite --mode mock --port 5174 --strictPort --open false`; without `--open false` the config's `open: true` opens a tab in the user's browser) and stop it afterwards.
+- `npm run dev:mock` (`vite --mode mock`; no `.env.mock` exists, so it reads no env file either): the site with no server, for looking at pages and flows (e.g. headless Playwright screenshots). Use a free port (`BROWSER=none npx vite --mode mock --port 5174 --strictPort`) and stop it afterwards. `BROWSER=none` is what stops the config's `open: true` opening a tab in the user's browser; `--open false` doesn't work (Vite reads `false` as a path and opens `/false`).
 
 **Server** (`server/`):
 - `node --check <file>` on any source file.
-- Vitest for pure tests only. Write a config in a scratch folder with `root` set to `server/` and `envDir` set to an empty folder, exclude `tests/integration/**`, then run `node <server>/node_modules/vitest/vitest.mjs run --config <that file>` **from that scratch folder**, so `dotenv/config` (which reads the env file in the working folder) loads nothing. `email.test.js` and `errorHandler.test.js` run this way too; `errorHandler.test.js` imports the app, so pass placeholder `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `FRONTEND_ORIGIN` and `DATABASE_URL` on the command line.
+- Vitest for pure tests only. Write a config in a scratch folder with `root` set to `server/` and `envDir` set to an empty folder, exclude `tests/integration/**`, then run `node <server>/node_modules/vitest/vitest.mjs run --config <that file>` **from that scratch folder**, so `dotenv/config` (which reads the env file in the working folder) loads nothing. `email.test.js` and `errorHandler.test.js` run this way too; `errorHandler.test.js`, `originCheck.test.js` and `authHooks.test.js` import the app (and `authConfig.test.js` imports `auth.js`, as production), so pass placeholder `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `FRONTEND_ORIGIN=http://localhost:5173` (`originCheck.test.js` expects that origin) and `DATABASE_URL` on the command line. `authHooks.test.js` runs the real better-auth against its in-memory adapter (the Prisma adapter is mocked), so the account hooks are checked without Postgres.
 - **Integration tests** (`tests/integration/`, `vitest.integration.config.js`: supertest against the real app and a real Postgres; only the private-bucket S3 client and email sending are mocked in `tests/integration/setup.js`):
   - they refuse to run unless `DATABASE_URL` names a database ending in `_test` (checked in `globalSetup.js` and again in `helpers.js`), and clean up only the users they created;
   - Claude runs them from a folder with no env file (so `dotenv/config` loads nothing), passing local values on the command line: `DATABASE_URL` (a migrated `*_test` database), `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL=http://localhost:4000`, `FRONTEND_ORIGIN=http://localhost:5173` and placeholder `STORAGE_*` values, then `node <server>/node_modules/vitest/vitest.mjs run --root <server> --config <server>/vitest.integration.config.js`. The config's `envDir` is an empty folder;
-  - migrate the test database with Prisma from a scratch folder (above), with that database's URL.
+  - migrate the test database with Prisma from a scratch folder (above), with that database's URL;
+  - **with no `_test` database** (the user keeps none locally): run them against a throwaway in-memory PGlite. In a scratch folder, install `@electric-sql/pglite` and `@electric-sql/pglite-socket`; a small script runs every `prisma/migrations/*/migration.sql` with `db.exec`, then serves it with `PGLiteSocketServer` on a free port (`maxConnections: 8`). Point `DATABASE_URL` at `postgresql://postgres:postgres@127.0.0.1:<port>/myplanetview_test?sslmode=disable` (PGlite ignores the name; the guard wants `_test`) and set `DB_POOL_MAX=1`. All 73 tests pass this way (15 Nov 2026). Nothing touches the user's Postgres.
 - **Prisma, only from a scratch folder:**
   - copy `prisma/schema.prisma` there;
   - add a plain `prisma.config.mjs` exporting `{ schema: 'schema.prisma', datasource: { url: 'postgresql://placeholder:placeholder@localhost:5432/placeholder' } }`;
@@ -47,7 +48,7 @@ My Planet View: people keep a private travel map of the world. They mark the cou
 | Folder | What |
 | --- | --- |
 | `client/` | Vite 7 + React 19 SPA, Tailwind 4, React Router 7. Public pages are pre-rendered at build. Hosted on InMotion (cPanel): build locally, upload `dist/`. |
-| `server/` | Express 5 API, Prisma 7 (Postgres), better-auth 1.4.13, S3-compatible storage (Cloudflare R2), email through Resend. Hosted on Vercel. |
+| `server/` | Express 5 API, Prisma 7 (Postgres), better-auth 1.7.20 (pinned; its CLI is the `auth` package), S3-compatible storage (Cloudflare R2), email through Resend. Hosted on Vercel. |
 | `docs/` (repo root) | `SITE-DESIGN.md`, `API.md`. |
 | `documents/` | `SEO-PLAYBOOK.md` (read sections 1, 3 and 6.22 before SEO work), `SECURITY-BASELINE.md` (from NextDummy; a checklist, not this code), `site/SiteInfo.md`. |
 | `images/` | Standalone image toolchain (`npm run img:gen`): makes `<name>-<width>.{avif,webp,jpg}` sets. |
@@ -57,12 +58,12 @@ No CI runs. `.github/ci.example.yml` is an example kept outside `workflows/` on 
 ## The travel model (`server/prisma/schema.prisma`)
 
 - **`TravelMap`**: one owner. It has a `groupType` (`SOLO`, `COUPLE`, `FAMILY`), a `linkAccess` (`RESTRICTED` or `ANYONE_WITH_LINK`) and a unique `shareCode`.
-  - Every user gets a default map ("My map", `isDefault`) from a better-auth hook at sign-up. There's one default per user, enforced in code, not by an index.
+  - Every user gets a default map ("My map", `isDefault`) from a better-auth hook at sign-up. There's one default per user, enforced by the database: `defaultForOwnerId` (the owner's id on the default map, null elsewhere) is unique, and a CHECK (`travel_map_default_owner`) keeps it in step with `isDefault`. Set or clear both together; `ensureDefaultMap` uses the winner when two requests race (P2002).
   - The default map can't be deleted.
 - **`Traveller`**: the people a map is for (no login needed; `userId` when linked), with birth and favourite countries. A couple or family can share one login, or each adult has their own and is added as `EDITOR`.
 - **Who has access:**
   - **`MapMember`** and **`TripMember`**: people added as `VIEWER` or `EDITOR`. The owner is never a member row.
-  - **`ShareInvite`**: an emailed invite for an address with no account yet. The token is stored hashed, and a CHECK constraint in the init migration makes it target exactly one of a map or a trip. It turns into a member when that address signs up and is verified.
+  - **`ShareInvite`**: an emailed invite for an address with no verified, active account. The token is stored hashed, and a CHECK constraint in the init migration makes it target exactly one of a map or a trip. It turns into a member when that address signs up and is verified.
 - **`CountryVisit`** (map × country): `VISITED`, `LIVED` or `WANT_TO_GO`, with a `source`: `MANUAL`, `PHOTO` or `TRIP`.
 - **Trips:**
   - **`Trip`**: status `PLANNED`, `ACTIVE` or `COMPLETED`. Completing a trip adds `TRIP` visits for its stops' countries.
@@ -76,9 +77,17 @@ No CI runs. `.github/ci.example.yml` is an example kept outside `workflows/` on 
   - **`Country`** (PK = ISO alpha-2, plus `IC` Canary Islands and `XK` Kosovo) and **`Landmark`** (lat/lng, `matchRadiusM`, map pin) are seeded and never edited by users.
 - **Stats** (countries, continents, photos, landmarks, per traveller) are computed, never stored (`server/src/utils/mapStats.js`).
 
-The template's `User`/`Session`/`Account`/`Verification` (owned by better-auth), `Profile` (username, home country and `mapSettings` JSON), `MediaItem`, `AvatarMediaItem`, `ContactForm` (name, email, message, optional image), `RateLimit` and `AppEvent` remain.
+The template's `User`/`Session`/`Account`/`Verification` (owned by better-auth), `Profile` (username, home country and `mapSettings` JSON), `MediaItem`, `AvatarMediaItem`, `ContactForm` (name, email, message, optional image), `RateLimit` and `AppEvent` remain. `AuthRateLimit` (`auth_rate_limit`) is better-auth's own limiter table (shape set by better-auth: `key`, `count`, `lastRequest` in epoch ms).
 
-**Migrations.** There is one `init` migration. Make new ones without a database: run `migrate diff --from-schema <copy of the old schema> --to-schema prisma/schema.prisma --script` from a scratch folder (see above) into `prisma/migrations/<timestamp>_<name>/migration.sql`. Prisma can't express partial indexes, and drops unknown ones on the next diff: enforce such rules in code. CHECK constraints are safe.
+**Indexes** (`20261114210000_audit_indexes`, audit B3):
+- every foreign key that a cascade or `SET NULL` follows has one (`Trip.coverPhotoId`/`createdById`, `ShareInvite.mapId`/`tripId`/`invitedById`, `AppEvent.actorId`/`targetId`): without them, deleting a 20k-photo map scanned every trip per photo;
+- `Photo` has `[mapId, createdAt desc, id desc]`, `[tripId, createdAt desc, id desc]` and `[mapId, countryCode, createdAt desc]`, matching the photo lists' order (newest upload first, keyset on id); they also serve the photo counts;
+- `AppEvent` has `[createdAt]` (newest first, retention) and `[level, createdAt]`;
+- `MediaItem` has `[ownerId, createdAt]` (the cap on unfinished uploads) and `ContactForm` has `[imageKey]` (the orphan clean-up and the contact image rules), from `20261115190000_upload_indexes`.
+
+A new query that filters or sorts a big table should match one of these, or add its own.
+
+**Migrations.** There are four: `init`, `audit_indexes`, `auth_rate_limit_default_map` (better-auth's limiter table, and `defaultForOwnerId` with its backfill and CHECK) and `upload_indexes`. Make new ones without a database: run `migrate diff --from-schema <copy of the old schema> --to-schema prisma/schema.prisma --script` from a scratch folder (see above) into `prisma/migrations/<timestamp>_<name>/migration.sql`. Prisma can't express partial indexes, and drops unknown ones on the next diff: enforce such rules in code. CHECK constraints are safe.
 
 ## Access and sharing
 
@@ -88,27 +97,40 @@ The full rules are in `docs/API.md`, under "Access":
 - **Link visitors:** a share code with link access on gives `VIEWER`, signed in or not, through `/api/shared/:code` only.
 - **What viewers never get:** hidden photos, GPS coordinates or originals.
 - **No role at all → 404** (so ids and codes can't be probed). A role that isn't enough → 403.
+- **Adding or changing content needs a verified email** (`requireVerifiedEmail` in `middleware/auth.js`, put on each write route): countries, trips and stops, photos and landmark matches, new or deleted maps, every sharing change, avatars. Not needed: reads, setting up a map (`PATCH /maps/:mapId` and its travellers, which `/welcome` does straight after sign-up), map settings, the account, the contact form. It runs before any lookup, so it answers the same 403 for every id. A new write route needs it too. Integration tests' `signUp()` makes verified users unless given `{ verified: false }`.
 
 - **The rules** are pure functions in `server/src/utils/access.js` (tested). Controllers load a row together with the caller's membership (`controllers/helpers/travel.js`: `loadMap`, `loadTrip`, `loadPhoto`, `loadUploadTarget`) and decide with them.
-- **The Prisma trap these queries avoid:** `where: { userId: undefined }` means *no filter*. So the access selects in `domain/maps.js`, `domain/trips.js` and `domain/photos.js` only add `members: { where: { userId } }` when there is a user. Keep that pattern in any new access query, or an anonymous request inherits the first member's role.
+- **The Prisma trap these queries avoid:** `where: { userId: undefined }` means *no filter*. So the access loads in `domain/maps.js`, `domain/trips.js` and `domain/photos.js` only read the caller's `MapMember`/`TripMember` when there is a user. Keep that pattern in any new access query, or an anonymous request inherits the first member's role.
+  - They read the row and the memberships as flat queries side by side (relation filters such as `map: { trips: { some: { id } } }`), not as nested selects, which Prisma runs one level after another; the result keeps the old shape (`members: []` or `[{ role }]`).
+- **Trip-only editors** (a `TripMember` `EDITOR` with no editor role on the map) edit the trip, complete it and add photos to it; the TRIP and PHOTO visits that follow still go on the map. **Deleting a trip needs an editor role on the map, or owning it** (`canDeleteTrip`; the trip detail's `canDelete`).
 - **Share codes:** 12 characters from `23456789ABCDEFGHJKMNPQRSTVWXYZ`, shown `XXXX-XXXX-XXXX`, normalised on lookup (`utils/shareCodes.js`). Reset = new code.
 - **Invite tokens** are hashed with SHA-256.
 - **Owner-only:** the sharing routes (`controllers/sharing.js`, one module for maps and trips). Editors can't list members yet.
+- **Adding people** (`addMember`) emails someone from our domain, so:
+  - the owner's own address must be verified (403 otherwise, after the role checks), with a per-user daily cap on top of the per-IP one;
+  - only an **active, verified** account becomes a member directly; anyone else (no account, unverified, deactivated) gets a `ShareInvite`, so an account squatting an address it never verified gets nothing;
+  - the share email's subject is fixed; the sharer's name is only in the escaped body.
 - **Leaving an account** (`services/travel/accounts.js`, from better-auth's `beforeDelete`):
   - each owned map with an editor passes to the longest-standing active editor (a deactivated one only if no other editor exists; `heirOf`);
-  - the person's uploads are deleted with their files;
-  - their other owned maps are deleted with their files.
+  - the person's uploads are deleted;
+  - their other owned maps are deleted;
+  - then the files of both, in batches (see Storage). Rows always go before files, so a failure leaves unused files for the cron, never a photo pointing at a missing file.
+- **Accepting an invite** (`acceptInviteInDB` in `domain/sharing.js`, from `POST /invites/accept` and the sign-up/verify hooks) is one transaction that claims the invite first, so the same invite accepted twice counts once.
 
 ## The photo pipeline
 
 1. **In the browser** (`client/src/utils/photos/`):
-   - `readPhotoMeta.js` reads the date and GPS with `exifr` (lazy-loaded);
-   - `makePhotoCopies.js` draws `THUMB` (400 px) and `DISPLAY` (1600 px) on a canvas, which drops all EXIF. HEIC that the browser can't decode goes through a lazy-loaded `heic2any`. The original is kept untouched.
+   - `readPhotoMeta.js` reads the date and GPS with `exifr`'s lite build (lazy-loaded; JPEG and HEIC, not PNG);
+   - `makePhotoCopies.js` draws `THUMB` (400 px) and `DISPLAY` (1600 px) on a canvas, which drops all EXIF. HEIC that the browser can't decode goes through a lazy-loaded `heic2any`, with a deadline (30 s plus 2 s per MB): its worker can hang for good (D3 in `docs/AUDIT.md`). Once one runs out, the other HEIC files in that page view fail at once with a message, and the rest of the batch carries on. The original is kept untouched.
 2. **Upload** (`uploadPhoto.js` → `POST /api/maps/:mapId/photos/presign`): the browser `PUT`s each file straight to the **private** bucket (`putFile.js`, XHR for progress). Keys are `myplanetview/photos/<mapId>/<photoId>/<size>-<random>.<ext>`.
+   - The presign takes each file's `contentType` and exact `bytes` (within `PHOTO_MAX_BYTES`), and the URL signs both (see Storage), so the `PUT` must send that type and a body of exactly that size. `putFile` refuses a blob whose size isn't the declared one.
+   - A user may have at most 60 photo files presigned and not saved over the last 24 hours (`UNCONFIRMED_UPLOAD_LIMIT`); a presign above that answers 429.
 3. **Confirm** (`POST /api/maps/:mapId/photos`):
+   - only within 50 minutes of the presign (`PHOTO_SAVE_WINDOW_MINUTES`, below the cron's one-hour cutoff, so the cron never deletes a photo being saved);
    - the server HEADs each object (real size and type, within `PHOTO_MAX_BYTES`), then creates the `MediaItem`s, the `Photo` and its `PhotoVariant`s in one transaction;
    - with GPS, it sets the country (`utils/countryLookup.js`), adds a `PHOTO` visit and suggests landmarks within `matchRadiusM` (`utils/landmarkMatch.js`);
-   - without GPS, the client sends a `countryCode`.
+   - the client always sends the uploader's chosen `countryCode`: it's used without GPS, or when the GPS position is in no country (at sea);
+   - a photo left with no country is listed by `GET …/photos?unplaced=1`, the map page's "Unplaced photos" (`components/map/UnplacedPhotosPanel.jsx`, opened from the stats and the country list), where an editor gives it a country.
 4. **Viewing:** signed GETs (`signPhotoUrl`), signed at the start of the hour and valid for two (`PHOTO_URL_TTL_SECONDS`), so the browser cache works.
    - The `photo` entry in `MEDIA_CFG` is private, and the generic `/api/media-services` routes refuse its keys.
    - The daily cron never deletes media a `PhotoVariant` uses.
@@ -145,6 +167,7 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
 - **Routing.**
   - `client/src/App.jsx` is the route table; path constants live in `utils/constants/routes.js`. Never hardcode paths.
   - Home and FAQ are eager. Every other page is a `lazyPage()` in `utils/navigation/lazyPages.js`, with its static path in `PAGES_BY_PATH`, used for the first-render preload and Navbar prefetch.
+  - `hooks/FocusMainOnRouteChange.js` (used by `App`) focuses `#main-content` after a route change and scrolls to the top, or, when the address has a `#hash`, to that element once the (lazy) page has drawn it. It's the one place hash links are handled: pages don't scroll to their own hash.
 - **Adding a page touches:**
   - `App.jsx` and `routes.js`;
   - if it's public, `PUBLIC_STATIC_ROUTES` plus `utils/data/helmetData.js` and `metaData.js`;
@@ -157,24 +180,51 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   - no guard: `/shared/:code` and `/invite/:token`.
 
   The guards pass `state.from`. Client checks are UX only; the server enforces everything.
-- **Analytics** (GA4) starts only after cookie consent, on idle. Never on `ANALYTICS_EXCLUDED_PREFIXES` (`/shared`, `/invite`): their addresses carry secrets.
-- **Providers:** `main.jsx` mounts `HeadProvider` → `BrowserRouter` → `AuthProvider` → `App`.
-- **Auth:** a cookie session (`withCredentials`); `useAuth()` exposes better-auth's account actions. Sign-up goes to `/welcome`, the onboarding that edits the default map. The login, sign-up, forgot and reset pages share `components/auth/AuthPageLayout` (red poster frame, one `<main>`) and `TravelTicket` (a boarding-pass card: parchment header with the page's h1, the form on theme tokens, a decorative `TicketStub`).
+- **Analytics** (GA4, `utils/analytics/`) starts only after cookie consent, on idle; `index.html` has no Google preconnects, so nothing contacts Google before that.
+  - **Secret addresses:** `ANALYTICS_EXCLUDED_PREFIXES` (`/shared`, `/invite`, `/reset-password`, `/verify-email-address`). GA is never first loaded on one; once loaded, `window['ga-disable-<ID>']` is set while one shows and cleared after (`trackAddress` in `initGA.js`, run on every route change and from a `history` hook installed before gtag.js, so it is set before gtag.js could report the change). Web vitals (`utils/seo/vitals.js`) aren't reported there.
+  - **Redaction** (`privacy.js`): every `page_location` and `page_referrer` GA gets is the route pattern (`/shared/:code`, `/maps/:mapId`; `ANALYTICS_REDACTED_ROUTES`) with only `utm_*` parameters and no hash; another site's referrer is cut to its origin. App sends the page views itself (`send_page_view: false`).
+  - A new route with a secret or an id in its path goes in those two lists in `routes.js`.
+  - Don't replace `window.gtag` with a wrapper that calls `ReactGA.gtag`: that calls `window.gtag` back, and the loop swallowed every event.
+  - **Withdrawing consent:** the footer's "Cookie settings" (Legal column, `openCookieSettings()` in `consent.js`) makes App show the banner at once, saying what was chosen, with focus on "No thanks"; Escape or its close stamp shuts it unchanged. A no (now or from an earlier visit) calls `stopGA` (`initGA.js`): `ga-disable-<ID>` stays set whatever the page, GA's consent becomes denied, queued page views are dropped, and the `_ga`, `_ga_*`, `_gid` and `_gat` cookies are deleted on this host and its parent domains. A yes again in the same visit resumes the GA already loaded.
+  - **Web vitals** (`utils/seo/vitals.js`, with `web-vitals`) load only once GA runs (`initGA.js`), and report only while `analyticsActive()`.
+- **Providers:** `main.jsx` mounts `ErrorBoundary` (`utils/error/`) → `HeadProvider` → `BrowserRouter` → `AuthProvider` → `App`. A render error, or a lazy page whose code didn't download, shows `components/utils/AppErrorScreen.jsx` (a paper card on the poster frame with a reload button); it sits outside the router and auth, so it uses plain links.
+  - **Hydration:** a pre-rendered page (`data-prerendered` on `<html>`, a filled `#root`) is hydrated with `hydrateRoot`; the app shell is drawn with `createRoot`. 404.html is drawn from scratch when the address is a real page in another case (`/About`). The first render must be the same in the browser as at build: nothing in a render may read storage, the window size, the date or `Math.random`; such things go in effects (or `useSyncExternalStore` with a server snapshot, as the footer's year does with `__BUILD_YEAR__` from `vite.config.js`). Auth starts signed out and the cookie banner closed for the same reason.
+- **Auth:** a cookie session (`withCredentials`); `useAuth()` exposes better-auth's account actions. The session request (`auth/bootSession.js`) goes out from `main.jsx` at boot, alongside the first page's code, when this browser has the `isLoggedIn` flag; `AuthProvider` takes it in its first effect. Logging out clears the state only once the server has answered (or a 401 says the session had already ended); otherwise the nav or account page says they're still logged in. While the user is unverified, the session is read again when the tab is focused or shown (at most every 10 s; a failed background read other than a 401 changes nothing), so verifying in another tab lifts this tab's locks; the verify page reads it straight after verifying. Session reads are numbered, and an older answer never replaces a newer one. The account page's avatar upload is locked for an unverified user ("Verify your email to add a photo."); removing stays allowed. Sign-up goes to `/welcome`, the onboarding that edits the default map. The login, sign-up, forgot and reset pages share `components/auth/AuthPageLayout` (red poster frame, one `<main>`) and `TravelTicket` (a boarding-pass card: parchment header with the page's h1, the form on theme tokens, a decorative `TicketStub`).
 - **Mock mode** (development only; the default for `npm run dev`, as the user asked to be always signed in as a test user):
   - `main.jsx` imports `src/dev/mock/installMock.js` when `import.meta.env.DEV` and `devUsesMock()`. That is true when MODE is `mock`, or unless the browser chose the real API: `?api=real` / `?api=mock` are stored as `localStorage['mpv:apiSource']`, and the badge has "Use real API".
   - Production builds compile `DEV` to false, so none of it ships (checked: no mock strings in `dist/`, including `mpv:apiSource`).
-  - It puts an Axios adapter (`mockAdapter.js`) on the exported `httpClient` and on the global axios, and patches XHR for the presigned-upload host (`mockXhr.js`), so no request leaves the browser.
+  - It puts an Axios adapter (`mockAdapter.js`) on the exported `httpClient` and on the global axios, and patches XHR for the presigned-upload host (`mockXhr.js`), so no request leaves the browser. Like R2, the mock bucket refuses (403) a `PUT` whose `Content-Type` or size isn't the presigned one (`dev/mock/uploads.js`).
   - The handlers in `src/dev/mock/handlers/` follow `docs/API.md` and the access rules. The store (`store.js`, seeded by `seed.js`) lives in localStorage; uploaded files are session blob URLs.
   - `data/landmarks.js` copies the server's landmark data; re-copy it when that changes. **When an endpoint or response shape changes, update its mock handler too.**
+  - As on the server:
+    - a GPS position finds its country by point-in-polygon on the map's own shapes (`countryLookup.js`, loaded on first use; it parses the client's paths exactly as `countryShapes.json` was made, and gave the server's answer for 3,012 test points);
+    - share codes are shown and linked as `XXXX-XXXX-XXXX` and normalised on lookup, and anything that can't be a code finds nothing;
+    - a hidden trip cover isn't shown below editor;
+    - trip visits come only when a trip becomes completed, or a completed trip gains a stop or a stop's country;
+    - new passwords follow the client's `PASSWORD_REGEX` (8 to 128 characters); forgot-password wants a valid address; change-email gives the same answer for a taken address; 20 new maps a day, then 429.
+  - Sign in as the test user, `test@myplanetview.local`, with `12345678` (`MOCK_PASSWORD` in `seed.js`, the server seed's password); any other address or password gets better-auth's 401. The badge says so.
+  - The writes that need a verified email are listed in `mockAdapter.js` (`NEEDS_VERIFIED_EMAIL`, the server's `requireVerifiedEmail` routes) and answer the server's 403 before any lookup. The badge's "Email verified" switch makes the test user unverified and back; the seeded users are verified.
 - **API layer:**
   - `api/client.js` is one Axios instance: errors become `error.friendlyMessage`, payloads are at `res.data.data`;
+  - **bundles** (`vite.config.js` `manualChunks`): only React, React DOM and the router are grouped (`react-*.js`, cached across deploys); every other package goes with the code that imports it, so heic2any, exifr, react-ga4 and web-vitals load only when used, and React DOM's server renderer only at build;
+  - form rules the server also checks live in `utils/regex/regex.js`: `isValidEmail` (the server's `normalizeEmail`), `serverText` (what `sanitizeText` keeps), and `PASSWORD_REGEX` with `PASSWORD_RULE`, the one wording of the password rule for hints and errors;
   - `api/travelApi.js` wraps every travel endpoint;
   - endpoint paths are constants in `utils/constants/apiRoutes.js`.
 - **Travel state:**
-  - `hooks/useTravelMap.js`: map, visits, stats and trips, plus mutations; visit changes are optimistic with rollback;
-  - `useMapSettings.js`: saved to the profile when signed in, localStorage otherwise;
+  - `hooks/useTravelMap.js`: map, visits, stats and trips, plus mutations; visit changes are optimistic with rollback; `refresh()` reloads the map and trips without the loading state (after photos change: an upload or a photo's country can add a `PHOTO` visit);
+  - `useMapSettings.js`: saved to the profile when signed in, localStorage otherwise. The local copy draws the first paint; the profile's copy is stored locally when it arrives, so the next visit starts with it;
   - `useMapViewport.js`: pan and zoom through the viewBox, mouse/touch/pinch, double-tap or double-click to zoom ×2 on the spot, and the grabbing-hand cursor while a mouse button is held (`data-grabbing` on the SVG). Map click handlers go through its `afterTap(action)`, which ignores the click ending a drag or a double-tap and waits 300 ms so a double-tap doesn't also open a country;
-  - `usePhotoPage.js`, `useLandmarks.js`.
+    - the view is not React state: it lives in a ref and goes straight onto the SVG's `viewBox` (through `viewport.svgRef`), so panning re-renders nothing. Keep it that way;
+    - what's drawn by zoom (badges, names, dots, pins, grid labels) reads it with `useViewportZoom(viewport)`, which re-renders only that component, when the zoom changes, once for a burst of pointer or wheel events (in the task after them, with the viewBox, outside the browser's frame work); with a `select` (`(zoom) => zoom >= 3`) only when the answer changes. The returned viewport object never changes;
+  - `usePhotoPage.js`: `preloadPhotoPage(filters)` starts a list's first page before the list mounts; the list with the same filters takes it;
+  - `useLandmarks.js`: every landmark in one request per session, filtered per country (reference data, never invalidated);
+  - `utils/map/mapListCache.js`: the map list and the trips shared with you, per user, for the session. The switcher shows them at once and asks again behind them; creating, renaming, deleting or leaving a map calls `forgetMapLists()`.
+
+  **Loading the map page:** once the map's id is known, everything starts together: the map and its trips, its photo lists (`utils/map/mapPhotoLists.js`), and the landmarks when pins show at once (the Detailed type, or a portrait screen, which opens zoomed in). On `/map` the id is the one remembered from last time (`localStorage['mpv:defaultMap']`, per user) while the map list confirms it. The trip page starts its photos with the trip. The hover photos are never fetched on screens that can't hover (`hooks/useCanHover.js`).
+
+  **Map panels** (stats, the country list, a country, settings, the switcher, unplaced photos, trips, uploads, the photo viewer, the share dialog, the hover postcard) are lazy (`components/map/lazyMapPanels.js`) and fetched on intent: a toolbar stamp, the title or the stats tag hovered, focused or pressed (`preloadTool`); the country panel on the first press on the map; the photo viewer when a panel listing photos opens. A slow one shows `MapPanelFallback`. The hover postcard (`MapHoverLayer`) follows a value store, so hovering re-renders only it. The country list's rows are memoised, and each status is a button that swaps in the real dropdown for that row only (`CountryStatusControl`).
+
+  **An unverified email address** (`hooks/useMustVerifyEmail.js`): the server refuses every change to content (Access and sharing, above). The map and trip pages show `components/map/VerifyEmailBanner.jsx` (a luggage tag that can send the link again; on wide screens the map's panels open below it, through `--map-panel-top`), and the controls that would fail are locked where they're used, each with a `VerifyFirstNote` saying why: statuses in the country panel and list, uploads, new trips and maps, trip and stop editing, photo editing and landmark actions, and every sharing change (the link can still be copied). Visit changes wait for the server instead of showing at once (`useTravelMap(mapId, { optimistic })`). Setting a map up, map settings and `/welcome` stay open.
 
   Panel state lives in the page (`useReducer`). Use functional state updates.
 - **Components:** one per file, under `components/map|photos|trips|sharing|onboarding/` and the template's folders. Pages follow the PageHeader + MainContainer pattern. Every page renders exactly one `<main id="main-content" tabIndex={-1}>`. Modals use `hooks/useModalA11y.js`. Form inputs go in `components/ui/FormField`. Dropdowns are the `components/ui/*OptionSelect` components, never a bare `<select>`.
@@ -182,7 +232,8 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
 - **Images:**
   - `ResponsiveImage` and `AppImage` use the `<name>-<width>.<ext>` sets under `src/assets/images/<folder>/` (`lib/media/imageManifest.js`, avif/webp/jpg only);
   - the home artwork (`pages/home/`), the map-style backgrounds and the detailed preview (`map-styles/`) and the logo (`brand/`) come from my_planet, converted with `images/`;
-  - the navbar logo and the home artwork import their files directly, keeping the image manifest out of eager pages.
+  - the navbar logo and the home artwork import their files directly, keeping the image manifest out of eager pages;
+  - one set per real width: an image narrower than the requested widths gets a single set at its own width (the 404 cat is `-366`), never copies under bigger names. AVIF is encoded 4:2:0 (`images/`); 4:4:4 made textured artwork bigger than its WebP. An AVIF should be smaller than its WebP, or the browser downloads the bigger file.
 - **Country posters** are not in the build. They're in the public bucket as `visitCountryPosters/<name>-800.avif` plus an 800 px WebP fallback, and the repo's `media/` folder (outside `client/`) holds the same files to upload.
   - `utils/map/posterData.js` lists them (167 countries, a placeholder card for the rest) and builds their URLs with `posterUrl()` from `VITE_MEDIA_CDN` (`utils/media/mediaUrl.js`); `components/map/PosterImage.jsx` draws one.
   - In development without `VITE_MEDIA_CDN`, `mediaUrl.js` falls back to `/local-media`, which a dev-only plugin in `vite.config.js` serves from `media/`. Mock-mode demo photos are posters too.
@@ -194,9 +245,10 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   - `colour1`–`colour5` are fixed neutrals, never changed;
   - `colour6`–`colour9` are the theme, from my_planet's travel-poster look: poster red, ocean blue, parchment, saddle brown;
   - `poster-*` are fixed artwork colours (frame red, gold corners, nav paper, brown edge, ink, cream), the same in both themes;
-  - fonts: `font-travel` / `font-titleFont` (TravelFont, SF Comic Script; licence to check before launch) for headings and the nav, Poppins (`font-main`) for text;
+  - fonts (`styles/fonts.css`): `font-travel` / `font-titleFont` (TravelFont, SF Comic Script; licence to check before launch, so the 46 KB TTF stays unconverted) for headings and the nav, Poppins (`font-main`) for text. Poppins ships only the weights in use, 400, 500, 600 and 700 (no italics, no 800: add a face back before using one, or the browser fakes it), each subset to Latin (Latin-1, Latin Extended-A, Ș/Ț, General Punctuation, € ™ −) at about 10 KB, with a matching `unicode-range`. `index.html` preloads Poppins 400 and the TravelFont TTF, which every first view draws;
   - also `field`, `status-critical|warning|minor|good`, `scrim`, the `lift` shadows, and the `tone-*`/`solid-*` utilities.
 - **Map styles.** The map page sets `data-map-style='animated'|'old-map'|'jupiter'|'galaxy'` (`utils/map/mapStyles.js`), which switches the `--map-*` tokens the drawing uses (`map-sea`, `map-land`, `map-visit-*`, `map-ink`, `map-edge` and so on). The containers over the map don't change with the style: they're travel paperwork in every style (`ticket-edge`, `paper-aged`, `bg-paper-cream`; `MapPanel`, `common/CloseStamp`, `common/PaperStripHeader`, `map/LuggageTag` for the floating labels; inputs inside a `paper-fields` scope). The map type (`regular` or `detailed`, `utils/map/mapTypes.js`) and my_planet's filters, banner, sun and moon and sea waves are viewer settings (`utils/map/mapSettings.js`).
+  - **The animated sea is on by default, so keep it cheap.** `animate-ocean` (an `@utility` in `index.css`) fades two full-size layers of the darker sea shades in and out by opacity, which the compositor runs; never animate `background-color` on a full-screen element. `SeaWaves.jsx` draws its canvas at most 1.5× the screen density, about 30 times a second, and pauses while a finger, mouse button or the wheel is moving the map.
 - **`scripts/check-house-rules.mjs`** (in `prebuild`):
   - **fails** on any hex, `rgb()`/`hsl()`, or white/black/Tailwind palette class in components;
   - **warns** on flex and vertical margins (41 in older template code).
@@ -208,10 +260,17 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
 - **Which pages:** home, about, FAQ, contact and `/user-agreements` (legal) are the only indexed pages (`PUBLIC_STATIC_ROUTES`). Everything else is client-only, noindex, disallowed in robots.txt and absent from the sitemap.
 - **The build:**
   - `prebuild` runs `check-meta` (titles ≤ 60 characters; unique descriptions of 120–156 characters, in whole sentences) and the house rules;
-  - `postbuild` runs `inline-critical` → `prerender` (headless Chromium saves each public page as `dist/<route>.html`, plus `404.html` and `app-shell.html`, and writes `_redirects` and the `.htaccess` client-only rewrites) → `generate-sitemap` → `generate-robots` → `check-seo` (fails on a missing or duplicate head tag, thin `<main>`, broken internal links, structured data not on the page).
+  - `postbuild` runs `prerender` (headless Chromium saves each public page as `dist/<route>.html`, plus `404.html` and `app-shell.html`, and writes `_redirects` and the `.htaccess` client-only rewrites) → `inline-critical` → `generate-sitemap` → `generate-robots` → `check-seo` (fails on a missing or duplicate head tag, thin `<main>`, broken internal links, structured data not on the page).
+  - **What prerender saves:** the head of the settled page (react-head's tags, the page's preloads), and in `#root` the app's *first* render as React's server renderer writes it (`window.__renderRootHtml` in `main.jsx`, `renderToString` from a chunk only the build loads), which is what hydration needs. It warns when the settled page has much more text than the first render (content shown only after an effect isn't pre-rendered), and drops the modulepreload the renderer's import adds.
+  - **`inline-critical`** runs beasties on each pre-rendered page (not the app shell): the rules the page uses, plus every `@font-face`, go in a `<style>`; the stylesheet moves to the end of `<body>`, so the page paints before it arrives, with no script. Measured on a phone: LCP on about, FAQ and legal about 0.95 → 0.5 s.
 - **Live check:** `npm run check:seo -- --live https://<domain>` checks a deployed site.
 - **Head tags:** `HelmetItem` (react-head) per page, from `helmetData`/`metaData`. JSON-LD is built in `utils/seo/schema.js` from `constants.js`. Only mark up what's visible.
 - **`client/public/.htaccess`** (cPanel) holds the CSP. It still has placeholder hosts (`api.client.com`, `nbg1.your-objectstorage.com`) that must become the real API, R2 endpoint and photo hosts before launch, or uploads and photos are blocked.
+  - **CSP:** `script-src` has no `'unsafe-inline'`: no page has an inline script (JSON-LD is data) or an inline event handler, so keep it that way. `style-src` keeps it (React style attributes, the critical CSS). `form-action 'self'`; no Google Fonts hosts.
+  - **Other headers:** HSTS for a year with `includeSubDomains` (no `preload`), `X-XSS-Protection: 0`, `Cross-Origin-Opener-Policy: same-origin`, plus nosniff, `DENY` framing, the referrer and permissions policies.
+  - **`client/netlify.toml`** (the temporary Netlify site) sends the same headers: change both together.
+  - **Compression** goes by MIME type, so its `AddOutputFilterByType` lines must name what section 7 serves: `.js` goes out as `text/javascript`, the TravelFont as `font/ttf`. After a deploy, check `Content-Encoding` on a `.js` file.
+  - **Caching:** a year and `immutable` only for `/assets/` (Vite's hashed files); other static files from `public/` (`favicon/`, `brand/`, `pages/`) get a day, as they keep their names when they change; HTML revalidates.
 
 ## Server architecture
 
@@ -219,17 +278,18 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   1. helmet (CSP off);
   2. `X-Robots-Tag: noindex` on everything;
   3. request context (`X-Request-Id`);
-  4. morgan;
+  4. morgan (`utils/requestLog.js`: its `url` token is redacted, see Logging);
   5. CORS from `FRONTEND_ORIGIN` (comma-separated; also better-auth's trusted origins);
-  6. JSON parsing (2000 kb);
-  7. `globalRateLimiter` (in memory, 1000 per 15 min per IP);
-  8. better-auth at `/api/auth/*`.
+  6. `originCheck` (`middleware/originCheck.js`, CSRF): a `POST`/`PUT`/`PATCH`/`DELETE` whose `Origin` isn't in `FRONTEND_ORIGIN`, or with no `Origin` and `Sec-Fetch-Site: cross-site`, gets 403. CORS alone only drops the headers; the request would still run. No `Origin` and no `Sec-Fetch-Site` passes (curl, supertest);
+  7. JSON parsing (2000 kb). **No `express.urlencoded`**: a cross-site HTML form can only send urlencoded, multipart or text/plain;
+  8. `globalRateLimiter` (in memory, 1000 per 15 min per IP or IPv6 /64; only a backstop);
+  9. better-auth at `/api/auth/*`.
 
   Then the routers: `/api/events`, `/api/users` (including `/map-settings`), `/api/contact`, `/api/media-services`, `/api` (`/countries`, `/landmarks`), `/api/maps`, `/api/trips`, `/api/photos`, `/api/shared`, `/api/invites`. `trust proxy` is 1 (Vercel).
 - **Per feature:**
   - `routes/` attaches middleware;
   - `controllers/` sanitises input (`utils/sanitize.js`, `utils/travelValidation.js`), calls domain functions, logs events and replies;
-  - `domain/` holds thin Prisma queries;
+  - `domain/` holds thin Prisma queries. **Never a `_count` in a select:** Prisma joins a `GROUP BY` over the whole child table, so every list counted every user's rows. List counts (`counts` on `GET /maps`, `stopCount`/`photoCount` on trip lists) come from `domain/counts.js`: a `groupBy` over the ids already loaded (`WHERE "mapId" IN (…) GROUP BY`), run in parallel and merged in. Hidden photos count only where the caller is the owner or an editor: `findOwnedMaps` always, `findMemberMaps`/`findTripsSharedWithUser` per membership role, `findTripsForMap(mapId, { includeHidden })` from the caller (default false);
   - `event/<x>Utils.js` builds events (`travelUtils.js` for the travel features);
   - pure rules go in `utils/<x>.js` with a test.
 - **Responses:**
@@ -237,27 +297,43 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   - use `DOMAINS`/`EVENT_MESSAGES` (`utils/responses/responses.js`);
   - failures are error event classes (`event/errorUtils.js`);
   - travel controllers wrap handlers in `handler()` from `controllers/helpers/travel.js`.
-- **Logging:** `logEvent(...)` writes `AppEvent` without awaiting, for writes only (never reads). `runAfterResponse(promise)` (`utils/background.js`, Vercel `waitUntil`) for anything after the response, emails especially.
-- **Rate limits:**
-  - in memory (`middleware/rateLimit.js`): global, presign, and a strict 5 per 15 min per public form;
-  - database-backed (`middleware/dbRateLimit.js`, the `RateLimit` table, shared across instances): opening a share link 30, browsing one 300, invite accepts 30 (all per 15 min), photo presigns 120 per 15 min, adding people 20 an hour;
-  - all values in `utils/constants/rateLimitConstants.js`.
-- **Auth** (`src/auth.js`, better-auth with the Prisma adapter):
-  - role and `isActive` live on the DB user, and `validateAuthentication` re-reads them;
+- **Logging:** `logEvent(...)` writes `AppEvent` without awaiting, for writes only (never reads), through `runAfterResponse(promise)` (`utils/background.js`, Vercel `waitUntil`, failures logged and swallowed). Use `runAfterResponse` for anything else after the response, emails especially.
+  - **No secrets or addresses in logs:** `AppEvent.path` and the morgan line go through `utils/redactUrl.js` (share codes → `:code`, invite and better-auth tokens → `:token`, query values other than plain filters → `:redacted`). Events never hold an email address: people are `actorId`/`targetId`, and an address with no account is `emailRef(email)` (`utils/emailRef.js`, a short HMAC). Keep it that way in new events.
+  - Only 5xx events keep a stack (`createGenericErrorEvent`, and `createAppEvent` drops it for any 4xx).
+  - `get-all-events` returns the newest 500 (`ALL_EVENTS_LIMIT`); the admin page uses the paged route.
+  - `deleteOldEvents({ olderThanDays })` in `domain/events.js` is the 90-day retention, called by the daily cron.
+- **Database connections** (`src/prisma.js`): one `pg` Pool per function instance behind the Prisma adapter, `max` from `DB_POOL_MAX` (default 5), `connectionTimeoutMillis` and `idleTimeoutMillis` of 5000, and `attachDatabasePool(pool)` from `@vercel/functions`, which keeps a Vercel instance alive until idle connections close (it does nothing elsewhere).
+  - In production `DATABASE_URL` must be the provider's **pooled**, transaction-mode URL. The adapter sends unnamed statements, which such poolers accept.
+  - `DIRECT_DATABASE_URL` is the direct URL; only the Prisma CLI uses it (`prisma.config.ts`).
+- **Rate limits** (all values in `utils/constants/rateLimitConstants.js`; every limiter is off under test unless `RATE_LIMITS_IN_TESTS=true`, which only `tests/integration/rateLimits.test.js` sets):
+  - in memory (`middleware/rateLimit.js`): only the global backstop;
+  - database-backed (`middleware/dbRateLimit.js`, the `RateLimit` table, shared across instances): share-code lookups 30 (opening a link, plus any `/shared/:code/photos…` request whose code matches nothing, `middleware/shareLookup.js`), browsing a link 300, invite accepts 30, contact form 5, generic uploads 20 (presign and confirm together), photo presigns 120 (all per 15 min), adding people 20 an hour per IP and 25 a day per user, new maps 20 a day per user (`keyFor: keyByUserId`);
+  - the count is one atomic `INSERT … ON CONFLICT DO UPDATE` (a passed window restarts at 1 in the same statement); IPs are keyed by `clientIpKey` (IPv4, or an IPv6 /64, via express-rate-limit's `ipKeyGenerator`);
+  - better-auth's own limiter is on the database too (`rateLimit.storage: 'database'`, model `AuthRateLimit`), keyed on `x-forwarded-for` (Vercel overwrites it with the visitor's address; a header with several values isn't trusted) and the path, IPv6 per /64.
+- **Auth** (`src/auth.js`, better-auth 1.7.20 with the Prisma adapter):
+  - role and `isActive` live on the DB user and are declared as `user.additionalFields` (`input: false`: a sign-up gets the defaults, `update-user` refuses them). The cookie cache is off, so `getSession` reads the session and its user from the database on every request, and `validateAuthentication`/`attachUserIfPresent` use that user without a second query: a role change or a deactivation applies to the next request;
   - a deactivated user can't create sessions;
-  - user `create.after` makes the default map, and accepts pending invites if the address is already verified;
+  - user `create.after` makes the default map, and accepts pending invites if the address is already verified (since better-auth 1.5, after hooks run once the user's transaction has committed);
   - user `update.after` accepts invites once the email is verified;
   - `deleteUser.beforeDelete` releases the travel data (see above), then avatars.
-  - Cookies are `sameSite: 'none'`, `secure` and `__Secure-` in production; keep `useSecureCookies` tied to `isProd`.
+  - `hooks.before`: `/delete-user` needs `password` (better-auth then checks it; without one it accepts any session younger than `freshAge`, a day. 1.4.13 multiplied `freshAge` by 1000 twice; fixed in 1.6, but the hook stays); `/sign-up/email` and `/update-user` clean `name` (`utils/displayName.js`: one line, no control characters, 80 at most), since names go into share emails; and a new password (`/sign-up/email`, `/reset-password`, `/change-password`) must follow the client's rules (`utils/passwordRules.js`, the same pattern as `client/src/utils/regex/regex.js`; keep the two in step), 400 otherwise. The password check only applies over HTTP, so the seed's `auth.api` sign-ups keep `12345678`.
+  - `changeEmail.sendChangeEmailConfirmation` (still the 1.7 name; the old alias `sendChangeEmailVerification` was removed in 1.5): a verified account confirms from its current address first (`users/userChangeEmailConfirmation.handlebars`, client link with `?change=confirm`), then better-auth's `/verify-email` sends the usual verification to the new address. An unverified account goes straight to the new address. An address that already has an account gets the same 200 and no email.
+  - Cookies are `sameSite: 'none'`, `secure` and `__Secure-` in production (`defaultCookieAttributes`, so every cookie better-auth sets); keep `useSecureCookies` tied to `isProd` (`tests/authConfig.test.js` checks the production settings). **Switch to `sameSite: 'lax'` once the API is on `api.<domain>`** (same site as the client); `originCheck` guards writes meanwhile.
 - **Storage** (`services/s3/`):
   - `s3public.js` (`STORAGE_*`): avatars and contact images;
   - `s3private.js` (`STORAGE_PRIVATE_*`, each falling back to its `STORAGE_*` twin): photos;
   - keys are prefixed with `BucketNamespace` (`myplanetview`);
-  - both clients set `requestChecksumCalculation`/`responseChecksumValidation: 'WHEN_REQUIRED'`. Without it, AWS SDK 3.729+ signs an empty-body CRC32 into every presigned PUT URL, so browser uploads fail. The buckets are in R2's EU jurisdiction, so the endpoint is `https://<account-id>.eu.r2.cloudflarestorage.com`;
-  - `MEDIA_CFG` in `mediaService.js` sets each resource's visibility and types. No SVG anywhere: it can carry scripts.
-  - The daily Vercel cron (`/api/media-services/cron/cleanup-orphans`, `CRON_SECRET`) deletes unattached uploads and expired rate-limit rows.
+  - `mediaService.js` loads the AWS SDK and both bucket modules on its first bucket call (`storage()`), and `emailHandler.js` loads `resend` and `handlebars` on the first email: a cold start that touches neither skips them (about 90 ms locally). Keep other code from importing `s3public.js`, `s3private.js` or the SDK directly;
+  - both clients set `requestChecksumCalculation`/`responseChecksumValidation: 'WHEN_REQUIRED'`. Without it, AWS SDK 3.729+ signs an empty-body CRC32 into every presigned PUT URL, so browser uploads fail. DeleteObjects still sends `x-amz-checksum-crc32` (the operation requires a checksum; `tests/mediaBatches.test.js`), which R2 has accepted since February 2025; that needs one real test. The buckets are in R2's EU jurisdiction, so the endpoint is `https://<account-id>.eu.r2.cloudflarestorage.com`;
+  - **Deleting files** (`deleteStoredObjects`): one `DeleteObjectsCommand` per 1,000 keys of a bucket, then the MediaItem rows of the files that went (never a row a photo or an avatar still uses); if a whole request fails, single deletes, eight at a time. A file that can't be deleted keeps its row for the cron. Delete the rows that point at files (PhotoVariant, via the photo or map) first, then the files;
+  - **Every presigned PUT signs `Content-Type` and `Content-Length`** (`services/s3/signedUpload.js`; `X-Amz-SignedHeaders=content-length;content-type;host`, checked offline in `tests/signedUpload.test.js`). The presigner leaves `content-type` unsigned unless it's in `signableHeaders`; `content-length` is signed once `ContentLength` is set; `CacheControl` on a presigned PUT does nothing (never signed or hoisted). That R2 enforces the signed length still needs one real test (a PUT of another size should get 403).
+  - `MEDIA_CFG` in `mediaService.js` sets each resource's visibility, exact `allowedTypes` and `maxBytes`. The generic uploads (avatars, contact images) take PNG, JPEG, WebP or GIF up to 5 MB; the key's extension comes from a MIME map (`utils/media/uploadRules.js`), never from the file name. No SVG anywhere: it can carry scripts.
+  - Generic uploads: presign needs `bytes`; `/confirm-upload` HEADs the object and deletes it on a type or size mismatch (the row stays unconfirmed for the cron). Only confirmed uploads can be used: an avatar must be the user's own, of an allowed type; a contact form's `imageKey` must also be under an hour old and on no other form. Contact uploads need no account (the public contact form). A signed-in user may have at most 20 unconfirmed generic uploads over the last 24 hours (429 above).
+  - **The daily Vercel cron** (`/api/media-services/cron/cleanup-orphans`, `CRON_SECRET`; `cleanupOrphanUploadsHandler` in `controllers/mediaGeneric.js`):
+    1. purges, together and each on its own (a failure is logged and reported as `null`): finished rate-limit windows, `AppEvent` rows older than 90 days, expired sessions and verifications, and invites accepted or expired over 30 days ago;
+    2. then deletes unused uploads (`deleteOrphanUploads`): `findOrphanUploads` (`domain/mediaGeneric.js`, one raw query) leaves out files a PhotoVariant or an avatar uses and contact images a form names, and takes photo files after an hour and the rest after a day, oldest first, 500 a batch. Each batch is one DeleteObjects per bucket and one row delete; it moves past files it couldn't delete, and starts no batch after 40 s (`CRON_BUDGET_MS`; `vercel.json` gives the function 60 s).
 - **Email** (Resend, `services/email/emailHandler.js`): renders the handlebars templates in `users/` and `contact/` and sends them with the `resend` SDK from `EMAIL_FROM`, using `RESEND_API_KEY`.
-  - Profiles: `userAdmin` (share invites, `users/shareEmail.handlebars`), `userVerify`, `userReset` and `contact` (reply-to is the person who sent the form).
+  - Profiles: `userAdmin` (share invites, `users/shareEmail.handlebars`), `userVerify`, `userReset`, `userChangeEmail` (`users/userChangeEmailConfirmation.handlebars`, to the current address) and `contact` (reply-to is the person who sent the form).
   - Network, rate-limit and 5xx failures retry twice under one idempotency key; quota and validation errors don't.
   - In production it throws at import without both keys; locally it logs each email and its link instead of sending.
   - Until a domain is verified in Resend, `EMAIL_FROM=onboarding@resend.dev` only delivers to the Resend account's own address.
@@ -271,6 +347,7 @@ Production never gets the seed. Its countries and landmarks come from `npm run d
   - the CSP hosts in `.htaccess`.
 - **Data:** 16 landmarks are marked `// unverified`; border photos can land in the neighbouring country.
 - **Sharing:** editors can't see who else has access.
-- **Unused code:** a few client files are kept on purpose although nothing imports them: `Breadcrumbs`, spare UI inputs, `ErrorBoundary` (not mounted, so a failed lazy chunk renders blank) and `deleteMediaObject`.
+- **Account enumeration:** sign-up still answers 422 for an address that has an account. better-auth only hides it with `requireEmailVerification: true` (no session until the address is verified), which would change the sign-up → `/welcome` flow; not decided (`docs/AUDIT.md`, E).
+- **Unused code:** a few client files are kept on purpose although nothing imports them: `Breadcrumbs`, spare UI inputs and `deleteMediaObject`.
 - **Tests:** no Playwright tests cover the travel pages.
-- **Analytics:** turn GA4's "page changes based on browser history events" off.
+- **Analytics:** turn GA4's "page changes based on browser history events" off. The app sends its own redacted page views; GA's history ones would double them and could carry a secret address as the referrer.

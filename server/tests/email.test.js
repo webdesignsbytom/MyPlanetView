@@ -22,7 +22,7 @@ vi.mock('resend', () => ({
   },
 }));
 
-const { sendContactEmail, sendUserEmail } = await import('../src/services/email/emailHandler.js');
+const { sendContactEmail, sendUserChangeEmailConfirmation, sendUserEmail } = await import('../src/services/email/emailHandler.js');
 
 const CONTACT = {
   title: 'New Contact Form Received',
@@ -105,5 +105,33 @@ describe('emailHandler: real templates, faked Resend', () => {
     fake.results.push(failure('daily_quota_exceeded', 429));
     expect(await sendUserEmail('friend@example.test', 'x', 'shareEmail', {})).toBe(false);
     expect(fake.sent).toHaveLength(1);
+  });
+
+  it('renders the change-email confirmation for the current address, with both addresses and the link', async () => {
+    const ok = await sendUserChangeEmailConfirmation('old@example.test', 'Confirm your new email address', 'userChangeEmailConfirmation', {
+      title: 'Confirm your new email address',
+      email: 'old@example.test',
+      newEmail: 'new@example.test',
+      confirmationUrl: 'https://example.test/verify-email-address/u1/tok?change=confirm',
+      expiryTime: '15 Nov 2026, 10:00',
+      businessName: 'Test Co',
+      businessUrl: 'https://example.test',
+      year: 2026,
+    });
+
+    expect(ok).toBe(true);
+    const [sent] = fake.sent;
+    expect(sent.to).toBe('old@example.test');
+    expect(sent.html).toContain('old@example.test');
+    expect(sent.html).toContain('new@example.test');
+    // Handlebars escapes the link's & and = as entities
+    expect(sent.html).toContain('https://example.test/verify-email-address/u1/tok?change&#x3D;confirm');
+    expect(sent.html).toContain('15 Nov 2026, 10:00');
+  });
+
+  it('escapes a hostile name in the share email body', async () => {
+    await sendUserEmail('friend@example.test', 'x', 'shareEmail', { sharerName: '<b>Boss</b>', resourceKind: 'a map' });
+    expect(fake.sent[0].html).toContain('&lt;b&gt;Boss&lt;/b&gt; shared a map with you');
+    expect(fake.sent[0].html).not.toContain('<b>Boss</b>');
   });
 });

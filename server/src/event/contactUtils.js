@@ -2,15 +2,13 @@ import { createAppEvent, levelFromStatusCode } from './events.js';
 
 const DOMAIN = 'contact';
 
+// Events never keep an email address: the form's id points at it, and the form
+// (with its address) can be deleted, while events stay for 90 days
 const normalizeUser = (user) => {
   if (user && typeof user === 'object') {
-    return {
-      id: user.id ?? null,
-      email: user.email ?? 'anonymous',
-      role: user.role ?? 'USER',
-    };
+    return { id: user.id ?? null, role: user.role ?? 'USER' };
   }
-  return { id: null, email: 'anonymous', role: 'USER' };
+  return { id: null, role: 'USER' };
 };
 
 const mk = (action, actor, details = {}, statusCode = 200, extra = '') => {
@@ -19,7 +17,6 @@ const mk = (action, actor, details = {}, statusCode = 200, extra = '') => {
   const parts = [
     action,
     details?.id ? `id=${details.id}` : null,
-    details?.email ? `email=${details.email}` : null,
     details?.count != null ? `count=${details.count}` : null,
     extra || null,
   ].filter(Boolean);
@@ -38,12 +35,12 @@ const mk = (action, actor, details = {}, statusCode = 200, extra = '') => {
 
 // Contact
 
-export const createContactCreateRequestedEvent = async ({ user, email }) => {
-  await mk('Create Requested', user, { email }, 200);
+export const createContactCreateRequestedEvent = async ({ user }) => {
+  await mk('Create Requested', user, {}, 200);
 };
 
-export const createContactCreateSuccessEvent = async ({ user, id, email }) => {
-  await mk('Create Success', user, { id, email }, 201);
+export const createContactCreateSuccessEvent = async ({ user, id }) => {
+  await mk('Create Success', user, { id }, 201);
 };
 
 export const createContactGetAllRequestedEvent = async ({ user }) => {

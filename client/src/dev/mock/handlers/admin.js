@@ -2,6 +2,22 @@
 // developer audit log) with a few fake rows. Switch roles from the mock badge.
 import { fail, ok, route } from '../mockAdapter';
 import { getDb, me, newId, session } from '../store';
+import { CONTACT_IMAGE_MAX_AGE_MS, UPLOAD_IMAGE_EXTENSIONS, mockUpload } from '../uploads';
+
+// As the server's normalizeEmail (utils/sanitize.js): one plain address, at most 254
+const EMAIL_ADDRESS = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:".]+$/;
+const cleanEmail = (value) => {
+  const email = typeof value === 'string' ? value.trim().toLowerCase() : '';
+  return email.length <= 254 && EMAIL_ADDRESS.test(email) ? email : null;
+};
+
+// As the server: a confirmed contact image, uploaded within the hour, on no other form
+function usableContactImage(key) {
+  const upload = typeof key === 'string' ? mockUpload(key) : null;
+  if (!upload?.confirmed || upload.resource !== 'contact' || !UPLOAD_IMAGE_EXTENSIONS[upload.contentType]) return false;
+  if (Date.now() - upload.createdAt > CONTACT_IMAGE_MAX_AGE_MS) return false;
+  return !getDb().contactForms.some((c) => c.imageKey === key);
+}
 
 const isAdmin = () => session.signedIn && ['ADMIN', 'DEVELOPER'].includes(me().role);
 const isDeveloper = () => session.signedIn && me().role === 'DEVELOPER';
@@ -23,9 +39,13 @@ export function registerAdminRoutes() {
   // Contact
   route('POST', '/api/contact/create-new-contact-form', ({ body }) => {
     const name = String(body.name || '').trim();
-    const email = String(body.email || '').trim();
+    const email = cleanEmail(body.email);
     const message = String(body.message || '').trim();
-    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !message) return fail(400, 'Malformed data.');
+    if (!name || !message) return fail(400, 'Malformed data.');
+    if (!email) return fail(400, 'Enter a valid email address.');
+    if (body.imageKey && !usableContactImage(body.imageKey)) {
+      return fail(400, 'The attached image has expired or can’t be used. Please attach it again.');
+    }
     const contactForm = { id: newId(), name, email, message: message.slice(0, 2000), imageKey: body.imageKey || null, createdAt: new Date().toISOString() };
     getDb().contactForms.unshift(contactForm);
     return ok({ contactForm }, 201);

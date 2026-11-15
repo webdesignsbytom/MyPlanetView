@@ -2,19 +2,18 @@
 // shared with you on their own. Every change answers with the whole trip.
 import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb, me, newId, session } from '../store';
-import { countryExists, landmarkById, markVisited, photoPage, tripRole, tripSummary, tripView } from '../views';
+import { atLeast, countryExists, landmarkById, mapRole, markVisited, photoPage, tripRole, tripSummary, tripView } from '../views';
 
 const TRIP_STATUSES = ['PLANNED', 'ACTIVE', 'COMPLETED'];
 const NOT_FOUND = 'This trip could not be found.';
 const findTrip = (id) => getDb().trips.find((t) => t.id === id) || null;
 const cleanText = (value, max) => (typeof value === 'string' && value.trim() ? value.trim().slice(0, max) : null);
 
-// Completed trips add a TRIP visit for each stop's country
-function addTripVisits(trip) {
-  if (trip.status !== 'COMPLETED') return;
-  getDb()
-    .stops.filter((s) => s.tripId === trip.id)
-    .forEach((s) => markVisited(trip.mapId, s.countryCode, 'TRIP', s.arriveOn || trip.startDate || null));
+// As the server (controllers/trips.js): a trip becoming COMPLETED adds a TRIP visit for
+// each stop's country; on a completed trip, a new stop, or a stop given a country, adds
+// its own. Nothing else does: a visit removed by hand stays removed after other edits.
+function addTripVisits(trip, codes = getDb().stops.filter((s) => s.tripId === trip.id).map((s) => s.countryCode)) {
+  codes.forEach((code) => markVisited(trip.mapId, code, 'TRIP'));
 }
 
 function stopFields(body) {
@@ -78,6 +77,7 @@ export function registerTripRoutes() {
       trip.title = title;
     }
     if (body.description !== undefined) trip.description = cleanText(body.description, 2000);
+    const wasCompleted = trip.status === 'COMPLETED';
     if (body.status !== undefined) {
       if (!TRIP_STATUSES.includes(body.status)) return fail(400, 'Unknown trip status.');
       trip.status = body.status;
@@ -90,7 +90,7 @@ export function registerTripRoutes() {
       }
       trip.coverPhotoId = body.coverPhotoId || null;
     }
-    addTripVisits(trip);
+    if (trip.status === 'COMPLETED' && !wasCompleted) addTripVisits(trip);
     return ok({ trip: tripView(trip, role) });
   });
 
@@ -98,6 +98,10 @@ export function registerTripRoutes() {
     const db = getDb();
     const { trip, reply } = loadTrip(params.tripId, 'EDITOR');
     if (reply) return reply;
+    // As the server: an editor added to the trip alone can't delete it
+    if (!atLeast(mapRole(db.maps.find((m) => m.id === trip.mapId)), 'EDITOR')) {
+      return fail(403, "Only the map's owner and its editors can delete a trip.");
+    }
     db.trips = db.trips.filter((t) => t.id !== trip.id);
     db.stops = db.stops.filter((s) => s.tripId !== trip.id);
     db.tripMembers = db.tripMembers.filter((m) => m.tripId !== trip.id);
@@ -121,7 +125,8 @@ export function registerTripRoutes() {
   route('GET', '/api/trips/:tripId/photos', ({ params, query }) => {
     const { trip, role, reply } = loadTrip(params.tripId, 'VIEWER');
     if (reply) return reply;
-    return ok(photoPage(getDb().photos.filter((p) => p.tripId === trip.id), role, query));
+    const page = photoPage(getDb().photos.filter((p) => p.tripId === trip.id), role, query);
+    return page.error ? fail(400, page.error) : ok(page);
   });
 
   // Stops
@@ -134,7 +139,7 @@ export function registerTripRoutes() {
     if (!fields.countryCode) return fail(400, 'Choose a country for this stop.');
     const position = db.stops.filter((s) => s.tripId === trip.id).length;
     db.stops.push({ id: newId(), tripId: trip.id, position, ...fields });
-    addTripVisits(trip);
+    if (trip.status === 'COMPLETED') addTripVisits(trip, [fields.countryCode]);
     return ok({ trip: tripView(trip, role) }, 201);
   });
 
@@ -161,7 +166,7 @@ export function registerTripRoutes() {
     const { fields, error } = stopFields(body);
     if (error) return fail(400, error);
     Object.assign(stop, fields);
-    addTripVisits(trip);
+    if (trip.status === 'COMPLETED' && fields.countryCode) addTripVisits(trip, [fields.countryCode]);
     return ok({ trip: tripView(trip, role) });
   });
 

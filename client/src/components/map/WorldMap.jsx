@@ -1,4 +1,6 @@
-import React, { useId } from 'react';
+import React, { memo, useId } from 'react';
+// Hooks
+import { useViewportZoom } from '@/hooks/useMapViewport';
 // Components
 import CountryLayer from './CountryLayer';
 import MapGridLines from './MapGridLines';
@@ -9,6 +11,8 @@ import VisitBadges from './VisitBadges';
 import { StarBadgeSymbols } from './StarBadge';
 
 const NO_VISITS = {};
+// The badge art, defined once in the SVG; a constant element, so zoom re-renders skip it
+const BADGE_SYMBOLS = <StarBadgeSymbols />;
 
 // An open hand over the sea, and a closed one over everything while a mouse button is held
 // (useMapViewport sets data-grabbing), beating the countries' pointer
@@ -16,7 +20,9 @@ const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[da
 
 /**
  * The SVG world map (viewBox 2000 x 857, Robinson). Pan and zoom come from a
- * useMapViewport() owned by the page, so the page can also move the view.
+ * useMapViewport() owned by the page, so the page can also move the view. The viewport
+ * sets the viewBox itself; this re-renders only when the zoom changes (for the layers
+ * drawn by zoom), never while panning.
  */
 function WorldMap({
   viewport,
@@ -36,7 +42,7 @@ function WorldMap({
   panZoom = true,
 }) {
   const hintId = useId();
-  const { zoom } = viewport;
+  const zoom = useViewportZoom(viewport);
   // Clicks wait for afterTap only when the map can be dragged and double-tapped
   const afterTap = panZoom ? viewport.afterTap : undefined;
 
@@ -44,7 +50,6 @@ function WorldMap({
     <>
       <svg
         ref={viewport.svgRef}
-        viewBox={viewport.viewBox}
         preserveAspectRatio='xMidYMid meet'
         className={`h-full w-full select-none [&_path]:[vector-effect:non-scaling-stroke] [&_circle]:[vector-effect:non-scaling-stroke] [&_polyline]:[vector-effect:non-scaling-stroke] ${
           panZoom ? GRAB_CURSORS : ''
@@ -55,7 +60,7 @@ function WorldMap({
         tabIndex={panZoom ? 0 : undefined}
         {...(panZoom ? viewport.handlers : {})}
       >
-        <StarBadgeSymbols />
+        {BADGE_SYMBOLS}
         {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} /> : null}
         <CountryLayer
           visitsByCode={visitsByCode}
@@ -82,4 +87,4 @@ function WorldMap({
   );
 }
 
-export default WorldMap;
+export default memo(WorldMap);

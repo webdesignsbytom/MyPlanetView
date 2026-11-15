@@ -1,3 +1,4 @@
+# The temporary Netlify site (staging; the live site is on InMotion with public/.htaccess).
 # Pre-rendering needs Chromium at build time (kept in node_modules so Netlify caches it)
 [build]
   command = "npx playwright install chromium && npm run build"
@@ -13,8 +14,22 @@
 #   to = "/new-path"
 #   status = 301
 
+# The same headers as public/.htaccess (section 4): keep the two in step. Netlify serves
+# HTTPS and compresses by itself.
 [[headers]]
   for = "/*"
   [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://nbg1.your-objectstorage.com data: blob:; connect-src 'self' https://api.client.com https://nbg1.your-objectstorage.com https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; media-src 'self' https://nbg1.your-objectstorage.com blob: data:; worker-src 'self' blob:; form-action 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
+    X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
+    X-XSS-Protection = "0"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# Only Vite's hashed build output is cached for good
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

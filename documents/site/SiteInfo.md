@@ -11,7 +11,7 @@ My Planet View
 | Operator | Byte Toast Studio (`OperatorName` in `constants.js`) |
 | Dev ports | Client 5173 (`npm run dev`), 4173 for a test build (`npm run preview`, e2e), 4174 Lighthouse, 4175 pre-render. Server 4000 |
 | Hosts | Client on InMotion (cPanel) through `.htaccess`. API on Vercel. Files on Cloudflare R2 (a public and a private bucket) |
-| Stack | Vite 7 + React 19, pre-rendered at build, React Router 7, Tailwind 4. Express 5 API, Prisma 7 + Postgres, better-auth 1.4.13 |
+| Stack | Vite 7 + React 19, pre-rendered at build, React Router 7, Tailwind 4. Express 5 API, Prisma 7 + Postgres, better-auth 1.7.20 |
 | Decisions | `docs/SITE-DESIGN.md` and `docs/API.md` at the repository root |
 
 **Two halves.** `client/` is the site visitors see. `server/` is the API it calls over HTTP (`VITE_API_URL`). They deploy separately, to different hosts.

@@ -13,7 +13,7 @@ import FormField from '@/components/ui/FormField';
 import PasswordInput from '@/components/ui/PasswordInput';
 import FormAlert from '@/components/forms/FormAlert';
 // Regex
-import { PASSWORD_REGEX } from '@/utils/regex/regex';
+import { PASSWORD_REGEX, PASSWORD_RULE } from '@/utils/regex/regex';
 
 function ResetLostPasswordForm() {
   const { resetPassword } = useAuth();
@@ -83,7 +83,7 @@ function ResetLostPasswordForm() {
     const { password, confirmPassword } = formData;
 
     if (!PASSWORD_REGEX.test(password)) {
-      return `Password must be at least 8 characters, include 1 uppercase letter, 1 number, and 1 special character, and must not contain /, \\, ", or '.`;
+      return PASSWORD_RULE;
     }
 
     if (password !== confirmPassword) {
@@ -144,7 +144,7 @@ function ResetLostPasswordForm() {
       <FormField
         id='password'
         label='New password'
-        hint='At least 8 characters, with an uppercase letter, a number, a special character, and no slash, backslash, or quotes.'
+        hint={PASSWORD_RULE}
         error={errorMsg ? String(errorMsg) : ''}
       >
         <PasswordInput

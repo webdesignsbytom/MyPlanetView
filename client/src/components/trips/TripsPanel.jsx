@@ -7,9 +7,11 @@ import MapPanel from '@/components/map/MapPanel';
 import MapActionButton from '@/components/map/MapActionButton';
 import TripCard from './TripCard';
 import TripForm from './TripForm';
+import VerifyFirstNote from '@/components/map/VerifyFirstNote';
 
-// The map's trips, planned and done; editors can start a new one.
-function TripsPanel({ trips, travellers, canEdit, onCreate, noLinks = false, onClose }) {
+// The map's trips, planned and done; editors can start a new one (`locked`: once their
+// email address is verified).
+function TripsPanel({ trips, travellers, canEdit, locked = false, onCreate, noLinks = false, onClose }) {
   const navigate = useNavigate();
   const [creating, setCreating] = useState(false);
 
@@ -28,6 +30,8 @@ function TripsPanel({ trips, travellers, canEdit, onCreate, noLinks = false, onC
         </div>
       ) : canEdit ? (
         <MapActionButton onClick={() => setCreating(true)}>Plan a new trip</MapActionButton>
+      ) : locked ? (
+        <VerifyFirstNote action='plan a trip' />
       ) : null}
 
       {trips.length ? (

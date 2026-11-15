@@ -1,5 +1,6 @@
 // Renders every public page in headless Chromium after the build and saves it as dist/<route>.html,
-// so crawlers and link previews get each page's real HTML. Runs after inline-critical.mjs.
+// so crawlers and link previews get each page's real HTML, and main.jsx hydrates it. Runs
+// first after the build; inline-critical.mjs then inlines each page's critical CSS.
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -54,7 +55,11 @@ async function writeHostingRules(shell) {
   await writeFile(htaccessPath, htaccess.replace(HTACCESS_MARKER, rule));
 }
 
-// Load a page, wait for it to settle, return its HTML with react-head's tags marked
+// Load a page, wait for it to settle, return its HTML with react-head's tags marked.
+// The head is the settled page's (react-head's tags, the page's preloads). #root holds the
+// app's first render as React's server renderer writes it (main.jsx, window.__renderRootHtml):
+// main.jsx hydrates that markup, and hydration needs exactly the first render, with its
+// Suspense and text markers, not the DOM after effects have run.
 async function capture(page, url, { isNotFound }) {
   try {
     await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
@@ -66,7 +71,13 @@ async function capture(page, url, { isNotFound }) {
   await page.waitForTimeout(300);
 
   return page.evaluate(
-    ({ headTags, isNotFound }) => {
+    async ({ headTags, isNotFound }) => {
+      if (typeof window.__renderRootHtml !== 'function') throw new Error('main.jsx has no window.__renderRootHtml');
+      // Loading the renderer adds a modulepreload for its chunk: never for visitors
+      const headBefore = new Set(document.head.children);
+      const markup = await window.__renderRootHtml();
+      for (const el of [...document.head.children]) if (!headBefore.has(el)) el.remove();
+
       for (const el of document.head.querySelectorAll(headTags)) el.setAttribute('data-rh', '');
       document.documentElement.dataset.prerendered = isNotFound ? '404' : 'page';
       // The 404 page is served for many URLs, so it can't claim one
@@ -74,7 +85,15 @@ async function capture(page, url, { isNotFound }) {
         document.head.querySelector('link[rel="canonical"]')?.remove();
         document.head.querySelector('meta[property="og:url"]')?.remove();
       }
-      return `<!doctype html>\n${document.documentElement.outerHTML}`;
+
+      // Text the page only shows after an effect isn't in the first render, so crawlers
+      // wouldn't see it: report the difference
+      const root = document.getElementById('root');
+      const settledText = root.innerText.replace(/\s+/g, ' ').trim().length;
+      root.innerHTML = markup;
+      const firstRenderText = root.innerText.replace(/\s+/g, ' ').trim().length;
+
+      return { html: `<!doctype html>\n${document.documentElement.outerHTML}`, settledText, firstRenderText };
     },
     { headTags: HEAD_TAGS, isNotFound }
   );
@@ -159,11 +178,15 @@ async function run() {
 
       try {
         const isNotFound = route === NOT_FOUND_PROBE;
-        const html = await capture(page, `${origin}${route}`, { isNotFound });
+        const { html, settledText, firstRenderText } = await capture(page, `${origin}${route}`, { isNotFound });
         if (!/<title[^>]*>[^<]+<\/title>/.test(html)) throw new Error('no <title> (check its HelmetItem)');
         rendered.push({ route, html });
-        const note = apiProblems.length ? `  ⚠️  ${apiProblems.length} API request(s) failed, check the saved page` : '';
-        console.log(`✅ Pre-rendered ${route}${note}`);
+        const notes = [];
+        if (apiProblems.length) notes.push(`${apiProblems.length} API request(s) failed, check the saved page`);
+        if (firstRenderText < settledText * 0.9) {
+          notes.push(`the first render has ${firstRenderText} characters of text, the settled page ${settledText}: content shown after an effect isn't pre-rendered`);
+        }
+        console.log(`✅ Pre-rendered ${route}${notes.map((note) => `\n   ⚠️  ${note}`).join('')}`);
       } catch (err) {
         failures += 1;
         console.error(`❌ Failed to pre-render ${route}: ${err.message}`);

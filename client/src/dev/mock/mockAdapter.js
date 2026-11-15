@@ -1,7 +1,7 @@
 // Mock mode only. An Axios adapter that answers every API call in the browser, from
 // the routes the handler modules register. Nothing it handles ever reaches the network.
 import { AxiosError } from 'axios';
-import { saveStore, session } from './store';
+import { me, saveStore, session } from './store';
 
 export const MOCK_MARKER = 'MPV_MOCK_MODE_ACTIVE';
 // Presigned upload URLs in mock mode point here; the adapter and the XHR patch keep the files
@@ -21,6 +21,45 @@ export function deny(role, needed, notFoundMessage = 'Not found.') {
   return null;
 }
 
+// As the server's requireVerifiedEmail (docs/API.md, "Access"): these writes need a
+// verified email address, checked before anything is looked up, so the 403 is the same
+// for every id. Not on the list: reads, setting a map up (PATCH /maps/:mapId and its
+// travellers), map settings, the account and the contact form. The generic presign
+// checks it itself (anything but a contact image), in handlers/account.js.
+export const VERIFY_EMAIL_FIRST =
+  'Verify your email address to add to your map or share it. Use the link we emailed you, or send a new one from your account page.';
+const kinds = (path) => ['maps', 'trips'].map((kind) => path.replace('{kind}', kind));
+const NEEDS_VERIFIED_EMAIL = new Set([
+  'POST /api/maps',
+  'DELETE /api/maps/:mapId',
+  'PUT /api/maps/:mapId/visits/:countryCode',
+  'DELETE /api/maps/:mapId/visits/:countryCode',
+  'POST /api/maps/:mapId/trips',
+  'POST /api/maps/:mapId/photos/presign',
+  'POST /api/maps/:mapId/photos',
+  'PATCH /api/trips/:tripId',
+  'DELETE /api/trips/:tripId',
+  'PUT /api/trips/:tripId/travellers',
+  'POST /api/trips/:tripId/stops',
+  'PUT /api/trips/:tripId/stops/order',
+  'PATCH /api/trips/:tripId/stops/:stopId',
+  'DELETE /api/trips/:tripId/stops/:stopId',
+  'PATCH /api/photos/:photoId',
+  'DELETE /api/photos/:photoId',
+  'POST /api/photos/:photoId/landmarks',
+  'PATCH /api/photos/:photoId/landmarks/:landmarkId',
+  'DELETE /api/photos/:photoId/landmarks/:landmarkId',
+  ...kinds('PATCH /api/{kind}/:id/sharing'),
+  ...kinds('POST /api/{kind}/:id/sharing/reset-link'),
+  ...kinds('POST /api/{kind}/:id/members'),
+  ...kinds('PATCH /api/{kind}/:id/members/:userId'),
+  ...kinds('DELETE /api/{kind}/:id/members/:userId'),
+  ...kinds('DELETE /api/{kind}/:id/invites/:inviteId'),
+  'POST /api/users/user/upload-or-change-avatar',
+]);
+/** The 403 for a signed-in user whose email address isn't verified, else null. */
+export const verifyFirst = () => (session.signedIn && me().emailVerified !== true ? fail(403, VERIFY_EMAIL_FIRST) : null);
+
 // Routes
 const routes = [];
 export function route(method, pattern, handler) {
@@ -31,7 +70,7 @@ export function route(method, pattern, handler) {
       return '([^/]+)';
     })}$`,
   );
-  routes.push({ method, regex, keys, handler });
+  routes.push({ method, regex, keys, handler, verified: NEEDS_VERIFIED_EMAIL.has(`${method} ${pattern}`) });
 }
 
 // Upload storage: a file PUT to a presigned mock URL becomes a blob URL for the session
@@ -75,9 +114,14 @@ export async function mockAdapter(config) {
     } else {
       const match = url.pathname.match(found.regex);
       const params = Object.fromEntries(found.keys.map((key, i) => [key, decodeURIComponent(match[i + 1])]));
+      // The query string plus axios `params`, which axios adds to the URL itself (an
+      // adapter gets them separately); undefined and null are left out, as axios does
       const query = Object.fromEntries(url.searchParams.entries());
+      for (const [key, value] of Object.entries(config.params || {})) {
+        if (value !== undefined && value !== null) query[key] = String(value);
+      }
       try {
-        result = await found.handler({ params, query, body: parseBody(config.data) });
+        result = (found.verified && verifyFirst()) || (await found.handler({ params, query, body: parseBody(config.data) }));
       } catch (err) {
         console.error(`[${MOCK_MARKER}] Handler failed for ${method} ${url.pathname}`, err);
         result = fail(500, 'Internal Server Error.');

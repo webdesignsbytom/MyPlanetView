@@ -13,7 +13,7 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
 - [ ] **[block]** Replace ByteToast's brand assets (the camera logo from my_planet is in `client/src/assets/images/brand/` and is what the navbar uses):
   - `client/public/brand/logo.png`;
   - `client/public/brand/og-default.jpg` (1200 × 630, the share image);
-  - everything in `client/public/favicon/` (ico, svg, 96 px, apple-touch, and the 192 and 512 manifest icons).
+  - everything in `client/public/favicon/` (ico, svg, 96 px, apple-touch, and the 192 and 512 manifest icons), plus a maskable 512 px icon for the installable app (`docs/FEATURE-PLAN.md`, "Installable app").
 - [ ] **[block]** The legal text (`client/src/utils/data/termsData.js`) has been reviewed by you, or someone qualified. It's a plain-English draft covering R2 storage, GPS kept only on originals, analytics only after consent, account deletion and the shared-map hand-over.
 - [ ] **[block]** The 16 landmarks marked `// unverified` in `server/prisma/seed/data/landmarks.js` are checked by hand: Badaling (Great Wall), Malabo Cathedral, Fort George, Copán, Petra, Tien Shan, Ohrid, Timbuktu, Aïr and Ténéré, Kokoda Track, Jesuit Missions (Trinidad), La Soufrière, Papaseea, Alhambra, Pamir, Old City of Sanaa. The other 161 were checked against Wikidata on 14 Nov 2026. Photos are matched by distance, so a wrong point means missed matches. Ranges and trails (Tien Shan, Pamir, Kokoda) may be better removed or given a point the photos are likely to be near. Re-copy the file to `client/src/dev/mock/data/landmarks.js` after changes.
 - [ ] `client/src/utils/constants/links.js` holds real profile URLs, or stays empty (an empty URL hides the link).
@@ -38,6 +38,7 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
 
 - [ ] **[block]** Production env on Vercel has every key in `server/.env.example`:
   - `NODE_ENV=production`;
+  - `DATABASE_URL` = the provider's **pooled**, transaction-mode URL (Neon's `-pooler` host, Supabase's pooler on port 6543): every Vercel instance opens its own connections. `DIRECT_DATABASE_URL` = the direct URL, used only by `prisma migrate`. `DB_POOL_MAX` = 5 (the default) unless the provider's limits say otherwise;
   - `BETTER_AUTH_URL` = the API's public URL, plus a fresh `BETTER_AUTH_SECRET`;
   - `FRONTEND_ORIGIN` = the bare domain;
   - `CRON_SECRET`;

@@ -47,6 +47,8 @@ export const EVENT_MESSAGES = {
   developerActionNoSession: `Developer action attempted without a valid session.`,
   developerRoleRequired: `This action requires a developer role.`,
   accountDeactivated: `This account has been deactivated. Please contact support.`,
+  passwordRequiredToDelete: `Enter your password to delete your account.`,
+  nameRequired: `Enter your name.`,
   // Contacts
   contactFormsNotFound: `Failed to find contact form(s).`,
   createContactFormFail: `Failed to create contact form.`,
@@ -106,6 +108,7 @@ export const EVENT_MESSAGES = {
   stopNotFound: `That stop isn't on this trip.`,
   invalidStopOrder: `Send every stop of the trip exactly once.`,
   coverPhotoInvalid: `The cover must be a photo from this trip.`,
+  tripDeleteNeedsMap: `Only the map's owner and its editors can delete a trip.`,
   // Photos
   photoNotFound: `That photo doesn't exist, or it hasn't been shared with you.`,
   photoUploadInvalid: `The upload doesn't match what was requested. Please try again.`,
@@ -114,6 +117,7 @@ export const EVENT_MESSAGES = {
   photoTooLarge: `That file is too large.`,
   photoPositionInvalid: `The photo's position must be a real latitude and longitude.`,
   photoAlreadySaved: `That photo has already been saved.`,
+  photoUploadExpired: `This upload took too long to finish. Please try again.`,
   // Sharing
   invalidShareRole: `Role must be VIEWER or EDITOR.`,
   invalidLinkAccess: `General access must be RESTRICTED or ANYONE_WITH_LINK.`,
@@ -125,6 +129,8 @@ export const EVENT_MESSAGES = {
   inviteWrongEmail: `This invite was sent to a different email address. Sign in with that address, and verify it, to accept.`,
   shareCodeNotFound: `That share link doesn't exist or has been turned off.`,
   shareEmailFailed: `Failed to send the sharing email.`,
+  shareNeedsVerifiedEmail: `Verify your email address before adding people. Use the link we emailed you, or send a new one from your account page.`,
+  contentNeedsVerifiedEmail: `Verify your email address to add to your map or share it. Use the link we emailed you, or send a new one from your account page.`,
   // Verification
   verificationTag: `Verification database.`,
   verificationNotFound: `Failed to find verification.`,

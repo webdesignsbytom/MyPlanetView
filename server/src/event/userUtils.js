@@ -1,24 +1,21 @@
 import { createAppEvent, levelFromStatusCode } from './events.js';
+import { emailRef } from '../utils/emailRef.js';
 
 const DOMAIN = 'users';
 
-// Normalizers
+// Normalizers. Events never keep an email address: people are their ids (actorId,
+// targetId), and an address given without an account is a short keyed hash (emailRef).
 const normalizeUser = (user) => {
   if (user && typeof user === 'object') {
-    return {
-      id: user.id ?? null,
-      email: user.email ?? 'anonymous',
-      role: user.role ?? 'USER',
-    };
+    return { id: user.id ?? null, role: user.role ?? 'USER' };
   }
-  return { id: null, email: 'anonymous', role: 'USER' };
+  return { id: null, role: 'USER' };
 };
 
 const normalizeTarget = (t) => {
   const src = t || {};
   return {
     id: src.id ?? null,
-    email: src.email ?? null,
     role: src.role ?? null,
     isVerified: typeof src.isVerified === 'boolean' ? src.isVerified : null,
     isActive: typeof src.isActive === 'boolean' ? src.isActive : null,
@@ -40,7 +37,6 @@ const mk = (action, actor, details = {}, statusCode = 200, extra = '') => {
   const parts = [
     action,
     t?.id ? `targetId=${t.id}` : null,
-    t?.email ? `targetEmail=${t.email}` : null,
     t?.role ? `targetRole=${t.role}` : null,
     typeof t?.isVerified === 'boolean' ? `isVerified=${t.isVerified}` : null,
     typeof t?.isActive === 'boolean' ? `isActive=${t.isActive}` : null,
@@ -101,13 +97,13 @@ export const createUserGetLoggedInFailedEvent = async ({ user, error }) => {
 
 // Register
 export const createUserRegisterRequestedEvent = async ({ email }) => {
-  await mk('Register Requested', { email, role: 'USER' }, {}, 200, email ? `email=${email}` : '');
+  await mk('Register Requested', null, {}, 200, emailRef(email) ?? '');
 };
 export const createUserRegisterSuccessEvent = async ({ target }) => {
   await mk('Register Success', target, { target }, 201);
 };
 export const createUserRegisterFailedEvent = async ({ email, error }) => {
-  await mk('Register Failed', { email, role: 'USER' }, {}, error?.status || 500, `error=${String(error?.message || error)}`);
+  await mk('Register Failed', null, {}, error?.status || 500, [emailRef(email), `error=${String(error?.message || error)}`].filter(Boolean).join(' | '));
 };
 
 // Verify email
@@ -122,14 +118,14 @@ export const createUserVerifyEmailFailedEvent = async ({ user, userId, error }) 
 };
 
 // Resend verification
-export const createUserResendVerificationRequestedEvent = async ({ user, userId, email }) => {
-  await mk('Resend Verification Requested', user, { target: { id: userId, email } }, 200);
+export const createUserResendVerificationRequestedEvent = async ({ user, userId }) => {
+  await mk('Resend Verification Requested', user, { target: { id: userId } }, 200);
 };
-export const createUserResendVerificationSuccessEvent = async ({ user, userId, email }) => {
-  await mk('Resend Verification Success', user, { target: { id: userId, email } }, 200);
+export const createUserResendVerificationSuccessEvent = async ({ user, userId }) => {
+  await mk('Resend Verification Success', user, { target: { id: userId } }, 200);
 };
-export const createUserResendVerificationFailedEvent = async ({ user, userId, email, error }) => {
-  await mk('Resend Verification Failed', user, { target: { id: userId, email } }, error?.status || 500, `error=${String(error?.message || error)}`);
+export const createUserResendVerificationFailedEvent = async ({ user, userId, error }) => {
+  await mk('Resend Verification Failed', user, { target: { id: userId } }, error?.status || 500, `error=${String(error?.message || error)}`);
 };
 
 // Password change (authed)
@@ -145,13 +141,13 @@ export const createUserPasswordChangeFailedEvent = async ({ user, error }) => {
 
 // Password reset request
 export const createUserPasswordResetRequestRequestedEvent = async ({ email }) => {
-  await mk('Password Reset Request Requested', { email, role: 'USER' }, {}, 200, `email=${email}`);
+  await mk('Password Reset Request Requested', null, {}, 200, emailRef(email) ?? '');
 };
 export const createUserPasswordResetRequestSuccessEvent = async ({ user }) => {
   await mk('Password Reset Request Success', user, {}, 201);
 };
 export const createUserPasswordResetRequestFailedEvent = async ({ email, error }) => {
-  await mk('Password Reset Request Failed', { email, role: 'USER' }, {}, error?.status || 500, `error=${String(error?.message || error)}`);
+  await mk('Password Reset Request Failed', null, {}, error?.status || 500, [emailRef(email), `error=${String(error?.message || error)}`].filter(Boolean).join(' | '));
 };
 
 // Password reset perform
@@ -167,7 +163,7 @@ export const createUserPasswordResetPerformFailedEvent = async ({ userId, error 
 
 // Update
 export const createUserUpdateRequestedEvent = async ({ user, next }) => {
-  const extra = next?.email ? `email=${next.email}` : '';
+  const extra = next?.email ? `newEmail=${emailRef(next.email)}` : '';
   await mk('Update Requested', user, {}, 200, extra);
 };
 export const createUserUpdateSuccessEvent = async ({ user, target }) => {
@@ -193,7 +189,7 @@ export const createUserChangeRoleFailedEvent = async ({ user, userId, newRole, e
 
 // Delete (self)
 export const createUserDeleteRequestedEvent = async ({ user }) => {
-  await mk('Delete Requested', user, { target: { id: user?.id, email: user?.email } }, 200);
+  await mk('Delete Requested', user, { target: { id: user?.id } }, 200);
 };
 export const createUserDeleteSuccessEvent = async ({ user }) => {
   await mk('Delete Success', user, {}, 200);
@@ -210,7 +206,7 @@ export const createAdminDeleteUserSuccessEvent = async ({ admin, target }) => {
   await mk('Admin Delete Success', admin, {
     target,
     linkTarget: false,
-    metadata: { deletedUserId: target?.id ?? null, email: target?.email ?? null, role: target?.role ?? null },
+    metadata: { deletedUserId: target?.id ?? null, role: target?.role ?? null },
   }, 200);
 };
 export const createAdminDeleteUserFailedEvent = async ({ admin, userId, error }) => {

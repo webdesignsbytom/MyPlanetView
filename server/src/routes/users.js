@@ -16,6 +16,7 @@ import { getMapSettingsHandler, putMapSettingsHandler } from '../controllers/map
 import {
   validateAuthentication,
   validateAdminRole,
+  requireVerifiedEmail,
 } from '../middleware/auth.js';
 
 const router = Router();
@@ -37,6 +38,7 @@ router.get(
 router.post(
   '/user/upload-or-change-avatar',
   validateAuthentication,
+  requireVerifiedEmail,
   uploadOrChangeAvatarHandler
 );
 router.delete(

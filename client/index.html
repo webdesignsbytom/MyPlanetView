@@ -18,20 +18,15 @@
   <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
   <link rel="manifest" href="/manifest.json" />
 
-  <!-- Preconnects (analytics + media CDN) -->
-  <link rel="preconnect" href="https://www.googletagmanager.com">
-  <link rel="preconnect" href="https://www.google-analytics.com">
-  <!-- No crossorigin: posters and avatars are plain <img> requests, which don't use a CORS connection -->
-  <link rel="preconnect" href="%VITE_MEDIA_CDN%">
+  <!-- No preconnects. Google (analytics) is contacted only after cookie consent, so never
+       from here. The media host (posters, avatars) isn't used by the public pages, and the
+       map fetches posters only when a country is opened or hovered, by when a connection
+       opened at page load has usually been dropped again. -->
 
-  <!-- Preload first-paint font weights (400 body, 700 H1) -->
+  <!-- Fonts the first view draws on every page: Poppins 400 (body text) and TravelFont
+       (the h1 and the nav). The other Poppins weights load when text needs them. -->
   <link rel="preload" href="/src/assets/fonts/Poppins/Poppins-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/src/assets/fonts/Poppins/Poppins-Bold.woff2" as="font" type="font/woff2" crossorigin>
-
-  <!-- TitleFont/FancyFont preloads (enable once wired up)
-  <link rel="preload" href="/src/assets/fonts/TitleFont/TitleFont-Bold.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/src/assets/fonts/FancyFont/FancyFont-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  -->
+  <link rel="preload" href="/src/assets/fonts/TravelFont/SFComicScript-Bold.ttf" as="font" type="font/ttf" crossorigin>
 
   <!-- Fallback head, filled from constants at build (react-head replaces it; no canonical, this shell serves every URL) -->
   <title data-rh="">__SITE_TITLE__</title>

@@ -14,7 +14,11 @@ import { formatDayRange } from '@/utils/functions/dates';
 // dashed perforation, then where and when. Editors move it up or down with round stamps
 // (buttons, not dragging, so it works on any device and from the keyboard), and edit it
 // on its own form card in place, or remove it.
-function TripStopItem({ stop, index, count, canEdit, busy, onMove, onSave, onRemove }) {
+// Keyboard focus survives the changes: nothing focused is disabled while saving (a click
+// then is ignored), a moved stop's stamp keeps focus in its new place (or its other
+// stamp, once at an end of the list), and `focusEdit` (after a neighbouring stop is
+// removed) puts focus on its Edit button.
+function TripStopItem({ stop, index, count, canEdit, busy, onMove, onSave, onRemove, focusEdit = false, onFocused }) {
   const [editing, setEditing] = useState(false);
   const where = [stop.landmarkName, stop.placeName].filter(Boolean).join(', ');
   const name = countryName(stop.countryCode);
@@ -31,6 +35,37 @@ function TripStopItem({ stop, index, count, canEdit, busy, onMove, onSave, onRem
   const closeEditing = () => {
     refocusEditRef.current = true;
     setEditing(false);
+  };
+
+  useEffect(() => {
+    if (!focusEdit) return;
+    editButtonRef.current?.focus();
+    onFocused?.();
+  }, [focusEdit, onFocused]);
+
+  // The move stamps (MapRoundButton has no ref, so they're found in their column)
+  const movesRef = useRef(null);
+  const moveDirectionRef = useRef(0);
+  useEffect(() => {
+    const direction = moveDirectionRef.current;
+    if (!direction) return;
+    moveDirectionRef.current = 0;
+    const [up, down] = movesRef.current?.querySelectorAll('button') || [];
+    const atTop = index === 0;
+    const atBottom = index === count - 1;
+    const target = direction < 0 ? (atTop ? down : up) : atBottom ? up : down;
+    target?.focus();
+  }, [index, count]);
+
+  const move = (direction, e) => {
+    if (busy) return;
+    // From the keyboard (Enter or Space: `detail` 0) focus follows the stop; a click lets
+    // go of focus, as every round stamp does
+    const fromKeyboard = e.detail === 0;
+    if (fromKeyboard) moveDirectionRef.current = direction;
+    Promise.resolve(onMove(direction)).catch(() => {
+      moveDirectionRef.current = 0;
+    });
   };
 
   return (
@@ -54,11 +89,11 @@ function TripStopItem({ stop, index, count, canEdit, busy, onMove, onSave, onRem
           {stop.notes ? <p className='text-sm'>{stop.notes}</p> : null}
         </div>
         {canEdit ? (
-          <div className='grid gap-2'>
-            <MapRoundButton label={`Move ${name} up`} onClick={() => onMove(-1)} disabled={busy || index === 0}>
+          <div ref={movesRef} className='grid gap-2'>
+            <MapRoundButton label={`Move ${label} up`} onClick={(e) => move(-1, e)} disabled={index === 0}>
               <FiArrowUp aria-hidden='true' />
             </MapRoundButton>
-            <MapRoundButton label={`Move ${name} down`} onClick={() => onMove(1)} disabled={busy || index === count - 1}>
+            <MapRoundButton label={`Move ${label} down`} onClick={(e) => move(1, e)} disabled={index === count - 1}>
               <FiArrowDown aria-hidden='true' />
             </MapRoundButton>
           </div>
@@ -70,7 +105,7 @@ function TripStopItem({ stop, index, count, canEdit, busy, onMove, onSave, onRem
           <Button ref={editButtonRef} small quiet ariaLabel={`Edit ${label}`} onClick={() => setEditing(true)}>
             Edit
           </Button>
-          <Button small danger ariaLabel={`Remove ${label}`} onClick={onRemove} disabled={busy}>
+          <Button small danger ariaLabel={`Remove ${label}`} onClick={busy ? undefined : onRemove}>
             Remove
           </Button>
         </div>

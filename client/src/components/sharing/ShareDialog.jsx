@@ -9,10 +9,15 @@ import {
   updateMember,
   updateSharing,
 } from '@/api/travelApi';
+// Auth
+import { useAuth } from '@/auth/AuthContext';
+// Constants
+import { ACCOUNT_PAGE_URL } from '@/utils/constants/routes';
 // Components
 import Modal from '@/components/common/Modal';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
+import AppLink from '@/components/common/AppLink';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import ShareAddPersonForm from './ShareAddPersonForm';
 import ShareMemberRow from './ShareMemberRow';
@@ -24,9 +29,14 @@ import { ROLE_LABELS } from '@/utils/sharing/shareRoles';
 
 // Sharing a map or a trip, Google Docs style. The owner adds people by email as viewer or
 // editor, changes or removes them, cancels invites, and sets general access. Anyone else
-// sees their own role and can leave. `resource` is 'maps' or 'trips'.
+// sees their own role and can leave. `resource` is 'maps' or 'trips'. Every change here
+// (adding, changing or removing people, link access, a new link, leaving) needs a verified
+// email address: the server refuses otherwise (403, shown as the error), so until then
+// those controls are locked and the dialog says why; the link can still be copied.
 function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose }) {
+  const { user } = useAuth();
   const isOwner = role === 'OWNER';
+  const mustVerifyEmail = user?.emailVerified === false;
   const [sharing, setSharing] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
@@ -84,7 +94,9 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose 
             You’re {ROLE_LABELS[role] === 'Editor' ? 'an editor' : 'a viewer'} on this {kind}. Only its owner can
             change who has access.
           </p>
-          {currentUserId && onLeft ? (
+          {currentUserId && onLeft && mustVerifyEmail ? (
+            <InlineAlert tone='info'>Leaving it needs a verified email address. The link is in the email we sent you.</InlineAlert>
+          ) : currentUserId && onLeft ? (
             <Button quiet busy={busy} onClick={leave}>
               Remove me from this {kind}
             </Button>
@@ -99,14 +111,23 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose 
         )
       ) : (
         <div className='grid gap-5'>
-          <ShareAddPersonForm
-            onAdd={(body) =>
-              run(async () => {
-                const result = await addMember(resource, id, body);
-                return result;
-              }, `Shared with ${body.email}. They’ve been emailed.`)
-            }
-          />
+          {mustVerifyEmail ? (
+            <InlineAlert tone='info'>
+              Adding people, changing who has access and making a new link need a verified email address. Lost the
+              link? Send a new one from{' '}
+              <AppLink to={ACCOUNT_PAGE_URL} label='your account page' description='your account page' className='font-semibold underline' />.
+              Until then, you can copy the link below.
+            </InlineAlert>
+          ) : (
+            <ShareAddPersonForm
+              onAdd={(body) =>
+                run(async () => {
+                  const result = await addMember(resource, id, body);
+                  return result;
+                }, `Shared with ${body.email}. They’ve been emailed.`)
+              }
+            />
+          )}
 
           <section className='grid gap-2' aria-labelledby='people-with-access'>
             <h3 id='people-with-access' className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
@@ -121,7 +142,7 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose 
                 <ShareMemberRow
                   key={member.userId}
                   member={member}
-                  busy={busy}
+                  busy={busy || mustVerifyEmail}
                   onChangeRole={(next) => run(() => updateMember(resource, id, member.userId, next)).catch(() => {})}
                   onRemove={() => run(() => removeMember(resource, id, member.userId)).catch(() => {})}
                 />
@@ -130,7 +151,7 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose 
                 <ShareInviteRow
                   key={invite.id}
                   invite={invite}
-                  busy={busy}
+                  busy={busy || mustVerifyEmail}
                   onCancel={() => run(() => cancelInvite(resource, id, invite.id)).catch(() => {})}
                 />
               ))}
@@ -143,13 +164,14 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose 
             </h3>
             <ShareGeneralAccess
               value={sharing.linkAccess}
-              busy={busy}
+              busy={busy || mustVerifyEmail}
               onChange={(linkAccess) => run(() => updateSharing(resource, id, linkAccess)).catch(() => {})}
             />
             <ShareLinkBox
               shareUrl={sharing.shareUrl}
               shareCode={sharing.shareCode}
               busy={busy}
+              canReset={!mustVerifyEmail}
               onReset={() => run(() => resetShareLink(resource, id), 'A new link is ready. The old one no longer works.').catch(() => {})}
             />
           </section>

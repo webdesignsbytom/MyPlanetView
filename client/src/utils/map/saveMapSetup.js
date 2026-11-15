@@ -2,6 +2,7 @@
 // PATCH the map, then add, update and remove travellers. Used by onboarding and by the
 // map settings panel.
 import { createTraveller, deleteTraveller, updateMap, updateTraveller } from '@/api/travelApi';
+import { forgetMapLists } from './mapListCache';
 
 export const GROUP_TYPES = [
   { value: 'SOLO', label: 'Just me', hint: 'A solo traveller with their own map', minTravellers: 1 },
@@ -28,6 +29,7 @@ const changed = (before, body) =>
 export async function saveMapSetup(mapId, original, form, { canRename = true } = {}) {
   if (canRename && (form.name.trim() !== original.name || form.groupType !== original.groupType)) {
     await updateMap(mapId, { name: form.name.trim(), groupType: form.groupType });
+    forgetMapLists(); // the switcher lists maps by name
   }
 
   const kept = form.travellers.filter((t) => t.name.trim());

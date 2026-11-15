@@ -23,6 +23,20 @@ export function readConsent() {
   }
 }
 
+// The footer's "Cookie settings" asks App to show the choice again (and so to let a yes
+// be withdrawn)
+const SETTINGS_EVENT = 'mpv:cookie-settings';
+
+export function openCookieSettings() {
+  window.dispatchEvent(new Event(SETTINGS_EVENT));
+}
+
+// Returns the unsubscribe function, for an effect's clean-up
+export function onCookieSettings(listener) {
+  window.addEventListener(SETTINGS_EVENT, listener);
+  return () => window.removeEventListener(SETTINGS_EVENT, listener);
+}
+
 export function saveConsent(analytics, details = {}) {
   try {
     localStorage.setItem(

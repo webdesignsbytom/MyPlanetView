@@ -9,6 +9,7 @@ import {
   IMAGE_ACCEPT,
   MAX_IMAGE_SIZE_MB,
 } from '@/utils/media/mediaConstants';
+import { EMAIL_MAX_LENGTH, isValidEmail, serverText } from '@/utils/regex/regex';
 // Components
 import FormField from '@/components/ui/FormField';
 import TextInput from '@/components/ui/TextInput';
@@ -19,12 +20,17 @@ import UploadFileInput from '@/components/ui/UploadFileInput';
 import { presignAndUpload } from '@/utils/media/uploadViaMediaService';
 
 const ACCEPT = IMAGE_ACCEPT;
+// The server's limits (server/src/controllers/contact.js); longer text would be cut short
+const NAME_MAX_LENGTH = 120;
+const MESSAGE_MAX_LENGTH = 2000;
+const SEND_FAILED = 'Your message could not be sent. Please try again.';
 
 function ContactForm() {
   const submitStates = ['waiting', 'inprogress', 'failed', 'success'];
 
   const [formData, setFormData] = useState(emptyContactFormData);
   const [submitState, setSubmitState] = useState(submitStates[0]);
+  const [failure, setFailure] = useState(SEND_FAILED);
   const [errors, setErrors] = useState({});
 
   const nameRef = useRef(null);
@@ -49,6 +55,12 @@ function ContactForm() {
       }
     };
   }, [attachment.previewUrl]);
+
+  // After a send, focus the alert saying how it went: the Send button was disabled while
+  // sending, which dropped focus, and the alert only exists once it has a message
+  useEffect(() => {
+    if (submitState === 'failed' || submitState === 'success') alertRef.current?.focus();
+  }, [submitState]);
 
   const validateAttachment = (file) => {
     if (!file) return { ok: false, reason: 'No file selected.' };
@@ -118,12 +130,14 @@ function ContactForm() {
     }));
   };
 
+  // The checks the server makes, so a form it would refuse never uploads its screenshot
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.name.trim()) newErrors.name = 'Please tell us your name';
+    if (!serverText(formData.name)) newErrors.name = 'Please tell us your name';
     if (!formData.email.trim()) newErrors.email = 'Please add an email address so we can reply';
-    if (!formData.message.trim()) newErrors.message = 'Please write a message';
+    else if (!isValidEmail(formData.email)) newErrors.email = 'Please enter a full email address, like name@example.com';
+    if (!serverText(formData.message)) newErrors.message = 'Please write a message';
 
     return newErrors;
   };
@@ -153,7 +167,7 @@ function ContactForm() {
     setErrors((prev) => ({ ...prev, attachment: '' }));
 
     try {
-      // upload attachment
+      // The screenshot goes up only now, once the form has passed the server's checks
       let imageKey = null;
 
       if (attachment.file) {
@@ -178,11 +192,9 @@ function ContactForm() {
       clearAttachment();
     } catch (err) {
       console.error('Unable to submit contact request', err);
+      // The server's own reason when it refused the form (e.g. an expired screenshot)
+      setFailure(err?.response?.status === 400 && err.friendlyMessage ? err.friendlyMessage : SEND_FAILED);
       setSubmitState(submitStates[2]);
-
-      if (alertRef.current) {
-        alertRef.current.focus();
-      }
     }
   };
 
@@ -201,6 +213,7 @@ function ContactForm() {
             autoComplete='name'
             value={formData.name}
             onChange={handleChange}
+            maxLength={NAME_MAX_LENGTH}
             required
           />
         </FormField>
@@ -213,6 +226,7 @@ function ContactForm() {
             autoComplete='email'
             value={formData.email}
             onChange={handleChange}
+            maxLength={EMAIL_MAX_LENGTH}
             required
           />
         </FormField>
@@ -231,6 +245,7 @@ function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           rows={6}
+          maxLength={MESSAGE_MAX_LENGTH}
           required
         />
       </FormField>
@@ -264,7 +279,7 @@ function ContactForm() {
         innerRef={alertRef}
         message={
           submitState === submitStates[2]
-            ? 'Your message could not be sent. Please try again.'
+            ? failure
             : submitState === submitStates[3]
               ? 'Thanks, your message is on its way. We will reply by email.'
               : ''

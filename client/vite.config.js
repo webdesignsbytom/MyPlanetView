@@ -161,6 +161,9 @@ export default defineConfig({
       }),
   ].filter(Boolean),
   server: { port: 5173, open: true },
+  // The year the pages are built (and pre-rendered) in: the footer's first render uses it,
+  // so hydration matches the pre-rendered text in a later year too
+  define: { __BUILD_YEAR__: JSON.stringify(new Date().getFullYear()) },
   resolve: { alias: { '@': path.resolve(__dirname, './src') } },
   build: {
     target: 'es2019',
@@ -170,17 +173,18 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Photo-upload libraries are imported only when someone adds photos: leave them
-          // to their own async chunks (heic2any alone is ~1.3 MB; in vendor it would load on
-          // every page)
-          if (/node_modules[\\/](heic2any|exifr)[\\/]/.test(id)) return undefined;
+          // React, React DOM and the router: every page needs them and they change rarely,
+          // so they are one chunk that stays cached when the app's own code changes. Not
+          // React DOM's server renderer, which only the build's pre-render loads.
+          if (/node_modules[\\/]react-dom[\\/](server|cjs[\\/]react-dom-server)/.test(id)) return undefined;
+          if (/node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom|cookie|set-cookie-parser)[\\/]/.test(id)) {
+            return 'react';
+          }
 
-          // React core in one vendor chunk
-          if (id.includes('node_modules')) return 'vendor';
-
-          // Don't manually chunk eager imports (past regression)
-
-          // Let Rollup decide the rest
+          // Every other package goes with the code that imports it, so a page downloads only
+          // what it uses: axios and react-head with the entry, icons with their pages, and the
+          // lazily imported ones (heic2any, exifr, react-ga4, web-vitals) only when needed.
+          // Don't manually chunk eager imports (past regression); let Rollup decide the rest.
         },
       },
     },

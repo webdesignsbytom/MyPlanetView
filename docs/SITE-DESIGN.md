@@ -166,7 +166,7 @@ It works like Google Docs.
    Re-encoding removes the EXIF from those two files, location included. Resizing in the browser also keeps Vercel's work, and its cost, low.
 2. **Upload:** each file goes straight to the **private** bucket through a presigned URL, never through Vercel.
 3. **Confirm:** the API checks each file's real size in R2 (the template's confirm-upload step). It then records a `MediaItem` per file, plus the `Photo` and its `PhotoVariant`s.
-4. **Country:** the photo's country comes from its GPS position, using an offline lookup against country borders, not a paid API. That marks the country as visited.
+4. **Country:** the photo's country comes from its GPS position, using an offline lookup against country borders, not a paid API. That marks the country as visited. Without GPS, or with a position in no country (a photo taken at sea), the country the uploader chose is used. A photo left with no country isn't lost: the map's "Unplaced photos" list shows it until someone gives it one.
 5. **Landmarks:** landmarks within their match radius are suggested, and the user confirms them.
 
 ### Why three files per photo

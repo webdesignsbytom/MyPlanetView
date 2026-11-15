@@ -4,9 +4,9 @@ const DOMAIN = 'events';
 
 const normalizeUser = (user) => {
   if (user && typeof user === 'object') {
-    return { id: user.id ?? null, email: user.email ?? 'anonymous', role: user.role ?? 'USER' };
+    return { id: user.id ?? null, role: user.role ?? 'USER' };
   }
-  return { id: null, email: 'anonymous', role: 'USER' };
+  return { id: null, role: 'USER' };
 };
 
 const mk = (action, actor, details = {}, status = 200) => {

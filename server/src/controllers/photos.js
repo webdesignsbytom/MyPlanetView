@@ -15,8 +15,9 @@ import {
 } from '../utils/travelValidation.js';
 import { countryAtPosition } from '../utils/countryLookup.js';
 import { boundingBox, matchLandmarks } from '../utils/landmarkMatch.js';
-import { PHOTO_CONTENT_TYPES, PHOTO_MAX_BYTES } from '../utils/constants/mediaConstants.js';
+import { PHOTO_CONTENT_TYPES, PHOTO_MAX_BYTES, PHOTO_SAVE_WINDOW_MINUTES } from '../utils/constants/mediaConstants.js';
 import {
+  assertPhotoUploadsUnderCap,
   buildPhotoKey,
   deleteStoredObjects,
   headPrivateObject,
@@ -24,7 +25,6 @@ import {
   presignPhotoUpload,
 } from '../services/s3/mediaService.js';
 import { findLandmarkById, findLandmarksInBox } from '../domain/places.js';
-import { createMissingVisits } from '../domain/maps.js';
 import {
   confirmPhotoLandmarkInDB,
   createPhotoInDB,
@@ -82,29 +82,52 @@ export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) 
     if (!PHOTO_CONTENT_TYPES[file.size].includes(file.contentType)) {
       return badRequest(req, res, D, EVENT_MESSAGES.photoTypeInvalid);
     }
-    if (!Number.isInteger(file.bytes) || file.bytes <= 0 || file.bytes > PHOTO_MAX_BYTES[file.size]) {
-      return sendMessageResponse(res, 413, EVENT_MESSAGES.photoTooLarge);
+    // The declared size is signed into the upload URL, so the PUT must be exactly this big
+    if (!Number.isSafeInteger(file.bytes) || file.bytes <= 0) {
+      return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
     }
+    if (file.bytes > PHOTO_MAX_BYTES[file.size]) return sendMessageResponse(res, 413, EVENT_MESSAGES.photoTooLarge);
   }
+
+  // At most UNCONFIRMED_UPLOAD_LIMIT.photo files presigned and never saved, per user (429)
+  await assertPhotoUploadsUnderCap(req.user.id, files.length);
 
   const photoId = crypto.randomUUID();
   const uploads = [];
   for (const file of files) {
     const key = buildPhotoKey({ mapId: map.id, photoId, size: file.size, contentType: file.contentType });
-    const { url, expiresIn } = await presignPhotoUpload({ key, contentType: file.contentType, userId: req.user.id });
-    uploads.push({ size: file.size, key, url, method: 'PUT', headers: { 'Content-Type': file.contentType }, expiresIn });
+    const { url, expiresIn } = await presignPhotoUpload({
+      key,
+      contentType: file.contentType,
+      bytes: file.bytes,
+      userId: req.user.id,
+    });
+    uploads.push({
+      size: file.size,
+      key,
+      url,
+      method: 'PUT',
+      headers: { 'Content-Type': file.contentType },
+      bytes: file.bytes,
+      expiresIn,
+    });
   }
   return sendDataResponse(res, 200, { photoId, uploads });
 });
 
 // Upload, step 3: check what arrived in R2, then save the photo
 
-/** Checks every uploaded file; returns `{ variants }` or `{ status, message }`. */
+/**
+ * Checks every uploaded file; returns `{ variants }` or `{ status, message }`. A photo
+ * must be saved within PHOTO_SAVE_WINDOW_MINUTES of its presign: after an hour the
+ * daily clean-up may delete its files, so it never deletes a photo being saved.
+ */
 async function checkUploadedFiles({ mapId, photoId, variants, userId }) {
   const folder = photoKeyFolder({ mapId, photoId });
   const keys = variants.map((v) => v.key);
   const items = await findMediaItemsByKeys(keys);
   const itemByKey = new Map(items.map((item) => [item.key, item]));
+  const presignedSince = Date.now() - PHOTO_SAVE_WINDOW_MINUTES * 60 * 1000;
 
   const checked = [];
   for (const variant of variants) {
@@ -113,6 +136,9 @@ async function checkUploadedFiles({ mapId, photoId, variants, userId }) {
       typeof variant.key === 'string' && variant.key.startsWith(`${folder}${String(variant.size).toLowerCase()}-`);
     if (!keyFits || !item || item.resource !== 'photo' || item.ownerId !== userId) {
       return { status: 400, message: EVENT_MESSAGES.photoUploadInvalid };
+    }
+    if (new Date(item.createdAt).getTime() < presignedSince) {
+      return { status: 400, message: EVENT_MESSAGES.photoUploadExpired };
     }
     const stored = await headPrivateObject(variant.key);
     if (!stored) return { status: 400, message: EVENT_MESSAGES.photoUploadInvalid };
@@ -162,7 +188,8 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
   if (!position.ok) return badRequest(req, res, D, EVENT_MESSAGES.photoPositionInvalid);
   const takenAt = parseDateTime(body.takenAt);
   if (!takenAt.ok) return badRequest(req, res, D, EVENT_MESSAGES.invalidDate);
-  // Without GPS the uploader may say which country it is
+  // The uploader's chosen country: used when there's no GPS, or when the GPS position
+  // isn't in any country (a photo taken at sea)
   const chosenCountry = await parseOptionalCountry(body.countryCode);
   if (!chosenCountry.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
 
@@ -202,9 +229,17 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
 
 // Lists
 
-/** Shared by the map list and the share-code list. */
+/**
+ * Shared by the map list and the share-code list. `unplaced=1` lists only the photos
+ * with no country (it can't be combined with `country`).
+ */
 export async function photoPage({ query, mapId, tripId, role }) {
   const country = query.country;
+  const unplaced = query.unplaced === '1' || query.unplaced === 'true';
+  if (query.unplaced !== undefined && !unplaced && query.unplaced !== '0' && query.unplaced !== 'false') {
+    return { error: EVENT_MESSAGES.malformedData };
+  }
+  if (unplaced && country !== undefined) return { error: EVENT_MESSAGES.malformedData };
   if (country !== undefined && !(await isKnownCountry(country))) return { error: EVENT_MESSAGES.countryNotFound };
   const filterTrip = tripId ?? query.tripId;
   if (filterTrip !== undefined && !isUuid(filterTrip)) return { error: EVENT_MESSAGES.tripNotFound };
@@ -215,6 +250,7 @@ export async function photoPage({ query, mapId, tripId, role }) {
     mapId,
     tripId: filterTrip,
     countryCode: country,
+    unplaced,
     includeHidden: canEdit(role),
     cursor: query.cursor,
     limit,
@@ -285,9 +321,10 @@ export const updatePhotoHandler = handler(D, 'Update photo', async (req, res) =>
   }
 
   if (Object.keys(data).length) {
+    // A photo taken there proves a visit, as it does at upload: a new country is
+    // marked visited in the same transaction (a trip-only editor's too: the visit
+    // carries its source)
     await updatePhotoInDB(photo.id, data);
-    // A photo taken there proves a visit, as it does at upload
-    if (data.countryCode) await createMissingVisits(photo.mapId, [data.countryCode], 'PHOTO');
     logEvent(createPhotoEvent({ user: req.user, action: 'Update Success', id: photo.id, detail: Object.keys(data).join(',') }));
   }
   return sendDataResponse(res, 200, { photo: await photoDetailView(await findPhotoDetail(photo.id), role) });

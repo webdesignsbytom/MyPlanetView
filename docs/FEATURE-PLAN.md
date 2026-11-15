@@ -2,7 +2,7 @@
 
 What comes after the port, and how it pays for itself. [SITE-DESIGN.md](SITE-DESIGN.md) records what is built; this file is what's planned. When a feature here is built, move its decisions into SITE-DESIGN.md.
 
-Last updated: 14 November 2026.
+Last updated: 15 November 2026.
 
 ## Agreed so far
 
@@ -21,6 +21,7 @@ Last updated: 14 November 2026.
 | Cultural and seasonal info | Public country pages that search engines index, with a summary in the app. |
 | Printing | An affiliate link to a print company first; ordering through the site later. |
 | Promotion | Give a few complimentary memberships to influencers who promote the site. |
+| Installable app | A PWA (15 Nov): installable from the browser, online only at first. No app store, no Next.js. |
 
 ## The pitch
 
@@ -393,6 +394,43 @@ A fixed list kept in one file of code:
 - It needs Stripe checkout, an order table, the printer's status webhooks, and a reprint and refund policy.
 - First Class gets a printing discount then.
 
+## Installable app (PWA)
+
+The site becomes installable: "Install app" in Chrome and Edge on Android and desktop, Add to Home Screen on iPhone. It opens from its own icon in a window with no browser bar. There's no app store, and it doesn't need Next.js. A PWA is a web manifest, a service worker and HTTPS, which the Vite site can have as it is.
+
+**Already there:**
+- `manifest.json`, built from `constants.js` in `vite.config.js`, with `display: standalone` and 192 and 512 px icons;
+- the `apple-touch-icon`;
+- `worker-src 'self'` in the CSP.
+
+**Version 1: installable, online only.**
+- **The service worker:** made at build by `vite-plugin-pwa` (Workbox). It caches the app's own files (`/assets/`, fonts, the app shell), so repeat visits start from the device.
+- **Opening a page offline:**
+  - signed-in pages (`CLIENT_ONLY_ROUTE_PREFIXES`) fall back to `app-shell.html`, not the plugin's default `index.html`;
+  - public pages load their own pre-rendered HTML from the network first.
+
+  Either way, a "You're offline" message shows instead of an empty map.
+- **Never cached:**
+  - API responses: they're private and tied to the login cookie;
+  - signed photo URLs: private photos would stay on the device, and the URLs change every hour anyway;
+  - the secret addresses (`/shared`, `/invite`, `/reset-password`, `/verify-email-address`).
+
+  Country posters are public, so they can be cached.
+- **Updates:** `sw.js` must be served with `no-cache`. Today `.htaccess` gives every `.js` outside `/assets/` a day, so a broken service worker could stay on devices for a day. Change `.htaccess` and `netlify.toml` together.
+- **Registered only on the live site:** in production builds, after the page has loaded. Never in development or mock mode, and never in the pre-render's headless Chromium.
+- **Icons:**
+  - real 192 and 512 px icons, plus a maskable one that Android crops to its own shape;
+  - an `id` in the manifest.
+
+  They wait on the brand assets (phase 0).
+- **Logging in on iPhone:** while the API is on another site (Vercel), Safari treats its login cookie as third-party, whether the site is installed or not. Moving the API to `api.<domain>`, already planned, fixes both.
+
+**Later: the last map offline.**
+- The map last opened (countries, stats, trips) can be read offline, for example on a plane.
+- Photos stay online only unless that's decided otherwise, as they're private.
+- Editing offline would need a queue that syncs once back online.
+- Build it only if people ask for it.
+
 ## Getting the word out
 
 - **Shared maps.** Every shared map shows friends and family what the site does. A small "Make your own map" link on share pages turns viewers into sign-ups.
@@ -437,6 +475,7 @@ When each part is built, update these sections there:
   - the Travel Desk;
   - the referrer policy.
 - **Removed from the template:** Stripe comes back.
+- **Stack and hosting:** the service worker, and `sw.js` served with `no-cache` (`.htaccess`, `netlify.toml`). What it never caches goes under the privacy rules.
 - **Home, About and FAQ copy:** the pitch above.
 
 ## Phases
@@ -444,9 +483,9 @@ When each part is built, update these sections there:
 | Phase | What | Why this order |
 | --- | --- | --- |
 | 0. Finish the port | SITE-DESIGN.md's open items: run everything for real, the domain, the brand assets | Nothing above works until the base does |
-| 1. Launch | <ul><li>the pitch copy and a Pricing page</li><li>the three tiers with Stripe, the print copy and complimentary memberships</li><li>First Class videos</li><li>ad cards and the Travel Desk</li><li>slideshows</li><li>the passport, with the landmark expansion</li><li>site badges and personal goals</li><li>the first ~20 country pages</li><li>influencer outreach</li></ul> | <ul><li>The tier rules must exist from day one.</li><li>Videos are First Class's main draw.</li><li>Memberships, cards and the Travel Desk are the income.</li><li>The passport and slideshows are the headline features.</li><li>Country pages start the slow SEO clock and help affiliate applications.</li></ul> |
+| 1. Launch | <ul><li>the pitch copy and a Pricing page</li><li>the three tiers with Stripe, the print copy and complimentary memberships</li><li>First Class videos</li><li>ad cards and the Travel Desk</li><li>slideshows</li><li>the passport, with the landmark expansion</li><li>site badges and personal goals</li><li>the first ~20 country pages</li><li>influencer outreach</li><li>the installable app (PWA), online only</li></ul> | <ul><li>The tier rules must exist from day one.</li><li>Videos are First Class's main draw.</li><li>Memberships, cards and the Travel Desk are the income.</li><li>The passport and slideshows are the headline features.</li><li>Country pages start the slow SEO clock and help affiliate applications.</li><li>The PWA is a small job once the brand icons exist, and makes the map feel like an app on a phone.</li></ul> |
 | 2. After launch | <ul><li>print link and download</li><li>monthly themes</li><li>friends challenges</li><li>more country pages</li></ul> | Each builds on the launch features; friends challenges need people already using the site |
-| 3. Later | <ul><li>"Where to go in <month>" pages</li><li>ordering prints and photobooks through the site, with the First Class discount</li><li>climate tables</li><li>per-traveller badges</li><li>video transcoding if needed</li><li>Infrequent Access storage for originals</li></ul> | More work, more risk, or waiting on demand |
+| 3. Later | <ul><li>"Where to go in <month>" pages</li><li>ordering prints and photobooks through the site, with the First Class discount</li><li>climate tables</li><li>per-traveller badges</li><li>video transcoding if needed</li><li>Infrequent Access storage for originals</li><li>the last map offline (PWA)</li></ul> | More work, more risk, or waiting on demand |
 
 ## Open decisions
 

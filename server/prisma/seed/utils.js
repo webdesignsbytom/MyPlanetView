@@ -31,6 +31,7 @@ export async function wipeDatabase() {
     prisma.landmark.deleteMany(),
     prisma.country.deleteMany(),
     prisma.rateLimit.deleteMany(),
+    prisma.authRateLimit.deleteMany(),
 
     // App tables (FK-safe order)
     prisma.avatarMediaItem.deleteMany(),

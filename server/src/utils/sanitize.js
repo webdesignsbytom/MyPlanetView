@@ -28,6 +28,24 @@ export function sanitizeEmail(value, { maxLength = 320 } = {}) {
   return str ? str.toLowerCase() : null;
 }
 
+// An address we may write to (e.g. a reply-to): one local part, one @, a dotted
+// domain, and none of the characters that would quote or split it in a mail header
+const EMAIL_ADDRESS = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:".]+$/;
+const ANY_CONTROL_CHAR = new RegExp('[\\u0000-\\u001F\\u007F]');
+export const EMAIL_MAX_LENGTH = 254;
+
+/**
+ * A valid email address, trimmed and lower-cased, or null. Unlike sanitizeEmail it
+ * never edits the address (stripping tags or truncating could turn junk into some
+ * other real address): anything that isn't already a plain address is refused.
+ */
+export function normalizeEmail(value) {
+  if (typeof value !== 'string') return null;
+  const email = value.trim().toLowerCase();
+  if (!email || email.length > EMAIL_MAX_LENGTH || ANY_CONTROL_CHAR.test(email)) return null;
+  return EMAIL_ADDRESS.test(email) ? email : null;
+}
+
 export function clampInt(value, { min, max, fallback }) {
   const n = Number.parseInt(value, 10);
   if (!Number.isFinite(n)) return fallback;

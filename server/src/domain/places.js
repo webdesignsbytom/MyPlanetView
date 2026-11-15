@@ -29,9 +29,6 @@ export const findAllCountries = () =>
 export const findCountryByCode = (code) =>
   prisma.country.findUnique({ where: { code }, select: COUNTRY_SELECT });
 
-export const findCountriesByCodes = (codes) =>
-  prisma.country.findMany({ where: { code: { in: codes } }, select: { code: true, continent: true } });
-
 export const findLandmarks = ({ countryCode } = {}) =>
   prisma.landmark.findMany({
     where: countryCode ? { countryCode } : undefined,

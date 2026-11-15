@@ -1,7 +1,5 @@
 import { fromNodeHeaders } from 'better-auth/node';
 import { auth } from '../auth.js';
-// Domain
-import { findUserByIdForAuth } from '../domain/users.js';
 // Events
 import { logEvent } from '../utils/events/logEvent.js';
 // Errors
@@ -26,21 +24,23 @@ const reject = (res, errorEvent) => {
   return sendMessageResponse(res, errorEvent.code, errorEvent.message);
 };
 
+// The session and its user, read from the database on every call: better-auth's
+// cookie cache is off (auth.js), and role and isActive are declared there as user
+// fields, so they come with the user and a change applies to the next request.
+// One lookup (session + user) instead of a second read of the user row.
+const readSession = (req) => auth.api.getSession({ headers: fromNodeHeaders(req.headers) });
+
 // Optional auth (attach req.user if a session exists, never blocks)
 export const attachUserIfPresent = async (req, res, next) => {
   try {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(req.headers),
-    });
-
-    const sessionUserId = session?.user?.id;
-    if (!sessionUserId) return next();
+    const session = await readSession(req);
+    const user = session?.user;
+    if (!user?.id) return next();
 
     // Deactivated users stay anonymous
-    const foundUser = await findUserByIdForAuth(sessionUserId);
-    if (foundUser && foundUser.isActive !== false) {
+    if (user.isActive !== false) {
       req.session = session;
-      req.user = foundUser;
+      req.user = user;
     }
 
     return next();
@@ -50,41 +50,47 @@ export const attachUserIfPresent = async (req, res, next) => {
   }
 };
 
-// Auth (session cookie → BetterAuth → DB user)
+// Auth (session cookie → better-auth → the user row, with role and isActive)
 export const validateAuthentication = async (req, res, next) => {
   try {
-    // 1) Validate cookie session
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(req.headers),
-    });
+    const session = await readSession(req);
+    const user = session?.user;
 
-    const sessionUserId = session?.user?.id;
-
-    if (!sessionUserId) {
+    // No session, or one whose user is gone (better-auth returns null for both)
+    if (!user?.id) {
       return reject(res, new NoValidationEvent(DOMAINS.auth, EVENT_MESSAGES.noValidSession));
     }
 
-    // 2) Fetch REAL user from DB (this is where role lives)
-    const foundUser = await findUserByIdForAuth(sessionUserId);
-
-    if (!foundUser) {
-      return reject(res, new NoValidationEvent(DOMAINS.auth, EVENT_MESSAGES.sessionUserNotFound));
+    // Deactivated by an admin
+    if (user.isActive === false) {
+      return reject(res, new DeactivatedUserEvent(user, DOMAINS.auth, EVENT_MESSAGES.accountDeactivated));
     }
 
-    // 3) Deactivated by an admin
-    if (foundUser.isActive === false) {
-      return reject(res, new DeactivatedUserEvent(foundUser, DOMAINS.auth, EVENT_MESSAGES.accountDeactivated));
-    }
-
-    // Attach session + real user
     req.session = session;
-    req.user = foundUser;
+    req.user = user;
 
     return next();
   } catch {
     // Generic message only (don't leak err.message)
     return reject(res, new NoValidationEvent(DOMAINS.auth));
   }
+};
+
+// Adding or changing content (countries, trips, photos, new maps, sharing, avatars) needs
+// a verified email address. Setting up your map (its name, group and travellers) and your
+// account don't, so the welcome page works straight after sign-up. Runs after
+// validateAuthentication and before any lookup: the answer is the same 403 for every id,
+// real or not, so it reveals nothing about other people's maps.
+export const requireVerifiedEmail = (req, res, next) => {
+  if (req.user?.emailVerified === true) return next();
+  return reject(res, new NoPermissionEvent(req.user, DOMAINS.auth, EVENT_MESSAGES.contentNeedsVerifiedEmail));
+};
+
+// The generic presign takes visitors too (the contact form). A signed-in account with an
+// unverified address may still attach a contact image, but nothing else (avatars).
+export const requireVerifiedEmailForAccountUploads = (req, res, next) => {
+  if (!req.user || req.body?.resource === 'contact') return next();
+  return requireVerifiedEmail(req, res, next);
 };
 
 // Admin role

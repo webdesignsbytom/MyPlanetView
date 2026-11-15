@@ -24,14 +24,16 @@ export { prisma };
 
 // A trusted origin (better-auth checks it on cookie requests; CORS allows it)
 export const ORIGIN = 'http://localhost:5173';
-export const PASSWORD = 'integration-test-password-1';
+// Meets the password rules (src/utils/passwordRules.js)
+export const PASSWORD = 'Integration-Test-Password-1';
 
 const RUN = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 let counter = 0;
 const createdUserIds = new Set();
 
 /** A unique test address that no real person has. */
-export const testEmail = (label) => `it-${RUN}-${++counter}-${label}@example.test`.toLowerCase();
+export const testEmail = (label) =>
+  `it-${RUN}-${++counter}-${String(label).replace(/[^a-z0-9]+/gi, '-')}@example.test`.toLowerCase();
 
 /** An anonymous visitor. */
 export const anon = () => request.agent(app).set('Origin', ORIGIN);
@@ -39,8 +41,11 @@ export const anon = () => request.agent(app).set('Origin', ORIGIN);
 /** The payload of a `{ status, data }` reply. */
 export const data = (res) => res.body?.data;
 
-/** Sign up a new user; returns their agent (cookies kept) and DB row. */
-export async function signUp(label = 'user', { verified = false } = {}) {
+/**
+ * Sign up a new user; returns their agent (cookies kept) and DB row. Verified by default,
+ * as adding content needs a verified email; pass `{ verified: false }` for the other case.
+ */
+export async function signUp(label = 'user', { verified = true } = {}) {
   const email = testEmail(label);
   const agent = request.agent(app).set('Origin', ORIGIN);
   const res = await agent.post('/api/auth/sign-up/email').send({ email, password: PASSWORD, name: label });

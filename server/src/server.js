@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { toNodeHandler } from 'better-auth/node';
-import morgan from 'morgan';
+import { requestLogger } from './utils/requestLog.js';
 
 // Path
 import { join } from 'path';
@@ -30,6 +30,7 @@ import { FRONTEND_ORIGINS } from './utils/config.js';
 import { requestContextMiddleware } from './utils/requestContext.js';
 import { createAppEvent } from './event/events.js';
 import { globalRateLimiter } from './middleware/rateLimit.js';
+import { originCheck } from './middleware/originCheck.js';
 
 const app = express();
 
@@ -55,8 +56,8 @@ app.use((_req, res, next) => {
 // Per-request requestId (X-Request-Id)
 app.use(requestContextMiddleware);
 
-// Request logger
-app.use(morgan('dev'));
+// Request logger (morgan; share codes, tokens and query values redacted)
+app.use(requestLogger);
 
 const allowedOrigins = new Set(FRONTEND_ORIGINS);
 
@@ -78,8 +79,13 @@ app.use(
   }),
 );
 
+// CSRF: a write from a browser on another site is refused (403) before anything
+// runs, better-auth included (middleware/originCheck.js)
+app.use(originCheck);
+
+// JSON only, and no urlencoded parser: every client sends JSON, while a plain HTML
+// form can only post urlencoded, multipart or text/plain bodies, which stay unparsed.
 app.use(express.json({ limit: '2000kb' }));
-app.use(express.urlencoded({ extended: true, limit: '2000kb' }));
 
 // Global rate limit
 app.use(globalRateLimiter);

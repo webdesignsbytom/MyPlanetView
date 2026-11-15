@@ -117,12 +117,16 @@ export function photoDetail(photo, role) {
   return detail;
 }
 
-// Newest first (by upload); cursor = the id of the last photo of the previous page
-export function photoPage(photos, role, { country, tripId, cursor, limit }) {
+// Newest first (by upload); cursor = the id of the last photo of the previous page.
+// `unplaced=1`: only the photos with no country. Returns { error } for a bad filter.
+export function photoPage(photos, role, { country, unplaced, tripId, cursor, limit }) {
   const size = Math.min(Math.max(Number(limit) || 30, 1), 60);
+  const onlyUnplaced = unplaced === '1' || unplaced === 'true';
+  if (unplaced !== undefined && !onlyUnplaced && unplaced !== '0' && unplaced !== 'false') return { error: 'Malformed data.' };
+  if (onlyUnplaced && country !== undefined) return { error: 'Malformed data.' };
   const list = photos
     .filter((p) => canSeePhoto(p, role))
-    .filter((p) => !country || p.countryCode === country)
+    .filter((p) => (onlyUnplaced ? !p.countryCode : !country || p.countryCode === country))
     .filter((p) => !tripId || p.tripId === tripId)
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   const start = cursor ? list.findIndex((p) => p.id === cursor) + 1 : 0;
@@ -200,11 +204,16 @@ export function mapView(map, role) {
   };
 }
 
-// Trips
-function coverThumb(trip) {
-  const photo = getDb().photos.find((p) => p.id === trip.coverPhotoId);
-  return photo ? photoUrls(photo).thumb : null;
+// Trips. As the server (controllers/helpers/views.js): a hidden cover photo isn't shown
+// to anyone below editor, neither its picture nor its id.
+function visibleCover(trip, role) {
+  const photo = trip.coverPhotoId ? getDb().photos.find((p) => p.id === trip.coverPhotoId) : null;
+  return photo && canSeePhoto(photo, role) ? photo : null;
 }
+const coverThumb = (trip, role) => {
+  const photo = visibleCover(trip, role);
+  return photo ? photoUrls(photo).thumb : null;
+};
 
 export function tripSummary(trip, role) {
   const db = getDb();
@@ -215,27 +224,32 @@ export function tripSummary(trip, role) {
     status: trip.status,
     startDate: trip.startDate,
     endDate: trip.endDate,
-    coverThumbUrl: coverThumb(trip),
+    coverThumbUrl: coverThumb(trip, role),
     stopCount: db.stops.filter((s) => s.tripId === trip.id).length,
     photoCount: db.photos.filter((p) => p.tripId === trip.id && canSeePhoto(p, role)).length,
     travellerIds: [...trip.travellerIds],
   };
 }
 
-export function tripView(trip, role) {
+// `viaShareLink`: opened through /shared/:code, where canOpenMap and canDelete are always false.
+// canDelete as the server's canDeleteTrip: the map's owner or an editor of the map (someone
+// added to the trip alone edits it, but can't delete it)
+export function tripView(trip, role, { viaShareLink = false } = {}) {
   const db = getDb();
   const map = db.maps.find((m) => m.id === trip.mapId);
   return {
     id: trip.id,
     mapId: trip.mapId,
     mapName: map?.name || '',
+    canOpenMap: !viaShareLink && Boolean(mapRole(map)),
+    canDelete: !viaShareLink && atLeast(mapRole(map), 'EDITOR'),
     title: trip.title,
     description: trip.description,
     status: trip.status,
     startDate: trip.startDate,
     endDate: trip.endDate,
-    coverPhotoId: trip.coverPhotoId,
-    coverThumbUrl: coverThumb(trip),
+    coverPhotoId: visibleCover(trip, role)?.id || null,
+    coverThumbUrl: coverThumb(trip, role),
     role,
     travellerIds: [...trip.travellerIds],
     travellers: db.travellers
@@ -259,24 +273,15 @@ export function tripView(trip, role) {
   };
 }
 
-// A WANT_TO_GO country becomes VISITED; an existing VISITED or LIVED one is left alone
-export function markVisited(mapId, countryCode, source, firstVisitedOn = null) {
+// As the server's createMissingVisits (domain/maps.js): a WANT_TO_GO country becomes
+// VISITED, a missing one is added as VISITED (no first-visit date), and an existing
+// VISITED or LIVED one is left alone
+export function markVisited(mapId, countryCode, source) {
   if (!countryCode) return;
   const db = getDb();
   const visit = db.visits.find((v) => v.mapId === mapId && v.countryCode === countryCode);
-  if (!visit) db.visits.push({ mapId, countryCode, status: 'VISITED', source, firstVisitedOn, notes: null });
+  if (!visit) db.visits.push({ mapId, countryCode, status: 'VISITED', source, firstVisitedOn: null, notes: null });
   else if (visit.status === 'WANT_TO_GO') Object.assign(visit, { status: 'VISITED', source });
-}
-
-// Photos with GPS: the nearest country pin stands in for the server's point-in-polygon
-export function countryNear(latitude, longitude) {
-  const { x, y } = projectToMap(latitude, longitude);
-  let best = null;
-  for (const c of COUNTRIES) {
-    const d = (c.pinX - x) ** 2 + (c.pinY - y) ** 2;
-    if (!best || d < best.d) best = { code: c.code, d };
-  }
-  return best && best.d < 60 * 60 ? best.code : null;
 }
 
 export function distanceM(lat1, lng1, lat2, lng2) {

@@ -1,7 +1,7 @@
 // Opening a share link (/shared/<code>): anyone, signed in or not.
 // Reads only, so nothing is logged; lookups are rate limited per IP.
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
-import { canSeePhoto, canView, higherRole, linkRoleFor, mapRoleFor, tripRoleFor } from '../utils/access.js';
+import { canEdit, canSeePhoto, canView, higherRole, linkRoleFor, mapRoleFor, tripRoleFor } from '../utils/access.js';
 import { normaliseShareCode } from '../utils/shareCodes.js';
 import { isUuid } from '../utils/travelValidation.js';
 import { findMapAccessByShareCode } from '../domain/maps.js';
@@ -46,7 +46,7 @@ export const getSharedHandler = handler(D, 'Open share link', async (req, res) =
   if (shared.kind === 'map') {
     const [map, trips] = await Promise.all([
       mapDetailView(shared.map.id, shared.role),
-      findTripsForMap(shared.map.id),
+      findTripsForMap(shared.map.id, { includeHidden: canEdit(shared.role) }),
     ]);
     return sendDataResponse(res, 200, {
       resource: 'map',

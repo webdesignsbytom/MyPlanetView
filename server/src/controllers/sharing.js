@@ -5,6 +5,7 @@ import { logEvent } from '../utils/events/logEvent.js';
 import { createSharingEvent } from '../event/travelUtils.js';
 import { runAfterResponse } from '../utils/background.js';
 import { sanitizeEmail } from '../utils/sanitize.js';
+import { cleanDisplayName } from '../utils/displayName.js';
 import { SHARE_ROLES, canManage, canRemoveMember, canView } from '../utils/access.js';
 import { LINK_ACCESS_VALUES, isEmail, isOneOf, isUuid } from '../utils/travelValidation.js';
 import { formatShareCode, generateInviteToken, hashInviteToken } from '../utils/shareCodes.js';
@@ -97,12 +98,17 @@ async function sharingView(adapter, resource) {
   };
 }
 
+// The subject is fixed: the sharer's name (anyone's to choose) stays in the body,
+// where it's escaped, so the email can't be dressed up as someone else's message
+export const shareEmailSubject = (kind) => `${BusinessName}: a ${kind} was shared with you`;
+
 function sendShareEmail({ to, sharer, adapter, resource, role, isInvite, token, expiresAt }) {
-  const title = `${sharer.name || 'Someone'} shared a ${adapter.kind} with you`;
+  const subject = shareEmailSubject(adapter.kind);
   runAfterResponse(
-    sendUserEmail(to, `${BusinessName}: ${title}`, 'shareEmail', {
-      title,
-      sharerName: sharer.name || 'Someone',
+    sendUserEmail(to, subject, 'shareEmail', {
+      title: subject,
+      // Names are cleaned at sign-up and rename; this covers rows from before that
+      sharerName: cleanDisplayName(sharer.name) || 'Someone',
       resourceKind: `a ${adapter.kind}`,
       resourceLabel: `"${adapter.label(resource)}"`,
       resourceName: adapter.label(resource),
@@ -160,9 +166,13 @@ export function sharingHandlers(resourceName) {
       return sendDataResponse(res, 200, { shareCode: formatShareCode(shareCode), shareUrl: shareUrlFor(shareCode) });
     }),
 
+    // Emails someone, so the sharer's own address must be verified (and the route
+    // has a per-user daily cap): an unverified throwaway account can't send mail
+    // from our domain to strangers
     addMember: handler(D, `Add ${adapter.kind} member`, async (req, res) => {
       const resource = await loadManaged(req, res);
       if (!resource) return undefined;
+      if (!req.user.emailVerified) return forbidden(req, res, D, EVENT_MESSAGES.shareNeedsVerifiedEmail);
       const body = req.body || {};
       const email = sanitizeEmail(body.email);
       if (!isEmail(email)) return badRequest(req, res, D, EVENT_MESSAGES.invalidEmail);
@@ -171,15 +181,18 @@ export function sharingHandlers(resourceName) {
         return badRequest(req, res, D, EVENT_MESSAGES.cannotShareWithOwner);
       }
 
+      // Access straight away only for an active account whose address is verified.
+      // Anyone could sign up with an address they don't own and never verify it.
       const user = await findUserForSharing(email);
-      if (user && user.isActive !== false) {
+      if (user && user.isActive !== false && user.emailVerified === true) {
         const member = await adapter.upsertMember(resource, user.id, body.role);
         logEvent(createSharingEvent({ user: req.user, action: 'Member Add Success', id: resource.id, targetId: user.id, detail: `${adapter.kind} ${body.role}`, statusCode: 201 }));
         sendShareEmail({ to: user.email, sharer: req.user, adapter, resource, role: body.role, isInvite: false });
         return sendDataResponse(res, 201, { member: memberView(member) });
       }
 
-      // No account yet (or a deactivated one): an invite they accept after signing up
+      // No account yet, or an unverified or deactivated one: an invite, accepted once
+      // that address is verified (automatically then, or through the emailed link)
       const token = generateInviteToken();
       const expiresAt = new Date(Date.now() + INVITE_DAYS * 24 * 60 * 60 * 1000);
       const invite = await replaceInviteInDB({

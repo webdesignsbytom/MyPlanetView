@@ -5,8 +5,8 @@ import { plural } from '@/utils/functions/plural';
 import LuggageTag from './LuggageTag';
 
 // The old site's always-on stats box, shrunk to one line on a luggage tag; opens the full
-// stats panel.
-function StatsBadge({ stats, onOpen }) {
+// stats panel (`onIntent`: hovered, focused or pressed, to fetch its code first).
+function StatsBadge({ stats, onOpen, onIntent }) {
   if (!stats) return null;
   const countries = plural(stats.countries, 'country', 'countries');
   const continents = plural(stats.continents, 'continent');
@@ -16,6 +16,9 @@ function StatsBadge({ stats, onOpen }) {
       as='button'
       type='button'
       onClick={onOpen}
+      onPointerEnter={onIntent}
+      onFocus={onIntent}
+      onPointerDown={onIntent}
       className='text-sm font-medium transition hover:brightness-105'
       aria-label={`${countries}, ${continents}, ${photos}. Open travel statistics`}
     >

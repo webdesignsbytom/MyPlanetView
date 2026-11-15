@@ -11,7 +11,7 @@ A private travel map of the world. People mark the countries they've been to, ad
 1. **Env files.** Fill these in yourself; the variable names are listed below.
    - **Client:** copy `client/.env.development.example` and `client/.env.production.example` without the `.example`. The client reads only `VITE_API_URL`, `VITE_MEDIA_CDN` and `VITE_ANALYTICS_ID`. Don't put `NODE_ENV` in them: a `NODE_ENV=development` line makes the build fail.
    - **Server:** copy `server/.env.example` to `server/.env`. It needs:
-     - `DATABASE_URL`, `DIRECT_DATABASE_URL`, `SHADOW_DATABASE_URL`, `DB_POOL_MAX`;
+     - `DATABASE_URL`, `DIRECT_DATABASE_URL`, `SHADOW_DATABASE_URL`, `DB_POOL_MAX`. In production, `DATABASE_URL` is the provider's **pooled** (transaction-mode) URL and `DIRECT_DATABASE_URL` the direct one, which only `prisma migrate` uses; `DB_POOL_MAX` is the connections per function instance (default 5). Locally both can be the same plain URL;
      - `BETTER_AUTH_SECRET` and `BETTER_AUTH_URL`;
      - `FRONTEND_ORIGIN` (comma-separated);
      - `CRON_SECRET` and `IS_PRODUCTION_DATABASE`;

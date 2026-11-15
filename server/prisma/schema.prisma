@@ -213,6 +213,11 @@ model TravelMap {
   ownerId String
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
+  // The owner's id on their default map, null on every other map. Unique, so two
+  // requests making a default map at once can't both succeed. A CHECK in the
+  // migration keeps it equal to ownerId exactly when isDefault is true.
+  defaultForOwnerId String? @unique
+
   linkAccess LinkAccess @default(RESTRICTED)
   // Random, unambiguous characters, e.g. K7QX-M2PA-9RTW. Reset = new code.
   // Lookups by code are rate limited.
@@ -300,6 +305,10 @@ model ShareInvite {
   createdAt DateTime @default(now())
 
   @@index([email])
+  // Foreign keys: a cascade from a deleted map, trip or user finds its invites
+  @@index([mapId])
+  @@index([tripId])
+  @@index([invitedById])
   @@map("share_invite")
 }
 
@@ -334,7 +343,8 @@ model CountryVisit {
   updatedAt DateTime @updatedAt
 
   @@id([mapId, countryCode])
-  @@index([countryCode])
+  // No index on countryCode alone: nothing looks visits up by country, and
+  // countries are never deleted
   @@map("country_visit")
 }
 
@@ -377,6 +387,10 @@ model Trip {
   updatedAt DateTime @updatedAt
 
   @@index([mapId, startDate])
+  // Foreign keys: without these, the SET NULL for each deleted photo or user
+  // scans every trip (deleting a 20k-photo map took 148 s, 1.9 s with them)
+  @@index([coverPhotoId])
+  @@index([createdById])
   @@map("trip")
 }
 
@@ -472,9 +486,11 @@ model Photo {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([mapId, takenAt])
-  @@index([tripId])
-  @@index([countryCode])
+  // The photo lists' order (newest upload first, keyset on id), per map, per
+  // trip and per map + country; they also serve the photo counts
+  @@index([mapId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([tripId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([mapId, countryCode, createdAt(sort: Desc)])
   @@index([uploaderId])
   @@map("photo")
 }
@@ -556,7 +572,9 @@ model MediaItem {
   createdAt DateTime @default(now())
 
   @@index([resource])
-  @@index([ownerId])
+  // The per-user cap on unfinished uploads counts by owner and age; it also serves
+  // the owner foreign key (SET NULL when a user is deleted)
+  @@index([ownerId, createdAt])
   @@map("media_item")
 }
 
@@ -591,6 +609,8 @@ model ContactForm {
   createdAt DateTime @default(now())
 
   @@index([createdAt])
+  // The cron's "no form uses this file" check and the contact image rules look up by key
+  @@index([imageKey])
   @@map("contact_form")
 }
 
@@ -603,6 +623,19 @@ model RateLimit {
 
   @@index([resetAt])
   @@map("rate_limit")
+}
+
+// better-auth's own limiter for /api/auth/* (auth.js: rateLimit.storage 'database',
+// modelName 'authRateLimit'). Its shape is better-auth's: key = "<ip>|<path>",
+// lastRequest in epoch ms. better-auth prunes old rows itself.
+model AuthRateLimit {
+  id          String @id
+  key         String @unique
+  count       Int
+  lastRequest BigInt
+
+  @@index([lastRequest])
+  @@map("auth_rate_limit")
 }
 
 // ── Audit log (unchanged from the dummy) ─────────────────────────────────────
@@ -644,10 +677,12 @@ model AppEvent {
 
   createdAt DateTime @default(now())
 
+  // The admin list (newest first, optionally by level), retention by age, and
+  // the SET NULL when a user is deleted
+  @@index([createdAt])
   @@index([level, createdAt])
-  @@index([domain, action])
-  @@index([status, targetId])
-  @@index([important])
+  @@index([actorId])
+  @@index([targetId])
   @@index([requestId])
   @@map("app_event")
 }

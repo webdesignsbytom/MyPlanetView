@@ -9,8 +9,21 @@ function AccountSessionsSection() {
   const { revokeOtherSessions, logout } = useAuth();
 
   const [busy, setBusy] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const [alert, setAlert] = useState({ message: '', variant: 'error' });
   const alertRef = useRef(null);
+
+  // Success leaves the page; a failure says they're still logged in
+  const onLogout = async () => {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    setAlert({ message: '', variant: 'error' });
+    const result = await logout();
+    if (result.ok) return;
+    setLoggingOut(false);
+    setAlert({ message: result.error, variant: 'error' });
+    requestAnimationFrame(() => alertRef.current?.focus());
+  };
 
   const onRevoke = async () => {
     setBusy(true);
@@ -42,9 +55,10 @@ function AccountSessionsSection() {
         <button
           type='button'
           className='py-2 px-4 rounded-md border-2 border-solid border-colour6 hover:brightness-110'
-          onClick={logout}
+          onClick={onLogout}
+          aria-busy={loggingOut}
         >
-          Log out
+          {loggingOut ? 'Logging out…' : 'Log out'}
         </button>
       </div>
       <FormAlert innerRef={alertRef} message={alert.message} variant={alert.variant} />

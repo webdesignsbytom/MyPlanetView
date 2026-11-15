@@ -11,7 +11,8 @@ import { uploadPhoto } from '@/utils/photos/uploadPhoto';
 const AT_ONCE = 2;
 
 // Choose or drop photos; each is read, resized, uploaded and saved, two at a time.
-// Photos without a location go in `country` (if chosen). `onUploaded` gets each new photo.
+// Photos without a location, or with one at sea, go in `country` (if chosen); with
+// neither, they're listed under Unplaced photos. `onUploaded` gets each new photo.
 function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
   const inputId = useId();
   const inputRef = useRef(null);
@@ -46,13 +47,16 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
           onStage: (stage) => update(item.id, { stage }),
           onProgress: (progress) => update(item.id, { progress }),
         });
-        const note = hadLocation
-          ? photo.countryCode
+        // A location in no country (at sea) falls back on the chosen country, like no location
+        const note = !photo.countryCode
+          ? hadLocation
+            ? 'Its location isn’t in any country, so it’s under Unplaced photos until you choose one.'
+            : 'No location in the file, so it’s under Unplaced photos until you choose a country.'
+          : hadLocation && photo.countryCode !== country
             ? `Placed in ${countryName(photo.countryCode)} from its location.`
-            : 'It has a location, but not on any country on the map.'
-          : country
-            ? `No location in the file, so it went in ${countryName(country)}.`
-            : 'No location in the file: open it to choose a country.';
+            : hadLocation
+              ? `Placed in ${countryName(photo.countryCode)}.`
+              : `No location in the file, so it went in ${countryName(photo.countryCode)}.`;
         update(item.id, { stage: 'done', note, file: null });
         onUploaded?.(photo);
       } catch (err) {
@@ -63,7 +67,11 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
 
   return (
     <div className='grid gap-4'>
-      <FormField id={`${inputId}-country`} label='Country for photos with no location' hint='Phones usually save the place; this is for the ones that don’t.'>
+      <FormField
+        id={`${inputId}-country`}
+        label='Country for photos with no location'
+        hint='Phones usually save the place; this is for the ones that don’t, or whose place is out at sea.'
+      >
         <PlainOptionSelect
           value={country}
           onChange={(e) => setCountry(e.target.value)}

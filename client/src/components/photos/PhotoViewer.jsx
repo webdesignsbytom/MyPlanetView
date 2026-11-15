@@ -8,13 +8,16 @@ import InlineAlert from '@/components/common/InlineAlert';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import PhotoEditForm from './PhotoEditForm';
 import PhotoLandmarkList from './PhotoLandmarkList';
+import VerifyFirstNote from '@/components/map/VerifyFirstNote';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { formatDay } from '@/utils/functions/dates';
 
 // One photo, large. Editors can change it, confirm landmark matches, download the
 // original (which keeps its location) and delete it. Link visitors pass `shareCode`.
-function PhotoViewer({ photoId, shareCode, canEdit = false, trips, onChanged, onDeleted, onClose }) {
+// `locked`: an editor whose email address isn't verified yet sees the photo (and can
+// download the original) but can't change it, and is told why.
+function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trips, onChanged, onDeleted, onClose }) {
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -102,14 +105,17 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, trips, onChanged, on
                 }}
               />
             ) : (
-              <PhotoLandmarkList photo={photo} canEdit={canEdit} onChanged={applyChange} />
+              <PhotoLandmarkList photo={photo} canEdit={canEdit && !locked} onChanged={applyChange} />
             )}
 
+            {canEdit && locked ? <VerifyFirstNote action='change or delete photos' /> : null}
             {canEdit && !editing ? (
               <div className='grid grid-row-wrap gap-2'>
-                <Button quiet onClick={() => setEditing(true)}>
-                  Edit
-                </Button>
+                {locked ? null : (
+                  <Button quiet onClick={() => setEditing(true)}>
+                    Edit
+                  </Button>
+                )}
                 {photo.originalUrl ? (
                   <a
                     href={photo.originalUrl}
@@ -120,7 +126,7 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, trips, onChanged, on
                     Download original
                   </a>
                 ) : null}
-                {confirmingDelete ? (
+                {locked ? null : confirmingDelete ? (
                   <span className='grid grid-row items-center gap-2 text-sm'>
                     Delete for good?
                     <Button danger busy={deleting} onClick={handleDelete}>

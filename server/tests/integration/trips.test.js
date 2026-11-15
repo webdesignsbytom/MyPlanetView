@@ -1,6 +1,7 @@
-// Trips: CRUD, stops, trip travellers, completing a trip, per-person stats.
+// Trips: CRUD, stops, trip travellers, completing a trip, per-person stats, and who may
+// delete a trip.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { cleanUp, data, defaultMapOf, signUp } from './helpers.js';
+import { cleanUp, data, defaultMapOf, prisma, signUp, uploadPhoto } from './helpers.js';
 
 afterAll(cleanUp);
 
@@ -27,7 +28,7 @@ describe('trips', () => {
     });
     expect(created.status).toBe(201);
     const trip = data(created).trip;
-    expect(trip).toMatchObject({ title: 'Spring in Japan', status: 'PLANNED', startDate: '2026-04-01', endDate: '2026-04-14', role: 'OWNER' });
+    expect(trip).toMatchObject({ title: 'Spring in Japan', status: 'PLANNED', startDate: '2026-04-01', endDate: '2026-04-14', role: 'OWNER', canOpenMap: true });
     expect(trip.travellerIds).toEqual([travellers[0].id]);
 
     const list = data(await agent.get(`/api/maps/${map.id}/trips`)).trips;
@@ -130,5 +131,66 @@ describe('trips', () => {
 
     const visits = data(await agent.get(`/api/maps/${map.id}`)).map.visits;
     expect(visits.find((v) => v.countryCode === 'IS')).toMatchObject({ status: 'VISITED', source: 'TRIP' });
+  });
+});
+
+// docs/API.md "Access": someone added to a trip alone edits it (completing it and
+// adding photos included, whose visits still go on the map), but only the map's owner
+// and its editors delete it
+describe('a trip-only editor', () => {
+  let owner;
+  let guest;
+  let mapViewer;
+  let mapEditor;
+  let map;
+  let trip;
+
+  beforeAll(async () => {
+    owner = await signUp('TripHost', { verified: true });
+    guest = await signUp('TripGuest', { verified: true });
+    mapViewer = await signUp('MapViewer', { verified: true });
+    mapEditor = await signUp('MapEditor', { verified: true });
+    map = await defaultMapOf(owner.agent);
+    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Shared road trip' })).trip;
+    for (const [who, resource, role] of [
+      [guest, `trips/${trip.id}`, 'EDITOR'],
+      [mapViewer, `maps/${map.id}`, 'VIEWER'],
+      [mapViewer, `trips/${trip.id}`, 'EDITOR'],
+      [mapEditor, `maps/${map.id}`, 'EDITOR'],
+    ]) {
+      expect((await owner.agent.post(`/api/${resource}/members`).send({ email: who.email, role })).status).toBe(201);
+    }
+  });
+
+  it('edits the trip, completes it and adds photos; the visits go on the map with their source', async () => {
+    expect((await guest.agent.patch(`/api/trips/${trip.id}`).send({ description: 'Coast first' })).status).toBe(200);
+    expect((await guest.agent.post(`/api/trips/${trip.id}/stops`).send({ countryCode: 'HR' })).status).toBe(201);
+    expect((await guest.agent.patch(`/api/trips/${trip.id}`).send({ status: 'COMPLETED' })).status).toBe(200);
+    expect((await uploadPhoto(guest.agent, map.id, { tripId: trip.id, countryCode: 'SI' })).status).toBe(201);
+
+    const visits = data(await owner.agent.get(`/api/maps/${map.id}`)).map.visits;
+    expect(visits.find((v) => v.countryCode === 'HR')).toMatchObject({ status: 'VISITED', source: 'TRIP' });
+    expect(visits.find((v) => v.countryCode === 'SI')).toMatchObject({ status: 'VISITED', source: 'PHOTO' });
+    // ...but can't mark a country on the map by hand
+    expect((await guest.agent.put(`/api/maps/${map.id}/visits/IT`).send({ status: 'VISITED' })).status).toBe(404);
+  });
+
+  it("can't delete the trip, and is told so up front", async () => {
+    expect(data(await guest.agent.get(`/api/trips/${trip.id}`)).trip).toMatchObject({ role: 'EDITOR', canOpenMap: false, canDelete: false });
+    const refused = await guest.agent.delete(`/api/trips/${trip.id}`);
+    expect(refused.status).toBe(403);
+    expect(refused.body.message).toBe("Only the map's owner and its editors can delete a trip.");
+    // A viewer of the map who edits the trip can't either
+    expect(data(await mapViewer.agent.get(`/api/trips/${trip.id}`)).trip).toMatchObject({ role: 'EDITOR', canOpenMap: true, canDelete: false });
+    expect((await mapViewer.agent.delete(`/api/trips/${trip.id}`)).status).toBe(403);
+    expect(await prisma.trip.findUnique({ where: { id: trip.id } })).not.toBeNull();
+  });
+
+  it("lets the map's editors and owner delete it", async () => {
+    expect(data(await owner.agent.get(`/api/trips/${trip.id}`)).trip.canDelete).toBe(true);
+    expect(data(await mapEditor.agent.get(`/api/trips/${trip.id}`)).trip.canDelete).toBe(true);
+    expect((await mapEditor.agent.delete(`/api/trips/${trip.id}`)).status).toBe(200);
+    const another = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Another' })).trip;
+    expect((await owner.agent.delete(`/api/trips/${another.id}`)).status).toBe(200);
   });
 });

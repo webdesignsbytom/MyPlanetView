@@ -1,11 +1,12 @@
 // Mock mode only: maps, travellers, visits, stats, and the map's trips and photos.
-import { MOCK_UPLOAD_ORIGIN, deny, fail, ok, route } from '../mockAdapter';
+import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb, me, newId, newShareCode, session } from '../store';
+import { declaredSizeProblem, presignMockUpload } from '../uploads';
+import { countryAtPosition } from '../countryLookup';
 import {
   LANDMARK_ROWS,
   atLeast,
   countryExists,
-  countryNear,
   distanceM,
   mapRole,
   mapStats,
@@ -24,7 +25,15 @@ const VISIT_STATUSES = ['VISITED', 'LIVED', 'WANT_TO_GO'];
 const TRIP_STATUSES = ['PLANNED', 'ACTIVE', 'COMPLETED'];
 const PHOTO_TYPES = ['image/jpeg', 'image/webp', 'image/png'];
 const ORIGINAL_TYPES = [...PHOTO_TYPES, 'image/heic', 'image/heif'];
+const MB = 1024 * 1024;
+// Server mediaConstants.js PHOTO_MAX_BYTES
+const PHOTO_MAX_BYTES = { THUMB: 1 * MB, DISPLAY: 5 * MB, ORIGINAL: 50 * MB };
+// Server UNCONFIRMED_UPLOAD_LIMIT.photo: files presigned and never saved, per user, over a day
+const UNCONFIRMED_PHOTO_FILES = 60;
 const NOT_FOUND = 'This map could not be found.';
+// As the server's MAP_CREATE_DAILY_USER_LIMIT: 20 new maps per user a day, then 429
+const MAP_CREATE_DAILY_LIMIT = 20;
+const DAY_MS = 86400000;
 const signedOut = () => fail(401, 'No valid session. Please sign in.');
 
 const findMap = (id) => getDb().maps.find((m) => m.id === id) || null;
@@ -63,6 +72,13 @@ export function registerMapRoutes() {
 
   route('POST', '/api/maps', ({ body }) => {
     if (!session.signedIn) return signedOut();
+    const db = getDb();
+    const since = Date.now() - DAY_MS;
+    db.mapCreations = (db.mapCreations || []).filter((c) => c.at > since);
+    if (db.mapCreations.filter((c) => c.userId === me().id).length >= MAP_CREATE_DAILY_LIMIT) {
+      return fail(429, 'Too many requests — please try again later.');
+    }
+    db.mapCreations.push({ userId: me().id, at: Date.now() });
     const name = cleanText(body.name, 80);
     if (!name) return fail(400, 'Give the map a name.');
     if (!GROUP_TYPES.includes(body.groupType)) return fail(400, 'Choose solo, couple or family.');
@@ -239,7 +255,8 @@ export function registerMapRoutes() {
     const role = mapRole(map);
     const denied = deny(role, 'VIEWER', NOT_FOUND);
     if (denied) return denied;
-    return ok(photoPage(getDb().photos.filter((p) => p.mapId === map.id), role, query));
+    const page = photoPage(getDb().photos.filter((p) => p.mapId === map.id), role, query);
+    return page.error ? fail(400, page.error) : ok(page);
   });
 
   route('POST', '/api/maps/:mapId/photos/presign', ({ params, body }) => {
@@ -258,20 +275,30 @@ export function registerMapRoutes() {
     for (const f of files) {
       const allowed = f.size === 'ORIGINAL' ? ORIGINAL_TYPES : PHOTO_TYPES;
       if (!allowed.includes(f.contentType)) return fail(400, `That file type can't be uploaded as ${f.size.toLowerCase()}.`);
+      // As the server: the size is required, capped, and signed into the URL (../uploads.js)
+      const sizeProblem = declaredSizeProblem(f.bytes, PHOTO_MAX_BYTES[f.size]);
+      if (sizeProblem) return fail(...sizeProblem);
     }
+    // As the server (429): too many files presigned in the last day and never saved
+    const since = Date.now() - 86400000;
+    const pendingFiles = [...session.presigned.values()]
+      .filter((p) => p.ownerId === me().id && p.at > since)
+      .reduce((sum, p) => sum + Object.keys(p.keys).length, 0);
+    if (pendingFiles + files.length > UNCONFIRMED_PHOTO_FILES) return fail(429, 'Too many unfinished uploads. Please try again later.');
     const photoId = newId();
     const keys = {};
     const uploads = files.map((f) => {
       const ext = f.contentType.split('/')[1].replace('jpeg', 'jpg');
       const key = `myplanetview/photos/${map.id}/${photoId}/${f.size.toLowerCase()}-${newId().slice(0, 8)}.${ext}`;
       keys[f.size] = key;
-      return { size: f.size, key, url: `${MOCK_UPLOAD_ORIGIN}/${encodeURIComponent(key)}`, method: 'PUT', headers: { 'Content-Type': f.contentType }, expiresIn: 600 };
+      const url = presignMockUpload(key, { resource: 'photo', contentType: f.contentType, bytes: f.bytes, ownerId: me().id });
+      return { size: f.size, key, url, method: 'PUT', headers: { 'Content-Type': f.contentType }, bytes: f.bytes, expiresIn: 600 };
     });
-    session.presigned.set(photoId, { mapId: map.id, tripId: body.tripId || null, keys });
+    session.presigned.set(photoId, { mapId: map.id, tripId: body.tripId || null, keys, ownerId: me().id, at: Date.now() });
     return ok({ photoId, uploads });
   });
 
-  route('POST', '/api/maps/:mapId/photos', ({ params, body }) => {
+  route('POST', '/api/maps/:mapId/photos', async ({ params, body }) => {
     const db = getDb();
     const map = findMap(params.mapId);
     const pending = session.presigned.get(body.photoId);
@@ -284,7 +311,9 @@ export function registerMapRoutes() {
     if (denied) return denied;
     if (!session.blobs.has(pending.keys.THUMB) || !session.blobs.has(pending.keys.DISPLAY)) return fail(400, 'The upload did not finish. Please try again.');
     const hasGps = Number.isFinite(body.latitude) && Number.isFinite(body.longitude);
-    const countryCode = hasGps ? countryNear(body.latitude, body.longitude) : cleanCountry(body.countryCode);
+    // The chosen country stands in when there's no GPS, or the GPS finds no country (at sea)
+    // (point-in-polygon on the map's shapes, as the server: ../countryLookup.js)
+    const countryCode = (hasGps ? await countryAtPosition(body.latitude, body.longitude) : null) ?? cleanCountry(body.countryCode);
     const photo = {
       id: body.photoId,
       mapId: map.id,
@@ -303,7 +332,7 @@ export function registerMapRoutes() {
     };
     db.photos.push(photo);
     session.presigned.delete(body.photoId);
-    markVisited(map.id, countryCode, 'PHOTO', photo.takenAt ? photo.takenAt.slice(0, 10) : null);
+    markVisited(map.id, countryCode, 'PHOTO');
     if (hasGps) {
       LANDMARK_ROWS.forEach((lm) => {
         const d = distanceM(body.latitude, body.longitude, lm.latitude, lm.longitude);

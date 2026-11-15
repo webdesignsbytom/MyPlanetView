@@ -3,11 +3,8 @@
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
 import { logEvent } from '../utils/events/logEvent.js';
 import { createSharingEvent } from '../event/travelUtils.js';
-import { higherRole } from '../utils/access.js';
 import { hashInviteToken } from '../utils/shareCodes.js';
-import { findMapMember, upsertMapMember } from '../domain/maps.js';
-import { findTripMember, upsertTripMember } from '../domain/trips.js';
-import { findUsableInviteByHash, markInviteAccepted } from '../domain/sharing.js';
+import { acceptInviteInDB, findUsableInviteByHash } from '../domain/sharing.js';
 import { badRequest, forbidden, handler } from './helpers/travel.js';
 
 const D = DOMAINS.sharing;
@@ -23,15 +20,9 @@ export const acceptInviteHandler = handler(D, 'Accept invite', async (req, res) 
   const sameAddress = String(req.user.email || '').toLowerCase() === invite.email;
   if (!sameAddress || !req.user.emailVerified) return forbidden(req, res, D, EVENT_MESSAGES.inviteWrongEmail);
 
-  // Never lowers a role someone already has
-  if (invite.mapId) {
-    const current = await findMapMember(invite.mapId, req.user.id);
-    await upsertMapMember(invite.mapId, req.user.id, higherRole(current?.role, invite.role));
-  } else {
-    const current = await findTripMember(invite.tripId, req.user.id);
-    await upsertTripMember(invite.tripId, req.user.id, higherRole(current?.role, invite.role));
-  }
-  await markInviteAccepted(invite.id);
+  // One transaction; never lowers a role someone already has. False when the invite
+  // was used meanwhile (two accepts at once).
+  if (!(await acceptInviteInDB(invite, req.user.id))) return badRequest(req, res, D, EVENT_MESSAGES.inviteInvalid);
 
   const resource = invite.mapId ? 'map' : 'trip';
   const id = invite.mapId ?? invite.tripId;

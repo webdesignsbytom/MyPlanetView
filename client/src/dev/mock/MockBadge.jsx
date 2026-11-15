@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 // Components
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
+import SwitchInput from '@/components/ui/SwitchInput';
 // Mock
-import { ROLES, getMockRole, resetStore, setMockRole } from './store';
+import { ROLES, getMockRole, me, resetStore, saveStore, setMockRole } from './store';
+import { MOCK_PASSWORD } from './seed';
 
 const ROLE_OPTIONS = ROLES.map((role) => ({ value: role, label: role.charAt(0) + role.slice(1).toLowerCase() }));
 
@@ -13,6 +15,13 @@ function MockBadge() {
 
   const changeRole = (event) => {
     setMockRole(event.target.value);
+    window.location.reload();
+  };
+
+  // To try the pages as someone who hasn't verified their email yet (the seeded users have)
+  const toggleVerified = () => {
+    me().emailVerified = !me().emailVerified;
+    saveStore();
     window.location.reload();
   };
 
@@ -51,6 +60,7 @@ function MockBadge() {
             Signed in as
             <PlainOptionSelect id='mock-role' name='mock-role' value={role} onChange={changeRole} options={ROLE_OPTIONS} ariaLabel='Signed in as' />
           </label>
+          <SwitchInput id='mock-verified' checked={me().emailVerified === true} onChange={toggleVerified} label='Email verified' />
           <button
             type='button'
             onClick={reset}
@@ -66,6 +76,9 @@ function MockBadge() {
             Use real API
           </button>
           <p>Back to mock: add <code>?api=mock</code> to the address.</p>
+          <p>
+            Signed out? Sign in as <code className='break-all'>{me().email}</code> with <code>{MOCK_PASSWORD}</code>.
+          </p>
         </div>
       )}
     </aside>

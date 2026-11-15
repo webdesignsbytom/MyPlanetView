@@ -3,7 +3,7 @@ import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/re
 import { logEvent } from '../utils/events/logEvent.js';
 import { createTripEvent } from '../event/travelUtils.js';
 import { sanitizeText } from '../utils/sanitize.js';
-import { canEdit, canView } from '../utils/access.js';
+import { canDeleteTrip, canEdit, canView } from '../utils/access.js';
 import {
   DESCRIPTION_MAX,
   NOTES_MAX,
@@ -15,7 +15,7 @@ import {
   isUuid,
   parseDateOnly,
 } from '../utils/travelValidation.js';
-import { createMissingVisits, findTravellerIds } from '../domain/maps.js';
+import { findTravellerIds } from '../domain/maps.js';
 import { findLandmarkById } from '../domain/places.js';
 import {
   createStopInDB,
@@ -26,7 +26,6 @@ import {
   findStopIds,
   findTripDetail,
   findTripPhoto,
-  findTripStopCountryCodes,
   findTripsForMap,
   findTripsSharedWithUser,
   reorderStopsInDB,
@@ -35,7 +34,7 @@ import {
   updateTripInDB,
 } from '../domain/trips.js';
 import { newUniqueShareCode } from '../services/travel/maps.js';
-import { badRequest, denyUnless, handler, loadMap, loadTrip, notFound } from './helpers/travel.js';
+import { badRequest, denyUnless, forbidden, handler, loadMap, loadTrip, notFound } from './helpers/travel.js';
 import { isKnownCountry } from './helpers/countries.js';
 import { tripDetailView, tripSummary } from './helpers/views.js';
 
@@ -44,15 +43,10 @@ const D = DOMAINS.trips;
 const cleanTitle = (value) => sanitizeText(value, { maxLength: TITLE_MAX });
 const cleanText = (value, maxLength) => (value === undefined ? undefined : sanitizeText(value, { maxLength }));
 
-export async function tripView(tripId, role) {
+/** The whole trip; `mapRole` (the caller's role on its map) sets `canOpenMap` and `canDelete`. */
+export async function tripView(tripId, role, mapRole = null) {
   const detail = await findTripDetail(tripId);
-  return detail ? tripDetailView(detail, role) : null;
-}
-
-/** When a trip is completed, its stops' countries count as visited on its map. */
-async function markTripCountriesVisited(tripId, mapId) {
-  const codes = await findTripStopCountryCodes(tripId);
-  await createMissingVisits(mapId, codes, 'TRIP');
+  return detail ? tripDetailView(detail, role, { mapRole }) : null;
 }
 
 // Trips on a map
@@ -60,7 +54,7 @@ async function markTripCountriesVisited(tripId, mapId) {
 export const getMapTripsHandler = handler(D, 'Get map trips', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
   if (!canView(role)) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
-  const trips = await findTripsForMap(map.id);
+  const trips = await findTripsForMap(map.id, { includeHidden: canEdit(role) });
   return sendDataResponse(res, 200, { trips: await Promise.all(trips.map((t) => tripSummary(t, role))) });
 });
 
@@ -94,7 +88,8 @@ export const createTripHandler = handler(D, 'Create trip', async (req, res) => {
     travellerIds,
   });
   logEvent(createTripEvent({ user: req.user, action: 'Create Success', id: created.id, statusCode: 201 }));
-  return sendDataResponse(res, 201, { trip: await tripView(created.id, role) });
+  // Created from the map, so the caller's trip role is their map role
+  return sendDataResponse(res, 201, { trip: await tripView(created.id, role, role) });
 });
 
 // Trips added to someone directly (not through a map they can see)
@@ -109,13 +104,13 @@ export const getTripsSharedWithMeHandler = handler(D, 'Get shared trips', async 
 // One trip
 
 export const getTripHandler = handler(D, 'Get trip', async (req, res) => {
-  const { trip, role } = await loadTrip(req, req.params.tripId);
+  const { trip, mapRole, role } = await loadTrip(req, req.params.tripId);
   if (!canView(role)) return notFound(req, res, D, EVENT_MESSAGES.tripNotFound);
-  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role) });
+  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role, mapRole) });
 });
 
 export const updateTripHandler = handler(D, 'Update trip', async (req, res) => {
-  const { trip, role } = await loadTrip(req, req.params.tripId);
+  const { trip, mapRole, role } = await loadTrip(req, req.params.tripId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.tripNotFound)) return undefined;
 
   const body = req.body || {};
@@ -149,18 +144,21 @@ export const updateTripHandler = handler(D, 'Update trip', async (req, res) => {
   }
 
   if (Object.keys(data).length) {
-    const updated = await updateTripInDB(trip.id, data);
-    if (data.status === 'COMPLETED' && current.status !== 'COMPLETED') {
-      await markTripCountriesVisited(trip.id, updated.mapId);
-    }
+    // Completing it marks its stops' countries visited on the map, in the same
+    // transaction (also for a trip-only editor: the visits carry source TRIP)
+    const completing = data.status === 'COMPLETED' && current.status !== 'COMPLETED';
+    await updateTripInDB(trip.id, data, { markVisited: completing });
     logEvent(createTripEvent({ user: req.user, action: 'Update Success', id: trip.id, detail: Object.keys(data).join(',') }));
   }
-  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role) });
+  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role, mapRole) });
 });
 
 export const deleteTripHandler = handler(D, 'Delete trip', async (req, res) => {
-  const { trip, role } = await loadTrip(req, req.params.tripId);
+  const { trip, mapRole, role } = await loadTrip(req, req.params.tripId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.tripNotFound)) return undefined;
+  // Removing a trip takes the map's owner or an editor of the map: someone added to
+  // the trip alone edits it, but can't delete it
+  if (!canDeleteTrip(mapRole)) return forbidden(req, res, D, EVENT_MESSAGES.tripDeleteNeedsMap);
   // Photos stay on the map: Photo.trip is ON DELETE SET NULL
   await deleteTripInDB(trip.id);
   logEvent(createTripEvent({ user: req.user, action: 'Delete Success', id: trip.id }));
@@ -168,7 +166,7 @@ export const deleteTripHandler = handler(D, 'Delete trip', async (req, res) => {
 });
 
 export const putTripTravellersHandler = handler(D, 'Set trip travellers', async (req, res) => {
-  const { trip, role } = await loadTrip(req, req.params.tripId);
+  const { trip, mapRole, role } = await loadTrip(req, req.params.tripId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.tripNotFound)) return undefined;
   const { travellerIds } = req.body || {};
   if (!isSubsetOf(travellerIds, await findTravellerIds(trip.mapId))) {
@@ -176,7 +174,7 @@ export const putTripTravellersHandler = handler(D, 'Set trip travellers', async 
   }
   await setTripTravellersInDB(trip.id, travellerIds);
   logEvent(createTripEvent({ user: req.user, action: 'Travellers Update Success', id: trip.id, detail: `count=${travellerIds.length}` }));
-  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role) });
+  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role, mapRole) });
 });
 
 // Stops
@@ -208,47 +206,44 @@ async function parseStop(body, { partial = false, current = {} } = {}) {
 }
 
 export const createStopHandler = handler(D, 'Create stop', async (req, res) => {
-  const { trip, role } = await loadTrip(req, req.params.tripId);
+  const { trip, mapRole, role } = await loadTrip(req, req.params.tripId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.tripNotFound)) return undefined;
   const parsed = await parseStop(req.body || {});
   if (parsed.error) return badRequest(req, res, D, parsed.error);
 
+  // On a completed trip, the country is marked visited in the same transaction
   const stop = await createStopInDB({ tripId: trip.id, ...parsed.value });
   const detail = await findTripDetail(trip.id);
-  if (detail.status === 'COMPLETED') await createMissingVisits(trip.mapId, [stop.countryCode], 'TRIP');
   logEvent(createTripEvent({ user: req.user, action: 'Stop Create Success', id: trip.id, detail: `stop=${stop.id}`, statusCode: 201 }));
-  return sendDataResponse(res, 201, { trip: await tripDetailView(detail, role) });
+  return sendDataResponse(res, 201, { trip: await tripDetailView(detail, role, { mapRole }) });
 });
 
 export const updateStopHandler = handler(D, 'Update stop', async (req, res) => {
-  const { trip, role } = await loadTrip(req, req.params.tripId);
+  const { trip, mapRole, role } = await loadTrip(req, req.params.tripId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.tripNotFound)) return undefined;
   const current = isUuid(req.params.stopId) ? await findStop(trip.id, req.params.stopId) : null;
   if (!current) return notFound(req, res, D, EVENT_MESSAGES.stopNotFound);
   const parsed = await parseStop(req.body || {}, { partial: true, current });
   if (parsed.error) return badRequest(req, res, D, parsed.error);
 
-  await updateStopInDB(current.id, parsed.value);
+  await updateStopInDB(trip.id, current.id, parsed.value);
   const detail = await findTripDetail(trip.id);
-  if (detail.status === 'COMPLETED' && parsed.value.countryCode) {
-    await createMissingVisits(trip.mapId, [parsed.value.countryCode], 'TRIP');
-  }
   logEvent(createTripEvent({ user: req.user, action: 'Stop Update Success', id: trip.id, detail: `stop=${current.id}` }));
-  return sendDataResponse(res, 200, { trip: await tripDetailView(detail, role) });
+  return sendDataResponse(res, 200, { trip: await tripDetailView(detail, role, { mapRole }) });
 });
 
 export const deleteStopHandler = handler(D, 'Delete stop', async (req, res) => {
-  const { trip, role } = await loadTrip(req, req.params.tripId);
+  const { trip, mapRole, role } = await loadTrip(req, req.params.tripId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.tripNotFound)) return undefined;
   const current = isUuid(req.params.stopId) ? await findStop(trip.id, req.params.stopId) : null;
   if (!current) return notFound(req, res, D, EVENT_MESSAGES.stopNotFound);
   await deleteStopInDB(current.id);
   logEvent(createTripEvent({ user: req.user, action: 'Stop Delete Success', id: trip.id, detail: `stop=${current.id}` }));
-  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role) });
+  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role, mapRole) });
 });
 
 export const reorderStopsHandler = handler(D, 'Reorder stops', async (req, res) => {
-  const { trip, role } = await loadTrip(req, req.params.tripId);
+  const { trip, mapRole, role } = await loadTrip(req, req.params.tripId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.tripNotFound)) return undefined;
   const { stopIds } = req.body || {};
   const existing = await findStopIds(trip.id);
@@ -257,5 +252,5 @@ export const reorderStopsHandler = handler(D, 'Reorder stops', async (req, res) 
   }
   await reorderStopsInDB(stopIds);
   logEvent(createTripEvent({ user: req.user, action: 'Stops Reorder Success', id: trip.id }));
-  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role) });
+  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role, mapRole) });
 });

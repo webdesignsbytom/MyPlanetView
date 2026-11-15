@@ -8,7 +8,9 @@ import React from 'react';
 // A click or tap lets go of focus: a stamp left focused gets the keyboard focus ring as
 // soon as any key is pressed (even Shift). Enter or Space (`detail` 0) keeps it.
 // Also the trip page's move-up / move-down stamps, which use `disabled` at the list's ends.
-function MapRoundButton({ label, onClick, pressed, disabled = false, children }) {
+// `onIntent` runs when it's hovered, focused or pressed, before the click: the map
+// toolbar fetches the panel's code then.
+function MapRoundButton({ label, onClick, onIntent, pressed, disabled = false, children }) {
   return (
     <button
       type='button'
@@ -16,6 +18,9 @@ function MapRoundButton({ label, onClick, pressed, disabled = false, children })
         onClick(e);
         if (e.detail > 0) e.currentTarget.blur();
       }}
+      onPointerEnter={onIntent}
+      onFocus={onIntent}
+      onPointerDown={onIntent}
       disabled={disabled}
       aria-label={label}
       aria-pressed={pressed === undefined ? undefined : pressed}

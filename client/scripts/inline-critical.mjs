@@ -1,57 +1,50 @@
-// Inline critical CSS into built HTML
+// Inlines each pre-rendered page's critical CSS (runs after prerender.mjs, on its output).
+// Beasties finds the rules the page's HTML uses and puts them in a <style> in the head; the
+// full stylesheet moves to the end of <body> (preload 'body'), so the page paints without
+// waiting for it and no script is needed (the CSP allows no inline script). The app shell
+// is skipped: its #root is empty until the app draws it, so it keeps the blocking link.
+//
+// Beasties can't tell which fonts the critical rules use (their families come through
+// CSS variables), so every @font-face of the stylesheet is inlined too. Without them the
+// first paint used a fallback font and the text moved when the stylesheet arrived.
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import Critters from 'critters';
+import { fileURLToPath } from 'node:url';
+import Beasties from 'beasties';
 
-const outDir = path.resolve('dist');
+const dist = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../dist');
+const SKIP = new Set(['app-shell.html']);
+const STYLESHEET = /<link[^>]+rel="stylesheet"[^>]+href="\/(assets\/[^"]+\.css)"/g;
+const FONT_FACE = /@font-face\{[^}]*\}/g;
 
-async function findHtmlFiles(dir) {
-  const entries = await fs.readdir(dir, { withFileTypes: true });
-  const files = [];
-
-  for (const entry of entries) {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      files.push(...(await findHtmlFiles(full)));
-    } else if (entry.name === 'index.html') {
-      files.push(full);
-    }
-  }
-
-  return files;
-}
-
-// Critters config
-const critters = new Critters({
-  path: outDir,
+const beasties = new Beasties({
+  path: dist,
   publicPath: '/',
-  preload: 'swap',
-  inlineFonts: true,
+  preload: 'body',
   pruneSource: false,
+  inlineFonts: false, // added below instead
+  preloadFonts: false, // index.html preloads the two every page draws
   compress: true,
   logLevel: 'warn',
-  dimensions: [
-    { width: 375, height: 667 }, // small phone
-    { width: 768, height: 1024 }, // tablet
-    { width: 1280, height: 800 }, // desktop
-  ],
 });
 
 async function run() {
-  const htmlFiles = await findHtmlFiles(outDir);
-
-  for (const filePath of htmlFiles) {
-    const html = await fs.readFile(filePath, 'utf8');
-    const processed = await critters.process(html);
-    await fs.writeFile(filePath, processed);
+  const pages = (await fs.readdir(dist)).filter((file) => file.endsWith('.html') && !SKIP.has(file));
+  for (const file of pages) {
+    const html = await fs.readFile(path.join(dist, file), 'utf8');
+    const faces = [];
+    for (const [, href] of html.matchAll(STYLESHEET)) {
+      const css = await fs.readFile(path.join(dist, href), 'utf8');
+      faces.push(...(css.match(FONT_FACE) || []));
+    }
+    const processed = await beasties.process(html);
+    if (!processed.includes('<style>')) throw new Error(`${file}: no critical CSS was inlined`);
+    await fs.writeFile(path.join(dist, file), processed.replace('<style>', `<style>${faces.join('')}`));
   }
-
-  console.log(
-    `✅ Inlined critical CSS into ${htmlFiles.length} HTML file(s)`
-  );
+  console.log(`✅ Inlined critical CSS into ${pages.length} pre-rendered page(s)`);
 }
 
-run().catch((e) => {
-  console.error('❌ Critters failed:', e);
+run().catch((err) => {
+  console.error('❌ Critical CSS failed:', err);
   process.exit(1);
 });

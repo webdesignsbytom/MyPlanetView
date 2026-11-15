@@ -45,6 +45,13 @@ export const canView = (role) => hasAtLeast(role, ROLES.VIEWER);
 export const canEdit = (role) => hasAtLeast(role, ROLES.EDITOR);
 export const canManage = (role) => role === ROLES.OWNER;
 
+/**
+ * Deleting a trip: the map's owner or an editor of the map. Someone added to the trip
+ * alone (a TripMember EDITOR) edits it, but can't remove it. `mapRole` is the caller's
+ * role on the trip's map.
+ */
+export const canDeleteTrip = (mapRole) => canEdit(mapRole);
+
 /** Viewers never see hidden photos. */
 export const canSeePhoto = (role, photo) => canView(role) && (!photo?.hidden || canEdit(role));
 

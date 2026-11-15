@@ -2,9 +2,11 @@ import React from 'react';
 // Components
 import MapPanel from './MapPanel';
 import StatTile from './StatTile';
+import UnplacedPhotosButton from './UnplacedPhotosButton';
 
-// Travel statistics, counted by the server from what this viewer may see.
-function StatsPanel({ stats, travellers = [], onClose }) {
+// Travel statistics, counted by the server from what this viewer may see. The photos
+// with no country (counted, but on no country) are a button away.
+function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onClose }) {
   const byTraveller = stats?.byTraveller || [];
   return (
     <MapPanel title='Travel statistics' onClose={onClose}>
@@ -17,6 +19,7 @@ function StatsPanel({ stats, travellers = [], onClose }) {
             <StatTile label='Landmarks' value={stats.landmarks} />
             <StatTile label='Trips' value={stats.trips} />
           </dl>
+          {onShowUnplaced ? <UnplacedPhotosButton count={unplacedCount} more={unplacedMore} onOpen={onShowUnplaced} /> : null}
           {travellers.length > 1 && byTraveller.length ? (
             <section className='grid gap-2' aria-labelledby='stats-by-traveller'>
               <h3 id='stats-by-traveller' className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>

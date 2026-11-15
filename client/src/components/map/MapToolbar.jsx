@@ -12,7 +12,8 @@ import MapRoundButton from './MapRoundButton';
 // The old site's tool strip, as a parchment strip of rubber stamps: a column on the
 // right on wide screens, a row along the bottom on phones. `tools` lists which panels
 // this viewer can open; settings comes last (the bottom of the column, the end of the row).
-function MapToolbar({ openPanel, onToggle, canUpload, canShare, showHome = true }) {
+// `onIntent(id)` runs as a stamp is hovered, focused or pressed (to fetch its panel's code).
+function MapToolbar({ openPanel, onToggle, onIntent, canUpload, canShare, showHome = true }) {
   const navigate = useNavigate();
 
   const tools = [
@@ -40,6 +41,7 @@ function MapToolbar({ openPanel, onToggle, canUpload, canShare, showHome = true 
           label={tool.label}
           pressed={openPanel === tool.id}
           onClick={() => onToggle(tool.id)}
+          onIntent={onIntent ? () => onIntent(tool.id) : undefined}
         >
           {tool.icon}
         </MapRoundButton>

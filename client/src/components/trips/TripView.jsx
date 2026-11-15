@@ -7,6 +7,8 @@ import TripPhotosSection from './TripPhotosSection';
 import ShareDialog from '@/components/sharing/ShareDialog';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
+// Hooks
+import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 // Utils
 import { canEditRole } from '@/utils/sharing/shareRoles';
 
@@ -14,10 +16,14 @@ import { canEditRole } from '@/utils/sharing/shareRoles';
  * One trip: header, route map, stops and photos, each a piece of travel paperwork laid
  * out like the public pages' cards (16px apart, 8px from lg up). Editors change it here;
  * a share-link visitor (`shareCode`) only views. `onDelete` returns a promise that
- * removes the trip.
+ * removes the trip. An editor whose email address isn't verified yet (`locked`) sees it
+ * as a viewer would, with the reason where the edit controls would be.
  */
 function TripView({ trip, onTripChange, shareCode = null, styleId, currentUser = null, onDelete, onLeft }) {
-  const canEdit = !shareCode && canEditRole(trip.role);
+  const roleCanEdit = !shareCode && canEditRole(trip.role);
+  const mustVerify = useMustVerifyEmail();
+  const locked = roleCanEdit && mustVerify;
+  const canEdit = roleCanEdit && !locked;
   const [sharing, setSharing] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
@@ -39,6 +45,7 @@ function TripView({ trip, onTripChange, shareCode = null, styleId, currentUser =
       <TripHeader
         trip={trip}
         canEdit={canEdit}
+        locked={locked}
         linkToMap={!shareCode}
         onChanged={onTripChange}
         onShare={currentUser && !shareCode ? () => setSharing(true) : null}
@@ -62,7 +69,7 @@ function TripView({ trip, onTripChange, shareCode = null, styleId, currentUser =
 
       <TripMiniMap trip={trip} styleId={styleId} />
       <TripStopList trip={trip} canEdit={canEdit} onChanged={onTripChange} />
-      <TripPhotosSection trip={trip} canEdit={canEdit} shareCode={shareCode} />
+      <TripPhotosSection trip={trip} canEdit={canEdit} locked={locked} shareCode={shareCode} />
 
       {sharing ? (
         <ShareDialog

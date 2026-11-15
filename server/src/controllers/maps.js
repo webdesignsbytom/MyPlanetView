@@ -30,7 +30,7 @@ import {
 import { deleteMapWithFiles, ensureDefaultMap, newUniqueShareCode } from '../services/travel/maps.js';
 import { badRequest, conflict, denyUnless, handler, loadMap, notFound } from './helpers/travel.js';
 import { isKnownCountry, parseOptionalCountry } from './helpers/countries.js';
-import { loadMapStats, visitView } from './helpers/views.js';
+import { loadMapStats, loadStatsCounts, statsFrom, visitView } from './helpers/views.js';
 
 const D = DOMAINS.maps;
 
@@ -69,13 +69,18 @@ const summaryView = (map, role) => ({
   isDefault: map.isDefault,
   role,
   ownerName: map.owner?.name ?? null,
-  counts: { countries: map._count.visits, photos: map._count.photos, trips: map._count.trips },
+  // { countries, photos, trips }, from findOwnedMaps/findMemberMaps (photos per the caller's role)
+  counts: map.counts,
 });
 
-/** The full map for someone with `role` on it. */
+/**
+ * The full map for someone with `role` on it. The detail and the stats' counts are
+ * read side by side; the stats reuse the detail's visits and travellers.
+ */
 export async function mapDetailView(mapId, role) {
-  const [detail, stats] = await Promise.all([findMapDetail(mapId), loadMapStats(mapId, role)]);
+  const [detail, counts] = await Promise.all([findMapDetail(mapId), loadStatsCounts(mapId, role)]);
   if (!detail) return null;
+  const stats = statsFrom(detail, counts);
   const editor = canEdit(role);
   return {
     id: detail.id,
@@ -100,8 +105,13 @@ export async function mapDetailView(mapId, role) {
 // Maps
 
 export const getMyMapsHandler = handler(D, 'Get my maps', async (req, res) => {
-  await ensureDefaultMap(req.user);
-  const [owned, memberships] = await Promise.all([findOwnedMaps(req.user.id), findMemberMaps(req.user.id)]);
+  const [ownedMaps, memberships] = await Promise.all([findOwnedMaps(req.user.id), findMemberMaps(req.user.id)]);
+  // The sign-up hook makes the default map; it's made here only if that ever failed
+  let owned = ownedMaps;
+  if (!owned.some((map) => map.isDefault)) {
+    await ensureDefaultMap(req.user);
+    owned = await findOwnedMaps(req.user.id);
+  }
   const maps = [
     ...owned.map((map) => summaryView(map, 'OWNER')),
     ...memberships.map((m) => summaryView(m.map, m.role)),

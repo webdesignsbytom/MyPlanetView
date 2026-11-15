@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useSyncExternalStore } from 'react';
 // Utils
 import { MAP_HEIGHT, MAP_WIDTH } from '@/utils/map/projection';
 
@@ -13,7 +13,23 @@ const DOUBLE_TAP_ZOOM = 2;
 // Where a portrait screen opens when the page gives no home point: Europe
 const DEFAULT_HOME = { x: 1060, y: 200 };
 
+// Runs `fn` in a task of its own, after the current one, as React's scheduler does: the
+// view goes onto the SVG, and what's drawn by zoom re-renders, together and outside the
+// browser's frame work (done inside requestAnimationFrame, the render lengthened every
+// pinch frame).
+let channel = null;
+const queued = [];
+function afterThisTask(fn) {
+  if (!channel) {
+    channel = new MessageChannel();
+    channel.port1.onmessage = () => queued.splice(0).forEach((run) => run());
+  }
+  queued.push(fn);
+  channel.port2.postMessage(null);
+}
+
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
+const viewBoxOf = (v) => `${v.x} ${v.y} ${v.w} ${v.h}`;
 
 // The view's shape (height / width). On a landscape screen it's the map's own, so the whole
 // world fits. On a portrait one it's the screen's, so the map fills the height and the
@@ -44,21 +60,28 @@ function homeView(aspect, home) {
  * Pan and zoom for the SVG map, through its viewBox: drag with a mouse or one finger,
  * pinch with two, double-tap or double-click to zoom in on a spot, the wheel, the
  * keyboard (arrows, + and -, 0 to reset) and buttons.
+ *
+ * The view isn't React state. It lives in a ref and goes straight onto the SVG's viewBox
+ * (through `svgRef`), so panning re-renders nothing. What depends on the zoom (badges,
+ * names, dots, pins) reads it with useViewportZoom(viewport), which re-renders only those
+ * components, only when the zoom changes, and once for a burst of events (in the same
+ * task that moves the viewBox).
+ *
  * While a mouse button is held on the map, the SVG carries `data-grabbing` (for the
  * grabbing-hand cursor).
  * `afterTap(action)` is for click handlers on the map (opening a country): it ignores the
  * click that ends a drag or a double-tap, and holds the action back until no second tap
  * can follow, so a double-tap only zooms.
  * `home` ({ x, y } in map units) is where a portrait screen opens, e.g. the visited countries.
+ * The returned object never changes, so it can be passed to memoised components.
  */
 export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME } = {}) {
-  const svgRef = useRef(null);
-  const [view, setView] = useState(FULL);
-  // The view as of the last render, for gestures that start from it
+  const svgNodeRef = useRef(null);
+  // The live view, and the zoom the subscribers last saw
   const viewRef = useRef(FULL);
-  useEffect(() => {
-    viewRef.current = view;
-  }, [view]);
+  const zoomRef = useRef(1);
+  const listenersRef = useRef(new Set());
+  const pendingRef = useRef(false);
   const pointersRef = useRef(new Map());
   const gestureRef = useRef(null);
   const draggedRef = useRef(false);
@@ -68,80 +91,140 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
   const lastTapRef = useRef(null);
   const doubleTapRef = useRef(false);
   const pendingTapRef = useRef(null);
-  useEffect(() => () => clearTimeout(pendingTapRef.current), []);
   // The view's shape, from the SVG's size on screen; and whether the user has moved it yet
-  const [aspect, setAspect] = useState(ASPECT);
   const aspectRef = useRef(ASPECT);
   const movedRef = useRef(false);
+  const homeRef = useRef({ x: home?.x ?? DEFAULT_HOME.x, y: home?.y ?? DEFAULT_HOME.y });
   const homeX = home?.x ?? DEFAULT_HOME.x;
   const homeY = home?.y ?? DEFAULT_HOME.y;
 
+  useEffect(() => () => clearTimeout(pendingTapRef.current), []);
+
+  // The live view onto the SVG, and the zoom to its subscribers, together (so the badges
+  // never lag the map by a frame)
+  const flush = useCallback(() => {
+    pendingRef.current = false;
+    const view = viewRef.current;
+    svgNodeRef.current?.setAttribute('viewBox', viewBoxOf(view));
+    const zoom = MAP_WIDTH / view.w;
+    if (zoom === zoomRef.current) return;
+    zoomRef.current = zoom;
+    listenersRef.current.forEach((listener) => listener());
+  }, []);
+
+  // The one way the view changes. The ref at once (gestures read it); the SVG and the zoom
+  // subscribers in a task after this one, once for any number of pointer or wheel events
+  // in between. `now`: straight away, e.g. before the first paint.
+  const apply = useCallback(
+    (next, now = false) => {
+      viewRef.current = next;
+      if (now) flush();
+      else if (!pendingRef.current) {
+        pendingRef.current = true;
+        afterThisTask(flush);
+      }
+    },
+    [flush],
+  );
+
+  // The view's shape from the SVG's size on screen. A new shape resets the view until the
+  // user has moved it; after that, a rotation keeps their place in the new shape.
+  const measure = useCallback(
+    (first = false) => {
+      const rect = svgNodeRef.current?.getBoundingClientRect();
+      if (!rect?.width || !rect?.height) return;
+      const aspect = viewAspectFor(rect.height / rect.width);
+      if (aspect === aspectRef.current && !first) return;
+      aspectRef.current = aspect;
+      const prev = viewRef.current;
+      apply(movedRef.current ? fit({ x: prev.x, y: prev.y, w: prev.w }, aspect) : homeView(aspect, homeRef.current), first);
+    },
+    [apply],
+  );
+
+  // The SVG gets its viewBox from here, never from a React prop. Measured as it's attached,
+  // before the first paint, so a portrait screen never shows the whole world first (the
+  // zoom subscribers catch up in their own layout effects; see useViewportZoom).
+  const svgRef = useCallback(
+    (node) => {
+      svgNodeRef.current = node;
+      if (!node) return;
+      node.setAttribute('viewBox', viewBoxOf(viewRef.current));
+      measure(true);
+    },
+    [measure],
+  );
+
   useEffect(() => {
-    const svg = svgRef.current;
+    const svg = svgNodeRef.current;
     if (!svg || typeof ResizeObserver === 'undefined') return undefined;
-    const measure = () => {
-      const rect = svg.getBoundingClientRect();
-      if (rect.width && rect.height) setAspect(viewAspectFor(rect.height / rect.width));
-    };
-    const observer = new ResizeObserver(measure);
+    const observer = new ResizeObserver(() => measure());
     observer.observe(svg);
-    measure();
     return () => observer.disconnect();
-  }, []);
+  }, [measure]);
 
-  // A new screen shape (or a new home before the user has moved) resets the view; once
-  // they've panned or zoomed, a rotation keeps their place in the new shape
+  // A new home (the visits arrived or changed) moves the view only if the user hasn't yet
   useEffect(() => {
-    aspectRef.current = aspect;
-    if (!movedRef.current) setView(homeView(aspect, { x: homeX, y: homeY }));
-    else setView((prev) => fit({ x: prev.x, y: prev.y, w: prev.w }, aspect));
-  }, [aspect, homeX, homeY]);
+    homeRef.current = { x: homeX, y: homeY };
+    if (!movedRef.current) apply(homeView(aspectRef.current, homeRef.current));
+  }, [homeX, homeY, apply]);
 
-  // Screen position -> map position, through the SVG's own transform
+  // Screen position -> map position, from the live view (the SVG's viewBox can be a task
+  // behind) and its box on screen, drawn "meet" and centred (xMidYMid)
   const toMap = useCallback((clientX, clientY) => {
-    const svg = svgRef.current;
-    const ctm = svg?.getScreenCTM?.();
-    if (!svg || !ctm) return null;
-    const point = svg.createSVGPoint();
-    point.x = clientX;
-    point.y = clientY;
-    return point.matrixTransform(ctm.inverse());
+    const rect = svgNodeRef.current?.getBoundingClientRect();
+    if (!rect?.width || !rect?.height) return null;
+    const view = viewRef.current;
+    const scale = Math.min(rect.width / view.w, rect.height / view.h);
+    return {
+      x: view.x + (clientX - rect.left - (rect.width - view.w * scale) / 2) / scale,
+      y: view.y + (clientY - rect.top - (rect.height - view.h * scale) / 2) / scale,
+    };
   }, []);
 
-  const zoomAround = useCallback((factor, centre) => {
-    movedRef.current = true;
-    setView((prev) => {
+  const zoomAround = useCallback(
+    (factor, centre) => {
+      movedRef.current = true;
+      const prev = viewRef.current;
       const a = aspectRef.current;
       const at = centre || { x: prev.x + prev.w / 2, y: prev.y + prev.h / 2 };
       const w = clamp(prev.w / factor, MIN_WIDTH, Math.min(MAP_WIDTH, MAP_HEIGHT / a));
       const ratio = w / prev.w;
-      return fit({ x: at.x - (at.x - prev.x) * ratio, y: at.y - (at.y - prev.y) * ratio, w }, a);
-    });
-  }, []);
+      apply(fit({ x: at.x - (at.x - prev.x) * ratio, y: at.y - (at.y - prev.y) * ratio, w }, a));
+    },
+    [apply],
+  );
 
   const zoomIn = useCallback(() => zoomAround(1.6), [zoomAround]);
   const zoomOut = useCallback(() => zoomAround(1 / 1.6), [zoomAround]);
   const reset = useCallback(() => {
     movedRef.current = false;
-    setView(homeView(aspectRef.current, { x: homeX, y: homeY }));
-  }, [homeX, homeY]);
+    apply(homeView(aspectRef.current, homeRef.current));
+  }, [apply]);
 
   // Centre on a point at a given width (a country picked from the list)
-  const focusOn = useCallback((x, y, width = 400) => {
-    movedRef.current = true;
-    const a = aspectRef.current;
-    const w = clamp(width, MIN_WIDTH, MAP_WIDTH);
-    setView(fit({ x: x - w / 2, y: y - (w * a) / 2, w }, a));
-  }, []);
+  const focusOn = useCallback(
+    (x, y, width = 400) => {
+      movedRef.current = true;
+      const a = aspectRef.current;
+      const w = clamp(width, MIN_WIDTH, MAP_WIDTH);
+      apply(fit({ x: x - w / 2, y: y - (w * a) / 2, w }, a));
+    },
+    [apply],
+  );
 
-  const panBy = useCallback((dxFraction, dyFraction) => {
-    movedRef.current = true;
-    setView((prev) => fit({ x: prev.x + prev.w * dxFraction, y: prev.y + prev.h * dyFraction, w: prev.w }, aspectRef.current));
-  }, []);
+  const panBy = useCallback(
+    (dxFraction, dyFraction) => {
+      movedRef.current = true;
+      const prev = viewRef.current;
+      apply(fit({ x: prev.x + prev.w * dxFraction, y: prev.y + prev.h * dyFraction, w: prev.w }, aspectRef.current));
+    },
+    [apply],
+  );
 
   // The wheel needs a non-passive listener to stop the page scrolling
   useEffect(() => {
-    const svg = svgRef.current;
+    const svg = svgNodeRef.current;
     if (!svg || !wheelZoom) return undefined;
     const onWheel = (e) => {
       e.preventDefault();
@@ -154,7 +237,7 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
 
   // The grabbing hand: set straight on the SVG, so holding the mouse doesn't re-render the map
   const setGrabbing = useCallback((on) => {
-    svgRef.current?.toggleAttribute('data-grabbing', on);
+    svgNodeRef.current?.toggleAttribute('data-grabbing', on);
   }, []);
 
   const onPointerDown = useCallback(
@@ -218,12 +301,12 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
           movedRef.current = true;
           e.currentTarget.setPointerCapture?.(e.pointerId);
         }
-        const rect = svgRef.current?.getBoundingClientRect();
+        const rect = svgNodeRef.current?.getBoundingClientRect();
         if (!rect?.width || !rect?.height) return;
         // Map units per screen pixel (the map is drawn "meet": the tighter side decides)
         const base = gesture.view;
         const scale = Math.max(base.w / rect.width, base.h / rect.height);
-        setView(fit({ x: base.x - dx * scale, y: base.y - dy * scale, w: base.w }, aspectRef.current));
+        apply(fit({ x: base.x - dx * scale, y: base.y - dy * scale, w: base.w }, aspectRef.current));
       } else if (gesture.kind === 'pinch' && pointers.length === 2) {
         const [a, b] = pointers;
         const distance = Math.hypot(a.x - b.x, a.y - b.y);
@@ -233,7 +316,7 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
         gesture.distance = distance;
       }
     },
-    [endPointer, zoomAround],
+    [endPointer, zoomAround, apply],
   );
 
   // A finger or button lifted: end the gesture, and if it was a plain tap close after
@@ -293,22 +376,46 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME }
     [panBy, zoomIn, zoomOut, reset],
   );
 
-  return {
-    svgRef,
-    view,
-    viewBox: `${view.x} ${view.y} ${view.w} ${view.h}`,
-    zoom: MAP_WIDTH / view.w,
-    zoomIn,
-    zoomOut,
-    reset,
-    focusOn,
-    afterTap,
-    handlers: {
-      onPointerDown,
-      onPointerMove,
-      onPointerUp,
-      onPointerCancel: endPointer,
-      onKeyDown,
-    },
-  };
+  const subscribe = useCallback((listener) => {
+    listenersRef.current.add(listener);
+    return () => listenersRef.current.delete(listener);
+  }, []);
+  const getZoom = useCallback(() => zoomRef.current, []);
+
+  return useMemo(
+    () => ({
+      svgRef,
+      subscribe,
+      getZoom,
+      zoomIn,
+      zoomOut,
+      reset,
+      focusOn,
+      afterTap,
+      handlers: {
+        onPointerDown,
+        onPointerMove,
+        onPointerUp,
+        onPointerCancel: endPointer,
+        onKeyDown,
+      },
+    }),
+    [svgRef, subscribe, getZoom, zoomIn, zoomOut, reset, focusOn, afterTap, onPointerDown, onPointerMove, onPointerUp, endPointer, onKeyDown],
+  );
+}
+
+/**
+ * The viewport's zoom (map width / view width), for what is drawn by zoom. Re-renders the
+ * caller only when the zoom changes, or with `select` only when its result does
+ * (e.g. `(zoom) => zoom >= 3`). A change made while the caller was being committed (the
+ * first measurement, as the SVG is attached) is caught before the browser paints.
+ */
+export function useViewportZoom(viewport, select) {
+  const getSnapshot = select ? () => select(viewport.getZoom()) : viewport.getZoom;
+  const value = useSyncExternalStore(viewport.subscribe, getSnapshot, getSnapshot);
+  const [, rerender] = useReducer((n) => n + 1, 0);
+  useLayoutEffect(() => {
+    if (getSnapshot() !== value) rerender();
+  });
+  return value;
 }

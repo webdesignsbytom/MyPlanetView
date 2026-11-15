@@ -187,6 +187,14 @@ export async function clearUserAvatar(userId) {
   return current?.media?.key ?? null;
 }
 
+// Retention, for the daily cron: better-auth rows past their expiry (it ignores them
+// anyway; nothing else removes a session nobody signs out of). -> { count }
+export const deleteExpiredSessions = () =>
+  prisma.session.deleteMany({ where: { expiresAt: { lt: new Date() } } });
+
+export const deleteExpiredVerifications = () =>
+  prisma.verification.deleteMany({ where: { expiresAt: { lt: new Date() } } });
+
 // Every avatar upload the user owns (for account deletion)
 export const findOwnedAvatarKeys = async (userId) => {
   const items = await prisma.mediaItem.findMany({

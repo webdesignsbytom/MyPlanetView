@@ -66,9 +66,9 @@ export const updateStop = (tripId, stopId, body) =>
 export const deleteStop = (tripId, stopId) => data(client.delete(`${TRIPS_API}/${enc(tripId)}/stops/${enc(stopId)}`));
 export const reorderStops = (tripId, stopIds) => data(client.put(`${TRIPS_API}/${enc(tripId)}/stops/order`, { stopIds }));
 
-// Photos: a page of a map's, a trip's or a share link's photos
-export const getPhotoPage = ({ mapId, tripId, shareCode, country, cursor, limit }) => {
-  const filters = query({ country, cursor, limit, tripId: mapId && tripId ? tripId : undefined });
+// Photos: a page of a map's, a trip's or a share link's photos (`unplaced`: only those with no country)
+export const getPhotoPage = ({ mapId, tripId, shareCode, country, unplaced, cursor, limit }) => {
+  const filters = query({ country, unplaced: unplaced ? 1 : undefined, cursor, limit, tripId: mapId && tripId ? tripId : undefined });
   if (shareCode) return data(client.get(`${SHARED_API}/${enc(shareCode)}/photos${filters}`));
   if (mapId) return data(client.get(`${MAPS_API}/${enc(mapId)}/photos${filters}`));
   return data(client.get(`${TRIPS_API}/${enc(tripId)}/photos${filters}`));

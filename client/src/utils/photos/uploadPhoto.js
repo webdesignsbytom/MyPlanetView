@@ -11,7 +11,8 @@ export const PHOTO_MAX_BYTES = { THUMB: 1 * MB, DISPLAY: 5 * MB, ORIGINAL: 50 * 
 
 /**
  * onStage('reading' | 'resizing' | 'uploading' | 'saving'), onProgress(0..1).
- * `countryCode` is used only when the photo has no location of its own.
+ * `countryCode` is the uploader's choice, always sent: the server uses it when the photo
+ * has no location of its own, or a location in no country (taken at sea).
  * Resolves { photo, hadLocation }; rejects with a message people can read.
  */
 export async function uploadPhoto({ mapId, tripId, file, countryCode, onStage, onProgress }) {
@@ -37,12 +38,14 @@ export async function uploadPhoto({ mapId, tripId, file, countryCode, onStage, o
   }
 
   onStage?.('uploading');
+  // Each upload URL is signed for this type and this exact size; the PUT sends both as declared
+  for (const f of files) f.bytes = f.blob.size;
   const { photoId, uploads } = await presignPhoto(mapId, {
     tripId: tripId || undefined,
-    files: files.map((f) => ({ size: f.size, contentType: f.contentType, bytes: f.blob.size })),
+    files: files.map((f) => ({ size: f.size, contentType: f.contentType, bytes: f.bytes })),
   });
 
-  const total = files.reduce((sum, f) => sum + f.blob.size, 0);
+  const total = files.reduce((sum, f) => sum + f.bytes, 0);
   const sent = {};
   const report = () => onProgress?.(Object.values(sent).reduce((a, b) => a + b, 0) / total);
   const keys = {};
@@ -50,11 +53,12 @@ export async function uploadPhoto({ mapId, tripId, file, countryCode, onStage, o
     const target = uploads.find((u) => u.size === f.size);
     if (!target) throw new Error('The server didn’t give an upload address for this photo.');
     keys[f.size] = target.key;
-    await putFile(target.url, f.blob, f.contentType, (loaded) => {
+    const onFileProgress = (loaded) => {
       sent[f.size] = loaded;
       report();
-    });
-    sent[f.size] = f.blob.size;
+    };
+    await putFile(target.url, f.blob, f.contentType, onFileProgress, f.bytes);
+    sent[f.size] = f.bytes;
     report();
   }
 
@@ -66,7 +70,7 @@ export async function uploadPhoto({ mapId, tripId, file, countryCode, onStage, o
     takenAt: meta.takenAt || undefined,
     latitude: hadLocation ? meta.latitude : undefined,
     longitude: hadLocation ? meta.longitude : undefined,
-    countryCode: !hadLocation && countryCode ? countryCode : undefined,
+    countryCode: countryCode || undefined,
     width: copies.width,
     height: copies.height,
     variants: files.map((f) => ({ size: f.size, key: keys[f.size], width: f.width, height: f.height })),

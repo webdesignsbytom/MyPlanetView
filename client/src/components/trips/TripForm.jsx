@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
 // Components
 import FormField from '@/components/ui/FormField';
 import TextInput from '@/components/ui/TextInput';
@@ -10,8 +10,10 @@ import TripTravellerChips from './TripTravellerChips';
 // Utils
 import { TRIP_STATUSES } from '@/utils/trips/tripStatus';
 
-// A trip's details: new (empty `initial`) or editing. `onSubmit(body)` saves.
+// A trip's details: new (empty `initial`) or editing. `onSubmit(body)` saves. Its field
+// ids are its own: the trip page's h1 is #trip-title, and the form sits under it.
 function TripForm({ initial = {}, travellers = [], onSubmit, onCancel, submitLabel = 'Create trip', showTravellers = true }) {
+  const uid = useId();
   const [form, setForm] = useState({
     title: initial.title || '',
     description: initial.description || '',
@@ -47,22 +49,22 @@ function TripForm({ initial = {}, travellers = [], onSubmit, onCancel, submitLab
 
   return (
     <form onSubmit={handleSubmit} className='grid gap-3' noValidate>
-      <FormField id='trip-title' label='Title' required>
+      <FormField id={`${uid}-title`} label='Title' required>
         <TextInput value={form.title} onChange={set('title')} maxLength={120} required />
       </FormField>
-      <FormField id='trip-status' label='Status'>
+      <FormField id={`${uid}-status`} label='Status'>
         <PlainOptionSelect value={form.status} onChange={set('status')} options={TRIP_STATUSES} />
       </FormField>
       {/* Two columns at most, the map panel is narrow; grid-cols-1 lets a date field shrink to its column */}
       <div className='grid gap-3 sm:grid-cols-2'>
-        <FormField id='trip-start' label='From' className='grid grid-cols-1 gap-y-2'>
+        <FormField id={`${uid}-start`} label='From' className='grid grid-cols-1 gap-y-2'>
           <TextInput type='date' value={form.startDate} onChange={set('startDate')} />
         </FormField>
-        <FormField id='trip-end' label='To' className='grid grid-cols-1 gap-y-2'>
+        <FormField id={`${uid}-end`} label='To' className='grid grid-cols-1 gap-y-2'>
           <TextInput type='date' value={form.endDate} onChange={set('endDate')} min={form.startDate || undefined} />
         </FormField>
       </div>
-      <FormField id='trip-description' label='Notes'>
+      <FormField id={`${uid}-description`} label='Notes'>
         <TextAreaInput value={form.description} onChange={set('description')} rows={3} maxLength={2000} />
       </FormField>
       {showTravellers ? (

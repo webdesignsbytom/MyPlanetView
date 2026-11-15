@@ -1,24 +1,28 @@
-// Country codes are seeded and only change with a deploy, so they're read once per instance.
+// Countries are seeded and only change with a deploy, so they're read once per instance.
 import { isCountryCode } from '../../utils/travelValidation.js';
 import { findAllCountries } from '../../domain/places.js';
 
-let codesPromise = null;
+// code -> continent, for every country on the map
+let countriesPromise = null;
 
-const loadCodes = () => {
-  codesPromise ??= findAllCountries()
-    .then((rows) => new Set(rows.map((c) => c.code)))
+const loadCountries = () => {
+  countriesPromise ??= findAllCountries()
+    .then((rows) => new Map(rows.map((c) => [c.code, c.continent])))
     .catch((err) => {
-      codesPromise = null; // try again next time
+      countriesPromise = null; // try again next time
       throw err;
     });
-  return codesPromise;
+  return countriesPromise;
 };
 
 /** Is this a country on the map? */
 export async function isKnownCountry(code) {
   if (!isCountryCode(code)) return false;
-  return (await loadCodes()).has(code);
+  return (await loadCountries()).has(code);
 }
+
+/** Every country's continent, as a Map of code -> continent (for map stats). */
+export const continentsByCode = () => loadCountries();
 
 /**
  * An optional country field: undefined (leave), null/"" (clear) or a known code.

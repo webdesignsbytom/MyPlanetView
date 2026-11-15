@@ -1,9 +1,11 @@
 // When and where a photo was taken, from its EXIF (exifr, loaded only when needed).
 // Returns { takenAt, latitude, longitude }, each null when the file doesn't say.
+// exifr's lite build (45 kB against 75 kB) reads EXIF and GPS from JPEG and HEIC, which is
+// where phones and cameras write them. It doesn't read PNG; a PNG rarely carries either.
 export async function readPhotoMeta(file) {
   const none = { takenAt: null, latitude: null, longitude: null };
   try {
-    const { default: exifr } = await import('exifr');
+    const { default: exifr } = await import('exifr/dist/lite.esm.mjs');
     const data = await exifr.parse(file, {
       tiff: true,
       exif: true,

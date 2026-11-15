@@ -37,21 +37,22 @@ import { sendContactEmail } from '../services/email/emailHandler.js';
 import { runAfterResponse } from '../utils/background.js';
 import { BusinessName, BusinessUrl } from '../utils/constants/siteConstants.js';
 // Media
-import { isConfirmedUpload, hardDeleteObject } from '../services/s3/mediaService.js';
+import { isUsableContactImage, hardDeleteObject } from '../services/s3/mediaService.js';
 import { publicMediaUrlFrom } from '../utils/media/publicMediaUrl.js';
 // Sanitization
-import { sanitizeText, sanitizeEmail } from '../utils/sanitize.js';
+import { sanitizeText, normalizeEmail } from '../utils/sanitize.js';
 
 export const createNewContactFormHandler = async (req, res) => {
   const { name = '', email = '', message = '', imageKey = '' } = req.body || {};
 
   try {
     const cleanName = sanitizeText(name, { maxLength: 120 });
-    const cleanEmail = sanitizeEmail(email);
+    // Becomes the notification email's reply-to: a real address or nothing
+    const cleanEmail = normalizeEmail(email);
     const cleanMessage = sanitizeText(message, { maxLength: 2000 });
 
-    // Name, a valid email and a message are all required
-    if (!cleanName || !cleanEmail || !cleanMessage) {
+    // Name and a message are required
+    if (!cleanName || !cleanMessage) {
       const badRequest = new BadRequestEvent(
         req.user,
         DOMAINS.contact,
@@ -61,12 +62,19 @@ export const createNewContactFormHandler = async (req, res) => {
       return sendMessageResponse(res, badRequest.code, badRequest.message);
     }
 
-    // imageKey must be a confirmed 'contact' upload
-    if (imageKey && !(await isConfirmedUpload(imageKey, 'contact'))) {
+    // So is a valid email address
+    if (!cleanEmail) {
+      const badRequest = new BadRequestEvent(req.user, DOMAINS.contact, EVENT_MESSAGES.invalidEmail);
+      logEvent(createGenericErrorEvent(badRequest));
+      return sendMessageResponse(res, badRequest.code, badRequest.message);
+    }
+
+    // imageKey: a confirmed contact image, uploaded within the hour, on no other form
+    if (imageKey && !(typeof imageKey === 'string' && (await isUsableContactImage(imageKey)))) {
       const badRequest = new BadRequestEvent(
         req.user,
         DOMAINS.contact,
-        'Invalid image key for this form.'
+        'The attached image has expired or can’t be used. Please attach it again.'
       );
       logEvent(createGenericErrorEvent(badRequest));
       return sendMessageResponse(res, badRequest.code, badRequest.message);

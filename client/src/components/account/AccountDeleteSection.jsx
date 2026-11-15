@@ -44,14 +44,18 @@ function AccountDeleteSection() {
     confirmAction({
       action: runDelete,
       header: 'Delete your account?',
-      message: 'This permanently deletes your account and profile. It cannot be undone.',
+      message:
+        'This permanently deletes your account, your photos, and your maps and trips. A map with an editor passes to that editor instead. It cannot be undone.',
     });
   };
 
   return (
     <form className='grid gap-y-4' onSubmit={onSubmit} noValidate>
       <p className='text-sm text-center'>
-        Permanently delete your account, profile and avatar. This cannot be undone.
+        Permanently delete your account, profile and avatar, every photo you uploaded (on any
+        map), and your maps with their trips. A map of yours that has an editor isn’t
+        deleted: it passes to the editor who has had access longest, with its trips but without
+        your photos. This cannot be undone.
       </p>
 
       <FormField id='deletePassword' label='Your password' error={fieldError} required>

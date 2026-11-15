@@ -1,7 +1,7 @@
 // Auth
 import { deleteUserMedia } from '../auth.js';
 // Media
-import { hardDeleteObject } from '../services/s3/mediaService.js';
+import { hardDeleteObject, isAllowedUploadType } from '../services/s3/mediaService.js';
 // Background
 import { runAfterResponse } from '../utils/background.js';
 // Sanitization
@@ -145,14 +145,15 @@ export const getLoggedInUserHandler = async (req, res) => {
   });
 };
 
-// Avatar (own avatar uploads only)
+// Avatar: the user's own upload, confirmed (real type and size checked in the bucket)
+// and of an allowed image type
 export const uploadOrChangeAvatarHandler = async (req, res) => {
   const userId = req.user.id;
   const { key, alt, focalX, focalY } = req.body || {};
 
   try {
     const media = typeof key === 'string' ? await findOwnAvatarUpload(userId, key) : null;
-    if (!media) {
+    if (!media || !isAllowedUploadType('avatar', media.contentType)) {
       const badRequest = new BadRequestEvent(req.user, DOMAINS.users, EVENT_MESSAGES.avatarInvalid);
       logEvent(createGenericErrorEvent(badRequest));
       return sendMessageResponse(res, badRequest.code, badRequest.message);

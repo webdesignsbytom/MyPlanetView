@@ -6,18 +6,27 @@ import {
   confirmUploadHandler,
   cleanupOrphanUploadsHandler,
 } from '../controllers/mediaGeneric.js';
-import { validateAuthentication, attachUserIfPresent } from '../middleware/auth.js';
-import { presignRateLimiter } from '../middleware/rateLimit.js';
+import {
+  validateAuthentication,
+  attachUserIfPresent,
+  requireVerifiedEmailForAccountUploads,
+} from '../middleware/auth.js';
+import { createDbRateLimiter } from '../middleware/dbRateLimit.js';
+import { MEDIA_UPLOAD_RATE_LIMIT } from '../utils/constants/rateLimitConstants.js';
 
 const router = Router();
+// One count for presign and confirm (same name), per IP, in the database
+const uploadLimiter = createDbRateLimiter(MEDIA_UPLOAD_RATE_LIMIT);
 
 router.get('/ping', (req, res) => res.json({ ok: true }));
 
-// Presign upload (auth checked per resource via MEDIA_CFG)
-router.post('/presign-url', presignRateLimiter, attachUserIfPresent, presignUploadHandler);
+// Presign upload (auth checked per resource via MEDIA_CFG). A signed-in account needs a
+// verified email for anything but a contact image (avatars).
+router.post('/presign-url', uploadLimiter, attachUserIfPresent, requireVerifiedEmailForAccountUploads, presignUploadHandler);
 
-// Confirm upload (checks real size in S3)
-router.post('/confirm-upload', presignRateLimiter, confirmUploadHandler);
+// Confirm upload: HEADs the object and checks its real type and size. No login needed
+// (contact form visitors), but an upload with an owner can only be confirmed by them.
+router.post('/confirm-upload', uploadLimiter, attachUserIfPresent, confirmUploadHandler);
 
 // Signed view URL (private resources)
 router.get('/get-url', validateAuthentication, signViewHandler);

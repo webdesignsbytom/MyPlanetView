@@ -1,11 +1,13 @@
 // Mock mode only: Google Docs style sharing for maps and trips (one module for both),
 // invite links and share codes.
 import { RANK, deny, fail, ok, route } from '../mockAdapter';
-import { getDb, me, newId, newShareCode, normaliseCode, session, shareUrlFor } from '../store';
+import { formatShareCode, getDb, me, newId, newShareCode, normaliseShareCode, session, shareUrlFor } from '../store';
 import { canSeePhoto, higherRole, mapRole, mapView, photoDetail, photoPage, tripRole, tripSummary, tripView } from '../views';
 
 const ROLES = ['VIEWER', 'EDITOR'];
 const LINK_ACCESS = ['RESTRICTED', 'ANYONE_WITH_LINK'];
+// The server's EVENT_MESSAGES.shareNeedsVerifiedEmail
+const VERIFY_FIRST = 'Verify your email address before adding people. Use the link we emailed you, or send a new one from your account page.';
 const memberTable = (kind) => (kind === 'maps' ? 'mapMembers' : 'tripMembers');
 const idField = (kind) => (kind === 'maps' ? 'mapId' : 'tripId');
 
@@ -32,7 +34,7 @@ function sharingView(kind, item) {
   const invites = db.invites
     .filter((i) => i[idField(kind)] === item.id && !i.acceptedAt)
     .map(({ id, email, role, expiresAt }) => ({ id, email, role, expiresAt }));
-  return { linkAccess: item.linkAccess, shareCode: item.shareCode, shareUrl: shareUrlFor(item.shareCode), members, invites };
+  return { linkAccess: item.linkAccess, shareCode: formatShareCode(item.shareCode), shareUrl: shareUrlFor(item.shareCode), members, invites };
 }
 
 function manage(kind, id) {
@@ -64,20 +66,23 @@ export function registerSharingRoutes() {
       const { item, reply } = manage(kind, params.id);
       if (reply) return reply;
       item.shareCode = newShareCode();
-      return ok({ shareCode: item.shareCode, shareUrl: shareUrlFor(item.shareCode) });
+      return ok({ shareCode: formatShareCode(item.shareCode), shareUrl: shareUrlFor(item.shareCode) });
     });
 
     route('POST', `${base}/members`, ({ params, body }) => {
       const db = getDb();
       const { item, reply } = manage(kind, params.id);
       if (reply) return reply;
+      // As the server: the sharer's own address must be verified
+      if (!me().emailVerified) return fail(403, VERIFY_FIRST);
       const email = String(body.email || '').trim().toLowerCase();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail(400, 'Enter a valid email address.');
       if (!ROLES.includes(body.role)) return fail(400, 'Choose viewer or editor.');
       if (email === me().email.toLowerCase()) return fail(400, 'That is your own address.');
       const user = db.users.find((u) => u.email.toLowerCase() === email);
       const table = db[memberTable(kind)];
-      if (user) {
+      // Added straight away only when verified and active; anyone else gets an invite
+      if (user && user.isActive !== false && user.emailVerified === true) {
         const existing = table.find((m) => m[idField(kind)] === item.id && m.userId === user.id);
         if (existing) existing.role = body.role;
         else table.push({ [idField(kind)]: item.id, userId: user.id, role: body.role, createdAt: new Date().toISOString() });
@@ -144,7 +149,8 @@ export function registerSharingRoutes() {
   // Share links: the caller's own role, else VIEWER when the link is on
   const resolveCode = (code) => {
     const db = getDb();
-    const normal = normaliseCode(code);
+    const normal = normaliseShareCode(code);
+    if (!normal) return null;
     const map = db.maps.find((m) => m.shareCode === normal);
     if (map) {
       const role = higherRole(mapRole(map), map.linkAccess === 'ANYONE_WITH_LINK' ? 'VIEWER' : null);
@@ -167,14 +173,15 @@ export function registerSharingRoutes() {
       const trips = getDb().trips.filter((t) => t.mapId === item.id).map((t) => tripSummary(t, role));
       return ok({ resource: 'map', id: item.id, role, map: mapView(item, role), trips });
     }
-    return ok({ resource: 'trip', id: item.id, role, trip: tripView(item, role) });
+    return ok({ resource: 'trip', id: item.id, role, trip: tripView(item, role, { viaShareLink: true }) });
   });
 
   route('GET', '/api/shared/:code/photos', ({ params, query }) => {
     const shared = resolveCode(params.code);
     if (!shared) return fail(404, NOT_FOUND);
     const photos = getDb().photos.filter((p) => (shared.kind === 'map' ? p.mapId === shared.item.id : p.tripId === shared.item.id));
-    return ok(photoPage(photos, shared.role, query));
+    const page = photoPage(photos, shared.role, query);
+    return page.error ? fail(400, page.error) : ok(page);
   });
 
   route('GET', '/api/shared/:code/photos/:photoId', ({ params }) => {

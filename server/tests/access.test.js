@@ -10,6 +10,7 @@ import {
   canSeePhoto,
   canSeeLocation,
   canRemoveMember,
+  canDeleteTrip,
 } from '../src/utils/access.js';
 
 const map = { ownerId: 'owner' };
@@ -73,5 +74,16 @@ describe('permissions', () => {
     expect(canRemoveMember({ actorRole: 'OWNER', actorId: 'owner', targetUserId: 'friend' })).toBe(true);
     expect(canRemoveMember({ actorRole: 'VIEWER', actorId: 'friend', targetUserId: 'friend' })).toBe(true);
     expect(canRemoveMember({ actorRole: 'EDITOR', actorId: 'partner', targetUserId: 'friend' })).toBe(false);
+  });
+
+  it("lets only the map's owner and editors delete a trip, not someone added to the trip alone", () => {
+    // The argument is the role on the trip's map: a trip-only member has none
+    expect(canDeleteTrip('OWNER')).toBe(true);
+    expect(canDeleteTrip('EDITOR')).toBe(true);
+    expect(canDeleteTrip('VIEWER')).toBe(false);
+    expect(canDeleteTrip(null)).toBe(false);
+    // A map viewer who edits the trip still can't delete it
+    expect(canDeleteTrip(mapRoleFor(map, 'friend', { role: 'VIEWER' }))).toBe(false);
+    expect(tripRoleFor(mapRoleFor(map, 'friend', { role: 'VIEWER' }), { role: 'EDITOR' })).toBe('EDITOR');
   });
 });

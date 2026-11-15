@@ -1,5 +1,5 @@
 // What the travel routes send back, shaped by the caller's role.
-import { canEdit, canSeeLocation, canSeePhoto } from '../../utils/access.js';
+import { canDeleteTrip, canEdit, canSeeLocation, canSeePhoto, canView } from '../../utils/access.js';
 import { toDateOnly } from '../../utils/travelValidation.js';
 import { buildMapStats } from '../../utils/mapStats.js';
 import { signPhotoUrl } from '../../services/s3/mediaService.js';
@@ -11,7 +11,7 @@ import {
   findMapTravellers,
   findMapVisitsForStats,
 } from '../../domain/maps.js';
-import { findCountriesByCodes } from '../../domain/places.js';
+import { continentsByCode } from './countries.js';
 
 const keyOf = (photo, size) => photo.variants?.find((v) => v.size === size)?.media?.key ?? null;
 const signed = async (key) => (key ? signPhotoUrl(key) : null);
@@ -60,6 +60,10 @@ export const visiblePhotos = (photos, role) => photos.filter((p) => canSeePhoto(
 const coverThumb = async (trip, role) =>
   trip.coverPhoto && canSeePhoto(role, trip.coverPhoto) ? signed(trip.coverPhoto.variants?.[0]?.media?.key) : null;
 
+/**
+ * A trip in a list. `trip.counts` comes from domain/trips.js, which already left
+ * hidden photos out for callers below editor.
+ */
 export async function tripSummary(trip, role) {
   return {
     id: trip.id,
@@ -69,17 +73,25 @@ export async function tripSummary(trip, role) {
     startDate: toDateOnly(trip.startDate),
     endDate: toDateOnly(trip.endDate),
     coverThumbUrl: await coverThumb(trip, role),
-    stopCount: trip._count?.stops ?? 0,
-    photoCount: trip._count?.photos ?? 0,
+    stopCount: trip.counts?.stops ?? 0,
+    photoCount: trip.counts?.photos ?? 0,
     travellerIds: trip.travellers.map((t) => t.travellerId),
   };
 }
 
-export async function tripDetailView(trip, role) {
+/**
+ * One trip. `mapRole` is the caller's role on the trip's map: `canOpenMap` tells the
+ * client whether to link back to it (a trip-only member can't open it), `canDelete`
+ * whether to offer deleting the trip (the map's owner and editors only). Left out (a
+ * share link), both are false.
+ */
+export async function tripDetailView(trip, role, { mapRole = null } = {}) {
   return {
     id: trip.id,
     mapId: trip.mapId,
     mapName: trip.map.name,
+    canOpenMap: canView(mapRole),
+    canDelete: canDeleteTrip(mapRole),
     title: trip.title,
     description: trip.description,
     status: trip.status,
@@ -113,28 +125,31 @@ export const visitView = (v) => ({
   notes: v.notes,
 });
 
-/** Stats for a map, counting only what the caller may see. */
-export async function loadMapStats(mapId, role) {
+/**
+ * What a map's stats need beyond its visits and travellers, counting only what the
+ * caller may see. All side by side; continents come from the cached country list.
+ */
+export async function loadStatsCounts(mapId, role) {
   const includeHidden = canEdit(role);
-  const [visits, photoCount, landmarkCount, tripCount, completed, travellers] = await Promise.all([
-    findMapVisitsForStats(mapId),
+  const [photoCount, landmarkCount, tripCount, completedTrips, continentByCode] = await Promise.all([
     countMapPhotos(mapId, { includeHidden }),
     countMapConfirmedLandmarks(mapId, { includeHidden }),
     countMapTrips(mapId),
     findCompletedTripsForStats(mapId),
-    findMapTravellers(mapId),
+    continentsByCode(),
   ]);
-  const countries = await findCountriesByCodes([...new Set(visits.map((v) => v.countryCode))]);
-  return buildMapStats({
-    visits,
-    continentByCode: new Map(countries.map((c) => [c.code, c.continent])),
-    photoCount,
-    landmarkCount,
-    tripCount,
-    travellers,
-    completedTrips: completed.map((t) => ({
-      travellerIds: t.travellers.map((x) => x.travellerId),
-      countryCodes: t.stops.map((s) => s.countryCode),
-    })),
-  });
+  return { photoCount, landmarkCount, tripCount, completedTrips, continentByCode };
+}
+
+/** Stats from a map's visits and travellers (`[{ id, name }]`) and loadStatsCounts. */
+export const statsFrom = ({ visits, travellers }, counts) => buildMapStats({ visits, travellers, ...counts });
+
+/** Stats for a map, counting only what the caller may see (GET /maps/:mapId/stats). */
+export async function loadMapStats(mapId, role) {
+  const [visits, travellers, counts] = await Promise.all([
+    findMapVisitsForStats(mapId),
+    findMapTravellers(mapId),
+    loadStatsCounts(mapId, role),
+  ]);
+  return statsFrom({ visits, travellers }, counts);
 }

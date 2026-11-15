@@ -14,18 +14,24 @@ describe('people with access to a map', () => {
   let map;
 
   beforeAll(async () => {
-    owner = await signUp('Owner');
-    friend = await signUp('Friend');
+    // Adding people needs the sharer's address verified, and only a verified
+    // account is added directly
+    owner = await signUp('Owner', { verified: true });
+    friend = await signUp('Friend', { verified: true });
     stranger = await signUp('Stranger');
     map = await defaultMapOf(owner.agent);
   });
 
-  it('adds an existing user as a viewer and emails them', async () => {
+  it('adds an existing verified user as a viewer and emails them', async () => {
     const res = await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: friend.email.toUpperCase(), role: 'VIEWER' });
     expect(res.status).toBe(201);
     expect(data(res).member).toMatchObject({ userId: friend.user.id, role: 'VIEWER', email: friend.email });
     await vi.waitFor(() => expect(shareEmailTo(friend.email)).toHaveLength(1));
-    expect(shareEmailTo(friend.email)[0].context).toMatchObject({ isInvite: false, canEdit: false });
+    const [email] = shareEmailTo(friend.email);
+    expect(email.context).toMatchObject({ isInvite: false, canEdit: false, sharerName: 'Owner' });
+    // A fixed subject: the sharer's name stays out of it
+    expect(email.subject).toMatch(/: a map was shared with you$/);
+    expect(email.subject).not.toContain('Owner');
 
     const theirMaps = data(await friend.agent.get('/api/maps')).maps;
     expect(theirMaps.find((m) => m.id === map.id)).toMatchObject({ role: 'VIEWER', ownerName: 'Owner' });
@@ -72,7 +78,7 @@ describe('people with access to a map', () => {
   });
 
   it('lets a member leave, but not remove someone else', async () => {
-    const third = await signUp('Third');
+    const third = await signUp('Third', { verified: true });
     await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: third.email, role: 'VIEWER' });
     expect((await friend.agent.delete(`/api/maps/${map.id}/members/${third.user.id}`)).status).toBe(403);
 
@@ -84,7 +90,7 @@ describe('people with access to a map', () => {
 
 describe('invites for people without an account', () => {
   it('invites by email, then the person accepts once their address is verified', async () => {
-    const owner = await signUp('Inviter');
+    const owner = await signUp('Inviter', { verified: true });
     const map = await defaultMapOf(owner.agent);
     const email = testEmail('newcomer');
 
@@ -106,7 +112,7 @@ describe('invites for people without an account', () => {
 
     // They sign up: not verified yet, so no access and the invite can't be used
     const agent = request.agent((await import('../../src/server.js')).default).set('Origin', 'http://localhost:5173');
-    const signUpRes = await agent.post('/api/auth/sign-up/email').send({ email, password: 'integration-test-password-1', name: 'Newcomer' });
+    const signUpRes = await agent.post('/api/auth/sign-up/email').send({ email, password: 'Integration-Test-Password-1', name: 'Newcomer' });
     expect(signUpRes.status).toBe(200);
     const newcomer = await prisma.user.findUniqueOrThrow({ where: { email } });
     trackUser(newcomer.id);
@@ -131,7 +137,7 @@ describe('invites for people without an account', () => {
   });
 
   it('invites to a trip only, and refuses an expired invite', async () => {
-    const owner = await signUp('TripInviter');
+    const owner = await signUp('TripInviter', { verified: true });
     const map = await defaultMapOf(owner.agent);
     const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Patagonia' })).trip;
     const invitee = await signUp('TripInvitee', { verified: true });
@@ -161,11 +167,94 @@ describe('invites for people without an account', () => {
   });
 
   it('lets the owner cancel an invite', async () => {
-    const owner = await signUp('Canceller');
+    const owner = await signUp('Canceller', { verified: true });
     const map = await defaultMapOf(owner.agent);
     const invite = data(await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: testEmail('never'), role: 'VIEWER' })).invite;
     expect((await owner.agent.delete(`/api/maps/${map.id}/invites/${invite.id}`)).status).toBe(200);
     expect((await owner.agent.delete(`/api/maps/${map.id}/invites/${invite.id}`)).status).toBe(404);
+  });
+});
+
+describe('unverified addresses', () => {
+  it('invites an unverified account instead of adding it, and the invite works once it verifies', async () => {
+    const owner = await signUp('VerifiedOwner', { verified: true });
+    const map = await defaultMapOf(owner.agent);
+    // Anyone can sign up with an address they don't own and never verify it
+    const squatter = await signUp('Unverified', { verified: false });
+
+    const res = await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: squatter.email, role: 'EDITOR' });
+    expect(res.status).toBe(201);
+    expect(data(res)).not.toHaveProperty('member');
+    expect(data(res).invite).toMatchObject({ email: squatter.email, role: 'EDITOR' });
+    expect(await prisma.mapMember.findFirst({ where: { mapId: map.id, userId: squatter.user.id } })).toBeNull();
+    expect((await squatter.agent.get(`/api/maps/${map.id}`)).status).toBe(404);
+    const sharing = data(await owner.agent.get(`/api/maps/${map.id}/sharing`));
+    expect(sharing.members).toEqual([]);
+    expect(sharing.invites).toEqual([expect.objectContaining({ email: squatter.email, role: 'EDITOR' })]);
+
+    // The invite email, not a "you've been added" one; its link needs a verified address
+    await vi.waitFor(() => expect(shareEmailTo(squatter.email)).toHaveLength(1));
+    const { context } = shareEmailTo(squatter.email)[0];
+    expect(context.isInvite).toBe(true);
+    const token = context.actionUrl.split('/').pop();
+    expect((await squatter.agent.post('/api/invites/accept').send({ token })).status).toBe(403);
+
+    // Once the address is verified, the invite gives the role
+    await prisma.user.update({ where: { id: squatter.user.id }, data: { emailVerified: true } });
+    expect((await squatter.agent.post('/api/invites/accept').send({ token })).status).toBe(200);
+    expect(data(await squatter.agent.get(`/api/maps/${map.id}`)).map.role).toBe('EDITOR');
+  });
+
+  it('invites an unverified account to a trip the same way', async () => {
+    const owner = await signUp('TripVerifiedOwner', { verified: true });
+    const map = await defaultMapOf(owner.agent);
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Faroe Islands' })).trip;
+    const squatter = await signUp('TripUnverified', { verified: false });
+
+    const res = await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: squatter.email, role: 'VIEWER' });
+    expect(res.status).toBe(201);
+    expect(data(res).invite).toMatchObject({ email: squatter.email, role: 'VIEWER' });
+    expect((await squatter.agent.get(`/api/trips/${trip.id}`)).status).toBe(404);
+  });
+
+  it("won't let an unverified owner add people, to a map or a trip", async () => {
+    // The trip is made while verified; then the address counts as unverified again
+    const sharer = await signUp('UnverifiedSharer');
+    const map = await defaultMapOf(sharer.agent);
+    const trip = data(await sharer.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Spam trip' })).trip;
+    await prisma.user.update({ where: { id: sharer.user.id }, data: { emailVerified: false } });
+    const target = testEmail('spam-target');
+    const verifiedTarget = await signUp('SpamTarget', { verified: true });
+
+    for (const url of [`/api/maps/${map.id}/members`, `/api/trips/${trip.id}/members`]) {
+      for (const email of [target, verifiedTarget.email]) {
+        const res = await sharer.agent.post(url).send({ email, role: 'VIEWER' });
+        expect(res.status).toBe(403);
+        expect(res.body).toEqual({ status: 'fail', message: expect.stringMatching(/verify your email address/i) });
+      }
+    }
+    const sharing = data(await sharer.agent.get(`/api/maps/${map.id}/sharing`));
+    expect(sharing.members).toEqual([]);
+    expect(sharing.invites).toEqual([]);
+    expect(shareEmailTo(target)).toEqual([]);
+    expect(shareEmailTo(verifiedTarget.email)).toEqual([]);
+
+    // Someone else's map, or one that doesn't exist, gets the same 403 as their own:
+    // the check comes before any lookup, so it says nothing about other maps
+    const stranger = await signUp('VerifiedStranger', { verified: true });
+    const theirMap = await defaultMapOf(stranger.agent);
+    for (const id of [theirMap.id, '00000000-0000-4000-8000-000000000000']) {
+      const res = await sharer.agent.post(`/api/maps/${id}/members`).send({ email: target, role: 'VIEWER' });
+      expect(res.status).toBe(403);
+      expect(res.body.message).toMatch(/verify your email address/i);
+    }
+
+    // Once verified again, someone else's map is a 404 as usual
+    await prisma.user.update({ where: { id: sharer.user.id }, data: { emailVerified: true } });
+    expect((await sharer.agent.post(`/api/maps/${theirMap.id}/members`).send({ email: target, role: 'VIEWER' })).status).toBe(404);
+
+    // Verified, it works
+    expect((await sharer.agent.post(`/api/maps/${map.id}/members`).send({ email: target, role: 'VIEWER' })).status).toBe(201);
   });
 });
 
@@ -179,8 +268,8 @@ describe('share links', () => {
   let otherMapPhoto;
 
   beforeAll(async () => {
-    owner = await signUp('Linker');
-    editor = await signUp('LinkEditor');
+    owner = await signUp('Linker', { verified: true });
+    editor = await signUp('LinkEditor', { verified: true });
     map = await defaultMapOf(owner.agent);
     await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: editor.email, role: 'EDITOR' });
     await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Visible trip' });
@@ -254,8 +343,8 @@ describe('share links', () => {
 
 describe('sharing one trip', () => {
   it('shares a trip by link and by person without exposing the rest of the map', async () => {
-    const owner = await signUp('TripOwner');
-    const friend = await signUp('TripFriend');
+    const owner = await signUp('TripOwner', { verified: true });
+    const friend = await signUp('TripFriend', { verified: true });
     const map = await defaultMapOf(owner.agent);
     const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Iceland' })).trip;
     await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Secret' });
@@ -283,5 +372,23 @@ describe('sharing one trip', () => {
     // They leave the trip
     expect((await friend.agent.delete(`/api/trips/${trip.id}/members/${friend.user.id}`)).status).toBe(200);
     expect((await friend.agent.get(`/api/trips/${trip.id}`)).status).toBe(404);
+  });
+});
+
+describe('accepting an invite', () => {
+  it('counts once when the same invite is accepted twice at the same moment', async () => {
+    const owner = await signUp('RaceOwner', { verified: true });
+    const map = await defaultMapOf(owner.agent);
+    const invitee = await signUp('RaceInvitee', { verified: false });
+    expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: invitee.email, role: 'VIEWER' })).status).toBe(201);
+    await vi.waitFor(() => expect(shareEmailTo(invitee.email)).toHaveLength(1));
+    const token = shareEmailTo(invitee.email)[0].context.actionUrl.split('/').pop();
+    await prisma.user.update({ where: { id: invitee.user.id }, data: { emailVerified: true } });
+
+    // The invite is claimed and the member row written in one transaction
+    const answers = await Promise.all([1, 2].map(() => invitee.agent.post('/api/invites/accept').send({ token })));
+    expect(answers.map((r) => r.status).sort()).toEqual([200, 400]);
+    expect(await prisma.mapMember.count({ where: { mapId: map.id, userId: invitee.user.id } })).toBe(1);
+    expect(data(await invitee.agent.get(`/api/maps/${map.id}`)).map.role).toBe('VIEWER');
   });
 });

@@ -234,8 +234,7 @@
   --shadow-lift-sm-hover: var(--lift-sm-hover);
   --shadow-input: var(--inset);
 
-  /* The old site's animated sea: animate-ocean */
-  --animate-ocean: ocean-colour-change 30s infinite;
+  /* The old site's animated sea, animate-ocean, is an @utility below (it needs layers) */
   /* The sun and moon crossing the animated map (decorative; hidden under reduced motion) */
   --animate-sky-drift: sky-drift 90s linear infinite;
 
@@ -256,19 +255,6 @@
 
   --z-100: 100;
   --z-max: 999;
-
-  @keyframes ocean-colour-change {
-    0%,
-    100% {
-      background-color: var(--map-sea);
-    }
-    40% {
-      background-color: var(--map-sea-mid);
-    }
-    75% {
-      background-color: var(--map-sea-deep);
-    }
-  }
 
   @keyframes sky-drift {
     from {
@@ -689,4 +675,71 @@ textarea:-webkit-autofill {
     5px 0 10px 3px var(--sky-moon-glow),
     0 0 10px 2px var(--sky-moon-glow),
     0 0 3px 2px var(--sky-moon-glow);
+}
+
+/* The old site's animated sea: over 30 s the water turns from sea to sea-mid (40%), to
+   sea-deep (75%) and back to sea. Animating background-color repainted the whole screen
+   every frame, so the element keeps its own bg-map-sea and two full-size layers of the
+   darker shades fade in and out over it: only opacity changes, which the compositor runs
+   off the main thread. The colours on screen are the same as before, eased the same way:
+     0–40%   sea-mid fades in over the sea          (sea → mid)
+     40–75%  sea-deep fades in over sea-mid         (mid → deep)
+     75–100% sea-mid drops out unseen under the opaque sea-deep, which fades out (deep → sea)
+   contain: layout makes the element the layers' containing block and a stacking context,
+   so they sit over its background and under its content, whatever its position. Used
+   with bg-map-sea (and motion-reduce:animate-none, which the layers don't need). */
+@utility animate-ocean {
+  contain: layout;
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+  }
+  &::before {
+    background-color: var(--map-sea-mid);
+    animation: ocean-mid 30s infinite;
+  }
+  &::after {
+    background-color: var(--map-sea-deep);
+    animation: ocean-deep 30s infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &::before,
+    &::after {
+      content: none;
+    }
+  }
+}
+
+@keyframes ocean-mid {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+    animation-timing-function: step-start;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ocean-deep {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

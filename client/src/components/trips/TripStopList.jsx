@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 // Icons
 import { FiPlus } from 'react-icons/fi';
 // Api
@@ -44,12 +44,29 @@ function TripStopList({ trip, canEdit, onChanged }) {
     }
   };
 
+  // Rejects when the move fails (the stop then keeps focus where it is)
   const move = (index, direction) => {
     const target = index + direction;
-    if (target < 0 || target >= stops.length) return;
+    if (busy || target < 0 || target >= stops.length) return Promise.resolve();
     const ids = stops.map((s) => s.id);
     [ids[index], ids[target]] = [ids[target], ids[index]];
-    run(() => reorderStops(trip.id, ids)).catch(() => {});
+    return run(() => reorderStops(trip.id, ids));
+  };
+
+  // After a stop is removed, focus goes to the next one's Edit button (the previous one
+  // at the end of the list), or to "Add a stop" when none are left
+  const [focusStopId, setFocusStopId] = useState(null);
+  const clearFocusStop = useCallback(() => setFocusStopId(null), []);
+  const remove = (index, stopId) => {
+    if (busy) return;
+    run(() => deleteStop(trip.id, stopId))
+      .then(() => {
+        const rest = stops.filter((s) => s.id !== stopId);
+        const next = rest[Math.min(index, rest.length - 1)];
+        if (next) setFocusStopId(next.id);
+        else addButtonRef.current?.focus();
+      })
+      .catch(() => {});
   };
 
   const openAdding = () => {
@@ -75,7 +92,9 @@ function TripStopList({ trip, canEdit, onChanged }) {
               busy={busy}
               onMove={(direction) => move(index, direction)}
               onSave={(body) => run(() => updateStop(trip.id, stop.id, body))}
-              onRemove={() => run(() => deleteStop(trip.id, stop.id)).catch(() => {})}
+              onRemove={() => remove(index, stop.id)}
+              focusEdit={focusStopId === stop.id}
+              onFocused={clearFocusStop}
             />
           ))}
         </ol>

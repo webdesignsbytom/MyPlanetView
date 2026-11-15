@@ -11,12 +11,25 @@ import {
   UserEmailVerificationUrl,
   UserResetPasswordUrl,
 } from './utils/constants/siteConstants.js';
-import { BETTER_AUTH_RATE_LIMIT } from './utils/constants/rateLimitConstants.js';
 import {
+  AUTH_EMAIL_RATE_LIMIT,
+  BETTER_AUTH_RATE_LIMIT,
+  IPV6_SUBNET,
+} from './utils/constants/rateLimitConstants.js';
+import { rateLimitsOff } from './middleware/rateLimit.js';
+import {
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_RULES_MESSAGE,
+  isValidPassword,
+} from './utils/passwordRules.js';
+import {
+  sendUserChangeEmailConfirmation,
   sendUserPasswordResetEmail,
   sendUserVerificationEmail,
 } from './services/email/emailHandler.js';
 import { runAfterResponse } from './utils/background.js';
+import { cleanDisplayName } from './utils/displayName.js';
 // Account media cleanup
 import { hardDeleteObject } from './services/s3/mediaService.js';
 import { clearUserAvatar, findOwnedAvatarKeys, findUserStatusById } from './domain/users.js';
@@ -51,7 +64,7 @@ const RESET_PASSWORD_EXPIRES_IN_SECONDS = 60 * 60; // 1 hour
 const EMAIL_VERIFICATION_EXPIRES_IN_SECONDS = 60 * 60 * 24; // 24 hours
 
 // Strict limit for endpoints that send email
-const EMAIL_SEND_RATE_LIMIT = { window: 15 * 60, max: 5 };
+const EMAIL_SEND_RATE_LIMIT = { window: AUTH_EMAIL_RATE_LIMIT.windowSeconds, max: AUTH_EMAIL_RATE_LIMIT.max };
 
 const formatExpiry = (seconds) =>
   new Date(Date.now() + seconds * 1000).toLocaleString('en-GB', {
@@ -66,6 +79,9 @@ export const disableAuthEmails = () => {
   authEmailsEnabled = false;
 };
 
+// Production keeps SameSite=None for now, because the API's host isn't decided and
+// may be a different site from the client's (middleware/originCheck.js refuses
+// cross-site writes meanwhile). Switch to 'lax' once the API is on api.<domain>.
 const cookieAttributes = {
   httpOnly: true,
   secure: isProd,
@@ -108,14 +124,62 @@ const auditAfterHook = createAuthMiddleware(async (ctx) => {
   logEvent(audit(user));
 });
 
+// Paths whose `name` is cleaned before better-auth stores it
+const NAME_PATHS = new Set(['/sign-up/email', '/update-user']);
+
+// Paths that set a new password, and the body field that carries it
+const NEW_PASSWORD_FIELDS = {
+  '/sign-up/email': 'password',
+  '/reset-password': 'newPassword',
+  '/change-password': 'newPassword',
+};
+
+// Checks before better-auth's own handlers run
+const beforeHook = createAuthMiddleware(async (ctx) => {
+  // Deleting the account always needs the password, which better-auth then checks
+  // (without one it only wants a "fresh" session, so a stolen cookie would do)
+  if (ctx.path === '/delete-user') {
+    const password = ctx.body?.password;
+    if (typeof password !== 'string' || !password) {
+      throw new APIError('BAD_REQUEST', { message: EVENT_MESSAGES.passwordRequiredToDelete });
+    }
+    return undefined;
+  }
+
+  // A new password follows the client's rules (utils/passwordRules.js). Only for
+  // requests over HTTP: the seed's sign-ups (auth.api, no request) keep their
+  // simple test passwords. A missing password is left to better-auth (400).
+  const passwordField = NEW_PASSWORD_FIELDS[ctx.path];
+  if (passwordField && ctx.request) {
+    const password = ctx.body?.[passwordField];
+    if (typeof password === 'string' && !isValidPassword(password)) {
+      throw new APIError('BAD_REQUEST', { message: PASSWORD_RULES_MESSAGE });
+    }
+  }
+
+  // Names go into emails other people get (share emails): one line, at most 80
+  // characters, no control characters (utils/displayName.js)
+  if (NAME_PATHS.has(ctx.path) && ctx.body && typeof ctx.body === 'object' && 'name' in ctx.body) {
+    const name = cleanDisplayName(ctx.body.name);
+    if (!name) throw new APIError('BAD_REQUEST', { message: EVENT_MESSAGES.nameRequired });
+    return { context: { body: { ...ctx.body, name } } };
+  }
+
+  return undefined;
+});
+
 export const auth = betterAuth({
   baseURL: BETTER_AUTH_URL,
   trustedOrigins: FRONTEND_ORIGINS,
   database: prismaAdapter(prisma, { provider: 'postgresql' }),
 
-  // better-auth rate limiter (off under test)
+  // better-auth's rate limiter, counted in the database (the AuthRateLimit model) so
+  // every Vercel instance shares one count. Keyed on the client IP (an IPv6 address
+  // on its /64; see `advanced.ipAddress`) and the path. Off under test.
   rateLimit: {
-    enabled: process.env.NODE_ENV !== 'test',
+    enabled: !rateLimitsOff(),
+    storage: 'database',
+    modelName: 'authRateLimit',
     window: BETTER_AUTH_RATE_LIMIT.windowSeconds,
     max: BETTER_AUTH_RATE_LIMIT.max,
     customRules: {
@@ -124,9 +188,18 @@ export const auth = betterAuth({
     },
   },
 
+  // Every request reads the session and its user from the database (no cookie
+  // cache), so a changed role or a deactivation applies at once (middleware/auth.js)
+  session: {
+    cookieCache: { enabled: false },
+  },
+
   // Email/password auth (callbacks only send the emails)
   emailAndPassword: {
     enabled: true,
+    // The rest of the rules are checked in beforeHook
+    minPasswordLength: PASSWORD_MIN_LENGTH,
+    maxPasswordLength: PASSWORD_MAX_LENGTH,
     requireEmailVerification: false,
     revokeSessionsOnPasswordReset: true,
     resetPasswordTokenExpiresIn: RESET_PASSWORD_EXPIRES_IN_SECONDS,
@@ -182,9 +255,50 @@ export const auth = betterAuth({
   },
 
   user: {
-    // Link goes to the new address; email changes once it's clicked
-    changeEmail: { enabled: true },
-    // Password is required by the client
+    // Columns of our own on the user row. Declared so the session's user carries
+    // them (middleware/auth.js uses them without reading the row again). Never set
+    // through better-auth: a sign-up always gets the defaults, and update-user
+    // refuses them (400); only the admin routes change them.
+    additionalFields: {
+      role: { type: 'string', required: false, defaultValue: 'USER', input: false },
+      isActive: { type: 'boolean', required: false, defaultValue: true, input: false },
+    },
+    // A verified account confirms from its current address first; that link
+    // (through /verify-email) then sends the usual verification to the new address,
+    // and the email changes once that one is clicked. An unverified account skips
+    // the first step: the link goes straight to the new address. An address that
+    // already has an account gets the same 200 and no email (better-auth 1.5+), so
+    // the answer doesn't say whether it's taken.
+    changeEmail: {
+      enabled: true,
+      sendChangeEmailConfirmation: async ({ user, newEmail, token }) => {
+        if (!authEmailsEnabled) return;
+        // `?change=confirm` lets the client page say what happens next
+        const confirmationUrl = `${UserEmailVerificationUrl}/${user.id}/${token}?change=confirm`;
+        const title = `${BusinessName}: Confirm your new email address`;
+
+        runAfterResponse(sendUserChangeEmailConfirmation(
+          user.email,
+          title,
+          'userChangeEmailConfirmation',
+          {
+            title,
+            email: user.email,
+            newEmail,
+            confirmationUrl,
+            expiryTime: formatExpiry(EMAIL_VERIFICATION_EXPIRES_IN_SECONDS),
+            businessUrl: BusinessUrl,
+            businessName: BusinessName,
+            logoUrl: LogoUrl,
+            year: new Date().getFullYear(),
+          }
+        ));
+      },
+    },
+    // The password is required (beforeHook) and checked by better-auth. (1.4.13
+    // multiplied freshAge by 1000 twice, so any session under about 1000 days old
+    // counted as fresh; 1.6 fixed that, but a stolen fresh cookie would still do
+    // without the hook, so it stays.)
     deleteUser: {
       enabled: true,
       beforeDelete: deleteUserMedia,
@@ -232,17 +346,21 @@ export const auth = betterAuth({
     },
   },
 
-  hooks: { after: auditAfterHook },
+  hooks: { before: beforeHook, after: auditAfterHook },
 
   advanced: {
     // __Secure- cookie names need the Secure flag, so production only
     useSecureCookies: isProd,
 
-    // Cross-site frontend -> api cookies
-    cookies: {
-      session_token: { attributes: cookieAttributes },
-      session_data: { attributes: cookieAttributes },
-      dont_remember: { attributes: cookieAttributes },
+    // Cross-site frontend -> api cookies (every cookie better-auth sets)
+    defaultCookieAttributes: cookieAttributes,
+
+    // The client IP for the rate limiter. Vercel overwrites x-forwarded-for with the
+    // visitor's address (one value, the same one Express's req.ip gives with
+    // `trust proxy` 1); a header with several values isn't trusted. IPv6 counts per /64.
+    ipAddress: {
+      ipAddressHeaders: ['x-forwarded-for'],
+      ipv6Subnet: IPV6_SUBNET,
     },
   },
 });

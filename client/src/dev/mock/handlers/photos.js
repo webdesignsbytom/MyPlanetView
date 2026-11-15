@@ -65,9 +65,11 @@ export function registerPhotoRoutes() {
     return ok({ photo: photoDetail(photo, role) }, 201);
   });
 
-  route('PATCH', '/api/photos/:photoId/landmarks/:landmarkId', ({ params }) => {
+  // Like the server: both answer with the whole photo, and 404 when there's no such match
+  route('PATCH', '/api/photos/:photoId/landmarks/:landmarkId', ({ params, body }) => {
     const { photo, role, reply } = loadPhoto(params.photoId, 'EDITOR');
     if (reply) return reply;
+    if (body.confirmed !== true) return fail(400, 'Malformed data.');
     const match = getDb().photoLandmarks.find((pl) => pl.photoId === photo.id && pl.landmarkId === params.landmarkId);
     if (!match) return fail(404, 'That landmark match could not be found.');
     match.confirmed = true;
@@ -76,9 +78,11 @@ export function registerPhotoRoutes() {
 
   route('DELETE', '/api/photos/:photoId/landmarks/:landmarkId', ({ params }) => {
     const db = getDb();
-    const { photo, reply } = loadPhoto(params.photoId, 'EDITOR');
+    const { photo, role, reply } = loadPhoto(params.photoId, 'EDITOR');
     if (reply) return reply;
-    db.photoLandmarks = db.photoLandmarks.filter((pl) => !(pl.photoId === photo.id && pl.landmarkId === params.landmarkId));
-    return ok({ message: 'Landmark match removed.' });
+    const matches = (pl) => pl.photoId === photo.id && pl.landmarkId === params.landmarkId;
+    if (!db.photoLandmarks.some(matches)) return fail(404, 'That landmark match could not be found.');
+    db.photoLandmarks = db.photoLandmarks.filter((pl) => !matches(pl));
+    return ok({ photo: photoDetail(photo, role) });
   });
 }

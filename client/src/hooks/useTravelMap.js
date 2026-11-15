@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 // Api
 import {
   createTraveller,
@@ -12,15 +12,23 @@ import {
   updateMap,
   updateTraveller,
 } from '@/api/travelApi';
+// Utils
+import { forgetMapLists } from '@/utils/map/mapListCache';
 
 const EMPTY = { map: null, trips: [], loading: true, error: null };
 
 /**
  * One travel map: its details, travellers, visited countries, stats and trips, with
- * the changes an editor can make. Visit changes show at once and roll back on failure.
+ * the changes an editor can make. Visit changes show at once and roll back on failure;
+ * with `optimistic: false` (an email address not verified yet, which the server refuses)
+ * they wait for the server, so nothing flickers on and off.
  */
-export default function useTravelMap(mapId) {
+export default function useTravelMap(mapId, { optimistic = true } = {}) {
   const [state, setState] = useState(EMPTY);
+  const optimisticRef = useRef(optimistic);
+  useEffect(() => {
+    optimisticRef.current = optimistic;
+  }, [optimistic]);
 
   const load = useCallback(async () => {
     if (!mapId) return;
@@ -38,6 +46,19 @@ export default function useTravelMap(mapId) {
     load();
   }, [load]);
 
+  // The map and its trips again, without the loading state (the map stays on screen):
+  // after photos change, as an upload or a photo's new country can add a PHOTO visit,
+  // and moving or deleting photos changes the trips' counts
+  const refresh = useCallback(async () => {
+    if (!mapId) return;
+    try {
+      const [{ map }, { trips }] = await Promise.all([getMap(mapId), getMapTrips(mapId)]);
+      setState((prev) => (prev.map && map ? { ...prev, map, trips: trips || prev.trips } : prev));
+    } catch {
+      // A nicety; the next full load corrects it
+    }
+  }, [mapId]);
+
   const refreshStats = useCallback(async () => {
     try {
       const { stats } = await getMapStats(mapId);
@@ -51,19 +72,23 @@ export default function useTravelMap(mapId) {
   const setVisit = useCallback(
     async (countryCode, status, extra = {}) => {
       let previous = null;
-      setState((prev) => {
-        if (!prev.map) return prev;
-        previous = prev.map.visits;
-        const others = prev.map.visits.filter((v) => v.countryCode !== countryCode);
-        const current = prev.map.visits.find((v) => v.countryCode === countryCode);
-        const visits = status
-          ? [...others, { ...(current || { source: 'MANUAL', firstVisitedOn: null, notes: null }), countryCode, status, ...extra }]
-          : others;
-        return { ...prev, map: { ...prev.map, visits } };
-      });
+      const show = () =>
+        setState((prev) => {
+          if (!prev.map) return prev;
+          previous = prev.map.visits;
+          const others = prev.map.visits.filter((v) => v.countryCode !== countryCode);
+          const current = prev.map.visits.find((v) => v.countryCode === countryCode);
+          const visits = status
+            ? [...others, { ...(current || { source: 'MANUAL', firstVisitedOn: null, notes: null }), countryCode, status, ...extra }]
+            : others;
+          return { ...prev, map: { ...prev.map, visits } };
+        });
+      const optimisticNow = optimisticRef.current;
+      if (optimisticNow) show();
       try {
         if (status) await putVisit(mapId, countryCode, { status, ...extra });
         else await deleteVisit(mapId, countryCode);
+        if (!optimisticNow) show();
         refreshStats();
       } catch (err) {
         setState((prev) => (prev.map && previous ? { ...prev, map: { ...prev.map, visits: previous } } : prev));
@@ -76,6 +101,7 @@ export default function useTravelMap(mapId) {
   const saveMapDetails = useCallback(
     async (body) => {
       const { map } = await updateMap(mapId, body);
+      forgetMapLists(); // the switcher lists maps by name
       setState((prev) => ({ ...prev, map: map || prev.map }));
     },
     [mapId],
@@ -132,6 +158,7 @@ export default function useTravelMap(mapId) {
   return {
     ...state,
     reload: load,
+    refresh,
     refreshStats,
     setVisit,
     saveMapDetails,

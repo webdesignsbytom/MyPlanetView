@@ -13,6 +13,8 @@ import {
 
 // Footer link columns, one FooterNavSection each. `signedInLinks` replaces `links` for a
 // signed-in visitor (the pre-rendered pages are built signed out, so they keep `links`).
+// An entry with `action` instead of `route` is a button ('cookie-settings' shows the
+// cookie choice again, so consent can be withdrawn).
 export const FooterLinkGroups = [
   {
     id: 'footer-explore',
@@ -42,6 +44,7 @@ export const FooterLinkGroups = [
     links: [
       { name: 'Terms', route: TERMS_AND_CONDITIONS_PAGE_URL },
       { name: 'Privacy', route: PRIVACY_POLICIES_PAGE_URL },
+      { name: 'Cookie settings', action: 'cookie-settings' },
     ],
   },
 ];

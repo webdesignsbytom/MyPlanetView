@@ -1,10 +1,12 @@
 import { prisma } from '../prisma.js';
 import { COUNTED_VISIT_STATUSES } from '../utils/travelValidation.js';
+import { canEdit } from '../utils/access.js';
+import { countPerParent, countPhotosPer } from './counts.js';
 
 // Maps, travellers, visits, map members
 
 // Enough to decide the caller's role
-const mapAccessSelect = (userId) => ({
+const MAP_ACCESS_SELECT = {
   id: true,
   ownerId: true,
   name: true,
@@ -12,14 +14,25 @@ const mapAccessSelect = (userId) => ({
   isDefault: true,
   linkAccess: true,
   shareCode: true,
-  ...(userId ? { members: { where: { userId }, select: { role: true } } } : {}),
-});
+};
 
-export const findMapAccess = (mapId, userId) =>
-  prisma.travelMap.findUnique({ where: { id: mapId }, select: mapAccessSelect(userId) });
+/**
+ * The map and the caller's own membership, read side by side (one round trip, not a
+ * nested read). The membership is read only when there's a user: a filter with
+ * `userId: undefined` means no filter, and an anonymous caller would get the first
+ * member's role. -> `{ ...map, members: [] | [{ role }] }`, or null
+ */
+async function findMapWithMembership(mapWhere, userId) {
+  const [map, member] = await Promise.all([
+    prisma.travelMap.findUnique({ where: mapWhere, select: MAP_ACCESS_SELECT }),
+    userId ? prisma.mapMember.findFirst({ where: { userId, map: mapWhere }, select: { role: true } }) : null,
+  ]);
+  return map && { ...map, members: member ? [member] : [] };
+}
 
-export const findMapAccessByShareCode = (shareCode, userId) =>
-  prisma.travelMap.findUnique({ where: { shareCode }, select: mapAccessSelect(userId) });
+export const findMapAccess = (mapId, userId) => findMapWithMembership({ id: mapId }, userId);
+
+export const findMapAccessByShareCode = (shareCode, userId) => findMapWithMembership({ shareCode }, userId);
 
 const mapSummarySelect = {
   id: true,
@@ -29,52 +42,81 @@ const mapSummarySelect = {
   ownerId: true,
   createdAt: true,
   owner: { select: { name: true } },
-  _count: {
-    select: {
-      visits: { where: { status: { in: [...COUNTED_VISIT_STATUSES] } } },
-      photos: true,
-      trips: true,
-    },
-  },
 };
 
-export const findOwnedMaps = (userId) =>
-  prisma.travelMap.findMany({
+/**
+ * Adds `counts: { countries, photos, trips }` to each map, counted over these
+ * maps' ids only (see domain/counts.js). `includeHidden[i]`: whether map i's
+ * hidden photos count (the caller is its owner or an editor).
+ */
+async function withMapCounts(maps, includeHidden) {
+  const ids = maps.map((m) => m.id);
+  const [countries, photos, trips] = await Promise.all([
+    countPerParent('countryVisit', 'mapId', ids, { status: { in: [...COUNTED_VISIT_STATUSES] } }),
+    countPhotosPer('mapId', ids, includeHidden),
+    countPerParent('trip', 'mapId', ids),
+  ]);
+  return maps.map((m) => ({
+    ...m,
+    counts: {
+      countries: countries.get(m.id) ?? 0,
+      photos: photos.get(m.id) ?? 0,
+      trips: trips.get(m.id) ?? 0,
+    },
+  }));
+}
+
+/** The user's own maps with their counts (hidden photos included: they own them). */
+export const findOwnedMaps = async (userId) => {
+  const maps = await prisma.travelMap.findMany({
     where: { ownerId: userId },
     select: mapSummarySelect,
     orderBy: [{ isDefault: 'desc' }, { createdAt: 'asc' }],
   });
+  return withMapCounts(maps, maps.map(() => true));
+};
 
-export const findMemberMaps = (userId) =>
-  prisma.mapMember.findMany({
+/** Maps shared with the user, with counts; hidden photos count only where they're an editor. */
+export const findMemberMaps = async (userId) => {
+  const memberships = await prisma.mapMember.findMany({
     where: { userId },
     select: { role: true, map: { select: mapSummarySelect } },
     orderBy: { createdAt: 'asc' },
   });
+  const maps = await withMapCounts(
+    memberships.map((m) => m.map),
+    memberships.map((m) => canEdit(m.role))
+  );
+  return memberships.map((m, i) => ({ role: m.role, map: maps[i] }));
+};
 
 export const findDefaultMap = (userId) =>
-  prisma.travelMap.findFirst({ where: { ownerId: userId, isDefault: true }, select: { id: true } });
+  prisma.travelMap.findUnique({ where: { defaultForOwnerId: userId }, select: { id: true } });
 
-export const findMapDetail = (mapId) =>
-  prisma.travelMap.findUnique({
-    where: { id: mapId },
-    select: {
-      id: true,
-      name: true,
-      groupType: true,
-      isDefault: true,
-      ownerId: true,
-      owner: { select: { name: true } },
-      travellers: {
-        select: { id: true, name: true, position: true, userId: true, birthCountryCode: true, favouriteCountryCode: true },
-        orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
-      },
-      visits: {
-        select: { countryCode: true, status: true, source: true, firstVisitedOn: true, notes: true },
-        orderBy: { countryCode: 'asc' },
-      },
-    },
-  });
+/**
+ * The whole map: its row, owner's name, travellers and visits. Four flat queries run
+ * side by side (a nested select reads the map first, then the rest).
+ */
+export const findMapDetail = async (mapId) => {
+  const [map, owner, travellers, visits] = await Promise.all([
+    prisma.travelMap.findUnique({
+      where: { id: mapId },
+      select: { id: true, name: true, groupType: true, isDefault: true, ownerId: true },
+    }),
+    prisma.user.findFirst({ where: { ownedMaps: { some: { id: mapId } } }, select: { name: true } }),
+    prisma.traveller.findMany({
+      where: { mapId },
+      select: { id: true, name: true, position: true, userId: true, birthCountryCode: true, favouriteCountryCode: true },
+      orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
+    }),
+    prisma.countryVisit.findMany({
+      where: { mapId },
+      select: { countryCode: true, status: true, source: true, firstVisitedOn: true, notes: true },
+      orderBy: { countryCode: 'asc' },
+    }),
+  ]);
+  return map && { ...map, owner, travellers, visits };
+};
 
 /** A new map with its travellers (one transaction). */
 export const createMapInDB = ({ ownerId, name, groupType, isDefault = false, shareCode, travellers }) =>
@@ -84,6 +126,8 @@ export const createMapInDB = ({ ownerId, name, groupType, isDefault = false, sha
       name,
       groupType,
       isDefault,
+      // Unique: a second default map for the same owner fails (P2002)
+      defaultForOwnerId: isDefault ? ownerId : null,
       shareCode,
       travellers: {
         create: travellers.map((t, index) => ({
@@ -103,14 +147,8 @@ export const updateMapInDB = (mapId, data) =>
 
 export const deleteMapInDB = (mapId) => prisma.travelMap.delete({ where: { id: mapId } });
 
-/** Every stored file of every photo on a map (read before deleting the map). */
-export const findMapPhotoKeys = async (mapId) => {
-  const variants = await prisma.photoVariant.findMany({
-    where: { photo: { mapId } },
-    select: { media: { select: { key: true } } },
-  });
-  return variants.map((v) => v.media.key);
-};
+/** Several maps at once (account deletion); their photos, trips and members cascade. */
+export const deleteMapsInDB = (mapIds) => prisma.travelMap.deleteMany({ where: { id: { in: mapIds } } });
 
 // Share codes are unique per table; a new code is checked against both
 export const isShareCodeTaken = async (shareCode) => {
@@ -212,11 +250,26 @@ export const countMapConfirmedLandmarks = async (mapId, { includeHidden }) =>
 
 export const countMapTrips = (mapId) => prisma.trip.count({ where: { mapId } });
 
-export const findCompletedTripsForStats = (mapId) =>
-  prisma.trip.findMany({
-    where: { mapId, status: 'COMPLETED' },
-    select: { travellers: { select: { travellerId: true } }, stops: { select: { countryCode: true } } },
-  });
+/**
+ * Who went on each completed trip and where it stopped: `[{ travellerIds, countryCodes }]`.
+ * Two flat queries side by side; a completed trip with neither travellers nor stops
+ * adds nothing to the stats, so it's not listed.
+ */
+export const findCompletedTripsForStats = async (mapId) => {
+  const completed = { mapId, status: 'COMPLETED' };
+  const [travellers, stops] = await Promise.all([
+    prisma.tripTraveller.findMany({ where: { trip: completed }, select: { tripId: true, travellerId: true } }),
+    prisma.tripStop.findMany({ where: { trip: completed }, select: { tripId: true, countryCode: true } }),
+  ]);
+  const byTrip = new Map();
+  const tripOf = (tripId) => {
+    if (!byTrip.has(tripId)) byTrip.set(tripId, { travellerIds: [], countryCodes: [] });
+    return byTrip.get(tripId);
+  };
+  for (const t of travellers) tripOf(t.tripId).travellerIds.push(t.travellerId);
+  for (const s of stops) tripOf(s.tripId).countryCodes.push(s.countryCode);
+  return [...byTrip.values()];
+};
 
 // Map members
 
@@ -261,5 +314,5 @@ export const transferMapOwnership = (mapId, newOwnerId) =>
   prisma.$transaction([
     prisma.mapMember.deleteMany({ where: { mapId, userId: newOwnerId } }),
     // The new owner already has their own default map
-    prisma.travelMap.update({ where: { id: mapId }, data: { ownerId: newOwnerId, isDefault: false } }),
+    prisma.travelMap.update({ where: { id: mapId }, data: { ownerId: newOwnerId, isDefault: false, defaultForOwnerId: null } }),
   ]);

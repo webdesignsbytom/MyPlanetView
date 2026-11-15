@@ -8,13 +8,17 @@ import { MAP_PAGE_URL, TRIP_PAGE_URL, mapPath } from '@/utils/constants/routes';
 import { useAuth } from '@/auth/AuthContext';
 // Hooks
 import useMapSettings from '@/hooks/useMapSettings';
+import { preloadPhotoPage } from '@/hooks/usePhotoPage';
 // Components
 import AppPageHead from '@/components/utils/AppPageHead';
 import PublicPageLayout from '@/components/common/PublicPageLayout';
 import PaperCard from '@/components/common/PaperCard';
 import TripView from '@/components/trips/TripView';
+import VerifyEmailBanner from '@/components/map/VerifyEmailBanner';
 import InlineAlert from '@/components/common/InlineAlert';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
+// Utils
+import { forgetMapLists } from '@/utils/map/mapListCache';
 
 // One trip: anyone with a role on it (its map's people, or people added to the trip alone).
 // In the public pages' poster frame (the side nav, paper cards, the footer): nothing in
@@ -31,6 +35,8 @@ function TripPage() {
     let cancelled = false;
     setTrip(null);
     setError(null);
+    // Its photos (TripPhotosSection's first page) alongside the trip, not after it
+    preloadPhotoPage({ tripId });
     getTrip(tripId)
       .then(({ trip: loaded }) => {
         if (!cancelled) setTrip(loaded);
@@ -47,6 +53,8 @@ function TripPage() {
     <>
       <AppPageHead route={TRIP_PAGE_URL} title={trip?.title} />
       <PublicPageLayout mainProps={{ 'aria-busy': !trip && !error ? 'true' : undefined }}>
+        {/* Signed in with an unverified email: nothing on the trip can change until it is */}
+        <VerifyEmailBanner className='justify-self-start' />
         {error ? (
           <PaperCard title='Trip not found' titleId='trip-error-heading' headingLevel={1}>
             <InlineAlert>{error}</InlineAlert>
@@ -68,9 +76,14 @@ function TripPage() {
             currentUser={user}
             onDelete={async () => {
               await deleteTrip(trip.id);
-              navigate(mapPath(trip.mapId), { replace: true });
+              forgetMapLists();
+              // Back to its map, or to your own when you were added to the trip alone
+              navigate(trip.canOpenMap ? mapPath(trip.mapId) : MAP_PAGE_URL, { replace: true });
             }}
-            onLeft={() => navigate(MAP_PAGE_URL, { replace: true })}
+            onLeft={() => {
+              forgetMapLists();
+              navigate(MAP_PAGE_URL, { replace: true });
+            }}
           />
         ) : null}
       </PublicPageLayout>

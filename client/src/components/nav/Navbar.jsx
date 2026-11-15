@@ -37,18 +37,29 @@ function Navbar({ variant = 'bar' }) {
   const navLinkItemsArray = getNavLinkItemsArray(user);
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  // Logging out failed: they're still signed in, and the nav says so under the button
+  const [logoutError, setLogoutError] = useState('');
+  const navRef = useRef(null);
 
+  // Resolves to whether they're now logged out
   const handleLogout = async () => {
-    if (isLoggingOut) return;
+    if (isLoggingOut) return false;
     setIsLoggingOut(true);
-    try {
-      await logout();
+    setLogoutError('');
+    const result = await logout();
+    setIsLoggingOut(false);
+    if (result.ok) {
       // Announce via live region
       const live = document.getElementById('nav-live');
       if (live) live.textContent = 'You have been logged out.';
-    } finally {
-      setIsLoggingOut(false);
+    } else {
+      setLogoutError(result.error);
+      // The message in the nav that's showing (the desktop or the phone one)
+      requestAnimationFrame(() =>
+        [...(navRef.current?.querySelectorAll('[data-logout-error]') ?? [])].find((el) => el.offsetParent)?.focus(),
+      );
     }
+    return result.ok;
   };
 
   const siteNavJsonLd = useMemo(() => {
@@ -67,6 +78,7 @@ function Navbar({ variant = 'bar' }) {
 
   return (
     <nav
+      ref={navRef}
       role='navigation'
       aria-label='Main Navigation'
       // The column variant lives in PosterFrame, whose side padding keeps the bar clear of
@@ -97,6 +109,7 @@ function Navbar({ variant = 'bar' }) {
         user={user}
         handleLogout={handleLogout}
         isLoggingOut={isLoggingOut}
+        logoutError={logoutError}
         column={column}
       />
 
@@ -105,13 +118,14 @@ function Navbar({ variant = 'bar' }) {
         user={user}
         handleLogout={handleLogout}
         isLoggingOut={isLoggingOut}
+        logoutError={logoutError}
       />
     </nav>
   );
 }
 
 /* Desktop nav (lg and up): a bar, or the home page's column */
-function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut, column }) {
+function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut, logoutError, column }) {
   const [openDesktopDropdown, setOpenDesktopDropdown] = useState(null);
   const desktopNavRef = useRef(null);
 
@@ -187,8 +201,9 @@ function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut
 
         {/* Logout button */}
         {user?.email && (
-          <li className='grid'>
+          <li className='grid gap-2'>
             <LogoutButton user={user} onLogout={handleLogout} isLoggingOut={isLoggingOut} />
+            <LogoutError message={logoutError} />
           </li>
         )}
       </ul>
@@ -197,17 +212,27 @@ function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut
 }
 
 /* Mobile nav (below lg) */
-function MobileNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut }) {
+function MobileNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut, logoutError }) {
   const [isPhoneNavOpen, setIsPhoneNavOpen] = useState(false);
   const [openMobileDropdown, setOpenMobileDropdown] = useState(null);
+  const sectionRef = useRef(null);
 
   const togglePhoneNav = () => setIsPhoneNavOpen((prev) => !prev);
   const handleMobileDropdownToggle = (label) => {
     setOpenMobileDropdown((prev) => (prev === label ? null : label));
   };
 
+  // Logged out: the menu closes, and focus (on the Logout button, now gone) goes to its
+  // toggle (when this nav is still on the page). It failed: the menu stays open, with the
+  // message under the button.
+  const logoutAndClose = async () => {
+    if (!(await handleLogout())) return;
+    setIsPhoneNavOpen(false);
+    sectionRef.current?.querySelector('button[aria-controls="mobile-nav"]')?.focus();
+  };
+
   return (
-    <section className='grid lg:hidden grid-cols-reg items-center px-4 py-3'>
+    <section ref={sectionRef} className='grid lg:hidden grid-cols-reg items-center px-4 py-3'>
       {/* Logo */}
       <NavLink to={HOME_PAGE_URL} aria-label={`${CompanyName} homepage`} className='grid items-center active:scale-95'>
         <BrandWordmark size='md' hideNameOnPhones />
@@ -216,9 +241,10 @@ function MobileNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut 
       {/* Toggle: a rubber stamp reading MENU / CLOSE */}
       <MenuStampButton open={isPhoneNavOpen} onClick={togglePhoneNav} controls='mobile-nav' />
 
-      {/* Sliding panel */}
+      {/* Sliding panel; while closed it's inert, so its links leave the tab order */}
       <section
         id='mobile-nav'
+        inert={!isPhoneNavOpen}
         className={`phone-nav grid gap-6 rounded-lg paper-aged ticket-edge py-8 transition-transform duration-300 ${
           isPhoneNavOpen ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-full opacity-0'
         }`}
@@ -258,8 +284,9 @@ function MobileNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut 
 
           {/* Logout button */}
           {user?.email && (
-            <li className='grid'>
-              <LogoutButton user={user} onLogout={handleLogout} isLoggingOut={isLoggingOut} />
+            <li className='grid gap-2'>
+              <LogoutButton user={user} onLogout={logoutAndClose} isLoggingOut={isLoggingOut} />
+              <LogoutError message={logoutError} />
             </li>
           )}
         </ul>
@@ -269,6 +296,16 @@ function MobileNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut 
         </section>
       </section>
     </section>
+  );
+}
+
+// In poster ink, so it reads on the nav's parchment in both colour schemes
+function LogoutError({ message }) {
+  if (!message) return null;
+  return (
+    <p data-logout-error role='alert' tabIndex={-1} className='text-center text-sm font-semibold text-poster-red-deep'>
+      {message}
+    </p>
   );
 }
 

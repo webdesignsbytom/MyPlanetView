@@ -2,11 +2,37 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 // Api
 import { getPhotoPage } from '@/api/travelApi';
 
+// First pages asked for before their list mounted (MapPage starts the map's lists alongside
+// the map itself). Each is taken once, by the first list with the same filters, while fresh.
+const preloaded = new Map();
+const PRELOAD_FRESH_MS = 30000;
+const keyOf = ({ mapId, tripId, shareCode, country, unplaced = false, limit = 30 }) =>
+  JSON.stringify([mapId || null, tripId || null, shareCode || null, country || null, Boolean(unplaced), limit]);
+
+/** Start fetching a list's first page now; the usePhotoPage with the same filters uses it. */
+export function preloadPhotoPage(filters) {
+  const key = keyOf(filters);
+  const hit = preloaded.get(key);
+  if (hit && Date.now() - hit.at < PRELOAD_FRESH_MS) return;
+  const promise = getPhotoPage({ ...filters, cursor: undefined });
+  promise.catch(() => {}); // a failure is reported by the list, when it asks
+  preloaded.set(key, { promise, at: Date.now() });
+}
+
+function takePreloaded(filters) {
+  const key = keyOf(filters);
+  const hit = preloaded.get(key);
+  if (!hit) return null;
+  preloaded.delete(key);
+  return Date.now() - hit.at < PRELOAD_FRESH_MS ? hit.promise : null;
+}
+
 /**
  * Photos of a map, a trip, or a share link, newest first, a page at a time.
- * Filters: `country` (ISO code) and, on a map, `tripId`. Nothing loads while `enabled` is false.
+ * Filters: `country` (ISO code), or `unplaced` (only the photos with no country), and,
+ * on a map, `tripId`. Nothing loads while `enabled` is false.
  */
-export default function usePhotoPage({ mapId, tripId, shareCode, country, limit = 30, enabled = true }) {
+export default function usePhotoPage({ mapId, tripId, shareCode, country, unplaced = false, limit = 30, enabled = true }) {
   const [photos, setPhotos] = useState([]);
   const [nextCursor, setNextCursor] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -20,7 +46,8 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, limit 
       setLoading(true);
       setError(null);
       try {
-        const page = await getPhotoPage({ mapId, tripId, shareCode, country, cursor, limit });
+        const filters = { mapId, tripId, shareCode, country, unplaced, limit };
+        const page = await ((!cursor && takePreloaded(filters)) || getPhotoPage({ ...filters, cursor }));
         if (generation !== generationRef.current) return;
         setPhotos((prev) => (cursor ? [...prev, ...(page.photos || [])] : page.photos || []));
         setNextCursor(page.nextCursor || null);
@@ -30,7 +57,7 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, limit 
         if (generation === generationRef.current) setLoading(false);
       }
     },
-    [mapId, tripId, shareCode, country, limit],
+    [mapId, tripId, shareCode, country, unplaced, limit],
   );
 
   const reload = useCallback(() => {

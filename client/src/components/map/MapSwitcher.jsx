@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Api
-import { createMap, getMyMaps, getTripsSharedWithMe } from '@/api/travelApi';
+import { createMap } from '@/api/travelApi';
 // Constants
 import { mapPath } from '@/utils/constants/routes';
 // Components
@@ -9,33 +9,38 @@ import MapPanel from './MapPanel';
 import MapActionButton from './MapActionButton';
 import MapSwitcherItem from './MapSwitcherItem';
 import NewMapForm from './NewMapForm';
+import VerifyFirstNote from './VerifyFirstNote';
 import TripCard from '@/components/trips/TripCard';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
+// Utils
+import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/map/mapListCache';
 
 // Every map you can open (yours, then ones shared with you), trips shared with you on
-// their own, and a new map.
-function MapSwitcher({ currentMapId, userName, onClose }) {
+// their own, and a new map. The lists from earlier in the session show at once, and are
+// asked for again behind them (utils/map/mapListCache.js).
+function MapSwitcher({ currentMapId, userId, userName, locked = false, onClose }) {
   const navigate = useNavigate();
-  const [maps, setMaps] = useState(null);
-  const [sharedTrips, setSharedTrips] = useState([]);
+  const [maps, setMaps] = useState(() => myMaps.peek(userId));
+  const [sharedTrips, setSharedTrips] = useState(() => sharedTripList.peek(userId) || []);
   const [error, setError] = useState(null);
   const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([getMyMaps(), getTripsSharedWithMe().catch(() => ({ trips: [] }))])
-      .then(([{ maps: list }, { trips }]) => {
+    Promise.all([myMaps.load(userId), sharedTripList.load(userId).catch(() => [])])
+      .then(([list, trips]) => {
         if (cancelled) return;
-        setMaps(list || []);
-        setSharedTrips(trips || []);
+        setMaps(list);
+        setSharedTrips(trips);
       })
       .catch((err) => {
-        if (!cancelled) setError(err.friendlyMessage || 'Your maps could not be loaded.');
+        // A list already on screen stays; only an empty switcher says so
+        if (!cancelled) setError((prev) => prev || err.friendlyMessage || 'Your maps could not be loaded.');
       });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [userId]);
 
   const own = (maps || []).filter((m) => m.role === 'OWNER');
   const shared = (maps || []).filter((m) => m.role !== 'OWNER');
@@ -63,12 +68,15 @@ function MapSwitcher({ currentMapId, userName, onClose }) {
 
       {own.length ? list(own) : null}
 
-      {creating ? (
+      {locked && maps ? (
+        <VerifyFirstNote action='make another map' />
+      ) : creating ? (
         <NewMapForm
           firstTraveller={userName}
           onCancel={() => setCreating(false)}
           onCreate={async (body) => {
             const { map } = await createMap(body);
+            forgetMapLists();
             onClose();
             navigate(mapPath(map.id));
           }}

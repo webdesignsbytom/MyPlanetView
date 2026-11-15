@@ -1,9 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 // Data
 import { COUNTRIES } from '@/utils/map/countries';
 // Components
 import MapPanel from './MapPanel';
 import CountryListItem from './CountryListItem';
+import UnplacedPhotosButton from './UnplacedPhotosButton';
+import VerifyFirstNote from './VerifyFirstNote';
 import TextInput from '@/components/ui/TextInput';
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 
@@ -18,8 +20,20 @@ const FILTERS = [
 const fold = (text) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 // Every country as a list: the keyboard path to the whole map, and the quickest way to
-// tick off many countries (the old site's "countries visited" list).
-function CountryListPanel({ visitsByCode, canEdit, onChangeStatus, onShowCountry, onClose }) {
+// tick off many countries (the old site's "countries visited" list). Photos with no
+// country have their own list, opened from the top. The rows are memoised and get only
+// stable callbacks, so a status change re-renders one row, and the map moving none.
+function CountryListPanel({
+  visitsByCode,
+  canEdit,
+  locked = false,
+  onChangeStatus,
+  onShowCountry,
+  unplacedCount = 0,
+  unplacedMore = false,
+  onShowUnplaced,
+  onClose,
+}) {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('ALL');
   const [error, setError] = useState(null);
@@ -33,18 +47,27 @@ function CountryListPanel({ visitsByCode, canEdit, onChangeStatus, onShowCountry
     });
   }, [search, filter, visitsByCode]);
 
-  const changeStatus = async (code, status) => {
-    setError(null);
-    try {
-      await onChangeStatus(code, status);
-    } catch (err) {
-      setError(err.friendlyMessage || 'That change could not be saved.');
-    }
-  };
+  const changeStatus = useCallback(
+    async (code, status) => {
+      setError(null);
+      try {
+        await onChangeStatus(code, status);
+      } catch (err) {
+        setError(err.friendlyMessage || 'That change could not be saved.');
+      }
+    },
+    [onChangeStatus],
+  );
 
   return (
     <MapPanel title='Countries' onClose={onClose}>
+      {onShowUnplaced ? <UnplacedPhotosButton count={unplacedCount} more={unplacedMore} onOpen={onShowUnplaced} /> : null}
+      {locked ? <VerifyFirstNote action='tick off countries' /> : null}
       <div className='grid gap-2 sm:grid-cols-2'>
+        {/* The placeholder isn't a name: it goes as soon as you type */}
+        <label htmlFor='country-search' className='sr-only'>
+          Search countries
+        </label>
         <TextInput
           id='country-search'
           type='search'
@@ -85,4 +108,4 @@ function CountryListPanel({ visitsByCode, canEdit, onChangeStatus, onShowCountry
   );
 }
 
-export default CountryListPanel;
+export default memo(CountryListPanel);

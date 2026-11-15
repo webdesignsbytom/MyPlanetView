@@ -18,7 +18,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import useNavigateToPage from '@/hooks/useNavigateToPage';
 // Regex
-import { PASSWORD_REGEX } from '@/utils/regex/regex';
+import { PASSWORD_REGEX, PASSWORD_RULE } from '@/utils/regex/regex';
 // Auth
 import { useAuth } from '@/auth/AuthContext';
 
@@ -84,9 +84,7 @@ function RegisterForm() {
     setRegisterError(null);
 
     if (!isPasswordValid) {
-      setRegisterError(
-        'Password must be at least 8 characters, include 1 uppercase letter, 1 number, and 1 special character, and cannot contain / or \\.'
-      );
+      setRegisterError(PASSWORD_RULE);
       setRegistrationInProgress(false);
       return;
     }
@@ -189,7 +187,7 @@ function RegisterForm() {
       <FormField
         id='password'
         label='Password'
-        hint='Password must be at least 8 characters, include 1 uppercase letter, 1 number, 1 special character, and cannot contain / or \.'
+        hint={PASSWORD_RULE}
         error={Boolean(registerError)}
       >
         <PasswordInput
@@ -200,8 +198,6 @@ function RegisterForm() {
           onChange={handleChange}
           required
           autoComplete='new-password'
-          pattern='^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])(?!.*[\\/]).{8,}$'
-          title='Min 8 chars, 1 uppercase, 1 number, 1 special character, and no / or \.'
         />
       </FormField>
 
@@ -219,8 +215,6 @@ function RegisterForm() {
           onChange={handleChange}
           required
           autoComplete='new-password'
-          pattern='^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])(?!.*[\\/]).{8,}$'
-          title='Min 8 chars, 1 uppercase, 1 number, 1 special character, and no / or \.'
         />
       </FormField>
 

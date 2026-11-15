@@ -2,16 +2,12 @@
 import { RESPONSE_MESSAGES } from '../utils/responses/responses.js';
 import { createAppEvent, levelFromStatusCode } from './events.js';
 
-// Safe helpers
+// Safe helpers. Events never keep an email address: the user is the actorId.
 const normalizeUser = (user) => {
   if (user && typeof user === 'object') {
-    return {
-      id: user.id ?? null,
-      email: user.email ?? 'anonymous',
-      role: user.role ?? 'USER',
-    };
+    return { id: user.id ?? null, role: user.role ?? 'USER' };
   }
-  return { id: null, email: 'anonymous', role: 'USER' };
+  return { id: null, role: 'USER' };
 };
 
 // Generic error event creator
@@ -22,7 +18,7 @@ export const createGenericErrorEvent = async (errorEvent) => {
   const persistedMessage =
     errorEvent?.logMessage ||
     errorEvent?.message ||
-    `An unknown error occurred for ${u.email}`;
+    `An unknown error occurred for ${u.id ? `user ${u.id}` : 'a visitor'}`;
 
   await createAppEvent({
     level: levelFromStatusCode(statusCode),
@@ -31,8 +27,10 @@ export const createGenericErrorEvent = async (errorEvent) => {
     message: persistedMessage,
     statusCode,
     actorId: u.id,
-    // Stack captured in the constructor
-    stack: errorEvent?.stack,
+    // Stack captured in the constructor; kept for server errors only. A 4xx
+    // (bad input, not found) is the caller's, and reading `.stack` is what
+    // makes V8 format it.
+    stack: statusCode >= 500 ? errorEvent?.stack : undefined,
   });
 };
 

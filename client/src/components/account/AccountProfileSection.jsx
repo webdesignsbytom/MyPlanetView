@@ -75,6 +75,9 @@ function AccountProfileSection() {
   };
 
   const initial = (user?.name || user?.email || '?').charAt(0).toUpperCase();
+  // The server refuses uploads until the address is verified (docs/API.md, Access); the
+  // button stays focusable so the reason is read with it. Removing is still allowed.
+  const uploadLocked = user?.emailVerified === false;
 
   return (
     <div className='grid gap-6'>
@@ -104,13 +107,17 @@ function AccountProfileSection() {
             className='sr-only'
             id='avatar-file'
             onChange={onPickFile}
-            disabled={busy === 'avatar'}
+            disabled={busy === 'avatar' || uploadLocked}
           />
           <button
             type='button'
-            className={buttonClass}
-            onClick={() => fileRef.current?.click()}
+            className={`${buttonClass} aria-disabled:cursor-not-allowed aria-disabled:opacity-60`}
+            onClick={() => {
+              if (!uploadLocked) fileRef.current?.click();
+            }}
             disabled={busy === 'avatar'}
+            aria-disabled={uploadLocked || undefined}
+            aria-describedby={uploadLocked ? 'avatar-verify-note' : undefined}
           >
             {busy === 'avatar' ? <LoadingSpinner xs /> : user?.image ? 'Change avatar' : 'Upload avatar'}
           </button>
@@ -125,7 +132,13 @@ function AccountProfileSection() {
             </button>
           ) : null}
         </div>
-        <p className='text-xs opacity-70'>PNG, JPEG, WebP or GIF, up to {MAX_IMAGE_SIZE_MB} MB.</p>
+        {uploadLocked ? (
+          <p id='avatar-verify-note' className='text-sm font-semibold text-center'>
+            Verify your email to add a photo.
+          </p>
+        ) : (
+          <p className='text-xs opacity-70'>PNG, JPEG, WebP or GIF, up to {MAX_IMAGE_SIZE_MB} MB.</p>
+        )}
       </div>
 
       {/* Display name */}

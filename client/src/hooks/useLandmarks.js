@@ -2,24 +2,34 @@ import { useEffect, useState } from 'react';
 // Api
 import { getLandmarks } from '@/api/travelApi';
 
-// Landmarks are reference data: fetched once per country (or once for all) per page load
-const cache = new Map();
-const ALL = '__all__';
+// Landmarks are reference data (seeded, never edited by users), so they're fetched once
+// per session, all of them (177, about 7 kB compressed): the map's pins, every country's
+// list and the photo and stop forms all come from that one request. A failed request is
+// forgotten, so the next use tries again.
+let all = null;
+let allLoaded = null; // the list itself, once it's here
+const byCountry = new Map();
 
-function loadLandmarks(countryCode) {
-  const key = countryCode || ALL;
-  if (!cache.has(key)) {
-    cache.set(
-      key,
-      getLandmarks(countryCode)
-        .then(({ landmarks }) => landmarks || [])
-        .catch((err) => {
-          cache.delete(key);
-          throw err;
-        }),
-    );
-  }
-  return cache.get(key);
+function loadAll() {
+  all ||= getLandmarks()
+    .then(({ landmarks }) => (allLoaded = landmarks || []))
+    .catch((err) => {
+      all = null;
+      throw err;
+    });
+  return all;
+}
+
+// One array per country, so a country's list keeps its identity between uses
+function pick(list, countryCode) {
+  if (!countryCode) return list;
+  if (!byCountry.has(countryCode)) byCountry.set(countryCode, list.filter((l) => l.countryCode === countryCode));
+  return byCountry.get(countryCode);
+}
+
+/** Start fetching the landmarks before anything asks (the map page, when pins will show). */
+export function preloadLandmarks() {
+  loadAll().catch(() => {});
 }
 
 /** Landmarks in one country, or every landmark when `countryCode` is empty. */
@@ -28,9 +38,15 @@ export default function useLandmarks(countryCode, { enabled = true } = {}) {
 
   useEffect(() => {
     if (!enabled) return undefined;
+    // Already here: straight in, with no "Loading" in between
+    if (allLoaded) {
+      setState({ landmarks: pick(allLoaded, countryCode), loading: false, error: null });
+      return undefined;
+    }
     let cancelled = false;
     setState((prev) => ({ ...prev, loading: true, error: null }));
-    loadLandmarks(countryCode)
+    loadAll()
+      .then((list) => pick(list, countryCode))
       .then((landmarks) => {
         if (!cancelled) setState({ landmarks, loading: false, error: null });
       })

@@ -23,14 +23,17 @@ import { HOME_PAGE_URL } from '@/utils/constants/routes';
 // Utils
 import { presignAndUpload } from '@/utils/media/uploadViaMediaService';
 // React
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 // Context
 import { AuthContext } from './AuthContext';
-import { getStoredItem, removeStoredItem } from '@/utils/functions/safeStorage';
-
-const IS_LOGGED_IN_KEY = 'isLoggedIn';
+import { IS_LOGGED_IN_KEY, takeSessionRequest } from './bootSession';
+import { getStoredItem, removeStoredItem, setStoredItem } from '@/utils/functions/safeStorage';
 
 const fail = (e, fallback) => ({ ok: false, error: e?.friendlyMessage || fallback });
+
+// While the address is unverified, the session is read again when the tab comes back, at
+// most this often (the person may have clicked the emailed link in another tab)
+const UNVERIFIED_RECHECK_MS = 10000;
 
 export function AuthProvider({ children }) {
   const navigateToPage = useNavigateToPage();
@@ -38,6 +41,11 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // When the session was last read; reads are numbered so a slow, older answer (the boot
+  // request, say, after the verify page's fresh read) never replaces a newer one
+  const lastSessionRead = useRef(0);
+  const readCount = useRef(0);
+  const appliedRead = useRef(0);
 
   const clearUser = () => {
     removeStoredItem(IS_LOGGED_IN_KEY);
@@ -45,21 +53,30 @@ export function AuthProvider({ children }) {
     setIsAuthenticated(false);
   };
 
-  // silent: refresh without unmounting guarded pages
-  async function refresh({ silent = false } = {}) {
+  // silent: refresh without unmounting guarded pages. request: one already sent (the
+  // session request main.jsx starts at boot). background: a check nobody asked for, so a
+  // failure other than a 401 (offline, a server error) leaves the session as it was
+  async function refresh({ silent = false, request = null, background = false } = {}) {
     if (!silent) setLoading(true);
+    lastSessionRead.current = Date.now();
+    const read = ++readCount.current;
 
     try {
-      const res = await client.get(GET_LOGGED_IN_USER_API, true);
+      const res = await (request || client.get(GET_LOGGED_IN_USER_API, true));
       const u = res?.data?.data?.user || null;
+      if (read < appliedRead.current) return { ok: Boolean(u), user: u };
+      appliedRead.current = read;
 
       setUser(u);
       setIsAuthenticated(Boolean(u));
-      if (u) localStorage.setItem(IS_LOGGED_IN_KEY, 'true');
-      else localStorage.removeItem(IS_LOGGED_IN_KEY);
+      if (u) setStoredItem(IS_LOGGED_IN_KEY, 'true');
+      else removeStoredItem(IS_LOGGED_IN_KEY);
 
       return { ok: Boolean(u), user: u };
     } catch (e) {
+      if (read < appliedRead.current) return fail(e, 'Not signed in.');
+      if (background && e?.response?.status !== 401) return fail(e, 'Not signed in.');
+      appliedRead.current = read;
       clearUser();
       return fail(e, 'Not signed in.');
     } finally {
@@ -127,7 +144,8 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // Sends a link to the new address; email changes once it's clicked
+  // A verified account confirms from its current address first; then a link goes to the
+  // new address, and the email changes once it's clicked
   async function changeEmail({ newEmail }) {
     try {
       await client.post(CHANGE_EMAIL_API, { newEmail }, true);
@@ -201,22 +219,50 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // Signed out only once the server says so: if the call fails, the session cookie is
+  // still good, so the page keeps showing the person as signed in and says it failed.
+  // A 401 means the session had already ended.
   async function logout() {
     try {
       await client.post(SIGNOUT_API, {}, true);
     } catch (e) {
-      console.log('logout:error', e);
+      if (e?.response?.status !== 401) {
+        return { ok: false, error: "Logging out didn't work, so you're still logged in. Please try again." };
+      }
     }
 
     clearUser();
     setLoading(false);
     navigateToPage(HOME_PAGE_URL);
+    return { ok: true };
   }
 
-  // Mount only
+  // Signed in but not verified: when this tab is focused or shown again, read the session
+  // (throttled), so that verifying from the emailed link in another tab lifts this tab's
+  // banner and locks without a reload
+  const awaitingVerification = Boolean(user) && user.emailVerified === false;
   useEffect(() => {
-    if (getStoredItem(IS_LOGGED_IN_KEY) === 'true') {
-      refresh();
+    if (!awaitingVerification) return undefined;
+    const recheck = () => {
+      if (document.visibilityState !== 'visible') return;
+      if (Date.now() - lastSessionRead.current < UNVERIFIED_RECHECK_MS) return;
+      refresh({ silent: true, background: true });
+    };
+    window.addEventListener('focus', recheck);
+    document.addEventListener('visibilitychange', recheck);
+    return () => {
+      window.removeEventListener('focus', recheck);
+      document.removeEventListener('visibilitychange', recheck);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [awaitingVerification]);
+
+  // Mount only. The first render is the signed-out one, as on the pre-rendered pages
+  // (hydration needs it to match); the session arrives after.
+  useEffect(() => {
+    const request = takeSessionRequest();
+    if (request || getStoredItem(IS_LOGGED_IN_KEY) === 'true') {
+      refresh({ request });
     } else {
       setLoading(false);
     }

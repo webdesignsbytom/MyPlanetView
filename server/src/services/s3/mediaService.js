@@ -1,49 +1,72 @@
 import crypto from 'node:crypto';
 import path from 'node:path';
-import { DeleteObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
-// Public S3 helpers
-import s3Public, {
-  s3PresignPut,
-  s3PresignGet,
-  s3DeleteObject,
-  PUBLIC_BUCKET,
-} from './s3public.js';
-// Private S3 client + helpers
-import s3Private, {
-  PRIVATE_BUCKET,
-  signPrivateGetObject,
-  signPrivatePutObject,
-} from './s3private.js';
 import {
   BucketNamespace,
   MAX_UPLOAD_BYTES,
+  ORPHAN_AGE_HOURS,
+  ORPHAN_PHOTO_AGE_MINUTES,
   PHOTO_EXTENSIONS,
   PHOTO_UPLOAD_URL_TTL_SECONDS,
   PHOTO_URL_TTL_SECONDS,
+  UNCONFIRMED_UPLOAD_LIMIT,
+  UNCONFIRMED_UPLOAD_WINDOW_HOURS,
 } from '../../utils/constants/mediaConstants.js';
 import { prisma } from '../../prisma.js';
-import { mediaKindFromContentType } from '../../domain/mediaGeneric.js';
+import {
+  countUnconfirmedUploads,
+  deleteUnusedMediaItems,
+  findOrphanUploads,
+  mediaKindFromContentType,
+} from '../../domain/mediaGeneric.js';
 import { publicMediaUrlFrom } from '../../utils/media/publicMediaUrl.js';
+import {
+  UPLOAD_IMAGE_TYPES,
+  extensionForType,
+  checkDeclaredUpload,
+  checkStoredUpload,
+  canAttachContactImage,
+} from '../../utils/media/uploadRules.js';
+import { DELETE_BATCH_MAX, chunk, deleteResult, distinctKeys, settleWithLimit } from '../../utils/media/batches.js';
 
-// No SVG anywhere: an SVG is an XML document that can carry <script>
+// The AWS SDK and the two bucket clients (s3public.js, s3private.js) load on first use,
+// not at start-up: most requests (sign-in, maps, trips without photos) never touch a
+// bucket, and the SDK is the slowest import on a cold start.
+let storagePromise = null;
+const storage = () =>
+  (storagePromise ??= Promise.all([
+    import('@aws-sdk/client-s3'),
+    import('./s3public.js'),
+    import('./s3private.js'),
+  ])
+    .then(([sdk, pub, priv]) => ({ sdk, pub, priv }))
+    .catch((err) => {
+      storagePromise = null; // try again next time
+      throw err;
+    }));
+
+// For cacheControlFor only. What each resource accepts is its exact `allowedTypes`.
 const IMAGE_TYPES = /^(image)\/(png|jpe?g|webp|gif)$/i;
-const AVATAR_TYPES = IMAGE_TYPES;
 const VIDEO_TYPES = /^(video)\/(mp4|webm|quicktime|ogg|x-matroska)$/i;
 
-// Resource registry (camelCase keys)
+// Resource registry (camelCase keys). `allowedTypes` are exact MIME types, each with
+// an extension in uploadRules.js (never SVG or HTML); `maxBytes` caps the declared
+// size, which the upload URL signs, and the real size checked on confirm.
 export const MEDIA_CFG = {
   avatar: {
     prefix: `${BucketNamespace}/avatars/`,
     visibility: 'public',
     requiresAuth: true,
-    allowedTypes: [AVATAR_TYPES],
+    allowedTypes: UPLOAD_IMAGE_TYPES,
+    maxBytes: MAX_UPLOAD_BYTES.IMAGE,
   },
   contact: {
     prefix: `${BucketNamespace}/contact/`,
     visibility: 'public',
+    // The public contact form: visitors upload without an account. Small images only,
+    // and a form attaches one only while it's fresh and unused (isUsableContactImage).
     requiresAuth: false,
-    // Images only
-    allowedTypes: [IMAGE_TYPES],
+    allowedTypes: UPLOAD_IMAGE_TYPES,
+    maxBytes: MAX_UPLOAD_BYTES.IMAGE,
     // Admin/dev-only view (app-level; bucket is still public)
     restrictedView: true,
   },
@@ -54,9 +77,13 @@ export const MEDIA_CFG = {
     visibility: 'private',
     requiresAuth: true,
     allowedTypes: [],
+    maxBytes: 0,
     generic: false,
   },
 };
+
+/** An error the generic media handlers answer with as it is (4xx). */
+const httpError = (status, message) => Object.assign(new Error(message), { status });
 
 export const PHOTO_PREFIX = MEDIA_CFG.photo.prefix;
 
@@ -64,6 +91,9 @@ const ALLOWED_PREFIXES = Object.values(MEDIA_CFG).map((c) => c.prefix);
 const GENERIC_PREFIXES = Object.values(MEDIA_CFG)
   .filter((c) => c.generic !== false)
   .map((c) => c.prefix);
+const GENERIC_RESOURCES = Object.keys(MEDIA_CFG).filter((name) => MEDIA_CFG[name].generic !== false);
+
+export const TOO_MANY_UNCONFIRMED_UPLOADS = 'Too many unfinished uploads. Please try again later.';
 
 // Validators
 export function assertAllowedKey(key) {
@@ -83,13 +113,9 @@ function assertGenericKey(key) {
   }
 }
 
-export function assertContentTypeAllowed(contentType, allowedTypes) {
-  if (!contentType || !allowedTypes?.some((re) => re.test(contentType))) {
-    const err = new Error('Unsupported content type for this resource.');
-    err.status = 400;
-    throw err;
-  }
-}
+/** A type this resource accepts (exact MIME match). */
+export const isAllowedUploadType = (resource, contentType) =>
+  Boolean(MEDIA_CFG[resource]?.allowedTypes.includes(contentType));
 
 // Helpers
 function randomBase32(n = 16) {
@@ -100,18 +126,15 @@ function randomBase32(n = 16) {
     .replace(/-/g, '');
 }
 
-export function buildObjectKey({ resource, userId, filename }) {
+// The extension comes from the type (uploadRules.js), never from `filename`, which
+// only gives the readable part of the name.
+export function buildObjectKey({ resource, userId, filename, contentType }) {
   const cfg = MEDIA_CFG[resource];
-  if (!cfg) {
-    const err = new Error(`Unknown media resource: ${resource}`);
-    err.status = 400;
-    throw err;
-  }
+  if (!cfg) throw httpError(400, 'Unknown media resource.');
 
   const prefix = cfg.prefix;
-  const ext = (
-    path.extname(filename || '').replace('.', '') || 'bin'
-  ).toLowerCase();
+  const ext = extensionForType(contentType);
+  if (!ext) throw httpError(400, 'That file type can’t be uploaded here.');
   const today = new Date();
   const yyyy = today.getUTCFullYear();
   const mm = String(today.getUTCMonth() + 1).padStart(2, '0');
@@ -145,6 +168,17 @@ const isPrivateKey = (key) =>
 const resourceCfgForKey = (key) =>
   Object.values(MEDIA_CFG).find((c) => key.startsWith(c.prefix));
 
+/**
+ * Refuse (429) a presign that would leave the user with more than `limit` unconfirmed
+ * uploads of these resources over the last day. `adding` is how many this presign makes.
+ */
+export async function assertUnconfirmedUploadsUnder({ userId, resources, limit, adding = 1 }) {
+  if (!userId) return;
+  const since = new Date(Date.now() - UNCONFIRMED_UPLOAD_WINDOW_HOURS * 60 * 60 * 1000);
+  const pending = await countUnconfirmedUploads({ ownerId: userId, resources, since });
+  if (pending + adding > limit) throw httpError(429, TOO_MANY_UNCONFIRMED_UPLOADS);
+}
+
 // One MediaItem row per uploaded object
 async function recordMediaItem({ key, resource, cfg, userId, contentType, filename }) {
   await prisma.mediaItem.upsert({
@@ -169,62 +203,161 @@ async function recordMediaItem({ key, resource, cfg, userId, contentType, filena
   });
 }
 
-// Delete S3 object + MediaItem row (no permission check)
-async function deleteObjectAndRecord(key) {
-  if (isPrivateKey(key)) {
-    await s3Private.send(new DeleteObjectCommand({ Bucket: PRIVATE_BUCKET, Key: key }));
-  } else {
-    await s3DeleteObject({ bucket: PUBLIC_BUCKET, key });
+// ── Deleting stored files ─────────────────────────────────────────────────────
+
+/** The client and bucket a key lives in. */
+const bucketOf = ({ pub, priv }, key) =>
+  isPrivateKey(key)
+    ? { client: priv.default, bucket: priv.PRIVATE_BUCKET }
+    : { client: pub.default, bucket: pub.PUBLIC_BUCKET };
+
+// One key per request; also the fallback when a whole DeleteObjects request fails
+const deleteOne = async (store, key) => {
+  const { client, bucket } = bucketOf(store, key);
+  await client.send(new store.sdk.DeleteObjectCommand({ Bucket: bucket, Key: key }));
+};
+
+let warnedBatchFallback = false;
+
+/**
+ * Up to 1,000 keys of one bucket in one DeleteObjects request. If the request itself
+ * fails (not single keys), the keys are deleted one by one, eight at a time.
+ * DeleteObjects needs a body checksum: SDK 3.729+ sends x-amz-checksum-crc32 even with
+ * requestChecksumCalculation WHEN_REQUIRED (it's a required checksum), which R2 has
+ * accepted since February 2025. -> `{ removed, failed }`
+ */
+async function deleteChunk(store, client, bucket, keys) {
+  if (keys.length === 1) {
+    try {
+      await deleteOne(store, keys[0]);
+      return { removed: keys, failed: [] };
+    } catch (err) {
+      console.error('[media] delete failed (left for clean-up):', keys[0], err?.message);
+      return { removed: [], failed: keys };
+    }
   }
+  try {
+    const reply = await client.send(
+      new store.sdk.DeleteObjectsCommand({
+        Bucket: bucket,
+        Delete: { Objects: keys.map((Key) => ({ Key })), Quiet: true },
+      })
+    );
+    const result = deleteResult(keys, reply);
+    if (result.failed.length) {
+      console.error(`[media] ${result.failed.length} file(s) not deleted (left for clean-up):`, reply.Errors?.[0]?.Code);
+    }
+    return result;
+  } catch (err) {
+    if (!warnedBatchFallback) {
+      warnedBatchFallback = true;
+      console.error('[media] DeleteObjects failed; deleting one file at a time instead:', err?.name, err?.message);
+    }
+    const settled = await settleWithLimit(keys, 8, (key) => deleteOne(store, key));
+    return {
+      removed: settled.filter((r) => r.ok).map((r) => r.item),
+      failed: settled.filter((r) => !r.ok).map((r) => r.item),
+    };
+  }
+}
+
+/** Delete stored files (either bucket), in batches. Never throws: -> `{ removed, failed }` */
+async function deleteFiles(keys) {
+  const list = distinctKeys(keys);
+  const removed = [];
+  const failed = [];
+  if (!list.length) return { removed, failed };
+  let store;
+  try {
+    store = await storage();
+  } catch (err) {
+    console.error('[media] storage unavailable (files left for clean-up):', err?.message);
+    return { removed, failed: list };
+  }
+  const groups = [list.filter(isPrivateKey), list.filter((k) => !isPrivateKey(k))];
+  for (const group of groups) {
+    if (!group.length) continue;
+    const { client, bucket } = bucketOf(store, group[0]);
+    for (const part of chunk(group, DELETE_BATCH_MAX)) {
+      const result = await deleteChunk(store, client, bucket, part);
+      removed.push(...result.removed);
+      failed.push(...result.failed);
+    }
+  }
+  return { removed, failed };
+}
+
+/**
+ * Delete stored files, then the MediaItem rows of the ones that went (never a row a
+ * photo or an avatar still uses). A file that couldn't be deleted keeps its row, so the
+ * daily clean-up finds it and tries again. -> `{ deleted, failed }`
+ */
+async function deleteFilesAndRecords(keys) {
+  const { removed, failed } = await deleteFiles(keys);
+  let deleted = 0;
+  for (const part of chunk(removed, DELETE_BATCH_MAX)) {
+    try {
+      deleted += (await deleteUnusedMediaItems(part)).count;
+    } catch (err) {
+      // The files are gone; the rows stay unused, and the clean-up removes them
+      console.error('[media] deleting upload rows failed (left for clean-up):', err?.message);
+    }
+  }
+  return { deleted, failed: failed.length };
+}
+
+// One file and its MediaItem row (no permission check). Throws if the file can't go.
+async function deleteObjectAndRecord(key) {
+  const store = await storage();
+  await deleteOne(store, key);
   await prisma.mediaItem.delete({ where: { key } }).catch(() => {});
 }
 
-// Presign PUT for new object
+// Presign PUT for new object. The URL signs `contentType` and `bytes`, so the bucket
+// takes only that type at exactly that size (signedUpload.js).
 export async function mintUploadUrl({
   resource,
   userId,
   filename,
   contentType,
+  bytes,
   cache = 'immutable',
 }) {
   const cfg = MEDIA_CFG[resource];
-  if (!cfg || cfg.generic === false) {
-    const err = new Error(`Unknown media resource: ${resource}`);
-    err.status = 400;
-    throw err;
-  }
+  if (!cfg || cfg.generic === false) throw httpError(400, 'Unknown media resource.');
 
-  if (cfg.requiresAuth && !userId) {
-    const err = new Error('This resource requires an authenticated user to upload.');
-    err.status = 401;
-    throw err;
-  }
+  if (cfg.requiresAuth && !userId) throw httpError(401, 'Sign in to upload this file.');
 
-  assertContentTypeAllowed(contentType, cfg.allowedTypes);
+  const declared = checkDeclaredUpload({ contentType, bytes }, cfg);
+  if (!declared.ok) throw httpError(declared.status, declared.message);
 
-  const key = buildObjectKey({ resource, userId, filename });
+  // A signed-in user can't pile up uploads they never confirm (visitors' contact
+  // uploads are rate limited per IP instead)
+  await assertUnconfirmedUploadsUnder({ userId, resources: GENERIC_RESOURCES, limit: UNCONFIRMED_UPLOAD_LIMIT.generic });
+
+  const key = buildObjectKey({ resource, userId, filename, contentType });
   await recordMediaItem({ key, resource, cfg, userId, contentType, filename });
-
-  const kind = mediaKindFromContentType(contentType);
-  const maxBytes = MAX_UPLOAD_BYTES[kind];
+  const { pub, priv } = await storage();
 
   if (cfg.visibility === 'private') {
-    const url = await signPrivatePutObject({
-      bucket: PRIVATE_BUCKET,
+    const url = await priv.signPrivatePutObject({
+      bucket: priv.PRIVATE_BUCKET,
       key,
       contentType,
+      contentLength: bytes,
       expiresIn: 600,
     });
 
-    return { url, key, expiresIn: 600, contentType, visibility: cfg.visibility, maxBytes };
+    return { url, key, expiresIn: 600, contentType, bytes, visibility: cfg.visibility, maxBytes: cfg.maxBytes };
   }
 
   const cacheControl = cacheControlFor(contentType, cache);
 
-  const { url, expiresIn } = await s3PresignPut({
-    bucket: PUBLIC_BUCKET,
+  const { url, expiresIn } = await pub.s3PresignPut({
+    bucket: pub.PUBLIC_BUCKET,
     key,
     contentType,
+    contentLength: bytes,
     cacheControl,
     expiresIn: 600,
   });
@@ -234,8 +367,9 @@ export async function mintUploadUrl({
     key,
     expiresIn,
     contentType,
+    bytes,
     visibility: cfg.visibility,
-    maxBytes,
+    maxBytes: cfg.maxBytes,
     // Direct public URL (no signing needed)
     publicUrl: publicMediaUrlFrom(key),
   };
@@ -257,10 +391,11 @@ export async function signDownloadUrl({ key, ttl = 300, user }) {
   }
 
   const expiresIn = Math.max(1, Math.min(ttl, 7 * 24 * 60 * 60));
+  const { pub, priv } = await storage();
 
   if (isPrivateKey(key)) {
-    const url = await signPrivateGetObject({
-      bucket: PRIVATE_BUCKET,
+    const url = await priv.signPrivateGetObject({
+      bucket: priv.PRIVATE_BUCKET,
       key,
       expiresIn,
     });
@@ -268,41 +403,53 @@ export async function signDownloadUrl({ key, ttl = 300, user }) {
     return { url, expiresIn };
   }
 
-  const { url } = await s3PresignGet({ bucket: PUBLIC_BUCKET, key, expiresIn });
+  const { url } = await pub.s3PresignGet({ bucket: pub.PUBLIC_BUCKET, key, expiresIn });
 
   return { url, expiresIn };
 }
 
-// Confirm upload (enforces real size cap via HeadObject)
-export async function confirmUpload({ key }) {
+/** What the bucket holds for a key: `{ bytes, contentType }`, or null if it isn't there. */
+async function headStoredObject(key) {
+  const store = await storage();
+  const { client, bucket } = bucketOf(store, key);
+  try {
+    const head = await client.send(new store.sdk.HeadObjectCommand({ Bucket: bucket, Key: key }));
+    return { bytes: head.ContentLength ?? 0, contentType: head.ContentType || null };
+  } catch (err) {
+    if (err?.$metadata?.httpStatusCode === 404 || err?.name === 'NotFound') return null;
+    throw err;
+  }
+}
+
+// Confirm upload: HEAD the object and check its real type and size against what was
+// presigned and the resource's rules. Only a confirmed upload (bytes set) can be used.
+export async function confirmUpload({ key, user }) {
   assertAllowedKey(key);
   assertGenericKey(key);
 
   const item = await prisma.mediaItem.findUnique({ where: { key } });
-  if (!item) {
-    const err = new Error('Unknown media key.');
-    err.status = 404;
-    throw err;
+  // Someone else's upload answers like a missing one. Anonymous (contact) uploads have
+  // no owner: their random key is the only secret.
+  if (!item || (item.ownerId && item.ownerId !== user?.id)) throw httpError(404, 'Unknown media key.');
+
+  const cfg = MEDIA_CFG[item.resource];
+  if (!cfg || cfg.generic === false || !key.startsWith(cfg.prefix)) throw httpError(400, 'Key prefix not allowed');
+
+  const stored = await headStoredObject(key);
+  const check = checkStoredUpload(stored, {
+    contentType: item.contentType,
+    allowedTypes: cfg.allowedTypes,
+    maxBytes: cfg.maxBytes,
+  });
+  if (!check.ok) {
+    // Delete what arrived. The MediaItem row stays unconfirmed (unusable) until the
+    // daily clean-up, which also removes anything PUT again on the still-valid URL.
+    if (!check.missing) await deleteOne(await storage(), key);
+    throw httpError(400, check.message);
   }
 
-  const bucket = isPrivateKey(key) ? PRIVATE_BUCKET : PUBLIC_BUCKET;
-  const client = isPrivateKey(key) ? s3Private : s3Public;
-
-  const head = await client.send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
-  const actualBytes = head.ContentLength ?? 0;
-  const maxBytes = MAX_UPLOAD_BYTES[item.kind];
-
-  if (maxBytes && actualBytes > maxBytes) {
-    await deleteObjectAndRecord(key);
-    const err = new Error(
-      `File too large (${actualBytes} bytes) — max for ${item.kind.toLowerCase()} is ${maxBytes} bytes.`
-    );
-    err.status = 413;
-    throw err;
-  }
-
-  await prisma.mediaItem.update({ where: { key }, data: { bytes: actualBytes } });
-  return { key, bytes: actualBytes };
+  await prisma.mediaItem.update({ where: { key }, data: { bytes: stored.bytes } });
+  return { key, bytes: stored.bytes };
 }
 
 // Hard delete
@@ -332,56 +479,68 @@ export const keyHasPrefix = (key, resource) => {
   return typeof key === 'string' && cfg ? key.startsWith(cfg.prefix) : false;
 };
 
-// Upload exists for this resource and passed confirm-upload (real size checked)
-export async function isConfirmedUpload(key, resource) {
-  if (!keyHasPrefix(key, resource)) return false;
-  const item = await prisma.mediaItem.findUnique({
-    where: { key },
-    select: { resource: true, bytes: true },
+// A contact form may attach this key: a confirmed contact image of an allowed type,
+// uploaded within the last hour and not on another form (uploadRules.js)
+export async function isUsableContactImage(key) {
+  if (!keyHasPrefix(key, 'contact')) return false;
+  const [item, usedBy] = await Promise.all([
+    prisma.mediaItem.findUnique({
+      where: { key },
+      select: { resource: true, bytes: true, contentType: true, createdAt: true },
+    }),
+    prisma.contactForm.findFirst({ where: { imageKey: key }, select: { id: true } }),
+  ]);
+  return canAttachContactImage({
+    item,
+    alreadyUsed: Boolean(usedBy),
+    allowedTypes: MEDIA_CFG.contact.allowedTypes,
   });
-  return Boolean(item && item.resource === resource && item.bytes !== null);
 }
 
-const ORPHAN_AGE_HOURS = 24;
 const ORPHAN_BATCH = 500;
 
-// Delete uploads nothing references (older than a day)
-export async function deleteOrphanUploads({ olderThanHours = ORPHAN_AGE_HOURS } = {}) {
-  const cutoff = new Date(Date.now() - olderThanHours * 60 * 60 * 1000);
+/**
+ * Delete uploads nothing uses: photo files after `photoOlderThanMinutes` (a photo
+ * can't be saved after PHOTO_SAVE_WINDOW_MINUTES), everything else after
+ * `olderThanHours`. Never a file a PhotoVariant or an avatar uses, nor a contact image
+ * a form shows (left out by the query, so they can't hold up the batches).
+ *
+ * Works through them oldest first, `batchSize` at a time (one query, one DeleteObjects
+ * per bucket and one row delete per batch), until none are left or `deadline` (a
+ * Date.now() value) passes. -> `{ checked, deleted, failed, batches, complete }`
+ */
+export async function deleteOrphanUploads({
+  olderThanHours = ORPHAN_AGE_HOURS,
+  photoOlderThanMinutes = ORPHAN_PHOTO_AGE_MINUTES,
+  batchSize = ORPHAN_BATCH,
+  deadline = Infinity,
+} = {}) {
+  if (!Number.isFinite(olderThanHours) || olderThanHours <= 0 || !Number.isFinite(photoOlderThanMinutes) || photoOlderThanMinutes <= 0) {
+    throw new RangeError('deleteOrphanUploads: the ages must be positive numbers');
+  }
+  const now = Date.now();
+  const cutoff = new Date(now - olderThanHours * 60 * 60 * 1000);
+  const photoCutoff = new Date(now - photoOlderThanMinutes * 60 * 1000);
 
-  // Never a saved photo's file; an unconfirmed photo upload (no PhotoVariant
-  // after a day) is fair game like any other unattached upload
-  const candidates = await prisma.mediaItem.findMany({
-    where: {
-      createdAt: { lt: cutoff },
-      usedAsAvatarBy: { is: null },
-      photoVariant: { is: null },
-    },
-    select: { key: true },
-    take: ORPHAN_BATCH,
-  });
-  const keys = candidates.map((item) => item.key);
-  if (!keys.length) return { checked: 0, deleted: 0 };
-
-  // Contact forms reference uploads by key
-  const contactRefs = await prisma.contactForm.findMany({
-    where: { imageKey: { in: keys } },
-    select: { imageKey: true },
-  });
-  const referenced = new Set(contactRefs.map((ref) => ref.imageKey));
-
-  let deleted = 0;
-  for (const key of keys) {
-    if (referenced.has(key)) continue;
-    try {
-      await deleteObjectAndRecord(key);
-      deleted++;
-    } catch (err) {
-      console.error('[media] orphan cleanup failed:', key, err.message);
+  const totals = { checked: 0, deleted: 0, failed: 0, batches: 0, complete: false };
+  let after = null;
+  while (Date.now() < deadline) {
+    const rows = await findOrphanUploads({ cutoff, photoCutoff, after, take: batchSize });
+    if (rows.length) {
+      const result = await deleteFilesAndRecords(rows.map((row) => row.key));
+      totals.batches++;
+      totals.checked += rows.length;
+      totals.deleted += result.deleted;
+      totals.failed += result.failed;
+      // Rows that failed stay behind `after`, so the next batch moves on
+      after = rows[rows.length - 1];
+    }
+    if (rows.length < batchSize) {
+      totals.complete = true;
+      break;
     }
   }
-
-  return { checked: keys.length, deleted };
+  return totals;
 }
 
 // ── Travel photos (private bucket; access is checked by the photo routes) ────
@@ -395,28 +554,32 @@ export function buildPhotoKey({ mapId, photoId, size, contentType }) {
 /** The folder every file of one photo sits in (used to check confirmed keys). */
 export const photoKeyFolder = ({ mapId, photoId }) => `${PHOTO_PREFIX}${mapId}/${photoId}/`;
 
-/** Record the file (bytes stay null until confirmed) and presign its upload. */
-export async function presignPhotoUpload({ key, contentType, userId }) {
+/** Refuse (429) a photo presign that would leave the user more than the cap of unconfirmed photo files. */
+export const assertPhotoUploadsUnderCap = (userId, adding) =>
+  assertUnconfirmedUploadsUnder({ userId, resources: ['photo'], limit: UNCONFIRMED_UPLOAD_LIMIT.photo, adding });
+
+/**
+ * Record the file (bytes stay null until confirmed) and presign its upload. The URL
+ * signs `contentType` and `bytes` (the caller checks them against PHOTO_MAX_BYTES).
+ */
+export async function presignPhotoUpload({ key, contentType, bytes, userId }) {
   await recordMediaItem({ key, resource: 'photo', cfg: MEDIA_CFG.photo, userId, contentType });
-  const url = await signPrivatePutObject({
-    bucket: PRIVATE_BUCKET,
+  const { priv } = await storage();
+  const url = await priv.signPrivatePutObject({
+    bucket: priv.PRIVATE_BUCKET,
     key,
     contentType,
+    contentLength: bytes,
     expiresIn: PHOTO_UPLOAD_URL_TTL_SECONDS,
   });
   return { url, expiresIn: PHOTO_UPLOAD_URL_TTL_SECONDS };
 }
 
-/** What R2 actually holds for a key: `{ bytes, contentType }`, or null if it isn't there. */
-export async function headPrivateObject(key) {
-  try {
-    const head = await s3Private.send(new HeadObjectCommand({ Bucket: PRIVATE_BUCKET, Key: key }));
-    return { bytes: head.ContentLength ?? 0, contentType: head.ContentType || null };
-  } catch (err) {
-    if (err?.$metadata?.httpStatusCode === 404 || err?.name === 'NotFound') return null;
-    throw err;
-  }
-}
+/** What R2 actually holds for a photo key: `{ bytes, contentType }`, or null if it isn't there. */
+export const headPrivateObject = (key) => {
+  if (!isPrivateKey(key)) throw httpError(400, 'Key prefix not allowed');
+  return headStoredObject(key);
+};
 
 /**
  * A signed GET for a photo file. Signed at the start of the current hour and
@@ -425,8 +588,9 @@ export async function headPrivateObject(key) {
 export async function signPhotoUrl(key) {
   const hourStart = new Date();
   hourStart.setUTCMinutes(0, 0, 0);
-  return signPrivateGetObject({
-    bucket: PRIVATE_BUCKET,
+  const { priv } = await storage();
+  return priv.signPrivateGetObject({
+    bucket: priv.PRIVATE_BUCKET,
     key,
     expiresIn: PHOTO_URL_TTL_SECONDS,
     signingDate: hourStart,
@@ -436,16 +600,13 @@ export async function signPhotoUrl(key) {
 /** Delete one stored file and its MediaItem row (no permission check). */
 export const deleteStoredObject = (key) => deleteObjectAndRecord(key);
 
-/** Delete many stored files; failures are logged and left for the orphan clean-up. */
+/**
+ * Delete many stored files and their MediaItem rows: one DeleteObjects request per
+ * 1,000 files of a bucket, then the rows. Call it after the rows that point at the files
+ * (PhotoVariant) are gone: a failure then leaves only unused files and rows, which the
+ * daily clean-up removes. Never throws. -> how many were deleted
+ */
 export async function deleteStoredObjects(keys) {
-  let deleted = 0;
-  for (const key of keys) {
-    try {
-      await deleteObjectAndRecord(key);
-      deleted++;
-    } catch (err) {
-      console.error('[media] delete failed (left for clean-up):', key, err.message);
-    }
-  }
+  const { deleted } = await deleteFilesAndRecords(keys);
   return deleted;
 }

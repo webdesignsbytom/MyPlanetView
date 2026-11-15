@@ -1,4 +1,17 @@
-/* Poppins — self-hosted (woff2 only) */
+/* Poppins, self-hosted (woff2), the four weights the site uses: 400 body text,
+   500 font-medium, 600 font-semibold, 700 font-bold and <strong>. No italics: nothing
+   is set in italic. (Checked 14 Nov 2026 on every page, rendered, at phone and desktop
+   sizes; a weight or style with no face here would be faked by the browser, so add
+   its face back before using it.)
+
+   Each file is a subset (Poppins is under the OFL, with no Reserved Font Name, so
+   subsetting is allowed): Latin, Latin-1 Supplement, Latin Extended-A, Ș ș Ț ț, General
+   Punctuation, € ™ and − (the FAQ's open/close mark). The full files carried Devanagari
+   as well and were about 52 KB each; these are about 10 KB. The copyright and licence
+   name records are kept. unicode-range below lists the same characters, so text outside
+   them (other scripts, emoji, arrows, which Poppins never had) goes straight to the
+   system fonts. To add characters, subset Google Fonts' Poppins again with them (e.g.
+   the subset-font npm package or fonttools' pyftsubset) and widen the range here. */
 
 @font-face {
   font-family: 'Poppins';
@@ -6,14 +19,7 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('../assets/fonts/Poppins/Poppins-Italic.woff2') format('woff2');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-017F, U+0218-021B, U+2000-206F, U+20AC, U+2122, U+2212;
 }
 
 @font-face {
@@ -22,6 +28,7 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-017F, U+0218-021B, U+2000-206F, U+20AC, U+2122, U+2212;
 }
 
 @font-face {
@@ -30,16 +37,7 @@
   font-weight: 600;
   font-style: normal;
   font-display: swap;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src:
-    url('../assets/fonts/Poppins/Poppins-SemiBoldItalic.woff2')
-      format('woff2');
-  font-weight: 600;
-  font-style: italic;
-  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-017F, U+0218-021B, U+2000-206F, U+20AC, U+2122, U+2212;
 }
 
 @font-face {
@@ -48,22 +46,15 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-017F, U+0218-021B, U+2000-206F, U+20AC, U+2122, U+2212;
 }
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('../assets/fonts/Poppins/Poppins-ExtraBold.woff2') format('woff2');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Poppins-Thin (100) dropped: unused */
 
 /* TravelFont: my_planet's display face (SF Comic Script Bold), used through
    font-travel for headings, the nav and the poster titles. Shipped as the original
-   TTF (46 KB) until it's converted to woff2. Its licence must be checked before
-   launch (LAUNCH-CHECKLIST.md). */
+   TTF (46 KB), untouched: its licence must be checked before launch
+   (LAUNCH-CHECKLIST.md), and converting or subsetting it waits for that. index.html
+   preloads it (the h1 and the nav use it on every page), and .htaccess compresses
+   it (to about 29 KB) and caches it for good. */
 @font-face {
   font-family: 'TravelFont';
   src: url('../assets/fonts/TravelFont/SFComicScript-Bold.ttf') format('truetype');

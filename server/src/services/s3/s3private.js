@@ -5,6 +5,7 @@ import {
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { signedPutInput, signedPutOptions } from './signedUpload.js';
 
 export const PRIVATE_BUCKET = process.env.STORAGE_PRIVATE_BUCKET || '';
 if (!PRIVATE_BUCKET) console.warn('[S3 private] STORAGE_PRIVATE_BUCKET is empty');
@@ -42,19 +43,17 @@ export async function signPrivateGetObject({
   return getSignedUrl(s3Private, cmd, { expiresIn, ...(signingDate ? { signingDate } : {}) });
 }
 
-// Presign a PUT (upload)
+// Presign a PUT (upload). Signs ContentType and ContentLength (signedUpload.js):
+// the PUT must send exactly `contentType` and exactly `contentLength` bytes.
 export async function signPrivatePutObject({
   key,
-  contentType = 'application/octet-stream',
+  contentType,
+  contentLength,
   expiresIn = 60,
   bucket = PRIVATE_BUCKET,
 }) {
-  const cmd = new PutObjectCommand({
-    Bucket: bucket,
-    Key: key,
-    ContentType: contentType,
-  });
-  return getSignedUrl(s3Private, cmd, { expiresIn });
+  const cmd = new PutObjectCommand(signedPutInput({ bucket, key, contentType, contentLength }));
+  return getSignedUrl(s3Private, cmd, signedPutOptions(expiresIn));
 }
 
 export default s3Private;

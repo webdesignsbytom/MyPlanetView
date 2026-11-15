@@ -1,32 +1,23 @@
 import rateLimit from 'express-rate-limit';
-import {
-  GLOBAL_RATE_LIMIT,
-  PRESIGN_RATE_LIMIT,
-  STRICT_RATE_LIMIT,
-} from '../utils/constants/rateLimitConstants.js';
+import { GLOBAL_RATE_LIMIT, IPV6_SUBNET } from '../utils/constants/rateLimitConstants.js';
 
-const standardOptions = {
-  standardHeaders: true, // RateLimit-* headers
-  legacyHeaders: false,
-  // Same shape as sendMessageResponse so the client shows it
-  message: { status: 'fail', message: 'Too many requests — please try again later.' },
-  // Disabled under test
-  skip: () => process.env.NODE_ENV === 'test',
-};
+/**
+ * Every limiter (this one, dbRateLimit.js and better-auth's) is off under test,
+ * except in a test that turns them on (tests/integration/rateLimits.test.js).
+ */
+export const rateLimitsOff = () =>
+  process.env.NODE_ENV === 'test' && process.env.RATE_LIMITS_IN_TESTS !== 'true';
 
+// The only in-memory limiter left: a coarse backstop for the whole API. Each
+// Vercel instance counts on its own, so anything that matters is on the database
+// (dbRateLimit.js, and better-auth's in auth.js).
 export const globalRateLimiter = rateLimit({
   ...GLOBAL_RATE_LIMIT,
-  ...standardOptions,
+  standardHeaders: true, // RateLimit-* headers
+  legacyHeaders: false,
+  // An IPv6 visitor counts per /64 (the library's default is /56)
+  ipv6Subnet: IPV6_SUBNET,
+  // Same shape as sendMessageResponse so the client shows it
+  message: { status: 'fail', message: 'Too many requests — please try again later.' },
+  skip: rateLimitsOff,
 });
-
-export const presignRateLimiter = rateLimit({
-  ...PRESIGN_RATE_LIMIT,
-  ...standardOptions,
-});
-
-// One counter per form, so one form can't lock out the others
-export const createStrictRateLimiter = () =>
-  rateLimit({
-    ...STRICT_RATE_LIMIT,
-    ...standardOptions,
-  });

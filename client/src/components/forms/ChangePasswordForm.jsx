@@ -8,7 +8,7 @@ import PasswordInput from '@/components/ui/PasswordInput';
 import CheckboxInput from '@/components/ui/CheckboxInput';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 // Regex
-import { PASSWORD_REGEX } from '@/utils/regex/regex';
+import { PASSWORD_REGEX, PASSWORD_RULE } from '@/utils/regex/regex';
 
 const emptyForm = { currentPassword: '', newPassword: '', confirmPassword: '' };
 
@@ -40,8 +40,7 @@ function ChangePasswordForm() {
     const errors = {};
     if (!currentPassword) errors.currentPassword = 'Enter your current password.';
     if (!PASSWORD_REGEX.test(newPassword)) {
-      errors.newPassword =
-        'Use at least 8 characters with an uppercase letter, a number and a special character (no /, \\, " or \').';
+      errors.newPassword = PASSWORD_RULE;
     } else if (newPassword === currentPassword) {
       errors.newPassword = 'Your new password must be different from your current one.';
     }
@@ -109,7 +108,7 @@ function ChangePasswordForm() {
       <FormField
         id='newPassword'
         label='New password'
-        hint='At least 8 characters, with an uppercase letter, a number and a special character.'
+        hint={PASSWORD_RULE}
         error={fieldErrors.newPassword}
         required
       >

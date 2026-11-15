@@ -2,6 +2,9 @@
 // test user's couple's map (owned), a map someone shared with them, a trip shared on
 // its own, and the admin lists. Photos use the site's own poster images as stand-ins.
 
+// Every mock user's password: the one the server's seed gives its users (CLAUDE.md, "Seed")
+export const MOCK_PASSWORD = '12345678';
+
 const daysFromNow = (days) => new Date(Date.now() + days * 86400000).toISOString();
 const daysAgo = (days) => daysFromNow(-days);
 
@@ -85,10 +88,10 @@ export function buildSeed() {
       { mapId: joMap, countryCode: 'GB', status: 'LIVED', source: 'MANUAL', firstVisitedOn: null, notes: null },
     ],
     trips: [
-      { id: italyTrip, mapId: homeMap, createdById: USER_ID, title: 'Italian summer', description: 'Rome to Florence by train, with a few days by the sea.', status: 'COMPLETED', startDate: '2025-07-02', endDate: '2025-07-16', coverPhotoId: 'photo-colosseum', linkAccess: 'RESTRICTED', shareCode: 'TRPTAL7SMR42', travellerIds: ['trav-test', 'trav-alex'], createdAt: daysAgo(140) },
+      { id: italyTrip, mapId: homeMap, createdById: USER_ID, title: 'Italian summer', description: 'Rome to Florence by train, with a few days by the sea.', status: 'COMPLETED', startDate: '2025-07-02', endDate: '2025-07-16', coverPhotoId: 'photo-colosseum', linkAccess: 'RESTRICTED', shareCode: 'TRPTAK7SMR42', travellerIds: ['trav-test', 'trav-alex'], createdAt: daysAgo(140) },
       { id: japanTrip, mapId: homeMap, createdById: USER_ID, title: 'Japan in spring', description: 'Tokyo, Kyoto and a day at Mount Fuji.', status: 'PLANNED', startDate: '2027-04-01', endDate: '2027-04-14', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'JPNSPR7NG289', travellerIds: ['trav-test', 'trav-alex'], createdAt: daysAgo(20) },
-      { id: samTrip, mapId: samMap, createdById: SAM_ID, title: 'South-East Asia loop', description: null, status: 'COMPLETED', startDate: '2024-01-08', endDate: '2024-03-01', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'SEAL22P7MKQ3', travellerIds: ['trav-sam'], createdAt: daysAgo(190) },
-      { id: lisbonTrip, mapId: joMap, createdById: JO_ID, title: 'Lisbon weekend', description: 'Planning together: add ideas!', status: 'COMPLETED', startDate: '2026-10-03', endDate: '2026-10-06', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'L5BNWK3ND7QT', travellerIds: ['trav-jo', 'trav-jo-kid'], createdAt: daysAgo(40) },
+      { id: samTrip, mapId: samMap, createdById: SAM_ID, title: 'South-East Asia loop', description: null, status: 'COMPLETED', startDate: '2024-01-08', endDate: '2024-03-01', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'SEAK22P7MKQ3', travellerIds: ['trav-sam'], createdAt: daysAgo(190) },
+      { id: lisbonTrip, mapId: joMap, createdById: JO_ID, title: 'Lisbon weekend', description: 'Planning together: add ideas!', status: 'COMPLETED', startDate: '2026-10-03', endDate: '2026-10-06', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'K5BNWK3ND7QT', travellerIds: ['trav-jo', 'trav-jo-kid'], createdAt: daysAgo(40) },
     ],
     stops: [
       { id: 'stop-rome', tripId: italyTrip, position: 0, countryCode: 'IT', landmarkId: 'lm-colosseum', placeName: 'Rome', arriveOn: '2025-07-02', leaveOn: '2025-07-07', notes: null },

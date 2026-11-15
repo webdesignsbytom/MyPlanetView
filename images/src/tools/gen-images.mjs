@@ -27,7 +27,9 @@ const sizes = (sizesArg || '480,800,1200')
 const formats = [
   {
     ext: 'avif',
-    options: { quality: 55, effort: 5 },
+    // 4:2:0 like the WebP and JPEG: sharp's AVIF default (4:4:4) made textured artwork
+    // bigger than its WebP (old-map-1792: 446 kB against 425 kB; 343 kB with 4:2:0)
+    options: { quality: 55, effort: 5, chromaSubsampling: '4:2:0' },
   },
   {
     ext: 'webp',

@@ -9,8 +9,8 @@ import {
 } from '../constants/constants.js';
 
 export const LEGAL_VERSION = {
-  lastUpdated: '2026-11-14',
-  version: '1.0.0',
+  lastUpdated: '2026-11-15',
+  version: '1.0.1',
 };
 
 // Terms of use
@@ -236,7 +236,8 @@ export const PrivacySectionsArray = [
     group: 'policies',
     content: [
       'An essential cookie keeps you signed in. It is needed for the site to work, so it is not optional.',
-      'Analytics cookies (Google Analytics) are set only if you accept them in the cookie banner. Your choice is saved in your browser, and you can change it at any time.',
+      'Analytics cookies (Google Analytics) are set only if you accept them in the cookie banner. Your choice is saved in your browser.',
+      'You can change it at any time with “Cookie settings” at the foot of this page. Saying no there deletes the analytics cookies, and nothing more is sent to Google Analytics.',
     ],
   },
   {

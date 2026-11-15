@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 // Components
 import LoadingScreen from './components/utils/LoadingScreen';
@@ -30,12 +30,12 @@ import {
   WELCOME_PAGE_URL,
   SHARED_PAGE_URL,
   INVITE_PAGE_URL,
-  ANALYTICS_EXCLUDED_PREFIXES,
 } from '@/utils/constants/routes';
 import { COOKIE_CONSENT_STYLE, COOKIE_TIMER } from './utils/constants/constants';
 // Analytics
-import { initGA, sendPageView } from './utils/analytics/initGA';
-import { readConsent } from './utils/analytics/consent';
+import { initGA, sendPageView, stopGA, trackAddress } from './utils/analytics/initGA';
+import { onCookieSettings, readConsent } from './utils/analytics/consent';
+import { isAnalyticsExcluded } from './utils/analytics/privacy';
 // Guards
 import {
   AuthenticateAdmin,
@@ -73,9 +73,7 @@ import {
 // Build-time pre-render: no cookie modal, no analytics
 const IS_PRERENDER = Boolean(window.__PRERENDER__);
 
-// Share links and invites carry a secret in the address: analytics never sees them
-const isAnalyticsExcluded = (pathname) =>
-  ANALYTICS_EXCLUDED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+const GA_ID = import.meta.env.VITE_ANALYTICS_ID;
 
 // Cookie pop-ups by COOKIE_CONSENT_STYLE; only the chosen one is downloaded
 const COOKIE_POPUPS = {
@@ -85,9 +83,11 @@ const COOKIE_POPUPS = {
 };
 
 function App() {
-  const [isVisible, setIsVisible] = useState(false);
   const [consent, setConsent] = useState(readConsent);
-  const [CookieCmp, setCookieCmp] = useState(null);
+  // The cookie pop-up showing: { Cmp, fromSettings } (none on the first render, so the
+  // pre-rendered pages hydrate)
+  const [cookiePopup, setCookiePopup] = useState(null);
+  const settingsOpener = useRef(null);
   const location = useLocation();
 
   useScrollToTopOnRouteChange();
@@ -95,40 +95,71 @@ function App() {
 
   // Lazy-import the cookie pop-up after the timer, until they've chosen
   useEffect(() => {
-    if (consent !== null || IS_PRERENDER) {
-      setIsVisible(false);
-      return;
-    }
+    if (consent !== null || IS_PRERENDER) return undefined;
     const t = setTimeout(async () => {
       const m = await (COOKIE_POPUPS[COOKIE_CONSENT_STYLE] || COOKIE_POPUPS.banner)();
-      setCookieCmp(() => m.default);
-      setIsVisible(true);
+      setCookiePopup((open) => open || { Cmp: m.default, fromSettings: false });
     }, COOKIE_TIMER);
     return () => clearTimeout(t);
   }, [consent]);
+
+  // The footer's Cookie settings: the banner at once, showing the current choice, so a yes
+  // can be withdrawn (the 'modal' style's "I Disagree" leaves the site, so it's always the banner)
+  useEffect(
+    () =>
+      onCookieSettings(async () => {
+        settingsOpener.current = document.activeElement;
+        const m = await COOKIE_POPUPS.banner();
+        setCookiePopup({ Cmp: m.default, fromSettings: true });
+      }),
+    [],
+  );
+
+  const closeCookiePopup = () => {
+    const opener = cookiePopup?.fromSettings ? settingsOpener.current : null;
+    setCookiePopup(null);
+    if (opener?.isConnected) requestAnimationFrame(() => opener.focus());
+  };
+  const chooseCookies = (choice) => {
+    setConsent(choice);
+    closeCookiePopup();
+  };
+
+  // A no, or a yes withdrawn: GA stops sending and its cookies are deleted (initGA.js)
+  useEffect(() => {
+    if (consent === 'denied' && !IS_PRERENDER) stopGA(GA_ID);
+  }, [consent]);
+
+  // Every address change: GA paused on a page with a secret in its address (share, invite,
+  // reset and verify links) and resumed after; then the page view, with the address
+  // redacted to its route pattern (sent once GA has loaded; never for a secret page)
+  useEffect(() => {
+    if (IS_PRERENDER) return;
+    trackAddress(GA_ID);
+    sendPageView();
+  }, [location.pathname, location.search]);
 
   // GA only after a yes, on idle, and never first loaded on a page with a secret address
   const excluded = isAnalyticsExcluded(location.pathname);
   useEffect(() => {
     if (consent !== 'granted' || IS_PRERENDER || excluded) return;
     const id = window.requestIdleCallback
-      ? requestIdleCallback(() => initGA(import.meta.env.VITE_ANALYTICS_ID))
-      : setTimeout(() => initGA(import.meta.env.VITE_ANALYTICS_ID), 0);
+      ? requestIdleCallback(() => initGA(GA_ID))
+      : setTimeout(() => initGA(GA_ID), 0);
     return () =>
       window.cancelIdleCallback ? cancelIdleCallback(id) : clearTimeout(id);
   }, [consent, excluded]);
 
-  // Route change pageviews (fires only if GA loaded; never for share or invite pages)
-  useEffect(() => {
-    if (isAnalyticsExcluded(location.pathname)) return;
-    sendPageView(location.pathname + location.search);
-  }, [location.pathname, location.search]);
-
   return (
     <>
-      {isVisible && CookieCmp && (
+      {cookiePopup && (
         <Suspense fallback={null}>
-          <CookieCmp onChoice={setConsent} />
+          <cookiePopup.Cmp
+            onChoice={chooseCookies}
+            current={consent}
+            fromSettings={cookiePopup.fromSettings}
+            onClose={closeCookiePopup}
+          />
         </Suspense>
       )}
 

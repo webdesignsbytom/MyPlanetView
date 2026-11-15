@@ -115,5 +115,5 @@ What each My Planet View feature is made of: the client files, the server files,
 
 ## Rate limiting
 
-- **Server:** `src/middleware/rateLimit.js` (in memory: global, presign, strict per form), `src/middleware/dbRateLimit.js` (database-backed: share links, invites, photo presigns, adding people), values in `src/utils/constants/rateLimitConstants.js`.
-- **Tables:** `RateLimit` (expired rows are cleared by the daily cron).
+- **Server:** `src/middleware/rateLimit.js` (in memory: only the global backstop), `src/middleware/dbRateLimit.js` (database-backed: share-code lookups and browsing, invites, the contact form, generic and photo uploads, adding people, new maps), and better-auth's own limiter on the database (`src/auth.js`). Values in `src/utils/constants/rateLimitConstants.js`.
+- **Tables:** `RateLimit` (expired rows are cleared by the daily cron) and `AuthRateLimit` (better-auth's; it prunes its own).

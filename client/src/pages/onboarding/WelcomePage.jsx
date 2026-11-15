@@ -68,6 +68,12 @@ function WelcomePage() {
             Tell us who this map is for. A couple or a family share one map: add everyone who travels, children
             included. Anyone can have their own login later, and you can change all of this in the map’s settings.
           </p>
+          {user?.emailVerified === false ? (
+            <p className='max-w-prose'>
+              We’ve emailed a link to {user.email}. Setting up your map works now; once you’ve verified your address,
+              you can add countries, trips and photos.
+            </p>
+          ) : null}
         </header>
         <InlineAlert>{error}</InlineAlert>
         {map === undefined && !error ? (

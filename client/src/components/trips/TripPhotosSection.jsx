@@ -11,7 +11,8 @@ import PaperCard from '@/components/common/PaperCard';
 
 // The trip's photos on a paper card (each on its white photo border, from PhotoThumb),
 // with adding (editors) and the viewer. Link visitors pass `shareCode`.
-function TripPhotosSection({ trip, canEdit, shareCode }) {
+// `locked`: an editor whose email address isn't verified yet (the viewer says why).
+function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
   const photos = usePhotoPage(shareCode ? { shareCode } : { tripId: trip.id });
   const [uploading, setUploading] = useState(false);
   const [openId, setOpenId] = useState(null);
@@ -48,7 +49,8 @@ function TripPhotosSection({ trip, canEdit, shareCode }) {
         <PhotoViewer
           photoId={openId}
           shareCode={shareCode}
-          canEdit={canEdit && !shareCode}
+          canEdit={(canEdit || locked) && !shareCode}
+          locked={locked}
           onChanged={photos.replacePhoto}
           onDeleted={photos.removePhoto}
           onClose={() => setOpenId(null)}
