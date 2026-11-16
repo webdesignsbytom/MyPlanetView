@@ -2,6 +2,7 @@ import React, { memo, useCallback, useRef } from 'react';
 // Data
 import { COUNTRIES, POLE_PLACES } from '@/utils/map/countries';
 import { COUNTRY_SHAPES } from '@/utils/map/countryShapes';
+import { UK_NATION_SHAPES } from '@/utils/map/ukNationShapes';
 // Components
 import CountryShape from './CountryShape';
 import MicroStateDot from './MicroStateDot';
@@ -10,18 +11,22 @@ import PoleMarker from './PoleMarker';
 import { isAntarctic, isPole } from '@/utils/map/specialPlaces';
 
 // The shapes (countries and Antarctica), the micro-states' dots, and the poles' markers;
-// each list also without Antarctica's places, for when that's hidden
+// each list also without Antarctica's places, for when that's hidden, and with the UK's
+// four nations drawn in its place, for a map that splits the UK (ukNationShapes.js)
+const shapesOf = (code) => COUNTRY_SHAPES[code] ?? UK_NATION_SHAPES[code];
 const SHAPED = COUNTRIES.filter((c) => COUNTRY_SHAPES[c.code]);
-const DOTTED = COUNTRIES.filter((c) => !COUNTRY_SHAPES[c.code] && !isPole(c.code));
+const SHAPED_SPLIT_UK = [...SHAPED.filter((c) => c.code !== 'GB'), ...COUNTRIES.filter((c) => c.kind === 'NATION')];
+const DOTTED = COUNTRIES.filter((c) => !COUNTRY_SHAPES[c.code] && !isPole(c.code) && c.kind !== 'NATION');
 const notAntarctic = (c) => !isAntarctic(c.code);
-const LAYERS = {
-  withAntarctica: { shaped: SHAPED, dotted: DOTTED, poles: POLE_PLACES },
+const layerOf = (shaped) => ({
+  withAntarctica: { shaped, dotted: DOTTED, poles: POLE_PLACES },
   withoutAntarctica: {
-    shaped: SHAPED.filter(notAntarctic),
+    shaped: shaped.filter(notAntarctic),
     dotted: DOTTED.filter(notAntarctic),
     poles: POLE_PLACES.filter(notAntarctic),
   },
-};
+});
+const LAYERS = { whole: layerOf(SHAPED), splitUk: layerOf(SHAPED_SPLIT_UK) };
 
 const codeFrom = (target) => target?.closest?.('[data-code]')?.getAttribute('data-code') || null;
 
@@ -32,7 +37,8 @@ const FADE_NOT_BEEN = '[&_[data-been=false]]:opacity-15';
 
 // Every country and special place, with one set of listeners for all of them (event
 // delegation), so a hover or click never re-renders the 614 paths. With Antarctica
-// hidden (`showAntarctica` off), it and the poles beside it aren't drawn.
+// hidden (`showAntarctica` off), it and the poles beside it aren't drawn. On a map that
+// splits the UK (`splitUk`), its four nations are drawn instead of it.
 function CountryLayer({
   visitsByCode,
   selectedCode,
@@ -43,9 +49,11 @@ function CountryLayer({
   showVisited = true,
   showUnvisited = true,
   showAntarctica = true,
+  splitUk = false,
 }) {
   const hoveredRef = useRef(null);
-  const layer = showAntarctica ? LAYERS.withAntarctica : LAYERS.withoutAntarctica;
+  const layers = splitUk ? LAYERS.splitUk : LAYERS.whole;
+  const layer = showAntarctica ? layers.withAntarctica : layers.withoutAntarctica;
 
   // With pan and zoom on, the viewport's afterTap skips drags and double-taps (which zoom)
   const handleClick = useCallback(
@@ -86,7 +94,7 @@ function CountryLayer({
         <CountryShape
           key={country.code}
           code={country.code}
-          paths={COUNTRY_SHAPES[country.code]}
+          paths={shapesOf(country.code)}
           status={visitsByCode[country.code]}
           selected={selectedCode === country.code}
         />

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import { test, expect } from './fixtures.js';
 
 // The admin's travel offers page (docs/API.md, "Travel offers") against mock mode, signed
-// in as the mock admin. The seed has the server's 29 example offers
+// in as the mock admin. The seed has the server's 30 example offers
 // (server/prisma/seed/data/offers.example.json) and a few clicks: Hotels in Spain 3 from
 // galleries and 1 from the Travel Desk, Hotels in Japan 2 from galleries and 1 from a
 // slideshow. "Summer sale: 20% off stays in Spain" is off.
@@ -29,8 +29,8 @@ const jsonFile = (payload, name = 'offers.json') => ({
 test.describe('Travel offers (admin)', () => {
   test('the list shows the example offers with their clicks, and filters them', { tag: '@phone' }, async ({ page }) => {
     await openOffers(page);
-    await offerCount(page, '29 offers');
-    await expect(offerList(page).getByRole('article')).toHaveCount(29);
+    await offerCount(page, '30 offers');
+    await expect(offerList(page).getByRole('article')).toHaveCount(30);
 
     const spain = offerRow(page, 'Hotels in Spain');
     await expect(spain).toContainText('Example Stays · Hotels');
@@ -58,17 +58,17 @@ test.describe('Travel offers (admin)', () => {
     // Filters
     const filters = page.getByRole('search', { name: 'Filter offers' });
     await filters.getByRole('combobox', { name: 'Kind' }).selectOption({ label: 'Tours and tickets' });
-    await offerCount(page, 'Showing 10 of 29 offers');
+    await offerCount(page, 'Showing 10 of 30 offers');
     await filters.getByRole('combobox', { name: 'Kind' }).selectOption({ label: 'Every kind' });
     await filters.getByRole('combobox', { name: 'Country' }).selectOption({ label: 'Anywhere (general offers)' });
-    await offerCount(page, 'Showing 5 of 29 offers');
+    await offerCount(page, 'Showing 6 of 30 offers');
     await filters.getByRole('combobox', { name: 'Country' }).selectOption({ label: 'Every country' });
     await filters.getByRole('combobox', { name: 'State' }).selectOption({ label: 'Off' });
-    await offerCount(page, 'Showing 1 of 29 offers');
+    await offerCount(page, 'Showing 1 of 30 offers');
     await expect(offerRow(page, 'Summer sale: 20% off stays in Spain')).toBeVisible();
     await filters.getByRole('combobox', { name: 'State' }).selectOption({ label: 'Any' });
     await filters.getByRole('searchbox', { name: 'Search offers' }).fill('iceland');
-    await offerCount(page, 'Showing 2 of 29 offers');
+    await offerCount(page, 'Showing 2 of 30 offers');
   });
 
   test('an admin makes an offer, changes it, turns it off and deletes it', async ({ page }) => {
@@ -103,7 +103,7 @@ test.describe('Travel offers (admin)', () => {
     await dialog.getByRole('button', { name: 'Make offer' }).click();
     await expect(dialog).toBeHidden();
     await expect(page.getByText('Hotels in Lisbon is made (test-stays-lisbon).')).toBeVisible();
-    await offerCount(page, '30 offers');
+    await offerCount(page, '31 offers');
     const row = offerRow(page, 'Hotels in Lisbon');
     await expect(row.getByText('On', { exact: true })).toBeVisible();
     await expect(row.locator('dl').first()).toHaveText(
@@ -148,7 +148,7 @@ test.describe('Travel offers (admin)', () => {
     await confirm.getByRole('button', { name: 'Delete offer and counts' }).click();
     await expect(confirm).toBeHidden();
     await expect(changed).toHaveCount(0);
-    await offerCount(page, '29 offers');
+    await offerCount(page, '30 offers');
   });
 
   test('an import with a bad offer changes nothing; fixed, it makes them, and again it updates them', async ({ page }) => {
@@ -186,7 +186,7 @@ test.describe('Travel offers (admin)', () => {
     await expect(card.getByRole('list', { name: 'Problems in the file' }).getByRole('listitem')).toHaveText([
       'Offer 2 (test-import-data): the link must start with https://',
     ]);
-    await offerCount(page, '29 offers');
+    await offerCount(page, '30 offers');
     await expect(offerRow(page, 'Walking tours in Lisbon')).toHaveCount(0);
 
     // Fixed: both are made
@@ -195,7 +195,7 @@ test.describe('Travel offers (admin)', () => {
     await expect(card.getByText('offers.json holds 2 offers: 2 new, 0 to update.')).toBeVisible();
     await card.getByRole('button', { name: 'Import 2 offers' }).click();
     await expect(card.getByText('Imported: 2 offers made.')).toBeVisible();
-    await offerCount(page, '31 offers');
+    await offerCount(page, '32 offers');
     await expect(offerRow(page, 'Walking tours in Lisbon').locator('dl').first()).toContainText(/Country\s*Portugal[\s\S]*Weight\s*5/);
     await expect(offerRow(page, 'Data abroad')).toContainText('Test Data · eSIMs');
     await expect(offerRow(page, 'Data abroad').locator('dl').first()).toContainText(/Country\s*Anywhere/);
@@ -207,7 +207,7 @@ test.describe('Travel offers (admin)', () => {
     await expect(card).toContainText(/To update\s*test-import-walks, test-import-data/);
     await card.getByRole('button', { name: 'Import 2 offers' }).click();
     await expect(card.getByText('Imported: 2 offers updated.')).toBeVisible();
-    await offerCount(page, '31 offers');
+    await offerCount(page, '32 offers');
     await expect(offerRow(page, 'Walking tours in Lisbon')).toHaveCount(0);
     await expect(offerRow(page, 'Walking tours in Lisbon and Porto').locator('dl').first()).toContainText(/Weight\s*1/);
   });
@@ -222,7 +222,7 @@ test.describe('Travel offers (admin)', () => {
     expect(download.suggestedFilename()).toMatch(/^offers-\d{4}-\d{2}-\d{2}\.json$/);
     const text = fs.readFileSync(await download.path(), 'utf8');
     const file = JSON.parse(text);
-    expect(file.offers).toHaveLength(29);
+    expect(file.offers).toHaveLength(30);
     // Every field an import takes, and nothing the server makes (ids, dates, clicks)
     expect(file.offers.find((o) => o.key === 'example-stays-summer-sale')).toEqual({
       key: 'example-stays-summer-sale',
@@ -242,10 +242,10 @@ test.describe('Travel offers (admin)', () => {
 
     // Imported back as it is: every offer updated, none made
     await fileInput(page).setInputFiles({ name: download.suggestedFilename(), mimeType: 'application/json', buffer: Buffer.from(text) });
-    await expect(card.getByText(/holds 29 offers: 0 new, 29 to update\.$/)).toBeVisible();
-    await card.getByRole('button', { name: 'Import 29 offers' }).click();
-    await expect(card.getByText('Imported: 29 offers updated.')).toBeVisible();
-    await offerCount(page, '29 offers');
+    await expect(card.getByText(/holds 30 offers: 0 new, 30 to update\.$/)).toBeVisible();
+    await card.getByRole('button', { name: 'Import 30 offers' }).click();
+    await expect(card.getByText('Imported: 30 offers updated.')).toBeVisible();
+    await offerCount(page, '30 offers');
     await expect(offerRow(page, 'Summer sale: 20% off stays in Spain').getByText('Off', { exact: true })).toBeVisible();
   });
 

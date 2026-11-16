@@ -1,0 +1,200 @@
+{
+  "code": "NO",
+  "slug": "norway",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Velkommen", "Norge"],
+  "summary": "Deep fjords, mountain railways and fishing villages, with the midnight sun and northern lights up north.",
+  "overview": [
+    "Norway runs a long way up the edge of Scandinavia, from Oslo and the southern coast to far above the Arctic Circle. In the west, fjords cut deep into the mountains, with waterfalls, fruit farms and villages along their shores and some of Europe's most dramatic walks above them; Bergen is the usual gateway. The north has the Lofoten Islands, Tromsø and the North Cape, with the midnight sun in summer and the northern lights in winter.",
+    "It's one of the most expensive countries in Europe, so budget carefully, above all for eating out and alcohol. Cards are taken everywhere and cash is rarely needed. Distances are long and roads wind round fjords and over passes, often with a car ferry on the way, so allow more time than the map suggests. Scenic train lines, such as Oslo to Bergen and the steep branch down to Flåm, are sights in themselves."
+  ],
+  "whenToGo": {
+    "stripLabel": "Southern Norway, where most visitors go: Oslo, Bergen and the fjords. The Arctic north differs a lot, and has a strip of its own below.",
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Winter lasts into April in the mountains, and Easter is a skiing holiday for many Norwegians. The lowlands turn green in May, when fruit trees blossom along the fjords and the waterfalls run full with meltwater."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Mild, usually 15–25°C in the south, with very long days: Oslo has close to 19 hours of daylight at midsummer, and above the Arctic Circle the sun doesn't set for weeks. Every mountain road and trail is open. The busiest time, especially July, when Norwegians take their holidays."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is quieter, with autumn colours in the mountains and the first northern lights in the north. Rain increases on the west coast, the days shorten fast, and some mountain roads and summer-only services close by October."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and snowy inland and in the north, milder and wet on the west coast. Days are short, about six hours of daylight in Oslo in December, and in the far north the sun doesn't rise at all for several weeks. The season for skiing, dog-sledding and the northern lights."
+      }
+    ],
+    "weather": "The Gulf Stream keeps the coast far milder than its latitude suggests, and the harbours free of ice. The west is wet in every season, and Bergen is known for its rain. Inland and in the north, winters are long, cold and snowy and summers short and fresh; the south-east around Oslo is drier, with warmer summers and colder winters than the west.",
+    "festivals": [
+      {
+        "name": "Holmenkollen Ski Festival",
+        "place": "Oslo",
+        "when": "Usually in early March",
+        "months": [3],
+        "text": "World Cup ski jumping and cross-country races at the famous ski jump above the city, with big crowds cheering along the trails in the woods."
+      },
+      {
+        "name": "Sámi Easter Festival",
+        "place": "Kautokeino, Finnmark",
+        "when": "At Easter, in March or April",
+        "months": [3, 4],
+        "text": "In the heart of the Sámi homeland, Easter brings weddings and confirmations in traditional dress, reindeer racing on the snow, concerts and a joik song contest."
+      },
+      {
+        "name": "Constitution Day (17 May)",
+        "place": "Across Norway",
+        "when": "17 May",
+        "months": [5],
+        "text": "The biggest celebration of the year: children's parades with flags and bands in every town, and many people in their regional folk costume (bunad). In Oslo the parade passes the Royal Palace, where the royal family waves from the balcony."
+      },
+      {
+        "name": "Bergen International Festival",
+        "place": "Bergen",
+        "when": "Usually from late May to early June",
+        "months": [5, 6],
+        "text": "Two weeks of classical music, theatre, opera and dance in concert halls, churches and outdoor stages across the city."
+      },
+      {
+        "name": "Sankthansaften (Midsummer Eve)",
+        "place": "Across Norway",
+        "when": "23 June",
+        "months": [6],
+        "text": "Bonfires on beaches and along the fjords on the evening of 23 June, in the long light of midsummer."
+      },
+      {
+        "name": "Pepperkakebyen (the gingerbread town)",
+        "place": "Bergen",
+        "when": "Usually from mid-November to late December",
+        "months": [11, 12],
+        "text": "A whole town of gingerbread houses, trains and ships, made by the city's children, schools and companies, and shown to the public before Christmas."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Oslo and the south",
+        "text": "Oslo is a green, compact capital at the head of a fjord, with the Munch Museum, the National Museum and the polar ship Fram. Its summers are the warmest and driest in the country, and in winter forest ski trails start at the end of the metro line. The southern coast has white wooden towns and islands for summer sailing."
+      },
+      {
+        "name": "The western fjords and Bergen",
+        "text": "Geirangerfjord, Nærøyfjord and Hardanger draw the crowds, along with walks such as Preikestolen and Trolltunga. June to August is the season. High mountain roads such as Trollstigen usually open only from late May or June until October, and Trolltunga is best left to guided groups outside summer. Ferries and the Flåm railway run all year."
+      },
+      {
+        "name": "Northern Norway: Lofoten, Tromsø and Finnmark",
+        "months": ["good", "best", "best", "good", "good", "best", "best", "best", "good", "good", "good", "good"],
+        "text": "Above the Arctic Circle, the midnight sun lasts from about mid-May to late July around Tromsø, and the sun stays below the horizon from late November to mid-January. The northern lights can be seen from about September to early April, whenever the sky is dark and clear; February and March add snow and longer days for dog-sledding and skiing. The Lofoten Islands are at their best in summer."
+      },
+      {
+        "name": "Svalbard",
+        "text": "An Arctic archipelago halfway between the mainland and the North Pole, reached by air from Oslo or Tromsø. Snowmobile and dog-sled trips run from late winter into spring, boat trips among the glaciers in summer. Polar bears live here, so most visitors leave the main town, Longyearbyen, only with a guide."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A firm handshake and eye contact, with first names straight away. \"Hei\" does for hello in any setting, and \"ha det\" for goodbye. Norwegians can seem reserved with strangers, but they're friendly and helpful once you start talking.",
+    "etiquette": [
+      "The right to roam (allemannsretten) lets anyone walk, ski and camp on uncultivated land, keeping at least 150 m from houses and cabins and usually moving on after two nights. Leave no trace, and light no fires in or near woods from 15 April to 15 September.",
+      "Popular hikes such as Preikestolen and Trolltunga are long and exposed. Start early, check the forecast, carry food, water and warm layers, and turn back if the weather turns.",
+      "Wine and spirits are sold only at the state shops, Vinmonopolet, which close early on Saturdays and all day on Sundays. Supermarkets sell beer, but not after 8 pm on weekdays or 6 pm on Saturdays, and not on Sundays.",
+      "Tolls on many roads, bridges and tunnels are charged automatically by camera; with a hire car, the rental company passes them on to you.",
+      "Take your shoes off when you go into someone's home."
+    ],
+    "tipping": "Not expected: service is included and wages are high. Rounding up, or adding up to 10% for very good service in a restaurant, is appreciated but never required.",
+    "dress": "Practical outdoor clothes are normal everywhere, even in town. Pack waterproofs and warm layers in every season; in winter, add wool base layers, a hat, gloves and boots with grip for icy streets. As Norwegians like to say, there's no bad weather, only bad clothes.",
+    "food": [
+      {
+        "name": "Seafood",
+        "text": "Salmon, cod, halibut and shellfish, very fresh. In summer, buy a bag of cooked prawns (reker) by the harbour and peel them onto bread with mayonnaise and lemon."
+      },
+      {
+        "name": "Skrei and stockfish",
+        "text": "Skrei, the winter cod that comes to spawn off Lofoten, is a treat from January to April. There, cod is also hung on wooden racks to dry into stockfish, a trade that goes back to the Viking age."
+      },
+      {
+        "name": "Brunost",
+        "text": "Brown cheese: sweet and caramel-like, made from whey, and shaved thin onto bread or waffles with a cheese slicer, a Norwegian invention."
+      },
+      {
+        "name": "Vafler",
+        "text": "Heart-shaped waffles with jam and sour cream, or brown cheese, sold in cafés, on ferries and at mountain huts."
+      },
+      {
+        "name": "Fårikål",
+        "text": "Mutton and cabbage stewed slowly with whole peppercorns, often called the national dish and eaten above all in autumn."
+      },
+      {
+        "name": "Pølse i lompe",
+        "text": "A hot dog wrapped in a soft potato flatbread instead of a bun, the classic snack from petrol stations and kiosks."
+      }
+    ],
+    "phrases": {
+      "language": "Norwegian",
+      "intro": "Almost everyone speaks English well. Norwegian has two written forms, Bokmål and Nynorsk; these phrases are in Bokmål, the more common.",
+      "items": [
+        { "phrase": "Hei", "say": "hi", "meaning": "Hello" },
+        { "phrase": "God morgen", "say": "goo MOR-en", "meaning": "Good morning" },
+        { "phrase": "Takk", "say": "tahk", "meaning": "Thank you" },
+        { "phrase": "Tusen takk", "say": "TOO-sen tahk", "meaning": "Thank you very much (\"a thousand thanks\")" },
+        { "phrase": "Unnskyld", "say": "OON-shil", "meaning": "Excuse me; sorry" },
+        { "phrase": "Snakker du engelsk?", "say": "SNAH-ker doo ENG-elsk", "meaning": "Do you speak English?" },
+        { "phrase": "Hva koster det?", "say": "vah KOS-ter deh", "meaning": "How much is it?" },
+        { "phrase": "Skål!", "say": "skawl", "meaning": "Cheers!" },
+        { "phrase": "Ha det", "say": "HAH-deh", "meaning": "Bye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q20",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Norwegian krone (kr, NOK). Cards are taken everywhere, and cash is rarely needed.",
+        "sources": [{ "property": "P38", "values": ["Q132643"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Norwegian, written in two standard forms, Bokmål and Nynorsk. Sámi is also official, mainly in the north. Almost everyone speaks English.",
+        "sources": [{ "property": "P37", "values": ["Q9043", "Q25167", "Q25164", "Q56463"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October. Svalbard keeps the same time.",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q5412119"] }],
+        "note": "Wikidata also lists UTC+0, which it applies to Bouvet Island, an uninhabited Norwegian island in the South Atlantic; the page leaves it out. That Svalbard keeps mainland time isn't in Wikidata; the page adds it."
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, 110 for fire and 113 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648823", "Q25648804"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+47",
+        "sources": [{ "property": "P474", "values": ["+47"] }]
+      }
+    ]
+  }
+}

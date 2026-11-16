@@ -5,6 +5,7 @@ import { RATINGS, RATING_LABELS, RATING_MEANINGS, monthNumbersText } from '@/uti
 import PaperCard from '@/components/common/PaperCard';
 import MonthStrip from './MonthStrip';
 import MonthStripSummary from './MonthStripSummary';
+import MonthLinks from '@/components/months/MonthLinks';
 
 const subheading = 'font-travel text-xl uppercase leading-tight tracking-wide text-colour9';
 const section = 'grid gap-3 border-t-2 border-dashed border-poster-brown/50 pt-5';
@@ -30,6 +31,11 @@ function CountryWhenToGo({ name, whenToGo }) {
             </React.Fragment>
           ))}
         </dl>
+        {/* Where else is at its best in this country's best months (published month pages only) */}
+        <MonthLinks
+          months={months.map((rating, i) => (rating === 'best' ? i + 1 : null)).filter(Boolean)}
+          lead={`Where else is at its best in ${name}’s best months:`}
+        />
       </div>
 
       <section aria-labelledby='country-seasons-heading' className={section}>

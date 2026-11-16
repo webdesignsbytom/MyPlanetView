@@ -7,6 +7,8 @@
 const SECRET_PATHS = [
   // A share link: /api/shared/<code>, /api/shared/<code>/photos/...
   [/^(\/api\/shared\/)[^/?#]+/i, '$1:code'],
+  // A friends challenge's join link: /api/challenges/join/<code>
+  [/^(\/api\/challenges\/join\/)[^/?#]+/i, '$1:code'],
   // Invites: accepting takes the token in the body; any other segment could be one
   [/^(\/api\/invites\/)(?!accept(?:[/?#]|$))[^/?#]+/i, '$1:token'],
   // better-auth's links: /api/auth/reset-password/<token>, /api/auth/verify-email/<token>
@@ -17,7 +19,9 @@ const SECRET_PATHS = [
 const PLAIN_QUERY_KEYS = new Set([
   'country',
   'unplaced',
+  'best',
   'tripId',
+  'landmark',
   'cursor',
   'limit',
   'page',

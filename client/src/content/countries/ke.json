@@ -1,0 +1,194 @@
+{
+  "code": "KE",
+  "slug": "kenya",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Jambo", "Karibu", "Kenya"],
+  "summary": "Big-game safaris, a snow-capped peak on the equator and a warm Swahili coast.",
+  "overview": [
+    "Kenya is one of Africa's classic safari countries. The Maasai Mara, in the south-west, is famous for its lions and for the wildebeest and zebra that cross the Mara River on their yearly migration; Amboseli has big herds of elephants beneath Kilimanjaro, just over the border in Tanzania; and Samburu, Tsavo and the lakes of the Rift Valley each add a different landscape. The Indian Ocean coast, with the old Swahili town of Lamu and the beaches of Diani and Watamu, is the natural place to finish.",
+    "Nairobi is the hub, with a national park on the edge of the city where giraffes and rhinos graze in sight of the skyline. Safaris travel by small plane or by 4×4 on rough roads, and parks and conservancies charge daily fees. M-Pesa, the mobile money service, pays for almost everything, and visitors can use it with a local SIM card."
+  ],
+  "whenToGo": {
+    "stripLabel": "The safari parks and the country taken together. The Maasai Mara, the coast and Mount Kenya differ, and each has a strip of its own below.",
+    "months": ["best", "best", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Short dry season",
+        "months": [1, 2],
+        "text": "Hot, dry and sunny, with good game viewing as animals stay near water, and calm, clear beach weather on the coast."
+      },
+      {
+        "name": "Long rains",
+        "months": [3, 4, 5],
+        "text": "The main rainy season, heaviest in April and May: hard downpours, muddy tracks, and some safari camps and coastal hotels closed. The country turns lush and green, visitors are few and prices are at their lowest."
+      },
+      {
+        "name": "Long dry season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Sunny and comfortable, with cool mornings and evenings in the highlands; Nairobi can feel chilly in July. The peak of the safari season, with the migration in the Mara, and busiest and dearest in July and August."
+      },
+      {
+        "name": "Short rains",
+        "months": [11, 12],
+        "text": "Short showers and thunderstorms, usually in the afternoon or at night, from about late October to early December. The land greens up again, and the Christmas holidays fill the coast."
+      }
+    ],
+    "weather": "Kenya lies on the equator, so there's no real summer or winter: the seasons are wet or dry, and height decides the temperature. Nairobi, at about 1,800 m, has warm days and cool nights all year, and the Maasai Mara is much the same. The north is hot and dry, and the coast is hot and humid, around 30°C by day. There are two rainy seasons: the long rains, roughly March to May, and the short rains, roughly November and early December.",
+    "festivals": [
+      {
+        "name": "The Great Migration",
+        "place": "The Maasai Mara",
+        "when": "Usually from July to September or October",
+        "months": [7, 8, 9, 10],
+        "text": "Over a million wildebeest, with zebra and gazelles, move up from Tanzania's Serengeti in search of fresh grass, crossing the crocodile-filled Mara River. Their timing shifts with the rains each year, so no date can be promised."
+      },
+      {
+        "name": "Madaraka Day",
+        "place": "Across Kenya",
+        "when": "1 June",
+        "months": [6],
+        "text": "A public holiday marking the start of self-government in 1963, with parades and speeches."
+      },
+      {
+        "name": "Mashujaa Day (Heroes' Day)",
+        "place": "Across Kenya",
+        "when": "20 October",
+        "months": [10],
+        "text": "A public holiday honouring the people who fought for independence and others who served the country."
+      },
+      {
+        "name": "Lamu Cultural Festival",
+        "place": "Lamu",
+        "when": "Usually in November, over a few days",
+        "months": [11],
+        "text": "Dhow races in the harbour, donkey races along the waterfront, Swahili poetry, music and crafts in the narrow lanes of the old stone town."
+      },
+      {
+        "name": "Jamhuri Day",
+        "place": "Across Kenya",
+        "when": "12 December",
+        "months": [12],
+        "text": "The national day, marking independence in 1963 and the republic a year later, both on 12 December."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Maasai Mara",
+        "months": ["best", "best", "good", "avoid", "good", "good", "best", "best", "best", "best", "good", "good"],
+        "text": "Good game viewing all year, with lions, cheetahs and leopards living here. The migration usually arrives around July and stays into September or October; the river crossings are the drama, but they come in bursts and need patience. In the long rains, above all April, tracks turn to mud and several camps close."
+      },
+      {
+        "name": "The coast",
+        "months": ["best", "best", "best", "good", "avoid", "good", "good", "good", "good", "best", "good", "best"],
+        "text": "Mombasa, Diani, Watamu, Malindi and Lamu are hot all year. December to March is dry, hot and calm, the best beach weather. The heaviest rain falls from about April to June, when some hotels close for a few weeks; from about June to September a steady south-east wind makes the sea choppier, which kitesurfers love."
+      },
+      {
+        "name": "Mount Kenya",
+        "months": ["best", "best", "good", "avoid", "avoid", "good", "best", "best", "best", "good", "avoid", "good"],
+        "text": "Africa's second-highest mountain, 5,199 m. Trekkers climb to Point Lenana (4,985 m) over four or five days, best in the drier months, January to February and July to September; the true summit needs technical climbing. Nights near the top are well below freezing in any month."
+      },
+      {
+        "name": "Samburu and the north",
+        "text": "Hotter and drier than the south, with animals of the dry country rarely seen elsewhere on a safari: Grevy's zebra, reticulated giraffe and the long-necked gerenuk. Good in most months outside the rains."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings matter: take time over them before you ask for anything. A handshake is usual, often held for a while, and with older people a light touch of your left hand under your right forearm shows respect. \"Jambo\" is the hello Kenyans use with visitors; among themselves they say \"Habari?\" (\"What news?\"), answered with \"Nzuri\" (\"Good\").",
+    "etiquette": [
+      "Ask before photographing people, Maasai and Samburu villagers included. Visits to villages that welcome tourists usually have a set fee.",
+      "Plastic carrier bags have been banned since 2017, and can be taken from your luggage on arrival: pack with other bags.",
+      "Use your right hand to give, take and eat; the left is thought unclean.",
+      "On the coast, especially in Lamu and Mombasa's Old Town, where most people are Muslim, dress modestly away from the beach and keep affection for private.",
+      "In Nairobi and Mombasa, take app taxis such as Uber or Bolt at night rather than walking, and keep phones out of sight in busy streets.",
+      "On game drives, keep your voice down, stay in the vehicle unless your guide says otherwise, and never press the driver to crowd an animal or leave the track: off-road driving is banned in the Mara reserve."
+    ],
+    "tipping": "Usual, above all in tourism. About 10% in restaurants where service isn't already added. On safari, camps and lodges suggest an amount per day for your guide and driver, with a shared box for the camp staff; shillings and US dollars are both welcome.",
+    "dress": "Light, neutral-coloured layers for safari: khaki, green or brown. Dark blue and black attract tsetse flies in some parks. Bring a warm fleece for early game drives and highland nights. Small safari planes usually limit each passenger to about 15 kg in a soft bag. In coastal towns, cover your shoulders and knees.",
+    "food": [
+      {
+        "name": "Ugali",
+        "text": "A stiff maize-flour porridge, the everyday staple. Pull off a piece with your right hand, press a dent into it and use it to scoop up stews and greens."
+      },
+      {
+        "name": "Nyama choma",
+        "text": "Grilled meat, usually goat or beef, ordered by weight and shared at the table with kachumbari, a fresh tomato and onion salad."
+      },
+      {
+        "name": "Sukuma wiki",
+        "text": "Collard greens fried with onion and tomato, served with ugali. The name means \"stretch the week\": a cheap dish that makes the money last."
+      },
+      {
+        "name": "Pilau and biryani",
+        "text": "The coast's spiced rice dishes, shaped by centuries of trade across the Indian Ocean. Swahili cooking also uses coconut, tamarind and fresh fish."
+      },
+      {
+        "name": "Chapati and mandazi",
+        "text": "Chapatis, a soft, layered flatbread brought by Indian settlers, go with stews and beans; mandazi are lightly sweet fried dough, eaten with tea at breakfast."
+      },
+      {
+        "name": "Chai and coffee",
+        "text": "Kenya is one of the world's biggest tea exporters, and chai, brewed with milk, sugar and sometimes ginger, is drunk all day. The highland coffee is excellent too."
+      }
+    ],
+    "phrases": {
+      "language": "Swahili (Kiswahili)",
+      "intro": "English is widely spoken, especially in tourism, business and the cities, but a few words of Swahili go a long way.",
+      "items": [
+        { "phrase": "Jambo", "say": "JAHM-boh", "meaning": "Hello (to visitors)" },
+        { "phrase": "Habari?", "say": "hah-BAH-ree", "meaning": "How are you? (\"What news?\")" },
+        { "phrase": "Nzuri", "say": "n-ZOO-ree", "meaning": "Good; fine" },
+        { "phrase": "Asante sana", "say": "ah-SAHN-teh SAH-nah", "meaning": "Thank you very much" },
+        { "phrase": "Tafadhali", "say": "tah-fah-THAH-lee", "meaning": "Please" },
+        { "phrase": "Karibu", "say": "kah-REE-boo", "meaning": "Welcome; you're welcome" },
+        { "phrase": "Bei gani?", "say": "BAY GAH-nee", "meaning": "How much is it?" },
+        { "phrase": "Pole pole", "say": "POH-leh POH-leh", "meaning": "Slowly, slowly (take it easy)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q114",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Kenyan shilling (KSh, KES). M-Pesa mobile money is used for almost everything; cards are taken in hotels, lodges and city restaurants.",
+        "sources": [{ "property": "P38", "values": ["Q202882"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Swahili and English, both official. Most Kenyans also speak the language of their own community, such as Kikuyu, Luo or Kalenjin.",
+        "sources": [{ "property": "P37", "values": ["Q7838", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "East Africa Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q4689515"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 or 112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+254",
+        "sources": [{ "property": "P474", "values": ["+254"] }]
+      }
+    ]
+  }
+}

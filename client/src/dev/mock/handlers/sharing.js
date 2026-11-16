@@ -214,8 +214,10 @@ export function registerSharingRoutes() {
     if (!shared) return fail(404, NOT_FOUND);
     const photos = getDb().photos.filter((p) => (shared.kind === 'map' ? p.mapId === shared.item.id : p.tripId === shared.item.id));
     // A shared trip's photos come in the trip's order
-    const page = photoPage(photos, shared.role, shared.kind === 'trip' ? { ...query, tripId: shared.item.id } : query);
-    return page.error ? fail(400, page.error) : ok(page);
+    // Never the best copies through a link (`best=1` is a 403), as the server
+    const filters = shared.kind === 'trip' ? { ...query, tripId: shared.item.id } : query;
+    const page = photoPage(photos, shared.role, filters, { allowBest: false });
+    return page.error ? fail(page.status ?? 400, page.error) : ok(page);
   });
 
   // The map's moments, or the trip's (with that trip's photos only); never hidden ones below editor

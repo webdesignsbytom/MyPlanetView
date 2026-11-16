@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Api
-import { createMap, getMap, getMyMaps } from '@/api/travelApi';
+import { createMap, getMap, getMyMaps, updateMap } from '@/api/travelApi';
 // Constants
 import { MAP_PAGE_URL, WELCOME_PAGE_URL } from '@/utils/constants/routes';
 // Auth
@@ -44,7 +44,7 @@ function WelcomePage() {
     if (map) {
       await saveMapSetup(map.id, map, form);
     } else {
-      await createMap({
+      const created = await createMap({
         name: form.name.trim(),
         groupType: form.groupType,
         travellers: form.travellers
@@ -55,6 +55,8 @@ function WelcomePage() {
             favouriteCountryCode: t.favouriteCountryCode || null,
           })),
       });
+      // A new map starts with the UK whole
+      if (form.splitUk && created?.map?.id) await updateMap(created.map.id, { splitUk: true });
     }
     navigate(MAP_PAGE_URL, { replace: true });
   };

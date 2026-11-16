@@ -1,5 +1,7 @@
 import React from 'react';
-import { FaLandmark } from 'react-icons/fa';
+import { FaLandmark, FaThumbtack } from 'react-icons/fa';
+// Utils
+import { formatMomentDate } from '@/utils/moments/momentDates';
 
 const CREDIT_LINK = 'underline underline-offset-2 hover:text-colour6';
 
@@ -8,13 +10,19 @@ const CREDIT_LINK = 'underline underline-offset-2 hover:text-colour6';
 // linked to the photo's Wikimedia Commons page, and the licence, linked to its text.
 // `photo` comes from landmarkPhotoInfo; without one (or before the credits load) the
 // frame holds the landmark icon. The photo is decorative (alt ''): the name is the caption.
-function LandmarkCard({ landmark, photo }) {
+// `moments`: the map's moments that happened here, each a pinned line with its date (the
+// first two, then how many more).
+const MOMENTS_SHOWN = 2;
+
+function LandmarkCard({ landmark, photo, moments = [] }) {
   return (
     <li className='group'>
       <figure className='grid content-start gap-2'>
         <div className='aspect-[4/3] overflow-hidden border-4 border-poster-cream bg-colour9/10 shadow-paper transition-transform group-odd:-rotate-1 group-even:rotate-1'>
+          {/* The picture fills the frame, so the photo's h-full has a height to fill and
+              object-cover crops every shape to the 4:3 print */}
           {photo ? (
-            <picture>
+            <picture className='block h-full w-full'>
               <source type='image/avif' srcSet={photo.avif} />
               <img
                 src={photo.webp}
@@ -56,6 +64,23 @@ function LandmarkCard({ landmark, photo }) {
                 photo.licence
               )}
             </span>
+          ) : null}
+          {moments.length ? (
+            <ul className='grid gap-0.5 pt-1 text-xs leading-snug' aria-label={`Moments at ${landmark.name}`}>
+              {moments.slice(0, MOMENTS_SHOWN).map((moment) => {
+                const when = formatMomentDate(moment);
+                return (
+                  <li key={moment.id} className='grid grid-cols-[auto_minmax(0,1fr)] items-start gap-1.5'>
+                    <FaThumbtack aria-hidden='true' className='h-3 w-3 translate-y-0.5 text-poster-red' />
+                    <span>
+                      <span className='font-semibold'>{moment.title}</span>
+                      {when ? `, ${when}` : ''}
+                    </span>
+                  </li>
+                );
+              })}
+              {moments.length > MOMENTS_SHOWN ? <li className='pl-4.5 opacity-80'>and {moments.length - MOMENTS_SHOWN} more</li> : null}
+            </ul>
           ) : null}
         </figcaption>
       </figure>

@@ -8,6 +8,10 @@ import PublicPageLayout from '@/components/common/PublicPageLayout';
 import PageTitleCard from '@/components/common/PageTitleCard';
 import CountryIndexList from '@/components/countries/CountryIndexList';
 import CountryStartMap from '@/components/countries/CountryStartMap';
+import MonthLinks from '@/components/months/MonthLinks';
+import PaperCard from '@/components/common/PaperCard';
+// Utils
+import { CHECKED_MONTH_PAGES } from '@/utils/months/monthPages';
 
 /**
  * /countries, the index of the country guides (public, pre-rendered, indexed). It exists
@@ -37,6 +41,11 @@ function CountriesIndexPage({ pages }) {
           subtitleId='countries-subtitle'
           stamp={['Where', 'next?']}
         />
+        {CHECKED_MONTH_PAGES.length ? (
+          <PaperCard title='Month by month' titleId='countries-months-heading'>
+            <MonthLinks lead='Where to go in each month: the countries at their best, from these guides.' />
+          </PaperCard>
+        ) : null}
         <CountryIndexList pages={pages} />
         <CountryStartMap />
       </PublicPageLayout>

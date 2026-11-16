@@ -577,8 +577,9 @@ export async function presignPhotoUpload({ key, contentType, bytes, userId }) {
 
 /**
  * Put a file straight into the private bucket from the server, with no presigned URL.
- * Only the seed uses it (prisma/seed/photos.js, the demo photos); people's photos always
- * go from the browser through presignPhotoUpload. Throws if the bucket refuses it.
+ * Only the seed uses it (prisma/seed/photos.js, the demo photos, at the keys an upload
+ * gets); people's photos always go from the browser through presignPhotoUpload. Throws
+ * if the bucket refuses it.
  */
 export async function putPrivateObject({ key, body, contentType }) {
   if (!isPrivateKey(key)) throw httpError(400, 'Key prefix not allowed');
@@ -618,6 +619,21 @@ export async function signPhotoUrl(key, { downloadAs } = {}) {
   });
 }
 
+/**
+ * A signed GET for a photo file in a data export ("Download my data"): signed now and
+ * valid for `days` (S3's longest is 7), so the export's links last a while. Saves as
+ * `downloadAs`.
+ */
+export async function signPhotoExportUrl(key, { downloadAs, days }) {
+  const { priv } = await storage();
+  return priv.signPrivateGetObject({
+    bucket: priv.PRIVATE_BUCKET,
+    key,
+    expiresIn: Math.min(days, 7) * 24 * 60 * 60,
+    downloadAs: downloadAs ? String(downloadAs).replace(/[^A-Za-z0-9._-]/g, '') || undefined : undefined,
+  });
+}
+
 /** Delete one stored file and its MediaItem row (no permission check). */
 export const deleteStoredObject = (key) => deleteObjectAndRecord(key);
 
@@ -630,4 +646,15 @@ export const deleteStoredObject = (key) => deleteObjectAndRecord(key);
 export async function deleteStoredObjects(keys) {
   const { deleted } = await deleteFilesAndRecords(keys);
   return deleted;
+}
+
+/**
+ * Delete stored files only, leaving their rows to the caller. Only the seed uses it: it
+ * deletes the files of every MediaItem before wiping the tables (prisma/seed/utils.js),
+ * as deleting a map or an account deletes its files. Never throws.
+ * -> `{ removed, failed }` (counts)
+ */
+export async function deleteStoredFilesOnly(keys) {
+  const { removed, failed } = await deleteFiles(keys);
+  return { removed: removed.length, failed: failed.length };
 }

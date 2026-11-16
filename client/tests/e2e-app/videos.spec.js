@@ -1,11 +1,16 @@
-import { test, expect, openMap, openTool } from './fixtures.js';
+import { test, expect, openMap, openTool, MOCK_STORE_KEY } from './fixtures.js';
 import { hasLocationMarker, readVideoInfo, stripVideoLocation, VIDEO_CHECK_FAILED } from '../../src/utils/photos/videoFile.js';
 
 // First Class videos (docs/API.md, "Videos"). The seeded test user is on Business, so
-// their map refuses videos until the mock badge makes them First Class. Fran's First Class
-// map ("Fran's views from orbit", src/dev/mock/seedFirstClass.js) is shared with them and
-// holds four videos (the NASA clips of seed-videos/, whose files aren't in git, so they
-// show the "can't play" fallback unless downloaded).
+// their map refuses videos until the mock badge makes them First Class. A video goes to
+// (the mock) Cloudflare Stream as tus sends it, and is "being prepared" for a few seconds
+// (src/dev/mock/stream.js) before it plays; a browser's own recording plays as HLS through
+// hls.js, as Stream serves every video. Fran's First Class map ("Fran's views from orbit",
+// src/dev/mock/seedFirstClass.js) is shared with them and holds four videos (the NASA clips
+// of seed-videos/, whose files aren't in git, so they show the "can't play" fallback
+// unless downloaded).
+// The mock "converts" a video in 4 s; the gallery asks again after 5 s
+const READY_WITHIN = { timeout: 20000 };
 
 const FRAN_MAP = "Fran's views from orbit";
 const LOCATION_CHECK_FAILED = VIDEO_CHECK_FAILED;
@@ -123,22 +128,24 @@ test.describe('Videos', () => {
     await expect(page.getByRole('application', { name: /: world map$/ })).toBeVisible();
     const panel = await openUploader(page, 'Italy');
     await expect(panel.getByText('0 of 20 videos of Italy on this map.')).toBeVisible();
-    // A file holding a location both ways a phone writes it. The mock bucket refuses (403)
+    // A file holding a location both ways a phone writes it. The mock Stream refuses (403)
     // a video file still holding either, so "Added" means the browser took them out.
     const original = mp4(42, xyz(), appleMeta());
     await fileInput(panel).setInputFiles(videoUpload('colosseum.mp4', original));
     const item = panel.getByRole('listitem').filter({ hasText: 'colosseum.mp4' });
     await expect(item).toContainText('Added');
     await expect(item).toContainText('Videos keep no location, so it went in Italy.');
+    await expect(item).toContainText('It plays once it’s been prepared');
     await expect(panel.getByText('1 of 20 videos of Italy on this map.')).toBeVisible();
     // Photos have their own cap: Italy's photos are as they were
     await expect(panel.getByText('4 of 1,000 photos of Italy on this map.')).toBeVisible();
     await panel.getByRole('button', { name: 'Close Add photos' }).click();
 
-    // A tile with a play mark and its length; a screen reader hears "Video, 42 seconds"
+    // Once it's been prepared: a tile with a play mark and its length; a screen reader
+    // hears "Video, 42 seconds"
     const italy = await openCountry(page, 'Italy');
-    const tile = italy.getByRole('button', { name: 'Open Video, 42 seconds' });
-    await expect(tile).toBeVisible();
+    const tile = italy.getByRole('button', { name: 'Open Video, 42 seconds', exact: true });
+    await expect(tile).toBeVisible(READY_WITHIN);
     await expect(tile).toContainText('0:42');
     await tile.click();
 
@@ -158,7 +165,16 @@ test.describe('Videos', () => {
     await expect(viewer.getByRole('combobox', { name: 'Add a landmark' })).toHaveCount(0);
   });
 
-  test('a playable video plays in the viewer, and plays through in the slideshow before it moves on', async ({ page }) => {
+  test('a playable video plays in the viewer through hls.js, and plays through in the slideshow before it moves on', async ({ page }) => {
+    // This Chromium plays HLS itself; Firefox and older Chrome don't, and use hls.js. Answer
+    // as they do, so hls.js is what plays it here.
+    await page.addInitScript(() => {
+      const canPlayType = HTMLMediaElement.prototype.canPlayType;
+      window.realCanPlayType = canPlayType;
+      HTMLMediaElement.prototype.canPlayType = function (type) {
+        return /mpegurl/i.test(type) ? '' : canPlayType.call(this, type);
+      };
+    });
     await openMap(page);
     await chooseInBadge(page, 'Plan', 'First Class');
     await expect(page.getByRole('application', { name: /: world map$/ })).toBeVisible();
@@ -169,10 +185,13 @@ test.describe('Videos', () => {
     await panel.getByRole('button', { name: 'Close Add photos' }).click();
 
     const iceland = await openCountry(page, 'Iceland');
-    await iceland.getByRole('button', { name: /^Open Video, 3 seconds/ }).click();
+    // A 2-second recording reads as 2 or 3 seconds, depending on the run
+    await iceland.getByRole('button', { name: /^Open Video, [23] seconds(, from|$)/ }).click(READY_WITHIN);
     const viewer = page.getByRole('dialog', { name: /^Video/ });
     const player = viewer.locator('video');
     await expect(player).toBeVisible();
+    // Stream's kind of link (HLS), which this browser plays through hls.js
+    await expect(player).toHaveAttribute('data-playback', 'hls');
     await expect.poll(() => player.evaluate((v) => v.videoWidth)).toBe(320);
     await expect(viewer.getByText('This browser can’t play this video.')).toHaveCount(0);
     await viewer.getByRole('button', { name: 'Close' }).click();
@@ -190,6 +209,79 @@ test.describe('Videos', () => {
     await show.getByRole('button', { name: 'Turn the sound on' }).click();
     await expect(show.getByRole('button', { name: 'Turn the sound off' })).toBeVisible();
     await expect(show.getByText('The end')).toBeVisible({ timeout: 6000 });
+    await show.getByRole('button', { name: 'Close the slideshow' }).click();
+
+    // A browser that plays HLS itself (Safari, and this Chromium unpatched) is given the link
+    await page.evaluate(() => {
+      HTMLMediaElement.prototype.canPlayType = window.realCanPlayType;
+    });
+    const icelandAgain = await openCountry(page, 'Iceland');
+    await icelandAgain.getByRole('button', { name: /^Open Video, [23] seconds(, from|$)/ }).click();
+    await expect(player).toHaveAttribute('data-playback', 'native');
+    await expect.poll(() => player.evaluate((v) => v.videoWidth)).toBe(320);
+  });
+
+  test('a video being prepared, or that couldn’t be, says so to its editors; viewers never see it', async ({ page }) => {
+    await openMap(page);
+    // Two videos on the test user's map (one still converting, one that failed) and one
+    // still converting on Fran's map, which they only view
+    await page.evaluate((key) => {
+      const db = JSON.parse(localStorage.getItem(key));
+      const video = (id, mapId, durationS, videoState) => ({
+        id,
+        mapId,
+        uploaderId: 'mock-user',
+        tripId: null,
+        kind: 'VIDEO',
+        durationS,
+        videoState,
+        readyAt: videoState === 'PROCESSING' ? '2999-01-01T00:00:00.000Z' : null,
+        videoBytes: 1000,
+        countryCode: 'IT',
+        caption: null,
+        takenAt: null,
+        latitude: null,
+        longitude: null,
+        width: 1920,
+        height: 1080,
+        hidden: false,
+        image: { kind: 'stream', uid: `gone-${id}` },
+        createdAt: new Date().toISOString(),
+        shotAt: new Date().toISOString(),
+        countryPosition: -1000,
+        tripPosition: 0,
+      });
+      db.photos.push(video('video-preparing', 'map-home', 30, 'PROCESSING'), video('video-failed', 'map-home', 20, 'FAILED'));
+      db.photos.push(video('video-fran-preparing', 'map-fran', 25, 'PROCESSING'));
+      localStorage.setItem(key, JSON.stringify(db));
+    }, MOCK_STORE_KEY);
+    await openMap(page);
+
+    const italy = await openCountry(page, 'Italy');
+    const preparing = italy.getByRole('button', { name: 'Open Video, 30 seconds, being prepared' });
+    await expect(preparing).toContainText('Preparing…');
+    const failed = italy.getByRole('button', { name: 'Open Video, 20 seconds, couldn’t be prepared' });
+    await expect(failed).toContainText('Couldn’t prepare');
+
+    await preparing.click();
+    let viewer = page.getByRole('dialog', { name: 'Video' });
+    await expect(viewer.getByText('Getting this video ready')).toBeVisible();
+    await viewer.getByRole('button', { name: 'Check now' }).click();
+    await expect(viewer.getByText('Getting this video ready')).toBeVisible();
+    await expect(viewer.locator('video')).toHaveCount(0);
+    await viewer.getByRole('button', { name: 'Close' }).click();
+
+    await failed.click();
+    viewer = page.getByRole('dialog', { name: 'Video' });
+    await expect(viewer.getByText('This video couldn’t be prepared')).toBeVisible();
+    await expect(viewer.getByRole('button', { name: 'Check now' })).toHaveCount(0);
+    await viewer.getByRole('button', { name: 'Close' }).click();
+
+    // Fran's map, as a viewer: her video still converting isn't there at all
+    await openMap(page, '/maps/map-fran');
+    const fransItaly = await openCountry(page, 'Italy');
+    await expect(fransItaly.getByRole('button', { name: /^Open Video, 34 seconds/ })).toBeVisible();
+    await expect(fransItaly.getByRole('button', { name: /^Open Video, 25 seconds/ })).toHaveCount(0);
   });
 
   test('a video over 3 minutes, or one that can’t be checked, is refused before anything uploads', async ({ page }) => {

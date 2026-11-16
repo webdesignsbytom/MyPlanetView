@@ -14,6 +14,7 @@ export const BADGE_GROUPS = [
   { id: 'regions', label: 'Regions' },
   { id: 'landmarks', label: 'Landmarks' },
   { id: 'photos', label: 'Photos' },
+  { id: 'themes', label: 'Monthly themes' },
 ];
 
 const COUNTRY_WORDS = { 1: 'First country', 5: 'Five countries', 10: 'Ten countries', 25: '25 countries', 50: '50 countries', 100: '100 countries' };
@@ -48,7 +49,11 @@ const WORDS = {
       `region-${key}`,
       {
         name: region.name.replace(/^The /, ''),
-        description: `Every country in ${region.name.replace(/^The /, 'the ')}: ${listNames(region.codes, region.codes.length)}.`,
+        description:
+          `Every country in ${region.name.replace(/^The /, 'the ')}: ${listNames(region.codes, region.codes.length)}.` +
+          (region.splitUkCodes
+            ? ` On a map that shows the UK as its nations: ${listNames(region.splitUkCodes, region.splitUkCodes.length)}.`
+            : ''),
       },
     ]),
   ),
@@ -59,6 +64,9 @@ const WORDS = {
   'unesco-25': { name: '25 World Heritage Sites', short: '25', description: '25 UNESCO World Heritage Sites stamped.' },
   'photos-100': { name: '100 photos', short: '100', description: '100 photos on the map.' },
   'photos-1000': { name: '1,000 photos', short: '1k', description: '1,000 photos on the map.' },
+  'themes-3': { name: 'Three themes', short: '3', description: 'Photos entered in 3 monthly themes.' },
+  'themes-6': { name: 'Six themes', short: '6', description: 'Photos entered in 6 monthly themes.' },
+  'themes-12': { name: 'A year of themes', short: '12', description: 'Photos entered in 12 monthly themes.' },
 };
 
 /** `{ name, description, short? }` for a badge key (`short`: the number on its sticker). */

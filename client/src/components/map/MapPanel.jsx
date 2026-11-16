@@ -8,10 +8,11 @@ import PaperStripHeader from '@/components/common/PaperStripHeader';
  * The shell every map overlay uses (stats, settings, the trips...), as travel paperwork:
  * cream paper in the ticket edge, an aged-parchment title strip over a dashed
  * perforation and a round close stamp. The same in every map style. A floating card on
- * wide screens, a sheet above the toolbar on phones; it doesn't block the map. Focus,
- * Escape and giving focus back on closing come from useMapPanel (shared with the
- * country's ticket, CountryTicket). On wide screens its height leaves `--map-panel-top`
- * above it (8rem; the map page sets more when the verify-email banner is showing).
+ * wide screens (the map page centres it, as it does the country tickets; the map switcher
+ * drops from the title instead), a sheet above the toolbar on phones; it doesn't block the
+ * map. Focus, Escape and giving focus back on closing come from useMapPanel (shared with
+ * the country's ticket, CountryTicket). On wide screens it's at most as tall as the map
+ * page's panel wrapper, which has a definite height.
  */
 function MapPanel({ title, onClose, children, footer = null }) {
   const { titleId, headingRef, panelProps } = useMapPanel(onClose);
@@ -19,7 +20,7 @@ function MapPanel({ title, onClose, children, footer = null }) {
   return (
     <section
       {...panelProps}
-      className='ticket-edge paper-fields pointer-events-auto grid max-h-[62vh] w-full grid-rows-a1a overflow-hidden bg-paper-cream text-colour4 md:max-h-[calc(100dvh_-_var(--map-panel-top,8rem)_-_1rem)] md:w-[26rem]'
+      className='ticket-edge paper-fields pointer-events-auto grid max-h-[62vh] w-full grid-rows-a1a overflow-hidden bg-paper-cream text-colour4 md:max-h-full md:w-[26rem]'
     >
       <PaperStripHeader titleId={titleId} title={title} headingRef={headingRef} onClose={onClose} closeLabel={`Close ${title}`} />
       <div className='grid content-start gap-4 overflow-y-auto px-5 py-4'>{children}</div>

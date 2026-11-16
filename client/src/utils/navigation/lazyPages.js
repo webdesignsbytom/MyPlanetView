@@ -6,6 +6,8 @@ import {
   ADMIN_CONTACT_FORM_PAGE_URL,
   ADMIN_EVENTS_PAGE_URL,
   ADMIN_OFFERS_PAGE_URL,
+  ADMIN_THEMES_PAGE_URL,
+  CHALLENGES_PAGE_URL,
   ADMIN_PAGE_URL,
   ADMIN_PROMO_CODES_PAGE_URL,
   ADMIN_USERS_PAGE_URL,
@@ -21,9 +23,11 @@ import {
   MAP_PAGE_URL,
   WELCOME_PAGE_URL,
   countryPagePath,
+  monthPagePath,
 } from '../constants/routes';
 // Country guides
 import { COUNTRY_PAGES, HAS_COUNTRY_PAGES, loadCountryIndex, loadCountryPage } from '../countries/countryPages';
+import { HAS_MONTH_PAGES, MONTH_PAGES, loadMonthPage } from '../months/monthPages';
 
 // lazy() that renders straight away once its code is loaded (no loading screen)
 const lazyPage = (load) => {
@@ -48,6 +52,7 @@ export const AdminUsersPage = lazyPage(() => import('@/pages/admin/AdminUsersPag
 export const AdminEventsPage = lazyPage(() => import('@/pages/admin/AdminEventsPage'));
 export const AdminPromoCodesPage = lazyPage(() => import('@/pages/admin/AdminPromoCodesPage'));
 export const AdminOffersPage = lazyPage(() => import('@/pages/admin/AdminOffersPage'));
+export const AdminThemesPage = lazyPage(() => import('@/pages/admin/AdminThemesPage'));
 // Users
 export const AccountPage = lazyPage(() => import('@/pages/account/AccountPage'));
 export const LoginPage = lazyPage(() => import('@/users/login/LoginPage'));
@@ -61,6 +66,9 @@ export const TripPage = lazyPage(() => import('@/pages/trips/TripPage'));
 export const WelcomePage = lazyPage(() => import('@/pages/onboarding/WelcomePage'));
 export const SharedPage = lazyPage(() => import('@/pages/shared/SharedPage'));
 export const InviteAcceptPage = lazyPage(() => import('@/pages/invite/InviteAcceptPage'));
+export const ChallengesPage = lazyPage(() => import('@/pages/challenges/ChallengesPage'));
+export const ChallengePage = lazyPage(() => import('@/pages/challenges/ChallengePage'));
+export const ChallengeJoinPage = lazyPage(() => import('@/pages/challenges/ChallengeJoinPage'));
 // A map's passport (/maps/:mapId/passport, and /shared/:code/passport)
 export const PassportPage = lazyPage(() => import('@/pages/passport/PassportPage'));
 // Dev server only: null in production builds, so the page isn't bundled
@@ -87,6 +95,16 @@ export const COUNTRY_GUIDE_PAGES = HAS_COUNTRY_PAGES
     }))
   : [];
 
+// "Where to go in <month>" (src/content/months/): the same, one page per month this build
+// has; with none, no routes and no chunk
+export const MONTH_GUIDE_PAGES = HAS_MONTH_PAGES
+  ? MONTH_PAGES.map(({ slug }) => ({
+      slug,
+      path: monthPagePath(slug),
+      Page: lazyPage(withContent(() => import('@/pages/months/MonthPage'), () => loadMonthPage(slug), 'page')),
+    }))
+  : [];
+
 // Static paths -> page ('*' is the 404 page)
 const PAGES_BY_PATH = {
   [ABOUT_PAGE_URL]: AboutPage,
@@ -100,6 +118,8 @@ const PAGES_BY_PATH = {
   [ADMIN_EVENTS_PAGE_URL]: AdminEventsPage,
   [ADMIN_PROMO_CODES_PAGE_URL]: AdminPromoCodesPage,
   [ADMIN_OFFERS_PAGE_URL]: AdminOffersPage,
+  [ADMIN_THEMES_PAGE_URL]: AdminThemesPage,
+  [CHALLENGES_PAGE_URL]: ChallengesPage,
   [ACCOUNT_PAGE_URL]: AccountPage,
   [LOGIN_PAGE_URL]: LoginPage,
   [SIGN_UP_PAGE_URL]: RegisterPage,
@@ -109,6 +129,7 @@ const PAGES_BY_PATH = {
   ...(SelectLabPage ? { [DEV_SELECT_LAB_PAGE_URL]: SelectLabPage } : {}),
   ...(CountriesIndexPage ? { [COUNTRIES_PAGE_URL]: CountriesIndexPage } : {}),
   ...Object.fromEntries(COUNTRY_GUIDE_PAGES.map(({ path, Page }) => [path, Page])),
+  ...Object.fromEntries(MONTH_GUIDE_PAGES.map(({ path, Page }) => [path, Page])),
   '*': Error404,
 };
 

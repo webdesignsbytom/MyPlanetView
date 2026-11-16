@@ -30,16 +30,21 @@ model User {
   mediaItems      MediaItem[]
 
   // Travel
-  ownedMaps        TravelMap[]
-  mapMemberships   MapMember[]
-  tripMemberships  TripMember[]
-  createdTrips     Trip[]
-  uploadedPhotos   Photo[]
-  sentShareInvites ShareInvite[]
-  travellerOf      Traveller[]
-  addedTripLinks   TripMap[]
-  createdMoments   Moment[]
-  createdGoals     Goal[]
+  ownedMaps         TravelMap[]
+  mapMemberships    MapMember[]
+  tripMemberships   TripMember[]
+  createdTrips      Trip[]
+  uploadedPhotos    Photo[]
+  sentShareInvites  ShareInvite[]
+  travellerOf       Traveller[]
+  addedTripLinks    TripMap[]
+  createdMoments    Moment[]
+  createdGoals      Goal[]
+  // Photos this user entered in a monthly theme
+  themeEntries      PhotoThemeEntry[]
+  // Friends challenges this user started, and the ones they're in
+  startedChallenges FriendChallenge[]      @relation("ChallengeCreator")
+  challengeEntries  FriendChallengeEntry[]
 
   // Influencer codes this admin made (docs/API.md, "Promo codes")
   createdPromoCodes PromoCode[]
@@ -164,6 +169,9 @@ enum Continent {
 enum PlaceKind {
   COUNTRY
   SPECIAL
+  // The UK's nations (England XE, Scotland XC, Wales XW, Northern Ireland XI): in place of
+  // GB on a map that splits the UK (TravelMap.splitUk; utils/ukNations.js)
+  NATION
 }
 
 model Country {
@@ -279,6 +287,15 @@ model TravelMap {
   // the owner's own maps for paid slots (utils/mapSlots.js).
   graceUntil DateTime?
 
+  // The UK as its four nations (England, Scotland, Wales, Northern Ireland) instead of
+  // one country, for everyone on the map (docs/API.md "The UK's nations"). Off by
+  // default; changing it moves the map's UK visits, photos, trip stops and moments
+  // (services/travel/ukNations.js).
+  splitUk        Boolean @default(false)
+  // The nations' visits as they were when the split was last turned off, put back if it's
+  // turned on again while the map still has the UK; null otherwise
+  ukNationVisits Json?
+
   travellers Traveller[]
   members    MapMember[]
   visits     CountryVisit[]
@@ -290,10 +307,14 @@ model TravelMap {
   moments    Moment[]
 
   // The passport, badges and goals (docs/API.md, "Passport", "Badges and goals")
-  landmarkMatches PhotoLandmark[]
-  landmarkCovers  LandmarkCover[]
-  badges          BadgeAward[]
-  goals           Goal[]
+  landmarkMatches  PhotoLandmark[]
+  landmarkCovers   LandmarkCover[]
+  badges           BadgeAward[]
+  goals            Goal[]
+  // Its photos entered in the monthly themes (docs/API.md, "Photo themes")
+  themeEntries     PhotoThemeEntry[]
+  // Friends challenges it counts for (docs/API.md, "Friends challenges")
+  challengeEntries FriendChallengeEntry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -527,6 +548,9 @@ model TripStop {
 
   countryCode String    @db.Char(2)
   country     Country   @relation(fields: [countryCode], references: [code], onDelete: Restrict)
+  // The UK nation (XE, XC, XW, XI) it was in when the map's split was last turned off,
+  // so turning it on again puts it back there; null otherwise (services/travel/ukNations.js)
+  ukNation    String?   @db.Char(2)
   landmarkId  String?
   landmark    Landmark? @relation(fields: [landmarkId], references: [id], onDelete: SetNull)
   placeName   String? // a town or place that isn't a seeded landmark
@@ -559,6 +583,9 @@ model Photo {
 
   countryCode String?  @db.Char(2)
   country     Country? @relation(fields: [countryCode], references: [code], onDelete: SetNull)
+  // The UK nation (XE, XC, XW, XI) it was in when the map's split was last turned off,
+  // so turning it on again puts it back there; null otherwise (services/travel/ukNations.js)
+  ukNation    String?   @db.Char(2)
 
   caption String?
   takenAt DateTime?
@@ -601,12 +628,14 @@ model Photo {
   countryPosition Float @default(0)
   tripPosition    Float @default(0)
 
-  variants    PhotoVariant[]
-  landmarks   PhotoLandmark[]
-  coverOf     Trip[]          @relation("TripCover")
-  moments     MomentPhoto[]
+  variants     PhotoVariant[]
+  landmarks    PhotoLandmark[]
+  coverOf      Trip[]            @relation("TripCover")
+  moments      MomentPhoto[]
   // Passport stamps showing this photo
-  stampCovers LandmarkCover[]
+  stampCovers  LandmarkCover[]
+  // The monthly themes it's entered in
+  themeEntries PhotoThemeEntry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -723,6 +752,9 @@ model Moment {
 
   countryCode String    @db.Char(2)
   country     Country   @relation(fields: [countryCode], references: [code], onDelete: Restrict)
+  // The UK nation (XE, XC, XW, XI) it was in when the map's split was last turned off,
+  // so turning it on again puts it back there; null otherwise (services/travel/ukNations.js)
+  ukNation    String?   @db.Char(2)
   // In the moment's country (checked in code)
   landmarkId  String?
   landmark    Landmark? @relation(fields: [landmarkId], references: [id], onDelete: SetNull)
@@ -879,6 +911,98 @@ model LandmarkCover {
   @@map("landmark_cover")
 }
 
+// Monthly photo themes (docs/API.md, "Photo themes"; docs/FEATURE-PLAN.md "Monthly photo
+// themes"): one theme a calendar month (UTC), set in advance by an admin. While a theme runs,
+// a map's editors enter any of the map's photos (from any date); the entries are the
+// theme's album on that map, seen by whoever can see the map. Never a public gallery.
+
+// CHECK photo_theme_first_of_month: `month` is the 1st of its month
+model PhotoTheme {
+  id      String            @id @default(uuid())
+  // The month it runs, as its first day (UTC)
+  month   DateTime          @unique @db.Date
+  title   String
+  blurb   String?
+  entries PhotoThemeEntry[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("photo_theme")
+}
+
+// A photo entered in a theme. `mapId` is the photo's map (a photo never changes map), so a
+// map's albums and the theme badges read this table alone.
+model PhotoThemeEntry {
+  themeId     String
+  theme       PhotoTheme @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  photoId     String
+  photo       Photo      @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  mapId       String
+  map         TravelMap  @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  enteredById String?
+  enteredBy   User?      @relation(fields: [enteredById], references: [id], onDelete: SetNull)
+  enteredAt   DateTime   @default(now())
+
+  @@id([themeId, photoId])
+  // A map's album for a theme, newest entry first, and its counts
+  @@index([mapId, themeId, enteredAt(sort: Desc), photoId(sort: Desc)])
+  @@index([photoId])
+  @@index([enteredById])
+  @@map("photo_theme_entry")
+}
+
+// Friends challenges (docs/API.md, "Friends challenges"; docs/FEATURE-PLAN.md "Friends
+// challenges"): a measure counted between two dates, among friends who join by a link.
+// Each person picks which of their maps counts; the others see names and counts only.
+
+enum ChallengeMeasure {
+  NEW_COUNTRIES // countries whose first photo on the map was taken in the dates
+  COUNTRIES // countries with a photo taken in the dates
+  LANDMARKS // landmarks stamped from photos taken in the dates
+  THEME_PHOTOS // photos entered in the monthly themes in the dates
+}
+
+// CHECKs: dates in order, at most two years long; target 1–500 or none; title 1–80
+model FriendChallenge {
+  id          String                 @id @default(uuid())
+  title       String
+  measure     ChallengeMeasure
+  // The first and last days counted (UTC), both included
+  startsOn    DateTime               @db.Date
+  endsOn      DateTime               @db.Date
+  // "First to 5": optional
+  target      Int?
+  // The join link's code (utils/shareCodes.js); a reset gives a new one
+  joinCode    String                 @unique
+  createdById String?
+  createdBy   User?                  @relation("ChallengeCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  entries     FriendChallengeEntry[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@map("friend_challenge")
+}
+
+// Someone in a challenge, and the map that counts for them (one they own or edit; null
+// once that map is gone, until they pick another)
+model FriendChallengeEntry {
+  challengeId String
+  challenge   FriendChallenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mapId       String?
+  map         TravelMap?      @relation(fields: [mapId], references: [id], onDelete: SetNull)
+  joinedAt    DateTime        @default(now())
+
+  @@id([challengeId, userId])
+  @@index([userId])
+  @@index([mapId])
+  @@map("friend_challenge_entry")
+}
+
 // Badges and goals (docs/API.md, "Badges and goals")
 
 // A site badge a map has earned (utils/badges.js lists them). Awarded when the owner or
@@ -970,15 +1094,19 @@ enum OfferKind {
   LUGGAGE
   CAR_HIRE
   OTHER
+  // A photo printer (the "Print or download" dialog; FEATURE-PLAN.md "Printing")
+  PRINTS
 }
 
 // Where an offer may show: every 12th or 24th tile of a photo gallery, the end of a
-// slideshow, the public country pages, and the Travel Desk (only when asked for)
+// slideshow, the public country pages, the Travel Desk (only when asked for), and the
+// "Print or download" dialog (PRINT: the print partners, under the download)
 enum OfferPlacement {
   GALLERY
   SLIDESHOW
   COUNTRY_PAGE
   TRAVEL_DESK
+  PRINT
 }
 
 // A partner's offer (docs/API.md, "Travel offers"), imported from a JSON file by its

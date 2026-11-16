@@ -14,12 +14,19 @@ import {
 import { getMapSettingsHandler, putMapSettingsHandler } from '../controllers/mapSettings.js';
 import { getLeavingOptionsHandler, putLeavingPlanHandler } from '../controllers/leaving.js';
 import {
+  getExportHandler,
+  getMapExportHandler,
+  getMapPhotosExportHandler,
+  getUploadsExportHandler,
+} from '../controllers/dataExport.js';
+import {
   adminTransferMapHandler,
   createGrantHandler,
   endGrantHandler,
   listGrantsHandler,
 } from '../controllers/planAdmin.js';
 import { createPromoCodeHandler, listPromoCodesHandler, updatePromoCodeHandler } from '../controllers/promoCodes.js';
+import { createThemeHandler, deleteThemeHandler, listThemesHandler, updateThemeHandler } from '../controllers/themes.js';
 import {
   createOfferHandler,
   deleteOfferHandler,
@@ -33,6 +40,8 @@ import {
   validateAdminRole,
   requireVerifiedEmail,
 } from '../middleware/auth.js';
+import { createDbRateLimiter, keyByUserId } from '../middleware/dbRateLimit.js';
+import { DATA_EXPORT_RATE_LIMIT } from '../utils/constants/rateLimitConstants.js';
 
 const router = Router();
 
@@ -46,6 +55,14 @@ router.put('/map-settings', validateAuthentication, putMapSettingsHandler);
 // (docs/API.md, "Leaving"). An account change, so no verified email needed.
 router.get('/leaving-options', validateAuthentication, getLeavingOptionsHandler);
 router.put('/leaving-plan', validateAuthentication, putLeavingPlanHandler);
+
+// "Download my data" (docs/API.md, "Your data"): the parts of one file, read only, your
+// own data only, on every plan
+const dataExportLimiter = createDbRateLimiter({ ...DATA_EXPORT_RATE_LIMIT, keyFor: keyByUserId });
+router.get('/export', validateAuthentication, dataExportLimiter, getExportHandler);
+router.get('/export/uploads', validateAuthentication, dataExportLimiter, getUploadsExportHandler);
+router.get('/export/maps/:mapId', validateAuthentication, dataExportLimiter, getMapExportHandler);
+router.get('/export/maps/:mapId/photos', validateAuthentication, dataExportLimiter, getMapPhotosExportHandler);
 
 // Current user
 router.get(
@@ -122,5 +139,11 @@ router.post('/admin/offers', validateAuthentication, validateAdminRole, createOf
 router.post('/admin/offers/import', validateAuthentication, validateAdminRole, importOffersHandler);
 router.patch('/admin/offers/:offerId', validateAuthentication, validateAdminRole, updateOfferHandler);
 router.delete('/admin/offers/:offerId', validateAuthentication, validateAdminRole, deleteOfferHandler);
+
+// Monthly photo themes (docs/API.md, "Photo themes"): one a month, set in advance
+router.get('/admin/themes', validateAuthentication, validateAdminRole, listThemesHandler);
+router.post('/admin/themes', validateAuthentication, validateAdminRole, createThemeHandler);
+router.patch('/admin/themes/:themeId', validateAuthentication, validateAdminRole, updateThemeHandler);
+router.delete('/admin/themes/:themeId', validateAuthentication, validateAdminRole, deleteThemeHandler);
 
 export default router;

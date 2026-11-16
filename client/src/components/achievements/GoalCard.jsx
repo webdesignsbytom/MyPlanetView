@@ -20,7 +20,7 @@ function GoalCard({ goal, onEdit, onDelete }) {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState(null);
   const state = goalState(goal);
-  const toGo = state === 'reached' ? [] : goalStillToGo(goal);
+  const toGo = state === 'reached' ? [] : goalStillToGo(goal, splitUk);
 
   const handleDelete = async () => {
     setDeleting(true);

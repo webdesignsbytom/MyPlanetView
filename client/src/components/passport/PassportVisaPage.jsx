@@ -6,7 +6,9 @@ import PassportStamp from './PassportStamp';
 import StampOutline from './StampOutline';
 // Utils
 import { countryName } from '@/utils/map/countries';
+import { localNamesBeside } from '@/utils/map/countryLocalNames';
 import { formatDay } from '@/utils/functions/dates';
+import { formatMomentDate } from '@/utils/moments/momentDates';
 
 // How many landmarks still to stamp show before "Show all" (Italy has 58)
 const FIRST_TO_STAMP = 12;
@@ -20,13 +22,14 @@ function statusLine({ status, enteredOn }) {
 
 /**
  * A visa page: one country (or special place), as a spread on wide screens. On the left,
- * the country's name, its entry stamp and the landmarks still to stamp (dotted outlines,
+ * the country's name (with its own name for itself, utils/map/countryLocalNames.js), its entry stamp and the landmarks still to stamp (dotted outlines,
  * so the book is also a checklist); on the right, a stamp for each landmark photographed,
  * in the order they were stamped.
  */
 function PassportVisaPage({ page, pageNumber, headingId, canPick, locked, onOpenPhoto, onPickPhoto }) {
   const [allToStamp, setAllToStamp] = useState(false);
   const name = countryName(page.countryCode);
+  const localNames = localNamesBeside(page.countryCode, name);
   const toStamp = allToStamp ? page.toStamp : page.toStamp.slice(0, FIRST_TO_STAMP);
   const toStampId = `${headingId}-to-stamp`;
   const stampsId = `${headingId}-stamps`;
@@ -34,14 +37,31 @@ function PassportVisaPage({ page, pageNumber, headingId, canPick, locked, onOpen
   return (
     <PassportLeaf pageNumber={pageNumber} labelledBy={headingId}>
       {/* Phones: the country, its stamps, then what's left to stamp. Wide screens: a spread,
-          the stamps on the right-hand page */}
-      <div className='grid content-start gap-6 md:grid-cols-2 md:grid-rows-[auto_minmax(0,1fr)]'>
-        <div className='grid content-start gap-5 md:col-start-1 md:row-start-1 md:pr-6'>
+          the stamps on the right-hand page, clear of the fold */}
+      <div className='grid content-start gap-6 md:grid-cols-2 md:grid-rows-[auto_minmax(0,1fr)] md:gap-x-16'>
+        <div className='grid content-start gap-5 md:col-start-1 md:row-start-1'>
           <header className='grid gap-1'>
             <p className='font-travel text-xs uppercase tracking-xl text-colour9'>Visa</p>
-            <h2 id={headingId} className='font-travel text-3xl uppercase leading-tight text-colour6'>
-              {name}
-            </h2>
+            {/* The name, and beside it (below when there's no room) the country's own name
+                for itself in each of its languages, where that's different */}
+            <div className='text-3xl leading-tight'>
+              <h2 id={headingId} className='inline font-travel uppercase text-colour6'>
+                {name}
+              </h2>
+              {localNames.length ? (
+                <>
+                  {' '}
+                  <span className='inline-block font-main text-lg text-colour9'>
+                    {localNames.map((local, i) => (
+                      <React.Fragment key={local.lang}>
+                        {i ? <span aria-hidden='true'> · </span> : null}
+                        <bdi lang={local.lang}>{local.name}</bdi>
+                      </React.Fragment>
+                    ))}
+                  </span>
+                </>
+              ) : null}
+            </div>
             <p className='text-sm'>{statusLine(page)}</p>
           </header>
           <div className='grid justify-items-center px-4'>
@@ -49,7 +69,7 @@ function PassportVisaPage({ page, pageNumber, headingId, canPick, locked, onOpen
           </div>
         </div>
 
-        <section aria-labelledby={stampsId} className='grid content-start gap-4 md:col-start-2 md:row-span-2 md:row-start-1 md:border-l-2 md:border-dashed md:border-colour9/40 md:pl-6'>
+        <section aria-labelledby={stampsId} className='grid content-start gap-4 md:col-start-2 md:row-span-2 md:row-start-1'>
           <h3 id={stampsId} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
             Landmark stamps <span className='font-main text-sm normal-case tracking-normal'>({page.stamps.length})</span>
           </h3>
@@ -62,7 +82,7 @@ function PassportVisaPage({ page, pageNumber, headingId, canPick, locked, onOpen
                   canPick={canPick}
                   locked={locked}
                   onOpenPhoto={onOpenPhoto}
-                  onPickPhoto={(picked) => onPickPhoto(picked, page.countryCode)}
+                  onPickPhoto={onPickPhoto}
                 />
               ))}
             </ul>
@@ -72,10 +92,29 @@ function PassportVisaPage({ page, pageNumber, headingId, canPick, locked, onOpen
               from {name} and say which landmark it shows.
             </p>
           )}
+          {/* What happened at the stamped landmarks: the map's moments there */}
+          {page.stamps.some((stamp) => stamp.moments?.length) ? (
+            <div className='grid gap-1.5 border-t-2 border-dashed border-colour9/40 pt-3'>
+              <h4 className='font-travel text-sm uppercase tracking-xl text-colour9'>Moments here</h4>
+              <ul className='grid gap-1 text-sm'>
+                {page.stamps.flatMap((stamp) =>
+                  (stamp.moments || []).map((moment) => {
+                    const when = formatMomentDate(moment);
+                    return (
+                      <li key={moment.id}>
+                        <span className='font-semibold'>{stamp.name}:</span> {moment.title}
+                        {when ? `, ${when}` : ''}
+                      </li>
+                    );
+                  }),
+                )}
+              </ul>
+            </div>
+          ) : null}
         </section>
 
         {page.toStamp.length ? (
-          <section aria-labelledby={toStampId} className='grid content-start gap-2 md:col-start-1 md:row-start-2 md:pr-6'>
+          <section aria-labelledby={toStampId} className='grid content-start gap-2 md:col-start-1 md:row-start-2'>
             <h3 id={toStampId} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
               Still to stamp <span className='font-main text-sm normal-case tracking-normal'>({page.toStamp.length})</span>
             </h3>

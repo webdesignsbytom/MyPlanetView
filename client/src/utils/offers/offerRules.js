@@ -6,8 +6,8 @@
 // page uses them to check its form and to word an import's problems.
 import { serverText } from '@/utils/regex/regex';
 
-export const OFFER_KINDS = Object.freeze(['HOTEL', 'TOUR', 'FLIGHT', 'ESIM', 'INSURANCE', 'LUGGAGE', 'CAR_HIRE', 'OTHER']);
-export const OFFER_PLACEMENTS = Object.freeze(['GALLERY', 'SLIDESHOW', 'COUNTRY_PAGE', 'TRAVEL_DESK']);
+export const OFFER_KINDS = Object.freeze(['HOTEL', 'TOUR', 'FLIGHT', 'ESIM', 'INSURANCE', 'LUGGAGE', 'CAR_HIRE', 'OTHER', 'PRINTS']);
+export const OFFER_PLACEMENTS = Object.freeze(['GALLERY', 'SLIDESHOW', 'COUNTRY_PAGE', 'TRAVEL_DESK', 'PRINT']);
 export const OFFER_KEY_PATTERN = /^[a-z0-9][a-z0-9-]{1,63}$/;
 export const OFFER_LIMITS = Object.freeze({
   partner: 60,

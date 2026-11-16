@@ -12,7 +12,7 @@ function FooterLogoSection() {
       <h2 id='footer-brand' className='sr-only'>
         {CompanyName}
       </h2>
-      <BrandWordmark size='md' />
+      <BrandWordmark size='lg' />
       <p className='font-travel text-xl opacity-80'>{CompanyTagLine}</p>
       <SocialMediaCTA socialClassName='text-2xl text-poster-ink hover:text-poster-red-deep' />
     </section>

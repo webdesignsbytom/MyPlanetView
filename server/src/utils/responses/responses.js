@@ -32,6 +32,10 @@ export const DOMAINS = {
   billing: 'billing',
   // Travel offers: the ad cards and the Travel Desk
   offers: 'offers',
+  // Monthly photo themes
+  themes: 'themes',
+  // Friends challenges
+  challenges: 'challenges',
 };
 
 export const EVENT_MESSAGES = {
@@ -98,6 +102,7 @@ export const EVENT_MESSAGES = {
   mapNotFound: `That map doesn't exist, or it hasn't been shared with you.`,
   defaultMapDelete: `Your first map can't be deleted. You can rename it instead.`,
   invalidGroupType: `Who the map is for must be SOLO, COUPLE or FAMILY.`,
+  invalidSplitUk: `splitUk must be true or false.`,
   invalidName: `Give it a name of 1 to 80 characters.`,
   travellerNotFound: `That traveller isn't on this map.`,
   lastTraveller: `A map needs at least one traveller.`,
@@ -134,6 +139,26 @@ export const EVENT_MESSAGES = {
   promoCodeFormat: `A code is 3 to 24 letters and numbers.`,
   promoCodeTaken: `That code is already in use.`,
   promoCodeNotFound: `That code doesn't exist.`,
+  // Monthly photo themes
+  themeNotFound: `That theme doesn't exist.`,
+  themeInvalid: `Check the theme: a month (YYYY-MM), a title of 1 to 60 characters and a blurb of up to 300.`,
+  themeMonthTaken: `There's already a theme for that month.`,
+  themeMonthPast: `A theme can't be set for a month that's over.`,
+  themeHasEntries: `Photos have been entered in this theme, so its month can't change and it can't be deleted.`,
+  themeNotRunning: `That theme isn't running: photos can only be entered during its month.`,
+  themeVideo: `Themes are for photos, not videos.`,
+  themeEntryNotFound: `That photo isn't entered in that theme.`,
+  // Friends challenges
+  challengeNotFound: `That challenge doesn't exist, or you're not in it.`,
+  challengeInvalid: `Check the challenge: a title of 1 to 80 characters, what it counts, a first and last day (YYYY-MM-DD) and a target of 1 to 500, or none.`,
+  challengeDates: `The last day must be on or after the first, and a challenge can last up to two years.`,
+  challengeMeasureFixed: `What a challenge counts can't change once it's made.`,
+  challengeMapInvalid: `Choose one of your maps to count: one you own or edit.`,
+  challengeLinkNotFound: `That challenge link doesn't work. Ask for a new one.`,
+  challengeFull: `This challenge has 50 people, the most it can have.`,
+  challengesPerUserFull: `You're in 30 challenges, the most at once. Leave one to join another.`,
+  challengeEnded: `This challenge has ended.`,
+  challengeCreatorLeaves: `You started this challenge, so delete it instead of leaving.`,
   // Travel offers
   offerNotFound: `That offer doesn't exist.`,
   offerEnded: `That offer has ended.`,

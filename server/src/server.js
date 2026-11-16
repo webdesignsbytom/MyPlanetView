@@ -23,6 +23,8 @@ import momentRouter from './routes/moments.js';
 import goalRouter from './routes/goals.js';
 import promoRouter from './routes/promoCodes.js';
 import { offerClickRouter, offersRouter } from './routes/offers.js';
+import themeRouter from './routes/themes.js';
+import challengeRouter from './routes/challenges.js';
 import sharedRouter from './routes/shared.js';
 import inviteRouter from './routes/invites.js';
 // Plans and payments
@@ -134,6 +136,8 @@ app.use('/api/moments', momentRouter);
 app.use('/api/goals', goalRouter);
 app.use('/api/promo-codes', promoRouter);
 app.use('/api/offers', offersRouter);
+app.use('/api/themes', themeRouter);
+app.use('/api/challenges', challengeRouter);
 // An offer card's link (docs/API.md, "Travel offers"): counts the click and redirects
 app.use('/go', offerClickRouter);
 app.use('/api/shared', sharedRouter);

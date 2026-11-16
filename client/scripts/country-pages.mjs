@@ -68,6 +68,9 @@ function usableContent({ includeDrafts, onSkip = () => {} }) {
 }
 
 export const publishedCountryContent = () => usableContent({ includeDrafts: false });
+// The guides a month page draws on (scripts/month-pages.mjs): the checked ones, drafts too on
+// the dev server
+export const countryGuideContent = ({ includeDrafts = false, onSkip } = {}) => usableContent({ includeDrafts, onSkip });
 export const publishedCountryRoutes = () => countryRoutesFor(publishedCountryContent());
 
 // Sitemap entries: { route, lastmod } for each checked guide (its lastChecked date: when it

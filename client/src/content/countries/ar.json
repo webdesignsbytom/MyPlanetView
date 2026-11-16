@@ -1,0 +1,207 @@
+{
+  "code": "AR",
+  "slug": "argentina",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Hola, che", "Argentina"],
+  "summary": "Tango and steak in Buenos Aires, Andean canyons and Patagonia's glaciers.",
+  "overview": [
+    "Argentina runs nearly 3,700 km from the subtropical north to Tierra del Fuego. Buenos Aires is a big, elegant city of cafés, bookshops, steakhouses and tango halls; Iguazú Falls thunder through the jungle in the north-east; the north-west has red-rock canyons, adobe villages and high-altitude vineyards; Mendoza makes Malbec beneath the Andes; and Patagonia has the Perito Moreno Glacier, the granite towers around El Chaltén and whales and penguins on the Atlantic coast.",
+    "Distances are huge, so most visitors fly between regions: Buenos Aires to Iguazú, Salta, Mendoza, Bariloche, El Calafate or Ushuaia. Long-distance buses are comfortable, with seats that recline almost flat on overnight routes. Prices and exchange rules have changed often in recent years, so check the latest on paying by card or in cash before you go."
+  ],
+  "whenToGo": {
+    "stripLabel": "Buenos Aires and the country taken together. Patagonia, the north-west and Iguazú differ a lot, and each has a strip of its own below.",
+    "months": ["good", "good", "best", "best", "good", "good", "good", "good", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [12, 1, 2],
+        "text": "Hot and humid in Buenos Aires and the north, and the best season in Patagonia, with long days for walking. January and February are the main holiday months, when Argentines head for the coast and the mountains, and much of Buenos Aires slows down."
+      },
+      {
+        "name": "Autumn",
+        "months": [3, 4, 5],
+        "text": "Warm days and fewer crowds in Buenos Aires, the grape harvest in Mendoza, and red and gold beech forests in Patagonia in April, though services there start closing as the days shorten."
+      },
+      {
+        "name": "Winter",
+        "months": [6, 7, 8],
+        "text": "Cool, grey and damp in Buenos Aires, with occasional frosts, and the ski season in the Andes from about late June to September. Dry, sunny days in the north-west. In southern Patagonia many lodges, boats and trails close, and the July school holidays fill the ski resorts."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Warm, bright days in Buenos Aires, where the jacaranda trees flower purple in late October and November. Southern right whales gather off Península Valdés, best from about September to November, and Magellanic penguins return to the Patagonian coast to nest."
+      }
+    ],
+    "weather": "Argentina has almost every climate. Buenos Aires and the Pampas are temperate and humid, with hot summers and mild winters; the north-east around Iguazú is subtropical; the north-west is high and dry, with most of its rain in summer; the Andes have snow in winter; and Patagonia is cool, dry and famously windy, with long summer days and short, cold winter ones. The sun is strong at altitude and in the far south.",
+    "festivals": [
+      {
+        "name": "Carnaval",
+        "place": "Gualeguaychú, and the Quebrada de Humahuaca in the north-west",
+        "when": "Gualeguaychú's parades are usually on Saturdays in January and February; the north-west's carnival is the days before Ash Wednesday",
+        "months": [1, 2, 3],
+        "text": "Gualeguaychú's comparsas parade with floats, drums and feathered costumes in a purpose-built stadium all summer; in the villages of the Quebrada de Humahuaca, carnival means days of music, dancing and street parties."
+      },
+      {
+        "name": "Fiesta Nacional de la Vendimia",
+        "place": "Mendoza",
+        "when": "Usually late February to early March, with the main show on the first weekend of March",
+        "months": [2, 3],
+        "text": "The grape harvest festival: parades of floats through the city, and a vast evening show in an amphitheatre in the hills where a harvest queen is crowned."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Argentina, above all Tucumán",
+        "when": "9 July",
+        "months": [7],
+        "text": "A public holiday marking the declaration of independence in San Miguel de Tucumán in 1816, with flags, folk music and bowls of locro, a hearty stew."
+      },
+      {
+        "name": "Tango BA Festival y Mundial",
+        "place": "Buenos Aires",
+        "when": "Usually in August, for about two weeks",
+        "months": [8],
+        "text": "Free concerts, classes and milongas (tango dance evenings) across the city, ending with the finals of the world tango championships."
+      },
+      {
+        "name": "Fiesta de la Tradición",
+        "place": "San Antonio de Areco, Buenos Aires province",
+        "when": "Usually around 10 November, the Day of Tradition",
+        "months": [11],
+        "text": "A gaucho festival in an old Pampas town: horsemanship, folk music and dancing, asado and traditional dress, with riders parading through the streets."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Buenos Aires and the Pampas",
+        "months": ["good", "good", "best", "best", "best", "good", "good", "good", "good", "best", "best", "good"],
+        "text": "Summers are hot and humid, often above 30°C in January, when many locals leave for the coast. Winters are mild, with grey, damp spells. Spring and autumn are the most comfortable seasons; in late October and November the jacarandas turn whole avenues purple."
+      },
+      {
+        "name": "Southern Patagonia and Tierra del Fuego",
+        "months": ["best", "best", "best", "good", "good", "avoid", "avoid", "avoid", "good", "good", "best", "best"],
+        "text": "El Calafate, El Chaltén and Ushuaia. The season for hiking, glacier trips and boat trips runs from about October to April, with long days in December and January and strong wind at any time. In winter many lodges, boats and trails close, though the Perito Moreno Glacier can be visited all year and Ushuaia has skiing."
+      },
+      {
+        "name": "Bariloche and the Lakes District",
+        "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "best"],
+        "text": "Lakes, forests and mountains around Bariloche and San Martín de los Andes. Summer is for hiking, kayaking and drives along the lakes; autumn colours the forests in April; and from about late June to September Cerro Catedral and the other ski resorts open."
+      },
+      {
+        "name": "Salta, Jujuy and the north-west",
+        "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "best", "good"],
+        "text": "High desert, red-rock gorges such as the Quebrada de Humahuaca, and some of the highest vineyards in the world, around Cafayate. The dry season, about April to November, has sunny days and cold nights, below freezing at altitude; summer storms can close mountain roads. Some roads climb above 4,000 m, so take time to adjust to the height."
+      },
+      {
+        "name": "Iguazú Falls",
+        "months": ["good", "good", "best", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+        "text": "Subtropical: hot and humid in summer and mild in winter. The falls are spectacular in any month, with more water after heavy rain upstream. Argentina's side has walkways right over the falls, out to the Devil's Throat (Garganta del Diablo); Brazil's side gives the wide view."
+      },
+      {
+        "name": "Mendoza and the wine country",
+        "text": "Sunny and dry most of the year, below Aconcagua, at 6,961 m the highest mountain outside Asia. Spring and autumn suit wine tours best, and the grape harvest runs from about February to April."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "One kiss on the right cheek is the usual greeting between friends, and Argentine men often greet each other this way too. A handshake is right in business and with strangers, often followed by the kiss next time. Say \"hola\" or \"buen día\" when you walk into a shop.",
+    "etiquette": [
+      "Meals are late: lunch from about 1 pm, dinner rarely before 9 pm, and many restaurants are half empty until 10.",
+      "Mate, a bitter herbal tea sipped through a metal straw from a shared gourd, is a social ritual. If you're offered it, drink it all and hand it back to the person serving; say \"gracias\" only when you've had enough.",
+      "In Buenos Aires, the metro (Subte) and buses run on a rechargeable SUBE card, sold at kiosks and stations.",
+      "Keep phones and bags close in busy places in Buenos Aires, such as La Boca's Caminito and the San Telmo Sunday market.",
+      "A football match is unforgettable, but many clubs sell tickets only to members: go with a local or a tour that arranges tickets.",
+      "Outside Buenos Aires, above all in the north-west, many shops close for a long break in the early afternoon and reopen into the evening."
+    ],
+    "tipping": "About 10% in restaurants, left in cash where you can, as card machines often can't add a tip. A cubierto, a small charge per person for bread and the table, may appear on the bill; it isn't a tip. Round up for taxis, and give small tips to hotel porters and guides.",
+    "dress": "Buenos Aires is a stylish city, and people dress neatly, especially in the evening. For Patagonia, pack for four seasons in a day: windproof and waterproof layers, a warm hat and good walking boots. The sun is strong in the north-west and the far south, so bring sunscreen and sunglasses.",
+    "food": [
+      {
+        "name": "Asado",
+        "text": "Beef and other meats grilled slowly over wood or charcoal, at a parrilla (steakhouse) or a long Sunday lunch at home. Try bife de chorizo (sirloin), vacío (flank) and provoleta (grilled provolone), with chimichurri, a sauce of parsley, garlic, oregano, vinegar and oil."
+      },
+      {
+        "name": "Empanadas",
+        "text": "Baked or fried pastries with beef, chicken, cheese or corn fillings. Every region has its own style; those from Salta and Tucumán are famous."
+      },
+      {
+        "name": "Locro",
+        "text": "A thick stew of maize, beans, squash and meat from the north-west, eaten on cold days and on the national holidays of 25 May and 9 July."
+      },
+      {
+        "name": "Dulce de leche",
+        "text": "A thick caramel of milk and sugar cooked slowly, spread on toast, sandwiched in alfajores (soft biscuits, often dipped in chocolate) and stirred into ice cream."
+      },
+      {
+        "name": "Pizza and helado",
+        "text": "Buenos Aires' Italian heritage shows in thick, cheesy pizza by the slice, sometimes with fainá (a chickpea flatbread) on top, and in excellent ice cream parlours open late."
+      },
+      {
+        "name": "Malbec and Torrontés",
+        "text": "Mendoza's rich red Malbec, from vineyards at the foot of the Andes, is the country's signature wine; Torrontés, a fragrant white, comes mostly from Salta."
+      }
+    ],
+    "phrases": {
+      "language": "Argentine Spanish",
+      "intro": "In Buenos Aires and much of the country, \"ll\" and \"y\" sound like \"sh\", so calle (street) is \"KAH-sheh\", and people say vos instead of tú for \"you\". English is spoken in tourism, less so elsewhere.",
+      "items": [
+        { "phrase": "Hola", "say": "OH-lah", "meaning": "Hello" },
+        { "phrase": "Buen día", "say": "bwen DEE-ah", "meaning": "Good morning" },
+        { "phrase": "Por favor", "say": "por fah-BOR", "meaning": "Please" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto sale?", "say": "KWAN-toh SAH-leh", "meaning": "How much is it?" },
+        { "phrase": "La cuenta, por favor", "say": "lah KWEN-tah por fah-BOR", "meaning": "The bill, please" },
+        { "phrase": "Che", "say": "cheh", "meaning": "Hey; mate (friendly, informal)" },
+        { "phrase": "Dale", "say": "DAH-leh", "meaning": "OK; sure; go ahead" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q414",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Argentine peso (ARS). Prices use a $ sign too, so check whether you're being quoted pesos or US dollars.",
+        "sources": [{ "property": "P38", "values": ["Q199578"] }],
+        "note": "Wikidata calls the current currency the \"Argentine convertible peso\", its name when it was introduced in 1992; it's the Argentine peso in use today."
+      },
+      {
+        "key": "languages",
+        "text": "Spanish, the language of government and daily life, though no law makes it official. Some provinces also recognise Indigenous languages, such as Guaraní in Corrientes.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }],
+        "note": "Wikidata gives Spanish as official de facto; the page adds Guaraní, made an official language of Corrientes province in 2004."
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (two or three angled flat pins, as in Australia), with some older two-pin Type C sockets. 220 V.",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539", "Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right; Argentina switched from the left in 1945.",
+        "sources": [{ "property": "P1622", "values": ["Q14565199", "Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Argentina Time, UTC−3, across the whole country and all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6513"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 in Buenos Aires and many other cities; across the country, 101 for police, 100 for fire and 107 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806", "Q25648794", "Q25648793"] }],
+        "note": "Wikidata doesn't list 107, the national ambulance number, and lists 117 without saying what it's for; the page adds 107 and leaves 117 out."
+      },
+      {
+        "key": "callingCode",
+        "text": "+54",
+        "sources": [{ "property": "P474", "values": ["+54"] }]
+      }
+    ]
+  }
+}

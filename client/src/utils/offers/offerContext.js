@@ -5,6 +5,7 @@
 // stop in the offer's country (its own name, else the country's) and the trip's dates.
 // Otherwise a country's offer carries that country. Nothing about the viewer ever goes.
 import { countryName } from '../map/countries.js';
+import { countryOf } from '../map/ukNations.js';
 import { offersForPlacement } from './chooseOffer.js';
 import { OFFER_KIND_ORDER } from './offerKinds.js';
 
@@ -53,7 +54,9 @@ export function tripPlace(trip) {
 export const placeCountries = (place) => [...new Set((place?.stops || []).map((s) => s.countryCode))];
 
 /** A country's link context: its name and code (nothing for none). */
-export const countryLink = (code) => (code ? { destination: countryName(code), country: code } : {});
+// A UK nation (a map that splits the UK) is named as the destination, and sent as the UK:
+// partners' links take ISO country codes
+export const countryLink = (code) => (code ? { destination: countryName(code), country: countryOf(code) } : {});
 
 /**
  * A link's context on a trip: the first stop in `countryCode` (the trip's first stop when
@@ -63,7 +66,7 @@ export const countryLink = (code) => (code ? { destination: countryName(code), c
 export function tripLink(place, countryCode = null) {
   const stop = countryCode ? place.stops.find((s) => s.countryCode === countryCode) : place.stops[0];
   if (countryCode && !stop) return countryLink(countryCode);
-  return { destination: stop?.destination, country: stop?.countryCode, from: place.from, to: place.to };
+  return { destination: stop?.destination, country: stop?.countryCode && countryOf(stop.countryCode), from: place.from, to: place.to };
 }
 
 /**
@@ -87,7 +90,11 @@ export function linkForChoice(choice, { plannedTrip = null, country = null, arou
  */
 export function deskLink(offer, { countryCodes, trip = null }) {
   const onTrip = trip ? placeCountries(trip) : [];
-  if (offer.countryCode) return onTrip.includes(offer.countryCode) ? tripLink(trip, offer.countryCode) : countryLink(offer.countryCode);
+  if (offer.countryCode) {
+    // The UK's offer for a stop in one of its nations: that stop
+    const stopCountry = onTrip.find((code) => countryOf(code) === offer.countryCode);
+    return stopCountry ? tripLink(trip, stopCountry) : countryLink(offer.countryCode);
+  }
   const shared = (countryCodes || []).find((code) => onTrip.includes(code));
   return shared ? tripLink(trip, shared) : countryLink(countryCodes?.[0]);
 }
@@ -107,7 +114,8 @@ export const choiceContext = (placement, { plannedTrip = null, country = null, a
  * the general ones; then the heavier first, then by title.
  */
 export function deskShelves(offers, countryCodes) {
-  const codes = countryCodes || [];
+  // Offers are kept per country: a UK nation's are the UK's
+  const codes = (countryCodes || []).map(countryOf);
   const rank = (offer) => (offer.countryCode ? codes.indexOf(offer.countryCode) : codes.length);
   const fitting = offersForPlacement(offers, 'TRAVEL_DESK')
     .filter((offer) => !offer.countryCode || codes.includes(offer.countryCode))

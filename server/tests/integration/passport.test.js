@@ -2,7 +2,7 @@
 // visited, a stamp per landmark with a confirmed photo, the photo a stamp shows, and what
 // viewers and share links see.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { anon, cleanUp, data, defaultMapOf, prisma, signUp, uploadPhoto } from './helpers.js';
+import { ORIGINAL_SIZES, anon, cleanUp, data, defaultMapOf, givePlan, prisma, signUp, uploadPhoto } from './helpers.js';
 
 afterAll(cleanUp);
 
@@ -141,5 +141,78 @@ describe('the passport', () => {
     const tripCode = data(await owner.agent.get(`/api/trips/${trip.id}/sharing`)).shareCode;
     expect((await anon().get(`/api/shared/${tripCode}/passport`)).status).toBe(404);
     expect((await anon().get('/api/shared/AAAA-BBBB-CCCC/passport')).status).toBe(404);
+  });
+
+  it('wears the owner’s plan on its cover, for everyone who opens it', async () => {
+    expect((await passportOf(owner.agent)).map.plan).toEqual({ id: 'FREE', name: 'Economy' });
+    await givePlan(owner.user.id, { plan: 'PREMIUM' });
+    expect((await passportOf(viewer.agent)).map.plan).toEqual({ id: 'PREMIUM', name: 'First Class' });
+    await givePlan(owner.user.id, { plan: 'REGULAR' });
+    expect((await passportOf(owner.agent)).map.plan).toEqual({ id: 'REGULAR', name: 'Business' });
+  });
+
+  it('shows the moments that happened at a stamped landmark, hidden ones to editors only', async () => {
+    // The owner is on Business by now (the test above): the original is kept
+    const photo = data(await uploadPhoto(owner.agent, map.id, { ...EIFFEL, takenAt: '2025-06-01T10:00:00.000Z', sizes: ORIGINAL_SIZES })).photo;
+    expect((await confirm(photo.id)).status).toBe(200);
+    const moment = (title, extra = {}) =>
+      owner.agent.post(`/api/maps/${map.id}/moments`).send({ kind: 'SAW_OR_DID', title, countryCode: 'FR', landmarkId: eiffelId, ...extra });
+    expect((await moment('Picnic on the Champ de Mars', { happenedOn: '2025-06-01', datePrecision: 'DAY' })).status).toBe(201);
+    expect((await moment('A secret proposal plan', { hidden: true })).status).toBe(201);
+
+    const mine = eiffelStamp(await passportOf(owner.agent)).moments;
+    expect(mine.map((m) => m.title)).toEqual(['Picnic on the Champ de Mars', 'A secret proposal plan']);
+    expect(mine[0]).toMatchObject({ happenedOn: '2025-06-01', datePrecision: 'DAY', kind: 'SAW_OR_DID' });
+    const theirs = eiffelStamp(await passportOf(viewer.agent)).moments;
+    expect(theirs.map((m) => m.title)).toEqual(['Picnic on the Champ de Mars']);
+  });
+
+  it('lists a landmark’s photos for the stamp picker, whichever country they were placed in', async () => {
+    // A photo of the tower placed in Belgium (taken across a border, say), matched by hand
+    const border = data(
+      await uploadPhoto(owner.agent, map.id, { countryCode: 'BE', takenAt: '2024-01-05T08:00:00.000Z', sizes: ORIGINAL_SIZES })
+    ).photo;
+    expect((await owner.agent.post(`/api/photos/${border.id}/landmarks`).send({ landmarkId: eiffelId })).status).toBe(201);
+    // A GPS suggestion that isn't confirmed doesn't count
+    const suggested = data(await uploadPhoto(owner.agent, map.id, { ...EIFFEL, takenAt: '2023-01-01T08:00:00.000Z', sizes: ORIGINAL_SIZES })).photo;
+
+    const listed = async (agent, query = `landmark=${eiffelId}`) => {
+      const res = await agent.get(`/api/maps/${map.id}/photos?${query}`);
+      expect(res.status).toBe(200);
+      return data(res).photos.map((p) => p.id);
+    };
+    const mine = await listed(owner.agent);
+    // Oldest taken first: the Belgian one leads, and the suggestion isn't there
+    expect(mine[0]).toBe(border.id);
+    expect(mine).toContain(first.id);
+    expect(mine).not.toContain(suggested.id);
+    const france = await listed(owner.agent, 'country=FR');
+    expect(france).not.toContain(border.id);
+
+    // Below editor, hidden photos stay out; a bad id is a 400
+    expect((await owner.agent.patch(`/api/photos/${border.id}`).send({ hidden: true })).status).toBe(200);
+    expect(await listed(viewer.agent)).not.toContain(border.id);
+    expect(await listed(owner.agent)).toContain(border.id);
+    expect((await owner.agent.get(`/api/maps/${map.id}/photos?landmark=nope`)).status).toBe(400);
+    expect((await stranger.agent.get(`/api/maps/${map.id}/photos?landmark=${eiffelId}`)).status).toBe(404);
+  });
+
+  it('names the stamped landmarks with the map, to mark their pins; a hidden photo’s only for editors', async () => {
+    const montId = data(await owner.agent.get('/api/landmarks?country=FR')).landmarks.find((l) => l.name === 'Mont-Saint-Michel').id;
+    const hiddenPhoto = data(await uploadPhoto(owner.agent, map.id, { countryCode: 'FR', sizes: ORIGINAL_SIZES })).photo;
+    expect((await owner.agent.post(`/api/photos/${hiddenPhoto.id}/landmarks`).send({ landmarkId: montId })).status).toBe(201);
+    expect((await owner.agent.patch(`/api/photos/${hiddenPhoto.id}`).send({ hidden: true })).status).toBe(200);
+
+    const stampedFor = async (agent) => {
+      const res = await agent.get(`/api/maps/${map.id}`);
+      expect(res.status).toBe(200);
+      return data(res).map.stampedLandmarkIds;
+    };
+    const mine = await stampedFor(owner.agent);
+    expect(mine).toEqual(expect.arrayContaining([eiffelId, montId]));
+    expect(data(await owner.agent.get(`/api/maps/${map.id}`)).map.stats.landmarks).toBe(mine.length);
+    const theirs = await stampedFor(viewer.agent);
+    expect(theirs).toContain(eiffelId);
+    expect(theirs).not.toContain(montId);
   });
 });

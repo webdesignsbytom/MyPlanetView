@@ -8,6 +8,8 @@ import {
 } from '../src/utils/constants/routes.js';
 // Country guides: checked ones only (none checked: no /countries either)
 import { publishedCountrySitemap } from './country-pages.mjs';
+// "Where to go in <month>": the checked months the checked guides fill
+import { publishedMonthSitemap } from './month-pages.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = dirname(__filename);
@@ -23,6 +25,7 @@ const origin = SITE_ORIGIN.replace(/\/$/, '');
 const entries = [
   ...PUBLIC_STATIC_ROUTES.map((route) => ({ route, lastmod: ROUTE_SITEMAP_META[route]?.lastmod })),
   ...publishedCountrySitemap(),
+  ...publishedMonthSitemap(),
 ];
 
 const urlsXml = entries.map(({ route, lastmod }) => urlEntry(`${origin}${route}`, { lastmod })).join('\n');

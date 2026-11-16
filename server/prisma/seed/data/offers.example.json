@@ -473,6 +473,20 @@
       "imageKey": "visitCountryPosters/es-800.avif",
       "weight": 1,
       "active": false
+    },
+    {
+      "key": "example-prints",
+      "partner": "Example Prints",
+      "kind": "PRINTS",
+      "title": "Photo prints and photobooks",
+      "blurb": "Prints from 6x4 to A3, canvases and photobooks, posted to your door.",
+      "countryCode": null,
+      "placements": [
+        "PRINT"
+      ],
+      "url": "https://www.example.com/prints?ref=myplanetview-example",
+      "imageKey": null,
+      "weight": 1
     }
   ]
 }

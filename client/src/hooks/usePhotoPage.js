@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 // Api
-import { getPhotoPage, movePhoto as movePhotoRequest } from '@/api/travelApi';
+import { getPhoto, getPhotoPage, movePhoto as movePhotoRequest } from '@/api/travelApi';
 
 // The list with `photoId` moved to straight after `afterId` (first when it's null)
 const placeAfter = (list, photoId, afterId) => {
@@ -15,6 +15,13 @@ const placeAfter = (list, photoId, afterId) => {
 // the map itself). Each is taken once, by the first list with the same filters, while fresh.
 const preloaded = new Map();
 const PRELOAD_FRESH_MS = 30000;
+// Videos Cloudflare is still converting (editors only; docs/API.md "Videos"): each is
+// asked about again (the server then asks Stream) after these waits, then every last one,
+// for as long as the list is open and the tab is showing, up to VIDEO_CHECK_FOR_MS.
+const VIDEO_CHECK_WAITS_MS = [5000, 10000, 20000, 30000];
+const VIDEO_CHECK_FOR_MS = 20 * 60 * 1000;
+const isProcessingVideo = (photo) => photo.kind === 'VIDEO' && photo.videoState === 'PROCESSING';
+
 const keyOf = ({ mapId, tripId, shareCode, country, unplaced = false, limit = 30 }) =>
   JSON.stringify([mapId || null, tripId || null, shareCode || null, country || null, Boolean(unplaced), limit]);
 
@@ -102,6 +109,37 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, unplac
   const addPhotos = useCallback((added) => {
     setPhotos((prev) => [...added, ...prev.filter((p) => !added.some((a) => a.id === p.id))]);
   }, []);
+
+  // A video being converted turns into a playable one (or a failed one) by itself
+  const processingIds = photos.filter(isProcessingVideo).map((p) => p.id).join(',');
+  useEffect(() => {
+    if (!processingIds || shareCode) return undefined;
+    let timer = null;
+    let round = 0;
+    let stopped = false;
+    const started = Date.now();
+    const check = async () => {
+      if (document.visibilityState === 'visible') {
+        const ids = processingIds.split(',');
+        const answers = await Promise.allSettled(ids.map((id) => getPhoto(id)));
+        if (stopped) return;
+        answers.forEach((answer) => {
+          const photo = answer.status === 'fulfilled' ? answer.value?.photo : null;
+          if (photo && !isProcessingVideo(photo)) replacePhoto(photo);
+        });
+      }
+      round += 1;
+      if (!stopped && Date.now() - started < VIDEO_CHECK_FOR_MS) schedule();
+    };
+    const schedule = () => {
+      timer = window.setTimeout(check, VIDEO_CHECK_WAITS_MS[Math.min(round, VIDEO_CHECK_WAITS_MS.length - 1)]);
+    };
+    schedule();
+    return () => {
+      stopped = true;
+      window.clearTimeout(timer);
+    };
+  }, [processingIds, shareCode, replacePhoto]);
 
   // Rearranging (editors): the list moves at once, then the server is told. If it says
   // no, the list is loaded again, so it shows the order that was really saved; the

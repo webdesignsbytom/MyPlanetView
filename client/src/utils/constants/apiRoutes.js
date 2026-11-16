@@ -16,6 +16,9 @@ export const GET_LOGGED_IN_USER_API = '/api/users/user/get-logged-in-user';
 export const CHANGE_OR_ADD_AVATAR_API =
   '/api/users/user/upload-or-change-avatar';
 export const REMOVE_AVATAR_API = '/api/users/user/remove-avatar';
+// "Download my data" (docs/API.md, "Your data"): /export, /export/maps/:mapId,
+// /export/maps/:mapId/photos?cursor=, /export/uploads?cursor=
+export const DATA_EXPORT_API = '/api/users/export';
 
 // Contact Form
 export const SUBMIT_CONTACT_FORM_API = '/api/contact/create-new-contact-form';
@@ -42,7 +45,7 @@ export const DELETE_ALL_EVENTS_API = '/api/events/delete-all-events';
 // Travel (docs/API.md). Paths below these bases are built in src/api/travelApi.js.
 export const COUNTRIES_API = '/api/countries';
 export const LANDMARKS_API = '/api/landmarks'; // ?country=JP
-export const MAPS_API = '/api/maps'; // /:mapId, /:mapId/stats|travellers|visits|trips|photos|moments|passport|badges|goals|sharing|members|invites
+export const MAPS_API = '/api/maps'; // /:mapId, /:mapId/stats|travellers|visits|trips|photos|videos|moments|passport|badges|goals|sharing|members|invites
 export const TRIPS_API = '/api/trips'; // /:tripId, /:tripId/stops|travellers|photos|moments|maps|sharing|members|invites, /shared-with-me
 export const PHOTOS_API = '/api/photos'; // /:photoId, /:photoId/landmarks, /:photoId/move
 export const MOMENTS_API = '/api/moments'; // /:momentId (PATCH, DELETE)
@@ -50,6 +53,9 @@ export const GOALS_API = '/api/goals'; // /:goalId (PATCH, DELETE)
 export const SHARED_API = '/api/shared'; // /:code, /:code/photos, /:code/photos/:photoId, /:code/moments|passport|badges|goals
 export const PROMO_CODES_API = '/api/promo-codes'; // GET /:code (before signing up)
 export const OFFERS_API = '/api/offers'; // GET: every live travel offer (docs/API.md, "Travel offers")
+export const THEMES_API = '/api/themes'; // GET: this month's photo theme and the recent ones (docs/API.md, "Photo themes")
+export const ADMIN_THEMES_API = '/api/users/admin/themes'; // GET, POST, PATCH|DELETE /:themeId
+export const CHALLENGES_API = '/api/challenges'; // GET, POST, /:challengeId (GET, PATCH, DELETE), /reset-link, /me, /join/:code (docs/API.md, "Friends challenges")
 export const OFFER_CLICK_PATH = '/go'; // /:offerId?p=&dest=&country=&from=&to= on the API's host (a card's link)
 export const ACCEPT_INVITE_API = '/api/invites/accept'; // POST { token }
 export const MAP_SETTINGS_API = '/api/users/map-settings'; // GET, PUT { mapSettings }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 // Components
 import FormField from '@/components/ui/FormField';
 import TextInput from '@/components/ui/TextInput';
+import SwitchInput from '@/components/ui/SwitchInput';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
 import GroupTypePicker from './GroupTypePicker';
@@ -27,13 +28,17 @@ function suggestName(groupType, travellers) {
 }
 
 /**
- * The map's set-up: who it's for, the travellers and its name. `onSubmit(form)` saves;
- * `canRename` is false for editors (only the owner names the map and sets its group).
+ * The map's set-up: who it's for, the travellers, its name, and whether it shows the UK
+ * as England, Scotland, Wales and Northern Ireland (off by default; docs/API.md "The UK's
+ * nations"). `onSubmit(form)` saves; `canRename` is false for editors (only the owner names
+ * the map, sets its group and splits the UK). `splitUkNote`: what changing it does to a map
+ * that has places already (the settings panel; a new map has none).
  */
-function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = true }) {
+function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = true, splitUkNote = false }) {
   const [form, setForm] = useState(() => ({
     name: initial.name || '',
     groupType: initial.groupType || 'SOLO',
+    splitUk: Boolean(initial.splitUk),
     travellers: padTravellers(
       (initial.travellers || []).map((t) => ({
         id: t.id,
@@ -119,6 +124,28 @@ function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = tru
             }}
           />
         </FormField>
+      ) : null}
+
+      {canRename ? (
+        <div className='grid gap-1'>
+          <SwitchInput
+            id='map-split-uk'
+            name='splitUk'
+            label='Show the UK as England, Scotland, Wales and Northern Ireland'
+            checked={form.splitUk}
+            onChange={(e) => {
+              setSaved(false);
+              setForm((prev) => ({ ...prev, splitUk: e.target.checked }));
+            }}
+            ariaDescribedBy='map-split-uk-hint'
+          />
+          <p id='map-split-uk-hint' className='text-sm opacity-80'>
+            Each one is then its own country on your map, with its own photos, and counts as one.
+            {splitUkNote
+              ? ' Turning it on puts your UK photos and places with a location in their nation; anything else stays in the United Kingdom for you to place. Turning it off puts them all back in the United Kingdom.'
+              : ''}
+          </p>
+        </div>
       ) : null}
 
       <InlineAlert>{error}</InlineAlert>

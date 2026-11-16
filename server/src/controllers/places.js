@@ -1,6 +1,7 @@
 // Countries and landmarks: public reference data (reads only, not logged)
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
 import { isCountryCode } from '../utils/travelValidation.js';
+import { UK, ukNationAt } from '../utils/ukNations.js';
 import { findAllCountries, findCountryByCode, findLandmarks } from '../domain/places.js';
 import { badRequest, handler } from './helpers/travel.js';
 
@@ -29,7 +30,11 @@ export const getLandmarksHandler = handler(DOMAINS.places, 'Get landmarks', asyn
       return badRequest(req, res, DOMAINS.places, EVENT_MESSAGES.countryNotFound);
     }
   }
-  const landmarks = await findLandmarks({ countryCode: country });
+  // A UK landmark also says which nation it's in, for maps that split the UK (docs/API.md
+  // "The UK's nations")
+  const landmarks = (await findLandmarks({ countryCode: country })).map((l) =>
+    l.countryCode === UK ? { ...l, nation: ukNationAt(l.latitude, l.longitude) } : l
+  );
   cacheForAnHour(res);
   return sendDataResponse(res, 200, { landmarks });
 });

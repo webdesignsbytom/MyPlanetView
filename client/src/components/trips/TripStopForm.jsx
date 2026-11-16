@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 // Hooks
+import useSplitUk from '@/hooks/useSplitUk';
 import useLandmarks from '@/hooks/useLandmarks';
 // Components
 import FormField from '@/components/ui/FormField';
@@ -9,7 +10,7 @@ import GroupedOptionSelect from '@/components/ui/GroupedOptionSelect';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
 // Utils
-import { COUNTRY_OPTION_GROUPS } from '@/utils/map/countries';
+import { countryOptionGroupsFor } from '@/utils/map/countries';
 
 // A stop on a trip: a country (or a special place: Antarctica or a pole, listed after the
 // countries), optionally one of its landmarks or a place name, dates and notes.
@@ -24,6 +25,8 @@ function TripStopForm({ initial = {}, onSubmit, onCancel, submitLabel = 'Add sto
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  // The trip's map's places: the UK's nations instead of it on a map that splits it
+  const splitUk = useSplitUk();
   const { landmarks } = useLandmarks(form.countryCode, { enabled: Boolean(form.countryCode) });
 
   const set = (key) => (e) =>
@@ -59,7 +62,7 @@ function TripStopForm({ initial = {}, onSubmit, onCancel, submitLabel = 'Add sto
           <GroupedOptionSelect
             value={form.countryCode}
             onChange={set('countryCode')}
-            groups={COUNTRY_OPTION_GROUPS}
+            groups={countryOptionGroupsFor(splitUk)}
             placeholder='Choose a country'
             required
           />

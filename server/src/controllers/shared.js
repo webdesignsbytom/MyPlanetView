@@ -7,7 +7,7 @@ import { isUuid } from '../utils/travelValidation.js';
 import { findMapAccessByShareCode } from '../domain/maps.js';
 import { findTripAccessByShareCode } from '../domain/trips.js';
 import { findPhotoAccess, findPhotoDetail } from '../domain/photos.js';
-import { badRequest, handler, notFound } from './helpers/travel.js';
+import { badRequest, forbidden, handler, notFound } from './helpers/travel.js';
 import { photoDetailView } from './helpers/views.js';
 import { mapDetailView } from './maps.js';
 import { mapTripsView, tripView } from './trips.js';
@@ -16,6 +16,7 @@ import { momentPage } from './moments.js';
 import { adsFor } from '../services/offers.js';
 import { buildPassport } from '../services/travel/passport.js';
 import { mapBadges, mapGoals } from '../services/travel/achievements.js';
+import { mapThemesView, themeAlbumPage } from './themes.js';
 
 const D = DOMAINS.sharing;
 
@@ -71,7 +72,9 @@ export const getSharedPhotosHandler = handler(D, 'Open share link photos', async
     shared.kind === 'map'
       ? { mapId: shared.map.id }
       : { mapId: shared.trip.mapId, tripId: shared.trip.id };
-  const result = await photoPage({ query: req.query || {}, ...scope, role: shared.role });
+  // Never the best copies (`best=1`): those are for the map's own editors, on its own routes
+  const result = await photoPage({ query: req.query || {}, ...scope, role: shared.role, allowBest: false });
+  if (result.forbidden) return forbidden(req, res, D);
   if (result.error) return badRequest(req, res, D, result.error);
   return sendDataResponse(res, 200, result);
 });
@@ -130,6 +133,25 @@ export const getSharedBadgesHandler = handler(D, 'Open share link badges', async
   const shared = await sharedMap(req, res);
   if (!shared) return undefined;
   return sendDataResponse(res, 200, await mapBadges(shared.map.id, { award: canEdit(shared.role) }));
+});
+
+// A map's theme albums through its link (docs/API.md, "Photo themes"): as its viewers see
+// them; never how many more an editor may enter (the link is for looking)
+export const getSharedThemesHandler = handler(D, 'Open share link themes', async (req, res) => {
+  const shared = await sharedMap(req, res);
+  if (!shared) return undefined;
+  const view = await mapThemesView(shared.map.id, shared.role);
+  if (view.current) delete view.current.entriesLeft;
+  return sendDataResponse(res, 200, view);
+});
+
+export const getSharedThemeAlbumHandler = handler(D, 'Open share link theme album', async (req, res) => {
+  const shared = await sharedMap(req, res);
+  if (!shared) return undefined;
+  const result = await themeAlbumPage({ mapId: shared.map.id, themeId: req.params.themeId, role: shared.role, query: req.query || {} });
+  if (result.notFound) return notFound(req, res, D, result.notFound);
+  if (result.error) return badRequest(req, res, D, result.error);
+  return sendDataResponse(res, 200, result);
 });
 
 export const getSharedGoalsHandler = handler(D, 'Open share link goals', async (req, res) => {

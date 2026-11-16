@@ -245,4 +245,12 @@ export const COUNTRIES = [
   { code: 'QN', name: "Magnetic North Pole", slug: 'magnetic-north-pole', continent: null, kind: 'SPECIAL', pinX: 1435.1, pinY: -6.1 },
   { code: 'XS', name: "South Pole", slug: 'south-pole', continent: 'ANTARCTICA', kind: 'SPECIAL', pinX: 987.1, pinY: 1020.6 },
   { code: 'QS', name: "Magnetic South Pole", slug: 'magnetic-south-pole', continent: null, kind: 'SPECIAL', pinX: 1717, pinY: 905.2 },
+  // The UK's nations (16 Nov 2026): in place of GB on a map that splits the UK
+  // (TravelMap.splitUk; src/utils/ukNations.js), never otherwise. Codes from ISO 3166's
+  // user-assigned range (XI is HMRC's for Northern Ireland). Pins are Natural Earth's label
+  // points (images/src/tools/uk-nations.mjs); the migration uk_nation_places writes the same rows.
+  { code: 'XE', name: "England", slug: 'england', continent: 'EUROPE', kind: 'NATION', pinX: 980.3, pinY: 165.7 },
+  { code: 'XC', name: "Scotland", slug: 'scotland', continent: 'EUROPE', kind: 'NATION', pinX: 968.2, pinY: 140.2 },
+  { code: 'XW', name: "Wales", slug: 'wales', continent: 'EUROPE', kind: 'NATION', pinX: 969.4, pinY: 168.6 },
+  { code: 'XI', name: "Northern Ireland", slug: 'northern-ireland', continent: 'EUROPE', kind: 'NATION', pinX: 956.3, pinY: 153.1 },
 ];

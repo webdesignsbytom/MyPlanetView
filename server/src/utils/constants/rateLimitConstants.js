@@ -92,12 +92,34 @@ export const MAP_CREATE_DAILY_USER_LIMIT = {
   max: 20,
 };
 
+// Friends challenges started per user per day (keyed by user, as new maps)
+export const CHALLENGE_CREATE_DAILY_USER_LIMIT = {
+  name: 'challenge-create-user-day',
+  windowMs: DAY,
+  max: 10,
+};
+
+// Opening or joining a challenge by its link, per IP: codes would be guessed here
+export const CHALLENGE_LOOKUP_RATE_LIMIT = {
+  name: 'challenge-lookup',
+  windowMs: 15 * MINUTES,
+  max: 30,
+};
+
 // Billing writes per signed-in user (checkout, plan and extra-map changes, the portal):
 // each one calls Stripe
 export const BILLING_RATE_LIMIT = {
   name: 'billing-user',
   windowMs: 15 * MINUTES,
   max: 20,
+};
+
+// "Download my data" per signed-in user: the account, each map, and each page of 500
+// photos (with their signed links) is a request, so a big account makes a hundred or so
+export const DATA_EXPORT_RATE_LIMIT = {
+  name: 'data-export',
+  windowMs: 60 * MINUTES,
+  max: 600,
 };
 
 // better-auth's limiter (window in seconds, not ms), on the database (auth.js).

@@ -11,6 +11,7 @@ import ShareDialog from '@/components/sharing/ShareDialog';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
 // Hooks
+import { SplitUkProvider } from '@/hooks/useSplitUk';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 // Utils
 import { canEditRole } from '@/utils/sharing/shareRoles';
@@ -56,6 +57,9 @@ function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctic
   };
 
   return (
+    // The trip's map's choice to show the UK as its four nations: the mini map, the stop
+    // and photo pickers, the landmark lists (the trip page and trip share links alike)
+    <SplitUkProvider value={Boolean(trip.splitUk)}>
     <div className='grid min-w-0 gap-4 lg:gap-2'>
       <TripHeader
         trip={trip}
@@ -104,6 +108,7 @@ function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctic
         />
       ) : null}
     </div>
+    </SplitUkProvider>
   );
 }
 

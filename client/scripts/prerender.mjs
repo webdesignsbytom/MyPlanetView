@@ -15,6 +15,7 @@ import {
 } from '../src/utils/constants/routes.js';
 // Country guides: the checked ones only, as the build has (none checked: none at all)
 import { publishedCountryRoutes } from './country-pages.mjs';
+import { publishedMonthRoutes } from './month-pages.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = resolve(root, 'dist');
@@ -124,7 +125,8 @@ async function run() {
 
   // Production API, for pages that fetch data while they are captured
   const { VITE_API_URL: apiUrl } = loadEnv('production', root, 'VITE_');
-  const pages = [...PUBLIC_STATIC_ROUTES, ...publishedCountryRoutes()];
+  // Month pages: checked, and filled by the checked guides (scripts/month-pages.mjs)
+  const pages = [...PUBLIC_STATIC_ROUTES, ...publishedCountryRoutes(), ...publishedMonthRoutes()];
   const routes = [...pages, NOT_FOUND_PROBE];
 
   const server = await preview({ root, logLevel: 'silent', preview: { port: PORT, strictPort: true, open: false } });

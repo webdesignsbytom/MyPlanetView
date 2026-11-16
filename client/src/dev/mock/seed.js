@@ -7,6 +7,8 @@ import { seedPhotoBySlug } from './data/seedPhotos';
 import { EXAMPLE_OFFERS } from './data/offers';
 // Fran's First Class map of videos, shared with the test user (seedFirstClass.js)
 import { addFirstClassMap } from './seedFirstClass';
+// The example monthly photo themes (the server's seed/themes.js)
+import { exampleThemeEntries, exampleThemes } from './themes';
 
 // Every mock user's password: the one the server's seed gives its users (CLAUDE.md, "Seed")
 export const MOCK_PASSWORD = '12345678';
@@ -328,6 +330,36 @@ function buildBaseSeed() {
     // leaves them (fixed ids by place in the file), and a few days of click tallies
     offers: exampleOffers(),
     offerClicks: exampleOfferClicks(),
+    // Monthly photo themes (docs/API.md, "Photo themes"): last month's, this month's and ten
+    // more, with two of the test user's photos in this month's and one in last month's
+    themes: exampleThemes(),
+    // A friends challenge (docs/API.md, "Friends challenges") Sam started, with the test user
+    // and Jo in. Fixed dates, so the counts never move: the test user 2 countries (Italy,
+    // France), Jo 1 (Portugal), Sam 0
+    challenges: [
+      {
+        id: 'challenge-two-years',
+        title: 'Two years on the road',
+        measure: 'COUNTRIES',
+        startsOn: '2025-01-01',
+        endsOn: '2026-12-31',
+        target: null,
+        joinCode: 'CHA2YR5RDTRP',
+        createdById: SAM_ID,
+        createdAt: daysAgo(60),
+      },
+    ],
+    challengeEntries: [
+      { challengeId: 'challenge-two-years', userId: SAM_ID, mapId: samMap, joinedAt: daysAgo(60) },
+      { challengeId: 'challenge-two-years', userId: USER_ID, mapId: homeMap, joinedAt: daysAgo(50) },
+      { challengeId: 'challenge-two-years', userId: JO_ID, mapId: joMap, joinedAt: daysAgo(40) },
+    ],
+    themeEntries: exampleThemeEntries(new Date(), {
+      mapId: homeMap,
+      userId: USER_ID,
+      current: ['photo-dam', 'photo-eiffel'],
+      last: ['photo-alhambra'],
+    }),
     mapSettings: null,
     contactForms: [
       { id: 'contact-1', name: 'Priya Shah', email: 'priya@example.test', message: 'Can I share one trip without sharing my whole map?', imageKey: null, createdAt: daysAgo(3) },

@@ -1,12 +1,14 @@
 // What the passport, badges and goals count (docs/API.md, "Passport", "Badges and goals"):
 // one read of a map's facts, then the pure rules in utils/badges.js and utils/goals.js.
 import { COUNTED_VISIT_STATUSES } from '../../utils/travelValidation.js';
-import { badgeProgress } from '../../utils/badges.js';
+import { badgeProgress, travellerBadges } from '../../utils/badges.js';
 import { goalProgress } from '../../utils/goals.js';
-import { countMapPhotos, findMapVisitsForStats } from '../../domain/maps.js';
+import { countMapPhotos, findMapSplitUk, findMapTravellers, findMapVisitsForStats } from '../../domain/maps.js';
 import { findFirstPhotoByCountry, findLandmarksByIds, findStamps } from '../../domain/passport.js';
-import { createBadgeAwards, findBadgeAwards, findGoals, markGoalsAchieved } from '../../domain/achievements.js';
+import { createBadgeAwards, findBadgeAwards, findCompletedTripsForTravellers, findGoals, markGoalsAchieved } from '../../domain/achievements.js';
 import { continentsByCode } from '../../controllers/helpers/countries.js';
+import { countMapThemesEntered } from '../../domain/themes.js';
+import { landmarkPlace } from '../../utils/ukNations.js';
 
 /** continent -> the codes on it (special places included; the rules leave them out). */
 export async function countriesByContinent() {
@@ -21,24 +23,28 @@ export async function countriesByContinent() {
 
 /**
  * A map's facts, as the caller may see them (`includeHidden` for the owner and editors):
- * `{ visited, continentByCode, countriesByContinent, firstPhotoAt, stamps, photos }`.
+ * `{ visited, continentByCode, countriesByContinent, firstPhotoAt, stamps, photos, themes, splitUk }`.
  * `stamps` is `[{ landmarkId, countryCode, isUnesco, firstShotAt, photoId, photoCount, confirmedAt }]`.
+ * `splitUk`: the map shows the UK as its four nations (the rules count them one each).
  */
 export async function loadMapFacts(mapId, { includeHidden }) {
-  const [visits, firstPhotoAt, stampRows, photos, continentByCode, byContinent] = await Promise.all([
+  const [visits, firstPhotoAt, stampRows, photos, continentByCode, byContinent, themes, splitUk] = await Promise.all([
     findMapVisitsForStats(mapId),
     findFirstPhotoByCountry(mapId, { includeHidden }),
     findStamps(mapId, { includeHidden }),
     countMapPhotos(mapId, { includeHidden }),
     continentsByCode(),
     countriesByContinent(),
+    countMapThemesEntered(mapId, { includeHidden }),
+    findMapSplitUk(mapId),
   ]);
   const landmarks = new Map((await findLandmarksByIds(stampRows.map((s) => s.landmarkId))).map((l) => [l.id, l]));
   const stamps = stampRows
     .filter((row) => landmarks.has(row.landmarkId))
     .map((row) => ({
       landmarkId: row.landmarkId,
-      countryCode: landmarks.get(row.landmarkId).countryCode,
+      // On a map that splits the UK, a UK landmark's nation (utils/ukNations.js)
+      countryCode: landmarkPlace(landmarks.get(row.landmarkId), splitUk),
       isUnesco: landmarks.get(row.landmarkId).isUnesco,
       name: landmarks.get(row.landmarkId).name,
       firstShotAt: new Date(row.shotAt),
@@ -54,6 +60,8 @@ export async function loadMapFacts(mapId, { includeHidden }) {
     firstPhotoAt,
     stamps,
     photos,
+    themes,
+    splitUk,
   };
 }
 
@@ -61,10 +69,17 @@ export async function loadMapFacts(mapId, { includeHidden }) {
  * The map's badges. With `award` (the owner or an editor), badges now earned are stored
  * first (counted from everything, hidden photos too) and listed in `newlyEarned`.
  * Below editor, progress counts only what the caller can see; awards are as stored.
- * -> `{ badges: [{ key, group, have, need, earnedAt }], newlyEarned }`
+ * `travellers`: each of the map's people with their travel badges, from the completed trips
+ * they were on (utils/badges.js travellerBadges; worked out, never stored or announced).
+ * -> `{ badges: [{ key, group, have, need, earnedAt }], newlyEarned, travellers: [{ id, name, badges: [{ key, group, have, need, earnedOn }] }] }`
  */
 export async function mapBadges(mapId, { award }) {
-  const [facts, stored] = await Promise.all([loadMapFacts(mapId, { includeHidden: award }), findBadgeAwards(mapId)]);
+  const [facts, stored, people, trips] = await Promise.all([
+    loadMapFacts(mapId, { includeHidden: award }),
+    findBadgeAwards(mapId),
+    findMapTravellers(mapId),
+    findCompletedTripsForTravellers(mapId),
+  ]);
   const progress = badgeProgress(facts);
   const earnedAt = new Map(stored.map((a) => [a.badgeKey, a.earnedAt]));
   let newlyEarned = [];
@@ -86,6 +101,18 @@ export async function mapBadges(mapId, { award }) {
       earnedAt: earnedAt.get(b.key) ?? null,
     })),
     newlyEarned,
+    travellers: people.map((person) => ({
+      id: person.id,
+      name: person.name,
+      badges: travellerBadges({ trips, travellerId: person.id, continentByCode: facts.continentByCode, splitUk: facts.splitUk }).map((b) => ({
+        key: b.key,
+        group: b.group,
+        have: b.have,
+        need: b.need,
+        earnedOn: b.earned ? b.earnedOn : null,
+        earned: b.earned,
+      })),
+    })),
   };
 }
 

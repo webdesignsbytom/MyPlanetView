@@ -1,9 +1,8 @@
 // Mock mode only. Presigned uploads as the bucket treats them: each URL is "signed" for
 // one Content-Type and one byte size (docs/API.md), and a PUT that differs gets a 403,
 // so mock mode catches a client that sends something other than what it declared.
-// A video's file must also have had its location taken out (docs/API.md, "Videos"): the
-// mock bucket looks for the server's location markers in it and refuses it (403) when
-// any is left, so the e2e tests prove the browser cleaned it.
+// Videos go to the mock Stream instead (stream.js), which refuses a file that still holds
+// a location with videoStillHasLocation below, so the e2e tests prove the browser cleaned it.
 import { MOCK_UPLOAD_ORIGIN, storeUpload } from './mockAdapter';
 
 const MB = 1024 * 1024;
@@ -32,7 +31,7 @@ export function presignMockUpload(key, { resource, contentType, bytes, ownerId =
 
 /**
  * The mock bucket's answer to a PUT (a promise): 200 (file kept), or 403 when it isn't
- * what was signed, or is a video still holding a location.
+ * what was signed.
  */
 export async function receiveMockUpload(url, body, contentType) {
   const signed = uploads.get(keyOf(url));
@@ -41,10 +40,6 @@ export async function receiveMockUpload(url, body, contentType) {
       signed,
       sent: { contentType, bytes: body?.size },
     });
-    return 403;
-  }
-  if (String(contentType).startsWith('video/') && (await videoStillHasLocation(body))) {
-    console.warn('[mock upload] 403: this video still holds a location (or has no movie box to check)', { key: keyOf(url) });
     return 403;
   }
   storeUpload(url, body);
@@ -65,7 +60,7 @@ const includesBytes = (bytes, marker) => {
  * small reads (its own few lines, apart from the client's cleaner), then checks the movie
  * box as the server's mp4Info.js does. No movie box, or a broken box: treated as holding one.
  */
-async function videoStillHasLocation(blob) {
+export async function videoStillHasLocation(blob) {
   let at = 0;
   while (at + 8 <= blob.size) {
     const head = new DataView(await blob.slice(at, at + 16).arrayBuffer());

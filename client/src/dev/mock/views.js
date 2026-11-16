@@ -9,6 +9,9 @@ import { getDb, me, session } from './store';
 import { byPosition, byShotAt } from './photoOrder';
 import { pageAfter, parseShuffleSeed, shuffled } from './shuffle';
 import { mapPlanFields, mapSlots, uploadRules } from './plans';
+import { mockPlayback } from './stream';
+import { mockUpload } from './uploads';
+import { photoThemes } from './themes';
 
 export const slugify = (text) =>
   String(text)
@@ -75,10 +78,16 @@ function photoUrls(photo) {
     return { thumb: `${folder}/thumb.webp`, display: `${folder}/display.webp`, original: `${folder}/original.jpg` };
   }
   // A demo video (seed-videos/, which the dev server serves at /seed-videos once the file
-  // has been downloaded): its country's poster stands in for its poster frames
+  // has been downloaded): its country's poster stands in for its thumbnails
   if (photo.image?.kind === 'seedVideo') {
     const poster = posterUrl(photo.image.poster, 'avif');
-    return { thumb: poster, display: poster, original: `/seed-videos/${photo.image.slug}/video.mp4` };
+    return { thumb: poster, display: poster, video: `/seed-videos/${photo.image.slug}/video.mp4` };
+  }
+  // A video uploaded this session, in the mock Stream (./stream.js): its thumbnails and
+  // playback link once "converted"
+  if (photo.image?.kind === 'stream') {
+    const links = mockPlayback(photo.image.uid);
+    return { thumb: links?.thumb ?? null, display: links?.display ?? null, video: links?.videoUrl ?? null };
   }
   // A poster stands in for a demo photo, at every size
   if (photo.image?.kind === 'asset') {
@@ -96,10 +105,11 @@ function photoUrls(photo) {
 export const photoThumbUrl = (photo) => photoUrls(photo).thumb;
 
 // The best copy a photo keeps, as the server's bestCopySize: its original (Business and
-// First Class maps; the demo photos have one, and a video's file is its original), else
-// its print copy (Economy), else none
+// First Class maps; the demo photos have one), else its print copy (Economy), else none.
+// A video has none: Stream keeps no original to hand back.
 function bestCopy(photo) {
-  if (['seed', 'asset', 'seedVideo'].includes(photo.image?.kind) || photo.image?.originalKey) return 'ORIGINAL';
+  if (photo.kind === 'VIDEO') return null;
+  if (['seed', 'asset'].includes(photo.image?.kind) || photo.image?.originalKey) return 'ORIGINAL';
   return photo.image?.printKey ? 'PRINT' : null;
 }
 
@@ -109,12 +119,22 @@ const photoLandmarks = (photo, role) =>
     .map((pl) => ({ pl, lm: landmarkById(pl.landmarkId) }))
     .filter(({ lm }) => lm);
 
-export const canSeePhoto = (photo, role) => atLeast(role, 'VIEWER') && (!photo.hidden || atLeast(role, 'EDITOR'));
-
-// Videos (docs/API.md, "Videos"): every item says its kind and length; a video's file
-// (videoUrl) is in its detail always, and in lists with display=1, for everyone who can
-// see it (its location was taken out before upload)
+// Videos (docs/API.md, "Videos"): Stream converts each one first. A saved video is
+// PROCESSING until its readyAt (the mock's MOCK_CONVERT_MS after saving), then READY, as
+// Stream's notice would make it; the seeded ones have no state, and are ready. A FAILED
+// one stays so.
 const isVideo = (photo) => photo.kind === 'VIDEO';
+export function videoStateOf(photo) {
+  if (!isVideo(photo)) return null;
+  if (photo.videoState === 'PROCESSING' && photo.readyAt && Date.parse(photo.readyAt) <= Date.now()) photo.videoState = 'READY';
+  return photo.videoState || 'READY';
+}
+const videoReady = (photo) => videoStateOf(photo) === 'READY';
+
+// Hidden photos are for editors only, and so are videos that aren't ready (the server's
+// canSeePhoto): for anyone else they don't exist
+export const canSeePhoto = (photo, role) =>
+  atLeast(role, 'VIEWER') && (!photo.hidden || atLeast(role, 'EDITOR')) && (!isVideo(photo) || videoReady(photo) || atLeast(role, 'EDITOR'));
 
 export function photoListItem(photo, role) {
   const item = {
@@ -127,17 +147,53 @@ export function photoListItem(photo, role) {
     tripId: photo.tripId,
     width: photo.width,
     height: photo.height,
-    thumbUrl: photoUrls(photo).thumb,
+    // A video has its pictures only once it's ready (Stream's thumbnails)
+    thumbUrl: isVideo(photo) && !videoReady(photo) ? null : photoUrls(photo).thumb,
     landmarks: photoLandmarks(photo, role).map(({ pl, lm }) => ({ id: lm.id, name: lm.name, confirmed: pl.confirmed })),
   };
-  if (atLeast(role, 'EDITOR')) item.hidden = photo.hidden;
+  if (atLeast(role, 'EDITOR')) {
+    item.hidden = photo.hidden;
+    if (isVideo(photo)) item.videoState = videoStateOf(photo);
+  }
   return item;
+}
+
+// A video's display picture and playback link, when it's ready (else neither)
+const videoLinks = (photo) => {
+  if (!videoReady(photo)) return { displayUrl: null, videoUrl: null };
+  const urls = photoUrls(photo);
+  return { displayUrl: urls.display, videoUrl: urls.video ?? urls.original ?? null };
+};
+
+// The best copy for a download list (`best=1`, docs/API.md "Downloads"), as the server's
+// views.js bestFile: `{ copy, url, contentType, bytes, width, height }`, or null (a video,
+// or a photo with neither). The demo photos' sizes aren't known (`bytes` null), as an old
+// photo's on the server; one uploaded this session knows its blob's.
+function bestFile(photo) {
+  const copy = bestCopy(photo);
+  if (!copy) return null;
+  const urls = photoUrls(photo);
+  const url = copy === 'ORIGINAL' ? urls.original : urls.print;
+  if (!url) return null;
+  const key = copy === 'ORIGINAL' ? photo.image?.originalKey : photo.image?.printKey;
+  const meta = (key && mockUpload(key)) || {};
+  return {
+    copy,
+    url,
+    contentType: meta.contentType ?? (url.endsWith('.avif') ? 'image/avif' : 'image/jpeg'),
+    bytes: meta.bytes ?? null,
+    width: photo.width || null,
+    height: photo.height || null,
+  };
 }
 
 export function photoDetail(photo, role) {
   const urls = photoUrls(photo);
-  const detail = { ...photoListItem(photo, role), displayUrl: urls.display };
-  if (isVideo(photo)) detail.videoUrl = urls.original;
+  // A photo's monthly themes (docs/API.md, "Photo themes"), for everyone who sees it
+  const detail = {
+    ...photoListItem(photo, role),
+    ...(isVideo(photo) ? videoLinks(photo) : { displayUrl: urls.display, themes: photoThemes(getDb(), photo.id) }),
+  };
   if (atLeast(role, 'EDITOR')) {
     const best = bestCopy(photo);
     Object.assign(detail, {
@@ -164,10 +220,22 @@ export function photoDetail(photo, role) {
 // The slideshows' (docs/API.md, "Slideshows"): `order=taken` (oldest taken first, by
 // shotAt), `order=shuffle&seed=N` (the server's shuffle: the same seed, the same order; a
 // cursor no longer in it is a 400) and `display=1` (each photo's displayUrl too).
+// The download lists' `best=1` (docs/API.md "Downloads"): each photo's best copy, for
+// editors only and never through a share link (`allowBest: false`), else a 403; pages of 200.
 const PHOTO_ORDERS = ['gallery', 'taken', 'shuffle'];
 const BAD_FILTER = { error: 'Malformed data.' };
-export function photoPage(photos, role, { country, unplaced, tripId, cursor, limit, order = 'gallery', seed, display }) {
-  const size = Math.min(Math.max(Number(limit) || 30, 1), 60);
+const NO_BEST = { error: 'You do not have permission to do that.', status: 403 };
+const isFlagValue = (value) => value === undefined || ['1', 'true', '0', 'false'].includes(value);
+export function photoPage(
+  photos,
+  role,
+  { country, unplaced, tripId, landmark, cursor, limit, order = 'gallery', seed, display, best },
+  { allowBest = true } = {}
+) {
+  if (!isFlagValue(best)) return BAD_FILTER;
+  const withBest = best === '1' || best === 'true';
+  if (withBest && (!allowBest || !atLeast(role, 'EDITOR'))) return NO_BEST;
+  const size = Math.min(Math.max(Number(limit) || 30, 1), withBest ? 200 : 60);
   const onlyUnplaced = unplaced === '1' || unplaced === 'true';
   if (unplaced !== undefined && !onlyUnplaced && unplaced !== '0' && unplaced !== 'false') return BAD_FILTER;
   if (onlyUnplaced && country !== undefined) return BAD_FILTER;
@@ -176,8 +244,13 @@ export function photoPage(photos, role, { country, unplaced, tripId, cursor, lim
   if (order === 'shuffle' && shuffleSeed === null) return BAD_FILTER;
   const withDisplay = display === '1' || display === 'true';
   if (display !== undefined && !withDisplay && display !== '0' && display !== 'false') return BAD_FILTER;
+  // A landmark's photos (the stamp photo picker): confirmed as it, in any country, oldest
+  // taken first, as the server lists them
+  const atLandmark = landmark
+    ? new Set(getDb().photoLandmarks.filter((pl) => pl.landmarkId === landmark && pl.confirmed).map((pl) => pl.photoId))
+    : null;
   const sort =
-    order === 'taken'
+    order === 'taken' || atLandmark
       ? byShotAt
       : tripId
         ? byPosition('tripPosition')
@@ -188,11 +261,13 @@ export function photoPage(photos, role, { country, unplaced, tripId, cursor, lim
     .filter((p) => canSeePhoto(p, role))
     .filter((p) => (onlyUnplaced ? !p.countryCode : !country || p.countryCode === country))
     .filter((p) => !tripId || p.tripId === tripId)
+    .filter((p) => !atLandmark || atLandmark.has(p.id))
     .sort(sort);
   const item = (p) => {
+    if (withBest) return { ...photoListItem(p, role), best: bestFile(p) };
     if (!withDisplay) return photoListItem(p, role);
-    const urls = photoUrls(p);
-    return { ...photoListItem(p, role), displayUrl: urls.display, ...(isVideo(p) ? { videoUrl: urls.original } : {}) };
+    if (isVideo(p)) return { ...photoListItem(p, role), ...videoLinks(p) };
+    return { ...photoListItem(p, role), displayUrl: photoUrls(p).display };
   };
   if (order === 'shuffle') {
     // Every id in the list, shuffled the same way for the same seed, then this page of it
@@ -214,6 +289,12 @@ const visibleMapPhotos = (map, role) => getDb().photos.filter((p) => p.mapId ===
 // As the server's utils/mapStats.js: countries leave out the special places (Antarctica
 // and the poles), which have their own count; the continents count every visit (Antarctica
 // and the South Pole give the seventh); per person, countries only
+/** The landmarks a map has stamped (a confirmed photo the caller can see), as the server's. */
+export function stampedLandmarkIds(map, role) {
+  const photoIds = new Set(visibleMapPhotos(map, role).map((p) => p.id));
+  return [...new Set(getDb().photoLandmarks.filter((pl) => pl.confirmed && photoIds.has(pl.photoId)).map((pl) => pl.landmarkId))];
+}
+
 export function mapStats(map, role) {
   const db = getDb();
   const counted = new Set(
@@ -223,8 +304,7 @@ export function mapStats(map, role) {
   const specialPlaces = [...counted].filter(isSpecialPlace);
   const continents = new Set([...counted].map((c) => continentByCode.get(c)).filter(Boolean));
   const photos = visibleMapPhotos(map, role);
-  const photoIds = new Set(photos.map((p) => p.id));
-  const landmarks = new Set(db.photoLandmarks.filter((pl) => pl.confirmed && photoIds.has(pl.photoId)).map((pl) => pl.landmarkId));
+  const landmarks = stampedLandmarkIds(map, role);
   const trips = db.trips.filter((t) => t.mapId === map.id);
   // The group trips added from other maps count too; per person, only the map's own trips
   const completed = trips
@@ -236,7 +316,7 @@ export function mapStats(map, role) {
     specialPlaces: specialPlaces.length,
     continents: continents.size,
     photos: photos.length,
-    landmarks: landmarks.size,
+    landmarks: landmarks.length,
     trips: trips.length + linkedTrips(map.id).length,
     byTraveller: travellers.map((t) => {
       const countries = new Set();
@@ -289,6 +369,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
     stats: mapStats(map, role),
     // Everyone's: the moments per country, hidden ones for the owner and editors only
     momentCountsByCountry: momentCountsByCountry(map.id, { includeHidden: atLeast(role, 'EDITOR') }),
+    // The passport's stamped landmarks, to mark their pins (hidden photos' for editors)
+    stampedLandmarkIds: stampedLandmarkIds(map, role),
   };
 }
 

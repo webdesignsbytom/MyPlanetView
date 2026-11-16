@@ -25,12 +25,14 @@ const machineLine = (travellers) =>
 function PassportPhotoPage({ travellers, pageNumber, headingId }) {
   return (
     <PassportLeaf pageNumber={pageNumber} labelledBy={headingId}>
+      {/* Wide screens: the travellers two by two, a page each, clear of the fold; the
+          machine-readable line on the left-hand page */}
       <div className='grid content-start gap-5'>
         <h2 id={headingId} className='font-travel text-3xl uppercase leading-tight text-colour6'>
           Travellers
         </h2>
         {travellers.length ? (
-          <ul className='grid gap-4 md:grid-cols-2'>
+          <ul className='grid gap-4 md:grid-cols-2 md:gap-x-16'>
             {travellers.map((traveller) => (
               <li key={traveller.id} className='grid grid-cols-[5rem_minmax(0,1fr)] items-start gap-4 border-2 border-colour9/50 p-3'>
                 <span
@@ -54,7 +56,7 @@ function PassportPhotoPage({ travellers, pageNumber, headingId }) {
           <p className='text-sm'>No travellers on this map yet.</p>
         )}
         {travellers.length ? (
-          <p aria-hidden='true' className='overflow-hidden font-mono text-xs tracking-widest text-colour9'>
+          <p aria-hidden='true' className='overflow-hidden font-mono text-xs tracking-widest text-colour9 md:w-[calc(50%-2rem)]'>
             {machineLine(travellers)}
           </p>
         ) : null}

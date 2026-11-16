@@ -17,15 +17,19 @@ Last updated: 16 November 2026.
   - the Pricing page and the account's "Your plan" card;
   - group trips' "Add to my map", moments with the timeline and map marks, and the country notes box (server, app, mock and tests);
   - the map data audit: ~300 missing islands and misplaced coasts from Natural Earth, and Andorra, Gibraltar and Kiribati (227 countries);
-  - the country-page framework (no page published yet);
+  - the country-page framework, and the first 20 guides, passed by the user and marked checked on 16 Nov (published with the next build);
   - the passport, with the 1,273 UNESCO World Heritage Sites loaded (1,332 landmarks); slideshows (worldwide, country, trip; by date taken or shuffled); site badges and personal goals; influencer codes (every follower's first month free on the paid plan they choose, as a Stripe trial with a card) and an admin page.
 
   The rules as built are in SITE-DESIGN.md ("Plans and limits") and API.md. Decisions waiting on the user are in [WAITING-ON-YOU.md](WAITING-ON-YOU.md).
-- **Next in Phase 1:**
-  - ads and the Travel Desk: built on 16 Nov with example offers (fictional partners); real offers wait on the partners, imported in the same file format;
-  - videos;
-  - the country pages: framework built (16 Nov), and all of the first 20 drafted (16 Nov), waiting for the user's check (WAITING-ON-YOU.md);
-  - the PWA.
+- **Phase 1, the rest built (16 Nov 2026, evening):**
+  - ads and the Travel Desk, with example offers (fictional partners) until real partners' offers are imported in the same file format;
+  - First Class videos in Cloudflare Stream, end to end: the server, the app (a resumable upload straight to Stream, "Preparing…" until it's converted, HLS playback with hls.js where the browser has no HLS of its own), the mock and the tests;
+  - the installable app, version 1 (online only);
+  - "Download my data" on the account page (docs/API.md "Your data"), which the Pricing page promised;
+  - a Wikimedia Commons photo for 1,331 of the 1,332 landmarks.
+- **Phase 2, started (16 Nov 2026, evening):** "Print or download", version 1 (see "Printing"; docs/API.md "Downloads"): a country's, a trip's or the whole map's best copies as a zip made in the browser, for editors, then the print partner's link, imported like any travel offer (an example printer until one is chosen). Monthly photo themes (see "Monthly photo themes"; docs/API.md "Photo themes"): the admin page, the albums in the badges panel, entering from the photo viewer and the theme badges, with an example year in development until the real one is written. Friends challenges (see "Friends challenges"; docs/API.md "Friends challenges"): start one, send its link, each friend picks the map that counts, a leaderboard of names and counts. Each plan's passport cover (16 Nov): the map owner's plan picks it. The next 20 country guides, drafted (16 Nov): the popular countries that have a poster (United Kingdom, Belgium, Austria, Czechia, Poland, Hungary, Denmark, Norway, Sweden, Finland, Malta, Cyprus, India, Indonesia, South Korea, China, South Africa, Kenya, Brazil, Argentina), waiting for the user's proofreading (WAITING-ON-YOU.md).
+- **Phase 3, started (16 Nov 2026, night):** the twelve "Where to go in <month>" pages, as drafts until the user passes their introductions (see "Country pages"); per-traveller badges (see "Badges and goals"); moments on landmark cards and passport stamps, and as cards in the slideshows (see "Moments"); stamped landmarks gold on the map, and the stamp photo picker finding a landmark's photos placed in another country (see "The passport").
+- **Phase 1, what's left is the user's** (WAITING-ON-YOU.md, LAUNCH-CHECKLIST.md): choosing First Class's extra map styles (the Pricing page still marks them "soon"); joining the travel partners; the influencer outreach; the brand's icons; and trying everything for real (R2, Stream, Stripe, phones).
 
 ## Agreed so far
 
@@ -90,7 +94,7 @@ Affiliate income stays small until the country pages bring visitors, so the memb
 | Videos | No | No | Yes |
 | Ad cards in galleries | Shown to everyone viewing your maps | You never see them; non-paying people viewing your maps see fewer | None, for anyone viewing your maps |
 | Editors on each map (people besides the owner who can add photos) | Up to 10 | Up to 10 | Up to 10 |
-| Extras | None | None | Extra map styles and passport covers; a print discount once printing goes through the site |
+| Extras | The red and gold Economy passport cover | A navy and silver Business Class passport cover | A black and gold First Class passport cover; extra map styles (to choose); a print discount once printing goes through the site |
 | Storage safety net, on each map | Not needed | 50 GB | 200 GB |
 
 **Every tier gets:**
@@ -306,7 +310,7 @@ A **Travel Desk** button on trip pages, the map's country panel and the country 
 
 ## Videos (First Class)
 
-**Decided 16 Nov 2026: Cloudflare Stream.** Every video must play in every browser, so each one is converted by Cloudflare Stream ($5 per 1,000 minutes stored a month, $1 per 1,000 minutes watched; only First Class uploads videos). The browser uploads straight to Stream (resumable), Stream converts it and makes thumbnails, and playback is a signed HLS link. Built as docs/API.md "Videos" describes; the plan below was the first version (straight to R2, no conversion) and its compatibility risk is gone.
+**Decided 16 Nov 2026: Cloudflare Stream.** Every video must play in every browser, so each one is converted by Cloudflare Stream ($5 per 1,000 minutes stored a month, $1 per 1,000 minutes watched; only First Class uploads videos). The browser uploads straight to Stream (resumable), Stream converts it and makes thumbnails, and playback is a signed HLS link. Built as docs/API.md "Videos" describes, server and app (16 Nov); the plan below was the first version (straight to R2, no conversion) and its compatibility risk is gone.
 
 - **Upload:** straight to Cloudflare Stream through a one-off resumable upload link the API signs, like photos go to R2. The server never handles the file.
 - **Limits** (proposed):
@@ -345,6 +349,7 @@ A **Travel Desk** button on trip pages, the map's country panel and the country 
 - **Captions:** place, landmark, date and the photo's caption.
 - **Behind the scenes:** the screen stays awake while playing (the Screen Wake Lock API), and the next two display copies are preloaded.
 - **Reduced motion:** no pan or zoom effects, just simple cuts.
+- **Moments** (16 Nov 2026): in date order, the map's, country's or trip's dated moments come as cards between the photos (see "Moments").
 - **Viewers** can play the slideshows. As everywhere else, they never see hidden photos.
 - **Ads:** where cards show, one comes at the end, never mid-show.
 - **Music:** none in version 1 because of licensing. People can play their own alongside.
@@ -374,6 +379,7 @@ A **Travel Desk** button on trip pages, the map's country panel and the country 
 - **Page turning** is a 3D page turn on desktop and a swipe page by page on phones. With reduced motion, pages fade instead.
 - **Access:** the owner, editors and viewers (read only). The route is `/maps/:mapId/passport`, `noindex`.
 - **No ads** inside the passport.
+- **On the map** (built 16 Nov 2026): stamped landmarks' pins are gold, and show whenever pins do; a stamp's photo can be any photo confirmed as that landmark, wherever it was placed.
 - **Later:** print the passport as a real photobook (see Printing).
 
 ## Moments (life events and notes on the map)
@@ -405,13 +411,13 @@ In the code it's called a **moment**, not an event, because "event" already mean
 
 **Where moments show:**
 - **The country panel:** the country's moments in date order, with "Add a moment" for editors.
-- **Landmarks:** the landmark's card and its passport stamp show the moments that happened there.
+- **Landmarks (built 16 Nov 2026):** the landmark's card in the country panel and its passport stamp show the moments that happened there (title and date; the card lists two, then "and N more", and puts landmarks with moments first).
 - **The map:** a small marker beside the country's badge or at the landmark, which a viewer setting turns on and off, like the country names.
 - **A timeline panel:**
   - the whole map's moments and trips in date order, filtered by traveller: the family's story;
   - it opens from the toolbar, like the other panels.
 - **Share links:** viewers see moments unless they're hidden.
-- **Later:** slideshows show moments as title cards between the photos.
+- **Slideshows (built 16 Nov 2026):** a show in date order puts each dated moment in as a card (its stamp, kind, date, title, place and story) before the first photo taken on or after it, on screen at least 6 seconds; undated moments and shuffled shows have none.
 
 **Who can do what:**
 - **The rules are the same as for photos:**
@@ -421,13 +427,11 @@ In the code it's called a **moment**, not an event, because "event" already mean
 - **Country notes stay, beside moments** (decided 16 Nov). A note is the country's one free-text box: a plan or a reminder ("I want to visit here", "Cherry blossom is in early April"). A moment is something that happened ("We saw a volcano", "We had our baby in Paris").
   - `CountryVisit.notes` is already in the API but no screen shows it: the country panel gets a "Notes" box at the top, editable by editors, read by viewers.
   - A note belongs to the country's visit row, so it can be written for any status, "want to go" included; clearing the status keeps no note (the row goes).
-- **Replies from other people** ("Congratulations!") are a separate, later feature.
-  - They'd come only from people the map is shared with, so they don't break the "not a social network" pitch.
-  - They need notifications, and a way to remove what others wrote on your map.
+- **No replies from other people** (dropped 16 Nov 2026, the user's decision): a map isn't a social network, so nobody else writes on it.
 
 **Privacy.** Moments can be very personal: a birth, a home.
 - In version 1 a place is a landmark or a name, never coordinates, so a shared map can't show where someone lives.
-- Picking a spot on the map is a later option, and viewers would see it rounded.
+- Picking a spot on the map is a later option (Phase 3); viewers would see it rounded to about 1 km (decided 16 Nov 2026), so a shared map never shows a home.
 - Hidden moments, like hidden photos, never reach viewers or share links.
 
 **Tiers:** free on every tier. A moment is a row of text, and its photos already count toward the photo limits.
@@ -436,7 +440,7 @@ In the code it's called a **moment**, not an event, because "event" already mean
 
 **Shared rules:**
 - Progress is counted from the tables that already exist: visits, photos and landmark matches. Only awards and user-made challenges are stored.
-- Badges and goals belong to a map, so a couple or family earns them together. Badges per traveller can come later, from trip data.
+- Badges and goals belong to a map, so a couple or family earns them together. **Per traveller (built 16 Nov 2026, Phase 3):** the travel badges (countries, continents, special places, regions) for each person, counted from the completed trips they were on, each dated by the trip that earned it (its last day, else its first; none for an undated trip). Worked out on each load, never stored or announced; the badges panel shows them behind a "whose badges" switch on maps with two or more travellers.
 - Badges with no time limit count every visited country, as the map's stats do. Anything with dates (friends challenges, dated goals) counts only countries backed by a photo, because a hand-ticked country has no date.
 - **Every tier gets every challenge.** They give people reasons to add photos and to share, which is free promotion.
 
@@ -469,6 +473,14 @@ A fixed list kept in one file of code:
 
 ### Friends challenges
 
+**Built on 16 Nov 2026** (docs/API.md "Friends challenges"), as below, with these decisions:
+- **invites are by link only** for now: the join link (a share-code-style secret) is copied and sent however people like; inviting by email, and the starter removing someone, can come later (a new link stops newcomers);
+- the map that counts can be one you **own or edit** (a couple sharing one map can both count it); someone who loses it counts 0 until they pick another;
+- the measures are new countries (first photo there in the dates), countries with a photo in the dates, landmarks stamped from photos in the dates, and photos entered in the monthly themes in the dates; "photos in this month's theme" became the last;
+- a target makes it a race: whoever's target-th item came first leads;
+- up to two years long, 50 people a challenge, 30 challenges a person; only the starter changes it or deletes it, and the starter can't leave;
+- pages: `/challenges` (yours, and "Start a challenge"), `/challenges/<id>` (the leaderboard, the link, your map), `/challenges/join/<code>` (anyone; sign in to join). "Challenges" is in the nav for signed-in people.
+
 - **Setting one up:** someone picks:
   - a measure: new countries, countries visited, landmarks stamped, or photos in this month's theme;
   - start and end dates;
@@ -482,6 +494,14 @@ A fixed list kept in one file of code:
 - **Sign-in needed:** a share-link viewer can't join.
 
 ### Monthly photo themes
+
+**Built on 16 Nov 2026** (docs/API.md "Photo themes"), as below, with these decisions:
+- a theme runs for its calendar month in UTC, and members see it only once it starts (a surprise each month); past ones stay as albums;
+- **photos only**, never videos, and **at most 20 photos per map** in one theme: an album, not the whole map;
+- photos go in only while the theme runs, and come out at any time; a theme with photos in keeps its month and can't be deleted;
+- on the map: the badges and goals panel's "Monthly theme" card (choose photos, open the album, past albums) and a line in the photo viewer ("Enter it in this month's theme");
+- the theme badges are 3, 6 and 12 themes entered (not a streak: months don't have to run in a row);
+- development has an example year (`prisma/seed/themes.js`: "Doors", "Worst weather", "Street food"…); production's are written on the admin page (`/admin/themes`), which lists the coming year's months with no theme.
 
 - **Setting them:** one theme a month, set in advance on an admin page. Seed a year's worth at launch.
 - **Themes that fit the pitch:** "worst weather", "street food", "doors", "lost", "the view from the window", "the bad selfie".
@@ -516,7 +536,7 @@ A fixed list kept in one file of code:
 **Sources and licences.** The ads make the site commercial, so the licences must allow commercial use.
 - **Practical facts:** from Wikidata (CC0).
 - **The words:** written for the site, drafted with AI, then checked and edited by hand. Don't copy Wikipedia or Wikivoyage text: it's CC BY-SA, so copied text would have to carry attribution and be shared under the same licence.
-- **Climate numbers**, if a table is wanted later, need a source that allows commercial use. NOAA's station data is US-government public domain; Meteostat's data and Open-Meteo's free API are for non-commercial use only. Version 1 describes the weather in words.
+- **No climate tables** (dropped 16 Nov 2026, the user's decision): the guides describe the weather in words, in "When to go".
 - **A "last checked" date** goes on each page. Festival dates move from year to year (lunar calendars), so write "usually in March".
 
 **SEO** (the playbook applies):
@@ -525,16 +545,20 @@ A fixed list kept in one file of code:
 - **Every page must be checked by hand.** Google penalises mass-produced pages that add little ("scaled content abuse"). Each page also needs something only this site has: the poster, the month strip, the landmark stamps.
 - **Build time:** pre-rendering ~200 more pages with Playwright adds build time, so measure it after the first batch.
 
-**Later:** twelve "Where to go in <month>" pages, built from the month strips.
+**"Where to go in <month>" (built 16 Nov 2026, Phase 3; drafts until the user passes them):** twelve pages, `/where-to-go/<month>`, each with its own hand-written introduction (`client/src/content/months/<month>.json`, checked like a guide) and, from the checked guides, the countries at their best that month (poster, the season's line, its festivals), those also good, and the regions at their best where the rest of their country isn't, each linking to its guide. A month is built only once its file is checked **and** the checked guides give it at least three countries (playbook C1, C10: no thin list pages). No index page: the months link each other, the country index has a "Month by month" row, and each guide links its best months' pages, all only to published months. The sitemap's date is the newest of the month's check and its guides'.
 
 ## Printing
 
-**Version 1: affiliate link.**
-1. A **Print** button on a photo, a selection, an album or a trip opens a dialog.
-2. The dialog downloads the chosen photos as JPEGs in a zip made in the browser from signed URLs, so Vercel does no work:
+**Version 1: affiliate link.** Built on 16 Nov 2026 (docs/API.md "Downloads"), but for picking single photos:
+1. A **Print or download** button on a country's panel, a trip's Photos card and Settings, "This map" (the whole map, a folder per country) opens a dialog. Editors only (verified or not: it's a read); never through a share link. Not on a single photo: the photo viewer already downloads its best copy.
+2. The dialog downloads the photos as a zip made in the browser from signed URLs, so Vercel does no work:
    - Economy photos come from their print copy (good up to about A4);
-   - Business and First Class photos come from the original (always JPEG, PNG or WebP: uploads take no HEIC).
-3. It then links to the print partner with the affiliate code. The user uploads and orders there.
+   - Business and First Class photos come from the original (always JPEG, PNG or WebP: uploads take no HEIC). The dialog warns that originals still hold the location.
+   - Videos aren't included (Stream keeps no original; Stream can make an MP4 download per video, at a cost, if people ask).
+   - Chrome and Edge on a computer write the zip to disk as it's made, at any size; other browsers hold it in memory, so it comes in parts of up to 500 MB.
+3. It then links to the print partner with the affiliate code. The user uploads and orders there. The partner is a travel offer of kind `PRINTS` in placement `PRINT`, imported like the others: choosing one needs no code. Until then development shows a fictional "Example Prints", and production shows a line saying any photo printer takes the files.
+
+**Later:** picking photos for a print order from a gallery (a selection), rather than a whole country or trip.
 
 **Candidate partners** (check their current affiliate terms): UK photo printers such as Photobox, CEWE and Snapfish.
 
@@ -546,10 +570,12 @@ A fixed list kept in one file of code:
 
 ## Installable app (PWA)
 
+**Version 1 built on 16 Nov 2026**, with a hand-written service worker instead of `vite-plugin-pwa` (no new dependency, and it does exactly what's below; CLAUDE.md "Installable app" has the details). Waiting: the real icons (192, 512 and a maskable one) with the brand, and a try on real phones.
+
 The site becomes installable: "Install app" in Chrome and Edge on Android and desktop, Add to Home Screen on iPhone. It opens from its own icon in a window with no browser bar. There's no app store, and it doesn't need Next.js. A PWA is a web manifest, a service worker and HTTPS, which the Vite site can have as it is.
 
 **Already there:**
-- `manifest.json`, built from `constants.js` in `vite.config.js`, with `display: standalone` and 192 and 512 px icons;
+- `manifest.json`, built from `constants.js` in `vite.config.js`, with `display: standalone`, 192 and 512 px icons and a maskable 512 (the brand's, from `images/src/tools/brand-assets.mjs`);
 - the `apple-touch-icon`;
 - `worker-src 'self'` in the CSP.
 
@@ -575,11 +601,10 @@ The site becomes installable: "Install app" in Chrome and Edge on Android and de
   They wait on the brand assets (phase 0).
 - **Logging in on iPhone:** while the API is on another site (Vercel), Safari treats its login cookie as third-party, whether the site is installed or not. Moving the API to `api.<domain>`, already planned, fixes both.
 
-**Later: the last map offline.**
-- The map last opened (countries, stats, trips) can be read offline, for example on a plane.
-- Photos stay online only unless that's decided otherwise, as they're private.
-- Editing offline would need a queue that syncs once back online.
-- Build it only if people ask for it.
+**Offline: the site's own pages, never its data** (decided 16 Nov 2026, the user's decision; built the same day).
+- The app needs the internet for everything that's people's own: maps, photos, trips, moments, the account. Offline, those pages say "You're offline". No map is kept on the device, so the old idea of reading the last map offline is dropped.
+- What's written into the site is kept: the installed app (opened from its icon) keeps every public page (home, about, FAQ, pricing, contact, legal, the published country guides and month pages) and all the site's code, styles and fonts (about 1 MB a deploy), so those pages open offline even if they were never visited. Images are kept once they've been shown; posters and photos come from other hosts and need a connection.
+- In a browser tab nothing more is kept than before (the app shell, the files it loads, and the pages visited), so ordinary visitors don't download the whole site.
 
 ## Getting the word out
 
@@ -649,18 +674,18 @@ When each part is built, update these sections there:
 | 0. Finish the port | SITE-DESIGN.md's open items: run everything for real, the domain, the brand assets | Nothing above works until the base does |
 | 1. Launch | <ul><li>the pitch copy and a Pricing page</li><li>the three tiers with Stripe, the print copy and complimentary memberships, extra maps, and the 10-editor cap</li><li>First Class videos</li><li>ad cards and the Travel Desk</li><li>slideshows</li><li>the passport, with the landmark expansion</li><li>site badges and personal goals</li><li>the first ~20 country pages</li><li>influencer outreach</li><li>the installable app (PWA), online only</li><li>moments, with the timeline panel</li></ul> | <ul><li>The tier rules must exist from day one.</li><li>Videos are First Class's main draw.</li><li>Memberships, cards and the Travel Desk are the income.</li><li>The passport and slideshows are the headline features.</li><li>Country pages start the slow SEO clock and help affiliate applications.</li><li>The PWA is a small job once the brand icons exist, and makes the map feel like an app on a phone.</li><li>Moments cost no storage and make the map a family's story, not only a list of countries.</li></ul> |
 | 2. After launch | <ul><li>print link and download</li><li>monthly themes</li><li>friends challenges</li><li>more country pages</li></ul> | Each builds on the launch features; friends challenges need people already using the site |
-| 3. Later | <ul><li>"Where to go in <month>" pages</li><li>ordering prints and photobooks through the site, with the First Class discount</li><li>climate tables</li><li>per-traveller badges</li><li>video transcoding if needed</li><li>Infrequent Access storage for originals</li><li>the last map offline (PWA)</li><li>replies to moments from the people a map is shared with</li><li>moments on a spot picked on the map</li></ul> | More work, more risk, or waiting on demand |
+| 3. Later | <ul><li>"Where to go in <month>" pages</li><li>ordering prints and photobooks through the site, with the First Class discount (print companies to be approached once the site is finished)</li><li>per-traveller badges</li><li>video transcoding if needed</li><li>Infrequent Access storage for originals</li><li>moments on a spot picked on the map, rounded to about 1 km for viewers</li></ul> | More work, more risk, or waiting on demand |
 
 ## Open decisions
 
-Proposed values, to confirm or change (all in the tiers constants file):
+**Decided (16 Nov):** the proposed values stay, as built (all in the tiers constants file):
 - **Photos per country:** 30, 200 and 1,000.
 - **Ad rates:** a card every 12 photos on Economy maps, and every 24 for non-paying viewers of Business maps.
 - **Video limits:** 3 minutes, 500 MB, 20 per country.
 - **Storage safety nets:** 50 GB and 200 GB.
 
 Still to decide (each is also in [WAITING-ON-YOU.md](WAITING-ON-YOU.md), with what the code does until then):
-- **First Class extras:** which extra map styles and passport covers.
+- ~~**First Class extras:**~~ **Passport covers decided (16 Nov):** a cover per plan, the map owner's: Economy burgundy and gold, Business navy and silver, First Class black leather and gold with a double frame (built; restyled the same day as a real passport: leather grain, foil stamping, a raised crest, the e-passport mark). **Still to choose:** First Class's extra map styles (the Pricing page marks them "soon").
 - ~~**Influencer terms:**~~ **Decided (16 Nov):** creators get two years free; their followers get their first month free on the paid plan they choose, with a card up front. What's asked of a creator in return is agreed (16 Nov): [documents/CREATOR-AGREEMENT.md](../documents/CREATOR-AGREEMENT.md).
 - **Partners:** which affiliate partners and which print partner.
 - ~~**First country pages:**~~ **Decided (16 Nov):** Spain, France, Italy, Portugal, Greece, Turkey, Ireland, the Netherlands, Germany, Croatia, Iceland, the USA, Canada, Mexico, Morocco, Egypt, Japan, Thailand, Australia and New Zealand.

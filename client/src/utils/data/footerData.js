@@ -7,6 +7,7 @@ import {
   HOME_PAGE_URL,
   LOGIN_PAGE_URL,
   MAP_PAGE_URL,
+  CHALLENGES_PAGE_URL,
   PRICING_PAGE_URL,
   PRIVACY_POLICIES_PAGE_URL,
   SIGN_UP_PAGE_URL,
@@ -42,6 +43,7 @@ export const FooterLinkGroups = [
     ],
     signedInLinks: [
       { name: 'My map', route: MAP_PAGE_URL },
+      { name: 'Challenges', route: CHALLENGES_PAGE_URL },
       { name: 'Account', route: ACCOUNT_PAGE_URL },
     ],
   },

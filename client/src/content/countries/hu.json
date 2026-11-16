@@ -1,0 +1,197 @@
+{
+  "code": "HU",
+  "slug": "hungary",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Szia", "Magyarország"],
+  "summary": "Thermal baths, a grand capital on the Danube, Lake Balaton and wine from volcanic hills.",
+  "overview": [
+    "Most visits to Hungary start in Budapest, where hilly Buda, with its castle district, faces flat, busy Pest across the Danube. The city sits on hot springs, and its bathhouses range from Ottoman-era domes to the grand yellow Széchenyi, with outdoor pools that steam in winter. Beyond the capital are Lake Balaton, the largest lake in Central Europe, the wine towns of Eger and Tokaj, and the wide grasslands of the Great Plain.",
+    "Hungary uses the forint, not the euro, and cards are taken almost everywhere. The language is unlike any of its neighbours', so expect signs you can't guess at; English is common among younger people in Budapest, less so in the countryside. The country is small, and trains and buses from Budapest reach most places in two or three hours."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "March can still be cold, but by May the parks are green, café terraces are out and the days are warm without summer's heat. A good time for Budapest and the countryside alike."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and sunny, often above 30°C in Budapest in July and August, with the odd thunderstorm. The season for Lake Balaton, open-air baths, festivals and evenings on the river, and the busiest and priciest time in the capital."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is warm and settled, and the grape harvest brings wine festivals. October turns cooler, with autumn colours in the hills; November is grey, damp and quiet."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, around freezing and sometimes well below, with occasional snow. Christmas markets fill Budapest's squares in December, and the outdoor thermal pools are at their most atmospheric."
+      }
+    ],
+    "weather": "Continental: hot summers, cold winters and rain spread fairly evenly through the year. Summer days in Budapest and on the Great Plain often pass 30°C, while winter nights regularly drop below freezing. Spring and autumn are short but pleasant.",
+    "festivals": [
+      {
+        "name": "Busójárás",
+        "place": "Mohács, in the south",
+        "when": "Usually in February or early March, in the days before Lent",
+        "months": [2, 3],
+        "text": "Men in carved wooden masks and sheepskins parade through the town, making as much noise as they can to chase winter away, and a bonfire ends the carnival."
+      },
+      {
+        "name": "National Day",
+        "place": "Across Hungary, above all Budapest",
+        "when": "15 March",
+        "months": [3],
+        "text": "Marks the revolution of 1848 against Habsburg rule. People wear red, white and green ribbons, and there are speeches and events at the National Museum."
+      },
+      {
+        "name": "Easter Monday",
+        "place": "Across Hungary, mostly in villages",
+        "when": "The day after Easter Sunday, in March or April",
+        "months": [3, 4],
+        "text": "An old custom has men and boys sprinkling women and girls with perfume or water, in return for painted eggs or a drink. A public holiday."
+      },
+      {
+        "name": "St Stephen's Day",
+        "place": "Across Hungary, above all Budapest",
+        "when": "20 August",
+        "months": [8],
+        "text": "The national holiday honouring Hungary's first king, ending with a huge fireworks display over the Danube in Budapest. The riverbanks fill hours ahead."
+      },
+      {
+        "name": "Budapest Wine Festival",
+        "place": "Buda Castle, Budapest",
+        "when": "Usually in September",
+        "months": [9],
+        "text": "Wineries from every region pour their wines in the castle courtyards, with views over the river."
+      },
+      {
+        "name": "Christmas markets",
+        "place": "Budapest, above all Vörösmarty Square and St Stephen's Basilica",
+        "when": "Usually from mid-November until around New Year",
+        "months": [11, 12],
+        "text": "Wooden stalls selling crafts, mulled wine, chimney cakes and hot food, with a light show on the front of the Basilica."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Budapest",
+        "text": "Good all year: the baths, cafés and museums work in any weather. Summer is hot and busy, and winter brings Christmas markets and steaming outdoor pools. The ruin bars of the old Jewish Quarter, in the seventh district, are the centre of the city's nightlife."
+      },
+      {
+        "name": "Lake Balaton",
+        "text": "The country's summer holiday spot. The shallow water warms quickly, so the season runs from June to August; many hotels and restaurants close outside it. The south shore has shallow, sandy beaches for families, the north shore hills, vineyards and the Tihany peninsula."
+      },
+      {
+        "name": "Eger, Tokaj and the north",
+        "text": "Hilly wine country with castles, baroque towns and wine cellars cut into the rock. Best from May to October, above all at harvest time in September."
+      },
+      {
+        "name": "The Great Plain",
+        "text": "Flat grassland in the east and south, with the Hortobágy National Park and its horsemen, and the university cities of Debrecen and Szeged. Summers here are hot and sunny."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you meet someone, and between friends often a kiss on each cheek. Say \"jó napot\" (good day) when you walk into a shop or café. Friends and younger people say \"szia\" for both hello and goodbye.",
+    "etiquette": [
+      "Hungarian names put the family name first: the composer Franz Liszt is Liszt Ferenc at home.",
+      "Many Hungarians still won't clink beer glasses, a custom linked to the defeat of the 1848–49 revolution. Wine and pálinka glasses are clinked as usual, with eye contact.",
+      "Buy a ticket before you board Budapest's metro, trams and buses, and validate paper tickets in the machines: inspectors are frequent.",
+      "When a card machine offers to charge you in your own currency, choose forints: the rate it offers is usually worse. Avoid exchange booths on tourist streets.",
+      "Take your shoes off when you go into someone's home."
+    ],
+    "tipping": "Expected where there's table service: 10 to 15%. Check the bill first, as many Budapest restaurants already add a service charge (szervízdíj). Rather than leaving money on the table, tell the waiter the total you want to pay as you hand over cash or a card. Round up taxi fares.",
+    "dress": "Casual is fine. Cover shoulders and knees in churches such as St Stephen's Basilica and Matthias Church. Bring a swimsuit and flip-flops for the baths, and comfortable shoes for Buda's hills and cobbles.",
+    "food": [
+      {
+        "name": "Gulyás",
+        "text": "In Hungary, goulash is a soup of beef, paprika and potatoes, first cooked in a pot over a fire by cattle herders. The thick stew much of the world calls goulash is closer to pörkölt."
+      },
+      {
+        "name": "Paprikás csirke",
+        "text": "Chicken paprikash: chicken in a creamy paprika sauce, served with small, soft egg dumplings (nokedli)."
+      },
+      {
+        "name": "Halászlé",
+        "text": "Fisherman's soup, a fiery red broth of river fish and hot paprika, best in Szeged and Baja and eaten by many families on Christmas Eve."
+      },
+      {
+        "name": "Lángos",
+        "text": "Deep-fried flatbread rubbed with garlic and topped with sour cream and grated cheese, from market stalls and the beaches of Balaton."
+      },
+      {
+        "name": "Kürtőskalács",
+        "text": "Chimney cake: sweet dough wound round a spit, baked over embers and rolled in sugar, cinnamon or nuts."
+      },
+      {
+        "name": "Tokaji and pálinka",
+        "text": "Tokaji aszú is a golden sweet wine made from grapes shrivelled by noble rot; pálinka is a strong fruit brandy, often of apricot or plum, offered as a welcome."
+      }
+    ],
+    "phrases": {
+      "language": "Hungarian",
+      "intro": "Hungarian is unrelated to its neighbours' languages. The stress always falls on the first syllable; s sounds like \"sh\", sz like \"s\", and cs like \"ch\".",
+      "items": [
+        { "phrase": "Szia", "say": "SEE-yah", "meaning": "Hi; bye (informal)" },
+        { "phrase": "Jó napot", "say": "YOH nah-poht", "meaning": "Good day" },
+        { "phrase": "Köszönöm", "say": "KUH-suh-num", "meaning": "Thank you" },
+        { "phrase": "Kérem", "say": "KAY-rem", "meaning": "Please; you're welcome" },
+        { "phrase": "Igen / Nem", "say": "EE-gen / nem", "meaning": "Yes / No" },
+        { "phrase": "Elnézést", "say": "EL-nay-zaysht", "meaning": "Excuse me; sorry" },
+        { "phrase": "Beszél angolul?", "say": "BES-ayl ON-goh-lool", "meaning": "Do you speak English?" },
+        { "phrase": "Mennyibe kerül?", "say": "MEN-nyee-beh KEH-rool", "meaning": "How much is it?" },
+        { "phrase": "Egészségedre!", "say": "EG-ays-shay-ged-reh", "meaning": "Cheers! (\"To your health\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q28",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Hungarian forint (Ft, HUF). Cards are taken almost everywhere; some tourist places take euros, at a poor rate.",
+        "sources": [{ "property": "P38", "values": ["Q47190"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Hungarian; English is widely spoken in Budapest, less so in the countryside",
+        "sources": [{ "property": "P37", "values": ["Q9067"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q5412101"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance. The national numbers work too: 104 for an ambulance, 105 for fire and 107 for police.",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648855", "Q25648856", "Q27887993"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+36",
+        "sources": [{ "property": "P474", "values": ["+36"] }]
+      }
+    ]
+  }
+}

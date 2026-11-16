@@ -1,0 +1,201 @@
+{
+  "code": "AT",
+  "slug": "austria",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Grüß Gott", "Österreich"],
+  "summary": "Imperial Vienna, Mozart's Salzburg, and Alpine valleys for walking in summer and skiing in winter.",
+  "overview": [
+    "Austria is mostly mountains: the Alps cover around two-thirds of the country, with ski resorts, glaciers and green valleys for summer walking. Vienna, once the capital of the Habsburg empire, has palaces, great art museums, opera and its famous coffee houses. Salzburg, Mozart's birthplace, has a baroque old town under a hilltop fortress, and the lakes of the Salzkammergut east of it draw crowds to their lakeside villages, Hallstatt above all.",
+    "Trains are fast, frequent and comfortable, and reach most valleys, with buses for the rest. Motorways and expressways need a vignette, a toll sticker or a digital one linked to your number plate, before you drive on them. Shops close on Sundays, cash is still common in cafés and mountain huts, and dinner starts earlier than in southern Europe."
+  ],
+  "whenToGo": {
+    "stripLabel": "Vienna, Salzburg and the lakes. The Alps have two seasons, summer and winter, and a strip of their own below.",
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "A slow start: most ski resorts close after Easter, the valleys turn green in April and May, and the high paths stay under snow into June. A good time for Vienna and Salzburg, before the summer crowds."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm in the valleys and cities, often 25–30°C in Vienna, with afternoon thunderstorms in the mountains. The season for hiking, mountain huts, swimming in the lakes and the Salzburg Festival. Vienna's State Opera takes its summer break in July and August."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September and early October are often settled and clear, ideal for walking, with the grape harvest in the vineyards around Vienna and in the Wachau. Many Alpine lifts and huts close during October, and November is grey and quiet until the Christmas markets open."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, around 0–5°C by day in Vienna and much colder in the mountains. The ski season usually runs from early or mid December to Easter, longer on the glaciers. Christmas markets fill the towns in Advent, and Vienna's ball season peaks in January and February."
+      }
+    ],
+    "weather": "Warm summers and cold winters. Vienna and the east are the driest and warmest, with hot spells in summer; the Alps in the west are wetter and much colder, with snow on the heights from late autumn to spring and storms on summer afternoons. The higher you go, the cooler it gets, so take a warm layer up the mountains even in August.",
+    "festivals": [
+      {
+        "name": "New Year's Concert",
+        "place": "Vienna, in the Musikverein",
+        "when": "1 January",
+        "months": [1],
+        "text": "The Vienna Philharmonic's waltzes and polkas by the Strauss family, ending with the \"Radetzky March\". Tickets are drawn by lottery, with entries usually taken early in the year before, so most people watch it on television."
+      },
+      {
+        "name": "Ball season",
+        "place": "Vienna",
+        "when": "Mostly January and February, until Shrove Tuesday",
+        "months": [1, 2],
+        "text": "Hundreds of balls, from the Opera Ball to those of the coffee-house owners, doctors and confectioners. Many sell tickets to anyone; evening dress is required, and a few waltz lessons beforehand help."
+      },
+      {
+        "name": "Salzburg Festival",
+        "place": "Salzburg",
+        "when": "Usually from late July to the end of August",
+        "months": [7, 8],
+        "text": "Opera, concerts and drama, with the play \"Jedermann\" (Everyman) staged in front of the cathedral. Tickets and rooms sell out early."
+      },
+      {
+        "name": "Almabtrieb",
+        "place": "Alpine villages, above all in Tyrol and Salzburg",
+        "when": "Usually from mid-September to early October",
+        "months": [9, 10],
+        "text": "Cows come down from their summer pastures wearing flower headdresses and big bells, followed by a village festival with music, food and drink."
+      },
+      {
+        "name": "Krampus runs",
+        "place": "Towns and villages across the Alps",
+        "when": "Usually from late November to early December, above all around 5 December",
+        "months": [11, 12],
+        "text": "Krampus, the horned, shaggy companion of St Nicholas, charges through the streets in carved wooden masks and clanging bells. Loud and thrilling, and too scary for small children."
+      },
+      {
+        "name": "Christmas markets",
+        "place": "Vienna, Salzburg, Innsbruck and towns across Austria",
+        "when": "Usually from mid or late November until Christmas",
+        "months": [11, 12],
+        "text": "Stalls of decorations and crafts, roasted chestnuts, and hot punch or mulled wine in a mug you pay a deposit on. Vienna has a dozen or more, the biggest in front of the city hall."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Vienna",
+        "text": "Palaces, museums, music and coffee houses: a city for any season, at its best in spring and autumn. Summer brings open-air films and concerts in front of the city hall; winter, the balls and the Christmas markets."
+      },
+      {
+        "name": "Salzburg and the Salzkammergut",
+        "text": "Mozart's city and the lake district to the east: Hallstatt, the Wolfgangsee and St. Gilgen. Hallstatt is overrun by day-trippers in summer, so arrive early or stay overnight. Best from May to October."
+      },
+      {
+        "name": "The Alps: Tyrol, Vorarlberg and the high valleys",
+        "months": ["good", "good", "good", "good", "good", "good", "best", "best", "best", "good", "avoid", "good"],
+        "text": "Innsbruck, Kitzbühel, St. Anton, the Ötztal and the Zillertal. Skiing from December to Easter, and hiking from late June to September, when the huts and lifts are open. Between the seasons, in May and above all November, many hotels, lifts and huts close, and the weather is at its dullest."
+      },
+      {
+        "name": "The Danube and the Wachau",
+        "text": "Vineyards, apricot orchards and abbeys along the river west of Vienna, with Melk Abbey at one end. Best by bike or riverboat from April to October; the apricot trees blossom in early spring and the wine taverns open at harvest time."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake with eye contact, when you arrive and when you leave. \"Grüß Gott\" is the everyday hello, and \"Servus\" a friendly one that also means goodbye. Use surnames, with any academic title (Frau Doktor, Herr Magister), until you're invited to use first names: titles matter more here than in most countries.",
+    "etiquette": [
+      "Almost all shops close on Sundays and public holidays, apart from those at main stations and airports.",
+      "In a traditional coffee house (Kaffeehaus), one coffee buys you the table for as long as you like, with newspapers to read, and it comes with a glass of water.",
+      "Greet people you pass on mountain paths, and stay on marked trails: the weather on the heights turns quickly, so check the forecast before you set off.",
+      "Austrians share a language with Germany, not an identity: don't call them German.",
+      "Cash is still common: some cafés, mountain huts and small shops don't take cards.",
+      "Wait for the green man at crossings, and keep out of the cycle lanes."
+    ],
+    "tipping": "Round up the bill, or add 5 to 10% for good service in restaurants and cafés. Say the total you'd like to pay as you hand over the money, rather than leaving coins on the table; \"stimmt so\" means keep the change. Round up taxi fares too.",
+    "dress": "Casual and neat. People dress up more than in most capitals for the opera and concerts, and the balls require evening dress. For mountain walks, wear proper boots and bring a waterproof and a warm layer, even in summer. Saunas are nude and often mixed.",
+    "food": [
+      {
+        "name": "Wiener Schnitzel",
+        "text": "A thin slice of veal, breaded and fried until the coating puffs up, with lemon and potato salad. Made with pork, it should be called \"Schnitzel Wiener Art\"."
+      },
+      {
+        "name": "Tafelspitz",
+        "text": "Beef simmered in broth and served with its soup, apple and horseradish sauce and chive sauce: a Viennese classic."
+      },
+      {
+        "name": "Coffee and cake",
+        "text": "Sachertorte (chocolate cake with a layer of apricot jam), apple strudel and dozens more, with a Melange, the Viennese answer to a cappuccino, in a coffee house or a cake shop (Konditorei)."
+      },
+      {
+        "name": "Kaiserschmarrn",
+        "text": "A thick, fluffy pancake torn into pieces, dusted with icing sugar and served with plum compote; a favourite in mountain huts."
+      },
+      {
+        "name": "Käsespätzle",
+        "text": "Small soft egg noodles baked with strong mountain cheese and topped with crisp onions, the dish of the ski lodges in Tyrol and Vorarlberg."
+      },
+      {
+        "name": "Heuriger wine taverns",
+        "text": "Wine growers' taverns on the edges of Vienna and in the wine villages, serving their own young wine with a cold buffet. A bunch of pine branches over the door means it's open."
+      }
+    ],
+    "phrases": {
+      "language": "German",
+      "intro": "English is widely spoken, especially in cities and ski resorts, but a greeting in German is always welcome. Austrian German has words of its own: Jänner for January, Paradeiser for tomatoes and Erdäpfel for potatoes.",
+      "items": [
+        { "phrase": "Grüß Gott", "say": "groos GOT", "meaning": "Hello (the everyday greeting)" },
+        { "phrase": "Servus", "say": "SAIR-voos", "meaning": "Hi; bye (friendly)" },
+        { "phrase": "Bitte", "say": "BIT-tuh", "meaning": "Please; you're welcome" },
+        { "phrase": "Danke schön", "say": "DAHN-kuh shern", "meaning": "Thank you very much" },
+        { "phrase": "Entschuldigung", "say": "ent-SHOOL-dee-goong", "meaning": "Excuse me; sorry" },
+        { "phrase": "Sprechen Sie Englisch?", "say": "SHPREH-khen zee ENG-lish", "meaning": "Do you speak English?" },
+        { "phrase": "Zahlen, bitte", "say": "TSAH-len BIT-tuh", "meaning": "The bill, please" },
+        { "phrase": "Prost!", "say": "prohst", "meaning": "Cheers!" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q40",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Cards are widely taken, but carry some cash for cafés, mountain huts and small shops.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "German. In parts of Carinthia and Burgenland, Slovene, Croatian or Hungarian are official alongside it, and some villages have bilingual signs.",
+        "sources": [{ "property": "P37", "values": ["Q188"] }],
+        "note": "Wikidata lists German and Austrian Sign Language (recognised in the constitution since 2005), which the page leaves out. The regional languages aren't in Wikidata's list; they're official under the minority rights of the 1955 State Treaty and the laws on ethnic groups."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q28148658"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for any emergency; 144 for an ambulance, 133 for police, 122 for fire and 140 for mountain rescue",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648814", "Q25648813", "Q25648812", "Q25648888"] }],
+        "note": "Wikidata also lists 120 and 123, the breakdown services of the motoring clubs ÖAMTC and ARBÖ, which the page leaves out."
+      },
+      {
+        "key": "callingCode",
+        "text": "+43",
+        "sources": [{ "property": "P474", "values": ["+43"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "code": "CN",
+  "slug": "china",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ni hao", "Zhongguo"],
+  "summary": "The Great Wall, imperial palaces, karst peaks and some of the world's best food.",
+  "overview": [
+    "China is a continent's worth of travel in one country. Beijing has the Forbidden City, with the Great Wall within a day trip; Xi'an has the Terracotta Army; Shanghai sets the grand old banks of the Bund against a skyline of towers; and the south and south-west hold some of the finest scenery anywhere, from the limestone peaks of Guilin and Yangshuo to the giant pandas of Chengdu and the old towns of Yunnan.",
+    "High-speed trains link most big cities, fast, punctual and comfortable, and every ticket is booked with your passport. Daily life runs through phone apps, for paying, maps, taxis and messages, and many foreign websites and apps are blocked, so set up a payment app and download what you need before you go."
+  ],
+  "whenToGo": {
+    "stripLabel": "Beijing, Xi'an and Shanghai taken together, the route most first visits follow. The south, the south-west and the high west differ a lot, and each has a strip of its own below.",
+    "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warming quickly after winter, with blossom in March and April. Beijing can be windy, with dust blown in from the north in some years. The May Day holiday, usually 1–5 May, fills trains, hotels and famous sights."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and humid in the east and the south, often above 35°C, with the \"plum rains\" in the Yangtze valley from about mid-June to mid-July and typhoons possible on the coast from July to September. School holidays fill the big sights. The best season for Tibet, the high plateaus and the far north."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Clear skies and comfortable days almost everywhere, the best time of year for most of the country. The National Day holiday, from 1 October for about a week, is the busiest travel week of the year: plan around it if you can."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and dry in the north, with Beijing below freezing at night and Harbin far colder; damp and chilly in the centre, where many buildings have no central heating; mild in the far south. Quiet and cheap, apart from the weeks around Chinese New Year."
+      }
+    ],
+    "weather": "China runs from the subarctic north-east to the tropical island of Hainan, so it has nearly every climate. The north has cold, dry winters and hot summers; the Yangtze valley and the south are humid, with most of their rain from May to September; Yunnan, in the south-west, is mild all year because of its height; and Tibet and the far west are high and dry, with cold winters. Air quality is often worst in northern cities in winter: a phone app shows the daily index.",
+    "festivals": [
+      {
+        "name": "Chinese New Year (Spring Festival)",
+        "place": "Across China",
+        "when": "Usually between late January and mid-February, set by the lunar calendar",
+        "months": [1, 2],
+        "text": "The year's biggest holiday: family reunions, red lanterns, dumplings and fireworks. Hundreds of millions of people travel home, so trains and flights sell out for weeks around it, and many small shops and restaurants close for the first days."
+      },
+      {
+        "name": "Harbin Ice and Snow Festival",
+        "place": "Harbin, in the far north-east",
+        "when": "Usually from late December into February",
+        "months": [12, 1, 2],
+        "text": "Whole buildings carved from blocks of river ice and lit in colour at night. Nights are often around −20°C or colder, so dress for it."
+      },
+      {
+        "name": "Lantern Festival",
+        "place": "Across China",
+        "when": "The 15th day of the new year, usually in February, sometimes early March",
+        "months": [2, 3],
+        "text": "The end of the New Year season, with lantern displays in parks and temples, riddles to solve and sweet rice balls (tangyuan)."
+      },
+      {
+        "name": "Dragon Boat Festival",
+        "place": "Across China, on rivers and lakes",
+        "when": "Usually in June, sometimes late May",
+        "months": [5, 6],
+        "text": "Races of long, narrow boats with dragon heads, paddled to the beat of a drum, and sticky rice parcels wrapped in leaves (zongzi). A public holiday of a few days."
+      },
+      {
+        "name": "Mid-Autumn Festival",
+        "place": "Across China",
+        "when": "The full moon of the eighth lunar month, usually in September or early October",
+        "months": [9, 10],
+        "text": "Families gather to look at the full moon and share mooncakes, rich round pastries filled with lotus seed paste or other fillings."
+      },
+      {
+        "name": "National Day Golden Week",
+        "place": "Across China",
+        "when": "From 1 October, for about a week",
+        "months": [10],
+        "text": "A week-long national holiday. The Great Wall, the Forbidden City and every famous sight are packed, and trains and hotels book out and cost more."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Beijing, Xi'an and the north",
+        "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+        "text": "Spring and autumn are short and lovely; September and October are the best months of all. Summers are hot, with most of the year's rain in July and August. Winters are cold and dry, often sunny, and the Great Wall is quiet then, sometimes dusted with snow."
+      },
+      {
+        "name": "Shanghai and the Yangtze",
+        "months": ["good", "good", "good", "best", "best", "good", "good", "good", "good", "best", "best", "good"],
+        "text": "Shanghai, Hangzhou, Suzhou, the Yellow Mountains (Huangshan) and the Three Gorges. Spring and autumn are mild and pleasant. The plum rains, roughly mid-June to mid-July, give weeks of grey, wet days, then July and August are hot and sticky, with a chance of typhoons. Winter is damp and chilly rather than freezing."
+      },
+      {
+        "name": "Guilin and the south",
+        "months": ["good", "good", "good", "good", "good", "good", "good", "good", "good", "best", "best", "best"],
+        "text": "Guilin, Yangshuo's karst peaks, Guangzhou and the island of Hainan. Subtropical: October to December is dry, warm and clear, the best season. Spring is humid and often misty, and from May to September it's hot and wet, with typhoons possible near the coast. Hainan is beach weather all winter."
+      },
+      {
+        "name": "Yunnan and Sichuan",
+        "months": ["good", "good", "best", "best", "best", "good", "good", "good", "good", "best", "best", "good"],
+        "text": "Kunming, Dali, Lijiang and the mountains of the south-west, and Chengdu, home of the giant panda breeding centre. Yunnan is mild all year, with a rainy season from about June to September. Chengdu is often grey and humid. Jiuzhaigou's lakes and forests are at their most colourful in October."
+      },
+      {
+        "name": "Tibet and the north-west",
+        "months": ["avoid", "avoid", "avoid", "good", "best", "best", "good", "good", "best", "best", "good", "avoid"],
+        "text": "Lhasa sits at about 3,650 m, so allow a few days to adjust to the altitude. Foreign visitors need a Tibet permit, arranged through a licensed agency with a guide, and permits are sometimes suspended at short notice. May to October is the season; winter is very cold. Along the Silk Road in Gansu and Xinjiang, spring and autumn are best: summer in the desert oases, such as Turpan, is fiercely hot."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake, or a nod and a smile; bows are rare. Chinese names put the family name first, so Wang Fang is Ms Wang. Greet older people first, and give and take business cards with both hands.",
+    "etiquette": [
+      "Google's services, WhatsApp, Facebook, Instagram and many other foreign apps and websites are blocked. Download offline maps and a translation app before you arrive; mobile data roaming on a SIM from home usually isn't affected.",
+      "Carry your passport: it's needed to buy train tickets, check into hotels and book many museums and sights, some of which must be reserved online a few days ahead.",
+      "At meals, dishes are shared from the middle of the table, and the host usually orders for everyone. Friends often compete to pay the bill; splitting it is less usual than in the West.",
+      "Don't stand chopsticks upright in a bowl of rice: it recalls the incense sticks burnt for the dead.",
+      "Carry tissues. Outside hotels, malls and big stations, public toilets are often squat toilets with no paper.",
+      "Drink bottled or boiled water, not water from the tap. Hotel rooms have a kettle, and trains have free hot water."
+    ],
+    "tipping": "Not part of the culture: there's no tipping in restaurants, taxis or hotels, and staff may hand the money back. Upmarket hotels add a service charge instead. On organised tours, guides and drivers often do expect a tip, so ask your agency what's usual.",
+    "dress": "Casual and practical. Summers call for light clothes and an umbrella for sun and rain alike; northern winters need a proper coat, hat and gloves. Cover shoulders and knees in temples, and bring comfortable shoes: sights like the Great Wall mean a lot of steps.",
+    "food": [
+      {
+        "name": "Peking duck",
+        "text": "Roast duck with crisp, lacquered skin, carved at the table and rolled in thin pancakes with spring onion, cucumber and sweet bean sauce. Beijing's signature dish."
+      },
+      {
+        "name": "Dumplings (jiaozi)",
+        "text": "Boiled, steamed or fried parcels of pork, vegetables or prawns, ordered by weight in the north and eaten by every family at New Year."
+      },
+      {
+        "name": "Sichuan cooking",
+        "text": "Mapo tofu, kung pao chicken and bubbling hotpot, fiery with chilli and with Sichuan pepper, which makes the lips tingle and go numb. Ask for it not spicy if you'd rather (see the phrases below)."
+      },
+      {
+        "name": "Dim sum",
+        "text": "Cantonese small plates with tea, eaten at breakfast and lunch: prawn dumplings, barbecue pork buns, rice-noodle rolls and custard tarts."
+      },
+      {
+        "name": "Xiaolongbao",
+        "text": "Shanghai's soup dumplings: thin skins around pork and hot broth. Nibble a small hole and sip the soup first, or it will burn."
+      },
+      {
+        "name": "Hand-pulled noodles",
+        "text": "Lanzhou's beef noodle soup, with the noodles stretched by hand as you order, is served all over the country. Xi'an has its own wide, belt-like biangbiang noodles."
+      }
+    ],
+    "phrases": {
+      "language": "Mandarin Chinese (Putonghua)",
+      "intro": "Mandarin is tonal: the same syllable means different things at a different pitch, so expect to be misunderstood now and then. The phrases are in pinyin, the official spelling in Latin letters, with the Chinese characters to point at. English is spoken in big hotels but rarely elsewhere, so a translation app helps a lot.",
+      "items": [
+        { "phrase": "Nǐ hǎo (你好)", "say": "nee HOW", "meaning": "Hello" },
+        { "phrase": "Xièxie (谢谢)", "say": "SHYEH-shyeh", "meaning": "Thank you" },
+        { "phrase": "Duìbuqǐ (对不起)", "say": "DWAY-boo-chee", "meaning": "Sorry" },
+        { "phrase": "Bú yào (不要)", "say": "boo YOW", "meaning": "No thanks (I don't want it)" },
+        { "phrase": "Duōshao qián? (多少钱?)", "say": "DWOH-show CHYEN", "meaning": "How much is it?" },
+        { "phrase": "Bú là (不辣)", "say": "boo LAH", "meaning": "Not spicy" },
+        { "phrase": "Mǎidān (买单)", "say": "my-DAN", "meaning": "The bill, please" },
+        { "phrase": "Cèsuǒ zài nǎr? (厕所在哪儿?)", "say": "TSUH-swaw dzai NAR", "meaning": "Where's the toilet?" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q148",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Renminbi, counted in yuan (¥, CNY). Most people pay by phone with Alipay or WeChat Pay, which now accept foreign cards; carry some cash as a back-up.",
+        "sources": [{ "property": "P38", "values": ["Q39099"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Standard Chinese (Mandarin, or Putonghua). Many other Chinese languages are spoken at home, Cantonese among them, and Tibetan, Uyghur, Mongolian and other minority languages are official in their own regions.",
+        "sources": [{ "property": "P37", "values": ["Q24841726", "Q727694"] }],
+        "note": "Wikidata gives Putonghua (preferred), Standard Chinese and Chinese, with \"languages of China\" deprecated; the page adds the minority languages official in the autonomous regions."
+      },
+      {
+        "key": "plugs",
+        "text": "Types A (two flat pins), C (two round pins) and I (two or three angled flat pins); many sockets take more than one. 220 V.",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q1378312", "Q2335539"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right. China doesn't recognise international driving permits, so most visitors travel by train, plane and taxi.",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }],
+        "note": "Wikidata gives the side of the road only; the page adds that international driving permits aren't recognised."
+      },
+      {
+        "key": "timeZones",
+        "text": "China Standard Time, UTC+8, across the whole country and all year (no summer time). In Xinjiang many people also keep an unofficial local time two hours behind.",
+        "sources": [{ "property": "P421", "values": ["Q1143153", "Q6985", "Q4806303", "Q4806313"] }],
+        "note": "Wikidata also lists Asia/Urumqi (UTC+6) for Xinjiang, the unofficial local time; trains, flights and official business there run on Beijing time."
+      },
+      {
+        "key": "emergency",
+        "text": "110 for police; 119 for fire; 120 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648823", "Q2807090", "Q25648851"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+86",
+        "sources": [{ "property": "P474", "values": ["+86"] }]
+      }
+    ]
+  }
+}

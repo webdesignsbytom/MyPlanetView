@@ -33,6 +33,7 @@ export const planTickets = [
       { text: perCountry('REGULAR') },
       { text: 'Your full-size originals, untouched: for posters, canvases, cropping and re-editing' },
       { text: 'No ad cards for you, on any map; fewer for the people you share with' },
+      { text: 'A navy Business Class passport cover' },
     ],
   },
   {
@@ -41,8 +42,10 @@ export const planTickets = [
     features: [
       { text: 'Everything in Business' },
       { text: perCountry('PREMIUM') },
-      { text: 'Videos of your trips, beside the photos', soon: true },
-      { text: 'Extra map styles and passport covers', soon: true },
+      { text: 'Videos of your trips, beside the photos' },
+      // Each plan has its own passport cover (16 Nov); the map styles wait on the user's choice
+      { text: 'A black and gold First Class passport cover' },
+      { text: 'Extra map styles', soon: true },
       { text: 'No ad cards on your maps, for anyone who looks' },
     ],
   },
@@ -70,8 +73,8 @@ export const everyPlanFeatures = [
   { text: 'Slideshows of your whole map, one country or one trip.' },
   { text: 'The Travel Desk: places to stay, tours and flights for a trip or a country, from our travel partners, only when you ask.' },
   { text: 'Badges as your map fills up, and goals of your own: a number of countries, a bucket list, a whole region.' },
-  // Friends challenges and monthly photo themes aren't built, and no country guide is published yet
-  { text: 'Challenges with friends, monthly photo themes and country guides.', soon: true },
+  // Friends challenges, monthly photo themes and the first 20 country guides (checked 16 Nov)
+  { text: 'Challenges with friends, monthly photo themes and country guides.' },
 ];
 
 // More than one map (FEATURE-PLAN.md, "Maps")
@@ -91,8 +94,8 @@ export const pricingNotes = [
   { text: 'Upgrade the day you need it. Changing plan never deletes anything: originals already kept stay, and a country over the new limit keeps its photos but takes no more.' },
   { text: `A fair-use limit of ${Math.round(PLANS.REGULAR.limits.storageCapBytes / GB)} GB of photos on each Business map, and ${Math.round(PLANS.PREMIUM.limits.storageCapBytes / GB)} GB on First Class, keeps things fair. Most people never get near it.` },
   { text: `Payments go through Stripe. Cancel any time from your account page, and the plan runs to the end of the period you’ve paid for.` },
-  // "Download all my data" isn't built yet (asking for a copy works, by law, but there's no button)
-  { text: `Prices are in pounds sterling. Getting a copy of all your data is free on every plan, as the law says it should be.`, soon: true },
+  // "Download my data" is on the account page (docs/API.md, "Your data")
+  { text: `Prices are in pounds sterling. Getting a copy of all your data is free on every plan, as the law says it should be: it’s a button on your account page.` },
 ];
 
 export const pricingCta = {

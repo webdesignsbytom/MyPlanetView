@@ -1,8 +1,8 @@
 {
   "code": "FR",
   "slug": "france",
-  "status": "draft",
-  "lastChecked": null,
+  "status": "checked",
+  "lastChecked": "2026-11-16",
   "stamp": ["Bonjour", "France"],
   "summary": "Paris, Loire châteaux, great wine regions, Alpine ski resorts and the Mediterranean coast.",
   "overview": [

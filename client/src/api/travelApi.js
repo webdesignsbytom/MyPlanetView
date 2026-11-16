@@ -91,17 +91,22 @@ export const deleteMoment = (momentId) => data(client.delete(`${MOMENTS_API}/${e
 
 // Photos: a page of a map's, a trip's or a share link's photos (`unplaced`: only those with no
 // country). The slideshows (docs/API.md, "Slideshows") pass `order` ('taken', or 'shuffle'
-// with a `seed`) and `display` (each photo also carries its displayUrl).
-export const getPhotoPage = ({ mapId, tripId, shareCode, country, unplaced, cursor, limit, order, seed, display }) => {
+// with a `seed`) and `display` (each photo also carries its displayUrl). "Print or download"
+// passes `best` (editors only, never a share link; docs/API.md "Downloads"): each photo
+// carries its best copy's link, type and size. `landmark` lists only the photos confirmed
+// as that landmark, in any country (the passport's stamp photo picker).
+export const getPhotoPage = ({ mapId, tripId, shareCode, country, unplaced, landmark, cursor, limit, order, seed, display, best }) => {
   const filters = query({
     country,
     unplaced: unplaced ? 1 : undefined,
+    landmark,
     cursor,
     limit,
     tripId: mapId && tripId ? tripId : undefined,
     order,
     seed: order === 'shuffle' ? seed : undefined,
     display: display ? 1 : undefined,
+    best: best ? 1 : undefined,
   });
   if (shareCode) return data(client.get(`${SHARED_API}/${enc(shareCode)}/photos${filters}`));
   if (mapId) return data(client.get(`${MAPS_API}/${enc(mapId)}/photos${filters}`));
@@ -113,6 +118,11 @@ export const getPhoto = (photoId, { shareCode } = {}) =>
     : data(client.get(`${PHOTOS_API}/${enc(photoId)}`));
 export const presignPhoto = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/photos/presign`, body));
 export const createPhoto = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/photos`, body));
+// Videos (First Class; docs/API.md "Videos"): start an upload to Cloudflare Stream
+// ({ bytes, contentType, durationS, tripId?, countryCode? } -> { photoId, uploadUrl, ticket,
+// expiresAt }), then, once the file is there, save it ({ ticket, countryCode?, caption?, takenAt? })
+export const startVideoUpload = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/videos/upload`, body));
+export const saveVideo = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/videos`, body));
 export const updatePhoto = (photoId, body) => data(client.patch(`${PHOTOS_API}/${enc(photoId)}`, body));
 export const deletePhoto = (photoId) => data(client.delete(`${PHOTOS_API}/${enc(photoId)}`));
 // Rearranging: put the photo straight after `afterId` in its country's ('country') or its

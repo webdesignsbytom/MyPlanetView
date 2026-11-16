@@ -55,15 +55,19 @@ export function pickByWeight(list, seed) {
  * `[{ source: 'trip'|'country'|'around'|'general', countryCode, offers }]`.
  * `context`: `{ placement, tripCountry, country, aroundCountry }` (any may be null).
  */
+// Offers are kept per country: one of the UK's nations (a map that splits the UK) takes the
+// UK's (a copy of utils/map/ukNations.js countryOf, as this file has no imports)
+const offerCountry = (code) => (['XE', 'XC', 'XW', 'XI'].includes(code) ? 'GB' : code);
+
 export function offerGroups(offers, { placement, tripCountry = null, country = null, aroundCountry = null }) {
   const fitting = offersForPlacement(offers, placement);
   const groups = [];
   const add = (source, countryCode, list) => {
     if (list.length) groups.push({ source, countryCode, offers: list });
   };
-  if (tripCountry) add('trip', tripCountry, fitting.filter((o) => o.countryCode === tripCountry));
-  if (country) add('country', country, fitting.filter((o) => o.countryCode === country));
-  if (aroundCountry) add('around', aroundCountry, fitting.filter((o) => o.countryCode === aroundCountry));
+  if (tripCountry) add('trip', tripCountry, fitting.filter((o) => o.countryCode === offerCountry(tripCountry)));
+  if (country) add('country', country, fitting.filter((o) => o.countryCode === offerCountry(country)));
+  if (aroundCountry) add('around', aroundCountry, fitting.filter((o) => o.countryCode === offerCountry(aroundCountry)));
   add('general', null, fitting.filter((o) => !o.countryCode));
   return groups;
 }

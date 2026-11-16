@@ -10,7 +10,8 @@ import CheckboxInput from '@/components/ui/CheckboxInput';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
 // Utils
-import { COUNTRY_OPTIONS } from '@/utils/map/countries';
+import { countryOptionsFor } from '@/utils/map/countries';
+import useSplitUk from '@/hooks/useSplitUk';
 import { toDateInput } from '@/utils/functions/dates';
 
 // An editor's changes to one photo: caption, country, trip, date, and whether viewers see it.
@@ -25,6 +26,8 @@ function PhotoEditForm({ photo, trips, onSaved, onCancel }) {
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  // The map's places: the UK's nations instead of it on a map that splits it
+  const splitUk = useSplitUk();
 
   const set = (key) => (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -62,7 +65,7 @@ function PhotoEditForm({ photo, trips, onSaved, onCancel }) {
           <PlainOptionSelect
             value={form.countryCode}
             onChange={set('countryCode')}
-            options={[{ value: '', label: 'Not set' }, ...COUNTRY_OPTIONS]}
+            options={[{ value: '', label: 'Not set' }, ...countryOptionsFor(splitUk)]}
           />
         </FormField>
         <FormField id='photo-date' label='Taken on'>

@@ -14,6 +14,7 @@ export const OFFER_KIND_LABELS = Object.freeze({
   LUGGAGE: 'Luggage',
   CAR_HIRE: 'Car hire',
   OTHER: 'Other',
+  PRINTS: 'Photo prints',
 });
 
 export const OFFER_PLACEMENT_LABELS = Object.freeze({
@@ -21,6 +22,7 @@ export const OFFER_PLACEMENT_LABELS = Object.freeze({
   SLIDESHOW: 'End of a slideshow',
   COUNTRY_PAGE: 'Country pages',
   TRAVEL_DESK: 'Travel Desk',
+  PRINT: 'Print or download',
 });
 
 export const kindLabel = (kind) => OFFER_KIND_LABELS[kind] ?? kind;

@@ -13,6 +13,9 @@ function SlideCaption({ slide, photoCount }) {
   if (slide.type === 'card') {
     return <p className='font-travel text-lg uppercase tracking-wide'>{countryName(slide.countryCode)}</p>;
   }
+  if (slide.type === 'moment') {
+    return <p className='font-travel text-lg uppercase tracking-wide'>{slide.moment.title}</p>;
+  }
   if (slide.type === 'end') {
     return (
       <p className='text-sm font-medium'>

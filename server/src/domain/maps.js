@@ -1,6 +1,7 @@
 import { prisma } from '../prisma.js';
 import { COUNTED_VISIT_STATUSES } from '../utils/travelValidation.js';
 import { PARENT_PLACE, SPECIAL_PLACE_CODES, withParentPlaces } from '../utils/specialPlaces.js';
+import { UK, UK_NATION_CODES } from '../utils/ukNations.js';
 import { canEdit } from '../utils/access.js';
 import { countPerParent, countPhotosPer } from './counts.js';
 
@@ -15,6 +16,8 @@ const MAP_ACCESS_SELECT = {
   isDefault: true,
   linkAccess: true,
   shareCode: true,
+  // Which places its writes go to (utils/ukNations.js placeOnMap)
+  splitUk: true,
 };
 
 /**
@@ -47,6 +50,17 @@ const mapSummarySelect = {
   owner: { select: { name: true } },
 };
 
+/** The ids of these maps with the UK and at least one of its nations both counted as visited. */
+async function mapsWithUkAndNations(ids) {
+  if (!ids.length) return new Set();
+  const rows = await prisma.countryVisit.findMany({
+    where: { mapId: { in: ids }, status: { in: [...COUNTED_VISIT_STATUSES] }, countryCode: { in: [UK, ...UK_NATION_CODES] } },
+    select: { mapId: true, countryCode: true },
+  });
+  const withUk = new Set(rows.filter((r) => r.countryCode === UK).map((r) => r.mapId));
+  return new Set(rows.filter((r) => r.countryCode !== UK && withUk.has(r.mapId)).map((r) => r.mapId));
+}
+
 /**
  * Adds `counts: { countries, photos, trips }` to each map, counted over these
  * maps' ids only (see domain/counts.js). `includeHidden[i]`: whether map i's
@@ -54,12 +68,15 @@ const mapSummarySelect = {
  */
 async function withMapCounts(maps, includeHidden) {
   const ids = maps.map((m) => m.id);
-  const [countries, photos, trips, linkedTrips] = await Promise.all([
+  const [countries, ukBoth, photos, trips, linkedTrips] = await Promise.all([
     // Countries only: special places (Antarctica, the poles) have their own stat
     countPerParent('countryVisit', 'mapId', ids, {
       status: { in: [...COUNTED_VISIT_STATUSES] },
       countryCode: { notIn: [...SPECIAL_PLACE_CODES] },
     }),
+    // A map with the UK marked and some of its nations too (the UK from before the split,
+    // not yet given its nations) counts the nations, not the UK as well (utils/ukNations.js)
+    mapsWithUkAndNations(ids),
     countPhotosPer('mapId', ids, includeHidden),
     countPerParent('trip', 'mapId', ids),
     // Group trips added to these maps count too (their photos don't: they stay on the
@@ -69,7 +86,7 @@ async function withMapCounts(maps, includeHidden) {
   return maps.map((m) => ({
     ...m,
     counts: {
-      countries: countries.get(m.id) ?? 0,
+      countries: (countries.get(m.id) ?? 0) - (ukBoth.has(m.id) ? 1 : 0),
       photos: photos.get(m.id) ?? 0,
       trips: (trips.get(m.id) ?? 0) + (linkedTrips.get(m.id) ?? 0),
     },
@@ -103,6 +120,10 @@ export const findMemberMaps = async (userId) => {
 export const findDefaultMap = (userId) =>
   prisma.travelMap.findUnique({ where: { defaultForOwnerId: userId }, select: { id: true } });
 
+/** Whether a map shows the UK as its four nations (false for a map that's gone). */
+export const findMapSplitUk = async (mapId) =>
+  Boolean((await prisma.travelMap.findUnique({ where: { id: mapId }, select: { splitUk: true } }))?.splitUk);
+
 /**
  * The whole map: its row, owner's name, travellers and visits. Four flat queries run
  * side by side (a nested select reads the map first, then the rest).
@@ -111,7 +132,7 @@ export const findMapDetail = async (mapId) => {
   const [map, owner, travellers, visits] = await Promise.all([
     prisma.travelMap.findUnique({
       where: { id: mapId },
-      select: { id: true, name: true, groupType: true, isDefault: true, ownerId: true },
+      select: { id: true, name: true, groupType: true, isDefault: true, ownerId: true, splitUk: true },
     }),
     prisma.user.findFirst({ where: { ownedMaps: { some: { id: mapId } } }, select: { name: true } }),
     prisma.traveller.findMany({
@@ -276,7 +297,11 @@ export const findMapVisitsForStats = (mapId) =>
 export const countMapPhotos = (mapId, { includeHidden }) =>
   prisma.photo.count({ where: { mapId, ...(includeHidden ? {} : { hidden: false }) } });
 
-export const countMapConfirmedLandmarks = async (mapId, { includeHidden }) =>
+/**
+ * The landmarks a map has stamped: those with a confirmed photo (never a video: a video
+ * can't be matched). The stats count them and the map marks their pins.
+ */
+export const findMapStampedLandmarkIds = async (mapId, { includeHidden }) =>
   (
     await prisma.photoLandmark.findMany({
       // The match's own mapId (index [mapId, landmarkId]); viewers' only from visible photos
@@ -284,7 +309,7 @@ export const countMapConfirmedLandmarks = async (mapId, { includeHidden }) =>
       distinct: ['landmarkId'],
       select: { landmarkId: true },
     })
-  ).length;
+  ).map((row) => row.landmarkId);
 
 /** The map's own trips plus the group trips added to it ("Add to my map"). */
 export const countMapTrips = async (mapId) => {

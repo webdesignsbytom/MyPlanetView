@@ -22,24 +22,49 @@ export function newShuffleSeed() {
   return Math.floor(Math.random() * max) + 1;
 }
 
+// A moment's card stays up at least this long: it has words to read
+export const MOMENT_CARD_SECONDS = 6;
+
 /**
  * The slides for a list of photos: each photo, and in the worldwide show (`titleCards`)
  * a country's title card before the first photo of each stretch in a new country (a
- * photo with no country gets none, and doesn't end the stretch). `complete`: every page is
- * in, so the show ends with an end card.
- * -> `[{ id, type: 'card', countryCode } | { id, type: 'photo', photo } | { id: 'end', type: 'end' }]`
+ * photo with no country gets none, and doesn't end the stretch). `moments` (dated, oldest
+ * first; a show in date order) come as cards of their own before the first photo taken
+ * after them: after the title card when the moment is in that photo's country, before it
+ * otherwise. Photos with no date place none. `complete`: every page is in, so the moments
+ * still to come go before the end card.
+ * -> `[{ id, type: 'card', countryCode } | { id, type: 'moment', moment } | { id, type: 'photo', photo } | { id: 'end', type: 'end' }]`
  */
-export function buildSlides(photos, { titleCards = false, complete = false } = {}) {
+export function buildSlides(photos, { titleCards = false, complete = false, moments = [] } = {}) {
   const slides = [];
+  const queue = [...moments];
+  const takeDue = (day) => {
+    const due = [];
+    while (queue.length && queue[0].happenedOn <= day) due.push(queue.shift());
+    return due;
+  };
+  const pushMoments = (list) => {
+    for (const moment of list) slides.push({ id: `moment-${moment.id}`, type: 'moment', moment });
+  };
   let country = null;
   for (const photo of photos) {
-    if (titleCards && photo.countryCode && photo.countryCode !== country) {
+    const due = photo.takenAt ? takeDue(photo.takenAt.slice(0, 10)) : [];
+    const newCountry = titleCards && photo.countryCode && photo.countryCode !== country;
+    if (newCountry) {
+      pushMoments(due.filter((m) => m.countryCode !== photo.countryCode));
       country = photo.countryCode;
-      slides.push({ id: `card-${slides.length}-${country}`, type: 'card', countryCode: country });
+      // Named after its photo, so the id stays when moments come in around it
+      slides.push({ id: `card-${photo.id}`, type: 'card', countryCode: country });
+      pushMoments(due.filter((m) => m.countryCode === photo.countryCode));
+    } else {
+      pushMoments(due);
     }
     slides.push({ id: photo.id, type: 'photo', photo });
   }
-  if (complete && photos.length) slides.push({ id: 'end', type: 'end' });
+  if (complete && photos.length) {
+    pushMoments(queue);
+    slides.push({ id: 'end', type: 'end' });
+  }
   return slides;
 }
 

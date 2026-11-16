@@ -123,3 +123,29 @@ describe('badges and goals', () => {
     await expect(prisma.goal.create({ data: { mapId: map.id, kind: 'REGION', target: 3 } })).rejects.toThrow();
   });
 });
+
+describe('travellers’ badges', () => {
+  it('gives each person the travel badges of the completed trips they were on, dated by the trip', async () => {
+    const owner = await signUp('TravBadgeOwner');
+    const map = await defaultMapOf(owner.agent);
+    const add = async (name) => data(await owner.agent.post(`/api/maps/${map.id}/travellers`).send({ name })).traveller;
+    const ann = await add('Ann');
+    const bo = await add('Bo');
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Lisbon', startDate: '2025-03-01', endDate: '2025-03-08' })).trip;
+    await owner.agent.put(`/api/trips/${trip.id}/travellers`).send({ travellerIds: [ann.id] });
+    await owner.agent.post(`/api/trips/${trip.id}/stops`).send({ countryCode: 'PT' });
+
+    const of = async (traveller, key) => {
+      const { travellers } = data(await owner.agent.get(`/api/maps/${map.id}/badges`));
+      return travellers.find((t) => t.id === traveller.id)?.badges.find((b) => b.key === key);
+    };
+    // A planned trip counts for nobody yet
+    expect(await of(ann, 'countries-1')).toMatchObject({ have: 0, earned: false, earnedOn: null });
+    await owner.agent.patch(`/api/trips/${trip.id}`).send({ status: 'COMPLETED' });
+    expect(await of(ann, 'countries-1')).toMatchObject({ have: 1, earned: true, earnedOn: '2025-03-08' });
+    expect(await of(ann, 'continent-europe')).toMatchObject({ earned: true });
+    // Bo wasn't on it; and only travel badges are per person
+    expect(await of(bo, 'countries-1')).toMatchObject({ have: 0, earned: false });
+    expect(await of(ann, 'photos-100')).toBeUndefined();
+  });
+});

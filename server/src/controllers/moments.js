@@ -31,6 +31,7 @@ import {
   updateMomentInDB,
 } from '../domain/moments.js';
 import { badRequest, denyUnless, forbidden, handler, loadMap, loadMoment, loadTrip, notFound } from './helpers/travel.js';
+import { landmarkPlace, placeOnMap } from '../utils/ukNations.js';
 import { isKnownCountry } from './helpers/countries.js';
 import { momentView } from './helpers/views.js';
 
@@ -47,7 +48,7 @@ const isTextOrNull = (value) => value === null || typeof value === 'string';
  * on (a trip-only editor), or null for the whole map. The trip itself is handled by the
  * caller. -> `{ value: { data, travellerIds?, photoIds? } }` or `{ error }`
  */
-async function parseMoment(body, { partial = false, current = null, mapId, photoScope = null }) {
+async function parseMoment(body, { partial = false, current = null, mapId, photoScope = null, splitUk = false }) {
   const data = {};
   if (!partial || body.kind !== undefined) {
     if (!isMomentKind(body.kind)) return { error: EVENT_MESSAGES.invalidMomentKind };
@@ -72,10 +73,14 @@ async function parseMoment(body, { partial = false, current = null, mapId, photo
   if (!date.ok) return { error: EVENT_MESSAGES.invalidMomentDate };
   if (date.value) Object.assign(data, date.value);
 
-  // Every moment is in a country (or a special place); a landmark must be in it
+  // Every moment is in a country (or a special place); a landmark must be in it. Places as
+  // the map keeps them: on a map that splits the UK, a UK landmark is in its nation, and a
+  // nation is the UK on one that doesn't (utils/ukNations.js)
   if (!partial || body.countryCode !== undefined) {
     if (!(await isKnownCountry(body.countryCode))) return { error: EVENT_MESSAGES.countryNotFound };
-    data.countryCode = body.countryCode;
+    data.countryCode = placeOnMap(body.countryCode, splitUk);
+    // Placed by hand: the nation it had before the UK split was turned off no longer applies
+    if (partial && data.countryCode !== current?.countryCode) data.ukNation = null;
   }
   const countryCode = data.countryCode ?? current?.countryCode;
   if (body.landmarkId !== undefined) {
@@ -83,13 +88,13 @@ async function parseMoment(body, { partial = false, current = null, mapId, photo
     else {
       const landmark = isUuid(body.landmarkId) ? await findLandmarkById(body.landmarkId) : null;
       if (!landmark) return { error: EVENT_MESSAGES.landmarkNotFound };
-      if (landmark.countryCode !== countryCode) return { error: EVENT_MESSAGES.momentLandmarkWrongCountry };
+      if (landmarkPlace(landmark, splitUk) !== countryCode) return { error: EVENT_MESSAGES.momentLandmarkWrongCountry };
       data.landmarkId = landmark.id;
     }
   } else if (current?.landmarkId && countryCode !== current.countryCode) {
     // A new country with the old landmark: it must still fit (or be cleared with it)
     const landmark = await findLandmarkById(current.landmarkId);
-    if (landmark && landmark.countryCode !== countryCode) return { error: EVENT_MESSAGES.momentLandmarkWrongCountry };
+    if (landmark && landmarkPlace(landmark, splitUk) !== countryCode) return { error: EVENT_MESSAGES.momentLandmarkWrongCountry };
   }
 
   if (body.hidden !== undefined) {
@@ -204,7 +209,7 @@ export const createMomentHandler = handler(D, 'Create moment', async (req, res) 
   const { map, mapRole, role } = await loadMomentTarget(req, req.params.mapId, tripId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.mapNotFound)) return undefined;
 
-  const parsed = await parseMoment(body, { mapId: map.id, photoScope: momentPhotoScope(mapRole, tripId) });
+  const parsed = await parseMoment(body, { mapId: map.id, photoScope: momentPhotoScope(mapRole, tripId), splitUk: map.splitUk });
   if (parsed.error) return badRequest(req, res, D, parsed.error);
   const { data, travellerIds = [], photoIds = [] } = parsed.value;
 
@@ -242,7 +247,7 @@ export const updateMomentHandler = handler(D, 'Update moment', async (req, res) 
   }
 
   const photoScope = momentPhotoScope(mapRole, moment.tripId);
-  const parsed = await parseMoment(body, { partial: true, current: moment, mapId: moment.mapId, photoScope });
+  const parsed = await parseMoment(body, { partial: true, current: moment, mapId: moment.mapId, photoScope, splitUk: moment.map.splitUk });
   if (parsed.error) return badRequest(req, res, D, parsed.error);
   const { data, travellerIds } = parsed.value;
   let { photoIds } = parsed.value;

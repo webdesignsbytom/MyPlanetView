@@ -6,7 +6,8 @@ import PhotoUploadItem from './PhotoUploadItem';
 import LockedMapNote from '@/components/plans/LockedMapNote';
 import PlanUpgradeLink from '@/components/plans/PlanUpgradeLink';
 // Utils
-import { COUNTRY_OPTIONS, countryName } from '@/utils/map/countries';
+import { countryName, countryOptionsFor } from '@/utils/map/countries';
+import useSplitUk from '@/hooks/useSplitUk';
 import { runWithConcurrencyLimit } from '@/utils/functions/runWithConcurrencyLimit';
 import { VIDEO_MAX_SECONDS } from '@/utils/constants/plans';
 import { VIDEO_MAX_BYTES, uploadPhoto } from '@/utils/photos/uploadPhoto';
@@ -23,9 +24,11 @@ const VIDEO_ACCEPT = 'video/mp4,video/quicktime,.mp4,.m4v,.mov';
 // What became of an upload, in a sentence
 function placedNote(photo, { video, hadLocation, chosen }) {
   if (video) {
-    return photo.countryCode
+    const where = photo.countryCode
       ? `Videos keep no location, so it went in ${countryName(photo.countryCode)}.`
       : 'Videos keep no location, so it’s under Unplaced photos until you choose a country.';
+    // Cloudflare Stream converts it first (docs/API.md "Videos")
+    return photo.videoState === 'PROCESSING' ? `${where} It plays once it’s been prepared, usually within a few minutes.` : where;
   }
   // A location in no country (at sea) falls back on the chosen country, like no location
   if (!photo.countryCode) {
@@ -69,6 +72,8 @@ function PhotoUploader({
   const [country, setCountry] = useState(defaultCountryCode || '');
   const [items, setItems] = useState([]);
   const [dragging, setDragging] = useState(false);
+  // The map's places: the UK's nations instead of it on a map that splits it
+  const splitUk = useSplitUk();
   const busy = items.some((i) => !['done', 'failed'].includes(i.stage));
   const sendingVideo = items.some((i) => i.video && !['done', 'failed', 'waiting'].includes(i.stage));
 
@@ -162,7 +167,7 @@ function PhotoUploader({
         <PlainOptionSelect
           value={country}
           onChange={(e) => setCountry(e.target.value)}
-          options={[{ value: '', label: 'Leave unset' }, ...COUNTRY_OPTIONS]}
+          options={[{ value: '', label: 'Leave unset' }, ...countryOptionsFor(splitUk)]}
         />
       </FormField>
 

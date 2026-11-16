@@ -10,6 +10,7 @@ import { Slideshow } from '@/components/map/lazyMapPanels';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import PhotoUploader from '@/components/photos/PhotoUploader';
 import PhotoViewer from '@/components/photos/PhotoViewer';
+import PrintDownload from '@/components/photos/PrintDownload';
 import Modal from '@/components/common/Modal';
 import Button from '@/components/common/Button';
 import PaperCard from '@/components/common/PaperCard';
@@ -21,6 +22,8 @@ import { isUpcomingPlannedTrip, todayString } from '@/utils/offers/offerContext'
 // with adding (editors), the viewer, and the trip's slideshow (everyone, oldest taken
 // first; lazy-loaded). Link visitors pass `shareCode`.
 // `locked`: an editor whose email address isn't verified yet (the viewer says why).
+// "Print or download" (docs/API.md, "Downloads"): the trip's editors, verified or not,
+// get its photos' best copies as a zip; never through a share link.
 // Travel offers (docs/API.md, "Travel offers"): a card every `trip.ads.every` photos (none
 // for a paying viewer, or on a First Class map) and one at the end of the slideshow,
 // chosen for this trip's destination and dates while it's planned and still to come.
@@ -45,6 +48,7 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
   // isn't paid for takes no photos, so adding is locked with the reason
   const uploadRules = trip.uploadRules || null;
   const isOwner = trip.role === 'OWNER';
+  const canDownload = (canEdit || locked) && !shareCode && photos.photos.length > 0;
 
   return (
     <PaperCard title='Photos' titleId='trip-photos-heading' action={play}>
@@ -55,6 +59,7 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
           <Button onClick={() => setUploading(true)}>Add photos</Button>
         </div>
       ) : null}
+      {canDownload ? <PrintDownload scope={{ tripId: trip.id }} title={trip.title} /> : null}
       <PhotoGrid
         photos={photos.photos}
         loading={photos.loading}

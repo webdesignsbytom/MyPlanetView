@@ -1,0 +1,209 @@
+{
+  "code": "ZA",
+  "slug": "south-africa",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Sawubona", "Mzansi"],
+  "summary": "Safaris, the Cape's mountains and winelands, and long coastal drives.",
+  "overview": [
+    "South Africa fits a great deal into one trip: Cape Town beneath Table Mountain, the wine country of Stellenbosch and Franschhoek, the forests and beaches of the Garden Route, the Drakensberg mountains, and big-game safaris in Kruger National Park and the private reserves along its edge. Its recent history is told movingly on Robben Island, where Nelson Mandela was held for 18 years, and at the Apartheid Museum in Johannesburg.",
+    "Distances are long, so most visitors fly between Cape Town and Johannesburg or the Kruger area, then drive: the main roads are good and hiring a car is easy. Crime is a real concern in parts of the big cities, so take local advice on where to walk, use app taxis after dark and keep phones and bags out of sight."
+  ],
+  "whenToGo": {
+    "stripLabel": "The Cape and the safari parks taken together: spring and autumn suit both. The regions below differ a lot, and each has a strip of its own.",
+    "months": ["good", "good", "best", "best", "good", "good", "good", "good", "best", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [12, 1, 2],
+        "text": "Hot, dry and often windy in Cape Town, the peak of its season; hot and humid inland, with afternoon thunderstorms in Johannesburg, Kruger and the Drakensberg. The bush is green and full of young animals and migrant birds. Mid-December to mid-January is the main school holiday, when the coast is busiest and prices rise."
+      },
+      {
+        "name": "Autumn",
+        "months": [3, 4, 5],
+        "text": "Warm, settled days at the Cape, with fewer visitors, and the end of the rains in the north-east. A good time almost everywhere, and the grape harvest in the winelands runs into March."
+      },
+      {
+        "name": "Winter",
+        "months": [6, 7, 8],
+        "text": "Cool and rainy at the Cape, with snow on the high mountains. Inland it's dry and sunny, with cold nights: the classic safari season, as the bush thins and animals gather at water. Southern right whales start arriving off the Cape coast from about June."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Wild flowers carpet Namaqualand and the West Coast, usually from mid-August to mid-September, and whale watching peaks at Hermanus. Kruger is hot and dry, with excellent game viewing until the rains begin, usually in late October or November."
+      }
+    ],
+    "weather": "Mostly sunny, with a lot of variety. The Western Cape, around Cape Town, has a Mediterranean climate: warm, dry summers and cool, wet winters. The rest of the country gets its rain in summer, often as short afternoon storms, and has dry, sunny winters with frosty nights on the high plateau around Johannesburg. Durban and the KwaZulu-Natal coast are warm and humid all year.",
+    "festivals": [
+      {
+        "name": "Cape Town Minstrel Carnival",
+        "place": "Cape Town",
+        "when": "Usually on or around 2 January (Tweede Nuwe Jaar)",
+        "months": [1],
+        "text": "Troupes in bright satin suits, with painted faces and parasols, march through the city centre to banjos, drums and brass. A Cape Town tradition going back well over a century."
+      },
+      {
+        "name": "Freedom Day",
+        "place": "Across South Africa",
+        "when": "27 April",
+        "months": [4],
+        "text": "A public holiday marking the first democratic election, in 1994, when South Africans of every race could vote."
+      },
+      {
+        "name": "National Arts Festival",
+        "place": "Makhanda (Grahamstown), Eastern Cape",
+        "when": "Usually late June to early July, for about ten days",
+        "months": [6, 7],
+        "text": "One of Africa's largest arts festivals: theatre, music, dance, comedy and craft markets across a small university town."
+      },
+      {
+        "name": "Durban July",
+        "place": "Greyville Racecourse, Durban",
+        "when": "Usually the first Saturday of July",
+        "months": [7],
+        "text": "South Africa's best-known horse race, and as much a day for daring outfits and parties as for the racing."
+      },
+      {
+        "name": "Heritage Day",
+        "place": "Across South Africa",
+        "when": "24 September",
+        "months": [9],
+        "text": "A public holiday celebrating the country's many cultures, with traditional dress, music and food. Many people also call it Braai Day and spend it round a barbecue."
+      },
+      {
+        "name": "Hermanus Whale Festival",
+        "place": "Hermanus, Western Cape",
+        "when": "Usually late September or early October",
+        "months": [9, 10],
+        "text": "A weekend of music, food and markets in a seaside town where southern right whales can be watched from the cliff paths."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Cape Town and the Winelands",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "best", "best", "best"],
+        "text": "Warm, dry and sunny from October to April, with a strong south-easterly wind on many summer days. Winter, roughly June to August, brings cool, wet spells and the lowest prices; hotels still open, the vineyards are quiet and the mountains often clear between fronts."
+      },
+      {
+        "name": "Kruger and the safari parks",
+        "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+        "text": "The dry winter, May to October, is the classic season: the grass is short, the trees are bare and animals stay near rivers and waterholes. Early drives in an open vehicle are cold, so bring a warm layer. Summer is hot, green and lush, with storms, newborn animals and fewer visitors. The low-lying parks are a malaria area, with most risk in the wet months: ask a travel clinic about tablets."
+      },
+      {
+        "name": "Durban, KwaZulu-Natal and the Drakensberg",
+        "months": ["good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good", "good"],
+        "text": "The Indian Ocean coast is warm enough to swim all year, with sunny, dry winters and hot, humid, wetter summers. Inland, the Drakensberg is best for walking in autumn and spring; summer brings afternoon thunderstorms, and winter can bring snow to the peaks."
+      },
+      {
+        "name": "The Garden Route",
+        "text": "The coast between Mossel Bay and the Tsitsikamma forest is mild all year, with rain possible in any month. It's busiest over the summer holidays, and quieter and greener in spring and autumn."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake, often a long one, and time for \"How are you?\" before getting down to business: answer, and ask in return. Among friends you may meet a three-step handshake, a normal grip, then a grip round the thumbs, then a normal grip again. In shops, greet before you ask for anything.",
+    "etiquette": [
+      "In the cities, don't walk alone after dark, keep phones and cameras out of sight in the street, and ask your host which areas are fine to explore on foot. Use app taxis such as Uber or Bolt rather than hailing cars.",
+      "In traffic, keep car doors locked and nothing on the seats. Park in well-lit places, and use the ATMs inside shopping centres.",
+      "In car parks and on many streets, car guards in bright vests watch parked cars and expect a few rand when you leave.",
+      "In the national parks, stay in your vehicle except at marked places, keep to the speed limits and never feed the animals.",
+      "A braai (barbecue) is a social institution. If you're invited, bring something to drink, and expect a long evening: the fire comes first and the food much later.",
+      "\"Robot\" means a traffic light, and \"just now\" can mean any time later; \"now now\" is sooner."
+    ],
+    "tipping": "Expected. About 10 to 15% in restaurants (check the bill: large groups may already have service added); a small tip for petrol attendants, who fill the tank and clean the windscreen; and a few rand for car guards. On safari, lodges suggest an amount per day for your ranger and tracker, and a shared tip for the staff.",
+    "dress": "Casual, in layers: summer evenings at the Cape can turn cool, and winter mornings on game drives are cold. Khaki, green and brown suit safaris better than white or bright colours. The sun is strong all year, so bring a hat and sunscreen.",
+    "food": [
+      {
+        "name": "Braai",
+        "text": "Barbecue over wood or charcoal: boerewors (a coiled, spiced sausage), lamb chops and sosaties (kebabs), with pap (maize porridge) and a tomato and onion relish."
+      },
+      {
+        "name": "Bobotie",
+        "text": "A Cape Malay dish of spiced minced meat, often sweetened with dried fruit, baked under a savoury egg custard and served with yellow rice and chutney."
+      },
+      {
+        "name": "Bunny chow",
+        "text": "Durban's curry served in a hollowed-out half or quarter loaf of white bread, a dish of the city's Indian community. Eat it with your hands, tearing off the bread as you go."
+      },
+      {
+        "name": "Biltong",
+        "text": "Air-dried, spiced meat, usually beef or game, sold in strips or shavings everywhere from butchers to petrol stations."
+      },
+      {
+        "name": "Malva pudding",
+        "text": "A warm, spongy pudding with apricot jam, soaked in a buttery cream sauce and served with custard or ice cream."
+      },
+      {
+        "name": "Cape wines",
+        "text": "Vines have grown around Stellenbosch, Paarl and Franschhoek since the late 1600s, and most estates offer tastings. Pinotage, a red grape bred in South Africa, is the country's own."
+      }
+    ],
+    "phrases": {
+      "language": "isiZulu, isiXhosa and Afrikaans",
+      "intro": "English is spoken nearly everywhere you're likely to go, but a greeting in someone's own language is warmly received. isiZulu is the most widely spoken home language, then isiXhosa, which has click sounds, and Afrikaans.",
+      "items": [
+        { "phrase": "Sawubona", "say": "sah-woo-BOH-nah", "meaning": "Hello (isiZulu, to one person)" },
+        { "phrase": "Ngiyabonga", "say": "ngee-yah-BOHN-gah", "meaning": "Thank you (isiZulu)" },
+        { "phrase": "Molo", "say": "MOH-loh", "meaning": "Hello (isiXhosa, to one person)" },
+        { "phrase": "Enkosi", "say": "en-KOH-see", "meaning": "Thank you (isiXhosa)" },
+        { "phrase": "Goeie môre", "say": "KHOO-yuh MAW-ruh", "meaning": "Good morning (Afrikaans)" },
+        { "phrase": "Dankie", "say": "DUN-kee", "meaning": "Thank you (Afrikaans)" },
+        { "phrase": "Howzit", "say": "HOW-zit", "meaning": "Hi; how are you? (South African English)" },
+        { "phrase": "Lekker", "say": "LEK-uh", "meaning": "Nice; great (Afrikaans, but everyone says it)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q258",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "South African rand (R, ZAR). Cards are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q181907"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Twelve official languages: isiZulu, isiXhosa, Afrikaans, English, Sepedi, Setswana, Sesotho, Xitsonga, siSwati, Tshivenda, isiNdebele and South African Sign Language. English is the usual language of business and tourism.",
+        "sources": [
+          {
+            "property": "P37",
+            "values": ["Q10179", "Q13218", "Q14196", "Q1860", "Q33890", "Q34137", "Q34340", "Q34327", "Q34014", "Q32704", "Q36785", "Q3322093"]
+          }
+        ]
+      },
+      {
+        "key": "plugs",
+        "text": "Type M (three large round pins) is the most common; newer buildings also have Type N (three smaller round pins), and many sockets take the two-pin Europlug (Type C). 230 V. Adapters are cheap at supermarkets and airports.",
+        "sources": [
+          { "property": "P2853", "values": ["Q1383497", "Q1653438", "Q1378312"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata also lists the British family of plug types (Q60740126) as a whole; the page names the M, N and C types in use."
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "South African Standard Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q4689497"] }],
+        "note": "Wikidata also lists UTC+3 for the Prince Edward Islands, sub-Antarctic islands with only a research station, left out here."
+      },
+      {
+        "key": "emergency",
+        "text": "112 from a mobile phone; 10111 for the police; 10177 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata lists only 112; the page adds the national numbers for the police (10111) and ambulances (10177)."
+      },
+      {
+        "key": "callingCode",
+        "text": "+27",
+        "sources": [{ "property": "P474", "values": ["+27"] }]
+      }
+    ]
+  }
+}

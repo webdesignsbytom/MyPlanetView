@@ -16,6 +16,8 @@ import { registerAccountRoutes } from './handlers/account';
 import { registerMapRoutes } from './handlers/maps';
 import { registerTripRoutes } from './handlers/trips';
 import { registerPhotoRoutes } from './handlers/photos';
+import { registerVideoRoutes } from './handlers/videos';
+import { registerDataExportRoutes } from './handlers/dataExport';
 import { registerMomentRoutes } from './handlers/moments';
 import { registerSharingRoutes } from './handlers/sharing';
 import { registerAdminRoutes } from './handlers/admin';
@@ -25,6 +27,8 @@ import { registerOfferAdminRoutes } from './handlers/offerAdmin';
 import { registerOfferRoutes } from './handlers/offers';
 import { registerPassportRoutes } from './handlers/passport';
 import { registerAchievementRoutes } from './handlers/achievements';
+import { registerThemeRoutes } from './handlers/themes';
+import { registerChallengeRoutes } from './handlers/challenges';
 
 export function installMock() {
   // ?mockRole=ADMIN or DEVELOPER switches the test user's role, and is remembered
@@ -36,6 +40,8 @@ export function installMock() {
   registerMapRoutes();
   registerTripRoutes();
   registerPhotoRoutes();
+  registerVideoRoutes();
+  registerDataExportRoutes();
   registerMomentRoutes();
   registerSharingRoutes();
   registerAdminRoutes();
@@ -45,6 +51,8 @@ export function installMock() {
   registerOfferRoutes();
   registerPassportRoutes();
   registerAchievementRoutes();
+  registerThemeRoutes();
+  registerChallengeRoutes();
 
   // Every request goes to the adapter: the API client, the global axios (media uploads)
   // and the photo upload XHR

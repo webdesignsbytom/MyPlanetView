@@ -18,6 +18,7 @@ import { VIDEO_UPLOAD_HOURS, applyStreamNotice } from '../services/stream/videos
 import { loadMapPlan } from '../services/travel/plans.js';
 import { countPhotosInCountry, createPhotoInDB, findPhotoById, findPhotoDetail } from '../domain/photos.js';
 import { countryNameOf, parseOptionalCountry } from './helpers/countries.js';
+import { placeOnMap } from '../utils/ukNations.js';
 import { badRequest, conflict, denyUnless, forbidden, handler, loadUploadTarget, notFound } from './helpers/travel.js';
 import { photoDetailView } from './helpers/views.js';
 
@@ -93,7 +94,7 @@ export const startVideoUploadHandler = handler(D, 'Start video upload', async (r
   if (!hint.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
   if (hint.value) {
     const full = checkVideoCap({
-      count: await countPhotosInCountry(target.map.id, hint.value, undefined, 'VIDEO'),
+      count: await countPhotosInCountry(target.map.id, placeOnMap(hint.value, target.map.splitUk), undefined, 'VIDEO'),
       ...(await videoLimits(target.mapPlan.plan, hint.value)),
     });
     if (full) return conflict(req, res, D, full);
@@ -140,7 +141,8 @@ export const saveVideoHandler = handler(D, 'Save video', async (req, res) => {
     return badRequest(req, res, D, VIDEO_UPLOAD_MESSAGES.failed);
   }
 
-  const countryCode = country.value ?? null;
+  // As the map keeps places: a UK nation is the UK on a map that doesn't split it
+  const countryCode = country.value ? placeOnMap(country.value, target.map.splitUk) : null;
   const videoBytes = Number.isSafeInteger(video.size) && video.size > 0 ? video.size : ticket.bytes;
   const saved = await createPhotoInDB({
     photo: {

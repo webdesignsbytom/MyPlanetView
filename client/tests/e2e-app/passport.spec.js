@@ -1,4 +1,6 @@
-import { test, expect, HOME_MAP, HOME_SHARE_CODE, MOCK_STORE_KEY, SAM_MAP, SAM_SHARE_CODE, openMap, statsBadge } from './fixtures.js';
+import { test, expect, HOME_MAP, HOME_SHARE_CODE, MOCK_STORE_KEY, SAM_MAP, SAM_SHARE_CODE, openMap, openTool, statsBadge } from './fixtures.js';
+import { COUNTRIES } from '../../src/utils/map/countries.js';
+import { LOCAL_NAMES } from '../../src/utils/map/countryLocalNames.js';
 
 // The passport (docs/API.md "Passport"). The seeded stamps (src/dev/mock/seed.js), on the
 // test user's map: the Eiffel Tower, Paris's banks of the Seine (two photos: the Eiffel
@@ -111,6 +113,41 @@ test.describe('The passport', () => {
     await expect(stampButton(page, 'Paris, Banks of the Seine')).toHaveAccessibleDescription(/2 photos\.$/);
   });
 
+  test('the picker offers a landmark’s photos placed in another country', async ({ page }) => {
+    // Amsterdam's canal photo, placed in the Netherlands, matched by hand to the Eiffel Tower
+    // (a photo taken across a border would be the same)
+    await openPassport(page);
+    await page.evaluate((key) => {
+      const db = JSON.parse(localStorage.getItem(key));
+      const now = new Date().toISOString();
+      db.photoLandmarks.push({ photoId: 'photo-dam', mapId: 'map-home', landmarkId: 'lm-eiffel-tower', source: 'MANUAL', distanceM: null, confirmed: true, confirmedAt: now });
+      localStorage.setItem(key, JSON.stringify(db));
+    }, MOCK_STORE_KEY);
+    await page.reload();
+    await pageList(page).selectOption({ label: '6. France' });
+    await choosePhoto(page, 'Eiffel Tower').click();
+    const picker = page.getByRole('dialog', { name: 'Photo for Eiffel Tower' });
+    // Oldest first: the Dutch one (2016) is the stamp's now
+    await expect(picker.getByRole('button', { name: 'Canals at dusk (on the stamp now)' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(picker.getByRole('button', { name: 'Evening by the Seine' })).toBeVisible();
+  });
+
+  test('the map marks the stamped landmarks’ pins in gold, and its key says so', async ({ page }) => {
+    await openMap(page);
+    const key = page.getByRole('list', { name: 'Map key' });
+    await expect(key.getByText('Stamped landmark')).toBeVisible();
+    // Opening France zooms the map in on it, far enough for the pins
+    const list = await openTool(page, 'Country list', 'Countries');
+    await list.getByRole('searchbox', { name: 'Search countries' }).fill('france');
+    await list.getByRole('button', { name: 'France', exact: true }).click();
+    const pins = page.locator('[data-landmark-pins]');
+    // Every stamp on the map (the owner sees Belém's hidden one too), whatever the zoom
+    await expect(pins).toHaveAttribute('data-stamped-pins', '13');
+    await expect(pins.locator('[data-stamped] title').filter({ hasText: 'Eiffel Tower, stamped in the passport' })).toHaveCount(1);
+    // The Alhambra is only a suggestion: a plain pin, when it shows
+    await expect(pins.locator('[data-stamped] title').filter({ hasText: 'Alhambra' })).toHaveCount(0);
+  });
+
   test('a viewer sees no hidden photo’s stamp and no picker', async ({ page }) => {
     // Make the test user a viewer of the map (Alex owns it here)
     await openPassport(page);
@@ -182,5 +219,83 @@ test.describe('The passport', () => {
     // A short or mostly vertical drag is a scroll, not a turn
     await swipe(-30);
     await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
+  });
+
+  test('the cover follows the map owner’s plan: Economy, Business or First Class', async ({ page }) => {
+    // The test user's map is on Business; Sam's on Economy; Fran's on First Class
+    for (const [path, cover, label] of [
+      ['/maps/map-home/passport', 'REGULAR', 'Business Class'],
+      ['/maps/map-sam/passport', 'FREE', 'Economy'],
+      ['/maps/map-fran/passport', 'PREMIUM', 'First Class'],
+    ]) {
+      await openPassport(page, path);
+      const front = book(page).locator('[data-cover]');
+      await expect(front, path).toHaveAttribute('data-cover', cover);
+      await expect(front.getByText(label, { exact: true })).toBeVisible();
+    }
+  });
+
+  test('a visa page gives the country’s own name beside the English one, where it differs', async ({ page }) => {
+    await openPassport(page);
+    await pageList(page).selectOption({ label: '3. Netherlands' });
+    await expect(book(page).getByRole('heading', { level: 2, name: 'Netherlands' })).toBeVisible();
+    const own = book(page).locator('bdi[lang="nl"]');
+    await expect(own).toHaveText('Nederland');
+    // Portugal calls itself Portugal: nothing beside it
+    await pageList(page).selectOption({ label: '8. Portugal' });
+    await expect(book(page).getByRole('heading', { level: 2, name: 'Portugal' })).toBeVisible();
+    await expect(book(page).locator('bdi[lang]')).toHaveCount(0);
+  });
+
+  test('every country has its own name, each in a valid language', () => {
+    for (const country of COUNTRIES.filter((c) => c.kind !== 'SPECIAL')) {
+      const names = LOCAL_NAMES[country.code];
+      expect(names?.length, country.code).toBeGreaterThan(0);
+      for (const [lang, name] of names) {
+        expect(Intl.getCanonicalLocales(lang), `${country.code} ${lang}`).toEqual([lang]);
+        expect(name.trim(), `${country.code} ${lang}`).not.toBe('');
+      }
+    }
+    for (const place of COUNTRIES.filter((c) => c.kind === 'SPECIAL')) expect(LOCAL_NAMES[place.code], place.code).toBeUndefined();
+  });
+
+  test('a double-click opens the cover and turns the pages, and the book’s words can’t be selected', async ({ page }) => {
+    await openPassport(page);
+    const front = book(page).locator('[data-cover]');
+    await front.dblclick();
+    await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
+    // The double-click highlighted nothing
+    expect(await page.evaluate(() => window.getSelection().toString())).toBe('');
+
+    // The open book is a spread on this screen: a double-click on the right-hand page turns
+    // on, one on the left-hand page turns back (both away from the pages' controls)
+    const doubleClickAt = async (share) => {
+      const box = await book(page).getByRole('region').first().boundingBox();
+      await page.mouse.dblclick(box.x + box.width * share, box.y + box.height * 0.8);
+    };
+    await doubleClickAt(0.75);
+    await expect(pageStatus(page)).toHaveText('Page 3 of 11: Netherlands');
+    await doubleClickAt(0.25);
+    await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
+    expect(await page.evaluate(() => window.getSelection().toString())).toBe('');
+  });
+
+  test('a stamp’s landmark shows the moments that happened there, and so does its card on the map', async ({ page }) => {
+    await openPassport(page);
+    await pageList(page).selectOption({ label: '6. France' });
+    await expect(book(page).getByRole('heading', { level: 2, name: 'France' })).toBeVisible();
+    await expect(book(page).getByText('Moments here')).toBeVisible();
+    await expect(book(page).getByRole('listitem').filter({ hasText: 'Got engaged at the Eiffel Tower' })).toHaveText(
+      'Eiffel Tower: Got engaged at the Eiffel Tower, 12 Apr 2019',
+    );
+
+    // The country ticket's landmarks put the Eiffel Tower first, with its moment
+    await openMap(page);
+    const list = await openTool(page, 'Country list', 'Countries');
+    await list.getByRole('searchbox', { name: 'Search countries' }).fill('france');
+    await list.getByRole('button', { name: 'France', exact: true }).click();
+    const france = page.getByRole('dialog', { name: 'France' });
+    const moments = france.getByRole('list', { name: 'Moments at Eiffel Tower' });
+    await expect(moments).toContainText('Got engaged at the Eiffel Tower, 12 Apr 2019');
   });
 });

@@ -17,7 +17,7 @@ export const findMomentAccess = async (momentId, userId) => {
       where: { id: momentId },
       select: { id: true, mapId: true, tripId: true, countryCode: true, landmarkId: true, hidden: true },
     }),
-    prisma.travelMap.findFirst({ where: ofMoment, select: { ownerId: true } }),
+    prisma.travelMap.findFirst({ where: ofMoment, select: { ownerId: true, splitUk: true } }),
     userId ? prisma.mapMember.findFirst({ where: { userId, map: ofMoment }, select: { role: true } }) : null,
     userId ? prisma.tripMember.findFirst({ where: { userId, trip: ofMoment }, select: { role: true } }) : null,
   ]);

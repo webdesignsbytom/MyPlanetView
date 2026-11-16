@@ -1,8 +1,8 @@
 {
   "code": "DE",
   "slug": "germany",
-  "status": "draft",
-  "lastChecked": null,
+  "status": "checked",
+  "lastChecked": "2026-11-16",
   "stamp": ["Willkommen", "Deutschland"],
   "summary": "Castles, beer gardens and Christmas markets, with a dialect and dishes of its own in every region.",
   "overview": [

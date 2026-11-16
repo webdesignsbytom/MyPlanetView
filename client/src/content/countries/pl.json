@@ -1,0 +1,204 @@
+{
+  "code": "PL",
+  "slug": "poland",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dzień dobry", "Polska"],
+  "summary": "Old towns rebuilt with care, mountain trails, lakes and Baltic dunes, and pierogi at fair prices.",
+  "overview": [
+    "Poland's cities wear their history openly. Kraków's old town and Wawel Castle came through the Second World War largely intact, while the old centres of Warsaw and Gdańsk were rebuilt from the ruins after it, street by street. The Auschwitz-Birkenau memorial near Kraków, and the sites of the Warsaw Ghetto and the 1944 Warsaw Uprising, are part of many visits.",
+    "Beyond the cities there's plenty of open country: the Tatra Mountains above Zakopane, the lakes of Masuria, the ancient Białowieża Forest with its wild bison, and long sandy beaches on the Baltic. Trains are good value and keep getting faster, prices are lower than in western Europe, and cards and contactless payments are taken almost everywhere."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Still cold in March, milder through April; by May the parks and orchards are in flower and the evenings are long. Easter is a big family holiday, when many shops close for a day or two."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm, usually 20–26°C, with hot spells and thunderstorms. The season for the Baltic beaches, the Masurian lakes and walking in the Tatras, all of them busy in July and August, when Poles take their holidays."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is often warm and settled, and the woods turn gold through October, a spell Poles call the \"golden Polish autumn\". November is grey and damp, and on 1 November cemeteries glow with candles."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, often below freezing, with snow in most years, more of it in the east and the mountains. Christmas markets fill the old town squares in December, and the ski season around Zakopane runs from about December to March."
+      }
+    ],
+    "weather": "Warm summers and cold winters, both growing more extreme from west to east. Rain falls in every month, most of it in summer storms. The Baltic coast is cooler and breezy, and the Tatras in the south get the most snow, with weather that can change within the hour even in summer.",
+    "festivals": [
+      {
+        "name": "Fat Thursday (Tłusty Czwartek)",
+        "place": "Across Poland",
+        "when": "The Thursday before Lent, in February or March",
+        "months": [2, 3],
+        "text": "Poles eat doughnuts (pączki) by the million, and queues stretch out of the best bakeries from early morning."
+      },
+      {
+        "name": "Easter (Wielkanoc)",
+        "place": "Across Poland",
+        "when": "March or April",
+        "months": [3, 4],
+        "text": "On Holy Saturday, families take small baskets of eggs, bread, salt and sausage to church to be blessed. On Easter Monday (Śmigus-dyngus), people soak each other with water: expect to get wet in the street."
+      },
+      {
+        "name": "St Dominic's Fair (Jarmark św. Dominika)",
+        "place": "Gdańsk",
+        "when": "Usually three weeks from late July into August",
+        "months": [7, 8],
+        "text": "A fair with roots in the 13th century, now hundreds of stalls of crafts, antiques, amber and food spread through the old town, with concerts in the evenings."
+      },
+      {
+        "name": "Warsaw Uprising anniversary",
+        "place": "Warsaw",
+        "when": "1 August, at 5 pm",
+        "months": [8],
+        "text": "At 5 pm, the hour the 1944 uprising began, sirens sound and the city stops for a minute: traffic halts and people stand still in the street."
+      },
+      {
+        "name": "All Saints' Day (Wszystkich Świętych)",
+        "place": "Across Poland",
+        "when": "1 November",
+        "months": [11],
+        "text": "Families visit their relatives' graves and light candles in glass lanterns, so cemeteries glow at night. A public holiday: most shops close, and roads are busy."
+      },
+      {
+        "name": "Christmas markets and Wigilia",
+        "place": "Kraków, Wrocław, Gdańsk and Warsaw",
+        "when": "Markets usually from late November to late December; Wigilia on 24 December",
+        "months": [11, 12],
+        "text": "Market stalls of crafts, grilled cheese and mulled wine on the old town squares. Wigilia, the Christmas Eve supper of meat-free dishes such as carp and beetroot soup with small dumplings, traditionally starts when the first star appears."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Kraków and the south",
+        "text": "Kraków's old town and Wawel Castle, the Kazimierz Jewish quarter, the Wieliczka salt mine and the Auschwitz-Birkenau memorial. Visiting Auschwitz on your own is free and guided tours cost extra; either way, book online, as places run out early in summer. Good in any season."
+      },
+      {
+        "name": "The Tatras and Zakopane",
+        "text": "Poland's only high mountains, on the Slovak border. Hiking from June to September and skiing from December to March. The trails, and the long paved walk to the lake of Morskie Oko, are very crowded in summer, so set off early, and turn back if storms build."
+      },
+      {
+        "name": "Warsaw",
+        "text": "The capital: the rebuilt old town, the Warsaw Uprising Museum and POLIN, the museum of the history of Polish Jews. On summer Sundays, free Chopin recitals are played by his monument in Łazienki Park."
+      },
+      {
+        "name": "Gdańsk and the Baltic coast",
+        "text": "Gdańsk's Main Town, the vast brick castle of Malbork, the moving sand dunes of Słowiński National Park and the long, narrow Hel Peninsula. The sea is cool and the beach season short: July and August."
+      },
+      {
+        "name": "Masuria",
+        "text": "A lake district in the north-east, with lakes linked by rivers and canals, for sailing, kayaking and quiet cycling. Best from June to September."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you meet, and \"dzień dobry\" as you walk into a shop or a lift. Address people as \"Pan\" (Mr) or \"Pani\" (Mrs, Ms) until you're invited to use first names.",
+    "etiquette": [
+      "Most shops are closed on Sundays by law, apart from a handful of trading Sundays a year, such as those before Christmas and Easter. Petrol station shops and some small shops stay open.",
+      "Take your shoes off when you go into someone's home.",
+      "Drinking alcohol in public places, such as streets, squares and parks, is against the law and can bring a fine.",
+      "Cross the road only at crossings and on green: police fine people for jaywalking.",
+      "Drivers must keep dipped headlights on day and night all year.",
+      "At Auschwitz-Birkenau and other memorials, dress and behave as you would at a place of mourning."
+    ],
+    "tipping": "About 10% in restaurants with table service, for good service; check first whether service is already on the bill. Be careful saying \"dziękuję\" (thank you) as you hand over the money: it can be taken to mean \"keep the change\".",
+    "dress": "Casual and practical; people dress neatly in the cities. Cover your shoulders and knees in churches, which are places of worship first. Bring warm layers in winter and good boots for the Tatras.",
+    "food": [
+      {
+        "name": "Pierogi",
+        "text": "Dumplings filled with potato and curd cheese (ruskie), meat, cabbage and mushrooms, or summer fruit, boiled or fried and topped with onions or sour cream."
+      },
+      {
+        "name": "Żurek",
+        "text": "A sour soup of fermented rye with sausage and a boiled egg, sometimes served in a hollowed-out loaf."
+      },
+      {
+        "name": "Bigos",
+        "text": "Hunter's stew of sauerkraut, cabbage, several kinds of meat and mushrooms, cooked slowly and better on the second or third day."
+      },
+      {
+        "name": "Oscypek",
+        "text": "Smoked sheep's cheese from the Tatra highlands, pressed in carved wooden moulds and sold grilled with cranberry jam at Zakopane's stalls."
+      },
+      {
+        "name": "Milk bars (bary mleczne)",
+        "text": "Simple, cheap canteens that date from communist times and still serve home cooking: soups, pierogi and potato pancakes."
+      },
+      {
+        "name": "Pączki and sernik",
+        "text": "Doughnuts filled with rose-petal jam, and baked cheesecake, from any cake shop (cukiernia)."
+      }
+    ],
+    "phrases": {
+      "language": "Polish",
+      "intro": "English is common among younger people and in the cities, less so in the countryside. The stress almost always falls on the second-to-last syllable. W is \"v\", ł is \"w\", sz is \"sh\", cz is \"ch\", rz and ż are like the \"s\" in \"pleasure\", and ę and ą are nasal.",
+      "items": [
+        { "phrase": "Dzień dobry", "say": "jen DOH-brih", "meaning": "Hello; good day" },
+        { "phrase": "Cześć", "say": "cheshch", "meaning": "Hi; bye (informal)" },
+        { "phrase": "Proszę", "say": "PROH-sheh", "meaning": "Please; here you are" },
+        { "phrase": "Dziękuję", "say": "jen-KOO-yeh", "meaning": "Thank you" },
+        { "phrase": "Przepraszam", "say": "psheh-PRAH-sham", "meaning": "Excuse me; sorry" },
+        { "phrase": "Czy mówi pan/pani po angielsku?", "say": "chih MOO-vee pahn/PAH-nee poh ahn-GYEL-skoo", "meaning": "Do you speak English? (to a man / a woman)" },
+        { "phrase": "Rachunek, proszę", "say": "rah-HOO-nek PROH-sheh", "meaning": "The bill, please" },
+        { "phrase": "Na zdrowie!", "say": "nah ZDROH-vyeh", "meaning": "Cheers!" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q36",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Polish złoty (zł). The euro isn't used. Cards, contactless and phone payments are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q123213"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Polish. Kashubian, spoken in the countryside west of Gdańsk, is a recognised regional language, and a few areas near the borders, home to minorities, have bilingual signs.",
+        "sources": [{ "property": "P37", "values": ["Q809", "Q33690", "Q9091"] }],
+        "note": "Wikidata lists Belarusian, Silesian and Kashubian as auxiliary languages. Belarusian is one in a few communes of Podlaskie, as German and Lithuanian (not in Wikidata's list) are in others. Silesian isn't recognised as a regional language under Polish law (a bill to recognise it was vetoed in 2024), so the page leaves it out."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata also lists 220 V, the older standard, at normal rank; the preferred value and today's supply is 230 V."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q207020", "Q6655", "Q6723"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for any emergency; 999 for an ambulance, 998 for fire and 997 for police",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q3086706", "Q25648832", "Q25648827"] }],
+        "note": "Wikidata also lists 986, the municipal police (straż miejska), which the page leaves out."
+      },
+      {
+        "key": "callingCode",
+        "text": "+48",
+        "sources": [{ "property": "P474", "values": ["+48"] }]
+      }
+    ]
+  }
+}

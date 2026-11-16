@@ -164,20 +164,16 @@ export function countryCapProblem(map, countryCode, kind = 'PHOTO') {
   return `${number(Math.min(count, cap))} of ${number(cap)} photos of ${countryName(countryCode)} on this map.${isTopPlan(planId) ? '' : ' Upgrade to add more.'}`;
 }
 
-// Videos (server utils/planLimits.js VIDEO_MESSAGES, checkVideoAllowed, checkVideoSizes, checkVideoCap)
+// Videos (server utils/planLimits.js VIDEO_MESSAGES, checkVideoAllowed, checkVideoCap)
 export const VIDEO_MESSAGES = {
   notOnPlan: 'Videos are part of First Class. Upgrade this map’s owner to add them.',
-  sizes: 'A video sends a THUMB and a DISPLAY poster frame and its file as the ORIGINAL.',
   duration: 'A video can be up to 3 minutes long.',
   landmark: 'Landmark stamps come from photos, not videos.',
+  useVideoUpload: 'Videos upload through POST /maps/:mapId/videos/upload.',
 };
 
 /** Can this map take videos (its owner on First Class)? null, or the 403 message. */
 export const videoNotAllowed = (map) => (planOf(mapPlanId(map)).limits.videos ? null : VIDEO_MESSAGES.notOnPlan);
-
-/** A video's files: exactly THUMB, DISPLAY and ORIGINAL. null, or the 400 message. */
-export const videoSizesProblem = (sizes) =>
-  sizes.length === 3 && ['THUMB', 'DISPLAY', 'ORIGINAL'].every((s) => sizes.includes(s)) ? null : VIDEO_MESSAGES.sizes;
 
 /** One more video of `countryCode`: null, or "20 of 20 videos of Italy on this map." */
 function videoCapProblem(map, countryCode) {

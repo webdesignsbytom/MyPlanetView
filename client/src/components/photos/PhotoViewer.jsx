@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 // Api
 import { deletePhoto, getPhoto } from '@/api/travelApi';
 // Components
@@ -8,6 +8,7 @@ import InlineAlert from '@/components/common/InlineAlert';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import PhotoEditForm from './PhotoEditForm';
 import PhotoLandmarkList from './PhotoLandmarkList';
+import PhotoThemeLine from '@/components/themes/PhotoThemeLine';
 import VideoPlayer from './VideoPlayer';
 import VerifyFirstNote from '@/components/map/VerifyFirstNote';
 // Utils
@@ -18,9 +19,11 @@ import { formatVideoLength } from '@/utils/photos/videoLength';
 // One photo, large. Editors can change it, confirm landmark matches, download the best
 // copy kept (the original, which keeps its location, or on an Economy map the print copy:
 // `bestCopy`) and delete it. Link visitors pass `shareCode`.
-// A video (First Class; docs/API.md, "Videos") plays in the browser's player, or offers
-// itself to download where the browser can't play it. It has no landmark tools: landmark
-// stamps come from photos.
+// A video (First Class; docs/API.md, "Videos") plays from Cloudflare Stream (VideoPlayer);
+// one still converting says so and is checked again every few seconds. It has no
+// landmark tools (landmark stamps come from photos) and no download: Stream keeps no
+// original file to hand back.
+const VIDEO_CHECK_EVERY_MS = 6000;
 // `locked`: an editor whose email address isn't verified yet sees the photo (and can
 // download the original) but can't change it, and is told why.
 function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trips, onChanged, onDeleted, onClose }) {
@@ -50,6 +53,36 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
     setPhoto((prev) => ({ ...prev, ...updated }));
     onChanged?.(updated);
   };
+
+  // A video Cloudflare is still converting (editors only): opening it again asks Stream on
+  // the server, so ask now and then while it's open, and when "Check now" is pressed. A
+  // change (ready, or failed) also goes to the gallery.
+  const [checking, setChecking] = useState(false);
+  const processing = photo?.kind === 'VIDEO' && photo.videoState === 'PROCESSING';
+  // The latest onChanged, so the timer below isn't restarted by every parent render
+  const onChangedRef = useRef(onChanged);
+  useEffect(() => {
+    onChangedRef.current = onChanged;
+  });
+  const checkVideo = useCallback(async () => {
+    setChecking(true);
+    try {
+      const { photo: loaded } = await getPhoto(photoId, { shareCode });
+      if (loaded.videoState !== 'PROCESSING') {
+        setPhoto(loaded);
+        onChangedRef.current?.(loaded);
+      }
+    } catch {
+      // Left as it is; the next check tries again
+    } finally {
+      setChecking(false);
+    }
+  }, [photoId, shareCode]);
+  useEffect(() => {
+    if (!processing) return undefined;
+    const timer = window.setInterval(checkVideo, VIDEO_CHECK_EVERY_MS);
+    return () => window.clearInterval(timer);
+  }, [processing, checkVideo]);
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -81,7 +114,7 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
       {photo ? (
         <div className='grid gap-4 md:grid-cols-wide-narrow'>
           {isVideo ? (
-            <VideoPlayer photo={photo} />
+            <VideoPlayer photo={photo} checking={checking} onRefresh={checkVideo} />
           ) : (
             <img
               src={photo.displayUrl}
@@ -125,6 +158,8 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
             ) : isVideo ? null : (
               <PhotoLandmarkList photo={photo} canEdit={canEdit && !locked} onChanged={applyChange} />
             )}
+            {/* The monthly themes it's in, and entering this month's (editors; docs/API.md "Photo themes") */}
+            {editing || isVideo ? null : <PhotoThemeLine photo={photo} canEdit={canEdit && !locked && !shareCode} onChanged={applyChange} />}
 
             {canEdit && locked ? <VerifyFirstNote action='change or delete photos' /> : null}
             {canEdit && !editing ? (
@@ -141,7 +176,7 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
                     rel='noreferrer'
                     className='btn-paper [--btn-leading:1.5rem] [--btn-pad-x:1rem] [--btn-pad-y:0.375rem] [--btn-size:1.125rem]'
                   >
-                    {isVideo ? 'Download video' : photo.bestCopy === 'PRINT' ? 'Download print copy' : 'Download original'}
+                    {photo.bestCopy === 'PRINT' ? 'Download print copy' : 'Download original'}
                   </a>
                 ) : null}
                 {locked ? null : confirmingDelete ? (

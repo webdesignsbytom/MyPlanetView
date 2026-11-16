@@ -18,6 +18,7 @@ import {
   ADMIN_EVENTS_PAGE_URL,
   ADMIN_PROMO_CODES_PAGE_URL,
   ADMIN_OFFERS_PAGE_URL,
+  ADMIN_THEMES_PAGE_URL,
   LEGAL_AGREEMENTS_PAGE_URL,
   TERMS_AND_CONDITIONS_PAGE_URL,
   PRIVACY_POLICIES_PAGE_URL,
@@ -30,6 +31,9 @@ import {
   WELCOME_PAGE_URL,
   SHARED_PAGE_URL,
   INVITE_PAGE_URL,
+  CHALLENGES_PAGE_URL,
+  CHALLENGE_PAGE_URL,
+  CHALLENGE_JOIN_PAGE_URL,
   MAP_PASSPORT_PAGE_URL,
   SHARED_PASSPORT_PAGE_URL,
 } from '../constants/routes.js';
@@ -149,6 +153,23 @@ export const helmetData = {
     indexing: 'noindex,nofollow',
   },
 
+  // Friends challenges
+  [CHALLENGES_PAGE_URL]: {
+    pageName: 'Challenges',
+    desc: `Race your friends on ${CompanyName}: new countries, landmarks and theme photos between two dates.`,
+    indexing: 'noindex,nofollow',
+  },
+  [CHALLENGE_PAGE_URL]: {
+    pageName: 'Challenge',
+    desc: `A friends challenge on ${CompanyName}: the leaderboard, names and counts only.`,
+    indexing: 'noindex,nofollow',
+  },
+  [CHALLENGE_JOIN_PAGE_URL]: {
+    pageName: 'Join a challenge',
+    desc: `A friend has challenged you on ${CompanyName}. Join with your travel map.`,
+    indexing: 'noindex,nofollow',
+  },
+
   // A map's passport: its own address, and through the map's share link
   [MAP_PASSPORT_PAGE_URL]: {
     pageName: 'Passport',
@@ -200,6 +221,12 @@ export const helmetData = {
 
   [ADMIN_OFFERS_PAGE_URL]: {
     pageName: 'Travel Offers',
+    additionalMeta: [],
+    structuredData: [],
+    indexing: 'noindex,nofollow',
+  },
+  [ADMIN_THEMES_PAGE_URL]: {
+    pageName: 'Photo Themes',
     additionalMeta: [],
     structuredData: [],
     indexing: 'noindex,nofollow',

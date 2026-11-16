@@ -191,7 +191,7 @@ export function registerTripRoutes() {
     const { trip, role, reply } = loadTrip(params.tripId, 'VIEWER');
     if (reply) return reply;
     const page = photoPage(getDb().photos.filter((p) => p.tripId === trip.id), role, { ...query, tripId: trip.id });
-    return page.error ? fail(400, page.error) : ok(page);
+    return page.error ? fail(page.status ?? 400, page.error) : ok(page);
   });
 
   // Stops

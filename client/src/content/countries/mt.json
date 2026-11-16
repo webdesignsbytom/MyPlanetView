@@ -1,0 +1,190 @@
+{
+  "code": "MT",
+  "slug": "malta",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Merħba", "Malta"],
+  "summary": "Honey-coloured stone towns, clear blue water and temples older than the pyramids.",
+  "overview": [
+    "Malta is a small group of islands in the middle of the Mediterranean, south of Sicily: Malta itself, greener and quieter Gozo, and tiny Comino between the two. In a short stay you can see Valletta, the fortified capital built by the Knights of St John, the walled hilltop town of Mdina, prehistoric temples older than the pyramids of Egypt, and some of the clearest water in Europe for swimming and diving.",
+    "Distances are short. Buses reach most of the main island, though they can be slow and full in summer, and ferries cross to Gozo many times a day. English is an official language alongside Maltese, so getting around is easy. Most of the coast is rocky: the sandy beaches are mainly in the north and on Gozo, and many people swim from flat rocks and ladders instead."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm and sunny, with wild flowers in the fields before the summer dries them out. Good for walking and sightseeing; the sea is still cool for swimming until late May. Easter brings processions in towns and villages."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot, dry and bright, often above 30°C, with warm nights and a warm sea. July and August are the busiest and dearest months, and most weekends some village holds its festa."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The sea stays warm into October while the crowds thin out. The first heavy rain usually comes in October or November, often as short, sharp storms."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild by day, around 15°C, but often windy and showery, and the sea is too cold for most swimmers. A quiet, cheaper time for sightseeing and walking on Gozo."
+      }
+    ],
+    "weather": "A Mediterranean climate: long, hot, dry summers and mild, wetter winters. Malta is one of the sunniest places in Europe, and almost all of its rain falls between October and March. The wind matters as much as the temperature: the cool north-westerly majjistral blows often, and in spring and autumn the hot, humid xlokk (sirocco) can arrive from Africa.",
+    "festivals": [
+      {
+        "name": "Carnival (Il-Karnival)",
+        "place": "Valletta and Floriana; Nadur, on Gozo",
+        "when": "The days before Lent, usually in February or early March",
+        "months": [2, 3],
+        "text": "Decorated floats, costumes and dancing in the capital. Nadur holds a rougher, more spontaneous carnival of its own, with home-made masks and costumes."
+      },
+      {
+        "name": "Holy Week and Easter",
+        "place": "Across the islands",
+        "when": "The week before Easter, in March or April",
+        "months": [3, 4],
+        "text": "On Good Friday many towns carry life-size statues of the Passion through the streets. On Easter Sunday, in some towns, men run through the streets carrying the statue of the risen Christ."
+      },
+      {
+        "name": "L-Imnarja",
+        "place": "Buskett Gardens and Rabat",
+        "when": "29 June, starting the evening before",
+        "months": [6],
+        "text": "An old harvest feast for St Peter and St Paul: folk singing (għana) and rabbit stew in the woods of Buskett, and bareback horse and donkey races in Rabat on the day itself."
+      },
+      {
+        "name": "Village festas",
+        "place": "Towns and villages on Malta and Gozo",
+        "when": "Mostly June to September",
+        "months": [6, 7, 8, 9],
+        "text": "Each parish honours its patron saint with a week of street decorations, brass bands, fireworks and a procession of the saint's statue. Santa Marija, on 15 August, is celebrated in several places at once. Ask locally which one falls on your dates."
+      },
+      {
+        "name": "Notte Bianca",
+        "place": "Valletta",
+        "when": "Usually one night in early October",
+        "months": [10],
+        "text": "Museums, palaces and churches stay open late, many of them free, with music and street performances across the capital."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Valletta and the harbour towns",
+        "text": "Valletta and the Three Cities (Birgu, Senglea and Cospicua) face each other across the Grand Harbour, linked by small ferries and traditional boats. Good all year; in summer the narrow streets hold the heat, so walk them early and late."
+      },
+      {
+        "name": "The north and its beaches",
+        "text": "Mellieħa, Golden Bay and Għajn Tuffieħa have the main island's sandy beaches, at their best from June to September and crowded at weekends. The ferry to Gozo leaves from Ċirkewwa, at the north-western tip."
+      },
+      {
+        "name": "Gozo",
+        "text": "Greener, slower and more rural, with the Ċittadella in Victoria, Ramla Bay's red sand, coastal walks and good diving. The ferry takes about 25 minutes, and the island is worth a night or two rather than a rushed day trip."
+      },
+      {
+        "name": "Comino",
+        "text": "Almost empty of people, with the turquoise Blue Lagoon. On summer days it's packed with boat trips: go early or late, or in spring and autumn."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you meet someone; friends often greet each other with a kiss on each cheek. \"Bonġu\" (good morning) and \"bonswa\" (good evening) are welcome, though people will usually answer you in English.",
+    "etiquette": [
+      "Malta is strongly Catholic and its churches are many and grand. Visit them outside Mass times, keep your voice down and dress modestly (see below).",
+      "Cars drive on the left, roads on the main island are busy and parking is hard to find, so allow more time than the short distances suggest.",
+      "Many people swim from rocks and ladders as well as beaches. Watch the flags (red means no swimming), and in summer look out for jellyfish in some bays.",
+      "Tap water is safe to drink, but much of it is desalinated and many people prefer bottled.",
+      "Smaller shops often close for a few hours after lunch, and many are shut on Sundays."
+    ],
+    "tipping": "Not obligatory. In restaurants, 5 to 10% is usual for good service when none has been added to the bill; round up for taxis and leave small change in cafés.",
+    "dress": "Light summer clothes, and a jumper and a rain jacket in winter, when the wind can be cold. Cover your shoulders and knees in churches: St John's Co-Cathedral in Valletta also asks visitors not to wear stiletto heels, which damage its marble floor. Keep swimwear for the beach and the rocks, not the town.",
+    "food": [
+      {
+        "name": "Pastizzi",
+        "text": "Flaky pastry parcels filled with ricotta or mushy peas, sold hot and cheap from small shops. The classic snack, with tea or a bottle of Kinnie, the local bitter-orange soft drink."
+      },
+      {
+        "name": "Stuffat tal-fenek",
+        "text": "Rabbit slowly stewed in wine, tomato and garlic, the national dish. At a fenkata, a rabbit feast, the sauce is often served first with spaghetti and the meat after."
+      },
+      {
+        "name": "Ħobż biż-żejt",
+        "text": "Crusty Maltese bread rubbed with tomato paste and olive oil and piled with tuna, capers, olives and onion: an easy lunch for the beach."
+      },
+      {
+        "name": "Lampuki pie",
+        "text": "A pie of dorado (lampuki) with vegetables, olives and capers, made while the fish are in season, from late summer to early winter."
+      },
+      {
+        "name": "Ġbejniet",
+        "text": "Small round sheep's-milk cheeses from Gozo, eaten fresh, dried or rolled in crushed pepper."
+      },
+      {
+        "name": "Imqaret",
+        "text": "Diamond-shaped pastries filled with dates and deep-fried, sold hot at stalls and festas."
+      }
+    ],
+    "phrases": {
+      "language": "Maltese",
+      "intro": "Everyone speaks English, but a word of Maltese goes down well. It's a Semitic language written in Latin letters, with many Italian and English words. Ċ sounds like the ch in church, ġ like the j in jam and x like sh; h and għ are usually silent, while ħ is a breathy h.",
+      "items": [
+        { "phrase": "Bonġu", "say": "BON-joo", "meaning": "Good morning; hello" },
+        { "phrase": "Bonswa", "say": "BON-swah", "meaning": "Good evening" },
+        { "phrase": "Jekk jogħġbok", "say": "yek YOJ-bok", "meaning": "Please" },
+        { "phrase": "Grazzi", "say": "GRAHT-see", "meaning": "Thank you" },
+        { "phrase": "Skużani", "say": "skoo-ZAH-nee", "meaning": "Excuse me; sorry" },
+        { "phrase": "Iva / Le", "say": "EE-vah / leh", "meaning": "Yes / No" },
+        { "phrase": "Kemm jiswa?", "say": "kem YEES-wah", "meaning": "How much is it?" },
+        { "phrase": "Saħħa", "say": "SAH-hah", "meaning": "Cheers; goodbye (literally \"health\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q233",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Maltese and English, both official. Nearly everyone speaks English.",
+        "sources": [{ "property": "P37", "values": ["Q9166", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q5412115"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata also lists 191 (police), 199 (fire), 196 (ambulance) and a non-emergency medical line; the page gives 112, which reaches every service."
+      },
+      {
+        "key": "callingCode",
+        "text": "+356",
+        "sources": [{ "property": "P474", "values": ["+356"] }]
+      }
+    ]
+  }
+}

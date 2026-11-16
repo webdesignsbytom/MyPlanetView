@@ -10,17 +10,17 @@ import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import { formatDay } from '@/utils/functions/dates';
 
 const PAGE_SIZE = 60;
-const MOST_PAGES = 20; // 1,200 photos: more than any plan keeps of one country
+const MOST_PAGES = 20; // 1,200 photos of one landmark: more than any plan keeps of a country
 
 const photoLabel = (photo) => photo.caption || (photo.takenAt ? `Photo from ${formatDay(photo.takenAt)}` : 'Photo');
 
 /**
  * Choosing the photo a stamp shows (owner and editors; docs/API.md, "Passport"): any of the
- * landmark's confirmed photos on the map. There's no list of a landmark's photos, so this
- * pages through the country's photos and keeps those confirmed as this landmark.
+ * landmark's confirmed photos on the map, whichever country they were placed in (a photo
+ * taken across a border), oldest first: the photo list's `landmark` filter.
  * "Use the first photo" goes back to the earliest. `onSaved` reloads the passport.
  */
-function StampPhotoPicker({ mapId, countryCode, stamp, onSaved, onClose }) {
+function StampPhotoPicker({ mapId, stamp, onSaved, onClose }) {
   const [list, setList] = useState({ photos: [], loading: true, error: null });
   const [busy, setBusy] = useState(null);
   const [error, setError] = useState(null);
@@ -32,12 +32,10 @@ function StampPhotoPicker({ mapId, countryCode, stamp, onSaved, onClose }) {
         const found = [];
         let cursor;
         for (let page = 0; page < MOST_PAGES; page++) {
-          const { photos, nextCursor } = await getPhotoPage({ mapId, country: countryCode, cursor, limit: PAGE_SIZE });
+          const { photos, nextCursor } = await getPhotoPage({ mapId, landmark: stamp.landmarkId, cursor, limit: PAGE_SIZE });
           if (cancelled) return;
           // Stamps come from photos, never videos (docs/API.md, "Videos")
-          found.push(
-            ...photos.filter((photo) => photo.kind !== 'VIDEO' && photo.landmarks?.some((l) => l.id === stamp.landmarkId && l.confirmed)),
-          );
+          found.push(...photos.filter((photo) => photo.kind !== 'VIDEO'));
           if (!nextCursor) break;
           cursor = nextCursor;
         }
@@ -49,7 +47,7 @@ function StampPhotoPicker({ mapId, countryCode, stamp, onSaved, onClose }) {
     return () => {
       cancelled = true;
     };
-  }, [mapId, countryCode, stamp.landmarkId]);
+  }, [mapId, stamp.landmarkId]);
 
   const save = async (key, action) => {
     setBusy(key);

@@ -5,6 +5,9 @@ import { getPhotoPage } from '@/api/travelApi';
 import { SLIDE_PAGE_SIZE } from '@/utils/photos/slideshow';
 
 const START = { photos: [], nextCursor: null, loading: true, error: null, complete: false, stale: false };
+// A video plays only once Cloudflare has converted it (docs/API.md "Videos"): its editors'
+// lists also hold ones still converting, or failed, with nothing to play, so the show skips them
+const playable = (photo) => photo.kind !== 'VIDEO' || Boolean(photo.videoUrl);
 
 /**
  * The photos a slideshow plays (docs/API.md, "Slideshows"): a map's (`mapId`), a trip's
@@ -25,9 +28,10 @@ export default function useSlideshowPhotos({ mapId, tripId, shareCode, country, 
       try {
         const page = await getPhotoPage({ mapId, tripId, shareCode, country, order, seed, display: true, limit: SLIDE_PAGE_SIZE, cursor });
         if (generation !== generationRef.current) return;
+        const photos = (page.photos || []).filter(playable);
         setState((prev) => ({
           ...prev,
-          photos: cursor ? [...prev.photos, ...(page.photos || [])] : page.photos || [],
+          photos: cursor ? [...prev.photos, ...photos] : photos,
           nextCursor: page.nextCursor || null,
           complete: !page.nextCursor,
           loading: false,

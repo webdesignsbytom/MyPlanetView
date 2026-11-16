@@ -1,0 +1,198 @@
+{
+  "code": "KR",
+  "slug": "south-korea",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Annyeonghaseyo", "Hanguk"],
+  "summary": "Palaces and neon in Seoul, temples in the hills, and food worth the trip.",
+  "overview": [
+    "South Korea packs a lot into a small country: Seoul, a vast, round-the-clock capital with royal palaces between its towers; Busan, a port city of beaches and fish markets; Gyeongju, the old capital of the Silla kingdom, full of royal tombs and temples; mountain national parks laced with walking trails; and Jeju, a volcanic island off the south coast.",
+    "It's an easy country to travel in. KTX high-speed trains link Seoul and Busan in under three hours, city subways are cheap and signed in English, and a rechargeable T-money card pays for them, buses and many taxis. Cards are taken almost everywhere. Google Maps gives only limited directions here, so download a Korean map app such as Naver Map or Kakao Map."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Cherry blossom opens in late March in the south and on Jeju, and in early April around Seoul, followed by mild, sunny weeks. Fine dust, and yellow dust blown in from the deserts of China and Mongolia, can make spring days hazy: air-quality apps give a daily reading."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "The rainy season (jangma) usually runs from late June to late July, with heavy downpours. August is hot and very humid, often above 30°C, and typhoons can reach the south coast and Jeju in late summer. Beaches and mountain valleys fill with holidaymakers."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Clear, dry and comfortable, and for many the best season. The leaves turn red and gold from mid-October in the mountains to early November in Seoul. Chuseok, the harvest holiday, falls in September or early October."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and dry, with Seoul often below freezing and biting winds from the north-west. Ski resorts open in Gangwon's mountains. Days are crisp and clear, the sights are quieter, and street stalls sell hot snacks."
+      }
+    ],
+    "weather": "Four distinct seasons: cold, dry winters, with Seoul's January days often below freezing; mild springs; hot, humid summers, when most of the year's rain falls in the summer monsoon; and clear, mild autumns. Busan, the south coast and Jeju are a few degrees milder in winter than Seoul.",
+    "festivals": [
+      {
+        "name": "Seollal (Lunar New Year)",
+        "place": "Across the country",
+        "when": "Usually late January or February",
+        "months": [1, 2],
+        "text": "Three days when families gather at home, honour their ancestors and play traditional games. Many family-run shops and restaurants close, and trains out of the cities are booked up weeks ahead."
+      },
+      {
+        "name": "Jinhae Cherry Blossom Festival (Gunhangje)",
+        "place": "Jinhae, in Changwon, near Busan",
+        "when": "Usually late March to early April",
+        "months": [3, 4],
+        "text": "The country's biggest blossom festival, in a naval port whose streets, stream banks and old railway line are lined with cherry trees."
+      },
+      {
+        "name": "Buddha's Birthday and the Lotus Lantern Festival",
+        "place": "Temples across the country; the parade in Seoul",
+        "when": "The eighth day of the fourth lunar month, usually in May",
+        "months": [4, 5],
+        "text": "Temples hang thousands of paper lanterns, and on a weekend before the holiday Seoul's Lotus Lantern Festival parades lit lanterns through the city centre after dark."
+      },
+      {
+        "name": "Boryeong Mud Festival",
+        "place": "Daecheon Beach, Boryeong",
+        "when": "Usually in July",
+        "months": [7],
+        "text": "Mud slides, mud wrestling and mud baths by the sea, using the area's mineral-rich mud. Popular with young visitors."
+      },
+      {
+        "name": "Chuseok",
+        "place": "Across the country",
+        "when": "The 15th day of the eighth lunar month, usually in September, sometimes early October",
+        "months": [9, 10],
+        "text": "The harvest festival: families travel home to visit their ancestors' graves and share half-moon rice cakes (songpyeon). Roads and trains are packed, and many businesses close for three days."
+      },
+      {
+        "name": "Busan International Film Festival",
+        "place": "Busan",
+        "when": "Usually early October",
+        "months": [10],
+        "text": "One of Asia's biggest film festivals, with hundreds of screenings open to the public, many with English subtitles, and outdoor shows by the sea."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Seoul and around",
+        "text": "Palaces, markets, museums and neighbourhoods to fill a week, with day trips to the fortress walls of Suwon and, on organised tours only, the border zone with the North (the DMZ). Good all year, if you dress for the winter cold."
+      },
+      {
+        "name": "Busan and the south-east",
+        "text": "Beaches, fish markets and hillside villages in Busan, an easy trip from Gyeongju's tombs and temples. A few degrees warmer than Seoul in winter, and busy on the beaches in summer."
+      },
+      {
+        "name": "Gangwon and the east coast",
+        "text": "Seoraksan National Park is at its finest in October's colours, ski resorts open in winter, and the east-coast beaches fill in July and August."
+      },
+      {
+        "name": "Jeju",
+        "text": "A volcanic island about an hour's flight from Seoul, with Hallasan, the country's highest mountain, lava tubes, the Olle coastal walking trails and the haenyeo, women who free-dive for shellfish. Mildest in winter but windy, and busiest in summer."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A bow, from a small nod to friends to a deeper bow for elders; men often shake hands too. Give and take things with both hands, or with the right hand supported by the left. \"Annyeonghaseyo\" is the all-purpose polite hello. Age matters: older people are greeted first and served first.",
+    "etiquette": [
+      "At the table, wait for the eldest to start. Don't stand chopsticks upright in rice (a funeral custom), and leave your rice bowl on the table rather than lifting it: rice is eaten with a spoon.",
+      "Pour drinks for others rather than yourself, and when an older person pours for you, hold your glass with both hands. Turn your head slightly away from elders when you drink.",
+      "Take your shoes off in homes, temples, guesthouses and restaurants with floor seating.",
+      "On the subway, leave the seats at the ends of each carriage for older and disabled passengers, and the pink seats for pregnant women. Keep phone calls short and quiet.",
+      "Writing someone's name in red ink is a bad omen: it was once used for the names of the dead.",
+      "Some restaurants, barbecue places especially, serve portions for two or more and may not take a single diner."
+    ],
+    "tipping": "Not customary, and a tip may be politely refused. Prices include tax and service; some upmarket hotels add a service charge to the bill.",
+    "dress": "Neat and casual: people dress well in the cities. Light clothes for humid summers, and a warm coat, hat and gloves for winter. Cover your shoulders at temples. Wear socks without holes, since your shoes come off often.",
+    "food": [
+      {
+        "name": "Kimchi and banchan",
+        "text": "Kimchi is fermented cabbage (or radish and other vegetables) with chilli and garlic. It comes with every meal among the small side dishes (banchan), which are usually refilled for free."
+      },
+      {
+        "name": "Korean barbecue",
+        "text": "Pork belly (samgyeopsal) or marinated beef (bulgogi) grilled at your table, then wrapped in lettuce with garlic, chilli and a spicy bean paste (ssamjang)."
+      },
+      {
+        "name": "Bibimbap",
+        "text": "Rice topped with vegetables, a fried egg and chilli paste, mixed together before eating. Served in a hot stone bowl (dolsot), it forms a crisp crust. Jeonju is famous for it."
+      },
+      {
+        "name": "Fried chicken and beer (chimaek)",
+        "text": "Crisp Korean fried chicken, plain or glazed in a sweet-hot sauce, shared over cold beer late into the evening."
+      },
+      {
+        "name": "Street food",
+        "text": "Tteokbokki (chewy rice cakes in a spicy red sauce), hotteok (pancakes filled with brown sugar and nuts) and mung-bean pancakes, at stalls and markets such as Gwangjang in Seoul."
+      },
+      {
+        "name": "Naengmyeon",
+        "text": "Thin buckwheat noodles in an icy broth, a summer favourite. Ask the server to cut the long noodles with scissors."
+      }
+    ],
+    "phrases": {
+      "language": "Korean",
+      "intro": "Korean is written in Hangul, an alphabet whose 24 basic letters you can learn to sound out in an afternoon, which helps with signs and menus. Younger people in cities often speak some English.",
+      "items": [
+        { "phrase": "Annyeonghaseyo (안녕하세요)", "say": "an-nyong-ha-SAY-yo", "meaning": "Hello (polite)" },
+        { "phrase": "Gamsahamnida (감사합니다)", "say": "KAHM-sah-hahm-nee-dah", "meaning": "Thank you" },
+        { "phrase": "Joesonghamnida (죄송합니다)", "say": "chweh-SONG-hahm-nee-dah", "meaning": "I'm sorry" },
+        { "phrase": "Jeogiyo (저기요)", "say": "CHUH-gee-yo", "meaning": "Excuse me (to call a server)" },
+        { "phrase": "Igeo juseyo (이거 주세요)", "say": "EE-guh choo-SAY-yo", "meaning": "This one, please" },
+        { "phrase": "Eolmayeyo? (얼마예요?)", "say": "UHL-mah-yeh-yo", "meaning": "How much is it?" },
+        { "phrase": "Masisseoyo (맛있어요)", "say": "mah-SHEE-suh-yo", "meaning": "It's delicious" },
+        { "phrase": "Geonbae (건배)", "say": "GUHN-beh", "meaning": "Cheers" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q884",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "South Korean won (₩). Cards are accepted almost everywhere, even for small amounts.",
+        "sources": [{ "property": "P38", "values": ["Q202040"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Korean, written in Hangul; Korean Sign Language is official too. Signs in cities and on public transport are also in English.",
+        "sources": [{ "property": "P37", "values": ["Q9176", "Q3073428"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Korea Standard Time, UTC+9, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q76133", "Q7041", "Q27963524"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police; 119 for fire and ambulance. The Korea Travel Hotline, 1330, answers visitors' questions in English and other languages.",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q2807090"] }],
+        "note": "Wikidata also lists 113 (for reporting spies), which the page leaves out. 1330, a tourist helpline rather than an emergency number, isn't in Wikidata."
+      },
+      {
+        "key": "callingCode",
+        "text": "+82",
+        "sources": [{ "property": "P474", "values": ["+82"] }]
+      }
+    ]
+  }
+}

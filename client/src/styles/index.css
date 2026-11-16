@@ -50,8 +50,28 @@
   --poster-paper: #dcbc90;
   --poster-brown: #97572b;
   --poster-ink: #000000;
+  /* Ink on poster red (the poster buttons): poster-ink, white in black and white, where
+     the red turns black */
+  --poster-red-ink: var(--poster-ink);
   --poster-cream: #ffffff;
   --poster-wash: rgb(255 255 255 / 0.65);
+  /* Passport covers by plan (components/passport/PassportCover.jsx): leather boards with
+     foil stamping, Economy burgundy with gold, Business navy with silver, First Class black
+     with gold. Each foil runs light, mid, dark for its shine. Fixed, like printed covers. */
+  --cover-burgundy: #5a1621;
+  --cover-navy: #14294b;
+  --cover-black: #171513;
+  --foil-gold-light: #fff0c2;
+  --foil-gold: #d6aa4c;
+  --foil-gold-dark: #85601a;
+  --foil-silver-light: #ffffff;
+  --foil-silver: #c2c8d2;
+  --foil-silver-dark: #6a7380;
+  /* Light and shade on the leather: the raised foil's edges, the hinge's crease, the sheen
+     across the board and the shadow it casts */
+  --cover-shade: rgb(0 0 0 / 0.5);
+  --cover-sheen: rgb(255 255 255 / 0.16);
+  --cover-drop: 0 1px 2px rgb(0 0 0 / 0.35), 0 14px 30px rgb(40 10 10 / 0.38);
   /* Travel paperwork (tickets, panels, tags): cream paper that follows the theme, the
      browned edge of old parchment, and a warm shadow instead of a grey one. */
   --paper-cream: light-dark(#fdf8ee, #1b1813);
@@ -118,13 +138,13 @@
   --map-land-edge: #b91c1c;
   --map-hover: #66ff66;
   --map-wish: #b45309;
-  --map-visit-1: #ffff66;
-  --map-visit-2: #ccffcc;
-  --map-visit-3: #f5a277;
+  --map-visit-1: #f0f038;
+  --map-visit-2: #0eb4a6;
+  --map-visit-3: #d8845a;
   --map-visit-4: #ff6d6a;
   --map-visit-5: #73b76a;
   --map-visit-6: #b1a2ca;
-  --map-visit-7: #e3b5d1;
+  --map-visit-7: #da92be;
   /* Antarctica's ice sheet and shelves, and their outline, as a printed atlas draws them:
      not a pastel, so it never reads as a country you've coloured in */
   --map-ice: #f4f9ff;
@@ -193,8 +213,21 @@
   --poster-paper: #e4e4e4;
   --poster-brown: #000000;
   --poster-ink: #000000;
+  --poster-red-ink: #ffffff;
   --poster-cream: #ffffff;
   --poster-wash: rgb(255 255 255 / 0.65);
+  --cover-burgundy: #252525;
+  --cover-navy: #272727;
+  --cover-black: #151515;
+  --foil-gold-light: #f0f0f0;
+  --foil-gold: #adadad;
+  --foil-gold-dark: #636363;
+  --foil-silver-light: #ffffff;
+  --foil-silver: #c7c7c7;
+  --foil-silver-dark: #727272;
+  --cover-shade: rgb(0 0 0 / 0.5);
+  --cover-sheen: rgb(255 255 255 / 0.16);
+  --cover-drop: 0 1px 2px rgb(0 0 0 / 0.35), 0 14px 30px rgb(16 16 16 / 0.38);
   --paper-cream: light-dark(#ffffff, #111111);
   --paper-burn: rgb(97 97 97 / 0.22);
   --paper-shadow: 0 2px 0 rgb(97 97 97 / 0.35), 0 10px 24px rgb(35 35 35 / 0.28);
@@ -280,6 +313,9 @@
   /* Page titles use my_planet's travel face too (every font-titleFont heading) */
   --font-titleFont: 'TravelFont', 'Poppins', system-ui, sans-serif;
   --font-fancyFont: 'TravelFont', 'Poppins', system-ui, sans-serif;
+  /* The passport cover's foil lettering: a book serif, as real passports use (system
+     fonts only, nothing to download) */
+  --font-passport: 'Palatino Linotype', Palatino, 'Book Antiqua', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
 
   --color-colour1: var(--colour1);
   --color-colour2: var(--colour2);
@@ -682,7 +718,7 @@ textarea:-webkit-autofill {
   border: 2px solid var(--poster-brown);
   border-radius: var(--radius-xs);
   background-color: var(--poster-red);
-  color: var(--btn-ink, var(--poster-ink));
+  color: var(--btn-ink, var(--poster-red-ink));
   font-family: var(--font-travel);
   font-size: var(--btn-size, 1.25rem);
   line-height: var(--btn-leading, 1.75rem);
@@ -743,6 +779,81 @@ textarea:-webkit-autofill {
 @utility paper-aged {
   background-color: var(--poster-paper);
   background-image: radial-gradient(ellipse at center, transparent 55%, var(--paper-burn) 100%);
+}
+
+/* ── The passport (components/passport/) ──
+   passport-economy, -business and -first (on the book, by the owner's plan) set the
+   leather (--board), the foil (--foil-light, --foil, --foil-dark) and the colour of the
+   page block's edges (--page-edge: gilt in First Class) for everything inside. */
+@utility passport-economy {
+  --board: var(--cover-burgundy);
+  --foil-light: var(--foil-gold-light);
+  --foil: var(--foil-gold);
+  --foil-dark: var(--foil-gold-dark);
+  --page-edge: color-mix(in oklab, var(--colour9) 45%, transparent);
+}
+@utility passport-business {
+  --board: var(--cover-navy);
+  --foil-light: var(--foil-silver-light);
+  --foil: var(--foil-silver);
+  --foil-dark: var(--foil-silver-dark);
+  --page-edge: color-mix(in oklab, var(--colour9) 45%, transparent);
+}
+@utility passport-first {
+  --board: var(--cover-black);
+  --foil-light: var(--foil-gold-light);
+  --foil: var(--foil-gold);
+  --foil-dark: var(--foil-gold-dark);
+  --page-edge: var(--foil-gold);
+}
+
+/* Pebbled leather: the board's colour under a lit noise (an SVG tiled, so drawn once),
+   a soft sheen from the top left, edges darkened by handling, and the shadow it casts */
+@utility passport-board {
+  background-color: var(--board);
+  background-image:
+    radial-gradient(130% 90% at 25% 15%, var(--cover-sheen), transparent 55%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeDiffuseLighting surfaceScale='2.2'%3E%3CfeDistantLight azimuth='225' elevation='32'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: auto, 200px 200px;
+  background-blend-mode: normal, soft-light;
+  box-shadow:
+    inset 0 0 0 1px var(--cover-sheen),
+    inset 0 0 2.5rem var(--cover-shade),
+    var(--cover-drop);
+}
+
+/* Foil pressed into the leather and standing a touch proud of it: lit from the top left */
+@utility foil-raise {
+  filter: drop-shadow(-0.5px -0.5px 0 var(--cover-sheen)) drop-shadow(0.75px 1px 0.5px var(--cover-shade));
+}
+/* Foil-stamped lettering: the foil's shine clipped to the letters, raised */
+@utility foil-text {
+  color: var(--foil);
+  background-image: linear-gradient(172deg, var(--foil-light) 8%, var(--foil) 40%, var(--foil-dark) 58%, var(--foil) 72%, var(--foil-light) 94%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(-0.5px -0.5px 0 var(--cover-sheen)) drop-shadow(0.75px 1px 0.5px var(--cover-shade));
+}
+
+/* The page block of an open passport: a few pages' edges showing round the page */
+@utility passport-pages {
+  box-shadow:
+    0 0 0 1px var(--page-edge),
+    0 0 0 3px var(--paper-cream),
+    0 0 0 4px var(--page-edge);
+}
+
+/* The fold down the middle of an open spread (wide screens) */
+@utility passport-fold {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in oklab, var(--poster-ink) 6%, transparent) 38%,
+    color-mix(in oklab, var(--poster-ink) 20%, transparent) 50%,
+    color-mix(in oklab, var(--poster-ink) 6%, transparent) 62%,
+    transparent
+  );
 }
 
 /* Paperwork for what can't be undone (deleting the account): the same paper, edged and

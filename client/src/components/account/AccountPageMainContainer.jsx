@@ -5,6 +5,7 @@ import AccountProfileSection from './AccountProfileSection';
 import AccountPlanSection from './AccountPlanSection';
 import AccountEmailSection from './AccountEmailSection';
 import AccountSessionsSection from './AccountSessionsSection';
+import AccountDataSection from './AccountDataSection';
 import AccountDeleteSection from './AccountDeleteSection';
 import ChangePasswordForm from '@/components/forms/ChangePasswordForm';
 
@@ -30,6 +31,10 @@ function AccountPageMainContainer() {
 
       <AccountCard id='account-sessions' title='Devices'>
         <AccountSessionsSection />
+      </AccountCard>
+
+      <AccountCard id='account-data' title='Your data'>
+        <AccountDataSection />
       </AccountCard>
 
       <AccountCard id='account-delete' title='Delete account' danger>

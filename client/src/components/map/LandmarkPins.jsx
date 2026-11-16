@@ -1,12 +1,15 @@
 import React, { memo, useMemo } from 'react';
 // Utils
 import { pinZoomStep, pinsShownAt, placePins } from '@/utils/map/landmarkPins';
+import { landmarkPlace } from '@/utils/map/ukNations';
 
 // Landmark pins, at their real position on the map's projection (the API's pinX/pinY).
 // Hidden until the map is zoomed in enough for them not to crowd it, unless `always`
 // (the Detailed map type). Not every landmark has a pin at every zoom: there are 1,332, so
 // utils/map/landmarkPins.js thins them out by zoom, keeping them about 30 px apart on
-// screen, more appearing as the map zooms in, all of them close up.
+// screen, more appearing as the map zooms in, all of them close up. The landmarks stamped
+// in the map's passport (`stamped`, a Set of ids: the map's stampedLandmarkIds) are gold
+// and a little bigger, and show whenever any pins do, thinned or not: they're the map's own.
 export const LANDMARK_MIN_ZOOM = 3;
 
 // Each landmark list's pins are placed once (the list is fetched once per session)
@@ -24,33 +27,57 @@ function pinsFor(landmarks) {
 // Their dark edge is one path under all of them.
 const DOT_PX = 7;
 const EDGE_PX = DOT_PX + 2;
+const STAMP_PX = 9;
+const STAMP_EDGE_PX = STAMP_PX + 2;
 const dot = (x, y) => `M${x} ${y}h0`;
+const NO_STAMPS = new Set();
 
 // `afterTap` is the viewport's: it skips the click ending a drag or a double-tap (which zooms).
 // One click handler for every pin, on the group.
-function LandmarkPins({ landmarks, zoom, onSelectCountry, afterTap, always = false }) {
+// A pin opens its landmark's country; on a map that splits the UK (`splitUk`), a UK
+// landmark's nation.
+function LandmarkPins({ landmarks, zoom, onSelectCountry, afterTap, always = false, stamped = NO_STAMPS, splitUk = false }) {
   const pins = useMemo(() => pinsFor(landmarks), [landmarks]);
   const count = zoom >= LANDMARK_MIN_ZOOM || always ? pinsShownAt(pins, pinZoomStep(zoom)) : 0;
 
-  const drawn = useMemo(() => {
-    const shown = pins.slice(0, count);
-    return (
-      <>
-        <path d={shown.map(({ x, y }) => dot(x, y)).join('')} strokeWidth={EDGE_PX} className='pointer-events-none stroke-map-edge' />
-        {shown.map(({ landmark, x, y }) => (
-          <path key={landmark.id} d={dot(x, y)} strokeWidth={DOT_PX} data-country={landmark.countryCode} className='cursor-pointer stroke-poster-red'>
-            <title>{landmark.name}</title>
-          </path>
-        ))}
-      </>
+  const { drawn, stampCount } = useMemo(() => {
+    if (!count) return { drawn: null, stampCount: 0 };
+    // The thinned pins, less the stamped ones, which are drawn over them all
+    const plain = pins.slice(0, count).filter(({ landmark }) => !stamped.has(landmark.id));
+    const mine = stamped.size ? pins.filter(({ landmark }) => stamped.has(landmark.id)) : [];
+    const pin = ({ landmark, x, y }, isStamp) => (
+      <path
+        key={landmark.id}
+        d={dot(x, y)}
+        strokeWidth={isStamp ? STAMP_PX : DOT_PX}
+        data-country={landmarkPlace(landmark, splitUk)}
+        data-stamped={isStamp ? '' : undefined}
+        className={`cursor-pointer ${isStamp ? 'stroke-cover-gold' : 'stroke-poster-red'}`}
+      >
+        <title>{isStamp ? `${landmark.name}, stamped in the passport` : landmark.name}</title>
+      </path>
     );
-  }, [pins, count]);
+    return {
+      stampCount: mine.length,
+      drawn: (
+        <>
+          <path d={plain.map(({ x, y }) => dot(x, y)).join('')} strokeWidth={EDGE_PX} className='pointer-events-none stroke-map-edge' />
+          {plain.map((p) => pin(p, false))}
+          {mine.length ? (
+            <path d={mine.map(({ x, y }) => dot(x, y)).join('')} strokeWidth={STAMP_EDGE_PX} className='pointer-events-none stroke-map-edge' />
+          ) : null}
+          {mine.map((p) => pin(p, true))}
+        </>
+      ),
+    };
+  }, [pins, count, stamped, splitUk]);
 
   if (!count) return null;
   return (
     <g
       className='fill-none [stroke-linecap:round]'
       data-landmark-pins={count}
+      data-stamped-pins={stampCount}
       onClick={(e) => {
         const code = e.target.closest?.('[data-country]')?.getAttribute('data-country');
         if (!code) return;

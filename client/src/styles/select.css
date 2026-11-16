@@ -47,6 +47,8 @@
     border-color: var(--select-border);
   }
 
+  /* Only for the keyboard, so the person tabbing sees where they are. Opening the list draws
+     nothing extra (the user's wish, 16 Nov 2026: a red outline came round every open one) */
   .app-select:focus-visible {
     outline: 2px solid var(--select-focus);
     outline-offset: 0;
@@ -72,11 +74,6 @@
     .app-select {
       background-image: none;
       padding-right: 0.75rem;
-    }
-
-    .app-select:open {
-      outline: 2px solid var(--select-focus);
-      outline-offset: 0;
     }
 
     .app-select::picker-icon {

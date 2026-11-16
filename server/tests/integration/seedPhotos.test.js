@@ -3,8 +3,36 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { cleanUp, data, defaultMapOf, inBucket, prisma, signUp } from './helpers.js';
+import { cleanUp, data, defaultMapOf, givePlan, inBucket, prisma, signUp } from './helpers.js';
 import { SEED_PHOTOS_DIR, seedDemoPhotos } from '../../prisma/seed/photos.js';
+import { deleteStoredFiles } from '../../prisma/seed/utils.js';
+import { PHOTO_PREFIX } from '../../src/services/s3/mediaService.js';
+
+// An upload's key: the map's folder, the photo's folder, `<size>-<random>.<ext>`
+const uploadKey = (mapId, photoId) =>
+  new RegExp(`^${PHOTO_PREFIX}${mapId}/${photoId}/(thumb|display|print|original)-[A-Za-z0-9]+\\.(webp|jpg)$`);
+
+// A map's owner and editor, its "Paris to Rome by train" trip, and the seed's photos on it
+async function seededMap(name, { plan } = {}) {
+  const owner = await signUp(`${name}Owner`);
+  const partner = await signUp(`${name}Partner`);
+  if (plan) await givePlan(owner.user.id, { plan });
+  const map = await defaultMapOf(owner.agent);
+  expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: partner.email, role: 'EDITOR' })).status).toBe(201);
+  const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Paris to Rome by train' })).trip;
+  return { owner, partner, map, trip };
+}
+
+const filesOf = (mapId) =>
+  prisma.photo.findMany({
+    where: { mapId },
+    select: {
+      id: true,
+      caption: true,
+      uploaderId: true,
+      variants: { select: { size: true, media: { select: { key: true, bytes: true, visibility: true, ownerId: true, originalFilename: true } } } },
+    },
+  });
 
 afterAll(cleanUp);
 
@@ -17,24 +45,19 @@ describe('the seed’s demo photos', () => {
   let trip;
 
   beforeAll(async () => {
-    owner = await signUp('SeedOwner');
-    partner = await signUp('SeedPartner');
-    map = await defaultMapOf(owner.agent);
-    expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: partner.email, role: 'EDITOR' })).status).toBe(201);
-    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Paris to Rome by train' })).trip;
+    ({ owner, partner, map, trip } = await seededMap('Seed'));
     expect(await seedDemoPhotos({ ownerEmail: owner.email, partnerEmail: partner.email })).toEqual({ photos: manifest.length });
   });
 
-  it('puts every photo on the owner’s map, with its three files in the private bucket', async () => {
-    const photos = await prisma.photo.findMany({
-      where: { mapId: map.id },
-      select: { caption: true, uploaderId: true, variants: { select: { size: true, media: { select: { key: true, bytes: true, visibility: true, ownerId: true } } } } },
-    });
+  it('uploads every photo as an Economy user would: thumb, display and print copy, at an upload’s keys', async () => {
+    const photos = await filesOf(map.id);
     expect(photos).toHaveLength(manifest.length);
     for (const photo of photos) {
-      expect(photo.variants.map((v) => v.size).sort()).toEqual(['DISPLAY', 'ORIGINAL', 'THUMB']);
+      // Economy keeps a print copy, never the original (utils/planLimits.js)
+      expect(photo.variants.map((v) => v.size).sort()).toEqual(['DISPLAY', 'PRINT', 'THUMB']);
       for (const { media } of photo.variants) {
-        expect(media.key).toMatch(/^myplanetview\/photos\/seed\/[a-z-]+\/(thumb\.webp|display\.webp|original\.jpg)$/);
+        expect(media.key).toMatch(uploadKey(map.id, photo.id));
+        expect(media.originalFilename).toBeNull();
         expect(inBucket(media.key)).toBe(true);
         expect(media.bytes).toBeGreaterThan(0);
         expect(media.visibility).toBe('PRIVATE');
@@ -67,5 +90,32 @@ describe('the seed’s demo photos', () => {
     expect(stamped).toBeGreaterThan(0);
     const passport = data(await owner.agent.get(`/api/maps/${map.id}/passport`)).passport;
     expect(passport.totals.landmarks).toBe(stamped);
+  });
+});
+
+describe('the seed’s demo photos on a paid map', () => {
+  it('keeps each photo’s original instead of a print copy, as a Business upload does', async () => {
+    const { owner, partner, map } = await seededMap('SeedPaid', { plan: 'REGULAR' });
+    await seedDemoPhotos({ ownerEmail: owner.email, partnerEmail: partner.email });
+    const photos = await filesOf(map.id);
+    expect(photos).toHaveLength(manifest.length);
+    for (const photo of photos) {
+      expect(photo.variants.map((v) => v.size).sort()).toEqual(['DISPLAY', 'ORIGINAL', 'THUMB']);
+      for (const { media } of photo.variants) expect(media.key).toMatch(uploadKey(map.id, photo.id));
+    }
+  });
+});
+
+describe('re-seeding', () => {
+  it('deletes the stored files the rows point at before the wipe, so none are left behind', async () => {
+    const { owner, partner, map } = await seededMap('SeedAgain');
+    await seedDemoPhotos({ ownerEmail: owner.email, partnerEmail: partner.email });
+    const keys = (await filesOf(map.id)).flatMap((p) => p.variants.map((v) => v.media.key));
+    expect(keys).toHaveLength(manifest.length * 3);
+    expect(keys.every(inBucket)).toBe(true);
+
+    const result = await deleteStoredFiles({ where: { ownerId: { in: [owner.user.id, partner.user.id] } } });
+    expect(result).toEqual({ files: keys.length, removed: keys.length, failed: 0 });
+    expect(keys.some(inBucket)).toBe(false);
   });
 });

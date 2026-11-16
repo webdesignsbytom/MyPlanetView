@@ -6,6 +6,7 @@ import MapTypePicker from './MapTypePicker';
 import MapSettingsToggles from './MapSettingsToggles';
 import DeleteMapSection from './DeleteMapSection';
 import MainMapSection from './MainMapSection';
+import MapDownloadSection from './MapDownloadSection';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
 // Utils
 import { saveMapSetup } from '@/utils/map/saveMapSetup';
@@ -16,8 +17,8 @@ const TABS = [
 ];
 
 // Settings: how the map looks to you (yours alone, on every map), and, for editors,
-// this map's travellers; for the owner, its name, group, making it the main map (the one
-// the plan includes) and deletion. The two tabs are
+// this map's travellers and its photos as a zip ("Print or download"); for the owner, its
+// name, group, making it the main map (the one the plan includes) and deletion. The two tabs are
 // ticket tabs: the open one is parchment and sits on the panel's brown rule. They follow
 // the ARIA tabs pattern: only the open tab is in the tab order, the arrow keys (and Home,
 // End) move between tabs and open them, and each tab names its panel.
@@ -88,15 +89,17 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locke
         <div {...panelProps('map')} hidden={tab !== 'map'} className='grid gap-5'>
           <MapSetupForm
             // Fresh after each save, so new travellers carry their ids
-            key={`${map.name}|${map.groupType}|${map.travellers.map((t) => `${t.id}:${t.name}`).join(',')}`}
+            key={`${map.name}|${map.groupType}|${map.splitUk}|${map.travellers.map((t) => `${t.id}:${t.name}`).join(',')}`}
             initial={map}
             canRename={isOwner}
+            splitUkNote
             submitLabel='Save map'
             onSubmit={async (form) => {
               await saveMapSetup(map.id, map, form, { canRename: isOwner });
               await onMapSaved();
             }}
           />
+          <MapDownloadSection map={map} />
           {isOwner && !map.isDefault ? <MainMapSection map={map} locked={locked} onChanged={onMapSaved} /> : null}
           {isOwner && !map.isDefault ? <DeleteMapSection map={map} locked={locked} onDeleted={onMapDeleted} /> : null}
         </div>

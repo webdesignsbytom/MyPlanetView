@@ -5,6 +5,8 @@ import { test, expect, makeJpeg, openMap, openTool } from './fixtures.js';
 
 const fileInput = (panel) => panel.getByLabel(/choose photos/i);
 const pictures = (gallery) => gallery.locator('ul img').evaluateAll((imgs) => imgs.map((img) => img.getAttribute('src')));
+// A country panel's photo gallery (its landmark list has pictures too)
+const photosOf = (panel) => panel.getByRole('region', { name: 'Photos' });
 
 async function uploadTo(page, panel, names) {
   for (const name of names) {
@@ -46,9 +48,9 @@ test.describe('Rearranging photos', () => {
     await upload.getByRole('button', { name: 'Close Add photos' }).click();
 
     let germany = await openCountry(page, 'Germany');
-    await expect(germany.locator('ul img')).toHaveCount(3);
+    await expect(photosOf(germany).locator('ul img')).toHaveCount(3);
     // Newest first
-    const [third, second, first] = await pictures(germany);
+    const [third, second, first] = await pictures(photosOf(germany));
 
     await germany.getByRole('button', { name: 'Rearrange photos' }).click();
     const tiles = germany.getByRole('button', { name: 'Photo', exact: true });
@@ -56,7 +58,7 @@ test.describe('Rearranging photos', () => {
     // The tiles are movable now, not links to the viewer
     await expect(tiles.first()).toHaveAttribute('aria-roledescription', 'movable photo');
     await drag(page, tiles.nth(0), tiles.nth(2));
-    await expect.poll(() => pictures(germany)).toEqual([second, first, third]);
+    await expect.poll(() => pictures(photosOf(germany))).toEqual([second, first, third]);
 
     await germany.getByRole('button', { name: 'Done rearranging' }).click();
     await expect(germany.getByRole('button', { name: 'Open Photo' })).toHaveCount(3);
@@ -64,7 +66,7 @@ test.describe('Rearranging photos', () => {
     // Closed and opened again, the panel asks for the list again: the order was saved
     await germany.getByRole('button', { name: 'Close Germany' }).click();
     germany = await openCountry(page, 'Germany');
-    await expect.poll(() => pictures(germany)).toEqual([second, first, third]);
+    await expect.poll(() => pictures(photosOf(germany))).toEqual([second, first, third]);
   });
 
   test('a photo moves with the keyboard too', async ({ page }) => {
@@ -75,8 +77,8 @@ test.describe('Rearranging photos', () => {
     await upload.getByRole('button', { name: 'Close Add photos' }).click();
 
     const austria = await openCountry(page, 'Austria');
-    await expect(austria.locator('ul img')).toHaveCount(2);
-    const [two, one] = await pictures(austria);
+    await expect(photosOf(austria).locator('ul img')).toHaveCount(2);
+    const [two, one] = await pictures(photosOf(austria));
     await austria.getByRole('button', { name: 'Rearrange photos' }).click();
     const tiles = austria.getByRole('button', { name: 'Photo', exact: true });
     await expect(tiles).toHaveCount(2);
@@ -90,7 +92,7 @@ test.describe('Rearranging photos', () => {
     await said('Photo moved to place 2 of 2.');
     await page.keyboard.press('Space');
     await said('Dropped Photo at place 2 of 2.');
-    await expect.poll(() => pictures(austria)).toEqual([one, two]);
+    await expect.poll(() => pictures(photosOf(austria))).toEqual([one, two]);
   });
 
   test('a trip’s photos have their own order', async ({ page }) => {

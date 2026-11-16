@@ -23,7 +23,17 @@ export function hashOf(text) {
   return hash >>> 0;
 }
 
-export const GROUP_LABELS = { SOLO: 'Solo', COUPLE: 'Couple', FAMILY: 'Family' };
+// The cover by the map owner's plan (docs/API.md "Passport": `map.plan`): its class, its
+// leather and foil (the passport-* utilities in index.css), and its extras: Business a
+// blind-pressed frame, First Class a foil one and gilt page edges
+const COVERS = {
+  FREE: { label: 'Economy', look: 'passport-economy', frame: null },
+  REGULAR: { label: 'Business Class', look: 'passport-business', frame: 'blind' },
+  PREMIUM: { label: 'First Class', look: 'passport-first', frame: 'foil' },
+};
+
+/** The passport cover for a plan (`map.plan`), Economy's when it's missing. */
+export const passportCover = (plan) => COVERS[plan?.id] || COVERS.FREE;
 
 export const STAMP_SHAPES = ['circle', 'oval', 'rectangle', 'triangle'];
 // Theme inks that read on the passport's cream pages in light and dark mode

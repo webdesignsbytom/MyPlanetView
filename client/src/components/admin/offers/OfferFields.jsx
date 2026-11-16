@@ -21,6 +21,7 @@ const PLACEMENT_HINTS = {
   SLIDESHOW: 'after the last photo',
   COUNTRY_PAGE: 'the public country guides',
   TRAVEL_DESK: 'when someone asks for ideas',
+  PRINT: 'beside a photo download: for printers',
 };
 
 // Every field of an offer, shared by the new-offer and change dialogs: the key (only for

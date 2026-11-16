@@ -3,8 +3,9 @@
 // (services/travel/achievements.js).
 import { sanitizeText } from './sanitize.js';
 import { isCountryCode, parseDateOnly } from './travelValidation.js';
-import { INHABITED_CONTINENTS, REGIONS } from './constants/regions.js';
+import { INHABITED_CONTINENTS, REGIONS, regionCodesOnMap } from './constants/regions.js';
 import { isSpecialPlace } from './specialPlaces.js';
+import { UK, UK_NATION_CODES, countedCountryCodes, isUkNation, placeOnMap } from './ukNations.js';
 
 export const GOAL_KINDS = Object.freeze(['COUNTRY_COUNT', 'COUNTRY_LIST', 'REGION', 'LANDMARK_COUNT']);
 export const GOALS_PER_MAP = 50;
@@ -74,10 +75,16 @@ export function parseGoalInput(body, { existing = null, isKnownCode }) {
 export const changesWhatsAsked = (data) =>
   ['target', 'countryCodes', 'region', 'deadline'].some((field) => data[field] !== undefined);
 
-/** The countries a REGION goal covers. `countriesByContinent`: continent -> its country codes. */
-export function regionCodes(region, countriesByContinent) {
-  if (REGIONS[region]) return REGIONS[region].codes;
-  return (countriesByContinent.get(region) ?? []).filter((code) => !isSpecialPlace(code));
+/**
+ * The countries a REGION goal covers. `countriesByContinent`: continent -> its codes (special
+ * places and the UK's nations among them). On a map that splits the UK (`splitUk`), the
+ * nations stand in for the UK; otherwise the UK is one.
+ */
+export function regionCodes(region, countriesByContinent, splitUk = false) {
+  if (REGIONS[region]) return regionCodesOnMap(region, splitUk);
+  return (countriesByContinent.get(region) ?? []).filter(
+    (code) => !isSpecialPlace(code) && (splitUk ? code !== UK : !isUkNation(code))
+  );
 }
 
 // The end of a deadline's day, UTC
@@ -93,15 +100,23 @@ const endOfDay = (date) => new Date(new Date(date).getTime() + 24 * 60 * 60 * 10
  * @param {Map<string, Date>} facts.firstPhotoAt each country's earliest photo (shotAt)
  * @param {{ firstShotAt: Date }[]} facts.stamps
  * @param {Map<string, string[]>} facts.countriesByContinent
+ * @param {boolean} facts.splitUk the map shows the UK as its four nations: they count as
+ *   countries one each, and a goal naming the UK is met by any of them; on a map that
+ *   doesn't, a goal naming a nation is met by the UK
  * @param {Date} now
  * @returns {{ have: number, need: number, met: boolean, missed: boolean, done?: string[] }}
  */
 export function goalProgress(goal, facts, now = new Date()) {
   const deadline = goal.deadline ? endOfDay(goal.deadline) : null;
-  const countryDone = (code) => {
+  const splitUk = Boolean(facts.splitUk);
+  const placeDone = (code) => {
     if (!deadline) return facts.visited.has(code);
     const first = facts.firstPhotoAt.get(code);
     return Boolean(first) && first.getTime() <= deadline.getTime();
+  };
+  const countryDone = (code) => {
+    const place = placeOnMap(code, splitUk);
+    return placeDone(place) || (splitUk && place === UK && UK_NATION_CODES.some(placeDone));
   };
 
   let have;
@@ -109,13 +124,16 @@ export function goalProgress(goal, facts, now = new Date()) {
   let done;
   if (goal.kind === 'COUNTRY_COUNT') {
     const codes = deadline ? [...facts.firstPhotoAt.keys()] : [...facts.visited];
-    have = codes.filter((code) => !isSpecialPlace(code) && countryDone(code)).length;
+    have = countedCountryCodes(
+      codes.filter((code) => !isSpecialPlace(code) && placeDone(code)),
+      splitUk
+    ).length;
     need = goal.target;
   } else if (goal.kind === 'LANDMARK_COUNT') {
     have = facts.stamps.filter((stamp) => !deadline || stamp.firstShotAt.getTime() <= deadline.getTime()).length;
     need = goal.target;
   } else {
-    const codes = goal.kind === 'COUNTRY_LIST' ? goal.countryCodes : regionCodes(goal.region, facts.countriesByContinent);
+    const codes = goal.kind === 'COUNTRY_LIST' ? goal.countryCodes : regionCodes(goal.region, facts.countriesByContinent, splitUk);
     done = codes.filter(countryDone);
     have = done.length;
     need = codes.length;

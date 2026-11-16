@@ -218,7 +218,7 @@ export const PrivacySectionsArray = [
     title: 'Who else handles it',
     group: 'policies',
     content: [
-      'We use a small number of providers to run the site, each bound to use your data only on our instructions: Cloudflare (photo storage, R2), Vercel (the server), InMotion Hosting (the website), our database host and our email provider.',
+      'We use a small number of providers to run the site, each bound to use your data only on our instructions: Cloudflare (photo storage, R2, and First Class videos, Stream), Vercel (the server), InMotion Hosting (the website), our database host and our email provider.',
       'Google Analytics runs only if you accept analytics cookies.',
       'We never sell your data or share it with advertisers. We would only disclose it if the law required us to.',
       'Some providers may process data outside the UK. Where they do, they use approved safeguards such as standard contractual clauses.',
@@ -259,7 +259,7 @@ export const PrivacySectionsArray = [
     title: 'Your rights',
     group: 'compliance',
     content: [
-      'You can ask for a copy of your data, ask us to correct or delete it, object to how we use it, and download your original photos at any time.',
+      'You can download a copy of your data at any time (“Download my data” on your account page), ask us to correct or delete it, object to how we use it, and download your original photos at any time.',
       `Email ${CompanyEmailAddress} to use any of these rights. If you are unhappy with how we handle your data, you can complain to the Information Commissioner’s Office (ico.org.uk).`,
     ],
   },

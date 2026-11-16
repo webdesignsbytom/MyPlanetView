@@ -177,7 +177,12 @@ export const POSTERS_BY_CODE = {
 // Posters for places that aren't a country on the map
 export const EXTRA_POSTERS = [{ name: 'antarctica', ratio: '1024/1024' }];
 
-export const postersFor = (code) => POSTERS_BY_CODE[code] || [];
+// The UK's nations (a map that splits the UK): England's and Scotland's are two of the UK's
+// posters; Wales and Northern Ireland have none yet (the placeholder card)
+const NATION_POSTER = { XE: 'gb-england', XC: 'gb-scotland' };
+
+export const postersFor = (code) =>
+  POSTERS_BY_CODE[code] || (NATION_POSTER[code] ? POSTERS_BY_CODE.GB.filter((poster) => poster.name === NATION_POSTER[code]) : []);
 
 // One size (800px, sharp on retina screens at the sizes posters are shown), as AVIF
 // with a WebP fallback. Replacing a poster? Give it a new name: browsers cache these.

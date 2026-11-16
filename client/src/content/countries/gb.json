@@ -1,0 +1,212 @@
+{
+  "code": "GB",
+  "slug": "united-kingdom",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Welcome", "United Kingdom"],
+  "summary": "Free museums, castles and cathedrals, wild hills and coasts, and a pub in every village.",
+  "overview": [
+    "The United Kingdom is four nations in one: England, Scotland, Wales and Northern Ireland, each with its own character, and in places its own language, banknotes and laws. London has royal palaces, theatre and world-class museums, most of the big ones free. Beyond it are cathedral cities, the colleges of Oxford and Cambridge, the Lake District and the Scottish Highlands, the castles of Wales and the Giant's Causeway on the north coast of Northern Ireland.",
+    "Trains link most cities, and fares are far cheaper booked ahead; a car makes life easier in the Highlands and the deep countryside. Contactless cards are taken almost everywhere, and London's buses don't take cash at all. Distances are in miles and beer comes in pints. Pack a waterproof in every month: the weather can change several times a day."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Daffodils in March, bluebell woods from late April and lambs in the fields. Often bright but cool, with showers. Many castles, gardens and seasonal sights reopen around Easter, and May is one of the sunniest months."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "The warmest months, usually around 18–23°C by day and cooler in Scotland, with very long evenings: around midsummer it stays light past 10 pm in the north. School holidays run from late July to early September in England and Wales and start in late June in Scotland, so prices and crowds peak then. Heatwaves above 30°C come in some years, and few homes or older trains have air-conditioning."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is often settled and mild, and quieter once the schools go back. October brings autumn colour to woods and gardens, and more rain and wind. By late November it's dark soon after 4 pm."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cool and damp rather than freezing in most places, around 5–8°C by day, with snow mostly on high ground and in the Scottish Highlands. Days are short. Christmas markets and lights fill the cities in December; on Christmas Day almost everything closes, including most public transport."
+      }
+    ],
+    "weather": "Mild and changeable, shaped by the Atlantic: rarely very hot or very cold, with rain possible in any month. The west is the wettest, above all Wales, the Lake District and the western Highlands; the south and east of England are the driest and sunniest, and London is often a degree or two warmer than the countryside around it. Scotland is cooler, with longer summer evenings and shorter winter days.",
+    "festivals": [
+      {
+        "name": "Burns Night",
+        "place": "Across Scotland",
+        "when": "25 January",
+        "months": [1],
+        "text": "Suppers in honour of the poet Robert Burns: a haggis is piped to the table, his poems are read aloud and the evening ends with whisky and songs."
+      },
+      {
+        "name": "St David's Day",
+        "place": "Across Wales",
+        "when": "1 March",
+        "months": [3],
+        "text": "The national day of Wales, with parades, concerts and daffodils or leeks pinned to coats, and children in traditional dress. It isn't a public holiday."
+      },
+      {
+        "name": "Chelsea Flower Show",
+        "place": "London",
+        "when": "Usually five days in late May",
+        "months": [5],
+        "text": "The Royal Horticultural Society's show of designed gardens and new plants, in the grounds of the Royal Hospital Chelsea. Tickets sell out well ahead."
+      },
+      {
+        "name": "Edinburgh Festival Fringe",
+        "place": "Edinburgh",
+        "when": "Usually most of August",
+        "months": [8],
+        "text": "Thousands of shows, from comedy and theatre to music and cabaret, in venues all over the city, alongside the International Festival and the Military Tattoo at the castle. Rooms fill months ahead and prices soar."
+      },
+      {
+        "name": "Notting Hill Carnival",
+        "place": "London",
+        "when": "The Sunday and Monday of the August bank holiday weekend, at the end of August",
+        "months": [8],
+        "text": "Two days of Caribbean costumes, steel bands, sound systems and street food in west London. Huge crowds: go early, and travel light."
+      },
+      {
+        "name": "Bonfire Night",
+        "place": "Across the UK",
+        "when": "5 November, with displays on the nearest weekends",
+        "months": [11],
+        "text": "Bonfires and fireworks recalling the Gunpowder Plot of 1605, when Guy Fawkes was caught guarding barrels of gunpowder under Parliament. Most towns hold a public display; Lewes in Sussex has the best-known processions."
+      },
+      {
+        "name": "Hogmanay",
+        "place": "Edinburgh, and across Scotland",
+        "when": "31 December, with Edinburgh's events over the days around it",
+        "months": [12, 1],
+        "text": "Scotland's New Year, celebrated harder than Christmas: Edinburgh holds a ticketed street party with fireworks over the castle at midnight, and everyone links arms for \"Auld Lang Syne\"."
+      }
+    ],
+    "regions": [
+      {
+        "name": "London",
+        "text": "Big enough for a week, and good in any season: most national museums and galleries are free, and there's theatre every night. Book shows and the most popular sights ahead in summer and before Christmas."
+      },
+      {
+        "name": "England's countryside and coast",
+        "text": "The Cotswolds, the Lake District, the Yorkshire Dales, the Peak District, and the beaches and coves of Cornwall and Devon. At their best from May to September and busiest in the school holidays; Cornwall's narrow lanes and car parks fill up in August."
+      },
+      {
+        "name": "Scotland",
+        "text": "Edinburgh and Glasgow suit any season. The Highlands and islands are best from May to September, with very long days, though tiny biting midges swarm on still, damp days on the west coast from June to August, so bring repellent. In winter some island ferries run less often and many rural hotels close."
+      },
+      {
+        "name": "Wales",
+        "text": "Eryri (Snowdonia) in the north, with castles such as Conwy and Caernarfon, the Pembrokeshire coast path in the south-west, and Cardiff in the south. Mountain weather turns quickly, and the railway up Yr Wyddfa (Snowdon) runs only in the warmer months."
+      },
+      {
+        "name": "Northern Ireland",
+        "text": "Belfast, the Causeway Coast with the Giant's Causeway's stone columns, and the Mourne Mountains. Pounds and miles, as in the rest of the UK, and no checks at the land border with the Republic of Ireland."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you first meet someone; friends may hug, or kiss once on the cheek. \"How are you?\" and \"You all right?\" are greetings rather than real questions, and \"Fine, thanks\" is all that's expected. Please, thank you and sorry are said constantly, and people notice when they're missing.",
+    "etiquette": [
+      "Queue patiently, at bus stops, in shops and even at the bar, where the staff keep track of who's next. Pushing in is the quickest way to annoy people.",
+      "In a pub, order and pay at the bar unless there's table service. In a group, people often take turns to buy a round for everyone.",
+      "On escalators, stand on the right and walk on the left, especially on the London Underground.",
+      "Traffic drives on the left, so look right first when you cross the road; many London crossings have it painted on the kerb.",
+      "Don't call the whole country England, or a Scot or a Welsh person English: the four nations take their identities seriously.",
+      "In England and Wales, large shops may open for only six hours on a Sunday, often 10 am to 4 pm or 11 am to 5 pm."
+    ],
+    "tipping": "In restaurants with table service, 10 to 12.5% is usual, but many add a service charge to the bill, so check before you tip twice. Nobody tips for drinks at the bar in a pub. Taxi fares are often rounded up.",
+    "dress": "Casual almost everywhere; smart casual in upmarket restaurants, though jeans are fine at most theatres. Bring layers and a waterproof in every season, and shoes that cope with wet grass, cobbles and muddy paths.",
+    "food": [
+      {
+        "name": "Full breakfast",
+        "text": "Bacon, sausages, eggs, beans, grilled tomato, mushrooms and toast, with black pudding in many places. Scotland adds haggis and potato scones; Northern Ireland's Ulster fry comes with soda bread and potato bread."
+      },
+      {
+        "name": "Fish and chips",
+        "text": "Cod or haddock in crisp batter with thick-cut chips, from a chip shop and best eaten by the sea. Add salt, malt vinegar and a tub of mushy peas."
+      },
+      {
+        "name": "Sunday roast",
+        "text": "Roast beef, lamb, pork or chicken with roast potatoes, vegetables, Yorkshire puddings and gravy, served in pubs every Sunday lunchtime. Book a table at popular ones."
+      },
+      {
+        "name": "Afternoon tea",
+        "text": "Small sandwiches, scones with clotted cream and jam, and cakes, with a pot of tea. In Devon the cream goes on the scone first, in Cornwall the jam, and each side thinks the other is wrong."
+      },
+      {
+        "name": "Curry",
+        "text": "Every town has a curry house, and many Britons would call curry a national dish. Birmingham is known for its balti, cooked and served in a thin steel bowl."
+      },
+      {
+        "name": "Haggis",
+        "text": "Scotland's national dish: sheep's offal minced with oats, onion and spices, served with neeps and tatties (mashed swede and potato). Many visitors find it far better than it sounds."
+      }
+    ],
+    "phrases": {
+      "language": "Welsh and Scottish Gaelic",
+      "intro": "English is spoken everywhere. Welsh is the everyday language for many people in Wales, above all in the north and west, and road signs there are in both languages. Scottish Gaelic is spoken mainly in the Western Isles and parts of the Highlands, where many signs are bilingual too. A word of either goes down well. In the guides below, \"kh\" is the throaty sound in Scottish \"loch\".",
+      "items": [
+        { "phrase": "Croeso", "say": "KROY-soh", "meaning": "Welcome (Welsh)" },
+        { "phrase": "Bore da", "say": "BOR-eh DAH", "meaning": "Good morning (Welsh)" },
+        { "phrase": "Diolch", "say": "DEE-olkh", "meaning": "Thank you (Welsh)" },
+        { "phrase": "Iechyd da!", "say": "YEH-khid DAH", "meaning": "Cheers! (Welsh: \"good health\")" },
+        { "phrase": "Araf", "say": "AH-rav", "meaning": "Slow (painted on Welsh roads)" },
+        { "phrase": "Fàilte", "say": "FAAL-chuh", "meaning": "Welcome (Gaelic)" },
+        { "phrase": "Tapadh leat", "say": "TAH-pah let", "meaning": "Thank you (Gaelic)" },
+        { "phrase": "Slàinte mhath!", "say": "SLAAN-chuh VAH", "meaning": "Cheers! (Gaelic: \"good health\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q145",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Pound sterling (£). Scottish and Northern Irish banks print their own notes, which are pounds too and can be spent anywhere in the UK, though shops in England sometimes hesitate over them.",
+        "sources": [{ "property": "P38", "values": ["Q25224"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Welsh has equal status with English in Wales; Scottish Gaelic and Scots in Scotland, Irish and Ulster Scots in Northern Ireland, and Cornish in Cornwall are recognised too.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q9309", "Q9314", "Q14549", "Q9142", "Q201966", "Q25289"] }],
+        "note": "Wikidata gives English with the qualifier \"de facto\" (no single law makes it official), and also lists British Sign Language, which the page leaves out."
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata names the British standard, BS 1363, which is the type G plug and socket."
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time (UTC+0) in winter, and British Summer Time (UTC+1) from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q30192", "Q843589", "Q16894228"] }],
+        "note": "Wikidata lists Greenwich Mean Time, Western European Time and the Europe/London zone, but not British Summer Time. The page adds it: clocks go forward an hour on the last Sunday of March and back on the last Sunday of October."
+      },
+      {
+        "key": "emergency",
+        "text": "999 or 112 for police, fire, ambulance and coastguard. For urgent medical advice that isn't an emergency, call 111 (in England, Scotland and Wales); for police matters that aren't, 101.",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q1061257"] }],
+        "note": "Wikidata lists 999 and 112. The page adds the non-emergency numbers: 111 for the NHS (not in Northern Ireland) and 101 for the police."
+      },
+      {
+        "key": "callingCode",
+        "text": "+44",
+        "sources": [{ "property": "P474", "values": ["+44"] }]
+      }
+    ]
+  }
+}

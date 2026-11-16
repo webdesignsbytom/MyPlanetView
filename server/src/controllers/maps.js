@@ -1,5 +1,7 @@
 // Maps, their travellers and countries visited
 import { isPole } from '../utils/specialPlaces.js';
+import { isUkNation, placeOnMap } from '../utils/ukNations.js';
+import { setMapSplitUk } from '../services/travel/ukNations.js';
 import { adsFor } from '../services/offers.js';
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
 import { logEvent } from '../utils/events/logEvent.js';
@@ -64,7 +66,8 @@ async function parseTraveller(body, { partial = false } = {}) {
     if (!parsed.ok) return { error: EVENT_MESSAGES.countryNotFound };
     // Antarctica can be a birth or favourite place; a pole can't
     if (isPole(parsed.value)) return { error: EVENT_MESSAGES.poleNotATravellerCountry };
-    if (parsed.value !== undefined) out[field] = parsed.value;
+    // A traveller's places are countries: a UK nation (a birth moment in Scotland) is the UK
+    if (parsed.value !== undefined) out[field] = parsed.value ? placeOnMap(parsed.value, false) : parsed.value;
   }
   if (body.position !== undefined) {
     if (!Number.isInteger(body.position) || body.position < 0 || body.position > 1000) {
@@ -139,6 +142,8 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     name: detail.name,
     groupType: detail.groupType,
     isDefault: detail.isDefault,
+    // The UK as its four nations (docs/API.md "The UK's nations")
+    splitUk: detail.splitUk,
     role,
     ownerName: detail.owner?.name ?? null,
     travellers: detail.travellers.map((t) => ({
@@ -152,6 +157,8 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     visits: detail.visits.map(visitView),
     stats,
     momentCountsByCountry,
+    // The landmarks stamped in the passport, to mark their pins (hidden photos' for editors)
+    stampedLandmarkIds: counts.stampedLandmarkIds,
     ...planFields,
   };
 }
@@ -236,9 +243,18 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
     if (!isOneOf(body.groupType, GROUP_TYPES)) return badRequest(req, res, D, EVENT_MESSAGES.invalidGroupType);
     data.groupType = body.groupType;
   }
+  // The UK as its four nations: changing it moves the map's UK data (services/travel/ukNations.js)
+  if (body.splitUk !== undefined && typeof body.splitUk !== 'boolean') {
+    return badRequest(req, res, D, EVENT_MESSAGES.invalidSplitUk);
+  }
+  const splitChange = body.splitUk !== undefined && body.splitUk !== map.splitUk;
   if (Object.keys(data).length) {
     await updateMapInDB(map.id, data);
     logEvent(createMapEvent({ user: req.user, action: 'Update Success', id: map.id, detail: Object.keys(data).join(',') }));
+  }
+  if (splitChange) {
+    await setMapSplitUk(map.id, body.splitUk);
+    logEvent(createMapEvent({ user: req.user, action: 'Update Success', id: map.id, detail: `splitUk=${body.splitUk}` }));
   }
   return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role, WITH_PLAN) });
 });
@@ -360,6 +376,8 @@ export const putVisitHandler = handler(D, 'Save visit', async (req, res) => {
 
   const { countryCode } = req.params;
   if (!(await isKnownCountry(countryCode))) return notFound(req, res, D, EVENT_MESSAGES.countryNotFound);
+  // A UK nation is a place only on a map that splits the UK (utils/ukNations.js)
+  if (isUkNation(countryCode) && !map.splitUk) return notFound(req, res, D, EVENT_MESSAGES.countryNotFound);
 
   const body = req.body || {};
   if (!isOneOf(body.status, VISIT_STATUSES)) return badRequest(req, res, D, EVENT_MESSAGES.invalidVisitStatus);

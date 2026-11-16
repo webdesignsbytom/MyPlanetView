@@ -6,6 +6,7 @@ import { buildSeed } from './seed';
 import { fillPhotoPositions, fillShotAt } from './photoOrder';
 import { awardQuietly } from './achievements';
 import { addFirstClassMap } from './seedFirstClass';
+import { ensureThemes } from './themes';
 
 // v2: the test user's map got the real test photos (16 Nov 2026); a new key seeds them
 // for everyone, as older saved stores would keep the poster stand-ins.
@@ -46,6 +47,7 @@ export function loadStore() {
         db.photos = db.photos.filter((p) => !dropped.has(p.id));
         db.photoLandmarks = db.photoLandmarks.filter((pl) => !dropped.has(pl.photoId));
         db.landmarkCovers = (db.landmarkCovers || []).filter((c) => !dropped.has(c.photoId));
+        db.themeEntries = (db.themeEntries || []).filter((e) => !dropped.has(e.photoId));
         db.trips.forEach((t) => {
           if (dropped.has(t.coverPhotoId)) t.coverPhotoId = null;
         });
@@ -93,6 +95,12 @@ export function loadStore() {
   fillShotAt(db.photos);
   if (!Array.isArray(db.goals)) db.goals = buildSeed().goals;
   if (!Array.isArray(db.badgeAwards)) awardQuietly(db, QUIET_AWARD_DATE());
+  // ...and before monthly photo themes (16 Nov 2026), or saved in an earlier month: the
+  // example themes it lacks, so there's always one running
+  ensureThemes(db);
+  // ...and before friends challenges (16 Nov 2026): none, unless the seed has them
+  if (!Array.isArray(db.challenges)) db.challenges = buildSeed().challenges;
+  if (!Array.isArray(db.challengeEntries)) db.challengeEntries = buildSeed().challengeEntries;
   db.users[0].role = getMockRole();
   saveStore();
   return db;

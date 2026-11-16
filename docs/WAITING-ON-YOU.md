@@ -4,37 +4,40 @@ Decisions and checks only you can make. Nothing here blocks the build: each item
 
 Started 16 Nov 2026.
 
-## 1. Proofread the 20 country guides
+## 1. Proofread the next 20 country guides
 
-**What this is:** the site will have a public guide page per country (good for Google). The first 20 are written as drafts. Each has an overview, when to go (a rating for every month, and for big countries a strip per region), culture and festivals, phrases, and quick facts (money, plugs, driving side, time, emergency number). They're hidden from the live site until you approve them.
+**What this is:** the second batch of public country guides, written as drafts on 16 Nov in the same format as the first 20 (which you passed and are now published): United Kingdom, Belgium, Austria, Czechia, Poland, Hungary, Denmark, Norway, Sweden, Finland, Malta, Cyprus, India, Indonesia, South Korea, China, South Africa, Kenya, Brazil and Argentina (the popular countries that already have a poster). They're hidden from the live site until you pass them.
 
-**What you do:** run `npm run dev` in `client/`, open `/countries/<name>` and read each as a traveller would. Drafts show a "Draft, not published" banner. The 20: spain, france, italy, portugal, greece, turkey, ireland, netherlands, germany, croatia, iceland, united-states, canada, mexico, morocco, egypt, japan, thailand, australia, new-zealand.
+**What you do:** run `npm run dev` in `client/`, open `/countries/<name>` (e.g. `/countries/united-kingdom`) and read each as a traveller would. Drafts show a "Draft, not published" banner.
 
-**What to tell Claude:** whether the page layout works (or what to change), and any fact you know is wrong. A page goes live when its file (`client/src/content/countries/<code>.json`) says `"status": "checked"` with the date in `lastChecked`; tell Claude which ones you've passed and it sets them.
+**What to tell Claude:** which ones you pass (it sets `"status": "checked"` and the date), and any fact you know is wrong.
 
 **Facts worth your eye, least sure first in each country:**
-- **Canada:** British Columbia stopped changing its clocks in March 2026 and now stays on UTC−7 all year (the page is written around that); drinking ages; Moraine Lake's shuttle season.
-- **Turkey:** whether 177 (forest fires) has been folded into 112; Kırkpınar wrestling "usually late June or early July"; Şeb-i Arus "usually 7–17 December".
-- **Croatia:** the Sunday shop-opening rule (16 Sundays a year since 2023, under review); Italian "official in parts of Istria"; Wikidata's fire and ambulance numbers look wrong, so the page gives 193 and 194 (noted in the file).
-- **Thailand:** the plug line (mostly sockets taking Types A and C, with B, F and O also found; Type O, three round pins, is the national standard and Wikidata lacks it); the alcohol ban on Buddhist holy days; the limits on Yi Peng lantern releases in Chiang Mai.
-- **Mexico:** sargassum seaweed timing on the Caribbean coast; tipping 10–15%; the Guelaguetza "usually the two Mondays after 16 July".
-- **Egypt:** "restaurant bills often include a service charge"; drones taken at the airport without a permit; some Nile cruises stopping from May to September.
-- **Netherlands:** coffeeshops turning away foreign visitors in some border towns, and Amsterdam's ban on smoking cannabis in the street in the red-light district; Keukenhof "usually mid-March to mid-May".
-- **Germany:** Rhein in Flammen dates; Oktoberfest's last day (the first Sunday of October, or 3 October).
-- **Ireland:** 999 "just as widely used" as 112; Lisdoonvarna's matchmaking festival "usually all of September"; Skellig Michael landings "mid-May to September".
-- **France:** Nice Carnival timing; pools wanting close-fitting trunks; Corsica's winter closures.
-- **Italy:** Rome's bans on sitting on the Spanish Steps and wading in fountains; paper tickets to stamp on regional trains; Vatican Museums closed on Sundays except the last of the month.
-- **Portugal:** motorway tolls left out on purpose (the rules changed in 2025); Madeira's flower festival "usually April or May".
-- **Greece:** "service is usually included" (tipping); sites closing on the main Easter days; Samaria Gorge "usually May to October".
-- **Australia:** box jellyfish season (about November to May); Sunday and card surcharges; Vivid Sydney "late May to mid-June".
-- **New Zealand:** marae customs (dress, shoes, tables); camping limited to self-contained vehicles in many places; the Māori pronunciations.
-- **Morocco:** the emergency number "112 from a mobile", and its mains voltage (Wikidata also lists 127 V; the page says 220 V).
-- **USA:** the language line ("no federal law names one; a 2025 executive order designated English; Spanish widely spoken"); the six time zones of the 50 states (Wikidata leaves out Hawaii's); Yosemite's Tioga Road and Glacier's Going-to-the-Sun Road opening dates.
-- **Spain:** La Tomatina's ticket cap; Barcelona's swimwear fines.
-- **Iceland and Morocco:** festival timing (Iceland Airwaves "usually early November", Þjóðhátíð "first weekend of August", Gnaoua "usually June"); Toubkal needing a guide.
-- **Everywhere:** the pronunciation guides; Ramadan and Eid dates for 2027 (Turkey, Egypt, Morocco: "February into March", "in May"), which move about 11 days a year and need updating; and the month ratings, which are judgement calls. "Avoid" months are only on regional strips except in Japan (August), Morocco (July, August) and Egypt (June to August).
+- **United Kingdom:** the languages line calls Gaelic, Scots, Irish, Ulster Scots and Cornish "recognised" (the Scottish Languages Act 2025 may have made Gaelic and Scots official in Scotland); NHS 111 in England, Scotland and Wales but not Northern Ireland; tipping 10–12.5%; midges worst June to August on the west coast; the Welsh and Gaelic pronunciations.
+- **Belgium:** Ommegang "usually two evenings in early July"; the Flower Carpet in even-numbered years; mussels about July to April; Brussels hotels cheaper at weekends; Sunday opening.
+- **Austria:** Slovene, Croatian and Hungarian official in parts of Carinthia and Burgenland (not from Wikidata); the Alps "around two-thirds" of the country; the ski season; November rated "avoid" in the Alps (lifts and huts shut between seasons).
+- **Czechia:** July and August rated "good", not "best", because of Prague's crowds (a judgement call); paper tickets to stamp in Prague; big shops shut by law on some holidays; the most beer per person; the ř and ň pronunciations.
+- **Poland:** Silesian not official (the 2024 bill was vetoed: check for later changes); "a handful of trading Sundays"; Auschwitz free on your own, guided tours paid, booking online; jaywalking fines; Chopin recitals in Łazienki Park on summer Sundays; saying "dziękuję" as you pay means "keep the change".
+- **Hungary:** Budapest Wine Festival "usually in September"; the light show on St Stephen's Basilica at the Christmas market; telling the waiter the total instead of leaving a tip on the table. Sziget and the Gellért baths are left out on purpose (2026 plans unclear).
+- **Denmark:** Aarhus Festuge late August to early September; "several hundred islands"; stegt flæsk "often called the national dish"; plugs C, E, F and K.
+- **Norway:** supermarket beer until 8 pm on weekdays and 6 pm on Saturdays (the national limit; some towns stop earlier); the right to roam (150 m from houses, two nights) and the fire ban 15 April to 15 September; Pepperkakebyen in Bergen; Svalbard keeping the same time.
+- **Sweden:** Medieval Week in Visby "usually early August"; lobster season from late September; the Jokkmokk market in early February; May rated "avoid" in Lapland (the thaw); the pronunciations.
+- **Finland:** "nearly 188,000 lakes"; alcohol sold 9 am to 9 pm; two candles in each window on Independence Day; May "avoid" in Lapland; the midnight sun and polar night dates.
+- **Malta:** Notte Bianca "usually one night in early October"; no stiletto heels in St John's Co-Cathedral; small shops closing after lunch; the Maltese pronunciations.
+- **Cyprus:** about the Republic only; the island's division since 1974, the UN buffer zone and the crossing points are described neutrally. 230–240 V (Wikidata says 240 V, noted); hire cars' red plates and their limits on crossing north; snow on Mount Olympus January to March; Limassol Carnival timing.
+- **India:** the older emergency numbers (100, 101, 102/108) still working beside 112; the monsoon dates; Ladakh's roads open about June to October; the regional month ratings, especially Tamil Nadu (November "avoid") and Ladakh (five "avoid" months).
+- **Indonesia:** the emergency numbers 110, 113 and 119 (not in Wikidata, noted); Rinjani closed to climbers early in the year; Sumatra driest June to August; Raja Ampat calmest October to April; Lebaran "usually in February or March in the late 2020s"; 230 V (Wikidata also lists 127 V, noted).
+- **South Korea:** the 1330 Korea Travel Hotline (not in Wikidata, noted); the festival timings (Jinhae cherry blossom, Boryeong Mud Festival, Busan film festival); cherry blossom late March in the south, early April in Seoul; restaurants that won't seat one diner.
+- **China:** the pinyin tone letters (ǎ, ǐ, ǒ, ǔ) and the characters show in a fallback font (the site's Poppins doesn't have them; Japan's page is the same); the Tibet permit rules; Alipay and WeChat Pay taking foreign cards; roaming data from a home SIM not blocked; international driving permits not recognised; Harbin's festival late December into February at around −20°C.
+- **South Africa:** the emergency numbers 10111 and 10177 added (Wikidata has only 112); the plug wording (Type M, Type N in newer buildings); festival timings (Minstrel Carnival around 2 January, Hermanus whales late September or early October, the Durban July); the stamp says "Mzansi" (the popular name): you may prefer "South Africa".
+- **Kenya:** the Lamu Cultural Festival "usually in November" (least sure); the plastic bag ban and bags taken from luggage on arrival; about 15 kg in a soft bag on small safari planes; no off-road driving in the Mara; M-Pesa with a local SIM.
+- **Brazil:** 127 V or 220 V "depending on the city"; Pix usually needing a Brazilian bank account; Parintins "usually the last weekend of June"; the Pantanal strip's January and February "avoid"; summer time ended in 2019 (Wikidata still lists it).
+- **Argentina:** 107 for an ambulance added and 117 left out (Wikidata doesn't say what it is); payment advice kept general (the exchange rules keep changing); Guaraní official in Corrientes since 2004; Tango BA "usually in August"; Patagonia's June to August "avoid".
+- **Everywhere:** the month ratings are judgement calls; the pronunciation guides.
 
-**Until then:** no country page is built or listed anywhere on the live site.
+**Until then:** none of these 20 is built or listed on the live site.
+
+**Also to read: the twelve "Where to go in <month>" pages** (built 16 Nov). Each has a short introduction of its own (`client/src/content/months/<month>.json`); the countries under it come from the guides you've passed, so they need no extra reading. Open `/where-to-go/january` and the rest in `npm run dev` (the month buttons at the foot of each page go through the year). Tell Claude which months to pass. A passed month goes live with the next build, since the 20 published guides already give every month enough countries. Until then no month page is built.
 
 ## 2. Draw about 575 more small islands?
 
@@ -51,11 +54,11 @@ These were open in `docs/FEATURE-PLAN.md` ("Open decisions"). Each is set in cod
 
 | Decision | Example | Until you decide |
 | --- | --- | --- |
-| **First Class extras:** which extra map styles and passport covers | First Class gets a "Night sky" passport cover and a "Vintage atlas" map style | The passport has one cover for everyone |
-| **Affiliate and print partners** | Booking.com for hotels, GetYourGuide for tours, a photobook printer | The cards and the Travel Desk are built and show **example offers** in development (fictional "Example Stays", "Example Tours"… with example.com links, `server/prisma/seed/data/offers.example.json`). Once you join partners, put their links in a file of the same shape and import it on the admin offers page (or `npm run db:offers -- <file>`). Production has no offers until then, so no cards show. |
-| **Who writes the monthly photo themes** | "Worst weather" in January, "Street food" in February… | Themes are phase 2; nothing built |
+| **First Class's extra map styles:** which ones (the passport covers are decided: one per plan, built 16 Nov) | A "Vintage atlas" and a "Night sky" style only First Class maps can pick | First Class has the four styles everyone has; the Pricing page marks "Extra map styles" soon |
+| **Affiliate and print partners** | Booking.com for hotels, GetYourGuide for tours, a photobook printer | The cards and the Travel Desk are built and show **example offers** in development (fictional "Example Stays", "Example Tours"… with example.com links, `server/prisma/seed/data/offers.example.json`). Once you join partners, put their links in a file of the same shape and import it on the admin offers page (or `npm run db:offers -- <file>`). Production has no offers until then, so no cards show. The print partner goes in the same file, with `"kind": "PRINTS"` and `"placements": ["PRINT"]` (see `example-prints`): it then shows under "Print or download". Until then that dialog says any photo printer takes the files. |
+| **Who writes the monthly photo themes** | "Worst weather" in January, "Street food" in February… | Built on 16 Nov. Development shows an example year (`server/prisma/seed/themes.js`: Doors, Worst weather, Street food, Lost…; use any of them). Production has none until they're written on the admin page (`/admin/themes`, which lists the months still empty); until then the map's badges panel says there's no theme this month. |
+| **Friends challenges: invite by email too?** | Tom types Jo's address and Jo gets an email with the join link (as sharing a map does) | Link only (built 16 Nov): people copy the challenge's link and send it however they like. Email invites would add a template and the same daily caps as sharing. |
 | **VAT:** handle it yourself, or pay a merchant of record such as Paddle | Paddle takes about 5% but files EU VAT for you | Stripe, prices include VAT; ask an accountant before launch |
-| **The proposed limits:** photos per country 30/200/1,000; ad cards every 12 photos (every 24 for viewers of Business maps); videos 3 minutes, 500 MB, 20 per country; storage safety nets 50 GB and 200 GB | | Built with these numbers (`server/src/utils/constants/plans.js`) |
 
 ## 4. Sample videos for the First Class demo account
 
@@ -78,5 +81,5 @@ Listed here so nothing is missed. The details are in `docs/LAUNCH-CHECKLIST.md`.
 
 - The terms need payment wording (renewal, cancelling, refunds, extra maps, unpaid maps, complimentary memberships, and a promo code's free month: a card is taken and it renews as a paid plan after 30 days unless cancelled). Today they still say the site is free.
 - Stripe: an account, products and prices, and the `STRIPE_*` keys.
-- The Pricing page's `soon` claims are each built, or removed.
+- The Pricing page's `soon` claims are each built, or removed. One is left: First Class's extra map styles (your choice, section 3).
 - On your own computer, after this week's changes: `npm install` in `server/` and `client/`, then `npx prisma migrate dev` and `npm run db:reference` in `server/` (this also moves the Old City of Jerusalem and the Western Wall to Palestine). On a database loaded before 16 Nov, first run `UPDATE "landmark" SET "wikidataId"='Q42725548' WHERE "wikidataId"='Q4526'` (the Sundarbans moved to Bangladesh's own site).

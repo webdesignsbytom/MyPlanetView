@@ -6,6 +6,7 @@ import { MAP_PAGE_URL, mapPassportPath, mapPath, sharedPassportPath } from '@/ut
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import usePhotoPage from '@/hooks/usePhotoPage';
 import useLandmarks from '@/hooks/useLandmarks';
+import { SplitUkProvider } from '@/hooks/useSplitUk';
 import useCanHover from '@/hooks/useCanHover';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 import useAchievements from '@/hooks/useAchievements';
@@ -62,16 +63,11 @@ const PREVIEW_PER_COUNTRY = 6;
 const CLUSTER_RADIUS = 220; // map units: countries this close count as one region
 const VISITED = new Set(['VISITED', 'LIVED']);
 const atLandmarkZoom = (zoom) => zoom >= LANDMARK_MIN_ZOOM;
-// Where wide screens' side panels start: below the title and stats tags, and the banner
-// tags under them (verify your email: ~7rem; the map's plan: ~8rem), so none is covered
+// Where the map switcher starts on wide screens (it drops from the map's title): below
+// the title and stats tags, and the banner tags under them (verify your email: ~7rem;
+// the map's plan: ~8rem), so none is covered
 const panelTopBelow = ({ verify, plan }) =>
-  verify && plan
-    ? 'md:top-92 md:[--map-panel-top:23rem]'
-    : plan
-      ? 'md:top-64 md:[--map-panel-top:16rem]'
-      : verify
-        ? 'md:top-60 md:[--map-panel-top:15rem]'
-        : 'md:top-32';
+  verify && plan ? 'md:top-92' : plan ? 'md:top-64' : verify ? 'md:top-60' : 'md:top-32';
 // Opening a country from the map: its panel's code is fetched on the first press
 const warmCountryPanel = () => CountryPanel.preload().catch(() => {});
 
@@ -234,6 +230,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const detailed = settings.mapType === 'detailed';
   const landmarkZoom = useViewportZoom(viewport, atLandmarkZoom);
   const { landmarks } = useLandmarks(null, { enabled: detailed || landmarkZoom });
+  // The passport's stamped landmarks: their pins are gold (the map's own reply, so a
+  // confirmed landmark shows once the map refreshes after the photo's change)
+  const stampedIds = map.stampedLandmarkIds;
+  const stampedLandmarks = useMemo(() => new Set(stampedIds || []), [stampedIds]);
 
   // Photos with no country: no country panel shows them, so they get their own list
   const unplaced = usePhotoPage({ ...photoSource, ...UNPLACED_PHOTOS });
@@ -363,6 +363,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             key={ui.selectedCode}
             code={ui.selectedCode}
             visit={visitFor(ui.selectedCode)}
+            visitOf={visitFor}
             canEdit={canChange}
             locked={locked}
             onSetVisit={setVisit}
@@ -430,6 +431,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   })();
 
   return (
+    // The map's own choice to show the UK as its four nations, for everything on the page
+    // (the drawing, the country list, every country picker and landmark list)
+    <SplitUkProvider value={Boolean(map.splitUk)}>
     <div data-map-style={settings.style} className='relative h-dvh w-full overflow-hidden bg-map-sea text-map-ink'>
       {/* Black and white (the viewer's setting): everything here in greys, one greyscale filter
           over the lot (the GPU applies it). The photo viewer and the slideshow sit outside it,
@@ -457,6 +461,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             showUnvisited={settings.showUnvisited}
             showAntarctica={showAntarctica}
             landmarks={landmarks}
+            stampedLandmarks={stampedLandmarks}
             alwaysShowLandmarks={detailed}
             label={`${map.name}: world map`}
           />
@@ -482,7 +487,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               onPay={isOwner && !mustVerify ? () => setPayingForMap(true) : null}
             />
           ) : null}
-          {/* Last in the column, so the banners above keep their place (panels open below them) */}
+          {/* Last in the column, so the banners above keep their place (the map switcher opens below them) */}
           {settings.showGoalTag !== false ? (
             <GoalTag
               goals={achievements.goals}
@@ -519,21 +524,23 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         {/* The key hides while a panel is open: the panel covers that corner */}
         {panel ? null : (
           <div className='pointer-events-none absolute bottom-3 left-3 hidden md:grid'>
-            <MapLegend showMoments={settings.showMoments} />
+            <MapLegend showMoments={settings.showMoments} showStamps={stampedLandmarks.size > 0} />
           </div>
         )}
 
-        {/* With the verify or plan banners under the title, wide screens open panels below them. The
-            tickets (a country, and the country list) are centred on the screen on wide screens
-            instead: the same space above and below (4.5rem, clear of the title tag at the top
-            and the zoom stamps at the bottom), and clear of the toolbar on the right; on phones
-            every panel is the sheet above the toolbar. */}
+        {/* Wide screens centre every panel on the screen: the same space above and below
+            (4.5rem, clear of the title tag at the top and the zoom stamps at the bottom; 6rem at
+            the top while the map's banner shows there), and clear of the toolbar on the right.
+            The map switcher drops from the map's title
+            instead, below the title column (and the verify or plan banners in it). Either way
+            the wrapper has a definite height, so a panel's `md:max-h-full` keeps it on screen.
+            On phones every panel is the sheet above the toolbar. */}
         {panel ? (
           <div
             className={`pointer-events-none absolute inset-x-3 bottom-24 z-10 grid ${
-              ui.panel === 'country' || ui.panel === 'countries'
-                ? 'md:inset-x-24 md:inset-y-18 md:grid-rows-[minmax(0,1fr)] md:place-items-center'
-                : `md:inset-x-auto md:bottom-auto md:left-3 ${panelTopBelow({ verify: mustVerify, plan: planBanner })}`
+              ui.panel === 'switcher'
+                ? `md:inset-x-auto md:bottom-3 md:left-3 md:grid-rows-[minmax(0,1fr)] md:items-start ${panelTopBelow({ verify: mustVerify, plan: planBanner })}`
+                : `md:inset-x-24 md:inset-y-18 md:grid-rows-[minmax(0,1fr)] md:place-items-center ${settings.showUserBanner ? 'lg:top-24' : ''}`
             }`}
           >
             {/* A panel whose code failed to arrive says so; the next panel tries afresh */}
@@ -623,6 +630,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         </Suspense>
       ) : null}
     </div>
+    </SplitUkProvider>
   );
 }
 

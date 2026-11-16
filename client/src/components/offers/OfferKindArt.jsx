@@ -1,6 +1,6 @@
 import React from 'react';
 // Icons
-import { FaBed, FaCar, FaCompass, FaPlane, FaShieldAlt, FaSimCard, FaSuitcaseRolling, FaTicketAlt } from 'react-icons/fa';
+import { FaBed, FaCar, FaCompass, FaImages, FaPlane, FaShieldAlt, FaSimCard, FaSuitcaseRolling, FaTicketAlt } from 'react-icons/fa';
 // Utils
 import { offerKindWord } from '@/utils/offers/offerKinds';
 
@@ -13,6 +13,7 @@ const ICONS = {
   INSURANCE: FaShieldAlt,
   LUGGAGE: FaSuitcaseRolling,
   OTHER: FaCompass,
+  PRINTS: FaImages,
 };
 
 /**

@@ -1,0 +1,194 @@
+{
+  "code": "ID",
+  "slug": "indonesia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Selamat datang", "Indonesia"],
+  "summary": "Volcanoes, temples, rainforest and reefs, spread over thousands of islands.",
+  "overview": [
+    "Indonesia stretches more than 5,000 km along the equator across thousands of islands. Bali has its temples, rice terraces, surf and beaches; Java has the great Buddhist temple of Borobudur, the old royal city of Yogyakarta and volcanoes such as Bromo; Komodo has its dragons, Borneo and Sumatra have orangutans in their rainforests, and the reefs of Raja Ampat, in the far east, are among the richest in the world.",
+    "Bali is the easy start, with places to stay at every price. Travel further and things get slower and simpler, and fewer people speak English. Domestic flights link the main islands and ferries and boats the rest, though timetables bend with the weather. Many of the volcanoes are active, and climbs close when they stir, so check the latest before you set out.",
+    "Most Indonesians are Muslim, while Bali is mostly Hindu and some eastern islands mainly Christian, so customs and dress change from one island to the next."
+  ],
+  "whenToGo": {
+    "stripLabel": "Bali, Java and Lombok. Sumatra, Borneo and the islands further east differ, and each region below has a strip of its own.",
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [5, 6, 7, 8, 9],
+        "text": "Sunny days and lower humidity in Java, Bali, Lombok and the islands to the east: the best time for volcano climbs, diving and beaches. July and August are Bali's busiest and dearest months, so book ahead."
+      },
+      {
+        "name": "Between the seasons",
+        "months": [4, 10, 11],
+        "text": "April and October are often a good compromise: mostly dry, green after the rains and quieter than high summer. The first heavy rains usually arrive in November."
+      },
+      {
+        "name": "Wet season",
+        "months": [12, 1, 2, 3],
+        "text": "Heavy downpours, often in the afternoon or overnight, with sunny spells between, and steamy heat. Rain peaks from December to February, when seas can be rough and some trekking routes close: Mount Rinjani on Lombok usually closes to climbers for the first months of the year. Bali is busy anyway over Christmas and New Year."
+      }
+    ],
+    "weather": "Indonesia lies on the equator, so it is hot and humid all year, around 30°C on the coasts, and cooler in the highlands, where nights near the volcano summits can be cold. The seasons are about rain rather than temperature. Across Java, Bali and the islands east to Timor, a dry season from about April to October alternates with a wet one from November to March; closer to the equator, in Sumatra and Borneo, rain falls in every month, and parts of Maluku have their wettest months in the middle of the year.",
+    "festivals": [
+      {
+        "name": "Idul Fitri (Lebaran)",
+        "place": "Across Indonesia",
+        "when": "The end of Ramadan, about 11 days earlier each year: usually in February or March in the late 2020s",
+        "months": [2, 3],
+        "text": "The biggest holiday of the year. Millions travel home to their families, so planes, trains, ferries and roads are packed for a week or more around it, and many shops and offices close. Bali, mostly Hindu, is less affected but busy with visitors from other islands."
+      },
+      {
+        "name": "Nyepi (Day of Silence)",
+        "place": "Bali",
+        "when": "The Balinese New Year, usually in March, sometimes April",
+        "months": [3, 4],
+        "text": "For 24 hours from 6 am nobody goes out, lights stay off, shops close and even the airport shuts; visitors stay inside their hotels. The evening before, villages parade giant demon figures (ogoh-ogoh) through the streets, and many are burnt afterwards."
+      },
+      {
+        "name": "Waisak",
+        "place": "Borobudur, Central Java",
+        "when": "Usually the full moon in May, sometimes early June",
+        "months": [5, 6],
+        "text": "Buddhist monks walk in procession from the temple of Mendut to Borobudur and pray there through the night of the full moon. Visitors are welcome but should keep a respectful distance from the ceremonies."
+      },
+      {
+        "name": "Bali Arts Festival (Pesta Kesenian Bali)",
+        "place": "Denpasar, Bali",
+        "when": "Usually mid-June to mid-July",
+        "months": [6, 7],
+        "text": "A month of dance, music, puppetry and crafts from every part of Bali, opening with a long street parade."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Indonesia",
+        "when": "17 August",
+        "months": [8],
+        "text": "Red-and-white flags everywhere, parades and neighbourhood games, such as climbing greased poles for prizes (panjat pinang)."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Komodo and Flores",
+        "months": ["good", "good", "good", "best", "best", "best", "best", "best", "best", "best", "good", "good"],
+        "text": "Drier than Bali, with a long dry season from about April to November, when the hills turn brown and the water is clear. Boats from Labuan Bajo to Komodo and Rinca run all year, but seas can be rough from December to February and some trips are cancelled."
+      },
+      {
+        "name": "Sumatra",
+        "months": ["good", "good", "good", "good", "good", "best", "best", "good", "good", "good", "good", "good"],
+        "text": "Close to the equator, with rain in every month and no real dry season. The north, around Lake Toba and the orangutans of Bukit Lawang, is usually driest from about June to August and wettest from September to December. In dry years, smoke from forest and peat fires (the haze) can hang over parts of Sumatra and Borneo, mostly between August and October."
+      },
+      {
+        "name": "Borneo (Kalimantan)",
+        "months": ["good", "good", "good", "good", "good", "best", "best", "best", "good", "good", "good", "good"],
+        "text": "Hot and humid all year. A drier spell from about June to September is the best time for the river-boat trips to see orangutans at Tanjung Puting, though haze can arrive towards the end of it."
+      },
+      {
+        "name": "Raja Ampat and Maluku",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "best", "best", "best"],
+        "text": "Raja Ampat's reefs can be dived all year, but the seas are calmest from about October to April; from June to September stronger winds make crossings rougher. Parts of Maluku, Ambon among them, turn the usual pattern round, with their heaviest rain from about May to August."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A gentle handshake, often followed by touching your right hand to your chest, and a smile. Some Muslim men and women prefer not to touch the opposite sex, so wait for a hand to be offered. People are addressed as Bapak (Pak) for a man and Ibu (Bu) for a woman, before the first name: Pak Budi, Bu Sri.",
+    "etiquette": [
+      "Eat, and give and take things, with your right hand: the left is for the bathroom. Point with your right thumb rather than a finger.",
+      "Indonesia has more Muslims than any other country. Outside Bali, dress modestly, and during Ramadan avoid eating, drinking and smoking in public in the daytime.",
+      "At Balinese temples, wear a sarong and sash, usually lent or hired at the gate. Women who are menstruating are asked not to enter. Don't step on the small offerings (canang sari) left on pavements and doorsteps.",
+      "Take your shoes off when entering homes and mosques.",
+      "Keep calm in a dispute: raising your voice embarrasses everyone and rarely helps. Bargaining is normal at markets, done with a smile.",
+      "Drug laws are among the strictest in the world, with long prison terms for possession and the death penalty for trafficking."
+    ],
+    "tipping": "Not traditional, but welcome. Many hotels and restaurants add tax and a service charge (\"++\" after a price means both are added), so tipping isn't needed there. Elsewhere, round up, and give drivers, guides and spa staff a small note for good service.",
+    "dress": "Light, loose clothes for the heat. Away from Bali's beach towns, cover your shoulders and knees, especially in Java, in Aceh (which follows Islamic law) and at mosques, where women should also cover their hair. Keep swimwear for the beach and the pool.",
+    "food": [
+      {
+        "name": "Nasi goreng",
+        "text": "Fried rice with sweet soy sauce (kecap manis), shallots and chilli, often topped with a fried egg, and eaten at any time of day."
+      },
+      {
+        "name": "Sate",
+        "text": "Small skewers of chicken, goat or beef grilled over charcoal and served with peanut sauce or sweet soy. Madura and Padang have well-known styles."
+      },
+      {
+        "name": "Rendang and nasi Padang",
+        "text": "Rendang is beef slowly cooked in coconut milk and spices until almost dry, from the Minangkabau of West Sumatra. In Padang restaurants, many dishes are set out and you pay for what you eat."
+      },
+      {
+        "name": "Gado-gado",
+        "text": "Boiled vegetables, tofu, tempeh and egg under a thick peanut sauce, topped with crackers."
+      },
+      {
+        "name": "Babi guling",
+        "text": "Bali's spit-roast suckling pig, rubbed and stuffed with spices: a speciality of the Hindu island, rarely found elsewhere."
+      },
+      {
+        "name": "Tempeh",
+        "text": "A firm cake of fermented soybeans from Java, fried crisp or cooked in sauces, and a staple for vegetarians."
+      }
+    ],
+    "phrases": {
+      "language": "Indonesian (Bahasa Indonesia)",
+      "intro": "Indonesian is easy to start: it's written in Latin letters, said much as it's spelt, and has no tones or verb endings. C sounds like the ch in church.",
+      "items": [
+        { "phrase": "Selamat pagi", "say": "suh-LAH-mat PAH-gee", "meaning": "Good morning" },
+        { "phrase": "Terima kasih", "say": "tuh-REE-mah KAH-see", "meaning": "Thank you" },
+        { "phrase": "Sama-sama", "say": "SAH-mah SAH-mah", "meaning": "You're welcome" },
+        { "phrase": "Permisi", "say": "per-MEE-see", "meaning": "Excuse me (to get past or ask something)" },
+        { "phrase": "Maaf", "say": "mah-AHF", "meaning": "Sorry" },
+        { "phrase": "Berapa harganya?", "say": "buh-RAH-pah har-GAH-nyah", "meaning": "How much is it?" },
+        { "phrase": "Tidak pedas", "say": "TEE-dak puh-DAS", "meaning": "Not spicy" },
+        { "phrase": "Enak", "say": "EH-nak", "meaning": "Delicious" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q252",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Indonesian rupiah (Rp). Prices run into the thousands, so count the zeros; carry cash away from the big resorts.",
+        "sources": [{ "property": "P38", "values": ["Q41588"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Indonesian (Bahasa Indonesia), spoken everywhere alongside hundreds of local languages, of which Javanese has the most speakers. English is spoken in tourist areas, much less elsewhere.",
+        "sources": [{ "property": "P37", "values": ["Q9240"] }],
+        "note": "Wikidata gives Indonesian, the only official language; the page adds the local languages."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata also gives 127 V, an older supply; the page gives 230 V, the standard now."
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Three zones, with no summer time: Western Indonesia Time (WIB, UTC+7) in Sumatra, Java and western Borneo; Central (WITA, UTC+8) in Bali, Lombok, Nusa Tenggara, Sulawesi and eastern Borneo; Eastern (WIT, UTC+9) in Maluku and Papua. Bali is an hour ahead of Java.",
+        "sources": [{ "property": "P421", "values": ["Q7458035", "Q7458046", "Q7458054", "Q4806285", "Q4806298", "Q4806294", "Q4806286"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for any emergency, though it doesn't reach every area: 110 for police, 113 for fire and 119 for an ambulance are worth knowing too.",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata lists only 112; the page adds the national numbers for police (110), fire (113) and medical emergencies (119)."
+      },
+      {
+        "key": "callingCode",
+        "text": "+62",
+        "sources": [{ "property": "P474", "values": ["+62"] }]
+      }
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 // Icons
 import { IoEyeOff } from 'react-icons/io5';
-import { FaPlay } from 'react-icons/fa';
+import { FaFilm, FaPlay } from 'react-icons/fa';
 // Utils
 import { formatVideoLength } from '@/utils/photos/videoLength';
 
@@ -9,16 +9,26 @@ import { formatVideoLength } from '@/utils/photos/videoLength';
 // and marks for a photo hidden from viewers and a landmark suggestion still waiting
 // for a yes. A video (First Class) has a play mark and its length ("1:30"); the tile's
 // own label says "Video, 1 minute 30 seconds" (photoLabel), so the marks are hidden from
-// screen readers. The thumbnail can't be dragged out of the page as an image.
+// screen readers. A video Cloudflare is still converting has no thumbnail yet: a film card
+// says "Preparing…" (or "Couldn't prepare" when it failed), as its label does. The
+// thumbnail can't be dragged out of the page as an image.
+const VIDEO_STATE_MARKS = { PROCESSING: 'Preparing…', FAILED: 'Couldn’t prepare' };
+
 function PhotoThumbFace({ photo }) {
   const waiting = photo.landmarks?.some((l) => !l.confirmed);
   const video = photo.kind === 'VIDEO';
+  const stateMark = video ? VIDEO_STATE_MARKS[photo.videoState] : null;
   return (
     <>
       {photo.thumbUrl ? (
         <img src={photo.thumbUrl} alt='' loading='lazy' decoding='async' draggable={false} className='h-full w-full object-cover' />
+      ) : video ? (
+        <span aria-hidden='true' className='grid h-full w-full content-center justify-items-center gap-1 bg-poster-cream p-1 text-center text-poster-ink'>
+          <FaFilm className={`text-2xl ${photo.videoState === 'FAILED' ? 'text-status-critical' : 'text-poster-red'}`} />
+          {stateMark ? <span className='text-2xs font-semibold'>{stateMark}</span> : null}
+        </span>
       ) : null}
-      {video ? (
+      {video && !stateMark ? (
         <>
           <span
             aria-hidden='true'

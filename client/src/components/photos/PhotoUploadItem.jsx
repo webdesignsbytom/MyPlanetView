@@ -14,7 +14,6 @@ const VIDEO_STAGE_LABELS = {
   ...STAGE_LABELS,
   reading: 'Reading the video',
   cleaning: 'Taking out the location',
-  poster: 'Making the poster frame',
 };
 
 const MB = 1024 * 1024;

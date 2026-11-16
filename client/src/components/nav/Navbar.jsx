@@ -152,7 +152,7 @@ function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut
       {/* Logo; in the column, above a perforated tear line like the boarding pass */}
       <div className={column ? 'grid w-full justify-items-center border-b-2 border-dashed border-poster-brown pb-8' : 'grid'}>
         <NavLink to={HOME_PAGE_URL} aria-label={`${CompanyName} homepage`} className='grid items-center active:scale-95'>
-          <BrandWordmark size={column ? 'xl' : 'md'} stacked={column} />
+          <BrandWordmark size={column ? 'xl' : 'md'} />
         </NavLink>
       </div>
 
@@ -235,7 +235,7 @@ function MobileNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut,
     <section ref={sectionRef} className='grid lg:hidden grid-cols-reg items-center px-4 py-3'>
       {/* Logo */}
       <NavLink to={HOME_PAGE_URL} aria-label={`${CompanyName} homepage`} className='grid items-center active:scale-95'>
-        <BrandWordmark size='md' hideNameOnPhones />
+        <BrandWordmark size='md' />
       </NavLink>
 
       {/* Toggle: a rubber stamp reading MENU / CLOSE */}

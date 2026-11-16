@@ -35,6 +35,10 @@ export function offerUrlProblem(value) {
 const sentence = (words) => `${words.charAt(0).toUpperCase()}${words.slice(1)}.`;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
+// A new offer starts on every travel placement; PRINT (under "Print or download") is for
+// photo printers, so it's ticked by hand
+const NEW_OFFER_PLACEMENTS = OFFER_PLACEMENTS.filter((placement) => placement !== 'PRINT');
+
 export const emptyOfferForm = () => ({
   key: '',
   partner: '',
@@ -42,7 +46,7 @@ export const emptyOfferForm = () => ({
   title: '',
   blurb: '',
   countryCode: '',
-  placements: [...OFFER_PLACEMENTS],
+  placements: [...NEW_OFFER_PLACEMENTS],
   url: '',
   imageKey: '',
   weight: '1',

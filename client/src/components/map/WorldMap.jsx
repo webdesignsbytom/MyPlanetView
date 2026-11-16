@@ -1,6 +1,7 @@
 import React, { memo, useId } from 'react';
 // Hooks
 import { useViewportZoom } from '@/hooks/useMapViewport';
+import useSplitUk from '@/hooks/useSplitUk';
 // Components
 import CountryLayer from './CountryLayer';
 import MapGridLines from './MapGridLines';
@@ -38,6 +39,9 @@ const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[da
  * showAntarctica map setting; only the view changes).
  * `momentCounts` (the map's momentCountsByCountry) marks the places with moments, beside
  * their badges, unless `showMoments` is off (the viewer's setting).
+ * `stampedLandmarks` (a Set of the map's stampedLandmarkIds) turns those pins gold.
+ * The UK is drawn as its four nations when the map being shown splits it (useSplitUk: the
+ * page provides the map's `splitUk`).
  * `seaDepths`: the sea tinted by depth (SeaDepths), for the styles whose sea is plain
  * (mapStyles.js `background: null`, the animated sea).
  */
@@ -57,6 +61,7 @@ function WorldMap({
   showUnvisited = true,
   showAntarctica = true,
   landmarks = null,
+  stampedLandmarks,
   alwaysShowLandmarks = false,
   stops = null,
   label = 'World map',
@@ -64,6 +69,7 @@ function WorldMap({
 }) {
   const hintId = useId();
   const zoom = useViewportZoom(viewport);
+  const splitUk = useSplitUk();
   // Clicks wait for afterTap only when the map can be dragged and double-tapped
   const afterTap = panZoom ? viewport.afterTap : undefined;
 
@@ -96,12 +102,25 @@ function WorldMap({
           showVisited={showVisited}
           showUnvisited={showUnvisited}
           showAntarctica={showAntarctica}
+          splitUk={splitUk}
         />
-        {showCountryNames ? <CountryNameLabels zoom={zoom} visitsByCode={visitsByCode} showAntarctica={showAntarctica} /> : null}
-        <VisitBadges visitsByCode={visitsByCode} zoom={zoom} faded={!showVisited} showAntarctica={showAntarctica} />
+        {showCountryNames ? (
+          <CountryNameLabels zoom={zoom} visitsByCode={visitsByCode} showAntarctica={showAntarctica} splitUk={splitUk} />
+        ) : null}
+        <VisitBadges visitsByCode={visitsByCode} zoom={zoom} faded={!showVisited} showAntarctica={showAntarctica} splitUk={splitUk} />
         {showMoments ? <MomentMarks counts={momentCounts} zoom={zoom} showAntarctica={showAntarctica} /> : null}
         <PoleNameLabels zoom={zoom} visitsByCode={visitsByCode} always={showCountryNames} showAntarctica={showAntarctica} />
-        {landmarks?.length ? <LandmarkPins landmarks={landmarks} zoom={zoom} always={alwaysShowLandmarks} onSelectCountry={onSelectCountry} afterTap={afterTap} /> : null}
+        {landmarks?.length ? (
+          <LandmarkPins
+            landmarks={landmarks}
+            stamped={stampedLandmarks}
+            zoom={zoom}
+            always={alwaysShowLandmarks}
+            onSelectCountry={onSelectCountry}
+            afterTap={afterTap}
+            splitUk={splitUk}
+          />
+        ) : null}
         {stops?.length ? <StopMarkers stops={stops} zoom={zoom} /> : null}
       </svg>
       {panZoom ? (

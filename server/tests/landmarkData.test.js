@@ -7,6 +7,7 @@ import { projectToMap } from '../src/utils/projection.js';
 import { MAX_MATCH_RADIUS_M } from '../src/utils/landmarkMatch.js';
 import { slugify } from '../src/utils/slug.js';
 import { SPECIAL_PLACE_CODES } from '../src/utils/specialPlaces.js';
+import { UK_NATION_CODES } from '../src/utils/ukNations.js';
 
 const countryCodes = new Set(COUNTRIES.map((c) => c.code));
 const COUNTRY_BY_CODE = Object.fromEntries(COUNTRIES.map((c) => [c.code, c]));
@@ -24,9 +25,12 @@ describe('countries seed', () => {
     }
   });
 
-  it('has 227 countries and the five special places, matching utils/specialPlaces.js', () => {
+  it('has 227 countries, the five special places and the UK’s four nations, matching utils/specialPlaces.js and utils/ukNations.js', () => {
     const special = COUNTRIES.filter((c) => c.kind === 'SPECIAL');
-    expect(COUNTRIES.length - special.length).toBe(227);
+    const nations = COUNTRIES.filter((c) => c.kind === 'NATION');
+    expect(COUNTRIES.length - special.length - nations.length).toBe(227);
+    expect(nations.map((c) => c.code).sort()).toEqual([...UK_NATION_CODES].sort());
+    expect(nations.every((c) => c.continent === 'EUROPE')).toBe(true);
     expect(special.map((c) => c.code).sort()).toEqual([...SPECIAL_PLACE_CODES].sort());
     // Antarctica and the South Pole give the seventh continent; the others have none
     expect(Object.fromEntries(special.map((c) => [c.code, c.continent]))).toEqual({

@@ -53,7 +53,7 @@ export const findLandmarksInCountries = (countryCodes) =>
   countryCodes.length
     ? prisma.landmark.findMany({
         where: { countryCode: { in: countryCodes } },
-        select: { id: true, name: true, countryCode: true, isUnesco: true },
+        select: { id: true, name: true, countryCode: true, isUnesco: true, latitude: true, longitude: true },
         orderBy: { name: 'asc' },
       })
     : [];
@@ -61,7 +61,10 @@ export const findLandmarksInCountries = (countryCodes) =>
 /** Some landmarks by id (stamps whose landmark is in a country with no visit). */
 export const findLandmarksByIds = (ids) =>
   ids.length
-    ? prisma.landmark.findMany({ where: { id: { in: ids } }, select: { id: true, name: true, countryCode: true, isUnesco: true } })
+    ? prisma.landmark.findMany({
+        where: { id: { in: ids } },
+        select: { id: true, name: true, countryCode: true, isUnesco: true, latitude: true, longitude: true },
+      })
     : [];
 
 /** The travellers on the passport's photo page. */
@@ -103,3 +106,17 @@ export const findThumbKeys = async (photoIds) => {
   });
   return new Map(rows.map((row) => [row.photoId, row.media.key]));
 };
+
+/**
+ * The map's moments at some landmarks (the passport's stamps), oldest first, undated last:
+ * `[{ id, title, kind, happenedOn, datePrecision, landmarkId }]`. Hidden ones only with
+ * `includeHidden` (the owner and editors).
+ */
+export const findLandmarkMoments = (mapId, landmarkIds, { includeHidden }) =>
+  landmarkIds.length
+    ? prisma.moment.findMany({
+        where: { mapId, landmarkId: { in: landmarkIds }, ...(includeHidden ? {} : { hidden: false }) },
+        select: { id: true, title: true, kind: true, happenedOn: true, datePrecision: true, landmarkId: true },
+        orderBy: [{ happenedOn: { sort: 'asc', nulls: 'last' } }, { id: 'asc' }],
+      })
+    : [];

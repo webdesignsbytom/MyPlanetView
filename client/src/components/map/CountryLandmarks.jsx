@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { FaLandmark } from 'react-icons/fa';
 // Hooks
 import useLandmarks from '@/hooks/useLandmarks';
@@ -14,9 +14,24 @@ const FIRST = 6;
 // The landmarks we know of in one country (the ones photos get matched to, and the
 // passport's stamps), A–Z, each with its photo from Wikimedia Commons and that photo's
 // credit (LandmarkCard), the UNESCO World Heritage Sites marked. A long list shows its
-// first few, with a button for the rest.
-function CountryLandmarks({ countryCode }) {
-  const { landmarks, loading, error } = useLandmarks(countryCode);
+// first few, with a button for the rest. `moments` (the country's, as the panel has them)
+// puts the landmarks where something happened first, each card naming its moments.
+function CountryLandmarks({ countryCode, moments = [] }) {
+  const { landmarks: allLandmarks, loading, error } = useLandmarks(countryCode);
+  const momentsByLandmark = useMemo(() => {
+    const byId = new Map();
+    for (const moment of moments) {
+      if (!moment.landmark?.id) continue;
+      if (!byId.has(moment.landmark.id)) byId.set(moment.landmark.id, []);
+      byId.get(moment.landmark.id).push(moment);
+    }
+    return byId;
+  }, [moments]);
+  // Landmarks with moments first (A–Z), then the rest (A–Z)
+  const landmarks = useMemo(
+    () => [...allLandmarks.filter((l) => momentsByLandmark.has(l.id)), ...allLandmarks.filter((l) => !momentsByLandmark.has(l.id))],
+    [allLandmarks, momentsByLandmark],
+  );
   const photos = useLandmarkPhotos();
   const [all, setAll] = useState(false);
 
@@ -33,7 +48,12 @@ function CountryLandmarks({ countryCode }) {
       </h3>
       <ul id={listId} className='grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-x-4 gap-y-5'>
         {shown.map((landmark) => (
-          <LandmarkCard key={landmark.id} landmark={landmark} photo={landmarkPhotoInfo(photos, landmark.slug)} />
+          <LandmarkCard
+            key={landmark.id}
+            landmark={landmark}
+            photo={landmarkPhotoInfo(photos, landmark.slug)}
+            moments={momentsByLandmark.get(landmark.id)}
+          />
         ))}
       </ul>
       {landmarks.length > FIRST ? (

@@ -1,0 +1,210 @@
+{
+  "code": "IN",
+  "slug": "india",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Namaste", "Bhārat"],
+  "summary": "Forts, temples, mountains and beaches, with food that changes from state to state.",
+  "overview": [
+    "The world's most populous country is also one of its most varied: the Taj Mahal and the Mughal monuments of Agra and Delhi, the desert forts and palaces of Rajasthan, the holy river city of Varanasi on the Ganges, the backwaters and tea hills of Kerala, Goa's beaches and Portuguese churches, tiger reserves in the central forests, and the high Himalaya across the north.",
+    "Distances are huge, so most visitors choose a region rather than trying to see it all. Trains reach almost everywhere and are worth booking well ahead; domestic flights are cheap and save long journeys. The busiest places can be intense, with crowds, noise, traffic and touts, so leave room for rest days.",
+    "Religion is part of daily life for Hindus, Muslims, Sikhs, Christians, Buddhists and Jains alike, and customs vary from one region to the next. A little care with dress, shoes and hands, below, is noticed and appreciated."
+  ],
+  "whenToGo": {
+    "stripLabel": "Delhi, Agra, Rajasthan and the northern plains. The mountains, the west coast and the south differ a lot, and each region below has a strip of its own.",
+    "months": ["best", "best", "best", "good", "avoid", "avoid", "good", "good", "good", "best", "best", "best"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "The main season for most of the country: dry, sunny and mild by day in the north, with cold nights and thick morning fog that can delay trains and flights around Delhi. The south and Goa are warm and dry. Rooms are dearest over Christmas and New Year."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "March, with Holi, is still pleasant in the north, but the heat builds fast: by May the northern plains often pass 40°C. Indian families head for the hill stations, which are at their busiest."
+      },
+      {
+        "name": "Monsoon",
+        "months": [6, 7, 8, 9],
+        "text": "The south-west monsoon reaches Kerala around the start of June and most of the country by early July, then pulls back from the north-west during September. Rain falls in heavy bursts with sunny spells between, and the land turns green, but floods and landslides can disrupt travel, above all in the mountains and on the west coast. Ladakh, behind the Himalaya, stays mostly dry."
+      },
+      {
+        "name": "After the monsoon",
+        "months": [10, 11],
+        "text": "Skies clear, days are warm and the big festivals begin. From late October, smoke and smog often make the air in Delhi and the northern plains unhealthy, sometimes well into winter. The south-east coast, around Chennai, gets its main rain now."
+      }
+    ],
+    "weather": "India runs from tropical coasts to the high Himalaya, but most of it follows one pattern: a dry, mild winter from about November to February, a fierce hot season from March to May, and the monsoon rains from June to September. The exceptions are the mountains, with cold winters and snow up high; the Thar Desert in Rajasthan, which stays dry most of the year; and the south-east coast, which gets most of its rain from October to December.",
+    "festivals": [
+      {
+        "name": "Republic Day",
+        "place": "New Delhi",
+        "when": "26 January",
+        "months": [1],
+        "text": "A parade of soldiers, bands and floats from every state along Kartavya Path in the capital. Seats need tickets, and security is tight around it for several days."
+      },
+      {
+        "name": "Holi",
+        "place": "Across the north, liveliest around Mathura and Vrindavan",
+        "when": "The full moon of the Hindu month of Phalguna, usually in March, sometimes late February",
+        "months": [2, 3],
+        "text": "The festival of colours: people throw coloured powder and water at each other in the streets. Wear old clothes, keep your phone in a plastic bag, and know that it can get rowdy; many visitors join a celebration at their hotel."
+      },
+      {
+        "name": "Onam",
+        "place": "Kerala",
+        "when": "Usually late August or September",
+        "months": [8, 9],
+        "text": "Kerala's harvest festival: flower carpets (pookalam) at the doorways, snake-boat races on the backwaters, and a vegetarian feast (sadya) served on a banana leaf."
+      },
+      {
+        "name": "Durga Puja",
+        "place": "Kolkata and West Bengal",
+        "when": "Usually late September or October",
+        "months": [9, 10],
+        "text": "Kolkata builds hundreds of elaborate temporary shrines (pandals) for the goddess Durga, and the city stays out late visiting them. On the last day the images are carried to the river."
+      },
+      {
+        "name": "Diwali",
+        "place": "Across India",
+        "when": "The new moon of the Hindu month of Kartika, usually in October or November",
+        "months": [10, 11],
+        "text": "The festival of lights: homes and streets glow with oil lamps and strings of bulbs, sweets are shared and fireworks go on for nights. For many Indians it's the biggest holiday of the year, so trains and flights fill up."
+      },
+      {
+        "name": "Pushkar Camel Fair",
+        "place": "Pushkar, Rajasthan",
+        "when": "Usually October or November, ending at the full moon of Kartika",
+        "months": [10, 11],
+        "text": "Camel and livestock traders gather in the desert outside town, with races, music and a fairground, while pilgrims bathe in the holy lake at the full moon."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Ladakh",
+        "months": ["avoid", "avoid", "avoid", "avoid", "good", "best", "best", "best", "best", "good", "avoid", "avoid"],
+        "text": "A high, dry land of Buddhist monasteries beyond the main Himalayan range, out of the monsoon's reach. The roads in over the passes are usually open only from about June to October; flights to Leh run all year, but winters are bitterly cold. Leh is about 3,500 m up, so rest for a day or two when you arrive."
+      },
+      {
+        "name": "The Himalayan hill states",
+        "months": ["good", "good", "good", "best", "best", "good", "avoid", "avoid", "good", "best", "best", "good"],
+        "text": "Shimla, Manali, Rishikesh, Darjeeling and Sikkim. Spring and autumn bring clear mountain views and the best trekking; October and November are the clearest. The monsoon, from about July to mid-September, brings heavy rain and landslides that close roads. Winters are cold, with snow higher up."
+      },
+      {
+        "name": "Goa and Mumbai",
+        "months": ["best", "best", "best", "good", "good", "avoid", "avoid", "avoid", "good", "good", "best", "best"],
+        "text": "Goa's beach season runs from November to March: warm, dry and sunny. April and May are hot and very humid. The monsoon reaches the west coast in early June and pours down until about September: Mumbai's streets flood, the sea is too rough for swimming, and most of Goa's beach shacks close."
+      },
+      {
+        "name": "Kerala",
+        "months": ["best", "best", "good", "good", "good", "avoid", "avoid", "good", "good", "good", "good", "best"],
+        "text": "Backwaters, beaches, spice gardens and tea hills in the green south-west. December to February is warm and dry. The monsoon arrives here first, around the start of June, with heavy rain into August; some visitors come then for Ayurvedic treatments. October and November bring more showers from the north-east monsoon."
+      },
+      {
+        "name": "Tamil Nadu and the south-east",
+        "months": ["best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "avoid", "good"],
+        "text": "Chennai, Pondicherry and the great temple towns such as Madurai miss most of the summer monsoon, but get their heaviest rain from the north-east monsoon, from about October to December, when cyclones can strike the coast. January and February are the most comfortable; April to June is very hot."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Namaste\", with palms pressed together at chest height and a slight nod, is the respectful greeting everywhere. Men often shake hands with men; with women, wait to see whether a hand is offered, and a namaste is always safe. Greet older people first, and add \"ji\" to a name to show respect (Sharma-ji).",
+    "etiquette": [
+      "Eat, and give and take things, with your right hand: the left is thought unclean. Eating with your fingers is normal for many dishes, especially in the south.",
+      "Take your shoes off before entering a temple, a mosque, a gurdwara and most homes. At a gurdwara, cover your head too; scarves are lent at the door. A few temples admit Hindus only, and some don't allow leather inside.",
+      "Many Indians are vegetarian, some don't drink alcohol, and beef is off most menus. Cows wander many streets and are sacred to Hindus: leave them be.",
+      "Kissing and close embraces in public are frowned on almost everywhere.",
+      "Bargaining is normal in markets and with auto-rickshaws that have no meter: agree the fare before you set off, or book a ride through an app.",
+      "Drink bottled or filtered water, and be careful with ice and raw salad at street stalls."
+    ],
+    "tipping": "Not obligatory, but widely expected for good service. Leave around 10% in restaurants that haven't added a service charge, and give drivers, guides and hotel porters something at the end. Small tips in rupees go a long way.",
+    "dress": "Modest clothes are respected everywhere, especially away from the big cities and Goa's beaches: cover your shoulders and knees, and avoid tight or see-through clothes. Light, loose cotton suits the heat, and a scarf is useful for covering your head in gurdwaras and some mosques. Bring warm layers for northern winter nights and the mountains.",
+    "food": [
+      {
+        "name": "Thali",
+        "text": "A round platter of small bowls (dal, vegetables, rice, bread, pickle, yoghurt and something sweet), often refilled until you say stop. Every region has its own."
+      },
+      {
+        "name": "Dosa",
+        "text": "A thin, crisp crêpe of fermented rice and lentil batter from the south, often filled with spiced potato (masala dosa) and served with sambar and coconut chutney."
+      },
+      {
+        "name": "Biryani",
+        "text": "Rice layered with spiced meat or vegetables and cooked slowly in a sealed pot. Hyderabad and Lucknow each claim the best."
+      },
+      {
+        "name": "Tandoori dishes and butter chicken",
+        "text": "From the Punjabi kitchens of the north: meat and bread baked in a clay tandoor oven, and butter chicken, tandoori chicken in a rich tomato and cream sauce, eaten with naan."
+      },
+      {
+        "name": "Chaat",
+        "text": "Tangy street snacks such as pani puri: crisp hollow shells filled with potato, chickpeas and spiced tamarind water, eaten in one bite."
+      },
+      {
+        "name": "Masala chai",
+        "text": "Tea boiled with milk, sugar and spices such as cardamom and ginger, sold for a few rupees from stalls and on trains."
+      }
+    ],
+    "phrases": {
+      "language": "Hindi",
+      "intro": "Hindi is spoken across the north. In the south and east most people's first language is another one, such as Tamil, Malayalam or Bengali, and English is widely used in cities and tourism, so English is often the safer choice there.",
+      "items": [
+        { "phrase": "Namaste", "say": "nuh-muh-STAY", "meaning": "Hello; goodbye" },
+        { "phrase": "Dhanyavaad / Shukriya", "say": "DHUN-yuh-vaad / shook-REE-yah", "meaning": "Thank you" },
+        { "phrase": "Haan / Nahin", "say": "haan / nuh-HEEN", "meaning": "Yes / No" },
+        { "phrase": "Maaf kijiye", "say": "maaf KEE-jee-yay", "meaning": "Sorry; excuse me" },
+        { "phrase": "Kitne ka hai?", "say": "KIT-nay kaa hai", "meaning": "How much is it?" },
+        { "phrase": "Theek hai", "say": "teek hai", "meaning": "OK; fine" },
+        { "phrase": "Kam teekha", "say": "kum TEE-khaa", "meaning": "Less spicy" },
+        { "phrase": "Bahut accha", "say": "buh-HOOT ACH-chaa", "meaning": "Very good" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q668",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Indian rupee (₹). Cards are taken in cities and hotels; carry cash for markets, small shops and rickshaws.",
+        "sources": [{ "property": "P38", "values": ["Q80524"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Hindi and English are the central government's official languages. The constitution recognises 22 languages, and each state uses its own, such as Tamil, Bengali, Marathi or Malayalam.",
+        "sources": [{ "property": "P37", "values": ["Q1568", "Q1860"] }],
+        "note": "Wikidata gives Hindi (in Devanagari) and English, the Union's official languages; the page adds that the states have their own."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C (two round pins), D and M (three round pins in a triangle), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1383497", "Q60740126"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata gives the Europlug (Type C), BS 546 (Types D and M) and the general class of British-related plugs; the page names the types."
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "India Standard Time, UTC+5:30, across the whole country all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q604055", "Q4806291"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance. The older numbers still work in most states: 100 for police, 101 for fire, and 102 or 108 for an ambulance.",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648793", "Q25648794", "Q25648798", "Q4546759"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+91",
+        "sources": [{ "property": "P474", "values": ["+91"] }]
+      }
+    ]
+  }
+}

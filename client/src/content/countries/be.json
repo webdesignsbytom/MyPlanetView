@@ -1,0 +1,201 @@
+{
+  "code": "BE",
+  "slug": "belgium",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Welkom", "Bienvenue", "Belgium"],
+  "summary": "Medieval squares, Flemish masters and comic strips, with serious beer, chocolate and frites.",
+  "overview": [
+    "Belgium is small but packed with things to see: the canals and belfries of Bruges and Ghent, the Grand-Place and art nouveau houses of Brussels, and Antwerp's port, fashion and Rubens altarpieces in its cathedral. Flemish masterpieces hang in churches and museums across the north, the van Eyck brothers' Ghent Altarpiece among them. In the west, Ypres (Ieper) and the fields around it remember the First World War; in the south, the Ardennes have wooded hills, river valleys and castles.",
+    "The country is divided by language: Dutch in Flanders in the north, French in Wallonia in the south, both in Brussels, and German in a small area in the east. Place names change with the language, so on Dutch signs Liège is Luik and Mons is Bergen, while French ones call Antwerp Anvers. Trains are frequent and distances short: Ghent is about half an hour from Brussels, Bruges about an hour."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Cool and showery in March, milder by May, when café terraces fill. The bluebells of the Hallerbos, a beech wood south of Brussels, usually flower in mid to late April and draw big weekend crowds."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Mild to warm, usually 20–25°C, with long evenings and some rainy days. The busiest time in Bruges, and the season for the coast, kayaking in the Ardennes and big music festivals."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is often pleasant and quieter. October colours the Ardennes forests, and November is grey, wet and short of daylight, though it's the heart of the mussel season."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and damp, usually a few degrees above freezing by day, with some snow, more of it in the Ardennes. Christmas markets brighten December in Brussels, Bruges and Ghent, and carnival fills a few towns before Lent."
+      }
+    ],
+    "weather": "Mild and damp, with rain spread through the year and plenty of grey skies. The coast is breezy and rarely very hot or cold. The Ardennes in the south-east are higher, cooler in summer and colder in winter, with snow in most years.",
+    "festivals": [
+      {
+        "name": "Carnival of Binche",
+        "place": "Binche, Hainaut",
+        "when": "The days before Ash Wednesday, in February or March, with the Gilles on Shrove Tuesday",
+        "months": [2, 3],
+        "text": "Hundreds of Gilles in padded costumes and wax masks dance through the town to drums; in the afternoon they wear tall ostrich-feather hats and throw oranges into the crowd. On UNESCO's list of intangible heritage."
+      },
+      {
+        "name": "Procession of the Holy Blood",
+        "place": "Bruges",
+        "when": "Ascension Day, in May or early June",
+        "months": [5, 6],
+        "text": "A relic said to hold drops of Christ's blood is carried through the old centre, with scenes from the Bible acted out along the way by hundreds of townspeople."
+      },
+      {
+        "name": "Ommegang",
+        "place": "Brussels, on the Grand-Place",
+        "when": "Usually two evenings in early July",
+        "months": [7],
+        "text": "A pageant recalling a procession held for Emperor Charles V in 1549, with hundreds of people in Renaissance costume, flag-throwers, horses and giants. Seats on the square are ticketed."
+      },
+      {
+        "name": "Gentse Feesten",
+        "place": "Ghent",
+        "when": "Usually ten days in the second half of July, around the national holiday on 21 July",
+        "months": [7],
+        "text": "Free concerts, street theatre and parties across the old town, from midday to the small hours."
+      },
+      {
+        "name": "Flower Carpet",
+        "place": "Brussels, on the Grand-Place",
+        "when": "Usually a few days around 15 August, in even-numbered years",
+        "months": [8],
+        "text": "Hundreds of thousands of begonias laid out as a huge patterned carpet across the square, best seen from the town hall's balcony."
+      },
+      {
+        "name": "Christmas markets",
+        "place": "Brussels, Bruges, Ghent and Liège",
+        "when": "Usually from late November to early January",
+        "months": [11, 12, 1],
+        "text": "Wooden chalets, mulled wine and waffles, with an ice rink in some towns. Brussels' market spreads from the Bourse to Sainte-Catherine, with a light show on the Grand-Place."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Brussels",
+        "text": "The capital and home of the European Union's institutions: the Grand-Place, comic-strip murals, art nouveau houses, the Atomium and the fine-art museums. Good in any season; hotels are often cheaper at weekends, when business travellers go home."
+      },
+      {
+        "name": "Bruges, Ghent and Antwerp",
+        "text": "The Flemish cities, an hour or less apart by train. Bruges is best early in the morning or in the evening, once the day-trippers have gone. Ghent is livelier and less crowded, and Antwerp has the cathedral's Rubens paintings, the diamond quarter and the best shopping."
+      },
+      {
+        "name": "The coast",
+        "text": "About 65 km of sandy beaches and resort towns, linked end to end by the Coast Tram (Kusttram). Busy at summer weekends; the North Sea is bracing even in August."
+      },
+      {
+        "name": "Ypres and Flanders Fields",
+        "text": "The First World War battlefields and cemeteries around Ypres (Ieper), with Tyne Cot, the largest Commonwealth war cemetery. Every evening at 8 pm, buglers sound the Last Post under the Menin Gate."
+      },
+      {
+        "name": "Wallonia and the Ardennes",
+        "text": "Wooded hills, kayaking on the rivers, castles, caves and abbeys that brew beer, and the towns of Namur, Dinant and Durbuy. Best from May to October; some places close in winter."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you first meet; friends and family often greet with a kiss on the cheek. Start with a greeting in the local language, \"goeiedag\" in Flanders or \"bonjour\" in Wallonia and Brussels, and switch to English if you aren't sure: answering a Dutch speaker in French, or a French speaker in Dutch, can go down badly.",
+    "etiquette": [
+      "Mind the language line: in Flanders, try Dutch or English rather than French. Brussels is officially bilingual, though French is heard most.",
+      "At a junction with no signs or road markings, cars coming from the right have priority, even from a small side street. Belgians stick to it, so drive with care.",
+      "Each beer is served in its brewery's own glass, chosen to suit it. Many abbey and Trappist beers are 8% alcohol or stronger, so take them slowly.",
+      "Most shops close on Sundays, apart from bakeries in the morning and shops in the tourist centres.",
+      "Cycle paths run beside most roads in Flanders: don't walk on them, and look out for bikes before you step off the pavement."
+    ],
+    "tipping": "Service is included in restaurant prices, so a tip isn't expected. Rounding up, or adding 5 to 10% for very good service, is a kind extra. Taxi fares are often rounded up.",
+    "dress": "Casual and neat; people dress well in the cities. Bring a rain jacket and layers in every season, and comfortable shoes for cobbles. Cover your shoulders in churches.",
+    "food": [
+      {
+        "name": "Frites",
+        "text": "Thick-cut chips fried twice, from a friterie (frietkot in Dutch), served in a paper cone with mayonnaise or one of a dozen other sauces."
+      },
+      {
+        "name": "Moules-frites",
+        "text": "A pot of mussels steamed with celery, onion and often white wine, with frites on the side. The season runs from about July to April."
+      },
+      {
+        "name": "Stoofvlees (carbonnade flamande)",
+        "text": "Beef slowly stewed in dark beer with onions, thickened with a slice of bread spread with mustard, and served with frites."
+      },
+      {
+        "name": "Waffles",
+        "text": "Two kinds: the light, rectangular Brussels waffle, eaten at a table with toppings, and the denser Liège waffle, with nuggets of sugar caramelised in the dough, eaten in the hand."
+      },
+      {
+        "name": "Chocolate",
+        "text": "Pralines, filled chocolates sold by weight in boxes from chocolatiers in every town; the shops around the Grand Sablon in Brussels are among the best known."
+      },
+      {
+        "name": "Beer",
+        "text": "Hundreds of styles: Trappist ales brewed in monasteries, sour lambic and gueuze from around Brussels, strong blondes and cloudy wheat beers (witbier). Belgian beer culture is on UNESCO's list of intangible heritage."
+      }
+    ],
+    "phrases": {
+      "language": "Dutch and French",
+      "intro": "Dutch (often called Flemish here) is spoken in the north, French in the south and most of Brussels, and English is widely spoken, especially in Flanders. Each line gives the Dutch first, then the French. People in Flanders often say \"merci\" too, and Belgian French counts \"septante\" and \"nonante\" for 70 and 90.",
+      "items": [
+        { "phrase": "Goeiedag / Bonjour", "say": "KHOO-yuh-dahkh / bohn-ZHOOR", "meaning": "Hello; good day" },
+        { "phrase": "Alstublieft / S'il vous plaît", "say": "ahl-stew-BLEEFT / seel voo PLEH", "meaning": "Please; here you are" },
+        { "phrase": "Dank u / Merci", "say": "dahnk ew / mair-SEE", "meaning": "Thank you" },
+        { "phrase": "Sorry / Pardon", "say": "SOR-ee / par-DOHN", "meaning": "Sorry; excuse me" },
+        { "phrase": "Spreekt u Engels? / Parlez-vous anglais?", "say": "spraykt ew ENG-uls / par-lay voo ahn-GLEH", "meaning": "Do you speak English?" },
+        { "phrase": "Hoeveel kost het? / C'est combien?", "say": "HOO-vayl kost ut / say kohm-BYAN", "meaning": "How much is it?" },
+        { "phrase": "De rekening, alstublieft / L'addition, s'il vous plaît", "say": "duh RAY-kuh-ning ahl-stew-BLEEFT / lah-dee-SYOHN seel voo PLEH", "meaning": "The bill, please" },
+        { "phrase": "Schol! / Santé!", "say": "skhol / sahn-TAY", "meaning": "Cheers!" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q31",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Cards, including contactless, are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Dutch, French and German, each official in its own area: Dutch in Flanders, French in Wallonia, both in Brussels, and German in a small area in the east. English is widely spoken.",
+        "sources": [{ "property": "P37", "values": ["Q7411", "Q150", "Q188"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q207020", "Q6655", "Q6723", "Q5412099"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for any emergency; 100 for fire and ambulance, 101 for police",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648793", "Q25648794"] }],
+        "note": "Wikidata also lists 102, a helpline for children and young people (Awel), which the page leaves out."
+      },
+      {
+        "key": "callingCode",
+        "text": "+32",
+        "sources": [{ "property": "P474", "values": ["+32"] }]
+      }
+    ]
+  }
+}

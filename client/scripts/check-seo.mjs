@@ -5,10 +5,11 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 // Constants
 import { FULL_BUSINESS_URL } from '../src/utils/constants/constants.js';
-import { CLIENT_ONLY_ROUTE_PREFIXES, COUNTRIES_PAGE_URL } from '../src/utils/constants/routes.js';
+import { CLIENT_ONLY_ROUTE_PREFIXES, COUNTRIES_PAGE_URL, WHERE_TO_GO_URL } from '../src/utils/constants/routes.js';
 import { MAX_TITLE } from '../src/utils/seo/metaText.js';
 // Country guides: only the checked ones are pages
 import { draftLeaksIn, publishedCountryRoutes } from './country-pages.mjs';
+import { monthDraftLeaksIn, publishedMonthRoutes } from './month-pages.mjs';
 
 const dist = resolve(dirname(fileURLToPath(import.meta.url)), '../dist');
 const liveFlag = process.argv.indexOf('--live');
@@ -264,6 +265,8 @@ async function checkDist() {
 
   // A draft country guide never ships: no page file, none of its text in any asset
   for (const leak of draftLeaksIn(dist)) fail('draft country guide', leak);
+  // Nor does a month page that isn't published (a draft, or one the guides can't fill)
+  for (const leak of monthDraftLeaksIn(dist)) fail('unpublished month page', leak);
 
   if (!existsSync(resolve(dist, 'app-shell.html'))) {
     console.warn('⚠️  dist/ was not pre-rendered (SKIP_PRERENDER?), skipping the SEO page checks');
@@ -293,6 +296,12 @@ async function checkDist() {
     if (isCountryRoute(route) && !countryRoutes.has(route)) fail(route, 'in the sitemap but not a checked country guide');
   }
   for (const route of countryRoutes) if (!routes.has(route)) fail(route, 'a checked country guide missing from the sitemap');
+  // ...and its month pages exactly the published ones
+  const monthRoutes = new Set(publishedMonthRoutes());
+  for (const route of routes) {
+    if (route.startsWith(`${WHERE_TO_GO_URL}/`) && !monthRoutes.has(route)) fail(route, 'in the sitemap but not a published month page');
+  }
+  for (const route of monthRoutes) if (!routes.has(route)) fail(route, 'a published month page missing from the sitemap');
 
   for (const [route, page] of pages) {
     for (const link of new Set(page.links)) {

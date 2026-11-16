@@ -7,6 +7,7 @@ import { COUNTED_VISIT_STATUSES, toDateOnly } from '../../utils/travelValidation
 import { signPhotoUrl } from '../s3/mediaService.js';
 import {
   findLandmarkCovers,
+  findLandmarkMoments,
   findLandmarksInCountries,
   findPassportMap,
   findPassportTravellers,
@@ -14,6 +15,9 @@ import {
   findVisitsForPassport,
 } from '../../domain/passport.js';
 import { loadMapFacts } from './achievements.js';
+import { landmarkPlace, placeOnMap } from '../../utils/ukNations.js';
+import { loadMapPlan } from './plans.js';
+import { planOf } from '../../utils/constants/plans.js';
 
 const time = (date) => (date ? new Date(date).getTime() : Infinity);
 
@@ -24,12 +28,13 @@ const time = (date) => (date ? new Date(date).getTime() : Infinity);
  */
 export async function buildPassport(mapId, role) {
   const editor = canEdit(role);
-  const [map, travellers, visits, covers, facts] = await Promise.all([
+  const [map, travellers, visits, covers, facts, mapPlan] = await Promise.all([
     findPassportMap(mapId),
     findPassportTravellers(mapId),
     findVisitsForPassport(mapId),
     findLandmarkCovers(mapId),
     loadMapFacts(mapId, { includeHidden: editor }),
+    loadMapPlan(mapId),
   ]);
   if (!map) return null;
 
@@ -49,7 +54,22 @@ export async function buildPassport(mapId, role) {
   const coverOf = new Map(covers.filter((c) => editor || !c.hidden).map((c) => [c.landmarkId, c.photoId]));
   const chosenOf = new Map(covers.map((c) => [c.landmarkId, c.photoId]));
   const photoOf = (stamp) => coverOf.get(stamp.landmarkId) ?? stamp.photoId;
-  const thumbKeys = await findThumbKeys([...new Set(facts.stamps.map(photoOf))]);
+  const [thumbKeys, moments] = await Promise.all([
+    findThumbKeys([...new Set(facts.stamps.map(photoOf))]),
+    findLandmarkMoments(mapId, [...new Set(facts.stamps.map((s) => s.landmarkId))], { includeHidden: editor }),
+  ]);
+  // The moments that happened at each stamped landmark
+  const momentsAt = new Map();
+  for (const moment of moments) {
+    if (!momentsAt.has(moment.landmarkId)) momentsAt.set(moment.landmarkId, []);
+    momentsAt.get(moment.landmarkId).push({
+      id: moment.id,
+      title: moment.title,
+      kind: moment.kind,
+      happenedOn: toDateOnly(moment.happenedOn),
+      datePrecision: moment.datePrecision,
+    });
+  }
   const thumbUrl = async (photoId) => (thumbKeys.has(photoId) ? signPhotoUrl(thumbKeys.get(photoId)) : null);
 
   const stampsByCountry = new Map();
@@ -57,10 +77,13 @@ export async function buildPassport(mapId, role) {
     if (!stampsByCountry.has(stamp.countryCode)) stampsByCountry.set(stamp.countryCode, []);
     stampsByCountry.get(stamp.countryCode).push(stamp);
   }
+  // Each page's landmarks: on a map that splits the UK, a nation's are the UK landmarks in it
   const landmarksByCountry = new Map();
-  for (const landmark of await findLandmarksInCountries(ordered)) {
-    if (!landmarksByCountry.has(landmark.countryCode)) landmarksByCountry.set(landmark.countryCode, []);
-    landmarksByCountry.get(landmark.countryCode).push(landmark);
+  const landmarkCodes = [...new Set(ordered.map((code) => placeOnMap(code, false)))];
+  for (const landmark of await findLandmarksInCountries(landmarkCodes)) {
+    const place = landmarkPlace(landmark, facts.splitUk);
+    if (!landmarksByCountry.has(place)) landmarksByCountry.set(place, []);
+    landmarksByCountry.get(place).push(landmark);
   }
 
   const pages = await Promise.all(
@@ -80,6 +103,8 @@ export async function buildPassport(mapId, role) {
             stampedOn: toDateOnly(stamp.firstShotAt),
             photoCount: stamp.photoCount,
             photo: { id: photoOf(stamp), thumbUrl: await thumbUrl(photoOf(stamp)) },
+            // The map's moments at this landmark (hidden ones for editors only)
+            moments: momentsAt.get(stamp.landmarkId) ?? [],
             // Editors: whether someone picked the photo (else it's the earliest)
             ...(editor ? { photoChosen: chosenOf.has(stamp.landmarkId) } : {}),
           }))
@@ -94,7 +119,14 @@ export async function buildPassport(mapId, role) {
   const counted = [...facts.visited];
   const countries = counted.filter((code) => !isSpecialPlace(code));
   return {
-    map: { id: map.id, name: map.name, groupType: map.groupType, ownerName: map.owner?.name ?? null },
+    // The owner's plan picks the cover (Economy, Business, First Class), as it picks every rule
+    map: {
+      id: map.id,
+      name: map.name,
+      groupType: map.groupType,
+      ownerName: map.owner?.name ?? null,
+      plan: { id: planOf(mapPlan?.plan).id, name: planOf(mapPlan?.plan).name },
+    },
     travellers,
     pages,
     totals: {

@@ -5,6 +5,7 @@ import { FaPlay } from 'react-icons/fa';
 import usePhotoPage from '@/hooks/usePhotoPage';
 import useMomentPage from '@/hooks/useMomentPage';
 import useGalleryOffers from '@/hooks/useGalleryOffers';
+import useSplitUk from '@/hooks/useSplitUk';
 import usePlannedTripPlace from '@/hooks/usePlannedTripPlace';
 // Components
 import CountryTicket from './CountryTicket';
@@ -16,8 +17,10 @@ import FirstVisitDateField from './FirstVisitDateField';
 import CountryLandmarks from './CountryLandmarks';
 import { ExpeditionStampIcon, PlaceBadgeIcon } from './StarBadge';
 import VerifyFirstNote from './VerifyFirstNote';
+import UkNationsPrompt from './UkNationsPrompt';
 import MomentList from '@/components/moments/MomentList';
 import PhotoGrid from '@/components/photos/PhotoGrid';
+import PrintDownload from '@/components/photos/PrintDownload';
 import TravelDesk from '@/components/offers/TravelDesk';
 import FormField from '@/components/ui/FormField';
 // Utils
@@ -41,9 +44,13 @@ const NO_TRIPS = [];
 // `nextTrip` is the map's soonest planned trip (its list summary): where it goes is worked
 // out only when a card or the desk needs it (fetched unless `canFetchTrips` is false, as
 // through a share link). `mapKey` names the map in each card slot's seed.
+// "Print or download" (docs/API.md, "Downloads"): the country's photos as a zip, for the
+// map's editors (verified or not), never through a share link.
 function CountryPanel({
   code,
   visit,
+  // The map's visit for any place (the UK's ticket on a map that splits it asks about the nations)
+  visitOf = () => null,
   canEdit,
   locked = false,
   onSetVisit,
@@ -64,6 +71,7 @@ function CountryPanel({
   onClose,
 }) {
   const country = COUNTRY_BY_CODE[code];
+  const splitUk = useSplitUk();
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [deskOpened, setDeskOpened] = useState(false);
@@ -90,6 +98,18 @@ function CountryPanel({
   const status = visit?.status || null;
   const special = isSpecialPlace(code);
   const continent = CONTINENT_LABELS[country.continent];
+
+  // On a map that splits the UK, the UK itself is marked only from before the split: its
+  // ticket asks which nations that means (UkNationsPrompt) instead of offering a status
+  const ukToPlace = splitUk && code === 'GB';
+  const chooseNations = async (codes) => {
+    // The UK's note goes with it to each nation that has none
+    for (const nation of codes) {
+      await onSetVisit(nation, status, visit?.notes && !visitOf(nation)?.notes ? { notes: visit.notes } : undefined);
+    }
+    await onSetVisit(code, null);
+    onClose();
+  };
 
   const save = async (nextStatus, extra) => {
     setSaving(true);
@@ -142,7 +162,9 @@ function CountryPanel({
         onSave={(notes) => onSetVisit(code, status, { notes })}
       />
 
-      {canEdit ? (
+      {ukToPlace && status ? <UkNationsPrompt ukStatus={status} visitOf={visitOf} canEdit={canEdit} onChoose={chooseNations} /> : null}
+
+      {canEdit && !ukToPlace ? (
         // Never disabled while saving (that drops focus); the saves are optimistic
         <div className='grid items-start gap-3 sm:grid-cols-2' aria-busy={saving ? 'true' : undefined}>
           <FormField id={`visit-${code}`} label='Been there?'>
@@ -226,6 +248,9 @@ function CountryPanel({
         {canEdit && onAddPhotos ? (
           <MapActionButton onClick={() => onAddPhotos(code)}>Add photos from {country.name}</MapActionButton>
         ) : null}
+        {(canEdit || locked) && photoSource?.mapId && photos.photos.length ? (
+          <PrintDownload inMapPanel scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
+        ) : null}
       </section>
 
       {/* Partner offers for this country, only when asked for (every plan), before the
@@ -237,7 +262,7 @@ function CountryPanel({
         onOpen={() => setDeskOpened(true)}
       />
 
-      <CountryLandmarks countryCode={code} />
+      <CountryLandmarks countryCode={code} moments={moments.moments} />
     </CountryTicket>
   );
 }

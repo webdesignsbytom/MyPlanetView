@@ -29,6 +29,13 @@
         "bytes": 1128390,
         "width": 1920,
         "height": 1280
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 1104064,
+        "width": 1920,
+        "height": 1280
       }
     },
     "credit": {
@@ -66,6 +73,13 @@
         "file": "original.jpg",
         "contentType": "image/jpeg",
         "bytes": 645991,
+        "width": 1920,
+        "height": 1361
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 644046,
         "width": 1920,
         "height": 1361
       }
@@ -107,6 +121,13 @@
         "bytes": 469263,
         "width": 1920,
         "height": 1246
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 468792,
+        "width": 1920,
+        "height": 1246
       }
     },
     "credit": {
@@ -146,6 +167,13 @@
         "bytes": 1609036,
         "width": 1920,
         "height": 2885
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 1110298,
+        "width": 1597,
+        "height": 2400
       }
     },
     "credit": {
@@ -183,6 +211,13 @@
         "file": "original.jpg",
         "contentType": "image/jpeg",
         "bytes": 460143,
+        "width": 1920,
+        "height": 1440
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 457507,
         "width": 1920,
         "height": 1440
       }
@@ -224,6 +259,13 @@
         "bytes": 592351,
         "width": 1920,
         "height": 1280
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 588760,
+        "width": 1920,
+        "height": 1280
       }
     },
     "credit": {
@@ -261,6 +303,13 @@
         "file": "original.jpg",
         "contentType": "image/jpeg",
         "bytes": 422047,
+        "width": 1920,
+        "height": 853
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 415498,
         "width": 1920,
         "height": 853
       }
@@ -302,6 +351,13 @@
         "bytes": 815193,
         "width": 1920,
         "height": 2684
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 634633,
+        "width": 1717,
+        "height": 2400
       }
     },
     "credit": {
@@ -341,6 +397,13 @@
         "bytes": 634657,
         "width": 1920,
         "height": 2983
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 363953,
+        "width": 1545,
+        "height": 2400
       }
     },
     "credit": {
@@ -378,6 +441,13 @@
         "file": "original.jpg",
         "contentType": "image/jpeg",
         "bytes": 470547,
+        "width": 1920,
+        "height": 1403
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 467752,
         "width": 1920,
         "height": 1403
       }
@@ -419,6 +489,13 @@
         "bytes": 656301,
         "width": 1920,
         "height": 1536
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 646899,
+        "width": 1920,
+        "height": 1536
       }
     },
     "credit": {
@@ -456,6 +533,13 @@
         "file": "original.jpg",
         "contentType": "image/jpeg",
         "bytes": 160275,
+        "width": 1920,
+        "height": 960
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 157155,
         "width": 1920,
         "height": 960
       }
@@ -497,6 +581,13 @@
         "bytes": 136664,
         "width": 1920,
         "height": 539
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 134883,
+        "width": 1920,
+        "height": 539
       }
     },
     "credit": {
@@ -534,6 +625,13 @@
         "file": "original.jpg",
         "contentType": "image/jpeg",
         "bytes": 632952,
+        "width": 1920,
+        "height": 1280
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 630146,
         "width": 1920,
         "height": 1280
       }
@@ -575,6 +673,13 @@
         "bytes": 436771,
         "width": 1920,
         "height": 1378
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 435850,
+        "width": 1920,
+        "height": 1378
       }
     },
     "credit": {
@@ -612,6 +717,13 @@
         "file": "original.jpg",
         "contentType": "image/jpeg",
         "bytes": 416286,
+        "width": 1920,
+        "height": 1080
+      },
+      "PRINT": {
+        "file": "print.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 415439,
         "width": 1920,
         "height": 1080
       }

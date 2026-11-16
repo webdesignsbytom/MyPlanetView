@@ -10,7 +10,8 @@ export const REGIONS = Object.freeze({
   scandinavia: { name: 'Scandinavia', codes: ['DK', 'NO', 'SE'] },
   nordic: { name: 'The Nordic countries', codes: ['DK', 'FI', 'IS', 'NO', 'SE'] },
   'baltic-states': { name: 'The Baltic states', codes: ['EE', 'LT', 'LV'] },
-  'british-isles': { name: 'The British Isles', codes: ['GB', 'IE'] },
+  // On a map that splits the UK (utils/map/ukNations.js), its four nations and Ireland
+  'british-isles': { name: 'The British Isles', codes: ['GB', 'IE'], splitUkCodes: ['XE', 'XC', 'XW', 'XI', 'IE'] },
   benelux: { name: 'Benelux', codes: ['BE', 'LU', 'NL'] },
   iberia: { name: 'The Iberian Peninsula', codes: ['AD', 'ES', 'GI', 'PT'] },
   alps: { name: 'The Alpine countries', codes: ['AT', 'CH', 'DE', 'FR', 'IT', 'LI', 'MC', 'SI'] },
@@ -31,6 +32,9 @@ export const REGIONS = Object.freeze({
 });
 
 export const REGION_KEYS = Object.freeze(Object.keys(REGIONS));
+
+/** A region's codes on a map: its `splitUkCodes` on a map that splits the UK, if it has them. */
+export const regionCodesOnMap = (region, splitUk) => (splitUk && REGIONS[region].splitUkCodes) || REGIONS[region].codes;
 
 // The six continents people live on (Antarctica has its own badge)
 export const INHABITED_CONTINENTS = Object.freeze(['AFRICA', 'ASIA', 'EUROPE', 'NORTH_AMERICA', 'OCEANIA', 'SOUTH_AMERICA']);

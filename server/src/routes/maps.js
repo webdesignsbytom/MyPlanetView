@@ -27,6 +27,7 @@ import {
   setStampPhotoHandler,
 } from '../controllers/passport.js';
 import { sharingHandlers } from '../controllers/sharing.js';
+import { getMapThemeAlbumHandler, getMapThemesHandler } from '../controllers/themes.js';
 import { requireVerifiedEmail as verified, validateAuthentication } from '../middleware/auth.js';
 import { createDbRateLimiter, keyByUserId } from '../middleware/dbRateLimit.js';
 import {
@@ -95,6 +96,10 @@ router.delete('/:mapId/passport/stamps/:landmarkId/photo', verified, clearStampP
 router.get('/:mapId/badges', getBadgesHandler);
 router.get('/:mapId/goals', getGoalsHandler);
 router.post('/:mapId/goals', verified, createGoalHandler);
+
+// Monthly photo themes: the map's albums (docs/API.md, "Photo themes")
+router.get('/:mapId/themes', getMapThemesHandler);
+router.get('/:mapId/themes/:themeId/photos', getMapThemeAlbumHandler);
 
 // Sharing
 router.get('/:id/sharing', sharing.get);

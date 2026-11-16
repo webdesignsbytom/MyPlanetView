@@ -54,6 +54,7 @@ import {
 import { newUniqueShareCode } from '../services/travel/maps.js';
 import { badRequest, denyUnless, forbidden, handler, loadMap, loadTrip, notFound } from './helpers/travel.js';
 import { isKnownCountry } from './helpers/countries.js';
+import { placeOnMap } from '../utils/ukNations.js';
 import { linkedTripSummary, tripDetailView, tripSummary } from './helpers/views.js';
 import { loadUploadRules } from '../services/travel/plans.js';
 
@@ -327,11 +328,14 @@ export const removeTripFromMapHandler = handler(D, 'Remove trip from map', async
 // Stops
 
 /** A stop from a request body; `partial` for PATCH. */
-async function parseStop(body, { partial = false, current = {} } = {}) {
+async function parseStop(body, { partial = false, current = {}, splitUk = false } = {}) {
   const out = {};
   if (!partial || body.countryCode !== undefined) {
     if (!(await isKnownCountry(body.countryCode))) return { error: EVENT_MESSAGES.countryNotFound };
-    out.countryCode = body.countryCode;
+    // As the trip's map keeps places: a UK nation is the UK on a map that doesn't split it
+    out.countryCode = placeOnMap(body.countryCode, splitUk);
+    // Placed by hand: the nation it had before the UK split was turned off no longer applies
+    if (partial && out.countryCode !== current.countryCode) out.ukNation = null;
   }
   if (body.landmarkId !== undefined) {
     if (body.landmarkId === null || body.landmarkId === '') out.landmarkId = null;
@@ -355,7 +359,7 @@ async function parseStop(body, { partial = false, current = {} } = {}) {
 export const createStopHandler = handler(D, 'Create stop', async (req, res) => {
   const { trip, mapRole, role } = await loadTrip(req, req.params.tripId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.tripNotFound)) return undefined;
-  const parsed = await parseStop(req.body || {});
+  const parsed = await parseStop(req.body || {}, { splitUk: trip.map.splitUk });
   if (parsed.error) return badRequest(req, res, D, parsed.error);
 
   // On a completed trip, the country is marked visited in the same transaction
@@ -370,7 +374,7 @@ export const updateStopHandler = handler(D, 'Update stop', async (req, res) => {
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.tripNotFound)) return undefined;
   const current = isUuid(req.params.stopId) ? await findStop(trip.id, req.params.stopId) : null;
   if (!current) return notFound(req, res, D, EVENT_MESSAGES.stopNotFound);
-  const parsed = await parseStop(req.body || {}, { partial: true, current });
+  const parsed = await parseStop(req.body || {}, { partial: true, current, splitUk: trip.map.splitUk });
   if (parsed.error) return badRequest(req, res, D, parsed.error);
 
   await updateStopInDB(trip.id, current.id, parsed.value);

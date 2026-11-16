@@ -81,3 +81,23 @@ describe('buildMapStats', () => {
     });
   });
 });
+
+describe('buildMapStats on a map that splits the UK', () => {
+  const ukContinents = new Map([['GB', 'EUROPE'], ['XE', 'EUROPE'], ['XC', 'EUROPE'], ['XW', 'EUROPE'], ['FR', 'EUROPE']]);
+  const visit = (countryCode, status = 'VISITED') => ({ countryCode, status });
+
+  it('counts each nation as a country, and the UK only while none of its nations is marked', () => {
+    const visits = [visit('XE'), visit('XC', 'LIVED'), visit('FR'), visit('GB')];
+    expect(buildMapStats({ visits, continentByCode: ukContinents, splitUk: true }).countries).toBe(3);
+    expect(buildMapStats({ visits: [visit('GB'), visit('FR')], continentByCode: ukContinents, splitUk: true }).countries).toBe(2);
+  });
+
+  it('counts a traveller’s nations from their completed trips', () => {
+    const stats = buildMapStats({
+      splitUk: true,
+      travellers: [{ id: 't1', name: 'Sam' }],
+      completedTrips: [{ travellerIds: ['t1'], countryCodes: ['XE', 'XW', 'XE'] }],
+    });
+    expect(stats.byTraveller).toEqual([{ travellerId: 't1', name: 'Sam', countries: 2 }]);
+  });
+});

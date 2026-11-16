@@ -1,0 +1,202 @@
+{
+  "code": "FI",
+  "slug": "finland",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Tervetuloa", "Suomi"],
+  "summary": "Lakes, forests and saunas, design-minded Helsinki, and Lapland's snow, reindeer and northern lights.",
+  "overview": [
+    "Finland is a country of forests and lakes, nearly 188,000 of them, with Helsinki on the southern coast and Lapland reaching far above the Arctic Circle. Helsinki is compact and built around the sea, with market halls, design shops, modern libraries and saunas, and a fortress on islands a short ferry ride from the market square. Inland, the Lakeland is the country of summer cottages; in the north are low, rounded fells, reindeer and the Sámi homeland.",
+    "Finland is calm, safe and expensive, and things work: trains run on time and cards are taken almost everywhere. The sauna is part of everyday life, in homes, hotels and lakeside cabins, and Finnish sauna culture is on UNESCO's list of intangible heritage. Finnish and Swedish are both official, so signs in the south and west are often in both."
+  ],
+  "whenToGo": {
+    "stripLabel": "Helsinki, the south coast and the Lakeland. Lapland, in the far north, differs a lot and has a strip of its own below.",
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "March and April bring bright, snowy days in the north, the best time for skiing in Lapland. The snow melts in the south in April and in the north in May, and the birch trees come into leaf in late May. Vappu, on 1 May, is the first big party of the year."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Mild to warm, usually around 20°C in the south and sometimes hotter, with almost endless light: Helsinki has close to 19 hours of daylight at midsummer, and Lapland the midnight sun. Finns head to their lakeside cottages in July, festivals fill the calendar, and mosquitoes are out in the north and by the lakes."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "In September, ruska, the autumn colours, turns Lapland's fells red and gold, and the northern lights return. The south is crisp in September, then grey and wet; November is the darkest, dullest month before the snow."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and snowy, especially inland and in the north, where −20°C or colder is common. Helsinki has about six hours of daylight in December, and in northern Lapland the sun doesn't rise for weeks (kaamos). The season for husky and reindeer safaris, skiing and the northern lights."
+      }
+    ],
+    "weather": "Cold, snowy winters and short, mild summers, with the Baltic softening the south coast a little. Lapland is usually under snow from about November to early May. Summer days can reach the high 20s, while in winter the south usually stays a few degrees below freezing and the north far colder.",
+    "festivals": [
+      {
+        "name": "Vappu (May Day)",
+        "place": "Across Finland, above all Helsinki",
+        "when": "30 April and 1 May",
+        "months": [4, 5],
+        "text": "Finland's spring carnival: people wear their white student caps, the Havis Amanda statue in Helsinki gets one too on the eve, and 1 May means picnics in the parks with home-made mead (sima) and funnel cakes (tippaleipä)."
+      },
+      {
+        "name": "Juhannus (Midsummer)",
+        "place": "Across Finland",
+        "when": "Midsummer Eve, the Friday between 19 and 25 June",
+        "months": [6],
+        "text": "Bonfires by the lakes and the sea, saunas and late nights in the light. The cities empty as people leave for their cottages, and many shops close; the national flag flies through the night."
+      },
+      {
+        "name": "Savonlinna Opera Festival",
+        "place": "Olavinlinna Castle, Savonlinna",
+        "when": "Usually in July",
+        "months": [7],
+        "text": "A month of opera in the courtyard of a medieval castle on a small island in the Lakeland."
+      },
+      {
+        "name": "Helsinki Festival",
+        "place": "Helsinki",
+        "when": "Usually from late August to early September",
+        "months": [8, 9],
+        "text": "Two weeks of music, theatre, dance and art across the city, including a night when galleries and venues stay open late."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Finland",
+        "when": "6 December",
+        "months": [12],
+        "text": "A quiet, dignified holiday. Many homes put two candles in each window in the evening, and much of the country watches the President's reception on television."
+      },
+      {
+        "name": "Declaration of Christmas Peace",
+        "place": "Turku",
+        "when": "24 December, at noon",
+        "months": [12],
+        "text": "An old proclamation read from a balcony on the Old Great Square in Turku, broadcast across the country. Christmas Eve is the main day of Christmas in Finland, with a sauna before dinner."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Helsinki and the south coast",
+        "text": "Helsinki is good all year, with museums, saunas and the island fortress of Suomenlinna. Ferries cross to Tallinn in about two hours and to Stockholm overnight. Porvoo, a small old town of wooden houses, is an easy day trip."
+      },
+      {
+        "name": "The Lakeland",
+        "text": "Thousands of lakes and forested islands in the south-east, around Saimaa, the largest lake, home to a rare freshwater seal. Summer is the season for cottages, canoeing and lake steamers; in winter the lakes freeze for skating and ice fishing."
+      },
+      {
+        "name": "Turku, the archipelago and Åland",
+        "text": "Turku, the oldest city, faces an archipelago of thousands of islands linked by small ferries and bridges, best explored in summer. The Åland Islands, between Finland and Sweden, are self-governing and Swedish-speaking."
+      },
+      {
+        "name": "Lapland",
+        "months": ["good", "best", "best", "good", "avoid", "good", "good", "best", "best", "good", "good", "good"],
+        "text": "Rovaniemi, on the Arctic Circle, and ski resorts such as Levi, Ylläs and Saariselkä are busiest from December to March, with northern lights, husky and reindeer safaris, and Christmas trips in December. In the far north, the sun doesn't set from about mid-May to late July and doesn't rise from late November to mid-January. Ruska colours the fells in early September; in May, the thaw closes many places between seasons, and June and July bring the mosquitoes."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A firm handshake with eye contact, and first names soon after. \"Moi\" or \"hei\" says hello. Finns keep a little more personal space than many, speak quietly in public and don't need small talk: a silence is comfortable, not awkward.",
+    "etiquette": [
+      "In the sauna, shower first and sit on a small towel or a paper seat cover, and ask before you throw more water on the stones. Public saunas are usually single-sex and without swimsuits; mixed ones use swimsuits or towels. Cooling off in a lake, the sea or a hole in the ice is part of the ritual.",
+      "Everyman's right (jokamiehenoikeus) lets anyone walk, ski, pick berries and mushrooms and camp briefly in the countryside, away from homes. Lighting a fire isn't included: use marked fireplaces and respect fire warnings.",
+      "Reindeer wander onto Lapland's roads, often at dusk. Slow down when you see one, as others are usually close by.",
+      "Wine and spirits are sold at the state shops, Alko. Supermarkets sell beer and other lighter drinks, only between 9 am and 9 pm.",
+      "Take your shoes off when you go into someone's home."
+    ],
+    "tipping": "Not expected: service is included in prices. Rounding up, or leaving a little for excellent service, is welcome but rare among Finns.",
+    "dress": "Casual and practical. In winter, wear layers, a warm hat, gloves and boots with grip, and expect to take your outer layers off indoors, where it's warm. Lapland's tour companies usually lend thermal overalls and boots for safaris. Bring a swimsuit for mixed saunas and swimming.",
+    "food": [
+      {
+        "name": "Karjalanpiirakka",
+        "text": "Karelian pies: thin rye crusts filled with rice porridge, eaten warm with egg butter, at breakfast or as a snack."
+      },
+      {
+        "name": "Lohikeitto",
+        "text": "Creamy salmon soup with potatoes, leeks and dill, served with rye bread."
+      },
+      {
+        "name": "Poronkäristys",
+        "text": "Thin slices of reindeer sautéed with butter, served with mashed potato and lingonberries, above all in Lapland."
+      },
+      {
+        "name": "Ruisleipä",
+        "text": "Dark, sour rye bread, eaten with almost every meal; in the west it's often a flat round with a hole in the middle."
+      },
+      {
+        "name": "Korvapuusti",
+        "text": "Cinnamon and cardamom buns, whose name means \"slapped ears\", with coffee: Finns are among the world's biggest coffee drinkers."
+      },
+      {
+        "name": "Leipäjuusto",
+        "text": "\"Bread cheese\", a mild baked cheese that squeaks on the teeth, served warm with cloudberry jam."
+      }
+    ],
+    "phrases": {
+      "language": "Finnish",
+      "intro": "Finnish isn't related to Swedish or the other Nordic languages. Every letter is pronounced, the stress always falls on the first syllable, and ä sounds like the \"a\" in \"cat\". Most Finns speak good English.",
+      "items": [
+        { "phrase": "Moi / Hei", "say": "moy / hey", "meaning": "Hi" },
+        { "phrase": "Hyvää huomenta", "say": "HEW-vah HWOH-men-tah", "meaning": "Good morning" },
+        { "phrase": "Kiitos", "say": "KEE-toss", "meaning": "Thank you; also \"please\" after a request" },
+        { "phrase": "Anteeksi", "say": "AHN-tek-see", "meaning": "Excuse me; sorry" },
+        { "phrase": "Kyllä / Ei", "say": "KEWL-la / ay", "meaning": "Yes / No" },
+        { "phrase": "Puhutko englantia?", "say": "POO-hoot-koh ENG-lahn-tee-ah", "meaning": "Do you speak English?" },
+        { "phrase": "Paljonko tämä maksaa?", "say": "PAHL-yon-koh TA-ma MAHK-sah", "meaning": "How much is this?" },
+        { "phrase": "Kippis!", "say": "KIP-piss", "meaning": "Cheers!" },
+        { "phrase": "Hei hei", "say": "hey hey", "meaning": "Bye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q33",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Cards are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }],
+        "note": "Wikidata also lists the Finnish markka, which it ends on 31 December 1998, when the euro took over (markka notes and coins were used until 2002)."
+      },
+      {
+        "key": "languages",
+        "text": "Finnish and Swedish, both official. Swedish is spoken mainly on the west and south coasts and is the only official language of the Åland Islands. Sámi has official status in the Sámi homeland in northern Lapland. Most Finns speak good English.",
+        "sources": [{ "property": "P37", "values": ["Q1412", "Q9027"] }],
+        "note": "Wikidata lists Finnish and Swedish. The page adds Swedish's sole status in Åland and the Sámi languages' official status in the Sámi homeland, which come from Finnish law, not from Wikidata."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time: UTC+2, and UTC+3 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q190252", "Q1109976", "Q6723", "Q6760", "Q5412105"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance. For urgent medical advice that isn't an emergency, call 116 117.",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25743523"] }],
+        "note": "Wikidata also lists 000, the emergency number from 1983 to 1992, before 112; the page leaves it out. Its item for 116 117 (Q25743523, Päivystysapu) has no English label."
+      },
+      {
+        "key": "callingCode",
+        "text": "+358",
+        "sources": [{ "property": "P474", "values": ["+358"] }]
+      }
+    ]
+  }
+}

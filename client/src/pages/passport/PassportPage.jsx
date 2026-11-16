@@ -33,7 +33,7 @@ function PassportPage() {
   const [passport, setPassport] = useState(null);
   const [error, setError] = useState(null);
   const [photoId, setPhotoId] = useState(null);
-  const [picking, setPicking] = useState(null); // { stamp, countryCode }
+  const [picking, setPicking] = useState(null); // { stamp }
   const mustVerify = useMustVerifyEmail();
 
   useEffect(() => {
@@ -64,7 +64,7 @@ function PassportPage() {
   // The owner and editors get `photoChosen` on their stamps; never through a share link
   const canPick = !shareCode && Boolean(passport?.pages.some((page) => page.stamps.some((stamp) => stamp.photoChosen !== undefined)));
   const openPhoto = useCallback((id) => setPhotoId(id), []);
-  const pickPhoto = useCallback((stamp, countryCode) => setPicking({ stamp, countryCode }), []);
+  const pickPhoto = useCallback((stamp) => setPicking({ stamp }), []);
   const backTo = shareCode ? generatePath(SHARED_PAGE_URL, { code: shareCode }) : mapPath(mapId);
 
   return (
@@ -116,7 +116,6 @@ function PassportPage() {
         <Suspense fallback={null}>
           <StampPhotoPicker
             mapId={mapId}
-            countryCode={picking.countryCode}
             stamp={picking.stamp}
             onSaved={reload}
             onClose={() => setPicking(null)}

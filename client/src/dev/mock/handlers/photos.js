@@ -97,6 +97,8 @@ export function registerPhotoRoutes() {
     db.photoLandmarks = db.photoLandmarks.filter((pl) => pl.photoId !== photo.id);
     // A passport stamp's picked photo goes with it (back to the landmark's earliest)
     db.landmarkCovers = db.landmarkCovers.filter((c) => c.photoId !== photo.id);
+    // ...and its places in the monthly themes' albums
+    db.themeEntries = (db.themeEntries || []).filter((e) => e.photoId !== photo.id);
     db.trips.forEach((t) => {
       if (t.coverPhotoId === photo.id) t.coverPhotoId = null;
     });

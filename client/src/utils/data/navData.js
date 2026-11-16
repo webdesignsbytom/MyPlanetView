@@ -14,18 +14,29 @@ import {
   ADMIN_EVENTS_PAGE_URL,
   ADMIN_PROMO_CODES_PAGE_URL,
   ADMIN_OFFERS_PAGE_URL,
+  ADMIN_THEMES_PAGE_URL,
   MAP_PAGE_URL,
+  CHALLENGES_PAGE_URL,
 } from '../constants/routes';
 // Utils
 import { hasRole, ROLES } from '../user/permissions';
+import { HAS_CHECKED_COUNTRY_PAGES } from '../countries/countryPages';
+import { COUNTRIES_SECTION } from '../countries/countryRoutes';
 
 // Only routed pages; auth links depend on the user
 export const getNavLinkItemsArray = (user) => [
   // Signed in: your map first
-  ...(user ? [{ path: MAP_PAGE_URL, label: 'My map' }] : []),
+  ...(user
+    ? [
+        { path: MAP_PAGE_URL, label: 'My map' },
+        { path: CHALLENGES_PAGE_URL, label: 'Challenges' },
+      ]
+    : []),
 
-  // Core pages (the legal pages are linked from the footer)
+  // Core pages (the legal pages are linked from the footer). The country guides once one is
+  // published (before that, /countries doesn't exist), as in the footer
   { path: HOME_PAGE_URL, label: 'Home' },
+  ...(HAS_CHECKED_COUNTRY_PAGES ? [{ path: COUNTRIES_SECTION.href, label: COUNTRIES_SECTION.name }] : []),
   { path: ABOUT_PAGE_URL, label: 'About' },
   { path: FAQ_PAGE_URL, label: 'FAQ' },
   { path: PRICING_PAGE_URL, label: 'Pricing' },
@@ -42,6 +53,7 @@ export const getNavLinkItemsArray = (user) => [
             { path: ADMIN_USERS_PAGE_URL, label: 'Users' },
             { path: ADMIN_PROMO_CODES_PAGE_URL, label: 'Promo Codes' },
             { path: ADMIN_OFFERS_PAGE_URL, label: 'Travel Offers' },
+            { path: ADMIN_THEMES_PAGE_URL, label: 'Photo Themes' },
             ...(hasRole(user, ROLES.DEVELOPER)
               ? [{ path: ADMIN_EVENTS_PAGE_URL, label: 'Audit Log' }]
               : []),

@@ -4,6 +4,7 @@ import useModalA11y from '@/hooks/useModalA11y';
 import useWakeLock from '@/hooks/useWakeLock';
 import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
 import useSlideshowPhotos from '@/hooks/useSlideshowPhotos';
+import useSlideshowMoments from '@/hooks/useSlideshowMoments';
 // Components
 import PaperStripHeader from '@/components/common/PaperStripHeader';
 import Button from '@/components/common/Button';
@@ -12,6 +13,7 @@ import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import SlidePhoto from './SlidePhoto';
 import SlideVideo from './SlideVideo';
 import SlideTitleCard from './SlideTitleCard';
+import SlideMomentCard from './SlideMomentCard';
 import SlideCaption from './SlideCaption';
 import SlideshowControls from './SlideshowControls';
 import SlideshowOffer from './SlideshowOffer';
@@ -23,6 +25,7 @@ import {
   SLIDE_SPEEDS,
   SLIDE_SPEED_STORAGE_KEY,
   TITLE_CARD_SECONDS,
+  MOMENT_CARD_SECONDS,
   buildSlides,
   newShuffleSeed,
   photoPlace,
@@ -97,7 +100,13 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
     seed,
     run,
   });
-  const slides = useMemo(() => buildSlides(list.photos, { titleCards, complete: list.complete }), [list.photos, titleCards, list.complete]);
+  // The map's (or trip's, or country's) dated moments, as cards between the photos of a
+  // show in date order (none when shuffled); the show waits for them, so its slides don't move
+  const moments = useSlideshowMoments({ source, country, enabled: !shuffle });
+  const slides = useMemo(
+    () => (moments.ready ? buildSlides(list.photos, { titleCards, complete: list.complete, moments: moments.moments }) : []),
+    [list.photos, titleCards, list.complete, moments],
+  );
   const slide = slides[index] || null;
   const photoNumber = useMemo(() => slides.slice(0, index + 1).filter((s) => s.type === 'photo').length, [slides, index]);
   const canFullscreen = typeof document !== 'undefined' && Boolean(document.fullscreenEnabled);
@@ -156,7 +165,13 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
     // A video moves on when it ends (videoEnded); one that ended while the next page was
     // still coming moves on now
     if (playsThrough && videoEndedId !== slideId) return undefined;
-    const seconds = playsThrough ? 0 : slideType === 'card' ? Math.min(speed, TITLE_CARD_SECONDS) : speed;
+    const seconds = playsThrough
+      ? 0
+      : slideType === 'card'
+        ? Math.min(speed, TITLE_CARD_SECONDS)
+        : slideType === 'moment'
+          ? Math.max(speed, MOMENT_CARD_SECONDS)
+          : speed;
     const timer = window.setTimeout(() => setIndex((i) => i + 1), seconds * 1000);
     return () => window.clearTimeout(timer);
   }, [playing, slideId, slideType, readyId, speed, hasNext, playsThrough, videoEndedId]);
@@ -310,7 +325,9 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
           ) : slide.type === 'photo' ? (
             <SlidePhoto key={slide.id} photo={slide.photo} alt={altFor(slide.photo)} reducedMotion={reducedMotion} onReady={setReadyId} />
           ) : slide.type === 'card' ? (
-            <SlideTitleCard key={slide.id} countryCode={slide.countryCode} first={index === 0} />
+            <SlideTitleCard key={slide.id} countryCode={slide.countryCode} first={!slides.slice(0, index).some((s) => s.type === 'card')} />
+          ) : slide.type === 'moment' ? (
+            <SlideMomentCard key={slide.id} moment={slide.moment} />
           ) : (
             <div className='grid max-h-full justify-items-center gap-4 overflow-y-auto p-1 text-center'>
               <p className='-rotate-2 border-4 border-double border-poster-red px-4 py-2 font-travel text-4xl uppercase text-poster-red'>The end</p>

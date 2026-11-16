@@ -2,7 +2,9 @@ import { test, expect, HOME_MAP, SAM_MAP, SAM_SHARE_CODE, goInApp, openMap, open
 
 // The slideshows (docs/FEATURE-PLAN.md, "Slideshows"). The test user's map has 16 photos
 // (one hidden, which its owner sees); oldest taken first they start in the Netherlands
-// (2016), then Spain (2018) and the United States.
+// (2016), then Spain (2018) and the United States. Its dated moments come between them in
+// date order: "Test was born" (1990) and "Moved to Dublin" (2012) open the show, and
+// "Saw flamenco in Granada" (August 2018) follows Spain's card.
 
 /**
  * The captions (alt texts) of the next `count` photos, stepping on with the arrow key
@@ -30,34 +32,48 @@ test.describe('Slideshows', () => {
     const show = page.getByRole('dialog', { name: `Slideshow: ${HOME_MAP}` });
     await expect(show).toBeVisible();
 
-    // It plays at once, from the first country's title card (its poster and name), with
+    // It plays at once, from the oldest moment (its kind, date, place and story), with
     // focus on Pause: Space pauses it
-    await expect(show.getByText('First stop', { exact: true })).toBeVisible();
-    await expect(show.getByRole('img', { name: 'Travel poster for Netherlands' })).toBeVisible();
+    const born = show.getByRole('article', { name: 'Moment: Test was born' });
+    await expect(born).toBeVisible();
+    await expect(born.getByText('Born · 1990')).toBeVisible();
+    await expect(born.getByText('Manchester, United Kingdom')).toBeVisible();
+    await expect(born.getByText('In a snowstorm, apparently.')).toBeVisible();
     await expect(show.getByRole('button', { name: 'Pause', exact: true })).toBeFocused();
     await page.keyboard.press('Space');
     const play = show.getByRole('button', { name: 'Play', exact: true });
     await expect(play).toBeVisible();
 
-    // Paused, it waits for you: forward to the first photo, its caption under it
-    await show.getByRole('button', { name: 'Next', exact: true }).click();
+    // Paused, it waits for you: the next moment, then the first country's title card (its
+    // poster and name), then the first photo, its caption under it
+    const next = show.getByRole('button', { name: 'Next', exact: true });
+    await next.click();
+    await expect(show.getByRole('article', { name: 'Moment: Moved to Dublin' }).getByText('Moved here · September 2012')).toBeVisible();
+    await next.click();
+    await expect(show.getByText('First stop', { exact: true })).toBeVisible();
+    await expect(show.getByRole('img', { name: 'Travel poster for Netherlands' })).toBeVisible();
+    await next.click();
     await expect(show.getByRole('img', { name: 'Canals at dusk' })).toBeVisible();
     await expect(show.getByText('Photo 1 of 16')).toBeVisible();
     await expect(show.getByText(/^Netherlands · Amsterdam/)).toBeVisible();
     await expect(show.getByText('12 Mar 2016')).toBeVisible();
 
-    // The arrow keys: on to Spain's card, then its photo, and back
+    // The arrow keys: on to Spain's card, the moment there, then its photo, and back
     await page.keyboard.press('ArrowRight');
     await expect(show.getByText('Next stop', { exact: true })).toBeVisible();
     await expect(show.getByRole('img', { name: 'Travel poster for Spain' })).toBeVisible();
     await page.keyboard.press('ArrowRight');
+    const flamenco = show.getByRole('article', { name: 'Moment: Saw flamenco in Granada' });
+    await expect(flamenco.getByText('Alhambra, Spain')).toBeVisible();
+    await page.keyboard.press('ArrowRight');
     await expect(show.getByRole('img', { name: 'Granada' })).toBeVisible();
     await page.keyboard.press('ArrowLeft');
-    await expect(show.getByText('Next stop', { exact: true })).toBeVisible();
+    await expect(flamenco).toBeVisible();
 
     // Still paused a while later; then playing at 3 seconds a photo moves on by itself
+    // (a moment stays up 6 seconds, long enough to read)
     await page.waitForTimeout(3500);
-    await expect(show.getByText('Next stop', { exact: true })).toBeVisible();
+    await expect(flamenco).toBeVisible();
     await show.getByRole('button', { name: '3 seconds a photo' }).click();
     await expect(show.getByRole('button', { name: '3 seconds a photo' })).toHaveAttribute('aria-pressed', 'true');
     await play.click();
@@ -102,7 +118,9 @@ test.describe('Slideshows', () => {
     const france = page.getByRole('dialog', { name: 'France' });
     await france.getByRole('button', { name: 'Slideshow of France' }).click();
     const show = page.getByRole('dialog', { name: 'Slideshow: France' });
-    // One country: no title cards, its oldest photo first
+    // One country: no title cards. The engagement (2019) came before its oldest photo
+    await expect(show.getByRole('article', { name: 'Moment: Got engaged at the Eiffel Tower' })).toBeVisible();
+    await show.getByRole('button', { name: 'Next', exact: true }).click();
     await expect(show.getByRole('img', { name: 'Evening by the Seine' })).toBeVisible();
     await expect(show.getByText('Photo 1 of 3')).toBeVisible();
     await show.getByRole('button', { name: 'Close the slideshow' }).click();

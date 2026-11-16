@@ -1,0 +1,198 @@
+{
+  "code": "CZ",
+  "slug": "czechia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dobrý den", "Česko"],
+  "summary": "Prague's spires and bridges, castle towns, grand old spas and a beer culture like no other.",
+  "overview": [
+    "Most visitors come for Prague, and it deserves the time: a medieval and baroque centre that came through the 20th century's wars largely undamaged, with the castle above the river, Charles Bridge and the astronomical clock on the Old Town Square. Beyond it, Český Krumlov curls round a bend of the Vltava under its castle, Kutná Hora has a Gothic church built on silver and a chapel decorated with human bones, and the spa towns of the west, Karlovy Vary and Mariánské Lázně, have grand colonnades and mineral springs to drink from.",
+    "Czechia is the country's short name and the Czech Republic its formal one; both are used. Prices are in Czech crowns, not euros. Trains and buses are cheap and reach most towns, and the countryside of Bohemia and Moravia is good for walking, cycling and, in the south-east, wine."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Cool in March, warming quickly through April and May, when parks and orchards blossom. Easter markets fill Prague's squares, and May is one of the most pleasant months to walk the city."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm, usually 22–27°C by day, with hot spells and thunderstorms. Prague is at its most crowded in July and August, so see Charles Bridge and the castle early in the day; the countryside, lakes and mountains are quieter."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is warm and settled, with the wine harvest in South Moravia. October is cooler, with autumn colour in the forests, and November grey and damp."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, around 0–3°C by day in Prague and below freezing at night, with snow in the mountains for skiing. Christmas markets fill December; January and February are the quietest and cheapest months, and Prague looks its best under snow."
+      }
+    ],
+    "weather": "Warm summers, cold winters and rain spread through the year, much of it in summer storms. The lowlands around Prague and in South Moravia are the warmest and driest; the mountains along the borders, such as the Krkonoše and the Šumava, are cooler, with snow from December to March.",
+    "festivals": [
+      {
+        "name": "Masopust (carnival)",
+        "place": "Villages and towns across the country",
+        "when": "The weeks before Lent, ending on Shrove Tuesday, in February or March",
+        "months": [2, 3],
+        "text": "Masked processions with music go from house to house, followed by feasts of pork and doughnuts. The door-to-door processions of the villages around Hlinsko are on UNESCO's list of intangible heritage."
+      },
+      {
+        "name": "Easter (Velikonoce)",
+        "place": "Across the country",
+        "when": "March or April",
+        "months": [3, 4],
+        "text": "Markets sell painted eggs and plaited willow switches (pomlázka). On Easter Monday boys go round lightly whipping girls with them, an old custom meant to bring health and youth, and are given eggs or sweets in return."
+      },
+      {
+        "name": "Burning of the Witches (Pálení čarodějnic)",
+        "place": "Across the country",
+        "when": "30 April",
+        "months": [4],
+        "text": "Bonfires on the night before 1 May, with straw witches thrown on the flames to see off the winter, sausages roasted on sticks and plenty of beer."
+      },
+      {
+        "name": "Karlovy Vary International Film Festival",
+        "place": "Karlovy Vary",
+        "when": "Usually late June or early July, for about a week",
+        "months": [6, 7],
+        "text": "The country's biggest film festival takes over the spa town, and many screenings are open to anyone with a festival pass."
+      },
+      {
+        "name": "Wine harvest festivals (vinobraní)",
+        "place": "South Moravia, above all Znojmo and Mikulov",
+        "when": "Usually in September",
+        "months": [9],
+        "text": "Parades, music and stalls in the wine towns, and burčák, a cloudy, half-fermented young wine sold only around the harvest."
+      },
+      {
+        "name": "Christmas markets",
+        "place": "Prague, Brno and towns across the country",
+        "when": "Usually from late November to early January",
+        "months": [11, 12, 1],
+        "text": "Stalls on the main squares sell crafts, sausages and mulled wine (svařák). In the days before Christmas, live carp are sold from tubs in the street for the Christmas Eve dinner."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Prague",
+        "text": "Good in any season, and at its most crowded from Easter to October and around Christmas. Visit the big sights early or late in the day, and look beyond the centre to the castle's quieter gardens, Vyšehrad and the districts across the river."
+      },
+      {
+        "name": "Bohemia",
+        "text": "Castles and small towns south and west of Prague: Český Krumlov, the spa towns of the west and the beer city of Plzeň, plus the sandstone rock towers of Bohemian Switzerland and the Bohemian Paradise in the north. Best from May to October."
+      },
+      {
+        "name": "Moravia",
+        "text": "The east of the country: Brno, Olomouc, the chateaux and parkland of Lednice and Valtice, and South Moravia's wine villages and cellars. Warmer and drier than Bohemia, and at its liveliest at harvest time."
+      },
+      {
+        "name": "The mountains",
+        "text": "The Krkonoše, on the Polish border, are the highest range, topped by Sněžka (1,603 m); the Šumava's forests spread along the German and Austrian borders in the south-west. Hiking from May to October, and skiing from December to March."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you meet. Say \"dobrý den\" as you walk into a shop, a restaurant or even a lift, and \"na shledanou\" when you leave. Use surnames, and any title, until you're invited to use first names.",
+    "etiquette": [
+      "In a pub, the waiter keeps bringing beer until you put a beer mat on top of your glass, and marks each one on a slip of paper left on your table.",
+      "Look people in the eye when you clink glasses, and say \"na zdraví\" (cheers).",
+      "Take your shoes off when you go into someone's home; you'll often be offered slippers.",
+      "In Prague, a paper ticket must be stamped when you first board a tram or bus or enter the metro. Plain-clothes inspectors check, and fines are given on the spot.",
+      "Drivers may not drink any alcohol at all, headlights stay on day and night all year, and motorways need an electronic vignette, bought online before you drive on one.",
+      "Large shops close by law on several public holidays, including Christmas Day and New Year's Day."
+    ],
+    "tipping": "Round up, or add about 10% in restaurants for good service. Tell the waiter the total you want to pay as you hand over the money, rather than leaving coins on the table. Check the bill first: some tourist places in Prague add a service charge, or charge for bread and extras you didn't order.",
+    "dress": "Casual and practical, with good shoes for the cobbles and steep streets of Prague. Cover your shoulders in churches, and dress up a little for the opera or a concert.",
+    "food": [
+      {
+        "name": "Svíčková",
+        "text": "Beef sirloin in a creamy root-vegetable sauce, with bread dumplings, cranberries and a spoonful of whipped cream: the country's favourite Sunday dish."
+      },
+      {
+        "name": "Vepřo knedlo zelo",
+        "text": "Roast pork with dumplings and sauerkraut, the classic lunch in pubs and homes alike."
+      },
+      {
+        "name": "Guláš",
+        "text": "Thick beef stew with paprika and onions, served with bread dumplings, and best with a beer alongside."
+      },
+      {
+        "name": "Smažený sýr",
+        "text": "Fried cheese: a thick slice of breaded cheese, usually Edam, with chips or boiled potatoes and tartare sauce. A pub favourite."
+      },
+      {
+        "name": "Beer",
+        "text": "Pale lager was first brewed in Plzeň in 1842, and Czechs drink more beer per person than any other nation. Draught beer in a pub is usually fresh, cheap and served with a thick head of foam."
+      },
+      {
+        "name": "Koláče",
+        "text": "Round pastries topped with plum jam, poppy seeds or sweet curd cheese. The sugar-coated chimney cake (trdelník) sold all over Prague's centre is a recent arrival for tourists rather than a Czech tradition."
+      }
+    ],
+    "phrases": {
+      "language": "Czech",
+      "intro": "English is common in Prague and among younger people, less so in the countryside. The stress always falls on the first syllable. Č is \"ch\", š is \"sh\", ž is like the \"s\" in \"pleasure\", c is \"ts\", j is \"y\", and ř is a sound of its own, a rolled r and a \"zh\" at once.",
+      "items": [
+        { "phrase": "Dobrý den", "say": "DOH-bree den", "meaning": "Hello; good day" },
+        { "phrase": "Ahoj", "say": "AH-hoy", "meaning": "Hi; bye (informal)" },
+        { "phrase": "Prosím", "say": "PROH-seem", "meaning": "Please; you're welcome; here you are" },
+        { "phrase": "Děkuji", "say": "DYEH-koo-yee", "meaning": "Thank you" },
+        { "phrase": "Promiňte", "say": "PROH-meen-teh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Mluvíte anglicky?", "say": "MLOO-vee-teh AHN-glits-kee", "meaning": "Do you speak English?" },
+        { "phrase": "Na zdraví!", "say": "NAH zdrah-vee", "meaning": "Cheers!" },
+        { "phrase": "Zaplatím, prosím", "say": "ZAH-plah-teem PROH-seem", "meaning": "The bill, please (\"I'll pay\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q213",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Czech koruna, or crown (Kč). The euro isn't the currency, though some tourist shops take it at a poor rate. Pay in crowns, avoid street money changers, and when a card machine offers to charge you in your own currency, choose crowns.",
+        "sources": [{ "property": "P38", "values": ["Q131016"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Czech. English is widely spoken in Prague and by younger people.",
+        "sources": [{ "property": "P37", "values": ["Q9056"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q207020", "Q6655", "Q6723", "Q28146068"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for any emergency; 155 for an ambulance, 150 for fire and 158 for police",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648862", "Q25648839", "Q25648863"] }],
+        "note": "Wikidata also lists 156, the municipal police, which the page leaves out."
+      },
+      {
+        "key": "callingCode",
+        "text": "+420",
+        "sources": [{ "property": "P474", "values": ["+420"] }]
+      }
+    ]
+  }
+}

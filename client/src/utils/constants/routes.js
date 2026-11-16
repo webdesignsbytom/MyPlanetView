@@ -11,6 +11,12 @@ export const PRICING_PAGE_URL = '/pricing';
 export const COUNTRIES_PAGE_URL = '/countries';
 export const countryPagePath = (slug) => `${COUNTRIES_PAGE_URL}/${slug}`;
 
+// "Where to go in <month>" (public, pre-rendered): built from the checked files in
+// src/content/months/ and the checked country guides (scripts/month-pages.mjs); a month
+// with too few countries at their best isn't built. No index page: each links the others
+export const WHERE_TO_GO_URL = '/where-to-go';
+export const monthPagePath = (slug) => `${WHERE_TO_GO_URL}/${slug}`;
+
 // Terms and Conditions
 export const LEGAL_AGREEMENTS_PAGE_URL = '/user-agreements';
 export const TERMS_AND_CONDITIONS_PAGE_URL = '/user-agreements#terms-and-conditions';
@@ -48,6 +54,12 @@ export const SHARED_PASSPORT_PAGE_URL = '/shared/:code/passport';
 export const mapPassportPath = (mapId) => `${mapPath(mapId)}/passport`;
 export const sharedPassportPath = (code) => `/shared/${encodeURIComponent(code)}/passport`;
 export const tripPath = (tripId) => `/trips/${encodeURIComponent(tripId)}`;
+// Friends challenges (signed in), and a challenge's join link (anyone; the code is a secret)
+export const CHALLENGES_PAGE_URL = '/challenges';
+export const CHALLENGE_PAGE_URL = '/challenges/:challengeId';
+export const CHALLENGE_JOIN_PAGE_URL = '/challenges/join/:code';
+export const challengePath = (challengeId) => `/challenges/${encodeURIComponent(challengeId)}`;
+export const challengeJoinPath = (code) => `/challenges/join/${encodeURIComponent(code)}`;
 
 // Admin pages
 export const ADMIN_PAGE_URL = '/admin';
@@ -56,6 +68,7 @@ export const ADMIN_USERS_PAGE_URL = `${ADMIN_PAGE_URL}/users`;
 export const ADMIN_EVENTS_PAGE_URL = `${ADMIN_PAGE_URL}/events`;
 export const ADMIN_PROMO_CODES_PAGE_URL = `${ADMIN_PAGE_URL}/promo-codes`;
 export const ADMIN_OFFERS_PAGE_URL = `${ADMIN_PAGE_URL}/offers`;
+export const ADMIN_THEMES_PAGE_URL = `${ADMIN_PAGE_URL}/themes`;
 
 // Dev server only (not routed in production builds)
 export const DEV_SELECT_LAB_PAGE_URL = '/dev/select-lab';
@@ -87,12 +100,14 @@ export const CLIENT_ONLY_ROUTE_PREFIXES = [
   WELCOME_PAGE_URL,
   SHARED_PAGE_URL.split('/:')[0],
   INVITE_PAGE_URL.split('/:')[0],
+  CHALLENGES_PAGE_URL,
 ];
 
 // Pages whose address carries a secret (share code, invite token, password-reset or
 // email-verification link): analytics is paused there (utils/analytics/privacy.js)
 export const ANALYTICS_EXCLUDED_PREFIXES = [
   SHARED_PAGE_URL.split('/:')[0],
+  CHALLENGE_JOIN_PAGE_URL.split('/:')[0],
   INVITE_PAGE_URL.split('/:')[0],
   RESET_PASS_PAGE_URL.split('/:')[0],
   VERIFY_EMAIL_PAGE_URL.split('/:')[0],
@@ -102,6 +117,8 @@ export const ANALYTICS_EXCLUDED_PREFIXES = [
 // pattern with something after its id (the passports) is matched whole; the others cover
 // anything under their prefix (utils/analytics/privacy.js)
 export const ANALYTICS_REDACTED_ROUTES = [
+  CHALLENGE_JOIN_PAGE_URL,
+  CHALLENGE_PAGE_URL,
   MAP_PASSPORT_PAGE_URL,
   SHARED_PASSPORT_PAGE_URL,
   SHARED_PAGE_URL,

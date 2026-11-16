@@ -4,7 +4,7 @@
 // map's own data (visits, photos, confirmed landmark matches); only awards
 // (db.badgeAwards) and goals (db.goals) are stored. Awards are never taken back.
 import { COUNTRIES } from '@/utils/map/countries';
-import { isSpecialPlace } from '@/utils/map/specialPlaces';
+import { isSpecialPlace, withParentPlaces } from '@/utils/map/specialPlaces';
 import { INHABITED_CONTINENTS, REGIONS } from '@/utils/constants/regions';
 import { GOAL_KINDS, GOAL_LIST_MAX, GOAL_REGIONS, GOAL_TARGET_MAX, GOAL_TITLE_MAX } from '@/utils/achievements/goals';
 import { getDb } from './store';
@@ -49,9 +49,10 @@ export const BADGES = Object.freeze([
   ...[1, 10, 50].map((need) => ({ key: `landmarks-${need}`, group: 'landmarks', measure: 'landmarks', need })),
   ...[5, 25].map((need) => ({ key: `unesco-${need}`, group: 'landmarks', measure: 'unesco', need })),
   ...[100, 1000].map((need) => ({ key: `photos-${need}`, group: 'photos', measure: 'photos', need })),
+  ...[3, 6, 12].map((need) => ({ key: `themes-${need}`, group: 'themes', measure: 'themes', need })),
 ]);
 
-export function badgeProgress({ visited = new Set(), stamps = [], photos = 0 }) {
+export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, themes = 0 }) {
   const countries = [...visited].filter((code) => !isSpecialPlace(code));
   const continents = new Set(countries.map((code) => continentByCode.get(code)).filter(Boolean));
   const counts = {
@@ -60,6 +61,7 @@ export function badgeProgress({ visited = new Set(), stamps = [], photos = 0 }) 
     landmarks: stamps.length,
     unesco: stamps.filter((stamp) => stamp.isUnesco).length,
     photos,
+    themes,
   };
   const haveFor = (badge) => {
     if (badge.measure === 'continent') return continents.has(badge.continent) ? 1 : 0;
@@ -215,7 +217,10 @@ export function loadMapFacts(mapId, { includeHidden }) {
     const seen = firstPhotoAt.get(photo.countryCode);
     if (!seen || shot < seen) firstPhotoAt.set(photo.countryCode, shot);
   }
-  return { visited, firstPhotoAt, stamps: findStamps(photos), photos: photos.length };
+  // Monthly themes with one of the map's (visible) photos in (the theme badges)
+  const shown = new Set(photos.map((p) => p.id));
+  const themes = new Set((db.themeEntries || []).filter((e) => e.mapId === mapId && shown.has(e.photoId)).map((e) => e.themeId)).size;
+  return { visited, firstPhotoAt, stamps: findStamps(photos), photos: photos.length, themes };
 }
 
 /**
@@ -245,7 +250,51 @@ export function mapBadges(mapId, { award }) {
       earnedAt: earnedAt.get(b.key) ?? null,
     })),
     newlyEarned,
+    travellers: travellersWithBadges(mapId),
   };
+}
+
+// Per traveller (the server's utils/badges.js travellerBadges): the travel badges only, from
+// the completed trips each person was on, each dated by the trip that earned it
+const TRAVELLER_BADGE_GROUPS = ['countries', 'continents', 'special', 'regions'];
+const tripDay = (trip) => trip.endDate ?? trip.startDate ?? null;
+
+function travellerBadges(trips, travellerId) {
+  const own = trips
+    .filter((trip) => trip.travellerIds.includes(travellerId))
+    .sort((a, b) => {
+      const [x, y] = [tripDay(a), tripDay(b)];
+      if (x && y) return x < y ? -1 : x > y ? 1 : 0;
+      return x ? -1 : y ? 1 : 0;
+    });
+  const visited = new Set();
+  const earnedOn = new Map();
+  for (const trip of own) {
+    for (const code of withParentPlaces(trip.countryCodes)) visited.add(code);
+    for (const badge of badgeProgress({ visited })) {
+      if (badge.earned && TRAVELLER_BADGE_GROUPS.includes(badge.group) && !earnedOn.has(badge.key)) earnedOn.set(badge.key, tripDay(trip));
+    }
+  }
+  return badgeProgress({ visited })
+    .filter((badge) => TRAVELLER_BADGE_GROUPS.includes(badge.group))
+    .map((b) => ({ key: b.key, group: b.group, have: b.have, need: b.need, earnedOn: b.earned ? earnedOn.get(b.key) ?? null : null, earned: b.earned }));
+}
+
+// The map's people, each with their travel badges (mapBadges' `travellers`)
+function travellersWithBadges(mapId) {
+  const db = getDb();
+  const trips = db.trips
+    .filter((trip) => trip.mapId === mapId && trip.status === 'COMPLETED')
+    .map((trip) => ({
+      travellerIds: trip.travellerIds || [],
+      countryCodes: db.stops.filter((stop) => stop.tripId === trip.id).map((stop) => stop.countryCode),
+      startDate: trip.startDate ?? null,
+      endDate: trip.endDate ?? null,
+    }));
+  return db.travellers
+    .filter((t) => t.mapId === mapId)
+    .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+    .map((t) => ({ id: t.id, name: t.name, badges: travellerBadges(trips, t.id) }));
 }
 
 /** A goal as sent: its fields plus progress. */

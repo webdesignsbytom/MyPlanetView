@@ -1,0 +1,198 @@
+{
+  "code": "CY",
+  "slug": "cyprus",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Yiá sas", "Kýpros"],
+  "summary": "Sunny seasons, Roman mosaics, painted mountain churches and an easy café life.",
+  "overview": [
+    "Cyprus, the third-largest island in the Mediterranean, lies far to the east, closer to Turkey and Lebanon than to mainland Greece. Its coast has beaches and harbour towns (Paphos, Limassol, Larnaca and Ayia Napa), its long history shows in Roman mosaics, crusader castles and the painted Byzantine churches of the Troodos mountains, and its summers are long and reliably sunny.",
+    "The island has been divided since 1974. The Republic of Cyprus governs the south, the north is outside its control, and a UN buffer zone runs between the two, right through the middle of Nicosia, the capital. This guide covers the Republic. Visitors can cross at official crossing points, including on foot along Ledra Street in central Nicosia, showing a passport or ID card. Many hire companies in the south don't let their cars cross, or don't insure them in the north, so check before you drive.",
+    "Cars drive on the left and road signs are in Greek and English. There are no trains: buses link the main towns, but a hire car is the easy way to reach the mountains and the quieter stretches of coast."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Green hills and wild flowers in March and April, then warm, settled days in May, when the sea becomes warm enough for most swimmers. Orthodox Easter, the biggest holiday of the year, often falls on a different date from Easter in western Europe."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and almost rainless. The coast is in the low to mid 30s°C, and inland Nicosia can pass 40°C in July and August. The beach resorts are at their busiest; the Troodos mountains are a cooler escape."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September and October stay warm, and the sea is at its warmest. The first rain usually arrives in late October or November, and the countryside starts to turn green again."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild on the coast, with days often in the high teens, but this is when most of the year's rain falls. Snow covers the higher Troodos, where Mount Olympus has small ski slopes, usually from January to March."
+      }
+    ],
+    "weather": "One of the warmest and sunniest places in Europe: long, hot, dry summers from May to October and short, mild winters, when most of the rain falls. The sea softens the heat on the coast; inland, around Nicosia, summers are hotter and winter nights colder, and the Troodos mountains are cool enough for snow in winter.",
+    "festivals": [
+      {
+        "name": "Limassol Carnival",
+        "place": "Limassol",
+        "when": "About ten days before Orthodox Lent, usually in February or early March",
+        "months": [2, 3],
+        "text": "The island's liveliest carnival: costume parties and parades of floats, building up to a grand parade on the last Sunday."
+      },
+      {
+        "name": "Green Monday (Kathara Deftera)",
+        "place": "Across the Republic",
+        "when": "The first day of Orthodox Lent, usually in February or March",
+        "months": [2, 3],
+        "text": "A public holiday when families head into the countryside for picnics of meat-free Lenten food and fly kites."
+      },
+      {
+        "name": "Orthodox Easter (Pascha)",
+        "place": "Across the Republic",
+        "when": "Usually in April, sometimes early May",
+        "months": [4, 5],
+        "text": "Candlelit processions on Good Friday; on Saturday night a midnight church service, fireworks and, in many villages, bonfires; then a family lamb roast on Sunday. Many shops and services close over the long weekend."
+      },
+      {
+        "name": "Kataklysmos (Festival of the Flood)",
+        "place": "Coastal towns, Larnaca above all",
+        "when": "Orthodox Pentecost, usually in June, sometimes late May",
+        "months": [5, 6],
+        "text": "Several days of water games, boat races, music and food stalls along the seafront, linked to the Pentecost holiday."
+      },
+      {
+        "name": "Village saints' day fairs (panigyria)",
+        "place": "Villages across the Republic",
+        "when": "Mostly in summer",
+        "months": [7, 8],
+        "text": "Villages honour their church's saint with a service, then stalls of sweets and loukoumades, music and dancing in the square. 15 August, the Dormition of the Virgin Mary, is a public holiday with many of them."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Paphos and the west",
+        "text": "Roman mosaics, the rock-cut Tombs of the Kings and a harbour fort in Paphos, and wilder coast on the Akamas peninsula to the north, best walked in spring and autumn."
+      },
+      {
+        "name": "Limassol and the south coast",
+        "text": "A busy seaside city with a marina and an old town, close to the ancient city of Kourion on its cliff and the wine villages in the Troodos foothills."
+      },
+      {
+        "name": "Larnaca and the south-east",
+        "text": "Larnaca has the main airport, a palm-lined seafront and the church of Saint Lazarus. Ayia Napa and Protaras, further east, have some of the sandiest beaches and the busiest summer nightlife, and are much quieter in winter."
+      },
+      {
+        "name": "Nicosia",
+        "text": "The capital, inland and hotter in summer, with Venetian walls round its old town, the Cyprus Museum, and the crossing points to the north."
+      },
+      {
+        "name": "The Troodos mountains",
+        "text": "Pine forests, wine villages, Kykkos Monastery and ten painted churches on UNESCO's World Heritage list. Cooler than the coast in summer, with snow in winter."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you meet someone; friends and family kiss on both cheeks. \"Yiá sas\" is a polite hello to anyone, \"yiá sou\" a friendly one. English is widely spoken, but a Greek greeting is always warmly received.",
+    "etiquette": [
+      "Hospitality runs deep. In a village you may be offered coffee, fruit or a sweet, and it's polite to accept at least a little.",
+      "Keep your voice down in churches and monasteries, and check before taking photos inside: some don't allow them, or ask you not to use a flash on the icons.",
+      "The division of the island is a painful subject for many families. Listen more than you speak.",
+      "Don't photograph military sites or soldiers, including along the buffer zone, where signs forbid it.",
+      "Hire cars carry red number plates, so local drivers can tell visitors apart. Roundabouts and the left-hand traffic take a little getting used to.",
+      "Meals are long and social: a meze can run to twenty small dishes or more, so pace yourself."
+    ],
+    "tipping": "Not expected, but appreciated. In a restaurant, leave around 10% for good service if no service charge appears on the bill; round up for taxis and in cafés.",
+    "dress": "Light, loose clothes and sun protection from May to October, and a warm layer for winter evenings and the mountains. Cover your shoulders and knees in churches and monasteries. Keep swimwear for the beach and the pool.",
+    "food": [
+      {
+        "name": "Halloumi",
+        "text": "The island's own firm, squeaky cheese, usually grilled or fried, since it browns without melting. In summer it's often eaten with watermelon."
+      },
+      {
+        "name": "Meze",
+        "text": "A long run of small dishes brought to the table one after another: dips, salads, sausages, grilled meats, or fish in a fish meze. Ordered as one meal for the whole table."
+      },
+      {
+        "name": "Souvla and souvlaki",
+        "text": "Souvla is big pieces of pork or lamb slow-roasted on long skewers over charcoal, a Sunday favourite. Souvlaki is the smaller kebab, served in pitta with salad."
+      },
+      {
+        "name": "Kleftiko",
+        "text": "Lamb baked slowly in a sealed clay oven with herbs and potatoes until it falls from the bone."
+      },
+      {
+        "name": "Loukoumades",
+        "text": "Small balls of fried dough soaked in honey syrup, sold hot at fairs and cafés."
+      },
+      {
+        "name": "Commandaria",
+        "text": "A sweet, dark dessert wine from the villages on the southern slopes of the Troodos, made for many centuries."
+      }
+    ],
+    "phrases": {
+      "language": "Greek",
+      "intro": "Greek is the language of daily life in the Republic, and almost everyone in tourist areas speaks English too. Cypriots have their own accent and many words of their own, but standard Greek is understood everywhere.",
+      "items": [
+        { "phrase": "Yiá sas (Γεια σας)", "say": "YAH sahs", "meaning": "Hello; goodbye (polite)" },
+        { "phrase": "Kaliméra (Καλημέρα)", "say": "kah-lee-MEH-rah", "meaning": "Good morning" },
+        { "phrase": "Parakaló (Παρακαλώ)", "say": "pah-rah-kah-LOH", "meaning": "Please; you're welcome" },
+        { "phrase": "Efcharistó (Ευχαριστώ)", "say": "ef-hah-ree-STOH", "meaning": "Thank you" },
+        { "phrase": "Signómi (Συγγνώμη)", "say": "seeg-NO-mee", "meaning": "Sorry; excuse me" },
+        { "phrase": "Ne / Óchi (Ναι / Όχι)", "say": "neh / OH-hee", "meaning": "Yes / No (careful: ne means yes)" },
+        { "phrase": "Póso káni? (Πόσο κάνει;)", "say": "POH-soh KAH-nee", "meaning": "How much is it?" },
+        { "phrase": "Stin ygeiá mas (Στην υγειά μας)", "say": "steen ee-YAH mahs", "meaning": "Cheers" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q229",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }],
+        "note": "Wikidata also lists the Cypriot pound (replaced by the euro in 2008, with its end date) and, by mistake, the All-Russian Classifier of Currencies (Q6442872); the page gives the euro."
+      },
+      {
+        "key": "languages",
+        "text": "Greek and Turkish are both official; Greek is the everyday language in the Republic. English is widely spoken.",
+        "sources": [{ "property": "P37", "values": ["Q36510", "Q256"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230–240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["240"] }
+        ],
+        "note": "Wikidata gives 240 V, while the European Union's standard nominal voltage is 230 V, so the page gives the range. UK plugs and appliances work either way."
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time: UTC+2, and UTC+3 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q190252", "Q1109976", "Q6723", "Q6760", "Q63285935"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata also lists 199 (fire) and 1400 (ambulance); the page gives 112, which reaches every service."
+      },
+      {
+        "key": "callingCode",
+        "text": "+357",
+        "sources": [{ "property": "P474", "values": ["+357"] }]
+      }
+    ]
+  }
+}

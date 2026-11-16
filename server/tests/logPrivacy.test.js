@@ -24,6 +24,8 @@ beforeEach(() => {
 describe('redactUrl', () => {
   it('hides share codes, invite tokens and better-auth link tokens in the path', () => {
     expect(redactUrl('/api/shared/K7QX-M2PA-9RTW')).toBe('/api/shared/:code');
+    expect(redactUrl('/api/challenges/join/K7QX-M2PA-9RTW')).toBe('/api/challenges/join/:code');
+    expect(redactUrl('/api/challenges/0b6c1d6e-1f7a-4a53-9a5e-2f8d6f1c9a10/me')).toBe('/api/challenges/0b6c1d6e-1f7a-4a53-9a5e-2f8d6f1c9a10/me');
     expect(redactUrl('/api/shared/K7QXM2PA9RTW/photos/0b6c1d6e-1f7a-4a53-9a5e-2f8d6f1c9a10')).toBe(
       '/api/shared/:code/photos/0b6c1d6e-1f7a-4a53-9a5e-2f8d6f1c9a10'
     );

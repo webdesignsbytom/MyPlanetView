@@ -1,8 +1,8 @@
 // Personal goals (docs/API.md, "Badges and goals"): the server's limits
 // (server/src/utils/goals.js; change both together) and how the client words a goal and
 // its progress. Mock mode's rules (src/dev/mock/achievements.js) use the same limits.
-import { INHABITED_CONTINENTS, REGIONS } from '@/utils/constants/regions';
-import { CONTINENT_LABELS, PLAIN_COUNTRIES, countryName } from '@/utils/map/countries';
+import { INHABITED_CONTINENTS, REGIONS, regionCodesOnMap } from '@/utils/constants/regions';
+import { CONTINENT_LABELS, countriesOnMap, countryName } from '@/utils/map/countries';
 import { formatDay } from '@/utils/functions/dates';
 import { plural } from '@/utils/functions/plural';
 
@@ -101,14 +101,21 @@ export function nearestGoal(goals = []) {
   })[0];
 }
 
-/** The countries a REGION goal covers: a region's list, or a continent's countries (special places left out). */
-export const regionCountryCodes = (region) =>
-  REGIONS[region]?.codes ?? PLAIN_COUNTRIES.filter((country) => country.continent === region).map((country) => country.code);
+/**
+ * The countries a REGION goal covers: a region's list, or a continent's countries (special
+ * places left out). On a map that splits the UK (`splitUk`), its nations in its place.
+ */
+export const regionCountryCodes = (region, splitUk = false) =>
+  REGIONS[region]
+    ? regionCodesOnMap(region, splitUk)
+    : countriesOnMap(splitUk)
+        .filter((country) => country.continent === region)
+        .map((country) => country.code);
 
 /** The places a list or region goal still needs (the done ones come in `progress.done`); [] for the counts. */
-export function goalStillToGo(goal) {
+export function goalStillToGo(goal, splitUk = false) {
   if (goal.kind !== 'COUNTRY_LIST' && goal.kind !== 'REGION') return [];
   const done = new Set(goal.progress?.done || []);
-  const codes = goal.kind === 'COUNTRY_LIST' ? goal.countryCodes || [] : regionCountryCodes(goal.region);
+  const codes = goal.kind === 'COUNTRY_LIST' ? goal.countryCodes || [] : regionCountryCodes(goal.region, splitUk);
   return codes.filter((code) => !done.has(code));
 }

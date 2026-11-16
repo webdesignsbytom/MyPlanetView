@@ -16,6 +16,7 @@ import {
   ADMIN_EVENTS_PAGE_URL,
   ADMIN_PROMO_CODES_PAGE_URL,
   ADMIN_OFFERS_PAGE_URL,
+  ADMIN_THEMES_PAGE_URL,
   ADMIN_USERS_PAGE_URL,
   CONTACT_PAGE_URL,
   COUNTRIES_PAGE_URL,
@@ -36,6 +37,9 @@ import {
   WELCOME_PAGE_URL,
   SHARED_PAGE_URL,
   INVITE_PAGE_URL,
+  CHALLENGES_PAGE_URL,
+  CHALLENGE_PAGE_URL,
+  CHALLENGE_JOIN_PAGE_URL,
   MAP_PASSPORT_PAGE_URL,
   SHARED_PASSPORT_PAGE_URL,
 } from '@/utils/constants/routes';
@@ -62,6 +66,7 @@ import {
   AdminEventsPage,
   AdminPromoCodesPage,
   AdminOffersPage,
+  AdminThemesPage,
   ContactPage,
   PricingPage,
   TermAndPoliciesPage,
@@ -79,9 +84,13 @@ import {
   WelcomePage,
   SharedPage,
   InviteAcceptPage,
+  ChallengesPage,
+  ChallengePage,
+  ChallengeJoinPage,
   PassportPage,
   CountriesIndexPage,
   COUNTRY_GUIDE_PAGES,
+  MONTH_GUIDE_PAGES,
 } from './utils/navigation/lazyPages';
 
 // Build-time pre-render: no cookie modal, no analytics
@@ -194,6 +203,10 @@ function App() {
           {COUNTRY_GUIDE_PAGES.map((guide) => (
             <Route key={guide.slug} path={guide.path} element={<guide.Page />} />
           ))}
+          {/* "Where to go in <month>": the checked month files with enough countries (drafts in development) */}
+          {MONTH_GUIDE_PAGES.map((month) => (
+            <Route key={month.slug} path={month.path} element={<month.Page />} />
+          ))}
 
           <Route
             path={ADMIN_PAGE_URL}
@@ -232,6 +245,14 @@ function App() {
             element={
               <AuthenticateAdmin>
                 <AdminOffersPage />
+              </AuthenticateAdmin>
+            }
+          />
+          <Route
+            path={ADMIN_THEMES_PAGE_URL}
+            element={
+              <AuthenticateAdmin>
+                <AdminThemesPage />
               </AuthenticateAdmin>
             }
           />
@@ -288,6 +309,25 @@ function App() {
           <Route path={SHARED_PAGE_URL} element={<SharedPage />} />
           <Route path={SHARED_PASSPORT_PAGE_URL} element={<PassportPage />} />
           <Route path={INVITE_PAGE_URL} element={<InviteAcceptPage />} />
+
+          {/* Friends challenges: yours (signed in), and a challenge's join link (anyone) */}
+          <Route
+            path={CHALLENGES_PAGE_URL}
+            element={
+              <AuthenticateUser>
+                <ChallengesPage />
+              </AuthenticateUser>
+            }
+          />
+          <Route path={CHALLENGE_JOIN_PAGE_URL} element={<ChallengeJoinPage />} />
+          <Route
+            path={CHALLENGE_PAGE_URL}
+            element={
+              <AuthenticateUser>
+                <ChallengePage />
+              </AuthenticateUser>
+            }
+          />
 
           {/* Users */}
           <Route

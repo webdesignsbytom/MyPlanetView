@@ -28,3 +28,7 @@ export const createMomentEvent = mk(DOMAINS.moments);
 export const createBillingEvent = mk(DOMAINS.billing);
 // Travel offers: ids and keys only (clicks are never events: OfferClickDaily counts them)
 export const createOfferEvent = mk(DOMAINS.offers);
+// Monthly photo themes: ids and months only
+export const createThemeEvent = mk(DOMAINS.themes);
+// Friends challenges: ids only, never a title or a name
+export const createChallengeEvent = mk(DOMAINS.challenges);

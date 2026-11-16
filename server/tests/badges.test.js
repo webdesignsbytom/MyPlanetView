@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { BADGES, BADGE_KEYS, badgeProgress } from '../src/utils/badges.js';
+import { BADGES, BADGE_KEYS, TRAVELLER_BADGE_GROUPS, badgeProgress, travellerBadges } from '../src/utils/badges.js';
 import { REGIONS } from '../src/utils/constants/regions.js';
 
 const continentByCode = new Map([
@@ -51,5 +51,68 @@ describe('site badges', () => {
     expect(of(progress, 'unesco-5').earned).toBe(true);
     expect(of(progress, 'photos-100').earned).toBe(true);
     expect(of(progress, 'photos-1000')).toMatchObject({ have: 150, need: 1000 });
+  });
+
+  it('count the monthly themes entered: 3, 6 and 12', () => {
+    const progress = badgeProgress({ themes: 6 });
+    expect(of(progress, 'themes-3').earned).toBe(true);
+    expect(of(progress, 'themes-6')).toMatchObject({ have: 6, need: 6, earned: true });
+    expect(of(progress, 'themes-12')).toMatchObject({ have: 6, need: 12, earned: false });
+    expect(of(badgeProgress({}), 'themes-3').have).toBe(0);
+  });
+});
+
+describe('a traveller’s badges', () => {
+  const trips = [
+    { travellerIds: ['ann', 'bo'], countryCodes: ['FR'], startDate: '2024-05-01', endDate: '2024-05-08' },
+    { travellerIds: ['ann'], countryCodes: ['JP', 'XS'], startDate: '2025-01-02', endDate: '2025-01-20' },
+    { travellerIds: ['ann'], countryCodes: ['KE'], startDate: null, endDate: null },
+    { travellerIds: ['bo'], countryCodes: ['DK', 'NO', 'SE'], startDate: '2023-06-01', endDate: null },
+  ];
+
+  it('counts only that person’s completed trips, and only the travel badges', () => {
+    const ann = travellerBadges({ trips, travellerId: 'ann', continentByCode });
+    expect(new Set(ann.map((b) => b.group))).toEqual(new Set(TRAVELLER_BADGE_GROUPS));
+    // France, Japan, Kenya: three countries (the South Pole and Antarctica count apart)
+    expect(of(ann, 'countries-1')).toMatchObject({ have: 1, earned: true, earnedOn: '2024-05-08' });
+    expect(of(ann, 'countries-5')).toMatchObject({ have: 3, earned: false, earnedOn: null });
+    expect(of(ann, 'south-pole')).toMatchObject({ earned: true, earnedOn: '2025-01-20' });
+    expect(of(ann, 'antarctica')).toMatchObject({ earned: true, earnedOn: '2025-01-20' });
+    // Earned on a trip with no dates: earned, undated
+    expect(of(ann, 'continent-africa')).toMatchObject({ earned: true, earnedOn: null });
+    expect(of(ann, 'region-scandinavia').earned).toBe(false);
+  });
+
+  it('dates a badge from the trip that earned it, in date order', () => {
+    const bo = travellerBadges({ trips, travellerId: 'bo', continentByCode });
+    // The Scandinavian trip came first (dated by its first day), then France
+    expect(of(bo, 'countries-1').earnedOn).toBe('2023-06-01');
+    expect(of(bo, 'region-scandinavia')).toMatchObject({ earned: true, earnedOn: '2023-06-01' });
+    expect(of(bo, 'countries-1').have).toBe(1);
+    expect(travellerBadges({ trips, travellerId: 'nobody', continentByCode }).every((b) => !b.earned)).toBe(true);
+  });
+});
+
+describe('badges on a map that splits the UK', () => {
+  const uk = new Map([['XE', 'EUROPE'], ['XC', 'EUROPE'], ['XW', 'EUROPE'], ['XI', 'EUROPE'], ['IE', 'EUROPE'], ['GB', 'EUROPE']]);
+
+  it('counts each nation as a country', () => {
+    const progress = badgeProgress({ visited: new Set(['XE', 'XC', 'XW', 'XI', 'IE']), continentByCode: uk, splitUk: true });
+    expect(of(progress, 'countries-5')).toMatchObject({ have: 5, earned: true });
+  });
+
+  it('asks the British Isles badge for all four nations and Ireland', () => {
+    const some = badgeProgress({ visited: new Set(['XE', 'IE']), continentByCode: uk, splitUk: true });
+    expect(of(some, 'region-british-isles')).toMatchObject({ have: 2, need: 5, earned: false });
+    const all = badgeProgress({ visited: new Set(['XE', 'XC', 'XW', 'XI', 'IE']), continentByCode: uk, splitUk: true });
+    expect(of(all, 'region-british-isles')).toMatchObject({ have: 5, need: 5, earned: true });
+    // Without the split it's the UK and Ireland, as before
+    expect(of(badgeProgress({ visited: new Set(['GB', 'IE']), continentByCode: uk }), 'region-british-isles')).toMatchObject({ need: 2, earned: true });
+  });
+
+  it('counts a traveller’s nations the same way', () => {
+    const trips = [{ travellerIds: ['t1'], countryCodes: ['XE', 'XC'], endDate: '2025-06-01' }];
+    const countries = travellerBadges({ trips, travellerId: 't1', continentByCode: uk, splitUk: true }).find((b) => b.key === 'countries-1');
+    expect(countries).toMatchObject({ have: 1, earned: true });
   });
 });

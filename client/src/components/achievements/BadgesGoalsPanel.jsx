@@ -1,4 +1,4 @@
-import React, { useId, useState } from 'react';
+import React, { useId, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 // Icons
 import { FaPassport } from 'react-icons/fa';
@@ -11,8 +11,10 @@ import VerifyFirstNote from '@/components/map/VerifyFirstNote';
 import InlineAlert from '@/components/common/InlineAlert';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import BadgeSuitcase from './BadgeSuitcase';
+import BadgeOwnerSwitch from './BadgeOwnerSwitch';
 import GoalCard from './GoalCard';
 import GoalForm from './GoalForm';
+import ThemeSection from '@/components/themes/ThemeSection';
 // Utils
 import { GOALS_PER_MAP } from '@/utils/achievements/goals';
 
@@ -23,12 +25,23 @@ import { GOALS_PER_MAP } from '@/utils/achievements/goals';
  * editors (`canEdit`) add, change and delete goals; one whose email address isn't verified
  * yet (`locked`) is told why instead. Viewers and share links read them.
  * `wantToGo`: the map's "want to go" countries, for starting a bucket list.
+ * The monthly photo theme (ThemeSection) sits between the goals and the badges: entering
+ * photos can earn the theme badges, so the achievements are checked again after.
+ * With two or more travellers, a switch shows one person's travel badges instead, from
+ * the completed trips they were on (worked out by the server, dated by those trips).
  */
 function BadgesGoalsPanel({ achievements, canEdit = false, locked = false, wantToGo = [], mapId = null, shareCode = null, onClose }) {
   const goalsId = useId();
   // null, 'new', or the goal being changed
   const [editing, setEditing] = useState(null);
-  const { badges, goals, loading, error } = achievements;
+  const { badges, goals, loading, error, travellers = [] } = achievements;
+  const [owner, setOwner] = useState(null);
+  const person = travellers.length >= 2 ? travellers.find((t) => t.id === owner) : null;
+  // A traveller's badges in the suitcase's shape: earned on the trip's day, when it has one
+  const shownBadges = useMemo(
+    () => (person ? person.badges.map((b) => ({ ...b, earnedAt: b.earnedOn ?? null })) : badges),
+    [person, badges],
+  );
   const full = (goals?.length || 0) >= GOALS_PER_MAP;
   const passport = shareCode ? sharedPassportPath(shareCode) : mapId ? mapPassportPath(mapId) : null;
 
@@ -105,7 +118,15 @@ function BadgesGoalsPanel({ achievements, canEdit = false, locked = false, wantT
         </section>
       ) : null}
 
-      {badges ? <BadgeSuitcase badges={badges} /> : null}
+      {mapId || shareCode ? (
+        <ThemeSection mapId={mapId} shareCode={shareCode} canEdit={canEdit && !shareCode} locked={locked && !shareCode} onChanged={achievements.check} />
+      ) : null}
+
+      {badges ? (
+        <BadgeSuitcase badges={shownBadges} note={person ? `From the completed trips ${person.name} was on.` : null}>
+          {travellers.length >= 2 ? <BadgeOwnerSwitch travellers={travellers} value={person ? owner : null} onChange={setOwner} /> : null}
+        </BadgeSuitcase>
+      ) : null}
     </MapPanel>
   );
 }

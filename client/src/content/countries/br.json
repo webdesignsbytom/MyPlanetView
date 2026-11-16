@@ -1,0 +1,210 @@
+{
+  "code": "BR",
+  "slug": "brazil",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Oi!", "Brasil"],
+  "summary": "Rio's beaches and mountains, the Amazon and the Pantanal, Iguaçu Falls and the colour of Carnival.",
+  "overview": [
+    "Brazil is bigger than the mainland United States, and most visitors choose a few highlights. Rio de Janeiro has Sugarloaf Mountain, Copacabana and Ipanema, and Christ the Redeemer above them; Salvador, in Bahia, has a colourful old town and is the heart of Afro-Brazilian music, food and religion; the Amazon has rainforest lodges reached by boat from Manaus; the Pantanal wetlands have some of the best wildlife watching on the continent; and Iguaçu Falls stretch for nearly 3 km along the border with Argentina.",
+    "Domestic flights are the way to cover the distances; long-distance buses are comfortable too. Brazilians are warm and sociable, but few speak English outside hotels and tours, so a translation app helps. In the big cities, take the usual care: carry only what you need, keep your phone out of sight in the street and use app taxis at night."
+  ],
+  "whenToGo": {
+    "stripLabel": "The country taken together: the late dry season suits most regions at once. The regions below differ a lot, and each has a strip of its own.",
+    "months": ["good", "good", "good", "good", "good", "good", "good", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [12, 1, 2],
+        "text": "Hot and humid in Rio and the south-east, often above 35°C, with heavy afternoon storms. The peak of the beach season, with New Year, Carnival and the school holidays from about mid-December to early February: prices are at their highest and rooms book out."
+      },
+      {
+        "name": "Autumn",
+        "months": [3, 4, 5],
+        "text": "The storms ease in Rio and the south-east, the heat softens and the crowds thin after Carnival. It's the wettest time of year in the Amazon and on much of the north-east coast."
+      },
+      {
+        "name": "Winter",
+        "months": [6, 7, 8],
+        "text": "Dry and sunny in the centre and warm in Rio, where beach days are still common; cool to cold in the south, with frost in the hills. The start of the Pantanal's best season. Brazilian school holidays in July fill some resorts."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Warm and mostly dry, a good time almost everywhere: low water in the Amazon, the end of the Pantanal's dry season, sunny days on the north-east coast and humpback whales off southern Bahia until about November. The rains return to the south-east in November."
+      }
+    ],
+    "weather": "Most of Brazil is tropical, hot all year in the north and north-east, where the seasons are set by rain rather than temperature. The south-east, with Rio and São Paulo, has hot, rainy summers and warm, drier winters. The south is subtropical, with four seasons and cold spells in winter. The Amazon is hot and humid all year, with most rain in the first half of the year.",
+    "festivals": [
+      {
+        "name": "Festa de Iemanjá",
+        "place": "Rio Vermelho, Salvador",
+        "when": "2 February",
+        "months": [2],
+        "text": "Thousands dressed in white bring flowers, perfume and gifts for Iemanjá, the goddess of the sea in Afro-Brazilian religion, which boats carry out to sea; music and dancing go on all day."
+      },
+      {
+        "name": "Carnaval",
+        "place": "Rio de Janeiro, Salvador, Recife and Olinda, and across Brazil",
+        "when": "The days before Ash Wednesday, usually in February, sometimes early March",
+        "months": [2, 3],
+        "text": "Rio's samba schools parade through the Sambadrome, and street parties (blocos) take over every neighbourhood; Salvador's is a vast street party following trucks of musicians, and Olinda's fills its steep old streets. Book months ahead and expect much higher prices."
+      },
+      {
+        "name": "Festas Juninas",
+        "place": "Across Brazil, biggest in the north-east, as in Campina Grande and Caruaru",
+        "when": "All of June, into July",
+        "months": [6, 7],
+        "text": "Country-style festivals for the June saints: bonfires, forró music and dancing, square dances in checked shirts and straw hats, and dishes made from maize."
+      },
+      {
+        "name": "Parintins Folklore Festival",
+        "place": "Parintins, an island town on the Amazon",
+        "when": "Usually the last weekend of June",
+        "months": [6],
+        "text": "Two rival groups, Garantido in red and Caprichoso in blue, stage huge, colourful shows about the legend of an ox, with giant moving floats, in a purpose-built arena."
+      },
+      {
+        "name": "Oktoberfest",
+        "place": "Blumenau, Santa Catarina",
+        "when": "Usually in October",
+        "months": [10],
+        "text": "The south was settled by many German immigrants, and Blumenau's beer festival, with brass bands, parades and traditional food, is one of the largest outside Germany."
+      },
+      {
+        "name": "Réveillon (New Year's Eve)",
+        "place": "Copacabana, Rio de Janeiro",
+        "when": "31 December",
+        "months": [12],
+        "text": "Crowds in white fill the beach for music and fireworks over the sea at midnight; many jump seven waves for luck."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Rio de Janeiro and the south-east",
+        "months": ["good", "good", "good", "best", "best", "best", "best", "best", "best", "best", "good", "good"],
+        "text": "Rio, São Paulo, Paraty and the old gold-mining towns of Minas Gerais. Summer, December to March, is hot and humid, with heavy storms that can flood streets, and the beaches are busiest over New Year and Carnival. April to October is drier and warm enough for the beach on most days, and the best time for hiking in the mountains around Rio."
+      },
+      {
+        "name": "Salvador and the north-east coast",
+        "months": ["best", "best", "good", "good", "good", "good", "good", "good", "best", "best", "best", "best"],
+        "text": "Bahia, Pernambuco and Ceará are warm all year, around 30°C, with a warm sea to match. Around Salvador and Recife the rainiest months are roughly April to July; September to March is drier and sunnier. The dune lagoons of Lençóis Maranhenses fill after the rains and are fullest from about June to September."
+      },
+      {
+        "name": "The Amazon",
+        "months": ["good", "good", "good", "good", "good", "good", "best", "best", "best", "best", "good", "good"],
+        "text": "Hot and humid all year. Most rain falls from about December to May, and the rivers rise many metres, peaking around June, flooding the forest so canoes can glide among the treetops. The water then drops until about November, opening beaches and forest trails. Both seasons are worth seeing; the drier months are easier for walking."
+      },
+      {
+        "name": "The Pantanal",
+        "months": ["avoid", "avoid", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good"],
+        "text": "The world's largest tropical wetland, and one of the best places in South America to see wildlife: capybaras, caimans, giant otters, hundreds of kinds of birds and, along the rivers near Porto Jofre, jaguars. The dry season, about June to October, gathers animals near the water. In the wet season much of it floods, roads become hard going and some lodges close."
+      },
+      {
+        "name": "Iguaçu and the south",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "best", "best", "best"],
+        "text": "Iguaçu Falls, Florianópolis, Curitiba and the wine and hill country of the Serra Gaúcha. The only part of Brazil with a real winter: June to August can be cold, with frost and the occasional dusting of snow in the hills. Summer is warm, and Florianópolis' beaches are busy. The falls are spectacular in any month, with more water after heavy rain upstream."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Warm and physical. Men shake hands, often with a pat on the shoulder; women, and men greeting women, kiss on the cheek, once or twice depending on the region. \"Tudo bem?\" (\"All good?\") is the everyday hello, and \"Tudo bem\" is the answer.",
+    "etiquette": [
+      "In the big cities, carry only what you need for the day, keep your phone out of sight in the street and on the beach, and take app taxis such as Uber or 99 at night.",
+      "Brazilians pay by Pix, an instant transfer that usually needs a Brazilian bank account, but cards, above all contactless, are taken almost everywhere. Keep a little cash for beach stalls and small shops.",
+      "The OK sign made with the thumb and forefinger is rude in Brazil; use a thumbs-up instead, which Brazilians use all the time.",
+      "Socially, time is relaxed: arriving half an hour late to a party is normal. Be on time for tours, though.",
+      "In many older buildings, toilet paper goes in the bin, not the toilet: look for a sign.",
+      "Drink bottled or filtered water rather than water straight from the tap."
+    ],
+    "tipping": "Restaurants usually add a 10% service charge (serviço) to the bill. It's optional but almost always paid, and nothing more is expected. Taxi drivers aren't usually tipped, though rounding up is welcome; small tips for hotel porters and guides are usual.",
+    "dress": "Casual and summery, but beachwear stays on the beach: put on a shirt or a dress for the street, cafés and shops. Brazilians dress up to go out at night. Bring a light rain jacket for the tropics, long sleeves and insect repellent for the Amazon and the Pantanal, and a warm layer for the south in winter.",
+    "food": [
+      {
+        "name": "Feijoada",
+        "text": "Black beans slow-cooked with cuts of pork and sausage, served with rice, shredded greens, orange slices and farofa (toasted cassava flour). In Rio it's a Wednesday and Saturday lunch."
+      },
+      {
+        "name": "Churrasco",
+        "text": "Barbecued meat. At a churrascaria, waiters bring skewers to the table and carve slices until you turn your card from green to red; picanha (rump cap) is the favourite cut."
+      },
+      {
+        "name": "Moqueca",
+        "text": "A fish or seafood stew cooked in a clay pot. Bahia's version is rich with coconut milk and red palm oil (dendê); Espírito Santo's leaves the palm oil out."
+      },
+      {
+        "name": "Acarajé",
+        "text": "Salvador's street food: black-eyed bean fritters fried in dendê, split and filled with spicy shrimp paste, sold by women in the white dress of Bahia."
+      },
+      {
+        "name": "Pão de queijo",
+        "text": "Small, chewy cheese breads made with cassava flour, from Minas Gerais, eaten at breakfast or with a coffee."
+      },
+      {
+        "name": "Caipirinha",
+        "text": "The national cocktail: cachaça (a spirit distilled from sugar cane) with lime, sugar and ice. Juice bars blend dozens of tropical fruits, and açaí comes frozen as a thick purple bowl."
+      }
+    ],
+    "phrases": {
+      "language": "Brazilian Portuguese",
+      "intro": "Brazilians speak Portuguese, not Spanish, though many understand some Spanish. Brazilian Portuguese sounds softer than Portugal's: in Rio and São Paulo, \"di\" sounds like \"jee\" and \"ti\" like \"chee\".",
+      "items": [
+        { "phrase": "Oi / Olá", "say": "oy / oh-LAH", "meaning": "Hi / Hello" },
+        { "phrase": "Tudo bem?", "say": "TOO-doo bayn", "meaning": "How are you? (\"All good?\")" },
+        { "phrase": "Bom dia", "say": "bohn JEE-ah", "meaning": "Good morning" },
+        { "phrase": "Obrigado / Obrigada", "say": "oh-bree-GAH-doo / -dah", "meaning": "Thank you (said by a man / a woman)" },
+        { "phrase": "Por favor", "say": "poor fah-VOR", "meaning": "Please" },
+        { "phrase": "Com licença", "say": "kohn lee-SEN-sah", "meaning": "Excuse me (to get past)" },
+        { "phrase": "Quanto custa?", "say": "KWAN-too KOOS-tah", "meaning": "How much is it?" },
+        { "phrase": "A conta, por favor", "say": "ah KOHN-tah poor fah-VOR", "meaning": "The bill, please" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q155",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Brazilian real (R$, BRL). Cards, especially contactless, are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q173117"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Portuguese. Brazilian Sign Language (Libras) is recognised by law, and many Indigenous languages are spoken, above all in the Amazon.",
+        "sources": [{ "property": "P37", "values": ["Q5146", "Q3436689"] }],
+        "note": "Wikidata lists Portuguese (preferred, as Brazilian Portuguese) and Brazilian Sign Language; the page adds the Indigenous languages."
+      },
+      {
+        "key": "plugs",
+        "text": "Type N (three round pins), and the two-pin Type C fits most sockets. 127 V or 220 V depending on the city, and sometimes the building: check before plugging in anything that isn't dual-voltage.",
+        "sources": [
+          { "property": "P2853", "values": ["Q1653438", "Q1378312"] },
+          { "property": "P2884", "values": ["127", "220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Four zones. Brasília time, UTC−3, covers most of the country, including Rio, São Paulo, Salvador and Belém; UTC−4 covers most of Amazonas (with Manaus), Mato Grosso, Mato Grosso do Sul, Rondônia and Roraima; UTC−5 covers Acre and the far west of Amazonas; and Fernando de Noronha is UTC−2. No summer time since 2019.",
+        "sources": [{ "property": "P421", "values": ["Q6513", "Q5762", "Q5390", "Q6536"] }],
+        "note": "Wikidata still has statements for summer time in the south and south-east, which Brazil ended in 2019; the page leaves them out."
+      },
+      {
+        "key": "emergency",
+        "text": "190 for police; 192 for an ambulance (SAMU); 193 for the fire brigade",
+        "sources": [{ "property": "P2852", "values": ["Q25648833", "Q25648834", "Q25648835"] }],
+        "note": "Wikidata also lists 188, a crisis support line, left out here."
+      },
+      {
+        "key": "callingCode",
+        "text": "+55",
+        "sources": [{ "property": "P474", "values": ["+55"] }]
+      }
+    ]
+  }
+}

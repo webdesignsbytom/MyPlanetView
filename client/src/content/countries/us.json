@@ -1,8 +1,8 @@
 {
   "code": "US",
   "slug": "united-states",
-  "status": "draft",
-  "lastChecked": null,
+  "status": "checked",
+  "lastChecked": "2026-11-16",
   "stamp": ["Welcome", "USA"],
   "summary": "Big cities, road trips and national parks in every climate.",
   "overview": [

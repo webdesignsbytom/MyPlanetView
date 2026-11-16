@@ -2,7 +2,7 @@
 // Travel Desk's shelves, in the order a trip is booked, and the word on a card's stamp
 // when it has no picture. (The admin page has its own, shorter labels.)
 
-export const OFFER_KIND_ORDER = Object.freeze(['HOTEL', 'TOUR', 'FLIGHT', 'CAR_HIRE', 'ESIM', 'INSURANCE', 'LUGGAGE', 'OTHER']);
+export const OFFER_KIND_ORDER = Object.freeze(['HOTEL', 'TOUR', 'FLIGHT', 'CAR_HIRE', 'ESIM', 'INSURANCE', 'LUGGAGE', 'OTHER', 'PRINTS']);
 
 export const OFFER_SHELF_TITLES = Object.freeze({
   HOTEL: 'Places to stay',
@@ -13,6 +13,7 @@ export const OFFER_SHELF_TITLES = Object.freeze({
   INSURANCE: 'Travel insurance',
   LUGGAGE: 'Luggage',
   OTHER: 'More for the trip',
+  PRINTS: 'Photo prints',
 });
 
 export const OFFER_KIND_WORDS = Object.freeze({
@@ -24,6 +25,7 @@ export const OFFER_KIND_WORDS = Object.freeze({
   INSURANCE: 'Cover',
   LUGGAGE: 'Luggage',
   OTHER: 'Travel',
+  PRINTS: 'Prints',
 });
 
 export const offerKindWord = (kind) => OFFER_KIND_WORDS[kind] || OFFER_KIND_WORDS.OTHER;
@@ -35,3 +37,6 @@ export const offerLinkLabel = (offer) => `Ad: ${offer.title}. Visit ${offer.part
 
 // The Travel Desk's label (docs/FEATURE-PLAN.md, "Travel Desk")
 export const PARTNER_OFFERS_NOTE = 'Partner offers. We may earn a commission if you book, at no cost to you.';
+
+// The print partners' label, under "Print or download" (docs/FEATURE-PLAN.md, "Printing")
+export const PRINT_OFFERS_NOTE = 'Partner offers. We may earn a commission if you order, at no cost to you.';

@@ -20,10 +20,12 @@ import {
   CLIENT_ONLY_ROUTE_PREFIXES,
   CONTACT_PAGE_URL,
   HOME_PAGE_URL,
+  PUBLIC_STATIC_ROUTES,
 } from './src/utils/constants/routes.js';
 import { helmetData } from './src/utils/data/helmetData.js';
 // Country guides: the content files as virtual modules (drafts on the dev server only)
-import { countryPagesPlugin } from './scripts/country-pages.mjs';
+import { countryPagesPlugin, publishedCountryRoutes } from './scripts/country-pages.mjs';
+import { monthPagesPlugin, publishedMonthRoutes } from './scripts/month-pages.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -65,9 +67,11 @@ const SITE_MANIFEST = JSON.stringify(
     theme_color: THEME_COLOUR,
     background_color: BACKGROUND_COLOUR,
     icons: [
-      { src: '/favicon/favicon.ico', sizes: '64x64 32x32 24x24 16x16', type: 'image/x-icon' },
+      { src: '/favicon/favicon.ico', sizes: '64x64 48x48 32x32 24x24 16x16', type: 'image/x-icon' },
       { src: '/favicon/web-app-manifest-192x192.png', sizes: '192x192', type: 'image/png' },
       { src: '/favicon/web-app-manifest-512x512.png', sizes: '512x512', type: 'image/png' },
+      // The logo inside the safe circle, for launchers that crop icons to their own shape
+      { src: '/favicon/web-app-manifest-maskable-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
     shortcuts: [ABOUT_PAGE_URL, CONTACT_PAGE_URL].map((url) => ({ name: helmetData[url].pageName, url })),
   },
@@ -90,17 +94,25 @@ const siteManifest = () => ({
 
 // The service worker (PWA, scripts/sw-template.js): written to dist/sw.js at build only, with
 // a build id from the bundle's file names (a new deploy is a new worker, which drops the old
-// caches) and the browser-only pages it never stores. Registered by
+// caches), the browser-only pages it never stores, and what an installed app keeps: the
+// public pages (the pre-render's list: prerender.mjs) and every script, stylesheet and font
+// of the build (about 1 MB; images are kept as they're shown). Registered by
 // src/utils/pwa/registerServiceWorker.js on the live site only.
 const siteServiceWorker = () => ({
   name: 'site-service-worker',
   apply: 'build',
   generateBundle(_options, bundle) {
     const build = crypto.createHash('sha256').update(Object.keys(bundle).sort().join('\n')).digest('hex').slice(0, 12);
+    const siteCode = Object.keys(bundle)
+      .filter((name) => name.startsWith('assets/') && /\.(js|css|woff2?|ttf)$/.test(name))
+      .sort()
+      .map((name) => `/${name}`);
     const source = fs
       .readFileSync(path.resolve(__dirname, 'scripts/sw-template.js'), 'utf8')
       .replace('__SW_BUILD__', build)
-      .replace("['__SW_CLIENT_ONLY__']", JSON.stringify(CLIENT_ONLY_ROUTE_PREFIXES));
+      .replace("['__SW_CLIENT_ONLY__']", JSON.stringify(CLIENT_ONLY_ROUTE_PREFIXES))
+      .replace("['__SW_PUBLIC_PAGES__']", JSON.stringify([...PUBLIC_STATIC_ROUTES, ...publishedCountryRoutes(), ...publishedMonthRoutes()]))
+      .replace("['__SW_SITE_CODE__']", JSON.stringify(siteCode));
     this.emitFile({ type: 'asset', fileName: 'sw.js', source });
   },
 });
@@ -212,6 +224,8 @@ export default defineConfig({
     react(),
     requireProductionBuild(),
     countryPagesPlugin(),
+    // "Where to go in <month>": the checked month files, from the checked guides
+    monthPagesPlugin(),
     siteHeadDefaults(),
     siteManifest(),
     siteServiceWorker(),

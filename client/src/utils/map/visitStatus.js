@@ -1,5 +1,6 @@
 // How a country stands on a map (CountryVisit.status), and how it's drawn.
 import { COUNTRY_COLOUR } from './countryStyle';
+import { UK_NATION_COLOUR } from './ukNations';
 
 export const VISIT_STATUSES = [
   { value: 'VISITED', label: 'Visited' },
@@ -26,7 +27,7 @@ const PASTEL_FILLS = [
   'fill-map-visit-7',
 ];
 
-const pastelFor = (code) => PASTEL_FILLS[(COUNTRY_COLOUR[code] || 1) - 1];
+const pastelFor = (code) => PASTEL_FILLS[(COUNTRY_COLOUR[code] || UK_NATION_COLOUR[code] || 1) - 1];
 
 // Antarctica isn't a country: it's drawn as ice, with an ice-blue outline, as an atlas
 // draws it (the --map-ice tokens, per map style)

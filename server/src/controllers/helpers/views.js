@@ -10,13 +10,15 @@ import {
 import { toDateOnly } from '../../utils/travelValidation.js';
 import { buildMapStats } from '../../utils/mapStats.js';
 import { bestCopySize } from '../../utils/planLimits.js';
+import { themeView } from '../../utils/themes.js';
 import { signPhotoUrl } from '../../services/s3/mediaService.js';
 import { videoPlayback } from '../../services/stream/videos.js';
 import {
-  countMapConfirmedLandmarks,
   countMapPhotos,
   countMapTrips,
   findCompletedTripsForStats,
+  findMapSplitUk,
+  findMapStampedLandmarkIds,
   findMapTravellers,
   findMapVisitsForStats,
 } from '../../domain/maps.js';
@@ -26,12 +28,34 @@ const keyOf = (photo, size) => photo.variants?.find((v) => v.size === size)?.med
 const signed = async (key) => (key ? signPhotoUrl(key) : null);
 
 /**
+ * The best copy kept, for the download lists (`best=1`, editors only; docs/API.md
+ * "Downloads"): `{ copy: 'ORIGINAL'|'PRINT', url, contentType, bytes, width, height }`,
+ * or null (a video: Stream keeps no file to hand back; an old photo saved with neither).
+ */
+async function bestFile(photo) {
+  if (photo.kind === 'VIDEO') return null;
+  const copy = bestCopySize((photo.variants ?? []).map((v) => v.size));
+  const variant = copy ? photo.variants.find((v) => v.size === copy) : null;
+  if (!variant?.media?.key) return null;
+  return {
+    copy,
+    url: await signPhotoUrl(variant.media.key),
+    contentType: variant.media.contentType,
+    bytes: variant.media.bytes ?? null,
+    width: variant.width,
+    height: variant.height,
+  };
+}
+
+/**
  * A photo in a list: thumbnail only, unless the list asked for the DISPLAY copy too
- * (the slideshows); viewers see confirmed landmarks only.
+ * (the slideshows) or the best copy (`withBest`, the download lists); viewers see
+ * confirmed landmarks only.
  */
 export async function photoListItem(photo, role) {
   const editor = canEdit(role);
-  if (photo.kind === 'VIDEO') return videoListItem(photo, role);
+  const best = photo.withBest && editor ? { best: await bestFile(photo) } : {};
+  if (photo.kind === 'VIDEO') return { ...videoListItem(photo, role), ...best };
   const displayKey = keyOf(photo, 'DISPLAY');
   return {
     id: photo.id,
@@ -49,6 +73,7 @@ export async function photoListItem(photo, role) {
       .filter((l) => editor || l.confirmed)
       .map((l) => ({ id: l.landmark.id, name: l.landmark.name, confirmed: l.confirmed })),
     ...(editor ? { hidden: photo.hidden } : {}),
+    ...best,
   };
 }
 
@@ -80,6 +105,12 @@ function videoListItem(photo, role) {
   };
 }
 
+// The monthly themes a photo is in, newest month first (everyone who can see it sees them)
+const photoThemes = (photo) =>
+  (photo.themeEntries ?? [])
+    .map((entry) => themeView(entry.theme))
+    .sort((a, b) => (a.month < b.month ? 1 : -1));
+
 /** One opened video: its poster and playback link (READY only), never coordinates or files. */
 function videoDetailView(photo, role) {
   const playback = photo.videoState === 'READY' ? videoPlayback(photo) : null;
@@ -99,7 +130,7 @@ function videoDetailView(photo, role) {
 export async function photoDetailView(photo, role) {
   if (photo.kind === 'VIDEO') return videoDetailView(photo, role);
   const base = await photoListItem(photo, role);
-  const view = { ...base, displayUrl: await signed(keyOf(photo, 'DISPLAY')) };
+  const view = { ...base, displayUrl: await signed(keyOf(photo, 'DISPLAY')), themes: photoThemes(photo) };
   if (canSeeLocation(role)) {
     const bestCopy = bestCopySize((photo.variants ?? []).map((v) => v.size));
     view.originalUrl = await signed(bestCopy ? keyOf(photo, bestCopy) : null);
@@ -177,6 +208,8 @@ export async function tripDetailView(trip, role, { mapRole = null, uploadRules =
     id: trip.id,
     mapId: trip.mapId,
     mapName: trip.map.name,
+    // The trip's map shows the UK as its four nations (its stops' places and the mini map)
+    splitUk: Boolean(trip.map.splitUk),
     canOpenMap: canView(mapRole),
     canDelete: canDeleteTrip(mapRole),
     onMyMaps: myMaps?.links ?? [],
@@ -247,25 +280,31 @@ export async function momentView(moment, { role, photoAccess }) {
  */
 export async function loadStatsCounts(mapId, role) {
   const includeHidden = canEdit(role);
-  const [photoCount, landmarkCount, tripCount, completedTrips, continentByCode] = await Promise.all([
+  const [photoCount, stampedLandmarkIds, tripCount, completedTrips, continentByCode] = await Promise.all([
     countMapPhotos(mapId, { includeHidden }),
-    countMapConfirmedLandmarks(mapId, { includeHidden }),
+    findMapStampedLandmarkIds(mapId, { includeHidden }),
     countMapTrips(mapId),
     findCompletedTripsForStats(mapId),
     continentsByCode(),
   ]);
-  return { photoCount, landmarkCount, tripCount, completedTrips, continentByCode };
+  // The ids too: the map's reply marks those landmarks' pins (mapDetailView)
+  return { photoCount, landmarkCount: stampedLandmarkIds.length, stampedLandmarkIds, tripCount, completedTrips, continentByCode };
 }
 
-/** Stats from a map's visits and travellers (`[{ id, name }]`) and loadStatsCounts. */
-export const statsFrom = ({ visits, travellers }, counts) => buildMapStats({ visits, travellers, ...counts });
+/**
+ * Stats from a map's visits and travellers (`[{ id, name }]`) and loadStatsCounts; `splitUk`:
+ * the map counts the UK's nations one each (utils/ukNations.js).
+ */
+export const statsFrom = ({ visits, travellers, splitUk = false }, counts) =>
+  buildMapStats({ visits, travellers, splitUk, ...counts });
 
 /** Stats for a map, counting only what the caller may see (GET /maps/:mapId/stats). */
 export async function loadMapStats(mapId, role) {
-  const [visits, travellers, counts] = await Promise.all([
+  const [visits, travellers, counts, splitUk] = await Promise.all([
     findMapVisitsForStats(mapId),
     findMapTravellers(mapId),
     loadStatsCounts(mapId, role),
+    findMapSplitUk(mapId),
   ]);
-  return statsFrom({ visits, travellers }, counts);
+  return statsFrom({ visits, travellers, splitUk }, counts);
 }

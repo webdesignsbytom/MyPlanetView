@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../prisma.js';
 import { createMissingVisits } from './maps.js';
+import { UK } from '../utils/ukNations.js';
 import { POSITION_FIELD, POSITION_STEP, positionBetween, positionFirst } from '../utils/photoOrder.js';
 import { checkCountryCap, checkStorageCap, checkVideoCap } from '../utils/planLimits.js';
 import { planOf } from '../utils/constants/plans.js';
@@ -34,11 +35,12 @@ const PHOTO_LIST_SELECT = {
  * The order a list is shown in: a trip's photos in the trip's gallery order, a
  * country's (or the unplaced ones) in that gallery's order, and the whole map's (the
  * hover postcards) newest upload first. `order: 'shot'` is the slideshows' order
- * instead, oldest taken first, for any of them. Each ends on the id, so the order is
- * total and pages by cursor.
+ * instead, oldest taken first, for any of them; a landmark's photos have no gallery, so
+ * they're always in that order (the stamp's own: its earliest photo first). Each ends on
+ * the id, so the order is total and pages by cursor.
  */
-const listOrder = ({ tripId, countryCode, unplaced, order }) => {
-  if (order === 'shot') return [{ shotAt: 'asc' }, { id: 'asc' }];
+const listOrder = ({ tripId, countryCode, unplaced, landmarkId, order }) => {
+  if (order === 'shot' || landmarkId) return [{ shotAt: 'asc' }, { id: 'asc' }];
   if (tripId) return [{ tripPosition: 'asc' }, { id: 'asc' }];
   if (unplaced || countryCode) return [{ countryPosition: 'asc' }, { id: 'asc' }];
   return [{ createdAt: 'desc' }, { id: 'desc' }];
@@ -50,10 +52,31 @@ const DISPLAY_LIST_SELECT = {
   variants: { where: { size: { in: ['THUMB', 'DISPLAY'] } }, ...variantKeys },
 };
 
-const photoListWhere = ({ mapId, tripId, countryCode, unplaced, includeHidden }) => ({
+// The download lists (`best=1`, editors only): the best copy kept too, with its type and
+// size, so the browser can fetch and zip it (the ORIGINAL, or an Economy map's PRINT copy)
+const BEST_LIST_SELECT = {
+  ...PHOTO_LIST_SELECT,
+  variants: {
+    where: { size: { in: ['THUMB', 'ORIGINAL', 'PRINT'] } },
+    select: { size: true, width: true, height: true, media: { select: { key: true, contentType: true, bytes: true } } },
+  },
+};
+
+const listSelect = ({ withDisplay, withBest }) =>
+  withBest ? BEST_LIST_SELECT : withDisplay ? DISPLAY_LIST_SELECT : PHOTO_LIST_SELECT;
+
+const photoListWhere = ({ mapId, tripId, countryCode, unplaced, landmarkId, includeHidden }) => ({
   ...(mapId ? { mapId } : {}),
   ...(tripId ? { tripId } : {}),
-  ...(unplaced ? { countryCode: null } : countryCode ? { countryCode } : {}),
+  // Unplaced: no country, or on a map that splits the UK, in the UK with its nation not
+  // chosen yet (utils/ukNations.js)
+  ...(unplaced
+    ? { AND: [{ OR: [{ countryCode: null }, { countryCode: UK, map: { is: { splitUk: true } } }] }] }
+    : countryCode
+      ? { countryCode }
+      : {}),
+  // A landmark's photos: those confirmed as it, whichever country they're in (a border photo)
+  ...(landmarkId ? { landmarks: { some: { landmarkId, confirmed: true } } } : {}),
   // Below editor: nothing hidden, and a video only once Stream has converted it
   ...(includeHidden ? {} : { hidden: false, OR: [{ kind: 'PHOTO' }, { videoState: 'READY' }] }),
 });
@@ -61,14 +84,28 @@ const photoListWhere = ({ mapId, tripId, countryCode, unplaced, includeHidden })
 /**
  * One page of a map's (or trip's) photos, in the gallery's order (listOrder).
  * `cursor` is the last photo id of the previous page. `unplaced` keeps only the photos
- * with no country (no location in the file and none chosen, or a location at sea).
- * `withDisplay` adds the DISPLAY copy (the slideshows show it, not the thumbnail).
+ * with no country (no location in the file and none chosen, or a location at sea);
+ * `landmarkId` only those confirmed as that landmark.
+ * `withDisplay` adds the DISPLAY copy (the slideshows show it, not the thumbnail);
+ * `withBest` the best copy kept, with its type and size (the download lists).
  */
-export const findPhotosPage = ({ mapId, tripId, countryCode, unplaced = false, includeHidden, cursor, limit, order, withDisplay = false }) =>
+export const findPhotosPage = ({
+  mapId,
+  tripId,
+  countryCode,
+  unplaced = false,
+  landmarkId,
+  includeHidden,
+  cursor,
+  limit,
+  order,
+  withDisplay = false,
+  withBest = false,
+}) =>
   prisma.photo.findMany({
-    where: photoListWhere({ mapId, tripId, countryCode, unplaced, includeHidden }),
-    select: withDisplay ? DISPLAY_LIST_SELECT : PHOTO_LIST_SELECT,
-    orderBy: listOrder({ tripId, countryCode, unplaced, order }),
+    where: photoListWhere({ mapId, tripId, countryCode, unplaced, landmarkId, includeHidden }),
+    select: listSelect({ withDisplay, withBest }),
+    orderBy: listOrder({ tripId, countryCode, unplaced, landmarkId, order }),
     take: limit + 1,
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
   });
@@ -82,10 +119,10 @@ export const findPhotoIdsForList = async (filters) =>
   (await prisma.photo.findMany({ where: photoListWhere(filters), select: { id: true } })).map((p) => p.id);
 
 /** Some photos as list items, in the order of `ids` (the shuffled slideshow's pages). */
-export const findPhotosByIds = async (ids, { withDisplay = false } = {}) => {
+export const findPhotosByIds = async (ids, { withDisplay = false, withBest = false } = {}) => {
   const rows = await prisma.photo.findMany({
     where: { id: { in: ids } },
-    select: withDisplay ? DISPLAY_LIST_SELECT : PHOTO_LIST_SELECT,
+    select: listSelect({ withDisplay, withBest }),
   });
   const byId = new Map(rows.map((row) => [row.id, row]));
   return ids.map((id) => byId.get(id)).filter(Boolean);
@@ -188,7 +225,7 @@ export const findPhotoAccess = async (photoId, userId) => {
       where: { id: photoId },
       select: { id: true, mapId: true, tripId: true, countryCode: true, hidden: true, kind: true, streamUid: true, videoState: true },
     }),
-    prisma.travelMap.findFirst({ where: ofPhoto, select: { ownerId: true } }),
+    prisma.travelMap.findFirst({ where: ofPhoto, select: { ownerId: true, splitUk: true } }),
     userId ? prisma.mapMember.findFirst({ where: { userId, map: ofPhoto }, select: { role: true } }) : null,
     userId ? prisma.tripMember.findFirst({ where: { userId, trip: ofPhoto }, select: { role: true } }) : null,
   ]);
@@ -212,6 +249,8 @@ export const findPhotoDetail = (photoId) =>
       landmarks: {
         select: { confirmed: true, source: true, distanceM: true, landmark: { select: { id: true, name: true } } },
       },
+      // The monthly themes it's entered in (docs/API.md, "Photo themes")
+      themeEntries: { select: { theme: { select: { id: true, month: true, title: true, blurb: true } } } },
     },
   });
 

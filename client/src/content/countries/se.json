@@ -1,0 +1,205 @@
+{
+  "code": "SE",
+  "slug": "sweden",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Välkommen", "Sverige"],
+  "summary": "Stockholm's islands, lakes and red wooden cottages, and Lapland's snow and northern lights.",
+  "overview": [
+    "Sweden stretches from the farmland and beaches of Skåne, across the bridge from Copenhagen, to Lapland far above the Arctic Circle, and most of it is forest and lakes. Stockholm is built on islands where Lake Mälaren meets the Baltic, with a medieval old town, Gamla stan, and an archipelago of tens of thousands of islands beyond it. Gothenburg and the granite west coast are known for seafood, and the island of Gotland for its walled medieval town, Visby.",
+    "It's an easy country to travel in. Almost everyone speaks good English, trains link the cities, and a night train runs north to Lapland. Sweden is close to cashless: cards and phone payments work almost everywhere, and some places refuse cash. Prices are high, so look out for good-value set lunches (dagens lunch) on weekdays."
+  ],
+  "whenToGo": {
+    "stripLabel": "Southern and central Sweden, from Skåne to Stockholm. Lapland, in the far north, differs a lot and has a strip of its own below.",
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Snow lingers in the north into May, while the south turns green in April and May. Walpurgis Night on 30 April welcomes spring with bonfires and choirs, and café tables come outside on the first warm days."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm and bright, usually 20–25°C in the south, with long, light evenings: Stockholm has about 18 hours of daylight at midsummer. Swedes take long holidays in July, when the coast, the islands and the lakes are full and some city restaurants close."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Crisp days and autumn colours in September, with berries and mushrooms in the forests and the first northern lights in Lapland. October cools quickly, and November is dark, grey and wet."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, with snow over most of the country, though it's less reliable in the far south. Stockholm has about six hours of daylight in December, and in northern Lapland the sun barely rises. Lucia, Christmas markets and skiing brighten the season."
+      }
+    ],
+    "weather": "The south has mild summers and winters around freezing; the further north you go, the longer, colder and snowier the winters become, and Lapland can drop below −30°C. Summers are pleasant everywhere and rarely hot, with very long daylight. Rain is spread through the year.",
+    "festivals": [
+      {
+        "name": "Jokkmokk Winter Market",
+        "place": "Jokkmokk, Lapland",
+        "when": "Usually in early February",
+        "months": [2],
+        "text": "A Sámi market held since the 1600s, just north of the Arctic Circle, with handicrafts, reindeer, food and music."
+      },
+      {
+        "name": "Walpurgis Night (Valborg)",
+        "place": "Across Sweden, above all Uppsala and Lund",
+        "when": "30 April",
+        "months": [4],
+        "text": "Bonfires and choirs singing in the spring, with the biggest celebrations among students in the old university towns."
+      },
+      {
+        "name": "Midsummer (Midsommar)",
+        "place": "Across Sweden",
+        "when": "Midsummer Eve, the Friday between 19 and 25 June",
+        "months": [6],
+        "text": "The most Swedish of holidays: dancing round a maypole decked with leaves and flowers, flower crowns, pickled herring with new potatoes, and drinking songs. Many shops close and the cities empty as people head to the countryside."
+      },
+      {
+        "name": "Medieval Week",
+        "place": "Visby, Gotland",
+        "when": "Usually in early August",
+        "months": [8],
+        "text": "A week of markets, jousting, music and costume inside Visby's medieval walls. Ferries and rooms book up early."
+      },
+      {
+        "name": "Crayfish parties (kräftskiva)",
+        "place": "Across Sweden",
+        "when": "August",
+        "months": [8],
+        "text": "Late-summer parties outdoors, with paper lanterns and party hats, plates of boiled crayfish, snaps and songs."
+      },
+      {
+        "name": "Lucia",
+        "place": "Across Sweden",
+        "when": "13 December",
+        "months": [12],
+        "text": "Processions of singers in white, led by a girl wearing a crown of candles, in churches, schools and offices, with saffron buns (lussekatter) and mulled wine (glögg)."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Stockholm and the archipelago",
+        "text": "The city is good all year, with museums such as the Vasa, a 17th-century warship raised from the harbour. The archipelago is at its best from June to August, when ferries run often; outside summer, many island cafés and hotels close."
+      },
+      {
+        "name": "Gothenburg and the west coast",
+        "text": "Bare granite islands, fishing villages and some of the best seafood in Scandinavia. Summer is for swimming and sailing; the lobster season opens in late September, and oysters are at their best in the colder months."
+      },
+      {
+        "name": "Skåne and the south",
+        "text": "Flat farmland, castles and sandy beaches in the mildest part of the country. Malmö is linked to Copenhagen by the Öresund Bridge, so the two cities are easy to see together."
+      },
+      {
+        "name": "Gotland",
+        "text": "A limestone island in the Baltic with sea stacks, beaches and the walled town of Visby. Busy and lively from late June to August, very quiet in winter."
+      },
+      {
+        "name": "Lapland and the far north",
+        "months": ["good", "best", "best", "good", "avoid", "good", "best", "best", "best", "good", "good", "good"],
+        "text": "Winter here means snow from about November to May, dog-sledding and northern lights, especially around Abisko and Kiruna, and the ICEHOTEL at Jukkasjärvi, rebuilt from river ice each winter. The midnight sun lasts from about late May to mid-July around Kiruna, the season for hiking trails such as the Kungsleden; mosquitoes are fierce in June and July. In May the snow turns to slush and many places close between the seasons."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and first names, whoever you meet: everyone uses the informal \"du\". \"Hej\" works for hello everywhere, and \"hej då\" for goodbye. Swedes value personal space and quiet, above all on public transport.",
+    "etiquette": [
+      "Fika, a coffee break with a bun or a pastry, is a daily ritual at work and with friends. Being invited to fika is a friendly gesture.",
+      "Alcohol stronger than 3.5% is sold only at the state shops, Systembolaget, which close early on Saturdays and all day on Sundays. You must be 20 to buy there, though bars and restaurants serve from 18.",
+      "In pharmacies, bakeries and some shops, take a queue number from the machine and wait to be called.",
+      "The right of public access (allemansrätten) lets you walk, pick berries and mushrooms and camp for a night in the countryside, as long as you keep away from homes and disturb nothing. Check for fire bans in dry summers.",
+      "Carry a card: some cafés, shops and city buses don't take cash at all.",
+      "Take your shoes off when you go into someone's home."
+    ],
+    "tipping": "Not expected: service is included in prices. In restaurants, rounding up or adding 5 to 10% for good service is common, and card machines may suggest a tip, but it's always optional.",
+    "dress": "Casual and neat, in simple, understated styles. Bring layers and a waterproof jacket in every season. In a Lapland winter, temperatures can fall below −30°C: wear thermal layers, and ask whether your tour lends warm overalls and boots, as many do.",
+    "food": [
+      {
+        "name": "Köttbullar",
+        "text": "Meatballs with creamy gravy, mashed or boiled potatoes, lingonberry jam and pickled cucumber."
+      },
+      {
+        "name": "Sill",
+        "text": "Pickled herring in many flavours, from mustard to dill, eaten with new potatoes, sour cream and chives, and a must at Midsummer and Christmas."
+      },
+      {
+        "name": "Gravlax",
+        "text": "Salmon cured with salt, sugar and dill, sliced thin and served with a sweet mustard and dill sauce."
+      },
+      {
+        "name": "Kanelbullar",
+        "text": "Cinnamon buns, often with cardamom in the dough, the classic partner to a cup of coffee at fika."
+      },
+      {
+        "name": "Semla",
+        "text": "A cardamom bun filled with almond paste and whipped cream, eaten in the weeks before Lent and above all on Shrove Tuesday."
+      },
+      {
+        "name": "Kräftor",
+        "text": "Freshwater crayfish boiled with dill and served cold at the August crayfish parties."
+      }
+    ],
+    "phrases": {
+      "language": "Swedish",
+      "intro": "Almost everyone speaks good English, especially younger people, but a few words of Swedish are always welcome.",
+      "items": [
+        { "phrase": "Hej", "say": "hey", "meaning": "Hello" },
+        { "phrase": "God morgon", "say": "goo MOR-on", "meaning": "Good morning" },
+        { "phrase": "Tack", "say": "tahk", "meaning": "Thank you; also \"please\" after a request (en kaffe, tack)" },
+        { "phrase": "Tack så mycket", "say": "tahk saw MEW-keh", "meaning": "Thank you very much" },
+        { "phrase": "Ursäkta", "say": "OOR-shek-tah", "meaning": "Excuse me; sorry" },
+        { "phrase": "Pratar du engelska?", "say": "PRAH-tar doo ENG-el-skah", "meaning": "Do you speak English?" },
+        { "phrase": "Vad kostar det?", "say": "vah KOS-tar deh", "meaning": "How much is it?" },
+        { "phrase": "Skål!", "say": "skawl", "meaning": "Cheers!" },
+        { "phrase": "Hej då", "say": "hey DOH", "meaning": "Bye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q34",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Swedish krona (kr, SEK). Cards and phone payments are taken almost everywhere, and some places don't take cash at all.",
+        "sources": [{ "property": "P38", "values": ["Q122922"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Swedish. Finnish, Meänkieli, Sámi, Romani and Yiddish are recognised minority languages. Almost everyone speaks English.",
+        "sources": [{ "property": "P37", "values": ["Q9027", "Q1412", "Q13357", "Q56463", "Q13201", "Q8641"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }],
+        "note": "Wikidata also lists driving on the left, ended 3 September 1967 (Dagen H); the right is its preferred value."
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q28146208"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire, ambulance and rescue",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+46",
+        "sources": [{ "property": "P474", "values": ["+46"] }]
+      }
+    ]
+  }
+}

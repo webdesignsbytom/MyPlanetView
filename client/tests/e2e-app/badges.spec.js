@@ -115,4 +115,23 @@ test.describe('Badges and goals', () => {
     await page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('button', { name: 'Badges and goals' }).click();
     await expect(page.getByRole('dialog', { name: 'Badges and goals' })).toBeVisible();
   });
+
+  test('each traveller has their own travel badges, from the completed trips they were on', async ({ page }) => {
+    await openMap(page);
+    const panel = await openTool(page, 'Badges and goals', 'Badges and goals');
+    const whose = panel.getByRole('group', { name: 'Whose badges' });
+    await expect(whose.getByRole('button', { name: 'Everyone' })).toHaveAttribute('aria-pressed', 'true');
+
+    // Alex was only on the Italian summer (completed, ending 16 July 2025): Italy, Europe
+    await whose.getByRole('button', { name: 'Alex' }).click();
+    await expect(whose.getByRole('button', { name: 'Alex' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(panel.getByText(/From the completed trips Alex was on\./)).toBeVisible();
+    await expect(sticker(panel, 'A first country in Europe.')).toContainText('Earned 16 Jul 2025');
+    await expect(sticker(panel, 'A first country in Asia.')).toContainText('0 of 1');
+    // Travel badges only: no landmarks or photos for one person
+    await expect(sticker(panel, 'A first landmark stamped')).toHaveCount(0);
+
+    await whose.getByRole('button', { name: 'Everyone' }).click();
+    await expect(sticker(panel, 'A first landmark stamped')).toContainText(/Earned/);
+  });
 });

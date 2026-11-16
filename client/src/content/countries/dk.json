@@ -1,0 +1,198 @@
+{
+  "code": "DK",
+  "slug": "denmark",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Velkommen", "Danmark"],
+  "summary": "Copenhagen by bike, Viking ships, castles and wide beaches, and hygge on dark winter evenings.",
+  "overview": [
+    "Denmark is the peninsula of Jutland, joined to Germany, and several hundred islands, with Copenhagen on the largest of them, Zealand. The land is low and green, nowhere is far from the sea, and bridges and ferries tie it all together. Copenhagen has canals, palaces, Tivoli Gardens and a celebrated food scene; beyond it are the royal castles of North Zealand, Viking ships and burial grounds, Aarhus and its art museum, the dunes and wide beaches of the west coast, and LEGO's home town, Billund.",
+    "It's an expensive country, but an easy one. Almost everyone speaks excellent English, cards are taken everywhere (some places take nothing else), and trains link the main towns. Cycling is how many Danes get around, on wide bike lanes in every town, and hiring a bike is often the best way to see Copenhagen."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Cool and often bright, warming slowly; the beech woods come into leaf in May. Tivoli opens for its main season in spring, and café tables move outside on the first sunny days."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Pleasant rather than hot, usually around 20°C, with long, light evenings: Copenhagen has more than 17 hours of daylight at midsummer. Danes take their holidays in July, so the beaches and summer houses fill up while some city restaurants close for a week or two."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is often mild and calm. Then it turns windier and wetter, with autumn colour in the woods in October and grey, short days by November."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Damp, grey and close to freezing, with only about seven hours of daylight in December, and snow that rarely lasts. Christmas markets, Tivoli's Christmas season and candlelit cafés make December the best of it: this is the season of hygge."
+      }
+    ],
+    "weather": "Mild and maritime: the sea keeps summers cool and winters gentle for so far north. It's windy, above all on Jutland's west coast, and rain falls in every month, most often in autumn. Summer days are usually around 20°C, and winter days a little above freezing.",
+    "festivals": [
+      {
+        "name": "Fastelavn",
+        "place": "Across Denmark",
+        "when": "Usually in February or early March, seven weeks before Easter",
+        "months": [2, 3],
+        "text": "Denmark's carnival: children dress up, collect sweets and take turns hitting a barrel until it breaks open, and bakeries sell cream-filled buns (fastelavnsboller)."
+      },
+      {
+        "name": "Sankt Hans Aften (Midsummer Eve)",
+        "place": "Across Denmark",
+        "when": "23 June",
+        "months": [6],
+        "text": "Bonfires on beaches and by lakes, often topped with a straw witch, and everyone singing the same midsummer song as the fire takes hold."
+      },
+      {
+        "name": "Roskilde Festival",
+        "place": "Roskilde, west of Copenhagen",
+        "when": "Usually from late June into early July",
+        "months": [6, 7],
+        "text": "One of Europe's biggest music festivals, run as a non-profit, with a week of camping and big international acts."
+      },
+      {
+        "name": "Copenhagen Jazz Festival",
+        "place": "Copenhagen",
+        "when": "Usually in early July, for ten days",
+        "months": [7],
+        "text": "Hundreds of concerts in clubs, cafés, squares and parks across the city, many of them free."
+      },
+      {
+        "name": "Aarhus Festuge",
+        "place": "Aarhus",
+        "when": "Usually from late August into early September",
+        "months": [8, 9],
+        "text": "Ten days of music, theatre, art and food in the streets and venues of Denmark's second city."
+      },
+      {
+        "name": "Christmas (jul)",
+        "place": "Across Denmark",
+        "when": "Markets from about mid-November; the main celebration on Christmas Eve, 24 December",
+        "months": [11, 12],
+        "text": "Christmas markets, Tivoli lit up for the season, mulled wine and little pancake balls (æbleskiver). On Christmas Eve families eat roast duck or pork and a rice pudding with one whole almond hidden in it: whoever finds it wins a small present."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Copenhagen and Zealand",
+        "text": "A city for any season, with museums, cafés and Tivoli's winter season to fill the darker months. North of the city are Kronborg Castle at Helsingør, the setting of Hamlet, Frederiksborg Castle and the Louisiana museum of modern art by the sea."
+      },
+      {
+        "name": "Jutland",
+        "text": "The mainland: Aarhus, Legoland at Billund, the old town of Ribe, and the long west coast of dunes, wide beaches and surf. At Skagen, the northern tip, two seas meet. The west coast is at its best from June to August, and windy all year."
+      },
+      {
+        "name": "Funen and the southern islands",
+        "text": "Gentle farmland and manor houses between Zealand and Jutland. Odense, Hans Christian Andersen's birthplace, has a museum to him; the small islands to the south, such as Ærø, are made for cycling and sailing in summer."
+      },
+      {
+        "name": "Bornholm",
+        "text": "A rocky island far out in the Baltic, with cliffs, sandy beaches, round medieval churches and smokehouses. Reached by ferry or a short flight; it's busiest in July, and many places close in winter."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and first names, whoever you meet: Danes are informal, and everyone uses the familiar \"du\". \"Hej\" does for hello almost anywhere. Danes can be reserved with strangers, but are direct and friendly once you start talking.",
+    "etiquette": [
+      "Bike lanes are busy and fast: never walk or stand in them, and look both ways for cyclists before you cross one. If you ride, keep right and raise a hand before you stop.",
+      "In bakeries, pharmacies and some shops, take a number from the machine by the door and wait to be called.",
+      "Bottles and cans carry a deposit (pant): return them to the machines in supermarkets to get it back.",
+      "The red-and-white flag, the Dannebrog, turns up on birthday cakes and at family parties: it's a sign of celebration, not politics.",
+      "When someone raises a glass and says \"skål\", look them in the eye before you drink.",
+      "Take your shoes off when you go into someone's home."
+    ],
+    "tipping": "Not expected: service is included in prices, and staff are well paid. Rounding up, or leaving a little extra for excellent service, is welcome but never required.",
+    "dress": "Casual and practical, often in dark, simple colours. Bring a waterproof, windproof jacket in every season, and a warm layer for summer evenings, which can be cool by the sea.",
+    "food": [
+      {
+        "name": "Smørrebrød",
+        "text": "Open sandwiches on dense rye bread, piled with herring, egg and prawns, roast beef or liver pâté. A lunch dish, eaten with a knife and fork, traditionally starting with the fish."
+      },
+      {
+        "name": "Stegt flæsk med persillesovs",
+        "text": "Crisp slices of pork belly with boiled potatoes and parsley sauce, often called the national dish."
+      },
+      {
+        "name": "Wienerbrød",
+        "text": "What the world calls Danish pastries. Danes call them \"Viennese bread\", after the Austrian bakers said to have brought the method in the 1800s."
+      },
+      {
+        "name": "Pølser",
+        "text": "Hot dogs from street wagons, with remoulade, mustard, crispy fried onions and sliced pickled cucumber."
+      },
+      {
+        "name": "Æbleskiver and gløgg",
+        "text": "Round, fluffy pancake balls dusted with icing sugar and dipped in jam, with spiced mulled wine, through the Christmas season."
+      },
+      {
+        "name": "New Nordic food",
+        "text": "Copenhagen led the New Nordic movement, cooking with local, seasonal and foraged ingredients, and its ideas now run through restaurants at every price."
+      }
+    ],
+    "phrases": {
+      "language": "Danish",
+      "intro": "Almost every Dane speaks excellent English, but a few words are always appreciated. Spoken Danish swallows many of its letters, so it sounds quite different from how it looks.",
+      "items": [
+        { "phrase": "Hej", "say": "hi", "meaning": "Hello" },
+        { "phrase": "Godmorgen", "say": "go-MORN", "meaning": "Good morning" },
+        { "phrase": "Tak", "say": "tahk", "meaning": "Thank you" },
+        { "phrase": "Mange tak", "say": "MANG-eh tahk", "meaning": "Thank you very much" },
+        { "phrase": "Undskyld", "say": "OON-skewl", "meaning": "Excuse me; sorry" },
+        { "phrase": "Taler du engelsk?", "say": "TAY-ler doo ENG-elsk", "meaning": "Do you speak English?" },
+        { "phrase": "Hvad koster det?", "say": "vah KOS-ter deh", "meaning": "How much is it?" },
+        { "phrase": "Skål!", "say": "skoal", "meaning": "Cheers!" },
+        { "phrase": "Hej hej", "say": "hi hi", "meaning": "Bye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q35",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Danish krone (kr., DKK). Cards are taken almost everywhere, and some places don't take cash at all.",
+        "sources": [{ "property": "P38", "values": ["Q25417"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Danish; almost everyone speaks English too",
+        "sources": [{ "property": "P37", "values": ["Q9035"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, E, F and K, 230 V. Type K, the Danish plug, has a half-round earth pin; a two-pin Europlug (type C) fits every socket.",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1123613", "Q1502017"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q5412103"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+45",
+        "sources": [{ "property": "P474", "values": ["+45"] }]
+      }
+    ]
+  }
+}

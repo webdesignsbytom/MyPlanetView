@@ -65,7 +65,7 @@ test.describe('An unverified email address', () => {
     // Settings stay open: how it looks, and the map's set-up
     const settings = await openTool(page, 'Map settings', 'Settings');
     await settings.getByText('Galaxy', { exact: true }).click();
-    await expect(page.locator('#main-content').locator('xpath=..')).toHaveAttribute('data-map-style', 'galaxy');
+    await expect(page.locator('[data-map-style]:has(#main-content)')).toHaveAttribute('data-map-style', 'galaxy');
     await settings.getByRole('tab', { name: 'This map' }).click();
     const thisMap = settings.getByRole('tabpanel', { name: 'This map' });
     await thisMap.getByRole('textbox', { name: 'Map name' }).fill('Our travels');

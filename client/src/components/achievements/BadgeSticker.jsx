@@ -1,19 +1,6 @@
 import React from 'react';
 // Icons
-import {
-  FaCamera,
-  FaCheck,
-  FaCompass,
-  FaGlobe,
-  FaGlobeAfrica,
-  FaGlobeAmericas,
-  FaGlobeAsia,
-  FaGlobeEurope,
-  FaLandmark,
-  FaMapSigns,
-  FaSnowflake,
-  FaUniversity,
-} from 'react-icons/fa';
+import { FaCalendarAlt, FaCamera, FaCheck, FaCompass, FaGlobe, FaGlobeAfrica, FaGlobeAmericas, FaGlobeAsia, FaGlobeEurope, FaLandmark, FaMapSigns, FaSnowflake, FaUniversity } from 'react-icons/fa';
 // Utils
 import { badgeWords } from '@/utils/achievements/badges';
 import { formatDay } from '@/utils/functions/dates';
@@ -31,7 +18,7 @@ function iconFor({ key, group }) {
   if (CONTINENT_ICONS[key]) return CONTINENT_ICONS[key];
   if (key === 'antarctica') return FaSnowflake;
   if (key.startsWith('unesco-')) return FaUniversity;
-  return { countries: FaGlobe, continents: FaGlobe, special: FaCompass, regions: FaMapSigns, landmarks: FaLandmark, photos: FaCamera }[group] || FaGlobe;
+  return { countries: FaGlobe, continents: FaGlobe, special: FaCompass, regions: FaMapSigns, landmarks: FaLandmark, photos: FaCamera, themes: FaCalendarAlt }[group] || FaGlobe;
 }
 
 // Stickers slapped on at slightly different angles
@@ -42,11 +29,12 @@ const TILTS = ['-rotate-6', 'rotate-3', '-rotate-2', 'rotate-6', '-rotate-3', 'r
  * sticker in a double red ring, tilted, with a tick and "Earned 12 Mar 2026". Not yet: a
  * dashed outline where it will go, and how far along it is ("3 of 10"). The words say
  * which, so colour never has to. Its description is there for screen readers and as a
- * tooltip.
+ * tooltip. A traveller's badge (BadgesGoalsPanel) has `earned` and the day of the trip that
+ * earned it, or no day when that trip had no dates ("Earned").
  */
 function BadgeSticker({ badge, index = 0 }) {
   const words = badgeWords(badge.key);
-  const earned = Boolean(badge.earnedAt);
+  const earned = Boolean(badge.earnedAt) || Boolean(badge.earned);
   const Icon = iconFor(badge);
 
   return (
@@ -69,7 +57,7 @@ function BadgeSticker({ badge, index = 0 }) {
       </span>
       <span className='text-xs font-semibold leading-tight'>{words.name}</span>
       <span className={`text-2xs leading-tight ${earned ? 'font-medium text-poster-red-deep' : ''}`}>
-        {earned ? `Earned ${formatDay(badge.earnedAt)}` : `${badge.have} of ${badge.need}`}
+        {earned ? (badge.earnedAt ? `Earned ${formatDay(badge.earnedAt)}` : 'Earned') : `${badge.have} of ${badge.need}`}
       </span>
       {words.description ? <span className='sr-only'>{words.description}</span> : null}
     </li>

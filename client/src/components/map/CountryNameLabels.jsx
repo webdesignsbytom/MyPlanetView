@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 // Data
 import { COUNTRIES } from '@/utils/map/countries';
 import { COUNTRY_LABEL_WIDTH } from '@/utils/map/countryStyle';
+import { UK_NATION_LABEL_WIDTH } from '@/utils/map/ukNationShapes';
 // Utils
 import { badgeRadius } from '@/utils/map/badges';
 import { isAntarctic } from '@/utils/map/specialPlaces';
@@ -18,15 +19,18 @@ const HAS_BADGE = { VISITED: true, LIVED: true };
 // only drawn once it fits inside the country's main shape; a small country (Guatemala,
 // Costa Rica) gets a smaller name rather than none, and the tiniest get theirs as you
 // zoom in. A visited country's name sits under its star badge. Antarctica's name is
-// drawn too (unless it's hidden); the poles' are PoleNameLabels'.
-function CountryNameLabels({ zoom, visitsByCode, showAntarctica = true }) {
+// drawn too (unless it's hidden); the poles' are PoleNameLabels'. On a map that splits the
+// UK (`splitUk`), its nations are named instead of it.
+function CountryNameLabels({ zoom, visitsByCode, showAntarctica = true, splitUk = false }) {
   const fontSize = 10 / Math.sqrt(zoom) / Math.max(zoom / 4, 1);
   const minSize = Math.min(fontSize, Math.max(fontSize * MIN_SHRINK, MIN_SCREEN_SIZE / zoom));
   const radius = badgeRadius(zoom);
   return (
     <g className='pointer-events-none fill-map-ink font-medium' fontSize={fontSize} textAnchor='middle' aria-hidden='true'>
       {COUNTRIES.map((country) => {
-        const width = COUNTRY_LABEL_WIDTH[country.code];
+        const width = splitUk
+          ? country.code !== 'GB' && (COUNTRY_LABEL_WIDTH[country.code] ?? UK_NATION_LABEL_WIDTH[country.code])
+          : COUNTRY_LABEL_WIDTH[country.code];
         if (!width || (!showAntarctica && isAntarctic(country.code))) return null;
         const size = Math.min(fontSize, width / (country.name.length * CHAR_WIDTH));
         if (size < minSize) return null;

@@ -4,7 +4,7 @@ Test photos for the demo accounts, from Wikimedia Commons (downloaded 16 Nov 202
 
 - **The server seed** (`server/prisma/seed/photos.js`) uploads them to the **private** bucket as photos on the seeded USER's map, the way an upload does: a MediaItem per file, a Photo, its PhotoVariants and landmark suggestions.
 - **Mock mode** (`client/src/dev/mock/`) shows them on the test account's map. In development, Vite serves this folder at `/seed-photos` (`vite.config.js`).
-- **`photos.json`** lists each photo: country, caption, date, GPS position (from Commons), trip, who uploaded it, its three files (`THUMB` 400 px and `DISPLAY` 1600 px WebP, `ORIGINAL` JPEG) and its credit.
+- **`photos.json`** lists each photo: country, caption, date, GPS position (from Commons), trip, who uploaded it, its files (`THUMB` 400 px and `DISPLAY` 1600 px WebP, the `ORIGINAL` JPEG, and `PRINT`, the Economy print copy: at most 2,400 px, a JPEG with no metadata, made by `node images/src/tools/seed-print-copies.mjs` as the browser makes one) and its credit. The seed uploads THUMB, DISPLAY and PRINT to an Economy map, or the ORIGINAL instead of PRINT on a paid one, at the keys a real upload gets.
 
 ## Credits and licences
 

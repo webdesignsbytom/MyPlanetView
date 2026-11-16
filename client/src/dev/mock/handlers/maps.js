@@ -14,13 +14,8 @@ import {
   mapSlotsMessage,
   photoSizesProblem,
   effectivePlan,
-  VIDEO_CONTENT_TYPES,
-  VIDEO_MAX_BYTES,
   VIDEO_MESSAGES,
-  videoNotAllowed,
-  videoSizesProblem,
 } from '../plans';
-import { VIDEO_MAX_SECONDS } from '@/utils/constants/plans';
 import { isPole } from '@/utils/map/specialPlaces';
 import { adsFor } from '../offers';
 import {
@@ -54,28 +49,20 @@ const PHOTO_MAX_BYTES = { THUMB: 1 * MB, DISPLAY: 5 * MB, ORIGINAL: 50 * MB, PRI
 // The map routes' own answers carry the plan fields (owner and editors)
 const WITH_PLAN = { withPlan: true };
 // Server PHOTO_EXTENSIONS: each file's key ends with its type's extension
-const EXTENSIONS = { 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/png': 'png', 'video/mp4': 'mp4', 'video/quicktime': 'mov' };
+const EXTENSIONS = { 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/png': 'png' };
 // Server EVENT_MESSAGES for uploads
 const UPLOAD_INVALID = 'The upload doesn’t match what was requested. Please try again.';
 const TYPE_INVALID = "That file type isn't supported for this photo size.";
 
-// A photo or a video (docs/API.md, "Videos"), as the server's controllers/photos.js: a
-// video's ORIGINAL is its file (MP4 or MOV, up to 500 MB); its THUMB and DISPLAY are poster
-// frames, under the photo rules
-const typesFor = (kind, size) => (kind === 'VIDEO' && size === 'ORIGINAL' ? VIDEO_CONTENT_TYPES : PHOTO_TYPES[size]);
-const maxBytesFor = (kind, size) => (kind === 'VIDEO' && size === 'ORIGINAL' ? VIDEO_MAX_BYTES : PHOTO_MAX_BYTES[size]);
-const isDuration = (value) => Number.isInteger(value) && value >= 1 && value <= VIDEO_MAX_SECONDS;
-
-/** The server's parseUploadKind: -> `{ kind, durationS }`, or `{ error: [status, message] }`. */
-function uploadKind(body, map) {
+/**
+ * The server's parseUploadKind: this upload takes photos only; videos go to Cloudflare
+ * Stream (handlers/videos.js). -> `{ kind, durationS }`, or `{ error: [status, message] }`.
+ */
+function uploadKind(body) {
   const kind = body.kind ?? 'PHOTO';
-  if (kind !== 'PHOTO' && kind !== 'VIDEO') return { error: [400, UPLOAD_INVALID] };
-  if (kind === 'PHOTO') return { kind, durationS: null };
-  // A video needs the map's owner on First Class (403), then a length of 1–180 s (400)
-  const notAllowed = videoNotAllowed(map);
-  if (notAllowed) return { error: [403, notAllowed] };
-  if (!isDuration(body.durationS)) return { error: [400, VIDEO_MESSAGES.duration] };
-  return { kind, durationS: body.durationS };
+  if (kind === 'VIDEO') return { error: [400, VIDEO_MESSAGES.useVideoUpload] };
+  if (kind !== 'PHOTO') return { error: [400, UPLOAD_INVALID] };
+  return { kind, durationS: null };
 }
 // Server EVENT_MESSAGES for transfers
 const TRANSFER = {
@@ -262,6 +249,11 @@ export function registerMapRoutes() {
     db.photos = db.photos.filter((p) => !photoIds.has(p.id));
     db.photoLandmarks = db.photoLandmarks.filter((pl) => !photoIds.has(pl.photoId));
     db.landmarkCovers = db.landmarkCovers.filter((c) => c.mapId !== map.id);
+    db.themeEntries = (db.themeEntries || []).filter((e) => e.mapId !== map.id);
+    // A challenge it counted in counts no map for that person until they pick another
+    (db.challengeEntries || []).forEach((e) => {
+      if (e.mapId === map.id) e.mapId = null;
+    });
     return ok({ message: 'Map deleted.' });
   });
 
@@ -399,7 +391,7 @@ export function registerMapRoutes() {
     const denied = deny(role, 'VIEWER', NOT_FOUND);
     if (denied) return denied;
     const page = photoPage(getDb().photos.filter((p) => p.mapId === map.id), role, query);
-    return page.error ? fail(400, page.error) : ok(page);
+    return page.error ? fail(page.status ?? 400, page.error) : ok(page);
   });
 
   route('POST', '/api/maps/:mapId/photos/presign', ({ params, body }) => {
@@ -414,7 +406,7 @@ export function registerMapRoutes() {
     if (denied) return denied;
     // The owner's plan (docs/API.md, "Map limits"): a locked map takes nothing, first
     if (isMapLocked(map)) return fail(403, LOCKED_MAP_MESSAGE);
-    const upload = uploadKind(body, map);
+    const upload = uploadKind(body);
     if (upload.error) return fail(...upload.error);
     const { kind } = upload;
     const files = Array.isArray(body.files) ? body.files : [];
@@ -425,15 +417,13 @@ export function registerMapRoutes() {
     if (!sizes.includes('THUMB') || !sizes.includes('DISPLAY')) return fail(400, 'A photo needs its thumbnail and display copies.');
     for (const f of files) {
       // Web types for every size, JPEG for the print copy (the server's PHOTO_CONTENT_TYPES; no HEIC)
-      // ...and a video's file is MP4 or MOV
-      if (!typesFor(kind, f.size).includes(f.contentType)) return fail(400, `That file type can't be uploaded as ${f.size.toLowerCase()}.`);
+      if (!PHOTO_TYPES[f.size].includes(f.contentType)) return fail(400, `That file type can't be uploaded as ${f.size.toLowerCase()}.`);
       // As the server: the size is required, capped, and signed into the URL (../uploads.js)
-      const sizeProblem = declaredSizeProblem(f.bytes, maxBytesFor(kind, f.size));
+      const sizeProblem = declaredSizeProblem(f.bytes, PHOTO_MAX_BYTES[f.size]);
       if (sizeProblem) return fail(...sizeProblem);
     }
-    // The best copy follows the plan: ORIGINAL (Business, First Class) or PRINT (Economy);
-    // a video sends exactly its two poster frames and its file
-    const sizesProblem = kind === 'VIDEO' ? videoSizesProblem(sizes) : photoSizesProblem(sizes, mapPlanId(map));
+    // The best copy follows the plan: ORIGINAL (Business, First Class) or PRINT (Economy)
+    const sizesProblem = photoSizesProblem(sizes, mapPlanId(map));
     if (sizesProblem) return fail(400, sizesProblem);
     // The country the uploader expects: full on this map -> 409 before anything uploads
     if (body.countryCode !== undefined && body.countryCode !== null && body.countryCode !== '') {
@@ -480,8 +470,7 @@ export function registerMapRoutes() {
       session.presigned.delete(body.photoId);
       return fail(403, LOCKED_MAP_MESSAGE);
     }
-    // A video again: First Class (403) and its length (400); the files go either way
-    const upload = uploadKind(body, map);
+    const upload = uploadKind(body);
     if (upload.error) {
       dropUpload();
       session.presigned.delete(body.photoId);
@@ -490,22 +479,20 @@ export function registerMapRoutes() {
     const { kind, durationS } = upload;
     const variants = Array.isArray(body.variants) ? body.variants : [];
     const variantSizes = variants.map((v) => v?.size);
-    const sizesProblem = kind === 'VIDEO' ? videoSizesProblem(variantSizes) : photoSizesProblem(variantSizes, mapPlanId(map));
+    const sizesProblem = photoSizesProblem(variantSizes, mapPlanId(map));
     if (sizesProblem) return fail(400, sizesProblem);
     if (!session.blobs.has(pending.keys.THUMB) || !session.blobs.has(pending.keys.DISPLAY)) return fail(400, 'The upload did not finish. Please try again.');
-    if (kind === 'VIDEO' && !session.blobs.has(pending.keys.ORIGINAL)) return fail(400, 'The upload did not finish. Please try again.');
-    // As the server's HEAD of each file: what arrived must suit this kind (a video's file is MP4 or MOV)
-    if (Object.entries(pending.keys).some(([size, key]) => !typesFor(kind, size)?.includes(mockUpload(key)?.contentType))) {
+    // As the server's HEAD of each file: what arrived must suit its size
+    if (Object.entries(pending.keys).some(([size, key]) => !PHOTO_TYPES[size]?.includes(mockUpload(key)?.contentType))) {
       dropUpload();
       session.presigned.delete(body.photoId);
       return fail(400, TYPE_INVALID);
     }
-    // A video keeps no position (the server stores null): the uploader chose its country
-    const hasGps = kind === 'PHOTO' && Number.isFinite(body.latitude) && Number.isFinite(body.longitude);
+    const hasGps = Number.isFinite(body.latitude) && Number.isFinite(body.longitude);
     // The chosen country stands in when there's no GPS, or the GPS finds no country (at sea)
     // (point-in-polygon on the map's shapes, as the server: ../countryLookup.js)
     const countryCode = (hasGps ? await countryAtPosition(body.latitude, body.longitude) : null) ?? cleanCountry(body.countryCode);
-    // The country cap with the final country (a video's own cap): full -> 409, and the files go
+    // The country cap with the final country: full -> 409, and the files go
     const full = countryCapProblem(map, countryCode, kind);
     if (full) {
       dropUpload();

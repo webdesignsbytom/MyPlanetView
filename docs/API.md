@@ -65,7 +65,7 @@ Emails and share URLs point at these client routes, built from `server/src/utils
 | --- | --- | --- |
 | `GET /maps` | signed in | `{ maps: [{ id, name, groupType, isDefault, role, ownerName, counts: { countries, photos, trips }, locked, graceUntil }] }`: maps you own, then maps shared with you. `locked` and `graceUntil` are on the maps you own only (see "Map limits"). `trips` counts the group trips added to the map too, as the stats do (see "Group trips"). |
 | `POST /maps` | signed in | `{ name, groupType, travellers: [{ name, birthCountryCode?, favouriteCountryCode? }] }` → `{ map }`. Needs a free map slot, else **402** `{ status: 'fail', message }`, e.g. `Your plan includes 1 map, and every extra map you've paid for is in use. An extra map costs £3.99 a month or £39 a year.` (the owner's plan's price; £5.99 and £59 on First Class). The body is checked first (400), then the slot. 20 new maps a day per user (429 after). |
-| `GET /maps/:mapId` | viewer | `{ map: { id, name, groupType, isDefault, role, ownerName, travellers: [{ id, name, position, birthCountryCode, favouriteCountryCode, userId (editors only) }], visits: [{ countryCode, status, source, firstVisitedOn, notes }], stats, momentCountsByCountry, plan, locked, graceUntil, photoCounts, uploadRules } }`. The last five are for the owner and editors only (below); viewers, and everyone through a share link, never get them. `momentCountsByCountry: { [countryCode]: n }` is everyone's: the map's moments per country (see "Moments"), hidden ones counted for the owner and editors only; countries with none are left out. |
+| `GET /maps/:mapId` | viewer | `{ map: { id, name, groupType, isDefault, role, ownerName, travellers: [{ id, name, position, birthCountryCode, favouriteCountryCode, userId (editors only) }], visits: [{ countryCode, status, source, firstVisitedOn, notes }], stats, momentCountsByCountry, stampedLandmarkIds, plan, locked, graceUntil, photoCounts, uploadRules } }`. The last five are for the owner and editors only (below); viewers, and everyone through a share link, never get them. `momentCountsByCountry: { [countryCode]: n }` is everyone's: the map's moments per country (see "Moments"), hidden ones counted for the owner and editors only; countries with none are left out. `stampedLandmarkIds` is everyone's too: the landmarks stamped in the map's passport (a confirmed photo of each; see "Passport"), from the same read as `stats.landmarks`, so hidden photos' stamps only for the owner and editors. The map draws their pins in gold. |
 | `PATCH /maps/:mapId` | owner | `{ name?, groupType? }` → `{ map }` |
 | `DELETE /maps/:mapId` | owner | Refused (409) for the default map. Deletes the map's rows, then its photos' files, up to 1,000 per DeleteObjects request; a file that can't be deleted is left for the daily clean-up. |
 | `GET /maps/:mapId/stats` | viewer | `{ stats: { countries, specialPlaces, continents, photos, landmarks, trips, byTraveller: [{ travellerId, name, countries }] } }`. `countries` (and each traveller's) counts countries only; `specialPlaces` counts Antarctica and the poles. `trips` counts the map's own trips and the group trips added to it; `byTraveller` comes from the map's own completed trips only. |
@@ -209,7 +209,7 @@ A trip shared between people's accounts: the organiser's trip, on the organiser'
 
 | Method and path | Role | Body / returns |
 | --- | --- | --- |
-| `GET /maps/:mapId/photos?country=&unplaced=&tripId=&cursor=&limit=&order=&seed=&display=` | viewer | `{ photos: [{ id, caption, takenAt, countryCode, tripId, width, height, thumbUrl, displayUrl (with `display=1`), landmarks: [{ id, name, confirmed }], hidden (editors only) }], nextCursor }`. `order` and `display` are the slideshows' (see "Slideshows"). In the gallery's order (see `POST /photos/:photoId/move`): with `tripId`, or on a trip's list, the trip's order; with `country` or `unplaced`, that gallery's order; with neither, the whole map newest upload first (the hover postcards). A new photo goes first everywhere. `limit` 1–60 (default 30). `unplaced=1` lists only the photos with no country (no location and none chosen, or a location at sea), so they can be found and placed; it can't be combined with `country` (400). Viewers never get `hidden` photos, and see confirmed landmarks only. |
+| `GET /maps/:mapId/photos?country=&unplaced=&tripId=&landmark=&cursor=&limit=&order=&seed=&display=` | viewer | `{ photos: [{ id, caption, takenAt, countryCode, tripId, width, height, thumbUrl, displayUrl (with `display=1`), landmarks: [{ id, name, confirmed }], hidden (editors only) }], nextCursor }`. `order` and `display` are the slideshows' (see "Slideshows"); `best=1` (editors only) is "Print or download"'s (see "Downloads"). In the gallery's order (see `POST /photos/:photoId/move`): with `tripId`, or on a trip's list, the trip's order; with `country` or `unplaced`, that gallery's order; with neither, the whole map newest upload first (the hover postcards). A new photo goes first everywhere. `limit` 1–60 (default 30). `unplaced=1` lists only the photos with no country (no location and none chosen, or a location at sea), so they can be found and placed; it can't be combined with `country` (400). `landmark=<id>` lists only the photos confirmed as that landmark, whichever country they're in (a photo taken across a border), oldest taken first (the passport's stamp photo picker); an id that isn't a uuid → 400, a landmark with no photos gives an empty list. Viewers never get `hidden` photos, and see confirmed landmarks only. |
 | `GET /photos/:photoId` | viewer | `{ photo: { ..., displayUrl } }`. Editors also get `originalUrl`, `bestCopy`, `latitude`, `longitude`, and every landmark match with its `source` and `distanceM`. `originalUrl` is the best copy kept: the `ORIGINAL` (Business and First Class), else the `PRINT` copy (Economy); `bestCopy` says which (`'ORIGINAL'`, `'PRINT'`, or null with `originalUrl` null for an old photo saved with neither). |
 | `PATCH /photos/:photoId` | editor | `{ caption?, countryCode?, tripId?, takenAt?, hidden? }`. Moving a photo between trips (`tripId`) needs editor on the map, not just the trip. A new `countryCode` marks that country visited (`source: PHOTO`), in the same transaction. Moving it to a country that's full on the map (the owner's plan) → 409 `30 of 30 photos of France on this map. Upgrade to add more.` and nothing changes. A photo that lands in another gallery (a new country, no country, or a new trip) goes first there; sending its current country again changes nothing. → `{ photo }` |
 | `POST /photos/:photoId/move` | editor of that gallery | Rearranging. `{ gallery, afterId }`: `gallery` is `'country'` (the photo's country on its map; the unplaced photos are one gallery) or `'trip'` (its trip; 400 if it has none). The photo goes straight after `afterId` in that gallery, or first when `afterId` is null. A country's gallery needs editor on the map; a trip's needs editor of the trip (a trip-only editor too). Only the photo's own position changes, unless its new neighbours have no room left between them (then the gallery is renumbered, in the same transaction). 400 for a bad gallery or `afterId` (not an id, or the photo itself); 409 if `afterId` isn't in that gallery any more. → `{ message }` |
@@ -233,7 +233,8 @@ First Class videos (docs/FEATURE-PLAN.md, "Videos (First Class)"), kept in **Clo
 - **Rules:** only on a map whose owner is on **First Class** (403 `Videos are part of First Class. Upgrade this map’s owner to add them.`); `contentType` `video/mp4` or `video/quicktime`, `bytes` up to 500 MB (413 above), `durationS` 1–180 (400 `A video can be up to 3 minutes long.`); **20 videos per country** on each map, apart from the photo cap (409 `20 of 20 videos of Iceland on this map.`); videos count towards the storage safety net by their size, not towards the photo cap. A locked map → 403. Without Stream's settings (the `CLOUDFLARE_*` keys) both routes answer **503** `Videos aren’t set up yet.`
 - **The ticket** is signed by the server (HMAC with `BETTER_AUTH_SECRET`) and names the video, the map, the trip, the person and the photo id: saving with someone else's ticket, another map's, a changed one or an expired one → 400 `That upload has expired or wasn’t started here. Start it again.`; an upload Stream hasn't received yet → 400 `The video hasn’t finished uploading yet.`; one Stream couldn't read → 400 (deleted); saving twice → 409.
 - **No position:** a video keeps no latitude or longitude (CHECK `photo_video_no_location`); the uploader chooses its country, and no landmark is suggested. The browser also overwrites the file's location metadata before upload (the `©xyz` atom and QuickTime's location key), and Stream's converted copies keep no metadata, GPS tracks included.
-- **Converting:** a video is `PROCESSING` until Stream's notice says `READY` (or `FAILED`). When an editor opens one still processing, the server asks Stream too, so it catches up without the webhook.
+- **Converting:** a video is `PROCESSING` until Stream's notice says `READY` (or `FAILED`). When an editor opens one still processing, the server asks Stream too, so it catches up without the webhook. The app asks again by itself while one is on screen (a gallery after 5, 10, 20 and then every 30 seconds, for up to 20 minutes; the viewer every 6 seconds) and shows "Preparing…" or "Couldn't prepare" on its tile.
+- **The browser's side:** it sends the file to `uploadUrl` with tus-js-client (`client/src/utils/photos/streamUpload.js`), in 50 MB pieces (Stream wants multiples of 256 KiB, at least 5 MB), retrying after a dropped connection from where Stream says it got to. It plays `videoUrl` with the browser's own HLS where it has it (Safari, recent Chrome), else hls.js's light build, loaded only then (`client/src/hooks/useVideoSource.js`).
 - **Who sees it:** the owner and editors see every video, with `videoState`; viewers and share links only `READY` ones (a processing one answers 404 and isn't listed).
 - **Reading:** list items and `GET /photos/:photoId` carry `kind` and `durationS`. A ready video's `thumbUrl` (400 px) is Stream's thumbnail; its detail, and list items with `display=1`, also carry `displayUrl` (1,080 px) and `videoUrl`, an **HLS** link (`…/manifest/video.m3u8`; Safari plays it natively, other browsers through hls.js). Each link holds a token signed on the server with Stream's signing key (`CLOUDFLARE_STREAM_SIGNING_KEY_*`, an RS256 JWT for that video), valid from the start of the hour for two hours, like the photo links. Never coordinates, files or the Stream id.
 - **Deleting** a video deletes its row, then the Stream video (a failure is left for the daily clean-up). The daily clean-up deletes any Stream video older than 6 hours that no row points at (an upload never saved, a video deleted with its map or account).
@@ -241,6 +242,20 @@ First Class videos (docs/FEATURE-PLAN.md, "Videos (First Class)"), kept in **Clo
 - **Map fields:** `uploadRules.videos` is `{ perCountry, maxSeconds, maxBytes, contentTypes }` on a First Class map and null on the others; owners and editors also get `videoCounts` beside `photoCounts` (photos only).
 - **The database** holds the shape too: CHECK `photo_video_duration` (a video has a length of 1–600 s, a photo none) and `photo_video_stream` (a video has its Stream id, state and size, a photo none).
 - **Setting up** (the user): an API token with Stream: Edit, the account id and customer code, then `node src/services/stream/createSigningKey.js` and `node src/services/stream/setWebhook.js <https address>` (each prints the env values to set).
+
+## Downloads
+
+"Print or download" (docs/FEATURE-PLAN.md, "Printing", version 1): a map's or a trip's editors download its photos' best copies as a zip **made in the browser**, then follow a print partner's link. The server only lists the files; each one comes straight from R2 by its signed link, so Vercel moves no bytes.
+
+| Method and path | Role | Returns |
+| --- | --- | --- |
+| `GET /maps/:mapId/photos?best=1&country=&unplaced=&tripId=&cursor=&limit=` | editor | The usual list (any filter and `order`), where each item also has `best: { copy, url, contentType, bytes, width, height }`: the best copy kept (`copy` is `ORIGINAL`, else an Economy map's `PRINT`), signed like every photo link. `best` is null for a video (Stream keeps no original to hand back) and for an old photo saved with neither. `bytes` is the stored size, or null when it wasn't recorded. No `displayUrl` (`display=1` is ignored). `limit` 1–200 (default 30). Hidden photos are included (editors see them). |
+| `GET /trips/:tripId/photos?best=1&cursor=&limit=` | trip editor | The same for a trip's photos: a trip-only editor too. |
+
+- **Who:** editors only, since the best copy is the original (with its location) or the print copy. A viewer gets 403, someone with no role 404 (as every map route). **Never through a share link:** `GET /shared/:code/photos?best=1` is 403 whoever opens it, the map's own editors included. `best` other than `1`, `true`, `0` or `false` is 400.
+- **The zip** (`client/src/utils/photos/photoDownload.js`, `zipDownload.js`, with `client-zip`): files are stored, not compressed. Each is named `<day taken> <caption>.<ext>` (`2019-04-12 Evening by the Seine.jpg`, or `Photo.jpg` with neither; `(2)` when two would share a name), in a folder per country for the whole map (`France/…`, `No country/…`). In Chrome and Edge on a computer (`showSaveFilePicker`) the zip streams to the file chosen, at any size; elsewhere the browser holds it in memory until it's saved, so a download over 500 MB comes as parts (`… (part 2 of 3).zip`), each its own button. A page of the list older than 45 minutes is listed again before its files are fetched (the links last at least an hour), and a file that fails is tried once more with a fresh link, then left out and named.
+- **R2 CORS** must allow `GET` from the site's origin, as `setPrivateBucketCors.js` sets it: the browser reads each file with `fetch()`, not an `<img>`. CSP `connect-src` needs the photo host too (it has it for the uploads' `PUT`).
+- **Print partners** are travel offers (see "Travel offers") of kind `PRINTS` in placement `PRINT`: the dialog shows up to two under the download, heaviest first, each a link through `/go/` with `p=PRINT`. Without one it says any photo printer takes the files.
 
 ## Moments
 
@@ -284,6 +299,8 @@ The slideshows play a map's photos (worldwide), one country's, or one trip's, th
 
 Anything else for `order` or `display` → 400.
 
+**Moments in a show** (16 Nov 2026): a show in date order (not a shuffled one) also reads the same source's moments (`GET /maps/:mapId/moments`, `/trips/:tripId/moments` or `/shared/:code/moments`, with `country` for a country's show; up to five pages of 60) and puts each dated one in as a card before the first photo taken on or after its day; the rest come before the end card. Undated moments aren't shown. In the worldwide show a moment in the next country goes after that country's title card, any other before it. The access is the moment routes' own, so viewers never get hidden ones.
+
 ## Passport
 
 The landmark book (docs/FEATURE-PLAN.md, "The passport"). A landmark is **stamped** when a photo of it is confirmed on the map (`PhotoLandmark.confirmed`; a manual match is confirmed at once). No photo, no stamp: ticking a country by hand stamps nothing. Each match records its map (`mapId`, a copy of the photo's) and when it was confirmed (`confirmedAt`, null exactly while unconfirmed: CHECK `photo_landmark_confirmed_at`).
@@ -295,9 +312,9 @@ The landmark book (docs/FEATURE-PLAN.md, "The passport"). A landmark is **stampe
 | `DELETE /maps/:mapId/passport/stamps/:landmarkId/photo` | editor, **verified** | Back to the earliest photo → `{ message }` |
 | `GET /shared/:code/passport` | anyone with a map's code | The same, with the link's role. A trip's code → 404. |
 
-**A passport:** `{ map: { id, name, groupType, ownerName }, travellers: [{ id, name, birthCountryCode, favouriteCountryCode }], pages: [page], totals: { countries, specialPlaces, continents, landmarks, unesco } }`.
+**A passport:** `{ map: { id, name, groupType, ownerName, plan: { id, name } }, travellers: [{ id, name, birthCountryCode, favouriteCountryCode }], pages: [page], totals: { countries, specialPlaces, continents, landmarks, unesco } }`.
 - **Pages:** one per country (or special place) marked `VISITED` or `LIVED`, plus any country with a stamp. Each is `{ countryCode, status, enteredOn, stamps: [stamp], toStamp: [{ id, name, isUnesco }] }`, in the order they were first visited: `enteredOn` is the date of the country's earliest photo (when it was taken), else the visit's `firstVisitedOn`, else null (those go last, by when they were marked). `status` is null for a page that has only stamps. `toStamp` lists the country's landmarks not stamped yet, by name (the book's dotted outlines).
-- **A stamp:** `{ landmarkId, name, isUnesco, stampedOn, photoCount, photo: { id, thumbUrl }, photoChosen (editors only) }`, in the order they were stamped. `stampedOn` is when its earliest confirmed photo was taken. `photo` is the one an editor picked (`LandmarkCover`), else the earliest. A picked photo goes when its match or the photo does (the cover points at the match itself, `ON DELETE CASCADE`).
+- **A stamp:** `{ landmarkId, name, isUnesco, stampedOn, photoCount, photo: { id, thumbUrl }, photoChosen (editors only), moments: [{ id, title, kind, happenedOn, datePrecision }] }`, in the order they were stamped. `moments` are the map's moments at that landmark (see "Moments"), oldest first, undated last; hidden ones only for editors, never through a share link. `stampedOn` is when its earliest confirmed photo was taken. `photo` is the one an editor picked (`LandmarkCover`), else the earliest. A picked photo goes when its match or the photo does (the cover points at the match itself, `ON DELETE CASCADE`).
 - **Below editor** (viewers, share links), hidden photos neither stamp nor count: a stamp whose only photos are hidden isn't there, and one whose picked photo is hidden shows its earliest visible photo. `totals` follow the same rule.
 - **Totals:** `countries` and `specialPlaces` as the map's stats; `continents` counts Antarctica; `landmarks` and `unesco` are the stamps.
 
@@ -307,14 +324,14 @@ Counted from the map's own data (visits, photos, stamps); only awards and goals 
 
 | Method and path | Role | Body / returns |
 | --- | --- | --- |
-| `GET /maps/:mapId/badges` | viewer | `{ badges: [{ key, group, have, need, earnedAt }], newlyEarned: [key] }`: every badge, earned or not. An earned badge shows `have` = `need`. |
+| `GET /maps/:mapId/badges` | viewer | `{ badges: [{ key, group, have, need, earnedAt }], newlyEarned: [key], travellers: [{ id, name, badges: [{ key, group, have, need, earned, earnedOn }] }] }`: `travellers` are the map's people with their own travel badges (groups `countries`, `continents`, `special`, `regions`), counted from the completed trips each was on, `earnedOn` the day of the trip that earned it (its `endDate`, else `startDate`; null for an undated trip); worked out on each read, never stored or announced (`utils/badges.js` `travellerBadges`). every badge, earned or not. An earned badge shows `have` = `need`. |
 | `GET /maps/:mapId/goals` | viewer | `{ goals: [goal], newlyAchieved: [id] }`, oldest first |
 | `POST /maps/:mapId/goals` | editor, **verified** | `{ kind, title?, target?, countryCodes?, region?, deadline? }` → 201 `{ goal }`. A map has at most 50 (409 `A map can have up to 50 goals. Delete one to add another.`). |
 | `PATCH /goals/:goalId` | editor of its map, **verified** | The same fields but `kind` (which never changes; sending another → 400) → `{ goal }`. Changing `target`, `countryCodes`, `region` or `deadline` clears `achievedAt`: the goal has to be met again. |
 | `DELETE /goals/:goalId` | editor of its map, **verified** | → `{ message }` |
 | `GET /shared/:code/badges`, `GET /shared/:code/goals` | anyone with a map's code | As above (a trip's code → 404) |
 
-- **Badges** (`server/src/utils/badges.js`; the client words each `key`): groups `countries` (`countries-1`, `-5`, `-10`, `-25`, `-50`, `-100`; special places don't count), `continents` (`continent-africa`, `-asia`, `-europe`, `-north-america`, `-oceania`, `-south-america`: a first country there; `continents-all`: all six), `special` (`antarctica`, `north-pole`, `south-pole`), `regions` (`region-<key>`: every country in one of the regions of `utils/constants/regions.js`, e.g. `region-scandinavia`), `landmarks` (`landmarks-1`, `-10`, `-50` stamps; `unesco-5`, `unesco-25`) and `photos` (`photos-100`, `photos-1000`). Awarding counts everything on the map, hidden photos included.
+- **Badges** (`server/src/utils/badges.js`; the client words each `key`): groups `countries` (`countries-1`, `-5`, `-10`, `-25`, `-50`, `-100`; special places don't count), `continents` (`continent-africa`, `-asia`, `-europe`, `-north-america`, `-oceania`, `-south-america`: a first country there; `continents-all`: all six), `special` (`antarctica`, `north-pole`, `south-pole`), `regions` (`region-<key>`: every country in one of the regions of `utils/constants/regions.js`, e.g. `region-scandinavia`), `landmarks` (`landmarks-1`, `-10`, `-50` stamps; `unesco-5`, `unesco-25`), `photos` (`photos-100`, `photos-1000`) and `themes` (`themes-3`, `-6`, `-12`: monthly photo themes with a photo of the map in; see "Photo themes"). Awarding counts everything on the map, hidden photos included.
 - **A goal:** `{ id, kind, title, target, countryCodes, region, deadline, achievedAt, createdAt, progress: { have, need, met, missed, done? } }`. Kinds (CHECK `goal_shape` holds each to its own field):
   - `COUNTRY_COUNT`: `target` countries (1–250), special places not counted;
   - `COUNTRY_LIST`: every place in `countryCodes` (1–100 distinct codes, special places allowed: a bucket list); `progress.done` lists those done;
@@ -322,6 +339,61 @@ Counted from the map's own data (visits, photos, stamps); only awards and goals 
   - `LANDMARK_COUNT`: `target` stamps (1–2,000).
 
   `title` is optional (up to 80 characters, cleaned). Without a `deadline`, a country counts when it's marked visited or lived. With one (`"YYYY-MM-DD"`), only what a photo taken by the end of that day proves counts (a hand-ticked country has no date), and `missed` is true once the day has passed unmet. Anything that doesn't fit the kind → 400 `That goal isn't complete: check what it asks for.`
+
+## Photo themes
+
+One theme a calendar month (UTC), set ahead by an admin (docs/FEATURE-PLAN.md, "Monthly photo themes"). While it runs, a map's editors enter any of the map's photos, from any date; the entries are the theme's **album on that map**, seen by whoever can see the map. There's no public gallery. `PhotoTheme` (one per `month`, stored as its first day: CHECK `photo_theme_first_of_month`; title 1–60 characters: CHECK `photo_theme_title_length`) and `PhotoThemeEntry` (theme × photo, with the photo's `mapId`, who entered it and when; cascades with the theme, the photo and the map). Rules in `server/src/utils/themes.js`.
+
+A theme: `{ id, month: 'YYYY-MM', title, blurb, startsAt, endsAt, running }` (`endsAt` is the first moment of the next month).
+
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `GET /themes` | anyone | `{ current, recent }`: the theme running now (or null) and up to 12 past ones, newest first. Never a future one (a month's theme is a surprise until it starts). Cached 5 minutes. |
+| `GET /maps/:mapId/themes` | viewer | `{ current: { ...theme, count, entriesLeft }, albums: [{ ...theme, count }], entriesPerMap }`: this month's theme with the map's count, and every theme the map has photos in, newest month first. `entriesLeft` (how many more the map may enter) for editors only. Hidden photos count for editors only. |
+| `GET /maps/:mapId/themes/:themeId/photos?cursor=&limit=` | viewer | `{ theme, photos, nextCursor }`: the map's album, newest entry first, photo list items (`limit` 1–60, default 30). No hidden photos below editor. |
+| `PUT /photos/:photoId/themes/:themeId` | editor of the photo, **verified** | Enters the photo in the theme → 201 `{ themes }` (every theme the photo is in); already in → 200, nothing changes. Only while the theme runs (409 `That theme isn't running: photos can only be entered during its month.`), never a video (400 `Themes are for photos, not videos.`), at most 20 a map in one theme (409 `This map has 20 photos in “Doors” already: take one out to enter another.`, counted with the map row locked). |
+| `DELETE /photos/:photoId/themes/:themeId` | editor of the photo, **verified** | Takes it out, at any time → `{ themes }`; 404 if it wasn't in. |
+| `GET /shared/:code/themes`, `GET /shared/:code/themes/:themeId/photos` | anyone with a map's code | As above, as the link's role sees them, never with `entriesLeft` (a trip's code → 404) |
+| `GET /users/admin/themes` | ADMIN or DEVELOPER | `{ themes: [{ ...theme, entryCount, mapCount, ended }], entriesPerMap }`, newest month first, future ones too |
+| `POST /users/admin/themes` | ADMIN or DEVELOPER | `{ month: 'YYYY-MM', title, blurb? }` → 201 `{ theme }`. This month or later (400 `A theme can't be set for a month that's over.`); one a month (409 `There's already a theme for that month.`); title 1–60, blurb up to 300 (cleaned; 400 otherwise). |
+| `PATCH /users/admin/themes/:themeId` | ADMIN or DEVELOPER | `{ month?, title?, blurb? }` → `{ theme }`. The words can always change; the month only while no photo is entered (409 `Photos have been entered in this theme, so its month can't change and it can't be deleted.`). |
+| `DELETE /users/admin/themes/:themeId` | ADMIN or DEVELOPER | Only a theme with no photo entered (409 as above) → `{ message }` |
+
+- **A photo's detail** (`GET /photos/:photoId` and the share-link one) carries `themes: [theme]`, the themes it's in, newest month first, for everyone who can see it.
+- **Badges:** `themes-3`, `themes-6`, `themes-12` count the themes a map has a photo in (see "Badges and goals").
+- **Events** (`themes`): `Create Success`, `Update Success`, `Delete Success` (admin, with the month), `Entry Create Success`, `Entry Delete Success` (with the photo id). Never a title.
+- **The seed** (development only) writes the example year in `prisma/seed/themes.js`, from last month on, with three of the demo map's photos entered; production's themes are written on the admin page (`/admin/themes`).
+
+## Friends challenges
+
+A measure counted between two dates among friends (docs/FEATURE-PLAN.md, "Friends challenges"). Someone starts one, sends its **join link**, and each person who joins picks which of their maps counts: one they **own or edit**. The leaderboard shows **names and counts only**: never a map, a photo, a place or an id. Anyone not in a challenge gets a 404 for it. `FriendChallenge` (title, `measure`, `startsOn`/`endsOn` as UTC days, both included, an optional `target`, a unique `joinCode`, `createdById`; CHECKs `friend_challenge_dates_in_order` (at most 730 days), `friend_challenge_target_range` (1–500), `friend_challenge_title_length` (1–80)) and `FriendChallengeEntry` (challenge × user, the `mapId` that counts, `joinedAt`; the map set to null when it's deleted). Rules in `server/src/utils/challenges.js`, counting in `domain/challenges.js`.
+
+**Measures**, counted from the map's own data, hidden photos included, by when each photo was taken (`shotAt`: the file's date, else the upload time):
+- `NEW_COUNTRIES`: countries whose **first** photo on the map was taken in the dates;
+- `COUNTRIES`: countries with a photo taken in the dates;
+- `LANDMARKS`: landmarks confirmed on a photo taken in the dates;
+- `THEME_PHOTOS`: photos entered in the monthly themes in the dates (see "Photo themes").
+
+Special places don't count as countries. **The leaderboard:** with a target ("first to 5"), whoever reached it first leads (the date their target-th item counted), then the rest by count; without one, by count. Equal places share a rank. Someone whose map is gone, or who no longer edits it, counts 0 (`counting: false`) until they pick another. No cheating checks: dates can be edited, it's a game between friends.
+
+A challenge's fields: `{ id, title, measure, startsOn, endsOn, target, status }`, `status` being `UPCOMING`, `RUNNING` or `ENDED` (UTC).
+
+| Method and path | Who | Body / returns |
+| --- | --- | --- |
+| `GET /challenges` | signed in | `{ challenges: [{ ...fields, memberCount, myCount, reachedTarget, counting, youStartedIt }], perUserLimit }`, newest joined first. Your own count only: the ranks are on each challenge (ranking every challenge here would count everyone in all of them). |
+| `POST /challenges` | signed in, **verified** | `{ title, measure, startsOn, endsOn, target?, mapId }` → 201 `{ challenge }`: you're in it, counting `mapId`. 400 for anything wrong (`The last day must be on or after the first, and a challenge can last up to two years.`; `Choose one of your maps to count: one you own or edit.`). 10 a day per user. |
+| `GET /challenges/:challengeId` | in it | `{ challenge: { ...fields, joinCode, youStartedIt, myMap: { id, name }, members: [{ name, count, rank, reachedTarget, counting, isYou, startedIt }], memberLimit } }`. `joinCode` is `XXXX-XXXX-XXXX`; any member may pass the link on. |
+| `PATCH /challenges/:challengeId` | the starter, **verified** | `{ title?, startsOn?, endsOn?, target? }` → `{ challenge }`. The measure never changes (400 `What a challenge counts can't change once it's made.`). Others → 403. |
+| `DELETE /challenges/:challengeId` | the starter, **verified** | Deletes it for everyone → `{ message }` |
+| `POST /challenges/:challengeId/reset-link` | the starter, **verified** | A new join code; the old link stops working → `{ challenge }` |
+| `PATCH /challenges/:challengeId/me` | in it, **verified** | `{ mapId }`: which of your maps counts → `{ challenge }` |
+| `DELETE /challenges/:challengeId/me` | in it | Leave → `{ message }`. The starter can't (409 `You started this challenge, so delete it instead of leaving.`). |
+| `GET /challenges/join/:code` | anyone | `{ challenge: { ...fields, startedBy, memberCount, full, youAreIn } }`: enough to decide, the starter's name but nobody else's. A code that matches nothing → 404 `That challenge link doesn't work. Ask for a new one.` 30 per 15 minutes per IP (codes would be guessed here). |
+| `POST /challenges/join/:code` | signed in, **verified** | `{ mapId }` → 201 `{ challenge }` (already in → 200). An ended challenge → 409 `This challenge has ended.`; 50 people a challenge (409), 30 challenges a person (409). The count is made with the challenge row locked. |
+
+- **Privacy:** the join code is a secret: `/api/challenges/join/<code>` is logged as `:code` (`redactUrl.js`), and the client's `/challenges/join/:code` pauses analytics and is reported as its pattern. Events (`challenges`) carry ids only: `Create Success`, `Update Success`, `Delete Success`, `Link Reset Success`, `Join Success`, `Leave Success`.
+- **Not built yet:** inviting by email (the link is sent however people like), and the starter removing someone (a reset link stops newcomers).
+- **The seed** (development only) adds "Most new countries this year", started by the demo couple's account with the admin in (`prisma/seed/challenges.js`).
 
 ## Promo codes
 
@@ -359,11 +431,11 @@ Partner offers shown as our own cards (docs/FEATURE-PLAN.md, "Ads" and "Travel D
 | --- | --- |
 | `key` | Required, unique, never changes: 2–64 of `a-z`, `0-9` and `-`, starting with a letter or digit (`booking-hotels-jp`) |
 | `partner` | Required, up to 60 characters (cleaned like captions) |
-| `kind` | Required: `HOTEL`, `TOUR`, `FLIGHT`, `ESIM`, `INSURANCE`, `LUGGAGE`, `CAR_HIRE` or `OTHER` |
+| `kind` | Required: `HOTEL`, `TOUR`, `FLIGHT`, `ESIM`, `INSURANCE`, `LUGGAGE`, `CAR_HIRE`, `OTHER` or `PRINTS` (a photo printer) |
 | `title` | Required, up to 80: the card's line ("Hotels in Kyoto") |
 | `blurb` | Optional, up to 200 |
 | `countryCode` | A country or special place, or null for a general offer (insurance, eSIMs, luggage) |
-| `placements` | Required, at least one of `GALLERY`, `SLIDESHOW`, `COUNTRY_PAGE`, `TRAVEL_DESK` |
+| `placements` | Required, at least one of `GALLERY`, `SLIDESHOW`, `COUNTRY_PAGE`, `TRAVEL_DESK`, `PRINT` (under "Print or download": see "Downloads") |
 | `url` | Required, `https://`, up to 2,000 characters, no user or password, and no placeholders but `{destination}`, `{country}`, `{checkin}`, `{checkout}` |
 | `imageKey` | Optional: a picture in the public bucket (`visitCountryPosters/jp-800.avif`), letters, digits, `/_.-` only, no `..`, ending `.avif`, `.webp`, `.jpg`, `.jpeg` or `.png` (never SVG). Without one the card draws its kind. |
 | `weight` | 1–100 (default 1): how often it's picked among the offers that fit a slot |
@@ -414,7 +486,7 @@ A map's plan is always its **owner's** plan, for everything: photos per country,
 | --- | --- | --- | --- |
 | Photos per country, on each map | 30 | 200 | 1,000 |
 | Best copy kept | `PRINT` | `ORIGINAL` | `ORIGINAL` |
-| Videos | no | no | yes (not built yet) |
+| Videos | no | no | yes |
 | Storage safety net, on each map | none | 50 GB | 200 GB |
 
 - **Map slots.** Every account has 1 included map slot, for its default map, plus one per extra map paid for (the subscription's extra-map quantity, while its status is `active`, `trialing` or `past_due`). An owner's maps are **active** when they are:
@@ -455,6 +527,21 @@ When the account is deleted (better-auth's `beforeDelete`, `services/travel/acco
 - **each owned map** goes to the plan's choice (if that person is still on it) or is deleted as the plan says. A map the plan doesn't mention (or with no plan) passes to its longest-standing active editor, else a deactivated one, and is deleted when it has no editors. A handover follows the transfer's grace rule, and **keeps every photo on it**, the leaver's included (they become the new owner's);
 - **photos on other people's maps** are left there by default (`leavePhotos: true`): they become that map's owner's before the account row goes (it would cascade to them otherwise). With `leavePhotos: false` they're deleted, rows then files;
 - the remaining owned maps are deleted, rows then files, as before.
+
+## Your data
+
+"Download my data" on the account page: a copy of everything an account holds, free on every plan (the UK GDPR's rights of access and portability). Signed in, no verified email needed; read only; your own data only. One answer would be too big for Vercel (4.5 MB) on a big map, so the browser asks for the parts and joins them into one JSON file (`my-planet-view-data-YYYY-MM-DD.json`; `client/src/utils/account/dataExport.js`). Every answer is `Cache-Control: no-store`. The shapes are in `server/src/utils/dataExport.js`.
+
+| Method and path | Role | Returns |
+| --- | --- | --- |
+| `GET /users/export` | signed in | `{ format: 'my-planet-view-data', version: 1, site, exportedAt, linksWorkUntil, account, plan, mapsYouOwn, mapsSharedWithYou, tripsSharedWithYou, photosOnOtherMaps }`: the account (name, email, home country, map settings, the promo code signed up with), the plan in force (`{ id, name, from }`), the subscription and complimentary memberships, and the maps and trips you're on (`photosOnOtherMaps` is a count) |
+| `GET /users/export/maps/:mapId` | the map's **owner** | `{ map }`: its fields, travellers, `countries` (status, source, first visit, notes), `sharedWith` (names and roles) and `invites` (addresses you typed), trips with their stops, travellers, people and invites, `groupTripsAdded`, moments, goals, badges, `passportStampPhotos`, `photoCount` |
+| `GET /users/export/maps/:mapId/photos?cursor=` | the map's **owner** | `{ photos, nextCursor }`: 500 a page, newest upload first, hidden ones too. Each: caption, dates, country, trip, position, landmarks (with confirmation), who uploaded it, and `file: { copy, contentType, bytes, width, height, url }`, a signed link to its best copy (`ORIGINAL`, else `PRINT`) that saves as `photo-<date>-<id>.<ext>` and works for 7 days. A video has `file: null` and a `fileNote`: Stream keeps no original to hand back |
+| `GET /users/export/uploads?cursor=` | signed in | `{ photos, nextCursor }`: the photos you added to maps you don't own, the same shape plus `mapId`, `map` and `mapOwner` |
+
+- Someone else's map, an editor's included, is a 404 (as if it didn't exist); a cursor that can't be one is a 400.
+- Other people appear by name only, never by address, apart from the invites you sent yourself.
+- In the file, each map in `maps` carries its `photos`, and `photosOnOtherMaps` becomes the list of those photos.
 
 ## Plans and billing
 
@@ -542,6 +629,7 @@ Shared, database-backed counters (`RateLimit` table, from NextDummy), keyed per 
 | Member invites, per signed-in user (maps and trips together) | 25 per 24 hours |
 | New maps (`POST /maps`), per signed-in user | 20 per 24 hours |
 | Billing writes (`POST /billing/checkout`, `change-plan`, `extra-maps`, `portal`), per signed-in user | 20 per 15 min |
+| "Download my data" (every `GET /users/export…` together), per signed-in user | 600 per hour |
 
 - Over the limit → 429 `{ status, message }` with `Retry-After`.
 - The whole API also has an in-memory backstop of 1,000 requests per 15 minutes per IP and instance.

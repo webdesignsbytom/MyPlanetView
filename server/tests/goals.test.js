@@ -73,3 +73,30 @@ describe('goal progress', () => {
     expect(GOAL_REGIONS).not.toContain('ANTARCTICA');
   });
 });
+
+describe('goals on a map that splits the UK', () => {
+  const facts = (visited, splitUk) => ({
+    visited: new Set(visited),
+    firstPhotoAt: new Map(),
+    stamps: [],
+    countriesByContinent: new Map([['EUROPE', ['GB', 'XE', 'XC', 'XW', 'XI', 'FR', 'AQ']]]),
+    splitUk,
+  });
+
+  it('counts each nation as a country', () => {
+    expect(goalProgress({ kind: 'COUNTRY_COUNT', target: 3 }, facts(['XE', 'XC', 'FR', 'GB'], true))).toMatchObject({ have: 3, met: true });
+  });
+
+  it('meets a goal naming the UK with any nation, and one naming a nation with the UK once the map is one country again', () => {
+    expect(goalProgress({ kind: 'COUNTRY_LIST', countryCodes: ['GB', 'FR'] }, facts(['XW', 'FR'], true))).toMatchObject({ have: 2, met: true });
+    expect(goalProgress({ kind: 'COUNTRY_LIST', countryCodes: ['XC'] }, facts(['GB'], false))).toMatchObject({ have: 1, met: true });
+    expect(goalProgress({ kind: 'COUNTRY_LIST', countryCodes: ['XC'] }, facts(['XE'], true))).toMatchObject({ have: 0, met: false });
+  });
+
+  it('gives a continent the nations instead of the UK, and the British Isles all four and Ireland', () => {
+    const europe = facts([], true).countriesByContinent;
+    expect(regionCodes('EUROPE', europe, true)).toEqual(['XE', 'XC', 'XW', 'XI', 'FR']);
+    expect(regionCodes('EUROPE', europe, false)).toEqual(['GB', 'FR']);
+    expect(regionCodes('british-isles', europe, true)).toEqual(['XE', 'XC', 'XW', 'XI', 'IE']);
+  });
+});

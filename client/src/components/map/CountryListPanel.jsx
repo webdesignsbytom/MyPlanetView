@@ -1,6 +1,8 @@
 import React, { memo, useCallback, useId, useMemo, useRef, useState } from 'react';
 // Data
-import { PLAIN_COUNTRIES, SPECIAL_PLACES } from '@/utils/map/countries';
+import { COUNTRY_BY_CODE, SPECIAL_PLACES, countriesOnMap } from '@/utils/map/countries';
+// Hooks
+import useSplitUk from '@/hooks/useSplitUk';
 // Components
 import CountryTicket from './CountryTicket';
 import CountryListItem from './CountryListItem';
@@ -74,6 +76,11 @@ function CountryListPanel({
   const specialRef = useRef(null);
   const specialHeadingRef = useRef(null);
 
+  // The map's countries: on a map that splits the UK, its nations, and the UK itself only
+  // while it's marked from before the split (its nations not chosen yet: its ticket asks)
+  const splitUk = useSplitUk();
+  const countries = useMemo(() => countriesOnMap(splitUk), [splitUk]);
+  const ukPending = splitUk && Boolean(visitsByCode.GB);
   const [shownCountries, shownSpecial] = useMemo(() => {
     const term = fold(search.trim());
     const matches = (place) => {
@@ -81,8 +88,9 @@ function CountryListPanel({
       if (filter !== 'ALL' && status !== filter) return false;
       return !term || fold(place.name).includes(term);
     };
-    return [PLAIN_COUNTRIES.filter(matches), SPECIAL_PLACES.filter(matches)];
-  }, [search, filter, visitsByCode]);
+    const listed = ukPending ? [...countries, COUNTRY_BY_CODE.GB].sort((a, b) => a.name.localeCompare(b.name)) : countries;
+    return [listed.filter(matches), SPECIAL_PLACES.filter(matches)];
+  }, [search, filter, visitsByCode, countries, ukPending]);
   const letters = useMemo(() => byLetter(shownCountries), [shownCountries]);
 
   const changeStatus = useCallback(
@@ -153,7 +161,7 @@ function CountryListPanel({
       ) : null}
       <div className='grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3'>
         <p className='text-xs opacity-80' aria-live='polite'>
-          {shownCountries.length} of {PLAIN_COUNTRIES.length} countries, {shownSpecial.length} of {SPECIAL_PLACES.length}{' '}
+          {shownCountries.length} of {countries.length} countries, {shownSpecial.length} of {SPECIAL_PLACES.length}{' '}
           special places
         </p>
         {shownSpecial.length ? (

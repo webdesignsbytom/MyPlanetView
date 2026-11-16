@@ -5,6 +5,8 @@ import { COUNTRIES } from '@/utils/map/countries';
 import { isSpecialPlace } from '@/utils/map/specialPlaces';
 import { getDb } from './store';
 import { LANDMARK_ROWS, atLeast, landmarkById, photoThumbUrl, userName } from './views';
+import { mapPlanId } from './plans';
+import { planOf } from '@/utils/constants/plans';
 
 const CONTINENT_BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c.continent]));
 const COUNTED = new Set(['VISITED', 'LIVED']);
@@ -98,6 +100,11 @@ export function buildPassport(map, role) {
           photo: { id: photo.id, thumbUrl: photoThumbUrl(photo) },
           // Editors: whether someone picked the photo (else it's the earliest)
           ...(editor ? { photoChosen: chosen.has(s.landmark.id) } : {}),
+          // The map's moments at this landmark, oldest first (hidden ones for editors only)
+          moments: (db.moments || [])
+            .filter((m) => m.mapId === map.id && m.landmarkId === s.landmark.id && (editor || !m.hidden))
+            .sort((a, b) => (a.happenedOn || '9999') < (b.happenedOn || '9999') ? -1 : (a.happenedOn || '9999') > (b.happenedOn || '9999') ? 1 : 0)
+            .map((m) => ({ id: m.id, title: m.title, kind: m.kind, happenedOn: m.happenedOn, datePrecision: m.datePrecision })),
         };
       }),
       toStamp: LANDMARK_ROWS.filter((l) => l.countryCode === code && !stamped.has(l.id)).map((l) => ({
@@ -111,7 +118,14 @@ export function buildPassport(map, role) {
   const counted = [...visited];
   const countries = counted.filter((code) => !isSpecialPlace(code));
   return {
-    map: { id: map.id, name: map.name, groupType: map.groupType, ownerName: userName(map.ownerId) },
+    // The owner's plan picks the cover, as on the server
+    map: {
+      id: map.id,
+      name: map.name,
+      groupType: map.groupType,
+      ownerName: userName(map.ownerId),
+      plan: { id: planOf(mapPlanId(map)).id, name: planOf(mapPlanId(map)).name },
+    },
     travellers: db.travellers
       .filter((t) => t.mapId === map.id)
       .sort((a, b) => a.position - b.position)

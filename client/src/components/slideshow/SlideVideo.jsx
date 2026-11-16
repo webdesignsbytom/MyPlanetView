@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaVolumeMute, FaVolumeUp } from 'react-icons/fa';
 // Components
 import SlidePhoto from './SlidePhoto';
+// Hooks
+import useVideoSource from '@/hooks/useVideoSource';
 
 /**
  * One video of a slideshow (docs/FEATURE-PLAN.md, "Videos": "in slideshows, playing
@@ -11,12 +13,14 @@ import SlidePhoto from './SlidePhoto';
  * calls `onEnded(id)` when it has played through, which moves the show on instead of
  * its timer. A video this browser can't play (an error, or sound with no picture, as
  * with HEVC where the device can't decode it) shows its poster frame as a photo for the
- * usual time instead: `onFailed(id)`. Keyed by the photo by its parent.
+ * usual time instead: `onFailed(id)`. It plays from Cloudflare Stream's HLS link
+ * (useVideoSource). Keyed by the photo by its parent.
  */
 function SlideVideo({ photo, alt, playing, muted, onMutedChange, reducedMotion, onReady, onEnded, onFailed }) {
   const videoRef = useRef(null);
   const [failed, setFailed] = useState(!photo.videoUrl);
   const fail = () => setFailed(true);
+  useVideoSource(videoRef, failed ? null : photo.videoUrl, fail);
 
   useEffect(() => {
     if (failed) onFailed(photo.id);
@@ -46,7 +50,6 @@ function SlideVideo({ photo, alt, playing, muted, onMutedChange, reducedMotion, 
     <>
       <video
         ref={videoRef}
-        src={photo.videoUrl}
         poster={photo.displayUrl || undefined}
         muted={muted}
         playsInline

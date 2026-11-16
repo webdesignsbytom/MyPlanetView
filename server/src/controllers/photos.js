@@ -14,6 +14,7 @@ import {
   parsePosition,
 } from '../utils/travelValidation.js';
 import { countryAtPosition } from '../utils/countryLookup.js';
+import { UK, placeOnMap, ukNationAt } from '../utils/ukNations.js';
 import { boundingBox, matchLandmarks } from '../utils/landmarkMatch.js';
 import { PHOTO_CONTENT_TYPES, PHOTO_MAX_BYTES, PHOTO_SAVE_WINDOW_MINUTES } from '../utils/constants/mediaConstants.js';
 import {
@@ -67,6 +68,8 @@ const D = DOMAINS.photos;
 const REQUIRED_SIZES = ['THUMB', 'DISPLAY'];
 const PAGE_DEFAULT = 30;
 const PAGE_MAX = 60;
+// The download lists (`best=1`) page further: signing is local, and a big map is many pages
+const BEST_PAGE_MAX = 200;
 
 const hasRequiredSizes = (sizes) => REQUIRED_SIZES.every((s) => sizes.includes(s));
 const distinct = (list) => new Set(list).size === list.length;
@@ -133,9 +136,11 @@ export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) 
   const hint = await parseOptionalCountry(body.countryCode);
   if (!hint.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
   if (hint.value) {
+    // As the map keeps it: a UK nation is the UK on a map that doesn't split it
+    const place = placeOnMap(hint.value, map.splitUk);
     const full = checkCountryCap({
-      count: await countPhotosInCountry(map.id, hint.value, undefined, kind),
-      ...(await photoLimits(mapPlan.plan, hint.value, kind)),
+      count: await countPhotosInCountry(map.id, place, undefined, kind),
+      ...(await photoLimits(mapPlan.plan, place, kind)),
     });
     if (full) return conflict(req, res, D, full);
   }
@@ -281,7 +286,11 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
   }
 
   const hasGps = position.latitude !== null;
-  const countryCode = (hasGps ? countryAtPosition(position.latitude, position.longitude) : null) ?? chosenCountry.value ?? null;
+  // On a map that splits the UK, a position in the UK is in its nation (utils/ukNations.js);
+  // a chosen country is kept as the map keeps places
+  const gpsCountry = hasGps ? countryAtPosition(position.latitude, position.longitude) : null;
+  const gpsPlace = gpsCountry === UK && map.splitUk ? (ukNationAt(position.latitude, position.longitude) ?? UK) : gpsCountry;
+  const countryCode = gpsPlace ?? (chosenCountry.value ? placeOnMap(chosenCountry.value, map.splitUk) : null);
   const landmarkMatches = hasGps
     ? matchLandmarks(position, await findLandmarksInBox(boundingBox(position.latitude, position.longitude)))
     : [];
@@ -322,12 +331,22 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
 const PHOTO_ORDERS = ['gallery', 'taken', 'shuffle'];
 const isTrue = (value) => value === '1' || value === 'true';
 
+const isFlag = (value) => value === undefined || isTrue(value) || value === '0' || value === 'false';
+
 /**
  * Shared by the map list and the share-code list. `unplaced=1` lists only the photos
- * with no country (it can't be combined with `country`). `order` and `display=1` are
- * for the slideshows (docs/API.md, "Slideshows").
+ * with no country (it can't be combined with `country`); `landmark=<id>` only those
+ * confirmed as that landmark, in any country (the passport's stamp photo picker).
+ * `order` and `display=1` are for the slideshows (docs/API.md, "Slideshows"). `best=1`
+ * (editors only: `{ forbidden }` below) adds each photo's best copy for "Print or
+ * download" (docs/API.md, "Downloads").
  */
-export async function photoPage({ query, mapId, tripId, role }) {
+export async function photoPage({ query, mapId, tripId, role, allowBest = true }) {
+  if (!isFlag(query.best)) return { error: EVENT_MESSAGES.malformedData };
+  const withBest = isTrue(query.best);
+  // The best copy is the original or print copy, which only editors may download, and
+  // never through a share link (`allowBest: false`), whoever opens it
+  if (withBest && (!allowBest || !canEdit(role))) return { forbidden: true };
   const country = query.country;
   const unplaced = query.unplaced === '1' || query.unplaced === 'true';
   if (query.unplaced !== undefined && !unplaced && query.unplaced !== '0' && query.unplaced !== 'false') {
@@ -337,18 +356,20 @@ export async function photoPage({ query, mapId, tripId, role }) {
   if (country !== undefined && !(await isKnownCountry(country))) return { error: EVENT_MESSAGES.countryNotFound };
   const filterTrip = tripId ?? query.tripId;
   if (filterTrip !== undefined && !isUuid(filterTrip)) return { error: EVENT_MESSAGES.tripNotFound };
+  const landmarkId = query.landmark;
+  if (landmarkId !== undefined && !isUuid(landmarkId)) return { error: EVENT_MESSAGES.landmarkNotFound };
   if (query.cursor !== undefined && !isUuid(query.cursor)) return { error: EVENT_MESSAGES.malformedData };
-  const limit = clampInt(query.limit, { min: 1, max: PAGE_MAX, fallback: PAGE_DEFAULT });
+  const limit = clampInt(query.limit, { min: 1, max: withBest ? BEST_PAGE_MAX : PAGE_MAX, fallback: PAGE_DEFAULT });
   const order = query.order ?? 'gallery';
   if (!PHOTO_ORDERS.includes(order)) return { error: EVENT_MESSAGES.malformedData };
   const seed = order === 'shuffle' ? parseShuffleSeed(query.seed) : null;
   if (order === 'shuffle' && seed === null) return { error: EVENT_MESSAGES.malformedData };
-  if (query.display !== undefined && !isTrue(query.display) && query.display !== '0' && query.display !== 'false') {
-    return { error: EVENT_MESSAGES.malformedData };
-  }
-  const withDisplay = isTrue(query.display);
+  if (!isFlag(query.display)) return { error: EVENT_MESSAGES.malformedData };
+  // The download list has no use for the DISPLAY copy
+  const withDisplay = isTrue(query.display) && !withBest;
+  const mark = (p) => (withBest ? { ...p, withBest: true } : withDisplay ? { ...p, withDisplay: true } : p);
 
-  const filters = { mapId, tripId: filterTrip, countryCode: country, unplaced, includeHidden: canEdit(role) };
+  const filters = { mapId, tripId: filterTrip, countryCode: country, unplaced, landmarkId, includeHidden: canEdit(role) };
   let page;
   let nextCursor;
   if (order === 'shuffle') {
@@ -356,7 +377,7 @@ export async function photoPage({ query, mapId, tripId, role }) {
     const ids = shuffled(await findPhotoIdsForList(filters), seed);
     const slice = pageAfter(ids, query.cursor, limit);
     if (!slice) return { error: EVENT_MESSAGES.malformedData };
-    page = await findPhotosByIds(slice.ids, { withDisplay });
+    page = await findPhotosByIds(slice.ids, { withDisplay, withBest });
     nextCursor = slice.more ? slice.ids[slice.ids.length - 1] : null;
   } else {
     const rows = await findPhotosPage({
@@ -365,23 +386,28 @@ export async function photoPage({ query, mapId, tripId, role }) {
       limit,
       order: order === 'taken' ? 'shot' : undefined,
       withDisplay,
+      withBest,
     });
     page = rows.slice(0, limit);
     nextCursor = rows.length > limit ? page[page.length - 1].id : null;
   }
   return {
-    photos: await Promise.all(
-      visiblePhotos(page, role).map((p) => photoListItem(withDisplay ? { ...p, withDisplay: true } : p, role))
-    ),
+    photos: await Promise.all(visiblePhotos(page, role).map((p) => photoListItem(mark(p), role))),
     nextCursor,
   };
+}
+
+/** Answer a photoPage result that failed: 403 for `best=1` below editor, else 400. */
+export function replyPhotoPageError(req, res, result) {
+  if (result.forbidden) return forbidden(req, res, D);
+  return badRequest(req, res, D, result.error);
 }
 
 export const getMapPhotosHandler = handler(D, 'Get map photos', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
   if (!canView(role)) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
   const result = await photoPage({ query: req.query || {}, mapId: map.id, role });
-  if (result.error) return badRequest(req, res, D, result.error);
+  if (result.error || result.forbidden) return replyPhotoPageError(req, res, result);
   return sendDataResponse(res, 200, result);
 });
 
@@ -390,7 +416,7 @@ export const getTripPhotosHandler = handler(D, 'Get trip photos', async (req, re
   const { trip, role } = await loadTrip(req, req.params.tripId);
   if (!canView(role)) return notFound(req, res, D, EVENT_MESSAGES.tripNotFound);
   const result = await photoPage({ query: req.query || {}, mapId: trip.mapId, tripId: trip.id, role });
-  if (result.error) return badRequest(req, res, D, result.error);
+  if (result.error || result.forbidden) return replyPhotoPageError(req, res, result);
   return sendDataResponse(res, 200, result);
 });
 
@@ -415,7 +441,9 @@ export const updatePhotoHandler = handler(D, 'Update photo', async (req, res) =>
   if (body.countryCode !== undefined) {
     const country = await parseOptionalCountry(body.countryCode);
     if (!country.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
-    data.countryCode = country.value;
+    data.countryCode = country.value ? placeOnMap(country.value, photo.map.splitUk) : country.value;
+    // Placed by hand: the nation it was in before the UK split was turned off no longer applies
+    if (data.countryCode !== photo.countryCode) data.ukNation = null;
   }
   if (body.takenAt !== undefined) {
     const takenAt = parseDateTime(body.takenAt);

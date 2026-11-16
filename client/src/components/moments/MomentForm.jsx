@@ -2,6 +2,7 @@ import React, { useId, useState } from 'react';
 // Api
 import { createMoment, updateMoment } from '@/api/travelApi';
 // Hooks
+import useSplitUk from '@/hooks/useSplitUk';
 import useLandmarks from '@/hooks/useLandmarks';
 // Components
 import MomentDateFields from './MomentDateFields';
@@ -24,7 +25,7 @@ import {
   statusForKind,
 } from '@/utils/moments/momentKinds';
 import { momentDateBody, momentDateFields } from '@/utils/moments/momentDates';
-import { COUNTRY_OPTION_GROUPS, countryName } from '@/utils/map/countries';
+import { countryName, countryOptionGroupsFor } from '@/utils/map/countries';
 import { VISIT_STATUS_LABELS } from '@/utils/map/visitStatus';
 import { isPole } from '@/utils/map/specialPlaces';
 import { serverText } from '@/utils/regex/regex';
@@ -78,6 +79,8 @@ function MomentForm({
   }));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  // The map's places: the UK's nations instead of it on a map that splits it
+  const splitUk = useSplitUk();
   const country = countryCode || form.countryCode;
   const { landmarks } = useLandmarks(country, { enabled: Boolean(country) });
 
@@ -153,7 +156,7 @@ function MomentForm({
           <GroupedOptionSelect
             value={form.countryCode}
             onChange={set('countryCode')}
-            groups={COUNTRY_OPTION_GROUPS}
+            groups={countryOptionGroupsFor(splitUk)}
             placeholder='Choose a country'
             required
           />

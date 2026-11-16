@@ -1,5 +1,7 @@
 // Database
 import { prisma } from '../../src/prisma.js';
+// Storage
+import { deleteStoredFilesOnly } from '../../src/services/s3/mediaService.js';
 
 // Refuse to seed a production database
 export function assertNotProduction() {
@@ -13,6 +15,23 @@ export function assertNotProduction() {
   }
 }
 
+/**
+ * Delete the stored files the database's MediaItem rows point at (photos in the private
+ * bucket, avatars and contact images in the public one), before wipeDatabase drops the
+ * rows: as deleting a map or an account deletes its files. The demo photos are stored at
+ * new keys each run, as uploads are, so without this every re-seed would leave the last
+ * run's files behind with nothing pointing at them (the daily clean-up finds files by
+ * their rows). The posters and landmark photos have no rows and are never touched.
+ * `where` narrows the rows (the tests). A file that can't be deleted is reported, and the
+ * seed goes on. -> `{ files, removed, failed }`
+ */
+export async function deleteStoredFiles({ where = {} } = {}) {
+  const keys = (await prisma.mediaItem.findMany({ where, select: { key: true } })).map((m) => m.key);
+  if (!keys.length) return { files: 0, removed: 0, failed: 0 };
+  const { removed, failed } = await deleteStoredFilesOnly(keys);
+  return { files: keys.length, removed, failed };
+}
+
 export async function wipeDatabase() {
   await prisma.$transaction([
     // Travel (FK-safe order: moments before countries, photos before their media, trips
@@ -22,6 +41,10 @@ export async function wipeDatabase() {
     prisma.moment.deleteMany(),
     prisma.tripMap.deleteMany(),
     prisma.landmarkCover.deleteMany(),
+    prisma.photoThemeEntry.deleteMany(),
+    prisma.photoTheme.deleteMany(),
+    prisma.friendChallengeEntry.deleteMany(),
+    prisma.friendChallenge.deleteMany(),
     prisma.offerClickDaily.deleteMany(),
     prisma.affiliateOffer.deleteMany(),
     prisma.badgeAward.deleteMany(),

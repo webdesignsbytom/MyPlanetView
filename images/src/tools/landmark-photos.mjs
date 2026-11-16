@@ -11,10 +11,12 @@
 //      site's image;
 //   4. the item's (then the site's) aerial view (P8592);
 //   5. the lead image of the item's (then the site's) English Wikipedia article, free
-//      licences only (PageImages, pilicense=free).
+//      licences only (PageImages, pilicense=free);
+//   6. Commons' own search for the landmark's name (bitmaps only), its first few hits.
 // A file counts only if Commons has it as a JPEG, PNG, TIFF or WebP at least 400 px wide,
-// under a free licence we can credit (CC, CC0, public domain), and its name isn't a map,
-// plan, logo or flag.
+// under a free licence that asks only for a credit (FREE_LICENCE: CC, CC0, public domain,
+// Free Art License, GFDL, "Attribution", governments' open licences), and its name isn't a
+// map, plan, logo or flag.
 //
 // It writes, and touches nothing else:
 //   - media/landmarkPhotos/<slug>-<width>.avif and .webp (480 px wide at most, 640 tall),
@@ -51,13 +53,58 @@ const refresh = args.includes('--refresh');
 // photo of the place
 const OVERRIDES = {};
 
+// Files never to pick: looked at on contact sheets (16 Nov 2026) and found to be maps,
+// plans, diagrams, signboards, a logo or a painting rather than a photo of the place
+const REJECT = new Set([
+  'GER — BY — Schwaben — Augsburg — Rathausplatz 1 (engl. Hinweistafel zum UNESCO-Status Augsburger Wassermanagement-System) Mattes 2022-11-05.jpg',
+  'Wat Pho Si Nai - UNESCO World Heritage Site plaque.JPG',
+  'Mahindra Gambia tractor, Bijagos Archipelago, Guinea-Bissau.jpg',
+  'Brasília, Brasil.jpg',
+  'Bahía de Campeche Cart Siglo XVI.jpg',
+  'Limes Alutanus + Transalutanus.png',
+  'Gästgivars.jpg',
+  'Guinea Topography.png',
+  'Gaya helmets.JPG',
+  '大運河.png',
+  'Estación Marín Central, Quito Historic Center of Quito.jpg',
+  'Arte rupestre arco mediterraneo.png',
+  "Ivyo dusanga kugwinjiriro rw'ikibira i bugarama.jpg",
+  'City of Kilwa, 1572.jpg',
+  'Santuario de la Mariposa Monarca (3088019191).jpg',
+  'Three Parallel Rivers of Yunnan Protected Areas map01.png',
+  'Timbuktu, Mali by Planet Labs.jpg',
+  "2003- 'Vézelay en hiver' - Marie-Claire Lefébure.JPG",
+  'Würzburg Residence DSC 9721.jpg',
+  'TabulaPeutingeriana limes Transalutanus.jpg',
+  'Morella (combate-de-arquero.png',
+  'Kastell Bulci.jpg',
+]);
+
+// What Commons' search is asked for (step 6) where the landmark's own name finds nothing
+// (long UNESCO names): slug -> a shorter search
+const SEARCH_AS = {
+  'pre-columbian-chiefdom-settlements-with-stone-spheres': 'stone spheres Costa Rica',
+  'graz-old-town-and-schloss-eggenberg': 'Graz Altstadt',
+  'ancient-ferrous-metallurgy-sites-douroula': 'Douroula',
+  'diy-gid-biy-of-the-mandara-mountains': 'Diy-Gid-Biy',
+  'medinas-of-the-comoros-sultanates': 'Mutsamudu',
+  'bony-fish-fossils-of-the-limfjord': 'Fur Mo-clay',
+  'khorramabad-valley-prehistoric-sites': 'Khorramabad',
+  'ancient-khuttal-hulbuk': 'Hulbuk',
+  // A chain of Roman forts: its name finds only maps; Porolissum is the best-known fort
+  'dacian-limes': 'Porolissum',
+};
+
 const MAX_WIDTH = 480;
 const MAX_HEIGHT = 640;
 const FETCH_WIDTH = 960; // one of Commons' standard thumbnail widths
 const UA = 'MyPlanetViewLandmarkPhotos/1.0 (one-off build script)';
 const OK_TYPES = new Set(['image/jpeg', 'image/png', 'image/tiff', 'image/webp']);
 const NOT_A_PHOTO = /\b(map|karte|carte|mapa|mappa|location|locator|plan|grundriss|logo|flag|coat[ _]of[ _]arms|wappen|diagram|scheme|sketch)\b/i;
-const FREE_LICENCE = /^(cc[ -]|cc0|public domain|pd\b|pd-)/i;
+// Free licences that ask only for a credit (and the licence named and linked): Creative
+// Commons, public domain, the Free Art License, GFDL, plain "Attribution" (ESA's photos),
+// Korea's and other governments' open licences
+const FREE_LICENCE = /^(cc[ -]|cc0|public domain|pd\b|pd-|fal\b|free art|gfdl|attribution|kogl|ogl\b|open government|copyrighted free use)/i;
 
 const wait = (ms) => new Promise((done) => setTimeout(done, ms));
 
@@ -131,6 +178,31 @@ const plainText = (html) =>
     .replace(/\s+/g, ' ')
     .trim();
 
+// A Commons "Artist" made readable as a credit: the name, without Commons' boilerplate
+// ("No machine-readable author provided. X assumed…"), talk links, signature timestamps,
+// pasted licence text or bare links (a Flickr link becomes "name (Flickr)")
+function cleanAuthor(raw) {
+  let author = String(raw);
+  const named =
+    author.match(/^No machine-readable author provided\.\s*(.+?)\s+assumed/i) ||
+    author.match(/original uploader was\s+(.+?)\s+at\s+/i) ||
+    author.match(/Picture by\s+(.+)$/i);
+  if (named) author = named[1];
+  author = author
+    .replace(/~commonswiki/g, '')
+    .replace(/\(\s*(talk|Archived)[^)]*\)/gi, '')
+    .replace(/\s*\d{1,2}:\d{2},\s*\d{1,2}\.?\s+\w+\.?\s+\d{4}\s*\((UTC|CEST|CET)\)/g, '')
+    .replace(/https?:\/\/(?:www\.)?flickr\.com\/photos\/([^/\s]+)\/?/gi, '$1 (Flickr)')
+    .replace(/\s*\+?\s*https?:\/\/\S+/g, '')
+    .replace(/\s+You are free to use[\s\S]*$/i, '')
+    .replace(/,\s*assent by email[\s\S]*$/i, '')
+    .replace(/\s+-\s*(?=\S+ \(Flickr\)$)/, ', ')
+    .replace(/\s+[-–.]\s*$/, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  return author || 'Unknown author';
+}
+
 const shorten = (text, max = 100) => (text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text);
 
 // ---------------------------------------------------------------------------------------
@@ -202,6 +274,26 @@ async function wikidataFacts(items, store) {
   return new Map(items.map((item) => [item, store.data[item]]));
 }
 
+// Commons' search for each name: the first few bitmap files (photos, not drawings)
+async function searchCommons(names, store) {
+  for (const name of names.filter((n) => !(n in store.data))) {
+    const url = `https://commons.wikimedia.org/w/api.php?${new URLSearchParams({
+      action: 'query',
+      list: 'search',
+      srnamespace: '6',
+      srlimit: '5',
+      srsearch: `${name.replace(/[()]/g, ' ')} filetype:bitmap`,
+      format: 'json',
+      formatversion: '2',
+    })}`;
+    const json = await (await request(url)).json();
+    store.data[name] = (json.query?.search || []).map((hit) => hit.title.replace(/^File:/, ''));
+    await store.save();
+    await wait(300);
+  }
+  return new Map(names.map((name) => [name, store.data[name] || []]));
+}
+
 // English Wikipedia's lead image per article (free licences only)
 async function leadImages(titles, store) {
   const asked = titles.filter((title) => !(title in store.data));
@@ -270,7 +362,7 @@ async function fileInfo(files, store) {
         thumb: ii.thumburl || ii.url,
         licence: plainText(meta.LicenseShortName?.value),
         licenceUrl: (meta.LicenseUrl?.value || '').replace(/^http:/, 'https:'),
-        author: shorten(author),
+        author,
       };
     }
     await store.save();
@@ -283,6 +375,7 @@ async function fileInfo(files, store) {
 
 const usable = (info) =>
   info &&
+  !REJECT.has(info.file) &&
   OK_TYPES.has(info.mime) &&
   info.width >= 400 &&
   FREE_LICENCE.test(info.licence) &&
@@ -345,10 +438,20 @@ async function main() {
     ]),
   );
   await pickFrom(second);
+  console.log(`with Wikipedia's lead images: ${picks.size}`);
+
+  // Last: Commons' own search for the landmark's name (photos only), its best few results
+  const still = todo.filter((landmark) => !picks.has(landmark.slug));
+  const queryOf = (landmark) => SEARCH_AS[landmark.slug] || landmark.name;
+  const found = await searchCommons(
+    still.map(queryOf),
+    await loadStore('search'),
+  );
+  await pickFrom(new Map(still.map((landmark) => [landmark.slug, found.get(queryOf(landmark)) || []])));
   const missing = todo
     .filter((landmark) => !picks.has(landmark.slug))
     .map((landmark) => `${landmark.slug} (${landmark.item}${landmark.site ? `, site ${landmark.site}` : ''})`);
-  console.log(`with Wikipedia's lead images: ${picks.size}, none found for ${missing.length}`);
+  console.log(`with Commons' search: ${picks.size}, none found for ${missing.length}`);
 
   // Download and convert
   await mkdir(outDir, { recursive: true });
@@ -397,9 +500,9 @@ async function main() {
     const fresh = made.get(landmark.slug);
     if (old) {
       const [w, h, author] = old.entry;
-      rows.push([landmark.slug, [w, h, author, licenceIndex(...old.licence), old.file]]);
+      rows.push([landmark.slug, [w, h, shorten(cleanAuthor(author)), licenceIndex(...old.licence), old.file]]);
     } else if (fresh) {
-      rows.push([landmark.slug, [fresh.w, fresh.h, fresh.author, licenceIndex(fresh.licence, fresh.licenceUrl), fresh.file]]);
+      rows.push([landmark.slug, [fresh.w, fresh.h, shorten(cleanAuthor(fresh.author)), licenceIndex(fresh.licence, fresh.licenceUrl), fresh.file]]);
     }
   }
   const output = `// GENERATED by images/src/tools/landmark-photos.mjs: don't edit by hand. Re-run it from the repo

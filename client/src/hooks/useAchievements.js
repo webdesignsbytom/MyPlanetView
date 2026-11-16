@@ -15,7 +15,7 @@ const CHECK_DELAY_MS = 1200;
  * `check()` asks again shortly (debounced); the goal changes keep the list in step.
  */
 export default function useAchievements({ mapId = null, shareCode = null, enabled = true }) {
-  const [state, setState] = useState({ badges: null, goals: null, loading: true, error: null });
+  const [state, setState] = useState({ badges: null, goals: null, travellers: [], loading: true, error: null });
   const [news, setNews] = useState([]);
   const where = useMemo(() => (shareCode ? { shareCode } : { mapId }), [shareCode, mapId]);
   // Bumped by every load and change, so an older answer never replaces a newer list
@@ -27,7 +27,7 @@ export default function useAchievements({ mapId = null, shareCode = null, enable
     try {
       const [badges, goals] = await Promise.all([getBadges(where), getGoals(where)]);
       if (generation !== generationRef.current) return;
-      setState({ badges: badges.badges || [], goals: goals.goals || [], loading: false, error: null });
+      setState({ badges: badges.badges || [], goals: goals.goals || [], travellers: badges.travellers || [], loading: false, error: null });
       const fresh = [
         ...(badges.newlyEarned || []).map((key) => ({ type: 'badge', key })),
         ...(goals.newlyAchieved || [])

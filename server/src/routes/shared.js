@@ -7,6 +7,8 @@ import {
   getSharedPassportHandler,
   getSharedPhotoHandler,
   getSharedPhotosHandler,
+  getSharedThemeAlbumHandler,
+  getSharedThemesHandler,
 } from '../controllers/shared.js';
 import { attachUserIfPresent } from '../middleware/auth.js';
 import { createDbRateLimiter } from '../middleware/dbRateLimit.js';
@@ -37,5 +39,7 @@ router.get('/:code/moments', failedLookupLimiter, shareBrowseLimiter, getSharedM
 router.get('/:code/passport', failedLookupLimiter, shareBrowseLimiter, getSharedPassportHandler);
 router.get('/:code/badges', failedLookupLimiter, shareBrowseLimiter, getSharedBadgesHandler);
 router.get('/:code/goals', failedLookupLimiter, shareBrowseLimiter, getSharedGoalsHandler);
+router.get('/:code/themes', failedLookupLimiter, shareBrowseLimiter, getSharedThemesHandler);
+router.get('/:code/themes/:themeId/photos', failedLookupLimiter, shareBrowseLimiter, getSharedThemeAlbumHandler);
 
 export default router;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 // Utils
 import { COUNTRY_PAGES, loadCountryIndex } from '@/utils/countries/countryPages';
+import { countryOf } from '@/utils/map/ukNations';
 
 // The country guides' index rows (code, slug, name, summary, months…), loaded once per
 // session, and only when a country asked about has a guide in this build (checked ones in
@@ -22,7 +23,8 @@ const NONE = [];
  * with no guide are left out. Nothing loads while `enabled` is false.
  */
 export default function useCountryGuides(countryCodes, { enabled = true } = {}) {
-  const wanted = (countryCodes || []).join(',');
+  // Guides are per country: a UK nation's (a map that splits the UK) is the UK's, once
+  const wanted = [...new Set((countryCodes || []).map(countryOf))].join(',');
   const [found, setFound] = useState({ wanted: null, guides: NONE });
 
   useEffect(() => {

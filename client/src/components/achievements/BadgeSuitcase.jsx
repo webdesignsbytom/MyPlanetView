@@ -9,11 +9,13 @@ import { BADGE_GROUPS, badgeGroupLabel } from '@/utils/achievements/badges';
  * "Site badges"): a leather-edged case with a handle, the stickers grouped as the server
  * groups them (countries, continents, special places, regions, landmarks, photos), the
  * earned ones stuck on and the rest outlined where they'll go. A group the client
- * doesn't know yet still shows, last, under its own name.
+ * doesn't know yet still shows, last, under its own name. `note` replaces the line under
+ * the heading (a traveller's suitcase says where their badges come from); `children` sit
+ * between the heading and the case (the panel's "whose badges" switch).
  */
-function BadgeSuitcase({ badges }) {
+function BadgeSuitcase({ badges, note = null, children = null }) {
   const headingId = useId();
-  const earned = badges.filter((b) => b.earnedAt).length;
+  const earned = badges.filter((b) => b.earnedAt || b.earned).length;
   const known = BADGE_GROUPS.map((g) => g.id);
   const groups = [...known, ...new Set(badges.map((b) => b.group).filter((g) => !known.includes(g)))]
     .map((id) => ({ id, badges: badges.filter((b) => b.group === id) }))
@@ -24,8 +26,9 @@ function BadgeSuitcase({ badges }) {
       <h3 id={headingId} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
         Badges
       </h3>
+      {children}
       <p className='text-sm'>
-        {earned} of {badges.length} earned. Each is a sticker on the suitcase once it’s yours.
+        {earned} of {badges.length} earned. {note || 'Each is a sticker on the suitcase once it’s yours.'}
       </p>
       <div className='grid justify-items-center'>
         {/* The handle */}

@@ -32,6 +32,9 @@ test.describe('The map page', () => {
     await openMap(page);
     const germany = page.locator('[data-code="DE"]');
     await expect(germany).toHaveAttribute('data-been', 'false');
+    // The goal tag comes with the badges, under the title (over the map on a phone): press
+    // once it's there, or the press can land on it
+    await expect(page.getByRole('button', { name: /^Next goal:/ })).toBeVisible();
 
     await pressCountry(page, 'DE', { touch: hasTouch });
     const panel = page.getByRole('dialog', { name: 'Germany' });
@@ -113,7 +116,7 @@ test.describe('The map page', () => {
 test.describe('Map settings', () => {
   test('the style and a switch are saved to the profile and kept after a reload', async ({ page }) => {
     await openMap(page);
-    const mapFrame = page.locator('#main-content').locator('xpath=..');
+    const mapFrame = page.locator('[data-map-style]:has(#main-content)');
     await expect(mapFrame).toHaveAttribute('data-map-style', 'animated');
 
     const settings = await openTool(page, 'Map settings', 'Settings');

@@ -1,8 +1,8 @@
 {
   "code": "CA",
   "slug": "canada",
-  "status": "draft",
-  "lastChecked": null,
+  "status": "checked",
+  "lastChecked": "2026-11-16",
   "stamp": ["Hello", "Bonjour", "Canada"],
   "summary": "Rocky Mountain lakes, French-speaking Quebec and Atlantic fishing villages, across six time zones.",
   "overview": [

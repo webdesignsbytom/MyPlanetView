@@ -1,4 +1,4 @@
-// Saves a map's set-up (name, group type, travellers) by working out what changed:
+// Saves a map's set-up (name, group type, the UK as its nations, travellers) by working out what changed:
 // PATCH the map, then add, update and remove travellers. Used by onboarding and by the
 // map settings panel.
 import { createTraveller, deleteTraveller, updateMap, updateTraveller } from '@/api/travelApi';
@@ -25,10 +25,18 @@ const changed = (before, body) =>
   (before.favouriteCountryCode || null) !== body.favouriteCountryCode ||
   before.position !== body.position;
 
-/** `original` is the map as loaded; `form` is { name, groupType, travellers: [{ id?, name, ... }] }. */
+/**
+ * `original` is the map as loaded; `form` is { name, groupType, splitUk, travellers: [{ id?, name, ... }] }.
+ * Only the owner (`canRename`) changes the map itself; turning `splitUk` on or off moves the
+ * map's UK data on the server (docs/API.md "The UK's nations").
+ */
 export async function saveMapSetup(mapId, original, form, { canRename = true } = {}) {
-  if (canRename && (form.name.trim() !== original.name || form.groupType !== original.groupType)) {
-    await updateMap(mapId, { name: form.name.trim(), groupType: form.groupType });
+  const splitUk = Boolean(form.splitUk);
+  if (
+    canRename &&
+    (form.name.trim() !== original.name || form.groupType !== original.groupType || splitUk !== Boolean(original.splitUk))
+  ) {
+    await updateMap(mapId, { name: form.name.trim(), groupType: form.groupType, splitUk });
     forgetMapLists(); // the switcher lists maps by name
   }
 

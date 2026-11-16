@@ -2,6 +2,7 @@ import { prisma } from '../prisma.js';
 import { canEdit } from '../utils/access.js';
 import { countPerParent, countPhotosPer } from './counts.js';
 import { createMissingVisits } from './maps.js';
+import { placeOnMap } from '../utils/ukNations.js';
 
 // Trips, stops, trip travellers, trip members
 
@@ -14,12 +15,12 @@ const TRIP_ACCESS_SELECT = { id: true, mapId: true, title: true, linkAccess: tru
  * trip, not a nested read three levels deep). Memberships are read only when there's a
  * user: a filter with `userId: undefined` means no filter, and an anonymous caller
  * would get the first member's role.
- * -> `{ ...trip, map: { id, ownerId, name, members }, members }` (members: [] or [{ role }]), or null
+ * -> `{ ...trip, map: { id, ownerId, name, splitUk, members }, members }` (members: [] or [{ role }]), or null
  */
 async function findTripWithMemberships(tripWhere, userId) {
   const [trip, map, mapMember, tripMember] = await Promise.all([
     prisma.trip.findUnique({ where: tripWhere, select: TRIP_ACCESS_SELECT }),
-    prisma.travelMap.findFirst({ where: { trips: { some: tripWhere } }, select: { id: true, ownerId: true, name: true } }),
+    prisma.travelMap.findFirst({ where: { trips: { some: tripWhere } }, select: { id: true, ownerId: true, name: true, splitUk: true } }),
     userId
       ? prisma.mapMember.findFirst({ where: { userId, map: { trips: { some: tripWhere } } }, select: { role: true } })
       : null,
@@ -124,7 +125,7 @@ export const findTripDetail = async (tripId) => {
       },
     }),
     prisma.tripTraveller.findMany({ where: { tripId }, select: { travellerId: true } }),
-    prisma.travelMap.findFirst({ where: ofTrip, select: { name: true } }),
+    prisma.travelMap.findFirst({ where: ofTrip, select: { name: true, splitUk: true } }),
     prisma.traveller.findMany({
       where: { map: ofTrip },
       select: { id: true, name: true },
@@ -182,7 +183,18 @@ const stopCountries = async (db, tripId) =>
 async function markVisitedOnTripMaps(tx, { tripId, mapId }, countryCodes) {
   if (!countryCodes.length) return;
   const links = await tx.tripMap.findMany({ where: { tripId }, select: { mapId: true } });
-  for (const id of [mapId, ...links.map((l) => l.mapId)]) await createMissingVisits(id, countryCodes, 'TRIP', tx);
+  await markTripVisits(tx, [mapId, ...links.map((l) => l.mapId)], countryCodes);
+}
+
+/**
+ * TRIP visits for `countryCodes` on each of `mapIds`, as each map keeps places: a stop in a
+ * UK nation is the UK on a map that doesn't split it (utils/ukNations.js), in `tx`.
+ */
+async function markTripVisits(tx, mapIds, countryCodes) {
+  const maps = await tx.travelMap.findMany({ where: { id: { in: mapIds } }, select: { id: true, splitUk: true } });
+  for (const map of maps) {
+    await createMissingVisits(map.id, [...new Set(countryCodes.map((code) => placeOnMap(code, map.splitUk)))], 'TRIP', tx);
+  }
 }
 
 /**
@@ -313,7 +325,7 @@ export const addTripToMapInDB = ({ tripId, mapId, addedById }) =>
     if (!trip) return { created: false };
     const { count } = await tx.tripMap.createMany({ data: [{ tripId, mapId, addedById }], skipDuplicates: true });
     if (!count) return { created: false };
-    if (trip.status === 'COMPLETED') await createMissingVisits(mapId, await stopCountries(tx, tripId), 'TRIP', tx);
+    if (trip.status === 'COMPLETED') await markTripVisits(tx, [mapId], await stopCountries(tx, tripId));
     return { created: true };
   });
 

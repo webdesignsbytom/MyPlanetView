@@ -6,7 +6,8 @@ import FormField from '@/components/ui/FormField';
 import GroupedOptionSelect from '@/components/ui/GroupedOptionSelect';
 import Button from '@/components/common/Button';
 // Utils
-import { COUNTRY_OPTION_GROUPS, countryName } from '@/utils/map/countries';
+import { countryName, countryOptionGroupsFor } from '@/utils/map/countries';
+import useSplitUk from '@/hooks/useSplitUk';
 import { GOAL_LIST_MAX } from '@/utils/achievements/goals';
 
 /**
@@ -15,10 +16,12 @@ import { GOAL_LIST_MAX } from '@/utils/achievements/goals';
  * start from the map's "want to go" countries (`wantToGo`), adding those not on it yet.
  */
 function GoalPlacesPicker({ idPrefix, codes, onChange, wantToGo = [] }) {
+  // The map's places: the UK's nations instead of it on a map that splits it
+  const splitUk = useSplitUk();
   const chosen = new Set(codes);
   const room = GOAL_LIST_MAX - codes.length;
   const missingWants = wantToGo.filter((code) => !chosen.has(code));
-  const groups = COUNTRY_OPTION_GROUPS.map((group) => ({
+  const groups = countryOptionGroupsFor(splitUk).map((group) => ({
     ...group,
     options: group.options.map((option) => ({ ...option, disabled: chosen.has(option.value) })),
   }));
