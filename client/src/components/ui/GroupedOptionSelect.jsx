@@ -19,6 +19,11 @@ function GroupedOptionSelect({
   ariaLabel,
   className = '',
 }) {
+  const chosen = groups
+    .flatMap((group) => group.options)
+    .map((option) => (typeof option === 'string' ? { value: option, label: option } : option))
+    .find((item) => String(item.value) === String(value));
+
   return (
     <select
       ref={refProp}
@@ -33,8 +38,17 @@ function GroupedOptionSelect({
       aria-invalid={ariaInvalid ? 'true' : 'false'}
       aria-describedby={ariaDescribedBy}
       aria-label={ariaLabel}
+      title={chosen?.label || undefined}
       className={`app-select ${className}`}
     >
+      {/* The closed box shows the choice on one line, cut short with … when it's long (its full
+          name is the title), so dropdowns side by side are always the same height (17 Nov 2026).
+          Customizable select only; other browsers ignore it. React 19 logs a "cannot be a
+          child of" warning in development for it, as for RichOptionSelect. */}
+      <button type='button'>
+        <selectedcontent></selectedcontent>
+      </button>
+
       {placeholder ? (
         <option value='' disabled hidden>
           {placeholder}

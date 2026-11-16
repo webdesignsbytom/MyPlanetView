@@ -1,0 +1,156 @@
+# The tests that must pass before anything merges into master (17 Nov 2026): work happens on
+# dev (or a branch off it), and a pull request into master runs all four jobs; master's
+# branch protection requires them. Pushes to dev run them too, so a failure shows early.
+# CI has no env files: every setting the tests need is a placeholder below, and nothing here
+# touches a real database, bucket, Stream account or email service.
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+# A newer push to the same branch or pull request cancels the run still going
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  client-checks:
+    name: Client checks and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - run: npm ci
+      - name: Lint
+        run: npx eslint .
+      - name: Page titles and descriptions
+        run: node scripts/check-meta.mjs
+      - name: House rules (no literal colours)
+        run: node scripts/check-house-rules.mjs
+      - name: Generated files are up to date
+        run: |
+          node scripts/generate-mono-tokens.mjs --check
+          node scripts/generate-mock-landmarks.mjs --check
+          node scripts/generate-mock-offers.mjs --check
+          node scripts/generate-country-landmarks.mjs --check
+      # The site compiles (a plain Vite build; the pre-render and SEO checks need the
+      # production env file, so they stay in the local `npm run build`)
+      - name: Build
+        run: npx vite build --mode verify --outDir ../ci-dist --emptyOutDir
+
+  client-e2e:
+    name: Client end-to-end tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      # The travel pages against mock mode (playwright.app.config.js starts its own Vite)
+      - name: Playwright
+        run: npm run test:e2e:app
+      - name: Keep the traces of failed tests
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: client/test-results/
+          retention-days: 7
+
+  server-unit:
+    name: Server unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: server
+    # Placeholders: some tests import the app, which reads these at start-up
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder_test
+      BETTER_AUTH_SECRET: ci-placeholder-secret-at-least-32-characters-long
+      BETTER_AUTH_URL: http://localhost:4000
+      FRONTEND_ORIGIN: http://localhost:5173
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci
+      - name: Vitest
+        run: npm test
+
+  server-integration:
+    name: Server integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: server
+    # A throwaway Postgres for this run only; the tests refuse any database whose name
+    # doesn't end in _test
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: myplanetview_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/myplanetview_test?sslmode=disable
+      DIRECT_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/myplanetview_test?sslmode=disable
+      BETTER_AUTH_SECRET: ci-placeholder-secret-at-least-32-characters-long
+      BETTER_AUTH_URL: http://localhost:4000
+      FRONTEND_ORIGIN: http://localhost:5173
+      # The buckets are mocked in tests/integration/setup.js; these only fill the settings
+      STORAGE_ENDPOINT: https://storage.example.test
+      STORAGE_REGION: auto
+      STORAGE_BUCKET: ci-public
+      STORAGE_ACCESS_KEY: ci
+      STORAGE_SECRET_KEY: ci
+      STORAGE_PRIVATE_BUCKET: ci-private
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci
+      - name: Migrate the test database
+        run: npx prisma migrate deploy
+      - name: Vitest (integration)
+        run: npm run test:integration

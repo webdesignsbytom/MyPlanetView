@@ -25,10 +25,17 @@ test('hovering a visited country with photos shows its poster, not a photo', asy
   await openMap(page);
   const at = await pointOn(page, 'FR');
   expect(at).not.toBeNull();
-  await page.mouse.move(at.x - 3, at.y);
-  await page.mouse.move(at.x, at.y);
+  // The card's code loads in the background (lazy), and the card follows the pointer from
+  // its first move after it arrives: keep nudging until it shows (a slow machine, CI, can
+  // finish both moves before the code is there)
   const card = page.locator('[data-hover-card="FR"]');
-  await expect(card).toBeVisible();
+  let nudge = 0;
+  await expect(async () => {
+    nudge += 1;
+    await page.mouse.move(at.x - 3 + (nudge % 2) * 2, at.y);
+    await page.mouse.move(at.x, at.y);
+    await expect(card).toBeVisible({ timeout: 1000 });
+  }).toPass({ timeout: 15000 });
   await expect(card).toContainText('France');
   await expect(card.locator('img')).toHaveAttribute('src', /visitCountryPosters\//);
   await expect(card.locator('img[src*="seed-photos"]')).toHaveCount(0);

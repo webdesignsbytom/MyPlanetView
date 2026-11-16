@@ -35,6 +35,9 @@ const continentKey = (continent) => continent.toLowerCase().replace(/_/g, '-');
 
 export const BADGES = Object.freeze([
   ...[1, 5, 10, 25, 50, 100].map((need) => ({ key: `countries-${need}`, group: 'countries', measure: 'countries', need })),
+  // Every country on the map (17 Nov 2026, the user's wish): its `need` is the map's own
+  // count, 227, or 230 on a map that shows the UK as its four nations (from continentByCode)
+  { key: 'countries-all', group: 'countries', measure: 'allCountries', need: 1 },
   ...INHABITED_CONTINENTS.map((continent) => ({
     key: `continent-${continentKey(continent)}`,
     group: 'continents',
@@ -59,6 +62,13 @@ export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, th
     [...visited].filter((code) => !isSpecialPlace(code)),
     splitUk,
   );
+  // Every country this map shows (the UK's nations instead of the UK on a split map)
+  const everyCountry = new Set(
+    countedCountryCodes(
+      [...continentByCode.keys()].filter((code) => !isSpecialPlace(code)),
+      splitUk,
+    ),
+  );
   const continents = new Set(countries.map((code) => continentByCode.get(code)).filter(Boolean));
   const counts = {
     countries: countries.length,
@@ -67,6 +77,7 @@ export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, th
     unesco: stamps.filter((stamp) => stamp.isUnesco).length,
     photos,
     themes,
+    allCountries: countries.filter((code) => everyCountry.has(code)).length,
   };
   const haveFor = (badge) => {
     if (badge.measure === 'continent') return continents.has(badge.continent) ? 1 : 0;
@@ -74,7 +85,12 @@ export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, th
     if (badge.measure === 'region') return regionCodesOnMap(badge.region, splitUk).filter((code) => visited.has(code)).length;
     return counts[badge.measure];
   };
-  const needFor = (badge) => (badge.measure === 'region' ? regionCodesOnMap(badge.region, splitUk).length : badge.need);
+  const needFor = (badge) => {
+    if (badge.measure === 'region') return regionCodesOnMap(badge.region, splitUk).length;
+    // Never 0 (no country table to hand): nothing is earned for an empty list
+    if (badge.measure === 'allCountries') return Math.max(everyCountry.size, 1);
+    return badge.need;
+  };
   return BADGES.map((badge) => {
     const have = haveFor(badge);
     const need = needFor(badge);

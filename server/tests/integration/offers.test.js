@@ -52,7 +52,7 @@ describe('travel offers', () => {
     const keys = data(res).offers.map((o) => o.id);
     expect(keys.length).toBe(example.offers.filter((o) => o.active !== false).length);
     const japan = data(res).offers.find((o) => o.title === 'Hotels in Japan');
-    expect(japan).toMatchObject({ partner: 'Example Stays', kind: 'HOTEL', countryCode: 'JP', imageKey: 'visitCountryPosters/jp-800.avif' });
+    expect(japan).toMatchObject({ partner: 'Example Stays', kind: 'HOTEL', countryCode: 'JP', imageKey: example.offers.find((o) => o.title === 'Hotels in Japan').imageKey });
     expect(japan).not.toHaveProperty('url');
     expect(japan).not.toHaveProperty('key');
     expect(data(res).offers.some((o) => o.title.startsWith('Summer sale'))).toBe(false);

@@ -10,8 +10,8 @@ const previewUrl = (name) => {
 };
 
 const DESCRIPTIONS = {
-  regular: 'Names, lines and landmarks as you set them',
-  detailed: 'Names, lines and landmarks everywhere',
+  regular: 'Names and lines as you set them',
+  detailed: 'Names and lines everywhere',
 };
 
 // my_planet's map types: Regular, or Detailed (every label and pin at every zoom).

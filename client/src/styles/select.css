@@ -170,7 +170,27 @@
       opacity: 0.8;
     }
 
+    /* The closed box (17 Nov 2026): the components' own button takes the room the arrow
+       leaves, and the choice stays on one line, ending in … when it's too long (the full
+       name is the select's title), so dropdowns side by side are always the same height */
+    .app-select > button {
+      display: flex;
+      flex: 1 1 auto;
+      align-items: center;
+      min-width: 0;
+      overflow: hidden;
+    }
+
     .app-select selectedcontent {
+      display: block;
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    /* RichOptionSelect: the chosen icon beside its title */
+    .app-select selectedcontent:has(.app-select-option-text) {
       display: flex;
       align-items: center;
       gap: 0.75rem;

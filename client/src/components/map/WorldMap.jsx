@@ -70,7 +70,8 @@ function WorldMap({
   showAntarctica = true,
   landmarks = null,
   stampedLandmarks,
-  alwaysShowLandmarks = false,
+  // When the landmark pins show (utils/map/mapSettings.js LANDMARK_PIN_MODES)
+  landmarkPins = 'zoomed',
   stops = null,
   label = 'World map',
   panZoom = true,
@@ -119,12 +120,12 @@ function WorldMap({
         <VisitBadges visitsByCode={visitsByCode} zoom={zoom} faded={!showVisited} showAntarctica={showAntarctica} splitUk={splitUk} />
         {showMoments ? <MomentMarks counts={momentCounts} zoom={zoom} showAntarctica={showAntarctica} /> : null}
         <PoleNameLabels zoom={zoom} visitsByCode={visitsByCode} always={showCountryNames} showAntarctica={showAntarctica} />
-        {landmarks?.length ? (
+        {landmarks?.length && landmarkPins !== 'off' ? (
           <LandmarkPins
             landmarks={landmarks}
             stamped={stampedLandmarks}
             zoom={zoom}
-            always={alwaysShowLandmarks}
+            mode={landmarkPins}
             onSelectCountry={onSelectCountry}
             afterTap={afterTap}
             splitUk={splitUk}

@@ -76,9 +76,9 @@ function MapPage() {
   const travelMap = useTravelMap(mapId, { optimistic: user?.emailVerified !== false });
   const { settings, updateSetting } = useMapSettings({ remote: true });
 
-  // The map's photo lists (and the landmarks, when pins show from the start: the Detailed
-  // type) alongside the map, not after it. A phone opens fully zoomed out, a little under desktop size, with no pins.
-  const pinsAtOnce = settings.mapType === 'detailed';
+  // The map's photo lists (and the landmarks, when pins show from the start: the landmark
+  // pins setting on 'always' or 'stamped') alongside the map, not after it. A phone opens fully zoomed out, a little under desktop size, with no pins.
+  const pinsAtOnce = settings.landmarkPins === 'always' || settings.landmarkPins === 'stamped';
   useEffect(() => {
     if (!mapId) return;
     preloadPhotoPage({ mapId, ...UNPLACED_PHOTOS });

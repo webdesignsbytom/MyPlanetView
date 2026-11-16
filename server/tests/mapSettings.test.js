@@ -25,6 +25,14 @@ describe('cleanMapSettings', () => {
     expect(cleanMapSettings({ mapType: 'satellite' }).ok).toBe(false);
   });
 
+  it('accepts the four landmark pin modes and refuses any other', () => {
+    for (const mode of ['zoomed', 'always', 'stamped', 'off']) {
+      expect(cleanMapSettings({ landmarkPins: mode })).toEqual({ ok: true, value: { landmarkPins: mode } });
+    }
+    expect(cleanMapSettings({ landmarkPins: 'some' }).ok).toBe(false);
+    expect(cleanMapSettings({ landmarkPins: true }).ok).toBe(false);
+  });
+
   it('refuses the my_planet flags with a non-boolean value', () => {
     expect(cleanMapSettings({ showVisited: 'no' }).ok).toBe(false);
     expect(cleanMapSettings({ showUserBanner: 1 }).ok).toBe(false);

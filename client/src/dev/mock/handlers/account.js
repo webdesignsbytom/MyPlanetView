@@ -36,6 +36,8 @@ const NAME_REQUIRED = 'Enter your name.';
 const MAP_SETTING_KEYS = {
   style: ['animated', 'old-map'],
   mapType: ['regular', 'detailed'],
+  // The landmark pins (the server's LANDMARK_PIN_MODES)
+  landmarkPins: ['zoomed', 'always', 'stamped', 'off'],
 };
 // `showMoments`: the marks beside countries with moments; `showGoalTag`: the goal's luggage
 // tag under the map's title; `blackAndWhite`: the map page in greys (the server's

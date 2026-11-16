@@ -112,6 +112,21 @@ const mockText = (await readdir(MOCK_DIR, { recursive: true }))
   .join('\n');
 const stillListed = new Set([...body.matchAll(/name: '([^']+)'/g)].map((m) => m[1]));
 const removable = oldNames.filter((name) => !stillListed.has(name) && !mockText.includes(`name: '${name}'`));
+
+// The example travel offers use posters as their pictures (imageKey): one whose poster
+// goes now uses its country's new main poster (17 Nov 2026: eight offers were left
+// pointing at deleted files). Then regenerate the mock's copy and re-import the offers.
+const OFFERS = join(root, 'server/prisma/seed/data/offers.example.json');
+const offersText = await readFile(OFFERS, 'utf8');
+const nextOffers = offersText.replace(/visitCountryPosters\/([a-z0-9-]+)-800\.avif/g, (all, name) => {
+  if (!removable.includes(name)) return all;
+  const posters = byCode.get(name.slice(0, 2).toUpperCase());
+  return posters ? `visitCountryPosters/${posters[0].name}-800.avif` : all;
+});
+if (nextOffers !== offersText) {
+  if (!dryRun) await writeFile(OFFERS, nextOffers);
+  console.log(`offers.example.json ${dryRun ? 'would use' : 'now uses'} the new posters (then: node scripts/generate-mock-offers.mjs in client/, and npm run db:offers -- prisma/seed/data/offers.example.json)`);
+}
 let removed = 0;
 for (const name of removable) {
   for (const ext of ['avif', 'webp']) {

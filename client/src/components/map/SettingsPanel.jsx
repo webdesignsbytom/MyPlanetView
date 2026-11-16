@@ -3,6 +3,7 @@ import React, { useId, useRef, useState } from 'react';
 import MapPanel from './MapPanel';
 import MapStylePicker from './MapStylePicker';
 import MapTypePicker from './MapTypePicker';
+import LandmarkPinsPicker from './LandmarkPinsPicker';
 import MapSettingsToggles from './MapSettingsToggles';
 import DeleteMapSection from './DeleteMapSection';
 import MainMapSection from './MainMapSection';
@@ -49,7 +50,7 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locke
     showTabs ? { role: 'tabpanel', id: panelId(id), 'aria-labelledby': tabId(id), tabIndex: 0 } : {};
 
   return (
-    <MapPanel title='Settings' onClose={onClose}>
+    <MapPanel roomy title='Settings' onClose={onClose}>
       {showTabs ? (
         <div
           ref={tabsRef}
@@ -83,6 +84,7 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locke
       <div {...panelProps('view')} hidden={showTabs && tab !== 'view'} className='grid gap-5'>
         <MapStylePicker value={settings.style} onChange={(style) => onChangeSetting('style', style)} />
         <MapTypePicker value={settings.mapType} onChange={(type) => onChangeSetting('mapType', type)} />
+        <LandmarkPinsPicker value={settings.landmarkPins} onChange={(mode) => onChangeSetting('landmarkPins', mode)} />
         <MapSettingsToggles settings={settings} onChange={onChangeSetting} />
       </div>
       {showTabs ? (

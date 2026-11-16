@@ -1,11 +1,12 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Constants
 import { MAP_PAGE_URL, mapPassportPath, mapPath, sharedPassportPath } from '@/utils/constants/routes';
 // Hooks
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
-import usePhotoPage from '@/hooks/usePhotoPage';
-import useLandmarks from '@/hooks/useLandmarks';
+import usePhotoPage, { preloadPhotoPage } from '@/hooks/usePhotoPage';
+import { preloadMomentPage } from '@/hooks/useMomentPage';
+import useLandmarks, { preloadLandmarks } from '@/hooks/useLandmarks';
 import { SplitUkProvider } from '@/hooks/useSplitUk';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
@@ -47,8 +48,9 @@ import {
 } from './lazyMapPanels';
 // Utils
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
-import { UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
-import { forgetMapLists } from '@/utils/map/mapListCache';
+import { MAP_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
+import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/map/mapListCache';
+import { preloadSharing } from '@/utils/sharing/sharingCache';
 import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
@@ -173,6 +175,52 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     [canEdit, canShare],
   );
 
+  // Their data too (17 Nov 2026, the user's wish: a panel should open at once, not wait for
+  // the database). Once the map has drawn and the browser is idle, the panel cache
+  // (utils/data/panelCache.js) gets: the share settings (the owner's), the photo album's
+  // and the timeline's first pages, every landmark (the country tickets' lists and the
+  // pins) and your map list. Each panel then shows them at once and refreshes quietly.
+  const userId = currentUser?.id;
+  useEffect(() => {
+    let done = false;
+    const run = () => {
+      if (done) return;
+      done = true;
+      if (isOwner) preloadSharing('maps', map.id);
+      preloadPhotoPage({ ...photoSource, ...MAP_PHOTOS });
+      preloadMomentPage({ ...photoSource, limit: 30 });
+      preloadLandmarks();
+      if (userId && !shareCode) {
+        myMaps.load(userId).catch(() => {});
+        sharedTripList.load(userId).catch(() => {});
+      }
+    };
+    const idle = typeof window.requestIdleCallback === 'function' ? window.requestIdleCallback(run, { timeout: 3000 }) : null;
+    const timer = idle === null ? window.setTimeout(run, 1500) : null;
+    return () => {
+      done = true;
+      if (idle !== null) window.cancelIdleCallback(idle);
+      if (timer !== null) window.clearTimeout(timer);
+    };
+  }, [map.id, isOwner, photoSource, userId, shareCode]);
+
+  // A country the pointer rests on: its ticket's photos and moments start loading, so it
+  // opens with them (phones open a ticket at the first press, so it loads then)
+  const hoverTimerRef = useRef(0);
+  const hoverCountry = useCallback(
+    (code) => {
+      hover.set(code);
+      window.clearTimeout(hoverTimerRef.current);
+      if (!code) return;
+      hoverTimerRef.current = window.setTimeout(() => {
+        preloadPhotoPage({ ...photoSource, country: code, limit: 12 });
+        preloadMomentPage({ ...photoSource, country: code });
+      }, 250);
+    },
+    [hover, photoSource],
+  );
+  useEffect(() => () => window.clearTimeout(hoverTimerRef.current), []);
+
   // Black and white: the grey tokens on <html> too (index.css :root[data-mono]), for what
   // sits outside the page's greyscale filter: the photo viewer's and slideshow's frames
   // (their photos keep their colour) and dialogs drawn in portals
@@ -206,11 +254,16 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const nextTrip = useMemo(() => nextPlannedTrip(trips, todayString()), [trips]);
   const offerProps = { adEvery, nextTrip, canFetchTrips: !shareCode, mapKey: `map:${map.id}` };
 
-  // my_planet's Detailed map type: names, lines and landmark pins at every zoom
-  // (re-renders this page only when the zoom crosses that line, not on every move)
+  // my_planet's Detailed map type: names and lines at every zoom. The landmark pins follow
+  // their own setting on either type (17 Nov 2026): when zoomed in (re-renders this page
+  // only when the zoom crosses that line, not on every move), always, only the passport's
+  // stamped ones, or off; the landmarks are fetched only when some can show
   const detailed = settings.mapType === 'detailed';
+  const pinMode = settings.landmarkPins;
   const landmarkZoom = useViewportZoom(viewport, atLandmarkZoom);
-  const { landmarks } = useLandmarks(null, { enabled: detailed || landmarkZoom });
+  const { landmarks } = useLandmarks(null, {
+    enabled: pinMode === 'always' || pinMode === 'stamped' || (pinMode === 'zoomed' && landmarkZoom),
+  });
   // The passport's stamped landmarks: their pins are gold (the map's own reply, so a
   // confirmed landmark shows once the map refreshes after the photo's change)
   const stampedIds = map.stampedLandmarkIds;
@@ -442,7 +495,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             showMoments={settings.showMoments}
             selectedCode={ui.panel === 'country' ? ui.selectedCode : null}
             onSelectCountry={selectCountry}
-            onHoverCountry={hover.set}
+            onHoverCountry={hoverCountry}
             showGrid={settings.showGrid || detailed}
             showGridLabels={settings.showGridLabels || detailed}
             showCountryNames={settings.showCountryNames || detailed}
@@ -451,7 +504,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             showAntarctica={showAntarctica}
             landmarks={landmarks}
             stampedLandmarks={stampedLandmarks}
-            alwaysShowLandmarks={detailed}
+            landmarkPins={pinMode}
             label={`${map.name}: world map`}
           />
         </main>

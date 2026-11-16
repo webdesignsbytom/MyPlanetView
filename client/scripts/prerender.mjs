@@ -25,6 +25,16 @@ const NOT_FOUND_PROBE = '/__prerender-404__';
 const APP_SHELL = 'app-shell.html';
 const HTACCESS_MARKER = '#__CLIENT_ONLY_REWRITES__';
 
+// The API, passed through by the Netlify site at its own /api and /go (the first rules in
+// _redirects; 17 Nov 2026). Called at its own address (my-planet-view.vercel.app), another
+// site, its sign-in cookie is third-party, which Safari and many phone browsers never keep:
+// signing in on a phone ended in "No valid session found". With VITE_API_URL set to the
+// site's own address, the browser only ever talks to the site, so the cookie is the site's.
+// Not needed once the API is on api.<domain>. Apache (.htaccess) has no such rule.
+const API_PROXY_TARGET = 'https://my-planet-view.vercel.app';
+const API_PROXY_PATHS = ['/api', '/go'];
+const isProxiedPath = (pathname) => API_PROXY_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+
 // Head tags react-head owns; marked so it swaps them for its own when the page loads
 const HEAD_TAGS = [
   'title',
@@ -43,9 +53,12 @@ async function writeHostingRules(shell) {
   const prefixes = CLIENT_ONLY_ROUTE_PREFIXES.map((prefix) => prefix.replace(/^\//, ''));
   const spaOnly = shell === 'index.html';
 
-  const redirects = spaOnly
+  // The API first (forced: these paths are never files), then the pages
+  const proxies = API_PROXY_PATHS.map((path) => `${path}/*  ${API_PROXY_TARGET}${path}/:splat  200!`);
+  const pages = spaOnly
     ? ['/*  /index.html  200']
     : prefixes.flatMap((prefix) => [`/${prefix}  /${shell}  200`, `/${prefix}/*  /${shell}  200`]);
+  const redirects = [...proxies, ...pages];
   await writeFile(resolve(dist, '_redirects'), `# Written by scripts/prerender.mjs\n${redirects.join('\n')}\n`);
 
   const htaccessPath = resolve(dist, '.htaccess');
@@ -158,7 +171,10 @@ async function run() {
       await context.route((url) => url.origin === apiOrigin, async (route) => {
         if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
         try {
-          const response = await route.fetch();
+          // The site's own /api and /go are the API's (passed through): asked of the API
+          // itself, so the build never depends on what the deployed site has
+          const { pathname, search } = new URL(route.request().url());
+          const response = await route.fetch(isProxiedPath(pathname) ? { url: `${API_PROXY_TARGET}${pathname}${search}` } : undefined);
           return route.fulfill({ response, headers: { ...response.headers(), ...cors } });
         } catch {
           return route.abort();

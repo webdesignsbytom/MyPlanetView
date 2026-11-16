@@ -57,9 +57,13 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 // Security headers (CSP off: status page uses Google Fonts)
 app.use(helmet({ contentSecurityPolicy: false }));
 
-// The API (and its status page) never belongs in search results
+// The API (and its status page) never belongs in search results, and no reply is kept by a
+// cache unless its route says so (themes, countries and landmarks, offers set their own):
+// the Netlify site passes /api and /go through to here (client/scripts/prerender.mjs,
+// 17 Nov 2026), and its CDN must never keep one person's reply for another
 app.use((_req, res, next) => {
   res.set('X-Robots-Tag', 'noindex, nofollow');
+  res.set('Cache-Control', 'no-store');
   next();
 });
 

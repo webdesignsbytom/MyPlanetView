@@ -451,7 +451,7 @@ A fixed list kept in one file of code:
 
 | Group | Badges |
 | --- | --- |
-| Countries | 1, 5, 10, 25, 50, 100 |
+| Countries | 1, 5, 10, 25, 50, 100, all of them (227, or 230 with the UK as its nations) |
 | Continents | First country on each; all six inhabited continents; Antarctica |
 | Regions | Every country in Scandinavia, Central America, the Balkans… (region lists in code) |
 | Landmarks | 1, 10, 50 stamps; 5 and 25 UNESCO sites |

@@ -28,6 +28,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { IS_LOGGED_IN_KEY, takeSessionRequest } from './bootSession';
 import { getStoredItem, removeStoredItem, setStoredItem } from '@/utils/functions/safeStorage';
+import { clearPanelCache } from '@/utils/data/panelCache';
 
 const fail = (e, fallback) => ({ ok: false, error: e?.friendlyMessage || fallback });
 
@@ -46,6 +47,15 @@ export function AuthProvider({ children }) {
   const lastSessionRead = useRef(0);
   const readCount = useRef(0);
   const appliedRead = useRef(0);
+
+  // The panels' data belongs to whoever was signed in: another account, or none, starts with
+  // an empty panel cache (utils/data/panelCache.js), so it never sees the last one's
+  const lastUserId = useRef(undefined);
+  useEffect(() => {
+    const id = user?.id ?? null;
+    if (lastUserId.current !== undefined && lastUserId.current !== id) clearPanelCache();
+    lastUserId.current = id;
+  }, [user?.id]);
 
   const clearUser = () => {
     removeStoredItem(IS_LOGGED_IN_KEY);

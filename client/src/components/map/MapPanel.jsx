@@ -14,11 +14,12 @@ import PaperStripHeader from '@/components/common/PaperStripHeader';
  * the country's ticket, CountryTicket). On wide screens it's at most as tall as the map
  * page's panel wrapper, which has a definite height.
  */
-function MapPanel({ title, onClose, children, footer = null, wide = false }) {
+function MapPanel({ title, onClose, children, footer = null, wide = false, roomy = false }) {
   const { titleId, headingRef, panelProps } = useMapPanel(onClose);
   // `wide`: the map's Photos panel, 80% of a large screen (16 Nov 2026, the user's wish:
-  // five or six photos across, not three); the rest are 26rem
-  const width = wide ? 'md:w-full lg:w-[80vw] lg:max-w-full' : 'md:w-[26rem]';
+  // five or six photos across, not three). `roomy`: Settings, 34rem, so fields side by side
+  // (a traveller's two countries) have room for long names (17 Nov 2026). The rest are 26rem.
+  const width = wide ? 'md:w-full lg:w-[80vw] lg:max-w-full' : roomy ? 'md:w-[34rem] md:max-w-full' : 'md:w-[26rem]';
 
   return (
     <section
