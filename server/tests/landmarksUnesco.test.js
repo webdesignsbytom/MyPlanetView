@@ -1,5 +1,5 @@
-// Checks the World Heritage landmarks (prisma/seed/data/landmarksUnesco.js, not loaded
-// yet) without a database, as landmarkData.test.js does for the 177.
+// Checks the World Heritage landmarks (prisma/seed/data/landmarksUnesco.js, loaded with
+// the passport) without a database, as landmarkData.test.js does for the 177.
 import { describe, it, expect } from 'vitest';
 import { LANDMARKS } from '../prisma/seed/data/landmarks.js';
 import { UNESCO_LANDMARKS, UNESCO_IN_EXISTING } from '../prisma/seed/data/landmarksUnesco.js';

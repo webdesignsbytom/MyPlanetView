@@ -8,6 +8,8 @@ import {
   ADMIN_CONTACT_FORM_PAGE_URL,
   ADMIN_USERS_PAGE_URL,
   ADMIN_EVENTS_PAGE_URL,
+  ADMIN_PROMO_CODES_PAGE_URL,
+  ADMIN_OFFERS_PAGE_URL,
 } from '@/utils/constants/routes';
 // Components
 import PaperCard from '@/components/common/PaperCard';
@@ -15,6 +17,8 @@ import PaperCard from '@/components/common/PaperCard';
 const ADMIN_LINKS = [
   { path: ADMIN_CONTACT_FORM_PAGE_URL, label: 'Contact Forms', desc: 'Messages sent from the contact page' },
   { path: ADMIN_USERS_PAGE_URL, label: 'Users', desc: 'Roles, account status, memberships and moving maps' },
+  { path: ADMIN_PROMO_CODES_PAGE_URL, label: 'Promo Codes', desc: 'Creators’ sign-up codes, their offers and who they brought' },
+  { path: ADMIN_OFFERS_PAGE_URL, label: 'Travel Offers', desc: 'Partner cards and the Travel Desk: clicks, changes and the import file' },
 ];
 
 const DEVELOPER_LINKS = [

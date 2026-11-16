@@ -42,11 +42,15 @@ export const DELETE_ALL_EVENTS_API = '/api/events/delete-all-events';
 // Travel (docs/API.md). Paths below these bases are built in src/api/travelApi.js.
 export const COUNTRIES_API = '/api/countries';
 export const LANDMARKS_API = '/api/landmarks'; // ?country=JP
-export const MAPS_API = '/api/maps'; // /:mapId, /:mapId/stats|travellers|visits|trips|photos|moments|sharing|members|invites
+export const MAPS_API = '/api/maps'; // /:mapId, /:mapId/stats|travellers|visits|trips|photos|moments|passport|badges|goals|sharing|members|invites
 export const TRIPS_API = '/api/trips'; // /:tripId, /:tripId/stops|travellers|photos|moments|maps|sharing|members|invites, /shared-with-me
 export const PHOTOS_API = '/api/photos'; // /:photoId, /:photoId/landmarks, /:photoId/move
 export const MOMENTS_API = '/api/moments'; // /:momentId (PATCH, DELETE)
-export const SHARED_API = '/api/shared'; // /:code, /:code/photos, /:code/photos/:photoId, /:code/moments
+export const GOALS_API = '/api/goals'; // /:goalId (PATCH, DELETE)
+export const SHARED_API = '/api/shared'; // /:code, /:code/photos, /:code/photos/:photoId, /:code/moments|passport|badges|goals
+export const PROMO_CODES_API = '/api/promo-codes'; // GET /:code (before signing up)
+export const OFFERS_API = '/api/offers'; // GET: every live travel offer (docs/API.md, "Travel offers")
+export const OFFER_CLICK_PATH = '/go'; // /:offerId?p=&dest=&country=&from=&to= on the API's host (a card's link)
 export const ACCEPT_INVITE_API = '/api/invites/accept'; // POST { token }
 export const MAP_SETTINGS_API = '/api/users/map-settings'; // GET, PUT { mapSettings }
 
@@ -59,6 +63,10 @@ export const LEAVING_PLAN_API = '/api/users/leaving-plan'; // PUT { maps, leaveP
 export const ADMIN_PLAN_GRANTS_API = '/api/users/admin/plan-grants'; // GET, POST /:userId
 export const ADMIN_END_PLAN_GRANT_API = '/api/users/admin/end-plan-grant'; // PATCH /:grantId
 export const ADMIN_TRANSFER_MAP_API = '/api/users/admin/transfer-map'; // POST { mapId, toEmail, keepOldOwnerAsEditor }
+// Admin: influencer codes (docs/API.md, "Promo codes")
+export const ADMIN_PROMO_CODES_API = '/api/users/admin/promo-codes'; // GET, POST, PATCH /:promoCodeId
+// Admin: travel offers (docs/API.md, "Travel offers")
+export const ADMIN_OFFERS_API = '/api/users/admin/offers'; // GET, POST, POST /import, PATCH|DELETE /:offerId
 
 // Media Routes
 export const PRESIGN_UPLOAD_API = '/api/media-services/presign-url'; // POST: get presigned PUT for upload

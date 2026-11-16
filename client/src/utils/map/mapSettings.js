@@ -23,6 +23,9 @@ export const DEFAULT_MAP_SETTINGS = {
   showAntarctica: true,
   // The pinned note beside places with moments (components/map/MomentMarks.jsx)
   showMoments: true,
+  // The luggage tag under the map's title with the nearest goal's progress
+  // (components/achievements/GoalTag.jsx)
+  showGoalTag: true,
 };
 
 // Grouped as the settings panel shows them.
@@ -33,6 +36,7 @@ export const MAP_SETTING_TOGGLES = [
   { key: 'showUnvisited', label: 'Countries you have not been to', group: 'countries' },
   { key: 'showAntarctica', label: 'Antarctica', group: 'countries' },
   { key: 'showMoments', label: 'Moments', group: 'countries' },
+  { key: 'showGoalTag', label: 'Goal progress tag', group: 'countries' },
   { key: 'showGrid', label: 'Latitude and longitude lines', group: 'map', detailed: true },
   { key: 'showGridLabels', label: 'Label the lines', group: 'map', detailed: true },
   { key: 'showCountryNames', label: 'Country names', group: 'map', detailed: true },

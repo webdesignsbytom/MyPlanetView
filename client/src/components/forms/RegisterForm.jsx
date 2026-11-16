@@ -7,6 +7,7 @@ import TextInput from '@/components/ui/TextInput';
 import PasswordInput from '@/components/ui/PasswordInput';
 import CheckboxInput from '@/components/ui/CheckboxInput';
 import FormAlert from '@/components/forms/FormAlert';
+import PromoCodeField from '@/components/forms/PromoCodeField';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 // Constants
 import {
@@ -17,8 +18,17 @@ import {
 // Hooks
 import { useLocation } from 'react-router-dom';
 import useNavigateToPage from '@/hooks/useNavigateToPage';
+import usePromoCodeCheck from '@/hooks/usePromoCodeCheck';
 // Regex
 import { PASSWORD_REGEX, PASSWORD_RULE } from '@/utils/regex/regex';
+// Utils
+import {
+  PROMO_CODE_INVALID,
+  forgetPromoCode,
+  normalisePromoCode,
+  promoCodeInSearch,
+  rememberedPromoCode,
+} from '@/utils/plans/promoCodes';
 // Auth
 import { useAuth } from '@/auth/AuthContext';
 
@@ -38,16 +48,30 @@ function RegisterForm() {
     // Unticked: it's the age confirmation as well as the terms (docs/FEATURE-PLAN.md,
     // "Children and editors"), so the person has to tick it themselves
     agreedToTerms: false,
+    // Optional: a creator's code (docs/API.md, "Promo codes"), filled from ?code= below
+    promoCode: '',
   });
 
   const [registerError, setRegisterError] = useState(null);
   const [registrationInProgress, setRegistrationInProgress] = useState(false);
+  // The server refused the code at sign-up (it was turned off or used up meanwhile)
+  const [promoRefused, setPromoRefused] = useState(false);
+  const { result: promoCheck, checkNow: checkPromoCodeNow } = usePromoCodeCheck(registerFormData.promoCode);
 
   const usernameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
+  const promoCodeRef = useRef(null);
   const alertRef = useRef(null);
+
+  // A creator's link (/sign-up?code=SAMTRAVELS), or one that landed on another page this
+  // visit (useRememberPromoCode). Read in an effect, as storage and the address must be.
+  const { search } = location;
+  useEffect(() => {
+    const code = promoCodeInSearch(search) || rememberedPromoCode();
+    if (code) setRegisterFormData((prev) => (prev.promoCode ? prev : { ...prev, promoCode: code }));
+  }, [search]);
 
   const isPasswordValid = PASSWORD_REGEX.test(registerFormData.password);
   const isConfirmValid =
@@ -68,6 +92,8 @@ function RegisterForm() {
         confirmPasswordRef.current
       ) {
         confirmPasswordRef.current.focus();
+      } else if (registerError === PROMO_CODE_INVALID && promoCodeRef.current) {
+        promoCodeRef.current.focus();
       } else if (alertRef.current) {
         alertRef.current.focus();
       }
@@ -107,22 +133,40 @@ function RegisterForm() {
       return;
     }
 
-    const result = await register(registerFormData);
+    // A code already found unusable isn't sent; one not checked yet is left to the server
+    const typedCode = registerFormData.promoCode.trim();
+    if (typedCode && promoCheck.status === 'invalid') {
+      setRegisterError(PROMO_CODE_INVALID);
+      setRegistrationInProgress(false);
+      return;
+    }
+
+    const result = await register({
+      ...registerFormData,
+      promoCode: typedCode ? normalisePromoCode(typedCode) || typedCode : '',
+    });
 
     setRegistrationInProgress(false);
 
     if (!result.ok) {
+      setPromoRefused(result.error === PROMO_CODE_INVALID);
       setRegisterError(result.error || 'Something went wrong.');
       return;
     }
 
     // Signed in: back to the invite that sent them here, else set up their map
+    forgetPromoCode();
     navigateToPage(returnTo || WELCOME_PAGE_URL);
   };
 
   const handleChange = (event) => {
     setRegisterError(null);
     const { name, value } = event.target;
+    if (name === 'promoCode') {
+      setPromoRefused(false);
+      // Cleared on purpose: not filled in again from this visit's link
+      if (!value.trim()) forgetPromoCode();
+    }
     setRegisterFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -142,7 +186,7 @@ function RegisterForm() {
       noValidate
     >
       <p id='register-help' className='text-xs text-center opacity-70'>
-        All fields are required. Use a valid email and a strong password.
+        All fields are required, apart from the promo code. Use a valid email and a strong password.
       </p>
 
       <FormField
@@ -228,6 +272,15 @@ function RegisterForm() {
           onChange={handleChange}
         />
       </FormField>
+
+      <PromoCodeField
+        refProp={promoCodeRef}
+        value={registerFormData.promoCode}
+        onChange={handleChange}
+        onBlur={checkPromoCodeNow}
+        result={promoCheck}
+        invalid={promoRefused}
+      />
 
       <CheckboxInput
         id='termsChecked'

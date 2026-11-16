@@ -53,7 +53,7 @@ test.describe('Plans', () => {
     await expect(business).toContainText('or £49 a year: two months free');
     await expect(business).toContainText('200 photos of each country, on each map');
     await expect(page.getByRole('article', { name: 'First Class' })).toContainText('£8.99');
-    await expect(page.getByText('Business and First Class members never see ad cards.')).toBeVisible();
+    await expect(page.getByText('Business and First Class members never see ad cards on a map.')).toBeVisible();
     await expect(page.getByRole('region', { name: 'More than one map' })).toContainText('£5.99 a month');
     await expect(page.getByRole('region', { name: 'On every plan' })).toBeVisible();
     // In the footer's Explore links
@@ -94,7 +94,7 @@ test.describe('Plans', () => {
     await card.getByText('Yearly', { exact: true }).click();
     await card.getByRole('button', { name: 'Upgrade to Business' }).click();
     await expect(page).toHaveURL(/\/account\?billing=success$/);
-    await expect(planCard(page).getByText(/^Thank you: your payment went through/)).toBeVisible();
+    await expect(planCard(page).getByText(/^Thank you: checkout went through/)).toBeVisible();
     await expect(planCard(page).getByText('Paid yearly, £49 a year')).toBeVisible();
   });
 

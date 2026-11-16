@@ -1,6 +1,6 @@
 # Database design review
 
-A review of [`server/prisma/schema.prisma`](../server/prisma/schema.prisma) (five migrations, the last being `photo_order`) against what's built and what [FEATURE-PLAN.md](FEATURE-PLAN.md) plans, before building on it further.
+A review of [`server/prisma/schema.prisma`](../server/prisma/schema.prisma) (five migrations then, the last being `photo_order`; nine now) against what's built and what [FEATURE-PLAN.md](FEATURE-PLAN.md) plans, before building on it further.
 
 Reviewed 15 November 2026.
 
@@ -50,7 +50,7 @@ FEATURE-PLAN.md's "Database additions (draft)" table, item by item. Where this r
 
 ### Plans and payments
 
-**Built on 16 Nov 2026** as reviewed below (migration `plans_billing`): `Subscription`, `PlanGrant`, `StripeEvent`, the plan in force computed (`utils/plans.js`), map slots computed (`utils/mapSlots.js`, no stored lock flag), `TravelMap.graceUntil`, `PhotoSize.PRINT`. `PromoCode` isn't built yet.
+**Built on 16 Nov 2026** as reviewed below (migration `plans_billing`): `Subscription`, `PlanGrant`, `StripeEvent`, the plan in force computed (`utils/plans.js`), map slots computed (`utils/mapSlots.js`, no stored lock flag), `TravelMap.graceUntil`, `PhotoSize.PRINT`. `PromoCode` and `Profile.promoCodeId` followed the same day (migration `passport_badges_goals_promo`), with `Profile.promoOfferGrantedAt` so a code's offer is given once; the offer was a `PlanGrant`. Migration `promo_first_month` (16 Nov 2026) made the offer the same for every code, a Stripe trial on the first paid Checkout: it dropped `PromoCode.offerPlan`, `offerDays` and the CHECK `promo_code_offer`, and renamed the profile's column `promoTrialUsedAt`.
 
 The draft puts `plan`, `planSource`, `planEndsAt` and `referralCode` on `User`.
 
@@ -60,7 +60,7 @@ The draft puts `plan`, `planSource`, `planEndsAt` and `referralCode` on `User`.
   - **`PlanGrant`**: user, plan, starts, ends, granted by, reason. The admin page writes it. It's how complimentary memberships are given.
   - **`StripeEvent`**: the Stripe event id as primary key. Stripe retries webhooks, so each event is applied once.
 - **The plan in force is computed:** the best of an active subscription and an active grant, else `FREE`. That's one pure function with a test, like the access rules. It's two indexed lookups, and a cached column can come later if it's ever slow.
-- **Influencer codes:** a **`PromoCode`** table (code, label, the followers' offer, active), and **`Profile.promoCodeId`** for the code an account signed up with. App fields go on `Profile`, not `User`.
+- **Influencer codes:** a **`PromoCode`** table (code, label, active, limits; the followers' offer is the same for every code, in code), and **`Profile.promoCodeId`** for the code an account signed up with. App fields go on `Profile`, not `User`.
 
 ### Whose plan applies
 
@@ -84,6 +84,8 @@ So the presign needs only the map owner's plan, one lookup.
 
 ### Passport and landmarks
 
+**Built on 16 Nov 2026** as reviewed below (migration `passport_badges_goals_promo`): `isUnesco` (the 1,273 sites loaded), `PhotoLandmark.mapId` with `[mapId, landmarkId]` and `confirmedAt` (CHECK `photo_landmark_confirmed_at`), and `LandmarkCover`, whose foreign key is the match itself (`[photoId, landmarkId]`), so removing the match also removes the choice. `category` is still not stored: stamp shapes come from the landmark's id.
+
 - **`isUnesco`, `wikidataId`:** agreed. `wikidataId` comes now (fix 1).
 - **`category`** is in the seed data but isn't stored. Store it if the stamps' shapes or icons should follow it (a mountain, a church, a ruin).
 - **Give `PhotoLandmark` a `mapId`,** with an index `[mapId, landmarkId]`.
@@ -102,6 +104,8 @@ The draft is good: precision-aware dates, kinds as text, `MomentTraveller`, `Mom
 
 ### Badges, goals, challenges and themes
 
+**Built on 16 Nov 2026:** `BadgeAward` and `Goal` as below, with awards made when the map's badges or goals are loaded by the owner or an editor. `Goal` keeps explicit columns (`target`, `countryCodes`, `region`) instead of a settings JSON, held to its kind by a CHECK (`goal_shape`). Friends challenges and themes are phase 2.
+
 - **`BadgeAward`** (map, badge key, earned at): agreed, with the primary key `[mapId, badgeKey]`. Award with "insert, or do nothing if it's there", so two requests can't award a badge twice.
 - **When badges are checked:**
   - The plan checks after every upload, visit change and landmark confirmation. A batch of 100 photos would recount the whole map 100 times.
@@ -114,12 +118,16 @@ The draft is good: precision-aware dates, kinds as text, `MomentTraveller`, `Mom
 
 ### Slideshows and photo dates
 
+**Built on 16 Nov 2026:** `Photo.shotAt` with `[mapId, shotAt, id]`, backfilled, and kept equal to `takenAt ?? createdAt` by `domain/photos.js` (not by a CHECK: the two timestamps are written in one statement but a CHECK on equality would be fragile).
+
 - The worldwide slideshow plays every photo on a map by date taken. That's the one photo order with no index: the old `[mapId, takenAt]` was dropped as unused in the audit.
 - `takenAt` is empty for photos with no EXIF date, which makes paging by date awkward.
 - **Add `Photo.shotAt`:** not null, `takenAt` when known, else the upload time, kept in step when `takenAt` is edited. Index it as `[mapId, shotAt, id]`.
 - Friends challenges and dated goals ("the first photo in each country") use the same column.
 
 ### Ads and the Travel Desk
+
+**Built on 16 Nov 2026** (migration `travel_offers`): `AffiliateOffer`, imported by a unique `key`, and `OfferClickDaily` (offer, UTC day, placement, count), added to with one `INSERT … ON CONFLICT DO UPDATE` per click. The client reads every live offer once (`GET /api/offers`, cached 5 minutes) and picks cards itself, so choosing one sends nothing about the viewer.
 
 - **`AffiliateOffer`:** agreed. It's a small table, so it can be read once and cached.
 - **Ad clicks:**

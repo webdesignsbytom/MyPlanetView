@@ -5,6 +5,7 @@ import { formatShareCode, getDb, me, newId, newShareCode, normaliseShareCode, se
 import { canSeePhoto, higherRole, mapRole, mapTripsView, mapView, photoDetail, photoPage, tripRole, tripView } from '../views';
 import { EDITORS_PER_MAP, PEOPLE_CAP_MESSAGES, PEOPLE_PER_TRIP } from '../plans';
 import { momentPage } from '../moments';
+import { adsFor } from '../offers';
 
 const ROLES = ['VIEWER', 'EDITOR'];
 const LINK_ACCESS = ['RESTRICTED', 'ANYONE_WITH_LINK'];
@@ -201,9 +202,11 @@ export function registerSharingRoutes() {
       // Group trips added from other maps always in their limited form: a share link
       // never opens another map's trip
       const trips = mapTripsView(item, role, { viaShareLink: true });
-      return ok({ resource: 'map', id: item.id, role, map: mapView(item, role), trips });
+      return ok({ resource: 'map', id: item.id, role, map: { ...mapView(item, role), ads: adsFor(item) }, trips });
     }
-    return ok({ resource: 'trip', id: item.id, role, trip: tripView(item, role, { viaShareLink: true }) });
+    // As the map's: a signed-out visitor counts as Economy (docs/API.md, "Travel offers")
+    const map = getDb().maps.find((m) => m.id === item.mapId);
+    return ok({ resource: 'trip', id: item.id, role, trip: { ...tripView(item, role, { viaShareLink: true }), ads: adsFor(map) } });
   });
 
   route('GET', '/api/shared/:code/photos', ({ params, query }) => {

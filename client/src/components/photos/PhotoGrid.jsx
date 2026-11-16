@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, useState } from 'react';
 // Components
 import PhotoThumb from './PhotoThumb';
+import OfferTile from '@/components/offers/OfferTile';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 
 // The drag-to-rearrange grid (and dnd-kit) download only when an editor rearranges;
@@ -8,10 +9,24 @@ import LoadingSpinner from '@/components/utils/LoadingSpinner';
 const loadSortableGrid = () => import('./SortablePhotoGrid');
 const SortablePhotoGrid = lazy(loadSortableGrid);
 
+// The photos around the slot after photos[index], nearest first: the one before it, the
+// one after, then outwards, up to `reach` each way
+function photosAround(photos, index, reach) {
+  const around = [];
+  for (let step = 0; step < reach; step++) {
+    if (photos[index - step]) around.push(photos[index - step]);
+    if (photos[index + 1 + step]) around.push(photos[index + 1 + step]);
+  }
+  return around;
+}
+
 // A grid of photos with "Show more" paging. `narrow` for narrow places (a map panel).
 // With `onMove(photoId, afterId)` (editors), "Rearrange photos" lets them drag photos
 // into a new order; it returns a promise, and a failure is shown under the grid.
-function PhotoGrid({ photos, loading, error, hasMore, onLoadMore, onOpen, onMove, emptyText = 'No photos yet.', narrow = false }) {
+// `offerSlots` (useGalleryOffers): a travel offer card after every `every` photos (docs/API.md,
+// "Travel offers"), each one grid cell like a photo, in reading and keyboard order. Never
+// while rearranging, and the `photos` themselves never include them.
+function PhotoGrid({ photos, loading, error, hasMore, onLoadMore, onOpen, onMove, offerSlots = null, emptyText = 'No photos yet.', narrow = false }) {
   const [arranging, setArranging] = useState(false);
   const [moveError, setMoveError] = useState(null);
   const columnsClass = narrow ? 'grid-cols-3' : 'grid-cols-3 sm:grid-cols-4 lg:grid-cols-6';
@@ -23,15 +38,32 @@ function PhotoGrid({ photos, loading, error, hasMore, onLoadMore, onOpen, onMove
     onMove(photoId, afterId).catch((err) => setMoveError(err.friendlyMessage || 'That move could not be saved.'));
   };
 
-  const plainGrid = (
-    <ul className={`grid gap-2 ${columnsClass}`}>
-      {photos.map((photo) => (
-        <li key={photo.id}>
-          <PhotoThumb photo={photo} onOpen={onOpen} />
-        </li>
-      ))}
-    </ul>
-  );
+  // The plain grid, with its offer cards unless it stands in for the rearranging one
+  const tiles = [];
+  const tilesBeforeArranging = [];
+  photos.forEach((photo, index) => {
+    const tile = (
+      <li key={photo.id}>
+        <PhotoThumb photo={photo} onOpen={onOpen} />
+      </li>
+    );
+    tiles.push(tile);
+    tilesBeforeArranging.push(tile);
+    const every = showArranging ? null : offerSlots?.every;
+    if (!every || (index + 1) % every !== 0) return;
+    const slot = (index + 1) / every - 1;
+    const card = offerSlots.cardAt(slot, photosAround(photos, index, every));
+    if (card) {
+      tiles.push(
+        <li key={`offer-${slot}`} data-offer-slot={slot}>
+          <OfferTile offer={card.offer} href={card.href} />
+        </li>,
+      );
+    }
+  });
+
+  const plainGrid = <ul className={`grid gap-2 ${columnsClass}`}>{tiles}</ul>;
+  const arrangingFallback = <ul className={`grid gap-2 ${columnsClass}`}>{tilesBeforeArranging}</ul>;
 
   return (
     <div className='grid gap-3'>
@@ -56,7 +88,7 @@ function PhotoGrid({ photos, loading, error, hasMore, onLoadMore, onOpen, onMove
 
       {photos.length ? (
         showArranging ? (
-          <Suspense fallback={plainGrid}>
+          <Suspense fallback={arrangingFallback}>
             <SortablePhotoGrid photos={photos} onMove={move} columnsClass={columnsClass} />
           </Suspense>
         ) : (

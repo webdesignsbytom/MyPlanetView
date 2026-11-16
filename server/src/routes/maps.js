@@ -17,6 +17,14 @@ import {
 import { createTripHandler, getMapTripsHandler } from '../controllers/trips.js';
 import { createPhotoHandler, getMapPhotosHandler, presignPhotoHandler } from '../controllers/photos.js';
 import { createMomentHandler, getMapMomentsHandler } from '../controllers/moments.js';
+import {
+  clearStampPhotoHandler,
+  createGoalHandler,
+  getBadgesHandler,
+  getGoalsHandler,
+  getPassportHandler,
+  setStampPhotoHandler,
+} from '../controllers/passport.js';
 import { sharingHandlers } from '../controllers/sharing.js';
 import { requireVerifiedEmail as verified, validateAuthentication } from '../middleware/auth.js';
 import { createDbRateLimiter, keyByUserId } from '../middleware/dbRateLimit.js';
@@ -73,6 +81,15 @@ router.get('/:mapId/photos', getMapPhotosHandler);
 // Moments on the map (a trip editor may add one on their trip: tripId in the body)
 router.get('/:mapId/moments', getMapMomentsHandler);
 router.post('/:mapId/moments', verified, createMomentHandler);
+
+// The passport, badges and goals (badges and goals are awarded as the owner or an editor
+// loads them; docs/API.md, "Badges and goals")
+router.get('/:mapId/passport', getPassportHandler);
+router.put('/:mapId/passport/stamps/:landmarkId/photo', verified, setStampPhotoHandler);
+router.delete('/:mapId/passport/stamps/:landmarkId/photo', verified, clearStampPhotoHandler);
+router.get('/:mapId/badges', getBadgesHandler);
+router.get('/:mapId/goals', getGoalsHandler);
+router.post('/:mapId/goals', verified, createGoalHandler);
 
 // Sharing
 router.get('/:id/sharing', sharing.get);

@@ -38,6 +38,9 @@ export const PhotoViewer = lazyPanel(() => import('@/components/photos/PhotoView
 export const ShareDialog = lazyPanel(() => import('@/components/sharing/ShareDialog'));
 // Paying for a map that isn't paid for (the plan banner's button); opened rarely
 export const ExtraMapDialog = lazyPanel(() => import('@/components/plans/ExtraMapDialog'));
+export const BadgesGoalsPanel = lazyPanel(() => import('@/components/achievements/BadgesGoalsPanel'));
+// The slideshows: the map's ("Play my world"), a country's, and a trip's (the trip page)
+export const Slideshow = lazyPanel(() => import('@/components/slideshow/Slideshow'));
 
 // What each toolbar stamp (and the title and stats tags) opens. The country list also
 // warms up the country panel, as picking a country is what it's for.
@@ -51,6 +54,8 @@ const FOR_TOOL = {
   share: [ShareDialog],
   settings: [SettingsPanel],
   switcher: [MapSwitcher],
+  badges: [BadgesGoalsPanel],
+  play: [Slideshow],
 };
 
 /** Start fetching what a tool opens; errors are left for the real open to show. */

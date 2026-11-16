@@ -19,6 +19,14 @@ import {
   endGrantHandler,
   listGrantsHandler,
 } from '../controllers/planAdmin.js';
+import { createPromoCodeHandler, listPromoCodesHandler, updatePromoCodeHandler } from '../controllers/promoCodes.js';
+import {
+  createOfferHandler,
+  deleteOfferHandler,
+  importOffersHandler,
+  listAdminOffersHandler,
+  updateOfferHandler,
+} from '../controllers/offers.js';
 // Middleware
 import {
   validateAuthentication,
@@ -102,5 +110,17 @@ router.get('/admin/plan-grants/:userId', validateAuthentication, validateAdminRo
 router.post('/admin/plan-grants/:userId', validateAuthentication, validateAdminRole, createGrantHandler);
 router.patch('/admin/end-plan-grant/:grantId', validateAuthentication, validateAdminRole, endGrantHandler);
 router.post('/admin/transfer-map', validateAuthentication, validateAdminRole, adminTransferMapHandler);
+
+// Influencer codes (docs/API.md, "Promo codes")
+router.get('/admin/promo-codes', validateAuthentication, validateAdminRole, listPromoCodesHandler);
+router.post('/admin/promo-codes', validateAuthentication, validateAdminRole, createPromoCodeHandler);
+router.patch('/admin/promo-codes/:promoCodeId', validateAuthentication, validateAdminRole, updatePromoCodeHandler);
+
+// Travel offers (docs/API.md, "Travel offers"): the ad cards and the Travel Desk
+router.get('/admin/offers', validateAuthentication, validateAdminRole, listAdminOffersHandler);
+router.post('/admin/offers', validateAuthentication, validateAdminRole, createOfferHandler);
+router.post('/admin/offers/import', validateAuthentication, validateAdminRole, importOffersHandler);
+router.patch('/admin/offers/:offerId', validateAuthentication, validateAdminRole, updateOfferHandler);
+router.delete('/admin/offers/:offerId', validateAuthentication, validateAdminRole, deleteOfferHandler);
 
 export default router;

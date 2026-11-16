@@ -17,15 +17,12 @@ Last updated: 16 November 2026.
   - the Pricing page and the account's "Your plan" card;
   - group trips' "Add to my map", moments with the timeline and map marks, and the country notes box (server, app, mock and tests);
   - the map data audit: ~300 missing islands and misplaced coasts from Natural Earth, and Andorra, Gibraltar and Kiribati (227 countries);
-  - the country-page framework (no page published yet).
+  - the country-page framework (no page published yet);
+  - the passport, with the 1,273 UNESCO World Heritage Sites loaded (1,332 landmarks); slideshows (worldwide, country, trip; by date taken or shuffled); site badges and personal goals; influencer codes (every follower's first month free on the paid plan they choose, as a Stripe trial with a card) and an admin page.
 
-  The rules as built are in SITE-DESIGN.md ("Plans and limits") and API.md.
+  The rules as built are in SITE-DESIGN.md ("Plans and limits") and API.md. Decisions waiting on the user are in [WAITING-ON-YOU.md](WAITING-ON-YOU.md).
 - **Next in Phase 1:**
-  - influencer codes (`PromoCode`);
-  - the passport with the landmark expansion (the UNESCO list is ready, not loaded: `server/prisma/seed/data/landmarksUnesco.js`, 1,154 new sites);
-  - slideshows;
-  - badges and goals;
-  - ads and the Travel Desk;
+  - ads and the Travel Desk: built on 16 Nov with example offers (fictional partners); real offers wait on the partners, imported in the same file format;
   - videos;
   - the country pages: framework built (16 Nov), Spain, Japan, Iceland, USA and Morocco drafted and waiting for the user's check; the other 15 of the first 20 after that;
   - the PWA.
@@ -46,7 +43,7 @@ Last updated: 16 November 2026.
 | Challenges | All four kinds: site badges, personal goals, friends challenges, monthly photo themes. |
 | Cultural and seasonal info | Public country pages that search engines index, with a summary in the app. |
 | Printing | An affiliate link to a print company first; ordering through the site later. |
-| Promotion | Give a few complimentary memberships to influencers who promote the site. |
+| Promotion | Influencers who promote the site get two years free; their followers get their first month free with the creator's code (16 Nov). |
 | Installable app | A PWA (15 Nov): installable from the browser, online only at first. No app store, no Next.js. |
 | Moments | Life events and notes on a country or landmark, e.g. "Had a baby in Canada" (15 Nov). Free on every tier. |
 | Maps you own | (16 Nov) Every plan includes 1 map, and any account can pay for more, with no limit: £3.99 a month (£39 a year) on Economy and Business, £5.99 (£59 a year) on First Class. An extra map gets the owner's plan limits. Maps shared with you are free and never count. |
@@ -224,7 +221,7 @@ The tier rules, including the Economy print copy, start the day the site launche
 
 ### Complimentary memberships
 
-- **Granting one:** an admin page gives an account a plan for a set time without payment, e.g. First Class for 12 months.
+- **Granting one:** an admin page gives an account a plan for a set time without payment (1 to 36 months), e.g. First Class for 24 months.
 - **When it ends,** the account drops to Economy unless they subscribe. Nothing is deleted (the downgrade rules apply).
 - **The first use is influencers:** a few travel creators who promote the site (see Getting the word out). It can also go to testers or as an apology.
 - **Cost:** a complimentary First Class account costs at most a few dollars a month in storage, and usually pennies.
@@ -590,10 +587,11 @@ The site becomes installable: "Install app" in Chrome and Edge on Android and de
 - **Shared maps.** Every shared map shows friends and family what the site does. A small "Make your own map" link on share pages turns viewers into sign-ups.
 - **Challenges.** Friends challenges and monthly themes give people reasons to invite others and come back.
 - **Country pages.** Search traffic, which grows slowly from launch.
-- **Influencers.** Give a few complimentary memberships (e.g. First Class for 12 months) to travel creators who promote the site. Smaller creators with engaged travel audiences fit the budget best.
-  - **Their own link or code.** Each creator gets a sign-up link or code, ideally with something for their followers (e.g. a first month of Business free), so you can see who brings sign-ups. Store the code on the account.
+- **Influencers.** **Decided (16 Nov):** a creator who promotes the site gets **two years free** (a 24-month complimentary membership, First Class unless decided otherwise per creator). Smaller creators with engaged travel audiences fit the budget best.
+  - **Their own link or code.** Each creator gets a sign-up link or code, so you can see who brings sign-ups; the code is stored on the account. **Decided (16 Nov):** anyone who signs up with it gets **their first month free on whichever paid plan they choose**: a 30-day Stripe trial on their first paid Checkout, **with a card**, charged from then on unless they cancel first. The same for every code (docs/API.md, "Promo codes").
   - **Labelling.** Under UK rules (ASA and CMA influencer guidance), a free membership given in return for promotion makes the post an advert, so it must be clearly labelled, e.g. "Ad" at the start. Put that in the agreement.
   - **Ask for honesty.** A real post or video showing their map and passport, not a script.
+  - **The agreement:** [documents/CREATOR-AGREEMENT.md](../documents/CREATOR-AGREEMENT.md) (draft, 16 Nov 2026): one post or video within 60 days showing their own map, with their code, kept up 12 months, labelled "Ad", with the followers' offer described accurately (card needed, renews after 30 days).
 
 ## Database additions (draft)
 
@@ -662,11 +660,11 @@ Proposed values, to confirm or change (all in the tiers constants file):
 - **Video limits:** 3 minutes, 500 MB, 20 per country.
 - **Storage safety nets:** 50 GB and 200 GB.
 
-Still to decide:
+Still to decide (each is also in [WAITING-ON-YOU.md](WAITING-ON-YOU.md), with what the code does until then):
 - **First Class extras:** which extra map styles and passport covers.
-- **Influencer terms:** how long a complimentary membership lasts, what's asked in return, and the followers' offer.
+- ~~**Influencer terms:**~~ **Decided (16 Nov):** creators get two years free; their followers get their first month free on the paid plan they choose, with a card up front. What's asked of a creator in return is drafted in [documents/CREATOR-AGREEMENT.md](../documents/CREATOR-AGREEMENT.md), for the user to review (WAITING-ON-YOU.md).
 - **Partners:** which affiliate partners and which print partner.
-- **First country pages:** which 20 countries come first.
+- ~~**First country pages:**~~ **Decided (16 Nov):** Spain, France, Italy, Portugal, Greece, Turkey, Ireland, the Netherlands, Germany, Croatia, Iceland, the USA, Canada, Mexico, Morocco, Egypt, Japan, Thailand, Australia and New Zealand.
 - **Themes:** who writes the year of monthly themes.
 - **VAT:** whether to handle VAT yourself or use a merchant of record; ask an accountant.
 - **Moments:**

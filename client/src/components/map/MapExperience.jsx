@@ -1,13 +1,14 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Constants
-import { MAP_PAGE_URL, mapPath } from '@/utils/constants/routes';
+import { MAP_PAGE_URL, mapPassportPath, mapPath, sharedPassportPath } from '@/utils/constants/routes';
 // Hooks
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import usePhotoPage from '@/hooks/usePhotoPage';
 import useLandmarks from '@/hooks/useLandmarks';
 import useCanHover from '@/hooks/useCanHover';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
+import useAchievements from '@/hooks/useAchievements';
 // Components
 import WorldMap from './WorldMap';
 import MapBackground from './MapBackground';
@@ -23,10 +24,13 @@ import MapHoverLayer from './MapHoverLayer';
 import MapPanelFallback from './MapPanelFallback';
 import VerifyEmailBanner from './VerifyEmailBanner';
 import MapPlanBanner from './MapPlanBanner';
+import GoalTag from '@/components/achievements/GoalTag';
+import AwardNews from '@/components/achievements/AwardNews';
 import { LANDMARK_MIN_ZOOM } from './LandmarkPins';
 import ErrorBoundary from '@/utils/error/ErrorBoundary';
 // Panels, fetched when first wanted (lazyMapPanels.js)
 import {
+  BadgesGoalsPanel,
   CountryListPanel,
   CountryPanel,
   ExtraMapDialog,
@@ -35,6 +39,7 @@ import {
   PhotoViewer,
   SettingsPanel,
   ShareDialog,
+  Slideshow,
   StatsPanel,
   TimelinePanel,
   TripsPanel,
@@ -50,6 +55,7 @@ import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
 import { isAntarctic } from '@/utils/map/specialPlaces';
+import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
 
 const PREVIEW_PER_COUNTRY = 6;
 const CLUSTER_RADIUS = 220; // map units: countries this close count as one region
@@ -88,14 +94,18 @@ function homeFromVisits(visits, showAntarctica) {
   };
 }
 
-// Which overlay is open, the selected country, the open photo and the share dialog:
-// one reducer, so opening one panel closes the last.
-const initialUi = { panel: null, selectedCode: null, uploadCountry: null, photoId: null, sharing: false };
+// Which overlay is open, the selected country, the open photo, the share dialog and the
+// slideshow (`{ country }`: one country's, or null for the whole map's): one reducer, so
+// opening one panel closes the last. The slideshow plays over everything, leaving the
+// panel it was opened from (a country's) there for when it closes.
+const initialUi = { panel: null, selectedCode: null, uploadCountry: null, photoId: null, sharing: false, slideshow: null };
 
 function uiReducer(state, action) {
   switch (action.type) {
     case 'toggle':
       return { ...state, panel: state.panel === action.panel ? null : action.panel, uploadCountry: null };
+    case 'open':
+      return { ...state, panel: action.panel, uploadCountry: null };
     case 'close':
       return { ...state, panel: null, selectedCode: state.panel === 'country' ? null : state.selectedCode };
     case 'selectCountry':
@@ -108,6 +118,10 @@ function uiReducer(state, action) {
       return { ...state, photoId: null };
     case 'share':
       return { ...state, sharing: action.open };
+    case 'play':
+      return { ...state, slideshow: { country: action.country || null } };
+    case 'stopPlaying':
+      return { ...state, slideshow: null };
     default:
       return state;
   }
@@ -159,17 +173,37 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         'stats',
         'trips',
         'timeline',
+        'badges',
         'settings',
+        'play',
         ...(canEdit ? ['upload'] : []),
         ...(canShare ? ['share', 'switcher'] : []),
       ]),
     [canEdit, canShare],
   );
 
+  // Badges and goals (docs/API.md, "Badges and goals"): loaded with the map, and asked
+  // again (debounced) after anything that might earn one: a visit changed, a batch of
+  // uploads finished, a photo changed (a landmark confirmed, a country given). The server
+  // awards as the owner and editors load them; what it says is new is announced once.
+  const achievements = useAchievements({ mapId: shareCode ? null : map.id, shareCode });
+  const { check: checkAchievements, dismissNews } = achievements;
+  const wantToGo = useMemo(() => map.visits.filter((v) => v.status === 'WANT_TO_GO').map((v) => v.countryCode), [map.visits]);
+  const openBadges = useCallback(() => {
+    dismissNews();
+    dispatch({ type: 'open', panel: 'badges' });
+  }, [dismissNews]);
+
   const visitsByCode = useMemo(() => Object.fromEntries(map.visits.map((v) => [v.countryCode, v.status])), [map.visits]);
   const visitFor = (code) => map.visits.find((v) => v.countryCode === code) || null;
   // The map's own trips: what a photo or a moment can be on (not the group trips added from other maps)
   const ownTrips = useMemo(() => trips.filter((t) => !t.linked), [trips]);
+  // Travel offers (docs/API.md, "Travel offers"): a card every `adEvery` photos in the
+  // country galleries and one at the end of a slideshow (null: none for this viewer), chosen
+  // first for the soonest planned trip's destination. (A client-only page: today is read here.)
+  const adEvery = map.ads?.every ?? null;
+  const nextTrip = useMemo(() => nextPlannedTrip(trips, todayString()), [trips]);
+  const offerProps = { adEvery, nextTrip, canFetchTrips: !shareCode, mapKey: `map:${map.id}` };
 
   // The newest photos, grouped by country, feed the hover slideshow (never fetched for
   // touch screens, which don't hover)
@@ -207,6 +241,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     reloadUnplaced();
     refreshMap?.();
   }, [reloadPreview, reloadUnplaced, refreshMap]);
+  // A photo changed in the viewer (a landmark confirmed, a country given): it may have
+  // earned something. Uploads ask once their batch is done (onBatchDone), not per photo.
+  const photoEdited = useCallback(() => {
+    photosChanged();
+    checkAchievements();
+  }, [photosChanged, checkAchievements]);
 
   const selectCountry = useCallback((code) => dispatch({ type: 'selectCountry', code }), []);
   const showCountry = useCallback(
@@ -219,12 +259,26 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   );
   const openPhoto = useCallback((photo) => dispatch({ type: 'openPhoto', photoId: photo.id }), []);
   const close = useCallback(() => dispatch({ type: 'close' }), []);
-  const setVisit = actions?.setVisit;
+  // A visit changed by hand: then see whether it earned a badge or met a goal
+  const changeVisit = actions?.setVisit;
+  const setVisit = useMemo(
+    () =>
+      changeVisit
+        ? async (...args) => {
+            const answer = await changeVisit(...args);
+            checkAchievements();
+            return answer;
+          }
+        : undefined,
+    [changeVisit, checkAchievements],
+  );
 
   const handleToggle = useCallback((panel) => {
     if (panel === 'share') dispatch({ type: 'share', open: true });
+    else if (panel === 'play') dispatch({ type: 'play', country: null });
     else dispatch({ type: 'toggle', panel });
   }, []);
+  const playCountry = useCallback((code) => dispatch({ type: 'play', country: code }), []);
 
   // A panel listing photos is open: the viewer is probably next
   const listsPhotos = ui.panel === 'country' || ui.panel === 'unplaced';
@@ -259,6 +313,20 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             unplacedCount={unplacedCount}
             unplacedMore={unplacedMore}
             onShowUnplaced={showUnplaced}
+            onShowBadges={openBadges}
+            passportHref={shareCode ? sharedPassportPath(shareCode) : mapPassportPath(map.id)}
+            onClose={close}
+          />
+        );
+      case 'badges':
+        return (
+          <BadgesGoalsPanel
+            achievements={achievements}
+            canEdit={canChange}
+            locked={locked}
+            wantToGo={wantToGo}
+            mapId={map.id}
+            shareCode={shareCode}
             onClose={close}
           />
         );
@@ -290,12 +358,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             photoSource={photoSource}
             photosVersion={photosVersion}
             onOpenPhoto={openPhoto}
+            onPlay={playCountry}
             onAddPhotos={canChange && !mapLocked ? (code) => dispatch({ type: 'upload', code }) : null}
             mapId={shareCode ? null : map.id}
             travellers={map.travellers}
             trips={ownTrips}
             onAddTraveller={actions?.addTraveller}
             onMomentsChanged={refreshMap}
+            {...offerProps}
             onClose={close}
           />
         ) : null;
@@ -320,6 +390,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             photoCounts={map.photoCounts || null}
             isOwner={isOwner}
             onUploaded={photosChanged}
+            onBatchDone={checkAchievements}
             onClose={close}
           />
         ) : null;
@@ -394,6 +465,15 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onPay={isOwner && !mustVerify ? () => setPayingForMap(true) : null}
           />
         ) : null}
+        {/* Last in the column, so the banners above keep their place (panels open below them) */}
+        {settings.showGoalTag !== false ? (
+          <GoalTag
+            goals={achievements.goals}
+            badges={achievements.badges}
+            onOpen={() => dispatch({ type: 'toggle', panel: 'badges' })}
+            onIntent={() => preloadTool('badges')}
+          />
+        ) : null}
       </div>
 
       {settings.showUserBanner ? (
@@ -404,7 +484,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
       <div className='pointer-events-none absolute inset-x-0 bottom-3 grid justify-items-center md:inset-x-auto md:bottom-auto md:right-3 md:top-3'>
         <MapToolbar
-          openPanel={ui.sharing ? 'share' : ui.panel}
+          openPanel={ui.slideshow ? 'play' : ui.sharing ? 'share' : ui.panel}
           onToggle={handleToggle}
           onIntent={preloadTool}
           canUpload={canEdit}
@@ -427,14 +507,15 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       )}
 
       {/* With the verify or plan banners under the title, wide screens open panels below them. The
-          tickets (a country, and the country list) are centred on wide screens instead,
-          clear of the toolbar (right) and the zoom stamps (bottom right); on phones every
-          panel is the sheet above the toolbar. */}
+          tickets (a country, and the country list) are centred on the screen on wide screens
+          instead: the same space above and below (4.5rem, clear of the title tag at the top
+          and the zoom stamps at the bottom), and clear of the toolbar on the right; on phones
+          every panel is the sheet above the toolbar. */}
       {panel ? (
         <div
           className={`pointer-events-none absolute inset-x-3 bottom-24 z-10 grid ${
             ui.panel === 'country' || ui.panel === 'countries'
-              ? 'md:inset-x-24 md:bottom-6 md:top-24 md:grid-rows-[minmax(0,1fr)] md:place-items-center'
+              ? 'md:inset-x-24 md:inset-y-18 md:grid-rows-[minmax(0,1fr)] md:place-items-center'
               : `md:inset-x-auto md:bottom-auto md:left-3 ${panelTopBelow({ verify: mustVerify, plan: planBanner })}`
           }`}
         >
@@ -444,6 +525,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           </ErrorBoundary>
         </div>
       ) : null}
+
+      {/* A badge earned or a goal reached: said once, politely */}
+      <AwardNews news={achievements.news} onOpen={openBadges} onDismiss={dismissNews} />
 
       <MapHoverLayer
         hover={hover}
@@ -461,7 +545,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             canEdit={canEdit}
             locked={locked}
             trips={canEdit ? ownTrips : undefined}
-            onChanged={photosChanged}
+            onChanged={photoEdited}
             onDeleted={photosChanged}
             onClose={() => dispatch({ type: 'closePhoto' })}
           />
@@ -490,6 +574,19 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               } else navigate(MAP_PAGE_URL, { replace: true });
             }}
             onClose={() => dispatch({ type: 'share', open: false })}
+          />
+        </Suspense>
+      ) : null}
+
+      {ui.slideshow ? (
+        <Suspense fallback={null}>
+          <Slideshow
+            source={photoSource}
+            country={ui.slideshow.country}
+            titleCards={!ui.slideshow.country}
+            {...offerProps}
+            title={`Slideshow: ${ui.slideshow.country ? COUNTRY_BY_CODE[ui.slideshow.country]?.name || ui.slideshow.country : map.name}`}
+            onClose={() => dispatch({ type: 'stopPlaying' })}
           />
         </Suspense>
       ) : null}

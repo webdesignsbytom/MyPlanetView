@@ -5,7 +5,9 @@ import {
   ACCOUNT_PAGE_URL,
   ADMIN_CONTACT_FORM_PAGE_URL,
   ADMIN_EVENTS_PAGE_URL,
+  ADMIN_OFFERS_PAGE_URL,
   ADMIN_PAGE_URL,
+  ADMIN_PROMO_CODES_PAGE_URL,
   ADMIN_USERS_PAGE_URL,
   CONTACT_PAGE_URL,
   COUNTRIES_PAGE_URL,
@@ -44,6 +46,8 @@ export const AdminDashboardPage = lazyPage(() => import('@/pages/admin/AdminDash
 export const ContactFormAdminPage = lazyPage(() => import('@/pages/contact/admin/ContactFormAdminPage'));
 export const AdminUsersPage = lazyPage(() => import('@/pages/admin/AdminUsersPage'));
 export const AdminEventsPage = lazyPage(() => import('@/pages/admin/AdminEventsPage'));
+export const AdminPromoCodesPage = lazyPage(() => import('@/pages/admin/AdminPromoCodesPage'));
+export const AdminOffersPage = lazyPage(() => import('@/pages/admin/AdminOffersPage'));
 // Users
 export const AccountPage = lazyPage(() => import('@/pages/account/AccountPage'));
 export const LoginPage = lazyPage(() => import('@/users/login/LoginPage'));
@@ -57,6 +61,8 @@ export const TripPage = lazyPage(() => import('@/pages/trips/TripPage'));
 export const WelcomePage = lazyPage(() => import('@/pages/onboarding/WelcomePage'));
 export const SharedPage = lazyPage(() => import('@/pages/shared/SharedPage'));
 export const InviteAcceptPage = lazyPage(() => import('@/pages/invite/InviteAcceptPage'));
+// A map's passport (/maps/:mapId/passport, and /shared/:code/passport)
+export const PassportPage = lazyPage(() => import('@/pages/passport/PassportPage'));
 // Dev server only: null in production builds, so the page isn't bundled
 export const SelectLabPage = import.meta.env.DEV ? lazyPage(() => import('@/pages/dev/SelectLabPage')) : null;
 
@@ -92,6 +98,8 @@ const PAGES_BY_PATH = {
   [ADMIN_CONTACT_FORM_PAGE_URL]: ContactFormAdminPage,
   [ADMIN_USERS_PAGE_URL]: AdminUsersPage,
   [ADMIN_EVENTS_PAGE_URL]: AdminEventsPage,
+  [ADMIN_PROMO_CODES_PAGE_URL]: AdminPromoCodesPage,
+  [ADMIN_OFFERS_PAGE_URL]: AdminOffersPage,
   [ACCOUNT_PAGE_URL]: AccountPage,
   [LOGIN_PAGE_URL]: LoginPage,
   [SIGN_UP_PAGE_URL]: RegisterPage,

@@ -22,7 +22,7 @@ export const planTickets = [
       { text: 'Your private travel map, with every country you’ve been coloured in' },
       { text: perCountry('FREE') },
       { text: 'A print-quality copy of every photo, good up to A4' },
-      { text: 'Travel offer cards in your photo galleries keep it free', soon: true },
+      { text: 'Travel offer cards in your photo galleries keep it free' },
     ],
   },
   {
@@ -32,7 +32,7 @@ export const planTickets = [
       { text: 'Everything in Economy' },
       { text: perCountry('REGULAR') },
       { text: 'Your full-size originals, untouched: for posters, canvases, cropping and re-editing' },
-      { text: 'No ad cards for you, on any map; fewer for the people you share with', soon: true },
+      { text: 'No ad cards for you, on any map; fewer for the people you share with' },
     ],
   },
   {
@@ -43,17 +43,18 @@ export const planTickets = [
       { text: perCountry('PREMIUM') },
       { text: 'Videos of your trips, beside the photos', soon: true },
       { text: 'Extra map styles and passport covers', soon: true },
-      { text: 'No ad cards on your maps, for anyone who looks', soon: true },
+      { text: 'No ad cards on your maps, for anyone who looks' },
     ],
   },
 ];
 
 // Worded as FEATURE-PLAN.md allows ("Ads by tier", "Travel Desk"): not "no ads anywhere",
-// which the Travel Desk would break (ads aren't built yet: soon)
+// which the Travel Desk would break, and "on a map", as the public country guides show
+// their two partner cards to every visitor
 export const adsLine = {
   // Not "paying members": an Economy account paying for an extra map still sees them
-  lead: 'Business and First Class members never see ad cards.',
-  text: 'Not on any map, theirs or anyone else’s. On a First Class map nobody does: no adverts in your albums or on your shared maps, and travel offers only when you ask for them.',
+  lead: 'Business and First Class members never see ad cards on a map.',
+  text: 'Not on their own maps or anyone else’s. On a First Class map nobody does: no adverts in your albums or on your shared maps, and travel offers only when you ask for them, at the Travel Desk.',
 };
 
 // What every plan has
@@ -65,7 +66,12 @@ export const everyPlanFeatures = [
   { text: 'Landmarks suggested from where each photo was taken.' },
   { text: 'Four looks for the map: the animated sea, the old map, Jupiter’s clouds and the galaxy.' },
   { text: 'Every map other people share with you, free: they never count as yours.' },
-  { text: 'The passport of landmark stamps, slideshows, travel challenges and country guides.', soon: true },
+  { text: 'A passport with a stamp for every landmark you photograph.' },
+  { text: 'Slideshows of your whole map, one country or one trip.' },
+  { text: 'The Travel Desk: places to stay, tours and flights for a trip or a country, from our travel partners, only when you ask.' },
+  { text: 'Badges as your map fills up, and goals of your own: a number of countries, a bucket list, a whole region.' },
+  // Friends challenges and monthly photo themes aren't built, and no country guide is published yet
+  { text: 'Challenges with friends, monthly photo themes and country guides.', soon: true },
 ];
 
 // More than one map (FEATURE-PLAN.md, "Maps")
@@ -81,11 +87,12 @@ export const extraMaps = {
 
 // The small print, kept honest
 export const pricingNotes = [
-  `Paying yearly gets you about two months free: ${formatPence(PLANS.REGULAR.price.YEAR)} a year for ${PLANS.REGULAR.name}, ${formatPence(PLANS.PREMIUM.price.YEAR)} for ${PLANS.PREMIUM.name}.`,
-  'Upgrade the day you need it. Changing plan never deletes anything: originals already kept stay, and a country over the new limit keeps its photos but takes no more.',
-  `A fair-use limit of ${Math.round(PLANS.REGULAR.limits.storageCapBytes / GB)} GB of photos on each Business map, and ${Math.round(PLANS.PREMIUM.limits.storageCapBytes / GB)} GB on First Class, keeps things fair. Most people never get near it.`,
-  `Payments go through Stripe. Cancel any time from your account page, and the plan runs to the end of the period you’ve paid for.`,
-  `Prices are in pounds sterling. Getting a copy of all your data is free on every plan, as the law says it should be.`,
+  { text: `Paying yearly gets you about two months free: ${formatPence(PLANS.REGULAR.price.YEAR)} a year for ${PLANS.REGULAR.name}, ${formatPence(PLANS.PREMIUM.price.YEAR)} for ${PLANS.PREMIUM.name}.` },
+  { text: 'Upgrade the day you need it. Changing plan never deletes anything: originals already kept stay, and a country over the new limit keeps its photos but takes no more.' },
+  { text: `A fair-use limit of ${Math.round(PLANS.REGULAR.limits.storageCapBytes / GB)} GB of photos on each Business map, and ${Math.round(PLANS.PREMIUM.limits.storageCapBytes / GB)} GB on First Class, keeps things fair. Most people never get near it.` },
+  { text: `Payments go through Stripe. Cancel any time from your account page, and the plan runs to the end of the period you’ve paid for.` },
+  // "Download all my data" isn't built yet (asking for a copy works, by law, but there's no button)
+  { text: `Prices are in pounds sterling. Getting a copy of all your data is free on every plan, as the law says it should be.`, soon: true },
 ];
 
 export const pricingCta = {

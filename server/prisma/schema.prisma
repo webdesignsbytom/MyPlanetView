@@ -39,6 +39,10 @@ model User {
   travellerOf      Traveller[]
   addedTripLinks   TripMap[]
   createdMoments   Moment[]
+  createdGoals     Goal[]
+
+  // Influencer codes this admin made (docs/API.md, "Promo codes")
+  createdPromoCodes PromoCode[]
 
   // App events
   actedAppEvents    AppEvent[] @relation("AppEventActor")
@@ -127,9 +131,17 @@ model Profile {
   leavingPlan   Json?
   leavingPlanAt DateTime?
 
+  // The influencer code this account signed up with (docs/API.md, "Promo codes"), and
+  // when its free month started (a Stripe trial on its first paid Checkout; never twice)
+  promoCodeId      String?
+  promoCode        PromoCode? @relation(fields: [promoCodeId], references: [id], onDelete: SetNull)
+  promoTrialUsedAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Sign-ups per code (the admin's list); also the foreign key's SET NULL
+  @@index([promoCodeId])
   @@map("profile")
 }
 
@@ -173,6 +185,7 @@ model Country {
   photos       Photo[]
   homeProfiles Profile[]
   moments      Moment[]
+  offers       AffiliateOffer[]
 
   birthTravellers     Traveller[] @relation("TravellerBirthCountry")
   favouriteTravellers Traveller[] @relation("TravellerFavouriteCountry")
@@ -204,9 +217,14 @@ model Landmark {
   pinX Float?
   pinY Float?
 
+  // A UNESCO World Heritage Site (the passport and its badges): the inscriptions in
+  // seed/data/landmarksUnesco.js, and the landmarks.js items in UNESCO_IN_EXISTING
+  isUnesco Boolean @default(false)
+
   photoMatches PhotoLandmark[]
   tripStops    TripStop[]
   moments      Moment[]
+  covers       LandmarkCover[]
 
   @@index([countryCode])
   @@index([latitude, longitude])
@@ -271,6 +289,12 @@ model TravelMap {
   tripLinks  TripMap[]
   moments    Moment[]
 
+  // The passport, badges and goals (docs/API.md, "Passport", "Badges and goals")
+  landmarkMatches PhotoLandmark[]
+  landmarkCovers  LandmarkCover[]
+  badges          BadgeAward[]
+  goals           Goal[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -302,9 +326,9 @@ model Traveller {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([mapId, position])
   // One traveller per account on a map (rows with no login are unaffected)
   @@unique([mapId, userId])
+  @@index([mapId, position])
   @@index([userId])
   @@map("traveller")
 }
@@ -544,6 +568,17 @@ model Photo {
   latitude  Float?
   longitude Float?
 
+  // A photo, or a First Class video (docs/API.md, "Videos"): a video's file is its ORIGINAL
+  // variant (location metadata overwritten in the browser), its THUMB and DISPLAY are
+  // poster frames, and it has a length. CHECKs: a video has `durationS` (a photo none) and
+  // no latitude or longitude.
+  kind      PhotoKind @default(PHOTO)
+  durationS Int?
+
+  // When it was taken, or when it was uploaded if the file had no date: the slideshows'
+  // order and the dated goals. Always takenAt ?? createdAt (set by domain/photos.js).
+  shotAt DateTime @default(now())
+
   width  Int
   height Int
 
@@ -558,10 +593,12 @@ model Photo {
   countryPosition Float @default(0)
   tripPosition    Float @default(0)
 
-  variants  PhotoVariant[]
-  landmarks PhotoLandmark[]
-  coverOf   Trip[]          @relation("TripCover")
-  moments   MomentPhoto[]
+  variants    PhotoVariant[]
+  landmarks   PhotoLandmark[]
+  coverOf     Trip[]          @relation("TripCover")
+  moments     MomentPhoto[]
+  // Passport stamps showing this photo
+  stampCovers LandmarkCover[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -572,8 +609,15 @@ model Photo {
   @@index([mapId, createdAt(sort: Desc), id(sort: Desc)])
   @@index([tripId, tripPosition, id])
   @@index([mapId, countryCode, countryPosition, id])
+  // The worldwide slideshow, in the order the photos were taken
+  @@index([mapId, shotAt, id])
   @@index([uploaderId])
   @@map("photo")
+}
+
+enum PhotoKind {
+  PHOTO
+  VIDEO
 }
 
 enum PhotoSize {
@@ -604,20 +648,32 @@ enum MatchSource {
 }
 
 model PhotoLandmark {
-  photoId    String
-  photo      Photo       @relation(fields: [photoId], references: [id], onDelete: Cascade)
-  landmarkId String
-  landmark   Landmark    @relation(fields: [landmarkId], references: [id], onDelete: Cascade)
-  source     MatchSource
+  photoId     String
+  photo       Photo       @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  landmarkId  String
+  landmark    Landmark    @relation(fields: [landmarkId], references: [id], onDelete: Cascade)
+  source      MatchSource
   // How far from the landmark the photo was taken (GPS matches)
-  distanceM  Int?
+  distanceM   Int?
   // GPS matches are suggestions until the user confirms them
-  confirmed  Boolean     @default(false)
+  confirmed   Boolean     @default(false)
+  // When it was confirmed (the passport stamp earned); null exactly while unconfirmed
+  // (CHECK photo_landmark_confirmed_at)
+  confirmedAt DateTime?
+
+  // The photo's map, copied here (a photo never changes map), so the passport and the
+  // landmark stat read this table alone instead of joining every photo on the map
+  mapId String
+  map   TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
+  // The stamp that shows this match's photo
+  coverOf LandmarkCover[]
 
   createdAt DateTime @default(now())
 
   @@id([photoId, landmarkId])
   @@index([landmarkId])
+  @@index([mapId, landmarkId])
   @@map("photo_landmark")
 }
 
@@ -781,6 +837,189 @@ model ContactForm {
   // The cron's "no form uses this file" check and the contact image rules look up by key
   @@index([imageKey])
   @@map("contact_form")
+}
+
+// ── Passport, badges, goals and promo codes ─────────────────────────────────
+
+// The passport (docs/API.md, "Passport")
+
+// The photo a passport stamp shows, picked by the owner or an editor. Without one, the
+// stamp shows the landmark's earliest confirmed photo. It points at the match itself, so
+// removing the match (or the photo) removes the choice.
+model LandmarkCover {
+  mapId      String
+  map        TravelMap     @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  landmarkId String
+  landmark   Landmark      @relation(fields: [landmarkId], references: [id], onDelete: Cascade)
+  photoId    String
+  photo      Photo         @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  match      PhotoLandmark @relation(fields: [photoId, landmarkId], references: [photoId, landmarkId], onDelete: Cascade)
+
+  updatedAt DateTime @updatedAt
+
+  @@id([mapId, landmarkId])
+  // Foreign keys: the cascades from a photo, a match and a landmark
+  @@index([photoId, landmarkId])
+  @@index([landmarkId])
+  @@map("landmark_cover")
+}
+
+// Badges and goals (docs/API.md, "Badges and goals")
+
+// A site badge a map has earned (utils/badges.js lists them). Awarded when the owner or
+// an editor loads the map's badges, and never taken back.
+model BadgeAward {
+  mapId    String
+  map      TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  badgeKey String
+  earnedAt DateTime  @default(now())
+
+  @@id([mapId, badgeKey])
+  @@map("badge_award")
+}
+
+enum GoalKind {
+  COUNTRY_COUNT // `target` countries
+  COUNTRY_LIST // every country in `countryCodes` (a bucket list)
+  REGION // every country in `region` (a continent or a region in utils/constants/regions.js)
+  LANDMARK_COUNT // `target` passport stamps
+}
+
+// A personal goal on a map. With a `deadline`, only what has a photo taken by then counts
+// (a hand-ticked country has no date). `achievedAt` is set the first time the owner or an
+// editor loads it met; changing what it asks clears it. CHECK goal_shape: each kind has
+// exactly its own fields.
+model Goal {
+  id    String    @id @default(uuid())
+  mapId String
+  map   TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
+  kind         GoalKind
+  // The person's own words ("30 before 30"); the app words it from the kind otherwise
+  title        String?
+  target       Int?
+  countryCodes String[]
+  region       String?
+  deadline     DateTime? @db.Date
+  achievedAt   DateTime?
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([mapId, createdAt])
+  // Foreign key: SET NULL when the account is deleted
+  @@index([createdById])
+  @@map("goal")
+}
+
+// Influencer codes (docs/API.md, "Promo codes"): a sign-up link or code per creator, so
+// sign-ups can be counted per code. Every code gives the same offer, set in code
+// (utils/promoCodes.js, 16 Nov 2026): the follower's first month free on the paid plan
+// they choose, as a Stripe trial with a card (Profile.promoTrialUsedAt).
+model PromoCode {
+  id    String @id @default(uuid())
+  // Upper case letters and digits, e.g. SAMTRAVELS (utils/promoCodes.js)
+  code  String @unique
+  // Who it's for, e.g. "Sam Travels (YouTube)"; admins only
+  label String
+
+  active  Boolean   @default(true)
+  // No more sign-ups with it after this many, or after this time
+  maxUses Int?
+  endsAt  DateTime?
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  profiles Profile[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Foreign key: SET NULL when the admin's account is deleted
+  @@index([createdById])
+  @@map("promo_code")
+}
+
+// ── Travel offers: ad cards and the Travel Desk ────────────────────────────────
+
+enum OfferKind {
+  HOTEL
+  TOUR
+  FLIGHT
+  ESIM
+  INSURANCE
+  LUGGAGE
+  CAR_HIRE
+  OTHER
+}
+
+// Where an offer may show: every 12th or 24th tile of a photo gallery, the end of a
+// slideshow, the public country pages, and the Travel Desk (only when asked for)
+enum OfferPlacement {
+  GALLERY
+  SLIDESHOW
+  COUNTRY_PAGE
+  TRAVEL_DESK
+}
+
+// A partner's offer (docs/API.md, "Travel offers"), imported from a JSON file by its
+// `key` (utils/offers.js; `npm run db:offers -- <file>` or the admin's import), or made
+// on the admin page. Shown as our own card; a click goes through GET /go/:offerId, which
+// counts it (OfferClickDaily) and redirects to `url` with its placeholders filled.
+// CHECKs: weight 1–100, at least one placement, startsAt not after endsAt.
+model AffiliateOffer {
+  id  String @id @default(uuid())
+  // The import file's id for it, e.g. "example-stays-jp": importing again updates the row
+  key String @unique
+
+  partner String
+  kind    OfferKind
+  // "Hotels in Kyoto"; the card's one line
+  title   String
+  blurb   String?
+
+  // The country it's for; null for a general offer (insurance, eSIMs, luggage)
+  countryCode String?  @db.Char(2)
+  country     Country? @relation(fields: [countryCode], references: [code], onDelete: Restrict)
+
+  placements OfferPlacement[]
+
+  // The partner's link, https only. May hold {destination}, {country}, {checkin} and
+  // {checkout}, filled at the click from what the card knew (a planned trip's dates)
+  url      String
+  // A picture in the public bucket (e.g. a country poster); the card draws an
+  // illustration of its kind without one
+  imageKey String?
+  // How often it's picked among the offers that fit a slot
+  weight   Int     @default(1)
+
+  active   Boolean   @default(true)
+  startsAt DateTime?
+  endsAt   DateTime?
+
+  clicks OfferClickDaily[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("affiliate_offer")
+}
+
+// Clicks, counted per offer, UTC day and placement, and nothing else: no person, map,
+// share code or time of day (docs/FEATURE-PLAN.md, "Ads")
+model OfferClickDaily {
+  offerId   String
+  offer     AffiliateOffer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  day       DateTime       @db.Date
+  placement OfferPlacement
+  count     Int            @default(0)
+
+  @@id([offerId, day, placement])
+  @@map("offer_click_daily")
 }
 
 // ── Plans and payments (docs/API.md, "Plans and billing") ────────────────────

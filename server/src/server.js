@@ -20,6 +20,9 @@ import mapRouter from './routes/maps.js';
 import tripRouter from './routes/trips.js';
 import photoRouter from './routes/photos.js';
 import momentRouter from './routes/moments.js';
+import goalRouter from './routes/goals.js';
+import promoRouter from './routes/promoCodes.js';
+import { offerClickRouter, offersRouter } from './routes/offers.js';
 import sharedRouter from './routes/shared.js';
 import inviteRouter from './routes/invites.js';
 // Plans and payments
@@ -120,6 +123,11 @@ app.use('/api/maps', mapRouter);
 app.use('/api/trips', tripRouter);
 app.use('/api/photos', photoRouter);
 app.use('/api/moments', momentRouter);
+app.use('/api/goals', goalRouter);
+app.use('/api/promo-codes', promoRouter);
+app.use('/api/offers', offersRouter);
+// An offer card's link (docs/API.md, "Travel offers"): counts the click and redirects
+app.use('/go', offerClickRouter);
 app.use('/api/shared', sharedRouter);
 app.use('/api/invites', inviteRouter);
 app.use('/api/billing', billingRouter);

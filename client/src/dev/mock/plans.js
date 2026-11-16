@@ -16,6 +16,7 @@ import {
 } from '@/utils/constants/plans';
 import { countryName } from '@/utils/map/countries';
 import { getDb } from './store';
+import { promoTrialFor } from './promoCodes';
 
 const DAY_MS = 86400000;
 const time = (value) => new Date(value).getTime();
@@ -210,6 +211,7 @@ export function billingView(userId) {
     renewsAt: sub?.currentPeriodEnd ?? null,
     cancelAtPeriodEnd: sub?.cancelAtPeriodEnd ?? false,
     grant: grant ? { plan: grant.plan, endsAt: grant.endsAt } : null,
+    promoTrial: isLive(sub) ? null : promoTrialFor(getDb().users.find((u) => u.id === userId)),
     includedMaps: INCLUDED_MAPS,
     extraMapsPaid: extraMapsPaid(userId),
     ownedMaps: getDb().maps.filter((m) => m.ownerId === userId).length,

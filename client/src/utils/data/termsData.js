@@ -10,7 +10,7 @@ import {
 
 export const LEGAL_VERSION = {
   lastUpdated: '2026-11-16',
-  version: '1.0.2',
+  version: '1.0.3',
 };
 
 // Terms of use
@@ -83,6 +83,16 @@ export const TermsSectionsArray = [
     content: [
       `${CompanyName} is free while it is new. If we add paid plans, for example with more storage, we will tell you before anything changes for your account.`,
       'We may add, change or remove features. We will give notice before removing anything you rely on.',
+    ],
+  },
+  {
+    id: 'travel-offers',
+    title: 'Travel offers',
+    group: 'agreements',
+    content: [
+      `${CompanyName} shows travel offers from partners such as hotel, tour and flight booking sites: cards marked “Ad” in photo galleries and at the end of slideshows (not on First Class maps, and never to Business or First Class members), two on each country guide, and the Travel Desk, which opens only when you ask.`,
+      'They are affiliate links. If you book through one, the partner may pay us a commission. It costs you nothing extra, and it helps keep Economy free.',
+      'A booking is between you and the partner, on their terms. We choose partners with care, but we are not responsible for their prices, availability or service.',
     ],
   },
   {
@@ -212,6 +222,17 @@ export const PrivacySectionsArray = [
       'Google Analytics runs only if you accept analytics cookies.',
       'We never sell your data or share it with advertisers. We would only disclose it if the law required us to.',
       'Some providers may process data outside the UK. Where they do, they use approved safeguards such as standard contractual clauses.',
+    ],
+  },
+  {
+    id: 'travel-offers-privacy',
+    title: 'Travel offers and affiliate links',
+    group: 'policies',
+    content: [
+      'The offer cards marked “Ad” and the Travel Desk are partner offers. If you book through one, we may earn a commission, at no cost to you.',
+      'They are our own cards with plain links: no advertiser’s or partner’s scripts, tracking pixels or cookies run on our pages. Nothing about you, your map or your photos is sent to choose them: your browser picks each card from the same list everyone gets, by the country you are looking at or a trip you are planning.',
+      'Opening an offer goes through our server, which adds one to a count for that offer, that day and where the card was (a photo gallery, a slideshow, a country guide or the Travel Desk). We record nothing about who clicked: no account, map, share link or time of day.',
+      'The partner sees the place and, for a trip you are planning, the dates in the link, so their search starts there, but not the page you came from. What happens on their site is covered by their own privacy policy.',
     ],
   },
   {

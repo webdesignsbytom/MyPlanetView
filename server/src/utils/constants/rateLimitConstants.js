@@ -41,6 +41,21 @@ export const SHARE_LOOKUP_RATE_LIMIT = {
   max: 30,
 };
 
+// Offer clicks counted per IP (GET /go/:offerId). Beyond it the click still goes through,
+// it just isn't counted, so nobody can pad an offer's tally
+export const OFFER_CLICK_COUNT_LIMIT = {
+  name: 'offer-click',
+  windowMs: 15 * MINUTES,
+  max: 60,
+};
+
+// Looking up a promo code before signing up (GET /api/promo-codes/:code)
+export const PROMO_LOOKUP_RATE_LIMIT = {
+  name: 'promo-lookup',
+  windowMs: 15 * MINUTES,
+  max: 30,
+};
+
 // Browsing an open share link (its photo pages and photos): one visit makes many
 export const SHARE_BROWSE_RATE_LIMIT = {
   name: 'share-browse',

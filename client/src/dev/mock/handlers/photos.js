@@ -2,10 +2,16 @@
 import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb } from '../store';
 import { atLeast, canSeePhoto, countryExists, landmarkById, mapRole, markVisited, photoDetail, photoRole } from '../views';
-import { POSITION_FIELD, firstPosition, movePhotoAfter } from '../photoOrder';
+import { POSITION_FIELD, firstPosition, movePhotoAfter, setShotAt } from '../photoOrder';
 import { countryCapProblem } from '../plans';
 
 const NOT_FOUND = 'This photo could not be found.';
+
+// A match confirmed now (an already confirmed one keeps its date)
+function confirmMatch(match) {
+  if (!match.confirmed || !match.confirmedAt) match.confirmedAt = new Date().toISOString();
+  match.confirmed = true;
+}
 
 // Viewers can't see hidden photos, so for them a hidden photo doesn't exist
 function loadPhoto(photoId, needed) {
@@ -35,7 +41,11 @@ export function registerPhotoRoutes() {
       }
     }
     if (body.caption !== undefined) photo.caption = typeof body.caption === 'string' && body.caption.trim() ? body.caption.trim().slice(0, 300) : null;
-    if (body.takenAt !== undefined) photo.takenAt = body.takenAt || null;
+    if (body.takenAt !== undefined) {
+      photo.takenAt = body.takenAt || null;
+      // shotAt follows takenAt; a date taken away falls back to the upload time
+      setShotAt(photo);
+    }
     if (body.hidden !== undefined) photo.hidden = Boolean(body.hidden);
     if (body.countryCode !== undefined) {
       const code = body.countryCode ? String(body.countryCode).toUpperCase() : null;
@@ -84,6 +94,8 @@ export function registerPhotoRoutes() {
     if (reply) return reply;
     db.photos = db.photos.filter((p) => p.id !== photo.id);
     db.photoLandmarks = db.photoLandmarks.filter((pl) => pl.photoId !== photo.id);
+    // A passport stamp's picked photo goes with it (back to the landmark's earliest)
+    db.landmarkCovers = db.landmarkCovers.filter((c) => c.photoId !== photo.id);
     db.trips.forEach((t) => {
       if (t.coverPhotoId === photo.id) t.coverPhotoId = null;
     });
@@ -99,9 +111,21 @@ export function registerPhotoRoutes() {
     const { photo, role, reply } = loadPhoto(params.photoId, 'EDITOR');
     if (reply) return reply;
     if (!landmarkById(body.landmarkId)) return fail(400, 'Unknown landmark.');
+    // As the server: each match records its map, and when it was confirmed (null while it
+    // isn't). Confirming one stamps the landmark in the map's passport.
     const existing = db.photoLandmarks.find((pl) => pl.photoId === photo.id && pl.landmarkId === body.landmarkId);
-    if (existing) existing.confirmed = true;
-    else db.photoLandmarks.push({ photoId: photo.id, landmarkId: body.landmarkId, source: 'MANUAL', distanceM: null, confirmed: true });
+    if (existing) confirmMatch(existing);
+    else {
+      db.photoLandmarks.push({
+        photoId: photo.id,
+        mapId: photo.mapId,
+        landmarkId: body.landmarkId,
+        source: 'MANUAL',
+        distanceM: null,
+        confirmed: true,
+        confirmedAt: new Date().toISOString(),
+      });
+    }
     return ok({ photo: photoDetail(photo, role) }, 201);
   });
 
@@ -112,7 +136,7 @@ export function registerPhotoRoutes() {
     if (body.confirmed !== true) return fail(400, 'Malformed data.');
     const match = getDb().photoLandmarks.find((pl) => pl.photoId === photo.id && pl.landmarkId === params.landmarkId);
     if (!match) return fail(404, 'That landmark match could not be found.');
-    match.confirmed = true;
+    confirmMatch(match);
     return ok({ photo: photoDetail(photo, role) });
   });
 
@@ -123,6 +147,10 @@ export function registerPhotoRoutes() {
     const matches = (pl) => pl.photoId === photo.id && pl.landmarkId === params.landmarkId;
     if (!db.photoLandmarks.some(matches)) return fail(404, 'That landmark match could not be found.');
     db.photoLandmarks = db.photoLandmarks.filter((pl) => !matches(pl));
+    // The stamp's picked photo points at the match itself (ON DELETE CASCADE on the server)
+    db.landmarkCovers = db.landmarkCovers.filter(
+      (c) => !(c.mapId === photo.mapId && c.landmarkId === params.landmarkId && c.photoId === photo.id),
+    );
     return ok({ photo: photoDetail(photo, role) });
   });
 }

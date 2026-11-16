@@ -1,9 +1,10 @@
-import React, { memo, useCallback, useId, useMemo, useState } from 'react';
+import React, { memo, useCallback, useId, useMemo, useRef, useState } from 'react';
 // Data
 import { PLAIN_COUNTRIES, SPECIAL_PLACES } from '@/utils/map/countries';
 // Components
 import CountryTicket from './CountryTicket';
 import CountryListItem from './CountryListItem';
+import { ExpeditionStampIcon } from './StarBadge';
 import UnplacedPhotosButton from './UnplacedPhotosButton';
 import VerifyFirstNote from './VerifyFirstNote';
 import TextInput from '@/components/ui/TextInput';
@@ -38,12 +39,21 @@ const INDEX_HEADING =
 // Rows in one column, two from lg (the ticket is wide enough there)
 const ROWS = 'grid lg:grid-cols-2 lg:gap-x-8';
 
+// The list's own scroller (the ticket's body), so the jump moves nothing else on the page
+function scrollerOf(element) {
+  for (let node = element.parentElement; node; node = node.parentElement) {
+    if (/(auto|scroll)/.test(getComputedStyle(node).overflowY)) return node;
+  }
+  return null;
+}
+
 // Every country as a list: the keyboard path to the whole map, and the quickest way to
 // tick off many countries (the old site's "countries visited" list), as a ticket like a
 // country's own (CountryTicket, with no stub) that the map page centres on wide screens.
 // The countries come under A–Z index letters, each status a rubber stamp
 // (CountryListItem), then the special places (Antarctica and the poles) under their own
-// heading. Photos with no country have their own list, opened from the top. The rows are
+// heading, which the stamp beside the counts jumps to. Photos with no country have their
+// own list, opened from the top. The rows are
 // memoised and get only stable callbacks, so a status change re-renders one row, and the
 // map moving none.
 function CountryListPanel({
@@ -61,6 +71,8 @@ function CountryListPanel({
   const [filter, setFilter] = useState('ALL');
   const [error, setError] = useState(null);
   const headingId = useId();
+  const specialRef = useRef(null);
+  const specialHeadingRef = useRef(null);
 
   const [shownCountries, shownSpecial] = useMemo(() => {
     const term = fold(search.trim());
@@ -84,6 +96,19 @@ function CountryListPanel({
     },
     [onChangeStatus],
   );
+
+  // Scroll the list to the special places, and take focus there so Tab carries on from them
+  const showSpecial = () => {
+    const section = specialRef.current;
+    const scroller = section && scrollerOf(section);
+    if (!scroller) return;
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    scroller.scrollBy({
+      top: section.getBoundingClientRect().top - scroller.getBoundingClientRect().top,
+      behavior: still ? 'auto' : 'smooth',
+    });
+    specialHeadingRef.current?.focus({ preventScroll: true });
+  };
 
   const row = (place) => (
     <CountryListItem
@@ -126,10 +151,22 @@ function CountryListPanel({
           {error}
         </p>
       ) : null}
-      <p className='text-xs opacity-80' aria-live='polite'>
-        {shownCountries.length} of {PLAIN_COUNTRIES.length} countries, {shownSpecial.length} of {SPECIAL_PLACES.length} special
-        places
-      </p>
+      <div className='grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3'>
+        <p className='text-xs opacity-80' aria-live='polite'>
+          {shownCountries.length} of {PLAIN_COUNTRIES.length} countries, {shownSpecial.length} of {SPECIAL_PLACES.length}{' '}
+          special places
+        </p>
+        {shownSpecial.length ? (
+          <button
+            type='button'
+            onClick={showSpecial}
+            className='grid min-h-8 -rotate-2 grid-cols-reg items-center gap-1.5 border-2 border-double border-colour9 px-2 font-travel text-xs uppercase tracking-wide text-colour9 transition hover:rotate-0 hover:bg-colour9/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-colour6'
+          >
+            <ExpeditionStampIcon className='h-4 w-4' />
+            Special places
+          </button>
+        ) : null}
+      </div>
       {letters.length || shownSpecial.length ? null : <p className='text-sm'>Nowhere matches that. Try another spelling or show all places.</p>}
       {letters.map(({ letter, places }) => (
         <section key={letter} className='grid' aria-labelledby={`${headingId}-${letter}`}>
@@ -141,8 +178,8 @@ function CountryListPanel({
         </section>
       ))}
       {shownSpecial.length ? (
-        <section className='grid gap-1' aria-labelledby={`${headingId}-special`}>
-          <h3 id={`${headingId}-special`} className={`${INDEX_HEADING} text-lg`}>
+        <section ref={specialRef} className='grid gap-1' aria-labelledby={`${headingId}-special`}>
+          <h3 ref={specialHeadingRef} id={`${headingId}-special`} tabIndex={-1} className={`${INDEX_HEADING} text-lg outline-none`}>
             Special places
             <span aria-hidden='true' className='border-t-2 border-dashed border-poster-brown/50' />
           </h3>

@@ -19,6 +19,8 @@ export const PLANS = Object.freeze({
     rank: 0,
     price: Object.freeze({ MONTH: 0, YEAR: 0 }),
     extraMap: Object.freeze({ MONTH: 399, YEAR: 3900 }),
+    // An offer card every this many photo tiles, for viewers who don't pay (FEATURE-PLAN.md, "Ads by tier")
+    adEvery: 12,
     limits: Object.freeze({ photosPerCountry: 30, keepsOriginals: false, videos: false, storageCapBytes: null }),
   }),
   REGULAR: Object.freeze({
@@ -27,6 +29,7 @@ export const PLANS = Object.freeze({
     rank: 1,
     price: Object.freeze({ MONTH: 499, YEAR: 4900 }),
     extraMap: Object.freeze({ MONTH: 399, YEAR: 3900 }),
+    adEvery: 24,
     limits: Object.freeze({ photosPerCountry: 200, keepsOriginals: true, videos: false, storageCapBytes: 50 * GB }),
   }),
   PREMIUM: Object.freeze({
@@ -35,6 +38,8 @@ export const PLANS = Object.freeze({
     rank: 2,
     price: Object.freeze({ MONTH: 899, YEAR: 8900 }),
     extraMap: Object.freeze({ MONTH: 599, YEAR: 5900 }),
+    // A First Class map shows no cards to anyone
+    adEvery: null,
     limits: Object.freeze({ photosPerCountry: 1000, keepsOriginals: true, videos: true, storageCapBytes: 200 * GB }),
   }),
 });

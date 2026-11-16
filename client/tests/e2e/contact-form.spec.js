@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-// The contact form: name, email, message and an optional screenshot
+// The contact form: name, email and a message
 test.describe('Contact form', () => {
   test('empty submit shows validation errors and focuses the first invalid field', async ({
     page,

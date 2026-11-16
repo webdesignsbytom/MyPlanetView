@@ -6,7 +6,8 @@ import { projectToMap } from '@/utils/map/projection';
 import { PARENT_PLACE, isSpecialPlace, withParentPlaces } from '@/utils/map/specialPlaces';
 import { LANDMARKS } from './data/landmarks';
 import { getDb, me, session } from './store';
-import { byPosition } from './photoOrder';
+import { byPosition, byShotAt } from './photoOrder';
+import { pageAfter, parseShuffleSeed, shuffled } from './shuffle';
 import { mapPlanFields, mapSlots, uploadRules } from './plans';
 
 export const slugify = (text) =>
@@ -20,6 +21,7 @@ export const slugify = (text) =>
 const continentByCode = new Map(COUNTRIES.map((c) => [c.code, c.continent]));
 export const countryExists = (code) => continentByCode.has(code);
 
+// GET /api/landmarks' rows, by name as the server lists them (all 1,332: data/landmarks.js)
 export const LANDMARK_ROWS = LANDMARKS.map((lm) => {
   const slug = slugify(lm.name);
   const pin = projectToMap(lm.latitude, lm.longitude);
@@ -33,9 +35,11 @@ export const LANDMARK_ROWS = LANDMARKS.map((lm) => {
     pinX: Math.round(pin.x * 10) / 10,
     pinY: Math.round(pin.y * 10) / 10,
     matchRadiusM: lm.matchRadiusM,
+    isUnesco: lm.isUnesco,
   };
-});
-export const landmarkById = (id) => LANDMARK_ROWS.find((l) => l.id === id) || null;
+}).sort((a, b) => a.name.localeCompare(b.name));
+const LANDMARK_BY_ID = new Map(LANDMARK_ROWS.map((l) => [l.id, l]));
+export const landmarkById = (id) => LANDMARK_BY_ID.get(id) || null;
 
 // Roles
 const RANK = { VIEWER: 1, EDITOR: 2, OWNER: 3 };
@@ -142,25 +146,47 @@ export function photoDetail(photo, role) {
 // (or the unplaced photos) in that gallery's order, the whole map's newest upload first.
 // cursor = the id of the last photo of the previous page.
 // `unplaced=1`: only the photos with no country. Returns { error } for a bad filter.
-export function photoPage(photos, role, { country, unplaced, tripId, cursor, limit }) {
+// The slideshows' (docs/API.md, "Slideshows"): `order=taken` (oldest taken first, by
+// shotAt), `order=shuffle&seed=N` (the server's shuffle: the same seed, the same order; a
+// cursor no longer in it is a 400) and `display=1` (each photo's displayUrl too).
+const PHOTO_ORDERS = ['gallery', 'taken', 'shuffle'];
+const BAD_FILTER = { error: 'Malformed data.' };
+export function photoPage(photos, role, { country, unplaced, tripId, cursor, limit, order = 'gallery', seed, display }) {
   const size = Math.min(Math.max(Number(limit) || 30, 1), 60);
   const onlyUnplaced = unplaced === '1' || unplaced === 'true';
-  if (unplaced !== undefined && !onlyUnplaced && unplaced !== '0' && unplaced !== 'false') return { error: 'Malformed data.' };
-  if (onlyUnplaced && country !== undefined) return { error: 'Malformed data.' };
-  const order = tripId
-    ? byPosition('tripPosition')
-    : onlyUnplaced || country
-      ? byPosition('countryPosition')
-      : (a, b) => (a.createdAt < b.createdAt ? 1 : -1);
-  const list = photos
+  if (unplaced !== undefined && !onlyUnplaced && unplaced !== '0' && unplaced !== 'false') return BAD_FILTER;
+  if (onlyUnplaced && country !== undefined) return BAD_FILTER;
+  if (!PHOTO_ORDERS.includes(order)) return BAD_FILTER;
+  const shuffleSeed = order === 'shuffle' ? parseShuffleSeed(seed) : null;
+  if (order === 'shuffle' && shuffleSeed === null) return BAD_FILTER;
+  const withDisplay = display === '1' || display === 'true';
+  if (display !== undefined && !withDisplay && display !== '0' && display !== 'false') return BAD_FILTER;
+  const sort =
+    order === 'taken'
+      ? byShotAt
+      : tripId
+        ? byPosition('tripPosition')
+        : onlyUnplaced || country
+          ? byPosition('countryPosition')
+          : (a, b) => (a.createdAt < b.createdAt ? 1 : -1);
+  let list = photos
     .filter((p) => canSeePhoto(p, role))
     .filter((p) => (onlyUnplaced ? !p.countryCode : !country || p.countryCode === country))
     .filter((p) => !tripId || p.tripId === tripId)
-    .sort(order);
+    .sort(sort);
+  const item = (p) => (withDisplay ? { ...photoListItem(p, role), displayUrl: photoUrls(p).display } : photoListItem(p, role));
+  if (order === 'shuffle') {
+    // Every id in the list, shuffled the same way for the same seed, then this page of it
+    const byId = new Map(list.map((p) => [p.id, p]));
+    const slice = pageAfter(shuffled([...byId.keys()], shuffleSeed), cursor, size);
+    if (!slice) return BAD_FILTER;
+    list = slice.ids.map((id) => byId.get(id));
+    return { photos: list.map(item), nextCursor: slice.more ? slice.ids[slice.ids.length - 1] : null };
+  }
   const start = cursor ? list.findIndex((p) => p.id === cursor) + 1 : 0;
   const page = list.slice(start, start + size);
   const nextCursor = start + size < list.length ? page[page.length - 1].id : null;
-  return { photos: page.map((p) => photoListItem(p, role)), nextCursor };
+  return { photos: page.map(item), nextCursor };
 }
 
 // Maps

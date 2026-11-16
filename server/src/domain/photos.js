@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '../prisma.js';
 import { createMissingVisits } from './maps.js';
 import { POSITION_FIELD, POSITION_STEP, positionBetween, positionFirst } from '../utils/photoOrder.js';
-import { checkCountryCap, checkStorageCap } from '../utils/planLimits.js';
+import { checkCountryCap, checkStorageCap, checkVideoCap } from '../utils/planLimits.js';
 import { planOf } from '../utils/constants/plans.js';
 
 // Photos, their stored sizes and landmark matches
@@ -14,8 +14,11 @@ const PHOTO_LIST_SELECT = {
   mapId: true,
   tripId: true,
   countryCode: true,
+  kind: true,
+  durationS: true,
   caption: true,
   takenAt: true,
+  shotAt: true,
   width: true,
   height: true,
   hidden: true,
@@ -27,33 +30,63 @@ const PHOTO_LIST_SELECT = {
 /**
  * The order a list is shown in: a trip's photos in the trip's gallery order, a
  * country's (or the unplaced ones) in that gallery's order, and the whole map's (the
- * hover postcards) newest upload first. Each ends on the id, so the order is total and
- * pages by cursor.
+ * hover postcards) newest upload first. `order: 'shot'` is the slideshows' order
+ * instead, oldest taken first, for any of them. Each ends on the id, so the order is
+ * total and pages by cursor.
  */
-const listOrder = ({ tripId, countryCode, unplaced }) => {
+const listOrder = ({ tripId, countryCode, unplaced, order }) => {
+  if (order === 'shot') return [{ shotAt: 'asc' }, { id: 'asc' }];
   if (tripId) return [{ tripPosition: 'asc' }, { id: 'asc' }];
   if (unplaced || countryCode) return [{ countryPosition: 'asc' }, { id: 'asc' }];
   return [{ createdAt: 'desc' }, { id: 'desc' }];
 };
 
+// The slideshows' lists: the DISPLAY copy too, and the ORIGINAL (a video's file, which
+// views.js signs only for videos: a photo's original never goes in a list)
+const DISPLAY_LIST_SELECT = {
+  ...PHOTO_LIST_SELECT,
+  variants: { where: { size: { in: ['THUMB', 'DISPLAY', 'ORIGINAL'] } }, ...variantKeys },
+};
+
+const photoListWhere = ({ mapId, tripId, countryCode, unplaced, includeHidden }) => ({
+  ...(mapId ? { mapId } : {}),
+  ...(tripId ? { tripId } : {}),
+  ...(unplaced ? { countryCode: null } : countryCode ? { countryCode } : {}),
+  ...(includeHidden ? {} : { hidden: false }),
+});
+
 /**
  * One page of a map's (or trip's) photos, in the gallery's order (listOrder).
  * `cursor` is the last photo id of the previous page. `unplaced` keeps only the photos
  * with no country (no location in the file and none chosen, or a location at sea).
+ * `withDisplay` adds the DISPLAY copy (the slideshows show it, not the thumbnail).
  */
-export const findPhotosPage = ({ mapId, tripId, countryCode, unplaced = false, includeHidden, cursor, limit }) =>
+export const findPhotosPage = ({ mapId, tripId, countryCode, unplaced = false, includeHidden, cursor, limit, order, withDisplay = false }) =>
   prisma.photo.findMany({
-    where: {
-      ...(mapId ? { mapId } : {}),
-      ...(tripId ? { tripId } : {}),
-      ...(unplaced ? { countryCode: null } : countryCode ? { countryCode } : {}),
-      ...(includeHidden ? {} : { hidden: false }),
-    },
-    select: PHOTO_LIST_SELECT,
-    orderBy: listOrder({ tripId, countryCode, unplaced }),
+    where: photoListWhere({ mapId, tripId, countryCode, unplaced, includeHidden }),
+    select: withDisplay ? DISPLAY_LIST_SELECT : PHOTO_LIST_SELECT,
+    orderBy: listOrder({ tripId, countryCode, unplaced, order }),
     take: limit + 1,
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
   });
+
+/**
+ * Every id a list holds, in no particular order (a shuffled slideshow shuffles them and
+ * pages through the shuffled list: `findPhotosByIds`). Ids only, so even a 20,000-photo
+ * map is one small index read.
+ */
+export const findPhotoIdsForList = async (filters) =>
+  (await prisma.photo.findMany({ where: photoListWhere(filters), select: { id: true } })).map((p) => p.id);
+
+/** Some photos as list items, in the order of `ids` (the shuffled slideshow's pages). */
+export const findPhotosByIds = async (ids, { withDisplay = false } = {}) => {
+  const rows = await prisma.photo.findMany({
+    where: { id: { in: ids } },
+    select: withDisplay ? DISPLAY_LIST_SELECT : PHOTO_LIST_SELECT,
+  });
+  const byId = new Map(rows.map((row) => [row.id, row]));
+  return ids.map((id) => byId.get(id)).filter(Boolean);
+};
 
 // Gallery order (utils/photoOrder.js). A photo's galleries: its country's on its map
 // (the unplaced photos, with no country, are one gallery), and its trip's.
@@ -150,7 +183,7 @@ export const findPhotoAccess = async (photoId, userId) => {
   const [photo, map, mapMember, tripMember] = await Promise.all([
     prisma.photo.findUnique({
       where: { id: photoId },
-      select: { id: true, mapId: true, tripId: true, countryCode: true, hidden: true },
+      select: { id: true, mapId: true, tripId: true, countryCode: true, hidden: true, kind: true },
     }),
     prisma.travelMap.findFirst({ where: ofPhoto, select: { ownerId: true } }),
     userId ? prisma.mapMember.findFirst({ where: { userId, map: ofPhoto }, select: { role: true } }) : null,
@@ -191,18 +224,22 @@ export const findMediaItemsByKeys = (keys) =>
 
 // The plan's limits on a map's photos (utils/planLimits.js)
 
-/** Photos per country on a map, hidden ones included: `{ [countryCode]: n }` (one groupBy on the map's country index). */
-export const countPhotosByCountry = async (mapId) => {
+/**
+ * Photos (or, with `kind: 'VIDEO'`, videos) per country on a map, hidden ones included:
+ * `{ [countryCode]: n }` (one groupBy on the map's country index). Each has its own cap.
+ */
+export const countPhotosByCountry = async (mapId, { kind = 'PHOTO' } = {}) => {
   const rows = await prisma.photo.groupBy({
     by: ['countryCode'],
-    where: { mapId, countryCode: { not: null } },
+    where: { mapId, countryCode: { not: null }, kind },
     _count: { _all: true },
   });
   return Object.fromEntries(rows.map((row) => [row.countryCode, row._count._all]));
 };
 
-/** A map's photos in one country, hidden ones and everyone's uploads included. */
-export const countPhotosInCountry = (mapId, countryCode, db = prisma) => db.photo.count({ where: { mapId, countryCode } });
+/** A map's photos (or videos) in one country, hidden ones and everyone's uploads included. */
+export const countPhotosInCountry = (mapId, countryCode, db = prisma, kind = 'PHOTO') =>
+  db.photo.count({ where: { mapId, countryCode, kind } });
 
 /** The bytes of every file of every photo on a map. */
 export const sumStoredPhotoBytes = async (mapId, db = prisma) => {
@@ -225,8 +262,11 @@ export const sumStoredPhotoBytes = async (mapId, db = prisma) => {
 async function photoLimitProblem(tx, { mapId, countryCode, addingBytes = 0, limits }) {
   await tx.$queryRaw`SELECT 1 FROM "travel_map" WHERE "id" = ${mapId} FOR NO KEY UPDATE`;
   if (countryCode) {
-    const count = await countPhotosInCountry(mapId, countryCode, tx);
-    const full = checkCountryCap({ count, planId: limits.planId, countryName: limits.countryName });
+    // Photos and videos each have their own cap per country
+    const kind = limits.kind ?? 'PHOTO';
+    const count = await countPhotosInCountry(mapId, countryCode, tx, kind);
+    const check = kind === 'VIDEO' ? checkVideoCap : checkCountryCap;
+    const full = check({ count, planId: limits.planId, countryName: limits.countryName });
     if (full) return full;
   }
   if (addingBytes > 0 && planOf(limits.planId).limits.storageCapBytes !== null) {
@@ -252,17 +292,23 @@ export const createPhotoInDB = ({ photo, variants, landmarkMatches, limits = nul
     for (const v of variants) {
       await tx.mediaItem.update({ where: { id: v.mediaId }, data: { bytes: v.bytes, contentType: v.contentType } });
     }
+    // shotAt is always takenAt ?? createdAt (the slideshows' order)
+    const now = new Date();
     await tx.photo.create({
       data: {
         ...photo,
+        createdAt: now,
+        shotAt: photo.takenAt ?? now,
         countryPosition: await firstPosition(tx, 'country', photo),
         tripPosition: photo.tripId ? await firstPosition(tx, 'trip', photo) : 0,
         variants: {
           create: variants.map((v) => ({ size: v.size, mediaId: v.mediaId, width: v.width, height: v.height })),
         },
         landmarks: {
+          // A video never has a position, so never a GPS suggestion
           create: landmarkMatches.map((m) => ({
             landmarkId: m.landmarkId,
+            mapId: photo.mapId,
             source: 'GPS',
             distanceM: m.distanceM,
             confirmed: false,
@@ -285,17 +331,22 @@ export const createPhotoInDB = ({ photo, variants, landmarkMatches, limits = nul
 export const updatePhotoInDB = (photoId, data, { limits = null } = {}) => {
   const select = { id: true, mapId: true };
   const galleryMayChange = data.countryCode !== undefined || data.tripId !== undefined;
-  if (!galleryMayChange) return prisma.photo.update({ where: { id: photoId }, data, select });
+  // shotAt follows takenAt; a date taken away falls back to the upload time
+  if (data.takenAt) data = { ...data, shotAt: data.takenAt };
+  if (!galleryMayChange && data.takenAt !== null) return prisma.photo.update({ where: { id: photoId }, data, select });
   return prisma.$transaction(async (tx) => {
     const current = await tx.photo.findUnique({
       where: { id: photoId },
-      select: { mapId: true, countryCode: true, tripId: true },
+      select: { mapId: true, countryCode: true, tripId: true, createdAt: true },
     });
+    if (data.takenAt === null) data = { ...data, shotAt: current.createdAt };
+    if (!galleryMayChange) return tx.photo.update({ where: { id: photoId }, data, select });
     if (limits && data.countryCode && data.countryCode !== current.countryCode) {
       const refused = await photoLimitProblem(tx, { mapId: current.mapId, countryCode: data.countryCode, limits });
       if (refused) return { refused };
     }
-    const next = { ...current, ...data };
+    const { createdAt: _createdAt, ...currentGallery } = current;
+    const next = { ...currentGallery, ...data };
     const positions = {};
     if (data.countryCode !== undefined && data.countryCode !== current.countryCode) {
       positions.countryPosition = await firstPosition(tx, 'country', next, photoId);
@@ -361,16 +412,33 @@ export const reassignUploadsToMapOwners = async (userId, mapIds) => {
 
 // Landmark matches
 
-export const upsertPhotoLandmarkInDB = (photoId, landmarkId) =>
-  prisma.photoLandmark.upsert({
-    where: { photoId_landmarkId: { photoId, landmarkId } },
-    create: { photoId, landmarkId, source: 'MANUAL', confirmed: true },
-    update: { confirmed: true },
-    select: { confirmed: true, source: true, landmark: { select: { id: true, name: true } } },
+/**
+ * Match a photo to a landmark by hand (confirmed at once). An existing GPS suggestion
+ * is confirmed instead; one already confirmed keeps its date. `photo` is `{ id, mapId }`.
+ */
+export const upsertPhotoLandmarkInDB = (photo, landmarkId) =>
+  prisma.$transaction(async (tx) => {
+    const key = { photoId_landmarkId: { photoId: photo.id, landmarkId } };
+    const existing = await tx.photoLandmark.findUnique({ where: key, select: { confirmed: true } });
+    if (!existing) {
+      return tx.photoLandmark.create({
+        data: { photoId: photo.id, landmarkId, mapId: photo.mapId, source: 'MANUAL', confirmed: true, confirmedAt: new Date() },
+      });
+    }
+    if (existing.confirmed) return existing;
+    return tx.photoLandmark.update({ where: key, data: { confirmed: true, confirmedAt: new Date() } });
   });
 
-export const confirmPhotoLandmarkInDB = (photoId, landmarkId) =>
-  prisma.photoLandmark.updateMany({ where: { photoId, landmarkId }, data: { confirmed: true } });
+/** Confirm a GPS suggestion (stamping the passport). -> `{ count }`: 0 when there's no such match. */
+export const confirmPhotoLandmarkInDB = async (photoId, landmarkId) => {
+  const confirmed = await prisma.photoLandmark.updateMany({
+    where: { photoId, landmarkId, confirmed: false },
+    data: { confirmed: true, confirmedAt: new Date() },
+  });
+  if (confirmed.count) return confirmed;
+  // Already confirmed is fine; no match at all is a 404
+  return { count: await prisma.photoLandmark.count({ where: { photoId, landmarkId } }) };
+};
 
 export const deletePhotoLandmarkInDB = (photoId, landmarkId) =>
   prisma.photoLandmark.deleteMany({ where: { photoId, landmarkId } });

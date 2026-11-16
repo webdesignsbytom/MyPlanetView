@@ -5,26 +5,19 @@ import client from '@/api/client';
 import { emptyContactFormData } from '@/utils/data/formData';
 // Constants
 import { SUBMIT_CONTACT_FORM_API } from '@/utils/constants/apiRoutes';
-import {
-  IMAGE_ACCEPT,
-  MAX_IMAGE_SIZE_MB,
-} from '@/utils/media/mediaConstants';
 import { EMAIL_MAX_LENGTH, isValidEmail, serverText } from '@/utils/regex/regex';
 // Components
 import FormField from '@/components/ui/FormField';
 import TextInput from '@/components/ui/TextInput';
 import TextAreaInput from '@/components/ui/TextAreaInput';
 import FormAlert from '@/components/forms/FormAlert';
-import UploadFileInput from '@/components/ui/UploadFileInput';
-// Upload service
-import { presignAndUpload } from '@/utils/media/uploadViaMediaService';
 
-const ACCEPT = IMAGE_ACCEPT;
 // The server's limits (server/src/controllers/contact.js); longer text would be cut short
 const NAME_MAX_LENGTH = 120;
 const MESSAGE_MAX_LENGTH = 2000;
 const SEND_FAILED = 'Your message could not be sent. Please try again.';
 
+// The contact form: name, email and a message, nothing else
 function ContactForm() {
   const submitStates = ['waiting', 'inprogress', 'failed', 'success'];
 
@@ -38,81 +31,11 @@ function ContactForm() {
   const messageRef = useRef(null);
   const alertRef = useRef(null);
 
-  // attachment state
-  const [attachment, setAttachment] = useState({
-    file: null,
-    previewUrl: '',
-  });
-  const fileInputRef = useRef(null);
-
-  const isObjectURL = (url) =>
-    typeof url === 'string' && url.startsWith('blob:');
-
-  useEffect(() => {
-    return () => {
-      if (attachment.previewUrl && isObjectURL(attachment.previewUrl)) {
-        URL.revokeObjectURL(attachment.previewUrl);
-      }
-    };
-  }, [attachment.previewUrl]);
-
   // After a send, focus the alert saying how it went: the Send button was disabled while
   // sending, which dropped focus, and the alert only exists once it has a message
   useEffect(() => {
     if (submitState === 'failed' || submitState === 'success') alertRef.current?.focus();
   }, [submitState]);
-
-  const validateAttachment = (file) => {
-    if (!file) return { ok: false, reason: 'No file selected.' };
-
-    const isImage = file.type?.startsWith('image/');
-
-    if (!isImage) {
-      return { ok: false, reason: 'Only images are allowed.' };
-    }
-
-    const sizeMB = file.size / (1024 * 1024);
-    if (sizeMB > MAX_IMAGE_SIZE_MB) {
-      return {
-        ok: false,
-        reason: `File too large (>${MAX_IMAGE_SIZE_MB}MB).`,
-      };
-    }
-
-    return { ok: true };
-  };
-
-  const handleFileSelect = (file) => {
-    setSubmitState(submitStates[0]);
-
-    const ok = validateAttachment(file);
-    if (!ok.ok) {
-      setErrors((prev) => ({ ...prev, attachment: ok.reason }));
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
-
-    if (attachment.previewUrl && isObjectURL(attachment.previewUrl)) {
-      URL.revokeObjectURL(attachment.previewUrl);
-    }
-
-    setErrors((prev) => ({ ...prev, attachment: '' }));
-    setAttachment({ file, previewUrl: url });
-  };
-
-  const clearAttachment = () => {
-    if (attachment.previewUrl && isObjectURL(attachment.previewUrl)) {
-      URL.revokeObjectURL(attachment.previewUrl);
-    }
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-
-    setAttachment({ file: null, previewUrl: '' });
-    setErrors((prev) => ({ ...prev, attachment: '' }));
-  };
 
   const handleChange = (e) => {
     setSubmitState(submitStates[0]);
@@ -130,7 +53,7 @@ function ContactForm() {
     }));
   };
 
-  // The checks the server makes, so a form it would refuse never uploads its screenshot
+  // The checks the server makes, so a form it would refuse is never sent
   const validateForm = () => {
     const newErrors = {};
 
@@ -164,35 +87,14 @@ function ContactForm() {
       return;
     }
 
-    setErrors((prev) => ({ ...prev, attachment: '' }));
-
     try {
-      // The screenshot goes up only now, once the form has passed the server's checks
-      let imageKey = null;
-
-      if (attachment.file) {
-        const { key } = await presignAndUpload({
-          resource: 'contact',
-          file: attachment.file,
-          filename: attachment.file.name,
-        });
-
-        imageKey = key;
-      }
-
-      const payload = {
-        ...formData,
-        imageKey,
-      };
-
-      await client.post(SUBMIT_CONTACT_FORM_API, payload, false);
+      await client.post(SUBMIT_CONTACT_FORM_API, formData, false);
 
       setSubmitState(submitStates[3]);
       setFormData(emptyContactFormData);
-      clearAttachment();
     } catch (err) {
       console.error('Unable to submit contact request', err);
-      // The server's own reason when it refused the form (e.g. an expired screenshot)
+      // The server's own reason when it refused the form
       setFailure(err?.response?.status === 400 && err.friendlyMessage ? err.friendlyMessage : SEND_FAILED);
       setSubmitState(submitStates[2]);
     }
@@ -249,20 +151,6 @@ function ContactForm() {
           required
         />
       </FormField>
-
-      {/* Upload */}
-      <UploadFileInput
-        fileInputRef={fileInputRef}
-        attachment={attachment}
-        accept={ACCEPT}
-        maxSizeMb={MAX_IMAGE_SIZE_MB}
-        onFileSelect={handleFileSelect}
-        onRemoveFile={clearAttachment}
-        error={errors.attachment}
-        label='Screenshot (optional)'
-        dropLabel='Click or drop an image'
-        helpText={`If something on the site looks wrong, a screenshot helps us find it. Images only, up to ${MAX_IMAGE_SIZE_MB} MB.`}
-      />
 
       {/* Submit */}
       <div className='grid items-center'>

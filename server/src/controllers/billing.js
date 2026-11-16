@@ -26,6 +26,7 @@ import {
   verifyWebhookEvent,
 } from '../services/billing/stripe.js';
 import { applyStripeSubscription, linkCheckoutSession } from '../services/billing/subscriptions.js';
+import { promoTrialFor } from '../services/billing/promo.js';
 import { badRequest, conflict, handler, reply } from './helpers/travel.js';
 
 const D = DOMAINS.billing;
@@ -51,6 +52,8 @@ async function billingView(userId) {
     renewsAt: sub?.currentPeriodEnd ?? null,
     cancelAtPeriodEnd: sub?.cancelAtPeriodEnd ?? false,
     grant: state.grant ? { plan: state.grant.plan, endsAt: state.grant.endsAt } : null,
+    // A promo code's free month not yet used, `{ code, days }`: the next paid Checkout gets it
+    promoTrial: hasLiveSubscription(sub) ? null : await promoTrialFor(userId),
     includedMaps: INCLUDED_MAPS,
     extraMapsPaid: state.extraMapsPaid,
     ownedMaps: state.maps.length,
@@ -62,9 +65,12 @@ async function billingView(userId) {
 
 /**
  * A Checkout session for a new subscription: the plan line (none on FREE) and the
- * extra-map line. -> `{ url }`, or null when a price id isn't configured
+ * extra-map line. `trial` (`{ code, days }`, a promo code's free month) makes the first
+ * days free: Stripe still takes a card, and charges when they end unless cancelled; the
+ * code goes in the subscription's metadata, so the webhook records the month as used.
+ * -> `{ url }`, or null when a price id isn't configured
  */
-async function createCheckout(user, { plan, interval, extraMaps, customerId }) {
+async function createCheckout(user, { plan, interval, extraMaps, customerId, trial = null }) {
   const lineItems = [];
   if (plan !== 'FREE') lineItems.push({ price: planPriceId(plan, interval), quantity: 1 });
   if (extraMaps > 0) lineItems.push({ price: extraMapPriceId(plan, interval), quantity: extraMaps });
@@ -75,7 +81,11 @@ async function createCheckout(user, { plan, interval, extraMaps, customerId }) {
     line_items: lineItems,
     client_reference_id: user.id,
     metadata: { userId: user.id },
-    subscription_data: { metadata: { userId: user.id } },
+    subscription_data: {
+      metadata: { userId: user.id, ...(trial ? { promoCode: trial.code } : {}) },
+      ...(trial ? { trial_period_days: trial.days } : {}),
+    },
+    ...(trial ? { payment_method_collection: 'always' } : {}),
     ...(customerId ? { customer: customerId } : { customer_email: user.email }),
     success_url: accountUrl('?billing=success'),
     cancel_url: accountUrl('?billing=cancelled'),
@@ -118,14 +128,18 @@ export const checkoutHandler = handler(D, 'Checkout', async (req, res) => {
   const sub = await findSubscription(req.user.id);
   if (hasLiveSubscription(sub)) return conflict(req, res, D, EVENT_MESSAGES.subscriptionExists);
 
+  // A promo code's free month, on a paid plan (docs/API.md, "Promo codes")
+  const trial = await promoTrialFor(req.user.id, body.plan);
   const checkout = await createCheckout(req.user, {
     plan: body.plan,
     interval: body.interval,
     extraMaps,
     customerId: sub?.stripeCustomerId,
+    trial,
   });
   if (!checkout) return paymentsOff(req, res);
-  logEvent(createBillingEvent({ user: req.user, action: 'Checkout Started', detail: `plan=${body.plan} interval=${body.interval} extraMaps=${extraMaps}` }));
+  const trialDetail = trial ? ` trialDays=${trial.days}` : '';
+  logEvent(createBillingEvent({ user: req.user, action: 'Checkout Started', detail: `plan=${body.plan} interval=${body.interval} extraMaps=${extraMaps}${trialDetail}` }));
   return sendDataResponse(res, 200, checkout);
 });
 

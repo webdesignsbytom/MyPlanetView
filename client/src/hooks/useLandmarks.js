@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { getLandmarks } from '@/api/travelApi';
 
 // Landmarks are reference data (seeded, never edited by users), so they're fetched once
-// per session, all of them (177, about 7 kB compressed): the map's pins, every country's
-// list and the photo and stop forms all come from that one request. A failed request is
-// forgotten, so the next use tries again.
+// per session, all of them (1,332 since 16 Nov 2026, about 90 kB gzipped; the browser keeps
+// the answer an hour): the map's pins, every country's list and the photo, stop and moment
+// forms all come from that one request. A failed request is forgotten, so the next use
+// tries again.
 let all = null;
 let allLoaded = null; // the list itself, once it's here
 const byCountry = new Map();

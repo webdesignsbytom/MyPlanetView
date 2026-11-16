@@ -55,6 +55,7 @@ function PhotoLandmarkList({ photo, canEdit, onChanged }) {
                     <Button
                       quiet
                       busy={busy === `c${landmark.id}`}
+                      ariaLabel={`That's right: ${landmark.name}`}
                       onClick={() => run(`c${landmark.id}`, () => confirmPhotoLandmark(photo.id, landmark.id))}
                     >
                       That's right
@@ -63,6 +64,7 @@ function PhotoLandmarkList({ photo, canEdit, onChanged }) {
                   <Button
                     quiet
                     busy={busy === `r${landmark.id}`}
+                    ariaLabel={`Remove ${landmark.name}`}
                     onClick={() => run(`r${landmark.id}`, () => removePhotoLandmark(photo.id, landmark.id))}
                   >
                     Remove

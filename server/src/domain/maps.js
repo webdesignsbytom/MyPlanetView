@@ -279,7 +279,8 @@ export const countMapPhotos = (mapId, { includeHidden }) =>
 export const countMapConfirmedLandmarks = async (mapId, { includeHidden }) =>
   (
     await prisma.photoLandmark.findMany({
-      where: { confirmed: true, photo: { mapId, ...(includeHidden ? {} : { hidden: false }) } },
+      // The match's own mapId (index [mapId, landmarkId]); viewers' only from visible photos
+      where: { mapId, confirmed: true, ...(includeHidden ? {} : { photo: { hidden: false } }) },
       distinct: ['landmarkId'],
       select: { landmarkId: true },
     })

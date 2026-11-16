@@ -30,6 +30,8 @@ export const DOMAINS = {
   moments: 'moments',
   // Plans and payments
   billing: 'billing',
+  // Travel offers: the ad cards and the Travel Desk
+  offers: 'offers',
 };
 
 export const EVENT_MESSAGES = {
@@ -122,6 +124,23 @@ export const EVENT_MESSAGES = {
   tripLinkRemoveNotAllowed: `Only the person who added the trip, or the map's owner, can take it off the map.`,
   // Moments
   momentNotFound: `That moment doesn't exist, or it hasn't been shared with you.`,
+  // Passport, badges and goals
+  stampPhotoInvalid: `Pick a photo of this landmark that's confirmed on this map.`,
+  goalNotFound: `That goal doesn't exist, or it hasn't been shared with you.`,
+  goalInvalid: `That goal isn't complete: check what it asks for.`,
+  goalsFull: `A map can have up to 50 goals. Delete one to add another.`,
+  // Promo codes
+  promoCodeInvalid: `That code isn't valid. Check it, or sign up without one.`,
+  promoCodeFormat: `A code is 3 to 24 letters and numbers.`,
+  promoCodeTaken: `That code is already in use.`,
+  promoCodeNotFound: `That code doesn't exist.`,
+  // Travel offers
+  offerNotFound: `That offer doesn't exist.`,
+  offerEnded: `That offer has ended.`,
+  offerKeyTaken: `An offer with that key already exists.`,
+  offerInvalid: `Check the offer's details: a key, partner, kind, title, at least one placement and an https link.`,
+  offersImportInvalid: `Nothing was imported: fix the offers listed and try again.`,
+  promoCodeDetailsInvalid: `Check the code's details: a label, and limits that are whole numbers or empty.`,
   invalidMomentKind: `Choose what kind of moment it is from the list.`,
   invalidMomentTitle: `Give the moment a title of 1 to 120 characters.`,
   invalidMomentText: `A moment's title, story and place name must be text.`,

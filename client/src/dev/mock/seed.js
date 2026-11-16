@@ -4,12 +4,40 @@
 // the test user's plan (Business with one extra map), and the admin lists. The test user's map has real photos (the repo's
 // seed-photos/, from Wikimedia Commons); the other maps use posters as stand-ins.
 import { seedPhotoBySlug } from './data/seedPhotos';
+import { EXAMPLE_OFFERS } from './data/offers';
 
 // Every mock user's password: the one the server's seed gives its users (CLAUDE.md, "Seed")
 export const MOCK_PASSWORD = '12345678';
 
 const daysFromNow = (days) => new Date(Date.now() + days * 86400000).toISOString();
 const daysAgo = (days) => daysFromNow(-days);
+
+// The example offers as the server stores them: every field, ids fixed by place in the file
+export const exampleOfferId = (index) => `0ffe0000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`;
+export const exampleOffers = () =>
+  EXAMPLE_OFFERS.map((offer, index) => ({
+    id: exampleOfferId(index),
+    blurb: null,
+    countryCode: null,
+    imageKey: null,
+    weight: 1,
+    active: true,
+    startsAt: null,
+    endsAt: null,
+    ...offer,
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(30),
+  }));
+// Clicks per offer, UTC day ("YYYY-MM-DD") and placement, as OfferClickDaily keeps them
+const exampleOfferClicks = () => {
+  const day = (n) => daysAgo(n).slice(0, 10);
+  return [
+    { offerId: exampleOfferId(0), day: day(1), placement: 'GALLERY', count: 3 },
+    { offerId: exampleOfferId(0), day: day(1), placement: 'TRAVEL_DESK', count: 1 },
+    { offerId: exampleOfferId(5), day: day(2), placement: 'GALLERY', count: 2 },
+    { offerId: exampleOfferId(5), day: day(4), placement: 'SLIDESHOW', count: 1 },
+  ];
+};
 
 // A real test photo's picture and size (data/seedPhotos.js), and a whole photo from it
 const seedImage = (slug) => {
@@ -52,6 +80,18 @@ const SAM_ID = 'mock-sam';
 const JO_ID = 'mock-jo';
 const TOM_ID = 'mock-tom';
 
+// A photo matched to a landmark, as the server stores it: with the photo's map, and when it
+// was confirmed (null while it's a suggestion). GPS suggestions carry their distance.
+const landmarkMatch = (photoId, mapId, landmarkId, { source = 'GPS', distanceM = null, confirmedDaysAgo = null } = {}) => ({
+  photoId,
+  mapId,
+  landmarkId,
+  source,
+  distanceM,
+  confirmed: confirmedDaysAgo !== null,
+  confirmedAt: confirmedDaysAgo !== null ? daysAgo(confirmedDaysAgo) : null,
+});
+
 // A moment (docs/API.md "Moments"); `happenedOn` is the first day of what's known
 const moment = (id, fields) => ({
   id,
@@ -67,6 +107,19 @@ const moment = (id, fields) => ({
   createdAt: daysAgo(30),
   updatedAt: daysAgo(30),
   ...fields,
+});
+
+// A personal goal (docs/API.md "Badges and goals"): each kind fills only its own field
+const goal = (id, fields) => ({
+  id,
+  title: null,
+  target: null,
+  countryCodes: [],
+  region: null,
+  deadline: null,
+  achievedAt: null,
+  ...fields,
+  updatedAt: fields.createdAt,
 });
 
 const user = (id, name, email, extra = {}) => ({
@@ -101,8 +154,9 @@ export function buildSeed() {
       user(USER_ID, 'Test Traveller', 'test@myplanetview.local'),
       user(ALEX_ID, 'Alex Morgan', 'alex@example.test'),
       user(SAM_ID, 'Sam Rivers', 'sam@example.test'),
-      user(JO_ID, 'Jo Patel', 'jo@example.test'),
-      user(TOM_ID, 'Tom Baker', 'tom@example.test'),
+      // Both signed up with the podcast's code (promoCodes below)
+      user(JO_ID, 'Jo Patel', 'jo@example.test', { promoCodeId: 'promo-traveltalk' }),
+      user(TOM_ID, 'Tom Baker', 'tom@example.test', { promoCodeId: 'promo-traveltalk' }),
       user('mock-admin', 'Ada Admin', 'admin@example.test', { role: 'ADMIN' }),
       user('mock-paused', 'Pat Paused', 'paused@example.test', { isActive: false }),
     ],
@@ -192,6 +246,18 @@ export function buildSeed() {
       moment('moment-nata', { mapId: joMap, createdById: JO_ID, kind: 'SAW_OR_DID', title: 'Pastéis de nata at Belém', happenedOn: '2026-10-04', datePrecision: 'DAY', countryCode: 'PT', landmarkId: 'lm-tower-of-belem', tripId: lisbonTrip, travellerIds: ['trav-jo', 'trav-jo-kid'], photoIds: ['photo-lisbon'] }),
       moment('moment-mia', { mapId: joMap, createdById: JO_ID, kind: 'BORN', title: 'Mia was born', happenedOn: '2018-03-01', datePrecision: 'MONTH', countryCode: 'GB', travellerIds: ['trav-jo-kid'] }),
     ],
+    // Personal goals (docs/API.md "Badges and goals"). The test user's map: ten countries by
+    // a deadline (8 of 10, every one with a photo, which a deadline needs), a bucket list of
+    // its "want to go" countries (0 of 3), and the British Isles, reached. Sam's map: one the
+    // test user (a viewer there) can only read. The badges the data has already earned are
+    // awarded quietly when the store is made (store.js, awardQuietly), so no pop-up greets
+    // the first visit.
+    goals: [
+      goal('goal-ten', { mapId: homeMap, createdById: USER_ID, kind: 'COUNTRY_COUNT', title: 'Ten countries by the end of 2027', target: 10, deadline: '2027-12-31', createdAt: daysAgo(60) }),
+      goal('goal-bucket', { mapId: homeMap, createdById: ALEX_ID, kind: 'COUNTRY_LIST', title: 'Our bucket list', countryCodes: ['JP', 'PE', 'IS'], createdAt: daysAgo(45) }),
+      goal('goal-isles', { mapId: homeMap, createdById: USER_ID, kind: 'REGION', region: 'british-isles', achievedAt: daysAgo(80), createdAt: daysAgo(85) }),
+      goal('goal-sam-asia', { mapId: samMap, createdById: SAM_ID, kind: 'REGION', title: 'All of Southeast Asia', region: 'southeast-asia', createdAt: daysAgo(150) }),
+    ],
     // image.kind 'seed' = one of the real test photos in the repo's seed-photos/ (served
     // at /seed-photos in development; data/seedPhotos.js); 'asset' = one of the site's
     // posters, named as in posterData.js, standing in on the other people's maps
@@ -213,12 +279,32 @@ export function buildSeed() {
       { id: 'photo-bangkok', mapId: samMap, uploaderId: SAM_ID, tripId: samTrip, countryCode: 'TH', caption: 'Temple roofs', takenAt: '2024-01-12T09:00:00.000Z', latitude: null, longitude: null, width: 1024, height: 1792, hidden: false, image: { kind: 'asset', name: 'th' }, createdAt: daysAgo(180) },
       { id: 'photo-lisbon', mapId: joMap, uploaderId: JO_ID, tripId: lisbonTrip, countryCode: 'PT', caption: 'Belém', takenAt: '2026-10-04T11:00:00.000Z', latitude: 38.6916, longitude: -9.216, width: 1024, height: 1792, hidden: false, image: { kind: 'asset', name: 'pt' }, createdAt: daysAgo(35) },
     ],
+    // Landmark matches: a confirmed one stamps the map's passport (docs/API.md "Passport").
+    // The test user's map has stamps in seven countries: two photos of Paris's banks of the
+    // Seine (so an editor can pick the stamp's photo), Belém only on a hidden photo (a stamp
+    // for editors alone), and the Alhambra still a suggestion (no stamp yet). Sam's map has
+    // one, for the passport's viewers.
     photoLandmarks: [
-      { photoId: 'photo-eiffel', landmarkId: 'lm-eiffel-tower', source: 'GPS', distanceM: 12, confirmed: true },
-      { photoId: 'photo-colosseum', landmarkId: 'lm-colosseum', source: 'GPS', distanceM: 14, confirmed: true },
-      { photoId: 'photo-alhambra', landmarkId: 'lm-alhambra', source: 'GPS', distanceM: 15, confirmed: false },
-      { photoId: 'photo-lisbon', landmarkId: 'lm-tower-of-belem', source: 'GPS', distanceM: 8, confirmed: true },
+      landmarkMatch('photo-eiffel', homeMap, 'lm-eiffel-tower', { distanceM: 12, confirmedDaysAgo: 60 }),
+      landmarkMatch('photo-eiffel', homeMap, 'lm-paris-banks-of-the-seine', { source: 'MANUAL', confirmedDaysAgo: 59 }),
+      landmarkMatch('photo-louvre', homeMap, 'lm-paris-banks-of-the-seine', { source: 'MANUAL', confirmedDaysAgo: 58 }),
+      landmarkMatch('photo-mont-saint-michel', homeMap, 'lm-mont-saint-michel', { distanceM: 1812, confirmedDaysAgo: 70 }),
+      landmarkMatch('photo-colosseum', homeMap, 'lm-colosseum', { distanceM: 14, confirmedDaysAgo: 50 }),
+      landmarkMatch('photo-florence-cathedral', homeMap, 'lm-historic-centre-of-florence', { distanceM: 1270, confirmedDaysAgo: 49 }),
+      landmarkMatch('photo-cinque-terre', homeMap, 'lm-portovenere-and-cinque-terre', { distanceM: 140, confirmedDaysAgo: 49 }),
+      landmarkMatch('photo-venice-grand-canal', homeMap, 'lm-venice-and-its-lagoon', { distanceM: 479, confirmedDaysAgo: 48 }),
+      landmarkMatch('photo-alhambra', homeMap, 'lm-alhambra', { distanceM: 15 }),
+      landmarkMatch('photo-sagrada-familia', homeMap, 'lm-works-of-gaudi-sagrada-familia', { source: 'MANUAL', confirmedDaysAgo: 40 }),
+      landmarkMatch('photo-hidden', homeMap, 'lm-tower-of-belem', { distanceM: 24, confirmedDaysAgo: 20 }),
+      landmarkMatch('photo-dam', homeMap, 'lm-amsterdam-canal-ring', { distanceM: 876, confirmedDaysAgo: 30 }),
+      landmarkMatch('photo-tower-bridge', homeMap, 'lm-tower-of-london', { distanceM: 311, confirmedDaysAgo: 75 }),
+      landmarkMatch('photo-edinburgh-castle', homeMap, 'lm-old-and-new-towns-of-edinburgh', { distanceM: 1215, confirmedDaysAgo: 74 }),
+      landmarkMatch('photo-cliffs-of-moher', homeMap, 'lm-cliffs-of-moher', { source: 'MANUAL', confirmedDaysAgo: 72 }),
+      landmarkMatch('photo-bangkok', samMap, 'lm-historic-city-of-ayutthaya', { source: 'MANUAL', confirmedDaysAgo: 170 }),
+      landmarkMatch('photo-lisbon', joMap, 'lm-tower-of-belem', { distanceM: 8, confirmedDaysAgo: 34 }),
     ],
+    // The photo an editor picked for a stamp (none yet: each shows its earliest photo)
+    landmarkCovers: [],
     // Plans (docs/API.md, "Plans and billing"). The test user pays monthly for Business
     // and one extra map: originals kept, and room for one more map than the one they own
     // (the switcher's "New map" works). Everyone else is on Economy. The mock badge's
@@ -227,6 +313,17 @@ export function buildSeed() {
       { userId: USER_ID, plan: 'REGULAR', interval: 'MONTH', status: 'active', currentPeriodEnd: daysFromNow(18), cancelAtPeriodEnd: false, extraMaps: 1, stripeCustomerId: 'cus_mock_test' },
     ],
     planGrants: [],
+    // Influencer codes (docs/API.md, "Promo codes"): a creator's code (up to 500 sign-ups)
+    // and a podcast's (Jo and Tom used it). Each gives the same offer: the follower's first
+    // month free on a paid plan, as a trial on their first paid Checkout
+    promoCodes: [
+      { id: 'promo-samtravels', code: 'SAMTRAVELS', label: 'Sam’s Travels on YouTube, spring 2027', active: true, maxUses: 500, endsAt: daysFromNow(120), createdById: 'mock-admin', createdAt: daysAgo(20) },
+      { id: 'promo-traveltalk', code: 'TRAVELTALK', label: 'Travel Talk podcast', active: true, maxUses: null, endsAt: null, createdById: 'mock-admin', createdAt: daysAgo(45) },
+    ],
+    // Travel offers (docs/API.md, "Travel offers"): the server's example file, as an import
+    // leaves them (fixed ids by place in the file), and a few days of click tallies
+    offers: exampleOffers(),
+    offerClicks: exampleOfferClicks(),
     mapSettings: null,
     contactForms: [
       { id: 'contact-1', name: 'Priya Shah', email: 'priya@example.test', message: 'Can I share one trip without sharing my whole map?', imageKey: null, createdAt: daysAgo(3) },

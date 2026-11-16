@@ -3,6 +3,9 @@ import axios from 'axios';
 import { API_TIMEOUT } from '@/utils/constants/constants';
 
 const host = import.meta.env.VITE_API_URL;
+// The API's address, for links that leave through it (a travel offer's /go/:offerId);
+// empty when the API is on this site
+export const apiHost = String(host || '').replace(/\/+$/, '');
 
 // Build Cookie Auth config (Better Auth session cookie)
 const getAuthConfig = () => ({ withCredentials: true });

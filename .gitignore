@@ -49,3 +49,7 @@ client/playwright/.cache
 
 # Old sites, kept on disk to compare against (not part of the repo)
 archive/
+
+# Sample videos for the First Class demo account: downloaded by hand (seed-videos/README.md)
+seed-videos/**/*.mp4
+seed-videos/**/*.mov

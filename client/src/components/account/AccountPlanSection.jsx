@@ -177,7 +177,7 @@ function AccountPlanSection() {
     <div className='grid gap-4'>
       {billingReturn === 'success' ? (
         <InlineAlert tone='good'>
-          Thank you: your payment went through. Your plan shows here as soon as Stripe confirms it, usually within a few
+          Thank you: checkout went through. Your plan shows here as soon as Stripe confirms it, usually within a few
           seconds.
         </InlineAlert>
       ) : null}

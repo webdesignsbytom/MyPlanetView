@@ -34,7 +34,15 @@ export const PHOTO_EXTENSIONS = {
   'image/jpeg': 'jpg',
   'image/webp': 'webp',
   'image/png': 'png',
+  'video/mp4': 'mp4',
+  'video/quicktime': 'mov',
 };
+
+// A video's file (its ORIGINAL; docs/API.md "Videos"): MP4 or MOV, at most 500 MB. The
+// browser overwrites its location metadata before upload; its THUMB and DISPLAY are
+// poster frames, so they follow the photo rules above.
+export const VIDEO_CONTENT_TYPES = ['video/mp4', 'video/quicktime'];
+export const VIDEO_MAX_BYTES = 500 * MB;
 
 // Signed photo URLs: signed at the start of the hour, valid for two, so a file
 // keeps the same URL for at least an hour and the browser cache works

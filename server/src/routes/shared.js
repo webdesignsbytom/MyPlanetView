@@ -1,7 +1,10 @@
 import { Router } from 'express';
 import {
+  getSharedBadgesHandler,
+  getSharedGoalsHandler,
   getSharedHandler,
   getSharedMomentsHandler,
+  getSharedPassportHandler,
   getSharedPhotoHandler,
   getSharedPhotosHandler,
 } from '../controllers/shared.js';
@@ -31,5 +34,8 @@ router.get('/:code', shareLookupLimiter, getSharedHandler);
 router.get('/:code/photos', failedLookupLimiter, shareBrowseLimiter, getSharedPhotosHandler);
 router.get('/:code/photos/:photoId', failedLookupLimiter, shareBrowseLimiter, getSharedPhotoHandler);
 router.get('/:code/moments', failedLookupLimiter, shareBrowseLimiter, getSharedMomentsHandler);
+router.get('/:code/passport', failedLookupLimiter, shareBrowseLimiter, getSharedPassportHandler);
+router.get('/:code/badges', failedLookupLimiter, shareBrowseLimiter, getSharedBadgesHandler);
+router.get('/:code/goals', failedLookupLimiter, shareBrowseLimiter, getSharedGoalsHandler);
 
 export default router;

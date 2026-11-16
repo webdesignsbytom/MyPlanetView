@@ -18,7 +18,9 @@ export const PLANS = Object.freeze({
     rank: 0,
     price: Object.freeze({ MONTH: 0, YEAR: 0 }),
     extraMap: Object.freeze({ MONTH: 399, YEAR: 3900 }),
-    limits: Object.freeze({ photosPerCountry: 30, keepsOriginals: false, videos: false, storageCapBytes: null }),
+    // An offer card every this many photo tiles, for viewers who don't pay (FEATURE-PLAN.md, "Ads by tier")
+    adEvery: 12,
+    limits: Object.freeze({ photosPerCountry: 30, keepsOriginals: false, videos: false, videosPerCountry: 0, storageCapBytes: null }),
   }),
   REGULAR: Object.freeze({
     id: 'REGULAR',
@@ -26,7 +28,8 @@ export const PLANS = Object.freeze({
     rank: 1,
     price: Object.freeze({ MONTH: 499, YEAR: 4900 }),
     extraMap: Object.freeze({ MONTH: 399, YEAR: 3900 }),
-    limits: Object.freeze({ photosPerCountry: 200, keepsOriginals: true, videos: false, storageCapBytes: 50 * GB }),
+    adEvery: 24,
+    limits: Object.freeze({ photosPerCountry: 200, keepsOriginals: true, videos: false, videosPerCountry: 0, storageCapBytes: 50 * GB }),
   }),
   PREMIUM: Object.freeze({
     id: 'PREMIUM',
@@ -34,7 +37,9 @@ export const PLANS = Object.freeze({
     rank: 2,
     price: Object.freeze({ MONTH: 899, YEAR: 8900 }),
     extraMap: Object.freeze({ MONTH: 599, YEAR: 5900 }),
-    limits: Object.freeze({ photosPerCountry: 1000, keepsOriginals: true, videos: true, storageCapBytes: 200 * GB }),
+    // A First Class map shows no cards to anyone
+    adEvery: null,
+    limits: Object.freeze({ photosPerCountry: 1000, keepsOriginals: true, videos: true, videosPerCountry: 20, storageCapBytes: 200 * GB }),
   }),
 });
 
@@ -63,6 +68,9 @@ export const isBillingInterval = (value) => typeof value === 'string' && BILLING
 
 /** A plan's settings; anything unknown is FREE. */
 export const planOf = (planId) => PLANS[planId] ?? PLANS.FREE;
+
+// A video's longest length (FEATURE-PLAN.md, "Videos"): the browser reads it before uploading
+export const VIDEO_MAX_SECONDS = 180;
 
 /** What a map view and GET /billing say about a plan. */
 export const planView = (planId) => {

@@ -89,6 +89,9 @@ const FILES = {
   ORIGINAL: { contentType: 'image/jpeg', bytes: 4_000_000, width: 4000, height: 3000 },
   PRINT: { contentType: 'image/jpeg', bytes: 1_000_000, width: 2400, height: 1800 },
 };
+// A video's file (its ORIGINAL): 90 seconds of 1080p is about 90 MB
+const VIDEO_FILE = { contentType: 'video/mp4', bytes: 90_000_000, width: 1920, height: 1080 };
+export const VIDEO_SIZES = ['THUMB', 'DISPLAY', 'ORIGINAL'];
 
 // The copies a photo keeps follow the map owner's plan: Economy (every test user, unless
 // givePlan says otherwise) a print copy, Business and First Class the original
@@ -99,17 +102,35 @@ export const ORIGINAL_SIZES = ['THUMB', 'DISPLAY', 'ORIGINAL'];
  * The whole upload as the browser does it: presign, "PUT" each file (into the
  * fake bucket), confirm. `put` can override what lands in the bucket per size;
  * `sizes` are the copies sent (an Economy map's by default; ORIGINAL_SIZES for a
- * paid owner's map). Returns the confirm response, or the presign's if it failed.
+ * paid owner's map); `takenAt` is the date read from the file (null: none). Returns
+ * the confirm response, or the presign's if it failed.
  */
 export async function uploadPhoto(
   agent,
   mapId,
-  { tripId, latitude, longitude, countryCode, caption, put = {}, sizes = ECONOMY_SIZES, countryHint } = {}
+  {
+    tripId,
+    latitude,
+    longitude,
+    countryCode,
+    caption,
+    put = {},
+    sizes = ECONOMY_SIZES,
+    countryHint,
+    // When it was taken; null for a file with no date
+    takenAt = '2026-06-01T12:00:00.000Z',
+    // A First Class video: its length, and its file as the ORIGINAL (pass sizes: VIDEO_SIZES)
+    kind,
+    durationS,
+  } = {}
 ) {
+  const fileFor = (size) => (kind === 'VIDEO' && size === 'ORIGINAL' ? VIDEO_FILE : FILES[size]);
   const presign = await agent.post(`/api/maps/${mapId}/photos/presign`).send({
     tripId,
     countryCode: countryHint,
-    files: sizes.map((size) => ({ size, contentType: FILES[size].contentType, bytes: FILES[size].bytes })),
+    kind,
+    durationS,
+    files: sizes.map((size) => ({ size, contentType: fileFor(size).contentType, bytes: fileFor(size).bytes })),
   });
   if (presign.status !== 200) return presign;
   const { photoId, uploads } = data(presign);
@@ -117,7 +138,7 @@ export async function uploadPhoto(
   for (const upload of uploads) {
     const override = put[upload.size];
     if (override === null) continue; // never uploaded
-    fakeR2().set(upload.key, override ?? { bytes: FILES[upload.size].bytes, contentType: FILES[upload.size].contentType });
+    fakeR2().set(upload.key, override ?? { bytes: fileFor(upload.size).bytes, contentType: fileFor(upload.size).contentType });
   }
 
   const res = await agent.post(`/api/maps/${mapId}/photos`).send({
@@ -127,10 +148,12 @@ export async function uploadPhoto(
     latitude,
     longitude,
     countryCode,
-    takenAt: '2026-06-01T12:00:00.000Z',
+    takenAt,
+    kind,
+    durationS,
     width: 4000,
     height: 3000,
-    variants: uploads.map((u) => ({ size: u.size, key: u.key, width: FILES[u.size].width, height: FILES[u.size].height })),
+    variants: uploads.map((u) => ({ size: u.size, key: u.key, width: fileFor(u.size).width, height: fileFor(u.size).height })),
   });
   res.uploadedKeys = uploads.map((u) => u.key);
   return res;

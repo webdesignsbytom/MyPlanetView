@@ -1,7 +1,7 @@
 // Opening a share link (/shared/<code>): anyone, signed in or not.
 // Reads only, so nothing is logged; lookups are rate limited per IP.
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
-import { canSeePhoto, canView, higherRole, linkRoleFor, mapRoleFor, tripRoleFor } from '../utils/access.js';
+import { canEdit, canSeePhoto, canView, higherRole, linkRoleFor, mapRoleFor, tripRoleFor } from '../utils/access.js';
 import { normaliseShareCode } from '../utils/shareCodes.js';
 import { isUuid } from '../utils/travelValidation.js';
 import { findMapAccessByShareCode } from '../domain/maps.js';
@@ -13,6 +13,9 @@ import { mapDetailView } from './maps.js';
 import { mapTripsView, tripView } from './trips.js';
 import { photoPage } from './photos.js';
 import { momentPage } from './moments.js';
+import { adsFor } from '../services/offers.js';
+import { buildPassport } from '../services/travel/passport.js';
+import { mapBadges, mapGoals } from '../services/travel/achievements.js';
 
 const D = DOMAINS.sharing;
 
@@ -47,18 +50,18 @@ export const getSharedHandler = handler(D, 'Open share link', async (req, res) =
   if (shared.kind === 'map') {
     // Group trips added to the map are listed with their limited fields only: a share
     // link never opens another map's trip
-    const [map, trips] = await Promise.all([
+    const [map, trips, ads] = await Promise.all([
       mapDetailView(shared.map.id, shared.role),
       mapTripsView(shared.map.id, shared.role, req.user?.id ?? null, { viaShareLink: true }),
+      adsFor({ mapId: shared.map.id, viewerId: req.user?.id ?? null }),
     ]);
-    return sendDataResponse(res, 200, { resource: 'map', id: shared.map.id, role: shared.role, map, trips });
+    return sendDataResponse(res, 200, { resource: 'map', id: shared.map.id, role: shared.role, map: { ...map, ads }, trips });
   }
-  return sendDataResponse(res, 200, {
-    resource: 'trip',
-    id: shared.trip.id,
-    role: shared.role,
-    trip: await tripView(shared.trip.id, shared.role),
-  });
+  const [trip, ads] = await Promise.all([
+    tripView(shared.trip.id, shared.role),
+    adsFor({ mapId: shared.trip.mapId, viewerId: req.user?.id ?? null }),
+  ]);
+  return sendDataResponse(res, 200, { resource: 'trip', id: shared.trip.id, role: shared.role, trip: { ...trip, ads } });
 });
 
 export const getSharedPhotosHandler = handler(D, 'Open share link photos', async (req, res) => {
@@ -102,4 +105,35 @@ export const getSharedPhotoHandler = handler(D, 'Open share link photo', async (
     return notFound(req, res, D, EVENT_MESSAGES.photoNotFound);
   }
   return sendDataResponse(res, 200, { photo: await photoDetailView(await findPhotoDetail(photo.id), shared.role) });
+});
+
+// A map's passport, badges and goals through its link (a trip link has none: 404). Viewers
+// see them as they see the map: no hidden photos; a member who edits it still awards.
+async function sharedMap(req, res) {
+  const shared = await resolveCode(req);
+  if (!shared || shared.kind !== 'map') {
+    notFound(req, res, D, EVENT_MESSAGES.shareCodeNotFound);
+    return null;
+  }
+  return shared;
+}
+
+export const getSharedPassportHandler = handler(D, 'Open share link passport', async (req, res) => {
+  const shared = await sharedMap(req, res);
+  if (!shared) return undefined;
+  const passport = await buildPassport(shared.map.id, shared.role);
+  if (!passport) return notFound(req, res, D, EVENT_MESSAGES.shareCodeNotFound);
+  return sendDataResponse(res, 200, { passport });
+});
+
+export const getSharedBadgesHandler = handler(D, 'Open share link badges', async (req, res) => {
+  const shared = await sharedMap(req, res);
+  if (!shared) return undefined;
+  return sendDataResponse(res, 200, await mapBadges(shared.map.id, { award: canEdit(shared.role) }));
+});
+
+export const getSharedGoalsHandler = handler(D, 'Open share link goals', async (req, res) => {
+  const shared = await sharedMap(req, res);
+  if (!shared) return undefined;
+  return sendDataResponse(res, 200, await mapGoals(shared.map.id, { award: canEdit(shared.role) }));
 });

@@ -24,11 +24,20 @@ import { continentsByCode } from './countries.js';
 const keyOf = (photo, size) => photo.variants?.find((v) => v.size === size)?.media?.key ?? null;
 const signed = async (key) => (key ? signPhotoUrl(key) : null);
 
-/** A photo in a list: thumbnail only; viewers see confirmed landmarks only. */
+/**
+ * A photo in a list: thumbnail only, unless the list asked for the DISPLAY copy too
+ * (the slideshows); viewers see confirmed landmarks only.
+ */
 export async function photoListItem(photo, role) {
   const editor = canEdit(role);
+  const displayKey = keyOf(photo, 'DISPLAY');
+  // A video's file is its ORIGINAL (location metadata overwritten before upload), so anyone
+  // who can see the video can play it; a photo's original never goes in a list
+  const videoKey = photo.kind === 'VIDEO' ? keyOf(photo, 'ORIGINAL') : null;
   return {
     id: photo.id,
+    kind: photo.kind ?? 'PHOTO',
+    durationS: photo.durationS ?? null,
     caption: photo.caption,
     takenAt: photo.takenAt,
     countryCode: photo.countryCode,
@@ -36,6 +45,8 @@ export async function photoListItem(photo, role) {
     width: photo.width,
     height: photo.height,
     thumbUrl: await signed(keyOf(photo, 'THUMB')),
+    ...(displayKey ? { displayUrl: await signed(displayKey) } : {}),
+    ...(videoKey ? { videoUrl: await signed(videoKey) } : {}),
     landmarks: photo.landmarks
       .filter((l) => editor || l.confirmed)
       .map((l) => ({ id: l.landmark.id, name: l.landmark.name, confirmed: l.confirmed })),
@@ -51,6 +62,7 @@ export async function photoListItem(photo, role) {
 export async function photoDetailView(photo, role) {
   const base = await photoListItem(photo, role);
   const view = { ...base, displayUrl: await signed(keyOf(photo, 'DISPLAY')) };
+  if (photo.kind === 'VIDEO') view.videoUrl = await signed(keyOf(photo, 'ORIGINAL'));
   if (canSeeLocation(role)) {
     const bestCopy = bestCopySize((photo.variants ?? []).map((v) => v.size));
     view.originalUrl = await signed(bestCopy ? keyOf(photo, bestCopy) : null);

@@ -25,7 +25,7 @@ function PricingEveryPlan() {
         </h3>
         <ul className='grid list-disc gap-2 pl-5 text-sm leading-relaxed'>
           {pricingNotes.map((note) => (
-            <li key={note}>{note}</li>
+            <li key={note.text}>{note.text}</li>
           ))}
         </ul>
       </section>

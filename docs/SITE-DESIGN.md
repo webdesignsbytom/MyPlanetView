@@ -204,6 +204,20 @@ Editors drag photos into the order they want, in every gallery: a country's on t
 - **In the browser:** "Rearrange photos" above a gallery switches it to dragging: the mouse, a press and hold on a touch screen (a quick swipe still scrolls), or the keyboard (Space, the arrow keys, Space; a screen reader hears each step). The list moves at once and saves behind it; if the save fails, the list is loaded again. The drag code (dnd-kit, about 16 kB gzipped) loads only then.
 - **The whole map's list** (the hover postcards) stays newest upload first.
 
+## The passport
+
+A book on the poster frame. The cover is deep-red board with gold lettering and the camera logo as its crest (fixed poster colours). The inside pages are cream paper with a faint printed pattern, a running head and page numbers, bound by a deep-red spine. A visa page is a spread on wide screens: the country, its entry or residence stamp and the dotted outlines still to collect on the left; the stamps on the right. Stamps are SVG rubber stamps in four shapes (circle, oval, rectangle, pennant triangle), tilted −10° to 10° and inked in theme tokens (`colour6`, `colour7`, `colour9`, `status-good`), all hashed from the landmark's id. The name is set on a curve and the photo sits inside; UNESCO sites carry a small temple pictogram (not UNESCO's emblem). Pages turn round the spine on desktop, slide and swipe on phones, and fade with reduced motion. Every stamp is a button that opens its photo.
+
+On the map, landmark pins come in by zoom: about 200 across the whole world, every one of the 1,332 from zoom 12, each country's best-known first.
+
+## Slideshows
+
+A show plays over the page as a modal in the paperwork look: a parchment stage with the photo on its white border, the caption strip (place, confirmed landmarks, the day taken, the caption) and the toolbar's rubber stamps. It starts playing, oldest taken first; Shuffle starts it again in a new random order (a new seed, so the server pages the same order). The whole-map show puts the country's poster up as a title card whenever the country changes. Captions are read out only when the viewer moves the show by hand. The screen stays awake while it plays. With reduced motion there's no fade and no slow zoom, just a cut to the next photo. No music.
+
+## Badges and goals
+
+Badges are luggage stickers on a suitcase: an earned one is stuck on, tilted, with a tick and the date it was earned; one not yet earned is a dashed outline with how far along it is, so the words carry the state as well as the colour. Goals sit above the suitcase as paper tags with a progress bar, the numbers, the deadline and the places still to go. Progress shows on the map as a luggage tag under the title (the unmet goal nearest done), which a viewer can hide. A new badge or a reached goal gets one short, polite note at the top of the map that goes by itself after ten seconds; it never blocks the map. On phones the toolbar keeps eight stamps: the stats and the badges open from their tags.
+
 ## Plans and limits
 
 Built on 16 Nov 2026 (FEATURE-PLAN.md, "Tiers" and "Maps", has the reasons; docs/API.md, "Plans and billing" and "Map limits", the rules).
@@ -217,6 +231,14 @@ Built on 16 Nov 2026 (FEATURE-PLAN.md, "Tiers" and "Maps", has the reasons; docs
 - **Downgrades never delete anything:** originals already kept stay, and a country over the new limit keeps its photos but takes no more.
 - **Cost:** R2 charges for storage and operations, not for downloads. Storage is the line to watch.
 - **The Pricing page** (`/pricing`, indexed) sells the map and the look, not storage. Claims about features not built yet are marked `soon` in `client/src/utils/data/pricingData.js` and must be live, or removed, before launch.
+- **Influencer codes.**
+  - Each creator gets a code (3–24 letters and digits, stored upper case) and a link, `/sign-up?code=CODE`. A code from a link on any page is kept for the visit, so it's still filled in when the person reaches sign-up.
+  - The form checks the code as it's typed and says what it gives: "SAMTRAVELS: your first month of Business or First Class is free. Choose one on your account page once your email is verified. Stripe asks for a card, and nothing is charged for 30 days." A code that can't be used says "That code isn't valid. Check it, or sign up without one.", and the person can sign up with the field cleared.
+  - **The offer is the same for every code** (decided 16 Nov 2026): the first month free on the paid plan the follower chooses, as a 30-day Stripe trial on their first paid Checkout, **with a card**. A card up front means free months go to people willing to pay, and Stripe charges when the month ends unless they cancel. Checkout needs a verified address, so throwaway sign-ups get nothing. On the account page the plans then read "Start a free month of Business", and during the month "Free until <date>. Your first payment is then, unless you cancel before."
+  - **The creator** gets two years free: a 24-month complimentary membership given from the admin users page (its default).
+  - Admins make codes at `/admin/promo-codes`, with a label only they see and optional limits on uses and a last day. They see each code's sign-ups, verified accounts, free months started and paying accounts. A code is turned off rather than deleted, and never renamed, because it's in people's posts; accounts that signed up with it keep their free month.
+  - A creator given a free membership in return must label the post as an ad (ASA and CMA influencer guidance).
+- **Travel offers admin** (`/admin/offers`). Offers mostly arrive as partner files, so the page leads with the import: matched by key, offers not in the file left alone, a field left out back to its default; it shows which keys are new and which will update before sending, and lists any problems per offer in plain words. Export writes the same shape for offline editing. Each offer is a paper slip with its state in words and 30 days of clicks (numbers per placement and daily bars, never colour alone). Turning an offer off keeps its counts; deleting asks first and says they go too.
 
 ## Privacy rules
 
@@ -228,13 +250,16 @@ Built on 16 Nov 2026 (FEATURE-PLAN.md, "Tiers" and "Maps", has the reasons; docs
 
 ## Database
 
-- **The schema:** see [`schema.prisma`](../server/prisma/schema.prisma) (Prisma 7.10.1), with five migrations so far. The old database only held fake seed data, so the site starts on a fresh database with a new seed. No old data or passwords are carried over. Reviewed before the Phase 1 features in [DATABASE-REVIEW.md](DATABASE-REVIEW.md).
+- **The schema:** see [`schema.prisma`](../server/prisma/schema.prisma) (Prisma 7.10.1), with nine migrations so far. The old database only held fake seed data, so the site starts on a fresh database with a new seed. No old data or passwords are carried over. Reviewed before the Phase 1 features in [DATABASE-REVIEW.md](DATABASE-REVIEW.md).
 - **Kept from the template:** the better-auth tables, `Profile`, `MediaItem`, `AvatarMediaItem`, a trimmed `ContactForm`, `AppEvent`, and `RateLimit` (from NextDummy).
 - **New:**
   - `Country` and `Landmark` (seeded);
   - `TravelMap` (with its group type), `Traveller`, `MapMember`, `Trip`, `TripTraveller`, `TripMember`, `TripStop` and `ShareInvite`;
   - `CountryVisit`;
-  - `Photo`, `PhotoVariant` and `PhotoLandmark`.
+  - `Photo`, `PhotoVariant` and `PhotoLandmark`;
+  - `TripMap`, `Moment`, `MomentTraveller` and `MomentPhoto`;
+  - the plans: `Subscription`, `PlanGrant`, `StripeEvent`, `PromoCode`;
+  - the passport, badges and goals: `LandmarkCover`, `BadgeAward`, `Goal`.
 - **Stats** (countries, continents, photos, landmarks) are counted from these tables, never stored.
 
 ## Removed from the template

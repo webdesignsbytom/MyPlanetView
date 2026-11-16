@@ -1,5 +1,6 @@
 // Maps, their travellers and countries visited
 import { isPole } from '../utils/specialPlaces.js';
+import { adsFor } from '../services/offers.js';
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
 import { logEvent } from '../utils/events/logEvent.js';
 import { createMapEvent } from '../event/travelUtils.js';
@@ -97,13 +98,18 @@ const summaryView = (map, role, slots = null) => ({
  * (the shape GET /trips/:tripId also has).
  */
 async function mapPlanView(mapId) {
-  const [mapPlan, photoCounts] = await Promise.all([loadMapPlan(mapId), countPhotosByCountry(mapId)]);
+  const [mapPlan, photoCounts, videoCounts] = await Promise.all([
+    loadMapPlan(mapId),
+    countPhotosByCountry(mapId),
+    countPhotosByCountry(mapId, { kind: 'VIDEO' }),
+  ]);
   if (!mapPlan) return {};
   return {
     plan: planView(mapPlan.plan),
     locked: mapPlan.locked,
     graceUntil: mapPlan.graceUntil,
     photoCounts,
+    videoCounts,
     uploadRules: uploadRulesFrom(mapPlan),
   };
 }
@@ -211,7 +217,8 @@ export const createMapHandler = handler(D, 'Create map', async (req, res) => {
 export const getMapHandler = handler(D, 'Get map', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
   if (!canView(role)) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
-  return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role, WITH_PLAN) });
+  const [view, ads] = await Promise.all([mapDetailView(map.id, role, WITH_PLAN), adsFor({ mapId: map.id, viewerId: req.user.id })]);
+  return sendDataResponse(res, 200, { map: { ...view, ads } });
 });
 
 export const updateMapHandler = handler(D, 'Update map', async (req, res) => {

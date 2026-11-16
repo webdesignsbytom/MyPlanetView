@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "ireland-to-egypt-at-night",
+    "title": "Ireland to Egypt at Night - Sept. 2017",
+    "caption": "Dublin to Cairo by night, from the space station: London, Paris, Rome, Athens and the Nile",
+    "countryCode": "IE",
+    "takenAt": "2017-09-24T01:53:00.000Z",
+    "source": "https://eol.jsc.nasa.gov/BeyondThePhotography/CrewEarthObservationsVideos/",
+    "frames": "ISS053-E-45404 to ISS053-E-46038"
+  },
+  {
+    "slug": "over-western-europe-at-night",
+    "title": "Over Western Europe at Night",
+    "caption": "Northern Italy, Croatia and the Black Sea at night from the space station",
+    "countryCode": "IT",
+    "takenAt": "2019-09-24T19:25:40.000Z",
+    "source": "https://eol.jsc.nasa.gov/BeyondThePhotography/CrewEarthObservationsVideos/",
+    "frames": "ISS060-E-79517 to ISS060-E-80317"
+  },
+  {
+    "slug": "over-the-nile-at-night",
+    "title": "Over the Nile at Night",
+    "caption": "The Nile traced in city lights, from Athens to the Red Sea",
+    "countryCode": "EG",
+    "takenAt": "2019-11-27T21:33:15.000Z",
+    "source": "https://eol.jsc.nasa.gov/BeyondThePhotography/CrewEarthObservationsVideos/",
+    "frames": "ISS061-E-61778 to ISS061-E-63040"
+  },
+  {
+    "slug": "west-africa-to-the-alps",
+    "title": "West Africa to the Alps - Dec. 2017",
+    "caption": "Sahara dust, the Atlas Mountains and the snowy Alps, by day",
+    "countryCode": "MA",
+    "takenAt": "2017-12-07T14:05:42.000Z",
+    "source": "https://eol.jsc.nasa.gov/BeyondThePhotography/CrewEarthObservationsVideos/",
+    "frames": "ISS053-E-386864 to ISS053-E-388463"
+  }
+]

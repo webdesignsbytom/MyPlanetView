@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { Suspense, useMemo, useState } from 'react';
+// Icons
+import { FaPlay } from 'react-icons/fa';
 // Hooks
 import usePhotoPage from '@/hooks/usePhotoPage';
+import useGalleryOffers from '@/hooks/useGalleryOffers';
+import usePlannedTripPlace from '@/hooks/usePlannedTripPlace';
 // Components
+import { Slideshow } from '@/components/map/lazyMapPanels';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import PhotoUploader from '@/components/photos/PhotoUploader';
 import PhotoViewer from '@/components/photos/PhotoViewer';
@@ -9,21 +14,40 @@ import Modal from '@/components/common/Modal';
 import Button from '@/components/common/Button';
 import PaperCard from '@/components/common/PaperCard';
 import LockedMapNote from '@/components/plans/LockedMapNote';
+// Utils
+import { isUpcomingPlannedTrip, todayString } from '@/utils/offers/offerContext';
 
 // The trip's photos on a paper card (each on its white photo border, from PhotoThumb),
-// with adding (editors) and the viewer. Link visitors pass `shareCode`.
+// with adding (editors), the viewer, and the trip's slideshow (everyone, oldest taken
+// first; lazy-loaded). Link visitors pass `shareCode`.
 // `locked`: an editor whose email address isn't verified yet (the viewer says why).
+// Travel offers (docs/API.md, "Travel offers"): a card every `trip.ads.every` photos (none
+// for a paying viewer, or on a First Class map) and one at the end of the slideshow,
+// chosen for this trip's destination and dates while it's planned and still to come.
 function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
-  const photos = usePhotoPage(shareCode ? { shareCode } : { tripId: trip.id });
+  const source = shareCode ? { shareCode } : { tripId: trip.id };
+  const photos = usePhotoPage(source);
+  const adEvery = trip.ads?.every ?? null;
+  // A client-only page, so today can be read here
+  const upcoming = useMemo(() => isUpcomingPlannedTrip(trip, todayString()), [trip]);
+  const plannedTrip = usePlannedTripPlace(upcoming ? trip : null);
+  const offerSlots = useGalleryOffers({ every: adEvery, slotKey: `trip:${trip.id}`, plannedTrip });
   const [uploading, setUploading] = useState(false);
   const [openId, setOpenId] = useState(null);
+  const [playing, setPlaying] = useState(false);
+  const play = photos.photos.length ? (
+    <Button quiet onClick={() => setPlaying(true)} ariaLabel={`Slideshow of ${trip.title}`}>
+      <FaPlay aria-hidden='true' className='self-center text-sm' />
+      <span>Slideshow</span>
+    </Button>
+  ) : null;
   // The map owner's plan, for those who can upload (docs/API.md, "Trips"): a map that
   // isn't paid for takes no photos, so adding is locked with the reason
   const uploadRules = trip.uploadRules || null;
   const isOwner = trip.role === 'OWNER';
 
   return (
-    <PaperCard title='Photos' titleId='trip-photos-heading'>
+    <PaperCard title='Photos' titleId='trip-photos-heading' action={play}>
       {canEdit && uploadRules?.locked ? (
         <LockedMapNote isOwner={isOwner} />
       ) : canEdit ? (
@@ -39,6 +63,7 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
         onLoadMore={photos.loadMore}
         onOpen={(photo) => setOpenId(photo.id)}
         onMove={canEdit && !shareCode ? (photoId, afterId) => photos.movePhoto(photoId, afterId, 'trip') : undefined}
+        offerSlots={offerSlots}
         emptyText='No photos from this trip yet.'
       />
 
@@ -65,6 +90,19 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
           onDeleted={photos.removePhoto}
           onClose={() => setOpenId(null)}
         />
+      ) : null}
+
+      {playing ? (
+        <Suspense fallback={null}>
+          <Slideshow
+            source={source}
+            title={`Slideshow: ${trip.title}`}
+            adEvery={adEvery}
+            nextTrip={upcoming ? trip : null}
+            mapKey={`trip:${trip.id}`}
+            onClose={() => setPlaying(false)}
+          />
+        </Suspense>
       ) : null}
     </PaperCard>
   );

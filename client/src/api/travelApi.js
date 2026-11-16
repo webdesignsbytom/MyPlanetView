@@ -3,6 +3,7 @@
 import client from './client';
 import {
   ACCEPT_INVITE_API,
+  GOALS_API,
   LANDMARKS_API,
   MAPS_API,
   MAP_SETTINGS_API,
@@ -88,9 +89,20 @@ export const createMoment = (mapId, body) => data(client.post(`${MAPS_API}/${enc
 export const updateMoment = (momentId, body) => data(client.patch(`${MOMENTS_API}/${enc(momentId)}`, body));
 export const deleteMoment = (momentId) => data(client.delete(`${MOMENTS_API}/${enc(momentId)}`));
 
-// Photos: a page of a map's, a trip's or a share link's photos (`unplaced`: only those with no country)
-export const getPhotoPage = ({ mapId, tripId, shareCode, country, unplaced, cursor, limit }) => {
-  const filters = query({ country, unplaced: unplaced ? 1 : undefined, cursor, limit, tripId: mapId && tripId ? tripId : undefined });
+// Photos: a page of a map's, a trip's or a share link's photos (`unplaced`: only those with no
+// country). The slideshows (docs/API.md, "Slideshows") pass `order` ('taken', or 'shuffle'
+// with a `seed`) and `display` (each photo also carries its displayUrl).
+export const getPhotoPage = ({ mapId, tripId, shareCode, country, unplaced, cursor, limit, order, seed, display }) => {
+  const filters = query({
+    country,
+    unplaced: unplaced ? 1 : undefined,
+    cursor,
+    limit,
+    tripId: mapId && tripId ? tripId : undefined,
+    order,
+    seed: order === 'shuffle' ? seed : undefined,
+    display: display ? 1 : undefined,
+  });
   if (shareCode) return data(client.get(`${SHARED_API}/${enc(shareCode)}/photos${filters}`));
   if (mapId) return data(client.get(`${MAPS_API}/${enc(mapId)}/photos${filters}`));
   return data(client.get(`${TRIPS_API}/${enc(tripId)}/photos${filters}`));
@@ -131,3 +143,20 @@ export const acceptInvite = (token) => data(client.post(ACCEPT_INVITE_API, { tok
 
 // Share links (no sign-in needed; cookies still go, so members get their own role)
 export const openShareCode = (code) => data(client.get(`${SHARED_API}/${enc(code)}`));
+
+// The passport, badges and goals (docs/API.md, "Passport", "Badges and goals"). With a
+// `shareCode`, through the map's share link (read only).
+const mapOrShared = ({ mapId, shareCode }, what) =>
+  shareCode ? `${SHARED_API}/${enc(shareCode)}/${what}` : `${MAPS_API}/${enc(mapId)}/${what}`;
+export const getPassport = (where) => data(client.get(mapOrShared(where, 'passport')));
+export const setStampPhoto = (mapId, landmarkId, photoId) =>
+  data(client.put(`${MAPS_API}/${enc(mapId)}/passport/stamps/${enc(landmarkId)}/photo`, { photoId }));
+export const clearStampPhoto = (mapId, landmarkId) =>
+  data(client.delete(`${MAPS_API}/${enc(mapId)}/passport/stamps/${enc(landmarkId)}/photo`));
+// -> { badges, newlyEarned } (the owner and editors award as they load)
+export const getBadges = (where) => data(client.get(mapOrShared(where, 'badges')));
+// -> { goals, newlyAchieved }
+export const getGoals = (where) => data(client.get(mapOrShared(where, 'goals')));
+export const createGoal = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/goals`, body));
+export const updateGoal = (goalId, body) => data(client.patch(`${GOALS_API}/${enc(goalId)}`, body));
+export const deleteGoal = (goalId) => data(client.delete(`${GOALS_API}/${enc(goalId)}`));

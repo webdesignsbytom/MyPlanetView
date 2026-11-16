@@ -8,16 +8,23 @@ test.describe('The map page', () => {
     await expect(page.getByRole('button', { name: `${HOME_MAP}. Switch map` })).toBeVisible();
     await expectStats(page, '8 countries, 2 continents, 16 photos');
 
-    // The owner's tools
-    for (const label of ['Travel statistics', 'Country list', 'Trips', 'Timeline', 'Add photos', 'Share this map', 'Map settings']) {
-      await expect(toolbar(page).getByRole('button', { name: label, exact: true })).toBeAttached();
+    // The owner's tools. On a phone the row keeps eight stamps: the statistics and the
+    // badges give way, as the tags under the title open them (MapToolbar)
+    const wide = page.viewportSize().width >= 768;
+    const tools = ['Home page', 'Country list', 'Trips', 'Timeline', 'Play my world', 'Add photos', 'Share this map', 'Map settings'];
+    for (const label of [...tools, ...(wide ? ['Travel statistics', 'Badges and goals'] : [])]) {
+      await expect(toolbar(page).getByRole('button', { name: label, exact: true })).toBeVisible();
     }
+    await expect(toolbar(page).getByRole('button')).toHaveCount(wide ? 10 : 8);
+    // The phone's row fits a 390px screen without scrolling
+    if (!wide) expect(await toolbar(page).evaluate((nav) => nav.scrollWidth <= nav.clientWidth && nav.offsetWidth <= 390)).toBe(true);
 
     await statsBadge(page).click();
     const stats = page.getByRole('dialog', { name: 'Travel statistics' });
     await expect(stats).toBeVisible();
-    // Countries, continents (of 7), special places (of 5), photos, landmarks (confirmed matches), trips
-    await expect(stats.getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '16', '2', '3']);
+    // Countries, continents (of 7), special places (of 5), photos, landmarks (stamped: confirmed
+    // matches, the owner counting the one on a hidden photo too), trips
+    await expect(stats.getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '16', '13', '3']);
     await expect(stats.getByRole('listitem')).toHaveText([/Test\s*1/, /Alex\s*1/]);
   });
 

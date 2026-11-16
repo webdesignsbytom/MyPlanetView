@@ -1,6 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+// Icons
+import { FaPassport, FaSuitcase } from 'react-icons/fa';
 // Components
 import MapPanel from './MapPanel';
+import MapActionButton from './MapActionButton';
 import StatTile from './StatTile';
 import UnplacedPhotosButton from './UnplacedPhotosButton';
 // Utils
@@ -9,8 +13,10 @@ import { CONTINENT_TOTAL, SPECIAL_PLACE_TOTAL } from '@/utils/map/specialPlaces'
 // Travel statistics, counted by the server from what this viewer may see. Countries
 // leave out the special places (Antarctica and the poles), which have their own count;
 // continents count them (Antarctica is the seventh). The photos with no country
-// (counted, but on no country) are a button away.
-function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onClose }) {
+// (counted, but on no country) are a button away, and so are the badges and goals (on a
+// phone, the toolbar leaves their stamp out: MapToolbar). `passportHref` links to the map's
+// passport (its own address, or through the share link).
+function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, passportHref, onClose }) {
   const byTraveller = stats?.byTraveller || [];
   return (
     <MapPanel title='Travel statistics' onClose={onClose}>
@@ -25,6 +31,21 @@ function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = 
             <StatTile label='Trips' value={stats.trips} />
           </dl>
           {onShowUnplaced ? <UnplacedPhotosButton count={unplacedCount} more={unplacedMore} onOpen={onShowUnplaced} /> : null}
+          {onShowBadges ? (
+            <MapActionButton quiet onClick={onShowBadges}>
+              <FaSuitcase aria-hidden='true' />
+              <span>Badges and goals</span>
+            </MapActionButton>
+          ) : null}
+          {passportHref ? (
+            <Link
+              to={passportHref}
+              className='btn-paper grid-flow-col justify-center gap-2 text-center [grid-auto-columns:minmax(0,max-content)] [--btn-leading:1.5rem] [--btn-pad-x:1rem] [--btn-pad-y:0.25rem] [--btn-size:1.0625rem]'
+            >
+              <FaPassport aria-hidden='true' />
+              <span>Passport: landmark stamps</span>
+            </Link>
+          ) : null}
           {travellers.length > 1 && byTraveller.length ? (
             <section className='grid gap-2' aria-labelledby='stats-by-traveller'>
               <h3 id='stats-by-traveller' className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>

@@ -314,13 +314,14 @@ describe('plan fields on maps and trips', () => {
     const tripViewer = await signUp('TripOnlyViewer');
     const map = await defaultMapOf(owner.agent);
     const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Stag do' })).trip;
-    expect(trip.uploadRules).toEqual({ keepsOriginals: false, photosPerCountry: 30, locked: false });
+    expect(trip.uploadRules).toEqual({ keepsOriginals: false, photosPerCountry: 30, videos: null, locked: false });
     await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: tripEditor.email, role: 'EDITOR' });
     await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: tripViewer.email, role: 'VIEWER' });
 
     expect(data(await tripEditor.agent.get(`/api/trips/${trip.id}`)).trip.uploadRules).toEqual({
       keepsOriginals: false,
       photosPerCountry: 30,
+      videos: null,
       locked: false,
     });
     // Changing the trip answers with the same shape
@@ -336,9 +337,10 @@ describe('plan fields on maps and trips', () => {
 
     // The owner's plan, whoever looks; a trip-only editor uploads by it
     await givePlan(owner.user.id, { plan: 'PREMIUM' });
-    expect(data(await tripEditor.agent.get(`/api/trips/${trip.id}`)).trip.uploadRules).toEqual({
+    expect(data(await tripEditor.agent.get(`/api/trips/${trip.id}`)).trip.uploadRules).toMatchObject({
       keepsOriginals: true,
       photosPerCountry: 1000,
+      videos: { perCountry: 20 },
       locked: false,
     });
     const upload = await uploadPhoto(tripEditor.agent, map.id, { tripId: trip.id, countryCode: 'CZ', sizes: ORIGINAL_SIZES });

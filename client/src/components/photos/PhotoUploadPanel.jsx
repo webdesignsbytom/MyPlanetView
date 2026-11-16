@@ -10,7 +10,8 @@ import { countryName } from '@/utils/map/countries';
 // email address isn't verified yet, so it says that instead of offering the uploader.
 // `uploadRules` and `photoCounts` are the map's (its owner's plan: a map that isn't paid
 // for takes no photos, Economy keeps print copies, and each country has a cap).
-function PhotoUploadPanel({ mapId, countryCode, locked = false, uploadRules = null, photoCounts = null, isOwner = false, onUploaded, onClose }) {
+// `onBatchDone` runs once each batch of photos has finished (the map then checks badges and goals).
+function PhotoUploadPanel({ mapId, countryCode, locked = false, uploadRules = null, photoCounts = null, isOwner = false, onUploaded, onBatchDone, onClose }) {
   return (
     <MapPanel title={countryCode ? `Add photos: ${countryName(countryCode)}` : 'Add photos'} onClose={onClose}>
       {locked ? (
@@ -23,6 +24,7 @@ function PhotoUploadPanel({ mapId, countryCode, locked = false, uploadRules = nu
           photoCounts={photoCounts}
           isOwner={isOwner}
           onUploaded={onUploaded}
+          onBatchDone={onBatchDone}
         />
       )}
     </MapPanel>

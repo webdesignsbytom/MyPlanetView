@@ -7,10 +7,12 @@ import AppLink from '@/components/common/AppLink';
 // Utils
 import { PAID_PLAN_IDS, planOf } from '@/utils/constants/plans';
 import { INTERVAL_NAMES, hasSubscription, planPrice, priceText } from '@/utils/plans/billing';
+import { promoTrialText } from '@/utils/plans/promoCodes';
 
 // The plans the account can move to, on the `interval` chosen above. With a subscription
 // the plan line changes in place (change-plan, prorated by Stripe; the same plan on the
-// other interval too); without one, each plan is a Stripe Checkout. Stopping is in
+// other interval too); without one, each plan is a Stripe Checkout, whose first month is
+// free when the account signed up with a promo code (`billing.promoTrial`). Stopping is in
 // Stripe's billing page. `onChoose(planId)` runs the change.
 function PlanChoices({ billing, interval, busy, onChoose }) {
   const current = planOf(billing.plan);
@@ -25,21 +27,32 @@ function PlanChoices({ billing, interval, busy, onChoose }) {
     return <p className='text-sm'>You’re on our top plan, so there’s nothing to upgrade to.</p>;
   }
 
+  // A promo code's free month: only for a Checkout (no subscription yet)
+  const trial = !paying && !hasSubscription(billing) ? billing.promoTrial : null;
+
   return (
     <div className='grid gap-3'>
+      {trial ? (
+        <p className='border-2 border-dashed border-status-good bg-paper-cream p-3 text-sm' data-testid='promo-trial'>
+          {promoTrialText(trial)}
+        </p>
+      ) : null}
       <ul className='grid gap-2 sm:grid-cols-2'>
         {choices.map((plan) => {
           const label =
             plan.id === current.id
               ? `Pay ${INTERVAL_NAMES[interval]} instead`
-              : plan.rank > current.rank
-                ? `Upgrade to ${plan.name}`
-                : `Change to ${plan.name}`;
+              : trial
+                ? `Start a free month of ${plan.name}`
+                : plan.rank > current.rank
+                  ? `Upgrade to ${plan.name}`
+                  : `Change to ${plan.name}`;
           return (
             <li key={plan.id} className='grid content-between gap-2 border-2 border-dashed border-poster-brown/60 p-3'>
               <span className='grid gap-1'>
                 <span className='font-travel text-lg uppercase leading-tight tracking-wide'>{plan.name}</span>
                 <span className='text-sm'>
+                  {trial ? `Free for ${trial.days} days, then ` : ''}
                   {priceText(planPrice(billing, plan.id, interval), interval)}.{' '}
                   {plan.limits.photosPerCountry.toLocaleString('en-GB')} photos of each country, originals kept
                   {plan.limits.videos ? ', videos' : ''}.

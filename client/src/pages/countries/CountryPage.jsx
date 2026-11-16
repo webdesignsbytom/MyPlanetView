@@ -13,11 +13,13 @@ import CountryCulture from '@/components/countries/CountryCulture';
 import CountryLandmarks from '@/components/countries/CountryLandmarks';
 import CountryFacts from '@/components/countries/CountryFacts';
 import CountryStartMap from '@/components/countries/CountryStartMap';
+import CountryTravelOffers from '@/components/countries/CountryTravelOffers';
 
 /**
  * A country guide, /countries/<slug> (public, pre-rendered, indexed once checked): the
  * poster and headline, an overview, when to go, culture and customs, the landmarks, the
- * practical facts and a way to start a map. `page` is the content file with the country's
+ * practical facts, travel offers (the Travel Desk and two partner cards, for every visitor)
+ * and a way to start a map. `page` is the content file with the country's
  * name and landmarks (lazyPages.js loads it with this code, so the first render is whole).
  * Drafts exist only on the dev server, with a banner, and are never indexed.
  */
@@ -54,10 +56,10 @@ function CountryPage({ page }) {
         <CountryLandmarks named={named} landmarks={page.landmarks} />
         <CountryFacts name={page.name} facts={page.facts} />
 
-        {/* Reserved: the Travel Desk button and two ad cards (hotels and tours in this
-            country) go here, between the guide and the call to action. Neither is built
-            yet (docs/FEATURE-PLAN.md, "Ads: travel affiliate cards" and "Travel Desk"), so
-            nothing renders: no empty box, no placeholder text. */}
+        <CountryTravelOffers
+          guide={{ code: page.code, name: page.name, slug: page.slug, months: page.whenToGo.months }}
+          named={named}
+        />
 
         <CountryStartMap named={named} />
       </PublicPageLayout>

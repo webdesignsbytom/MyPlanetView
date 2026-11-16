@@ -12,6 +12,8 @@ import {
   ADMIN_CONTACT_FORM_PAGE_URL,
   ADMIN_USERS_PAGE_URL,
   ADMIN_EVENTS_PAGE_URL,
+  ADMIN_PROMO_CODES_PAGE_URL,
+  ADMIN_OFFERS_PAGE_URL,
   MAP_PAGE_URL,
 } from '../constants/routes';
 // Utils
@@ -38,6 +40,8 @@ export const getNavLinkItemsArray = (user) => [
             { path: ADMIN_PAGE_URL, label: 'Dashboard' },
             { path: ADMIN_CONTACT_FORM_PAGE_URL, label: 'Contact Forms' },
             { path: ADMIN_USERS_PAGE_URL, label: 'Users' },
+            { path: ADMIN_PROMO_CODES_PAGE_URL, label: 'Promo Codes' },
+            { path: ADMIN_OFFERS_PAGE_URL, label: 'Travel Offers' },
             ...(hasRole(user, ROLES.DEVELOPER)
               ? [{ path: ADMIN_EVENTS_PAGE_URL, label: 'Audit Log' }]
               : []),

@@ -14,7 +14,7 @@ export const SAM_MAP = "Sam's gap year";
 export const SAM_SHARE_CODE = 'SAMG-4PYE-AR22';
 export const HOME_SHARE_CODE = 'K7QX-M2PA-9RTW';
 // Where mock mode keeps its demo data (src/dev/mock/store.js STORE_KEY)
-export const MOCK_STORE_KEY = 'mpvMockStore.v3';
+export const MOCK_STORE_KEY = 'mpvMockStore.v4';
 
 export const test = base.extend({
   page: async ({ page }, provide) => {

@@ -63,7 +63,9 @@ test.describe('Photos', () => {
 
     const viewer = page.getByRole('dialog', { name: 'Photo' });
     await expect(viewer.getByText(/^Brandenburg Gate — suggested \(\d+ m away\)$/)).toBeVisible();
-    await viewer.getByRole('button', { name: 'That\'s right' }).click();
+    // Museum Island (1.3 km off, within its 3 km) is suggested too: each has its own yes
+    await expect(viewer.getByText(/^Museum Island — suggested \(1\.3 km away\)$/)).toBeVisible();
+    await viewer.getByRole('button', { name: 'That\'s right: Brandenburg Gate' }).click();
     await expect(viewer.getByText('Brandenburg Gate', { exact: true })).toBeVisible();
     // Escape closes the viewer only: the country's panel stays, with focus back on the photo
     await page.keyboard.press('Escape');
@@ -71,9 +73,9 @@ test.describe('Photos', () => {
     await expect(germany).toBeVisible();
     await expect(thumb).toBeFocused();
 
-    // A confirmed landmark counts
+    // A confirmed landmark counts (the seeded map has 13 stamps)
     await statsBadge(page).click();
-    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['9', '2 of 7', '0 of 5', '17', '3', '3']);
+    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['9', '2 of 7', '0 of 5', '17', '14', '3']);
   });
 
   test('a photo with no country waits under Unplaced photos until it is given one', { tag: '@phone' }, async ({ page }) => {

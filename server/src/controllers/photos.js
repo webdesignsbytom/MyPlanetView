@@ -15,7 +15,14 @@ import {
 } from '../utils/travelValidation.js';
 import { countryAtPosition } from '../utils/countryLookup.js';
 import { boundingBox, matchLandmarks } from '../utils/landmarkMatch.js';
-import { PHOTO_CONTENT_TYPES, PHOTO_MAX_BYTES, PHOTO_SAVE_WINDOW_MINUTES } from '../utils/constants/mediaConstants.js';
+import {
+  PHOTO_CONTENT_TYPES,
+  PHOTO_MAX_BYTES,
+  PHOTO_SAVE_WINDOW_MINUTES,
+  VIDEO_CONTENT_TYPES,
+  VIDEO_MAX_BYTES,
+} from '../utils/constants/mediaConstants.js';
+import { VIDEO_MAX_SECONDS } from '../utils/constants/plans.js';
 import {
   assertPhotoUploadsUnderCap,
   buildPhotoKey,
@@ -26,7 +33,15 @@ import {
 } from '../services/s3/mediaService.js';
 import { findLandmarkById, findLandmarksInBox } from '../domain/places.js';
 import { loadMapPlan } from '../services/travel/plans.js';
-import { LOCKED_MAP_MESSAGE, checkCountryCap, checkPhotoSizesForPlan } from '../utils/planLimits.js';
+import {
+  LOCKED_MAP_MESSAGE,
+  VIDEO_MESSAGES,
+  checkCountryCap,
+  checkPhotoSizesForPlan,
+  checkVideoAllowed,
+  checkVideoCap,
+  checkVideoSizes,
+} from '../utils/planLimits.js';
 import {
   confirmPhotoLandmarkInDB,
   countPhotosInCountry,
@@ -37,12 +52,15 @@ import {
   findPhotoById,
   findPhotoDetail,
   findPhotoFileKeys,
+  findPhotoIdsForList,
+  findPhotosByIds,
   findPhotosPage,
   movePhotoInDB,
   updatePhotoInDB,
   upsertPhotoLandmarkInDB,
 } from '../domain/photos.js';
 import { PHOTO_GALLERIES } from '../utils/photoOrder.js';
+import { pageAfter, parseShuffleSeed, shuffled } from '../utils/shuffle.js';
 import { findTripAccess } from '../domain/trips.js';
 import {
   badRequest,
@@ -68,10 +86,32 @@ const hasRequiredSizes = (sizes) => REQUIRED_SIZES.every((s) => sizes.includes(s
 const distinct = (list) => new Set(list).size === list.length;
 
 // What the plan rules need about a country, for the photo writes (domain/photos.js)
-const photoLimits = async (planId, countryCode) => ({
+const photoLimits = async (planId, countryCode, kind = 'PHOTO') => ({
   planId,
+  kind,
   countryName: countryCode ? await countryNameOf(countryCode) : null,
 });
+
+// A photo or a video (docs/API.md, "Videos"): each file's allowed types and largest size.
+// A video's ORIGINAL is its file; its THUMB and DISPLAY are poster frames, as a photo's.
+const PHOTO_KINDS = ['PHOTO', 'VIDEO'];
+const typesFor = (kind, size) => (kind === 'VIDEO' && size === 'ORIGINAL' ? VIDEO_CONTENT_TYPES : PHOTO_CONTENT_TYPES[size]);
+const maxBytesFor = (kind, size) => (kind === 'VIDEO' && size === 'ORIGINAL' ? VIDEO_MAX_BYTES : PHOTO_MAX_BYTES[size]);
+const isDuration = (value) => Number.isInteger(value) && value >= 1 && value <= VIDEO_MAX_SECONDS;
+
+/**
+ * The kind of an upload and, for a video, its length and whether the map's plan takes
+ * videos. -> `{ kind, durationS }`, or `{ status, message }`
+ */
+function parseUploadKind(body, planId) {
+  const kind = body.kind ?? 'PHOTO';
+  if (!PHOTO_KINDS.includes(kind)) return { status: 400, message: EVENT_MESSAGES.photoUploadInvalid };
+  if (kind === 'PHOTO') return { kind, durationS: null };
+  const notAllowed = checkVideoAllowed(planId);
+  if (notAllowed) return { status: 403, message: notAllowed };
+  if (!isDuration(body.durationS)) return { status: 400, message: VIDEO_MESSAGES.duration };
+  return { kind, durationS: body.durationS };
+}
 
 // Upload, step 1: presigned PUTs into the private bucket. The map's owner's plan decides:
 // a locked map takes no photos (403); Economy sends a PRINT copy and no ORIGINAL, the
@@ -88,6 +128,10 @@ export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) 
   if (!mapPlan) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
   if (mapPlan.locked) return forbidden(req, res, D, LOCKED_MAP_MESSAGE);
 
+  const upload = parseUploadKind(body, mapPlan.plan);
+  if (upload.status) return sendMessageResponse(res, upload.status, upload.message);
+  const { kind } = upload;
+
   const files = Array.isArray(body.files) ? body.files : [];
   const sizes = files.map((f) => f?.size);
   if (!files.length || files.length > PHOTO_SIZES.length || !distinct(sizes)) {
@@ -96,25 +140,26 @@ export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) 
   if (!hasRequiredSizes(sizes)) return badRequest(req, res, D, EVENT_MESSAGES.photoSizesRequired);
   for (const file of files) {
     if (!PHOTO_SIZES.includes(file.size)) return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
-    if (!PHOTO_CONTENT_TYPES[file.size].includes(file.contentType)) {
+    if (!typesFor(kind, file.size)?.includes(file.contentType)) {
       return badRequest(req, res, D, EVENT_MESSAGES.photoTypeInvalid);
     }
     // The declared size is signed into the upload URL, so the PUT must be exactly this big
     if (!Number.isSafeInteger(file.bytes) || file.bytes <= 0) {
       return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
     }
-    if (file.bytes > PHOTO_MAX_BYTES[file.size]) return sendMessageResponse(res, 413, EVENT_MESSAGES.photoTooLarge);
+    if (file.bytes > maxBytesFor(kind, file.size)) return sendMessageResponse(res, 413, EVENT_MESSAGES.photoTooLarge);
   }
-  const sizeProblem = checkPhotoSizesForPlan(sizes, mapPlan.plan);
+  // A video's files are its poster frames and its file, whatever the plan's photo copies
+  const sizeProblem = kind === 'VIDEO' ? checkVideoSizes(sizes) : checkPhotoSizesForPlan(sizes, mapPlan.plan);
   if (sizeProblem) return badRequest(req, res, D, sizeProblem);
 
   // The country the uploader expects (confirm checks again with the final one)
   const hint = await parseOptionalCountry(body.countryCode);
   if (!hint.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
   if (hint.value) {
-    const full = checkCountryCap({
-      count: await countPhotosInCountry(map.id, hint.value),
-      ...(await photoLimits(mapPlan.plan, hint.value)),
+    const full = (kind === 'VIDEO' ? checkVideoCap : checkCountryCap)({
+      count: await countPhotosInCountry(map.id, hint.value, undefined, kind),
+      ...(await photoLimits(mapPlan.plan, hint.value, kind)),
     });
     if (full) return conflict(req, res, D, full);
   }
@@ -152,7 +197,7 @@ export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) 
  * must be saved within PHOTO_SAVE_WINDOW_MINUTES of its presign: after an hour the
  * daily clean-up may delete its files, so it never deletes a photo being saved.
  */
-async function checkUploadedFiles({ mapId, photoId, variants, userId }) {
+async function checkUploadedFiles({ mapId, photoId, variants, userId, kind = 'PHOTO' }) {
   const folder = photoKeyFolder({ mapId, photoId });
   const keys = variants.map((v) => v.key);
   const items = await findMediaItemsByKeys(keys);
@@ -172,8 +217,8 @@ async function checkUploadedFiles({ mapId, photoId, variants, userId }) {
     }
     const stored = await headPrivateObject(variant.key);
     if (!stored) return { status: 400, message: EVENT_MESSAGES.photoUploadInvalid };
-    if (stored.bytes > PHOTO_MAX_BYTES[variant.size]) return { status: 413, message: EVENT_MESSAGES.photoTooLarge };
-    if (!PHOTO_CONTENT_TYPES[variant.size].includes(stored.contentType)) {
+    if (stored.bytes > maxBytesFor(kind, variant.size)) return { status: 413, message: EVENT_MESSAGES.photoTooLarge };
+    if (!typesFor(kind, variant.size)?.includes(stored.contentType)) {
       return { status: 400, message: EVENT_MESSAGES.photoTypeInvalid };
     }
     checked.push({
@@ -218,6 +263,13 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
     return forbidden(req, res, D, LOCKED_MAP_MESSAGE);
   }
 
+  const upload = parseUploadKind(body, mapPlan.plan);
+  if (upload.status) {
+    await discardUpload();
+    return sendMessageResponse(res, upload.status, upload.message);
+  }
+  const { kind, durationS } = upload;
+
   const variants = Array.isArray(body.variants) ? body.variants : [];
   const sizes = variants.map((v) => v?.size);
   if (
@@ -229,13 +281,14 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
     return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
   }
   if (!hasRequiredSizes(sizes)) return badRequest(req, res, D, EVENT_MESSAGES.photoSizesRequired);
-  const sizeProblem = checkPhotoSizesForPlan(sizes, mapPlan.plan);
+  const sizeProblem = kind === 'VIDEO' ? checkVideoSizes(sizes) : checkPhotoSizesForPlan(sizes, mapPlan.plan);
   if (sizeProblem) return badRequest(req, res, D, sizeProblem);
   if (!isPixelSize(body.width) || !isPixelSize(body.height)) {
     return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
   }
 
-  const position = parsePosition(body.latitude, body.longitude);
+  // Version 1 keeps no position for a video: the uploader chooses its country
+  const position = kind === 'VIDEO' ? parsePosition(null, null) : parsePosition(body.latitude, body.longitude);
   if (!position.ok) return badRequest(req, res, D, EVENT_MESSAGES.photoPositionInvalid);
   const takenAt = parseDateTime(body.takenAt);
   if (!takenAt.ok) return badRequest(req, res, D, EVENT_MESSAGES.invalidDate);
@@ -244,7 +297,7 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
   const chosenCountry = await parseOptionalCountry(body.countryCode);
   if (!chosenCountry.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
 
-  const checked = await checkUploadedFiles({ mapId: map.id, photoId, variants, userId: req.user.id });
+  const checked = await checkUploadedFiles({ mapId: map.id, photoId, variants, userId: req.user.id, kind });
   if (checked.status) {
     // Nothing from a failed upload is kept
     await discardUpload();
@@ -263,6 +316,8 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
       mapId: map.id,
       uploaderId: req.user.id,
       tripId,
+      kind,
+      durationS,
       countryCode,
       caption: sanitizeText(body.caption, { maxLength: CAPTION_MAX }),
       takenAt: takenAt.value ?? null,
@@ -273,22 +328,28 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
     },
     variants: checked.variants,
     landmarkMatches,
-    // The country cap with the final country, and the storage safety net
-    limits: await photoLimits(mapPlan.plan, countryCode),
+    // The country cap with the final country (the video cap for a video), and the storage safety net
+    limits: await photoLimits(mapPlan.plan, countryCode, kind),
   });
   if (saved.refused) {
     await discardUpload();
     return conflict(req, res, D, saved.refused);
   }
-  logEvent(createPhotoEvent({ user: req.user, action: 'Create Success', id: photoId, detail: `map=${map.id}`, statusCode: 201 }));
+  logEvent(createPhotoEvent({ user: req.user, action: 'Create Success', id: photoId, detail: `map=${map.id} kind=${kind}`, statusCode: 201 }));
   return sendDataResponse(res, 201, { photo: await photoDetailView(await findPhotoDetail(photoId), role) });
 });
 
 // Lists
 
+// The slideshows' orders (docs/API.md, "Slideshows"): `taken` plays oldest taken first,
+// `shuffle` a shuffled order fixed by `seed` (the same seed pages the same order)
+const PHOTO_ORDERS = ['gallery', 'taken', 'shuffle'];
+const isTrue = (value) => value === '1' || value === 'true';
+
 /**
  * Shared by the map list and the share-code list. `unplaced=1` lists only the photos
- * with no country (it can't be combined with `country`).
+ * with no country (it can't be combined with `country`). `order` and `display=1` are
+ * for the slideshows (docs/API.md, "Slideshows").
  */
 export async function photoPage({ query, mapId, tripId, role }) {
   const country = query.country;
@@ -302,20 +363,39 @@ export async function photoPage({ query, mapId, tripId, role }) {
   if (filterTrip !== undefined && !isUuid(filterTrip)) return { error: EVENT_MESSAGES.tripNotFound };
   if (query.cursor !== undefined && !isUuid(query.cursor)) return { error: EVENT_MESSAGES.malformedData };
   const limit = clampInt(query.limit, { min: 1, max: PAGE_MAX, fallback: PAGE_DEFAULT });
+  const order = query.order ?? 'gallery';
+  if (!PHOTO_ORDERS.includes(order)) return { error: EVENT_MESSAGES.malformedData };
+  const seed = order === 'shuffle' ? parseShuffleSeed(query.seed) : null;
+  if (order === 'shuffle' && seed === null) return { error: EVENT_MESSAGES.malformedData };
+  if (query.display !== undefined && !isTrue(query.display) && query.display !== '0' && query.display !== 'false') {
+    return { error: EVENT_MESSAGES.malformedData };
+  }
+  const withDisplay = isTrue(query.display);
 
-  const rows = await findPhotosPage({
-    mapId,
-    tripId: filterTrip,
-    countryCode: country,
-    unplaced,
-    includeHidden: canEdit(role),
-    cursor: query.cursor,
-    limit,
-  });
-  const page = rows.slice(0, limit);
+  const filters = { mapId, tripId: filterTrip, countryCode: country, unplaced, includeHidden: canEdit(role) };
+  let page;
+  let nextCursor;
+  if (order === 'shuffle') {
+    // Every id in the list, shuffled the same way for the same seed, then this page of it
+    const ids = shuffled(await findPhotoIdsForList(filters), seed);
+    const slice = pageAfter(ids, query.cursor, limit);
+    if (!slice) return { error: EVENT_MESSAGES.malformedData };
+    page = await findPhotosByIds(slice.ids, { withDisplay });
+    nextCursor = slice.more ? slice.ids[slice.ids.length - 1] : null;
+  } else {
+    const rows = await findPhotosPage({
+      ...filters,
+      cursor: query.cursor,
+      limit,
+      order: order === 'taken' ? 'shot' : undefined,
+      withDisplay,
+    });
+    page = rows.slice(0, limit);
+    nextCursor = rows.length > limit ? page[page.length - 1].id : null;
+  }
   return {
     photos: await Promise.all(visiblePhotos(page, role).map((p) => photoListItem(p, role))),
-    nextCursor: rows.length > limit ? page[page.length - 1].id : null,
+    nextCursor,
   };
 }
 
@@ -384,7 +464,7 @@ export const updatePhotoHandler = handler(D, 'Update photo', async (req, res) =>
     let limits = null;
     if (data.countryCode && data.countryCode !== photo.countryCode) {
       const mapPlan = await loadMapPlan(photo.mapId);
-      limits = await photoLimits(mapPlan?.plan ?? 'FREE', data.countryCode);
+      limits = await photoLimits(mapPlan?.plan ?? 'FREE', data.countryCode, photo.kind ?? 'PHOTO');
     }
     const updated = await updatePhotoInDB(photo.id, data, { limits });
     if (updated?.refused) return conflict(req, res, D, updated.refused);
@@ -448,11 +528,12 @@ async function loadEditablePhoto(req, res) {
 export const addPhotoLandmarkHandler = handler(D, 'Add photo landmark', async (req, res) => {
   const loaded = await loadEditablePhoto(req, res);
   if (!loaded) return undefined;
+  if (loaded.photo.kind === 'VIDEO') return badRequest(req, res, D, VIDEO_MESSAGES.landmark);
   const { landmarkId } = req.body || {};
   if (!isUuid(landmarkId) || !(await findLandmarkById(landmarkId))) {
     return badRequest(req, res, D, EVENT_MESSAGES.landmarkNotFound);
   }
-  await upsertPhotoLandmarkInDB(loaded.photo.id, landmarkId);
+  await upsertPhotoLandmarkInDB(loaded.photo, landmarkId);
   logEvent(createPhotoEvent({ user: req.user, action: 'Landmark Add Success', id: loaded.photo.id, detail: `landmark=${landmarkId}`, statusCode: 201 }));
   return sendDataResponse(res, 201, { photo: await photoDetailView(await findPhotoDetail(loaded.photo.id), loaded.role) });
 });

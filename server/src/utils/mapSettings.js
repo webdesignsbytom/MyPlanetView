@@ -18,6 +18,8 @@ export const MAP_SETTING_FLAGS = Object.freeze([
   'showAntarctica',
   // The pinned-note mark beside places with moments (on unless turned off)
   'showMoments',
+  // The luggage tag under the map's title with the nearest unmet goal (on unless turned off)
+  'showGoalTag',
 ]);
 
 const isPlainObject = (value) =>

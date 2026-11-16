@@ -15,6 +15,7 @@ import {
   tripSummary,
   tripView,
 } from '../views';
+import { adsFor } from '../offers';
 
 const TRIP_STATUSES = ['PLANNED', 'ACTIVE', 'COMPLETED'];
 const NOT_FOUND = 'This trip could not be found.';
@@ -88,7 +89,8 @@ export function registerTripRoutes() {
 
   route('GET', '/api/trips/:tripId', ({ params }) => {
     const { trip, role, reply } = loadTrip(params.tripId, 'VIEWER');
-    return reply || ok({ trip: tripView(trip, role) });
+    // How often its gallery shows an offer card to the caller: the trip's map owner's plan and theirs
+    return reply || ok({ trip: { ...tripView(trip, role), ads: adsFor(getDb().maps.find((m) => m.id === trip.mapId)) } });
   });
 
   route('PATCH', '/api/trips/:tripId', ({ params, body }) => {

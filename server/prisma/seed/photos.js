@@ -3,7 +3,9 @@
 // as an upload makes it: its three files go to the PRIVATE bucket, then a MediaItem per
 // file, the Photo with its PhotoVariants, a PHOTO visit for its country and GPS landmark
 // suggestions (createPhotoInDB, in one transaction). The partner (the seeded ADMIN, an
-// editor of the map) uploaded some of them, and the trip's photos are on the trip.
+// editor of the map) uploaded some of them, and the trip's photos are on the trip. Every
+// other photo with a suggestion has its nearest landmark confirmed, as the owner would,
+// so the demo passport has stamps and the rest still show the "confirm" step.
 //
 // The files' keys don't change between runs (`<photos prefix>seed/<slug>/<size>.<ext>`),
 // so seeding again overwrites them instead of leaving the last run's files behind (the
@@ -16,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 import { prisma } from '../../src/prisma.js';
 import { seedAccounts } from './users.js';
 import { PHOTO_PREFIX, putPrivateObject } from '../../src/services/s3/mediaService.js';
-import { createPhotoInDB } from '../../src/domain/photos.js';
+import { confirmPhotoLandmarkInDB, createPhotoInDB } from '../../src/domain/photos.js';
 import { findLandmarksInBox } from '../../src/domain/places.js';
 import { mediaKindFromContentType } from '../../src/domain/mediaGeneric.js';
 import { boundingBox, matchLandmarks } from '../../src/utils/landmarkMatch.js';
@@ -53,6 +55,7 @@ export async function seedDemoPhotos({ dir = SEED_PHOTOS_DIR, ownerEmail = email
 
   // A new photo goes first in its galleries, so the last one saved shows first:
   // saving them in reverse keeps the manifest's order
+  let suggested = 0;
   for (const entry of [...manifest].reverse()) {
     const uploaderId = entry.uploader === 'partner' ? partner.id : owner.id;
     const variants = [];
@@ -84,9 +87,10 @@ export async function seedDemoPhotos({ dir = SEED_PHOTOS_DIR, ownerEmail = email
     const landmarkMatches = hasGps
       ? matchLandmarks(position, await findLandmarksInBox(boundingBox(entry.latitude, entry.longitude)))
       : [];
+    const photoId = crypto.randomUUID();
     await createPhotoInDB({
       photo: {
-        id: crypto.randomUUID(),
+        id: photoId,
         mapId: map.id,
         uploaderId,
         tripId: tripId(entry.trip),
@@ -102,6 +106,10 @@ export async function seedDemoPhotos({ dir = SEED_PHOTOS_DIR, ownerEmail = email
       variants,
       landmarkMatches,
     });
+    if (landmarkMatches.length) {
+      if (suggested % 2 === 0) await confirmPhotoLandmarkInDB(photoId, landmarkMatches[0].landmarkId);
+      suggested += 1;
+    }
   }
 
   console.log(`✅ Seeded ${manifest.length} demo photos on ${ownerEmail}'s map (files in the private bucket under ${PHOTO_PREFIX}seed/)`);

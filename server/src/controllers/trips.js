@@ -1,5 +1,6 @@
 // Trips (planned and completed), their stops and who went
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
+import { adsFor } from '../services/offers.js';
 import { logEvent } from '../utils/events/logEvent.js';
 import { createTripEvent } from '../event/travelUtils.js';
 import { sanitizeText } from '../utils/sanitize.js';
@@ -206,7 +207,8 @@ export const getTripsSharedWithMeHandler = handler(D, 'Get shared trips', async 
 export const getTripHandler = handler(D, 'Get trip', async (req, res) => {
   const { trip, mapRole, role } = await loadTrip(req, req.params.tripId);
   if (!canView(role)) return notFound(req, res, D, EVENT_MESSAGES.tripNotFound);
-  return sendDataResponse(res, 200, { trip: await tripView(trip.id, role, mapRole, mine(req)) });
+  const [view, ads] = await Promise.all([tripView(trip.id, role, mapRole, mine(req)), adsFor({ mapId: trip.mapId, viewerId: req.user.id })]);
+  return sendDataResponse(res, 200, { trip: { ...view, ads } });
 });
 
 export const updateTripHandler = handler(D, 'Update trip', async (req, res) => {

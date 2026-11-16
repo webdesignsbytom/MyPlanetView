@@ -1,7 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+// Icons
+import { FaPlay } from 'react-icons/fa';
 // Hooks
 import usePhotoPage from '@/hooks/usePhotoPage';
 import useMomentPage from '@/hooks/useMomentPage';
+import useGalleryOffers from '@/hooks/useGalleryOffers';
+import usePlannedTripPlace from '@/hooks/usePlannedTripPlace';
 // Components
 import CountryTicket from './CountryTicket';
 import CountryTicketStub from './CountryTicketStub';
@@ -14,6 +18,7 @@ import { ExpeditionStampIcon, PlaceBadgeIcon } from './StarBadge';
 import VerifyFirstNote from './VerifyFirstNote';
 import MomentList from '@/components/moments/MomentList';
 import PhotoGrid from '@/components/photos/PhotoGrid';
+import TravelDesk from '@/components/offers/TravelDesk';
 import FormField from '@/components/ui/FormField';
 // Utils
 import { CONTINENT_LABELS, COUNTRY_BY_CODE } from '@/utils/map/countries';
@@ -30,7 +35,12 @@ const NO_TRIPS = [];
 // on wide screens.
 // Moments: `mapId` (editors add them; `trips` are the map's own, `travellers` its people,
 // `onAddTraveller` adds a baby born here) and `onMomentsChanged` after a change (the
-// map's marks count them).
+// map's marks count them). `onPlay(code)` plays the country's photos as a slideshow.
+// Travel offers (docs/API.md, "Travel offers"): a card every `adEvery` photos (the map's
+// `ads.every`; null for none), and the Travel Desk for this country, on every plan.
+// `nextTrip` is the map's soonest planned trip (its list summary): where it goes is worked
+// out only when a card or the desk needs it (fetched unless `canFetchTrips` is false, as
+// through a share link). `mapKey` names the map in each card slot's seed.
 function CountryPanel({
   code,
   visit,
@@ -40,19 +50,29 @@ function CountryPanel({
   photoSource,
   photosVersion,
   onOpenPhoto,
+  onPlay,
   onAddPhotos,
   mapId = null,
   travellers = [],
   trips = NO_TRIPS,
   onAddTraveller,
   onMomentsChanged,
+  adEvery = null,
+  nextTrip = null,
+  canFetchTrips = true,
+  mapKey = '',
   onClose,
 }) {
   const country = COUNTRY_BY_CODE[code];
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [deskOpened, setDeskOpened] = useState(false);
   const photos = usePhotoPage({ ...photoSource, country: code, limit: 12, enabled: Boolean(code) });
   const moments = useMomentPage({ ...photoSource, country: code, enabled: Boolean(code) });
+  const cardsDue = Boolean(adEvery) && photos.photos.length >= adEvery;
+  const plannedTrip = usePlannedTripPlace(nextTrip, { enabled: cardsDue || deskOpened, canFetch: canFetchTrips });
+  const offerSlots = useGalleryOffers({ every: adEvery, slotKey: `${mapKey}:${code}`, country: code, plannedTrip });
+  const deskCountries = useMemo(() => [code], [code]);
   const { reload } = photos;
   const { reload: reloadMoments } = moments;
 
@@ -194,12 +214,28 @@ function CountryPanel({
           onLoadMore={photos.loadMore}
           onOpen={onOpenPhoto}
           onMove={canEdit ? (photoId, afterId) => photos.movePhoto(photoId, afterId, 'country') : undefined}
+          offerSlots={offerSlots}
           emptyText={`No photos from ${country.name} yet.`}
         />
+        {onPlay && photos.photos.length ? (
+          <MapActionButton quiet onClick={() => onPlay(code)}>
+            <FaPlay aria-hidden='true' className='self-center text-sm' />
+            <span>Slideshow of {country.name}</span>
+          </MapActionButton>
+        ) : null}
         {canEdit && onAddPhotos ? (
           <MapActionButton onClick={() => onAddPhotos(code)}>Add photos from {country.name}</MapActionButton>
         ) : null}
       </section>
+
+      {/* Partner offers for this country, only when asked for (every plan), before the
+          landmarks, whose list can be long */}
+      <TravelDesk
+        inMapPanel
+        countryCodes={deskCountries}
+        trip={plannedTrip && plannedTrip.stops.some((s) => s.countryCode === code) ? plannedTrip : null}
+        onOpen={() => setDeskOpened(true)}
+      />
 
       <CountryLandmarks countryCode={code} />
     </CountryTicket>

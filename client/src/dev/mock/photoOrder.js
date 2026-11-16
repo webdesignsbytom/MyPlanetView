@@ -78,3 +78,18 @@ export function fillPhotoPositions(photos) {
     }
   }
 }
+
+// The slideshows' order (docs/API.md, "Slideshows"): each photo's `shotAt` is when it was
+// taken, or when it was uploaded if the file had no date, as the server keeps it
+// (domain/photos.js). Saving a photo, and changing or clearing its takenAt, sets it again.
+export const shotAtOf = (photo) => photo.takenAt || photo.createdAt;
+export const setShotAt = (photo) => {
+  photo.shotAt = shotAtOf(photo);
+};
+/** Stores saved before photos had a shotAt (and the seed). */
+export function fillShotAt(photos) {
+  for (const photo of photos) if (!photo.shotAt) setShotAt(photo);
+}
+const timeOf = (value) => new Date(value).getTime() || 0;
+/** Oldest taken first, then by id (`order=taken`). */
+export const byShotAt = (a, b) => timeOf(a.shotAt ?? shotAtOf(a)) - timeOf(b.shotAt ?? shotAtOf(b)) || byId(a, b);

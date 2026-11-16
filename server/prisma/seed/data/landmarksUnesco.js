@@ -1,9 +1,10 @@
 // UNESCO World Heritage Sites for the passport (docs/FEATURE-PLAN.md, "The passport"):
 // one landmark per inscription, in the same shape as landmarks.js plus `isUnesco: true`.
 //
-// NOT LOADED YET. Nothing imports this file: the seed, `npm run db:reference`, the schema
-// (`Landmark.isUnesco`) and the map take it with the passport, once the map can draw
-// ~1,150 more pins.
+// LOADED since 16 Nov 2026 (with the passport): prisma/seed/landmarks.js `landmarkRows()`
+// joins it to landmarks.js for the seed and `npm run db:reference`, setting
+// `Landmark.isUnesco`; the client's mock copy is made by
+// client/scripts/generate-mock-landmarks.mjs.
 //
 // SOURCE: Wikidata (CC0), queried on 16 Nov 2026 at query.wikidata.org: items with a World
 // Heritage Site ID (P757) or heritage designation (P1435) World Heritage Site (Q9259), with
@@ -34,7 +35,9 @@
 // Andorra and Gibraltar have their own entries since 16 Nov 2026, so the
 // Madriu-Perafita-Claror Valley is AD and Gorham's Cave GI (they were FR and ES), and the
 // map finds Greece on Rhodes, Samos and Patmos (it found Turkey). Islands far out at sea
-// land on no shape and keep Wikidata's country.
+// land on no shape and keep Wikidata's country. The Old City of Jerusalem is Palestine
+// (PS), where the map puts it, although Wikidata says Israel and it's within 4 units of
+// Israel (the user's decision, 16 Nov 2026; landmarks.js's Western Wall too).
 //
 // RADIUS (`matchRadiusM`), on the scale of landmarks.js (building 300–800 m · site / old
 // town 1–3 km · park, range, archipelago 10–60 km, never above MAX_MATCH_RADIUS_M):
@@ -610,7 +613,6 @@ export const UNESCO_LANDMARKS = [
   { countryCode: 'IL', name: 'Masada', category: 'site', latitude: 31.31556, longitude: 35.35389, matchRadiusM: 1300, wikidataId: 'Q186312', isUnesco: true }, // WHS 1040, 2001
   { countryCode: 'IL', name: 'Mount Carmel Caves', category: 'park', latitude: 32.67083, longitude: 34.96611, matchRadiusM: 5000, wikidataId: 'Q1443478', isUnesco: true }, // WHS 1393, 2012
   { countryCode: 'IL', name: 'Old City of Acre', category: 'old town', latitude: 32.92611, longitude: 35.08389, matchRadiusM: 1500, wikidataId: 'Q126084', isUnesco: true }, // WHS 1042, 2001
-  { countryCode: 'IL', name: 'Old City of Jerusalem', category: 'old town', latitude: 31.77821, longitude: 35.23191, matchRadiusM: 1500, wikidataId: 'Q15726304', isUnesco: true }, // WHS 148, 1981
   { countryCode: 'IL', name: 'White City of Tel Aviv', category: 'old town', latitude: 32.07778, longitude: 34.77389, matchRadiusM: 1500, wikidataId: 'Q159070', isUnesco: true }, // WHS 1096, 2003
   { countryCode: 'IT', name: 'Aeolian Islands', category: 'archipelago', latitude: 38.49667, longitude: 14.93583, matchRadiusM: 10000, wikidataId: 'Q179883', isUnesco: true }, // WHS 908, 2000
   { countryCode: 'IT', name: 'Amalfi Coast', category: 'natural', latitude: 40.63333, longitude: 14.6, matchRadiusM: 5000, wikidataId: 'Q212214', isUnesco: true }, // WHS 830, 1997
@@ -847,6 +849,7 @@ export const UNESCO_LANDMARKS = [
   { countryCode: 'PS', name: 'Ancient Jericho', category: 'site', latitude: 31.87172, longitude: 35.44456, matchRadiusM: 1000, wikidataId: 'Q2402267', isUnesco: true }, // WHS 1687, 2023
   { countryCode: 'PS', name: 'Battir: Land of Olives and Vines', category: 'site', latitude: 31.71972, longitude: 35.13056, matchRadiusM: 1500, wikidataId: 'Q18031707', isUnesco: true }, // WHS 1492, 2014
   { countryCode: 'PS', name: 'Hebron Old Town', category: 'old town', latitude: 31.52528, longitude: 35.10833, matchRadiusM: 1500, wikidataId: 'Q35584069', isUnesco: true }, // WHS 1565, 2017
+  { countryCode: 'PS', name: 'Old City of Jerusalem', category: 'old town', latitude: 31.77821, longitude: 35.23191, matchRadiusM: 1500, wikidataId: 'Q15726304', isUnesco: true }, // WHS 148, 1981; where the map puts it (Wikidata: Israel)
   { countryCode: 'PS', name: 'Saint Hilarion Monastery', category: 'site', latitude: 31.44722, longitude: 34.36639, matchRadiusM: 1500, wikidataId: 'Q7697530', isUnesco: true }, // WHS 1749, 2024
   { countryCode: 'PS', name: 'Sebastia', category: 'old town', latitude: 32.26667, longitude: 35.18333, matchRadiusM: 1500, wikidataId: 'Q2918480', isUnesco: true }, // WHS 1809, 2026
   { countryCode: 'PA', name: 'Coiba National Park', category: 'park', latitude: 7.48, longitude: -81.79, matchRadiusM: 15000, wikidataId: 'Q741636', isUnesco: true }, // WHS 1138, 2005

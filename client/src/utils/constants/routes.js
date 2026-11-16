@@ -42,6 +42,11 @@ export const SHARED_PAGE_URL = '/shared/:code'; // a share link, no sign-in
 export const INVITE_PAGE_URL = '/invite/:token'; // accept an emailed invite
 
 export const mapPath = (mapId) => `/maps/${encodeURIComponent(mapId)}`;
+// The passport (landmark book) of a map, and of a map opened from its share link
+export const MAP_PASSPORT_PAGE_URL = '/maps/:mapId/passport';
+export const SHARED_PASSPORT_PAGE_URL = '/shared/:code/passport';
+export const mapPassportPath = (mapId) => `${mapPath(mapId)}/passport`;
+export const sharedPassportPath = (code) => `/shared/${encodeURIComponent(code)}/passport`;
 export const tripPath = (tripId) => `/trips/${encodeURIComponent(tripId)}`;
 
 // Admin pages
@@ -49,6 +54,8 @@ export const ADMIN_PAGE_URL = '/admin';
 export const ADMIN_CONTACT_FORM_PAGE_URL = `${ADMIN_PAGE_URL}/contact-forms`;
 export const ADMIN_USERS_PAGE_URL = `${ADMIN_PAGE_URL}/users`;
 export const ADMIN_EVENTS_PAGE_URL = `${ADMIN_PAGE_URL}/events`;
+export const ADMIN_PROMO_CODES_PAGE_URL = `${ADMIN_PAGE_URL}/promo-codes`;
+export const ADMIN_OFFERS_PAGE_URL = `${ADMIN_PAGE_URL}/offers`;
 
 // Dev server only (not routed in production builds)
 export const DEV_SELECT_LAB_PAGE_URL = '/dev/select-lab';
@@ -91,8 +98,12 @@ export const ANALYTICS_EXCLUDED_PREFIXES = [
   VERIFY_EMAIL_PAGE_URL.split('/:')[0],
 ];
 
-// Pages with an id or a secret in the address: analytics only ever sees the pattern
+// Pages with an id or a secret in the address: analytics only ever sees the pattern. A
+// pattern with something after its id (the passports) is matched whole; the others cover
+// anything under their prefix (utils/analytics/privacy.js)
 export const ANALYTICS_REDACTED_ROUTES = [
+  MAP_PASSPORT_PAGE_URL,
+  SHARED_PASSPORT_PAGE_URL,
   SHARED_PAGE_URL,
   INVITE_PAGE_URL,
   RESET_PASS_PAGE_URL,

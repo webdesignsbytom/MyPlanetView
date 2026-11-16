@@ -16,6 +16,8 @@ import { formatDay } from '@/utils/functions/dates';
 const PLAN_OPTIONS = PAID_PLAN_IDS.map((id) => ({ value: id, label: planOf(id).name }));
 const SOURCE_WORDS = { STRIPE: 'paid', COMPLIMENTARY: 'complimentary', FREE: 'free' };
 const REASON_MAX = 200;
+// Memberships are mostly for creators, who get two years (the user's decision, 16 Nov 2026)
+const CREATOR_MONTHS = '24';
 
 // Complimentary memberships for one account (docs/API.md, "Plans and billing"): the plan
 // they have now, their memberships (newest first; a running one can be ended now), and a
@@ -23,7 +25,7 @@ const REASON_MAX = 200;
 function UserPlanDialog({ user, onClose }) {
   const [state, setState] = useState(null); // { grants, plan, source }
   const [plan, setPlan] = useState('PREMIUM');
-  const [months, setMonths] = useState('12');
+  const [months, setMonths] = useState(CREATOR_MONTHS);
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
@@ -128,7 +130,11 @@ function UserPlanDialog({ user, onClose }) {
               <FormField id='grant-plan' label='Plan'>
                 <PlainOptionSelect value={plan} onChange={(e) => setPlan(e.target.value)} options={PLAN_OPTIONS} />
               </FormField>
-              <FormField id='grant-months' label={`Months (${GRANT_MONTHS.min} to ${GRANT_MONTHS.max})`}>
+              <FormField
+                id='grant-months'
+                label={`Months (${GRANT_MONTHS.min} to ${GRANT_MONTHS.max})`}
+                hint={`A creator with a promo code gets ${CREATOR_MONTHS}.`}
+              >
                 <TextInput
                   type='number'
                   inputMode='numeric'

@@ -21,7 +21,7 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
 - [ ] The magnetic poles' pins (`QN`, `QS` in both country lists) are this year's positions from NOAA's World Magnetic Model; they were set to 2025's on 15 Nov 2026. Repeat every January.
 - [ ] `client/src/utils/constants/links.js` holds real profile URLs, or stays empty (an empty URL hides the link).
 - [ ] Every claim on the home, about, FAQ and **Pricing** pages matches what the app actually does. The Pricing page's claims marked `soon: true` in `client/src/utils/data/pricingData.js` (ads, the Travel Desk, videos, extra styles and covers, passport, slideshows, challenges, country guides, "a copy of all your data") are each built, or removed.
-- [ ] **[block]** The terms (`client/src/utils/data/termsData.js`) cover payments before they go live: renewal, cancelling at the end of the period, refunds, extra maps, what happens to an unpaid map, and complimentary memberships. Today they still say the site is free.
+- [ ] **[block]** The terms (`client/src/utils/data/termsData.js`) cover payments before they go live: renewal, cancelling at the end of the period, refunds, extra maps, what happens to an unpaid map, complimentary memberships, and a promo code's free month (a card is taken, and it renews as a paid plan after 30 days unless cancelled first). Today they still say the site is free.
 - [ ] Each indexable page's description says what the page answers, with a fact from the page. The build checks length and uniqueness, not wording.
 
 ## 2. Storage (Cloudflare R2)
@@ -64,6 +64,8 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
     3. Switch to yearly.
     4. Cancel in the portal.
     5. Check that the maps lock (viewable, no new photos) and nothing is deleted.
+- [ ] **Travel offers:** you've joined the partners you want (Booking.com, GetYourGuide, Skyscanner, an eSIM and an insurer, or an aggregator such as Travelpayouts), checked each one's terms allow our own cards and plain links, and imported a real offers file (the admin's offers page, or `npm run db:offers -- <file>` in `server/`; the format is in docs/API.md, "Travel offers"). Without offers no card shows, which is safe. Then click one card of each kind on the live site: it lands on the partner with the destination and dates filled where the link has them, and the admin page counts the click.
+- [ ] The affiliate disclosure is in the Privacy and Terms text and the FAQ, and each card says **Ad** (UK CAP Code).
 
 ## 4. Client build and hosting (InMotion / cPanel)
 
@@ -89,6 +91,8 @@ Test signed out, as a brand-new account, and on a phone in portrait:
 - [ ] Countries: mark visited, lived and want to go from the map and the country list; the stats add up.
 - [ ] Uploads: JPEG and PNG; photos from an iPhone (in Safari and in Chrome) arrive as JPEGs, and a `.heic` file from a computer gets the "save it as a JPEG" message; a photo with GPS lands in the right country with landmark suggestions (reports say iPhone browsers strip GPS from photos picked in the browser since iOS 16.4: check whether it survives); one without GPS asks for a country; the original downloads, and the copies carry no location data.
 - [ ] Trips: create, add and reorder stops, mark completed (its countries become visited), photos into a trip.
+- [ ] Passport, slideshows, badges and goals: confirm a photo's landmark and see its stamp in the passport (turn pages with a mouse, the arrow keys and a swipe); landmark pins show and stay round in Safari as well as Chrome; a slideshow keeps the phone's screen awake and plays full screen; a new badge's note appears once.
+- [ ] A promo code: sign up from `/sign-up?code=<CODE>`, verify the address, and the account page offers a free month; Checkout (Stripe test mode) asks for a card and shows 30 days free; back on the account page it says "Free until <date>"; the admin's promo codes page counts the sign-up and the free month.
 - [ ] Sharing:
   - add a viewer and an editor by email, both existing users and a new address (the invite turns into access after sign-up and verification);
   - "Anyone with the link" on and off;

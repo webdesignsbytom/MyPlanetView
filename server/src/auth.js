@@ -39,6 +39,8 @@ import {
   acceptInvitesForVerifiedUser,
   releaseTravelDataForDeletedUser,
 } from './services/travel/accounts.js';
+// Influencer codes: checked before sign-up, recorded after, the offer given once verified
+import { recordSignUpPromoCode, usablePromoCode } from './services/billing/promo.js';
 // Responses
 import { EVENT_MESSAGES } from './utils/responses/responses.js';
 // Events
@@ -117,11 +119,21 @@ const AUDITED_PATHS = {
   '/update-user': (user) => createUserUpdateSuccessEvent({ user, target: user }),
 };
 
+// A sign-up's promo code (optional; better-auth ignores fields it doesn't know)
+const promoCodeIn = (body) =>
+  body && typeof body === 'object' && typeof body.promoCode === 'string' && body.promoCode.trim() ? body.promoCode : null;
+
 const auditAfterHook = createAuthMiddleware(async (ctx) => {
   const audit = AUDITED_PATHS[ctx.path];
   if (!audit || ctx.context.returned instanceof Error) return;
   const user = ctx.context.newSession?.user ?? ctx.context.session?.user ?? null;
   logEvent(audit(user));
+  // The new account keeps the code it signed up with; a failure never fails the sign-up
+  if (ctx.path === '/sign-up/email' && user && promoCodeIn(ctx.body)) {
+    await recordSignUpPromoCode(user, promoCodeIn(ctx.body)).catch((err) =>
+      console.error('[AUTH] promo code not recorded:', err.message)
+    );
+  }
 });
 
 // Paths whose `name` is cleaned before better-auth stores it
@@ -155,6 +167,12 @@ const beforeHook = createAuthMiddleware(async (ctx) => {
     if (typeof password === 'string' && !isValidPassword(password)) {
       throw new APIError('BAD_REQUEST', { message: PASSWORD_RULES_MESSAGE });
     }
+  }
+
+  // A promo code that can't be used is refused before the account is made, so the
+  // person can fix it or sign up without one
+  if (ctx.path === '/sign-up/email' && promoCodeIn(ctx.body) && !(await usablePromoCode(promoCodeIn(ctx.body)))) {
+    throw new APIError('BAD_REQUEST', { message: EVENT_MESSAGES.promoCodeInvalid });
   }
 
   // Names go into emails other people get (share emails): one line, at most 80
@@ -324,7 +342,8 @@ export const auth = betterAuth({
       },
       update: {
         before: async (data) => ('image' in data ? { data: { image: undefined } } : undefined),
-        // A newly verified address picks up any maps or trips shared with it
+        // A newly verified address picks up any maps or trips shared with it (once each).
+        // A promo code's free month comes later, with the first paid Checkout.
         after: async (user) => {
           if (!user?.emailVerified) return;
           await acceptInvitesForVerifiedUser(user).catch((err) =>

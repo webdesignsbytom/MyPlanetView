@@ -21,6 +21,11 @@ export async function wipeDatabase() {
     prisma.momentTraveller.deleteMany(),
     prisma.moment.deleteMany(),
     prisma.tripMap.deleteMany(),
+    prisma.landmarkCover.deleteMany(),
+    prisma.offerClickDaily.deleteMany(),
+    prisma.affiliateOffer.deleteMany(),
+    prisma.badgeAward.deleteMany(),
+    prisma.goal.deleteMany(),
     prisma.photoLandmark.deleteMany(),
     prisma.photoVariant.deleteMany(),
     prisma.photo.deleteMany(),
@@ -49,6 +54,7 @@ export async function wipeDatabase() {
     prisma.account.deleteMany(),
     prisma.verification.deleteMany(),
     prisma.profile.deleteMany(),
+    prisma.promoCode.deleteMany(),
     prisma.user.deleteMany(),
   ]);
 }

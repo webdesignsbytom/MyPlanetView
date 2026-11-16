@@ -55,7 +55,7 @@ Emails and share URLs point at these client routes, built from `server/src/utils
 | Method and path | Returns |
 | --- | --- |
 | `GET /countries` | `{ countries: [{ code, name, slug, kind, continent, pinX, pinY }] }`. `kind` is `COUNTRY`, or `SPECIAL` for the five special places (below); `continent` is null for the North Pole and the magnetic poles. |
-| `GET /landmarks?country=JP` | `{ landmarks: [{ id, name, slug, countryCode, latitude, longitude, pinX, pinY, matchRadiusM }] }`. `country` is optional. |
+| `GET /landmarks?country=JP` | `{ landmarks: [{ id, name, slug, countryCode, latitude, longitude, pinX, pinY, matchRadiusM, isUnesco }] }`. `country` is optional. 1,332 in all (16 Nov 2026): the 177 of `landmarks.js` and the 1,155 UNESCO World Heritage Sites of `landmarksUnesco.js`; `isUnesco` marks all 1,273 World Heritage Sites. |
 
 - **Caching:** both send `Cache-Control: public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400` and `Vary: Origin`. Browsers keep them an hour; Vercel's CDN keeps one copy per origin (each carries that origin's CORS header) and strips `s-maxage` before the browser sees it. A 400 isn't cached.
 
@@ -115,7 +115,8 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
   - the booleans `showGrid`, `showGridLabels`, `animatedSea`, `sunAndMoon`, `showCountryNames` and `hoverPreview`;
   - from my_planet, the booleans `showVisited` and `showUnvisited` (when off, those countries fade back on the map) and `showUserBanner` (the map's banner at the top);
   - `showAntarctica` (on unless set to `false`): draws Antarctica and the two South Poles, and extends the map down to them. It changes only the view, never visits or stats;
-  - `showMoments` (on unless set to `false`): the pinned-note mark beside places with moments. Only the view changes.
+  - `showMoments` (on unless set to `false`): the pinned-note mark beside places with moments. Only the view changes;
+  - `showGoalTag` (on unless set to `false`): the luggage tag under the map's title with the nearest unmet goal (see "Badges and goals").
 - **Unknown keys** are dropped. A known key with the wrong kind of value is refused (400).
 - **The whole object is replaced** on each `PUT`. Send every setting, not just the one that changed.
 
@@ -207,7 +208,7 @@ A trip shared between people's accounts: the organiser's trip, on the organiser'
 
 | Method and path | Role | Body / returns |
 | --- | --- | --- |
-| `GET /maps/:mapId/photos?country=&unplaced=&tripId=&cursor=&limit=` | viewer | `{ photos: [{ id, caption, takenAt, countryCode, tripId, width, height, thumbUrl, landmarks: [{ id, name, confirmed }], hidden (editors only) }], nextCursor }`. In the gallery's order (see `POST /photos/:photoId/move`): with `tripId`, or on a trip's list, the trip's order; with `country` or `unplaced`, that gallery's order; with neither, the whole map newest upload first (the hover postcards). A new photo goes first everywhere. `limit` 1–60 (default 30). `unplaced=1` lists only the photos with no country (no location and none chosen, or a location at sea), so they can be found and placed; it can't be combined with `country` (400). Viewers never get `hidden` photos, and see confirmed landmarks only. |
+| `GET /maps/:mapId/photos?country=&unplaced=&tripId=&cursor=&limit=&order=&seed=&display=` | viewer | `{ photos: [{ id, caption, takenAt, countryCode, tripId, width, height, thumbUrl, displayUrl (with `display=1`), landmarks: [{ id, name, confirmed }], hidden (editors only) }], nextCursor }`. `order` and `display` are the slideshows' (see "Slideshows"). In the gallery's order (see `POST /photos/:photoId/move`): with `tripId`, or on a trip's list, the trip's order; with `country` or `unplaced`, that gallery's order; with neither, the whole map newest upload first (the hover postcards). A new photo goes first everywhere. `limit` 1–60 (default 30). `unplaced=1` lists only the photos with no country (no location and none chosen, or a location at sea), so they can be found and placed; it can't be combined with `country` (400). Viewers never get `hidden` photos, and see confirmed landmarks only. |
 | `GET /photos/:photoId` | viewer | `{ photo: { ..., displayUrl } }`. Editors also get `originalUrl`, `bestCopy`, `latitude`, `longitude`, and every landmark match with its `source` and `distanceM`. `originalUrl` is the best copy kept: the `ORIGINAL` (Business and First Class), else the `PRINT` copy (Economy); `bestCopy` says which (`'ORIGINAL'`, `'PRINT'`, or null with `originalUrl` null for an old photo saved with neither). |
 | `PATCH /photos/:photoId` | editor | `{ caption?, countryCode?, tripId?, takenAt?, hidden? }`. Moving a photo between trips (`tripId`) needs editor on the map, not just the trip. A new `countryCode` marks that country visited (`source: PHOTO`), in the same transaction. Moving it to a country that's full on the map (the owner's plan) → 409 `30 of 30 photos of France on this map. Upgrade to add more.` and nothing changes. A photo that lands in another gallery (a new country, no country, or a new trip) goes first there; sending its current country again changes nothing. → `{ photo }` |
 | `POST /photos/:photoId/move` | editor of that gallery | Rearranging. `{ gallery, afterId }`: `gallery` is `'country'` (the photo's country on its map; the unplaced photos are one gallery) or `'trip'` (its trip; 400 if it has none). The photo goes straight after `afterId` in that gallery, or first when `afterId` is null. A country's gallery needs editor on the map; a trip's needs editor of the trip (a trip-only editor too). Only the photo's own position changes, unless its new neighbours have no room left between them (then the gallery is renumbered, in the same transaction). 400 for a bad gallery or `afterId` (not an id, or the photo itself); 409 if `afterId` isn't in that gallery any more. → `{ message }` |
@@ -217,6 +218,22 @@ A trip shared between people's accounts: the organiser's trip, on the organiser'
 | `DELETE /photos/:photoId/landmarks/:landmarkId` | editor | → `{ photo }` (the photo without that match). 404 if the photo has no such match. |
 
 - **Signed URLs:** file URLs are signed `GET`s on the private bucket. The signing time is rounded down to the hour and they're valid for two hours, so the same file keeps the same URL for an hour and the browser cache works.
+
+## Videos
+
+First Class videos (docs/FEATURE-PLAN.md, "Videos (First Class)"). A video is a `Photo` row with `kind: 'VIDEO'` and `durationS`, so galleries, order, hidden, country, trip, moments and slideshows treat it as a photo. Its file is its `ORIGINAL` variant; its `THUMB` and `DISPLAY` are poster frames the browser grabs onto a canvas.
+
+- **Uploading:** the photo upload (`POST /maps/:mapId/photos/presign`, then `POST /maps/:mapId/photos`) with `kind: 'VIDEO'` and `durationS` (whole seconds, 1–180, read by the browser) in both bodies:
+  - only on a map whose owner is on **First Class** (403 `Videos are part of First Class. Upgrade this map’s owner to add them.`);
+  - exactly three files: `THUMB` and `DISPLAY` (images, as a photo's) and `ORIGINAL` (`video/mp4` or `video/quicktime`, at most 500 MB, signed into the upload URL like every file); anything else → 400 (a wrong length → 400 `A video can be up to 3 minutes long.`, too big → 413);
+  - **no position:** `latitude`/`longitude` are ignored and stored null (CHECK `photo_video_no_location`); the uploader chooses the country (`countryCode`), and no landmark is suggested;
+  - **the browser overwrites the file's location metadata before upload** (the `©xyz` atom and QuickTime's `com.apple.quicktime.location.ISO6709` value, at the same length, so nothing else in the file moves). If it can't read the file well enough to check, it doesn't upload it. The server never reads the file;
+  - **20 videos per country** on each map, apart from the photo cap (409 `20 of 20 videos of Iceland on this map.`); videos count towards the storage safety net, not the photo cap. `kind` other than `PHOTO`/`VIDEO` → 400.
+- **Reading:** list items and `GET /photos/:photoId` carry `kind` and `durationS`. A video's `videoUrl` (its file, signed like the rest) is in its detail and, with `display=1`, in lists, for **everyone who can see it**, viewers and share links included: it's the only copy there is, and its location was overwritten before upload. Editors also get it as `originalUrl` (`bestCopy: 'ORIGINAL'`).
+- **Not in the passport:** a video can't be matched to a landmark (400 `Landmark stamps come from photos, not videos.`), and the stamps count photos only.
+- **Map fields:** `uploadRules.videos` is `{ perCountry, maxSeconds, maxBytes, contentTypes }` on a First Class map and null on the others; owners and editors also get `videoCounts` (videos per country) beside `photoCounts` (which now counts photos only).
+- **The database** holds the shape too: CHECK `photo_video_duration` (a video has a length of 1–600 s, a photo none).
+- **Playback:** R2 answers range requests, so a `<video>` can seek. iPhones record HEVC, which some browsers can't play: the client checks `canPlayType` and offers "Download to watch".
 
 ## Moments
 
@@ -246,6 +263,110 @@ Life events and notes on a map: "We had our baby in Paris", "Got engaged at the 
   - **viewers and share links** read them, never `hidden` ones (as hidden photos: a hidden moment answers 404 to a viewer, and isn't counted for them). Hidden photos inside a moment show only to editors (of the map, or of the trip for the trip's photos). Someone who reaches moments through a trip (its list or its share link) sees only that trip's photos in them.
 - **On the map:** `GET /maps/:mapId` has `momentCountsByCountry` (see "Maps").
 - **Events:** `moments`, `Create Success`, `Update Success` (the names of the fields changed) and `Delete Success`, with the moment's id and `map=<id>`; never a title, story or place.
+
+## Slideshows
+
+The slideshows play a map's photos (worldwide), one country's, or one trip's, through the photo lists above: `GET /maps/:mapId/photos`, `GET /trips/:tripId/photos` and `GET /shared/:code/photos`, with the usual filters, paging and access (viewers never get hidden photos).
+
+| Query | Meaning |
+| --- | --- |
+| `order=gallery` (the default) | The gallery's order, as above |
+| `order=taken` | Oldest taken first, then by id: each photo's `shotAt`, which is its `takenAt`, or when it was uploaded if the file had no date. Changing `takenAt` moves it; clearing it puts it back at its upload time. The whole map's order has its own index (`[mapId, shotAt, id]`). |
+| `order=shuffle&seed=N` | A shuffled order fixed by `seed` (1 to 2,147,483,647): the same seed always gives the same order, so a show pages through it with `cursor` like any list. The client picks a new seed for each show. A `cursor` no longer in the list (the photo was deleted or hidden meanwhile) → 400: start the show again. A missing or bad seed → 400. |
+| `display=1` | Each photo also carries `displayUrl` (the 1,600 px copy the show plays), signed like the rest. |
+
+Anything else for `order` or `display` → 400.
+
+## Passport
+
+The landmark book (docs/FEATURE-PLAN.md, "The passport"). A landmark is **stamped** when a photo of it is confirmed on the map (`PhotoLandmark.confirmed`; a manual match is confirmed at once). No photo, no stamp: ticking a country by hand stamps nothing. Each match records its map (`mapId`, a copy of the photo's) and when it was confirmed (`confirmedAt`, null exactly while unconfirmed: CHECK `photo_landmark_confirmed_at`).
+
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `GET /maps/:mapId/passport` | viewer | `{ passport }` (below) |
+| `PUT /maps/:mapId/passport/stamps/:landmarkId/photo` | editor, **verified** | `{ photoId }`: the photo the stamp shows, which must be one of that landmark's confirmed photos on this map (else 400 `Pick a photo of this landmark that's confirmed on this map.`) → `{ cover: { landmarkId, photoId } }` |
+| `DELETE /maps/:mapId/passport/stamps/:landmarkId/photo` | editor, **verified** | Back to the earliest photo → `{ message }` |
+| `GET /shared/:code/passport` | anyone with a map's code | The same, with the link's role. A trip's code → 404. |
+
+**A passport:** `{ map: { id, name, groupType, ownerName }, travellers: [{ id, name, birthCountryCode, favouriteCountryCode }], pages: [page], totals: { countries, specialPlaces, continents, landmarks, unesco } }`.
+- **Pages:** one per country (or special place) marked `VISITED` or `LIVED`, plus any country with a stamp. Each is `{ countryCode, status, enteredOn, stamps: [stamp], toStamp: [{ id, name, isUnesco }] }`, in the order they were first visited: `enteredOn` is the date of the country's earliest photo (when it was taken), else the visit's `firstVisitedOn`, else null (those go last, by when they were marked). `status` is null for a page that has only stamps. `toStamp` lists the country's landmarks not stamped yet, by name (the book's dotted outlines).
+- **A stamp:** `{ landmarkId, name, isUnesco, stampedOn, photoCount, photo: { id, thumbUrl }, photoChosen (editors only) }`, in the order they were stamped. `stampedOn` is when its earliest confirmed photo was taken. `photo` is the one an editor picked (`LandmarkCover`), else the earliest. A picked photo goes when its match or the photo does (the cover points at the match itself, `ON DELETE CASCADE`).
+- **Below editor** (viewers, share links), hidden photos neither stamp nor count: a stamp whose only photos are hidden isn't there, and one whose picked photo is hidden shows its earliest visible photo. `totals` follow the same rule.
+- **Totals:** `countries` and `specialPlaces` as the map's stats; `continents` counts Antarctica; `landmarks` and `unesco` are the stamps.
+
+## Badges and goals
+
+Counted from the map's own data (visits, photos, stamps); only awards and goals are stored. Badges and goals belong to a map, so a couple or family earns them together. **The owner and editors award** them by loading them: a badge earned since is stored with the date (`BadgeAward`, one per map and key) and listed in `newlyEarned`, and a goal met for the first time gets `achievedAt` and is listed in `newlyAchieved`, so the client can say so once. **Neither is ever taken back** (unmarking a country keeps the badge). Viewers and share links see the stored awards, with progress counted from what they can see, and never award.
+
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `GET /maps/:mapId/badges` | viewer | `{ badges: [{ key, group, have, need, earnedAt }], newlyEarned: [key] }`: every badge, earned or not. An earned badge shows `have` = `need`. |
+| `GET /maps/:mapId/goals` | viewer | `{ goals: [goal], newlyAchieved: [id] }`, oldest first |
+| `POST /maps/:mapId/goals` | editor, **verified** | `{ kind, title?, target?, countryCodes?, region?, deadline? }` → 201 `{ goal }`. A map has at most 50 (409 `A map can have up to 50 goals. Delete one to add another.`). |
+| `PATCH /goals/:goalId` | editor of its map, **verified** | The same fields but `kind` (which never changes; sending another → 400) → `{ goal }`. Changing `target`, `countryCodes`, `region` or `deadline` clears `achievedAt`: the goal has to be met again. |
+| `DELETE /goals/:goalId` | editor of its map, **verified** | → `{ message }` |
+| `GET /shared/:code/badges`, `GET /shared/:code/goals` | anyone with a map's code | As above (a trip's code → 404) |
+
+- **Badges** (`server/src/utils/badges.js`; the client words each `key`): groups `countries` (`countries-1`, `-5`, `-10`, `-25`, `-50`, `-100`; special places don't count), `continents` (`continent-africa`, `-asia`, `-europe`, `-north-america`, `-oceania`, `-south-america`: a first country there; `continents-all`: all six), `special` (`antarctica`, `north-pole`, `south-pole`), `regions` (`region-<key>`: every country in one of the regions of `utils/constants/regions.js`, e.g. `region-scandinavia`), `landmarks` (`landmarks-1`, `-10`, `-50` stamps; `unesco-5`, `unesco-25`) and `photos` (`photos-100`, `photos-1000`). Awarding counts everything on the map, hidden photos included.
+- **A goal:** `{ id, kind, title, target, countryCodes, region, deadline, achievedAt, createdAt, progress: { have, need, met, missed, done? } }`. Kinds (CHECK `goal_shape` holds each to its own field):
+  - `COUNTRY_COUNT`: `target` countries (1–250), special places not counted;
+  - `COUNTRY_LIST`: every place in `countryCodes` (1–100 distinct codes, special places allowed: a bucket list); `progress.done` lists those done;
+  - `REGION`: every country in `region`, a key of `utils/constants/regions.js` or an inhabited continent (`EUROPE`…); `progress.done` too;
+  - `LANDMARK_COUNT`: `target` stamps (1–2,000).
+
+  `title` is optional (up to 80 characters, cleaned). Without a `deadline`, a country counts when it's marked visited or lived. With one (`"YYYY-MM-DD"`), only what a photo taken by the end of that day proves counts (a hand-ticked country has no date), and `missed` is true once the day has passed unmet. Anything that doesn't fit the kind → 400 `That goal isn't complete: check what it asks for.`
+
+## Promo codes
+
+Influencer codes (docs/FEATURE-PLAN.md, "Getting the word out"): a code per creator, so sign-ups can be counted per code. **Every code gives the same offer** (the user's decision, 16 Nov 2026; `PROMO_TRIAL_DAYS` in `utils/promoCodes.js`): the follower's **first month free on the paid plan they choose**, as a 30-day Stripe trial on their first paid Checkout. Checkout takes a card (`payment_method_collection: 'always'`), and Stripe charges when the trial ends unless they cancel first. Checkout already needs a verified address, so throwaway sign-ups get nothing. The creator's own reward is a complimentary membership given by an admin (24 months; "Complimentary memberships" below).
+
+- **Codes** are 3–24 letters and digits, stored upper case; what people type is cleaned (`sam-travels` is `SAMTRAVELS`). A code can be used while it's `active`, before `endsAt`, and while fewer than `maxUses` accounts have it (no limit when null). The count isn't locked, so two sign-ups at the same moment can take a code one over its limit; a code that fills up between the check and the account being made is simply not recorded.
+- **Signing up with one:** `POST /api/auth/sign-up/email` takes an optional `promoCode` beside the usual fields. A code that can't be used → 400 `That code isn't valid. Check it, or sign up without one.`, and no account is made. A good one goes on the new account's profile (`Profile.promoCodeId`), and stays there if the code is turned off later.
+- **The free month** (`promoTrialDays`): `POST /billing/checkout` for `REGULAR` or `PREMIUM` from an account with a code whose free month hasn't started (`Profile.promoTrialUsedAt` null) adds `subscription_data.trial_period_days: 30` and `metadata.promoCode`, and asks for a card. Extra maps alone (`plan: 'FREE'`, or `POST /billing/extra-maps` without a subscription) get no trial, and the month stays for later. The webhook records the month as started when a subscription with `trial_end` and `metadata.promoCode` arrives (any event; once), so cancelling during the trial and buying again pays from the first day. `GET /billing` carries `promoTrial: { code, days }` while the account has the month and no live subscription.
+
+| Method and path | Who | Body / returns |
+| --- | --- | --- |
+| `GET /promo-codes/:code` | anyone (rate limited: 30 per 15 min per IP) | `{ promoCode: { code, trialDays: 30 } }` for a usable code, else 404. No label. |
+| `GET /users/admin/promo-codes` | ADMIN or DEVELOPER | `{ promoCodes: [{ id, code, label, trialDays, active, maxUses, endsAt, createdAt, signUps, verified, trials, paying }] }`, newest first. `signUps` counts accounts with the code, `verified` those whose address is verified, `trials` those whose free month has started, `paying` those with a subscription that counts now (a trial included). |
+| `POST /users/admin/promo-codes` | ADMIN or DEVELOPER | `{ code, label, maxUses?, endsAt? }` → 201 `{ promoCode }`. Other fields (an old `offerPlan` or `offerDays`) are ignored. A taken code → 409; a bad one → 400. |
+| `PATCH /users/admin/promo-codes/:promoCodeId` | ADMIN or DEVELOPER | `{ label?, active?, maxUses?, endsAt? }` → `{ promoCode }`. The code itself never changes (it's in people's posts); turn it off with `active: false`. Accounts that already signed up keep their free month. |
+- **Events:** `billing`, `Promo Code Create Success` (with the code), `Promo Code Update Success`, and `Checkout Started` with `trialDays=30` when the free month applies; never the label.
+
+## Travel offers
+
+Partner offers shown as our own cards (docs/FEATURE-PLAN.md, "Ads" and "Travel Desk"): in photo galleries, at the end of a slideshow and on the public country pages, as the viewer's plan allows, and on the Travel Desk when someone asks. Nothing about the viewer is sent to choose them: the client gets every live offer once and picks one per slot.
+
+| Method and path | Who | Body / returns |
+| --- | --- | --- |
+| `GET /offers` | anyone | `{ offers: [{ id, partner, kind, title, blurb, countryCode, placements, imageKey, weight }] }`: every offer live now (active, after `startsAt`, before `endsAt`). Never the link or the key. Cached 5 minutes (`public, max-age=300, s-maxage=300, stale-while-revalidate=3600`, `Vary: Origin`). |
+| `GET /go/:offerId?p=&dest=&country=&from=&to=` (mounted at `/go`, not `/api`) | anyone | A card's link. Adds one to today's (UTC) tally for that offer and placement `p` (one of the placements; anything else isn't counted), then **302** to the offer's `url` with its placeholders filled: `{destination}` from `dest` (a place name, cleaned, 80 characters at most), `{country}` from `country` (a code), `{checkin}` and `{checkout}` from `from` and `to` (`YYYY-MM-DD`). Each is URL-encoded, and left empty when unknown or malformed: a click is never refused for its query. At most 60 clicks per 15 minutes per IP are counted; past that it still redirects. `Cache-Control: no-store`, `Referrer-Policy: no-referrer`. An unknown offer → 404 `That offer doesn't exist.`; one that's off or outside its dates → 404 `That offer has ended.` |
+| `GET /users/admin/offers` | ADMIN or DEVELOPER | `{ offers: [{ ...every field, key, url, active, startsAt, endsAt, createdAt, updatedAt, clicks: { total, byPlacement: { GALLERY: n, … }, byDay: [{ day, count }] } }], clicksSince }`: the clicks of the last 30 days (`clicksSince` is the first day counted). |
+| `POST /users/admin/offers` | ADMIN or DEVELOPER | One offer (below) → 201 `{ offer }`. A taken key → 409; anything wrong → 400 `Check the offer's details: … (<field>)`. |
+| `PATCH /users/admin/offers/:offerId` | ADMIN or DEVELOPER | Any fields but `key` (sending another key → 400) → `{ offer }`. `active: false` takes it off every card and the Travel Desk, and keeps its tallies. |
+| `DELETE /users/admin/offers/:offerId` | ADMIN or DEVELOPER | Deletes it and its tallies → `{ message }` |
+| `POST /users/admin/offers/import` | ADMIN or DEVELOPER | An import file's contents, `{ offers: [...] }` (or a bare list), at most 500 → `{ created, updated, keys }`. Each offer is created or updated by its `key`; a field left out goes back to its default (the file is the whole truth about each offer it names); offers not in the file are left alone. Every offer is checked first: if any is wrong, nothing is written and the answer is 400 `Nothing was imported: fix the offers listed and try again.` with `data: { problems: [{ index, key, field }] }` (`index` from 0; `field` the first wrong field). |
+
+**An offer** (the import file's shape; `server/prisma/seed/data/offers.example.json` is a complete example, imported by the dev seed):
+
+| Field | Rule |
+| --- | --- |
+| `key` | Required, unique, never changes: 2–64 of `a-z`, `0-9` and `-`, starting with a letter or digit (`booking-hotels-jp`) |
+| `partner` | Required, up to 60 characters (cleaned like captions) |
+| `kind` | Required: `HOTEL`, `TOUR`, `FLIGHT`, `ESIM`, `INSURANCE`, `LUGGAGE`, `CAR_HIRE` or `OTHER` |
+| `title` | Required, up to 80: the card's line ("Hotels in Kyoto") |
+| `blurb` | Optional, up to 200 |
+| `countryCode` | A country or special place, or null for a general offer (insurance, eSIMs, luggage) |
+| `placements` | Required, at least one of `GALLERY`, `SLIDESHOW`, `COUNTRY_PAGE`, `TRAVEL_DESK` |
+| `url` | Required, `https://`, up to 2,000 characters, no user or password, and no placeholders but `{destination}`, `{country}`, `{checkin}`, `{checkout}` |
+| `imageKey` | Optional: a picture in the public bucket (`visitCountryPosters/jp-800.avif`), letters, digits, `/_.-` only, no `..`, ending `.avif`, `.webp`, `.jpg`, `.jpeg` or `.png` (never SVG). Without one the card draws its kind. |
+| `weight` | 1–100 (default 1): how often it's picked among the offers that fit a slot |
+| `active` | Default true |
+| `startsAt`, `endsAt` | Optional ISO times; `endsAt` not before `startsAt` |
+
+- **How often cards show** comes with the map or trip: `GET /maps/:mapId`, `GET /trips/:tripId` and `GET /shared/:code` add `ads: { every }`, a card every `every` photo tiles, or null for none. It follows docs/FEATURE-PLAN.md "Ads by tier" (`utils/offers.js` `adEveryFor`): a viewer on Business or First Class sees none; anyone else (Economy, or signed out on a share link) sees the map owner's plan's rate: one every 12 photos on an Economy map, every 24 on a Business map, none on a First Class map (`adEvery` in `utils/constants/plans.js`). The Travel Desk and the country pages' slots aren't affected: the Travel Desk opens only when asked for, on every plan, and the country pages are public travel pages.
+- **Choosing a card** (the client; `GET /offers` gives it everything live): among the offers for that placement, the first group that has any wins: a planned trip on this map with future dates (its destination country, with the trip's place and dates passed to `/go`); the country being viewed; the country of the photos around the slot; then general offers (no `countryCode`). Within the group, one is picked by `weight`, the same way for the same slot each time.
+- **Privacy:** no third-party scripts, pixels or cookies; a card is our own markup with a plain link to `/go/…` (`rel="sponsored noopener"`), labelled **Ad**. The tally keeps only offer, day, placement and a count (`OfferClickDaily`): no person, map, share code or time of day. Clicks are never `AppEvent`s; admin changes are (`offers`: `Create Success`, `Update Success`, `Delete Success`, `Import Success`, with ids and keys).
+- **Importing outside the admin page:** `npm run db:offers -- <file>` (in `server/`) runs the same import; the user runs it. It's safe on production.
 
 ## Sharing
 
@@ -342,7 +463,7 @@ All under `/api/billing`, signed in. Every write needs a **verified** email and 
 
 | Method and path | Body / returns |
 | --- | --- |
-| `GET /billing` | `{ plan, planName, source: 'STRIPE' \| 'COMPLIMENTARY' \| 'FREE', interval, status, renewsAt, cancelAtPeriodEnd, grant: { plan, endsAt } \| null, includedMaps, extraMapsPaid, ownedMaps, lockedMapIds, prices, paymentsEnabled }`. `interval`, `status` and `renewsAt` (the period end) are the subscription's, or null. `grant` is the best grant running now, even when the subscription wins. `prices` is `{ currency: 'GBP', plans: { FREE, REGULAR, PREMIUM }, extraMap: { FREE, REGULAR, PREMIUM } }`, each `{ MONTH, YEAR }` in pence. |
+| `GET /billing` | `{ plan, planName, source: 'STRIPE' \| 'COMPLIMENTARY' \| 'FREE', interval, status, renewsAt, cancelAtPeriodEnd, grant: { plan, endsAt } \| null, promoTrial: { code, days } \| null, includedMaps, extraMapsPaid, ownedMaps, lockedMapIds, prices, paymentsEnabled }`. `interval`, `status` and `renewsAt` (the period end) are the subscription's, or null. `grant` is the best grant running now, even when the subscription wins. `promoTrial`: a promo code's free month not yet used, with no live subscription ("Promo codes"); a subscription in it has `status: 'trialing'` and `renewsAt` at the trial's end. `prices` is `{ currency: 'GBP', plans: { FREE, REGULAR, PREMIUM }, extraMap: { FREE, REGULAR, PREMIUM } }`, each `{ MONTH, YEAR }` in pence. |
 | `POST /billing/checkout` | `{ plan: 'REGULAR' \| 'PREMIUM' \| 'FREE', interval: 'MONTH' \| 'YEAR', extraMaps = 0 }` → `{ url }` (Stripe Checkout, mode subscription). `FREE` means extra maps only (then `extraMaps` ≥ 1, else 400). Bad values → 400. An account with a subscription that hasn't ended → 409 `You already have a subscription. Change its plan or extra maps instead.` Checkout returns to `<first FRONTEND_ORIGIN>/account?billing=success` or `?billing=cancelled`; the plan applies when the webhook arrives. |
 | `POST /billing/change-plan` | `{ plan, interval }` → `{ billing }` (as `GET /billing`). Changes the plan line, prorated; the extra-map line keeps its quantity on the new interval and the new plan's extra-map price. `FREE` drops the plan line, which needs extra maps on it (else 409 `To stop paying altogether, cancel from the billing portal.`). No subscription → 409. |
 | `POST /billing/extra-maps` | `{ quantity, interval? }` (0–1000). Always one of two answers: **`{ billing }`** (as `GET /billing`) when the account has a subscription: the extra-map line's quantity is set, prorated (0 removes it; 0 on a subscription of extra maps only → 409, cancel in the portal); or **`{ url }`** (a Checkout for that many extra maps on Economy's line, `interval` defaulting to `MONTH`) when it has none (0 → 400). Fewer extra maps than maps in use locks the newest ones; nothing is deleted. |
@@ -359,7 +480,7 @@ All under `/api/billing`, signed in. Every write needs a **verified** email and 
   | Method and path | Body / returns |
   | --- | --- |
   | `GET /users/admin/plan-grants/:userId` | `{ grants: [{ id, plan, startsAt, endsAt, reason, grantedById, createdAt, active }], plan, source }`, newest first, with the plan the user has now. Unknown user → 404. |
-  | `POST /users/admin/plan-grants/:userId` | `{ plan: 'REGULAR' \| 'PREMIUM', months: 1–36, reason? }` → 201 `{ grant }`, from now for whole calendar months. Bad values → 400; yourself → 403 `You can't give yourself a membership.` |
+  | `POST /users/admin/plan-grants/:userId` | `{ plan: 'REGULAR' \| 'PREMIUM', months: 1–36, reason? }` → 201 `{ grant }`, from now for whole calendar months. A creator with a promo code gets 24 months (the admin dialog's default; the user's decision, 16 Nov 2026). Bad values → 400; yourself → 403 `You can't give yourself a membership.` |
   | `PATCH /users/admin/end-plan-grant/:grantId` | Ends it now → `{ grant }`. Already ended → 409; unknown → 404. The account drops to its other plan, or Economy; nothing is deleted. |
 
 ## Accounts
@@ -402,8 +523,10 @@ Shared, database-backed counters (`RateLimit` table, from NextDummy), keyed per 
 
 | What | Limit |
 | --- | --- |
-| Share-code lookups: opening a link (`GET /shared/:code`), and any `/shared/:code/photos…` or `/shared/:code/moments` request whose code matches no map or trip | 30 per 15 min (one counter) |
-| Browsing an open link (`/shared/:code/photos…`, `/shared/:code/moments`) | 300 per 15 min (separate counter) |
+| Share-code lookups: opening a link (`GET /shared/:code`), and any `/shared/:code/photos…`, `moments`, `passport`, `badges` or `goals` request whose code matches no map or trip | 30 per 15 min (one counter) |
+| Browsing an open link (`/shared/:code/photos…`, `moments`, `passport`, `badges`, `goals`) | 300 per 15 min (separate counter) |
+| Promo code checks (`GET /promo-codes/:code`) | 30 per 15 min |
+| Offer clicks counted (`GET /go/:offerId`; past it the click still redirects, uncounted) | 60 per 15 min |
 | Invite accepts | 30 per 15 min (separate counter) |
 | Photo presigns | 120 per 15 min |
 | Generic uploads (`presign-url` and `confirm-upload` together) | 20 per 15 min |

@@ -1,8 +1,9 @@
 // Mock mode only: sign-in and account (better-auth's raw JSON replies), the current
 // user, avatars, the generic media service, map settings and the reference data.
 import { fail, ok, raw, route, verifyFirst } from '../mockAdapter';
-import { getDb, me, newId, resetStore, session } from '../store';
+import { getDb, me, newId, resetStore, saveStore, session } from '../store';
 import { MOCK_PASSWORD } from '../seed';
+import { PROMO_MESSAGES, usablePromoCode } from '../promoCodes';
 import {
   GENERIC_MAX_BYTES,
   UPLOAD_IMAGE_EXTENSIONS,
@@ -36,8 +37,9 @@ const MAP_SETTING_KEYS = {
   style: ['animated', 'old-map', 'jupiter', 'galaxy'],
   mapType: ['regular', 'detailed'],
 };
-// `showMoments`: the marks beside countries with moments (the server needs it added too)
-const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments'];
+// `showMoments`: the marks beside countries with moments; `showGoalTag`: the goal's luggage
+// tag under the map's title (the server's MAP_SETTING_FLAGS need it too)
+const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments', 'showGoalTag'];
 
 // The test user's password: the seeded one until changed or reset here. Sign-in isn't
 // held to the rules below (the seeded one doesn't meet them, as on the server).
@@ -71,9 +73,15 @@ export function registerAccountRoutes() {
     session.signedIn = true;
     return raw({ redirect: false, token: 'mock-session', user: publicUser() });
   });
-  // Signing up makes you the test user (renamed); an address a mock user has is taken (422)
+  // Signing up makes you the test user (renamed), with an address still to verify, as a new
+  // account is; an address a mock user has is taken (422). An optional promo code
+  // (docs/API.md, "Promo codes") that can't be used is refused before anything changes;
+  // a good one is recorded (its free month waits for the first paid Checkout).
   route('POST', '/api/auth/sign-up/email', ({ body }) => {
     if (breaksRules(body.password)) return rulesError();
+    const promoCode = typeof body.promoCode === 'string' && body.promoCode.trim() ? body.promoCode : null;
+    const promo = promoCode ? usablePromoCode(promoCode) : null;
+    if (promoCode && !promo) return raw({ message: PROMO_MESSAGES.invalid }, 400);
     let name = null;
     if ('name' in body) {
       name = cleanName(body.name);
@@ -86,6 +94,9 @@ export function registerAccountRoutes() {
       return authError(422, 'USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL', 'User already exists. Use another email.');
     }
     if (name) me().name = name;
+    me().emailVerified = false;
+    me().promoCodeId = promo ? promo.id : null;
+    me().promoTrialUsedAt = null;
     session.signedIn = true;
     return raw({ token: 'mock-session', user: publicUser() });
   });
@@ -107,8 +118,10 @@ export function registerAccountRoutes() {
     me().password = body.newPassword;
     return raw({ status: true });
   });
+  // A GET, which the adapter doesn't save after, so it saves itself
   route('GET', '/api/auth/verify-email', () => {
     me().emailVerified = true;
+    saveStore();
     return raw({ status: true });
   });
   route('POST', '/api/auth/send-verification-email', () => raw({ status: true }));

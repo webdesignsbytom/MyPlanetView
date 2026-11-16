@@ -47,6 +47,11 @@ export const faqsArray = [
     answer: `Economy is free: one map, 30 photos of each country and sharing with as many people as you like. Business is ${formatPence(PLANS.REGULAR.price.MONTH)} a month and First Class ${formatPence(PLANS.PREMIUM.price.MONTH)}, with full-size originals and more photos of each country. Extra maps are extra on any plan. The Pricing page has every detail.`,
   },
   {
+    question: 'Why are there travel offers, and do they track me?',
+    answer:
+      'The cards marked “Ad” and the Travel Desk are partner offers from travel sites. If you book through one, we may earn a commission, at no cost to you, and it helps keep Economy free. They do not track you: there are no tracking scripts or advertising cookies, and nothing about you or your photos is sent to choose them. We count clicks per offer per day, and nothing about who clicked. Business and First Class members never see the cards on a map, and the Travel Desk only opens when you ask.',
+  },
+  {
     question: 'Where are my photos stored?',
     answer:
       'In private cloud storage with Cloudflare R2. Photos are shown through short-lived links, so when you stop sharing with someone they lose access to the files too.',

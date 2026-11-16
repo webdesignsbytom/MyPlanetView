@@ -39,9 +39,9 @@ describe('plan constants', () => {
       { MONTH: 599, YEAR: 5900 },
     ]);
     expect(PLAN_IDS.map((id) => PLANS[id].limits)).toEqual([
-      { photosPerCountry: 30, keepsOriginals: false, videos: false, storageCapBytes: null },
-      { photosPerCountry: 200, keepsOriginals: true, videos: false, storageCapBytes: 50 * GB },
-      { photosPerCountry: 1000, keepsOriginals: true, videos: true, storageCapBytes: 200 * GB },
+      { photosPerCountry: 30, keepsOriginals: false, videos: false, videosPerCountry: 0, storageCapBytes: null },
+      { photosPerCountry: 200, keepsOriginals: true, videos: false, videosPerCountry: 0, storageCapBytes: 50 * GB },
+      { photosPerCountry: 1000, keepsOriginals: true, videos: true, videosPerCountry: 20, storageCapBytes: 200 * GB },
     ]);
   });
 
@@ -73,6 +73,7 @@ describe('plan constants', () => {
       photosPerCountry: 200,
       keepsOriginals: true,
       videos: false,
+      videosPerCountry: 0,
       storageCapBytes: 50 * GB,
     });
   });

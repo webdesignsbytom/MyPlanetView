@@ -20,6 +20,9 @@
 //   - Sundarbans: Bangladesh's Sundarbans Reserved Forest, its World Heritage Site (WHS
 //     798; 16 Nov 2026). The whole forest's item (Q4526) points at India's Sundarbans
 //     National Park (WHS 452), 85 km west, across the border.
+//   - Western Wall: in Jerusalem's Old City, so Palestine (PS), as the map's shapes place it
+//     (the user's decision, 16 Nov 2026; Wikidata says Israel). It was Israel's one
+//     landmark here; Israel's UNESCO sites (Masada, Acre…) are in landmarksUnesco.js.
 //
 // `category` isn't stored (the schema has no column for it); it explains the radius:
 //   building 300–800 m · site / old town 1–3 km · park, range, archipelago 10–60 km.
@@ -91,7 +94,6 @@ export const LANDMARKS = [
   { countryCode: 'IR', name: 'Persepolis', category: 'site', latitude: 29.935, longitude: 52.89, matchRadiusM: 1000, wikidataId: 'Q129072' },
   { countryCode: 'IQ', name: 'Hatra', category: 'site', latitude: 35.58806, longitude: 42.71833, matchRadiusM: 1500, wikidataId: 'Q466614' },
   { countryCode: 'IE', name: 'Cliffs of Moher', category: 'natural', latitude: 52.93611, longitude: -9.47083, matchRadiusM: 3000, wikidataId: 'Q239477' },
-  { countryCode: 'IL', name: 'Western Wall', category: 'monument', latitude: 31.77695, longitude: 35.23425, matchRadiusM: 300, wikidataId: 'Q134821' },
   { countryCode: 'IT', name: 'Colosseum', category: 'building', latitude: 41.89028, longitude: 12.49222, matchRadiusM: 400, wikidataId: 'Q10285' },
   { countryCode: 'JM', name: 'Blue and John Crow Mountains', category: 'park', latitude: 18.0775, longitude: -76.57111, matchRadiusM: 25000, wikidataId: 'Q24082981' },
   { countryCode: 'JP', name: 'Mount Fuji', category: 'mountain', latitude: 35.36056, longitude: 138.7275, matchRadiusM: 20000, wikidataId: 'Q39231' },
@@ -141,6 +143,7 @@ export const LANDMARKS = [
   { countryCode: 'PK', name: 'Mohenjo-daro', category: 'site', latitude: 27.32917, longitude: 68.13889, matchRadiusM: 1500, wikidataId: 'Q5725' },
   { countryCode: 'PW', name: 'Rock Islands Southern Lagoon', category: 'archipelago', latitude: 7.2469, longitude: 134.3525, matchRadiusM: 20000, wikidataId: 'Q17215490' },
   { countryCode: 'PS', name: 'Church of the Nativity', category: 'building', latitude: 31.70431, longitude: 35.20758, matchRadiusM: 300, wikidataId: 'Q194504' },
+  { countryCode: 'PS', name: 'Western Wall', category: 'monument', latitude: 31.77695, longitude: 35.23425, matchRadiusM: 300, wikidataId: 'Q134821' },
   { countryCode: 'PA', name: 'Panama Canal (Miraflores Locks)', category: 'site', latitude: 8.99724, longitude: -79.59093, matchRadiusM: 10000, wikidataId: 'Q100144719' },
   { countryCode: 'PG', name: 'Kokoda Track', category: 'range', latitude: -9.15567, longitude: 147.66, matchRadiusM: 35000, wikidataId: 'Q5347553' },
   { countryCode: 'PY', name: 'Jesuit Missions of La Santísima Trinidad de Paraná', category: 'site', latitude: -27.132, longitude: -55.702, matchRadiusM: 1000, wikidataId: 'Q1366015' },

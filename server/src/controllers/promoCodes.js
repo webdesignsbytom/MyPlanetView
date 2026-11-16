@@ -1,0 +1,54 @@
+// Influencer codes (docs/API.md, "Promo codes"): a public check for the sign-up page, and
+// the admin's list, new code and changes (ADMIN or DEVELOPER).
+import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
+import { logEvent } from '../utils/events/logEvent.js';
+import { createBillingEvent } from '../event/travelUtils.js';
+import { isUuid } from '../utils/travelValidation.js';
+import { PROMO_TRIAL_DAYS, parsePromoCodeInput } from '../utils/promoCodes.js';
+import { usablePromoCode } from '../services/billing/promo.js';
+import {
+  createPromoCodeInDB,
+  findPromoCodeByCode,
+  findPromoCodeById,
+  listPromoCodesWithCounts,
+  updatePromoCodeInDB,
+} from '../domain/promoCodes.js';
+import { badRequest, conflict, handler, notFound } from './helpers/travel.js';
+
+const D = DOMAINS.billing;
+
+// Before signing up: is this code usable, and what does it give? (No label: that's for
+// admins.) Every code gives the same: the first PROMO_TRIAL_DAYS free on a paid plan.
+export const checkPromoCodeHandler = handler(D, 'Check promo code', async (req, res) => {
+  const promo = await usablePromoCode(req.params.code);
+  if (!promo) return notFound(req, res, D, EVENT_MESSAGES.promoCodeInvalid);
+  return sendDataResponse(res, 200, { promoCode: { code: promo.code, trialDays: PROMO_TRIAL_DAYS } });
+});
+
+const promoView = (promo) => ({ ...promo, trialDays: PROMO_TRIAL_DAYS });
+
+export const listPromoCodesHandler = handler(D, 'List promo codes', async (req, res) => {
+  const promoCodes = await listPromoCodesWithCounts();
+  return sendDataResponse(res, 200, { promoCodes: promoCodes.map(promoView) });
+});
+
+// `{ code, label, maxUses?, endsAt? }`
+export const createPromoCodeHandler = handler(D, 'Create promo code', async (req, res) => {
+  const parsed = parsePromoCodeInput(req.body);
+  if (!parsed.ok) return badRequest(req, res, D, EVENT_MESSAGES[parsed.message]);
+  if (await findPromoCodeByCode(parsed.data.code)) return conflict(req, res, D, EVENT_MESSAGES.promoCodeTaken);
+  const promo = await createPromoCodeInDB({ ...parsed.data, createdById: req.user.id });
+  logEvent(createBillingEvent({ user: req.user, action: 'Promo Code Create Success', id: promo.id, detail: `code=${promo.code}`, statusCode: 201 }));
+  return sendDataResponse(res, 201, { promoCode: promoView({ ...promo, signUps: 0, verified: 0, trials: 0, paying: 0 }) });
+});
+
+// `{ label?, active?, maxUses?, endsAt? }`: the code itself never changes
+export const updatePromoCodeHandler = handler(D, 'Update promo code', async (req, res) => {
+  const existing = isUuid(req.params.promoCodeId) ? await findPromoCodeById(req.params.promoCodeId) : null;
+  if (!existing) return notFound(req, res, D, EVENT_MESSAGES.promoCodeNotFound);
+  const parsed = parsePromoCodeInput(req.body, { existing });
+  if (!parsed.ok) return badRequest(req, res, D, EVENT_MESSAGES[parsed.message]);
+  const promo = Object.keys(parsed.data).length ? await updatePromoCodeInDB(existing.id, parsed.data) : existing;
+  logEvent(createBillingEvent({ user: req.user, action: 'Promo Code Update Success', id: promo.id, detail: Object.keys(parsed.data).join(',') }));
+  return sendDataResponse(res, 200, { promoCode: promoView(promo) });
+});

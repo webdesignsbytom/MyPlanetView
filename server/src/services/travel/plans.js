@@ -3,7 +3,8 @@
 import { findPlanInputsForMap, findPlanInputsForUser } from '../../domain/billing.js';
 import { effectivePlan, extraMapsPaid } from '../../utils/plans.js';
 import { mapSlots } from '../../utils/mapSlots.js';
-import { TRANSFER_GRACE_DAYS, planOf } from '../../utils/constants/plans.js';
+import { TRANSFER_GRACE_DAYS, VIDEO_MAX_SECONDS, planOf } from '../../utils/constants/plans.js';
+import { VIDEO_CONTENT_TYPES, VIDEO_MAX_BYTES } from '../../utils/constants/mediaConstants.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -50,6 +51,15 @@ export const uploadRulesFrom = (mapPlan) =>
   mapPlan && {
     keepsOriginals: planOf(mapPlan.plan).limits.keepsOriginals,
     photosPerCountry: planOf(mapPlan.plan).limits.photosPerCountry,
+    // Videos (First Class): how many per country, how long and how big (docs/API.md "Videos")
+    videos: planOf(mapPlan.plan).limits.videos
+      ? {
+          perCountry: planOf(mapPlan.plan).limits.videosPerCountry,
+          maxSeconds: VIDEO_MAX_SECONDS,
+          maxBytes: VIDEO_MAX_BYTES,
+          contentTypes: VIDEO_CONTENT_TYPES,
+        }
+      : null,
     locked: mapPlan.locked,
   };
 

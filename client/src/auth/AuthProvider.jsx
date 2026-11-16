@@ -96,7 +96,8 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // Sign-up signs the user in and sends a verification email
+  // Sign-up signs the user in and sends a verification email. `promoCode` is optional (a
+  // creator's code; an unusable one is a 400 and no account is made: docs/API.md, "Promo codes")
   async function register(registerFormData) {
     try {
       await client.post(
@@ -105,6 +106,7 @@ export function AuthProvider({ children }) {
           email: registerFormData.email,
           password: registerFormData.password,
           name: registerFormData.username,
+          ...(registerFormData.promoCode ? { promoCode: registerFormData.promoCode } : {}),
         },
         true,
       );

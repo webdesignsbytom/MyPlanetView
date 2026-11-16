@@ -3,7 +3,7 @@ import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb, me, newId, newShareCode, session } from '../store';
 import { declaredSizeProblem, presignMockUpload } from '../uploads';
 import { countryAtPosition } from '../countryLookup';
-import { firstPosition } from '../photoOrder';
+import { firstPosition, setShotAt } from '../photoOrder';
 import {
   LOCKED_MAP_MESSAGE,
   countryCapProblem,
@@ -16,6 +16,7 @@ import {
   effectivePlan,
 } from '../plans';
 import { isPole } from '@/utils/map/specialPlaces';
+import { adsFor } from '../offers';
 import {
   LANDMARK_ROWS,
   atLeast,
@@ -154,7 +155,8 @@ export function registerMapRoutes() {
   route('GET', '/api/maps/:mapId', ({ params }) => {
     const map = findMap(params.mapId);
     const role = mapRole(map);
-    return deny(role, 'VIEWER', NOT_FOUND) || ok({ map: mapView(map, role, WITH_PLAN) });
+    // How often its galleries show an offer card to the caller (docs/API.md, "Travel offers")
+    return deny(role, 'VIEWER', NOT_FOUND) || ok({ map: { ...mapView(map, role, WITH_PLAN), ads: adsFor(map) } });
   });
 
   // The owner's main (included) map; the old default becomes an extra map
@@ -223,9 +225,13 @@ export function registerMapRoutes() {
     // Group trips: the ones added to this map, and this map's trips added elsewhere
     db.tripMaps = db.tripMaps.filter((l) => l.mapId !== map.id && !tripIds.has(l.tripId));
     db.moments = db.moments.filter((m) => m.mapId !== map.id);
+    // Its badges and goals go with it
+    db.badgeAwards = db.badgeAwards.filter((a) => a.mapId !== map.id);
+    db.goals = db.goals.filter((g) => g.mapId !== map.id);
     db.invites = db.invites.filter((i) => i.mapId !== map.id && !tripIds.has(i.tripId));
     db.photos = db.photos.filter((p) => !photoIds.has(p.id));
     db.photoLandmarks = db.photoLandmarks.filter((pl) => !photoIds.has(pl.photoId));
+    db.landmarkCovers = db.landmarkCovers.filter((c) => c.mapId !== map.id);
     return ok({ message: 'Map deleted.' });
   });
 
@@ -476,6 +482,8 @@ export function registerMapRoutes() {
       },
       createdAt: new Date().toISOString(),
     };
+    // When it was taken, else now (the slideshows' order)
+    setShotAt(photo);
     // First in its country's gallery and its trip's, as the server puts a new photo
     photo.countryPosition = firstPosition(db.photos, 'country', photo);
     photo.tripPosition = photo.tripId ? firstPosition(db.photos, 'trip', photo) : 0;
@@ -485,7 +493,9 @@ export function registerMapRoutes() {
     if (hasGps) {
       LANDMARK_ROWS.forEach((lm) => {
         const d = distanceM(body.latitude, body.longitude, lm.latitude, lm.longitude);
-        if (d <= lm.matchRadiusM) db.photoLandmarks.push({ photoId: photo.id, landmarkId: lm.id, source: 'GPS', distanceM: Math.round(d), confirmed: false });
+        if (d <= lm.matchRadiusM) {
+          db.photoLandmarks.push({ photoId: photo.id, mapId: map.id, landmarkId: lm.id, source: 'GPS', distanceM: Math.round(d), confirmed: false, confirmedAt: null });
+        }
       });
     }
     return ok({ photo: photoDetail(photo, atLeast(role, 'EDITOR') ? role : 'EDITOR') }, 201);

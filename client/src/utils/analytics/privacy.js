@@ -4,7 +4,21 @@
 // redactUrl first, so it only ever gets the route pattern ('/shared/:code').
 import { ANALYTICS_EXCLUDED_PREFIXES, ANALYTICS_REDACTED_ROUTES } from '@/utils/constants/routes';
 
-const ROUTES = ANALYTICS_REDACTED_ROUTES.map((pattern) => ({ pattern, prefix: `${pattern.split('/:')[0]}/` }));
+// A pattern with more after its id ('/maps/:mapId/passport') matches that address only;
+// any other matches everything under its prefix ('/shared/…', however deep)
+const escape = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const wholeMatch = (pattern) => new RegExp(`^${pattern.split('/').map((part) => (part.startsWith(':') ? '[^/]+' : escape(part))).join('/')}/?$`);
+const hasTail = (pattern) => !pattern.split('/').at(-1).startsWith(':');
+const ROUTES = [
+  ...ANALYTICS_REDACTED_ROUTES.filter(hasTail).map((pattern) => {
+    const whole = wholeMatch(pattern);
+    return { pattern, test: (path) => whole.test(path) };
+  }),
+  ...ANALYTICS_REDACTED_ROUTES.filter((pattern) => !hasTail(pattern)).map((pattern) => {
+    const prefix = `${pattern.split('/:')[0]}/`;
+    return { pattern, test: (path) => path.startsWith(prefix) };
+  }),
+];
 
 // Campaign tags are the only query parameters kept; any other one could be a token
 const KEPT_PARAM = /^utm_[a-z]+$/;
@@ -13,9 +27,10 @@ const KEPT_PARAM = /^utm_[a-z]+$/;
 export const isAnalyticsExcluded = (pathname) =>
   ANALYTICS_EXCLUDED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 
-// '/shared/K7QX-M2PA-9RTW' -> '/shared/:code' (anything below the prefix, however deep)
+// '/shared/K7QX-M2PA-9RTW' -> '/shared/:code' (anything below the prefix, however deep);
+// '/maps/abc/passport' -> '/maps/:mapId/passport'
 function redactPath(pathname) {
-  const route = ROUTES.find(({ prefix }) => pathname.startsWith(prefix));
+  const route = ROUTES.find(({ test }) => test(pathname));
   return route ? route.pattern : pathname;
 }
 

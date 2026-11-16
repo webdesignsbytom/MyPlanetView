@@ -21,12 +21,18 @@ function PlanSummary({ billing }) {
         ? `Paid ${INTERVAL_NAMES[billing.interval] || ''}, ${priceText(planPrice(billing, billing.plan, billing.interval || 'MONTH'), billing.interval || 'MONTH')}`
         : 'Free';
 
+  // A promo code's free month is a Stripe trial: the period ends when the first payment is due
+  const trialing = billing.status === 'trialing';
   const renewal = !subscribed
     ? null
     : billing.cancelAtPeriodEnd
-      ? `Cancelled: it stops on ${formatDay(billing.renewsAt)}, and nothing is deleted.`
+      ? trialing
+        ? `Cancelled in your free month: it stops on ${formatDay(billing.renewsAt)}, nothing is charged and nothing is deleted.`
+        : `Cancelled: it stops on ${formatDay(billing.renewsAt)}, and nothing is deleted.`
       : billing.renewsAt
-        ? `Renews on ${formatDay(billing.renewsAt)}.`
+        ? trialing
+          ? `Free until ${formatDay(billing.renewsAt)}. Your first payment is then, unless you cancel before.`
+          : `Renews on ${formatDay(billing.renewsAt)}.`
         : null;
 
   const limits = [

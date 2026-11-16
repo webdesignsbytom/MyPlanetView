@@ -7,6 +7,7 @@ import {
   saveSubscriptionState,
 } from '../../domain/billing.js';
 import { shouldApplySubscriptionEvent, stripeIdOf, subscriptionStateFrom } from '../../utils/stripeState.js';
+import { markPromoTrialUsedInDB } from '../../domain/promoCodes.js';
 import { priceKind } from './stripe.js';
 
 const userExists = async (userId) =>
@@ -36,6 +37,8 @@ export async function linkCheckoutSession(session) {
  * updates): write the subscription's plan line, extra-map quantity, status, period end
  * and cancel flag. The account is found by customer id, else by the subscription's
  * `metadata.userId` (set at checkout, for an event that comes before the checkout's).
+ * A subscription with a trial that a promo code asked for (`metadata.promoCode`) records
+ * the account's free month as used, whatever the event (once; promoTrialUsedAt).
  * -> `{ userId, subscription }`, or null when it's no account's or out of date
  */
 export async function applyStripeSubscription(sub, { deleted = false } = {}) {
@@ -47,6 +50,7 @@ export async function applyStripeSubscription(sub, { deleted = false } = {}) {
     if (!(await userExists(userId))) return null;
     row = await linkStripeCustomer({ userId, stripeCustomerId });
   }
+  if (sub.trial_end && sub.metadata?.promoCode) await markPromoTrialUsedInDB(row.userId);
   if (!shouldApplySubscriptionEvent(row, sub, { deleted })) return null;
   const subscription = await saveSubscriptionState(row.userId, subscriptionStateFrom(sub, priceKind, { deleted }));
   return { userId: row.userId, subscription };

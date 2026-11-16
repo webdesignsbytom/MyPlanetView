@@ -5,6 +5,7 @@ import LoadingScreen from './components/utils/LoadingScreen';
 // Hooks
 import useScrollToTopOnRouteChange from './utils/functions/scrollToTop';
 import useFocusMainOnRouteChange from './hooks/FocusMainOnRouteChange';
+import useRememberPromoCode from './hooks/useRememberPromoCode';
 // Constants
 import {
   ABOUT_PAGE_URL,
@@ -12,6 +13,8 @@ import {
   ADMIN_PAGE_URL,
   ADMIN_CONTACT_FORM_PAGE_URL,
   ADMIN_EVENTS_PAGE_URL,
+  ADMIN_PROMO_CODES_PAGE_URL,
+  ADMIN_OFFERS_PAGE_URL,
   ADMIN_USERS_PAGE_URL,
   CONTACT_PAGE_URL,
   COUNTRIES_PAGE_URL,
@@ -32,6 +35,8 @@ import {
   WELCOME_PAGE_URL,
   SHARED_PAGE_URL,
   INVITE_PAGE_URL,
+  MAP_PASSPORT_PAGE_URL,
+  SHARED_PASSPORT_PAGE_URL,
 } from '@/utils/constants/routes';
 import { COOKIE_CONSENT_STYLE, COOKIE_TIMER } from './utils/constants/constants';
 // Analytics
@@ -54,6 +59,8 @@ import {
   ContactFormAdminPage,
   AdminUsersPage,
   AdminEventsPage,
+  AdminPromoCodesPage,
+  AdminOffersPage,
   ContactPage,
   PricingPage,
   TermAndPoliciesPage,
@@ -71,6 +78,7 @@ import {
   WelcomePage,
   SharedPage,
   InviteAcceptPage,
+  PassportPage,
   CountriesIndexPage,
   COUNTRY_GUIDE_PAGES,
 } from './utils/navigation/lazyPages';
@@ -97,6 +105,8 @@ function App() {
 
   useScrollToTopOnRouteChange();
   useFocusMainOnRouteChange();
+  // A creator's ?code= link, kept for the visit until they sign up (in an effect)
+  useRememberPromoCode();
 
   // Lazy-import the cookie pop-up after the timer, until they've chosen
   useEffect(() => {
@@ -208,6 +218,22 @@ function App() {
             }
           />
           <Route
+            path={ADMIN_PROMO_CODES_PAGE_URL}
+            element={
+              <AuthenticateAdmin>
+                <AdminPromoCodesPage />
+              </AuthenticateAdmin>
+            }
+          />
+          <Route
+            path={ADMIN_OFFERS_PAGE_URL}
+            element={
+              <AuthenticateAdmin>
+                <AdminOffersPage />
+              </AuthenticateAdmin>
+            }
+          />
+          <Route
             path={ADMIN_EVENTS_PAGE_URL}
             element={
               <AuthenticateDeveloper>
@@ -249,7 +275,16 @@ function App() {
               </AuthenticateUser>
             }
           />
+          <Route
+            path={MAP_PASSPORT_PAGE_URL}
+            element={
+              <AuthenticateUser>
+                <PassportPage />
+              </AuthenticateUser>
+            }
+          />
           <Route path={SHARED_PAGE_URL} element={<SharedPage />} />
+          <Route path={SHARED_PASSPORT_PAGE_URL} element={<PassportPage />} />
           <Route path={INVITE_PAGE_URL} element={<InviteAcceptPage />} />
 
           {/* Users */}

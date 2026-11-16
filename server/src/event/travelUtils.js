@@ -26,3 +26,5 @@ export const createSharingEvent = mk(DOMAINS.sharing);
 export const createMomentEvent = mk(DOMAINS.moments);
 // Plans, payments and complimentary memberships (never an email address or a reason text)
 export const createBillingEvent = mk(DOMAINS.billing);
+// Travel offers: ids and keys only (clicks are never events: OfferClickDaily counts them)
+export const createOfferEvent = mk(DOMAINS.offers);

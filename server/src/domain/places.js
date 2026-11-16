@@ -23,6 +23,7 @@ export const LANDMARK_SELECT = {
   pinX: true,
   pinY: true,
   matchRadiusM: true,
+  isUnesco: true,
 };
 
 export const findAllCountries = () =>

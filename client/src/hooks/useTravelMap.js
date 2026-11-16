@@ -121,7 +121,8 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     async (body) => {
       const { map } = await updateMap(mapId, body);
       forgetMapLists(); // the switcher lists maps by name
-      setState((prev) => ({ ...prev, map: map || prev.map }));
+      // PATCH's answer has no `ads` (only GET /maps/:mapId says how often cards show): keep it
+      setState((prev) => ({ ...prev, map: map ? { ...map, ads: map.ads ?? prev.map?.ads } : prev.map }));
     },
     [mapId],
   );

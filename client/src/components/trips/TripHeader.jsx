@@ -36,7 +36,9 @@ const STATUS_STAMPS = {
 // notes, who's going and the actions. Editors edit it in the same card, so the h1 stays.
 // Every change hands back the whole trip.
 // `locked`: an editor whose email address isn't verified yet; the actions say why they're missing.
-function TripHeader({ trip, canEdit, locked = false, linkToMap = true, onChanged, onShare, onDelete }) {
+// `travelDesk`: the Travel Desk's button, first among the actions, for everyone (share-link
+// visitors too).
+function TripHeader({ trip, canEdit, locked = false, linkToMap = true, onChanged, onShare, onDelete, travelDesk = null }) {
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState(null);
   const [savingTravellers, setSavingTravellers] = useState(false);
@@ -110,8 +112,9 @@ function TripHeader({ trip, canEdit, locked = false, linkToMap = true, onChanged
           />
           <InlineAlert>{error}</InlineAlert>
           {locked ? <VerifyFirstNote action='change this trip, its stops, moments or photos' /> : null}
-          {canEdit || onShare ? (
+          {canEdit || onShare || travelDesk ? (
             <div className={`${ACTIONS_ROW} border-t-2 border-dashed border-poster-brown/60 pt-5`}>
+              {travelDesk}
               {canEdit ? (
                 <Button quiet onClick={() => setEditing(true)}>
                   Edit trip

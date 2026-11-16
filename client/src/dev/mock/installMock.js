@@ -9,6 +9,7 @@ import { httpClient } from '@/api/client';
 import { setStoredItem } from '@/utils/functions/safeStorage';
 import { MOCK_MARKER, mockAdapter } from './mockAdapter';
 import { installUploadInterceptor } from './mockXhr';
+import { installOfferClickInterceptor } from './offerClicks';
 import { loadStore, setMockRole } from './store';
 import MockBadge from './MockBadge';
 import { registerAccountRoutes } from './handlers/account';
@@ -19,6 +20,11 @@ import { registerMomentRoutes } from './handlers/moments';
 import { registerSharingRoutes } from './handlers/sharing';
 import { registerAdminRoutes } from './handlers/admin';
 import { registerBillingRoutes } from './handlers/billing';
+import { registerPromoCodeRoutes } from './handlers/promoCodes';
+import { registerOfferAdminRoutes } from './handlers/offerAdmin';
+import { registerOfferRoutes } from './handlers/offers';
+import { registerPassportRoutes } from './handlers/passport';
+import { registerAchievementRoutes } from './handlers/achievements';
 
 export function installMock() {
   // ?mockRole=ADMIN or DEVELOPER switches the test user's role, and is remembered
@@ -34,12 +40,19 @@ export function installMock() {
   registerSharingRoutes();
   registerAdminRoutes();
   registerBillingRoutes();
+  registerPromoCodeRoutes();
+  registerOfferAdminRoutes();
+  registerOfferRoutes();
+  registerPassportRoutes();
+  registerAchievementRoutes();
 
   // Every request goes to the adapter: the API client, the global axios (media uploads)
   // and the photo upload XHR
   httpClient.defaults.adapter = mockAdapter;
   axios.defaults.adapter = mockAdapter;
   installUploadInterceptor();
+  // A travel offer card's link (/go/:offerId on the API) is counted and followed here
+  installOfferClickInterceptor();
 
   // AuthProvider only checks the session when this flag is set, so you start signed in
   setStoredItem('isLoggedIn', 'true');

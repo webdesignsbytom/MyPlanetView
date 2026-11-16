@@ -60,7 +60,12 @@ describe('the seed’s demo photos', () => {
     const countries = [...new Set(manifest.map((p) => p.countryCode))];
     for (const code of countries) expect(visits.find((v) => v.countryCode === code)).toMatchObject({ status: 'VISITED', source: 'PHOTO' });
 
-    const suggested = await prisma.photoLandmark.count({ where: { photo: { mapId: map.id }, source: 'GPS', confirmed: false } });
+    // Every other photo's nearest landmark is confirmed (passport stamps); the rest are suggestions
+    const suggested = await prisma.photoLandmark.count({ where: { mapId: map.id, source: 'GPS', confirmed: false } });
+    const stamped = await prisma.photoLandmark.count({ where: { mapId: map.id, confirmed: true } });
     expect(suggested).toBeGreaterThan(0);
+    expect(stamped).toBeGreaterThan(0);
+    const passport = data(await owner.agent.get(`/api/maps/${map.id}/passport`)).passport;
+    expect(passport.totals.landmarks).toBe(stamped);
   });
 });

@@ -44,6 +44,29 @@ export function checkCountryCap({ count, adding = 1, planId, countryName }) {
   return countryFullMessage({ count: Math.min(count, cap), cap, countryName, planId });
 }
 
+// ── Videos (First Class; docs/API.md "Videos") ───────────────────────────────
+
+export const VIDEO_MESSAGES = Object.freeze({
+  notOnPlan: 'Videos are part of First Class. Upgrade this map’s owner to add them.',
+  sizes: 'A video sends a THUMB and a DISPLAY poster frame and its file as the ORIGINAL.',
+  duration: 'A video can be up to 3 minutes long.',
+  landmark: 'Landmark stamps come from photos, not videos.',
+});
+
+/** Can a map with this owner's plan take videos? -> null, or the 403 message */
+export const checkVideoAllowed = (planId) => (planOf(planId).limits.videos ? null : VIDEO_MESSAGES.notOnPlan);
+
+/** A video's files: exactly THUMB, DISPLAY and ORIGINAL. -> null, or the 400 message */
+export const checkVideoSizes = (sizes) =>
+  sizes.length === 3 && ['THUMB', 'DISPLAY', 'ORIGINAL'].every((s) => sizes.includes(s)) ? null : VIDEO_MESSAGES.sizes;
+
+/** "20 of 20 videos of France on this map." (videos have their own cap, apart from photos) */
+export function checkVideoCap({ count, adding = 1, planId, countryName }) {
+  const cap = planOf(planId).limits.videosPerCountry;
+  if (count + adding <= cap) return null;
+  return `${number(Math.min(count, cap))} of ${number(cap)} videos of ${countryName} on this map.`;
+}
+
 // ── The storage safety net (paid plans) ──────────────────────────────────────
 
 const gigabytes = (bytes) => `${Math.round(bytes / 1000 ** 3)} GB`;

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 // Components
 import TripHeader from './TripHeader';
+import TravelDesk from '@/components/offers/TravelDesk';
 import TripMiniMap from './TripMiniMap';
 import TripStopList from './TripStopList';
 import TripPhotosSection from './TripPhotosSection';
@@ -13,6 +14,7 @@ import InlineAlert from '@/components/common/InlineAlert';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 // Utils
 import { canEditRole } from '@/utils/sharing/shareRoles';
+import { isUpcomingPlannedTrip, placeCountries, todayString, tripPlace } from '@/utils/offers/offerContext';
 
 /**
  * One trip: header, the caller's own maps showing it (a group trip: "Add to my map"),
@@ -32,6 +34,15 @@ function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctic
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
   const [deleting, setDeleting] = useState(false);
+
+  // The Travel Desk (docs/FEATURE-PLAN.md, "Travel Desk"), for everyone who can see the
+  // trip: offers for its countries, the links carrying each stop's place, and the trip's
+  // dates while it's planned and still to come (a client-only page: today is read here)
+  const deskTrip = useMemo(() => {
+    const place = tripPlace(trip);
+    return isUpcomingPlannedTrip(trip, todayString()) ? place : { ...place, from: null, to: null };
+  }, [trip]);
+  const deskCountries = useMemo(() => placeCountries(deskTrip), [deskTrip]);
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -54,6 +65,7 @@ function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctic
         onChanged={onTripChange}
         onShare={currentUser && !shareCode ? () => setSharing(true) : null}
         onDelete={onDelete ? () => setConfirmingDelete(true) : null}
+        travelDesk={<TravelDesk fill countryCodes={deskCountries} trip={deskTrip} />}
       />
 
       {confirmingDelete ? (

@@ -6,6 +6,7 @@ import { fail, ok, route } from '../mockAdapter';
 import { getDb, me, newId, session } from '../store';
 import { addMonths, billingView, effectivePlan, grantIsActive, grantsOf, isLive, subscriptionOf } from '../plans';
 import { transferMapRecord } from './maps';
+import { promoTrialFor } from '../promoCodes';
 import { GRANT_MONTHS, MAX_EXTRA_MAPS, PAID_PLAN_IDS, isBillingInterval, isPlanId } from '@/utils/constants/plans';
 
 // Server EVENT_MESSAGES
@@ -40,16 +41,19 @@ const periodEnd = (interval) => new Date(Date.now() + (interval === 'YEAR' ? 365
 const isAdmin = () => session.signedIn && ['ADMIN', 'DEVELOPER'].includes(me().role);
 const notAdmin = () => (session.signedIn ? fail(403, 'Admins only.') : signedOut());
 
-/** A paid Checkout, applied at once: the account's subscription, with its two lines. */
-function subscribe(userId, { plan, interval, extraMaps }) {
+/**
+ * A paid Checkout, applied at once: the account's subscription, with its two lines.
+ * `trialDays` (a promo code's free month): in its trial, the period ending when it does.
+ */
+function subscribe(userId, { plan, interval, extraMaps, trialDays = 0 }) {
   const db = getDb();
   db.subscriptions = db.subscriptions.filter((s) => s.userId !== userId);
   db.subscriptions.push({
     userId,
     plan,
     interval,
-    status: 'active',
-    currentPeriodEnd: periodEnd(interval),
+    status: trialDays ? 'trialing' : 'active',
+    currentPeriodEnd: trialDays ? new Date(Date.now() + trialDays * DAY_MS).toISOString() : periodEnd(interval),
     cancelAtPeriodEnd: false,
     extraMaps,
     stripeCustomerId: `cus_mock_${userId}`,
@@ -117,7 +121,10 @@ export function registerBillingRoutes() {
     if (!isQuantity(extraMaps)) return fail(400, M.invalidExtraMaps);
     if (body.plan === 'FREE' && extraMaps === 0) return fail(400, M.nothingToBuy);
     if (isLive(subscriptionOf(me().id))) return fail(409, M.subscriptionExists);
-    subscribe(me().id, { plan: body.plan, interval: body.interval, extraMaps });
+    // A promo code's free month, on a paid plan; as the webhook, it's then used
+    const trial = promoTrialFor(me(), body.plan);
+    subscribe(me().id, { plan: body.plan, interval: body.interval, extraMaps, trialDays: trial?.days });
+    if (trial) me().promoTrialUsedAt = new Date().toISOString();
     return ok({ url: CHECKOUT_DONE_URL });
   });
 

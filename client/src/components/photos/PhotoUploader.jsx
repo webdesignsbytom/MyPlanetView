@@ -15,14 +15,16 @@ const number = (n) => Number(n).toLocaleString('en-GB');
 
 // Choose or drop photos; each is read, resized, uploaded and saved, two at a time.
 // Photos without a location, or with one at sea, go in `country` (if chosen); with
-// neither, they're listed under Unplaced photos. `onUploaded` gets each new photo.
+// neither, they're listed under Unplaced photos. `onUploaded` gets each new photo, and
+// `onBatchDone` runs once a batch has finished (whatever came of each), when at least one
+// photo of it was saved.
 // The map owner's plan (docs/API.md, "Map limits"):
 // - `uploadRules` ({ keepsOriginals, photosPerCountry, locked }): a locked map takes no
 //   photos; Economy keeps a print copy instead of the original;
 // - `photoCounts` (the map's photos per country, on the map page): the chosen country's
 //   count against the cap, and at the cap the drop zone stops, with a way to upgrade
 //   (`isOwner`: the owner's own plan; anyone else is told it's the owner's).
-function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, uploadRules = null, photoCounts = null, isOwner = false }) {
+function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, onBatchDone, uploadRules = null, photoCounts = null, isOwner = false }) {
   const inputId = useId();
   const inputRef = useRef(null);
   const [country, setCountry] = useState(defaultCountryCode || '');
@@ -51,6 +53,7 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, upl
     }));
     setItems((prev) => [...added, ...prev]);
 
+    let saved = 0;
     await runWithConcurrencyLimit(AT_ONCE, added, async (item) => {
       try {
         const { photo, hadLocation } = await uploadPhoto({
@@ -73,11 +76,13 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, upl
               ? `Placed in ${countryName(photo.countryCode)}.`
               : `No location in the file, so it went in ${countryName(photo.countryCode)}.`;
         update(item.id, { stage: 'done', note, file: null });
+        saved += 1;
         onUploaded?.(photo);
       } catch (err) {
         update(item.id, { stage: 'failed', error: err.friendlyMessage || err.message || 'Something went wrong.', file: null });
       }
     });
+    if (saved) onBatchDone?.();
   };
 
   if (uploadRules?.locked) return <LockedMapNote isOwner={isOwner} />;

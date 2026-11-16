@@ -2,7 +2,7 @@
 // extra-map changes and the portal against a fake Stripe client, the webhook with real
 // signatures (the SDK's own signing code), complimentary memberships, and the cron purge.
 import request from 'supertest';
-import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // A fake Stripe: records each call and keeps subscriptions in memory. Webhook signing
 // and checking stay the real SDK's.
@@ -126,6 +126,7 @@ describe('GET /billing', () => {
       renewsAt: null,
       cancelAtPeriodEnd: false,
       grant: null,
+      promoTrial: null,
       includedMaps: 1,
       extraMapsPaid: 0,
       ownedMaps: 1,
@@ -184,6 +185,10 @@ describe('checkout', () => {
       cancel_url: 'http://localhost:5173/account?billing=cancelled',
     });
 
+    // No promo code: no free days, and Stripe's own card rules
+    expect(params.subscription_data.trial_period_days).toBeUndefined();
+    expect(params.payment_method_collection).toBeUndefined();
+
     // Extra maps only, on Economy's price
     await agent.post('/api/billing/checkout').send({ plan: 'FREE', interval: 'MONTH', extraMaps: 1 });
     expect(callsTo('checkout.sessions.create')[1].args[0].line_items).toEqual([{ price: 'price_it_extra_month', quantity: 1 }]);
@@ -212,6 +217,82 @@ describe('checkout', () => {
     const unverified = await signUp('Unverified Buyer', { verified: false });
     expect((await unverified.agent.post('/api/billing/checkout').send({ plan: 'REGULAR', interval: 'MONTH' })).status).toBe(403);
     expect(fake.calls.filter((c) => c.name === 'checkout.sessions.create')).toHaveLength(1);
+  });
+});
+
+describe("a promo code's free month", () => {
+  const CODE = `IT${RUN}`.toUpperCase().slice(0, 24);
+  let promo;
+
+  beforeAll(async () => {
+    promo = await prisma.promoCode.create({ data: { code: CODE, label: 'Integration test creator' } });
+  });
+  afterAll(async () => {
+    if (promo) await prisma.promoCode.delete({ where: { id: promo.id } });
+  });
+
+  /** A verified account that signed up with the code. */
+  async function follower(label) {
+    const who = await signUp(label);
+    await prisma.profile.upsert({
+      where: { userId: who.user.id },
+      update: { promoCodeId: promo.id },
+      create: { userId: who.user.id, promoCodeId: promo.id },
+    });
+    return who;
+  }
+
+  it('makes the first paid Checkout free for 30 days, with a card, once', async () => {
+    const { agent, user } = await follower('Follower');
+    expect(data(await agent.get('/api/billing')).promoTrial).toEqual({ code: CODE, days: 30 });
+
+    // Extra maps alone: no free month, and it's still there afterwards
+    await agent.post('/api/billing/checkout').send({ plan: 'FREE', interval: 'MONTH', extraMaps: 1 });
+    const [extrasOnly] = callsTo('checkout.sessions.create').at(-1).args;
+    expect(extrasOnly.subscription_data).toEqual({ metadata: { userId: user.id } });
+    expect(extrasOnly.payment_method_collection).toBeUndefined();
+
+    const res = await agent.post('/api/billing/checkout').send({ plan: 'PREMIUM', interval: 'MONTH' });
+    expect(res.status).toBe(200);
+    expect(callsTo('checkout.sessions.create').at(-1).args[0]).toMatchObject({
+      line_items: [{ price: 'price_it_premium_month', quantity: 1 }],
+      payment_method_collection: 'always',
+      subscription_data: { metadata: { userId: user.id, promoCode: CODE }, trial_period_days: 30 },
+    });
+
+    // Stripe makes the subscription in its trial: the plan counts, and the month is used
+    const sub = {
+      ...subscriptionObject({
+        id: `sub_it_${RUN}_trial`,
+        customer: `cus_it_${RUN}_trial`,
+        userId: user.id,
+        status: 'trialing',
+        lines: [['price_it_premium_month', 1]],
+      }),
+      trial_end: 1893456000,
+    };
+    sub.metadata.promoCode = CODE;
+    expect((await sendEvent('customer.subscription.created', sub)).status).toBe(200);
+    expect((await prisma.profile.findUnique({ where: { userId: user.id } })).promoTrialUsedAt).toBeInstanceOf(Date);
+    expect(data(await agent.get('/api/billing'))).toMatchObject({ plan: 'PREMIUM', source: 'STRIPE', status: 'trialing', promoTrial: null });
+
+    // Cancelled during the free month: a new Checkout pays from the first day
+    expect((await sendEvent('customer.subscription.deleted', { ...sub, status: 'canceled' })).status).toBe(200);
+    expect(data(await agent.get('/api/billing'))).toMatchObject({ plan: 'FREE', promoTrial: null });
+    expect((await agent.post('/api/billing/checkout').send({ plan: 'REGULAR', interval: 'MONTH' })).status).toBe(200);
+    expect(callsTo('checkout.sessions.create').at(-1).args[0].subscription_data).toEqual({ metadata: { userId: user.id } });
+  });
+
+  it('is kept when the code is turned off, and shown only without a subscription', async () => {
+    const { agent, user } = await follower('Late Follower');
+    await prisma.promoCode.update({ where: { id: promo.id }, data: { active: false } });
+    try {
+      expect(data(await agent.get('/api/billing')).promoTrial).toEqual({ code: CODE, days: 30 });
+    } finally {
+      await prisma.promoCode.update({ where: { id: promo.id }, data: { active: true } });
+    }
+    await givePlan(user.id, { plan: 'REGULAR' });
+    expect(data(await agent.get('/api/billing')).promoTrial).toBeNull();
   });
 });
 
@@ -439,6 +520,8 @@ describe('complimentary memberships', () => {
     expect(data(await creator.agent.get(`/api/maps/${map.id}`)).map.uploadRules).toEqual({
       keepsOriginals: true,
       photosPerCountry: 1000,
+      // First Class takes videos
+      videos: { perCountry: 20, maxSeconds: 180, maxBytes: 500 * 1024 * 1024, contentTypes: ['video/mp4', 'video/quicktime'] },
       locked: false,
     });
     expect(data(await admin.agent.get(url))).toMatchObject({ plan: 'PREMIUM', source: 'COMPLIMENTARY', grants: [{ id: grant.id, active: true }] });
@@ -471,7 +554,10 @@ describe('the daily clean-up', () => {
         { id: recent, type: 'invoice.paid', processedAt: new Date(Date.now() - 89 * 24 * 60 * 60 * 1000) },
       ],
     });
+    // Its own secret, as cleanup.test.js does, so the run needs none on the command line
+    vi.stubEnv('CRON_SECRET', 'it-cron-secret');
     const res = await request(app).get('/api/media-services/cron/cleanup-orphans').set('Authorization', 'Bearer it-cron-secret');
+    vi.unstubAllEnvs();
     expect(res.status).toBe(200);
     expect(data(res).oldStripeEvents).toBeGreaterThanOrEqual(1);
     expect(await prisma.stripeEvent.findUnique({ where: { id: old } })).toBeNull();

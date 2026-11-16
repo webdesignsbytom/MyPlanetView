@@ -3,12 +3,15 @@
 // for the session only, so photos uploaded in mock mode are dropped on reload.
 import { getStoredItem, removeStoredItem, setStoredItem } from '@/utils/functions/safeStorage';
 import { buildSeed } from './seed';
-import { fillPhotoPositions } from './photoOrder';
+import { fillPhotoPositions, fillShotAt } from './photoOrder';
+import { awardQuietly } from './achievements';
 
 // v2: the test user's map got the real test photos (16 Nov 2026); a new key seeds them
 // for everyone, as older saved stores would keep the poster stand-ins.
 // v3: moments, group trips (trips added to other maps) and Tom's map (16 Nov 2026)
-const STORE_KEY = 'mpvMockStore.v3';
+// v4: the passport (16 Nov 2026): confirmed landmark matches (stamps) on the seeded
+// photos, each match with its map and confirmation date, and the stamps' picked photos
+const STORE_KEY = 'mpvMockStore.v4';
 const ROLE_KEY = 'mpvMockRole';
 
 export const ROLES = ['USER', 'ADMIN', 'DEVELOPER'];
@@ -41,6 +44,7 @@ export function loadStore() {
       if (dropped.size) {
         db.photos = db.photos.filter((p) => !dropped.has(p.id));
         db.photoLandmarks = db.photoLandmarks.filter((pl) => !dropped.has(pl.photoId));
+        db.landmarkCovers = (db.landmarkCovers || []).filter((c) => !dropped.has(c.photoId));
         db.trips.forEach((t) => {
           if (dropped.has(t.coverPhotoId)) t.coverPhotoId = null;
         });
@@ -58,15 +62,40 @@ export function loadStore() {
   if (!Array.isArray(db.planGrants)) db.planGrants = [];
   if (!Array.isArray(db.moments)) db.moments = [];
   if (!Array.isArray(db.tripMaps)) db.tripMaps = [];
+  if (!Array.isArray(db.landmarkCovers)) db.landmarkCovers = [];
+  // Stores saved before promo codes (16 Nov 2026): the seed's codes, so no new key is needed
+  if (!Array.isArray(db.promoCodes)) db.promoCodes = buildSeed().promoCodes;
+  // ...and before the free month replaced each code's own offer (the same day)
+  db.promoCodes.forEach((promo) => {
+    delete promo.offerPlan;
+    delete promo.offerDays;
+  });
+  db.users.forEach((user) => {
+    if ('promoOfferGrantedAt' in user) {
+      user.promoTrialUsedAt ??= null;
+      delete user.promoOfferGrantedAt;
+    }
+  });
+  // ...and before travel offers (16 Nov 2026): the example offers and their tallies
+  if (!Array.isArray(db.offers)) db.offers = buildSeed().offers;
+  if (!Array.isArray(db.offerClicks)) db.offerClicks = buildSeed().offerClicks;
   [...db.maps, ...db.trips].forEach((item) => {
     item.shareCode = fixCode(item.shareCode);
   });
   // The seed, and stores saved before photos could be rearranged
   fillPhotoPositions(db.photos);
+  // ...or had a shotAt (the slideshows' order), and before badges and goals: the seed's
+  // goals, and what the data has already earned, awarded quietly (no pop-up)
+  fillShotAt(db.photos);
+  if (!Array.isArray(db.goals)) db.goals = buildSeed().goals;
+  if (!Array.isArray(db.badgeAwards)) awardQuietly(db, QUIET_AWARD_DATE());
   db.users[0].role = getMockRole();
   saveStore();
   return db;
 }
+
+// When the seed's badges were earned: a few days back, so a new one shows as new
+const QUIET_AWARD_DATE = () => new Date(Date.now() - 3 * 86400000).toISOString();
 
 export function saveStore() {
   setStoredItem(STORE_KEY, JSON.stringify(db));
@@ -76,6 +105,8 @@ export function resetStore() {
   removeStoredItem(STORE_KEY);
   db = buildSeed();
   fillPhotoPositions(db.photos);
+  fillShotAt(db.photos);
+  awardQuietly(db, QUIET_AWARD_DATE());
   db.users[0].role = getMockRole();
   saveStore();
 }

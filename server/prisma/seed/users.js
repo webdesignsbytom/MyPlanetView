@@ -3,12 +3,20 @@ import { prisma } from '../../src/prisma.js';
 // Auth
 import { auth, disableAuthEmails } from '../../src/auth.js';
 
-// Dev-only logins
+// Dev-only logins. `plan` is the plan each one is on (seed/plans.js gives the paid ones a
+// subscription, as Stripe's webhook would): one account per plan, so each plan's rules can
+// be tried by signing in. The USER is the demo couple's Economy map (travel.js, photos.js);
+// First Class has the sample videos (videos.js).
 export const seedAccounts = [
-  { role: 'USER', email: 'user@gmail.com', password: '12345678', name: 'User' },
-  { role: 'ADMIN', email: 'tom@gmail.com', password: '12345678', name: 'Admin' },
-  { role: 'DEVELOPER', email: 'dev@gmail.com', password: '12345678', name: 'Dev' },
+  { role: 'USER', email: 'user@gmail.com', password: '12345678', name: 'User', plan: 'FREE' },
+  { role: 'ADMIN', email: 'tom@gmail.com', password: '12345678', name: 'Admin', plan: 'FREE' },
+  { role: 'DEVELOPER', email: 'dev@gmail.com', password: '12345678', name: 'Dev', plan: 'FREE' },
+  { role: 'USER', email: 'business@gmail.com', password: '12345678', name: 'Bea Business', plan: 'REGULAR' },
+  { role: 'USER', email: 'firstclass@gmail.com', password: '12345678', name: 'Fran First', plan: 'PREMIUM' },
 ];
+
+/** The seeded account on a plan (the first one, for FREE: the demo couple's USER). */
+export const seedAccountOnPlan = (plan) => seedAccounts.find((a) => a.plan === plan);
 
 // Create a user via better-auth sign-up
 async function signUp({ email, password, name }) {
