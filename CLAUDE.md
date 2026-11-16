@@ -351,7 +351,7 @@ Production never gets the seed (so never the example offers: its offers come fro
   - **`inline-critical`** runs beasties on each pre-rendered page (not the app shell): the rules the page uses, plus every `@font-face`, go in a `<style>`; the stylesheet moves to the end of `<body>`, so the page paints before it arrives, with no script. Measured on a phone: LCP on about, FAQ and legal about 0.95 → 0.5 s.
 - **Live check:** `npm run check:seo -- --live https://<domain>` checks a deployed site.
 - **Head tags:** `HelmetItem` (react-head) per page, from `helmetData`/`metaData`. JSON-LD is built in `utils/seo/schema.js` from `constants.js`. Only mark up what's visible.
-- **`client/public/.htaccess`** (cPanel) holds the CSP. It still has placeholder hosts (`api.client.com`, `nbg1.your-objectstorage.com`) that must become the real API, R2 endpoint and photo hosts before launch, or uploads and photos are blocked.
+- **`client/public/.htaccess`** (cPanel) holds the CSP (`client/netlify.toml` the same). Since 17 Nov 2026 (the live test: the placeholders blocked every API call, so sign-in said "No response from the server") it names the API, `https://my-planet-view.vercel.app`, and allows Cloudflare's whole `*.r2.dev`, `*.eu.r2.cloudflarestorage.com` and `*.cloudflarestream.com` (the exact bucket and Stream hosts live in the env files): narrow them, and change the API host when it moves to `api.<domain>`. `worker-src` allows `blob:` (hls.js); `Permissions-Policy` allows geolocation for the site itself (a moment's pin from the device's location).
   - **CSP:** `script-src` has no `'unsafe-inline'`: no page has an inline script (JSON-LD is data) or an inline event handler, so keep it that way. `style-src` keeps it (React style attributes, the critical CSS). `form-action 'self'`; no Google Fonts hosts.
   - **Other headers:** HSTS for a year with `includeSubDomains` (no `preload`), `X-XSS-Protection: 0`, `Cross-Origin-Opener-Policy: same-origin`, plus nosniff, `DENY` framing, the referrer and permissions policies.
   - **`client/netlify.toml`** (the temporary Netlify site) sends the same headers: change both together.
@@ -430,7 +430,7 @@ Production never gets the seed (so never the example offers: its offers come fro
 - **Untested for real:** the API is tested end to end against Postgres (`npm run test:integration`), but nothing has run against real R2 (the bucket client is mocked there), real Cloudflare Stream (an in-memory Stream there, and the mock's in the browser) or in a real browser on the live site. Uploads, signed URLs and the client flows need trying for real.
 - **Placeholders:**
   - the domain;
-  - the CSP hosts in `.htaccess`.
+  - the CSP's bucket and Stream hosts (whole Cloudflare domains for now) and its API host (`my-planet-view.vercel.app`).
 - **Data:** border photos can land in the neighbouring country. The coarse lookup folds Jersey, Guernsey and the Isle of Man into the UK (so on a split map they go to the nearest nation), and puts Dundalk (Ireland) in the drawn Northern Ireland.
 - **Passport:** the zero-length round-capped pins were checked in Chromium only (Safari to try).
 - **Sharing:** editors can't see who else has access.

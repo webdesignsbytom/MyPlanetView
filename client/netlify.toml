@@ -19,12 +19,12 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://nbg1.your-objectstorage.com data: blob:; connect-src 'self' https://api.client.com https://nbg1.your-objectstorage.com https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; media-src 'self' https://nbg1.your-objectstorage.com blob: data:; worker-src 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com data: blob:; connect-src 'self' https://my-planet-view.vercel.app https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com https://upload.videodelivery.net https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; media-src 'self' https://*.cloudflarestream.com https://*.eu.r2.cloudflarestorage.com blob: data:; worker-src 'self' blob:; form-action 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "0"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(self)"
     Cross-Origin-Opener-Policy = "same-origin"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
 

@@ -50,20 +50,26 @@ ErrorDocument 404 /404.html
 # CSP: no inline script anywhere (the pages' only inline <script>s are JSON-LD, which is
 # data, not code), so script-src has no 'unsafe-inline'. style-src keeps it for React's
 # style attributes. Forms only post to this site (the app sends its data with fetch/XHR).
-# The two placeholder hosts (api.client.com, nbg1.your-objectstorage.com) must become the
-# real API, R2 endpoint and media host before launch (docs/AUDIT.md, D1).
+# Outside hosts (17 Nov 2026, the live test; client/netlify.toml sends the same): the API
+# (my-planet-view.vercel.app until it moves to api.<domain>); the public bucket's r2.dev
+# address (posters, landmark and festival photos); the private bucket's R2 endpoint (signed
+# photo links and presigned uploads); Cloudflare Stream (video playback, thumbnails, tus
+# uploads). The bucket and Stream hosts are whole Cloudflare domains, as their exact names
+# live in the env files: narrow them to the real ones, and add a custom media domain if
+# VITE_MEDIA_CDN becomes one (docs/AUDIT.md, D1). worker-src allows blob: for hls.js.
 <IfModule mod_headers.c>
   Header always set Content-Security-Policy "default-src 'self'; \
     script-src 'self' https://www.googletagmanager.com; \
     style-src  'self' 'unsafe-inline'; \
     font-src   'self'; \
-    img-src    'self' https://nbg1.your-objectstorage.com data: blob:; \
+    img-src    'self' https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com data: blob:; \
     connect-src 'self' \
-      https://api.client.com \
-      https://nbg1.your-objectstorage.com \
+      https://my-planet-view.vercel.app \
+      https://*.r2.dev https://*.eu.r2.cloudflarestorage.com \
+      https://*.cloudflarestream.com https://upload.videodelivery.net \
       https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; \
-    media-src  'self' https://nbg1.your-objectstorage.com blob: data:; \
-    worker-src 'self'; \
+    media-src  'self' https://*.cloudflarestream.com https://*.eu.r2.cloudflarestorage.com blob: data:; \
+    worker-src 'self' blob:; \
     form-action 'self'; \
     frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
   Header always set X-Content-Type-Options nosniff
@@ -71,7 +77,8 @@ ErrorDocument 404 /404.html
   # The old XSS filter is gone from current browsers and could be abused where it's left: off
   Header always set X-XSS-Protection "0"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
-  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  # geolocation for this site only: a moment's pin can come from the device's location
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
   # Pages from other sites opened from here (or opening this site) get no handle on its windows
   Header always set Cross-Origin-Opener-Policy "same-origin"
   # HTTPS only, for a year, subdomains included (so every subdomain must serve HTTPS: the
