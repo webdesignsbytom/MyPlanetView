@@ -7,6 +7,7 @@ import useMomentPage from '@/hooks/useMomentPage';
 import useGalleryOffers from '@/hooks/useGalleryOffers';
 import useSplitUk from '@/hooks/useSplitUk';
 import usePlannedTripPlace from '@/hooks/usePlannedTripPlace';
+import useMediaQuery from '@/hooks/useMediaQuery';
 // Components
 import CountryTicket from './CountryTicket';
 import CountryTicketStub from './CountryTicketStub';
@@ -33,7 +34,9 @@ const NO_TRIPS = [];
 
 // One country on this map, as a boarding pass (CountryTicket): its poster always on the
 // stub to the left (CountryTicketStub), then its note, its status, when you first went,
-// its moments, your photos from there and its landmarks. A special place (Antarctica or a
+// its moments, your photos from there and its landmarks. An editor's "Been there?" and
+// "First went" sit in the stub under the poster from md up (17 Nov 2026, the user's wish);
+// on phones the stub is too narrow, so they head the ticket's content. A special place (Antarctica or a
 // pole) says so with a stamp, and a magnetic pole that it moves. The map page centres it
 // on wide screens.
 // Moments: `mapId` (editors add them; `trips` are the map's own, `travellers` its people,
@@ -81,6 +84,8 @@ function CountryPanel({
   const plannedTrip = usePlannedTripPlace(nextTrip, { enabled: cardsDue || deskOpened, canFetch: canFetchTrips });
   const offerSlots = useGalleryOffers({ every: adEvery, slotKey: `${mapKey}:${code}`, country: code, plannedTrip });
   const deskCountries = useMemo(() => [code], [code]);
+  // md and up: the status controls go in the stub (Tailwind's md, 48rem)
+  const controlsInStub = useMediaQuery('(min-width: 48rem)');
   const { reload } = photos;
   const { reload: reloadMoments } = moments;
 
@@ -132,12 +137,44 @@ function CountryPanel({
     </p>
   );
 
+  // Marking the country, for editors (the UK on a split map asks about its nations instead).
+  // Never disabled while saving (that drops focus); the saves are optimistic.
+  const editsStatus = canEdit && !ukToPlace;
+  const statusControls = editsStatus ? (
+    <div className={`grid w-full items-start gap-3 ${controlsInStub ? '' : 'sm:grid-cols-2'}`} aria-busy={saving ? 'true' : undefined}>
+      <FormField id={`visit-${code}`} label='Been there?'>
+        <VisitStatusSelect
+          labelled
+          countryName={country.name}
+          status={status}
+          onChange={(next) => save(next, next ? { firstVisitedOn: visit?.firstVisitedOn || undefined } : undefined)}
+        />
+      </FormField>
+      {status && status !== 'WANT_TO_GO' ? (
+        <FirstVisitDateField id={`first-visit-${code}`} value={visit?.firstVisitedOn || ''} onSave={(date) => save(status, { firstVisitedOn: date })} />
+      ) : null}
+      {error ? (
+        <p role='alert' className='rounded-lg border px-3 py-2 text-sm tone-danger sm:col-span-2'>
+          {error}
+        </p>
+      ) : null}
+    </div>
+  ) : null;
+
   return (
     <CountryTicket
       title={country.name}
       kicker={kicker}
       onClose={onClose}
-      stub={<CountryTicketStub code={code} countryName={country.name} status={status} firstVisitedOn={visit?.firstVisitedOn} />}
+      stub={
+        <CountryTicketStub
+          code={code}
+          countryName={country.name}
+          status={status}
+          firstVisitedOn={visit?.firstVisitedOn}
+          controls={controlsInStub ? statusControls : null}
+        />
+      }
     >
       {special ? (
         <p className='grid justify-start'>
@@ -163,25 +200,8 @@ function CountryPanel({
 
       {ukToPlace && status ? <UkNationsPrompt ukStatus={status} visitOf={visitOf} canEdit={canEdit} onChoose={chooseNations} /> : null}
 
-      {canEdit && !ukToPlace ? (
-        // Never disabled while saving (that drops focus); the saves are optimistic
-        <div className='grid items-start gap-3 sm:grid-cols-2' aria-busy={saving ? 'true' : undefined}>
-          <FormField id={`visit-${code}`} label='Been there?'>
-            <VisitStatusSelect
-              labelled
-              countryName={country.name}
-              status={status}
-              onChange={(next) => save(next, next ? { firstVisitedOn: visit?.firstVisitedOn || undefined } : undefined)}
-            />
-          </FormField>
-          {status && status !== 'WANT_TO_GO' ? (
-            <FirstVisitDateField
-              id={`first-visit-${code}`}
-              value={visit?.firstVisitedOn || ''}
-              onSave={(date) => save(status, { firstVisitedOn: date })}
-            />
-          ) : null}
-        </div>
+      {editsStatus ? (
+        controlsInStub ? null : statusControls
       ) : (
         <p className='text-sm font-medium'>
           {status ? VISIT_STATUS_LABELS[status] : 'Not been yet'}
@@ -189,11 +209,6 @@ function CountryPanel({
         </p>
       )}
       {locked ? <VerifyFirstNote action='mark countries, write notes, or add moments and photos' /> : null}
-      {error ? (
-        <p role='alert' className='rounded-lg border px-3 py-2 text-sm tone-danger'>
-          {error}
-        </p>
-      ) : null}
 
       <section className='grid gap-2' aria-labelledby={`moments-${code}`}>
         <h3 id={`moments-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
