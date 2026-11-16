@@ -5,6 +5,9 @@
 export const MAP_STYLES = Object.freeze(['animated', 'old-map']);
 // 'detailed' shows country names, grid lines and landmarks at every zoom
 export const MAP_TYPES = Object.freeze(['regular', 'detailed']);
+// The landmark pins (17 Nov 2026): when zoomed in, at every zoom, only the passport's
+// stamped ones, or none (the client's LANDMARK_PIN_MODES)
+export const LANDMARK_PIN_MODES = Object.freeze(['zoomed', 'always', 'stamped', 'off']);
 export const MAP_SETTING_FLAGS = Object.freeze([
   'showGrid',
   'showGridLabels',
@@ -44,6 +47,10 @@ export function cleanMapSettings(input) {
   if (input.mapType !== undefined) {
     if (!MAP_TYPES.includes(input.mapType)) return { ok: false };
     value.mapType = input.mapType;
+  }
+  if (input.landmarkPins !== undefined) {
+    if (!LANDMARK_PIN_MODES.includes(input.landmarkPins)) return { ok: false };
+    value.landmarkPins = input.landmarkPins;
   }
   for (const flag of MAP_SETTING_FLAGS) {
     if (input[flag] === undefined) continue;

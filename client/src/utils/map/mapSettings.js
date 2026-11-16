@@ -6,9 +6,22 @@ import { MAP_TYPE_IDS } from './mapTypes.js';
 
 export const MAP_SETTINGS_STORAGE_KEY = 'myPlanetViewMapSettings';
 
+// The landmark pins (components/map/LandmarkPins.jsx, 17 Nov 2026, the user's wish: finer
+// control of the dots): from zoom 3, more as the map zooms in (the default); at every zoom;
+// only the landmarks stamped in the map's passport, at every zoom; or none. On either map
+// type: the Detailed type no longer forces them on.
+export const LANDMARK_PIN_MODES = [
+  { id: 'zoomed', label: 'When zoomed in' },
+  { id: 'always', label: 'Always, at every zoom' },
+  { id: 'stamped', label: 'Only the landmarks in your passport' },
+  { id: 'off', label: 'Off' },
+];
+export const LANDMARK_PIN_MODE_IDS = LANDMARK_PIN_MODES.map((mode) => mode.id);
+
 export const DEFAULT_MAP_SETTINGS = {
   style: 'animated',
   mapType: 'regular',
+  landmarkPins: 'zoomed',
   showGrid: true,
   showGridLabels: false,
   animatedSea: true,
@@ -64,6 +77,7 @@ export function cleanMapSettings(value) {
   const clean = { ...DEFAULT_MAP_SETTINGS };
   if (MAP_STYLE_IDS.includes(input.style)) clean.style = input.style;
   if (MAP_TYPE_IDS.includes(input.mapType)) clean.mapType = input.mapType;
+  if (LANDMARK_PIN_MODE_IDS.includes(input.landmarkPins)) clean.landmarkPins = input.landmarkPins;
   for (const { key } of MAP_SETTING_TOGGLES) {
     if (typeof input[key] === 'boolean') clean[key] = input[key];
   }

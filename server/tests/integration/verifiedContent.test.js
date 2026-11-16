@@ -45,21 +45,24 @@ describe('an account whose email is not verified yet', () => {
 
   it('gets 403 with a clear message for every change to content, and nothing is written', async () => {
     const { agent } = user;
+    // One at a time: twelve at once through one agent had a connection reset on CI's Linux
+    // runner (ECONNRESET), and the test is about each answer, not about doing them together
     const attempts = [
-      agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'VISITED' }),
-      agent.delete(`/api/maps/${map.id}/visits/FR`),
-      agent.post('/api/maps').send({ name: 'Second map', groupType: 'SOLO' }),
-      agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Paris' }),
-      agent.post(`/api/maps/${map.id}/photos/presign`).send({ files: [] }),
-      agent.post(`/api/maps/${map.id}/photos`).send({}),
-      agent.patch(`/api/maps/${map.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' }),
-      agent.post(`/api/maps/${map.id}/sharing/reset-link`),
-      agent.post(`/api/maps/${map.id}/members`).send({ email: 'friend@example.test', role: 'VIEWER' }),
-      agent.delete(`/api/maps/${map.id}`),
-      agent.post('/api/users/user/upload-or-change-avatar').send({ key: 'x' }),
-      agent.post('/api/media-services/presign-url').send({ resource: 'avatar', filename: 'me.png', ...PNG }),
+      () => agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'VISITED' }),
+      () => agent.delete(`/api/maps/${map.id}/visits/FR`),
+      () => agent.post('/api/maps').send({ name: 'Second map', groupType: 'SOLO' }),
+      () => agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Paris' }),
+      () => agent.post(`/api/maps/${map.id}/photos/presign`).send({ files: [] }),
+      () => agent.post(`/api/maps/${map.id}/photos`).send({}),
+      () => agent.patch(`/api/maps/${map.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' }),
+      () => agent.post(`/api/maps/${map.id}/sharing/reset-link`),
+      () => agent.post(`/api/maps/${map.id}/members`).send({ email: 'friend@example.test', role: 'VIEWER' }),
+      () => agent.delete(`/api/maps/${map.id}`),
+      () => agent.post('/api/users/user/upload-or-change-avatar').send({ key: 'x' }),
+      () => agent.post('/api/media-services/presign-url').send({ resource: 'avatar', filename: 'me.png', ...PNG }),
     ];
-    for (const res of await Promise.all(attempts)) {
+    for (const attempt of attempts) {
+      const res = await attempt();
       expect(res.status, `${res.req.method} ${res.req.path}`).toBe(403);
       expect(res.body.message).toMatch(NEEDS_VERIFIED);
     }

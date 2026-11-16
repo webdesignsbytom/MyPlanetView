@@ -206,11 +206,16 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const nextTrip = useMemo(() => nextPlannedTrip(trips, todayString()), [trips]);
   const offerProps = { adEvery, nextTrip, canFetchTrips: !shareCode, mapKey: `map:${map.id}` };
 
-  // my_planet's Detailed map type: names, lines and landmark pins at every zoom
-  // (re-renders this page only when the zoom crosses that line, not on every move)
+  // my_planet's Detailed map type: names and lines at every zoom. The landmark pins follow
+  // their own setting on either type (17 Nov 2026): when zoomed in (re-renders this page
+  // only when the zoom crosses that line, not on every move), always, only the passport's
+  // stamped ones, or off; the landmarks are fetched only when some can show
   const detailed = settings.mapType === 'detailed';
+  const pinMode = settings.landmarkPins;
   const landmarkZoom = useViewportZoom(viewport, atLandmarkZoom);
-  const { landmarks } = useLandmarks(null, { enabled: detailed || landmarkZoom });
+  const { landmarks } = useLandmarks(null, {
+    enabled: pinMode === 'always' || pinMode === 'stamped' || (pinMode === 'zoomed' && landmarkZoom),
+  });
   // The passport's stamped landmarks: their pins are gold (the map's own reply, so a
   // confirmed landmark shows once the map refreshes after the photo's change)
   const stampedIds = map.stampedLandmarkIds;
@@ -451,7 +456,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             showAntarctica={showAntarctica}
             landmarks={landmarks}
             stampedLandmarks={stampedLandmarks}
-            alwaysShowLandmarks={detailed}
+            landmarkPins={pinMode}
             label={`${map.name}: world map`}
           />
         </main>
