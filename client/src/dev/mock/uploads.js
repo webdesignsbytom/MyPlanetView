@@ -1,6 +1,9 @@
 // Mock mode only. Presigned uploads as the bucket treats them: each URL is "signed" for
 // one Content-Type and one byte size (docs/API.md), and a PUT that differs gets a 403,
 // so mock mode catches a client that sends something other than what it declared.
+// A video's file must also have had its location taken out (docs/API.md, "Videos"): the
+// mock bucket looks for the server's location markers in it and refuses it (403) when
+// any is left, so the e2e tests prove the browser cleaned it.
 import { MOCK_UPLOAD_ORIGIN, storeUpload } from './mockAdapter';
 
 const MB = 1024 * 1024;
@@ -27,8 +30,11 @@ export function presignMockUpload(key, { resource, contentType, bytes, ownerId =
   return `${MOCK_UPLOAD_ORIGIN}/${encodeURIComponent(key)}?X-Amz-SignedHeaders=content-length%3Bcontent-type%3Bhost`;
 }
 
-/** The mock bucket's answer to a PUT: 200 (file kept), or 403 when it isn't what was signed. */
-export function receiveMockUpload(url, body, contentType) {
+/**
+ * The mock bucket's answer to a PUT (a promise): 200 (file kept), or 403 when it isn't
+ * what was signed, or is a video still holding a location.
+ */
+export async function receiveMockUpload(url, body, contentType) {
   const signed = uploads.get(keyOf(url));
   if (!signed || !(body instanceof Blob) || body.size !== signed.bytes || contentType !== signed.contentType) {
     console.warn('[mock upload] 403: the PUT differs from what the URL was signed for', {
@@ -37,8 +43,44 @@ export function receiveMockUpload(url, body, contentType) {
     });
     return 403;
   }
+  if (String(contentType).startsWith('video/') && (await videoStillHasLocation(body))) {
+    console.warn('[mock upload] 403: this video still holds a location (or has no movie box to check)', { key: keyOf(url) });
+    return 403;
+  }
   storeUpload(url, body);
   return 200;
+}
+
+// The server's markers (utils/mp4Info.js LOCATION_MARKERS): "©xyz", and QuickTime's key
+const LOCATION_MARKERS = [[0xa9, 0x78, 0x79, 0x7a], [...'com.apple.quicktime.location.ISO6709'].map((c) => c.charCodeAt(0))];
+const includesBytes = (bytes, marker) => {
+  for (let at = bytes.indexOf(marker[0]); at !== -1; at = bytes.indexOf(marker[0], at + 1)) {
+    if (marker.every((b, i) => bytes[at + i] === b)) return true;
+  }
+  return false;
+};
+
+/**
+ * Does a video's movie box (moov) still hold a location? Walks the top-level boxes with
+ * small reads (its own few lines, apart from the client's cleaner), then checks the movie
+ * box as the server's mp4Info.js does. No movie box, or a broken box: treated as holding one.
+ */
+async function videoStillHasLocation(blob) {
+  let at = 0;
+  while (at + 8 <= blob.size) {
+    const head = new DataView(await blob.slice(at, at + 16).arrayBuffer());
+    let size = head.getUint32(0);
+    if (size === 1) size = Number(head.getBigUint64(8));
+    else if (size === 0) size = blob.size - at;
+    if (size < 8 || at + size > blob.size) return true;
+    const type = String.fromCharCode(head.getUint8(4), head.getUint8(5), head.getUint8(6), head.getUint8(7));
+    if (type === 'moov') {
+      const movie = new Uint8Array(await blob.slice(at, at + size).arrayBuffer());
+      return LOCATION_MARKERS.some((marker) => includesBytes(movie, marker));
+    }
+    at += size;
+  }
+  return true;
 }
 
 /** What was presigned for a key (or undefined). */

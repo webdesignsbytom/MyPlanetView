@@ -74,6 +74,12 @@ function photoUrls(photo) {
     const folder = `/seed-photos/${photo.image.slug}`;
     return { thumb: `${folder}/thumb.webp`, display: `${folder}/display.webp`, original: `${folder}/original.jpg` };
   }
+  // A demo video (seed-videos/, which the dev server serves at /seed-videos once the file
+  // has been downloaded): its country's poster stands in for its poster frames
+  if (photo.image?.kind === 'seedVideo') {
+    const poster = posterUrl(photo.image.poster, 'avif');
+    return { thumb: poster, display: poster, original: `/seed-videos/${photo.image.slug}/video.mp4` };
+  }
   // A poster stands in for a demo photo, at every size
   if (photo.image?.kind === 'asset') {
     const url = posterUrl(photo.image.name, 'avif');
@@ -90,9 +96,10 @@ function photoUrls(photo) {
 export const photoThumbUrl = (photo) => photoUrls(photo).thumb;
 
 // The best copy a photo keeps, as the server's bestCopySize: its original (Business and
-// First Class maps; the demo photos have one), else its print copy (Economy), else none
+// First Class maps; the demo photos have one, and a video's file is its original), else
+// its print copy (Economy), else none
 function bestCopy(photo) {
-  if (photo.image?.kind === 'seed' || photo.image?.kind === 'asset' || photo.image?.originalKey) return 'ORIGINAL';
+  if (['seed', 'asset', 'seedVideo'].includes(photo.image?.kind) || photo.image?.originalKey) return 'ORIGINAL';
   return photo.image?.printKey ? 'PRINT' : null;
 }
 
@@ -104,9 +111,16 @@ const photoLandmarks = (photo, role) =>
 
 export const canSeePhoto = (photo, role) => atLeast(role, 'VIEWER') && (!photo.hidden || atLeast(role, 'EDITOR'));
 
+// Videos (docs/API.md, "Videos"): every item says its kind and length; a video's file
+// (videoUrl) is in its detail always, and in lists with display=1, for everyone who can
+// see it (its location was taken out before upload)
+const isVideo = (photo) => photo.kind === 'VIDEO';
+
 export function photoListItem(photo, role) {
   const item = {
     id: photo.id,
+    kind: photo.kind || 'PHOTO',
+    durationS: photo.durationS ?? null,
     caption: photo.caption,
     takenAt: photo.takenAt,
     countryCode: photo.countryCode,
@@ -123,6 +137,7 @@ export function photoListItem(photo, role) {
 export function photoDetail(photo, role) {
   const urls = photoUrls(photo);
   const detail = { ...photoListItem(photo, role), displayUrl: urls.display };
+  if (isVideo(photo)) detail.videoUrl = urls.original;
   if (atLeast(role, 'EDITOR')) {
     const best = bestCopy(photo);
     Object.assign(detail, {
@@ -174,7 +189,11 @@ export function photoPage(photos, role, { country, unplaced, tripId, cursor, lim
     .filter((p) => (onlyUnplaced ? !p.countryCode : !country || p.countryCode === country))
     .filter((p) => !tripId || p.tripId === tripId)
     .sort(sort);
-  const item = (p) => (withDisplay ? { ...photoListItem(p, role), displayUrl: photoUrls(p).display } : photoListItem(p, role));
+  const item = (p) => {
+    if (!withDisplay) return photoListItem(p, role);
+    const urls = photoUrls(p);
+    return { ...photoListItem(p, role), displayUrl: urls.display, ...(isVideo(p) ? { videoUrl: urls.original } : {}) };
+  };
   if (order === 'shuffle') {
     // Every id in the list, shuffled the same way for the same seed, then this page of it
     const byId = new Map(list.map((p) => [p.id, p]));
@@ -245,7 +264,7 @@ export function mapSummary(map, role) {
 }
 
 // `withPlan`: the map routes' own answers, where the owner and editors also get the
-// owner's plan, locked, graceUntil, photoCounts and uploadRules (never through a share link)
+// owner's plan, locked, graceUntil, photoCounts, videoCounts and uploadRules (never through a share link)
 export function mapView(map, role, { withPlan = false } = {}) {
   const db = getDb();
   return {

@@ -34,11 +34,15 @@ export async function signPrivateGetObject({
   expiresIn = 60,
   bucket = PRIVATE_BUCKET,
   signingDate,
+  // A file name: the answer then says "attachment", so the browser saves the file
+  // (a link's `download` attribute is ignored across sites)
+  downloadAs,
 }) {
   const cmd = new GetObjectCommand({
     Bucket: bucket,
     Key: key,
     ResponseContentType: contentType || undefined,
+    ResponseContentDisposition: downloadAs ? `attachment; filename="${downloadAs}"` : undefined,
   });
   return getSignedUrl(s3Private, cmd, { expiresIn, ...(signingDate ? { signingDate } : {}) });
 }

@@ -17,9 +17,10 @@ import { choiceContext, linkForChoice } from '@/utils/offers/offerContext';
  *   every time (seeded from `slotKey` and the number).
  * - `slotKey`: names the gallery ("trip:<id>", "map:<id>:FR"); `placement` GALLERY or
  *   SLIDESHOW; `country`: the country being viewed; `plannedTrip`: usePlannedTripPlace's
- *   (undefined while it's fetched: no cards until it's here).
+ *   (undefined while it's fetched: no cards until it's here; so it has no default, which
+ *   would turn that undefined into null).
  */
-export default function useGalleryOffers({ every, slotKey, placement = 'GALLERY', country = null, plannedTrip = null }) {
+export default function useGalleryOffers({ every, slotKey, placement = 'GALLERY', country = null, plannedTrip }) {
   const { offers } = useOffers({ enabled: Boolean(every) });
 
   return useMemo(() => {

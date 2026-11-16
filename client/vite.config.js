@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -52,6 +53,8 @@ const siteHeadDefaults = () => ({
 // manifest.json from constants.js: served in dev, written to dist/ at build
 const SITE_MANIFEST = JSON.stringify(
   {
+    // The app's identity for the installed copy (it stays the same if start_url changes)
+    id: '/',
     name: CompanyName,
     short_name: CompanyShortName,
     description: helmetData[HOME_PAGE_URL].desc,
@@ -85,6 +88,23 @@ const siteManifest = () => ({
   },
 });
 
+// The service worker (PWA, scripts/sw-template.js): written to dist/sw.js at build only, with
+// a build id from the bundle's file names (a new deploy is a new worker, which drops the old
+// caches) and the browser-only pages it never stores. Registered by
+// src/utils/pwa/registerServiceWorker.js on the live site only.
+const siteServiceWorker = () => ({
+  name: 'site-service-worker',
+  apply: 'build',
+  generateBundle(_options, bundle) {
+    const build = crypto.createHash('sha256').update(Object.keys(bundle).sort().join('\n')).digest('hex').slice(0, 12);
+    const source = fs
+      .readFileSync(path.resolve(__dirname, 'scripts/sw-template.js'), 'utf8')
+      .replace('__SW_BUILD__', build)
+      .replace("['__SW_CLIENT_ONLY__']", JSON.stringify(CLIENT_ONLY_ROUTE_PREFIXES));
+    this.emitFile({ type: 'asset', fileName: 'sw.js', source });
+  },
+});
+
 // vite preview behaves like the hosts: <route>.html, the app shell for browser-only pages, else a real 404
 const isClientOnly = (pathname) =>
   CLIENT_ONLY_ROUTE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
@@ -113,28 +133,61 @@ const hostLikePreview = () => ({
   },
 });
 
-// Development only, two of the repo's folders (images only, nothing outside them):
+// Development only, three of the repo's folders (images only, and videos in seed-videos/;
+// nothing outside them):
 // - media/ (a copy of the public bucket) at /local-media, used when VITE_MEDIA_CDN isn't
 //   set (src/utils/media/mediaUrl.js);
 // - seed-photos/ (the real test photos) at /seed-photos, for mock mode's demo photos
-//   (src/dev/mock/views.js). The server's seed puts the same photos in the private bucket.
+//   (src/dev/mock/views.js). The server's seed puts the same photos in the private bucket;
+// - seed-videos/ (NASA's clips, downloaded by hand: seed-videos/README.md) at /seed-videos,
+//   for mock mode's First Class videos (src/dev/mock/seedFirstClass.js), with range
+//   requests so the player can seek, as R2 answers them.
+const IMAGE_TYPES = { '.avif': 'image/avif', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png' };
+const VIDEO_TYPES = { '.mp4': 'video/mp4', '.mov': 'video/quicktime' };
 const LOCAL_FOLDERS = {
-  '/local-media': path.resolve(__dirname, '../media'),
-  '/seed-photos': path.resolve(__dirname, '../seed-photos'),
+  '/local-media': { dir: path.resolve(__dirname, '../media'), types: IMAGE_TYPES },
+  '/seed-photos': { dir: path.resolve(__dirname, '../seed-photos'), types: IMAGE_TYPES },
+  '/seed-videos': { dir: path.resolve(__dirname, '../seed-videos'), types: { ...IMAGE_TYPES, ...VIDEO_TYPES } },
 };
-const MEDIA_TYPES = { '.avif': 'image/avif', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png' };
+
+// "bytes=start-end" (either end may be missing) -> { start, end }, or null when it can't be served
+function byteRange(header, size) {
+  const match = /^bytes=(\d*)-(\d*)$/.exec(String(header || '').trim());
+  if (!match || (!match[1] && !match[2])) return null;
+  // "bytes=-500" is the last 500 bytes
+  const start = match[1] ? Number(match[1]) : Math.max(0, size - Number(match[2]));
+  const end = match[1] && match[2] ? Math.min(Number(match[2]), size - 1) : size - 1;
+  return start <= end && start < size ? { start, end } : null;
+}
 
 const localMedia = () => ({
   name: 'local-media',
   apply: 'serve',
   configureServer(server) {
-    for (const [mount, dir] of Object.entries(LOCAL_FOLDERS)) {
+    for (const [mount, { dir, types }] of Object.entries(LOCAL_FOLDERS)) {
       server.middlewares.use(mount, (req, res, next) => {
         const file = path.join(dir, decodeURIComponent((req.url || '').split('?')[0]));
-        const type = MEDIA_TYPES[path.extname(file).toLowerCase()];
+        const type = types[path.extname(file).toLowerCase()];
         if (!type || !file.startsWith(dir + path.sep) || !fs.existsSync(file)) return next();
         res.setHeader('Content-Type', type);
-        fs.createReadStream(file).pipe(res);
+        if (!VIDEO_TYPES[path.extname(file).toLowerCase()]) return fs.createReadStream(file).pipe(res);
+        // Videos: the whole file, or the part a range asks for
+        const { size } = fs.statSync(file);
+        res.setHeader('Accept-Ranges', 'bytes');
+        if (!req.headers.range) {
+          res.setHeader('Content-Length', size);
+          return fs.createReadStream(file).pipe(res);
+        }
+        const range = byteRange(req.headers.range, size);
+        if (!range) {
+          res.statusCode = 416;
+          res.setHeader('Content-Range', `bytes */${size}`);
+          return res.end();
+        }
+        res.statusCode = 206;
+        res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${size}`);
+        res.setHeader('Content-Length', range.end - range.start + 1);
+        return fs.createReadStream(file, range).pipe(res);
       });
     }
   },
@@ -161,6 +214,7 @@ export default defineConfig({
     countryPagesPlugin(),
     siteHeadDefaults(),
     siteManifest(),
+    siteServiceWorker(),
     localMedia(),
     hostLikePreview(),
     process.env.ANALYZE &&

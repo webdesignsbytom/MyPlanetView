@@ -15,6 +15,7 @@ describe('cleanMapSettings', () => {
       showVisited: true,
       showUnvisited: false,
       showUserBanner: true,
+      blackAndWhite: true,
     };
     expect(cleanMapSettings(input)).toEqual({ ok: true, value: input });
   });

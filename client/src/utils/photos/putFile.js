@@ -20,3 +20,36 @@ export function putFile(url, blob, contentType, onProgress, bytes = blob.size) {
     xhr.send(blob);
   });
 }
+
+/**
+ * PUT each of an upload's files (`[{ size, blob, contentType, bytes }]`) to its presigned
+ * address (`uploads`, the presign's answer), one after another, reporting the whole
+ * upload's progress as `onProgress(fraction, { sent, total })` in bytes. -> `{ [size]: key }`
+ */
+export async function putFiles(files, uploads, onProgress) {
+  const total = files.reduce((sum, f) => sum + f.bytes, 0);
+  const sent = {};
+  const report = () => {
+    const done = Object.values(sent).reduce((a, b) => a + b, 0);
+    onProgress?.(total ? done / total : 1, { sent: done, total });
+  };
+  const keys = {};
+  for (const f of files) {
+    const target = uploads.find((u) => u.size === f.size);
+    if (!target) throw new Error('The server didn’t give an upload address for this file.');
+    keys[f.size] = target.key;
+    await putFile(
+      target.url,
+      f.blob,
+      f.contentType,
+      (loaded) => {
+        sent[f.size] = loaded;
+        report();
+      },
+      f.bytes,
+    );
+    sent[f.size] = f.bytes;
+    report();
+  }
+  return keys;
+}

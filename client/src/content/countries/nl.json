@@ -1,0 +1,202 @@
+{
+  "code": "NL",
+  "slug": "netherlands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Welkom", "Nederland"],
+  "summary": "Canals, bulb fields and Dutch masters, close together and easy to reach by bike or train.",
+  "overview": [
+    "The Netherlands is small, flat and crowded, and about a quarter of it lies below sea level, kept dry by dykes, pumps and the windmills that once drained it. Amsterdam's canals and museums draw most visitors, but Rotterdam, The Hague, Utrecht, Delft, Leiden and Haarlem are all within an hour or so by train, and the countryside has bulb fields, cheese towns, dunes and islands.",
+    "Bikes outnumber people, and cycling is the easiest way to get round towns and the countryside alike. \"Holland\" is strictly just two of the twelve provinces, North and South Holland. This page covers the European Netherlands, not the Caribbean islands that are also part of the kingdom."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Cool, bright and often breezy, warming through May. The bulb fields flower from late March, with tulips at their peak in mid to late April, and King's Day on 27 April fills Amsterdam."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm but rarely hot, usually around 20–23°C, with long light evenings: the best time for cycling, the beaches and the islands. Amsterdam is at its busiest, and its hotels at their dearest."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is often mild and settled. Wind and rain pick up from October, and November is grey and damp, though the museums and cafés carry it well."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Grey, damp and windy, around 5–6°C by day, with frost some nights and snow only now and then. December brings Sinterklaas, Christmas lights and the Christmas markets in the caves at Valkenburg. A hard frost that freezes the canals for skating has become rare."
+      }
+    ],
+    "weather": "Mild and damp, with wind off the North Sea. Summer days are usually around 20–23°C and winter days around 5–6°C. Rain is spread through the year, mostly as showers, and the flat land lets weather blow through quickly; the coast is the windiest part.",
+    "festivals": [
+      {
+        "name": "Carnaval",
+        "place": "The south, above all Maastricht and Den Bosch",
+        "when": "The days before Ash Wednesday, in February or March",
+        "months": [2, 3],
+        "text": "Costumes, brass bands and parades take over the Catholic south, and Den Bosch renames itself Oeteldonk for the occasion. North of the big rivers it passes almost unnoticed."
+      },
+      {
+        "name": "Tulip season and Keukenhof",
+        "place": "Keukenhof, Lisse, and the bulb fields between Leiden and Haarlem",
+        "when": "Keukenhof usually opens from mid-March to mid-May; the fields peak in mid to late April",
+        "months": [3, 4, 5],
+        "text": "Keukenhof's gardens show millions of bulbs in flower, and the fields around them turn into stripes of colour. A flower parade (Bloemencorso) runs from Noordwijk to Haarlem on a Saturday in April. Keukenhof sells timed tickets online, and weekday mornings are quietest."
+      },
+      {
+        "name": "King's Day (Koningsdag)",
+        "place": "Across the country, above all Amsterdam",
+        "when": "27 April (26 April when the 27th is a Sunday)",
+        "months": [4],
+        "text": "The King's birthday: everyone wears orange, the streets become one big flea market where anyone may sell, and Amsterdam's canals fill with party boats. Trains and city centres are packed."
+      },
+      {
+        "name": "Remembrance and Liberation Day",
+        "place": "Across the country",
+        "when": "4 and 5 May",
+        "months": [5],
+        "text": "At 8 pm on 4 May the country falls silent for two minutes for the war dead. The next day marks the end of the German occupation in 1945, with free open-air music festivals in many cities."
+      },
+      {
+        "name": "Pride Amsterdam",
+        "place": "Amsterdam",
+        "when": "Usually late July to early August, with the Canal Parade on the first Saturday of August",
+        "months": [7, 8],
+        "text": "A week or more of events ending in the Canal Parade, when decorated boats sail along the Prinsengracht and the Amstel past huge crowds on the banks."
+      },
+      {
+        "name": "Sinterklaas",
+        "place": "Across the country",
+        "when": "From his arrival by boat in mid-November to the evening of 5 December",
+        "months": [11, 12],
+        "text": "Saint Nicholas arrives by steamboat, from Spain as the story goes, and rides through towns on a white horse. On 5 December (pakjesavond) families swap presents and teasing poems. Shops fill with chocolate letters and spiced pepernoten."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Amsterdam",
+        "text": "Canals, the Rijksmuseum, the Van Gogh Museum and the Anne Frank House, which sells tickets only online, often weeks ahead. Busy all year and expensive to stay in; Haarlem and Utrecht are short train rides away and calmer."
+      },
+      {
+        "name": "The other Randstad cities",
+        "text": "Rotterdam's modern architecture and port, The Hague's Mauritshuis (home of Vermeer's Girl with a Pearl Earring) and seaside at Scheveningen, and the old canal towns of Delft, Leiden and Utrecht. All are good in any season."
+      },
+      {
+        "name": "The coast and the Wadden Islands",
+        "text": "Long sandy beaches and dunes run the length of the North Sea coast, and the Wadden Islands, Texel the biggest, are a ferry ride from the north. They're at their best from May to September."
+      },
+      {
+        "name": "Limburg and the south",
+        "text": "Maastricht and the green hills of south Limburg, the highest ground in the country, with a slower pace, food and drink taken seriously, and the biggest carnival."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you meet someone, with your first name. Friends greet each other with three kisses on alternate cheeks, though fewer people do it than before. The Dutch are known for being direct: a frank opinion is meant as honesty, not rudeness.",
+    "etiquette": [
+      "Keep out of the cycle lanes, which are often red, and look both ways for bikes before stepping off the pavement. A ringing bell means move, now.",
+      "A coffeeshop sells cannabis, which is tolerated rather than legal; for coffee, look for a café. Rules differ by city: Amsterdam bans smoking it in the street in the red-light district, and some towns near the borders turn away visitors from abroad.",
+      "Don't photograph the women working in the windows of the red-light districts.",
+      "On trains, trams and buses, tap in and out with the same contactless bank card or phone (OVpay). Forget to tap out and you're charged a higher fare.",
+      "Be on time, and expect plans to be made in advance, even among friends. Splitting the bill is normal.",
+      "Canal houses have very steep, narrow stairs, often with no lift, so pack light if you're staying in one."
+    ],
+    "tipping": "Service is included, and tipping is modest. Round up or leave 5 to 10% for good table service; nothing is expected at a bar or for a coffee at the counter.",
+    "dress": "Casual and practical: layers and a rain jacket in every season, something windproof for the coast, and comfortable shoes for cobbles and a lot of walking. Tidy clothes are enough for churches.",
+    "food": [
+      {
+        "name": "Raw herring (haring)",
+        "text": "Salted raw herring from street stalls, with chopped onion and pickles, eaten held by the tail or in a soft roll (broodje haring). The new season's catch, Hollandse Nieuwe, arrives in June."
+      },
+      {
+        "name": "Bitterballen",
+        "text": "Crisp, deep-fried balls of meat ragout, dipped in mustard and eaten with a beer. Their bigger cousin, the kroket, is sold in a roll or from a wall of vending hatches."
+      },
+      {
+        "name": "Cheese",
+        "text": "Gouda, Edam and aged cheeses with crystals in them, from cheese shops everywhere. Alkmaar and Gouda hold traditional cheese markets for visitors from spring to late summer."
+      },
+      {
+        "name": "Stamppot",
+        "text": "A winter dish of potato mashed with kale, sauerkraut or carrots and onion, served with smoked sausage (rookworst) and gravy."
+      },
+      {
+        "name": "Stroopwafels and poffertjes",
+        "text": "Thin waffles sandwiched with caramel syrup, best warm from a market stall, and tiny fluffy pancakes with butter and icing sugar."
+      },
+      {
+        "name": "Rijsttafel",
+        "text": "An Indonesian \"rice table\" of a dozen or more small dishes, from the country's colonial past; Amsterdam and The Hague have the best-known restaurants for it."
+      }
+    ],
+    "phrases": {
+      "language": "Dutch",
+      "intro": "Almost everyone speaks good English, and many will switch to it as soon as they hear your accent, but a few words of Dutch are still appreciated. The Dutch \"g\" is a rasping sound in the throat, like the \"ch\" in Scottish \"loch\" (written \"kh\" below).",
+      "items": [
+        { "phrase": "Hallo", "say": "HAH-loh", "meaning": "Hello" },
+        { "phrase": "Goedemorgen", "say": "khoo-duh-MOR-khun", "meaning": "Good morning" },
+        { "phrase": "Dank je wel", "say": "dahnk yuh VEL", "meaning": "Thank you" },
+        { "phrase": "Alstublieft", "say": "ahl-stew-BLEEFT", "meaning": "Please; here you are" },
+        { "phrase": "Spreekt u Engels?", "say": "spraykt ew ENG-uls", "meaning": "Do you speak English?" },
+        { "phrase": "Wat kost het?", "say": "vat KOST ut", "meaning": "How much is it?" },
+        { "phrase": "Proost!", "say": "prohst", "meaning": "Cheers!" },
+        { "phrase": "Lekker", "say": "LEK-er", "meaning": "Tasty; nice (said of almost anything good)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q55",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Cards, including contactless, are taken almost everywhere, and some shops and cafés don't take cash at all.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }],
+        "note": "Wikidata also lists the US dollar, the currency of the Caribbean Netherlands (Bonaire, Sint Eustatius and Saba); the page covers the European Netherlands."
+      },
+      {
+        "key": "languages",
+        "text": "Dutch; Frisian is also official in the province of Friesland. Almost everyone speaks English.",
+        "sources": [{ "property": "P37", "values": ["Q7411", "Q27175"] }],
+        "note": "Wikidata also lists Papiamento and English, which are official in the Caribbean Netherlands, and Dutch Sign Language. The page covers the European Netherlands, and mentions English only as widely spoken."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q5412088"] }],
+        "note": "Wikidata also lists the Atlantic Time Zone (UTC−4), used in the Caribbean Netherlands, which the page leaves out. It has no summer time for the European Netherlands; the page adds Central European Summer Time (UTC+2), kept from the last Sunday of March to the last Sunday of October."
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata also lists 911, the emergency number in the Caribbean Netherlands; the page covers the European Netherlands."
+      },
+      {
+        "key": "callingCode",
+        "text": "+31",
+        "sources": [{ "property": "P474", "values": ["+31"] }],
+        "note": "Wikidata also lists +599, the code for the Caribbean Netherlands (shared with Curaçao); the page covers the European Netherlands."
+      }
+    ]
+  }
+}

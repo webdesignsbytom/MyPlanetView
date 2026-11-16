@@ -1,6 +1,6 @@
 # My Planet View creator agreement
 
-> **Draft, 16 Nov 2026. Not yet checked by a lawyer.** Fill in everything in [square brackets], then delete this box before sending.
+> **Agreed 16 Nov 2026; not yet checked by a lawyer.** For each creator, fill in the [square brackets], then delete this box before sending.
 
 This agreement is between **Byte Toast Studio**, which runs My Planet View (myplanetview.com), 70 Monksmead, Tavistock, Devon PL19 8ER, United Kingdom ("we"), and **[creator's name]**, who posts as **[channel or handle]** ("you").
 
@@ -13,9 +13,9 @@ This agreement is between **Byte Toast Studio**, which runs My Planet View (mypl
 
 ## 2. What we ask
 
-- Within [60 days] of your membership starting, publish at least [one post or video] that shows **your own map** on the site and says what you think of it.
+- Within 60 days of your membership starting, publish at least one post or video that shows **your own map** on the site and says what you think of it.
 - Include your code or link.
-- Keep it up for at least [12 months].
+- Keep it up for at least 12 months.
 - **Your opinion is yours.** We won't script it or ask to approve it. We may ask you to fix a factual mistake, such as a wrong price or a feature the site doesn't have.
 - Only describe features the site has now. Some features on our Pricing page are marked "soon"; don't present those as available yet.
 

@@ -1,0 +1,196 @@
+{
+  "code": "EG",
+  "slug": "egypt",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ahlan", "Masr"],
+  "summary": "The pyramids, the temples and tombs of the Nile, and coral reefs in the Red Sea.",
+  "overview": [
+    "Egypt is the Nile: almost everyone lives along the river or in its delta, and most of the rest is desert. Visitors come for ancient Egypt: the pyramids at Giza and the Grand Egyptian Museum beside them, then, far to the south, the temples of Luxor, the Valley of the Kings, Aswan, and Abu Simbel near the border with Sudan. The Red Sea coast adds coral reefs for diving and snorkelling.",
+    "Sleeper trains and short flights link Cairo with Luxor and Aswan, and Nile cruises between the two take three or four nights. At the big sites, expect touts, camel and horse rides and unofficial guides: agree any price first, and a firm \"la', shukran\" (no, thank you) is enough. Check your government's travel advice before you go, as some border areas are off limits."
+  ],
+  "whenToGo": {
+    "stripLabel": "Cairo and the Nile Valley taken together, the trip most visitors make. The regions below differ, and each has a strip of its own.",
+    "months": ["best", "best", "best", "good", "good", "avoid", "avoid", "avoid", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "The main season. Sunny days, around 20°C in Cairo and the mid-20s in Luxor and Aswan, with chilly nights, and cold ones in the desert. Christmas and New Year are the busiest weeks, so book cruises and hotels early."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warming fast: by May, Luxor and Aswan are close to 40°C. A hot, dusty desert wind, the khamsin, brings sandstorms on some days in spring. Sham el-Nessim fills the parks and riverbanks."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Very hot and dry: about 35°C in Cairo and above 40°C most days in Luxor and Aswan, where the hours after dawn are the only comfortable time for the temples. Egyptians head for the Mediterranean and Red Sea coasts, where sea breezes help."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is still very hot in the south. The heat eases through October, and November is warm and settled, the start of the main season."
+      }
+    ],
+    "weather": "A desert climate, dry and sunny almost all year. It hardly ever rains in Luxor and Aswan, and Cairo gets only a few showers, in winter. The further south you go, the hotter the summers and the milder the winters, and desert nights are cold from December to February. Alexandria and the Mediterranean coast are milder, with most of their rain from November to February, and the Red Sea coast is warm all year and often windy.",
+    "festivals": [
+      {
+        "name": "Coptic Christmas",
+        "place": "Across Egypt",
+        "when": "7 January",
+        "months": [1],
+        "text": "Egypt's Christians, the Copts, celebrate Christmas with a midnight service on the evening of 6 January. The 7th is a public holiday."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Egypt",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting from dawn to sunset. Streets are hung with lanterns (fawanees), daytime is slow and evenings are busy once the fast is broken (iftar). It ends with Eid al-Fitr, a holiday of several days."
+      },
+      {
+        "name": "Abu Simbel Sun Festival",
+        "place": "Abu Simbel",
+        "when": "22 February and 22 October, at dawn",
+        "months": [2, 10],
+        "text": "Twice a year the rising sun shines deep into Ramesses II's great temple and lights the statues in its inner sanctuary. Crowds gather before dawn, with music and dancing outside."
+      },
+      {
+        "name": "Sham el-Nessim",
+        "place": "Across Egypt",
+        "when": "The Monday after Coptic Easter, in April or early May",
+        "months": [4, 5],
+        "text": "A spring festival from pharaonic times, kept by Muslims and Christians alike: families picnic in parks and by the Nile and eat salted fish (feseekh) and coloured eggs."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Egypt",
+        "when": "About ten weeks after Ramadan ends, so also about 11 days earlier each year: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice: families gather, many offices and shops close for several days, and trains, buses and the coast resorts are busy."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Cairo and Giza",
+        "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "best", "best", "best"],
+        "text": "Cool, sunny winters and hot, hazy summers, about 35°C in July and August. In the hot months, get to the pyramids when they open, as there's little shade on the plateau."
+      },
+      {
+        "name": "Luxor, Aswan and the Nile",
+        "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+        "text": "Luxor's temples, the Valley of the Kings, Aswan's feluccas and the Nile cruises between them are best from November to March. From May to September it's above 40°C on most days: some cruises stop, and sightseeing means dawn starts and the afternoon indoors."
+      },
+      {
+        "name": "The Red Sea and Sinai",
+        "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "best", "good"],
+        "text": "Hurghada, Marsa Alam, Sharm el-Sheikh and Dahab are warm all year, with diving in every month. The sea is about 22°C in winter and 28°C in late summer; winter evenings are cool and windy, and summer days hot."
+      },
+      {
+        "name": "Alexandria and the Mediterranean coast",
+        "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "Milder than Cairo: summers stay around 30°C, and the north coast fills with Egyptian holidaymakers in July and August. Winter brings grey days, rain and rough seas."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Salamu alaykum\" (peace be upon you), answered with \"wa alaykum el-salam\", or simply \"ahlan\" (hello). Men shake hands, often at some length; between men and women, wait for the woman to offer her hand. \"Welcome to Egypt\" is heard everywhere, sometimes as the start of a sales pitch.",
+    "etiquette": [
+      "Eat and pass things with your right hand.",
+      "Ask before photographing people, and never photograph police, soldiers, checkpoints or government buildings. Leave drones at home: without a permit, they're taken at the airport.",
+      "Haggling is expected in markets such as Cairo's Khan el-Khalili. Agree the price of a taxi, felucca or camel ride before you set off, or use a ride-hailing app such as Uber or Careem in Cairo.",
+      "Many mosques welcome visitors outside prayer times. Take off your shoes, and women cover their hair; avoid Friday's midday prayers.",
+      "During Ramadan, don't eat, drink or smoke in public by day; hotels and tourist restaurants keep serving.",
+      "At temples and tombs, guards may offer to show you a hidden corner or take your photo, then ask for a tip. Say no politely if you don't want it."
+    ],
+    "tipping": "Baksheesh, a small tip for a small service, is part of daily life: for toilet attendants, porters, drivers and the crew at the end of a Nile cruise, and more for guides. Restaurant bills often include a service charge, but a little extra for the waiter is still usual. Carry plenty of small notes.",
+    "dress": "Modest for men and women alike: shoulders and knees covered in towns, at religious sites and in the countryside, and loose, light clothes are the coolest. Women may want a scarf for mosques. Swimwear is fine at the Red Sea resorts but stays at the beach or the pool. Bring a hat and sunglasses, and a warm layer for winter nights.",
+    "food": [
+      {
+        "name": "Koshari",
+        "text": "Cairo's everyday dish: rice, lentils, macaroni and chickpeas under a spiced tomato sauce, with crisp fried onions, and garlic vinegar and chilli to taste. Some restaurants serve nothing else."
+      },
+      {
+        "name": "Ful medames",
+        "text": "Fava beans, stewed slowly and mashed with oil, cumin and lemon, eaten with flatbread (aish baladi) for breakfast."
+      },
+      {
+        "name": "Ta'ameya",
+        "text": "Egypt's falafel, made from fava beans rather than chickpeas, so it's green inside. Often eaten in a sandwich with ful."
+      },
+      {
+        "name": "Molokhia",
+        "text": "A thick green soup of finely chopped jute leaves with garlic and coriander, served with rice or bread and chicken or rabbit."
+      },
+      {
+        "name": "Feteer meshaltet",
+        "text": "A flaky pastry of many buttery layers, eaten sweet with honey or cream, or savoury with cheese and meat."
+      },
+      {
+        "name": "Karkade and asab",
+        "text": "Deep-red hibiscus tea, hot in winter and iced in summer, and fresh sugar-cane juice pressed at juice bars."
+      }
+    ],
+    "phrases": {
+      "language": "Egyptian Arabic",
+      "intro": "English is spoken in hotels and at the sights. Arabic has no single way of writing its words in Latin letters, so spellings vary, and some words change when you speak to a woman: min fadlik instead of min fadlak.",
+      "items": [
+        { "phrase": "Ahlan", "say": "AH-lan", "meaning": "Hello" },
+        { "phrase": "Shukran", "say": "SHOOK-ran", "meaning": "Thank you" },
+        { "phrase": "La', shukran", "say": "LAH SHOOK-ran", "meaning": "No, thank you" },
+        { "phrase": "Min fadlak", "say": "min FAD-lak", "meaning": "Please (to a man)" },
+        { "phrase": "Bikam?", "say": "bee-KAM", "meaning": "How much?" },
+        { "phrase": "Khalas", "say": "kha-LAAS", "meaning": "Enough; that's it" },
+        { "phrase": "Mafeesh mushkila", "say": "ma-FEESH MOSH-ki-la", "meaning": "No problem" },
+        { "phrase": "Ma'a salama", "say": "ma-sa-LAA-ma", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q79",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Egyptian pound (E£), written LE or EGP on price tags. Cash is needed for tips and small purchases.",
+        "sources": [{ "property": "P38", "values": ["Q199462"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic; everyday speech is Egyptian Arabic. English is widely spoken in hotels and at the main sights.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time: UTC+2, and UTC+3 from the last Friday of April to the last Thursday of October",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q6760", "Q4689484"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "122 for police, 123 for ambulance and 180 for fire. The tourist police are on 126.",
+        "sources": [{ "property": "P2852", "values": ["Q25648812", "Q25648825", "Q25648853"] }],
+        "note": "Wikidata lists 122, 123 and 180; the page adds 126, the tourist police, from travel advice pages (checked 16 Nov 2026)."
+      },
+      {
+        "key": "callingCode",
+        "text": "+20",
+        "sources": [{ "property": "P474", "values": ["+20"] }]
+      }
+    ]
+  }
+}

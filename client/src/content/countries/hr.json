@@ -1,0 +1,197 @@
+{
+  "code": "HR",
+  "slug": "croatia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dobar dan", "Hrvatska"],
+  "summary": "Walled towns on the Adriatic, island ferries, and the lakes and waterfalls of Plitvice.",
+  "overview": [
+    "Croatia's mainland coast runs for nearly 1,800 km down the Adriatic, past more than a thousand islands and islets. Its towns grew up under Rome and Venice: Pula has a Roman amphitheatre, Split's old town is built inside the Emperor Diocletian's palace, and Dubrovnik is ringed by walls you can walk along. Inland are the capital, Zagreb, and the Plitvice Lakes, a chain of turquoise lakes joined by waterfalls.",
+    "Ferries and catamarans link the coast to the islands, and car ferries fill up in summer, so book or arrive early. Croatia took up the euro and joined the Schengen area in 2023. July and August bring heat, crowds and high prices to the coast, so June and September are the easier months for most visitors."
+  ],
+  "whenToGo": {
+    "stripLabel": "The mainland coast and inland, taken together. The islands' season is shorter, and they have a strip of their own below.",
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Mild and green, with the Plitvice waterfalls at their fullest after the winter's rain and snow. Island hotels and restaurants open around Easter or in May, and the sea is cool until late May."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and sunny on the coast, around 30°C, with the sea warm enough for long swims. July and August are the busiest and most expensive months, when ferries, roads and old towns are crowded. Zagreb is hot too, with thunderstorms."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September keeps summer's warmth and a warm sea without the crowds. In October the island season winds down and the rains begin; November is wet and windy."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild on the coast, around 10–13°C by day in Split and Dubrovnik, but wet, and the bura wind can stop ferries and close bridges. Inland is cold, often below freezing, with snow in the mountains and at Plitvice, and Zagreb's Advent market from late November."
+      }
+    ],
+    "weather": "Mediterranean on the coast and islands, with hot, dry summers and mild, wet winters; continental inland, where Zagreb has cold winters and warm summers. Between them, the mountains of Lika and Gorski Kotar get heavy snow. Two winds shape the coast's weather: the bura, a cold, gusty north-easterly that brings clear skies, mostly in winter, and the jugo, a warm, damp south-easterly that brings rain and rough seas.",
+    "festivals": [
+      {
+        "name": "Rijeka Carnival",
+        "place": "Rijeka",
+        "when": "Usually from January to Shrove Tuesday, in February or early March, with the main parade on the Sunday before",
+        "months": [1, 2, 3],
+        "text": "Weeks of masked balls and parades, ending with an international parade through the city. Bell-ringers (zvončari) in sheepskins come in from the villages around to chase winter away."
+      },
+      {
+        "name": "Feast of St Blaise",
+        "place": "Dubrovnik",
+        "when": "3 February",
+        "months": [2],
+        "text": "The day of the city's patron saint: processions carry his relics through the old town, with flags, music and people from the villages around in folk costume."
+      },
+      {
+        "name": "Za Križen (Following the Cross)",
+        "place": "Hvar",
+        "when": "The night before Good Friday, in March or April",
+        "months": [3, 4],
+        "text": "Six processions set out at the same time from six villages in the middle of the island and walk through the night, each visiting the others' churches, each led by a man carrying a heavy cross."
+      },
+      {
+        "name": "Dubrovnik Summer Festival",
+        "place": "Dubrovnik",
+        "when": "10 July to 25 August",
+        "months": [7, 8],
+        "text": "Theatre, classical music and dance on open-air stages in the old town's squares, forts and palaces, held every summer since 1950."
+      },
+      {
+        "name": "Sinjska alka",
+        "place": "Sinj, near Split",
+        "when": "Usually the first Sunday of August, after two days of trials",
+        "months": [8],
+        "text": "Horsemen in 18th-century costume gallop down a course and aim a lance at a small iron ring, marking a victory over the Ottomans in 1715."
+      },
+      {
+        "name": "Advent in Zagreb",
+        "place": "Zagreb",
+        "when": "Usually late November to early January",
+        "months": [11, 12, 1],
+        "text": "Christmas markets, lights and stalls of mulled wine and sausages across the centre, from Ban Jelačić Square and Zrinjevac park up to the old upper town."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Istria, Split, Dubrovnik and the coast",
+        "text": "Rovinj, Pula, Zadar, Split and Dubrovnik are towns lived in all year. Summer is hot, and July and August are crowded, above all in Dubrovnik's old town when cruise ships are in port. Winters are mild but wet and windy, and some restaurants and hotels close until spring."
+      },
+      {
+        "name": "The islands",
+        "months": ["avoid", "avoid", "avoid", "good", "best", "best", "good", "good", "best", "good", "avoid", "avoid"],
+        "text": "Hvar, Brač, Korčula, Vis, Mljet and the Kvarner islands (Krk, Cres, Lošinj) have a season from about May to October. From November to about April most hotels and restaurants close, ferries and catamarans run on winter timetables, and the bura can stop them altogether."
+      },
+      {
+        "name": "Zagreb and the inland parks",
+        "text": "Zagreb has cold winters, often below freezing, and warm summers, and its Advent market fills the centre from late November to early January. The Plitvice Lakes are open all year: fullest of water in spring, busiest in July and August, and often snowy in winter, when fewer routes are open."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and eye contact when you meet; friends often kiss on both cheeks. Say \"dobar dan\" (good day) when you walk into a small shop or café. \"Bok\" is a casual hello and goodbye between friends.",
+    "etiquette": [
+      "Walking round the old towns in swimwear or without a shirt is banned in several places, Split, Hvar and Dubrovnik among them. Cover up away from the beach.",
+      "Coffee is a slow social ritual: one cup can last an hour, and no one will hurry you from a café table.",
+      "Since 2023 most shops, supermarkets included, may open on only 16 Sundays a year, so shop on Saturday. Shops at petrol stations, ports and stations are exempt.",
+      "Swimming isn't allowed in the Plitvice Lakes, nor any longer at Krka's waterfalls.",
+      "The war of independence in the 1990s (the Homeland War) is within living memory. Let people raise it themselves, and call the language Croatian.",
+      "Naturism has a long history here, at marked naturist (FKK) beaches and campsites; elsewhere, swimwear stays on."
+    ],
+    "tipping": "Not expected, though welcome. Round up in cafés and taxis, and leave about 10% in a restaurant for good service, in cash. Service is rarely added to the bill.",
+    "dress": "Casual, with smarter clothes for evenings in the old towns. Cover your shoulders and knees in churches and monasteries, and keep swimwear for the beach. Many beaches are pebble or rock, and sea urchins are common, so water shoes help.",
+    "food": [
+      {
+        "name": "Peka",
+        "text": "Lamb, veal or octopus baked slowly with potatoes under an iron bell covered in embers. Many restaurants need a few hours' notice, so order it ahead."
+      },
+      {
+        "name": "Black risotto (crni rižot)",
+        "text": "Risotto coloured and flavoured with cuttlefish ink, on almost every menu in Dalmatia."
+      },
+      {
+        "name": "Grilled fish with blitva",
+        "text": "Fresh fish grilled over wood and often priced by the kilo, served with blitva: Swiss chard and potatoes with olive oil and garlic."
+      },
+      {
+        "name": "Pašticada",
+        "text": "Beef marinated, then braised for hours in wine with prunes and spices, and served with gnocchi. A Dalmatian dish for feast days."
+      },
+      {
+        "name": "Istrian truffles and pasta",
+        "text": "Istria's forests give black and white truffles, shaved over fuži or pljukanci, the local hand-made pasta. White truffles are an autumn treat."
+      },
+      {
+        "name": "Štrukli",
+        "text": "From Zagreb and the Zagorje hills: thin dough filled with fresh cheese, boiled or baked with cream."
+      }
+    ],
+    "phrases": {
+      "language": "Croatian",
+      "intro": "English is widely spoken on the coast and in Zagreb, and German and Italian are common too. Č and ć sound like \"ch\", š like \"sh\", ž like the \"s\" in \"pleasure\", and j like \"y\".",
+      "items": [
+        { "phrase": "Bok", "say": "bohk", "meaning": "Hi; bye (casual)" },
+        { "phrase": "Dobar dan", "say": "DOH-bar dahn", "meaning": "Good day; hello" },
+        { "phrase": "Molim", "say": "MOH-leem", "meaning": "Please; you're welcome" },
+        { "phrase": "Hvala", "say": "HVAH-lah", "meaning": "Thank you" },
+        { "phrase": "Da / Ne", "say": "dah / neh", "meaning": "Yes / No" },
+        { "phrase": "Oprostite", "say": "oh-PROH-stee-teh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Koliko košta?", "say": "KOH-lee-koh KOHSH-tah", "meaning": "How much is it?" },
+        { "phrase": "Račun, molim", "say": "RAH-choon MOH-leem", "meaning": "The bill, please" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q224",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€), since 1 January 2023, when it replaced the kuna",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Croatian. Italian is also official in parts of Istria, where signs are in both languages, and English is widely spoken on the coast.",
+        "sources": [{ "property": "P37", "values": ["Q6654"] }],
+        "note": "Wikidata lists Croatian only; the page adds Italian's regional official status in parts of Istria."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q28157115"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance. The national numbers work too: 192 for police, 193 for fire and 194 for an ambulance.",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648834"] }],
+        "note": "Wikidata lists 93 and 94 (Q25743498, Q25743500), which look like 193 (fire) and 194 (ambulance) missing their first digit; the page gives 193 and 194 and cites neither item."
+      },
+      {
+        "key": "callingCode",
+        "text": "+385",
+        "sources": [{ "property": "P474", "values": ["+385"] }]
+      }
+    ]
+  }
+}

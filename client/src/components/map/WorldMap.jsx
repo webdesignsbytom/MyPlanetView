@@ -4,6 +4,7 @@ import { useViewportZoom } from '@/hooks/useMapViewport';
 // Components
 import CountryLayer from './CountryLayer';
 import MapGridLines from './MapGridLines';
+import SeaDepths from './SeaDepths';
 import CountryNameLabels from './CountryNameLabels';
 import LandmarkPins from './LandmarkPins';
 import StopMarkers from './StopMarkers';
@@ -21,6 +22,7 @@ const NO_MOMENTS = {};
 const BADGE_SYMBOLS = <StarBadgeSymbols />;
 const POLE_SYMBOLS = <PoleMarkerSymbols />;
 const MOMENT_SYMBOL = <MomentMarkSymbol />;
+const DEPTHS = <SeaDepths />;
 
 // An open hand over the sea, and a closed one over everything while a mouse button is held
 // (useMapViewport sets data-grabbing), beating the countries' pointer
@@ -36,6 +38,8 @@ const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[da
  * showAntarctica map setting; only the view changes).
  * `momentCounts` (the map's momentCountsByCountry) marks the places with moments, beside
  * their badges, unless `showMoments` is off (the viewer's setting).
+ * `seaDepths`: the sea tinted by depth (SeaDepths), for the styles whose sea is plain
+ * (mapStyles.js `background: null`, the animated sea).
  */
 function WorldMap({
   viewport,
@@ -45,6 +49,7 @@ function WorldMap({
   selectedCode = null,
   onSelectCountry,
   onHoverCountry,
+  seaDepths = false,
   showGrid = false,
   showGridLabels = false,
   showCountryNames = false,
@@ -79,6 +84,7 @@ function WorldMap({
         {BADGE_SYMBOLS}
         {POLE_SYMBOLS}
         {MOMENT_SYMBOL}
+        {seaDepths ? DEPTHS : null}
         {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} showAntarctica={showAntarctica} /> : null}
         <CountryLayer
           visitsByCode={visitsByCode}

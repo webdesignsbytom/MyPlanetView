@@ -51,6 +51,7 @@ export const VIDEO_MESSAGES = Object.freeze({
   sizes: 'A video sends a THUMB and a DISPLAY poster frame and its file as the ORIGINAL.',
   duration: 'A video can be up to 3 minutes long.',
   landmark: 'Landmark stamps come from photos, not videos.',
+  useVideoUpload: 'Videos upload through POST /maps/:mapId/videos/upload.',
 });
 
 /** Can a map with this owner's plan take videos? -> null, or the 403 message */

@@ -5,6 +5,7 @@ import LoadingScreen from './components/utils/LoadingScreen';
 // Hooks
 import useScrollToTopOnRouteChange from './utils/functions/scrollToTop';
 import useFocusMainOnRouteChange from './hooks/FocusMainOnRouteChange';
+import OfflineNotice from './components/utils/OfflineNotice';
 import useRememberPromoCode from './hooks/useRememberPromoCode';
 // Constants
 import {
@@ -167,6 +168,7 @@ function App() {
 
   return (
     <>
+      <OfflineNotice />
       {cookiePopup && (
         <Suspense fallback={null}>
           <cookiePopup.Cmp

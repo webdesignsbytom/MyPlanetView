@@ -1,0 +1,197 @@
+{
+  "code": "DE",
+  "slug": "germany",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Willkommen", "Deutschland"],
+  "summary": "Castles, beer gardens and Christmas markets, with a dialect and dishes of its own in every region.",
+  "overview": [
+    "Germany is a federal country of 16 states, and it shows: Berlin's history and nightlife, Hamburg's port, half-timbered towns and castles along the Rhine and the Romantic Road, the beer halls and Alps of Bavaria, and the rebuilt baroque centre of Dresden. Each region has its own dialect, food and beer, and its own pride in them.",
+    "Trains reach almost every town. The fast ICE trains are comfortable but often late, so leave time for connections; the Deutschlandticket, a monthly pass sold as a subscription you can cancel, covers local and regional trains, trams and buses across the country, but not ICE or IC trains. Most shops close on Sundays, and cash is still used more than in much of Europe."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Cool in March, warming through April and May, when the beer gardens open and white asparagus (Spargel) is on every menu. Easter and the May public holidays bring crowds and busy trains."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm, usually 20–27°C, with heatwaves above 30°C in some years and afternoon thunderstorms. The season for lakes, the Alps and the North Sea and Baltic coasts. School holidays, staggered by state from late June to mid-September, fill the resorts."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is often settled and warm: the time of Oktoberfest and the wine harvest along the Rhine and the Moselle. October brings autumn colour and cooler, wetter days, and November is grey until the Christmas markets open late in the month."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and often grey, around 0–5°C by day, colder in the east and the south. December is the season of the Christmas markets, one of the best reasons to visit, so book rooms early in Nuremberg, Dresden and Cologne. January and February are quiet, apart from skiing in the Bavarian Alps and carnival in the Rhineland."
+      }
+    ],
+    "weather": "Temperate, and more continental towards the east and south: the north-west, near the North Sea, is mild, damp and windy, while Berlin, Saxony and Bavaria have warmer summers and colder winters. Rain falls in every month, much of it in summer thunderstorms. The Alps and the higher hills get reliable snow; the lowlands only now and then.",
+    "festivals": [
+      {
+        "name": "Karneval (Fasching)",
+        "place": "Cologne, Düsseldorf and Mainz, and towns across the south",
+        "when": "The week before Ash Wednesday, in February or March",
+        "months": [2, 3],
+        "text": "The street carnival starts on the Thursday (Weiberfastnacht, when women snip off men's ties) and peaks with the Rose Monday parades, which throw sweets into crowds in costume. Cologne's is the biggest; in the south-west, Fastnacht has carved wooden masks instead."
+      },
+      {
+        "name": "Walpurgisnacht",
+        "place": "The Harz Mountains: Thale, Schierke, Wernigerode",
+        "when": "30 April",
+        "months": [4],
+        "text": "Witches and devils in costume, bonfires and music, from the old legend that witches meet that night on the Brocken, the highest peak in the Harz."
+      },
+      {
+        "name": "Kieler Woche",
+        "place": "Kiel",
+        "when": "Usually the last full week of June",
+        "months": [6],
+        "text": "One of the world's biggest sailing events, with races on the bay, tall ships in the harbour and free concerts across the city."
+      },
+      {
+        "name": "Rhein in Flammen (Rhine in Flames)",
+        "place": "The Rhine valley, between Rüdesheim and Koblenz",
+        "when": "Several Saturdays from July to September, each in a different town",
+        "months": [7, 8, 9],
+        "text": "Castles and riverbanks are lit with red flares and fireworks, watched from the banks or from a convoy of lit-up boats."
+      },
+      {
+        "name": "Oktoberfest",
+        "place": "Munich",
+        "when": "Usually from mid or late September to the first Sunday of October, or to 3 October",
+        "months": [9, 10],
+        "text": "Huge beer tents run by Munich's breweries, litre mugs (Maß), brass bands and fairground rides. Entry is free, tables in the tents are booked months ahead, and weekdays are calmer than weekends. Rooms in Munich cost far more and fill early."
+      },
+      {
+        "name": "Christmas markets (Weihnachtsmärkte)",
+        "place": "Across Germany, above all Nuremberg, Dresden and Cologne",
+        "when": "Usually from late November until just before Christmas",
+        "months": [11, 12],
+        "text": "Wooden stalls selling decorations, gingerbread (Lebkuchen) and grilled sausages, and Glühwein, a hot spiced wine served in a mug you pay a deposit on. Dresden's Striezelmarkt, first held in 1434, is one of the oldest."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Berlin and the north",
+        "text": "Berlin is a city for any season, with its museums, history and nightlife. Hamburg, Lübeck and the coasts of the North Sea and the Baltic, with islands such as Sylt and Rügen, are at their best from June to September."
+      },
+      {
+        "name": "Bavaria and the Alps",
+        "text": "Munich, the castles of Neuschwanstein and Linderhof, and the Alpine towns of Garmisch-Partenkirchen and Berchtesgaden. Hiking from June to October and skiing from December to March. Neuschwanstein is seen only on a timed tour, so book ahead in summer."
+      },
+      {
+        "name": "The Rhine, the Moselle and the south-west",
+        "text": "Castles and vineyards in the Rhine Gorge between Bingen and Koblenz, the Moselle's wine villages, Heidelberg and the Black Forest. Best from May to October, when the riverboats run their full timetable and wine festivals fill the late summer."
+      },
+      {
+        "name": "Saxony and the east",
+        "text": "Dresden, Leipzig and the sandstone pillars of Saxon Switzerland. Colder in winter than the west, and home to some of the oldest Christmas markets."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A firm handshake with eye contact, when you meet and when you leave. Use \"Sie\" and surnames (Herr Schmidt, Frau Weber) until you're invited to use first names and \"du\". Say \"Guten Tag\" when you walk into a small shop, or \"Grüß Gott\" in Bavaria.",
+    "etiquette": [
+      "Sundays and public holidays are quiet days: almost all shops are closed, apart from those at main stations and airports, and noisy jobs are frowned on.",
+      "Don't walk in the cycle lanes, often red or marked on the pavement, and wait for the green man even on an empty street: crossing on red draws looks and can bring a fine.",
+      "Most bottles and cans carry a deposit (Pfand), refunded by the return machines in supermarkets.",
+      "On the motorway (Autobahn), keep right except to overtake, and never overtake on the right. Some stretches have no speed limit, but 130 km/h is the advised top speed.",
+      "Showing Nazi symbols or giving the Nazi salute is a crime, even as a joke.",
+      "Ask for \"stilles Wasser\" if you want still water: plain \"Wasser\" often brings sparkling, and tap water isn't always served."
+    ],
+    "tipping": "Round up, or add about 5 to 10% in restaurants for good service. Tell the server the total you want to pay as you hand over the money, rather than leaving it on the table; \"stimmt so\" means keep the change. Round up taxi fares too.",
+    "dress": "Casual and practical. Germans dress for the weather, so bring a rain jacket and warm layers from October to April, and neater clothes for the opera or upmarket restaurants. In churches, take off hats and keep your voice down. Saunas are nude, and often mixed: no swimsuits.",
+    "food": [
+      {
+        "name": "Sausages (Wurst)",
+        "text": "A different one in every region: small grilled Nuremberg sausages, Thuringian bratwurst, Munich's white Weißwurst (traditionally eaten before noon) and Berlin's currywurst, sliced and covered in curried ketchup."
+      },
+      {
+        "name": "Bread and pretzels",
+        "text": "Hundreds of kinds of bread, from dense rye to seeded rolls, fresh from the bakery every morning. Soft pretzels (Brezeln) come with butter or alongside a beer."
+      },
+      {
+        "name": "Spätzle",
+        "text": "Soft egg noodles from Swabia in the south-west, served with roasts or as Käsespätzle, baked with cheese and topped with fried onions."
+      },
+      {
+        "name": "White asparagus (Spargel)",
+        "text": "The spring obsession: thick white asparagus with hollandaise sauce, potatoes and ham, on menus from April until the season ends on 24 June."
+      },
+      {
+        "name": "Kaffee und Kuchen",
+        "text": "Afternoon coffee and cake, a weekend ritual: try Black Forest gateau (Schwarzwälder Kirschtorte), apple strudel or a crumb-topped Streuselkuchen."
+      },
+      {
+        "name": "Beer and beer gardens",
+        "text": "Thousands of local beers, from Bavarian wheat beer to Cologne's Kölsch, served in small glasses that keep coming until you lay a beer mat on top. In many Bavarian beer gardens you may bring your own food."
+      }
+    ],
+    "phrases": {
+      "language": "German",
+      "intro": "English is widely spoken, especially by younger people, but a greeting in German is always welcome. In Bavaria you'll also hear \"Grüß Gott\" (hello) and \"Servus\" (hi or bye).",
+      "items": [
+        { "phrase": "Guten Tag", "say": "GOO-ten tahk", "meaning": "Hello; good day" },
+        { "phrase": "Danke", "say": "DAHN-kuh", "meaning": "Thank you" },
+        { "phrase": "Bitte", "say": "BIT-tuh", "meaning": "Please; you're welcome" },
+        { "phrase": "Entschuldigung", "say": "ent-SHOOL-dee-goong", "meaning": "Excuse me; sorry" },
+        { "phrase": "Sprechen Sie Englisch?", "say": "SHPREH-khen zee ENG-lish", "meaning": "Do you speak English?" },
+        { "phrase": "Die Rechnung, bitte", "say": "dee REKH-noong BIT-tuh", "meaning": "The bill, please" },
+        { "phrase": "Prost!", "say": "prohst", "meaning": "Cheers!" },
+        { "phrase": "Tschüss", "say": "chooss", "meaning": "Bye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q183",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Cards are widely taken, but carry some cash for bakeries, small cafés and markets.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "German; English is widely spoken, especially by younger people and in cities",
+        "sources": [{ "property": "P37", "values": ["Q188"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and Central European Summer Time (UTC+2) from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q207020", "Q6723", "Q5412096"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for fire and ambulance (and any emergency); 110 for police",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648823"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+49",
+        "sources": [{ "property": "P474", "values": ["+49"] }]
+      }
+    ]
+  }
+}

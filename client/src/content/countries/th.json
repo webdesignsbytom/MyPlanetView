@@ -1,0 +1,187 @@
+{
+  "code": "TH",
+  "slug": "thailand",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Sawasdee", "Prathet Thai"],
+  "summary": "Temples, street food and islands on two coasts, each with its rains at a different time.",
+  "overview": [
+    "Thailand takes in Bangkok, a huge city of temples, canals, markets and street food; the ruined old capitals of Ayutthaya and Sukhothai; the hills, temples and night markets of Chiang Mai and the north; and, in the south, two coasts of beaches and islands: Phuket, Krabi and Ko Lanta on the Andaman Sea, and Ko Samui, Ko Pha Ngan and Ko Tao in the Gulf of Thailand.",
+    "Getting around is easy: domestic flights, sleeper trains and long-distance buses link the regions, ferries and longtail boats reach the islands, and Bangkok has the Skytrain and a metro. Most Thais are Buddhist, and respect for the monarchy and for temples runs deep, so the customs below matter more here than in most places."
+  ],
+  "whenToGo": {
+    "stripLabel": "Bangkok and the central plains. The north and the two coasts differ, and each region below has a strip of its own.",
+    "months": ["best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool season",
+        "months": [11, 12, 1, 2],
+        "text": "Dry, sunny and less humid, with Bangkok around 30°C by day and fresh mornings in the north. The Andaman coast is at its best; the Gulf islands are still wet in November and December. Prices and crowds peak from mid-December to mid-January."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "Hot and humid everywhere, often 35°C or more in April, the hottest month, when Songkran brings a nationwide water fight. Smoke from field and forest burning often hangs over the north. The Gulf islands are dry and sunny, and the rains begin in May."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Heavy showers most days, usually in the afternoon or evening, with sunny spells between. The countryside is green, prices are lower and the sights quieter. September is usually the wettest month, when low-lying streets in Bangkok can flood. Seas on the Andaman coast are rough; the Gulf islands stay mostly dry until October."
+      }
+    ],
+    "weather": "Tropical and warm all year, so the seasons differ mainly in rain and humidity. Bangkok is around 30–35°C by day in every month, hottest in April; the north is cooler, especially at night in December and January. The south-west monsoon brings rain to most of the country and the Andaman coast from about May or June to October, while the Gulf coast around Ko Samui gets its heaviest rain from October to December instead.",
+    "festivals": [
+      {
+        "name": "Chinese New Year",
+        "place": "Bangkok's Chinatown (Yaowarat) and Thai-Chinese towns",
+        "when": "Usually late January or February",
+        "months": [1, 2],
+        "text": "Red lanterns, lion and dragon dances, firecrackers and food stalls along Yaowarat Road."
+      },
+      {
+        "name": "Songkran (Thai New Year)",
+        "place": "Across Thailand, liveliest in Chiang Mai and Bangkok",
+        "when": "13–15 April, longer in some towns",
+        "months": [4],
+        "text": "Water is poured over Buddha images and over elders' hands as a blessing, and the streets turn into a water fight: expect to be soaked. Many Thais travel home, so book buses, trains and flights early."
+      },
+      {
+        "name": "Visakha Bucha",
+        "place": "Temples across Thailand",
+        "when": "The full moon of the sixth lunar month: usually in May, sometimes early June",
+        "months": [5, 6],
+        "text": "Buddhism's most important day, marking the Buddha's birth, enlightenment and death, with candlelit processions round the temples in the evening. Alcohol sales are usually banned on this and the other main Buddhist holy days."
+      },
+      {
+        "name": "Vegetarian Festival",
+        "place": "Phuket Town, and Chinese communities elsewhere",
+        "when": "Usually late September or October, for nine days",
+        "months": [9, 10],
+        "text": "Phuket's Thai-Chinese community gives up meat for nine days, with processions in white, firecrackers and entranced mediums who pierce their cheeks. Yellow flags mark stalls serving vegan food (jay)."
+      },
+      {
+        "name": "Loy Krathong and Yi Peng",
+        "place": "Across Thailand; best known in Chiang Mai and Sukhothai",
+        "when": "The full moon of the twelfth Thai lunar month, usually in November",
+        "months": [11],
+        "text": "People float small rafts (krathong) of banana leaf, flowers and a candle on rivers and ponds, to thank the water goddess and let go of bad luck. In Chiang Mai, Yi Peng adds paper lanterns, though releasing them is now limited to set times and places."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Chiang Mai and the north",
+        "months": ["best", "best", "avoid", "good", "good", "good", "good", "good", "good", "good", "best", "best"],
+        "text": "Hills, old temples, night markets and mountain walks, a little cooler than Bangkok. December and January nights can be chilly. From late February to April, smoke from field and forest fires often makes the air unhealthy and hides the views, worst in March. The rains turn the hills green from June to October."
+      },
+      {
+        "name": "The Andaman coast",
+        "months": ["best", "best", "best", "good", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+        "text": "Phuket, Krabi, Ko Lanta and Ko Phi Phi have calm seas and dry weather from December to March. The south-west monsoon brings heavy rain and rough seas from May to October, wettest in September: red flags mean dangerous currents, some boat trips stop and many small resorts close. The Similan Islands national park usually closes from mid-May to mid-October."
+      },
+      {
+        "name": "The Gulf islands",
+        "months": ["good", "best", "best", "best", "good", "good", "good", "good", "good", "good", "avoid", "good"],
+        "text": "Ko Samui, Ko Pha Ngan and Ko Tao get their heaviest rain from October to December, worst in November, when rough seas can cancel ferries. From February to September they're mostly dry, the better choice in July and August, when the Andaman coast is wet."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "The wai: palms pressed together at chest height with a slight bow of the head, and \"sawasdee khrap\" (from a man) or \"sawasdee kha\" (from a woman). The younger or junior person wais first. Return a wai from adults; for children and staff serving you, a smile and a nod is enough. Many Thais will offer a foreigner a handshake instead. People are addressed by their first name with \"Khun\" before it (Khun Somchai).",
+    "etiquette": [
+      "Never criticise or joke about the King or the royal family, even online: insulting the monarchy is a serious crime, and foreigners have been jailed for it. Stand for the royal anthem played before films in cinemas.",
+      "The head is the most respected part of the body and the feet the lowest. Don't touch anyone's head, even a child's, don't point your feet at people or at Buddha images, and don't put them up on tables or chairs.",
+      "Take your shoes off before going into a temple building or a home. Don't climb on Buddha images or pose with them in ways that make fun of them.",
+      "Monks may not touch women or take things from their hands: women should give way to them and put an offering down rather than hand it over.",
+      "Losing your temper loses you respect: stay calm and smile through delays and mistakes.",
+      "E-cigarettes and vapes are illegal to bring in, sell or use, and visitors have been fined and held by police for carrying them."
+    ],
+    "tipping": "Not a Thai custom, but common in tourist areas: leave the small change at casual restaurants, about 10% at sit-down ones that add no service charge, and a little for massages, guides and porters. Many hotels and upmarket restaurants add a 10% service charge; \"++\" after a price means service and tax are added on top.",
+    "dress": "Light, loose cotton clothes for the heat. At temples, cover your shoulders and knees, with nothing tight or see-through: the Grand Palace in Bangkok is strictest and turns away people in shorts, short skirts or sleeveless tops. Some temples lend or sell sarongs at the gate. Keep swimwear for the beach, where topless sunbathing is frowned on.",
+    "food": [
+      {
+        "name": "Pad kra pao",
+        "text": "Minced pork or chicken stir-fried with holy basil and chilli, served on rice with a fried egg on top: the everyday lunch."
+      },
+      {
+        "name": "Tom yum",
+        "text": "A hot and sour soup scented with lemongrass, galangal and lime leaves, most often made with prawns (tom yum goong)."
+      },
+      {
+        "name": "Som tam",
+        "text": "Green papaya salad pounded in a mortar with chilli, lime, fish sauce and peanuts, from the north-east (Isan). Eaten with sticky rice and grilled chicken (gai yang)."
+      },
+      {
+        "name": "Khao soi",
+        "text": "The north's curry noodle soup, made with coconut milk, with soft egg noodles in the broth and crispy fried ones on top. Best in Chiang Mai."
+      },
+      {
+        "name": "Green curry (gaeng khiao wan)",
+        "text": "A coconut curry with green chillies, Thai basil and small round aubergines, usually with chicken; often hotter than it looks."
+      },
+      {
+        "name": "Mango sticky rice",
+        "text": "Ripe mango with sweet sticky rice and salted coconut cream, best in the mango season from about March to May."
+      }
+    ],
+    "phrases": {
+      "language": "Thai",
+      "intro": "Thai is tonal: a word's pitch changes its meaning, but people will understand you from the context. Men end polite phrases with khrap, women with kha, and leaving them off sounds curt. English is spoken in hotels and tourist areas.",
+      "items": [
+        { "phrase": "Sawasdee khrap / kha", "say": "sah-wat-DEE krap / kah", "meaning": "Hello; goodbye" },
+        { "phrase": "Khop khun khrap / kha", "say": "kop-KOON krap / kah", "meaning": "Thank you" },
+        { "phrase": "Khor thot", "say": "kor TOHT", "meaning": "Sorry; excuse me" },
+        { "phrase": "Mai pen rai", "say": "my pen RYE", "meaning": "Never mind; no problem" },
+        { "phrase": "Tao rai?", "say": "tow RYE", "meaning": "How much?" },
+        { "phrase": "Mai ao khrap / kha", "say": "my OW krap / kah", "meaning": "No thanks (I don't want it)" },
+        { "phrase": "Mai phet", "say": "my PET", "meaning": "Not spicy" },
+        { "phrase": "Aroi", "say": "ah-ROY", "meaning": "Delicious" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q869",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Thai baht (฿). Markets and street stalls usually want cash.",
+        "sources": [{ "property": "P38", "values": ["Q177882"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Thai; English is spoken in hotels and tourist areas, less so elsewhere",
+        "sources": [{ "property": "P37", "values": ["Q9217"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Mostly sockets that take both two flat pins (Type A) and two round pins (Type C); Types B, F and O (three round pins) are found too. 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456", "Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata lists Types A, B, C and F. It lacks Type O (three round pins), Thailand's national standard since 2006 (TIS 166-2549) and found in newer buildings, which the page adds."
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+7 all year, with no summer time",
+        "sources": [{ "property": "P421", "values": ["Q6940", "Q4806279"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "191 for police, 199 for fire and 1669 for an ambulance. The Tourist Police, on 1155, speak English.",
+        "sources": [{ "property": "P2852", "values": ["Q25648876", "Q25648881", "Q25743536"] }],
+        "note": "Wikidata lacks 1155, the Tourist Police's number; the page adds it because it answers in English."
+      },
+      {
+        "key": "callingCode",
+        "text": "+66",
+        "sources": [{ "property": "P474", "values": ["+66"] }]
+      }
+    ]
+  }
+}

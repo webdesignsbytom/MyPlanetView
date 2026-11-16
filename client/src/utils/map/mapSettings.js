@@ -26,12 +26,17 @@ export const DEFAULT_MAP_SETTINGS = {
   // The luggage tag under the map's title with the nearest goal's progress
   // (components/achievements/GoalTag.jsx)
   showGoalTag: true,
+  // The whole map page in greys (a greyscale filter: the sea's depths, the countries, the
+  // tags and every panel), except the photo viewer and slideshow, where photos keep their
+  // colour; the trip page's map too
+  blackAndWhite: false,
 };
 
 // Grouped as the settings panel shows them.
 // `detailed`: the Detailed map type always shows it, so its switch is locked on there.
 // `wideOnly`: only drawn on wide screens (lg and up), so its switch is hidden elsewhere.
 export const MAP_SETTING_TOGGLES = [
+  { key: 'blackAndWhite', label: 'Black and white', group: 'colour' },
   { key: 'showVisited', label: 'Countries you have been to', group: 'countries' },
   { key: 'showUnvisited', label: 'Countries you have not been to', group: 'countries' },
   { key: 'showAntarctica', label: 'Antarctica', group: 'countries' },
@@ -47,6 +52,7 @@ export const MAP_SETTING_TOGGLES = [
 ];
 
 export const MAP_SETTING_GROUPS = [
+  { id: 'colour', legend: 'Colour' },
   { id: 'countries', legend: 'Show on the map' },
   { id: 'map', legend: 'Map details' },
   { id: 'sky', legend: 'Sea, sky and hover' },

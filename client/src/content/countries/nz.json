@@ -1,0 +1,186 @@
+{
+  "code": "NZ",
+  "slug": "new-zealand",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Kia ora", "Aotearoa"],
+  "summary": "Mountains, fiords and volcanoes, Māori culture, and long road trips between them.",
+  "overview": [
+    "New Zealand is two main islands and many smaller ones, about three hours' flight across the Tasman Sea from Sydney. The North Island has Auckland, the capital Wellington, beaches, volcanoes and the steaming geothermal country around Rotorua. The South Island has the Southern Alps, glaciers, fiords such as Milford Sound, and lakeside towns like Queenstown and Wanaka. Māori culture and language, te reo Māori, are part of everyday life.",
+    "Most visitors hire a car or a campervan. Roads are good but narrow and winding, with many one-lane bridges, so journeys take longer than the distances suggest. Ferries cross Cook Strait between Wellington and Picton. Walking, called tramping here, is a national pastime: the Great Walks, multi-day tracks run by the Department of Conservation (DOC), have huts that book out months ahead for summer."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [12, 1, 2],
+        "text": "Warm rather than hot, with highs mostly around 20–25°C and light until about 9 pm. The busiest time, above all from Christmas to late January, when New Zealanders take their summer holidays: book campervans, ferries and Great Walk huts early."
+      },
+      {
+        "name": "Autumn",
+        "months": [3, 4, 5],
+        "text": "Often settled and sunny in March and April, with fewer visitors and calm days on the lakes. The trees of Central Otago and Arrowtown, near Queenstown, turn gold in April. May turns cooler and wetter."
+      },
+      {
+        "name": "Winter",
+        "months": [6, 7, 8],
+        "text": "Mild and wet in the north, cold in the south, with snow on the mountains. The ski season runs from about mid-June to early October around Queenstown and Wanaka and on Mount Ruapehu. Mountain roads can close in snow, and some tracks are only for walkers with winter gear."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Changeable and often windy, with lambs in the fields, snow still on the peaks and the waterfalls full of meltwater. The Great Walks' main season starts in late October."
+      }
+    ],
+    "weather": "Temperate and changeable: the weather can turn several times in a day, above all in the mountains. The far north is subtropical, with warm, humid summers. In the South Island the Southern Alps divide the very wet West Coast and Fiordland from the drier, sunnier east, Canterbury and Central Otago, which has hot summers and frosty winters. Near the coasts winters are mild, with snow mainly in the mountains. The sun's UV is strong in summer, and sunburn comes quickly.",
+    "festivals": [
+      {
+        "name": "Waitangi Day",
+        "place": "Across New Zealand; the main events are at the Treaty Grounds in Waitangi, Bay of Islands",
+        "when": "6 February",
+        "months": [2],
+        "text": "The national day, marking the signing of the Treaty of Waitangi (Te Tiriti o Waitangi) in 1840 between the British Crown and Māori chiefs. At the Treaty Grounds there's a dawn service, a display of waka (war canoes) and speeches by politicians that often turn into debate about the Treaty."
+      },
+      {
+        "name": "Anzac Day",
+        "place": "Across New Zealand",
+        "when": "25 April",
+        "months": [4],
+        "text": "Dawn services at war memorials across the country, remembering New Zealanders who served in war, first among them the Anzacs at Gallipoli in 1915. A public holiday, and most shops open only in the afternoon."
+      },
+      {
+        "name": "Matariki (Māori New Year)",
+        "place": "Across New Zealand",
+        "when": "A Friday in June or July, set for each year",
+        "months": [6, 7],
+        "text": "Marks the midwinter rising of the Matariki star cluster (the Pleiades) before dawn: a time to remember the dead, welcome the new year and share food. A public holiday since 2022, with dawn ceremonies, light shows and festivals."
+      },
+      {
+        "name": "World of WearableArt",
+        "place": "Wellington",
+        "when": "Usually late September into October",
+        "months": [9, 10],
+        "text": "A design competition staged as a big theatre show: garments that are part costume, part sculpture, made by designers from around the world."
+      },
+      {
+        "name": "Christmas and the summer holidays",
+        "place": "Across New Zealand",
+        "when": "25 December, with the main holidays from Christmas to late January",
+        "months": [12, 1],
+        "text": "Christmas falls in midsummer: barbecues, beaches and camping, while the pōhutukawa, known as the New Zealand Christmas tree, flowers red along the northern coasts. Campsites, ferries and campervans book up early."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Auckland and the north",
+        "text": "Subtropical: warm, humid summers and mild, wet winters that are rarely cold. The Bay of Islands, with Waitangi, and the beaches of the Coromandel are at their best from December to March."
+      },
+      {
+        "name": "Rotorua, Taupō and Tongariro",
+        "text": "Geothermal parks, Māori cultural evenings and the Tongariro Alpine Crossing, a long day walk over volcanic country. It suits summer and autumn best: in winter the crossing is covered in snow and ice and becomes a mountaineering trip, best done with a guide."
+      },
+      {
+        "name": "The South Island's mountains and lakes",
+        "text": "Queenstown, Wanaka, Aoraki/Mount Cook and Fiordland. Summer is the season for walking and winter for skiing. Fiordland and the West Coast are very wet (Milford Sound gets more than six metres of rain a year), but rain fills its waterfalls, and the sandflies bite all summer."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and first names. \"Kia ora\" (hello, and thanks) is used by everyone, Māori or not. On a marae, a Māori meeting ground, guests are welcomed with a ceremony called a pōwhiri, and may then greet their hosts with the hongi, pressing noses and foreheads together.",
+    "etiquette": [
+      "Border biosecurity is strict: declare all food, plants and animal products, and clean boots, tents and other outdoor gear before you arrive, or you can be fined on the spot.",
+      "On a marae, wait to be invited on, take off your shoes before going into the meeting house (wharenui), and don't eat or drink inside it.",
+      "Don't sit on tables, and avoid touching people's heads: in Māori custom the head is sacred (tapu), and food is kept apart from the body.",
+      "The weather in the mountains changes fast. Check the forecast and track conditions with DOC, and tell someone your plans before a tramp.",
+      "Camp only where it's allowed: many sites take only certified self-contained vehicles, with their own toilet."
+    ],
+    "tipping": "Not expected: service is included, and locals rarely tip. Leaving around 10% for very good service in a restaurant is welcome but optional. Some cafés and restaurants add a surcharge on public holidays.",
+    "dress": "Casual almost everywhere, even in good restaurants. Pack layers and a waterproof jacket in every season, sunscreen and a hat for the strong summer sun, and insect repellent for the sandflies on the West Coast and in Fiordland. Wear neat clothes to visit a marae; some ask women to wear a skirt or dress for the welcome.",
+    "food": [
+      {
+        "name": "Hāngī",
+        "text": "Meat, kūmara (sweet potato) and other vegetables steamed for hours in an earth oven over hot stones. Try it at a Māori cultural evening in Rotorua."
+      },
+      {
+        "name": "Lamb",
+        "text": "There are far more sheep than people, and roast lamb is the classic family meal."
+      },
+      {
+        "name": "Seafood",
+        "text": "Green-lipped mussels, Bluff oysters in autumn and winter, and crayfish (rock lobster) from roadside stalls at Kaikōura."
+      },
+      {
+        "name": "Whitebait fritters",
+        "text": "Tiny young fish bound with egg and fried, a West Coast treat in spring, the whitebait season."
+      },
+      {
+        "name": "Hokey pokey",
+        "text": "Vanilla ice cream with crunchy pieces of honeycomb toffee, sold everywhere."
+      },
+      {
+        "name": "Pavlova",
+        "text": "A meringue with a crisp shell and a soft middle, topped with cream and kiwifruit or berries. Australia claims it too."
+      }
+    ],
+    "phrases": {
+      "language": "New Zealand English and Māori",
+      "intro": "English is the everyday language, and Māori words run through it, in greetings, place names and on signs. In Māori, \"wh\" usually sounds like \"f\", and a line over a vowel (ā) makes it long.",
+      "items": [
+        { "phrase": "Kia ora", "say": "kee-ah OR-ah", "meaning": "Hello; thanks (Māori, used by everyone)" },
+        { "phrase": "Ka kite anō", "say": "kah KEE-teh ah-NAW", "meaning": "See you again (Māori)" },
+        { "phrase": "Whānau", "say": "FAH-now", "meaning": "Family, in the wide sense (Māori)" },
+        { "phrase": "Kai", "say": "kye", "meaning": "Food (Māori)" },
+        { "phrase": "Tramping", "meaning": "Hiking" },
+        { "phrase": "Dairy", "meaning": "Corner shop" },
+        { "phrase": "Jandals", "meaning": "Flip-flops" },
+        { "phrase": "Sweet as", "meaning": "Fine; no problem" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q664",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "New Zealand dollar ($). Cards, especially contactless, are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q1472704"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, Māori (te reo Māori) and New Zealand Sign Language. Māori and NZ Sign Language are official by law; English is the language of everyday life.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q36451", "Q36239"] }],
+        "note": "Wikidata lists English as an official language. It's the main language in practice, but no law makes it official, unlike Māori (1987) and New Zealand Sign Language (2006)."
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (two flat pins in a V, often with a third earth pin), 230 V. Most sockets have their own on/off switch.",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "New Zealand Standard Time, UTC+12, and UTC+13 from the last Sunday in September to the first Sunday in April. The Chatham Islands, about 800 km east, are 45 minutes ahead: UTC+12:45, and UTC+13:45 in summer.",
+        "sources": [{ "property": "P421", "values": ["Q7105", "Q7118", "Q63285976", "Q7110", "Q7127", "Q63285977"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "111 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q4547309"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+64",
+        "sources": [{ "property": "P474", "values": ["+64"] }]
+      }
+    ]
+  }
+}

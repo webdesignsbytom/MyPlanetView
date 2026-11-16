@@ -23,7 +23,8 @@
 //     the client shows with each photo.
 // A landmark already in that file whose images exist keeps its pick (so a re-run only
 // fills gaps); --only redoes the slugs given, --refresh redoes them all. Downloads are
-// cached in --cache (default: the OS temp folder).
+// cached in --cache (default: the OS temp folder), and so are the APIs' answers
+// (wikidata.json, lead.json, commons.json there): delete those for fresh ones.
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -305,43 +306,52 @@ async function main() {
   const todo = landmarks.filter((landmark) => !kept.has(landmark.slug));
   console.log(`${landmarks.length} landmarks: ${kept.size} kept, ${todo.length} to find`);
 
-  // Candidates per landmark, in order of preference
+  // Candidates per landmark, in order of preference: Wikidata's images first; then, for the
+  // landmarks none of those suit, the English Wikipedia articles' lead images
+  await mkdir(cacheDir, { recursive: true });
   const items = [...new Set(todo.flatMap((landmark) => [landmark.item, landmark.site].filter(Boolean)))];
-  const facts = items.length ? await wikidataFacts(items) : new Map();
-  const articles = [...new Set([...facts.values()].map((fact) => fact.article).filter(Boolean))];
-  const lead = articles.length ? await leadImages(articles) : new Map();
-  const candidates = new Map();
-  for (const landmark of todo) {
-    const own = facts.get(landmark.item) || { images: [], aerial: [] };
-    const site = (landmark.site && facts.get(landmark.site)) || { images: [], aerial: [] };
-    const list = [
-      OVERRIDES[landmark.slug],
-      ...own.images,
-      ...site.images,
-      ...own.aerial,
-      ...site.aerial,
-      own.article && lead.get(own.article),
-      site.article && lead.get(site.article),
-    ].filter(Boolean);
-    candidates.set(landmark.slug, { list: [...new Set(list)] });
-  }
-  const files = [...new Set([...candidates.values()].flatMap((c) => c.list))];
-  console.log(`checking ${files.length} candidate files on Commons`);
-  const info = await fileInfo(files);
-
-  // The pick per landmark
+  const facts = await wikidataFacts(items, await loadStore('wikidata'));
+  console.log(`wikidata: ${items.length} items`);
+  const none = { images: [], aerial: [], article: null };
+  const commons = await loadStore('commons');
   const picks = new Map();
-  const missing = [];
+  const pickFrom = async (lists) => {
+    const files = [...new Set([...lists.values()].flat())];
+    const info = await fileInfo(files, commons);
+    for (const [slug, list] of lists) {
+      const pick = list.map((file) => info.get(file)).find(usable);
+      if (pick) picks.set(slug, pick);
+    }
+  };
+
+  const first = new Map();
   for (const landmark of todo) {
-    const pick = candidates.get(landmark.slug).list.map((file) => info.get(file)).find(usable);
-    if (pick) picks.set(landmark.slug, pick);
-    else missing.push(`${landmark.slug} (${landmark.item}${landmark.site ? `, site ${landmark.site}` : ''})`);
+    const own = facts.get(landmark.item) || none;
+    const site = (landmark.site && facts.get(landmark.site)) || none;
+    const list = [OVERRIDES[landmark.slug], ...own.images, ...site.images, ...own.aerial, ...site.aerial].filter(Boolean);
+    first.set(landmark.slug, [...new Set(list)]);
   }
-  console.log(`picked ${picks.size}, none found for ${missing.length}`);
+  await pickFrom(first);
+  console.log(`from Wikidata: ${picks.size} of ${todo.length}`);
+
+  const left = todo.filter((landmark) => !picks.has(landmark.slug));
+  const articleOf = (q) => (q && (facts.get(q) || none).article) || null;
+  const titles = [...new Set(left.flatMap((landmark) => [articleOf(landmark.item), articleOf(landmark.site)]).filter(Boolean))];
+  const lead = await leadImages(titles, await loadStore('lead'));
+  const second = new Map(
+    left.map((landmark) => [
+      landmark.slug,
+      [...new Set([articleOf(landmark.item), articleOf(landmark.site)].map((title) => title && lead.get(title)).filter(Boolean))],
+    ]),
+  );
+  await pickFrom(second);
+  const missing = todo
+    .filter((landmark) => !picks.has(landmark.slug))
+    .map((landmark) => `${landmark.slug} (${landmark.item}${landmark.site ? `, site ${landmark.site}` : ''})`);
+  console.log(`with Wikipedia's lead images: ${picks.size}, none found for ${missing.length}`);
 
   // Download and convert
   await mkdir(outDir, { recursive: true });
-  await mkdir(cacheDir, { recursive: true });
   const made = new Map();
   const failed = [];
   let done = 0;

@@ -53,7 +53,11 @@ export const canManage = (role) => role === ROLES.OWNER;
 export const canDeleteTrip = (mapRole) => canEdit(mapRole);
 
 /** Viewers never see hidden photos. */
-export const canSeePhoto = (role, photo) => canView(role) && (!photo?.hidden || canEdit(role));
+// A video shows below editor only once Stream has converted it (videoState READY)
+export const canSeePhoto = (role, photo) =>
+  canView(role) &&
+  (!photo?.hidden || canEdit(role)) &&
+  (photo?.kind !== 'VIDEO' || photo.videoState === 'READY' || canEdit(role));
 
 /** GPS coordinates and originals: editors and the owner only. */
 export const canSeeLocation = (role) => canEdit(role);

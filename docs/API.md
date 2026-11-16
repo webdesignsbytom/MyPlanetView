@@ -116,7 +116,8 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
   - from my_planet, the booleans `showVisited` and `showUnvisited` (when off, those countries fade back on the map) and `showUserBanner` (the map's banner at the top);
   - `showAntarctica` (on unless set to `false`): draws Antarctica and the two South Poles, and extends the map down to them. It changes only the view, never visits or stats;
   - `showMoments` (on unless set to `false`): the pinned-note mark beside places with moments. Only the view changes;
-  - `showGoalTag` (on unless set to `false`): the luggage tag under the map's title with the nearest unmet goal (see "Badges and goals").
+  - `showGoalTag` (on unless set to `false`): the luggage tag under the map's title with the nearest unmet goal (see "Badges and goals");
+  - `blackAndWhite` (off unless set to `true`): the map page, and the trip page's map, in greys. Only the view changes.
 - **Unknown keys** are dropped. A known key with the wrong kind of value is refused (400).
 - **The whole object is replaced** on each `PUT`. Send every setting, not just the one that changed.
 
@@ -221,19 +222,25 @@ A trip shared between people's accounts: the organiser's trip, on the organiser'
 
 ## Videos
 
-First Class videos (docs/FEATURE-PLAN.md, "Videos (First Class)"). A video is a `Photo` row with `kind: 'VIDEO'` and `durationS`, so galleries, order, hidden, country, trip, moments and slideshows treat it as a photo. Its file is its `ORIGINAL` variant; its `THUMB` and `DISPLAY` are poster frames the browser grabs onto a canvas.
+First Class videos (docs/FEATURE-PLAN.md, "Videos (First Class)"), kept in **Cloudflare Stream**, which converts each one so every browser plays it (decided 16 Nov 2026). A video is a `Photo` row with `kind: 'VIDEO'`, `durationS`, its Stream id (`streamUid`), its conversion state (`videoState`: `PROCESSING`, `READY` or `FAILED`) and its size (`videoBytes`); it has no files in R2 (no PhotoVariants). Galleries, order, hidden, country, trip, moments and slideshows treat it as a photo.
 
-- **Uploading:** the photo upload (`POST /maps/:mapId/photos/presign`, then `POST /maps/:mapId/photos`) with `kind: 'VIDEO'` and `durationS` (whole seconds, 1–180, read by the browser) in both bodies:
-  - only on a map whose owner is on **First Class** (403 `Videos are part of First Class. Upgrade this map’s owner to add them.`);
-  - exactly three files: `THUMB` and `DISPLAY` (images, as a photo's) and `ORIGINAL` (`video/mp4` or `video/quicktime`, at most 500 MB, signed into the upload URL like every file); anything else → 400 (a wrong length → 400 `A video can be up to 3 minutes long.`, too big → 413);
-  - **no position:** `latitude`/`longitude` are ignored and stored null (CHECK `photo_video_no_location`); the uploader chooses the country (`countryCode`), and no landmark is suggested;
-  - **the browser overwrites the file's location metadata before upload** (the `©xyz` atom and QuickTime's `com.apple.quicktime.location.ISO6709` value, at the same length, so nothing else in the file moves). If it can't read the file well enough to check, it doesn't upload it. The server never reads the file;
-  - **20 videos per country** on each map, apart from the photo cap (409 `20 of 20 videos of Iceland on this map.`); videos count towards the storage safety net, not the photo cap. `kind` other than `PHOTO`/`VIDEO` → 400.
-- **Reading:** list items and `GET /photos/:photoId` carry `kind` and `durationS`. A video's `videoUrl` (its file, signed like the rest) is in its detail and, with `display=1`, in lists, for **everyone who can see it**, viewers and share links included: it's the only copy there is, and its location was overwritten before upload. Editors also get it as `originalUrl` (`bestCopy: 'ORIGINAL'`).
-- **Not in the passport:** a video can't be matched to a landmark (400 `Landmark stamps come from photos, not videos.`), and the stamps count photos only.
-- **Map fields:** `uploadRules.videos` is `{ perCountry, maxSeconds, maxBytes, contentTypes }` on a First Class map and null on the others; owners and editors also get `videoCounts` (videos per country) beside `photoCounts` (which now counts photos only).
-- **The database** holds the shape too: CHECK `photo_video_duration` (a video has a length of 1–600 s, a photo none).
-- **Playback:** R2 answers range requests, so a `<video>` can seek. iPhones record HEVC, which some browsers can't play: the client checks `canPlayType` and offers "Download to watch".
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `POST /maps/:mapId/videos/upload` | editor (of the map, or of the trip in `tripId`), **verified** | `{ bytes, contentType, durationS, tripId?, countryCode? }` → `{ photoId, uploadUrl, ticket, expiresAt }`. `uploadUrl` is a Stream **tus** upload (resumable, no credentials) the browser sends the file to; it lasts 6 hours. Stream itself refuses a video over 181 seconds. Rate limited with the photo presigns. |
+| `POST /maps/:mapId/videos` | the same person, **verified** | `{ ticket, countryCode?, caption?, takenAt? }` → 201 `{ photo }`: the finished upload, checked with Stream, saved as a video (usually `PROCESSING`). The country cap and the storage safety net are checked in the save's transaction (refused → 409, and the Stream video is deleted). |
+| `POST /api/videos/stream-webhook` | Stream only | Stream's notice that a video is ready or failed (raw body; `Webhook-Signature: time=…,sig1=…`, the HMAC-SHA256 of `<time>.<body>` with `CLOUDFLARE_STREAM_WEBHOOK_SECRET`; older than 5 minutes or wrong → 400; no secret set → 503). The row takes the state, the length and the size. |
+
+- **Rules:** only on a map whose owner is on **First Class** (403 `Videos are part of First Class. Upgrade this map’s owner to add them.`); `contentType` `video/mp4` or `video/quicktime`, `bytes` up to 500 MB (413 above), `durationS` 1–180 (400 `A video can be up to 3 minutes long.`); **20 videos per country** on each map, apart from the photo cap (409 `20 of 20 videos of Iceland on this map.`); videos count towards the storage safety net by their size, not towards the photo cap. A locked map → 403. Without Stream's settings (the `CLOUDFLARE_*` keys) both routes answer **503** `Videos aren’t set up yet.`
+- **The ticket** is signed by the server (HMAC with `BETTER_AUTH_SECRET`) and names the video, the map, the trip, the person and the photo id: saving with someone else's ticket, another map's, a changed one or an expired one → 400 `That upload has expired or wasn’t started here. Start it again.`; an upload Stream hasn't received yet → 400 `The video hasn’t finished uploading yet.`; one Stream couldn't read → 400 (deleted); saving twice → 409.
+- **No position:** a video keeps no latitude or longitude (CHECK `photo_video_no_location`); the uploader chooses its country, and no landmark is suggested. The browser also overwrites the file's location metadata before upload (the `©xyz` atom and QuickTime's location key), and Stream's converted copies keep no metadata, GPS tracks included.
+- **Converting:** a video is `PROCESSING` until Stream's notice says `READY` (or `FAILED`). When an editor opens one still processing, the server asks Stream too, so it catches up without the webhook.
+- **Who sees it:** the owner and editors see every video, with `videoState`; viewers and share links only `READY` ones (a processing one answers 404 and isn't listed).
+- **Reading:** list items and `GET /photos/:photoId` carry `kind` and `durationS`. A ready video's `thumbUrl` (400 px) is Stream's thumbnail; its detail, and list items with `display=1`, also carry `displayUrl` (1,080 px) and `videoUrl`, an **HLS** link (`…/manifest/video.m3u8`; Safari plays it natively, other browsers through hls.js). Each link holds a token signed on the server with Stream's signing key (`CLOUDFLARE_STREAM_SIGNING_KEY_*`, an RS256 JWT for that video), valid from the start of the hour for two hours, like the photo links. Never coordinates, files or the Stream id.
+- **Deleting** a video deletes its row, then the Stream video (a failure is left for the daily clean-up). The daily clean-up deletes any Stream video older than 6 hours that no row points at (an upload never saved, a video deleted with its map or account).
+- **Not in the passport:** a video can't be matched to a landmark (400 `Landmark stamps come from photos, not videos.`), and stamps count photos only. The photo upload refuses `kind: 'VIDEO'` (400).
+- **Map fields:** `uploadRules.videos` is `{ perCountry, maxSeconds, maxBytes, contentTypes }` on a First Class map and null on the others; owners and editors also get `videoCounts` beside `photoCounts` (photos only).
+- **The database** holds the shape too: CHECK `photo_video_duration` (a video has a length of 1–600 s, a photo none) and `photo_video_stream` (a video has its Stream id, state and size, a photo none).
+- **Setting up** (the user): an API token with Stream: Edit, the account id and customer code, then `node src/services/stream/createSigningKey.js` and `node src/services/stream/setWebhook.js <https address>` (each prints the env values to set).
 
 ## Moments
 

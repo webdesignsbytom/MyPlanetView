@@ -1,0 +1,195 @@
+{
+  "code": "MX",
+  "slug": "mexico",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bienvenidos", "México"],
+  "summary": "Maya ruins, colonial towns, Caribbean and Pacific beaches, and tacos on almost every corner.",
+  "overview": [
+    "Mexico runs from the deserts on the US border to the rainforests and Maya ruins of the south. Mexico City, high on the central plateau, has the Aztec Templo Mayor, the National Museum of Anthropology and food stalls on every block. The highlands have colonial towns such as Oaxaca and San Miguel de Allende; the Yucatán has Chichén Itzá, swimming holes called cenotes and the beaches of Cancún and Tulum; and the Pacific coast runs from Baja California to Oaxaca.",
+    "Long-distance buses are comfortable and frequent, and a new train, the Tren Maya, runs around the Yucatán Peninsula. Safety varies a lot from state to state, so read your government's travel advice before you plan a route, and keep to well-used roads by day."
+  ],
+  "whenToGo": {
+    "stripLabel": "Most of the country, taken together. The highlands, the Yucatán and the Pacific coast differ, and each has a strip of its own below.",
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [11, 12, 1, 2, 3],
+        "text": "Sunny and dry almost everywhere: warm on the coasts, mild by day and chilly at night in the highlands. The busiest time on the beaches, especially at Christmas, New Year and spring break in March."
+      },
+      {
+        "name": "Hot season",
+        "months": [4, 5],
+        "text": "The hottest weeks before the rains, above all in the Yucatán and the lowlands, where 35°C is common. Holy Week and Easter fill hotels and buses as Mexicans head for the beach."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Short, heavy downpours, usually in the afternoon or evening after a sunny morning, and green countryside. Hurricanes are possible on both coasts from about June to November, most of all from August to October."
+      }
+    ],
+    "weather": "Height matters as much as latitude. The central highlands, with Mexico City at about 2,240 m, are mild all year, with cool nights; the coasts and the Yucatán are hot and humid; and the north is desert, very hot in summer and cold on winter nights. Most of the country has a dry season from November to April and a rainy season from about June to October.",
+    "festivals": [
+      {
+        "name": "Carnaval",
+        "place": "Veracruz and Mazatlán, among others",
+        "when": "The days before Ash Wednesday, in February or early March",
+        "months": [2, 3],
+        "text": "Parades of floats, music and dancing along the seafront, and parties late into the night."
+      },
+      {
+        "name": "Semana Santa (Holy Week)",
+        "place": "Across Mexico",
+        "when": "The week before Easter, in March or April",
+        "months": [3, 4],
+        "text": "Processions and passion plays, as in Taxco and Mexico City's Iztapalapa, and packed beaches and buses."
+      },
+      {
+        "name": "Guelaguetza",
+        "place": "Oaxaca",
+        "when": "Two Mondays in the second half of July, usually the two after 16 July",
+        "months": [7],
+        "text": "Dance groups from every region of Oaxaca state perform in costume in a hillside auditorium above the city."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Mexico, above all Mexico City",
+        "when": "The night of 15 September and 16 September",
+        "months": [9],
+        "text": "At 11 pm on the 15th, the president gives the \"grito\", the cry of independence, to a packed Zócalo, and town squares everywhere echo it. Parades follow on the 16th."
+      },
+      {
+        "name": "Día de Muertos (Day of the Dead)",
+        "place": "Across Mexico, above all Oaxaca, Mexico City and Michoacán",
+        "when": "Late October to 2 November, the main days 1 and 2 November",
+        "months": [10, 11],
+        "text": "Families build altars with marigolds, candles, photos and the dead's favourite food, and keep vigil in cemeteries. Book rooms in Oaxaca well ahead."
+      },
+      {
+        "name": "Day of the Virgin of Guadalupe",
+        "place": "Mexico City",
+        "when": "12 December",
+        "months": [12],
+        "text": "Millions of pilgrims walk to the Basilica of Guadalupe in the north of the city, many arriving through the night of the 11th."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Mexico City and the central highlands",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "best", "best"],
+        "text": "Mild all year at this height: sunny days and cool nights in the dry season, and heavy afternoon showers from June to September. Puebla, Guanajuato and Oaxaca follow the same pattern. Smog is worst in the warm, dry spring."
+      },
+      {
+        "name": "The Yucatán and the Caribbean coast",
+        "months": ["best", "best", "best", "good", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+        "text": "Cancún, Tulum, Mérida and the Maya sites are hot all year. December to March is dry and the most comfortable; April and May are the hottest, often above 35°C inland. Hurricanes are most likely in September and October, and in some years sargassum seaweed piles up on the Caribbean beaches from spring to early autumn."
+      },
+      {
+        "name": "The Pacific coast and Baja California",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "best", "best"],
+        "text": "Puerto Vallarta, Mazatlán, Los Cabos and the Oaxaca coast are dry and sunny from November to May, and whales winter offshore and in Baja's lagoons, roughly January to March. Summer is hot and humid, with heavy rain on the mainland coast, and hurricanes are most likely from August to October."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you meet someone. Between friends, women, and a man and a woman, greet with one kiss on the right cheek; men often hug, with a pat on the back. Greet people as you walk into a shop, a lift or a waiting room: \"buenos días\" in the morning, \"buenas tardes\" from midday.",
+    "etiquette": [
+      "Don't drink the tap water. Bottled and filtered water is everywhere, and ice in restaurants and bars is usually made from purified water.",
+      "In many places, toilet paper goes in the bin, not the toilet: look for a sign.",
+      "Shower before swimming in a cenote, and skip sunscreen and insect repellent there: many cenotes ban them to protect the water.",
+      "Pay in pesos rather than dollars, even where dollars are taken: the rate you'll get is usually poor.",
+      "In Mexico City, use an app taxi or an official taxi rank (sitio) rather than hailing cars on the street, especially at night.",
+      "It's polite to wish people \"buen provecho\" (enjoy your meal) as you pass their table or leave your own."
+    ],
+    "tipping": "Expected. About 10% in casual restaurants and 15% in smarter ones, as service is rarely added to the bill; a few pesos for supermarket baggers and petrol-station attendants (every station is full-service); and around 10% for guides. Taxi drivers aren't usually tipped, but rounding up is welcome.",
+    "dress": "Casual, if a little smarter in Mexico City, where locals rarely wear shorts in town. Cover your shoulders and take off your hat in churches. Bring a warm layer for evenings in the highlands, and sun protection everywhere.",
+    "food": [
+      {
+        "name": "Tacos",
+        "text": "Soft corn tortillas with every kind of filling, from street stands day and night. In Mexico City, try al pastor: pork marinated with chillies, cooked on a vertical spit and topped with pineapple."
+      },
+      {
+        "name": "Mole",
+        "text": "Rich sauces of dried chillies, spices, nuts and often chocolate, ground together and served over chicken or turkey. Puebla's mole poblano and Oaxaca's black mole are the best known."
+      },
+      {
+        "name": "Cochinita pibil",
+        "text": "The Yucatán's slow-cooked pork, marinated in achiote and bitter orange and wrapped in banana leaves, eaten in tacos or rolls with pink pickled onions."
+      },
+      {
+        "name": "Chiles en nogada",
+        "text": "Poblano chillies stuffed with meat and fruit, covered in walnut sauce and pomegranate seeds, in the green, white and red of the flag. A Puebla dish of August and September, around Independence Day."
+      },
+      {
+        "name": "Tamales",
+        "text": "Corn dough with a filling, steamed in a corn husk or, in the south, a banana leaf, and sold from street carts in the morning."
+      },
+      {
+        "name": "Tequila and mezcal",
+        "text": "Both are distilled from agave. Tequila comes from blue agave, mainly in Jalisco; mezcal, smoky from agave roasted in pits, mostly from Oaxaca. Locals sip them slowly."
+      }
+    ],
+    "phrases": {
+      "language": "Mexican Spanish",
+      "intro": "English is spoken in the resorts and by many people in tourism, less so elsewhere. Mexican Spanish has no lisp: gracias is said with an s.",
+      "items": [
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "Por favor", "say": "por fah-BOR", "meaning": "Please" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "Disculpe", "say": "dees-KOOL-peh", "meaning": "Excuse me" },
+        { "phrase": "¿Mande?", "say": "MAHN-deh", "meaning": "Pardon? (the Mexican way to ask someone to repeat)" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "La cuenta, por favor", "say": "lah KWEN-tah por fah-BOR", "meaning": "The bill, please" },
+        { "phrase": "¡Buen provecho!", "say": "bwen proh-BEH-choh", "meaning": "Enjoy your meal" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q96",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Mexican peso (MXN). Prices are written with a $ sign, like dollars, so check which you're being quoted.",
+        "sources": [{ "property": "P38", "values": ["Q4730"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. The law also makes Mexico's Indigenous languages national languages, with equal standing; Nahuatl and Yucatec Maya are the most widely spoken.",
+        "sources": [{ "property": "P37", "values": ["Q1321", "Q13300", "Q13354"] }],
+        "note": "No law names an official language: a 2003 law makes Spanish and the Indigenous languages national languages. Wikidata lists Spanish, Nahuatl and Yucatec Maya as official."
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins), 127 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["127"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Four zones: Southeast (UTC−5) in Quintana Roo, with Cancún and Tulum; Central (UTC−6) in most of the country, Mexico City included; Pacific (UTC−7) in the north-west, including Sonora, Mazatlán and Los Cabos; and Northwest (UTC−8) in Baja California. Most of Mexico stopped changing its clocks in 2022; Baja California and towns along the US border still move with the US, from March to early November.",
+        "sources": [{ "property": "P421", "values": ["Q941023", "Q2086913", "Q3134980", "Q847142"] }],
+        "note": "Wikidata names the zones by their US names (Eastern, Central, Mountain, Pacific); in Mexico they're the Southeast, Central, Pacific and Northwest zones. The page adds the end of summer time in 2022 and the border exception."
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance. 078 reaches the Ángeles Verdes (Green Angels), the tourism ministry's free roadside help and tourist information line.",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }],
+        "note": "Wikidata lists only 911; the page adds 078, the Ángeles Verdes line of the Secretaría de Turismo (checked 16 Nov 2026)."
+      },
+      {
+        "key": "callingCode",
+        "text": "+52",
+        "sources": [{ "property": "P474", "values": ["+52"] }]
+      }
+    ]
+  }
+}

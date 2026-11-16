@@ -1,0 +1,210 @@
+{
+  "code": "AU",
+  "slug": "australia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["G'day", "Australia"],
+  "summary": "Beach cities, reef, rainforest and red desert, far apart.",
+  "overview": [
+    "Australia is nearly as big as the mainland United States, and most of its people live along the coast, above all in the south-east. Visitors usually pair Sydney or Melbourne with one or two of the great natural sights: the Great Barrier Reef off Queensland, Uluru in the red desert of the Centre, the rainforest and wetlands of the tropical north, or the wild coasts of Tasmania and Western Australia.",
+    "The distances mean flying between regions, then hiring a car or a campervan. Aboriginal and Torres Strait Islander peoples have lived here for tens of thousands of years, and tours led by Traditional Owners, at Uluru, in Kakadu and elsewhere, are the best way to learn about their cultures."
+  ],
+  "whenToGo": {
+    "stripLabel": "The country taken together: autumn and spring suit most regions at once. The regions below differ a lot, and each has a strip of its own.",
+    "months": ["good", "good", "best", "best", "best", "good", "good", "good", "best", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [12, 1, 2],
+        "text": "Beach weather in the south, and the long school holidays from mid-December to late January, the busiest weeks of the year. Heatwaves and bushfires are a risk in the south-east and the west; the tropical north has its wet season, and the Centre often passes 40°C."
+      },
+      {
+        "name": "Autumn",
+        "months": [3, 4, 5],
+        "text": "Warm, settled days in the south and fewer crowds. The wet season ends in the north in April, leaving Kakadu's waterfalls at their fullest, and the Centre cools to comfortable days."
+      },
+      {
+        "name": "Winter",
+        "months": [6, 7, 8],
+        "text": "Cool and wet in Melbourne, Tasmania and Perth, mild in Sydney, with skiing in the Australian Alps from about June to September. The tropical north is dry and warm, its best season, and the Centre has sunny days and cold nights. Humpback whales pass along both coasts from about June to November."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Warm days in the south and wildflowers in Western Australia. The tropical north turns hot and humid from October, the \"build-up\" before the rains, and the Centre heats up again by November."
+      }
+    ],
+    "weather": "Tropical in the north, temperate in the south and dry in the vast interior. The north has a wet season, roughly November to April, with monsoon downpours and the chance of cyclones, and a warm, sunny dry season from May to October. The south has hot summers and cool rather than cold winters, with snow only in the Alps and Tasmania's highlands. The sun's UV is strong all year, so use sunscreen, a hat and shade.",
+    "festivals": [
+      {
+        "name": "Australia Day",
+        "place": "Across Australia",
+        "when": "26 January",
+        "months": [1],
+        "text": "A public holiday with citizenship ceremonies, barbecues and fireworks. For many Aboriginal and Torres Strait Islander people it marks the start of British colonisation in 1788, and it's also a day of protest marches."
+      },
+      {
+        "name": "Sydney Gay and Lesbian Mardi Gras",
+        "place": "Sydney",
+        "when": "The parade is usually on a Saturday in late February or early March",
+        "months": [2, 3],
+        "text": "Weeks of events end in a night-time parade of floats and dancers along Oxford Street."
+      },
+      {
+        "name": "Anzac Day",
+        "place": "Across Australia",
+        "when": "25 April",
+        "months": [4],
+        "text": "A public holiday remembering Australians who served in war, first among them the Anzacs at Gallipoli in 1915: dawn services at war memorials, then marches of veterans."
+      },
+      {
+        "name": "Vivid Sydney",
+        "place": "Sydney",
+        "when": "Usually late May to mid-June",
+        "months": [5, 6],
+        "text": "Light shows and projections on the Opera House sails and around the harbour each evening, with music and talks. Walking the light trail is free."
+      },
+      {
+        "name": "Melbourne Cup",
+        "place": "Flemington Racecourse, Melbourne",
+        "when": "The first Tuesday of November",
+        "months": [11],
+        "text": "Australia's best-known horse race and a public holiday in Melbourne. Much of the country stops to watch it, and racegoers dress up, hats and all."
+      },
+      {
+        "name": "New Year's Eve",
+        "place": "Sydney Harbour",
+        "when": "31 December",
+        "months": [12],
+        "text": "Fireworks over the Harbour Bridge, at 9 pm for families and again at midnight. The best spots round the harbour fill up hours ahead, and some need tickets."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Sydney, Melbourne and Tasmania",
+        "months": ["good", "good", "best", "best", "good", "good", "good", "good", "good", "best", "best", "good"],
+        "text": "Warm to hot summers, with heatwaves and a bushfire risk; mild autumns and springs, the most comfortable seasons; cool winters, wetter in Melbourne, where the weather can swing from hot to cool in a day. Tasmania is cooler, and best from December to March for walks such as the Overland Track."
+      },
+      {
+        "name": "The tropical north",
+        "months": ["avoid", "avoid", "avoid", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+        "text": "Cairns and the Great Barrier Reef, Darwin, Kakadu and the Kimberley. The dry season, May to October, is warm and sunny. The wet brings humid heat, downpours and the chance of cyclones, worst from January to March, when floods close roads and much of Kakadu. Box jellyfish are in the sea from about November to May: swim in a stinger suit or a netted area."
+      },
+      {
+        "name": "The Red Centre",
+        "months": ["avoid", "avoid", "good", "best", "best", "good", "good", "best", "best", "good", "good", "avoid"],
+        "text": "Uluru, Kata Tjuta, Alice Springs and the MacDonnell Ranges. From December to February days often pass 40°C and parts of some walks close in the heat, so walk at dawn. Winter days are warm and sunny, but nights fall below freezing. Flies are thick in the warmer months: a head net helps."
+      },
+      {
+        "name": "Perth and the south-west",
+        "months": ["good", "good", "best", "best", "good", "good", "good", "good", "best", "best", "best", "good"],
+        "text": "Hot, dry summers, often above 35°C, cooled on many afternoons by a sea breeze (the \"Fremantle Doctor\"), and mild, wet winters. Wildflowers bloom from about August to November, and the Margaret River wine region is a few hours' drive south."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Informal: a handshake when you meet, then first names straight away. \"G'day\" and \"How are you going?\" are greetings rather than questions, and \"Good, thanks\" is all the answer needed.",
+    "etiquette": [
+      "On the beach, swim between the red and yellow flags, where lifeguards watch the water. Rip currents are the biggest danger on Australian beaches.",
+      "In the tropical north, crocodiles live in rivers, estuaries and along some beaches: never swim where warning signs are posted.",
+      "Outback roads have long stretches with no fuel or phone signal. Carry water, fill up whenever you can, and avoid driving at dawn, dusk and night, when kangaroos are on the roads.",
+      "In a pub, friends buy drinks in rounds (a \"shout\"): if you join one, buy yours when it's your turn.",
+      "Uluru is sacred to the Anangu, its Traditional Owners. Climbing it has been banned since October 2019, and some places around its base mustn't be photographed, as signs show.",
+      "Food, plants, seeds and animal products are strictly controlled at the border: declare them all on your arrival card."
+    ],
+    "tipping": "Not expected: staff are paid a proper wage and service is included. Locals may round up, or leave about 10% for good service in a restaurant, and nothing at bars or in taxis. Some restaurants add a surcharge on Sundays and public holidays, and many businesses add a small fee for card payments.",
+    "dress": "Casual almost everywhere, and smart casual for upmarket restaurants and bars. Sun protection matters all year: a broad-brimmed hat, sunglasses, high-factor sunscreen and a rash vest for snorkelling. Pack warm layers for southern winters and desert nights, and cover shoulders and knees in places of worship.",
+    "food": [
+      {
+        "name": "Meat pie",
+        "text": "A hand-sized pie of minced beef in gravy, from bakeries, petrol stations and football grounds, with tomato sauce on top."
+      },
+      {
+        "name": "The barbecue",
+        "text": "Parks and beaches have free public barbecues. A \"sausage sizzle\" outside hardware stores at weekends, and at polling places on election day, sells a sausage in a slice of white bread with fried onions, often for charity."
+      },
+      {
+        "name": "Seafood",
+        "text": "Sydney rock oysters, barramundi, Moreton Bay bugs (a small, flat kind of lobster) and prawns, which many families eat at Christmas."
+      },
+      {
+        "name": "Coffee and brunch",
+        "text": "Melbourne and Sydney take their cafés seriously: a flat white, and brunch of eggs or smashed avocado on toast."
+      },
+      {
+        "name": "Pavlova and lamingtons",
+        "text": "Pavlova is a meringue cake topped with cream and fruit, which New Zealand claims too; lamingtons are squares of sponge dipped in chocolate and rolled in coconut."
+      },
+      {
+        "name": "Vegemite",
+        "text": "A dark, salty yeast spread, eaten thinly on buttered toast. Go easy the first time."
+      }
+    ],
+    "phrases": {
+      "language": "Australian English",
+      "intro": "English, with a habit of shortening words and plenty of slang of its own.",
+      "items": [
+        { "phrase": "Arvo", "meaning": "Afternoon" },
+        { "phrase": "Brekkie", "meaning": "Breakfast" },
+        { "phrase": "Servo", "meaning": "Petrol station" },
+        { "phrase": "Bottle-o", "meaning": "Off-licence (a bottle shop)" },
+        { "phrase": "Thongs", "meaning": "Flip-flops" },
+        { "phrase": "Esky", "meaning": "Cool box" },
+        { "phrase": "Shout", "meaning": "To buy someone a drink or a meal; a round" },
+        { "phrase": "No worries", "meaning": "No problem; you're welcome" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q408",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Australian dollar ($). Cards, especially contactless, are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q259502"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, though no law makes it official. Aboriginal and Torres Strait Islander languages are spoken in many communities, above all in the north and the Centre.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q44679"] }],
+        "note": "Wikidata also lists Auslan (Australian Sign Language), left out here, and doesn't list the Indigenous languages, which the page mentions."
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (two flat pins in a V, often with a third earth pin), 230 V. Most sockets have their own on/off switch.",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Western (UTC+8) in Western Australia; Central (UTC+9:30) in the Northern Territory and South Australia; Eastern (UTC+10) in Queensland, New South Wales, the ACT, Victoria and Tasmania. Clocks go forward an hour from the first Sunday in October to the first Sunday in April, except in Queensland, the Northern Territory and Western Australia.",
+        "sources": [
+          {
+            "property": "P421",
+            "values": ["Q6985", "Q7048", "Q7056", "Q7065", "Q7069", "Q4823535", "Q4823527", "Q4823522", "Q4823523", "Q4823536", "Q4823534", "Q4823530"]
+          }
+        ],
+        "note": "Wikidata's list also has the external territories' and Antarctic bases' zones, Lord Howe Island (UTC+10:30) and Eucla's unofficial zone; the page summarises the mainland and Tasmania. Broken Hill, in New South Wales, keeps South Australia's time."
+      },
+      {
+        "key": "emergency",
+        "text": "000 for police, fire and ambulance; 112 also works from mobile phones",
+        "sources": [{ "property": "P2852", "values": ["Q2806478", "Q1061257"] }],
+        "note": "Wikidata also lists 106, the text relay line for people who are deaf or have a speech impairment, left out here."
+      },
+      {
+        "key": "callingCode",
+        "text": "+61",
+        "sources": [{ "property": "P474", "values": ["+61"] }]
+      }
+    ]
+  }
+}

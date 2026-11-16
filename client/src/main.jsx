@@ -15,6 +15,7 @@ import { CLIENT_ONLY_ROUTE_PREFIXES, PUBLIC_STATIC_ROUTES } from './utils/consta
 import { COUNTRY_ROUTES } from './utils/countries/countryPages.js';
 // Pages
 import { preloadPage } from './utils/navigation/lazyPages.js';
+import { registerServiceWorker } from './utils/pwa/registerServiceWorker.js';
 // Styles
 import './styles/main.css';
 
@@ -88,3 +89,6 @@ if (window.__PRERENDER__) {
   window.__renderRootHtml = () =>
     import('react-dom/server').then(({ renderToString }) => renderToString(app()));
 }
+
+// The installable app's service worker: production builds on the live site only
+registerServiceWorker();

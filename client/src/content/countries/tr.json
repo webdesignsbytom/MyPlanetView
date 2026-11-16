@@ -1,0 +1,204 @@
+{
+  "code": "TR",
+  "slug": "turkey",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Merhaba", "Türkiye"],
+  "summary": "Istanbul's mosques and bazaars, Roman ruins, a warm coast and Cappadocia.",
+  "overview": [
+    "Turkey, officially Türkiye, sits on two continents, and Istanbul spreads across the Bosphorus between Europe and Asia. Beyond the city are Greek and Roman ruins such as Ephesus near the Aegean coast, the white travertine terraces of Pamukkale, beaches and coves along the Mediterranean, the rock valleys and cave houses of Cappadocia, and in the east, high mountains, Lake Van and Göbekli Tepe, whose carved stone pillars are more than 11,000 years old.",
+    "Distances are long. Domestic flights are frequent, long-distance coaches are comfortable, and high-speed trains link Istanbul, Ankara and Konya. Mosques welcome visitors outside prayer times, bargaining is part of shopping in the bazaars, and you'll be offered tea almost everywhere you go."
+  ],
+  "whenToGo": {
+    "stripLabel": "Istanbul, the west and south coasts and Cappadocia, taken together. The regions below differ a lot, and each has a strip of its own.",
+    "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Mild and green, with wild flowers on the coasts and tulips in Istanbul's parks in April. Good weather for ruins and for trails such as the Lycian Way; the sea is warm enough for most swimmers by late May."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and dry almost everywhere. The coasts pass 35°C and inland sites such as Ephesus and Pamukkale get hotter, while Istanbul is warm and humid. The south-east is scorching, but the eastern highlands and the green Black Sea coast are pleasant. Beach resorts are at their busiest in July and August."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Warm, settled weather and a warm sea into October, with fewer visitors: one of the best times for the coast, Istanbul and Cappadocia. November turns cooler and wetter."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cool and rainy in Istanbul, with snow some years. The south coast stays mild, but most beach resorts close. Cappadocia and central Anatolia are cold and often snowy, and the eastern highlands around Kars and Erzurum are bitterly cold. Skiing at Uludağ near Bursa, Erciyes near Kayseri and Palandöken near Erzurum."
+      }
+    ],
+    "weather": "The coasts are Mediterranean, with hot, dry summers and mild, wet winters. The central plateau, Ankara and Cappadocia included, lies around 1,000 metres up and has hot, dry summers and cold, snowy winters. The Black Sea coast in the north is mild and rainy all year, the south-east is very hot and dry in summer, and the mountainous north-east has long, hard winters.",
+    "festivals": [
+      {
+        "name": "Ramadan and Ramazan Bayramı",
+        "place": "Across Turkey",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting from dawn to sunset. In Istanbul and the resorts most restaurants stay open by day; in conservative towns fewer do. Evenings fill with iftar meals, and drummers walk the streets before dawn to wake people for the last meal. It ends with Ramazan (or Şeker) Bayramı, a public holiday of three and a half days."
+      },
+      {
+        "name": "Kurban Bayramı (Eid al-Adha)",
+        "place": "Across Turkey",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice, a public holiday of four and a half days, sometimes stretched to nine. Turks travel in great numbers, so coaches, flights and coastal hotels fill up, and some shops and offices close."
+      },
+      {
+        "name": "Istanbul Tulip Festival",
+        "place": "Istanbul",
+        "when": "Usually through April",
+        "months": [4],
+        "text": "Millions of tulips in the city's parks and squares, above all in Emirgan Park on the Bosphorus and around Sultanahmet."
+      },
+      {
+        "name": "Kırkpınar Oil Wrestling",
+        "place": "Edirne",
+        "when": "Usually late June or early July",
+        "months": [6, 7],
+        "text": "Wrestlers in leather breeches, doused in olive oil, compete for the title of chief wrestler (başpehlivan) and a golden belt, in a tournament that is centuries old."
+      },
+      {
+        "name": "Republic Day",
+        "place": "Across Turkey",
+        "when": "29 October",
+        "months": [10],
+        "text": "Flags on every building, parades and fireworks for the founding of the republic in 1923. The afternoon before is a half holiday."
+      },
+      {
+        "name": "Şeb-i Arus",
+        "place": "Konya",
+        "when": "Usually 7–17 December",
+        "months": [12],
+        "text": "Whirling dervish ceremonies (sema) marking the death of the poet and mystic Rumi (Mevlana) on 17 December 1273, near his tomb. Book seats early."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Istanbul",
+        "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "Cool, wet winters, with snow some years, and warm, humid summers around 28–30°C. April's tulips and the autumn are the most pleasant times, and summer brings the biggest crowds to Sultanahmet's mosques and palaces."
+      },
+      {
+        "name": "The Aegean and Mediterranean coasts",
+        "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "Bodrum, Fethiye, Kaş, Antalya and the ruins of Ephesus. The beach season runs from May to October, with the sea warmest in August and September. In July and August the coast passes 35°C and Ephesus and Pamukkale, inland, get hotter still, so see them early in the day. In winter the resorts close, but Antalya and the ancient sites stay open."
+      },
+      {
+        "name": "Cappadocia",
+        "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "High and dry, with hot summer afternoons, cool nights all year, and snow and frost in winter. Hot-air balloons fly at dawn when the wind allows, and flights are cancelled more often in winter. Spring and autumn suit walks in the valleys best."
+      },
+      {
+        "name": "The south-east",
+        "months": ["good", "good", "good", "best", "best", "good", "avoid", "avoid", "good", "best", "best", "good"],
+        "text": "Şanlıurfa and Göbekli Tepe, Mardin and Mount Nemrut. Spring and autumn are the times to go: in July and August Şanlıurfa often passes 40°C. Snow can close the road to Nemrut's summit in winter."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Merhaba\" (hello) and a handshake; friends often kiss on both cheeks. Turks use first names with a title after them: \"Bey\" for men and \"Hanım\" for women (Ahmet Bey, Ayşe Hanım). Younger people may kiss an elder's hand and touch it to their forehead, especially on holidays, but no one expects it of visitors.",
+    "etiquette": [
+      "Mosques are open to visitors outside the five daily prayers, and busiest at Friday midday. Take your shoes off at the door; women cover their hair, and the big mosques lend scarves and wraps.",
+      "Take your shoes off when you go into someone's home.",
+      "Bargaining is normal in the bazaars and with carpet sellers, but not in shops with marked prices. Accepting a glass of tea while you look doesn't commit you to buy.",
+      "Atatürk, the republic's founder, is deeply respected, and insulting him or the nation is a crime. At 9:05 am on 10 November, the time of his death, sirens sound and people stop for a minute's silence.",
+      "During Ramadan, eat, drink and smoke discreetly by day, above all in conservative towns.",
+      "Public displays of affection are frowned on outside the big cities and resorts."
+    ],
+    "tipping": "Usual but modest. In restaurants, leave 5 to 10% in cash unless a service charge (servis) is on the bill; round up taxi fares; and give a little to hotel porters and to the attendants in a hammam.",
+    "dress": "Istanbul, Ankara and the coastal resorts are as casual as most of Europe; dress more modestly in the interior and the east, with shoulders and knees covered. In mosques, women need covered hair, shoulders and legs, and men long trousers. Beachwear stays at the beach.",
+    "food": [
+      {
+        "name": "Kebabs",
+        "text": "Dozens of kinds: döner sliced from a turning spit, spicy minced Adana kebab, and İskender from Bursa, döner laid on bread with tomato sauce, yoghurt and melted butter."
+      },
+      {
+        "name": "Meze and rakı",
+        "text": "Cold small plates (aubergine, yoghurt dips, white cheese, stuffed vine leaves) shared over rakı, an aniseed spirit that turns milky with water. Fish restaurants serve them before the fish."
+      },
+      {
+        "name": "Turkish breakfast (kahvaltı)",
+        "text": "A spread of cheeses, olives, tomatoes, cucumbers, eggs, honey with clotted cream (kaymak) and bread, with glass after glass of tea. Menemen is eggs scrambled with tomatoes and peppers."
+      },
+      {
+        "name": "Pide and lahmacun",
+        "text": "Boat-shaped flatbread baked with cheese, meat or egg, and a thin, crisp round topped with spiced mince, rolled up with parsley and lemon."
+      },
+      {
+        "name": "Baklava",
+        "text": "Layers of thin pastry with pistachios or walnuts, soaked in syrup. Gaziantep, in the south-east, is the most famous place for it."
+      },
+      {
+        "name": "Tea and Turkish coffee",
+        "text": "Black tea (çay) comes in small tulip-shaped glasses all day long. Turkish coffee is thick and unfiltered: let the grounds settle, and leave the last mouthful."
+      }
+    ],
+    "phrases": {
+      "language": "Turkish",
+      "intro": "English is common in Istanbul and the resorts, much less so in the east. Turkish uses Latin letters: c sounds like the j in \"jam\", ç like \"ch\", ş like \"sh\", ı (with no dot) like the a in \"about\", and ğ is silent, lengthening the vowel before it.",
+      "items": [
+        { "phrase": "Merhaba", "say": "MEHR-hah-bah", "meaning": "Hello" },
+        { "phrase": "Günaydın", "say": "gew-nai-DUHN", "meaning": "Good morning" },
+        { "phrase": "Teşekkür ederim", "say": "teh-shek-KEWR eh-deh-REEM", "meaning": "Thank you" },
+        { "phrase": "Lütfen", "say": "LEWT-fen", "meaning": "Please" },
+        { "phrase": "Evet / Hayır", "say": "eh-VET / HAH-yuhr", "meaning": "Yes / No" },
+        { "phrase": "Affedersiniz", "say": "ahf-feh-DEHR-see-neez", "meaning": "Excuse me; sorry" },
+        { "phrase": "Ne kadar?", "say": "NEH kah-dahr", "meaning": "How much?" },
+        { "phrase": "Hesap, lütfen", "say": "heh-SAHP LEWT-fen", "meaning": "The bill, please" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q43",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Turkish lira (₺). Cards are widely taken in cities and resorts; carry some cash for markets and small places.",
+        "sources": [{ "property": "P38", "values": ["Q172872"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Turkish. Kurdish is widely spoken in the south-east, and English in tourist areas.",
+        "sources": [{ "property": "P37", "values": ["Q256"] }],
+        "note": "Wikidata lists Turkish only, the one official language; the page adds Kurdish, which has no official status but is widely spoken in the south-east."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+3 all year: Turkey has had no summer time since 2016",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q16837414", "Q109521557"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata also lists 177, the old forest-fire line, which was folded into 112 with the other emergency numbers; the page gives 112 only."
+      },
+      {
+        "key": "callingCode",
+        "text": "+90",
+        "sources": [{ "property": "P474", "values": ["+90"] }]
+      }
+    ]
+  }
+}

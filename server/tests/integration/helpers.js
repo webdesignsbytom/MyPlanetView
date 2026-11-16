@@ -159,6 +159,28 @@ export async function uploadPhoto(
   return res;
 }
 
+/**
+ * A First Class video as the browser sends it (docs/API.md "Videos"): start the upload,
+ * "send" the file to the fake Stream, save it with the ticket. `ready` has Stream finish
+ * converting first. Returns the save's response (with `streamUid`), or the start's if it failed.
+ */
+export async function uploadVideo(
+  agent,
+  mapId,
+  { bytes = 90_000_000, durationS = 90, contentType = 'video/mp4', countryCode = 'IS', tripId, caption, takenAt, ready = false, skipUpload = false } = {}
+) {
+  const start = await agent.post(`/api/maps/${mapId}/videos/upload`).send({ bytes, durationS, contentType, countryCode, tripId });
+  if (start.status !== 200) return start;
+  const { ticket, uploadUrl } = data(start);
+  const uid = uploadUrl.split('/').pop();
+  if (!skipUpload) globalThis.__fakeStreamUploaded(uid);
+  if (ready) globalThis.__fakeStreamReady(uid, { duration: durationS });
+  const res = await agent.post(`/api/maps/${mapId}/videos`).send({ ticket, countryCode, caption, takenAt });
+  res.streamUid = uid;
+  res.ticket = ticket;
+  return res;
+}
+
 /** Is this key in the fake bucket? */
 export const inBucket = (key) => fakeR2().has(key);
 

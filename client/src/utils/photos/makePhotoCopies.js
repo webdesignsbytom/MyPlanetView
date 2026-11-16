@@ -45,7 +45,9 @@ function draw(bitmap, maxEdge) {
   return { canvas, width, height };
 }
 
-async function encode(bitmap, maxEdge, quality) {
+// `bitmap` is anything a canvas can draw that has a width and height (an ImageBitmap, or
+// a canvas: a video's poster frame, videoPoster.js)
+export async function encode(bitmap, maxEdge, quality) {
   const { canvas, width, height } = draw(bitmap, maxEdge);
   // WebP where the browser can write it; JPEG otherwise (Safari hands back PNG for WebP)
   let blob = await toBlob(canvas, 'image/webp', quality);

@@ -43,10 +43,26 @@ export const isValidLatLng = (latitude, longitude) =>
 
 const round1 = (n) => Math.round(n * 10) / 10;
 
+// Antarctica as a printed map draws it (16 Nov 2026): Robinson's sides curve in towards
+// the poles, so Antarctica followed a curve. From 58°S the parallels widen, smoothly,
+// until from 66°S they reach the map's sides (x 0 and 2000): Antarctica runs straight
+// across the bottom. North of 58°S nothing changes.
+const WIDEN_FROM = 58;
+const WIDEN_FULL = 66;
+const smoothstep = (t) => t * t * (3 - 2 * t);
+function widened(latitude, longitude, x) {
+  if (latitude > -WIDEN_FROM) return x;
+  const t = smoothstep(Math.min(1, (-latitude - WIDEN_FROM) / (WIDEN_FULL - WIDEN_FROM)));
+  // The meridian's place on a map whose parallels all reach its sides
+  const full = MAP_CENTRE_X + (longitude / 180) * (longitude < 0 ? MAP_CENTRE_X : MAP_WIDTH - MAP_CENTRE_X);
+  return x + (full - x) * t;
+}
+
 /** Real position -> SVG map position ({ x, y }), or null for an invalid position. */
 export function projectToMap(latitude, longitude) {
   if (!isValidLatLng(latitude, longitude)) return null;
-  const x = MAP_CENTRE_X + MAP_X_SCALE * interpolate(X_TABLE, latitude) * longitude;
+  const robinsonX = MAP_CENTRE_X + MAP_X_SCALE * interpolate(X_TABLE, latitude) * longitude;
+  const x = widened(latitude, longitude, robinsonX);
   const y = MAP_EQUATOR_Y - MAP_Y_SCALE * Math.sign(latitude) * interpolate(Y_TABLE, latitude);
   return { x: round1(x), y: round1(y) };
 }

@@ -1,0 +1,205 @@
+{
+  "code": "CA",
+  "slug": "canada",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Hello", "Bonjour", "Canada"],
+  "summary": "Rocky Mountain lakes, French-speaking Quebec and Atlantic fishing villages, across six time zones.",
+  "overview": [
+    "Canada is the second-largest country in the world, yet most Canadians live within a few hundred kilometres of the US border, in cities such as Toronto, Montreal and Vancouver. Beyond them are the Rocky Mountains of Banff and Jasper, the lakes and forests of Ontario and Quebec, the fishing villages of the Atlantic provinces, and the Arctic north.",
+    "Distances are huge: Toronto to Vancouver is a flight of four to five hours, so most visitors choose one or two regions. Quebec is French-speaking, and Quebec City's old town still has its walls, the only ones left north of Mexico. Most visitors who fly in, British travellers included, need an eTA (electronic travel authorisation) before they board."
+  ],
+  "whenToGo": {
+    "stripLabel": "The southern half of the country, where most visitors go, taken together. The regions below differ a lot, and each has a strip of its own.",
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Late and short. Snow lingers into April in much of the country, and mountain lakes stay frozen until late May or June. March and April are maple syrup season in Quebec and Ontario."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm across the south, often above 25°C, with some hot, humid days in Toronto and Montreal. The national parks are at their busiest, so book early. Black flies and mosquitoes are thick in the woods in early summer, and wildfire smoke sometimes hazes the sky."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is warm and quieter. The maples turn red and gold from mid-September to mid-October in the east, and the larches go gold in the Rockies. Many seasonal businesses close after Thanksgiving, the second Monday of October."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Long and cold: January averages about −10°C in Montreal and Ottawa, colder on the Prairies and far colder in the north, while Vancouver stays mild and rainy. The season for skiing, skating on Ottawa's Rideau Canal and the northern lights around Yellowknife and Whitehorse."
+      }
+    ],
+    "weather": "Most of Canada has long, cold, snowy winters, warm summers and short springs and autumns. The British Columbia coast is the exception: mild and wet, with most of its rain from October to March. The Prairies are sunny and dry, with bitter winters; the Atlantic provinces are cooler and often foggy by the sea; and the far north has long, dark winters and short summers with almost no night.",
+    "festivals": [
+      {
+        "name": "Quebec Winter Carnival (Carnaval de Québec)",
+        "place": "Quebec City",
+        "when": "Usually ten days in early to mid-February",
+        "months": [2],
+        "text": "Night parades, snow sculptures, an ice palace for the carnival's snowman, Bonhomme, and canoe races over the ice floes of the St Lawrence."
+      },
+      {
+        "name": "Canadian Tulip Festival",
+        "place": "Ottawa",
+        "when": "Usually in May",
+        "months": [5],
+        "text": "Tulip beds flower across the capital, a tradition begun by Princess Juliana of the Netherlands, who spent the Second World War in Ottawa and sent bulbs in thanks."
+      },
+      {
+        "name": "Montreal International Jazz Festival",
+        "place": "Montreal",
+        "when": "Usually late June to early July",
+        "months": [6, 7],
+        "text": "Concert halls and free outdoor stages around the Quartier des Spectacles, the city's festival district."
+      },
+      {
+        "name": "Canada Day",
+        "place": "Across Canada",
+        "when": "1 July",
+        "months": [7],
+        "text": "The national holiday, with flags, concerts and fireworks, and the biggest party in Ottawa. Quebec's own big celebration is its Fête nationale on 24 June."
+      },
+      {
+        "name": "Calgary Stampede",
+        "place": "Calgary",
+        "when": "Ten days in early July",
+        "months": [7],
+        "text": "Rodeo, chuckwagon races, a funfair and free pancake breakfasts around town, with much of the city in cowboy hats."
+      },
+      {
+        "name": "Toronto International Film Festival",
+        "place": "Toronto",
+        "when": "Usually early to mid-September",
+        "months": [9],
+        "text": "One of the world's biggest film festivals, with premieres, red carpets and tickets on sale to the public."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Vancouver and the British Columbia coast",
+        "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+        "text": "Mild all year, with most rain from October to March. Summers are dry and sunny, the time for Vancouver Island and whale watching; Whistler's ski season runs from about December to April."
+      },
+      {
+        "name": "The Rockies: Banff and Jasper",
+        "months": ["good", "good", "good", "good", "good", "good", "best", "best", "best", "good", "good", "good"],
+        "text": "High trails are clear of snow only from about July to September. Moraine Lake's road is closed to private cars: shuttles and tour buses run from about June to mid-October. Skiing runs from about November to May."
+      },
+      {
+        "name": "Ontario and Quebec",
+        "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good"],
+        "text": "Toronto, Niagara Falls, Ottawa, Montreal and Quebec City have cold, snowy winters and warm, humid summers. Summer is festival season, and the autumn colours peak from late September to mid-October."
+      },
+      {
+        "name": "The Atlantic provinces",
+        "months": ["avoid", "avoid", "avoid", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+        "text": "Cool summers by the sea, icebergs off Newfoundland in May and June, and whales offshore from June to September. Many inns, restaurants and sights outside Halifax and St John's close from mid-October to May, and January to March bring storms and heavy snow."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake, a smile and first names straight away. In Quebec, friends greet each other with a kiss on each cheek, and in Montreal shop staff often open with \"Bonjour, hi!\" so you can answer in either language.",
+    "etiquette": [
+      "Prices on shelves and menus don't include sales tax, which differs between provinces and is added when you pay.",
+      "In Quebec, French comes first: signs are in French, and opening with \"bonjour\" goes down well even if you carry on in English.",
+      "Never feed or approach wildlife. On Rockies trails, carry bear spray, and buy it there: it isn't allowed on planes.",
+      "You need a Parks Canada pass to stop in national parks such as Banff and Jasper.",
+      "The legal age for alcohol is 19 in most provinces, and 18 in Alberta, Manitoba and Quebec.",
+      "Turning right at a red light after a full stop is allowed, except on the island of Montreal."
+    ],
+    "tipping": "Expected, much as in the US: 15 to 20% in restaurants with table service, a dollar or two a drink at a bar, about 15% for taxis, and a few dollars a night for hotel housekeeping.",
+    "dress": "Casual almost everywhere. Winter needs a warm coat, a hat (a toque), gloves and boots with grip, as nights below −20°C are common in January on the Prairies and in Quebec. In summer, bring layers for the mountains, a waterproof for the west coast and insect repellent for the woods.",
+    "food": [
+      {
+        "name": "Poutine",
+        "text": "Chips topped with squeaky cheese curds and hot gravy, from Quebec and now sold everywhere."
+      },
+      {
+        "name": "Maple syrup and sugar shacks",
+        "text": "Quebec makes most of the world's maple syrup. In March and April, sugar shacks (cabanes à sucre) serve big meals with syrup on everything, and maple taffy set on snow."
+      },
+      {
+        "name": "Montreal bagels and smoked meat",
+        "text": "Bagels boiled in honey water and baked in wood-fired ovens, and smoked beef brisket piled high on rye bread."
+      },
+      {
+        "name": "Tourtière",
+        "text": "A spiced meat pie from Quebec, eaten above all at Christmas and New Year."
+      },
+      {
+        "name": "Seafood from both coasts",
+        "text": "Lobster, mussels and scallops in the Atlantic provinces; wild Pacific salmon in British Columbia, smoked or cooked on a cedar plank."
+      },
+      {
+        "name": "Butter tarts and Nanaimo bars",
+        "text": "Small pastry tarts with a runny filling of butter, sugar and egg, and a no-bake bar of chocolate, custard icing and a crumb base, named after a town on Vancouver Island."
+      }
+    ],
+    "phrases": {
+      "language": "Quebec French",
+      "intro": "English is the main language in most of Canada, close to American English: a washroom is a toilet, and the $1 and $2 coins are the loonie and the toonie. In Quebec, French comes first.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello" },
+        { "phrase": "Merci", "say": "mair-SEE", "meaning": "Thank you" },
+        { "phrase": "Bienvenue", "say": "byan-veh-NEW", "meaning": "You're welcome (in Quebec; in France it means \"welcome\")" },
+        { "phrase": "S'il vous plaît", "say": "seel voo PLAY", "meaning": "Please" },
+        { "phrase": "Excusez-moi", "say": "ex-kew-zay-MWAH", "meaning": "Excuse me" },
+        { "phrase": "Parlez-vous anglais?", "say": "par-lay voo on-GLAY", "meaning": "Do you speak English?" },
+        { "phrase": "C'est combien?", "say": "say kom-BYAN", "meaning": "How much is it?" },
+        { "phrase": "L'addition, s'il vous plaît", "say": "lah-dee-SYON seel voo PLAY", "meaning": "The bill, please" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q16",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Canadian dollar ($, often written C$ or CAD). Cards, including contactless, are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q1104069"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English and French, equal in federal law. French is the main language in Quebec, and New Brunswick is officially bilingual. Nunavut and the Northwest Territories also make Indigenous languages, such as Inuktitut, official.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q150"] }],
+        "note": "Wikidata lists English and French; the territories' Indigenous official languages are the page's addition."
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }],
+        "note": "Wikidata also lists driving on the left, with end dates from 1922 to 1947 as provinces switched (Newfoundland last); the right is its preferred value."
+      },
+      {
+        "key": "timeZones",
+        "text": "Six zones, east to west: Newfoundland (UTC−3:30), Atlantic (UTC−4), Eastern (UTC−5), Central (UTC−6), Mountain (UTC−7) and Pacific, which British Columbia has kept at UTC−7 all year since March 2026. Most places put clocks forward an hour from March to early November; most of Saskatchewan, Yukon and British Columbia don't.",
+        "sources": [{ "property": "P421", "values": ["Q60738798", "Q2085376", "Q5762", "Q941023", "Q5390", "Q2086913", "Q5385", "Q3134980", "Q2212"] }],
+        "note": "Wikidata has no current Pacific row: its UTC−8 row is deprecated, ending in 2026, when British Columbia stayed on UTC−7 after 8 March 2026 (BC government release 2026AG0013-000209). The page adds Pacific Time and the summer time rules."
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1",
+        "sources": [{ "property": "P474", "values": ["+1"] }]
+      }
+    ]
+  }
+}

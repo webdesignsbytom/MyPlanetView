@@ -244,5 +244,5 @@ export const COUNTRIES = [
   { code: 'XN', name: "North Pole", slug: 'north-pole', continent: null, kind: 'SPECIAL', pinX: 987.1, pinY: -16.6 },
   { code: 'QN', name: "Magnetic North Pole", slug: 'magnetic-north-pole', continent: null, kind: 'SPECIAL', pinX: 1435.1, pinY: -6.1 },
   { code: 'XS', name: "South Pole", slug: 'south-pole', continent: 'ANTARCTICA', kind: 'SPECIAL', pinX: 987.1, pinY: 1020.6 },
-  { code: 'QS', name: "Magnetic South Pole", slug: 'magnetic-south-pole', continent: null, kind: 'SPECIAL', pinX: 1576.9, pinY: 905.2 },
+  { code: 'QS', name: "Magnetic South Pole", slug: 'magnetic-south-pole', continent: null, kind: 'SPECIAL', pinX: 1717, pinY: 905.2 },
 ];

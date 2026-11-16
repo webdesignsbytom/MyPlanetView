@@ -23,9 +23,9 @@ import { isUpcomingPlannedTrip, placeCountries, todayString, tripPlace } from '@
  * a share-link visitor (`shareCode`) only views. `onDelete` returns a promise that
  * removes the trip. An editor whose email address isn't verified yet (`locked`) sees it
  * as a viewer would, with the reason where the edit controls would be.
- * `styleId` and `showAntarctica` are the viewer's map settings, for the route map.
+ * `styleId`, `showAntarctica` and `blackAndWhite` are the viewer's map settings, for the route map.
  */
-function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctica = true, currentUser = null, onDelete, onLeft }) {
+function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctica = true, blackAndWhite = false, currentUser = null, onDelete, onLeft }) {
   const roleCanEdit = !shareCode && canEditRole(trip.role);
   const mustVerify = useMustVerifyEmail();
   const locked = roleCanEdit && mustVerify;
@@ -87,7 +87,7 @@ function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctic
         <TripMyMaps trip={trip} userId={currentUser.id} locked={mustVerify} onTripChange={onTripChange} />
       ) : null}
 
-      <TripMiniMap trip={trip} styleId={styleId} showAntarctica={showAntarctica} />
+      <TripMiniMap trip={trip} styleId={styleId} showAntarctica={showAntarctica} blackAndWhite={blackAndWhite} />
       <TripStopList trip={trip} canEdit={canEdit} onChanged={onTripChange} />
       <TripMoments trip={trip} canEdit={canEdit} shareCode={shareCode} onTripChange={onTripChange} />
       <TripPhotosSection trip={trip} canEdit={canEdit} locked={locked} shareCode={shareCode} />

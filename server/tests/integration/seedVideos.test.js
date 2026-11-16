@@ -1,11 +1,12 @@
-// The seed's sample videos (prisma/seed/videos.js): the First Class account's clips, made as
-// an upload makes them. The real clips aren't in git, so this builds small MP4s in a temp
-// folder: one good, one still holding a location, one too long, and one missing.
+// The seed's sample videos (prisma/seed/videos.js): the First Class account's clips, uploaded
+// to (the fake) Cloudflare Stream and saved as videos. The real clips aren't in git, so this
+// builds small MP4s in a temp folder: one good, one still holding a location, one too long,
+// and one missing.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { cleanUp, data, defaultMapOf, givePlan, inBucket, prisma, signUp } from './helpers.js';
+import { cleanUp, defaultMapOf, givePlan, prisma, signUp } from './helpers.js';
 import { seedDemoVideos } from '../../prisma/seed/videos.js';
 
 const box = (type, ...parts) => {
@@ -57,23 +58,14 @@ describe('the seed’s sample videos', () => {
     expect(await seedDemoVideos({ dir, ownerEmail: owner.email })).toEqual({ videos: 1 });
   });
 
-  it('makes a video of each good clip, with its poster frames and file in the private bucket', async () => {
-    const videos = await prisma.photo.findMany({
-      where: { mapId: map.id },
-      select: { kind: true, durationS: true, countryCode: true, latitude: true, width: true, height: true, variants: { select: { size: true, media: { select: { key: true, contentType: true } } } } },
-    });
+  it('uploads each good clip to Stream and saves it as a video, converting', async () => {
+    const videos = await prisma.photo.findMany({ where: { mapId: map.id } });
     expect(videos).toHaveLength(1);
-    expect(videos[0]).toMatchObject({ kind: 'VIDEO', durationS: 42, countryCode: 'IT', latitude: null, width: 1280, height: 720 });
-    const files = Object.fromEntries(videos[0].variants.map((v) => [v.size, v.media]));
-    expect(files.ORIGINAL).toMatchObject({ key: 'myplanetview/photos/seed/videos/good/video.mp4', contentType: 'video/mp4' });
-    // No poster of its own: the country's poster stands in
-    expect(files.THUMB.contentType).toBe('image/webp');
-    for (const media of Object.values(files)) expect(inBucket(media.key)).toBe(true);
+    expect(videos[0]).toMatchObject({ kind: 'VIDEO', durationS: 42, countryCode: 'IT', latitude: null, width: 1280, height: 720, videoState: 'PROCESSING' });
+    expect(globalThis.__fakeStream.get(videos[0].streamUid)).toMatchObject({ meta: { photoId: videos[0].id, seed: 'good' } });
   });
 
-  it('plays for the owner, and skips clips with a location, too long or missing', async () => {
-    const listed = data(await owner.agent.get(`/api/maps/${map.id}/photos?display=1`)).photos;
-    expect(listed).toEqual([expect.objectContaining({ kind: 'VIDEO', durationS: 42, videoUrl: expect.any(String) })]);
+  it('skips clips with a location, too long or missing', async () => {
     expect(await prisma.photo.count({ where: { mapId: map.id, countryCode: { in: ['IE', 'EG', 'MA'] } } })).toBe(0);
   });
 });

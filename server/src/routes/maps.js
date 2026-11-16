@@ -17,6 +17,7 @@ import {
 import { createTripHandler, getMapTripsHandler } from '../controllers/trips.js';
 import { createPhotoHandler, getMapPhotosHandler, presignPhotoHandler } from '../controllers/photos.js';
 import { createMomentHandler, getMapMomentsHandler } from '../controllers/moments.js';
+import { saveVideoHandler, startVideoUploadHandler } from '../controllers/videos.js';
 import {
   clearStampPhotoHandler,
   createGoalHandler,
@@ -77,6 +78,10 @@ router.post('/:mapId/trips', verified, createTripHandler);
 router.post('/:mapId/photos/presign', verified, photoPresignLimiter, presignPhotoHandler);
 router.post('/:mapId/photos', verified, createPhotoHandler);
 router.get('/:mapId/photos', getMapPhotosHandler);
+
+// First Class videos (Cloudflare Stream; docs/API.md "Videos"): start the upload, then save it
+router.post('/:mapId/videos/upload', verified, photoPresignLimiter, startVideoUploadHandler);
+router.post('/:mapId/videos', verified, saveVideoHandler);
 
 // Moments on the map (a trip editor may add one on their trip: tripId in the body)
 router.get('/:mapId/moments', getMapMomentsHandler);

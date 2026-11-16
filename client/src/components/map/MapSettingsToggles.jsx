@@ -5,7 +5,7 @@ import SwitchInput from '@/components/ui/SwitchInput';
 import { MAP_SETTING_GROUPS, MAP_SETTING_TOGGLES } from '@/utils/map/mapSettings';
 
 // The on/off settings from the old map pages (my_planet added the visited filters and
-// the banner), in three groups.
+// the banner), in four groups.
 // The Detailed map type always draws the lines, their labels and the names, so those
 // switches are locked on there, with a note saying why. The banner only fits on wide
 // screens, so its switch only shows there too.

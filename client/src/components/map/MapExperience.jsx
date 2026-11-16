@@ -54,6 +54,7 @@ import { forgetMapLists } from '@/utils/map/mapListCache';
 import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
+import { mapStyleById } from '@/utils/map/mapStyles';
 import { isAntarctic } from '@/utils/map/specialPlaces';
 import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
 
@@ -181,6 +182,16 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       ]),
     [canEdit, canShare],
   );
+
+  // Black and white: the grey tokens on <html> too (index.css :root[data-mono]), for what
+  // sits outside the page's greyscale filter: the photo viewer's and slideshow's frames
+  // (their photos keep their colour) and dialogs drawn in portals
+  const blackAndWhite = Boolean(settings.blackAndWhite);
+  useEffect(() => {
+    if (!blackAndWhite) return undefined;
+    document.documentElement.setAttribute('data-mono', '');
+    return () => document.documentElement.removeAttribute('data-mono');
+  }, [blackAndWhite]);
 
   // Badges and goals (docs/API.md, "Badges and goals"): loaded with the map, and asked
   // again (debounced) after anything that might earn one: a visit changed, a batch of
@@ -388,6 +399,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             locked={locked}
             uploadRules={uploadRules}
             photoCounts={map.photoCounts || null}
+            videoCounts={map.videoCounts || null}
             isOwner={isOwner}
             onUploaded={photosChanged}
             onBatchDone={checkAchievements}
@@ -419,123 +431,169 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
   return (
     <div data-map-style={settings.style} className='relative h-dvh w-full overflow-hidden bg-map-sea text-map-ink'>
-      <MapBackground styleId={settings.style} animatedSea={settings.animatedSea} />
-      {settings.style === 'animated' && settings.animatedSea ? <SeaWaves /> : null}
-      {settings.style === 'animated' && settings.sunAndMoon ? <SunMoon /> : null}
+      {/* Black and white (the viewer's setting): everything here in greys, one greyscale filter
+          over the lot (the GPU applies it). The photo viewer and the slideshow sit outside it,
+          so a photo opened is in colour. */}
+      <div className={`absolute inset-0 ${settings.blackAndWhite ? 'grayscale' : ''}`}>
+        <MapBackground styleId={settings.style} animatedSea={settings.animatedSea} />
+        {settings.style === 'animated' && settings.animatedSea ? <SeaWaves /> : null}
+        {settings.style === 'animated' && settings.sunAndMoon ? <SunMoon /> : null}
 
-      <main id='main-content' tabIndex={-1} role='main' className='absolute inset-0' onPointerDownCapture={warmCountryPanel}>
-        <h1 className='sr-only'>{map.name}</h1>
-        <WorldMap
-          viewport={viewport}
+        <main id='main-content' tabIndex={-1} role='main' className='absolute inset-0' onPointerDownCapture={warmCountryPanel}>
+          <h1 className='sr-only'>{map.name}</h1>
+          <WorldMap
+            viewport={viewport}
+            seaDepths={!mapStyleById(settings.style).background}
+            visitsByCode={visitsByCode}
+            momentCounts={map.momentCountsByCountry || undefined}
+            showMoments={settings.showMoments}
+            selectedCode={ui.panel === 'country' ? ui.selectedCode : null}
+            onSelectCountry={selectCountry}
+            onHoverCountry={hover.set}
+            showGrid={settings.showGrid || detailed}
+            showGridLabels={settings.showGridLabels || detailed}
+            showCountryNames={settings.showCountryNames || detailed}
+            showVisited={settings.showVisited}
+            showUnvisited={settings.showUnvisited}
+            showAntarctica={showAntarctica}
+            landmarks={landmarks}
+            alwaysShowLandmarks={detailed}
+            label={`${map.name}: world map`}
+          />
+        </main>
+
+        <div className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2'>
+          <MapTitle
+            map={map}
+            role={role}
+            shared={Boolean(shareCode)}
+            onOpenSwitcher={currentUser && !shareCode ? () => dispatch({ type: 'toggle', panel: 'switcher' }) : null}
+            onIntent={() => preloadTool('switcher')}
+          />
+          <StatsBadge stats={map.stats} onOpen={() => dispatch({ type: 'toggle', panel: 'stats' })} onIntent={() => preloadTool('stats')} />
+          {mustVerify ? <VerifyEmailBanner /> : null}
+          {planBanner ? (
+            <MapPlanBanner
+              locked={mapLocked}
+              inGrace={inGrace}
+              graceUntil={map.graceUntil}
+              isOwner={isOwner}
+              // Paying needs a verified address (the verify banner above says so)
+              onPay={isOwner && !mustVerify ? () => setPayingForMap(true) : null}
+            />
+          ) : null}
+          {/* Last in the column, so the banners above keep their place (panels open below them) */}
+          {settings.showGoalTag !== false ? (
+            <GoalTag
+              goals={achievements.goals}
+              badges={achievements.badges}
+              onOpen={() => dispatch({ type: 'toggle', panel: 'badges' })}
+              onIntent={() => preloadTool('badges')}
+            />
+          ) : null}
+        </div>
+
+        {settings.showUserBanner ? (
+          <div className='pointer-events-none absolute inset-x-0 top-3 hidden justify-items-center lg:grid'>
+            <MapBanner map={map} />
+          </div>
+        ) : null}
+
+        <div className='pointer-events-none absolute inset-x-0 bottom-3 grid justify-items-center md:inset-x-auto md:bottom-auto md:right-3 md:top-3'>
+          <MapToolbar
+            openPanel={ui.slideshow ? 'play' : ui.sharing ? 'share' : ui.panel}
+            onToggle={handleToggle}
+            onIntent={preloadTool}
+            canUpload={canEdit}
+            canShare={canShare}
+          />
+        </div>
+
+        {/* Wide screens: as far from the bottom as the toolbar is from the top (both 3) */}
+        <div className='pointer-events-none absolute bottom-24 right-3 grid md:bottom-3'>
+          <div className='pointer-events-auto'>
+            <MapZoomControls viewport={viewport} />
+          </div>
+        </div>
+
+        {/* The key hides while a panel is open: the panel covers that corner */}
+        {panel ? null : (
+          <div className='pointer-events-none absolute bottom-3 left-3 hidden md:grid'>
+            <MapLegend showMoments={settings.showMoments} />
+          </div>
+        )}
+
+        {/* With the verify or plan banners under the title, wide screens open panels below them. The
+            tickets (a country, and the country list) are centred on the screen on wide screens
+            instead: the same space above and below (4.5rem, clear of the title tag at the top
+            and the zoom stamps at the bottom), and clear of the toolbar on the right; on phones
+            every panel is the sheet above the toolbar. */}
+        {panel ? (
+          <div
+            className={`pointer-events-none absolute inset-x-3 bottom-24 z-10 grid ${
+              ui.panel === 'country' || ui.panel === 'countries'
+                ? 'md:inset-x-24 md:inset-y-18 md:grid-rows-[minmax(0,1fr)] md:place-items-center'
+                : `md:inset-x-auto md:bottom-auto md:left-3 ${panelTopBelow({ verify: mustVerify, plan: planBanner })}`
+            }`}
+          >
+            {/* A panel whose code failed to arrive says so; the next panel tries afresh */}
+            <ErrorBoundary key={ui.panel} fallback={<MapPanelFallback failed onClose={close} />}>
+              <Suspense fallback={<MapPanelFallback />}>{panel}</Suspense>
+            </ErrorBoundary>
+          </div>
+        ) : null}
+
+        {/* A badge earned or a goal reached: said once, politely */}
+        <AwardNews news={achievements.news} onOpen={openBadges} onDismiss={dismissNews} />
+
+        <MapHoverLayer
+          hover={hover}
+          hidden={Boolean(ui.photoId)}
           visitsByCode={visitsByCode}
-          momentCounts={map.momentCountsByCountry || undefined}
-          showMoments={settings.showMoments}
-          selectedCode={ui.panel === 'country' ? ui.selectedCode : null}
-          onSelectCountry={selectCountry}
-          onHoverCountry={hover.set}
-          showGrid={settings.showGrid || detailed}
-          showGridLabels={settings.showGridLabels || detailed}
-          showCountryNames={settings.showCountryNames || detailed}
-          showVisited={settings.showVisited}
-          showUnvisited={settings.showUnvisited}
-          showAntarctica={showAntarctica}
-          landmarks={landmarks}
-          alwaysShowLandmarks={detailed}
-          label={`${map.name}: world map`}
+          thumbsByCountry={thumbsByCountry}
+          showPhotos={settings.hoverPreview}
         />
-      </main>
 
-      <div className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2'>
-        <MapTitle
-          map={map}
-          role={role}
-          shared={Boolean(shareCode)}
-          onOpenSwitcher={currentUser && !shareCode ? () => dispatch({ type: 'toggle', panel: 'switcher' }) : null}
-          onIntent={() => preloadTool('switcher')}
-        />
-        <StatsBadge stats={map.stats} onOpen={() => dispatch({ type: 'toggle', panel: 'stats' })} onIntent={() => preloadTool('stats')} />
-        {mustVerify ? <VerifyEmailBanner /> : null}
-        {planBanner ? (
-          <MapPlanBanner
-            locked={mapLocked}
-            inGrace={inGrace}
-            graceUntil={map.graceUntil}
-            isOwner={isOwner}
-            // Paying needs a verified address (the verify banner above says so)
-            onPay={isOwner && !mustVerify ? () => setPayingForMap(true) : null}
-          />
+        {ui.sharing ? (
+          <Suspense fallback={null}>
+            <ShareDialog
+              resource='maps'
+              id={map.id}
+              name={map.name}
+              role={role}
+              currentUserId={currentUser?.id}
+              onLeft={() => {
+                forgetMapLists();
+                navigate(MAP_PAGE_URL, { replace: true });
+              }}
+              // Handed to someone else: as an editor, the same map with that role (at its own
+              // address, as /map is now another map); gone, your own map
+              onTransferred={({ stayed }) => {
+                dispatch({ type: 'share', open: false });
+                if (stayed) {
+                  actions?.reload();
+                  navigate(mapPath(map.id), { replace: true });
+                } else navigate(MAP_PAGE_URL, { replace: true });
+              }}
+              onClose={() => dispatch({ type: 'share', open: false })}
+            />
+          </Suspense>
         ) : null}
-        {/* Last in the column, so the banners above keep their place (panels open below them) */}
-        {settings.showGoalTag !== false ? (
-          <GoalTag
-            goals={achievements.goals}
-            badges={achievements.badges}
-            onOpen={() => dispatch({ type: 'toggle', panel: 'badges' })}
-            onIntent={() => preloadTool('badges')}
-          />
+
+        {payingForMap ? (
+          <Suspense fallback={null}>
+            <ExtraMapDialog
+              reason='locked'
+              onClose={() => setPayingForMap(false)}
+              onPaid={() => {
+                setPayingForMap(false);
+                forgetMapLists();
+                actions?.reload();
+              }}
+            />
+          </Suspense>
         ) : null}
       </div>
-
-      {settings.showUserBanner ? (
-        <div className='pointer-events-none absolute inset-x-0 top-3 hidden justify-items-center lg:grid'>
-          <MapBanner map={map} />
-        </div>
-      ) : null}
-
-      <div className='pointer-events-none absolute inset-x-0 bottom-3 grid justify-items-center md:inset-x-auto md:bottom-auto md:right-3 md:top-3'>
-        <MapToolbar
-          openPanel={ui.slideshow ? 'play' : ui.sharing ? 'share' : ui.panel}
-          onToggle={handleToggle}
-          onIntent={preloadTool}
-          canUpload={canEdit}
-          canShare={canShare}
-        />
-      </div>
-
-      {/* Wide screens: as far from the bottom as the toolbar is from the top (both 3) */}
-      <div className='pointer-events-none absolute bottom-24 right-3 grid md:bottom-3'>
-        <div className='pointer-events-auto'>
-          <MapZoomControls viewport={viewport} />
-        </div>
-      </div>
-
-      {/* The key hides while a panel is open: the panel covers that corner */}
-      {panel ? null : (
-        <div className='pointer-events-none absolute bottom-3 left-3 hidden md:grid'>
-          <MapLegend showMoments={settings.showMoments} />
-        </div>
-      )}
-
-      {/* With the verify or plan banners under the title, wide screens open panels below them. The
-          tickets (a country, and the country list) are centred on the screen on wide screens
-          instead: the same space above and below (4.5rem, clear of the title tag at the top
-          and the zoom stamps at the bottom), and clear of the toolbar on the right; on phones
-          every panel is the sheet above the toolbar. */}
-      {panel ? (
-        <div
-          className={`pointer-events-none absolute inset-x-3 bottom-24 z-10 grid ${
-            ui.panel === 'country' || ui.panel === 'countries'
-              ? 'md:inset-x-24 md:inset-y-18 md:grid-rows-[minmax(0,1fr)] md:place-items-center'
-              : `md:inset-x-auto md:bottom-auto md:left-3 ${panelTopBelow({ verify: mustVerify, plan: planBanner })}`
-          }`}
-        >
-          {/* A panel whose code failed to arrive says so; the next panel tries afresh */}
-          <ErrorBoundary key={ui.panel} fallback={<MapPanelFallback failed onClose={close} />}>
-            <Suspense fallback={<MapPanelFallback />}>{panel}</Suspense>
-          </ErrorBoundary>
-        </div>
-      ) : null}
-
-      {/* A badge earned or a goal reached: said once, politely */}
-      <AwardNews news={achievements.news} onOpen={openBadges} onDismiss={dismissNews} />
-
-      <MapHoverLayer
-        hover={hover}
-        hidden={Boolean(ui.photoId)}
-        visitsByCode={visitsByCode}
-        thumbsByCountry={thumbsByCountry}
-        showPhotos={settings.hoverPreview}
-      />
 
       {ui.photoId ? (
         <Suspense fallback={null}>
@@ -552,32 +610,6 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         </Suspense>
       ) : null}
 
-      {ui.sharing ? (
-        <Suspense fallback={null}>
-          <ShareDialog
-            resource='maps'
-            id={map.id}
-            name={map.name}
-            role={role}
-            currentUserId={currentUser?.id}
-            onLeft={() => {
-              forgetMapLists();
-              navigate(MAP_PAGE_URL, { replace: true });
-            }}
-            // Handed to someone else: as an editor, the same map with that role (at its own
-            // address, as /map is now another map); gone, your own map
-            onTransferred={({ stayed }) => {
-              dispatch({ type: 'share', open: false });
-              if (stayed) {
-                actions?.reload();
-                navigate(mapPath(map.id), { replace: true });
-              } else navigate(MAP_PAGE_URL, { replace: true });
-            }}
-            onClose={() => dispatch({ type: 'share', open: false })}
-          />
-        </Suspense>
-      ) : null}
-
       {ui.slideshow ? (
         <Suspense fallback={null}>
           <Slideshow
@@ -587,20 +619,6 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             {...offerProps}
             title={`Slideshow: ${ui.slideshow.country ? COUNTRY_BY_CODE[ui.slideshow.country]?.name || ui.slideshow.country : map.name}`}
             onClose={() => dispatch({ type: 'stopPlaying' })}
-          />
-        </Suspense>
-      ) : null}
-
-      {payingForMap ? (
-        <Suspense fallback={null}>
-          <ExtraMapDialog
-            reason='locked'
-            onClose={() => setPayingForMap(false)}
-            onPaid={() => {
-              setPayingForMap(false);
-              forgetMapLists();
-              actions?.reload();
-            }}
           />
         </Suspense>
       ) : null}

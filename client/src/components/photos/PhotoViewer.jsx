@@ -8,14 +8,19 @@ import InlineAlert from '@/components/common/InlineAlert';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import PhotoEditForm from './PhotoEditForm';
 import PhotoLandmarkList from './PhotoLandmarkList';
+import VideoPlayer from './VideoPlayer';
 import VerifyFirstNote from '@/components/map/VerifyFirstNote';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { formatDay } from '@/utils/functions/dates';
+import { formatVideoLength } from '@/utils/photos/videoLength';
 
 // One photo, large. Editors can change it, confirm landmark matches, download the best
 // copy kept (the original, which keeps its location, or on an Economy map the print copy:
 // `bestCopy`) and delete it. Link visitors pass `shareCode`.
+// A video (First Class; docs/API.md, "Videos") plays in the browser's player, or offers
+// itself to download where the browser can't play it. It has no landmark tools: landmark
+// stamps come from photos.
 // `locked`: an editor whose email address isn't verified yet sees the photo (and can
 // download the original) but can't change it, and is told why.
 function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trips, onChanged, onDeleted, onClose }) {
@@ -59,7 +64,9 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
     }
   };
 
-  const title = photo?.caption || (photo?.takenAt ? `Photo from ${formatDay(photo.takenAt)}` : 'Photo');
+  const isVideo = photo?.kind === 'VIDEO';
+  const noun = isVideo ? 'Video' : 'Photo';
+  const title = photo?.caption || (photo?.takenAt ? `${noun} from ${formatDay(photo.takenAt)}` : noun);
 
   return (
     <Modal title={title} onClose={onClose} wide>
@@ -73,17 +80,27 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
 
       {photo ? (
         <div className='grid gap-4 md:grid-cols-wide-narrow'>
-          <img
-            src={photo.displayUrl}
-            alt={photo.caption || ''}
-            className='max-h-[70vh] w-full border-8 border-poster-cream bg-poster-cream object-contain shadow-paper'
-          />
+          {isVideo ? (
+            <VideoPlayer photo={photo} />
+          ) : (
+            <img
+              src={photo.displayUrl}
+              alt={photo.caption || ''}
+              className='max-h-[70vh] w-full border-8 border-poster-cream bg-poster-cream object-contain shadow-paper'
+            />
+          )}
           <div className='grid content-start gap-4'>
             <dl className='grid gap-1 text-sm'>
               {photo.takenAt ? (
                 <div className='grid grid-cols-reg gap-2'>
                   <dt className='font-medium'>Taken</dt>
                   <dd>{formatDay(photo.takenAt)}</dd>
+                </div>
+              ) : null}
+              {isVideo && photo.durationS ? (
+                <div className='grid grid-cols-reg gap-2'>
+                  <dt className='font-medium'>Length</dt>
+                  <dd>{formatVideoLength(photo.durationS)}</dd>
                 </div>
               ) : null}
               {photo.countryCode ? (
@@ -105,7 +122,7 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
                   setEditing(false);
                 }}
               />
-            ) : (
+            ) : isVideo ? null : (
               <PhotoLandmarkList photo={photo} canEdit={canEdit && !locked} onChanged={applyChange} />
             )}
 
@@ -124,7 +141,7 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
                     rel='noreferrer'
                     className='btn-paper [--btn-leading:1.5rem] [--btn-pad-x:1rem] [--btn-pad-y:0.375rem] [--btn-size:1.125rem]'
                   >
-                    {photo.bestCopy === 'PRINT' ? 'Download print copy' : 'Download original'}
+                    {isVideo ? 'Download video' : photo.bestCopy === 'PRINT' ? 'Download print copy' : 'Download original'}
                   </a>
                 ) : null}
                 {locked ? null : confirmingDelete ? (

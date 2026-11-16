@@ -16,6 +16,9 @@ const PHOTO_LIST_SELECT = {
   countryCode: true,
   kind: true,
   durationS: true,
+  // A video's Stream id and state (views.js signs its playback links; never sent as is)
+  streamUid: true,
+  videoState: true,
   caption: true,
   takenAt: true,
   shotAt: true,
@@ -41,18 +44,18 @@ const listOrder = ({ tripId, countryCode, unplaced, order }) => {
   return [{ createdAt: 'desc' }, { id: 'desc' }];
 };
 
-// The slideshows' lists: the DISPLAY copy too, and the ORIGINAL (a video's file, which
-// views.js signs only for videos: a photo's original never goes in a list)
+// The slideshows' lists: the DISPLAY copy too (a video's playback link comes from Stream)
 const DISPLAY_LIST_SELECT = {
   ...PHOTO_LIST_SELECT,
-  variants: { where: { size: { in: ['THUMB', 'DISPLAY', 'ORIGINAL'] } }, ...variantKeys },
+  variants: { where: { size: { in: ['THUMB', 'DISPLAY'] } }, ...variantKeys },
 };
 
 const photoListWhere = ({ mapId, tripId, countryCode, unplaced, includeHidden }) => ({
   ...(mapId ? { mapId } : {}),
   ...(tripId ? { tripId } : {}),
   ...(unplaced ? { countryCode: null } : countryCode ? { countryCode } : {}),
-  ...(includeHidden ? {} : { hidden: false }),
+  // Below editor: nothing hidden, and a video only once Stream has converted it
+  ...(includeHidden ? {} : { hidden: false, OR: [{ kind: 'PHOTO' }, { videoState: 'READY' }] }),
 });
 
 /**
@@ -183,7 +186,7 @@ export const findPhotoAccess = async (photoId, userId) => {
   const [photo, map, mapMember, tripMember] = await Promise.all([
     prisma.photo.findUnique({
       where: { id: photoId },
-      select: { id: true, mapId: true, tripId: true, countryCode: true, hidden: true, kind: true },
+      select: { id: true, mapId: true, tripId: true, countryCode: true, hidden: true, kind: true, streamUid: true, videoState: true },
     }),
     prisma.travelMap.findFirst({ where: ofPhoto, select: { ownerId: true } }),
     userId ? prisma.mapMember.findFirst({ where: { userId, map: ofPhoto }, select: { role: true } }) : null,
@@ -241,14 +244,19 @@ export const countPhotosByCountry = async (mapId, { kind = 'PHOTO' } = {}) => {
 export const countPhotosInCountry = (mapId, countryCode, db = prisma, kind = 'PHOTO') =>
   db.photo.count({ where: { mapId, countryCode, kind } });
 
-/** The bytes of every file of every photo on a map. */
+/** The bytes of every file of every photo on a map, and of every video (kept in Stream). */
 export const sumStoredPhotoBytes = async (mapId, db = prisma) => {
   const [row] = await db.$queryRaw`
-    SELECT COALESCE(SUM(m."bytes"), 0)::float8 AS "bytes"
-    FROM "photo" AS p
-    JOIN "photo_variant" AS v ON v."photoId" = p."id"
-    JOIN "media_item" AS m ON m."id" = v."mediaId"
-    WHERE p."mapId" = ${mapId}`;
+    SELECT (
+      COALESCE((
+        SELECT SUM(m."bytes")
+        FROM "photo" AS p
+        JOIN "photo_variant" AS v ON v."photoId" = p."id"
+        JOIN "media_item" AS m ON m."id" = v."mediaId"
+        WHERE p."mapId" = ${mapId}
+      ), 0)
+      + COALESCE((SELECT SUM("videoBytes") FROM "photo" WHERE "mapId" = ${mapId}), 0)
+    )::float8 AS "bytes"`;
   return Number(row?.bytes ?? 0);
 };
 
@@ -285,7 +293,8 @@ async function photoLimitProblem(tx, { mapId, countryCode, addingBytes = 0, limi
 export const createPhotoInDB = ({ photo, variants, landmarkMatches, limits = null }) =>
   prisma.$transaction(async (tx) => {
     if (limits) {
-      const addingBytes = variants.reduce((sum, v) => sum + (Number(v.bytes) || 0), 0);
+      // A video has no files here (it's in Stream): its own size counts instead
+      const addingBytes = variants.reduce((sum, v) => sum + (Number(v.bytes) || 0), 0) + (Number(photo.videoBytes) || 0);
       const refused = await photoLimitProblem(tx, { mapId: photo.mapId, countryCode: photo.countryCode, addingBytes, limits });
       if (refused) return { id: null, refused };
     }
@@ -442,3 +451,14 @@ export const confirmPhotoLandmarkInDB = async (photoId, landmarkId) => {
 
 export const deletePhotoLandmarkInDB = (photoId, landmarkId) =>
   prisma.photoLandmark.deleteMany({ where: { photoId, landmarkId } });
+
+// Videos in Cloudflare Stream
+
+/** A video's state, length or size, from a Stream notice. -> `{ count }` */
+export const updateVideoByStreamUid = (streamUid, data) => prisma.photo.updateMany({ where: { streamUid }, data });
+
+/** Which of these Stream ids a row points at (the daily clean-up deletes the rest). */
+export const findStreamUidsIn = async (uids) =>
+  new Set(
+    (await prisma.photo.findMany({ where: { streamUid: { in: uids } }, select: { streamUid: true } })).map((p) => p.streamUid)
+  );

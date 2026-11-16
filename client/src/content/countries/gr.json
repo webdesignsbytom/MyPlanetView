@@ -1,0 +1,197 @@
+{
+  "code": "GR",
+  "slug": "greece",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Yia sas", "Elláda"],
+  "summary": "Ancient ruins, island-hopping by ferry and long taverna dinners by the sea.",
+  "overview": [
+    "Greece is a mountainous mainland and thousands of islands spread across the Aegean and Ionian seas. Athens has the Acropolis and its museum; the mainland has Delphi, Olympia and the monasteries of Meteora on their pillars of rock; and the islands run from Crete, the largest, to the white villages of the Cyclades, such as Santorini, Mykonos and Naxos.",
+    "Ferries and fast catamarans leave Piraeus and Rafina for the islands, and flights reach the bigger ones: in July and August, book both ahead. The islands' season is short. From about November to April many hotels, tavernas and ferry routes stop, while Athens and the larger towns carry on all year. Meals are late and shared, and Easter, not Christmas, is the biggest holiday."
+  ],
+  "whenToGo": {
+    "stripLabel": "Greece as a whole, with Athens and the mainland open all year. The islands' season is shorter, and each region below has a strip of its own.",
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Mild and green, with wild flowers in April and May. Easter, usually in April, opens the season on many islands. The sea stays cool for swimming until about June."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot, dry and bright. Athens is often above 35°C, and heatwaves pass 40°C. The islands are at their busiest and most expensive, above all around 15 August, when Greeks take their own holidays. Wildfires are a risk in the countryside."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is still summer, with the warmest sea and fewer people. October is mild and mostly sunny, but the island season winds down and many places close by the end of the month. Rain returns in November."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild and wet in Athens and on the coasts, around 13–15°C by day, and cold with snow in the north and the mountains. Most island hotels and tavernas close and ferries run less often, while Athens and the mainland's sites stay open and quiet."
+      }
+    ],
+    "weather": "Mediterranean: hot, dry, sunny summers with almost no rain from June to August, and mild, rainy winters. The north and the mountains are colder, with snow in winter, and the Ionian islands in the west (Corfu, Kefalonia) are greener and wetter than the Aegean ones. In July and August the meltemi, a strong northerly wind, blows across the Aegean: it cools the islands but can delay or cancel ferries. The sea is warmest in August and September.",
+    "festivals": [
+      {
+        "name": "Apokries (Carnival) and Clean Monday",
+        "place": "Across Greece, biggest in Patras",
+        "when": "The weeks before Lent, in February or March; Clean Monday falls 48 days before Orthodox Easter",
+        "months": [2, 3],
+        "text": "Costume parties and parades, the largest in Patras. Lent begins on Clean Monday (Kathara Deftera), a public holiday of picnics, kite flying and meatless food."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Greece",
+        "when": "25 March",
+        "months": [3],
+        "text": "School and military parades, the biggest in Athens, marking the start of the 1821 revolution against Ottoman rule."
+      },
+      {
+        "name": "Easter (Pascha)",
+        "place": "Across Greece",
+        "when": "Orthodox Easter, usually in April or early May, often on a different Sunday from Western Easter",
+        "months": [4, 5],
+        "text": "Candlelit processions on Good Friday, a midnight service with fireworks on Saturday, and lamb roasted on spits on Sunday. Ferries, flights and hotels fill up, and many shops and some sites close on the main days."
+      },
+      {
+        "name": "Athens Epidaurus Festival",
+        "place": "Athens and Epidaurus",
+        "when": "Usually June to August",
+        "months": [6, 7, 8],
+        "text": "Theatre, music and dance in the Odeon of Herodes Atticus below the Acropolis, and ancient Greek plays performed at night in the theatre at Epidaurus."
+      },
+      {
+        "name": "Dormition of the Virgin (Panagia)",
+        "place": "Across Greece, above all the islands",
+        "when": "15 August",
+        "months": [8],
+        "text": "A public holiday at the height of summer, with church processions and village feasts (panigyria) of music and dancing. Pilgrims crowd the island of Tinos, and ferries and island rooms are at their busiest."
+      },
+      {
+        "name": "Ochi Day",
+        "place": "Across Greece",
+        "when": "28 October",
+        "months": [10],
+        "text": "Parades for the day in 1940 when Greece refused Italy's ultimatum in the Second World War. \"Ochi\" means no."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Athens and the mainland",
+        "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+        "text": "Athens, Delphi, Meteora and the Peloponnese (Nafplio, Mycenae, Olympia) are open all year. Spring and autumn are best for walking round ruins. In July and August Athens is often above 35°C, and in heatwaves the Acropolis has closed in the hottest hours. Winter brings snow to the mountains, with skiing on Mount Parnassos above Delphi."
+      },
+      {
+        "name": "The Cyclades and other small islands",
+        "months": ["avoid", "avoid", "avoid", "good", "best", "best", "good", "good", "best", "good", "avoid", "avoid"],
+        "text": "Santorini, Mykonos, Naxos, Paros and their neighbours have a season from about Easter or May to October. From November to about April most hotels, tavernas and beach bars close and ferries run less often. July and August are the busiest and dearest months, and the meltemi can stop smaller boats."
+      },
+      {
+        "name": "Crete and Rhodes",
+        "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "The two big southern islands have the longest season, roughly April to early November, and the sea stays warm into October. Their main towns (Chania, Heraklion, Rhodes Town) are lived in all year, though the beach resorts close in winter. Crete's Samaria Gorge is usually open from May to October."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and eye contact when you meet; friends and family kiss on both cheeks. \"Yia sas\" is hello, polite or to more than one person, and \"yia sou\" to a friend; both also mean goodbye. Say \"kalimera\" (good morning) in the morning and \"kalispera\" (good evening) from late afternoon.",
+    "etiquette": [
+      "\"Ne\" means yes and \"ochi\" means no. A quick upward tilt of the head, often with raised eyebrows or a click of the tongue, also means no.",
+      "Don't push an open hand, fingers spread, towards someone's face: the gesture (moutza) is an old insult.",
+      "In much of Greece the drains are narrow, so toilet paper goes in the bin beside the toilet, not down it, unless a sign says otherwise.",
+      "Meals are late and shared: lunch from about 2 pm, dinner from 9 pm, with dishes ordered for the whole table. The bill comes when you ask for it.",
+      "Ancient sites have little shade, so go early and carry water. Don't touch or climb on the ruins.",
+      "Easter matters more than Christmas. Churches fill for the midnight service on Holy Saturday, and you'll be welcome to stand at the back with a candle."
+    ],
+    "tipping": "Not expected the way it is in the US, and service is usually included in menu prices. In tavernas and restaurants, locals round up or leave 5 to 10% in cash on the table for good service. Round up taxi fares, and give a euro or two to porters.",
+    "dress": "Light and casual in summer, with a hat and sun cream; a warm layer and a waterproof in winter. Cover your shoulders and knees in churches and monasteries: at Meteora, women are asked to wear a skirt below the knee (wraps are lent at the door) and men long trousers. Shoes with grip help on the polished marble paths at the Acropolis. Keep swimwear for the beach.",
+    "food": [
+      {
+        "name": "Souvlaki and gyros",
+        "text": "Grilled pork or chicken on skewers, or sliced from a turning spit, wrapped in pitta with tzatziki, tomato, onion and often chips. Cheap, quick and everywhere."
+      },
+      {
+        "name": "Meze",
+        "text": "Small plates shared over ouzo or tsipouro: tzatziki, fava (a yellow split-pea purée, best on Santorini), grilled octopus and saganaki, fried cheese."
+      },
+      {
+        "name": "Moussaka",
+        "text": "Layers of aubergine and spiced minced meat under a thick béchamel, baked and served in squares."
+      },
+      {
+        "name": "Horiatiki (Greek salad)",
+        "text": "Tomato, cucumber, onion, peppers and olives with a slab of feta and plenty of olive oil, and no lettuce."
+      },
+      {
+        "name": "Fish and seafood",
+        "text": "Fresh fish is chosen from the display and priced by the kilo, so ask what yours will cost before it's cooked."
+      },
+      {
+        "name": "Pies (pites)",
+        "text": "Filo pies of spinach and feta (spanakopita) or cheese (tiropita) from any bakery, and in Thessaloniki bougatsa, a custard pie for breakfast."
+      }
+    ],
+    "phrases": {
+      "language": "Greek",
+      "intro": "English is widely spoken where visitors go, and road signs and many menus show Latin letters as well as Greek. The phrases are given in Latin letters.",
+      "items": [
+        { "phrase": "Yia sas / Yia sou", "say": "YAH sas / YAH soo", "meaning": "Hello; goodbye (polite / to a friend)" },
+        { "phrase": "Kalimera", "say": "kah-lee-MEH-rah", "meaning": "Good morning" },
+        { "phrase": "Efharisto", "say": "ef-hah-ree-STOH", "meaning": "Thank you" },
+        { "phrase": "Parakalo", "say": "pah-rah-kah-LOH", "meaning": "Please; you're welcome" },
+        { "phrase": "Ne / Ochi", "say": "neh / OH-hee", "meaning": "Yes / No" },
+        { "phrase": "Signomi", "say": "seeg-NOH-mee", "meaning": "Sorry; excuse me" },
+        { "phrase": "Poso kanei?", "say": "POH-soh KAH-nee", "meaning": "How much is it?" },
+        { "phrase": "Ton logariasmo, parakalo", "say": "ton loh-gah-ryahz-MOH pah-rah-kah-LOH", "meaning": "The bill, please" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q41",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Greek; English is widely spoken where visitors go",
+        "sources": [{ "property": "P37", "values": ["Q9129"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time: UTC+2, and UTC+3 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q190252", "Q6723", "Q6760", "Q1109976", "Q5412093"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance. The national numbers work too: 100 for police, 166 for an ambulance and 199 for fire.",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648793", "Q25648841", "Q25648881"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+30",
+        "sources": [{ "property": "P474", "values": ["+30"] }]
+      }
+    ]
+  }
+}

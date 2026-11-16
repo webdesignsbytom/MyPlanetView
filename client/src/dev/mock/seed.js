@@ -5,6 +5,8 @@
 // seed-photos/, from Wikimedia Commons); the other maps use posters as stand-ins.
 import { seedPhotoBySlug } from './data/seedPhotos';
 import { EXAMPLE_OFFERS } from './data/offers';
+// Fran's First Class map of videos, shared with the test user (seedFirstClass.js)
+import { addFirstClassMap } from './seedFirstClass';
 
 // Every mock user's password: the one the server's seed gives its users (CLAUDE.md, "Seed")
 export const MOCK_PASSWORD = '12345678';
@@ -135,7 +137,9 @@ const user = (id, name, email, extra = {}) => ({
   ...extra,
 });
 
-export function buildSeed() {
+export const buildSeed = () => addFirstClassMap(buildBaseSeed());
+
+function buildBaseSeed() {
   const homeMap = 'map-home';
   const samMap = 'map-sam';
   const joMap = 'map-jo';

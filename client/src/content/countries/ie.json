@@ -1,0 +1,196 @@
+{
+  "code": "IE",
+  "slug": "ireland",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Fáilte", "Éire"],
+  "summary": "Atlantic cliffs, traditional music in the pub and weather that changes by the hour.",
+  "overview": [
+    "Ireland is a small, green island on the edge of the Atlantic, and most of it is countryside: the cliffs and peninsulas of the west coast, bogs and lakes in the middle, stone forts and ruined monasteries, and towns where traditional music is played in the pub most nights. Dublin has Georgian squares, the Book of Kells at Trinity College and the Guinness Storehouse.",
+    "This page covers the Republic of Ireland, which uses the euro. Northern Ireland, in the north-east of the island, is part of the United Kingdom, with pounds sterling and speed limits in miles per hour, though there are no checks at the border. Distances are short but country roads are slow, so allow more time than the map suggests, and pack for rain in every month."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Longer days, lambs in the fields and fewer visitors. March and April are cool and showery; May is often one of the sunniest months. St Patrick's Day fills Dublin in mid-March."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "The warmest months, usually 17–20°C by day, with long evenings: in late June it stays light until about 10 pm. The busiest and most expensive time, above all on the west coast, so book rooms and hire cars early."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is often settled and mild, with the summer crowds gone. October and November turn wetter and windier, and Atlantic storms become more likely."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild but wet and windy, with less than eight hours of daylight in December. Frost and snow are rare outside the hills. Some seasonal sights, B&Bs and boat trips in the west close until Easter, but Dublin makes a good winter city break, with Christmas lights in December."
+      }
+    ],
+    "weather": "Mild and damp all year, and rarely very hot or very cold: summer days are usually 17–20°C and winter days around 8°C. Rain comes mostly as showers, often with sunshine in between, and can fall in any month. The west gets the most rain and wind; the east and the south-east are drier and sunnier.",
+    "festivals": [
+      {
+        "name": "St Patrick's Day",
+        "place": "Across Ireland, above all Dublin",
+        "when": "17 March; Dublin's festival runs for several days around it",
+        "months": [3],
+        "text": "A public holiday for Ireland's patron saint, with a parade in almost every town, the biggest in Dublin, and pubs full from midday. Book Dublin rooms well ahead."
+      },
+      {
+        "name": "Bloomsday",
+        "place": "Dublin",
+        "when": "16 June",
+        "months": [6],
+        "text": "Readings, walks and Edwardian costume in honour of James Joyce's novel Ulysses, which follows its hero round Dublin on 16 June 1904."
+      },
+      {
+        "name": "Galway International Arts Festival",
+        "place": "Galway",
+        "when": "Usually two weeks in the second half of July",
+        "months": [7],
+        "text": "Theatre, music, art and street shows across the city. The Galway Races, a week of horse racing and parties, usually follow around the end of July."
+      },
+      {
+        "name": "Puck Fair",
+        "place": "Killorglin, County Kerry",
+        "when": "10–12 August",
+        "months": [8],
+        "text": "One of Ireland's oldest fairs: a wild goat is crowned King Puck and watches over three days of horse trading, market stalls and music."
+      },
+      {
+        "name": "Lisdoonvarna Matchmaking Festival",
+        "place": "Lisdoonvarna, County Clare",
+        "when": "Usually all of September, busiest at weekends",
+        "months": [9],
+        "text": "A month of dancing, country music and a traditional matchmaker who still pairs people off, in a small spa town near the Burren."
+      },
+      {
+        "name": "Cork Jazz Festival",
+        "place": "Cork",
+        "when": "The October bank holiday weekend, at the end of October",
+        "months": [10],
+        "text": "Jazz in pubs, hotels and concert halls across the city for a long weekend, from free sessions to ticketed concerts."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Dublin and the east",
+        "text": "The capital, with day trips to the Wicklow Mountains, the monastic valley of Glendalough and the passage tomb of Newgrange in the Boyne Valley. The driest part of the country, and fine for a city break in any month."
+      },
+      {
+        "name": "The west coast",
+        "text": "The Wild Atlantic Way: the Kerry peninsulas, the Cliffs of Moher, the Burren, Galway and Connemara. The wettest and windiest region, at its best from May to September, when boats to the islands run most often; landings on Skellig Michael are usually allowed only from mid-May to September, weather permitting."
+      },
+      {
+        "name": "Cork and the south",
+        "text": "Cork city, the harbour town of Kinsale and the coves and fishing villages of West Cork. The south-east, around Wexford and Waterford, is the sunniest corner of the island."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you meet someone, and first names straight away. \"How are you?\" or \"How's it going?\" is a greeting more than a question, and you'll often hear \"What's the craic?\": craic (said \"crack\") means news, fun or good company.",
+    "etiquette": [
+      "In a pub with a group, people take turns to buy a round for everyone. Join in, and don't slip away before it's your turn.",
+      "A traditional music session in a pub isn't a show put on for you: keep your voice down during a song, and ask before joining in with an instrument.",
+      "Thanking the bus driver as you get off is normal, in Dublin and everywhere else.",
+      "Country roads are narrow and winding, often between stone walls. Speed limits are in km/h, and road signs are in Irish and English, or in Irish only in the Gaeltacht.",
+      "Northern Ireland is part of the UK. There are no checks at the border, but prices change to pounds sterling and speed limits to miles per hour; if you hire a car, check that you may take it across.",
+      "Smoking is banned inside pubs, restaurants and every other workplace (Ireland was the first country to do so, in 2004), so smokers use outdoor areas."
+    ],
+    "tipping": "Not required, but in restaurants with table service most people leave 10 to 15% unless a service charge is already on the bill, as it often is for larger groups. Nobody tips for drinks at the bar. Taxi fares are usually rounded up.",
+    "dress": "Casual almost everywhere. Bring a waterproof jacket and warm layers in every season, since even summer evenings can be cool, and sturdy shoes for cliff paths, bogs and wet grass. Tidy clothes are enough for churches.",
+    "food": [
+      {
+        "name": "Full Irish breakfast",
+        "text": "Bacon rashers, sausages, eggs, black and white pudding, grilled tomato and toast or soda bread, with a pot of tea."
+      },
+      {
+        "name": "Irish stew",
+        "text": "Lamb or mutton slow-cooked with potatoes, onions and carrots: the classic pub lunch on a cold day."
+      },
+      {
+        "name": "Brown soda bread",
+        "text": "A dense wholemeal loaf raised with buttermilk and bread soda instead of yeast, served with butter alongside soup or smoked salmon."
+      },
+      {
+        "name": "Seafood",
+        "text": "Creamy seafood chowder, oysters from Galway Bay and smoked salmon, at their best in harbour towns along the west and south coasts."
+      },
+      {
+        "name": "Colcannon and boxty",
+        "text": "Potato dishes: colcannon is mashed potato with cabbage or kale and butter; boxty is a pancake of grated and mashed potato, most at home in the north-west."
+      },
+      {
+        "name": "Guinness and whiskey",
+        "text": "Stout has been brewed at St James's Gate in Dublin since 1759, and Irish whiskey is distilled across the country, with tours at many distilleries."
+      }
+    ],
+    "phrases": {
+      "language": "Irish (Gaeilge)",
+      "intro": "Everyone speaks English, and it's the language of daily life almost everywhere. Irish is on road signs and still spoken day to day in the Gaeltacht, areas mostly along the west coast, and a word or two of it always goes down well.",
+      "items": [
+        { "phrase": "Dia duit", "say": "DEE-ah gwit", "meaning": "Hello (\"God be with you\")" },
+        { "phrase": "Le do thoil", "say": "leh duh HULL", "meaning": "Please" },
+        { "phrase": "Go raibh maith agat", "say": "guh rev mah AH-gut", "meaning": "Thank you" },
+        { "phrase": "Sláinte!", "say": "SLAWN-chuh", "meaning": "Cheers! (\"Health\")" },
+        { "phrase": "Céad míle fáilte", "say": "kayd MEE-luh FAWL-chuh", "meaning": "A hundred thousand welcomes (often seen on signs)" },
+        { "phrase": "Slán", "say": "slawn", "meaning": "Goodbye" },
+        { "phrase": "Fir / Mná", "say": "fir / m-NAW", "meaning": "Men / Women (on toilet doors)" },
+        { "phrase": "An Lár", "say": "un LAWR", "meaning": "City centre (on bus signs)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q27",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Northern Ireland, which is part of the UK, uses the pound sterling (£).",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }],
+        "note": "Wikidata also lists the Irish euro coins (Q274474), which are simply euro, so the page leaves them out. Sterling in Northern Ireland isn't in the Republic's item; the page adds it for travellers crossing the border."
+      },
+      {
+        "key": "languages",
+        "text": "Irish and English, both official. English is the everyday language almost everywhere; Irish is spoken mainly in the Gaeltacht, mostly in the west, and is on every road sign.",
+        "sources": [{ "property": "P37", "values": ["Q9142", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time (UTC+0) in winter, and Irish Standard Time (UTC+1) from late March to late October: always the same as the UK.",
+        "sources": [{ "property": "P421", "values": ["Q30192", "Q6574"] }],
+        "note": "Wikidata lists only Greenwich Mean Time and UTC+0. The page adds summer time: clocks go forward an hour to Irish Standard Time (UTC+1) on the last Sunday of March and back on the last Sunday of October. In Irish law, Irish Standard Time is the standard time and GMT the winter period; the clock times are the same."
+      },
+      {
+        "key": "emergency",
+        "text": "112 or 999 for police (Gardaí), fire, ambulance and coast guard",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata lists only 112. The page adds 999, the older number, which reaches the same services and is just as widely used in Ireland."
+      },
+      {
+        "key": "callingCode",
+        "text": "+353",
+        "sources": [{ "property": "P474", "values": ["+353"] }]
+      }
+    ]
+  }
+}

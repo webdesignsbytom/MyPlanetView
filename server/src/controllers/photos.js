@@ -15,14 +15,7 @@ import {
 } from '../utils/travelValidation.js';
 import { countryAtPosition } from '../utils/countryLookup.js';
 import { boundingBox, matchLandmarks } from '../utils/landmarkMatch.js';
-import {
-  PHOTO_CONTENT_TYPES,
-  PHOTO_MAX_BYTES,
-  PHOTO_SAVE_WINDOW_MINUTES,
-  VIDEO_CONTENT_TYPES,
-  VIDEO_MAX_BYTES,
-} from '../utils/constants/mediaConstants.js';
-import { VIDEO_MAX_SECONDS } from '../utils/constants/plans.js';
+import { PHOTO_CONTENT_TYPES, PHOTO_MAX_BYTES, PHOTO_SAVE_WINDOW_MINUTES } from '../utils/constants/mediaConstants.js';
 import {
   assertPhotoUploadsUnderCap,
   buildPhotoKey,
@@ -33,15 +26,7 @@ import {
 } from '../services/s3/mediaService.js';
 import { findLandmarkById, findLandmarksInBox } from '../domain/places.js';
 import { loadMapPlan } from '../services/travel/plans.js';
-import {
-  LOCKED_MAP_MESSAGE,
-  VIDEO_MESSAGES,
-  checkCountryCap,
-  checkPhotoSizesForPlan,
-  checkVideoAllowed,
-  checkVideoCap,
-  checkVideoSizes,
-} from '../utils/planLimits.js';
+import { LOCKED_MAP_MESSAGE, VIDEO_MESSAGES, checkCountryCap, checkPhotoSizesForPlan } from '../utils/planLimits.js';
 import {
   confirmPhotoLandmarkInDB,
   countPhotosInCountry,
@@ -60,6 +45,7 @@ import {
   upsertPhotoLandmarkInDB,
 } from '../domain/photos.js';
 import { PHOTO_GALLERIES } from '../utils/photoOrder.js';
+import { deleteStreamVideoQuietly, refreshVideoState } from '../services/stream/videos.js';
 import { pageAfter, parseShuffleSeed, shuffled } from '../utils/shuffle.js';
 import { findTripAccess } from '../domain/trips.js';
 import {
@@ -92,25 +78,16 @@ const photoLimits = async (planId, countryCode, kind = 'PHOTO') => ({
   countryName: countryCode ? await countryNameOf(countryCode) : null,
 });
 
-// A photo or a video (docs/API.md, "Videos"): each file's allowed types and largest size.
-// A video's ORIGINAL is its file; its THUMB and DISPLAY are poster frames, as a photo's.
-const PHOTO_KINDS = ['PHOTO', 'VIDEO'];
-const typesFor = (kind, size) => (kind === 'VIDEO' && size === 'ORIGINAL' ? VIDEO_CONTENT_TYPES : PHOTO_CONTENT_TYPES[size]);
-const maxBytesFor = (kind, size) => (kind === 'VIDEO' && size === 'ORIGINAL' ? VIDEO_MAX_BYTES : PHOTO_MAX_BYTES[size]);
-const isDuration = (value) => Number.isInteger(value) && value >= 1 && value <= VIDEO_MAX_SECONDS;
+// This upload takes photos only; videos go to Cloudflare Stream (controllers/videos.js)
+const PHOTO_KINDS = ['PHOTO'];
 
-/**
- * The kind of an upload and, for a video, its length and whether the map's plan takes
- * videos. -> `{ kind, durationS }`, or `{ status, message }`
- */
-function parseUploadKind(body, planId) {
+/** -> `{ kind: 'PHOTO', durationS: null }`, or `{ status, message }` for anything else */
+function parseUploadKind(body) {
   const kind = body.kind ?? 'PHOTO';
+  // Videos upload to Cloudflare Stream instead (controllers/videos.js)
+  if (kind === 'VIDEO') return { status: 400, message: VIDEO_MESSAGES.useVideoUpload };
   if (!PHOTO_KINDS.includes(kind)) return { status: 400, message: EVENT_MESSAGES.photoUploadInvalid };
-  if (kind === 'PHOTO') return { kind, durationS: null };
-  const notAllowed = checkVideoAllowed(planId);
-  if (notAllowed) return { status: 403, message: notAllowed };
-  if (!isDuration(body.durationS)) return { status: 400, message: VIDEO_MESSAGES.duration };
-  return { kind, durationS: body.durationS };
+  return { kind, durationS: null };
 }
 
 // Upload, step 1: presigned PUTs into the private bucket. The map's owner's plan decides:
@@ -128,7 +105,7 @@ export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) 
   if (!mapPlan) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
   if (mapPlan.locked) return forbidden(req, res, D, LOCKED_MAP_MESSAGE);
 
-  const upload = parseUploadKind(body, mapPlan.plan);
+  const upload = parseUploadKind(body);
   if (upload.status) return sendMessageResponse(res, upload.status, upload.message);
   const { kind } = upload;
 
@@ -140,24 +117,23 @@ export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) 
   if (!hasRequiredSizes(sizes)) return badRequest(req, res, D, EVENT_MESSAGES.photoSizesRequired);
   for (const file of files) {
     if (!PHOTO_SIZES.includes(file.size)) return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
-    if (!typesFor(kind, file.size)?.includes(file.contentType)) {
+    if (!PHOTO_CONTENT_TYPES[file.size].includes(file.contentType)) {
       return badRequest(req, res, D, EVENT_MESSAGES.photoTypeInvalid);
     }
     // The declared size is signed into the upload URL, so the PUT must be exactly this big
     if (!Number.isSafeInteger(file.bytes) || file.bytes <= 0) {
       return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
     }
-    if (file.bytes > maxBytesFor(kind, file.size)) return sendMessageResponse(res, 413, EVENT_MESSAGES.photoTooLarge);
+    if (file.bytes > PHOTO_MAX_BYTES[file.size]) return sendMessageResponse(res, 413, EVENT_MESSAGES.photoTooLarge);
   }
-  // A video's files are its poster frames and its file, whatever the plan's photo copies
-  const sizeProblem = kind === 'VIDEO' ? checkVideoSizes(sizes) : checkPhotoSizesForPlan(sizes, mapPlan.plan);
+  const sizeProblem = checkPhotoSizesForPlan(sizes, mapPlan.plan);
   if (sizeProblem) return badRequest(req, res, D, sizeProblem);
 
   // The country the uploader expects (confirm checks again with the final one)
   const hint = await parseOptionalCountry(body.countryCode);
   if (!hint.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
   if (hint.value) {
-    const full = (kind === 'VIDEO' ? checkVideoCap : checkCountryCap)({
+    const full = checkCountryCap({
       count: await countPhotosInCountry(map.id, hint.value, undefined, kind),
       ...(await photoLimits(mapPlan.plan, hint.value, kind)),
     });
@@ -217,8 +193,8 @@ async function checkUploadedFiles({ mapId, photoId, variants, userId, kind = 'PH
     }
     const stored = await headPrivateObject(variant.key);
     if (!stored) return { status: 400, message: EVENT_MESSAGES.photoUploadInvalid };
-    if (stored.bytes > maxBytesFor(kind, variant.size)) return { status: 413, message: EVENT_MESSAGES.photoTooLarge };
-    if (!typesFor(kind, variant.size)?.includes(stored.contentType)) {
+    if (stored.bytes > PHOTO_MAX_BYTES[variant.size]) return { status: 413, message: EVENT_MESSAGES.photoTooLarge };
+    if (!PHOTO_CONTENT_TYPES[variant.size].includes(stored.contentType)) {
       return { status: 400, message: EVENT_MESSAGES.photoTypeInvalid };
     }
     checked.push({
@@ -263,7 +239,7 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
     return forbidden(req, res, D, LOCKED_MAP_MESSAGE);
   }
 
-  const upload = parseUploadKind(body, mapPlan.plan);
+  const upload = parseUploadKind(body);
   if (upload.status) {
     await discardUpload();
     return sendMessageResponse(res, upload.status, upload.message);
@@ -281,7 +257,7 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
     return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
   }
   if (!hasRequiredSizes(sizes)) return badRequest(req, res, D, EVENT_MESSAGES.photoSizesRequired);
-  const sizeProblem = kind === 'VIDEO' ? checkVideoSizes(sizes) : checkPhotoSizesForPlan(sizes, mapPlan.plan);
+  const sizeProblem = checkPhotoSizesForPlan(sizes, mapPlan.plan);
   if (sizeProblem) return badRequest(req, res, D, sizeProblem);
   if (!isPixelSize(body.width) || !isPixelSize(body.height)) {
     return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
@@ -394,7 +370,9 @@ export async function photoPage({ query, mapId, tripId, role }) {
     nextCursor = rows.length > limit ? page[page.length - 1].id : null;
   }
   return {
-    photos: await Promise.all(visiblePhotos(page, role).map((p) => photoListItem(p, role))),
+    photos: await Promise.all(
+      visiblePhotos(page, role).map((p) => photoListItem(withDisplay ? { ...p, withDisplay: true } : p, role))
+    ),
     nextCursor,
   };
 }
@@ -421,6 +399,8 @@ export const getTripPhotosHandler = handler(D, 'Get trip photos', async (req, re
 export const getPhotoHandler = handler(D, 'Get photo', async (req, res) => {
   const { photo, role } = await loadPhoto(req, req.params.photoId);
   if (!canSeePhoto(role, photo)) return notFound(req, res, D, EVENT_MESSAGES.photoNotFound);
+  // A video still converting (only editors see one): ask Stream, in case its notice is late
+  if (photo.kind === 'VIDEO' && photo.videoState === 'PROCESSING') await refreshVideoState(photo);
   return sendDataResponse(res, 200, { photo: await photoDetailView(await findPhotoDetail(photo.id), role) });
 });
 
@@ -502,10 +482,12 @@ export const deletePhotoHandler = handler(D, 'Delete photo', async (req, res) =>
   if (!canSeePhoto(role, photo)) return notFound(req, res, D, EVENT_MESSAGES.photoNotFound);
   if (!canEdit(role)) return forbidden(req, res, D);
 
-  // Rows first: a file still referenced by a PhotoVariant can't be removed
+  // Rows first: a file still referenced by a PhotoVariant can't be removed. A video's file
+  // is in Stream (a failed delete there is left for the daily clean-up).
   const keys = await findPhotoFileKeys(photo.id);
   await deletePhotoInDB(photo.id);
   await deleteStoredObjects(keys);
+  if (photo.streamUid) await deleteStreamVideoQuietly(photo.streamUid);
   logEvent(createPhotoEvent({ user: req.user, action: 'Delete Success', id: photo.id }));
   return sendDataResponse(res, 200, { message: 'Photo deleted.' });
 });

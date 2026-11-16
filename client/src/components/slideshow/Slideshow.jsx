@@ -10,6 +10,7 @@ import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import SlidePhoto from './SlidePhoto';
+import SlideVideo from './SlideVideo';
 import SlideTitleCard from './SlideTitleCard';
 import SlideCaption from './SlideCaption';
 import SlideshowControls from './SlideshowControls';
@@ -59,6 +60,9 @@ const ownsKey = (target) => Boolean(target?.closest?.('input, textarea, select, 
  * - **Screen readers:** a modal dialog; each slide's words are announced when it's moved
  *   by hand, not while it plays by itself (as a carousel does).
  * Viewers never get hidden photos: the API leaves them out.
+ * - **Videos** (First Class): a video plays through (muted until its sound button is
+ *   pressed), then the show moves on, instead of on the timer; one this browser can't
+ *   play shows its poster frame for the usual time (SlideVideo).
  * - **A travel offer** (docs/API.md, "Travel offers"): where the map's galleries show
  *   cards (`adEvery` set), one comes on the end card, never mid-show (SlideshowOffer).
  *   `nextTrip`, `canFetchTrips` and `mapKey` are as for CountryPanel's.
@@ -78,6 +82,11 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
   const [readyId, setReadyId] = useState(null);
   const [fullscreen, setFullscreen] = useState(false);
   const [notice, setNotice] = useState(null);
+  // Videos: muted until asked (then for the rest of the show), the one that couldn't play
+  // (it shows its poster on the timer), and one that ended before the next page arrived
+  const [muted, setMuted] = useState(true);
+  const [videoFailedId, setVideoFailedId] = useState(null);
+  const [videoEndedId, setVideoEndedId] = useState(null);
 
   const list = useSlideshowPhotos({
     mapId: source.mapId,
@@ -124,10 +133,12 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
     restart(true);
   }, [list.stale, restart]);
 
-  // A slide with no picture to wait for is ready at once. (By its id and kind: the list of
-  // slides is rebuilt as each page arrives, and that mustn't restart the clock.)
   const slideId = slide?.id ?? null;
   const slideType = slide?.type ?? null;
+  // A video that can play moves the show on when it ends, not on the timer
+  const playsThrough = slideType === 'photo' && slide.photo.kind === 'VIDEO' && videoFailedId !== slideId;
+  // A slide with no picture to wait for is ready at once. (By its id and kind: the list of
+  // slides is rebuilt as each page arrives, and that mustn't restart the clock.)
   useEffect(() => {
     if (slideId && slideType !== 'photo') setReadyId(slideId);
   }, [slideId, slideType]);
@@ -142,10 +153,24 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
       return undefined;
     }
     if (!hasNext) return undefined; // the next page is still coming
-    const seconds = slideType === 'card' ? Math.min(speed, TITLE_CARD_SECONDS) : speed;
+    // A video moves on when it ends (videoEnded); one that ended while the next page was
+    // still coming moves on now
+    if (playsThrough && videoEndedId !== slideId) return undefined;
+    const seconds = playsThrough ? 0 : slideType === 'card' ? Math.min(speed, TITLE_CARD_SECONDS) : speed;
     const timer = window.setTimeout(() => setIndex((i) => i + 1), seconds * 1000);
     return () => window.clearTimeout(timer);
-  }, [playing, slideId, slideType, readyId, speed, hasNext]);
+  }, [playing, slideId, slideType, readyId, speed, hasNext, playsThrough, videoEndedId]);
+
+  // A video played through: on to the next slide (while the show plays)
+  const videoEnded = (id) => {
+    if (id !== slideId || !playing) return;
+    if (hasNext) setIndex((i) => i + 1);
+    else setVideoEndedId(id);
+  };
+  // Leaving a slide forgets that its video had ended, so coming back plays it again
+  useEffect(() => {
+    setVideoEndedId(null);
+  }, [index]);
 
   // The next page, before the show gets to the end of this one
   const { loadMore, nextCursor, loading } = list;
@@ -269,6 +294,19 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
               <LoadingSpinner md />
               <span className='sr-only'>Loading the photos…</span>
             </div>
+          ) : slide.type === 'photo' && slide.photo.kind === 'VIDEO' ? (
+            <SlideVideo
+              key={slide.id}
+              photo={slide.photo}
+              alt={altFor(slide.photo)}
+              playing={playing}
+              muted={muted}
+              onMutedChange={setMuted}
+              reducedMotion={reducedMotion}
+              onReady={setReadyId}
+              onEnded={videoEnded}
+              onFailed={setVideoFailedId}
+            />
           ) : slide.type === 'photo' ? (
             <SlidePhoto key={slide.id} photo={slide.photo} alt={altFor(slide.photo)} reducedMotion={reducedMotion} onReady={setReadyId} />
           ) : slide.type === 'card' ? (

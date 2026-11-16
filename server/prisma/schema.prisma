@@ -575,6 +575,14 @@ model Photo {
   kind      PhotoKind @default(PHOTO)
   durationS Int?
 
+  // A video lives in Cloudflare Stream (docs/API.md "Videos"), which converts it so every
+  // browser plays it: its Stream id, where the conversion has got to, and its size (it
+  // counts towards the storage safety net). A video has no PhotoVariants. CHECK
+  // photo_video_stream: a video has all of these, a photo none.
+  streamUid  String?     @unique
+  videoState VideoState?
+  videoBytes Int?
+
   // When it was taken, or when it was uploaded if the file had no date: the slideshows'
   // order and the dated goals. Always takenAt ?? createdAt (set by domain/photos.js).
   shotAt DateTime @default(now())
@@ -618,6 +626,13 @@ model Photo {
 enum PhotoKind {
   PHOTO
   VIDEO
+}
+
+// A video's conversion in Cloudflare Stream: shown to viewers only when READY
+enum VideoState {
+  PROCESSING
+  READY
+  FAILED
 }
 
 enum PhotoSize {

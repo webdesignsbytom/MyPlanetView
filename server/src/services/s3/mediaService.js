@@ -604,7 +604,7 @@ export const headPrivateObject = (key) => {
  * A signed GET for a photo file. Signed at the start of the current hour and
  * valid for two, so the URL stays the same for at least an hour (cacheable).
  */
-export async function signPhotoUrl(key) {
+export async function signPhotoUrl(key, { downloadAs } = {}) {
   const hourStart = new Date();
   hourStart.setUTCMinutes(0, 0, 0);
   const { priv } = await storage();
@@ -613,6 +613,8 @@ export async function signPhotoUrl(key) {
     key,
     expiresIn: PHOTO_URL_TTL_SECONDS,
     signingDate: hourStart,
+    // Only letters, digits, dots and dashes reach the header (callers build the name)
+    downloadAs: downloadAs ? String(downloadAs).replace(/[^A-Za-z0-9._-]/g, '') || undefined : undefined,
   });
 }
 

@@ -11,6 +11,7 @@ import { toDateOnly } from '../../utils/travelValidation.js';
 import { buildMapStats } from '../../utils/mapStats.js';
 import { bestCopySize } from '../../utils/planLimits.js';
 import { signPhotoUrl } from '../../services/s3/mediaService.js';
+import { videoPlayback } from '../../services/stream/videos.js';
 import {
   countMapConfirmedLandmarks,
   countMapPhotos,
@@ -30,14 +31,12 @@ const signed = async (key) => (key ? signPhotoUrl(key) : null);
  */
 export async function photoListItem(photo, role) {
   const editor = canEdit(role);
+  if (photo.kind === 'VIDEO') return videoListItem(photo, role);
   const displayKey = keyOf(photo, 'DISPLAY');
-  // A video's file is its ORIGINAL (location metadata overwritten before upload), so anyone
-  // who can see the video can play it; a photo's original never goes in a list
-  const videoKey = photo.kind === 'VIDEO' ? keyOf(photo, 'ORIGINAL') : null;
   return {
     id: photo.id,
-    kind: photo.kind ?? 'PHOTO',
-    durationS: photo.durationS ?? null,
+    kind: 'PHOTO',
+    durationS: null,
     caption: photo.caption,
     takenAt: photo.takenAt,
     countryCode: photo.countryCode,
@@ -46,11 +45,49 @@ export async function photoListItem(photo, role) {
     height: photo.height,
     thumbUrl: await signed(keyOf(photo, 'THUMB')),
     ...(displayKey ? { displayUrl: await signed(displayKey) } : {}),
-    ...(videoKey ? { videoUrl: await signed(videoKey) } : {}),
     landmarks: photo.landmarks
       .filter((l) => editor || l.confirmed)
       .map((l) => ({ id: l.landmark.id, name: l.landmark.name, confirmed: l.confirmed })),
     ...(editor ? { hidden: photo.hidden } : {}),
+  };
+}
+
+/**
+ * A video in a list (docs/API.md "Videos"): it lives in Cloudflare Stream, so its pictures
+ * are Stream's thumbnails and it plays from Stream's HLS link, each signed for the hour.
+ * Only a READY video has them (viewers never get any other); editors also get `videoState`.
+ * `displayUrl` and `videoUrl` come with the slideshow lists' DISPLAY copy, as for photos.
+ */
+function videoListItem(photo, role) {
+  const editor = canEdit(role);
+  const playback = photo.videoState === 'READY' ? videoPlayback(photo) : null;
+  // Set by photoPage for the slideshows' lists (`display=1`)
+  const withDisplay = Boolean(photo.withDisplay);
+  return {
+    id: photo.id,
+    kind: 'VIDEO',
+    durationS: photo.durationS ?? null,
+    caption: photo.caption,
+    takenAt: photo.takenAt,
+    countryCode: photo.countryCode,
+    tripId: photo.tripId,
+    width: photo.width,
+    height: photo.height,
+    thumbUrl: playback ? playback.thumbnail(400) : null,
+    ...(withDisplay && playback ? { displayUrl: playback.thumbnail(1080), videoUrl: playback.hls } : {}),
+    landmarks: [],
+    ...(editor ? { hidden: photo.hidden, videoState: photo.videoState } : {}),
+  };
+}
+
+/** One opened video: its poster and playback link (READY only), never coordinates or files. */
+function videoDetailView(photo, role) {
+  const playback = photo.videoState === 'READY' ? videoPlayback(photo) : null;
+  return {
+    ...videoListItem(photo, role),
+    displayUrl: playback ? playback.thumbnail(1080) : null,
+    videoUrl: playback ? playback.hls : null,
+    ...(canSeeLocation(role) ? { latitude: null, longitude: null, originalUrl: null, bestCopy: null } : {}),
   };
 }
 
@@ -60,9 +97,9 @@ export async function photoListItem(photo, role) {
  * (Economy), and `bestCopy` says which (null when the photo has neither).
  */
 export async function photoDetailView(photo, role) {
+  if (photo.kind === 'VIDEO') return videoDetailView(photo, role);
   const base = await photoListItem(photo, role);
   const view = { ...base, displayUrl: await signed(keyOf(photo, 'DISPLAY')) };
-  if (photo.kind === 'VIDEO') view.videoUrl = await signed(keyOf(photo, 'ORIGINAL'));
   if (canSeeLocation(role)) {
     const bestCopy = bestCopySize((photo.variants ?? []).map((v) => v.size));
     view.originalUrl = await signed(bestCopy ? keyOf(photo, bestCopy) : null);

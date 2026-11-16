@@ -240,12 +240,21 @@ Built on 16 Nov 2026 (FEATURE-PLAN.md, "Tiers" and "Maps", has the reasons; docs
   - A creator given a free membership in return must label the post as an ad (ASA and CMA influencer guidance).
 - **Travel offers admin** (`/admin/offers`). Offers mostly arrive as partner files, so the page leads with the import: matched by key, offers not in the file left alone, a field left out back to its default; it shows which keys are new and which will update before sending, and lists any problems per offer in plain words. Export writes the same shape for offline editing. Each offer is a paper slip with its state in words and 30 days of clicks (numbers per placement and daily bars, never colour alone). Turning an offer off keeps its counts; deleting asks first and says they go too.
 
+## Travel offers
+
+Partner offers are our own cards, never a third party's script. The client fetches every live offer once (`GET /offers`) and chooses in the browser, so nothing about the viewer leaves to choose them.
+- **Choosing:** a planned trip with future dates (its destination), then the country being viewed, then the country of the photos around the slot, then general offers; within the group by weight, the same for the same slot every time.
+- **Where cards show:** country and trip galleries, after every `ads.every` photos (12 on Economy maps, 24 on Business maps for viewers who don't pay; none for paying viewers or on First Class maps); one on a slideshow's end card; two on each country guide, for everyone. Never while rearranging, in pickers, the passport, account pages, sign-in or sign-up.
+- **The Travel Desk** opens only when pressed, on every plan, from trips, the country panel and the guides: a brochure rack with the label "Partner offers. We may earn a commission if you book, at no cost to you.", when to go from the guide's month strip, then offers by kind.
+- **Links** go through `/go/:offerId`, which counts offer × day × placement and nothing else; on a planned trip they carry the first stop's place and the trip's dates. Each is labelled "Ad" and opens in a new tab with `rel="sponsored noopener"` and no referrer.
+- **Disclosure:** the terms ("Travel offers"), the privacy policy ("Travel offers and affiliate links") and the FAQ ("Why are there travel offers, and do they track me?") say all of this.
+
 ## Privacy rules
 
 - Everything is private by default.
 - GPS coordinates are shown only to the owner and editors. They are never inside a file a viewer can open.
 - Share pages are `noindex`, and analytics doesn't run on them.
-- Planned: Economy maps show travel affiliate cards to everyone viewing them, and Business maps show fewer to non-paying viewers. They're plain links with no ad scripts or tracking. Paying members never see them, and a Travel Desk button opens offers on request. See [FEATURE-PLAN.md](FEATURE-PLAN.md#ads-by-tier).
+- Economy maps show travel offer cards to everyone viewing them, and Business maps show fewer to non-paying viewers ("Travel offers", above). They're plain links with no ad scripts or tracking. Paying members never see them, and a Travel Desk button opens offers on request. See [FEATURE-PLAN.md](FEATURE-PLAN.md#ads-by-tier).
 - Deleting an account deletes that person's uploads. A map with other editors is handed to one of them first, or the deletion is refused, so nobody loses photos with someone else's account.
 
 ## Database

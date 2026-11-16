@@ -15,6 +15,18 @@ describe('projectToMap (Robinson, fitted to the SVG map)', () => {
     expect(Math.abs(projectToMap(-34.83, 20.0).y - 725.4)).toBeLessThan(1.5);
   });
 
+  it('runs Antarctica straight across the bottom: from 66°S the parallels reach the sides', () => {
+    for (const lat of [-66, -75, -90]) {
+      expect(projectToMap(lat, -180).x).toBe(0);
+      expect(projectToMap(lat, 180).x).toBe(2000);
+    }
+    // North of 58°S it's plain Robinson; between, the parallels widen smoothly
+    expect(projectToMap(-58, 180).x).toBeCloseTo(987.1 + 5.681 * (0.835 + (0.7986 - 0.835) * 0.6) * 180, 0);
+    const between = projectToMap(-62, 180).x;
+    expect(between).toBeGreaterThan(projectToMap(-58, 180).x);
+    expect(between).toBeLessThan(2000);
+  });
+
   it('is symmetric about the equator', () => {
     const north = projectToMap(40, 10);
     const south = projectToMap(-40, 10);

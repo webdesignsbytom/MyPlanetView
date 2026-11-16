@@ -1,0 +1,191 @@
+{
+  "code": "PT",
+  "slug": "portugal",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Olá", "Portugal"],
+  "summary": "Lisbon and Porto, Douro vineyards, Algarve beaches and islands in the Atlantic.",
+  "overview": [
+    "Portugal is only about 560 km from north to south, with a long Atlantic coastline: Lisbon and its old quarters above the Tagus, Porto and its port lodges on the Douro, the terraced vineyards of the Douro Valley, the cork-oak plains and whitewashed towns of the Alentejo, and the cliffs and beaches of the Algarve. Far out in the Atlantic, the islands of Madeira and the Azores are part of the country too.",
+    "Fast Alfa Pendular trains link Braga, Porto, Coimbra, Lisbon and the Algarve, and buses reach most other places; for the Alentejo and the Douro Valley a car helps. Lisbon and Porto are both built on steep hills, so plan for climbs and bring comfortable shoes."
+  ],
+  "whenToGo": {
+    "stripLabel": "Mainland Portugal. Madeira and the Azores have climates of their own, described below.",
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Green and mild, warming from the high teens °C in March to the mid-20s in May. Showers are likely until April, especially in the north. Easter week and 25 April (Freedom Day, a public holiday) are busy."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm on the coast, where the Atlantic keeps Lisbon at about 28°C by day, but very hot inland, where heatwaves can pass 40°C and forest fires are a risk. June is the month of the city saints' festivals; the Algarve is at its busiest in August."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September and October stay warm and mostly dry, with the sea at its warmest and the grape harvest in the Douro Valley. The rain usually returns in late October or November."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild and wet rather than cold: around 15°C by day in Lisbon and the Algarve, cooler and rainier in Porto, with snow only on the Serra da Estrela. Many homes and cheaper guesthouses have little heating, so nights indoors can feel cold."
+      }
+    ],
+    "weather": "Mild and Atlantic: warm, dry summers and cool, wet winters. The north is the greenest and wettest part, the Alentejo inland the hottest in summer, and the Algarve the sunniest and driest. Winds off the ocean keep the west coast fresh and its sea cool, even in August.",
+    "festivals": [
+      {
+        "name": "Festa da Flor (Flower Festival)",
+        "place": "Funchal, Madeira",
+        "when": "Usually in April or May, a few weeks after Easter",
+        "months": [4, 5],
+        "text": "A parade of floats and dancers covered in flowers through the town, and a \"wall of hope\" built by schoolchildren, each adding a flower."
+      },
+      {
+        "name": "Fátima pilgrimages",
+        "place": "Fátima, central Portugal",
+        "when": "12–13 May and 12–13 October",
+        "months": [5, 10],
+        "text": "Huge crowds of pilgrims, many arriving on foot, fill the shrine for candlelit processions on the anniversaries of the 1917 apparitions."
+      },
+      {
+        "name": "Santo António",
+        "place": "Lisbon",
+        "when": "12–13 June",
+        "months": [6],
+        "text": "Lisbon's city festival: grilled sardines, paper garlands and street parties in Alfama and the other old quarters, and a parade of the districts' marching groups (marchas populares) down Avenida da Liberdade on the evening of 12 June. Smaller street parties go on all month."
+      },
+      {
+        "name": "São João",
+        "place": "Porto",
+        "when": "The night of 23–24 June",
+        "months": [6],
+        "text": "Porto's biggest night: crowds tap each other on the head with plastic hammers, eat grilled sardines and watch fireworks over the Douro at midnight."
+      },
+      {
+        "name": "New Year's Eve",
+        "place": "Funchal, Madeira",
+        "when": "31 December",
+        "months": [12],
+        "text": "Fireworks launched all round Funchal's bay, a display that once set a world record for its size, watched from the town's hillsides and from cruise ships in the harbour."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Porto and the north",
+        "text": "Greener and wetter than the south, with most rain from October to April. The Douro Valley's terraced vineyards are at their best from May to October, and the grape harvest is usually in September and early October."
+      },
+      {
+        "name": "Lisbon and the Alentejo",
+        "text": "Lisbon has mild winters and warm summers cooled by the sea, while the hills of Sintra nearby are often misty and cooler. The Alentejo inland is the hottest part of the country, often above 35°C in July and August, so spring and autumn suit it best."
+      },
+      {
+        "name": "The Algarve",
+        "text": "The south coast is the sunniest part of Portugal, with sandy beaches, coves and cliffs. Beach weather runs from June to September, busiest in August, though the Atlantic is cooler than the Mediterranean. Mild winters suit golf and coastal walks."
+      },
+      {
+        "name": "Madeira and the Azores",
+        "text": "Madeira, about 1,000 km south-west of Lisbon, is mild all year, with walks along its levadas (old irrigation channels). The Azores, nine volcanic islands in mid-Atlantic, are greener, wetter and more changeable, an hour behind the mainland; June to September is their season for walking and crater lakes, and whale-watching runs from spring to autumn."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you meet someone; women, and men greeting women, usually kiss on both cheeks, while men shake hands. Say \"bom dia\" (good morning) until lunch, \"boa tarde\" in the afternoon and \"boa noite\" after dark.",
+    "etiquette": [
+      "Don't assume Spanish will do. Portuguese is a different language, and English is often the better choice if you have no Portuguese.",
+      "Bread, olives, cheese and other starters brought to the table at the start of a meal (the couvert) aren't free: you pay for what you eat, and can send back what you don't want.",
+      "Lunch runs from about 12.30 to 3 pm and dinner from about 7.30 or 8 pm. Many restaurants close between the two, and some close one day a week.",
+      "The pavements of Lisbon and Porto are made of polished limestone cobbles (calçada) that turn slippery in the rain: wear shoes with grip.",
+      "Pickpockets work Lisbon's crowded trams, the 28 above all: keep bags closed and in front of you."
+    ],
+    "tipping": "Not expected, and service isn't usually added. Locals round up or leave small change in cafés; in restaurants, 5 to 10% is generous for good service. Taxi fares are usually rounded up.",
+    "dress": "Casual and practical, though people dress neatly in the cities. Cover your shoulders and knees in churches and at Fátima. Bring a layer for the evenings even in summer, as ocean breezes cool the coast.",
+    "food": [
+      {
+        "name": "Bacalhau",
+        "text": "Dried salt cod, cooked in more ways than there are days in the year. Try bacalhau à Brás: shredded cod with eggs, onion and thin fried potatoes."
+      },
+      {
+        "name": "Grilled sardines",
+        "text": "Cooked over charcoal in the street through the summer, above all at the June festivals, and eaten on a slice of bread."
+      },
+      {
+        "name": "Pastéis de nata",
+        "text": "Custard tarts in crisp, flaky pastry, best warm with a dusting of cinnamon. The best known come from a bakery in Belém, in Lisbon, which has made them since 1837."
+      },
+      {
+        "name": "Francesinha",
+        "text": "Porto's heavyweight sandwich of ham, sausage and steak under melted cheese and a beer and tomato sauce, usually with chips."
+      },
+      {
+        "name": "Cataplana and arroz de marisco",
+        "text": "Seafood from the coast: cataplana is a stew cooked in a hinged copper pan of the same name, from the Algarve; arroz de marisco is a wet, rich seafood rice."
+      },
+      {
+        "name": "Port and vinho verde",
+        "text": "Port is a fortified wine from the Douro Valley, aged in lodges across the river from Porto in Vila Nova de Gaia. Vinho verde is a young, light wine from the north."
+      }
+    ],
+    "phrases": {
+      "language": "Portuguese",
+      "intro": "European Portuguese sounds quite unlike Spanish, with many swallowed vowels and \"sh\" sounds. English is widely spoken in Lisbon, Porto and the Algarve.",
+      "items": [
+        { "phrase": "Olá", "say": "oh-LAH", "meaning": "Hello" },
+        { "phrase": "Bom dia", "say": "bohn DEE-ah", "meaning": "Good morning" },
+        { "phrase": "Por favor", "say": "poor fah-VOR", "meaning": "Please" },
+        { "phrase": "Obrigado / Obrigada", "say": "oh-bree-GAH-doo / oh-bree-GAH-dah", "meaning": "Thank you (said by a man / by a woman)" },
+        { "phrase": "Desculpe", "say": "dush-KOOLP", "meaning": "Sorry; excuse me" },
+        { "phrase": "Fala inglês?", "say": "FAH-lah een-GLAYSH", "meaning": "Do you speak English?" },
+        { "phrase": "Quanto custa?", "say": "KWAN-too KOOSH-tah", "meaning": "How much is it?" },
+        { "phrase": "A conta, por favor", "say": "ah KON-tah poor fah-VOR", "meaning": "The bill, please" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q45",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Portuguese",
+        "sources": [{ "property": "P37", "values": ["Q5146"] }],
+        "note": "Wikidata also lists Mirandese, which is officially recognised around Miranda do Douro, but at deprecated rank, so the page leaves it out."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Western European Time: UTC+0, and UTC+1 from late March to late October. Madeira keeps the same time; the Azores are an hour behind (UTC−1, and UTC+0 in summer).",
+        "sources": [{ "property": "P421", "values": ["Q843589", "Q7987828", "Q6574", "Q6540", "Q5412108"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+351",
+        "sources": [{ "property": "P474", "values": ["+351"] }]
+      }
+    ]
+  }
+}

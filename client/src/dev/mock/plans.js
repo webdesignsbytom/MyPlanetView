@@ -8,6 +8,7 @@ import {
   INCLUDED_MAPS,
   PEOPLE_PER_TRIP,
   TRANSFER_GRACE_DAYS,
+  VIDEO_MAX_SECONDS,
   extraMapPriceText,
   isTopPlan,
   planOf,
@@ -98,15 +99,33 @@ export const graceForNewOwner = (mapId, toUserId) =>
 
 export const mapPlanId = (map) => effectivePlan(map.ownerId).plan;
 
-export function photoCounts(mapId) {
+// Photos per country, or with kind 'VIDEO' videos per country (each has its own cap),
+// hidden ones included
+const kindOf = (photo) => photo.kind || 'PHOTO';
+export function photoCounts(mapId, kind = 'PHOTO') {
   const out = {};
-  for (const p of getDb().photos) if (p.mapId === mapId && p.countryCode) out[p.countryCode] = (out[p.countryCode] || 0) + 1;
+  for (const p of getDb().photos) {
+    if (p.mapId === mapId && p.countryCode && kindOf(p) === kind) out[p.countryCode] = (out[p.countryCode] || 0) + 1;
+  }
   return out;
 }
+export const videoCounts = (mapId) => photoCounts(mapId, 'VIDEO');
 
+// Server mediaConstants.js VIDEO_CONTENT_TYPES and VIDEO_MAX_BYTES (docs/API.md, "Videos")
+export const VIDEO_CONTENT_TYPES = ['video/mp4', 'video/quicktime'];
+export const VIDEO_MAX_BYTES = 500 * 1024 * 1024;
+
+// As the server's uploadRulesFrom: `videos` only on First Class, null on the others
 export function uploadRules(map) {
   const { limits } = planOf(mapPlanId(map));
-  return { keepsOriginals: limits.keepsOriginals, photosPerCountry: limits.photosPerCountry, locked: isMapLocked(map) };
+  return {
+    keepsOriginals: limits.keepsOriginals,
+    photosPerCountry: limits.photosPerCountry,
+    videos: limits.videos
+      ? { perCountry: limits.videosPerCountry, maxSeconds: VIDEO_MAX_SECONDS, maxBytes: VIDEO_MAX_BYTES, contentTypes: VIDEO_CONTENT_TYPES }
+      : null,
+    locked: isMapLocked(map),
+  };
 }
 
 export const mapPlanFields = (map) => ({
@@ -114,6 +133,7 @@ export const mapPlanFields = (map) => ({
   locked: isMapLocked(map),
   graceUntil: map.graceUntil || null,
   photoCounts: photoCounts(map.id),
+  videoCounts: videoCounts(map.id),
   uploadRules: uploadRules(map),
 });
 
@@ -133,14 +153,38 @@ export function photoSizesProblem(sizes, planId) {
   return null;
 }
 
-/** One more photo of `countryCode` on the map: null, or the 409 message. */
-export function countryCapProblem(map, countryCode) {
+/** One more photo (or, with kind 'VIDEO', video) of `countryCode` on the map: null, or the 409 message. */
+export function countryCapProblem(map, countryCode, kind = 'PHOTO') {
   if (!countryCode) return null;
+  if (kind === 'VIDEO') return videoCapProblem(map, countryCode);
   const planId = mapPlanId(map);
   const cap = planOf(planId).limits.photosPerCountry;
   const count = photoCounts(map.id)[countryCode] || 0;
   if (count + 1 <= cap) return null;
   return `${number(Math.min(count, cap))} of ${number(cap)} photos of ${countryName(countryCode)} on this map.${isTopPlan(planId) ? '' : ' Upgrade to add more.'}`;
+}
+
+// Videos (server utils/planLimits.js VIDEO_MESSAGES, checkVideoAllowed, checkVideoSizes, checkVideoCap)
+export const VIDEO_MESSAGES = {
+  notOnPlan: 'Videos are part of First Class. Upgrade this map’s owner to add them.',
+  sizes: 'A video sends a THUMB and a DISPLAY poster frame and its file as the ORIGINAL.',
+  duration: 'A video can be up to 3 minutes long.',
+  landmark: 'Landmark stamps come from photos, not videos.',
+};
+
+/** Can this map take videos (its owner on First Class)? null, or the 403 message. */
+export const videoNotAllowed = (map) => (planOf(mapPlanId(map)).limits.videos ? null : VIDEO_MESSAGES.notOnPlan);
+
+/** A video's files: exactly THUMB, DISPLAY and ORIGINAL. null, or the 400 message. */
+export const videoSizesProblem = (sizes) =>
+  sizes.length === 3 && ['THUMB', 'DISPLAY', 'ORIGINAL'].every((s) => sizes.includes(s)) ? null : VIDEO_MESSAGES.sizes;
+
+/** One more video of `countryCode`: null, or "20 of 20 videos of Italy on this map." */
+function videoCapProblem(map, countryCode) {
+  const cap = planOf(mapPlanId(map)).limits.videosPerCountry;
+  const count = videoCounts(map.id)[countryCode] || 0;
+  if (count + 1 <= cap) return null;
+  return `${number(Math.min(count, cap))} of ${number(cap)} videos of ${countryName(countryCode)} on this map.`;
 }
 
 export const PEOPLE_CAP_MESSAGES = {

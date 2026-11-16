@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { deleteOrphanStreamVideos } from '../services/stream/videos.js';
 import {
   mintUploadUrl,
   signDownloadUrl,
@@ -63,9 +64,10 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
   // The cheap purges run first, together and each on its own, so a slow orphan
   // clean-up can't skip them: finished rate-limit windows, events older than 90 days
   // (docs/AUDIT.md B3), expired sessions and verifications, invites accepted or
-  // expired over 30 days ago, and Stripe webhook event ids over 90 days old (Stripe
-  // retries for 3 days at most)
-  const [expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents] =
+  // expired over 30 days ago, Stripe webhook event ids over 90 days old (Stripe
+  // retries for 3 days at most), and Cloudflare Stream videos no row points at (an upload
+  // never saved, a video deleted with its map or account; services/stream/videos.js)
+  const [expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents, orphanStreamVideos] =
     await Promise.all([
       purge('rate-limit', deleteExpiredRateLimits),
       purge('event', () => deleteOldEvents()),
@@ -73,8 +75,9 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
       purge('verification', deleteExpiredVerifications),
       purge('invite', () => deleteOldInvites()),
       purge('stripe-event', () => deleteOldStripeEvents()),
+      purge('stream-video', () => deleteOrphanStreamVideos({ budgetMs: 15000 })),
     ]);
-  const purged = { expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents };
+  const purged = { expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents, orphanStreamVideos };
 
   try {
     const result = await deleteOrphanUploads({ deadline: startedAt + CRON_BUDGET_MS });

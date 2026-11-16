@@ -28,6 +28,7 @@ import inviteRouter from './routes/invites.js';
 // Plans and payments
 import billingRouter from './routes/billing.js';
 import { stripeWebhookHandler } from './controllers/billing.js';
+import { streamWebhookHandler } from './controllers/videos.js';
 import {
   EVENT_MESSAGES,
   RESPONSE_MESSAGES,
@@ -98,6 +99,13 @@ app.post(
   globalRateLimiter,
   express.raw({ type: 'application/json', limit: '1mb' }),
   stripeWebhookHandler,
+);
+// Cloudflare Stream's notices (a video converted, or failed): raw body for the signature
+app.post(
+  '/api/videos/stream-webhook',
+  globalRateLimiter,
+  express.raw({ type: 'application/json', limit: '1mb' }),
+  streamWebhookHandler,
 );
 
 // JSON only, and no urlencoded parser: every client sends JSON, while a plain HTML

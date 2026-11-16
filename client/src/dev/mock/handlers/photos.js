@@ -3,7 +3,7 @@ import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb } from '../store';
 import { atLeast, canSeePhoto, countryExists, landmarkById, mapRole, markVisited, photoDetail, photoRole } from '../views';
 import { POSITION_FIELD, firstPosition, movePhotoAfter, setShotAt } from '../photoOrder';
-import { countryCapProblem } from '../plans';
+import { VIDEO_MESSAGES, countryCapProblem } from '../plans';
 
 const NOT_FOUND = 'This photo could not be found.';
 
@@ -36,7 +36,8 @@ export function registerPhotoRoutes() {
     if (body.countryCode !== undefined && body.countryCode) {
       const code = String(body.countryCode).toUpperCase();
       if (countryExists(code) && code !== photo.countryCode) {
-        const full = countryCapProblem(db.maps.find((m) => m.id === photo.mapId), code);
+        // A video moves under the videos' own cap
+        const full = countryCapProblem(db.maps.find((m) => m.id === photo.mapId), code, photo.kind || 'PHOTO');
         if (full) return fail(409, full);
       }
     }
@@ -110,6 +111,8 @@ export function registerPhotoRoutes() {
     const db = getDb();
     const { photo, role, reply } = loadPhoto(params.photoId, 'EDITOR');
     if (reply) return reply;
+    // Landmark stamps come from photos, never videos (docs/API.md, "Videos")
+    if (photo.kind === 'VIDEO') return fail(400, VIDEO_MESSAGES.landmark);
     if (!landmarkById(body.landmarkId)) return fail(400, 'Unknown landmark.');
     // As the server: each match records its map, and when it was confirmed (null while it
     // isn't). Confirming one stamps the landmark in the map's passport.

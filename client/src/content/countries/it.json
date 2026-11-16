@@ -1,0 +1,198 @@
+{
+  "code": "IT",
+  "slug": "italy",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ciao", "Italia"],
+  "summary": "Roman ruins, Renaissance art, lakes and islands, and food that changes by region.",
+  "overview": [
+    "Italy has more to see than any one trip allows: ancient Rome and the Vatican, the Renaissance art of Florence, Venice on its lagoon, the hill towns of Tuscany and Umbria, the lakes and the Dolomites in the north, Pompeii and the Amalfi Coast in the south, and the islands of Sicily and Sardinia.",
+    "Fast trains (Frecciarossa and Italo) link Turin, Milan, Venice, Bologna, Florence, Rome and Naples, and regional trains reach most towns. The big sights, such as the Colosseum, the Vatican Museums and Leonardo's Last Supper in Milan, are best booked ahead. Vatican City and San Marino are separate states inside Italy, with open borders."
+  ],
+  "whenToGo": {
+    "stripLabel": "Rome, Florence and central Italy. The north, the south and the islands differ, and each has a strip of its own below.",
+    "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Mild and green, with wild flowers in the countryside and the first beach days in the south by late May. Easter week is busy in Rome and Florence, and 25 April (Liberation Day) and 1 May are public holidays."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and dry, above all in the south and the cities: Rome and Florence often reach 35°C in July and August, and heatwaves go higher. The coasts fill up, and around Ferragosto (15 August) many Italians are on holiday, so city shops and restaurants may close while the beaches are packed. The Dolomites and the lakes are cooler."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is still hot in the south and pleasant everywhere. October brings the grape and olive harvests, white truffles in Piedmont, and fewer crowds. November is often the wettest month, and Venice's high tides (acqua alta), which can flood St Mark's Square, are most likely from October to January."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cool and damp in the cities, around 12°C by day in Rome and colder and often foggy in Milan and the Po valley, with snow in the Alps and the Dolomites for skiing from about December to April. The art cities are quiet apart from Christmas and New Year, and many seaside hotels close."
+      }
+    ],
+    "weather": "Mediterranean along most of the coasts, in the south and on the islands: hot, dry summers and mild, wetter winters. The north is more continental: the Po valley around Milan has hot, humid summers and cold, foggy winters, and the Alps and the Dolomites get heavy snow. Inland hill towns in Tuscany and Umbria are colder in winter than the coast.",
+    "festivals": [
+      {
+        "name": "Carnevale di Venezia",
+        "place": "Venice",
+        "when": "The two weeks or so before Lent: usually February, sometimes early March",
+        "months": [2, 3],
+        "text": "Masks and costumes in the streets and on the bridges, events in St Mark's Square and ticketed masked balls in old palaces. The last weekend is the most crowded."
+      },
+      {
+        "name": "Easter (Pasqua)",
+        "place": "Rome, Florence and across Italy",
+        "when": "March or April",
+        "months": [3, 4],
+        "text": "Holy Week services at the Vatican, and the Way of the Cross at the Colosseum on Good Friday. In Florence, the Scoppio del Carro sets off a cart of fireworks outside the cathedral on Easter Sunday morning. Easter Monday (Pasquetta) is a holiday for picnics and day trips."
+      },
+      {
+        "name": "Arena di Verona Opera Festival",
+        "place": "Verona",
+        "when": "Usually mid-June to early September",
+        "months": [6, 7, 8, 9],
+        "text": "Opera on summer evenings in the city's Roman amphitheatre, with large stagings of Aida, Carmen and other favourites. The cheapest seats are on the stone steps, so a cushion helps."
+      },
+      {
+        "name": "Palio di Siena",
+        "place": "Siena, Tuscany",
+        "when": "2 July and 16 August",
+        "months": [7, 8],
+        "text": "A bareback horse race three times round the Piazza del Campo between the city's districts (contrade), over in about a minute and a half. Standing in the middle of the square is free, but the crowd packs in hours before the start."
+      },
+      {
+        "name": "Ferragosto",
+        "place": "Across Italy",
+        "when": "15 August",
+        "months": [8],
+        "text": "The Assumption holiday and the height of the summer break: the beaches are full, many city shops and restaurants close for a week or two around it, and towns hold fireworks and festivals."
+      },
+      {
+        "name": "Christmas and the Befana",
+        "place": "Across Italy",
+        "when": "24 December to 6 January",
+        "months": [12, 1],
+        "text": "Nativity scenes (presepi) in churches and squares; in Naples, Via San Gregorio Armeno is lined with crib-makers' workshops. On 6 January, a public holiday, the Befana, a kindly old witch, brings children sweets, and coal to the naughty ones."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The north",
+        "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+        "text": "Venice, Milan, the lakes (Como, Garda, Maggiore) and the Dolomites. Winters are cold, with fog on the plain and skiing in the mountains from about December to April. Summers are hot and humid in the cities but fresh in the mountains, where the walking season runs from late June to September. Lake boats run less often from November to March, and many lakeside hotels close."
+      },
+      {
+        "name": "The south",
+        "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "Naples, Pompeii, the Amalfi Coast and Puglia. Warmer than the north in every season, and very hot in July and August. Many Amalfi Coast hotels and its ferries run only from about April to October, while Naples and the towns of Puglia stay lively all year."
+      },
+      {
+        "name": "Sicily and Sardinia",
+        "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "The islands have the longest summers, and the sea is warm enough to swim from about June to October. Inland Sicily can pass 40°C in summer, so spring and autumn suit Etna, the temples of Agrigento and Palermo best. In Sardinia, many beach resorts close from late October to April."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake when you meet someone; friends and family kiss on both cheeks. Say \"buongiorno\" when you walk into a shop or bar until early afternoon, and \"buonasera\" after that. \"Ciao\" is for friends; \"salve\" is a polite hello at any time of day.",
+    "etiquette": [
+      "Lunch is from about 1 pm and dinner from about 8 pm, later in the south. Many restaurants close between the two.",
+      "Coffee is usually drunk standing at the bar, and costs more at a table. Ask for \"un caffè\" and you'll get an espresso; cappuccino is a morning drink.",
+      "Many historic town centres are limited traffic zones (ZTL), watched by cameras. Drive in without a permit and the fine follows you home through the hire company, often months later, so park outside and walk in.",
+      "Paper tickets for regional trains and city buses must be stamped in a machine before you travel, or you can be fined.",
+      "Sitting on the Spanish Steps and wading in fountains such as the Trevi are banned in Rome, and police hand out fines.",
+      "Many state museums close on Mondays, the Uffizi in Florence among them. The Vatican Museums close on Sundays, except the last Sunday of the month."
+    ],
+    "tipping": "Not expected. Restaurants often add a cover charge (coperto) per person, or in some places a service charge (servizio), both shown on the menu. Locals round up or leave a euro or two for good service, and up to 10% for an excellent meal is generous.",
+    "dress": "Italians dress smartly, even for the evening stroll (the passeggiata). Shoulders and knees must be covered in churches, and St Peter's and the Vatican Museums turn away people in shorts or sleeveless tops, so carry a scarf or a light layer. Keep swimwear for the beach: some seaside towns fine people walking the streets in it.",
+    "food": [
+      {
+        "name": "Pasta",
+        "text": "Each region has its own: carbonara and cacio e pepe in Rome, tagliatelle with ragù in Bologna, trofie with pesto in Liguria."
+      },
+      {
+        "name": "Pizza",
+        "text": "Naples' original is soft and puffy at the edge, baked for a minute or two in a wood-fired oven; a margherita is the test of any pizzeria. Rome's is thin and crisp."
+      },
+      {
+        "name": "Risotto",
+        "text": "The north's rice dish, from saffron risotto alla milanese to the seafood and cuttlefish-ink versions of Venice."
+      },
+      {
+        "name": "Gelato",
+        "text": "Dense ice cream from a gelateria, often eaten on the evening walk. Pistachio and hazelnut are good tests of a shop."
+      },
+      {
+        "name": "Arancini and cannoli",
+        "text": "Sicily's street food: fried rice balls filled with ragù or cheese, and crisp pastry tubes filled with sweet ricotta."
+      },
+      {
+        "name": "Aperitivo",
+        "text": "An early-evening drink, such as a spritz or a Negroni, with snacks, from about 6 to 8 pm. In Milan and Turin many bars set out a buffet with it."
+      }
+    ],
+    "phrases": {
+      "language": "Italian",
+      "intro": "English is common in hotels and at the big sights, less so in the countryside and the south.",
+      "items": [
+        { "phrase": "Buongiorno", "say": "bwon-JOR-noh", "meaning": "Good morning; hello" },
+        { "phrase": "Buonasera", "say": "bwoh-nah-SEH-rah", "meaning": "Good evening" },
+        { "phrase": "Per favore", "say": "pehr fah-VOH-reh", "meaning": "Please" },
+        { "phrase": "Grazie", "say": "GRAHT-see-eh", "meaning": "Thank you" },
+        { "phrase": "Scusi", "say": "SKOO-zee", "meaning": "Excuse me; sorry" },
+        { "phrase": "Parla inglese?", "say": "PAR-lah een-GLEH-zeh", "meaning": "Do you speak English?" },
+        { "phrase": "Quanto costa?", "say": "KWAHN-toh KOS-tah", "meaning": "How much is it?" },
+        { "phrase": "Il conto, per favore", "say": "eel KON-toh pehr fah-VOH-reh", "meaning": "The bill, please" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q38",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Italian. German is also official in South Tyrol, and French in the Aosta Valley.",
+        "sources": [{ "property": "P37", "values": ["Q652"] }],
+        "note": "Wikidata gives only Italian. The regional languages with official status (German in South Tyrol, French in the Aosta Valley) are added from the regions' own statutes, not from Wikidata."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, F and L (two or three round pins), 230 V. A two-pin Europlug (type C) fits most sockets.",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613", "Q1520890"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q5412122", "Q6655", "Q6723"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance; the older numbers still work too: 113 for police, 115 for the fire brigade and 118 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648804", "Q25648805", "Q11185210"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+39",
+        "sources": [{ "property": "P474", "values": ["+39"] }]
+      }
+    ]
+  }
+}

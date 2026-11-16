@@ -1,0 +1,205 @@
+{
+  "code": "FR",
+  "slug": "france",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonjour", "France"],
+  "summary": "Paris, Loire châteaux, great wine regions, Alpine ski resorts and the Mediterranean coast.",
+  "overview": [
+    "Paris is where most visitors start, but France reaches far beyond it: the châteaux of the Loire Valley, Mont-Saint-Michel and the D-Day beaches in Normandy, the vineyards of Burgundy and Bordeaux, the Alps and the Pyrenees, and a Mediterranean coast running from the Camargue to the Italian border, with the mountainous island of Corsica offshore.",
+    "High-speed TGV trains run from Paris to Lyon, Marseille, Bordeaux, Lille and Strasbourg, and fares are cheapest booked weeks ahead. In the countryside a car helps, though most motorways charge tolls. Book the Louvre and the Eiffel Tower online before you go, and expect fewer English speakers once you leave Paris and the main tourist areas."
+  ],
+  "whenToGo": {
+    "stripLabel": "Paris and most of mainland France, taken together. Brittany and Normandy, Provence and the Riviera, the Alps and Corsica each have a strip of their own below.",
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Changeable in March and April, with showers and cool nights in Paris, and warm and settled in the south by May. May has several public holidays (1 May, 8 May and, most years, Ascension Day), so trains and roads fill on the long weekends."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm to hot: about 25°C by day in Paris in July, often over 30°C in the south, and heatwaves have passed 40°C in recent summers. The French take their holidays in July and August, so the coasts, mountains and motorways are at their busiest, while some small Paris shops and restaurants close for a few weeks."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is warm and settled, with the sea still warm in the south and the grape harvest under way in the wine regions. October turns cooler and wetter in the north, and November is grey and damp, with heavy storms at times on the Mediterranean coast."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and often grey in Paris and the north, around 5–8°C by day, while the Riviera is mild and often sunny. The ski season in the Alps and the Pyrenees runs from about mid-December to April, and Christmas markets fill the towns of Alsace."
+      }
+    ],
+    "weather": "France has several climates. The north and the Atlantic coast are mild and changeable, with rain spread through the year; the east and the centre, around Strasbourg and Lyon, have colder winters and hotter summers; and the Mediterranean south has hot, dry summers and mild winters, with the mistral, a cold north wind that can blow down the Rhône valley for days. The Alps and the Pyrenees have snowy winters.",
+    "festivals": [
+      {
+        "name": "Nice Carnival",
+        "place": "Nice",
+        "when": "Usually the second half of February, sometimes into early March",
+        "months": [2, 3],
+        "text": "Two weeks of parades of giant papier-mâché figures, by day and lit up at night, and flower parades where people on the floats throw mimosa to the crowd. Menton's Lemon Festival, along the coast, runs at the same time."
+      },
+      {
+        "name": "Fête de la Musique",
+        "place": "Across France",
+        "when": "21 June",
+        "months": [6],
+        "text": "Free music on street corners, in squares, bars and courtyards, from amateurs and professionals alike, on an evening close to the longest day of the year."
+      },
+      {
+        "name": "Bastille Day (14 juillet)",
+        "place": "Across France, above all Paris",
+        "when": "14 July",
+        "months": [7],
+        "text": "The national holiday: a military parade down the Champs-Élysées in the morning and fireworks at the Eiffel Tower at night. Many fire stations hold public dances (bals des pompiers) on the evenings of 13 and 14 July."
+      },
+      {
+        "name": "Festival d'Avignon",
+        "place": "Avignon, Provence",
+        "when": "Usually three weeks in July",
+        "months": [7],
+        "text": "One of the world's biggest theatre festivals: the official programme plays in the Palais des Papes' courtyard and other venues, and the fringe (the Off) puts on more than a thousand shows. Rooms sell out early."
+      },
+      {
+        "name": "Christmas markets",
+        "place": "Strasbourg, Colmar and across Alsace",
+        "when": "Usually late November to 24 December",
+        "months": [11, 12],
+        "text": "Wooden stalls selling mulled wine (vin chaud), spiced biscuits and decorations. Strasbourg's market dates back to 1570 and is one of the oldest in Europe; the city and its trains are very busy at weekends."
+      },
+      {
+        "name": "Fête des Lumières",
+        "place": "Lyon",
+        "when": "Usually four nights around 8 December",
+        "months": [12],
+        "text": "Light shows projected on churches and buildings across the city, from an old tradition of setting candles in windows on 8 December. Free, and very crowded."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Brittany and Normandy",
+        "months": ["good", "good", "good", "good", "good", "best", "best", "good", "best", "good", "good", "good"],
+        "text": "Green, mild and changeable, with rain in every season and summers that are rarely hot. June to September suits the coast, the D-Day beaches and Mont-Saint-Michel, which is at its most crowded in July and August."
+      },
+      {
+        "name": "Provence and the Riviera",
+        "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "Hot, dry summers and mild, sunny winters. The lavender flowers from about late June to late July, while the coast from Saint-Tropez to Menton is crowded and at its dearest. Spring and autumn are better for walking, cycling and the hill villages, though the mistral can blow cold."
+      },
+      {
+        "name": "The Alps",
+        "months": ["good", "good", "good", "good", "good", "good", "best", "best", "best", "good", "avoid", "good"],
+        "text": "Skiing from about mid-December to April in resorts such as Chamonix, Courchevel and Val d'Isère; walking, climbing and swimming in Lake Annecy from late June to September, when the summer lifts run. In November, before the snow, many resort hotels, lifts and restaurants are shut."
+      },
+      {
+        "name": "Corsica",
+        "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+        "text": "A mountainous island, by ferry from Marseille, Toulon or Nice, or by air. The beaches are at their best from June to September, the usual season too for the GR20, one of Europe's toughest long-distance paths. From November to March many hotels and restaurants outside Ajaccio and Bastia close."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Say \"bonjour\" (\"bonsoir\" in the evening) when you walk into a shop, café or waiting room, and \"au revoir\" as you leave: going straight to your question without it comes across as rude. Friends and family greet each other with kisses on the cheeks (la bise), usually two, more in some regions; with someone you've only just met, a handshake is safer.",
+    "etiquette": [
+      "Restaurants keep fixed hours: lunch from about noon to 2 pm and dinner from about 7.30 pm. Outside the cities, a kitchen that closes after lunch won't serve again until the evening.",
+      "The bill only comes when you ask for it (l'addition, s'il vous plaît). Lingering over a meal or a coffee is normal, and nobody will hurry you.",
+      "Tap water is free with a meal: ask for a carafe (une carafe d'eau) if you don't want bottled water.",
+      "Many shops close on Sundays, and in small towns at lunchtime too. Most museums close one day a week: the Louvre on Tuesdays, the Musée d'Orsay on Mondays.",
+      "Pickpockets work the Paris metro and the busiest sights, such as the Eiffel Tower, the Louvre and Montmartre: keep bags closed and phones out of back pockets."
+    ],
+    "tipping": "Not expected: by law, prices include service (service compris). Locals round up or leave a euro or two in a café, and perhaps 5 to 10% for an excellent meal. Taxi fares are usually just rounded up.",
+    "dress": "Neat casual in the cities, where people dress a little more smartly than in Britain: sportswear and shorts stand out in Paris restaurants. Cover your shoulders in churches and cathedrals. Many public swimming pools allow only close-fitting swimming trunks, not loose shorts, and some ask for a swimming cap.",
+    "food": [
+      {
+        "name": "Bread and pastries",
+        "text": "A fresh baguette from the boulangerie, bought every day, and a croissant or pain au chocolat for breakfast. Most bakeries open early, and many on Sunday mornings."
+      },
+      {
+        "name": "Cheese",
+        "text": "Hundreds of kinds, from Camembert and Roquefort to Comté, served after the main course and before dessert."
+      },
+      {
+        "name": "Boeuf bourguignon and coq au vin",
+        "text": "Burgundy's slow braises: beef, or chicken, cooked for hours in red wine with mushrooms, onions and bacon."
+      },
+      {
+        "name": "Bouillabaisse",
+        "text": "Marseille's stew of several Mediterranean fish, served in two parts: the broth first, with toasted bread and rouille (a garlic and saffron mayonnaise), then the fish. Some restaurants want it ordered a day ahead."
+      },
+      {
+        "name": "Crêpes and galettes",
+        "text": "From Brittany: sweet crêpes of wheat flour, and savoury galettes of buckwheat, often with ham, egg and cheese (a complète), with a bowl of cider."
+      },
+      {
+        "name": "Tartiflette, raclette and fondue",
+        "text": "The Alps' cheese dishes: potatoes baked with Reblochon, bacon and onion; melted cheese scraped over potatoes; or bread dipped in a pot of melted cheese."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "Always start with \"bonjour\". English is common in hotels and the tourist areas of Paris, less so in the countryside.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bohn-ZHOOR", "meaning": "Hello; good day" },
+        { "phrase": "S'il vous plaît", "say": "seel voo PLEH", "meaning": "Please" },
+        { "phrase": "Merci", "say": "mair-SEE", "meaning": "Thank you" },
+        { "phrase": "Excusez-moi", "say": "ex-kew-zay-MWAH", "meaning": "Excuse me; sorry" },
+        { "phrase": "Parlez-vous anglais?", "say": "par-lay voo ahn-GLEH", "meaning": "Do you speak English?" },
+        { "phrase": "C'est combien?", "say": "say kohm-BYAN", "meaning": "How much is it?" },
+        { "phrase": "L'addition, s'il vous plaît", "say": "lah-dee-SYOHN seel voo PLEH", "meaning": "The bill, please" },
+        { "phrase": "Au revoir", "say": "oh ruh-VWAHR", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q142",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }],
+        "note": "Wikidata also gives the CFP franc, the currency of France's Pacific territories (French Polynesia, New Caledonia, Wallis and Futuna); the page covers metropolitan France, which uses only the euro."
+      },
+      {
+        "key": "languages",
+        "text": "French. Regional languages such as Breton, Basque, Occitan, Alsatian and Corsican are still spoken, but have no official status.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata also lists 400 V, the three-phase supply; homes and hotels use 230 V."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 (Central European Summer Time) from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q207020", "Q6655", "Q6723", "Q5412120"] }],
+        "note": "Wikidata also lists the zones of France's overseas departments and territories, from UTC−10 to UTC+12; the page covers metropolitan France, Corsica included."
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance; or 15 for medical help (SAMU), 17 for police and 18 for the fire brigade",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648869", "Q25648842", "Q25648843"] }],
+        "note": "Wikidata also lists 114, the emergency line by text, video or fax for people who are deaf or hard of hearing; the page leaves it out."
+      },
+      {
+        "key": "callingCode",
+        "text": "+33",
+        "sources": [{ "property": "P474", "values": ["+33"] }]
+      }
+    ]
+  }
+}

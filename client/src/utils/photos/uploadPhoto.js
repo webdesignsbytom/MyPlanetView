@@ -6,17 +6,22 @@
 import { createPhoto, presignPhoto } from '@/api/travelApi';
 import { readPhotoMeta } from './readPhotoMeta';
 import { ORIGINAL_TYPES, PRINT_MAX_BYTES, isHeic, makePhotoCopies } from './makePhotoCopies';
-import { putFile } from './putFile';
+import { putFiles } from './putFile';
 
 const MB = 1024 * 1024;
 // The server's caps (server mediaConstants.js PHOTO_MAX_BYTES)
 export const PHOTO_MAX_BYTES = { THUMB: 1 * MB, DISPLAY: 5 * MB, ORIGINAL: 50 * MB, PRINT: PRINT_MAX_BYTES };
+// A video's file, its ORIGINAL (server mediaConstants.js VIDEO_CONTENT_TYPES and
+// VIDEO_MAX_BYTES); its THUMB and DISPLAY are poster frames, within the photo caps above.
+// The map gives the same in `uploadRules.videos` (First Class); these stand in without it.
+export const VIDEO_CONTENT_TYPES = ['video/mp4', 'video/quicktime'];
+export const VIDEO_MAX_BYTES = 500 * MB;
 
 // The server's LOCKED_MAP_MESSAGE, for a map that's locked before anything starts
-const LOCKED_MAP = "This map isn't paid for, so it can't take new photos.";
+export const LOCKED_MAP = "This map isn't paid for, so it can't take new photos.";
 
 /**
- * onStage('reading' | 'resizing' | 'uploading' | 'saving'), onProgress(0..1).
+ * onStage('reading' | 'resizing' | 'uploading' | 'saving'), onProgress(0..1, { sent, total }).
  * `countryCode` is the uploader's choice, always sent: the server uses it when the photo
  * has no location of its own, or a location in no country (taken at sea). For a photo
  * with no location it's also the presign's hint, so a country that's full is refused
@@ -64,22 +69,7 @@ export async function uploadPhoto({ mapId, tripId, file, countryCode, uploadRule
     files: files.map((f) => ({ size: f.size, contentType: f.contentType, bytes: f.bytes })),
   });
 
-  const total = files.reduce((sum, f) => sum + f.bytes, 0);
-  const sent = {};
-  const report = () => onProgress?.(Object.values(sent).reduce((a, b) => a + b, 0) / total);
-  const keys = {};
-  for (const f of files) {
-    const target = uploads.find((u) => u.size === f.size);
-    if (!target) throw new Error('The server didn’t give an upload address for this photo.');
-    keys[f.size] = target.key;
-    const onFileProgress = (loaded) => {
-      sent[f.size] = loaded;
-      report();
-    };
-    await putFile(target.url, f.blob, f.contentType, onFileProgress, f.bytes);
-    sent[f.size] = f.bytes;
-    report();
-  }
+  const keys = await putFiles(files, uploads, onProgress);
 
   onStage?.('saving');
   const { photo } = await createPhoto(mapId, {

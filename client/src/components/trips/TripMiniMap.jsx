@@ -7,6 +7,7 @@ import MapBackground from '@/components/map/MapBackground';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { mapExtent } from '@/utils/map/projection';
+import { mapStyleById } from '@/utils/map/mapStyles';
 import { isAntarctic } from '@/utils/map/specialPlaces';
 
 // The card's shape is the map's: 2000 wide, pole line to pole line (1037.2) with
@@ -18,8 +19,8 @@ const ASPECT = { true: 'aspect-[2000/1037.2]', false: 'aspect-[2000/873.6]' };
 // A still overview, so the page scrolls past it normally on a phone. Mounted on a cream
 // card in the shared ticket-edge, so the dashed printed line shows on the paper margin
 // around the map, like a postcard. Antarctica follows the viewer's setting, but is
-// always drawn when the trip stops there.
-function TripMiniMap({ trip, styleId = 'animated', showAntarctica = true }) {
+// always drawn when the trip stops there. `blackAndWhite` (the viewer's setting) draws it in greys.
+function TripMiniMap({ trip, styleId = 'animated', showAntarctica = true, blackAndWhite = false }) {
   const stops = useMemo(() => trip.stops || [], [trip.stops]);
   const withAntarctica = showAntarctica || stops.some((stop) => isAntarctic(stop.countryCode));
   const extent = useMemo(() => mapExtent(withAntarctica), [withAntarctica]);
@@ -34,13 +35,14 @@ function TripMiniMap({ trip, styleId = 'animated', showAntarctica = true }) {
     <div className='ticket-edge grid bg-paper-cream p-3 sm:p-4'>
       <div
         data-map-style={styleId}
-        className={`relative ${ASPECT[withAntarctica]} w-full overflow-hidden border-2 border-poster-brown bg-map-sea`}
+        className={`relative ${ASPECT[withAntarctica]} w-full overflow-hidden border-2 border-poster-brown bg-map-sea ${blackAndWhite ? 'grayscale' : ''}`}
       >
         <MapBackground styleId={styleId} animatedSea={false} />
         <div className='absolute inset-0'>
           <WorldMap
             viewport={viewport}
             panZoom={false}
+            seaDepths={!mapStyleById(styleId).background}
             visitsByCode={visitsByCode}
             stops={stops}
             showGrid

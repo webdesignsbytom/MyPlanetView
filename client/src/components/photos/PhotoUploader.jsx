@@ -1,4 +1,4 @@
-import React, { useId, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 // Components
 import FormField from '@/components/ui/FormField';
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
@@ -8,34 +8,90 @@ import PlanUpgradeLink from '@/components/plans/PlanUpgradeLink';
 // Utils
 import { COUNTRY_OPTIONS, countryName } from '@/utils/map/countries';
 import { runWithConcurrencyLimit } from '@/utils/functions/runWithConcurrencyLimit';
-import { uploadPhoto } from '@/utils/photos/uploadPhoto';
+import { VIDEO_MAX_SECONDS } from '@/utils/constants/plans';
+import { VIDEO_MAX_BYTES, uploadPhoto } from '@/utils/photos/uploadPhoto';
+import { VIDEOS_ARE_FIRST_CLASS, uploadVideo } from '@/utils/photos/uploadVideo';
+import { isVideoFile } from '@/utils/photos/videoFile';
 
 const AT_ONCE = 2;
+const MB = 1024 * 1024;
 const number = (n) => Number(n).toLocaleString('en-GB');
+const PHOTO_ACCEPT = 'image/jpeg,image/png,image/webp';
+// MP4 and MOV, by type and by name (some systems give a .mov no type)
+const VIDEO_ACCEPT = 'video/mp4,video/quicktime,.mp4,.m4v,.mov';
 
-// Choose or drop photos; each is read, resized, uploaded and saved, two at a time.
+// What became of an upload, in a sentence
+function placedNote(photo, { video, hadLocation, chosen }) {
+  if (video) {
+    return photo.countryCode
+      ? `Videos keep no location, so it went in ${countryName(photo.countryCode)}.`
+      : 'Videos keep no location, so it’s under Unplaced photos until you choose a country.';
+  }
+  // A location in no country (at sea) falls back on the chosen country, like no location
+  if (!photo.countryCode) {
+    return hadLocation
+      ? 'Its location isn’t in any country, so it’s under Unplaced photos until you choose one.'
+      : 'No location in the file, so it’s under Unplaced photos until you choose a country.';
+  }
+  if (hadLocation && photo.countryCode !== chosen) return `Placed in ${countryName(photo.countryCode)} from its location.`;
+  if (hadLocation) return `Placed in ${countryName(photo.countryCode)}.`;
+  return `No location in the file, so it went in ${countryName(photo.countryCode)}.`;
+}
+
+// Choose or drop photos (and, on a First Class map, videos); each is read, resized,
+// uploaded and saved, two at a time.
 // Photos without a location, or with one at sea, go in `country` (if chosen); with
-// neither, they're listed under Unplaced photos. `onUploaded` gets each new photo, and
+// neither, they're listed under Unplaced photos. Videos keep no location, so they always
+// go in `country` (docs/API.md, "Videos"). `onUploaded` gets each new photo, and
 // `onBatchDone` runs once a batch has finished (whatever came of each), when at least one
 // photo of it was saved.
 // The map owner's plan (docs/API.md, "Map limits"):
-// - `uploadRules` ({ keepsOriginals, photosPerCountry, locked }): a locked map takes no
-//   photos; Economy keeps a print copy instead of the original;
-// - `photoCounts` (the map's photos per country, on the map page): the chosen country's
-//   count against the cap, and at the cap the drop zone stops, with a way to upgrade
-//   (`isOwner`: the owner's own plan; anyone else is told it's the owner's).
-function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, onBatchDone, uploadRules = null, photoCounts = null, isOwner = false }) {
+// - `uploadRules` ({ keepsOriginals, photosPerCountry, videos, locked }): a locked map takes
+//   no photos; Economy keeps a print copy instead of the original; `videos` (First Class
+//   only, else null) says how many videos each country takes, and how long and big;
+// - `photoCounts` and `videoCounts` (the map's photos and videos per country, on the map
+//   page): the chosen country's counts against the caps, and at the photo cap the drop
+//   zone stops, with a way to upgrade (`isOwner`: the owner's own plan; anyone else is
+//   told it's the owner's).
+function PhotoUploader({
+  mapId,
+  tripId,
+  defaultCountryCode = '',
+  onUploaded,
+  onBatchDone,
+  uploadRules = null,
+  photoCounts = null,
+  videoCounts = null,
+  isOwner = false,
+}) {
   const inputId = useId();
   const inputRef = useRef(null);
   const [country, setCountry] = useState(defaultCountryCode || '');
   const [items, setItems] = useState([]);
   const [dragging, setDragging] = useState(false);
   const busy = items.some((i) => !['done', 'failed'].includes(i.stage));
+  const sendingVideo = items.some((i) => i.video && !['done', 'failed', 'waiting'].includes(i.stage));
 
   const cap = uploadRules?.photosPerCountry ?? null;
   const count = country && photoCounts && cap !== null ? photoCounts[country] || 0 : null;
   const full = count !== null && count >= cap;
   const keepsPrintCopy = uploadRules?.keepsOriginals === false;
+  const videoRules = uploadRules?.videos || null;
+  const videoCap = videoRules?.perCountry ?? null;
+  const videoCount = country && videoCounts && videoCap !== null ? videoCounts[country] || 0 : null;
+  const videoMinutes = Math.round((videoRules?.maxSeconds || VIDEO_MAX_SECONDS) / 60);
+  const videoMegabytes = Math.round((videoRules?.maxBytes || VIDEO_MAX_BYTES) / MB);
+
+  // A video is big: leaving the page mid-upload would throw it away, so the browser asks first
+  useEffect(() => {
+    if (!sendingVideo) return undefined;
+    const ask = (event) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', ask);
+    return () => window.removeEventListener('beforeunload', ask);
+  }, [sendingVideo]);
 
   const update = (id, patch) => setItems((prev) => prev.map((item) => (item.id === id ? { ...item, ...patch } : item)));
 
@@ -46,8 +102,11 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, onB
       id: `${Date.now()}-${i}-${file.name}`,
       name: file.name,
       file,
+      video: isVideoFile(file),
       stage: 'waiting',
       progress: 0,
+      sent: 0,
+      total: 0,
       error: null,
       note: null,
     }));
@@ -55,27 +114,29 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, onB
 
     let saved = 0;
     await runWithConcurrencyLimit(AT_ONCE, added, async (item) => {
+      // Progress at most once per percent: a 500 MB video reports thousands of times
+      let shown = -1;
+      const onProgress = (progress, bytes) => {
+        const percent = Math.floor(progress * 100);
+        if (percent === shown) return;
+        shown = percent;
+        update(item.id, { progress, sent: bytes?.sent || 0, total: bytes?.total || 0 });
+      };
+      const onStage = (stage) => update(item.id, { stage });
       try {
-        const { photo, hadLocation } = await uploadPhoto({
-          mapId,
-          tripId,
-          file: item.file,
-          countryCode: country,
-          uploadRules,
-          onStage: (stage) => update(item.id, { stage }),
-          onProgress: (progress) => update(item.id, { progress }),
-        });
-        // A location in no country (at sea) falls back on the chosen country, like no location
-        const note = !photo.countryCode
-          ? hadLocation
-            ? 'Its location isn’t in any country, so it’s under Unplaced photos until you choose one.'
-            : 'No location in the file, so it’s under Unplaced photos until you choose a country.'
-          : hadLocation && photo.countryCode !== country
-            ? `Placed in ${countryName(photo.countryCode)} from its location.`
-            : hadLocation
-              ? `Placed in ${countryName(photo.countryCode)}.`
-              : `No location in the file, so it went in ${countryName(photo.countryCode)}.`;
-        update(item.id, { stage: 'done', note, file: null });
+        const { photo, hadLocation } = item.video
+          ? await uploadVideo({
+              mapId,
+              tripId,
+              file: item.file,
+              countryCode: country,
+              uploadRules,
+              videoCount,
+              onStage,
+              onProgress,
+            })
+          : await uploadPhoto({ mapId, tripId, file: item.file, countryCode: country, uploadRules, onStage, onProgress });
+        update(item.id, { stage: 'done', note: placedNote(photo, { video: item.video, hadLocation, chosen: country }), file: null });
         saved += 1;
         onUploaded?.(photo);
       } catch (err) {
@@ -92,7 +153,11 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, onB
       <FormField
         id={`${inputId}-country`}
         label='Country for photos with no location'
-        hint='Phones usually save the place; this is for the ones that don’t, or whose place is out at sea.'
+        hint={
+          videoRules
+            ? 'Phones usually save the place; this is for the ones that don’t, whose place is out at sea, and for every video (videos keep no location).'
+            : 'Phones usually save the place; this is for the ones that don’t, or whose place is out at sea.'
+        }
       >
         <PlainOptionSelect
           value={country}
@@ -119,6 +184,14 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, onB
       ) : cap !== null && !photoCounts ? (
         <p className='text-sm'>This map keeps up to {number(cap)} photos of each country.</p>
       ) : null}
+      {/* First Class: the chosen country's videos against their own cap */}
+      {videoCount !== null ? (
+        <p className={`text-sm ${videoCount >= videoCap ? 'font-semibold text-status-critical' : ''}`} role='status'>
+          {number(Math.min(videoCount, videoCap))} of {number(videoCap)} videos of {countryName(country)} on this map.
+        </p>
+      ) : videoCap !== null && !videoCounts ? (
+        <p className='text-sm'>This map keeps up to {number(videoCap)} videos of each country.</p>
+      ) : null}
 
       <label
         htmlFor={inputId}
@@ -141,14 +214,19 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, onB
               : 'cursor-pointer border-poster-brown/60 hover:bg-poster-paper/20'
         }`}
       >
-        <span className='font-travel text-xl uppercase tracking-wide text-colour6'>Choose photos</span>
-        <span className='opacity-80'>or drop them here. JPEG, PNG or WebP, up to 50 MB each.</span>
+        <span className='font-travel text-xl uppercase tracking-wide text-colour6'>
+          {videoRules ? 'Choose photos or videos' : 'Choose photos'}
+        </span>
+        <span className='opacity-80'>
+          or drop them here. JPEG, PNG or WebP, up to 50 MB each.
+          {videoRules ? ` Videos: MP4 or MOV, up to ${videoMinutes} minutes and ${videoMegabytes} MB each.` : ''}
+        </span>
       </label>
       <input
         ref={inputRef}
         id={inputId}
         type='file'
-        accept='image/jpeg,image/png,image/webp'
+        accept={videoRules ? `${PHOTO_ACCEPT},${VIDEO_ACCEPT}` : PHOTO_ACCEPT}
         multiple
         disabled={full}
         className='sr-only'
@@ -163,10 +241,13 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, onB
           Economy keeps a print-quality copy (good up to A4). Business keeps your full-size originals.
         </p>
       ) : null}
+      {/* Said plainly, with no second upgrade link (the full-country note has the one) */}
+      {videoRules ? null : <p className='text-sm'>{VIDEOS_ARE_FIRST_CLASS}</p>}
       <p className='text-xs opacity-80'>
         {keepsPrintCopy
           ? 'Every copy has the location taken out. Only you and your editors see where each photo was taken.'
           : 'The copies people see have the location taken out. The original keeps it, and only you and your editors can download it.'}
+        {videoRules ? ' A video’s location is taken out before it uploads, as everyone who can see it can play it.' : ''}
       </p>
 
       {items.length ? (

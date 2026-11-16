@@ -47,6 +47,9 @@
 //     wd:Q29 ?p ?st . ?st ?ps ?value ; wikibase:rank ?rank .
 //     OPTIONAL { ?st pq:P582 ?end }
 //     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". } }
+// When query.wikidata.org doesn't answer, the wbgetentities API gives the same statements
+// with their ranks and end dates (P582): www.wikidata.org/w/api.php?action=wbgetentities
+// &ids=Q142|Q38&props=claims (the first 20's facts were read this way, 16 Nov 2026).
 //
 // The checks a file must pass are in countryContentChecks.js (the build scripts run them).
 

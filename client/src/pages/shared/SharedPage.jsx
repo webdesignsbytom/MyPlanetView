@@ -78,6 +78,7 @@ function SharedPage() {
             shareCode={code}
             styleId={settings.style}
             showAntarctica={settings.showAntarctica}
+            blackAndWhite={settings.blackAndWhite}
             onTripChange={() => {}}
           />
         </PublicPageLayout>

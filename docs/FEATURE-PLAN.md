@@ -24,7 +24,7 @@ Last updated: 16 November 2026.
 - **Next in Phase 1:**
   - ads and the Travel Desk: built on 16 Nov with example offers (fictional partners); real offers wait on the partners, imported in the same file format;
   - videos;
-  - the country pages: framework built (16 Nov), Spain, Japan, Iceland, USA and Morocco drafted and waiting for the user's check; the other 15 of the first 20 after that;
+  - the country pages: framework built (16 Nov), and all of the first 20 drafted (16 Nov), waiting for the user's check (WAITING-ON-YOU.md);
   - the PWA.
 
 ## Agreed so far
@@ -306,7 +306,9 @@ A **Travel Desk** button on trip pages, the map's country panel and the country 
 
 ## Videos (First Class)
 
-- **Upload:** straight to the private bucket through a presigned URL, like photos. No server processing.
+**Decided 16 Nov 2026: Cloudflare Stream.** Every video must play in every browser, so each one is converted by Cloudflare Stream ($5 per 1,000 minutes stored a month, $1 per 1,000 minutes watched; only First Class uploads videos). The browser uploads straight to Stream (resumable), Stream converts it and makes thumbnails, and playback is a signed HLS link. Built as docs/API.md "Videos" describes; the plan below was the first version (straight to R2, no conversion) and its compatibility risk is gone.
+
+- **Upload:** straight to Cloudflare Stream through a one-off resumable upload link the API signs, like photos go to R2. The server never handles the file.
 - **Limits** (proposed):
   - up to 3 minutes and 500 MB each;
   - MP4 or MOV;
@@ -322,10 +324,7 @@ A **Travel Desk** button on trip pages, the map's country panel and the country 
   - in galleries, as a tile with a play button;
   - in slideshows, playing through, then moving on;
   - never in the passport.
-- **Compatibility risk.** iPhones record HEVC by default.
-  - Safari plays it. Chrome and Edge play it only where the device decodes it in hardware, and Firefox support is patchy.
-  - Version 1 checks `canPlayType` and offers "Download to watch" where it can't play.
-  - If that becomes a common complaint, transcode with a paid service such as Cloudflare Stream, which bills per minute stored and watched.
+- **Compatibility:** iPhones record HEVC by default, which only some browsers play, so every video is converted by Cloudflare Stream (above) and plays everywhere.
 - **Videos are First Class's main draw,** so they ship at launch with the tiers.
 
 ## Slideshows (the "playlists")
@@ -591,7 +590,7 @@ The site becomes installable: "Install app" in Chrome and Edge on Android and de
   - **Their own link or code.** Each creator gets a sign-up link or code, so you can see who brings sign-ups; the code is stored on the account. **Decided (16 Nov):** anyone who signs up with it gets **their first month free on whichever paid plan they choose**: a 30-day Stripe trial on their first paid Checkout, **with a card**, charged from then on unless they cancel first. The same for every code (docs/API.md, "Promo codes").
   - **Labelling.** Under UK rules (ASA and CMA influencer guidance), a free membership given in return for promotion makes the post an advert, so it must be clearly labelled, e.g. "Ad" at the start. Put that in the agreement.
   - **Ask for honesty.** A real post or video showing their map and passport, not a script.
-  - **The agreement:** [documents/CREATOR-AGREEMENT.md](../documents/CREATOR-AGREEMENT.md) (draft, 16 Nov 2026): one post or video within 60 days showing their own map, with their code, kept up 12 months, labelled "Ad", with the followers' offer described accurately (card needed, renews after 30 days).
+  - **The agreement:** [documents/CREATOR-AGREEMENT.md](../documents/CREATOR-AGREEMENT.md) (agreed 16 Nov 2026; a lawyer should read it before the first one goes out): one post or video within 60 days showing their own map, with their code, kept up 12 months, labelled "Ad", with the followers' offer described accurately (card needed, renews after 30 days).
 
 ## Database additions (draft)
 
@@ -662,7 +661,7 @@ Proposed values, to confirm or change (all in the tiers constants file):
 
 Still to decide (each is also in [WAITING-ON-YOU.md](WAITING-ON-YOU.md), with what the code does until then):
 - **First Class extras:** which extra map styles and passport covers.
-- ~~**Influencer terms:**~~ **Decided (16 Nov):** creators get two years free; their followers get their first month free on the paid plan they choose, with a card up front. What's asked of a creator in return is drafted in [documents/CREATOR-AGREEMENT.md](../documents/CREATOR-AGREEMENT.md), for the user to review (WAITING-ON-YOU.md).
+- ~~**Influencer terms:**~~ **Decided (16 Nov):** creators get two years free; their followers get their first month free on the paid plan they choose, with a card up front. What's asked of a creator in return is agreed (16 Nov): [documents/CREATOR-AGREEMENT.md](../documents/CREATOR-AGREEMENT.md).
 - **Partners:** which affiliate partners and which print partner.
 - ~~**First country pages:**~~ **Decided (16 Nov):** Spain, France, Italy, Portugal, Greece, Turkey, Ireland, the Netherlands, Germany, Croatia, Iceland, the USA, Canada, Mexico, Morocco, Egypt, Japan, Thailand, Australia and New Zealand.
 - **Themes:** who writes the year of monthly themes.
@@ -676,7 +675,7 @@ Still to decide (each is also in [WAITING-ON-YOU.md](WAITING-ON-YOU.md), with wh
 - **Affiliate programmes may turn down a new site.** Apply once the first country pages are live.
 - **The no-tracking promise is part of the pitch.** Adding an ad network script later would need a consent banner and would break that promise, so revisit the pitch before ever doing it.
 - **Writing culture and seasons for ~200 countries is a lot of work,** and errors are public. Publish in checked batches, each page with a "last checked" date.
-- **Some browsers won't play iPhone (HEVC) videos,** and videos are First Class's main draw (see Videos).
+- **Video costs** grow with First Class use (Cloudflare Stream bills per minute stored and watched); each minute belongs to a paying member, but watch the bill.
 - **Unlabelled influencer posts** are the site's problem as well as theirs. Make labelling part of every agreement.
 - **VAT on EU sales** applies from the first sale. Sort it out before taking EU payments.
 - **Friends challenges show counts to other people.** Keep them opt-in, counts only.

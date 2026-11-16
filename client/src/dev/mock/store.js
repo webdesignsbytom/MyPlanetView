@@ -5,6 +5,7 @@ import { getStoredItem, removeStoredItem, setStoredItem } from '@/utils/function
 import { buildSeed } from './seed';
 import { fillPhotoPositions, fillShotAt } from './photoOrder';
 import { awardQuietly } from './achievements';
+import { addFirstClassMap } from './seedFirstClass';
 
 // v2: the test user's map got the real test photos (16 Nov 2026); a new key seeds them
 // for everyone, as older saved stores would keep the poster stand-ins.
@@ -82,6 +83,9 @@ export function loadStore() {
   [...db.maps, ...db.trips].forEach((item) => {
     item.shareCode = fixCode(item.shareCode);
   });
+  // ...and before videos (16 Nov 2026): Fran's First Class map of videos, shared with the
+  // test user, added row by row (seedFirstClass.js), so no new key is needed
+  addFirstClassMap(db);
   // The seed, and stores saved before photos could be rearranged
   fillPhotoPositions(db.photos);
   // ...or had a shotAt (the slideshows' order), and before badges and goals: the seed's

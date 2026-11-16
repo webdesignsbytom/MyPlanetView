@@ -34,7 +34,10 @@ function StampPhotoPicker({ mapId, countryCode, stamp, onSaved, onClose }) {
         for (let page = 0; page < MOST_PAGES; page++) {
           const { photos, nextCursor } = await getPhotoPage({ mapId, country: countryCode, cursor, limit: PAGE_SIZE });
           if (cancelled) return;
-          found.push(...photos.filter((photo) => photo.landmarks?.some((l) => l.id === stamp.landmarkId && l.confirmed)));
+          // Stamps come from photos, never videos (docs/API.md, "Videos")
+          found.push(
+            ...photos.filter((photo) => photo.kind !== 'VIDEO' && photo.landmarks?.some((l) => l.id === stamp.landmarkId && l.confirmed)),
+          );
           if (!nextCursor) break;
           cursor = nextCursor;
         }
