@@ -59,7 +59,7 @@ My Planet View: people keep a private travel map of the world. They mark the cou
 | `seed-photos/` | 16 real test photos from Wikimedia Commons (credits and licences in its `README.md`), each as `thumb.webp`, `display.webp`, `original.jpg` and `print.jpg` (the Economy print copy, from `node images/src/tools/seed-print-copies.mjs`), listed in `photos.json`. The server seed puts them in the private bucket; mock mode shows them. Development only. |
 | `seed-videos/` | The First Class demo account's sample videos: `videos.json` lists four NASA space station time-lapses; each `video.mp4` is downloaded by hand (not in git; its `README.md` says where). The server seed uploads the ones present. Development only. |
 
-No CI runs. `.github/ci.example.yml` is an example kept outside `workflows/` on purpose.
+**Branches and CI** (17 Nov 2026, the user's wish): work happens on `dev` (or a branch off it); `master` is production (Vercel deploys it) and takes changes only through a pull request whose checks pass (branch protection). `.github/workflows/ci.yml` runs on every push to `dev` and every pull request into `master`: the client's lint, meta and house-rule checks, the generated-file `--check`s and a Vite build; the travel pages' Playwright suite (mock mode); the server's unit tests; and its integration tests against a throwaway Postgres 17 (`myplanetview_test`, migrated with `prisma migrate deploy`). CI has no env files: its settings are placeholders in the workflow. Commit to `dev`, never straight to `master`.
 
 ## The travel model (`server/prisma/schema.prisma`)
 
