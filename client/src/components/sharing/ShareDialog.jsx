@@ -6,6 +6,7 @@ import {
   getSharing,
   removeMember,
   resetShareLink,
+  transferMap,
   updateMember,
   updateSharing,
 } from '@/api/travelApi';
@@ -24,8 +25,10 @@ import ShareMemberRow, { ACCESS_ROW_CLASS } from './ShareMemberRow';
 import ShareInviteRow from './ShareInviteRow';
 import ShareGeneralAccess from './ShareGeneralAccess';
 import ShareLinkBox from './ShareLinkBox';
+import MakeOwnerDialog from './MakeOwnerDialog';
 // Utils
 import { ROLE_LABELS } from '@/utils/sharing/shareRoles';
+import { forgetMapLists } from '@/utils/map/mapListCache';
 
 // Sharing a map or a trip, Google Docs style. The owner adds people by email as viewer or
 // editor, changes or removes them, cancels invites, and sets general access. Anyone else
@@ -33,7 +36,10 @@ import { ROLE_LABELS } from '@/utils/sharing/shareRoles';
 // (adding, changing or removing people, link access, a new link, leaving) needs a verified
 // email address: the server refuses otherwise (403, shown as the error), so until then
 // those controls are locked and the dialog says why; the link can still be copied.
-function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose }) {
+// The plan's caps on people (10 editors a map, 20 people a trip) come back as 409s,
+// shown as the error. A map's owner can make a member the owner (`onTransferred` gets
+// `{ stayed, map }` once it's done; the map lists are forgotten first).
+function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransferred, onClose }) {
   const { user } = useAuth();
   const isOwner = role === 'OWNER';
   const mustVerifyEmail = user?.emailVerified === false;
@@ -41,7 +47,17 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
+  // The member being made the owner (the confirmation is open)
+  const [newOwner, setNewOwner] = useState(null);
   const kind = resource === 'trips' ? 'trip' : 'map';
+  const canTransfer = resource === 'maps' && !mustVerifyEmail && Boolean(onTransferred);
+
+  const transfer = async (stayAsEditor) => {
+    const { map } = await transferMap(id, { userId: newOwner.userId, stayAsEditor });
+    forgetMapLists();
+    setNewOwner(null);
+    onTransferred({ stayed: stayAsEditor, map });
+  };
 
   const load = useCallback(async () => {
     try {
@@ -146,6 +162,7 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose 
                   busy={busy || mustVerifyEmail}
                   onChangeRole={(next) => run(() => updateMember(resource, id, member.userId, next)).catch(() => {})}
                   onRemove={() => run(() => removeMember(resource, id, member.userId)).catch(() => {})}
+                  onMakeOwner={canTransfer ? () => setNewOwner(member) : undefined}
                 />
               ))}
               {sharing.invites.map((invite) => (
@@ -182,6 +199,10 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onClose 
       <div className='grid justify-end'>
         <Button onClick={onClose}>Done</Button>
       </div>
+
+      {newOwner ? (
+        <MakeOwnerDialog member={newOwner} mapName={name} onConfirm={transfer} onClose={() => setNewOwner(null)} />
+      ) : null}
     </Modal>
   );
 }

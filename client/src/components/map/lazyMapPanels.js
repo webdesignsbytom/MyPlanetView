@@ -1,8 +1,9 @@
 import { lazy } from 'react';
 
-// The map page's overlays, loaded only when first wanted: none is part of the first paint.
-// Each has preload(), so its code can be fetched on intent (a toolbar stamp hovered,
-// focused or pressed) and is usually there by the time the click opens it.
+// The map page's overlays: none is part of the first paint. Each has preload(), so its
+// code is fetched once the map has drawn and the browser is idle (preloadWhenIdle), or
+// sooner on intent (a toolbar stamp hovered, focused or pressed), and is there by the
+// time the click opens it.
 
 // lazy() that renders straight away once its code is loaded (no fallback flash)
 function lazyPanel(load) {
@@ -31,9 +32,12 @@ export const MapSwitcher = lazyPanel(() => import('./MapSwitcher'));
 export const UnplacedPhotosPanel = lazyPanel(() => import('./UnplacedPhotosPanel'));
 export const HoverPreview = lazyPanel(() => import('./HoverPreview'));
 export const TripsPanel = lazyPanel(() => import('@/components/trips/TripsPanel'));
+export const TimelinePanel = lazyPanel(() => import('./TimelinePanel'));
 export const PhotoUploadPanel = lazyPanel(() => import('@/components/photos/PhotoUploadPanel'));
 export const PhotoViewer = lazyPanel(() => import('@/components/photos/PhotoViewer'));
 export const ShareDialog = lazyPanel(() => import('@/components/sharing/ShareDialog'));
+// Paying for a map that isn't paid for (the plan banner's button); opened rarely
+export const ExtraMapDialog = lazyPanel(() => import('@/components/plans/ExtraMapDialog'));
 
 // What each toolbar stamp (and the title and stats tags) opens. The country list also
 // warms up the country panel, as picking a country is what it's for.
@@ -41,6 +45,8 @@ const FOR_TOOL = {
   stats: [StatsPanel],
   countries: [CountryListPanel, CountryPanel],
   trips: [TripsPanel],
+  // A moment on the timeline opens its country
+  timeline: [TimelinePanel, CountryPanel],
   upload: [PhotoUploadPanel],
   share: [ShareDialog],
   settings: [SettingsPanel],
@@ -50,4 +56,27 @@ const FOR_TOOL = {
 /** Start fetching what a tool opens; errors are left for the real open to show. */
 export function preloadTool(id) {
   for (const panel of FOR_TOOL[id] || []) panel.preload().catch(() => {});
+}
+
+/**
+ * Once the map has drawn: fetch the given tools' panels while the browser is idle, one
+ * per idle moment and in the order given, so they open at once instead of showing the
+ * fallback while their code downloads (in development, while Vite compiles it). Intent
+ * (preloadTool) still jumps the queue. Returns a function that stops what hasn't started.
+ */
+export function preloadWhenIdle(ids) {
+  if (typeof window === 'undefined') return () => {};
+  const hasIdle = typeof window.requestIdleCallback === 'function';
+  const later = (fn) => (hasIdle ? window.requestIdleCallback(fn, { timeout: 5000 }) : window.setTimeout(fn, 1500));
+  const cancel = (handle) => (hasIdle ? window.cancelIdleCallback(handle) : window.clearTimeout(handle));
+  let index = 0;
+  let handle = 0;
+  const next = () => {
+    if (index >= ids.length) return;
+    preloadTool(ids[index]);
+    index += 1;
+    handle = later(next);
+  };
+  handle = later(next);
+  return () => cancel(handle);
 }

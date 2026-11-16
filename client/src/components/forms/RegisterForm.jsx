@@ -35,7 +35,9 @@ function RegisterForm() {
     confirmPassword: '',
     username: '',
     country: 'United Kingdom',
-    agreedToTerms: true,
+    // Unticked: it's the age confirmation as well as the terms (docs/FEATURE-PLAN.md,
+    // "Children and editors"), so the person has to tick it themselves
+    agreedToTerms: false,
   });
 
   const [registerError, setRegisterError] = useState(null);
@@ -99,7 +101,7 @@ function RegisterForm() {
 
     if (!registerFormData.agreedToTerms) {
       setRegisterError(
-        'You must agree to the terms and conditions to continue.'
+        'Please confirm you’re 13 or over and agree to the terms and conditions to continue.'
       );
       setRegistrationInProgress(false);
       return;
@@ -233,10 +235,10 @@ function RegisterForm() {
         checked={registerFormData.agreedToTerms}
         onChange={handleCheckboxChange}
         required
-        ariaLabel='Agree to terms and conditions'
+        ariaLabel='I am 13 or over and agree to the terms and conditions'
         label={
           <>
-            I agree to all{' '}
+            I’m 13 or over (with a parent’s or guardian’s permission if I’m under 18), and I agree to the{' '}
             <AppLink
               to={LEGAL_AGREEMENTS_PAGE_URL}
               label='terms and conditions'

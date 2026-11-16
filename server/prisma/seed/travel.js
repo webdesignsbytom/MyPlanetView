@@ -1,4 +1,4 @@
-// Demo travel data for the seeded USER account (no photos: they need R2).
+// Demo travel data for the seeded USER account (its photos are photos.js, next).
 // Its default map (made by the sign-up hook) becomes a couple's map, and the
 // seeded ADMIN is added as an editor (the partner with their own login).
 import { prisma } from '../../src/prisma.js';

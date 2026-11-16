@@ -14,12 +14,14 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
   - `client/public/brand/logo.png`;
   - `client/public/brand/og-default.jpg` (1200 × 630, the share image);
   - everything in `client/public/favicon/` (ico, svg, 96 px, apple-touch, and the 192 and 512 manifest icons), plus a maskable 512 px icon for the installable app (`docs/FEATURE-PLAN.md`, "Installable app").
-- [ ] **[block]** The legal text (`client/src/utils/data/termsData.js`) has been reviewed by you, or someone qualified. It's a plain-English draft covering R2 storage, GPS kept only on originals, analytics only after consent, account deletion and the shared-map hand-over.
+- [ ] **[block]** The legal text (`client/src/utils/data/termsData.js`) has been reviewed by you, or someone qualified. It's a plain-English draft covering R2 storage, GPS kept only on originals, analytics only after consent, account deletion, the shared-map hand-over, and children (accounts from 13; 13 to 17 with a parent's or guardian's permission; an owner adding an under-18 editor confirms that permission).
+- [ ] **[block]** The ICO's Children's Code (Age Appropriate Design Code) self-assessment is done, since teenagers can have accounts and be editors: private by default, photo locations shown only to editors, no nudging, no profiling. Record the outcome next to the legal text. See `docs/FEATURE-PLAN.md`, "Children and editors".
 - [x] **[block]** Every landmark in `server/prisma/seed/data/landmarks.js` is checked against Wikidata, each with its `// Wikidata Q…` item: 161 on 14 Nov 2026, the last 16 (Badaling, Malabo Cathedral, Fort George, Copán, Petra, Tien Shan, Ohrid, Timbuktu, Aïr and Ténéré, Kokoda Track, Trinidad, La Soufrière, Papaseʻea, Alhambra, Pamir, Old Sanaa) on 15 Nov. `client/src/dev/mock/data/landmarks.js` is a fresh copy.
   - Where one point can't describe the place, the file's header names a stand-in that travellers photograph, and the two ranges are named after theirs: "Tien Shan (Ala-Archa)" (15 km) and "Pamir (Lake Karakul)" (30 km). Kokoda Track is centred on Efogi, half-way, with 35 km reaching both trailheads. Papaseʻea's Wikidata item has no coordinate, so its point is OpenStreetMap's. Re-copy the file to the mock after any change.
 - [ ] The magnetic poles' pins (`QN`, `QS` in both country lists) are this year's positions from NOAA's World Magnetic Model; they were set to 2025's on 15 Nov 2026. Repeat every January.
 - [ ] `client/src/utils/constants/links.js` holds real profile URLs, or stays empty (an empty URL hides the link).
-- [ ] Every claim on the home, about and FAQ pages matches what the app actually does.
+- [ ] Every claim on the home, about, FAQ and **Pricing** pages matches what the app actually does. The Pricing page's claims marked `soon: true` in `client/src/utils/data/pricingData.js` (ads, the Travel Desk, videos, extra styles and covers, passport, slideshows, challenges, country guides, "a copy of all your data") are each built, or removed.
+- [ ] **[block]** The terms (`client/src/utils/data/termsData.js`) cover payments before they go live: renewal, cancelling at the end of the period, refunds, extra maps, what happens to an unpaid map, and complimentary memberships. Today they still say the site is free.
 - [ ] Each indexable page's description says what the page answers, with a fact from the page. The build checks length and uniqueness, not wording.
 
 ## 2. Storage (Cloudflare R2)
@@ -51,6 +53,17 @@ Work through this before My Planet View goes live. Items marked **[block]** stop
 - [ ] A real admin account exists, promoted on the database user. Sign-up only makes `USER`.
 - [ ] **[block]** Email: myplanetview.com is verified in Resend (its DNS records added), `EMAIL_FROM` is an address on it and `RESEND_API_KEY` is set in Vercel. Then one verification email, one password reset, one share invite and one contact-form notification each arrive in your own inbox.
 - [ ] `npm test` passes in `server/`.
+- [ ] **[block]** Payments (Stripe), tried end to end in **test mode** first, then repeated in live mode:
+  - **Products and prices** in GBP, matching `server/src/utils/constants/plans.js`: Business £4.99 a month and £49 a year; First Class £8.99 and £89; an extra map £3.99 and £39 (Economy and Business owners), and £5.99 and £59 (First Class owners). Each price's id goes in its `STRIPE_PRICE_*` key (`server/.env.example` lists them), set in Vercel with `STRIPE_SECRET_KEY`.
+  - **The webhook** points at `https://api.<domain>/api/billing/webhook`, with the `checkout.session.completed` and `customer.subscription.created`, `.updated` and `.deleted` events. Its signing secret goes in `STRIPE_WEBHOOK_SECRET` Pick the API version the server's `stripe` package (23.1.0) was built for, `2026-10-28.endive`.
+  - **The customer portal** is set up in Stripe's dashboard: update the payment method, see invoices, cancel at the end of the period.
+  - **VAT** is decided with an accountant (FEATURE-PLAN.md, "Payments"): Stripe Tax, prices including VAT, or a merchant of record.
+  - **One full round:**
+    1. Pay for Business with a test card.
+    2. Add an extra map.
+    3. Switch to yearly.
+    4. Cancel in the portal.
+    5. Check that the maps lock (viewable, no new photos) and nothing is deleted.
 
 ## 4. Client build and hosting (InMotion / cPanel)
 

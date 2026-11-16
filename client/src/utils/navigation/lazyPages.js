@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { createElement, lazy } from 'react';
 // Constants
 import {
   ABOUT_PAGE_URL,
@@ -8,15 +8,20 @@ import {
   ADMIN_PAGE_URL,
   ADMIN_USERS_PAGE_URL,
   CONTACT_PAGE_URL,
+  COUNTRIES_PAGE_URL,
   DEV_SELECT_LAB_PAGE_URL,
   FORGOT_PASS_PAGE_URL,
   LEGAL_AGREEMENTS_PAGE_URL,
   LOGIN_PAGE_URL,
   MAINTENANCE_PAGE_URL,
+  PRICING_PAGE_URL,
   SIGN_UP_PAGE_URL,
   MAP_PAGE_URL,
   WELCOME_PAGE_URL,
+  countryPagePath,
 } from '../constants/routes';
+// Country guides
+import { COUNTRY_PAGES, HAS_COUNTRY_PAGES, loadCountryIndex, loadCountryPage } from '../countries/countryPages';
 
 // lazy() that renders straight away once its code is loaded (no loading screen)
 const lazyPage = (load) => {
@@ -30,6 +35,7 @@ const lazyPage = (load) => {
 // Public pages
 export const AboutPage = lazyPage(() => import('@/pages/about/AboutPage'));
 export const ContactPage = lazyPage(() => import('@/pages/contact/ContactPage'));
+export const PricingPage = lazyPage(() => import('@/pages/pricing/PricingPage'));
 export const TermAndPoliciesPage = lazyPage(() => import('@/pages/policies/TermAndPoliciesPage'));
 export const MaintenancePage = lazyPage(() => import('@/pages/maintenance/MaintenancePage'));
 export const Error404 = lazyPage(() => import('@/pages/error/Error404'));
@@ -54,10 +60,32 @@ export const InviteAcceptPage = lazyPage(() => import('@/pages/invite/InviteAcce
 // Dev server only: null in production builds, so the page isn't bundled
 export const SelectLabPage = import.meta.env.DEV ? lazyPage(() => import('@/pages/dev/SelectLabPage')) : null;
 
+// Country guides (src/content/countries/): a page's code and its content load together, so
+// its first render is complete, as the pre-render needs. One page per guide, from the
+// checked files (drafts too on the dev server); with none, no index, no routes, no chunks.
+const withContent = (loadPage, loadContent, prop) => () =>
+  Promise.all([loadPage(), loadContent()]).then(([module, content]) => ({
+    default: function PageWithContent() {
+      return createElement(module.default, { [prop]: content });
+    },
+  }));
+
+export const CountriesIndexPage = HAS_COUNTRY_PAGES
+  ? lazyPage(withContent(() => import('@/pages/countries/CountriesIndexPage'), loadCountryIndex, 'pages'))
+  : null;
+export const COUNTRY_GUIDE_PAGES = HAS_COUNTRY_PAGES
+  ? COUNTRY_PAGES.map(({ slug }) => ({
+      slug,
+      path: countryPagePath(slug),
+      Page: lazyPage(withContent(() => import('@/pages/countries/CountryPage'), () => loadCountryPage(slug), 'page')),
+    }))
+  : [];
+
 // Static paths -> page ('*' is the 404 page)
 const PAGES_BY_PATH = {
   [ABOUT_PAGE_URL]: AboutPage,
   [CONTACT_PAGE_URL]: ContactPage,
+  [PRICING_PAGE_URL]: PricingPage,
   [LEGAL_AGREEMENTS_PAGE_URL]: TermAndPoliciesPage,
   [MAINTENANCE_PAGE_URL]: MaintenancePage,
   [ADMIN_PAGE_URL]: AdminDashboardPage,
@@ -71,6 +99,8 @@ const PAGES_BY_PATH = {
   [MAP_PAGE_URL]: MapPage,
   [WELCOME_PAGE_URL]: WelcomePage,
   ...(SelectLabPage ? { [DEV_SELECT_LAB_PAGE_URL]: SelectLabPage } : {}),
+  ...(CountriesIndexPage ? { [COUNTRIES_PAGE_URL]: CountriesIndexPage } : {}),
+  ...Object.fromEntries(COUNTRY_GUIDE_PAGES.map(({ path, Page }) => [path, Page])),
   '*': Error404,
 };
 

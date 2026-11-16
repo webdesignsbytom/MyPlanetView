@@ -68,7 +68,7 @@ test.describe('Trips', () => {
 
     // Back on the map: Finland and Norway are visited, Sweden isn't
     await page.getByRole('link', { name: `Back to ${HOME_MAP}` }).click();
-    await expectStats(page, '10 countries, 2 continents, 5 photos');
+    await expectStats(page, '10 countries, 2 continents, 16 photos');
     const list = await openTool(page, 'Country list', 'Countries');
     await list.getByRole('combobox', { name: 'Show' }).selectOption('Visited');
     await expect(list.getByRole('button', { name: 'Status for Finland: Visited' })).toBeVisible();
@@ -160,8 +160,8 @@ test.describe('Trips', () => {
     await expect(trips.getByRole('link', { name: /Italian summer/ })).toBeVisible();
     await expect(trips.getByRole('link', { name: /Japan in spring/ })).toHaveCount(0);
     await statsBadge(page).click();
-    // Countries, continents, photos, landmarks, trips
-    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['8', '2', '5', '2', '1']);
+    // Countries, continents, special places, photos, landmarks, trips
+    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '16', '2', '2']);
 
     // The old address now says so
     await page.goto('/trips/trip-japan');

@@ -25,8 +25,11 @@ import {
   presignPhotoUpload,
 } from '../services/s3/mediaService.js';
 import { findLandmarkById, findLandmarksInBox } from '../domain/places.js';
+import { loadMapPlan } from '../services/travel/plans.js';
+import { LOCKED_MAP_MESSAGE, checkCountryCap, checkPhotoSizesForPlan } from '../utils/planLimits.js';
 import {
   confirmPhotoLandmarkInDB,
+  countPhotosInCountry,
   createPhotoInDB,
   deletePhotoInDB,
   deletePhotoLandmarkInDB,
@@ -53,7 +56,7 @@ import {
   loadUploadTarget,
   notFound,
 } from './helpers/travel.js';
-import { isKnownCountry, parseOptionalCountry } from './helpers/countries.js';
+import { countryNameOf, isKnownCountry, parseOptionalCountry } from './helpers/countries.js';
 import { photoDetailView, photoListItem, visiblePhotos } from './helpers/views.js';
 
 const D = DOMAINS.photos;
@@ -64,7 +67,16 @@ const PAGE_MAX = 60;
 const hasRequiredSizes = (sizes) => REQUIRED_SIZES.every((s) => sizes.includes(s));
 const distinct = (list) => new Set(list).size === list.length;
 
-// Upload, step 1: presigned PUTs into the private bucket
+// What the plan rules need about a country, for the photo writes (domain/photos.js)
+const photoLimits = async (planId, countryCode) => ({
+  planId,
+  countryName: countryCode ? await countryNameOf(countryCode) : null,
+});
+
+// Upload, step 1: presigned PUTs into the private bucket. The map's owner's plan decides:
+// a locked map takes no photos (403); Economy sends a PRINT copy and no ORIGINAL, the
+// paid plans an ORIGINAL (optional) and no PRINT (400); with a `countryCode` hint, a
+// country that's full on the map is refused before anything is uploaded (409).
 
 export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) => {
   const body = req.body || {};
@@ -72,6 +84,9 @@ export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) 
   if (tripId && !isUuid(tripId)) return notFound(req, res, D, EVENT_MESSAGES.tripNotFound);
   const { map, role } = await loadUploadTarget(req, req.params.mapId, tripId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.mapNotFound)) return undefined;
+  const mapPlan = await loadMapPlan(map.id);
+  if (!mapPlan) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
+  if (mapPlan.locked) return forbidden(req, res, D, LOCKED_MAP_MESSAGE);
 
   const files = Array.isArray(body.files) ? body.files : [];
   const sizes = files.map((f) => f?.size);
@@ -89,6 +104,19 @@ export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) 
       return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
     }
     if (file.bytes > PHOTO_MAX_BYTES[file.size]) return sendMessageResponse(res, 413, EVENT_MESSAGES.photoTooLarge);
+  }
+  const sizeProblem = checkPhotoSizesForPlan(sizes, mapPlan.plan);
+  if (sizeProblem) return badRequest(req, res, D, sizeProblem);
+
+  // The country the uploader expects (confirm checks again with the final one)
+  const hint = await parseOptionalCountry(body.countryCode);
+  if (!hint.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
+  if (hint.value) {
+    const full = checkCountryCap({
+      count: await countPhotosInCountry(map.id, hint.value),
+      ...(await photoLimits(mapPlan.plan, hint.value)),
+    });
+    if (full) return conflict(req, res, D, full);
   }
 
   // At most UNCONFIRMED_UPLOAD_LIMIT.photo files presigned and never saved, per user (429)
@@ -160,6 +188,16 @@ async function checkUploadedFiles({ mapId, photoId, variants, userId }) {
   return { variants: checked };
 }
 
+/** The keys of one photo's upload (only those in its own folder, so nothing else can be named). */
+const uploadKeysOf = (mapId, photoId, variants) =>
+  (Array.isArray(variants) ? variants : [])
+    .map((v) => v?.key)
+    .filter((k) => typeof k === 'string' && k.startsWith(photoKeyFolder({ mapId, photoId })));
+
+// Upload, step 3 (confirm). The plan rules are checked again: a map locked meanwhile
+// (403), the sizes for the owner's plan (400), and, in the save's own transaction, the
+// country cap with the final country and the storage safety net (409). A refused
+// upload's files are deleted.
 export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
   const body = req.body || {};
   const tripId = body.tripId || null;
@@ -170,6 +208,15 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
   const { photoId } = body;
   if (!isUuid(photoId)) return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
   if (await findPhotoById(photoId)) return conflict(req, res, D, EVENT_MESSAGES.photoAlreadySaved);
+
+  // Not saved, so nothing uses this photo's folder yet: its files can go
+  const discardUpload = () => deleteStoredObjects(uploadKeysOf(map.id, photoId, body.variants));
+  const mapPlan = await loadMapPlan(map.id);
+  if (!mapPlan) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
+  if (mapPlan.locked) {
+    await discardUpload();
+    return forbidden(req, res, D, LOCKED_MAP_MESSAGE);
+  }
 
   const variants = Array.isArray(body.variants) ? body.variants : [];
   const sizes = variants.map((v) => v?.size);
@@ -182,6 +229,8 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
     return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
   }
   if (!hasRequiredSizes(sizes)) return badRequest(req, res, D, EVENT_MESSAGES.photoSizesRequired);
+  const sizeProblem = checkPhotoSizesForPlan(sizes, mapPlan.plan);
+  if (sizeProblem) return badRequest(req, res, D, sizeProblem);
   if (!isPixelSize(body.width) || !isPixelSize(body.height)) {
     return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
   }
@@ -198,7 +247,7 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
   const checked = await checkUploadedFiles({ mapId: map.id, photoId, variants, userId: req.user.id });
   if (checked.status) {
     // Nothing from a failed upload is kept
-    await deleteStoredObjects(variants.map((v) => v.key).filter((k) => typeof k === 'string' && k.startsWith(photoKeyFolder({ mapId: map.id, photoId }))));
+    await discardUpload();
     return sendMessageResponse(res, checked.status, checked.message);
   }
 
@@ -208,7 +257,7 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
     ? matchLandmarks(position, await findLandmarksInBox(boundingBox(position.latitude, position.longitude)))
     : [];
 
-  await createPhotoInDB({
+  const saved = await createPhotoInDB({
     photo: {
       id: photoId,
       mapId: map.id,
@@ -224,7 +273,13 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
     },
     variants: checked.variants,
     landmarkMatches,
+    // The country cap with the final country, and the storage safety net
+    limits: await photoLimits(mapPlan.plan, countryCode),
   });
+  if (saved.refused) {
+    await discardUpload();
+    return conflict(req, res, D, saved.refused);
+  }
   logEvent(createPhotoEvent({ user: req.user, action: 'Create Success', id: photoId, detail: `map=${map.id}`, statusCode: 201 }));
   return sendDataResponse(res, 201, { photo: await photoDetailView(await findPhotoDetail(photoId), role) });
 });
@@ -325,8 +380,14 @@ export const updatePhotoHandler = handler(D, 'Update photo', async (req, res) =>
   if (Object.keys(data).length) {
     // A photo taken there proves a visit, as it does at upload: a new country is
     // marked visited in the same transaction (a trip-only editor's too: the visit
-    // carries its source)
-    await updatePhotoInDB(photo.id, data);
+    // carries its source). A country that's full on the map takes no more (409).
+    let limits = null;
+    if (data.countryCode && data.countryCode !== photo.countryCode) {
+      const mapPlan = await loadMapPlan(photo.mapId);
+      limits = await photoLimits(mapPlan?.plan ?? 'FREE', data.countryCode);
+    }
+    const updated = await updatePhotoInDB(photo.id, data, { limits });
+    if (updated?.refused) return conflict(req, res, D, updated.refused);
     logEvent(createPhotoEvent({ user: req.user, action: 'Update Success', id: photo.id, detail: Object.keys(data).join(',') }));
   }
   return sendDataResponse(res, 200, { photo: await photoDetailView(await findPhotoDetail(photo.id), role) });

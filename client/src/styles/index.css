@@ -166,6 +166,30 @@
   --map-ice-edge: #dbeafe;
 }
 
+/* The map's colours switch with data-map-style (the blocks above), so their utilities
+   must read the --map-* tokens where they're used: `inline` puts var(--map-…) straight
+   into each utility. A plain @theme resolves var() once, on :root, and every map style
+   drew with the animated sea's colours. */
+@theme inline {
+  --color-map-sea: var(--map-sea);
+  --color-map-sea-ink: var(--map-sea-ink);
+  --color-map-ink: var(--map-ink);
+  --color-map-edge: var(--map-edge);
+  --color-map-land: var(--map-land);
+  --color-map-land-edge: var(--map-land-edge);
+  --color-map-hover: var(--map-hover);
+  --color-map-wish: var(--map-wish);
+  --color-map-visit-1: var(--map-visit-1);
+  --color-map-visit-2: var(--map-visit-2);
+  --color-map-visit-3: var(--map-visit-3);
+  --color-map-visit-4: var(--map-visit-4);
+  --color-map-visit-5: var(--map-visit-5);
+  --color-map-visit-6: var(--map-visit-6);
+  --color-map-visit-7: var(--map-visit-7);
+  --color-map-ice: var(--map-ice);
+  --color-map-ice-edge: var(--map-ice-edge);
+}
+
 @theme {
   /* SQUARE CORNERS EVERYWHERE (the site's look, agreed 14 Nov 2026): every rounded-*
      utility, the btn-* buttons and the dropdowns read these, so all corners are square,
@@ -219,27 +243,10 @@
   --color-paper-cream: var(--paper-cream);
   --shadow-paper: var(--paper-shadow);
 
-  --color-map-sea: var(--map-sea);
-  --color-map-sea-ink: var(--map-sea-ink);
-  --color-map-ink: var(--map-ink);
-  --color-map-edge: var(--map-edge);
   --color-sky-sun: var(--sky-sun);
   --color-sky-sun-glow: var(--sky-sun-glow);
   --color-sky-moon: var(--sky-moon);
   --color-sky-moon-glow: var(--sky-moon-glow);
-  --color-map-land: var(--map-land);
-  --color-map-land-edge: var(--map-land-edge);
-  --color-map-hover: var(--map-hover);
-  --color-map-wish: var(--map-wish);
-  --color-map-visit-1: var(--map-visit-1);
-  --color-map-visit-2: var(--map-visit-2);
-  --color-map-visit-3: var(--map-visit-3);
-  --color-map-visit-4: var(--map-visit-4);
-  --color-map-visit-5: var(--map-visit-5);
-  --color-map-visit-6: var(--map-visit-6);
-  --color-map-visit-7: var(--map-visit-7);
-  --color-map-ice: var(--map-ice);
-  --color-map-ice-edge: var(--map-ice-edge);
 
   --shadow-lift: var(--lift);
   --shadow-lift-sm: var(--lift-sm);

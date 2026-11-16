@@ -5,8 +5,10 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 // Constants
 import { FULL_BUSINESS_URL } from '../src/utils/constants/constants.js';
-import { CLIENT_ONLY_ROUTE_PREFIXES } from '../src/utils/constants/routes.js';
+import { CLIENT_ONLY_ROUTE_PREFIXES, COUNTRIES_PAGE_URL } from '../src/utils/constants/routes.js';
 import { MAX_TITLE } from '../src/utils/seo/metaText.js';
+// Country guides: only the checked ones are pages
+import { draftLeaksIn, publishedCountryRoutes } from './country-pages.mjs';
 
 const dist = resolve(dirname(fileURLToPath(import.meta.url)), '../dist');
 const liveFlag = process.argv.indexOf('--live');
@@ -254,9 +256,15 @@ function checkRobots(where, text, origin) {
   }
 }
 
+const isCountryRoute = (route) => route === COUNTRIES_PAGE_URL || route.startsWith(`${COUNTRIES_PAGE_URL}/`);
+
 // dist/ after the build
 async function checkDist() {
   const read = (file) => readFile(resolve(dist, file), 'utf8');
+
+  // A draft country guide never ships: no page file, none of its text in any asset
+  for (const leak of draftLeaksIn(dist)) fail('draft country guide', leak);
+
   if (!existsSync(resolve(dist, 'app-shell.html'))) {
     console.warn('⚠️  dist/ was not pre-rendered (SKIP_PRERENDER?), skipping the SEO page checks');
     return;
@@ -278,6 +286,13 @@ async function checkDist() {
     pages.push([route, checkPage(route, await read(file), loc, FULL_BUSINESS_URL)]);
   }
   checkUnique(pages);
+
+  // The sitemap's country guides are exactly the checked ones (and /countries only with them)
+  const countryRoutes = new Set(publishedCountryRoutes());
+  for (const route of routes) {
+    if (isCountryRoute(route) && !countryRoutes.has(route)) fail(route, 'in the sitemap but not a checked country guide');
+  }
+  for (const route of countryRoutes) if (!routes.has(route)) fail(route, 'a checked country guide missing from the sitemap');
 
   for (const [route, page] of pages) {
     for (const link of new Set(page.links)) {

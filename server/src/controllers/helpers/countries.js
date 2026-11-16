@@ -2,18 +2,26 @@
 import { isCountryCode } from '../../utils/travelValidation.js';
 import { findAllCountries } from '../../domain/places.js';
 
-// code -> continent, for every country on the map
+// code -> continent, and code -> name, for every country on the map
 let countriesPromise = null;
 
-const loadCountries = () => {
+const loadCountryTables = () => {
   countriesPromise ??= findAllCountries()
-    .then((rows) => new Map(rows.map((c) => [c.code, c.continent])))
+    .then((rows) => ({
+      continents: new Map(rows.map((c) => [c.code, c.continent])),
+      names: new Map(rows.map((c) => [c.code, c.name])),
+    }))
     .catch((err) => {
       countriesPromise = null; // try again next time
       throw err;
     });
   return countriesPromise;
 };
+
+const loadCountries = async () => (await loadCountryTables()).continents;
+
+/** A country's name ("France"), or its code if it isn't known. */
+export const countryNameOf = async (code) => (await loadCountryTables()).names.get(code) ?? code;
 
 /** Is this a country on the map? */
 export async function isKnownCountry(code) {

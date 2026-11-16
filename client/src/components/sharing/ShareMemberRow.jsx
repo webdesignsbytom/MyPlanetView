@@ -18,14 +18,26 @@ export const ACCESS_ROW_CLASS =
 export const BIN_BUTTON_CLASS =
   'grid h-10 w-10 justify-self-center place-items-center rounded-full text-xl text-status-critical transition hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-colour6 disabled:opacity-50 disabled:hover:scale-100';
 
-// Someone with access: change their role, or remove them.
-function ShareMemberRow({ member, busy, onChangeRole, onRemove }) {
+// Someone with access: change their role, or remove them. `onMakeOwner` (a map's owner)
+// adds "Make owner" under their name, which asks first (MakeOwnerDialog).
+function ShareMemberRow({ member, busy, onChangeRole, onRemove, onMakeOwner }) {
   const who = member.name || member.email;
   return (
     <li className={ACCESS_ROW_CLASS}>
-      <span className='grid min-w-0'>
-        <span className='truncate font-medium'>{who}</span>
-        {member.name ? <span className='truncate text-xs opacity-80'>{member.email}</span> : null}
+      <span className='grid min-w-0 justify-items-start'>
+        <span className='w-full truncate font-medium'>{who}</span>
+        {member.name ? <span className='w-full truncate text-xs opacity-80'>{member.email}</span> : null}
+        {onMakeOwner ? (
+          <button
+            type='button'
+            onClick={onMakeOwner}
+            disabled={busy}
+            aria-label={`Make ${who} the owner`}
+            className='text-xs font-semibold text-poster-red-deep underline underline-offset-2 disabled:opacity-50'
+          >
+            Make owner
+          </button>
+        ) : null}
       </span>
       <PlainOptionSelect
         id={`member-role-${member.userId}`}

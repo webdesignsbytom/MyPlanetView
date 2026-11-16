@@ -28,8 +28,19 @@ const beasties = new Beasties({
   logLevel: 'warn',
 });
 
+// Every pre-rendered page, in subfolders too (the country guides are dist/countries/*.html)
+async function htmlFiles(dir = dist, prefix = '') {
+  const found = [];
+  for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+    const file = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory() && entry.name !== 'assets') found.push(...(await htmlFiles(path.join(dir, entry.name), file)));
+    else if (entry.isFile() && entry.name.endsWith('.html') && !SKIP.has(file)) found.push(file);
+  }
+  return found;
+}
+
 async function run() {
-  const pages = (await fs.readdir(dist)).filter((file) => file.endsWith('.html') && !SKIP.has(file));
+  const pages = await htmlFiles();
   for (const file of pages) {
     const html = await fs.readFile(path.join(dist, file), 'utf8');
     const faces = [];

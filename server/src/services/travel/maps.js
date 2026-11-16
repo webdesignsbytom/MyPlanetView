@@ -1,8 +1,9 @@
 // Map operations shared by the routes and the account hooks in auth.js.
 import { generateShareCode } from '../../utils/shareCodes.js';
-import { createMapInDB, deleteMapInDB, findDefaultMap, isShareCodeTaken } from '../../domain/maps.js';
+import { createMapInDB, deleteMapInDB, findDefaultMap, isShareCodeTaken, transferMapInDB } from '../../domain/maps.js';
 import { findMapPhotoKeys } from '../../domain/photos.js';
 import { deleteStoredObjects } from '../s3/mediaService.js';
+import { graceForNewOwner } from './plans.js';
 
 export const DEFAULT_MAP_NAME = 'My map';
 
@@ -53,4 +54,18 @@ export async function deleteMapWithFiles(mapId) {
   const keys = await findMapPhotoKeys(mapId);
   await deleteMapInDB(mapId);
   await deleteStoredObjects(keys);
+}
+
+/**
+ * Hand a map to someone else (the owner's transfer, an admin's, or account deletion).
+ * The map becomes theirs with its plan: if they have no free map slot it gets
+ * TRANSFER_GRACE_DAYS of grace before it needs paying for (graceForNewOwner). The old
+ * owner stays as an editor with `keepOldOwnerAsEditor`. Callers recreate the old
+ * owner's default map (ensureDefaultMap) when `wasDefault`.
+ * -> `{ fromUserId, wasDefault, graceUntil }`, or null when the map doesn't exist
+ */
+export async function transferMap({ mapId, toUserId, keepOldOwnerAsEditor = false, now = new Date() }) {
+  const graceUntil = await graceForNewOwner({ mapId, toUserId, now });
+  const result = await transferMapInDB({ mapId, toUserId, keepOldOwnerAsEditor, graceUntil });
+  return result && { ...result, graceUntil };
 }

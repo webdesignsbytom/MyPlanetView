@@ -42,6 +42,8 @@ const mapSummarySelect = {
   isDefault: true,
   ownerId: true,
   createdAt: true,
+  // Which of an owner's maps are active (utils/mapSlots.js); shown to the owner only
+  graceUntil: true,
   owner: { select: { name: true } },
 };
 
@@ -52,7 +54,7 @@ const mapSummarySelect = {
  */
 async function withMapCounts(maps, includeHidden) {
   const ids = maps.map((m) => m.id);
-  const [countries, photos, trips] = await Promise.all([
+  const [countries, photos, trips, linkedTrips] = await Promise.all([
     // Countries only: special places (Antarctica, the poles) have their own stat
     countPerParent('countryVisit', 'mapId', ids, {
       status: { in: [...COUNTED_VISIT_STATUSES] },
@@ -60,13 +62,16 @@ async function withMapCounts(maps, includeHidden) {
     }),
     countPhotosPer('mapId', ids, includeHidden),
     countPerParent('trip', 'mapId', ids),
+    // Group trips added to these maps count too (their photos don't: they stay on the
+    // organiser's map)
+    countPerParent('tripMap', 'mapId', ids),
   ]);
   return maps.map((m) => ({
     ...m,
     counts: {
       countries: countries.get(m.id) ?? 0,
       photos: photos.get(m.id) ?? 0,
-      trips: trips.get(m.id) ?? 0,
+      trips: (trips.get(m.id) ?? 0) + (linkedTrips.get(m.id) ?? 0),
     },
   }));
 }
@@ -207,18 +212,26 @@ const VISIT_SELECT = { countryCode: true, status: true, source: true, firstVisit
  * visits as they now are, when the rule changed them (else []).
  */
 export const upsertVisitInDB = async ({ mapId, countryCode, status, firstVisitedOn, notes }) => {
-  const upsert = (db) =>
-    db.countryVisit.upsert({
+  const upsert = async (db) => {
+    // A new or changed status is the person's own (MANUAL); saving only a note or a date
+    // keeps where the visit came from (a completed trip, a photo)
+    const current = await db.countryVisit.findUnique({
+      where: { mapId_countryCode: { mapId, countryCode } },
+      select: { status: true },
+    });
+    const sameStatus = current?.status === status;
+    return db.countryVisit.upsert({
       where: { mapId_countryCode: { mapId, countryCode } },
       create: { mapId, countryCode, status, source: 'MANUAL', firstVisitedOn: firstVisitedOn ?? null, notes: notes ?? null },
       update: {
         status,
-        source: 'MANUAL',
+        ...(sameStatus ? {} : { source: 'MANUAL' }),
         ...(firstVisitedOn !== undefined ? { firstVisitedOn } : {}),
         ...(notes !== undefined ? { notes } : {}),
       },
       select: VISIT_SELECT,
     });
+  };
   const parent = PARENT_PLACE[countryCode];
   if (!parent || !COUNTED_VISIT_STATUSES.includes(status)) return { visit: await upsert(prisma), implied: [] };
   return prisma.$transaction(async (tx) => {
@@ -272,7 +285,14 @@ export const countMapConfirmedLandmarks = async (mapId, { includeHidden }) =>
     })
   ).length;
 
-export const countMapTrips = (mapId) => prisma.trip.count({ where: { mapId } });
+/** The map's own trips plus the group trips added to it ("Add to my map"). */
+export const countMapTrips = async (mapId) => {
+  const [own, linked] = await Promise.all([
+    prisma.trip.count({ where: { mapId } }),
+    prisma.tripMap.count({ where: { mapId } }),
+  ]);
+  return own + linked;
+};
 
 /**
  * Who went on each completed trip and where it stopped: `[{ travellerIds, countryCodes }]`.
@@ -316,27 +336,92 @@ export const upsertMapMember = (mapId, userId, role) =>
 export const deleteMapMember = (mapId, userId) =>
   prisma.mapMember.deleteMany({ where: { mapId, userId } });
 
-// Account deletion
+// Transferring a map, and account deletion
 
-/** Maps a user owns, with their longest-standing editor (if any). */
-/** A user's maps with their editors, longest-standing first (to pick an heir on account deletion). */
-export const findOwnedMapsWithFirstEditor = (userId) =>
+/**
+ * A user's maps with everyone added to them, longest-standing first: to choose who
+ * takes each one when they leave (GET /users/leaving-options, and the heir on account
+ * deletion). -> `[{ id, name, isDefault, members: [{ userId, role, user: { name, isActive } }] }]`
+ */
+export const findOwnedMapsWithMembers = (userId) =>
   prisma.travelMap.findMany({
     where: { ownerId: userId },
     select: {
       id: true,
+      name: true,
+      isDefault: true,
       members: {
-        where: { role: 'EDITOR' },
         orderBy: { createdAt: 'asc' },
-        select: { userId: true, user: { select: { isActive: true } } },
+        select: { userId: true, role: true, user: { select: { name: true, isActive: true } } },
       },
     },
+    orderBy: [{ isDefault: 'desc' }, { createdAt: 'asc' }],
   });
 
-/** Hand a map to one of its editors: they become owner, their member row goes. */
-export const transferMapOwnership = (mapId, newOwnerId) =>
-  prisma.$transaction([
-    prisma.mapMember.deleteMany({ where: { mapId, userId: newOwnerId } }),
-    // The new owner already has their own default map
-    prisma.travelMap.update({ where: { id: mapId }, data: { ownerId: newOwnerId, isDefault: false, defaultForOwnerId: null } }),
+/**
+ * Make `toUserId` a map's owner, in one transaction: their member row goes, the map
+ * stops being anyone's default (the new owner has their own), `graceUntil` is set (or
+ * cleared), and with `keepOldOwnerAsEditor` the old owner becomes an EDITOR member.
+ * -> `{ fromUserId, wasDefault }`, or null when the map doesn't exist
+ */
+export const transferMapInDB = ({ mapId, toUserId, keepOldOwnerAsEditor = false, graceUntil = null }) =>
+  prisma.$transaction(async (tx) => {
+    const map = await tx.travelMap.findUnique({ where: { id: mapId }, select: { ownerId: true, isDefault: true } });
+    if (!map) return null;
+    await tx.mapMember.deleteMany({ where: { mapId, userId: toUserId } });
+    // isDefault and defaultForOwnerId change together (the travel_map_default_owner CHECK)
+    await tx.travelMap.update({
+      where: { id: mapId },
+      data: { ownerId: toUserId, isDefault: false, defaultForOwnerId: null, graceUntil },
+    });
+    if (keepOldOwnerAsEditor && map.ownerId !== toUserId) {
+      await tx.mapMember.upsert({
+        where: { mapId_userId: { mapId, userId: map.ownerId } },
+        create: { mapId, userId: map.ownerId, role: 'EDITOR' },
+        update: { role: 'EDITOR' },
+      });
+    }
+    return { fromUserId: map.ownerId, wasDefault: map.isDefault };
+  });
+
+/**
+ * Make one of an owner's maps their default (the included one), in one transaction:
+ * the old default is cleared first, so the unique defaultForOwnerId and the CHECK hold
+ * after each statement.
+ */
+export const makeDefaultMapInDB = (mapId, ownerId) =>
+  prisma.$transaction(async (tx) => {
+    await tx.travelMap.updateMany({
+      where: { ownerId, isDefault: true, id: { not: mapId } },
+      data: { isDefault: false, defaultForOwnerId: null },
+    });
+    await tx.travelMap.update({ where: { id: mapId }, data: { isDefault: true, defaultForOwnerId: ownerId } });
+  });
+
+// Caps on people (utils/planLimits.js). The person being added is left out, so adding
+// someone already counted changes nothing; `except*` are only applied when given (a
+// filter on undefined would mean no filter at all, which is what we want then anyway).
+
+const pendingInvite = (now) => ({ acceptedAt: null, expiresAt: { gt: now } });
+
+/** A map's editors: EDITOR members plus pending EDITOR invites. */
+export const countMapEditorSeats = async (mapId, { exceptUserId, exceptEmail } = {}) => {
+  const now = new Date();
+  const [members, invites] = await Promise.all([
+    prisma.mapMember.count({ where: { mapId, role: 'EDITOR', ...(exceptUserId ? { userId: { not: exceptUserId } } : {}) } }),
+    prisma.shareInvite.count({
+      where: { mapId, role: 'EDITOR', ...pendingInvite(now), ...(exceptEmail ? { email: { not: exceptEmail } } : {}) },
+    }),
   ]);
+  return members + invites;
+};
+
+/** A trip's people: members of any role plus pending invites. */
+export const countTripSeats = async (tripId, { exceptUserId, exceptEmail } = {}) => {
+  const now = new Date();
+  const [members, invites] = await Promise.all([
+    prisma.tripMember.count({ where: { tripId, ...(exceptUserId ? { userId: { not: exceptUserId } } : {}) } }),
+    prisma.shareInvite.count({ where: { tripId, ...pendingInvite(now), ...(exceptEmail ? { email: { not: exceptEmail } } : {}) } }),
+  ]);
+  return members + invites;
+};

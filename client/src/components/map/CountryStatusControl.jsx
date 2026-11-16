@@ -3,9 +3,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import VisitStatusSelect from './VisitStatusSelect';
 // Utils
 import { VISIT_STATUS_LABELS } from '@/utils/map/visitStatus';
+import { visitStampClass } from '@/utils/map/visitStamp';
 
 // A country's status in the country list. 224 dropdowns made the list slow to open, so
-// each row shows a button drawn like the closed dropdown, and only the row being changed
+// each row shows a button, drawn as a rubber stamp (visitStamp.js), and only the row being changed
 // gets the real one: pressing the button (click, tap, Enter or Space) swaps the dropdown
 // in, focused and, where the browser allows, already open. Once focus leaves it, it's a
 // button again. Screen readers hear "Status for France: Visited, button", then the
@@ -50,7 +51,7 @@ function CountryStatusControl({ code, countryName, status, onChange }) {
       onClick={() => setEditing(true)}
       aria-haspopup='listbox'
       aria-label={`Status for ${countryName}: ${label}`}
-      className='app-select grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 text-left'
+      className={`${visitStampClass(status)} transition hover:rotate-0 hover:shadow-paper focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-colour6`}
     >
       <span className='truncate'>{label}</span>
       <span aria-hidden='true'>▾</span>

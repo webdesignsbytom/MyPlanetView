@@ -19,11 +19,24 @@ const SMALL_COUNTRIES = [
   { code: 'SM', latitude: 43.9424, longitude: 12.4578, radiusM: 6000 },
   { code: 'LI', latitude: 47.166, longitude: 9.555, radiusM: 9000 },
   { code: 'SG', latitude: 1.3521, longitude: 103.8198, radiusM: 13000 },
+  // Andorra: 13.5 km takes in Pas de la Casa and Arcalís, and a little of the French and
+  // Spanish Pyrenees beside them. Gibraltar: the Rock from Europa Point to the frontier.
+  { code: 'AD', latitude: 42.546, longitude: 1.592, radiusM: 13500 },
+  { code: 'GI', latitude: 36.1315, longitude: -5.349, radiusM: 2700 },
 ].filter((c) => !COUNTRY_SHAPES[c.code]);
 
-// Islands the old map data leaves out of their country's shape (it draws only
-// mainland Equatorial Guinea), so the nearest coast would otherwise win
-const UNDRAWN_ISLANDS = [{ code: 'GQ', name: 'Bioko', latitude: 3.53, longitude: 8.7, radiusM: 40000 }];
+// Islands the map doesn't draw, so the nearest coast would otherwise win: Bioko (the
+// old map data draws only mainland Equatorial Guinea), and Greek islands off Turkey too
+// small for Natural Earth's 1:50m data, which drew the others (16 Nov 2026)
+const UNDRAWN_ISLANDS = [
+  { code: 'GQ', name: 'Bioko', latitude: 3.53, longitude: 8.7, radiusM: 40000 },
+  { code: 'GR', name: 'Kastellorizo', latitude: 36.145, longitude: 29.585, radiusM: 2200 },
+  { code: 'GR', name: 'Tilos', latitude: 36.43, longitude: 27.37, radiusM: 6000 },
+  { code: 'GR', name: 'Lipsi', latitude: 37.3, longitude: 26.765, radiusM: 3000 },
+  { code: 'GR', name: 'Arki and Marathi', latitude: 37.378, longitude: 26.735, radiusM: 3000 },
+  { code: 'GR', name: 'Agathonisi', latitude: 37.46, longitude: 26.97, radiusM: 3500 },
+  { code: 'GR', name: 'Farmakonisi', latitude: 37.293, longitude: 27.088, radiusM: 1500 },
+];
 
 const smallCountryAt = (latitude, longitude) =>
   [...SMALL_COUNTRIES, ...UNDRAWN_ISLANDS].find(

@@ -2,7 +2,7 @@
 // (docs/AUDIT.md A9, B8, E). Both buckets are the fake one from setup.js.
 import crypto from 'node:crypto';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { anon, cleanUp, data, defaultMapOf, inBucket, prisma, signUp, uploadPhoto } from './helpers.js';
+import { anon, cleanUp, data, defaultMapOf, givePlan, inBucket, prisma, signUp, uploadPhoto } from './helpers.js';
 
 vi.mock('../../src/services/s3/s3public.js', async (importOriginal) => {
   const actual = await importOriginal();
@@ -46,6 +46,7 @@ async function unconfirmedPhoto(agent, mapId) {
     files: [
       { size: 'THUMB', contentType: 'image/jpeg', bytes: 1000 },
       { size: 'DISPLAY', contentType: 'image/jpeg', bytes: 2000 },
+      { size: 'PRINT', contentType: 'image/jpeg', bytes: 2000 },
     ],
   });
   expect(res.status).toBe(200);
@@ -76,6 +77,7 @@ async function contactImage({ onForm = false } = {}) {
 describe('deleting a map with many photos', () => {
   it('deletes its files in one DeleteObjects request, after the rows', async () => {
     const owner = await signUp('Bulk');
+    await givePlan(owner.user.id, { extraMaps: 1 });
     const map = data(await owner.agent.post('/api/maps').send({ name: 'Bulk', groupType: 'SOLO', travellers: [{ name: 'B' }] })).map;
     const photos = [];
     for (let i = 0; i < 5; i++) photos.push(data(await uploadPhoto(owner.agent, map.id, { countryCode: 'GR' })).photo.id);
@@ -93,6 +95,7 @@ describe('deleting a map with many photos', () => {
 
   it('leaves only unused files and rows when the bucket fails, and the cron removes them', async () => {
     const owner = await signUp('BulkFail');
+    await givePlan(owner.user.id, { extraMaps: 1 });
     const map = data(await owner.agent.post('/api/maps').send({ name: 'Flaky', groupType: 'SOLO', travellers: [{ name: 'F' }] })).map;
     const photo = data(await uploadPhoto(owner.agent, map.id, { countryCode: 'GR' })).photo;
     const keys = await photoKeys([photo.id]);
@@ -244,7 +247,7 @@ describe('unconfirmed uploads', () => {
     const map = await defaultMapOf(user.agent);
     const presign = () =>
       user.agent.post(`/api/maps/${map.id}/photos/presign`).send({
-        files: ['THUMB', 'DISPLAY', 'ORIGINAL'].map((size) => ({ size, contentType: 'image/jpeg', bytes: 1000 })),
+        files: ['THUMB', 'DISPLAY', 'PRINT'].map((size) => ({ size, contentType: 'image/jpeg', bytes: 1000 })),
       });
     // Older than a day: no longer counted
     await unconfirmedRows(user.user.id, 'photo', 50, ago(25 * HOUR));
@@ -273,6 +276,7 @@ describe('unconfirmed uploads', () => {
       files: [
         { size: 'THUMB', contentType: 'image/jpeg', bytes: 40_000 },
         { size: 'DISPLAY', contentType: 'image/jpeg', bytes: 400_000 },
+        { size: 'PRINT', contentType: 'image/jpeg', bytes: 400_000 },
       ],
     });
     const { photoId, uploads } = data(presign);

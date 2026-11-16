@@ -1,19 +1,42 @@
-// Mock mode only: one trip, its travellers and stops, its photos, and the trips
-// shared with you on their own. Every change answers with the whole trip.
+// Mock mode only: one trip, its travellers and stops, its photos, the trips shared
+// with you on their own, and group trips added to other maps ("Add to my map"). Every
+// change answers with the whole trip.
 import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb, me, newId, session } from '../store';
-import { atLeast, countryExists, landmarkById, mapRole, markVisited, photoPage, tripRole, tripSummary, tripView } from '../views';
+import {
+  atLeast,
+  countryExists,
+  landmarkById,
+  mapRole,
+  markVisited,
+  photoPage,
+  tripMapIds,
+  tripRole,
+  tripSummary,
+  tripView,
+} from '../views';
 
 const TRIP_STATUSES = ['PLANNED', 'ACTIVE', 'COMPLETED'];
 const NOT_FOUND = 'This trip could not be found.';
+// The server's EVENT_MESSAGES for group trips
+const LINK = {
+  invalidMap: 'Choose one of your maps to add the trip to.',
+  ownMap: 'This trip is already on its own map.',
+  mapNotFound: "That map doesn't exist, or it hasn't been shared with you.",
+  notFound: "That trip isn't on that map.",
+  removeNotAllowed: "Only the person who added the trip, or the map's owner, can take it off the map.",
+};
 const findTrip = (id) => getDb().trips.find((t) => t.id === id) || null;
 const cleanText = (value, max) => (typeof value === 'string' && value.trim() ? value.trim().slice(0, max) : null);
+const stopCountries = (trip) => getDb().stops.filter((s) => s.tripId === trip.id).map((s) => s.countryCode);
 
 // As the server (controllers/trips.js): a trip becoming COMPLETED adds a TRIP visit for
-// each stop's country; on a completed trip, a new stop, or a stop given a country, adds
-// its own. Nothing else does: a visit removed by hand stays removed after other edits.
-function addTripVisits(trip, codes = getDb().stops.filter((s) => s.tripId === trip.id).map((s) => s.countryCode)) {
-  codes.forEach((code) => markVisited(trip.mapId, code, 'TRIP'));
+// each stop's country, on the trip's own map and on every map it was added to (group
+// trips); on a completed trip, a new stop, or a stop given a country, adds its own.
+// Nothing else does: a visit removed by hand stays removed after other edits. The South
+// Pole brings Antarctica (markVisited).
+function addTripVisits(trip, codes = stopCountries(trip)) {
+  for (const mapId of tripMapIds(trip)) codes.forEach((code) => markVisited(mapId, code, 'TRIP'));
 }
 
 function stopFields(body) {
@@ -105,11 +128,51 @@ export function registerTripRoutes() {
     db.trips = db.trips.filter((t) => t.id !== trip.id);
     db.stops = db.stops.filter((s) => s.tripId !== trip.id);
     db.tripMembers = db.tripMembers.filter((m) => m.tripId !== trip.id);
+    db.tripMaps = db.tripMaps.filter((l) => l.tripId !== trip.id);
     db.invites = db.invites.filter((i) => i.tripId !== trip.id);
     db.photos.forEach((p) => {
       if (p.tripId === trip.id) p.tripId = null;
     });
+    // Its moments stay on the map, off any trip
+    db.moments.forEach((m) => {
+      if (m.tripId === trip.id) m.tripId = null;
+    });
     return ok({ message: 'Trip deleted.' });
+  });
+
+  // Group trips: show the trip on one of your own maps (anyone on the trip, onto a map
+  // they own or edit). A completed trip's countries are marked there at once.
+  route('POST', '/api/trips/:tripId/maps', ({ params, body }) => {
+    const db = getDb();
+    const trip = findTrip(params.tripId);
+    const role = tripRole(trip);
+    if (!atLeast(role, 'VIEWER')) return fail(404, NOT_FOUND);
+    const { mapId } = body || {};
+    if (typeof mapId !== 'string' || !mapId) return fail(400, LINK.invalidMap);
+    if (mapId === trip.mapId) return fail(400, LINK.ownMap);
+    const target = db.maps.find((m) => m.id === mapId) || null;
+    const targetRole = mapRole(target);
+    if (!atLeast(targetRole, 'VIEWER')) return fail(404, LINK.mapNotFound);
+    if (!atLeast(targetRole, 'EDITOR')) return fail(403, 'You do not have permission to do that.');
+    if (db.tripMaps.some((l) => l.tripId === trip.id && l.mapId === target.id)) return ok({ trip: tripView(trip, role) });
+    db.tripMaps.push({ tripId: trip.id, mapId: target.id, addedById: me().id, createdAt: new Date().toISOString() });
+    if (trip.status === 'COMPLETED') stopCountries(trip).forEach((code) => markVisited(target.id, code, 'TRIP'));
+    return ok({ trip: tripView(trip, role) }, 201);
+  });
+
+  // Taking it off: whoever added it, or that map's owner. The visits it marked stay.
+  route('DELETE', '/api/trips/:tripId/maps/:mapId', ({ params }) => {
+    const db = getDb();
+    if (!session.signedIn) return fail(401, 'No valid session. Please sign in.');
+    const link = db.tripMaps.find((l) => l.tripId === params.tripId && l.mapId === params.mapId);
+    if (!link) return fail(404, LINK.notFound);
+    const map = db.maps.find((m) => m.id === link.mapId);
+    if (me().id !== link.addedById && me().id !== map?.ownerId) {
+      if (!atLeast(tripRole(findTrip(link.tripId)), 'VIEWER') && !atLeast(mapRole(map), 'VIEWER')) return fail(404, LINK.notFound);
+      return fail(403, LINK.removeNotAllowed);
+    }
+    db.tripMaps = db.tripMaps.filter((l) => l !== link);
+    return ok({ message: 'Trip taken off the map. Its countries stay marked.' });
   });
 
   route('PUT', '/api/trips/:tripId/travellers', ({ params, body }) => {

@@ -6,6 +6,7 @@ import {
   LANDMARKS_API,
   MAPS_API,
   MAP_SETTINGS_API,
+  MOMENTS_API,
   PHOTOS_API,
   SHARED_API,
   TRIPS_API,
@@ -37,6 +38,11 @@ export const getMap = (mapId) => data(client.get(`${MAPS_API}/${enc(mapId)}`));
 export const updateMap = (mapId, body) => data(client.patch(`${MAPS_API}/${enc(mapId)}`, body));
 export const deleteMap = (mapId) => data(client.delete(`${MAPS_API}/${enc(mapId)}`));
 export const getMapStats = (mapId) => data(client.get(`${MAPS_API}/${enc(mapId)}/stats`));
+// The owner's main (included) map; the old one becomes an extra map
+export const makeMainMap = (mapId) => data(client.post(`${MAPS_API}/${enc(mapId)}/main`, {}));
+// Hand the map to someone already on it -> { map } (as an editor sees it when you stay)
+export const transferMap = (mapId, { userId, stayAsEditor = true }) =>
+  data(client.post(`${MAPS_API}/${enc(mapId)}/transfer`, { userId, stayAsEditor }));
 
 // Travellers
 export const createTraveller = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/travellers`, body));
@@ -65,6 +71,22 @@ export const updateStop = (tripId, stopId, body) =>
   data(client.patch(`${TRIPS_API}/${enc(tripId)}/stops/${enc(stopId)}`, body));
 export const deleteStop = (tripId, stopId) => data(client.delete(`${TRIPS_API}/${enc(tripId)}/stops/${enc(stopId)}`));
 export const reorderStops = (tripId, stopIds) => data(client.put(`${TRIPS_API}/${enc(tripId)}/stops/order`, { stopIds }));
+// Group trips: show a trip on one of your own maps ("Add to my map") -> { trip }, or take it off
+export const addTripToMap = (tripId, mapId) => data(client.post(`${TRIPS_API}/${enc(tripId)}/maps`, { mapId }));
+export const removeTripFromMap = (tripId, mapId) =>
+  data(client.delete(`${TRIPS_API}/${enc(tripId)}/maps/${enc(mapId)}`));
+
+// Moments: a page of a map's, a trip's or a share link's moments, in date order
+// (`country` and, on a map or a share link, `tripId` filter) -> { moments, nextCursor }
+export const getMomentPage = ({ mapId, tripId, shareCode, country, cursor, limit }) => {
+  const filters = query({ country, cursor, limit, tripId: mapId || shareCode ? tripId : undefined });
+  if (shareCode) return data(client.get(`${SHARED_API}/${enc(shareCode)}/moments${filters}`));
+  if (mapId) return data(client.get(`${MAPS_API}/${enc(mapId)}/moments${filters}`));
+  return data(client.get(`${TRIPS_API}/${enc(tripId)}/moments${filters}`));
+};
+export const createMoment = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/moments`, body));
+export const updateMoment = (momentId, body) => data(client.patch(`${MOMENTS_API}/${enc(momentId)}`, body));
+export const deleteMoment = (momentId) => data(client.delete(`${MOMENTS_API}/${enc(momentId)}`));
 
 // Photos: a page of a map's, a trip's or a share link's photos (`unplaced`: only those with no country)
 export const getPhotoPage = ({ mapId, tripId, shareCode, country, unplaced, cursor, limit }) => {

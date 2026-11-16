@@ -36,7 +36,8 @@ const MAP_SETTING_KEYS = {
   style: ['animated', 'old-map', 'jupiter', 'galaxy'],
   mapType: ['regular', 'detailed'],
 };
-const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica'];
+// `showMoments`: the marks beside countries with moments (the server needs it added too)
+const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments'];
 
 // The test user's password: the seeded one until changed or reset here. Sign-in isn't
 // held to the rules below (the seeded one doesn't meet them, as on the server).

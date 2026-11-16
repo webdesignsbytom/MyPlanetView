@@ -21,15 +21,26 @@ import {
   deleteTravellerInDB,
   deleteVisitInDB,
   findMapDetail,
+  findMapMember,
   findMemberMaps,
   findOwnedMaps,
   findTraveller,
+  makeDefaultMapInDB,
   updateMapInDB,
   updateTravellerInDB,
   upsertVisitInDB,
 } from '../domain/maps.js';
-import { deleteMapWithFiles, ensureDefaultMap, newUniqueShareCode } from '../services/travel/maps.js';
-import { badRequest, conflict, denyUnless, handler, loadMap, notFound } from './helpers/travel.js';
+import { findSubscription } from '../domain/billing.js';
+import { countPhotosByCountry } from '../domain/photos.js';
+import { countMomentsByCountry } from '../domain/moments.js';
+import { findUserForTransfer } from '../domain/users.js';
+import { deleteMapWithFiles, ensureDefaultMap, newUniqueShareCode, transferMap } from '../services/travel/maps.js';
+import { loadMapPlan, loadUserPlan, uploadRulesFrom } from '../services/travel/plans.js';
+import { extraMapsPaid } from '../utils/plans.js';
+import { mapSlots } from '../utils/mapSlots.js';
+import { extraMapPriceText, planView } from '../utils/constants/plans.js';
+import { OtherErrorEvent } from '../event/errorUtils.js';
+import { badRequest, conflict, denyUnless, handler, loadMap, notFound, reply } from './helpers/travel.js';
 import { isKnownCountry, parseOptionalCountry } from './helpers/countries.js';
 import { loadMapStats, loadStatsCounts, statsFrom, visitView } from './helpers/views.js';
 
@@ -65,7 +76,9 @@ async function parseTraveller(body, { partial = false } = {}) {
 
 // Views
 
-const summaryView = (map, role) => ({
+// `slots` (utils/mapSlots.js) is given for the maps the caller owns: only the owner sees
+// whether a map is locked and its grace period
+const summaryView = (map, role, slots = null) => ({
   id: map.id,
   name: map.name,
   groupType: map.groupType,
@@ -74,17 +87,47 @@ const summaryView = (map, role) => ({
   ownerName: map.owner?.name ?? null,
   // { countries, photos, trips }, from findOwnedMaps/findMemberMaps (photos per the caller's role)
   counts: map.counts,
+  ...(slots ? { locked: slots.lockedIds.includes(map.id), graceUntil: map.graceUntil ?? null } : {}),
 });
 
 /**
- * The full map for someone with `role` on it. The detail and the stats' counts are
- * read side by side; the stats reuse the detail's visits and travellers.
+ * What the owner and editors see of a map's plan (never viewers or share links): the
+ * owner's plan and its limits, whether the map is locked, its grace period, its photos
+ * per country (hidden ones included: they count towards the cap), and `uploadRules`
+ * (the shape GET /trips/:tripId also has).
  */
-export async function mapDetailView(mapId, role) {
-  const [detail, counts] = await Promise.all([findMapDetail(mapId), loadStatsCounts(mapId, role)]);
+async function mapPlanView(mapId) {
+  const [mapPlan, photoCounts] = await Promise.all([loadMapPlan(mapId), countPhotosByCountry(mapId)]);
+  if (!mapPlan) return {};
+  return {
+    plan: planView(mapPlan.plan),
+    locked: mapPlan.locked,
+    graceUntil: mapPlan.graceUntil,
+    photoCounts,
+    uploadRules: uploadRulesFrom(mapPlan),
+  };
+}
+
+// The map routes' own answers carry the plan fields; GET /shared/:code reuses
+// mapDetailView without them (a share link never shows them, whoever opens it)
+const WITH_PLAN = { withPlan: true };
+
+/**
+ * The full map for someone with `role` on it. The detail and the stats' counts are
+ * read side by side; the stats reuse the detail's visits and travellers. With
+ * `withPlan`, the owner and editors also get the plan fields (mapPlanView).
+ */
+export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
+  const editor = canEdit(role);
+  const [detail, counts, planFields, momentCountsByCountry] = await Promise.all([
+    findMapDetail(mapId),
+    loadStatsCounts(mapId, role),
+    editor && withPlan ? mapPlanView(mapId) : {},
+    // Which countries have moments, to mark them on the map (hidden ones for editors)
+    countMomentsByCountry(mapId, { includeHidden: editor }),
+  ]);
   if (!detail) return null;
   const stats = statsFrom(detail, counts);
-  const editor = canEdit(role);
   return {
     id: detail.id,
     name: detail.name,
@@ -102,26 +145,35 @@ export async function mapDetailView(mapId, role) {
     })),
     visits: detail.visits.map(visitView),
     stats,
+    momentCountsByCountry,
+    ...planFields,
   };
 }
 
 // Maps
 
 export const getMyMapsHandler = handler(D, 'Get my maps', async (req, res) => {
-  const [ownedMaps, memberships] = await Promise.all([findOwnedMaps(req.user.id), findMemberMaps(req.user.id)]);
+  const [ownedMaps, memberships, subscription] = await Promise.all([
+    findOwnedMaps(req.user.id),
+    findMemberMaps(req.user.id),
+    findSubscription(req.user.id),
+  ]);
   // The sign-up hook makes the default map; it's made here only if that ever failed
+  // (or the default was handed to someone else)
   let owned = ownedMaps;
   if (!owned.some((map) => map.isDefault)) {
     await ensureDefaultMap(req.user);
     owned = await findOwnedMaps(req.user.id);
   }
+  const slots = mapSlots({ maps: owned, extraMapsPaid: extraMapsPaid(subscription) });
   const maps = [
-    ...owned.map((map) => summaryView(map, 'OWNER')),
+    ...owned.map((map) => summaryView(map, 'OWNER', slots)),
     ...memberships.map((m) => summaryView(m.map, m.role)),
   ];
   return sendDataResponse(res, 200, { maps });
 });
 
+// A new map needs a free map slot: the included one, or an extra map paid for (402)
 export const createMapHandler = handler(D, 'Create map', async (req, res) => {
   const body = req.body || {};
   const name = cleanName(body.name);
@@ -139,6 +191,12 @@ export const createMapHandler = handler(D, 'Create map', async (req, res) => {
     travellers.push(parsed.value);
   }
 
+  const owner = await loadUserPlan(req.user.id);
+  if (!owner.slots.canCreate) {
+    const message = `${EVENT_MESSAGES.mapSlotsUsed} ${extraMapPriceText(owner.plan)}`;
+    return reply(res, new OtherErrorEvent(req.user, D, 402, message, 'payment-required'));
+  }
+
   const created = await createMapInDB({
     ownerId: req.user.id,
     name,
@@ -147,13 +205,13 @@ export const createMapHandler = handler(D, 'Create map', async (req, res) => {
     travellers,
   });
   logEvent(createMapEvent({ user: req.user, action: 'Create Success', id: created.id, statusCode: 201 }));
-  return sendDataResponse(res, 201, { map: await mapDetailView(created.id, 'OWNER') });
+  return sendDataResponse(res, 201, { map: await mapDetailView(created.id, 'OWNER', WITH_PLAN) });
 });
 
 export const getMapHandler = handler(D, 'Get map', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
   if (!canView(role)) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
-  return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role) });
+  return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role, WITH_PLAN) });
 });
 
 export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
@@ -175,7 +233,7 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
     await updateMapInDB(map.id, data);
     logEvent(createMapEvent({ user: req.user, action: 'Update Success', id: map.id, detail: Object.keys(data).join(',') }));
   }
-  return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role) });
+  return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role, WITH_PLAN) });
 });
 
 export const deleteMapHandler = handler(D, 'Delete map', async (req, res) => {
@@ -186,6 +244,55 @@ export const deleteMapHandler = handler(D, 'Delete map', async (req, res) => {
   await deleteMapWithFiles(map.id);
   logEvent(createMapEvent({ user: req.user, action: 'Delete Success', id: map.id }));
   return sendDataResponse(res, 200, { message: 'Map deleted.' });
+});
+
+// The owner picks which map is their main (included) one: the old default becomes an
+// ordinary map, which needs a paid slot to stay active
+export const makeMainMapHandler = handler(D, 'Make main map', async (req, res) => {
+  const { map, role } = await loadMap(req, req.params.mapId);
+  if (denyUnless(req, res, D, role, canManage, EVENT_MESSAGES.mapNotFound)) return undefined;
+  if (!map.isDefault) {
+    await makeDefaultMapInDB(map.id, req.user.id);
+    logEvent(createMapEvent({ user: req.user, action: 'Main Map Success', id: map.id }));
+  }
+  return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role, WITH_PLAN) });
+});
+
+/**
+ * Make someone already on the map its owner (`{ userId, stayAsEditor = true }`). They
+ * need an active account with a verified address. The map takes the new owner's plan,
+ * with grace when they have no free map slot (services/travel/maps.js, transferMap).
+ */
+export const transferMapHandler = handler(D, 'Transfer map', async (req, res) => {
+  const { map, role } = await loadMap(req, req.params.mapId);
+  if (denyUnless(req, res, D, role, canManage, EVENT_MESSAGES.mapNotFound)) return undefined;
+
+  const body = req.body || {};
+  const { userId } = body;
+  const stayAsEditor = body.stayAsEditor ?? true;
+  if (typeof userId !== 'string' || !userId || userId.length > 255) return badRequest(req, res, D, EVENT_MESSAGES.invalidUserId);
+  if (typeof stayAsEditor !== 'boolean') return badRequest(req, res, D, EVENT_MESSAGES.malformedData);
+  if (userId === req.user.id) return badRequest(req, res, D, EVENT_MESSAGES.transferToSelf);
+
+  const [member, target] = await Promise.all([findMapMember(map.id, userId), findUserForTransfer({ id: userId })]);
+  if (!member || !target) return badRequest(req, res, D, EVENT_MESSAGES.transferTargetNotMember);
+  if (target.isActive === false || target.emailVerified !== true) {
+    return badRequest(req, res, D, EVENT_MESSAGES.transferTargetNotReady);
+  }
+
+  const result = await transferMap({ mapId: map.id, toUserId: userId, keepOldOwnerAsEditor: stayAsEditor });
+  if (!result) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
+  // The included map goes with it: the old owner gets a new default, as at sign-up
+  if (result.wasDefault) await ensureDefaultMap(req.user);
+  logEvent(createMapEvent({
+    user: req.user,
+    action: 'Transfer Success',
+    id: map.id,
+    targetId: userId,
+    detail: `stayAsEditor=${stayAsEditor} grace=${Boolean(result.graceUntil)}`,
+  }));
+  const view = stayAsEditor ? await mapDetailView(map.id, 'EDITOR', WITH_PLAN) : { id: map.id, name: map.name, role: null };
+  return sendDataResponse(res, 200, { map: view });
 });
 
 export const getMapStatsHandler = handler(D, 'Get map stats', async (req, res) => {
@@ -251,6 +358,11 @@ export const putVisitHandler = handler(D, 'Save visit', async (req, res) => {
   if (!isOneOf(body.status, VISIT_STATUSES)) return badRequest(req, res, D, EVENT_MESSAGES.invalidVisitStatus);
   const firstVisitedOn = parseDateOnly(body.firstVisitedOn);
   if (!firstVisitedOn.ok) return badRequest(req, res, D, EVENT_MESSAGES.invalidDate);
+  // The country's one note ("I want to visit here"): text, cleaned and cut to NOTES_MAX;
+  // missing keeps it, null or empty clears it
+  if (body.notes !== undefined && body.notes !== null && typeof body.notes !== 'string') {
+    return badRequest(req, res, D, EVENT_MESSAGES.notesInvalid);
+  }
   const notes = body.notes === undefined ? undefined : sanitizeText(body.notes, { maxLength: NOTES_MAX });
 
   const { visit, implied } = await upsertVisitInDB({

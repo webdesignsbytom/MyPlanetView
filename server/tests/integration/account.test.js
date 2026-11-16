@@ -1,6 +1,7 @@
-// Deleting an account: shared maps pass to the longest-standing editor, the
-// person's uploads go everywhere, and their unshared maps go. Also the account
-// checks around better-auth: the delete password, names, and changing the email.
+// Deleting an account with no leaving plan (the defaults; leaving.test.js has the
+// plan): shared maps pass to the longest-standing editor with every photo on them, the
+// person's photos on other people's maps stay there, and their unshared maps go. Also
+// the account checks around better-auth: the delete password, names, and changing the email.
 import { afterAll, describe, expect, it, vi } from 'vitest';
 import {
   PASSWORD,
@@ -8,6 +9,7 @@ import {
   cleanUp,
   data,
   defaultMapOf,
+  givePlan,
   inBucket,
   prisma,
   sentEmails,
@@ -23,7 +25,7 @@ const photoKeys = async (photoId) =>
   (await prisma.photoVariant.findMany({ where: { photoId }, include: { media: true } })).map((v) => v.media.key);
 
 describe('deleting an account', () => {
-  it('hands shared maps to the longest-standing editor and removes the rest', async () => {
+  it('hands shared maps to the longest-standing editor, leaves photos on other maps, and removes the rest', async () => {
     // Verified: sharers need it, and only verified accounts are added directly
     const leaver = await signUp('Leaver', { verified: true });
     const viewer = await signUp('EarlyViewer', { verified: true });
@@ -38,6 +40,8 @@ describe('deleting an account', () => {
     await leaver.agent.post(`/api/maps/${sharedMap.id}/members`).send({ email: secondEditor.email, role: 'EDITOR' });
     await leaver.agent.put(`/api/maps/${sharedMap.id}/visits/FR`).send({ status: 'VISITED' });
 
+    // A second map is an extra map, paid for
+    await givePlan(leaver.user.id, { extraMaps: 1 });
     const soloMap = data(
       await leaver.agent.post('/api/maps').send({ name: 'Just me', groupType: 'SOLO', travellers: [{ name: 'Leaver' }] })
     ).map;
@@ -50,12 +54,12 @@ describe('deleting an account', () => {
     await elsewhere.agent.post(`/api/maps/${elsewhereMap.id}/members`).send({ email: leaver.email, role: 'EDITOR' });
     const leaverOnElsewhere = data(await uploadPhoto(leaver.agent, elsewhereMap.id, { countryCode: 'JP' })).photo;
 
-    const goneKeys = [
+    const goneKeys = await photoKeys(leaverOnSolo.id);
+    const keptKeys = [
+      ...(await photoKeys(editorOnShared.id)),
       ...(await photoKeys(leaverOnShared.id)),
-      ...(await photoKeys(leaverOnSolo.id)),
       ...(await photoKeys(leaverOnElsewhere.id)),
     ];
-    const keptKeys = await photoKeys(editorOnShared.id);
 
     const res = await leaver.agent.post('/api/auth/delete-user').send({ password: PASSWORD });
     expect(res.status).toBe(200);
@@ -73,17 +77,19 @@ describe('deleting an account', () => {
     // Its visits stay
     expect(data(await firstEditor.agent.get(`/api/maps/${sharedMap.id}`)).map.visits.map((v) => v.countryCode)).toContain('FR');
 
-    // The unshared map is gone; every photo the leaver uploaded is gone, files included
+    // The unshared map is gone with its photos, files included
     expect(await prisma.travelMap.findUnique({ where: { id: soloMap.id } })).toBeNull();
-    for (const id of [leaverOnShared.id, leaverOnSolo.id, leaverOnElsewhere.id]) {
-      expect(await prisma.photo.findUnique({ where: { id } })).toBeNull();
-    }
+    expect(await prisma.photo.findUnique({ where: { id: leaverOnSolo.id } })).toBeNull();
     expect(goneKeys.some(inBucket)).toBe(false);
     expect(await prisma.mediaItem.count({ where: { key: { in: goneKeys } } })).toBe(0);
 
-    // The editor's photo on the inherited map stays
-    expect(await prisma.photo.findUnique({ where: { id: editorOnShared.id } })).not.toBeNull();
+    // Every photo on the inherited map stays (the leaver's are the heir's now), and so
+    // does the leaver's photo on someone else's map (it's that map owner's now)
+    expect(await prisma.photo.findUnique({ where: { id: editorOnShared.id } })).toMatchObject({ uploaderId: firstEditor.user.id });
+    expect(await prisma.photo.findUnique({ where: { id: leaverOnShared.id } })).toMatchObject({ uploaderId: firstEditor.user.id });
+    expect(await prisma.photo.findUnique({ where: { id: leaverOnElsewhere.id } })).toMatchObject({ uploaderId: elsewhere.user.id });
     expect(keptKeys.every(inBucket)).toBe(true);
+    expect(await prisma.mediaItem.count({ where: { key: { in: keptKeys } } })).toBe(keptKeys.length);
   });
 
   it('an admin deleting a user does the same, skipping a deactivated editor', async () => {

@@ -8,12 +8,15 @@ import {
   getMapHandler,
   getMapStatsHandler,
   getMyMapsHandler,
+  makeMainMapHandler,
   putVisitHandler,
+  transferMapHandler,
   updateMapHandler,
   updateTravellerHandler,
 } from '../controllers/maps.js';
 import { createTripHandler, getMapTripsHandler } from '../controllers/trips.js';
 import { createPhotoHandler, getMapPhotosHandler, presignPhotoHandler } from '../controllers/photos.js';
+import { createMomentHandler, getMapMomentsHandler } from '../controllers/moments.js';
 import { sharingHandlers } from '../controllers/sharing.js';
 import { requireVerifiedEmail as verified, validateAuthentication } from '../middleware/auth.js';
 import { createDbRateLimiter, keyByUserId } from '../middleware/dbRateLimit.js';
@@ -45,6 +48,9 @@ router.get('/:mapId', getMapHandler);
 router.patch('/:mapId', updateMapHandler);
 router.delete('/:mapId', verified, deleteMapHandler);
 router.get('/:mapId/stats', getMapStatsHandler);
+// Owner only: the included (main) map, and handing a map to someone on it
+router.post('/:mapId/main', verified, makeMainMapHandler);
+router.post('/:mapId/transfer', verified, transferMapHandler);
 
 // Travellers
 router.post('/:mapId/travellers', createTravellerHandler);
@@ -63,6 +69,10 @@ router.post('/:mapId/trips', verified, createTripHandler);
 router.post('/:mapId/photos/presign', verified, photoPresignLimiter, presignPhotoHandler);
 router.post('/:mapId/photos', verified, createPhotoHandler);
 router.get('/:mapId/photos', getMapPhotosHandler);
+
+// Moments on the map (a trip editor may add one on their trip: tripId in the body)
+router.get('/:mapId/moments', getMapMomentsHandler);
+router.post('/:mapId/moments', verified, createMomentHandler);
 
 // Sharing
 router.get('/:id/sharing', sharing.get);

@@ -4,6 +4,7 @@ const STATUS_MESSAGES = {
   201: `success`,
   400: `fail`,
   401: `fail`,
+  402: `fail`,
   403: `fail`,
   404: `fail`,
   409: `fail`,
@@ -26,6 +27,9 @@ export const DOMAINS = {
   trips: 'trips',
   photos: 'photos',
   sharing: 'sharing',
+  moments: 'moments',
+  // Plans and payments
+  billing: 'billing',
 };
 
 export const EVENT_MESSAGES = {
@@ -99,6 +103,7 @@ export const EVENT_MESSAGES = {
   invalidVisitStatus: `Status must be VISITED, LIVED or WANT_TO_GO.`,
   invalidDate: `Dates must be real dates written as YYYY-MM-DD.`,
   visitNotFound: `That country isn't marked on this map.`,
+  notesInvalid: `A country's notes must be text.`,
   invalidMapSettings: `Map settings must be an object: style is animated, old-map, jupiter or galaxy; the switches are true or false.`,
   // Trips
   tripNotFound: `That trip doesn't exist, or it hasn't been shared with you.`,
@@ -110,6 +115,21 @@ export const EVENT_MESSAGES = {
   invalidStopOrder: `Send every stop of the trip exactly once.`,
   coverPhotoInvalid: `The cover must be a photo from this trip.`,
   tripDeleteNeedsMap: `Only the map's owner and its editors can delete a trip.`,
+  // Group trips
+  tripMapInvalid: `Choose one of your maps to add the trip to.`,
+  tripOnOwnMap: `This trip is already on its own map.`,
+  tripLinkNotFound: `That trip isn't on that map.`,
+  tripLinkRemoveNotAllowed: `Only the person who added the trip, or the map's owner, can take it off the map.`,
+  // Moments
+  momentNotFound: `That moment doesn't exist, or it hasn't been shared with you.`,
+  invalidMomentKind: `Choose what kind of moment it is from the list.`,
+  invalidMomentTitle: `Give the moment a title of 1 to 120 characters.`,
+  invalidMomentText: `A moment's title, story and place name must be text.`,
+  invalidMomentDate: `A moment's date is a year (2019), a month (2019-06) or a day (2019-06-14), from 1800 to 2200, with DAY, MONTH or YEAR saying how much of it is known. Leave it empty for an undated note.`,
+  momentLandmarkWrongCountry: `That landmark isn't in the moment's country.`,
+  momentPhotosInvalid: `Choose up to 20 photos, each from this map.`,
+  momentPhotosNotOnTrip: `You can only choose photos from this trip.`,
+  momentTripChangeNeedsMap: `Only the map's owner and its editors can move a moment to another trip.`,
   // Photos
   photoNotFound: `That photo doesn't exist, or it hasn't been shared with you.`,
   photoUploadInvalid: `The upload doesn't match what was requested. Please try again.`,
@@ -134,6 +154,28 @@ export const EVENT_MESSAGES = {
   shareEmailFailed: `Failed to send the sharing email.`,
   shareNeedsVerifiedEmail: `Verify your email address before adding people. Use the link we emailed you, or send a new one from your account page.`,
   contentNeedsVerifiedEmail: `Verify your email address to add to your map or share it. Use the link we emailed you, or send a new one from your account page.`,
+  // Map limits and transfers
+  mapSlotsUsed: `Your plan includes 1 map, and every extra map you've paid for is in use.`,
+  transferTargetNotMember: `Only someone already on this map can become its owner. Add them first.`,
+  transferTargetNotReady: `The new owner needs an active account with a verified email address.`,
+  transferToSelf: `You already own this map.`,
+  transferTargetNoAccount: `That address has no active account to move the map to.`,
+  invalidUserId: `Say who the new owner is (their user id).`,
+  // Leaving
+  leavingPlanInvalid: `List each map you own once, with TRANSFER (to someone on that map) or DELETE, and say whether to leave your photos.`,
+  // Plans and billing
+  paymentsOff: `Payments aren't set up yet.`,
+  invalidPlan: `Plan must be FREE, REGULAR or PREMIUM, and the interval MONTH or YEAR.`,
+  invalidExtraMaps: `Extra maps must be a whole number from 0 to 1000.`,
+  nothingToBuy: `Choose a plan, or at least one extra map.`,
+  subscriptionExists: `You already have a subscription. Change its plan or extra maps instead.`,
+  noSubscription: `You don't have a subscription to change yet. Choose a plan to start one.`,
+  cancelInPortal: `To stop paying altogether, cancel from the billing portal.`,
+  noBillingAccount: `There's no billing account yet. Choose a plan first.`,
+  invalidGrant: `Give a plan of REGULAR or PREMIUM and a number of months from 1 to 36.`,
+  grantNotFound: `That membership doesn't exist.`,
+  grantAlreadyEnded: `That membership has already ended.`,
+  cannotGrantSelf: `You can't give yourself a membership.`,
   // Verification
   verificationTag: `Verification database.`,
   verificationNotFound: `Failed to find verification.`,

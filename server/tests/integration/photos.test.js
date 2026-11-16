@@ -21,6 +21,7 @@ describe('photo upload', () => {
       files: [
         { size: 'THUMB', contentType: 'image/jpeg', bytes: 1000 },
         { size: 'DISPLAY', contentType: 'image/webp', bytes: 5000 },
+        { size: 'PRINT', contentType: 'image/jpeg', bytes: 5000 },
       ],
     });
     expect(res.status).toBe(200);
@@ -178,6 +179,7 @@ describe('photo upload', () => {
         files: [
           { size: 'THUMB', contentType: 'image/jpeg', bytes: 10 },
           { size: 'DISPLAY', contentType: 'image/jpeg', bytes: 10 },
+          { size: 'PRINT', contentType: 'image/jpeg', bytes: 10 },
         ],
       })
     );
@@ -192,7 +194,7 @@ describe('photo upload', () => {
     expect(res.status).toBe(400);
     // ...and their failed attempt can't delete the owner's files
     expect(presign.uploads.every((u) => inBucket(u.key))).toBe(true);
-    expect(await prisma.mediaItem.count({ where: { key: { in: presign.uploads.map((u) => u.key) } } })).toBe(2);
+    expect(await prisma.mediaItem.count({ where: { key: { in: presign.uploads.map((u) => u.key) } } })).toBe(3);
     // The owner can still save them on their own map
     const mine = await owner.agent.post(`/api/maps/${map.id}/photos`).send({
       photoId: presign.photoId,

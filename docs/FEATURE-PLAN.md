@@ -2,7 +2,33 @@
 
 What comes after the port, and how it pays for itself. [SITE-DESIGN.md](SITE-DESIGN.md) records what is built; this file is what's planned. When a feature here is built, move its decisions into SITE-DESIGN.md.
 
-Last updated: 15 November 2026.
+Last updated: 16 November 2026.
+
+## Build status
+
+- **Built (16 Nov 2026):**
+  - the three plans with Stripe (Checkout, plan changes, the billing portal, the webhook);
+  - complimentary memberships, given from the admin users page;
+  - one included map plus paid extra maps, with unpaid maps locked;
+  - the per-map limits: photos per country, the Economy print copy, the storage safety net;
+  - 10 editors per map and 20 people per trip;
+  - transferring a map (owner and admin, with 60 days' grace);
+  - the leaving choices;
+  - the Pricing page and the account's "Your plan" card;
+  - group trips' "Add to my map", moments with the timeline and map marks, and the country notes box (server, app, mock and tests);
+  - the map data audit: ~300 missing islands and misplaced coasts from Natural Earth, and Andorra, Gibraltar and Kiribati (227 countries);
+  - the country-page framework (no page published yet).
+
+  The rules as built are in SITE-DESIGN.md ("Plans and limits") and API.md.
+- **Next in Phase 1:**
+  - influencer codes (`PromoCode`);
+  - the passport with the landmark expansion (the UNESCO list is ready, not loaded: `server/prisma/seed/data/landmarksUnesco.js`, 1,154 new sites);
+  - slideshows;
+  - badges and goals;
+  - ads and the Travel Desk;
+  - videos;
+  - the country pages: framework built (16 Nov), Spain, Japan, Iceland, USA and Morocco drafted and waiting for the user's check; the other 15 of the first 20 after that;
+  - the PWA.
 
 ## Agreed so far
 
@@ -23,6 +49,13 @@ Last updated: 15 November 2026.
 | Promotion | Give a few complimentary memberships to influencers who promote the site. |
 | Installable app | A PWA (15 Nov): installable from the browser, online only at first. No app store, no Next.js. |
 | Moments | Life events and notes on a country or landmark, e.g. "Had a baby in Canada" (15 Nov). Free on every tier. |
+| Maps you own | (16 Nov) Every plan includes 1 map, and any account can pay for more, with no limit: £3.99 a month (£39 a year) on Economy and Business, £5.99 (£59 a year) on First Class. An extra map gets the owner's plan limits. Maps shared with you are free and never count. |
+| Photo allowance | (16 Nov) Belongs to the map, not to each uploader. Every map you own gets your plan's full allowance; nothing is split between maps. |
+| Editors | (16 Nov) Up to 10 editors on any map, on every tier: the family adds photos to the owner's map with their own logins. Viewers and share-link visitors are unlimited. |
+| Children | (16 Nov) Under 13: no account, but they can be travellers on a map. 13 to 17: an account with a parent's or guardian's permission, so teenagers can be editors. The terms say so. |
+| Group trips | (16 Nov) A trip can be shared between people's accounts: everyone on it adds photos, and each can add the trip to their own map. Up to 20 people per trip, separate from the map's 10 editors. Their photos use the organiser's map allowance. |
+| Transferring a map | (16 Nov) An owner can make someone else the owner (e.g. Mum, when Dad's email is no longer used), and an admin can do it when the owner can't (a death, a lost email). |
+| Country notes and moments | (16 Nov) Both: each country keeps one note ("I want to visit here"), and moments are events ("We saw a volcano", "We had our baby in Paris"). |
 
 ## The pitch
 
@@ -54,17 +87,18 @@ Affiliate income stays small until the country pages bring visitors, so the memb
 | | Economy | Business | First Class |
 | --- | --- | --- | --- |
 | Price | Free | £4.99 a month or £49 a year | £8.99 a month or £89 a year |
-| Photos per country | 30 | 200 | 1,000 |
+| Maps you own | 1 included; each extra map £3.99 a month or £39 a year | 1 included; each extra map £3.99 a month or £39 a year | 1 included; each extra map £5.99 a month or £59 a year |
+| Photos per country, on each map | 30 | 200 | 1,000 |
 | Best copy kept of each photo | A 2,400 px print copy | The untouched original | The untouched original |
 | Videos | No | No | Yes |
 | Ad cards in galleries | Shown to everyone viewing your maps | You never see them; non-paying people viewing your maps see fewer | None, for anyone viewing your maps |
-| People who can add photos to a map, including you | 2 | 6 | Unlimited |
+| Editors on each map (people besides the owner who can add photos) | Up to 10 | Up to 10 | Up to 10 |
 | Extras | None | None | Extra map styles and passport covers; a print discount once printing goes through the site |
-| Storage safety net | Not needed | 50 GB | 200 GB |
+| Storage safety net, on each map | Not needed | 50 GB | 200 GB |
 
 **Every tier gets:**
 - sharing, with unlimited viewers and share links;
-- up to 3 maps;
+- every map other people share with you, free: they never count as maps you own;
 - the passport, challenges, slideshows and country pages;
 - the Travel Desk;
 - "Download all my photos". UK data protection law (GDPR) lets people get a copy of their own data free of charge, so it can't be a paid perk.
@@ -73,7 +107,8 @@ Affiliate income stays small until the country pages bring visitors, so the memb
 
 ### Photos per country
 
-- **What counts:** the photos an account uploaded in that country, across all its maps. A couple's map with two Economy accounts can hold 60 photos of France. This matches the existing rule that usage counts against the uploader.
+- **What counts:** the photos on that map in that country, whoever added them. The owner and the map's editors share the map's allowance, which follows the owner's plan; an editor's own plan adds nothing to it. So ten editors on a free account's map still share 30 photos of France, and the owner's plan pays for the storage. (This replaces the current rule that usage counts against the uploader.)
+- **Each map has the full allowance.** Nothing is split: a Business owner with a family map and a personal map can keep 200 photos of France on each.
 - **Hidden photos count;** deleting one frees the space.
 - **At the cap,** uploading for that country says "30 of 30 photos of France", with an upgrade button. It bites first in the countries people visit most, often their home country, which is where the upgrade prompt will appear.
 - **Where it's checked:** when an upload is presigned and again at confirm-upload, the tier hooks already in SITE-DESIGN.md.
@@ -110,11 +145,66 @@ Friends viewing a Business member's map aren't paying, so they see some ads, but
 
 ### Maps
 
-A login is one person; a map is a world map with its photos. They're separate, so one person can be on several maps. For example:
-- Sam makes "Sam & Alex". Alex signs up with their own login and is added as an editor: one map, two logins.
-- Sam can also own a second map of solo work trips, under the same login, with a switcher to flip between them.
+An **account** is one person's login. A **map** is one world map with its countries, trips and photos. One login can own maps and be added to other people's, and the map switcher (the map's name at the top of the map page) flips between them: "Your maps", then "Shared with you" and "Trips shared with you".
 
-Every tier can own up to 3 maps; maps other people share with you don't count. This isn't a selling point, just a sensible limit.
+**The rules:**
+- **The plan belongs to the person who owns the map,** and pays for it: its photo allowance, its storage, its ads.
+- **Every plan includes 1 map,** and any account can pay for more. An extra map gets the owner's plan, and costs:
+
+  | Owner's plan | Extra map, monthly | Extra map, yearly |
+  | --- | --- | --- |
+  | Economy | £3.99 | £39 |
+  | Business | £3.99 | £39 |
+  | First Class | £5.99 (it keeps videos, so it uses more storage) | £59 |
+
+  The yearly prices are ten months for the price of twelve, like the plans. An extra map is billed on the same schedule as the plan (monthly or yearly); an Economy account chooses either.
+- **An Economy account buying a map** keeps Economy's limits on both (30 photos per country each, print copies, ads). It's the cheapest first payment: £3.99 from someone who would otherwise pay nothing, and they meet Business once a country fills up.
+- **No limit on how many maps** someone pays for. The existing 20-new-maps-a-day limit stays, against abuse.
+- **Every map gets the plan's full limits:** photos per country, storage safety net, 10 editors. Nothing is split between maps.
+- **Maps shared with you are free** and unlimited, whatever your plan.
+- **Editors:** up to 10 on any map, on every tier. Each has their own login and adds photos to the owner's map, using the map's allowance. Viewers, and visitors with the share link (no login needed), are unlimited.
+
+**Examples:**
+
+| Who | Maps they own | Maps shared with them | Pays a month |
+| --- | --- | --- | --- |
+| Sam, travels alone | "Sam's travels" (Economy) | None | £0 |
+| Sam wants a family map as well, and stays on Economy | Economy: "Sam's travels" plus "The Smiths" as an extra map, both with Economy's limits | None | £3.99 |
+| Sam later fills up France and upgrades | Business: both maps get Business limits | None | £4.99 + £3.99 = £8.98 |
+| Jo, First Class, with a solo map and a couple's map | First Class: one included, one extra | None | £8.99 + £5.99 = £14.98 |
+| Dad, family of five | "The Smiths" (Business); Mum and three teenagers are editors (4 of 10) | None | £4.99 |
+| Mum, an editor on Dad's map | Optionally her own "Girls' trips" (Economy) | "The Smiths" | £0 |
+| Grandma | None, and no account | Opens the family map's share link | £0 |
+
+### Group trips
+
+A trip can be shared between people's accounts (decided 16 Nov). Example: Tom has had his map for years and goes on a stag do with eleven friends; they all add their photos to the one trip.
+
+- **Who's on it:** the organiser's trip, on the organiser's map. People are added to the trip by email, as editors or viewers, as trips already allow (`TripMember`). Up to **20 people per trip**, on every plan, separate from the map's 10 editors, so family editors and the stag do never compete for places.
+- **Where it shows:** "Group trips" in everyone's map switcher (today's "Trips shared with you").
+- **On your own map:** each person on the trip can press **Add to my map**. The trip then shows in their own map's trips, and when it's completed its countries are marked visited on their map too (`TRIP` visits). Nothing is copied: the photos stay in the one trip.
+- **Photos use the organiser's map allowance** (30 photos of Czechia on a free map), so a busy group trip nudges the organiser to upgrade.
+- **Leaving:** taking the trip off your map, or leaving the trip, keeps the countries already marked on your map (visits are never taken back).
+
+### Transferring a map, and leaving
+
+- **Transfer ownership** (decided 16 Nov): the owner makes someone else the owner, usually an editor already on the map ("Make Mum the owner"). The old owner stays on as an editor unless they leave. The map's plan becomes the new owner's.
+- **Admin transfer:** when the owner can't do it themselves (a death, a lost email address), an admin moves the map from the admin page after checking off the site, as other services handle bereavement.
+- **Changing an account's email** already exists for someone who can sign in.
+- **Leaving** (decided 16 Nov; today's code does otherwise until it's built):
+  - deleting an account asks about each map it owns: hand it to someone, or delete it (today: maps with editors pass to the longest-standing editor, the rest are deleted);
+  - an editor deleting their account is asked whether to leave their photos on the maps they added them to, with "leave them" as the default, since they use the map's allowance (today: they're deleted);
+  - a map that becomes someone's extra map through a transfer stays fully usable for 60 days before it needs paying for.
+
+### Children and editors
+
+- **Under 13: no account.** A parent lists them as travellers on the family map (a first name is enough) and adds photos for them.
+- **13 to 17: an account with a parent's or guardian's permission,** so teenagers can be editors on the family map. The owner who adds an under-18 as an editor confirms they're the parent or guardian, or have that person's permission.
+- **Editors see everything on the map,** including where each photo was taken (the exact location is editor-only), so owners should only add children to maps they're happy for them to see in full.
+- **Sign-up** asks people to confirm they're 13 or over, together with the terms (an unticked box, done 16 Nov 2026).
+- **The terms and privacy policy** say all of this (`client/src/utils/data/termsData.js`, "Children on a map" and "Children", 16 Nov 2026).
+- **The UK Children's Code** (the ICO's Age Appropriate Design Code) applies to a service teenagers use: high privacy by default, no nudging, location off by default, no profiling. The site is already private by default and shows locations only to editors; do the code's self-assessment before launch (LAUNCH-CHECKLIST.md).
+- **Later, if asked for:** child logins a parent creates and manages, without an email address.
 
 ### Upgrades and downgrades
 
@@ -124,6 +214,9 @@ Every tier can own up to 3 maps; maps other people share with you don't count. T
   - originals already kept stay; new uploads keep a print copy;
   - videos stay viewable, but no new ones can be added;
   - ads follow the new plan.
+- **Changing plan keeps extra maps:** they take the new plan's limits and price (an extra map on a Business account that drops to Economy stays, at £3.99 with Economy's limits; one that moves to First Class becomes £5.99).
+- **Extra maps that aren't paid for** (cancelled, or a payment fails) are never deleted either. They stay viewable and shareable, but take no new photos until they're paid for again. The owner picks which map stays fully active (their first map until they choose).
+- **Adding or removing an extra map** changes the Stripe subscription's quantity, prorated.
 
 ### Free rules from launch
 
@@ -139,6 +232,7 @@ The tier rules, including the Economy print copy, start the day the site launche
 ### Payments
 
 - **Stripe Checkout plus the Stripe customer portal,** monthly and yearly. A webhook sets the account's plan. NextDummy had Stripe checkout and webhook code to reuse.
+- **Extra maps are one line on the same subscription,** with a quantity (the number of extra maps), so the account pays once a month or once a year. An Economy account with an extra map has a subscription that holds only that line. Making or deleting an extra map changes the quantity; Stripe prorates it.
 - **Promote the yearly prices.** Stripe takes roughly 20p plus a small percentage per payment (check its current UK rates). That's about 5.5% of a £4.99 monthly payment, but under 2% of a £49 yearly one.
 - **VAT:**
   - if you're VAT-registered, the prices include VAT;
@@ -155,6 +249,9 @@ Cloudflare R2 charges **$0.015 per GB a month**. The first 10 GB a month are fre
 | Economy user, 30 photos in each of 20 countries (~1.4 MB a photo including the print copy) | ~840 MB | about 1p |
 | Business user at the 50 GB safety net (about 10,000 photos with originals) | 50 GB | ~$0.75 |
 | First Class user at the 200 GB safety net | 200 GB | ~$3.00 |
+| An extra Economy map, 30 photos in each of 20 countries (it earns £3.99) | ~840 MB | about 1p |
+| An extra map at the Business safety net (it earns £3.99) | 50 GB | ~$0.75 |
+| An extra map at the First Class safety net (it earns £5.99) | 200 GB | ~$3.00 |
 
 Most people will use far less, so the prices are about value, not cost.
 
@@ -179,7 +276,7 @@ Not in the passport, account pages, login or sign-up.
 
 **How it's built:**
 - `AffiliateOffer` rows, managed on an admin page. Card images sit in the public bucket.
-- A click goes through `GET /go/:offerId` on the API. That records an `AppEvent` with the offer, country and where the click came from (gallery, slideshow, country page, Travel Desk), but no user, map or share code. It then redirects to the partner.
+- A click goes through `GET /go/:offerId` on the API. That adds one to a daily tally (`OfferClickDaily`: offer, day, where the click came from (gallery, slideshow, country page, Travel Desk), count), then redirects to the partner. It records no person, map, share code or time of day (decided 16 Nov 2026: not in `AppEvent`, which is the admin log).
 - Earnings are tracked in each partner's own dashboard.
 
 **Privacy:**
@@ -298,7 +395,7 @@ In the code it's called a **moment**, not an event, because "event" already mean
   - a plain note can have no date.
 - **Kind:**
   - it sets the moment's stamp icon and wording;
-  - the starter list: born, moved here, wedding, engagement, graduated, new job, met someone, celebration, and **note** (a comment about the place);
+  - the starter list: born, moved here, wedding, engagement, graduated, new job, met someone, celebration, and **something we saw or did** ("We saw a volcano");
   - it's stored as text checked against a list in the code, not a Prisma enum, so adding a kind needs no migration.
 - **Title and text:** a short title and an optional longer story, both plain text, cleaned like captions.
 - **Who:** which of the map's travellers it's about (optional).
@@ -325,10 +422,9 @@ In the code it's called a **moment**, not an event, because "event" already mean
   - map editors add, edit and delete moments;
   - a trip-only editor can do the same for moments linked to their trip;
   - viewers only read them.
-- **Comments are moments of the note kind.**
-  - `CountryVisit.notes` (one note per country) is already in the API, but no screen shows it.
-  - Moments replace it: a migration turns each existing note into an undated note moment, then drops the field.
-  - A "Want to go" note such as "Cherry blossom season" becomes a note moment too.
+- **Country notes stay, beside moments** (decided 16 Nov). A note is the country's one free-text box: a plan or a reminder ("I want to visit here", "Cherry blossom is in early April"). A moment is something that happened ("We saw a volcano", "We had our baby in Paris").
+  - `CountryVisit.notes` is already in the API but no screen shows it: the country panel gets a "Notes" box at the top, editable by editors, read by viewers.
+  - A note belongs to the country's visit row, so it can be written for any status, "want to go" included; clearing the status keeps no note (the row goes).
 - **Replies from other people** ("Congratulations!") are a separate, later feature.
   - They'd come only from people the map is shared with, so they don't break the "not a social network" pitch.
   - They need notifications, and a way to remove what others wrote on your map.
@@ -506,7 +602,8 @@ Reviewed on 15 Nov 2026 in [DATABASE-REVIEW.md](DATABASE-REVIEW.md), which chang
 | Model or field | For |
 | --- | --- |
 | `User.plan` (`FREE` / `REGULAR` / `PREMIUM`), `planSource` (`STRIPE` / `COMPLIMENTARY`), `planEndsAt` | Tiers, complimentary memberships |
-| `Subscription` (Stripe ids, status, renewal date) | Payments |
+| `Subscription` (Stripe ids, status, renewal date, `extraMaps`: how many extra maps are paid for) | Payments, extra maps |
+| `TravelMap.uploadsLocked` (an extra map that isn't paid for: viewable and shareable, no new photos) | Extra maps |
 | `User.referralCode` (the influencer code they signed up with) | Promotion tracking |
 | `PhotoVariant` size `PRINT` (the Economy print copy) | Tiers, printing |
 | `Photo.kind` (`PHOTO` / `VIDEO`) and `durationS`. A video's file is its `ORIGINAL` variant; its poster frames fill `THUMB` and `DISPLAY` | Videos |
@@ -517,9 +614,13 @@ Reviewed on 15 Nov 2026 in [DATABASE-REVIEW.md](DATABASE-REVIEW.md), which chang
 | `FriendChallenge`, `FriendChallengeEntry` (challenge, user, map) | Friends challenges |
 | `PhotoTheme` (month, title, blurb), `PhotoThemeEntry` (theme, photo) | Monthly themes |
 | `AffiliateOffer` (partner, kind, country, title, image key, URL, weight, active) | Ad cards and the Travel Desk |
-| `Moment` (map, kind, title, text, `happenedOn` with `datePrecision` `DAY` / `MONTH` / `YEAR`, country, landmark?, place name?, trip?, hidden, created by), indexed `[mapId, happenedOn]` and `[mapId, countryCode, happenedOn]`; `MomentTraveller` (moment, traveller); `MomentPhoto` (moment, photo, position). Drops `CountryVisit.notes` once its notes are moved | Moments |
+| `OfferClickDaily` (offer, day, placement, count) | Counting ad and Travel Desk clicks, with nothing about who clicked |
+| A map ownership transfer: no new table (`TravelMap.ownerId` changes, the old owner becomes an editor); logged as an `AppEvent` | Transferring a map |
+| `Moment` (map, kind, title, text, `happenedOn` with `datePrecision` `DAY` / `MONTH` / `YEAR`, country, landmark?, place name?, trip?, hidden, created by), indexed `[mapId, happenedOn]` and `[mapId, countryCode, happenedOn]`; `MomentTraveller` (moment, traveller); `MomentPhoto` (moment, photo, position). `CountryVisit.notes` stays (the country note) | Moments |
 
-Ad and Travel Desk clicks go into the existing `AppEvent` table. The per-country cap counts existing `Photo` rows.
+| `TripMap` (trip, map, added by, added at): a group trip added to someone's own map. The trip shows in that map's trips, and completing it adds `TRIP` visits there too | Group trips |
+
+The per-country cap counts the map's existing `Photo` rows in that country (the `[mapId, countryCode, …]` index serves it). The 10-editor cap counts `MapMember` rows with the `EDITOR` role.
 
 ## Decisions in SITE-DESIGN.md this changes
 
@@ -530,7 +631,8 @@ When each part is built, update these sections there:
   - "the original is always kept" becomes Business and First Class only.
 
   It's still three files per photo.
-- **Storage use and future paid tiers:** becomes the three tiers, from launch.
+- **Storage use and future paid tiers:** becomes the three tiers, from launch, and "usage counts against the uploader" becomes "usage counts against the map", on the owner's plan. Owning a second map needs an extra-map payment, on any plan.
+- **Sharing:** up to 10 editors on a map; adding an under-18 editor needs the parent's or guardian's say-so (see Children and editors).
 - **Privacy rules:**
   - ad cards on Economy maps, and fewer for non-paying viewers of Business maps, as plain links with no ad scripts;
   - the Travel Desk;
@@ -541,7 +643,6 @@ When each part is built, update these sections there:
   - `docs/API.md`: the moment routes (per map, per country, and through share links);
   - the access rules: as for photos, hidden ones for editors only;
   - the mock handlers;
-  - `CountryVisit.notes` leaves the visit routes.
 - **Home, About and FAQ copy:** the pitch above.
 
 ## Phases
@@ -549,7 +650,7 @@ When each part is built, update these sections there:
 | Phase | What | Why this order |
 | --- | --- | --- |
 | 0. Finish the port | SITE-DESIGN.md's open items: run everything for real, the domain, the brand assets | Nothing above works until the base does |
-| 1. Launch | <ul><li>the pitch copy and a Pricing page</li><li>the three tiers with Stripe, the print copy and complimentary memberships</li><li>First Class videos</li><li>ad cards and the Travel Desk</li><li>slideshows</li><li>the passport, with the landmark expansion</li><li>site badges and personal goals</li><li>the first ~20 country pages</li><li>influencer outreach</li><li>the installable app (PWA), online only</li><li>moments, with the timeline panel</li></ul> | <ul><li>The tier rules must exist from day one.</li><li>Videos are First Class's main draw.</li><li>Memberships, cards and the Travel Desk are the income.</li><li>The passport and slideshows are the headline features.</li><li>Country pages start the slow SEO clock and help affiliate applications.</li><li>The PWA is a small job once the brand icons exist, and makes the map feel like an app on a phone.</li><li>Moments cost no storage and make the map a family's story, not only a list of countries.</li></ul> |
+| 1. Launch | <ul><li>the pitch copy and a Pricing page</li><li>the three tiers with Stripe, the print copy and complimentary memberships, extra maps, and the 10-editor cap</li><li>First Class videos</li><li>ad cards and the Travel Desk</li><li>slideshows</li><li>the passport, with the landmark expansion</li><li>site badges and personal goals</li><li>the first ~20 country pages</li><li>influencer outreach</li><li>the installable app (PWA), online only</li><li>moments, with the timeline panel</li></ul> | <ul><li>The tier rules must exist from day one.</li><li>Videos are First Class's main draw.</li><li>Memberships, cards and the Travel Desk are the income.</li><li>The passport and slideshows are the headline features.</li><li>Country pages start the slow SEO clock and help affiliate applications.</li><li>The PWA is a small job once the brand icons exist, and makes the map feel like an app on a phone.</li><li>Moments cost no storage and make the map a family's story, not only a list of countries.</li></ul> |
 | 2. After launch | <ul><li>print link and download</li><li>monthly themes</li><li>friends challenges</li><li>more country pages</li></ul> | Each builds on the launch features; friends challenges need people already using the site |
 | 3. Later | <ul><li>"Where to go in <month>" pages</li><li>ordering prints and photobooks through the site, with the First Class discount</li><li>climate tables</li><li>per-traveller badges</li><li>video transcoding if needed</li><li>Infrequent Access storage for originals</li><li>the last map offline (PWA)</li><li>replies to moments from the people a map is shared with</li><li>moments on a spot picked on the map</li></ul> | More work, more risk, or waiting on demand |
 
@@ -558,8 +659,6 @@ When each part is built, update these sections there:
 Proposed values, to confirm or change (all in the tiers constants file):
 - **Photos per country:** 30, 200 and 1,000.
 - **Ad rates:** a card every 12 photos on Economy maps, and every 24 for non-paying viewers of Business maps.
-- **People who can add photos to a map:** 2, 6 and unlimited.
-- **Maps per account:** up to 3.
 - **Video limits:** 3 minutes, 500 MB, 20 per country.
 - **Storage safety nets:** 50 GB and 200 GB.
 
@@ -572,7 +671,6 @@ Still to decide:
 - **VAT:** whether to handle VAT yourself or use a merchant of record; ask an accountant.
 - **Moments:**
   - the starter list of kinds and their stamp icons;
-  - whether moments replace `CountryVisit.notes` (proposed) or the one country note stays as well.
 
 ## Risks
 

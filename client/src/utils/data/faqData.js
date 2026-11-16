@@ -1,5 +1,6 @@
 // Constants
 import { CompanyName } from '../constants/constants';
+import { PLANS, formatPence } from '../constants/plans';
 
 export const faqsArray = [
   {
@@ -24,12 +25,12 @@ export const faqsArray = [
   {
     question: 'What happens to the location data in my photos?',
     answer:
-      'Your phone saves the place each photo was taken inside the file. We use it to put the photo in the right country and to suggest landmarks. The small and screen-sized copies other people see have that location removed. Only you and your editors can download the original, which still has it.',
+      'Your phone saves the place each photo was taken inside the file. We use it to put the photo in the right country and to suggest landmarks. The small and screen-sized copies other people see have that location removed, and only you and your editors see where a photo was taken. On Business and First Class, the original you can download still has it.',
   },
   {
     question: 'Do you keep my original photos?',
     answer:
-      'Yes. We keep the full-size file exactly as you uploaded it, in private storage, alongside a thumbnail and a screen-sized copy for viewing. You can download your originals at any time.',
+      'On Business and First Class, yes: we keep the full-size file exactly as you uploaded it, in private storage, alongside a thumbnail and a screen-sized copy. On Economy we keep a 2,400-pixel print copy instead, which prints well up to about A4, and your original never leaves your device. Upgrading later keeps originals of the photos you add from then on.',
   },
   {
     question: 'How are photos matched to landmarks?',
@@ -43,8 +44,7 @@ export const faqsArray = [
   },
   {
     question: `What does ${CompanyName} cost?`,
-    answer:
-      'It is free while it is new. If we ever add paid plans, for example with more storage, we will tell you before anything changes.',
+    answer: `Economy is free: one map, 30 photos of each country and sharing with as many people as you like. Business is ${formatPence(PLANS.REGULAR.price.MONTH)} a month and First Class ${formatPence(PLANS.PREMIUM.price.MONTH)}, with full-size originals and more photos of each country. Extra maps are extra on any plan. The Pricing page has every detail.`,
   },
   {
     question: 'Where are my photos stored?',
@@ -54,7 +54,7 @@ export const faqsArray = [
   {
     question: 'How do I delete my account?',
     answer:
-      'From your account page. Deleting your account removes your maps, trips and the photos you uploaded. If you own a map that other people edit, it is handed to one of them first, so their photos are not lost with your account.',
+      'From your account page. First you choose what happens to each map you own: give it to someone on it, with every photo on it, or delete it. You also choose whether the photos you added to other people’s maps stay there. Then your account is deleted for good.',
   },
 ];
 

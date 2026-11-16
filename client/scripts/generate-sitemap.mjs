@@ -6,6 +6,8 @@ import {
   PUBLIC_STATIC_ROUTES,
   ROUTE_SITEMAP_META,
 } from '../src/utils/constants/routes.js';
+// Country guides: checked ones only (none checked: no /countries either)
+import { publishedCountrySitemap } from './country-pages.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = dirname(__filename);
@@ -18,15 +20,18 @@ const urlEntry = (loc, { lastmod } = {}) => `
 
 const origin = SITE_ORIGIN.replace(/\/$/, '');
 
-const staticUrlsXml = PUBLIC_STATIC_ROUTES.map((route) =>
-  urlEntry(`${origin}${route}`, { lastmod: ROUTE_SITEMAP_META[route]?.lastmod })
-).join('\n');
+const entries = [
+  ...PUBLIC_STATIC_ROUTES.map((route) => ({ route, lastmod: ROUTE_SITEMAP_META[route]?.lastmod })),
+  ...publishedCountrySitemap(),
+];
+
+const urlsXml = entries.map(({ route, lastmod }) => urlEntry(`${origin}${route}`, { lastmod })).join('\n');
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${staticUrlsXml}
+${urlsXml}
 </urlset>
 `;
 
 await writeFile(resolve(__dirname, '../dist/sitemap.xml'), xml, 'utf8');
-console.log(`✅ sitemap.xml generated at dist/sitemap.xml (${PUBLIC_STATIC_ROUTES.length} routes)`);
+console.log(`✅ sitemap.xml generated at dist/sitemap.xml (${entries.length} routes)`);

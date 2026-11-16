@@ -9,11 +9,14 @@ export const MAX_UPLOAD_BYTES = {
   FILE: 10 * MB,
 };
 
-// Photos: each size of a photo is its own file in the private bucket
+// Photos: each size of a photo is its own file in the private bucket. A map keeps
+// ORIGINAL or PRINT by its owner's plan (utils/planLimits.js), never both.
 export const PHOTO_MAX_BYTES = {
   THUMB: 1 * MB,
   DISPLAY: 5 * MB,
   ORIGINAL: 50 * MB,
+  // Economy's best copy: ~2,400 px, location removed (made in the browser), ~1 MB
+  PRINT: 5 * MB,
 };
 
 // Every size is a plain web image. No HEIC: iPhones send a JPEG when a photo is
@@ -23,6 +26,8 @@ export const PHOTO_CONTENT_TYPES = {
   THUMB: WEB_IMAGE_TYPES,
   DISPLAY: WEB_IMAGE_TYPES,
   ORIGINAL: WEB_IMAGE_TYPES,
+  // JPEG only: many print shops don't take WebP
+  PRINT: ['image/jpeg'],
 };
 
 export const PHOTO_EXTENSIONS = {

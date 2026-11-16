@@ -7,6 +7,7 @@ import {
   CONTACT_PAGE_URL,
   FAQ_PAGE_URL,
   LEGAL_AGREEMENTS_PAGE_URL,
+  PRICING_PAGE_URL,
 } from '@/utils/constants/routes';
 // SEO
 import {
@@ -38,6 +39,10 @@ export const faqPageAdditionalMeta = pageImage('faqPreview');
 
 export const contactPageStructuredData = pageSchema(CONTACT_PAGE_URL, { type: 'ContactPage', mainEntity: businessRef });
 export const contactPageAdditionalMeta = pageImage('contactPreview');
+
+// A plain WebPage: no Offer markup until the prices are final (M4: markup must match the page)
+export const pricingPageStructuredData = pageSchema(PRICING_PAGE_URL, { publisher: businessRef });
+export const pricingPageAdditionalMeta = pageImage('pricingPreview');
 
 export const termsAndPoliciesStructuredData = pageSchema(LEGAL_AGREEMENTS_PAGE_URL, { publisher: businessRef });
 export const termsAndPoliciesAdditionalMeta = pageImage('termsPreview');

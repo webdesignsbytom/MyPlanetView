@@ -22,8 +22,12 @@ async function openCountry(page, name) {
   return panel;
 }
 
-// A mouse drag in small steps, as a person drags (dnd-kit starts after 4 px)
+// A mouse drag in small steps, as a person drags (dnd-kit starts after 4 px). The
+// gallery may be below the fold of its panel (a country's moments come first): both
+// tiles are scrolled into view first, as a person would.
 async function drag(page, from, to) {
+  await to.scrollIntoViewIfNeeded();
+  await from.scrollIntoViewIfNeeded();
   const a = await from.boundingBox();
   const b = await to.boundingBox();
   await page.mouse.move(a.x + a.width / 2, a.y + a.height / 2);
@@ -101,12 +105,14 @@ test.describe('Rearranging photos', () => {
     await uploadTo(page, upload, ['gelato.jpg']);
     await upload.getByRole('button', { name: /^Close/ }).click();
 
-    // The new photo first, then the trip's demo photo
-    await expect(photos.locator('ul img')).toHaveCount(2);
-    const [added, rome] = await pictures(photos);
+    // The new photo first, then the trip's three demo photos
+    await expect(photos.locator('ul img')).toHaveCount(4);
+    const [added, ...demo] = await pictures(photos);
     await photos.getByRole('button', { name: 'Rearrange photos' }).click();
-    const tiles = photos.getByRole('button', { name: /^(Photo|First morning in Rome)$/ });
+    // The rearranging tiles are named by caption ("Photo" for the upload, which has none)
+    const tiles = photos.locator('[aria-roledescription="movable photo"]');
+    await expect(tiles).toHaveCount(4);
     await drag(page, tiles.nth(0), tiles.nth(1));
-    await expect.poll(() => pictures(photos)).toEqual([rome, added]);
+    await expect.poll(() => pictures(photos)).toEqual([demo[0], added, ...demo.slice(1)]);
   });
 });

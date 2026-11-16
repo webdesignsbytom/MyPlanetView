@@ -575,6 +575,25 @@ export async function presignPhotoUpload({ key, contentType, bytes, userId }) {
   return { url, expiresIn: PHOTO_UPLOAD_URL_TTL_SECONDS };
 }
 
+/**
+ * Put a file straight into the private bucket from the server, with no presigned URL.
+ * Only the seed uses it (prisma/seed/photos.js, the demo photos); people's photos always
+ * go from the browser through presignPhotoUpload. Throws if the bucket refuses it.
+ */
+export async function putPrivateObject({ key, body, contentType }) {
+  if (!isPrivateKey(key)) throw httpError(400, 'Key prefix not allowed');
+  const { sdk, priv } = await storage();
+  await priv.default.send(
+    new sdk.PutObjectCommand({
+      Bucket: priv.PRIVATE_BUCKET,
+      Key: key,
+      Body: body,
+      ContentType: contentType,
+      ContentLength: body.length,
+    }),
+  );
+}
+
 /** What R2 actually holds for a photo key: `{ bytes, contentType }`, or null if it isn't there. */
 export const headPrivateObject = (key) => {
   if (!isPrivateKey(key)) throw httpError(400, 'Key prefix not allowed');

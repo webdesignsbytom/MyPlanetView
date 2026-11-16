@@ -21,6 +21,8 @@ import {
   HOME_PAGE_URL,
 } from './src/utils/constants/routes.js';
 import { helmetData } from './src/utils/data/helmetData.js';
+// Country guides: the content files as virtual modules (drafts on the dev server only)
+import { countryPagesPlugin } from './scripts/country-pages.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -111,22 +113,30 @@ const hostLikePreview = () => ({
   },
 });
 
-// Development only: the repo's media/ folder (a copy of the public bucket) at /local-media,
-// used when VITE_MEDIA_CDN isn't set (src/utils/media/mediaUrl.js)
-const MEDIA_DIR = path.resolve(__dirname, '../media');
+// Development only, two of the repo's folders (images only, nothing outside them):
+// - media/ (a copy of the public bucket) at /local-media, used when VITE_MEDIA_CDN isn't
+//   set (src/utils/media/mediaUrl.js);
+// - seed-photos/ (the real test photos) at /seed-photos, for mock mode's demo photos
+//   (src/dev/mock/views.js). The server's seed puts the same photos in the private bucket.
+const LOCAL_FOLDERS = {
+  '/local-media': path.resolve(__dirname, '../media'),
+  '/seed-photos': path.resolve(__dirname, '../seed-photos'),
+};
 const MEDIA_TYPES = { '.avif': 'image/avif', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png' };
 
 const localMedia = () => ({
   name: 'local-media',
   apply: 'serve',
   configureServer(server) {
-    server.middlewares.use('/local-media', (req, res, next) => {
-      const file = path.join(MEDIA_DIR, decodeURIComponent((req.url || '').split('?')[0]));
-      const type = MEDIA_TYPES[path.extname(file).toLowerCase()];
-      if (!type || !file.startsWith(MEDIA_DIR + path.sep) || !fs.existsSync(file)) return next();
-      res.setHeader('Content-Type', type);
-      fs.createReadStream(file).pipe(res);
-    });
+    for (const [mount, dir] of Object.entries(LOCAL_FOLDERS)) {
+      server.middlewares.use(mount, (req, res, next) => {
+        const file = path.join(dir, decodeURIComponent((req.url || '').split('?')[0]));
+        const type = MEDIA_TYPES[path.extname(file).toLowerCase()];
+        if (!type || !file.startsWith(dir + path.sep) || !fs.existsSync(file)) return next();
+        res.setHeader('Content-Type', type);
+        fs.createReadStream(file).pipe(res);
+      });
+    }
   },
 });
 
@@ -148,6 +158,7 @@ export default defineConfig({
   plugins: [
     react(),
     requireProductionBuild(),
+    countryPagesPlugin(),
     siteHeadDefaults(),
     siteManifest(),
     localMedia(),

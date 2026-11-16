@@ -10,6 +10,7 @@ export const COUNTRIES = [
   { code: 'AL', name: "Albania", slug: 'albania', continent: 'EUROPE', pinX: 1090.4, pinY: 237.9 },
   { code: 'DZ', name: "Algeria", slug: 'algeria', continent: 'AFRICA', pinX: 1000.6, pinY: 321.2 },
   { code: 'AS', name: "American Samoa", slug: 'american-samoa', continent: 'OCEANIA', pinX: 27.1, pinY: 593.7 },
+  { code: 'AD', name: "Andorra", slug: 'andorra', continent: 'EUROPE', pinX: 995.3, pinY: 228.7 },
   { code: 'AO', name: "Angola", slug: 'angola', continent: 'AFRICA', pinX: 1084.9, pinY: 580.7 },
   { code: 'AI', name: "Anguilla", slug: 'anguilla', continent: 'NORTH_AMERICA', pinX: 634.3, pinY: 384.7 },
   { code: 'AG', name: "Antigua and Barbuda", slug: 'antigua-and-barbuda', continent: 'NORTH_AMERICA', pinX: 640.6, pinY: 392.2 },
@@ -83,6 +84,7 @@ export const COUNTRIES = [
   { code: 'GE', name: "Georgia", slug: 'georgia', continent: 'ASIA', pinX: 1211, pinY: 231.4 },
   { code: 'DE', name: "Germany", slug: 'germany', continent: 'EUROPE', pinX: 1036.5, pinY: 175.3 },
   { code: 'GH', name: "Ghana", slug: 'ghana', continent: 'AFRICA', pinX: 979.4, pinY: 450.9 },
+  { code: 'GI', name: "Gibraltar", slug: 'gibraltar', continent: 'EUROPE', pinX: 958.6, pinY: 269.7 },
   { code: 'GR', name: "Greece", slug: 'greece', continent: 'EUROPE', pinX: 1104.6, pinY: 249.4 },
   { code: 'GL', name: "Greenland", slug: 'greenland', continent: 'NORTH_AMERICA', pinX: 825.4, pinY: 46.5 },
   { code: 'GD', name: "Grenada", slug: 'grenada', continent: 'NORTH_AMERICA', pinX: 639, pinY: 424 },
@@ -108,6 +110,7 @@ export const COUNTRIES = [
   { code: 'JO', name: "Jordan", slug: 'jordan', continent: 'ASIA', pinX: 1185.7, pinY: 301.3 },
   { code: 'KZ', name: "Kazakhstan", slug: 'kazakhstan', continent: 'ASIA', pinX: 1321.3, pinY: 194 },
   { code: 'KE', name: "Kenya", slug: 'kenya', continent: 'AFRICA', pinX: 1200.6, pinY: 498 },
+  { code: 'KI', name: "Kiribati", slug: 'kiribati', continent: 'OCEANIA', pinX: 1969.4, pinY: 493.5 },
   { code: 'XK', name: "Kosovo", slug: 'kosovo', continent: 'EUROPE', pinX: 1094, pinY: 228.7 },
   { code: 'KW', name: "Kuwait", slug: 'kuwait', continent: 'ASIA', pinX: 1246, pinY: 313.7 },
   { code: 'KG', name: "Kyrgyzstan", slug: 'kyrgyzstan', continent: 'ASIA', pinX: 1373.1, pinY: 235.5 },
@@ -254,7 +257,7 @@ export const CONTINENT_LABELS = {
   SOUTH_AMERICA: 'South America',
 };
 
-// The 224 countries, and the five special places (Antarctica and the poles), each in
+// The 227 countries, and the five special places (Antarctica and the poles), each in
 // the list's order
 export const PLAIN_COUNTRIES = COUNTRIES.filter((country) => country.kind !== 'SPECIAL');
 export const SPECIAL_PLACES = COUNTRIES.filter((country) => country.kind === 'SPECIAL');

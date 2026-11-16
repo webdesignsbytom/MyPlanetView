@@ -3,6 +3,10 @@ import { useEffect, useRef } from 'react';
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+// The open modals, newest last: only the top one answers Escape and Tab, so a dialog
+// opened from inside another (a confirmation over the share dialog) closes on its own
+const openModals = [];
+
 /**
  * What every modal needs (from NextDummy): lock the page behind it, focus its first
  * control, keep Tab inside it, close on Escape, and hand focus back on close.
@@ -20,6 +24,8 @@ export default function useModalA11y(onClose, { open = true } = {}) {
   useEffect(() => {
     if (!open) return undefined;
 
+    const token = {};
+    openModals.push(token);
     previouslyFocusedRef.current = document.activeElement;
 
     const prevOverflow = document.body.style.overflow;
@@ -33,6 +39,7 @@ export default function useModalA11y(onClose, { open = true } = {}) {
     focusables()[0]?.focus?.();
 
     const onKeyDown = (e) => {
+      if (openModals[openModals.length - 1] !== token) return;
       if (e.key === 'Escape') {
         e.preventDefault();
         onCloseRef.current?.();
@@ -59,6 +66,7 @@ export default function useModalA11y(onClose, { open = true } = {}) {
     document.addEventListener('keydown', onKeyDown, true);
 
     return () => {
+      openModals.splice(openModals.indexOf(token), 1);
       document.body.style.overflow = prevOverflow;
       document.removeEventListener('keydown', onKeyDown, true);
       previouslyFocusedRef.current?.focus?.();

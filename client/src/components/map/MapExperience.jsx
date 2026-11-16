@@ -1,7 +1,7 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Constants
-import { MAP_PAGE_URL } from '@/utils/constants/routes';
+import { MAP_PAGE_URL, mapPath } from '@/utils/constants/routes';
 // Hooks
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import usePhotoPage from '@/hooks/usePhotoPage';
@@ -22,21 +22,25 @@ import MapLegend from './MapLegend';
 import MapHoverLayer from './MapHoverLayer';
 import MapPanelFallback from './MapPanelFallback';
 import VerifyEmailBanner from './VerifyEmailBanner';
+import MapPlanBanner from './MapPlanBanner';
 import { LANDMARK_MIN_ZOOM } from './LandmarkPins';
 import ErrorBoundary from '@/utils/error/ErrorBoundary';
 // Panels, fetched when first wanted (lazyMapPanels.js)
 import {
   CountryListPanel,
   CountryPanel,
+  ExtraMapDialog,
   MapSwitcher,
   PhotoUploadPanel,
   PhotoViewer,
   SettingsPanel,
   ShareDialog,
   StatsPanel,
+  TimelinePanel,
   TripsPanel,
   UnplacedPhotosPanel,
   preloadTool,
+  preloadWhenIdle,
 } from './lazyMapPanels';
 // Utils
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
@@ -51,6 +55,16 @@ const PREVIEW_PER_COUNTRY = 6;
 const CLUSTER_RADIUS = 220; // map units: countries this close count as one region
 const VISITED = new Set(['VISITED', 'LIVED']);
 const atLandmarkZoom = (zoom) => zoom >= LANDMARK_MIN_ZOOM;
+// Where wide screens' side panels start: below the title and stats tags, and the banner
+// tags under them (verify your email: ~7rem; the map's plan: ~8rem), so none is covered
+const panelTopBelow = ({ verify, plan }) =>
+  verify && plan
+    ? 'md:top-92 md:[--map-panel-top:23rem]'
+    : plan
+      ? 'md:top-64 md:[--map-panel-top:16rem]'
+      : verify
+        ? 'md:top-60 md:[--map-panel-top:15rem]'
+        : 'md:top-32';
 // Opening a country from the map: its panel's code is fetched on the first press
 const warmCountryPanel = () => CountryPanel.preload().catch(() => {});
 
@@ -124,10 +138,38 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const locked = canEdit && mustVerify;
   const canChange = canEdit && !mustVerify;
   const isOwner = !shareCode && role === 'OWNER';
+  const canShare = Boolean(currentUser) && !shareCode;
   const photoSource = useMemo(() => (shareCode ? { shareCode } : { mapId: map.id }), [shareCode, map.id]);
+  // The map's plan (the owner and editors get it; docs/API.md, "Map limits"): a locked map
+  // (an extra map that isn't paid for) takes no photos, and says so on a tag under the
+  // title; a map handed to its owner without a free slot is in a grace period
+  const uploadRules = shareCode ? null : map.uploadRules || null;
+  const mapLocked = !shareCode && Boolean(map.locked);
+  const inGrace = !shareCode && !mapLocked && Boolean(map.graceUntil) && new Date(map.graceUntil).getTime() > Date.now();
+  const planBanner = mapLocked || (inGrace && isOwner);
+  const [payingForMap, setPayingForMap] = useState(false);
+
+  // The panels are separate downloads (lazyMapPanels.js): once the map has drawn, fetch
+  // the ones this toolbar offers while the browser is idle, the country list (and a
+  // country) first, so none has to load when it's opened
+  useEffect(
+    () =>
+      preloadWhenIdle([
+        'countries',
+        'stats',
+        'trips',
+        'timeline',
+        'settings',
+        ...(canEdit ? ['upload'] : []),
+        ...(canShare ? ['share', 'switcher'] : []),
+      ]),
+    [canEdit, canShare],
+  );
 
   const visitsByCode = useMemo(() => Object.fromEntries(map.visits.map((v) => [v.countryCode, v.status])), [map.visits]);
   const visitFor = (code) => map.visits.find((v) => v.countryCode === code) || null;
+  // The map's own trips: what a photo or a moment can be on (not the group trips added from other maps)
+  const ownTrips = useMemo(() => trips.filter((t) => !t.linked), [trips]);
 
   // The newest photos, grouped by country, feed the hover slideshow (never fetched for
   // touch screens, which don't hover)
@@ -248,13 +290,38 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             photoSource={photoSource}
             photosVersion={photosVersion}
             onOpenPhoto={openPhoto}
-            onAddPhotos={canChange ? (code) => dispatch({ type: 'upload', code }) : null}
+            onAddPhotos={canChange && !mapLocked ? (code) => dispatch({ type: 'upload', code }) : null}
+            mapId={shareCode ? null : map.id}
+            travellers={map.travellers}
+            trips={ownTrips}
+            onAddTraveller={actions?.addTraveller}
+            onMomentsChanged={refreshMap}
             onClose={close}
           />
         ) : null;
+      case 'timeline':
+        return (
+          <TimelinePanel
+            momentSource={photoSource}
+            trips={trips}
+            travellers={map.travellers}
+            shareCode={shareCode}
+            onShowCountry={showCountry}
+            onClose={close}
+          />
+        );
       case 'upload':
         return canEdit ? (
-          <PhotoUploadPanel mapId={map.id} countryCode={ui.uploadCountry} locked={locked} onUploaded={photosChanged} onClose={close} />
+          <PhotoUploadPanel
+            mapId={map.id}
+            countryCode={ui.uploadCountry}
+            locked={locked}
+            uploadRules={uploadRules}
+            photoCounts={map.photoCounts || null}
+            isOwner={isOwner}
+            onUploaded={photosChanged}
+            onClose={close}
+          />
         ) : null;
       case 'trips':
         return (
@@ -265,6 +332,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             locked={locked}
             onCreate={actions?.addTrip}
             noLinks={Boolean(shareCode)}
+            // The map's owner can take a group trip off it (whoever added it can too, from the trip)
+            onRemoveLinked={isOwner && !mustVerify ? actions?.unlinkTrip : null}
             onClose={close}
           />
         );
@@ -288,6 +357,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         <WorldMap
           viewport={viewport}
           visitsByCode={visitsByCode}
+          momentCounts={map.momentCountsByCountry || undefined}
+          showMoments={settings.showMoments}
           selectedCode={ui.panel === 'country' ? ui.selectedCode : null}
           onSelectCountry={selectCountry}
           onHoverCountry={hover.set}
@@ -313,6 +384,16 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         />
         <StatsBadge stats={map.stats} onOpen={() => dispatch({ type: 'toggle', panel: 'stats' })} onIntent={() => preloadTool('stats')} />
         {mustVerify ? <VerifyEmailBanner /> : null}
+        {planBanner ? (
+          <MapPlanBanner
+            locked={mapLocked}
+            inGrace={inGrace}
+            graceUntil={map.graceUntil}
+            isOwner={isOwner}
+            // Paying needs a verified address (the verify banner above says so)
+            onPay={isOwner && !mustVerify ? () => setPayingForMap(true) : null}
+          />
+        ) : null}
       </div>
 
       {settings.showUserBanner ? (
@@ -327,7 +408,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           onToggle={handleToggle}
           onIntent={preloadTool}
           canUpload={canEdit}
-          canShare={Boolean(currentUser) && !shareCode}
+          canShare={canShare}
         />
       </div>
 
@@ -341,15 +422,20 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       {/* The key hides while a panel is open: the panel covers that corner */}
       {panel ? null : (
         <div className='pointer-events-none absolute bottom-3 left-3 hidden md:grid'>
-          <MapLegend />
+          <MapLegend showMoments={settings.showMoments} />
         </div>
       )}
 
-      {/* With the verify banner under the title, wide screens open panels below it */}
+      {/* With the verify or plan banners under the title, wide screens open panels below them. The
+          tickets (a country, and the country list) are centred on wide screens instead,
+          clear of the toolbar (right) and the zoom stamps (bottom right); on phones every
+          panel is the sheet above the toolbar. */}
       {panel ? (
         <div
-          className={`pointer-events-none absolute inset-x-3 bottom-24 z-10 grid md:inset-x-auto md:bottom-auto md:left-3 ${
-            mustVerify ? 'md:top-60 md:[--map-panel-top:15rem]' : 'md:top-32'
+          className={`pointer-events-none absolute inset-x-3 bottom-24 z-10 grid ${
+            ui.panel === 'country' || ui.panel === 'countries'
+              ? 'md:inset-x-24 md:bottom-6 md:top-24 md:grid-rows-[minmax(0,1fr)] md:place-items-center'
+              : `md:inset-x-auto md:bottom-auto md:left-3 ${panelTopBelow({ verify: mustVerify, plan: planBanner })}`
           }`}
         >
           {/* A panel whose code failed to arrive says so; the next panel tries afresh */}
@@ -374,7 +460,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             shareCode={shareCode}
             canEdit={canEdit}
             locked={locked}
-            trips={canEdit ? trips : undefined}
+            trips={canEdit ? ownTrips : undefined}
             onChanged={photosChanged}
             onDeleted={photosChanged}
             onClose={() => dispatch({ type: 'closePhoto' })}
@@ -394,7 +480,30 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               forgetMapLists();
               navigate(MAP_PAGE_URL, { replace: true });
             }}
+            // Handed to someone else: as an editor, the same map with that role (at its own
+            // address, as /map is now another map); gone, your own map
+            onTransferred={({ stayed }) => {
+              dispatch({ type: 'share', open: false });
+              if (stayed) {
+                actions?.reload();
+                navigate(mapPath(map.id), { replace: true });
+              } else navigate(MAP_PAGE_URL, { replace: true });
+            }}
             onClose={() => dispatch({ type: 'share', open: false })}
+          />
+        </Suspense>
+      ) : null}
+
+      {payingForMap ? (
+        <Suspense fallback={null}>
+          <ExtraMapDialog
+            reason='locked'
+            onClose={() => setPayingForMap(false)}
+            onPaid={() => {
+              setPayingForMap(false);
+              forgetMapLists();
+              actions?.reload();
+            }}
           />
         </Suspense>
       ) : null}

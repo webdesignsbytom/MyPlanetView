@@ -15,7 +15,12 @@ export function assertNotProduction() {
 
 export async function wipeDatabase() {
   await prisma.$transaction([
-    // Travel (FK-safe order: photos before their media, trips before maps)
+    // Travel (FK-safe order: moments before countries, photos before their media, trips
+    // before maps)
+    prisma.momentPhoto.deleteMany(),
+    prisma.momentTraveller.deleteMany(),
+    prisma.moment.deleteMany(),
+    prisma.tripMap.deleteMany(),
     prisma.photoLandmark.deleteMany(),
     prisma.photoVariant.deleteMany(),
     prisma.photo.deleteMany(),

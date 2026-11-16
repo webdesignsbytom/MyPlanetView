@@ -11,6 +11,12 @@ import {
   canSeeLocation,
   canRemoveMember,
   canDeleteTrip,
+  canAddTripToMap,
+  canRemoveTripFromMap,
+  momentRoleFor,
+  canSeeMoment,
+  momentPhotoScope,
+  canSeeMomentPhoto,
 } from '../src/utils/access.js';
 
 const map = { ownerId: 'owner' };
@@ -85,5 +91,86 @@ describe('permissions', () => {
     // A map viewer who edits the trip still can't delete it
     expect(canDeleteTrip(mapRoleFor(map, 'friend', { role: 'VIEWER' }))).toBe(false);
     expect(tripRoleFor(mapRoleFor(map, 'friend', { role: 'VIEWER' }), { role: 'EDITOR' })).toBe('EDITOR');
+  });
+});
+
+describe('group trips', () => {
+  it('lets anyone on the trip add it to a map they own or edit', () => {
+    for (const tripRole of ['VIEWER', 'EDITOR', 'OWNER']) {
+      expect(canAddTripToMap({ tripRole, targetMapRole: 'OWNER' })).toBe(true);
+      expect(canAddTripToMap({ tripRole, targetMapRole: 'EDITOR' })).toBe(true);
+      expect(canAddTripToMap({ tripRole, targetMapRole: 'VIEWER' })).toBe(false);
+      expect(canAddTripToMap({ tripRole, targetMapRole: null })).toBe(false);
+    }
+    // Someone not on the trip can't, even onto their own map
+    expect(canAddTripToMap({ tripRole: null, targetMapRole: 'OWNER' })).toBe(false);
+  });
+
+  it('lets whoever added it, or the map owner, take it off', () => {
+    expect(canRemoveTripFromMap({ userId: 'adder', addedById: 'adder', targetMapOwnerId: 'owner' })).toBe(true);
+    expect(canRemoveTripFromMap({ userId: 'owner', addedById: 'adder', targetMapOwnerId: 'owner' })).toBe(true);
+    expect(canRemoveTripFromMap({ userId: 'editor', addedById: 'adder', targetMapOwnerId: 'owner' })).toBe(false);
+    // Added by an account since deleted: only the owner
+    expect(canRemoveTripFromMap({ userId: 'editor', addedById: null, targetMapOwnerId: 'owner' })).toBe(false);
+    expect(canRemoveTripFromMap({ userId: null, addedById: null, targetMapOwnerId: null })).toBe(false);
+  });
+});
+
+describe('moments', () => {
+  it('gives the trip role on a trip, else the map role', () => {
+    // A trip-only editor edits the moments of their trip...
+    expect(momentRoleFor(null, { role: 'EDITOR' }, 'trip-1')).toBe('EDITOR');
+    // ...but has no role on the map's other moments
+    expect(momentRoleFor(null, { role: 'EDITOR' }, null)).toBeNull();
+    expect(momentRoleFor('VIEWER', { role: 'EDITOR' }, 'trip-1')).toBe('EDITOR');
+    expect(momentRoleFor('VIEWER', null, null)).toBe('VIEWER');
+    expect(momentRoleFor('EDITOR', null, 'trip-1')).toBe('EDITOR');
+    expect(momentRoleFor(undefined, undefined, null)).toBeNull();
+  });
+
+  it('hides hidden moments from viewers only', () => {
+    expect(canSeeMoment('VIEWER', { hidden: true })).toBe(false);
+    expect(canSeeMoment('VIEWER', { hidden: false })).toBe(true);
+    expect(canSeeMoment('EDITOR', { hidden: true })).toBe(true);
+    expect(canSeeMoment(null, { hidden: false })).toBe(false);
+  });
+
+  it("limits a trip-only editor's photos to the moment's trip", () => {
+    expect(momentPhotoScope('OWNER', 'trip-1')).toBeNull();
+    expect(momentPhotoScope('EDITOR', null)).toBeNull();
+    expect(momentPhotoScope(null, 'trip-1')).toBe('trip-1');
+    expect(momentPhotoScope('VIEWER', 'trip-1')).toBe('trip-1');
+  });
+
+  describe('photos shown inside a moment', () => {
+    const onTrip = { tripId: 'trip-1', hidden: false };
+    const onTripHidden = { tripId: 'trip-1', hidden: true };
+    const elsewhere = { tripId: null, hidden: false };
+    const elsewhereHidden = { tripId: 'trip-2', hidden: true };
+
+    it('shows map viewers the visible ones, and map editors every one', () => {
+      const viewer = { mapRole: 'VIEWER' };
+      expect([onTrip, onTripHidden, elsewhere, elsewhereHidden].map((p) => canSeeMomentPhoto(p, viewer))).toEqual([true, false, true, false]);
+      const editor = { mapRole: 'EDITOR' };
+      expect([onTrip, onTripHidden, elsewhere, elsewhereHidden].map((p) => canSeeMomentPhoto(p, editor))).toEqual([true, true, true, true]);
+    });
+
+    it('shows someone on the trip alone only its photos (hidden ones to its editors)', () => {
+      const tripViewer = { mapRole: null, trip: { id: 'trip-1', role: 'VIEWER' } };
+      expect([onTrip, onTripHidden, elsewhere, elsewhereHidden].map((p) => canSeeMomentPhoto(p, tripViewer))).toEqual([true, false, false, false]);
+      const tripEditor = { mapRole: null, trip: { id: 'trip-1', role: 'EDITOR' } };
+      expect([onTrip, onTripHidden, elsewhere, elsewhereHidden].map((p) => canSeeMomentPhoto(p, tripEditor))).toEqual([true, true, false, false]);
+    });
+
+    it("lets a map viewer who edits the trip see the trip's hidden photos, not the map's", () => {
+      const access = { mapRole: 'VIEWER', trip: { id: 'trip-1', role: 'EDITOR' } };
+      expect([onTrip, onTripHidden, elsewhere, elsewhereHidden].map((p) => canSeeMomentPhoto(p, access))).toEqual([true, true, true, false]);
+    });
+
+    it('shows nothing to someone with no role', () => {
+      expect(canSeeMomentPhoto(onTrip, {})).toBe(false);
+      expect(canSeeMomentPhoto(onTrip, { mapRole: null, trip: { id: 'trip-1', role: null } })).toBe(false);
+      expect(canSeeMomentPhoto(null, { mapRole: 'OWNER' })).toBe(false);
+    });
   });
 });

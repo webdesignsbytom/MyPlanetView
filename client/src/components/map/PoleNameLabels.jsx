@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import { POLE_PLACES } from '@/utils/map/countries';
 // Utils
 import { badgeRadius, poleMarkerRadius } from '@/utils/map/badges';
-import { MAP_EQUATOR_Y } from '@/utils/map/projection';
+import { MAP_EQUATOR_Y, insidePoleLines } from '@/utils/map/projection';
 import { isAntarctic } from '@/utils/map/specialPlaces';
 
 // Names show once you've zoomed in this far, or at any zoom with country names on
@@ -19,9 +19,11 @@ function PoleNameLabels({ zoom, visitsByCode, always = false, showAntarctica = t
     <g className='pointer-events-none fill-map-ink font-medium' fontSize={fontSize} textAnchor='middle' aria-hidden='true'>
       {POLE_PLACES.map((pole) => {
         if (!showAntarctica && isAntarctic(pole.code)) return null;
+        // Clear of the marker or the stamp, where they're drawn (just inside the pole lines)
         const clear = VISITED[visitsByCode?.[pole.code]] ? badgeRadius(zoom) : poleMarkerRadius(zoom) * 1.05;
+        const at = insidePoleLines(pole.pinY, clear);
         const north = pole.pinY < MAP_EQUATOR_Y;
-        const y = north ? pole.pinY + clear + fontSize * 0.95 : pole.pinY - clear - fontSize * 0.35;
+        const y = north ? at + clear + fontSize * 0.95 : at - clear - fontSize * 0.35;
         return (
           <text key={pole.code} x={pole.pinX} y={y}>
             {pole.name}

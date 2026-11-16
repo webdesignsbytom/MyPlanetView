@@ -1,6 +1,7 @@
 // Shared set-up for the travel-page tests (playwright.app.config.js). Every test gets a
 // fresh browser context, so mock mode seeds its demo data afresh (src/dev/mock/seed.js):
-// the test user owns "Test & Alex's travels" (8 countries, 2 continents, 5 photos).
+// the test user owns "Test & Alex's travels" (8 countries, 2 continents, 16 photos, 3
+// trips: two of its own and Tom's stag do, a group trip Alex added; 6 moments, one hidden).
 import { test as base, expect } from '@playwright/test';
 // Constants
 import { COOKIE_POLICY_NAME } from '../../src/utils/constants/constants.js';
@@ -12,6 +13,8 @@ export const HOME_MAP = "Test & Alex's travels";
 export const SAM_MAP = "Sam's gap year";
 export const SAM_SHARE_CODE = 'SAMG-4PYE-AR22';
 export const HOME_SHARE_CODE = 'K7QX-M2PA-9RTW';
+// Where mock mode keeps its demo data (src/dev/mock/store.js STORE_KEY)
+export const MOCK_STORE_KEY = 'mpvMockStore.v3';
 
 export const test = base.extend({
   page: async ({ page }, provide) => {
@@ -55,10 +58,14 @@ export async function openMap(page, path = '/map') {
 
 export const toolbar = (page) => page.getByRole('navigation', { name: 'Map tools' });
 
-/** The luggage tag under the title: "8 countries, 2 continents, 5 photos. Open travel statistics". */
+/**
+ * The luggage tag under the title: "8 countries, 2 continents, 16 photos. Special places 0
+ * of 5. Open travel statistics" (special places: Antarctica and the poles).
+ */
 export const statsBadge = (page) => page.getByRole('button', { name: /\. Open travel statistics$/ });
 
-export const expectStats = (page, text) => expect(statsBadge(page)).toHaveAccessibleName(`${text}. Open travel statistics`);
+export const expectStats = (page, text, specialPlaces = 0) =>
+  expect(statsBadge(page)).toHaveAccessibleName(`${text}. Special places ${specialPlaces} of 5. Open travel statistics`);
 
 /** Press a toolbar stamp and return the panel it opens. */
 export async function openTool(page, label, panelTitle) {

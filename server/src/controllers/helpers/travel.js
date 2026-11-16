@@ -10,11 +10,12 @@ import {
   createGenericErrorEvent,
 } from '../../event/errorUtils.js';
 import { sendMessageResponse } from '../../utils/responses/responses.js';
-import { canView, mapRoleFor, tripRoleFor } from '../../utils/access.js';
+import { canView, mapRoleFor, momentRoleFor, tripRoleFor } from '../../utils/access.js';
 import { isUuid } from '../../utils/travelValidation.js';
 import { findMapAccess } from '../../domain/maps.js';
 import { findTripAccess } from '../../domain/trips.js';
 import { findPhotoAccess } from '../../domain/photos.js';
+import { findMomentAccess } from '../../domain/moments.js';
 
 export const reply = (res, errorEvent) => {
   logEvent(createGenericErrorEvent(errorEvent));
@@ -82,6 +83,19 @@ export async function loadPhoto(req, photoId) {
   if (!photo) return { photo: null, mapRole: null, role: null };
   const mapRole = mapRoleFor(photo.map, userId, photo.map.members?.[0]);
   return { photo, mapRole, role: tripRoleFor(mapRole, photo.trip?.members?.[0]) };
+}
+
+/**
+ * `{ moment, mapRole, role }`: on a trip, the role is the trip role (a trip-only editor
+ * changes the moments of their trip), else the map role (utils/access.js momentRoleFor).
+ */
+export async function loadMoment(req, momentId) {
+  if (!isUuid(momentId)) return { moment: null, mapRole: null, role: null };
+  const userId = req.user?.id;
+  const moment = await findMomentAccess(momentId, userId);
+  if (!moment) return { moment: null, mapRole: null, role: null };
+  const mapRole = mapRoleFor(moment.map, userId, moment.map.members?.[0]);
+  return { moment, mapRole, role: momentRoleFor(mapRole, moment.trip?.members?.[0], moment.tripId) };
 }
 
 /**

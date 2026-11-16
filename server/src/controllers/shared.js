@@ -1,17 +1,18 @@
 // Opening a share link (/shared/<code>): anyone, signed in or not.
 // Reads only, so nothing is logged; lookups are rate limited per IP.
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
-import { canEdit, canSeePhoto, canView, higherRole, linkRoleFor, mapRoleFor, tripRoleFor } from '../utils/access.js';
+import { canSeePhoto, canView, higherRole, linkRoleFor, mapRoleFor, tripRoleFor } from '../utils/access.js';
 import { normaliseShareCode } from '../utils/shareCodes.js';
 import { isUuid } from '../utils/travelValidation.js';
 import { findMapAccessByShareCode } from '../domain/maps.js';
-import { findTripAccessByShareCode, findTripsForMap } from '../domain/trips.js';
+import { findTripAccessByShareCode } from '../domain/trips.js';
 import { findPhotoAccess, findPhotoDetail } from '../domain/photos.js';
 import { badRequest, handler, notFound } from './helpers/travel.js';
-import { photoDetailView, tripSummary } from './helpers/views.js';
+import { photoDetailView } from './helpers/views.js';
 import { mapDetailView } from './maps.js';
-import { tripView } from './trips.js';
+import { mapTripsView, tripView } from './trips.js';
 import { photoPage } from './photos.js';
+import { momentPage } from './moments.js';
 
 const D = DOMAINS.sharing;
 
@@ -44,17 +45,13 @@ export const getSharedHandler = handler(D, 'Open share link', async (req, res) =
   if (!shared) return notFound(req, res, D, EVENT_MESSAGES.shareCodeNotFound);
 
   if (shared.kind === 'map') {
+    // Group trips added to the map are listed with their limited fields only: a share
+    // link never opens another map's trip
     const [map, trips] = await Promise.all([
       mapDetailView(shared.map.id, shared.role),
-      findTripsForMap(shared.map.id, { includeHidden: canEdit(shared.role) }),
+      mapTripsView(shared.map.id, shared.role, req.user?.id ?? null, { viaShareLink: true }),
     ]);
-    return sendDataResponse(res, 200, {
-      resource: 'map',
-      id: shared.map.id,
-      role: shared.role,
-      map,
-      trips: await Promise.all(trips.map((t) => tripSummary(t, shared.role))),
-    });
+    return sendDataResponse(res, 200, { resource: 'map', id: shared.map.id, role: shared.role, map, trips });
   }
   return sendDataResponse(res, 200, {
     resource: 'trip',
@@ -72,6 +69,24 @@ export const getSharedPhotosHandler = handler(D, 'Open share link photos', async
       ? { mapId: shared.map.id }
       : { mapId: shared.trip.mapId, tripId: shared.trip.id };
   const result = await photoPage({ query: req.query || {}, ...scope, role: shared.role });
+  if (result.error) return badRequest(req, res, D, result.error);
+  return sendDataResponse(res, 200, result);
+});
+
+// The map's moments, or the trip's (with that trip's photos only); never hidden ones
+// below editor
+export const getSharedMomentsHandler = handler(D, 'Open share link moments', async (req, res) => {
+  const shared = await resolveCode(req);
+  if (!shared) return notFound(req, res, D, EVENT_MESSAGES.shareCodeNotFound);
+  const scope =
+    shared.kind === 'map'
+      ? { mapId: shared.map.id, photoAccess: { mapRole: shared.role, trip: null } }
+      : {
+          mapId: shared.trip.mapId,
+          tripId: shared.trip.id,
+          photoAccess: { mapRole: null, trip: { id: shared.trip.id, role: shared.role } },
+        };
+  const result = await momentPage({ query: req.query || {}, ...scope, role: shared.role });
   if (result.error) return badRequest(req, res, D, result.error);
   return sendDataResponse(res, 200, result);
 });

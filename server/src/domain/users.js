@@ -89,6 +89,13 @@ export const findUserById = (userId) =>
     select: ADMIN_USER_SELECT,
   });
 
+// The account a map is handed to, by id (the owner's transfer) or address (an admin's)
+export const findUserForTransfer = (where) =>
+  prisma.user.findUnique({
+    where,
+    select: { id: true, name: true, isActive: true, emailVerified: true },
+  });
+
 // Sign-in check (session create hook)
 export const findUserStatusById = (userId) =>
   prisma.user.findUnique({

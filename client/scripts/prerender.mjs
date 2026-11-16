@@ -13,6 +13,8 @@ import {
   CLIENT_ONLY_ROUTE_PREFIXES,
   PUBLIC_STATIC_ROUTES,
 } from '../src/utils/constants/routes.js';
+// Country guides: the checked ones only, as the build has (none checked: none at all)
+import { publishedCountryRoutes } from './country-pages.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = resolve(root, 'dist');
@@ -122,7 +124,8 @@ async function run() {
 
   // Production API, for pages that fetch data while they are captured
   const { VITE_API_URL: apiUrl } = loadEnv('production', root, 'VITE_');
-  const routes = [...PUBLIC_STATIC_ROUTES, NOT_FOUND_PROBE];
+  const pages = [...PUBLIC_STATIC_ROUTES, ...publishedCountryRoutes()];
+  const routes = [...pages, NOT_FOUND_PROBE];
 
   const server = await preview({ root, logLevel: 'silent', preview: { port: PORT, strictPort: true, open: false } });
   const origin = `http://localhost:${PORT}`;
@@ -207,7 +210,7 @@ async function run() {
 
     await writeHostingRules(APP_SHELL);
     console.log(
-      `✅ Pre-rendered ${PUBLIC_STATIC_ROUTES.length} pages and 404.html for ${FULL_BUSINESS_URL}`
+      `✅ Pre-rendered ${pages.length} pages and 404.html for ${FULL_BUSINESS_URL}`
     );
   } finally {
     await browser.close();

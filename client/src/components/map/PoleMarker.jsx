@@ -1,12 +1,14 @@
 import React, { memo } from 'react';
 // Utils
 import { poleMarkerRadius } from '@/utils/map/badges';
+import { insidePoleLines } from '@/utils/map/projection';
 import { isMagneticPole } from '@/utils/map/specialPlaces';
 import { countsAsVisited } from '@/utils/map/visitStatus';
 
-// The four poles are points, not shapes: each is a small compass rose at its pin, on the
-// map's top edge (the North Pole line) or bottom edge (the South Pole line), or for the
-// magnetic poles where NOAA's model puts them this year. Gold points; a red heart for a
+// The four poles are points, not shapes: each is a small compass rose at its pin, or for
+// the magnetic poles where NOAA's model puts them this year. The map ends at the pole
+// lines, so a rose that would cross one is drawn just inside: the North Pole's hangs from
+// the top edge, the South Pole's sits on the bottom edge. Gold points; a red heart for a
 // geographic pole, a blue one for a magnetic pole, whose rose is turned off true north.
 // Clickable like the micro-states' dots (CountryLayer's listeners find data-code).
 
@@ -62,8 +64,10 @@ export function PoleMarkerSymbols() {
 // pointer, so the gaps between the points count); "want to go" is a dashed ring, as a
 // country's dashed outline; the selected pole gets an ink ring. Once visited, the gold
 // expedition stamp (VisitBadges) takes the rose's place; the disc still takes the click.
-function PoleMarker({ code, x, y, zoom, status, selected }) {
+function PoleMarker({ code, x, y: pinY, zoom, status, selected }) {
   const r = poleMarkerRadius(zoom);
+  // Touching the edge, not cut by it (the ring of "want to go" or the selection too)
+  const y = insidePoleLines(pinY, r * 1.05);
   const visited = countsAsVisited(status);
   const symbol = isMagneticPole(code) ? POLE_SYMBOL.MAGNETIC : POLE_SYMBOL.GEOGRAPHIC;
   return (

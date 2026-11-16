@@ -10,12 +10,17 @@ const X_TABLE = [1, 0.9986, 0.9954, 0.99, 0.9822, 0.973, 0.96, 0.9427, 0.9216, 0
 const Y_TABLE = [0, 0.062, 0.124, 0.186, 0.248, 0.31, 0.372, 0.434, 0.4958, 0.5571, 0.6176, 0.6769, 0.7346, 0.7903, 0.8435, 0.8936, 0.9394, 0.9761, 1];
 
 export const MAP_WIDTH = 2000;
-// The map's extent, top to bottom: from just above the North Pole line (room for the
-// north poles' markers) to just below the South Pole line. With Antarctica hidden (the
-// showAntarctica setting off) it ends where the countries do, as the map did before.
-export const MAP_TOP = -30;
-export const MAP_BOTTOM = 1034;
+// The map's extent, top to bottom: exactly the pole lines, so no sea shows beyond them
+// (the poles' markers are drawn inside, touching the edges: insidePoleLines). With
+// Antarctica hidden (the showAntarctica setting off) it ends where the countries do, as
+// the map did before.
+export const MAP_TOP = -16.6; // the North Pole line, projectToMap(90, 0).y
+export const MAP_BOTTOM = 1020.6; // the South Pole line, projectToMap(-90, 0).y
 export const MAP_BOTTOM_WITHOUT_ANTARCTICA = 857;
+// What a landscape screen opens on (and "show the whole world" goes back to), at the
+// scale the map had before Antarctica: the North Pole line down to where the countries
+// end. Antarctica is below, reached by panning down or zooming out.
+export const MAP_HOME_BOTTOM = 857;
 export const MAP_CENTRE_X = 987.1;
 export const MAP_X_SCALE = 5.681; // map units per degree of longitude at the equator
 export const MAP_EQUATOR_Y = 502;
@@ -51,6 +56,9 @@ export const mapExtent = (showAntarctica = true) => ({
   top: MAP_TOP,
   bottom: showAntarctica ? MAP_BOTTOM : MAP_BOTTOM_WITHOUT_ANTARCTICA,
 });
+
+/** A mark of radius `r` centred at `y`, moved just inside the pole lines if it would cross one. */
+export const insidePoleLines = (y, r) => Math.min(Math.max(y, MAP_TOP + r), MAP_BOTTOM - r);
 
 const toPoints = (points) => points.map(({ x, y }) => `${x},${y}`).join(' ');
 

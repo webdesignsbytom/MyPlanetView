@@ -1,16 +1,19 @@
 import { Router } from 'express';
 import {
+  addTripToMapHandler,
   createStopHandler,
   deleteStopHandler,
   deleteTripHandler,
   getTripHandler,
   getTripsSharedWithMeHandler,
   putTripTravellersHandler,
+  removeTripFromMapHandler,
   reorderStopsHandler,
   updateStopHandler,
   updateTripHandler,
 } from '../controllers/trips.js';
 import { getTripPhotosHandler } from '../controllers/photos.js';
+import { getTripMomentsHandler } from '../controllers/moments.js';
 import { sharingHandlers } from '../controllers/sharing.js';
 import { requireVerifiedEmail as verified, validateAuthentication } from '../middleware/auth.js';
 import { createDbRateLimiter, keyByUserId } from '../middleware/dbRateLimit.js';
@@ -38,6 +41,11 @@ router.patch('/:tripId', verified, updateTripHandler);
 router.delete('/:tripId', verified, deleteTripHandler);
 router.put('/:tripId/travellers', verified, putTripTravellersHandler);
 router.get('/:tripId/photos', getTripPhotosHandler);
+router.get('/:tripId/moments', getTripMomentsHandler);
+
+// Group trips: showing the trip on your own maps ("Add to my map")
+router.post('/:tripId/maps', verified, addTripToMapHandler);
+router.delete('/:tripId/maps/:mapId', verified, removeTripFromMapHandler);
 
 // Stops (/order before /:stopId)
 router.post('/:tripId/stops', verified, createStopHandler);

@@ -22,7 +22,7 @@ test.describe('The map switcher', () => {
     await expect(switcher.getByRole('link', { name: new RegExp(`^${HOME_MAP}`) })).toHaveAttribute('aria-current', 'page');
     await expect(switcher.getByRole('heading', { name: 'Shared with you', exact: true })).toBeVisible();
     await expect(switcher.getByRole('link', { name: /Viewer, Sam Rivers’s map/ })).toBeVisible();
-    await expect(switcher.getByRole('heading', { name: 'Trips shared with you' })).toBeVisible();
+    await expect(switcher.getByRole('heading', { name: 'Group trips' })).toBeVisible();
     await expect(switcher.getByRole('link', { name: /Lisbon weekend/ })).toBeVisible();
 
     // A map shared with you as a viewer: no editing, no sharing it on

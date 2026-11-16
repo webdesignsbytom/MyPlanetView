@@ -11,7 +11,7 @@ export const LANDMARKS = [
   { countryCode: 'AU', name: 'Sydney Opera House', category: 'building', latitude: -33.85706, longitude: 151.2149, matchRadiusM: 400, wikidataId: 'Q45178' },
   { countryCode: 'AT', name: 'Schönbrunn Palace', category: 'building', latitude: 48.18479, longitude: 16.31227, matchRadiusM: 800, wikidataId: 'Q131330' },
   { countryCode: 'AZ', name: 'Gobustan Rock Art', category: 'site', latitude: 40.125, longitude: 49.375, matchRadiusM: 3000, wikidataId: 'Q4313909' },
-  { countryCode: 'BD', name: 'Sundarbans', category: 'park', latitude: 21.75, longitude: 88.75, matchRadiusM: 40000, wikidataId: 'Q4526' },
+  { countryCode: 'BD', name: 'Sundarbans', category: 'park', latitude: 22.03333, longitude: 89.51667, matchRadiusM: 40000, wikidataId: 'Q42725548' },
   { countryCode: 'BE', name: 'Grand Place', category: 'site', latitude: 50.84671, longitude: 4.35254, matchRadiusM: 300, wikidataId: 'Q215429' },
   { countryCode: 'BR', name: 'Christ the Redeemer', category: 'monument', latitude: -22.95192, longitude: -43.21046, matchRadiusM: 500, wikidataId: 'Q79961' },
   { countryCode: 'BG', name: 'Rila Monastery', category: 'building', latitude: 42.13438, longitude: 23.33955, matchRadiusM: 600, wikidataId: 'Q207945' },

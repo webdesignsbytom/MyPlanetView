@@ -30,6 +30,11 @@ vi.hoisted(() => {
       }
       return { ContentLength: stored.bytes, ContentType: stored.contentType };
     }
+    // The server's own uploads (only the seed's demo photos; people's photos go from the browser)
+    if (name === 'PutObjectCommand') {
+      globalThis.__fakeR2.set(input.Key, { bytes: input.ContentLength ?? input.Body?.length, contentType: input.ContentType });
+      return {};
+    }
     if (name === 'DeleteObjectCommand') {
       if (globalThis.__fakeR2FailDeletes) throw unreachable();
       globalThis.__fakeR2.delete(input.Key);

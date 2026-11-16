@@ -37,10 +37,18 @@ model User {
   uploadedPhotos   Photo[]
   sentShareInvites ShareInvite[]
   travellerOf      Traveller[]
+  addedTripLinks   TripMap[]
+  createdMoments   Moment[]
 
   // App events
   actedAppEvents    AppEvent[] @relation("AppEventActor")
   targetedAppEvents AppEvent[] @relation("AppEventTarget")
+
+  // Plans (docs/API.md, "Plans and billing"): kept off this table, which better-auth
+  // reads on every request
+  subscription Subscription?
+  planGrants   PlanGrant[]   @relation("PlanGrantUser")
+  grantedPlans PlanGrant[]   @relation("PlanGrantGrantedBy")
 
   @@unique([email])
   @@map("user")
@@ -113,6 +121,12 @@ model Profile {
   // Was localStorage-only before.
   mapSettings Json?
 
+  // What to do with this person's maps and photos when they delete their account
+  // (PUT /api/users/leaving-plan): { maps: [{ mapId, action, toUserId? }], leavePhotos }.
+  // Used only if saved within LEAVING_PLAN_TTL_MINUTES of the deletion.
+  leavingPlan   Json?
+  leavingPlanAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -158,6 +172,7 @@ model Country {
   tripStops    TripStop[]
   photos       Photo[]
   homeProfiles Profile[]
+  moments      Moment[]
 
   birthTravellers     Traveller[] @relation("TravellerBirthCountry")
   favouriteTravellers Traveller[] @relation("TravellerFavouriteCountry")
@@ -191,6 +206,7 @@ model Landmark {
 
   photoMatches PhotoLandmark[]
   tripStops    TripStop[]
+  moments      Moment[]
 
   @@index([countryCode])
   @@index([latitude, longitude])
@@ -239,12 +255,21 @@ model TravelMap {
   // Lookups by code are rate limited.
   shareCode  String     @unique
 
+  // A map handed to someone with no free map slot stays fully usable until then
+  // (TRANSFER_GRACE_DAYS); after it, it needs paying for as an extra map or it's
+  // locked (no new photos). Never cleared: a map that came this way queues behind
+  // the owner's own maps for paid slots (utils/mapSlots.js).
+  graceUntil DateTime?
+
   travellers Traveller[]
   members    MapMember[]
   visits     CountryVisit[]
   trips      Trip[]
   photos     Photo[]
   invites    ShareInvite[]
+  // Group trips from other people's maps shown on this one ("Add to my map")
+  tripLinks  TripMap[]
+  moments    Moment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -271,7 +296,8 @@ model Traveller {
   favouriteCountryCode String?  @db.Char(2)
   favouriteCountry     Country? @relation("TravellerFavouriteCountry", fields: [favouriteCountryCode], references: [code], onDelete: SetNull)
 
-  trips TripTraveller[]
+  trips   TripTraveller[]
+  moments MomentTraveller[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -400,6 +426,9 @@ model Trip {
   stops      TripStop[]
   photos     Photo[]         @relation("TripPhotos")
   invites    ShareInvite[]
+  // Other people's maps this trip is shown on (a group trip's "Add to my map")
+  mapLinks   TripMap[]
+  moments    Moment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -426,6 +455,31 @@ model TripMember {
   @@id([tripId, userId])
   @@index([userId])
   @@map("trip_member")
+}
+
+// A group trip shown on someone else's map ("Add to my map", docs/API.md "Group
+// trips"). Nothing is copied: the trip, its stops and photos stay on the organiser's
+// map. The trip shows in this map's trips (counted in its stats), and completing it
+// marks its stops' countries visited here too. Taking it off, or leaving the trip,
+// keeps the visits already marked.
+model TripMap {
+  tripId String
+  trip   Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  mapId  String
+  map    TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
+  // Who added it (they, or the map's owner, can take it off). Leaving the trip removes
+  // the links that person added.
+  addedById String?
+  addedBy   User?    @relation(fields: [addedById], references: [id], onDelete: SetNull)
+  addedAt   DateTime @default(now())
+
+  @@id([tripId, mapId])
+  // A map's linked trips; the PK serves a trip's
+  @@index([mapId])
+  // Foreign key: SET NULL when that account is deleted
+  @@index([addedById])
+  @@map("trip_map")
 }
 
 // Which of the map's travellers went on a trip. Per-person stats ("Sarah: 18
@@ -507,6 +561,7 @@ model Photo {
   variants  PhotoVariant[]
   landmarks PhotoLandmark[]
   coverOf   Trip[]          @relation("TripCover")
+  moments   MomentPhoto[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -524,7 +579,8 @@ model Photo {
 enum PhotoSize {
   THUMB // ~400px, location data removed
   DISPLAY // ~1600px, location data removed
-  ORIGINAL // the file as uploaded; owner and editors can download it
+  ORIGINAL // the file as uploaded; owner and editors can download it (Business and First Class maps)
+  PRINT // ~2400px JPEG, location data removed: the best copy an Economy map keeps
 }
 
 // Each size is its own file in the private bucket, through MediaItem, so the
@@ -563,6 +619,93 @@ model PhotoLandmark {
   @@id([photoId, landmarkId])
   @@index([landmarkId])
   @@map("photo_landmark")
+}
+
+// ── Moments (life events and notes on the map; docs/API.md "Moments") ────────
+// "Moment", not "event": AppEvent is the app's log.
+
+// How much of `happenedOn` is known. A month or a year is stored as its first day.
+enum DatePrecision {
+  DAY
+  MONTH
+  YEAR
+}
+
+// Something that happened in a country (or a special place): "We had our baby in
+// Paris", "We saw a volcano". Optionally at a landmark or a named place, on a trip,
+// about some of the map's travellers, with some of the map's photos (nothing is
+// uploaded). Never coordinates. Hidden ones are for editors only, like hidden photos.
+model Moment {
+  id    String    @id @default(uuid())
+  mapId String
+  map   TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
+  // Checked in code against src/utils/constants/momentKinds.js (no enum, so a new kind
+  // needs no migration)
+  kind  String
+  title String
+  text  String?
+
+  // Both null for an undated note, both set otherwise (a CHECK in the migration)
+  happenedOn    DateTime?      @db.Date
+  datePrecision DatePrecision?
+
+  countryCode String    @db.Char(2)
+  country     Country   @relation(fields: [countryCode], references: [code], onDelete: Restrict)
+  // In the moment's country (checked in code)
+  landmarkId  String?
+  landmark    Landmark? @relation(fields: [landmarkId], references: [id], onDelete: SetNull)
+  placeName   String?
+
+  // One of the map's own trips: its trip-only editors may change the moment
+  tripId String?
+  trip   Trip?   @relation(fields: [tripId], references: [id], onDelete: SetNull)
+
+  hidden Boolean @default(false)
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  travellers MomentTraveller[]
+  photos     MomentPhoto[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // The lists: the map's moments in date order, and a country's
+  @@index([mapId, happenedOn])
+  @@index([mapId, countryCode, happenedOn])
+  // Foreign keys: a trip's moments (and its SET NULL), a landmark's, an account's
+  @@index([tripId])
+  @@index([landmarkId])
+  @@index([createdById])
+  @@map("moment")
+}
+
+// Which of the map's travellers a moment is about
+model MomentTraveller {
+  momentId    String
+  moment      Moment    @relation(fields: [momentId], references: [id], onDelete: Cascade)
+  travellerId String
+  traveller   Traveller @relation(fields: [travellerId], references: [id], onDelete: Cascade)
+
+  @@id([momentId, travellerId])
+  @@index([travellerId])
+  @@map("moment_traveller")
+}
+
+// Photos already on the map, chosen for a moment, in order
+model MomentPhoto {
+  momentId String
+  moment   Moment @relation(fields: [momentId], references: [id], onDelete: Cascade)
+  photoId  String
+  photo    Photo  @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  position Int    @default(0)
+
+  @@id([momentId, photoId])
+  // Foreign key: deleting a photo (or a whole map's) finds its moments
+  @@index([photoId])
+  @@map("moment_photo")
 }
 
 // ── Media (from the dummy; blog links removed, photo variants added) ─────────
@@ -638,6 +781,82 @@ model ContactForm {
   // The cron's "no form uses this file" check and the contact image rules look up by key
   @@index([imageKey])
   @@map("contact_form")
+}
+
+// ── Plans and payments (docs/API.md, "Plans and billing") ────────────────────
+// Names, prices and limits live in src/utils/constants/plans.js, never here. The
+// plan in force is computed (utils/plans.js): the best of a counting subscription
+// and an active grant, else FREE.
+
+enum Plan {
+  FREE // Economy
+  REGULAR // Business
+  PREMIUM // First Class
+}
+
+enum BillingInterval {
+  MONTH
+  YEAR
+}
+
+// One per account: its Stripe customer and subscription, written by the webhook.
+// The subscription has a plan line (none on FREE) and an extra-map line whose
+// quantity is the number of extra maps paid for.
+model Subscription {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  stripeCustomerId     String  @unique
+  stripeSubscriptionId String? @unique
+
+  // FREE when the subscription only pays for extra maps
+  plan              Plan             @default(FREE)
+  interval          BillingInterval?
+  // Stripe's status (active, trialing, past_due count; canceled, unpaid... don't)
+  status            String?
+  // A CHECK in the migration keeps it 0 or more
+  extraMaps         Int              @default(0)
+  currentPeriodEnd  DateTime?
+  cancelAtPeriodEnd Boolean          @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscription")
+}
+
+// A complimentary membership: a plan for a set time, given by an admin
+model PlanGrant {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation("PlanGrantUser", fields: [userId], references: [id], onDelete: Cascade)
+  plan   Plan
+
+  startsAt DateTime @default(now())
+  endsAt   DateTime
+  reason   String?
+
+  grantedById String?
+  grantedBy   User?   @relation("PlanGrantGrantedBy", fields: [grantedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  // The plan in force: a user's grants that haven't ended
+  @@index([userId, endsAt])
+  // Foreign key: SET NULL when the admin's account is deleted
+  @@index([grantedById])
+  @@map("plan_grant")
+}
+
+// Webhook idempotency: Stripe retries, so each event id is applied once. The
+// daily cron removes rows over 90 days old.
+model StripeEvent {
+  id          String   @id // Stripe's event id (evt_...)
+  type        String
+  processedAt DateTime @default(now())
+
+  @@index([processedAt])
+  @@map("stripe_event")
 }
 
 // ── Rate limiting (from NextDummy: shared across Vercel instances) ───────────

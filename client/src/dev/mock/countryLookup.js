@@ -1,7 +1,8 @@
 // Mock mode only. Which country a GPS position is in, worked out as the server does
 // (server/src/utils/countryLookup.js): a geographic pole by latitude alone, then circles
-// for the micro-states and for Bioko, then project onto the map and point-in-polygon
-// against the map's own shapes (Antarctica's too), the smallest containing shape winning
+// for the micro-states and the islands the map doesn't draw, then project onto the map
+// and point-in-polygon against the map's own shapes (Antarctica's too), the smallest
+// containing shape winning
 // enclaves, then the nearest coast within a tolerance. The magnetic poles are never found
 // from GPS (they drift). The polygons are parsed from the client's path strings exactly
 // as server/src/data/countryShapes.json was made from them, so both give the same
@@ -12,15 +13,26 @@ import { poleAt } from '@/utils/map/specialPlaces';
 const COASTLINE_TOLERANCE = 6;
 const EARTH_RADIUS_M = 6371000;
 
-// Countries too small to have a shape, and the island the shapes leave out of Equatorial Guinea
+// Countries too small to have a shape, and islands the map doesn't draw (Bioko, and Greek
+// islands off Turkey too small for Natural Earth's 1:50m data)
 const SMALL_COUNTRIES = [
   { code: 'VA', latitude: 41.9029, longitude: 12.4534, radiusM: 600 },
   { code: 'MC', latitude: 43.7384, longitude: 7.4246, radiusM: 1800 },
   { code: 'SM', latitude: 43.9424, longitude: 12.4578, radiusM: 6000 },
   { code: 'LI', latitude: 47.166, longitude: 9.555, radiusM: 9000 },
   { code: 'SG', latitude: 1.3521, longitude: 103.8198, radiusM: 13000 },
+  { code: 'AD', latitude: 42.546, longitude: 1.592, radiusM: 13500 },
+  { code: 'GI', latitude: 36.1315, longitude: -5.349, radiusM: 2700 },
 ];
-const UNDRAWN_ISLANDS = [{ code: 'GQ', latitude: 3.53, longitude: 8.7, radiusM: 40000 }];
+const UNDRAWN_ISLANDS = [
+  { code: 'GQ', latitude: 3.53, longitude: 8.7, radiusM: 40000 },
+  { code: 'GR', latitude: 36.145, longitude: 29.585, radiusM: 2200 },
+  { code: 'GR', latitude: 36.43, longitude: 27.37, radiusM: 6000 },
+  { code: 'GR', latitude: 37.3, longitude: 26.765, radiusM: 3000 },
+  { code: 'GR', latitude: 37.378, longitude: 26.735, radiusM: 3000 },
+  { code: 'GR', latitude: 37.46, longitude: 26.97, radiusM: 3500 },
+  { code: 'GR', latitude: 37.293, longitude: 27.088, radiusM: 1500 },
+];
 
 const toRadians = (d) => (d * Math.PI) / 180;
 function haversineMeters(lat1, lng1, lat2, lng2) {

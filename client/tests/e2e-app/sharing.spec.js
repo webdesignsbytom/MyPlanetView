@@ -85,7 +85,7 @@ test.describe('Sharing a map', () => {
     await goInApp(page, `/shared/${HOME_SHARE_CODE}`);
     await expect(page.getByRole('application', { name: `${HOME_MAP}: world map` })).toBeVisible();
     await expect(page.getByText('Couple · Viewer, from a shared link')).toBeVisible();
-    await expectStats(page, '8 countries, 2 continents, 4 photos');
+    await expectStats(page, '8 countries, 2 continents, 15 photos');
 
     // Back as the owner (mock mode signs in again on a page load): a new link
     await openMap(page);

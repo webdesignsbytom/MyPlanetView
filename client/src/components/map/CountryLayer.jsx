@@ -16,7 +16,11 @@ const DOTTED = COUNTRIES.filter((c) => !COUNTRY_SHAPES[c.code] && !isPole(c.code
 const notAntarctic = (c) => !isAntarctic(c.code);
 const LAYERS = {
   withAntarctica: { shaped: SHAPED, dotted: DOTTED, poles: POLE_PLACES },
-  withoutAntarctica: { shaped: SHAPED.filter(notAntarctic), dotted: DOTTED.filter(notAntarctic), poles: POLE_PLACES.filter(notAntarctic) },
+  withoutAntarctica: {
+    shaped: SHAPED.filter(notAntarctic),
+    dotted: DOTTED.filter(notAntarctic),
+    poles: POLE_PLACES.filter(notAntarctic),
+  },
 };
 
 const codeFrom = (target) => target?.closest?.('[data-code]')?.getAttribute('data-code') || null;

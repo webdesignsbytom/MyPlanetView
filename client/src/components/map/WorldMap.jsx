@@ -8,32 +8,40 @@ import CountryNameLabels from './CountryNameLabels';
 import LandmarkPins from './LandmarkPins';
 import StopMarkers from './StopMarkers';
 import VisitBadges from './VisitBadges';
+import MomentMarks from './MomentMarks';
 import PoleNameLabels from './PoleNameLabels';
 import { StarBadgeSymbols } from './StarBadge';
 import { PoleMarkerSymbols } from './PoleMarker';
+import { MomentMarkSymbol } from './MomentMark';
 
 const NO_VISITS = {};
-// The badge and pole art, defined once in the SVG; constant elements, so zoom re-renders
-// skip them
+const NO_MOMENTS = {};
+// The badge, pole and moment art, defined once in the SVG; constant elements, so zoom
+// re-renders skip them
 const BADGE_SYMBOLS = <StarBadgeSymbols />;
 const POLE_SYMBOLS = <PoleMarkerSymbols />;
+const MOMENT_SYMBOL = <MomentMarkSymbol />;
 
 // An open hand over the sea, and a closed one over everything while a mouse button is held
 // (useMapViewport sets data-grabbing), beating the countries' pointer
 const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[data-grabbing]_*]:cursor-grabbing';
 
 /**
- * The SVG world map (Robinson, 2000 wide; from y -30 to 1034 with Antarctica, to 857
- * without: projection.js mapExtent). Pan and zoom come from a useMapViewport() owned by
+ * The SVG world map (Robinson, 2000 wide; from the North Pole line, y -16.6, to the
+ * South Pole line, 1020.6, with Antarctica, or to 857 without: projection.js mapExtent). Pan and zoom come from a useMapViewport() owned by
  * the page, so the page can also move the view; give it the same extent. The viewport
  * sets the viewBox itself; this re-renders only when the zoom changes (for the layers
  * drawn by zoom), never while panning.
  * `showAntarctica` off: Antarctica and the poles beside it aren't drawn (the
  * showAntarctica map setting; only the view changes).
+ * `momentCounts` (the map's momentCountsByCountry) marks the places with moments, beside
+ * their badges, unless `showMoments` is off (the viewer's setting).
  */
 function WorldMap({
   viewport,
   visitsByCode = NO_VISITS,
+  momentCounts = NO_MOMENTS,
+  showMoments = true,
   selectedCode = null,
   onSelectCountry,
   onHoverCountry,
@@ -70,6 +78,7 @@ function WorldMap({
       >
         {BADGE_SYMBOLS}
         {POLE_SYMBOLS}
+        {MOMENT_SYMBOL}
         {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} showAntarctica={showAntarctica} /> : null}
         <CountryLayer
           visitsByCode={visitsByCode}
@@ -84,6 +93,7 @@ function WorldMap({
         />
         {showCountryNames ? <CountryNameLabels zoom={zoom} visitsByCode={visitsByCode} showAntarctica={showAntarctica} /> : null}
         <VisitBadges visitsByCode={visitsByCode} zoom={zoom} faded={!showVisited} showAntarctica={showAntarctica} />
+        {showMoments ? <MomentMarks counts={momentCounts} zoom={zoom} showAntarctica={showAntarctica} /> : null}
         <PoleNameLabels zoom={zoom} visitsByCode={visitsByCode} always={showCountryNames} showAntarctica={showAntarctica} />
         {landmarks?.length ? <LandmarkPins landmarks={landmarks} zoom={zoom} always={alwaysShowLandmarks} onSelectCountry={onSelectCountry} afterTap={afterTap} /> : null}
         {stops?.length ? <StopMarkers stops={stops} zoom={zoom} /> : null}

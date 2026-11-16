@@ -4,6 +4,7 @@ import {
   ABOUT_PAGE_URL,
   CONTACT_PAGE_URL,
   FAQ_PAGE_URL,
+  PRICING_PAGE_URL,
   SIGN_UP_PAGE_URL,
   LOGIN_PAGE_URL,
   ACCOUNT_PAGE_URL,
@@ -25,6 +26,7 @@ export const getNavLinkItemsArray = (user) => [
   { path: HOME_PAGE_URL, label: 'Home' },
   { path: ABOUT_PAGE_URL, label: 'About' },
   { path: FAQ_PAGE_URL, label: 'FAQ' },
+  { path: PRICING_PAGE_URL, label: 'Pricing' },
   { path: CONTACT_PAGE_URL, label: 'Contact' },
 
   // Admin

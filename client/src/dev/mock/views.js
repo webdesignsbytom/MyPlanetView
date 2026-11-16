@@ -7,6 +7,7 @@ import { PARENT_PLACE, isSpecialPlace, withParentPlaces } from '@/utils/map/spec
 import { LANDMARKS } from './data/landmarks';
 import { getDb, me, session } from './store';
 import { byPosition } from './photoOrder';
+import { mapPlanFields, mapSlots, uploadRules } from './plans';
 
 export const slugify = (text) =>
   String(text)
@@ -63,6 +64,12 @@ export const userName = (id) => getDb().users.find((u) => u.id === id)?.name || 
 
 // Photos
 function photoUrls(photo) {
+  // A real test photo from the repo's seed-photos/, which the dev server serves
+  // (vite.config.js), in the three copies an upload makes
+  if (photo.image?.kind === 'seed') {
+    const folder = `/seed-photos/${photo.image.slug}`;
+    return { thumb: `${folder}/thumb.webp`, display: `${folder}/display.webp`, original: `${folder}/original.jpg` };
+  }
   // A poster stands in for a demo photo, at every size
   if (photo.image?.kind === 'asset') {
     const url = posterUrl(photo.image.name, 'avif');
@@ -72,7 +79,17 @@ function photoUrls(photo) {
     thumb: session.blobs.get(photo.image?.thumbKey) || null,
     display: session.blobs.get(photo.image?.displayKey) || session.blobs.get(photo.image?.thumbKey) || null,
     original: session.blobs.get(photo.image?.originalKey) || null,
+    print: session.blobs.get(photo.image?.printKey) || null,
   };
+}
+
+export const photoThumbUrl = (photo) => photoUrls(photo).thumb;
+
+// The best copy a photo keeps, as the server's bestCopySize: its original (Business and
+// First Class maps; the demo photos have one), else its print copy (Economy), else none
+function bestCopy(photo) {
+  if (photo.image?.kind === 'seed' || photo.image?.kind === 'asset' || photo.image?.originalKey) return 'ORIGINAL';
+  return photo.image?.printKey ? 'PRINT' : null;
 }
 
 const photoLandmarks = (photo, role) =>
@@ -103,8 +120,10 @@ export function photoDetail(photo, role) {
   const urls = photoUrls(photo);
   const detail = { ...photoListItem(photo, role), displayUrl: urls.display };
   if (atLeast(role, 'EDITOR')) {
+    const best = bestCopy(photo);
     Object.assign(detail, {
-      originalUrl: urls.original,
+      originalUrl: best === 'ORIGINAL' ? urls.original : best === 'PRINT' ? urls.print : null,
+      bestCopy: best,
       latitude: photo.latitude,
       longitude: photo.longitude,
       landmarks: photoLandmarks(photo, role).map(({ pl, lm }) => ({
@@ -162,6 +181,7 @@ export function mapStats(map, role) {
   const photoIds = new Set(photos.map((p) => p.id));
   const landmarks = new Set(db.photoLandmarks.filter((pl) => pl.confirmed && photoIds.has(pl.photoId)).map((pl) => pl.landmarkId));
   const trips = db.trips.filter((t) => t.mapId === map.id);
+  // The group trips added from other maps count too; per person, only the map's own trips
   const completed = trips
     .filter((t) => t.status === 'COMPLETED')
     .map((t) => ({ travellerIds: t.travellerIds, countryCodes: db.stops.filter((s) => s.tripId === t.id).map((s) => s.countryCode) }));
@@ -172,7 +192,7 @@ export function mapStats(map, role) {
     continents: continents.size,
     photos: photos.length,
     landmarks: landmarks.size,
-    trips: trips.length,
+    trips: trips.length + linkedTrips(map.id).length,
     byTraveller: travellers.map((t) => {
       const countries = new Set();
       completed.forEach(
@@ -183,8 +203,8 @@ export function mapStats(map, role) {
   };
 }
 
+// The maps you own also say whether each is locked, and its transfer's grace period
 export function mapSummary(map, role) {
-  const db = getDb();
   const stats = mapStats(map, role);
   return {
     id: map.id,
@@ -193,13 +213,17 @@ export function mapSummary(map, role) {
     isDefault: map.isDefault,
     role,
     ownerName: userName(map.ownerId),
-    counts: { countries: stats.countries, photos: stats.photos, trips: db.trips.filter((t) => t.mapId === map.id).length },
+    counts: { countries: stats.countries, photos: stats.photos, trips: stats.trips },
+    ...(role === 'OWNER' ? { locked: mapSlots(map.ownerId).lockedIds.includes(map.id), graceUntil: map.graceUntil || null } : {}),
   };
 }
 
-export function mapView(map, role) {
+// `withPlan`: the map routes' own answers, where the owner and editors also get the
+// owner's plan, locked, graceUntil, photoCounts and uploadRules (never through a share link)
+export function mapView(map, role, { withPlan = false } = {}) {
   const db = getDb();
   return {
+    ...(withPlan && atLeast(role, 'EDITOR') ? mapPlanFields(map) : {}),
     id: map.id,
     name: map.name,
     groupType: map.groupType,
@@ -218,7 +242,108 @@ export function mapView(map, role) {
       .filter((v) => v.mapId === map.id)
       .map(({ countryCode, status, source, firstVisitedOn, notes }) => ({ countryCode, status, source, firstVisitedOn, notes })),
     stats: mapStats(map, role),
+    // Everyone's: the moments per country, hidden ones for the owner and editors only
+    momentCountsByCountry: momentCountsByCountry(map.id, { includeHidden: atLeast(role, 'EDITOR') }),
   };
+}
+
+/** The map's moments per country, `{ [code]: n }`; countries with none are left out. */
+export function momentCountsByCountry(mapId, { includeHidden = false } = {}) {
+  const counts = {};
+  for (const m of getDb().moments) {
+    if (m.mapId !== mapId || (m.hidden && !includeHidden)) continue;
+    counts[m.countryCode] = (counts[m.countryCode] || 0) + 1;
+  }
+  return counts;
+}
+
+// Group trips (docs/API.md "Group trips"): trips added to a map from other maps
+// (TripMap links), which show in its trips and count in its stats
+
+/** The trips added to a map from other maps. */
+export const linkedTrips = (mapId) => {
+  const db = getDb();
+  return db.tripMaps
+    .filter((l) => l.mapId === mapId)
+    .map((l) => db.trips.find((t) => t.id === l.tripId))
+    .filter(Boolean);
+};
+
+/** Every map a trip's countries go on when it's completed: its own, and those it was added to. */
+export const tripMapIds = (trip) => [trip.mapId, ...getDb().tripMaps.filter((l) => l.tripId === trip.id).map((l) => l.mapId)];
+
+// A trip's stops' countries, in stop order, each once
+const tripCountryCodes = (tripId) => [
+  ...new Set(
+    getDb()
+      .stops.filter((s) => s.tripId === tripId)
+      .sort((a, b) => a.position - b.position)
+      .map((s) => s.countryCode),
+  ),
+];
+
+/** As the server's byTripOrder: undated first, then the latest start first, then the newest. */
+export function byTripOrder(a, b) {
+  if (!a.startDate !== !b.startDate) return a.startDate ? 1 : -1;
+  if (a.startDate && b.startDate && a.startDate !== b.startDate) return a.startDate < b.startDate ? 1 : -1;
+  return String(b.createdAt).localeCompare(String(a.createdAt));
+}
+
+/**
+ * A group trip in another map's list: someone with a role on the trip itself (`canOpen`)
+ * gets its summary too; anyone else only its title, dates, status and countries.
+ */
+export function linkedTripSummary(trip, { canOpen, role = null }) {
+  const limited = {
+    id: trip.id,
+    title: trip.title,
+    status: trip.status,
+    startDate: trip.startDate,
+    endDate: trip.endDate,
+    countryCodes: tripCountryCodes(trip.id),
+    linked: true,
+    organiserMapName: getDb().maps.find((m) => m.id === trip.mapId)?.name || '',
+    canOpen,
+  };
+  return canOpen ? { ...tripSummary(trip, role), ...limited } : limited;
+}
+
+/**
+ * A map's trips for someone with `role` on it: its own trips and the group trips added to
+ * it, in one list, in the trips' order. A linked trip opens only for someone with a role
+ * on the trip itself; through a share link (`viaShareLink`), never.
+ */
+export function mapTripsView(map, role, { viaShareLink = false } = {}) {
+  const own = getDb()
+    .trips.filter((t) => t.mapId === map.id)
+    .map((trip) => ({ trip, view: { ...tripSummary(trip, role), linked: false, canOpen: true } }));
+  const linked = linkedTrips(map.id).map((trip) => {
+    const onTrip = viaShareLink ? null : tripRole(trip);
+    return {
+      trip,
+      view: atLeast(onTrip, 'VIEWER') ? linkedTripSummary(trip, { canOpen: true, role: onTrip }) : linkedTripSummary(trip, { canOpen: false }),
+    };
+  });
+  return [...own, ...linked].sort((a, b) => byTripOrder(a.trip, b.trip)).map((row) => row.view);
+}
+
+/**
+ * Which of the signed-in user's own maps (owned or edited) show the trip, first added
+ * first, each with whether they may take it off (they added it, or own that map), and
+ * whether they own or edit a map besides the trip's own to add it to.
+ */
+function myMapsFor(trip) {
+  const db = getDb();
+  if (!session.signedIn) return { links: [], canAdd: false };
+  const mine = db.maps.filter((m) => atLeast(mapRole(m), 'EDITOR'));
+  const links = db.tripMaps
+    .filter((l) => l.tripId === trip.id && mine.some((m) => m.id === l.mapId))
+    .sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))
+    .map((l) => {
+      const map = mine.find((m) => m.id === l.mapId);
+      return { mapId: map.id, name: map.name, canRemove: l.addedById === me().id || map.ownerId === me().id };
+    });
+  return { links, canAdd: mine.some((m) => m.id !== trip.mapId) };
 }
 
 // Trips. As the server (controllers/helpers/views.js): a hidden cover photo isn't shown
@@ -254,12 +379,16 @@ export function tripSummary(trip, role) {
 export function tripView(trip, role, { viaShareLink = false } = {}) {
   const db = getDb();
   const map = db.maps.find((m) => m.id === trip.mapId);
+  // Group trips: the caller's own maps showing it, and whether they have one to add it to
+  const myMaps = viaShareLink ? { links: [], canAdd: false } : myMapsFor(trip);
   return {
     id: trip.id,
     mapId: trip.mapId,
     mapName: map?.name || '',
     canOpenMap: !viaShareLink && Boolean(mapRole(map)),
     canDelete: !viaShareLink && atLeast(mapRole(map), 'EDITOR'),
+    onMyMaps: myMaps.links,
+    canAddToMyMap: myMaps.canAdd,
     title: trip.title,
     description: trip.description,
     status: trip.status,
@@ -287,6 +416,8 @@ export function tripView(trip, role, { viaShareLink = false } = {}) {
         leaveOn: s.leaveOn,
         notes: s.notes,
       })),
+    // The map owner's plan, for whoever can upload to the trip (not through a share link)
+    ...(!viaShareLink && atLeast(role, 'EDITOR') && map ? { uploadRules: uploadRules(map) } : {}),
   };
 }
 

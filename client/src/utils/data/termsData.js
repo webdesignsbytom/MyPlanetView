@@ -9,8 +9,8 @@ import {
 } from '../constants/constants.js';
 
 export const LEGAL_VERSION = {
-  lastUpdated: '2026-11-15',
-  version: '1.0.1',
+  lastUpdated: '2026-11-16',
+  version: '1.0.2',
 };
 
 // Terms of use
@@ -29,7 +29,7 @@ export const TermsSectionsArray = [
     title: 'Accounts',
     group: 'agreements',
     content: [
-      'You need to be 13 or older to create an account. Children can appear on a family map as travellers without an account of their own.',
+      'You need to be 13 or older to create an account, including to be added as an editor on someone else’s map. If you are under 18, you need a parent’s or guardian’s permission. Younger children can appear on a family map as travellers, without an account of their own.',
       'Keep your password safe. You are responsible for what happens under your account, including on a login you choose to share with a partner or family member.',
       'If you think someone else is using your account, change your password and tell us straight away.',
     ],
@@ -52,6 +52,18 @@ export const TermsSectionsArray = [
       'Everything is private until you share it. You can add people as viewers or editors, or turn on a link that anyone can open without signing in.',
       'Anyone you share with can see, and could save, what you have shared with them. Turning sharing off or resetting a link stops further access, but cannot undo what someone has already saved.',
       'Editors can add, change and remove content on the map or trip you shared with them.',
+    ],
+  },
+  {
+    id: 'children-on-maps',
+    title: 'Children on a map',
+    group: 'agreements',
+    content: [
+      'Children under 13 cannot have an account. A parent or guardian can list them on a family map as travellers, with just a first name, and add photos for them.',
+      'Young people aged 13 to 17 can have an account, and be editors on a family map, with a parent’s or guardian’s permission. If you add someone under 18 as an editor, you confirm that you are their parent or guardian, or that you have that person’s permission.',
+      'Editors see everything on the map they edit, including where each photo was taken. Only add a child as an editor on a map you are happy for them to see in full.',
+      'Think carefully before turning on link sharing for a map with photos of children: anyone with the link can see them, without signing in.',
+      'If we learn that an account belongs to someone under 13, we will close it and delete what it uploaded. A parent or guardian can ask us at any time to remove a child’s account, photos or details.',
     ],
   },
   {
@@ -245,7 +257,10 @@ export const PrivacySectionsArray = [
     title: 'Children',
     group: 'policies',
     content: [
-      'Accounts are for people aged 13 and over. A parent can add children as travellers on a family map; a first name is all that is needed.',
+      'Accounts are for people aged 13 and over, and those aged 13 to 17 need a parent’s or guardian’s permission.',
+      'A parent can add younger children as travellers on a family map. A first name is all that is needed, and we keep only what the parent enters.',
+      'Teenagers’ accounts get the same protections as everyone’s: everything is private until it is shared, the place a photo was taken is shown only to a map’s editors, and nothing is used for advertising or profiling.',
+      `A parent or guardian can ask to see, correct or delete a child’s information: email ${CompanyEmailAddress}.`,
     ],
   },
   {

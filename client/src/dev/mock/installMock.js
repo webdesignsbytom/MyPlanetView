@@ -15,8 +15,10 @@ import { registerAccountRoutes } from './handlers/account';
 import { registerMapRoutes } from './handlers/maps';
 import { registerTripRoutes } from './handlers/trips';
 import { registerPhotoRoutes } from './handlers/photos';
+import { registerMomentRoutes } from './handlers/moments';
 import { registerSharingRoutes } from './handlers/sharing';
 import { registerAdminRoutes } from './handlers/admin';
+import { registerBillingRoutes } from './handlers/billing';
 
 export function installMock() {
   // ?mockRole=ADMIN or DEVELOPER switches the test user's role, and is remembered
@@ -28,8 +30,10 @@ export function installMock() {
   registerMapRoutes();
   registerTripRoutes();
   registerPhotoRoutes();
+  registerMomentRoutes();
   registerSharingRoutes();
   registerAdminRoutes();
+  registerBillingRoutes();
 
   // Every request goes to the adapter: the API client, the global axios (media uploads)
   // and the photo upload XHR

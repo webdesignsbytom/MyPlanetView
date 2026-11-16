@@ -4,12 +4,14 @@ import { FaPlane } from 'react-icons/fa6';
 
 // A country with no travel poster yet: its name on poster paper, in the travel face,
 // so the card still looks like part of the set (never another country's poster).
+// min-w-0: a square's automatic minimum width follows its content's height, so a long
+// name ("Magnetic South Pole") would otherwise widen the whole panel.
 function PosterPlaceholder({ countryName, compact = false }) {
   return (
     <div
       role='img'
       aria-label={`${countryName}: travel poster coming soon`}
-      className={`grid aspect-square w-full grid-cols-1 content-center justify-items-center gap-2 rounded-lg border-4 border-double border-poster-brown bg-poster-paper p-4 text-center text-poster-ink ${
+      className={`grid aspect-square w-full min-w-0 grid-cols-1 content-center justify-items-center gap-2 rounded-lg border-4 border-double border-poster-brown bg-poster-paper p-4 text-center text-poster-ink ${
         compact ? 'gap-1 p-3' : ''
       }`}
     >

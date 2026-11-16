@@ -16,15 +16,28 @@ export default defineConfig({
   // One dev server serves every worker, and each page runs the whole mock API and makes
   // its photo copies on a canvas: four at a time stays quick without starving the machine
   workers: 4,
-  retries: 0,
+  // Tracing every test only to throw the trace away when it passes cost about 45% of a
+  // run, so a test runs untraced, and one that fails runs once more with a trace
+  // (on-first-retry, saved in test-results/). Passing on that retry still fails the run
+  // (failOnFlakyTests): a flaky test is reported, never let through.
+  retries: 1,
+  failOnFlakyTests: true,
   reporter: 'list',
   timeout: 60_000,
   expect: { timeout: 10_000 },
   use: {
     baseURL: BASE_URL,
-    trace: 'retain-on-failure',
+    trace: 'on-first-retry',
     // "Copy link" in the share dialog
     permissions: ['clipboard-read', 'clipboard-write'],
+    // The map's animated sea never stops: two full-screen layers fading for ever (and the
+    // waves canvas), so a map page draws 60 frames a second. Headless Chromium composites
+    // them on the CPU, and a trace screencasts each frame: with four browsers at once the
+    // pages starved, and steps of a few ms took 10–60 s (6–9 minute runs, timeouts).
+    // The app honours reduced motion (no sea animation or waves, near-instant
+    // transitions), so the pages sit still between steps. Nothing tested depends on motion.
+    // (A context option: Playwright Test has no `reducedMotion` of its own and ignores one.)
+    contextOptions: { reducedMotion: 'reduce' },
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },

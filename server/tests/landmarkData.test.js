@@ -24,9 +24,9 @@ describe('countries seed', () => {
     }
   });
 
-  it('has 224 countries and the five special places, matching utils/specialPlaces.js', () => {
+  it('has 227 countries and the five special places, matching utils/specialPlaces.js', () => {
     const special = COUNTRIES.filter((c) => c.kind === 'SPECIAL');
-    expect(COUNTRIES.length - special.length).toBe(224);
+    expect(COUNTRIES.length - special.length).toBe(227);
     expect(special.map((c) => c.code).sort()).toEqual([...SPECIAL_PLACE_CODES].sort());
     // Antarctica and the South Pole give the seventh continent; the others have none
     expect(Object.fromEntries(special.map((c) => [c.code, c.continent]))).toEqual({

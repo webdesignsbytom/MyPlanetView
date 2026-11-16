@@ -2,7 +2,9 @@
 // invite links and share codes.
 import { RANK, deny, fail, ok, route } from '../mockAdapter';
 import { formatShareCode, getDb, me, newId, newShareCode, normaliseShareCode, session, shareUrlFor } from '../store';
-import { canSeePhoto, higherRole, mapRole, mapView, photoDetail, photoPage, tripRole, tripSummary, tripView } from '../views';
+import { canSeePhoto, higherRole, mapRole, mapTripsView, mapView, photoDetail, photoPage, tripRole, tripView } from '../views';
+import { EDITORS_PER_MAP, PEOPLE_CAP_MESSAGES, PEOPLE_PER_TRIP } from '../plans';
+import { momentPage } from '../moments';
 
 const ROLES = ['VIEWER', 'EDITOR'];
 const LINK_ACCESS = ['RESTRICTED', 'ANYONE_WITH_LINK'];
@@ -35,6 +37,26 @@ function sharingView(kind, item) {
     .filter((i) => i[idField(kind)] === item.id && !i.acceptedAt)
     .map(({ id, email, role, expiresAt }) => ({ id, email, role, expiresAt }));
   return { linkAccess: item.linkAccess, shareCode: formatShareCode(item.shareCode), shareUrl: shareUrlFor(item.shareCode), members, invites };
+}
+
+// The caps on people (docs/API.md, "Sharing"): a map's editors (EDITOR members plus
+// pending EDITOR invites) and a trip's people (members of any role plus pending invites),
+// leaving out the person being added. -> null, or the 409 message
+const pendingInvite = (invite) => !invite.acceptedAt && invite.expiresAt > new Date().toISOString();
+function seatProblem(kind, item, { role, userId = null, email = null, roleChangeOnly = false }) {
+  const db = getDb();
+  if (kind === 'maps') {
+    if (role !== 'EDITOR') return null;
+    const editors =
+      db.mapMembers.filter((m) => m.mapId === item.id && m.role === 'EDITOR' && m.userId !== userId).length +
+      db.invites.filter((i) => i.mapId === item.id && i.role === 'EDITOR' && pendingInvite(i) && i.email !== email).length;
+    return editors + 1 > EDITORS_PER_MAP ? PEOPLE_CAP_MESSAGES.editors : null;
+  }
+  if (roleChangeOnly) return null;
+  const people =
+    db.tripMembers.filter((m) => m.tripId === item.id && m.userId !== userId).length +
+    db.invites.filter((i) => i.tripId === item.id && pendingInvite(i) && i.email !== email).length;
+  return people + 1 > PEOPLE_PER_TRIP ? PEOPLE_CAP_MESSAGES.tripPeople : null;
 }
 
 function manage(kind, id) {
@@ -80,6 +102,8 @@ export function registerSharingRoutes() {
       if (!ROLES.includes(body.role)) return fail(400, 'Choose viewer or editor.');
       if (email === me().email.toLowerCase()) return fail(400, 'That is your own address.');
       const user = db.users.find((u) => u.email.toLowerCase() === email);
+      const full = seatProblem(kind, item, { role: body.role, userId: user?.id ?? null, email });
+      if (full) return fail(409, full);
       const table = db[memberTable(kind)];
       // Added straight away only when verified and active; anyone else gets an invite
       if (user && user.isActive !== false && user.emailVerified === true) {
@@ -101,8 +125,10 @@ export function registerSharingRoutes() {
       if (!ROLES.includes(body.role)) return fail(400, 'Choose viewer or editor.');
       const member = db[memberTable(kind)].find((m) => m[idField(kind)] === item.id && m.userId === params.userId);
       if (!member) return fail(404, 'That person could not be found.');
-      member.role = body.role;
       const u = db.users.find((x) => x.id === member.userId);
+      const full = seatProblem(kind, item, { role: body.role, userId: member.userId, email: u?.email ?? null, roleChangeOnly: true });
+      if (full) return fail(409, full);
+      member.role = body.role;
       return ok({ member: { userId: member.userId, name: u?.name || '', email: u?.email || '', role: member.role } });
     });
 
@@ -115,6 +141,8 @@ export function registerSharingRoutes() {
       if (!owner && params.userId !== me().id) return fail(403, 'Only the owner can remove people.');
       const table = memberTable(kind);
       db[table] = db[table].filter((m) => !(m[idField(kind)] === item.id && m.userId === params.userId));
+      // Leaving a trip also takes it off the maps that person added it to
+      if (kind === 'trips') db.tripMaps = db.tripMaps.filter((l) => !(l.tripId === item.id && l.addedById === params.userId));
       return ok({ message: 'Removed.' });
     });
 
@@ -170,7 +198,9 @@ export function registerSharingRoutes() {
     if (!shared) return fail(404, NOT_FOUND);
     const { kind, item, role } = shared;
     if (kind === 'map') {
-      const trips = getDb().trips.filter((t) => t.mapId === item.id).map((t) => tripSummary(t, role));
+      // Group trips added from other maps always in their limited form: a share link
+      // never opens another map's trip
+      const trips = mapTripsView(item, role, { viaShareLink: true });
       return ok({ resource: 'map', id: item.id, role, map: mapView(item, role), trips });
     }
     return ok({ resource: 'trip', id: item.id, role, trip: tripView(item, role, { viaShareLink: true }) });
@@ -182,6 +212,18 @@ export function registerSharingRoutes() {
     const photos = getDb().photos.filter((p) => (shared.kind === 'map' ? p.mapId === shared.item.id : p.tripId === shared.item.id));
     // A shared trip's photos come in the trip's order
     const page = photoPage(photos, shared.role, shared.kind === 'trip' ? { ...query, tripId: shared.item.id } : query);
+    return page.error ? fail(400, page.error) : ok(page);
+  });
+
+  // The map's moments, or the trip's (with that trip's photos only); never hidden ones below editor
+  route('GET', '/api/shared/:code/moments', ({ params, query }) => {
+    const shared = resolveCode(params.code);
+    if (!shared) return fail(404, NOT_FOUND);
+    const scope =
+      shared.kind === 'map'
+        ? { mapId: shared.item.id, photoAccess: { mapRole: shared.role, trip: null } }
+        : { mapId: shared.item.mapId, tripId: shared.item.id, photoAccess: { mapRole: null, trip: { id: shared.item.id, role: shared.role } } };
+    const page = momentPage({ query, ...scope, role: shared.role });
     return page.error ? fail(400, page.error) : ok(page);
   });
 

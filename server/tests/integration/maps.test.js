@@ -1,6 +1,6 @@
 // Maps, onboarding, travellers, visits, stats and map settings, end to end.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { anon, cleanUp, data, defaultMapOf, prisma, signUp, uploadPhoto } from './helpers.js';
+import { anon, cleanUp, data, defaultMapOf, givePlan, prisma, signUp, uploadPhoto } from './helpers.js';
 
 afterAll(cleanUp);
 
@@ -86,7 +86,9 @@ describe('onboarding and travellers', () => {
 
 describe('maps', () => {
   it('creates a second map and refuses to delete the default one', async () => {
-    const { agent } = await signUp('Fam');
+    const { agent, user } = await signUp('Fam');
+    // A second map is an extra map (mapLimits.test.js has the 402)
+    await givePlan(user.id, { extraMaps: 1 });
     const created = await agent.post('/api/maps').send({
       name: 'Family holidays',
       groupType: 'FAMILY',
@@ -195,7 +197,7 @@ describe('countries visited and stats', () => {
 describe('reference data', () => {
   it('serves countries and landmarks to anyone', async () => {
     const countries = data(await anon().get('/api/countries')).countries;
-    expect(countries.length).toBeGreaterThanOrEqual(224);
+    expect(countries.length).toBeGreaterThanOrEqual(227);
     expect(countries.find((c) => c.code === 'FR')).toMatchObject({ name: 'France', continent: 'EUROPE', kind: 'COUNTRY' });
     expect(countries.filter((c) => c.kind === 'SPECIAL').map((c) => c.code).sort()).toEqual(['AQ', 'QN', 'QS', 'XN', 'XS']);
     expect(countries.find((c) => c.code === 'XN')).toMatchObject({ name: 'North Pole', continent: null });

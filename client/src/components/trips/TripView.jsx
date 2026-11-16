@@ -4,6 +4,8 @@ import TripHeader from './TripHeader';
 import TripMiniMap from './TripMiniMap';
 import TripStopList from './TripStopList';
 import TripPhotosSection from './TripPhotosSection';
+import TripMoments from './TripMoments';
+import TripMyMaps from './TripMyMaps';
 import ShareDialog from '@/components/sharing/ShareDialog';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
@@ -13,7 +15,8 @@ import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 import { canEditRole } from '@/utils/sharing/shareRoles';
 
 /**
- * One trip: header, route map, stops and photos, each a piece of travel paperwork laid
+ * One trip: header, the caller's own maps showing it (a group trip: "Add to my map"),
+ * route map, stops, moments and photos, each a piece of travel paperwork laid
  * out like the public pages' cards (16px apart, 8px from lg up). Editors change it here;
  * a share-link visitor (`shareCode`) only views. `onDelete` returns a promise that
  * removes the trip. An editor whose email address isn't verified yet (`locked`) sees it
@@ -68,8 +71,13 @@ function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctic
         </div>
       ) : null}
 
+      {currentUser && !shareCode && (trip.canAddToMyMap || trip.onMyMaps?.length) ? (
+        <TripMyMaps trip={trip} userId={currentUser.id} locked={mustVerify} onTripChange={onTripChange} />
+      ) : null}
+
       <TripMiniMap trip={trip} styleId={styleId} showAntarctica={showAntarctica} />
       <TripStopList trip={trip} canEdit={canEdit} onChanged={onTripChange} />
+      <TripMoments trip={trip} canEdit={canEdit} shareCode={shareCode} onTripChange={onTripChange} />
       <TripPhotosSection trip={trip} canEdit={canEdit} locked={locked} shareCode={shareCode} />
 
       {sharing ? (

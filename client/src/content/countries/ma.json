@@ -1,0 +1,191 @@
+{
+  "code": "MA",
+  "slug": "morocco",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Marhaba", "Maroc"],
+  "summary": "Walled medinas, the Atlas Mountains and Sahara dunes, a short flight from Europe.",
+  "overview": [
+    "Morocco is close to Europe (Spain is 14 km away across the Strait of Gibraltar) and very different from it. Its old walled cities, the medinas, above all in Fes and Marrakech, are mazes of souks, workshops and riads: courtyard houses, many now turned into small hotels. Beyond them lie the Atlas Mountains, the Atlantic coast and the dunes of the Sahara.",
+    "Trains link Tangier, Rabat, Casablanca, Fes and Marrakech, with a high-speed line from Tangier to Casablanca; buses and hired drivers go further. Haggling is normal in the souks, and in the medinas unofficial guides may offer to show you the way: a polite, firm \"no, thank you\" is enough."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "best", "best", "best", "good", "avoid", "avoid", "good", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm days and green valleys, with roses in the Dades Valley in May. The best time for the mountains and the desert, before the heat."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Very hot inland: Marrakech and Fes often pass 40°C in July and August, and the desert is hotter still. The Atlantic coast (Essaouira, Agadir) stays pleasant, if windy."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The heat fades through September, and October is warm and settled, a second best season for touring. Rain returns in November in the north."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Sunny, mild days (around 18–20°C in Marrakech) but cold nights, and riads without heating can be chilly. Snow covers the High Atlas, and desert nights drop below freezing."
+      }
+    ],
+    "weather": "Mediterranean in the north, mild and breezy on the Atlantic coast, and hot and dry inland and south of the Atlas, where the Sahara begins. Most rain falls between November and March, mainly in the north and the mountains.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Morocco",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting from dawn to sunset. Many cafés and restaurants close by day, and the evenings come alive once the fast is broken (ftour). It ends with Eid al-Fitr, a public holiday."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Morocco",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice: families gather, many shops close for several days, and buses and trains are busy."
+      },
+      {
+        "name": "Rose Festival",
+        "place": "Kelaat M'Gouna, Dades Valley",
+        "when": "Usually in May",
+        "months": [5],
+        "text": "A harvest festival for the valley's damask roses, grown for rosewater and oil, with music and parades."
+      },
+      {
+        "name": "Gnaoua World Music Festival",
+        "place": "Essaouira",
+        "when": "Usually in June",
+        "months": [6],
+        "text": "Free concerts of Gnaoua music, a trance tradition with West African roots, alongside jazz and other visiting musicians."
+      },
+      {
+        "name": "Throne Day",
+        "place": "Across Morocco",
+        "when": "30 July",
+        "months": [7],
+        "text": "A public holiday marking the King's accession, with flags, concerts and fireworks."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Atlantic coast",
+        "text": "Essaouira and Agadir are mild all year and cooled by sea breezes, which makes them the place to be in summer. Agadir is warm enough for the beach in winter too."
+      },
+      {
+        "name": "The Atlas Mountains",
+        "text": "Walking season is April to June and September to October. Toubkal, the highest peak in North Africa, is under snow in winter and then needs winter gear and a guide."
+      },
+      {
+        "name": "The Sahara",
+        "text": "Camel treks and desert camps near Merzouga and Zagora are best from October to April. Summer days are fiercely hot and winter nights freezing, so pack warm layers."
+      },
+      {
+        "name": "The north",
+        "text": "Tangier, Tetouan and Chefchaouen are greener and wetter, with most rain from November to March; their summers are warm rather than scorching."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Salam alaykum\" (peace be upon you), answered with \"wa alaykum salam\". Men shake hands, often touching the heart afterwards; between men and women, wait for the woman to offer her hand. French is widely spoken, so \"bonjour\" works too.",
+    "etiquette": [
+      "Eat and pass things with your right hand. At a shared tagine, eat from the part in front of you, using bread as a scoop.",
+      "Ask before photographing people: many will say no, and some will expect a small payment.",
+      "Bargaining is expected in the souks. Start well below the asking price, keep it friendly, and only name a price you're willing to pay.",
+      "Most mosques are closed to non-Muslims. The Hassan II Mosque in Casablanca is the best-known exception, with guided tours.",
+      "During Ramadan, avoid eating, drinking or smoking in public by day, out of respect.",
+      "Public displays of affection are frowned on, and alcohol is served only in licensed hotels, bars and restaurants."
+    ],
+    "tipping": "Expected for most services: about 10% in restaurants, a few dirhams for porters, car-park attendants and anyone who helps you, and more for guides and drivers. Carry small change.",
+    "dress": "Modest for men and women alike: shoulders and knees covered, especially in the medinas, the countryside and religious places. Loose, light clothes are coolest in the heat, and a scarf is handy for women. Beachwear stays at the beach or the pool.",
+    "food": [
+      {
+        "name": "Tagine",
+        "text": "Slow-cooked stews named after the cone-lidded clay pot they're cooked in: chicken with preserved lemon and olives, or lamb with prunes."
+      },
+      {
+        "name": "Couscous",
+        "text": "Steamed semolina with vegetables and meat, traditionally eaten on Fridays after the midday prayers."
+      },
+      {
+        "name": "Pastilla",
+        "text": "A flaky pastry pie of pigeon or chicken with almonds, dusted with cinnamon and sugar; there's a seafood version too."
+      },
+      {
+        "name": "Harira",
+        "text": "A tomato, lentil and chickpea soup, served to break the fast during Ramadan and eaten all year round."
+      },
+      {
+        "name": "Mint tea",
+        "text": "Green tea with fresh mint and plenty of sugar, poured from a height. Accepting a glass is part of every welcome."
+      },
+      {
+        "name": "Jemaa el-Fnaa's food stalls",
+        "text": "In Marrakech's main square, stalls set up every evening: grilled meats, snail soup and, for the brave, spiced sheep's head."
+      }
+    ],
+    "phrases": {
+      "language": "Moroccan Arabic (Darija)",
+      "intro": "French is widely understood too.",
+      "items": [
+        { "phrase": "Salam", "say": "sah-LAAM", "meaning": "Hello" },
+        { "phrase": "Shukran", "say": "SHOOK-ran", "meaning": "Thank you" },
+        { "phrase": "La, shukran", "say": "LAH SHOOK-ran", "meaning": "No, thank you" },
+        { "phrase": "Bshhal?", "say": "b-SHHAL", "meaning": "How much?" },
+        { "phrase": "Smahli", "say": "SMAH-lee", "meaning": "Excuse me; sorry" },
+        { "phrase": "Wakha", "say": "WAH-kha", "meaning": "OK" },
+        { "phrase": "Inshallah", "say": "in-SHAH-lah", "meaning": "God willing (often heard about plans)" },
+        { "phrase": "Bslama", "say": "b-SLAH-ma", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1028",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Moroccan dirham (MAD). It's hard to get outside Morocco, so use a cash machine or change money on arrival.",
+        "sources": [{ "property": "P38", "values": ["Q200192"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic and Tamazight (Berber); French is widely used in business and on signs",
+        "sources": [{ "property": "P37", "values": ["Q13955", "Q7598268"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata also lists 127 V, from old networks; the page gives 220 V."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+1 for most of the year; clocks go back to UTC+0 during Ramadan",
+        "sources": [{ "property": "P421", "values": ["Q4689485", "Q6655", "Q6574"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "19 for police in towns, 177 for the gendarmerie in the countryside, 15 for fire and ambulance, and 112 from a mobile",
+        "sources": [{ "property": "P2852", "values": ["Q25648864", "Q25743529", "Q25648869", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+212",
+        "sources": [{ "property": "P474", "values": ["+212"] }]
+      }
+    ]
+  }
+}

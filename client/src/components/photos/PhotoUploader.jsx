@@ -3,17 +3,26 @@ import React, { useId, useRef, useState } from 'react';
 import FormField from '@/components/ui/FormField';
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 import PhotoUploadItem from './PhotoUploadItem';
+import LockedMapNote from '@/components/plans/LockedMapNote';
+import PlanUpgradeLink from '@/components/plans/PlanUpgradeLink';
 // Utils
 import { COUNTRY_OPTIONS, countryName } from '@/utils/map/countries';
 import { runWithConcurrencyLimit } from '@/utils/functions/runWithConcurrencyLimit';
 import { uploadPhoto } from '@/utils/photos/uploadPhoto';
 
 const AT_ONCE = 2;
+const number = (n) => Number(n).toLocaleString('en-GB');
 
 // Choose or drop photos; each is read, resized, uploaded and saved, two at a time.
 // Photos without a location, or with one at sea, go in `country` (if chosen); with
 // neither, they're listed under Unplaced photos. `onUploaded` gets each new photo.
-function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
+// The map owner's plan (docs/API.md, "Map limits"):
+// - `uploadRules` ({ keepsOriginals, photosPerCountry, locked }): a locked map takes no
+//   photos; Economy keeps a print copy instead of the original;
+// - `photoCounts` (the map's photos per country, on the map page): the chosen country's
+//   count against the cap, and at the cap the drop zone stops, with a way to upgrade
+//   (`isOwner`: the owner's own plan; anyone else is told it's the owner's).
+function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded, uploadRules = null, photoCounts = null, isOwner = false }) {
   const inputId = useId();
   const inputRef = useRef(null);
   const [country, setCountry] = useState(defaultCountryCode || '');
@@ -21,11 +30,16 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
   const [dragging, setDragging] = useState(false);
   const busy = items.some((i) => !['done', 'failed'].includes(i.stage));
 
+  const cap = uploadRules?.photosPerCountry ?? null;
+  const count = country && photoCounts && cap !== null ? photoCounts[country] || 0 : null;
+  const full = count !== null && count >= cap;
+  const keepsPrintCopy = uploadRules?.keepsOriginals === false;
+
   const update = (id, patch) => setItems((prev) => prev.map((item) => (item.id === id ? { ...item, ...patch } : item)));
 
   const start = async (fileList) => {
     const files = Array.from(fileList || []);
-    if (!files.length) return;
+    if (!files.length || full) return;
     const added = files.map((file, i) => ({
       id: `${Date.now()}-${i}-${file.name}`,
       name: file.name,
@@ -44,6 +58,7 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
           tripId,
           file: item.file,
           countryCode: country,
+          uploadRules,
           onStage: (stage) => update(item.id, { stage }),
           onProgress: (progress) => update(item.id, { progress }),
         });
@@ -65,6 +80,8 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
     });
   };
 
+  if (uploadRules?.locked) return <LockedMapNote isOwner={isOwner} />;
+
   return (
     <div className='grid gap-4'>
       <FormField
@@ -79,11 +96,31 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
         />
       </FormField>
 
+      {/* The chosen country against the map's cap (the map page knows the counts) */}
+      {full ? (
+        <div role='status' className='grid gap-1 rounded-lg border px-3 py-2 text-sm tone-danger'>
+          <p className='font-semibold'>
+            {number(count)} of {number(cap)} photos of {countryName(country)} on this map.
+          </p>
+          <p>
+            That’s the most this map’s plan keeps of one country. Choose another country, or leave it unset, to add photos
+            that carry their own location. <PlanUpgradeLink isOwner={isOwner} />
+          </p>
+        </div>
+      ) : count !== null ? (
+        <p className='text-sm' role='status'>
+          {number(count)} of {number(cap)} photos of {countryName(country)} on this map.
+        </p>
+      ) : cap !== null && !photoCounts ? (
+        <p className='text-sm'>This map keeps up to {number(cap)} photos of each country.</p>
+      ) : null}
+
       <label
         htmlFor={inputId}
+        aria-disabled={full ? 'true' : undefined}
         onDragOver={(e) => {
           e.preventDefault();
-          setDragging(true);
+          if (!full) setDragging(true);
         }}
         onDragLeave={() => setDragging(false)}
         onDrop={(e) => {
@@ -91,8 +128,12 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
           setDragging(false);
           start(e.dataTransfer.files);
         }}
-        className={`grid cursor-pointer place-items-center gap-1 border-2 border-dashed px-4 py-8 text-center text-sm transition ${
-          dragging ? 'border-poster-red bg-poster-paper/40' : 'border-poster-brown/60 hover:bg-poster-paper/20'
+        className={`grid place-items-center gap-1 border-2 border-dashed px-4 py-8 text-center text-sm transition ${
+          full
+            ? 'cursor-not-allowed border-poster-brown/40 opacity-60'
+            : dragging
+              ? 'cursor-pointer border-poster-red bg-poster-paper/40'
+              : 'cursor-pointer border-poster-brown/60 hover:bg-poster-paper/20'
         }`}
       >
         <span className='font-travel text-xl uppercase tracking-wide text-colour6'>Choose photos</span>
@@ -104,6 +145,7 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
         type='file'
         accept='image/jpeg,image/png,image/webp'
         multiple
+        disabled={full}
         className='sr-only'
         onChange={(e) => {
           start(e.target.files);
@@ -111,9 +153,15 @@ function PhotoUploader({ mapId, tripId, defaultCountryCode = '', onUploaded }) {
         }}
       />
 
+      {keepsPrintCopy ? (
+        <p className='border-l-4 border-poster-brown pl-3 text-sm'>
+          Economy keeps a print-quality copy (good up to A4). Business keeps your full-size originals.
+        </p>
+      ) : null}
       <p className='text-xs opacity-80'>
-        The copies people see have the location taken out. The original keeps it, and only you and your editors
-        can download it.
+        {keepsPrintCopy
+          ? 'Every copy has the location taken out. Only you and your editors see where each photo was taken.'
+          : 'The copies people see have the location taken out. The original keeps it, and only you and your editors can download it.'}
       </p>
 
       {items.length ? (

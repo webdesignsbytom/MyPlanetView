@@ -19,8 +19,12 @@ import placesRouter from './routes/places.js';
 import mapRouter from './routes/maps.js';
 import tripRouter from './routes/trips.js';
 import photoRouter from './routes/photos.js';
+import momentRouter from './routes/moments.js';
 import sharedRouter from './routes/shared.js';
 import inviteRouter from './routes/invites.js';
+// Plans and payments
+import billingRouter from './routes/billing.js';
+import { stripeWebhookHandler } from './controllers/billing.js';
 import {
   EVENT_MESSAGES,
   RESPONSE_MESSAGES,
@@ -83,6 +87,16 @@ app.use(
 // runs, better-auth included (middleware/originCheck.js)
 app.use(originCheck);
 
+// Stripe's webhook needs the exact bytes it sent to check the signature, so it gets a
+// raw body here, before the JSON parser. Stripe sends no Origin and no Sec-Fetch-Site,
+// so originCheck lets it through; the signature is what's checked.
+app.post(
+  '/api/billing/webhook',
+  globalRateLimiter,
+  express.raw({ type: 'application/json', limit: '1mb' }),
+  stripeWebhookHandler,
+);
+
 // JSON only, and no urlencoded parser: every client sends JSON, while a plain HTML
 // form can only post urlencoded, multipart or text/plain bodies, which stay unparsed.
 app.use(express.json({ limit: '2000kb' }));
@@ -105,8 +119,10 @@ app.use('/api', placesRouter); // /api/countries, /api/landmarks
 app.use('/api/maps', mapRouter);
 app.use('/api/trips', tripRouter);
 app.use('/api/photos', photoRouter);
+app.use('/api/moments', momentRouter);
 app.use('/api/shared', sharedRouter);
 app.use('/api/invites', inviteRouter);
+app.use('/api/billing', billingRouter);
 
 app.get('/', (_req, res) => {
   res.sendFile('index.html', { root: join(__dirname, 'views') });

@@ -6,14 +6,15 @@ const TAG = 'border-2 px-3 py-1 text-sm transition pointer-coarse:py-2';
 // Who went (or is going): one toggle tag per traveller on the map. A chosen traveller's
 // tag is parchment edged in red; the others are dashed outlines waiting to be picked.
 // Read-only when `onChange` is missing: only the chosen travellers' tags show.
-function TripTravellerChips({ travellers, selectedIds, onChange, disabled = false }) {
+// `legend` names the group (a moment's form: "Who it’s about").
+function TripTravellerChips({ travellers, selectedIds, onChange, disabled = false, legend = 'Who’s going' }) {
   if (!travellers?.length) return null;
   const toggle = (id) =>
     onChange(selectedIds.includes(id) ? selectedIds.filter((x) => x !== id) : [...selectedIds, id]);
 
   return (
     <fieldset className='grid gap-2'>
-      <legend className='font-travel text-base uppercase tracking-wide text-poster-brown'>Who’s going</legend>
+      <legend className='font-travel text-base uppercase tracking-wide text-poster-brown'>{legend}</legend>
       <div className='grid grid-row-wrap gap-2'>
         {travellers.map((traveller) => {
           const on = selectedIds.includes(traveller.id);

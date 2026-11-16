@@ -9,9 +9,10 @@ import { countryName } from '@/utils/map/countries';
 import { mapExtent } from '@/utils/map/projection';
 import { isAntarctic } from '@/utils/map/specialPlaces';
 
-// The card's shape is the map's: 2000 wide, 1064 tall with Antarctica, 887 without
-// (projection.js mapExtent), so the whole world fills it
-const ASPECT = { true: 'aspect-[2000/1064]', false: 'aspect-[2000/887]' };
+// The card's shape is the map's: 2000 wide, pole line to pole line (1037.2) with
+// Antarctica, the North Pole line to 857 (873.6) without (projection.js mapExtent), so
+// the whole world fills it
+const ASPECT = { true: 'aspect-[2000/1037.2]', false: 'aspect-[2000/873.6]' };
 
 // The trip on the world map: its countries coloured in, its stops numbered and joined.
 // A still overview, so the page scrolls past it normally on a phone. Mounted on a cream

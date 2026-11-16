@@ -109,7 +109,7 @@ function TripHeader({ trip, canEdit, locked = false, linkToMap = true, onChanged
             disabled={savingTravellers}
           />
           <InlineAlert>{error}</InlineAlert>
-          {locked ? <VerifyFirstNote action='change this trip, its stops or its photos' /> : null}
+          {locked ? <VerifyFirstNote action='change this trip, its stops, moments or photos' /> : null}
           {canEdit || onShare ? (
             <div className={`${ACTIONS_ROW} border-t-2 border-dashed border-poster-brown/60 pt-5`}>
               {canEdit ? (

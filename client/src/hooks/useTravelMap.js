@@ -9,6 +9,7 @@ import {
   getMapStats,
   getMapTrips,
   putVisit,
+  removeTripFromMap,
   updateMap,
   updateTraveller,
 } from '@/api/travelApi';
@@ -173,6 +174,18 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     [mapId, refreshStats],
   );
 
+  // A group trip taken off this map (its owner, or whoever added it): the countries it
+  // marked stay; the trips count goes down
+  const unlinkTrip = useCallback(
+    async (tripId) => {
+      await removeTripFromMap(tripId, mapId);
+      setState((prev) => ({ ...prev, trips: prev.trips.filter((t) => t.id !== tripId) }));
+      forgetMapLists();
+      refreshStats();
+    },
+    [mapId, refreshStats],
+  );
+
   return {
     ...state,
     reload: load,
@@ -184,5 +197,6 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     editTraveller,
     removeTraveller,
     addTrip,
+    unlinkTrip,
   };
 }

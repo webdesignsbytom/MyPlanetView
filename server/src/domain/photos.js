@@ -2,6 +2,8 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '../prisma.js';
 import { createMissingVisits } from './maps.js';
 import { POSITION_FIELD, POSITION_STEP, positionBetween, positionFirst } from '../utils/photoOrder.js';
+import { checkCountryCap, checkStorageCap } from '../utils/planLimits.js';
+import { planOf } from '../utils/constants/plans.js';
 
 // Photos, their stored sizes and landmark matches
 
@@ -187,13 +189,66 @@ export const findMediaItemsByKeys = (keys) =>
     select: { id: true, key: true, resource: true, ownerId: true, bytes: true, createdAt: true },
   });
 
+// The plan's limits on a map's photos (utils/planLimits.js)
+
+/** Photos per country on a map, hidden ones included: `{ [countryCode]: n }` (one groupBy on the map's country index). */
+export const countPhotosByCountry = async (mapId) => {
+  const rows = await prisma.photo.groupBy({
+    by: ['countryCode'],
+    where: { mapId, countryCode: { not: null } },
+    _count: { _all: true },
+  });
+  return Object.fromEntries(rows.map((row) => [row.countryCode, row._count._all]));
+};
+
+/** A map's photos in one country, hidden ones and everyone's uploads included. */
+export const countPhotosInCountry = (mapId, countryCode, db = prisma) => db.photo.count({ where: { mapId, countryCode } });
+
+/** The bytes of every file of every photo on a map. */
+export const sumStoredPhotoBytes = async (mapId, db = prisma) => {
+  const [row] = await db.$queryRaw`
+    SELECT COALESCE(SUM(m."bytes"), 0)::float8 AS "bytes"
+    FROM "photo" AS p
+    JOIN "photo_variant" AS v ON v."photoId" = p."id"
+    JOIN "media_item" AS m ON m."id" = v."mediaId"
+    WHERE p."mapId" = ${mapId}`;
+  return Number(row?.bytes ?? 0);
+};
+
+/**
+ * The plan's caps, checked inside a photo write's transaction. The map's row is locked
+ * first (FOR NO KEY UPDATE: two saves to one map queue up, so neither counts without the
+ * other's photo; other writes' foreign-key checks aren't blocked). `limits` is
+ * `{ planId, countryName }` (the owner's plan; the name of `countryCode`).
+ * -> null, or the 409 message
+ */
+async function photoLimitProblem(tx, { mapId, countryCode, addingBytes = 0, limits }) {
+  await tx.$queryRaw`SELECT 1 FROM "travel_map" WHERE "id" = ${mapId} FOR NO KEY UPDATE`;
+  if (countryCode) {
+    const count = await countPhotosInCountry(mapId, countryCode, tx);
+    const full = checkCountryCap({ count, planId: limits.planId, countryName: limits.countryName });
+    if (full) return full;
+  }
+  if (addingBytes > 0 && planOf(limits.planId).limits.storageCapBytes !== null) {
+    return checkStorageCap({ storedBytes: await sumStoredPhotoBytes(mapId, tx), addingBytes, planId: limits.planId });
+  }
+  return null;
+}
+
 /**
  * Save a confirmed photo: sizes recorded on its MediaItems, the Photo and its
  * PhotoVariants (first in its country's gallery and its trip's), the country marked
- * visited, GPS landmark suggestions. One transaction.
+ * visited, GPS landmark suggestions. One transaction. With `limits` (`{ planId,
+ * countryName }`), the plan's caps are checked first in the same transaction, and a
+ * photo over them isn't saved. -> `{ id }`, or `{ id: null, refused: message }`
  */
-export const createPhotoInDB = ({ photo, variants, landmarkMatches }) =>
+export const createPhotoInDB = ({ photo, variants, landmarkMatches, limits = null }) =>
   prisma.$transaction(async (tx) => {
+    if (limits) {
+      const addingBytes = variants.reduce((sum, v) => sum + (Number(v.bytes) || 0), 0);
+      const refused = await photoLimitProblem(tx, { mapId: photo.mapId, countryCode: photo.countryCode, addingBytes, limits });
+      if (refused) return { id: null, refused };
+    }
     for (const v of variants) {
       await tx.mediaItem.update({ where: { id: v.mediaId }, data: { bytes: v.bytes, contentType: v.contentType } });
     }
@@ -223,9 +278,11 @@ export const createPhotoInDB = ({ photo, variants, landmarkMatches }) =>
  * Change a photo. A new country counts as visited on its map (as at upload), and a
  * photo that lands in another gallery (a new country, no country, or a new trip) goes
  * first there, as a new upload does. One transaction, so the photo never moves without
- * its visit.
+ * its visit. With `limits` (`{ planId, countryName }` of the new country), a move into a
+ * country that's full on the map is refused before anything changes.
+ * -> `{ id, mapId }`, or `{ refused: message }`
  */
-export const updatePhotoInDB = (photoId, data) => {
+export const updatePhotoInDB = (photoId, data, { limits = null } = {}) => {
   const select = { id: true, mapId: true };
   const galleryMayChange = data.countryCode !== undefined || data.tripId !== undefined;
   if (!galleryMayChange) return prisma.photo.update({ where: { id: photoId }, data, select });
@@ -234,6 +291,10 @@ export const updatePhotoInDB = (photoId, data) => {
       where: { id: photoId },
       select: { mapId: true, countryCode: true, tripId: true },
     });
+    if (limits && data.countryCode && data.countryCode !== current.countryCode) {
+      const refused = await photoLimitProblem(tx, { mapId: current.mapId, countryCode: data.countryCode, limits });
+      if (refused) return { refused };
+    }
     const next = { ...current, ...data };
     const positions = {};
     if (data.countryCode !== undefined && data.countryCode !== current.countryCode) {
@@ -270,6 +331,33 @@ export const findMapPhotoKeys = (mapIds) => photoFileKeys({ mapId: Array.isArray
 
 /** Every photo a user uploaded, on any map (account deletion; their files go after). */
 export const deletePhotosByUploader = (userId) => prisma.photo.deleteMany({ where: { uploaderId: userId } });
+
+/** How many photos a user uploaded to maps they don't own (GET /users/leaving-options). */
+export const countPhotosOnOtherMaps = (userId) =>
+  prisma.photo.count({ where: { uploaderId: userId, map: { ownerId: { not: userId } } } });
+
+/**
+ * Account deletion, leaving photos behind: every photo a user uploaded to a map they
+ * don't own (only the maps in `mapIds`, when given) becomes that map's owner's (the
+ * uploader's row cascades to their photos otherwise). One updateMany per map, in one
+ * transaction. -> `{ count }`
+ */
+export const reassignUploadsToMapOwners = async (userId, mapIds) => {
+  if (Array.isArray(mapIds) && !mapIds.length) return { count: 0 };
+  const maps = await prisma.travelMap.findMany({
+    where: {
+      ownerId: { not: userId },
+      photos: { some: { uploaderId: userId } },
+      ...(Array.isArray(mapIds) ? { id: { in: mapIds } } : {}),
+    },
+    select: { id: true, ownerId: true },
+  });
+  if (!maps.length) return { count: 0 };
+  const results = await prisma.$transaction(
+    maps.map((m) => prisma.photo.updateMany({ where: { mapId: m.id, uploaderId: userId }, data: { uploaderId: m.ownerId } }))
+  );
+  return { count: results.reduce((sum, r) => sum + r.count, 0) };
+};
 
 // Landmark matches
 

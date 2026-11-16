@@ -5,7 +5,10 @@ import { getStoredItem, removeStoredItem, setStoredItem } from '@/utils/function
 import { buildSeed } from './seed';
 import { fillPhotoPositions } from './photoOrder';
 
-const STORE_KEY = 'mpvMockStore.v1';
+// v2: the test user's map got the real test photos (16 Nov 2026); a new key seeds them
+// for everyone, as older saved stores would keep the poster stand-ins.
+// v3: moments, group trips (trips added to other maps) and Tom's map (16 Nov 2026)
+const STORE_KEY = 'mpvMockStore.v3';
 const ROLE_KEY = 'mpvMockRole';
 
 export const ROLES = ['USER', 'ADMIN', 'DEVELOPER'];
@@ -16,7 +19,7 @@ let db = null;
 export const session = {
   signedIn: true,
   blobs: new Map(), // storage key -> blob URL
-  presigned: new Map(), // photoId -> { mapId, tripId, keys: { THUMB, DISPLAY, ORIGINAL } }
+  presigned: new Map(), // photoId -> { mapId, tripId, keys: { THUMB, DISPLAY, ORIGINAL or PRINT } }
 };
 
 export function getMockRole() {
@@ -41,12 +44,20 @@ export function loadStore() {
         db.trips.forEach((t) => {
           if (dropped.has(t.coverPhotoId)) t.coverPhotoId = null;
         });
+        (db.moments || []).forEach((m) => {
+          m.photoIds = m.photoIds.filter((id) => !dropped.has(id));
+        });
       }
     } catch {
       db = null;
     }
   }
   if (!db) db = buildSeed();
+  // Stores saved before the plans (16 Nov 2026): the seed's subscription, no memberships
+  if (!Array.isArray(db.subscriptions)) db.subscriptions = buildSeed().subscriptions;
+  if (!Array.isArray(db.planGrants)) db.planGrants = [];
+  if (!Array.isArray(db.moments)) db.moments = [];
+  if (!Array.isArray(db.tripMaps)) db.tripMaps = [];
   [...db.maps, ...db.trips].forEach((item) => {
     item.shareCode = fixCode(item.shareCode);
   });

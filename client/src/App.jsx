@@ -14,7 +14,9 @@ import {
   ADMIN_EVENTS_PAGE_URL,
   ADMIN_USERS_PAGE_URL,
   CONTACT_PAGE_URL,
+  COUNTRIES_PAGE_URL,
   FAQ_PAGE_URL,
+  PRICING_PAGE_URL,
   FORGOT_PASS_PAGE_URL,
   HOME_PAGE_URL,
   LEGAL_AGREEMENTS_PAGE_URL,
@@ -53,6 +55,7 @@ import {
   AdminUsersPage,
   AdminEventsPage,
   ContactPage,
+  PricingPage,
   TermAndPoliciesPage,
   AccountPage,
   LoginPage,
@@ -68,6 +71,8 @@ import {
   WelcomePage,
   SharedPage,
   InviteAcceptPage,
+  CountriesIndexPage,
+  COUNTRY_GUIDE_PAGES,
 } from './utils/navigation/lazyPages';
 
 // Build-time pre-render: no cookie modal, no analytics
@@ -168,7 +173,16 @@ function App() {
           <Route path={HOME_PAGE_URL} element={<HomePage />} />
           <Route path={ABOUT_PAGE_URL} element={<AboutPage />} />
           <Route path={FAQ_PAGE_URL} element={<FaqPage />} />
+          <Route path={PRICING_PAGE_URL} element={<PricingPage />} />
           <Route path={CONTACT_PAGE_URL} element={<ContactPage />} />
+
+          {/* Country guides: built from the checked content files (drafts too in development).
+              None checked: no index and no country routes, so those addresses are 404s */}
+          {CountriesIndexPage ? <Route path={COUNTRIES_PAGE_URL} element={<CountriesIndexPage />} /> : null}
+          {COUNTRY_GUIDE_PAGES.map((guide) => (
+            <Route key={guide.slug} path={guide.path} element={<guide.Page />} />
+          ))}
+
           <Route
             path={ADMIN_PAGE_URL}
             element={

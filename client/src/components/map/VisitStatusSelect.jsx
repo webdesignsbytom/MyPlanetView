@@ -5,8 +5,10 @@ import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 import { VISIT_STATUS_OPTIONS } from '@/utils/map/visitStatus';
 
 // Visited / Lived there / Want to go / Not yet, for one country. `onChange` gets the
-// status, or null for "Not yet".
-function VisitStatusSelect({ id, countryName, status, onChange, onBlur, refProp, disabled = false }) {
+// status, or null for "Not yet". With `labelled`, a visible <label> names it (the country
+// panel's "Been there?", inside a dialog named by the country); otherwise it's
+// "Status for <country>" (the country list, where no label shows).
+function VisitStatusSelect({ id, countryName, status, onChange, onBlur, refProp, disabled = false, labelled = false }) {
   return (
     <PlainOptionSelect
       refProp={refProp}
@@ -15,7 +17,7 @@ function VisitStatusSelect({ id, countryName, status, onChange, onBlur, refProp,
       value={status || ''}
       options={VISIT_STATUS_OPTIONS}
       disabled={disabled}
-      ariaLabel={`Status for ${countryName}`}
+      ariaLabel={labelled ? undefined : `Status for ${countryName}`}
       onChange={(e) => onChange(e.target.value || null)}
       onBlur={onBlur}
     />

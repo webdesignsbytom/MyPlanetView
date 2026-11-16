@@ -8,6 +8,7 @@ import PhotoViewer from '@/components/photos/PhotoViewer';
 import Modal from '@/components/common/Modal';
 import Button from '@/components/common/Button';
 import PaperCard from '@/components/common/PaperCard';
+import LockedMapNote from '@/components/plans/LockedMapNote';
 
 // The trip's photos on a paper card (each on its white photo border, from PhotoThumb),
 // with adding (editors) and the viewer. Link visitors pass `shareCode`.
@@ -16,10 +17,16 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
   const photos = usePhotoPage(shareCode ? { shareCode } : { tripId: trip.id });
   const [uploading, setUploading] = useState(false);
   const [openId, setOpenId] = useState(null);
+  // The map owner's plan, for those who can upload (docs/API.md, "Trips"): a map that
+  // isn't paid for takes no photos, so adding is locked with the reason
+  const uploadRules = trip.uploadRules || null;
+  const isOwner = trip.role === 'OWNER';
 
   return (
     <PaperCard title='Photos' titleId='trip-photos-heading'>
-      {canEdit ? (
+      {canEdit && uploadRules?.locked ? (
+        <LockedMapNote isOwner={isOwner} />
+      ) : canEdit ? (
         <div className='grid justify-items-start'>
           <Button onClick={() => setUploading(true)}>Add photos</Button>
         </div>
@@ -41,6 +48,8 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
             mapId={trip.mapId}
             tripId={trip.id}
             defaultCountryCode={trip.stops?.[0]?.countryCode || ''}
+            uploadRules={uploadRules}
+            isOwner={isOwner}
             onUploaded={(photo) => photos.addPhotos([photo])}
           />
         </Modal>

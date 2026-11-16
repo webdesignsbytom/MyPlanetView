@@ -9,11 +9,26 @@ import TripCard from './TripCard';
 import TripForm from './TripForm';
 import VerifyFirstNote from '@/components/map/VerifyFirstNote';
 
-// The map's trips, planned and done; editors can start a new one (`locked`: once their
-// email address is verified).
-function TripsPanel({ trips, travellers, canEdit, locked = false, onCreate, noLinks = false, onClose }) {
+// The map's trips, planned and done, with the group trips added to it from other maps
+// (marked as such); editors can start a new one (`locked`: once their email address is
+// verified). `onRemoveLinked(tripId)` (the map's owner) takes a group trip off the map.
+function TripsPanel({ trips, travellers, canEdit, locked = false, onCreate, noLinks = false, onRemoveLinked = null, onClose }) {
   const navigate = useNavigate();
   const [creating, setCreating] = useState(false);
+  const [removingId, setRemovingId] = useState(null);
+  const [error, setError] = useState(null);
+
+  const remove = async (trip) => {
+    setRemovingId(trip.id);
+    setError(null);
+    try {
+      await onRemoveLinked(trip.id);
+    } catch (err) {
+      setError(err.friendlyMessage || 'The trip could not be taken off the map.');
+    } finally {
+      setRemovingId(null);
+    }
+  };
 
   return (
     <MapPanel title='Trips' onClose={onClose}>
@@ -34,10 +49,21 @@ function TripsPanel({ trips, travellers, canEdit, locked = false, onCreate, noLi
         <VerifyFirstNote action='plan a trip' />
       ) : null}
 
+      {error ? (
+        <p role='alert' className='text-sm text-status-critical'>
+          {error}
+        </p>
+      ) : null}
       {trips.length ? (
         <ul className='grid gap-2'>
           {trips.map((trip) => (
-            <TripCard key={trip.id} trip={trip} noLink={noLinks} />
+            <TripCard
+              key={trip.id}
+              trip={trip}
+              noLink={noLinks}
+              onRemove={trip.linked && onRemoveLinked ? () => remove(trip) : undefined}
+              removing={removingId === trip.id}
+            />
           ))}
         </ul>
       ) : (

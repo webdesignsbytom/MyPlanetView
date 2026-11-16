@@ -5,6 +5,7 @@ import MapStylePicker from './MapStylePicker';
 import MapTypePicker from './MapTypePicker';
 import MapSettingsToggles from './MapSettingsToggles';
 import DeleteMapSection from './DeleteMapSection';
+import MainMapSection from './MainMapSection';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
 // Utils
 import { saveMapSetup } from '@/utils/map/saveMapSetup';
@@ -15,7 +16,8 @@ const TABS = [
 ];
 
 // Settings: how the map looks to you (yours alone, on every map), and, for editors,
-// this map's travellers; for the owner, its name, group and deletion. The two tabs are
+// this map's travellers; for the owner, its name, group, making it the main map (the one
+// the plan includes) and deletion. The two tabs are
 // ticket tabs: the open one is parchment and sits on the panel's brown rule. They follow
 // the ARIA tabs pattern: only the open tab is in the tab order, the arrow keys (and Home,
 // End) move between tabs and open them, and each tab names its panel.
@@ -95,6 +97,7 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locke
               await onMapSaved();
             }}
           />
+          {isOwner && !map.isDefault ? <MainMapSection map={map} locked={locked} onChanged={onMapSaved} /> : null}
           {isOwner && !map.isDefault ? <DeleteMapSection map={map} locked={locked} onDeleted={onMapDeleted} /> : null}
         </div>
       ) : null}

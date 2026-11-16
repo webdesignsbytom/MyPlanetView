@@ -50,6 +50,8 @@ FEATURE-PLAN.md's "Database additions (draft)" table, item by item. Where this r
 
 ### Plans and payments
 
+**Built on 16 Nov 2026** as reviewed below (migration `plans_billing`): `Subscription`, `PlanGrant`, `StripeEvent`, the plan in force computed (`utils/plans.js`), map slots computed (`utils/mapSlots.js`, no stored lock flag), `TravelMap.graceUntil`, `PhotoSize.PRINT`. `PromoCode` isn't built yet.
+
 The draft puts `plan`, `planSource`, `planEndsAt` and `referralCode` on `User`.
 
 - **Keep them off `User`.** better-auth owns that table and reads it on every request (the cookie cache is off). Billing fields don't belong in the session, and one `plan` column can't hold two sources at once: an influencer on a complimentary First Class year who then subscribes has both.
@@ -66,19 +68,19 @@ This needs deciding before the upload code changes, because a shared map has two
 
 | Rule | Proposed |
 | --- | --- |
-| Photos per country | The uploader's (as planned: usage counts against the uploader) |
-| Original or print copy | **The uploader's**, so it matches who pays for the storage. So a free editor on a Business family map gets print copies |
-| People who can add photos | The map owner's |
+| Photos per country | **The map owner's**, counted per map (FEATURE-PLAN.md, 16 Nov: the allowance belongs to the map, and its editors share it) |
+| Original or print copy | **The map owner's** (decided 16 Nov): every photo on a map keeps the original or the print copy by the owner's plan, whoever uploaded it |
+| Editors | Up to 10 per map on every plan (`MapMember` with `EDITOR`); a group trip has its own 20, separate (decided 16 Nov) |
 | Ads on a map | The owner's and the viewer's (as planned) |
-| Maps per account | The owner's |
+| Maps per account | The owner's: one included, extra maps paid for (FEATURE-PLAN.md, "Maps") |
 
-The presign then needs both plans, which is two of the lookups above.
+So the presign needs only the map owner's plan, one lookup.
 
 ### Photos: print copy and videos
 
 - **`PRINT` size:** agreed. Economy photos have no `ORIGINAL`, so code that assumes one ("download the original", the print dialog) must ask for the best copy, `ORIGINAL` or else `PRINT`. One helper.
 - **Videos as `Photo.kind` (`PHOTO`/`VIDEO`) with `durationS`:** agreed. Galleries, order, hidden, country, trip and landmarks all work for videos unchanged. `MediaItem.kind` already has `VIDEO`, and `bytes` (an `Int`, up to 2 GB) covers 500 MB files.
-- **The caps count by uploader and country:** **replace the `Photo` index `[uploaderId]` with `[uploaderId, countryCode]`.** Today the count would scan every photo that person has uploaded. The new index still serves the foreign key.
+- **The caps count by map and country** (decided 16 Nov), which the existing `Photo` index `[mapId, countryCode, countryPosition, id]` serves, so no new index is needed. (The `[uploaderId, countryCode]` index proposed here first is no longer needed.)
 
 ### Passport and landmarks
 
@@ -96,7 +98,7 @@ The draft is good: precision-aware dates, kinds as text, `MomentTraveller`, `Mom
 
 - Add a CHECK that a dated moment has a precision, and an undated one doesn't.
 - `MomentPhoto` cascades on the photo, so deleting a photo removes it from its moments.
-- **`CountryVisit.notes`:** there's no production data, so moving notes into moments needs no data migration. Drop the column when moments ship.
+- **`CountryVisit.notes` stays** (decided 16 Nov): the country's one note ("I want to visit here"), shown in the country panel; moments are separate events.
 
 ### Badges, goals, challenges and themes
 
@@ -141,9 +143,9 @@ Worth doing once, just before the first production deploy, not now.
 
 ## Decisions needed
 
-1. **Whose plan applies** to the original or print copy: the uploader's (proposed) or the map owner's?
-2. **People who can add photos:** do trip-only editors count toward the map's 2/6/unlimited?
-3. **Moments replace `CountryVisit.notes`** (proposed), or both stay?
+1. ~~**Whose plan applies**~~ **Decided (16 Nov):** the map owner's, for originals, photo caps and ads alike.
+2. ~~**People who can add photos**~~ **Decided (16 Nov):** 10 editors per map on every plan; group trips have their own 20 people, separate, and their photos use the organiser's allowance.
+3. ~~**Moments replace the country note**~~ **Decided (16 Nov):** both stay: a note per country, and moments for events.
 4. ~~**Antarctica as a country**~~ **Decided (15 Nov):** Antarctica (drawn as a real shape, with a setting to hide it) and the four poles are "special places", counted apart from countries.
-5. **An editor deleting their account** deletes their uploads, on other people's maps too (the current rule, for privacy). With paid plans, a family map would lose one parent's photos when that parent leaves. Keep it, or offer to hand the photos to the map's owner first?
-6. **Ad clicks** in their own daily-count table (proposed), or in the audit log as planned?
+5. ~~**Leaving and transfers**~~ **Decided (16 Nov):** transfer ownership (owner and admin); deleting an account asks about each owned map (hand it over or delete it) and whether to leave photos on other people's maps (default: leave them); a map that becomes a paid extra map through a transfer gets 60 days' grace (FEATURE-PLAN.md, "Transferring a map, and leaving").
+6. ~~**Ad clicks**~~ **Decided (16 Nov):** a daily tally per offer and placement (`OfferClickDaily`), not the audit log.

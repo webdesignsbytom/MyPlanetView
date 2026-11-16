@@ -23,7 +23,7 @@ test.describe('Photos', () => {
     const { panel, item } = await upload(page, await makeJpeg(page, { name: 'harbour.jpg' }), { country: 'Germany' });
     await expect(item).toContainText('No location in the file, so it went in Germany.');
     // A photo from a country you hadn't marked makes it visited
-    await expectStats(page, '9 countries, 2 continents, 6 photos');
+    await expectStats(page, '9 countries, 2 continents, 17 photos');
     await panel.getByRole('button', { name: 'Close Add photos' }).click();
 
     const list = await openTool(page, 'Country list', 'Countries');
@@ -50,7 +50,7 @@ test.describe('Photos', () => {
     const file = await makeJpeg(page, { name: 'gate.jpg', gps: { latitude: 52.51627, longitude: 13.37772 } });
     const { panel, item } = await upload(page, file);
     await expect(item).toContainText('Placed in Germany from its location.');
-    await expectStats(page, '9 countries, 2 continents, 6 photos');
+    await expectStats(page, '9 countries, 2 continents, 17 photos');
     await panel.getByRole('button', { name: 'Close Add photos' }).click();
 
     const list = await openTool(page, 'Country list', 'Countries');
@@ -73,14 +73,14 @@ test.describe('Photos', () => {
 
     // A confirmed landmark counts
     await statsBadge(page).click();
-    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['9', '2', '6', '3', '2']);
+    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['9', '2 of 7', '0 of 5', '17', '3', '3']);
   });
 
   test('a photo with no country waits under Unplaced photos until it is given one', { tag: '@phone' }, async ({ page }) => {
     await openMap(page);
     const { panel, item } = await upload(page, await makeJpeg(page, { name: 'somewhere.jpg' }));
     await expect(item).toContainText('under Unplaced photos until you choose a country');
-    await expectStats(page, '8 countries, 2 continents, 6 photos');
+    await expectStats(page, '8 countries, 2 continents, 17 photos');
     await panel.getByRole('button', { name: 'Close Add photos' }).click();
 
     await statsBadge(page).click();
@@ -101,7 +101,7 @@ test.describe('Photos', () => {
     await expect(saved.getByText('Greece', { exact: true })).toBeVisible();
     await saved.getByRole('button', { name: 'Close' }).click();
     await expect(unplaced.getByText('Every photo has a country now.')).toBeVisible();
-    await expectStats(page, '9 countries, 2 continents, 6 photos');
+    await expectStats(page, '9 countries, 2 continents, 17 photos');
   });
 
   test('a photo is deleted from the viewer, after a second press', async ({ page }) => {
@@ -120,6 +120,6 @@ test.describe('Photos', () => {
     await expect(viewer).toBeHidden();
 
     await expect(panel.getByText('No photos from Netherlands yet.')).toBeVisible();
-    await expectStats(page, '8 countries, 2 continents, 4 photos');
+    await expectStats(page, '8 countries, 2 continents, 15 photos');
   });
 });

@@ -9,7 +9,7 @@ import request from 'supertest';
 // Before the app is imported: auth.js reads it when it builds better-auth
 process.env.RATE_LIMITS_IN_TESTS = 'true';
 
-const { ORIGIN, PASSWORD, cleanUp, data, prisma, testEmail, trackUser } = await import('./helpers.js');
+const { ORIGIN, PASSWORD, cleanUp, data, givePlan, prisma, testEmail, trackUser } = await import('./helpers.js');
 const { default: app } = await import('../../src/server.js');
 const { rateLimitShared } = await import('../../src/middleware/dbRateLimit.js');
 const { generateShareCode } = await import('../../src/utils/shareCodes.js');
@@ -168,6 +168,8 @@ describe('share-code lookups', () => {
 describe('creating maps', () => {
   it('allows 20 new maps a day per user', async () => {
     const { agent, user } = await signUpFrom(ipv4(50), 'MapMaker');
+    // Paid map slots for all of them: the daily limit is what's tested
+    await givePlan(user.id, { extraMaps: 25 });
     const body = { name: 'Another map', groupType: 'SOLO', travellers: [{ name: 'Me' }] };
     for (let i = 0; i < 20; i++) expect((await agent.post('/api/maps').send(body)).status).toBe(201);
     const blocked = await agent.post('/api/maps').send(body);

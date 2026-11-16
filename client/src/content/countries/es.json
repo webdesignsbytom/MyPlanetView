@@ -1,0 +1,196 @@
+{
+  "code": "ES",
+  "slug": "spain",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Hola", "España"],
+  "summary": "Late dinners, long light evenings and a fiesta somewhere almost every week.",
+  "overview": [
+    "Spain packs a lot into one country: the Moorish palaces of Andalusia, Gaudí's buildings in Barcelona, the art museums of Madrid, the green hills and seafood of the north, and beaches on the Mediterranean, the Atlantic and two groups of islands, the Balearics and the Canaries.",
+    "Daily life runs late. Lunch is the main meal and dinner rarely starts before nine, so plan sightseeing for the morning and keep the evening for a walk and tapas. Fast trains link the big cities, and regional identity is strong: Catalonia, the Basque Country and Galicia have languages of their own."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm days and green countryside. Holy Week brings processions and fills the hotels, so book early if your dates fall then."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and dry, above all inland: Seville and Córdoba often pass 40°C in July and August. The coasts are busy and at their most expensive in August, when many Spaniards take their holidays."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September and October keep summer's warmth without its crowds, and the sea is still warm. November turns wetter, especially in the north."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild and often sunny on the south coast and in the Canaries; cold nights in Madrid and the interior, and snow for skiing in the Pyrenees and the Sierra Nevada. A good time for city breaks."
+      }
+    ],
+    "weather": "Hot, dry summers and mild winters on the Mediterranean coast and in the south. The central plateau around Madrid has very hot summers and cold winters, while the green north (Galicia, Asturias, Cantabria and the Basque Country) is mild and rainy all year. The Canary Islands are warm all year round.",
+    "festivals": [
+      {
+        "name": "Semana Santa (Holy Week)",
+        "place": "Across Spain, above all Seville and Málaga",
+        "when": "The week before Easter, in March or April",
+        "months": [3, 4],
+        "text": "Religious brotherhoods carry statues through the streets by day and night. Moving and very crowded: book rooms well ahead."
+      },
+      {
+        "name": "Las Fallas",
+        "place": "Valencia",
+        "when": "15–19 March",
+        "months": [3],
+        "text": "Huge papier-mâché figures fill the streets, with fireworks and firecrackers every day, and are burnt on the last night."
+      },
+      {
+        "name": "Feria de Abril",
+        "place": "Seville",
+        "when": "Two weeks after Easter, usually in April, sometimes early May",
+        "months": [4, 5],
+        "text": "A week of flamenco dresses, horses and dancing in rows of striped marquees (casetas), many of them private."
+      },
+      {
+        "name": "San Fermín",
+        "place": "Pamplona",
+        "when": "6–14 July",
+        "months": [7],
+        "text": "Nine days of street parties, best known for the morning bull runs (encierros). The town is packed and rooms cost far more."
+      },
+      {
+        "name": "La Tomatina",
+        "place": "Buñol, near Valencia",
+        "when": "The last Wednesday of August",
+        "months": [8],
+        "text": "An hour-long tomato fight in the town's streets. Entry is by ticket, and numbers are capped."
+      },
+      {
+        "name": "Los Reyes (Three Kings)",
+        "place": "Across Spain",
+        "when": "5–6 January",
+        "months": [1],
+        "text": "Parades on the evening of 5 January throw sweets to the children. 6 January, when presents are given, is a public holiday and many shops close."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Andalusia and the interior",
+        "text": "The south and the central plateau are at their best in spring and autumn. Summer heat there is fierce, so keep the afternoons for indoor sights or a long lunch."
+      },
+      {
+        "name": "The green north",
+        "text": "Galicia, Asturias, Cantabria and the Basque Country are mild and rainy, and their summers are rarely too hot, so June to September suits them best."
+      },
+      {
+        "name": "The Balearic Islands",
+        "text": "Mallorca, Menorca and Ibiza have their season from May to October. Many hotels and restaurants close in winter, especially on Menorca and Ibiza."
+      },
+      {
+        "name": "The Canary Islands",
+        "text": "Off the coast of Africa and an hour behind the mainland, the islands are spring-like all year and busiest in winter."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Friends, and people being introduced socially, greet each other with two kisses, one on each cheek; men who know each other often shake hands or hug instead. A handshake is right for business and with officials. Say \"buenos días\" when you walk into a small shop.",
+    "etiquette": [
+      "Meals are late: lunch from about 2 pm, dinner from 9 pm or later. Many restaurant kitchens close between the two.",
+      "Outside the big cities, many shops close in the afternoon, roughly 2 to 5 pm, and most are closed on Sundays.",
+      "The bill won't come until you ask for it (la cuenta, por favor).",
+      "Catalonia, the Basque Country and Galicia have their own languages and a strong sense of identity. Signs may be in the local language first, and a word or two of it is welcome.",
+      "In some cities, Granada among them, a small tapa comes free with each drink."
+    ],
+    "tipping": "Not expected the way it is in the US, and service is included in prices. Locals leave small change or round up at a bar; in a restaurant, 5 to 10% is generous for good service.",
+    "dress": "Casual is fine almost everywhere, though people dress neatly in the cities. Cover your shoulders and knees in cathedrals and churches. Keep swimwear for the beach: some towns, Barcelona among them, fine people walking the streets in it.",
+    "food": [
+      {
+        "name": "Tapas",
+        "text": "Small plates shared over a drink, at the bar or at a table. In the Basque Country they're pintxos, often on a slice of bread held with a cocktail stick."
+      },
+      {
+        "name": "Paella",
+        "text": "From Valencia, where it's a lunchtime dish of rice with chicken and rabbit, or with seafood. It's cooked to order, so expect to wait."
+      },
+      {
+        "name": "Jamón ibérico",
+        "text": "Cured ham from black Iberian pigs, sliced thin by hand. The finest, de bellota, comes from pigs fed on acorns."
+      },
+      {
+        "name": "Tortilla española",
+        "text": "A thick potato omelette, often with onion, served in slices at any time of day."
+      },
+      {
+        "name": "Gazpacho and salmorejo",
+        "text": "Cold tomato soups from Andalusia, for hot days. Salmorejo is thicker, and topped with egg and ham."
+      },
+      {
+        "name": "Churros con chocolate",
+        "text": "Fried dough sticks dipped in thick hot chocolate, for breakfast or after a late night."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish",
+      "items": [
+        { "phrase": "Hola", "say": "OH-lah", "meaning": "Hello" },
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "Por favor", "say": "por fah-BOR", "meaning": "Please" },
+        { "phrase": "Gracias", "say": "GRAH-thee-ahs", "meaning": "Thank you" },
+        { "phrase": "Perdón", "say": "pehr-DOHN", "meaning": "Sorry; excuse me" },
+        { "phrase": "¿Habla inglés?", "say": "AH-blah een-GLAYS", "meaning": "Do you speak English?" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "La cuenta, por favor", "say": "lah KWEN-tah por fah-BOR", "meaning": "The bill, please" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q29",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish (Castilian). Catalan, Galician and Basque are also official in their regions, and Occitan (Aranese) in Catalonia.",
+        "sources": [{ "property": "P37", "values": ["Q1321", "Q7026", "Q9307", "Q8752", "Q14185"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time: UTC+1, and UTC+2 from late March to late October. The Canary Islands are an hour behind.",
+        "sources": [{ "property": "P421", "values": ["Q5412114", "Q6655", "Q6723", "Q6574"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata also lists 091 (National Police) and 061 (medical, in some regions); the page gives 112, which reaches every service."
+      },
+      {
+        "key": "callingCode",
+        "text": "+34",
+        "sources": [{ "property": "P474", "values": ["+34"] }]
+      }
+    ]
+  }
+}

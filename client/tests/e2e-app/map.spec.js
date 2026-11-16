@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, expectStats, openMap, openTool, pressCountry, statsBadge, toolbar } from './fixtures.js';
+import { test, expect, HOME_MAP, MOCK_STORE_KEY, expectStats, openMap, openTool, pressCountry, statsBadge, toolbar } from './fixtures.js';
 
 test.describe('The map page', () => {
   test('opens the default map with its stats', { tag: '@phone' }, async ({ page }) => {
@@ -6,18 +6,18 @@ test.describe('The map page', () => {
     await expect(page).toHaveTitle(new RegExp(HOME_MAP.replace(/[&']/g, '.')));
     await expect(page.getByRole('heading', { level: 1, name: HOME_MAP })).toBeAttached();
     await expect(page.getByRole('button', { name: `${HOME_MAP}. Switch map` })).toBeVisible();
-    await expectStats(page, '8 countries, 2 continents, 5 photos');
+    await expectStats(page, '8 countries, 2 continents, 16 photos');
 
     // The owner's tools
-    for (const label of ['Travel statistics', 'Country list', 'Trips', 'Add photos', 'Share this map', 'Map settings']) {
+    for (const label of ['Travel statistics', 'Country list', 'Trips', 'Timeline', 'Add photos', 'Share this map', 'Map settings']) {
       await expect(toolbar(page).getByRole('button', { name: label, exact: true })).toBeAttached();
     }
 
     await statsBadge(page).click();
     const stats = page.getByRole('dialog', { name: 'Travel statistics' });
     await expect(stats).toBeVisible();
-    // Countries, continents, photos, landmarks (confirmed matches), trips
-    await expect(stats.getByRole('definition')).toHaveText(['8', '2', '5', '2', '2']);
+    // Countries, continents (of 7), special places (of 5), photos, landmarks (confirmed matches), trips
+    await expect(stats.getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '16', '2', '3']);
     await expect(stats.getByRole('listitem')).toHaveText([/Test\s*1/, /Alex\s*1/]);
   });
 
@@ -31,11 +31,11 @@ test.describe('The map page', () => {
     await expect(panel).toBeVisible();
     await expect(panel.getByText('Europe', { exact: true })).toBeVisible();
     await expect(panel.getByText('No photos from Germany yet.')).toBeVisible();
-    const status = panel.getByRole('combobox', { name: 'Status for Germany' });
+    const status = panel.getByRole('combobox', { name: 'Been there?' });
     await expect(status).toHaveValue('');
 
     await status.selectOption('Visited');
-    await expectStats(page, '9 countries, 2 continents, 5 photos');
+    await expectStats(page, '9 countries, 2 continents, 16 photos');
     await expect(germany).toHaveAttribute('data-been', 'true');
     await expect(panel.getByLabel('First went')).toBeVisible();
 
@@ -47,42 +47,43 @@ test.describe('The map page', () => {
     // Its name in the list opens it again: want to go
     await list.getByRole('button', { name: 'Germany', exact: true }).click();
     const again = page.getByRole('dialog', { name: 'Germany' });
-    await again.getByRole('combobox', { name: 'Status for Germany' }).selectOption('Want to go');
-    await expectStats(page, '8 countries, 2 continents, 5 photos');
+    await again.getByRole('combobox', { name: 'Been there?' }).selectOption('Want to go');
+    await expectStats(page, '8 countries, 2 continents, 16 photos');
     await expect(germany).toHaveAttribute('data-been', 'false');
     await expect(again.getByLabel('First went')).toHaveCount(0);
 
     // Cleared
-    await again.getByRole('combobox', { name: 'Status for Germany' }).selectOption('Not yet');
-    await expect(again.getByRole('combobox', { name: 'Status for Germany' })).toHaveValue('');
+    await again.getByRole('combobox', { name: 'Been there?' }).selectOption('Not yet');
+    await expect(again.getByRole('combobox', { name: 'Been there?' })).toHaveValue('');
     const listAgain = await openTool(page, 'Country list', 'Countries');
     await listAgain.getByRole('searchbox', { name: 'Search countries' }).fill('germ');
     await expect(listAgain.getByRole('button', { name: 'Status for Germany: Not yet' })).toBeVisible();
-    await expectStats(page, '8 countries, 2 continents, 5 photos');
+    await expectStats(page, '8 countries, 2 continents, 16 photos');
 
     // Kept: a reload shows the same
     await page.reload();
-    await expectStats(page, '8 countries, 2 continents, 5 photos');
+    await expectStats(page, '8 countries, 2 continents, 16 photos');
   });
 
   test('the country list filters, searches and sets statuses', { tag: '@phone' }, async ({ page }) => {
     await openMap(page);
     const list = await openTool(page, 'Country list', 'Countries');
-    await expect(list.getByText(/^(\d+) of \1$/)).toBeVisible();
+    // Every country and every special place showing
+    await expect(list.getByText(/^(\d+) of \1 countries, (\d+) of \2 special places$/)).toBeVisible();
 
     const show = list.getByRole('combobox', { name: 'Show' });
     await show.selectOption('Visited');
-    await expect(list.getByText(/^6 of \d+$/)).toBeVisible();
+    await expect(list.getByText(/^6 of \d+ countries, 0 of \d+ special places$/)).toBeVisible();
     for (const name of ['France', 'Spain', 'Italy', 'Portugal', 'Netherlands']) {
       await expect(list.getByRole('button', { name: `Status for ${name}: Visited` })).toBeVisible();
     }
     await show.selectOption('Want to go');
-    await expect(list.getByText(/^3 of \d+$/)).toBeVisible();
+    await expect(list.getByText(/^3 of \d+ countries, 0 of \d+ special places$/)).toBeVisible();
     await expect(list.getByRole('button', { name: 'Status for Japan: Want to go' })).toBeVisible();
 
-    await show.selectOption('All countries');
+    await show.selectOption('All places');
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('braz');
-    await expect(list.getByText(/^1 of \d+$/)).toBeVisible();
+    await expect(list.getByText(/^1 of \d+ countries, 0 of \d+ special places$/)).toBeVisible();
 
     // The row's button turns into the real dropdown, focused and opened (a customizable
     // select: focus is then on its chosen option, inside it)
@@ -90,14 +91,14 @@ test.describe('The map page', () => {
     const select = list.getByRole('combobox', { name: 'Status for Brazil' });
     await expect.poll(() => select.evaluate((el) => el.contains(document.activeElement))).toBe(true);
     await select.selectOption('Lived there');
-    await expectStats(page, '9 countries, 3 continents, 5 photos');
+    await expectStats(page, '9 countries, 3 continents, 16 photos');
     // Leaving it turns it back into a button showing the new status
     await list.getByRole('heading', { name: 'Countries' }).click();
     await expect(list.getByRole('button', { name: 'Status for Brazil: Lived there' })).toBeVisible();
 
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('');
     await show.selectOption('Lived there');
-    await expect(list.getByText(/^3 of \d+$/)).toBeVisible();
+    await expect(list.getByText(/^3 of \d+ countries, 0 of \d+ special places$/)).toBeVisible();
     await expect(list.getByRole('button', { name: /^Status for (United Kingdom|Ireland|Brazil): Lived there$/ })).toHaveCount(3);
   });
 });
@@ -125,7 +126,7 @@ test.describe('Map settings', () => {
     // Saved to the profile a moment later (the mock's store), then this browser's own copy
     // is dropped, so the reload can only get them from the profile
     await expect
-      .poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('mpvMockStore.v1') || 'null')?.mapSettings))
+      .poll(() => page.evaluate((key) => JSON.parse(localStorage.getItem(key) || 'null')?.mapSettings, MOCK_STORE_KEY))
       .toMatchObject({ style: 'old-map', showGrid: false });
     await page.evaluate(() => localStorage.removeItem('myPlanetViewMapSettings'));
     await page.reload();
@@ -167,7 +168,7 @@ test.describe('Keyboard', () => {
     await page.keyboard.press('Enter');
     const country = page.getByRole('dialog', { name: 'Iceland' });
     await expect(country.getByRole('heading', { name: 'Iceland' })).toBeFocused();
-    await expect(country.getByRole('combobox', { name: 'Status for Iceland' })).toHaveValue('WANT_TO_GO');
+    await expect(country.getByRole('combobox', { name: 'Been there?' })).toHaveValue('WANT_TO_GO');
 
     await page.keyboard.press('Escape');
     await expect(country).toBeHidden();

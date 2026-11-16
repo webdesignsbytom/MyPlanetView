@@ -1,9 +1,11 @@
 // Constants
 import { CompanyName } from '../constants/constants.js';
+import { PLANS, formatPence } from '../constants/plans.js';
 import {
   HOME_PAGE_URL,
   ABOUT_PAGE_URL,
   CONTACT_PAGE_URL,
+  PRICING_PAGE_URL,
   SIGN_UP_PAGE_URL,
   LOGIN_PAGE_URL,
   VERIFY_EMAIL_PAGE_URL,
@@ -46,6 +48,13 @@ export const helmetData = {
   [FAQ_PAGE_URL]: {
     pageName: 'FAQ',
     desc: `Answers about ${CompanyName}: who can see your map, how sharing links work, what happens to photo location data, and how couples and families share.`,
+    indexing: 'index,follow',
+  },
+
+  [PRICING_PAGE_URL]: {
+    pageName: 'Pricing',
+    title: `Pricing: Economy, Business and First Class | ${CompanyName}`,
+    desc: `${CompanyName} pricing: Economy is free, Business is ${formatPence(PLANS.REGULAR.price.MONTH)} a month and First Class ${formatPence(PLANS.PREMIUM.price.MONTH)}. Every plan has private sharing and your travel map.`,
     indexing: 'index,follow',
   },
 

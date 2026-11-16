@@ -2,6 +2,7 @@ import React from 'react';
 // Components
 import AccountCard from './AccountCard';
 import AccountProfileSection from './AccountProfileSection';
+import AccountPlanSection from './AccountPlanSection';
 import AccountEmailSection from './AccountEmailSection';
 import AccountSessionsSection from './AccountSessionsSection';
 import AccountDeleteSection from './AccountDeleteSection';
@@ -13,6 +14,10 @@ function AccountPageMainContainer() {
     <>
       <AccountCard id='account-profile' title='Profile'>
         <AccountProfileSection />
+      </AccountCard>
+
+      <AccountCard id='account-plan' title='Your plan'>
+        <AccountPlanSection />
       </AccountCard>
 
       <AccountCard id='account-email' title='Email'>

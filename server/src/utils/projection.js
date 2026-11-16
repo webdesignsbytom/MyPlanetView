@@ -1,6 +1,7 @@
 // The SVG world map's projection: Robinson, fitted on 14 Nov 2026 against known
 // coastlines (within ~2 units on a map 2000 wide; see docs/SITE-DESIGN.md).
-// viewBox 2000 x 1000, equator at y = 502, prime meridian at x = 987.1.
+// 2000 wide; the extent is the pole lines, y -16.6 to 1020.6 with Antarctica (-16.6 to 857
+// without). Equator at y = 502, prime meridian at x = 987.1.
 
 const LATITUDES = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
 // Robinson's standard tables: parallel length (X) and distance from the equator (Y)

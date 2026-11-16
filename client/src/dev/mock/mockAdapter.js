@@ -24,7 +24,7 @@ export function deny(role, needed, notFoundMessage = 'Not found.') {
 // As the server's requireVerifiedEmail (docs/API.md, "Access"): these writes need a
 // verified email address, checked before anything is looked up, so the 403 is the same
 // for every id. Not on the list: reads, setting a map up (PATCH /maps/:mapId and its
-// travellers), map settings, the account and the contact form. The generic presign
+// travellers), map settings, the account (the leaving plan too) and the contact form. The generic presign
 // checks it itself (anything but a contact image), in handlers/account.js.
 export const VERIFY_EMAIL_FIRST =
   'Verify your email address to add to your map or share it. Use the link we emailed you, or send a new one from your account page.';
@@ -32,6 +32,12 @@ const kinds = (path) => ['maps', 'trips'].map((kind) => path.replace('{kind}', k
 const NEEDS_VERIFIED_EMAIL = new Set([
   'POST /api/maps',
   'DELETE /api/maps/:mapId',
+  'POST /api/maps/:mapId/main',
+  'POST /api/maps/:mapId/transfer',
+  'POST /api/billing/checkout',
+  'POST /api/billing/change-plan',
+  'POST /api/billing/extra-maps',
+  'POST /api/billing/portal',
   'PUT /api/maps/:mapId/visits/:countryCode',
   'DELETE /api/maps/:mapId/visits/:countryCode',
   'POST /api/maps/:mapId/trips',
@@ -44,6 +50,11 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   'PUT /api/trips/:tripId/stops/order',
   'PATCH /api/trips/:tripId/stops/:stopId',
   'DELETE /api/trips/:tripId/stops/:stopId',
+  'POST /api/trips/:tripId/maps',
+  'DELETE /api/trips/:tripId/maps/:mapId',
+  'POST /api/maps/:mapId/moments',
+  'PATCH /api/moments/:momentId',
+  'DELETE /api/moments/:momentId',
   'PATCH /api/photos/:photoId',
   'DELETE /api/photos/:photoId',
   'POST /api/photos/:photoId/landmarks',

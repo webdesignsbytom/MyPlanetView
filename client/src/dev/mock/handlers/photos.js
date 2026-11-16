@@ -3,6 +3,7 @@ import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb } from '../store';
 import { atLeast, canSeePhoto, countryExists, landmarkById, mapRole, markVisited, photoDetail, photoRole } from '../views';
 import { POSITION_FIELD, firstPosition, movePhotoAfter } from '../photoOrder';
+import { countryCapProblem } from '../plans';
 
 const NOT_FOUND = 'This photo could not be found.';
 
@@ -25,6 +26,14 @@ export function registerPhotoRoutes() {
     const db = getDb();
     const { photo, role, reply } = loadPhoto(params.photoId, 'EDITOR');
     if (reply) return reply;
+    // A new country that's full on the map (the owner's plan) -> 409, and nothing changes
+    if (body.countryCode !== undefined && body.countryCode) {
+      const code = String(body.countryCode).toUpperCase();
+      if (countryExists(code) && code !== photo.countryCode) {
+        const full = countryCapProblem(db.maps.find((m) => m.id === photo.mapId), code);
+        if (full) return fail(409, full);
+      }
+    }
     if (body.caption !== undefined) photo.caption = typeof body.caption === 'string' && body.caption.trim() ? body.caption.trim().slice(0, 300) : null;
     if (body.takenAt !== undefined) photo.takenAt = body.takenAt || null;
     if (body.hidden !== undefined) photo.hidden = Boolean(body.hidden);
@@ -77,6 +86,10 @@ export function registerPhotoRoutes() {
     db.photoLandmarks = db.photoLandmarks.filter((pl) => pl.photoId !== photo.id);
     db.trips.forEach((t) => {
       if (t.coverPhotoId === photo.id) t.coverPhotoId = null;
+    });
+    // A deleted photo leaves its moments
+    db.moments.forEach((m) => {
+      m.photoIds = m.photoIds.filter((id) => id !== photo.id);
     });
     return ok({ message: 'Photo deleted.' });
   });

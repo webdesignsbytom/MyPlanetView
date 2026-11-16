@@ -10,6 +10,7 @@ import { deleteExpiredRateLimits } from '../middleware/dbRateLimit.js';
 import { deleteOldEvents } from '../domain/events.js';
 import { deleteOldInvites } from '../domain/sharing.js';
 import { deleteExpiredSessions, deleteExpiredVerifications } from '../domain/users.js';
+import { deleteOldStripeEvents } from '../domain/billing.js';
 import { sanitizeText } from '../utils/sanitize.js';
 import { logEvent } from '../utils/events/logEvent.js';
 import { ServerErrorEvent, createGenericErrorEvent } from '../event/errorUtils.js';
@@ -61,16 +62,19 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
 
   // The cheap purges run first, together and each on its own, so a slow orphan
   // clean-up can't skip them: finished rate-limit windows, events older than 90 days
-  // (docs/AUDIT.md B3), expired sessions and verifications, and invites accepted or
-  // expired over 30 days ago
-  const [expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites] = await Promise.all([
-    purge('rate-limit', deleteExpiredRateLimits),
-    purge('event', () => deleteOldEvents()),
-    purge('session', deleteExpiredSessions),
-    purge('verification', deleteExpiredVerifications),
-    purge('invite', () => deleteOldInvites()),
-  ]);
-  const purged = { expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites };
+  // (docs/AUDIT.md B3), expired sessions and verifications, invites accepted or
+  // expired over 30 days ago, and Stripe webhook event ids over 90 days old (Stripe
+  // retries for 3 days at most)
+  const [expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents] =
+    await Promise.all([
+      purge('rate-limit', deleteExpiredRateLimits),
+      purge('event', () => deleteOldEvents()),
+      purge('session', deleteExpiredSessions),
+      purge('verification', deleteExpiredVerifications),
+      purge('invite', () => deleteOldInvites()),
+      purge('stripe-event', () => deleteOldStripeEvents()),
+    ]);
+  const purged = { expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents };
 
   try {
     const result = await deleteOrphanUploads({ deadline: startedAt + CRON_BUDGET_MS });

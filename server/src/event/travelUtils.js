@@ -22,3 +22,7 @@ export const createMapEvent = mk(DOMAINS.maps);
 export const createTripEvent = mk(DOMAINS.trips);
 export const createPhotoEvent = mk(DOMAINS.photos);
 export const createSharingEvent = mk(DOMAINS.sharing);
+// Moments: ids and field names only, never a title, story or place name
+export const createMomentEvent = mk(DOMAINS.moments);
+// Plans, payments and complimentary memberships (never an email address or a reason text)
+export const createBillingEvent = mk(DOMAINS.billing);

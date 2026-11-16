@@ -1,0 +1,218 @@
+{
+  "code": "US",
+  "slug": "united-states",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Welcome", "USA"],
+  "summary": "Big cities, road trips and national parks in every climate.",
+  "overview": [
+    "The United States is big enough to feel like several countries: New York and Chicago, the deserts and canyons of the Southwest, the California coast, the Rocky Mountains, the music and food of the South, and Alaska and Hawaii far beyond the mainland. Distances are long, so most visitors pick one or two regions rather than trying to see it all.",
+    "Outside the big cities a car is close to essential, and the most popular national parks are worth booking ahead: some need a timed entry reservation in summer. Prices are shown without sales tax, which is added when you pay, and tipping is part of what service costs."
+  ],
+  "whenToGo": {
+    "stripLabel": "Most of the mainland, taken together. The regions below differ a lot, and each has a strip of its own.",
+    "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Mild in most of the country, with blossom in Washington, D.C. and wildflowers in the deserts. A good time for the Southwest's parks, before the heat."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot in the South and very hot in the deserts, warm elsewhere. The national parks and beaches are at their busiest, especially around 4 July. The season for Alaska, the Rockies and the Pacific Northwest, and the start of the hurricane season on the Atlantic and Gulf coasts."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Warm, settled weather in September and October once the summer crowds have gone, and the leaves turn in New England from late September to mid-October. The hurricane season peaks from August to October and ends on 30 November."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, with snow across the north and in the mountains (skiing in the Rockies and New England), and mild in Florida, southern California, Arizona and Hawaii, which are at their best now."
+      }
+    ],
+    "weather": "It depends where you are. The north and the Midwest have cold, snowy winters and warm summers; the South is hot and humid in summer and mild in winter; the Southwest is dry, with very hot summers; the Pacific Northwest is mild and rainy from October to May; and southern California is sunny most of the year.",
+    "festivals": [
+      {
+        "name": "Mardi Gras",
+        "place": "New Orleans",
+        "when": "February or early March, ending the day before Ash Wednesday",
+        "months": [2, 3],
+        "text": "Weeks of parades, costumes and thrown beads, building up to Fat Tuesday itself."
+      },
+      {
+        "name": "National Cherry Blossom Festival",
+        "place": "Washington, D.C.",
+        "when": "Usually late March to mid-April",
+        "months": [3, 4],
+        "text": "Thousands of Japanese cherry trees in bloom around the Tidal Basin, with a parade and events across the city."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the country",
+        "when": "4 July",
+        "months": [7],
+        "text": "Parades, barbecues and fireworks everywhere, and one of the busiest travel days of the year."
+      },
+      {
+        "name": "Halloween",
+        "place": "Across the country",
+        "when": "31 October",
+        "months": [10],
+        "text": "Pumpkins, costumes and children trick-or-treating door to door, with big street parades in some cities, such as New York's Village Halloween Parade."
+      },
+      {
+        "name": "Thanksgiving",
+        "place": "Across the country",
+        "when": "The fourth Thursday of November",
+        "months": [11],
+        "text": "A family holiday with a turkey dinner and, in New York, the Macy's parade. Flights and roads around it are among the busiest of the year."
+      },
+      {
+        "name": "New Year's Eve",
+        "place": "Across the country",
+        "when": "31 December",
+        "months": [12],
+        "text": "Countdowns everywhere, the best known in New York's Times Square, where crowds gather hours ahead."
+      }
+    ],
+    "regions": [
+      {
+        "name": "New York and New England",
+        "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "Cold, snowy winters and warm, humid summers. Late spring and early autumn are the most comfortable, and New England's autumn colours peak from late September to mid-October."
+      },
+      {
+        "name": "Florida and the Gulf Coast",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+        "text": "Warm all year. Winter and spring are dry and pleasant; summer is hot and humid, with thunderstorms most afternoons. Hurricanes are most likely from August to October, with September the peak."
+      },
+      {
+        "name": "The Southwest's deserts and canyons",
+        "months": ["good", "good", "best", "best", "best", "good", "avoid", "avoid", "good", "best", "best", "good"],
+        "text": "Spring and autumn suit the parks best: the Grand Canyon, Zion, Arches, Monument Valley. In midsummer Phoenix and Las Vegas pass 40°C and Death Valley often 45°C, so walk at dawn or go higher, and summer storms bring flash floods to slot canyons."
+      },
+      {
+        "name": "California",
+        "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+        "text": "Mild on the coast all year. San Francisco is often cool and foggy in summer, and the warmest, clearest weather comes in September and October. Yosemite's high Tioga Road is usually open only from late May or June to November, and wildfires are a risk from late summer."
+      },
+      {
+        "name": "The Rockies and Yellowstone",
+        "months": ["good", "good", "good", "avoid", "good", "best", "best", "best", "best", "good", "avoid", "good"],
+        "text": "Skiing from December to March. Most of Yellowstone's roads close to cars from early November to late April, and high roads such as Glacier's Going-to-the-Sun Road usually open fully only in late June or July. June to September is the season, July and August the busiest."
+      },
+      {
+        "name": "Alaska",
+        "months": ["avoid", "avoid", "good", "good", "good", "best", "best", "best", "good", "avoid", "avoid", "avoid"],
+        "text": "The visitor season runs from mid-May to mid-September, when the cruise ships sail and most lodges and tours are open; June and July have near-endless daylight. In winter most of it closes, apart from northern lights trips around Fairbanks."
+      },
+      {
+        "name": "Hawaii",
+        "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "Warm all year, with only a few degrees between the seasons. Winter is wetter, with big surf on the north shores and humpback whales offshore; April to June and September to October are quieter and often cheaper."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A firm handshake and eye contact when you meet someone, and first names come quickly. \"How are you?\" is a greeting rather than a question: \"Good, thanks, and you?\" is the expected answer.",
+    "etiquette": [
+      "Prices on shelves and menus don't include sales tax, which varies by state and city and is added when you pay.",
+      "The legal age for alcohol is 21, and bars and shops ask for photo ID even from people well over it. Drinking in the street is against the law in most places.",
+      "Turning right at a red light is allowed in most states after a full stop, unless a sign forbids it; it's banned in New York City.",
+      "If police stop your car, stay inside with your hands on the wheel unless they tell you otherwise.",
+      "Healthcare is very expensive for visitors, so travel insurance with medical cover is essential."
+    ],
+    "tipping": "Expected, and part of how staff are paid. In restaurants with table service, 18 to 20% of the bill before tax; at a bar, a dollar or two a drink; 15 to 20% for taxis and rideshares; and a few dollars a night for hotel housekeeping. The tip screen at a counter is optional.",
+    "dress": "Casual almost everywhere, with smarter clothes for upmarket restaurants. Bring a layer for strong air-conditioning indoors, and proper boots, sun protection and plenty of water for national park trails.",
+    "food": [
+      {
+        "name": "Barbecue",
+        "text": "Meat smoked low and slow, in strongly held regional styles: beef brisket in Texas, pulled pork in the Carolinas, ribs in Memphis and Kansas City."
+      },
+      {
+        "name": "Cajun and Creole cooking",
+        "text": "Louisiana's gumbo, jambalaya and spring crawfish, and beignets with chicory coffee in New Orleans."
+      },
+      {
+        "name": "New England seafood",
+        "text": "Clam chowder and lobster rolls, best from a shack on the Maine coast."
+      },
+      {
+        "name": "Tex-Mex and Southwestern food",
+        "text": "Tacos, enchiladas and chile-rich dishes near the Mexican border, and in New Mexico, famous for its red and green chiles."
+      },
+      {
+        "name": "Pizza and bagels",
+        "text": "New York's thin, foldable slices and hand-rolled bagels; Chicago answers with deep-dish pizza."
+      },
+      {
+        "name": "Diners",
+        "text": "All-day breakfasts of pancakes, eggs and hash browns, with refills of filter coffee."
+      }
+    ],
+    "phrases": {
+      "language": "American English",
+      "intro": "English, of course, but some everyday words differ from British English.",
+      "items": [
+        { "phrase": "Restroom", "meaning": "Toilet (in a public place)" },
+        { "phrase": "Check", "meaning": "The bill, in a restaurant" },
+        { "phrase": "Gas", "meaning": "Petrol" },
+        { "phrase": "Sidewalk", "meaning": "Pavement" },
+        { "phrase": "Elevator", "meaning": "Lift" },
+        { "phrase": "First floor", "meaning": "Ground floor" },
+        { "phrase": "Line", "meaning": "Queue" },
+        { "phrase": "Fall", "meaning": "Autumn" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q30",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar ($)",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English; no federal law names an official language, though a 2025 executive order designated English. Spanish is widely spoken.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q1321"] }],
+        "note": "Wikidata gives English deprecated rank (reason: wrong property, start 2025-03-01, the executive order) and lists languages official only in states and territories: Hawaiian, Samoan, Chamorro, Carolinian and Spanish."
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Six across the 50 states: Eastern (UTC−5), Central (UTC−6), Mountain (UTC−7), Pacific (UTC−8), Alaska (UTC−9) and Hawaii (UTC−10). Most states put clocks forward an hour from March to November; Hawaii and most of Arizona don't.",
+        "sources": [{ "property": "P421", "values": ["Q5390", "Q2086913", "Q3134980", "Q2204", "Q3238805"] }],
+        "note": "Wikidata's list mixes zone names and UTC offsets, includes the territories' zones (Atlantic, Chamorro, Samoa, UTC+12) and has no UTC−10 for Hawaii; the page summarises the 50 states instead."
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1",
+        "sources": [{ "property": "P474", "values": ["+1"] }]
+      }
+    ]
+  }
+}

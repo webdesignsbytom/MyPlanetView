@@ -24,3 +24,13 @@ export const badgeRadius = (zoom) => 9 / Math.sqrt(zoom);
 // A pole's compass rose (components/map/PoleMarker.jsx): its points are thin, so it's
 // drawn a little bigger than a badge to read as clearly
 export const poleMarkerRadius = (zoom) => 11 / Math.sqrt(zoom);
+
+// The mark beside a country with moments (components/map/MomentMark.jsx, MomentMarks.jsx):
+// its <symbol> id, and where it sits: up and to the right of the badge's centre, a little
+// over its edge, a little smaller than the badge
+export const MOMENT_MARK_ID = 'mpv-moment-mark';
+export const momentMarkPlace = (pinX, pinY, zoom) => {
+  const r = badgeRadius(zoom);
+  const height = r * 1.35;
+  return { x: pinX + r * 0.45, y: pinY - r * 1.25, width: height * (16 / 18), height };
+};

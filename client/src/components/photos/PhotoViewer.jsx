@@ -13,8 +13,9 @@ import VerifyFirstNote from '@/components/map/VerifyFirstNote';
 import { countryName } from '@/utils/map/countries';
 import { formatDay } from '@/utils/functions/dates';
 
-// One photo, large. Editors can change it, confirm landmark matches, download the
-// original (which keeps its location) and delete it. Link visitors pass `shareCode`.
+// One photo, large. Editors can change it, confirm landmark matches, download the best
+// copy kept (the original, which keeps its location, or on an Economy map the print copy:
+// `bestCopy`) and delete it. Link visitors pass `shareCode`.
 // `locked`: an editor whose email address isn't verified yet sees the photo (and can
 // download the original) but can't change it, and is told why.
 function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trips, onChanged, onDeleted, onClose }) {
@@ -123,7 +124,7 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
                     rel='noreferrer'
                     className='btn-paper [--btn-leading:1.5rem] [--btn-pad-x:1rem] [--btn-pad-y:0.375rem] [--btn-size:1.125rem]'
                   >
-                    Download original
+                    {photo.bestCopy === 'PRINT' ? 'Download print copy' : 'Download original'}
                   </a>
                 ) : null}
                 {locked ? null : confirmingDelete ? (

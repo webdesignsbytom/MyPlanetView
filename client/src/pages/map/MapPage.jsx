@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 // Constants
 import { MAP_PAGE_URL, WELCOME_PAGE_URL } from '@/utils/constants/routes';
 // Auth
@@ -38,6 +38,9 @@ function rememberedDefault(userId) {
 // id is the one remembered from last time, checked against the map list in parallel.
 function MapPage() {
   const { mapId: routeMapId } = useParams();
+  // Each visit to /map asks which map is the default again (after handing your default
+  // map to someone, /map is a new one)
+  const { key: visitKey } = useLocation();
   const { user } = useAuth();
   const userId = user?.id || null;
   const [defaultMapId, setDefaultMapId] = useState(() => (routeMapId ? null : rememberedDefault(userId)));
@@ -67,7 +70,7 @@ function MapPage() {
     return () => {
       cancelled = true;
     };
-  }, [routeMapId, userId]);
+  }, [routeMapId, userId, visitKey]);
 
   const mapId = routeMapId || defaultMapId;
   // Visits show before the server answers, unless it's sure to refuse (an unverified email)

@@ -1,0 +1,189 @@
+{
+  "code": "JP",
+  "slug": "japan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Konnichiwa", "Nippon"],
+  "summary": "Old temples, neon cities and hot springs, linked by fast and punctual trains.",
+  "overview": [
+    "Japan rewards a first visit and every one after it. Tokyo is vast and orderly, Kyoto keeps hundreds of temples and gardens, and the countryside has mountain walks, hot-spring inns (ryokan) and food taken seriously at every price.",
+    "Trains are fast, clean and on time, and a rechargeable IC card such as Suica pays for city trains, buses and convenience-store snacks. English signs are common in cities and stations, less so in the countryside. Cards are widely taken, but small shops, temples and rural places may still want cash."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "best", "best", "best", "good", "good", "avoid", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Cherry blossom opens in late March and early April in Tokyo and Kyoto, earlier in the south and in May in Hokkaido. Mild and dry but crowded, and Golden Week (29 April to 5 May) is one of the busiest travel times of the year."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "The rainy season (tsuyu) runs from early June to mid-July in most of the country. Then it turns hot and very humid, often above 35°C in the cities in August. Hokkaido stays cooler, and Mount Fuji's climbing season runs from July to early September."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is still warm, and the peak of the typhoon season. October and November are clear and comfortable, and the maple leaves turn red, from October in Hokkaido to late November in Kyoto and Tokyo."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and dry, with bright days on the Pacific side and deep snow on the Sea of Japan side and in Hokkaido, which is good for skiing. Fewer visitors, except over New Year."
+      }
+    ],
+    "weather": "Four clear seasons over most of the country: mild springs and autumns, hot and humid summers, and cold winters. Hokkaido in the north has long snowy winters and cool summers; Okinawa in the far south is subtropical and warm all year, with its rainy season in May and June.",
+    "festivals": [
+      {
+        "name": "Shōgatsu (New Year)",
+        "place": "Across Japan",
+        "when": "1–3 January",
+        "months": [1],
+        "text": "The most important holiday: families visit shrines for the first prayers of the year (hatsumōde). Many shops, restaurants and sights close for a few days around it."
+      },
+      {
+        "name": "Sapporo Snow Festival",
+        "place": "Sapporo, Hokkaido",
+        "when": "Usually in early February, for about a week",
+        "months": [2],
+        "text": "Huge snow and ice sculptures along the city's central park and streets."
+      },
+      {
+        "name": "Cherry blossom (hanami)",
+        "place": "Across Japan",
+        "when": "Usually late March to early April in Tokyo and Kyoto",
+        "months": [3, 4],
+        "text": "Picnics under the blossom in parks, by day and lit up at night. The dates move with the weather each year, so watch the blossom forecasts."
+      },
+      {
+        "name": "Gion Matsuri",
+        "place": "Kyoto",
+        "when": "All of July, with the big parades on 17 and 24 July",
+        "months": [7],
+        "text": "One of Japan's best-known festivals: towering wooden floats are pulled through the city centre."
+      },
+      {
+        "name": "Obon",
+        "place": "Across Japan",
+        "when": "Usually 13–16 August",
+        "months": [8],
+        "text": "Families return to their home towns to honour their ancestors, with lanterns and Bon dances. Trains and roads are at their busiest."
+      },
+      {
+        "name": "Autumn leaves (kōyō)",
+        "place": "Across Japan",
+        "when": "October in Hokkaido, mid to late November in Kyoto and Tokyo",
+        "months": [10, 11],
+        "text": "Temples and mountain valleys turn red and gold, and Kyoto's gardens are as busy as in cherry blossom season."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Hokkaido",
+        "text": "Snowy from December to March, for skiing and the Sapporo Snow Festival. Its summers are cool and fresh, with lavender fields in July and no real rainy season."
+      },
+      {
+        "name": "Okinawa",
+        "text": "Subtropical islands far to the south-west, with beach weather from April to October, a rainy season in May and June, and typhoons most likely in late summer and early autumn."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A bow is the usual greeting; a small nod of the head is fine from a visitor, and many people will offer foreigners a handshake. Use family names with \"-san\" (Tanaka-san), and never add it to your own name.",
+    "etiquette": [
+      "Take your shoes off when you enter a home, a ryokan and some temples and restaurants: look for a raised floor and a rack of slippers. Wear the separate toilet slippers only in the toilet.",
+      "Keep your voice down on trains, and don't take phone calls on them.",
+      "Don't stand chopsticks upright in rice or pass food from chopsticks to chopsticks: both belong to funeral rites.",
+      "At hot springs (onsen), wash and rinse at the taps before getting into the bath, and bathe without a swimsuit. Some baths turn away people with tattoos, so ask first or look for tattoo-friendly ones.",
+      "Bins are rare in the street: carry your rubbish until you find one, often by a convenience store.",
+      "Eating while walking along the street is frowned on in many places. Eat beside the stall or shop where you bought it."
+    ],
+    "tipping": "There's no tipping: good service is simply expected, and money left on the table may be brought back to you. Upmarket hotels and ryokan add a service charge to the bill instead.",
+    "dress": "Neat and casual. Wear socks without holes, since your shoes come off often. Covered shoulders and knees are respectful at temples and shrines, though rarely required.",
+    "food": [
+      {
+        "name": "Sushi and sashimi",
+        "text": "From conveyor-belt restaurants to counters where the chef serves one piece at a time. Dip the fish, not the rice, in the soy sauce."
+      },
+      {
+        "name": "Ramen",
+        "text": "Noodle soup in many regional styles: rich pork-bone tonkotsu in Fukuoka, miso in Sapporo, soy-based in Tokyo. Slurping is normal."
+      },
+      {
+        "name": "Okonomiyaki",
+        "text": "A savoury pancake of cabbage and batter cooked on a hot plate, mixed together in Osaka or layered with noodles in Hiroshima."
+      },
+      {
+        "name": "Tempura",
+        "text": "Seafood and vegetables in a very light batter, best eaten straight from the fryer."
+      },
+      {
+        "name": "Kaiseki",
+        "text": "A meal of many small seasonal courses, at its best in Kyoto and at ryokan."
+      },
+      {
+        "name": "Konbini food",
+        "text": "Convenience stores such as 7-Eleven, Lawson and FamilyMart sell good, cheap rice balls (onigiri), sandwiches and hot snacks, day and night."
+      }
+    ],
+    "phrases": {
+      "language": "Japanese",
+      "items": [
+        { "phrase": "Konnichiwa", "say": "kon-NEE-chee-wah", "meaning": "Hello" },
+        { "phrase": "Arigatō gozaimasu", "say": "ah-ree-GAH-toh go-ZAI-mass", "meaning": "Thank you" },
+        { "phrase": "Sumimasen", "say": "soo-mee-MAH-sen", "meaning": "Excuse me; sorry" },
+        { "phrase": "Kore o kudasai", "say": "KOH-reh oh koo-dah-SAI", "meaning": "This one, please" },
+        { "phrase": "Ikura desu ka?", "say": "ee-KOO-rah dess-kah", "meaning": "How much is it?" },
+        { "phrase": "Eigo o hanasemasu ka?", "say": "AY-go oh hah-nah-seh-MASS-kah", "meaning": "Do you speak English?" },
+        { "phrase": "Itadakimasu", "say": "ee-tah-dah-kee-MASS", "meaning": "Said before eating (\"I humbly receive\")" },
+        { "phrase": "Oishii", "say": "oy-SHEE", "meaning": "Delicious" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q17",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Japanese yen (¥)",
+        "sources": [{ "property": "P38", "values": ["Q8146"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Japanese",
+        "sources": [{ "property": "P37", "values": ["Q5287"] }],
+        "note": "No law names an official language; Wikidata gives Japanese, which is used for everything official."
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins), 100 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["100"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Japan Standard Time, UTC+9, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q909085", "Q7041", "Q63285941"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "110 for police; 119 for fire and ambulance; 118 for the coast guard",
+        "sources": [{ "property": "P2852", "values": ["Q25648823", "Q2807090", "Q11185210"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+81",
+        "sources": [{ "property": "P474", "values": ["+81"] }]
+      }
+    ]
+  }
+}

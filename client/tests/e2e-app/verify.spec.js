@@ -28,9 +28,14 @@ test.describe('An unverified email address', () => {
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('france');
     await list.getByRole('button', { name: 'France', exact: true }).click();
     const france = page.getByRole('dialog', { name: 'France' });
-    await expect(france.getByText('Verify your email address to mark countries or add photos.')).toBeVisible();
+    await expect(france.getByText('Verify your email address to mark countries, write notes, or add moments and photos.')).toBeVisible();
     await expect(france.getByRole('combobox')).toHaveCount(0);
     await expect(france.getByRole('button', { name: /^Add photos from/ })).toHaveCount(0);
+    // Its moment is read, not changed; there's no note box to write in
+    await expect(france.getByRole('heading', { name: 'Got engaged at the Eiffel Tower' })).toBeVisible();
+    await expect(france.getByRole('button', { name: 'Add a moment' })).toHaveCount(0);
+    await expect(france.getByRole('button', { name: /^(Edit|Delete) Got engaged/ })).toHaveCount(0);
+    await expect(france.getByRole('textbox', { name: 'Notes' })).toHaveCount(0);
 
     // Photos, trips, another map
     const upload = await openTool(page, 'Add photos', 'Add photos');
@@ -84,8 +89,8 @@ test.describe('An unverified email address', () => {
 
     await expect(page.getByRole('heading', { level: 1, name: 'Italian summer' })).toBeVisible();
     await expect(banner(page)).toBeVisible();
-    await expect(page.getByText('Verify your email address to change this trip, its stops or its photos.')).toBeVisible();
-    for (const name of ['Edit trip', 'Delete trip', 'Add a stop', 'Add photos']) {
+    await expect(page.getByText('Verify your email address to change this trip, its stops, moments or photos.')).toBeVisible();
+    for (const name of ['Edit trip', 'Delete trip', 'Add a stop', 'Add photos', 'Add a moment']) {
       await expect(page.getByRole('button', { name, exact: true })).toHaveCount(0);
     }
     await expect(page.getByRole('button', { name: /^Move stop/ })).toHaveCount(0);

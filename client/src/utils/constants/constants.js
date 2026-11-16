@@ -72,6 +72,7 @@ export const PAGE_MEDIA = {
   contactPreview: OG_DEFAULT,
   aboutPreview: OG_DEFAULT,
   faqPreview: OG_DEFAULT,
+  pricingPreview: OG_DEFAULT,
 
   maintenancePreview: OG_DEFAULT,
   termsPreview: OG_DEFAULT,

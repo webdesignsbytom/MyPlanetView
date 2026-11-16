@@ -1,15 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 // Hooks
 import usePhotoPage from '@/hooks/usePhotoPage';
+import useMomentPage from '@/hooks/useMomentPage';
 // Components
-import MapPanel from './MapPanel';
+import CountryTicket from './CountryTicket';
+import CountryTicketStub from './CountryTicketStub';
+import CountryNotes from './CountryNotes';
 import MapActionButton from './MapActionButton';
 import VisitStatusSelect from './VisitStatusSelect';
 import FirstVisitDateField from './FirstVisitDateField';
-import CountryPoster from './CountryPoster';
 import CountryLandmarks from './CountryLandmarks';
 import { ExpeditionStampIcon, PlaceBadgeIcon } from './StarBadge';
 import VerifyFirstNote from './VerifyFirstNote';
+import MomentList from '@/components/moments/MomentList';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import FormField from '@/components/ui/FormField';
 // Utils
@@ -18,23 +21,50 @@ import { VISIT_STATUS_LABELS, countsAsVisited } from '@/utils/map/visitStatus';
 import { formatDay } from '@/utils/functions/dates';
 import { isMagneticPole, isSpecialPlace } from '@/utils/map/specialPlaces';
 
-// One country on this map: its status, when you first went, your photos from there,
-// its landmarks, and a poster if you haven't been yet. A special place (Antarctica or a
-// pole) says so with a stamp, and a magnetic pole that it moves.
-function CountryPanel({ code, visit, canEdit, locked = false, onSetVisit, photoSource, photosVersion, onOpenPhoto, onAddPhotos, onClose }) {
+const NO_TRIPS = [];
+
+// One country on this map, as a boarding pass (CountryTicket): its poster always on the
+// stub to the left (CountryTicketStub), then its note, its status, when you first went,
+// its moments, your photos from there and its landmarks. A special place (Antarctica or a
+// pole) says so with a stamp, and a magnetic pole that it moves. The map page centres it
+// on wide screens.
+// Moments: `mapId` (editors add them; `trips` are the map's own, `travellers` its people,
+// `onAddTraveller` adds a baby born here) and `onMomentsChanged` after a change (the
+// map's marks count them).
+function CountryPanel({
+  code,
+  visit,
+  canEdit,
+  locked = false,
+  onSetVisit,
+  photoSource,
+  photosVersion,
+  onOpenPhoto,
+  onAddPhotos,
+  mapId = null,
+  travellers = [],
+  trips = NO_TRIPS,
+  onAddTraveller,
+  onMomentsChanged,
+  onClose,
+}) {
   const country = COUNTRY_BY_CODE[code];
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const photos = usePhotoPage({ ...photoSource, country: code, limit: 12, enabled: Boolean(code) });
+  const moments = useMomentPage({ ...photoSource, country: code, enabled: Boolean(code) });
   const { reload } = photos;
+  const { reload: reloadMoments } = moments;
 
-  // A new upload or edit elsewhere on the page: show it here too
+  // A new upload or edit elsewhere on the page: show it here too (and in the moments,
+  // whose photos may have been hidden or deleted)
   const seenVersionRef = useRef(photosVersion);
   useEffect(() => {
     if (photosVersion === seenVersionRef.current) return;
     seenVersionRef.current = photosVersion;
     reload();
-  }, [photosVersion, reload]);
+    reloadMoments();
+  }, [photosVersion, reload, reloadMoments]);
 
   if (!country) return null;
   const status = visit?.status || null;
@@ -53,35 +83,51 @@ function CountryPanel({ code, visit, canEdit, locked = false, onSetVisit, photoS
     }
   };
 
+  // The kicker over the name: the place's badge once visited, and its continent
+  const kicker = (
+    <p className='grid grid-cols-reg items-center justify-start gap-2'>
+      {countsAsVisited(status) ? (
+        <PlaceBadgeIcon code={code} lived={status === 'LIVED'} className='h-7 w-7 -rotate-6 drop-shadow-md' />
+      ) : null}
+      <span>{continent || 'The world'}</span>
+    </p>
+  );
+
   return (
-    <MapPanel title={country.name} onClose={onClose}>
-      <div className='grid grid-cols-reg items-center gap-2'>
-        {countsAsVisited(status) ? (
-          <PlaceBadgeIcon code={code} lived={status === 'LIVED'} className='h-9 w-9 -rotate-6 drop-shadow-md' />
-        ) : null}
-        {special ? (
-          <p className='grid grid-row items-center justify-start gap-2 text-sm'>
-            <span className='grid -rotate-2 grid-cols-reg items-center gap-1.5 border-2 border-double border-colour9 px-2 py-0.5 font-travel text-xs uppercase tracking-wide text-colour9'>
-              <ExpeditionStampIcon className='h-4 w-4' />
-              Special place
-            </span>
-            {continent ? <span className='opacity-80'>{continent}</span> : null}
-          </p>
-        ) : (
-          <p className='text-sm opacity-80'>{continent}</p>
-        )}
-      </div>
+    <CountryTicket
+      title={country.name}
+      kicker={kicker}
+      onClose={onClose}
+      stub={<CountryTicketStub code={code} countryName={country.name} status={status} firstVisitedOn={visit?.firstVisitedOn} />}
+    >
+      {special ? (
+        <p className='grid justify-start'>
+          <span className='grid -rotate-2 grid-cols-reg items-center gap-1.5 border-2 border-double border-colour9 px-2 py-0.5 font-travel text-xs uppercase tracking-wide text-colour9'>
+            <ExpeditionStampIcon className='h-4 w-4' />
+            Special place
+          </span>
+        </p>
+      ) : null}
       {isMagneticPole(code) ? (
         <p className='text-sm'>
           The magnetic poles wander, tens of kilometres a year. This is where NOAA’s World Magnetic Model puts it for 2025.
         </p>
       ) : null}
 
+      {/* The note belongs to the visit, so an editor writes one once the country has a status */}
+      <CountryNotes
+        code={code}
+        notes={visit?.notes}
+        canEdit={canEdit && Boolean(status)}
+        onSave={(notes) => onSetVisit(code, status, { notes })}
+      />
+
       {canEdit ? (
         // Never disabled while saving (that drops focus); the saves are optimistic
         <div className='grid items-start gap-3 sm:grid-cols-2' aria-busy={saving ? 'true' : undefined}>
-          <FormField id={`visit-${code}`} label='Status'>
+          <FormField id={`visit-${code}`} label='Been there?'>
             <VisitStatusSelect
+              labelled
               countryName={country.name}
               status={status}
               onChange={(next) => save(next, next ? { firstVisitedOn: visit?.firstVisitedOn || undefined } : undefined)}
@@ -101,12 +147,39 @@ function CountryPanel({ code, visit, canEdit, locked = false, onSetVisit, photoS
           {visit?.firstVisitedOn ? `, first on ${formatDay(visit.firstVisitedOn)}` : ''}
         </p>
       )}
-      {locked ? <VerifyFirstNote action='mark countries or add photos' /> : null}
+      {locked ? <VerifyFirstNote action='mark countries, write notes, or add moments and photos' /> : null}
       {error ? (
         <p role='alert' className='rounded-lg border px-3 py-2 text-sm tone-danger'>
           {error}
         </p>
       ) : null}
+
+      <section className='grid gap-2' aria-labelledby={`moments-${code}`}>
+        <h3 id={`moments-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
+          Moments
+        </h3>
+        <MomentList
+          inPanel
+          list={moments}
+          canEdit={canEdit && Boolean(mapId)}
+          travellers={travellers}
+          trips={trips}
+          onOpenPhoto={onOpenPhoto}
+          onChanged={onMomentsChanged}
+          emptyText={`No moments in ${country.name} yet.`}
+          form={{
+            mapId,
+            countryCode: code,
+            trips,
+            travellers,
+            photoSource: { ...photoSource, country: code },
+            wholeMap: photoSource,
+            visitStatus: status,
+            onMarkVisit: (next) => save(next),
+            onAddTraveller,
+          }}
+        />
+      </section>
 
       <section className='grid gap-2' aria-labelledby={`photos-${code}`}>
         <h3 id={`photos-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
@@ -129,9 +202,7 @@ function CountryPanel({ code, visit, canEdit, locked = false, onSetVisit, photoS
       </section>
 
       <CountryLandmarks countryCode={code} />
-
-      {!countsAsVisited(status) ? <CountryPoster code={code} countryName={country.name} /> : null}
-    </MapPanel>
+    </CountryTicket>
   );
 }
 

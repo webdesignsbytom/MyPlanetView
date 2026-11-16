@@ -19,6 +19,7 @@ import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import AdminPagination from './AdminPagination';
 import UserAdminItem from './UserAdminItem';
 import UserFilters from './UserFilters';
+import UserPlanDialog from './UserPlanDialog';
 
 const PAGE_SIZE = 20;
 const SEARCH_DELAY_MS = 350;
@@ -61,6 +62,8 @@ function AdminUsersMainContainer() {
   const [modalOpen, setModalOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
   const [modalContent, setModalContent] = useState({ header: '', message: '' });
+  // The user whose memberships are open
+  const [planUser, setPlanUser] = useState(null);
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
@@ -263,6 +266,7 @@ function AdminUsersMainContainer() {
                     onDeactivate={handleDeactivate}
                     onReactivate={handleReactivate}
                     onDelete={handleDelete}
+                    onPlans={setPlanUser}
                   />
                 </li>
               ))}
@@ -279,6 +283,9 @@ function AdminUsersMainContainer() {
           />
         </section>
       </div>
+
+      {/* Complimentary memberships for one user */}
+      {planUser ? <UserPlanDialog user={planUser} onClose={() => setPlanUser(null)} /> : null}
 
       {/* Confirm Modal */}
       {modalOpen && (

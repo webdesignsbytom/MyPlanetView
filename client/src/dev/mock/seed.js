@@ -1,6 +1,9 @@
 // Mock mode only. The demo data a fresh mock session starts with: the signed-in
 // test user's couple's map (owned), a map someone shared with them, a trip shared on
-// its own, and the admin lists. Photos use the site's own poster images as stand-ins.
+// its own, a group trip from Tom's map that Alex added to the test user's map, moments,
+// the test user's plan (Business with one extra map), and the admin lists. The test user's map has real photos (the repo's
+// seed-photos/, from Wikimedia Commons); the other maps use posters as stand-ins.
+import { seedPhotoBySlug } from './data/seedPhotos';
 
 // Every mock user's password: the one the server's seed gives its users (CLAUDE.md, "Seed")
 export const MOCK_PASSWORD = '12345678';
@@ -8,10 +11,63 @@ export const MOCK_PASSWORD = '12345678';
 const daysFromNow = (days) => new Date(Date.now() + days * 86400000).toISOString();
 const daysAgo = (days) => daysFromNow(-days);
 
+// A real test photo's picture and size (data/seedPhotos.js), and a whole photo from it
+const seedImage = (slug) => {
+  const { width, height } = seedPhotoBySlug(slug);
+  return { width, height, image: { kind: 'seed', slug } };
+};
+const seedPhoto = (slug, fields) => {
+  const photo = seedPhotoBySlug(slug);
+  return {
+    id: `photo-${slug}`,
+    countryCode: photo.countryCode,
+    caption: photo.caption,
+    latitude: photo.latitude,
+    longitude: photo.longitude,
+    hidden: false,
+    ...seedImage(slug),
+    ...fields,
+  };
+};
+// The test photos the five demo photos above don't already use
+const MORE_SEED_PHOTOS = [
+  'mont-saint-michel',
+  'louvre',
+  'florence-cathedral',
+  'cinque-terre',
+  'venice-grand-canal',
+  'sagrada-familia',
+  'lower-manhattan',
+  'golden-gate-bridge',
+  'tower-bridge',
+  'edinburgh-castle',
+  'cliffs-of-moher',
+];
+// The ones taken on the Italian summer trip, with dates during it
+const ITALY_TRIP_PHOTOS = { 'florence-cathedral': '2025-07-08T21:10:00.000Z', 'cinque-terre': '2025-07-13T17:45:00.000Z' };
+
 const USER_ID = 'mock-user';
 const ALEX_ID = 'mock-alex';
 const SAM_ID = 'mock-sam';
 const JO_ID = 'mock-jo';
+const TOM_ID = 'mock-tom';
+
+// A moment (docs/API.md "Moments"); `happenedOn` is the first day of what's known
+const moment = (id, fields) => ({
+  id,
+  tripId: null,
+  text: null,
+  happenedOn: null,
+  datePrecision: null,
+  landmarkId: null,
+  placeName: null,
+  hidden: false,
+  travellerIds: [],
+  photoIds: [],
+  createdAt: daysAgo(30),
+  updatedAt: daysAgo(30),
+  ...fields,
+});
 
 const user = (id, name, email, extra = {}) => ({
   id,
@@ -34,6 +90,10 @@ export function buildSeed() {
   const japanTrip = 'trip-japan';
   const samTrip = 'trip-sam-asia';
   const lisbonTrip = 'trip-jo-lisbon';
+  // Tom's group trip, which Alex (on it as an editor) added to the test user's map: the
+  // test user isn't on it, so it shows there with its limited fields only
+  const tomMap = 'map-tom';
+  const stagTrip = 'trip-tom-stag';
 
   return {
     version: 1,
@@ -42,6 +102,7 @@ export function buildSeed() {
       user(ALEX_ID, 'Alex Morgan', 'alex@example.test'),
       user(SAM_ID, 'Sam Rivers', 'sam@example.test'),
       user(JO_ID, 'Jo Patel', 'jo@example.test'),
+      user(TOM_ID, 'Tom Baker', 'tom@example.test'),
       user('mock-admin', 'Ada Admin', 'admin@example.test', { role: 'ADMIN' }),
       user('mock-paused', 'Pat Paused', 'paused@example.test', { isActive: false }),
     ],
@@ -49,6 +110,7 @@ export function buildSeed() {
       { id: homeMap, name: "Test & Alex's travels", groupType: 'COUPLE', isDefault: true, ownerId: USER_ID, linkAccess: 'RESTRICTED', shareCode: 'K7QXM2PA9RTW', createdAt: daysAgo(90) },
       { id: samMap, name: "Sam's gap year", groupType: 'SOLO', isDefault: true, ownerId: SAM_ID, linkAccess: 'ANYONE_WITH_LINK', shareCode: 'SAMG4PYEAR22', createdAt: daysAgo(200) },
       { id: joMap, name: "Jo's family trips", groupType: 'FAMILY', isDefault: true, ownerId: JO_ID, linkAccess: 'RESTRICTED', shareCode: 'J0FAM7TRP5QX'.replace('0', 'D'), createdAt: daysAgo(150) },
+      { id: tomMap, name: "Tom's map", groupType: 'SOLO', isDefault: true, ownerId: TOM_ID, linkAccess: 'RESTRICTED', shareCode: 'TQMB7KX2PRG4', createdAt: daysAgo(300) },
     ],
     travellers: [
       { id: 'trav-test', mapId: homeMap, name: 'Test', position: 0, userId: USER_ID, birthCountryCode: 'GB', favouriteCountryCode: 'JP' },
@@ -56,13 +118,19 @@ export function buildSeed() {
       { id: 'trav-sam', mapId: samMap, name: 'Sam', position: 0, userId: SAM_ID, birthCountryCode: 'AU', favouriteCountryCode: 'TH' },
       { id: 'trav-jo', mapId: joMap, name: 'Jo', position: 0, userId: JO_ID, birthCountryCode: 'GB', favouriteCountryCode: 'PT' },
       { id: 'trav-jo-kid', mapId: joMap, name: 'Mia', position: 1, userId: null, birthCountryCode: 'GB', favouriteCountryCode: null },
+      { id: 'trav-tom', mapId: tomMap, name: 'Tom', position: 0, userId: TOM_ID, birthCountryCode: 'GB', favouriteCountryCode: 'CZ' },
     ],
     mapMembers: [
       { mapId: homeMap, userId: ALEX_ID, role: 'EDITOR', createdAt: daysAgo(80) },
       { mapId: homeMap, userId: SAM_ID, role: 'VIEWER', createdAt: daysAgo(30) },
       { mapId: samMap, userId: USER_ID, role: 'VIEWER', createdAt: daysAgo(25) },
     ],
-    tripMembers: [{ tripId: lisbonTrip, userId: USER_ID, role: 'EDITOR', createdAt: daysAgo(12) }],
+    tripMembers: [
+      { tripId: lisbonTrip, userId: USER_ID, role: 'EDITOR', createdAt: daysAgo(12) },
+      { tripId: stagTrip, userId: ALEX_ID, role: 'EDITOR', createdAt: daysAgo(14) },
+    ],
+    // Group trips shown on other maps (docs/API.md "Group trips"): who added each, and when
+    tripMaps: [{ tripId: stagTrip, mapId: homeMap, addedById: ALEX_ID, createdAt: daysAgo(10) }],
     invites: [
       { id: 'invite-jo', email: 'jo@example.test', role: 'VIEWER', mapId: homeMap, tripId: null, invitedById: USER_ID, token: null, expiresAt: daysFromNow(9), acceptedAt: null },
       // Open /invite/demo-invite to accept this one (the Jo family map, as a viewer)
@@ -80,18 +148,20 @@ export function buildSeed() {
       { mapId: homeMap, countryCode: 'JP', status: 'WANT_TO_GO', source: 'MANUAL', firstVisitedOn: null, notes: 'Cherry blossom season' },
       { mapId: homeMap, countryCode: 'PE', status: 'WANT_TO_GO', source: 'MANUAL', firstVisitedOn: null, notes: null },
       { mapId: homeMap, countryCode: 'IS', status: 'WANT_TO_GO', source: 'MANUAL', firstVisitedOn: null, notes: null },
-      { mapId: samMap, countryCode: 'TH', status: 'VISITED', source: 'TRIP', firstVisitedOn: '2024-01-10', notes: null },
+      { mapId: samMap, countryCode: 'TH', status: 'VISITED', source: 'TRIP', firstVisitedOn: '2024-01-10', notes: 'Next time: the islands in the south.' },
       { mapId: samMap, countryCode: 'VN', status: 'VISITED', source: 'TRIP', firstVisitedOn: '2024-02-02', notes: null },
       { mapId: samMap, countryCode: 'KH', status: 'VISITED', source: 'TRIP', firstVisitedOn: '2024-02-20', notes: null },
       { mapId: samMap, countryCode: 'AU', status: 'LIVED', source: 'MANUAL', firstVisitedOn: '2001-01-01', notes: null },
       { mapId: joMap, countryCode: 'PT', status: 'VISITED', source: 'TRIP', firstVisitedOn: '2026-10-03', notes: null },
       { mapId: joMap, countryCode: 'GB', status: 'LIVED', source: 'MANUAL', firstVisitedOn: null, notes: null },
+      { mapId: tomMap, countryCode: 'GB', status: 'LIVED', source: 'MANUAL', firstVisitedOn: null, notes: null },
     ],
     trips: [
       { id: italyTrip, mapId: homeMap, createdById: USER_ID, title: 'Italian summer', description: 'Rome to Florence by train, with a few days by the sea.', status: 'COMPLETED', startDate: '2025-07-02', endDate: '2025-07-16', coverPhotoId: 'photo-colosseum', linkAccess: 'RESTRICTED', shareCode: 'TRPTAK7SMR42', travellerIds: ['trav-test', 'trav-alex'], createdAt: daysAgo(140) },
       { id: japanTrip, mapId: homeMap, createdById: USER_ID, title: 'Japan in spring', description: 'Tokyo, Kyoto and a day at Mount Fuji.', status: 'PLANNED', startDate: '2027-04-01', endDate: '2027-04-14', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'JPNSPR7NG289', travellerIds: ['trav-test', 'trav-alex'], createdAt: daysAgo(20) },
       { id: samTrip, mapId: samMap, createdById: SAM_ID, title: 'South-East Asia loop', description: null, status: 'COMPLETED', startDate: '2024-01-08', endDate: '2024-03-01', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'SEAK22P7MKQ3', travellerIds: ['trav-sam'], createdAt: daysAgo(190) },
       { id: lisbonTrip, mapId: joMap, createdById: JO_ID, title: 'Lisbon weekend', description: 'Planning together: add ideas!', status: 'COMPLETED', startDate: '2026-10-03', endDate: '2026-10-06', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'K5BNWK3ND7QT', travellerIds: ['trav-jo', 'trav-jo-kid'], createdAt: daysAgo(40) },
+      { id: stagTrip, mapId: tomMap, createdById: TOM_ID, title: 'Stag do in Prague', description: 'Three nights, eleven friends.', status: 'PLANNED', startDate: '2027-05-14', endDate: '2027-05-17', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'STGPRG5QW8MN', travellerIds: ['trav-tom'], createdAt: daysAgo(15) },
     ],
     stops: [
       { id: 'stop-rome', tripId: italyTrip, position: 0, countryCode: 'IT', landmarkId: 'lm-colosseum', placeName: 'Rome', arriveOn: '2025-07-02', leaveOn: '2025-07-07', notes: null },
@@ -104,14 +174,42 @@ export function buildSeed() {
       { id: 'stop-hanoi', tripId: samTrip, position: 1, countryCode: 'VN', landmarkId: null, placeName: 'Hanoi', arriveOn: '2024-02-01', leaveOn: '2024-02-19', notes: null },
       { id: 'stop-siem', tripId: samTrip, position: 2, countryCode: 'KH', landmarkId: null, placeName: 'Siem Reap', arriveOn: '2024-02-19', leaveOn: '2024-03-01', notes: null },
       { id: 'stop-lisbon', tripId: lisbonTrip, position: 0, countryCode: 'PT', landmarkId: 'lm-tower-of-belem', placeName: 'Lisbon', arriveOn: '2026-10-03', leaveOn: '2026-10-06', notes: null },
+      { id: 'stop-prague', tripId: stagTrip, position: 0, countryCode: 'CZ', landmarkId: 'lm-prague-castle', placeName: 'Prague', arriveOn: '2027-05-14', leaveOn: '2027-05-17', notes: null },
     ],
-    // image.kind 'asset' = one of the site's posters, named as in posterData.js
+    // Moments (docs/API.md "Moments"). The test user's map: one a year back to a birth, one
+    // on the Italian trip, and one hidden from viewers. Sam's map: one on his trip and one
+    // hidden. Jo's map: one on the Lisbon trip (the test user edits that trip alone) and one
+    // that isn't, which the test user can't see.
+    moments: [
+      moment('moment-born', { mapId: homeMap, createdById: USER_ID, kind: 'BORN', title: 'Test was born', text: 'In a snowstorm, apparently.', happenedOn: '1990-01-01', datePrecision: 'YEAR', countryCode: 'GB', placeName: 'Manchester', travellerIds: ['trav-test'] }),
+      moment('moment-dublin', { mapId: homeMap, createdById: USER_ID, kind: 'MOVED_HERE', title: 'Moved to Dublin', happenedOn: '2012-09-01', datePrecision: 'MONTH', countryCode: 'IE', placeName: 'Dublin', travellerIds: ['trav-test', 'trav-alex'], photoIds: ['photo-cliffs-of-moher'] }),
+      moment('moment-flamenco', { mapId: homeMap, createdById: ALEX_ID, kind: 'SAW_OR_DID', title: 'Saw flamenco in Granada', happenedOn: '2018-08-01', datePrecision: 'MONTH', countryCode: 'ES', landmarkId: 'lm-alhambra', travellerIds: ['trav-alex'], photoIds: ['photo-alhambra'] }),
+      moment('moment-engaged', { mapId: homeMap, createdById: USER_ID, kind: 'ENGAGEMENT', title: 'Got engaged at the Eiffel Tower', text: 'Alex said yes before the lights came on.', happenedOn: '2019-04-12', datePrecision: 'DAY', countryCode: 'FR', landmarkId: 'lm-eiffel-tower', travellerIds: ['trav-test', 'trav-alex'], photoIds: ['photo-eiffel'] }),
+      moment('moment-gelato', { mapId: homeMap, createdById: ALEX_ID, kind: 'SAW_OR_DID', title: 'Best gelato of the trip', text: 'Pistachio, by the Ponte Vecchio.', happenedOn: '2025-07-09', datePrecision: 'DAY', countryCode: 'IT', placeName: 'Florence', tripId: italyTrip, travellerIds: ['trav-test', 'trav-alex'], photoIds: ['photo-florence-cathedral'] }),
+      moment('moment-party', { mapId: homeMap, createdById: USER_ID, kind: 'CELEBRATION', title: 'Planning a surprise party', text: 'Editors only: keep it quiet!', countryCode: 'PT', hidden: true, travellerIds: ['trav-test'] }),
+      moment('moment-angkor', { mapId: samMap, createdById: SAM_ID, kind: 'SAW_OR_DID', title: 'Sunrise at Angkor Wat', happenedOn: '2024-02-21', datePrecision: 'DAY', countryCode: 'KH', landmarkId: 'lm-angkor-wat', tripId: samTrip, travellerIds: ['trav-sam'] }),
+      moment('moment-passport', { mapId: samMap, createdById: SAM_ID, kind: 'SAW_OR_DID', title: 'Lost my passport in Bangkok', happenedOn: '2024-01-15', datePrecision: 'DAY', countryCode: 'TH', hidden: true, tripId: samTrip, travellerIds: ['trav-sam'], photoIds: ['photo-bangkok'] }),
+      moment('moment-nata', { mapId: joMap, createdById: JO_ID, kind: 'SAW_OR_DID', title: 'Pastéis de nata at Belém', happenedOn: '2026-10-04', datePrecision: 'DAY', countryCode: 'PT', landmarkId: 'lm-tower-of-belem', tripId: lisbonTrip, travellerIds: ['trav-jo', 'trav-jo-kid'], photoIds: ['photo-lisbon'] }),
+      moment('moment-mia', { mapId: joMap, createdById: JO_ID, kind: 'BORN', title: 'Mia was born', happenedOn: '2018-03-01', datePrecision: 'MONTH', countryCode: 'GB', travellerIds: ['trav-jo-kid'] }),
+    ],
+    // image.kind 'seed' = one of the real test photos in the repo's seed-photos/ (served
+    // at /seed-photos in development; data/seedPhotos.js); 'asset' = one of the site's
+    // posters, named as in posterData.js, standing in on the other people's maps
     photos: [
-      { id: 'photo-eiffel', mapId: homeMap, uploaderId: USER_ID, tripId: null, countryCode: 'FR', caption: 'Evening by the Seine', takenAt: '2019-04-12T19:40:00.000Z', latitude: 48.8583, longitude: 2.2944, width: 1024, height: 1792, hidden: false, image: { kind: 'asset', name: 'fr' }, createdAt: daysAgo(60) },
-      { id: 'photo-colosseum', mapId: homeMap, uploaderId: ALEX_ID, tripId: italyTrip, countryCode: 'IT', caption: 'First morning in Rome', takenAt: '2025-07-03T08:15:00.000Z', latitude: 41.8901, longitude: 12.4923, width: 1024, height: 1024, hidden: false, image: { kind: 'asset', name: 'it' }, createdAt: daysAgo(50) },
-      { id: 'photo-alhambra', mapId: homeMap, uploaderId: USER_ID, tripId: null, countryCode: 'ES', caption: 'Granada', takenAt: '2018-08-05T17:00:00.000Z', latitude: 37.1762, longitude: -3.5882, width: 1024, height: 1024, hidden: false, image: { kind: 'asset', name: 'es' }, createdAt: daysAgo(40) },
-      { id: 'photo-dam', mapId: homeMap, uploaderId: USER_ID, tripId: null, countryCode: 'NL', caption: 'Canals at dusk', takenAt: '2016-03-12T18:30:00.000Z', latitude: 52.3731, longitude: 4.8926, width: 1024, height: 1024, hidden: false, image: { kind: 'asset', name: 'nl' }, createdAt: daysAgo(30) },
-      { id: 'photo-hidden', mapId: homeMap, uploaderId: USER_ID, tripId: null, countryCode: 'PT', caption: 'Hidden from viewers (editors only)', takenAt: '2021-10-21T12:00:00.000Z', latitude: 38.6916, longitude: -9.2159, width: 1024, height: 1792, hidden: true, image: { kind: 'asset', name: 'pt' }, createdAt: daysAgo(20) },
+      { id: 'photo-eiffel', mapId: homeMap, uploaderId: USER_ID, tripId: null, countryCode: 'FR', caption: 'Evening by the Seine', takenAt: '2019-04-12T19:40:00.000Z', latitude: 48.8583, longitude: 2.2944, ...seedImage('eiffel-tower'), hidden: false, createdAt: daysAgo(60) },
+      { id: 'photo-colosseum', mapId: homeMap, uploaderId: ALEX_ID, tripId: italyTrip, countryCode: 'IT', caption: 'First morning in Rome', takenAt: '2025-07-03T08:15:00.000Z', latitude: 41.8901, longitude: 12.4923, ...seedImage('colosseum'), hidden: false, createdAt: daysAgo(50) },
+      { id: 'photo-alhambra', mapId: homeMap, uploaderId: USER_ID, tripId: null, countryCode: 'ES', caption: 'Granada', takenAt: '2018-08-05T17:00:00.000Z', latitude: 37.1762, longitude: -3.5882, ...seedImage('alhambra'), hidden: false, createdAt: daysAgo(40) },
+      { id: 'photo-dam', mapId: homeMap, uploaderId: USER_ID, tripId: null, countryCode: 'NL', caption: 'Canals at dusk', takenAt: '2016-03-12T18:30:00.000Z', latitude: 52.3731, longitude: 4.8926, ...seedImage('amsterdam-canal'), hidden: false, createdAt: daysAgo(30) },
+      { id: 'photo-hidden', mapId: homeMap, uploaderId: USER_ID, tripId: null, countryCode: 'PT', caption: 'Hidden from viewers (editors only)', takenAt: '2021-10-21T12:00:00.000Z', latitude: 38.6916, longitude: -9.2159, ...seedImage('belem-tower'), hidden: true, createdAt: daysAgo(20) },
+      // The rest of the test photos, on the same map: several per country, the Italian
+      // ones from Florence and Cinque Terre on the Italian summer trip
+      ...MORE_SEED_PHOTOS.map((slug, index) => seedPhoto(slug, {
+        mapId: homeMap,
+        uploaderId: seedPhotoBySlug(slug).uploader === 'partner' ? ALEX_ID : USER_ID,
+        tripId: ITALY_TRIP_PHOTOS[slug] ? italyTrip : null,
+        takenAt: ITALY_TRIP_PHOTOS[slug] || seedPhotoBySlug(slug).takenAt,
+        createdAt: daysAgo(70 + index),
+      })),
       { id: 'photo-bangkok', mapId: samMap, uploaderId: SAM_ID, tripId: samTrip, countryCode: 'TH', caption: 'Temple roofs', takenAt: '2024-01-12T09:00:00.000Z', latitude: null, longitude: null, width: 1024, height: 1792, hidden: false, image: { kind: 'asset', name: 'th' }, createdAt: daysAgo(180) },
       { id: 'photo-lisbon', mapId: joMap, uploaderId: JO_ID, tripId: lisbonTrip, countryCode: 'PT', caption: 'Belém', takenAt: '2026-10-04T11:00:00.000Z', latitude: 38.6916, longitude: -9.216, width: 1024, height: 1792, hidden: false, image: { kind: 'asset', name: 'pt' }, createdAt: daysAgo(35) },
     ],
@@ -121,6 +219,14 @@ export function buildSeed() {
       { photoId: 'photo-alhambra', landmarkId: 'lm-alhambra', source: 'GPS', distanceM: 15, confirmed: false },
       { photoId: 'photo-lisbon', landmarkId: 'lm-tower-of-belem', source: 'GPS', distanceM: 8, confirmed: true },
     ],
+    // Plans (docs/API.md, "Plans and billing"). The test user pays monthly for Business
+    // and one extra map: originals kept, and room for one more map than the one they own
+    // (the switcher's "New map" works). Everyone else is on Economy. The mock badge's
+    // Plan and Extra maps controls change the test user's.
+    subscriptions: [
+      { userId: USER_ID, plan: 'REGULAR', interval: 'MONTH', status: 'active', currentPeriodEnd: daysFromNow(18), cancelAtPeriodEnd: false, extraMaps: 1, stripeCustomerId: 'cus_mock_test' },
+    ],
+    planGrants: [],
     mapSettings: null,
     contactForms: [
       { id: 'contact-1', name: 'Priya Shah', email: 'priya@example.test', message: 'Can I share one trip without sharing my whole map?', imageKey: null, createdAt: daysAgo(3) },

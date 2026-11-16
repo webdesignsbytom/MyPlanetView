@@ -62,3 +62,47 @@ export const canSeeLocation = (role) => canEdit(role);
 export function canRemoveMember({ actorRole, actorId, targetUserId }) {
   return canManage(actorRole) || (Boolean(actorId) && actorId === targetUserId);
 }
+
+// Group trips (docs/API.md "Group trips")
+
+/**
+ * Showing a trip on one of your own maps ("Add to my map"): anyone on the trip (any trip
+ * role: a TripMember, or any role on the trip's map), onto a map they own or edit.
+ */
+export const canAddTripToMap = ({ tripRole, targetMapRole }) => canView(tripRole) && canEdit(targetMapRole);
+
+/** Taking a trip off a map it was added to: whoever added it, or that map's owner. */
+export const canRemoveTripFromMap = ({ userId, addedById, targetMapOwnerId }) =>
+  Boolean(userId) && (userId === addedById || userId === targetMapOwnerId);
+
+// Moments (docs/API.md "Moments"): the same rules as photos
+
+/**
+ * A user's role on a moment: on a trip, their trip role (so a trip-only editor edits the
+ * moments of their trip), else their map role. `tripMembership` is their TripMember row
+ * on the moment's trip.
+ */
+export const momentRoleFor = (mapRole, tripMembership, momentTripId) =>
+  momentTripId ? tripRoleFor(mapRole, tripMembership) : mapRole ?? null;
+
+/** Viewers never see hidden moments (as hidden photos). */
+export const canSeeMoment = (role, moment) => canSeePhoto(role, moment);
+
+/**
+ * Which photos someone writing a moment may attach: a map editor any photo on the map
+ * (null), a trip-only editor only those of the moment's trip (its id).
+ */
+export const momentPhotoScope = (mapRole, momentTripId) => (canEdit(mapRole) ? null : momentTripId ?? null);
+
+/**
+ * A photo shown inside a moment, for someone who reached it with `mapRole` on the map,
+ * and through `trip` (`{ id, role }`, the trip's list or a trip's share link) or not.
+ * Someone with no role on the map sees only that trip's photos; hidden photos only show
+ * to an editor of the map, or of the trip for the trip's own photos.
+ */
+export function canSeeMomentPhoto(photo, { mapRole = null, trip = null } = {}) {
+  if (!photo) return false;
+  const onTrip = Boolean(trip?.id) && photo.tripId === trip.id;
+  if (!canView(mapRole) && !(onTrip && canView(trip.role))) return false;
+  return !photo.hidden || canEdit(mapRole) || (onTrip && canEdit(trip.role));
+}

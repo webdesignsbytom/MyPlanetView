@@ -15,8 +15,9 @@ const badgeClass = (tone) =>
     info: 'bg-colour6/15 text-colour6',
   })[tone];
 
-// lockedReason: why this row can't be changed (null = editable)
-function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDeactivate, onReactivate, onDelete }) {
+// lockedReason: why this row can't be changed (null = editable). `onPlans` opens their
+// complimentary memberships (UserPlanDialog).
+function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDeactivate, onReactivate, onDelete, onPlans }) {
   const currentRole = String(user.role || '').toUpperCase();
   const [draftRole, setDraftRole] = useState(currentRole);
 
@@ -100,6 +101,18 @@ function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDe
                 Reactivate
               </button>
             )}
+
+            {onPlans ? (
+              <button
+                type='button'
+                onClick={() => onPlans(user)}
+                disabled={isLocked || busy}
+                className={`btn-paper ${SMALL}`}
+                aria-label={`Membership for ${name}`}
+              >
+                Membership
+              </button>
+            ) : null}
           </div>
         </div>
 

@@ -42,12 +42,23 @@ export const DELETE_ALL_EVENTS_API = '/api/events/delete-all-events';
 // Travel (docs/API.md). Paths below these bases are built in src/api/travelApi.js.
 export const COUNTRIES_API = '/api/countries';
 export const LANDMARKS_API = '/api/landmarks'; // ?country=JP
-export const MAPS_API = '/api/maps'; // /:mapId, /:mapId/stats|travellers|visits|trips|photos|sharing|members|invites
-export const TRIPS_API = '/api/trips'; // /:tripId, /:tripId/stops|travellers|photos|sharing|members|invites, /shared-with-me
+export const MAPS_API = '/api/maps'; // /:mapId, /:mapId/stats|travellers|visits|trips|photos|moments|sharing|members|invites
+export const TRIPS_API = '/api/trips'; // /:tripId, /:tripId/stops|travellers|photos|moments|maps|sharing|members|invites, /shared-with-me
 export const PHOTOS_API = '/api/photos'; // /:photoId, /:photoId/landmarks, /:photoId/move
-export const SHARED_API = '/api/shared'; // /:code, /:code/photos, /:code/photos/:photoId
+export const MOMENTS_API = '/api/moments'; // /:momentId (PATCH, DELETE)
+export const SHARED_API = '/api/shared'; // /:code, /:code/photos, /:code/photos/:photoId, /:code/moments
 export const ACCEPT_INVITE_API = '/api/invites/accept'; // POST { token }
 export const MAP_SETTINGS_API = '/api/users/map-settings'; // GET, PUT { mapSettings }
+
+// Plans and billing (docs/API.md, "Plans and billing"). Paths below it are built in src/api/plansApi.js.
+export const BILLING_API = '/api/billing'; // GET; POST /checkout, /change-plan, /extra-maps, /portal
+// Leaving (docs/API.md, "Leaving")
+export const LEAVING_OPTIONS_API = '/api/users/leaving-options'; // GET
+export const LEAVING_PLAN_API = '/api/users/leaving-plan'; // PUT { maps, leavePhotos }
+// Admin: complimentary memberships and moving a map
+export const ADMIN_PLAN_GRANTS_API = '/api/users/admin/plan-grants'; // GET, POST /:userId
+export const ADMIN_END_PLAN_GRANT_API = '/api/users/admin/end-plan-grant'; // PATCH /:grantId
+export const ADMIN_TRANSFER_MAP_API = '/api/users/admin/transfer-map'; // POST { mapId, toEmail, keepOldOwnerAsEditor }
 
 // Media Routes
 export const PRESIGN_UPLOAD_API = '/api/media-services/presign-url'; // POST: get presigned PUT for upload

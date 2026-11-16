@@ -14,7 +14,7 @@ import PaperCard from '@/components/common/PaperCard';
 
 const ADMIN_LINKS = [
   { path: ADMIN_CONTACT_FORM_PAGE_URL, label: 'Contact Forms', desc: 'Messages sent from the contact page' },
-  { path: ADMIN_USERS_PAGE_URL, label: 'Users', desc: 'Roles and account status' },
+  { path: ADMIN_USERS_PAGE_URL, label: 'Users', desc: 'Roles, account status, memberships and moving maps' },
 ];
 
 const DEVELOPER_LINKS = [

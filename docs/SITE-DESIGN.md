@@ -24,7 +24,7 @@ People keep a travel map of the world: the countries they've been to, photos fro
 
 | Indexed, pre-rendered, in the sitemap | App only: `noindex`, not in the sitemap, disallowed in robots.txt |
 | --- | --- |
-| Home, About, FAQ, Contact, Privacy, Terms | Login, sign-up, password reset, email verification, the maps, trips, shared views, account, admin |
+| Home, About, FAQ, Pricing, Contact, Privacy, Terms | Login, sign-up, password reset, email verification, the maps, trips, shared views, account, admin |
 
 The SEO playbook (`documents/SEO-PLAYBOOK.md`) applies to the indexed pages:
 - titles of 60 characters or fewer;
@@ -34,7 +34,7 @@ The SEO playbook (`documents/SEO-PLAYBOOK.md`) applies to the indexed pages:
 
 Analytics never runs on a share page, because the share code is in the address.
 
-**Planned:** public country pages (`/countries/<slug>`) and a Pricing page, indexed and in the sitemap. See [FEATURE-PLAN.md](FEATURE-PLAN.md#country-pages-culture-and-seasons).
+**Planned:** public country pages (`/countries/<slug>`), indexed and in the sitemap. See [FEATURE-PLAN.md](FEATURE-PLAN.md#country-pages-culture-and-seasons).
 
 ## Look
 
@@ -45,7 +45,8 @@ The look comes from my_planet, the newer version of the old site: a 1950s travel
 | Surface | Paperwork |
 | --- | --- |
 | Forms (login, sign-up, contact) | Boarding pass (`TravelTicket` + `TicketStub`) |
-| Panels over the map (settings, country, stats, trips, sharing) | Paper panel: aged parchment header, cream body, perforated divider, stamp close button |
+| A country, and the country list (16 Nov 2026) | Boarding pass centred over the map (`CountryTicket`): a country's poster on the stub to the left, always, with a status stamp; the name on the parchment header |
+| Other panels over the map (settings, stats, trips, sharing) | Paper panel: aged parchment header, cream body, perforated divider, stamp close button |
 | Small floating labels (map title, stats, key) | Luggage tags |
 | The hover pop-up | Postcard, with the star badge as its stamp |
 | Map toolbar and zoom buttons | Round rubber stamps, like the home page's "Start your map" |
@@ -101,7 +102,8 @@ The red poster frame's corners are brass corner protectors, like an old steamer 
     - y = 502 − 518.6 × Y(lat), negative south of the equator;
     - X and Y are Robinson's standard 5° tables.
 
-    So any real position (a landmark, a photo's GPS) can be placed on the map exactly. The equator is at y = 502, and the shapes end at about y = 857, with no Antarctica.
+    So any real position (a landmark, a photo's GPS) can be placed on the map exactly. The equator is at y = 502 and the countries end at about y = 857. Antarctica (Natural Earth, with its ice shelves) fills the bottom down to the South Pole line at 1020.6, and the North Pole line is at -16.6. The map ends exactly at the pole lines and always fills the screen, with no sea beyond its edges (16 Nov 2026). It opens with the North Pole at the top: on a wide screen at the scale it always had, Antarctica a pan away; on a less wide one, pole to pole with the sides a pan away. So the new places never make the world smaller.
+  - **Special places** (16 Nov 2026): Antarctica and the four poles (North, Magnetic North, South, Magnetic South) can be marked like countries, but they aren't countries: they have their own count ("Special places n of 5"), a visited one wears a gold expedition stamp instead of the star, and Antarctica and the South Pole make the seventh continent. Antarctica is drawn in an ice colour in every map style; the poles are compass roses inside the map's edges. The magnetic poles move tens of kilometres a year, so their pins follow NOAA's World Magnetic Model and are moved each January, and a photo is never placed at one from its GPS. A map setting, on by default, hides Antarctica and the two South Poles for people who'd rather have the room.
   - **Country pins** are the centre of each country's largest shape. Micro-states with no shape are pinned from their real position.
   - **Where the shapes come from.** The old map was hand-copied from simplemaps.com's free world SVG (MIT licence), with mistakes:
     - Belarus didn't draw (a stray quote mark);
@@ -109,18 +111,19 @@ The red poster frame's corners are brass corner protectors, like an old steamer 
     - Eswatini was listed twice;
     - many paths ended in stray letters.
 
-    The shapes are now generated straight from that SVG, keyed by ISO code, with the licence notice kept in the generated file. 219 countries have shapes. Liechtenstein, Monaco, San Marino, Singapore and the Vatican have none and are drawn as a dot at their pin.
+    The shapes are now generated straight from that SVG, keyed by ISO code, with the licence notice kept in the generated file. Natural Earth 1:50m (public domain) adds Kiribati and the islands and coasts simplemaps lacks or misplaces (16 Nov 2026: the eastern Aegean, the Balearics, Shetland, the Azores and ~300 more). Andorra, Gibraltar, Liechtenstein, Monaco, San Marino, Singapore and the Vatican have no shape and are drawn as a dot at their pin.
   - **Grid lines.** The old latitude/longitude lines were drawn as a straight even grid. On a Robinson map they're redrawn from the projection.
 - **Country posters:**
-  - my_planet's 170 posters cover 167 countries (`client/src/utils/map/posterData.js`). They show in the hover box (when you have no photos from there) and in the country panel.
+  - my_planet's 170 posters cover 167 countries (`client/src/utils/map/posterData.js`). They show in the hover box (when you have no photos from there) and, always, on the stub of a country's ticket (whether you've been or not).
   - They live in the public bucket, not the client build: `visitCountryPosters/<name>-800.avif` with an 800 px WebP fallback (`<name>-800.webp`), loaded from `VITE_MEDIA_CDN`. The repo's `media/` folder holds the same files to upload, and serves them in development when `VITE_MEDIA_CDN` isn't set.
-  - One size only: 800 px is sharp on retina screens at the sizes posters are shown (the hover box and the 24rem panel), and 400 px looked soft. They're cached for good, so a replaced poster gets a new name.
+  - One size only: 800 px is sharp on retina screens at the sizes posters are shown (the hover box and the 15rem stub), and 400 px looked soft. They're cached for good, so a replaced poster gets a new name.
   - The 57 countries without a poster get a placeholder card with their name in the travel face, never another country's poster.
 - **Backgrounds:** the home artwork, the map styles' backgrounds and the "detailed" preview are image sets too.
 
 ## Accounts
 
 - **Sign-in:** better-auth with email and password. Roles are `USER`, `ADMIN` and `DEVELOPER`; admin pages check the role on the server.
+- **Age.** Accounts are for people aged 13 and over; 13 to 17 year olds need a parent's or guardian's permission, so teenagers can be editors on a family map. Sign-up's terms box, unticked, also confirms the age (16 Nov 2026). Younger children are travellers without a login. The terms' "Children on a map" section and the privacy policy's "Children" section say so.
 - **Group types.** At sign-up the user picks who the map is for: **solo**, **couple** or **family**. That creates their default map.
 - **Travellers.** The people a map is for are its **travellers**: the solo traveller, both halves of a couple, every member of a family.
   - Each traveller has a name, a birth country and a favourite country, as in the old setup form.
@@ -161,7 +164,7 @@ It works like Google Docs.
 
 1. **In the browser:**
    - read the date and GPS position from the photo's EXIF;
-   - make a thumbnail (~400 px) and a display size (~1600 px).
+   - make a thumbnail (~400 px) and a display size (~1600 px), and on an Economy map a 2,400 px JPEG print copy instead of uploading the original (the original never leaves the device).
 
    Re-encoding removes the EXIF from those two files, location included. Resizing in the browser also keeps Vercel's work, and its cost, low.
 2. **Upload:** each file goes straight to the **private** bucket through a presigned URL, never through Vercel.
@@ -173,7 +176,8 @@ It works like Google Docs.
 
 | File | Typical size | Used for | Location data |
 | --- | --- | --- | --- |
-| Original | 3–8 MB | Owner and editors download it; landmark matching | Kept |
+| Original (Business and First Class) | 3–8 MB | Owner and editors download it; landmark matching | Kept |
+| Print copy (Economy, ~2,400 px JPEG) | ~1 MB | Owner and editors download it; prints up to about A4 | Removed |
 | Display (~1600 px) | ~300–500 KB | Opening a photo | Removed |
 | Thumbnail (~400 px) | ~30–60 KB | Map hover slideshow, grids, trip covers | Removed |
 
@@ -187,7 +191,7 @@ It works like Google Docs.
 
 - **Signed URLs:** files are served through short-lived signed URLs, so removing someone's access really cuts it off.
 - **Viewers** get the thumbnail and display sizes only. They never get hidden photos or GPS coordinates.
-- **The original** is always kept. Only the owner and editors can download it, because it still contains its location. (Planned: kept only on Business and First Class. Economy keeps a 2,400 px JPEG print copy instead, so it's still three files per photo. See [FEATURE-PLAN.md](FEATURE-PLAN.md#which-copies-each-tier-keeps).)
+- **The best copy** (the original on Business and First Class, the print copy on Economy) can be downloaded by the owner and editors only: "Download original" or "Download print copy". A map's plan is its owner's, whoever uploaded the photo.
 
 ### Gallery order
 
@@ -200,25 +204,19 @@ Editors drag photos into the order they want, in every gallery: a country's on t
 - **In the browser:** "Rearrange photos" above a gallery switches it to dragging: the mouse, a press and hold on a touch screen (a quick swipe still scrolls), or the keyboard (Space, the arrow keys, Space; a screen reader hears each step). The list moves at once and saves behind it; if the save fails, the list is loaded again. The drag code (dnd-kit, about 16 kB gzipped) loads only then.
 - **The whole map's list** (the hover postcards) stays newest upload first.
 
-## Storage use and future paid tiers
+## Plans and limits
 
-**There are no storage caps for now.** (Planned for launch: three tiers, Economy (free), Business and First Class, each with a cap per country. See [FEATURE-PLAN.md](FEATURE-PLAN.md#tiers-economy-business-and-first-class).) The design keeps tiers easy to add later:
+Built on 16 Nov 2026 (FEATURE-PLAN.md, "Tiers" and "Maps", has the reasons; docs/API.md, "Plans and billing" and "Map limits", the rules).
 
-- **Usage is already measured.** Every file's real size is stored in `MediaItem.bytes` when its upload is confirmed. An account's usage is the sum of `bytes` for files it uploaded, so caps can be added later without backfilling anything.
-- **Usage counts against the uploader**, not the map owner. On a shared map, each person's uploads count against their own account.
-- **Adding tiers later:**
-  - Add a `plan` to the account (e.g. `FREE`, `PLUS`).
-  - Put each plan's limits in one constants file.
-  - Check the limit when an upload is presigned (estimated size) and again at confirm-upload (real size; delete the file and refuse if it's over).
-  - Payments can come from NextDummy's Stripe code, with its webhook setting the plan.
-- **Levers a tier can pull:**
-  - total storage;
-  - whether the full-size file is kept (usually most of the storage);
-  - largest single upload;
-  - number of maps;
-  - number of editors per map.
-- **Downgrades never delete anything.** An account over its new cap keeps everything but can't upload until it's under again.
+- **Three plans:** Economy (free), Business (£4.99 a month, £49 a year) and First Class (£8.99, £89), paid through Stripe Checkout, with Stripe's billing portal for the card, invoices and cancelling. Admins can give complimentary memberships for a set time. Names, prices and limits live in one constants file on each side (`plans.js`), so renaming a plan never touches the database.
+- **A map's plan is its owner's,** for everything: photos per country (30, 200, 1,000, every uploader together), originals or a print copy, and the storage safety net (50 GB and 200 GB per map).
+- **One map is included;** each extra map is £3.99 a month (£5.99 on First Class). An extra map that isn't paid for is locked: viewable, shareable and editable, but it takes no new photos. Nothing is ever deleted for lack of payment.
+- **People:** up to 10 editors per map and 20 people per trip, on every plan; viewers and share links are unlimited.
+- **Transfers and leaving:** an owner can make someone else the owner (an admin can do it for them); a transferred map that finds no free slot gets 60 days' grace. Deleting an account asks what happens to each map and to the photos on other people's maps.
+- **Usage is measured per file** (`MediaItem.bytes`), and counts against the map, so editors share its allowance.
+- **Downgrades never delete anything:** originals already kept stay, and a country over the new limit keeps its photos but takes no more.
 - **Cost:** R2 charges for storage and operations, not for downloads. Storage is the line to watch.
+- **The Pricing page** (`/pricing`, indexed) sells the map and the look, not storage. Claims about features not built yet are marked `soon` in `client/src/utils/data/pricingData.js` and must be live, or removed, before launch.
 
 ## Privacy rules
 
@@ -263,7 +261,7 @@ Editors drag photos into the order they want, in every gallery: a country's on t
 - **GA4 setting.** In the GA4 property, turn off "page changes based on browser history events". Otherwise a tag loaded earlier can record a share or invite address after an in-app navigation.
 - **Who has access.** Editors and viewers can't yet see who else has access: `GET …/sharing` is owner-only, so they see only their own role and a "leave" button.
 - **Coarse borders.** A photo taken near a border can be placed in the neighbouring country, because the map's shapes are coarse (Victoria Falls, Kaesong and the Western Wall do). Users can correct the country.
-- **Missing shapes.** Bioko island (Equatorial Guinea) has no shape, and nor do Liechtenstein, Monaco, San Marino, Singapore and the Vatican. The micro-states are drawn as dots; the server places photos in all of these with circles around known positions.
+- **Missing shapes.** Andorra, Gibraltar, Liechtenstein, Monaco, San Marino, Singapore and the Vatican are drawn as dots; Bioko and six small Greek islands off Turkey have no shape. The lookups place photos in all of these with circles around known positions. About 575 smaller islands look up correctly but aren't drawn (Euboea, Funen, Lombok, Zanzibar…). A few territories have no entry and leave a photo "Unplaced" (South Georgia, Saint Helena, Pitcairn, the Cook Islands…).
 - **Brand assets.** The logo, favicons and share image (`client/public/brand/`, `client/public/favicon/`) are still ByteToast's.
 - **Client env examples.** `client/.env.development.example` and `client/.env.production.example` still list keys nothing reads. Keep only `VITE_API_URL`, `VITE_MEDIA_CDN` and `VITE_ANALYTICS_ID`.
 - **iPhone uploads.** Check on a real iPhone that a photo picked in Safari and in Chrome arrives as a JPEG with its date. Reports say iPhone browsers strip GPS from photos picked in the browser since iOS 16.4; if so, those photos get their country from the uploader's choice and no landmark suggestions.

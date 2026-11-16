@@ -20,12 +20,15 @@ import {
 } from '../utils/constants/siteConstants.js';
 import { sendUserEmail } from '../services/email/emailHandler.js';
 import {
+  countMapEditorSeats,
+  countTripSeats,
   deleteMapMember,
   findMapMember,
   findMapMembers,
   updateMapInDB,
   upsertMapMember,
 } from '../domain/maps.js';
+import { checkEditorCap, checkTripPeopleCap } from '../utils/planLimits.js';
 import {
   deleteTripMember,
   findTripMember,
@@ -40,7 +43,7 @@ import {
   replaceInviteInDB,
 } from '../domain/sharing.js';
 import { newUniqueShareCode } from '../services/travel/maps.js';
-import { badRequest, denyUnless, forbidden, handler, loadMap, loadTrip, notFound } from './helpers/travel.js';
+import { badRequest, conflict, denyUnless, forbidden, handler, loadMap, loadTrip, notFound } from './helpers/travel.js';
 
 const D = DOMAINS.sharing;
 const INVITE_DAYS = 14;
@@ -64,6 +67,12 @@ const RESOURCES = {
     findMember: (map, userId) => findMapMember(map.id, userId),
     upsertMember: (map, userId, role) => upsertMapMember(map.id, userId, role),
     deleteMember: (map, userId) => deleteMapMember(map.id, userId),
+    // Up to EDITORS_PER_MAP editors (EDITOR members and pending EDITOR invites, the
+    // person being added left out); viewers are unlimited. -> null, or the 409 message
+    async seatProblem(map, { role, userId, email }) {
+      if (role !== 'EDITOR') return null;
+      return checkEditorCap({ editors: await countMapEditorSeats(map.id, { exceptUserId: userId, exceptEmail: email }) });
+    },
   },
   trips: {
     kind: 'trip',
@@ -80,7 +89,14 @@ const RESOURCES = {
     members: (trip) => findTripMembers(trip.id),
     findMember: (trip, userId) => findTripMember(trip.id, userId),
     upsertMember: (trip, userId, role) => upsertTripMember(trip.id, userId, role),
+    // Also takes the trip off the maps that person added it to (the visits stay)
     deleteMember: (trip, userId) => deleteTripMember(trip.id, userId),
+    // Up to PEOPLE_PER_TRIP people of any role (members and pending invites, the person
+    // being added left out). A role change adds nobody. -> null, or the 409 message
+    async seatProblem(trip, { userId, email, roleChangeOnly = false }) {
+      if (roleChangeOnly) return null;
+      return checkTripPeopleCap({ people: await countTripSeats(trip.id, { exceptUserId: userId, exceptEmail: email }) });
+    },
   },
 };
 
@@ -185,6 +201,8 @@ export function sharingHandlers(resourceName) {
       // Anyone could sign up with an address they don't own and never verify it.
       const user = await findUserForSharing(email);
       if (user && user.isActive !== false && user.emailVerified === true) {
+        const full = await adapter.seatProblem(resource, { role: body.role, userId: user.id, email });
+        if (full) return conflict(req, res, D, full);
         const member = await adapter.upsertMember(resource, user.id, body.role);
         logEvent(createSharingEvent({ user: req.user, action: 'Member Add Success', id: resource.id, targetId: user.id, detail: `${adapter.kind} ${body.role}`, statusCode: 201 }));
         sendShareEmail({ to: user.email, sharer: req.user, adapter, resource, role: body.role, isInvite: false });
@@ -192,7 +210,10 @@ export function sharingHandlers(resourceName) {
       }
 
       // No account yet, or an unverified or deactivated one: an invite, accepted once
-      // that address is verified (automatically then, or through the emailed link)
+      // that address is verified (automatically then, or through the emailed link).
+      // It holds a place until then (accepting it never fails on the cap).
+      const full = await adapter.seatProblem(resource, { role: body.role, email });
+      if (full) return conflict(req, res, D, full);
       const token = generateInviteToken();
       const expiresAt = new Date(Date.now() + INVITE_DAYS * 24 * 60 * 60 * 1000);
       const invite = await replaceInviteInDB({
@@ -216,6 +237,9 @@ export function sharingHandlers(resourceName) {
       if (!(await adapter.findMember(resource, req.params.userId))) {
         return notFound(req, res, D, EVENT_MESSAGES.memberNotFound);
       }
+      // Promoting a map viewer to editor takes an editor's place
+      const full = await adapter.seatProblem(resource, { role, userId: req.params.userId, roleChangeOnly: true });
+      if (full) return conflict(req, res, D, full);
       const member = await adapter.upsertMember(resource, req.params.userId, role);
       logEvent(createSharingEvent({ user: req.user, action: 'Member Update Success', id: resource.id, targetId: req.params.userId, detail: `${adapter.kind} ${role}` }));
       return sendDataResponse(res, 200, { member: memberView(member) });

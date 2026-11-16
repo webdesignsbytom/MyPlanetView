@@ -4,11 +4,15 @@
 // the centre of each country's largest shape on the map (Robinson projection; the
 // shapes span y 0 to 857, the pole lines are at -16.6 and 1020.6). Micro-states with no shape, and Chile (whose mainland is
 // missing from the old map), are pinned from their real position instead.
+// Added 16 Nov 2026: Andorra and Gibraltar (micro-states, drawn as dots; pinned at the
+// centre of their lookup circles in src/utils/countryLookup.js) and Kiribati (Natural
+// Earth's atolls, which straddle the antimeridian; pinned at Tarawa, its capital).
 export const COUNTRIES = [
   { code: 'AF', name: "Afghanistan", slug: 'afghanistan', continent: 'ASIA', pinX: 1340.9, pinY: 284.6 },
   { code: 'AL', name: "Albania", slug: 'albania', continent: 'EUROPE', pinX: 1090.4, pinY: 237.9 },
   { code: 'DZ', name: "Algeria", slug: 'algeria', continent: 'AFRICA', pinX: 1000.6, pinY: 321.2 },
   { code: 'AS', name: "American Samoa", slug: 'american-samoa', continent: 'OCEANIA', pinX: 27.1, pinY: 593.7 },
+  { code: 'AD', name: "Andorra", slug: 'andorra', continent: 'EUROPE', pinX: 995.3, pinY: 228.7 },
   { code: 'AO', name: "Angola", slug: 'angola', continent: 'AFRICA', pinX: 1084.9, pinY: 580.7 },
   { code: 'AI', name: "Anguilla", slug: 'anguilla', continent: 'NORTH_AMERICA', pinX: 634.3, pinY: 384.7 },
   { code: 'AG', name: "Antigua and Barbuda", slug: 'antigua-and-barbuda', continent: 'NORTH_AMERICA', pinX: 640.6, pinY: 392.2 },
@@ -82,6 +86,7 @@ export const COUNTRIES = [
   { code: 'GE', name: "Georgia", slug: 'georgia', continent: 'ASIA', pinX: 1211, pinY: 231.4 },
   { code: 'DE', name: "Germany", slug: 'germany', continent: 'EUROPE', pinX: 1036.5, pinY: 175.3 },
   { code: 'GH', name: "Ghana", slug: 'ghana', continent: 'AFRICA', pinX: 979.4, pinY: 450.9 },
+  { code: 'GI', name: "Gibraltar", slug: 'gibraltar', continent: 'EUROPE', pinX: 958.6, pinY: 269.7 },
   { code: 'GR', name: "Greece", slug: 'greece', continent: 'EUROPE', pinX: 1104.6, pinY: 249.4 },
   { code: 'GL', name: "Greenland", slug: 'greenland', continent: 'NORTH_AMERICA', pinX: 825.4, pinY: 46.5 },
   { code: 'GD', name: "Grenada", slug: 'grenada', continent: 'NORTH_AMERICA', pinX: 639, pinY: 424 },
@@ -107,6 +112,7 @@ export const COUNTRIES = [
   { code: 'JO', name: "Jordan", slug: 'jordan', continent: 'ASIA', pinX: 1185.7, pinY: 301.3 },
   { code: 'KZ', name: "Kazakhstan", slug: 'kazakhstan', continent: 'ASIA', pinX: 1321.3, pinY: 194 },
   { code: 'KE', name: "Kenya", slug: 'kenya', continent: 'AFRICA', pinX: 1200.6, pinY: 498 },
+  { code: 'KI', name: "Kiribati", slug: 'kiribati', continent: 'OCEANIA', pinX: 1969.4, pinY: 493.5 },
   { code: 'XK', name: "Kosovo", slug: 'kosovo', continent: 'EUROPE', pinX: 1094, pinY: 228.7 },
   { code: 'KW', name: "Kuwait", slug: 'kuwait', continent: 'ASIA', pinX: 1246, pinY: 313.7 },
   { code: 'KG', name: "Kyrgyzstan", slug: 'kyrgyzstan', continent: 'ASIA', pinX: 1373.1, pinY: 235.5 },
@@ -228,7 +234,8 @@ export const COUNTRIES = [
   { code: 'EH', name: "Western Sahara", slug: 'western-sahara', continent: 'AFRICA', pinX: 919.2, pinY: 345.9 },
   { code: 'YE', name: "Yemen", slug: 'yemen', continent: 'ASIA', pinX: 1252.8, pinY: 399.7 },
   { code: 'ZM', name: "Zambia", slug: 'zambia', continent: 'AFRICA', pinX: 1142.3, pinY: 587.9 },
-  { code: 'ZW', name: "Zimbabwe", slug: 'zimbabwe', continent: 'AFRICA', pinX: 1152.5, pinY: 623.2 },  // Special places (15 Nov 2026): not countries, so they're left out of the country count.
+  { code: 'ZW', name: "Zimbabwe", slug: 'zimbabwe', continent: 'AFRICA', pinX: 1152.5, pinY: 623.2 },
+  // Special places (15 Nov 2026): not countries, so they're left out of the country count.
   // Antarctica (its real ISO code) is a drawn shape and counts as a continent; the poles are
   // points, with codes from ISO 3166's user-assigned range (X = geographic, Q = magnetic).
   // The magnetic poles drift: their pins are NOAA's World Magnetic Model positions for 2025

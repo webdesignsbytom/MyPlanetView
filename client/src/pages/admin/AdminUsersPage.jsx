@@ -8,6 +8,7 @@ import { HelmetItem } from '@/components/utils/HelmetItem';
 import AppPageShell from '@/components/common/AppPageShell';
 import PageTitleCard from '@/components/common/PageTitleCard';
 import AdminUsersMainContainer from '@/components/admin/users/AdminUsersMainContainer';
+import AdminTransferMapCard from '@/components/admin/users/AdminTransferMapCard';
 
 function AdminUsersPage() {
   const pageHelmet = helmetData[ADMIN_USERS_PAGE_URL];
@@ -26,6 +27,7 @@ function AdminUsersPage() {
       <AppPageShell width='max-w-6xl' mainProps={{ 'aria-labelledby': 'admin-users-heading' }}>
         <PageTitleCard page='Head office' title='User Admin' headingId='admin-users-heading' />
         <AdminUsersMainContainer />
+        <AdminTransferMapCard />
       </AppPageShell>
     </>
   );

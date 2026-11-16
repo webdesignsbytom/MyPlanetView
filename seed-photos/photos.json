@@ -1,0 +1,626 @@
+[
+  {
+    "slug": "eiffel-tower",
+    "countryCode": "FR",
+    "caption": "The Eiffel Tower in spring",
+    "takenAt": "2025-05-04T10:20:00.000Z",
+    "trip": "paris-rome",
+    "uploader": "owner",
+    "latitude": null,
+    "longitude": null,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 44338,
+        "width": 400,
+        "height": 267
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 857414,
+        "width": 1600,
+        "height": 1067
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 1128390,
+        "width": 1920,
+        "height": 1280
+      }
+    },
+    "credit": {
+      "title": "Paris - The Eiffel Tower in spring - 2307.jpg",
+      "author": "Jorge Royan",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Paris_-_The_Eiffel_Tower_in_spring_-_2307.jpg"
+    }
+  },
+  {
+    "slug": "mont-saint-michel",
+    "countryCode": "FR",
+    "caption": "Mont Saint-Michel at low tide",
+    "takenAt": "2023-07-18T19:05:00.000Z",
+    "trip": null,
+    "uploader": "owner",
+    "latitude": 48.619314,
+    "longitude": -1.512455,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 13704,
+        "width": 400,
+        "height": 283
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 460924,
+        "width": 1600,
+        "height": 1134
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 645991,
+        "width": 1920,
+        "height": 1361
+      }
+    },
+    "credit": {
+      "title": "Mont St Michel 3, Brittany, France - July 2011.jpg",
+      "author": "Diliff",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Mont_St_Michel_3,_Brittany,_France_-_July_2011.jpg"
+    }
+  },
+  {
+    "slug": "louvre",
+    "countryCode": "FR",
+    "caption": "The Louvre’s Richelieu wing",
+    "takenAt": "2025-05-05T15:40:00.000Z",
+    "trip": "paris-rome",
+    "uploader": "partner",
+    "latitude": 48.860582,
+    "longitude": 2.335979,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 20526,
+        "width": 400,
+        "height": 260
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 286524,
+        "width": 1600,
+        "height": 1038
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 469263,
+        "width": 1920,
+        "height": 1246
+      }
+    },
+    "credit": {
+      "title": "Aile Richelieu Louvre.jpg",
+      "author": "Jebulon",
+      "license": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Aile_Richelieu_Louvre.jpg"
+    }
+  },
+  {
+    "slug": "colosseum",
+    "countryCode": "IT",
+    "caption": "Inside the Colosseum",
+    "takenAt": "2025-05-11T09:30:00.000Z",
+    "trip": "paris-rome",
+    "uploader": "partner",
+    "latitude": 41.890713,
+    "longitude": 12.491491,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 26436,
+        "width": 266,
+        "height": 400
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 560548,
+        "width": 1065,
+        "height": 1600
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 1609036,
+        "width": 1920,
+        "height": 2885
+      }
+    },
+    "credit": {
+      "title": "Cross Colosseum Rome Italy.jpg",
+      "author": "Jebulon",
+      "license": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Cross_Colosseum_Rome_Italy.jpg"
+    }
+  },
+  {
+    "slug": "florence-cathedral",
+    "countryCode": "IT",
+    "caption": "Florence by night",
+    "takenAt": "2024-09-02T21:10:00.000Z",
+    "trip": null,
+    "uploader": "owner",
+    "latitude": 43.763202,
+    "longitude": 11.264102,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 15202,
+        "width": 400,
+        "height": 300
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 272266,
+        "width": 1600,
+        "height": 1200
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 460143,
+        "width": 1920,
+        "height": 1440
+      }
+    },
+    "credit": {
+      "title": "Florence Cathedral seen from Piazzale Michelangelo night dllu.jpg",
+      "author": "Dllu",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Florence_Cathedral_seen_from_Piazzale_Michelangelo_night_dllu.jpg"
+    }
+  },
+  {
+    "slug": "cinque-terre",
+    "countryCode": "IT",
+    "caption": "Manarola and the coast",
+    "takenAt": "2024-09-05T17:45:00.000Z",
+    "trip": null,
+    "uploader": "owner",
+    "latitude": 44.106883,
+    "longitude": 9.727424,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 15098,
+        "width": 400,
+        "height": 267
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 405182,
+        "width": 1600,
+        "height": 1067
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 592351,
+        "width": 1920,
+        "height": 1280
+      }
+    },
+    "credit": {
+      "title": "Manarola NW Cemetery Corniglia Monterosso Cinque Terre Sep23 A7C 06872.jpg",
+      "author": "Timothy A. Gonsalves",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Manarola_NW_Cemetery_Corniglia_Monterosso_Cinque_Terre_Sep23_A7C_06872.jpg"
+    }
+  },
+  {
+    "slug": "venice-grand-canal",
+    "countryCode": "IT",
+    "caption": "The Grand Canal from the Rialto",
+    "takenAt": "2024-09-08T11:00:00.000Z",
+    "trip": null,
+    "uploader": "partner",
+    "latitude": 45.438053,
+    "longitude": 12.335911,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 14830,
+        "width": 400,
+        "height": 178
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 267796,
+        "width": 1600,
+        "height": 711
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 422047,
+        "width": 1920,
+        "height": 853
+      }
+    },
+    "credit": {
+      "title": "Panorama of Canal Grande and Ponte di Rialto, Venice - September 2017.jpg",
+      "author": "Martin Falbisoner",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Panorama_of_Canal_Grande_and_Ponte_di_Rialto,_Venice_-_September_2017.jpg"
+    }
+  },
+  {
+    "slug": "alhambra",
+    "countryCode": "ES",
+    "caption": "The Court of the Lions",
+    "takenAt": "2021-06-16T12:30:00.000Z",
+    "trip": null,
+    "uploader": "owner",
+    "latitude": 37.177037,
+    "longitude": -3.589236,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 16116,
+        "width": 286,
+        "height": 400
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 275874,
+        "width": 1145,
+        "height": 1600
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 815193,
+        "width": 1920,
+        "height": 2684
+      }
+    },
+    "credit": {
+      "title": "Pavillon Cour des Lions Alhambra Granada Spain.jpg",
+      "author": "Jebulon",
+      "license": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Pavillon_Cour_des_Lions_Alhambra_Granada_Spain.jpg"
+    }
+  },
+  {
+    "slug": "sagrada-familia",
+    "countryCode": "ES",
+    "caption": "Sagrada Família",
+    "takenAt": "2021-06-19T10:15:00.000Z",
+    "trip": null,
+    "uploader": "owner",
+    "latitude": null,
+    "longitude": null,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 8714,
+        "width": 258,
+        "height": 400
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 107452,
+        "width": 1030,
+        "height": 1600
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 634657,
+        "width": 1920,
+        "height": 2983
+      }
+    },
+    "credit": {
+      "title": "Sagrada Familia March 2015-19bw.jpg",
+      "author": "Alvesgaspar",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Sagrada_Familia_March_2015-19bw.jpg"
+    }
+  },
+  {
+    "slug": "belem-tower",
+    "countryCode": "PT",
+    "caption": "Belém Tower",
+    "takenAt": "2022-04-10T16:20:00.000Z",
+    "trip": null,
+    "uploader": "partner",
+    "latitude": 38.692048,
+    "longitude": -9.216345,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 13770,
+        "width": 400,
+        "height": 292
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 288374,
+        "width": 1600,
+        "height": 1169
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 470547,
+        "width": 1920,
+        "height": 1403
+      }
+    },
+    "credit": {
+      "title": "Lisbon Torre de Belém BW 2018-10-03 16-33-21.jpg",
+      "author": "Berthold Werner",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Lisbon_Torre_de_Bel%C3%A9m_BW_2018-10-03_16-33-21.jpg"
+    }
+  },
+  {
+    "slug": "amsterdam-canal",
+    "countryCode": "NL",
+    "caption": "Canal houses at blue hour",
+    "takenAt": "2023-03-11T19:30:00.000Z",
+    "trip": null,
+    "uploader": "owner",
+    "latitude": 52.376792,
+    "longitude": 4.898098,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 25550,
+        "width": 400,
+        "height": 320
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 367788,
+        "width": 1600,
+        "height": 1280
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 656301,
+        "width": 1920,
+        "height": 1536
+      }
+    },
+    "credit": {
+      "title": "Water reflection of canal houses at blue hour in Damrak Amsterdam the Netherlands.jpg",
+      "author": "Basile Morin",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Water_reflection_of_canal_houses_at_blue_hour_in_Damrak_Amsterdam_the_Netherlands.jpg"
+    }
+  },
+  {
+    "slug": "lower-manhattan",
+    "countryCode": "US",
+    "caption": "Lower Manhattan from Jersey City",
+    "takenAt": "2018-10-21T18:00:00.000Z",
+    "trip": null,
+    "uploader": "owner",
+    "latitude": 40.714997,
+    "longitude": -74.033185,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 4558,
+        "width": 400,
+        "height": 200
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 91464,
+        "width": 1600,
+        "height": 800
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 160275,
+        "width": 1920,
+        "height": 960
+      }
+    },
+    "credit": {
+      "title": "Lower Manhattan from Jersey City September 2020 panorama.jpg",
+      "author": "King of Hearts",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Lower_Manhattan_from_Jersey_City_September_2020_panorama.jpg"
+    }
+  },
+  {
+    "slug": "golden-gate-bridge",
+    "countryCode": "US",
+    "caption": "The Golden Gate from Crissy Field",
+    "takenAt": "2018-10-25T14:10:00.000Z",
+    "trip": null,
+    "uploader": "owner",
+    "latitude": 37.804167,
+    "longitude": -122.459722,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 3616,
+        "width": 400,
+        "height": 112
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 78178,
+        "width": 1600,
+        "height": 449
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 136664,
+        "width": 1920,
+        "height": 539
+      }
+    },
+    "credit": {
+      "title": "Crissy Field beach and Golden Gate Bridge.jpg",
+      "author": "Brocken Inaglory",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Crissy_Field_beach_and_Golden_Gate_Bridge.jpg"
+    }
+  },
+  {
+    "slug": "tower-bridge",
+    "countryCode": "GB",
+    "caption": "Tower Bridge",
+    "takenAt": "2024-01-14T13:00:00.000Z",
+    "trip": null,
+    "uploader": "partner",
+    "latitude": 51.505456,
+    "longitude": -0.075357,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 22702,
+        "width": 400,
+        "height": 267
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 432550,
+        "width": 1600,
+        "height": 1067
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 632952,
+        "width": 1920,
+        "height": 1280
+      }
+    },
+    "credit": {
+      "title": "London, Tower Bridge -- 2016 -- 4676.jpg",
+      "author": "Dietmar Rabich",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:London,_Tower_Bridge_--_2016_--_4676.jpg"
+    }
+  },
+  {
+    "slug": "edinburgh-castle",
+    "countryCode": "GB",
+    "caption": "Edinburgh Castle",
+    "takenAt": "2024-11-02T11:25:00.000Z",
+    "trip": null,
+    "uploader": "owner",
+    "latitude": 55.948463,
+    "longitude": -3.197356,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 11786,
+        "width": 400,
+        "height": 287
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 270594,
+        "width": 1600,
+        "height": 1148
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 436771,
+        "width": 1920,
+        "height": 1378
+      }
+    },
+    "credit": {
+      "title": "Edinburgh Castle from Esplanade 20211019.jpg",
+      "author": "Daniel Kraft",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Edinburgh_Castle_from_Esplanade_20211019.jpg"
+    }
+  },
+  {
+    "slug": "cliffs-of-moher",
+    "countryCode": "IE",
+    "caption": "The Cliffs of Moher",
+    "takenAt": "2019-08-03T15:50:00.000Z",
+    "trip": null,
+    "uploader": "partner",
+    "latitude": 52.9724,
+    "longitude": -9.429578,
+    "files": {
+      "THUMB": {
+        "file": "thumb.webp",
+        "contentType": "image/webp",
+        "bytes": 10236,
+        "width": 400,
+        "height": 225
+      },
+      "DISPLAY": {
+        "file": "display.webp",
+        "contentType": "image/webp",
+        "bytes": 268498,
+        "width": 1600,
+        "height": 900
+      },
+      "ORIGINAL": {
+        "file": "original.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 416286,
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    "credit": {
+      "title": "Ireland Cliffs of Moher BW 2025-09-11 14-27-51.jpg",
+      "author": "Berthold Werner",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Ireland_Cliffs_of_Moher_BW_2025-09-11_14-27-51.jpg"
+    }
+  }
+]

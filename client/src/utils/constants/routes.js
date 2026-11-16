@@ -3,6 +3,13 @@ export const HOME_PAGE_URL = '/';
 export const ABOUT_PAGE_URL = '/about';
 export const CONTACT_PAGE_URL = '/contact';
 export const FAQ_PAGE_URL = '/faq';
+export const PRICING_PAGE_URL = '/pricing';
+
+// Country guides (public, pre-rendered). Not in PUBLIC_STATIC_ROUTES: they're built from
+// the checked files in src/content/countries/ (scripts/country-pages.mjs), and with none
+// checked there's no index and no country page at all
+export const COUNTRIES_PAGE_URL = '/countries';
+export const countryPagePath = (slug) => `${COUNTRIES_PAGE_URL}/${slug}`;
 
 // Terms and Conditions
 export const LEGAL_AGREEMENTS_PAGE_URL = '/user-agreements';
@@ -51,6 +58,7 @@ export const PUBLIC_STATIC_ROUTES = [
   HOME_PAGE_URL,
   ABOUT_PAGE_URL,
   FAQ_PAGE_URL,
+  PRICING_PAGE_URL,
   CONTACT_PAGE_URL,
   LEGAL_AGREEMENTS_PAGE_URL,
 ];

@@ -23,6 +23,8 @@ function NewMapForm({ firstTraveller, onCreate, onCancel }) {
       await onCreate({ name: name.trim(), groupType, travellers: [{ name: firstTraveller || 'Me' }] });
     } catch (err) {
       setError(err.friendlyMessage || 'The map could not be created.');
+    } finally {
+      // Still here: refused, or waiting on a payment (the switcher's extra-map dialog)
       setBusy(false);
     }
   };

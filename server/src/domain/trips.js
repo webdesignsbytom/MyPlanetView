@@ -46,8 +46,17 @@ const TRIP_SUMMARY_SELECT = {
   status: true,
   startDate: true,
   endDate: true,
+  // Only for ordering a map's own and linked trips together (byTripOrder)
+  createdAt: true,
   coverPhoto: { select: { hidden: true, variants: thumbOf } },
   travellers: { select: { travellerId: true } },
+};
+
+/** A map's trips' order: latest start first (undated first), then newest. */
+export const byTripOrder = (a, b) => {
+  if (!a.startDate !== !b.startDate) return a.startDate ? 1 : -1;
+  const byStart = a.startDate && b.startDate ? b.startDate.getTime() - a.startDate.getTime() : 0;
+  return byStart || b.createdAt.getTime() - a.createdAt.getTime();
 };
 
 /**
@@ -55,7 +64,7 @@ const TRIP_SUMMARY_SELECT = {
  * only (see domain/counts.js). `includeHidden[i]`: whether trip i's hidden
  * photos count (the caller is an editor there).
  */
-async function withTripCounts(trips, includeHidden) {
+export async function withTripCounts(trips, includeHidden) {
   const ids = trips.map((t) => t.id);
   const [stops, photos] = await Promise.all([
     countPerParent('tripStop', 'tripId', ids),
@@ -160,24 +169,41 @@ export const createTripInDB = ({ travellerIds = [], ...data }) =>
 
 const TRIP_UPDATE_SELECT = { id: true, mapId: true, status: true };
 
+/** A trip's stops' countries, each once (in `db`). */
+const stopCountries = async (db, tripId) =>
+  (await db.tripStop.findMany({ where: { tripId }, select: { countryCode: true }, distinct: ['countryCode'] })).map(
+    (s) => s.countryCode
+  );
+
+/**
+ * A completed trip's countries count as visited on its own map and on every map it was
+ * added to (group trips), in `tx`. `mapId` is the trip's own map.
+ */
+async function markVisitedOnTripMaps(tx, { tripId, mapId }, countryCodes) {
+  if (!countryCodes.length) return;
+  const links = await tx.tripMap.findMany({ where: { tripId }, select: { mapId: true } });
+  for (const id of [mapId, ...links.map((l) => l.mapId)]) await createMissingVisits(id, countryCodes, 'TRIP', tx);
+}
+
 /**
  * Change a trip. `markVisited` (the trip is being completed): its stops' countries
- * count as visited on its map, in the same transaction.
+ * count as visited on its map and the maps it was added to, in the same transaction.
  */
 export const updateTripInDB = (tripId, data, { markVisited = false } = {}) => {
   if (!markVisited) return prisma.trip.update({ where: { id: tripId }, data, select: TRIP_UPDATE_SELECT });
   return prisma.$transaction(async (tx) => {
+    // The update locks the trip's row, so a link being added at the same time waits for
+    // this, then sees the trip completed (addTripToMapInDB)
     const trip = await tx.trip.update({ where: { id: tripId }, data, select: TRIP_UPDATE_SELECT });
-    const stops = await tx.tripStop.findMany({ where: { tripId }, select: { countryCode: true }, distinct: ['countryCode'] });
-    await createMissingVisits(trip.mapId, stops.map((s) => s.countryCode), 'TRIP', tx);
+    await markVisitedOnTripMaps(tx, { tripId, mapId: trip.mapId }, await stopCountries(tx, tripId));
     return trip;
   });
 };
 
-/** A stop's country on a completed trip counts as visited on the trip's map (in `tx`). */
+/** A stop's country on a completed trip counts as visited on the trip's maps (in `tx`). */
 async function markStopVisited(tx, tripId, countryCode) {
   const trip = await tx.trip.findUnique({ where: { id: tripId }, select: { mapId: true, status: true } });
-  if (trip?.status === 'COMPLETED') await createMissingVisits(trip.mapId, [countryCode], 'TRIP', tx);
+  if (trip?.status === 'COMPLETED') await markVisitedOnTripMaps(tx, { tripId, mapId: trip.mapId }, [countryCode]);
 }
 
 export const deleteTripInDB = (tripId) => prisma.trip.delete({ where: { id: tripId } });
@@ -259,5 +285,116 @@ export const upsertTripMember = (tripId, userId, role) =>
     select: MEMBER_SELECT,
   });
 
-export const deleteTripMember = (tripId, userId) =>
-  prisma.tripMember.deleteMany({ where: { tripId, userId } });
+/**
+ * Someone leaves a trip, or is removed from it: their TripMember row goes, and so do the
+ * maps they added the trip to ("Add to my map"); the visits it marked there stay. One
+ * transaction. -> `{ count }` (member rows removed)
+ */
+export const deleteTripMember = async (tripId, userId) => {
+  const [, member] = await prisma.$transaction([
+    prisma.tripMap.deleteMany({ where: { tripId, addedById: userId } }),
+    prisma.tripMember.deleteMany({ where: { tripId, userId } }),
+  ]);
+  return member;
+};
+
+// Group trips: a trip shown on other people's maps (TripMap, docs/API.md "Group trips")
+
+/**
+ * Show a trip on another map. Nothing happens when it's already there. A completed
+ * trip's countries are marked visited on that map at once (the South Pole bringing
+ * Antarctica, as everywhere). One transaction; the trip's row is share-locked first, so
+ * a completion running at the same time either sees this link or is seen by it.
+ * -> `{ created }`
+ */
+export const addTripToMapInDB = ({ tripId, mapId, addedById }) =>
+  prisma.$transaction(async (tx) => {
+    const [trip] = await tx.$queryRaw`SELECT "status"::text AS "status" FROM "trip" WHERE "id" = ${tripId} FOR SHARE`;
+    if (!trip) return { created: false };
+    const { count } = await tx.tripMap.createMany({ data: [{ tripId, mapId, addedById }], skipDuplicates: true });
+    if (!count) return { created: false };
+    if (trip.status === 'COMPLETED') await createMissingVisits(mapId, await stopCountries(tx, tripId), 'TRIP', tx);
+    return { created: true };
+  });
+
+/** One link: `{ addedById, map: { ownerId } }`, or null. */
+export const findTripMapLink = (tripId, mapId) =>
+  prisma.tripMap.findUnique({
+    where: { tripId_mapId: { tripId, mapId } },
+    select: { addedById: true, map: { select: { ownerId: true } } },
+  });
+
+/** Take a trip off a map (the visits it marked stay). -> `{ count }` */
+export const deleteTripMapLink = (tripId, mapId) => prisma.tripMap.deleteMany({ where: { tripId, mapId } });
+
+// Maps a user owns or edits (where they may add a trip). `userId` is always set here.
+const mapsUserEdits = (userId) => ({ OR: [{ ownerId: userId }, { members: { some: { userId, role: 'EDITOR' } } }] });
+
+/**
+ * The maps of `userId` (owned or edited) a trip was added to, first added first:
+ * `[{ mapId, addedById, map: { name, ownerId } }]`. Empty without a user.
+ */
+export const findTripLinksOnUsersMaps = (tripId, userId) =>
+  userId
+    ? prisma.tripMap.findMany({
+        where: { tripId, map: mapsUserEdits(userId) },
+        select: { mapId: true, addedById: true, map: { select: { name: true, ownerId: true } } },
+        orderBy: { addedAt: 'asc' },
+      })
+    : [];
+
+/** Does `userId` own or edit a map other than `exceptMapId`? */
+export const hasEditableMapOtherThan = async (userId, exceptMapId) =>
+  Boolean(
+    userId &&
+      (await prisma.travelMap.findFirst({ where: { id: { not: exceptMapId }, ...mapsUserEdits(userId) }, select: { id: true } }))
+  );
+
+/**
+ * Trips from other maps shown on this one, with what a list needs: the summary fields,
+ * the organiser's map (`map: { name, ownerId }`) and the stops' countries in trip order
+ * (`countryCodes`). Counts are added later, only for the trips the caller can open.
+ */
+export const findTripsLinkedToMap = async (mapId) => {
+  const links = await prisma.tripMap.findMany({
+    where: { mapId },
+    select: { trip: { select: { ...TRIP_SUMMARY_SELECT, map: { select: { name: true, ownerId: true } } } } },
+  });
+  const trips = links.map((l) => l.trip);
+  if (!trips.length) return [];
+  const stops = await prisma.tripStop.findMany({
+    where: { tripId: { in: trips.map((t) => t.id) } },
+    select: { tripId: true, countryCode: true },
+    orderBy: [{ tripId: 'asc' }, { position: 'asc' }],
+  });
+  const countries = new Map(trips.map((t) => [t.id, []]));
+  for (const s of stops) {
+    const list = countries.get(s.tripId);
+    if (!list.includes(s.countryCode)) list.push(s.countryCode);
+  }
+  return trips.map((t) => ({ ...t, countryCodes: countries.get(t.id) }));
+};
+
+/**
+ * The caller's own memberships behind some trips (from other maps): their MapMember rows
+ * on those trips' maps and their TripMember rows on the trips, side by side. Nothing is
+ * read without a user (a filter on `userId: undefined` would match everyone's rows).
+ * -> `{ mapRoles: Map<mapId, role>, tripRoles: Map<tripId, role> }`
+ */
+export const findMembershipsForTrips = async (trips, userId) => {
+  if (!userId || !trips.length) return { mapRoles: new Map(), tripRoles: new Map() };
+  const [mapMembers, tripMembers] = await Promise.all([
+    prisma.mapMember.findMany({
+      where: { userId, mapId: { in: [...new Set(trips.map((t) => t.mapId))] } },
+      select: { mapId: true, role: true },
+    }),
+    prisma.tripMember.findMany({ where: { userId, tripId: { in: trips.map((t) => t.id) } }, select: { tripId: true, role: true } }),
+  ]);
+  return {
+    mapRoles: new Map(mapMembers.map((m) => [m.mapId, m.role])),
+    tripRoles: new Map(tripMembers.map((m) => [m.tripId, m.role])),
+  };
+};
+
+/** How many trips from other maps are shown on a map (they count in its stats). */
+export const countLinkedTrips = (mapId) => prisma.tripMap.count({ where: { mapId } });

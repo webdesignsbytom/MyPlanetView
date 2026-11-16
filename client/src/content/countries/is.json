@@ -1,0 +1,192 @@
+{
+  "code": "IS",
+  "slug": "iceland",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Velkomin", "Ísland"],
+  "summary": "Glaciers, waterfalls and hot springs, under the midnight sun or the northern lights.",
+  "overview": [
+    "Iceland is a young volcanic island on the edge of the Arctic, where lava fields, black-sand beaches, glaciers and waterfalls lie within a day's drive of each other. Most visitors land at Keflavík, spend a night or two in Reykjavík, then follow the Ring Road (Route 1) round the island.",
+    "It's expensive, and the weather changes fast in every season, so pack for rain and wind even in summer. Plan each day with the forecast: storms close roads, and the waves on beaches such as Reynisfjara have swept people away. Almost everyone speaks English."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Mild, around 10–15°C, with daylight almost round the clock in June. Every road is open, including the mountain roads into the highlands (usually from late June or July). The busiest and most expensive time: book cars and rooms early."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10],
+        "text": "Quieter, with autumn colours and the first northern lights once the nights are dark again, usually from late August or September. The highland roads close and the weather turns stormier."
+      },
+      {
+        "name": "Winter",
+        "months": [11, 12, 1, 2, 3],
+        "text": "Short days (four to five hours of daylight in December), snow and ice, and storms that can close roads for a day or more. The best time for the northern lights and ice caves; many visitors take guided tours rather than drive."
+      },
+      {
+        "name": "Spring",
+        "months": [4, 5],
+        "text": "Longer days and fewer visitors. Snow lingers in the north and the mountains into May, and the puffins return to the cliffs from late April."
+      }
+    ],
+    "weather": "Cool and changeable rather than very cold: the Gulf Stream keeps Reykjavík's winters around freezing and its summers around 10–15°C. The south and west are wetter and windier, the north and east a little colder and drier. Wind is the thing to plan for, in every season.",
+    "festivals": [
+      {
+        "name": "Þorrablót",
+        "place": "Across Iceland",
+        "when": "Late January to late February (the old month of Þorri)",
+        "months": [1, 2],
+        "text": "Midwinter feasts of traditional food: cured and soured meats, dried fish and fermented shark (hákarl), usually with a shot of brennivín, a caraway spirit."
+      },
+      {
+        "name": "National Day",
+        "place": "Across Iceland",
+        "when": "17 June",
+        "months": [6],
+        "text": "Parades, music and street parties marking the founding of the republic in 1944."
+      },
+      {
+        "name": "Þjóðhátíð",
+        "place": "Vestmannaeyjar (the Westman Islands)",
+        "when": "The first weekend of August",
+        "months": [8],
+        "text": "Three days of music and bonfires in a valley on the island of Heimaey. Ferries and flights sell out early."
+      },
+      {
+        "name": "Culture Night (Menningarnótt)",
+        "place": "Reykjavík",
+        "when": "A Saturday in late August",
+        "months": [8],
+        "text": "Free concerts, open houses and events across the city, ending with fireworks over the harbour."
+      },
+      {
+        "name": "Iceland Airwaves",
+        "place": "Reykjavík",
+        "when": "Usually in early November",
+        "months": [11],
+        "text": "A music festival of Icelandic and international bands in venues across the city."
+      },
+      {
+        "name": "New Year's Eve",
+        "place": "Across Iceland",
+        "when": "31 December",
+        "months": [12],
+        "text": "Neighbourhood bonfires, then a sky full of fireworks at midnight, set off by almost everyone."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Reykjavík and the south",
+        "text": "The Golden Circle, the south coast's waterfalls and the glacier lagoon at Jökulsárlón: the most visited part of the island, and the easiest to drive in winter."
+      },
+      {
+        "name": "The highlands",
+        "text": "The empty interior is reached only on mountain roads (F-roads) in a four-wheel-drive car, usually from late June or July to early September. Ordinary hire cars aren't allowed on them."
+      },
+      {
+        "name": "The north, the east and the Westfjords",
+        "text": "Further from Reykjavík and colder in winter, when mountain passes often close. They're at their best from June to September."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake, or a simple \"hæ\" between friends. Icelanders use first names for everyone, even the president: most people have a first name and a name formed from a parent's, ending in -son or -dóttir, rather than a family surname.",
+    "etiquette": [
+      "Shower without a swimsuit before you go into a public pool or lagoon. It's the rule everywhere, and staff will remind you.",
+      "Stay on marked paths and never drive off the road: it scars the moss for decades and is against the law, with heavy fines.",
+      "Check the weather forecast and road conditions every morning before you drive, and leave your plans on SafeTravel.is before remote trips.",
+      "Keep well back from the waves on black-sand beaches such as Reynisfjara, and never turn your back on the sea there.",
+      "Take off your shoes when you go into someone's home."
+    ],
+    "tipping": "Not expected: service is included in prices. Rounding up, or leaving a little for an excellent guide, is welcome but never required.",
+    "dress": "Layers, whatever the month: a warm middle layer, a waterproof and windproof jacket and trousers, a hat and gloves, and boots with grip. Bring a swimsuit for the pools and lagoons.",
+    "food": [
+      {
+        "name": "Lamb",
+        "text": "Sheep graze freely all summer, and lamb soup (kjötsúpa) is the classic warming dish."
+      },
+      {
+        "name": "Fish",
+        "text": "Cod, haddock, Arctic char and, in the town of Höfn, langoustine, often served simply and very fresh."
+      },
+      {
+        "name": "Skyr",
+        "text": "A thick, mild dairy food like strained yoghurt, eaten at breakfast or in desserts."
+      },
+      {
+        "name": "Hot dogs (pylsur)",
+        "text": "Lamb-based hot dogs from kiosks, ordered \"eina með öllu\": one with everything, including raw and crispy onions."
+      },
+      {
+        "name": "Rye bread (rúgbrauð)",
+        "text": "Dense, sweet rye bread, sometimes baked slowly in hot ground near geothermal springs."
+      },
+      {
+        "name": "Tap water",
+        "text": "Some of the cleanest anywhere, so there's no need to buy bottled water."
+      }
+    ],
+    "phrases": {
+      "language": "Icelandic",
+      "intro": "Almost everyone speaks English, but a few words are always welcome. Þ sounds like the \"th\" in \"thin\", and ð like the \"th\" in \"this\".",
+      "items": [
+        { "phrase": "Hæ", "say": "hi", "meaning": "Hi" },
+        { "phrase": "Góðan daginn", "say": "GOH-than DAI-yin", "meaning": "Good day" },
+        { "phrase": "Takk fyrir", "say": "tahk FIH-rir", "meaning": "Thank you" },
+        { "phrase": "Já / Nei", "say": "yow / nay", "meaning": "Yes / No" },
+        { "phrase": "Hvað kostar þetta?", "say": "kvath KOS-tar THET-ta", "meaning": "How much is this?" },
+        { "phrase": "Skál!", "say": "skowl", "meaning": "Cheers!" },
+        { "phrase": "Bless", "say": "bless", "meaning": "Bye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q189",
+    "queried": "2026-11-16",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Icelandic króna (ISK). Cards are taken almost everywhere, even for small amounts.",
+        "sources": [{ "property": "P38", "values": ["Q131473"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Icelandic; almost everyone speaks English too",
+        "sources": [{ "property": "P37", "values": ["Q294"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }],
+        "note": "Wikidata also lists driving on the left, ended 26 May 1968 (H-dagurinn); the right is its preferred value."
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+0 all year, with no summer time",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q63286000"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire, ambulance and rescue",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+354",
+        "sources": [{ "property": "P474", "values": ["+354"] }]
+      }
+    ]
+  }
+}

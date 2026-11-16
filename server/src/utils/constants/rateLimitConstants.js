@@ -77,6 +77,14 @@ export const MAP_CREATE_DAILY_USER_LIMIT = {
   max: 20,
 };
 
+// Billing writes per signed-in user (checkout, plan and extra-map changes, the portal):
+// each one calls Stripe
+export const BILLING_RATE_LIMIT = {
+  name: 'billing-user',
+  windowMs: 15 * MINUTES,
+  max: 20,
+};
+
 // better-auth's limiter (window in seconds, not ms), on the database (auth.js).
 // For sign-in, sign-up, change-password and change-email its own stricter rule
 // replaces this one: 3 per 10 s.

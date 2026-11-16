@@ -16,6 +16,8 @@ export const MAP_SETTING_FLAGS = Object.freeze([
   'showUserBanner',
   // Draw Antarctica and the south poles (on unless turned off); only the view changes
   'showAntarctica',
+  // The pinned-note mark beside places with moments (on unless turned off)
+  'showMoments',
 ]);
 
 const isPlainObject = (value) =>

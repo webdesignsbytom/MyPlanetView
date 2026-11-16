@@ -3,7 +3,8 @@
 export const GROUP_TYPES = Object.freeze(['SOLO', 'COUPLE', 'FAMILY']);
 export const VISIT_STATUSES = Object.freeze(['VISITED', 'LIVED', 'WANT_TO_GO']);
 export const TRIP_STATUSES = Object.freeze(['PLANNED', 'ACTIVE', 'COMPLETED']);
-export const PHOTO_SIZES = Object.freeze(['THUMB', 'DISPLAY', 'ORIGINAL']);
+// Which of ORIGINAL and PRINT a photo keeps follows its map owner's plan (utils/planLimits.js)
+export const PHOTO_SIZES = Object.freeze(['THUMB', 'DISPLAY', 'ORIGINAL', 'PRINT']);
 export const LINK_ACCESS_VALUES = Object.freeze(['RESTRICTED', 'ANYONE_WITH_LINK']);
 
 // Visits that count as "been there" in stats

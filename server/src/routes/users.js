@@ -12,6 +12,13 @@ import {
   removeAvatarHandler,
 } from '../controllers/users.js';
 import { getMapSettingsHandler, putMapSettingsHandler } from '../controllers/mapSettings.js';
+import { getLeavingOptionsHandler, putLeavingPlanHandler } from '../controllers/leaving.js';
+import {
+  adminTransferMapHandler,
+  createGrantHandler,
+  endGrantHandler,
+  listGrantsHandler,
+} from '../controllers/planAdmin.js';
 // Middleware
 import {
   validateAuthentication,
@@ -26,6 +33,11 @@ const router = Router();
 // Map viewing preferences (docs/API.md, "Map settings")
 router.get('/map-settings', validateAuthentication, getMapSettingsHandler);
 router.put('/map-settings', validateAuthentication, putMapSettingsHandler);
+
+// Leaving: what happens to your maps and photos when you delete your account
+// (docs/API.md, "Leaving"). An account change, so no verified email needed.
+router.get('/leaving-options', validateAuthentication, getLeavingOptionsHandler);
+router.put('/leaving-plan', validateAuthentication, putLeavingPlanHandler);
 
 // Current user
 router.get(
@@ -84,5 +96,11 @@ router.delete(
   validateAdminRole,
   adminDeleteUserHandler
 );
+
+// Admin: complimentary memberships, and moving a map whose owner can't
+router.get('/admin/plan-grants/:userId', validateAuthentication, validateAdminRole, listGrantsHandler);
+router.post('/admin/plan-grants/:userId', validateAuthentication, validateAdminRole, createGrantHandler);
+router.patch('/admin/end-plan-grant/:grantId', validateAuthentication, validateAdminRole, endGrantHandler);
+router.post('/admin/transfer-map', validateAuthentication, validateAdminRole, adminTransferMapHandler);
 
 export default router;
