@@ -35,7 +35,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/fr-800.avif",
+    "imageKey": "visitCountryPosters/fr-paris-riverside-800.avif",
     "weight": 3
   },
   {
@@ -52,7 +52,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/it-800.avif",
+    "imageKey": "visitCountryPosters/it-vintage-collage-800.avif",
     "weight": 3
   },
   {
@@ -86,7 +86,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/gr-800.avif",
+    "imageKey": "visitCountryPosters/gr-aegean-dreams-800.avif",
     "weight": 3
   },
   {
@@ -103,7 +103,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/jp-800.avif",
+    "imageKey": "visitCountryPosters/jp-blossoms-beneath-fuji-800.avif",
     "weight": 3
   },
   {
@@ -154,7 +154,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/is-800.avif",
+    "imageKey": "visitCountryPosters/is-land-of-fire-and-ice-800.avif",
     "weight": 3
   },
   {
@@ -171,7 +171,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/ma-800.avif",
+    "imageKey": "visitCountryPosters/ma-vintage-adventure-800.avif",
     "weight": 3
   },
   {
@@ -188,7 +188,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/mx-800.avif",
+    "imageKey": "visitCountryPosters/mx-land-of-ancient-wonders-800.avif",
     "weight": 3
   },
   {
@@ -205,7 +205,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/au-800.avif",
+    "imageKey": "visitCountryPosters/au-icons-at-sunset-800.avif",
     "weight": 3
   },
   {
@@ -254,7 +254,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/tours?country={country}&q={destination}&date={checkin}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/fr-800.avif",
+    "imageKey": "visitCountryPosters/fr-paris-riverside-800.avif",
     "weight": 2
   },
   {
@@ -270,7 +270,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/tours?country={country}&q={destination}&date={checkin}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/it-800.avif",
+    "imageKey": "visitCountryPosters/it-vintage-collage-800.avif",
     "weight": 2
   },
   {
@@ -302,7 +302,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/tours?country={country}&q={destination}&date={checkin}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/gr-800.avif",
+    "imageKey": "visitCountryPosters/gr-aegean-dreams-800.avif",
     "weight": 2
   },
   {
@@ -318,7 +318,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/tours?country={country}&q={destination}&date={checkin}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/jp-800.avif",
+    "imageKey": "visitCountryPosters/jp-blossoms-beneath-fuji-800.avif",
     "weight": 2
   },
   {
@@ -366,7 +366,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/tours?country={country}&q={destination}&date={checkin}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/is-800.avif",
+    "imageKey": "visitCountryPosters/is-land-of-fire-and-ice-800.avif",
     "weight": 2
   },
   {
@@ -382,7 +382,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/tours?country={country}&q={destination}&date={checkin}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/ma-800.avif",
+    "imageKey": "visitCountryPosters/ma-vintage-adventure-800.avif",
     "weight": 2
   },
   {
