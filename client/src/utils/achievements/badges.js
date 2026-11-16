@@ -40,6 +40,11 @@ const WORDS = {
       { name: CONTINENT_LABELS[continent], description: `A first country in ${CONTINENT_LABELS[continent]}.` },
     ]),
   ),
+  'countries-all': {
+    name: 'All countries',
+    short: 'All',
+    description: 'Every country on the map visited or lived in. Antarctica and the poles count apart.',
+  },
   'continents-all': { name: 'Six continents', short: '6', description: 'A country on each of the six continents people live on.' },
   antarctica: { name: 'Antarctica', description: 'Antarctica visited. The South Pole brings it with it.' },
   'north-pole': { name: 'North Pole', description: 'The geographic North Pole, at the top of the world.' },

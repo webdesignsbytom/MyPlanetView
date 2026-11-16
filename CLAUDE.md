@@ -364,7 +364,7 @@ Production never gets the seed (so never the example offers: its offers come fro
 
 - **`src/server.js`** wires the global middleware in this order:
   1. helmet (CSP off);
-  2. `X-Robots-Tag: noindex` on everything;
+  2. `X-Robots-Tag: noindex` and `Cache-Control: no-store` on everything (a route that may be cached sets its own: countries and landmarks, offers, themes);
   3. request context (`X-Request-Id`);
   4. morgan (`utils/requestLog.js`: its `url` token is redacted, see Logging);
   5. CORS from `FRONTEND_ORIGIN` (comma-separated; also better-auth's trusted origins);
@@ -430,6 +430,7 @@ Production never gets the seed (so never the example offers: its offers come fro
 ## Known gaps
 
 - **Untested for real:** the API is tested end to end against Postgres (`npm run test:integration`), but nothing has run against real R2 (the bucket client is mocked there), real Cloudflare Stream (an in-memory Stream there, and the mock's in the browser) or in a real browser on the live site. Uploads, signed URLs and the client flows need trying for real.
+- **The API through Netlify** (17 Nov 2026, while there's no domain): called at `my-planet-view.vercel.app` from the Netlify site, the API's cookies were third-party, which Safari and many phone browsers never keep, so signing in on a phone ended in "No valid session found". The Netlify site now passes `/api/*` and `/go/*` through to the API (the first rules `scripts/prerender.mjs` writes into `_redirects`, `API_PROXY_TARGET`; the prerender asks the API itself for those paths), and `VITE_API_URL` must be the Netlify site's own address (set in Netlify's environment variables), so the browser only talks to the site and the cookie is its own. Every API reply is `Cache-Control: no-store` unless its route sets its own, so Netlify's CDN never keeps one person's reply for another. While proxied, Vercel sees Netlify's address as every visitor's, so the per-IP rate limits (and better-auth's) are shared by everyone: fine for a test, not for launch. Once the API is on `api.<domain>`, drop the rules and switch the cookies to `lax`. Apache (`.htaccess`, InMotion) has no such rule.
 - **Placeholders:**
   - the domain;
   - the CSP's bucket and Stream hosts (whole Cloudflare domains for now) and its API host (`my-planet-view.vercel.app`).

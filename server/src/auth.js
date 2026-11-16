@@ -85,6 +85,11 @@ export const disableAuthEmails = () => {
 // Production keeps SameSite=None for now, because the API's host isn't decided and
 // may be a different site from the client's (middleware/originCheck.js refuses
 // cross-site writes meanwhile). Switch to 'lax' once the API is on api.<domain>.
+// The browser must see these cookies as the site's own: called on another site
+// (my-planet-view.vercel.app from the Netlify site), they're third-party, which Safari and
+// many phone browsers never keep, and every request after signing in got "No valid
+// session found" (17 Nov 2026). So the Netlify site passes /api through to here
+// (client/scripts/prerender.mjs), and the client calls its own address (VITE_API_URL).
 const cookieAttributes = {
   httpOnly: true,
   secure: isProd,

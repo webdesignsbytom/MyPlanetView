@@ -125,7 +125,8 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
 
 - **Accepted keys:**
   - `style`: `animated` or `old-map` (`jupiter` and `galaxy` were taken out on 16 Nov 2026 and are now refused; a profile that saved one keeps it until the next save, and the client opens it as `animated`);
-  - `mapType`: `regular`, or `detailed` (country names, grid lines and landmarks at every zoom);
+  - `mapType`: `regular`, or `detailed` (country names and grid lines at every zoom);
+  - `landmarkPins`: `zoomed` (the default: from zoom 3), `always`, `stamped` (only the landmarks stamped in the map's passport) or `off` (17 Nov 2026); any other value is refused;
   - the booleans `showGrid`, `showGridLabels`, `animatedSea`, `sunAndMoon`, `showCountryNames` and `hoverPreview`;
   - from my_planet, the booleans `showVisited` and `showUnvisited` (when off, those countries fade back on the map) and `showUserBanner` (the map's banner at the top);
   - `showAntarctica` (on unless set to `false`): draws Antarctica and the two South Poles, and extends the map down to them. It changes only the view, never visits or stats;
@@ -346,7 +347,7 @@ Counted from the map's own data (visits, photos, stamps); only awards and goals 
 | `DELETE /goals/:goalId` | editor of its map, **verified** | → `{ message }` |
 | `GET /shared/:code/badges`, `GET /shared/:code/goals` | anyone with a map's code | As above (a trip's code → 404) |
 
-- **Badges** (`server/src/utils/badges.js`; the client words each `key`): groups `countries` (`countries-1`, `-5`, `-10`, `-25`, `-50`, `-100`; special places don't count), `continents` (`continent-africa`, `-asia`, `-europe`, `-north-america`, `-oceania`, `-south-america`: a first country there; `continents-all`: all six), `special` (`antarctica`, `north-pole`, `south-pole`), `regions` (`region-<key>`: every country in one of the regions of `utils/constants/regions.js`, e.g. `region-scandinavia`), `landmarks` (`landmarks-1`, `-10`, `-50` stamps; `unesco-5`, `unesco-25`), `photos` (`photos-100`, `photos-1000`) and `themes` (`themes-3`, `-6`, `-12`: monthly photo themes with a photo of the map in; see "Photo themes"). Awarding counts everything on the map, hidden photos included.
+- **Badges** (`server/src/utils/badges.js`; the client words each `key`): groups `countries` (`countries-1`, `-5`, `-10`, `-25`, `-50`, `-100`, and `countries-all`: every country the map shows, its `need` counted from the country table, 227, or 230 on a map that splits the UK, whose nations count instead of the UK; special places don't count), `continents` (`continent-africa`, `-asia`, `-europe`, `-north-america`, `-oceania`, `-south-america`: a first country there; `continents-all`: all six), `special` (`antarctica`, `north-pole`, `south-pole`), `regions` (`region-<key>`: every country in one of the regions of `utils/constants/regions.js`, e.g. `region-scandinavia`), `landmarks` (`landmarks-1`, `-10`, `-50` stamps; `unesco-5`, `unesco-25`), `photos` (`photos-100`, `photos-1000`) and `themes` (`themes-3`, `-6`, `-12`: monthly photo themes with a photo of the map in; see "Photo themes"). Awarding counts everything on the map, hidden photos included.
 - **A goal:** `{ id, kind, title, target, countryCodes, region, deadline, achievedAt, createdAt, progress: { have, need, met, missed, done? } }`. Kinds (CHECK `goal_shape` holds each to its own field):
   - `COUNTRY_COUNT`: `target` countries (1–250), special places not counted;
   - `COUNTRY_LIST`: every place in `countryCodes` (1–100 distinct codes, special places allowed: a bucket list); `progress.done` lists those done;

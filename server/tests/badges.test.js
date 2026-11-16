@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { BADGES, BADGE_KEYS, TRAVELLER_BADGE_GROUPS, badgeProgress, travellerBadges } from '../src/utils/badges.js';
 import { REGIONS } from '../src/utils/constants/regions.js';
+import { COUNTRIES } from '../prisma/seed/data/countries.js';
 
 const continentByCode = new Map([
   ['FR', 'EUROPE'], ['DK', 'EUROPE'], ['NO', 'EUROPE'], ['SE', 'EUROPE'], ['JP', 'ASIA'], ['KE', 'AFRICA'],
@@ -59,6 +60,31 @@ describe('site badges', () => {
     expect(of(progress, 'themes-6')).toMatchObject({ have: 6, need: 6, earned: true });
     expect(of(progress, 'themes-12')).toMatchObject({ have: 6, need: 12, earned: false });
     expect(of(badgeProgress({}), 'themes-3').have).toBe(0);
+  });
+
+  it('award "All countries" for every country the map shows: the UK, or its four nations on a split map', () => {
+    const table = new Map([
+      ['FR', 'EUROPE'], ['GB', 'EUROPE'], ['XE', 'EUROPE'], ['XC', 'EUROPE'], ['XW', 'EUROPE'], ['XI', 'EUROPE'],
+      ['AQ', 'ANTARCTICA'], ['XS', 'ANTARCTICA'], ['XN', null],
+    ]);
+    const all = (visited, splitUk = false) => of(badgeProgress({ visited: new Set(visited), continentByCode: table, splitUk }), 'countries-all');
+    expect(all(['FR'])).toMatchObject({ group: 'countries', have: 1, need: 2, earned: false });
+    // Antarctica and the poles count apart
+    expect(all(['FR', 'GB', 'AQ', 'XS', 'XN'])).toMatchObject({ have: 2, need: 2, earned: true });
+    // On a split map, the nations instead of the UK (an old UK mark isn't a nation yet)
+    expect(all(['FR', 'GB'], true)).toMatchObject({ have: 1, need: 5, earned: false });
+    expect(all(['FR', 'XE', 'XC', 'XW'], true)).toMatchObject({ have: 4, need: 5, earned: false });
+    expect(all(['FR', 'XE', 'XC', 'XW', 'XI'], true)).toMatchObject({ have: 5, need: 5, earned: true });
+    // With no country table to count from, nothing is earned
+    expect(of(badgeProgress({}), 'countries-all')).toMatchObject({ have: 0, need: 1, earned: false });
+  });
+
+  it('need all 227 countries of the seeded list for "All countries", or 230 with the UK split', () => {
+    const table = new Map(COUNTRIES.map((c) => [c.code, c.continent]));
+    expect(of(badgeProgress({ continentByCode: table }), 'countries-all').need).toBe(227);
+    expect(of(badgeProgress({ continentByCode: table, splitUk: true }), 'countries-all').need).toBe(230);
+    const everywhere = new Set(COUNTRIES.filter((c) => c.kind !== 'NATION').map((c) => c.code));
+    expect(of(badgeProgress({ visited: everywhere, continentByCode: table }), 'countries-all')).toMatchObject({ have: 227, earned: true });
   });
 });
 

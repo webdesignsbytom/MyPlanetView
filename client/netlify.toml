@@ -7,7 +7,10 @@
 [build.environment]
   PLAYWRIGHT_BROWSERS_PATH = "0"
 
-# Redirects: dist/_redirects is written at build (browser-only pages -> app shell, the rest 404.html)
+# Redirects: dist/_redirects is written at build (scripts/prerender.mjs): first /api/* and /go/*
+# passed through to the API (my-planet-view.vercel.app), so the browser only talks to this
+# site and the sign-in cookie is its own (set VITE_API_URL to this site's address); then
+# browser-only pages -> app shell, the rest 404.html
 # Retired URLs: add a 301 per old path, e.g.
 # [[redirects]]
 #   from = "/old-path"
