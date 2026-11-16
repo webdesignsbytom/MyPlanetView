@@ -9,7 +9,6 @@ import { HelmetItem } from '@/components/utils/HelmetItem';
 import PublicPageLayout from '@/components/common/PublicPageLayout';
 import PaperCard from '@/components/common/PaperCard';
 import CountryStartMap from '@/components/countries/CountryStartMap';
-import MonthDraftBanner from '@/components/months/MonthDraftBanner';
 import MonthPageHeader from '@/components/months/MonthPageHeader';
 import MonthBestList from '@/components/months/MonthBestList';
 import MonthMoreList from '@/components/months/MonthMoreList';
@@ -46,7 +45,6 @@ function MonthPage({ page }) {
       />
 
       <PublicPageLayout mainProps={{ 'aria-labelledby': 'month-title', 'aria-describedby': 'month-summary' }}>
-        {isDraft ? <MonthDraftBanner slug={page.slug} /> : null}
         <MonthPageHeader page={page} />
 
         <PaperCard title={`${label} around the world`} titleId='month-intro-heading' bodyClassName='gap-3'>

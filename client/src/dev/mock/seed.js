@@ -96,7 +96,8 @@ const landmarkMatch = (photoId, mapId, landmarkId, { source = 'GPS', distanceM =
   confirmedAt: confirmedDaysAgo !== null ? daysAgo(confirmedDaysAgo) : null,
 });
 
-// A moment (docs/API.md "Moments"); `happenedOn` is the first day of what's known
+// A moment (docs/API.md "Moments"); `happenedOn` is the first day of what's known. A pin
+// (`latitude`, `longitude`) is seen by editors always, by viewers only when `spotShared`
 const moment = (id, fields) => ({
   id,
   tripId: null,
@@ -105,6 +106,9 @@ const moment = (id, fields) => ({
   datePrecision: null,
   landmarkId: null,
   placeName: null,
+  latitude: null,
+  longitude: null,
+  spotShared: false,
   hidden: false,
   travellerIds: [],
   photoIds: [],
@@ -157,23 +161,23 @@ function buildBaseSeed() {
   return {
     version: 1,
     users: [
-      user(USER_ID, 'Test Traveller', 'test@myplanetview.local'),
+      user(USER_ID, 'Charlie Reid', 'test@myplanetview.local'),
       user(ALEX_ID, 'Alex Morgan', 'alex@example.test'),
       user(SAM_ID, 'Sam Rivers', 'sam@example.test'),
       // Both signed up with the podcast's code (promoCodes below)
       user(JO_ID, 'Jo Patel', 'jo@example.test', { promoCodeId: 'promo-traveltalk' }),
       user(TOM_ID, 'Tom Baker', 'tom@example.test', { promoCodeId: 'promo-traveltalk' }),
-      user('mock-admin', 'Ada Admin', 'admin@example.test', { role: 'ADMIN' }),
-      user('mock-paused', 'Pat Paused', 'paused@example.test', { isActive: false }),
+      user('mock-admin', 'Ada Lawson', 'admin@example.test', { role: 'ADMIN' }),
+      user('mock-paused', 'Pat Quinn', 'paused@example.test', { isActive: false }),
     ],
     maps: [
-      { id: homeMap, name: "Test & Alex's travels", groupType: 'COUPLE', isDefault: true, ownerId: USER_ID, linkAccess: 'RESTRICTED', shareCode: 'K7QXM2PA9RTW', createdAt: daysAgo(90) },
+      { id: homeMap, name: "Charlie & Alex's travels", groupType: 'COUPLE', isDefault: true, ownerId: USER_ID, linkAccess: 'RESTRICTED', shareCode: 'K7QXM2PA9RTW', createdAt: daysAgo(90) },
       { id: samMap, name: "Sam's gap year", groupType: 'SOLO', isDefault: true, ownerId: SAM_ID, linkAccess: 'ANYONE_WITH_LINK', shareCode: 'SAMG4PYEAR22', createdAt: daysAgo(200) },
       { id: joMap, name: "Jo's family trips", groupType: 'FAMILY', isDefault: true, ownerId: JO_ID, linkAccess: 'RESTRICTED', shareCode: 'J0FAM7TRP5QX'.replace('0', 'D'), createdAt: daysAgo(150) },
       { id: tomMap, name: "Tom's map", groupType: 'SOLO', isDefault: true, ownerId: TOM_ID, linkAccess: 'RESTRICTED', shareCode: 'TQMB7KX2PRG4', createdAt: daysAgo(300) },
     ],
     travellers: [
-      { id: 'trav-test', mapId: homeMap, name: 'Test', position: 0, userId: USER_ID, birthCountryCode: 'GB', favouriteCountryCode: 'JP' },
+      { id: 'trav-test', mapId: homeMap, name: 'Charlie', position: 0, userId: USER_ID, birthCountryCode: 'GB', favouriteCountryCode: 'JP' },
       { id: 'trav-alex', mapId: homeMap, name: 'Alex', position: 1, userId: ALEX_ID, birthCountryCode: 'IE', favouriteCountryCode: 'IT' },
       { id: 'trav-sam', mapId: samMap, name: 'Sam', position: 0, userId: SAM_ID, birthCountryCode: 'AU', favouriteCountryCode: 'TH' },
       { id: 'trav-jo', mapId: joMap, name: 'Jo', position: 0, userId: JO_ID, birthCountryCode: 'GB', favouriteCountryCode: 'PT' },
@@ -241,13 +245,13 @@ function buildBaseSeed() {
     // hidden. Jo's map: one on the Lisbon trip (the test user edits that trip alone) and one
     // that isn't, which the test user can't see.
     moments: [
-      moment('moment-born', { mapId: homeMap, createdById: USER_ID, kind: 'BORN', title: 'Test was born', text: 'In a snowstorm, apparently.', happenedOn: '1990-01-01', datePrecision: 'YEAR', countryCode: 'GB', placeName: 'Manchester', travellerIds: ['trav-test'] }),
+      moment('moment-born', { mapId: homeMap, createdById: USER_ID, kind: 'BORN', title: 'Charlie was born', text: 'In a snowstorm, apparently.', happenedOn: '1990-01-01', datePrecision: 'YEAR', countryCode: 'GB', placeName: 'Manchester', latitude: 53.4808, longitude: -2.2426, travellerIds: ['trav-test'] }),
       moment('moment-dublin', { mapId: homeMap, createdById: USER_ID, kind: 'MOVED_HERE', title: 'Moved to Dublin', happenedOn: '2012-09-01', datePrecision: 'MONTH', countryCode: 'IE', placeName: 'Dublin', travellerIds: ['trav-test', 'trav-alex'], photoIds: ['photo-cliffs-of-moher'] }),
       moment('moment-flamenco', { mapId: homeMap, createdById: ALEX_ID, kind: 'SAW_OR_DID', title: 'Saw flamenco in Granada', happenedOn: '2018-08-01', datePrecision: 'MONTH', countryCode: 'ES', landmarkId: 'lm-alhambra', travellerIds: ['trav-alex'], photoIds: ['photo-alhambra'] }),
-      moment('moment-engaged', { mapId: homeMap, createdById: USER_ID, kind: 'ENGAGEMENT', title: 'Got engaged at the Eiffel Tower', text: 'Alex said yes before the lights came on.', happenedOn: '2019-04-12', datePrecision: 'DAY', countryCode: 'FR', landmarkId: 'lm-eiffel-tower', travellerIds: ['trav-test', 'trav-alex'], photoIds: ['photo-eiffel'] }),
+      moment('moment-engaged', { mapId: homeMap, createdById: USER_ID, kind: 'ENGAGEMENT', title: 'Got engaged at the Eiffel Tower', text: 'Alex said yes before the lights came on.', happenedOn: '2019-04-12', datePrecision: 'DAY', countryCode: 'FR', landmarkId: 'lm-eiffel-tower', latitude: 48.8584, longitude: 2.2945, spotShared: true, travellerIds: ['trav-test', 'trav-alex'], photoIds: ['photo-eiffel'] }),
       moment('moment-gelato', { mapId: homeMap, createdById: ALEX_ID, kind: 'SAW_OR_DID', title: 'Best gelato of the trip', text: 'Pistachio, by the Ponte Vecchio.', happenedOn: '2025-07-09', datePrecision: 'DAY', countryCode: 'IT', placeName: 'Florence', tripId: italyTrip, travellerIds: ['trav-test', 'trav-alex'], photoIds: ['photo-florence-cathedral'] }),
       moment('moment-party', { mapId: homeMap, createdById: USER_ID, kind: 'CELEBRATION', title: 'Planning a surprise party', text: 'Editors only: keep it quiet!', countryCode: 'PT', hidden: true, travellerIds: ['trav-test'] }),
-      moment('moment-angkor', { mapId: samMap, createdById: SAM_ID, kind: 'SAW_OR_DID', title: 'Sunrise at Angkor Wat', happenedOn: '2024-02-21', datePrecision: 'DAY', countryCode: 'KH', landmarkId: 'lm-angkor-wat', tripId: samTrip, travellerIds: ['trav-sam'] }),
+      moment('moment-angkor', { mapId: samMap, createdById: SAM_ID, kind: 'SAW_OR_DID', title: 'Sunrise at Angkor Wat', happenedOn: '2024-02-21', datePrecision: 'DAY', countryCode: 'KH', landmarkId: 'lm-angkor-wat', latitude: 13.4125, longitude: 103.867, spotShared: true, tripId: samTrip, travellerIds: ['trav-sam'] }),
       moment('moment-passport', { mapId: samMap, createdById: SAM_ID, kind: 'SAW_OR_DID', title: 'Lost my passport in Bangkok', happenedOn: '2024-01-15', datePrecision: 'DAY', countryCode: 'TH', hidden: true, tripId: samTrip, travellerIds: ['trav-sam'], photoIds: ['photo-bangkok'] }),
       moment('moment-nata', { mapId: joMap, createdById: JO_ID, kind: 'SAW_OR_DID', title: 'Pastéis de nata at Belém', happenedOn: '2026-10-04', datePrecision: 'DAY', countryCode: 'PT', landmarkId: 'lm-tower-of-belem', tripId: lisbonTrip, travellerIds: ['trav-jo', 'trav-jo-kid'], photoIds: ['photo-lisbon'] }),
       moment('moment-mia', { mapId: joMap, createdById: JO_ID, kind: 'BORN', title: 'Mia was born', happenedOn: '2018-03-01', datePrecision: 'MONTH', countryCode: 'GB', travellerIds: ['trav-jo-kid'] }),

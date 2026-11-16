@@ -30,11 +30,11 @@ export default defineConfig({
     trace: 'on-first-retry',
     // "Copy link" in the share dialog
     permissions: ['clipboard-read', 'clipboard-write'],
-    // The map's animated sea never stops: two full-screen layers fading for ever (and the
-    // waves canvas), so a map page draws 60 frames a second. Headless Chromium composites
-    // them on the CPU, and a trace screencasts each frame: with four browsers at once the
-    // pages starved, and steps of a few ms took 10–60 s (6–9 minute runs, timeouts).
-    // The app honours reduced motion (no sea animation or waves, near-instant
+    // The map's animated sea never stops: two full-screen layers fading for ever, so a map
+    // page draws 60 frames a second. Headless Chromium composites them on the CPU, and a
+    // trace screencasts each frame: with four browsers at once the pages starved, and
+    // steps of a few ms took 10–60 s (6–9 minute runs, timeouts).
+    // The app honours reduced motion (no sea animation, near-instant
     // transitions), so the pages sit still between steps. Nothing tested depends on motion.
     // (A context option: Playwright Test has no `reducedMotion` of its own and ignores one.)
     contextOptions: { reducedMotion: 'reduce' },

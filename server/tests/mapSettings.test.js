@@ -31,9 +31,9 @@ describe('cleanMapSettings', () => {
   });
 
   it('drops unknown keys', () => {
-    expect(cleanMapSettings({ style: 'galaxy', isAdmin: true, __proto__x: 1 })).toEqual({
+    expect(cleanMapSettings({ style: 'old-map', isAdmin: true, __proto__x: 1 })).toEqual({
       ok: true,
-      value: { style: 'galaxy' },
+      value: { style: 'old-map' },
     });
   });
 
@@ -44,6 +44,12 @@ describe('cleanMapSettings', () => {
   it('refuses a known key with a wrong value', () => {
     expect(cleanMapSettings({ style: 'neon' }).ok).toBe(false);
     expect(cleanMapSettings({ showGrid: 'yes' }).ok).toBe(false);
+  });
+
+  it('refuses the styles taken out (Jupiter clouds and Galaxy, 16 Nov 2026)', () => {
+    expect(cleanMapSettings({ style: 'jupiter' }).ok).toBe(false);
+    expect(cleanMapSettings({ style: 'galaxy' }).ok).toBe(false);
+    expect(cleanMapSettings({ style: 'animated' })).toEqual({ ok: true, value: { style: 'animated' } });
   });
 
   it('refuses anything that is not a plain object', () => {

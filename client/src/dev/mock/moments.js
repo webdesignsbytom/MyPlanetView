@@ -5,6 +5,8 @@ import { isMomentKind, MOMENT_PAGE_DEFAULT, MOMENT_PAGE_MAX, MOMENT_PHOTOS_MAX, 
 import { compareMoments, momentCursor, parseMomentCursor, parseMomentDate } from '@/utils/moments/momentDates';
 import { getDb } from './store';
 import { atLeast, countryExists, landmarkById, photoThumbUrl } from './views';
+import { landmarkPlace, placeOnMap } from '@/utils/map/ukNations';
+import { parseMomentSpot, spotFitsPlace, spotView } from './momentSpots';
 
 // The server's EVENT_MESSAGES
 export const MOMENT_MESSAGES = {
@@ -14,6 +16,8 @@ export const MOMENT_MESSAGES = {
   text: "A moment's title, story and place name must be text.",
   date: "A moment's date is a year (2019), a month (2019-06) or a day (2019-06-14), from 1800 to 2200, with DAY, MONTH or YEAR saying how much of it is known. Leave it empty for an undated note.",
   landmarkWrongCountry: "That landmark isn't in the moment's country.",
+  spot: 'A pin needs a latitude from -90 to 90 and a longitude from -180 to 180, and "shared" is true or false.',
+  spotWrongCountry: "That spot isn't in the moment's country. Move the pin, or take it off.",
   photos: 'Choose up to 20 photos, each from this map.',
   photosNotOnTrip: 'You can only choose photos from this trip.',
   tripChangeNeedsMap: "Only the map's owner and its editors can move a moment to another trip.",
@@ -46,7 +50,7 @@ export function canSeeMomentPhoto(photo, { mapRole = null, trip = null } = {}) {
 /** Which photos a writer may attach: a map editor any (null), anyone else only the moment's trip's. */
 export const momentPhotoScope = (mapRole, momentTripId) => (atLeast(mapRole, 'EDITOR') ? null : momentTripId ?? null);
 
-/** One moment as the API answers it. Never coordinates: a landmark is its id and name. */
+/** One moment as the API answers it: a landmark is its id and name; its own pin (`spot`) per spotView. */
 export function momentView(moment, { role, photoAccess }) {
   const db = getDb();
   const position = (id) => db.travellers.find((t) => t.id === id)?.position ?? 0;
@@ -61,6 +65,7 @@ export function momentView(moment, { role, photoAccess }) {
     countryCode: moment.countryCode,
     landmark: landmark ? { id: landmark.id, name: landmark.name } : null,
     placeName: moment.placeName,
+    spot: spotView(moment, { canEdit: atLeast(role, 'EDITOR') }),
     tripId: moment.tripId,
     travellerIds: [...moment.travellerIds].sort((a, b) => position(a) - position(b)),
     photos: moment.photoIds
@@ -118,6 +123,25 @@ const isSubsetOf = (ids, allowed) => Array.isArray(ids) && new Set(ids).size ===
  * photos must be on (a trip-only editor), or null. -> `{ value: { data, travellerIds?,
  * photoIds? } }` or `{ error }`
  */
+/**
+ * A moment's pin from a request body, once parseMoment has its place (`countryCode`, the
+ * new or the current one), as the server: in that place, and a pinned moment moved to
+ * another country needs its pin moved or taken off. -> `{ data }` (the fields to change,
+ * none when the pin's left as is) or `{ error }`
+ */
+export async function parseMomentSpotFor(body, { countryCode, current = null }) {
+  const spot = parseMomentSpot(body.spot);
+  if (!spot.ok) return { error: MOMENT_MESSAGES.spot };
+  if (spot.value) {
+    if (spot.value.latitude !== null && !(await spotFitsPlace(spot.value, countryCode))) return { error: MOMENT_MESSAGES.spotWrongCountry };
+    return { data: spot.value };
+  }
+  if (current?.latitude != null && countryCode !== current.countryCode && !(await spotFitsPlace(current, countryCode))) {
+    return { error: MOMENT_MESSAGES.spotWrongCountry };
+  }
+  return { data: {} };
+}
+
 export function parseMoment(body, { partial = false, current = null, mapId, photoScope = null }) {
   const db = getDb();
   const data = {};
@@ -143,9 +167,13 @@ export function parseMoment(body, { partial = false, current = null, mapId, phot
   if (!date.ok) return { error: MOMENT_MESSAGES.date };
   if (date.value) Object.assign(data, date.value);
 
+  // Places as the map keeps them (as the server): on a map that splits the UK, a UK landmark
+  // is in its nation, and a nation is the UK on one that doesn't
+  const splitUk = Boolean(getDb().maps.find((m) => m.id === mapId)?.splitUk);
   if (!partial || body.countryCode !== undefined) {
     if (typeof body.countryCode !== 'string' || !countryExists(body.countryCode)) return { error: MOMENT_MESSAGES.countryNotFound };
-    data.countryCode = body.countryCode;
+    data.countryCode = placeOnMap(body.countryCode, splitUk);
+    if (partial && data.countryCode !== current?.countryCode) data.ukNation = null;
   }
   const countryCode = data.countryCode ?? current?.countryCode;
   if (body.landmarkId !== undefined) {
@@ -153,12 +181,12 @@ export function parseMoment(body, { partial = false, current = null, mapId, phot
     else {
       const landmark = landmarkById(body.landmarkId);
       if (!landmark) return { error: MOMENT_MESSAGES.landmarkNotFound };
-      if (landmark.countryCode !== countryCode) return { error: MOMENT_MESSAGES.landmarkWrongCountry };
+      if (landmarkPlace(landmark, splitUk) !== countryCode) return { error: MOMENT_MESSAGES.landmarkWrongCountry };
       data.landmarkId = landmark.id;
     }
   } else if (current?.landmarkId && countryCode !== current.countryCode) {
     const landmark = landmarkById(current.landmarkId);
-    if (landmark && landmark.countryCode !== countryCode) return { error: MOMENT_MESSAGES.landmarkWrongCountry };
+    if (landmark && landmarkPlace(landmark, splitUk) !== countryCode) return { error: MOMENT_MESSAGES.landmarkWrongCountry };
   }
 
   if (body.hidden !== undefined) {

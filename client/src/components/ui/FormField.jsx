@@ -1,5 +1,7 @@
 import React from 'react';
 
+// `align`: 'center' (the default: the sign-in tickets and single-column forms) or 'start',
+// the label, hint and error on the field's left edge, for forms with fields side by side
 function FormField({
   id,
   label,
@@ -8,7 +10,9 @@ function FormField({
   required = false,
   children,
   className = 'grid gap-y-2',
+  align = 'center',
 }) {
+  const textAlign = align === 'start' ? 'text-left' : 'text-center';
   // error: string shows a message, true only marks invalid
   const isInvalid = Boolean(error);
   const errorMessage = typeof error === 'string' ? error : '';
@@ -29,7 +33,7 @@ function FormField({
   return (
     <div className={className}>
       {label ? (
-        <label htmlFor={id} className='block text-center text-sm font-medium'>
+        <label htmlFor={id} className={`block ${textAlign} text-sm font-medium`}>
           {label}
           {required ? (
             <span className='text-status-critical' aria-hidden='true'>
@@ -43,7 +47,7 @@ function FormField({
       {child}
 
       {hint ? (
-        <span id={hintId} className='block text-xs text-center opacity-70'>
+        <span id={hintId} className={`block text-xs ${textAlign} opacity-70`}>
           {hint}
         </span>
       ) : null}
@@ -51,7 +55,7 @@ function FormField({
         <span
           id={errorId}
           role='alert'
-          className='block text-xs text-center text-status-critical'
+          className={`block text-xs ${textAlign} text-status-critical`}
         >
           {errorMessage}
         </span>

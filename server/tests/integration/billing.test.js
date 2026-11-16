@@ -6,7 +6,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 
 // A fake Stripe: records each call and keeps subscriptions in memory. Webhook signing
 // and checking stay the real SDK's.
-const fake = vi.hoisted(() => ({ calls: [], subscriptions: new Map(), next: 1 }));
+const fake = vi.hoisted(() => ({ calls: [], subscriptions: new Map(), next: 1, cancelFails: false }));
 
 vi.mock('stripe', async (importOriginal) => {
   const actual = await importOriginal();
@@ -46,6 +46,15 @@ vi.mock('stripe', async (importOriginal) => {
       this.subscriptions = {
         retrieve: record('subscriptions.retrieve', (id) => fake.subscriptions.get(id)),
         update: record('subscriptions.update', update),
+        // Ends it at once; Stripe's own error for one it doesn't have, or none reachable
+        cancel: record('subscriptions.cancel', (id) => {
+          if (fake.cancelFails) throw Object.assign(new Error('An error occurred with our connection to Stripe.'), { type: 'StripeConnectionError' });
+          const sub = fake.subscriptions.get(id);
+          if (!sub) throw Object.assign(new Error(`No such subscription: '${id}'`), { code: 'resource_missing' });
+          const ended = { ...sub, status: 'canceled' };
+          fake.subscriptions.set(id, ended);
+          return ended;
+        }),
       };
     }
   }
@@ -69,7 +78,7 @@ Object.assign(process.env, PRICES, { STRIPE_SECRET_KEY: 'sk_test_it_placeholder'
 
 const { default: Stripe } = await import('stripe');
 const { default: app } = await import('../../src/server.js');
-const { anon, cleanUp, data, defaultMapOf, givePlan, prisma, signUp } = await import('./helpers.js');
+const { PASSWORD, anon, cleanUp, data, defaultMapOf, givePlan, prisma, signUp } = await import('./helpers.js');
 
 const RUN = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 const eventIds = [];
@@ -382,6 +391,65 @@ describe('changing a subscription', () => {
     });
     const none = await signUp('NoCustomer');
     expect((await none.agent.post('/api/billing/portal')).status).toBe(409);
+  });
+});
+
+describe('deleting an account', () => {
+  const userRow = (id) => prisma.user.findUnique({ where: { id }, select: { id: true } });
+  async function payer(label, { known = true } = {}) {
+    const who = await signUp(label);
+    const row = await givePlan(who.user.id, { plan: 'REGULAR' });
+    if (known) {
+      fake.subscriptions.set(
+        row.stripeSubscriptionId,
+        subscriptionObject({ id: row.stripeSubscriptionId, customer: row.stripeCustomerId, lines: [['price_it_regular_month', 1]] })
+      );
+    }
+    return { ...who, subscriptionId: row.stripeSubscriptionId };
+  }
+  const deleteOwn = (who) => who.agent.post('/api/auth/delete-user').send({ password: PASSWORD });
+
+  it('cancels its subscription with Stripe first, so the card stops being charged', async () => {
+    const leaver = await payer('Leaving payer');
+    expect((await deleteOwn(leaver)).status).toBe(200);
+    expect(callsTo('subscriptions.cancel').map((c) => c.args[0])).toContain(leaver.subscriptionId);
+    expect(fake.subscriptions.get(leaver.subscriptionId).status).toBe('canceled');
+    expect(await userRow(leaver.user.id)).toBeNull();
+
+    // Stripe's notice that it ended finds no account, and changes nothing
+    const ended = fake.subscriptions.get(leaver.subscriptionId);
+    expect((await sendEvent('customer.subscription.deleted', ended)).status).toBe(200);
+  });
+
+  it('keeps the account when Stripe can’t be told, and deletes it once it can', async () => {
+    const leaver = await payer('Unlucky payer');
+    fake.cancelFails = true;
+    try {
+      const res = await deleteOwn(leaver);
+      expect(res.status).toBe(503);
+      expect(res.body.message).toMatch(/couldn't cancel your subscription/);
+      expect(await userRow(leaver.user.id)).not.toBeNull();
+      expect(await prisma.subscription.findUnique({ where: { userId: leaver.user.id } })).not.toBeNull();
+    } finally {
+      fake.cancelFails = false;
+    }
+    expect((await deleteOwn(leaver)).status).toBe(200);
+    expect(await userRow(leaver.user.id)).toBeNull();
+  });
+
+  it('goes ahead when Stripe no longer has the subscription', async () => {
+    const leaver = await payer('Forgotten payer', { known: false });
+    expect((await deleteOwn(leaver)).status).toBe(200);
+    expect(await userRow(leaver.user.id)).toBeNull();
+  });
+
+  it('an admin’s delete cancels it too', async () => {
+    const admin = await signUp('Billing admin');
+    await prisma.user.update({ where: { id: admin.user.id }, data: { role: 'ADMIN' } });
+    const target = await payer('Removed payer');
+    expect((await admin.agent.delete(`/api/users/admin/delete-user-by-id/${target.user.id}`)).status).toBe(200);
+    expect(callsTo('subscriptions.cancel').map((c) => c.args[0])).toContain(target.subscriptionId);
+    expect(await userRow(target.user.id)).toBeNull();
   });
 });
 

@@ -1,5 +1,6 @@
 // Mock mode only: one photo (open, edit, delete) and its landmark matches.
 import { deny, fail, ok, route } from '../mockAdapter';
+import { placeOnMap } from '@/utils/map/ukNations';
 import { getDb } from '../store';
 import { atLeast, canSeePhoto, countryExists, landmarkById, mapRole, markVisited, photoDetail, photoRole } from '../views';
 import { POSITION_FIELD, firstPosition, movePhotoAfter, setShotAt } from '../photoOrder';
@@ -32,9 +33,11 @@ export function registerPhotoRoutes() {
     const db = getDb();
     const { photo, role, reply } = loadPhoto(params.photoId, 'EDITOR');
     if (reply) return reply;
+    // As the map keeps places: a UK nation is the UK on a map that doesn't split it
+    const splitUk = Boolean(db.maps.find((m) => m.id === photo.mapId)?.splitUk);
     // A new country that's full on the map (the owner's plan) -> 409, and nothing changes
     if (body.countryCode !== undefined && body.countryCode) {
-      const code = String(body.countryCode).toUpperCase();
+      const code = placeOnMap(String(body.countryCode).toUpperCase(), splitUk);
       if (countryExists(code) && code !== photo.countryCode) {
         // A video moves under the videos' own cap
         const full = countryCapProblem(db.maps.find((m) => m.id === photo.mapId), code, photo.kind || 'PHOTO');
@@ -49,11 +52,14 @@ export function registerPhotoRoutes() {
     }
     if (body.hidden !== undefined) photo.hidden = Boolean(body.hidden);
     if (body.countryCode !== undefined) {
-      const code = body.countryCode ? String(body.countryCode).toUpperCase() : null;
-      if (code && !countryExists(code)) return fail(400, 'Unknown country.');
+      const asked = body.countryCode ? String(body.countryCode).toUpperCase() : null;
+      if (asked && !countryExists(asked)) return fail(400, 'Unknown country.');
+      const code = asked && placeOnMap(asked, splitUk);
       // A new gallery (another country, or none): it goes first there, as on the server
       if (code !== (photo.countryCode || null)) {
         photo.countryCode = code;
+        // Placed by hand: the nation it had before the UK split was turned off no longer applies
+        photo.ukNation = null;
         photo.countryPosition = firstPosition(db.photos, 'country', photo);
       }
       markVisited(photo.mapId, code, 'PHOTO');

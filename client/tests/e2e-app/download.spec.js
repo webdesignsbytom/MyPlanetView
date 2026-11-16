@@ -3,7 +3,7 @@ import { test, expect, HOME_MAP, openMap, openTool } from './fixtures.js';
 
 // "Print or download" (docs/API.md, "Downloads"): an editor gets a country's, a trip's or
 // the whole map's best copies as a zip made in the browser, then the print partners. The
-// test user owns "Test & Alex's travels" (Business, so originals): France has 3 photos,
+// test user owns "Charlie & Alex's travels" (Business, so originals): France has 3 photos,
 // the Italian summer trip 3, the map 16 (one hidden, which its editors still get).
 
 // The browser without a save dialog that writes to disk: the zip is held in memory, then

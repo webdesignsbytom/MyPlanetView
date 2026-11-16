@@ -1,45 +1,44 @@
 import React from 'react';
-// Utils
-import { initialOf, joinNames } from '@/utils/map/travellerNames';
 
-const GROUP_TAGLINES = {
-  SOLO: 'See the world!',
-  COUPLE: 'Seeing the world together!',
-  FAMILY: 'A family seeing the world!',
-};
+// The ribbon's parts behind the band, as a vintage banner draws them. The tails hang a
+// little lower than the band (top-3, -bottom-3) and reach under it; the folds are the
+// ribbon's back showing where it turns under the band's lower corners. Shades of the
+// poster's deep red, darker the further back.
+const TAIL = 'absolute -bottom-3 top-3 w-15 bg-[color-mix(in_oklab,var(--poster-red-deep)_80%,var(--poster-ink))]';
+const LEFT_TAIL = `${TAIL} -left-12 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%,30%_50%)]`;
+const RIGHT_TAIL = `${TAIL} -right-12 [clip-path:polygon(0_0,100%_0,70%_50%,100%_100%,0_100%)]`;
+const FOLD = 'absolute top-full h-3 w-3 bg-[color-mix(in_oklab,var(--poster-red-deep)_50%,var(--poster-ink))]';
 
-// The ribbon's notched tails, folded behind the parchment plate
-const TAIL_CLASS = 'h-11 w-8 translate-y-2 bg-poster-red-deep';
-const LEFT_TAIL = '[clip-path:polygon(0_0,100%_0,100%_100%,0_100%,45%_50%)]';
-const RIGHT_TAIL = '[clip-path:polygon(0_0,100%_0,55%_50%,100%_100%,0_100%)]';
-const INITIAL_CLASS =
-  'grid h-10 w-10 -rotate-6 place-items-center rounded-full border-4 border-double border-poster-red bg-poster-paper font-travel text-lg text-poster-red';
-
-// my_planet's user banner (OwnerDisplayContainer): the map's travellers on a parchment
-// ribbon with notched red tails, the names in the travel face and their initials as
-// rubber stamps, top centre. Hidden only with its switch in the map settings (no close
-// stamp on the banner itself).
+/**
+ * my_planet's user banner (OwnerDisplayContainer), top centre on wide screens, where it
+ * takes the title tag's place (MapExperience): a ribbon banner, a deep-red band stitched
+ * along its edges, with swallowtail tails folded behind it and a shadow that follows its
+ * shape. The map's name alone, in cream travel lettering between two stars (the user's
+ * wish, 16 Nov 2026: the travellers' names over the map's name said the same thing twice,
+ * and a second line wasn't needed at all). Hidden with its switch in the map settings, and
+ * the title tag shows instead.
+ */
 function MapBanner({ map }) {
-  const names = map.travellers.map((t) => t.name).filter(Boolean);
-  const people = names.length ? joinNames(names) : map.name;
-  const firstTwo = names.slice(0, 2);
 
   return (
-    <section aria-label='Map banner' className='pointer-events-auto relative grid grid-cols-a1a items-center'>
-      <span aria-hidden='true' className={`-mr-3 ${TAIL_CLASS} ${LEFT_TAIL}`} />
-      <div className='ticket-edge paper-aged relative z-10 grid grid-cols-a1a items-center gap-3 px-4 py-2 text-poster-ink'>
-        <span aria-hidden='true' className={INITIAL_CLASS}>
-          {initialOf(firstTwo[0] || map.name)}
-        </span>
-        <div className='grid text-center leading-tight'>
-          <p className='font-travel text-2xl uppercase tracking-wide text-poster-red-deep'>{people}</p>
-          <p className='text-sm'>{names.length ? map.name : GROUP_TAGLINES[map.groupType]}</p>
+    <section aria-label='Map banner' className='pointer-events-auto grid px-12 pb-3 [filter:drop-shadow(0_4px_5px_var(--cover-shade))]'>
+      <div className='relative grid'>
+        <span aria-hidden='true' className={LEFT_TAIL} />
+        <span aria-hidden='true' className={RIGHT_TAIL} />
+        <span aria-hidden='true' className={`${FOLD} left-0 [clip-path:polygon(0_0,100%_0,100%_100%)]`} />
+        <span aria-hidden='true' className={`${FOLD} right-0 [clip-path:polygon(0_0,100%_0,0_100%)]`} />
+        <div className='relative grid bg-poster-red-deep p-1 text-poster-cream'>
+          <div className='grid grid-cols-a1a items-center gap-3 border-y border-dashed border-poster-cream/50 px-5 py-1'>
+            <span aria-hidden='true' className='text-xs'>
+              ★
+            </span>
+            <p className='text-center font-travel text-2xl uppercase leading-tight tracking-wide'>{map.name}</p>
+            <span aria-hidden='true' className='text-xs'>
+              ★
+            </span>
+          </div>
         </div>
-        <span aria-hidden='true' className={INITIAL_CLASS}>
-          {firstTwo[1] ? initialOf(firstTwo[1]) : '✈'}
-        </span>
       </div>
-      <span aria-hidden='true' className={`-ml-3 ${TAIL_CLASS} ${RIGHT_TAIL}`} />
     </section>
   );
 }

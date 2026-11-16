@@ -2,6 +2,7 @@
 // (server/src/services/travel/passport.js and domain/passport.js). A landmark is stamped
 // by a confirmed photo of it on the map; below editor, hidden photos neither stamp nor count.
 import { COUNTRIES } from '@/utils/map/countries';
+import { landmarkPlace } from '@/utils/map/ukNations';
 import { isSpecialPlace } from '@/utils/map/specialPlaces';
 import { getDb } from './store';
 import { LANDMARK_ROWS, atLeast, landmarkById, photoThumbUrl, userName } from './views';
@@ -68,7 +69,9 @@ export function buildPassport(map, role) {
 
   // The pages: every country marked visited or lived, plus any with a stamp, in the order
   // they were first visited (undated last, by when they were marked)
-  const codes = new Set([...visited, ...stamps.map((s) => s.landmark.countryCode)]);
+  // On a map that splits the UK, a UK landmark's page is its nation's (as the server)
+  const placeOf = (landmark) => landmarkPlace(landmark, map.splitUk);
+  const codes = new Set([...visited, ...stamps.map((s) => placeOf(s.landmark))]);
   const ordered = [...codes].sort(
     (a, b) => time(enteredOn(a)) - time(enteredOn(b)) || markedAt(a) - markedAt(b) || a.localeCompare(b),
   );
@@ -81,7 +84,7 @@ export function buildPassport(map, role) {
 
   const pages = ordered.map((code) => {
     const own = stamps
-      .filter((s) => s.landmark.countryCode === code)
+      .filter((s) => placeOf(s.landmark) === code)
       .sort((a, b) => time(shotAt(a.photo)) - time(shotAt(b.photo)) || a.landmark.name.localeCompare(b.landmark.name));
     const stamped = new Set(own.map((s) => s.landmark.id));
     return {
@@ -107,7 +110,7 @@ export function buildPassport(map, role) {
             .map((m) => ({ id: m.id, title: m.title, kind: m.kind, happenedOn: m.happenedOn, datePrecision: m.datePrecision })),
         };
       }),
-      toStamp: LANDMARK_ROWS.filter((l) => l.countryCode === code && !stamped.has(l.id)).map((l) => ({
+      toStamp: LANDMARK_ROWS.filter((l) => placeOf(l) === code && !stamped.has(l.id)).map((l) => ({
         id: l.id,
         name: l.name,
         isUnesco: l.isUnesco,

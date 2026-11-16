@@ -10,6 +10,9 @@ const X_TABLE = [1, 0.9986, 0.9954, 0.99, 0.9822, 0.973, 0.96, 0.9427, 0.9216, 0
 const Y_TABLE = [0, 0.062, 0.124, 0.186, 0.248, 0.31, 0.372, 0.434, 0.4958, 0.5571, 0.6176, 0.6769, 0.7346, 0.7903, 0.8435, 0.8936, 0.9394, 0.9761, 1];
 
 export const MAP_WIDTH = 2000;
+// Zoom 1 on screen (useMapViewport): the whole map's width across a 1920-pixel screen.
+// What's drawn by zoom is sized and switched on by it, so it looks the same on any screen.
+export const REFERENCE_PX_PER_UNIT = 1920 / MAP_WIDTH;
 // The map's extent, top to bottom: exactly the pole lines, so no sea shows beyond them
 // (the poles' markers are drawn inside, touching the edges: insidePoleLines). With
 // Antarctica hidden (the showAntarctica setting off) it ends where the countries do, as
@@ -58,13 +61,49 @@ function widened(latitude, longitude, x) {
   return x + (full - x) * t;
 }
 
+// The projection itself, unrounded (projectToMap rounds it; positionFromMap inverts it)
+function projectExact(latitude, longitude) {
+  const robinsonX = MAP_CENTRE_X + MAP_X_SCALE * interpolate(X_TABLE, latitude) * longitude;
+  return {
+    x: widened(latitude, longitude, robinsonX),
+    y: MAP_EQUATOR_Y - MAP_Y_SCALE * Math.sign(latitude) * interpolate(Y_TABLE, latitude),
+  };
+}
+
 /** Real position -> SVG map position ({ x, y }), or null for an invalid position. */
 export function projectToMap(latitude, longitude) {
   if (!isValidLatLng(latitude, longitude)) return null;
-  const robinsonX = MAP_CENTRE_X + MAP_X_SCALE * interpolate(X_TABLE, latitude) * longitude;
-  const x = widened(latitude, longitude, robinsonX);
-  const y = MAP_EQUATOR_Y - MAP_Y_SCALE * Math.sign(latitude) * interpolate(Y_TABLE, latitude);
+  const { x, y } = projectExact(latitude, longitude);
   return { x: round1(x), y: round1(y) };
+}
+
+// The value in [lo, hi] where a rising function reaches `target` (48 halvings: far finer
+// than a metre)
+function solveRising(fn, lo, hi, target) {
+  let low = lo;
+  let high = hi;
+  for (let i = 0; i < 48; i++) {
+    const mid = (low + high) / 2;
+    if (fn(mid) < target) low = mid;
+    else high = mid;
+  }
+  return (low + high) / 2;
+}
+
+/**
+ * SVG map position -> real position ({ latitude, longitude }), or null off the world
+ * (beyond a pole line, or past the world's edge at that latitude): the projection
+ * inverted, for a spot picked by tapping the map. The height gives the latitude alone, and
+ * at a latitude the width grows with the longitude, so each is found by halving (the
+ * widened south included). Client only: the server never needs it.
+ */
+export function positionFromMap(x, y) {
+  if (!Number.isFinite(x) || !Number.isFinite(y) || y < MAP_TOP || y > MAP_BOTTOM) return null;
+  // y falls as the latitude rises
+  const latitude = solveRising((lat) => -projectExact(lat, 0).y, -90, 90, -y);
+  if (x < projectExact(latitude, -180).x || x > projectExact(latitude, 180).x) return null;
+  const longitude = solveRising((lng) => projectExact(latitude, lng).x, -180, 180, x);
+  return { latitude, longitude };
 }
 
 /** The map's extent ({ top, bottom }, in map units) with or without Antarctica. */

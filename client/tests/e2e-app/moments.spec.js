@@ -207,7 +207,7 @@ test.describe('Moments', () => {
     const timeline = await openTool(page, 'Timeline', 'Timeline');
     await expect(timeline.getByRole('heading', { level: 3 })).toHaveText(['1990', '2012', '2018', '2019', '2025', '2027', 'Undated']);
     await expect(timeline.getByRole('listitem')).toHaveText([
-      /^Test was born/,
+      /^Charlie was born/,
       /^Moved to Dublin/,
       /^Saw flamenco in Granada/,
       /^Got engaged at the Eiffel Tower/,

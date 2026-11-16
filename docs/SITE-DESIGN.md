@@ -84,16 +84,16 @@ The red poster frame's corners are brass corner protectors, like an old steamer 
   - a big round, rustic "Start your map" stamp button.
 
   On desktop the nav is a parchment column inside the frame; the content sections follow on paper.
-- **Navigation:** parchment with a brown edge, the camera logo, and red poster buttons in the travel face, with the current page inverted. A bar on every page; on the home page a column from `lg` up.
+- **Navigation:** parchment with a brown edge, the camera logo, and red poster buttons in the travel face, with the current page inverted. A bar on every page; on the home page a column from `lg` up. "Countries" (the guides) follows Home once a guide is published, as in the footer (16 Nov 2026). On short windows (a laptop's browser page is often 600 to 700 px tall) the column's logo, spacing and buttons shrink in two steps (below 860 and 680 px tall) so every link fits; below about 520 px it stops sticking and scrolls with the page. The Admin menu opens beside the column and upward, as its button sits near the foot.
 - **Footer:** the same parchment, brown edge and travel-face headings.
 - **Components:** every piece is its own component, one per file. Pages follow the template's `PageHeader` + `MainContainer` pattern.
 - **The map** is the existing SVG world map, and only that. There is no Google Maps, MapLibre or other real-world map.
-  - The four map styles stay: Animated sea, Old Map, Jupiter Clouds and Galaxy. Each style switches the theme tokens through a `data-map-style` attribute instead of hardcoded classes. Galaxy has my_planet's black panels with white text.
+  - Two map styles: Animated sea and Old Map. Each style switches the theme tokens through a `data-map-style` attribute instead of hardcoded classes. Jupiter Clouds and Galaxy, from my_planet, were taken out on 16 Nov 2026 (the user's wish); a profile that saved one opens as the animated sea.
   - **my_planet's extra options:**
     - show / hide the countries you have and haven't been to (a hidden group fades back);
     - a red map banner with the travellers' names;
     - a **Detailed** map type (names, grid lines and landmark pins at every zoom);
-    - the sun and moon placed by the time of day;
+    - the sun and the moon on the map, each over the place where it's overhead right now (16 Nov 2026; they used to slide across the screen by the hour), moving with the map and redrawn each minute;
     - wavy lines drifting over the animated sea (paused when the tab is hidden, off for reduced motion).
 
     my_planet's "detailed" map image is a different projection, so it's only the picker's preview, never a background.
@@ -106,6 +106,7 @@ The red poster frame's corners are brass corner protectors, like an old steamer 
 
     So any real position (a landmark, a photo's GPS) can be placed on the map exactly. The equator is at y = 502 and the countries end at about y = 857. Antarctica (Natural Earth, with its ice shelves) fills the bottom down to the South Pole line at 1020.6, and the North Pole line is at -16.6. The map ends exactly at the pole lines and always fills the screen, with no sea beyond its edges (16 Nov 2026). It opens with the North Pole at the top: on a wide screen at the scale it always had, Antarctica a pan away; on a less wide one, pole to pole with the sides a pan away. So the new places never make the world smaller.
   - **Special places** (16 Nov 2026): Antarctica and the four poles (North, Magnetic North, South, Magnetic South) can be marked like countries, but they aren't countries: they have their own count ("Special places n of 5"), a visited one wears a gold expedition stamp instead of the star, and Antarctica and the South Pole make the seventh continent. Antarctica is drawn in an ice colour in every map style; the poles are compass roses inside the map's edges. The magnetic poles move tens of kilometres a year, so their pins follow NOAA's World Magnetic Model and are moved each January, and a photo is never placed at one from its GPS. A map setting, on by default, hides Antarctica and the two South Poles for people who'd rather have the room.
+  - **The UK's nations** (16 Nov 2026, the user's decisions): a map can show the UK as England, Scotland, Wales and Northern Ireland, off by default. It's per map, not per person, because it changes which country a visit, photo, trip stop or moment belongs to, and everyone on a shared map has to see the same data; the owner chooses it on the welcome page and in Settings, "This map". On a split map each nation is a country in every count ("England and Scotland" is two), and the British Isles badge asks for all four and Ireland. Turning it on moves what has a location (a photo's GPS, a landmark) to its nation and leaves the rest in the UK, "nation not chosen": the UK's ticket asks which nations its old mark means, and the photos wait under "Unplaced photos". Turning it off merges them back, losing nothing: each thing remembers its nation, so turning it on again puts it back. The nations' shapes are the map's own UK shape cut along Natural Earth's real borders (`images/src/tools/uk-nations.mjs`), so the coast doesn't change; England and Scotland show the UK's two posters, Wales and Northern Ireland the placeholder card until they have their own. Travel offers and the country guide stay the UK's.
   - **Country pins** are the centre of each country's largest shape. Micro-states with no shape are pinned from their real position.
   - **Where the shapes come from.** The old map was hand-copied from simplemaps.com's free world SVG (MIT licence), with mistakes:
     - Belarus didn't draw (a stray quote mark);
@@ -116,7 +117,7 @@ The red poster frame's corners are brass corner protectors, like an old steamer 
     The shapes are now generated straight from that SVG, keyed by ISO code, with the licence notice kept in the generated file. Natural Earth 1:50m (public domain) adds Kiribati and the islands and coasts simplemaps lacks or misplaces (16 Nov 2026: the eastern Aegean, the Balearics, Shetland, the Azores and ~300 more). Andorra, Gibraltar, Liechtenstein, Monaco, San Marino, Singapore and the Vatican have no shape and are drawn as a dot at their pin.
   - **Grid lines.** The old latitude/longitude lines were drawn as a straight even grid. On a Robinson map they're redrawn from the projection.
 - **Country posters:**
-  - my_planet's 170 posters cover 167 countries (`client/src/utils/map/posterData.js`). They show in the hover box (when you have no photos from there) and, always, on the stub of a country's ticket (whether you've been or not).
+  - The posters cover 170 countries: the user's adventure posters (16 Nov 2026, 117 countries so far, more coming; `images/src/tools/country-posters.mjs`) and my_planet's for the rest (`client/src/utils/map/posterData.js`). They show in the hover box (when you have no photos from there) and, always, on the stub of a country's ticket (whether you've been or not).
   - They live in the public bucket, not the client build: `visitCountryPosters/<name>-800.avif` with an 800 px WebP fallback (`<name>-800.webp`), loaded from `VITE_MEDIA_CDN`. The repo's `media/` folder holds the same files to upload, and serves them in development when `VITE_MEDIA_CDN` isn't set.
   - One size only: 800 px is sharp on retina screens at the sizes posters are shown (the hover box and the 15rem stub), and 400 px looked soft. They're cached for good, so a replaced poster gets a new name.
   - The 57 countries without a poster get a placeholder card with their name in the travel face, never another country's poster.
@@ -181,7 +182,7 @@ It works like Google Docs.
 | Original (Business and First Class) | 3–8 MB | Owner and editors download it; landmark matching | Kept |
 | Print copy (Economy, ~2,400 px JPEG) | ~1 MB | Owner and editors download it; prints up to about A4 | Removed |
 | Display (~1600 px) | ~300–500 KB | Opening a photo | Removed |
-| Thumbnail (~400 px) | ~30–60 KB | Map hover slideshow, grids, trip covers | Removed |
+| Thumbnail (~400 px) | ~30–60 KB | Grids, trip covers | Removed |
 
 - **Speed.** A grid of 50 photos is about 2 MB of thumbnails, against about 250 MB of originals.
 - **Privacy.** An original carries GPS precise to a few metres. A viewer who downloads a photo taken at someone's home would have their address.
@@ -212,7 +213,7 @@ Editors drag photos into the order they want, in every gallery: a country's on t
 - **Moving one photo writes one row.** Positions are numbers with gaps, and a moved photo takes the halfway point between its new neighbours. Only when two neighbours have no room left between them (after dozens of moves into the same gap) is the gallery renumbered, in the same transaction.
 - **Who:** a country's order belongs to the map (its editors); a trip's to the trip (a trip-only editor too). Viewers see the order, without the hidden photos.
 - **In the browser:** "Rearrange photos" above a gallery switches it to dragging: the mouse, a press and hold on a touch screen (a quick swipe still scrolls), or the keyboard (Space, the arrow keys, Space; a screen reader hears each step). The list moves at once and saves behind it; if the save fails, the list is loaded again. The drag code (dnd-kit, about 16 kB gzipped) loads only then.
-- **The whole map's list** (the hover postcards) stays newest upload first.
+- **The whole map's list** (the photo album) stays newest upload first.
 
 ## The passport
 

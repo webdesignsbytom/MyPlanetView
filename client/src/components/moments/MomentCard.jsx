@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 // Icons
-import { IoEyeOff } from 'react-icons/io5';
+import { IoEyeOff, IoLocationSharp } from 'react-icons/io5';
 // Api
 import { deleteMoment } from '@/api/travelApi';
 // Components
@@ -11,6 +11,7 @@ import InlineAlert from '@/components/common/InlineAlert';
 import { MOMENT_KIND_LABELS } from '@/utils/moments/momentKinds';
 import { formatMomentDate } from '@/utils/moments/momentDates';
 import { countryName } from '@/utils/map/countries';
+import { googleMapsUrl, spotAudience } from '@/utils/moments/momentSpots';
 
 // Names joined as people say them: "Test", "Test and Alex", "Test, Alex and Mia"
 const listNames = (names) => (names.length < 3 ? names.join(' and ') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`);
@@ -78,6 +79,17 @@ function MomentCard({
           </Heading>
           <p className='text-xs opacity-80'>{details}</p>
           {trip ? <p className='text-xs opacity-80'>On {trip.title}</p> : null}
+          {moment.spot ? (
+            <p className='grid grid-cols-reg items-start justify-start gap-1.5 text-xs'>
+              <IoLocationSharp aria-hidden='true' className='translate-y-0.5 text-poster-red' />
+              <span>
+                <a href={googleMapsUrl(moment.spot)} target='_blank' rel='noopener noreferrer' referrerPolicy='no-referrer' className='underline'>
+                  See the spot on Google Maps<span className='sr-only'> (opens in a new tab)</span>
+                </a>
+                {canEdit && 'shared' in moment.spot ? ` · ${spotAudience(moment.spot.shared)}` : ''}
+              </span>
+            </p>
+          ) : null}
           {moment.hidden ? (
             <p className='grid grid-cols-reg items-center justify-start gap-1.5 text-xs font-medium text-poster-red-deep'>
               <IoEyeOff aria-hidden='true' />

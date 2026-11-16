@@ -81,7 +81,7 @@ export async function findMapForExport(mapId) {
       prisma.tripMap.findMany({ where: onMap, select: { addedAt: true, trip: { select: { id: true, title: true, map: { select: { name: true } } } } }, orderBy: { addedAt: 'asc' } }),
       prisma.moment.findMany({
         where: onMap,
-        select: { id: true, kind: true, title: true, text: true, happenedOn: true, datePrecision: true, countryCode: true, ...PLACE, tripId: true, hidden: true, createdAt: true, updatedAt: true },
+        select: { id: true, kind: true, title: true, text: true, happenedOn: true, datePrecision: true, countryCode: true, ...PLACE, latitude: true, longitude: true, spotShared: true, tripId: true, hidden: true, createdAt: true, updatedAt: true },
         orderBy: { createdAt: 'asc' },
       }),
       prisma.momentTraveller.findMany({ where: { moment: onMap }, select: { momentId: true, travellerId: true } }),

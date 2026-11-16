@@ -4,6 +4,8 @@ import { COUNTRIES } from '@/utils/map/countries';
 import { posterUrl } from '@/utils/map/posterData';
 import { projectToMap } from '@/utils/map/projection';
 import { PARENT_PLACE, isSpecialPlace, withParentPlaces } from '@/utils/map/specialPlaces';
+import { UK, countedCountryCodes, placeOnMap } from '@/utils/map/ukNations';
+import { ukNationAt } from './ukNationLookup';
 import { LANDMARKS } from './data/landmarks';
 import { getDb, me, session } from './store';
 import { byPosition, byShotAt } from './photoOrder';
@@ -12,6 +14,7 @@ import { mapPlanFields, mapSlots, uploadRules } from './plans';
 import { mockPlayback } from './stream';
 import { mockUpload } from './uploads';
 import { photoThemes } from './themes';
+import { compareMoments } from '@/utils/moments/momentDates';
 
 export const slugify = (text) =>
   String(text)
@@ -39,6 +42,8 @@ export const LANDMARK_ROWS = LANDMARKS.map((lm) => {
     pinY: Math.round(pin.y * 10) / 10,
     matchRadiusM: lm.matchRadiusM,
     isUnesco: lm.isUnesco,
+    // As the server's list: a UK landmark's nation, for maps that split the UK
+    ...(lm.countryCode === UK ? { nation: ukNationAt(lm.latitude, lm.longitude) } : {}),
   };
 }).sort((a, b) => a.name.localeCompare(b.name));
 const LANDMARK_BY_ID = new Map(LANDMARK_ROWS.map((l) => [l.id, l]));
@@ -226,6 +231,11 @@ const PHOTO_ORDERS = ['gallery', 'taken', 'shuffle'];
 const BAD_FILTER = { error: 'Malformed data.' };
 const NO_BEST = { error: 'You do not have permission to do that.', status: 403 };
 const isFlagValue = (value) => value === undefined || ['1', 'true', '0', 'false'].includes(value);
+// Unplaced: no country, or on a map that splits the UK, in the UK with its nation not chosen
+// yet (as the server's photoListWhere)
+const isUnplaced = (photo) =>
+  !photo.countryCode || (photo.countryCode === UK && Boolean(getDb().maps.find((m) => m.id === photo.mapId)?.splitUk));
+
 export function photoPage(
   photos,
   role,
@@ -259,7 +269,7 @@ export function photoPage(
           : (a, b) => (a.createdAt < b.createdAt ? 1 : -1);
   let list = photos
     .filter((p) => canSeePhoto(p, role))
-    .filter((p) => (onlyUnplaced ? !p.countryCode : !country || p.countryCode === country))
+    .filter((p) => (onlyUnplaced ? isUnplaced(p) : !country || p.countryCode === country))
     .filter((p) => !tripId || p.tripId === tripId)
     .filter((p) => !atLandmark || atLandmark.has(p.id))
     .sort(sort);
@@ -300,7 +310,8 @@ export function mapStats(map, role) {
   const counted = new Set(
     db.visits.filter((v) => v.mapId === map.id && (v.status === 'VISITED' || v.status === 'LIVED')).map((v) => v.countryCode),
   );
-  const countries = [...counted].filter((c) => !isSpecialPlace(c));
+  // On a map that splits the UK, its nations count one each (utils/map/ukNations.js)
+  const countries = countedCountryCodes([...counted].filter((c) => !isSpecialPlace(c)), map.splitUk);
   const specialPlaces = [...counted].filter(isSpecialPlace);
   const continents = new Set([...counted].map((c) => continentByCode.get(c)).filter(Boolean));
   const photos = visibleMapPhotos(map, role);
@@ -319,11 +330,10 @@ export function mapStats(map, role) {
     landmarks: landmarks.length,
     trips: trips.length + linkedTrips(map.id).length,
     byTraveller: travellers.map((t) => {
-      const countries = new Set();
-      completed.forEach(
-        (trip) => trip.travellerIds.includes(t.id) && trip.countryCodes.forEach((c) => !isSpecialPlace(c) && countries.add(c)),
-      );
-      return { travellerId: t.id, name: t.name, countries: countries.size };
+      const codes = completed
+        .filter((trip) => trip.travellerIds.includes(t.id))
+        .flatMap((trip) => trip.countryCodes.filter((c) => !isSpecialPlace(c)));
+      return { travellerId: t.id, name: t.name, countries: countedCountryCodes(codes, map.splitUk).length };
     }),
   };
 }
@@ -353,6 +363,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
     name: map.name,
     groupType: map.groupType,
     isDefault: map.isDefault,
+    // The UK as its four nations (docs/API.md "The UK's nations")
+    splitUk: Boolean(map.splitUk),
     role,
     ownerName: userName(map.ownerId),
     travellers: db.travellers
@@ -369,9 +381,20 @@ export function mapView(map, role, { withPlan = false } = {}) {
     stats: mapStats(map, role),
     // Everyone's: the moments per country, hidden ones for the owner and editors only
     momentCountsByCountry: momentCountsByCountry(map.id, { includeHidden: atLeast(role, 'EDITOR') }),
+    // The moments pinned to a spot (as the server's findMomentSpots): every pin for editors,
+    // the shared ones on visible moments for anyone else
+    momentSpots: momentSpots(map.id, { includeHidden: atLeast(role, 'EDITOR') }),
     // The passport's stamped landmarks, to mark their pins (hidden photos' for editors)
     stampedLandmarkIds: stampedLandmarkIds(map, role),
   };
+}
+
+/** The map's pinned moments, `[{ id, kind, title, countryCode, latitude, longitude }]`, in date order. */
+export function momentSpots(mapId, { includeHidden = false } = {}) {
+  return getDb()
+    .moments.filter((m) => m.mapId === mapId && m.latitude != null && (includeHidden || (!m.hidden && m.spotShared)))
+    .sort(compareMoments)
+    .map(({ id, kind, title, countryCode, latitude, longitude }) => ({ id, kind, title, countryCode, latitude, longitude }));
 }
 
 /** The map's moments per country, `{ [code]: n }`; countries with none are left out. */
@@ -512,6 +535,7 @@ export function tripView(trip, role, { viaShareLink = false } = {}) {
     id: trip.id,
     mapId: trip.mapId,
     mapName: map?.name || '',
+    splitUk: Boolean(map?.splitUk),
     canOpenMap: !viaShareLink && Boolean(mapRole(map)),
     canDelete: !viaShareLink && atLeast(mapRole(map), 'EDITOR'),
     onMyMaps: myMaps.links,
@@ -556,7 +580,10 @@ export function markVisited(mapId, countryCode, source) {
   if (!countryCode) return [];
   const db = getDb();
   const changed = [];
-  for (const code of withParentPlaces([countryCode])) {
+  // As each map keeps places: a UK nation is the UK on a map that doesn't split it (a group
+  // trip's stop on someone else's map)
+  const place = placeOnMap(countryCode, Boolean(db.maps.find((m) => m.id === mapId)?.splitUk));
+  for (const code of withParentPlaces([place])) {
     const visit = db.visits.find((v) => v.mapId === mapId && v.countryCode === code);
     if (!visit) {
       const added = { mapId, countryCode: code, status: 'VISITED', source, firstVisitedOn: null, notes: null };

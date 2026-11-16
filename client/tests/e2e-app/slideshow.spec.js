@@ -1,10 +1,14 @@
-import { test, expect, HOME_MAP, SAM_MAP, SAM_SHARE_CODE, goInApp, openMap, openTool, signOut, toolbar } from './fixtures.js';
+import { test, expect, HOME_MAP, SAM_MAP, SAM_SHARE_CODE, goInApp, openMap, openTool, pressTool, signOut, toolbar } from './fixtures.js';
 
 // The slideshows (docs/FEATURE-PLAN.md, "Slideshows"). The test user's map has 16 photos
 // (one hidden, which its owner sees); oldest taken first they start in the Netherlands
 // (2016), then Spain (2018) and the United States. Its dated moments come between them in
-// date order: "Test was born" (1990) and "Moved to Dublin" (2012) open the show, and
+// date order: "Charlie was born" (1990) and "Moved to Dublin" (2012) open the show, and
 // "Saw flamenco in Granada" (August 2018) follows Spain's card.
+
+// What's on screen in words, for screen readers: the footer shows only the controls
+// (16 Nov 2026, the user's wish), with this live region out of sight
+const saidIn = (show) => show.locator('footer [aria-live]');
 
 /**
  * The captions (alt texts) of the next `count` photos, stepping on with the arrow key
@@ -34,7 +38,7 @@ test.describe('Slideshows', () => {
 
     // It plays at once, from the oldest moment (its kind, date, place and story), with
     // focus on Pause: Space pauses it
-    const born = show.getByRole('article', { name: 'Moment: Test was born' });
+    const born = show.getByRole('article', { name: 'Moment: Charlie was born' });
     await expect(born).toBeVisible();
     await expect(born.getByText('Born · 1990')).toBeVisible();
     await expect(born.getByText('Manchester, United Kingdom')).toBeVisible();
@@ -45,7 +49,8 @@ test.describe('Slideshows', () => {
     await expect(play).toBeVisible();
 
     // Paused, it waits for you: the next moment, then the first country's title card (its
-    // poster and name), then the first photo, its caption under it
+    // poster and name), then the first photo (its count, place and day for screen
+    // readers only: nothing but the controls under it)
     const next = show.getByRole('button', { name: 'Next', exact: true });
     await next.click();
     await expect(show.getByRole('article', { name: 'Moment: Moved to Dublin' }).getByText('Moved here · September 2012')).toBeVisible();
@@ -54,9 +59,8 @@ test.describe('Slideshows', () => {
     await expect(show.getByRole('img', { name: 'Travel poster for Netherlands' })).toBeVisible();
     await next.click();
     await expect(show.getByRole('img', { name: 'Canals at dusk' })).toBeVisible();
-    await expect(show.getByText('Photo 1 of 16')).toBeVisible();
-    await expect(show.getByText(/^Netherlands · Amsterdam/)).toBeVisible();
-    await expect(show.getByText('12 Mar 2016')).toBeVisible();
+    await expect(saidIn(show)).toContainText('Photo 1 of 16. Netherlands · Amsterdam');
+    await expect(saidIn(show)).toContainText('12 Mar 2016');
 
     // The arrow keys: on to Spain's card, the moment there, then its photo, and back
     await page.keyboard.press('ArrowRight');
@@ -88,7 +92,7 @@ test.describe('Slideshows', () => {
 
   test('the shuffle plays the photos in another order', async ({ page }) => {
     await openMap(page);
-    await toolbar(page).getByRole('button', { name: 'Play my world', exact: true }).click();
+    await pressTool(page, 'Play my world');
     const show = page.getByRole('dialog', { name: `Slideshow: ${HOME_MAP}` });
     await show.getByRole('button', { name: 'Pause', exact: true }).click();
     const taken = await photosInOrder(page, show, 6);
@@ -122,7 +126,7 @@ test.describe('Slideshows', () => {
     await expect(show.getByRole('article', { name: 'Moment: Got engaged at the Eiffel Tower' })).toBeVisible();
     await show.getByRole('button', { name: 'Next', exact: true }).click();
     await expect(show.getByRole('img', { name: 'Evening by the Seine' })).toBeVisible();
-    await expect(show.getByText('Photo 1 of 3')).toBeVisible();
+    await expect(saidIn(show)).toContainText('Photo 1 of 3');
     await show.getByRole('button', { name: 'Close the slideshow' }).click();
     await expect(show).toBeHidden();
     await expect(france).toBeVisible();
@@ -131,18 +135,18 @@ test.describe('Slideshows', () => {
     await page.getByRole('button', { name: 'Slideshow of Italian summer' }).click();
     const trip = page.getByRole('dialog', { name: 'Slideshow: Italian summer' });
     await expect(trip.getByRole('img', { name: 'First morning in Rome' })).toBeVisible();
-    await expect(trip.getByText('Photo 1 of 3')).toBeVisible();
+    await expect(saidIn(trip)).toContainText('Photo 1 of 3');
   });
 
   test('a share link’s map plays for someone signed out', async ({ page }) => {
     await signOut(page);
     await goInApp(page, `/shared/${SAM_SHARE_CODE}`);
     await expect(page.getByRole('application', { name: `${SAM_MAP}: world map` })).toBeVisible();
-    await toolbar(page).getByRole('button', { name: 'Play my world', exact: true }).click();
+    await pressTool(page, 'Play my world');
     const show = page.getByRole('dialog', { name: `Slideshow: ${SAM_MAP}` });
     await expect(show.getByText('First stop', { exact: true })).toBeVisible();
     await show.getByRole('button', { name: 'Next', exact: true }).click();
     await expect(show.getByRole('img', { name: 'Temple roofs' })).toBeVisible();
-    await expect(show.getByText('Photo 1 of 1')).toBeVisible();
+    await expect(saidIn(show)).toContainText('Photo 1 of 1');
   });
 });

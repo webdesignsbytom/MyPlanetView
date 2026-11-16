@@ -2,6 +2,7 @@
 // controllers/videos.js: starting an upload to (the mock) Cloudflare Stream, then saving
 // it as a video on the map, PROCESSING until the mock has "converted" it (../stream.js).
 import { deny, fail, ok, route } from '../mockAdapter';
+import { placeOnMap } from '@/utils/map/ukNations';
 import { getDb, me, newId } from '../store';
 import { atLeast, countryExists, mapRole, markVisited, photoDetail, tripRole } from '../views';
 import { LOCKED_MAP_MESSAGE, VIDEO_CONTENT_TYPES, VIDEO_MAX_BYTES, VIDEO_MESSAGES, countryCapProblem, isMapLocked, videoNotAllowed } from '../plans';
@@ -60,7 +61,7 @@ export function registerVideoRoutes() {
     }
     const hint = countryOf(body.countryCode);
     if (!hint.ok) return fail(400, MESSAGES.country);
-    const full = countryCapProblem(target.map, hint.value, 'VIDEO');
+    const full = countryCapProblem(target.map, hint.value && placeOnMap(hint.value, target.map.splitUk), 'VIDEO');
     if (full) return fail(409, full);
 
     const photoId = newId();
@@ -104,7 +105,7 @@ export function registerVideoRoutes() {
       // When the mock's "conversion" is done (views.js videoStateOf)
       readyAt: new Date(now.getTime() + MOCK_CONVERT_MS).toISOString(),
       videoBytes: video.size,
-      countryCode: country.value,
+      countryCode: country.value && placeOnMap(country.value, target.map.splitUk),
       caption: cleanText(body.caption, 300),
       takenAt: typeof body.takenAt === 'string' && !Number.isNaN(Date.parse(body.takenAt)) ? body.takenAt : null,
       latitude: null,

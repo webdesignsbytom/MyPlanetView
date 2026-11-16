@@ -7,17 +7,13 @@ import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import usePhotoPage from '@/hooks/usePhotoPage';
 import useLandmarks from '@/hooks/useLandmarks';
 import { SplitUkProvider } from '@/hooks/useSplitUk';
-import useCanHover from '@/hooks/useCanHover';
+import useMediaQuery from '@/hooks/useMediaQuery';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 import useAchievements from '@/hooks/useAchievements';
 // Components
 import WorldMap from './WorldMap';
 import MapBackground from './MapBackground';
-import SeaWaves from './SeaWaves';
-import SunMoon from './SunMoon';
 import MapBanner from './MapBanner';
-import MapTitle from './MapTitle';
-import StatsBadge from './StatsBadge';
 import MapToolbar from './MapToolbar';
 import MapZoomControls from './MapZoomControls';
 import MapLegend from './MapLegend';
@@ -45,12 +41,13 @@ import {
   TimelinePanel,
   TripsPanel,
   UnplacedPhotosPanel,
+  MapPhotosPanel,
   preloadTool,
   preloadWhenIdle,
 } from './lazyMapPanels';
 // Utils
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
-import { PREVIEW_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
+import { UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 import { forgetMapLists } from '@/utils/map/mapListCache';
 import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole } from '@/utils/sharing/shareRoles';
@@ -59,15 +56,9 @@ import { mapStyleById } from '@/utils/map/mapStyles';
 import { isAntarctic } from '@/utils/map/specialPlaces';
 import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
 
-const PREVIEW_PER_COUNTRY = 6;
 const CLUSTER_RADIUS = 220; // map units: countries this close count as one region
 const VISITED = new Set(['VISITED', 'LIVED']);
 const atLandmarkZoom = (zoom) => zoom >= LANDMARK_MIN_ZOOM;
-// Where the map switcher starts on wide screens (it drops from the map's title): below
-// the title and stats tags, and the banner tags under them (verify your email: ~7rem;
-// the map's plan: ~8rem), so none is covered
-const panelTopBelow = ({ verify, plan }) =>
-  verify && plan ? 'md:top-92' : plan ? 'md:top-64' : verify ? 'md:top-60' : 'md:top-32';
 // Opening a country from the map: its panel's code is fetched on the first press
 const warmCountryPanel = () => CountryPanel.preload().catch(() => {});
 
@@ -140,7 +131,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // The country under the pointer: followed by the hover postcard only (MapHoverLayer)
   const [hover] = useState(() => createValueStore(null));
   const [photosVersion, setPhotosVersion] = useState(0);
-  const canHover = useCanHover();
+  // Wide screens (lg) show the map's banner, while it's switched on. The map has no title tag
+  // anywhere (the user's wish, 16 Nov 2026, phones too): "Your maps" opens from the toolbar.
+  const bannerShows = useMediaQuery('(min-width: 1024px)') && settings.showUserBanner;
 
   const canEdit = Boolean(actions) && !shareCode && canEditRole(role);
   // An unverified email address: nothing can be added or changed yet (the server refuses
@@ -173,6 +166,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         'badges',
         'settings',
         'play',
+        'photos',
         ...(canEdit ? ['upload'] : []),
         ...(canShare ? ['share', 'switcher'] : []),
       ]),
@@ -212,19 +206,6 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const nextTrip = useMemo(() => nextPlannedTrip(trips, todayString()), [trips]);
   const offerProps = { adEvery, nextTrip, canFetchTrips: !shareCode, mapKey: `map:${map.id}` };
 
-  // The newest photos, grouped by country, feed the hover slideshow (never fetched for
-  // touch screens, which don't hover)
-  const preview = usePhotoPage({ ...photoSource, ...PREVIEW_PHOTOS, enabled: settings.hoverPreview && canHover });
-  const thumbsByCountry = useMemo(() => {
-    const groups = {};
-    for (const photo of preview.photos) {
-      if (!photo.countryCode || !photo.thumbUrl) continue;
-      const group = (groups[photo.countryCode] ||= []);
-      if (group.length < PREVIEW_PER_COUNTRY) group.push(photo);
-    }
-    return groups;
-  }, [preview.photos]);
-
   // my_planet's Detailed map type: names, lines and landmark pins at every zoom
   // (re-renders this page only when the zoom crosses that line, not on every move)
   const detailed = settings.mapType === 'detailed';
@@ -243,15 +224,13 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
   // An upload, edit or delete: the photo lists, and the map itself, as a photo can add a
   // PHOTO visit (or turn a "want to go" country visited) and changes the stats
-  const { reload: reloadPreview } = preview;
   const { reload: reloadUnplaced } = unplaced;
   const refreshMap = actions?.refresh;
   const photosChanged = useCallback(() => {
     setPhotosVersion((v) => v + 1);
-    reloadPreview();
     reloadUnplaced();
     refreshMap?.();
-  }, [reloadPreview, reloadUnplaced, refreshMap]);
+  }, [reloadUnplaced, refreshMap]);
   // A photo changed in the viewer (a landmark confirmed, a country given): it may have
   // earned something. Uploads ask once their batch is done (onBatchDone), not per photo.
   const photoEdited = useCallback(() => {
@@ -292,7 +271,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const playCountry = useCallback((code) => dispatch({ type: 'play', country: code }), []);
 
   // A panel listing photos is open: the viewer is probably next
-  const listsPhotos = ui.panel === 'country' || ui.panel === 'unplaced';
+  const listsPhotos = ui.panel === 'country' || ui.panel === 'unplaced' || ui.panel === 'photos';
   useEffect(() => {
     if (listsPhotos) PhotoViewer.preload().catch(() => {});
   }, [listsPhotos]);
@@ -357,6 +336,16 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         );
       case 'unplaced':
         return <UnplacedPhotosPanel photos={unplaced} canEdit={canChange} onOpenPhoto={openPhoto} onClose={close} />;
+      case 'photos':
+        return (
+          <MapPhotosPanel
+            photoSource={photoSource}
+            photosVersion={photosVersion}
+            // An editor's "Add photos" opens the upload panel (which says why, on a locked or unverified map)
+            onAddPhotos={canEdit ? () => dispatch({ type: 'upload' }) : null}
+            onClose={close}
+          />
+        );
       case 'country':
         return ui.selectedCode ? (
           <CountryPanel
@@ -440,8 +429,6 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           so a photo opened is in colour. */}
       <div className={`absolute inset-0 ${settings.blackAndWhite ? 'grayscale' : ''}`}>
         <MapBackground styleId={settings.style} animatedSea={settings.animatedSea} />
-        {settings.style === 'animated' && settings.animatedSea ? <SeaWaves /> : null}
-        {settings.style === 'animated' && settings.sunAndMoon ? <SunMoon /> : null}
 
         <main id='main-content' tabIndex={-1} role='main' className='absolute inset-0' onPointerDownCapture={warmCountryPanel}>
           <h1 className='sr-only'>{map.name}</h1>
@@ -450,6 +437,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             seaDepths={!mapStyleById(settings.style).background}
             visitsByCode={visitsByCode}
             momentCounts={map.momentCountsByCountry || undefined}
+            momentSpots={map.momentSpots || undefined}
+            showSky={settings.style === 'animated' && settings.sunAndMoon}
             showMoments={settings.showMoments}
             selectedCode={ui.panel === 'country' ? ui.selectedCode : null}
             onSelectCountry={selectCountry}
@@ -466,16 +455,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             label={`${map.name}: world map`}
           />
         </main>
-
         <div className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2'>
-          <MapTitle
-            map={map}
-            role={role}
-            shared={Boolean(shareCode)}
-            onOpenSwitcher={currentUser && !shareCode ? () => dispatch({ type: 'toggle', panel: 'switcher' }) : null}
-            onIntent={() => preloadTool('switcher')}
-          />
-          <StatsBadge stats={map.stats} onOpen={() => dispatch({ type: 'toggle', panel: 'stats' })} onIntent={() => preloadTool('stats')} />
           {mustVerify ? <VerifyEmailBanner /> : null}
           {planBanner ? (
             <MapPlanBanner
@@ -498,24 +478,28 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           ) : null}
         </div>
 
-        {settings.showUserBanner ? (
-          <div className='pointer-events-none absolute inset-x-0 top-3 hidden justify-items-center lg:grid'>
+        {bannerShows ? (
+          <div className='pointer-events-none absolute inset-x-0 top-3 grid justify-items-center'>
             <MapBanner map={map} />
           </div>
         ) : null}
 
-        <div className='pointer-events-none absolute inset-x-0 bottom-3 grid justify-items-center md:inset-x-auto md:bottom-auto md:right-3 md:top-3'>
+        {/* The tools at the top right: a column of stamps on wide screens, the "Menu"
+            button on phones (MapToolbar) */}
+        <div className='pointer-events-none absolute right-3 top-3 z-20 grid justify-items-end'>
           <MapToolbar
-            openPanel={ui.slideshow ? 'play' : ui.sharing ? 'share' : ui.panel}
+            // Adding photos is part of the Photos stamp's panel
+            openPanel={ui.slideshow ? 'play' : ui.sharing ? 'share' : ui.panel === 'upload' ? 'photos' : ui.panel}
             onToggle={handleToggle}
             onIntent={preloadTool}
-            canUpload={canEdit}
             canShare={canShare}
+            canSwitch={Boolean(currentUser) && !shareCode}
+            stats={map.stats}
           />
         </div>
 
-        {/* Wide screens: as far from the bottom as the toolbar is from the top (both 3) */}
-        <div className='pointer-events-none absolute bottom-24 right-3 grid md:bottom-3'>
+        {/* As far from the bottom as the toolbar is from the top (both 3) */}
+        <div className='pointer-events-none absolute bottom-3 right-3 grid'>
           <div className='pointer-events-auto'>
             <MapZoomControls viewport={viewport} />
           </div>
@@ -524,23 +508,20 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         {/* The key hides while a panel is open: the panel covers that corner */}
         {panel ? null : (
           <div className='pointer-events-none absolute bottom-3 left-3 hidden md:grid'>
-            <MapLegend showMoments={settings.showMoments} showStamps={stampedLandmarks.size > 0} />
+            <MapLegend showMoments={settings.showMoments} showSpots={Boolean(map.momentSpots?.length)} showStamps={stampedLandmarks.size > 0} />
           </div>
         )}
 
-        {/* Wide screens centre every panel on the screen: the same space above and below
-            (4.5rem, clear of the title tag at the top and the zoom stamps at the bottom; 6rem at
-            the top while the map's banner shows there), and clear of the toolbar on the right.
-            The map switcher drops from the map's title
-            instead, below the title column (and the verify or plan banners in it). Either way
-            the wrapper has a definite height, so a panel's `md:max-h-full` keeps it on screen.
-            On phones every panel is the sheet above the toolbar. */}
+        {/* Wide screens centre every panel on the screen, the map switcher too: the same space
+            above and below (4.5rem, clear of the tags at the top and the zoom stamps at the
+            bottom; 6rem at the top while the map's banner shows there), and clear of the toolbar
+            on the right. The wrapper has a definite height, so a panel's `md:max-h-full` keeps it
+            on screen. On phones every panel fills the screen from just below the Menu button to the bottom
+            (16 Nov 2026, the user's wish: the bottom row of stamps is gone, so no gap above). */}
         {panel ? (
           <div
-            className={`pointer-events-none absolute inset-x-3 bottom-24 z-10 grid ${
-              ui.panel === 'switcher'
-                ? `md:inset-x-auto md:bottom-3 md:left-3 md:grid-rows-[minmax(0,1fr)] md:items-start ${panelTopBelow({ verify: mustVerify, plan: planBanner })}`
-                : `md:inset-x-24 md:inset-y-18 md:grid-rows-[minmax(0,1fr)] md:place-items-center ${settings.showUserBanner ? 'lg:top-24' : ''}`
+            className={`pointer-events-none absolute inset-x-3 bottom-3 top-[4.25rem] z-10 grid grid-rows-[minmax(0,1fr)] md:inset-x-24 md:inset-y-18 md:place-items-center ${
+              bannerShows ? 'lg:top-24' : ''
             }`}
           >
             {/* A panel whose code failed to arrive says so; the next panel tries afresh */}
@@ -557,8 +538,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           hover={hover}
           hidden={Boolean(ui.photoId)}
           visitsByCode={visitsByCode}
-          thumbsByCountry={thumbsByCountry}
-          showPhotos={settings.hoverPreview}
+          showPoster={settings.hoverPreview}
         />
 
         {ui.sharing ? (

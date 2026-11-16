@@ -18,18 +18,26 @@ const PUNCH = 'pointer-events-none absolute h-5 w-5 rounded-full border-2 border
  * ticket in one piece (the country list, CountryListPanel). Behaves like every map panel
  * (useMapPanel): a non-modal dialog named by its heading, focus to the heading on
  * opening, Escape closes, "Close <title>" stamp. The map page centres it on wide
- * screens; on phones it's the usual sheet above the toolbar, the stub still on the left.
+ * screens; on phones it fills the screen below the Menu button, the stub still on the left.
  */
 function CountryTicket({ title, kicker, stub = null, onClose, children }) {
   const { titleId, headingRef, panelProps } = useMapPanel(onClose);
   const columns = stub ? 'grid-cols-[6.5rem_minmax(0,1fr)] md:grid-cols-[15rem_minmax(0,1fr)]' : 'grid-cols-1';
+  // A country's ticket is wider than the list's (16 Nov 2026): its forms (notes, moments)
+  // set fields side by side
+  const width = stub ? 'md:w-[min(56rem,calc(100vw_-_12rem))]' : 'md:w-[min(46rem,calc(100vw_-_12rem))]';
+  // On a phone, while a form that needs the room is open (marked `data-ticket-form`: a
+  // moment's), the stub steps aside and the content takes the ticket's whole width
+  const formTakesStub = 'max-md:group-has-[[data-ticket-form]]:hidden';
 
   return (
     <section
       {...panelProps}
-      className={`ticket-edge paper-fields pointer-events-auto relative grid max-h-[62vh] w-full ${columns} grid-rows-[minmax(0,1fr)] overflow-hidden rounded-lg bg-paper-cream text-colour4 md:max-h-full md:w-[min(46rem,calc(100vw_-_12rem))]`}
+      className={`ticket-edge paper-fields group pointer-events-auto relative grid h-full w-full ${columns} grid-rows-[minmax(0,1fr)] overflow-hidden rounded-lg bg-paper-cream text-colour4 md:h-auto md:max-h-full ${width} ${
+        stub ? 'max-md:has-[[data-ticket-form]]:grid-cols-1' : ''
+      }`}
     >
-      {stub}
+      {stub ? <div className={`contents ${formTakesStub}`}>{stub}</div> : null}
       <div className='grid min-h-0 min-w-0 grid-rows-[auto_minmax(0,1fr)]'>
         <header className='paper-aged grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border-b-2 border-dashed border-poster-brown py-4 pl-5 pr-4 text-poster-ink'>
           <div className='grid min-w-0 gap-1'>
@@ -49,8 +57,8 @@ function CountryTicket({ title, kicker, stub = null, onClose, children }) {
       </div>
       {stub ? (
         <>
-          <span aria-hidden='true' className={`${PUNCH} -top-2.5`} />
-          <span aria-hidden='true' className={`${PUNCH} -bottom-2.5`} />
+          <span aria-hidden='true' className={`${PUNCH} -top-2.5 ${formTakesStub}`} />
+          <span aria-hidden='true' className={`${PUNCH} -bottom-2.5 ${formTakesStub}`} />
         </>
       ) : null}
     </section>

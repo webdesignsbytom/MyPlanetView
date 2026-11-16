@@ -5,6 +5,11 @@ import { getStoredItem, removeStoredItem, setStoredItem } from '@/utils/function
 
 // A subscription that hasn't ended is changed (change-plan, extra-maps), never bought again
 const ENDED_STATUSES = ['canceled', 'incomplete_expired'];
+// Days to change your mind after a first payment for a plan or extra maps, with a full
+// refund (the user's choice, 16 Nov 2026; the terms' "14 days to change your mind").
+// Refunds are made by hand in Stripe's dashboard.
+export const REFUND_DAYS = 14;
+
 export const hasSubscription = (billing) => Boolean(billing?.status) && !ENDED_STATUSES.includes(billing.status);
 
 export const INTERVAL_WORDS = { MONTH: 'a month', YEAR: 'a year' };

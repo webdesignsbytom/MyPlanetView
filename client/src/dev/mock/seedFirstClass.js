@@ -23,7 +23,7 @@ export function addFirstClassMap(db) {
     db.users,
     {
       id: FRAN_ID,
-      name: 'Fran First',
+      name: 'Fran Okafor',
       email: 'firstclass@example.test',
       role: 'USER',
       emailVerified: true,

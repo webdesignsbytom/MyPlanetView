@@ -1,4 +1,4 @@
-import { test, expect, makeJpeg, openMap, openTool } from './fixtures.js';
+import { test, expect, makeJpeg, openMap, openTool, openUploader } from './fixtures.js';
 
 // Rearranging a gallery: a country's on the map, and a trip's. Uploaded photos have no
 // caption, so the tiles are told apart by their pictures (each upload is its own blob URL).
@@ -14,6 +14,16 @@ async function uploadTo(page, panel, names) {
     await expect(panel.getByRole('listitem').filter({ hasText: name })).toContainText('Added');
   }
 }
+
+/**
+ * Wait until a keyboard pick-up is ready for the arrow keys. dnd-kit (6.3) measures the tiles
+ * in effects after the pick-up renders, and starts listening for keys on a 0 ms timer; an
+ * arrow key in that gap (the test presses it the moment "Picked up…" is said, ~20 ms) is
+ * ignored, which made this test fail about one run in eight. A person never presses that
+ * fast. Two frames and a task let both happen.
+ */
+const pickUpSettled = (page) =>
+  page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve)))));
 
 async function openCountry(page, name) {
   const list = await openTool(page, 'Country list', 'Countries');
@@ -42,7 +52,7 @@ async function drag(page, from, to) {
 test.describe('Rearranging photos', () => {
   test('an editor drags a country’s photos into a new order, and it is saved', async ({ page }) => {
     await openMap(page);
-    const upload = await openTool(page, 'Add photos', 'Add photos');
+    const upload = await openUploader(page);
     await upload.getByRole('combobox', { name: 'Country for photos with no location' }).selectOption({ label: 'Germany' });
     await uploadTo(page, upload, ['first.jpg', 'second.jpg', 'third.jpg']);
     await upload.getByRole('button', { name: 'Close Add photos' }).click();
@@ -71,7 +81,7 @@ test.describe('Rearranging photos', () => {
 
   test('a photo moves with the keyboard too', async ({ page }) => {
     await openMap(page);
-    const upload = await openTool(page, 'Add photos', 'Add photos');
+    const upload = await openUploader(page);
     await upload.getByRole('combobox', { name: 'Country for photos with no location' }).selectOption({ label: 'Austria' });
     await uploadTo(page, upload, ['one.jpg', 'two.jpg']);
     await upload.getByRole('button', { name: 'Close Add photos' }).click();
@@ -88,6 +98,7 @@ test.describe('Rearranging photos', () => {
     await tiles.first().focus();
     await page.keyboard.press('Space');
     await said('Picked up Photo, at place 1 of 2.');
+    await pickUpSettled(page);
     await page.keyboard.press('ArrowRight');
     await said('Photo moved to place 2 of 2.');
     await page.keyboard.press('Space');

@@ -30,7 +30,7 @@ describe('an account whose email is not verified yet', () => {
     const traveller = data(added).traveller;
     expect((await agent.patch(`/api/maps/${map.id}/travellers/${traveller.id}`).send({ favouriteCountryCode: 'JP' })).status).toBe(200);
     expect((await agent.delete(`/api/maps/${map.id}/travellers/${traveller.id}`)).status).toBe(200);
-    expect((await agent.put('/api/users/map-settings').send({ mapSettings: { style: 'galaxy' } })).status).toBe(200);
+    expect((await agent.put('/api/users/map-settings').send({ mapSettings: { style: 'old-map' } })).status).toBe(200);
   });
 
   it('can read its map, its stats and its sharing settings', async () => {

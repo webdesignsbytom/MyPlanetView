@@ -32,6 +32,7 @@ import {
 } from '../domain/moments.js';
 import { badRequest, denyUnless, forbidden, handler, loadMap, loadMoment, loadTrip, notFound } from './helpers/travel.js';
 import { landmarkPlace, placeOnMap } from '../utils/ukNations.js';
+import { parseMomentSpot, spotFitsPlace } from '../utils/momentSpots.js';
 import { isKnownCountry } from './helpers/countries.js';
 import { momentView } from './helpers/views.js';
 
@@ -95,6 +96,17 @@ async function parseMoment(body, { partial = false, current = null, mapId, photo
     // A new country with the old landmark: it must still fit (or be cleared with it)
     const landmark = await findLandmarkById(current.landmarkId);
     if (landmark && landmarkPlace(landmark, splitUk) !== countryCode) return { error: EVENT_MESSAGES.momentLandmarkWrongCountry };
+  }
+
+  // A pin on the map: in the moment's country, like a landmark (utils/momentSpots.js)
+  const spot = parseMomentSpot(body.spot);
+  if (!spot.ok) return { error: EVENT_MESSAGES.invalidMomentSpot };
+  if (spot.value) {
+    if (spot.value.latitude !== null && !spotFitsPlace(spot.value, countryCode)) return { error: EVENT_MESSAGES.momentSpotWrongCountry };
+    Object.assign(data, spot.value);
+  } else if (current?.latitude != null && countryCode !== current.countryCode && !spotFitsPlace(current, countryCode)) {
+    // A new country with the old pin: it must still fit (or be moved or taken off with it)
+    return { error: EVENT_MESSAGES.momentSpotWrongCountry };
   }
 
   if (body.hidden !== undefined) {

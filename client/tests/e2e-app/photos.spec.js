@@ -1,11 +1,11 @@
-import { test, expect, expectStats, makeJpeg, openMap, openTool, statsBadge } from './fixtures.js';
+import { test, expect, expectStats, makeJpeg, openMap, openStats, openTool, openUploader } from './fixtures.js';
 
 // The upload panel's file input (a hidden input behind the "Choose photos" drop zone)
 const fileInput = (panel) => panel.getByLabel(/choose photos/i);
 const countryChoice = (panel) => panel.getByRole('combobox', { name: 'Country for photos with no location' });
 
 async function upload(page, file, { country } = {}) {
-  const panel = await openTool(page, 'Add photos', 'Add photos');
+  const panel = await openUploader(page);
   if (country) await countryChoice(panel).selectOption({ label: country });
   await fileInput(panel).setInputFiles(file);
   const item = panel.getByRole('listitem').filter({ hasText: file.name });
@@ -74,7 +74,7 @@ test.describe('Photos', () => {
     await expect(thumb).toBeFocused();
 
     // A confirmed landmark counts (the seeded map has 13 stamps)
-    await statsBadge(page).click();
+    await openStats(page);
     await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['9', '2 of 7', '0 of 5', '17', '14', '3']);
   });
 
@@ -85,9 +85,9 @@ test.describe('Photos', () => {
     await expectStats(page, '8 countries, 2 continents, 17 photos');
     await panel.getByRole('button', { name: 'Close Add photos' }).click();
 
-    await statsBadge(page).click();
-    const stats = page.getByRole('dialog', { name: 'Travel statistics' });
-    await stats.getByRole('button', { name: 'Unplaced photos (1)' }).click();
+    // From the country list (the stats panel has the same button, on wide screens)
+    const list = await openTool(page, 'Country list', 'Countries');
+    await list.getByRole('button', { name: 'Unplaced photos (1)' }).click();
 
     const unplaced = page.getByRole('dialog', { name: 'Unplaced photos' });
     await unplaced.getByRole('button', { name: 'Open Photo' }).click();
@@ -123,5 +123,45 @@ test.describe('Photos', () => {
 
     await expect(panel.getByText('No photos from Netherlands yet.')).toBeVisible();
     await expectStats(page, '8 countries, 2 continents, 15 photos');
+  });
+
+  test('the photo album shows every photo, newest first, each with its country, and adds more', async ({ page }) => {
+    await openMap(page);
+    const gallery = await openTool(page, 'Photo album', 'Photo album');
+    await expect(gallery.getByRole('listitem')).toHaveCount(16);
+
+    // Videos are First Class: the owner (on Business) is offered the upgrade
+    await gallery.getByRole('button', { name: 'Add photos', exact: true }).click();
+    const panel = page.getByRole('dialog', { name: 'Add photos', exact: true });
+    await expect(panel.getByText('Videos are part of First Class.')).toBeVisible();
+    await expect(panel.getByRole('link', { name: 'Upgrade to First Class' })).toHaveAttribute('href', '/account#account-plan-heading');
+
+    // A new photo comes first in the gallery, with its country under it
+    await countryChoice(panel).selectOption({ label: 'Germany' });
+    await fileInput(panel).setInputFiles(await makeJpeg(page, { name: 'newest.jpg' }));
+    await expect(panel.getByRole('listitem').filter({ hasText: 'newest.jpg' })).toContainText('Added');
+    await panel.getByRole('button', { name: 'Close Add photos' }).click();
+
+    const again = await openTool(page, 'Photo album', 'Photo album');
+    await expect(again.getByRole('listitem')).toHaveCount(17);
+    await expect(again.getByRole('listitem').first()).toHaveText('Germany');
+
+    // A photo opens full screen: just the picture and its title (no caption here, so its
+    // country), nothing to edit; it steps through the album and closes back to it
+    await again.getByRole('listitem').first().getByRole('button', { name: 'Open Photo' }).click();
+    const viewer = page.getByRole('dialog', { name: 'Germany' });
+    await expect(viewer.getByRole('img', { name: 'Germany' })).toBeVisible();
+    await expect(viewer.getByRole('button', { name: /^(Edit|Delete|Download)/ })).toHaveCount(0);
+    await expect(viewer.getByRole('combobox')).toHaveCount(0);
+    await expect(viewer.getByRole('button', { name: 'Previous photo' })).toBeDisabled();
+    const where = page.getByRole('status').filter({ hasText: /^Photo \d+ of \d+/ });
+    await expect(where).toHaveText('Photo 1 of 17: Germany');
+    await viewer.getByRole('button', { name: 'Next photo' }).click();
+    await expect(where).toHaveText(/^Photo 2 of 17: /);
+    await page.keyboard.press('ArrowLeft');
+    await expect(where).toHaveText('Photo 1 of 17: Germany');
+    await page.keyboard.press('Escape');
+    await expect(viewer).toBeHidden();
+    await expect(again).toBeVisible();
   });
 });

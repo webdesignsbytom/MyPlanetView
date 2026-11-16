@@ -1,6 +1,8 @@
 // A user's map viewing preferences (Profile.mapSettings). Pure, so it's unit-tested.
 
-export const MAP_STYLES = Object.freeze(['animated', 'old-map', 'jupiter', 'galaxy']);
+// Jupiter clouds and Galaxy were taken out on 16 Nov 2026 (the user's wish): a profile
+// that saved one keeps it until the next save, and the client opens it as the animated sea
+export const MAP_STYLES = Object.freeze(['animated', 'old-map']);
 // 'detailed' shows country names, grid lines and landmarks at every zoom
 export const MAP_TYPES = Object.freeze(['regular', 'detailed']);
 export const MAP_SETTING_FLAGS = Object.freeze([

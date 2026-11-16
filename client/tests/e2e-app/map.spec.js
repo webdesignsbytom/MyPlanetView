@@ -1,40 +1,72 @@
-import { test, expect, HOME_MAP, MOCK_STORE_KEY, expectStats, openMap, openTool, pressCountry, statsBadge, toolbar } from './fixtures.js';
+import { test, expect, HOME_MAP, MOCK_STORE_KEY, expectStats, openMap, openStats, openTool, pressCountry, showsBanner, showTools, toolbar } from './fixtures.js';
 
 test.describe('The map page', () => {
   test('opens the default map with its stats', { tag: '@phone' }, async ({ page }) => {
     await openMap(page);
     await expect(page).toHaveTitle(new RegExp(HOME_MAP.replace(/[&']/g, '.')));
     await expect(page.getByRole('heading', { level: 1, name: HOME_MAP })).toBeAttached();
-    await expect(page.getByRole('button', { name: `${HOME_MAP}. Switch map` })).toBeVisible();
+    // Wide screens show the map's name on the banner, top centre; there's no title tag on any
+    // screen ("Your maps" opens from the toolbar)
+    if (showsBanner(page)) await expect(page.getByRole('region', { name: 'Map banner' })).toContainText(HOME_MAP);
+    else await expect(page.getByRole('region', { name: 'Map banner' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /\. Switch map$/ })).toHaveCount(0);
     await expectStats(page, '8 countries, 2 continents, 16 photos');
 
-    // The owner's tools. On a phone the row keeps eight stamps: the statistics and the
-    // badges give way, as the tags under the title open them (MapToolbar)
+    // The owner's tools, every one on every screen: a column of stamps on wide screens; on a
+    // phone a "Menu" button at the top right that drops them all, with their names
+    // (MapToolbar, 16 Nov 2026: the bottom row went, and with it the three it had no room for)
     const wide = page.viewportSize().width >= 768;
-    const tools = ['Home page', 'Country list', 'Trips', 'Timeline', 'Play my world', 'Add photos', 'Share this map', 'Map settings'];
-    for (const label of [...tools, ...(wide ? ['Travel statistics', 'Badges and goals'] : [])]) {
-      await expect(toolbar(page).getByRole('button', { name: label, exact: true })).toBeVisible();
+    const tools = [
+      'Home page',
+      'Your maps',
+      'Travel statistics',
+      'Country list',
+      'Trips',
+      'Timeline',
+      'Badges and goals',
+      'Play my world',
+      'Photo album',
+      'Share this map',
+      'Map settings',
+    ];
+    const menu = toolbar(page).getByRole('button', { name: 'Menu', exact: true });
+    if (!wide) {
+      await expect(menu).toHaveAttribute('aria-expanded', 'false');
+      // Top right, and nothing along the bottom
+      const box = await menu.boundingBox();
+      expect(box.x + box.width).toBeGreaterThan(page.viewportSize().width - 40);
+      expect(box.y).toBeLessThan(40);
+      await expect(toolbar(page).getByRole('button', { name: 'Country list', exact: true })).toBeHidden();
+    } else await expect(menu).toBeHidden();
+    await showTools(page);
+    for (const label of tools) await expect(toolbar(page).getByRole('button', { name: label, exact: true })).toBeVisible();
+    // The phone's menu writes the counts under the statistics, and shuts with Escape, focus
+    // back on its button
+    if (!wide) {
+      await expect(toolbar(page).getByRole('button', { name: /^Travel statistics/ })).toContainText('8 countries, 2 continents, 16 photos');
+      await page.keyboard.press('Escape');
+      await expect(menu).toHaveAttribute('aria-expanded', 'false');
+      await expect(menu).toBeFocused();
     }
-    await expect(toolbar(page).getByRole('button')).toHaveCount(wide ? 10 : 8);
-    // The phone's row fits a 390px screen without scrolling
-    if (!wide) expect(await toolbar(page).evaluate((nav) => nav.scrollWidth <= nav.clientWidth && nav.offsetWidth <= 390)).toBe(true);
 
-    await statsBadge(page).click();
+    // The stats panel opens from its stamp, or the menu
+    await openStats(page);
     const stats = page.getByRole('dialog', { name: 'Travel statistics' });
     await expect(stats).toBeVisible();
     // Countries, continents (of 7), special places (of 5), photos, landmarks (stamped: confirmed
     // matches, the owner counting the one on a hidden photo too), trips
     await expect(stats.getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '16', '13', '3']);
-    await expect(stats.getByRole('listitem')).toHaveText([/Test\s*1/, /Alex\s*1/]);
+    await expect(stats.getByRole('listitem')).toHaveText([/Charlie\s*1/, /Alex\s*1/]);
   });
 
   test('a country pressed on the map is marked visited, then wanted, then cleared', { tag: '@phone' }, async ({ page, hasTouch }) => {
     await openMap(page);
     const germany = page.locator('[data-code="DE"]');
     await expect(germany).toHaveAttribute('data-been', 'false');
-    // The goal tag comes with the badges, under the title (over the map on a phone): press
-    // once it's there, or the press can land on it
-    await expect(page.getByRole('button', { name: /^Next goal:/ })).toBeVisible();
+    // The goal tag comes with the badges, under the title (on a phone, folded behind its flag,
+    // still over the map): press once it's there, or the press can land on it
+    const wide = page.viewportSize().width >= 768;
+    await expect(page.getByRole('button', wide ? { name: /^Next goal:/ } : { name: 'Next goal', exact: true })).toBeVisible();
 
     await pressCountry(page, 'DE', { touch: hasTouch });
     const panel = page.getByRole('dialog', { name: 'Germany' });

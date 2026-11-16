@@ -2,6 +2,7 @@ import React from 'react';
 // Components
 import { ExpeditionStampIcon, StarBadgeIcon } from './StarBadge';
 import { MomentMarkIcon } from './MomentMark';
+import { MomentSpotIcon } from './MomentSpotPins';
 import LuggageTag from './LuggageTag';
 
 // What the map's marks mean (shown on wide screens), on a luggage tag. Every country has
@@ -9,7 +10,7 @@ import LuggageTag from './LuggageTag';
 // special places (Antarctica and the poles) you've reached, the pinned note where
 // there are moments (while `showMoments`, the viewer's setting, is on), and the gold pin of
 // a landmark stamped in the passport (once the map has one; pins show zoomed in).
-function MapLegend({ showMoments = true, showStamps = false }) {
+function MapLegend({ showMoments = true, showSpots = false, showStamps = false }) {
   return (
     <LuggageTag className='text-xs'>
       <ul aria-label='Map key' className='grid gap-1'>
@@ -35,9 +36,15 @@ function MapLegend({ showMoments = true, showStamps = false }) {
             Moments
           </li>
         ) : null}
+        {showMoments && showSpots ? (
+          <li className='grid grid-cols-reg items-center gap-2'>
+            <MomentSpotIcon />
+            A moment’s spot
+          </li>
+        ) : null}
         {showStamps ? (
           <li className='grid grid-cols-reg items-center gap-2'>
-            <span aria-hidden='true' className='mx-1 h-3 w-3 rounded-full border border-map-edge bg-cover-gold' />
+            <span aria-hidden='true' className='mx-1 h-3 w-3 rounded-full border border-map-edge bg-poster-gold-light' />
             Stamped landmark
           </li>
         ) : null}

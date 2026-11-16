@@ -48,7 +48,7 @@ export const MAP_SETTING_TOGGLES = [
   { key: 'showUserBanner', label: 'Banner with your names along the top', group: 'map', wideOnly: true },
   { key: 'animatedSea', label: 'Animated sea', group: 'sky' },
   { key: 'sunAndMoon', label: 'Sun and moon', group: 'sky' },
-  { key: 'hoverPreview', label: 'Photos and posters on hover', group: 'sky' },
+  { key: 'hoverPreview', label: 'Country posters on hover', group: 'sky' },
 ];
 
 export const MAP_SETTING_GROUPS = [

@@ -1,16 +1,23 @@
 // Terms and privacy policy for My Planet View. Plain-English drafts written from
 // docs/SITE-DESIGN.md: have them checked before launch, and update the version and
-// date whenever the wording changes.
+// date whenever the wording changes. The payment terms (16 Nov 2026) follow how billing
+// works (docs/API.md "Plans and billing", FEATURE-PLAN.md "Upgrades and downgrades") and
+// the user's refund choice: in full within 14 days of a first payment, none after.
 import {
   CompanyEmailAddress,
   CompanyName,
   OperatorName,
   ADDRESS_LINES,
 } from '../constants/constants.js';
+import { PLANS, TRANSFER_GRACE_DAYS } from '../constants/plans.js';
+import { REFUND_DAYS } from '../plans/billing.js';
+import { PROMO_TRIAL_DAYS } from '../plans/promoCodes.js';
+
+const PAID = `${PLANS.REGULAR.name} and ${PLANS.PREMIUM.name}`;
 
 export const LEGAL_VERSION = {
   lastUpdated: '2026-11-16',
-  version: '1.0.3',
+  version: '1.1.1',
 };
 
 // Terms of use
@@ -77,12 +84,63 @@ export const TermsSectionsArray = [
     ],
   },
   {
-    id: 'cost-and-changes',
-    title: 'Cost and changes to the service',
+    id: 'plans-and-prices',
+    title: 'Plans and prices',
     group: 'agreements',
     content: [
-      `${CompanyName} is free while it is new. If we add paid plans, for example with more storage, we will tell you before anything changes for your account.`,
-      'We may add, change or remove features. We will give notice before removing anything you rely on.',
+      `${PLANS.FREE.name} is free. ${PAID} are paid plans, by the month or by the year, and you can add extra maps to any plan. The prices are on the Pricing page, and the price shown at checkout, including any VAT that applies, is what you pay.`,
+      'A map follows its owner’s plan: everyone who edits or views it gets that plan’s limits.',
+      'Payments are handled by Stripe. Your card details go straight to them: we never see or store them.',
+    ],
+  },
+  {
+    id: 'renewing-and-cancelling',
+    title: 'Renewing and cancelling',
+    group: 'agreements',
+    content: [
+      'A paid plan renews by itself at the end of each month or year, on the card you gave, until you cancel. We remind you by email before a yearly plan renews.',
+      `You can cancel at any time with “Manage billing” on your account page. Your plan carries on until the end of the period you have paid for, then your account moves to ${PLANS.FREE.name}. Apart from the ${REFUND_DAYS} days below, we don’t refund part of a period.`,
+      'If we change a price, we will tell you at least 30 days before it applies to you, so you can cancel first if you want to.',
+      `If a payment fails, Stripe tries again over the following days and we ask you to update your card; your plan keeps working meanwhile. If it still can’t be paid, the plan ends and your account moves to ${PLANS.FREE.name}.`,
+    ],
+  },
+  {
+    id: 'refunds',
+    title: `${REFUND_DAYS} days to change your mind`,
+    group: 'agreements',
+    content: [
+      `When you first pay for a plan, or for extra maps, you have ${REFUND_DAYS} days to change your mind. Cancel, and tell us within ${REFUND_DAYS} days of that first payment, and we will refund it in full, even if you have used the plan meanwhile.`,
+      `With a promo code’s free month, the ${REFUND_DAYS} days start on the day of your first payment, when the free month ends.`,
+      `To ask, email ${CompanyEmailAddress} or use the contact page. The refund goes back to the card you paid with, within ${REFUND_DAYS} days of your asking.`,
+      'Renewals, and payments after those first days, aren’t refunded. Nothing in these terms takes away your rights under consumer law, for example if the service isn’t as described.',
+    ],
+  },
+  {
+    id: 'changing-plans',
+    title: 'Changing plan, and what happens to your photos',
+    group: 'agreements',
+    content: [
+      'A change of plan takes effect straight away. Moving up, you pay the difference for the rest of the period; moving down, the difference comes off your next payment.',
+      `Nothing is deleted when you move down or a plan ends. Your photos, the originals already kept and your videos all stay. A country already over the new plan’s limit keeps its photos but takes no more; on ${PLANS.FREE.name}, new uploads keep a print-quality copy instead of the original; and videos stay viewable, but no new ones can be added.`,
+      'Extra maps you stop paying for are never deleted either. They stay viewable and shareable but take no new photos until they are paid for again. Your first map always stays fully active, and you choose which of the others do.',
+      `A map someone hands over to you keeps working fully for ${TRANSFER_GRACE_DAYS} days, so you have time to add an extra map for it if you need one.`,
+    ],
+  },
+  {
+    id: 'free-memberships-and-promo-codes',
+    title: 'Free memberships and promo codes',
+    group: 'agreements',
+    content: [
+      `We sometimes give a plan free for a set time, for example to people who help us spread the word. When it ends, your account moves to ${PLANS.FREE.name} unless you choose to pay. Nothing is charged and nothing is deleted.`,
+      `A promo code gives you your first month of ${PAID} free, once per account. You give a card at checkout. If you don’t cancel within the ${PROMO_TRIAL_DAYS} days, the plan carries on as a paid plan: your card is charged when the free month ends, and at each renewal after that.`,
+    ],
+  },
+  {
+    id: 'changes-to-the-service',
+    title: 'Changes to the service',
+    group: 'agreements',
+    content: [
+      'We may add, change or remove features. We will give notice before removing anything you rely on. If a change takes away something your paid plan includes, you can cancel and we will refund the part of the period you hadn’t used.',
     ],
   },
   {
@@ -110,6 +168,7 @@ export const TermsSectionsArray = [
     group: 'agreements',
     content: [
       'You can delete your account at any time from your account page. That deletes your maps, trips and the photos you uploaded.',
+      `Deleting your account cancels any subscription straight away, so nothing more is charged. Within ${REFUND_DAYS} days of your first payment you can still ask for your refund; otherwise the rest of the period isn’t refunded.`,
       'If you own a map that other people edit, it is handed to one of those editors first, so their photos are not lost with your account.',
       'We may close an account that seriously or repeatedly breaks these terms, and will tell you why where we can.',
     ],
@@ -179,6 +238,7 @@ export const PrivacySectionsArray = [
       'Your account: your name, email address and a securely hashed password.',
       'Your maps: the countries you mark, your trips and their stops, and the travellers on each map (names, and optionally a birth country and favourite country).',
       'Your photos: the files you upload, their captions, the date each was taken and, where your phone saved it, the place it was taken.',
+      `Your plan, if you pay: which plan and how often you pay, any extra maps, the promo code you signed up with, and the references Stripe gives your customer record and subscription. Your card details go straight to Stripe; we never see or store them.`,
       'Messages you send through the contact form.',
       'Security records: sign-in sessions, the device and IP address they came from, and a log of important actions, used to protect accounts and investigate problems.',
     ],
@@ -191,6 +251,7 @@ export const PrivacySectionsArray = [
       'Phones usually save the place a photo was taken inside the file. We read it to put the photo in the right country and to suggest landmarks.',
       'We keep it only in your original file and in your map’s records. The thumbnail and screen-sized copies that other people see have it removed.',
       'Only you and the editors of your map can see a photo’s exact location or download the original.',
+      'A moment can be pinned to its exact spot on the map. Only you and your map’s editors see the pin, unless you tick “Show the exact spot to everyone the map is shared with” on that pin.',
     ],
   },
   {
@@ -208,7 +269,8 @@ export const PrivacySectionsArray = [
     title: 'Our legal reasons',
     group: 'compliance',
     content: [
-      'Running the service you signed up for (contract) covers your account, maps and photos.',
+      'Running the service you signed up for (contract) covers your account, maps, photos and payments.',
+      'Keeping records of payments is a legal obligation (tax law).',
       'Our legitimate interest in keeping the site secure covers security records and rate limits.',
       'Your consent covers analytics cookies, and you can withdraw it at any time.',
     ],
@@ -218,7 +280,7 @@ export const PrivacySectionsArray = [
     title: 'Who else handles it',
     group: 'policies',
     content: [
-      'We use a small number of providers to run the site, each bound to use your data only on our instructions: Cloudflare (photo storage, R2, and First Class videos, Stream), Vercel (the server), InMotion Hosting (the website), our database host and our email provider.',
+      'We use a small number of providers to run the site, each bound to use your data only on our instructions: Cloudflare (photo storage, R2, and First Class videos, Stream), Vercel (the server), InMotion Hosting (the website), Stripe (payments), our database host and our email provider.',
       'Google Analytics runs only if you accept analytics cookies.',
       'We never sell your data or share it with advertisers. We would only disclose it if the law required us to.',
       'Some providers may process data outside the UK. Where they do, they use approved safeguards such as standard contractual clauses.',
@@ -252,6 +314,7 @@ export const PrivacySectionsArray = [
       'We keep your account and content until you delete them or close your account.',
       'Deleting a photo deletes all its files. Closing your account deletes your maps, trips and uploads, apart from shared maps that are handed to another editor first.',
       'Contact messages are kept while we deal with them, and security records for as long as they are needed to protect the site.',
+      'Records of payments (invoices and receipts, kept in our Stripe account) are kept for six years, as UK tax law requires, even after you close your account.',
     ],
   },
   {

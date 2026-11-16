@@ -16,6 +16,7 @@ import {
   tripView,
 } from '../views';
 import { adsFor } from '../offers';
+import { placeOnMap } from '@/utils/map/ukNations';
 
 const TRIP_STATUSES = ['PLANNED', 'ACTIVE', 'COMPLETED'];
 const NOT_FOUND = 'This trip could not be found.';
@@ -40,12 +41,14 @@ function addTripVisits(trip, codes = stopCountries(trip)) {
   for (const mapId of tripMapIds(trip)) codes.forEach((code) => markVisited(mapId, code, 'TRIP'));
 }
 
-function stopFields(body) {
+// `trip`'s map keeps places its way: a UK nation is the UK on a map that doesn't split it
+function stopFields(body, trip) {
   const out = {};
   if (body.countryCode !== undefined) {
     const code = String(body.countryCode || '').toUpperCase();
     if (!countryExists(code)) return { error: 'Choose a country for this stop.' };
-    out.countryCode = code;
+    out.countryCode = placeOnMap(code, Boolean(getDb().maps.find((m) => m.id === trip.mapId)?.splitUk));
+    out.ukNation = null;
   }
   if (body.landmarkId !== undefined) {
     if (body.landmarkId && !landmarkById(body.landmarkId)) return { error: 'Unknown landmark.' };
@@ -199,7 +202,7 @@ export function registerTripRoutes() {
     const db = getDb();
     const { trip, role, reply } = loadTrip(params.tripId, 'EDITOR');
     if (reply) return reply;
-    const { fields, error } = stopFields({ landmarkId: null, placeName: null, arriveOn: null, leaveOn: null, notes: null, ...body });
+    const { fields, error } = stopFields({ landmarkId: null, placeName: null, arriveOn: null, leaveOn: null, notes: null, ...body }, trip);
     if (error) return fail(400, error);
     if (!fields.countryCode) return fail(400, 'Choose a country for this stop.');
     const position = db.stops.filter((s) => s.tripId === trip.id).length;
@@ -228,7 +231,7 @@ export function registerTripRoutes() {
     if (reply) return reply;
     const stop = getDb().stops.find((s) => s.id === params.stopId && s.tripId === trip.id);
     if (!stop) return fail(404, 'That stop could not be found.');
-    const { fields, error } = stopFields(body);
+    const { fields, error } = stopFields(body, trip);
     if (error) return fail(400, error);
     Object.assign(stop, fields);
     if (trip.status === 'COMPLETED' && fields.countryCode) addTripVisits(trip, [fields.countryCode]);

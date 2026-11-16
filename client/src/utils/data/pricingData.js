@@ -6,6 +6,7 @@
 // FEATURE-PLAN.md, "Phases"). Check each one is live before the page is published.
 import { CompanyName } from '../constants/constants.js';
 import { EDITORS_PER_MAP, INCLUDED_MAPS, PLANS, formatPence } from '../constants/plans.js';
+import { REFUND_DAYS } from '../plans/billing.js';
 
 const count = (n) => n.toLocaleString('en-GB');
 const perCountry = (planId) => `${count(PLANS[planId].limits.photosPerCountry)} photos of each country, on each map`;
@@ -67,7 +68,7 @@ export const everyPlanFeatures = [
   { text: 'One trip shared on its own, so friends from one holiday see only that holiday.' },
   { text: 'Trips with their stops, dates and route drawn on the map.' },
   { text: 'Landmarks suggested from where each photo was taken.' },
-  { text: 'Four looks for the map: the animated sea, the old map, Jupiter’s clouds and the galaxy.' },
+  { text: 'Two looks for the map: the animated sea and the old map.' },
   { text: 'Every map other people share with you, free: they never count as yours.' },
   { text: 'A passport with a stamp for every landmark you photograph.' },
   { text: 'Slideshows of your whole map, one country or one trip.' },
@@ -93,7 +94,7 @@ export const pricingNotes = [
   { text: `Paying yearly gets you about two months free: ${formatPence(PLANS.REGULAR.price.YEAR)} a year for ${PLANS.REGULAR.name}, ${formatPence(PLANS.PREMIUM.price.YEAR)} for ${PLANS.PREMIUM.name}.` },
   { text: 'Upgrade the day you need it. Changing plan never deletes anything: originals already kept stay, and a country over the new limit keeps its photos but takes no more.' },
   { text: `A fair-use limit of ${Math.round(PLANS.REGULAR.limits.storageCapBytes / GB)} GB of photos on each Business map, and ${Math.round(PLANS.PREMIUM.limits.storageCapBytes / GB)} GB on First Class, keeps things fair. Most people never get near it.` },
-  { text: `Payments go through Stripe. Cancel any time from your account page, and the plan runs to the end of the period you’ve paid for.` },
+  { text: `Payments go through Stripe. Cancel any time from your account page, and the plan runs to the end of the period you’ve paid for. Changed your mind? Tell us within ${REFUND_DAYS} days of your first payment for a full refund.` },
   // "Download my data" is on the account page (docs/API.md, "Your data")
   { text: `Prices are in pounds sterling. Getting a copy of all your data is free on every plan, as the law says it should be: it’s a button on your account page.` },
 ];

@@ -27,9 +27,15 @@ function makePrisma() {
 
   const adapter = new PrismaPg(pool);
 
+  // A longer limit for every transaction (batch and interactive) when DB_TRANSACTION_TIMEOUT_MS
+  // is set; Prisma's own 5 s otherwise. The seed sets 60 s for itself (prisma/seed/connection.js):
+  // run from far away, each query to the live database is a ~140 ms round trip.
+  const txTimeout = Number(process.env.DB_TRANSACTION_TIMEOUT_MS) || 0;
+
   return new PrismaClient({
     adapter,
     log: ['error', 'warn'],
+    ...(txTimeout ? { transactionOptions: { timeout: txTimeout, maxWait: Math.min(txTimeout, 20000) } } : {}),
   });
 }
 

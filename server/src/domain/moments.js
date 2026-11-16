@@ -15,7 +15,7 @@ export const findMomentAccess = async (momentId, userId) => {
   const [moment, map, mapMember, tripMember] = await Promise.all([
     prisma.moment.findUnique({
       where: { id: momentId },
-      select: { id: true, mapId: true, tripId: true, countryCode: true, landmarkId: true, hidden: true },
+      select: { id: true, mapId: true, tripId: true, countryCode: true, landmarkId: true, latitude: true, longitude: true, hidden: true },
     }),
     prisma.travelMap.findFirst({ where: ofMoment, select: { ownerId: true, splitUk: true } }),
     userId ? prisma.mapMember.findFirst({ where: { userId, map: ofMoment }, select: { role: true } }) : null,
@@ -43,6 +43,10 @@ const MOMENT_SELECT = {
   // Never its coordinates
   landmark: { select: { id: true, name: true } },
   placeName: true,
+  // The moment's own pin: the views decide who sees it (utils/momentSpots.js spotView)
+  latitude: true,
+  longitude: true,
+  spotShared: true,
   tripId: true,
   hidden: true,
   createdAt: true,
@@ -83,6 +87,18 @@ export const findMomentsPage = ({ mapId, tripId, countryCode, includeHidden, cur
     select: MOMENT_SELECT,
     orderBy: [{ happenedOn: { sort: 'asc', nulls: 'last' } }, { id: 'asc' }],
     take: limit + 1,
+  });
+
+/**
+ * The map's pinned moments, to draw their pins: `[{ id, kind, title, countryCode, latitude,
+ * longitude }]`. Editors (`includeHidden`) get every pin, hidden moments' too; anyone else
+ * only the pins shared with them, on moments they can see.
+ */
+export const findMomentSpots = (mapId, { includeHidden = false } = {}) =>
+  prisma.moment.findMany({
+    where: { mapId, latitude: { not: null }, ...(includeHidden ? {} : { hidden: false, spotShared: true }) },
+    select: { id: true, kind: true, title: true, countryCode: true, latitude: true, longitude: true },
+    orderBy: [{ happenedOn: { sort: 'asc', nulls: 'last' } }, { id: 'asc' }],
   });
 
 /** Moments per country on a map, `{ [code]: n }` (one groupBy); hidden ones for editors only. */

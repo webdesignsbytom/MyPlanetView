@@ -103,7 +103,8 @@ function AccountDeleteSection() {
     <form className='grid gap-y-4' onSubmit={onSubmit} noValidate>
       <p className='text-sm text-center'>
         Permanently delete your account, profile and avatar. First choose what happens to each map you own: give it to
-        someone on it, or delete it with its trips and photos. This cannot be undone.
+        someone on it, or delete it with its trips and photos. If you pay for a plan, it’s cancelled straight away and
+        nothing more is charged. This cannot be undone.
       </p>
 
       {options ? (

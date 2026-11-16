@@ -20,16 +20,37 @@ function photosAround(photos, index, reach) {
   return around;
 }
 
-// A grid of photos with "Show more" paging. `narrow` for narrow places (a map panel).
+// A grid of photos with "Show more" paging. `narrow` for narrow places (a map panel);
+// `wide` for the map's wide Photos panel (80% of a large screen, 16 Nov 2026, the user's
+// wish): three across on phones, then as many columns of at least 9rem as fit (5 on a
+// 1024px screen, 6 at 1280, about 9 at 1920), so thousands of photos need less scrolling.
 // With `onMove(photoId, afterId)` (editors), "Rearrange photos" lets them drag photos
 // into a new order; it returns a promise, and a failure is shown under the grid.
 // `offerSlots` (useGalleryOffers): a travel offer card after every `every` photos (docs/API.md,
 // "Travel offers"), each one grid cell like a photo, in reading and keyboard order. Never
 // while rearranging, and the `photos` themselves never include them.
-function PhotoGrid({ photos, loading, error, hasMore, onLoadMore, onOpen, onMove, offerSlots = null, emptyText = 'No photos yet.', narrow = false }) {
+// `caption(photo)`: a line of text under each photo (the map's Photos panel: its country).
+function PhotoGrid({
+  photos,
+  loading,
+  error,
+  hasMore,
+  onLoadMore,
+  onOpen,
+  onMove,
+  offerSlots = null,
+  emptyText = 'No photos yet.',
+  narrow = false,
+  wide = false,
+  caption = null,
+}) {
   const [arranging, setArranging] = useState(false);
   const [moveError, setMoveError] = useState(null);
-  const columnsClass = narrow ? 'grid-cols-3' : 'grid-cols-3 sm:grid-cols-4 lg:grid-cols-6';
+  const columnsClass = wide
+    ? 'grid-cols-3 md:grid-cols-[repeat(auto-fill,minmax(9rem,1fr))]'
+    : narrow
+      ? 'grid-cols-3'
+      : 'grid-cols-3 sm:grid-cols-4 lg:grid-cols-6';
   const canArrange = Boolean(onMove) && photos.length > 1;
   const showArranging = arranging && canArrange;
 
@@ -43,8 +64,9 @@ function PhotoGrid({ photos, loading, error, hasMore, onLoadMore, onOpen, onMove
   const tilesBeforeArranging = [];
   photos.forEach((photo, index) => {
     const tile = (
-      <li key={photo.id}>
+      <li key={photo.id} className={caption ? 'grid content-start gap-1' : undefined}>
         <PhotoThumb photo={photo} onOpen={onOpen} />
+        {caption ? <span className='truncate text-center text-xs'>{caption(photo)}</span> : null}
       </li>
     );
     tiles.push(tile);

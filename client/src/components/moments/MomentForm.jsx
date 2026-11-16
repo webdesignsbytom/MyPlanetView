@@ -7,6 +7,7 @@ import useLandmarks from '@/hooks/useLandmarks';
 // Components
 import MomentDateFields from './MomentDateFields';
 import MomentPhotoPicker from './MomentPhotoPicker';
+import MomentSpotField from './MomentSpotField';
 import TripTravellerChips from '@/components/trips/TripTravellerChips';
 import FormField from '@/components/ui/FormField';
 import TextInput from '@/components/ui/TextInput';
@@ -32,8 +33,9 @@ import { serverText } from '@/utils/regex/regex';
 
 /**
  * A moment, new or (`moment`) being changed: its kind, title and story, when, where (a
- * landmark in its country, or a place name), the trip, who it's about, its photos and
- * whether viewers see it. Saved here; `onSaved(moment)` gets the server's answer.
+ * landmark in its country, or a place name, and optionally a pin on its exact spot), the
+ * trip, who it's about, its photos and whether viewers see it. Saved here;
+ * `onSaved(moment)` gets the server's answer.
  *
  * - `countryCode`: the moment's country, fixed (a country's panel); without it the form
  *   asks, starting at `defaultCountryCode` (a trip's page).
@@ -69,6 +71,7 @@ function MomentForm({
     countryCode: countryCode || moment?.countryCode || defaultCountryCode || '',
     landmarkId: moment?.landmark?.id || '',
     placeName: moment?.placeName || '',
+    spot: moment?.spot || null,
     tripId: moment ? moment.tripId || '' : tripId || '',
     travellerIds: moment?.travellerIds || [],
     photos: moment?.photos || [],
@@ -119,6 +122,7 @@ function MomentForm({
         countryCode: country,
         landmarkId: form.landmarkId || null,
         placeName: form.placeName.trim() || null,
+        spot: form.spot ? { latitude: form.spot.latitude, longitude: form.spot.longitude, shared: Boolean(form.spot.shared) } : null,
         hidden: form.hidden,
         travellerIds,
         photoIds: form.photos.map((p) => p.id),
@@ -135,24 +139,29 @@ function MomentForm({
     }
   };
 
+  // Two fields side by side on wide screens (lg: a country's ticket and the trip page both
+  // have the room there), one to a row below that, as on a phone. Labels on the fields' left
+  // edges. Not a container query: making the form a size container hung Chrome on the trip
+  // page (layout never finished; 16 Nov 2026). `data-ticket-form`: in a country's ticket on
+  // a phone, the stub steps aside to give it the width (CountryTicket).
   return (
-    <form onSubmit={handleSubmit} className='grid gap-3' noValidate>
-      <div className='grid gap-3 sm:grid-cols-2'>
-        <FormField id={`${uid}-kind`} label='What kind'>
+    <form onSubmit={handleSubmit} className='grid gap-4' noValidate data-ticket-form=''>
+      <div className='grid gap-4 lg:grid-cols-2'>
+        <FormField id={`${uid}-kind`} label='What kind' align='start'>
           <PlainOptionSelect value={form.kind} onChange={set('kind')} options={MOMENT_KIND_OPTIONS} />
         </FormField>
-        <FormField id={`${uid}-title`} label='Title' required>
+        <FormField id={`${uid}-title`} label='Title' required align='start'>
           <TextInput value={form.title} onChange={set('title')} maxLength={MOMENT_TITLE_MAX} required />
         </FormField>
       </div>
-      <FormField id={`${uid}-text`} label='The story'>
+      <FormField id={`${uid}-text`} label='The story' align='start'>
         <TextAreaInput value={form.text} onChange={set('text')} rows={3} maxLength={MOMENT_TEXT_MAX} />
       </FormField>
 
       <MomentDateFields idPrefix={`${uid}-date`} value={form.date} onChange={(date) => setForm((prev) => ({ ...prev, date }))} />
 
       {countryCode ? null : (
-        <FormField id={`${uid}-country`} label='Country' required>
+        <FormField id={`${uid}-country`} label='Country' required align='start'>
           <GroupedOptionSelect
             value={form.countryCode}
             onChange={set('countryCode')}
@@ -162,8 +171,8 @@ function MomentForm({
           />
         </FormField>
       )}
-      <div className='grid gap-3 sm:grid-cols-2'>
-        <FormField id={`${uid}-landmark`} label='Landmark'>
+      <div className='grid gap-4 lg:grid-cols-2'>
+        <FormField id={`${uid}-landmark`} label='Landmark' align='start'>
           <PlainOptionSelect
             value={form.landmarkId}
             onChange={set('landmarkId')}
@@ -174,13 +183,21 @@ function MomentForm({
             ]}
           />
         </FormField>
-        <FormField id={`${uid}-place`} label='Town or place'>
+        <FormField id={`${uid}-place`} label='Town or place' align='start'>
           <TextInput value={form.placeName} onChange={set('placeName')} maxLength={MOMENT_PLACE_MAX} />
         </FormField>
       </div>
 
+      <MomentSpotField
+        idPrefix={`${uid}-spot`}
+        value={form.spot}
+        onChange={(spot) => setForm((prev) => ({ ...prev, spot }))}
+        photos={form.photos}
+        countryCode={country}
+      />
+
       {trips ? (
-        <FormField id={`${uid}-trip`} label='Trip'>
+        <FormField id={`${uid}-trip`} label='Trip' align='start'>
           <PlainOptionSelect
             value={form.tripId}
             onChange={set('tripId')}
@@ -197,7 +214,7 @@ function MomentForm({
       />
 
       {offerBaby ? (
-        <div className='grid gap-2 border-l-4 border-poster-red pl-3'>
+        <div className='grid gap-2'>
           <CheckboxInput
             id={`${uid}-add-baby`}
             checked={form.addBaby}
@@ -205,7 +222,7 @@ function MomentForm({
             label={`Add the baby to this map as a traveller, born in ${placeName}`}
           />
           {form.addBaby ? (
-            <FormField id={`${uid}-baby-name`} label='Their name' required>
+            <FormField id={`${uid}-baby-name`} label='Their name' required align='start'>
               <TextInput value={form.babyName} onChange={set('babyName')} maxLength={60} required />
             </FormField>
           ) : null}
@@ -236,7 +253,7 @@ function MomentForm({
       ) : null}
 
       <InlineAlert>{error}</InlineAlert>
-      <div className='grid grid-row justify-end gap-2'>
+      <div className='grid gap-2 sm:grid-row sm:justify-end'>
         <Button quiet onClick={onCancel}>
           Cancel
         </Button>

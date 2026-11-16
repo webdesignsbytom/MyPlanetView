@@ -288,7 +288,10 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
         role='dialog'
         aria-modal='true'
         aria-labelledby={titleId}
-        className='ticket-edge paper-fields grid h-full min-h-0 w-full grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-paper-cream text-colour4 sm:mx-auto sm:max-w-6xl'
+        // A plain brown edge, not ticket-edge: its dashed inner frame ran just under the top
+        // edge, the stage covered it, and the header's and footer's perforations cut across
+        // it (16 Nov 2026, the user: the dashed border merged with the real one)
+        className='paper-fields grid h-full min-h-0 w-full grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden border-2 border-poster-brown bg-paper-cream text-colour4 shadow-paper sm:mx-auto sm:max-w-6xl'
       >
         <PaperStripHeader titleId={titleId} title={title} onClose={onClose} closeLabel='Close the slideshow' />
 
@@ -353,11 +356,12 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
         </div>
 
         <footer className='grid gap-3 border-t-2 border-dashed border-poster-brown px-4 py-3 sm:px-6'>
-          {/* What's on screen, read out when moved by hand (not while it plays by itself) */}
-          <div className='grid grid-cols-rev items-start gap-3' aria-live={playing ? 'off' : 'polite'} aria-atomic='true'>
-            <SlideCaption slide={slide} photoCount={list.photos.length} />
-            <p className='text-xs font-medium tabular-nums'>{counter}</p>
-          </div>
+          {/* Only the controls show here (16 Nov 2026, the user's wish: no caption or count
+              under the slide). What's on screen is for screen readers, read out when the
+              show is moved by hand (not while it plays by itself) */}
+          <p className='sr-only' aria-live={playing ? 'off' : 'polite'} aria-atomic='true'>
+            <SlideCaption slide={slide} photoCount={list.photos.length} counter={counter} />
+          </p>
           {notice ? <InlineAlert tone='info'>{notice}</InlineAlert> : null}
           <SlideshowControls
             playing={playing}

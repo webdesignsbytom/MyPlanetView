@@ -9,7 +9,6 @@ import useTravelMap from '@/hooks/useTravelMap';
 import useMapSettings from '@/hooks/useMapSettings';
 import { preloadPhotoPage } from '@/hooks/usePhotoPage';
 import { preloadLandmarks } from '@/hooks/useLandmarks';
-import { canHover } from '@/hooks/useCanHover';
 // Components
 import AppPageHead from '@/components/utils/AppPageHead';
 import MapExperience from '@/components/map/MapExperience';
@@ -17,7 +16,7 @@ import MapStatusScreen from '@/components/map/MapStatusScreen';
 // Utils
 import { getStoredItem, setStoredItem } from '@/utils/functions/safeStorage';
 import { myMaps } from '@/utils/map/mapListCache';
-import { PREVIEW_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
+import { UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 
 // Which map /map opened last time, for this user: it starts loading at once, while the
 // map list confirms it (or picks another)
@@ -78,14 +77,12 @@ function MapPage() {
   const { settings, updateSetting } = useMapSettings({ remote: true });
 
   // The map's photo lists (and the landmarks, when pins show from the start: the Detailed
-  // type, or a portrait screen, which opens zoomed in) alongside the map, not after it
-  const previewWanted = settings.hoverPreview && canHover();
-  const pinsAtOnce = settings.mapType === 'detailed' || window.innerHeight > window.innerWidth;
+  // type) alongside the map, not after it. A phone opens fully zoomed out, a little under desktop size, with no pins.
+  const pinsAtOnce = settings.mapType === 'detailed';
   useEffect(() => {
     if (!mapId) return;
     preloadPhotoPage({ mapId, ...UNPLACED_PHOTOS });
-    if (previewWanted) preloadPhotoPage({ mapId, ...PREVIEW_PHOTOS });
-  }, [mapId, previewWanted]);
+  }, [mapId]);
   useEffect(() => {
     if (pinsAtOnce) preloadLandmarks();
   }, [pinsAtOnce]);

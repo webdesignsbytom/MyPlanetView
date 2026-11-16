@@ -13,7 +13,8 @@ import { ensureThemes } from './themes';
 // v3: moments, group trips (trips added to other maps) and Tom's map (16 Nov 2026)
 // v4: the passport (16 Nov 2026): confirmed landmark matches (stamps) on the seeded
 // photos, each match with its map and confirmation date, and the stamps' picked photos
-const STORE_KEY = 'mpvMockStore.v4';
+// v5: real names for the seeded people (17 Nov 2026): the test user is Charlie Reid
+const STORE_KEY = 'mpvMockStore.v5';
 const ROLE_KEY = 'mpvMockRole';
 
 export const ROLES = ['USER', 'ADMIN', 'DEVELOPER'];

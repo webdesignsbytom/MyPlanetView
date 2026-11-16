@@ -5,6 +5,9 @@ import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 import PhotoUploadItem from './PhotoUploadItem';
 import LockedMapNote from '@/components/plans/LockedMapNote';
 import PlanUpgradeLink from '@/components/plans/PlanUpgradeLink';
+import AppLink from '@/components/common/AppLink';
+// Constants
+import { ACCOUNT_PAGE_URL } from '@/utils/constants/routes';
 // Utils
 import { countryName, countryOptionsFor } from '@/utils/map/countries';
 import useSplitUk from '@/hooks/useSplitUk';
@@ -242,12 +245,28 @@ function PhotoUploader({
       />
 
       {keepsPrintCopy ? (
-        <p className='border-l-4 border-poster-brown pl-3 text-sm'>
+        <p className='text-sm'>
           Economy keeps a print-quality copy (good up to A4). Business keeps your full-size originals.
         </p>
       ) : null}
-      {/* Said plainly, with no second upgrade link (the full-country note has the one) */}
-      {videoRules ? null : <p className='text-sm'>{VIDEOS_ARE_FIRST_CLASS}</p>}
+      {/* Videos on a map that isn't First Class: the owner gets a button to the plan on
+          their account page; anyone else is told the plan is the owner's (16 Nov 2026) */}
+      {videoRules ? null : (
+        <div className='grid justify-items-start gap-2 text-sm'>
+          <p>{VIDEOS_ARE_FIRST_CLASS}</p>
+          {isOwner ? (
+            <AppLink
+              to={`${ACCOUNT_PAGE_URL}#account-plan-heading`}
+              label='Upgrade to First Class'
+              className='btn-poster [--btn-leading:1.25rem] [--btn-pad-x:0.875rem] [--btn-pad-y:0.375rem] [--btn-size:1rem]'
+            />
+          ) : (
+            <p>
+              <PlanUpgradeLink />
+            </p>
+          )}
+        </div>
+      )}
       <p className='text-xs opacity-80'>
         {keepsPrintCopy
           ? 'Every copy has the location taken out. Only you and your editors see where each photo was taken.'

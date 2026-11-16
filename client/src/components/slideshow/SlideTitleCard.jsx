@@ -21,7 +21,8 @@ function SlideTitleCard({ countryCode, first = false }) {
         <PosterImage
           poster={poster}
           alt={`Travel poster for ${name}`}
-          className='w-40 -rotate-2 overflow-hidden border-8 border-poster-cream shadow-paper sm:w-56 lg:w-64'
+          // No cream border: the posters have their own printed one (17 Nov 2026)
+          className='w-40 -rotate-2 overflow-hidden shadow-paper sm:w-56 lg:w-64'
         />
       ) : (
         <div className='w-40 -rotate-2 sm:w-56 lg:w-64'>

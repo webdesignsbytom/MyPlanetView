@@ -19,8 +19,8 @@ test.describe('Friends challenges', () => {
 
     await expect(page.getByRole('heading', { level: 1, name: SEEDED })).toBeVisible();
     const board = page.getByRole('list', { name: 'Leaderboard' }).getByRole('listitem');
-    await expect(board).toHaveText([/^1st\s*Test Traveller \(you\)\s*2 countries$/, /^2nd\s*Jo Patel\s*1 country$/, /^3rd\s*Sam Rivers\s*Started it\s*0 countries$/]);
-    await expect(page.getByRole('region', { name: 'Your map' })).toContainText("Counting “Test & Alex's travels”");
+    await expect(board).toHaveText([/^1st\s*Charlie Reid \(you\)\s*2 countries$/, /^2nd\s*Jo Patel\s*1 country$/, /^3rd\s*Sam Rivers\s*Started it\s*0 countries$/]);
+    await expect(page.getByRole('region', { name: 'Your map' })).toContainText("Counting “Charlie & Alex's travels”");
     // Not the starter: no changes, but leaving
     await expect(page.getByRole('region', { name: 'Change the challenge' })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Leave the challenge' })).toBeVisible();
@@ -38,7 +38,7 @@ test.describe('Friends challenges', () => {
     await expect(page.getByText(/^Landmarks stamped, .+\. First to 10\.$/)).toBeVisible();
     const board = page.getByRole('list', { name: 'Leaderboard' }).getByRole('listitem');
     await expect(board).toHaveCount(1);
-    await expect(board.first()).toContainText('Test Traveller (you)');
+    await expect(board.first()).toContainText('Charlie Reid (you)');
     // The link to send friends
     await expect(page.getByRole('textbox', { name: 'Join link' })).toHaveValue(/\/challenges\/join\/[2-9A-Z]{4}-[2-9A-Z]{4}-[2-9A-Z]{4}$/);
     // The starter can't leave, only delete

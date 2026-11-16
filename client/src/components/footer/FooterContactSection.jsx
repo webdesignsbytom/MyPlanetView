@@ -9,6 +9,9 @@ import {
 // Components
 import AppAnchor from '@/components/common/AppAnchor';
 
+// The address may wrap after the @ (a phone's half-width column), not mid-word
+const [emailUser, emailDomain] = CompanyEmailAddress.split('@');
+
 // How to reach us, and who runs the site
 function FooterContactSection() {
   return (
@@ -21,9 +24,10 @@ function FooterContactSection() {
         <AppAnchor
           href={`mailto:${CompanyEmailAddress}`}
           ariaLabel={`Email ${CompanyName}`}
-          className='hover:text-poster-red-deep hover:underline break-all'
+          className='hover:text-poster-red-deep hover:underline break-words'
         >
-          {CompanyEmailAddress}
+          {emailUser}@<wbr />
+          {emailDomain}
         </AppAnchor>
         <p className='opacity-80'>
           Run by {OperatorName}, {LocationCity}, Devon.

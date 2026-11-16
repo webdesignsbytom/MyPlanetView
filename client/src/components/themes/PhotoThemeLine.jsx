@@ -4,7 +4,8 @@ import { FaCalendarAlt } from 'react-icons/fa';
 // Api
 import { enterPhotoInTheme, getThemes, takePhotoOutOfTheme } from '@/api/themesApi';
 // Components
-import Button from '@/components/common/Button';
+// A button whose label wraps: "Enter it in this month's theme: <title>" is wider than a phone
+import MapActionButton from '@/components/map/MapActionButton';
 // Utils
 import { monthThemeLabel } from '@/utils/themes/themeWords';
 
@@ -61,13 +62,13 @@ function PhotoThemeLine({ photo, canEdit = false, onChanged }) {
       {canEdit && current ? (
         <div className='grid justify-items-start'>
           {inCurrent ? (
-            <Button quiet small busy={busy} onClick={() => change(takePhotoOutOfTheme)}>
+            <MapActionButton quiet busy={busy} onClick={() => change(takePhotoOutOfTheme)}>
               Take it out of “{current.title}”
-            </Button>
+            </MapActionButton>
           ) : (
-            <Button quiet small busy={busy} onClick={() => change(enterPhotoInTheme)}>
+            <MapActionButton quiet busy={busy} onClick={() => change(enterPhotoInTheme)}>
               Enter it in this month’s theme: {current.title}
-            </Button>
+            </MapActionButton>
           )}
         </div>
       ) : null}

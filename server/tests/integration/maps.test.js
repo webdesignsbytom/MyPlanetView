@@ -217,16 +217,16 @@ describe('map settings', () => {
 
     const saved = await agent
       .put('/api/users/map-settings')
-      .send({ mapSettings: { style: 'galaxy', showGrid: false, showAntarctica: false, sneaky: 'x' } });
+      .send({ mapSettings: { style: 'old-map', showGrid: false, showAntarctica: false, sneaky: 'x' } });
     expect(saved.status).toBe(200);
-    expect(data(saved).mapSettings).toMatchObject({ style: 'galaxy', showGrid: false, showAntarctica: false });
+    expect(data(saved).mapSettings).toMatchObject({ style: 'old-map', showGrid: false, showAntarctica: false });
     expect(data(saved).mapSettings).not.toHaveProperty('sneaky');
 
     const bad = await agent.put('/api/users/map-settings').send({ mapSettings: { style: 'neon' } });
     expect(bad.status).toBe(400);
 
     const again = data(await agent.get('/api/users/map-settings')).mapSettings;
-    expect(again).toMatchObject({ style: 'galaxy', showGrid: false });
+    expect(again).toMatchObject({ style: 'old-map', showGrid: false });
 
     expect((await anon().get('/api/users/map-settings')).status).toBe(401);
   });

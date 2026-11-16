@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, HOME_SHARE_CODE, MOCK_STORE_KEY, SAM_MAP, SAM_SHARE_CODE, openMap, openTool, statsBadge } from './fixtures.js';
+import { test, expect, HOME_MAP, HOME_SHARE_CODE, MOCK_STORE_KEY, SAM_MAP, SAM_SHARE_CODE, openMap, openStats, openTool } from './fixtures.js';
 import { COUNTRIES } from '../../src/utils/map/countries.js';
 import { LOCAL_NAMES } from '../../src/utils/map/countryLocalNames.js';
 
@@ -24,7 +24,7 @@ async function openPassport(page, path = '/maps/map-home/passport') {
 test.describe('The passport', () => {
   test('opens from the stats, and its pages turn with the buttons, the arrow keys and the page list', async ({ page }) => {
     await openMap(page);
-    await statsBadge(page).click();
+    await openStats(page);
     await page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('link', { name: 'Passport: landmark stamps' }).click();
     await expect(page).toHaveURL(/\/maps\/map-home\/passport$/);
     await expect(page.getByRole('heading', { level: 1, name: HOME_MAP })).toBeVisible();
@@ -35,7 +35,7 @@ test.describe('The passport', () => {
     // The photo page: each traveller with where they were born and their favourite country
     await page.getByRole('button', { name: 'Next page' }).click();
     await expect(book(page).getByRole('heading', { level: 2, name: 'Travellers' })).toBeVisible();
-    await expect(book(page).getByRole('listitem')).toHaveText([/Test.*United Kingdom.*Japan/, /Alex.*Ireland.*Italy/]);
+    await expect(book(page).getByRole('listitem')).toHaveText([/Charlie.*United Kingdom.*Japan/, /Alex.*Ireland.*Italy/]);
 
     // The arrow keys: the first visa page (the Netherlands, first photographed in 2016) and back
     await page.keyboard.press('ArrowRight');
@@ -136,10 +136,14 @@ test.describe('The passport', () => {
     await openMap(page);
     const key = page.getByRole('list', { name: 'Map key' });
     await expect(key.getByText('Stamped landmark')).toBeVisible();
-    // Opening France zooms the map in on it, far enough for the pins
+    // Opening France zooms the map in on it; once more brings the pins (the zoom is a screen
+    // scale: the test's 1280-pixel screen shows France smaller than a 1920 one does)
     const list = await openTool(page, 'Country list', 'Countries');
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('france');
     await list.getByRole('button', { name: 'France', exact: true }).click();
+    await expect(page.getByRole('dialog', { name: 'France' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await page.getByRole('group', { name: 'Zoom' }).getByRole('button', { name: 'Zoom in' }).click();
     const pins = page.locator('[data-landmark-pins]');
     // Every stamp on the map (the owner sees Belém's hidden one too), whatever the zoom
     await expect(pins).toHaveAttribute('data-stamped-pins', '13');

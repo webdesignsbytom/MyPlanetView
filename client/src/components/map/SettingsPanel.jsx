@@ -89,7 +89,7 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locke
         <div {...panelProps('map')} hidden={tab !== 'map'} className='grid gap-5'>
           <MapSetupForm
             // Fresh after each save, so new travellers carry their ids
-            key={`${map.name}|${map.groupType}|${map.splitUk}|${map.travellers.map((t) => `${t.id}:${t.name}`).join(',')}`}
+            key={`${map.name}|${map.groupType}|${map.travellers.map((t) => `${t.id}:${t.name}`).join(',')}`}
             initial={map}
             canRename={isOwner}
             splitUkNote

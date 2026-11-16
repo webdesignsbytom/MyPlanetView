@@ -1,20 +1,7 @@
-import {
-  test,
-  expect,
-  HOME_MAP,
-  HOME_SHARE_CODE,
-  SAM_MAP,
-  SAM_SHARE_CODE,
-  expectStats,
-  goInApp,
-  openMap,
-  openTool,
-  signOut,
-  toolbar,
-} from './fixtures.js';
+import { test, expect, HOME_MAP, HOME_SHARE_CODE, SAM_MAP, SAM_SHARE_CODE, expectMapOpen, expectStats, goInApp, openMap, openSwitcher, openTool, pressTool, showsBanner, showTools, signOut, toolbar } from './fixtures.js';
 
 async function openShareDialog(page) {
-  await toolbar(page).getByRole('button', { name: 'Share this map', exact: true }).click();
+  await pressTool(page, 'Share this map');
   const dialog = page.getByRole('dialog', { name: `Share “${HOME_MAP}”` });
   await expect(dialog.getByRole('region', { name: 'People with access' })).toBeVisible();
   return dialog;
@@ -46,19 +33,31 @@ test.describe('Sharing a map', () => {
     await expect(dialog.getByRole('combobox', { name: 'Role for Jo Patel' })).toHaveValue('EDITOR');
     await expect(dialog.getByRole('textbox', { name: 'Email address' })).toHaveValue('');
 
-    // Anyone else gets an invite, which can be cancelled
+    // Anyone else gets an invite, which can be cancelled, after being asked
     await dialog.getByRole('textbox', { name: 'Email address' }).fill('new.friend@example.test');
     await dialog.getByRole('button', { name: 'Share', exact: true }).click();
     const cancel = dialog.getByRole('button', { name: 'Cancel the invite to new.friend@example.test' });
     await expect(cancel).toBeVisible();
     await cancel.click();
+    const cancelling = page.getByRole('dialog', { name: 'Cancel the invite?' });
+    await expect(cancelling).toContainText('The invite to new.friend@example.test will stop working');
+    await cancelling.getByRole('button', { name: 'Cancel the invite', exact: true }).click();
+    await expect(cancelling).toBeHidden();
     await expect(cancel).toHaveCount(0);
 
-    // A role changed, someone removed
+    // A role changed, someone removed: asked first, "Keep them" changes nothing
     await dialog.getByRole('combobox', { name: 'Role for Sam Rivers' }).selectOption('Editor');
     await expect(dialog.getByRole('combobox', { name: 'Role for Sam Rivers' })).toHaveValue('EDITOR');
-    await dialog.getByRole('button', { name: 'Remove Alex Morgan' }).click();
-    await expect(dialog.getByRole('button', { name: 'Remove Alex Morgan' })).toHaveCount(0);
+    const removeAlex = dialog.getByRole('button', { name: 'Remove Alex Morgan' });
+    await removeAlex.click();
+    const removing = page.getByRole('dialog', { name: 'Remove Alex Morgan?' });
+    await removing.getByRole('button', { name: 'Keep them' }).click();
+    await expect(removing).toBeHidden();
+    await expect(removeAlex).toBeVisible();
+    await removeAlex.click();
+    await removing.getByRole('button', { name: 'Remove', exact: true }).click();
+    await expect(removing).toBeHidden();
+    await expect(removeAlex).toHaveCount(0);
 
     // Kept: the dialog opened again shows the same
     await dialog.getByRole('button', { name: 'Done' }).click();
@@ -84,7 +83,7 @@ test.describe('Sharing a map', () => {
     await signOut(page);
     await goInApp(page, `/shared/${HOME_SHARE_CODE}`);
     await expect(page.getByRole('application', { name: `${HOME_MAP}: world map` })).toBeVisible();
-    await expect(page.getByText('Couple · Viewer, from a shared link')).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Map banner' })).toContainText(HOME_MAP);
     await expectStats(page, '8 countries, 2 continents, 15 photos');
 
     // Back as the owner (mock mode signs in again on a page load): a new link
@@ -120,13 +119,21 @@ test.describe('Sharing a map', () => {
     await signOut(page);
     await goInApp(page, `/shared/${SAM_SHARE_CODE}`);
     await expect(page.getByRole('application', { name: `${SAM_MAP}: world map` })).toBeVisible();
-    await expect(page.getByText('Solo · Viewer, from a shared link')).toBeVisible();
+    // The map's name on the banner (wide screens)
+    if (showsBanner(page)) await expect(page.getByRole('region', { name: 'Map banner' })).toContainText(SAM_MAP);
     await expectStats(page, '4 countries, 2 continents, 1 photo');
 
     // No switcher, no adding or sharing
     await expect(page.getByRole('button', { name: /Switch map$/ })).toHaveCount(0);
-    await expect(toolbar(page).getByRole('button', { name: 'Add photos' })).toHaveCount(0);
+    // With the phone's menu open, so a tool that's missing is really missing
+    await showTools(page);
+    await expect(toolbar(page).getByRole('button', { name: 'Your maps' })).toHaveCount(0);
     await expect(toolbar(page).getByRole('button', { name: 'Share this map' })).toHaveCount(0);
+    // The map's photos, with their countries, and nothing to add them with
+    const gallery = await openTool(page, 'Photo album', 'Photo album');
+    await expect(gallery.getByRole('button', { name: 'Open Temple roofs' })).toBeVisible();
+    await expect(gallery.getByText('Thailand', { exact: true })).toBeVisible();
+    await expect(gallery.getByRole('button', { name: 'Add photos' })).toHaveCount(0);
 
     // Statuses are words, not controls
     const list = await openTool(page, 'Country list', 'Countries');
@@ -173,16 +180,15 @@ test.describe('Sharing a map', () => {
 
   test('someone the map is shared with sees their role and can leave it', async ({ page }) => {
     await openMap(page, '/maps/map-sam');
-    await toolbar(page).getByRole('button', { name: 'Share this map', exact: true }).click();
+    await pressTool(page, 'Share this map');
     const dialog = page.getByRole('dialog', { name: `Share “${SAM_MAP}”` });
     await expect(dialog.getByText('You’re a viewer on this map. Only its owner can change who has access.')).toBeVisible();
     await expect(dialog.getByRole('textbox', { name: 'Email address' })).toHaveCount(0);
 
     await dialog.getByRole('button', { name: 'Remove me from this map' }).click();
     await expect(page).toHaveURL(/\/map$/);
-    await expect(page.getByRole('button', { name: `${HOME_MAP}. Switch map` })).toBeVisible();
-    await page.getByRole('button', { name: `${HOME_MAP}. Switch map` }).click();
-    const switcher = page.getByRole('dialog', { name: 'Your maps' });
+    await expectMapOpen(page, HOME_MAP);
+    const switcher = await openSwitcher(page);
     await expect(switcher.getByRole('link', { name: new RegExp(`^${HOME_MAP}`) })).toBeVisible();
     await expect(switcher.getByRole('link', { name: new RegExp(`^${SAM_MAP}`) })).toHaveCount(0);
   });

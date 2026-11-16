@@ -1,4 +1,4 @@
-import { test, expect, MOCK_STORE_KEY, openMap, openTool, toolbar } from './fixtures.js';
+import { test, expect, MOCK_STORE_KEY, openMap, openTool, pressTool } from './fixtures.js';
 
 // Travel offers (docs/API.md, "Travel offers"; docs/FEATURE-PLAN.md, "Ads by tier",
 // "Travel Desk") against mock mode. The seeded test user pays for Business, so sees no
@@ -148,7 +148,7 @@ test.describe('Travel offers', () => {
 
   test('a slideshow ends with one card where the galleries show them, never mid-show', async ({ page }) => {
     await morePhotosOfFrance(page, 0, { economy: true });
-    await toolbar(page).getByRole('button', { name: 'Play my world', exact: true }).click();
+    await pressTool(page, 'Play my world');
     const show = page.getByRole('dialog', { name: /^Slideshow: / });
     const stage = show.locator('[data-slide-id]');
     await expect(stage).not.toHaveAttribute('data-slide-id', '');

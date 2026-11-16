@@ -78,7 +78,8 @@ function PhotoLandmarkList({ photo, canEdit, onChanged }) {
         <p className='text-sm opacity-80'>No landmarks matched yet.</p>
       )}
       {canEdit && addable.length ? (
-        <div className='grid grid-cols-rev items-end gap-2'>
+        <div className='grid grid-cols-rev items-stretch gap-2'>
+          {/* The Add button as tall as the dropdown beside it (stretched to the row) */}
           <PlainOptionSelect
             id={`add-landmark-${photo.id}`}
             value={adding}

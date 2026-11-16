@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, openMap, openTool, toolbar } from './fixtures.js';
+import { test, expect, HOME_MAP, expectMapOpen, openMap, openSwitcher, openTool, openUploader, pressTool } from './fixtures.js';
 
 const banner = (page) => page.getByRole('region', { name: 'Verify your email' });
 
@@ -38,20 +38,19 @@ test.describe('An unverified email address', () => {
     await expect(france.getByRole('textbox', { name: 'Notes' })).toHaveCount(0);
 
     // Photos, trips, another map
-    const upload = await openTool(page, 'Add photos', 'Add photos');
+    const upload = await openUploader(page);
     await expect(upload.getByText('Verify your email address to add photos.')).toBeVisible();
     await expect(upload.getByLabel(/choose photos/i)).toHaveCount(0);
     const trips = await openTool(page, 'Trips', 'Trips');
     await expect(trips.getByText('Verify your email address to plan a trip.')).toBeVisible();
     await expect(trips.getByRole('button', { name: 'Plan a new trip' })).toHaveCount(0);
-    await page.getByRole('button', { name: `${HOME_MAP}. Switch map` }).click();
-    const switcher = page.getByRole('dialog', { name: 'Your maps' });
+    const switcher = await openSwitcher(page);
     await expect(switcher.getByText('Verify your email address to make another map.')).toBeVisible();
     await expect(switcher.getByRole('button', { name: 'New map' })).toHaveCount(0);
     await switcher.getByRole('button', { name: 'Close Your maps' }).click();
 
     // Sharing: the link can still be copied; nothing else changes
-    await toolbar(page).getByRole('button', { name: 'Share this map', exact: true }).click();
+    await pressTool(page, 'Share this map');
     const share = page.getByRole('dialog', { name: `Share “${HOME_MAP}”` });
     await expect(share.getByText(/need a verified email address/)).toBeVisible();
     await expect(share.getByRole('textbox', { name: 'Email address' })).toHaveCount(0);
@@ -64,17 +63,17 @@ test.describe('An unverified email address', () => {
 
     // Settings stay open: how it looks, and the map's set-up
     const settings = await openTool(page, 'Map settings', 'Settings');
-    await settings.getByText('Galaxy', { exact: true }).click();
-    await expect(page.locator('[data-map-style]:has(#main-content)')).toHaveAttribute('data-map-style', 'galaxy');
+    await settings.getByText('Old map', { exact: true }).click();
+    await expect(page.locator('[data-map-style]:has(#main-content)')).toHaveAttribute('data-map-style', 'old-map');
     await settings.getByRole('tab', { name: 'This map' }).click();
     const thisMap = settings.getByRole('tabpanel', { name: 'This map' });
     await thisMap.getByRole('textbox', { name: 'Map name' }).fill('Our travels');
     await thisMap.getByRole('button', { name: 'Save map' }).click();
-    await expect(page.getByRole('button', { name: 'Our travels. Switch map' })).toBeVisible();
+    await expectMapOpen(page, 'Our travels');
 
     // Verified again: the banner goes and the controls come back
     await setEmailVerified(page, true);
-    await expect(page.getByRole('button', { name: 'Our travels. Switch map' })).toBeVisible();
+    await expectMapOpen(page, 'Our travels');
     await expect(banner(page)).toHaveCount(0);
     const unlocked = await openTool(page, 'Country list', 'Countries');
     await unlocked.getByRole('searchbox', { name: 'Search countries' }).fill('france');

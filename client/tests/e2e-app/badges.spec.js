@@ -1,4 +1,4 @@
-import { test, expect, SAM_MAP, openMap, openTool, toolbar } from './fixtures.js';
+import { test, expect, SAM_MAP, openMap, openTool, toolButton } from './fixtures.js';
 
 // Badges and goals (docs/API.md, "Badges and goals"). The seed (src/dev/mock/seed.js) gives
 // the test user's map three goals: ten countries by the end of 2027 (8 of 10), a bucket
@@ -14,6 +14,14 @@ const sticker = (panel, description) => panel.getByRole('listitem').filter({ has
 test.describe('Badges and goals', () => {
   test('the owner sees the badges, adds a goal, and a new badge is announced', { tag: '@phone' }, async ({ page }) => {
     await openMap(page);
+    // On a phone the tag is folded behind its flag stamp until asked for
+    if (page.viewportSize().width < 768) {
+      const flag = page.getByRole('button', { name: 'Next goal', exact: true });
+      await expect(flag).toHaveAttribute('aria-pressed', 'false');
+      await expect(goalTag(page)).toBeHidden();
+      await flag.click();
+      await expect(flag).toHaveAttribute('aria-pressed', 'true');
+    }
     await expect(goalTag(page)).toHaveAccessibleName(
       'Next goal: Ten countries by the end of 2027, 8 of 10 countries. Open badges and goals',
     );
@@ -110,7 +118,7 @@ test.describe('Badges and goals', () => {
     await expect(settings.getByRole('switch', { name: 'Goal progress tag' })).not.toBeChecked();
     await expect(goalTag(page)).toHaveCount(0);
     // The panel is still a stamp away, and the stats link to it
-    await expect(toolbar(page).getByRole('button', { name: 'Badges and goals', exact: true })).toBeVisible();
+    await expect(await toolButton(page, 'Badges and goals')).toBeVisible();
     await openTool(page, 'Travel statistics', 'Travel statistics');
     await page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('button', { name: 'Badges and goals' }).click();
     await expect(page.getByRole('dialog', { name: 'Badges and goals' })).toBeVisible();

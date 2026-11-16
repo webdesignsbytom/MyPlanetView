@@ -8,7 +8,7 @@ import { HoverPreview } from './lazyMapPanels';
 // the map writes the hovered country to), so moving between countries re-renders only
 // this, not the page. Its code is fetched once the browser is idle, on screens that can
 // hover; touch screens never fetch it.
-function MapHoverLayer({ hover, hidden = false, visitsByCode, thumbsByCountry, showPhotos }) {
+function MapHoverLayer({ hover, hidden = false, visitsByCode, showPoster }) {
   const code = useSyncExternalStore(hover.subscribe, hover.get, hover.get);
   const canHover = useCanHover();
 
@@ -26,7 +26,7 @@ function MapHoverLayer({ hover, hidden = false, visitsByCode, thumbsByCountry, s
   if (!code || hidden) return null;
   return (
     <Suspense fallback={null}>
-      <HoverPreview code={code} status={visitsByCode[code]} thumbs={thumbsByCountry[code]} showPhotos={showPhotos} />
+      <HoverPreview code={code} status={visitsByCode[code]} showPoster={showPoster} />
     </Suspense>
   );
 }

@@ -1,5 +1,9 @@
 import React from 'react';
 
+// A checkbox and its label, in the site's paperwork colours rather than the browser's blue
+// (the forms plugin draws the box: it fills a ticked one with the text colour, so that's the
+// deep poster red, with its cream tick): a brown-edged square on the field colour, red when
+// ticked, a red ring for the keyboard. The box sits by the label's first line.
 function CheckboxInput({
   id,
   name,
@@ -16,11 +20,9 @@ function CheckboxInput({
   wrapperClassName = '',
 }) {
   return (
-    <div
-      className={`${wrapperClassName} form-check flex ${disabled ? 'opacity-50' : ''}`}
-    >
+    <div className={`${wrapperClassName} grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-2.5 ${disabled ? 'opacity-50' : ''}`}>
       <input
-        className={`${className} h-4 w-4 rounded-sm transition duration-200 mt-1 align-top float-left mr-2 cursor-pointer accent-colour6 disabled:cursor-not-allowed aria-invalid:outline-2 aria-invalid:outline-status-critical`}
+        className={`${className} relative top-0.75 size-control cursor-pointer border-2 border-poster-brown bg-field text-poster-red-deep transition checked:border-poster-red-deep checked:bg-poster-red-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-colour6 disabled:cursor-not-allowed aria-invalid:outline-2 aria-invalid:outline-status-critical`}
         type='checkbox'
         id={id}
         name={name}
@@ -33,10 +35,7 @@ function CheckboxInput({
         aria-describedby={ariaDescribedBy}
         aria-label={ariaLabel}
       />
-      <label
-        className={`${labelClassName} inline-block ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-        htmlFor={id}
-      >
+      <label className={`${labelClassName} ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`} htmlFor={id}>
         {label}
       </label>
     </div>

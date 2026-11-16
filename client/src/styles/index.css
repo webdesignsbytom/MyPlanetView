@@ -77,6 +77,9 @@
   --paper-cream: light-dark(#fdf8ee, #1b1813);
   --paper-burn: rgb(151 87 43 / 0.22);
   --paper-shadow: 0 2px 0 rgb(151 87 43 / 0.35), 0 10px 24px rgb(60 30 10 / 0.28);
+  /* The buttons' shadow: the paper's soft one, without its hard 2px line underneath (on a
+     card it's the paper's thickness; on a button it read as a thicker bottom border) */
+  --btn-shadow: 0 10px 24px rgb(60 30 10 / 0.28);
   /* The frame's brass corner protectors (components/common/BrassCorner.jsx), like the
      corners on an old steamer trunk: polished highlight, body, shadowed edge, rivets. */
   --brass-light: #f7e7a8;
@@ -128,8 +131,6 @@
   --sky-sun-glow: #ffff00;
   --sky-moon: #b2b2b2;
   --sky-moon-glow: rgb(229 229 229 / 0.3);
-  /* The animated sea's wavy lines */
-  --sea-wave: rgb(255 255 255 / 0.55);
 
   /* The countries: land not yet visited, its borders, the hover green the old map
      used, the "want to go" outline, and the old map's seven pastels for visited
@@ -160,32 +161,6 @@
   --map-land-edge: #7c2d12;
   --map-ice: #eef1ea;
   --map-ice-edge: #8c9a96;
-}
-
-[data-map-style='jupiter'] {
-  --map-sea: #b98f62;
-  --map-sea-mid: #b98f62;
-  --map-sea-deep: #b98f62;
-  --map-sea-ink: #000000;
-  --map-land: #efdcc0;
-  --map-land-edge: #7c2d12;
-  --map-ice: #f7f2ea;
-  --map-ice-edge: #a08a72;
-}
-
-/* my_planet's galaxy: white ink and white outlines on the night sky */
-[data-map-style='galaxy'] {
-  --map-sea: #0b1026;
-  --map-sea-mid: #0b1026;
-  --map-sea-deep: #0b1026;
-  --map-sea-ink: #ffffff;
-  --map-ink: #ffffff;
-  --map-edge: #ffffff;
-  --map-land: #3a4a78;
-  --map-land-edge: #93c5fd;
-  --map-wish: #fbbf24;
-  --map-ice: #b9cdee;
-  --map-ice-edge: #dbeafe;
 }
 
 /* mono-tokens:start */
@@ -231,6 +206,7 @@
   --paper-cream: light-dark(#ffffff, #111111);
   --paper-burn: rgb(97 97 97 / 0.22);
   --paper-shadow: 0 2px 0 rgb(97 97 97 / 0.35), 0 10px 24px rgb(35 35 35 / 0.28);
+  --btn-shadow: 0 10px 24px rgb(35 35 35 / 0.28);
   --brass-light: #e6e6e6;
   --brass-mid: #9c9c9c;
   --brass-dark: #585858;
@@ -251,7 +227,6 @@
   --sky-sun-glow: #ededed;
   --sky-moon: #b2b2b2;
   --sky-moon-glow: rgb(229 229 229 / 0.3);
-  --sea-wave: rgb(255 255 255 / 0.55);
   --map-land: #f7f7f7;
   --map-land-edge: #000000;
   --map-hover: #d3d3d3;
@@ -578,8 +553,27 @@ textarea:-webkit-autofill {
     --tw-ring-offset-shadow: 0 0 #0000;
   }
 
+  /* Checkboxes and radios in the site's colours, never the forms plugin's blue: it fills a
+     ticked one with the text colour (the deep poster red, behind its cream tick or dot), on
+     a brown edge. CheckboxInput and RadioInput say the same; this covers any other. The
+     red ring only for the keyboard, as everywhere. */
+  html input[type='checkbox'],
+  html input[type='radio'] {
+    color: var(--poster-red-deep);
+    border-color: var(--poster-brown);
+  }
+
+  /* The forms plugin's focus ring is blue (a box-shadow on :focus); its selector outranks
+     `html input:focus`, so this one names the type too */
   html input[type='checkbox']:focus,
   html input[type='radio']:focus {
+    box-shadow: none;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+
+  html input[type='checkbox']:focus-visible,
+  html input[type='radio']:focus-visible {
     outline-color: var(--colour6);
   }
 
@@ -723,7 +717,7 @@ textarea:-webkit-autofill {
   font-size: var(--btn-size, 1.25rem);
   line-height: var(--btn-leading, 1.75rem);
   letter-spacing: 0.025em;
-  box-shadow: var(--paper-shadow);
+  box-shadow: var(--btn-shadow);
   cursor: pointer;
   transition: filter 150ms, transform 150ms;
   &:hover {
@@ -749,7 +743,7 @@ textarea:-webkit-autofill {
   font-size: var(--btn-size, 1.25rem);
   line-height: var(--btn-leading, 1.75rem);
   letter-spacing: 0.025em;
-  box-shadow: var(--paper-shadow);
+  box-shadow: var(--btn-shadow);
   cursor: pointer;
   transition: filter 150ms, transform 150ms;
   &:hover {

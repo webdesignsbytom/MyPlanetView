@@ -6,13 +6,15 @@ import { auth, disableAuthEmails } from '../../src/auth.js';
 // Dev-only logins. `plan` is the plan each one is on (seed/plans.js gives the paid ones a
 // subscription, as Stripe's webhook would): one account per plan, so each plan's rules can
 // be tried by signing in. The USER is the demo couple's Economy map (travel.js, photos.js);
-// First Class has the sample videos (videos.js).
+// First Class has the sample videos (videos.js). Real names (17 Nov 2026): the USER is Sam,
+// the demo map's owner, and the ADMIN is Alex, Sam's partner (travel.js links Alex's
+// traveller to this account).
 export const seedAccounts = [
-  { role: 'USER', email: 'user@gmail.com', password: '12345678', name: 'User', plan: 'FREE' },
-  { role: 'ADMIN', email: 'tom@gmail.com', password: '12345678', name: 'Admin', plan: 'FREE' },
-  { role: 'DEVELOPER', email: 'dev@gmail.com', password: '12345678', name: 'Dev', plan: 'FREE' },
-  { role: 'USER', email: 'business@gmail.com', password: '12345678', name: 'Bea Business', plan: 'REGULAR' },
-  { role: 'USER', email: 'firstclass@gmail.com', password: '12345678', name: 'Fran First', plan: 'PREMIUM' },
+  { role: 'USER', email: 'user@gmail.com', password: '12345678', name: 'Sam Carter', plan: 'FREE' },
+  { role: 'ADMIN', email: 'tom@gmail.com', password: '12345678', name: 'Alex Byrne', plan: 'FREE' },
+  { role: 'DEVELOPER', email: 'dev@gmail.com', password: '12345678', name: 'Priya Nair', plan: 'FREE' },
+  { role: 'USER', email: 'business@gmail.com', password: '12345678', name: 'Bea Hughes', plan: 'REGULAR' },
+  { role: 'USER', email: 'firstclass@gmail.com', password: '12345678', name: 'Fran Okafor', plan: 'PREMIUM' },
 ];
 
 /** The seeded account on a plan (the first one, for FREE: the demo couple's USER). */

@@ -182,6 +182,7 @@ export function exportMapView(rows, { userId }) {
       datePrecision: m.datePrecision ?? null,
       countryCode: m.countryCode,
       ...place(m),
+      spot: m.latitude === null || m.latitude === undefined ? null : { latitude: m.latitude, longitude: m.longitude, shared: m.spotShared },
       tripId: m.tripId ?? null,
       hidden: m.hidden,
       travellerIds: (travellersByMoment.get(m.id) ?? []).map((r) => r.travellerId),

@@ -3,7 +3,7 @@ import { test, expect, HOME_MAP } from './fixtures.js';
 
 // "Download my data" (docs/API.md, "Your data"): the account page gathers the account, each
 // map the test user owns with its photos, and their photos on other people's maps into one
-// JSON file. The seeded test user owns "Test & Alex's travels" (src/dev/mock/seed.js).
+// JSON file. The seeded test user owns "Charlie & Alex's travels" (src/dev/mock/seed.js).
 
 test.describe('Your data', () => {
   test('the account page downloads everything as one JSON file', async ({ page }) => {
@@ -19,7 +19,7 @@ test.describe('Your data', () => {
     expect(file).toMatchObject({
       format: 'my-planet-view-data',
       version: 1,
-      account: { email: 'test@myplanetview.local', name: 'Test Traveller' },
+      account: { email: 'test@myplanetview.local', name: 'Charlie Reid' },
       plan: { inForce: { name: 'Business' } },
       mapsSharedWithYou: expect.arrayContaining([expect.objectContaining({ name: "Sam's gap year", role: 'VIEWER' })]),
     });

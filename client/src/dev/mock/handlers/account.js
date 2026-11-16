@@ -34,7 +34,7 @@ const cleanName = (value) =>
 const NAME_REQUIRED = 'Enter your name.';
 
 const MAP_SETTING_KEYS = {
-  style: ['animated', 'old-map', 'jupiter', 'galaxy'],
+  style: ['animated', 'old-map'],
   mapType: ['regular', 'detailed'],
 };
 // `showMoments`: the marks beside countries with moments; `showGoalTag`: the goal's luggage

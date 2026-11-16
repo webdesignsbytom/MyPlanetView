@@ -6,6 +6,9 @@ import PaperCard from '@/components/common/PaperCard';
 import MonthStrip from './MonthStrip';
 import MonthStripSummary from './MonthStripSummary';
 import MonthLinks from '@/components/months/MonthLinks';
+import GuidePhoto from './GuidePhoto';
+// Utils
+import { festivalGuidePhoto } from '@/utils/countries/guidePhotos';
 
 const subheading = 'font-travel text-xl uppercase leading-tight tracking-wide text-colour9';
 const section = 'grid gap-3 border-t-2 border-dashed border-poster-brown/50 pt-5';
@@ -69,6 +72,12 @@ function CountryWhenToGo({ name, whenToGo }) {
         <ul className='grid gap-4 md:grid-cols-2 xl:grid-cols-3'>
           {festivals.map((festival) => (
             <li key={festival.name} className='grid content-start gap-1 rounded-md border border-poster-brown/40 px-4 py-3 leading-relaxed'>
+              {/* Its photo (images/src/tools/festival-photos.mjs), when one was found */}
+              {festival.photo ? (
+                <div className='mb-2'>
+                  <GuidePhoto photo={festivalGuidePhoto(festival)} frameClass='aspect-[16/9]' />
+                </div>
+              ) : null}
               <p className='font-semibold'>{festival.name}</p>
               <p className='text-sm text-colour9'>
                 {festival.when}

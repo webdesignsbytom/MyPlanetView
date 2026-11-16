@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, HOME_SHARE_CODE, SAM_MAP, expectStats, goInApp, openMap, openTool, statsBadge, toolbar } from './fixtures.js';
+import { test, expect, HOME_MAP, HOME_SHARE_CODE, SAM_MAP, expectMapOpen, expectStats, goInApp, openMap, openStats, openSwitcher, openTool, pressTool, showTools, toolbar } from './fixtures.js';
 
 // Group trips (docs/API.md "Group trips"): a trip shown on other people's maps ("Add to my
 // map"), its countries marked there when it's done. Seeded (src/dev/mock/seed.js): the
@@ -7,7 +7,6 @@ import { test, expect, HOME_MAP, HOME_SHARE_CODE, SAM_MAP, expectStats, goInApp,
 // and the test user isn't on that trip.
 
 const myMapsCard = (page) => page.getByRole('region', { name: 'On your maps' });
-const switchButton = (page, name) => page.getByRole('button', { name: `${name}. Switch map` });
 const escape = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /** On a trip's page: "Add to my map", then the map. */
@@ -57,13 +56,13 @@ test.describe('Group trips', () => {
   test('a planned trip added to another of your maps marks its countries there once it’s done', async ({ page }) => {
     // A second map of the test user's own
     await openMap(page);
-    await switchButton(page, HOME_MAP).click();
-    const switcher = page.getByRole('dialog', { name: 'Your maps' });
+    await expectMapOpen(page, HOME_MAP);
+    const switcher = await openSwitcher(page);
     await switcher.getByRole('button', { name: 'New map' }).click();
     await switcher.getByText('Just me', { exact: true }).click();
     await switcher.getByRole('textbox', { name: 'Map name' }).fill('Road trips');
     await switcher.getByRole('button', { name: 'Create map' }).click();
-    await expect(switchButton(page, 'Road trips')).toBeVisible();
+    await expectMapOpen(page, 'Road trips');
     const roadTrips = page.url();
 
     // Japan in spring (planned, on the test user's own map) added to it: nothing marked yet
@@ -91,7 +90,7 @@ test.describe('Group trips', () => {
 
   test('a group trip you aren’t on shows only its title, dates, status and countries, and its owner can take it off', async ({ page }) => {
     await openMap(page);
-    await statsBadge(page).click();
+    await openStats(page);
     // Trips: the map's own two and the group trip
     await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition').last()).toHaveText('3');
 
@@ -106,7 +105,7 @@ test.describe('Group trips', () => {
     // The map's owner takes it off, without being on the trip
     await stag.getByRole('button', { name: 'Take Stag do in Prague off this map' }).click();
     await expect(trips.getByText('Stag do in Prague')).toHaveCount(0);
-    await statsBadge(page).click();
+    await openStats(page);
     await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition').last()).toHaveText('2');
 
     // Its page is still closed to them
@@ -119,7 +118,7 @@ test.describe('Group trips', () => {
     await page.goto('/trips/trip-sam-asia');
     await addToMyMap(page, HOME_MAP);
     await openMap(page);
-    await toolbar(page).getByRole('button', { name: 'Share this map', exact: true }).click();
+    await pressTool(page, 'Share this map');
     const dialog = page.getByRole('dialog', { name: `Share “${HOME_MAP}”` });
     await dialog.getByRole('combobox', { name: 'General access' }).selectOption('Anyone with the link');
     await expect(dialog.getByRole('combobox', { name: 'General access' })).toHaveValue('ANYONE_WITH_LINK');
@@ -130,6 +129,8 @@ test.describe('Group trips', () => {
     // The same map's page stays on screen while the share page loads: wait for the latter
     // (no sharing or switching from a share link)
     await expect(page).toHaveURL(new RegExp(`/shared/${HOME_SHARE_CODE}$`));
+    // With the phone's menu open, so a tool that's missing is really missing
+    await showTools(page);
     await expect(toolbar(page).getByRole('button', { name: 'Share this map', exact: true })).toHaveCount(0);
     await expect(page.getByRole('application', { name: `${HOME_MAP}: world map` })).toBeVisible();
     const trips = await openTool(page, 'Trips', 'Trips');

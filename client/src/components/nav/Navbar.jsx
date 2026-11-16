@@ -24,6 +24,18 @@ const navButtonClass = ({ isActive }) =>
   }`;
 const navButtonStatic = navButtonClass({ isActive: false });
 
+// The column on short windows (a laptop's browser page is often 600 to 700 px tall): its
+// spacing, logo and buttons shrink in two steps, so every link fits without scrolling (a
+// scrolling column would clip the Admin menu, which opens beside it). Below about 520 px
+// the column stops sticking and scrolls with the page, so nothing is ever out of reach.
+const COLUMN_NAV = 'lg:top-2 lg:min-h-[calc(100svh-1rem)] lg:[@media(min-height:520px)]:sticky';
+const COLUMN_SECTION =
+  'h-full content-start justify-items-center gap-10 px-6 py-10 [@media(max-height:860px)]:gap-4 [@media(max-height:860px)]:py-5 [@media(max-height:680px)]:gap-3 [@media(max-height:680px)]:py-3';
+const COLUMN_LOGO =
+  'grid w-full justify-items-center border-b-2 border-dashed border-poster-brown pb-8 [@media(max-height:860px)]:pb-3 [@media(max-height:860px)]:[&_picture]:max-w-32 [@media(max-height:680px)]:pb-2 [@media(max-height:680px)]:[&_picture]:max-w-24';
+const COLUMN_LIST =
+  'w-full justify-items-stretch text-center [@media(max-height:860px)]:gap-1.5 [@media(max-height:860px)]:[&_:is(a,button)]:py-0.5 [@media(max-height:680px)]:gap-1 [@media(max-height:680px)]:[&_:is(a,button)]:py-0 [@media(max-height:680px)]:[&_:is(a,button)]:text-lg [@media(max-height:680px)]:[&_:is(a,button)]:leading-6';
+
 /**
  * The site navigation on my_planet's parchment.
  * variant 'bar' (every page): a strip along the top with a brown bottom edge.
@@ -87,7 +99,7 @@ function Navbar({ variant = 'bar' }) {
       // md up. Both are the travel-paperwork card: aged parchment, thin brown edge, dashed
       // printed line.
       className={`relative z-50 h-fit rounded-lg paper-aged ticket-edge text-poster-ink no__highlights ${
-        column ? 'lg:sticky lg:top-2 lg:h-[calc(100svh-1rem)]' : 'md:mx-14'
+        column ? COLUMN_NAV : 'md:mx-14'
       }`}
       itemScope
       itemType='https://schema.org/SiteNavigationElement'
@@ -146,11 +158,11 @@ function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut
   return (
     <section
       className={`hidden lg:grid ${
-        column ? 'h-full content-start justify-items-center gap-10 px-6 py-10' : 'grid-cols-reg items-center gap-6 px-6 py-3'
+        column ? COLUMN_SECTION : 'grid-cols-reg items-center gap-6 px-6 py-3'
       }`}
     >
       {/* Logo; in the column, above a perforated tear line like the boarding pass */}
-      <div className={column ? 'grid w-full justify-items-center border-b-2 border-dashed border-poster-brown pb-8' : 'grid'}>
+      <div className={column ? COLUMN_LOGO : 'grid'}>
         <NavLink to={HOME_PAGE_URL} aria-label={`${CompanyName} homepage`} className='grid items-center active:scale-95'>
           <BrandWordmark size={column ? 'xl' : 'md'} />
         </NavLink>
@@ -159,7 +171,7 @@ function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut
       {/* Desktop nav list */}
       <ul
         ref={desktopNavRef}
-        className={`grid gap-2 ${column ? 'w-full justify-items-stretch text-center' : 'grid-row justify-self-end items-center'}`}
+        className={`grid gap-2 ${column ? COLUMN_LIST : 'grid-row justify-self-end items-center'}`}
       >
         {navLinkItemsArray.map(({ path, label, subpages }) =>
           subpages ? (
@@ -180,11 +192,13 @@ function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut
                 <span itemProp='name'>{label}</span>
                 <FaCaretDown size={12} aria-hidden='true' />
               </button>
+              {/* In the column it opens beside the button and upward: the button is near the
+                  column's foot, so opening downward ran off the bottom of the screen */}
               {openDesktopDropdown === label && (
                 <ul
                   id={`desktop-submenu-${label}`}
                   className={`absolute z-20 grid min-w-40 gap-2 ticket-edge rounded-md bg-poster-paper p-4 ${
-                    column ? 'left-full top-0' : 'right-0 top-full'
+                    column ? 'bottom-0 left-full w-max' : 'right-0 top-full'
                   }`}
                   aria-label={`${label} submenu`}
                 >
@@ -270,7 +284,7 @@ function MobileNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut,
                 </button>
 
                 {openMobileDropdown === label && (
-                  <ul id={`mobile-submenu-${label}`} className='grid gap-2 border-l-4 border-poster-brown pl-3' aria-label={`${label} submenu`}>
+                  <ul id={`mobile-submenu-${label}`} className='grid gap-2 pl-3' aria-label={`${label} submenu`}>
                     {subpages.map(({ path: sp, label: sl }) => (
                       <NavItem key={sl} path={sp} title={sl} />
                     ))}

@@ -23,8 +23,10 @@ function FooterComponent() {
       aria-label={`${CompanyName} site footer`}
       className='ticket-edge paper-aged grid overflow-hidden rounded-lg text-poster-ink no__highlights'
     >
-      <div className='grid w-full gap-10 px-6 py-10 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 xl:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))_minmax(0,1.4fr)]'>
-        <div className='sm:col-span-2 lg:col-span-4 xl:col-span-1'>
+      {/* Two columns of links from phones up (16 Nov 2026, the user's wish), the logo across
+          both above them (centred on phones) */}
+      <div className='grid w-full grid-cols-2 gap-x-6 gap-y-10 px-6 py-10 sm:gap-x-10 sm:px-8 lg:grid-cols-4 xl:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))_minmax(0,1.4fr)]'>
+        <div className='col-span-2 lg:col-span-4 xl:col-span-1'>
           <FooterLogoSection />
         </div>
         {FooterLinkGroups.map(({ id, title, links, signedInLinks }) => (

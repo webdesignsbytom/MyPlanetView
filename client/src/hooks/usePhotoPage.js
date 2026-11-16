@@ -22,8 +22,10 @@ const VIDEO_CHECK_WAITS_MS = [5000, 10000, 20000, 30000];
 const VIDEO_CHECK_FOR_MS = 20 * 60 * 1000;
 const isProcessingVideo = (photo) => photo.kind === 'VIDEO' && photo.videoState === 'PROCESSING';
 
-const keyOf = ({ mapId, tripId, shareCode, country, unplaced = false, limit = 30 }) =>
-  JSON.stringify([mapId || null, tripId || null, shareCode || null, country || null, Boolean(unplaced), limit]);
+// `display` is part of the key: a page fetched without the screen-sized copies (the hover
+// postcards' early page) must never stand in for one that wants them (the photo album)
+const keyOf = ({ mapId, tripId, shareCode, country, unplaced = false, limit = 30, display = false }) =>
+  JSON.stringify([mapId || null, tripId || null, shareCode || null, country || null, Boolean(unplaced), limit, Boolean(display)]);
 
 /** Start fetching a list's first page now; the usePhotoPage with the same filters uses it. */
 export function preloadPhotoPage(filters) {
@@ -47,9 +49,11 @@ function takePreloaded(filters) {
  * Photos of a map, a trip, or a share link, a page at a time, in the gallery's order
  * (a country's or a trip's as its editors arranged it; the whole map's newest first).
  * Filters: `country` (ISO code), or `unplaced` (only the photos with no country), and,
- * on a map, `tripId`. Nothing loads while `enabled` is false.
+ * on a map, `tripId`. `display`: each photo also carries its screen-sized copy (displayUrl),
+ * for a viewer that shows the list full screen (the photo album). Nothing loads while
+ * `enabled` is false.
  */
-export default function usePhotoPage({ mapId, tripId, shareCode, country, unplaced = false, limit = 30, enabled = true }) {
+export default function usePhotoPage({ mapId, tripId, shareCode, country, unplaced = false, limit = 30, display = false, enabled = true }) {
   const [photos, setPhotos] = useState([]);
   const [nextCursor, setNextCursor] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -63,7 +67,7 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, unplac
       setLoading(true);
       setError(null);
       try {
-        const filters = { mapId, tripId, shareCode, country, unplaced, limit };
+        const filters = { mapId, tripId, shareCode, country, unplaced, limit, display };
         const page = await ((!cursor && takePreloaded(filters)) || getPhotoPage({ ...filters, cursor }));
         if (generation !== generationRef.current) return;
         setPhotos((prev) => (cursor ? [...prev, ...(page.photos || [])] : page.photos || []));
@@ -74,7 +78,7 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, unplac
         if (generation === generationRef.current) setLoading(false);
       }
     },
-    [mapId, tripId, shareCode, country, unplaced, limit],
+    [mapId, tripId, shareCode, country, unplaced, limit, display],
   );
 
   // Which list is on screen. Loading the same one again (after a change in the viewer, say)
@@ -83,12 +87,12 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, unplac
   const listKeyRef = useRef(null);
   const reload = useCallback(() => {
     generationRef.current += 1;
-    const key = enabled ? keyOf({ mapId, tripId, shareCode, country, unplaced, limit }) : null;
+    const key = enabled ? keyOf({ mapId, tripId, shareCode, country, unplaced, limit, display }) : null;
     if (key === null || key !== listKeyRef.current) setPhotos([]);
     listKeyRef.current = key;
     setNextCursor(null);
     if (enabled) fetchPage(null);
-  }, [enabled, fetchPage, mapId, tripId, shareCode, country, unplaced, limit]);
+  }, [enabled, fetchPage, mapId, tripId, shareCode, country, unplaced, limit, display]);
 
   useEffect(() => {
     reload();

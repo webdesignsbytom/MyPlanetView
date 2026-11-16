@@ -1,5 +1,7 @@
-// Env
+// Env (another file with DOTENV_CONFIG_PATH, e.g. the live database's), then the seed's own
+// connection: the direct URL (never PgBouncer) and longer transactions
 import 'dotenv/config';
+import './seed/connection.js';
 // Database
 import { prisma } from '../src/prisma.js';
 // Seed steps

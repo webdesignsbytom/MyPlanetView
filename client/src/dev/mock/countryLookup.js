@@ -10,7 +10,7 @@
 import { projectToMap } from '@/utils/map/projection';
 import { poleAt } from '@/utils/map/specialPlaces';
 
-const COASTLINE_TOLERANCE = 6;
+export const COASTLINE_TOLERANCE = 6;
 const EARTH_RADIUS_M = 6371000;
 
 // Countries too small to have a shape, and islands the map doesn't draw (Bioko, and Greek
@@ -191,6 +191,22 @@ function countryAtMapPoint(countries, x, y) {
     }
   }
   return nearest?.code ?? null;
+}
+
+/**
+ * How far (in map units) a real position is from a country's shapes: 0 inside, null when
+ * that country has no shape (as the server's distanceToCountry; a moment's pin leeway).
+ */
+export async function distanceToCountry(code, latitude, longitude) {
+  const point = projectToMap(latitude, longitude);
+  const country = (await loadIndex()).find((c) => c.code === code);
+  if (!country || !point) return null;
+  let best = Infinity;
+  for (const polygon of country.polygons) {
+    if (pointInPolygon(polygon.points, point.x, point.y)) return 0;
+    best = Math.min(best, distanceToPolygon(polygon.points, point.x, point.y));
+  }
+  return best;
 }
 
 /** Country (or special place) code for a real position, or null (open sea). */

@@ -1,4 +1,4 @@
-import { test, expect, openMap, openTool, MOCK_STORE_KEY } from './fixtures.js';
+import { test, expect, openMap, openTool, openUploader as openUploadPanel, MOCK_STORE_KEY } from './fixtures.js';
 import { hasLocationMarker, readVideoInfo, stripVideoLocation, VIDEO_CHECK_FAILED } from '../../src/utils/photos/videoFile.js';
 
 // First Class videos (docs/API.md, "Videos"). The seeded test user is on Business, so
@@ -96,7 +96,7 @@ const fileInput = (panel) => panel.getByLabel(/choose photos/i);
 const countryChoice = (panel) => panel.getByRole('combobox', { name: 'Country for photos with no location' });
 
 async function openUploader(page, country) {
-  const panel = await openTool(page, 'Add photos', 'Add photos');
+  const panel = await openUploadPanel(page);
   if (country) await countryChoice(panel).selectOption({ label: country });
   return panel;
 }

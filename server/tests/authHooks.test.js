@@ -32,6 +32,11 @@ vi.mock('../src/services/travel/accounts.js', async (importOriginal) => ({
   acceptInvitesForVerifiedUser: vi.fn(async () => 0),
   releaseTravelDataForDeletedUser: vi.fn(async () => {}),
 }));
+// No subscription to end (the cancelling itself: tests/integration/billing.test.js)
+vi.mock('../src/services/billing/subscriptions.js', async (importOriginal) => ({
+  ...(await importOriginal()),
+  endSubscriptionOfDeletedAccount: vi.fn(async () => false),
+}));
 
 // Emails are recorded, not sent
 const sent = vi.hoisted(() => []);

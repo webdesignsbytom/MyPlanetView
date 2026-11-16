@@ -17,6 +17,9 @@ import {
   VIDEO_MESSAGES,
 } from '../plans';
 import { isPole } from '@/utils/map/specialPlaces';
+import { UK, isUkNation, placeOnMap } from '@/utils/map/ukNations';
+import { ukNationAt } from '../ukNationLookup';
+import { setMapSplitUk } from '../ukNationSplit';
 import { adsFor } from '../offers';
 import {
   LANDMARK_ROWS,
@@ -221,6 +224,11 @@ export function registerMapRoutes() {
       if (!GROUP_TYPES.includes(body.groupType)) return fail(400, 'Choose solo, couple or family.');
       map.groupType = body.groupType;
     }
+    // The UK as its four nations: changing it moves the map's UK data (as the server)
+    if (body.splitUk !== undefined) {
+      if (typeof body.splitUk !== 'boolean') return fail(400, 'splitUk must be true or false.');
+      setMapSplitUk(map, body.splitUk);
+    }
     return ok({ map: mapView(map, role, WITH_PLAN) });
   });
 
@@ -317,6 +325,8 @@ export function registerMapRoutes() {
     if (denied) return denied;
     const code = cleanCountry(params.countryCode);
     if (!code) return fail(400, 'Unknown country.');
+    // A UK nation is a place only on a map that splits the UK (the server's 404)
+    if (isUkNation(code) && !map.splitUk) return fail(404, "That country isn't on the map.");
     if (!VISIT_STATUSES.includes(body.status)) return fail(400, 'Choose visited, lived there or want to go.');
     // The note: text or null (left out, it stays); cleaned as other text, cut to 1,000
     if (body.notes !== undefined && body.notes !== null && typeof body.notes !== 'string') return fail(400, NOTES_NOT_TEXT);
@@ -429,7 +439,7 @@ export function registerMapRoutes() {
     if (body.countryCode !== undefined && body.countryCode !== null && body.countryCode !== '') {
       const hint = cleanCountry(body.countryCode);
       if (!hint) return fail(400, 'Unknown country.');
-      const full = countryCapProblem(map, hint, kind);
+      const full = countryCapProblem(map, placeOnMap(hint, map.splitUk), kind);
       if (full) return fail(409, full);
     }
     // As the server (429): too many files presigned in the last day and never saved
@@ -491,7 +501,12 @@ export function registerMapRoutes() {
     const hasGps = Number.isFinite(body.latitude) && Number.isFinite(body.longitude);
     // The chosen country stands in when there's no GPS, or the GPS finds no country (at sea)
     // (point-in-polygon on the map's shapes, as the server: ../countryLookup.js)
-    const countryCode = (hasGps ? await countryAtPosition(body.latitude, body.longitude) : null) ?? cleanCountry(body.countryCode);
+    // On a map that splits the UK, a position in the UK is in its nation; a chosen country is
+    // kept as the map keeps places (as the server)
+    const gpsCountry = hasGps ? await countryAtPosition(body.latitude, body.longitude) : null;
+    const gpsPlace = gpsCountry === UK && map.splitUk ? (ukNationAt(body.latitude, body.longitude) ?? UK) : gpsCountry;
+    const chosen = cleanCountry(body.countryCode);
+    const countryCode = gpsPlace ?? (chosen ? placeOnMap(chosen, map.splitUk) : null);
     // The country cap with the final country: full -> 409, and the files go
     const full = countryCapProblem(map, countryCode, kind);
     if (full) {

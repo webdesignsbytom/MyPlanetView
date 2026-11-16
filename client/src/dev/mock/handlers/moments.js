@@ -5,7 +5,7 @@
 import { fail, ok, route } from '../mockAdapter';
 import { getDb, me, newId, session } from '../store';
 import { atLeast, mapRole, tripRole } from '../views';
-import { MOMENT_MESSAGES as M, canSeeMoment, momentPage, momentPhotoScope, momentView, parseMoment } from '../moments';
+import { MOMENT_MESSAGES as M, canSeeMoment, momentPage, momentPhotoScope, momentView, parseMoment, parseMomentSpotFor } from '../moments';
 
 const findMap = (id) => getDb().maps.find((m) => m.id === id) || null;
 const findTrip = (id) => getDb().trips.find((t) => t.id === id) || null;
@@ -50,7 +50,7 @@ export function registerMomentRoutes() {
   });
 
   // A map editor anywhere on the map; a trip's editor only on that trip (`tripId`)
-  route('POST', '/api/maps/:mapId/moments', ({ params, body }) => {
+  route('POST', '/api/maps/:mapId/moments', async ({ params, body }) => {
     const tripId = body.tripId || null;
     const map = findMap(params.mapId);
     const onMap = mapRole(map);
@@ -64,7 +64,10 @@ export function registerMomentRoutes() {
 
     const parsed = parseMoment(body, { mapId: map.id, photoScope: momentPhotoScope(onMap, tripId) });
     if (parsed.error) return fail(400, parsed.error);
-    const { data, travellerIds = [], photoIds = [] } = parsed.value;
+    const pin = await parseMomentSpotFor(body, { countryCode: parsed.value.data.countryCode });
+    if (pin.error) return fail(400, pin.error);
+    const data = { latitude: null, longitude: null, spotShared: false, ...parsed.value.data, ...pin.data };
+    const { travellerIds = [], photoIds = [] } = parsed.value;
     const now = new Date().toISOString();
     const moment = {
       id: newId(),
@@ -87,7 +90,7 @@ export function registerMomentRoutes() {
     return ok({ moment: writerView(moment, { role, mapRole: onMap }) }, 201);
   });
 
-  route('PATCH', '/api/moments/:momentId', ({ params, body }) => {
+  route('PATCH', '/api/moments/:momentId', async ({ params, body }) => {
     const db = getDb();
     const { moment, mapRole: onMap, role } = loadMoment(params.momentId);
     if (!moment || !canSeeMoment(role, moment)) return fail(404, M.notFound);
@@ -105,7 +108,10 @@ export function registerMomentRoutes() {
     const photoScope = momentPhotoScope(onMap, moment.tripId);
     const parsed = parseMoment(body, { partial: true, current: moment, mapId: moment.mapId, photoScope });
     if (parsed.error) return fail(400, parsed.error);
-    const { data, travellerIds } = parsed.value;
+    const pin = await parseMomentSpotFor(body, { countryCode: parsed.value.data.countryCode ?? moment.countryCode, current: moment });
+    if (pin.error) return fail(400, pin.error);
+    const data = { ...parsed.value.data, ...pin.data };
+    const { travellerIds } = parsed.value;
     let { photoIds } = parsed.value;
     // A trip-only editor sees and chooses only the trip's photos: the others stay, after theirs
     if (photoIds && photoScope) {

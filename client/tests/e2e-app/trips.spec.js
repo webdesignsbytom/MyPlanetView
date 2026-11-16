@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, expectStats, openMap, openTool, statsBadge } from './fixtures.js';
+import { test, expect, HOME_MAP, expectStats, openMap, openStats, openTool } from './fixtures.js';
 
 const stopsCard = (page) => page.getByRole('region', { name: 'Stops' });
 const stopItems = (page) => stopsCard(page).getByRole('listitem');
@@ -22,7 +22,7 @@ test.describe('Trips', () => {
     await trips.getByRole('textbox', { name: 'Title' }).fill('Nordic loop');
     await expect(trips.getByRole('combobox', { name: 'Status' })).toHaveValue('PLANNED');
     // Both travellers go by default
-    await expect(trips.getByRole('button', { name: 'Test', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await expect(trips.getByRole('button', { name: 'Charlie', exact: true })).toHaveAttribute('aria-pressed', 'true');
     await expect(trips.getByRole('button', { name: 'Alex', exact: true })).toHaveAttribute('aria-pressed', 'true');
     await trips.getByRole('button', { name: 'Create trip' }).click();
 
@@ -159,7 +159,7 @@ test.describe('Trips', () => {
     const trips = await openTool(page, 'Trips', 'Trips');
     await expect(trips.getByRole('link', { name: /Italian summer/ })).toBeVisible();
     await expect(trips.getByRole('link', { name: /Japan in spring/ })).toHaveCount(0);
-    await statsBadge(page).click();
+    await openStats(page);
     // Countries, continents, special places, photos, landmarks, trips
     await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '16', '13', '2']);
 

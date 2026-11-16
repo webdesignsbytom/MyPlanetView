@@ -5,10 +5,10 @@ import { CompanyTagLine, CompanyName } from '@/utils/constants/constants';
 import BrandWordmark from '@/components/common/BrandWordmark';
 import SocialMediaCTA from '@/components/socialMedia/SocialMediaCTA';
 
-// The wordmark, tagline and (once there are any) social links
+// The wordmark, tagline and (once there are any) social links; centred on phones
 function FooterLogoSection() {
   return (
-    <section className='grid content-start gap-y-3' aria-labelledby='footer-brand'>
+    <section className='grid content-start gap-y-3 max-sm:justify-items-center max-sm:text-center' aria-labelledby='footer-brand'>
       <h2 id='footer-brand' className='sr-only'>
         {CompanyName}
       </h2>

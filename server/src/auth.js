@@ -41,6 +41,7 @@ import {
 } from './services/travel/accounts.js';
 // Influencer codes: checked before sign-up, recorded after, the offer given once verified
 import { recordSignUpPromoCode, usablePromoCode } from './services/billing/promo.js';
+import { endSubscriptionOfDeletedAccount } from './services/billing/subscriptions.js';
 // Responses
 import { EVENT_MESSAGES } from './utils/responses/responses.js';
 // Events
@@ -91,9 +92,16 @@ const cookieAttributes = {
   path: '/',
 };
 
-// Travel data, then avatar files, go before the user row (ownership is lost
-// after; admin delete reuses this). Shared maps pass to an editor first.
+// The subscription ends first (so Stripe stops charging; if Stripe can't be told, nothing
+// is deleted), then travel data, then avatar files, before the user row (ownership is
+// lost after; admin delete reuses this). Shared maps pass to an editor first.
 export const deleteUserMedia = async (user) => {
+  try {
+    await endSubscriptionOfDeletedAccount(user.id);
+  } catch (err) {
+    console.error('[AUTH] subscription not cancelled, account kept:', err.message);
+    throw new APIError('SERVICE_UNAVAILABLE', { message: EVENT_MESSAGES.subscriptionNotCancelled });
+  }
   await releaseTravelDataForDeletedUser(user);
 
   const keys = await findOwnedAvatarKeys(user.id);

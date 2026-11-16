@@ -14,7 +14,7 @@
 // (`pinZoomStep`), so the pins re-render a few times per doubling of the zoom, never per
 // wheel tick or pinch frame.
 
-/** Map units between two pins at zoom 1 (about 30 px on a laptop's screen, at any zoom). */
+/** Map units between two pins at zoom 1: about 38 px on any screen, at any zoom (the zoom is a screen scale). */
 export const PIN_SPACING = 40;
 /** From this zoom every landmark has its pin. */
 export const ALL_PINS_ZOOM = 12;

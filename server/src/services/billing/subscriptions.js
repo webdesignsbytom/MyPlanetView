@@ -2,13 +2,41 @@
 // straight after the billing routes change a subscription (so the reply shows it).
 import { prisma } from '../../prisma.js';
 import {
+  findSubscription,
   findSubscriptionByCustomer,
   linkStripeCustomer,
   saveSubscriptionState,
 } from '../../domain/billing.js';
-import { shouldApplySubscriptionEvent, stripeIdOf, subscriptionStateFrom } from '../../utils/stripeState.js';
+import { hasLiveSubscription, shouldApplySubscriptionEvent, stripeIdOf, subscriptionStateFrom } from '../../utils/stripeState.js';
 import { markPromoTrialUsedInDB } from '../../domain/promoCodes.js';
-import { priceKind } from './stripe.js';
+import { paymentsEnabled, priceKind, stripeClient } from './stripe.js';
+
+/**
+ * Deleting an account ends its subscription at once, before anything is deleted (auth.js
+ * deleteUserMedia, for the person and for an admin alike). The Subscription row goes with
+ * the user, so without this Stripe would go on charging a card for an account that no
+ * longer exists. It throws when Stripe can't be told, so the account stays (and can be
+ * deleted again) rather than leaving a subscription running. A subscription Stripe doesn't
+ * have (already ended, or a seeded stand-in id) counts as ended. Stripe's notice that it
+ * ended then finds no account and is ignored. -> true when one was cancelled
+ */
+export async function endSubscriptionOfDeletedAccount(userId) {
+  const sub = await findSubscription(userId);
+  if (!hasLiveSubscription(sub)) return false;
+  if (!paymentsEnabled()) {
+    // Only where payments were never set up (development, tests): nothing to tell
+    console.warn('[billing] payments are off: subscription not cancelled for a deleted account', sub.stripeSubscriptionId);
+    return false;
+  }
+  const stripe = await stripeClient();
+  try {
+    await stripe.subscriptions.cancel(sub.stripeSubscriptionId);
+  } catch (err) {
+    if (err?.code === 'resource_missing') return false;
+    throw err;
+  }
+  return true;
+}
 
 const userExists = async (userId) =>
   typeof userId === 'string' && Boolean(await prisma.user.findUnique({ where: { id: userId }, select: { id: true } }));

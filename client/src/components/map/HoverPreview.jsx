@@ -10,7 +10,6 @@ import { postersFor } from '@/utils/map/posterData';
 import { countryName } from '@/utils/map/countries';
 import { VISIT_STATUS_LABELS, countsAsVisited } from '@/utils/map/visitStatus';
 
-const CYCLE_MS = 2500;
 const OFFSET = 18;
 // The card's top sits this far above the pointer, so the pointer is beside its header
 const LIFT = 40;
@@ -39,23 +38,39 @@ function nameSize(name) {
 
 // my_planet's hover box, as a postcard: the country's name in the travel face, its
 // status as a postmark, the star badge stuck on the corner like a stamp when visited,
-// and, if you have photos from there, a slideshow of them on a white photo border;
-// otherwise its travel poster (or the placeholder card). It follows the pointer, and goes
-// above it near the bottom of the screen, where it wouldn't fit below. Mouse and pen only;
-// every listener and timer is cleared when the country changes or the box goes.
-function HoverPreview({ code, status, thumbs = [], showPhotos }) {
+// and the country's travel poster (or the placeholder card) with `showPoster` (the setting
+// "Country posters on hover"). Always the poster, visited or not: never the map's own
+// photos (17 Nov 2026, the user's wish; it was a slideshow of the newest ones from there).
+// It follows the pointer, and goes above it near the bottom of the screen, where it
+// wouldn't fit below. Mouse and pen only; every listener is cleared when the box goes.
+function HoverPreview({ code, status, showPoster }) {
   const [position, setPosition] = useState(null);
-  const [index, setIndex] = useState(0);
   const boxRef = useRef(null);
-  const photos = showPhotos ? thumbs : [];
 
-  // The card's height depends on what it shows (a poster, a photo, or neither), so its
+  // The card's height depends on what it shows (a poster or not), so its
   // top is set once it's laid out and before it's painted: no frame off the screen
+  const positionRef = useRef(null);
   useLayoutEffect(() => {
+    positionRef.current = position;
     const box = boxRef.current;
     if (!box || !position) return;
     box.style.top = `${cardTop(position.y, box.offsetHeight, window.innerHeight)}px`;
   });
+
+  // ...and again whenever its size changes: a poster's box is drawn square until its image
+  // arrives, then grows to the poster's own shape (17 Nov 2026: a 2:3 poster near the bottom
+  // of the screen ran off it)
+  const shown = Boolean(code && position);
+  useEffect(() => {
+    const box = boxRef.current;
+    if (!shown || !box || typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(() => {
+      const at = positionRef.current;
+      if (at) box.style.top = `${cardTop(at.y, box.offsetHeight, window.innerHeight)}px`;
+    });
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, [shown]);
 
   useEffect(() => {
     let frame = 0;
@@ -70,13 +85,6 @@ function HoverPreview({ code, status, thumbs = [], showPhotos }) {
     };
   }, []);
 
-  useEffect(() => {
-    setIndex(0);
-    if (photos.length < 2) return undefined;
-    const timer = setInterval(() => setIndex((i) => (i + 1) % photos.length), CYCLE_MS);
-    return () => clearInterval(timer);
-  }, [code, photos.length]);
-
   if (!code || !position) return null;
 
   // Keep the box on screen: flip to the pointer's left near the right edge (its top is
@@ -87,7 +95,6 @@ function HoverPreview({ code, status, thumbs = [], showPhotos }) {
     right: flip ? window.innerWidth - position.x + OFFSET : undefined,
   };
 
-  const current = photos[index % Math.max(photos.length, 1)];
   const [poster] = postersFor(code);
   const name = countryName(code);
   const starred = countsAsVisited(status);
@@ -96,6 +103,7 @@ function HoverPreview({ code, status, thumbs = [], showPhotos }) {
     <div
       ref={boxRef}
       aria-hidden='true'
+      data-hover-card={code}
       style={style}
       className='pointer-events-none fixed z-20 grid w-64 grid-cols-1 gap-3 border-2 border-poster-brown bg-paper-cream p-3 text-colour4 shadow-paper'
     >
@@ -110,15 +118,11 @@ function HoverPreview({ code, status, thumbs = [], showPhotos }) {
         <p className={`break-words font-travel ${nameSize(name)} uppercase leading-tight tracking-wide text-colour6`}>{name}</p>
         <Postmark>{status ? VISIT_STATUS_LABELS[status] : 'Not been yet'}</Postmark>
       </div>
-      {current ? (
-        <div className='grid bg-poster-cream p-1.5 shadow-paper'>
-          <img key={current.id} src={current.thumbUrl} alt='' className='aspect-[4/3] w-full object-cover' />
-        </div>
-      ) : showPhotos && poster ? (
-        <div className='grid bg-poster-cream p-1.5 shadow-paper'>
-          <PosterImage poster={poster} ratio='1/1' alt='' className='overflow-hidden' imgClassName='object-cover object-top' />
-        </div>
-      ) : showPhotos ? (
+      {showPoster && poster ? (
+        // The whole poster at its own shape, with no mat: the posters have their own
+        // printed border (17 Nov 2026, the user's wish; it was cropped square on a cream mat)
+        <PosterImage poster={poster} alt='' className='overflow-hidden shadow-paper' />
+      ) : showPoster ? (
         <PosterPlaceholder countryName={name} compact />
       ) : null}
     </div>

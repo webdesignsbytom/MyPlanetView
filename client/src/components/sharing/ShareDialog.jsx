@@ -26,6 +26,7 @@ import ShareInviteRow from './ShareInviteRow';
 import ShareGeneralAccess from './ShareGeneralAccess';
 import ShareLinkBox from './ShareLinkBox';
 import MakeOwnerDialog from './MakeOwnerDialog';
+import RemoveAccessDialog from './RemoveAccessDialog';
 // Utils
 import { ROLE_LABELS } from '@/utils/sharing/shareRoles';
 import { forgetMapLists } from '@/utils/map/mapListCache';
@@ -38,7 +39,8 @@ import { forgetMapLists } from '@/utils/map/mapListCache';
 // those controls are locked and the dialog says why; the link can still be copied.
 // The plan's caps on people (10 editors a map, 20 people a trip) come back as 409s,
 // shown as the error. A map's owner can make a member the owner (`onTransferred` gets
-// `{ stayed, map }` once it's done; the map lists are forgotten first).
+// `{ stayed, map }` once it's done; the map lists are forgotten first). A bin (removing a
+// member, cancelling an invite) asks first (RemoveAccessDialog).
 function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransferred, onClose }) {
   const { user } = useAuth();
   const isOwner = role === 'OWNER';
@@ -49,6 +51,8 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
   const [notice, setNotice] = useState(null);
   // The member being made the owner (the confirmation is open)
   const [newOwner, setNewOwner] = useState(null);
+  // A bin pressed: { member } or { invite }, asked about first (RemoveAccessDialog)
+  const [removing, setRemoving] = useState(null);
   const kind = resource === 'trips' ? 'trip' : 'map';
   const canTransfer = resource === 'maps' && !mustVerifyEmail && Boolean(onTransferred);
 
@@ -161,7 +165,7 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
                   member={member}
                   busy={busy || mustVerifyEmail}
                   onChangeRole={(next) => run(() => updateMember(resource, id, member.userId, next)).catch(() => {})}
-                  onRemove={() => run(() => removeMember(resource, id, member.userId)).catch(() => {})}
+                  onRemove={() => setRemoving({ member })}
                   onMakeOwner={canTransfer ? () => setNewOwner(member) : undefined}
                 />
               ))}
@@ -170,7 +174,7 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
                   key={invite.id}
                   invite={invite}
                   busy={busy || mustVerifyEmail}
-                  onCancel={() => run(() => cancelInvite(resource, id, invite.id)).catch(() => {})}
+                  onCancel={() => setRemoving({ invite })}
                 />
               ))}
             </ul>
@@ -202,6 +206,21 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
 
       {newOwner ? (
         <MakeOwnerDialog member={newOwner} mapName={name} onConfirm={transfer} onClose={() => setNewOwner(null)} />
+      ) : null}
+      {removing ? (
+        <RemoveAccessDialog
+          member={removing.member}
+          invite={removing.invite}
+          kind={kind}
+          name={name}
+          onConfirm={async () => {
+            await run(() =>
+              removing.member ? removeMember(resource, id, removing.member.userId) : cancelInvite(resource, id, removing.invite.id),
+            );
+            setRemoving(null);
+          }}
+          onClose={() => setRemoving(null)}
+        />
       ) : null}
     </Modal>
   );

@@ -125,8 +125,8 @@ model Profile {
   homeCountryCode String?  @db.Char(2)
   homeCountry     Country? @relation(fields: [homeCountryCode], references: [code], onDelete: SetNull)
 
-  // How this user likes to view maps: style (animated, old map, jupiter,
-  // galaxy), grid lines, sea animation, sun and moon, country names...
+  // How this user likes to view maps: style (animated, old map), grid lines,
+  // sea animation, sun and moon, country names...
   // Was localStorage-only before.
   mapSettings Json?
 
@@ -759,6 +759,14 @@ model Moment {
   landmarkId  String?
   landmark    Landmark? @relation(fields: [landmarkId], references: [id], onDelete: SetNull)
   placeName   String?
+
+  // A pin on the map (16 Nov 2026): the exact spot, in the moment's country (checked in
+  // code); both or neither, in range (CHECK moment_spot). The owner and editors always see
+  // it; viewers and share links only when `spotShared` (chosen when it's pinned, off by
+  // default; never true without a spot)
+  latitude   Float?
+  longitude  Float?
+  spotShared Boolean @default(false)
 
   // One of the map's own trips: its trip-only editors may change the moment
   tripId String?

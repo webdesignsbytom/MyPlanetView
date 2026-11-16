@@ -10,9 +10,9 @@ export async function seedContactForms() {
   // Contact form
   await prisma.contactForm.create({
     data: {
-      name: 'Test Traveller',
+      name: 'Jamie Rowe',
       email: adminEmail,
-      message: 'Test contact form seed message: can I share one trip without sharing my whole map?',
+      message: 'Hello! Can I share one trip with my sister without sharing my whole map?',
     },
   });
 

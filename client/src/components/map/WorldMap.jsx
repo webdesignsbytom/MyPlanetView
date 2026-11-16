@@ -11,6 +11,8 @@ import LandmarkPins from './LandmarkPins';
 import StopMarkers from './StopMarkers';
 import VisitBadges from './VisitBadges';
 import MomentMarks from './MomentMarks';
+import MomentSpotPins from './MomentSpotPins';
+import SkyBodies from './SkyBodies';
 import PoleNameLabels from './PoleNameLabels';
 import { StarBadgeSymbols } from './StarBadge';
 import { PoleMarkerSymbols } from './PoleMarker';
@@ -18,6 +20,7 @@ import { MomentMarkSymbol } from './MomentMark';
 
 const NO_VISITS = {};
 const NO_MOMENTS = {};
+const NO_SPOTS = [];
 // The badge, pole and moment art, defined once in the SVG; constant elements, so zoom
 // re-renders skip them
 const BADGE_SYMBOLS = <StarBadgeSymbols />;
@@ -40,6 +43,9 @@ const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[da
  * `momentCounts` (the map's momentCountsByCountry) marks the places with moments, beside
  * their badges, unless `showMoments` is off (the viewer's setting).
  * `stampedLandmarks` (a Set of the map's stampedLandmarkIds) turns those pins gold.
+ * `showSky`: the sun and the moon over where each is overhead now (SkyBodies).
+ * `momentSpots` (the map's momentSpots) puts a pin on each moment's spot, while
+ * `showMoments` is on; a pin opens its country with `onSelectCountry`.
  * The UK is drawn as its four nations when the map being shown splits it (useSplitUk: the
  * page provides the map's `splitUk`).
  * `seaDepths`: the sea tinted by depth (SeaDepths), for the styles whose sea is plain
@@ -49,6 +55,8 @@ function WorldMap({
   viewport,
   visitsByCode = NO_VISITS,
   momentCounts = NO_MOMENTS,
+  momentSpots = NO_SPOTS,
+  showSky = false,
   showMoments = true,
   selectedCode = null,
   onSelectCountry,
@@ -104,6 +112,7 @@ function WorldMap({
           showAntarctica={showAntarctica}
           splitUk={splitUk}
         />
+        {showSky ? <SkyBodies zoom={zoom} /> : null}
         {showCountryNames ? (
           <CountryNameLabels zoom={zoom} visitsByCode={visitsByCode} showAntarctica={showAntarctica} splitUk={splitUk} />
         ) : null}
@@ -120,6 +129,9 @@ function WorldMap({
             afterTap={afterTap}
             splitUk={splitUk}
           />
+        ) : null}
+        {showMoments && momentSpots.length ? (
+          <MomentSpotPins spots={momentSpots} zoom={zoom} showAntarctica={showAntarctica} onSelectCountry={onSelectCountry} afterTap={afterTap} />
         ) : null}
         {stops?.length ? <StopMarkers stops={stops} zoom={zoom} /> : null}
       </svg>

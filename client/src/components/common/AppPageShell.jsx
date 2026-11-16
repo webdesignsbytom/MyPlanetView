@@ -13,11 +13,11 @@ import PosterFrame from './PosterFrame';
  * in a centred column at most `width` wide. Below lg the frame's padding sets the edges,
  * as on the public pages; from lg a short page sits in the middle of the red, with the
  * footer at the bottom. `mainProps` carries the page's aria-labelledby / -describedby /
- * aria-busy.
+ * aria-busy. `backdrop` is drawn on the red behind it all (the account page's stamps).
  */
-function AppPageShell({ children, width = 'max-w-5xl', mainProps = {} }) {
+function AppPageShell({ children, width = 'max-w-5xl', mainProps = {}, backdrop = null }) {
   return (
-    <PosterFrame>
+    <PosterFrame backdrop={backdrop}>
       <Navbar variant='column' />
       <div className='grid min-w-0 grid-rows-[minmax(0,1fr)_auto] gap-4 pt-2 lg:gap-2 lg:pt-0'>
         <main

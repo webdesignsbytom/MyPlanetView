@@ -5,7 +5,8 @@
 // (db.badgeAwards) and goals (db.goals) are stored. Awards are never taken back.
 import { COUNTRIES } from '@/utils/map/countries';
 import { isSpecialPlace, withParentPlaces } from '@/utils/map/specialPlaces';
-import { INHABITED_CONTINENTS, REGIONS } from '@/utils/constants/regions';
+import { INHABITED_CONTINENTS, REGIONS, regionCodesOnMap } from '@/utils/constants/regions';
+import { UK, UK_NATION_CODES, countedCountryCodes, isUkNation, placeOnMap } from '@/utils/map/ukNations';
 import { GOAL_KINDS, GOAL_LIST_MAX, GOAL_REGIONS, GOAL_TARGET_MAX, GOAL_TITLE_MAX } from '@/utils/achievements/goals';
 import { getDb } from './store';
 import { countryExists, landmarkById } from './views';
@@ -52,8 +53,12 @@ export const BADGES = Object.freeze([
   ...[3, 6, 12].map((need) => ({ key: `themes-${need}`, group: 'themes', measure: 'themes', need })),
 ]);
 
-export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, themes = 0 }) {
-  const countries = [...visited].filter((code) => !isSpecialPlace(code));
+// `splitUk`: the map shows the UK as its four nations (they count one each; a region holds them)
+export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, themes = 0, splitUk = false }) {
+  const countries = countedCountryCodes(
+    [...visited].filter((code) => !isSpecialPlace(code)),
+    splitUk,
+  );
   const continents = new Set(countries.map((code) => continentByCode.get(code)).filter(Boolean));
   const counts = {
     countries: countries.length,
@@ -66,12 +71,14 @@ export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, th
   const haveFor = (badge) => {
     if (badge.measure === 'continent') return continents.has(badge.continent) ? 1 : 0;
     if (badge.measure === 'place') return visited.has(badge.code) ? 1 : 0;
-    if (badge.measure === 'region') return REGIONS[badge.region].codes.filter((code) => visited.has(code)).length;
+    if (badge.measure === 'region') return regionCodesOnMap(badge.region, splitUk).filter((code) => visited.has(code)).length;
     return counts[badge.measure];
   };
+  const needFor = (badge) => (badge.measure === 'region' ? regionCodesOnMap(badge.region, splitUk).length : badge.need);
   return BADGES.map((badge) => {
     const have = haveFor(badge);
-    return { key: badge.key, group: badge.group, have: Math.min(have, badge.need), need: badge.need, earned: have >= badge.need };
+    const need = needFor(badge);
+    return { key: badge.key, group: badge.group, have: Math.min(have, need), need, earned: have >= need };
   });
 }
 
@@ -145,9 +152,11 @@ export function parseGoalInput(body, { existing = null } = {}) {
 /** Does a change ask for something else (so an achieved goal has to be met again)? */
 export const changesWhatsAsked = (data) => ['target', 'countryCodes', 'region', 'deadline'].some((field) => data[field] !== undefined);
 
-function regionCodes(region) {
-  if (REGIONS[region]) return REGIONS[region].codes;
-  return (countriesByContinent.get(region) ?? []).filter((code) => !isSpecialPlace(code));
+function regionCodes(region, splitUk = false) {
+  if (REGIONS[region]) return regionCodesOnMap(region, splitUk);
+  return (countriesByContinent.get(region) ?? []).filter(
+    (code) => !isSpecialPlace(code) && (splitUk ? code !== UK : !isUkNation(code)),
+  );
 }
 
 // The end of a deadline's day, UTC
@@ -155,10 +164,17 @@ const endOfDay = (day) => new Date(new Date(`${day}T00:00:00.000Z`).getTime() + 
 
 export function goalProgress(goal, facts, now = new Date()) {
   const deadline = goal.deadline ? endOfDay(goal.deadline) : null;
-  const countryDone = (code) => {
+  const splitUk = Boolean(facts.splitUk);
+  const placeDone = (code) => {
     if (!deadline) return facts.visited.has(code);
     const first = facts.firstPhotoAt.get(code);
     return Boolean(first) && first.getTime() <= deadline.getTime();
+  };
+  // A goal naming the UK is met by any nation on a map that splits it; one naming a nation by
+  // the UK on a map that doesn't
+  const countryDone = (code) => {
+    const place = placeOnMap(code, splitUk);
+    return placeDone(place) || (splitUk && place === UK && UK_NATION_CODES.some(placeDone));
   };
 
   let have;
@@ -166,13 +182,16 @@ export function goalProgress(goal, facts, now = new Date()) {
   let done;
   if (goal.kind === 'COUNTRY_COUNT') {
     const codes = deadline ? [...facts.firstPhotoAt.keys()] : [...facts.visited];
-    have = codes.filter((code) => !isSpecialPlace(code) && countryDone(code)).length;
+    have = countedCountryCodes(
+      codes.filter((code) => !isSpecialPlace(code) && placeDone(code)),
+      splitUk,
+    ).length;
     need = goal.target;
   } else if (goal.kind === 'LANDMARK_COUNT') {
     have = facts.stamps.filter((stamp) => !deadline || stamp.firstShotAt.getTime() <= deadline.getTime()).length;
     need = goal.target;
   } else {
-    const codes = goal.kind === 'COUNTRY_LIST' ? goal.countryCodes : regionCodes(goal.region);
+    const codes = goal.kind === 'COUNTRY_LIST' ? goal.countryCodes : regionCodes(goal.region, splitUk);
     done = codes.filter(countryDone);
     have = done.length;
     need = codes.length;
@@ -220,7 +239,8 @@ export function loadMapFacts(mapId, { includeHidden }) {
   // Monthly themes with one of the map's (visible) photos in (the theme badges)
   const shown = new Set(photos.map((p) => p.id));
   const themes = new Set((db.themeEntries || []).filter((e) => e.mapId === mapId && shown.has(e.photoId)).map((e) => e.themeId)).size;
-  return { visited, firstPhotoAt, stamps: findStamps(photos), photos: photos.length, themes };
+  const splitUk = Boolean(db.maps.find((m) => m.id === mapId)?.splitUk);
+  return { visited, firstPhotoAt, stamps: findStamps(photos), photos: photos.length, themes, splitUk };
 }
 
 /**
@@ -259,7 +279,7 @@ export function mapBadges(mapId, { award }) {
 const TRAVELLER_BADGE_GROUPS = ['countries', 'continents', 'special', 'regions'];
 const tripDay = (trip) => trip.endDate ?? trip.startDate ?? null;
 
-function travellerBadges(trips, travellerId) {
+function travellerBadges(trips, travellerId, splitUk = false) {
   const own = trips
     .filter((trip) => trip.travellerIds.includes(travellerId))
     .sort((a, b) => {
@@ -271,11 +291,11 @@ function travellerBadges(trips, travellerId) {
   const earnedOn = new Map();
   for (const trip of own) {
     for (const code of withParentPlaces(trip.countryCodes)) visited.add(code);
-    for (const badge of badgeProgress({ visited })) {
+    for (const badge of badgeProgress({ visited, splitUk })) {
       if (badge.earned && TRAVELLER_BADGE_GROUPS.includes(badge.group) && !earnedOn.has(badge.key)) earnedOn.set(badge.key, tripDay(trip));
     }
   }
-  return badgeProgress({ visited })
+  return badgeProgress({ visited, splitUk })
     .filter((badge) => TRAVELLER_BADGE_GROUPS.includes(badge.group))
     .map((b) => ({ key: b.key, group: b.group, have: b.have, need: b.need, earnedOn: b.earned ? earnedOn.get(b.key) ?? null : null, earned: b.earned }));
 }
@@ -283,6 +303,7 @@ function travellerBadges(trips, travellerId) {
 // The map's people, each with their travel badges (mapBadges' `travellers`)
 function travellersWithBadges(mapId) {
   const db = getDb();
+  const splitUk = Boolean(db.maps.find((m) => m.id === mapId)?.splitUk);
   const trips = db.trips
     .filter((trip) => trip.mapId === mapId && trip.status === 'COMPLETED')
     .map((trip) => ({
@@ -294,7 +315,7 @@ function travellersWithBadges(mapId) {
   return db.travellers
     .filter((t) => t.mapId === mapId)
     .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-    .map((t) => ({ id: t.id, name: t.name, badges: travellerBadges(trips, t.id) }));
+    .map((t) => ({ id: t.id, name: t.name, badges: travellerBadges(trips, t.id, splitUk) }));
 }
 
 /** A goal as sent: its fields plus progress. */

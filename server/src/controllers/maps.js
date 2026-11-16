@@ -35,7 +35,7 @@ import {
 } from '../domain/maps.js';
 import { findSubscription } from '../domain/billing.js';
 import { countPhotosByCountry } from '../domain/photos.js';
-import { countMomentsByCountry } from '../domain/moments.js';
+import { countMomentsByCountry, findMomentSpots } from '../domain/moments.js';
 import { findUserForTransfer } from '../domain/users.js';
 import { deleteMapWithFiles, ensureDefaultMap, newUniqueShareCode, transferMap } from '../services/travel/maps.js';
 import { loadMapPlan, loadUserPlan, uploadRulesFrom } from '../services/travel/plans.js';
@@ -128,12 +128,14 @@ const WITH_PLAN = { withPlan: true };
  */
 export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
   const editor = canEdit(role);
-  const [detail, counts, planFields, momentCountsByCountry] = await Promise.all([
+  const [detail, counts, planFields, momentCountsByCountry, momentSpots] = await Promise.all([
     findMapDetail(mapId),
     loadStatsCounts(mapId, role),
     editor && withPlan ? mapPlanView(mapId) : {},
     // Which countries have moments, to mark them on the map (hidden ones for editors)
     countMomentsByCountry(mapId, { includeHidden: editor }),
+    // The moments pinned to a spot: every pin for editors, the shared ones for anyone else
+    findMomentSpots(mapId, { includeHidden: editor }),
   ]);
   if (!detail) return null;
   const stats = statsFrom(detail, counts);
@@ -157,6 +159,7 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     visits: detail.visits.map(visitView),
     stats,
     momentCountsByCountry,
+    momentSpots,
     // The landmarks stamped in the passport, to mark their pins (hidden photos' for editors)
     stampedLandmarkIds: counts.stampedLandmarkIds,
     ...planFields,

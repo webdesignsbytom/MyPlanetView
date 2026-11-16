@@ -1,6 +1,6 @@
 // Shared set-up for the travel-page tests (playwright.app.config.js). Every test gets a
 // fresh browser context, so mock mode seeds its demo data afresh (src/dev/mock/seed.js):
-// the test user owns "Test & Alex's travels" (8 countries, 2 continents, 16 photos, 3
+// the test user owns "Charlie & Alex's travels" (8 countries, 2 continents, 16 photos, 3
 // trips: two of its own and Tom's stag do, a group trip Alex added; 6 moments, one hidden).
 import { test as base, expect } from '@playwright/test';
 // Constants
@@ -8,13 +8,13 @@ import { COOKIE_POLICY_NAME } from '../../src/utils/constants/constants.js';
 
 export { expect };
 
-export const HOME_MAP = "Test & Alex's travels";
+export const HOME_MAP = "Charlie & Alex's travels";
 // Seeded maps and codes (seed.js): Sam's map is shared with anyone who has the link
 export const SAM_MAP = "Sam's gap year";
 export const SAM_SHARE_CODE = 'SAMG-4PYE-AR22';
 export const HOME_SHARE_CODE = 'K7QX-M2PA-9RTW';
 // Where mock mode keeps its demo data (src/dev/mock/store.js STORE_KEY)
-export const MOCK_STORE_KEY = 'mpvMockStore.v4';
+export const MOCK_STORE_KEY = 'mpvMockStore.v5';
 
 export const test = base.extend({
   page: async ({ page }, provide) => {
@@ -59,18 +59,78 @@ export async function openMap(page, path = '/map') {
 export const toolbar = (page) => page.getByRole('navigation', { name: 'Map tools' });
 
 /**
- * The luggage tag under the title: "8 countries, 2 continents, 16 photos. Special places 0
- * of 5. Open travel statistics" (special places: Antarctica and the poles).
+ * Whether the map shows its banner (the map's name, top centre): wide screens (1024px and up,
+ * the desktop project), with the banner switched on, as it is by default. The map has had no
+ * title tag anywhere since 16 Nov 2026 (the user's wish).
  */
-export const statsBadge = (page) => page.getByRole('button', { name: /\. Open travel statistics$/ });
+export const showsBanner = (page) => page.viewportSize().width >= 1024;
 
+/** The map that's open, by the page's h1 (the banner shows the same name on wide screens). */
+export const expectMapOpen = (page, name) => expect(page.getByRole('heading', { level: 1, name, exact: true })).toBeAttached();
+
+/** Opens "Your maps", a tool like the others (openTool), on every screen. */
+export const openSwitcher = (page) => openTool(page, 'Your maps', 'Your maps');
+
+/**
+ * Open the statistics from the tools (the stamp, or the phone's menu). The map had a stats
+ * tag under its title until 16 Nov 2026.
+ */
+export const openStats = (page) => pressTool(page, 'Travel statistics');
+
+/**
+ * The map's counts, from the statistics stamp's description: "8 countries, 2 continents, 16
+ * photos. Special places 0 of 5" (special places: Antarctica and the poles). Read from the
+ * page, as the stamp is hidden on phones.
+ */
 export const expectStats = (page, text, specialPlaces = 0) =>
-  expect(statsBadge(page)).toHaveAccessibleName(`${text}. Special places ${specialPlaces} of 5. Open travel statistics`);
+  expect
+    .poll(() =>
+      toolbar(page)
+        // The wide stamp and the phone menu's item both carry the counts (one of them hidden)
+        .locator('button[aria-label="Travel statistics"]')
+        .first()
+        .evaluate((stamp) => document.getElementById(stamp.getAttribute('aria-describedby'))?.textContent ?? ''),
+    )
+    .toBe(`${text}. Special places ${specialPlaces} of 5`);
+
+/**
+ * On a phone the map's tools are a "Menu" button at the top right that drops the list
+ * (MapToolbar, 16 Nov 2026): open it, if it's there and shut. Wide screens show the stamps.
+ */
+export async function showTools(page) {
+  // The tools first (after a reload the map may not have drawn them yet: isVisible doesn't wait)
+  await expect(toolbar(page)).toBeVisible();
+  const menu = toolbar(page).getByRole('button', { name: 'Menu', exact: true });
+  if ((await menu.isVisible()) && (await menu.getAttribute('aria-expanded')) !== 'true') await menu.click();
+}
+
+/** One of the map's tools, by name: a stamp on wide screens, an item of the phone's menu (opened). */
+export async function toolButton(page, label) {
+  await showTools(page);
+  return toolbar(page).getByRole('button', { name: label, exact: true });
+}
+
+/** Press one of the map's tools (through the phone's menu on a phone). */
+export async function pressTool(page, label) {
+  await (await toolButton(page, label)).click();
+}
 
 /** Press a toolbar stamp and return the panel it opens. */
 export async function openTool(page, label, panelTitle) {
-  await toolbar(page).getByRole('button', { name: label, exact: true }).click();
+  await pressTool(page, label);
   const panel = page.getByRole('dialog', { name: panelTitle, exact: true });
+  await expect(panel).toBeVisible();
+  return panel;
+}
+
+/**
+ * Open the upload panel ("Add photos"): the toolbar's Photos stamp opens the map's photos,
+ * whose "Add photos" button (editors only) opens it (16 Nov 2026; the stamp opened it before).
+ */
+export async function openUploader(page) {
+  const photos = await openTool(page, 'Photo album', 'Photo album');
+  await photos.getByRole('button', { name: 'Add photos', exact: true }).click();
+  const panel = page.getByRole('dialog', { name: 'Add photos', exact: true });
   await expect(panel).toBeVisible();
   return panel;
 }

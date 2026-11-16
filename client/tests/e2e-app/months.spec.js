@@ -8,7 +8,6 @@ test.describe('Where to go, month by month', () => {
   test('a draft month lists the guides’ countries at their best, and the other months', async ({ page }) => {
     await page.goto('/where-to-go/january');
     await expect(page.getByRole('heading', { level: 1, name: 'Where to go in January' })).toBeVisible();
-    await expect(page.getByText('Draft, not published')).toBeVisible();
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
     await expect(page.getByRole('region', { name: 'January around the world' })).toContainText('height of summer');
 

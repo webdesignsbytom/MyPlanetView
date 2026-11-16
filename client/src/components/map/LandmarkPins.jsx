@@ -52,7 +52,7 @@ function LandmarkPins({ landmarks, zoom, onSelectCountry, afterTap, always = fal
         strokeWidth={isStamp ? STAMP_PX : DOT_PX}
         data-country={landmarkPlace(landmark, splitUk)}
         data-stamped={isStamp ? '' : undefined}
-        className={`cursor-pointer ${isStamp ? 'stroke-cover-gold' : 'stroke-poster-red'}`}
+        className={`cursor-pointer ${isStamp ? 'stroke-poster-gold-light' : 'stroke-poster-red'}`}
       >
         <title>{isStamp ? `${landmark.name}, stamped in the passport` : landmark.name}</title>
       </path>

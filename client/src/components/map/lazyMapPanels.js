@@ -34,6 +34,8 @@ export const HoverPreview = lazyPanel(() => import('./HoverPreview'));
 export const TripsPanel = lazyPanel(() => import('@/components/trips/TripsPanel'));
 export const TimelinePanel = lazyPanel(() => import('./TimelinePanel'));
 export const PhotoUploadPanel = lazyPanel(() => import('@/components/photos/PhotoUploadPanel'));
+// The map's photos, newest first (the toolbar's Photos stamp); its "Add photos" opens the upload panel
+export const MapPhotosPanel = lazyPanel(() => import('./MapPhotosPanel'));
 export const PhotoViewer = lazyPanel(() => import('@/components/photos/PhotoViewer'));
 export const ShareDialog = lazyPanel(() => import('@/components/sharing/ShareDialog'));
 // Paying for a map that isn't paid for (the plan banner's button); opened rarely
@@ -51,6 +53,8 @@ const FOR_TOOL = {
   // A moment on the timeline opens its country
   timeline: [TimelinePanel, CountryPanel],
   upload: [PhotoUploadPanel],
+  // The gallery opens first; its photos open in the viewer, and an editor's button uploads
+  photos: [MapPhotosPanel],
   share: [ShareDialog],
   settings: [SettingsPanel],
   switcher: [MapSwitcher],

@@ -23,6 +23,7 @@ import {
   findMapVisitsForStats,
 } from '../../domain/maps.js';
 import { continentsByCode } from './countries.js';
+import { spotView } from '../../utils/momentSpots.js';
 
 const keyOf = (photo, size) => photo.variants?.find((v) => v.size === size)?.media?.key ?? null;
 const signed = async (key) => (key ? signPhotoUrl(key) : null);
@@ -266,6 +267,8 @@ export async function momentView(moment, { role, photoAccess }) {
     countryCode: moment.countryCode,
     landmark: moment.landmark ? { id: moment.landmark.id, name: moment.landmark.name } : null,
     placeName: moment.placeName,
+    // Its pin: always for editors (with `shared`), else only when shared
+    spot: spotView(moment, { canEdit: canEdit(role) }),
     tripId: moment.tripId,
     travellerIds: moment.travellers.map((t) => t.travellerId),
     photos: await Promise.all(photos.map(async (p) => ({ id: p.id, thumbUrl: await signed(keyOf(p, 'THUMB')) }))),

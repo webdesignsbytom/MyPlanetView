@@ -15,7 +15,8 @@ import { COUNTRY_BY_CODE, CONTINENT_LABELS } from '../src/utils/map/countries.js
 import { isCheckedContent } from '../src/utils/countries/countryContent.js';
 import { countryContentProblems } from '../src/utils/countries/countryContentChecks.js';
 import { countryRoutesFor } from '../src/utils/countries/countryRoutes.js';
-import { COUNTRY_LANDMARKS } from '../src/content/countries/landmarks.generated.js';
+import { COUNTRY_LANDMARKS, LANDMARK_PHOTOS, LICENCES } from '../src/content/countries/landmarks.generated.js';
+import { FESTIVAL_PHOTOS, LICENCES as FESTIVAL_LICENCES } from '../src/content/countries/festivalPhotos.generated.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const COUNTRY_CONTENT_DIR = path.join(root, 'src', 'content', 'countries');
@@ -138,9 +139,38 @@ const INDEX_ID = 'virtual:country-index';
 const PAGE_PREFIX = 'virtual:country-page/';
 const RESOLVED = '\0';
 
+// A photo's credit entry ([width, height, author, licence's place, Commons file]) as the page
+// data's `photo` (utils/countries/guidePhotos.js reads it)
+const photoOf = (entry, licences) => {
+  if (!entry) return null;
+  const [width, height, author, licenceAt, file] = entry;
+  const [licence, licenceUrl] = licences[licenceAt] || ['', ''];
+  return { width, height, author, licence, licenceUrl, file };
+};
+
+// A festival's key, as images/src/tools/festival-photos.mjs makes it: "<code>-<name slug>"
+const festivalKey = (code, name) =>
+  `${code.toLowerCase()}-${String(name)
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')}`;
+
 const pageData = (content) => {
   const country = COUNTRY_BY_CODE[content.code];
-  return { ...content, name: country.name, landmarks: COUNTRY_LANDMARKS[content.code] ?? [] };
+  // Each landmark and festival with its photo (images/src/tools/landmark-photos.mjs and
+  // festival-photos.mjs), so the pre-rendered page has them
+  const landmarks = (COUNTRY_LANDMARKS[content.code] ?? []).map((landmark) => {
+    const photo = photoOf(LANDMARK_PHOTOS[landmark.slug], LICENCES);
+    return photo ? { ...landmark, photo } : landmark;
+  });
+  const festivals = (content.whenToGo.festivals || []).map((festival) => {
+    const key = festivalKey(content.code, festival.name);
+    const photo = photoOf(FESTIVAL_PHOTOS[key], FESTIVAL_LICENCES);
+    return { ...festival, key, ...(photo ? { photo } : {}) };
+  });
+  return { ...content, whenToGo: { ...content.whenToGo, festivals }, name: country.name, landmarks };
 };
 
 const indexRow = (content) => {

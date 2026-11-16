@@ -13,6 +13,7 @@
     "env:check:strict": "node scripts/check-env.mjs --strict",
     "media:cleanup": "node scripts/cleanup-orphan-uploads.mjs",
     "media:upload": "node scripts/upload-public-media.mjs",
+    "media:empty": "node scripts/empty-buckets.mjs",
     "db:reference": "node scripts/load-reference-data.mjs",
     "db:offers": "node scripts/load-offers.mjs"
   },

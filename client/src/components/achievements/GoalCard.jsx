@@ -1,4 +1,6 @@
 import React, { useId, useState } from 'react';
+// Hooks
+import useSplitUk from '@/hooks/useSplitUk';
 // Components
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
@@ -20,6 +22,8 @@ function GoalCard({ goal, onEdit, onDelete }) {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState(null);
   const state = goalState(goal);
+  // A region's countries as the map has them: the UK's nations on a map that splits it
+  const splitUk = useSplitUk();
   const toGo = state === 'reached' ? [] : goalStillToGo(goal, splitUk);
 
   const handleDelete = async () => {

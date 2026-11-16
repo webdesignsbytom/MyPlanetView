@@ -103,10 +103,9 @@ function CountryPanel({
   // ticket asks which nations that means (UkNationsPrompt) instead of offering a status
   const ukToPlace = splitUk && code === 'GB';
   const chooseNations = async (codes) => {
-    // The UK's note goes with it to each nation that has none
-    for (const nation of codes) {
-      await onSetVisit(nation, status, visit?.notes && !visitOf(nation)?.notes ? { notes: visit.notes } : undefined);
-    }
+    // The UK's note goes with it, to the first of them that has none
+    const noteTo = visit?.notes ? codes.find((nation) => !visitOf(nation)?.notes) : null;
+    for (const nation of codes) await onSetVisit(nation, status, nation === noteTo ? { notes: visit.notes } : undefined);
     await onSetVisit(code, null);
     onClose();
   };

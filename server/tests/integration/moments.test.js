@@ -18,6 +18,7 @@ const MOMENT_KEYS = [
   'landmark',
   'photos',
   'placeName',
+  'spot',
   'text',
   'title',
   'travellerIds',
@@ -334,6 +335,70 @@ describe('moments', () => {
 
     expect((await anon().get('/api/shared/NOT-A-CODE/moments')).status).toBe(404);
     await owner.agent.delete(`/api/moments/${secret.id}`);
+  });
+
+  it('pins a moment to a spot: editors always see it, viewers and share links only when it’s shared', async () => {
+    const SPOT = { latitude: 48.8584, longitude: 2.2945 };
+    const res = await create(owner, { ...base, title: 'Picnic under the tower', countryCode: 'FR', spot: SPOT });
+    expect(res.status).toBe(201);
+    const pinned = data(res).moment;
+    // Not shared unless asked
+    expect(pinned.spot).toEqual({ ...SPOT, shared: false });
+
+    const mapMoments = `/api/maps/${map.id}/moments`;
+    const seen = async (agent, url) => (await listFor(agent, url)).find((m) => m.id === pinned.id);
+    const pinsOn = async (agent, url) => data(await agent.get(url)).map.momentSpots.map((spot) => spot.id);
+    expect((await seen(editor.agent, mapMoments)).spot).toEqual({ ...SPOT, shared: false });
+    expect((await seen(viewer.agent, mapMoments)).spot).toBeNull();
+    expect(await pinsOn(owner.agent, `/api/maps/${map.id}`)).toContain(pinned.id);
+    expect(await pinsOn(viewer.agent, `/api/maps/${map.id}`)).not.toContain(pinned.id);
+
+    // Shared: everyone the map is shared with sees the exact spot, a share link too
+    expect((await owner.agent.patch(`/api/moments/${pinned.id}`).send({ spot: { ...SPOT, shared: true } })).status).toBe(200);
+    expect((await seen(viewer.agent, mapMoments)).spot).toEqual(SPOT);
+    expect(await pinsOn(viewer.agent, `/api/maps/${map.id}`)).toContain(pinned.id);
+    await owner.agent.patch(`/api/maps/${map.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' });
+    const code = data(await owner.agent.get(`/api/maps/${map.id}/sharing`)).shareCode;
+    expect((await seen(anon(), `/api/shared/${code}/moments`)).spot).toEqual(SPOT);
+    expect(data(await anon().get(`/api/shared/${code}`)).map.momentSpots.find((spot) => spot.id === pinned.id)).toEqual({
+      id: pinned.id,
+      kind: 'SAW_OR_DID',
+      title: 'Picnic under the tower',
+      countryCode: 'FR',
+      ...SPOT,
+    });
+
+    // A hidden moment's pin never reaches a viewer, shared or not
+    await owner.agent.patch(`/api/moments/${pinned.id}`).send({ hidden: true });
+    expect(await pinsOn(viewer.agent, `/api/maps/${map.id}`)).not.toContain(pinned.id);
+    expect(await pinsOn(owner.agent, `/api/maps/${map.id}`)).toContain(pinned.id);
+
+    // Taken off: nothing kept
+    expect(data(await owner.agent.patch(`/api/moments/${pinned.id}`).send({ spot: null })).moment.spot).toBeNull();
+    expect(await prisma.moment.findUnique({ where: { id: pinned.id }, select: { latitude: true, longitude: true, spotShared: true } })).toEqual({
+      latitude: null,
+      longitude: null,
+      spotShared: false,
+    });
+    await owner.agent.delete(`/api/moments/${pinned.id}`);
+  });
+
+  it('keeps a pin in the moment’s country', async () => {
+    const PARIS = { latitude: 48.8584, longitude: 2.2945 };
+    // Paris for an Italian moment, and a spot off the globe
+    const wrong = await create(owner, { ...base, spot: PARIS });
+    expect(wrong.status).toBe(400);
+    expect(wrong.body.message).toMatch(/isn't in the moment's country/);
+    expect((await create(owner, { ...base, spot: { latitude: 95, longitude: 0 } })).status).toBe(400);
+    expect((await create(owner, { ...base, spot: { ...PARIS, shared: 'yes' } })).status).toBe(400);
+
+    // Moving a pinned moment to another country needs its pin moved (or taken off) too
+    const rome = data(await create(owner, { ...base, spot: { latitude: 41.8902, longitude: 12.4922 } })).moment;
+    expect((await owner.agent.patch(`/api/moments/${rome.id}`).send({ countryCode: 'FR' })).status).toBe(400);
+    const moved = await owner.agent.patch(`/api/moments/${rome.id}`).send({ countryCode: 'FR', spot: PARIS });
+    expect(moved.status).toBe(200);
+    expect(data(moved).moment).toMatchObject({ countryCode: 'FR', spot: { ...PARIS, shared: false } });
+    await owner.agent.delete(`/api/moments/${rome.id}`);
   });
 
   it('lets go of a deleted photo, and of a deleted trip', async () => {

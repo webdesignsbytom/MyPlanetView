@@ -162,8 +162,9 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
             {editing || isVideo ? null : <PhotoThemeLine photo={photo} canEdit={canEdit && !locked && !shareCode} onChanged={applyChange} />}
 
             {canEdit && locked ? <VerifyFirstNote action='change or delete photos' /> : null}
+            {/* One to a row on a phone, so nothing runs off the side; in a row from sm up */}
             {canEdit && !editing ? (
-              <div className='grid grid-row-wrap gap-2'>
+              <div className='grid gap-2 sm:grid-row sm:justify-start'>
                 {locked ? null : (
                   <Button quiet onClick={() => setEditing(true)}>
                     Edit
@@ -180,7 +181,7 @@ function PhotoViewer({ photoId, shareCode, canEdit = false, locked = false, trip
                   </a>
                 ) : null}
                 {locked ? null : confirmingDelete ? (
-                  <span className='grid grid-row items-center gap-2 text-sm'>
+                  <span className='grid gap-2 text-sm sm:grid-row sm:items-center'>
                     Delete for good?
                     <Button danger busy={deleting} onClick={handleDelete}>
                       Yes, delete

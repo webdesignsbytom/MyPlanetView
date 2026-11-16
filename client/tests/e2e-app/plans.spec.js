@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, MOCK_STORE_KEY, makeJpeg, openMap, openTool, toolbar } from './fixtures.js';
+import { test, expect, HOME_MAP, MOCK_STORE_KEY, expectMapOpen, makeJpeg, openMap, openSwitcher, openTool, openUploader, pressTool } from './fixtures.js';
 
 // Paid plans (docs/API.md, "Plans and billing", "Map limits", "Transferring a map",
 // "Leaving") against mock mode, where Checkout applies at once and comes back to
@@ -6,7 +6,6 @@ import { test, expect, HOME_MAP, MOCK_STORE_KEY, makeJpeg, openMap, openTool, to
 // map, and owns one map, so one more fits; the mock badge's Plan and Extra maps change that.
 
 const planCard = (page) => page.getByRole('region', { name: 'Your plan' });
-const switchButton = (page, name) => page.getByRole('button', { name: `${name}. Switch map` });
 
 /** A mock badge dropdown (Plan, Extra maps paid): choosing reloads the page. */
 async function chooseInBadge(page, name, label) {
@@ -32,8 +31,8 @@ async function editStore(page, edit, arg) {
 
 /** A new map from the switcher; resolves once its page is open. */
 async function newMap(page, currentName, name) {
-  await switchButton(page, currentName).click();
-  const switcher = page.getByRole('dialog', { name: 'Your maps' });
+  await expectMapOpen(page, currentName);
+  const switcher = await openSwitcher(page);
   await switcher.getByRole('button', { name: 'New map' }).click();
   await switcher.getByText('Just me', { exact: true }).click();
   await switcher.getByRole('textbox', { name: 'Map name' }).fill(name);
@@ -102,7 +101,7 @@ test.describe('Plans', () => {
     await openMap(page);
     // The seed's extra map makes room for one
     await newMap(page, HOME_MAP, 'Road trips');
-    await expect(switchButton(page, 'Road trips')).toBeVisible();
+    await expectMapOpen(page, 'Road trips');
 
     // The next is refused (402): the dialog offers the plan's price, then makes it
     const switcher = await newMap(page, 'Road trips', 'Family');
@@ -111,14 +110,14 @@ test.describe('Plans', () => {
     await dialog.getByRole('button', { name: 'Pay £3.99 a month' }).click();
     await expect(dialog).toBeHidden();
     await expect(switcher).toBeHidden();
-    await expect(switchButton(page, 'Family')).toBeVisible();
+    await expectMapOpen(page, 'Family');
   });
 
   test('on Economy with no extra maps, a new map waits for Checkout and is made on the account page', async ({ page }) => {
     await openMap(page);
     await chooseInBadge(page, 'Plan', 'Economy');
     await chooseInBadge(page, 'Extra maps paid', '0');
-    await expect(switchButton(page, HOME_MAP)).toBeVisible();
+    await expectMapOpen(page, HOME_MAP);
 
     await newMap(page, HOME_MAP, 'Girls’ trips');
     const dialog = page.getByRole('dialog', { name: 'Pay for another map' });
@@ -129,19 +128,19 @@ test.describe('Plans', () => {
     const card = planCard(page);
     await expect(card.getByText('Your new map “Girls’ trips” is ready.')).toBeVisible();
     await card.getByRole('link', { name: 'Open it' }).click();
-    await expect(switchButton(page, 'Girls’ trips')).toBeVisible();
+    await expectMapOpen(page, 'Girls’ trips');
   });
 
   test('a map that isn’t paid for takes no photos, says why, and paying unlocks it', async ({ page }) => {
     await openMap(page);
     await newMap(page, HOME_MAP, 'Road trips');
-    await expect(switchButton(page, 'Road trips')).toBeVisible();
+    await expectMapOpen(page, 'Road trips');
     // No extra maps paid any more: the newer map is locked
     await chooseInBadge(page, 'Extra maps paid', '0');
 
     const banner = page.getByRole('region', { name: 'This map isn’t paid for' });
     await expect(banner).toBeVisible();
-    const upload = await openTool(page, 'Add photos', 'Add photos');
+    const upload = await openUploader(page);
     await expect(upload.getByText(/^This map isn’t paid for, so it can’t take new photos\./)).toBeVisible();
     await expect(upload.getByLabel(/choose photos/i)).toHaveCount(0);
     await upload.getByRole('button', { name: 'Close Add photos' }).click();
@@ -150,14 +149,14 @@ test.describe('Plans', () => {
     const dialog = page.getByRole('dialog', { name: 'Pay for this map' });
     await dialog.getByRole('button', { name: 'Pay £3.99 a month' }).click();
     await expect(banner).toHaveCount(0);
-    const unlocked = await openTool(page, 'Add photos', 'Add photos');
+    const unlocked = await openUploader(page);
     await expect(unlocked.getByLabel(/choose photos/i)).toBeAttached();
   });
 
   test('on Economy an upload keeps a print copy, not the original', async ({ page }) => {
     await openMap(page);
     await chooseInBadge(page, 'Plan', 'Economy');
-    const upload = await openTool(page, 'Add photos', 'Add photos');
+    const upload = await openUploader(page);
     await expect(upload.getByText('Economy keeps a print-quality copy (good up to A4). Business keeps your full-size originals.')).toBeVisible();
     await upload.getByRole('combobox', { name: 'Country for photos with no location' }).selectOption({ label: 'Germany' });
     await expect(upload.getByText('0 of 30 photos of Germany on this map.')).toBeVisible();
@@ -193,7 +192,7 @@ test.describe('Plans', () => {
       }
       db.subscriptions = [];
     });
-    await expect(switchButton(page, HOME_MAP)).toBeVisible();
+    await expectMapOpen(page, HOME_MAP);
 
     const list = await openTool(page, 'Country list', 'Countries');
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('france');
@@ -219,7 +218,7 @@ test.describe('Plans', () => {
 
   test('the owner makes an editor the owner and stays on as an editor', async ({ page }) => {
     await openMap(page);
-    await toolbar(page).getByRole('button', { name: 'Share this map', exact: true }).click();
+    await pressTool(page, 'Share this map');
     const share = page.getByRole('dialog', { name: `Share “${HOME_MAP}”` });
     await expect(share.getByRole('region', { name: 'People with access' })).toBeVisible();
 
@@ -235,11 +234,11 @@ test.describe('Plans', () => {
     await confirm.getByRole('button', { name: 'Make owner' }).click();
     await expect(share).toBeHidden();
     await expect(page).toHaveURL(/\/maps\/map-home$/);
-    await expect(page.getByText('Couple · Editor', { exact: true })).toBeVisible();
 
-    // The default map went with it, so the test user has a new one of their own
-    await switchButton(page, HOME_MAP).click();
-    const switcher = page.getByRole('dialog', { name: 'Your maps' });
+    // The default map went with it, so the test user has a new one of their own; this one
+    // is now Alex's, with the test user as its editor
+    await expectMapOpen(page, HOME_MAP);
+    const switcher = await openSwitcher(page);
     await expect(switcher.getByRole('link', { name: /^My map/ })).toBeVisible();
     await expect(switcher.getByRole('link', { name: /Editor, Alex Morgan’s map/ })).toBeVisible();
   });
@@ -252,7 +251,7 @@ test.describe('Plans', () => {
         db.mapMembers.push({ mapId: 'map-home', userId: `mock-extra-editor-${i}`, role: 'EDITOR', createdAt: new Date().toISOString() });
       }
     });
-    await toolbar(page).getByRole('button', { name: 'Share this map', exact: true }).click();
+    await pressTool(page, 'Share this map');
     const share = page.getByRole('dialog', { name: `Share “${HOME_MAP}”` });
     await share.getByRole('combobox', { name: 'Role for Sam Rivers' }).selectOption('Editor');
     await expect(share.getByRole('alert')).toHaveText('A map can have up to 10 editors.');

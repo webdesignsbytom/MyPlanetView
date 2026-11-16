@@ -8,7 +8,7 @@ Started 16 Nov 2026.
 
 **What this is:** the second batch of public country guides, written as drafts on 16 Nov in the same format as the first 20 (which you passed and are now published): United Kingdom, Belgium, Austria, Czechia, Poland, Hungary, Denmark, Norway, Sweden, Finland, Malta, Cyprus, India, Indonesia, South Korea, China, South Africa, Kenya, Brazil and Argentina (the popular countries that already have a poster). They're hidden from the live site until you pass them.
 
-**What you do:** run `npm run dev` in `client/`, open `/countries/<name>` (e.g. `/countries/united-kingdom`) and read each as a traveller would. Drafts show a "Draft, not published" banner.
+**What you do:** run `npm run dev` in `client/`, open `/countries/<name>` (e.g. `/countries/united-kingdom`) and read each as a traveller would.
 
 **What to tell Claude:** which ones you pass (it sets `"status": "checked"` and the date), and any fact you know is wrong.
 
