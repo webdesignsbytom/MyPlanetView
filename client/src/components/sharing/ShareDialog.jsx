@@ -30,6 +30,8 @@ import RemoveAccessDialog from './RemoveAccessDialog';
 // Utils
 import { ROLE_LABELS } from '@/utils/sharing/shareRoles';
 import { forgetMapLists } from '@/utils/map/mapListCache';
+import { inFlight, recall, remember } from '@/utils/data/panelCache';
+import { sharingKey } from '@/utils/sharing/sharingCache';
 
 // Sharing a map or a trip, Google Docs style. The owner adds people by email as viewer or
 // editor, changes or removes them, cancels invites, and sets general access. Anyone else
@@ -45,7 +47,10 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
   const { user } = useAuth();
   const isOwner = role === 'OWNER';
   const mustVerifyEmail = user?.emailVerified === false;
-  const [sharing, setSharing] = useState(null);
+  // The settings the map page fetched once the map drew, or this dialog last saw, show at
+  // once (17 Nov 2026); a fresh copy replaces them as soon as it arrives
+  const cacheKey = sharingKey(resource, id);
+  const [sharing, setSharing] = useState(() => (isOwner ? recall(cacheKey) : null));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
@@ -63,17 +68,23 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
     onTransferred({ stayed: stayAsEditor, map });
   };
 
-  const load = useCallback(async () => {
-    try {
-      setSharing(await getSharing(resource, id));
-    } catch (err) {
-      setError(err.friendlyMessage || 'Sharing settings could not be loaded.');
-    }
-  }, [resource, id]);
+  // `quiet`: a refresh behind settings already on screen, whose failure changes nothing
+  const load = useCallback(
+    async (quiet = false) => {
+      try {
+        const fresh = await (inFlight(cacheKey) || getSharing(resource, id));
+        remember(cacheKey, fresh);
+        setSharing(fresh);
+      } catch (err) {
+        if (!quiet) setError(err.friendlyMessage || 'Sharing settings could not be loaded.');
+      }
+    },
+    [resource, id, cacheKey],
+  );
 
   useEffect(() => {
-    if (isOwner) load();
-  }, [isOwner, load]);
+    if (isOwner) load(Boolean(recall(cacheKey)));
+  }, [isOwner, load, cacheKey]);
 
   const run = async (action, doneMessage) => {
     setBusy(true);

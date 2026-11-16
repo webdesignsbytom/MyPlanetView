@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 // Api
 import { getPhoto, getPhotoPage, movePhoto as movePhotoRequest } from '@/api/travelApi';
+// Utils
+import { inFlight, prefetch, recall, remember } from '@/utils/data/panelCache';
 
 // The list with `photoId` moved to straight after `afterId` (first when it's null)
 const placeAfter = (list, photoId, afterId) => {
@@ -11,10 +13,6 @@ const placeAfter = (list, photoId, afterId) => {
   return [...rest.slice(0, at), moving, ...rest.slice(at)];
 };
 
-// First pages asked for before their list mounted (MapPage starts the map's lists alongside
-// the map itself). Each is taken once, by the first list with the same filters, while fresh.
-const preloaded = new Map();
-const PRELOAD_FRESH_MS = 30000;
 // Videos Cloudflare is still converting (editors only; docs/API.md "Videos"): each is
 // asked about again (the server then asks Stream) after these waits, then every last one,
 // for as long as the list is open and the tab is showing, up to VIDEO_CHECK_FOR_MS.
@@ -27,22 +25,18 @@ const isProcessingVideo = (photo) => photo.kind === 'VIDEO' && photo.videoState 
 const keyOf = ({ mapId, tripId, shareCode, country, unplaced = false, limit = 30, display = false }) =>
   JSON.stringify([mapId || null, tripId || null, shareCode || null, country || null, Boolean(unplaced), limit, Boolean(display)]);
 
-/** Start fetching a list's first page now; the usePhotoPage with the same filters uses it. */
-export function preloadPhotoPage(filters) {
-  const key = keyOf(filters);
-  const hit = preloaded.get(key);
-  if (hit && Date.now() - hit.at < PRELOAD_FRESH_MS) return;
-  const promise = getPhotoPage({ ...filters, cursor: undefined });
-  promise.catch(() => {}); // a failure is reported by the list, when it asks
-  preloaded.set(key, { promise, at: Date.now() });
-}
+// A list's place in the panel cache (utils/data/panelCache.js): the photos it had and where
+// its next page starts, kept as the list changes, so it opens again at once
+const cacheKey = (filters) => `photos:${keyOf(filters)}`;
+const asList = (page) => ({ photos: page.photos || [], nextCursor: page.nextCursor || null });
 
-function takePreloaded(filters) {
-  const key = keyOf(filters);
-  const hit = preloaded.get(key);
-  if (!hit) return null;
-  preloaded.delete(key);
-  return Date.now() - hit.at < PRELOAD_FRESH_MS ? hit.promise : null;
+/**
+ * Start fetching a list's first page now and keep it (the map page, alongside the map and
+ * once it has drawn; a country hovered): the usePhotoPage with the same filters shows it at
+ * once, or waits for it if it's still on its way.
+ */
+export function preloadPhotoPage(filters) {
+  prefetch(cacheKey(filters), () => getPhotoPage({ ...filters, cursor: undefined }), asList);
 }
 
 /**
@@ -60,46 +54,71 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, unplac
   const [error, setError] = useState(null);
   // Bumped on every reset, so a slow reply for old filters is dropped
   const generationRef = useRef(0);
+  // Whether the list on screen is a real one (fetched, or kept from before), worth keeping
+  const readyRef = useRef(false);
 
+  // `quiet`: a fresh first page behind a kept list already on screen, with no spinner and
+  // no error (the kept list stays if it fails)
   const fetchPage = useCallback(
-    async (cursor) => {
+    async (cursor, quiet = false) => {
       const generation = generationRef.current;
-      setLoading(true);
-      setError(null);
+      if (!quiet) {
+        setLoading(true);
+        setError(null);
+      }
       try {
         const filters = { mapId, tripId, shareCode, country, unplaced, limit, display };
-        const page = await ((!cursor && takePreloaded(filters)) || getPhotoPage({ ...filters, cursor }));
+        const page = await ((!cursor && inFlight(cacheKey(filters))) || getPhotoPage({ ...filters, cursor }));
         if (generation !== generationRef.current) return;
+        readyRef.current = true;
         setPhotos((prev) => (cursor ? [...prev, ...(page.photos || [])] : page.photos || []));
         setNextCursor(page.nextCursor || null);
       } catch (err) {
-        if (generation === generationRef.current) setError(err.friendlyMessage || 'Photos could not be loaded.');
+        if (!quiet && generation === generationRef.current) setError(err.friendlyMessage || 'Photos could not be loaded.');
       } finally {
-        if (generation === generationRef.current) setLoading(false);
+        if (!quiet && generation === generationRef.current) setLoading(false);
       }
     },
     [mapId, tripId, shareCode, country, unplaced, limit, display],
   );
 
-  // Which list is on screen. Loading the same one again (after a change in the viewer, say)
-  // keeps it there until the new page arrives, so its thumbnails stay mounted and the one
-  // the viewer was opened from can take focus back; other filters start from an empty list.
+  // Which list is on screen. A list kept from before (panelCache) shows at once while a fresh
+  // first page loads quietly behind it. Without one, loading the same list again (after a
+  // change in the viewer, say) keeps it there until the new page arrives, so its thumbnails
+  // stay mounted and the one the viewer was opened from can take focus back; other filters
+  // start from an empty list.
   const listKeyRef = useRef(null);
   const reload = useCallback(() => {
     generationRef.current += 1;
-    const key = enabled ? keyOf({ mapId, tripId, shareCode, country, unplaced, limit, display }) : null;
-    if (key === null || key !== listKeyRef.current) setPhotos([]);
+    const filters = { mapId, tripId, shareCode, country, unplaced, limit, display };
+    const key = enabled ? keyOf(filters) : null;
+    const kept = enabled ? recall(cacheKey(filters)) : null;
+    if (kept) {
+      setPhotos(kept.photos);
+      setNextCursor(kept.nextCursor);
+    } else {
+      if (key === null || key !== listKeyRef.current) setPhotos([]);
+      setNextCursor(null);
+    }
     listKeyRef.current = key;
-    setNextCursor(null);
-    if (enabled) fetchPage(null);
+    readyRef.current = Boolean(kept);
+    if (enabled) fetchPage(null, Boolean(kept));
   }, [enabled, fetchPage, mapId, tripId, shareCode, country, unplaced, limit, display]);
 
   useEffect(() => {
     reload();
   }, [reload]);
 
+  // The list as it stands goes into the panel cache: after a page, a move, an edit, a delete
+  useEffect(() => {
+    if (readyRef.current && listKeyRef.current) remember(`photos:${listKeyRef.current}`, { photos, nextCursor });
+  }, [photos, nextCursor]);
+
+  // A quiet refresh still on its way is dropped: it would replace the pages added here
   const loadMore = useCallback(() => {
-    if (nextCursor && !loading) fetchPage(nextCursor);
+    if (!nextCursor || loading) return;
+    generationRef.current += 1;
+    fetchPage(nextCursor);
   }, [nextCursor, loading, fetchPage]);
 
   // Keep the list in step after a change in the viewer, without a refetch
