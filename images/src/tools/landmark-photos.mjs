@@ -170,9 +170,10 @@ async function loadStore(name) {
 // ---------------------------------------------------------------------------------------
 // Wikidata: images, aerial views and English Wikipedia articles
 
-async function wikidataFacts(items) {
-  const facts = new Map(items.map((item) => [item, { images: [], aerial: [], article: null }]));
-  for (const batch of chunks(items, 250)) {
+async function wikidataFacts(items, store) {
+  const asked = items.filter((item) => !(item in store.data));
+  for (const batch of chunks(asked, 250)) {
+    const facts = new Map(batch.map((item) => [item, { images: [], aerial: [], article: null }]));
     const query = `SELECT ?item ?image ?aerial ?article WHERE {
       VALUES ?item { ${batch.map((q) => `wd:${q}`).join(' ')} }
       OPTIONAL { ?item wdt:P18 ?image }
@@ -193,15 +194,17 @@ async function wikidataFacts(items) {
       if (aerial && !fact.aerial.includes(aerial)) fact.aerial.push(aerial);
       if (row.article) fact.article = decodeURIComponent(row.article.value.split('/wiki/')[1]).replace(/_/g, ' ');
     }
+    for (const [item, fact] of facts) store.data[item] = fact;
+    await store.save();
     await wait(500);
   }
-  return facts;
+  return new Map(items.map((item) => [item, store.data[item]]));
 }
 
 // English Wikipedia's lead image per article (free licences only)
-async function leadImages(titles) {
-  const found = new Map();
-  for (const batch of chunks(titles, 50)) {
+async function leadImages(titles, store) {
+  const asked = titles.filter((title) => !(title in store.data));
+  for (const batch of chunks(asked, 50)) {
     const url = `https://en.wikipedia.org/w/api.php?${new URLSearchParams({
       action: 'query',
       prop: 'pageimages',
@@ -220,19 +223,21 @@ async function leadImages(titles) {
       let at = title;
       for (let hops = 0; renamed.has(at) && hops < 3; hops += 1) at = renamed.get(at);
       const image = byTitle.get(at);
-      if (image) found.set(title, image.replace(/_/g, ' '));
+      store.data[title] = image ? image.replace(/_/g, ' ') : null;
     }
+    await store.save();
     await wait(300);
   }
-  return found;
+  return new Map(titles.filter((title) => store.data[title]).map((title) => [title, store.data[title]]));
 }
 
 // ---------------------------------------------------------------------------------------
 // Commons: type, size, licence, author and a thumbnail URL per file
 
-async function fileInfo(files) {
-  const info = new Map();
-  for (const batch of chunks(files, 50)) {
+async function fileInfo(files, store) {
+  const asked = files.filter((file) => !(file in store.data));
+  let done = 0;
+  for (const batch of chunks(asked, 50)) {
     const url = `https://commons.wikimedia.org/w/api.php?${new URLSearchParams({
       action: 'query',
       prop: 'imageinfo',
@@ -250,10 +255,13 @@ async function fileInfo(files) {
       const title = renamed.get(`File:${file}`) || `File:${file}`;
       const page = byTitle.get(title);
       const ii = page && !page.missing && page.imageinfo?.[0];
-      if (!ii) continue;
+      if (!ii) {
+        store.data[file] = null;
+        continue;
+      }
       const meta = ii.extmetadata || {};
       const author = plainText(meta.Artist?.value) || plainText(meta.Credit?.value) || 'Unknown author';
-      info.set(file, {
+      store.data[file] = {
         file: title.replace(/^File:/, ''),
         mime: ii.mime,
         width: ii.width,
@@ -262,11 +270,14 @@ async function fileInfo(files) {
         licence: plainText(meta.LicenseShortName?.value),
         licenceUrl: (meta.LicenseUrl?.value || '').replace(/^http:/, 'https:'),
         author: shorten(author),
-      });
+      };
     }
+    await store.save();
+    done += batch.length;
+    if (done % 500 < 50) console.log(`  ${done} of ${asked.length} files checked`);
     await wait(300);
   }
-  return info;
+  return new Map(files.filter((file) => store.data[file]).map((file) => [file, store.data[file]]));
 }
 
 const usable = (info) =>
