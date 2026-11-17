@@ -270,16 +270,16 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
 
       {/* The page list between the two buttons, in one row on every screen; on phones the
           buttons are arrows alone (17 Nov 2026, the user's wish), named "Previous page" and
-          "Next page" all the same */}
+          "Next page" all the same, and as tall as the list (items-stretch) */}
       <nav
         aria-label='Passport pages'
-        className='paper-aged paper-fields ticket-edge grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-3 py-3 text-poster-ink sm:px-4'
+        className='paper-aged paper-fields ticket-edge grid grid-cols-[auto_minmax(0,1fr)_auto] items-stretch gap-3 rounded-lg px-3 py-3 text-poster-ink sm:px-4'
       >
         <Button quiet onClick={() => go(at - 1)} disabled={at === 0}>
           <IoChevronBack aria-hidden='true' />
           <span className='sr-only sm:not-sr-only'>Previous page</span>
         </Button>
-        <div className='grid justify-items-center'>
+        <div className='grid content-center justify-items-center'>
           <PlainOptionSelect
             id={pageListId}
             ariaLabel='Go to a page'

@@ -130,7 +130,8 @@ export const BETTER_AUTH_RATE_LIMIT = {
   max: 100,
 };
 
-// better-auth routes that send email: 5 per 15 minutes per IP
+// better-auth routes that send email (password reset, verification, sign-up, change-email):
+// 5 per 15 minutes per IP
 export const AUTH_EMAIL_RATE_LIMIT = {
   windowSeconds: 15 * 60,
   max: 5,

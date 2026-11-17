@@ -154,14 +154,19 @@ export function photoSizesProblem(sizes, planId) {
 }
 
 /** One more photo (or, with kind 'VIDEO', video) of `countryCode` on the map: null, or the 409 message. */
+// "of France", or "with no country": the photos with no country are one gallery under the
+// same cap (the server's countryFullMessage, 17 Nov 2026)
+const ofPlace = (countryCode) => (countryCode ? `of ${countryName(countryCode)}` : 'with no country');
+const countIn = (mapId, countryCode, kind) =>
+  getDb().photos.filter((p) => p.mapId === mapId && (p.countryCode || null) === (countryCode || null) && kindOf(p) === kind).length;
+
 export function countryCapProblem(map, countryCode, kind = 'PHOTO') {
-  if (!countryCode) return null;
   if (kind === 'VIDEO') return videoCapProblem(map, countryCode);
   const planId = mapPlanId(map);
   const cap = planOf(planId).limits.photosPerCountry;
-  const count = photoCounts(map.id)[countryCode] || 0;
+  const count = countIn(map.id, countryCode, 'PHOTO');
   if (count + 1 <= cap) return null;
-  return `${number(Math.min(count, cap))} of ${number(cap)} photos of ${countryName(countryCode)} on this map.${isTopPlan(planId) ? '' : ' Upgrade to add more.'}`;
+  return `${number(Math.min(count, cap))} of ${number(cap)} photos ${ofPlace(countryCode)} on this map.${isTopPlan(planId) ? '' : ' Upgrade to add more.'}`;
 }
 
 // Videos (server utils/planLimits.js VIDEO_MESSAGES, checkVideoAllowed, checkVideoCap)
@@ -178,9 +183,9 @@ export const videoNotAllowed = (map) => (planOf(mapPlanId(map)).limits.videos ? 
 /** One more video of `countryCode`: null, or "20 of 20 videos of Italy on this map." */
 function videoCapProblem(map, countryCode) {
   const cap = planOf(mapPlanId(map)).limits.videosPerCountry;
-  const count = videoCounts(map.id)[countryCode] || 0;
+  const count = countIn(map.id, countryCode, 'VIDEO');
   if (count + 1 <= cap) return null;
-  return `${number(Math.min(count, cap))} of ${number(cap)} videos of ${countryName(countryCode)} on this map.`;
+  return `${number(Math.min(count, cap))} of ${number(cap)} videos ${ofPlace(countryCode)} on this map.`;
 }
 
 export const PEOPLE_CAP_MESSAGES = {

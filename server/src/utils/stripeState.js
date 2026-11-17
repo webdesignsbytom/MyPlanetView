@@ -64,4 +64,14 @@ export function shouldApplySubscriptionEvent(row, sub, { deleted = false } = {})
   return true;
 }
 
+/**
+ * Is `sub` a second live subscription for an account whose row already tracks another live
+ * one? (Two Checkouts completed at once.) Never for the tracked one, an ended one, or one
+ * the row hasn't got a live subscription beside.
+ */
+export function isDuplicateSubscription(row, sub, { deleted = false } = {}) {
+  if (!row?.stripeSubscriptionId || row.stripeSubscriptionId === sub?.id) return false;
+  return hasLiveSubscription(row) && !deleted && !isEndedStatus(sub?.status);
+}
+
 export { idOf as stripeIdOf };

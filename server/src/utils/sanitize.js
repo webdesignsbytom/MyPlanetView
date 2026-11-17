@@ -31,6 +31,8 @@ export function sanitizeEmail(value, { maxLength = 320 } = {}) {
 // An address we may write to (e.g. a reply-to): one local part, one @, a dotted
 // domain, and none of the characters that would quote or split it in a mail header
 const EMAIL_ADDRESS = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:".]+$/;
+// Control characters are what it looks for
+// eslint-disable-next-line no-control-regex
 const ANY_CONTROL_CHAR = new RegExp('[\\u0000-\\u001F\\u007F]');
 export const EMAIL_MAX_LENGTH = 254;
 

@@ -6,6 +6,7 @@ import { prisma } from './prisma.js';
 import { FRONTEND_ORIGINS } from './utils/config.js';
 import {
   BusinessName,
+  BusinessSiteUrl,
   BusinessUrl,
   LogoUrl,
   UserEmailVerificationUrl,
@@ -40,7 +41,7 @@ import {
   releaseTravelDataForDeletedUser,
 } from './services/travel/accounts.js';
 // Promo codes: checked before sign-up, recorded after (a code for life gives its membership then)
-import { recordSignUpPromoCode, usablePromoCode } from './services/billing/promo.js';
+import { giveLifetimePlan, recordSignUpPromoCode, usablePromoCode } from './services/billing/promo.js';
 import { endSubscriptionOfDeletedAccount } from './services/billing/subscriptions.js';
 // Responses
 import { EVENT_MESSAGES } from './utils/responses/responses.js';
@@ -213,9 +214,14 @@ export const auth = betterAuth({
     modelName: 'authRateLimit',
     window: BETTER_AUTH_RATE_LIMIT.windowSeconds,
     max: BETTER_AUTH_RATE_LIMIT.max,
+    // Every route that emails someone (17 Nov 2026, the audit: sign-up and change-email had
+    // only the 3 per 10 s rule, so the site could be made to mail strangers, and sign-up
+    // answered a promo code's check faster than its own limit)
     customRules: {
       '/request-password-reset': EMAIL_SEND_RATE_LIMIT,
       '/send-verification-email': EMAIL_SEND_RATE_LIMIT,
+      '/sign-up/email': EMAIL_SEND_RATE_LIMIT,
+      '/change-email': EMAIL_SEND_RATE_LIMIT,
     },
   },
 
@@ -249,6 +255,7 @@ export const auth = betterAuth({
           resetUrl,
           expiryTime: formatExpiry(RESET_PASSWORD_EXPIRES_IN_SECONDS),
           businessUrl: BusinessUrl,
+          businessSiteUrl: BusinessSiteUrl,
           businessName: BusinessName,
           logoUrl: LogoUrl,
           year: new Date().getFullYear(),
@@ -277,6 +284,7 @@ export const auth = betterAuth({
           confirmationUrl,
           expiryTime: formatExpiry(EMAIL_VERIFICATION_EXPIRES_IN_SECONDS),
           businessUrl: BusinessUrl,
+          businessSiteUrl: BusinessSiteUrl,
           businessName: BusinessName,
           logoUrl: LogoUrl,
           year: new Date().getFullYear(),
@@ -319,6 +327,7 @@ export const auth = betterAuth({
             confirmationUrl,
             expiryTime: formatExpiry(EMAIL_VERIFICATION_EXPIRES_IN_SECONDS),
             businessUrl: BusinessUrl,
+            businessSiteUrl: BusinessSiteUrl,
             businessName: BusinessName,
             logoUrl: LogoUrl,
             year: new Date().getFullYear(),
@@ -355,13 +364,15 @@ export const auth = betterAuth({
       },
       update: {
         before: async (data) => ('image' in data ? { data: { image: undefined } } : undefined),
-        // A newly verified address picks up any maps or trips shared with it (once each).
-        // A promo code's free month comes later, with the first paid Checkout.
+        // A newly verified address picks up any maps or trips shared with it (once each),
+        // and the plan for life of a code it signed up with (once). A promo code's free
+        // month comes later, with the first paid Checkout.
         after: async (user) => {
           if (!user?.emailVerified) return;
           await acceptInvitesForVerifiedUser(user).catch((err) =>
             console.error('[AUTH] invite conversion failed:', err.message)
           );
+          await giveLifetimePlan(user.id).catch((err) => console.error('[AUTH] promo plan not given:', err.message));
         },
       },
     },
@@ -381,6 +392,12 @@ export const auth = betterAuth({
   hooks: { before: beforeHook, after: auditAfterHook },
 
   advanced: {
+    // UUIDs for its users, sessions, accounts and verifications, as every other table has
+    // (17 Nov 2026, the user's wish). On Postgres better-auth then sends no id and Prisma's
+    // @default(uuid()) in schema.prisma makes it; other adapters (the tests' memory one)
+    // get crypto.randomUUID() from better-auth.
+    database: { generateId: 'uuid' },
+
     // __Secure- cookie names need the Secure flag, so production only
     useSecureCookies: isProd,
 

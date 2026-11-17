@@ -55,20 +55,27 @@ export const listPromoCodesWithCounts = async () => {
   }));
 };
 
-/** Record the code an account signed up with (creating its Profile row if it's missing). */
-export const setProfilePromoCode = (userId, promoCodeId) =>
-  prisma.profile.upsert({
-    where: { userId },
-    update: { promoCodeId },
-    create: { userId, promoCodeId },
-    select: { promoCodeId: true },
+/**
+ * Claim a code for a new account, in one transaction with the code's row locked, so
+ * sign-ups at the same moment can't take it past its limit (17 Nov 2026, the audit): it's
+ * checked again inside (`usable`, utils/promoCodes.js promoCodeUsable) with the uses counted
+ * under the lock, then recorded on the profile. -> the code, or null when it can't be used now
+ */
+export const claimPromoCodeInDB = ({ userId, promoCodeId, usable }) =>
+  prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT 1 FROM "promo_code" WHERE "id" = ${promoCodeId} FOR UPDATE`;
+    const promo = await tx.promoCode.findUnique({ where: { id: promoCodeId }, select: PROMO_SELECT });
+    const uses = await tx.profile.count({ where: { promoCodeId } });
+    if (!usable(promo, uses)) return null;
+    await tx.profile.upsert({ where: { userId }, update: { promoCodeId }, create: { userId, promoCodeId } });
+    return promo;
   });
 
 /** The code an account signed up with, and when its free month started (null: not yet). */
 export const findProfilePromo = (userId) =>
   prisma.profile.findUnique({
     where: { userId },
-    select: { promoTrialUsedAt: true, promoCode: { select: { code: true, freePlan: true } } },
+    select: { promoTrialUsedAt: true, promoCode: { select: { code: true, freePlan: true, createdById: true } } },
   });
 
 /**

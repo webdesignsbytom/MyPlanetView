@@ -359,8 +359,20 @@ export const upsertMapMember = (mapId, userId, role) =>
     select: MEMBER_SELECT,
   });
 
-export const deleteMapMember = (mapId, userId) =>
-  prisma.mapMember.deleteMany({ where: { mapId, userId } });
+/**
+ * Someone leaves a map, or is removed from it: their MapMember row goes, and so do the links
+ * they added to its trips on their own maps ("Add to my map"), unless they're on that trip
+ * themselves (a TripMember), which keeps it theirs to open (17 Nov 2026, the audit: the
+ * trips stayed on their maps, and kept marking visits there). The visits already marked
+ * stay. One transaction. -> `{ count }` (member rows removed)
+ */
+export const deleteMapMember = async (mapId, userId) => {
+  const [, member] = await prisma.$transaction([
+    prisma.tripMap.deleteMany({ where: { addedById: userId, trip: { mapId, members: { none: { userId } } } } }),
+    prisma.mapMember.deleteMany({ where: { mapId, userId } }),
+  ]);
+  return member;
+};
 
 // Transferring a map, and account deletion
 

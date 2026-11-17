@@ -46,6 +46,9 @@ export const deleteThemeInDB = (id) => prisma.photoTheme.delete({ where: { id } 
 
 export const countThemeEntries = (themeId) => prisma.photoThemeEntry.count({ where: { themeId } });
 
+/** How many maps have a photo in the theme (the admin row's "on N maps"). */
+export const countThemeMaps = async (themeId) => (await prisma.photoThemeEntry.groupBy({ by: ['mapId'], where: { themeId } })).length;
+
 // Entries
 
 /**

@@ -26,6 +26,10 @@ const grantsInForce = (now) => ({ startsAt: { lte: now }, endsAt: { gt: now } })
  * A user's plan inputs: their subscription, grants in force and owned maps, read side by
  * side. -> `{ subscription, grants, maps }`
  */
+/** A map's grace date from an earlier transfer (null when it never had one). */
+export const findMapGraceUntil = async (mapId) =>
+  (await prisma.travelMap.findUnique({ where: { id: mapId }, select: { graceUntil: true } }))?.graceUntil ?? null;
+
 export const findPlanInputsForUser = async (userId, now = new Date()) => {
   const [subscription, grants, maps] = await Promise.all([
     prisma.subscription.findUnique({ where: { userId }, select: SUBSCRIPTION_SELECT }),
@@ -81,6 +85,9 @@ export const findGrantsForUser = (userId) =>
   prisma.planGrant.findMany({ where: { userId }, select: GRANT_SELECT, orderBy: { createdAt: 'desc' } });
 
 export const createGrantInDB = (data) => prisma.planGrant.create({ data, select: GRANT_SELECT });
+
+/** A grant of the account's with this reason (a promo code's plan for life), or null. */
+export const findGrantByReason = (userId, reason) => prisma.planGrant.findFirst({ where: { userId, reason }, select: { id: true } });
 
 export const findGrant = (grantId) => prisma.planGrant.findUnique({ where: { id: grantId }, select: { ...GRANT_SELECT, userId: true } });
 

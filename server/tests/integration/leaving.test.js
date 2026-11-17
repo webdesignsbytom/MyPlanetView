@@ -38,8 +38,8 @@ describe('leaving options and plan', () => {
           id: s.shared.id,
           name: 'My map',
           members: [
-            { userId: s.viewer.user.id, name: 'ListerViewer', role: 'VIEWER' },
-            { userId: s.editor.user.id, name: 'ListerEditor', role: 'EDITOR' },
+            { userId: s.viewer.user.id, name: 'ListerViewer', role: 'VIEWER', isActive: true },
+            { userId: s.editor.user.id, name: 'ListerEditor', role: 'EDITOR', isActive: true },
           ],
         },
         { id: s.solo.id, name: 'Solo', members: [] },

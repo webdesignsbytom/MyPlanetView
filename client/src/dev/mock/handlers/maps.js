@@ -93,14 +93,27 @@ const hasPole = (traveller) => TRAVELLER_COUNTRY_FIELDS.some((field) => isPole(c
 const findMap = (id) => getDb().maps.find((m) => m.id === id) || null;
 const cleanText = (value, max) => (typeof value === 'string' && value.trim() ? value.trim().slice(0, max) : null);
 const cleanCountry = (code) => (typeof code === 'string' && countryExists(code.toUpperCase()) ? code.toUpperCase() : null);
+// As the server (EVENT_MESSAGES.countryNotFound, visitNotFound, tooManyTravellers; MAX_TRAVELLERS)
+const COUNTRY_NOT_FOUND = "That country isn't on the map.";
+const VISIT_NOT_FOUND = "That country isn't marked on this map.";
+const MAX_TRAVELLERS = 20;
+const TOO_MANY_TRAVELLERS = 'A map can have up to 20 travellers.';
+// A traveller's places are countries, as on the server: a UK nation (a birth moment in
+// Scotland) is the UK. Empty or null clears it; anything not a place is the server's 400.
+const travellerCountry = (value) =>
+  value === null || value === '' ? { value: null } : cleanCountry(value) ? { value: placeOnMap(cleanCountry(value), false) } : { error: COUNTRY_NOT_FOUND };
 
-// -> { fields } or { error } (a pole as a birth or favourite place: 400)
+// -> { fields } or { error } (a pole as a birth or favourite place, or no such place: 400)
 function travellerFields(body) {
   const out = {};
   if (body.name !== undefined) out.name = cleanText(body.name, 60);
+  for (const field of TRAVELLER_COUNTRY_FIELDS) {
+    if (body[field] === undefined) continue;
+    const place = travellerCountry(body[field]);
+    if (place.error) return { error: place.error };
+    out[field] = place.value;
+  }
   if (hasPole(body)) return { error: POLE_NOT_A_HOME };
-  if (body.birthCountryCode !== undefined) out.birthCountryCode = cleanCountry(body.birthCountryCode);
-  if (body.favouriteCountryCode !== undefined) out.favouriteCountryCode = cleanCountry(body.favouriteCountryCode);
   if (body.position !== undefined && Number.isInteger(body.position)) out.position = body.position;
   return { fields: out };
 }
@@ -112,7 +125,7 @@ export function createMapRecord({ name, groupType, isDefault = false, travellers
   db.maps.push(map);
   const list = travellers.length ? travellers : [{ name: owner.name.split(' ')[0] || 'Me' }];
   list.forEach((t, i) => {
-    db.travellers.push({ id: newId(), mapId: map.id, name: cleanText(t.name, 60) || `Traveller ${i + 1}`, position: i, userId: i === 0 ? owner.id : null, birthCountryCode: cleanCountry(t.birthCountryCode), favouriteCountryCode: cleanCountry(t.favouriteCountryCode) });
+    db.travellers.push({ id: newId(), mapId: map.id, name: cleanText(t.name, 60) || `Traveller ${i + 1}`, position: i, userId: i === 0 ? owner.id : null, birthCountryCode: travellerCountry(t.birthCountryCode ?? null).value ?? null, favouriteCountryCode: travellerCountry(t.favouriteCountryCode ?? null).value ?? null });
   });
   return map;
 }
@@ -165,6 +178,10 @@ export function registerMapRoutes() {
     if (!name) return fail(400, 'Give the map a name.');
     if (!GROUP_TYPES.includes(body.groupType)) return fail(400, 'Choose solo, couple or family.');
     const travellers = Array.isArray(body.travellers) ? body.travellers : [];
+    if (travellers.length > MAX_TRAVELLERS) return fail(400, TOO_MANY_TRAVELLERS);
+    for (const t of travellers) {
+      for (const field of TRAVELLER_COUNTRY_FIELDS) if (t?.[field] != null && travellerCountry(t[field]).error) return fail(400, COUNTRY_NOT_FOUND);
+    }
     if (travellers.some(hasPole)) return fail(400, POLE_NOT_A_HOME);
     // The body first, then a free map slot (402 with the extra map's price on the plan)
     if (!mapSlots(me().id).canCreate) return fail(402, mapSlotsMessage(effectivePlan(me().id).plan));
@@ -282,6 +299,7 @@ export function registerMapRoutes() {
     const { fields, error } = travellerFields(body);
     if (error) return fail(400, error);
     if (!fields.name) return fail(400, 'Add the traveller’s name.');
+    if (db.travellers.filter((t) => t.mapId === map.id).length >= MAX_TRAVELLERS) return fail(400, TOO_MANY_TRAVELLERS);
     const position = fields.position ?? db.travellers.filter((t) => t.mapId === map.id).length;
     const traveller = { id: newId(), mapId: map.id, userId: null, birthCountryCode: null, favouriteCountryCode: null, ...fields, position };
     db.travellers.push(traveller);
@@ -330,7 +348,7 @@ export function registerMapRoutes() {
     const denied = deny(mapRole(map), 'EDITOR', NOT_FOUND);
     if (denied) return denied;
     const code = cleanCountry(params.countryCode);
-    if (!code) return fail(400, 'Unknown country.');
+    if (!code) return fail(404, COUNTRY_NOT_FOUND);
     // A UK nation is a place only on a map that splits the UK (the server's 404)
     if (isUkNation(code) && !map.splitUk) return fail(404, "That country isn't on the map.");
     if (!VISIT_STATUSES.includes(body.status)) return fail(400, 'Choose visited, lived there or want to go.');
@@ -357,7 +375,9 @@ export function registerMapRoutes() {
     const map = findMap(params.mapId);
     const denied = deny(mapRole(map), 'EDITOR', NOT_FOUND);
     if (denied) return denied;
-    db.visits = db.visits.filter((v) => !(v.mapId === map.id && v.countryCode === String(params.countryCode).toUpperCase()));
+    const code = String(params.countryCode).toUpperCase();
+    if (!db.visits.some((v) => v.mapId === map.id && v.countryCode === code)) return fail(404, VISIT_NOT_FOUND);
+    db.visits = db.visits.filter((v) => !(v.mapId === map.id && v.countryCode === code));
     return ok({ message: 'Country cleared.' });
   });
 
@@ -528,7 +548,7 @@ export function registerMapRoutes() {
       kind,
       durationS,
       countryCode,
-      caption: cleanText(body.caption, 300),
+      caption: cleanText(body.caption, 500),
       takenAt: body.takenAt || null,
       latitude: hasGps ? body.latitude : null,
       longitude: hasGps ? body.longitude : null,

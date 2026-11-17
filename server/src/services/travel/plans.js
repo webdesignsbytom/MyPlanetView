@@ -1,6 +1,6 @@
 // The plan in force and the map slots, loaded for an account or for a map's owner.
 // The rules are pure (utils/plans.js, utils/mapSlots.js); this reads their inputs.
-import { findPlanInputsForMap, findPlanInputsForUser } from '../../domain/billing.js';
+import { findMapGraceUntil, findPlanInputsForMap, findPlanInputsForUser } from '../../domain/billing.js';
 import { effectivePlan, extraMapsPaid } from '../../utils/plans.js';
 import { mapSlots } from '../../utils/mapSlots.js';
 import { TRANSFER_GRACE_DAYS, VIDEO_MAX_SECONDS, planOf } from '../../utils/constants/plans.js';
@@ -67,9 +67,13 @@ export const loadUploadRules = async (mapId, now = new Date()) => uploadRulesFro
 
 /**
  * A map moving to `toUserId`: when they have no free map slot it would be locked, so
- * it gets TRANSFER_GRACE_DAYS of grace (the date), else none (null).
+ * it gets TRANSFER_GRACE_DAYS of grace (the date), else none (null). Once per map (17 Nov
+ * 2026, the audit): a map that has had a grace period keeps the date it had, so passing a
+ * map back and forth between two accounts with no free slot can't keep it unlocked for good.
  */
 export async function graceForNewOwner({ mapId, toUserId, now = new Date() }) {
+  const earlier = await findMapGraceUntil(mapId);
+  if (earlier) return earlier;
   const inputs = await findPlanInputsForUser(toUserId, now);
   const others = inputs.maps.filter((m) => m.id !== mapId);
   const { slots } = planStateFrom({ ...inputs, maps: others }, now);

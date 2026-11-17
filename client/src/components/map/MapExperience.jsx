@@ -34,6 +34,7 @@ import {
   CountryPanel,
   ExtraMapDialog,
   MapSwitcher,
+  MapTipsDialog,
   PhotoUploadPanel,
   PhotoViewer,
   SettingsPanel,
@@ -52,12 +53,13 @@ import { nearestGoal } from '@/utils/achievements/goals';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { MAP_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/map/mapListCache';
-import { preloadCountryLists } from '@/utils/map/preloadCountryLists';
+import { countryListsOf, countryMomentFilters, countryPhotoFilters, preloadCountryLists } from '@/utils/map/preloadCountryLists';
 import { preloadSharing } from '@/utils/sharing/sharingCache';
 import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
 import { mapStyleById } from '@/utils/map/mapStyles';
+import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
 import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
 
 const atLandmarkZoom = (zoom) => zoom >= LANDMARK_MIN_ZOOM;
@@ -163,7 +165,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // inside the map loads afterwards): the share settings (the owner's), the photo album's
   // and the timeline's first pages, every landmark (the country tickets' lists and the
   // pins), your map lists, and every country ticket's photos and moments
-  // (preloadCountryLists: fetched where the map says there are some, kept empty elsewhere),
+  // (preloadCountryLists: fetched where the map says there are some, kept empty elsewhere;
+  // viewers' and share links' photo lists, which have no counts, when a country is hovered),
   // all into the panel cache (utils/data/panelCache.js); the badges and goals come with
   // useAchievements below. Each panel then shows its data at once and refreshes quietly. The
   // map draws underneath meanwhile, and the screen lifts once they're all in, or after
@@ -200,7 +203,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   }, [map.id, isOwner, photoSource, userId, shareCode]);
 
   // A country the pointer rests on: its ticket's photos and moments start loading, so it
-  // opens with them (phones open a ticket at the first press, so it loads then)
+  // opens with them (phones open a ticket at the first press, so it loads then). Never a
+  // list the map reply says is empty: it's kept empty already, and the ticket checks it
+  // quietly when it opens
   const hoverTimerRef = useRef(0);
   const hoverCountry = useCallback(
     (code) => {
@@ -208,8 +213,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       window.clearTimeout(hoverTimerRef.current);
       if (!code) return;
       hoverTimerRef.current = window.setTimeout(() => {
-        preloadPhotoPage({ ...photoSource, country: code, limit: 12 });
-        preloadMomentPage({ ...photoSource, country: code });
+        const lists = countryListsOf(mapNowRef.current, code);
+        if (lists.photos !== 'none') preloadPhotoPage(countryPhotoFilters(photoSource, code));
+        if (lists.moments !== 'none') preloadMomentPage(countryMomentFilters(photoSource, code));
       }, 250);
     },
     [hover, photoSource],
@@ -242,6 +248,24 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       document.getElementById('main-content')?.focus({ preventScroll: true });
     }
   }, [dataReady]);
+  // The tips (MapTipsDialog; 17 Nov 2026, the user's wish), once the loading screen lifts:
+  // once a visit, on whichever map opens first, while the viewer's `showTips` is on. Its box
+  // turns the setting off without closing it.
+  const tipsWanted = settings.showTips !== false;
+  const [tipsOpen, setTipsOpen] = useState(false);
+  useEffect(() => {
+    if (!dataReady || !tipsWanted) return;
+    try {
+      if (sessionStorage.getItem(TIPS_SHOWN_KEY) === '1') return;
+      sessionStorage.setItem(TIPS_SHOWN_KEY, '1');
+    } catch {
+      // Storage blocked: they show on each map opened instead
+    }
+    MapTipsDialog.preload().then(
+      () => setTipsOpen(true),
+      () => {},
+    );
+  }, [dataReady, tipsWanted]);
   const wantToGo = useMemo(() => map.visits.filter((v) => v.status === 'WANT_TO_GO').map((v) => v.countryCode), [map.visits]);
   const openBadges = useCallback(() => {
     dismissNews();
@@ -583,12 +607,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             above and below (4.5rem, clear of the tags at the top and the zoom stamps at the
             bottom; 6rem at the top while the map's banner shows there), and clear of the toolbar
             on the right. The wrapper has a definite height, so a panel's `nophone:max-h-full` keeps it
-            on screen. On phones every panel fills the screen from just below the Menu button to the bottom
-            (16 Nov 2026, the user's wish: the bottom row of stamps is gone, so no gap above). */}
+            on screen. On phones every panel fills the screen but for a 0.75rem margin all round, over the
+            Menu stamp (17 Nov 2026, the user's wish; it started below it), and is shut with its
+            own close stamp. */}
         {panel ? (
           <div
-            className={`pointer-events-none absolute inset-x-3 bottom-3 top-[4.25rem] z-10 grid grid-rows-[minmax(0,1fr)] nophone:inset-x-24 nophone:inset-y-18 nophone:place-items-center ${
-              bannerShows ? 'lg:top-24' : ''
+            data-map-panels=''
+            className={`pointer-events-none absolute inset-3 z-30 grid grid-rows-[minmax(0,1fr)] nophone:inset-x-24 nophone:z-10 nophone:place-items-center ${
+              bannerShows ? 'nophone:bottom-18 nophone:top-24' : 'nophone:inset-y-18'
             }`}
           >
             {/* A panel whose code failed to arrive says so; the next panel tries afresh */}
@@ -630,6 +656,17 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
                 } else navigate(MAP_PAGE_URL, { replace: true });
               }}
               onClose={() => dispatch({ type: 'share', open: false })}
+            />
+          </Suspense>
+        ) : null}
+
+        {tipsOpen ? (
+          <Suspense fallback={null}>
+            <MapTipsDialog
+              hideTips={!tipsWanted}
+              onHideTips={(hide) => onChangeSetting('showTips', !hide)}
+              posters={settings.hoverPreview}
+              onClose={() => setTipsOpen(false)}
             />
           </Suspense>
         ) : null}

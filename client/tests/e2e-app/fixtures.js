@@ -5,6 +5,7 @@
 import { test as base, expect } from '@playwright/test';
 // Constants
 import { COOKIE_POLICY_NAME } from '../../src/utils/constants/constants.js';
+import { TIPS_SHOWN_KEY } from '../../src/utils/map/mapTips.js';
 
 export { expect };
 
@@ -17,7 +18,11 @@ export const HOME_SHARE_CODE = 'K7QX-M2PA-9RTW';
 export const MOCK_STORE_KEY = 'mpvMockStore.v5';
 
 export const test = base.extend({
-  page: async ({ page }, provide) => {
+  // The tips the map opens with (MapTipsDialog) cover it, so every test starts as if they'd
+  // shown already this visit; mapTips.spec.js turns this on to see them
+  mapTips: [false, { option: true }],
+
+  page: async ({ page, mapTips }, provide) => {
     // Vite's hot-reload socket, answered here and kept silent: a source file saved during
     // a run would otherwise reload the page in the middle of a test
     // (the app opens no other socket; Vite's is ws://<host>/?token=…)
@@ -34,6 +39,16 @@ export const test = base.extend({
         // Storage blocked: the pop-up may show, which no test relies on
       }
     }, COOKIE_POLICY_NAME);
+
+    if (!mapTips) {
+      await page.addInitScript((key) => {
+        try {
+          sessionStorage.setItem(key, '1');
+        } catch {
+          // Storage blocked: the tips may show
+        }
+      }, TIPS_SHOWN_KEY);
+    }
 
     // An uncaught error, or a mock handler that threw or is missing, fails the test
     const problems = [];
@@ -110,7 +125,11 @@ export async function showTools(page) {
   // The tools first (after a reload the map may not have drawn them yet: isVisible doesn't wait)
   await expect(toolbar(page)).toBeVisible();
   const menu = toolbar(page).getByRole('button', { name: 'Menu', exact: true });
-  if ((await menu.isVisible()) && (await menu.getAttribute('aria-expanded')) !== 'true') await menu.click();
+  if (!(await menu.isVisible()) || (await menu.getAttribute('aria-expanded')) === 'true') return;
+  // On a phone an open panel covers the Menu stamp (17 Nov 2026): shut it first, as a person would
+  const panels = page.locator('[data-map-panels]');
+  if (await panels.count()) await panels.getByRole('button', { name: /^Close/ }).first().click();
+  await menu.click();
 }
 
 /** One of the map's tools, by name: a stamp on wide screens, an item of the phone's menu (opened). */

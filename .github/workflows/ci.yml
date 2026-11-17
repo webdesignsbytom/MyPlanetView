@@ -1,6 +1,8 @@
 # The tests that must pass before anything merges into master (17 Nov 2026): work happens on
-# dev (or a branch off it), and a pull request into master runs all four jobs; master's
-# branch protection requires them. Pushes to dev run them too, so a failure shows early.
+# dev (or a branch off it), and a pull request into master runs every job; master's branch
+# protection requires the first four (client checks, end-to-end, server unit and
+# integration; the production build is newer). Pushes to dev run them too, so a failure
+# shows early.
 # CI has no env files: every setting the tests need is a placeholder below, and nothing here
 # touches a real database, bucket, Stream account or email service.
 name: CI
@@ -48,10 +50,42 @@ jobs:
           node scripts/generate-mock-landmarks.mjs --check
           node scripts/generate-mock-offers.mjs --check
           node scripts/generate-country-landmarks.mjs --check
-      # The site compiles (a plain Vite build; the pre-render and SEO checks need the
-      # production env file, so they stay in the local `npm run build`)
+      # The site compiles (a plain Vite build, quick; the whole production build, with the
+      # pre-render and the SEO checks, is the client-build job below)
       - name: Build
         run: npx vite build --mode verify --outDir ../ci-dist --emptyOutDir
+
+  # The production build as `npm run build` makes it: the pre-build checks, Vite, then the
+  # pre-render (headless Chromium), the critical CSS, sitemap, robots.txt and the SEO checks.
+  # CI has no env file, so VITE_API_URL is unset and the pre-render talks to no API (none of
+  # the public pages needs one). Added 17 Nov 2026; not yet among the checks master's branch
+  # protection requires, until it has passed a few runs.
+  client-build:
+    name: Client production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - run: npm ci
+      - name: Install Chromium (for the pre-render)
+        run: npx playwright install --with-deps chromium
+      - name: Build, pre-render and check (npm run build)
+        run: npm run build
+      # Mock mode is development only: none of it may ship
+      - name: No mock code in the build
+        run: |
+          if grep -rlE "mpv:apiSource|mpvMockStore" dist; then
+            echo "Mock-mode code is in dist/"
+            exit 1
+          fi
 
   client-e2e:
     name: Client end-to-end tests
@@ -103,6 +137,8 @@ jobs:
           cache: npm
           cache-dependency-path: server/package-lock.json
       - run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Vitest
         run: npm test
 
@@ -152,5 +188,9 @@ jobs:
       - run: npm ci
       - name: Migrate the test database
         run: npx prisma migrate deploy
+      # The migrations make exactly the schema: a change to schema.prisma with no migration
+      # (or a migration that doesn't match it) fails here (exit 2: a difference)
+      - name: Schema matches the migrations
+        run: npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
       - name: Vitest (integration)
         run: npm run test:integration

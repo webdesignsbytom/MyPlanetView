@@ -64,9 +64,11 @@ export function AuthProvider({ children }) {
   };
 
   // silent: refresh without unmounting guarded pages. request: one already sent (the
-  // session request main.jsx starts at boot). background: a check nobody asked for, so a
-  // failure other than a 401 (offline, a server error) leaves the session as it was
-  async function refresh({ silent = false, request = null, background = false } = {}) {
+  // session request main.jsx starts at boot). Only the server's answer ends a session (no
+  // user, or a 401): a failed read (offline, a server error, a timeout) leaves the session
+  // as it was, and the isLoggedIn flag, so the next load asks again instead of starting
+  // signed out for good
+  async function refresh({ silent = false, request = null } = {}) {
     if (!silent) setLoading(true);
     lastSessionRead.current = Date.now();
     const read = ++readCount.current;
@@ -84,8 +86,7 @@ export function AuthProvider({ children }) {
 
       return { ok: Boolean(u), user: u };
     } catch (e) {
-      if (read < appliedRead.current) return fail(e, 'Not signed in.');
-      if (background && e?.response?.status !== 401) return fail(e, 'Not signed in.');
+      if (read < appliedRead.current || e?.response?.status !== 401) return fail(e, 'Not signed in.');
       appliedRead.current = read;
       clearUser();
       return fail(e, 'Not signed in.');
@@ -258,7 +259,7 @@ export function AuthProvider({ children }) {
     const recheck = () => {
       if (document.visibilityState !== 'visible') return;
       if (Date.now() - lastSessionRead.current < UNVERIFIED_RECHECK_MS) return;
-      refresh({ silent: true, background: true });
+      refresh({ silent: true });
     };
     window.addEventListener('focus', recheck);
     document.addEventListener('visibilitychange', recheck);

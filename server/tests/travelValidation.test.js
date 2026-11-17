@@ -37,6 +37,14 @@ describe('parseDateTime', () => {
     expect(parseDateTime('not a date').ok).toBe(false);
     expect(parseDateTime(12).ok).toBe(false);
   });
+
+  it('refuses years Postgres can’t store (and anything outside 1 to 9999)', () => {
+    expect(parseDateTime('-100000-01-01T00:00:00Z').ok).toBe(false);
+    expect(parseDateTime('+275000-01-01T00:00:00Z').ok).toBe(false);
+    expect(parseDateTime('+010000-01-01T00:00:00Z').ok).toBe(false);
+    expect(parseDateTime('9999-12-31T00:00:00.000Z').value.toISOString()).toBe('9999-12-31T00:00:00.000Z');
+    expect(parseDateTime('0001-01-01T00:00:00Z').ok).toBe(true);
+  });
 });
 
 describe('dates', () => {

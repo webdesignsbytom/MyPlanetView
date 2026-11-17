@@ -11,6 +11,7 @@ import { LINK_ACCESS_VALUES, isEmail, isOneOf, isUuid } from '../utils/travelVal
 import { formatShareCode, generateInviteToken, hashInviteToken } from '../utils/shareCodes.js';
 import {
   BusinessName,
+  BusinessSiteUrl,
   BusinessUrl,
   InviteAcceptUrl,
   LogoUrl,
@@ -137,6 +138,7 @@ function sendShareEmail({ to, sharer, adapter, resource, role, isInvite, token, 
         : null,
       businessName: BusinessName,
       businessUrl: BusinessUrl,
+      businessSiteUrl: BusinessSiteUrl,
       logoUrl: LogoUrl,
       year: new Date().getFullYear(),
     }).then((sent) => {

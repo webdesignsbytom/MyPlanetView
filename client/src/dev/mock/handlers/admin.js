@@ -85,6 +85,7 @@ export function registerAdminRoutes() {
     const user = getDb().users.find((u) => u.id === body.userId);
     if (!user) return fail(404, 'User not found.');
     if (user.id === me().id) return fail(403, 'You cannot change your own role.');
+    if (user.role === 'DEVELOPER' && me().role !== 'DEVELOPER') return fail(403, 'Only a developer can manage developer accounts.');
     if (!['USER', 'ADMIN', 'DEVELOPER'].includes(body.newRole)) return fail(400, 'Unknown role.');
     if (body.newRole === 'DEVELOPER' && me().role !== 'DEVELOPER') return fail(403, 'Only a developer can grant developer.');
     user.role = body.newRole;
@@ -96,6 +97,7 @@ export function registerAdminRoutes() {
       const user = getDb().users.find((u) => u.id === params.userId);
       if (!user) return fail(404, 'User not found.');
       if (user.id === me().id) return fail(403, 'You cannot change your own status.');
+      if (user.role === 'DEVELOPER' && me().role !== 'DEVELOPER') return fail(403, 'Only a developer can manage developer accounts.');
       user.isActive = isActive;
       return ok({ user: adminUser(user) });
     });
@@ -103,6 +105,9 @@ export function registerAdminRoutes() {
   route('DELETE', '/api/users/admin/delete-user-by-id/:userId', ({ params }) => {
     if (!isAdmin()) return forbidden();
     if (params.userId === me().id) return fail(403, 'You cannot delete yourself.');
+    if (getDb().users.find((u) => u.id === params.userId)?.role === 'DEVELOPER' && me().role !== 'DEVELOPER') {
+      return fail(403, 'Only a developer can manage developer accounts.');
+    }
     getDb().users = getDb().users.filter((u) => u.id !== params.userId);
     return ok({ message: 'User deleted.' });
   });

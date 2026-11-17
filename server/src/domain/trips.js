@@ -1,5 +1,5 @@
 import { prisma } from '../prisma.js';
-import { canEdit } from '../utils/access.js';
+import { canEdit, mapRoleFor, tripRoleFor } from '../utils/access.js';
 import { countPerParent, countPhotosPer } from './counts.js';
 import { createMissingVisits } from './maps.js';
 import { placeOnMap } from '../utils/ukNations.js';
@@ -85,8 +85,10 @@ export const findTripsForMap = async (mapId, { includeHidden = false } = {}) => 
 };
 
 /**
- * Trips someone was added to directly (not through the map), with counts;
- * hidden photos count only where they were added as an editor.
+ * Trips someone was added to directly (not through the map), with counts. Each `role` is
+ * their trip role: the higher of that membership and their role on the trip's map (an
+ * editor of the map added to one trip as a viewer still edits it). Hidden photos count
+ * only where that role is editor.
  */
 export const findTripsSharedWithUser = async (userId) => {
   const memberships = await prisma.tripMember.findMany({
@@ -94,11 +96,17 @@ export const findTripsSharedWithUser = async (userId) => {
     select: { role: true, trip: { select: { ...TRIP_SUMMARY_SELECT, map: { select: { name: true, ownerId: true } } } } },
     orderBy: { createdAt: 'desc' },
   });
+  const mapIds = [...new Set(memberships.map((m) => m.trip.mapId))];
+  const mapMembers = mapIds.length
+    ? await prisma.mapMember.findMany({ where: { userId, mapId: { in: mapIds } }, select: { mapId: true, role: true } })
+    : [];
+  const mapMemberOf = new Map(mapMembers.map((m) => [m.mapId, m]));
+  const roles = memberships.map((m) => tripRoleFor(mapRoleFor(m.trip.map, userId, mapMemberOf.get(m.trip.mapId)), m));
   const trips = await withTripCounts(
     memberships.map((m) => m.trip),
-    memberships.map((m) => canEdit(m.role))
+    roles.map((role) => canEdit(role))
   );
-  return memberships.map((m, i) => ({ role: m.role, trip: trips[i] }));
+  return memberships.map((m, i) => ({ role: roles[i], trip: trips[i] }));
 };
 
 /**
@@ -153,7 +161,7 @@ export const findTripDetail = async (tripId) => {
   return {
     ...trip,
     travellers,
-    map: { name: map.name, travellers: mapTravellers },
+    map: { name: map.name, splitUk: map.splitUk, travellers: mapTravellers },
     stops,
     coverPhoto: coverPhoto && { hidden: coverPhoto.hidden, variants: coverThumb ? [{ media: coverThumb }] : [] },
   };

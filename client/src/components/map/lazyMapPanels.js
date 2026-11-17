@@ -1,11 +1,14 @@
-import { lazy } from 'react';
+import { createElement, lazy } from 'react';
 
 // The map page's overlays: none is part of the first paint. Each has preload(), so its
 // code is fetched once the map has drawn and the browser is idle (preloadWhenIdle), or
 // sooner on intent (a toolbar stamp hovered, focused or pressed), and is there by the
 // time the click opens it.
 
-// lazy() that renders straight away once its code is loaded (no fallback flash)
+// lazy() that renders straight away once its code is loaded (no fallback flash). React
+// keeps a lazy component's failed load for good, so after a failure (a dropped connection,
+// or old code gone after a deploy) the panel gets a fresh one: the error boundary says it
+// failed, and the next open downloads it again instead of failing until a reload
 function lazyPanel(load) {
   let loaded = null;
   let pending = null;
@@ -19,7 +22,17 @@ function lazyPanel(load) {
     );
     return pending;
   };
-  const Panel = lazy(() => (loaded ? { then: (resolve) => resolve(loaded) } : preload()));
+  const fresh = () =>
+    lazy(() =>
+      loaded
+        ? { then: (resolve) => resolve(loaded) }
+        : preload().catch((err) => {
+            current = fresh();
+            throw err;
+          }),
+    );
+  let current = fresh();
+  const Panel = (props) => createElement(current, props);
   Panel.preload = preload;
   return Panel;
 }
@@ -40,6 +53,8 @@ export const PhotoViewer = lazyPanel(() => import('@/components/photos/PhotoView
 export const ShareDialog = lazyPanel(() => import('@/components/sharing/ShareDialog'));
 // Paying for a map that isn't paid for (the plan banner's button); opened rarely
 export const ExtraMapDialog = lazyPanel(() => import('@/components/plans/ExtraMapDialog'));
+// The tips the map opens with, once a visit (fetched as the loading screen lifts)
+export const MapTipsDialog = lazyPanel(() => import('./MapTipsDialog'));
 export const BadgesGoalsPanel = lazyPanel(() => import('@/components/achievements/BadgesGoalsPanel'));
 // The slideshows: the map's ("Play my world"), a country's, and a trip's (the trip page)
 export const Slideshow = lazyPanel(() => import('@/components/slideshow/Slideshow'));

@@ -1,11 +1,22 @@
-# Dev fallback only; the build writes dist/robots.txt (scripts/generate-robots.mjs)
+# Dev fallback only; the build writes dist/robots.txt (scripts/generate-robots.mjs) from
+# CLIENT_ONLY_ROUTE_PREFIXES in src/utils/constants/routes.js
 User-agent: *
 Allow: /
 
 Disallow: /admin
 Disallow: /account
-Disallow: /blog/admin
-Disallow: /blog/create-new-post
-Disallow: /blog/edit
+Disallow: /login
+Disallow: /sign-up
+Disallow: /forgot-password
+Disallow: /verify-email-address
+Disallow: /reset-password
+Disallow: /down-for-maintenance
+Disallow: /map
+Disallow: /maps
+Disallow: /trips
+Disallow: /welcome
+Disallow: /shared
+Disallow: /invite
+Disallow: /challenges
 
-Sitemap: https://bytetoast-studio.com/sitemap.xml
+Sitemap: https://myplanetview.com/sitemap.xml

@@ -109,6 +109,22 @@ describe('the UK’s nations', () => {
     ]);
   });
 
+  it('tells the trip page and the trip’s link whether its map splits the UK', async () => {
+    const owner = await signUp('SplitTrip');
+    const map = await defaultMapOf(owner.agent);
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Highlands' })).trip;
+    await owner.agent.patch(`/api/trips/${trip.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' });
+    const { shareCode } = data(await owner.agent.get(`/api/trips/${trip.id}/sharing`));
+    const tripOf = async () => data(await owner.agent.get(`/api/trips/${trip.id}`)).trip;
+    const linkOf = async () => data(await anon().get(`/api/shared/${shareCode}`)).trip;
+
+    expect((await tripOf()).splitUk).toBe(false);
+    expect((await linkOf()).splitUk).toBe(false);
+    await split(owner.agent, map.id, true);
+    expect((await tripOf()).splitUk).toBe(true);
+    expect((await linkOf()).splitUk).toBe(true);
+  });
+
   it('gives each UK landmark its nation', async () => {
     const landmarks = data(await anon().get('/api/landmarks?country=GB')).landmarks;
     expect(landmarks.length).toBeGreaterThan(20);

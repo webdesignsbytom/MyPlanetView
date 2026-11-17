@@ -217,6 +217,7 @@ export const EVENT_MESSAGES = {
   subscriptionExists: `You already have a subscription. Change its plan or extra maps instead.`,
   noSubscription: `You don't have a subscription to change yet. Choose a plan to start one.`,
   cancelInPortal: `To stop paying altogether, cancel from the billing portal.`,
+  extraMapsAfterFreeMonth: `Extra maps can be added once your free month ends.`,
   subscriptionNotCancelled: `We couldn't cancel your subscription just now, so your account hasn't been deleted. Please try again in a few minutes.`,
   noBillingAccount: `There's no billing account yet. Choose a plan first.`,
   invalidGrant: `Give a plan of REGULAR or PREMIUM and a number of months from 1 to 36.`,

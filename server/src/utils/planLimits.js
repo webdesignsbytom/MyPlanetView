@@ -30,9 +30,15 @@ export const bestCopySize = (sizes) => (sizes.includes('ORIGINAL') ? 'ORIGINAL' 
 
 const number = (n) => Number(n).toLocaleString('en-GB');
 
-/** "30 of 30 photos of France on this map. Upgrade to add more." (no upgrade line on the top plan) */
+/**
+ * "30 of 30 photos of France on this map. Upgrade to add more." (no upgrade line on the top
+ * plan). With no `countryName`, the photos with no country, which count as a gallery of their
+ * own (17 Nov 2026, the audit: they had no cap, so Economy's storage had none either).
+ */
 export const countryFullMessage = ({ count, cap, countryName, planId }) =>
-  `${number(count)} of ${number(cap)} photos of ${countryName} on this map.${isTopPlan(planId) ? '' : ' Upgrade to add more.'}`;
+  `${number(count)} of ${number(cap)} photos ${countryName ? `of ${countryName}` : 'with no country'} on this map.${
+    isTopPlan(planId) ? '' : ' Upgrade to add more.'
+  }`;
 
 /**
  * Would `adding` more photos of one country go over the map's cap? `count` is the map's
@@ -65,7 +71,7 @@ export const checkVideoSizes = (sizes) =>
 export function checkVideoCap({ count, adding = 1, planId, countryName }) {
   const cap = planOf(planId).limits.videosPerCountry;
   if (count + adding <= cap) return null;
-  return `${number(Math.min(count, cap))} of ${number(cap)} videos of ${countryName} on this map.`;
+  return `${number(Math.min(count, cap))} of ${number(cap)} videos ${countryName ? `of ${countryName}` : 'with no country'} on this map.`;
 }
 
 // ── The storage safety net (paid plans) ──────────────────────────────────────

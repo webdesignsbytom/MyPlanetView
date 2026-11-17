@@ -15,6 +15,7 @@ import {
 import { heirFor, heirOf, parseLeavingPlan, usableLeavingPlan } from '../src/utils/leavingPlan.js';
 import {
   hasLiveSubscription,
+  isDuplicateSubscription,
   shouldApplySubscriptionEvent,
   subscriptionStateFrom,
 } from '../src/utils/stripeState.js';
@@ -249,5 +250,26 @@ describe('Stripe subscription state', () => {
     // A new subscription after a canceled one is applied
     expect(shouldApplySubscriptionEvent(canceled, { id: 'sub_2', status: 'active' })).toBe(true);
     expect(shouldApplySubscriptionEvent(null, { id: 'sub_1', status: 'active' })).toBe(true);
+  });
+});
+
+describe('the audit fixes (17 Nov 2026)', () => {
+  it('words a full gallery of photos with no country', () => {
+    expect(countryFullMessage({ count: 30, cap: 30, countryName: null, planId: 'FREE' })).toBe(
+      '30 of 30 photos with no country on this map. Upgrade to add more.',
+    );
+    expect(checkCountryCap({ count: 30, planId: 'FREE', countryName: null })).toMatch(/with no country/);
+  });
+
+  it('knows a second live subscription for an account that has one', () => {
+    const row = { stripeSubscriptionId: 'sub_first', status: 'active' };
+    expect(isDuplicateSubscription(row, { id: 'sub_second', status: 'active' })).toBe(true);
+    expect(isDuplicateSubscription(row, { id: 'sub_second', status: 'incomplete' })).toBe(true);
+    // Not the tracked one, an ended one, or beside one that has ended
+    expect(isDuplicateSubscription(row, { id: 'sub_first', status: 'active' })).toBe(false);
+    expect(isDuplicateSubscription(row, { id: 'sub_second', status: 'canceled' })).toBe(false);
+    expect(isDuplicateSubscription(row, { id: 'sub_second', status: 'active' }, { deleted: true })).toBe(false);
+    expect(isDuplicateSubscription({ ...row, status: 'canceled' }, { id: 'sub_second', status: 'active' })).toBe(false);
+    expect(isDuplicateSubscription({ stripeSubscriptionId: null, status: null }, { id: 'sub_second', status: 'active' })).toBe(false);
   });
 });

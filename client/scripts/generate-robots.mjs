@@ -6,31 +6,14 @@ import { FULL_BUSINESS_URL as SITE_ORIGIN } from '../src/utils/constants/constan
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = dirname(__filename);
 
-// Private/admin routes to disallow
+// Every browser-only page is disallowed: the same list the hosts' rewrites use
+// (CLIENT_ONLY_ROUTE_PREFIXES), so a new private page can't be missed here. That's the
+// travel app (maps, trips, onboarding, challenges and their join links), share links and
+// invites, the account and admin pages, and sign-in, sign-up and the emailed links
 const routesFile = resolve(__dirname, '../src/utils/constants/routes.js');
-const {
-  ADMIN_PAGE_URL,
-  ACCOUNT_PAGE_URL,
-  MAP_PAGE_URL,
-  TRIP_PAGE_URL,
-  WELCOME_PAGE_URL,
-  SHARED_PAGE_URL,
-  INVITE_PAGE_URL,
-} = await import(pathToFileURL(routesFile).href);
+const { CLIENT_ONLY_ROUTE_PREFIXES } = await import(pathToFileURL(routesFile).href);
 
-const base = (route) => route.split('/:')[0];
-
-// The travel app is private: maps (/map also covers /maps/...), trips, onboarding,
-// share links and invites
-const disallowedRoutes = [
-  ADMIN_PAGE_URL,
-  ACCOUNT_PAGE_URL,
-  MAP_PAGE_URL,
-  base(TRIP_PAGE_URL),
-  WELCOME_PAGE_URL,
-  base(SHARED_PAGE_URL),
-  base(INVITE_PAGE_URL),
-];
+const disallowedRoutes = [...new Set(CLIENT_ONLY_ROUTE_PREFIXES)];
 
 const disallowLines = disallowedRoutes.map((route) => `Disallow: ${route}`).join('\n');
 

@@ -27,6 +27,8 @@ export const MAP_SETTING_FLAGS = Object.freeze([
   'showGoalTag',
   // The map page in greys (off unless turned on)
   'blackAndWhite',
+  // The tips the map opens with, once a visit (on unless turned off)
+  'showTips',
 ]);
 
 const isPlainObject = (value) =>

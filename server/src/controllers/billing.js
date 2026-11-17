@@ -15,7 +15,7 @@ import {
   pricesView,
 } from '../utils/constants/plans.js';
 import { hasLiveSubscription } from '../utils/stripeState.js';
-import { findSubscription, forgetStripeEvent, recordStripeEvent } from '../domain/billing.js';
+import { findSubscription, forgetStripeEvent, linkStripeCustomer, recordStripeEvent } from '../domain/billing.js';
 import { loadUserPlan } from '../services/travel/plans.js';
 import {
   extraMapPriceId,
@@ -25,7 +25,7 @@ import {
   stripeClient,
   verifyWebhookEvent,
 } from '../services/billing/stripe.js';
-import { applyStripeSubscription, linkCheckoutSession } from '../services/billing/subscriptions.js';
+import { applyStripeSubscription, latestSubscription, linkCheckoutSession } from '../services/billing/subscriptions.js';
 import { promoTrialFor } from '../services/billing/promo.js';
 import { badRequest, conflict, handler, reply } from './helpers/travel.js';
 
@@ -68,6 +68,9 @@ async function billingView(userId) {
  * extra-map line. `trial` (`{ code, days }`, a promo code's free month) makes the first
  * days free: Stripe still takes a card, and charges when they end unless cancelled; the
  * code goes in the subscription's metadata, so the webhook records the month as used.
+ * One Stripe customer per account (made at the first Checkout and kept on its row), and one
+ * open Checkout at a time: any other still open is expired first, so two tabs or a double
+ * click can't pay for two subscriptions (17 Nov 2026, the audit).
  * -> `{ url }`, or null when a price id isn't configured
  */
 async function createCheckout(user, { plan, interval, extraMaps, customerId, trial = null }) {
@@ -76,6 +79,13 @@ async function createCheckout(user, { plan, interval, extraMaps, customerId, tri
   if (extraMaps > 0) lineItems.push({ price: extraMapPriceId(plan, interval), quantity: extraMaps });
   if (lineItems.some((item) => !item.price)) return null;
   const stripe = await stripeClient();
+  let customer = customerId;
+  if (!customer) {
+    customer = (await stripe.customers.create({ email: user.email, metadata: { userId: user.id } })).id;
+    await linkStripeCustomer({ userId: user.id, stripeCustomerId: customer });
+  }
+  const open = await stripe.checkout.sessions.list({ customer, status: 'open', limit: 10 });
+  for (const session of open?.data ?? []) await stripe.checkout.sessions.expire(session.id);
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
     line_items: lineItems,
@@ -86,7 +96,7 @@ async function createCheckout(user, { plan, interval, extraMaps, customerId, tri
       ...(trial ? { trial_period_days: trial.days } : {}),
     },
     ...(trial ? { payment_method_collection: 'always' } : {}),
-    ...(customerId ? { customer: customerId } : { customer_email: user.email }),
+    customer,
     success_url: accountUrl('?billing=success'),
     cancel_url: accountUrl('?billing=cancelled'),
   });
@@ -102,10 +112,11 @@ async function remoteLines(stripe, subscriptionId) {
 }
 
 /** Change the live subscription's lines (prorated), then record what Stripe answers. */
-async function updateSubscription(stripe, sub, items) {
+async function updateSubscription(stripe, sub, items, extra = {}) {
   const updated = await stripe.subscriptions.update(sub.stripeSubscriptionId, {
     items,
     proration_behavior: 'create_prorations',
+    ...extra,
   });
   await applyStripeSubscription(updated);
   return updated;
@@ -128,8 +139,10 @@ export const checkoutHandler = handler(D, 'Checkout', async (req, res) => {
   const sub = await findSubscription(req.user.id);
   if (hasLiveSubscription(sub)) return conflict(req, res, D, EVENT_MESSAGES.subscriptionExists);
 
-  // A promo code's free month, on a paid plan (docs/API.md, "Promo codes")
-  const trial = await promoTrialFor(req.user.id, body.plan);
+  // A promo code's free month, on a paid plan (docs/API.md, "Promo codes"). Not with extra
+  // maps in the same Checkout: a trial covers every line, so they'd be free too; the month
+  // stays for a later Checkout of the plan alone.
+  const trial = extraMaps > 0 ? null : await promoTrialFor(req.user.id, body.plan);
   const checkout = await createCheckout(req.user, {
     plan: body.plan,
     interval: body.interval,
@@ -171,7 +184,10 @@ export const changePlanHandler = handler(D, 'Change plan', async (req, res) => {
     items.push({ id: extraItem.id, price, quantity: extraItem.quantity });
   }
 
-  await updateSubscription(stripe, sub, items);
+  // A new plan ends a promo code's free month: paid from now (17 Nov 2026, the audit: the
+  // rest of a Business free month could be had on First Class)
+  const endsTrial = sub.status === 'trialing' && plan !== sub.plan;
+  await updateSubscription(stripe, sub, items, endsTrial ? { trial_end: 'now' } : {});
   logEvent(createBillingEvent({ user: req.user, action: 'Plan Change Success', detail: `plan=${plan} interval=${interval}` }));
   return sendDataResponse(res, 200, { billing: await billingView(req.user.id) });
 });
@@ -194,6 +210,9 @@ export const extraMapsHandler = handler(D, 'Extra maps', async (req, res) => {
     logEvent(createBillingEvent({ user: req.user, action: 'Checkout Started', detail: `plan=FREE interval=${interval} extraMaps=${quantity}` }));
     return sendDataResponse(res, 200, checkout);
   }
+
+  // A free month covers every line: extra maps wait until it ends (17 Nov 2026, the audit)
+  if (sub.status === 'trialing' && quantity > (sub.extraMaps ?? 0)) return conflict(req, res, D, EVENT_MESSAGES.extraMapsAfterFreeMonth);
 
   const stripe = await stripeClient();
   const { planItem, extraItem } = await remoteLines(stripe, sub.stripeSubscriptionId);
@@ -242,7 +261,17 @@ async function handleStripeEvent(event) {
     return;
   }
   if (SUBSCRIPTION_EVENTS.has(event.type)) {
-    const applied = await applyStripeSubscription(object, { deleted: event.type === 'customer.subscription.deleted' });
+    // Stripe's subscription as it is now, not as this (perhaps late) event saw it
+    const current = await latestSubscription(object);
+    const applied = await applyStripeSubscription(current, { deleted: event.type === 'customer.subscription.deleted' });
+    if (applied?.duplicate) {
+      logEvent(createBillingEvent({
+        user: { id: applied.userId },
+        action: 'Duplicate Subscription Cancelled',
+        detail: `${event.type} subscription=${applied.duplicate} (refund its first payment)`,
+      }));
+      return;
+    }
     if (applied) {
       const s = applied.subscription;
       logEvent(createBillingEvent({

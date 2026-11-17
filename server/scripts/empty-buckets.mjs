@@ -40,7 +40,7 @@ async function main() {
     { which: 'private', client: s3Private, bucket: PRIVATE_BUCKET },
   ].filter((t) => !opts.only || t.which === opts.only);
 
-  for (const { which, client, bucket } of targets) {
+  for (const { which, bucket } of targets) {
     if (!bucket) throw new Error(`The ${which} bucket's name isn't set (STORAGE_${which === 'private' ? 'PRIVATE_' : ''}BUCKET)`);
   }
   if (targets.length === 2 && targets[0].bucket === targets[1].bucket) targets.pop();

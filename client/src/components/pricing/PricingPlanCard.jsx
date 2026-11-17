@@ -1,6 +1,4 @@
 import React from 'react';
-// Icons
-import { FiCheck } from 'react-icons/fi';
 // Auth
 import { useAuth } from '@/auth/AuthContext';
 // Constants
@@ -8,6 +6,7 @@ import { ACCOUNT_PAGE_URL, SIGN_UP_PAGE_URL } from '@/utils/constants/routes';
 import { formatPence, planOf } from '@/utils/constants/plans';
 // Components
 import AppLink from '@/components/common/AppLink';
+import PricingFeature from '@/components/pricing/PricingFeature';
 
 // One plan as a boarding pass: the class on a parchment strip, its fare monthly and
 // yearly, what it adds, and a way aboard (sign up; once signed in, the plan on the
@@ -48,10 +47,7 @@ function PricingPlanCard({ ticket }) {
 
           <ul className='grid gap-2'>
             {ticket.features.map((feature) => (
-              <li key={feature.text} className='grid grid-cols-[auto_minmax(0,1fr)] items-start gap-2 text-sm leading-relaxed'>
-                <FiCheck aria-hidden='true' className='translate-y-1 text-status-good' />
-                <span>{feature.text}</span>
-              </li>
+              <PricingFeature key={feature.text} feature={feature} className='text-sm' />
             ))}
           </ul>
         </div>

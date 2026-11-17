@@ -9,6 +9,7 @@ import { assertNotProduction, deleteStoredFiles, wipeDatabase } from './seed/uti
 import { seedCountries } from './seed/countries.js';
 import { seedLandmarks } from './seed/landmarks.js';
 import { seedUsers } from './seed/users.js';
+import { seedOwnerAccount } from './seed/owner.js';
 import { seedTravelDemo } from './seed/travel.js';
 import { seedDemoPhotos } from './seed/photos.js';
 import { seedContactForms } from './seed/contact.js';
@@ -39,6 +40,8 @@ async function seed() {
   await seedUsers();
   // One account per plan: Business and First Class get their subscriptions
   await seedPlans();
+  // The owner's own account: First Class for life, Tom and Gigie's map (SEED_OWNER_PASSWORD)
+  await seedOwnerAccount();
   await seedTravelDemo();
   // The demo photos go into the private bucket (skipped without one)
   await seedDemoPhotos();

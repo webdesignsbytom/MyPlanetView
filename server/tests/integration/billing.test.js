@@ -6,7 +6,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 
 // A fake Stripe: records each call and keeps subscriptions in memory. Webhook signing
 // and checking stay the real SDK's.
-const fake = vi.hoisted(() => ({ calls: [], subscriptions: new Map(), next: 1, cancelFails: false }));
+const fake = vi.hoisted(() => ({ calls: [], subscriptions: new Map(), openSessions: new Map(), next: 1, cancelFails: false }));
 
 vi.mock('stripe', async (importOriginal) => {
   const actual = await importOriginal();
@@ -35,9 +35,22 @@ vi.mock('stripe', async (importOriginal) => {
   class FakeStripe {
     constructor(key) {
       this.key = key;
+      this.customers = {
+        create: record('customers.create', (params) => ({ id: `cus_fake_${fake.next++}`, ...params })),
+      };
+      // Sessions stay open per customer until expired (or completed, which these tests skip)
       this.checkout = {
         sessions: {
-          create: record('checkout.sessions.create', () => ({ id: 'cs_fake', url: 'https://checkout.stripe.test/c/pay/cs_fake' })),
+          create: record('checkout.sessions.create', (params) => {
+            const id = `cs_fake_${fake.next++}`;
+            fake.openSessions.set(params.customer, [...(fake.openSessions.get(params.customer) ?? []), id]);
+            return { id, url: 'https://checkout.stripe.test/c/pay/cs_fake' };
+          }),
+          list: record('checkout.sessions.list', (params) => ({ data: (fake.openSessions.get(params.customer) ?? []).map((id) => ({ id })) })),
+          expire: record('checkout.sessions.expire', (id) => {
+            for (const [customer, ids] of fake.openSessions) fake.openSessions.set(customer, ids.filter((open) => open !== id));
+            return { id, status: 'expired' };
+          }),
         },
       };
       this.billingPortal = {
@@ -175,7 +188,7 @@ describe('GET /billing', () => {
 
 describe('checkout', () => {
   it('opens Stripe Checkout for a plan and extra maps, linked to the user', async () => {
-    const { agent, user, email } = await signUp('Buyer');
+    const { agent, user } = await signUp('Buyer');
     const res = await agent.post('/api/billing/checkout').send({ plan: 'PREMIUM', interval: 'YEAR', extraMaps: 2 });
     expect(res.status).toBe(200);
     expect(data(res)).toEqual({ url: 'https://checkout.stripe.test/c/pay/cs_fake' });
@@ -189,7 +202,8 @@ describe('checkout', () => {
       client_reference_id: user.id,
       metadata: { userId: user.id },
       subscription_data: { metadata: { userId: user.id } },
-      customer_email: email,
+      // A Stripe customer of its own, made for this first Checkout
+      customer: expect.stringMatching(/^cus_fake_/),
       success_url: 'http://localhost:5173/account?billing=success',
       cancel_url: 'http://localhost:5173/account?billing=cancelled',
     });
@@ -201,6 +215,22 @@ describe('checkout', () => {
     // Extra maps only, on Economy's price
     await agent.post('/api/billing/checkout').send({ plan: 'FREE', interval: 'MONTH', extraMaps: 1 });
     expect(callsTo('checkout.sessions.create')[1].args[0].line_items).toEqual([{ price: 'price_it_extra_month', quantity: 1 }]);
+  });
+
+  it('keeps one Stripe customer and one open Checkout per account', async () => {
+    const { agent, user, email } = await signUp('Two Tabs');
+    expect((await agent.post('/api/billing/checkout').send({ plan: 'REGULAR', interval: 'MONTH' })).status).toBe(200);
+    expect(callsTo('customers.create').map((c) => c.args[0])).toEqual([{ email, metadata: { userId: user.id } }]);
+    const { stripeCustomerId: customer } = await prisma.subscription.findUnique({ where: { userId: user.id } });
+    expect(callsTo('checkout.sessions.create')[0].args[0]).toMatchObject({ customer });
+    expect(data(await agent.get('/api/billing'))).toMatchObject({ plan: 'FREE', status: null });
+
+    // A second tab: the same customer, and the first Checkout expired so it can't be paid too
+    expect((await agent.post('/api/billing/checkout').send({ plan: 'PREMIUM', interval: 'MONTH' })).status).toBe(200);
+    expect(callsTo('customers.create')).toHaveLength(1);
+    expect(callsTo('checkout.sessions.expire')).toHaveLength(1);
+    expect(callsTo('checkout.sessions.create')[1].args[0]).toMatchObject({ customer });
+    expect(fake.openSessions.get(customer)).toHaveLength(1);
   });
 
   it('refuses bad input, nothing to buy, an unverified address and a second subscription', async () => {
@@ -253,6 +283,11 @@ describe("a promo code's free month", () => {
 
   it('makes the first paid Checkout free for 30 days, with a card, once', async () => {
     const { agent, user } = await follower('Follower');
+    expect(data(await agent.get('/api/billing')).promoTrial).toEqual({ code: CODE, days: 30 });
+
+    // Extra maps with the plan: no free month (it would cover them too); it stays for later
+    await agent.post('/api/billing/checkout').send({ plan: 'PREMIUM', interval: 'MONTH', extraMaps: 1 });
+    expect(callsTo('checkout.sessions.create').at(-1).args[0].subscription_data).toEqual({ metadata: { userId: user.id } });
     expect(data(await agent.get('/api/billing')).promoTrial).toEqual({ code: CODE, days: 30 });
 
     // Extra maps alone: no free month, and it's still there afterwards
@@ -379,6 +414,23 @@ describe('changing a subscription', () => {
     expect(callsTo('checkout.sessions.create').at(-1).args[0].line_items).toEqual([{ price: 'price_it_extra_year', quantity: 2 }]);
     expect((await newcomer.agent.post('/api/billing/extra-maps').send({ quantity: 0 })).status).toBe(400);
     expect((await newcomer.agent.post('/api/billing/extra-maps').send({ quantity: 'lots' })).status).toBe(400);
+  });
+
+  it('a new plan ends a free month, and extra maps wait until it has ended', async () => {
+    const s = await subscriber('Trialist', [['price_it_regular_month', 1]], { plan: 'REGULAR' });
+    await prisma.subscription.update({ where: { userId: s.user.id }, data: { status: 'trialing' } });
+    fake.subscriptions.set(s.subscriptionId, { ...fake.subscriptions.get(s.subscriptionId), status: 'trialing' });
+
+    const extra = await s.agent.post('/api/billing/extra-maps').send({ quantity: 1 });
+    expect(extra.status).toBe(409);
+    expect(extra.body.message).toBe('Extra maps can be added once your free month ends.');
+    expect(callsTo('subscriptions.update')).toHaveLength(0);
+
+    // Monthly to yearly on the same plan keeps the free month; another plan ends it
+    expect((await s.agent.post('/api/billing/change-plan').send({ plan: 'REGULAR', interval: 'YEAR' })).status).toBe(200);
+    expect(callsTo('subscriptions.update').at(-1).args[1].trial_end).toBeUndefined();
+    expect((await s.agent.post('/api/billing/change-plan').send({ plan: 'PREMIUM', interval: 'YEAR' })).status).toBe(200);
+    expect(callsTo('subscriptions.update').at(-1).args[1].trial_end).toBe('now');
   });
 
   it('opens the customer portal for an account with a Stripe customer', async () => {
@@ -538,6 +590,48 @@ describe('the webhook', () => {
     expect(await prisma.subscription.findUnique({ where: { stripeCustomerId: `cus_it_x_${RUN}` } })).toBeNull();
     // Types it doesn't handle are recorded and ignored
     expect((await sendEvent('invoice.paid', { id: 'in_1', object: 'invoice' })).status).toBe(200);
+  });
+
+  it('applies a subscription as Stripe has it now, not as a late event saw it', async () => {
+    const { user } = await signUp('Late Event');
+    const customer = `cus_it_late_${RUN}`;
+    const now = subscriptionObject({ id: `sub_it_late_${RUN}`, customer, userId: user.id, lines: [['price_it_premium_month', 1]] });
+    fake.subscriptions.set(now.id, now);
+    // An old update (still on Business) arriving after the change to First Class
+    const old = subscriptionObject({ id: now.id, customer, userId: user.id, lines: [['price_it_regular_month', 1]] });
+    expect((await sendEvent('customer.subscription.updated', old)).status).toBe(200);
+    expect(callsTo('subscriptions.retrieve').map((c) => c.args[0])).toEqual([now.id]);
+    expect(await prisma.subscription.findUnique({ where: { userId: user.id } })).toMatchObject({ plan: 'PREMIUM' });
+  });
+
+  it('cancels a second live subscription for an account that already has one', async () => {
+    const { user } = await signUp('Double Click');
+    const customer = `cus_it_dup_${RUN}`;
+    const first = subscriptionObject({ id: `sub_it_dup1_${RUN}`, customer, userId: user.id, lines: [['price_it_regular_month', 1]] });
+    await sendEvent('customer.subscription.created', first);
+    const second = subscriptionObject({ id: `sub_it_dup2_${RUN}`, customer, userId: user.id, lines: [['price_it_premium_month', 1]] });
+    fake.subscriptions.set(second.id, second);
+
+    // Its checkout completing never replaces the one the account has
+    await sendEvent('checkout.session.completed', {
+      id: 'cs_dup',
+      object: 'checkout.session',
+      mode: 'subscription',
+      client_reference_id: user.id,
+      metadata: { userId: user.id },
+      customer,
+      subscription: second.id,
+    });
+    expect((await sendEvent('customer.subscription.created', second)).status).toBe(200);
+    expect(callsTo('subscriptions.cancel').map((c) => c.args[0])).toEqual([second.id]);
+    expect(await prisma.subscription.findUnique({ where: { userId: user.id } })).toMatchObject({
+      stripeSubscriptionId: first.id,
+      plan: 'REGULAR',
+      status: 'active',
+    });
+    // Its end is a late event about another subscription: nothing changes
+    await sendEvent('customer.subscription.deleted', { ...second, status: 'canceled' });
+    expect(await prisma.subscription.findUnique({ where: { userId: user.id } })).toMatchObject({ stripeSubscriptionId: first.id, status: 'active' });
   });
 
   it('refuses a bad signature, and a write from another site', async () => {

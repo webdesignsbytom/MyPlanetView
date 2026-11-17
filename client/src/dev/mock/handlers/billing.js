@@ -72,7 +72,10 @@ function ownedMapsWithMembers(userId) {
       members: db.mapMembers
         .filter((m) => m.mapId === map.id)
         .sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))
-        .map((m) => ({ userId: m.userId, name: db.users.find((u) => u.id === m.userId)?.name ?? null, role: m.role })),
+        .map((m) => {
+          const user = db.users.find((u) => u.id === m.userId);
+          return { userId: m.userId, name: user?.name ?? null, role: m.role, isActive: user?.isActive !== false };
+        }),
     }));
 }
 

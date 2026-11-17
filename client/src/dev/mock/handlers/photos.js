@@ -35,16 +35,22 @@ export function registerPhotoRoutes() {
     if (reply) return reply;
     // As the map keeps places: a UK nation is the UK on a map that doesn't split it
     const splitUk = Boolean(db.maps.find((m) => m.id === photo.mapId)?.splitUk);
-    // A new country that's full on the map (the owner's plan) -> 409, and nothing changes
-    if (body.countryCode !== undefined && body.countryCode) {
-      const code = placeOnMap(String(body.countryCode).toUpperCase(), splitUk);
-      if (countryExists(code) && code !== photo.countryCode) {
-        // A video moves under the videos' own cap
-        const full = countryCapProblem(db.maps.find((m) => m.id === photo.mapId), code, photo.kind || 'PHOTO');
-        if (full) return fail(409, full);
-      }
+    // Every check before anything changes, as the server (a refused edit changes nothing)
+    const asked = body.countryCode !== undefined && body.countryCode ? String(body.countryCode).toUpperCase() : null;
+    if (asked && !countryExists(asked)) return fail(400, 'Unknown country.');
+    const newCode = body.countryCode !== undefined ? asked && placeOnMap(asked, splitUk) : undefined;
+    // A new country, or none, that's full on the map (the owner's plan) -> 409; a video
+    // moves under the videos' own cap
+    if (newCode !== undefined && newCode !== (photo.countryCode || null)) {
+      const full = countryCapProblem(db.maps.find((m) => m.id === photo.mapId), newCode, photo.kind || 'PHOTO');
+      if (full) return fail(409, full);
     }
-    if (body.caption !== undefined) photo.caption = typeof body.caption === 'string' && body.caption.trim() ? body.caption.trim().slice(0, 300) : null;
+    if (body.tripId !== undefined) {
+      // Moving a photo between trips needs editor on the map, not just the trip
+      if (!atLeast(mapRole(db.maps.find((m) => m.id === photo.mapId)), 'EDITOR')) return fail(403, 'Only the map’s editors can move photos between trips.');
+      if (body.tripId && !db.trips.some((t) => t.id === body.tripId && t.mapId === photo.mapId)) return fail(400, 'That trip is not on this map.');
+    }
+    if (body.caption !== undefined) photo.caption = typeof body.caption === 'string' && body.caption.trim() ? body.caption.trim().slice(0, 500) : null;
     if (body.takenAt !== undefined) {
       photo.takenAt = body.takenAt || null;
       // shotAt follows takenAt; a date taken away falls back to the upload time
@@ -52,9 +58,7 @@ export function registerPhotoRoutes() {
     }
     if (body.hidden !== undefined) photo.hidden = Boolean(body.hidden);
     if (body.countryCode !== undefined) {
-      const asked = body.countryCode ? String(body.countryCode).toUpperCase() : null;
-      if (asked && !countryExists(asked)) return fail(400, 'Unknown country.');
-      const code = asked && placeOnMap(asked, splitUk);
+      const code = newCode;
       // A new gallery (another country, or none): it goes first there, as on the server
       if (code !== (photo.countryCode || null)) {
         photo.countryCode = code;
@@ -65,9 +69,6 @@ export function registerPhotoRoutes() {
       markVisited(photo.mapId, code, 'PHOTO');
     }
     if (body.tripId !== undefined) {
-      // Moving a photo between trips needs editor on the map, not just the trip
-      if (!atLeast(mapRole(db.maps.find((m) => m.id === photo.mapId)), 'EDITOR')) return fail(403, 'Only the map’s editors can move photos between trips.');
-      if (body.tripId && !db.trips.some((t) => t.id === body.tripId && t.mapId === photo.mapId)) return fail(400, 'That trip is not on this map.');
       const moved = (body.tripId || null) !== (photo.tripId || null);
       photo.tripId = body.tripId || null;
       if (moved && photo.tripId) photo.tripPosition = firstPosition(db.photos, 'trip', photo);

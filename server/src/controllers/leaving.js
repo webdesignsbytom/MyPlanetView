@@ -20,7 +20,8 @@ export const getLeavingOptionsHandler = handler(D, 'Get leaving options', async 
   const maps = owned.map((map) => ({
     id: map.id,
     name: map.name,
-    members: map.members.map((m) => ({ userId: m.userId, name: m.user?.name ?? null, role: m.role })),
+    // isActive: the client defaults to an active editor first, as heirOf does
+    members: map.members.map((m) => ({ userId: m.userId, name: m.user?.name ?? null, role: m.role, isActive: m.user?.isActive !== false })),
   }));
   return sendDataResponse(res, 200, { maps, photosOnOtherMaps });
 });

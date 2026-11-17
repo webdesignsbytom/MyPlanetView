@@ -2,8 +2,15 @@
 
 export const DELETE_MAP = 'DELETE';
 
-/** What a map goes to unless chosen otherwise: its longest-standing editor, as the server would, else nobody. */
-export const defaultChoiceFor = (map) => map.members.find((m) => m.role === 'EDITOR')?.userId || DELETE_MAP;
+/**
+ * What a map goes to unless chosen otherwise, as the server's heirOf: its longest-standing
+ * active editor, else a deactivated one, else nobody (17 Nov 2026, the audit: a deactivated
+ * editor could be the default while an active one waited).
+ */
+export const defaultChoiceFor = (map) => {
+  const editors = map.members.filter((m) => m.role === 'EDITOR');
+  return (editors.find((m) => m.isActive !== false) ?? editors[0])?.userId || DELETE_MAP;
+};
 
 /** The PUT /users/leaving-plan body from the choices ({ mapId: userId | 'DELETE' }). */
 export const leavingPlanFrom = (maps, choices, leavePhotos) => ({

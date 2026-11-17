@@ -1,10 +1,9 @@
 import React from 'react';
-// Icons
-import { FiCheck } from 'react-icons/fi';
 // Data
 import { everyPlanFeatures, pricingNotes } from '@/utils/data/pricingData';
 // Components
 import PaperCard from '@/components/common/PaperCard';
+import PricingFeature from '@/components/pricing/PricingFeature';
 
 // What comes with every plan, then the small print
 function PricingEveryPlan() {
@@ -12,10 +11,7 @@ function PricingEveryPlan() {
     <PaperCard title='On every plan' titleId='pricing-every-plan-heading' bodyClassName='gap-6'>
       <ul className='grid gap-3 md:grid-cols-2'>
         {everyPlanFeatures.map((feature) => (
-          <li key={feature.text} className='grid grid-cols-[auto_minmax(0,1fr)] items-start gap-2 leading-relaxed'>
-            <FiCheck aria-hidden='true' className='translate-y-1 text-status-good' />
-            <span>{feature.text}</span>
-          </li>
+          <PricingFeature key={feature.text} feature={feature} />
         ))}
       </ul>
 

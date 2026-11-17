@@ -160,7 +160,8 @@ describe('monthly photo themes', () => {
     const patch = (body) => admin.agent.patch(`/api/users/admin/themes/${current.id}`).send(body);
     // This map's photo, and the 20 from the full map above
     const entries = 1 + THEME_LIMITS.entriesPerMap;
-    expect(data(await patch({ title: 'Doors and gates' })).theme).toMatchObject({ title: 'Doors and gates', entryCount: entries });
+    // With both counts, as the list has them, so the admin row swaps in as it is
+    expect(data(await patch({ title: 'Doors and gates' })).theme).toMatchObject({ title: 'Doors and gates', entryCount: entries, mapCount: 2 });
     expect((await patch({ month: monthKey(months[5]) })).status).toBe(409);
     expect((await admin.agent.delete(`/api/users/admin/themes/${current.id}`)).status).toBe(409);
     // An empty one moves and goes

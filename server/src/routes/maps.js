@@ -60,7 +60,8 @@ router.delete('/:mapId', verified, deleteMapHandler);
 router.get('/:mapId/stats', getMapStatsHandler);
 // Owner only: the included (main) map, and handing a map to someone on it
 router.post('/:mapId/main', verified, makeMainMapHandler);
-router.post('/:mapId/transfer', verified, transferMapHandler);
+// Counts as making a map: handing over your main map makes you a new one (17 Nov 2026)
+router.post('/:mapId/transfer', verified, mapCreateDailyLimiter, transferMapHandler);
 
 // Travellers
 router.post('/:mapId/travellers', createTravellerHandler);

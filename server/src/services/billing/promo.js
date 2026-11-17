@@ -5,8 +5,8 @@
 // needed and the address must be verified (Checkout's own rules), so throwaway sign-ups
 // get nothing. The webhook records when the free month started (subscriptions.js).
 import { normalisePromoCode, promoCodeUsable, promoTrialDays, PROMO_TRIAL_DAYS } from '../../utils/promoCodes.js';
-import { countPromoUses, findProfilePromo, findPromoCodeByCode, setProfilePromoCode } from '../../domain/promoCodes.js';
-import { createGrantInDB } from '../../domain/billing.js';
+import { claimPromoCodeInDB, countPromoUses, findProfilePromo, findPromoCodeByCode } from '../../domain/promoCodes.js';
+import { createGrantInDB, findGrantByReason } from '../../domain/billing.js';
 import { FOR_LIFE_ENDS_AT } from '../../utils/promoCodes.js';
 
 /** A code that a new account may sign up with now, or null. */
@@ -19,23 +19,36 @@ export async function usablePromoCode(value, now = new Date()) {
 }
 
 /**
- * After sign-up: the code goes on the account. One of the user's own codes (`freePlan`) also
- * gives the account that plan for life: a complimentary membership ending in
- * FOR_LIFE_ENDS_AT, from whoever made the code, named after it.
+ * After sign-up: the code goes on the account, claimed under a lock so its limit holds
+ * (claimPromoCodeInDB). One of the user's own codes (`freePlan`) gives its plan for life once
+ * the address is verified (giveLifetimePlan; 17 Nov 2026, the audit: it was given to
+ * unverified accounts), so an account made already verified gets it now.
  */
-export async function recordSignUpPromoCode(user, value) {
-  const promo = await usablePromoCode(value);
+export async function recordSignUpPromoCode(user, value, now = new Date()) {
+  const promo = await usablePromoCode(value, now);
   if (!promo || !user?.id) return;
-  await setProfilePromoCode(user.id, promo.id);
-  if (promo.freePlan) {
-    await createGrantInDB({
-      userId: user.id,
-      plan: promo.freePlan,
-      endsAt: FOR_LIFE_ENDS_AT,
-      reason: `Promo code ${promo.code}, for life`,
-      grantedById: promo.createdById ?? null,
-    });
-  }
+  const claimed = await claimPromoCodeInDB({
+    userId: user.id,
+    promoCodeId: promo.id,
+    usable: (row, uses) => promoCodeUsable(row, { uses, now }),
+  });
+  if (claimed?.freePlan && user.emailVerified) await giveLifetimePlan(user.id);
+}
+
+/**
+ * The plan for life an account's code gives (`freePlan`), once its address is verified (the
+ * user update hook in auth.js, and recordSignUpPromoCode): a complimentary membership ending
+ * in FOR_LIFE_ENDS_AT, from whoever made the code, named after it. Given once: an account
+ * that has it already gets nothing more. -> true when it was given now
+ */
+export async function giveLifetimePlan(userId) {
+  const profile = await findProfilePromo(userId);
+  const promo = profile?.promoCode;
+  if (!promo?.freePlan) return false;
+  const reason = `Promo code ${promo.code}, for life`;
+  if (await findGrantByReason(userId, reason)) return false;
+  await createGrantInDB({ userId, plan: promo.freePlan, endsAt: FOR_LIFE_ENDS_AT, reason, grantedById: promo.createdById ?? null });
+  return true;
 }
 
 /**
