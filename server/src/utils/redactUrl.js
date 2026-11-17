@@ -9,6 +9,8 @@ const SECRET_PATHS = [
   [/^(\/api\/shared\/)[^/?#]+/i, '$1:code'],
   // A friends challenge's join link: /api/challenges/join/<code>
   [/^(\/api\/challenges\/join\/)[^/?#]+/i, '$1:code'],
+  // A promo code checked at sign-up: /api/promo-codes/<code> (a code for life gives a plan)
+  [/^(\/api\/promo-codes\/)[^/?#]+/i, '$1:code'],
   // Invites: accepting takes the token in the body; any other segment could be one
   [/^(\/api\/invites\/)(?!accept(?:[/?#]|$))[^/?#]+/i, '$1:token'],
   // better-auth's links: /api/auth/reset-password/<token>, /api/auth/verify-email/<token>

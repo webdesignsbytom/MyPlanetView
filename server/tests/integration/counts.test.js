@@ -62,6 +62,14 @@ describe('counts in map and trip lists', () => {
     expect(shared.find((t) => t.id === trip.id)).toMatchObject({ role: 'VIEWER', stopCount: 1, photoCount: 1 });
   });
 
+  it('gives a trip shared with you your trip role: the higher of the trip’s and the map’s', async () => {
+    // The map's editor, added to the trip as a viewer, still edits it, and sees its hidden photo
+    expect((await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: editor.email, role: 'VIEWER' })).status).toBe(201);
+    const shared = data(await editor.agent.get('/api/trips/shared-with-me')).trips;
+    expect(shared.find((t) => t.id === trip.id)).toMatchObject({ role: 'EDITOR', photoCount: 2 });
+    expect(data(await editor.agent.get(`/api/trips/${trip.id}`)).trip.role).toBe('EDITOR');
+  });
+
   it('leaves hidden photos out of the counts behind a share link', async () => {
     expect((await owner.agent.patch(`/api/maps/${map.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' })).status).toBe(200);
     const code = data(await owner.agent.get(`/api/maps/${map.id}/sharing`)).shareCode;

@@ -9,6 +9,7 @@ import { isUuid } from '../utils/travelValidation.js';
 import { THEME_LIMITS, isRunning, monthStart, parseThemeInput, themeView } from '../utils/themes.js';
 import {
   countThemeEntries,
+  countThemeMaps,
   createThemeInDB,
   deleteThemeInDB,
   enterPhotoInTheme,
@@ -215,7 +216,9 @@ export const updateThemeHandler = handler(D, 'Update theme', async (req, res) =>
   }
   const theme = Object.keys(data).length ? await updateThemeInDB(existing.id, data) : existing;
   logEvent(createThemeEvent({ user: req.user, action: 'Update Success', id: theme.id, detail: Object.keys(data).join(',') }));
-  return sendDataResponse(res, 200, { theme: adminView({ ...theme, entryCount }) });
+  // The row's counts as the list shows them, so the admin page can swap it in as it is
+  const mapCount = entryCount ? await countThemeMaps(existing.id) : 0;
+  return sendDataResponse(res, 200, { theme: adminView({ ...theme, entryCount, mapCount }) });
 });
 
 /** Only a theme with no photos entered can go (its albums would vanish with it). */

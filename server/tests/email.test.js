@@ -30,7 +30,9 @@ const CONTACT = {
   email: 'ada@example.test',
   message: 'Hello from the contact form',
   businessName: 'Test Co',
-  businessUrl: 'https://example.test',
+  // As the app passes them (siteConstants.js): the bare host to show, the full address to link
+  businessUrl: 'example.test',
+  businessSiteUrl: 'https://example.test',
   year: 2026,
 };
 
@@ -61,6 +63,8 @@ describe('emailHandler: real templates, faked Resend', () => {
     expect(sent.html).toContain('ada@example.test');
     expect(sent.html).toContain('Hello from the contact form');
     expect(sent.html).toContain('Test Co');
+    // The footer links the site with its scheme (a bare host is a relative link in a mail client)
+    expect(sent.html).toContain('href="https://example.test">example.test</a>');
   });
 
   it('sets reply-to on a contact notification to the person who sent the form', async () => {

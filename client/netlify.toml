@@ -6,6 +6,8 @@
 
 [build.environment]
   PLAYWRIGHT_BROWSERS_PATH = "0"
+  # The Node CI and Vercel use (package.json "engines", .nvmrc)
+  NODE_VERSION = "24"
 
 # Redirects: dist/_redirects is written at build (scripts/prerender.mjs): first /api/* and /go/*
 # passed through to the API (my-planet-view.vercel.app), so the browser only talks to this
@@ -17,7 +19,7 @@
 #   to = "/new-path"
 #   status = 301
 
-# The same headers as public/.htaccess (section 4): keep the two in step. Netlify serves
+# The same headers as public/.htaccess (section 5): keep the two in step. Netlify serves
 # HTTPS and compresses by itself.
 [[headers]]
   for = "/*"

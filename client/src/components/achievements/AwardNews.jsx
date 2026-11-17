@@ -23,6 +23,9 @@ function AwardNews({ news, onOpen, onDismiss }) {
   const timerRef = useRef(null);
 
   useEffect(() => {
+    // Each note starts unheld: the last one went with a click (its close stamp, "See badges
+    // and goals"), which takes it away without a pointer-leave or a blur to let go
+    holdRef.current = false;
     if (!text) return undefined;
     const tick = () => {
       if (holdRef.current) timerRef.current = window.setTimeout(tick, 1500);

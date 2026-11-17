@@ -1,11 +1,14 @@
-import { lazy } from 'react';
+import { createElement, lazy } from 'react';
 
 // The map page's overlays: none is part of the first paint. Each has preload(), so its
 // code is fetched once the map has drawn and the browser is idle (preloadWhenIdle), or
 // sooner on intent (a toolbar stamp hovered, focused or pressed), and is there by the
 // time the click opens it.
 
-// lazy() that renders straight away once its code is loaded (no fallback flash)
+// lazy() that renders straight away once its code is loaded (no fallback flash). React
+// keeps a lazy component's failed load for good, so after a failure (a dropped connection,
+// or old code gone after a deploy) the panel gets a fresh one: the error boundary says it
+// failed, and the next open downloads it again instead of failing until a reload
 function lazyPanel(load) {
   let loaded = null;
   let pending = null;
@@ -19,7 +22,17 @@ function lazyPanel(load) {
     );
     return pending;
   };
-  const Panel = lazy(() => (loaded ? { then: (resolve) => resolve(loaded) } : preload()));
+  const fresh = () =>
+    lazy(() =>
+      loaded
+        ? { then: (resolve) => resolve(loaded) }
+        : preload().catch((err) => {
+            current = fresh();
+            throw err;
+          }),
+    );
+  let current = fresh();
+  const Panel = (props) => createElement(current, props);
   Panel.preload = preload;
   return Panel;
 }

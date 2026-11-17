@@ -15,6 +15,16 @@ function readStored() {
   }
 }
 
+// Save what's waiting in `pendingRef` to the profile, once
+function savePending(pendingRef) {
+  const pending = pendingRef.current;
+  pendingRef.current = null;
+  if (!pending) return;
+  putMapSettings(pending).catch(() => {
+    // Saving failed: the browser copy still holds them; try again on the next change
+  });
+}
+
 /**
  * The viewer's map preferences. Always kept in this browser, which gives the first paint;
  * when `remote` (signed in) they're also loaded from the profile (and that copy kept in
@@ -46,18 +56,22 @@ export default function useMapSettings({ remote = false } = {}) {
     };
   }, [remote]);
 
-  // Save after a change: to this browser at once, to the profile after a pause
+  // Save after a change: to this browser at once, to the profile after a pause. The
+  // settings waiting for that pause are kept here, so leaving the page during it still
+  // saves them (otherwise the profile's older copy wins on the next visit)
+  const pendingRef = useRef(null);
   useEffect(() => {
     if (!changedRef.current) return undefined;
     setStoredItem(MAP_SETTINGS_STORAGE_KEY, JSON.stringify(settings));
-    if (!remote) return undefined;
-    const timer = setTimeout(() => {
-      putMapSettings(settings).catch(() => {
-        // Saving failed: the browser copy still holds them; try again on the next change
-      });
-    }, SAVE_DELAY_MS);
+    if (!remote) {
+      pendingRef.current = null;
+      return undefined;
+    }
+    pendingRef.current = settings;
+    const timer = setTimeout(() => savePending(pendingRef), SAVE_DELAY_MS);
     return () => clearTimeout(timer);
   }, [settings, remote]);
+  useEffect(() => () => savePending(pendingRef), []);
 
   const updateSetting = useCallback((key, value) => {
     changedRef.current = true;

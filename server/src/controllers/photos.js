@@ -178,7 +178,7 @@ export const presignPhotoHandler = handler(D, 'Presign photo', async (req, res) 
  * must be saved within PHOTO_SAVE_WINDOW_MINUTES of its presign: after an hour the
  * daily clean-up may delete its files, so it never deletes a photo being saved.
  */
-async function checkUploadedFiles({ mapId, photoId, variants, userId, kind = 'PHOTO' }) {
+async function checkUploadedFiles({ mapId, photoId, variants, userId }) {
   const folder = photoKeyFolder({ mapId, photoId });
   const keys = variants.map((v) => v.key);
   const items = await findMediaItemsByKeys(keys);
@@ -235,8 +235,13 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
   if (!isUuid(photoId)) return badRequest(req, res, D, EVENT_MESSAGES.photoUploadInvalid);
   if (await findPhotoById(photoId)) return conflict(req, res, D, EVENT_MESSAGES.photoAlreadySaved);
 
-  // Not saved, so nothing uses this photo's folder yet: its files can go
-  const discardUpload = () => deleteStoredObjects(uploadKeysOf(map.id, photoId, body.variants));
+  // Not saved, so nothing uses this photo's folder yet: its files can go. Asked again first:
+  // the same upload confirmed twice at once is saved by one request, and the other may then
+  // be refused at the cap, which mustn't delete the saved photo's files
+  const discardUpload = async () => {
+    if (await findPhotoById(photoId)) return;
+    await deleteStoredObjects(uploadKeysOf(map.id, photoId, body.variants));
+  };
   const mapPlan = await loadMapPlan(map.id);
   if (!mapPlan) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
   if (mapPlan.locked) {
@@ -278,7 +283,7 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
   const chosenCountry = await parseOptionalCountry(body.countryCode);
   if (!chosenCountry.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
 
-  const checked = await checkUploadedFiles({ mapId: map.id, photoId, variants, userId: req.user.id, kind });
+  const checked = await checkUploadedFiles({ mapId: map.id, photoId, variants, userId: req.user.id });
   if (checked.status) {
     // Nothing from a failed upload is kept
     await discardUpload();

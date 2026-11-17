@@ -44,13 +44,19 @@ export function parseDateOnly(input) {
   return { ok: true, value: date };
 }
 
-/** A full timestamp (ISO string), same missing/null/invalid rules as parseDateOnly. */
+/**
+ * A full timestamp (ISO string), same missing/null/invalid rules as parseDateOnly. Years 1
+ * to 9999 only, as a date-only field allows: JavaScript reads years Postgres can't store
+ * ("-100000-01-01T00:00:00Z"), which failed the write with a 500.
+ */
 export function parseDateTime(input) {
   if (input === undefined) return { ok: true, value: undefined };
   if (input === null || input === '') return { ok: true, value: null };
   if (typeof input !== 'string') return { ok: false };
   const date = new Date(input);
-  return Number.isNaN(date.getTime()) ? { ok: false } : { ok: true, value: date };
+  if (Number.isNaN(date.getTime())) return { ok: false };
+  const year = date.getUTCFullYear();
+  return year < 1 || year > 9999 ? { ok: false } : { ok: true, value: date };
 }
 
 /** End on or after start, when both are set. */

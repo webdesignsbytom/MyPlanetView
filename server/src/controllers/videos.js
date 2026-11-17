@@ -169,7 +169,9 @@ export const saveVideoHandler = handler(D, 'Save video', async (req, res) => {
     limits: await videoLimits(target.mapPlan.plan, countryCode),
   });
   if (saved.refused) {
-    await deleteVideo(ticket.uid).catch(() => {});
+    // Unless the same ticket, saved twice at once, was saved by the other request (which
+    // filled the cap this one was refused at): that video is in use
+    if (!(await findPhotoById(ticket.photoId))) await deleteVideo(ticket.uid).catch(() => {});
     return conflict(req, res, D, saved.refused);
   }
   // Stream's own record names the row, for anyone looking at the account

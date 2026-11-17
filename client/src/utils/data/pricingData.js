@@ -2,8 +2,9 @@
 // map, its looks and private sharing; the photo limits are a line on each ticket. Every
 // number comes from the plan constants, so a price or a limit changes in one place.
 //
-// `soon: true` marks a claim about a feature that isn't built yet (the launch list in
-// FEATURE-PLAN.md, "Phases"). Check each one is live before the page is published.
+// `soon: true` marks a feature that isn't built yet (the launch list in FEATURE-PLAN.md,
+// "Phases"): the page shows it with a clock and "Coming soon" (PricingFeature), never as
+// there. Take the flag off once it's live.
 import { CompanyName } from '../constants/constants.js';
 import { EDITORS_PER_MAP, INCLUDED_MAPS, PLANS, formatPence } from '../constants/plans.js';
 import { REFUND_DAYS } from '../plans/billing.js';

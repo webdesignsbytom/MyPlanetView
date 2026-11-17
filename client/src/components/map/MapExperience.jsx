@@ -53,7 +53,7 @@ import { nearestGoal } from '@/utils/achievements/goals';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { MAP_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/map/mapListCache';
-import { preloadCountryLists } from '@/utils/map/preloadCountryLists';
+import { countryListsOf, countryMomentFilters, countryPhotoFilters, preloadCountryLists } from '@/utils/map/preloadCountryLists';
 import { preloadSharing } from '@/utils/sharing/sharingCache';
 import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole } from '@/utils/sharing/shareRoles';
@@ -165,7 +165,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // inside the map loads afterwards): the share settings (the owner's), the photo album's
   // and the timeline's first pages, every landmark (the country tickets' lists and the
   // pins), your map lists, and every country ticket's photos and moments
-  // (preloadCountryLists: fetched where the map says there are some, kept empty elsewhere),
+  // (preloadCountryLists: fetched where the map says there are some, kept empty elsewhere;
+  // viewers' and share links' photo lists, which have no counts, when a country is hovered),
   // all into the panel cache (utils/data/panelCache.js); the badges and goals come with
   // useAchievements below. Each panel then shows its data at once and refreshes quietly. The
   // map draws underneath meanwhile, and the screen lifts once they're all in, or after
@@ -202,7 +203,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   }, [map.id, isOwner, photoSource, userId, shareCode]);
 
   // A country the pointer rests on: its ticket's photos and moments start loading, so it
-  // opens with them (phones open a ticket at the first press, so it loads then)
+  // opens with them (phones open a ticket at the first press, so it loads then). Never a
+  // list the map reply says is empty: it's kept empty already, and the ticket checks it
+  // quietly when it opens
   const hoverTimerRef = useRef(0);
   const hoverCountry = useCallback(
     (code) => {
@@ -210,8 +213,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       window.clearTimeout(hoverTimerRef.current);
       if (!code) return;
       hoverTimerRef.current = window.setTimeout(() => {
-        preloadPhotoPage({ ...photoSource, country: code, limit: 12 });
-        preloadMomentPage({ ...photoSource, country: code });
+        const lists = countryListsOf(mapNowRef.current, code);
+        if (lists.photos !== 'none') preloadPhotoPage(countryPhotoFilters(photoSource, code));
+        if (lists.moments !== 'none') preloadMomentPage(countryMomentFilters(photoSource, code));
       }, 250);
     },
     [hover, photoSource],

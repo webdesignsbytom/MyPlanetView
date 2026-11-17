@@ -112,7 +112,11 @@ function CountryLayer({
 
   const handlePointerDown = useCallback(
     (e) => {
-      if (pressRef.current) endPress(); // a second finger: a pinch
+      // A second finger: a pinch, which cancels the press and never starts its own
+      if (pressRef.current) {
+        endPress();
+        return;
+      }
       if (e.pointerType !== 'touch') return;
       const code = codeFrom(e.target);
       if (!code) return;

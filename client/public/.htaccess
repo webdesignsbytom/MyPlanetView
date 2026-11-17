@@ -9,7 +9,25 @@ RewriteCond %{REQUEST_URI} !^/[0-9]+\..+\.cpaneldcv$
 RewriteCond %{REQUEST_URI} !^/\.well-known/pki-validation/[A-F0-9]{32}\.txt(?:\ Comodo\ DCV)?$
 RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# 2) Pre-rendered pages (<route>.html), the app shell for browser-only pages, a real 404 for the rest
+# 2) and 3) come before the pages' rules (4): mod_rewrite runs this file's rules as one
+# list, and section 4's [L] rules end it for every page and file, so anything after them
+# only ever reached addresses nothing else matched
+
+# 2) Limit HTTP methods (keep)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_METHOD} !^(GET|POST|HEAD|OPTIONS)$
+  RewriteRule .* - [F]
+</IfModule>
+
+# 3) Simple bot ban (no generic words like "crawler": real search bots use them)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_USER_AGENT} (badbot|spambot) [NC]
+  RewriteRule .* - [F,L]
+</IfModule>
+
+# 4) Pre-rendered pages (<route>.html), the app shell for browser-only pages, a real 404 for the rest
 Options -Indexes
 <IfModule mod_dir.c>
   DirectorySlash Off
@@ -40,13 +58,7 @@ Options -Indexes
 </IfModule>
 ErrorDocument 404 /404.html
 
-# 3) Limit HTTP methods (keep)
-<IfModule mod_rewrite.c>
-  RewriteCond %{REQUEST_METHOD} !^(GET|POST|HEAD|OPTIONS)$
-  RewriteRule .* - [F]
-</IfModule>
-
-# 4) Security headers (keep)
+# 5) Security headers (keep)
 # CSP: no inline script anywhere (the pages' only inline <script>s are JSON-LD, which is
 # data, not code), so script-src has no 'unsafe-inline'. style-src keeps it for React's
 # style attributes. Forms only post to this site (the app sends its data with fetch/XHR).
@@ -86,8 +98,8 @@ ErrorDocument 404 /404.html
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 </IfModule>
 
-# 5) Compression (Brotli, Gzip fallback) + Vary
-# The types must match what section 7 serves: .js and .mjs go out as text/javascript, and
+# 6) Compression (Brotli, Gzip fallback) + Vary
+# The types must match what section 8 serves: .js and .mjs go out as text/javascript, and
 # TravelFont is a .ttf (font/ttf), which compresses by about a third (woff2 is already compressed).
 <IfModule mod_brotli.c>
   BrotliCompressionQuality 5
@@ -103,12 +115,12 @@ ErrorDocument 404 /404.html
   Header append Vary Accept-Encoding
 </IfModule>
 
-# 6) Access hardening (keep)
+# 7) Access hardening (keep)
 <FilesMatch "\.(htaccess|htpasswd|env|ini|log|sh|php)$">
   Require all denied
 </FilesMatch>
 
-# 7) Charset + MIME types (keep)
+# 8) Charset + MIME types (keep)
 AddDefaultCharset UTF-8
 <IfModule mod_mime.c>
   AddType text/javascript .js
@@ -124,7 +136,7 @@ AddDefaultCharset UTF-8
   AddType video/webm .webm
 </IfModule>
 
-# 8) Caching
+# 9) Caching
 <IfModule mod_expires.c>
   ExpiresActive On
 
@@ -177,13 +189,6 @@ AddDefaultCharset UTF-8
   <FilesMatch "^(manifest\.json|robots\.txt|sitemap\.xml)$">
     Header set Cache-Control "public, max-age=3600"
   </FilesMatch>
-</IfModule>
-
-# 9) Simple bot ban (no generic words like "crawler": real search bots use them)
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteCond %{HTTP_USER_AGENT} (badbot|spambot) [NC]
-  RewriteRule .* - [F,L]
 </IfModule>
 
 # 10) PHP handler (keep)
