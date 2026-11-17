@@ -1,12 +1,12 @@
 // The admin's promo code form (docs/API.md, "Promo codes"): its fields as the inputs hold
 // them, and the body the server takes, checked first as the server checks it
-// (server/src/utils/promoCodes.js), with a message per field. Every code gives the same
-// offer (PROMO_TRIAL_DAYS), so there's nothing to set for it.
+// (server/src/utils/promoCodes.js), with a message per field. What a code gives is chosen
+// when it's made (`freePlan`: a plan for life, or '' for the usual free month) and never changed.
 import { serverText } from '@/utils/regex/regex';
 import { toDateInput } from '@/utils/functions/dates';
-import { PROMO_LABEL_MAX, PROMO_MAX_USES_MAX, normalisePromoCode } from './promoCodes';
+import { FREE_PLAN_IDS, PROMO_LABEL_MAX, PROMO_MAX_USES_MAX, normalisePromoCode } from './promoCodes';
 
-export const emptyPromoForm = () => ({ code: '', label: '', maxUses: '', lastDay: '' });
+export const emptyPromoForm = () => ({ code: '', freePlan: '', label: '', maxUses: '', lastDay: '' });
 
 /** A stored code as the form's fields (for changing it). */
 export const promoFormFrom = (promo) => ({
@@ -32,6 +32,7 @@ export function promoBodyFrom(form, { existing = null } = {}) {
     const code = normalisePromoCode(form.code);
     if (code) body.code = code;
     else errors.code = 'A code is 3 to 24 letters and numbers.';
+    if (FREE_PLAN_IDS.includes(form.freePlan)) body.freePlan = form.freePlan;
   }
 
   const label = serverText(form.label).slice(0, PROMO_LABEL_MAX);

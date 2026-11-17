@@ -216,7 +216,7 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
   return (
     <section aria-label='Passport book' className={`grid gap-4 ${passportCover(passport.map.plan).look}`}>
       <div
-        className={`relative grid touch-pan-y select-none perspective-[2200px] md:h-[40rem] ${turn?.style === 'slide' ? 'overflow-hidden' : ''}`}
+        className={`relative grid aspect-[88/125] min-h-0 touch-pan-y select-none grid-rows-[minmax(0,1fr)] perspective-[2200px] md:aspect-auto md:h-[40rem] ${turn?.style === 'slide' ? 'overflow-hidden' : ''}`}
         onPointerDown={(e) => {
           if (e.pointerType !== 'mouse') swipeRef.current = { x: e.clientX, y: e.clientY };
         }}
@@ -268,11 +268,18 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
         ) : null}
       </div>
 
+      {/* The page list between the two buttons, in one row on every screen; on phones the
+          buttons are arrows alone (17 Nov 2026, the user's wish), named "Previous page" and
+          "Next page" all the same */}
       <nav
         aria-label='Passport pages'
-        className='paper-aged paper-fields ticket-edge grid grid-cols-2 items-center gap-3 rounded-lg px-4 py-3 text-poster-ink sm:grid-cols-[auto_minmax(0,1fr)_auto]'
+        className='paper-aged paper-fields ticket-edge grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-3 py-3 text-poster-ink sm:px-4'
       >
-        <div className='col-span-2 grid justify-items-center sm:order-2 sm:col-span-1'>
+        <Button quiet onClick={() => go(at - 1)} disabled={at === 0}>
+          <IoChevronBack aria-hidden='true' />
+          <span className='sr-only sm:not-sr-only'>Previous page</span>
+        </Button>
+        <div className='grid justify-items-center'>
           <PlainOptionSelect
             id={pageListId}
             ariaLabel='Go to a page'
@@ -287,24 +294,10 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
             Page {at + 1} of {leaves.length}: {leaves[at]?.label}
           </p>
         </div>
-        <div className='grid justify-items-start sm:order-1'>
-          <Button quiet onClick={() => go(at - 1)} disabled={at === 0}>
-            {/* "Previous" and "Next" alone on phones, where both don't fit side by side;
-                the names stay "Previous page" and "Next page" */}
-            <IoChevronBack aria-hidden='true' />
-            <span>
-              Previous<span className='sr-only sm:not-sr-only'> page</span>
-            </span>
-          </Button>
-        </div>
-        <div className='grid justify-items-end sm:order-3'>
-          <Button quiet onClick={() => go(at + 1)} disabled={at === leaves.length - 1}>
-            <span>
-              Next<span className='sr-only sm:not-sr-only'> page</span>
-            </span>
-            <IoChevronForward aria-hidden='true' />
-          </Button>
-        </div>
+        <Button quiet onClick={() => go(at + 1)} disabled={at === leaves.length - 1}>
+          <span className='sr-only sm:not-sr-only'>Next page</span>
+          <IoChevronForward aria-hidden='true' />
+        </Button>
       </nav>
     </section>
   );

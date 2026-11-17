@@ -1,4 +1,4 @@
-import { test, expect, HOME_SHARE_CODE, openMap, openTool } from './fixtures.js';
+import { test, expect, HOME_SHARE_CODE, openMap, openTool, mapReady } from './fixtures.js';
 
 // Monthly photo themes (docs/API.md, "Photo themes"). The mock seeds the server's example
 // year from last month on: last month "Doors" (the test user's map has Granada in it), this
@@ -58,7 +58,7 @@ test.describe('Monthly photo themes', () => {
 
   test('a share link shows the albums, with nothing to enter', async ({ page }) => {
     await page.goto(`/shared/${HOME_SHARE_CODE}`);
-    await expect(page.getByRole('application', { name: /: world map$/ })).toBeVisible();
+    await mapReady(page);
     const panel = await openTool(page, 'Badges and goals', 'Badges and goals');
     const theme = themeSection(panel);
     await expect(theme.getByText('2 photos from this map')).toBeVisible();

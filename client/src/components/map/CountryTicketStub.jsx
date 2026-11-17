@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBookOpen } from 'react-icons/fa';
 // Components
 import PosterImage from './PosterImage';
 import PosterPlaceholder from './PosterPlaceholder';
+import PosterViewer from './PosterViewer';
 // Data
 import { postersFor } from '@/utils/map/posterData';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
@@ -22,9 +23,11 @@ import { formatDay } from '@/utils/functions/dates';
 // the top part scrolls should it still not fit, so they're never cut off. At the
 // bottom, a link to the country's guide, `/countries/<slug>` (a UK nation's is the UK's),
 // on every ticket: the guides are being written, and a guide not in this build yet opens
-// the site's "not found" page (the guides use the country list's slugs).
+// the site's "not found" page (the guides use the country list's slugs). A tap on the
+// poster shows it full screen (PosterViewer; 17 Nov 2026, the user's wish).
 function CountryTicketStub({ code, countryName, status, firstVisitedOn, controls = null }) {
   const [poster] = postersFor(code);
+  const [viewing, setViewing] = useState(false);
   const guideSlug = COUNTRY_BY_CODE[countryOf(code)]?.slug;
   const visited = countsAsVisited(status);
   const stampWords = status ? VISIT_STATUS_LABELS[status] : 'Not been yet';
@@ -35,7 +38,7 @@ function CountryTicketStub({ code, countryName, status, firstVisitedOn, controls
 
   return (
     <aside
-      className={`paper-aged grid min-h-0 gap-4 overflow-hidden border-r-2 border-dashed border-poster-brown p-2 md:p-4 ${
+      className={`paper-aged grid min-h-0 gap-4 overflow-hidden border-r-2 border-dashed border-poster-brown p-2 nophone:p-4 ${
         guideSlug ? 'grid-rows-[minmax(0,1fr)_auto]' : ''
       }`}
     >
@@ -44,12 +47,19 @@ function CountryTicketStub({ code, countryName, status, firstVisitedOn, controls
       <div className='-m-2 grid min-h-0 content-start justify-items-center gap-4 overflow-y-auto p-2'>
         <figure className={`grid gap-1 ${posterWidth}`}>
           {poster ? (
-            <PosterImage
-              poster={poster}
-              alt={`Travel poster for ${countryName}`}
-              // No cream border: the posters have their own printed one (17 Nov 2026)
-              className='overflow-hidden shadow-paper'
-            />
+            <button
+              type='button'
+              onClick={() => setViewing(true)}
+              aria-label={`Show the travel poster for ${countryName} full screen`}
+              className='grid cursor-zoom-in transition hover:brightness-105'
+            >
+              <PosterImage
+                poster={poster}
+                alt=''
+                // No cream border: the posters have their own printed one (17 Nov 2026)
+                className='overflow-hidden shadow-paper'
+              />
+            </button>
           ) : (
             <PosterPlaceholder countryName={countryName} compact />
           )}
@@ -68,7 +78,7 @@ function CountryTicketStub({ code, countryName, status, firstVisitedOn, controls
           </span>
         )}
         {visited && firstVisitedOn && !controls ? (
-          <p aria-hidden='true' className='grid w-full text-center font-travel text-2xs uppercase text-poster-brown [overflow-wrap:anywhere] md:text-xs md:tracking-wide'>
+          <p aria-hidden='true' className='grid w-full text-center font-travel text-2xs uppercase text-poster-brown [overflow-wrap:anywhere] nophone:text-xs nophone:tracking-wide'>
             <span>First went</span>
             <span>{formatDay(firstVisitedOn)}</span>
           </p>
@@ -79,10 +89,11 @@ function CountryTicketStub({ code, countryName, status, firstVisitedOn, controls
           to={countryPagePath(guideSlug)}
           className='btn-paper w-full grid-flow-col justify-center gap-2 text-center [grid-auto-columns:minmax(0,max-content)] [--btn-leading:1.25rem] [--btn-pad-x:0.5rem] [--btn-pad-y:0.25rem] [--btn-size:0.9375rem]'
         >
-          <FaBookOpen aria-hidden='true' className='hidden h-4 w-4 self-center md:block' />
+          <FaBookOpen aria-hidden='true' className='hidden h-4 w-4 self-center nophone:block' />
           Country guide
         </Link>
       ) : null}
+      {viewing && poster ? <PosterViewer poster={poster} countryName={countryName} onClose={() => setViewing(false)} /> : null}
     </aside>
   );
 }

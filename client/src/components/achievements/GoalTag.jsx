@@ -28,12 +28,12 @@ function GoalTag({ goals, badges, onOpen, onIntent }) {
   const detail = goal ? goalProgressText(goal) : null;
   const fraction = goal ? goalFraction(goal) : badges.length ? earned / badges.length : 0;
   // Phones: shown only once the flag opens it, and only when there's a goal
-  const onPhones = goal && open ? '' : 'max-md:hidden';
+  const onPhones = goal && open ? '' : 'phone:hidden';
 
   return (
     <div className='grid justify-items-start gap-2'>
       {goal ? (
-        <div className='pointer-events-auto grid md:hidden'>
+        <div className='pointer-events-auto grid nophone:hidden'>
           <MapRoundButton label='Next goal' pressed={open} onClick={() => setOpen((shown) => !shown)}>
             <FaFlagCheckered aria-hidden='true' />
           </MapRoundButton>

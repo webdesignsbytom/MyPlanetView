@@ -1078,6 +1078,12 @@ model PromoCode {
   maxUses Int?
   endsAt  DateTime?
 
+  // A code that gives a paid plan for life (REGULAR or PREMIUM, CHECK promo_code_free_plan;
+  // the user's own codes, 17 Nov 2026): signing up with it gives the account a complimentary
+  // membership that never ends (utils/promoCodes.js). Null: the usual offer, the first month
+  // free. Set when the code is made, never changed.
+  freePlan Plan?
+
   createdById String?
   createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
 

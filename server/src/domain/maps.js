@@ -205,7 +205,7 @@ export const findTravellerIds = async (mapId) =>
   (await prisma.traveller.findMany({ where: { mapId }, select: { id: true } })).map((t) => t.id);
 
 export const findTraveller = (mapId, travellerId) =>
-  prisma.traveller.findFirst({ where: { id: travellerId, mapId }, select: { id: true } });
+  prisma.traveller.findFirst({ where: { id: travellerId, mapId }, select: { id: true, birthCountryCode: true } });
 
 const TRAVELLER_SELECT = {
   id: true,

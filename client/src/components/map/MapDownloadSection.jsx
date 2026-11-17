@@ -13,7 +13,8 @@ function MapDownloadSection({ map }) {
       <p className='text-sm opacity-80'>
         Every photo on “{map.name}” as a zip, in a folder per country: to keep a copy, or to print.
       </p>
-      <PrintDownload inMapPanel scope={{ mapId: map.id }} title={map.name} byCountry label='Download or print photos' />
+      {/* Full width, as Settings' Save map above it (17 Nov 2026, the user's wish) */}
+      <PrintDownload inMapPanel fill scope={{ mapId: map.id }} title={map.name} byCountry label='Download or print photos' />
     </section>
   );
 }

@@ -39,7 +39,7 @@ import {
   acceptInvitesForVerifiedUser,
   releaseTravelDataForDeletedUser,
 } from './services/travel/accounts.js';
-// Influencer codes: checked before sign-up, recorded after, the offer given once verified
+// Promo codes: checked before sign-up, recorded after (a code for life gives its membership then)
 import { recordSignUpPromoCode, usablePromoCode } from './services/billing/promo.js';
 import { endSubscriptionOfDeletedAccount } from './services/billing/subscriptions.js';
 // Responses

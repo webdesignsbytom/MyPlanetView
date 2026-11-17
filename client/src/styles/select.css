@@ -85,7 +85,10 @@
       rotate: 180deg;
     }
 
+    /* The open list is as wide as its box (17 Nov 2026, the user's wish: a long country name
+       made it wider, past the panel's edge on a phone); a long name wraps instead */
     .app-select::picker(select) {
+      width: anchor-size(width);
       max-height: 20rem;
       margin-block: var(--select-gap);
       padding: var(--select-padding);

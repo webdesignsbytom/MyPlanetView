@@ -83,7 +83,7 @@ test.describe('Travel offers (admin)', () => {
     await dialog.getByRole('checkbox', { name: /^End of a slideshow/ }).uncheck();
     await dialog.getByRole('checkbox', { name: /^Country pages/ }).uncheck();
     await dialog.getByRole('button', { name: 'Use Portugal’s poster' }).click();
-    await expect(dialog.getByRole('textbox', { name: 'Picture (optional)' })).toHaveValue('visitCountryPosters/pt-800.avif');
+    await expect(dialog.getByRole('textbox', { name: 'Picture (optional)' })).toHaveValue('visitCountryPosters/pt-vintage-lisbon-tram-adventure-800.avif');
     await dialog.getByRole('spinbutton', { name: 'Weight (1 to 100)' }).fill('4');
 
     // Only https links
@@ -233,7 +233,7 @@ test.describe('Travel offers (admin)', () => {
       countryCode: 'ES',
       placements: ['GALLERY', 'TRAVEL_DESK'],
       url: 'https://www.example.com/stays/summer-sale?ref=myplanetview-example',
-      imageKey: 'visitCountryPosters/es-800.avif',
+      imageKey: 'visitCountryPosters/es-flamenco-and-tapas-800.avif',
       weight: 1,
       active: false,
       startsAt: null,

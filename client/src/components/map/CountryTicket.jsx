@@ -8,7 +8,7 @@ import CloseStamp from '@/components/common/CloseStamp';
 // clipped by the ticket, in the poster red of the home page's frame (as the sign-in
 // pages' TravelTicket notches are), whatever the map style. Their left edge sits on the
 // stub's width (6.5rem on phones, 15rem from md up) less half a punch.
-const PUNCH = 'pointer-events-none absolute h-5 w-5 rounded-full border-2 border-poster-brown bg-poster-red left-[5.875rem] md:left-[14.375rem]';
+const PUNCH = 'pointer-events-none absolute h-5 w-5 rounded-full border-2 border-poster-brown bg-poster-red left-[5.875rem] nophone:left-[14.375rem]';
 
 /**
  * A country's card on the map, styled as a boarding pass like the sign-in pages'
@@ -22,19 +22,19 @@ const PUNCH = 'pointer-events-none absolute h-5 w-5 rounded-full border-2 border
  */
 function CountryTicket({ title, kicker, stub = null, onClose, children }) {
   const { titleId, headingRef, panelProps } = useMapPanel(onClose);
-  const columns = stub ? 'grid-cols-[6.5rem_minmax(0,1fr)] md:grid-cols-[15rem_minmax(0,1fr)]' : 'grid-cols-1';
+  const columns = stub ? 'grid-cols-[6.5rem_minmax(0,1fr)] nophone:grid-cols-[15rem_minmax(0,1fr)]' : 'grid-cols-1';
   // A country's ticket is wider than the list's (16 Nov 2026): its forms (notes, moments)
   // set fields side by side
-  const width = stub ? 'md:w-[min(56rem,calc(100vw_-_12rem))]' : 'md:w-[min(46rem,calc(100vw_-_12rem))]';
+  const width = stub ? 'nophone:w-[min(56rem,calc(100vw_-_12rem))]' : 'nophone:w-[min(46rem,calc(100vw_-_12rem))]';
   // On a phone, while a form that needs the room is open (marked `data-ticket-form`: a
   // moment's), the stub steps aside and the content takes the ticket's whole width
-  const formTakesStub = 'max-md:group-has-[[data-ticket-form]]:hidden';
+  const formTakesStub = 'phone:group-has-[[data-ticket-form]]:hidden';
 
   return (
     <section
       {...panelProps}
-      className={`ticket-edge paper-fields group pointer-events-auto relative grid h-full w-full ${columns} grid-rows-[minmax(0,1fr)] overflow-hidden rounded-lg bg-paper-cream text-colour4 md:h-auto md:max-h-full ${width} ${
-        stub ? 'max-md:has-[[data-ticket-form]]:grid-cols-1' : ''
+      className={`ticket-edge paper-fields group pointer-events-auto relative grid h-full w-full ${columns} grid-rows-[minmax(0,1fr)] overflow-hidden rounded-lg bg-paper-cream text-colour4 nophone:h-auto nophone:max-h-full ${width} ${
+        stub ? 'phone:has-[[data-ticket-form]]:grid-cols-1' : ''
       }`}
     >
       {stub ? <div className={`contents ${formTakesStub}`}>{stub}</div> : null}
@@ -46,7 +46,7 @@ function CountryTicket({ title, kicker, stub = null, onClose, children }) {
               id={titleId}
               ref={headingRef}
               tabIndex={-1}
-              className='-rotate-1 break-words font-travel text-3xl uppercase leading-none text-poster-red text-stroke-poster focus:outline-none md:text-4xl'
+              className='-rotate-1 break-words font-travel text-3xl uppercase leading-none text-poster-red text-stroke-poster focus:outline-none nophone:text-4xl'
             >
               {title}
             </h2>

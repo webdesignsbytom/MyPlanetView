@@ -28,6 +28,10 @@ describe('an account whose email is not verified yet', () => {
     const added = await agent.post(`/api/maps/${map.id}/travellers`).send({ name: 'Sam', birthCountryCode: 'GB' });
     expect(added.status).toBe(201);
     const traveller = data(added).traveller;
+    // Born there is been there: setting up the map marks the birthplace, verified or not
+    expect(await prisma.countryVisit.findMany({ where: { mapId: map.id }, select: { countryCode: true, status: true } })).toEqual([
+      { countryCode: 'GB', status: 'VISITED' },
+    ]);
     expect((await agent.patch(`/api/maps/${map.id}/travellers/${traveller.id}`).send({ favouriteCountryCode: 'JP' })).status).toBe(200);
     expect((await agent.delete(`/api/maps/${map.id}/travellers/${traveller.id}`)).status).toBe(200);
     expect((await agent.put('/api/users/map-settings').send({ mapSettings: { style: 'old-map' } })).status).toBe(200);
@@ -67,7 +71,8 @@ describe('an account whose email is not verified yet', () => {
       expect(res.body.message).toMatch(NEEDS_VERIFIED);
     }
 
-    expect(await prisma.countryVisit.count({ where: { mapId: map.id } })).toBe(0);
+    // Only the birthplace from setting up the map: France was never written
+    expect(await prisma.countryVisit.findMany({ where: { mapId: map.id }, select: { countryCode: true } })).toEqual([{ countryCode: 'GB' }]);
     expect(await prisma.trip.count({ where: { mapId: map.id } })).toBe(0);
     expect(await prisma.travelMap.count({ where: { ownerId: user.user.id } })).toBe(1);
     const stored = await prisma.travelMap.findUniqueOrThrow({ where: { id: map.id } });

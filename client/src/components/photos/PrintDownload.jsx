@@ -18,13 +18,13 @@ const PrintDownloadDialog = lazy(loadDialog);
  * `{ mapId }` (the whole map, in a folder per country), `{ mapId, country }` or
  * `{ tripId }`; `title` names the zip. `inMapPanel` for a map panel's button style.
  */
-function PrintDownload({ scope, title, byCountry = false, inMapPanel = false, label = 'Print or download' }) {
+function PrintDownload({ scope, title, byCountry = false, inMapPanel = false, fill = false, label = 'Print or download' }) {
   const [open, setOpen] = useState(false);
   const ButtonKind = inMapPanel ? MapActionButton : Button;
 
   return (
     <>
-      <span className='grid justify-items-start' onPointerEnter={loadDialog} onFocus={loadDialog}>
+      <span className={fill ? 'grid' : inMapPanel ? 'grid justify-items-start phone:justify-items-stretch' : 'grid justify-items-start'} onPointerEnter={loadDialog} onFocus={loadDialog}>
         <ButtonKind quiet onClick={() => setOpen(true)}>
           <FaDownload aria-hidden='true' className='self-center text-sm' />
           <span>{label}</span>

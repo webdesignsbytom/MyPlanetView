@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useRef } from 'react';
 // Data
 import { COUNTRIES, POLE_PLACES } from '@/utils/map/countries';
 import { COUNTRY_SHAPES } from '@/utils/map/countryShapes';
@@ -9,6 +9,7 @@ import MicroStateDot from './MicroStateDot';
 import PoleMarker from './PoleMarker';
 // Utils
 import { isAntarctic, isPole } from '@/utils/map/specialPlaces';
+import { setHoverPoint } from '@/utils/map/hoverPoint';
 
 // The shapes (countries and Antarctica), the micro-states' dots, and the poles' markers;
 // each list also without Antarctica's places, for when that's hidden, and with the UK's
@@ -27,6 +28,11 @@ const layerOf = (shaped) => ({
   },
 });
 const LAYERS = { whole: layerOf(SHAPED), splitUk: layerOf(SHAPED_SPLIT_UK) };
+
+// A finger held still on a country this long shows its postcard (17 Nov 2026, the user's
+// wish: phones have no hover); moving it further than this first is a pan, and hides it
+const LONG_PRESS_MS = 450;
+const PRESS_MOVE_PX = 10;
 
 const codeFrom = (target) => target?.closest?.('[data-code]')?.getAttribute('data-code') || null;
 
@@ -52,12 +58,19 @@ function CountryLayer({
   splitUk = false,
 }) {
   const hoveredRef = useRef(null);
+  // Set by a long press (below), so the click it ends with opens nothing
+  const longPressedRef = useRef(false);
   const layers = splitUk ? LAYERS.splitUk : LAYERS.whole;
   const layer = showAntarctica ? layers.withAntarctica : layers.withoutAntarctica;
 
   // With pan and zoom on, the viewport's afterTap skips drags and double-taps (which zoom)
   const handleClick = useCallback(
     (e) => {
+      // The click a long press ends with (some browsers send one) opens nothing
+      if (longPressedRef.current) {
+        longPressedRef.current = false;
+        return;
+      }
       const code = codeFrom(e.target);
       if (!code) return;
       const select = () => onSelect?.(code);
@@ -83,12 +96,73 @@ function CountryLayer({
     onHover?.(null);
   }, [onHover]);
 
+  // Touch: a long press shows the country's postcard (the hover card) above the finger
+  // while it's held; lifting the finger or moving it (a pan) hides it, a second finger (a
+  // pinch) cancels it, and the press never opens the country as a tap would. The finger is
+  // followed on the window, as the map takes it over once it pans.
+  const pressRef = useRef(null); // { pointerId, start, timer, shown, stop }
+  const endPress = useCallback(() => {
+    const press = pressRef.current;
+    if (!press) return;
+    pressRef.current = null;
+    clearTimeout(press.timer);
+    press.stop();
+    if (press.shown) onHover?.(null);
+  }, [onHover]);
+
+  const handlePointerDown = useCallback(
+    (e) => {
+      if (pressRef.current) endPress(); // a second finger: a pinch
+      if (e.pointerType !== 'touch') return;
+      const code = codeFrom(e.target);
+      if (!code) return;
+      longPressedRef.current = false;
+      const start = { x: e.clientX, y: e.clientY };
+      const onMove = (ev) => {
+        if (ev.pointerId === e.pointerId && Math.hypot(ev.clientX - start.x, ev.clientY - start.y) > PRESS_MOVE_PX) endPress();
+      };
+      const onEnd = (ev) => {
+        if (ev.pointerId === e.pointerId) endPress();
+      };
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onEnd);
+      window.addEventListener('pointercancel', onEnd);
+      const press = {
+        pointerId: e.pointerId,
+        start,
+        shown: false,
+        stop: () => {
+          window.removeEventListener('pointermove', onMove);
+          window.removeEventListener('pointerup', onEnd);
+          window.removeEventListener('pointercancel', onEnd);
+        },
+      };
+      press.timer = setTimeout(() => {
+        if (pressRef.current !== press) return;
+        press.shown = true;
+        longPressedRef.current = true;
+        setHoverPoint(start);
+        onHover?.(code);
+      }, LONG_PRESS_MS);
+      pressRef.current = press;
+    },
+    [onHover, endPress],
+  );
+  useEffect(() => endPress, [endPress]);
+
+  // The long press's own menu (text selection, "copy") never shows on the map
+  const handleContextMenu = useCallback((e) => {
+    if (pressRef.current || longPressedRef.current) e.preventDefault();
+  }, []);
+
   return (
     <g
       className={`stroke-[0.6] ${showVisited ? '' : FADE_BEEN} ${showUnvisited ? '' : FADE_NOT_BEEN}`}
       onClick={handleClick}
       onPointerOver={handlePointerOver}
       onPointerLeave={handlePointerLeave}
+      onPointerDown={handlePointerDown}
+      onContextMenu={handleContextMenu}
     >
       {layer.shaped.map((country) => (
         <CountryShape

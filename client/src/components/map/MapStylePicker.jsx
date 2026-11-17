@@ -15,7 +15,7 @@ const previewUrl = (name) => {
 function MapStylePicker({ value, onChange }) {
   return (
     <fieldset className='grid gap-2'>
-      <legend className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>Map style</legend>
+      <legend className='pb-3 font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>Map style</legend>
       <div className='grid grid-cols-2 gap-2'>
         {MAP_STYLES.map((style) => (
           <label

@@ -1,13 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 // Icons
-import { FaRoute } from 'react-icons/fa';
+import { FaHistory, FaMapMarkerAlt, FaRoute } from 'react-icons/fa';
 // Constants
 import { tripPath } from '@/utils/constants/routes';
 // Hooks
 import useMomentPage from '@/hooks/useMomentPage';
 // Components
 import MapPanel from './MapPanel';
+import MapActionButton from './MapActionButton';
+import PanelEmptyState from './PanelEmptyState';
 import MomentStamp from '@/components/moments/MomentStamp';
 import FormField from '@/components/ui/FormField';
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
@@ -50,9 +52,11 @@ function byDate(a, b) {
  * up to the last moment loaded are shown, so nothing comes in out of order. A moment
  * opens its country (`onShowCountry`); a trip its page, when the viewer can open it (not
  * through a share link, nor a group trip they aren't on). Group trips from other maps
- * aren't anyone's here, so a traveller's story leaves them out.
+ * aren't anyone's here, so a traveller's story leaves them out. With nothing on it yet, a
+ * passport page waiting for its first stamp (PanelEmptyState) says what goes here, and an
+ * editor (`canEdit`) gets the way to each (`onOpenTool`: the country list, the trips).
  */
-function TimelinePanel({ momentSource, trips = [], travellers = [], shareCode = null, onShowCountry, onClose }) {
+function TimelinePanel({ momentSource, trips = [], travellers = [], shareCode = null, canEdit = false, onOpenTool, onShowCountry, onClose }) {
   const [travellerId, setTravellerId] = useState('');
   const list = useMomentPage({ ...momentSource, limit: 30 });
   const { moments, nextCursor, loading, error } = list;
@@ -116,8 +120,12 @@ function TimelinePanel({ momentSource, trips = [], travellers = [], shareCode = 
     );
   };
 
+  // Nothing at all yet (not just nothing for one traveller): the empty page fills the panel
+  const empty = !groups.length && !loading && !error && !travellerId;
+
   return (
-    <MapPanel title='Timeline' onClose={onClose}>
+    <MapPanel title='Timeline' onClose={onClose} fill={empty}>
+      <div className={`grid gap-4 ${empty ? (travellers.length > 1 ? 'grid-rows-[auto_minmax(0,1fr)]' : 'grid-rows-[minmax(0,1fr)]') : 'content-start'}`}>
       {travellers.length > 1 ? (
         <FormField id='timeline-traveller' label='Whose story'>
           <PlainOptionSelect
@@ -149,10 +157,35 @@ function TimelinePanel({ momentSource, trips = [], travellers = [], shareCode = 
             </section>
           ))}
         </div>
+      ) : empty ? (
+        <PanelEmptyState
+          icon={<FaHistory />}
+          title={canEdit ? 'Your story starts here' : 'Nothing here yet'}
+          text={
+            canEdit
+              ? 'Your moments and trips line up here by date, year by year: the day you got engaged in Paris, the summer you moved abroad, every trip you take.'
+              : 'When moments and trips are added to this map, they line up here by date, year by year.'
+          }
+          steps={
+            canEdit
+              ? [
+                  { icon: <FaMapMarkerAlt />, text: 'Open a country on the map and add a moment.' },
+                  { icon: <FaRoute />, text: 'Plan a trip, or add one you’ve been on, in Trips.' },
+                ]
+              : []
+          }
+        >
+          {canEdit && onOpenTool ? (
+            <>
+              <MapActionButton onClick={() => onOpenTool('countries')}>Choose a country</MapActionButton>
+              <MapActionButton quiet onClick={() => onOpenTool('trips')}>
+                Go to Trips
+              </MapActionButton>
+            </>
+          ) : null}
+        </PanelEmptyState>
       ) : !loading && !error ? (
-        <p className='text-sm opacity-80'>
-          {travellerId ? 'Nothing for them yet.' : 'Nothing on the timeline yet. Moments are added from a country; trips from Trips.'}
-        </p>
+        <p className='text-sm opacity-80'>Nothing for them yet.</p>
       ) : null}
 
       {loading ? (
@@ -166,6 +199,7 @@ function TimelinePanel({ momentSource, trips = [], travellers = [], shareCode = 
           Show more of the story
         </button>
       ) : null}
+      </div>
     </MapPanel>
   );
 }

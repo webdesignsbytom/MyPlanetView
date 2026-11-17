@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { getMomentPage } from '@/api/travelApi';
 // Utils
 import { compareMoments } from '@/utils/moments/momentDates';
-import { inFlight, prefetch, recall, remember } from '@/utils/data/panelCache';
+import { inFlight, prefetch, recall, remember, rememberIfMissing } from '@/utils/data/panelCache';
 
 const keyOf = ({ mapId, tripId, shareCode, country, limit = 30 }) =>
   JSON.stringify([mapId || null, tripId || null, shareCode || null, country || null, limit]);
@@ -17,7 +17,12 @@ const asList = (page) => ({ moments: page.moments || [], nextCursor: page.nextCu
  * country hovered): the useMomentPage with the same filters shows it at once.
  */
 export function preloadMomentPage(filters) {
-  prefetch(cacheKey(filters), () => getMomentPage({ ...filters, cursor: undefined, limit: filters.limit ?? 30 }), asList);
+  return prefetch(cacheKey(filters), () => getMomentPage({ ...filters, cursor: undefined, limit: filters.limit ?? 30 }), asList);
+}
+
+/** A list the map's counts say has no moments: kept empty, so it opens without a spinner. */
+export function rememberEmptyMomentPage(filters) {
+  rememberIfMissing(cacheKey(filters), { moments: [], nextCursor: null });
 }
 
 /**

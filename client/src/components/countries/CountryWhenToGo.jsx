@@ -7,6 +7,7 @@ import MonthStrip from './MonthStrip';
 import MonthStripSummary from './MonthStripSummary';
 import MonthLinks from '@/components/months/MonthLinks';
 import GuidePhoto from './GuidePhoto';
+import SeasonIcon from './SeasonIcon';
 // Utils
 import { festivalGuidePhoto } from '@/utils/countries/guidePhotos';
 
@@ -47,10 +48,13 @@ function CountryWhenToGo({ name, whenToGo }) {
         </h3>
         <ul className='grid gap-3 md:grid-cols-2'>
           {seasons.map((season) => (
-            <li key={season.name} className='grid content-start gap-1 leading-relaxed'>
-              <p>
-                <span className='font-semibold'>{season.name}</span>{' '}
-                <span className='text-colour5'>({monthNumbersText(season.months)})</span>
+            <li key={season.name} className='grid content-start gap-2 leading-relaxed'>
+              <p className='grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3'>
+                <SeasonIcon name={season.name} />
+                <span>
+                  <span className='font-semibold'>{season.name}</span>{' '}
+                  <span className='text-colour5'>({monthNumbersText(season.months)})</span>
+                </span>
               </p>
               <p>{season.text}</p>
             </li>

@@ -10,6 +10,9 @@ import TextInput from '@/components/ui/TextInput';
 import PromoCodeFields from './PromoCodeFields';
 // Utils
 import { emptyPromoForm, promoBodyFrom } from '@/utils/plans/promoCodeForm';
+import { PROMO_OFFER_CHOICES } from '@/utils/plans/promoCodes';
+import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
+import { planOf } from '@/utils/constants/plans';
 import { PROMO_TRIAL_DAYS } from '@/utils/plans/promoCodes';
 
 // A new code for a creator (docs/API.md, "Promo codes"): the code they'll print, a label
@@ -40,7 +43,11 @@ function PromoCodeCreateCard({ onCreated }) {
     try {
       const { promoCode } = await createPromoCode(parsed.body);
       onCreated(promoCode);
-      setDone(`${promoCode.code} is ready: their followers get their first month free.`);
+      setDone(
+        promoCode.freePlan
+          ? `${promoCode.code} is ready: whoever signs up with it gets ${planOf(promoCode.freePlan).name} free, for life.`
+          : `${promoCode.code} is ready: their followers get their first month free.`,
+      );
       setForm(emptyPromoForm());
     } catch (err) {
       setError(err.friendlyMessage || 'The code couldn’t be made.');
@@ -73,6 +80,13 @@ function PromoCodeCreateCard({ onCreated }) {
             autoCapitalize='characters'
             spellCheck='false'
           />
+        </FormField>
+        <FormField
+          id='new-promo-offer'
+          label='What it gives'
+          hint='Your own codes can give Business or First Class for life, from sign-up. It can’t be changed later.'
+        >
+          <PlainOptionSelect value={form.freePlan} options={PROMO_OFFER_CHOICES} onChange={(e) => change('freePlan', e.target.value)} />
         </FormField>
         <PromoCodeFields idPrefix='new-promo' form={form} errors={errors} onChange={change} />
         <InlineAlert>{error}</InlineAlert>

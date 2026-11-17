@@ -14,7 +14,7 @@ const NOT_CHECKED =
  * pause in typing and when the field is left, so the person sees what it gives before
  * signing up. Each code is asked about once (the lookup is rate limited per address).
  * -> { result, checkNow }. `result.status`: 'idle' (empty), 'pending' (typed, not checked
- * yet), 'checking', 'valid' ({ code, trialDays }), 'invalid' ({ message }) or 'unknown' (the
+ * yet), 'checking', 'valid' ({ code, freePlan, trialDays }), 'invalid' ({ message }) or 'unknown' (the
  * check failed: the server decides at sign-up).
  */
 export default function usePromoCodeCheck(value) {
@@ -35,7 +35,7 @@ export default function usePromoCodeCheck(value) {
     let next;
     try {
       const { promoCode } = await checkPromoCode(code);
-      next = { status: 'valid', code: promoCode.code, trialDays: promoCode.trialDays ?? null };
+      next = { status: 'valid', code: promoCode.code, freePlan: promoCode.freePlan ?? null, trialDays: promoCode.trialDays ?? null };
       known.current.set(code, next);
     } catch (err) {
       if (err?.response?.status === 404) {

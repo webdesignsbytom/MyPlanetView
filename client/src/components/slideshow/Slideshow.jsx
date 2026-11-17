@@ -212,17 +212,20 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
   // The screen stays awake while it plays
   useWakeLock(playing && slides.length > 0);
 
-  // Full screen: the show's own frame, followed as the browser enters and leaves it
+  // Full screen: the show's own frame, followed as the browser enters and leaves it. Only
+  // the show's own: the map page may be full screen itself (the phone menu's "Full screen"),
+  // and leaving the show's returns to that.
   useEffect(() => {
-    const onChange = () => setFullscreen(Boolean(document.fullscreenElement));
+    const dialog = dialogRef.current;
+    const onChange = () => setFullscreen(Boolean(dialog) && document.fullscreenElement === dialog);
     document.addEventListener('fullscreenchange', onChange);
     return () => {
       document.removeEventListener('fullscreenchange', onChange);
-      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      if (dialog && document.fullscreenElement === dialog) document.exitFullscreen().catch(() => {});
     };
-  }, []);
+  }, [dialogRef]);
   const toggleFullscreen = () => {
-    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    if (dialogRef.current && document.fullscreenElement === dialogRef.current) document.exitFullscreen().catch(() => {});
     else dialogRef.current?.requestFullscreen?.().catch(() => {});
   };
 

@@ -6,6 +6,8 @@
 // get nothing. The webhook records when the free month started (subscriptions.js).
 import { normalisePromoCode, promoCodeUsable, promoTrialDays, PROMO_TRIAL_DAYS } from '../../utils/promoCodes.js';
 import { countPromoUses, findProfilePromo, findPromoCodeByCode, setProfilePromoCode } from '../../domain/promoCodes.js';
+import { createGrantInDB } from '../../domain/billing.js';
+import { FOR_LIFE_ENDS_AT } from '../../utils/promoCodes.js';
 
 /** A code that a new account may sign up with now, or null. */
 export async function usablePromoCode(value, now = new Date()) {
@@ -16,11 +18,24 @@ export async function usablePromoCode(value, now = new Date()) {
   return promo;
 }
 
-/** After sign-up: the code goes on the new account. */
+/**
+ * After sign-up: the code goes on the account. One of the user's own codes (`freePlan`) also
+ * gives the account that plan for life: a complimentary membership ending in
+ * FOR_LIFE_ENDS_AT, from whoever made the code, named after it.
+ */
 export async function recordSignUpPromoCode(user, value) {
   const promo = await usablePromoCode(value);
   if (!promo || !user?.id) return;
   await setProfilePromoCode(user.id, promo.id);
+  if (promo.freePlan) {
+    await createGrantInDB({
+      userId: user.id,
+      plan: promo.freePlan,
+      endsAt: FOR_LIFE_ENDS_AT,
+      reason: `Promo code ${promo.code}, for life`,
+      grantedById: promo.createdById ?? null,
+    });
+  }
 }
 
 /**

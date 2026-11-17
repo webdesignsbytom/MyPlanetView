@@ -100,6 +100,21 @@ export function registerAccountRoutes() {
     me().emailVerified = false;
     me().promoCodeId = promo ? promo.id : null;
     me().promoTrialUsedAt = null;
+    // One of the user's own codes: its plan for life, as the server's recordSignUpPromoCode
+    if (promo?.freePlan) {
+      const db = getDb();
+      db.planGrants = db.planGrants || [];
+      db.planGrants.push({
+        id: `grant-${Date.now().toString(36)}`,
+        userId: me().id,
+        plan: promo.freePlan,
+        startsAt: new Date().toISOString(),
+        endsAt: '9999-12-31T00:00:00.000Z',
+        reason: `Promo code ${promo.code}, for life`,
+        grantedById: promo.createdById ?? null,
+        createdAt: new Date().toISOString(),
+      });
+    }
     session.signedIn = true;
     return raw({ token: 'mock-session', user: publicUser() });
   });

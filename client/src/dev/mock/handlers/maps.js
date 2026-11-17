@@ -169,6 +169,8 @@ export function registerMapRoutes() {
     // The body first, then a free map slot (402 with the extra map's price on the plan)
     if (!mapSlots(me().id).canCreate) return fail(402, mapSlotsMessage(effectivePlan(me().id).plan));
     const map = createMapRecord({ name, groupType: body.groupType, travellers });
+    // Born there is been there, as the server's markBirthplaces
+    for (const t of travellers) markVisited(map.id, t?.birthCountryCode, 'MANUAL');
     return ok({ map: mapView(map, 'OWNER', WITH_PLAN) }, 201);
   });
 
@@ -283,6 +285,8 @@ export function registerMapRoutes() {
     const position = fields.position ?? db.travellers.filter((t) => t.mapId === map.id).length;
     const traveller = { id: newId(), mapId: map.id, userId: null, birthCountryCode: null, favouriteCountryCode: null, ...fields, position };
     db.travellers.push(traveller);
+    // Born there is been there, as the server's markBirthplaces
+    markVisited(map.id, traveller.birthCountryCode, 'MANUAL');
     return ok({ traveller }, 201);
   });
 
@@ -295,7 +299,9 @@ export function registerMapRoutes() {
     const { fields, error } = travellerFields(body);
     if (error) return fail(400, error);
     if ('name' in fields && !fields.name) return fail(400, 'Add the traveller’s name.');
+    const bornBefore = traveller.birthCountryCode;
     Object.assign(traveller, fields);
+    if (traveller.birthCountryCode !== bornBefore) markVisited(map.id, traveller.birthCountryCode, 'MANUAL');
     return ok({ traveller });
   });
 

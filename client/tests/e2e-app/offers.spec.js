@@ -1,4 +1,4 @@
-import { test, expect, MOCK_STORE_KEY, openMap, openTool, pressTool } from './fixtures.js';
+import { test, expect, MOCK_STORE_KEY, openMap, openTool, pressTool, mapReady } from './fixtures.js';
 
 // Travel offers (docs/API.md, "Travel offers"; docs/FEATURE-PLAN.md, "Ads by tier",
 // "Travel Desk") against mock mode. The seeded test user pays for Business, so sees no
@@ -37,7 +37,7 @@ async function morePhotosOfFrance(page, count, { economy = false } = {}) {
     },
     { count, economy },
   );
-  await expect(page.getByRole('application', { name: /: world map$/ })).toBeVisible();
+  await mapReady(page);
 }
 
 async function openCountry(page, name) {

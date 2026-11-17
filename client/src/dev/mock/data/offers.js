@@ -18,7 +18,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/es-800.avif",
+    "imageKey": "visitCountryPosters/es-flamenco-and-tapas-800.avif",
     "weight": 3
   },
   {
@@ -222,7 +222,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/nz-800.avif",
+    "imageKey": "visitCountryPosters/nz-fjords-and-mountains-800.avif",
     "weight": 3
   },
   {
@@ -238,7 +238,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/tours?country={country}&q={destination}&date={checkin}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/es-800.avif",
+    "imageKey": "visitCountryPosters/es-flamenco-and-tapas-800.avif",
     "weight": 2
   },
   {
@@ -473,7 +473,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays/summer-sale?ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/es-800.avif",
+    "imageKey": "visitCountryPosters/es-flamenco-and-tapas-800.avif",
     "weight": 1,
     "active": false
   },

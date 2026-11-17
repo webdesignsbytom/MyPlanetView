@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 // Api
 import { getPhoto, getPhotoPage, movePhoto as movePhotoRequest } from '@/api/travelApi';
 // Utils
-import { inFlight, prefetch, recall, remember } from '@/utils/data/panelCache';
+import { inFlight, prefetch, recall, remember, rememberIfMissing } from '@/utils/data/panelCache';
 
 // The list with `photoId` moved to straight after `afterId` (first when it's null)
 const placeAfter = (list, photoId, afterId) => {
@@ -36,7 +36,12 @@ const asList = (page) => ({ photos: page.photos || [], nextCursor: page.nextCurs
  * once, or waits for it if it's still on its way.
  */
 export function preloadPhotoPage(filters) {
-  prefetch(cacheKey(filters), () => getPhotoPage({ ...filters, cursor: undefined }), asList);
+  return prefetch(cacheKey(filters), () => getPhotoPage({ ...filters, cursor: undefined }), asList);
+}
+
+/** A list the map's counts say has no photos: kept empty, so it opens without a spinner. */
+export function rememberEmptyPhotoPage(filters) {
+  rememberIfMissing(cacheKey(filters), { photos: [], nextCursor: null });
 }
 
 /**

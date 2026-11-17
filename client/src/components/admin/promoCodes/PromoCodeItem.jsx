@@ -3,7 +3,7 @@ import React from 'react';
 import Button from '@/components/common/Button';
 // Utils
 import { formatDay } from '@/utils/functions/dates';
-import { PROMO_OFFER_WORDS, promoSignUpLink } from '@/utils/plans/promoCodes';
+import { promoOfferWords, promoSignUpLink } from '@/utils/plans/promoCodes';
 import { promoState } from '@/utils/plans/promoCodeForm';
 
 const STATE_TONES = { on: 'tone-good', off: 'tone-danger', ended: 'tone-warn', used: 'tone-warn' };
@@ -34,7 +34,7 @@ function PromoCodeItem({ promo, busy, onEdit, onToggle }) {
 
       <dl className='grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-sm'>
         <dt className='font-semibold text-colour9'>Offer</dt>
-        <dd>{PROMO_OFFER_WORDS}</dd>
+        <dd>{promoOfferWords(promo)}</dd>
         <dt className='font-semibold text-colour9'>Limit</dt>
         <dd>{promo.maxUses == null ? 'No limit' : `Up to ${count(promo.maxUses)} sign-ups`}</dd>
         <dt className='font-semibold text-colour9'>Last day</dt>

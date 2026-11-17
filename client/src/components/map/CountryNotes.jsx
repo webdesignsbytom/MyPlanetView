@@ -65,8 +65,8 @@ function CountryNotes({ code, notes, canEdit, onSave }) {
           placeholder='I want to visit here…'
         />
       </FormField>
-      <div className='grid grid-cols-rev items-center gap-3'>
-        <p role='status' className='text-xs'>
+      <div className='grid grid-cols-rev items-center gap-3 phone:grid-cols-1 phone:gap-1'>
+        <p role='status' className='text-xs phone:order-last'>
           {status}
         </p>
         <MapActionButton type='submit' quiet busy={saving} disabled={!changed}>

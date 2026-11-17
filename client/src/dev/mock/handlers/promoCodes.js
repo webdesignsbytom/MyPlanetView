@@ -16,7 +16,7 @@ export function registerPromoCodeRoutes() {
   route('GET', '/api/promo-codes/:code', ({ params }) => {
     const promo = usablePromoCode(params.code);
     if (!promo) return fail(404, PROMO_MESSAGES.invalid);
-    return ok({ promoCode: { code: promo.code, trialDays: PROMO_TRIAL_DAYS } });
+    return ok({ promoCode: { code: promo.code, freePlan: promo.freePlan ?? null, trialDays: promo.freePlan ? 0 : PROMO_TRIAL_DAYS } });
   });
 
   route('GET', '/api/users/admin/promo-codes', () => {
