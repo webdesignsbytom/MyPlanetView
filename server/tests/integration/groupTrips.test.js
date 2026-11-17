@@ -231,3 +231,25 @@ describe('group trips: add to my map', () => {
     expect(await listedOn(friend.agent, friendMap.id)).toBeUndefined();
   });
 });
+
+describe('group trips: leaving the organiser\'s map', () => {
+  it('takes off the links a map editor added, unless they are on the trip themselves', async () => {
+    const [owner, editor, both] = await Promise.all(['ReunionOwner', 'ReunionEditor', 'ReunionGuest'].map((name) => signUp(name)));
+    const [ownerMap, editorMap, bothMap] = await Promise.all([owner, editor, both].map((u) => defaultMapOf(u.agent)));
+    for (const who of [editor, both]) {
+      expect((await owner.agent.post(`/api/maps/${ownerMap.id}/members`).send({ email: who.email, role: 'EDITOR' })).status).toBe(201);
+    }
+    const reunion = data(await owner.agent.post(`/api/maps/${ownerMap.id}/trips`).send({ title: 'Family reunion' })).trip;
+    // One of them is on the trip as well as the map
+    expect((await owner.agent.post(`/api/trips/${reunion.id}/members`).send({ email: both.email, role: 'VIEWER' })).status).toBe(201);
+    for (const [who, map] of [[editor, editorMap], [both, bothMap]]) {
+      expect((await who.agent.post(`/api/trips/${reunion.id}/maps`).send({ mapId: map.id })).status).toBe(201);
+    }
+
+    for (const who of [editor, both]) {
+      expect((await owner.agent.delete(`/api/maps/${ownerMap.id}/members/${who.user.id}`)).status).toBe(200);
+    }
+    // The map editor's link went with the map; the trip member keeps theirs
+    expect(await prisma.tripMap.findMany({ where: { tripId: reunion.id }, select: { mapId: true } })).toEqual([{ mapId: bothMap.id }]);
+  });
+});

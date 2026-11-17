@@ -40,9 +40,9 @@ const MAP_SETTING_KEYS = {
   landmarkPins: ['zoomed', 'always', 'stamped', 'off'],
 };
 // `showMoments`: the marks beside countries with moments; `showGoalTag`: the goal's luggage
-// tag under the map's title; `blackAndWhite`: the map page in greys (the server's
-// MAP_SETTING_FLAGS need each of them too)
-const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments', 'showGoalTag', 'blackAndWhite'];
+// tag under the map's title; `blackAndWhite`: the map page in greys; `showTips`: the tips
+// the map opens with (the server's MAP_SETTING_FLAGS need each of them too)
+const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments', 'showGoalTag', 'blackAndWhite', 'showTips'];
 
 // The test user's password: the seeded one until changed or reset here. Sign-in isn't
 // held to the rules below (the seeded one doesn't meet them, as on the server).
@@ -100,21 +100,6 @@ export function registerAccountRoutes() {
     me().emailVerified = false;
     me().promoCodeId = promo ? promo.id : null;
     me().promoTrialUsedAt = null;
-    // One of the user's own codes: its plan for life, as the server's recordSignUpPromoCode
-    if (promo?.freePlan) {
-      const db = getDb();
-      db.planGrants = db.planGrants || [];
-      db.planGrants.push({
-        id: `grant-${Date.now().toString(36)}`,
-        userId: me().id,
-        plan: promo.freePlan,
-        startsAt: new Date().toISOString(),
-        endsAt: '9999-12-31T00:00:00.000Z',
-        reason: `Promo code ${promo.code}, for life`,
-        grantedById: promo.createdById ?? null,
-        createdAt: new Date().toISOString(),
-      });
-    }
     session.signedIn = true;
     return raw({ token: 'mock-session', user: publicUser() });
   });
@@ -136,9 +121,29 @@ export function registerAccountRoutes() {
     me().password = body.newPassword;
     return raw({ status: true });
   });
-  // A GET, which the adapter doesn't save after, so it saves itself
+  // A GET, which the adapter doesn't save after, so it saves itself. A promo code's plan for
+  // life comes with the verified address (the server's giveLifetimePlan, 17 Nov 2026), once.
+  function giveLifetimePlan(user) {
+    const db = getDb();
+    const promo = (db.promoCodes || []).find((p) => p.id === user.promoCodeId);
+    if (!promo?.freePlan) return;
+    const reason = `Promo code ${promo.code}, for life`;
+    db.planGrants = db.planGrants || [];
+    if (db.planGrants.some((g) => g.userId === user.id && g.reason === reason)) return;
+    db.planGrants.push({
+      id: `grant-${Date.now().toString(36)}`,
+      userId: user.id,
+      plan: promo.freePlan,
+      startsAt: new Date().toISOString(),
+      endsAt: '9999-12-31T00:00:00.000Z',
+      reason,
+      grantedById: promo.createdById ?? null,
+      createdAt: new Date().toISOString(),
+    });
+  }
   route('GET', '/api/auth/verify-email', () => {
     me().emailVerified = true;
+    giveLifetimePlan(me());
     saveStore();
     return raw({ status: true });
   });

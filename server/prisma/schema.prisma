@@ -9,9 +9,13 @@ datasource db {
 }
 
 // ── Accounts (better-auth owns these four; unchanged from the dummy) ─────────
+// Their ids are UUIDs like every other table's (17 Nov 2026, the user's wish): auth.js sets
+// `advanced.database.generateId: 'uuid'`, so better-auth leaves the id out on Postgres and
+// Prisma's @default(uuid()) fills it in (AuthRateLimit's too). Rows made before then keep
+// better-auth's own random ids.
 
 model User {
-  id            String    @id
+  id            String    @id @default(uuid())
   name          String
   email         String
   emailVerified Boolean   @default(false)
@@ -64,7 +68,7 @@ model User {
 }
 
 model Session {
-  id        String   @id
+  id        String   @id @default(uuid())
   expiresAt DateTime
   token     String
   createdAt DateTime @default(now())
@@ -80,7 +84,7 @@ model Session {
 }
 
 model Account {
-  id                    String    @id
+  id                    String    @id @default(uuid())
   accountId             String
   providerId            String
   userId                String
@@ -100,7 +104,7 @@ model Account {
 }
 
 model Verification {
-  id         String   @id
+  id         String   @id @default(uuid())
   identifier String
   value      String
   expiresAt  DateTime
@@ -1270,7 +1274,7 @@ model RateLimit {
 // modelName 'authRateLimit'). Its shape is better-auth's: key = "<ip>|<path>",
 // lastRequest in epoch ms. better-auth prunes old rows itself.
 model AuthRateLimit {
-  id          String @id
+  id          String @id @default(uuid())
   key         String @unique
   count       Int
   lastRequest BigInt

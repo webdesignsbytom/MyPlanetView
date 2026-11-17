@@ -16,7 +16,7 @@ export const PROMO_MAX_USES_MAX = 1_000_000;
 export const PROMO_TRIAL_DAYS = 30;
 
 // The user's own codes (17 Nov 2026), as the server's: one made with `freePlan` (Business or
-// First Class) gives that plan for life from sign-up, a complimentary membership ending in
+// First Class) gives that plan for life once the address is verified, a complimentary membership ending in
 // 9999 (isForLife), with no free month
 export const FREE_PLAN_IDS = PAID_PLAN_IDS;
 const FOR_LIFE_FROM = Date.UTC(9999, 0, 1);
@@ -47,12 +47,12 @@ export function normalisePromoCode(value) {
 export const PROMO_OFFER_WORDS = `First month free on ${PAID_PLAN_NAMES} (${PROMO_TRIAL_DAYS} days, with a card)`;
 
 /** What a code gives in a few words, for the admin page: its plan for life, or the free month. */
-export const promoOfferWords = (promo) => (promo?.freePlan ? `${planOf(promo.freePlan).name}, free for life, from sign-up` : PROMO_OFFER_WORDS);
+export const promoOfferWords = (promo) => (promo?.freePlan ? `${planOf(promo.freePlan).name}, free for life, once their email is verified` : PROMO_OFFER_WORDS);
 
 /** What a usable code gives, for the sign-up form. */
 export const promoOfferText = ({ code, freePlan }) =>
   freePlan
-    ? `${code}: ${planOf(freePlan).name} is yours, free for life. It starts as soon as your account is made.`
+    ? `${code}: ${planOf(freePlan).name} is yours, free for life. It starts once you’ve verified your email address.`
     : `${code}: your first month of ${PAID_PLAN_NAMES} is free. Choose one on your account page once your email is verified. Stripe asks for a card, and nothing is charged for ${PROMO_TRIAL_DAYS} days.`;
 
 /** The account page's offer: `promoTrial` is GET /billing's `{ code, days }`. */

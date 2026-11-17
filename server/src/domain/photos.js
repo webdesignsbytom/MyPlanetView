@@ -308,14 +308,13 @@ export const sumStoredPhotoBytes = async (mapId, db = prisma) => {
  */
 async function photoLimitProblem(tx, { mapId, countryCode, addingBytes = 0, limits }) {
   await tx.$queryRaw`SELECT 1 FROM "travel_map" WHERE "id" = ${mapId} FOR NO KEY UPDATE`;
-  if (countryCode) {
-    // Photos and videos each have their own cap per country
-    const kind = limits.kind ?? 'PHOTO';
-    const count = await countPhotosInCountry(mapId, countryCode, tx, kind);
-    const check = kind === 'VIDEO' ? checkVideoCap : checkCountryCap;
-    const full = check({ count, planId: limits.planId, countryName: limits.countryName });
-    if (full) return full;
-  }
+  // Photos and videos each have their own cap per country; the ones with no country are
+  // one more gallery under the same cap
+  const kind = limits.kind ?? 'PHOTO';
+  const count = await countPhotosInCountry(mapId, countryCode ?? null, tx, kind);
+  const check = kind === 'VIDEO' ? checkVideoCap : checkCountryCap;
+  const full = check({ count, planId: limits.planId, countryName: countryCode ? limits.countryName : null });
+  if (full) return full;
   if (addingBytes > 0 && planOf(limits.planId).limits.storageCapBytes !== null) {
     return checkStorageCap({ storedBytes: await sumStoredPhotoBytes(mapId, tx), addingBytes, planId: limits.planId });
   }
@@ -389,7 +388,8 @@ export const updatePhotoInDB = (photoId, data, { limits = null } = {}) => {
     });
     if (data.takenAt === null) data = { ...data, shotAt: current.createdAt };
     if (!galleryMayChange) return tx.photo.update({ where: { id: photoId }, data, select });
-    if (limits && data.countryCode && data.countryCode !== current.countryCode) {
+    // Into another country, or out of every country (the ones with no country have a cap too)
+    if (limits && data.countryCode !== undefined && data.countryCode !== current.countryCode) {
       const refused = await photoLimitProblem(tx, { mapId: current.mapId, countryCode: data.countryCode, limits });
       if (refused) return { refused };
     }

@@ -470,7 +470,8 @@ export const updatePhotoHandler = handler(D, 'Update photo', async (req, res) =>
     // marked visited in the same transaction (a trip-only editor's too: the visit
     // carries its source). A country that's full on the map takes no more (409).
     let limits = null;
-    if (data.countryCode && data.countryCode !== photo.countryCode) {
+    // (Moving one out of every country counts too: the ones with no country have a cap)
+    if (data.countryCode !== undefined && data.countryCode !== photo.countryCode) {
       const mapPlan = await loadMapPlan(photo.mapId);
       limits = await photoLimits(mapPlan?.plan ?? 'FREE', data.countryCode, photo.kind ?? 'PHOTO');
     }

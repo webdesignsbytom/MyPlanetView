@@ -86,7 +86,7 @@ export function registerVideoRoutes() {
     const video = mockStreamVideo(ticket.uid);
     if (!video?.arrived) return fail(400, MESSAGES.notArrived);
     // The country's videos, with the final country: full -> 409, and the Stream video goes
-    const full = countryCapProblem(target.map, country.value, 'VIDEO');
+    const full = countryCapProblem(target.map, country.value && placeOnMap(country.value, target.map.splitUk), 'VIDEO');
     if (full) {
       deleteMockStreamVideo(ticket.uid);
       tickets.delete(body.ticket);
@@ -106,7 +106,7 @@ export function registerVideoRoutes() {
       readyAt: new Date(now.getTime() + MOCK_CONVERT_MS).toISOString(),
       videoBytes: video.size,
       countryCode: country.value && placeOnMap(country.value, target.map.splitUk),
-      caption: cleanText(body.caption, 300),
+      caption: cleanText(body.caption, 500),
       takenAt: typeof body.takenAt === 'string' && !Number.isNaN(Date.parse(body.takenAt)) ? body.takenAt : null,
       latitude: null,
       longitude: null,

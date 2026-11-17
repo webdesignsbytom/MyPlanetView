@@ -7,7 +7,7 @@ import {
   linkStripeCustomer,
   saveSubscriptionState,
 } from '../../domain/billing.js';
-import { hasLiveSubscription, shouldApplySubscriptionEvent, stripeIdOf, subscriptionStateFrom } from '../../utils/stripeState.js';
+import { hasLiveSubscription, isDuplicateSubscription, shouldApplySubscriptionEvent, stripeIdOf, subscriptionStateFrom } from '../../utils/stripeState.js';
 import { markPromoTrialUsedInDB } from '../../domain/promoCodes.js';
 import { paymentsEnabled, priceKind, stripeClient } from './stripe.js';
 
@@ -38,6 +38,35 @@ export async function endSubscriptionOfDeletedAccount(userId) {
   return true;
 }
 
+/**
+ * The subscription as Stripe has it now, for a webhook event about it (17 Nov 2026, the
+ * audit): events can arrive out of order, or late after a retry, so the event's own copy
+ * could undo a newer change. Stripe keeps ended subscriptions, so a deleted one is found too;
+ * when it has none to give, the event's copy is used.
+ */
+export async function latestSubscription(sub) {
+  if (!sub?.id) return sub;
+  const stripe = await stripeClient();
+  const fresh = await stripe.subscriptions.retrieve(sub.id);
+  return fresh?.id ? fresh : sub;
+}
+
+/**
+ * A second live subscription for an account that already has one (two Checkouts completed
+ * at once, from two tabs or a double click, before the first one's events arrived). The
+ * newer one is cancelled at once, so only one ever charges; its first payment needs
+ * refunding by hand (the event says which). -> true when it was cancelled
+ */
+async function cancelDuplicate(sub) {
+  const stripe = await stripeClient();
+  try {
+    await stripe.subscriptions.cancel(sub.id);
+  } catch (err) {
+    if (err?.code !== 'resource_missing') throw err;
+  }
+  return true;
+}
+
 const userExists = async (userId) =>
   typeof userId === 'string' && Boolean(await prisma.user.findUnique({ where: { id: userId }, select: { id: true } }));
 
@@ -50,8 +79,13 @@ export async function linkCheckoutSession(session) {
   const userId = session?.client_reference_id || session?.metadata?.userId;
   const stripeCustomerId = stripeIdOf(session?.customer);
   if (session?.mode !== 'subscription' || !stripeCustomerId || !(await userExists(userId))) return null;
+  // A second Checkout's subscription never replaces a live one the row tracks: its own
+  // events then find it a duplicate and cancel it (applyStripeSubscription)
+  const tracked = await findSubscription(userId);
+  const newId = stripeIdOf(session.subscription);
+  const keepTracked = hasLiveSubscription(tracked) && tracked.stripeSubscriptionId && tracked.stripeSubscriptionId !== newId;
   try {
-    await linkStripeCustomer({ userId, stripeCustomerId, stripeSubscriptionId: stripeIdOf(session.subscription) });
+    await linkStripeCustomer({ userId, stripeCustomerId, stripeSubscriptionId: keepTracked ? undefined : newId });
   } catch (err) {
     // The customer or subscription is already another account's: nothing to change here
     if (err?.code === 'P2002') return null;
@@ -67,6 +101,8 @@ export async function linkCheckoutSession(session) {
  * `metadata.userId` (set at checkout, for an event that comes before the checkout's).
  * A subscription with a trial that a promo code asked for (`metadata.promoCode`) records
  * the account's free month as used, whatever the event (once; promoTrialUsedAt).
+ * A second live one for an account that has a live subscription already is cancelled
+ * instead (`{ userId, duplicate: id }`).
  * -> `{ userId, subscription }`, or null when it's no account's or out of date
  */
 export async function applyStripeSubscription(sub, { deleted = false } = {}) {
@@ -77,6 +113,10 @@ export async function applyStripeSubscription(sub, { deleted = false } = {}) {
     const userId = sub.metadata?.userId;
     if (!(await userExists(userId))) return null;
     row = await linkStripeCustomer({ userId, stripeCustomerId });
+  }
+  if (isDuplicateSubscription(row, sub, { deleted })) {
+    await cancelDuplicate(sub);
+    return { userId: row.userId, duplicate: sub.id };
   }
   if (sub.trial_end && sub.metadata?.promoCode) await markPromoTrialUsedInDB(row.userId);
   if (!shouldApplySubscriptionEvent(row, sub, { deleted })) return null;

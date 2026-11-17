@@ -40,7 +40,7 @@ function AwardNews({ news, onOpen, onDismiss }) {
     <div
       role='status'
       aria-live='polite'
-      className='pointer-events-none absolute right-3 top-16 z-20 grid w-[min(17rem,calc(100vw-1.5rem))] nophone:top-3 nophone:right-20 nophone:w-[min(22rem,calc(100vw-30rem))]'
+      className='pointer-events-none absolute right-3 top-16 z-40 grid nophone:z-20 w-[min(17rem,calc(100vw-1.5rem))] nophone:top-3 nophone:right-20 nophone:w-[min(22rem,calc(100vw-30rem))]'
     >
       {text ? (
         <div

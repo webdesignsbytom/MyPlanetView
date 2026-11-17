@@ -35,7 +35,7 @@ function sharingView(kind, item) {
       return { userId: m.userId, name: u?.name || 'Someone', email: u?.email || '', role: m.role };
     });
   const invites = db.invites
-    .filter((i) => i[idField(kind)] === item.id && !i.acceptedAt)
+    .filter((i) => i[idField(kind)] === item.id && !i.acceptedAt && !(i.expiresAt && new Date(i.expiresAt).getTime() <= Date.now()))
     .map(({ id, email, role, expiresAt }) => ({ id, email, role, expiresAt }));
   return { linkAccess: item.linkAccess, shareCode: formatShareCode(item.shareCode), shareUrl: shareUrlFor(item.shareCode), members, invites };
 }

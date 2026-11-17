@@ -103,15 +103,18 @@ test.describe('Promo codes', () => {
     await card.getByRole('textbox', { name: 'Label (only admins see it)' }).fill('Friends and family');
     await card.getByRole('button', { name: 'Make code' }).click();
     await expect(card.getByRole('status')).toHaveText('FRIENDS4LIFE is ready: whoever signs up with it gets First Class free, for life.');
-    await expect(codeRow(page, 'FRIENDS4LIFE')).toContainText('First Class, free for life, from sign-up');
+    await expect(codeRow(page, 'FRIENDS4LIFE')).toContainText('First Class, free for life, once their email is verified');
 
     await page.goto('/sign-up?code=FRIENDS4LIFE');
-    await expect(promoStatus(page)).toHaveText('FRIENDS4LIFE: First Class is yours, free for life. It starts as soon as your account is made.');
+    await expect(promoStatus(page)).toHaveText('FRIENDS4LIFE: First Class is yours, free for life. It starts once you’ve verified your email address.');
     await fillSignUp(page);
     await page.getByRole('button', { name: 'Register your account' }).click();
     await expect(page).toHaveURL(/\/welcome$/);
 
-    // The account has First Class for life, above the test user's own Business subscription
+    // First Class for life once the address is verified, above the test user's own Business
+    // subscription
+    await page.goto('/verify-email-address/mock-user/mock-token');
+    await expect(page.getByText('Your email has been verified successfully.')).toBeVisible();
     // (the badge's plan choice would clear memberships too, so it's left alone), and no free
     // month to start
     await page.goto('/account');

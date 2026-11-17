@@ -153,7 +153,7 @@ export const findTripDetail = async (tripId) => {
   return {
     ...trip,
     travellers,
-    map: { name: map.name, travellers: mapTravellers },
+    map: { name: map.name, splitUk: map.splitUk, travellers: mapTravellers },
     stops,
     coverPhoto: coverPhoto && { hidden: coverPhoto.hidden, variants: coverThumb ? [{ media: coverThumb }] : [] },
   };

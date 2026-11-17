@@ -61,6 +61,7 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   'PATCH /api/goals/:goalId',
   'DELETE /api/goals/:goalId',
   'PATCH /api/photos/:photoId',
+  'POST /api/photos/:photoId/move',
   'DELETE /api/photos/:photoId',
   'POST /api/photos/:photoId/landmarks',
   'PATCH /api/photos/:photoId/landmarks/:landmarkId',

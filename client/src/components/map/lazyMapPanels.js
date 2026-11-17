@@ -40,6 +40,8 @@ export const PhotoViewer = lazyPanel(() => import('@/components/photos/PhotoView
 export const ShareDialog = lazyPanel(() => import('@/components/sharing/ShareDialog'));
 // Paying for a map that isn't paid for (the plan banner's button); opened rarely
 export const ExtraMapDialog = lazyPanel(() => import('@/components/plans/ExtraMapDialog'));
+// The tips the map opens with, once a visit (fetched as the loading screen lifts)
+export const MapTipsDialog = lazyPanel(() => import('./MapTipsDialog'));
 export const BadgesGoalsPanel = lazyPanel(() => import('@/components/achievements/BadgesGoalsPanel'));
 // The slideshows: the map's ("Play my world"), a country's, and a trip's (the trip page)
 export const Slideshow = lazyPanel(() => import('@/components/slideshow/Slideshow'));

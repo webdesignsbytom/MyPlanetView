@@ -41,13 +41,20 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     optimisticRef.current = optimistic;
   }, [optimistic]);
 
+  // Only the newest load's answer counts (17 Nov 2026, the audit): on /map the remembered
+  // map starts loading before the map list confirms it, and a slower answer for that one
+  // (or its 404) must never replace the map that's open
+  const loadRef = useRef(0);
   const load = useCallback(async () => {
     if (!mapId) return;
+    const run = ++loadRef.current;
     setState((prev) => ({ ...prev, loading: true, error: null }));
     try {
       const [{ map }, { trips }] = await Promise.all([getMap(mapId), getMapTrips(mapId)]);
+      if (run !== loadRef.current) return;
       setState({ map, trips: trips || [], loading: false, error: null });
     } catch (err) {
+      if (run !== loadRef.current) return;
       setState({ map: null, trips: [], loading: false, error: err.friendlyMessage || 'This map could not be loaded.' });
     }
   }, [mapId]);
@@ -64,7 +71,8 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     if (!mapId) return;
     try {
       const [{ map }, { trips }] = await Promise.all([getMap(mapId), getMapTrips(mapId)]);
-      setState((prev) => (prev.map && map ? { ...prev, map, trips: trips || prev.trips } : prev));
+      // Never onto another map (the page moved on while it was asked for)
+      setState((prev) => (prev.map && map && prev.map.id === map.id ? { ...prev, map, trips: trips || prev.trips } : prev));
     } catch {
       // A nicety; the next full load corrects it
     }
@@ -73,7 +81,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
   const refreshStats = useCallback(async () => {
     try {
       const { stats } = await getMapStats(mapId);
-      setState((prev) => (prev.map ? { ...prev, map: { ...prev.map, stats } } : prev));
+      setState((prev) => (prev.map?.id === mapId ? { ...prev, map: { ...prev.map, stats } } : prev));
     } catch {
       // Stats are a nicety; the next full load corrects them
     }
@@ -82,17 +90,23 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
   // status: 'VISITED' | 'LIVED' | 'WANT_TO_GO', or null to clear the country
   const setVisit = useCallback(
     async (countryCode, status, extra = {}) => {
-      let previous = null;
+      // A failure undoes only this change: this country and what it brought with it, as
+      // they were (17 Nov 2026, the audit: the whole list came back, undoing other
+      // countries changed meanwhile)
+      let restore = null;
       const show = () =>
         setState((prev) => {
           if (!prev.map) return prev;
-          previous = prev.map.visits;
+          const implied = status ? impliedVisits(prev.map.visits, countryCode, status) : [];
+          const affected = new Set([countryCode, ...implied.map((v) => v.countryCode)]);
+          const before = prev.map.visits.filter((v) => affected.has(v.countryCode));
+          restore = (visits) => [...visits.filter((v) => !affected.has(v.countryCode)), ...before];
           const others = prev.map.visits.filter((v) => v.countryCode !== countryCode);
           const current = prev.map.visits.find((v) => v.countryCode === countryCode);
           const visits = status
             ? withVisits(
                 [...others, { ...(current || { source: 'MANUAL', firstVisitedOn: null, notes: null }), countryCode, status, ...extra }],
-                impliedVisits(prev.map.visits, countryCode, status),
+                implied,
               )
             : others;
           return { ...prev, map: { ...prev.map, visits } };
@@ -110,7 +124,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
         showImplied(answer?.implied);
         refreshStats();
       } catch (err) {
-        setState((prev) => (prev.map && previous ? { ...prev, map: { ...prev.map, visits: previous } } : prev));
+        setState((prev) => (prev.map && restore ? { ...prev, map: { ...prev.map, visits: restore(prev.map.visits) } } : prev));
         throw err;
       }
     },

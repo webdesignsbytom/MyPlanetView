@@ -84,7 +84,7 @@ function PromoCodeCreateCard({ onCreated }) {
         <FormField
           id='new-promo-offer'
           label='What it gives'
-          hint='Your own codes can give Business or First Class for life, from sign-up. It can’t be changed later.'
+          hint='Your own codes can give Business or First Class for life, once the person has verified their email. It can’t be changed later.'
         >
           <PlainOptionSelect value={form.freePlan} options={PROMO_OFFER_CHOICES} onChange={(e) => change('freePlan', e.target.value)} />
         </FormField>

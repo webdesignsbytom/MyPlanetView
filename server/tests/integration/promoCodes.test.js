@@ -88,8 +88,15 @@ describe('promo codes', () => {
     expect((await admin.agent.post('/api/users/admin/promo-codes').send({ code: 'ITLIFEFREE', label: 'x', freePlan: 'FREE' })).status).toBe(400);
     expect((await admin.agent.patch(`/api/users/admin/promo-codes/${life.id}`).send({ freePlan: 'REGULAR' })).status).toBe(400);
 
-    const { res, user, agent } = await signUpWith('PromoForLife', life.code);
+    const { res, user, email, agent } = await signUpWith('PromoForLife', life.code);
     expect(res.status).toBe(200);
+    // Nothing until the address is verified
+    expect(await prisma.planGrant.count({ where: { userId: user.id } })).toBe(0);
+    expect(data(await agent.get('/api/billing'))).toMatchObject({ plan: 'FREE', promoTrial: null });
+
+    await vi.waitFor(() => expect(sentEmails().filter((e) => e.to === email && e.template === 'userVerificationEmail')).toHaveLength(1));
+    const [verify] = sentEmails().filter((e) => e.to === email && e.template === 'userVerificationEmail');
+    expect((await agent.get(`/api/auth/verify-email?token=${tokenOf(verify.context.confirmationUrl)}`)).status).toBe(200);
     const grants = await prisma.planGrant.findMany({ where: { userId: user.id } });
     expect(grants).toEqual([expect.objectContaining({ plan: 'PREMIUM', grantedById: admin.user.id })]);
     expect(grants[0].endsAt.toISOString()).toBe('9999-12-31T00:00:00.000Z');
@@ -97,6 +104,22 @@ describe('promo codes', () => {
     const billing = data(await agent.get('/api/billing'));
     expect(billing).toMatchObject({ plan: 'PREMIUM', source: 'COMPLIMENTARY', promoTrial: null });
     expect(billing.grant).toMatchObject({ plan: 'PREMIUM', endsAt: '9999-12-31T00:00:00.000Z' });
+
+    // Given once: another change to the verified account gives no second membership
+    expect((await agent.post('/api/auth/update-user').send({ name: 'Promo For Life' })).status).toBe(200);
+    expect(await prisma.planGrant.count({ where: { userId: user.id } })).toBe(1);
+  });
+
+  it('hold their limit when sign-ups come at the same moment', async () => {
+    const made = await admin.agent
+      .post('/api/users/admin/promo-codes')
+      .send({ code: `it-one-${Date.now() % 100000}`, label: 'One person only', maxUses: 1, freePlan: 'REGULAR' });
+    const one = data(made).promoCode;
+    promoIds.push(one.id);
+    const results = await Promise.all(['PromoRaceA', 'PromoRaceB', 'PromoRaceC'].map((label) => signUpWith(label, one.code)));
+    // Every account is made (the code was usable when each was checked), but only one has it
+    expect(results.every((r) => r.res.status === 200)).toBe(true);
+    expect(await prisma.profile.count({ where: { promoCodeId: one.id } })).toBe(1);
   });
 
   it('stop at their limit, and when turned off', async () => {

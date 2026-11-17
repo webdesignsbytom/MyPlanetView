@@ -35,7 +35,7 @@ import {
 // Email
 import { sendContactEmail } from '../services/email/emailHandler.js';
 import { runAfterResponse } from '../utils/background.js';
-import { BusinessName, BusinessUrl } from '../utils/constants/siteConstants.js';
+import { BusinessName, BusinessSiteUrl, BusinessUrl } from '../utils/constants/siteConstants.js';
 // Media
 import { isUsableContactImage, hardDeleteObject } from '../services/s3/mediaService.js';
 import { publicMediaUrlFrom } from '../utils/media/publicMediaUrl.js';
@@ -128,6 +128,7 @@ export const createNewContactFormHandler = async (req, res) => {
         }),
         businessName: BusinessName,
         businessUrl: BusinessUrl,
+        businessSiteUrl: BusinessSiteUrl,
         year: new Date().getFullYear(),
       }
     ).then((emailSent) => {

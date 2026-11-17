@@ -43,6 +43,9 @@ export const DEFAULT_MAP_SETTINGS = {
   // tags and every panel), except the photo viewer and slideshow, where photos keep their
   // colour; the trip page's map too
   blackAndWhite: false,
+  // The tips the map opens with, once a visit (components/map/MapTipsDialog.jsx, whose box
+  // turns this off)
+  showTips: true,
 };
 
 // Grouped as the settings panel shows them.
@@ -62,6 +65,7 @@ export const MAP_SETTING_TOGGLES = [
   { key: 'animatedSea', label: 'Animated sea', group: 'sky' },
   { key: 'sunAndMoon', label: 'Sun and moon', group: 'sky' },
   { key: 'hoverPreview', label: 'Country posters on hover', group: 'sky' },
+  { key: 'showTips', label: 'Tips when the map opens', group: 'help' },
 ];
 
 export const MAP_SETTING_GROUPS = [
@@ -69,6 +73,7 @@ export const MAP_SETTING_GROUPS = [
   { id: 'countries', legend: 'Show on the map' },
   { id: 'map', legend: 'Map details' },
   { id: 'sky', legend: 'Sea, sky and hover' },
+  { id: 'help', legend: 'Help' },
 ];
 
 /** Keeps only known keys with the right types; anything else falls back to the default. */
