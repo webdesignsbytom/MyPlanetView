@@ -1,9 +1,9 @@
 import { test, expect } from './fixtures.js';
 
 // Influencer codes (docs/API.md, "Promo codes") against mock mode. The seed has SAMTRAVELS
-// (up to 500 sign-ups) and TRAVELTALK (a podcast's; Jo and Tom used it). Every code gives
-// the same: the follower's first month free on a paid plan, as a trial on their first paid
-// Checkout. Signing up in mock mode makes you the test user, renamed, with an address still
+// (up to 500 sign-ups) and TRAVELTALK (a podcast's; Jo and Tom used it). A code gives the
+// follower's first month free on a paid plan, as a trial on their first paid Checkout, or,
+// made with a plan for life (the user's own codes), that plan from sign-up. Signing up in mock mode makes you the test user, renamed, with an address still
 // to verify (and the test user's Business subscription, which the badge can take away).
 
 const OFFER = (code) =>
@@ -95,6 +95,32 @@ test.describe('Promo codes', () => {
     await expect(page).toHaveURL(/\/welcome$/);
   });
 
+  test('your own code gives a plan for life from sign-up, with no free month', async ({ page }) => {
+    await openAdmin(page);
+    const card = page.getByRole('region', { name: 'New code' });
+    await card.getByRole('textbox', { name: 'Code', exact: true }).fill('friends4life');
+    await card.getByRole('combobox', { name: 'What it gives' }).selectOption({ label: 'First Class, free for life' });
+    await card.getByRole('textbox', { name: 'Label (only admins see it)' }).fill('Friends and family');
+    await card.getByRole('button', { name: 'Make code' }).click();
+    await expect(card.getByRole('status')).toHaveText('FRIENDS4LIFE is ready: whoever signs up with it gets First Class free, for life.');
+    await expect(codeRow(page, 'FRIENDS4LIFE')).toContainText('First Class, free for life, from sign-up');
+
+    await page.goto('/sign-up?code=FRIENDS4LIFE');
+    await expect(promoStatus(page)).toHaveText('FRIENDS4LIFE: First Class is yours, free for life. It starts as soon as your account is made.');
+    await fillSignUp(page);
+    await page.getByRole('button', { name: 'Register your account' }).click();
+    await expect(page).toHaveURL(/\/welcome$/);
+
+    // The account has First Class for life, above the test user's own Business subscription
+    // (the badge's plan choice would clear memberships too, so it's left alone), and no free
+    // month to start
+    await page.goto('/account');
+    const plan = page.getByRole('region', { name: 'Your plan' });
+    await expect(plan).toContainText('First Class');
+    await expect(plan).toContainText('Complimentary First Class for life');
+    await expect(plan.getByTestId('promo-trial')).toHaveCount(0);
+  });
+
   test('a code from a link on another page is kept for the sign-up form', async ({ page }) => {
     await page.goto('/pricing?code=traveltalk');
     await expect(page.getByRole('heading', { level: 1, name: 'Pricing' })).toBeVisible();
@@ -115,8 +141,8 @@ test.describe('Promo codes', () => {
     const card = page.getByRole('region', { name: 'New code' });
     await card.getByRole('textbox', { name: 'Code', exact: true }).fill('ada-adventures');
     await card.getByRole('textbox', { name: 'Label (only admins see it)' }).fill('Ada’s Adventures, summer 2027');
-    // There's no offer to set: it's the same for every code
-    await expect(card.getByRole('combobox')).toHaveCount(0);
+    // What it gives: the usual free month unless one of the plans for life is chosen
+    await expect(card.getByRole('combobox', { name: 'What it gives' })).toHaveValue('');
     await card.getByRole('button', { name: 'Make code' }).click();
     await expect(card.getByRole('status')).toHaveText('ADAADVENTURES is ready: their followers get their first month free.');
     const row = codeRow(page, 'ADAADVENTURES');

@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { PROMO_TRIAL_DAYS, normalisePromoCode, parsePromoCodeInput, promoCodeUsable, promoTrialDays } from '../src/utils/promoCodes.js';
+import {
+  FOR_LIFE_ENDS_AT,
+  PROMO_TRIAL_DAYS,
+  isForLife,
+  normalisePromoCode,
+  parsePromoCodeInput,
+  promoCodeUsable,
+  promoTrialDays,
+} from '../src/utils/promoCodes.js';
 
 describe('promo codes', () => {
   it('are stored upper case, without spaces or dashes', () => {
@@ -28,6 +36,25 @@ describe('promo codes', () => {
     expect(promoTrialDays({ ...fresh, promoTrialUsedAt: new Date() }, 'REGULAR')).toBe(0);
     expect(promoTrialDays({ promoCode: null, promoTrialUsedAt: null }, 'REGULAR')).toBe(0);
     expect(promoTrialDays(null, 'REGULAR')).toBe(0);
+    // A code that gives a plan for life gives no free month on top
+    expect(promoTrialDays({ promoCode: { code: 'FRIENDS', freePlan: 'PREMIUM' }, promoTrialUsedAt: null }, 'PREMIUM')).toBe(0);
+  });
+
+  it('can give a paid plan for life, chosen when the code is made and never changed', () => {
+    expect(parsePromoCodeInput({ code: 'friends', label: 'Friends', freePlan: 'PREMIUM' })).toEqual({
+      ok: true,
+      data: { code: 'FRIENDS', label: 'Friends', freePlan: 'PREMIUM' },
+    });
+    expect(parsePromoCodeInput({ code: 'FAMILY', label: 'Family', freePlan: 'REGULAR' }).data.freePlan).toBe('REGULAR');
+    // null: the usual free month
+    expect(parsePromoCodeInput({ code: 'FAMILY', label: 'Family', freePlan: null }).data).not.toHaveProperty('freePlan');
+    for (const bad of ['FREE', 'GOLD', 1]) expect(parsePromoCodeInput({ code: 'FAMILY', label: 'Family', freePlan: bad }).ok).toBe(false);
+    expect(parsePromoCodeInput({ freePlan: 'PREMIUM' }, { existing: { code: 'FAMILY' } }).ok).toBe(false);
+    // "For life" is a membership ending in 9999
+    expect(isForLife(FOR_LIFE_ENDS_AT)).toBe(true);
+    expect(isForLife('9999-12-31T00:00:00.000Z')).toBe(true);
+    expect(isForLife(new Date('2028-01-01'))).toBe(false);
+    expect(isForLife(null)).toBe(false);
   });
 
   it('check what an admin sets', () => {

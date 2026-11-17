@@ -33,9 +33,9 @@ function BadgeSuitcase({ badges, note = null, children = null }) {
       <div className='grid justify-items-center'>
         {/* The handle */}
         <span aria-hidden='true' className='h-5 w-24 rounded-t-2xl border-4 border-b-0 border-poster-brown' />
-        <div className='paper-aged grid w-full gap-4 rounded-2xl border-4 border-poster-brown px-3 py-4 text-poster-ink shadow-paper'>
+        <div className='paper-aged grid w-full gap-6 rounded-2xl border-4 border-poster-brown px-3 py-4 text-poster-ink shadow-paper'>
           {groups.map((group) => (
-            <section key={group.id} className='grid gap-2' aria-labelledby={`${headingId}-${group.id}`}>
+            <section key={group.id} className='grid gap-5' aria-labelledby={`${headingId}-${group.id}`}>
               <h4
                 id={`${headingId}-${group.id}`}
                 className='border-b-2 border-dashed border-poster-brown/50 pb-1 font-travel text-sm uppercase tracking-xl text-poster-brown'

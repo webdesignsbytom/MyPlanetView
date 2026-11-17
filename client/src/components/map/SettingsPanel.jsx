@@ -96,6 +96,7 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locke
             canRename={isOwner}
             splitUkNote
             submitLabel='Save map'
+            wideSubmit
             onSubmit={async (form) => {
               await saveMapSetup(map.id, map, form, { canRename: isOwner });
               await onMapSaved();

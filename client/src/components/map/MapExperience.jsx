@@ -21,6 +21,7 @@ import MapLegend from './MapLegend';
 import MapHoverLayer from './MapHoverLayer';
 import MapPanelFallback from './MapPanelFallback';
 import VerifyEmailBanner from './VerifyEmailBanner';
+import MapStatusScreen from './MapStatusScreen';
 import MapPlanBanner from './MapPlanBanner';
 import GoalTag from '@/components/achievements/GoalTag';
 import AwardNews from '@/components/achievements/AwardNews';
@@ -47,48 +48,31 @@ import {
   preloadWhenIdle,
 } from './lazyMapPanels';
 // Utils
+import { nearestGoal } from '@/utils/achievements/goals';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { MAP_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/map/mapListCache';
+import { preloadCountryLists } from '@/utils/map/preloadCountryLists';
 import { preloadSharing } from '@/utils/sharing/sharingCache';
 import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
 import { mapStyleById } from '@/utils/map/mapStyles';
-import { isAntarctic } from '@/utils/map/specialPlaces';
 import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
 
-const CLUSTER_RADIUS = 220; // map units: countries this close count as one region
-const VISITED = new Set(['VISITED', 'LIVED']);
 const atLandmarkZoom = (zoom) => zoom >= LANDMARK_MIN_ZOOM;
 // Opening a country from the map: its panel's code is fetched on the first press
 const warmCountryPanel = () => CountryPanel.preload().catch(() => {});
-
-// Where a portrait screen opens: the middle of the biggest group of visited countries
-// (so a map of European trips opens on Europe), or Europe when nothing is visited yet.
-// Antarctica's places count only while it's drawn.
-function homeFromVisits(visits, showAntarctica) {
-  const pins = visits
-    .filter((v) => VISITED.has(v.status) && (showAntarctica || !isAntarctic(v.countryCode)))
-    .map((v) => COUNTRY_BY_CODE[v.countryCode])
-    .filter(Boolean);
-  if (!pins.length) return undefined;
-  let best = [];
-  for (const pin of pins) {
-    const near = pins.filter((p) => Math.hypot(p.pinX - pin.pinX, p.pinY - pin.pinY) <= CLUSTER_RADIUS);
-    if (near.length > best.length) best = near;
-  }
-  return {
-    x: best.reduce((sum, p) => sum + p.pinX, 0) / best.length,
-    y: best.reduce((sum, p) => sum + p.pinY, 0) / best.length,
-  };
-}
 
 // Which overlay is open, the selected country, the open photo, the share dialog and the
 // slideshow (`{ country }`: one country's, or null for the whole map's): one reducer, so
 // opening one panel closes the last. The slideshow plays over everything, leaving the
 // panel it was opened from (a country's) there for when it closes.
 const initialUi = { panel: null, selectedCode: null, uploadCountry: null, photoId: null, sharing: false, slideshow: null };
+
+// The longest the loading screen waits for the panels' data (a slow connection): the map
+// shows then, and whatever is still on its way arrives as each panel opens
+const LOADING_CAP_MS = 20000;
 
 function uiReducer(state, action) {
   switch (action.type) {
@@ -125,17 +109,16 @@ function uiReducer(state, action) {
 function MapExperience({ map, trips, role, actions = null, shareCode = null, currentUser = null, settings, onChangeSetting }) {
   const navigate = useNavigate();
   const { showAntarctica } = settings;
-  const home = useMemo(() => homeFromVisits(map.visits, showAntarctica), [map.visits, showAntarctica]);
   // The map reaches further down with Antarctica; the viewport re-fits when it's toggled
   const extent = useMemo(() => mapExtent(showAntarctica), [showAntarctica]);
-  const viewport = useMapViewport({ home, extent });
+  const viewport = useMapViewport({ extent });
   const [ui, dispatch] = useReducer(uiReducer, initialUi);
   // The country under the pointer: followed by the hover postcard only (MapHoverLayer)
   const [hover] = useState(() => createValueStore(null));
   const [photosVersion, setPhotosVersion] = useState(0);
   // Wide screens (lg) show the map's banner, while it's switched on. The map has no title tag
   // anywhere (the user's wish, 16 Nov 2026, phones too): "Your maps" opens from the toolbar.
-  const bannerShows = useMediaQuery('(min-width: 1024px)') && settings.showUserBanner;
+  const bannerShows = useMediaQuery('(min-width: 1024px) and (min-height: 500px)') && settings.showUserBanner;
 
   const canEdit = Boolean(actions) && !shareCode && canEditRole(role);
   // An unverified email address: nothing can be added or changed yet (the server refuses
@@ -175,32 +158,44 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     [canEdit, canShare],
   );
 
-  // Their data too (17 Nov 2026, the user's wish: a panel should open at once, not wait for
-  // the database). Once the map has drawn and the browser is idle, the panel cache
-  // (utils/data/panelCache.js) gets: the share settings (the owner's), the photo album's
+  // Every panel's data, fetched behind the loading screen before the map shows (17 Nov 2026,
+  // the user's wish: the loading screen covers all of the person's travel data, so nothing
+  // inside the map loads afterwards): the share settings (the owner's), the photo album's
   // and the timeline's first pages, every landmark (the country tickets' lists and the
-  // pins) and your map list. Each panel then shows them at once and refreshes quietly.
+  // pins), your map lists, and every country ticket's photos and moments
+  // (preloadCountryLists: fetched where the map says there are some, kept empty elsewhere),
+  // all into the panel cache (utils/data/panelCache.js); the badges and goals come with
+  // useAchievements below. Each panel then shows its data at once and refreshes quietly. The
+  // map draws underneath meanwhile, and the screen lifts once they're all in, or after
+  // LOADING_CAP_MS whatever is still on its way. The map as it is then (a ref, so later
+  // changes to it don't start the run again).
   const userId = currentUser?.id;
+  const mapNowRef = useRef(map);
   useEffect(() => {
-    let done = false;
-    const run = () => {
-      if (done) return;
-      done = true;
-      if (isOwner) preloadSharing('maps', map.id);
-      preloadPhotoPage({ ...photoSource, ...MAP_PHOTOS });
-      preloadMomentPage({ ...photoSource, limit: 30 });
-      preloadLandmarks();
-      if (userId && !shareCode) {
-        myMaps.load(userId).catch(() => {});
-        sharedTripList.load(userId).catch(() => {});
-      }
-    };
-    const idle = typeof window.requestIdleCallback === 'function' ? window.requestIdleCallback(run, { timeout: 3000 }) : null;
-    const timer = idle === null ? window.setTimeout(run, 1500) : null;
+    mapNowRef.current = map;
+  }, [map]);
+  const [loadedMapId, setLoadedMapId] = useState(null);
+  useEffect(() => {
+    let left = false;
+    const jobs = [
+      isOwner ? preloadSharing('maps', map.id) : null,
+      preloadPhotoPage({ ...photoSource, ...MAP_PHOTOS }),
+      preloadMomentPage({ ...photoSource, limit: 30 }),
+      preloadLandmarks(),
+      userId && !shareCode ? myMaps.load(userId).catch(() => {}) : null,
+      userId && !shareCode ? sharedTripList.load(userId).catch(() => {}) : null,
+      preloadCountryLists(mapNowRef.current, photoSource, () => left),
+    ];
+    let cap = 0;
+    const capped = new Promise((resolve) => {
+      cap = window.setTimeout(resolve, LOADING_CAP_MS);
+    });
+    Promise.race([Promise.all(jobs), capped]).then(() => {
+      if (!left) setLoadedMapId(map.id);
+    });
     return () => {
-      done = true;
-      if (idle !== null) window.cancelIdleCallback(idle);
-      if (timer !== null) window.clearTimeout(timer);
+      left = true;
+      window.clearTimeout(cap);
     };
   }, [map.id, isOwner, photoSource, userId, shareCode]);
 
@@ -236,7 +231,17 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // uploads finished, a photo changed (a landmark confirmed, a country given). The server
   // awards as the owner and editors load them; what it says is new is announced once.
   const achievements = useAchievements({ mapId: shareCode ? null : map.id, shareCode });
+  // Whether phones show the goal flag at the top left (GoalTag: an unmet goal, the tag not switched off)
+  const phoneFlag = settings.showGoalTag !== false && Boolean(achievements.goals && achievements.badges && nearestGoal(achievements.goals));
   const { check: checkAchievements, dismissNews } = achievements;
+  // The loading screen lifts once the panels' data and the badges and goals are in
+  const dataReady = loadedMapId === map.id && !achievements.loading;
+  // Focus to the page once it lifts (nothing on it could take focus while it was up)
+  useEffect(() => {
+    if (dataReady && (document.activeElement === document.body || !document.activeElement)) {
+      document.getElementById('main-content')?.focus({ preventScroll: true });
+    }
+  }, [dataReady]);
   const wantToGo = useMemo(() => map.visits.filter((v) => v.status === 'WANT_TO_GO').map((v) => v.countryCode), [map.visits]);
   const openBadges = useCallback(() => {
     dismissNews();
@@ -430,6 +435,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             trips={trips}
             travellers={map.travellers}
             shareCode={shareCode}
+            canEdit={canEdit}
+            onOpenTool={handleToggle}
             onShowCountry={showCountry}
             onClose={close}
           />
@@ -480,7 +487,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       {/* Black and white (the viewer's setting): everything here in greys, one greyscale filter
           over the lot (the GPU applies it). The photo viewer and the slideshow sit outside it,
           so a photo opened is in colour. */}
-      <div className={`absolute inset-0 ${settings.blackAndWhite ? 'grayscale' : ''}`}>
+      {/* Out of reach while the loading screen is over it */}
+      <div inert={!dataReady} className={`absolute inset-0 ${settings.blackAndWhite ? 'grayscale' : ''}`}>
         <MapBackground styleId={settings.style} animatedSea={settings.animatedSea} />
 
         <main id='main-content' tabIndex={-1} role='main' className='absolute inset-0' onPointerDownCapture={warmCountryPanel}>
@@ -508,7 +516,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             label={`${map.name}: world map`}
           />
         </main>
-        <div className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2'>
+        <div className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2 phone:right-3'>
           {mustVerify ? <VerifyEmailBanner /> : null}
           {planBanner ? (
             <MapPlanBanner
@@ -520,15 +528,21 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               onPay={isOwner && !mustVerify ? () => setPayingForMap(true) : null}
             />
           ) : null}
-          {/* Last in the column, so the banners above keep their place (the map switcher opens below them) */}
+          {/* Last in the column, so the banners above keep their place (the map switcher opens
+              below them). On phones first (17 Nov 2026): its flag sits level with the Menu
+              stamp, and the banners come below them both, or below an empty row as tall as
+              the stamps when there's no flag, never under the Menu. */}
           {settings.showGoalTag !== false ? (
-            <GoalTag
-              goals={achievements.goals}
-              badges={achievements.badges}
-              onOpen={() => dispatch({ type: 'toggle', panel: 'badges' })}
-              onIntent={() => preloadTool('badges')}
-            />
+            <div className='grid phone:order-first'>
+              <GoalTag
+                goals={achievements.goals}
+                badges={achievements.badges}
+                onOpen={() => dispatch({ type: 'toggle', panel: 'badges' })}
+                onIntent={() => preloadTool('badges')}
+              />
+            </div>
           ) : null}
+          {phoneFlag ? null : <span aria-hidden='true' className='h-10 phone:order-first nophone:hidden' />}
         </div>
 
         {bannerShows ? (
@@ -560,7 +574,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
         {/* The key hides while a panel is open: the panel covers that corner */}
         {panel ? null : (
-          <div className='pointer-events-none absolute bottom-3 left-3 hidden md:grid'>
+          <div className='pointer-events-none absolute bottom-3 left-3 hidden nophone:grid'>
             <MapLegend showMoments={settings.showMoments} showSpots={Boolean(map.momentSpots?.length)} showStamps={stampedLandmarks.size > 0} />
           </div>
         )}
@@ -568,12 +582,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         {/* Wide screens centre every panel on the screen, the map switcher too: the same space
             above and below (4.5rem, clear of the tags at the top and the zoom stamps at the
             bottom; 6rem at the top while the map's banner shows there), and clear of the toolbar
-            on the right. The wrapper has a definite height, so a panel's `md:max-h-full` keeps it
+            on the right. The wrapper has a definite height, so a panel's `nophone:max-h-full` keeps it
             on screen. On phones every panel fills the screen from just below the Menu button to the bottom
             (16 Nov 2026, the user's wish: the bottom row of stamps is gone, so no gap above). */}
         {panel ? (
           <div
-            className={`pointer-events-none absolute inset-x-3 bottom-3 top-[4.25rem] z-10 grid grid-rows-[minmax(0,1fr)] md:inset-x-24 md:inset-y-18 md:place-items-center ${
+            className={`pointer-events-none absolute inset-x-3 bottom-3 top-[4.25rem] z-10 grid grid-rows-[minmax(0,1fr)] nophone:inset-x-24 nophone:inset-y-18 nophone:place-items-center ${
               bannerShows ? 'lg:top-24' : ''
             }`}
           >
@@ -662,6 +676,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           />
         </Suspense>
       ) : null}
+
+      {dataReady ? null : <MapStatusScreen loading overlay />}
     </div>
     </SplitUkProvider>
   );

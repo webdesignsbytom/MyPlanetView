@@ -63,7 +63,7 @@ function SharedPage() {
     return (
       <>
         <AppPageHead route={SHARED_PAGE_URL} />
-        <MapStatusScreen loading title='Opening…' />
+        <MapStatusScreen loading />
       </>
     );
   }

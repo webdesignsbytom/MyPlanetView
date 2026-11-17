@@ -20,6 +20,7 @@ import {
 import {
   countTravellers,
   createMapInDB,
+  createMissingVisits,
   createTravellerInDB,
   deleteTravellerInDB,
   deleteVisitInDB,
@@ -220,6 +221,7 @@ export const createMapHandler = handler(D, 'Create map', async (req, res) => {
     shareCode: await newUniqueShareCode(),
     travellers,
   });
+  await markBirthplaces(created, travellers.map((t) => t.birthCountryCode));
   logEvent(createMapEvent({ user: req.user, action: 'Create Success', id: created.id, statusCode: 201 }));
   return sendDataResponse(res, 201, { map: await mapDetailView(created.id, 'OWNER', WITH_PLAN) });
 });
@@ -329,6 +331,14 @@ export const getMapStatsHandler = handler(D, 'Get map stats', async (req, res) =
 
 // Travellers
 
+// Born there is been there (17 Nov 2026, the user's wish: a new map starts with at least the
+// country chosen as a birthplace at sign-up): a traveller's new or changed birth country is
+// marked VISITED on the map, as a photo or a trip marks one (createMissingVisits: a visit
+// already there stays as it is, "want to go" becomes visited). In the map's own places (a UK
+// birthplace stays the UK's mark on a split map). Never taken back when the birthplace changes.
+const markBirthplaces = (map, codes) =>
+  createMissingVisits(map.id, [...new Set(codes.filter(Boolean).map((code) => placeOnMap(code, Boolean(map.splitUk))))], 'MANUAL');
+
 export const createTravellerHandler = handler(D, 'Create traveller', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.mapNotFound)) return undefined;
@@ -339,6 +349,7 @@ export const createTravellerHandler = handler(D, 'Create traveller', async (req,
   if (count >= MAX_TRAVELLERS) return badRequest(req, res, D, EVENT_MESSAGES.tooManyTravellers);
 
   const traveller = await createTravellerInDB({ mapId: map.id, position: count, ...parsed.value });
+  await markBirthplaces(map, [traveller.birthCountryCode]);
   logEvent(createMapEvent({ user: req.user, action: 'Traveller Create Success', id: map.id, detail: `traveller=${traveller.id}`, statusCode: 201 }));
   return sendDataResponse(res, 201, { traveller });
 });
@@ -346,14 +357,14 @@ export const createTravellerHandler = handler(D, 'Create traveller', async (req,
 export const updateTravellerHandler = handler(D, 'Update traveller', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.mapNotFound)) return undefined;
-  if (!(await findTraveller(map.id, req.params.travellerId))) {
-    return notFound(req, res, D, EVENT_MESSAGES.travellerNotFound);
-  }
+  const before = await findTraveller(map.id, req.params.travellerId);
+  if (!before) return notFound(req, res, D, EVENT_MESSAGES.travellerNotFound);
 
   const parsed = await parseTraveller(req.body || {}, { partial: true });
   if (parsed.error) return badRequest(req, res, D, parsed.error);
 
   const traveller = await updateTravellerInDB(req.params.travellerId, parsed.value);
+  if (traveller.birthCountryCode !== before.birthCountryCode) await markBirthplaces(map, [traveller.birthCountryCode]);
   logEvent(createMapEvent({ user: req.user, action: 'Traveller Update Success', id: map.id, detail: `traveller=${traveller.id}` }));
   return sendDataResponse(res, 200, { traveller });
 });

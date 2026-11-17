@@ -34,7 +34,7 @@ function suggestName(groupType, travellers) {
  * the map, sets its group and splits the UK). `splitUkNote`: what changing it does to a map
  * that has places already (the settings panel; a new map has none).
  */
-function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = true, splitUkNote = false }) {
+function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = true, splitUkNote = false, wideSubmit = false }) {
   const [form, setForm] = useState(() => ({
     name: initial.name || '',
     groupType: initial.groupType || 'SOLO',
@@ -150,7 +150,8 @@ function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = tru
 
       <InlineAlert>{error}</InlineAlert>
       {saved ? <InlineAlert tone='good'>Saved.</InlineAlert> : null}
-      <div className='grid justify-end'>
+      {/* `wideSubmit`: across the form (Settings' Save map, 17 Nov 2026, the user's wish) */}
+      <div className={wideSubmit ? 'grid' : 'grid justify-end'}>
         <Button type='submit' busy={saving}>
           {submitLabel}
         </Button>

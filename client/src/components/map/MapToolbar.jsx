@@ -1,11 +1,13 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Icons
-import { IoChevronDown, IoHome, IoMap, IoSettings, IoShareSocial } from 'react-icons/io5';
+import { IoContract, IoExpand, IoHome, IoMap, IoMenu, IoSettings, IoShareSocial } from 'react-icons/io5';
 import { IoIosImages, IoIosStats } from 'react-icons/io';
 import { FaHistory, FaListOl, FaPlay, FaRoute, FaSuitcase } from 'react-icons/fa';
 // Constants
 import { HOME_PAGE_URL } from '@/utils/constants/routes';
+// Hooks
+import useFullscreen from '@/hooks/useFullscreen';
 // Utils
 import { plural } from '@/utils/functions/plural';
 import { SPECIAL_PLACE_TOTAL } from '@/utils/map/specialPlaces';
@@ -50,16 +52,19 @@ function MenuStamp({ pressed, size = 'h-11 w-11 text-lg', children }) {
 }
 
 /**
- * The phone's map menu (16 Nov 2026, the user's design): one "Menu" button at the top right,
- * with a down arrow, that drops every tool, restyled the same day as a travel ticket: the
+ * The phone's map menu (16 Nov 2026, the user's design): one round "Menu" stamp at the top
+ * right (a menu icon in the toolbar's round stamp, like the goal flag at the left; 17 Nov
+ * 2026, it was a "Menu" ticket with a down arrow), pressed in while open, that drops every tool, restyled the same day as a travel ticket: the
  * statistics across the top as a parchment strip of figures (its counts, as a sentence, are
  * its description, so its name is just "Travel statistics", as on the stamp), then the
- * tools as round stamps with their names under them, three to a row, and the home page
- * below a perforation. A disclosure, not an ARIA menu: Tab moves through it, choosing a
+ * tools as round stamps with their names under them, three to a row (on a phone on its side,
+ * 17 Nov 2026, a wider menu: the statistics beside their name, the tools in one row), and below a perforation the home page and, where the browser allows
+ * it, "Full screen", which hides the browser's bars (the user's wish: on its side a phone
+ * lost a third of its height to them). A disclosure, not an ARIA menu: Tab moves through it, choosing a
  * tool closes it, and so do Escape (focus back on the button) and a press outside. The open
  * panel's tool is pressed in.
  */
-function PhoneToolMenu({ items, home }) {
+function PhoneToolMenu({ items, home, extras = [] }) {
   const [open, setOpen] = useState(false);
   const listId = useId();
   const statsId = useId();
@@ -67,6 +72,7 @@ function PhoneToolMenu({ items, home }) {
   const toggleRef = useRef(null);
   const summary = items.find((item) => item.id === 'stats');
   const tools = items.filter((item) => item !== summary);
+  const footerItems = [home, ...extras].filter(Boolean);
 
   const choose = (item) => {
     setOpen(false);
@@ -95,7 +101,7 @@ function PhoneToolMenu({ items, home }) {
   return (
     <div
       ref={wrapRef}
-      className='relative grid justify-items-end md:hidden'
+      className='relative grid justify-items-end nophone:hidden'
       onKeyDown={(e) => {
         if (e.key !== 'Escape' || !open) return;
         // The menu closes first; the map's own Escape (closing a panel) waits for the next press
@@ -110,22 +116,25 @@ function PhoneToolMenu({ items, home }) {
         aria-expanded={open}
         aria-controls={listId}
         onClick={() => setOpen((now) => !now)}
-        className='ticket-edge paper-aged grid grid-cols-[auto_auto] items-center gap-2 px-4 py-2 font-travel text-lg uppercase leading-none tracking-wide text-poster-red-deep shadow-paper active:scale-95'
+        aria-label='Menu'
+        title='Menu'
+        className={`grid h-10 w-10 place-items-center rounded-full border-4 border-double text-xl transition active:scale-95 ${
+          open ? 'translate-y-px border-poster-paper bg-poster-red-deep text-poster-paper' : '-rotate-6 border-poster-red bg-poster-paper text-poster-red shadow-paper'
+        }`}
       >
-        Menu
-        <IoChevronDown aria-hidden='true' className={`text-xl transition-transform ${open ? 'rotate-180' : ''}`} />
+        <IoMenu aria-hidden='true' />
       </button>
       <div
         id={listId}
         hidden={!open}
-        className='ticket-edge absolute right-0 top-[calc(100%+0.5rem)] grid max-h-[calc(100svh-5.5rem)] w-[min(22rem,calc(100vw-1.5rem))] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-paper-cream text-poster-ink'
+        className='ticket-edge absolute right-0 top-[calc(100%+0.5rem)] grid max-h-[calc(100svh-4.5rem)] w-[min(22rem,calc(100vw-1.5rem))] grid-rows-[auto_minmax(0,1fr)_auto] sideways:w-[min(52rem,calc(100vw-1.5rem))] overflow-hidden bg-paper-cream text-poster-ink'
       >
         {summary ? (
           <button
             {...itemProps(summary)}
             aria-labelledby={`${statsId}-label`}
             aria-describedby={summary.description ? statsId : undefined}
-            className={`group grid gap-2 border-b-2 border-dashed border-poster-brown px-4 pb-3 pt-3.5 text-left transition ${
+            className={`group grid gap-2 border-b-2 border-dashed border-poster-brown px-4 pb-3 pt-3.5 text-left transition sideways:grid-cols-[auto_minmax(0,1fr)] sideways:items-center sideways:gap-4 sideways:py-2 ${
               summary.pressed ? 'bg-poster-red-deep text-poster-paper' : 'paper-aged hover:brightness-105'
             }`}
           >
@@ -162,7 +171,7 @@ function PhoneToolMenu({ items, home }) {
         ) : (
           <span />
         )}
-        <ul className='grid grid-cols-3 content-start gap-x-1 gap-y-2 overflow-y-auto px-3 py-3'>
+        <ul className='grid grid-cols-3 content-start gap-x-1 gap-y-2 overflow-y-auto px-3 py-3 sideways:grid-cols-[repeat(auto-fit,minmax(5.25rem,1fr))] sideways:py-2'>
           {tools.map((item) => (
             <li key={item.id} className='grid'>
               <button
@@ -177,14 +186,19 @@ function PhoneToolMenu({ items, home }) {
             </li>
           ))}
         </ul>
-        {home ? (
-          <button
-            {...itemProps(home)}
-            className='group grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 border-t-2 border-dashed border-poster-brown px-4 py-2.5 text-left transition paper-aged hover:brightness-105'
-          >
-            <MenuStamp size='h-8 w-8 text-sm'>{home.icon}</MenuStamp>
-            <span className='font-travel text-base uppercase leading-tight tracking-wide text-poster-red-deep'>{home.label}</span>
-          </button>
+        {footerItems.length ? (
+          <div className='paper-aged grid auto-cols-fr grid-flow-col divide-x-2 divide-dashed divide-poster-brown border-t-2 border-dashed border-poster-brown'>
+            {footerItems.map((item) => (
+              <button
+                key={item.id}
+                {...itemProps(item)}
+                className='group grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 px-4 py-2.5 text-left transition hover:brightness-105'
+              >
+                <MenuStamp size='h-8 w-8 text-sm'>{item.icon}</MenuStamp>
+                <span className='font-travel text-base uppercase leading-tight tracking-wide text-poster-red-deep'>{item.label}</span>
+              </button>
+            ))}
+          </div>
         ) : (
           <span />
         )}
@@ -235,10 +249,21 @@ function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false
     onIntent: onIntent ? () => onIntent(tool.id) : undefined,
   }));
   const menuHome = showHome ? { id: 'home', label: 'Home page', icon: <IoHome aria-hidden='true' />, onSelect: goHome } : null;
+  const fullscreen = useFullscreen();
+  const menuExtras = fullscreen.supported
+    ? [
+        {
+          id: 'fullscreen',
+          label: fullscreen.active ? 'Leave full screen' : 'Full screen',
+          icon: fullscreen.active ? <IoContract aria-hidden='true' /> : <IoExpand aria-hidden='true' />,
+          onSelect: fullscreen.toggle,
+        },
+      ]
+    : [];
 
   return (
     <nav aria-label='Map tools' className='pointer-events-auto grid'>
-      <div className='ticket-edge paper-aged hidden gap-2 px-3 py-3 md:grid pointer-fine:gap-2.5 pointer-fine:px-2.5 pointer-fine:py-3.25'>
+      <div className='ticket-edge paper-aged hidden gap-2 px-3 py-3 nophone:grid pointer-fine:gap-2.5 pointer-fine:px-2.5 pointer-fine:py-3.25'>
         {showHome ? (
           <MapRoundButton label='Home page' onClick={goHome}>
             <IoHome aria-hidden='true' />
@@ -257,7 +282,7 @@ function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false
           </MapRoundButton>
         ))}
       </div>
-      <PhoneToolMenu items={menuItems} home={menuHome} />
+      <PhoneToolMenu items={menuItems} home={menuHome} extras={menuExtras} />
     </nav>
   );
 }

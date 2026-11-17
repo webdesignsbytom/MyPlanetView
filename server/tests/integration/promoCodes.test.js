@@ -49,7 +49,7 @@ describe('promo codes', () => {
   it('can be checked before signing up, without the label', async () => {
     const res = await anon().get(`/api/promo-codes/${code.code.toLowerCase()}`);
     expect(res.status).toBe(200);
-    expect(data(res).promoCode).toEqual({ code: code.code, trialDays: 30 });
+    expect(data(res).promoCode).toEqual({ code: code.code, freePlan: null, trialDays: 30 });
     expect((await anon().get('/api/promo-codes/NOSUCHCODE')).status).toBe(404);
   });
 
@@ -72,6 +72,31 @@ describe('promo codes', () => {
     // Verifying gives no membership: the month is a trial on the first paid Checkout
     expect(await prisma.planGrant.count({ where: { userId: user.id } })).toBe(0);
     expect(data(await agent.get('/api/billing'))).toMatchObject({ plan: 'FREE', promoTrial: { code: code.code, days: 30 } });
+  });
+
+  it('of your own can give a plan for life: First Class from sign-up, with no end and no free month', async () => {
+    const made = await admin.agent
+      .post('/api/users/admin/promo-codes')
+      .send({ code: `it-life-${Date.now() % 100000}`, label: 'Friends and family', freePlan: 'PREMIUM' });
+    expect(made.status).toBe(201);
+    const life = data(made).promoCode;
+    promoIds.push(life.id);
+    expect(life).toMatchObject({ freePlan: 'PREMIUM', trialDays: 0 });
+    expect(life).not.toHaveProperty('createdById');
+    expect(data(await anon().get(`/api/promo-codes/${life.code}`)).promoCode).toEqual({ code: life.code, freePlan: 'PREMIUM', trialDays: 0 });
+    // Only a paid plan, and never changed once made
+    expect((await admin.agent.post('/api/users/admin/promo-codes').send({ code: 'ITLIFEFREE', label: 'x', freePlan: 'FREE' })).status).toBe(400);
+    expect((await admin.agent.patch(`/api/users/admin/promo-codes/${life.id}`).send({ freePlan: 'REGULAR' })).status).toBe(400);
+
+    const { res, user, agent } = await signUpWith('PromoForLife', life.code);
+    expect(res.status).toBe(200);
+    const grants = await prisma.planGrant.findMany({ where: { userId: user.id } });
+    expect(grants).toEqual([expect.objectContaining({ plan: 'PREMIUM', grantedById: admin.user.id })]);
+    expect(grants[0].endsAt.toISOString()).toBe('9999-12-31T00:00:00.000Z');
+    expect(grants[0].reason).toMatch(/for life/);
+    const billing = data(await agent.get('/api/billing'));
+    expect(billing).toMatchObject({ plan: 'PREMIUM', source: 'COMPLIMENTARY', promoTrial: null });
+    expect(billing.grant).toMatchObject({ plan: 'PREMIUM', endsAt: '9999-12-31T00:00:00.000Z' });
   });
 
   it('stop at their limit, and when turned off', async () => {

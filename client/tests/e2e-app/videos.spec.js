@@ -1,4 +1,4 @@
-import { test, expect, openMap, openTool, openUploader as openUploadPanel, MOCK_STORE_KEY } from './fixtures.js';
+import { test, expect, openMap, openTool, openUploader as openUploadPanel, MOCK_STORE_KEY, mapReady } from './fixtures.js';
 import { hasLocationMarker, readVideoInfo, stripVideoLocation, VIDEO_CHECK_FAILED } from '../../src/utils/photos/videoFile.js';
 
 // First Class videos (docs/API.md, "Videos"). The seeded test user is on Business, so
@@ -125,7 +125,7 @@ test.describe('Videos', () => {
   test('on First Class a video’s location is taken out, it uploads, shows its length and opens', async ({ page }) => {
     await openMap(page);
     await chooseInBadge(page, 'Plan', 'First Class');
-    await expect(page.getByRole('application', { name: /: world map$/ })).toBeVisible();
+    await mapReady(page);
     const panel = await openUploader(page, 'Italy');
     await expect(panel.getByText('0 of 20 videos of Italy on this map.')).toBeVisible();
     // A file holding a location both ways a phone writes it. The mock Stream refuses (403)
@@ -177,7 +177,7 @@ test.describe('Videos', () => {
     });
     await openMap(page);
     await chooseInBadge(page, 'Plan', 'First Class');
-    await expect(page.getByRole('application', { name: /: world map$/ })).toBeVisible();
+    await mapReady(page);
     const clip = await recordMp4(page, 'iceland.mp4');
     const panel = await openUploader(page, 'Iceland');
     await fileInput(panel).setInputFiles(clip);
@@ -287,7 +287,7 @@ test.describe('Videos', () => {
   test('a video over 3 minutes, or one that can’t be checked, is refused before anything uploads', async ({ page }) => {
     await openMap(page);
     await chooseInBadge(page, 'Plan', 'First Class');
-    await expect(page.getByRole('application', { name: /: world map$/ })).toBeVisible();
+    await mapReady(page);
     const panel = await openUploader(page, 'Spain');
     await fileInput(panel).setInputFiles([
       videoUpload('long.mp4', mp4(200)),

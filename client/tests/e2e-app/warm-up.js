@@ -9,6 +9,8 @@ const ATTEMPTS = 3;
 async function loadEverything(page) {
   await page.goto('/map', { timeout: COLD_START_MS });
   await page.getByRole('application', { name: /: world map$/ }).waitFor({ timeout: COLD_START_MS });
+  // ...and its loading screen gone: every panel's data in (MapExperience)
+  await page.locator('[data-map-loading]').waitFor({ state: 'detached', timeout: COLD_START_MS });
   // The same modules the app imports (Vite serves them by these paths)
   await page.evaluate(async () => {
     const [pages, panels] = await Promise.all([

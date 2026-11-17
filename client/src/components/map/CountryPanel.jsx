@@ -8,6 +8,7 @@ import useGalleryOffers from '@/hooks/useGalleryOffers';
 import useSplitUk from '@/hooks/useSplitUk';
 import usePlannedTripPlace from '@/hooks/usePlannedTripPlace';
 import useMediaQuery from '@/hooks/useMediaQuery';
+import { NOT_PHONE_QUERY } from '@/utils/layout/phone';
 // Components
 import CountryTicket from './CountryTicket';
 import CountryTicketStub from './CountryTicketStub';
@@ -85,7 +86,7 @@ function CountryPanel({
   const offerSlots = useGalleryOffers({ every: adEvery, slotKey: `${mapKey}:${code}`, country: code, plannedTrip });
   const deskCountries = useMemo(() => [code], [code]);
   // md and up: the status controls go in the stub (Tailwind's md, 48rem)
-  const controlsInStub = useMediaQuery('(min-width: 48rem)');
+  const controlsInStub = useMediaQuery(NOT_PHONE_QUERY);
   const { reload } = photos;
   const { reload: reloadMoments } = moments;
 

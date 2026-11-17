@@ -3,14 +3,17 @@ import React, { useState } from 'react';
 import Button from '@/components/common/Button';
 
 // The share link and its code, with copy, and "reset link" (a new code; old links stop
-// working), offered only when `canReset` (a verified email address).
+// working), offered only when `canReset` (a verified email address). The link is on the site
+// this page came from (17 Nov 2026, the user's wish: the server's was the domain the site
+// isn't on yet), so it opens wherever the site is running: the Netlify site, localhost.
 function ShareLinkBox({ shareUrl, shareCode, busy, canReset = true, onReset }) {
   const [copied, setCopied] = useState(false);
+  const link = shareCode ? `${window.location.origin}/shared/${shareCode}` : shareUrl;
   const [confirmingReset, setConfirmingReset] = useState(false);
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(link);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     } catch {
@@ -24,7 +27,7 @@ function ShareLinkBox({ shareUrl, shareCode, busy, canReset = true, onReset }) {
       <div className='grid gap-2 sm:grid-cols-rev'>
         <input
           readOnly
-          value={shareUrl}
+          value={link}
           aria-label='Share link'
           onFocus={(e) => e.target.select()}
           className='w-full truncate border border-field-edge bg-field px-2 py-2 text-sm'

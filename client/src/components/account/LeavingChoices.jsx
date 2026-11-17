@@ -34,7 +34,7 @@ function LeavingChoices({ options, choices, onChoose, leavePhotos, onLeavePhotos
               </FormField>
             ) : (
               <p key={map.id} className='text-sm'>
-                “{map.name}” is deleted: nobody else is on it.
+                “{map.name}” will be deleted with your account, as nobody else is on it.
               </p>
             ),
           )}

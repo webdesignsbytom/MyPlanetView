@@ -9,12 +9,22 @@ import { postersFor } from '@/utils/map/posterData';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { VISIT_STATUS_LABELS, countsAsVisited } from '@/utils/map/visitStatus';
+import { takeHoverPoint } from '@/utils/map/hoverPoint';
 
 const OFFSET = 18;
 // The card's top sits this far above the pointer, so the pointer is beside its header
 const LIFT = 40;
 // Kept clear of the screen's top and bottom edges
 const MARGIN = 8;
+// A finger's card (a long press: CountryLayer) clears the fingertip by this much
+const FINGER = 36;
+const CARD_WIDTH = 256; // w-64
+
+// A finger's card: above the finger, centred on it, or below when there's no room above
+function fingerTop(y, height) {
+  const above = y - FINGER - height;
+  return above >= MARGIN ? above : y + FINGER;
+}
 
 // Where the card's top goes: beside the pointer, or, when the card wouldn't fit below
 // the pointer, above it (its bottom just over the pointer); never off the top
@@ -44,7 +54,11 @@ function nameSize(name) {
 // It follows the pointer, and goes above it near the bottom of the screen, where it
 // wouldn't fit below. Mouse and pen only; every listener is cleared when the box goes.
 function HoverPreview({ code, status, showPoster }) {
-  const [position, setPosition] = useState(null);
+  // A long press starts at the finger (`touch`); a mouse at its first move
+  const [position, setPosition] = useState(() => {
+    const at = takeHoverPoint();
+    return at ? { ...at, touch: true } : null;
+  });
   const boxRef = useRef(null);
 
   // The card's height depends on what it shows (a poster or not), so its
@@ -54,7 +68,7 @@ function HoverPreview({ code, status, showPoster }) {
     positionRef.current = position;
     const box = boxRef.current;
     if (!box || !position) return;
-    box.style.top = `${cardTop(position.y, box.offsetHeight, window.innerHeight)}px`;
+    box.style.top = `${position.touch ? fingerTop(position.y, box.offsetHeight) : cardTop(position.y, box.offsetHeight, window.innerHeight)}px`;
   });
 
   // ...and again whenever its size changes: a poster's box is drawn square until its image
@@ -66,7 +80,7 @@ function HoverPreview({ code, status, showPoster }) {
     if (!shown || !box || typeof ResizeObserver === 'undefined') return undefined;
     const observer = new ResizeObserver(() => {
       const at = positionRef.current;
-      if (at) box.style.top = `${cardTop(at.y, box.offsetHeight, window.innerHeight)}px`;
+      if (at) box.style.top = `${at.touch ? fingerTop(at.y, box.offsetHeight) : cardTop(at.y, box.offsetHeight, window.innerHeight)}px`;
     });
     observer.observe(box);
     return () => observer.disconnect();
@@ -75,6 +89,7 @@ function HoverPreview({ code, status, showPoster }) {
   useEffect(() => {
     let frame = 0;
     const onMove = (e) => {
+      if (e.pointerType === 'touch') return; // a finger's card stays put (it hides when the finger moves)
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => setPosition({ x: e.clientX, y: e.clientY }));
     };
@@ -89,11 +104,14 @@ function HoverPreview({ code, status, showPoster }) {
 
   // Keep the box on screen: flip to the pointer's left near the right edge (its top is
   // set in the layout effect above, which can measure it)
-  const flip = typeof window !== 'undefined' && position.x > window.innerWidth - 320;
-  const style = {
-    left: flip ? undefined : position.x + OFFSET,
-    right: flip ? window.innerWidth - position.x + OFFSET : undefined,
-  };
+  // A finger's card is centred over it, kept on the screen
+  const flip = !position.touch && typeof window !== 'undefined' && position.x > window.innerWidth - 320;
+  const style = position.touch
+    ? { left: Math.max(MARGIN, Math.min(position.x - CARD_WIDTH / 2, window.innerWidth - CARD_WIDTH - MARGIN)) }
+    : {
+        left: flip ? undefined : position.x + OFFSET,
+        right: flip ? window.innerWidth - position.x + OFFSET : undefined,
+      };
 
   const [poster] = postersFor(code);
   const name = countryName(code);

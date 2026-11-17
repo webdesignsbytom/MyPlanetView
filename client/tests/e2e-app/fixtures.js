@@ -53,7 +53,16 @@ export const test = base.extend({
 /** Open a map page and wait for the map itself. */
 export async function openMap(page, path = '/map') {
   await page.goto(path);
+  await mapReady(page);
+}
+
+/**
+ * The map is up and usable: drawn, and its loading screen gone (it stays over the map, the
+ * map inert, until every panel's data is in: MapExperience, 17 Nov 2026).
+ */
+export async function mapReady(page) {
   await expect(page.getByRole('application', { name: /: world map$/ })).toBeVisible();
+  await expect(page.locator('[data-map-loading]')).toHaveCount(0);
 }
 
 export const toolbar = (page) => page.getByRole('navigation', { name: 'Map tools' });

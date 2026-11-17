@@ -18,8 +18,6 @@ const DRAG_THRESHOLD_PX = 5;
 const DOUBLE_TAP_MS = 300;
 const DOUBLE_TAP_PX = 30;
 const DOUBLE_TAP_ZOOM = 2;
-// Where a portrait screen opens when the page gives no home point: Europe
-const DEFAULT_HOME = { x: 1060, y: 200 };
 
 // Runs `fn` in a task of its own, after the current one, as React's scheduler does: the
 // view goes onto the SVG, and what's drawn by zoom re-renders, together and outside the
@@ -73,15 +71,16 @@ function fit({ x, y, w }, aspect, extent, closest = MIN_WIDTH) {
 
 // The starting view, with the North Pole at the top (`aspect` is height / width). A
 // portrait screen: as far out as the map allows, pole line to pole line (Antarctica in
-// view when shown), centred on home (16 Nov 2026, the user's wish: phones open fully
-// zoomed out; they opened on the home frame, Antarctica a zoom-out away). A landscape
+// view when shown), centred (16 Nov 2026, the user's wish: phones open fully zoomed out;
+// 17 Nov: centred on the map, no longer on the visited countries, which opened it over the
+// Americas). A landscape
 // one: the home frame across the whole width, at the scale the map always had (Antarctica
 // below it), unless that would show sea beyond the map: then as far out as the map
 // allows, centred (a less wide screen fills its height).
-function homeView(aspect, home, extent, closest = MIN_WIDTH) {
+function homeView(aspect, extent, closest = MIN_WIDTH) {
   if (aspect > 1) {
     const w = widestFor(aspect, extent);
-    return fit({ x: home.x - w / 2, y: extent.top, w }, aspect, extent, closest);
+    return fit({ x: (MAP_WIDTH - w) / 2, y: extent.top, w }, aspect, extent, closest);
   }
   const w = Math.min(Math.max(MAP_WIDTH, homeFrameHeight(extent) / aspect), widestFor(aspect, extent));
   return fit({ x: (MAP_WIDTH - w) / 2, y: extent.top, w }, aspect, extent, closest);
@@ -103,18 +102,16 @@ function homeView(aspect, home, extent, closest = MIN_WIDTH) {
  * `afterTap(action)` is for click handlers on the map (opening a country): it ignores the
  * click that ends a drag or a double-tap, and holds the action back until no second tap
  * can follow, so a double-tap only zooms.
- * `home` ({ x, y } in map units) is where a portrait screen opens (centred on its x, the
- * North Pole at the top), e.g. the visited countries.
  * `extent` ({ top, bottom } in map units, from projection.js mapExtent) is how far the map
  * reaches: further down with Antarctica. A new extent re-fits the view before the next
  * paint (the opening view again, unless the user has moved it).
  * The returned object never changes, so it can be passed to memoised components.
  */
-export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME, extent = FULL_EXTENT } = {}) {
+export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT } = {}) {
   const svgNodeRef = useRef(null);
   const extentRef = useRef({ top: extent.top, bottom: extent.bottom });
   // The live view, and the zoom the subscribers last saw
-  const viewRef = useRef(homeView(viewAspectFor(0, extentRef.current), DEFAULT_HOME, extentRef.current));
+  const viewRef = useRef(homeView(viewAspectFor(0, extentRef.current), extentRef.current));
   const zoomRef = useRef(1);
   const listenersRef = useRef(new Set());
   const pendingRef = useRef(false);
@@ -136,9 +133,6 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME, 
   const screenWidthRef = useRef(0);
   const closestRef = useRef(MIN_WIDTH);
   const movedRef = useRef(false);
-  const homeRef = useRef({ x: home?.x ?? DEFAULT_HOME.x, y: home?.y ?? DEFAULT_HOME.y });
-  const homeX = home?.x ?? DEFAULT_HOME.x;
-  const homeY = home?.y ?? DEFAULT_HOME.y;
 
   useEffect(() => () => clearTimeout(pendingTapRef.current), []);
 
@@ -188,7 +182,7 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME, 
       }
       aspectRef.current = aspect;
       const prev = viewRef.current;
-      apply(movedRef.current ? fit(prev, aspect, extent, closestRef.current) : homeView(aspect, homeRef.current, extent, closestRef.current), first);
+      apply(movedRef.current ? fit(prev, aspect, extent, closestRef.current) : homeView(aspect, extent, closestRef.current), first);
     },
     [apply],
   );
@@ -214,12 +208,6 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME, 
     return () => observer.disconnect();
   }, [measure]);
 
-  // A new home (the visits arrived or changed) moves the view only if the user hasn't yet
-  useEffect(() => {
-    homeRef.current = { x: homeX, y: homeY };
-    if (!movedRef.current) apply(homeView(aspectRef.current, homeRef.current, extentRef.current, closestRef.current));
-  }, [homeX, homeY, apply]);
-
   // A new extent (Antarctica shown or hidden): the view's shape follows the map's on a
   // landscape screen, and the view is kept on the map. Before the paint that draws the
   // map without (or with) Antarctica, so it never shows a gap.
@@ -232,7 +220,7 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME, 
     extentRef.current = next;
     const aspect = viewAspectFor(screenAspectRef.current, next);
     aspectRef.current = aspect;
-    apply(movedRef.current ? fit(viewRef.current, aspect, next, closestRef.current) : homeView(aspect, homeRef.current, next, closestRef.current), true);
+    apply(movedRef.current ? fit(viewRef.current, aspect, next, closestRef.current) : homeView(aspect, next, closestRef.current), true);
   }, [extentTop, extentBottom, apply]);
 
   // Screen position -> map position, from the live view (the SVG's viewBox can be a task
@@ -266,7 +254,7 @@ export default function useMapViewport({ wheelZoom = true, home = DEFAULT_HOME, 
   const zoomOut = useCallback(() => zoomAround(1 / 1.6), [zoomAround]);
   const reset = useCallback(() => {
     movedRef.current = false;
-    apply(homeView(aspectRef.current, homeRef.current, extentRef.current, closestRef.current));
+    apply(homeView(aspectRef.current, extentRef.current, closestRef.current));
   }, [apply]);
 
   // Centre on a point at a given width (a country picked from the list)

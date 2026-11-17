@@ -4,7 +4,10 @@
 //   node images/src/tools/country-posters.mjs <folder> --dry-run         say what it would do
 //
 // Each file is "<country slug>-<title>.png" (or .jpg/.webp), the slug as in
-// client/src/utils/map/countries.js (ALIASES below for the few named otherwise). For each,
+// client/src/utils/map/countries.js (ALIASES below for the few named otherwise), a special
+// place's too (antarctica, north-pole, south-pole...) and a UK nation's (england, scotland,
+// wales, northern-ireland; 17 Nov 2026), whose own poster shows on a map that splits the UK
+// (posterData.js postersFor). One per place is the user's way (17 Nov 2026). For each,
 // it writes media/visitCountryPosters/<code>-<title>-800.avif and .webp (800px wide; files
 // already there are kept), then sets that country's posters in
 // client/src/utils/map/posterData.js to the folder's ones, A–Z by title (the first is the
@@ -36,7 +39,7 @@ if (!folder) {
 const { COUNTRIES } = await import(pathToFileURL(join(root, 'client/src/utils/map/countries.js')).href);
 // Longest first, so "dominican-republic" wins over "dominica", "guinea-bissau" over "guinea"
 const prefixes = [
-  ...COUNTRIES.filter((country) => !country.kind).map((country) => [country.slug, country.code]),
+  ...COUNTRIES.map((country) => [country.slug, country.code]),
   ...Object.entries(ALIASES),
 ].sort((a, b) => b[0].length - a[0].length);
 

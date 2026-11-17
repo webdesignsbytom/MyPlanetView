@@ -31,7 +31,7 @@ function TravelDesk({ countryCodes, trip = null, guideOnPage = null, inMapPanel 
 
   return (
     <>
-      <span className={fill ? 'grid' : 'grid justify-items-start'} onPointerEnter={loadDialog} onFocus={loadDialog}>
+      <span className={fill ? 'grid' : inMapPanel ? 'grid justify-items-start phone:justify-items-stretch' : 'grid justify-items-start'} onPointerEnter={loadDialog} onFocus={loadDialog}>
         <ButtonKind quiet onClick={show}>
           <FaConciergeBell aria-hidden='true' className='self-center text-sm' />
           <span>Travel Desk</span>

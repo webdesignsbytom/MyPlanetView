@@ -1,4 +1,4 @@
-import { test, expect, HOME_SHARE_CODE, expectStats, goInApp, openMap, openTool, openUploader } from './fixtures.js';
+import { test, expect, HOME_SHARE_CODE, expectStats, goInApp, openMap, openTool, openUploader, mapReady } from './fixtures.js';
 
 // The UK's nations (docs/API.md "The UK's nations"): the owner splits the map's UK into
 // England, Scotland, Wales and Northern Ireland in the settings, and back. The seed's map
@@ -110,7 +110,7 @@ test.describe('The UK’s nations', () => {
     await expect(toggle).toBeChecked();
     await page.getByRole('button', { name: 'Start my map' }).click();
     // On to the map, drawn with the nations
-    await expect(page.getByRole('application', { name: /: world map$/ })).toBeVisible();
+    await mapReady(page);
     await expect(page.locator('[data-code="XC"]')).toHaveCount(1);
     await expect(page.locator('[data-code="GB"]')).toHaveCount(0);
   });

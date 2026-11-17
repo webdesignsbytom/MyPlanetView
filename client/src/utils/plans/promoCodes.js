@@ -1,4 +1,4 @@
-// Influencer codes (docs/API.md, "Promo codes"): the format, as the server's
+// Promo codes (docs/API.md, "Promo codes"): the format, as the server's
 // utils/promoCodes.js (mock mode uses these too), the words for the offer, and the code
 // kept for the visit from a `?code=` link, so it's still there when the person goes on
 // to sign up. Plan names come from the plan constants.
@@ -14,6 +14,21 @@ export const PROMO_MAX_USES_MAX = 1_000_000;
 // Every code's offer, as the server's PROMO_TRIAL_DAYS (16 Nov 2026): the follower's first
 // month free on the paid plan they choose, as a Stripe trial with a card
 export const PROMO_TRIAL_DAYS = 30;
+
+// The user's own codes (17 Nov 2026), as the server's: one made with `freePlan` (Business or
+// First Class) gives that plan for life from sign-up, a complimentary membership ending in
+// 9999 (isForLife), with no free month
+export const FREE_PLAN_IDS = PAID_PLAN_IDS;
+const FOR_LIFE_FROM = Date.UTC(9999, 0, 1);
+
+/** Does a membership ending at `endsAt` last for life? */
+export const isForLife = (endsAt) => Boolean(endsAt) && new Date(endsAt).getTime() >= FOR_LIFE_FROM;
+
+/** What a code gives, for the admin's choice when making one ('' is the usual free month). */
+export const PROMO_OFFER_CHOICES = [
+  { value: '', label: 'The first month free (the usual offer)' },
+  ...FREE_PLAN_IDS.map((id) => ({ value: id, label: `${planOf(id).name}, free for life` })),
+];
 
 // "Business or First Class"
 const PAID_PLAN_NAMES = PAID_PLAN_IDS.map((id) => planOf(id).name).join(' or ');
@@ -31,9 +46,14 @@ export function normalisePromoCode(value) {
 /** The followers' offer in a few words, for the admin page. */
 export const PROMO_OFFER_WORDS = `First month free on ${PAID_PLAN_NAMES} (${PROMO_TRIAL_DAYS} days, with a card)`;
 
+/** What a code gives in a few words, for the admin page: its plan for life, or the free month. */
+export const promoOfferWords = (promo) => (promo?.freePlan ? `${planOf(promo.freePlan).name}, free for life, from sign-up` : PROMO_OFFER_WORDS);
+
 /** What a usable code gives, for the sign-up form. */
-export const promoOfferText = ({ code }) =>
-  `${code}: your first month of ${PAID_PLAN_NAMES} is free. Choose one on your account page once your email is verified. Stripe asks for a card, and nothing is charged for ${PROMO_TRIAL_DAYS} days.`;
+export const promoOfferText = ({ code, freePlan }) =>
+  freePlan
+    ? `${code}: ${planOf(freePlan).name} is yours, free for life. It starts as soon as your account is made.`
+    : `${code}: your first month of ${PAID_PLAN_NAMES} is free. Choose one on your account page once your email is verified. Stripe asks for a card, and nothing is charged for ${PROMO_TRIAL_DAYS} days.`;
 
 /** The account page's offer: `promoTrial` is GET /billing's `{ code, days }`. */
 export const promoTrialText = (promoTrial) =>

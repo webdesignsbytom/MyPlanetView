@@ -10,5 +10,5 @@ export const sharingKey = (resource, id) => `sharing:${resource}:${id}`;
 
 /** Fetch the sharing settings now and keep them, unless a fresh copy is here already. */
 export function preloadSharing(resource, id) {
-  prefetch(sharingKey(resource, id), () => getSharing(resource, id));
+  return prefetch(sharingKey(resource, id), () => getSharing(resource, id));
 }

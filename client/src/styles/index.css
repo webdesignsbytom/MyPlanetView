@@ -2,6 +2,28 @@
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/aspect-ratio";
 
+/* A phone held either way (17 Nov 2026, the user's wish: on its side a phone was taken for a
+   wide screen, so the map showed the desktop's column of stamps, cut off): narrow (below
+   md), or short, as a phone on its side is (under 500px tall). The map page's phone layout
+   (the Menu button, panels filling the screen, no map key) is `phone:`, its wide layout
+   `nophone:`. The same test in code: PHONE_QUERY in utils/layout/phone.js. */
+@custom-variant phone {
+  @media (max-width: 767.98px), (max-height: 499.98px) {
+    @slot;
+  }
+}
+@custom-variant nophone {
+  @media (min-width: 768px) and (min-height: 500px) {
+    @slot;
+  }
+}
+/* A phone on its side (any window under 500px tall): the phone menu lies flatter */
+@custom-variant sideways {
+  @media (max-height: 499.98px) {
+    @slot;
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    Colour tokens (NextDummy's system). Every token is light-dark(light, dark);
    `color-scheme` on <html> (below, in the base layer) decides which side applies,
@@ -336,6 +358,8 @@
   /* The old site's animated sea, animate-ocean, is an @utility below (it needs layers) */
   /* The sun and moon crossing the animated map (decorative; hidden under reduced motion) */
   --animate-sky-drift: sky-drift 90s linear infinite;
+  /* A rubber stamp pressed on: the map's loading screen (StampLoading) */
+  --animate-stamp-in: stamp-in 0.32s cubic-bezier(0.3, 1.4, 0.5, 1) both;
 
   /* font sizes */
   --text-2xs: 0.6875rem; /* 11px: captions, chips, field hints */
@@ -361,6 +385,17 @@
     }
     to {
       transform: translateX(110vw);
+    }
+  }
+
+  @keyframes stamp-in {
+    from {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 }

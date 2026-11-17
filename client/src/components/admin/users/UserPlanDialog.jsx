@@ -11,6 +11,7 @@ import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 // Utils
 import { GRANT_MONTHS, PAID_PLAN_IDS, planOf } from '@/utils/constants/plans';
+import { isForLife } from '@/utils/plans/promoCodes';
 import { formatDay } from '@/utils/functions/dates';
 
 const PLAN_OPTIONS = PAID_PLAN_IDS.map((id) => ({ value: id, label: planOf(id).name }));
@@ -100,7 +101,7 @@ function UserPlanDialog({ user, onClose }) {
                   <li key={grant.id} className='grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-2 border-dashed border-poster-brown/60 px-3 py-2 text-sm'>
                     <span className='grid min-w-0'>
                       <span className='font-semibold'>
-                        {planOf(grant.plan).name}, {formatDay(grant.startsAt)} – {formatDay(grant.endsAt)}
+                        {planOf(grant.plan).name}, {formatDay(grant.startsAt)} – {isForLife(grant.endsAt) ? 'for life' : formatDay(grant.endsAt)}
                         {grant.active ? ' (running)' : ''}
                       </span>
                       {grant.reason ? <span className='break-words opacity-80'>{grant.reason}</span> : null}

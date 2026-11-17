@@ -34,7 +34,7 @@ function pick(list, countryCode) {
 
 /** Start fetching the landmarks before anything asks (the map page, when pins will show). */
 export function preloadLandmarks() {
-  loadAll().catch(() => {});
+  return loadAll().catch(() => {});
 }
 
 /** Landmarks in one country, or every landmark when `countryCode` is empty. */

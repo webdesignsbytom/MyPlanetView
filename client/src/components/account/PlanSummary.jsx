@@ -2,6 +2,7 @@ import React from 'react';
 // Utils
 import { formatDay } from '@/utils/functions/dates';
 import { planOf } from '@/utils/constants/plans';
+import { isForLife } from '@/utils/plans/promoCodes';
 import { INTERVAL_NAMES, hasSubscription, planPrice, priceText } from '@/utils/plans/billing';
 
 const number = (n) => Number(n).toLocaleString('en-GB');
@@ -9,6 +10,9 @@ const gigabytes = (bytes) => `${Math.round(bytes / 1000 ** 3)} GB`;
 
 // What the account's plan is, where it comes from (a subscription, a complimentary
 // membership or nothing: Economy), when it renews or ends, and what it keeps
+// "until 5 Dec 2027", or "for life" (a promo code of your own: utils/plans/promoCodes.js)
+const grantEnd = (grant) => (isForLife(grant.endsAt) ? 'for life' : `until ${formatDay(grant.endsAt)}`);
+
 function PlanSummary({ billing }) {
   const plan = planOf(billing.plan);
   const grantPlan = billing.grant ? planOf(billing.grant.plan) : null;
@@ -16,7 +20,7 @@ function PlanSummary({ billing }) {
 
   const source =
     billing.source === 'COMPLIMENTARY' && billing.grant
-      ? `Complimentary ${grantPlan.name} until ${formatDay(billing.grant.endsAt)}`
+      ? `Complimentary ${grantPlan.name} ${grantEnd(billing.grant)}`
       : billing.source === 'STRIPE'
         ? `Paid ${INTERVAL_NAMES[billing.interval] || ''}, ${priceText(planPrice(billing, billing.plan, billing.interval || 'MONTH'), billing.interval || 'MONTH')}`
         : 'Free';
@@ -55,7 +59,7 @@ function PlanSummary({ billing }) {
       {/* A membership running beside a subscription that wins, or the other way round */}
       {billing.source !== 'COMPLIMENTARY' && billing.grant ? (
         <p className='text-sm'>
-          You also have complimentary {grantPlan.name} until {formatDay(billing.grant.endsAt)}.
+          You also have complimentary {grantPlan.name} {grantEnd(billing.grant)}.
         </p>
       ) : null}
       {billing.source === 'COMPLIMENTARY' && subscribed ? (

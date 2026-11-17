@@ -5,6 +5,7 @@
 // `promoTrialUsedAt` once its free month started.
 import { COUNTING_SUBSCRIPTION_STATUSES, PAID_PLAN_IDS } from '@/utils/constants/plans';
 import {
+  FREE_PLAN_IDS,
   PROMO_CODE_INVALID,
   PROMO_LABEL_MAX,
   PROMO_MAX_USES_MAX,
@@ -45,7 +46,8 @@ export function usablePromoCode(value, now = Date.now()) {
  */
 export function promoTrialFor(user, plan = 'REGULAR') {
   const promo = user?.promoCodeId ? codes().find((p) => p.id === user.promoCodeId) : null;
-  if (!promo || user.promoTrialUsedAt || !PAID_PLAN_IDS.includes(plan)) return null;
+  // A code that gives a plan for life gives no free month
+  if (!promo || promo.freePlan || user.promoTrialUsedAt || !PAID_PLAN_IDS.includes(plan)) return null;
   return { code: promo.code, days: PROMO_TRIAL_DAYS };
 }
 
@@ -59,7 +61,8 @@ export function promoCodeView(promo) {
   const { createdById: _createdBy, ...fields } = promo;
   return {
     ...fields,
-    trialDays: PROMO_TRIAL_DAYS,
+    freePlan: promo.freePlan ?? null,
+    trialDays: promo.freePlan ? 0 : PROMO_TRIAL_DAYS,
     signUps: users.length,
     verified: users.filter((u) => u.emailVerified === true).length,
     trials: users.filter((u) => u.promoTrialUsedAt).length,
@@ -87,7 +90,11 @@ export function parsePromoCodeInput(body, { existing = null } = {}) {
     const code = normalisePromoCode(body.code);
     if (!code) return { ok: false, message: 'format' };
     data.code = code;
-  } else if (body.code !== undefined) {
+    if (body.freePlan !== undefined && body.freePlan !== null) {
+      if (!FREE_PLAN_IDS.includes(body.freePlan)) return { ok: false, message: 'detailsInvalid' };
+      data.freePlan = body.freePlan;
+    }
+  } else if (body.code !== undefined || body.freePlan !== undefined) {
     return { ok: false, message: 'detailsInvalid' };
   }
 

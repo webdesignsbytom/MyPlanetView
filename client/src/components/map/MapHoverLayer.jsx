@@ -1,19 +1,14 @@
 import React, { Suspense, memo, useEffect, useSyncExternalStore } from 'react';
-// Hooks
-import useCanHover from '@/hooks/useCanHover';
 // Components
 import { HoverPreview } from './lazyMapPanels';
 
 // The postcard that follows the pointer over a country. It follows `hover` (a value store
 // the map writes the hovered country to), so moving between countries re-renders only
-// this, not the page. Its code is fetched once the browser is idle, on screens that can
-// hover; touch screens never fetch it.
+// this, not the page. Its code is fetched once the browser is idle, on every screen: a
+// long press shows it on a touch screen (CountryLayer; 17 Nov 2026).
 function MapHoverLayer({ hover, hidden = false, visitsByCode, showPoster }) {
   const code = useSyncExternalStore(hover.subscribe, hover.get, hover.get);
-  const canHover = useCanHover();
-
   useEffect(() => {
-    if (!canHover) return undefined;
     const warm = () => HoverPreview.preload().catch(() => {});
     if (!window.requestIdleCallback) {
       const timer = setTimeout(warm, 2000);
@@ -21,7 +16,7 @@ function MapHoverLayer({ hover, hidden = false, visitsByCode, showPoster }) {
     }
     const id = window.requestIdleCallback(warm, { timeout: 5000 });
     return () => window.cancelIdleCallback(id);
-  }, [canHover]);
+  }, []);
 
   if (!code || hidden) return null;
   return (

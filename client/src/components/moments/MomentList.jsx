@@ -102,7 +102,7 @@ function MomentList({
             <MomentForm {...form} onSaved={saved} onCancel={() => setAdding(false)} />
           </section>
         ) : (
-          <div className='grid justify-items-start'>
+          <div className={inPanel ? 'grid justify-items-start phone:justify-items-stretch' : 'grid justify-items-start'}>
             <Action
               onClick={() => {
                 setEditingId(null);

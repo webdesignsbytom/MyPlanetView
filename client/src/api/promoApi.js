@@ -6,7 +6,7 @@ import { ADMIN_PROMO_CODES_API, PROMO_CODES_API } from '@/utils/constants/apiRou
 const data = (promise) => promise.then((res) => res.data?.data ?? {});
 const enc = encodeURIComponent;
 
-// -> { promoCode: { code, trialDays } }; 404 when it can't be used
+// -> { promoCode: { code, freePlan, trialDays } } (freePlan: a plan for life, else null); 404 when it can't be used
 export const checkPromoCode = (code) => data(client.get(`${PROMO_CODES_API}/${enc(code)}`, false));
 
 // Admin (ADMIN or DEVELOPER)

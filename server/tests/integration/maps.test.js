@@ -82,6 +82,38 @@ describe('onboarding and travellers', () => {
     const crossed = await agent.patch(`/api/maps/${map.id}/travellers/${otherTraveller.id}`).send({ name: 'Hacked' });
     expect(crossed.status).toBe(404);
   });
+
+  it("marks a traveller's birth country visited, once, as born there is been there", async () => {
+    const born = await signUp('Born');
+    const bornMap = await defaultMapOf(born.agent);
+    const visitsNow = async () => data(await born.agent.get(`/api/maps/${bornMap.id}`)).map.visits;
+    const visitOf = (visits, code) => visits.find((v) => v.countryCode === code);
+    const me = data(await born.agent.get(`/api/maps/${bornMap.id}`)).map.travellers[0];
+    await born.agent.put(`/api/maps/${bornMap.id}/visits/PT`).send({ status: 'WANT_TO_GO' });
+    await born.agent.put(`/api/maps/${bornMap.id}/visits/JP`).send({ status: 'LIVED' });
+
+    // The welcome page's edit of the sign-up traveller, and two more people
+    expect((await born.agent.patch(`/api/maps/${bornMap.id}/travellers/${me.id}`).send({ birthCountryCode: 'GB' })).status).toBe(200);
+    expect((await born.agent.post(`/api/maps/${bornMap.id}/travellers`).send({ name: 'Ana', birthCountryCode: 'PT' })).status).toBe(201);
+    expect((await born.agent.post(`/api/maps/${bornMap.id}/travellers`).send({ name: 'Ken', birthCountryCode: 'JP' })).status).toBe(201);
+    let visits = await visitsNow();
+    expect(visitOf(visits, 'GB')).toMatchObject({ status: 'VISITED', source: 'MANUAL' });
+    // "Want to go" becomes visited; lived stays lived
+    expect(visitOf(visits, 'PT')).toMatchObject({ status: 'VISITED' });
+    expect(visitOf(visits, 'JP')).toMatchObject({ status: 'LIVED' });
+
+    // Only a new or changed birthplace counts: a visit taken off stays off when the
+    // traveller is saved again with the same one
+    expect((await born.agent.delete(`/api/maps/${bornMap.id}/visits/GB`)).status).toBe(200);
+    await born.agent.patch(`/api/maps/${bornMap.id}/travellers/${me.id}`).send({ name: 'Born again', birthCountryCode: 'GB' });
+    expect(visitOf(await visitsNow(), 'GB')).toBeUndefined();
+
+    // A changed one marks the new country; the old one is never taken back
+    await born.agent.patch(`/api/maps/${bornMap.id}/travellers/${me.id}`).send({ birthCountryCode: 'FR' });
+    visits = await visitsNow();
+    expect(visitOf(visits, 'FR')).toMatchObject({ status: 'VISITED' });
+    expect(visits.map((v) => v.countryCode).sort()).toEqual(['FR', 'JP', 'PT']);
+  });
 });
 
 describe('maps', () => {
@@ -98,6 +130,8 @@ describe('maps', () => {
     const familyMap = data(created).map;
     expect(familyMap.travellers).toHaveLength(3);
     expect(familyMap.isDefault).toBe(false);
+    // The kid's birthplace is on the new map
+    expect(familyMap.visits).toEqual([expect.objectContaining({ countryCode: 'GB', status: 'VISITED' })]);
 
     const list = data(await agent.get('/api/maps')).maps;
     expect(list.map((m) => m.name).sort()).toEqual(['Family holidays', 'My map']);

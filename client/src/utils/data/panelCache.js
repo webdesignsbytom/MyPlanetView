@@ -31,10 +31,13 @@ export const inFlight = (key) => entries.get(key)?.promise || null;
 /**
  * Fetch `key` now and keep the answer, unless a fresh copy is here or one is on its way.
  * `toValue` turns the reply into what's kept (a list's first page into its list shape).
+ * Returns a promise that settles (never rejects) once that's done, so a caller can pace
+ * a run of them.
  */
 export function prefetch(key, fetcher, toValue = (reply) => reply) {
   const entry = entries.get(key);
-  if (entry?.promise || (entry && 'value' in entry && Date.now() - entry.at < FRESH_MS)) return;
+  if (entry?.promise) return entry.promise.then(settled, settled);
+  if (entry && 'value' in entry && Date.now() - entry.at < FRESH_MS) return Promise.resolve();
   const promise = fetcher();
   entries.set(key, { ...entry, promise });
   promise.then(
@@ -50,6 +53,18 @@ export function prefetch(key, fetcher, toValue = (reply) => reply) {
       else entries.delete(key);
     },
   );
+  return promise.then(settled, settled);
+}
+
+const settled = () => undefined;
+
+/**
+ * Keep `value` under `key` unless something is kept or on its way there already: a list the
+ * map's own counts say is empty (a country with no photos or moments), so its panel opens
+ * at once without asking. The panel still refreshes it quietly when it opens.
+ */
+export function rememberIfMissing(key, value) {
+  if (!recall(key) && !inFlight(key)) remember(key, value);
 }
 
 /** Everything goes (signing in or out). */

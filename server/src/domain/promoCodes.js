@@ -10,6 +10,8 @@ const PROMO_SELECT = {
   active: true,
   maxUses: true,
   endsAt: true,
+  freePlan: true,
+  createdById: true,
   createdAt: true,
 };
 
@@ -66,7 +68,7 @@ export const setProfilePromoCode = (userId, promoCodeId) =>
 export const findProfilePromo = (userId) =>
   prisma.profile.findUnique({
     where: { userId },
-    select: { promoTrialUsedAt: true, promoCode: { select: { code: true } } },
+    select: { promoTrialUsedAt: true, promoCode: { select: { code: true, freePlan: true } } },
   });
 
 /**
