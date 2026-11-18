@@ -11,6 +11,8 @@ export const TILE_H = 600;
 export const INK = {
   cream: { line: 'stroke-poster-cream', text: 'fill-poster-cream', fade: 'opacity-30' },
   deep: { line: 'stroke-poster-red-deep', text: 'fill-poster-red-deep', fade: 'opacity-50' },
+  // Green, for one stamp on the map's loading screen (a stamp's `loadingInk`; 18 Nov 2026, the user's wish)
+  green: { line: 'stroke-poster-green', text: 'fill-poster-green', fade: 'opacity-50' },
 };
 
 const PLANE = 'M0-6 1.4-2 7 0 1.4 2 0 6-1 2-5 1.6-6.2 3.4-7.2 3.4-6.2 0-7.2-3.4-6.2-3.4-5-1.6-1-2Z';
@@ -145,12 +147,13 @@ export const PASSPORT_STAMPS = [
       </>
     ),
   },
-  // San Francisco: a tilted oval with anchors
+  // San Francisco: a tilted oval with anchors (green on the map's loading screen)
   {
     x: 262,
     y: 512,
     rotate: -12,
     ink: 'cream',
+    loadingInk: 'green',
     draw: (c) => (
       <>
         <ellipse rx={130} ry={58} strokeWidth={4} className={lines(c)} />

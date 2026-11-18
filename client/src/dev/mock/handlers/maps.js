@@ -98,6 +98,14 @@ const COUNTRY_NOT_FOUND = "That country isn't on the map.";
 const VISIT_NOT_FOUND = "That country isn't marked on this map.";
 const MAX_TRAVELLERS = 20;
 const TOO_MANY_TRAVELLERS = 'A map can have up to 20 travellers.';
+// Each kind of map's travellers, as the server (GROUP_MAX_TRAVELLERS and its messages)
+const GROUP_MAX_TRAVELLERS = { SOLO: 1, COUPLE: 2, FAMILY: MAX_TRAVELLERS };
+const groupFull = (groupType) =>
+  groupType === 'SOLO'
+    ? `A map that's just for you has one traveller. Choose "A couple" or "A family" to add more.`
+    : `A couple's map has two travellers. Choose "A family" to add more.`;
+const tooManyForGroup = (groupType) =>
+  groupType === 'SOLO' ? '"Just me" is for one traveller: remove the others first.' : '"A couple" is for two travellers: remove the others first.';
 // A traveller's places are countries, as on the server: a UK nation (a birth moment in
 // Scotland) is the UK. Empty or null clears it; anything not a place is the server's 400.
 const travellerCountry = (value) =>
@@ -121,7 +129,8 @@ function travellerFields(body) {
 // `owner`: the signed-in user, or (a default map remade after a transfer) someone else
 export function createMapRecord({ name, groupType, isDefault = false, travellers = [], owner = me() }) {
   const db = getDb();
-  const map = { id: newId(), name, groupType, isDefault, ownerId: owner.id, linkAccess: 'RESTRICTED', shareCode: newShareCode(), graceUntil: null, createdAt: new Date().toISOString() };
+  // A new map shows the UK as its four nations, as the server's default (18 Nov 2026)
+  const map = { id: newId(), name, groupType, isDefault, ownerId: owner.id, linkAccess: 'RESTRICTED', shareCode: newShareCode(), graceUntil: null, splitUk: true, createdAt: new Date().toISOString() };
   db.maps.push(map);
   const list = travellers.length ? travellers : [{ name: owner.name.split(' ')[0] || 'Me' }];
   list.forEach((t, i) => {
@@ -179,6 +188,7 @@ export function registerMapRoutes() {
     if (!GROUP_TYPES.includes(body.groupType)) return fail(400, 'Choose solo, couple or family.');
     const travellers = Array.isArray(body.travellers) ? body.travellers : [];
     if (travellers.length > MAX_TRAVELLERS) return fail(400, TOO_MANY_TRAVELLERS);
+    if (travellers.length > GROUP_MAX_TRAVELLERS[body.groupType]) return fail(400, tooManyForGroup(body.groupType));
     for (const t of travellers) {
       for (const field of TRAVELLER_COUNTRY_FIELDS) if (t?.[field] != null && travellerCountry(t[field]).error) return fail(400, COUNTRY_NOT_FOUND);
     }
@@ -234,15 +244,16 @@ export function registerMapRoutes() {
     const role = mapRole(map);
     const denied = deny(role, 'OWNER', NOT_FOUND);
     if (denied) return denied;
-    if (body.name !== undefined) {
-      const name = cleanText(body.name, 80);
-      if (!name) return fail(400, 'Give the map a name.');
-      map.name = name;
-    }
+    // Everything is checked before anything changes, as on the server
+    const name = body.name !== undefined ? cleanText(body.name, 80) : null;
+    if (body.name !== undefined && !name) return fail(400, 'Give the map a name.');
     if (body.groupType !== undefined) {
       if (!GROUP_TYPES.includes(body.groupType)) return fail(400, 'Choose solo, couple or family.');
-      map.groupType = body.groupType;
+      const count = getDb().travellers.filter((t) => t.mapId === map.id).length;
+      if (body.groupType !== map.groupType && count > GROUP_MAX_TRAVELLERS[body.groupType]) return fail(409, tooManyForGroup(body.groupType));
     }
+    if (name) map.name = name;
+    if (body.groupType !== undefined) map.groupType = body.groupType;
     // The UK as its four nations: changing it moves the map's UK data (as the server)
     if (body.splitUk !== undefined) {
       if (typeof body.splitUk !== 'boolean') return fail(400, 'splitUk must be true or false.');
@@ -300,6 +311,7 @@ export function registerMapRoutes() {
     if (error) return fail(400, error);
     if (!fields.name) return fail(400, 'Add the traveller’s name.');
     if (db.travellers.filter((t) => t.mapId === map.id).length >= MAX_TRAVELLERS) return fail(400, TOO_MANY_TRAVELLERS);
+    if (db.travellers.filter((t) => t.mapId === map.id).length >= GROUP_MAX_TRAVELLERS[map.groupType]) return fail(409, groupFull(map.groupType));
     const position = fields.position ?? db.travellers.filter((t) => t.mapId === map.id).length;
     const traveller = { id: newId(), mapId: map.id, userId: null, birthCountryCode: null, favouriteCountryCode: null, ...fields, position };
     db.travellers.push(traveller);

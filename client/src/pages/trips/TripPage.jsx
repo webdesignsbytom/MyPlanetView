@@ -36,7 +36,7 @@ function TripPage() {
     setTrip(null);
     setError(null);
     // Its photos (TripPhotosSection's first page) alongside the trip, not after it
-    preloadPhotoPage({ tripId });
+    preloadPhotoPage({ tripId, display: true });
     getTrip(tripId)
       .then(({ trip: loaded }) => {
         if (!cancelled) setTrip(loaded);

@@ -168,12 +168,30 @@ test.describe('Moments', () => {
     await expectStats(page, '9 countries, 2 continents, 16 photos');
   });
 
-  test('a birth offers to add the baby as a traveller born there, and marks the country lived in', async ({ page }) => {
+  test('a birth offers to add the baby as a traveller born there, once the map has room, and marks the country lived in', async ({ page }) => {
     await openMap(page);
-    const canada = await openCountry(page, 'Canada');
-    const moments = momentsIn(canada);
+    // A couple's map is two people, and has its two: no baby to add (17 Nov 2026, the user's wish)
+    let canada = await openCountry(page, 'Canada');
+    let moments = momentsIn(canada);
     await moments.getByRole('button', { name: 'Add a moment' }).click();
-    const form = moments.getByRole('region', { name: 'Add a moment' });
+    let form = moments.getByRole('region', { name: 'Add a moment' });
+    await form.getByRole('combobox', { name: 'What kind' }).selectOption({ label: 'Born' });
+    await expect(form.getByRole('checkbox', { name: /^Add the baby/ })).toHaveCount(0);
+
+    // Nor another traveller in Settings, until it's a family's map
+    const setup = await openTool(page, 'Map settings', 'Settings');
+    await setup.getByRole('tab', { name: 'This map' }).click();
+    const thisMap = setup.getByRole('tabpanel', { name: 'This map' });
+    await expect(thisMap.getByRole('button', { name: 'Add another traveller' })).toHaveCount(0);
+    await thisMap.getByText('A family', { exact: true }).click();
+    await expect(thisMap.getByRole('button', { name: 'Add another traveller' })).toBeVisible();
+    await thisMap.getByRole('button', { name: 'Save map' }).click();
+    await expect(thisMap.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
+
+    canada = await openCountry(page, 'Canada');
+    moments = momentsIn(canada);
+    await moments.getByRole('button', { name: 'Add a moment' }).click();
+    form = moments.getByRole('region', { name: 'Add a moment' });
     await expect(form.getByRole('checkbox', { name: /^Add the baby/ })).toHaveCount(0);
     await form.getByRole('combobox', { name: 'What kind' }).selectOption({ label: 'Born' });
     await form.getByRole('textbox', { name: 'Title' }).fill('Our baby was born');

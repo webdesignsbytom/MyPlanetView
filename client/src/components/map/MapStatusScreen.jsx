@@ -6,7 +6,7 @@ import { HOME_PAGE_URL } from '@/utils/constants/routes';
 import StampLoading from './StampLoading';
 
 // The full-screen map page while it loads, or when it can't open, on the sea. Loading, it's
-// "Loading…" in plain words over passport stamps pressed on one after another (StampLoading;
+// "Loading…" in plain words over passport stamps pressed one after another all over it (StampLoading;
 // 17 Nov 2026, the user's wish: no card); when it can't open, a paper card (the map panels'
 // travel paperwork). `children` adds a way out (a btn-poster link).
 // `overlay`: over the map page while its panels' data loads (MapExperience), a layer of its
@@ -23,14 +23,17 @@ function MapStatusScreen({ loading = false, overlay = false, title, message, chi
       }`}
     >
       {loading ? (
-        // The words in the middle of the screen (17 Nov 2026, the user's wish), the stamps
-        // in the half below them
-        <div role='status' className='grid justify-items-center'>
-          <span className='font-travel text-3xl uppercase tracking-wide text-poster-cream sm:text-4xl'>{title || 'Loading…'}</span>
-          <div className='absolute inset-x-4 bottom-4 top-[calc(50%_+_2.5rem)] grid justify-items-center'>
-            <StampLoading />
+        // The words in the middle of the screen (17 Nov 2026, the user's wish), over the
+        // stamps landing all over it (18 Nov 2026), with a glow of sea round them so a stamp
+        // underneath never hides them
+        <>
+          <StampLoading />
+          <div role='status' className='relative z-10 grid justify-items-center'>
+            <span className='font-travel text-3xl uppercase tracking-wide text-poster-cream [text-shadow:0_0_6px_var(--color-map-sea),0_0_14px_var(--color-map-sea),0_0_24px_var(--color-map-sea)] sm:text-4xl'>
+              {title || 'Loading…'}
+            </span>
           </div>
-        </div>
+        </>
       ) : (
         <div className='ticket-edge grid w-full max-w-md overflow-hidden bg-paper-cream text-center text-colour4'>
           <div className='paper-aged border-b-2 border-dashed border-poster-brown px-6 pb-4 pt-5'>

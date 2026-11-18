@@ -25,6 +25,8 @@ const TABS = [
 // End) move between tabs and open them, and each tab names its panel.
 function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locked = false, onMapSaved, onMapDeleted, onClose }) {
   const [tab, setTab] = useState('view');
+  // "Saved" outlives the form, which starts afresh after a save that changes the map
+  const [mapSaved, setMapSaved] = useState(false);
   const showTabs = Boolean(map) && canEdit;
   const uid = useId();
   const tabsRef = useRef(null);
@@ -96,6 +98,8 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locke
             canRename={isOwner}
             splitUkNote
             submitLabel='Save map'
+            saved={mapSaved}
+            onSavedChange={setMapSaved}
             wideSubmit
             onSubmit={async (form) => {
               await saveMapSetup(map.id, map, form, { canRename: isOwner });

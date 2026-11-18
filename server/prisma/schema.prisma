@@ -292,10 +292,10 @@ model TravelMap {
   graceUntil DateTime?
 
   // The UK as its four nations (England, Scotland, Wales, Northern Ireland) instead of
-  // one country, for everyone on the map (docs/API.md "The UK's nations"). Off by
-  // default; changing it moves the map's UK visits, photos, trip stops and moments
-  // (services/travel/ukNations.js).
-  splitUk        Boolean @default(false)
+  // one country, for everyone on the map (docs/API.md "The UK's nations"). On by default
+  // for new maps (18 Nov 2026, the user's wish); changing it moves the map's UK visits,
+  // photos, trip stops and moments (services/travel/ukNations.js).
+  splitUk        Boolean @default(true)
   // The nations' visits as they were when the split was last turned off, put back if it's
   // turned on again while the map still has the UK; null otherwise
   ukNationVisits Json?

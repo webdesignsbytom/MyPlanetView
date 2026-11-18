@@ -67,6 +67,9 @@
      like a printed poster. Text on poster-red is poster-ink (5.6:1). */
   --poster-red: #ef4444;
   --poster-red-deep: #991b1b;
+  /* A stamp's green ink (the loading screen's San Francisco stamp, 18 Nov 2026), as dark as
+     the deep red so it reads on the sea */
+  --poster-green: #166534;
   --poster-gold-dark: #665426;
   --poster-gold-light: #ba9f0b;
   --poster-paper: #dcbc90;
@@ -205,6 +208,7 @@
   --colour9: light-dark(#2b2b2b, #d0d0d0);
   --poster-red: #000000;
   --poster-red-deep: #000000;
+  --poster-green: #515151;
   --poster-gold-dark: #555555;
   --poster-gold-light: #9a9a9a;
   --poster-paper: #e4e4e4;
@@ -335,6 +339,7 @@
 
   --color-poster-red: var(--poster-red);
   --color-poster-red-deep: var(--poster-red-deep);
+  --color-poster-green: var(--poster-green);
   --color-poster-gold-dark: var(--poster-gold-dark);
   --color-poster-gold-light: var(--poster-gold-light);
   --color-poster-paper: var(--poster-paper);

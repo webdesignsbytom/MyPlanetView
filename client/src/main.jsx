@@ -16,6 +16,7 @@ import { COUNTRY_ROUTES } from './utils/countries/countryPages.js';
 // Pages
 import { preloadPage } from './utils/navigation/lazyPages.js';
 import { registerServiceWorker } from './utils/pwa/registerServiceWorker.js';
+import { listenForInstallOffer } from './utils/pwa/installPrompt.js';
 // Styles
 import './styles/main.css';
 
@@ -92,3 +93,5 @@ if (window.__PRERENDER__) {
 
 // The installable app's service worker: production builds on the live site only
 registerServiceWorker();
+// The browser's offer to install it as an app, kept for the map's tips
+listenForInstallOffer();

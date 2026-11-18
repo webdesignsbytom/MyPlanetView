@@ -18,6 +18,8 @@ import ThemeSection from '@/components/themes/ThemeSection';
 // Utils
 import { GOALS_PER_MAP } from '@/utils/achievements/goals';
 
+const NO_ONE = [];
+
 /**
  * The map's badges and goals (docs/FEATURE-PLAN.md, "Travel challenges"), a map panel:
  * the goals first, with their progress, then the badges as stickers on a suitcase, and a
@@ -27,14 +29,17 @@ import { GOALS_PER_MAP } from '@/utils/achievements/goals';
  * `wantToGo`: the map's "want to go" countries, for starting a bucket list.
  * The monthly photo theme (ThemeSection) sits between the goals and the badges: entering
  * photos can earn the theme badges, so the achievements are checked again after.
- * With two or more travellers, a switch shows one person's travel badges instead, from
- * the completed trips they were on (worked out by the server, dated by those trips).
+ * On a family's map (`perPerson`) with two or more travellers, a switch shows one person's
+ * travel badges instead, from the completed trips they were on (worked out by the server,
+ * dated by those trips). A couple travels together, so a couple's map has one set (18 Nov
+ * 2026, the user's wish).
  */
-function BadgesGoalsPanel({ achievements, canEdit = false, locked = false, wantToGo = [], mapId = null, shareCode = null, onClose }) {
+function BadgesGoalsPanel({ achievements, canEdit = false, locked = false, wantToGo = [], mapId = null, shareCode = null, perPerson = false, onClose }) {
   const goalsId = useId();
   // null, 'new', or the goal being changed
   const [editing, setEditing] = useState(null);
-  const { badges, goals, loading, error, travellers = [] } = achievements;
+  const { badges, goals, loading, error, travellers: everyone = [] } = achievements;
+  const travellers = perPerson ? everyone : NO_ONE;
   const [owner, setOwner] = useState(null);
   const person = travellers.length >= 2 ? travellers.find((t) => t.id === owner) : null;
   // A traveller's badges in the suitcase's shape: earned on the trip's day, when it has one
@@ -46,7 +51,7 @@ function BadgesGoalsPanel({ achievements, canEdit = false, locked = false, wantT
   const passport = shareCode ? sharedPassportPath(shareCode) : mapId ? mapPassportPath(mapId) : null;
 
   const footer = passport ? (
-    <Link to={passport} className='grid grid-cols-reg items-center gap-2 font-medium text-colour6 underline underline-offset-4 hover:no-underline'>
+    <Link to={passport} className='mx-auto grid w-fit grid-cols-reg items-center gap-2 font-medium text-colour6 underline underline-offset-4 hover:no-underline'>
       <FaPassport aria-hidden='true' />
       <span>Open the passport</span>
     </Link>

@@ -23,8 +23,11 @@ const hasAny = (counts, code) => (counts?.[code] || 0) > 0;
 
 const visitedCodes = (map) => new Set((map.visits || []).filter((v) => countsAsVisited(v.status)).map((v) => v.countryCode));
 
-/** The ticket's lists: CountryPanel's usePhotoPage and useMomentPage filters exactly. */
-export const countryPhotoFilters = (source, code) => ({ ...source, country: code, limit: 12 });
+/**
+ * The ticket's lists: CountryPanel's usePhotoPage and useMomentPage filters exactly. The
+ * photos come with their screen-sized copies (`display`), so the viewer opens one at once.
+ */
+export const countryPhotoFilters = (source, code) => ({ ...source, country: code, limit: 12, display: true });
 export const countryMomentFilters = (source, code) => ({ ...source, country: code });
 
 /**

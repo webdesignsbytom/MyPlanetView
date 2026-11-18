@@ -25,17 +25,22 @@ describe('the UK’s nations', () => {
     const map = await defaultMapOf(owner.agent);
     expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: editor.email, role: 'EDITOR' })).status).toBe(201);
 
-    expect((await mapOf(owner.agent, map.id)).splitUk).toBe(false);
-    expect((await editor.agent.patch(`/api/maps/${map.id}`).send({ splitUk: true })).status).toBe(403);
+    // A new map splits the UK (18 Nov 2026, the user's wish)
+    expect((await mapOf(owner.agent, map.id)).splitUk).toBe(true);
+    expect((await editor.agent.patch(`/api/maps/${map.id}`).send({ splitUk: false })).status).toBe(403);
     expect((await owner.agent.patch(`/api/maps/${map.id}`).send({ splitUk: 'yes' })).status).toBe(400);
+    expect((await split(owner.agent, map.id, false)).splitUk).toBe(false);
+    // Everyone on the map sees it as the owner chose
+    expect((await mapOf(editor.agent, map.id)).splitUk).toBe(false);
     expect((await split(owner.agent, map.id, true)).splitUk).toBe(true);
-    // Everyone on the map sees it split
     expect((await mapOf(editor.agent, map.id)).splitUk).toBe(true);
   });
 
   it('keeps the nations off a map that doesn’t split the UK', async () => {
     const owner = await signUp('NoSplit');
     const map = await defaultMapOf(owner.agent);
+    // The UK as one country (a new map splits it)
+    await split(owner.agent, map.id, false);
     expect((await owner.agent.put(`/api/maps/${map.id}/visits/XC`).send({ status: 'VISITED' })).status).toBe(404);
     expect(data(await uploadPhoto(owner.agent, map.id, { ...EDINBURGH })).photo.countryCode).toBe('GB');
     // A nation chosen for a photo is the UK here
@@ -59,6 +64,8 @@ describe('the UK’s nations', () => {
   it('moves the UK’s located photos to their nations when the split is turned on, and leaves the rest to be placed', async () => {
     const owner = await signUp('SplitOn');
     const map = await defaultMapOf(owner.agent);
+    // The UK as one country (a new map splits it)
+    await split(owner.agent, map.id, false);
     expect((await owner.agent.put(`/api/maps/${map.id}/visits/GB`).send({ status: 'LIVED' })).status).toBe(200);
     const cardiff = data(await uploadPhoto(owner.agent, map.id, { ...CARDIFF, caption: 'Cardiff' })).photo;
     const somewhere = data(await uploadPhoto(owner.agent, map.id, { countryCode: 'GB', caption: 'Somewhere in the UK' })).photo;
@@ -112,6 +119,8 @@ describe('the UK’s nations', () => {
   it('tells the trip page and the trip’s link whether its map splits the UK', async () => {
     const owner = await signUp('SplitTrip');
     const map = await defaultMapOf(owner.agent);
+    // The UK as one country (a new map splits it)
+    await split(owner.agent, map.id, false);
     const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Highlands' })).trip;
     await owner.agent.patch(`/api/trips/${trip.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' });
     const { shareCode } = data(await owner.agent.get(`/api/trips/${trip.id}/sharing`));

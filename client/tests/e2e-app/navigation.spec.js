@@ -7,6 +7,17 @@ test.describe('Back and forward', () => {
   test('return to where the page was scrolled, once it has drawn', async ({ page }) => {
     await page.goto('/faq');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    // The page as it settles (fonts, pictures): scrolled before then, it could only go part of the way
+    await page.evaluate(() => document.fonts.ready);
+    let height = 0;
+    await expect
+      .poll(async () => {
+        const now = await page.evaluate(() => document.documentElement.scrollHeight);
+        const settled = now === height;
+        height = now;
+        return settled;
+      })
+      .toBe(true);
 
     // Well down the page (or as far as it goes)
     const scrolled = await page.evaluate(() => {
@@ -27,7 +38,8 @@ test.describe('Back and forward', () => {
 
     await page.goBack();
     await expect(page).toHaveURL(/\/faq$/);
-    await expect.poll(() => page.evaluate(() => Math.round(window.scrollY))).toBe(Math.round(scrolled));
+    // Where it was, give or take the browser's scroll anchoring keeping the same words in view
+    await expect.poll(() => page.evaluate((y) => Math.abs(window.scrollY - y), scrolled)).toBeLessThanOrEqual(40);
 
     await page.goForward();
     await expect(page).toHaveURL(/\/about$/);

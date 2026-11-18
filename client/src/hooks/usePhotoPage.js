@@ -52,7 +52,12 @@ export function rememberEmptyPhotoPage(filters) {
  * for a viewer that shows the list full screen (the photo album). Nothing loads while
  * `enabled` is false.
  */
-export default function usePhotoPage({ mapId, tripId, shareCode, country, unplaced = false, limit = 30, display = false, enabled = true }) {
+/**
+ * `refresh: false` (the photo viewer, stepping through the gallery it was opened from): a
+ * list kept from before is used as it is, with no fresh first page behind it; only a list
+ * that isn't kept is fetched.
+ */
+export default function usePhotoPage({ mapId, tripId, shareCode, country, unplaced = false, limit = 30, display = false, enabled = true, refresh = true }) {
   const [photos, setPhotos] = useState([]);
   const [nextCursor, setNextCursor] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -107,8 +112,8 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, unplac
     }
     listKeyRef.current = key;
     readyRef.current = Boolean(kept);
-    if (enabled) fetchPage(null, Boolean(kept));
-  }, [enabled, fetchPage, mapId, tripId, shareCode, country, unplaced, limit, display]);
+    if (enabled && !(kept && !refresh)) fetchPage(null, Boolean(kept));
+  }, [enabled, refresh, fetchPage, mapId, tripId, shareCode, country, unplaced, limit, display]);
 
   useEffect(() => {
     reload();

@@ -18,7 +18,7 @@ async function setSplit(page, on) {
   if (on) await expect(toggle).toBeChecked();
   else await expect(toggle).not.toBeChecked();
   await panel.getByRole('button', { name: 'Save map' }).click();
-  await expect(panel.getByText('Saved.')).toBeVisible();
+  await expect(panel.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
   await settings.getByRole('button', { name: 'Close Settings' }).click();
 }
 

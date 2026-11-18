@@ -30,6 +30,7 @@ import { CONTINENT_LABELS, COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { VISIT_STATUS_LABELS, countsAsVisited } from '@/utils/map/visitStatus';
 import { formatDay } from '@/utils/functions/dates';
 import { isMagneticPole, isSpecialPlace } from '@/utils/map/specialPlaces';
+import { countryPhotoFilters } from '@/utils/map/preloadCountryLists';
 
 const NO_TRIPS = [];
 
@@ -79,7 +80,8 @@ function CountryPanel({
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [deskOpened, setDeskOpened] = useState(false);
-  const photos = usePhotoPage({ ...photoSource, country: code, limit: 12, enabled: Boolean(code) });
+  const photoFilters = useMemo(() => countryPhotoFilters(photoSource, code), [photoSource, code]);
+  const photos = usePhotoPage({ ...photoFilters, enabled: Boolean(code) });
   const moments = useMomentPage({ ...photoSource, country: code, enabled: Boolean(code) });
   const cardsDue = Boolean(adEvery) && photos.photos.length >= adEvery;
   const plannedTrip = usePlannedTripPlace(nextTrip, { enabled: cardsDue || deskOpened, canFetch: canFetchTrips });
@@ -249,7 +251,7 @@ function CountryPanel({
           error={photos.error}
           hasMore={Boolean(photos.nextCursor)}
           onLoadMore={photos.loadMore}
-          onOpen={onOpenPhoto}
+          onOpen={(photo) => onOpenPhoto(photo, { filters: photoFilters })}
           onMove={canEdit ? (photoId, afterId) => photos.movePhoto(photoId, afterId, 'country') : undefined}
           offerSlots={offerSlots}
           emptyText={`No photos from ${country.name} yet.`}

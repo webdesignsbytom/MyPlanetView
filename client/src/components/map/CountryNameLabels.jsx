@@ -15,10 +15,23 @@ const MIN_SHRINK = 0.65;
 const MIN_SCREEN_SIZE = 11;
 const HAS_BADGE = { VISITED: true, LIVED: true };
 
-// Country names at their pins, sized to stay readable as the map zooms. A name is
-// only drawn once it fits inside the country's main shape; a small country (Guatemala,
-// Costa Rica) gets a smaller name rather than none, and the tiniest get theirs as you
-// zoom in. A visited country's name sits under its star badge. Antarctica's name is
+// A place too small for its name even then (a Caribbean island, the Canaries, the
+// Falklands, a micro-state's dot) is named under it instead, at that smallest readable
+// size, once the map is zoomed in this far for it (18 Nov 2026, the user's wish: they never
+// got a name): sooner the bigger it is (OUTSIDE_PER_WIDTH over its width in map units),
+// from OUTSIDE_EARLIEST at the soonest and by OUTSIDE_LATEST at the latest, so every one
+// is named before the closest zoom. A micro-state's dot (no shape) is named from DOT_FROM.
+const OUTSIDE_PER_WIDTH = 6;
+const OUTSIDE_EARLIEST = 4;
+const OUTSIDE_LATEST = 10;
+const DOT_FROM = 6;
+const outsideFrom = (width) => (width ? Math.min(OUTSIDE_LATEST, Math.max(OUTSIDE_EARLIEST, OUTSIDE_PER_WIDTH / width)) : DOT_FROM);
+
+// Country names at their pins, sized to stay readable as the map zooms. A name is drawn
+// inside its country's main shape once it fits; a small country (Guatemala, Costa Rica)
+// gets a smaller name rather than none, and one too small for even that gets its name
+// under it as you zoom in (outsideFrom), below the island (about its size down, as only its
+// width is known). A visited country's name sits under its star badge. Antarctica's name is
 // drawn too (unless it's hidden); the poles' are PoleNameLabels'. On a map that splits the
 // UK (`splitUk`), its nations are named instead of it.
 function CountryNameLabels({ zoom, visitsByCode, showAntarctica = true, splitUk = false }) {
@@ -31,10 +44,16 @@ function CountryNameLabels({ zoom, visitsByCode, showAntarctica = true, splitUk 
         const width = splitUk
           ? country.code !== 'GB' && (COUNTRY_LABEL_WIDTH[country.code] ?? UK_NATION_LABEL_WIDTH[country.code])
           : COUNTRY_LABEL_WIDTH[country.code];
-        if (!width || (!showAntarctica && isAntarctic(country.code))) return null;
-        const size = Math.min(fontSize, width / (country.name.length * CHAR_WIDTH));
-        if (size < minSize) return null;
-        const y = country.pinY + (HAS_BADGE[visitsByCode?.[country.code]] ? radius + size * 0.9 : size * 0.35);
+        // A micro-state drawn as a dot: a country (not a special place or a UK nation) with no shape
+        const dotted = !country.kind && COUNTRY_LABEL_WIDTH[country.code] == null;
+        if ((!width && !dotted) || (!showAntarctica && isAntarctic(country.code))) return null;
+
+        const inside = width ? Math.min(fontSize, width / (country.name.length * CHAR_WIDTH)) : 0;
+        const outside = inside < minSize;
+        if (outside && zoom < outsideFrom(width)) return null;
+        const size = outside ? minSize : inside;
+        const badge = HAS_BADGE[visitsByCode?.[country.code]] ? radius : 0;
+        const y = country.pinY + (outside ? badge + Math.min((width || 0) * 0.45, 4) + size * 1.1 : badge ? radius + size * 0.9 : size * 0.35);
         return (
           <text key={country.code} x={country.pinX} y={y} fontSize={size < fontSize ? size : undefined}>
             {country.name}

@@ -18,7 +18,9 @@
   --select-padding: 4px;
   --select-gap: 6px;
   --select-arrow: '▾';
-  --select-checkmark: inline;
+  /* No checkmark: the chosen option is already poster red, and its column took a narrow
+     list's room (17 Nov 2026, a landmark list on a phone) */
+  --select-checkmark: none;
   --select-fade: 0.18s;
 }
 
@@ -118,12 +120,17 @@
       }
     }
 
+    /* A long name wraps inside the list (phones' browsers kept options on one line, so a
+       landmark list cut its names off at the edge, 17 Nov 2026) */
     .app-select option {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       padding: 0.5rem 0.75rem;
       border-radius: calc(var(--select-radius) / 2);
+      white-space: normal;
+      overflow-wrap: break-word;
+      text-align: start;
     }
 
     .app-select option:hover,
