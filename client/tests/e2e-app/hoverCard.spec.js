@@ -4,10 +4,15 @@ import { test, expect, openMap } from './fixtures.js';
 // visited or not, never the map's own photos (17 Nov 2026, the user's wish). France is
 // visited on the seeded map and has photos (src/dev/mock/seed.js).
 
-/** A point on the screen where the map shows the country itself (not a badge or a pin over it). */
+/**
+ * A point on the screen where the map shows the country itself (not a badge or a pin over
+ * it). Each of its shapes is tried on its own: France's are also its far islands, so the
+ * whole group's box spans half the world.
+ */
 async function pointOn(page, code) {
   return page.evaluate((code) => {
-    for (const el of document.querySelectorAll(`[data-code="${code}"]`)) {
+    const pieces = [...document.querySelectorAll(`[data-code="${code}"]`)].flatMap((el) => [...el.querySelectorAll('path'), el]);
+    for (const el of pieces) {
       const box = el.getBoundingClientRect();
       for (let fy = 0.1; fy < 1; fy += 0.1) {
         for (let fx = 0.1; fx < 1; fx += 0.1) {

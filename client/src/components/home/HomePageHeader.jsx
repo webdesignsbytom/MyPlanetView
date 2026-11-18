@@ -1,16 +1,13 @@
 import React from 'react';
-// Constants
-import { ABOUT_PAGE_URL } from '@/utils/constants/routes';
 // Data
 import { homeHero } from '@/utils/data/homeData';
 // Components
-import AppLink from '@/components/common/AppLink';
 import HomeHeroArtwork from './HomeHeroArtwork';
 import HomeStartButton from './HomeStartButton';
 
 // The home hero (17 Nov 2026, the user's artwork): about a screen tall, the art filling it,
-// with the round start stamp and "How it works" over its foot and no text over it (the art
-// carries the name and the tagline). A portrait phone's box takes the phone art's own
+// with the round start stamp over its foot (its "How it works" link went on 18 Nov 2026, the
+// user's wish) and no text over it (the art carries the name and the tagline). A portrait phone's box takes the phone art's own
 // shape, so the name across it is never cut off at the sides. The h1 is for screen readers
 // and search engines only. Inside <main>, so the skip link lands on it. Poster colours are
 // fixed artwork, the same in light and dark mode.
@@ -25,9 +22,8 @@ function HomePageHeader() {
       </h1>
       <HomeHeroArtwork />
 
-      <div className='relative grid grid-flow-col content-end items-center justify-center gap-4 px-4 pb-8 sm:gap-8 sm:pb-10'>
+      <div className='relative grid content-end justify-center px-4 pb-8 sm:pb-10'>
         <HomeStartButton />
-        <AppLink to={`${ABOUT_PAGE_URL}#how-it-works`} label='How it works' className='btn-paper whitespace-nowrap' />
       </div>
     </section>
   );

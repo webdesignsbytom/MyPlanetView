@@ -7,7 +7,7 @@ import HowItWorksCta from './HowItWorksCta';
 
 // How it works, on the About page (the home page is the poster hero alone): what the
 // map does, who it's for, the privacy promise and a way to start, on one sheet of
-// cream paper split by dashed perforations. The home hero links here (#how-it-works).
+// cream paper split by dashed perforations (#how-it-works).
 function HowItWorksSection() {
   return (
     <div

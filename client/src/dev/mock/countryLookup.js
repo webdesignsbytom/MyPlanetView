@@ -24,6 +24,8 @@ const SMALL_COUNTRIES = [
   { code: 'AD', latitude: 42.546, longitude: 1.592, radiusM: 13500 },
   { code: 'GI', latitude: 36.1315, longitude: -5.349, radiusM: 2700 },
 ];
+// As the server's DECIDED_PLACES: the Old City of Jerusalem is Palestine's
+const DECIDED_PLACES = [{ code: 'PS', latitude: 31.7767, longitude: 35.2345, radiusM: 1000 }];
 const UNDRAWN_ISLANDS = [
   { code: 'GQ', latitude: 3.53, longitude: 8.7, radiusM: 40000 },
   { code: 'GR', latitude: 36.145, longitude: 29.585, radiusM: 2200 },
@@ -217,7 +219,7 @@ export async function countryAtPosition(latitude, longitude) {
   if (pole) return pole;
   const countries = await loadIndex();
   const shaped = new Set(countries.map((c) => c.code));
-  const small = [...SMALL_COUNTRIES.filter((c) => !shaped.has(c.code)), ...UNDRAWN_ISLANDS].find(
+  const small = [...DECIDED_PLACES, ...SMALL_COUNTRIES.filter((c) => !shaped.has(c.code)), ...UNDRAWN_ISLANDS].find(
     (c) => haversineMeters(latitude, longitude, c.latitude, c.longitude) <= c.radiusM,
   );
   return small?.code ?? countryAtMapPoint(countries, point.x, point.y);
