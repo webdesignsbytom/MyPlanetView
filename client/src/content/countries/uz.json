@@ -1,0 +1,188 @@
+{
+  "code": "UZ",
+  "slug": "uzbekistan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salom", "O'zbekiston", "Xush kelibsiz"],
+  "summary": "Blue-tiled Samarkand, Bukhara's trading domes and the walled town of Khiva.",
+  "overview": [
+    "Uzbekistan holds the finest of the Silk Road's old cities. Samarkand's Registan is a square framed on three sides by tiled madrasas, and Timur's ribbed, turquoise-domed tomb and the lane of blue mausoleums at Shah-i-Zinda are close by. Bukhara's old centre is a maze of madrasas, mosques and covered trading domes round the 12th-century Kalon minaret, small enough to walk everywhere. Khiva, in the far west, keeps its whole inner town of mosques, palaces and minarets inside mud-brick walls.",
+    "Tashkent, the capital, is a big, green, modern city, with a metro whose stations are decorated like palaces and the domed Chorsu bazaar. Fast trains link Tashkent with Samarkand in about two hours and run on to Bukhara; Khiva is reached by train, by a flight to Urgench or by a long drive across the desert. In the east, the Fergana Valley is known for silk weaving in Margilan and pottery in Rishtan, and in the far west, Nukus has a large collection of Soviet avant-garde art that was banned in its day, while at Moynaq rusting fishing boats lie on the dried-out bed of the Aral Sea."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "good", "avoid", "avoid", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Navruz in March, then orchards in flower and green hills in April. April and May are warm, around 25°C, and the busiest months at the big sights; spring is also the wettest season, with short showers."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Very hot and dry: Tashkent averages about 36°C in July, and Bukhara and Khiva pass 40°C on many days. See the sights early and late, and rest at midday as locals do. Apricots, cherries and melons fill the bazaars."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The heat breaks in September, and October is warm, clear and golden, with grapes and pomegranates in season. November is cool, and the nights turn cold."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and often grey, below freezing at night and colder still in Khiva, with snow now and then on Samarkand's domes. The sights are quiet, and the mountains near Tashkent have skiing."
+      }
+    ],
+    "weather": "A dry continental climate, deep in the middle of Asia: hot summers, cold winters and plenty of sunshine. Most of the year's light rain falls from about November to April. The desert west, around Khiva and Nukus, has the biggest swings, with summer heat above 40°C and winter nights down to about −10°C. Tashkent and the Fergana Valley, near the mountains, are a little wetter and greener.",
+    "festivals": [
+      {
+        "name": "Ramadan and Ramazon Hayit (Eid al-Fitr)",
+        "place": "Across Uzbekistan",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting, kept by many but not all; restaurants stay open by day in the cities. The end is a public holiday, when families visit relatives and the graves of their dead."
+      },
+      {
+        "name": "Navruz",
+        "place": "Across Uzbekistan",
+        "when": "21 March",
+        "months": [3],
+        "text": "New Year at the spring equinox, a public holiday with folk concerts, fairs and wrestling. Women gather to stir sumalak, a sweet paste of sprouted wheat, in huge pots through the night, singing as they work."
+      },
+      {
+        "name": "Qurbon Hayit (Eid al-Adha)",
+        "place": "Across Uzbekistan",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "A public holiday. The meat of a sacrificed sheep is divided between the family, relatives and the poor, and the days are spent visiting."
+      },
+      {
+        "name": "Sharq Taronalari",
+        "place": "The Registan, Samarkand",
+        "when": "Every two years, usually in late August",
+        "months": [8],
+        "text": "An international festival of traditional music, with performers from dozens of countries on a stage in front of the Registan's madrasas."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Uzbekistan",
+        "when": "1 September",
+        "months": [9],
+        "text": "The national day, marking independence from the Soviet Union in 1991, with concerts and fireworks in Tashkent."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Khiva and Karakalpakstan",
+        "text": "The far west, in the desert near the Amu Darya delta. The hottest summers and the coldest winters on the usual route; April to May and September to October are the times to go. Moynaq and the old Aral shore are a long day's drive from Nukus."
+      },
+      {
+        "name": "Tashkent and the mountains",
+        "text": "The Chimgan and Chatkal ranges, under two hours from Tashkent, give hiking in summer and skiing from about December to March, and cool air when the city bakes."
+      },
+      {
+        "name": "The Fergana Valley",
+        "text": "A fertile basin ringed by mountains in the east, the most crowded and traditional part of the country, with silk workshops and potteries. Reached from Tashkent by train through a mountain tunnel or over the Kamchik Pass."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Assalomu alaykum\", with the right hand on the heart, is the respectful greeting; friends say \"Salom\". Men shake hands with each other, and greet older people first. Many women greet men with a hand on the heart and a slight bow instead of a handshake.",
+    "etiquette": [
+      "Green tea is poured into small bowls (piyola), a little at a time. A host may pour the first bowls back into the pot to brew it, and tops up your bowl often: that's a sign of care, not stinginess.",
+      "Flatbread (non) is broken by hand, never cut with a knife, and never put upside down or left on the ground.",
+      "Many madrasas now hold craft shops, but working mosques need modest dress, shoes off, and women's hair covered. Avoid visiting during Friday midday prayers.",
+      "Bargaining is expected in bazaars and at souvenir stalls; agree taxi fares first or use a ride-hailing app in the cities.",
+      "Photographing police, soldiers or government buildings can get your camera checked; with people, a gesture asking permission is enough."
+    ],
+    "tipping": "Restaurants in the cities often add a service charge of 10–15%; where none is added, about 10% is usual. Guides and drivers expect a tip at the end of a tour.",
+    "dress": "Light, loose clothes that cover shoulders and knees are the most comfortable and respectful, especially in Bukhara, Khiva and the Fergana Valley. Women may want a scarf for mosques and shrines. Bring a sun hat in summer and a warm coat in winter: the madrasas are cold inside.",
+    "food": [
+      {
+        "name": "Plov",
+        "text": "The national dish: rice cooked in a huge cauldron with mutton, yellow carrots, onions and cumin, sometimes with quail eggs, chickpeas or raisins. It's a lunchtime meal, and plov houses often sell out by early afternoon."
+      },
+      {
+        "name": "Samarkand non",
+        "text": "Round, glossy flatbread with a stamped centre, heavier than most and said to keep for days. People carry stacks of it home as gifts."
+      },
+      {
+        "name": "Somsa",
+        "text": "Flaky pastries of mutton, onion and fat, baked against the walls of a clay oven; in autumn, pumpkin ones appear."
+      },
+      {
+        "name": "Shashlik",
+        "text": "Skewers of mutton, beef or minced meat grilled over charcoal and served with raw onion rings sprinkled with vinegar."
+      },
+      {
+        "name": "Shivit oshi",
+        "text": "Khiva's green noodles, coloured with dill, served under a meat and vegetable stew with yoghurt."
+      },
+      {
+        "name": "Kok choy",
+        "text": "Green tea, drunk with every meal and between meals, even in the summer heat; black tea is more usual in Tashkent."
+      }
+    ],
+    "phrases": {
+      "language": "Uzbek",
+      "intro": "Uzbek is written in Latin letters, though Cyrillic is still seen on older signs. Tashkent still uses a lot of Russian, and in Samarkand and Bukhara many people also speak Tajik.",
+      "items": [
+        { "phrase": "Assalomu alaykum", "say": "ah-sah-LOH-moo ah-LAY-koom", "meaning": "Hello (\"Peace be upon you\")" },
+        { "phrase": "Yaxshimisiz?", "say": "yakh-shee-mee-SIZ", "meaning": "How are you?" },
+        { "phrase": "Rahmat", "say": "rakh-MAHT", "meaning": "Thank you" },
+        { "phrase": "Iltimos", "say": "il-tee-MOHS", "meaning": "Please" },
+        { "phrase": "Ha / Yo'q", "say": "HAH / YOHK", "meaning": "Yes / No" },
+        { "phrase": "Bu qancha?", "say": "boo kahn-CHAH", "meaning": "How much is this?" },
+        { "phrase": "Juda mazali", "say": "joo-DAH mah-zah-LEE", "meaning": "Very tasty" },
+        { "phrase": "Xayr", "say": "KHIRE", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q265",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Uzbek som (UZS). Cards are taken in big hotels and many city shops, and cash machines are common in the cities; carry cash for bazaars and small towns.",
+        "sources": [{ "property": "P38", "values": ["Q487888"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Uzbek. Karakalpak is also official in Karakalpakstan, Russian is widely spoken in the cities, and Tajik is common in Samarkand and Bukhara.",
+        "sources": [{ "property": "P37", "values": ["Q9264"] }],
+        "note": "Wikidata lists Uzbek alone; the page adds Karakalpak, official in the republic of Karakalpakstan, and Russian and Tajik, which visitors hear every day."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata also lists the Australian type I; the page gives types C and F, which the IEC's list of plugs by country names for Uzbekistan."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Uzbekistan Time, UTC+5, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6806", "Q63285960", "Q4806306"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; also 101 for fire, 102 for police and 103 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata lists only 112; the page adds the service numbers 101, 102 and 103, which Uzbekistan kept from Soviet times."
+      },
+      {
+        "key": "callingCode",
+        "text": "+998",
+        "sources": [{ "property": "P474", "values": ["+998"] }]
+      }
+    ]
+  }
+}

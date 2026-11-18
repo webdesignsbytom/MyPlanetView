@@ -1,0 +1,185 @@
+{
+  "code": "JO",
+  "slug": "jordan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Marhaba", "Al-Urdun"],
+  "summary": "Petra's rock-cut city, Wadi Rum's red sand and the Roman streets of Jerash.",
+  "overview": [
+    "Most trips to Jordan are built around Petra, the Nabataean city carved into rose-coloured sandstone 2,000 years ago. You walk in through the Siq, a narrow gorge more than a kilometre long, to the Treasury's carved front, then on past hundreds of tombs to the Monastery, about 800 rock steps above the valley floor; one full day is the least it needs, and two are better. A couple of hours south, Wadi Rum is a desert of red sand and sheer sandstone mountains, explored by 4×4 or camel with Bedouin guides, with nights in desert camps under a sky full of stars.",
+    "Amman, the capital, spreads over steep hills, with a Roman theatre and the Citadel above the old downtown. North of it, Jerash is one of the best-kept Roman cities anywhere, its colonnaded street and oval plaza still standing. To the south-west are Madaba, with a sixth-century mosaic map of the Holy Land in its Greek Orthodox church, Mount Nebo, the Baptism Site on the Jordan River and the Dead Sea's eastern shore. The slow King's Highway runs south past the Crusader castle of Kerak and the Dana reserve towards Petra, and Aqaba, at the far end of the country, has coral reefs in the Red Sea.",
+    "There are no passenger trains: comfortable coaches link Amman with Petra and Aqaba, minibuses leave when they're full, and many visitors hire a car or a driver, as roads are good and signposted in English. Amman to Petra is about three hours on the Desert Highway. The weekend is Friday and Saturday. The desert borders with Syria and Iraq are far from the usual route; check your own government's travel advice before you go."
+  ],
+  "whenToGo": {
+    "stripLabel": "Amman, Petra and the high plateau, where most of the sights are. The Dead Sea and Aqaba, low and hot, have a strip of their own below.",
+    "months": ["good", "good", "best", "best", "best", "good", "good", "good", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Colder than many expect: Amman and Petra are around 12°C by day and close to freezing at night, with rain and, in some years, snow that closes roads for a day or two. Wadi Rum's nights are bitter. At the Dead Sea and in Aqaba it stays mild, in the low 20s."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The best time: warm, clear days, green hills and wild flowers in the north, among them the black iris, Jordan's national flower. Petra is at its busiest in March and April. By late May the Dead Sea and Aqaba pass 35°C."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Dry and hot: Amman and Petra in the low 30s, the Dead Sea and Aqaba near 40°C. Start at Petra at opening time, as there's little shade. The water hikes in the Wadi Mujib canyon are open in the warm months, and the Jerash Festival fills the Roman theatres."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is still hot. October and November are warm and settled, good for walking, though the first heavy rains in late autumn can send flash floods through Petra's gorges and close them for the day."
+      }
+    ],
+    "weather": "Most of Jordan is desert, but Amman, Petra and the King's Highway stand on a plateau 800 to 1,500 m up, so their summers are warm rather than scorching and their winters cold. Rain falls between November and March, most of it in the north-west; the east and south get almost none. Down in the Jordan Valley and at the Dead Sea, about 430 m below sea level, the air is hot from May to September and pleasantly warm in winter, and Aqaba, on the Red Sea, has sunshine in every month.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Jordan",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Daytime is quiet, with shorter opening hours and many cafés closed until sunset; after iftar, Amman's streets and sweet shops are full until late. Petra and the main sights stay open. The month closes with Eid al-Fitr, when Jordanians visit family and fill the parks."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Jordan",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "A long holiday when Jordanians travel to family, and Aqaba and the Dead Sea resorts fill up."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Jordan",
+        "when": "25 May",
+        "months": [5],
+        "text": "A public holiday marking independence in 1946, with flags on every car, fireworks over Amman and military parades."
+      },
+      {
+        "name": "Jerash Festival of Culture and Arts",
+        "place": "Jerash",
+        "when": "Usually in July, sometimes running into August",
+        "months": [7, 8],
+        "text": "Arab singers, poets, folk dance troupes and theatre on stages among the ruins, including the Roman South Theatre, over a week or two of summer evenings."
+      },
+      {
+        "name": "Christmas",
+        "place": "Amman, Madaba and Christian towns",
+        "when": "25 December",
+        "months": [12],
+        "text": "A public holiday. Jordan's Christian minority decorates its churches and neighbourhoods, and Amman's hotels and malls put up big trees and lights."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Dead Sea and Aqaba",
+        "months": ["best", "best", "best", "best", "good", "avoid", "avoid", "avoid", "good", "best", "best", "best"],
+        "text": "Low and warm: the winter escape for Jordanians from cold Amman. Floating in the Dead Sea and diving off Aqaba are best from October to April; from June to August both are well over 40°C on many days."
+      },
+      {
+        "name": "Wadi Rum",
+        "text": "Most of it lies 800 m or more above sea level, so desert days are pleasant in spring and autumn, but winter nights fall below freezing and summer afternoons are fierce. Camps provide blankets; bring a warm layer in any season."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Marhaba\" is hello, and the polite answer doubles it: \"marhabtein\". You'll hear \"welcome to Jordan\" many times a day, usually meant simply as that. Handshakes are normal between men, and friends kiss on both cheeks; whether a woman shakes a man's hand is her choice. Bedouin hosts greet guests with cardamom-scented coffee, and accepting is part of the welcome.",
+    "etiquette": [
+      "When served Bedouin coffee, take the cup in your right hand. One cup is polite and up to three is usual; to say you've had enough, give the cup a little shake before handing it back.",
+      "Agree the price of a camel, horse or donkey ride in Petra or Wadi Rum before you start.",
+      "Bedouin families and women in particular may not want to be photographed, so ask first; police, soldiers and military sites are off limits.",
+      "Mosques that admit visitors, such as Amman's King Abdullah I Mosque, ask women to cover their hair and everyone to cover arms and legs; robes are lent at the door.",
+      "Show affection in private; holding hands is the most couples do in public."
+    ],
+    "tipping": "Restaurant bills in tourist places usually add a service charge and tax; leaving a little extra for the waiter is still common. Tip guides and drivers at the end of a tour, and round up taxi fares. Bedouin camps often have a box for the staff.",
+    "dress": "Modest outside the resorts: shoulders and knees out of sight for everyone, and loose long sleeves are cooler in the sun anyway. Swimwear is for hotel beaches and pools at the Dead Sea and Aqaba. Petra means hours of walking and hundreds of steps, so wear good shoes, and bring a warm jacket from November to March.",
+    "food": [
+      {
+        "name": "Mansaf",
+        "text": "The national dish: lamb cooked in jameed, a sauce of dried, fermented yoghurt, served on a big platter of rice over thin bread and scattered with almonds and pine nuts. It's the meal of weddings and big welcomes, traditionally eaten by hand from the shared plate."
+      },
+      {
+        "name": "Zarb",
+        "text": "The Bedouin barbecue of Wadi Rum: lamb or chicken and vegetables cooked for hours in a pit dug in the sand, then lifted out at dinner in the camp."
+      },
+      {
+        "name": "Galayet bandora",
+        "text": "Tomatoes fried slowly with garlic, chilli and olive oil until soft, scooped up with bread. A simple dish found in every cheap restaurant."
+      },
+      {
+        "name": "Falafel and hummus breakfast",
+        "text": "Downtown Amman's busiest meal: plates of hummus and ful beans, hot falafel and stacks of bread, eaten at shared tables from early morning."
+      },
+      {
+        "name": "Knafeh",
+        "text": "Baked in huge round trays: a layer of fine semolina or shredded pastry over soft white cheese, soaked in syrup and eaten hot, often standing in the street."
+      },
+      {
+        "name": "Bedouin tea and coffee",
+        "text": "Sweet black tea brewed over a fire, often with sage or mint, and bitter, cardamom-flavoured Arabic coffee in tiny cups: offered at every camp, shop and meeting."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Jordanian Arabic)",
+      "intro": "English is widely spoken in Amman and at the sights; Jordanians enjoy hearing visitors try a few words of Arabic.",
+      "items": [
+        { "phrase": "Marhaba (مرحبا)", "say": "MAR-ha-ba", "meaning": "Hello" },
+        { "phrase": "Kifak? (كيفك)", "say": "KEE-fak", "meaning": "How are you? (to a man; kifik to a woman)" },
+        { "phrase": "Mneeh (منيح)", "say": "m-NEEH", "meaning": "Good; fine" },
+        { "phrase": "Yislamu (يسلمو)", "say": "yis-LA-moo", "meaning": "Thanks (\"bless you\")" },
+        { "phrase": "Afwan (عفوا)", "say": "AF-wan", "meaning": "You're welcome; excuse me" },
+        { "phrase": "Addeish? (قديش)", "say": "ad-DAYSH", "meaning": "How much?" },
+        { "phrase": "Ma'lesh (معلش)", "say": "MAA-lesh", "meaning": "Never mind; sorry" },
+        { "phrase": "Bkhatrak (بخاطرك)", "say": "b-KHAA-trak", "meaning": "Goodbye (said by the one leaving, to a man)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q810",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Jordanian dinar (JD, JOD), divided into 100 piastres or 1,000 fils. Cards are taken in hotels and larger restaurants; carry cash for taxis, small shops and Bedouin camps.",
+        "sources": [{ "property": "P38", "values": ["Q203722"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic. English is widely spoken in tourism and business.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "A mix: mostly Types C and F (two round pins), with Type G (three rectangular pins, as in the UK) and Types J and B in places; 230 V. A universal adapter helps.",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613", "Q1528507", "Q60740126", "Q2335530", "Q24288456"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+3 all year (no clock changes)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q4806274"] }],
+        "note": "Wikidata also lists UTC+2; Jordan stopped changing its clocks in October 2022 and has kept UTC+3 all year since."
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+962",
+        "sources": [{ "property": "P474", "values": ["+962"] }]
+      }
+    ]
+  }
+}

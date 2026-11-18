@@ -1,0 +1,165 @@
+{
+  "code": "LV",
+  "slug": "latvia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Sveiki", "Latvija", "Laipni lūdzam"],
+  "summary": "Art nouveau Riga, long white Baltic beaches, pine forests and the great midsummer feast of Jāņi.",
+  "overview": [
+    "Latvia is the middle one of the three Baltic states, a low, green country of pine forest, lakes and almost 500 km of sandy coast on the Baltic Sea and the Gulf of Riga. Riga, the capital and the largest city in the Baltics, has a medieval old town of church spires, guild halls and merchants' houses; just beyond it, whole streets of art nouveau apartment blocks, with faces, peacocks and sphinxes on their façades, make up one of the finest collections in Europe, many of them by the architect Mikhail Eisenstein.",
+    "Jūrmala, a string of beach resorts with old wooden villas behind the dunes, is under an hour from Riga by train. Gauja National Park, around Sigulda and Cēsis, has sandstone cliffs, castle ruins and quiet stretches of river for canoeing, and Rundāle Palace, in the farmland south of Riga, is a baroque palace by Rastrelli, who designed the Winter Palace in St Petersburg. In the west, Kuldīga has Ventas Rumba, said to be the widest waterfall in Europe, though it is barely two metres high, and the Kurzeme coast runs empty and wild up to Cape Kolka.",
+    "Trains run from Riga to the coast, to Sigulda and Cēsis and east to Daugavpils, and buses cover the rest. Picking mushrooms and berries is a national habit, and the boardwalk across the Great Ķemeri Bog is an easy outing from Jūrmala. Russian is widely spoken in Riga and the east, but Latvian is the state language, and many Latvians would rather a visitor used Latvian or English."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and often grey, usually a few degrees below freezing with snow on and off, and about seven hours of daylight in December. A Christmas market fills Riga's Dom Square, and Sigulda has a bobsleigh track and small ski slopes."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Snow melts in March and April, white storks return to their nests on poles and rooftops, and by May the birches are green and café tables are out on the streets."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Mild to warm, about 20–25°C by day, with long evenings and short, pale nights. The beaches at Jūrmala and Liepāja are busy, the sea cool but swimmable, and the whole country heads to the countryside for Jāņi."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Cool and often clear in September, with golden forests and mushroom hunting into October, then grey, wet and dark through November."
+      }
+    ],
+    "weather": "Mild summers and cold, damp winters, softened by the sea along the coast. Riga averages about 23°C by day in July and a little below freezing in January; inland, above all in the east around Daugavpils, winters are colder and snowier. Rain comes in every month, most in summer and autumn. Daylight runs from about seven hours in December to about eighteen in late June.",
+    "festivals": [
+      {
+        "name": "Restoration of Independence Day",
+        "place": "Across Latvia",
+        "when": "4 May",
+        "months": [5],
+        "text": "A public holiday marking the vote of 1990 to restore independence. Many families lay a white tablecloth and share a meal, a newer tradition that has spread quickly."
+      },
+      {
+        "name": "Jāņi (Līgo and Jāņi)",
+        "place": "Across Latvia",
+        "when": "23–24 June",
+        "months": [6],
+        "text": "The biggest holiday of the year. Cities empty as people gather in the countryside for bonfires kept burning until dawn, oak-leaf crowns for men and flower wreaths for women, caraway cheese, beer and the singing of līgo songs."
+      },
+      {
+        "name": "Song and Dance Festival",
+        "place": "Riga",
+        "when": "Every five years, in early July: the last in 2023, the next expected in 2028",
+        "months": [7],
+        "text": "Tens of thousands of singers and dancers from every corner of Latvia fill Mežaparks' open-air stage and Daugava Stadium, a tradition going back to 1873 that UNESCO lists alongside Estonia's and Lithuania's."
+      },
+      {
+        "name": "Lāčplēsis Day and Proclamation Day",
+        "place": "Riga and across Latvia",
+        "when": "11 and 18 November",
+        "months": [11],
+        "text": "On 11 November candles line the wall of Riga Castle along the river, for those who fought for independence. A week later, Proclamation Day, the national day, marks independence in 1918, with flowers at the Freedom Monument and fireworks over the Daugava."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Latvians are reserved with strangers: a firm handshake, little small talk, and plenty of personal space. \"Labdien\" (good day) is the polite greeting, and \"Sveiki\" the everyday hello. The warmth shows among friends, and above all at Jāņi.",
+    "etiquette": [
+      "Bring flowers in an odd number when visiting: even-numbered bunches are for funerals.",
+      "The Freedom Monument in Riga has an honour guard and is a national symbol: don't sit or climb on it.",
+      "Invited to a Jāņi party in the country? Bring food or drink, expect singing and jumping over the fire, and try to stay up to see the sunrise.",
+      "Cross roads only at crossings and on the green light; police do fine jaywalkers.",
+      "Shoes usually come off at the door of a home."
+    ],
+    "tipping": "About 10% in restaurants for good service, left in cash or added when paying by card.",
+    "dress": "Smart-casual in Riga. Layers and a waterproof in summer, and a warm coat, hat and boots with grip in winter.",
+    "food": [
+      {
+        "name": "Grey peas with bacon",
+        "text": "Pelēkie zirņi ar speķi: large grey peas fried with smoked bacon and onion, often with a glass of kefir; eaten at Christmas and found in canteens all year."
+      },
+      {
+        "name": "Rupjmaize",
+        "text": "Dark, dense rye bread, also turned into a dessert, rupjmaizes kārtojums, layered with whipped cream and jam."
+      },
+      {
+        "name": "Jāņu siers",
+        "text": "Fresh, mild cheese with caraway seeds, made for midsummer and eaten with beer."
+      },
+      {
+        "name": "Sklandrausis",
+        "text": "A small open rye pie from Kurzeme, filled with a layer of mashed potato under one of sweetened carrot."
+      },
+      {
+        "name": "Smoked fish",
+        "text": "Flounder, eel, bream and sprats smoked in coastal villages; Riga's tinned sprats in oil are famous across the old Soviet world."
+      },
+      {
+        "name": "Riga Black Balsam",
+        "text": "A thick, bitter herbal liqueur sold in a dark stoneware bottle, drunk in coffee, mixed with blackcurrant juice or taken as a shot."
+      }
+    ],
+    "phrases": {
+      "language": "Latvian (latviešu valoda)",
+      "intro": "Latvian is one of only two living Baltic languages, with Lithuanian. Most younger people speak English.",
+      "items": [
+        { "phrase": "Sveiki", "say": "SVAY-kee", "meaning": "Hello" },
+        { "phrase": "Labdien", "say": "LAHB-dee-en", "meaning": "Good day" },
+        { "phrase": "Paldies", "say": "PAHL-dee-es", "meaning": "Thank you" },
+        { "phrase": "Lūdzu", "say": "LOO-dzoo", "meaning": "Please; you're welcome" },
+        { "phrase": "Atvainojiet", "say": "AHT-vai-noh-yee-et", "meaning": "Excuse me; sorry" },
+        { "phrase": "Cik maksā?", "say": "tsick MAHK-sah", "meaning": "How much is it?" },
+        { "phrase": "Priekā!", "say": "PREE-eh-kah", "meaning": "Cheers!" },
+        { "phrase": "Uz redzēšanos", "say": "ooz REH-dzeh-shah-nohs", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q211",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Latvian, official. Russian is the first language of about a third of the people, most of them in Riga and the east.",
+        "sources": [{ "property": "P37", "values": ["Q9078"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time, UTC+2; UTC+3 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q6760"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; also 110 for police and 113 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648823", "Q25648804"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+371",
+        "sources": [{ "property": "P474", "values": ["+371"] }]
+      }
+    ]
+  }
+}

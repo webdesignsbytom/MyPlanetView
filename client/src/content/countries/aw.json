@@ -1,0 +1,162 @@
+{
+  "code": "AW",
+  "slug": "aruba",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bon bini", "Aruba"],
+  "summary": "A dry, windswept island below the hurricane belt, with cactus hills and long white beaches.",
+  "overview": [
+    "Aruba lies about 25 km off the coast of Venezuela, and it looks nothing like the green islands further north. The land is dry and rocky, covered in cactus and aloe, and the divi-divi trees all lean the same way, bent south-west by a wind that hardly ever stops. The sheltered south and west coasts have the calm beaches: Eagle Beach, wide and white with its leaning fofoti trees; Palm Beach, lined with high-rise hotels; and Arashi, near the California Lighthouse at the northern tip. Baby Beach, a shallow lagoon near San Nicolas at the far south-east, is the place for small children.",
+    "The north coast faces the open sea with cliffs, crashing waves and strong currents, and no one swims there. Inland, Arikok National Park covers nearly a fifth of the island, with rocky hills, caves with old Amerindian drawings and the Natural Pool, a basin in the coastal rocks reached by 4×4, horse or a hot walk. Oranjestad, the capital, has pastel shopfronts in the Dutch colonial style and Fort Zoutman, the island's oldest building, from the late 18th century; San Nicolas, once the refinery town, is now known for its murals.",
+    "Arubus buses run along the hotel coast to Oranjestad, and taxis and hire cars do the rest, driving on the right. US dollars are taken everywhere and almost everyone speaks English. The tap water is safe to drink: it's made from sea water at the island's desalination plant."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry high season",
+        "months": [1, 2, 3, 4, 5],
+        "text": "Rain is rare, the breeze steady and the heat at its gentlest. Carnival takes over the streets in January and February, and hotels are fullest until Easter. May is quieter and still dry."
+      },
+      {
+        "name": "Windy summer",
+        "months": [6, 7, 8, 9],
+        "text": "June and July bring the strongest trade winds, loved by windsurfers and kitesurfers on the north-west coast. By August and September the wind drops and it's the hottest time of year, often 32°C or more in the afternoon."
+      },
+      {
+        "name": "Short wet season",
+        "months": [10, 11, 12],
+        "text": "Most of the year's little rain falls now, usually as short, heavy showers followed by sun. December fills up with holiday visitors, and the island lights up for Christmas."
+      }
+    ],
+    "weather": "Aruba is close to a desert: about 450 mm of rain falls in an average year, most of it from October to December. Hurricanes rarely come this far south, though a storm passing to the north can bring a few wet days. Daytime temperatures stay between about 29°C and 32°C all year, with warm nights around 26°C, and the steady north-east trade wind keeps it from feeling oppressive. The sea is about 26°C to 28°C.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "Oranjestad and San Nicolas",
+        "when": "Usually from January to Shrove Tuesday, with the Grand Parade in Oranjestad on the Sunday before Lent",
+        "months": [1, 2],
+        "text": "Weeks of calypso and road-march contests, night-time lighting parades and early-morning J'ouvert, ending when an effigy of King Momo is burned on the last night."
+      },
+      {
+        "name": "Betico Day",
+        "place": "Across Aruba",
+        "when": "25 January",
+        "months": [1],
+        "text": "A public holiday on the birthday of Gilberto \"Betico\" Croes, who led the campaign for Aruba's own status within the Kingdom of the Netherlands, won in 1986."
+      },
+      {
+        "name": "National Anthem and Flag Day",
+        "place": "Across Aruba",
+        "when": "18 March",
+        "months": [3],
+        "text": "Flags everywhere, folk music and dancing in Oranjestad, and school pupils singing the anthem, \"Aruba Dushi Tera\"."
+      },
+      {
+        "name": "Dera Gai (St John's Day)",
+        "place": "Across Aruba",
+        "when": "24 June",
+        "months": [6],
+        "text": "An old harvest festival with traditional songs and dances in yellow and red. The name means \"burying the rooster\", after a game that is no longer played with a live bird."
+      },
+      {
+        "name": "Dande",
+        "place": "Across Aruba",
+        "when": "New Year's Eve and the first days of January",
+        "months": [12, 1],
+        "text": "Groups of musicians go from house to house singing the dande, a song wishing the household good luck for the year ahead, and are rewarded with a drink or a gift."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Strangers shake hands, while friends and family greet with a kiss on the cheek. Most Arubans move easily between Papiamento, English, Dutch and Spanish, sometimes in the same sentence, and a \"Bon dia\" from a visitor always gets a smile.",
+    "etiquette": [
+      "Don't swim on the north and east coasts, where currents are strong, and only go into the Natural Pool when the sea is calm.",
+      "Aruba bans the sale of sunscreen containing oxybenzone, which harms coral: bring a reef-safe one.",
+      "Stay on marked tracks in Arikok and the dunes. Off-road driving scars the desert for years.",
+      "Shops and restaurants take US dollars as readily as florins, so check which currency a price is in before you pay.",
+      "Leave the iguanas and the wild goats alone, and don't feed them."
+    ],
+    "tipping": "Many bills already include a service charge, shown on a separate line; anything on top is for good service. Taxi drivers, guides and bar staff appreciate around 10%.",
+    "dress": "Light, breathable clothes, a hat and sunglasses: the wind makes the sun feel weaker than it is. Water shoes help on rocky beaches and at the Natural Pool. Smart casual for dinner in the better restaurants.",
+    "food": [
+      {
+        "name": "Pastechi",
+        "text": "Crescent-shaped fried pastries filled with cheese, ham, chicken or tuna, the island's breakfast on the run."
+      },
+      {
+        "name": "Funchi and pan bati",
+        "text": "Funchi is cornmeal cooked stiff, then sliced and often fried; pan bati is a thick, slightly sweet pancake. Both come on the side of stews and fish."
+      },
+      {
+        "name": "Fish, Aruban style",
+        "text": "Red snapper, grouper or wahoo, fried whole or cooked in a Creole sauce of tomato, onion and sweet pepper, with funchi and salad."
+      },
+      {
+        "name": "Pica di papaya",
+        "text": "A hot sauce of green papaya, onion and Scotch bonnet chillies. Every snack bar has a bottle on the counter; go carefully."
+      },
+      {
+        "name": "Balashi and Aruba Ariba",
+        "text": "Balashi is the local beer, brewed with the island's desalinated water. Aruba Ariba is the home-grown cocktail, with Coecoei, a red local liqueur, among the rum, vodka and fruit juice."
+      }
+    ],
+    "phrases": {
+      "language": "Papiamento",
+      "intro": "Papiamento, a Creole drawing on Portuguese, Spanish, Dutch and African languages, is what Arubans speak among themselves. English works everywhere, but a few words of Papiamento are welcome:",
+      "items": [
+        { "phrase": "Bon dia", "say": "bon DEE-ah", "meaning": "Good morning" },
+        { "phrase": "Bon bini", "say": "bon BEE-nee", "meaning": "Welcome" },
+        { "phrase": "Danki", "say": "DAHN-kee", "meaning": "Thank you" },
+        { "phrase": "Por fabor", "say": "por fah-BOR", "meaning": "Please" },
+        { "phrase": "Bon nochi", "say": "bon NO-chee", "meaning": "Good evening; good night" },
+        { "phrase": "Dushi", "say": "DOO-shee", "meaning": "Sweet, lovely; also \"darling\"" },
+        { "phrase": "Pasa un bon dia", "say": "PAH-sah oon bon DEE-ah", "meaning": "Have a nice day" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q21203",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Aruban florin (Afl., AWG), fixed to the US dollar. US dollars are accepted almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q232270"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Dutch and Papiamento. English and Spanish are widely spoken.",
+        "sources": [{ "property": "P37", "values": ["Q7411", "Q33856"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America) and Type F (two round pins), 127 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456", "Q1123613"] },
+          { "property": "P2884", "values": ["127"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q2085376", "Q28145364", "Q5762"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+297",
+        "sources": [{ "property": "P474", "values": ["+297"] }]
+      }
+    ]
+  }
+}

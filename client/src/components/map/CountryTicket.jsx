@@ -20,8 +20,9 @@ const PUNCH = 'pointer-events-none absolute h-5 w-5 rounded-full border-2 border
  * opening, Escape closes, "Close <title>" stamp. The map page centres it on wide
  * screens; on phones it fills the screen below the Menu button, the stub still on the left.
  */
-// `action`: a button in the header's row, before the close stamp ("Open country": CountryPanel)
-function CountryTicket({ title, kicker, stub = null, action = null, onClose, children }) {
+// `action`: a button in the header's row, before the close stamp ("Open country": CountryPanel);
+// `subtitle`: a line under the title ("2 of 51 states visited")
+function CountryTicket({ title, kicker, subtitle = null, stub = null, action = null, onClose, children }) {
   const { titleId, headingRef, panelProps } = useMapPanel(onClose);
   const columns = stub ? 'grid-cols-[6.5rem_minmax(0,1fr)] nophone:grid-cols-[15rem_minmax(0,1fr)]' : 'grid-cols-1';
   // A country's ticket is wider than the list's (16 Nov 2026): its forms (notes, moments)
@@ -51,9 +52,11 @@ function CountryTicket({ title, kicker, stub = null, action = null, onClose, chi
             >
               {title}
             </h2>
+            {subtitle ? <div className='pt-1 text-sm font-medium'>{subtitle}</div> : null}
           </div>
-          {/* The action and the close stamp in one row, lined up on each other's middles */}
-          <div className='grid grid-flow-col items-center gap-3'>
+          {/* The action and the close stamp in one row, lined up on each other's middles, in the
+              middle of the header's height (18 Nov 2026, the user's wish) */}
+          <div className='grid grid-flow-col items-center gap-3 self-center'>
             {action}
             <CloseStamp label={`Close ${title}`} onClick={onClose} />
           </div>

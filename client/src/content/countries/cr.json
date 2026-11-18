@@ -1,0 +1,192 @@
+{
+  "code": "CR",
+  "slug": "costa-rica",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Pura vida!", "Costa Rica"],
+  "summary": "Cloud forest, volcanoes and sloths, between Pacific surf beaches and a laid-back Caribbean coast.",
+  "overview": [
+    "Costa Rica is a small country that has made nature its main attraction: about a quarter of its land is protected in national parks and reserves. The cone of Arenal rises over the town of La Fortuna and its hot springs; the cloud forest of Monteverde is crossed by trails and hanging bridges where you may hear the call of the bellbird; and Manuel Antonio, on the Pacific, puts sloths, monkeys and white beaches in one small park. Further afield, the canals of Tortuguero on the Caribbean are reached only by boat or light plane, and Corcovado, on the Osa Peninsula, is the wildest rainforest of all.",
+    "Most trips start in San José, in the cool Central Valley, or in Liberia, closer to the beaches of Guanacaste and the Nicoya Peninsula, where Tamarindo, Nosara and Santa Teresa are surfing towns. Distances look short on the map but roads are winding and slow, so allow most of a day between regions. Shared shuttle vans link the tourist towns, a 4×4 helps on Nicoya's dirt roads, and small planes save hours to the Osa and the Caribbean. Addresses are given by landmarks rather than street numbers: \"200 m north of the church\".",
+    "Many Pacific and Caribbean beaches have strong rip currents and few lifeguards, so swim where local people do and never alone. Costa Rica abolished its army in 1948, and is one of the steadiest and most visited countries in the region, which also makes it one of the dearer ones."
+  ],
+  "whenToGo": {
+    "stripLabel": "The Pacific side and the Central Valley, where most visitors go. The Caribbean coast follows almost the opposite pattern, and it and the Osa Peninsula have strips of their own below.",
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "avoid", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season (verano)",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Sunny and dry on the Pacific side and in the Central Valley, with Guanacaste turning brown and dusty by March. Monteverde and the Central Valley can be windy from December to February. The busiest time, dearest over Christmas, New Year and Easter week, when Costa Ricans head to the beach too."
+      },
+      {
+        "name": "Green season",
+        "months": [5, 6, 7, 8],
+        "text": "Mornings are often clear, with heavy rain in the afternoon. A drier spell usually comes in July, the veranillo. The forests are green, prices drop, Pacific surf is at its most consistent, and green turtles start nesting at Tortuguero."
+      },
+      {
+        "name": "Wettest months",
+        "months": [9, 10, 11],
+        "text": "The heaviest rain on the Pacific side, wettest of all in October, when rivers rise, some roads in the south wash out and several Osa lodges close. The Caribbean coast is usually at its driest in September and October."
+      }
+    ],
+    "weather": "Height decides the temperature. San José, at about 1,150 m, has spring-like days of around 24–27°C and cool nights all year; Monteverde, higher still, is often misty and around 15–20°C; the summit of Cerro Chirripó, 3,821 m, can see frost. The coasts are hot, around 30–33°C, and Guanacaste in March and April is the hottest corner. On the Pacific side and in the centre the dry season runs from about December to April and the rains from May to November, with October the wettest month. The Caribbean side gets rain in every month, heaviest around December and July.",
+    "festivals": [
+      {
+        "name": "Fiestas de Zapote",
+        "place": "Zapote, San José",
+        "when": "From about Christmas to early January",
+        "months": [12, 1],
+        "text": "A big fair with rides, food stalls and toros a la tica, where crowds of amateurs jump into the ring with a bull: no bull is killed. The Tope, a parade of horses through central San José, is usually held on 26 December."
+      },
+      {
+        "name": "Semana Santa (Holy Week)",
+        "place": "Across Costa Rica",
+        "when": "The week before Easter (Easter Sunday is 28 March in 2027)",
+        "months": [3, 4],
+        "text": "Processions in towns and villages. Holy Thursday and Good Friday are public holidays when much closes, and beaches and buses are packed all week: book ahead."
+      },
+      {
+        "name": "Juan Santamaría Day",
+        "place": "Across Costa Rica, biggest in Alajuela",
+        "when": "11 April",
+        "months": [4],
+        "text": "Costa Rica honours the young drummer from Alajuela who became the national hero of the 1856 battle of Rivas, with school parades and bands; schools and offices close."
+      },
+      {
+        "name": "Guanacaste Day",
+        "place": "Liberia, Nicoya and the rest of Guanacaste",
+        "when": "25 July",
+        "months": [7],
+        "text": "A public holiday marking the day in 1824 when the Nicoya district chose to join Costa Rica. Guanacaste celebrates with rodeos, marimba music and folk dancing."
+      },
+      {
+        "name": "La Romería",
+        "place": "Cartago",
+        "when": "2 August, with pilgrims walking through the night before",
+        "months": [8],
+        "text": "Hundreds of thousands walk from San José and further away to the Basílica de Nuestra Señora de los Ángeles, home of La Negrita, the country's patron saint. 2 August is a public holiday."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Costa Rica",
+        "when": "15 September",
+        "months": [9],
+        "text": "A torch is carried by relay runners from Guatemala to Cartago, arriving on the evening of 14 September, when children walk through the streets with home-made lanterns (faroles). Parades follow the next morning."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Caribbean coast",
+        "months": ["good", "best", "best", "best", "good", "good", "good", "good", "best", "best", "good", "good"],
+        "text": "Tortuguero, Cahuita and Puerto Viejo de Talamanca, with Afro-Caribbean cooking, reggae and calypso. Rain can fall in any month, heaviest around December and in July, but September and October, the wettest months elsewhere, are usually the calmest and sunniest here. Green turtles nest at Tortuguero from about July to October."
+      },
+      {
+        "name": "The Osa Peninsula",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "avoid", "good", "best"],
+        "text": "Corcovado National Park and Drake Bay, with scarlet macaws, tapirs and all four of Costa Rica's monkey species. The wettest part of the country: from September to November trails turn to mud and some lodges close. Humpback whales pass offshore, in the Golfo Dulce and around Marino Ballena, both from about July to October and from about December to March."
+      },
+      {
+        "name": "Guanacaste and Nicoya",
+        "text": "The driest part of the country, with sunny days almost guaranteed from December to April and less rain than elsewhere from May to November. The dry tropical forest drops its leaves in the dry season, which makes animals easier to spot."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Pura vida\" (\"pure life\") does duty as hello, thanks, goodbye and \"all good\". A handshake is the usual greeting; women who know each other often add a kiss on the right cheek. Costa Ricans, who call themselves Ticos, use the polite \"usted\" more than most Spanish speakers, even with friends and family, and they prefer a gentle, roundabout way of saying no.",
+    "etiquette": [
+      "Don't feed the wild animals: monkeys, coatis and raccoons in the parks grow aggressive and ill, and feeding them is fined.",
+      "Never leave anything in a parked car, even for a few minutes at a trailhead or beach.",
+      "Directions use landmarks and distances: \"100 metros\" usually means one block.",
+      "National parks limit how many people may enter each day, and Corcovado can only be walked with a licensed guide: book ahead in the dry season.",
+      "Most towns have drinkable tap water; in remote areas, ask your lodge.",
+      "Plans in the countryside run on \"hora tica\" (Tico time): buses and tours are mostly punctual, but social arrangements are loose."
+    ],
+    "tipping": "Restaurant bills already include a 10% service charge by law, along with tax, so an extra tip is a kindness, not a duty. Tip nature guides, boat crews and shuttle drivers, who rely on it.",
+    "dress": "Light, quick-drying clothes, with a fleece for San José evenings and the cloud forest, and a rain jacket from May to November. Long trousers and closed shoes for forest walks; many lodges lend rubber boots for muddy trails. Swimwear is for the beach: cover up in towns.",
+    "food": [
+      {
+        "name": "Gallo pinto",
+        "text": "Rice and black beans fried together with onion, sweet pepper and coriander, splashed with Salsa Lizano, a tangy brown sauce. Breakfast, with eggs, fried plantain and sour cream."
+      },
+      {
+        "name": "Casado",
+        "text": "The everyday lunch plate at a soda, a small local restaurant: rice, beans, salad, plantain and a choice of chicken, beef, pork or fish."
+      },
+      {
+        "name": "Olla de carne",
+        "text": "A hearty beef broth full of chunks of cassava, chayote, corn, carrot and plantain, often a weekend dish."
+      },
+      {
+        "name": "Chifrijo",
+        "text": "A bar snack in a bowl: rice, red beans, crisp fried pork (chicharrones) and chopped tomato salsa, scooped up with tortilla chips."
+      },
+      {
+        "name": "Rice and beans and rondón",
+        "text": "The Caribbean coast's own cooking: rice and red beans in coconut milk, and rondón, a coconut stew of fish or seafood with yams and plantain."
+      },
+      {
+        "name": "Coffee",
+        "text": "Grown on the slopes of the Central Valley and in Tarrazú, and often brewed the old way through a cloth sock on a wooden stand, the chorreador."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Costa Rican)",
+      "intro": "English is widely spoken in tourism, and on the Caribbean coast many people grew up speaking an English creole.",
+      "items": [
+        { "phrase": "¡Pura vida!", "say": "POO-rah VEE-dah", "meaning": "Great; hello; thanks; all good" },
+        { "phrase": "Buenas", "say": "BWEH-nahs", "meaning": "Hello (any time of day)" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "Con mucho gusto", "say": "kohn MOO-choh GOOS-toh", "meaning": "You're welcome (\"with great pleasure\")" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAHN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "La cuenta, por favor", "say": "lah KWEN-tah por fah-VOR", "meaning": "The bill, please" },
+        { "phrase": "Tuanis", "say": "TWAH-nees", "meaning": "Cool; great (slang)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q800",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Costa Rican colón (₡, CRC). US dollars are widely taken in tourist areas, and cards almost everywhere in towns.",
+        "sources": [{ "property": "P38", "values": ["Q242915"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. An English creole is spoken on the Caribbean coast, and indigenous languages such as Bribri and Cabécar in the south.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Standard Time, UTC−6, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5385", "Q63286060"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }],
+        "note": "Wikidata also lists 112; the page gives 911, the number Costa Rica's emergency service publishes."
+      },
+      {
+        "key": "callingCode",
+        "text": "+506",
+        "sources": [{ "property": "P474", "values": ["+506"] }]
+      }
+    ]
+  }
+}

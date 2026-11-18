@@ -59,6 +59,28 @@ export function placeOfPolygon(code, polygon) {
 export const GOLAN_LINE = [[35.62, 33.4], [35.655, 33.27], [35.632, 33.18], [35.627, 33.007], [35.632, 32.91], [35.645, 32.82], [35.652, 32.72], [35.66, 32.68], [35.68, 32.62]];
 export const GOLAN_POINT = [35.75, 33.0];
 
+// Western Sahara (18 Nov 2026, the user's wish): Natural Earth gives Morocco the part west of
+// the berm, and the map's Western Sahara the rest; the map draws the whole territory as
+// Western Sahara, as the old map did. Morocco is cut along the territory's northern border,
+// 27°40′N, a hair north of it (27.668°), so the line crosses Morocco's outline exactly twice
+// (at the coast and at Algeria); what's south of it is Western Sahara's
+export const WESTERN_SAHARA_LINE = [[-14, 27.668], [-8, 27.668]];
+export const WESTERN_SAHARA_NORTH = 27.668;
+const meanLatitude = (ring) => ring.reduce((sum, [, lat]) => sum + lat, 0) / ring.length;
+
+/**
+ * A Moroccan polygon as the map has it: [[place, ring]...], Western Sahara's for what's south
+ * of WESTERN_SAHARA_LINE (cut there when it crosses), else Morocco's.
+ */
+export function splitWesternSahara(ring) {
+  const lats = ring.map(([, lat]) => lat);
+  if (Math.min(...lats) >= WESTERN_SAHARA_NORTH) return [['MA', ring]];
+  if (Math.max(...lats) <= WESTERN_SAHARA_NORTH) return [['EH', ring]];
+  const pieces = cutRing(ring, WESTERN_SAHARA_LINE);
+  if (!pieces) throw new Error("Western Sahara's line should cross Morocco's outline twice");
+  return pieces.map((piece) => [meanLatitude(piece) < WESTERN_SAHARA_NORTH ? 'EH' : 'MA', piece]);
+}
+
 // Where segment p→q crosses r→s: [t along p→q, u along r→s, point], or null
 export function crossing([px, py], [qx, qy], [rx, ry], [sx, sy]) {
   const d = (qx - px) * (sy - ry) - (qy - py) * (sx - rx);

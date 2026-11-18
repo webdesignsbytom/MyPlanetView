@@ -1,0 +1,181 @@
+{
+  "code": "FK",
+  "slug": "falkland-islands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Hello", "The Falklands", "Welcome"],
+  "summary": "King penguins on white beaches and albatross cliffs in the windy South Atlantic.",
+  "overview": [
+    "The Falkland Islands are a group of several hundred islands in the South Atlantic, about 500 km off the coast of Patagonia. They are a British Overseas Territory; Argentina, which calls them the Islas Malvinas, also claims them, and in 1982 the two countries fought a ten-week war over them. About 3,700 people live here, most in Stanley, the small capital on East Falkland, with its brightly painted houses and tin roofs, a waterfront cathedral with an arch of whale jawbones, and a museum telling the islands' story. Everywhere outside Stanley is called \"Camp\": open moorland, sheep farms and settlements of a few houses, linked by gravel roads and tracks.",
+    "Wildlife is the reason most people come. Five kinds of penguin breed here: king, gentoo, Magellanic, rockhopper and a few macaroni. Volunteer Point, a long 4×4 drive across the peat from Stanley, has the islands' largest king penguin colony on a beach of white sand. On the outer islands, such as Saunders, Carcass, West Point and New Island, rockhopper penguins and black-browed albatrosses nest side by side on the cliff tops, and Sea Lion Island has elephant seals and sea lions, with orcas sometimes hunting offshore. Commerson's dolphins play in the bays.",
+    "Visitors arrive by air at Mount Pleasant, near Stanley, or on the Antarctic and South Atlantic cruise ships that call in summer. Small planes of the government air service hop between the islands, with each day's routes set by who needs to go where, and the few lodges on the outer islands are best booked as a package with the flights. The islands are quiet and safe, and the last minefields from 1982 were cleared in 2020."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Elephant seals pup on the beaches and the penguins come ashore to court and lay their eggs. Lodges reopen from about October. Cool and changeable, with long days by November."
+      },
+      {
+        "name": "Summer",
+        "months": [12, 1, 2],
+        "text": "The warmest weather and the most daylight, with penguin chicks hatching and growing in the colonies and albatross chicks on the nests. Cruise ships call in Stanley, so book lodges and flights early."
+      },
+      {
+        "name": "Autumn",
+        "months": [3, 4],
+        "text": "Quieter, cooler and often calm. The colonies thin out as the penguins moult and leave, and the rockhoppers have mostly gone by late April."
+      },
+      {
+        "name": "Winter",
+        "months": [5, 6, 7, 8],
+        "text": "Cold, with short days, frost and occasional snow. Many lodges close, and only the king and gentoo penguins stay on through the winter."
+      }
+    ],
+    "weather": "The Falklands have a cool, windy, oceanic climate with no great extremes. Summer days in Stanley reach about 13–17°C and winter days about 2–5°C. Rainfall is low, around 600 mm a year, but showers and drizzle come on many days, and the wind blows from the west almost constantly. The weather changes fast, sometimes giving four seasons in a day. The summer sun is strong and burns quickly, even when the air feels cool.",
+    "festivals": [
+      {
+        "name": "The penguin season",
+        "place": "Across the islands",
+        "when": "Usually from October to March",
+        "months": [10, 11, 12, 1, 2, 3],
+        "text": "Penguins come ashore to breed from about October, chicks hatch from about December, and the colonies are busiest and noisiest in the height of summer. King penguins can be seen at Volunteer Point all year."
+      },
+      {
+        "name": "Camp Sports",
+        "place": "A settlement in Camp, chosen each year",
+        "when": "Usually in February or March, after the shearing",
+        "months": [2, 3],
+        "text": "A few days of horse racing, sheepdog trials and other contests that bring farming families together from across the islands, with a dance in the evening."
+      },
+      {
+        "name": "Liberation Day",
+        "place": "Stanley",
+        "when": "14 June",
+        "months": [6],
+        "text": "Stanley remembers the end of the 1982 war with a service at the Liberation Memorial on its waterfront, and the islands take the day off."
+      },
+      {
+        "name": "Battle Day",
+        "place": "Stanley",
+        "when": "8 December",
+        "months": [12],
+        "text": "A public holiday remembering the naval Battle of the Falkland Islands in 1914, during the First World War, with a ceremony at its memorial in Stanley."
+      },
+      {
+        "name": "The Christmas races",
+        "place": "Stanley racecourse",
+        "when": "26 and 27 December",
+        "months": [12],
+        "text": "Horse races and sports days at the racecourse west of the town, the social highlight of Stanley's year."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Stanley and East Falkland",
+        "text": "The capital, the battlefields of 1982 on the hills around it, Gypsy Cove with its Magellanic penguins a short drive from town, and Volunteer Point's king penguins. Most cruise passengers see only this side."
+      },
+      {
+        "name": "West Falkland and the outer islands",
+        "text": "Saunders, Carcass, West Point, New Island, Pebble and Sea Lion Island, reached by the small planes. Farm lodges and the biggest seabird colonies, with albatrosses, rockhoppers and seals. Only open in the summer season, from about October to April."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Islanders are friendly and direct. In Camp, drivers wave to every vehicle they pass, and in a community this small people soon want to know where you're staying and what you've seen. A simple \"Hello\" and a handshake are the usual greeting.",
+    "etiquette": [
+      "Keep at least 6 m from penguins, seals and nesting birds, and never step between them and the sea.",
+      "Almost all land is privately owned farmland: ask before you walk on it, and leave gates as you find them.",
+      "Clean your boots and bags before visiting each island, to avoid carrying seeds, soil or rodents to islands kept free of them.",
+      "The 1982 war is within living memory: treat its memorials, battlefields and graves with respect.",
+      "Drive slowly on the gravel roads, and don't cross the peat off-track unless you're with a local guide.",
+      "Plans depend on the weather: flights and boat trips can be cancelled at short notice, so allow spare days."
+    ],
+    "tipping": "Not expected. Some visitors tip guides and drivers on a good wildlife day, but there's no custom to follow.",
+    "dress": "Windproof and waterproof outer layers, with a warm fleece, hat and gloves even in summer. Walking boots for the peat and tussac grass, sunglasses and strong sun cream. Stanley is informal.",
+    "food": [
+      {
+        "name": "Falkland lamb and mutton",
+        "text": "Sheep farming built the islands, and lamb and mutton are on every table. Mutton was once eaten so often that islanders still call it \"365\", for every day of the year."
+      },
+      {
+        "name": "Squid and fish",
+        "text": "Fishing licences for squid and toothfish earn the islands most of their income, and calamari, toothfish and fish and chips appear on menus in Stanley."
+      },
+      {
+        "name": "Smoko",
+        "text": "The mid-morning or afternoon tea break, with home-made cakes, scones and biscuits. On a farm stay, it's laid on generously."
+      },
+      {
+        "name": "Diddle-dee jam",
+        "text": "Jam or jelly made from the small red berries of diddle-dee, a heather-like shrub that covers much of Camp."
+      },
+      {
+        "name": "Upland goose",
+        "text": "The common wild goose of the islands, once a staple of Camp cooking, sometimes served roasted or as a pâté."
+      }
+    ],
+    "phrases": {
+      "language": "Falklands English",
+      "intro": "English is all you need, but island life has words of its own, some of them inherited from the South American gauchos who once worked the farms.",
+      "items": [
+        { "phrase": "Camp", "meaning": "Everywhere outside Stanley (from the Spanish \"campo\")" },
+        { "phrase": "Kelper", "meaning": "A Falkland Islander (informal)" },
+        { "phrase": "Smoko", "meaning": "A tea break, with cake" },
+        { "phrase": "365", "meaning": "Mutton" },
+        { "phrase": "Diddle-dee", "meaning": "A low shrub with red berries, used for jam" },
+        { "phrase": "Tussac", "meaning": "The tall tussock grass of the coasts, home to seabirds and sea lions" },
+        { "phrase": "Jackass penguin", "meaning": "The Magellanic penguin, named for its braying call" },
+        { "phrase": "Johnny rook", "meaning": "The striated caracara, a bold, curious bird of prey" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q9648",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Falkland Islands pound (£, FKP), at par with the pound sterling. UK notes and coins are taken everywhere too, but Falklands notes aren't accepted in the UK.",
+        "sources": [{ "property": "P38", "values": ["Q330044"] }],
+        "note": "Wikidata gives the Falkland Islands pound only; the page adds that sterling, to which it is fixed at par, is used alongside it."
+      },
+      {
+        "key": "languages",
+        "text": "English",
+        "sources": [{ "property": "P37", "values": ["Q7979"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Falkland Islands Time, UTC−3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6513"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police, fire and ambulance",
+        "sources": [],
+        "note": "Wikidata's item has no emergency number statement; the page gives 999, the islands' emergency number, as in the UK."
+      },
+      {
+        "key": "callingCode",
+        "text": "+500",
+        "sources": [{ "property": "P474", "values": ["+500"] }]
+      }
+    ]
+  }
+}

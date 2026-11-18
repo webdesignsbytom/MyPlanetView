@@ -1,0 +1,190 @@
+{
+  "code": "NI",
+  "slug": "nicaragua",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Buenas!", "Nicaragua", "¡Dale pues!"],
+  "summary": "Colonial Granada and León, a twin-volcano island in a vast lake, and surf on the Pacific.",
+  "overview": [
+    "Nicaragua is the largest country in Central America, with a string of volcanoes along its Pacific side and two great lakes inland. Most trips follow that western strip. Granada, on the shore of Lake Nicaragua, has brightly painted colonial streets and boat trips among Las Isletas, hundreds of small islands just offshore. León, the old university city, has the largest cathedral in Central America, whose white roof you can walk on, and is the base for sliding down the black gravel of Cerro Negro on a board. At Masaya, you can drive to the rim of an active crater, and the Laguna de Apoyo, a crater lake between Granada and Masaya, is warm and clear for swimming.",
+    "Ometepe, an island in Lake Nicaragua made of two volcanoes, Concepción and Maderas, is reached by ferry from San Jorge and is best explored by scooter or bicycle. On the Pacific coast, San Juan del Sur and the beaches around it are the surf centre. The cooler northern hills around Matagalpa and Estelí grow coffee and tobacco, and the Caribbean coast is another world, English-speaking and Afro-Caribbean, with the Corn Islands reached by small plane from Managua and then, for Little Corn, a fast boat.",
+    "Old school buses and minibuses run between all the western towns cheaply, and tourist shuttles link Granada, León and San Juan del Sur. Distances on the Pacific side are short: Granada to León is about three hours by road.",
+    "Some governments advise their citizens to reconsider travel to Nicaragua, or to take particular care there. As conditions can change quickly, read your own government's latest advice before you travel, and keep away from demonstrations."
+  ],
+  "whenToGo": {
+    "stripLabel": "The Pacific side, where most visitors go. The Caribbean coast and the Corn Islands are wetter, with a pattern of their own described below.",
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "avoid", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season (verano)",
+        "months": [12, 1, 2, 3],
+        "text": "Sunny and dry, with fresh breezes off the lakes and steady offshore winds on the Pacific beaches. The hills turn brown, the volcano trails are firm, and Christmas and New Year are busy."
+      },
+      {
+        "name": "Hot season",
+        "months": [4, 5],
+        "text": "The hottest weeks, often above 35°C in León and Managua, with hazy skies. Semana Santa sends much of the country to the beach. The first rains usually arrive in late May."
+      },
+      {
+        "name": "Rainy season (invierno)",
+        "months": [6, 7, 8, 9, 10, 11],
+        "text": "Afternoon thunderstorms and green countryside, usually with a drier spell in July or August. The Pacific surf is at its biggest. September and October are the wettest months, when tropical storms can bring floods, and Ometepe's volcano trails become slippery mud."
+      }
+    ],
+    "weather": "The Pacific lowlands are hot all year, with days of 30–35°C; León is one of the hottest cities in the region. The northern highlands around Matagalpa and Estelí, at about 700–900 m, are fresher, with cool nights. On the Pacific side the dry season runs from about December to April and the rains from May to November. The Caribbean side is far wetter, with rain in most months and the most from about June to December; hurricanes are possible there from June to November.",
+    "festivals": [
+      {
+        "name": "Semana Santa (Holy Week)",
+        "place": "Across Nicaragua",
+        "when": "Palm Sunday to Easter Sunday (21–28 March in 2027)",
+        "months": [3, 4],
+        "text": "Processions in León, Granada and the villages, and beaches and buses crowded all week. Offices and many shops close from Thursday."
+      },
+      {
+        "name": "Palo de Mayo",
+        "place": "Bluefields and the Caribbean coast",
+        "when": "All of May",
+        "months": [5],
+        "text": "The Afro-Caribbean maypole festival: a month of dancing, parades and music around ribbon-hung maypoles, ending in a big street carnival."
+      },
+      {
+        "name": "Fiestas de Santo Domingo",
+        "place": "Managua",
+        "when": "1–10 August",
+        "months": [8],
+        "text": "A small image of Santo Domingo is carried through the city with dancers, some painted black with oil or dressed as devils and bulls, and the crowds follow it all day."
+      },
+      {
+        "name": "National holidays",
+        "place": "Across Nicaragua",
+        "when": "14 and 15 September",
+        "months": [9],
+        "text": "14 September marks the battle of San Jacinto in 1856 and 15 September independence from Spain in 1821. School bands march in every town."
+      },
+      {
+        "name": "Fiestas de San Jerónimo",
+        "place": "Masaya",
+        "when": "From 30 September into December",
+        "months": [9, 10, 11, 12],
+        "text": "One of the longest festivals in the Americas, in a town proud of its folk dance: processions for the patron saint, marimba music and the Torovenado, a masked parade that mocks the powerful."
+      },
+      {
+        "name": "La Purísima and La Gritería",
+        "place": "Across Nicaragua, biggest in León",
+        "when": "The evening of 7 December",
+        "months": [12],
+        "text": "Families build altars to the Virgin Mary in their doorways. Crowds go from house to house shouting \"¿Quién causa tanta alegría?\" (\"Who causes so much joy?\"), answer \"¡La concepción de María!\", and are given sweets, fruit or small gifts."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Pacific side",
+        "text": "Granada, León, Masaya, Ometepe and the surf beaches. Hot, with a clear dry season from December to April, and the main strip above."
+      },
+      {
+        "name": "The northern highlands",
+        "text": "Matagalpa, Jinotega and Estelí, with coffee farms, cigar factories and the cloud forest of Miraflor. Cooler and greener than the lowlands, with rain from about May to October and misty mornings in the coffee harvest, from about November to February."
+      },
+      {
+        "name": "The Caribbean coast and the Corn Islands",
+        "text": "Wet and green, with rain in most months and the heaviest from about June to December. The Corn Islands are at their sunniest and calmest from about February to May, the best months for snorkelling."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Nicaraguans, who call themselves Nicas, greet with a handshake and \"¡Buenas!\", and female friends exchange a kiss on the cheek. \"Vos\" replaces \"tú\" between friends, and \"usted\" is used with older people and strangers. Don't be surprised to be called \"chele\" or \"chela\": it's an everyday, friendly name for anyone fair-skinned.",
+    "etiquette": [
+      "People often point with their lips, a quick pout towards whatever they mean; a wrinkled nose means \"What?\"",
+      "Keep cameras away from police, soldiers and government buildings, and stay clear of any demonstration.",
+      "Market stallholders and villagers usually agree to a photo if you ask, and mind if you don't.",
+      "Haggle gently at Masaya's craft market, but not in shops.",
+      "Refill from big jugs of purified water rather than the tap, and use the bin beside the toilet for paper.",
+      "Carry a copy of your passport and the page with your entry stamp."
+    ],
+    "tipping": "Many restaurants add a 10% \"propina\" to the bill; check before adding more. Tip guides, drivers and boat crews.",
+    "dress": "Light clothes for the hot lowlands, with a fleece for the northern hills and the boat to Ometepe. Long trousers and sturdy shoes for the volcano climbs; for Cerro Negro, boarding operators lend overalls and goggles. Cover up away from the beach.",
+    "food": [
+      {
+        "name": "Gallo pinto",
+        "text": "Rice fried with small red beans, onion and sweet pepper, eaten with almost every breakfast, often alongside eggs, fresh cheese and sweet plantain."
+      },
+      {
+        "name": "Nacatamal",
+        "text": "A large tamale of corn dough stuffed with pork, rice, potato, tomato and mint, wrapped and steamed in a plantain leaf: the classic Sunday breakfast, with coffee."
+      },
+      {
+        "name": "Vigorón",
+        "text": "Granada's street dish: boiled cassava topped with crisp pork crackling and a tangy cabbage salad, served on a banana leaf."
+      },
+      {
+        "name": "Indio viejo",
+        "text": "A thick stew of shredded beef cooked with corn dough, onion, tomato and sour orange, finished with mint."
+      },
+      {
+        "name": "Quesillo",
+        "text": "A warm tortilla wrapped round soft, stringy cheese, topped with pickled onion and cream, and often served in a plastic bag. Roadside stalls on the road between Managua and León sell it."
+      },
+      {
+        "name": "Pinolillo",
+        "text": "A drink of toasted cornmeal and cacao with cinnamon, mixed with water or milk; it gives Nicaraguans another nickname, pinoleros. Flor de Caña rum and Toña beer are the other national drinks."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Nicaraguan)",
+      "intro": "Little English is spoken away from the tourist centres, except on the Caribbean coast, where many people grew up speaking an English creole.",
+      "items": [
+        { "phrase": "¡Buenas!", "say": "BWEH-nahs", "meaning": "Hello (morning, noon or night)" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAHN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "¿Me regala la cuenta?", "say": "meh reh-GAH-lah lah KWEN-tah", "meaning": "Could I have the bill? (\"Would you give me the bill?\")" },
+        { "phrase": "¡Dale pues!", "say": "DAH-leh PWEHS", "meaning": "OK then; go ahead" },
+        { "phrase": "¡Chocho!", "say": "CHOH-choh", "meaning": "Wow! Goodness! (slang)" },
+        { "phrase": "Chele / chela", "say": "CHEH-leh / CHEH-lah", "meaning": "A fair-skinned person (friendly)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q811",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Nicaraguan córdoba (C$, NIO). US dollars are widely taken, with change often given in córdobas.",
+        "sources": [{ "property": "P38", "values": ["Q207312"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. On the Caribbean coast, English creole, Miskito, Mayangna and Garifuna are spoken and have official use in their regions.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Standard Time, UTC−6, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5385", "Q63286068"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "118 for police; 128 for an ambulance; 115 or 120 for the fire service",
+        "sources": [{ "property": "P2852", "values": ["Q11185210", "Q25648801", "Q25648805", "Q25648851"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+505",
+        "sources": [{ "property": "P474", "values": ["+505"] }]
+      }
+    ]
+  }
+}

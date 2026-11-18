@@ -1,12 +1,13 @@
 import React, { memo, useCallback, useEffect, useId, useRef, useState } from 'react';
 // Icons
-import { FaArrowLeft, FaMapPin } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa';
 // Hooks
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import useCountryMapData from '@/hooks/useCountryMapData';
 // Components
 import MapZoomControls from '@/components/map/MapZoomControls';
 import { StarBadgeSymbols } from '@/components/map/StarBadge';
+import { MomentSpotIcon } from '@/components/map/MomentSpotPins';
 import StatePopover from './StatePopover';
 import CountryMapLoading from './CountryMapLoading';
 import CountryFlag from './CountryFlag';
@@ -214,7 +215,8 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
       }}
       className={`${placing ? 'btn-poster' : 'btn-paper'} grid-flow-col gap-2 [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:0.875rem] disabled:opacity-50`}
     >
-      <FaMapPin aria-hidden='true' className='self-center' />
+      {/* The pin as the map draws it: red, outlined in black */}
+      <MomentSpotIcon className='h-5 w-5 self-center' />
       {placing ? 'Cancel' : 'Add a pin'}
     </button>
   ) : null;
@@ -267,18 +269,19 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
         <div ref={headerRef} className='ticket-edge paper-aged pointer-events-auto grid max-w-full justify-items-center gap-2 px-4 py-2 text-center'>
           <div className='grid items-center justify-items-center gap-2 nophone:grid-cols-[auto_auto_auto] nophone:gap-4'>
             <div className='hidden nophone:grid'>{backToWorld}</div>
-            <div className='grid justify-items-center'>
-              <div className='grid grid-flow-col items-center gap-3'>
-                <CountryFlag code={code} name={name} />
+            {/* The flag beside the name and the count, the two lined up on the left */}
+            <div className='grid grid-flow-col items-center gap-3'>
+              <CountryFlag code={code} name={name} />
+              <div className='grid justify-items-start text-left'>
                 <h2 id={headingId} className='font-travel text-2xl uppercase leading-tight tracking-wide text-colour6'>
                   {name}
                 </h2>
+                {geo && info ? (
+                  <p className='text-sm font-medium' data-state-count=''>
+                    {marked} of {total} {total === 1 ? info[0] : info[1]} visited
+                  </p>
+                ) : null}
               </div>
-              {geo && info ? (
-                <p className='text-sm font-medium' data-state-count=''>
-                  {marked} of {total} {total === 1 ? info[0] : info[1]} visited
-                </p>
-              ) : null}
             </div>
             <div className='hidden nophone:grid'>{addPin}</div>
             <div className='grid grid-flow-col justify-center gap-2 nophone:hidden'>

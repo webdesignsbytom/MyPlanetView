@@ -1,0 +1,187 @@
+{
+  "code": "KZ",
+  "slug": "kazakhstan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Sälem", "Qazaqstan", "Qosh keldiniz"],
+  "summary": "The world's largest landlocked country: open steppe, Almaty's mountain lakes and Astana's skyline.",
+  "overview": [
+    "Kazakhstan is the largest landlocked country in the world, and most of it is open steppe and semi-desert, with mountains along its southern and eastern edges. Almaty, the biggest city and the capital until 1997, lies at the foot of the snowy Trans-Ili Alatau, with leafy streets, Soviet-era buildings and the Green Bazaar. The Medeu ice rink and the Shymbulak ski area are half an hour up the valley above it, and Big Almaty Lake, a turquoise reservoir among peaks, is close by. Longer trips east from Almaty reach Charyn Canyon, the Kolsai lakes, and Kaindy, a lake where the trunks of drowned spruce trees rise out of the water.",
+    "Astana, the capital, was built up on the northern steppe from the late 1990s, with landmarks such as the Baiterek tower and Khan Shatyr, a shopping centre inside a giant see-through tent. In the south, Turkistan has the mausoleum of Khoja Ahmed Yasawi, a 14th-century shrine with a turquoise dome. In the far west, Mangystau has white chalk cliffs, canyons and underground mosques cut into the rock. Distances are huge, Almaty and Astana alone being about a thousand kilometres apart, so long journeys mean overnight trains or domestic flights. Russian is the everyday language of the cities, and little English is spoken outside hotels and tourist businesses."
+  ],
+  "whenToGo": {
+    "stripLabel": "Almaty and the mountains of the south-east, where most visitors go. The northern steppe and the hot south differ, and each has a strip of its own below.",
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Nauryz comes in March, as the snow melts and the roads turn muddy. In April and May wild tulips flower on the southern steppe, and Almaty is green, warm and sometimes wet, while snow still lies on the high passes."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "The mountains open up for hiking, and the high lakes are at their best. Almaty reaches about 30°C, the north is warm and green, and the south and the deserts are hot, often near 40°C."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is clear and golden, with apples and melons in the markets. The cold comes early: snow can fall in the north by late October, and November is grey across most of the country."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Long and fierce in the north, where Astana's nights can fall below −30°C and the wind makes it feel colder. Almaty is milder but still below freezing, with smog on still days; Shymbulak has skiing from about December to March."
+      }
+    ],
+    "weather": "One of the most continental climates anywhere, a long way from any ocean: hot summers, bitter winters and little rain. Astana has January averages around −14°C and summer days of 25–30°C. Almaty, sheltered by the mountains, is milder, around −5°C in January and 30°C in July, and gets most of its rain in spring. The south, around Shymkent and Turkistan, has the shortest winters and the hottest summers.",
+    "festivals": [
+      {
+        "name": "Orthodox Christmas",
+        "place": "Across Kazakhstan",
+        "when": "7 January",
+        "months": [1],
+        "text": "A public holiday kept by the country's large Russian Orthodox community, with services in the cathedrals of Almaty and Astana."
+      },
+      {
+        "name": "Nauryz",
+        "place": "Across Kazakhstan",
+        "when": "21–23 March, with public holidays",
+        "months": [3],
+        "text": "The biggest holiday of the year, welcoming spring and the new year. Yurts go up in city squares, families cook nauryz kozhe, a soup of seven ingredients, and there are concerts, horse games and wrestling."
+      },
+      {
+        "name": "Kurban Ait (Eid al-Adha)",
+        "place": "Across Kazakhstan",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Families slaughter a sheep and share the meat with relatives, neighbours and those in need; the first day is a public holiday."
+      },
+      {
+        "name": "Capital Day",
+        "place": "Astana",
+        "when": "6 July",
+        "months": [7],
+        "text": "Astana's birthday and a public holiday, with concerts on the main boulevards and fireworks over the city at night."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Kazakhstan",
+        "when": "16 December",
+        "months": [12],
+        "text": "Kazakhstan declared independence on this day in 1991, the last of the Soviet republics to do so. A public holiday, with concerts and fireworks."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Astana and the northern steppe",
+        "months": ["avoid", "avoid", "avoid", "good", "best", "best", "best", "best", "best", "good", "avoid", "avoid"],
+        "text": "Warm summers with long evenings, good for Astana and for the pine forests and lakes of Burabay, three hours north. From November to March the cold is extreme and the wind bites, and few visitors come."
+      },
+      {
+        "name": "Turkistan, Shymkent and the south",
+        "months": ["good", "good", "good", "best", "best", "good", "avoid", "avoid", "best", "best", "good", "good"],
+        "text": "The warmest part of the country, on the old Silk Road. Spring and autumn are pleasant for Turkistan's mausoleum and the ruins of Otrar; July and August are very hot. Winters are short and mild by Kazakh standards, with frosty nights."
+      },
+      {
+        "name": "Mangystau and the west",
+        "text": "A desert region on the Caspian Sea, reached by flying to Aktau. Most trips are by 4×4 into canyons and salt flats, best in spring and autumn; the summers are scorching, and there's little shade."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Sälemetsiz be\" is the polite hello in Kazakh, and \"Zdravstvuyte\" in Russian works everywhere. Men shake hands, sometimes holding the other's hand in both of theirs, and greet older people first. Don't shake hands across a doorway: it's thought to bring a quarrel.",
+    "etiquette": [
+      "Hospitality is generous: the table (dastarkhan) is laid with far more than anyone can eat. At a feast, an honoured guest may be offered the boiled sheep's head and is expected to share pieces round the table.",
+      "Tea is poured into small bowls, only half full, so it stays hot and can be topped up. A bowl filled to the brim can be a hint that it's time to leave.",
+      "Bread is treated with respect: don't put it upside down or throw it away.",
+      "Shoes come off at the door of a home, and sit so your feet don't point at anyone.",
+      "People are usually happy to be photographed if you ask first; military sites and border posts are off limits."
+    ],
+    "tipping": "Restaurants in Almaty and Astana often add a service charge of about 10% to the bill; where they don't, leaving about 10% is usual. Tip guides and drivers at the end of a trip.",
+    "dress": "City clothes much as in Europe. For winter in Astana you need serious cold-weather gear: a down coat, hat, gloves and warm boots. In summer, bring sun protection for the steppe and layers for cold nights in the mountains. Cover shoulders and knees in mosques, and women cover their hair.",
+    "food": [
+      {
+        "name": "Beshbarmak",
+        "text": "The national dish: boiled horse meat or mutton laid over wide sheets of pasta with onions, served with the meat broth (sorpa) in bowls. The name means \"five fingers\", as it was eaten by hand."
+      },
+      {
+        "name": "Kazy",
+        "text": "Horse-meat sausage made with the rib meat and fat, sliced cold for a feast. Horse meat is prized and served at every celebration."
+      },
+      {
+        "name": "Baursak",
+        "text": "Puffy squares or balls of fried dough, piled on the table at every meal and eaten with tea."
+      },
+      {
+        "name": "Manty",
+        "text": "Large steamed dumplings of minced meat and onion, sometimes with pumpkin, eaten with sour cream or a chilli sauce."
+      },
+      {
+        "name": "Kumys and shubat",
+        "text": "Fermented mare's milk and fermented camel's milk: slightly fizzy, sour and an acquired taste, sold at roadside stalls and markets in summer."
+      },
+      {
+        "name": "Apples",
+        "text": "Wild apples grow in the mountains around Almaty, which is thought to be where the apple came from. Big Aport apples are the city's old pride, at their best in September."
+      }
+    ],
+    "phrases": {
+      "language": "Kazakh",
+      "intro": "Kazakh is written in Cyrillic letters, with a move to Latin letters planned. In the cities many people speak Russian more often than Kazakh, and \"spasibo\" (thank you) is understood everywhere.",
+      "items": [
+        { "phrase": "Salemetsiz be (Сәлеметсіз бе)", "say": "sah-leh-met-SIZ beh", "meaning": "Hello (polite)" },
+        { "phrase": "Rakhmet (Рахмет)", "say": "rakh-MET", "meaning": "Thank you" },
+        { "phrase": "Iä / Zhoq (Иә / Жоқ)", "say": "ee-YAH / ZHOHK", "meaning": "Yes / No" },
+        { "phrase": "Keshiriniz (Кешіріңіз)", "say": "keh-shee-reen-IZ", "meaning": "Excuse me; sorry" },
+        { "phrase": "Qansha turady? (Қанша тұрады?)", "say": "kahn-SHAH too-rah-DUH", "meaning": "How much is it?" },
+        { "phrase": "Dämdi (Дәмді)", "say": "dam-DEE", "meaning": "Tasty" },
+        { "phrase": "Sau bolynyz (Сау болыңыз)", "say": "SOW boh-luh-NUHZ", "meaning": "Goodbye (polite)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q232",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Kazakhstani tenge (₸, KZT). Cards and phone payments are widely used in the cities; carry cash in villages.",
+        "sources": [{ "property": "P38", "values": ["Q173751"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Kazakh, the state language, and Russian, used officially alongside it and the common language of the cities.",
+        "sources": [{ "property": "P37", "values": ["Q9252", "Q7737"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+5 across the whole country, all year (no summer time). The east, Almaty and Astana included, was on UTC+6 until March 2024.",
+        "sources": [{ "property": "P421", "values": ["Q6806"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; also 101 for fire, 102 for police and 103 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648794", "Q25648798", "Q25648811"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+7 (shared with Russia)",
+        "sources": [{ "property": "P474", "values": ["+7"] }]
+      }
+    ]
+  }
+}

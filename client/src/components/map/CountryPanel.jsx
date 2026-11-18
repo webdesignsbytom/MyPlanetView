@@ -129,6 +129,10 @@ function CountryPanel({
 
   if (!country) return null;
   const status = visit?.status || null;
+  // Moments belong to a place you've been: the section shows once the country is visited or
+  // lived in (18 Nov 2026, the user's wish), or when it has some already (a status cleared
+  // later never hides them)
+  const showMoments = countsAsVisited(status) || moments.moments.length > 0;
   const special = isSpecialPlace(code);
   const continent = CONTINENT_LABELS[country.continent];
 
@@ -194,6 +198,14 @@ function CountryPanel({
     <CountryTicket
       title={country.name}
       kicker={kicker}
+      // How many of its states the map has been to, under its name
+      subtitle={
+        stateInfo?.count > 1 && statesMarked !== null ? (
+          <span data-states-marked=''>
+            {statesMarked} of {stateInfo.count} {stateInfo.word[1]} visited{mapCode !== code ? ` in ${COUNTRY_BY_CODE[mapCode]?.name}` : ''}
+          </span>
+        ) : null
+      }
       // The country on its own, with its states and pins (a region opens its country's)
       action={
         mapCode && onOpenCountryMap ? (
@@ -225,11 +237,6 @@ function CountryPanel({
             <ExpeditionStampIcon className='h-4 w-4' />
             Special place
           </span>
-        </p>
-      ) : null}
-      {stateInfo?.count > 1 && statesMarked !== null ? (
-        <p className='text-sm font-medium' data-states-marked=''>
-          {statesMarked} of {stateInfo.count} {stateInfo.word[1]} visited{mapCode !== code ? ` in ${COUNTRY_BY_CODE[mapCode]?.name}` : ''}
         </p>
       ) : null}
       {parent ? (
@@ -280,12 +287,15 @@ function CountryPanel({
         </section>
       ) : (
         <>
-      <section className='grid gap-2' aria-labelledby={`moments-${code}`}>
-        <h3 id={`moments-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
-          Moments
-        </h3>
+      {showMoments ? (
+      <section className='grid' aria-labelledby={`moments-${code}`}>
         <MomentList
           inPanel
+          header={
+            <h3 id={`moments-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
+              Moments
+            </h3>
+          }
           list={moments}
           canEdit={canEdit && Boolean(mapId)}
           travellers={travellers}
@@ -306,6 +316,7 @@ function CountryPanel({
           }}
         />
       </section>
+      ) : null}
 
       <section className='grid gap-2' aria-labelledby={`photos-${code}`}>
         <h3 id={`photos-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
@@ -329,24 +340,29 @@ function CountryPanel({
             <span>Slideshow of {country.name}</span>
           </MapActionButton>
         ) : null}
-        {canEdit && onAddPhotos ? (
-          <MapActionButton onClick={() => onAddPhotos(code)}>Add photos from {country.name}</MapActionButton>
-        ) : null}
-        {(canEdit || locked) && photoSource?.mapId && photos.photos.length ? (
-          <PrintDownload inMapPanel scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
-        ) : null}
       </section>
         </>
       )}
 
-      {/* Partner offers for this country, only when asked for (every plan), before the
-          landmarks, whose list can be long */}
-      <TravelDesk
-        inMapPanel
-        countryCodes={deskCountries}
-        trip={plannedTrip && plannedTrip.stops.some((s) => s.countryCode === (parent ?? code)) ? plannedTrip : null}
-        onOpen={() => setDeskOpened(true)}
-      />
+      {/* Adding photos, the country's photos as a zip, and partner offers for it (every
+          plan, only when asked for), before the landmarks, whose list can be long: side by
+          side from lg, in equal columns that fill the row (18 Nov 2026, the user's wish:
+          "Add photos" joined it the same day), one to a row below */}
+      <div className='grid gap-2 lg:auto-cols-fr lg:grid-flow-col'>
+        {!parent && canEdit && onAddPhotos ? (
+          <MapActionButton onClick={() => onAddPhotos(code)}>Add photos from {country.name}</MapActionButton>
+        ) : null}
+        {!parent && (canEdit || locked) && photoSource?.mapId && photos.photos.length ? (
+          <PrintDownload inMapPanel fill scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
+        ) : null}
+        <TravelDesk
+          inMapPanel
+          fill
+          countryCodes={deskCountries}
+          trip={plannedTrip && plannedTrip.stops.some((s) => s.countryCode === (parent ?? code)) ? plannedTrip : null}
+          onOpen={() => setDeskOpened(true)}
+        />
+      </div>
 
       {/* A region's: its country's landmarks inside it (useLandmarks) */}
       <CountryLandmarks countryCode={code} moments={parent ? [] : moments.moments} />

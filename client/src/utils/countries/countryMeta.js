@@ -4,13 +4,19 @@
 // pages' code doesn't carry the whole country list.
 import { CompanyName } from '../constants/constants.js';
 import { COUNTRIES_PAGE_URL, countryPagePath } from '../constants/routes.js';
-import { MAX_DESCRIPTION, MIN_DESCRIPTION, listDescription, metaTitle } from '../seo/metaText.js';
+import { MAX_DESCRIPTION, MAX_TITLE, MIN_DESCRIPTION, listDescription, metaTitle } from '../seo/metaText.js';
 import { bestMonthsText } from './countryContent.js';
 import { COUNTRIES_SECTION } from './countryRoutes.js';
 
-// A country's name inside a sentence: "the United States", "the Netherlands"
-const WITH_THE = /^(United |Netherlands$|Philippines$|Bahamas$|Gambia$|Maldives$|Comoros$|Seychelles$|Vatican City$)|(Islands|Republic|Emirates)$/;
+// A country's name inside a sentence: "the United States", "the Netherlands", "the
+// Caribbean Netherlands", "the Republic of the Congo"
+const WITH_THE = /^(United |Philippines$|Bahamas$|Gambia$|Maldives$|Comoros$|Seychelles$|Vatican City$)|(Islands|Republic|Emirates|Netherlands|of the Congo)$/;
 export const nameInSentence = (name) => (WITH_THE.test(name) ? `the ${name}` : name);
+
+// The page's title, shortened for a long name so it's never cut mid-phrase ("Saint Vincent
+// and the Grenadines: Best Time to Visit")
+const TITLE_ENDINGS = [': Best Time to Visit and Local Customs', ': Best Time to Visit and Customs', ': Best Time to Visit'];
+const titleFor = (name) => TITLE_ENDINGS.map((ending) => `${name}${ending}`).find((title) => title.length <= MAX_TITLE) ?? name;
 
 // The first candidate within the description limits, else the first short enough (so
 // check-meta names the problem rather than printing a cut sentence)
@@ -32,7 +38,7 @@ export function countryPageMeta(content, name) {
 
   return {
     pageName: name,
-    title: metaTitle(`${name}: Best Time to Visit and Local Customs`, CompanyName),
+    title: metaTitle(titleFor(name), CompanyName),
     desc: pickDescription([`${lead} ${summary}`, `${lead} ${summary} Festivals, customs and tipping are covered too.`]),
     path: countryPagePath(content.slug),
   };

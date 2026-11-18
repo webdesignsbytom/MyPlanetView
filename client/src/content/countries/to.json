@@ -1,0 +1,148 @@
+{
+  "code": "TO",
+  "slug": "tonga",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Mālō e lelei", "Tonga"],
+  "summary": "The last Polynesian kingdom: royal tombs, Sundays kept by law and humpbacks calving off Vava'u.",
+  "overview": [
+    "Tonga is the last Polynesian kingdom with a king of its own: about 170 islands, some 36 of them lived on, in groups strung out from north to south, under a royal family that has reigned since the 1800s. Tongans are proud that their country was never colonised; Britain ran its foreign affairs as a protected state from 1900 to 1970, but Tonga kept its own king, government and land.",
+    "Tongatapu, the main island, has the capital, Nuku'alofa, with the white wooden Royal Palace by the sea, and old sites such as the Ha'amonga 'a Maui, a stone trilithon from around 1200, the terraced royal tombs (langi) at Lapaha and the Mapu'a 'a Vaca blowholes on the south coast. Vava'u, to the north, is a maze of sheltered channels and islets around the harbour town of Neiafu, a favourite stop for yachts. Ha'apai, between the two, is a scatter of low, quiet islands, and 'Eua, a short hop from Tongatapu, has sea cliffs and forest trails.",
+    "Sunday is protected by the constitution: shops, most businesses and domestic flights stop, and Tongans spend the day at church and at long family meals, so stock up on Saturday. Domestic flights and ferries link the island groups; the ferry from Tongatapu to Vava'u is an overnight trip."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Cooler, drier months",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Highs of 23–26°C on Tongatapu, cool nights and fresh trade winds: the most comfortable months for walking, sailing and diving. Humpback whales arrive from about July and stay into October."
+      },
+      {
+        "name": "Hotter, wetter months",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Humid, with highs around 29–30°C, heavy showers and the main risk of cyclones, highest from about January to March. Christmas and New Year bring thousands of Tongans home from New Zealand, Australia and the United States."
+      }
+    ],
+    "weather": "Tonga stretches about 800 km from north to south, and the south is noticeably cooler: Tongatapu, near the Tropic of Capricorn, has winter nights of 16–18°C, while Vava'u stays a few degrees warmer. The rainy months are November to April; Tongatapu gets about 1,700 mm a year, Vava'u more. Cyclones can strike in the wet season and have done serious damage in the past.",
+    "festivals": [
+      {
+        "name": "Emancipation Day",
+        "place": "Across Tonga",
+        "when": "4 June",
+        "months": [6],
+        "text": "A public holiday marking 1862, when King George Tupou I freed commoners from the control of the chiefs."
+      },
+      {
+        "name": "Heilala Festival",
+        "place": "Nuku'alofa",
+        "when": "Usually in early July, around the King's Birthday holiday on 4 July",
+        "months": [7],
+        "text": "Tonga's biggest festival, named after the red heilala, the national flower: the Miss Heilala pageant, brass bands, dancing, float parades and a night when torches are lit along the shore."
+      },
+      {
+        "name": "Humpback whale season",
+        "place": "Vava'u, Ha'apai and Tongatapu",
+        "when": "Usually from July to October",
+        "months": [7, 8, 9, 10],
+        "text": "Humpbacks travel north from Antarctic waters to give birth in Tonga's warm, sheltered bays. Swimming beside a mother and calf with a licensed operator, in small groups with a guide, is the reason many visitors come."
+      },
+      {
+        "name": "Constitution Day",
+        "place": "Across Tonga",
+        "when": "4 November",
+        "months": [11],
+        "text": "Marks the constitution of 1875, among the oldest still in force anywhere."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Mālō e lelei\" is the everyday hello, and \"Mālō\" on its own works as thanks or well done. Tongans are courteous and fairly formal, especially towards nobles and older people, and the Tongan language has separate respectful words for speaking to or about the king, the nobles and everyone else.",
+    "etiquette": [
+      "Sunday is sacred and protected by law: no trading and no work, and swimming or noise near villages is frowned on.",
+      "Going shirtless in public away from the beach is against the law, for men too.",
+      "Faikava, the evening kava circle, is mostly men sitting cross-legged round a big bowl, talking and singing late into the night. If you're invited, accept the cup when it comes and drink it down.",
+      "Don't touch anyone's head, and avoid standing over people who are seated, above all elders.",
+      "Visitors are welcome in church. Dress smartly, sit towards the back, and expect powerful unaccompanied singing."
+    ],
+    "tipping": "Not customary and not expected. Buying from family stalls or bringing a small gift are better ways to thank people.",
+    "dress": "Modest: Tongans cover shoulders and knees, and many wear a ta'ovala, a finely woven mat wrapped round the waist, to church and formal events; women may wear a kiekie, a waistband hung with woven strips. Visitors don't need either, but a long skirt or trousers and a shirt with sleeves are respectful in town and church. Black clothes are worn for months after a death in the family.",
+    "food": [
+      {
+        "name": "'Ota 'ika",
+        "text": "Raw fish marinated in lemon or lime, mixed with coconut cream, tomato, onion and sometimes chilli."
+      },
+      {
+        "name": "Lu pulu",
+        "text": "Corned beef with onion and coconut cream, wrapped in taro leaves and baked in an 'umu, an earth oven; lu sipi is the same with mutton flaps."
+      },
+      {
+        "name": "Kai pola",
+        "text": "A feast laid out on long trays woven from coconut fronds: roast suckling pig, lobster, yams, taro, fish and fruit, served on Sundays and at weddings and church events."
+      },
+      {
+        "name": "Faikakai",
+        "text": "Soft dumplings of breadfruit, taro or flour, served in a thick sauce of caramelised sugar and coconut cream."
+      }
+    ],
+    "phrases": {
+      "language": "Tongan",
+      "intro": "Most Tongans speak good English, above all in Nuku'alofa and Neiafu, but Tongan is spoken in homes and churches and debated in parliament.",
+      "items": [
+        { "phrase": "Mālō e lelei", "say": "MAH-loh eh LEH-lay", "meaning": "Hello" },
+        { "phrase": "Fēfē hake?", "say": "FEH-feh HAH-keh", "meaning": "How are you?" },
+        { "phrase": "Sai pē, mālō", "say": "SIGH peh, MAH-loh", "meaning": "Fine, thanks" },
+        { "phrase": "Mālō 'aupito", "say": "MAH-loh ow-PEE-toh", "meaning": "Thank you very much" },
+        { "phrase": "Kātaki", "say": "kah-TAH-kee", "meaning": "Please" },
+        { "phrase": "'Io / 'Ikai", "say": "EE-oh / EE-kai", "meaning": "Yes / No" },
+        { "phrase": "'Alu ā", "say": "AH-loo ah", "meaning": "Goodbye (to someone leaving)" },
+        { "phrase": "Nofo ā", "say": "NOH-foh ah", "meaning": "Goodbye (to someone staying)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q678",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Tongan pa'anga (T$, TOP), divided into 100 seniti. Cards are taken in larger hotels and shops in Nuku'alofa and Neiafu; elsewhere, cash.",
+        "sources": [{ "property": "P38", "values": ["Q4613"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Tongan and English, both official",
+        "sources": [{ "property": "P37", "values": ["Q34094", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (two slanted flat pins, as in Australia), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+13, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q7118", "Q7122271"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "922 for the police, 933 for an ambulance, 999 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648915", "Q25648911", "Q3086706"] }],
+        "note": "Wikidata also gives 911, 927 and 928. The page gives the three numbers Australian, Canadian and Irish travel advice agree on."
+      },
+      {
+        "key": "callingCode",
+        "text": "+676",
+        "sources": [{ "property": "P474", "values": ["+676"] }]
+      }
+    ]
+  }
+}

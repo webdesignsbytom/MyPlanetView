@@ -29,7 +29,20 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { DOTS, GOLAN_LINE, GOLAN_POINT, JOINS, LEAVE_OUT, NATIONS, cutRing, insideRing, placeOfPolygon, ringsOfGeometry } from './lib/mapPlaces.mjs';
+import {
+  DOTS,
+  GOLAN_LINE,
+  GOLAN_POINT,
+  JOINS,
+  LEAVE_OUT,
+  NATIONS,
+  WESTERN_SAHARA_NORTH,
+  cutRing,
+  insideRing,
+  placeOfPolygon,
+  ringsOfGeometry,
+  splitWesternSahara,
+} from './lib/mapPlaces.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const OUT_DIR = path.join(ROOT, 'client/src/utils/map/countryMaps');
@@ -145,6 +158,9 @@ const codeOf = (p) => {
   const iso = cleanIso(p.iso_3166_2);
   return /^[A-Z]{2}-[A-Z0-9]{1,3}$/.test(iso) && isoCount.get(iso) === 1 ? iso : p.adm1_code;
 };
+// Names that would mislead on the map: Natural Earth calls Western Sahara's area east of the
+// berm "Western Sahara", which is the whole territory on this map
+const NAME_OF_STATE = { 'EH-X01': 'East of the berm' };
 const kindOf = (p) => (p.type_en || '').replace(/\(.*?\)/g, '').trim().split(/\s+/).pop()?.toLowerCase() || null;
 
 const pieces = []; // { map, code, name, kind, label: [lat, lon], polygon, place }
@@ -171,7 +187,23 @@ for (const f of admin1.features) {
   }
   const nation = place === 'GB' ? (NATIONS[p.gu_a3] ?? null) : null;
   const code = codeOf(p);
-  const info = { name: p.name, kind: kindOf(p), label, place, nation };
+  const info = { name: NAME_OF_STATE[codeOf(p)] ?? p.name, kind: kindOf(p), label, place, nation };
+  // Western Sahara (lib/mapPlaces.mjs): a Moroccan region's part south of the territory's
+  // border is Western Sahara's, under a code of its own (MA-15's is EH-15), each part
+  // labelled where its own label point is, else in its middle
+  if (place === 'MA') {
+    const south = label[0] < WESTERN_SAHARA_NORTH;
+    const ehCode = `EH-${code.replace(/^MA-/, '')}`;
+    for (const polygon of ringsOfGeometry(f.geometry)) {
+      for (const [piecePlace, ring] of splitWesternSahara(polygon[0])) {
+        const inSahara = piecePlace === 'EH';
+        pieces.push({ ...info, code: inSahara ? ehCode : code, place: piecePlace, label: inSahara === south ? label : null, polygon: [ring] });
+        if (inSahara && !named.has(ehCode)) named.set(ehCode, { ...info, name: ehCode === 'EH-14' ? 'Es-Semara' : info.name, place: 'EH', label: south ? label : null });
+      }
+    }
+    if (!named.has(code)) named.set(code, { ...info, label: south ? null : label });
+    continue;
+  }
   for (const polygon of ringsOfGeometry(f.geometry)) {
     // The Golan: Israel's district cut along the 1967 line, its eastern piece Quneitra's
     if (place === 'IL' && insideRing(GOLAN_POINT[0], GOLAN_POINT[1], polygon[0])) {

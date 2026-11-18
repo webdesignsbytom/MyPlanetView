@@ -135,7 +135,7 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
 - **Accepted keys:**
   - `style`: `animated` or `old-map` (`jupiter` and `galaxy` were taken out on 16 Nov 2026 and are now refused; a profile that saved one keeps it until the next save, and the client opens it as `animated`);
   - `mapType`: `regular`, or `detailed` (country names and grid lines at every zoom);
-  - `landmarkPins`: `zoomed` (the default: from zoom 3), `always`, `stamped` (only the landmarks stamped in the map's passport) or `off` (17 Nov 2026); any other value is refused;
+  - `landmarkPins`: `zoomed` (from zoom 3), `always`, `stamped` (the default since 18 Nov 2026: only the landmarks stamped in the map's passport) or `off` (17 Nov 2026); any other value is refused;
   - the booleans `showGrid`, `showGridLabels`, `animatedSea`, `sunAndMoon`, `showCountryNames` and `hoverPreview`;
   - from my_planet, the booleans `showVisited` and `showUnvisited` (when off, those countries fade back on the map) and `showUserBanner` (the map's banner at the top);
   - `showAntarctica` (on unless set to `false`): draws Antarctica and the two South Poles, and extends the map down to them. It changes only the view, never visits or stats;

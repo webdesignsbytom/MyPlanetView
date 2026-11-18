@@ -1,0 +1,186 @@
+{
+  "code": "ZM",
+  "slug": "zambia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Muli shani?", "Zambia", "Mwaiseni"],
+  "summary": "Victoria Falls from the Zambian bank, walking safaris in South Luangwa and canoes on the Zambezi.",
+  "overview": [
+    "Zambia is a landlocked country of high plateau, big rivers and wild, uncrowded parks. Its best-known sight is Victoria Falls, which it shares with Zimbabwe. From Livingstone, on the Zambian bank, paths lead along the Eastern Cataract and over the Knife-Edge Bridge through the spray, and when the water is low, guided trips from Livingstone Island swim in a rock pool at the very lip of the falls. The local name, Mosi-oa-Tunya, means \"the smoke that thunders\".",
+    "The great parks lie in the river valleys. South Luangwa is known for its leopards and for walking safaris, which began here; the Lower Zambezi has canoe trips past elephants and hippos, across the river from Zimbabwe's Mana Pools; and Kafue, one of the largest parks in Africa, has wide plains and few visitors. In the far west, wildebeest gather on Liuwa Plain with the first rains, and in the north the Bangweulu wetlands are home to the shoebill.",
+    "Many safaris fly between camps in light aircraft, since the roads are long and often rough, and many bush camps close in the rainy season. Lusaka, the capital, is the main hub, and Livingstone and Mfuwe, for South Luangwa, are the other airports most visitors use. English is widely spoken, and travel around the country is generally relaxed."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "avoid", "good", "good", "best", "best", "best", "best", "best", "good", "good", "avoid"],
+    "seasons": [
+      {
+        "name": "Cool, dry season",
+        "months": [5, 6, 7, 8],
+        "text": "Clear, sunny days of about 25°C and cold nights, close to freezing at dawn in some parks in June and July. The bush is thick at first and thins as the weeks pass. Victoria Falls is still full in May and June, with heavy spray; by August the views are clearer."
+      },
+      {
+        "name": "Hot, dry season",
+        "months": [9, 10, 11],
+        "text": "The heat builds to 35–40°C in the valleys in October, and animals crowd the shrinking rivers and lagoons: the best game viewing of the year. By about October the Zambian side of the falls shrinks to a few streams, while the pool at the lip is open. Fruit bats arrive at Kasanka from late October."
+      },
+      {
+        "name": "Rainy (green) season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Heavy storms, often in the afternoon, and green bush full of young animals and migrant birds. Many camps in the Lower Zambezi and Kafue close and roads turn to mud; South Luangwa keeps a few open. The Zambezi rises, and the falls reach full flood around March and April, with spray climbing hundreds of metres."
+      }
+    ],
+    "weather": "Most of Zambia is plateau, about 1,000–1,400 m high, so for much of the year it's warm rather than scorching, but the low valleys of the Luangwa and the Zambezi are much hotter. There are three seasons: cool and dry from about May to August, hot and dry from September to November, and warm and wet from about November or December to April. Lusaka has winter days of about 23°C and October days above 30°C.",
+    "festivals": [
+      {
+        "name": "Ncwala",
+        "place": "Mutenguleni, near Chipata",
+        "when": "Usually late February",
+        "months": [2],
+        "text": "The Ngoni people's first-fruits ceremony: the paramount chief tastes the new harvest, and regiments of men in animal skins dance before him."
+      },
+      {
+        "name": "Kuomboka",
+        "place": "Lealui to Limulunga, Western Province",
+        "when": "Usually March or April, set each year by the height of the flood",
+        "months": [3, 4],
+        "text": "The Lozi king, the Litunga, leaves his flooded palace on the Zambezi plain for higher ground, rowed in the great royal barge, the Nalikwanda, to the beat of drums. It's announced only a short time ahead, and in years of low water it isn't held."
+      },
+      {
+        "name": "Kulamba",
+        "place": "Mkaika, near Katete",
+        "when": "Usually late August",
+        "months": [8],
+        "text": "Chewa people from Zambia, Malawi and Mozambique gather to honour their paramount chief, with the masked Gule Wamkulu dancers."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Zambia",
+        "when": "24 October",
+        "months": [10],
+        "text": "Marks independence from Britain in 1964, with parades and celebrations."
+      },
+      {
+        "name": "The bat migration",
+        "place": "Kasanka National Park",
+        "when": "Usually late October to December, peaking in November",
+        "months": [10, 11, 12],
+        "text": "About ten million straw-coloured fruit bats gather in a small patch of swamp forest to feed on ripening fruit, pouring into the sky at dusk."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Victoria Falls and Livingstone",
+        "text": "The falls are fullest from about February to May, when the spray soaks everyone and hides much of the view, and lowest from about September to December, when the Zambian side can dry to a trickle but the pool at the lip opens. White-water rafting below the falls is best at lower water, roughly August to December."
+      },
+      {
+        "name": "South Luangwa",
+        "text": "Leopards, walking safaris and night drives, best from about June to October. In the rains a few camps stay open, with boat trips on the swollen river."
+      },
+      {
+        "name": "Lower Zambezi",
+        "text": "Canoeing and boat trips along the river, with elephants crossing between the islands. Most camps open from about April or May to November."
+      },
+      {
+        "name": "Liuwa Plain and the west",
+        "text": "The Barotse floodplain, home of the Kuomboka, and Liuwa Plain, where wildebeest gather with the first rains around November. Remote: go with a guide, or fly in."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings are unhurried and polite. Among friends, a handshake often comes in three moves: palm, then a grip of thumbs, then palm again. A few soft claps of the hands are a way of saying thank you or showing respect, and women may bend the knees when greeting an elder. \"Muli shani?\" (how are you?) in Bemba will be warmly received.",
+    "etiquette": [
+      "Ask before photographing people, and don't photograph government buildings, police or soldiers.",
+      "Receive gifts or change with both hands, or with your left hand touching your right arm.",
+      "On walking safaris, stay in single file behind the armed scout and do exactly as the guide says.",
+      "Dress modestly in towns and villages; short shorts and short skirts draw stares.",
+      "Bargain at craft markets, such as Lusaka's Sunday market, but gently."
+    ],
+    "tipping": "Usual in tourism: camps suggest an amount for guides, scouts and staff, often through a shared tip box. In town restaurants, about 10% where service isn't added. Camps welcome kwacha or US dollars.",
+    "dress": "Muted greens and browns for walking safaris, a warm jacket and hat for open vehicles on winter mornings, and a waterproof, or a hired poncho, for the falls from about February to June.",
+    "food": [
+      {
+        "name": "Nshima",
+        "text": "The staple: stiff maize porridge, rolled into a ball in the right hand and used to scoop up relishes of meat, fish, beans or greens. Most Zambians eat it at least once a day."
+      },
+      {
+        "name": "Ifisashi",
+        "text": "Greens such as pumpkin leaves or rape, cooked in a sauce of pounded groundnuts."
+      },
+      {
+        "name": "Kapenta",
+        "text": "Tiny sardine-like fish from Lake Kariba and Lake Tanganyika, dried, then fried with tomato and onion or eaten crunchy as a snack."
+      },
+      {
+        "name": "Chikanda",
+        "text": "Nicknamed \"African polony\": a savoury loaf of ground wild orchid tubers, groundnuts and chilli, a speciality of the north."
+      },
+      {
+        "name": "Munkoyo",
+        "text": "A lightly fermented drink of maize meal, sweetened by the roots of a local plant and sold at markets."
+      },
+      {
+        "name": "Mosi",
+        "text": "The national lager, named after Mosi-oa-Tunya, the falls."
+      }
+    ],
+    "phrases": {
+      "language": "Bemba (Icibemba)",
+      "intro": "English is the official language and widely spoken. Of the many local languages, Bemba is the most widely spoken, across the north and the Copperbelt; in Lusaka and the east you'll hear Nyanja, and around Livingstone Tonga and Lozi.",
+      "items": [
+        { "phrase": "Mwashibukeni", "say": "mwah-shee-boo-KEH-nee", "meaning": "Good morning" },
+        { "phrase": "Muli shani?", "say": "MOO-lee SHAH-nee", "meaning": "How are you?" },
+        { "phrase": "Bwino", "say": "BWEE-noh", "meaning": "Fine" },
+        { "phrase": "Natotela", "say": "nah-toh-TEH-lah", "meaning": "Thank you" },
+        { "phrase": "Mukwai", "say": "moo-KWAI", "meaning": "Please; sir or madam (a word of respect)" },
+        { "phrase": "Ni shinga?", "say": "nee SHEEN-gah", "meaning": "How much?" },
+        { "phrase": "Ee / Awe", "say": "EH / AH-weh", "meaning": "Yes / No" },
+        { "phrase": "Shaleenipo", "say": "shah-leh-NEE-poh", "meaning": "Goodbye (to people staying)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q953",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Zambian kwacha (K, ZMW). Safari camps often quote prices in US dollars.",
+        "sources": [{ "property": "P38", "values": ["Q73408"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English is the official language. Bemba, Nyanja, Tonga and Lozi are the most widely spoken of more than 70 local languages.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), with types C (two round pins) and D (three round pins) also found; 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q1378312", "Q60740126"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Africa Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q4689508"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 or 112 for police, 992 for an ambulance and 993 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q1061257", "Q25743564", "Q25743569"] }],
+        "note": "Wikidata also lists 911 and 991; the page gives the numbers most widely published for visitors."
+      },
+      {
+        "key": "callingCode",
+        "text": "+260",
+        "sources": [{ "property": "P474", "values": ["+260"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "code": "UA",
+  "slug": "ukraine",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dobryi den", "Ukraina"],
+  "summary": "Kyiv's golden domes, Lviv's coffee houses, the Carpathians and Odesa on the Black Sea.",
+  "overview": [
+    "The biggest country lying wholly in Europe, Ukraine is mostly flat farmland and steppe on deep black soil, with the Carpathian mountains in the far west and the Black Sea along the south. Kyiv, the capital, spreads over the hills above the Dnipro. St Sophia's Cathedral, begun in the 11th century, keeps its mosaics and frescoes, and the Kyiv Pechersk Lavra, a monastery of gold-domed churches, has cave passages where monks lie buried. Andriivskyi Descent, a cobbled street of galleries and stalls, winds down to the old merchant quarter of Podil.",
+    "Lviv, in the west, has an old centre of churches, squares and coffee houses, built under Polish and then Austrian rule and listed by UNESCO. Kamianets-Podilskyi has a fortress on a rock where a river canyon loops round the old town, and Chernivtsi's university fills a brick palace built for the Orthodox metropolitans of Bukovina. In the Carpathians, Hutsul villages have wooden churches, there are summer walks up Hoverla, at 2,061 m the highest peak, and skiing at Bukovel in winter. On the coast, Odesa grew as a 19th-century port, with the Potemkin Stairs dropping towards the harbour and an ornate opera house.",
+    "Trains are the backbone, with overnight sleepers and fast daytime Intercity services between the big cities; minibuses (marshrutky) reach the rest. Everything is signed in Cyrillic, and cards are widely accepted in cities.",
+    "Many governments advise against all or most travel to Ukraine. The situation can change quickly, so check your own government's current advice before planning a trip."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Snowy, with Kyiv usually a few degrees below freezing, the east colder, and short days. Skiing at Bukovel in the Carpathians. Christmas has been a public holiday on 25 December since 2023, though some families also keep 7 January."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "A slushy March gives way to a quick spring: by May Kyiv's chestnut trees are in flower and the parks are green. Easter, by the Orthodox reckoning, is the year's great feast."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm to hot, 25–30°C in Kyiv and hotter on the southern steppe, with thunderstorms. The Black Sea warms to about 24°C in August, and the Carpathians are cool and green for walking."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Early autumn stays warm and golden. By October the leaves have turned and the nights are chilly, and November is grey, damp and dark early."
+      }
+    ],
+    "weather": "Continental, but milder along the Black Sea. Kyiv's January averages a few degrees below freezing, with snow on the ground for much of the winter, and its July days usually reach 25–27°C. Most rain falls in early summer, often in thunderstorms. Odesa has milder winters and long, hot summers, while the Carpathians are cooler and wetter, with deep snow from about December to March.",
+    "festivals": [
+      {
+        "name": "Christmas (Rizdvo)",
+        "place": "Across Ukraine",
+        "when": "25 December, with the Holy Supper on Christmas Eve; some families keep 6–7 January",
+        "months": [12, 1],
+        "text": "The Holy Supper on Christmas Eve has twelve meatless dishes, beginning with kutia, boiled wheat with poppy seeds and honey, and carollers go from house to house singing koliadky."
+      },
+      {
+        "name": "Easter (Velykden)",
+        "place": "Across Ukraine",
+        "when": "Usually in April or early May (2 May in 2027)",
+        "months": [4, 5],
+        "text": "Baskets of paska (Easter bread), dyed eggs and pysanky, eggs decorated with patterns drawn in wax, are taken to church to be blessed."
+      },
+      {
+        "name": "Vyshyvanka Day",
+        "place": "Across Ukraine",
+        "when": "The third Thursday in May",
+        "months": [5],
+        "text": "People wear the vyshyvanka, the embroidered shirt, to work, to school and in the street, each region with its own patterns."
+      },
+      {
+        "name": "Ivana Kupala",
+        "place": "Across Ukraine",
+        "when": "Midsummer night, usually in late June or early July",
+        "months": [6, 7],
+        "text": "An old festival of the summer solstice: young people jump over bonfires, girls float flower wreaths on rivers, and legend tells of a fern that flowers only that night."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Ukraine",
+        "when": "24 August",
+        "months": [8],
+        "text": "Ukraine declared independence from the Soviet Union on this day in 1991; it is the main national holiday."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Men usually shake hands; women, and friends of either sex, may greet with a kiss on the cheek. With people you don't know well, use the polite “pan” (Mr) and “pani” (Mrs), or a first name and patronymic. “Dobryi den” is the all-purpose good day, “Pryvit” the casual hi.",
+    "etiquette": [
+      "Honoured guests may be welcomed with a round loaf (korovai) topped with salt: break off a piece, dip it in the salt and eat it.",
+      "Don't whistle indoors: it's said to whistle your money away.",
+      "Bring a cake or chocolates when you visit a home, and take your shoes off at the door.",
+      "In Orthodox and Greek Catholic churches, women cover their hair and wear skirts, and men take their hats off.",
+      "A word or two of Ukrainian, however clumsy, is warmly received."
+    ],
+    "tipping": "Ten per cent is the usual tip in restaurants and cafés; taxi drivers are happy with a rounded-up fare.",
+    "dress": "A warm coat, hat and boots with grip in winter; light clothes and an umbrella for summer storms; covered shoulders and, for women, a headscarf in churches. People dress up for the opera and the theatre.",
+    "food": [
+      {
+        "name": "Borshch",
+        "text": "Beetroot soup with cabbage, potato and often beef or pork, served with sour cream and pampushky, soft garlic buns. UNESCO lists the culture of cooking it as heritage in need of urgent safeguarding."
+      },
+      {
+        "name": "Varenyky",
+        "text": "Boiled dumplings filled with potato, curd cheese, cabbage or, in summer, sour cherries, served with sour cream, the savoury ones with fried onion."
+      },
+      {
+        "name": "Salo",
+        "text": "Cured pork fat, sliced thin and eaten on rye bread with garlic or raw onion, often alongside a glass of horilka."
+      },
+      {
+        "name": "Deruny",
+        "text": "Crisp potato pancakes, served with sour cream or a mushroom sauce."
+      },
+      {
+        "name": "Chicken Kyiv",
+        "text": "Kotleta po-kyivsky: a breaded chicken breast rolled round herb butter, which spurts out when you cut it."
+      },
+      {
+        "name": "Horilka and uzvar",
+        "text": "Horilka is the local vodka, sometimes flavoured with honey and chilli; uzvar, a drink of stewed dried fruit, is served at Christmas."
+      }
+    ],
+    "phrases": {
+      "language": "Ukrainian",
+      "intro": "Ukrainian is written in Cyrillic, with a few letters of its own (і, ї, є, ґ). Russian is widely understood, and younger people in the cities often speak English.",
+      "items": [
+        { "phrase": "Dobryi den (Добрий день)", "say": "DOB-riy den", "meaning": "Good day; hello" },
+        { "phrase": "Pryvit (Привіт)", "say": "pry-VEET", "meaning": "Hi" },
+        { "phrase": "Diakuiu (Дякую)", "say": "DYAH-koo-yoo", "meaning": "Thank you" },
+        { "phrase": "Bud laska (Будь ласка)", "say": "bood LAHS-kah", "meaning": "Please; you're welcome" },
+        { "phrase": "Vybachte (Вибачте)", "say": "VY-bach-teh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Skilky tse koshtuie? (Скільки це коштує?)", "say": "SKEEL-ky tseh KOSH-too-yeh", "meaning": "How much is it?" },
+        { "phrase": "Smachnoho! (Смачного!)", "say": "smahch-NOH-ho", "meaning": "Enjoy your meal" },
+        { "phrase": "Do pobachennia (До побачення)", "say": "doh poh-BAH-cheh-nyah", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q212",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Ukrainian hryvnia (₴, UAH)",
+        "sources": [{ "property": "P38", "values": ["Q81893"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Ukrainian. Russian is also widely understood.",
+        "sources": [{ "property": "P37", "values": ["Q8798"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time, UTC+2, and UTC+3 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q190252", "Q6723", "Q6760", "Q63286014"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; 101 for fire, 102 for police, 103 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648794", "Q25648798", "Q25648811"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+380",
+        "sources": [{ "property": "P474", "values": ["+380"] }]
+      }
+    ]
+  }
+}

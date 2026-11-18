@@ -1,0 +1,164 @@
+{
+  "code": "AD",
+  "slug": "andorra",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bon dia", "Andorra", "Benvinguts"],
+  "summary": "A Pyrenean co-principality of ski slopes, hiking valleys and tax-free shops.",
+  "overview": [
+    "Andorra is a small, steep country high in the Pyrenees, wedged between France and Spain. Its heads of state are two co-princes, the Bishop of Urgell in Catalonia and the President of France, though an elected parliament and government run its affairs. It is all mountains and narrow valleys, and almost everything lies along one main road that climbs from the Spanish border through Sant Julià de Lòria and Andorra la Vella to Pas de la Casa on the French side.",
+    "Winter is for skiing. Grandvalira, the biggest ski area in the Pyrenees, links Pas de la Casa, Grau Roig, Soldeu, El Tarter and Canillo, and Pal Arinsal and Ordino Arcalís lie in the north-west. In summer the same slopes are for walking, mountain biking and climbing; the Madriu-Perafita-Claror valley, on UNESCO's list, keeps shepherds' huts and stone terraces from centuries of grazing. Low taxes draw shoppers from both neighbours to the long street of shops running from Andorra la Vella into Escaldes-Engordany, where Caldea is a large thermal spa. Small Romanesque churches with stone bell towers, such as Santa Coloma and Sant Joan de Caselles, stand by the roadsides.",
+    "There's no airport and no railway. Most visitors come by road from Barcelona or Toulouse, about three hours away, by car or coach, and national buses run cheaply up the valleys. Andorra isn't in the European Union, so expect customs checks on the way out, with limits on the tobacco, alcohol and other goods you can take back."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "good", "good", "best", "best", "best", "good", "avoid", "good"],
+    "seasons": [
+      {
+        "name": "Ski season",
+        "months": [12, 1, 2, 3],
+        "text": "The resorts usually open in early December and run into April. January is the coldest month, with the most reliable snow; February brings French and Spanish school holidays and the biggest crowds, and March has longer, sunnier days. Roads need winter tyres or chains after snowfall."
+      },
+      {
+        "name": "Spring",
+        "months": [4, 5, 6],
+        "text": "The lifts close, snow retreats from the valley floors, and some hotels and restaurants shut for a few weeks between seasons. High paths stay snowy into June, but lower walks are green and full of waterfalls from the melt."
+      },
+      {
+        "name": "Summer",
+        "months": [7, 8, 9],
+        "text": "Warm, sunny days of about 25°C in the valleys and cool nights, with thunderstorms building on many afternoons. The mountain huts and lakes are reachable, and walkers and shoppers fill the roads, above all in August; September is calmer."
+      },
+      {
+        "name": "Autumn",
+        "months": [10, 11],
+        "text": "Birch and larch turn gold in October, a fine month for walking if the weather holds. November is the dead season: grey and cold, with lifts shut and many hotels closed until the ski season."
+      }
+    ],
+    "weather": "A mountain climate. Even the lowest point, at the Spanish border, is about 840 m up, and Andorra la Vella, at about 1,000 m, is the highest capital city in Europe. Summers are warm by day and fresh at night, with afternoon storms; winters are cold and often sunny, with snow on the slopes from about December to April and frost on most nights. Above 2,000 m it is cold on summer evenings too.",
+    "festivals": [
+      {
+        "name": "Constitution Day",
+        "place": "Across Andorra",
+        "when": "14 March",
+        "months": [3],
+        "text": "A public holiday marking the constitution approved by Andorrans in 1993, which made the country a parliamentary co-principality in its modern form."
+      },
+      {
+        "name": "Sant Joan bonfires (falles)",
+        "place": "Andorra la Vella, Sant Julià de Lòria and other parishes",
+        "when": "The night of 23 June",
+        "months": [6],
+        "text": "On midsummer night, people light bundles of dry bark tied to poles or ropes and whirl them round in circles of fire, and bonfires burn late. It's part of the Pyrenean solstice fire festivals that UNESCO lists, shared with Spain and France."
+      },
+      {
+        "name": "Festes majors",
+        "place": "Each of the seven parishes",
+        "when": "Usually in July and August, a different weekend for each parish",
+        "months": [7, 8],
+        "text": "Every parish holds its own festival with concerts, fairs, traditional circle dances and late-night parties in the main square."
+      },
+      {
+        "name": "Our Lady of Meritxell",
+        "place": "Meritxell, Canillo",
+        "when": "8 September",
+        "months": [9],
+        "text": "The national day, honouring Andorra's patron saint. Many Andorrans make a pilgrimage to her sanctuary at Meritxell, rebuilt to a modern design by Ricardo Bofill after a fire in 1972."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake for a first meeting, and two kisses on the cheeks between friends and from women, as across the border in Catalonia. Catalan is the language of the state and of Andorrans themselves, and a \"Bon dia\" is appreciated, though staff in shops and hotels switch easily to Spanish, French or English. Many of them are from Spain, Portugal or France.",
+    "etiquette": [
+      "Meals follow Spanish hours: lunch from about 1.30 pm, and dinner rarely before 8.30 pm.",
+      "Andorrans are neither Spanish nor French; don't describe the country as part of either.",
+      "Many of the mountain huts (refugis) are free and unstaffed: leave them clean, close the door and carry your rubbish down.",
+      "On mountain paths, close gates behind you and keep dogs on a lead near cattle and horses, which graze freely in summer.",
+      "Check the customs limits before loading the car, as officers on both borders stop many vehicles leaving."
+    ],
+    "tipping": "Service is included in prices. Leaving small change or rounding up in bars and restaurants is a kind gesture but not expected.",
+    "dress": "Layers in every season, as mountain weather changes fast. Full ski clothing and sunglasses in winter; in summer, boots, a waterproof and a warm top for the high paths, where it can be near freezing at dawn.",
+    "food": [
+      {
+        "name": "Trinxat",
+        "text": "Cabbage and potato mashed together and fried with garlic and bacon until crisp, the mountain dish of Andorra and neighbouring Cerdanya."
+      },
+      {
+        "name": "Escudella",
+        "text": "A hearty winter stew of meats, sausage, chickpeas and vegetables; the broth, often with pasta, comes first, then the meat."
+      },
+      {
+        "name": "A meal in a borda",
+        "text": "Bordas are old stone barns turned into restaurants, where lamb, botifarra sausage and snails are grilled over embers."
+      },
+      {
+        "name": "Truita de carreroles",
+        "text": "An omelette with small wild fairy-ring mushrooms, best in late spring and autumn when they're picked in the meadows."
+      },
+      {
+        "name": "Crema catalana",
+        "text": "Custard flavoured with lemon and cinnamon under a crust of burnt sugar, the usual end to a Catalan meal."
+      }
+    ],
+    "phrases": {
+      "language": "Catalan (català)",
+      "intro": "Spanish is understood everywhere, and French and Portuguese are common, but Catalan is the language of Andorra and its people.",
+      "items": [
+        { "phrase": "Bon dia", "say": "bon DEE-ah", "meaning": "Good morning; hello" },
+        { "phrase": "Bona tarda", "say": "BOH-nah TAR-dah", "meaning": "Good afternoon" },
+        { "phrase": "Gràcies", "say": "GRAH-see-es", "meaning": "Thank you" },
+        { "phrase": "Si us plau", "say": "see oos PLOW", "meaning": "Please" },
+        { "phrase": "Quant costa?", "say": "kwahn KOS-tah", "meaning": "How much is it?" },
+        { "phrase": "Parla anglès?", "say": "PAR-lah ahn-GLESS", "meaning": "Do you speak English?" },
+        { "phrase": "Bon profit", "say": "bon proh-FEET", "meaning": "Enjoy your meal" },
+        { "phrase": "Adéu", "say": "ah-DAY-oo", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q228",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Andorra isn't in the EU but uses the euro under an agreement with it, and mints its own euro coins.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Catalan, official. Spanish is spoken everywhere, and French and Portuguese are common too.",
+        "sources": [{ "property": "P37", "values": ["Q7026"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata gives 220 V, the older figure; Andorra's supply, like Spain's and France's, is 230 V. Appliances made for either work."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1; UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655"] }],
+        "note": "Wikidata gives UTC+1 only; Andorra changes to summer time (UTC+2) on the same dates as Spain and France."
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; also 110 for police and 116 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648823", "Q25648807"] }],
+        "note": "Wikidata also lists 118, with no use stated; the page leaves it out, as 112 reaches every service."
+      },
+      {
+        "key": "callingCode",
+        "text": "+376",
+        "sources": [{ "property": "P474", "values": ["+376"] }]
+      }
+    ]
+  }
+}

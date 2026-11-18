@@ -1,0 +1,156 @@
+{
+  "code": "DJ",
+  "slug": "djibouti",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Nabad", "Jabuuti", "Bienvenue"],
+  "summary": "Whale sharks in the Gulf of Tadjoura, Lake Assal's salt flats and Lac Abbé's chimneys.",
+  "overview": [
+    "Djibouti is a small, very hot country at the mouth of the Red Sea, where the Great Rift Valley runs into the ocean, and its landscapes look like another planet. Lake Assal, 155 m below sea level and the lowest point in Africa, is saltier than the Dead Sea and ringed by a crust of dazzling white salt. At Lac Abbé, on the Ethiopian border, limestone chimneys up to 50 m tall let off steam at dawn while flamingos feed in the shallows. In the Goda Mountains to the north, the Day Forest is a rare patch of juniper woodland.",
+    "From about November to February, whale sharks gather in the Gulf of Tadjoura near Arta, and boats take snorkellers out to swim alongside them. Moucha and Maskali islands, a short boat ride from the capital, have reefs and beaches. Djibouti City has a small European quarter around Place Ménélik and a busy market, and the old whitewashed town of Tadjoura faces it across the gulf. The country lives from its port, Ethiopia's main outlet to the sea, linked to Addis Ababa by an electric railway, and several foreign countries keep military bases here.",
+    "In the afternoons, much of the city slows down to chew khat, a mildly stimulant leaf brought in fresh from Ethiopia every day. Outside the capital, tracks are rough and the heat is serious, so most visitors travel with a local driver or tour. Travel warnings cover some border areas, so look at your government's advice first."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool season",
+        "months": [11, 12, 1, 2],
+        "text": "The pleasant months: about 28–30°C by day and in the low 20s °C at night, with a breeze off the sea. Whale shark season, and the time for trips to Lake Assal and Lac Abbé."
+      },
+      {
+        "name": "Warming up",
+        "months": [3, 4, 5],
+        "text": "Hotter and more humid each week, in the mid-30s °C by May. Diving is still good, but trips inland start to feel harsh."
+      },
+      {
+        "name": "Hot season",
+        "months": [6, 7, 8, 9],
+        "text": "Fierce heat, often above 40°C in the city and more inland, with spells of hot, dusty wind off the desert. Only the sea offers relief."
+      },
+      {
+        "name": "Cooling down",
+        "months": [10],
+        "text": "The worst heat breaks, though October is still hot and sticky."
+      }
+    ],
+    "weather": "One of the hottest countries on earth. In Djibouti City, winter days are about 28–30°C, while from June to September they pass 40°C, and inland, around Lake Assal, they go higher still. Rain is scarce and unreliable, falling in short downpours mostly between about October and April, and some years bring almost none. The sea is warm in every month, from about 25°C in winter to over 30°C in summer.",
+    "festivals": [
+      {
+        "name": "Whale shark season",
+        "place": "Gulf of Tadjoura, near Arta",
+        "when": "Usually from about November to February",
+        "months": [11, 12, 1, 2],
+        "text": "Young whale sharks, several metres long, come to feed on plankton close to the shore, and are often seen within minutes of leaving the beach."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across the country",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "A month of fasting from dawn to sunset. Days are quiet and working hours short, and the evenings come alive after the fast is broken. Eid al-Fitr ends it with new clothes, family visits and a public holiday."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across the country",
+        "when": "About ten weeks after Ramadan ends, so also about 11 days earlier each year: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice: goats and sheep fill the markets beforehand, and families share the meat with neighbours and the poor."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Djibouti City and across the country",
+        "when": "27 June",
+        "months": [6],
+        "text": "Independence from France came in 1977. The day brings a parade in the capital, and the light blue, green and white flag flies everywhere."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Salaam alaykum\" or simply \"Nabad\" (peace), with a handshake, then questions about health and family before any business. In the capital, \"Bonjour\" is just as common. Men may hold a handshake for a long time; between a man and a woman, let her choose whether to offer her hand.",
+    "etiquette": [
+      "Never photograph soldiers, military bases, the port, the airport or government buildings. With several foreign bases in and around the city, ask if you're unsure.",
+      "Afternoons belong to khat: many offices and shops close after lunch and open again later, so get errands done in the morning.",
+      "Use your right hand for eating and for passing things.",
+      "In Ramadan, keep eating, drinking and smoking out of public view until sunset.",
+      "With whale sharks, keep the distance your guide asks, never touch them, and switch off the camera flash."
+    ],
+    "tipping": "Not required, but welcome: 5–10% in restaurants in the capital. Guides, drivers and boat crews are usually tipped at the end of a trip.",
+    "dress": "Light, loose cotton that covers shoulders and knees in town; swimwear stays on the beach and the boats. For trips inland, bring a wide hat, sunglasses, strong sun cream and plenty of water, as there's almost no shade, and stout shoes for the sharp lava and salt crust.",
+    "food": [
+      {
+        "name": "Skoudehkaris",
+        "text": "The national dish: rice cooked with lamb or goat, tomato and warm spices such as cardamom and cloves."
+      },
+      {
+        "name": "Fah-fah",
+        "text": "A spicy soup of boiled goat with green chilli and vegetables, eaten with flatbread to soak it up."
+      },
+      {
+        "name": "Poisson yéménite",
+        "text": "Fish split open, rubbed with chilli paste and baked against the wall of a clay oven, served with flatbread from the same oven: an evening favourite in Djibouti City."
+      },
+      {
+        "name": "Lahoh",
+        "text": "A spongy, slightly sour pancake, eaten for breakfast with honey, sugar or ghee and a glass of spiced tea."
+      }
+    ],
+    "phrases": {
+      "language": "Somali",
+      "intro": "French is spoken in offices, hotels and shops, and Arabic in the mosques. In the street, most people speak Somali, or Afar in the north and west.",
+      "items": [
+        { "phrase": "Nabad", "say": "NAH-bahd", "meaning": "Hello (\"peace\")" },
+        { "phrase": "Iska warran?", "say": "IS-kah wah-RAHN", "meaning": "How are you? (\"Give me your news\")" },
+        { "phrase": "Wanaagsan", "say": "wah-NAHG-sahn", "meaning": "Good; fine" },
+        { "phrase": "Mahadsanid", "say": "mah-hahd-SAH-nid", "meaning": "Thank you" },
+        { "phrase": "Haa / Maya", "say": "HAH / MAH-yah", "meaning": "Yes / No" },
+        { "phrase": "Biyo", "say": "BEE-yoh", "meaning": "Water" },
+        { "phrase": "Waa imisa?", "say": "wah ee-MEE-sah", "meaning": "How much is it?" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q977",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Djiboutian franc (Fdj, DJF), tied to the US dollar at a fixed rate. Larger hotels take cards, but markets, taxis and small restaurants want cash.",
+        "sources": [{ "property": "P38", "values": ["Q4594"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French and Arabic, both official. Most people speak Somali or Afar at home.",
+        "sources": [{ "property": "P37", "values": ["Q150", "Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "East Africa Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q4689490"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "17 for police, 18 for fire and 19 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648842", "Q25648843", "Q25648864"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+253",
+        "sources": [{ "property": "P474", "values": ["+253"] }]
+      }
+    ]
+  }
+}

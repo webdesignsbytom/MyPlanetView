@@ -1,0 +1,162 @@
+{
+  "code": "FO",
+  "slug": "faroe-islands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Hey", "Føroyar", "Vælkomin"],
+  "summary": "Turf-roofed villages, puffin cliffs and undersea tunnels across 18 North Atlantic islands.",
+  "overview": [
+    "The Faroe Islands are 18 steep, almost treeless islands in the North Atlantic, roughly halfway between Iceland and Norway. They govern themselves within the Kingdom of Denmark, with their own parliament, flag and language, and around 54,000 people live here, outnumbered by the sheep. The scenery is the reason to come: villages of black-tarred and brightly painted houses with grass on their roofs, sea cliffs hundreds of metres high, waterfalls dropping straight into the ocean and seabirds everywhere in summer.",
+    "Tórshavn, the capital, is one of the smallest in Europe; its old government houses, roofed with turf, stand on Tinganes, the rocky point where the islanders' assembly met in Viking times. Mykines, the westernmost island, is the place to see puffins in summer, reached by a small boat when the sea allows. Gásadalur's waterfall pours off a cliff into the sea, and Saksun, Gjógv and Tjørnuvík are the much-photographed villages. Undersea tunnels now join most of the main islands, and the one under the fjord to Eysturoy has a roundabout beneath the sea, lit with coloured lights.",
+    "A hire car is the easiest way round; buses and ferries reach most villages but run rarely in the remote ones. Many famous viewpoints and walks cross private farmland, and some landowners charge walkers or ask them to go with a guide, so check before you set out. The weather changes in minutes: fog can hide a path and cancel boats, so leave room in your plans."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "good", "good", "good", "good", "best", "best", "best", "good", "good", "good", "avoid"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The light returns fast, snow lingers on the high ground, and lambs appear on every slope. Seabirds come back to the cliffs from April, and puffins by about May."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "About 11–13°C by day, rarely more, with long light evenings; in June it hardly gets dark. Paths are clear, the Mykines boats run, and the national festival and music festivals fill July. Rain and fog still come often."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Cooler, wetter and windier as the weeks go on. Farmers round up their sheep from the hills, and mutton is hung to dry in slatted wooden sheds. Days shorten quickly and storms become more frequent."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Dark, wet and stormy, though seldom far below freezing near the sea. Daylight lasts only about five hours around Christmas, and many walks and boat trips are off."
+      }
+    ],
+    "weather": "A cool, wet and windy ocean climate with small swings between the seasons: days around 5°C in winter and 11–13°C in summer. The warm current of the North Atlantic keeps the harbours free of ice, but it also brings cloud: rain or drizzle falls on most days of the year, and fog can roll in within minutes. Heavy snow and hard frost are rare at sea level, while gales are common from autumn to spring.",
+    "festivals": [
+      {
+        "name": "Flag Day (Flaggdagur)",
+        "place": "Across the islands",
+        "when": "25 April",
+        "months": [4],
+        "text": "Remembers the day in 1940, during the British occupation in the Second World War, when Faroese ships were first allowed to sail under the Faroese flag, Merkið. Flags fly from every house."
+      },
+      {
+        "name": "G! Festival",
+        "place": "Gøta, Eysturoy",
+        "when": "Usually in mid-July",
+        "months": [7],
+        "text": "A music festival on the beach and in the village of Gøta, with Faroese, Nordic and international bands and a stage by the water."
+      },
+      {
+        "name": "Ólavsøka",
+        "place": "Tórshavn",
+        "when": "28–29 July",
+        "months": [7],
+        "text": "The national festival, for St Olaf: a procession to the opening of parliament, the final rowing races in the harbour, art shows and concerts. Late on the 29th the crowd gathers in the town centre for midnight singing, followed by Faroese chain dancing to old ballads."
+      },
+      {
+        "name": "Summarfestivalurin",
+        "place": "Klaksvík",
+        "when": "Usually in August",
+        "months": [8],
+        "text": "The islands' other big music festival, in the fishing town of Klaksvík on Borðoy, with local and visiting acts over a long weekend."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and a \"Hey\" are enough. Faroese people can seem quiet at first and are friendly once you start talking; in a country this small, everyone seems to know everyone, and first names are used straight away.",
+    "etiquette": [
+      "Pay any fee a landowner asks for a walk, keep to the marked paths, close gates behind you and give sheep a wide berth, especially at lambing time in spring.",
+      "Keep well back from cliff edges: the grass hides overhangs and loose ground, and the wind gusts hard.",
+      "Ask before flying a drone near villages, farms or nesting birds.",
+      "Pilot whale meat and blubber are still eaten, from a traditional community hunt; you may be offered some, and a polite no is fine.",
+      "Check the forecast and the road and ferry updates each morning, and turn back if fog comes down on a hike."
+    ],
+    "tipping": "Not expected: service is included. Rounding up for good service is welcome.",
+    "dress": "A waterproof jacket and trousers, warm layers, a hat and sturdy walking boots in every season. Even in July, 12°C in the wind feels cold.",
+    "food": [
+      {
+        "name": "Skerpikjøt",
+        "text": "Mutton hung for months in the salty wind until it's dark and hard, then sliced thin and eaten on bread."
+      },
+      {
+        "name": "Ræst",
+        "text": "Meat or fish left to half-dry and ferment in the drying shed (hjallur) until it has a strong, tangy taste, then boiled or used in soup. The flavour most Faroese dishes are built around."
+      },
+      {
+        "name": "Fresh fish",
+        "text": "Cod, haddock and salmon farmed in the fjords, often simply boiled or fried and served with potatoes."
+      },
+      {
+        "name": "Lamb",
+        "text": "From sheep that graze the open hills all year, roasted or slow-cooked, and at its best in autumn after the round-ups."
+      },
+      {
+        "name": "Föroya Bjór",
+        "text": "The local brewery in Klaksvík, making beer since 1888; its lagers and ales are in every bar."
+      }
+    ],
+    "phrases": {
+      "language": "Faroese (føroyskt)",
+      "intro": "Faroese is a Nordic language close to Icelandic. Everyone also speaks Danish, and most people speak good English, but a word of Faroese is always appreciated.",
+      "items": [
+        { "phrase": "Hey", "say": "HAY", "meaning": "Hello" },
+        { "phrase": "Góðan morgun", "say": "GOW-an MOR-gun", "meaning": "Good morning" },
+        { "phrase": "Takk fyri", "say": "TAHK FEE-rih", "meaning": "Thank you" },
+        { "phrase": "Orsaka", "say": "OR-sah-kah", "meaning": "Sorry; excuse me" },
+        { "phrase": "Vælkomin", "say": "VEH-al-koh-min", "meaning": "Welcome" },
+        { "phrase": "Skál!", "say": "SKOAL", "meaning": "Cheers!" },
+        { "phrase": "Farvæl", "say": "FAR-veh-al", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q4628",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Faroese króna (kr), worth exactly the same as the Danish krone; Danish notes and coins are used alongside Faroese notes",
+        "sources": [{ "property": "P38", "values": ["Q191068"] }],
+        "note": "Wikidata lists the Faroese króna alone; it is a local issue of the Danish krone at par, and Danish money circulates freely, so the page says so."
+      },
+      {
+        "key": "languages",
+        "text": "Faroese and Danish, both official. Most people also speak English.",
+        "sources": [{ "property": "P37", "values": ["Q25258", "Q9035"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, E, F and K (two round pins; the Danish Type K adds a half-round earth pin), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1123613", "Q1502017"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Western European Time, UTC+0; UTC+1 in summer (late March to late October), as in the UK",
+        "sources": [{ "property": "P421", "values": ["Q6574"] }],
+        "note": "Wikidata gives UTC+0 only; the islands change to summer time (UTC+1) on the same dates as the rest of Europe."
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+298",
+        "sources": [{ "property": "P474", "values": ["+298"] }]
+      }
+    ]
+  }
+}

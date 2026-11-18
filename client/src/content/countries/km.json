@@ -1,0 +1,159 @@
+{
+  "code": "KM",
+  "slug": "comoros",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salam", "Komori", "Karibu"],
+  "summary": "Volcanic islands of ylang-ylang plantations, a crater to climb and turtles nesting on Mohéli.",
+  "overview": [
+    "The Comoros are three volcanic islands at the northern end of the Mozambique Channel, between Mozambique and Madagascar. Grande Comore (Ngazidja), the largest, has the capital, Moroni, a coast of black lava broken by white-sand coves, and Mount Karthala, an active volcano of 2,361 m with a summit crater several kilometres across. Anjouan (Ndzuwani) is steep and green, with the old stone town of Mutsamudu below its citadel and the stills that turn ylang-ylang flowers into oil for perfume. Mohéli (Mwali), the smallest and quietest, is mostly a marine park, and green turtles come ashore to nest on its beaches at Itsamia.",
+    "Very few tourists come. Towns keep their own pace of prayer times and morning markets, and on many beaches the only company is a fisherman's outrigger canoe. Outside Moroni, hotels are few and simple. Shared taxis run along the coast roads, and small planes and boats link the islands; the boats can be crowded and the crossings rough, so leave spare days. Bring cash: the Comorian franc is tied to the euro, euros are easy to change, and cards work in only a handful of places.",
+    "From about July to October humpback whales calve in the warm water around all three islands, and the deep sea off Grande Comore and Anjouan is home to the coelacanth, a fish once known only from fossils. Mayotte, the archipelago's fourth island, is governed by France as an overseas department; the Comoros claim it as part of their territory."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "avoid", "avoid", "good", "good", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Kusi (the cooler, drier season)",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "The south-east trade wind brings fresher air, and the rain tails off through May. Days are around 27°C on the coast with pleasant nights, the right time to climb Karthala and to look for whales. July and August fill with Comorians home from abroad for weddings, so flights book up."
+      },
+      {
+        "name": "Kashkazi (the hot, wet season)",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "The north-west monsoon brings heat, heavy humidity and downpours that can last for days, worst from about January to March. Cyclones are rare but possible until April, and rough seas cancel boats between the islands. November, December and April are the gentler ends, with showers rather than whole days of rain."
+      }
+    ],
+    "weather": "Hot and humid at sea level all year: about 27°C by day in the cooler months and 30–31°C in the wet ones, with the sea rarely below 25°C. Most rain falls from about December to April, often in heavy bursts, and the slopes facing the monsoon are the wettest. On Karthala the nights are cold, and cloud often hides the summit by late morning.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across the Comoros",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The fasting month sets the rhythm of every day: food stalls and cafés stay shut until sunset, then the streets come alive after the evening meal and the late prayers. Eid al-Fitr, at its end, means new clothes, family visits and several days off work."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across the Comoros",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice, when families share out meat and visit relatives. Offices close for several days and planes and boats between the islands are busy."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Moroni and the island capitals",
+        "when": "6 July",
+        "months": [7],
+        "text": "Marks independence from France in 1975, with parades and speeches."
+      },
+      {
+        "name": "The Grand Mariage (anda)",
+        "place": "Grande Comore",
+        "when": "Mostly in July and August",
+        "months": [7, 8],
+        "text": "The great wedding that gives a man and his family their standing in the town. Years of saving pay for days of feasting, processions, dances and gifts of gold. Comorians living abroad come home for it, and visitors are often welcome to watch."
+      },
+      {
+        "name": "Maulid (the Prophet's Birthday)",
+        "place": "Across the Comoros",
+        "when": "About 11 days earlier each year: in 2027, about mid-August",
+        "months": [8],
+        "text": "Kept with real devotion here, with prayers, processions and religious songs in mosques and town squares."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Almost everyone is Muslim, and \"salam aleikoum\" (peace be upon you), answered with \"wa aleikoum salam\", works everywhere; \"bonjour\" is fine too. Men shake hands with each other; between a man and a woman, wait to see whether she offers her hand. Ask after someone's family before getting down to business.",
+    "etiquette": [
+      "Cover shoulders and knees in towns and villages, men and women alike; swimwear stays on the beach or at the hotel.",
+      "Ask before photographing people, women above all, and never photograph police or soldiers.",
+      "Use your right hand to eat, pay and pass things.",
+      "During Ramadan, don't eat, drink or smoke in the street by day.",
+      "Alcohol is served in a few hotels and restaurants; drinking in public is frowned on.",
+      "Mosques are for worshippers: admire Moroni's Old Friday Mosque by the harbour from outside unless someone invites you in."
+    ],
+    "tipping": "Not expected in everyday places. In hotels and the few restaurants used to visitors, rounding up or leaving about 10% is welcome, and guides on Karthala or at the turtle beaches expect a tip at the end.",
+    "dress": "Long, loose, light clothes keep you cool and respectful at once; women may want a scarf for villages. Karthala needs proper walking shoes, a waterproof and a warm layer for a night near the crater. Reef shoes help on the rocky lava shores.",
+    "food": [
+      {
+        "name": "Langouste à la vanille",
+        "text": "Lobster in a creamy vanilla sauce, the dish served to guests, made with the islands' own vanilla."
+      },
+      {
+        "name": "Mataba",
+        "text": "Pounded cassava leaves cooked slowly in coconut milk, sometimes with fish or meat, eaten with rice."
+      },
+      {
+        "name": "Pilao",
+        "text": "Rice cooked with meat and whole spices such as cloves and cinnamon: the dish of weddings and feast days."
+      },
+      {
+        "name": "Mkatra foutra",
+        "text": "A flat bread made with coconut milk, eaten at breakfast with sweet tea."
+      },
+      {
+        "name": "Grilled fish",
+        "text": "Tuna and reef fish grilled over charcoal, with boiled green bananas, breadfruit or cassava on the side."
+      }
+    ],
+    "phrases": {
+      "language": "Comorian and French",
+      "intro": "Comorian (Shikomori), a relative of Swahili with its own dialect on each island, is what you'll hear in the street. French is used in offices, hotels and shops, and Arabic greetings are part of daily life. English is rare.",
+      "items": [
+        { "phrase": "Salam aleikoum", "say": "sah-LAHM ah-LAY-koom", "meaning": "Peace be upon you (hello)" },
+        { "phrase": "Marahaba", "say": "mah-rah-HAH-bah", "meaning": "Thank you (Comorian)" },
+        { "phrase": "Karibu", "say": "kah-REE-boo", "meaning": "Welcome (Comorian)" },
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello; good morning (French)" },
+        { "phrase": "Merci beaucoup", "say": "mair-SEE boh-KOO", "meaning": "Thank you very much" },
+        { "phrase": "C'est combien ?", "say": "say kom-BYAN", "meaning": "How much is it?" },
+        { "phrase": "Excusez-moi", "say": "ek-skoo-zay-MWAH", "meaning": "Excuse me; sorry" },
+        { "phrase": "Au revoir", "say": "oh ruh-VWAHR", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q970",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Comorian franc (KMF), tied to the euro. Euros are easy to change; cards are taken in only a few hotels.",
+        "sources": [{ "property": "P38", "values": ["Q267264"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Comorian (Shikomori), Arabic and French, all official. Comorian is the everyday language; French is used in government and business.",
+        "sources": [{ "property": "P37", "values": ["Q33077", "Q13955", "Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins, as in France), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "East Africa Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q109520536"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "17 for police and 18 for medical emergencies; the fire service is on 772 03 73",
+        "sources": [{ "property": "P2852", "values": ["Q25648842", "Q25648843", "Q60055661"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+269",
+        "sources": [{ "property": "P474", "values": ["+269"] }]
+      }
+    ]
+  }
+}

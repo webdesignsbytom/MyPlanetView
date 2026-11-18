@@ -1,0 +1,157 @@
+{
+  "code": "SM",
+  "slug": "san-marino",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Benvenuti", "San Marino"],
+  "summary": "Three towers on Monte Titano and a walled hilltop capital looking out to the Adriatic.",
+  "overview": [
+    "San Marino calls itself the world's oldest surviving republic, founded, so the story goes, in 301 by Marinus, a stonemason who took refuge on the mountain. It covers about 61 km² of hills entirely surrounded by Italy, a short way inland from Rimini. The capital, the Città di San Marino, runs along the ridge of Monte Titano, about 740 m high, with cliffs on one side and three towers, Guaita, Cesta and Montale, strung out along the top. A path joins the first two, and on clear days the view runs across Romagna to the Adriatic. The old centre and the mountain are a UNESCO World Heritage Site.",
+    "Inside the walls, steep lanes lead up to the Palazzo Pubblico, where the Great and General Council meets and the Guard of the Rock stands outside in green and red; the Basilica of San Marino holds the saint's relics. Below the ridge, Borgo Maggiore has an old market square and a cable car up to the capital. There's no airport or railway: most visitors come by bus from Rimini or by car, and the day-trippers leave by late afternoon, so staying the night means quiet streets and floodlit towers. Two Captains Regent, elected every six months, share the role of head of state."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and often misty on the summit, with days around 5–8°C, frost, and snow in some years. Quiet, with Christmas lights and stalls in the old town in December."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Often clear and mild, good for long views. The new Captains Regent take office in ceremony on 1 April, and May is warm and green."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm but breezier than the coast, with days of 26–28°C. Coaches from the Rimini beach resorts fill the lanes in July and August, and the Medieval Days bring crossbows and costumes."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Clear, warm days carry on through September, and the national day falls on the 3rd. Rain comes more often in October and November, when cloud can hide the view."
+      }
+    ],
+    "weather": "Monte Titano rises straight out of the hills behind the Adriatic coast, so the capital is a few degrees cooler and windier than the beaches. Summer days usually reach 26–28°C; winter days are around 5–8°C, nights hover near freezing, and snow falls in some years. Rain, roughly 800 mm a year, comes in every season, most of all in autumn, and low cloud sometimes wraps the summit.",
+    "festivals": [
+      {
+        "name": "Feast of St Agatha",
+        "place": "Across San Marino",
+        "when": "5 February",
+        "months": [2],
+        "text": "The republic's co-patron saint has her feast on the day in 1740 when an occupation by the papal legate, Cardinal Alberoni, came to an end; shops and offices close."
+      },
+      {
+        "name": "Investiture of the Captains Regent",
+        "place": "Città di San Marino",
+        "when": "1 April and 1 October",
+        "months": [4, 10],
+        "text": "The two new heads of state, chosen for six months, are sworn in, with a procession of officials and guards in ceremonial dress through the old town."
+      },
+      {
+        "name": "Medieval Days (Giornate Medioevali)",
+        "place": "Città di San Marino",
+        "when": "Usually in late July, over a few days",
+        "months": [7],
+        "text": "The old town goes back in time with crossbow contests, flag throwers, craft markets, music and food from old recipes."
+      },
+      {
+        "name": "Feast of San Marino and the Founding of the Republic",
+        "place": "Across San Marino",
+        "when": "3 September",
+        "months": [9],
+        "text": "San Marino's own day, for the saint and the founding of the republic in 301, with ceremonies at the basilica and a contest of the republic's crossbowmen."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Manners are much as in Italy: a handshake on meeting, “Buongiorno” until mid-afternoon and “Buonasera” after, and two kisses on the cheeks among friends. The Sammarinese are proud of their long independence, and like visitors to treat San Marino as a country of its own rather than a corner of Italy.",
+    "etiquette": [
+      "For a souvenir, the tourist office will stamp your passport with San Marino's own stamp, for a small fee.",
+      "Cover your shoulders and knees in the basilica and the churches.",
+      "The paths between the towers run along cliff edges: keep to them, and wear shoes with grip, as the stone is slippery after rain.",
+      "The old town is largely closed to traffic, so park in the car parks below the walls and walk up."
+    ],
+    "tipping": "As in Italy, bills often include a small cover charge (coperto), and tips aren't expected. Rounding up, or leaving a few euros for good service, is welcome.",
+    "dress": "Comfortable shoes for steep cobbles and steps, and an extra layer: the summit is windier and cooler than the beaches below.",
+    "food": [
+      {
+        "name": "Torta Tre Monti",
+        "text": "Layers of thin wafer and hazelnut and chocolate cream, coated in chocolate, with the three towers on top. Sold in boxes all over town."
+      },
+      {
+        "name": "Piadina",
+        "text": "The flatbread of Romagna, folded round prosciutto, soft squacquerone cheese and rocket, or torn and eaten with a meal."
+      },
+      {
+        "name": "Passatelli",
+        "text": "Short, thick strands of breadcrumbs, Parmesan, egg and nutmeg pressed straight into hot broth, a winter favourite here and across Romagna."
+      },
+      {
+        "name": "Sangiovese and Biancale",
+        "text": "Wines from the republic's own vineyards: red Sangiovese and whites such as Biancale, sold in shops and at the cooperative cellar."
+      }
+    ],
+    "phrases": {
+      "language": "Italian",
+      "intro": "Italian is the language of everyday life, and older people also speak Romagnol, the dialect of the surrounding region. English is common in the old town's shops.",
+      "items": [
+        { "phrase": "Buongiorno", "say": "bwon-JOR-noh", "meaning": "Good morning; hello" },
+        { "phrase": "Buonasera", "say": "bwoh-nah-SEH-rah", "meaning": "Good afternoon; good evening" },
+        { "phrase": "Grazie", "say": "GRAHT-see-eh", "meaning": "Thank you" },
+        { "phrase": "Per favore", "say": "pair fah-VOH-reh", "meaning": "Please" },
+        { "phrase": "Quanto costa?", "say": "KWAHN-toh KOS-tah", "meaning": "How much is it?" },
+        { "phrase": "Il conto, per favore", "say": "eel KON-toh pair fah-VOH-reh", "meaning": "The bill, please" },
+        { "phrase": "Che bella vista!", "say": "keh BEL-lah VEE-stah", "meaning": "What a view!" },
+        { "phrase": "Arrivederci", "say": "ah-ree-veh-DAIR-chee", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q238",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). San Marino isn't in the EU, but it mints its own euro coins, mostly sold to collectors.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Italian. Many older people also speak Romagnol, the regional dialect.",
+        "sources": [{ "property": "P37", "values": ["Q652"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, F and L (L: three round pins in a row, as in Italy), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613", "Q1520890"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, and UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q106899452"] }],
+        "note": "Wikidata gives only the winter time zone; San Marino changes its clocks for summer with Italy, so the page adds UTC+2."
+      },
+      {
+        "key": "emergency",
+        "text": "112; 113 for police, 115 for fire, 118 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648804", "Q25648805", "Q11185210"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+378",
+        "sources": [{ "property": "P474", "values": ["+378"] }],
+        "note": "Wikidata also gives +39 0549, the old route through Italy's network; the page gives the country's own code."
+      }
+    ]
+  }
+}

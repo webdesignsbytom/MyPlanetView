@@ -1,0 +1,194 @@
+{
+  "code": "RU",
+  "slug": "russia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Zdravstvuyte", "Rossiya"],
+  "summary": "Moscow's Kremlin, St Petersburg's palaces and canals, Lake Baikal and the Trans-Siberian railway.",
+  "overview": [
+    "The world's largest country stretches across eleven time zones from the Baltic to the Pacific, but most visitors to Russia start at its western end. Moscow has the red walls and cathedrals of the Kremlin, Red Square with the striped domes of St Basil's, the Tretyakov Gallery and a metro whose stations are lined with marble and chandeliers. St Petersburg, built by Peter the Great on the Neva in the 18th century, has the Hermitage in the Winter Palace, canals and bridges, and the palaces and fountains of Peterhof and Tsarskoye Selo just outside. North-east of Moscow, the Golden Ring of old towns, among them Suzdal, Vladimir, Sergiev Posad and Yaroslavl, keeps onion-domed churches and wooden houses, and on the Volga, the kremlin of Kazan has a mosque and an Orthodox cathedral side by side.",
+    "Further east, the Trans-Siberian Railway runs about 9,300 km from Moscow to Vladivostok, a week on the train without a break. Lake Baikal, in southern Siberia, is the deepest lake on Earth, over 1,600 m, and holds about a fifth of the world's unfrozen fresh surface water. Kamchatka, in the far east, has volcanoes, geysers and bears; in the south-west, Sochi lies on the Black Sea below the Caucasus, where Mount Elbrus is Europe's highest peak.",
+    "Long-distance trains with sleeper berths and domestic flights cover the distances, and the big cities have good metros. Signs are in Cyrillic, and English is less common outside Moscow and St Petersburg, so a translation app helps.",
+    "Many governments advise against all or most travel to Russia. Conditions change, so check your own government's current advice before planning a trip."
+  ],
+  "whenToGo": {
+    "stripLabel": "Moscow, St Petersburg and the west of the country, where most trips begin. Siberia, the far east and the Black Sea differ a lot, and each has a strip of its own below.",
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and snowy, usually between −10°C and −3°C in Moscow, with colder spells and very short days. Snow-covered cities look their best, and New Year is the biggest holiday: much of the country stops from 1 to 8 January, which takes in Orthodox Christmas on the 7th."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "March is still wintry, and the April thaw brings slush and mud. May is green and fresh, with Victory Day on the 9th and the first warm days."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm, with days of 20–25°C in Moscow and St Petersburg, occasional heatwaves above 30°C and thunderstorms. White nights light St Petersburg from late May to mid-July, and its bridges over the Neva open at night to let ships through. The busiest season; mosquitoes are thick in the north and in Siberia."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September brings “golden autumn”, with the birch woods turning yellow, but the days shorten fast. October is cool and wet, sometimes with the first snow, and November is dark and grey."
+      }
+    ],
+    "weather": "Most of Russia has a continental climate of long, cold winters and short, warm summers, growing harsher further east. Moscow averages about −6°C in January, with spells near −20°C, and reaches about 24°C by day in July. St Petersburg, on the Baltic, is a little milder and damper in winter but much darker, with about six hours of daylight at midwinter and white nights in June. Siberia's winters are among the coldest anywhere people live: Yakutsk averages close to −40°C in January. Summer is the wettest season. Only the coast around Sochi, on the Black Sea, breaks the pattern: it's humid and subtropical.",
+    "festivals": [
+      {
+        "name": "New Year and Orthodox Christmas",
+        "place": "Across Russia",
+        "when": "31 December to 8 January",
+        "months": [12, 1],
+        "text": "New Year's Eve is the main celebration, with Ded Moroz (Grandfather Frost), fireworks and a long family feast. The public holidays run to 8 January and take in Orthodox Christmas on the 7th, so offices close and trains and hotels are busy."
+      },
+      {
+        "name": "Maslenitsa",
+        "place": "Across Russia",
+        "when": "The week before Orthodox Lent, usually in late February or March",
+        "months": [2, 3],
+        "text": "Pancake week: stacks of bliny with butter, sour cream or caviar, sledging and outdoor games, ending with a straw figure of winter burned on a bonfire."
+      },
+      {
+        "name": "Victory Day",
+        "place": "Across Russia",
+        "when": "9 May",
+        "months": [5],
+        "text": "Military parades in Red Square and other cities mark the end of the Second World War in Europe, with fireworks in the evening; offices close for the day."
+      },
+      {
+        "name": "Scarlet Sails",
+        "place": "St Petersburg",
+        "when": "Usually in late June",
+        "months": [6],
+        "text": "A night-time celebration for school leavers on the Neva during the white nights, with a tall ship under scarlet sails, music and fireworks."
+      },
+      {
+        "name": "Sabantuy",
+        "place": "Kazan and across Tatarstan",
+        "when": "Usually in June",
+        "months": [6],
+        "text": "The Tatar festival marking the end of spring sowing, with belt wrestling, horse races, sack races and a climb up a greased pole for a prize at the top."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Siberia and Lake Baikal",
+        "months": ["avoid", "good", "good", "avoid", "good", "best", "best", "best", "best", "good", "avoid", "avoid"],
+        "text": "Irkutsk, the gateway to Lake Baikal, averages below −15°C in January, with spells near −35°C. In February and March the lake's ice is thick enough to walk and drive on, and clear enough to see into, which draws photographers and skaters; in April it starts to break up, and tracks turn to mud. Summer is short and warm, around 20–25°C by day, though the lake itself stays cold, and September turns the larches gold."
+      },
+      {
+        "name": "The far east",
+        "months": ["avoid", "avoid", "good", "good", "good", "good", "best", "best", "best", "good", "avoid", "avoid"],
+        "text": "Kamchatka's volcanoes, geysers and brown bears are reached by small plane and helicopter, and its hiking season is short, from about July to September; late winter and spring bring deep snow for ski touring. Vladivostok, at the end of the Trans-Siberian, has cold, dry, windy winters and foggy early summers, with its clearest and warmest weather in August and September."
+      },
+      {
+        "name": "The Black Sea coast and the Caucasus",
+        "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "Sochi has the mildest winters in Russia, around 10°C by day and often wet, while the ski slopes of Krasnaya Polyana, about an hour inland, have snow from about December to April. Summers on the coast are hot and humid, with the sea at about 25°C; September and October are warm and quieter. Mount Elbrus, 5,642 m, is climbed in summer, from about June to September."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Men shake hands firmly on meeting; a woman usually offers her hand first if she wants to shake. Strangers rarely smile in the street, which is reserve rather than rudeness, and warmth comes quickly once you're introduced. Formal Russian uses the first name and patronymic (Ivan Petrovich). “Zdravstvuyte” is the polite hello, “Privet” the one for friends.",
+    "etiquette": [
+      "Don't shake hands or pass things across a doorway: it's thought unlucky.",
+      "When invited home, bring an odd number of flowers, or a cake or chocolates, and take your shoes off at the door; slippers (tapochki) will be offered.",
+      "Leave your coat in the cloakroom (garderob) at museums, theatres and restaurants: wearing it inside isn't done.",
+      "Toasts are short speeches, and everyone drinks together. With vodka, eat a bite of something after each glass.",
+      "In Orthodox churches, women cover their hair and wear a skirt, and men take their hats off.",
+      "Carry your passport: police may ask to see it."
+    ],
+    "tipping": "Service is rarely added to the bill, so leave about 10% in restaurants; round up for taxis.",
+    "dress": "In winter, a proper coat, hat, gloves and boots that grip on ice; buildings are well heated, so dress in layers you can take off. In summer, light clothes and a jacket for the evenings. Russians dress up for the theatre and the ballet.",
+    "food": [
+      {
+        "name": "Pelmeni",
+        "text": "Small dumplings filled with minced meat, from the Urals and Siberia, boiled and served with sour cream or butter."
+      },
+      {
+        "name": "Bliny",
+        "text": "Thin pancakes eaten with sour cream, jam, smoked fish or red caviar, and above all during Maslenitsa."
+      },
+      {
+        "name": "Shchi",
+        "text": "Cabbage soup, sometimes made with sauerkraut, served with a spoonful of sour cream and dark rye bread."
+      },
+      {
+        "name": "Salat Olivye",
+        "text": "Diced potato, carrot, pickles, peas and ham or sausage in mayonnaise: no New Year table is without it."
+      },
+      {
+        "name": "Pirozhki",
+        "text": "Small baked or fried buns filled with cabbage, potato, egg and spring onion, or meat, sold in bakeries and at stations."
+      },
+      {
+        "name": "Kvass and vodka",
+        "text": "Kvass is a lightly fermented drink made from rye bread, drunk cold in summer. Vodka is drunk neat and chilled, always with food."
+      }
+    ],
+    "phrases": {
+      "language": "Russian",
+      "intro": "Russian is written in Cyrillic; learning the alphabet takes an afternoon and makes signs and menus far easier.",
+      "items": [
+        { "phrase": "Zdravstvuyte (Здравствуйте)", "say": "ZDRAST-vooy-tyeh", "meaning": "Hello (polite)" },
+        { "phrase": "Privet (Привет)", "say": "pree-VYET", "meaning": "Hi" },
+        { "phrase": "Spasibo (Спасибо)", "say": "spah-SEE-bah", "meaning": "Thank you" },
+        { "phrase": "Pozhaluysta (Пожалуйста)", "say": "pah-ZHAH-loo-stah", "meaning": "Please; you're welcome" },
+        { "phrase": "Izvinite (Извините)", "say": "eez-vee-NEE-tyeh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Skolko stoit? (Сколько стоит?)", "say": "SKOL-kah STOH-eet", "meaning": "How much is it?" },
+        { "phrase": "Ya ne ponimayu (Я не понимаю)", "say": "yah nyeh pah-nee-MAH-yoo", "meaning": "I don't understand" },
+        { "phrase": "Vy govorite po-angliyski? (Вы говорите по-английски?)", "say": "vy gah-vah-REE-tyeh pah-an-GLEE-skee", "meaning": "Do you speak English?" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q159",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Russian rouble (₽, RUB)",
+        "sources": [{ "property": "P38", "values": ["Q41044"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Russian, used across the country. Many of the republics have official languages of their own as well, such as Tatar in Tatarstan and Yakut in Sakha (Yakutia).",
+        "sources": [{ "property": "P37", "values": ["Q7737", "Q25285", "Q34299"] }],
+        "note": "Wikidata lists over thirty languages that are official in particular republics; the page names two of them."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eleven time zones, from UTC+2 in Kaliningrad to UTC+12 in Kamchatka and Chukotka; Moscow and St Petersburg are on Moscow Time, UTC+3. No summer time.",
+        "sources": [{ "property": "P421", "values": ["Q842320", "Q2356448", "Q2620414", "Q6723", "Q7105"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; 101 for fire, 102 for police, 103 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648794", "Q25648798", "Q25648811"] }],
+        "note": "Wikidata also lists 01, 02 and 03, the old landline numbers for the same services; the page gives the ones that work from any phone."
+      },
+      {
+        "key": "callingCode",
+        "text": "+7",
+        "sources": [{ "property": "P474", "values": ["+7"] }]
+      }
+    ]
+  }
+}

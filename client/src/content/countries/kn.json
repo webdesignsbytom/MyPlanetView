@@ -1,0 +1,172 @@
+{
+  "code": "KN",
+  "slug": "saint-kitts-and-nevis",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Good morning", "St Kitts", "and Nevis"],
+  "summary": "The smallest country in the Americas: a cane railway, a hilltop fort and quiet Nevis.",
+  "overview": [
+    "Saint Kitts and Nevis is the smallest country in the Americas: two volcanic islands separated by a strait about 3 km wide called the Narrows. St Kitts, the larger, has the capital, Basseterre, the cruise port and most of the hotels, around Frigate Bay and the quiet beaches of the south-east peninsula. Nevis, almost round and rising to a single peak that is usually capped with cloud, is slower and quieter, with old sugar estates turned into inns.",
+    "Sugar ruled both islands for three centuries, until the industry closed in 2005, and its traces are everywhere: in Brimstone Hill Fortress, a British stronghold of the 1700s on a hill above the west coast and a World Heritage Site; in the stone windmill towers of ruined estates; and in the St Kitts Scenic Railway, a narrow-gauge line built to carry cane, which now takes visitors along much of the coast. Mount Liamuiga, 1,156 m, the dormant volcano at the north end, is a muddy but rewarding climb through rainforest to the crater rim.",
+    "On Nevis, Charlestown has a rebuilt house on the site where Alexander Hamilton, one of the founders of the United States, was born, now a museum of the island's history, and Pinney's Beach runs north from the town. Ferries link Basseterre and Charlestown several times a day, and water taxis cross the Narrows. Green vervet monkeys, brought over by French settlers in the 1600s, are thought by some counts to outnumber the people, and you'll see them by the roads."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "avoid", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [1, 2, 3, 4, 5],
+        "text": "The most settled months, sunny and breezy at about 27–29°C. February to April are usually the driest of all, and May turns hotter as the winds drop."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and more humid, with passing showers. The St Kitts Music Festival opens the summer, and Nevis's Culturama closes it."
+      },
+      {
+        "name": "Storm season",
+        "months": [9, 10, 11],
+        "text": "The wettest stretch, when hurricanes are most likely, above all in September and October; a few hotels shut for some weeks, and by November the seas begin to settle."
+      },
+      {
+        "name": "Christmas",
+        "months": [12],
+        "text": "Showers are still around as the dry season begins, and Sugar Mas, the national carnival, takes over Basseterre."
+      }
+    ],
+    "weather": "Days reach about 29–31°C in every month and nights stay above 22°C, cooled by a steady easterly trade wind. The mountains catch most of the rain, so the forested slopes above the old cane fields stay green while the south-east peninsula is dry scrub. The wetter months run from about August to December, overlapping the June-to-November hurricane season.",
+    "festivals": [
+      {
+        "name": "Sugar Mas (National Carnival)",
+        "place": "Basseterre, St Kitts",
+        "when": "Usually late November to early January, peaking from Boxing Day to the first days of January",
+        "months": [12, 1],
+        "text": "Calypso and soca contests, a queen show and masquerade troupes, then the J'ouvert dawn street party and grand parades through the capital over the holidays."
+      },
+      {
+        "name": "St Kitts Music Festival",
+        "place": "Basseterre",
+        "when": "Usually late June, over three nights",
+        "months": [6],
+        "text": "Caribbean and international stars of soca, reggae and R&B on one big outdoor stage."
+      },
+      {
+        "name": "Culturama",
+        "place": "Charlestown, Nevis",
+        "when": "Usually late July to early August, ending around Emancipation Day",
+        "months": [7, 8],
+        "text": "Nevis's own festival of its heritage: calypso, a pageant, street jump-ups and folk performances."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the federation",
+        "when": "19 September",
+        "months": [9],
+        "text": "Independence from Britain in 1983, marked with a ceremonial parade, church services and celebrations through the week."
+      }
+    ],
+    "regions": [
+      {
+        "name": "St Kitts",
+        "text": "Livelier, with the cruise port, the hotels and beach bars of Frigate Bay, and the fortress and railway. Cruise ships make Basseterre busy on most winter days."
+      },
+      {
+        "name": "Nevis",
+        "text": "A single mountain ringed by a coast road, with plantation inns, hot springs near Charlestown and a much slower pace. It is wetter around the peak and drier on the coast."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Kittitians and Nevisians are friendly and courteous, and the day's greeting, \"Good morning\" or \"Good afternoon\", opens every exchange, in a shop, a taxi or on the street; a handshake follows when you meet someone. Older people are addressed with a title and first name, \"Miss Ruth\" or \"Mr George\", even by other adults.",
+    "etiquette": [
+      "Swimwear stays at the beach: walking round Basseterre or Charlestown in it is frowned on, and men shouldn't go shirtless in town.",
+      "Agree taxi fares before setting off, and check whether the price is in US or EC dollars.",
+      "Expect to tip anyone who poses for your camera with a monkey on their shoulder, and ask before photographing anyone else.",
+      "Sundays are for church and family: Basseterre's shops close and the islands go quiet.",
+      "If you're crossing to Nevis for the day, check the time of the last ferry or water taxi back."
+    ],
+    "tipping": "Check the bill first: a 10% service charge is often already on it, and if not, add 10–15%. Taxi drivers, guides and boat crews are usually tipped as well.",
+    "dress": "Light, casual clothes, and a smart outfit for dinner at the plantation inns, some of which expect it. For Mount Liamuiga or Nevis Peak, wear shoes you don't mind getting muddy and bring a layer for the cooler, damp summit.",
+    "food": [
+      {
+        "name": "Stewed saltfish",
+        "text": "The national dish: salt cod stewed with onion, peppers and tomato, served with spicy plantain, coconut dumplings and seasoned breadfruit."
+      },
+      {
+        "name": "Goat water",
+        "text": "A thick, peppery goat stew, sold at fêtes, festivals and roadside stands."
+      },
+      {
+        "name": "Black pudding and souse",
+        "text": "Spiced sausage of rice and pork blood, served with souse, pickled pork in a sharp broth of lime and cucumber."
+      },
+      {
+        "name": "Lobster and conch",
+        "text": "Grilled spiny lobster, and conch stewed or in fritters, at the beach bars of Frigate Bay and Pinney's Beach."
+      },
+      {
+        "name": "Sugar cake",
+        "text": "Grated coconut boiled with sugar and often tinted pink, a sweet that goes back to the cane-growing days."
+      }
+    ],
+    "phrases": {
+      "language": "St Kitts and Nevis English",
+      "intro": "English is spoken everywhere, with the islands' own lilting creole among friends. These are names and words worth knowing.",
+      "items": [
+        { "phrase": "Kittitian", "say": "kit-TISH-un", "meaning": "Someone from St Kitts" },
+        { "phrase": "Nevisian", "say": "neh-VEE-zhun", "meaning": "Someone from Nevis" },
+        { "phrase": "Nevis", "say": "NEE-vis", "meaning": "The smaller island (not \"NEV-is\")" },
+        { "phrase": "Basseterre", "say": "bass-TAIR", "meaning": "The capital, on St Kitts" },
+        { "phrase": "Liamuiga", "say": "lee-ah-MWEE-gah", "meaning": "The volcano, and the Kalinago name for St Kitts, said to mean \"fertile land\"" },
+        { "phrase": "Sugar Mas", "say": "SHUG-ar MAS", "meaning": "The Christmas carnival on St Kitts" },
+        { "phrase": "Culturama", "say": "kul-chur-AH-mah", "meaning": "Nevis's summer festival" },
+        { "phrase": "Lime", "say": "LIME", "meaning": "To hang out with friends" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q763",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Eastern Caribbean dollar (EC$, XCD), fixed to the US dollar. US dollars are accepted almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q26365"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK) and Types A and B (two flat pins, as in North America), 230 V: check before plugging in American devices",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata also lists the British family of plugs in general; Type G is the British plug found here."
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q28145653"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 869",
+        "sources": [{ "property": "P474", "values": ["+1869"] }]
+      }
+    ]
+  }
+}

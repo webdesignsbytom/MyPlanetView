@@ -1,0 +1,204 @@
+{
+  "code": "MY",
+  "slug": "malaysia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Selamat datang", "Malaysia"],
+  "summary": "Kuala Lumpur's towers, Penang's hawker food, cool tea hills, and Borneo's orangutans and reefs.",
+  "overview": [
+    "Malaysia comes in two parts: the peninsula, which runs south from Thailand to Singapore, and the states of Sabah and Sarawak on Borneo, across the South China Sea. Malays, Chinese and Indians live side by side, with Borneo's Indigenous peoples such as the Iban and the Kadazan-Dusun, and it shows in the food, the festivals and the mosques, temples and churches of every town.",
+    "Kuala Lumpur is the usual start: the Petronas Twin Towers, 452 m tall, the colonial buildings around Merdeka Square, and the Batu Caves just north of the city, a Hindu shrine reached by 272 painted steps beside a giant gold statue of Lord Murugan. Malacca and George Town, on Penang, are old trading ports listed together as a World Heritage Site, with shophouses, clan houses and temples, and Penang's hawker food is famous across the country. The Cameron Highlands, at about 1,500 m, are cool and green with tea estates; Taman Negara is one of the oldest rainforests on Earth; Langkawi, off the north-west coast, has beaches; and the Perhentian and Redang islands, off the east coast, have coral reefs and clear water.",
+    "On Borneo, Sabah has Mount Kinabalu, at 4,095 m the highest mountain in Malaysia, orangutans at Sepilok and wildlife along the Kinabatangan River; Sarawak has Kuching, Iban longhouses and the vast caves of Gunung Mulu. Sabah and Sarawak keep their own immigration controls, so passports are checked again even on a flight from the peninsula.",
+    "Getting around is easy: domestic flights link the peninsula and Borneo, fast electric trains run up the west coast, long-distance buses go almost everywhere else, and the Grab app works in every city. Drug offences carry very heavy penalties, and the east-coast states of Kelantan and Terengganu are more conservative than the rest of the country."
+  ],
+  "whenToGo": {
+    "stripLabel": "The country taken together, a compromise. The peninsula's two coasts and the two Borneo states have their wet seasons at different times, and each has a strip of its own below.",
+    "months": ["good", "good", "best", "best", "best", "best", "best", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "North-east monsoon",
+        "months": [11, 12, 1, 2],
+        "text": "Heavy rain, floods and rough seas on the peninsula's east coast, where most island resorts close, and the wettest months in Kuching. The west coast dries out from December, and January and February are the best months for Penang and Langkawi."
+      },
+      {
+        "name": "Spring changeover",
+        "months": [3, 4],
+        "text": "The east-coast islands reopen and Sabah has its driest weeks. Hot and humid, with afternoon thunderstorms building on the west coast through April."
+      },
+      {
+        "name": "South-west monsoon",
+        "months": [5, 6, 7, 8, 9],
+        "text": "The drier season over most of the country: the east-coast islands are at their best and Kuching has its driest months. Afternoon storms still come, and in some years haze from forest fires drifts in towards the end of the season."
+      },
+      {
+        "name": "Autumn changeover",
+        "months": [10],
+        "text": "Often the wettest month on the west coast, with heavy afternoon storms in Penang, Langkawi and Kuala Lumpur that carry on into November."
+      }
+    ],
+    "weather": "Malaysia is hot and humid all year: around 32°C by day and 24°C at night in the lowlands, and cooler in the hills, where the Cameron Highlands rarely pass 25°C. There are no dry months, only drier ones. The north-east monsoon, from about November to February, brings heavy rain and rough seas to the peninsula's east coast and to Sarawak, while the west coast stays fairly dry. The south-west monsoon, from about May to September, is the drier season for most of the country. Between the two, around April and October, afternoon thunderstorms are frequent, especially on the west coast. In some years, smoke from forest fires in Sumatra and Kalimantan brings haze, usually between about August and October.",
+    "festivals": [
+      {
+        "name": "Thaipusam",
+        "place": "Batu Caves, Kuala Lumpur, and Penang",
+        "when": "Usually late January or early February, at the full moon",
+        "months": [1, 2],
+        "text": "Hindu devotees of Lord Murugan carry kavadi, frames of steel and peacock feathers, some with hooks and skewers through their skin, from central Kuala Lumpur to the Batu Caves through the night, with huge crowds following. Penang holds its own procession."
+      },
+      {
+        "name": "Chinese New Year",
+        "place": "Across Malaysia, above all Penang and Kuala Lumpur",
+        "when": "Usually late January or February: in 2027, 6 February",
+        "months": [1, 2],
+        "text": "Lion dances, red lanterns and open houses. Penang's Kek Lok Si temple is lit with thousands of lights, and many Chinese-run shops and restaurants close for the first few days."
+      },
+      {
+        "name": "Ramadan and Hari Raya Aidilfitri",
+        "place": "Across Malaysia",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Through the month of fasting, Ramadan bazaars set up in the late afternoon with rows of stalls selling food to break the fast. Hari Raya, at the end, is the biggest Malay holiday: cities empty as people go home to their villages, and families hold open houses."
+      },
+      {
+        "name": "Kaamatan and Gawai",
+        "place": "Sabah and Sarawak",
+        "when": "Kaamatan through May, with the main days on 30 and 31 May; Gawai on 1 and 2 June",
+        "months": [5, 6],
+        "text": "The harvest festivals of Borneo's Indigenous peoples: rice wine (tapai in Sabah, tuak in Sarawak), feasts and longhouse gatherings, and in Sabah the Unduk Ngadau, a contest to choose the harvest queen."
+      },
+      {
+        "name": "Merdeka Day and Malaysia Day",
+        "place": "Across Malaysia",
+        "when": "31 August and 16 September",
+        "months": [8, 9],
+        "text": "Merdeka Day marks Malaya's independence from Britain in 1957, with a parade in the capital; Malaysia Day marks the founding of Malaysia in 1963, when Sabah and Sarawak joined. Both are public holidays."
+      },
+      {
+        "name": "Deepavali",
+        "place": "Across Malaysia, above all Brickfields in Kuala Lumpur and Penang's Little India",
+        "when": "Usually late October or early November",
+        "months": [10, 11],
+        "text": "The Hindu festival of lights: oil lamps, patterns of coloured rice flour (kolam) at doorsteps, and market stalls selling sweets, flowers and saris in the weeks before."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The west coast: Kuala Lumpur, Penang, Langkawi and Malacca",
+        "months": ["best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "good", "good"],
+        "text": "Hot all year. January and February are the driest and sunniest months, the best time for Langkawi's beaches and Penang. The rest of the year brings afternoon thunderstorms, heaviest around April and from about September to November, when Penang and Langkawi get most of their rain. In some years haze from fires in Sumatra hangs over the coast between about August and October."
+      },
+      {
+        "name": "The east coast: the Perhentians, Redang, Tioman, Terengganu and Kelantan",
+        "months": ["avoid", "avoid", "good", "best", "best", "best", "best", "best", "good", "good", "avoid", "avoid"],
+        "text": "Its seasons run the other way. From about November to February the north-east monsoon brings heavy rain, floods and rough seas: most resorts on the Perhentians and Redang close and the boats stop. The islands reopen around March, and April to August is the time for snorkelling and diving in clear water, with sea turtles nesting on some beaches."
+      },
+      {
+        "name": "Sabah",
+        "months": ["good", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good"],
+        "text": "Malaysia's north-eastern corner of Borneo, nicknamed the Land Below the Wind because it lies south of the typhoon belt. February to April is the driest time; rain picks up from May and stays heavy until about November. Mount Kinabalu is usually climbed over two days with a permit and a licensed guide, and diving permits for Sipadan are limited each day, so book both early."
+      },
+      {
+        "name": "Sarawak",
+        "months": ["good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good", "good"],
+        "text": "Kuching, a riverside city of old shophouses, is the base for Bako National Park's proboscis monkeys and coastal trails, the orangutans of Semenggoh and Iban longhouses upriver. June to August is usually the driest; December to February is the wettest, when monsoon rain can flood roads and rough seas can stop the boats to Bako. The Rainforest World Music Festival is usually held near Kuching in June or July."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "How people greet depends on their community. Malays often use the salam, a light clasp of the hands after which the right hand touches the chest; Chinese and Indian Malaysians usually shake hands. Let a woman offer her hand first. Encik (Mr) and Puan (Mrs) are polite titles, and you'll hear some people addressed as Datuk or Tan Sri, honours given by a state ruler or the king.",
+    "etiquette": [
+      "Point with your right thumb, fingers folded, rather than a forefinger, and beckon with your palm facing down.",
+      "Shoes come off at the door of homes, mosques and most temples: a pile of shoes outside is the sign.",
+      "When eating with your hands, as at a banana-leaf restaurant, use your right. Folding the leaf towards you at the end says you enjoyed the meal.",
+      "In Ramadan, be discreet about eating and drinking in front of people who are fasting; Chinese and Indian restaurants stay open by day.",
+      "Kelantan and Terengganu are more conservative than the west coast: dress more modestly there, away from the island resorts."
+    ],
+    "tipping": "Hotels and many restaurants add a 10% service charge, so there's no need to tip on top. Elsewhere, rounding up is fine, and porters and tour guides appreciate a little extra.",
+    "dress": "Light, loose clothes for the heat, plus a jumper for air-conditioned malls, buses and trains, which can be very cold. Cover shoulders and knees for mosques and temples; the big mosques lend robes and headscarves. Take warm layers and a waterproof for the Cameron Highlands and Mount Kinabalu, where the summit is near freezing before dawn.",
+    "food": [
+      {
+        "name": "Nasi lemak",
+        "text": "Rice cooked in coconut milk with sambal, crisp fried anchovies (ikan bilis), peanuts, cucumber and egg, often wrapped in a banana leaf. The national breakfast, eaten at any hour."
+      },
+      {
+        "name": "Char kway teow",
+        "text": "Flat rice noodles stir-fried over a fierce flame with prawns, cockles, bean sprouts, egg and Chinese sausage; Penang's hawkers make the best-known versions."
+      },
+      {
+        "name": "Roti canai and teh tarik",
+        "text": "A flaky flatbread, stretched thin, folded and griddled, served with dhal or curry at mamak (Indian Muslim) restaurants, many open all night. Drink it with teh tarik, sweet milky tea poured from a height between two jugs to froth it."
+      },
+      {
+        "name": "Laksa",
+        "text": "Noodle soup that changes from place to place: sour, fishy asam laksa in Penang, rich coconut curry laksa in Kuala Lumpur, and Sarawak laksa, with prawns, chicken and strips of omelette in a spiced broth, for breakfast in Kuching."
+      },
+      {
+        "name": "Satay",
+        "text": "Skewers of chicken or beef grilled over charcoal, with peanut sauce, cucumber, raw onion and cubes of pressed rice (ketupat)."
+      },
+      {
+        "name": "Durian",
+        "text": "The spiky \"king of fruits\": creamy, sweet and powerfully pungent. Many hotels and trains ban it, with signs to say so."
+      }
+    ],
+    "phrases": {
+      "language": "Malay (Bahasa Malaysia)",
+      "intro": "English is widely spoken, especially in the cities. Malay is easy to pronounce: words are said as they're spelt.",
+      "items": [
+        { "phrase": "Selamat pagi", "say": "seh-LAH-maht PAH-gee", "meaning": "Good morning" },
+        { "phrase": "Terima kasih", "say": "teh-REE-mah KAH-see", "meaning": "Thank you" },
+        { "phrase": "Tak apa", "say": "tahk AH-pah", "meaning": "That's OK; never mind" },
+        { "phrase": "Berapa?", "say": "beh-RAH-pah", "meaning": "How much?" },
+        { "phrase": "Boleh kurang?", "say": "BOH-leh KOO-rahng", "meaning": "Can you lower the price?" },
+        { "phrase": "Kurang pedas", "say": "KOO-rahng peh-DAHS", "meaning": "Less spicy, please" },
+        { "phrase": "Sedap!", "say": "seh-DAHP", "meaning": "Delicious!" },
+        { "phrase": "Jumpa lagi", "say": "JOOM-pah LAH-gee", "meaning": "See you again" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q833",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Malaysian ringgit (RM, MYR). Cards and e-wallets are widely used in cities; carry cash for night markets, hawker stalls and the countryside.",
+        "sources": [{ "property": "P38", "values": ["Q163712"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Malay (Bahasa Malaysia). English is widely spoken; Cantonese, Hokkien, Mandarin and Tamil are common, and Borneo has many Indigenous languages.",
+        "sources": [{ "property": "P37", "values": ["Q9237"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Malaysia Time, UTC+8, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6985", "Q63285947"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police, ambulance and fire; 112 also works from a mobile phone",
+        "sources": [{ "property": "P2852", "values": ["Q3086706"] }],
+        "note": "Wikidata gives 999; the page adds 112, which mobile phones in Malaysia connect to the same emergency service."
+      },
+      {
+        "key": "callingCode",
+        "text": "+60",
+        "sources": [{ "property": "P474", "values": ["+60"] }]
+      }
+    ]
+  }
+}

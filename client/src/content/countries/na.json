@@ -1,0 +1,183 @@
+{
+  "code": "NA",
+  "slug": "namibia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Goeiedag", "Namibia", "Welkom"],
+  "summary": "Red dunes in an ancient desert, Etosha's waterholes and long gravel roads made for a self-drive.",
+  "overview": [
+    "Namibia is a big, dry, thinly peopled country on Africa's south-west coast, and its landscapes are the draw. The Namib, one of the oldest deserts on earth, runs the length of the Atlantic coast. At Sossusvlei its red dunes rise more than 300 m, and in Deadvlei, a white clay pan nearby, dead camelthorn trees have stood for centuries. Up the coast, Swakopmund, a seaside town of German colonial buildings, is the base for sandboarding, quad biking and boat trips from Walvis Bay to see seals, dolphins and flamingos.",
+    "In the north, Etosha National Park surrounds a vast white salt pan. In the dry season elephants, rhinos, lions and great herds of springbok and zebra come to its waterholes, several of them floodlit at night beside the rest camps. Damaraland has rock engravings at Twyfelfontein and elephants adapted to the desert, and the Kaokoveld beyond it is Himba country. In the south, the Fish River Canyon is one of the largest canyons in the world, and Kolmanskop, near Lüderitz, is a diamond-mining town left to the sand.",
+    "Most visitors drive themselves, usually in a hired 4×4, on long gravel roads with little traffic; fuel stations can be far apart, and towns hours from each other. Loose gravel causes many accidents, so keep your speed down, and never drive at night, when antelope and cattle wander onto the road. Windhoek, the capital, is where most trips begin."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Autumn",
+        "months": [4, 5],
+        "text": "The rains end, the grass is still green, and the days are warm and clear, about 25°C in Windhoek. A quiet time before the busy season."
+      },
+      {
+        "name": "Dry winter",
+        "months": [6, 7, 8, 9],
+        "text": "Sunny, dry and cool, with days of about 20–25°C and cold nights, below freezing at times in the desert and on the central plateau. Animals gather at Etosha's waterholes, and the five-day Fish River Canyon hike runs only in these cooler months. July to September are the busiest."
+      },
+      {
+        "name": "Hot, dry season",
+        "months": [10, 11],
+        "text": "Hot inland, often above 35°C in Etosha and the desert, with very dry, dusty air. Game viewing at Etosha peaks just before the rains."
+      },
+      {
+        "name": "Rainy season",
+        "months": [12, 1, 2, 3],
+        "text": "Hot, with afternoon thunderstorms, mostly in the north and east; the desert and coast see little rain. Etosha turns green, animals spread out, springbok lambs appear, and flamingos and other birds flock to the pan when it holds water. Some gravel roads flood after storms."
+      }
+    ],
+    "weather": "Dry and sunny for most of the year. Inland, summer days are hot, often 30–35°C and more in the desert, while winter days are warm and the nights cold. What rain there is comes from about November to April, mostly as afternoon storms in the north and east, and the far north-east, along the Zambezi Region, is the wettest. The coast is a world of its own: the cold Benguela Current keeps Swakopmund at about 15–20°C, with fog on many mornings and almost no rain.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "Windhoek and across Namibia",
+        "when": "21 March",
+        "months": [3],
+        "text": "Marks independence from South African rule in 1990, with celebrations in the capital and the regions."
+      },
+      {
+        "name": "Herero Day and Heroes' Day",
+        "place": "Okahandja",
+        "when": "Usually the weekend nearest 26 August",
+        "months": [8],
+        "text": "Herero people gather at Okahandja to honour their chiefs and ancestors, the women in long Victorian-style dresses with headdresses shaped like cattle horns, the men in military-style uniforms. 26 August is also Heroes' Day, a public holiday."
+      },
+      {
+        "name": "Windhoek Oktoberfest",
+        "place": "Windhoek",
+        "when": "Usually in October",
+        "months": [10],
+        "text": "A German-style beer festival with brass bands, sausages and lederhosen, a reminder of the country's colonial past."
+      },
+      {
+        "name": "Summer holidays on the coast",
+        "place": "Swakopmund and Walvis Bay",
+        "when": "Mid-December to mid-January",
+        "months": [12, 1],
+        "text": "Namibians escape the inland heat for the cool coast, and Swakopmund's hotels and campsites fill up, so book ahead."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Sossusvlei and the Namib",
+        "text": "Best from about April to October. In the summer heat, climb the dunes at sunrise and be back down by mid-morning."
+      },
+      {
+        "name": "Etosha and the north",
+        "text": "Best from about June to October, when the animals depend on the waterholes. In the rains they scatter, but the park is green and full of birds."
+      },
+      {
+        "name": "The coast",
+        "text": "Swakopmund and Walvis Bay are cool and often foggy in every month, and the fog drifts inland on many mornings. Pack a warm layer even in summer."
+      },
+      {
+        "name": "The Zambezi Region",
+        "text": "The north-eastern strip between Angola, Zambia and Botswana: rivers, wetlands, hippos and elephants in the Bwabwata, Nkasa Rupara and Mudumu parks. Wetter and greener than the rest of the country, with malaria, and some tracks flooded from about January to April."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and a few words about how you are come before any question, even at a petrol station or shop counter. English is understood almost everywhere and Afrikaans is common in the centre and south; in the north, a word of Oshiwambo, such as \"Wa lalapo?\" (good morning; literally \"did you sleep well?\"), is much appreciated.",
+    "etiquette": [
+      "Visit Himba villages only with a local guide who knows the family, ask before taking photos, and bring useful gifts such as maize meal or sugar rather than sweets or money.",
+      "On gravel, keep to about 80 km/h or less and slow down for bends and oncoming cars: rollovers are the most common accident among visitors.",
+      "In Etosha, stay in your vehicle except in fenced areas, and be back inside the camp gates by sunset.",
+      "On remote roads, carry plenty of water and food, a spare tyre (better two) and a way to call for help.",
+      "The diamond areas around Lüderitz are off limits without a permit: keep to the marked roads."
+    ],
+    "tipping": "Leave about 10% at restaurants. Petrol station attendants fill the tank and clean the windscreen, and expect a small tip. Guides and lodge staff are tipped at the end of a stay.",
+    "dress": "Layers: desert mornings in winter can be below freezing and the afternoons warm. A hat, sunglasses and strong sun cream in every month, closed shoes for dunes and rocky trails, and a warm jacket for the foggy coast.",
+    "food": [
+      {
+        "name": "Kapana",
+        "text": "Strips of beef grilled over open fires at markets such as Single Quarters in Katutura, Windhoek's township, cut to order and dipped in spicy salt."
+      },
+      {
+        "name": "Game on the braai",
+        "text": "Oryx, kudu and springbok steaks are common on menus, and the braai (barbecue) is a weekend ritual."
+      },
+      {
+        "name": "Oshifima",
+        "text": "A stiff porridge of mahangu (pearl millet), the staple of the north, eaten with meat or a stew of greens."
+      },
+      {
+        "name": "Biltong",
+        "text": "Dried, spiced strips of beef or game, sold at every butcher's and supermarket and eaten on long drives."
+      },
+      {
+        "name": "Walvis Bay oysters",
+        "text": "Grown in the cold, rich water of the bay and served fresh along the coast."
+      },
+      {
+        "name": "Windhoek Lager and German bakeries",
+        "text": "The national lager is brewed to the German beer purity law of 1516, and cafés in Swakopmund and Windhoek serve apple strudel and Black Forest cake."
+      }
+    ],
+    "phrases": {
+      "language": "Afrikaans and Oshiwambo",
+      "intro": "English is the official language and the one most visitors use. Afrikaans is spoken across the centre and south, and Oshiwambo, the language of about half the population, in the north.",
+      "items": [
+        { "phrase": "Goeiemôre", "say": "KHOO-yuh-MOR-uh", "meaning": "Good morning (Afrikaans)" },
+        { "phrase": "Dankie", "say": "DUN-kee", "meaning": "Thank you (Afrikaans)" },
+        { "phrase": "Asseblief", "say": "AH-suh-bleef", "meaning": "Please (Afrikaans)" },
+        { "phrase": "Hoeveel kos dit?", "say": "hoo-FEEL KOSS dit", "meaning": "How much is it? (Afrikaans)" },
+        { "phrase": "Lekker", "say": "LEK-uh", "meaning": "Nice; good (Afrikaans)" },
+        { "phrase": "Totsiens", "say": "TOT-seens", "meaning": "Goodbye (Afrikaans)" },
+        { "phrase": "Wa lalapo?", "say": "wah lah-LAH-poh", "meaning": "Good morning (Oshiwambo)" },
+        { "phrase": "Tangi unene", "say": "TAHN-gee oo-NEH-neh", "meaning": "Thank you very much (Oshiwambo)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1030",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Namibian dollar (N$, NAD), worth the same as the South African rand, which is also legal tender. Spend or change Namibian dollars before leaving: South Africa doesn't take them.",
+        "sources": [{ "property": "P38", "values": ["Q202462", "Q181907"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English is the only official language. Oshiwambo, Afrikaans, Otjiherero, Khoekhoegowab (Nama and Damara) and German are widely spoken.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type M (three large round pins, as in South Africa), with type D (three smaller round pins) also found; 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1383497", "Q60740126"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Africa Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q4689525"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "10111 for police, or 112",
+        "sources": [{ "property": "P2852", "values": ["Q25648893", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+264",
+        "sources": [{ "property": "P474", "values": ["+264"] }]
+      }
+    ]
+  }
+}

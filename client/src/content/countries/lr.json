@@ -1,0 +1,164 @@
+{
+  "code": "LR",
+  "slug": "liberia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Hello", "Liberia"],
+  "summary": "Surf at Robertsport, deep rainforest at Sapo and a capital founded by settlers from America.",
+  "overview": [
+    "Liberia is Africa's oldest republic. Free-born and formerly enslaved Black Americans began settling this coast in 1822, and the country declared its independence in 1847. The link with the United States still shows: in the single-starred flag, the English spoken, the US dollars in circulation and the names of towns and counties. For visitors it's a country of surf beaches and rainforest. Robertsport, near the Sierra Leone border, has long point breaks and a lagoon, Lake Piso, behind it; Sapo National Park, in the south-east, protects the country's largest stretch of rainforest, with forest elephants, chimpanzees and pygmy hippos; and Liberia holds much of what's left of West Africa's Upper Guinean forest.",
+    "Monrovia, the capital, sits on a cape between the Atlantic and the Mesurado River. Providence Island, where the first settlers landed, lies at the river's mouth, and the gutted Ducor Hotel, once one of Africa's grandest, looks over the city from its hilltop. Outside the capital most roads are unpaved, and many are cut in the rainy season, so travel upcountry in the dry months and by 4×4. Electricity is unreliable away from the bigger hotels, so a torch and a power bank are worth packing."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3],
+        "text": "The time to travel: sunny, about 30°C on the coast, and the dirt roads into the interior are open. The harmattan can bring dusty, hazy skies in December and January."
+      },
+      {
+        "name": "Rains approach",
+        "months": [4],
+        "text": "Hot and sticky, with storms building in the afternoons and the first heavy showers on the coast."
+      },
+      {
+        "name": "Rainy season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Monrovia is often named the wettest capital city in the world, with around 4,500 mm of rain a year, nearly all of it in these months and the most in June and July. Downpours can last for hours, roads upcountry become impassable, and plans slip."
+      },
+      {
+        "name": "Rains ending",
+        "months": [11],
+        "text": "Showers grow fewer and lighter, the forest is at its greenest, and the roads begin to dry."
+      }
+    ],
+    "weather": "Hot and humid all year, with daytime highs in the high 20s to low 30s°C on the coast and little difference between the months. What changes is the rain. The coast, and Monrovia most of all, gets some of the heaviest rainfall on Earth, from about May to October; the interior, towards Guinea, gets less. The dry season runs from about December to March or April, with the harmattan's haze at its start.",
+    "festivals": [
+      {
+        "name": "Armed Forces Day",
+        "place": "Across Liberia",
+        "when": "11 February",
+        "months": [2],
+        "text": "A public holiday honouring the army, with a parade in Monrovia."
+      },
+      {
+        "name": "Decoration Day",
+        "place": "Across Liberia",
+        "when": "The second Wednesday in March",
+        "months": [3],
+        "text": "Families go to the cemeteries to clean, paint and decorate the graves of their relatives, then spend the day together. Offices close."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Liberia",
+        "when": "26 July",
+        "months": [7],
+        "text": "The national day, marking the declaration of independence in 1847, with speeches, parades and parties, and a festive mood in Monrovia."
+      },
+      {
+        "name": "Flag Day",
+        "place": "Across Liberia",
+        "when": "24 August",
+        "months": [8],
+        "text": "A public holiday for the Lone Star, the flag with eleven stripes and a single white star, adopted in 1847."
+      },
+      {
+        "name": "Thanksgiving Day",
+        "place": "Across Liberia",
+        "when": "The first Thursday in November",
+        "months": [11],
+        "text": "Liberia's own Thanksgiving, a public holiday brought over by the settlers, kept with church services and family meals."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Liberians shake hands with a twist: as the hands slide apart, each person catches the other's middle finger and pulls it to make a snap. Nobody minds if you fumble it, and someone will happily show you how. Always greet people before asking them anything, shopkeepers and drivers included.",
+    "etiquette": [
+      "The Atlantic along much of the coast has powerful rip currents: swim only where local people do, and never alone.",
+      "Liberian English is fast and drops word endings. Ask people to say it again, and they'll slow down for you.",
+      "Food is shared: if you're offered some, at least taste it.",
+      "In Monrovia after dark, use a car you know or a driver your hotel recommends rather than walking."
+    ],
+    "tipping": "Liberians tip little among themselves, but around 10% is usual in Monrovia's restaurants, and drivers, guides and anyone who carries your bags will be glad of something.",
+    "dress": "Light, smart-casual clothes; Liberians dress up for church on Sunday and for the office. A good rain jacket is essential in the wet season, and long sleeves and repellent help in the evenings.",
+    "food": [
+      {
+        "name": "Palm butter",
+        "text": "A thick, rich stew made from the pulp of palm nuts, cooked with fish, chicken or beef and eaten over rice."
+      },
+      {
+        "name": "Potato greens and cassava leaf",
+        "text": "Sweet potato leaves or cassava leaves, chopped fine and stewed with palm oil, pepper and meat or fish. Rice is the base of nearly every Liberian meal."
+      },
+      {
+        "name": "Dumboy and pepper soup",
+        "text": "Dumboy is boiled cassava pounded into a soft, stretchy ball, swallowed in pieces with a fiery soup of meat or fish. Liberian food doesn't hold back on hot pepper."
+      },
+      {
+        "name": "Rice bread",
+        "text": "A moist cake of rice flour and mashed ripe bananas, eaten as a snack or at breakfast."
+      },
+      {
+        "name": "Kanyah",
+        "text": "A sweet made from roasted rice, peanuts and sugar pounded together, sold in markets and by roadside sellers."
+      }
+    ],
+    "phrases": {
+      "language": "Liberian English",
+      "intro": "English is the official language, but on the street you'll hear Liberian English, sometimes called Koloqua: quick, musical and full of its own expressions. A few you'll meet straight away:",
+      "items": [
+        { "phrase": "I there", "meaning": "I'm fine (the answer to \"How are you?\")" },
+        { "phrase": "Small-small", "meaning": "Little by little; slowly" },
+        { "phrase": "I coming", "meaning": "I'll be back (said when leaving, even for a long while)" },
+        { "phrase": "Carry me to …", "meaning": "Take me to … (to a driver)" },
+        { "phrase": "Pehn-pehn", "say": "PEN-pen", "meaning": "Motorbike taxi" },
+        { "phrase": "My man", "meaning": "My friend" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1014",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Liberian dollar (L$, LRD) and the US dollar, both in everyday use: rooms, cars and larger bills are often priced in US dollars, and small change is in Liberian dollars. Clean, recent US notes are the easiest to use.",
+        "sources": [{ "property": "P38", "values": ["Q242988", "Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the official language. Most people speak Liberian English day to day, as well as languages of their own such as Kpelle, Bassa or Grebo.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "A mix: Types A and B (flat pins, as in the US) and Types C, E and F (two round pins). Both 120 V and 220 V are found, so check before you plug anything in.",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456", "Q1378312", "Q2335536", "Q1123613"] },
+          { "property": "P2884", "values": ["120", "220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689514"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911; 114 for the fire service",
+        "sources": [{ "property": "P2852", "values": ["Q533806", "Q2945964"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+231",
+        "sources": [{ "property": "P474", "values": ["+231"] }]
+      }
+    ]
+  }
+}

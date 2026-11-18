@@ -1,0 +1,189 @@
+{
+  "code": "UY",
+  "slug": "uruguay",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Hola, bo!", "Uruguay"],
+  "summary": "Montevideo's long rambla, cobbled Colonia del Sacramento and Atlantic beach towns for summer.",
+  "overview": [
+    "Uruguay is a small, easy-going country between Argentina and Brazil, with about 3.5 million people, nearly half of them in Montevideo. The capital stretches along the wide brown estuary of the Río de la Plata. Its old town, the Ciudad Vieja, has the Teatro Solís, the towering Palacio Salvo on Plaza Independencia, and the Mercado del Puerto, an old iron market hall full of smoky grill restaurants. The rambla, a seafront promenade over 20 km long, is where Montevideo walks, jogs, fishes and sits with a flask of hot water and a gourd of mate, above all at sunset.",
+    "Colonia del Sacramento, a short ferry ride from Buenos Aires across the estuary, was founded by the Portuguese in 1680, and its old quarter of cobbled lanes, low stone houses and a lighthouse is a World Heritage Site. To the east, the Atlantic coast is Uruguay's summer playground: Punta del Este, with high-rise hotels and a giant concrete hand rising from the sand of Playa Brava; quiet, expensive José Ignacio; and the surf villages of Rocha, among them Cabo Polonio, a cluster of cabins and a lighthouse among the dunes with no road in, reached by 4×4 trucks, and a colony of sea lions on the rocks.",
+    "Inland, the rolling grasslands are cattle country, where estancias (working ranches) take in guests for riding with gauchos, and wineries around Montevideo and Carmelo make Tannat, the country's signature red. Comfortable buses link every town, and distances are short: Montevideo to Punta del Este takes about two hours. Uruguay is one of the steadiest and safest countries in Latin America, and also one of the dearer ones."
+  ],
+  "whenToGo": {
+    "stripLabel": "Montevideo, Colonia and the country taken together. The Atlantic beach towns live for summer, and have a strip of their own below.",
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [12, 1, 2],
+        "text": "Warm, sunny days around 28°C and the beach season in full swing. In January Punta del Este fills with visitors from Argentina and Brazil and prices peak. Carnival runs from late January through February."
+      },
+      {
+        "name": "Autumn",
+        "months": [3, 4, 5],
+        "text": "March is still warm and the sea at its warmest, with the beaches emptying. Holy Week, called Tourism Week here, is a holiday for everyone. By May the days are cool and the beach towns close up."
+      },
+      {
+        "name": "Winter",
+        "months": [6, 7, 8],
+        "text": "Cool, damp and windy, with days around 12–15°C and nights near freezing; old buildings can feel cold inside. A fine time for Montevideo's theatres and grills, and southern right whales start to appear off the east coast from about July."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Mild, often breezy days, with whales offshore into November and jacaranda trees flowering purple in Montevideo's streets in late spring. Heritage Day opens historic buildings in October."
+      }
+    ],
+    "weather": "Uruguay has a temperate climate with four seasons and no mountains or deserts to vary it much. Summers, from December to February, are warm and fairly humid, around 26–30°C. From June to August it's cool and damp, with days around 12–15°C and occasional frost inland; the cold, gusty pampero wind can blow up from the south-west. Rain falls fairly evenly through the year, often in short storms. The Atlantic is only warm enough for most swimmers from about January to March.",
+    "festivals": [
+      {
+        "name": "Carnaval",
+        "place": "Montevideo and across Uruguay",
+        "when": "From late January to early March",
+        "months": [1, 2, 3],
+        "text": "The longest carnival in the world, around 40 days. Murgas, choirs that sing sharp, satirical songs, perform on neighbourhood stages (tablados) every night, and at Las Llamadas, usually in early February, hundreds of drummers play candombe, the Afro-Uruguayan rhythm, through the streets of Barrio Sur and Palermo."
+      },
+      {
+        "name": "Fiesta de la Patria Gaucha",
+        "place": "Tacuarembó",
+        "when": "Usually early March, for about five days",
+        "months": [3],
+        "text": "The great gaucho gathering: horsemen and women in traditional dress, rodeo, folk music and asado by the lake of Laguna de las Lavanderas."
+      },
+      {
+        "name": "Semana Criolla",
+        "place": "The Prado, Montevideo",
+        "when": "Tourism Week, the week before Easter (Easter Sunday is 28 March in 2027)",
+        "months": [3, 4],
+        "text": "During Holy Week, which Uruguay calls Tourism Week, the old park of the Prado hosts a week of gaucho rodeo, with riders trying to stay on unbroken horses, plus folk concerts, crafts and grills."
+      },
+      {
+        "name": "Noche de la Nostalgia and Independence Day",
+        "place": "Across Uruguay",
+        "when": "24 and 25 August",
+        "months": [8],
+        "text": "On the night of 24 August, Uruguayans pack bars and parties playing the hits of decades past, a tradition that began on a radio station in the 1970s. The next day, 25 August, is Independence Day, marking the declaration of 1825."
+      },
+      {
+        "name": "Día del Patrimonio (Heritage Day)",
+        "place": "Across Uruguay, mainly Montevideo",
+        "when": "Usually a weekend in early October",
+        "months": [10],
+        "text": "Government buildings, private houses, theatres and churches normally closed to the public open their doors for free, each year around a different theme."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Montevideo and Colonia",
+        "text": "Good in any month: the cities' museums, markets and grill restaurants carry on through winter, though the rambla is at its best on long summer evenings."
+      },
+      {
+        "name": "The Atlantic coast",
+        "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "good", "good", "good", "best"],
+        "text": "Punta del Este, José Ignacio, La Paloma, Cabo Polonio and Punta del Diablo. Lively from late December to February, calm and pleasant in March. From about May to August many hotels and restaurants close and the wind is cold; from September, whale-watching brings some life back."
+      },
+      {
+        "name": "The interior",
+        "text": "Estancias, rolling grassland and the hot springs of the north-west around Salto. Riding is most pleasant in spring and autumn; summer can be hot, especially in the north."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Uruguayans greet with one kiss on the right cheek, women and men alike, and men who are friends or family often kiss each other too. In business, a handshake. Friends say \"vos\" rather than \"tú\", and you'll hear \"bo\", roughly \"mate\", at the start of half the sentences on the street.",
+    "etiquette": [
+      "Mate is shared from one gourd: the person who prepares it drinks first, then refills and hands it to each person in turn. Drink it all, hand it back, don't stir the metal straw, and say \"gracias\" only when you want no more.",
+      "Dinner starts late, often after 9 pm, and Sunday lunch is a long family asado.",
+      "Uruguayans are proud of being their own country: don't treat them as Argentines.",
+      "You can drink the tap water.",
+      "Many shops close on Sunday, and much of the country shuts down during Tourism Week.",
+      "People are understated and polite; loud complaints get you less than a quiet word."
+    ],
+    "tipping": "About 10% in restaurants, where service is usually not included; some add a small cover charge (cubierto) for bread and cutlery. Round up for taxis.",
+    "dress": "Casual and neat. A warm coat for winter, when damp cold gets into old buildings, and a windproof layer for the rambla in any season. Beach towns are relaxed in summer, but Punta del Este dresses up at night.",
+    "food": [
+      {
+        "name": "Chivito",
+        "text": "The national sandwich: thin steak with ham, cheese, a fried egg, lettuce, tomato, olives and mayonnaise, in a bun or served \"al plato\" with chips and salad."
+      },
+      {
+        "name": "Asado",
+        "text": "Beef ribs, flank and sausages grilled slowly over wood embers on a parrilla; the Mercado del Puerto is the place to try it. Uruguay has more cattle than people."
+      },
+      {
+        "name": "Fainá and pizza",
+        "text": "Thin chickpea-flour flatbread, brought by Italian immigrants, eaten on top of a slice of pizza (\"a caballo\") in Montevideo's pizzerias."
+      },
+      {
+        "name": "Dulce de leche and chajá",
+        "text": "Caramel spread made by slowly cooking milk with sugar fills every pastry and alfajor biscuit. Chajá, from Paysandú, is a sponge cake of meringue, peaches and cream."
+      },
+      {
+        "name": "Tannat and medio y medio",
+        "text": "Tannat, a tannic red grape from south-west France, has become Uruguay's own wine. At the Mercado del Puerto, try medio y medio, half sparkling and half white wine."
+      },
+      {
+        "name": "Mate",
+        "text": "Bitter yerba mate, drunk hot through a metal straw from a gourd, with a thermos of hot water carried everywhere under the arm."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Uruguayan)",
+      "intro": "Uruguayans pronounce \"ll\" and \"y\" as \"sh\": \"calle\" sounds like \"CAH-sheh\". Hotels and tourist businesses speak English.",
+      "items": [
+        { "phrase": "¿Todo bien?", "say": "TOH-doh BYEN", "meaning": "All good? (a common hello)" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto es?", "say": "KWAHN-toh ES", "meaning": "How much is it?" },
+        { "phrase": "Me llamo …", "say": "meh SHAH-moh", "meaning": "My name is …" },
+        { "phrase": "¡Ta!", "say": "TAH", "meaning": "OK; fine (short for \"está bien\")" },
+        { "phrase": "Bo", "say": "BOH", "meaning": "Hey; mate (slang)" },
+        { "phrase": "¡Bárbaro!", "say": "BAR-bah-roh", "meaning": "Great!" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q77",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Uruguayan peso ($, UYU). Cards are widely taken, and US dollars are accepted in many tourist businesses.",
+        "sources": [{ "property": "P38", "values": ["Q209272"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. Portuguese is spoken along the Brazilian border, often mixed with Spanish.",
+        "sources": [],
+        "note": "Wikidata's item has no official-language statement: no law names one, but Spanish is the national language in practice, and the page gives it."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), I (angled flat pins, as in Australia) and L (three round pins in a row), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613", "Q2335539", "Q1520890"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Uruguay Time, UTC−3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6513", "Q63286104"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+598",
+        "sources": [{ "property": "P474", "values": ["+598"] }]
+      }
+    ]
+  }
+}

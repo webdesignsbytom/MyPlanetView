@@ -110,6 +110,9 @@ test.describe('Moments', () => {
 
     const germany = await openCountry(page, 'Germany');
     const moments = momentsIn(germany);
+    // No moments until the country is visited or lived in (18 Nov 2026, the user's wish)
+    await expect(moments).toHaveCount(0);
+    await germany.getByRole('combobox', { name: 'Been there?' }).selectOption('Visited');
     await expect(moments.getByText('No moments in Germany yet.')).toBeVisible();
     await moments.getByRole('button', { name: 'Add a moment' }).click();
     const form = moments.getByRole('region', { name: 'Add a moment' });
@@ -121,8 +124,8 @@ test.describe('Moments', () => {
     await form.getByRole('textbox', { name: 'Year' }).fill('2023');
     await form.getByRole('combobox', { name: 'Landmark' }).selectOption({ label: 'Brandenburg Gate' });
     await form.getByRole('group', { name: 'Who it’s about' }).getByRole('button', { name: 'Alex', exact: true }).click();
-    // Germany has no status yet: marking it visited is offered, and ticked
-    await expect(form.getByRole('checkbox', { name: 'Mark Germany as visited on the map' })).toBeChecked();
+    // Germany is visited already: nothing to offer
+    await expect(form.getByRole('checkbox', { name: /^Mark Germany/ })).toHaveCount(0);
     await form.getByRole('button', { name: 'Add moment' }).click();
 
     const card = moments.getByRole('article', { name: 'Christmas market in Berlin' });
@@ -168,10 +171,12 @@ test.describe('Moments', () => {
     await expectStats(page, '9 countries, 2 continents, 16 photos');
   });
 
-  test('a birth offers to add the baby as a traveller born there, once the map has room, and marks the country lived in', async ({ page }) => {
+  test('a birth offers to add the baby as a traveller born there, once the map has room', async ({ page }) => {
     await openMap(page);
     // A couple's map is two people, and has its two: no baby to add (17 Nov 2026, the user's wish)
     let canada = await openCountry(page, 'Canada');
+    // Moments show once the country is marked
+    await canada.getByRole('combobox', { name: 'Been there?' }).selectOption('Lived there');
     let moments = momentsIn(canada);
     await moments.getByRole('button', { name: 'Add a moment' }).click();
     let form = moments.getByRole('region', { name: 'Add a moment' });
@@ -197,8 +202,6 @@ test.describe('Moments', () => {
     await form.getByRole('textbox', { name: 'Title' }).fill('Our baby was born');
     await form.getByRole('combobox', { name: 'When' }).selectOption({ label: 'Only the year' });
     await form.getByRole('textbox', { name: 'Year' }).fill('2026');
-    // A birth suggests "lived there"
-    await expect(form.getByRole('checkbox', { name: 'Mark Canada as lived there on the map' })).toBeChecked();
     await form.getByRole('checkbox', { name: 'Add the baby to this map as a traveller, born in Canada' }).check();
     // Their name is needed
     await form.getByRole('button', { name: 'Add moment' }).click();

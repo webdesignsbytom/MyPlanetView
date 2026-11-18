@@ -1,0 +1,179 @@
+{
+  "code": "MG",
+  "slug": "madagascar",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salama", "Madagasikara", "Tongasoa"],
+  "summary": "Lemurs found nowhere else, avenues of baobabs and razor-sharp limestone forests.",
+  "overview": [
+    "Madagascar broke away from the rest of Africa so long ago that most of its plants and animals live nowhere else. Its lemurs, more than a hundred kinds from the singing indri to the tiny mouse lemurs, are why most people come, along with chameleons, leaf-tailed geckos and six kinds of baobab found only here. It is the world's fourth-largest island, almost 1,600 km from north to south, and its regions are nothing alike: rainforest down the east coast, dry forest and spiny desert in the south and west, and rice terraces across the central highlands.",
+    "Most first trips follow the RN7 south from Antananarivo, the hilly capital, through the highlands to the sandstone canyons of Isalo and the coast near Toliara, with Ranomafana's rainforest a short detour off the road and Andasibe, east of the capital, for the indri. In the west, the Avenue of the Baobabs near Morondava and the limestone pinnacles of the Tsingy de Bemaraha take a few days of rough driving. Nosy Be in the north-west and Île Sainte-Marie off the east coast are the beach islands.",
+    "Distances are long and roads slow: a few hundred kilometres can take a whole day, so many visitors hire a car with a driver, and domestic flights save days but often change schedule. Taxi-brousses (shared minibuses) go everywhere, slowly. Guides are compulsory in the national parks, and good ones spot animals you would walk past. Malaria is present outside the highlands, and the ariary can't easily be bought abroad, so bring euros to change or use cash machines in the towns."
+  ],
+  "whenToGo": {
+    "stripLabel": "Antananarivo, the highlands and the RN7 south, where most first trips go. The east, the west and the north keep calendars of their own, each with a strip below.",
+    "months": ["avoid", "avoid", "avoid", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Sunny days and little rain over most of the island. June to August is winter: the highlands are crisp, around 20°C by day with nights below 10°C, while the coasts stay warm. September and October warm up, many lemurs have young, and the jacarandas flower in Antananarivo."
+      },
+      {
+        "name": "Rainy season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Hot and humid, with the heaviest rain from December to March. In some years cyclones hit the east and north coasts, mostly from January to March; rivers flood, many western roads become impassable and the Tsingy de Bemaraha closes. November and April are the edges: the land is green, with the rains either coming or going."
+      }
+    ],
+    "weather": "The island stretches over more than 13 degrees of latitude, so the weather depends on where you are. The central highlands, at 1,200–1,500 m, are mild: Antananarivo reaches about 26°C on summer days and about 20°C in winter. The coasts are hot. The east is the wettest, with rain in every month, while the south-west around Toliara is semi-arid and gets little rain at any time of year. Across most of the island the rains fall between about November and April.",
+    "festivals": [
+      {
+        "name": "Donia",
+        "place": "Hell-Ville, Nosy Be",
+        "when": "Usually over the Pentecost weekend, in May or June",
+        "months": [5, 6],
+        "text": "A music festival with bands and dancers from Madagascar and the other islands of the Indian Ocean."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Madagascar",
+        "when": "26 June",
+        "months": [6],
+        "text": "Parades, concerts and fireworks in every town. The evening before, children walk the streets with paper lanterns."
+      },
+      {
+        "name": "Famadihana (the turning of the bones)",
+        "place": "The central highlands",
+        "when": "Usually July to September",
+        "months": [7, 8, 9],
+        "text": "Every few years, highland families open their ancestral tomb, wrap the remains in fresh silk shrouds and dance with them to a brass band before closing it again: a joyful reunion with the dead. It is a family occasion, so go only if invited, often through a guide or driver."
+      },
+      {
+        "name": "Humpback whales",
+        "place": "Île Sainte-Marie",
+        "when": "Usually July to September",
+        "months": [7, 8, 9],
+        "text": "Whales come up from Antarctic waters to mate and calve in the channel between Île Sainte-Marie and the mainland, close enough to watch from small boats and sometimes from the shore."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The east and the rainforests",
+        "months": ["avoid", "avoid", "avoid", "good", "good", "good", "good", "best", "best", "best", "best", "good"],
+        "text": "Andasibe, where the indri's wailing song carries through the forest at dawn, Ranomafana and the Masoala peninsula. Rain falls in every month, least from about August to November, and cyclones are a risk from January to March. Île Sainte-Marie has humpback whales from about July to September."
+      },
+      {
+        "name": "The west",
+        "months": ["avoid", "avoid", "avoid", "avoid", "good", "best", "best", "best", "best", "best", "good", "avoid"],
+        "text": "The Avenue of the Baobabs near Morondava, best at sunset, and the Tsingy de Bemaraha, a forest of sharp-edged limestone crossed by ladders and rope bridges. The tracks are dirt, and Bemaraha's main areas are usually open only from about May or June to November, as the rains cut the roads."
+      },
+      {
+        "name": "The north and Nosy Be",
+        "months": ["avoid", "avoid", "good", "good", "best", "best", "best", "best", "best", "best", "best", "good"],
+        "text": "Nosy Be and the islands around it have calm water for snorkelling and diving. On the mainland are the rainforest of Montagne d'Ambre and the grey limestone pinnacles of Ankarana. Drier than the east, with most of the rain from about December to March."
+      },
+      {
+        "name": "The south",
+        "text": "Isalo's sandstone canyons and natural pools, the spiny forest, and the beaches around Toliara and Ifaty. Hot and dry for most of the year, though nights in Isalo are cold from June to August."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake with \"salama\" or \"manao ahoana\" (both hello) is the usual greeting, or \"bonjour\" in French, which most people in towns speak. Malagasy manners are gentle: people speak softly, avoid open disagreement and greet elders first. Village children may call out \"vazaha!\" (foreigner): it's curiosity, not rudeness.",
+    "etiquette": [
+      "Each region, and sometimes each village, has its fady: taboos such as not eating pork, not swimming in a certain lake, or not pointing at a tomb with a straight finger (bend it instead). Ask your guide, and follow them.",
+      "Don't touch or feed lemurs, even at lodges where they are used to people.",
+      "Don't buy shells, coral, tortoiseshell, rosewood, or live animals and plants: taking them out of the country is illegal.",
+      "Avoid travelling by road after dark: there are no street lights, many vehicles have poor ones, and some rural roads aren't safe at night.",
+      "Ask before photographing people, and before photographing tombs.",
+      "Haggle in markets, gently and with a smile."
+    ],
+    "tipping": "Expected in tourism. Drivers and park guides are tipped by the day, porters and lodge staff a little, and about 10% is usual in restaurants used to visitors. Tip in ariary.",
+    "dress": "Layers: the highlands need a fleece for evenings from May to September, the coasts are hot, and the rainforests are damp in any month. Long sleeves and trousers help against mosquitoes and leeches on forest walks, and the sharp rock of the tsingy needs sturdy shoes.",
+    "food": [
+      {
+        "name": "Vary (rice)",
+        "text": "The centre of every meal, eaten up to three times a day with a laoka, the dish served beside it: meat, fish, beans or greens. Soft rice cooked with greens (vary amin'anana) is a breakfast favourite."
+      },
+      {
+        "name": "Romazava",
+        "text": "A clear stew of zebu beef and leafy greens, including brèdes mafana, whose flowers make your mouth tingle."
+      },
+      {
+        "name": "Ravitoto",
+        "text": "Pounded cassava leaves cooked with fatty pork and garlic: rich, dark green and very filling."
+      },
+      {
+        "name": "Zebu",
+        "text": "The humped cattle are everywhere, and their meat comes as steaks, as skewers (masikita) from street grills, and dried."
+      },
+      {
+        "name": "Mofo gasy",
+        "text": "Small, slightly sweet rice-flour cakes cooked in round moulds over charcoal, sold at dawn with coffee."
+      },
+      {
+        "name": "Ranon'apango and rhum arrangé",
+        "text": "Ranon'apango is water boiled with the toasted rice from the bottom of the pot, drunk with meals. Rhum arrangé is local rum steeped with vanilla, ginger, lychees or other fruit."
+      }
+    ],
+    "phrases": {
+      "language": "Malagasy",
+      "intro": "French is widely spoken in towns and hotels, English much less. In speech, Malagasy words drop most of their final vowel, and the letter o sounds like \"oo\".",
+      "items": [
+        { "phrase": "Salama", "say": "sah-LAHM", "meaning": "Hello" },
+        { "phrase": "Manao ahoana?", "say": "mah-now OWN", "meaning": "Hello; how are you?" },
+        { "phrase": "Misaotra", "say": "mee-SOWTCH", "meaning": "Thank you" },
+        { "phrase": "Azafady", "say": "ah-zah-FAHD", "meaning": "Please; excuse me" },
+        { "phrase": "Ohatrinona?", "say": "oo-ah-TCHEEN-oon", "meaning": "How much is it?" },
+        { "phrase": "Tsara", "say": "TSAHR", "meaning": "Good; fine" },
+        { "phrase": "Mora mora", "say": "MOO-rah MOO-rah", "meaning": "Slowly, slowly (take it easy)" },
+        { "phrase": "Veloma", "say": "veh-LOOM", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1019",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Malagasy ariary (Ar, MGA). Euros are the easiest money to change; cards work in bigger hotels and some town shops.",
+        "sources": [{ "property": "P38", "values": ["Q4584"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Malagasy and French, both official. Malagasy is spoken everywhere; French is common in towns, business and tourism.",
+        "sources": [{ "property": "P37", "values": ["Q7930", "Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), with types D, J and K also found; 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q60740126", "Q2335530", "Q1502017"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata also gives 127 V; the page gives 220 V, the usual supply."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "East Africa Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q109520398"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "117 for police, 118 for fire and 124 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q4547615", "Q11185210", "Q25648826"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+261",
+        "sources": [{ "property": "P474", "values": ["+261"] }]
+      }
+    ]
+  }
+}

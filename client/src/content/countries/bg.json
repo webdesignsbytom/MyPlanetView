@@ -1,0 +1,185 @@
+{
+  "code": "BG",
+  "slug": "bulgaria",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Zdraveyte", "Balgariya", "Dobre doshli"],
+  "summary": "Painted monasteries, Roman Plovdiv, Black Sea beaches and three mountain ranges.",
+  "overview": [
+    "Bulgaria fits a great deal into a modest area: the Black Sea coast in the east, three high mountain ranges in the south-west, and Thracian tombs, Roman ruins and Orthodox monasteries almost everywhere in between. Sofia, the capital, sits at the foot of Mount Vitosha, close enough for an afternoon on its slopes; its best-known sights are the gold-domed Alexander Nevsky Cathedral and the streets of Roman Serdica, uncovered beneath the modern centre.",
+    "Rila Monastery, in the mountains south of Sofia, is the country's most famous, with striped arcades and painted walls around a big courtyard. Plovdiv, one of Europe's oldest continuously inhabited cities, has a Roman theatre still used for summer concerts and an old town of painted 19th-century merchants' houses on its hills. Veliko Tarnovo, capital of the medieval Bulgarian kingdom, clings to the bends of a river gorge beneath the walls of Tsarevets. In winter, skiers fill Bansko, Borovets and Pamporovo; in summer, the coast fills, from the big hotels of Sunny Beach to the old towns of Nesebar and Sozopol.",
+    "Buses are the easiest way between towns, and trains are slower but cheap and scenic in the mountains. Signs are in Cyrillic, which Bulgarians proudly point out was developed here in the 9th and 10th centuries; main roads and stations add Latin letters."
+  ],
+  "whenToGo": {
+    "stripLabel": "Sofia, Plovdiv, Veliko Tarnovo and the monasteries. The coast and the mountains have strips of their own below.",
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "March starts cold, but by May the days are around 20–25°C, fruit trees are in blossom and the roses of the Valley of Roses open late in the month. Snow lingers on the high peaks."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot inland, with Plovdiv often over 32°C in July and August, and the beach season at its peak on the coast, where the resorts are crowded and loud. Cooler and greener in the mountains, the walking season."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September keeps summer's warmth without the crowds, and the sea is still warm. October is mild and golden, with the grape harvest and new wine; by November it's grey and damp, and the resorts have closed."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, around freezing in Sofia, with snow on the mountains and the ski season usually from mid-December to March. The coast is quiet and many hotels there shut."
+      }
+    ],
+    "weather": "A mostly continental climate: hot, dry summers and cold winters with snow, especially in the north and the mountains. Sofia, at about 550 m, has July days around 28°C and January days just above freezing. The Black Sea softens the coast a little, and the far south, near Greece and Turkey, is the warmest part. Rain falls through the year, most of it in late spring and early summer, often in thunderstorms.",
+    "festivals": [
+      {
+        "name": "Surva",
+        "place": "Pernik",
+        "when": "Usually the last weekend of January",
+        "months": [1],
+        "text": "The biggest gathering of kukeri, masked dancers in shaggy goat-hair costumes with heavy bells on their belts, who leap and stamp to drive away evil spirits. Groups come from villages across Bulgaria and abroad."
+      },
+      {
+        "name": "Baba Marta and Liberation Day",
+        "place": "Across Bulgaria",
+        "when": "1 March and 3 March",
+        "months": [3],
+        "text": "On 1 March people give each other martenitsi, red and white tassels or bracelets, and wear them until they see a stork or a tree in blossom, then tie them on a branch. Two days later, Liberation Day, a public holiday, marks the end of Ottoman rule in 1878, with ceremonies at the Shipka Pass."
+      },
+      {
+        "name": "Orthodox Easter",
+        "place": "Across Bulgaria",
+        "when": "Usually in April or early May: in 2027, 2 May",
+        "months": [4, 5],
+        "text": "The biggest religious feast. Churches fill for the midnight service, people tap painted eggs together to see whose cracks, and families share sweet kozunak bread."
+      },
+      {
+        "name": "Day of the Cyrillic alphabet and culture",
+        "place": "Across Bulgaria",
+        "when": "24 May",
+        "months": [5],
+        "text": "A public holiday honouring Saints Cyril and Methodius and the Slavic alphabet, with processions of schoolchildren and students carrying flowers."
+      },
+      {
+        "name": "Rose Festival",
+        "place": "Kazanlak",
+        "when": "Usually late May to early June, with the parade on a weekend in early June",
+        "months": [5, 6],
+        "text": "The Valley of Roses produces much of the world's rose oil. The festival brings rose-picking at dawn in the fields, the crowning of a Rose Queen and a costumed parade through town."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Black Sea coast",
+        "months": ["avoid", "avoid", "avoid", "good", "good", "best", "best", "best", "best", "good", "avoid", "avoid"],
+        "text": "Sunny Beach, Golden Sands, Nesebar, Sozopol and Varna. Beach weather runs from June to September, with the sea around 24°C at its warmest in August; July and August are packed and the big resorts noisy. From about November to April most resort hotels close, though Varna and Burgas stay lively cities."
+      },
+      {
+        "name": "The mountains",
+        "months": ["best", "best", "best", "good", "good", "good", "best", "best", "best", "good", "avoid", "good"],
+        "text": "Rila, Pirin and the Rhodopes. Skiing at Bansko, Borovets and Pamporovo usually runs from mid-December into early April. In summer, the walks to the Seven Rila Lakes and up Musala (2,925 m, the highest peak in the Balkans) are usually clear of snow from late June to September. November is wet and between seasons."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake for strangers and kisses on the cheek between friends. Use \"Gospodin\" (Mr) or \"Gospozha\" (Mrs) with a surname until you're asked to use first names. Beware the head: in Bulgaria a nod often means no and a sideways shake means yes, but some people switch for foreigners, so listen for \"da\" (yes) and \"ne\" (no).",
+    "etiquette": [
+      "Rakia is sipped slowly with a salad before the meal, not knocked back; look people in the eye as you clink glasses and say \"Nazdrave\".",
+      "Flowers for a host come in odd numbers: even bunches are for the dead.",
+      "Paper death notices with a photo (nekrolozi) are pasted on doors, trees and lamp posts, and stay up for months: leave them be.",
+      "In churches and monasteries, cover shoulders and knees and keep your voice down; lighting a candle is welcome, and photography inside is often not allowed.",
+      "Take taxis from known companies, with their fares displayed on the window, or book through an app, rather than drivers who approach you."
+    ],
+    "tipping": "About 10% in restaurants, and rounding up for taxis and in bars.",
+    "dress": "Casual. Light clothes for hot summers, a warm coat and boots for winter and the mountains, and something to cover shoulders and knees for churches and monasteries.",
+    "food": [
+      {
+        "name": "Shopska salad",
+        "text": "Chopped tomato, cucumber, pepper and onion under a heap of grated white sheep's cheese (sirene): white, green and red, the colours of the flag."
+      },
+      {
+        "name": "Banitsa",
+        "text": "Filo pastry layered with eggs, yogurt and sirene, baked until golden; a breakfast staple, often with ayran or boza, a thick, slightly fermented grain drink."
+      },
+      {
+        "name": "Tarator",
+        "text": "Cold soup of yogurt, cucumber, dill, garlic and walnuts, for hot days."
+      },
+      {
+        "name": "Kavarma",
+        "text": "Pork or chicken stewed with onions, peppers and mushrooms in an earthenware pot, often brought to the table still bubbling."
+      },
+      {
+        "name": "Kiselo mlyako",
+        "text": "Bulgaria's thick, tangy yogurt, made with the bacterium Lactobacillus bulgaricus, named after the country."
+      },
+      {
+        "name": "Rakia",
+        "text": "Strong fruit brandy, usually from grapes or plums, often home-made, and always offered to guests."
+      }
+    ],
+    "phrases": {
+      "language": "Bulgarian",
+      "intro": "Bulgarian is written in Cyrillic. Younger people in cities and resorts often speak English; older people may know Russian or German.",
+      "items": [
+        { "phrase": "Zdraveyte (Здравейте)", "say": "zdrah-VAY-teh", "meaning": "Hello" },
+        { "phrase": "Dobar den (Добър ден)", "say": "DOH-bur DEN", "meaning": "Good day" },
+        { "phrase": "Blagodarya (Благодаря)", "say": "blah-goh-dah-RYAH", "meaning": "Thank you" },
+        { "phrase": "Molya (Моля)", "say": "MOL-yah", "meaning": "Please; you're welcome" },
+        { "phrase": "Da / Ne (Да / Не)", "say": "DAH / NEH", "meaning": "Yes / No" },
+        { "phrase": "Kolko struva? (Колко струва?)", "say": "KOL-koh STROO-vah", "meaning": "How much is it?" },
+        { "phrase": "Nazdrave! (Наздраве!)", "say": "naz-DRAH-veh", "meaning": "Cheers!" },
+        { "phrase": "Dovizhdane (Довиждане)", "say": "doh-VEEZH-dah-neh", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q219",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€), since 1 January 2026, when it replaced the Bulgarian lev",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Bulgarian, official, written in Cyrillic. Turkish is spoken by a sizeable minority, mostly in the north-east and the Rhodopes.",
+        "sources": [{ "property": "P37", "values": ["Q7918"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time, UTC+2; UTC+3 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q190252", "Q6723", "Q6760", "Q1109976"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+359",
+        "sources": [{ "property": "P474", "values": ["+359"] }]
+      }
+    ]
+  }
+}

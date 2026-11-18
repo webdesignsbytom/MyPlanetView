@@ -1,0 +1,175 @@
+{
+  "code": "MW",
+  "slug": "malawi",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Moni", "Malaŵi", "Takulandirani"],
+  "summary": "A long freshwater lake with beaches and bright cichlid fish, plus quiet parks and highland plateaus.",
+  "overview": [
+    "Malawi is a long, narrow country wrapped around Lake Malawi, which runs about 580 km down its eastern side and covers a fifth of its area. The lake is the heart of a visit: clear fresh water with sandy beaches, fishing villages and hundreds of kinds of brightly coloured cichlid fish, most found nowhere else. Snorkel among them at Cape Maclear, in Lake Malawi National Park, a World Heritage Site; Senga Bay, Nkhata Bay and Likoma Island are other favourite stops on the shore.",
+    "Away from the lake, Liwonde National Park, on the Shire River, has elephants, hippos and rhinos, and lions and cheetahs brought back in recent years; Majete, in the far south, holds the Big Five. The Nyika Plateau in the north is high, rolling grassland with zebra, roan antelope and wild flowers in the rains, and Mount Mulanje rises to 3,002 m above the tea estates of the south, with huts for walkers. Zomba Plateau is a cooler, forested escape above the old colonial capital.",
+    "Malawi calls itself the Warm Heart of Africa, and visitors usually find people friendly and easy to talk to. It is one of the world's poorer countries, and travel is simple rather than smooth: buses and minibuses link the towns, many roads are unpaved and power cuts are frequent. Lilongwe, the capital, and Blantyre are the gateways. Malaria is present all year, and bilharzia lives in parts of the lake, so ask locally before swimming near reeds and villages."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "avoid", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Cool, dry season",
+        "months": [5, 6, 7, 8],
+        "text": "Sunny, dry and comfortable: about 23–25°C by the lake in the daytime, with cold nights in the highlands and frost on the Nyika Plateau in June and July. Good for walking on Mulanje and for the lake, though a south-easterly wind can whip up waves."
+      },
+      {
+        "name": "Hot, dry season",
+        "months": [9, 10, 11],
+        "text": "The heat builds, passing 35°C in the Shire valley in October. Game viewing is at its best as animals crowd the rivers, and the lake is at its clearest and calmest. The first rains usually come in November."
+      },
+      {
+        "name": "Rainy season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Heavy storms in the afternoons and at night, above all from January to March. The country turns green, but dirt roads become mud, Nyika and some lodges are hard to reach or closed, and the lake is murkier. By April the rain is easing and the land is at its lushest."
+      }
+    ],
+    "weather": "A tropical climate softened by height: most of the country lies on plateaus between about 750 and 1,500 m, while the lakeshore sits at about 475 m. Lilongwe has warm days and cool nights for much of the year; the lakeshore and the Shire valley in the south are hotter. The lake's water stays warm all year. Almost all the rain falls from about November to April, and the rest of the year is dry.",
+    "festivals": [
+      {
+        "name": "John Chilembwe Day",
+        "place": "Across Malawi",
+        "when": "15 January",
+        "months": [1],
+        "text": "A public holiday honouring the pastor who led a rising against colonial rule in 1915."
+      },
+      {
+        "name": "Martyrs' Day",
+        "place": "Across Malawi",
+        "when": "3 March",
+        "months": [3],
+        "text": "Remembers those who died in the struggle for independence, above all in 1959."
+      },
+      {
+        "name": "Kamuzu Day",
+        "place": "Across Malawi",
+        "when": "14 May",
+        "months": [5],
+        "text": "A public holiday on the birthday of Hastings Kamuzu Banda, the first president."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Lilongwe and the main towns",
+        "when": "6 July",
+        "months": [7],
+        "text": "Marks independence from Britain in 1964, with parades, music and speeches."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Lake Malawi",
+        "text": "Cape Maclear in the south for snorkelling and kayaking among the cichlids; Senga Bay, the closest beach to Lilongwe; Nkhata Bay and Likoma Island in the north, where missionaries built St Peter's, a stone cathedral of English size. Best from about May to November, calmest and clearest towards the end."
+      },
+      {
+        "name": "Liwonde and Majete",
+        "text": "Boat safaris on the Shire River among hippos and elephants at Liwonde, and Big Five drives at Majete. Best from about June to November, when the bush thins and animals come down to the water."
+      },
+      {
+        "name": "Nyika, Mulanje and Zomba",
+        "text": "The highlands: walking and horse riding on Nyika's grasslands, hikes of two to four days on Mulanje, and forest trails and viewpoints on Zomba. Cold at night from May to August, misty and wet in the rains."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Malawians greet everyone, and a greeting comes before any question: \"Moni\" (hello), then \"Muli bwanji?\" (how are you?). Handshakes are soft and can last a while. With an elder, many people support their right elbow with the left hand, and women may bend the knees slightly.",
+    "etiquette": [
+      "Ask before photographing people, and in a village greet the chief or headman before looking round.",
+      "Away from the lakeside lodges, dress modestly: knees covered for women, shirts on for men. A chitenje, the printed cloth sold in every market, makes a quick wrap.",
+      "Use your right hand, or both hands together, to give and receive things.",
+      "Don't drive at night: unlit vehicles, people walking and cyclists fill the roads after dark.",
+      "Never buy ivory or other wildlife products; buy carvings and crafts from markets and co-operatives instead."
+    ],
+    "tipping": "Not a big custom in daily life, but welcome in tourism: about 10% in restaurants that serve visitors, and a tip for guides, drivers and lodge staff, often through a shared box.",
+    "dress": "Light, modest clothes, with a warm fleece and jacket for Nyika, Zomba and Mulanje, where nights can be close to freezing in June and July. A rain jacket from December to March, and neutral colours on safari.",
+    "food": [
+      {
+        "name": "Nsima and ndiwo",
+        "text": "The national staple: a stiff white porridge of maize flour, eaten with one or two relishes (ndiwo) of beans, greens, fish or meat. For many Malawians, a meal without nsima doesn't count."
+      },
+      {
+        "name": "Chambo",
+        "text": "A tilapia found only in Lake Malawi and the country's favourite fish, grilled whole or fried, with chips or nsima."
+      },
+      {
+        "name": "Usipa",
+        "text": "Small silver fish from the lake, dried in the sun on racks along the shore, then fried crisp or stewed with tomato."
+      },
+      {
+        "name": "Kondowole",
+        "text": "A chewy cassava-flour porridge eaten along the northern lakeshore in place of nsima, often with fish."
+      },
+      {
+        "name": "Thobwa",
+        "text": "A thick, sweet-sour drink of fermented maize or millet, with no alcohol, sold in markets."
+      },
+      {
+        "name": "Malawi tea",
+        "text": "Grown on the estates around Thyolo and Mulanje; some, such as Satemwa, welcome visitors for tastings."
+      }
+    ],
+    "phrases": {
+      "language": "Chichewa (Chewa)",
+      "intro": "English is spoken in towns, hotels and lodges; Chichewa is understood almost everywhere, and Tumbuka more in the north. The stress falls on the second-to-last syllable.",
+      "items": [
+        { "phrase": "Moni", "say": "MOH-nee", "meaning": "Hello" },
+        { "phrase": "Muli bwanji?", "say": "MOO-lee BWAHN-jee", "meaning": "How are you?" },
+        { "phrase": "Ndili bwino", "say": "ndee-lee BWEE-noh", "meaning": "I'm fine" },
+        { "phrase": "Zikomo", "say": "zee-KOH-moh", "meaning": "Thank you; excuse me" },
+        { "phrase": "Zikomo kwambiri", "say": "zee-KOH-moh kwahm-BEE-ree", "meaning": "Thank you very much" },
+        { "phrase": "Pepani", "say": "peh-PAH-nee", "meaning": "Sorry" },
+        { "phrase": "Ndi zingati?", "say": "ndee zeen-GAH-tee", "meaning": "How much is it?" },
+        { "phrase": "Tsalani bwino", "say": "tsah-LAH-nee BWEE-noh", "meaning": "Goodbye (to someone staying)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1020",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Malawian kwacha (MK, MWK). Carry cash outside the cities; many lodges quote prices in US dollars.",
+        "sources": [{ "property": "P38", "values": ["Q211694"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English is the language of government; Chichewa is the national language, spoken across the country, and Tumbuka is common in the north.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q33273", "Q34138"] }],
+        "note": "Wikidata lists all three as official languages; the page gives English as the language of government and Chichewa as the national language, as they are usually described."
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Africa Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q4689479"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "997 or 990 for police, 998 for an ambulance and 999 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648827", "Q25648918", "Q25648832", "Q3086706"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+265",
+        "sources": [{ "property": "P474", "values": ["+265"] }]
+      }
+    ]
+  }
+}

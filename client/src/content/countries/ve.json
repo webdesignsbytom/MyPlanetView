@@ -1,0 +1,190 @@
+{
+  "code": "VE",
+  "slug": "venezuela",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Epa, chamo!", "Venezuela"],
+  "summary": "Angel Falls pouring off a table mountain, the coral islands of Los Roques and the Andes of Mérida.",
+  "overview": [
+    "Venezuela has some of the most striking landscapes in South America. In the south-east, Canaima National Park is the land of the tepuis, sheer-sided table mountains that rise from the savannah and forest, and from one of them, Auyán-tepui, Angel Falls drops 979 m, the highest uninterrupted waterfall in the world; the Pemón people call it Kerepakupai Merú. Canaima is reached by small plane, and the falls by a long motor-canoe trip upriver when the water is high enough. Further south, near the borders with Brazil and Guyana, walkers climb Roraima, a tepui whose flat top of black rock, crystals and pools inspired tales of lost worlds.",
+    "Off the Caribbean coast, Los Roques is an archipelago of coral islands and white sand, a national park where small inns on the main island arrange boats to empty beaches and reefs. Isla Margarita is the larger, busier beach island. In the west, the Andes rise above the university city of Mérida, where the Mukumbarí cable car climbs to nearly 4,800 m on Pico Espejo. Between the mountains and the Orinoco, the Llanos are vast grassy plains where cowboys work the ranches among capybaras, caimans, anacondas and huge flocks of wading birds. Caracas, the capital, fills a valley at about 900 m beneath the green wall of El Ávila mountain.",
+    "Long-distance buses and domestic flights link the main cities, and the national parks are usually visited on organised tours. US dollars in cash are widely used in everyday life alongside the bolívar.",
+    "Many governments advise against all or most travel to Venezuela, and conditions change. Check your own government's current advice before planning a trip."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Sunny and dry across most of the country: the best time for the beaches, for trekking Roraima and for wildlife in the Llanos, where animals crowd around the last waterholes. Angel Falls thins out, and by late in the season the rivers can be too low for canoes to reach it."
+      },
+      {
+        "name": "Rainy season",
+        "months": [5, 6, 7, 8],
+        "text": "Afternoon storms, green hills and rising rivers. Angel Falls is at its fullest from about June, and canoes run upriver to its foot. The Llanos flood, and some roads there become impassable."
+      },
+      {
+        "name": "End of the rains",
+        "months": [9, 10, 11],
+        "text": "Still wet, with heavy showers in the south and the Andes, but the rivers stay high for Angel Falls and the land is at its greenest. Los Roques and the coast are often drier than the interior."
+      }
+    ],
+    "weather": "Venezuela lies just north of the equator, so height sets the temperature more than the month. The coast and lowlands are hot, about 27–33°C; Caracas, at about 900 m, is warm by day and mild at night; Mérida, at about 1,600 m, is fresh all year, and the high páramo above it is cold, with frost at night. Rain falls mostly from May to November; December to April is dry. Los Roques and the coast near Coro are dry for most of the year.",
+    "festivals": [
+      {
+        "name": "Carnaval de El Callao",
+        "place": "El Callao, Bolívar state",
+        "when": "The days before Ash Wednesday (in 2027, 6–9 February)",
+        "months": [2, 3],
+        "text": "A carnival with a Caribbean beat, brought by gold miners from Trinidad and the Antilles in the 19th century: calypso, steel drums and costumed parades, recognised by UNESCO."
+      },
+      {
+        "name": "Diablos Danzantes (Corpus Christi)",
+        "place": "San Francisco de Yare and other towns",
+        "when": "Corpus Christi, usually late May or June (27 May in 2027)",
+        "months": [5, 6],
+        "text": "Brotherhoods of dancers in red costumes and painted devil masks dance through the streets to drums and maracas, then kneel before the Eucharist as good triumphs over evil. Recognised by UNESCO."
+      },
+      {
+        "name": "San Juan",
+        "place": "Barlovento and the central coast",
+        "when": "23–25 June",
+        "months": [6],
+        "text": "Afro-Venezuelan drumming for Saint John the Baptist: the saint's image is carried and danced through villages to the beat of the culo e' puya drums."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Venezuela",
+        "when": "5 July",
+        "months": [7],
+        "text": "The national day, for the declaration of independence in 1811, with military parades in Caracas."
+      },
+      {
+        "name": "Feria de la Chinita",
+        "place": "Maracaibo",
+        "when": "Around 18 November",
+        "months": [11],
+        "text": "Maracaibo's fair for its patron, the Virgin of Chiquinquirá, called La Chinita, with processions, bullfights and the first gaitas of the season, the fast, drum-driven Christmas music of Zulia."
+      },
+      {
+        "name": "Christmas",
+        "place": "Across Venezuela",
+        "when": "December",
+        "months": [12],
+        "text": "The biggest family time of the year: gaitas on every radio, families gathering to make hallacas together, and dawn masses in the week before Christmas, to which young people in Caracas have long gone on roller skates."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Canaima and the Gran Sabana",
+        "text": "Angel Falls, the tepuis and Roraima. Roraima is best climbed from about December to April, when the trails are drier, though its summit is often wet and cloudy in any month. Angel Falls is best seen from about June to November, when the rivers are high."
+      },
+      {
+        "name": "The Caribbean islands and coast",
+        "text": "Los Roques, Margarita, Morrocoy and Choroní. Hot and sunny for most of the year, driest from about January to April. The islands lie at the southern edge of the hurricane zone and are rarely hit."
+      },
+      {
+        "name": "The Andes and the Llanos",
+        "text": "Mérida and the plains below. The Andes are clearest from December to March; the Llanos are best for wildlife in the dry months, from about December to April, and flooded from about May to October."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Venezuelans are warm, chatty and quick to joke. Women greet with a kiss on the right cheek, men with a handshake or a slap on the back, and friends of any kind may hug. \"¡Epa!\" is the everyday \"Hi!\", and \"chamo\" or \"chama\", \"kid\", is what friends call each other.",
+    "etiquette": [
+      "Photographing soldiers, police, checkpoints or government buildings can lead to trouble, so don't.",
+      "Carry cash in small notes, both US dollars and bolívares; change is often short.",
+      "Keep phones, cameras and jewellery out of sight in cities, and travel with a trusted local contact or an organised tour.",
+      "In Canaima, the camps and boats are run by Pemón communities: follow their guides and their rules for the falls and the lagoon.",
+      "Drink bottled water.",
+      "Venezuelans dress up to go out: in a restaurant or a church, neat clothes show respect."
+    ],
+    "tipping": "Restaurants often add a 10% service charge; an extra tip for good service is welcome. Tip guides, boatmen and porters on treks, preferably in US dollars.",
+    "dress": "Light, quick-drying clothes for the lowlands and coast, a rain jacket from May to November, and warm layers for Mérida and for Roraima, where nights on the summit are cold and wet. Pack swimwear for Angel Falls: the spray soaks everyone at the viewpoint.",
+    "food": [
+      {
+        "name": "Arepas",
+        "text": "Grilled corn cakes split open and stuffed, eaten at any hour from areperas: try the reina pepiada, chicken and avocado salad, or the dominó, black beans and white cheese."
+      },
+      {
+        "name": "Pabellón criollo",
+        "text": "The national dish: shredded beef in a tomato sauce, black beans, white rice and fried sweet plantain, sometimes topped with a fried egg."
+      },
+      {
+        "name": "Cachapa",
+        "text": "A sweet, thick pancake of fresh ground corn, folded over soft white cheese (queso de mano), sold at roadside stalls."
+      },
+      {
+        "name": "Hallacas",
+        "text": "The Christmas dish: corn dough filled with a stew of beef, pork and chicken with raisins, olives and capers, wrapped in plantain leaves and boiled. Families make dozens together."
+      },
+      {
+        "name": "Tequeños",
+        "text": "Sticks of white cheese wrapped in pastry and fried, the snack at every party."
+      },
+      {
+        "name": "Rum and cacao",
+        "text": "Venezuela makes some of the world's finest aged rums and grows prized cacao, such as that of Chuao on the coast."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Venezuelan)",
+      "intro": "Little English is spoken outside the tourist camps and hotels, so a few words of Spanish go a long way.",
+      "items": [
+        { "phrase": "¡Epa!", "say": "EH-pah", "meaning": "Hi!" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAHN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "Chamo / chama", "say": "CHAH-moh / CHAH-mah", "meaning": "Kid; mate (slang)" },
+        { "phrase": "Pana", "say": "PAH-nah", "meaning": "Friend" },
+        { "phrase": "¡Qué fino!", "say": "keh FEE-noh", "meaning": "How great! (slang)" },
+        { "phrase": "Ahorita", "say": "ah-oh-REE-tah", "meaning": "In a moment (which may be quite a while)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q717",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Venezuelan bolívar (Bs.). US dollars in cash are widely used for everyday buying; bring small notes.",
+        "sources": [{ "property": "P38", "values": ["Q56349362"] }],
+        "note": "Wikidata's preferred item is the bolívar soberano of 2018; it lost six more zeros in 2021, and the page calls it simply the bolívar."
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. Indigenous languages, such as Wayuu and Pemón, are official for their own peoples, and Venezuelan Sign Language is recognised too.",
+        "sources": [{ "property": "P37", "values": ["Q1321", "Q3322064"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Venezuela Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q44380220"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance; 171 in some areas",
+        "sources": [{ "property": "P2852", "values": ["Q533806", "Q25648920"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+58",
+        "sources": [{ "property": "P474", "values": ["+58"] }]
+      }
+    ]
+  }
+}

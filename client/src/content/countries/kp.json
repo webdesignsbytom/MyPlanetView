@@ -1,0 +1,166 @@
+{
+  "code": "KP",
+  "slug": "north-korea",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Annyŏng", "Chosŏn"],
+  "summary": "Pyongyang's monuments and the border at Panmunjom, on guided tours only.",
+  "overview": [
+    "North Korea, officially the Democratic People's Republic of Korea, takes up the northern half of the Korean peninsula, between China, a short stretch of Russia and the heavily guarded border with South Korea. It can be visited only on an organised tour booked through an approved agency, with local guides who stay with the group from arrival to departure, and in some years it has admitted few tourists or none at all.",
+    "Tours usually centre on Pyongyang: the bronze statues of the leaders on Mansudae Hill, Kim Il Sung Square, the Juche Tower across the Taedong River, and the metro, whose deep stations are hung with chandeliers and lined with mosaics. Most also go south to Panmunjom, in the Demilitarised Zone, where the armistice of 1953 was signed and soldiers of the two Koreas face each other, and to Kaesong, capital of the medieval Koryo kingdom, whose tombs and monuments are a World Heritage Site. Mount Myohyang, north of Pyongyang, has wooded valleys, a Buddhist temple and the halls of the International Friendship Exhibition, where gifts to the leaders are displayed; longer trips reach Mount Paektu, a volcano with a crater lake on the Chinese border.",
+    "Tour rules are strict and come through the guides: stay with the group, ask before taking photographs, and expect to show respect at the leaders' monuments, usually by laying flowers and bowing as a group. Tourists pay in foreign currency, such as euros or Chinese yuan, rather than in won.",
+    "Many governments advise against all or most travel to North Korea. Conditions and the rules for visitors change without warning, so check your own government's current advice before planning a trip."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "good", "good", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Bitterly cold and dry, often far below freezing, with frozen rivers and few visitors. Hotels, buses and museums can be poorly heated, and January is the hardest month."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Still cold in March, then mild and fresh in April and May, with blossom in Pyongyang's parks. The biggest public holiday of the year falls in mid-April."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Sticky heat, with the heaviest rain in July and August. Fields and hills turn green, but floods can close roads outside the cities."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Clear, dry and comfortable in September and October, with the harvest in the fields and red leaves on the mountains. It turns cold in November."
+      }
+    ],
+    "weather": "North Korea has a continental climate, with long, cold, dry winters and short, hot, wet summers. Pyongyang averages about −6°C in January, with icy winds from Siberia, and the far north and Mount Paektu are much colder, often below −20°C. July and August are hot and humid, around 29°C by day, and bring most of the year's rain in heavy monsoon downpours. Spring and autumn are short, clear and mild, the best seasons for a visit, and the autumn colours in the mountains are at their best around October.",
+    "festivals": [
+      {
+        "name": "Day of the Shining Star",
+        "place": "Across North Korea",
+        "when": "16 February",
+        "months": [2],
+        "text": "Kim Jong Il's birthday, a public holiday kept with visits to the leaders' statues, performances and an exhibition of the Kimjongilia, a red begonia named after him."
+      },
+      {
+        "name": "Day of the Sun",
+        "place": "Across North Korea, above all Pyongyang",
+        "when": "15 April",
+        "months": [4],
+        "text": "The most important holiday of the year, Kim Il Sung's birthday. Flowers are laid at his statues, students perform mass dances in Pyongyang's squares, and the Kimilsungia, an orchid named after him, is shown at a flower exhibition."
+      },
+      {
+        "name": "Victory Day",
+        "place": "Pyongyang",
+        "when": "27 July",
+        "months": [7],
+        "text": "The North's name for the anniversary of the 1953 armistice that ended the fighting in the Korean War, marked with ceremonies at the war museum and monuments in the capital."
+      },
+      {
+        "name": "Day of the Foundation of the Republic",
+        "place": "Across North Korea",
+        "when": "9 September",
+        "months": [9],
+        "text": "The founding of the DPRK in 1948, a public holiday with mass dances, and military parades in Pyongyang on round anniversaries."
+      },
+      {
+        "name": "Chuseok",
+        "place": "Across North Korea",
+        "when": "Usually in September or early October",
+        "months": [9, 10],
+        "text": "The autumn harvest festival: families visit their ancestors' graves, tidy them and leave food and drink. A one-day public holiday in the North."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A bow, or a nod with a handshake between men, is the usual greeting, with \"Annyŏnghasimnikka\". Guides are usually addressed by their family name with Mr or Miss, as they'll suggest. In the North, Korea is called Chosŏn; the South's word, Hanguk, is best avoided.",
+    "etiquette": [
+      "Follow your guides on what you may photograph, and never photograph soldiers, military sites or building work. When photographing statues or portraits of the leaders, include the whole figure rather than cropping it.",
+      "Treat pictures of the leaders with care: don't fold, crumple or throw away newspapers or posters that carry them.",
+      "Don't leave the group or the hotel on your own unless the guides say you may.",
+      "Don't bring religious material to hand out, or books, films or pictures about the North or from the South.",
+      "Don't make jokes or remarks about the leaders: it can cause trouble for your guides as well as for you."
+    ],
+    "tipping": "Tour agencies usually suggest a tip in foreign currency for the guides and driver, given at the end of the tour. Small gifts, such as snacks from home, are welcome too.",
+    "dress": "Smart and modest, with no slogans, flags or words printed on clothes. A visit to the Kumsusan Palace of the Sun, the leaders' mausoleum, needs formal clothes: no jeans, shorts or sandals. In winter, bring a heavy coat, hat and gloves, as buses and buildings are often cold; in summer, a rain jacket.",
+    "food": [
+      {
+        "name": "Pyongyang naengmyŏn",
+        "text": "Cold buckwheat noodles in a chilled beef broth, with slices of meat, egg, pear and cucumber, seasoned at the table with vinegar and mustard. Pyongyang's Okryu restaurant is the most famous place to eat them."
+      },
+      {
+        "name": "Kimchi",
+        "text": "Fermented cabbage, served with every meal. The North's is usually milder and juicier than the South's, with less chilli."
+      },
+      {
+        "name": "Pyongyang onban",
+        "text": "Rice in a warm chicken broth, topped with a mung-bean pancake, sliced chicken and mushrooms."
+      },
+      {
+        "name": "Taedonggang beer",
+        "text": "Pyongyang's own beer, brewed with equipment bought from the Ushers brewery in Trowbridge, England, after it closed, and served in hotel bars."
+      }
+    ],
+    "phrases": {
+      "language": "Korean",
+      "intro": "Guides speak English and other languages. The North's standard Korean has some words of its own, but these phrases are understood across Korea.",
+      "items": [
+        { "phrase": "Annyŏnghasimnikka (안녕하십니까)", "say": "ahn-nyong-ha-SHIM-nee-kka", "meaning": "Hello (polite)" },
+        { "phrase": "Kamsahamnida (감사합니다)", "say": "KAHM-sah-hahm-nee-dah", "meaning": "Thank you" },
+        { "phrase": "Ye (예)", "say": "YEH", "meaning": "Yes" },
+        { "phrase": "Aniyo (아니요)", "say": "ah-NEE-yo", "meaning": "No" },
+        { "phrase": "Mianhamnida (미안합니다)", "say": "mee-AHN-hahm-nee-dah", "meaning": "Sorry" },
+        { "phrase": "Mashissŭmnida (맛있습니다)", "say": "mah-SHEE-sseum-nee-dah", "meaning": "It's delicious" },
+        { "phrase": "Annyŏnghi kyeseyo (안녕히 계세요)", "say": "ahn-nyong-hee kyeh-SEH-yo", "meaning": "Goodbye (to someone staying)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q423",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "North Korean won (₩, KPW). Tourists usually pay in foreign currency, such as euros or Chinese yuan, rather than in won.",
+        "sources": [{ "property": "P38", "values": ["Q106720"] }],
+        "note": "Wikidata gives the won; the page adds that tourists pay in foreign currency, as tour agencies advise."
+      },
+      {
+        "key": "languages",
+        "text": "Korean, in the North's standard form, called Munhwaŏ (\"cultured language\")",
+        "sources": [{ "property": "P37", "values": ["Q9176", "Q18784"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Mostly Types C and F (two round pins) at 220 V; Type A (two flat pins) and 110 V are also found",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220", "110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+9, all year (no summer time), as in South Korea",
+        "sources": [{ "property": "P421", "values": ["Q7041", "Q63285945"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "Your guides, who stay with the group throughout, call for any help needed",
+        "sources": [],
+        "note": "Wikidata's item has no emergency-number statement, and no number for visitors could be confirmed, so the page points to the guides, who handle emergencies on every tour."
+      },
+      {
+        "key": "callingCode",
+        "text": "+850",
+        "sources": [{ "property": "P474", "values": ["+850"] }]
+      }
+    ]
+  }
+}

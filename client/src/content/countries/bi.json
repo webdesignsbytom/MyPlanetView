@@ -1,0 +1,155 @@
+{
+  "code": "BI",
+  "slug": "burundi",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Amahoro", "Uburundi"],
+  "summary": "Lake Tanganyika's beaches, royal drummers at Gishora and chimps in the Kibira forest.",
+  "overview": [
+    "Burundi is a small, crowded country of steep green hills, terraced with bananas, beans and coffee, between Lake Tanganyika and the ridge that divides the Congo and Nile basins. Bujumbura, the largest city, sits at the northern tip of the lake, with sandy beaches such as Saga Beach on its edge; Gitega, in the middle of the country, became the political capital in 2019. Lake Tanganyika is the longest freshwater lake in the world and the second deepest, and the mountains of the DR Congo rise across the water.",
+    "Burundi's drummers are famous. In the royal drum ritual, huge drums are carried in on the drummers' heads and beaten in turns, with leaps and dances, and UNESCO lists it as intangible heritage; the drum sanctuary at Gishora, near Gitega, holds performances. Kibira National Park, in the north-west, is mountain rainforest that runs on into Rwanda's Nyungwe, with chimpanzees. Rusizi National Park, just north of Bujumbura, has hippos and crocodiles where the Rusizi River meets the lake, and in the south, a small stone pyramid at Rutovu marks what Burundi calls the southernmost source of the Nile.",
+    "Few tourists come, comforts are simple outside Bujumbura, and almost everything is paid in cash. Some provinces, especially along the Congolese border, are covered by travel warnings, so see what your government advises before you plan."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Sunny season",
+        "months": [6, 7, 8, 9],
+        "text": "Dry, sunny and slightly cooler, with clear views across the lake to the Congo mountains. The easiest months for roads and forest walks, and for lazy days on Bujumbura's beaches."
+      },
+      {
+        "name": "Rains build",
+        "months": [10, 11, 12, 1],
+        "text": "Storms return in October and become more frequent through November and December, usually in the afternoon or at night, with a slight easing around January in some years."
+      },
+      {
+        "name": "Wettest months",
+        "months": [2, 3, 4, 5],
+        "text": "Frequent heavy rain, heaviest in March and April; dirt roads in the hills turn slippery, and forest trails in Kibira are hard going. The rain fades through May."
+      }
+    ],
+    "weather": "Bujumbura, low on the lakeshore at about 800 m, is hot and humid, around 29–31°C by day in every month. The hills inland rise above 2,000 m and are far cooler, with chilly nights. Rain falls from about October to May, heaviest in March and April, and June to September is dry and sunny.",
+    "festivals": [
+      {
+        "name": "Unity Day",
+        "place": "Across the country",
+        "when": "5 February",
+        "months": [2],
+        "text": "Celebrates national unity, recalling the charter adopted on this day in 1991."
+      },
+      {
+        "name": "Easter",
+        "place": "Across the country",
+        "when": "Usually in March or April: in 2027, 28 March",
+        "months": [3, 4],
+        "text": "Most Burundians are Christian, the majority Catholic, and Easter brings packed churches, choirs and family meals."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the country",
+        "when": "1 July",
+        "months": [7],
+        "text": "Burundi's independence from Belgium in 1962 is celebrated with parades and speeches, and often with drummers."
+      },
+      {
+        "name": "Rwagasore Day",
+        "place": "Across the country",
+        "when": "13 October",
+        "months": [10],
+        "text": "Remembers Prince Louis Rwagasore, the independence leader and prime minister killed in October 1961, months before independence."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Amahoro\" (peace) is the greeting most visitors learn, and it works at any hour; \"Bwakeye\" is good morning. A handshake, often held for a while, comes with questions about your family and your journey. In Bujumbura, \"Bonjour\" is just as common, and many people slip between French, Kirundi and Swahili in one sentence.",
+    "etiquette": [
+      "Police take an interest in cameras: leave soldiers, police posts, government buildings and the airport out of your pictures, and ask people before photographing them.",
+      "Have your passport or a copy with you for the frequent police checks.",
+      "Swim only where local people do, on the beaches near Bujumbura: hippos and crocodiles live in parts of the lake, especially near the Rusizi delta.",
+      "Hold out your right hand, or both, when giving or receiving something, never the left alone.",
+      "At a drumming performance, the drums are treated with respect: ask before touching one."
+    ],
+    "tipping": "Not expected in local places. Tips are welcome in Bujumbura's restaurants, for guides in the national parks, and for the drummers after a performance.",
+    "dress": "Neat and modest: Burundians dress smartly in town and for church on Sunday. Wear light clothes for Bujumbura's heat, bring a fleece for the cool hills, and boots and a rain jacket for Kibira's forest.",
+    "food": [
+      {
+        "name": "Mukeke",
+        "text": "A firm white fish found only in Lake Tanganyika, grilled or fried whole and eaten with chips or plantain: the dish Burundians are proudest of."
+      },
+      {
+        "name": "Ndagala",
+        "text": "Tiny silver fish from the lake, dried in the sun on the beaches or fried crisp, and eaten whole with a spicy sauce."
+      },
+      {
+        "name": "Beans and plantain",
+        "text": "Beans are eaten almost every day, stewed with onion and palm oil and served with cooking bananas, sweet potato or cassava."
+      },
+      {
+        "name": "Coffee",
+        "text": "Fine arabica grown on small farms in the hills. Most of the crop is exported, but Bujumbura's cafés serve it too."
+      },
+      {
+        "name": "Primus and urwarwa",
+        "text": "Primus, brewed in Bujumbura, comes in big bottles; urwarwa, banana beer brewed at home, is shared at weddings and family occasions."
+      }
+    ],
+    "phrases": {
+      "language": "Kirundi",
+      "intro": "Kirundi, close to Rwanda's Kinyarwanda, is spoken by nearly every Burundian. French is the language of offices and much of Bujumbura, English is official but heard less, and Swahili is common in the city's markets.",
+      "items": [
+        { "phrase": "Amahoro", "say": "ah-mah-HOH-roh", "meaning": "Peace (hello)" },
+        { "phrase": "Bwakeye", "say": "bwah-KEH-yeh", "meaning": "Good morning" },
+        { "phrase": "Amakuru?", "say": "ah-mah-KOO-roo", "meaning": "How are you? (\"What news?\")" },
+        { "phrase": "Ni meza", "say": "nee MEH-zah", "meaning": "Fine; good" },
+        { "phrase": "Urakoze cane", "say": "oo-rah-KOH-zeh CHAH-neh", "meaning": "Thank you very much" },
+        { "phrase": "Ego / Oya", "say": "EH-goh / OH-yah", "meaning": "Yes / No" },
+        { "phrase": "Ni angahe?", "say": "nee ahn-GAH-heh", "meaning": "How much is it?" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q967",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Burundian franc (FBu, BIF). Cards are accepted in very few places, so bring cash.",
+        "sources": [{ "property": "P38", "values": ["Q238007"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Kirundi, French and English, all official. Nearly everyone speaks Kirundi, and Swahili is common in Bujumbura.",
+        "sources": [{ "property": "P37", "values": ["Q33583", "Q150", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Africa Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q4689483"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, 113 for fire and 117 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648804", "Q4547615"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+257",
+        "sources": [{ "property": "P474", "values": ["+257"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "code": "MC",
+  "slug": "monaco",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bienvenue", "Principauté", "de Monaco"],
+  "summary": "A Riviera city-state of palace guards, a Belle Époque casino, Grand Prix streets and yachts.",
+  "overview": [
+    "Only the Vatican is smaller. Monaco covers about 2 km² of steep Riviera coast, hemmed in by France on three sides and the Mediterranean on the fourth, with tower blocks climbing the slopes behind the harbour. Its districts run into one another. On the Rock, Monaco-Ville keeps the Prince's Palace, where the guard changes just before noon each day, the cathedral where Princess Grace and Prince Rainier III are buried, and the Oceanographic Museum, built into the cliff face and once run by Jacques Cousteau. Across Port Hercule, Monte-Carlo has the casino, the Hôtel de Paris and the tight streets of the Grand Prix circuit, while Fontvieille, built on land won from the sea, has the Princess Grace Rose Garden.",
+    "Walking is the way to see it, helped by free public lifts and escalators between the levels of the town, and by local buses. Most visitors arrive by train along the coast from Nice, whose airport is the nearest; Monaco's station is cut deep into the hillside. The principality isn't in the European Union but uses the euro, and there are no checks at the border with France. Fewer than a quarter of its roughly 38,000 residents are Monégasque citizens, and it is heavily policed and very safe."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild and often sunny, with days of about 12–14°C and cool nights. The quietest time of year, though the Monte-Carlo Rally (usually late January), the circus festival and the feast of Sainte-Dévote bring crowds for a few days."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Bright, warming days and a sea still too cool for most swimmers. April brings the Monte-Carlo Masters tennis, played at the Monte-Carlo Country Club just over the border in France, and the Grand Prix fills every hotel in late May or early June."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and dry, around 26–28°C, with the sea warmest in August. The harbour fills with superyachts, beach clubs and restaurants are packed, and rooms are at their dearest."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September stays summery but calmer, and the Monaco Yacht Show takes over Port Hercule late in the month. October and November are the wettest months, with heavy showers between sunny spells."
+      }
+    ],
+    "weather": "A Mediterranean climate, sheltered by the mountains behind the coast. Winters are mild and mostly sunny, with days around 13°C; summers are warm and dry, with days of 26–28°C and the sea at about 24°C by August. Some 750 mm of rain falls in a year, mostly from October to December, often in heavy storms that clear quickly.",
+    "festivals": [
+      {
+        "name": "International Circus Festival of Monte-Carlo",
+        "place": "Fontvieille",
+        "when": "Usually in January, for about ten days",
+        "months": [1],
+        "text": "Circus acts from around the world compete under the big top for the Golden Clown, at a festival Prince Rainier III founded in 1974."
+      },
+      {
+        "name": "Feast of Sainte-Dévote",
+        "place": "Monaco",
+        "when": "26–27 January",
+        "months": [1],
+        "text": "The feast of Monaco's patron saint. On the evening of the 26th a boat is set alight in front of the little church of Sainte-Dévote at the head of the harbour, and the 27th is a public holiday with a procession."
+      },
+      {
+        "name": "Monaco Grand Prix",
+        "place": "Monte-Carlo and the harbour",
+        "when": "Usually late May or early June",
+        "months": [5, 6],
+        "text": "Formula One cars race through the streets, round the harbour and through the tunnel under the Fairmont hotel. Grandstands go up weeks before, roads close, and hotels along the coast fill months ahead."
+      },
+      {
+        "name": "Monaco Yacht Show",
+        "place": "Port Hercule",
+        "when": "Usually late September",
+        "months": [9],
+        "text": "Superyachts moor side by side for a four-day trade show; without a ticket, you can still see them from the quays."
+      },
+      {
+        "name": "National Day",
+        "place": "Monaco-Ville",
+        "when": "19 November",
+        "months": [11],
+        "text": "A mass in the cathedral, the princely family on the palace balcony and a parade in the palace square, with fireworks over the harbour the evening before."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Monaco follows French manners: say “Bonjour, monsieur” or “Bonjour, madame” when you walk into a shop, café or even a lift, and shake hands on meeting. Friends kiss on both cheeks. Street signs in the old town are in French and Monégasque, the local language, which children learn at school.",
+    "etiquette": [
+      "Walking the streets in swimwear, or bare-chested, isn't allowed away from the beaches.",
+      "The casino's gaming rooms admit over-18s only, with a passport or identity card, and expect smart dress in the evening. Monégasque citizens themselves may not gamble there.",
+      "Police officers and cameras are everywhere, which keeps the town safe; drunken or rowdy behaviour isn't tolerated.",
+      "In the cathedral and churches, cover your shoulders and keep your voice down."
+    ],
+    "tipping": "Service is included in restaurant bills (service compris), as in France. Leaving small change, or 5–10% for very good service, is a kind extra rather than an obligation.",
+    "dress": "Smart casual by day and smarter in the evening: Monaco dresses up. Wear shoes that grip on the steep streets and steps, and bring a cover-up for the cathedral.",
+    "food": [
+      {
+        "name": "Barbagiuan",
+        "text": "Monaco's own snack: small fried pastries stuffed with Swiss chard, ricotta, leek and Parmesan, eaten above all on National Day."
+      },
+      {
+        "name": "Stocafi",
+        "text": "Dried cod (stockfish) stewed slowly with tomatoes, onions, black olives and white wine, an old dish of the harbour."
+      },
+      {
+        "name": "Fougasse monégasque",
+        "text": "A flat, sweet bread flavoured with orange-flower water and scattered with almonds and red and white aniseed sweets, the national colours."
+      },
+      {
+        "name": "Socca",
+        "text": "A thin, crisp pancake of chickpea flour baked in a wood oven, shared with nearby Nice and eaten hot with plenty of black pepper."
+      },
+      {
+        "name": "Marché de la Condamine",
+        "text": "The covered market on the Place d'Armes, below the Rock, where food stalls serve locals lunch at shared tables."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "French is the official language. Italian and English are widely spoken, and Monégasque, related to the Ligurian dialects of the nearby Italian coast, survives in schools and old-town street names.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello; good day" },
+        { "phrase": "Bonsoir", "say": "bon-SWAHR", "meaning": "Good evening" },
+        { "phrase": "Merci beaucoup", "say": "mair-SEE boh-KOO", "meaning": "Thank you very much" },
+        { "phrase": "S'il vous plaît", "say": "seel voo PLAY", "meaning": "Please" },
+        { "phrase": "Excusez-moi", "say": "ex-koo-zay-MWAH", "meaning": "Excuse me" },
+        { "phrase": "L'addition, s'il vous plaît", "say": "lah-dee-SYON seel voo PLAY", "meaning": "The bill, please" },
+        { "phrase": "Parlez-vous anglais ?", "say": "par-lay voo on-GLAY", "meaning": "Do you speak English?" },
+        { "phrase": "Au revoir", "say": "oh ruh-VWAHR", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q235",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Monaco isn't in the EU, but it mints euro coins of its own, mostly bought by collectors.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French. Monégasque, the old local language, is taught in schools, and Italian and English are widely spoken.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, E and F (two round pins; E sockets have an earth pin, as in France), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata also lists British-type plugs. A visitor meets French and German sockets, so the page leaves them out."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, and UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q63286002"] }],
+        "note": "Wikidata gives only the winter offset; Monaco changes its clocks for summer with France, so the page adds UTC+2."
+      },
+      {
+        "key": "emergency",
+        "text": "112; 17 for police; 18 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648842", "Q25648843"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+377",
+        "sources": [{ "property": "P474", "values": ["+377"] }]
+      }
+    ]
+  }
+}

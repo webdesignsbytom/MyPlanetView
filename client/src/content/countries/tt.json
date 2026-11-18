@@ -1,0 +1,184 @@
+{
+  "code": "TT",
+  "slug": "trinidad-and-tobago",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Wha' going on", "Trinbago", "Welcome"],
+  "summary": "Carnival, steelpan and doubles; scarlet ibis, nesting turtles and Tobago's reefs.",
+  "overview": [
+    "Trinidad and Tobago lies just off the coast of Venezuela, the southernmost country in the Caribbean, and its two islands could hardly be more different. Trinidad is big, busy and industrial, made rich by oil and gas. Most of its people descend from Africans or from Indians brought to work the plantations after slavery ended, so Hindu temples, mosques and churches stand side by side, and Divali, Eid ul-Fitr and Good Friday are all public holidays. Tobago, about 30 km to the north-east, is small, green and slow, with reefs, rainforest and quiet bays.",
+    "Trinidad gave the world steelpan, calypso and soca, and its Carnival, one of the biggest anywhere, takes over Port of Spain on the two days before Ash Wednesday. Beyond the capital, the Caroni Swamp fills at dusk with scarlet ibis, the national bird, flying in to roost; the forests of the Northern Range hold the Asa Wright Nature Centre, known for its hummingbirds and oilbirds; Maracas Bay, over the mountains from Port of Spain, is the favourite beach; and the Pitch Lake at La Brea is the world's largest natural deposit of asphalt. From about March to August, leatherback turtles come ashore at night to nest at Grande Rivière and Matura.",
+    "Tobago is for slowing down: the jetty and shallow water of Pigeon Point, Buccoo Reef and the Nylon Pool, a sandbar out in the sea, the fishing villages of Castara and Charlotteville, and the Main Ridge Forest Reserve, protected since 1776. Ferries and short flights link the two islands. On Trinidad, maxi taxis, minibuses with a coloured band showing their route, and route taxis, shared cars with H plates, carry most people; visitors often hire a driver."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [1, 2, 3, 4, 5],
+        "text": "Sunny, breezy and the least humid time, with highs of about 31°C. Carnival and Phagwa make it the liveliest time to visit; by May the land is parched and the heat builds before the rains."
+      },
+      {
+        "name": "Wet season",
+        "months": [6, 7, 8, 9, 10, 11],
+        "text": "Heavy showers, usually short and in the afternoon, between sunny spells, and high humidity. Turtle nesting carries on into August, and Tobago's heritage festival fills the summer evenings."
+      },
+      {
+        "name": "Christmas",
+        "months": [12],
+        "text": "The rains usually ease towards the end of the year, and parang bands play in the evenings before Christmas."
+      }
+    ],
+    "weather": "Hot all year, about 23°C at night and 31–32°C by day, with little change from month to month. The dry season runs from about January to May and the wet season from June to December, often with a short drier spell in September or October that Trinis call the petit carême. The islands sit at the southern edge of the hurricane belt, so storms pass by far more often than they hit. The Northern Range catches more rain than the plains to its south.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "Port of Spain and towns across Trinidad",
+        "when": "The Monday and Tuesday before Ash Wednesday; in 2027, 8–9 February",
+        "months": [2, 3],
+        "text": "Weeks of fêtes and calypso and steelband contests build to J'ouvert, a street party smeared in mud, paint and cocoa that starts before dawn on Monday, then two days of masquerade bands in feathers and beads crossing the stage at the Queen's Park Savannah."
+      },
+      {
+        "name": "Phagwa",
+        "place": "Hindu communities across Trinidad",
+        "when": "Usually in March; in 2027, about 22 March",
+        "months": [3],
+        "text": "The Hindu spring festival known elsewhere as Holi: people drench each other in abeer, a bright magenta dye, and sing chowtal songs."
+      },
+      {
+        "name": "Indian Arrival Day",
+        "place": "Across the country",
+        "when": "30 May",
+        "months": [5],
+        "text": "A public holiday marking the arrival of the first ship of indentured workers from India in 1845, with re-enactments, music and food."
+      },
+      {
+        "name": "Tobago Heritage Festival",
+        "place": "Villages across Tobago",
+        "when": "Usually from mid-July into early August",
+        "months": [7, 8],
+        "text": "Each village hosts an evening of Tobago's old traditions: the Ole Time Wedding, speech bands, reel and jig dancing, storytelling and local food."
+      },
+      {
+        "name": "Divali",
+        "place": "Across the country",
+        "when": "Usually late October or early November",
+        "months": [10, 11],
+        "text": "The Hindu festival of lights: thousands of clay deyas glow on bamboo frames, and families share vegetarian meals with neighbours. The Divali Nagar fair in central Trinidad runs for several nights before it."
+      },
+      {
+        "name": "Parang",
+        "place": "Trinidad, above all the hill villages of Paramin and Lopinot",
+        "when": "From about October to Christmas",
+        "months": [10, 11, 12],
+        "text": "Spanish-language Christmas songs from Venezuelan settlers, played on cuatro, guitar, maracas and box bass by bands who go from house to house and are fed and given a drink at each."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Trinidad",
+        "text": "Busier and more urban, with Carnival, the wildlife of the Northern Range and Caroni, and turtles on the north and east coasts. Port of Spain needs care at night: ask your hotel which areas to keep away from."
+      },
+      {
+        "name": "Tobago",
+        "text": "Quieter, with the best beaches, reefs and diving, from Buccoo Reef to Speyside in the north-east. January to May is ideal, and in the wet season the showers are usually short."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Trinis are sociable: greet with \"Good morning\" or \"Good afternoon\", or a casual \"Wha' going on?\" among friends, shake hands on meeting, and expect jokes and teasing. A nickname is a sign you've been accepted, and older people are \"Auntie\" or \"Uncle\" even to those who aren't family.",
+    "etiquette": [
+      "Camouflage prints are illegal for civilians here, as in several Caribbean countries.",
+      "In Port of Spain, take taxis after dark rather than walking, and ask locally which districts to avoid.",
+      "Liming, hanging out over a drink and good talk, is a national pastime: join in when you're invited.",
+      "At Hindu temples and mosques, cover your shoulders and legs and take your shoes off; ask before photographing ceremonies.",
+      "Watch nesting turtles only with a licensed guide, using no torch or flash, and keep well back from the females."
+    ],
+    "tipping": "A 10% service charge is standard on restaurant bills, with a little extra for good service; where it's missing, leave 10–15%. Guides and drivers are tipped too.",
+    "dress": "Trinis take care over their clothes in town and dress up for a night out, so pack something smart along with light, casual clothes. At Carnival, wear clothes and shoes you don't mind ruining for J'ouvert. Cover up at temples, mosques and churches.",
+    "food": [
+      {
+        "name": "Doubles",
+        "text": "The national street breakfast: two soft fried flatbreads (bara) with curried chickpeas (channa), topped with tamarind, mango and pepper sauces. Ask for \"slight\" pepper unless you like it fierce."
+      },
+      {
+        "name": "Bake and shark",
+        "text": "Fried shark in a fried bread, piled with garlic sauce, tamarind, chadon beni (culantro) and salad at the stalls of Maracas Bay."
+      },
+      {
+        "name": "Roti",
+        "text": "Curried chicken, goat or vegetables wrapped in a dhalpuri roti, filled with ground split peas, or served with buss-up-shut, a flaky roti torn into rags like a burst-up shirt."
+      },
+      {
+        "name": "Pelau",
+        "text": "Rice cooked with pigeon peas and meat browned in caramelised sugar, the one-pot dish for beach limes and family gatherings."
+      },
+      {
+        "name": "Crab and dumpling",
+        "text": "Tobago's best-known dish: blue crab curried in coconut milk, with heavy flour dumplings to mop up the sauce."
+      },
+      {
+        "name": "Angostura and rum",
+        "text": "Angostura bitters are made in Trinidad, and rum punch here gets a generous dash. Local rum, Carib beer and coconut water cut fresh at roadside stalls are the other drinks."
+      }
+    ],
+    "phrases": {
+      "language": "Trinidadian English Creole",
+      "intro": "English is the official language, but day to day Trinis speak a fast, musical creole full of words from French, Spanish, Hindi and African languages. A few to listen for:",
+      "items": [
+        { "phrase": "Wha' going on?", "say": "wah GO-in on", "meaning": "Hi; how are things?" },
+        { "phrase": "Liming", "say": "LIME-ing", "meaning": "Hanging out with friends" },
+        { "phrase": "Fête", "say": "FET", "meaning": "A party" },
+        { "phrase": "Allyuh", "say": "AHL-yuh", "meaning": "You all; everyone" },
+        { "phrase": "Doh study it", "say": "doh STUD-ee it", "meaning": "Don't worry about it" },
+        { "phrase": "Bacchanal", "say": "BAK-ah-nal", "meaning": "Wild fun; also scandal and confusion" },
+        { "phrase": "Steups", "say": "STEWPS", "meaning": "A suck of the teeth, showing annoyance" },
+        { "phrase": "Mamaguy", "say": "MAH-mah-guy", "meaning": "To tease or flatter someone insincerely" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q754",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Trinidad and Tobago dollar (TT$, TTD). Cards are taken in hotels and city restaurants; street food and maxi taxis want cash.",
+        "sources": [{ "property": "P38", "values": ["Q242890"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Trinidadian and Tobagonian Creole is the everyday language.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 115 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["115"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q63286103"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 or 911 for police; 990 for fire; 811 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q533806", "Q25648918", "Q25648916"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 868",
+        "sources": [{ "property": "P474", "values": ["+1868"] }]
+      }
+    ]
+  }
+}

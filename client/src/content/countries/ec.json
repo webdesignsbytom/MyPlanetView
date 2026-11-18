@@ -1,0 +1,197 @@
+{
+  "code": "EC",
+  "slug": "ecuador",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Alli puncha", "Ecuador", "Bienvenidos"],
+  "summary": "Galápagos wildlife, colonial Quito, snowy volcanoes and the Amazon, all in one small country.",
+  "overview": [
+    "Ecuador is one of the smallest countries in South America, yet a day's drive takes you from the Pacific over the Andes and down into the Amazon. Quito, the capital, lies at about 2,850 m in a long valley under the Pichincha volcano; its colonial centre, among the first places named a World Heritage Site, is crowded with churches, the gold-covered La Compañía the most dazzling. North of the city, Otavalo has one of the best-known markets in the Andes, busiest on Saturdays. South runs the \"Avenue of the Volcanoes\": the snow cone of Cotopaxi, the crater lake of Quilotoa, and Chimborazo, whose summit, thanks to the bulge of the earth at the equator, is the point on land furthest from the earth's centre. Baños, below Tungurahua, is the place for waterfalls, hot springs and adventure sports, and Cuenca, in the south, is a handsome colonial city where the toquilla straw hats wrongly called \"Panama hats\" are woven.",
+    "East of the Andes, lodges along the Napo River and in Yasuní National Park and the Cuyabeno reserve are reached by a short flight or long bus ride, then by motor canoe. On the coast, Montañita is the surf and party town, and from Puerto López boats go out to Isla de la Plata, with nesting boobies, and to watch humpback whales from about June to September. Guayaquil, the largest city, is the other gateway to the Galápagos.",
+    "The Galápagos Islands, about 1,000 km offshore, are where Charles Darwin's visit in 1835 helped shape his ideas on evolution. Giant tortoises, marine iguanas, sea lions and blue-footed boobies barely notice people. You see them on a small cruise ship or on day trips from hotels on Santa Cruz, San Cristóbal or Isabela; every visitor site needs a licensed park guide, and visitors pay a national park entry fee on arrival.",
+    "Buses are cheap and reach almost everywhere on the mainland, and flights to the Galápagos leave only from Quito and Guayaquil. The currency is the US dollar, but many shops won't take $50 or $100 notes, so carry smaller ones."
+  ],
+  "whenToGo": {
+    "stripLabel": "The highlands (Quito, Otavalo, Cotopaxi, Baños and Cuenca), where most trips start. The coast and the Galápagos follow other patterns and have strips of their own below.",
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season in the Andes",
+        "months": [6, 7, 8, 9],
+        "text": "Sunny, often windy days in the highlands, with the clearest views of the volcanoes and the best time for treks and climbs. The coast is cool and grey, with humpback whales offshore. In the Galápagos it's the cool season: misty, rougher seas and chilly water, but more marine life."
+      },
+      {
+        "name": "Short rains",
+        "months": [10, 11, 12],
+        "text": "Bright mornings and afternoon showers in the Andes. In the Galápagos the sea grows calmer and warmer towards December, and the Christmas and New Year holidays are busy everywhere."
+      },
+      {
+        "name": "Warm season",
+        "months": [1, 2, 3, 4, 5],
+        "text": "The coast is hot and sunny between heavy storms, its beach season; the Galápagos have calm, warm water, the best snorkelling and green islands. In the Andes rain falls most afternoons, heaviest in March and April, when mountain roads can be cut by landslides."
+      }
+    ],
+    "weather": "The equator runs just north of Quito, so the seasons are wet and dry, and height decides the temperature. Quito has spring-like days of about 18–22°C and cold nights near 8°C, and higher places such as Quilotoa can freeze. In the Andes the dry season runs from about June to September. The coast is hot and humid from about January to May, with heavy rain, and cooler and overcast from June to December. The Amazon is hot, humid and rainy in every month. In the Galápagos, the warm season, from about December to May, brings sun and short showers, and the cool season, from June to November, a misty drizzle called garúa.",
+    "festivals": [
+      {
+        "name": "Carnaval",
+        "place": "Across Ecuador, famously in Guaranda and Ambato",
+        "when": "The weekend before Ash Wednesday (in 2027, Monday and Tuesday 8–9 February)",
+        "months": [2, 3],
+        "text": "Water fights in every town: expect buckets, water balloons and cans of foam aimed at anyone passing, visitors included. Ambato marks it with its Festival of Fruits and Flowers, Guaranda with music and parades."
+      },
+      {
+        "name": "Semana Santa (Holy Week)",
+        "place": "Quito, and across Ecuador",
+        "when": "Holy Week; Good Friday is 26 March in 2027",
+        "months": [3, 4],
+        "text": "On Good Friday, thousands of penitents in purple robes and tall pointed hoods, the cucuruchos, walk through Quito's old town in the procession of Jesús del Gran Poder. Families eat fanesca, a rich Holy Week soup of grains, beans and salt cod."
+      },
+      {
+        "name": "Inti Raymi",
+        "place": "Otavalo, Cotacachi and the northern highlands",
+        "when": "Usually from about 21 June into early July",
+        "months": [6, 7],
+        "text": "The Kichwa festival of the sun at the June solstice, merged with the feasts of Saint John and Saint Peter: ritual bathing in waterfalls, then days of dancing from village to village."
+      },
+      {
+        "name": "Día de los Difuntos",
+        "place": "Across Ecuador",
+        "when": "2 November",
+        "months": [11],
+        "text": "Families visit cemeteries and share colada morada, a thick, spiced drink of purple corn and fruit, with guaguas de pan, bread shaped like swaddled babies. With Cuenca's independence day on 3 November, it makes a long holiday."
+      },
+      {
+        "name": "Fiestas de Quito",
+        "place": "Quito",
+        "when": "Late November to 6 December",
+        "months": [11, 12],
+        "text": "The capital celebrates its founding in 1534 with concerts, street parties and open-sided party buses called chivas, full of music, touring the city at night."
+      },
+      {
+        "name": "Año Viejo",
+        "place": "Across Ecuador",
+        "when": "31 December",
+        "months": [12],
+        "text": "Life-size effigies of the old year, often of politicians and cartoon characters, are set up in the streets and burned at midnight, while men dressed as the old year's \"widows\" stop traffic to beg coins."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The highlands",
+        "text": "Quito, Otavalo, Cotopaxi, Quilotoa, Baños and Cuenca: the main strip above. Dry and sunny from about June to September; rain most afternoons in the other months, heaviest in March and April."
+      },
+      {
+        "name": "The coast",
+        "months": ["best", "good", "good", "good", "good", "good", "best", "best", "good", "good", "good", "best"],
+        "text": "Montañita, Puerto López and Guayaquil. Hot, sunny and stormy from about January to May, when Ecuadorians head to the beach. From June to November it's cooler and often overcast, but humpback whales are off the coast from about June to September, best in July and August."
+      },
+      {
+        "name": "The Amazon",
+        "text": "Napo, Yasuní and Cuyabeno: hot, humid and rainy in every month. Animals are there all year; higher rivers from about April to July let canoes reach further into the flooded forest of Cuyabeno."
+      },
+      {
+        "name": "The Galápagos",
+        "months": ["best", "best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "best"],
+        "text": "Good in every month. December to May is warm and sunny, with calm seas and water around 25°C. June to November is cooler and misty, with rougher crossings and water near 20°C, but the cold current brings more fish, sea lions and seabirds, and the waved albatross nests on Española from about April to December."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Ecuadorians are polite and fairly soft-spoken. Say \"Buenos días\" or \"Buenas tardes\" when you meet anyone, shake hands, and expect women to greet with a kiss on the right cheek. Use \"usted\" with strangers and older people. In Kichwa villages of the highlands, \"Alli puncha\" (\"Good morning\") always brings a smile.",
+    "etiquette": [
+      "In Otavalo's market and the Kichwa villages, ask before you raise a camera; some people will want a coin.",
+      "In the Galápagos, stay at least 2 m from the animals, never touch or feed them, keep to marked paths and take nothing away, not even sand or shells.",
+      "Bargain politely at craft markets such as Otavalo's; food markets and shops have fixed prices.",
+      "The tap water isn't safe to drink, and the plumbing can't take paper: use the bin beside the toilet.",
+      "On long-distance buses, keep your bag on your lap rather than under the seat or overhead.",
+      "In Quito, take it slowly for the first day or two: the altitude makes everyone breathless at first."
+    ],
+    "tipping": "Mid-range and upmarket restaurants add a 10% service charge to the bill, along with tax; elsewhere, round up. On Galápagos cruises and Amazon lodges, tip guides and crew at the end, usually into a shared envelope.",
+    "dress": "Layers for the Andes, where a sunny day can turn cold and wet in an hour: a fleece, a rain jacket and a hat. The sun at the equator and at altitude burns fast. Lightweight long sleeves and trousers for the Amazon, where lodges lend rubber boots. In the Galápagos, reef-safe sun cream and, from June to November, a wetsuit for snorkelling.",
+    "food": [
+      {
+        "name": "Locro de papa",
+        "text": "A creamy highland soup of potatoes and cheese, served with avocado slices on top."
+      },
+      {
+        "name": "Encebollado",
+        "text": "The coast's morning soup: tuna and cassava in a fish broth, topped with pickled red onion and eaten with plantain chips, said to cure a hangover."
+      },
+      {
+        "name": "Ecuadorian ceviche",
+        "text": "Prawns or fish in a tangy sauce of lime, orange and tomato, served soupy in a bowl with popcorn (canguil) or plantain chips to sprinkle on top."
+      },
+      {
+        "name": "Hornado and llapingachos",
+        "text": "Whole pigs roasted slowly and carved at market stalls in the highlands, served with llapingachos, potato patties stuffed with cheese, and a peanut sauce."
+      },
+      {
+        "name": "Cuy",
+        "text": "Roast guinea pig, a highland dish for special occasions for centuries, served whole with potatoes, especially around Cuenca and Baños."
+      },
+      {
+        "name": "Chocolate",
+        "text": "Ecuador grows some of the world's most prized cacao, and makes its own fine bars. Cacao farm visits are easy to arrange in the Amazon and on the coast."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Ecuadorian)",
+      "intro": "Highland Spanish is slow and clear, good for learners, and borrows words from Kichwa. Tourist businesses and Galápagos boats work in English.",
+      "items": [
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAHN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "¿Me regala una funda?", "say": "meh reh-GAH-lah OO-nah FOON-dah", "meaning": "Could I have a bag? (a \"funda\" is a carrier bag)" },
+        { "phrase": "¡Achachay!", "say": "ah-chah-CHAI", "meaning": "Brr, it's cold! (from Kichwa)" },
+        { "phrase": "¡Chuta!", "say": "CHOO-tah", "meaning": "Oh no! Darn!" },
+        { "phrase": "Alli puncha", "say": "AH-yee POON-chah", "meaning": "Good morning (Kichwa)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q736",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar (US$), the currency since 2000, with Ecuador's own coins used alongside US ones. Many shops refuse $50 and $100 notes.",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. Kichwa and Shuar are also official languages of intercultural relations, and other indigenous languages are official in their own areas.",
+        "sources": [{ "property": "P37", "values": ["Q1321", "Q1740805", "Q617291"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Mainland Ecuador: UTC−5, all year. The Galápagos: UTC−6, all year (no summer time in either)",
+        "sources": [{ "property": "P421", "values": ["Q5390", "Q63286093", "Q5385", "Q63286095"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }],
+        "note": "Wikidata also lists the older 101 (police), 102 (fire) and 131 (ambulance); emergency calls now go through the national ECU 911 service, so the page gives 911."
+      },
+      {
+        "key": "callingCode",
+        "text": "+593",
+        "sources": [{ "property": "P474", "values": ["+593"] }]
+      }
+    ]
+  }
+}

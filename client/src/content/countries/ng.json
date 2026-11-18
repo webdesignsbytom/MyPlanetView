@@ -1,0 +1,179 @@
+{
+  "code": "NG",
+  "slug": "nigeria",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["How far?", "Naija"],
+  "summary": "Lagos's art, music and markets, the sacred grove of Osogbo and Calabar's December carnival.",
+  "overview": [
+    "Nigeria is Africa's most populous country, with more than 200 million people and over 500 languages, and its cities set the pace for much of the continent's music, film and fashion. Lagos, the biggest of them, is the place to feel it: Afrobeats clubs and live-music bars, the five-storey Nike Art Gallery, galleries and design shops on Victoria Island and Ikoyi, the canopy walkway over the swamp forest at the Lekki Conservation Centre, and weekend boat rides to the beach at Tarkwa Bay. Nollywood, the country's film industry, turns out more films each year than almost any other.",
+    "In the Yoruba south-west, the Osun-Osogbo Sacred Grove, a UNESCO World Heritage Site, is a forest by the Osun River filled with shrines and sculptures; Abeokuta has Olumo Rock, with views over the town; and Ibadan and Ile-Ife are old Yoruba cities. In the south-east, Calabar is a calm, green city with a carnival every December, and the Obudu plateau, near the Cameroon border, has a mountain resort reached by cable car. Abuja, the capital, was built from scratch in the 1980s beside the granite dome of Aso Rock.",
+    "Lagos traffic, the go-slow, is notorious: allow hours, and use ride-hailing apps rather than the yellow danfo minibuses, okadas or keke tricycles, which are banned on many main roads. Domestic flights link the big cities, and the roads between them can be slow, with many checkpoints. Cards and bank transfers are used everywhere in cities, but keep some naira in cash for markets and small purchases.",
+    "Many governments advise against all or most travel to large parts of Nigeria, including much of the north-east and north-west and some states of the Niger Delta, and conditions change. Check your own government's current advice before planning any trip, including to the south."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "avoid", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Harmattan",
+        "months": [12, 1, 2],
+        "text": "Dry, with dust from the Sahara hanging in the air: in the north the sky turns white and mornings are cool; Lagos stays around 32°C. December is Lagos's busiest month, \"Detty December\", when the diaspora comes home for concerts, weddings and parties, and flights and hotels fill early."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "The hottest months, especially in the north, where afternoons pass 40°C before the rains. The south is hot and sticky, with thunderstorms from April."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "In the south, heavy rain in June and July, a short lull in August, then more rain in September and October; in the north, one rainy season from about June to September. Lagos floods quickly, and its traffic gets even worse."
+      },
+      {
+        "name": "Early dry season",
+        "months": [11],
+        "text": "The rains end and the air is clearer than it will be once the harmattan arrives: one of the most pleasant months in the south."
+      }
+    ],
+    "weather": "Two broad climates. The south, from Lagos to Calabar, is hot and humid all year, about 24–32°C, with long rains from about April to July and a second spell in September and October; Lagos gets about 1,500 mm a year and the south-east more. The north, towards the Sahel, is drier and more extreme: one rainy season from about June to September, then a long dry season with harmattan nights in the low teens in December and January and afternoons over 40°C before the rains. The Jos and Obudu plateaus are cooler, thanks to their height.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Nigeria, above all the north",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "About half of Nigerians are Muslim. The fast ends with Eid al-Fitr, the \"small Sallah\", a two-day public holiday; in the northern emirates it brings durbars, parades of horsemen in robes and turbans before the emir."
+      },
+      {
+        "name": "Eid al-Adha (Big Sallah)",
+        "place": "Across Nigeria",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Called Eid-el-Kabir or Big Sallah: two days of public holidays, rams tethered outside houses in the days before, and roads packed with people travelling home."
+      },
+      {
+        "name": "Osun-Osogbo Festival",
+        "place": "Osogbo",
+        "when": "Usually in August, over about two weeks",
+        "months": [8],
+        "text": "Worshippers of Osun, the river goddess, and visitors from Nigeria and abroad follow the Arugba, a young woman carrying a sacred calabash, in a procession to the river in the sacred grove."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Nigeria",
+        "when": "1 October",
+        "months": [10],
+        "text": "Nigeria became independent of Britain on this day in 1960, and a republic three years later. Offices and banks close."
+      },
+      {
+        "name": "Felabration",
+        "place": "The New Afrika Shrine, Lagos",
+        "when": "Usually in October, around Fela Kuti's birthday (15 October)",
+        "months": [10],
+        "text": "A week of concerts and parties in honour of Fela Kuti, the father of Afrobeat, at the venue his children run in Ikeja."
+      },
+      {
+        "name": "Calabar Carnival",
+        "place": "Calabar",
+        "when": "Through December, with the big parades near the end of the month",
+        "months": [12],
+        "text": "A month of concerts and street parties, then costumed bands parading through the city in a contest of colour, music and dance."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings matter, and respect for age even more. Young Yoruba women may kneel and young men bow low or lie flat to greet elders; visitors aren't expected to, but a slight bow and a handshake with both hands go down well. \"Good morning, sir\" or \"Good morning, ma\" is the polite way to start; between friends, \"How far?\" is enough.",
+    "etiquette": [
+      "Use titles: \"Sir\", \"Ma\", \"Chief\", \"Doctor\", \"Aunty\". First names alone can sound rude, especially with older people.",
+      "Never take photographs of government buildings, the military, police or airports, and ask before photographing anyone.",
+      "Bargaining is expected in markets such as the Lekki Arts and Crafts Market, and it's meant to be good-humoured.",
+      "In Lagos, keep phones and valuables out of sight in traffic, and use ride-hailing apps after dark.",
+      "Humour is everywhere, and a bit of banter in a market or a taxi is part of the exchange: join in with a smile."
+    ],
+    "tipping": "Tips are welcome, and you may be asked for a \"dash\", a small gift for a service. In restaurants, 5–10% if service isn't included; tip porters, drivers and guides as well.",
+    "dress": "Nigerians dress up: bright ankara prints, flowing agbada robes for men and towering gele headwraps for women at parties, where guests often wear matching cloth (aso ebi). Smart clothes go a long way in Lagos and Abuja. In the mainly Muslim north, both men and women should cover their arms and legs.",
+    "food": [
+      {
+        "name": "Jollof rice",
+        "text": "Rice cooked in a rich tomato and pepper sauce. \"Party jollof\", cooked over firewood for weddings, picks up a smoky taste from the bottom of the pot."
+      },
+      {
+        "name": "Suya",
+        "text": "Thin slices of spiced beef threaded on skewers and grilled at night by Hausa vendors, served with onion, tomato and yaji, a dry pepper and peanut spice mix."
+      },
+      {
+        "name": "Pounded yam and egusi",
+        "text": "Yam pounded into a smooth, soft dough, eaten with egusi soup, a thick stew of ground melon seeds, leafy greens and meat or fish."
+      },
+      {
+        "name": "Pepper soup",
+        "text": "A thin, fiercely spiced broth with goat or catfish. At \"point and kill\" spots, you choose your live catfish from a tub."
+      },
+      {
+        "name": "Puff-puff",
+        "text": "Soft, sweet balls of fried dough, sold hot in paper bags by street sellers and served at every party."
+      },
+      {
+        "name": "Chapman and zobo",
+        "text": "Chapman is a fruity mocktail of orange and lemon-lime sodas, grenadine and bitters with slices of cucumber; zobo is a cold hibiscus drink spiced with ginger."
+      }
+    ],
+    "phrases": {
+      "language": "Nigerian Pidgin",
+      "intro": "English is the official language, but Nigerian Pidgin, or Naija, is the common tongue across the south and in every city. Hausa, Yoruba and Igbo are the largest of the country's own languages.",
+      "items": [
+        { "phrase": "How far?", "say": "how FAR", "meaning": "Hello; how are things?" },
+        { "phrase": "I dey", "say": "ee DAY", "meaning": "I'm fine (\"I'm here\")" },
+        { "phrase": "Wetin dey happen?", "say": "weh-TIN day HAP-pen", "meaning": "What's going on?" },
+        { "phrase": "Abeg", "say": "ah-BEG", "meaning": "Please" },
+        { "phrase": "Na how much?", "say": "nah how MUTCH", "meaning": "How much is it?" },
+        { "phrase": "No wahala", "say": "no wah-HAH-lah", "meaning": "No problem" },
+        { "phrase": "Oya", "say": "OH-yah", "meaning": "Come on; let's go" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1033",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Naira (₦, NGN). Cards work in big hotels, malls and restaurants; markets and street sellers want cash or a bank transfer.",
+        "sources": [{ "property": "P38", "values": ["Q203567"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the official language. Hausa, Yoruba and Igbo are the largest of more than 500 languages, and Nigerian Pidgin is spoken across the country.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types G (three rectangular pins, as in the UK) and D (three large round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q1383497"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "West Africa Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q4689502", "Q1773995"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 or 199 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648881"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+234",
+        "sources": [{ "property": "P474", "values": ["+234"] }]
+      }
+    ]
+  }
+}

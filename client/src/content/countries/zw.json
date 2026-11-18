@@ -1,0 +1,182 @@
+{
+  "code": "ZW",
+  "slug": "zimbabwe",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Mhoro", "Zimbabwe", "Mauya"],
+  "summary": "The long face of Victoria Falls, Hwange's elephants and the stone walls of Great Zimbabwe.",
+  "overview": [
+    "Zimbabwe looks straight at the long face of Victoria Falls. From the town of Victoria Falls, a path through the rainforest on the facing cliff passes some 16 viewpoints along most of the falls' 1.7 km width, from the Devil's Cataract to Danger Point, so there is falling water to see even in the driest months. Rafting, bungee jumps from the bridge and helicopter flights are all close by, and Hwange, the country's largest national park, with tens of thousands of elephants, is a couple of hours' drive to the south.",
+    "Beyond the falls, Mana Pools on the Zambezi is known for walking among elephants and wild dogs on open floodplain, and Lake Kariba, a huge reservoir, has houseboats and long sunsets. Great Zimbabwe, near Masvingo, is the ruin of a stone city built from about the 11th to the 15th centuries, its walls raised without mortar; it gave the country its name. The granite hills of Matobo, near Bulawayo, hold rock paintings and rhinos, and the Eastern Highlands around Nyanga, the Bvumba and Chimanimani are cool, green walking country.",
+    "Roads between the main sights are long and potholed in places, and fuel can be scarce in remote areas, so many visitors fly or travel with a tour operator; don't drive after dark. Money takes some thought: most prices are in US dollars, change is often short and cards don't always work, so carry plenty of small US notes. Most people speak good English and are glad to see visitors."
+  ],
+  "whenToGo": {
+    "stripLabel": "Victoria Falls, Hwange and the highveld. Mana Pools and the Zambezi Valley have a shorter season, shown in a strip of its own below.",
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Cool, dry season",
+        "months": [5, 6, 7, 8],
+        "text": "Sunny and mild, about 22–25°C by day, with cold nights; on the highveld and in Hwange it can fall below freezing at dawn in June and July. The falls are still high in May and June, and the bush dries out as the weeks pass."
+      },
+      {
+        "name": "Hot, dry season",
+        "months": [9, 10],
+        "text": "The best game viewing, as animals crowd the waterholes in Hwange and the banks of the Zambezi, but the heat climbs, past 35°C in the Zambezi Valley by October. The falls are at their lowest, though the Zimbabwean side still has water."
+      },
+      {
+        "name": "Rainy season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Afternoon thunderstorms, green landscapes and newborn animals. The highveld stays pleasant, but Mana Pools and some remote lodges close, and dirt roads become hard going. The falls rise again and reach full flood from about March to May."
+      }
+    ],
+    "weather": "Much of Zimbabwe is highveld, 1,200–1,500 m above sea level, which keeps Harare and Bulawayo mild: Harare has summer days of about 26°C and winter days of about 21°C. The Zambezi Valley, Victoria Falls and the south-eastern lowveld lie lower and are much hotter. The rains fall from about November to March, mostly as afternoon storms, and the rest of the year is dry and sunny. The Eastern Highlands are the coolest and wettest part of the country.",
+    "festivals": [
+      {
+        "name": "Victoria Falls in full flood",
+        "place": "Victoria Falls",
+        "when": "Usually March to May",
+        "months": [3, 4, 5],
+        "text": "The Zambezi brings down the summer rains from the north, and the falls are at their most powerful: the spray rises far above the gorge and can be seen from many kilometres away. Expect to be soaked at the viewpoints."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Zimbabwe",
+        "when": "18 April",
+        "months": [4],
+        "text": "Marks independence in 1980, with celebrations and speeches across the country."
+      },
+      {
+        "name": "Heroes' Day and Defence Forces Day",
+        "place": "Across Zimbabwe",
+        "when": "The second Monday and Tuesday of August",
+        "months": [8],
+        "text": "Two public holidays honouring those who fought for independence, with a ceremony at Heroes' Acre outside Harare."
+      },
+      {
+        "name": "Unity Day",
+        "place": "Across Zimbabwe",
+        "when": "22 December",
+        "months": [12],
+        "text": "Marks the unity agreement of 1987 between the two main parties of the liberation struggle, and starts the Christmas break."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Victoria Falls and Hwange",
+        "text": "There's water at the falls in every month, most from about March to May and least around October and November. Hwange is best from about July to October, when elephants gather at the pumped waterholes."
+      },
+      {
+        "name": "Mana Pools and the Zambezi Valley",
+        "months": ["avoid", "avoid", "avoid", "good", "good", "best", "best", "best", "best", "good", "good", "avoid"],
+        "text": "Floodplain walks among elephants, canoe trips and dry-season game viewing, at its best from about June to September. October and November are very hot. Mana Pools is usually open only from about April to November, as the rains close the roads and most camps."
+      },
+      {
+        "name": "Great Zimbabwe and Matobo",
+        "text": "Fine to visit all year, and cooler and clearer in the dry season from May to October. Matobo has rhino tracking on foot and caves with rock paintings."
+      },
+      {
+        "name": "The Eastern Highlands",
+        "text": "Mountains, forest, waterfalls and trout streams around Nyanga, the Bvumba and Chimanimani. Misty and wet in summer and cold at night in winter, with the best walking from about April to October."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings come first: ask how someone is, and wait to be asked in turn, before getting to business. A handshake is usual, and many people cup their hands together or clap softly to say thank you or to show respect when receiving something. Men are often addressed respectfully as \"Baba\" (father) and women as \"Amai\" (mother).",
+    "etiquette": [
+      "Avoid political talk with strangers; insulting the president is a criminal offence.",
+      "Keep cameras away from police, soldiers and government buildings, and ask people before you photograph them.",
+      "Expect police roadblocks: stay polite and keep your documents to hand.",
+      "Carry small US notes, as change is often short.",
+      "Mana Pools is one of the few parks where you may walk without a guide: keep well away from elephants and buffalo, and take a guide if you're unsure."
+    ],
+    "tipping": "About 10% in restaurants, in US dollars. On safari, tip guides and camp staff by the day, often through a shared box. Car guards and petrol attendants expect a little.",
+    "dress": "Neutral colours for safari, warm layers for winter mornings and evenings, and a fleece for the Eastern Highlands in any month. At the falls in high water, a raincoat (they can be hired at the entrance) and a waterproof bag for your phone.",
+    "food": [
+      {
+        "name": "Sadza ne nyama",
+        "text": "Sadza, the stiff white maize porridge, eaten with the right hand alongside a stew of beef, chicken or goat (nyama). Part of almost every meal."
+      },
+      {
+        "name": "Muriwo une dovi",
+        "text": "Greens such as covo or pumpkin leaves, cooked with onion, tomato and peanut butter (dovi)."
+      },
+      {
+        "name": "Roadrunner",
+        "text": "Free-range village chicken, tougher and tastier than the farmed kind, stewed slowly."
+      },
+      {
+        "name": "Maheu",
+        "text": "A thick, slightly sour drink of fermented maize, made at home or sold in cartons."
+      },
+      {
+        "name": "Chibuku and Zambezi",
+        "text": "Chibuku is a cloudy sorghum beer sold in plastic bottles known as scuds, shaken before drinking; Zambezi is the best-known lager."
+      }
+    ],
+    "phrases": {
+      "language": "Shona (chiShona)",
+      "intro": "English is spoken almost everywhere, and Zimbabwe has 16 official languages. Shona is the most widely spoken; in Bulawayo and the west most people speak Ndebele, where hello is \"Sawubona\".",
+      "items": [
+        { "phrase": "Mhoro", "say": "MHOH-roh", "meaning": "Hi" },
+        { "phrase": "Mangwanani", "say": "mahn-gwah-NAH-nee", "meaning": "Good morning" },
+        { "phrase": "Makadii?", "say": "mah-kah-DEE-ee", "meaning": "How are you? (polite)" },
+        { "phrase": "Ndiripo", "say": "ndee-REE-poh", "meaning": "I'm fine" },
+        { "phrase": "Ndatenda", "say": "ndah-TEN-dah", "meaning": "Thank you" },
+        { "phrase": "Maita basa", "say": "mah-EE-tah BAH-sah", "meaning": "Thank you (for your work or help)" },
+        { "phrase": "Imarii?", "say": "ee-MAH-ree", "meaning": "How much is it?" },
+        { "phrase": "Famba zvakanaka", "say": "FAHM-bah zvah-kah-NAH-kah", "meaning": "Goodbye (\"go well\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q954",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollars for most prices, alongside the Zimbabwe Gold (ZiG), the local currency since 2024. Bring plenty of small US notes; South African rand are taken in some places.",
+        "sources": [{ "property": "P38", "values": ["Q4917", "Q125352135", "Q181907"] }],
+        "note": "Wikidata also lists the other foreign currencies allowed since 2009 and the old Zimbabwe dollar; the page gives the ones in everyday use."
+      },
+      {
+        "key": "languages",
+        "text": "Sixteen official languages under the 2013 constitution. English, Shona and Ndebele are the most widely used, and English is the language of government, business and tourism.",
+        "sources": [
+          {
+            "property": "P37",
+            "values": ["Q1860", "Q34004", "Q35613", "Q33273", "Q8826802", "Q33672", "Q33614", "Q13311", "Q34327", "Q8072097", "Q34340", "Q34101", "Q34137", "Q32704", "Q13218", "Q3553981"]
+          }
+        ]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK) and type D (three small round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q60740126"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Africa Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q4689495"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for all emergencies; also 995 for police, 994 for an ambulance and 993 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q25267554", "Q25648901", "Q25743569"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+263",
+        "sources": [{ "property": "P474", "values": ["+263"] }]
+      }
+    ]
+  }
+}

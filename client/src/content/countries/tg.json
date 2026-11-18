@@ -1,0 +1,158 @@
+{
+  "code": "TG",
+  "slug": "togo",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Woezɔ", "Togo"],
+  "summary": "Lomé's beach and fetish market, the cocoa hills of Kpalimé and earthen tower-houses in the north.",
+  "overview": [
+    "Togo is a sliver of a country: about 50 km of Atlantic coast and nearly 600 km long, running north from the sea to the dry savanna on the border with Burkina Faso. Lomé, the capital, sits right against the Ghanaian frontier, with a long palm-lined beach, the Grand Marché, where the market women known as the Nana Benz made fortunes in printed cloth, and the Akodésséwa fetish market, where healers sell the animal skulls, herbs and charms used in Vodun remedies. Just east, Lake Togo and the village of Togoville, where the treaty that made Togo a German protectorate was signed in 1884, are a short trip by road and pirogue.",
+    "Inland, the plateau around Kpalimé is the greenest part of the country: hills of coffee and cocoa farms, forest walks, waterfalls, butterflies, and Mont Agou, at 986 m the highest point. In the north-east, the Koutammakou landscape, a UNESCO World Heritage Site, is home to the Batammariba people and their takienta, fortress-like earthen houses with turrets for storing grain.",
+    "Zémidjans, or zémis, the motorbike taxis, are the quick way round Lomé; shared taxis and minibuses run up the paved highway north through Atakpamé, Sokodé and Kara. Distances in the south are short: Kpalimé is about two hours from Lomé by road. Many governments advise against travel to the far north, the Savanes region near the border with Burkina Faso: check your own government's current advice."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "avoid", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [11, 12, 1, 2, 3],
+        "text": "The best months: dry and sunny, with Lomé at 30–32°C. From about December the harmattan brings cool, dusty mornings to the north, and the hills around Kpalimé can vanish into a white haze. March, the hottest month, brings the first storms."
+      },
+      {
+        "name": "Long rains",
+        "months": [4, 5, 6, 7],
+        "text": "Lomé's main rainy season, with heavy storms that peak in June. The Kpalimé plateau gets more rain than the coast, and its forest paths are slippery."
+      },
+      {
+        "name": "Little dry season",
+        "months": [8],
+        "text": "A cooler, overcast pause on the coast, around 26°C, with little rain; the north, meanwhile, is at the height of its wet season."
+      },
+      {
+        "name": "Short rains",
+        "months": [9, 10],
+        "text": "A second, lighter rainy season in the south. By the end of October the north is drying out and harvest time begins."
+      }
+    ],
+    "weather": "The south is hot and humid, about 23–32°C all year, but drier than most of the West African coast: Lomé gets under 1,000 mm of rain a year, in two seasons, roughly April to July and September to October. The north, past Sokodé and Kara, has a single rainy season from about May to October and a long dry season, with afternoons near 38°C in March and April and the harmattan's dust from about December.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "Across Togo",
+        "when": "27 April",
+        "months": [4],
+        "text": "The day Togo became independent in 1960, with Sylvanus Olympio as its leader: a military parade in Lomé and dancing in towns across the country."
+      },
+      {
+        "name": "Tabaski (Eid al-Adha)",
+        "place": "Across Togo, above all Sokodé and the centre",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Togo's Muslims, many of them in the central region around Sokodé, mark the Feast of the Sacrifice with prayers and shared meat. It's a public holiday for everyone."
+      },
+      {
+        "name": "Evala",
+        "place": "Around Kara",
+        "when": "Usually in July",
+        "months": [7],
+        "text": "The Kabye people's initiation wrestling: young men from neighbouring villages wrestle in turn, a rite of passage into adulthood, with crowds, drums and much ceremony."
+      },
+      {
+        "name": "Epe Ekpe",
+        "place": "Glidji, near Aného",
+        "when": "Usually in September",
+        "months": [9],
+        "text": "The Guin (Mina) people's new year, when priests bring out a sacred stone from a forest shrine; its colour is read as the forecast for the year ahead. Crowds come from Togo, Benin and Ghana."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Togolese greetings run long: a handshake, then questions about your health, your journey and your family, each of which deserves an answer before you ask your own. In the south, the Ewe \"Woezɔ\" (welcome) is the first word many visitors hear, and the morning greeting asks, in effect, whether you woke well.",
+    "etiquette": [
+      "Vodun is a living religion here, practised alongside Christianity and Islam. At shrines and in the fetish market, ask before photographing anything, and expect a fee for it.",
+      "Zémi riders expect a little haggling: name your price before you climb on.",
+      "The surf along Lomé's beach is powerful and the currents strong: paddle rather than swim.",
+      "In the largely Muslim centre, around Sokodé, cover your shoulders and knees."
+    ],
+    "tipping": "Nobody tips at street-food stands. Where prices are aimed at foreigners, as in hotel restaurants, rounding up or 10% is normal, and Kpalimé's walking guides count on a tip.",
+    "dress": "Light cotton, with long sleeves against mosquitoes after dark. Togolese wear bright pagne, wax-print cloth, and tailors run up shirts and dresses within days: the Grand Marché in Lomé is the place to choose the cloth.",
+    "food": [
+      {
+        "name": "Akoumé",
+        "text": "A smooth paste of maize flour, the southern staple, eaten with gboma dessi, a stew of spinach-like greens with tomato, fish or meat, or with okra sauce."
+      },
+      {
+        "name": "Fufu",
+        "text": "Here made from pounded yam, thick and elastic, served with groundnut or palm-nut soup. The rhythmic thud of the pestle is the sound of lunchtime."
+      },
+      {
+        "name": "Ablo",
+        "text": "Small white cakes of fermented maize and rice, steamed until spongy and slightly sweet, eaten with fried fish and a hot pepper sauce."
+      },
+      {
+        "name": "Koklo meme",
+        "text": "Chicken grilled over charcoal and served with a fiery chilli sauce, a favourite at roadside grills."
+      },
+      {
+        "name": "Tchoukoutou",
+        "text": "A cloudy, slightly sour beer brewed from sorghum or millet in the north, drunk from calabashes at village bars."
+      }
+    ],
+    "phrases": {
+      "language": "Ewe",
+      "intro": "French is the official language and is used in offices, hotels and schools. In Lomé and across the south, people speak Ewe and its local form, Mina; in the north, Kabiyè is the main language. Ewe has tones, so these sounds are only a guide.",
+      "items": [
+        { "phrase": "Woezɔ", "say": "woh-eh-ZOH", "meaning": "Welcome" },
+        { "phrase": "Ŋdi", "say": "n-DEE", "meaning": "Good morning" },
+        { "phrase": "Efɔa?", "say": "eh-FWAH", "meaning": "Good morning (\"Did you wake well?\")" },
+        { "phrase": "Akpe", "say": "ahk-PAY", "meaning": "Thank you" },
+        { "phrase": "Akpe kakaka", "say": "ahk-PAY kah-kah-KAH", "meaning": "Thank you very much" },
+        { "phrase": "Nenie?", "say": "neh-NEE-eh", "meaning": "How much?" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q945",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "West African CFA franc (CFA, XOF), the same as in Benin, Côte d'Ivoire and five other countries. Outside Lomé's hotels you'll need cash.",
+        "sources": [{ "property": "P38", "values": ["Q861690"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French, the official language. Ewe is the main language of the south and Kabiyè of the north; both are national languages taught in schools.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type C (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689505"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "117 for police (also 171 and 172) and 118 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q4547615", "Q25648920", "Q25743541", "Q11185210"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+228",
+        "sources": [{ "property": "P474", "values": ["+228"] }]
+      }
+    ]
+  }
+}

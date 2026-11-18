@@ -1,0 +1,158 @@
+{
+  "code": "GQ",
+  "slug": "equatorial-guinea",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Buenos días", "Guinea", "Ecuatorial"],
+  "summary": "Spanish-speaking Africa: volcanic Bioko, turtle beaches and the forests of Río Muni.",
+  "overview": [
+    "Equatorial Guinea is Africa's only Spanish-speaking country, and it comes in pieces. Bioko is a volcanic island in the Gulf of Guinea, closer to Cameroon than to the mainland; Río Muni is a block of rainforest on the mainland between Cameroon and Gabon; and small islands such as Annobón lie far out to the south-west. Malabo, on Bioko's north coast, keeps a colonial centre of Spanish-era buildings around its twin-towered cathedral. Pico Basilé, 3,011 m, rises above the city, and the wild south of the island, around Ureca, has black-sand beaches where sea turtles nest and forests home to rare monkeys such as the drill.",
+    "On the mainland, Bata is the largest city, with a long seafront, and Monte Alén National Park protects mountain rainforest with forest elephants, gorillas and chimpanzees. Short flights link Malabo and Bata, and the main roads on both sides are paved, but expect police checkpoints asking to see your passport. Tourism is small and the country is little set up for independent travellers, so most visitors arrange trips through a local contact or agency. Hotels and meals cost more than in most neighbouring countries, a result of the oil economy."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2],
+        "text": "The driest months on Bioko and the mainland: hot, around 30°C, with sunshine and occasional harmattan haze. Turtles come ashore to nest on Bioko's southern beaches at this time of year."
+      },
+      {
+        "name": "First rains",
+        "months": [3, 4, 5],
+        "text": "Rain returns to both Bioko and the mainland, often in heavy afternoon storms, and the air grows steamy."
+      },
+      {
+        "name": "Mid-year",
+        "months": [6, 7, 8],
+        "text": "On the mainland around Bata, a drier, cooler break between two rainy spells. Bioko has grey, misty days and frequent drizzle on the slopes."
+      },
+      {
+        "name": "Second rains",
+        "months": [9, 10, 11],
+        "text": "Heavy rain again in both parts of the country, with the forest trails at their muddiest."
+      }
+    ],
+    "weather": "Close to the equator, so hot and humid all year: about 24–31°C on the coast, cooler on the heights of Bioko. Rain falls in most months, more on the island's southern slopes, which face the wet south-west winds and are among the rainiest places in Africa. Malabo itself is drier, and the driest weeks everywhere are from about December to February.",
+    "festivals": [
+      {
+        "name": "Holy Week and Easter (Semana Santa)",
+        "place": "Malabo, Bata and across the country",
+        "when": "The week before Easter: in 2027, 21–28 March",
+        "months": [3],
+        "text": "Most people are Catholic, and Holy Week brings processions, crowded services in Malabo's cathedral, and a public holiday on Good Friday."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Equatorial Guinea",
+        "when": "12 October",
+        "months": [10],
+        "text": "Marks independence from Spain in 1968, the main national holiday, with official ceremonies and parades."
+      },
+      {
+        "name": "Immaculate Conception",
+        "place": "Across Equatorial Guinea",
+        "when": "8 December",
+        "months": [12],
+        "text": "A Catholic feast and public holiday, with special masses in the churches."
+      },
+      {
+        "name": "Christmas",
+        "place": "Across Equatorial Guinea",
+        "when": "25 December",
+        "months": [12],
+        "text": "A public holiday for family gatherings, with midnight mass on Christmas Eve."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings are in Spanish: \"buenos días\" until about midday, \"buenas tardes\" until dark, with a handshake. Use \"usted\", the formal \"you\", with older people and officials. Among themselves, most people on the mainland speak Fang, and on Bioko many speak Bubi.",
+    "etiquette": [
+      "Your passport is the document police and soldiers want to see, at checkpoints and in the street: never go out without it.",
+      "Photography is sensitive. Never photograph government buildings, the presidential palace, police, soldiers, the port or oil installations, and ask people before photographing them.",
+      "Leave politics out of conversations with people you've just met.",
+      "On the turtle beaches at night, use no torches or flash unless the rangers say so: light confuses the nesting females and the hatchlings."
+    ],
+    "tipping": "A tip of 5–10% is welcome in the restaurants and hotels of Malabo and Bata, though small local places don't expect one; guides and boatmen should get something.",
+    "dress": "Neat, smart-casual clothes: people dress well, and officials expect it. Bring a rain jacket for any month, and boots for the trails at Ureca and Monte Alén.",
+    "food": [
+      {
+        "name": "Grilled fish and plantain",
+        "text": "Fish from the Gulf of Guinea, grilled whole over charcoal at seafront stalls and served with fried plantain and a hot sauce."
+      },
+      {
+        "name": "Pepesup",
+        "text": "A peppery soup of fish or meat, the name a local version of \"pepper soup\", eaten especially on Bioko."
+      },
+      {
+        "name": "Cassava and plantain",
+        "text": "The staples, boiled, fried or pounded, served with sauces of ground peanuts or palm nuts and fish, chicken or meat."
+      },
+      {
+        "name": "Malamba",
+        "text": "A home-brewed drink of fermented sugar-cane juice, sweet and strong."
+      },
+      {
+        "name": "Spanish touches",
+        "text": "Bakeries with Spanish-style bread, café con leche, and tortilla and other Spanish dishes on the menus of Malabo's restaurants."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish",
+      "intro": "Spanish is the language of government, schools and towns, spoken with its own local accent. French and Portuguese are official too, but rarely heard; Fang is the most widely spoken African language.",
+      "items": [
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "¿Qué tal?", "say": "keh TAHL", "meaning": "How are you?" },
+        { "phrase": "Por favor", "say": "por fah-VOR", "meaning": "Please" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "Perdone", "say": "pair-DOH-neh", "meaning": "Excuse me" },
+        { "phrase": "Hasta luego", "say": "AHS-tah LWEH-goh", "meaning": "See you later" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q983",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Central African CFA franc (CFA, XAF), shared with Cameroon, Gabon and three other countries and tied to the euro. Bring cash: cards are taken in only a few hotels.",
+        "sources": [{ "property": "P38", "values": ["Q847739"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish, French and Portuguese are all official, but Spanish is the one in daily use. Fang is the most widely spoken first language; Bubi is spoken on Bioko, and a Portuguese-based creole on Annobón.",
+        "sources": [{ "property": "P37", "values": ["Q1321", "Q150", "Q5146"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "West Africa Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for an ambulance, 113 or 114 for police and 115 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648804", "Q2945964", "Q25648805"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+240",
+        "sources": [{ "property": "P474", "values": ["+240"] }]
+      }
+    ]
+  }
+}

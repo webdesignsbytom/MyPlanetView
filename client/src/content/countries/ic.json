@@ -1,0 +1,193 @@
+{
+  "code": "IC",
+  "slug": "canary-islands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Hola!", "Canarias", "Bienvenidos"],
+  "summary": "Mount Teide, Lanzarote's lava fields and two huge carnivals.",
+  "overview": [
+    "The Canary Islands lie in the Atlantic about 100 km off the coast of north-west Africa, but they are part of Spain, one of its autonomous communities, with the euro and Spanish ways. Seven main islands, all volcanic, plus little La Graciosa, each have a character of their own. Tenerife, the largest, rises to Mount Teide, at 3,715 m the highest peak in Spain, with a cable car most of the way up. Gran Canaria has Las Palmas, a busy port city with a long town beach, and the dunes of Maspalomas in the south. Lanzarote is a landscape of black lava fields and craters, shaped by the buildings and gardens of the artist César Manrique, and Fuerteventura has the longest, emptiest beaches.",
+    "The western islands are quieter and greener. La Palma is steep and wooded, with some of the clearest night skies in Europe and an observatory on its highest ridge; La Gomera is crossed by misty laurel forest, and its whistled language, Silbo Gomero, is still taught in schools; El Hierro, the smallest of the seven, is known for its diving. Ferries and short flights connect them all, and buses, called guaguas here, serve every island."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "best", "best", "best", "best", "good", "good", "best", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Northern Europe's winter-sun season: about 21°C by day on the southern coasts, with sunshine most days. The sea is cool, around 19°C, the north of the high islands is cloudier, with some rain, and Teide often has snow. Almond trees blossom in the hills in late January and February."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm, settled and green after the winter rain, with wild flowers on the hills. Good walking weather, though the busy Easter holidays fill the resorts."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm to hot, about 27 to 29°C on the coasts, with the trade wind blowing steadily. July and August bring Spanish and European holiday crowds, and spells of calima, dusty wind from the Sahara, can push the heat higher."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The sea is at its warmest, about 23 to 24°C, the crowds have gone and the days stay warm. The first rains usually reach the high islands in November."
+      }
+    ],
+    "weather": "Mild all year, kept so by the trade winds and a cool ocean current: the coasts are about 21°C by day in January and 27 to 29°C in August. On the high islands, the north-facing slopes catch the trade-wind cloud and are green and cooler, while the south is sunnier and drier; Lanzarote and Fuerteventura, lower and nearer Africa, are dry almost everywhere. What rain there is falls mostly between November and March. Now and then the calima, a hot, dusty wind from the Sahara, brings hazy days and a sudden rise in temperature.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "Santa Cruz de Tenerife and Las Palmas de Gran Canaria",
+        "when": "Usually February or early March, with events for weeks around it: in 2027, Carnival Monday and Tuesday are 8–9 February",
+        "months": [2, 3],
+        "text": "Santa Cruz's Carnival is among the biggest street carnivals in the world, with the crowning of a queen in a towering costume, nights of dancing in the streets and the grand parade on the Tuesday. Las Palmas rivals it, and is famous for its Drag Queen Gala."
+      },
+      {
+        "name": "Holy Week (Semana Santa)",
+        "place": "Above all San Cristóbal de La Laguna, Tenerife",
+        "when": "The week before Easter: in 2027, 21–28 March",
+        "months": [3],
+        "text": "Silent processions of hooded brotherhoods carry statues through the old streets of La Laguna and other towns. A public holiday on the Thursday and Friday."
+      },
+      {
+        "name": "Día de Canarias",
+        "place": "Across the islands",
+        "when": "30 May",
+        "months": [5],
+        "text": "The islands' own day, marking the first sitting of the Canarian parliament in 1983, with folk music, traditional dress and local food in the squares."
+      },
+      {
+        "name": "Corpus Christi",
+        "place": "La Orotava, Tenerife",
+        "when": "Around Corpus Christi, usually late May or June",
+        "months": [5, 6],
+        "text": "The streets are carpeted with flower petals, and the square in front of the town hall is covered with a huge picture made of coloured volcanic sand from Teide."
+      },
+      {
+        "name": "Fiesta de la Rama",
+        "place": "Agaete, Gran Canaria",
+        "when": "4 August",
+        "months": [8],
+        "text": "Crowds dance through the town behind brass bands, waving green branches, down to the harbour, where they beat the water with them: a ritual for rain thought to go back to the islands' first people."
+      },
+      {
+        "name": "Virgen del Pino",
+        "place": "Teror, Gran Canaria",
+        "when": "8 September",
+        "months": [9],
+        "text": "The feast of Gran Canaria's patron saint and an island holiday. Pilgrims walk through the night from all over the island to Teror, a hill town of wooden balconies."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Tenerife and Gran Canaria",
+        "text": "The two biggest islands, each a world in miniature: big resorts and beaches in the sunny south, green, cloudier valleys and old towns such as La Laguna and La Orotava in the north, and pine forest and high peaks in the middle. Teide's summit is cold and can be icy in winter."
+      },
+      {
+        "name": "Lanzarote and Fuerteventura",
+        "text": "Low, dry and windy, with the most reliable sunshine and the least rain. The wind makes them favourites for windsurfing and kitesurfing, especially in summer, when the trade wind is strongest."
+      },
+      {
+        "name": "La Palma, La Gomera and El Hierro",
+        "text": "Steep, green and quiet, for walking, star-gazing and diving rather than beach holidays. The mountain paths are best from spring to autumn; in winter, cloud and rain can close the high trails."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Canarians are relaxed and friendly. Friends, and men and women who've just been introduced, greet with a kiss on each cheek; men who don't know each other shake hands. Say \"Buenos días\" or \"Buenas\" when you walk into a small shop or bar. You may be called \"mi niño\" or \"mi niña\" (my dear) by people of any age.",
+    "etiquette": [
+      "Meals are late, as elsewhere in Spain: lunch around 2 pm, dinner rarely before 8.30 or 9 pm, outside the resorts.",
+      "Leave volcanic stones, sand and plants where they are: taking them from national parks is forbidden.",
+      "Check the weather before mountain walks: trails can be closed for wind, fire risk or rain, and conditions change fast with height.",
+      "Swimwear belongs on the beach and by the pool; cover up in towns and churches.",
+      "Respect the red flags on beaches: Atlantic currents are strong, especially on the northern and western coasts."
+    ],
+    "tipping": "Not obligatory. Canarians leave small change in bars and cafés; in restaurants, 5–10% for good service is appreciated but not expected.",
+    "dress": "Light clothes for the coast, but bring a warm layer: evenings can be cool in winter, and Teide and the other high mountains are cold, with snow at the top in winter. Walking boots for the trails, and a light rain jacket for the green north.",
+    "food": [
+      {
+        "name": "Papas arrugadas con mojo",
+        "text": "Small potatoes boiled in very salty water until their skins wrinkle, served with mojo rojo, a red sauce of peppers, garlic and cumin, and mojo verde, a green one of coriander or parsley."
+      },
+      {
+        "name": "Gofio",
+        "text": "Flour of toasted maize, wheat or barley, eaten since the time of the islands' first people: stirred into milk or soup, or kneaded with fish stock into escaldón."
+      },
+      {
+        "name": "Fish",
+        "text": "Vieja (parrotfish) grilled whole, or sancocho: salted fish boiled with potatoes and sweet potato, served with mojo and gofio."
+      },
+      {
+        "name": "Cheese",
+        "text": "Each island has its own: Majorero, a goat's cheese from Fuerteventura, smoked cheese from La Palma, and Gran Canaria's queso de flor, set with thistle flowers."
+      },
+      {
+        "name": "Lanzarote wine",
+        "text": "In La Geria, vines grow in hollows dug into the black volcanic ash, each sheltered by a low stone wall. Its Malvasía whites are the island's best-known wine."
+      },
+      {
+        "name": "Barraquito",
+        "text": "A layered coffee in a glass, with condensed milk, a dash of liqueur, lemon peel and cinnamon, from Tenerife and La Palma."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Canarian)",
+      "intro": "English and German are spoken in the resorts. Canarian Spanish sounds closer to Latin American Spanish than to Madrid's: the soft c and z are said as an s, and a few words differ.",
+      "items": [
+        { "phrase": "Hola", "say": "OH-la", "meaning": "Hello" },
+        { "phrase": "Buenos días", "say": "BWEH-nos DEE-as", "meaning": "Good morning" },
+        { "phrase": "Gracias", "say": "GRAH-syas", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAN-toh KWES-ta", "meaning": "How much is it?" },
+        { "phrase": "La guagua", "say": "la GWA-gwa", "meaning": "The bus (the Canarian word)" },
+        { "phrase": "¡Chacho!", "say": "CHA-cho", "meaning": "Hey! Wow! (short for muchacho)" },
+        { "phrase": "Mi niño / mi niña", "say": "mee NEE-nyo / mee NEE-nya", "meaning": "My dear (to a man / a woman)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q5813",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Cards are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish, spoken with the islands' own accent and words.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Western European Time: UTC+0, and UTC+1 from the last Sunday of March to the last Sunday of October. One hour behind mainland Spain.",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q6655", "Q16252110"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [],
+        "note": "Wikidata's item has no emergency number; the page gives Spain's 112, used across the islands."
+      },
+      {
+        "key": "callingCode",
+        "text": "+34, as in the rest of Spain",
+        "sources": [],
+        "note": "Wikidata's item has no calling code; the islands use Spain's, +34."
+      }
+    ]
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "code": "SG",
+  "slug": "singapore",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Welcome", "Singapura"],
+  "summary": "Hawker-centre food, Gardens by the Bay and old shophouse streets in a small, tidy city-state.",
+  "overview": [
+    "Singapore is an island city-state at the southern tip of the Malay Peninsula, joined to Malaysia by a causeway and a bridge. Most of its people are of Chinese, Malay or Indian descent, and the old quarters show it: the temples and shophouses of Chinatown, the golden-domed Sultan Mosque in Kampong Glam, and the spice shops and flower-garland stalls of Little India. Katong, in the east, has the pastel terraced houses of the Peranakans, whose families blended Chinese and Malay ways.",
+    "Marina Bay is the modern face of the city: the three towers of Marina Bay Sands, and beside them Gardens by the Bay, with its Supertree Grove of tall steel structures planted as vertical gardens and two vast glass conservatories, the Flower Dome and the Cloud Forest. The Singapore Botanic Gardens, a World Heritage Site, hold the National Orchid Garden, and the zoo and Night Safari sit beside a reservoir in the north. Sentosa island has beaches and theme parks, and Pulau Ubin, a short bumboat ride from Changi, keeps a little of the village life Singapore once had. Even the airport is a sight: Jewel, at Changi, has an indoor waterfall pouring through the roof of a glass dome.",
+    "MRT trains and buses take contactless bank cards, taxis and Grab are plentiful, and covered walkways shelter much of the centre from sun and rain. The laws are strict and enforced. There are fines for littering, jaywalking, smoking outside marked areas and eating or drinking on trains and buses; chewing gum isn't sold; and drug trafficking can carry the death penalty."
+  ],
+  "whenToGo": {
+    "months": ["good", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "North-east monsoon",
+        "months": [12, 1, 2, 3],
+        "text": "December and January are the wettest months, with spells of steady rain lasting a day or more. February and March turn drier and breezier, the most comfortable weeks of the year. Chinese New Year falls in this season."
+      },
+      {
+        "name": "First inter-monsoon",
+        "months": [4, 5],
+        "text": "Hot, still and humid, with thunderstorms building on most afternoons."
+      },
+      {
+        "name": "South-west monsoon",
+        "months": [6, 7, 8, 9],
+        "text": "Somewhat drier, with storms more often in the early morning than the afternoon. National Day in August and the Grand Prix in September or early October fill the hotels, and haze is possible late in the season."
+      },
+      {
+        "name": "Second inter-monsoon",
+        "months": [10, 11],
+        "text": "Afternoon and evening thunderstorms return, often heavy, with lightning; by late November the monsoon rains are setting in."
+      }
+    ],
+    "weather": "Less than 150 km from the equator, Singapore has no summer or winter: afternoons reach about 31°C in every month, nights rarely fall below 23°C, and the air is always humid. Rain falls in every month, often as a heavy thunderstorm that's over within an hour or two. The wettest weather comes with the north-east monsoon, from about November to January, followed by the driest, breeziest weeks in February and March. From about June to September, the south-west monsoon is drier, though lines of storms called Sumatra squalls can sweep in before dawn. Haze is the other hazard: when forests burn in Sumatra in a dry year, the smoke can blow across the island, usually between about August and October.",
+    "festivals": [
+      {
+        "name": "Thaipusam",
+        "place": "From Little India to Tank Road",
+        "when": "Usually late January or early February, at the full moon",
+        "months": [1, 2],
+        "text": "Devotees carry kavadi, tall frames of steel and peacock feathers, from the Sri Srinivasa Perumal Temple on Serangoon Road to the Sri Thendayuthapani Temple, about 4 km away, with drums and chanting along the way."
+      },
+      {
+        "name": "Chinese New Year",
+        "place": "Chinatown and across Singapore",
+        "when": "Usually late January or February: in 2027, 6 February",
+        "months": [1, 2],
+        "text": "Chinatown's streets are hung with lanterns and lined with stalls selling sweets and decorations for weeks beforehand. The first two days are public holidays and many hawker stalls close; a street parade, Chingay, follows soon after."
+      },
+      {
+        "name": "Ramadan and Hari Raya Puasa",
+        "place": "Geylang Serai and Kampong Glam",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "During the fast, the bazaar at Geylang Serai and the streets around the Sultan Mosque fill with food stalls at dusk. Hari Raya Puasa, the festival at the end, is a public holiday."
+      },
+      {
+        "name": "National Day",
+        "place": "Across Singapore, above all Marina Bay",
+        "when": "9 August",
+        "months": [8],
+        "text": "Independence in 1965 is marked with the National Day Parade: a flypast, displays by the armed forces and fireworks. Parade tickets are given out by ballot, but the fireworks can be watched from around the bay."
+      },
+      {
+        "name": "Singapore Grand Prix",
+        "place": "Marina Bay",
+        "when": "Usually in September or early October",
+        "months": [9, 10],
+        "text": "A Formula 1 race run at night on city streets around Marina Bay, with concerts alongside. Roads close for days and hotels fill."
+      },
+      {
+        "name": "Deepavali",
+        "place": "Little India",
+        "when": "Usually late October or early November",
+        "months": [10, 11],
+        "text": "Serangoon Road is strung with arches of lights for weeks, and the bazaars sell sweets, flowers and new clothes. The day itself is a public holiday."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A light handshake and a smile are usual. Muslim Malays may prefer a nod or a hand on the heart, especially between men and women. Chinese names put the family name first, so Tan Wei Ming is Mr Tan. Older people serving food or driving taxis are often called Uncle and Auntie: a friendly form of respect, not a family tie.",
+    "etiquette": [
+      "At hawker centres, a packet of tissues on a table means the seat is taken, or \"choped\". Return your tray and crockery to the racks when you've finished: it's required, and you can be fined.",
+      "Don't eat or drink on the MRT or buses, and don't take durians on board.",
+      "Remove your shoes in homes and in the prayer halls of temples and mosques.",
+      "Stand on the left on escalators, and queue in the marked lines at MRT doors.",
+      "Cross at crossings: jaywalking near one is an offence."
+    ],
+    "tipping": "There's no tipping culture: restaurants and hotels add a 10% service charge, and hawkers and taxi drivers don't look for anything extra.",
+    "dress": "A small umbrella does for sun and storms alike; wear thin, breathable clothes outdoors. Indoors the air-conditioning is fierce, so a thin cardigan helps in malls, cinemas and on trains. Temples and mosques ask for covered shoulders and knees; the Sultan Mosque lends robes at the door.",
+    "food": [
+      {
+        "name": "Hainanese chicken rice",
+        "text": "Poached chicken, silky and pale, with rice cooked in its stock and fat, served with chilli-garlic sauce, ginger and dark soy. The unofficial national dish, sold in every hawker centre."
+      },
+      {
+        "name": "Chilli crab",
+        "text": "Mud crab in a sweet, sticky sauce of tomato, chilli and egg, eaten with your hands and fried buns (mantou) to mop up the sauce."
+      },
+      {
+        "name": "Katong laksa",
+        "text": "Rice noodles in a rich coconut-curry broth with prawns and cockles. The noodles are cut short, so it's eaten with a spoon alone."
+      },
+      {
+        "name": "Kaya toast and kopi",
+        "text": "Toast spread with kaya, a coconut-and-egg jam, and a slab of cold butter, with soft-boiled eggs seasoned with soy sauce and white pepper, and strong local coffee: the classic breakfast."
+      },
+      {
+        "name": "Fish head curry",
+        "text": "A whole red snapper head simmered in a sour tamarind curry with okra and aubergine: a Singapore creation by Indian cooks."
+      },
+      {
+        "name": "Bak kut teh",
+        "text": "Pork ribs in a peppery, garlicky clear broth, the Teochew way, eaten with rice, braised peanuts and small cups of strong Chinese tea."
+      }
+    ],
+    "phrases": {
+      "language": "Singlish (Singapore English)",
+      "intro": "English is the language of work and school, and almost everyone speaks it. Among themselves Singaporeans often speak Singlish, English mixed with words from Malay, Hokkien and Tamil; these are words you'll hear.",
+      "items": [
+        { "phrase": "Lah", "say": "LAH", "meaning": "Added to soften or stress a sentence: \"Can lah\" (sure, no problem)" },
+        { "phrase": "Shiok!", "say": "SHYOHK", "meaning": "Delicious; wonderful" },
+        { "phrase": "Chope", "say": "CHOHP", "meaning": "To reserve a seat, at a hawker centre" },
+        { "phrase": "Makan", "say": "MAH-kahn", "meaning": "To eat; food (from Malay)" },
+        { "phrase": "Da bao", "say": "dah BOW", "meaning": "Takeaway; to go" },
+        { "phrase": "Kopi-O kosong", "say": "KOH-pee OH KOH-song", "meaning": "Black coffee, no sugar" },
+        { "phrase": "Paiseh", "say": "PIE-seh", "meaning": "Sorry; embarrassed (from Hokkien)" },
+        { "phrase": "Alamak!", "say": "AH-lah-mahk", "meaning": "Oh no! (from Malay)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q334",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Singapore dollar (S$, SGD). Cards and phone payments work almost everywhere, though some hawker stalls take only cash or local payment apps.",
+        "sources": [{ "property": "P38", "values": ["Q190951"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, Malay, Mandarin Chinese and Tamil, all four official. Malay is the national language, and English the language of work and school.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q9237", "Q727694", "Q5885"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Singapore Standard Time, UTC+8, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6985", "Q3244578", "Q63285957"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police; 995 for fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q25267554"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+65",
+        "sources": [{ "property": "P474", "values": ["+65"] }]
+      }
+    ]
+  }
+}

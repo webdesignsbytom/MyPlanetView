@@ -53,6 +53,8 @@ test.describe('A moment’s spot', () => {
   test('an editor pins a new moment by tapping the map, shares the spot, then takes the pin off', async ({ page }) => {
     await openMap(page);
     const germany = await openCountry(page, 'Germany');
+    // Moments show once the country is visited or lived in
+    await germany.getByRole('combobox', { name: 'Been there?' }).selectOption('Visited');
     const moments = momentsIn(germany);
     await moments.getByRole('button', { name: 'Add a moment' }).click();
     const form = moments.getByRole('region', { name: 'Add a moment' });

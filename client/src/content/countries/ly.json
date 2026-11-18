@@ -1,0 +1,180 @@
+{
+  "code": "LY",
+  "slug": "libya",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Marhba", "Lībiyā"],
+  "summary": "Leptis Magna and Sabratha on the Mediterranean, and old Ghadames in the desert.",
+  "overview": [
+    "Libya is about nine-tenths desert, and nearly all its people live along the Mediterranean. That coast holds some of the finest Roman and Greek ruins anywhere: Leptis Magna, east of Tripoli, with its market, theatre and the arch of Septimius Severus, the emperor born there; Sabratha, whose tall stage wall stands beside the sea to the west; and, in the green hills of the east, the Greek city of Cyrene and its harbour town, Apollonia.",
+    "Tripoli's walled old town and the Red Castle museum at its edge are where most visits begin. Inland, the oasis of Ghadames, close to the borders with Tunisia and Algeria, has an old town of whitewashed mud-brick houses joined by covered lanes that stay shaded in the midday heat. Far to the south-west, the Acacus Mountains near Ghat hold rock paintings and engravings thousands of years old, and lakes ringed with palms lie among the dunes of the Ubari sand sea.",
+    "Tourism has been very limited for years, and there are few services for visitors. Those who go usually travel with a Libyan tour company, which arranges the paperwork, drivers and guides. Libya runs on cash, and alcohol is banned.",
+    "Many governments currently advise their citizens against all travel to Libya. The situation can change quickly, and your own government's travel advice has the latest."
+  ],
+  "whenToGo": {
+    "stripLabel": "The coast: Tripoli, Leptis Magna, Sabratha and Cyrene. The desert's season runs the other way, and has a strip of its own below.",
+    "months": ["good", "good", "best", "best", "best", "good", "good", "good", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Tripoli's winter days reach about 18°C, with most of the year's few rainy days and chilly nights. The best time for the Sahara, where days are warm and nights fall close to freezing."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm and clear, the best time for the ruins. The ghibli, a hot, dusty wind off the desert, blows on some days and can push the coast above 40°C in a few hours."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and humid on the coast, about 32°C, with no rain at all. The desert is fiercely hot, often above 45°C. Ruins are best seen in the early morning."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is still hot; October and November are warm and settled, with the sea at its warmest early in the season and the first rains usually in November."
+      }
+    ],
+    "weather": "Only a narrow band along the coast gets regular rain, mostly from October to March, and the wettest, coolest part of the country is the Jebel Akhdar (Green Mountain) in the north-east, which rises to almost 900 m above Cyrene. Tripoli and Benghazi have mild winters and long, hot summers. Everywhere else is Sahara: dry all year, with very hot summers and cold desert nights in winter.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Libya",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Working hours shorten while Libyans fast from dawn to sunset, and the day's life moves into the evening. The fast is broken each night with sharba, a spiced lamb and pasta soup. Eid al-Fitr, at the end, brings family visits and sweets."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Libya",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Sheep are bought weeks ahead and slaughtered on the first morning of the feast, and the meat is shared with relatives and the poor. Most businesses close for several days."
+      },
+      {
+        "name": "Mawlid (the Prophet's Birthday)",
+        "place": "Across Libya",
+        "when": "About 11 days earlier each year: in 2027, about mid-August",
+        "months": [8],
+        "text": "A public holiday. Families eat asida, a thick wheat pudding with date syrup, for breakfast, and children carry lanterns and candles through the streets in the evening."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Libya",
+        "when": "24 December",
+        "months": [12],
+        "text": "A public holiday marking independence on 24 December 1951, which followed a decision of the United Nations."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Sahara",
+        "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+        "text": "Ghadames, Ghat, the Acacus Mountains and the Ubari lakes are for the cooler months, November to March, when days are sunny and about 20 to 25°C and nights are cold. October and April are hot by midday; from May to September the heat is too much for most visitors."
+      },
+      {
+        "name": "The Jebel Akhdar",
+        "text": "The hills behind Cyrene, Al Bayda and Shahhat are cooler and greener than anywhere else in Libya, with juniper and pine on the slopes. Winters are wet and chilly; summers are warm rather than scorching, which makes it a pleasant escape from the coast in June."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Salam alaykum\" is the usual first word, and \"Marhba\" (welcome) is heard everywhere. Greetings go on for a while, with questions about health and family before any business. Men shake hands and friends kiss on the cheeks; a man greeting a woman waits to see whether she offers her hand, and many women won't.",
+    "etiquette": [
+      "Alcohol is banned, and bringing any into the country is an offence.",
+      "Expect checkpoints on the roads, and keep your passport and your tour company's papers to hand.",
+      "Cameras make people nervous: keep yours away from anything military, armed men, oil installations and government buildings, and ask before you photograph anyone.",
+      "Eating or drinking in the street during a Ramadan day would cause offence: wait until you're indoors.",
+      "Libyans are generous hosts. Tea is offered often, and it's polite to accept at least one glass.",
+      "Bazeen and couscous are eaten by hand from a shared bowl: use only your right hand, and wait to be invited to start."
+    ],
+    "tipping": "Not expected in most places. Round up taxi fares and leave small change in cafés. Desert drivers and guides count on something extra when you part.",
+    "dress": "Conservative: long trousers and sleeves for men, and loose clothes covering arms and legs for women, who may want a scarf to hand. In the desert, a wide hat or head scarf, sunglasses and a warm layer for the nights.",
+    "food": [
+      {
+        "name": "Bazeen",
+        "text": "A firm dome of barley dough set in the middle of a dish of lamb, tomato sauce, potatoes and boiled eggs. Diners pull pieces of the dough off with their right hand and dip them in the sauce."
+      },
+      {
+        "name": "Sharba libiya",
+        "text": "Libyan soup: lamb, tomato, chickpeas and tiny pasta, finished with mint and lemon. It starts every evening meal in Ramadan."
+      },
+      {
+        "name": "Macarona imbakbaka",
+        "text": "Pasta cooked in a spicy tomato sauce with lamb or chicken, all in one pot so it soaks up the sauce. Pasta came with the Italians, who ruled Libya from 1911 to the Second World War."
+      },
+      {
+        "name": "Usban",
+        "text": "A sausage of lamb's tripe stuffed with rice, herbs, meat and liver, then steamed and often served with couscous on feast days."
+      },
+      {
+        "name": "Asida",
+        "text": "A smooth wheat-flour pudding shaped in a mound, with a well of date syrup and butter or olive oil in the middle. Made for the Prophet's Birthday and to celebrate a new baby."
+      },
+      {
+        "name": "Tea and coffee",
+        "text": "Libyan tea is strong and sweet, poured back and forth until a thick foam forms, and sometimes served with roasted peanuts or almonds. Espresso and macchiato, another Italian legacy, are drunk all day in the cafés."
+      }
+    ],
+    "phrases": {
+      "language": "Libyan Arabic",
+      "intro": "English is spoken by some in business and the oil industry, and older people may know Italian. Arabic spellings in Latin letters vary.",
+      "items": [
+        { "phrase": "Marhba (مرحبا)", "say": "MAR-ha-ba", "meaning": "Hello; welcome" },
+        { "phrase": "Shlonak? (شلونك)", "say": "SHLOH-nak", "meaning": "How are you? (to a man; to a woman, shlonik)" },
+        { "phrase": "Bahi (باهي)", "say": "BAA-hee", "meaning": "Good; OK" },
+        { "phrase": "Shukran (شكرا)", "say": "SHOOK-ran", "meaning": "Thank you" },
+        { "phrase": "Bkam? (بكم)", "say": "b-KAM", "meaning": "How much is it?" },
+        { "phrase": "Tfaddal (تفضل)", "say": "t-FAD-dal", "meaning": "Please, go ahead; come in (to a man)" },
+        { "phrase": "Insha'Allah (إن شاء الله)", "say": "in-SHAA-al-lah", "meaning": "God willing" },
+        { "phrase": "Ma'a salama (مع السلامة)", "say": "ma-sa-LAA-ma", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1016",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Libyan dinar (LD, LYD). Bring enough cash: foreign cards rarely work.",
+        "sources": [{ "property": "P38", "values": ["Q190699"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic; everyday speech is Libyan Arabic. Berber (Amazigh) is spoken in the Nafusa Mountains and at Zuwara, and the Tuareg and Tebu of the south have languages of their own.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins) and L (three round pins in a row), with some older British-style sockets; 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613", "Q1520890", "Q60740126"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata also gives 127 V, an older supply; the page gives 230 V, the usual mains voltage."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q190252", "Q4689523"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "193 for police, 191 for ambulance and 190 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648835", "Q25648876", "Q25648833"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+218",
+        "sources": [{ "property": "P474", "values": ["+218"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "code": "BZ",
+  "slug": "belize",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Gud mawnin", "Belize", "Welcome"],
+  "summary": "Reef dives off low sandy cayes, Maya temples in the forest, and English as the official language.",
+  "overview": [
+    "Belize is small enough to cross by road in a day, yet it packs in a long barrier reef, dozens of low islands called cayes, and Maya cities hidden in tropical forest. Ambergris Caye, with the town of San Pedro, and the smaller, slower Caye Caulker are the easiest islands to stay on, a short boat ride from the reef's snorkelling spots at Hol Chan. Divers and pilots head further out to the Great Blue Hole, a round sinkhole about 300 m across on Lighthouse Reef atoll.",
+    "Inland, the Cayo District around San Ignacio is the base for the temples of Xunantunich, reached by a hand-cranked ferry over the Mopan River, the great pyramid of Caracol, and Actun Tunichil Muknal (ATM), a cave you wade and swim into to see ancient pottery and skeletons. Further south, the Garifuna villages of Hopkins and Dangriga, the beaches of the Placencia peninsula and the jaguar reserve of Cockscomb Basin show a different side of the country, and Toledo, in the far south, has Maya farming villages that take in guests.",
+    "English is the official language, which makes Belize an easy start to Central America, though you'll hear Kriol, Spanish, Garifuna and Maya languages every day. Water taxis link Belize City with the northern cayes, small planes hop between towns and islands, and old American school buses run the main highways. Belize City is the main hub, but the capital is Belmopan, built inland after a hurricane flattened the coast in 1961."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "avoid", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [1, 2, 3, 4],
+        "text": "Sunny, calm days and clear water for snorkelling and diving. January can bring a few cool, windy fronts from the north; by April the inland heat builds. The busiest and dearest time, especially around Easter."
+      },
+      {
+        "name": "Hot season and early rains",
+        "months": [5, 6, 7, 8],
+        "text": "May is the hottest month, often above 32°C inland. The rains usually start in June, mostly as heavy afternoon showers, and the forest turns green. Whale sharks gather off Gladden Spit near Placencia around the full moons from about March to June, and the lobster season reopens in mid-June."
+      },
+      {
+        "name": "Peak hurricane months",
+        "months": [9, 10],
+        "text": "The wettest, stormiest stretch of the year, with the greatest risk of tropical storms and hurricanes. Some hotels, tour firms and restaurants on the cayes close for a few weeks, and dirt roads in the south can flood."
+      },
+      {
+        "name": "The rains ease",
+        "months": [11, 12],
+        "text": "Showers grow fewer and the air cooler, though rain can linger into December, above all in the south. Christmas and New Year fill the islands."
+      }
+    ],
+    "weather": "Belize is hot and humid all year, with coastal days of about 27–31°C and sea temperatures that rarely drop below 26°C. The Mountain Pine Ridge, at up to about 1,000 m, is fresher at night. Expect dry weather from about February to May and rain from June to November, with a short drier spell in August. Rain grows heavier from north to south: Toledo in the far south gets around three times as much as Corozal near the Mexican border. The Atlantic hurricane season runs from June to November, with most storms in September and October.",
+    "festivals": [
+      {
+        "name": "La Ruta Maya Belize River Challenge",
+        "place": "From San Ignacio to Belize City",
+        "when": "Usually early March, over four days",
+        "months": [3],
+        "text": "A canoe race of about 280 km down the Macal and Belize rivers, ending in Belize City around National Heroes and Benefactors Day. Crowds cheer the paddlers from bridges and riverbanks."
+      },
+      {
+        "name": "Holy Saturday Cross Country Cycling Classic",
+        "place": "Belize City and the Western Highway",
+        "when": "The Saturday before Easter (27 March in 2027)",
+        "months": [3, 4],
+        "text": "Belize's best-known bicycle race, run every Easter Saturday from Belize City to San Ignacio and back. Easter week is also a holiday, when families head to the rivers and the cayes."
+      },
+      {
+        "name": "Lobsterfests",
+        "place": "Caye Caulker, San Pedro and Placencia",
+        "when": "Usually late June and July",
+        "months": [6, 7],
+        "text": "Each island town marks the reopening of the lobster season, on 15 June, with a weekend of grilled lobster, music and dancing in the street."
+      },
+      {
+        "name": "The September Celebrations",
+        "place": "Across Belize, biggest in Belize City",
+        "when": "10 September to 21 September",
+        "months": [9],
+        "text": "Two public holidays bookend the month's parties: St George's Caye Day on 10 September, for a 1798 sea battle with Spain, and Independence Day on 21 September, for independence from Britain in 1981. Belize City's carnival road march is usually held in the same month."
+      },
+      {
+        "name": "Garifuna Settlement Day",
+        "place": "Dangriga and Hopkins",
+        "when": "19 November",
+        "months": [11],
+        "text": "A public holiday for the arrival of the Garifuna people on Belize's coast in 1832. At dawn a boat landing is re-enacted on the beach at Dangriga, followed by drumming, dancing and church services."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The cayes and the reef",
+        "text": "Ambergris Caye and Caye Caulker in the north, and small private islands further south. The sea is calmest and clearest from about March to June; northerly fronts in winter can stir it up for a day or two."
+      },
+      {
+        "name": "Cayo and the west",
+        "text": "Forest, rivers, caves and Maya sites around San Ignacio. Hotter than the coast in April and May, and the cave tours, ATM included, can close after heavy rain when water levels rise."
+      },
+      {
+        "name": "The south",
+        "text": "Placencia, Hopkins and Toledo are wetter than the rest of the country, with a longer rainy season. Visit from about February to May for the driest days."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Belizeans are easy-going and chatty. Say \"good morning\" or \"good afternoon\" when you walk into a shop or get on a bus, and a handshake is the usual greeting. Among friends you'll hear the Kriol \"Weh di go aan?\" (\"What's going on?\"), and in the north and west, where many people speak Spanish at home, \"Buenos días\".",
+    "etiquette": [
+      "Ask before photographing people, especially in Maya villages and in the Mennonite farming communities of Spanish Lookout and Shipyard, where many prefer not to be photographed.",
+      "On the reef, don't touch or stand on coral, and use the moorings rather than anchors. Don't buy black coral or turtle shell, which are protected.",
+      "Lobster is out of season from 15 February to 14 June and conch from July to September: a restaurant offering either then is breaking the law.",
+      "Cameras aren't allowed in the ATM cave, and every visit must go with a licensed guide.",
+      "In Belize City, take a taxi after dark rather than walking, and keep valuables out of sight.",
+      "Life on the cayes moves slowly: \"Go slow\" is Caye Caulker's motto, so expect patient service."
+    ],
+    "tipping": "About 10–15% in restaurants, unless a service charge is already on the bill. Tip guides, divemasters and boat crews too; US dollars and Belize dollars are equally welcome.",
+    "dress": "Light, quick-drying clothes, a hat and reef-safe sun cream. Bring long sleeves and insect repellent for the forest and for the sandflies on the beaches at dusk. For the ATM cave you'll get wet up to your neck: wear clothes that can be soaked, and socks, since shoes come off in the upper chamber.",
+    "food": [
+      {
+        "name": "Rice and beans",
+        "text": "Red kidney beans cooked into the rice with coconut milk, served with stewed chicken, potato salad and fried plantain: the national Sunday lunch. \"Beans and rice\", with the beans served separately, is a different dish."
+      },
+      {
+        "name": "Fry jacks",
+        "text": "Puffy triangles of fried dough, eaten at breakfast with refried beans, eggs, cheese and jam."
+      },
+      {
+        "name": "Hudut",
+        "text": "The Garifuna dish of Hopkins and Dangriga: fish in a coconut broth, eaten with mashed green and ripe plantain."
+      },
+      {
+        "name": "Boil-up",
+        "text": "A Kriol pot of boiled cassava, sweet potato, plantain, eggs and fish or salted pig tail, all covered in a tomato sauce."
+      },
+      {
+        "name": "Garnaches, salbutes and panades",
+        "text": "Cheap street snacks of Maya and Mestizo origin: crisp or puffed tortillas topped with beans, chicken, cabbage and cheese, and fried pasties of fish or beans."
+      },
+      {
+        "name": "Marie Sharp's and Belikin",
+        "text": "Marie Sharp's habanero hot sauces, made near Dangriga, are on almost every table. Belikin is the national beer, with a Maya temple on its label."
+      }
+    ],
+    "phrases": {
+      "language": "Belizean Kriol",
+      "intro": "English is spoken everywhere, but Kriol is the everyday language between many Belizeans, and Spanish is common in the north and west.",
+      "items": [
+        { "phrase": "Gud mawnin", "say": "gud MAW-nin", "meaning": "Good morning" },
+        { "phrase": "Weh di go aan?", "say": "WEH dee goh AHN", "meaning": "What's going on? How are things?" },
+        { "phrase": "Ah deh yah", "say": "ah DEH yah", "meaning": "I'm here; I'm fine (the usual answer)" },
+        { "phrase": "Tank yu", "say": "TANK yoo", "meaning": "Thank you" },
+        { "phrase": "Mi naym da …", "say": "mee NAYM dah", "meaning": "My name is …" },
+        { "phrase": "Go slow", "say": "goh SLOH", "meaning": "Take it easy" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q242",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Belize dollar (BZ$, BZD), fixed at two to the US dollar. US dollars are taken almost everywhere, often with change given in Belize dollars.",
+        "sources": [{ "property": "P38", "values": ["Q275112"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the official language. Kriol is the most widely shared everyday language, and Spanish, Garifuna, Mopan and Q'eqchi' Maya and Mennonite Low German are spoken too.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), sometimes G (three rectangular pins), 110 V or 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456", "Q1528507"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata also gives 550 V, which is no household supply, and leaves it at 220 V; most sockets are 110 V, as in the US, so the page gives both."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Standard Time, UTC−6, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5385", "Q63286058"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 or 90 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806", "Q25743491"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+501",
+        "sources": [{ "property": "P474", "values": ["+501"] }]
+      }
+    ]
+  }
+}

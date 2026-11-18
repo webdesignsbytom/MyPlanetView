@@ -1,0 +1,195 @@
+{
+  "code": "TZ",
+  "slug": "tanzania",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Shikamoo", "Tanzania", "Karibu sana"],
+  "summary": "Kilimanjaro, the Serengeti's calving herds and the spice island of Zanzibar.",
+  "overview": [
+    "Tanzania holds some of Africa's finest wildlife country. In the north, the plains of the Serengeti carry the great wildebeest migration for most of the year, as the herds circle between Tanzania and Kenya's Maasai Mara, and the Ngorongoro Crater, a collapsed volcano about 20 km across, is crowded with animals, black rhinos among them. Tarangire is known for its elephants and baobab trees, and Lake Manyara lies under the wall of the Rift Valley. Arusha is the base for this northern circuit.",
+    "Kilimanjaro, 5,895 m and the highest mountain in Africa, is a long walk rather than a technical climb: five to nine days on routes such as Marangu, Machame and Lemosho, with the final push to Uhuru Peak made through a freezing night. In the south, Nyerere National Park (once part of the Selous) and Ruaha are vast and far quieter, with boat safaris on the Rufiji River, and in the far west, Gombe and Mahale, on the shores of Lake Tanganyika, are the places to see wild chimpanzees.",
+    "Zanzibar, off the coast, runs its own affairs within the union, with its own president. Stone Town, its old trading port, is a maze of coral-stone houses with carved wooden doors, mosques, and the site of East Africa's last open slave market, closed in 1873 and now a memorial; inland are spice farms growing cloves and nutmeg, and the east and north coasts have long white beaches. Pemba and Mafia islands are quieter, with fine diving.",
+    "Dar es Salaam is the biggest city, though Dodoma is the official capital. Safaris travel by 4×4 or by light aircraft between bush airstrips, and fast ferries cross from Dar es Salaam to Zanzibar."
+  ],
+  "whenToGo": {
+    "stripLabel": "The northern safari parks and the country taken together. Zanzibar, Kilimanjaro and the southern parks differ, and each has its own line below.",
+    "months": ["best", "best", "good", "avoid", "good", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Calving season",
+        "months": [1, 2],
+        "text": "Hot and mostly dry between the rains. Hundreds of thousands of wildebeest calves are born on the short-grass plains of the southern Serengeti, and lions, cheetahs and hyenas gather. Clear skies on Kilimanjaro, too."
+      },
+      {
+        "name": "Masika (long rains)",
+        "months": [3, 4, 5],
+        "text": "The main rains, heaviest in April. Many camps in the southern and western parks close, and Zanzibar's hotels are quiet or shut for a few weeks; the northern parks stay open, green and empty."
+      },
+      {
+        "name": "Kiangazi (dry season)",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Dry, sunny days and cold early mornings in the highlands. The herds move north through the western Serengeti and reach the Mara River in the far north from about July. The busiest and dearest months."
+      },
+      {
+        "name": "Vuli (short rains)",
+        "months": [11, 12],
+        "text": "Short, sharp storms, mostly in the afternoon. The herds stream back south to the fresh grass of the southern plains, and Zanzibar fills up for Christmas."
+      }
+    ],
+    "weather": "Hot on the coast and warm inland, where much of the land is high plateau: Arusha, at about 1,400 m, has warm days and cool nights, and on Ngorongoro's rim, over 2,000 m, nights can be cold. Dar es Salaam and Zanzibar are hot and humid, about 30°C. The north and the coast have two rainy seasons, the masika, roughly mid-March to May, and the vuli, roughly November and December; the south and west have one long rainy season, from about November to April.",
+    "festivals": [
+      {
+        "name": "Wildebeest calving",
+        "place": "Southern Serengeti and Ndutu",
+        "when": "Usually from late January into March",
+        "months": [1, 2, 3],
+        "text": "Most calves are born within a few weeks, on the open grass where the herds spend the wet season. The timing follows the rains and shifts a little each year."
+      },
+      {
+        "name": "Sauti za Busara",
+        "place": "Stone Town, Zanzibar",
+        "when": "Usually in February, over four days",
+        "months": [2],
+        "text": "Live African music, from Zanzibar's own taarab to Tanzanian bongo flava, on stages inside the Old Fort."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Zanzibar and the coast",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Almost everyone on Zanzibar is Muslim. During the fast, many Stone Town restaurants close by day, and the waterfront fills each evening once the fast is broken; Eid al-Fitr ends the month with new clothes, visits and a public holiday."
+      },
+      {
+        "name": "Mwaka Kogwa",
+        "place": "Makunduchi, Zanzibar",
+        "when": "Usually in July",
+        "months": [7],
+        "text": "The Shirazi New Year in the south of the island: men fight mock battles with banana stems, a thatched hut is set alight, and the day ends with feasting and music."
+      },
+      {
+        "name": "Uhuru Day",
+        "place": "Across the country",
+        "when": "9 December",
+        "months": [12],
+        "text": "Independence Day, marking mainland Tanganyika's independence from Britain in 1961."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Serengeti and the northern parks",
+        "text": "The migration's year: calving in the south-east, around Ndutu, from about January to March; the long trek north-west in April and May; the western corridor and the Grumeti River in about June and July; the Mara River crossings in the far north from about July to October; and back south with the short rains. Resident lions, leopards and elephants are there in every month."
+      },
+      {
+        "name": "Zanzibar and the coast",
+        "months": ["best", "best", "good", "avoid", "avoid", "good", "best", "best", "best", "best", "good", "best"],
+        "text": "Hot all year. The long rains, about April and May, bring heavy downpours and close some hotels, and November has shorter showers. The rest of the year is beach weather, breezy on the east coast at Paje, a kitesurfing centre."
+      },
+      {
+        "name": "Kilimanjaro",
+        "months": ["best", "best", "good", "avoid", "avoid", "good", "best", "best", "best", "best", "good", "good"],
+        "text": "The driest, clearest climbing months are about January to early March and June to October. Summit night is well below freezing in any month, with snow possible, and in the long rains the forest on the lower slopes is a mud bath."
+      },
+      {
+        "name": "Nyerere, Ruaha and the west",
+        "text": "One long rainy season, about November to April, when many camps close. The dry months, June to October, are the best, when animals crowd the shrinking rivers; Mahale's chimps are easiest to find late in the dry season."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A greeting comes before anything else, and skipping it seems rude. Young people say \"Mambo?\", answered with \"Poa\" (cool); to anyone older, the respectful \"Shikamoo\" (\"I hold your feet\"), answered with \"Marahaba\". A handshake may last through the whole exchange.",
+    "etiquette": [
+      "On Zanzibar and along the coast, most people are Muslim: cover shoulders and knees in Stone Town and the villages, and keep swimwear for the beach.",
+      "Maasai herders often expect payment for a photograph: agree it first, or keep the camera down.",
+      "Hand things over and take them with your right hand.",
+      "Tanzania banned plastic carrier bags in 2019, so leave them at home.",
+      "On Kilimanjaro, walk slowly, drink plenty and listen to your guide: if altitude sickness gets worse, the only cure is to go down."
+    ],
+    "tipping": "Expected on safari and climbs. Operators suggest an amount per day for guides and cooks, and a Kilimanjaro crew of guides, cooks and porters is tipped together at the end, often after a song. About 10% in restaurants.",
+    "dress": "Neutral colours on safari, and warm layers for early game drives, above all on the Ngorongoro rim. Kilimanjaro takes everything from shorts to a down jacket, as the climb passes through every climate. On Zanzibar, wear loose clothes that cover you in Stone Town.",
+    "food": [
+      {
+        "name": "Chipsi mayai",
+        "text": "Chips cooked into an omelette in the pan, with chilli sauce: the country's favourite cheap meal, at roadside stalls everywhere."
+      },
+      {
+        "name": "Mishkaki",
+        "text": "Skewers of marinated beef or goat grilled over charcoal on street corners in the evening."
+      },
+      {
+        "name": "Ndizi nyama",
+        "text": "Green bananas stewed with beef and tomato until soft, a hearty dish from the slopes of Kilimanjaro."
+      },
+      {
+        "name": "Forodhani night market",
+        "text": "On Stone Town's waterfront after dark: Zanzibar pizza, a thin dough parcel filled with meat, egg and onion, or banana and chocolate, fried on a griddle; and urojo, a tangy soup with fried bhajia and potato."
+      },
+      {
+        "name": "Samaki wa kupaka",
+        "text": "Fish grilled over charcoal and then cooked in a spiced coconut sauce, a Zanzibar favourite with rice."
+      },
+      {
+        "name": "Konyagi",
+        "text": "A strong, clear spirit made in Dar es Salaam, drunk with tonic or soda."
+      }
+    ],
+    "phrases": {
+      "language": "Swahili",
+      "intro": "Swahili is the national language and almost everyone speaks it, the result of a deliberate choice after independence to give the country's many peoples one shared language. English is used in tourism and higher education.",
+      "items": [
+        { "phrase": "Shikamoo", "say": "shee-kah-MOH", "meaning": "Hello (respectful, to an elder)" },
+        { "phrase": "Marahaba", "say": "mah-rah-HAH-bah", "meaning": "The elder's reply" },
+        { "phrase": "Mambo?", "say": "MAHM-boh", "meaning": "Hi, what's up? (informal)" },
+        { "phrase": "Poa", "say": "POH-ah", "meaning": "Cool; fine (the reply)" },
+        { "phrase": "Asante", "say": "ah-SAHN-teh", "meaning": "Thank you" },
+        { "phrase": "Samahani", "say": "sah-mah-HAH-nee", "meaning": "Sorry; excuse me" },
+        { "phrase": "Shilingi ngapi?", "say": "shee-LING-ee NGAH-pee", "meaning": "How many shillings? (How much?)" },
+        { "phrase": "Twende!", "say": "TWEN-deh", "meaning": "Let's go!" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q924",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Tanzanian shilling (TSh, TZS). Safari operators and lodges often price in US dollars: bring clean, recent notes. Mobile money is widely used.",
+        "sources": [{ "property": "P38", "values": ["Q4589"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Swahili and English. Swahili is the national language, spoken by almost everyone; English is used in business, higher education and tourism.",
+        "sources": [{ "property": "P37", "values": ["Q7838", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), with the older type D (three round pins) in some buildings; 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q60740126"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata lists BS 1363 (type G) and \"British and related types\"; the page names type D, the related type still found in older buildings."
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "East Africa Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q1773949", "Q4689489"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, 114 for fire and 115 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q2945964", "Q25648805"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+255",
+        "sources": [{ "property": "P474", "values": ["+255"] }]
+      }
+    ]
+  }
+}

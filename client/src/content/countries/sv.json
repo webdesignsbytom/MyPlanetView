@@ -1,0 +1,178 @@
+{
+  "code": "SV",
+  "slug": "el-salvador",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Buenas!", "El Salvador", "¡Qué chivo!"],
+  "summary": "Pacific surf towns, volcano craters and coffee villages, with pupusas fresh off the griddle.",
+  "overview": [
+    "El Salvador is the smallest country in Central America and the only one without a Caribbean shore, so almost everything is within a few hours' drive of San Salvador. Its Pacific coast is lined with surf breaks: El Tunco, El Zonte and Punta Roca near La Libertad have long right-hand point breaks and small beach towns built around them, and Las Flores, in the east, is quieter. A chain of volcanoes runs inland. Santa Ana, the highest at about 2,380 m, has a sulphur-green lake in its crater; it's climbed with park guides from Cerro Verde, beside the bare cone of Izalco and the blue crater lake of Coatepeque.",
+    "In the western hills, the Ruta de las Flores links coffee towns: Juayúa, with its weekend food fair, Apaneca, and Concepción de Ataco, its walls painted with murals. Suchitoto, a cobbled colonial town above Lake Suchitlán, has craft shops and indigo dyeing workshops. Joya de Cerén, near San Andrés, is a farming village buried by volcanic ash around 1,400 years ago, its houses and kitchens left as they were: a UNESCO World Heritage Site.",
+    "The US dollar has been the currency since 2001. Colourful old school buses, the \"chicken buses\", reach almost every town cheaply, while shuttles and taxis are quicker between the main sights. Police and army patrols are a common sight, so carry a copy of your passport."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Sunny, dry days and the freshest nights, chilly in the hills of the Ruta de las Flores. The coffee harvest runs through these months, and the volcano views are at their clearest."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4],
+        "text": "The hottest weeks, with the lowlands often above 35°C and the air hazy from burning fields. Salvadorans fill the beaches in Holy Week, so book a coast hotel early."
+      },
+      {
+        "name": "Rainy season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Sunny mornings, then heavy storms in the afternoon or at night; June and September are usually the wettest months, with a drier spell in between. The surf is at its biggest, the countryside green, and visitors few. Tropical storms can bring floods and landslides, most likely in September and October."
+      }
+    ],
+    "weather": "Hot on the coast and in the lowlands all year, with days of 30–34°C and warm, humid nights. San Salvador, at about 650 m, is a little milder, and the coffee hills of the west, at 1,000–1,500 m, can drop to around 12°C on clear nights from December to February. The rainy season runs from about May to October and the dry season from November to April. Most rain falls in short, hard storms rather than all-day drizzle.",
+    "festivals": [
+      {
+        "name": "Semana Santa (Holy Week)",
+        "place": "Across El Salvador, notably Sonsonate and Izalco",
+        "when": "Holy Week, ending on Easter Sunday (28 March in 2027)",
+        "months": [3, 4],
+        "text": "Processions through the old towns, with streets carpeted in coloured sawdust and flowers for Good Friday. Offices close from Thursday, and the whole country seems to go to the beach."
+      },
+      {
+        "name": "Fiestas Agostinas",
+        "place": "San Salvador",
+        "when": "Early August, with the holidays on 3–6 August",
+        "months": [8],
+        "text": "The capital's festival for its patron, El Divino Salvador del Mundo, with a fair, parades and the Bajada, when the image of Christ is carried through the streets on 5 August. 6 August is a holiday across the country."
+      },
+      {
+        "name": "Bolas de Fuego",
+        "place": "Nejapa",
+        "when": "31 August",
+        "months": [8],
+        "text": "After dark, young men with painted faces throw blazing balls of rag soaked in fuel at each other in the streets, recalling a volcanic eruption that drove the town's people from their old home in the 17th century."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across El Salvador",
+        "when": "15 September",
+        "months": [9],
+        "text": "El Salvador shares this anniversary of the 1821 break from Spain with its Central American neighbours; every town has a parade of school bands."
+      },
+      {
+        "name": "Festival de los Farolitos",
+        "place": "Ahuachapán",
+        "when": "7 December",
+        "months": [12],
+        "text": "On the eve of the Immaculate Conception, families hang paper lanterns along their houses and the streets of Ahuachapán glow with candlelight."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The coast",
+        "text": "Steamy in every month, with black-sand beaches and rocky point breaks. The surf is largest from about March to October, and the dry months bring smaller, cleaner waves that suit beginners."
+      },
+      {
+        "name": "The highlands",
+        "text": "The Ruta de las Flores, the volcanoes of Cerro Verde and the mountains of Chalatenango and Morazán, the north-eastern area where Perquín's museum tells the story of the civil war of 1980–1992. Fresher than the coast, with misty afternoons in the rainy season and cold nights in December and January."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Salvadorans are warm and quick to help. Shake hands when you meet; female friends kiss once on the cheek. Say \"Buenos días\" or simply \"¡Buenas!\" on walking into a shop or a bus, and use \"usted\" with older people and strangers. Among friends you'll hear \"vos\" instead of \"tú\".",
+    "etiquette": [
+      "Don't photograph police, soldiers or prisons.",
+      "Carry small notes and coins: bus drivers and market stalls rarely have change for a $20 bill.",
+      "In most places, put toilet paper in the bin beside the toilet rather than flushing it: the pipes are narrow.",
+      "Agree a taxi fare before you set off, or use a ride-hailing app in San Salvador.",
+      "Ask before photographing people in markets and villages.",
+      "On the surf breaks, wait your turn: the surfer nearest the peak has the wave."
+    ],
+    "tipping": "Many restaurants add a suggested 10% tip to the bill; where they don't, leave about that much. Tip guides, and round up for porters and drivers.",
+    "dress": "Light cotton clothes for the coast and lowlands, with a fleece for volcano hikes and for evenings on the Ruta de las Flores. Salvadorans dress neatly in town, so swimwear and bare chests stay on the beach. Bring sturdy shoes for the loose ash on volcano trails.",
+    "food": [
+      {
+        "name": "Pupusas",
+        "text": "The national dish: thick corn tortillas stuffed with cheese, beans, crisp pork (chicharrón) or loroco, an edible flower bud, cooked on a griddle and eaten with your hands, topped with curtido, a tangy cabbage slaw, and a thin tomato sauce. In Olocuilta they're made with rice flour."
+      },
+      {
+        "name": "Yuca frita",
+        "text": "Fried or boiled cassava with crunchy pork, curtido and tomato sauce, sold at street stalls and fairs."
+      },
+      {
+        "name": "Panes con pollo",
+        "text": "Bread rolls stuffed with chicken stewed in a spiced tomato sauce, with watercress and radish: a Christmas favourite found all year."
+      },
+      {
+        "name": "Mariscada",
+        "text": "A creamy seafood soup of fish, prawns, crab and clams, best at the beach restaurants of La Libertad."
+      },
+      {
+        "name": "Horchata",
+        "text": "El Salvador's version is made with ground morro seeds, rice and spices such as cinnamon and nutmeg, served cold and sweet."
+      },
+      {
+        "name": "Quesadilla and coffee",
+        "text": "Not the Mexican dish, but a sweet, dense cake made with cheese and sprinkled with sesame seeds, eaten with a cup of the local coffee in the afternoon."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Salvadoran)",
+      "intro": "English is spoken in surf towns and some hotels, but little elsewhere.",
+      "items": [
+        { "phrase": "¡Buenas!", "say": "BWEH-nahs", "meaning": "Hi (said at any hour)" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "Con gusto", "say": "kohn GOOS-toh", "meaning": "You're welcome" },
+        { "phrase": "¿Cuánto vale?", "say": "KWAHN-toh VAH-leh", "meaning": "How much is it?" },
+        { "phrase": "Dos pupusas de queso, por favor", "say": "dohs poo-POO-sahs deh KEH-soh por fah-VOR", "meaning": "Two cheese pupusas, please" },
+        { "phrase": "¡Qué chivo!", "say": "keh CHEE-voh", "meaning": "How cool! (slang)" },
+        { "phrase": "Vaya, pues", "say": "VAH-yah PWEHS", "meaning": "OK then; all right" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q792",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar (US$), the currency since 2001. A few businesses also take bitcoin, but cash dollars and cards are what people use.",
+        "sources": [{ "property": "P38", "values": ["Q4917", "Q131723"] }],
+        "note": "Wikidata lists bitcoin alongside the dollar; it was made legal tender in 2021, and a change in the law in 2025 made accepting it voluntary, so the page treats it as a side note."
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. Nawat, the language of the Pipil people, is kept alive by a few speakers in western towns such as Santo Domingo de Guzmán.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 115 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["115"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Standard Time, UTC−6, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5385", "Q63286062"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance; 913 for the fire service",
+        "sources": [{ "property": "P2852", "values": ["Q533806", "Q25648879"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+503",
+        "sources": [{ "property": "P474", "values": ["+503"] }]
+      }
+    ]
+  }
+}

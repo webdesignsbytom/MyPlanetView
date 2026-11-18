@@ -1,0 +1,191 @@
+{
+  "code": "ME",
+  "slug": "montenegro",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dobro došli", "Crna Gora"],
+  "summary": "The fjord-like Bay of Kotor, walled seaside towns and deep canyons in the mountains.",
+  "overview": [
+    "Montenegro packs a great deal into a country smaller than Wales. The Bay of Kotor winds deep inland between limestone walls that rise straight from the water; it looks like a fjord, though it is a drowned river canyon. Kotor's walled old town sits at its far end, with a path of steps and ramparts zigzagging up to the fortress on San Giovanni hill, and Perast, along the shore, looks out on two islets, one with the church of Our Lady of the Rocks. Further south come the old town and beaches of Budva, the island village of Sveti Stefan, now a hotel, and Ulcinj near the Albanian border, where Velika Plaža runs for about 12 km of sand.",
+    "Inland, a road of tight hairpins climbs from Kotor to Lovćen National Park, where Njegoš, Montenegro's poet-prince, lies in a mausoleum on a summit, and on to Cetinje, the old royal capital. Lake Skadar, shared with Albania, has water lilies, fishing villages and Dalmatian pelicans. The north is high mountain country: Durmitor National Park, with the Tara River canyon, about 1,300 m deep at its deepest, and the base town of Žabljak; the old forest of Biogradska Gora; and Ostrog Monastery, built into a sheer cliff and visited by pilgrims of several faiths.",
+    "Buses link the coastal towns with Podgorica, the capital, but a car makes the mountains far easier. Roads are narrow and winding, so allow more time than the distances suggest. The railway from Bar to Belgrade crosses the mountains on high bridges and through many tunnels. Montenegro uses the euro, though it isn't in the EU, and in summer cruise ships can fill Kotor's lanes in the middle of the day."
+  ],
+  "whenToGo": {
+    "stripLabel": "The coast and the lowlands, where most visitors spend their time. Durmitor and the northern mountains have a strip of their own below.",
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild and wet on the coast, around 10–14°C by day, with long spells of heavy rain. Beach resorts shut, but the old towns keep going. Snow covers the north, with skiing at Kolašin and Žabljak."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The hills turn green and the rain eases through April. By late May the coast is near 25°C by day, though the sea is still cool, around 18–19°C."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and dry: 28–30°C on the coast, hotter in Podgorica, cooler in the mountains. The sea reaches about 25°C. July and August bring the biggest crowds, packed beaches and slow traffic on the coast road."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is still warm, with a warm sea and fewer people. October is often pleasant, but the rains return, and November is one of the wettest months of the year."
+      }
+    ],
+    "weather": "Two climates side by side. The coast is Mediterranean: hot, dry summers, with days of 28–30°C and the sea around 25°C in August, and mild, very wet winters. The mountains just behind it catch the moisture off the Adriatic and are among the wettest places in Europe, with most rain from October to March. Podgorica's plain bakes in summer, often above 35°C, while the northern mountains have cool summers and snowy winters, with nights below −10°C.",
+    "festivals": [
+      {
+        "name": "Orthodox Christmas Eve (Badnji dan)",
+        "place": "Across Montenegro",
+        "when": "6 January",
+        "months": [1],
+        "text": "Young oak branches (badnjak) are cut in the morning and burned on bonfires outside churches in the evening, in Cetinje, Podgorica and the coastal towns, before Christmas Day on 7 January."
+      },
+      {
+        "name": "Mimosa Festival",
+        "place": "Herceg Novi",
+        "when": "Usually in February, over several weeks",
+        "months": [2],
+        "text": "The town celebrates the yellow mimosa flowering on its hillsides with parades, brass bands, concerts and seafood."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Montenegro",
+        "when": "21 May",
+        "months": [5],
+        "text": "A public holiday, together with 22 May, marking the 2006 referendum in which Montenegro voted to leave its union with Serbia."
+      },
+      {
+        "name": "Statehood Day",
+        "place": "Across Montenegro",
+        "when": "13 July",
+        "months": [7],
+        "text": "Two days off, with 14 July, for Montenegro's recognition as an independent state at the Congress of Berlin in 1878 and the uprising of 13 July 1941."
+      },
+      {
+        "name": "Fašinada",
+        "place": "Perast",
+        "when": "22 July",
+        "months": [7],
+        "text": "At sunset, decorated boats roped together carry stones out to Our Lady of the Rocks, and the men throw them into the sea around the islet, adding to it as people here have done for centuries."
+      },
+      {
+        "name": "Boka Night (Bokeška noć)",
+        "place": "Kotor",
+        "when": "Usually in August",
+        "months": [8],
+        "text": "Boats hung with lights and flowers parade along the bay below the old town walls at night, followed by fireworks."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The coast",
+        "text": "From Herceg Novi to Ulcinj. Beach season runs from about June to September, when the sea is warm enough for most swimmers; July and August are hot and crowded. Many beach hotels and restaurants close from about November to March, but the old towns of Kotor, Budva and Herceg Novi stay lively."
+      },
+      {
+        "name": "Durmitor and the north",
+        "months": ["good", "good", "good", "avoid", "good", "best", "best", "best", "best", "good", "avoid", "good"],
+        "text": "Žabljak sits at about 1,450 m. Snow usually lies from December to March, for skiing at Savin Kuk; summer brings hiking, mountain lakes and rafting on the Tara, with days around 20–25°C and cold nights. April and November fall between the seasons, with slush or mud and much of it shut."
+      },
+      {
+        "name": "Podgorica and Lake Skadar",
+        "text": "The lowland around the capital is the hottest part of the country, often above 35°C in July and August. Spring and autumn suit Lake Skadar best, for boat trips among the water lilies and for birdwatching."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Shake hands firmly and look people in the eye; friends often greet with three kisses on the cheeks. “Dobar dan” (good day) is the polite hello, “Zdravo” the friendly one. Life runs at an unhurried pace, and coffee with friends can easily last an hour or two.",
+    "etiquette": [
+      "Cover up away from the beach: walking through town in swimwear is frowned on, and some coastal towns fine people for it.",
+      "At monasteries, Ostrog included, wear long trousers or a skirt and cover your shoulders. Wraps are usually lent at the entrance.",
+      "Toasts with rakija come with “Živjeli!” and eye contact. Refusing a host's first glass can seem cold, but sipping slowly is fine.",
+      "Carry cash in euros: small guesthouses, taxis and village restaurants often take nothing else.",
+      "Mountain roads are narrow, with blind bends and few barriers. Drive slowly, and sound your horn before tight corners."
+    ],
+    "tipping": "Leave around 10% in restaurants if you were well served; in cafés and taxis, round up.",
+    "dress": "Light clothes and sun protection for the coast in summer, something modest for churches and monasteries, and a warm layer for the mountains, where evenings are cool even in August.",
+    "food": [
+      {
+        "name": "Njeguški pršut",
+        "text": "Smoke-dried ham from the village of Njeguši on Mount Lovćen, cured in the mountain air and served with the village's cheese and olives."
+      },
+      {
+        "name": "Kačamak",
+        "text": "A filling mountain dish of cornmeal, sometimes mixed with potato, beaten into a thick mash with kajmak, a rich clotted cream, and cheese."
+      },
+      {
+        "name": "Crni rižot",
+        "text": "Black risotto coloured with cuttlefish ink, a staple of the coast's seafood restaurants alongside grilled fish and mussels farmed in the Bay of Kotor."
+      },
+      {
+        "name": "Fish from Lake Skadar",
+        "text": "Carp and bleak (ukljeva), the lake's small silvery fish, served fried or smoked in the villages along its shore."
+      },
+      {
+        "name": "Vranac and rakija",
+        "text": "Vranac is Montenegro's own deep red wine grape. Lozovača, a grape rakija, is offered to guests at almost any hour."
+      }
+    ],
+    "phrases": {
+      "language": "Montenegrin",
+      "intro": "Montenegrin, Serbian, Bosnian and Croatian are close enough for everyone to understand one another, and signs use Latin or Cyrillic letters. English is common in the coastal towns.",
+      "items": [
+        { "phrase": "Zdravo", "say": "ZDRAH-voh", "meaning": "Hi" },
+        { "phrase": "Dobro jutro", "say": "DOH-broh YOO-troh", "meaning": "Good morning" },
+        { "phrase": "Hvala", "say": "HVAH-lah", "meaning": "Thank you" },
+        { "phrase": "Molim", "say": "MOH-leem", "meaning": "Please; you're welcome" },
+        { "phrase": "Izvinite", "say": "eez-VEE-nee-teh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Koliko košta?", "say": "KOH-lee-koh KOSH-tah", "meaning": "How much is it?" },
+        { "phrase": "Živjeli!", "say": "ZHEEV-yeh-lee", "meaning": "Cheers!" },
+        { "phrase": "Polako", "say": "POH-lah-koh", "meaning": "Slowly; take it easy" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q236",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€), used since 2002 although Montenegro isn't in the EU or the eurozone.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Montenegrin is the official language; Serbian, Bosnian, Albanian and Croatian are also in official use.",
+        "sources": [{ "property": "P37", "values": ["Q8821", "Q9299", "Q9303", "Q8748", "Q6654"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, and UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q28148759"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; 122 for police, 123 for fire, 124 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648812", "Q25648825", "Q25648826"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+382",
+        "sources": [{ "property": "P474", "values": ["+382"] }]
+      }
+    ]
+  }
+}

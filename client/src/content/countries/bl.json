@@ -1,0 +1,172 @@
+{
+  "code": "BL",
+  "slug": "saint-barthelemy",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonjour", "Saint-Barth"],
+  "summary": "A small French island with Swedish street names, superyachts and a runway ending on a beach.",
+  "overview": [
+    "Saint Barthélemy, St Barth for short, is a small, hilly French island of about 25 km², known for white-sand coves, superyachts and some of the dearest hotels and restaurants in the Caribbean. It was Swedish from 1784 to 1878, which is why the capital is called Gustavia, after King Gustav III, and why some street signs still give a Swedish name beside the French one.",
+    "Gustavia wraps around a small harbour lined with red-roofed houses, boutiques and yachts, and Shell Beach is a short walk from the centre. Every beach is public by law, from busy Saint-Jean, beside the airport, to Gouverneur and Saline on the south coast, both left undeveloped, and Colombier in the north-west, reached only by boat or a footpath over the headland. On the east coast, reefs shelter the lagoon at Grand Cul-de-Sac, popular for paddling and kitesurfing.",
+    "Arriving is part of the show: the airport's short runway starts at the foot of a steep hill, so small planes drop low over a roundabout on the crest and land with Saint-Jean beach at the far end, and pilots need a special qualification to fly in. Others come by ferry from Saint Martin. There are no high-rise resorts, and most visitors hire a small car for the steep, twisting roads. English is widely spoken, and both euros and US dollars are taken."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "avoid", "avoid", "good", "best"],
+    "seasons": [
+      {
+        "name": "High season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Little rain, steady breezes and days of about 27–29°C. Christmas and New Year are the busiest and dearest weeks of the year, with Gustavia's harbour packed with yachts."
+      },
+      {
+        "name": "Late spring",
+        "months": [5, 6],
+        "text": "Mostly dry still, a little hotter, and much quieter, with the trade winds easing."
+      },
+      {
+        "name": "Summer",
+        "months": [7, 8],
+        "text": "Hot and humid, with more showers as the hurricane season gets going, and lower rates at the hotels that stay open."
+      },
+      {
+        "name": "Closing season",
+        "months": [9, 10],
+        "text": "The height of the hurricane season. Many hotels, restaurants and shops close for several weeks, usually from late August or September into October, for staff holidays and repairs."
+      },
+      {
+        "name": "Reopening",
+        "months": [11],
+        "text": "The island wakes up: places reopen, the rain eases, and bookings build towards Christmas."
+      }
+    ],
+    "weather": "Drier than most Caribbean islands: St Barth is small and fairly low, with no rivers, and it makes its fresh water from the sea. Days are 27–31°C all year, with the trade winds taking the edge off the heat. Showers come mostly from about July to November, and the island lies in the hurricane belt: Hurricane Irma did great damage here in 2017.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "Gustavia",
+        "when": "Mardi Gras and Ash Wednesday, in February or early March; in 2027, 9–10 February",
+        "months": [2, 3],
+        "text": "Costumed parades through the streets on Mardi Gras, then on Ash Wednesday the burning of Vaval, the carnival king, to close the festivities."
+      },
+      {
+        "name": "St Barth Bucket",
+        "place": "The waters around the island",
+        "when": "Usually in March",
+        "months": [3],
+        "text": "A regatta for superyachts, most over 30 m long, racing round the island, with Gustavia harbour crowded with masts."
+      },
+      {
+        "name": "Les Voiles de Saint-Barth",
+        "place": "Gustavia",
+        "when": "Usually in April, over about a week",
+        "months": [4],
+        "text": "Racing yachts and big multihulls sail daily courses around the island, with parties on the quay at night."
+      },
+      {
+        "name": "Fête de la Saint-Barthélemy",
+        "place": "Gustavia",
+        "when": "Around 24 August",
+        "months": [8],
+        "text": "The patron saint's day, with boat races, music, games and fireworks over the harbour. Other villages hold their own fêtes during the summer."
+      },
+      {
+        "name": "New Year's Eve",
+        "place": "Gustavia harbour",
+        "when": "31 December",
+        "months": [12],
+        "text": "Yachts fill the bay and sound their horns at midnight, with fireworks over the harbour and parties on the quayside."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "French manners apply: \"Bonjour\" when you enter a shop, a restaurant or a taxi, \"Bonsoir\" in the evening, and \"Merci, au revoir\" on the way out. Islanders, many descended from settlers from Normandy and Brittany, are polite but reserved, and warm to visitors who start in French, even if the talk then moves to English.",
+    "etiquette": [
+      "Drive slowly: the roads are narrow and very steep, often without pavements, and scooters weave between the cars.",
+      "From Christmas to Easter, book restaurant tables well ahead, dinner especially.",
+      "Beachwear is for the beach: cover up in Gustavia's streets, shops and cafés.",
+      "The sea around the island is a nature reserve: keep off the coral and seagrass, and don't take shells or fish in its protected zones.",
+      "Many shops close for a long lunch, and Sunday afternoons are quiet."
+    ],
+    "tipping": "Service is included in French bills (service compris), but leaving an extra 5–10% for good service is common here, where many visitors are American. Tip boat crews and drivers too.",
+    "dress": "Relaxed but polished: linen, sandals and sunglasses by day, and something smart for dinner, when the better restaurants expect it. Light clothes are all you need at any time of year.",
+    "food": [
+      {
+        "name": "French cooking",
+        "text": "Bakeries for croissants and baguettes in the morning, bistros at lunch, and restaurants run by chefs from mainland France, with cheese and wine shipped over from home."
+      },
+      {
+        "name": "Creole plates",
+        "text": "Salt-cod accras, spicy boudin créole and grilled fish with sauce chien, a sharp mix of lime, chilli, herbs and onion."
+      },
+      {
+        "name": "Langouste",
+        "text": "Caribbean spiny lobster, grilled and served with butter or a Creole sauce, a favourite on the beach restaurants' menus."
+      },
+      {
+        "name": "Fresh fish",
+        "text": "Tuna, mahi-mahi and snapper from the island's boats, often served raw as a French-style tartare or carpaccio."
+      },
+      {
+        "name": "Planteur",
+        "text": "The French Antilles' rum punch, mixed with tropical fruit juices and spice; ti-punch, white rum with lime and cane syrup, is the stronger choice."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "French is the island's language, and English is spoken in almost every hotel, shop and restaurant. The polite basics in French are still worth having.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello; good day" },
+        { "phrase": "Merci, au revoir", "say": "mair-SEE oh ruh-VWAHR", "meaning": "Thank you, goodbye (as you leave)" },
+        { "phrase": "Excusez-moi", "say": "ex-kew-zay-MWAH", "meaning": "Excuse me" },
+        { "phrase": "Une table pour deux, s'il vous plaît", "say": "ewn TAH-bluh poor DUH seel voo PLEH", "meaning": "A table for two, please" },
+        { "phrase": "Où est la plage ?", "say": "oo eh lah PLAHZH", "meaning": "Where is the beach?" },
+        { "phrase": "C'est délicieux", "say": "say day-lee-SYUH", "meaning": "It's delicious" },
+        { "phrase": "Bonne journée", "say": "bon zhoor-NAY", "meaning": "Have a good day" },
+        { "phrase": "À bientôt", "say": "ah byan-TOH", "meaning": "See you soon" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q25362",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). US dollars are widely accepted.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French. English is spoken widely in tourism.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins, as in mainland France), 230 V",
+        "sources": [],
+        "note": "Wikidata's item has no plug or voltage statement; the page gives the French sockets and supply used on the island."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q2085376"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112, or France's own numbers: 15 for an ambulance, 17 for police, 18 for fire",
+        "sources": [],
+        "note": "Wikidata's item has no emergency-number statement; as French territory, the island uses 112 and France's short numbers."
+      },
+      {
+        "key": "callingCode",
+        "text": "+590, shared with Guadeloupe and the French side of Saint Martin",
+        "sources": [{ "property": "P474", "values": ["+590"] }]
+      }
+    ]
+  }
+}

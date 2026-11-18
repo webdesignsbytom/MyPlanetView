@@ -1,0 +1,176 @@
+{
+  "code": "NE",
+  "slug": "niger",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Sannu", "Nijar", "Barka da zuwa"],
+  "summary": "Agadez's mud minaret, the Aïr and the Ténéré, and West Africa's last wild giraffes.",
+  "overview": [
+    "Niger is a landlocked country of the Sahel and the Sahara, with the Niger River crossing only its far south-west, past the capital, Niamey. In the north, Agadez, an old Tuareg caravan town, has a mud-brick minaret about 27 m tall, bristling with wooden beams. Beyond it, the granite Aïr Mountains and the dunes of the Ténéré form one of Africa's largest protected areas, with rock carvings from a time when the Sahara was green, among them two life-size giraffes at Dabous. Dinosaur bones lie in the sand at Gadoufaoua.",
+    "Near Niamey, the giraffes of Kouré, the last wild herd in West Africa, browse among farms and villages, and visitors walk among them with a local guide. W National Park, shared with Benin and Burkina Faso, protects savannah along the river, and Zinder, the capital until 1926, has a sultan's palace and an old walled quarter. Bush taxis and buses link the towns of the south, and the north means long desert drives.",
+    "Many governments tell their citizens not to travel to Niger at all. Things can change, so check what your own government advises now."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "avoid", "avoid", "avoid", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Sunny days of about 33°C in Niamey and mild nights. The harmattan blows dust off the desert, often hiding the sun in a white haze. In the Aïr and the Ténéré, nights can fall close to freezing."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "Niamey is one of the hottest capitals in the world, above 40°C by day in April and May, and nights barely cool. Life slows to a halt in the afternoons."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Walls of dust often roll in ahead of the first storms, then the rains turn the south green from about June to September. The herders of the north gather at In-Gall in September. October is dry and hot again."
+      }
+    ],
+    "weather": "Hot and dry for most of the year. The south gets a single rainy season from about June to September, around 550 mm a year in Niamey and less the further north you go; Agadez gets only a little, mostly in July and August, and much of the Ténéré almost none. The hottest months are April to June, when afternoons pass 40°C across the country. From November to February days are warm and nights cool, and in the desert they're cold.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Niger",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Almost everyone fasts, and the day's work is done early before the heat. Eid al-Fitr, \"Small Sallah\" in Hausa, brings prayers in the open air, new clothes and visits to relatives."
+      },
+      {
+        "name": "Eid al-Adha (Tabaski)",
+        "place": "Across Niger",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "\"Big Sallah\": each family slaughters a ram and shares the meat, and in Zinder the sultan's horsemen parade in bright robes."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Niger",
+        "when": "3 August",
+        "months": [8],
+        "text": "The day Niger became independent in 1960: a public holiday, and also the national day for planting trees."
+      },
+      {
+        "name": "Cure Salée",
+        "place": "In-Gall, west of Agadez",
+        "when": "Usually in September, at the end of the rains",
+        "months": [9],
+        "text": "Tuareg and Wodaabe herders bring their animals to the salty pastures and springs around In-Gall. The Wodaabe men, faces painted and eyes rolled wide, dance the Gerewol for the women to choose the most handsome, and Tuareg riders parade on camels."
+      },
+      {
+        "name": "Republic Day",
+        "place": "Across Niger",
+        "when": "18 December",
+        "months": [12],
+        "text": "The national day, marking the founding of the republic on 18 December 1958, with official ceremonies and celebrations."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Agadez, the Aïr and the Ténéré",
+        "text": "Drier and with bigger swings of temperature than the south: winter days of about 28°C in Agadez with cold nights, and summer days well above 40°C. December to February is the only comfortable time for desert trips."
+      },
+      {
+        "name": "Niamey and the south-west",
+        "text": "The Niger River, W National Park and Kouré's giraffes. Hot all year. The giraffes roam over a wide area, so go early in the day with a local guide, who will know where they were last seen."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings are unhurried: in Hausa, \"Sannu\" to start, then questions about the night, the family and the day's tiredness, each answered with a contented \"lafiya\" (well). In Niamey, Zarma speakers say \"Fofo\". Men shake hands and often touch their chest afterwards; between men and women, words alone are the usual greeting.",
+    "etiquette": [
+      "Greet people before asking anything, from shopkeepers to the police at a checkpoint.",
+      "The left hand is for washing: pass money, food and gifts with the right.",
+      "Keep your camera away from anything official, bridges and soldiers included, and ask before taking anyone's picture.",
+      "Take your shoes off when entering a home or a mosque, and greet the eldest first."
+    ],
+    "tipping": "Tipping isn't part of daily life in Niger. The exception is the team on a trip, guides, drivers and cooks; restaurants for visitors appreciate a little extra too.",
+    "dress": "Modest and loose: trousers and long sleeves for men, long skirts and covered shoulders for women. In the north, Tuareg men wear the tagelmust, a long veil wrapped over the head and face, and a similar scarf is the best protection from sun and sand for anyone. Desert nights in winter need warm clothes.",
+    "food": [
+      {
+        "name": "Tuwo and miyan kuka",
+        "text": "A firm porridge of millet or sorghum (tuwo) with a slippery, dark green soup of dried baobab leaves (miyan kuka), the Hausa everyday meal."
+      },
+      {
+        "name": "Fura da nono",
+        "text": "Balls of spiced millet dough crumbled into soured cow's milk, drunk from a calabash, cool and filling in the heat."
+      },
+      {
+        "name": "Kilishi",
+        "text": "Thin sheets of beef or mutton coated in a paste of ground peanuts and spices, then dried in the sun: Niger's travelling snack."
+      },
+      {
+        "name": "Masa",
+        "text": "Small, spongy cakes of fermented rice or millet, fried in a special pan with round hollows and eaten with chilli or honey."
+      },
+      {
+        "name": "Taguella",
+        "text": "Tuareg flatbread baked in the sand under hot embers, brushed clean, broken up and served in a meat and tomato sauce."
+      },
+      {
+        "name": "Brochettes",
+        "text": "Skewers of goat, mutton or beef grilled at roadside stalls in the evening, dusted with ground chilli and peanut."
+      }
+    ],
+    "phrases": {
+      "language": "Hausa",
+      "intro": "Hausa is spoken by more than half of Nigeriens. Zarma (Djerma) is the main language around Niamey, Tamasheq among the Tuareg of the north, and French in offices and hotels.",
+      "items": [
+        { "phrase": "Sannu", "say": "SAN-noo", "meaning": "Hello" },
+        { "phrase": "Ina kwana?", "say": "ee-na KWAA-na", "meaning": "Good morning (\"how did you sleep?\")" },
+        { "phrase": "Lafiya lau", "say": "la-FEE-ya LOW", "meaning": "Very well (the answer to most greetings)" },
+        { "phrase": "Na gode", "say": "na GOH-day", "meaning": "Thank you" },
+        { "phrase": "Nawa ne?", "say": "NAA-wa neh", "meaning": "How much is it?" },
+        { "phrase": "Yauwa", "say": "YOW-wa", "meaning": "Good; that's right" },
+        { "phrase": "Ba komai", "say": "ba KOH-my", "meaning": "No problem; it's nothing" },
+        { "phrase": "Sai anjima", "say": "sigh an-JEE-ma", "meaning": "See you later" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1032",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "West African CFA franc (CFA, XOF), pegged to the euro. Bring cash in euros to change: cards and cash machines for foreign cards are few.",
+        "sources": [{ "property": "P38", "values": ["Q861690"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Hausa, the national language and the most widely spoken. Zarma, Tamasheq, Fula and Kanuri are also widely spoken, and French is still used in government and business.",
+        "sources": [{ "property": "P37", "values": ["Q56475"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "A mix: Types C, E and F (two round pins), A and B (flat pins) and British-style sockets; 220 V. A universal adapter helps.",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1123613", "Q24288454", "Q24288456", "Q60740126"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "West Africa Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q4689518"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "17 for police and 18 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648842", "Q25648843"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+227",
+        "sources": [{ "property": "P474", "values": ["+227"] }]
+      }
+    ]
+  }
+}

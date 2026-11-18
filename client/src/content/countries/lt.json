@@ -1,0 +1,181 @@
+{
+  "code": "LT",
+  "slug": "lithuania",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Labas", "Lietuva", "Sveiki atvykę"],
+  "summary": "Baroque Vilnius, an island castle at Trakai and the high dunes of the Curonian Spit.",
+  "overview": [
+    "Lithuania is the largest and southernmost of the three Baltic states, a country of lakes, forests and wooden villages that was once the heart of a grand duchy stretching, at its peak, to the Black Sea. Vilnius, the capital, has one of the largest old towns in central and eastern Europe, on UNESCO's list: baroque church towers, hidden courtyards and cobbled lanes, with Užupis, the artists' quarter across a small river that declared itself a republic in 1997 and put its constitution up on a wall in dozens of languages.",
+    "Trakai, half an hour west of Vilnius, has a red-brick castle on an island in Lake Galvė. The Curonian Spit, a 98 km ribbon of high dunes and pine forest between the lagoon and the sea, shared with Russia's Kaliningrad region, is reached by a short ferry from Klaipėda; Nida, close to the Russian border, is the main village on the Lithuanian side. Kaunas, the second city, is known for its interwar modernist buildings, also on UNESCO's list, and the Hill of Crosses near Šiauliai is a mound covered with more than 100,000 crosses left by pilgrims.",
+    "Trains link Vilnius, Kaunas and Klaipėda, and buses go almost everywhere else; in summer Palanga is the busy, loud beach resort. Basketball is the national passion, followed more closely than any other sport, and the national team's games empty the streets."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Usually below freezing, with snow and short days. Vilnius puts up a big Christmas tree on Cathedral Square, and on the frozen lakes people fish through holes in the ice."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "A slow thaw: slushy March, cool April, then a green, blossoming May, when the café terraces of Vilnius open."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm, about 22–25°C by day and sometimes hotter, with long evenings. The coast at Palanga and Nida is busy, the sea is warm enough for a swim, and Joninės brings bonfires at midsummer."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Cool and colourful in September and October, the mushroom season in the pine forests of Dzūkija in the south. By November it's grey and dark by mid-afternoon."
+      }
+    ],
+    "weather": "A continental climate, milder on the coast. Vilnius has July days of about 23°C and January days a little below freezing, with nights down to about −7°C, and snow usually lies for weeks. Summer rain comes mostly in showers and thunderstorms. The coast is windier, a little cooler in summer and milder in winter.",
+    "festivals": [
+      {
+        "name": "Užgavėnės",
+        "place": "Across Lithuania",
+        "when": "Shrove Tuesday, the day before Lent: in 2027, 9 February",
+        "months": [2],
+        "text": "A carnival to chase winter away: people in masks of devils, goats and witches go door to door, Lašininis (Fatty) fights Kanapinis (Lean), and a straw figure called Morė is burned. Everyone eats pancakes."
+      },
+      {
+        "name": "Independence days",
+        "place": "Vilnius and across Lithuania",
+        "when": "16 February and 11 March",
+        "months": [2, 3],
+        "text": "Two public holidays: the restoration of the state in 1918, and the restoration of independence in 1990, when Lithuania was the first Soviet republic to declare it. Flags, concerts and processions in Vilnius."
+      },
+      {
+        "name": "Kaziukas Fair (Kaziuko mugė)",
+        "place": "Vilnius",
+        "when": "Usually the first weekend of March, around St Casimir's Day (4 March)",
+        "months": [3],
+        "text": "A huge crafts fair filling the old town's streets with wooden spoons, wicker, honey, gingerbread hearts and verbos, the dried flower and grass bundles carried to church on Palm Sunday."
+      },
+      {
+        "name": "Joninės (Rasos)",
+        "place": "Across Lithuania",
+        "when": "23–24 June",
+        "months": [6],
+        "text": "Midsummer, with 24 June a public holiday. Bonfires, wreaths of flowers floated on rivers, singing through the shortest night and a search for the fern flower that blooms only then."
+      },
+      {
+        "name": "Statehood Day",
+        "place": "Across Lithuania",
+        "when": "6 July",
+        "months": [7],
+        "text": "Marks the coronation of King Mindaugas in the 13th century. At 9 pm, Lithuanians at home and abroad sing the national anthem together."
+      },
+      {
+        "name": "All Saints' and All Souls' Days (Vėlinės)",
+        "place": "Across Lithuania",
+        "when": "1–2 November",
+        "months": [11],
+        "text": "Families visit graves, and after dark the cemeteries glow with thousands of candles in coloured glass."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A firm handshake with eye contact; Lithuanians are reserved with strangers and don't go in for forced cheer, so a straight face isn't unfriendliness. \"Labas\" is hello among equals, \"Laba diena\" the polite good day.",
+    "etiquette": [
+      "Basketball is close to a second religion: a game on the screen in a bar is an easy way into conversation.",
+      "The Gate of Dawn chapel in Vilnius, with its painting of the Virgin Mary, is a pilgrimage site where people pray: keep your voice down and dress respectfully.",
+      "At the Hill of Crosses, you may add a cross of your own, but take nothing away.",
+      "When toasting, look people in the eye and say \"Į sveikatą\" (to health).",
+      "Bring flowers or sweets if you're invited to someone's home, and expect to be fed generously."
+    ],
+    "tipping": "About 10% in restaurants for good service; in bars and taxis, people round up.",
+    "dress": "Casual, if neat in Vilnius. A warm coat and boots in winter, a waterproof in any season, and a jumper for evenings on the coast.",
+    "food": [
+      {
+        "name": "Cepelinai",
+        "text": "Big zeppelin-shaped dumplings of grated potato stuffed with minced meat or curd cheese, smothered in sour cream and fried bacon bits: the national dish, and very filling."
+      },
+      {
+        "name": "Šaltibarščiai",
+        "text": "Cold soup of beetroot, kefir, cucumber, dill and egg, an astonishing bright pink, served with hot boiled potatoes on the side."
+      },
+      {
+        "name": "Kibinai",
+        "text": "Half-moon pastries filled with mutton or other meat, a recipe of the Karaim, a small community that has lived in Trakai since the Middle Ages."
+      },
+      {
+        "name": "Kepta duona",
+        "text": "Strips of dark rye bread fried with garlic and served with a cheese dip: the usual snack with beer."
+      },
+      {
+        "name": "Šakotis",
+        "text": "A tall cake covered in spikes, made by dripping batter onto a turning spit over a fire, for weddings and celebrations."
+      },
+      {
+        "name": "Farmhouse beer",
+        "text": "Small breweries in the north, around Biržai and Pasvalys, still make cloudy, unfiltered beers in old local styles."
+      }
+    ],
+    "phrases": {
+      "language": "Lithuanian (lietuvių kalba)",
+      "intro": "Lithuanian has kept more of the ancient features of the Indo-European family than almost any other living language. Many younger people speak English, and older ones Russian or Polish.",
+      "items": [
+        { "phrase": "Labas", "say": "LAH-bahs", "meaning": "Hi" },
+        { "phrase": "Laba diena", "say": "lah-BAH dyeh-NAH", "meaning": "Good day" },
+        { "phrase": "Ačiū", "say": "AH-choo", "meaning": "Thank you" },
+        { "phrase": "Prašau", "say": "prah-SHOW", "meaning": "Please; you're welcome" },
+        { "phrase": "Atsiprašau", "say": "aht-see-prah-SHOW", "meaning": "Excuse me; sorry" },
+        { "phrase": "Kiek kainuoja?", "say": "KYEK kai-NWOH-yah", "meaning": "How much is it?" },
+        { "phrase": "Į sveikatą!", "say": "ee svay-KAH-tah", "meaning": "Cheers! (\"To health\")" },
+        { "phrase": "Viso gero", "say": "VEE-soh GEH-roh", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q37",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Lithuanian, official. Russian and Polish are spoken by minorities, Polish mostly around Vilnius.",
+        "sources": [{ "property": "P37", "values": ["Q9083"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata gives 220 V, the older figure; Lithuania supplies 230 V, the standard across the European Union. Appliances made for either work."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time, UTC+2; UTC+3 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q190252", "Q6723", "Q6760"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata also lists 02, the old police number; the page gives 112, which answers for every service."
+      },
+      {
+        "key": "callingCode",
+        "text": "+370",
+        "sources": [{ "property": "P474", "values": ["+370"] }]
+      }
+    ]
+  }
+}

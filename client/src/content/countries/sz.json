@@ -1,0 +1,171 @@
+{
+  "code": "SZ",
+  "slug": "eswatini",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Sawubona", "eSwatini"],
+  "summary": "A small kingdom of royal dance ceremonies, rhino reserves and mountain walks in Malolotja.",
+  "overview": [
+    "Eswatini, called Swaziland until 2018, is one of Africa's smallest countries, wedged between South Africa and Mozambique, and one of the last absolute monarchies in the world. The king and the queen mother stand at the centre of national life, and the old royal ceremonies, the Umhlanga reed dance and the Incwala, still bring tens of thousands of people together. You can cross the country in a few hours, from cool, green highveld in the west down to hot lowveld bush in the east.",
+    "Mbabane is the administrative capital and Lobamba, in the Ezulwini Valley, the royal and legislative one. The valley and neighbouring Malkerns are where most visitors stay, among craft markets, candle workshops, and the cultural village and falls at Mantenga. Mlilwane Wildlife Sanctuary, close by, has no big predators, so you can walk, cycle or ride among zebra and antelope. In the east, Hlane Royal National Park has lions, elephants and white rhinos, and Mkhaya is known for tracking black and white rhinos on foot. In the north-west, Malolotja Nature Reserve has walks over high grassland, and the iron-ore workings at Ngwenya are among the oldest known mines in the world.",
+    "Distances are short and the main roads good, so many visitors drive in from Johannesburg or add a few days to a trip to South Africa's Kruger National Park. Minibus taxis link the towns, and the South African rand is accepted everywhere at the same value as the lilangeni."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Autumn and winter (dry season)",
+        "months": [4, 5, 6, 7, 8],
+        "text": "Dry and sunny, with mild days of about 20°C on the highveld and warmer in the lowveld; nights are cold, with frost at times in the hills. The best game viewing, as the bush thins and animals come to water."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10],
+        "text": "Warming up and still mostly dry, with the first storms by October. The Umhlanga reed dance usually falls at the start of this season."
+      },
+      {
+        "name": "Summer (rainy season)",
+        "months": [11, 12, 1, 2, 3],
+        "text": "Hot and humid, above 30°C in the lowveld, with afternoon thunderstorms bringing most of the year's rain; the highveld is often misty. Everything is green, and the Incwala is held around the turn of the year."
+      }
+    ],
+    "weather": "Two climates in a small space. The highveld in the west, around Mbabane at about 1,200 m, is mild, with warm, wet summers, cool, dry winters and frequent mist. The lowveld in the east lies lower and is hotter and drier, often above 30°C in summer. Most rain falls from about October to March, as afternoon storms; the winters, from May to August, are dry and sunny.",
+    "festivals": [
+      {
+        "name": "Incwala",
+        "place": "Ludzidzini Royal Residence, Lobamba",
+        "when": "Usually late December to early January, timed by the moon",
+        "months": [12, 1],
+        "text": "The kingdom's most sacred ceremony, a celebration of kingship and the first fruits held over several weeks. On the main public day, thousands of men in traditional dress dance before the king. Photography is restricted during parts of it: follow the officials' instructions."
+      },
+      {
+        "name": "King's Birthday",
+        "place": "Across Eswatini",
+        "when": "19 April",
+        "months": [4],
+        "text": "A public holiday for King Mswati III."
+      },
+      {
+        "name": "Umhlanga (the Reed Dance)",
+        "place": "Ludzidzini Royal Residence, Lobamba",
+        "when": "Usually late August or early September",
+        "months": [8, 9],
+        "text": "Tens of thousands of young women and girls from across the country cut tall reeds and carry them to the queen mother's residence to repair its windbreak, then sing and dance in their groups over the last two days, which visitors can watch."
+      },
+      {
+        "name": "Independence Day (Somhlolo Day)",
+        "place": "Across Eswatini",
+        "when": "6 September",
+        "months": [9],
+        "text": "Marks independence from Britain in 1968."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The highveld and the Ezulwini Valley",
+        "text": "Mbabane, Lobamba, Malkerns and Mlilwane: crafts, the cultural village, easy walks and cool nights. Misty and wet in summer, crisp and clear in winter."
+      },
+      {
+        "name": "The lowveld",
+        "text": "Hlane, Mkhaya and Mbuluzi: hot bush country with the big game. Best in the dry months, from about May to September, when the bush is thin and animals gather at water; very hot in summer."
+      },
+      {
+        "name": "Malolotja and the north-west",
+        "text": "Grassland and gorges near the Ngwenya border post, with long day hikes, a canopy tour over the forest and the ancient mine at Ngwenya. The walking is best in the clear, dry months, from about April to October."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Sawubona\" (literally \"I see you\") is the greeting, answered with \"Yebo, sawubona\". A gentle handshake is usual and may be held a little while. With older people, it's polite not to look them straight in the eye for long.",
+    "etiquette": [
+      "The monarchy is held in great respect: don't criticise the king or the royal family in public.",
+      "At Umhlanga and Incwala, follow the officials' rules on photography and on where to stand, and dress modestly.",
+      "Ask before photographing people or royal buildings.",
+      "Watch for cows and goats on the road, especially at dusk.",
+      "Bargain gently at the roadside craft markets; the workshops with price tags aren't for haggling."
+    ],
+    "tipping": "Restaurants expect about 10%. Guides at Hlane, Mkhaya and the cultural village appreciate a tip, as do petrol station attendants.",
+    "dress": "Light clothes for the lowveld, a warm jacket for highveld winter nights and a rain jacket for summer storms. At the royal ceremonies, cover shoulders and knees. Many Swazis wear emahiya, the bright printed cloth, on ceremonial days.",
+    "food": [
+      {
+        "name": "Sishwala",
+        "text": "A stiff porridge of maize meal, eaten with meat, beans or greens."
+      },
+      {
+        "name": "Emasi",
+        "text": "Thick soured milk, often eaten with crumbled maize porridge."
+      },
+      {
+        "name": "Sidvudvu",
+        "text": "Pumpkin cooked with maize meal into a soft, sweetish porridge."
+      },
+      {
+        "name": "Umncweba",
+        "text": "Dried, salted meat, eaten as a snack, much like biltong."
+      },
+      {
+        "name": "Buganu",
+        "text": "A strong home brew made from marula fruit in late summer, around February and March, when the fruit falls."
+      }
+    ],
+    "phrases": {
+      "language": "siSwati",
+      "intro": "English is the language of government and business and is widely spoken; siSwati, close to Zulu, is what people speak among themselves.",
+      "items": [
+        { "phrase": "Sawubona", "say": "sah-woo-BOH-nah", "meaning": "Hello (to one person)" },
+        { "phrase": "Sanibonani", "say": "sah-nee-boh-NAH-nee", "meaning": "Hello (to several people)" },
+        { "phrase": "Unjani?", "say": "oon-JAH-nee", "meaning": "How are you?" },
+        { "phrase": "Ngikhona", "say": "ngee-KOH-nah", "meaning": "I'm fine" },
+        { "phrase": "Ngiyabonga", "say": "ngee-yah-BONG-gah", "meaning": "Thank you" },
+        { "phrase": "Yebo", "say": "YEH-boh", "meaning": "Yes" },
+        { "phrase": "Malini?", "say": "mah-LEE-nee", "meaning": "How much?" },
+        { "phrase": "Sala kahle", "say": "SAH-lah GAH-shleh", "meaning": "Goodbye (to someone staying)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1050",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Swazi lilangeni (plural emalangeni; E, SZL), worth the same as the South African rand, which is accepted everywhere. Emalangeni aren't taken in South Africa.",
+        "sources": [{ "property": "P38", "values": ["Q4823"] }],
+        "note": "Wikidata gives only the lilangeni; the page adds the rand, which is accepted at the same value throughout the country."
+      },
+      {
+        "key": "languages",
+        "text": "siSwati and English, both official. Almost everyone speaks siSwati.",
+        "sources": [{ "property": "P37", "values": ["Q34014", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type M (three large round pins, as in South Africa), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1383497"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "South Africa Standard Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q770321", "Q6723", "Q4689512"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police, 977 for an ambulance and 933 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q25648912", "Q25648911"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+268",
+        "sources": [{ "property": "P474", "values": ["+268"] }]
+      }
+    ]
+  }
+}

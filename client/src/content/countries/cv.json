@@ -1,0 +1,168 @@
+{
+  "code": "CV",
+  "slug": "cape-verde",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bon dia", "Kabu Verdi", "Morabeza"],
+  "summary": "Ten volcanic islands: Sal's beaches, Fogo's volcano, Santo Antão's trails and Mindelo's morna.",
+  "overview": [
+    "Cape Verde is a group of ten volcanic islands in the Atlantic, some 570 km off the coast of Senegal; nine are lived on, and each is quite different. Sal and Boa Vista are flat and sandy, with long beaches, steady wind for kitesurfing and the big resort hotels. Santiago, the largest island, has the capital, Praia, and Cidade Velha, the first town Europeans built in the tropics. Fogo is one great volcano, Pico do Fogo, whose wide crater holds a village where vines grow in the black volcanic soil. Santo Antão is all mountains, with deep green valleys and paths along the cliffs, and the best walking.",
+    "Mindelo, on São Vicente, is the cultural capital: home of morna, the slow, aching song Cesária Évora carried around the world, and of the islands' biggest Carnival. Between the islands there are short flights and ferries, which can be cancelled in rough seas or high wind, so leave slack in your plans; Santo Antão is reached by ferry from Mindelo. On each island, shared minibuses and pick-ups (aluguers) run from village to village and leave when they're full."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "best", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Windy season",
+        "months": [11, 12, 1, 2, 3],
+        "text": "The north-east trade wind blows steadily, best for kitesurfing and windsurfing on Sal and Boa Vista. Days are about 25°C, the sea is at its coolest, around 22°C, and Saharan dust hazes the sky on some days. Good, fresh weather for walking on Santo Antão."
+      },
+      {
+        "name": "Calm dry season",
+        "months": [4, 5, 6, 7],
+        "text": "The wind eases, the sea warms and the skies are clear and dry. A good time for diving and for the beaches."
+      },
+      {
+        "name": "Rainy season",
+        "months": [8, 9, 10],
+        "text": "Hot and humid, about 30°C, with short, heavy showers on some days and the hillsides briefly green. Loggerhead turtles nest on the beaches of Boa Vista and Sal. Tropical storms form nearby and now and then bring strong wind and rain."
+      }
+    ],
+    "weather": "Warm, dry and breezy all year, with little change between seasons: about 25°C by day in winter and 29 to 30°C in late summer at sea level. Rain is scarce and comes mainly from August to October in short bursts; the high, windward slopes of Santo Antão, Fogo and Santiago get much more than the flat eastern islands, which can go months without any. Fine dust from the Sahara (bruma seca) often hazes the air between December and March. The sea ranges from about 22°C in March to 27°C in September and October.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "Mindelo, and every island",
+        "when": "February or early March, ending on Shrove Tuesday: in 2027, the parades are on 8–9 February",
+        "months": [2],
+        "text": "Mindelo's Carnival is the islands' biggest: neighbourhood groups spend months on floats, costumes and songs, then parade through the town on the Tuesday to drums and brass. Smaller parades fill São Nicolau and the other islands."
+      },
+      {
+        "name": "Festa de São João",
+        "place": "Porto Novo, Santo Antão, and other islands",
+        "when": "Around 24 June",
+        "months": [6],
+        "text": "Saint John's feast, celebrated hardest on Santo Antão: processions with drums, model ships carried through the streets and dancing that goes on for days."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Cape Verde",
+        "when": "5 July",
+        "months": [7],
+        "text": "Cape Verde's independence from Portugal in 1975 is a public holiday, with official events in Praia."
+      },
+      {
+        "name": "Baía das Gatas Festival",
+        "place": "Baía das Gatas, São Vicente",
+        "when": "Usually in August, over the weekend of the full moon",
+        "months": [8],
+        "text": "Three nights of music on a beach outside Mindelo, from morna and funaná to international acts, with thousands camping by the bay."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Sal, Boa Vista and Maio",
+        "text": "The flat, dry eastern islands, with the best beaches and the most sunshine. Windy from about November to May, which the kitesurfers come for; calmer and hotter from June to October."
+      },
+      {
+        "name": "Santo Antão, Fogo and Santiago's mountains",
+        "text": "High and green on the slopes that face the trade wind, and cooler than the coast. Good for walking in any month outside the heaviest rain; the top of Pico do Fogo, 2,829 m, is cold and windy, and the climb is steep loose cinder."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Cape Verdeans are known for morabeza, an easy, welcoming warmth. A handshake and \"Bon dia\" (good morning) or \"Boa tardi\" (good afternoon) start most conversations; friends and women greet with a kiss on the cheek. Kriolu varies from island to island, but everyone understands Portuguese greetings.",
+    "etiquette": [
+      "Fresh water is scarce, and much of it comes from desalination: keep showers short.",
+      "On nesting beaches, don't use torches or flash at night, keep clear of turtles, and go with a licensed guide to watch them.",
+      "Aluguers leave only once they're full, so be ready to wait; agree a taxi fare before you set off.",
+      "Things run at an unhurried pace, and ferries and flights change often: patience goes a long way."
+    ],
+    "tipping": "Not expected, but appreciated: round up or leave about 10% in restaurants for visitors, and tip mountain guides and boat crews.",
+    "dress": "Casual and light. Beachwear is for the beach; in towns and churches, cover up a little more. Bring walking boots for Santo Antão and Fogo, and a warm layer for Fogo's crater, where nights are cool.",
+    "food": [
+      {
+        "name": "Cachupa",
+        "text": "The national dish: hominy maize slow-cooked with beans, sweet potato and cassava, and fish or pork and sausage. Leftovers are fried the next morning with an egg on top for breakfast."
+      },
+      {
+        "name": "Fresh fish",
+        "text": "Tuna, wahoo and grouper, grilled simply with garlic and served with rice or boiled potatoes, and lobster in the better restaurants."
+      },
+      {
+        "name": "Pastel com diabo dentro",
+        "text": "\"Pastry with the devil inside\": a fried pastry of maize and sweet potato dough stuffed with spicy tuna, sold in Mindelo's cafés."
+      },
+      {
+        "name": "Goat's cheese and papaya jam",
+        "text": "Fresh, soft goat's cheese from the hills, served with sweet papaya jam as the usual dessert."
+      },
+      {
+        "name": "Grogue",
+        "text": "A strong spirit distilled from sugar cane, above all on Santo Antão. Ponche softens it with honey or molasses."
+      },
+      {
+        "name": "Fogo wine",
+        "text": "Red and white wine made from vines grown in the volcano's crater, a rarity in West Africa."
+      }
+    ],
+    "phrases": {
+      "language": "Cape Verdean Creole (Kriolu)",
+      "intro": "Portuguese is the language of government and schools, and English is spoken in the resort hotels. These phrases are in the Kriolu of Santiago; other islands say some things differently.",
+      "items": [
+        { "phrase": "Bon dia", "say": "bon DEE-a", "meaning": "Good morning" },
+        { "phrase": "Modi ki bu sta?", "say": "MOH-dee kee boo STAH", "meaning": "How are you?" },
+        { "phrase": "N sta bon", "say": "n stah BON", "meaning": "I'm fine" },
+        { "phrase": "Obrigadu", "say": "oh-bree-GAH-doo", "meaning": "Thank you" },
+        { "phrase": "Kantu ki e?", "say": "KAN-too kee EH", "meaning": "How much is it?" },
+        { "phrase": "Txau", "say": "CHOW", "meaning": "Bye" },
+        { "phrase": "Morabeza", "say": "mo-ra-BEH-za", "meaning": "Warmth and hospitality, the islands' pride" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1011",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Cape Verdean escudo (CVE), pegged to the euro. Prices put the $ sign where a decimal point would go, as in 250$00. Euros are taken in many tourist places, with change in escudos.",
+        "sources": [{ "property": "P38", "values": ["Q4591"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Portuguese is the official language; Cape Verdean Creole (Kriolu) is everyone's everyday language.",
+        "sources": [{ "property": "P37", "values": ["Q5146", "Q35963"] }],
+        "note": "Wikidata lists Creole as official too; the constitution names Portuguese and commits the state to raising Creole to equal standing."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Cape Verde Time, UTC−1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q3208688", "Q6540", "Q63285925"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "132 for police, 130 for ambulance and 131 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648849", "Q25648847", "Q25648848"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+238",
+        "sources": [{ "property": "P474", "values": ["+238"] }]
+      }
+    ]
+  }
+}

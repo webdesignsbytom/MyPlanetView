@@ -1,0 +1,179 @@
+{
+  "code": "BY",
+  "slug": "belarus",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dobry dzień", "Bielaruś"],
+  "summary": "Stalin-era avenues in Minsk, UNESCO-listed castles and an ancient forest where European bison roam.",
+  "overview": [
+    "Belarus is a flat land of forest, farmland, marshes and lakes, bordered by Poland, Lithuania, Latvia, Russia and Ukraine. Minsk, the capital, was almost destroyed in the Second World War and rebuilt as a showpiece Soviet city: broad avenues lined with grand Stalinist buildings, wide squares and spotless parks, with a small rebuilt old quarter, the Trinity Suburb, beside the River Svislach.",
+    "Beyond the capital, Mir Castle, with its red-brick towers, and the palace of the Radziwiłł princes at Nesvizh are both on UNESCO's list, each within two hours' drive of Minsk. In the far west, Brest has the fortress where Soviet troops held out in 1941, now a vast memorial, and nearby the Belovezhskaya Pushcha, a primeval forest shared with Poland where European bison live. The north has the Braslav lakes and Polotsk, one of the oldest towns of the Eastern Slavs, and Grodno and Vitebsk keep old centres of churches and merchants' houses. Trains between the main towns are cheap and reliable, and minibuses (marshrutkas) fill the gaps.",
+    "Many governments advise against all or most travel to Belarus. Conditions can change at short notice, so check your own government's current travel advice before planning a trip."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, snowy and dark by late afternoon. New Year is the main celebration, with lit trees and fairs in town squares; the countryside goes quiet under snow."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The thaw in March brings slush and mud, and floods in Polesia, the marshy south. Trees come into leaf in late April, and May is mild and green, around 15–20°C."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm, usually 22–25°C by day, with long evenings and the odd thunderstorm. The best season for lakes, forests and castle towns, and for the midsummer celebrations of Kupalle."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is often settled and golden, and mushroom picking is a national pastime. October cools quickly, and by November the days are short, grey and wet."
+      }
+    ],
+    "weather": "A cool continental climate. Winters are long and cold: in Minsk, January days hover around −2°C and nights drop to about −8°C, with spells well below that, and snow often lies for weeks. Summers are warm rather than hot, about 23°C by day in July, and summer is also the wettest season, with rain coming in heavy showers. Spring arrives late and autumn fades fast.",
+    "festivals": [
+      {
+        "name": "Christmas, twice, and New Year",
+        "place": "Across Belarus",
+        "when": "25 December, 1 January and 7 January",
+        "months": [12, 1],
+        "text": "Catholic Christmas on 25 December and Orthodox Christmas on 7 January are both public holidays, and New Year in between is the biggest party, with a decorated tree in every square and fireworks at midnight."
+      },
+      {
+        "name": "Radunitsa",
+        "place": "Across Belarus",
+        "when": "The ninth day after Orthodox Easter, usually in April or May",
+        "months": [4, 5],
+        "text": "A public holiday when families visit the graves of their relatives, tidy them and share food at the cemetery."
+      },
+      {
+        "name": "Victory Day",
+        "place": "Across Belarus",
+        "when": "9 May",
+        "months": [5],
+        "text": "Marks the end of the Second World War in Europe, which killed a large share of the country's people. Veterans' parades, flowers at war memorials and fireworks in the evening."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Minsk and across Belarus",
+        "when": "3 July",
+        "months": [7],
+        "text": "The national day, the anniversary of the day in 1944 when Soviet troops drove German forces out of Minsk, with a parade, concerts and fireworks."
+      },
+      {
+        "name": "Kupalle",
+        "place": "Across Belarus",
+        "when": "The night of 6–7 July",
+        "months": [7],
+        "text": "An old midsummer festival: bonfires by rivers and lakes, wreaths of flowers floated on the water, and the search for a magic fern flower said to bloom only that night."
+      },
+      {
+        "name": "Slavianski Bazaar",
+        "place": "Vitebsk",
+        "when": "Usually in mid-July, over about a week",
+        "months": [7],
+        "text": "An arts festival held since 1992, with pop and folk concerts in an open-air amphitheatre, theatre and exhibitions; the town is busy throughout."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Men shake hands firmly; women are usually greeted with a nod or a smile, and close friends kiss on the cheek. People are reserved with strangers but warm once you're invited home, where the table fills with food and toasts follow one another. Older or senior people are addressed by first name and patronymic, such as Ivan Petrovich, once you know it.",
+    "etiquette": [
+      "Don't shake hands or hand things across a doorway: step inside or out first. It's thought to bring bad luck.",
+      "Take your shoes off when entering a home; your host may hand you slippers.",
+      "Don't photograph government buildings, soldiers, police or border posts.",
+      "Carry your passport: hotels need it, and police may ask to see it.",
+      "Streets are very clean; littering and crossing against the red light can bring an on-the-spot fine."
+    ],
+    "tipping": "Not a strong habit. Leave about 10% in restaurants for good service where it isn't on the bill, and round up taxi fares.",
+    "dress": "Warm, waterproof layers from October to April, and boots with grip in winter, when pavements are icy. Summer is casual. In Orthodox churches women cover their hair and men take off hats, and nobody wears shorts.",
+    "food": [
+      {
+        "name": "Draniki",
+        "text": "Grated potato pancakes, fried until crisp at the edges and served with sour cream: the national dish, in a country devoted to potatoes."
+      },
+      {
+        "name": "Machanka",
+        "text": "A thick stew of pork and sausage in a creamy gravy, set in the middle of the table for dipping pancakes or draniki."
+      },
+      {
+        "name": "Kalduny",
+        "text": "Dumplings with a potato or flour casing, stuffed with minced meat or mushrooms and served with sour cream."
+      },
+      {
+        "name": "Babka",
+        "text": "Grated potato baked in a pot with bacon and onion until it sets into a soft, savoury cake."
+      },
+      {
+        "name": "Kvass",
+        "text": "A lightly fizzy, slightly sour drink fermented from rye bread, sold cold in bottles and, in summer, from street barrels."
+      },
+      {
+        "name": "Krambambula",
+        "text": "An old honey liqueur warmed with spices, revived as a bottled drink and often given as a souvenir."
+      }
+    ],
+    "phrases": {
+      "language": "Russian",
+      "intro": "Russian is what most people speak day to day, especially in cities; Belarusian, the other official language, appears on many signs and is spoken by some. A word of thanks in Belarusian is a nice touch.",
+      "items": [
+        { "phrase": "Zdravstvuyte (Здравствуйте)", "say": "ZDRAST-vooy-tyeh", "meaning": "Hello (polite)" },
+        { "phrase": "Privet (Привет)", "say": "pree-VYET", "meaning": "Hi (to friends)" },
+        { "phrase": "Spasibo (Спасибо)", "say": "spah-SEE-bah", "meaning": "Thank you" },
+        { "phrase": "Dziakuj (Дзякуй)", "say": "DZYAH-kooy", "meaning": "Thank you (in Belarusian)" },
+        { "phrase": "Pozhaluysta (Пожалуйста)", "say": "pah-ZHAH-loo-stah", "meaning": "Please; you're welcome" },
+        { "phrase": "Izvinite (Извините)", "say": "eez-vee-NEE-tyeh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Skolko stoit? (Сколько стоит?)", "say": "SKOL-kah STOH-eet", "meaning": "How much is it?" },
+        { "phrase": "Do svidaniya (До свидания)", "say": "dah svee-DAH-nee-yah", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q184",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Belarusian rouble (Br, BYN)",
+        "sources": [{ "property": "P38", "values": ["Q21531507"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Belarusian and Russian, both official. Russian is the everyday language of most people, above all in the cities.",
+        "sources": [{ "property": "P37", "values": ["Q9091", "Q7737"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q16886728"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "101 for fire, 102 for police and 103 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648794", "Q25648798", "Q25648811"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+375",
+        "sources": [{ "property": "P474", "values": ["+375"] }]
+      }
+    ]
+  }
+}

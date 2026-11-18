@@ -1,0 +1,195 @@
+{
+  "code": "GH",
+  "slug": "ghana",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Akwaaba", "Ghana"],
+  "summary": "Slave-trade castles on the coast, Asante gold and kente in Kumasi, and elephants at Mole.",
+  "overview": [
+    "Ghana is often the first West African country people visit: English-speaking, peaceful and used to travellers, many of them from the African diaspora tracing their roots. The coast west of Accra is lined with forts and castles built by European traders, Cape Coast and Elmina the best known, where captives were held in dungeons before being shipped across the Atlantic; guided tours end at the Door of No Return. Just inland, Kakum National Park has a canopy walkway hung between the treetops of the rainforest.",
+    "Kumasi, the capital of the Asante kingdom, has the Manhyia Palace museum and Kejetia, one of the biggest markets in West Africa, and the villages around it weave kente cloth and stamp adinkra symbols. Mole National Park, in the dry north, is the place to walk among elephants with an armed ranger, and the Volta region, in the east, has the Wli waterfalls, hills and Lake Volta, one of the largest artificial lakes in the world.",
+    "Accra, the capital, is sprawling and friendly, with the fishing harbour and lighthouse of Jamestown, the Kwame Nkrumah Memorial Park and the bars and restaurants of Osu. Tro-tros (minibuses) and shared taxis go everywhere, air-conditioned coaches link the cities, and domestic flights save the long drive from Accra to Kumasi or Tamale. Ride-hailing apps work in Accra, and mobile money (MoMo) pays for almost anything."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "avoid", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Sunny and dry across the country, with Accra around 31°C. From about December to February the harmattan blows dust down from the Sahara: the sky turns hazy, nights in the north get cool, and poor visibility now and then delays flights."
+      },
+      {
+        "name": "Heat, then the long rains",
+        "months": [3, 4, 5, 6],
+        "text": "March is hot and humid everywhere, and the north climbs towards 40°C. The south's main rainy season follows, from about April, wettest in June: short, violent downpours that flood Accra's roads, then sunshine."
+      },
+      {
+        "name": "The August break",
+        "months": [7, 8],
+        "text": "In the south the rain eases and it's cooler, around 27°C, under grey skies. The north is now in the middle of its rainy season."
+      },
+      {
+        "name": "Minor rains",
+        "months": [9, 10],
+        "text": "A second, shorter rainy season in the south. The north's rains end in October, leaving the savanna green."
+      }
+    ],
+    "weather": "Tropical and warm all year: about 24–32°C on the coast, hotter in the north. The south has two rainy seasons, roughly April to June and September to October; the north has one, roughly May to October. Accra and the plains east of it are surprisingly dry for the tropics, with grassland rather than forest, while the west and the Asante forest belt around Kumasi get much more rain.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "Across Ghana, with a parade in Accra",
+        "when": "6 March",
+        "months": [3],
+        "text": "In 1957, led by Kwame Nkrumah, Ghana became the first of Britain's colonies south of the Sahara to win its independence. A national parade fills Black Star Square in Accra."
+      },
+      {
+        "name": "Aboakyer",
+        "place": "Winneba",
+        "when": "Usually the first weekend of May",
+        "months": [5],
+        "text": "The Effutu people's deer-hunting festival: two rival companies race into the bush to catch a live antelope with their bare hands and bring it back for the chief."
+      },
+      {
+        "name": "Emancipation Day",
+        "place": "Cape Coast and Assin Manso",
+        "when": "Around 1 August",
+        "months": [7, 8],
+        "text": "Remembers the end of slavery with ceremonies at the slave river at Assin Manso and the castles, attended by many visitors from the diaspora. In some years the PANAFEST arts festival runs alongside."
+      },
+      {
+        "name": "Homowo",
+        "place": "Accra",
+        "when": "Usually in August",
+        "months": [8],
+        "text": "The Ga people's harvest festival, whose name means \"hooting at hunger\". Families eat kpokpoi, steamed maize meal with palm-nut soup, and sprinkle some on the ground for the ancestors."
+      },
+      {
+        "name": "Fetu Afahye",
+        "place": "Cape Coast",
+        "when": "Usually the first Saturday of September",
+        "months": [9],
+        "text": "Cape Coast's chiefs are carried through the streets in palanquins under huge umbrellas, with drummers, the town's Asafo warrior companies and crowds in their best cloth."
+      },
+      {
+        "name": "Hogbetsotso",
+        "place": "Anloga, in the Volta region",
+        "when": "Usually the first Saturday of November",
+        "months": [11],
+        "text": "The Anlo Ewe people remember their ancestors' escape from a tyrant king centuries ago, with a durbar of chiefs in rich regalia, drumming and dancing."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The coast",
+        "text": "Cape Coast and Elmina castles, the forts strung along the shore between them, Kakum's canopy walkway, and beaches such as Busua, where beginners learn to surf. Best from November to March."
+      },
+      {
+        "name": "Kumasi and the Asante heartland",
+        "text": "Green and wetter than Accra. Every six weeks the Asantehene, the Asante king, sits in state at the Manhyia Palace for Akwasidae, a public ceremony of drumming, horns and chiefs under umbrellas. Kente is woven at Bonwire, and adinkra cloth stamped at Ntonso."
+      },
+      {
+        "name": "The north",
+        "text": "Hotter and drier, with one rainy season from about May to October. Mole is best in the dry months, when elephants gather at the waterholes below the park's lodge; nearby Larabanga has a mud-built mosque, one of the oldest in West Africa. Some governments advise against travel to parts of the far north-east, around Bawku: check your own government's advice."
+      },
+      {
+        "name": "The Volta region",
+        "text": "Hills, forest and waterfalls east of Lake Volta: the Wli falls, Mount Afadja, and the mona monkeys of the Tafi Atome sanctuary. Greener and cooler than the coast."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greet before you do anything else: starting with a question is rude. When greeting a group, shake hands with each person in turn, moving from your right to your left. Between friends, a handshake often ends with a snap of the fingers. \"Akwaaba\" (welcome) is said to every visitor, and \"obroni\", which you'll hear called out, means a foreigner and is usually meant in a friendly way.",
+    "etiquette": [
+      "Use your right hand for eating, giving, receiving and waving: the left is thought unclean, and using it can offend.",
+      "Haggle in markets and agree a fare before getting into a taxi without an app.",
+      "If you're introduced to a chief, follow your host's lead: chiefs are usually addressed through a spokesman, the linguist.",
+      "Eating with your hand is normal for fufu and banku: wash first, use only the right hand, and tear off small pieces."
+    ],
+    "tipping": "Welcome rather than expected. Round up or leave about 10% in restaurants that don't add service, and tip guides at the castles and in the parks.",
+    "dress": "Ghanaians dress well, in bright printed cloth and smart office wear; on Fridays many wear local prints for National Friday Wear. Light, modest clothes suit everywhere, and shorts are best kept for the beach. Cover your knees and shoulders at mosques and palaces.",
+    "food": [
+      {
+        "name": "Jollof rice",
+        "text": "Rice cooked in a spiced tomato and pepper sauce, at every party and on every menu. Ghana and Nigeria argue, loudly and for ever, over whose is better."
+      },
+      {
+        "name": "Fufu and light soup",
+        "text": "Boiled cassava and plantain pounded into a smooth, stretchy ball, eaten with a spicy tomato soup or a groundnut soup. You pinch off a piece and swallow it rather than chew."
+      },
+      {
+        "name": "Banku and tilapia",
+        "text": "A sour dough of fermented maize and cassava, served with a whole grilled tilapia, raw pepper sauce and shito, a dark, oily chilli relish with dried fish."
+      },
+      {
+        "name": "Waakye",
+        "text": "Rice and beans cooked with sorghum leaves, which turn them reddish-brown, piled with gari, spaghetti, a boiled egg and shito: a breakfast and lunch favourite."
+      },
+      {
+        "name": "Kelewele",
+        "text": "Cubes of ripe plantain spiced with ginger and chilli and deep-fried, sold at roadside stalls in the evening."
+      },
+      {
+        "name": "Red red",
+        "text": "Black-eyed beans stewed in red palm oil, with fried ripe plantain on the side, both red, hence the name."
+      }
+    ],
+    "phrases": {
+      "language": "Twi (Akan)",
+      "intro": "English is the official language and widely spoken. Twi, the language of the Akan peoples, is the most widely spoken Ghanaian language and is understood across much of the south.",
+      "items": [
+        { "phrase": "Akwaaba", "say": "ah-KWAH-bah", "meaning": "Welcome" },
+        { "phrase": "Maakye", "say": "MAH-cheh", "meaning": "Good morning" },
+        { "phrase": "Wo ho te sɛn?", "say": "woh hoh teh SEN", "meaning": "How are you?" },
+        { "phrase": "Me ho yɛ", "say": "meh hoh YEH", "meaning": "I'm fine" },
+        { "phrase": "Medaase", "say": "meh-DAH-seh", "meaning": "Thank you" },
+        { "phrase": "Mepa wo kyɛw", "say": "meh-PAH-chew", "meaning": "Please" },
+        { "phrase": "Ɛyɛ sɛn?", "say": "eh-yeh SEN", "meaning": "How much is it?" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q117",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Ghana cedi (GH₵, GHS), divided into 100 pesewas. Mobile money (MoMo) is everywhere; cards work in hotels, malls and larger restaurants.",
+        "sources": [{ "property": "P38", "values": ["Q183530", "Q134397947"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the official language. Twi (Akan) is the most widely spoken Ghanaian language, and Ewe, Ga, Dagbani and many others are spoken in their own regions.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q60740126", "Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689471"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999; or 191 for police, 192 for fire and 193 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q25648876", "Q25648834", "Q25648835"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+233",
+        "sources": [{ "property": "P474", "values": ["+233"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "code": "CO",
+  "slug": "colombia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Hola!", "Colombia", "¡Bienvenidos!"],
+  "summary": "Walled Cartagena, green coffee hills and the Caribbean beaches of Tayrona.",
+  "overview": [
+    "Colombia has coasts on both the Caribbean and the Pacific, three ranges of the Andes, and a slice of the Amazon, and most first trips join the cities of the mountains to the Caribbean shore. Bogotá, the capital, sits on a cool plateau at about 2,600 m: its Gold Museum holds tens of thousands of pre-Hispanic gold pieces, and the colonial streets of La Candelaria climb towards the hill of Monserrate. Medellín, lower and warmer, has cable cars that carry its metro up the steep hillsides, and the outdoor escalators and murals of Comuna 13. Between them, the coffee region around Salento has green hills, coffee farms that show visitors round, and the Cocora Valley, where wax palms, the tallest palms in the world, stand above the pastures.",
+    "On the Caribbean, Cartagena's walled old town is a maze of balconied colonial houses and squares, with day trips to the Rosario Islands. Further east, Santa Marta is the base for Tayrona National Park, where forested hills come down to the sea, and for the four- to five-day trek to Ciudad Perdida, a city of stone terraces in the jungle older than Machu Picchu. Beyond lie the desert peninsula of La Guajira, home of the Wayuu people, and, far out to sea, the islands of San Andrés and Providencia. The Pacific coast around Nuquí sees humpback whales from about July to October, and Leticia is the gateway to the Amazon.",
+    "Mountains make road journeys slow, so many visitors take cheap domestic flights between regions and buses for shorter hops. Colombia has changed greatly in recent decades, and its main cities and tourist areas see millions of visitors a year. Theft is the usual problem: Colombians say \"no dar papaya\", don't make yourself an easy target, so keep phones out of sight and call a taxi through an app at night. Some rural and border areas are still affected by armed groups, and many governments advise against travel to parts of the country, so check your own government's current advice."
+  ],
+  "whenToGo": {
+    "stripLabel": "The Andes (Bogotá, Medellín, the coffee region) and the country taken together. The Caribbean coast has a single long dry season, and its own strip below.",
+    "months": ["best", "best", "best", "good", "good", "good", "best", "best", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Main dry season",
+        "months": [12, 1, 2, 3],
+        "text": "The sunniest months in the Andes and on the Caribbean coast, where a steady breeze takes the edge off the heat. From mid-December to mid-January Colombians are on holiday too, and beaches, flights and hotels fill and rise in price."
+      },
+      {
+        "name": "First rains",
+        "months": [4, 5, 6],
+        "text": "Afternoon downpours in the mountains, heaviest in April and May; the Caribbean coast stays mostly dry until May. Holy Week, in March or April, is a busy holiday. Fewer visitors and lower prices otherwise."
+      },
+      {
+        "name": "Mid-year dry spell",
+        "months": [7, 8],
+        "text": "Drier, sunnier weather returns to the Andes, with Medellín's flower fair in August and whales off the Pacific coast. Colombian school holidays make late June and July busy."
+      },
+      {
+        "name": "Second rains",
+        "months": [9, 10, 11],
+        "text": "The wettest time in the mountains, especially October and November, with landslides on some roads. The Caribbean coast is at its rainiest and most humid, though showers come in short bursts, and storms can reach San Andrés and Providencia."
+      }
+    ],
+    "weather": "Colombia lies just north of the equator, so the temperature depends on height, not the month. Cartagena and the coasts are hot and humid, about 30–32°C by day; Medellín, at about 1,500 m, is mild, 22–28°C, all year; Bogotá, at about 2,600 m, has cool days around 18°C and chilly nights, often with drizzle. Above about 3,000 m, the páramo moorland is cold and misty. The Andes get two rainy seasons, roughly April to May and October to November; the Caribbean coast has one, from about May to November. The Pacific coast is one of the wettest places on earth.",
+    "festivals": [
+      {
+        "name": "Carnaval de Negros y Blancos",
+        "place": "Pasto",
+        "when": "2–7 January, the biggest days on 5 and 6 January",
+        "months": [1],
+        "text": "A carnival recognised by UNESCO: people paint each other's faces black on the 5th and throw white talc and foam on the 6th, before a parade of huge, intricate floats."
+      },
+      {
+        "name": "Carnaval de Barranquilla",
+        "place": "Barranquilla",
+        "when": "Saturday to Shrove Tuesday (6–9 February in 2027)",
+        "months": [2, 3],
+        "text": "One of the largest carnivals in the world: parades of dancers in costumes from African, indigenous and Spanish traditions, cumbia and champeta music, and the burial of Joselito, who \"dies\" of exhaustion at the end."
+      },
+      {
+        "name": "Semana Santa in Popayán",
+        "place": "Popayán",
+        "when": "Holy Week (Easter Sunday is 28 March in 2027)",
+        "months": [3, 4],
+        "text": "Night processions through the white colonial city, with heavy wooden floats carried on men's shoulders, a tradition kept for over 450 years and recognised by UNESCO."
+      },
+      {
+        "name": "Festival de la Leyenda Vallenata",
+        "place": "Valledupar",
+        "when": "Usually late April or early May",
+        "months": [4, 5],
+        "text": "The home of vallenato, the accordion-led folk music of the Caribbean plains, crowns its best accordionists, singers and songwriters in a week of concerts and parties."
+      },
+      {
+        "name": "Feria de las Flores",
+        "place": "Medellín",
+        "when": "Usually early August, for about ten days",
+        "months": [8],
+        "text": "Flower growers from the village of Santa Elena carry enormous wooden frames of flowers, the silletas, on their backs in a parade through the city."
+      },
+      {
+        "name": "Feria de Cali",
+        "place": "Cali",
+        "when": "25–30 December",
+        "months": [12],
+        "text": "The salsa capital's fair opens with the Salsódromo, a parade of hundreds of salsa dancers, followed by concerts and dancing until New Year."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Caribbean coast",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best"],
+        "text": "Cartagena, Santa Marta, Tayrona and La Guajira. Hot, with a dry, breezy season from about December to April and humid, rainy months from May to November, wettest in October. Tayrona closes for a couple of weeks several times a year to let the land rest and for indigenous ceremonies, so check before you go."
+      },
+      {
+        "name": "The Amazon",
+        "text": "Leticia and the river, hot and humid all year. From about December to May the river rises and boats glide into the flooded forest; from about July to October it falls, opening sandbanks and forest trails."
+      },
+      {
+        "name": "The Pacific coast",
+        "text": "Nuquí and Bahía Solano in the Chocó, reached by small plane: rainforest down to black-sand beaches, rain in every month, and humpback whales from about July to October, when they come to calve."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Colombians are warm and courteous, and greetings take their time: \"Buenos días, ¿cómo está?\" before any question. Men shake hands; women, and men greeting women, kiss once on the right cheek. In Bogotá and Medellín many people use the polite \"usted\" even with friends and children. Shopkeepers call out \"¿A la orden?\", \"at your service\", as you pass.",
+    "etiquette": [
+      "Keep phones and cameras out of sight in busy streets, and order taxis through an app or your hotel, especially at night.",
+      "Many Colombians find tours and souvenirs built around drug lords offensive; their country has moved on.",
+      "Bogotá, Medellín and most big cities have drinkable tap water; on the coast and in the countryside, buy bottled.",
+      "Ciudad Perdida can only be walked with a licensed tour, and parts of Tayrona are sacred to its indigenous peoples: keep to the paths.",
+      "Wayuu, Arhuaco and other indigenous people may not want their picture taken: always ask.",
+      "A \"tinto\" is a small black coffee, offered everywhere; accepting one is part of being polite."
+    ],
+    "tipping": "Restaurants usually add a voluntary 10% service charge to the bill and ask whether you'd like to keep it. Tip guides and drivers on tours; taxis don't expect it.",
+    "dress": "Bogotá needs a warm jacket and an umbrella, Medellín lighter clothes, and the Caribbean light cotton. City Colombians dress neatly, and shorts are rarely seen in Bogotá. Bring good walking shoes for the coffee hills and boots for the Ciudad Perdida trek.",
+    "food": [
+      {
+        "name": "Bandeja paisa",
+        "text": "Antioquia's enormous plate: red beans, rice, minced beef, crisp pork belly, chorizo, a fried egg, fried plantain, an arepa and avocado. Share one, or skip dinner."
+      },
+      {
+        "name": "Ajiaco",
+        "text": "Bogotá's chicken soup, thickened with three kinds of potato and flavoured with guascas, a local herb, served with corn on the cob, capers, cream and avocado. Just right for a cold afternoon."
+      },
+      {
+        "name": "Arepas",
+        "text": "Corn cakes eaten across the country, plain with cheese in the Andes, and on the coast deep-fried with an egg cooked inside: the arepa de huevo."
+      },
+      {
+        "name": "Fried fish and coconut rice",
+        "text": "The Caribbean coast's lunch: a whole fried fish with rice cooked in coconut, fried green plantain (patacón) and salad, best at a beach shack."
+      },
+      {
+        "name": "Fruit juices",
+        "text": "Colombia grows dozens of fruits rarely seen abroad, such as lulo, guanábana, maracuyá and mora, blended with water or milk into fresh juices at every lunch."
+      },
+      {
+        "name": "Coffee and aguardiente",
+        "text": "Coffee from the hills, drunk black and small as tinto through the day. Aguardiente, an anise-flavoured cane spirit, is passed round in shot glasses at every party."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Colombian)",
+      "intro": "Colombian Spanish, especially in Bogotá, is often said to be among the clearest to learn from. Outside hotels and tourist areas, few people speak English.",
+      "items": [
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "¿Qué más?", "say": "keh MAHS", "meaning": "How's it going?" },
+        { "phrase": "Muchas gracias", "say": "MOO-chahs GRAH-see-ahs", "meaning": "Thank you very much" },
+        { "phrase": "¿Cuánto vale?", "say": "KWAHN-toh VAH-leh", "meaning": "How much is it?" },
+        { "phrase": "Un tinto, por favor", "say": "oon TEEN-toh por fah-VOR", "meaning": "A small black coffee, please" },
+        { "phrase": "A la orden", "say": "ah lah OR-den", "meaning": "At your service; you're welcome" },
+        { "phrase": "¡Qué chévere!", "say": "keh CHEH-veh-reh", "meaning": "How great! Cool!" },
+        { "phrase": "Parce", "say": "PAR-seh", "meaning": "Mate; friend (slang, from Medellín)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q739",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Colombian peso ($, COP). Prices are written with a $ sign and run to thousands, so check you aren't being quoted in US dollars.",
+        "sources": [{ "property": "P38", "values": ["Q244819"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. Dozens of indigenous languages are official in their own territories, and an English creole is spoken on San Andrés and Providencia.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Colombia Time, UTC−5, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5390", "Q63286092"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "123 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648825"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+57",
+        "sources": [{ "property": "P474", "values": ["+57"] }]
+      }
+    ]
+  }
+}

@@ -21,7 +21,8 @@ export const LANDMARK_PIN_MODE_IDS = LANDMARK_PIN_MODES.map((mode) => mode.id);
 export const DEFAULT_MAP_SETTINGS = {
   style: 'animated',
   mapType: 'regular',
-  landmarkPins: 'zoomed',
+  // Only the passport's landmarks, at every zoom (18 Nov 2026, the user's wish; it was 'zoomed')
+  landmarkPins: 'stamped',
   showGrid: true,
   showGridLabels: false,
   animatedSea: true,

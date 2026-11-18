@@ -1,0 +1,184 @@
+{
+  "code": "CM",
+  "slug": "cameroon",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bienvenue", "Cameroun", "Cameroon"],
+  "summary": "Rainforest, Foumban's royal palace, and beaches at Kribi where a waterfall meets the sea.",
+  "overview": [
+    "Cameroon is often called \"Africa in miniature\" for the range it holds: rainforest in the south and east, beaches of black volcanic sand below Mount Cameroon, an active volcano of 4,040 m; green, cool highlands in the west with old kingdoms and chiefdoms; and savanna and dry hills towards Lake Chad in the far north. Around 250 languages are spoken, and the country is officially bilingual, in French and English.",
+    "Douala, the port and largest city, and Yaoundé, the capital in the hills, are the usual starting points. Kribi, on the south coast, has sandy beaches and the Lobé Falls, where a river tumbles straight into the sea; Foumban, in the west, is the seat of the Bamoun sultans, with a palace, a museum of royal treasures and a street of craftsmen; Bandjoun has one of the great Bamileke chiefdoms, with a huge thatched meeting house. The south-eastern rainforest, around the Dja Faunal Reserve, a UNESCO World Heritage Site, is reached only on long expeditions. Coaches run between the main cities, an overnight train goes north from Yaoundé to Ngaoundéré, and in towns motorbike taxis, called benskins, are everywhere.",
+    "Many governments advise against travel to the Far North region, to the North-West and South-West regions (which include Mount Cameroon, Buea and Limbe), and to areas near the borders with Nigeria and the Central African Republic. Conditions change, so check your own government's current advice before you plan a trip."
+  ],
+  "whenToGo": {
+    "stripLabel": "Douala, Yaoundé and the south taken together, where most visits go. The coast is wetter and the north drier; see below.",
+    "months": ["best", "best", "good", "good", "good", "good", "avoid", "avoid", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2],
+        "text": "Dry over the whole country: about 31°C in Douala and a little cooler in Yaoundé, with harmattan dust in the north and sometimes as far south as the capital. The easiest months for road travel and the rainforest."
+      },
+      {
+        "name": "First rains",
+        "months": [3, 4, 5, 6],
+        "text": "Storms return to the south from about March, building through the spring, while the north swelters near 40°C until its own rains start around June."
+      },
+      {
+        "name": "Heavy rains",
+        "months": [7, 8, 9],
+        "text": "The coast's wettest months, when Douala gets hundreds of millimetres of rain a month and the slopes of Mount Cameroon even more. Yaoundé has a drier spell in July and August. Unpaved roads in the east and south become impassable."
+      },
+      {
+        "name": "Last rains",
+        "months": [10, 11],
+        "text": "Yaoundé's second rainy season, and the last heavy rain on the coast; by November the north is dry and the savanna turns gold."
+      }
+    ],
+    "weather": "Cameroon runs from the equatorial forest to the edge of the Sahel, so its climates differ. Douala and the coast are hot and humid all year, about 23–31°C, with one long, very wet season from about June to October; Debundscha, at the foot of Mount Cameroon, is one of the rainiest places on Earth. Yaoundé, at about 750 m, is a little cooler, with two rainy seasons, roughly March to June and September to November. The north is hot and dry, with a short rainy season from about June to September.",
+    "festivals": [
+      {
+        "name": "Youth Day",
+        "place": "Across Cameroon",
+        "when": "11 February",
+        "months": [2],
+        "text": "A public holiday when schoolchildren and students march past officials in every town, in their uniforms."
+      },
+      {
+        "name": "National Day",
+        "place": "Across Cameroon, with a parade in Yaoundé",
+        "when": "20 May",
+        "months": [5],
+        "text": "Marks the 1972 vote that made Cameroon a single, unitary state, with a big military and civilian parade in the capital."
+      },
+      {
+        "name": "Tabaski (Eid al-Adha)",
+        "place": "Across Cameroon, above all the north",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Muslim north, and Muslim districts in the southern cities, mark the Feast of the Sacrifice with prayers, a ram for the family and visits to relatives. A public holiday nationwide."
+      },
+      {
+        "name": "Ngondo",
+        "place": "Douala",
+        "when": "Usually late November or early December",
+        "months": [11, 12],
+        "text": "The festival of the Sawa, the coastal peoples: pirogue races on the Wouri River, wrestling, dancing, and a diver who goes down into the river to bring back a message from the ancestors."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Douala and the coast",
+        "text": "Hot and humid, with very heavy rain from about June to October. Kribi's beaches and the Lobé Falls are best in the dry months, December to February. The Mount Cameroon area, around Buea and Limbe, lies in the South-West region: see the travel advice above."
+      },
+      {
+        "name": "Yaoundé and the forest south",
+        "text": "Slightly cooler, on hills, with two rainy seasons. Forest parks such as Campo Ma'an near Kribi and the Dja reserve further east are hard going in the rains and best from December to February."
+      },
+      {
+        "name": "The western highlands",
+        "text": "Cooler and greener, at 1,000 to 2,000 m, with the Bamoun capital Foumban, the Bamileke chiefdoms around Bafoussam and Dschang, and markets every few days in the villages. Rain falls from about March to October."
+      },
+      {
+        "name": "The north",
+        "text": "Savanna, rocky hills and the Mandara Mountains, hot and dry most of the year, with a short rainy season from about June to September. Much of it is covered by travel warnings."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Shake hands with everyone in the room, and take your time. Cameroonians are polite and quite formal with strangers: \"Monsieur\" and \"Madame\", or \"Papa\" and \"Maman\" for older people. Many people slide between French, English and Pidgin in one conversation, a mix called Camfranglais in the cities.",
+    "etiquette": [
+      "Carry your passport, or a certified copy: police check papers often, on the roads and in towns.",
+      "Photograph people only with their permission, and leave the camera away from official buildings, bridges and anything military.",
+      "Visits to a chiefdom (chefferie) usually start by asking permission and paying an entry fee; follow your guide's lead, and don't point at the chief.",
+      "Agree the fare before you climb onto a benskin, and hold on.",
+      "If you're offered food or a drink in someone's home, accept at least a little: turning it down outright can offend."
+    ],
+    "tipping": "In a local café or at a street grill, nobody expects a tip. Restaurants and hotels that cater to visitors appreciate around 10%, and guides and drivers a tip when the trip ends.",
+    "dress": "Cameroonians dress well: smart-casual in the cities, and bold printed cloth, cut into the loose kaba dress for many women. In the Muslim north, cover your arms and legs. Bring a rain jacket for most of the year, and a fleece for highland evenings.",
+    "food": [
+      {
+        "name": "Ndolé",
+        "text": "The national dish: a stew of bitter-leaf greens with ground peanuts and shrimp or beef, served with fried plantain or miondo, thin sticks of fermented cassava."
+      },
+      {
+        "name": "Poulet DG",
+        "text": "Chicken fried with plantain, carrots, peppers and green beans. The DG stands for directeur général: it was once a dish for the boss."
+      },
+      {
+        "name": "Eru",
+        "text": "In the English-speaking west, finely shredded leaves of a wild forest vine cooked with waterleaf, palm oil and meat or fish, eaten with water fufu, a soft cassava dough."
+      },
+      {
+        "name": "Achu",
+        "text": "Pounded cocoyam, shaped into a bowl and filled with a bright yellow soup of palm oil and spices: a dish from the highlands around Bamenda."
+      },
+      {
+        "name": "Soya",
+        "text": "Spiced beef skewers grilled over charcoal, sold at night on street corners; the recipe came from the north."
+      },
+      {
+        "name": "Poisson braisé",
+        "text": "Whole fish grilled with a spicy paste and eaten with miondo or fried plantain, at evening stalls in Douala and Yaoundé."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "French is the language of eight of the ten regions, including Douala and Yaoundé. In the North-West and South-West, people speak English and Cameroonian Pidgin, and Fulfulde is the common language of the north.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Good morning; hello" },
+        { "phrase": "Comment ça va ?", "say": "ko-mon sah VAH", "meaning": "How are you?" },
+        { "phrase": "S'il vous plaît", "say": "seel voo PLAY", "meaning": "Please" },
+        { "phrase": "Merci", "say": "mair-SEE", "meaning": "Thank you" },
+        { "phrase": "C'est à combien ?", "say": "say tah kom-BYAN", "meaning": "How much is it?" },
+        { "phrase": "Je suis perdu", "say": "zhuh swee pair-DOO", "meaning": "I'm lost" },
+        { "phrase": "Au revoir", "say": "oh ruh-VWAHR", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1009",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Central African CFA franc (CFA, XAF), tied to the euro. It has the same value as the West African franc, but the notes of one can't be spent in the other's countries.",
+        "sources": [{ "property": "P38", "values": ["Q847739"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French and English, both official: French in eight of the ten regions, English in the North-West and South-West. Cameroonian Pidgin and around 250 local languages are spoken too.",
+        "sources": [{ "property": "P37", "values": ["Q150", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "West Africa Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q1773995", "Q6655", "Q4689491"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; police are also on 117, and the fire service on 118",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata gives only 112; the page adds 117 (police) and 118 (fire), the numbers used across Cameroon."
+      },
+      {
+        "key": "callingCode",
+        "text": "+237",
+        "sources": [{ "property": "P474", "values": ["+237"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "code": "SL",
+  "slug": "sierra-leone",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Kushɛ", "Salone"],
+  "summary": "Beaches below forested hills, chimpanzees, river islands and the slave fort on Bunce Island.",
+  "overview": [
+    "Sierra Leone fits a lot into a small country. South of Freetown, the Western Area Peninsula has long white-sand beaches such as Lakka, River No. 2 and Tokeh, with forested hills behind them; Tacugama, a sanctuary for rescued chimpanzees, lies in those hills above the city; and boats go out to the Banana Islands off the peninsula's tip. Inland, Tiwai Island, in the Moa River, is home to eleven kinds of primate and the shy pygmy hippo. In the estuary of the Sierra Leone River, Bunce Island holds the ruins of a British slave fort, from which tens of thousands of Africans were shipped to the Americas, many to the rice plantations of South Carolina and Georgia.",
+    "Freetown was settled from 1787 by freed and formerly enslaved people from London, Nova Scotia and later Jamaica, and their descendants, the Krio, gave the country the language almost everyone shares. The city climbs steep hills and its traffic is slow; keke (motor tricycles) and okadas (motorbike taxis) weave through it. The airport is at Lungi, across the wide estuary: a water taxi crosses in under an hour, while the road round takes several. The main roads to Bo, Kenema and Makeni are paved, and shared taxis and buses run along them."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "good", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [11, 12, 1, 2, 3],
+        "text": "Sunny, dry and around 30°C on the coast, the time for the beaches and for travel upcountry. From about December to February the harmattan blows Saharan dust south, hazing the light and taking the edge off the night heat, most of all inland."
+      },
+      {
+        "name": "Build-up",
+        "months": [4, 5],
+        "text": "The most humid weeks of the year, with thunderstorms gathering in the afternoons and the first real downpours in May."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9],
+        "text": "Rain for days on end, heaviest in July and August, when Freetown gets more rain in a month than many European cities do in a year. Floods and landslides hit the city's hillsides, beach places close, and dirt roads upcountry get very hard going."
+      },
+      {
+        "name": "Rains easing",
+        "months": [10],
+        "text": "The storms come less often through October, the hills are lush, and the beach bars start to reopen."
+      }
+    ],
+    "weather": "Hot and humid all year, with daytime highs of about 28–32°C on the coast and little change between months. The rainy season runs from about May to October, peaking in July and August; Freetown gets around 3,000 mm or more a year, among the most of any West African city. From November to April it's mostly dry and sunny, with the harmattan's dusty haze from about December to February. Inland is a little hotter by day and cooler at night.",
+    "festivals": [
+      {
+        "name": "Easter Monday kites",
+        "place": "Freetown, above all Lumley Beach",
+        "when": "Easter Monday: in 2027, 29 March",
+        "months": [3, 4],
+        "text": "Families picnic on the beach and on the hilltops, and the sky fills with kites, many of them homemade from paper, sticks and string."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Sierra Leone",
+        "when": "27 April",
+        "months": [4],
+        "text": "Celebrates independence from Britain in 1961, with parades, flags on every vehicle and parties into the night."
+      },
+      {
+        "name": "Ramadan and Pray Day",
+        "place": "Across Sierra Leone",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Most Sierra Leoneans are Muslim, and the end of the month of fasting, Eid al-Fitr, is known in Krio as Pray Day: crowds pray together in stadiums and open spaces, then visit friends and share food, and Christian neighbours join in."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Sierra Leone",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "A public holiday of prayers, sacrifices and family meals, with meat shared out among neighbours and the poor."
+      },
+      {
+        "name": "Christmas and New Year",
+        "place": "Freetown",
+        "when": "25 December to 1 January",
+        "months": [12, 1],
+        "text": "Freetown's masquerade societies take to the streets on the holidays, with masked dancers called devils followed by drummers and crowds. Churches are full, and so are the beaches."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Sierra Leoneans greet everyone, strangers included, and a greeting skipped is noticed. In Krio, \"Kushɛ\" is hello and \"Aw di bodi?\" (how's the body?) asks how you are; the answer is \"Di bodi fayn\". Older people are called \"Pa\" and \"Ma\", and \"Aunty\" and \"Uncle\" are polite for anyone a little older than you.",
+    "etiquette": [
+      "Christians and Muslims live side by side, marry each other and celebrate each other's holidays. Expect both kinds of prayer at weddings and public events, and join in quietly.",
+      "State House, soldiers and police are not for photographing; most people are happy to pose if you ask first.",
+      "Give, take and eat with your right hand.",
+      "Bargain with a smile at craft stalls such as Freetown's Big Market on Wallace Johnson Street.",
+      "Rip currents can be strong off Lumley and the peninsula beaches, most of all in the rainy season, and lifeguards are few: ask which stretches are safe before going in.",
+      "At Tacugama, the chimpanzees are rescued animals: visits are guided and you watch them from a distance, never touching."
+    ],
+    "tipping": "Not expected, but welcome for good service: about 10% in restaurants that don't add a service charge, and something for guides, drivers and boatmen.",
+    "dress": "Light, loose clothes for the heat. Freetown dresses smartly, especially for church on Sunday and for offices. Cover your shoulders and knees in mosques and villages, and keep swimwear for the beach.",
+    "food": [
+      {
+        "name": "Cassava leaves",
+        "text": "The national dish: cassava leaves pounded fine and cooked slowly with palm oil, fish or meat and chilli, served over rice."
+      },
+      {
+        "name": "Groundnut soup",
+        "text": "A thick peanut stew with chicken or fish, eaten with rice or fufu."
+      },
+      {
+        "name": "Plasas",
+        "text": "The Krio word for any leaf stew over rice: potato leaves, cassava leaves or crain-crain, a slippery jute leaf, each cooked with palm oil and smoked fish."
+      },
+      {
+        "name": "Akara",
+        "text": "Small fritters of mashed banana and rice flour, or of black-eyed beans, fried in the morning and sold warm by street sellers."
+      },
+      {
+        "name": "Poyo",
+        "text": "Palm wine tapped from the trees, sweet and fizzy in the morning and much stronger by evening."
+      },
+      {
+        "name": "Ginger beer",
+        "text": "Homemade from fresh ginger, sugar and lime, with a kick that catches newcomers by surprise."
+      }
+    ],
+    "phrases": {
+      "language": "Krio",
+      "intro": "English is the official language, but Krio is what almost everyone speaks with each other. It grew from English, so many words sound familiar once you hear them slowly.",
+      "items": [
+        { "phrase": "Kushɛ", "say": "KOO-sheh", "meaning": "Hello" },
+        { "phrase": "Aw di bodi?", "say": "ow dee BOH-dee", "meaning": "How are you? (\"How's the body?\")" },
+        { "phrase": "Di bodi fayn", "say": "dee BOH-dee FINE", "meaning": "I'm fine" },
+        { "phrase": "Tɛnki", "say": "TEN-kee", "meaning": "Thank you" },
+        { "phrase": "Ow mɔch?", "say": "ow MUTCH", "meaning": "How much?" },
+        { "phrase": "Wetin na yu nem?", "say": "weh-TIN nah yoo NEM", "meaning": "What's your name?" },
+        { "phrase": "A nɔ ɔndastand", "say": "ah naw un-dah-STAND", "meaning": "I don't understand" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1044",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Leone (Le, SLE). New notes in 2022 dropped three zeros, so some prices are still quoted in old leones: check which is meant.",
+        "sources": [{ "property": "P38", "values": ["Q4587"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the language of government and schools, and Krio, spoken by nearly everyone. Mende in the south and east and Temne in the north are the largest of the country's own languages.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q35744"] }],
+        "note": "Wikidata lists both English and Krio as official languages; the page says what each is used for, as English is the language of law and schooling and Krio the everyday common language."
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q60740126", "Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689493"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for fire and ambulance; 019 for police",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q60061869"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+232",
+        "sources": [{ "property": "P474", "values": ["+232"] }]
+      }
+    ]
+  }
+}

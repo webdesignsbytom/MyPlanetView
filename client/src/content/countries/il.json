@@ -1,0 +1,187 @@
+{
+  "code": "IL",
+  "slug": "israel",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Shalom", "Yisra'el"],
+  "summary": "Tel Aviv's beaches, Crusader Akko, the salty Dead Sea and craters in the Negev.",
+  "overview": [
+    "Israel fits a great deal into a small space: from the green hills of the Galilee in the north to the Red Sea at Eilat is about 470 km. Tel Aviv, on the Mediterranean, is the secular, easy-going city of beaches, cafés and white 1930s Bauhaus-style buildings, with the old port of Jaffa at its southern end. Up the coast are Haifa, with the terraced Bahá'í Gardens on Mount Carmel, and Akko, an Ottoman walled town built over vaulted Crusader halls. Inland, Nazareth and the shores of the Sea of Galilee are places of Christian pilgrimage.",
+    "Jerusalem is about an hour from Tel Aviv by road, and less by fast train. Israel governs the whole city; the Palestinians claim its eastern part, including the walled Old City, as their capital, and its status is one of the central disputes between them. Inside the walls are the Western Wall, the Church of the Holy Sepulchre, and the compound of the Al-Aqsa Mosque and the Dome of the Rock, which Jews call the Temple Mount and where non-Muslims may visit only at set hours. East of the city the road drops to the Dead Sea, more than 400 m below sea level and salty enough to float in, with the fortress of Masada on its clifftop above the shore. Further south, the Negev desert has the vast Ramon Crater at Mitzpe Ramon, and Eilat has coral reefs.",
+    "Trains and buses link most towns, and a car helps in the Galilee and the Negev. Shabbat, from sunset on Friday to nightfall on Saturday, changes everything: most trains and buses stop, and in Jerusalem shops and many restaurants close, though Tel Aviv stays lively. Expect bag checks at stations and shopping centres, and long security questions when you fly out. Bethlehem, Jericho and the other West Bank towns are reached from Jerusalem by bus, taxi or tour (see the Palestine page).",
+    "Parts of Israel, especially near its borders, are on the lists of places many governments advise against visiting, and some advise against all but essential travel to the whole country. The picture can shift at short notice: read your own government's latest advice while planning, and look again just before you leave."
+  ],
+  "whenToGo": {
+    "stripLabel": "Jerusalem, Tel Aviv and the Galilee, where most trips go. The desert south, from the Dead Sea to Eilat, has a strip of its own below.",
+    "months": ["good", "good", "best", "best", "best", "good", "good", "good", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "The rainy season on the coast and in the hills: Tel Aviv is about 18°C by day, Jerusalem, at 800 m, closer to 12°C, with cold nights and snow in some years. The Dead Sea and Eilat stay sunny and warm, around 20°C, and fill with winter-sun visitors."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm days and green hills, with wild flowers carpeting the Galilee and parts of the Negev in February and March. Passover brings crowded hotels and sites. Now and then a hot, dusty desert wind (sharav) pushes temperatures past 35°C for a day or two."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8, 9],
+        "text": "No rain at all. Tel Aviv is about 30°C and humid, Jerusalem warm and drier with cooler evenings, and the Dead Sea and Eilat over 40°C. School holidays in July and August fill the beaches and hotels."
+      },
+      {
+        "name": "Autumn",
+        "months": [10, 11],
+        "text": "Warm and settled, with the sea still good for swimming into November and the first rains late in the season. The Jewish autumn holidays, usually in September or October, fill the hotels for a week or two."
+      }
+    ],
+    "weather": "A Mediterranean climate in the north and centre: hot, dry summers and mild, wet winters, with nearly all the rain from November to March and more of it in the north than the south. Height makes a difference: Jerusalem and the hills of the Galilee are a few degrees cooler than the coast. The south is desert, rainless for most of the year, with some of the hottest summers in the region round the Dead Sea and Eilat.",
+    "festivals": [
+      {
+        "name": "Purim",
+        "place": "Across Israel, above all Tel Aviv",
+        "when": "Usually in March, sometimes late February",
+        "months": [2, 3],
+        "text": "The carnival of the Jewish year: children and adults dress up in costumes, Tel Aviv throws street parties, and people swap baskets of sweets. Jerusalem keeps it a day later than everywhere else."
+      },
+      {
+        "name": "Passover (Pesach)",
+        "place": "Across Israel",
+        "when": "Usually in April, sometimes late March, for a week",
+        "months": [3, 4],
+        "text": "The festival of the Exodus from Egypt, opening with a family meal, the Seder. It's a school holiday, so hotels, parks and sites are crowded, and for the week many shops and restaurants sell no bread, only matza."
+      },
+      {
+        "name": "Independence Day (Yom Ha'atzmaut)",
+        "place": "Across Israel",
+        "when": "Usually in late April or May",
+        "months": [4, 5],
+        "text": "A public holiday that begins with fireworks and street stages in the evening and carries on with family barbecues in every park the next day."
+      },
+      {
+        "name": "The autumn holidays",
+        "place": "Across Israel",
+        "when": "Usually in September or October, over about three weeks",
+        "months": [9, 10],
+        "text": "Rosh Hashanah, the Jewish New Year, then Yom Kippur, the Day of Atonement, when the whole country stops: no cars on the roads, no flights, and shops, restaurants and broadcasts closed for a day. Sukkot follows, with wooden huts built on balconies and outside restaurants."
+      },
+      {
+        "name": "Hanukkah",
+        "place": "Across Israel",
+        "when": "Usually in December, for eight nights",
+        "months": [12],
+        "text": "The festival of lights: candles are lit in windows each evening, one more each night, and bakeries fill with jam doughnuts (sufganiyot)."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Dead Sea, the Negev and Eilat",
+        "months": ["best", "best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+        "text": "Desert country, sunny and warm in winter, when Eilat's beaches and reefs and the Dead Sea's hotels are at their best. From June to September it's over 40°C most days: walks at Masada and Ein Gedi start at dawn, and the Negev's trails are for the early hours only."
+      },
+      {
+        "name": "The Galilee and the north",
+        "text": "The greenest and wettest part of the country, with olive groves, vineyards, the Sea of Galilee and the hill town of Safed. Spring, when the hills flower, is its best season; summer is hot round the lake, which lies about 200 m below sea level."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Shalom\" means hello, goodbye and peace. Israelis are informal and direct: first names from the start, plain speaking that isn't meant as rude, and little queueing. A handshake is normal, but many religious men and women don't touch the opposite sex, so let them offer first. Arab citizens, about a fifth of the population, greet with \"marhaba\" or \"as-salamu alaykum\".",
+    "etiquette": [
+      "At the Western Wall, men cover their heads (paper kippot are handed out) and men and women pray in separate sections. Don't photograph or use a phone there on Shabbat.",
+      "In ultra-Orthodox neighbourhoods such as Jerusalem's Mea Shearim, dress modestly, ask before photographing people, and don't drive through on Shabbat.",
+      "Churches, mosques and synagogues expect covered shoulders and knees, and some lend wraps at the door.",
+      "Carry your passport: you may be asked for it at checkpoints, and it's needed to check in at hotels.",
+      "Many hotels and restaurants are kosher: meat and dairy are not served at the same meal, so no milk for coffee after a meat lunch."
+    ],
+    "tipping": "Expected in restaurants and cafés with table service: 10–15%, rarely included, and often left in cash. Tour guides and drivers expect a tip; taxi drivers don't, but rounding up is welcome.",
+    "dress": "Casual, and very casual in Tel Aviv, where shorts and sandals go almost everywhere. In Jerusalem's Old City, at holy places and in religious areas, cover shoulders and knees. Winter evenings in Jerusalem are cold, so bring a warm jacket; in summer, sun protection matters more than anything.",
+    "food": [
+      {
+        "name": "Hummus",
+        "text": "Eaten as a meal, not a dip: a plate of warm chickpea purée with tahini, olive oil and whole chickpeas, wiped up with pita. Many hummus places open early and close once the day's batch is gone, often by mid-afternoon."
+      },
+      {
+        "name": "Falafel and sabich",
+        "text": "Falafel balls in pita with salads and tahini are the classic street lunch. Sabich, brought by Iraqi Jews, fills the pita with fried aubergine, hard-boiled egg and tangy mango pickle (amba)."
+      },
+      {
+        "name": "Shakshuka",
+        "text": "Eggs poached in a pan of tomatoes, peppers and spices, a North African dish that became Israel's favourite breakfast. It's served in the pan with bread."
+      },
+      {
+        "name": "The Israeli breakfast",
+        "text": "Hotels and cafés serve a spread of chopped salad, soft white cheeses, olives, eggs, smoked fish, breads and jams, a tradition that began on the kibbutzim."
+      },
+      {
+        "name": "Bourekas",
+        "text": "Flaky pastries filled with cheese, potato or spinach, brought by Jews from Turkey and the Balkans and sold in every bakery, often for Shabbat breakfast."
+      },
+      {
+        "name": "Market food",
+        "text": "Jerusalem's Mahane Yehuda and Tel Aviv's Carmel Market are the places to graze: halva, olives, fresh juices, rugelach pastries and small restaurants that come alive at night."
+      }
+    ],
+    "phrases": {
+      "language": "Hebrew",
+      "intro": "Most Israelis speak good English, and road signs are in Hebrew, Arabic and English. Hebrew is written from right to left.",
+      "items": [
+        { "phrase": "Shalom (שלום)", "say": "sha-LOHM", "meaning": "Hello; goodbye; peace" },
+        { "phrase": "Ma nishma? (מה נשמע)", "say": "MAH nish-MAH", "meaning": "How's it going?" },
+        { "phrase": "Toda raba (תודה רבה)", "say": "toh-DAH ra-BAH", "meaning": "Thank you very much" },
+        { "phrase": "Bevakasha (בבקשה)", "say": "beh-va-ka-SHAH", "meaning": "Please; you're welcome" },
+        { "phrase": "Slicha (סליחה)", "say": "slee-KHAH", "meaning": "Excuse me; sorry" },
+        { "phrase": "Ken / lo (כן / לא)", "say": "KEN / LOH", "meaning": "Yes / no" },
+        { "phrase": "Kama ze ole? (כמה זה עולה)", "say": "KA-mah ZEH oh-LEH", "meaning": "How much is it?" },
+        { "phrase": "Shabbat shalom (שבת שלום)", "say": "sha-BAHT sha-LOHM", "meaning": "Have a good Shabbat (from Friday afternoon)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q801",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "New shekel (₪, ILS). Cards and phone payments are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q131309"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Hebrew, the official language. Arabic has a special status in law and is spoken by Arab citizens; English is understood almost everywhere, and Russian is common.",
+        "sources": [{ "property": "P37", "values": ["Q9288"] }],
+        "note": "Wikidata ends Arabic's statement as an official language in July 2018; the page says it has a special status, which the law passed then gives it."
+      },
+      {
+        "key": "plugs",
+        "text": "Type H (Israel's own plug, three pins in a triangle) and Type C (two round pins, which also fit Type H sockets), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1266396", "Q1378312"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata also lists BS 546 (Type D); the page leaves it out, as Israel's sockets take Types H and C."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Israel Standard Time, UTC+2; summer time, UTC+3, from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q2583609", "Q6087247", "Q63285940", "Q6723", "Q6760"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "100 for police, 101 for ambulance (Magen David Adom) and 102 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648793", "Q25648794", "Q25648798"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+972",
+        "sources": [{ "property": "P474", "values": ["+972"] }]
+      }
+    ]
+  }
+}

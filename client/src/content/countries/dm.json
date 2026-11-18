@@ -1,0 +1,159 @@
+{
+  "code": "DM",
+  "slug": "dominica",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonjou", "Dominica", "Byenvini"],
+  "summary": "Rainforest trails, hot springs, a boiling lake and sperm whales off a steep volcanic island.",
+  "overview": [
+    "Dominica (say dom-in-EE-ka; it isn't the Dominican Republic) is steep, volcanic and covered in forest, and the people who come are mostly walkers, divers and nature lovers rather than beach-goers: most of its few beaches are black sand or stones. Morne Trois Pitons National Park, a World Heritage Site, holds the main sights. The Boiling Lake, a flooded vent whose grey water bubbles and steams, is reached on a hard day's hike through the bare, sulphurous Valley of Desolation; the twin Trafalgar Falls and the Emerald Pool are short walks; and at Titou Gorge you swim up a narrow canyon to a waterfall. The Waitukubuli National Trail runs the length of the island in 14 sections, and the hot sulphur springs at Wotten Waven make a good end to a day.",
+    "Offshore, sperm whales live off the west coast all year, so Dominica is one of the few places where they can be seen with some confidence. At Champagne Reef, bubbles of volcanic gas rise through the water around snorkellers, and at Scotts Head, in the south, a thin strip of land separates the Atlantic from the Caribbean Sea. On the east coast, the Kalinago Territory is home to about 3,000 Kalinago, descendants of the island's first people. Roseau, the capital, is a small, busy town of wooden and stone buildings with a Saturday market; Portsmouth, in the north, has boat trips up the Indian River and the ruined Fort Shirley in Cabrits National Park.",
+    "Privately run minibuses link the towns and villages, but thin out after dark and on Sundays; many visitors hire a car, driving on the left on steep, winding roads, or travel with a local guide. The island is reached by small plane or by ferry from Guadeloupe and Martinique. Hurricane Maria, in 2017, did enormous damage, and the forest has since grown back."
+  ],
+  "whenToGo": {
+    "months": ["good", "best", "best", "best", "best", "good", "good", "good", "avoid", "avoid", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [2, 3, 4, 5],
+        "text": "The driest, sunniest months, when trails are firmest and rivers lowest: the best time for the Boiling Lake hike and the long trail. Carnival, Mas Domnik, falls in February or March."
+      },
+      {
+        "name": "Early wet season",
+        "months": [6, 7, 8],
+        "text": "Heavier, more frequent showers, high rivers and muddy paths, and a growing risk of storms. The forest is at its greenest and visitors few."
+      },
+      {
+        "name": "Storm season",
+        "months": [9, 10],
+        "text": "The wettest and riskiest weeks, with hurricanes, flash floods and landslides that can close roads. Late October still draws crowds for Creole Day and the World Creole Music Festival."
+      },
+      {
+        "name": "Late rains",
+        "months": [11, 12, 1],
+        "text": "The rain eases into sunny spells, the island celebrates independence in early November, and whale sightings become more frequent through the winter."
+      }
+    ],
+    "weather": "Hot and humid on the coast, about 27°C to 32°C by day all year, and noticeably cooler in the mountains, where Morne Diablotin rises to 1,447 m. Rainfall varies enormously: the sheltered west coast around Roseau is fairly dry, while the interior gets several times as much and is rarely without a shower. The wettest months are June to October, the driest February to April. Storms are a real hazard: Tropical Storm Erika caused deadly floods in 2015, and Hurricane Maria struck the island directly in 2017.",
+    "festivals": [
+      {
+        "name": "Mas Domnik (Carnival)",
+        "place": "Roseau",
+        "when": "The Monday and Tuesday before Ash Wednesday (8–9 February in 2027), after weeks of calypso contests",
+        "months": [2, 3],
+        "text": "J'ouvert at dawn on the Monday, then street bands and costumes, including the sensay, an old disguise of shredded cloth or fibre with a horned mask."
+      },
+      {
+        "name": "Jounen Kwéyòl (Creole Day)",
+        "place": "Across Dominica",
+        "when": "Usually the last Friday in October",
+        "months": [10],
+        "text": "People wear national dress (the madras wob dwiyet for women), speak Kwéyòl at school and work, and restaurants serve Creole food."
+      },
+      {
+        "name": "World Creole Music Festival",
+        "place": "Roseau",
+        "when": "Usually the last weekend of October",
+        "months": [10],
+        "text": "Three nights of bouyon, Dominica's own fast dance music, with kompa, zouk and other music of the French Creole Caribbean."
+      },
+      {
+        "name": "Independence Day and Community Service Day",
+        "place": "Across Dominica",
+        "when": "3 and 4 November",
+        "months": [11],
+        "text": "Independence from Britain in 1978 is marked with a parade and cultural shows; on the next day, people turn out to clean, paint and repair in their communities."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "No conversation starts without a greeting, whether \"Good morning\" or the Kwéyòl \"Bonjou\", and that goes for shops, buses and people passed on a village path. Dominicans are friendly and unhurried, and a short chat about where you're from and what you've seen often follows. Older people are addressed with respect, as Mr, Miss or Ma.",
+    "etiquette": [
+      "Go with a licensed guide on the Boiling Lake hike and other long walks: paths can be unclear, and rivers rise fast after rain. Never cross a river in flood.",
+      "The mountain chicken, a large frog that was once the national dish, is now critically endangered and protected. It isn't eaten.",
+      "Pick a whale-watching boat that keeps its distance and doesn't chase the animals.",
+      "Ask before photographing people, especially in the Kalinago Territory, and buy crafts straight from the people who make them."
+    ],
+    "tipping": "Appreciated rather than expected. Where a restaurant hasn't added a service charge, 10% is about right, and hiking and river guides should get something at the end of the day.",
+    "dress": "Walking boots or shoes that can get wet, quick-drying clothes, a rain jacket and insect repellent. Swimwear for river pools, and modest clothes in villages and churches.",
+    "food": [
+      {
+        "name": "Callaloo soup",
+        "text": "A thick green soup of dasheen leaves, okra and coconut milk, sometimes with crab or salted meat."
+      },
+      {
+        "name": "Bakes and saltfish",
+        "text": "Fried dough rolls (bakes) split open and filled with saltfish cooked with onion, tomato and peppers: a breakfast from the roadside."
+      },
+      {
+        "name": "Ground provisions",
+        "text": "Dasheen, yam, tannia, green bananas (called figs) and breadfruit, boiled and served with stewed fish or chicken. Much of it is grown on the island's small farms."
+      },
+      {
+        "name": "Crab backs",
+        "text": "Land crab meat seasoned with herbs and pepper and baked back in its shell, a Dominican speciality in its season."
+      },
+      {
+        "name": "Kubuli",
+        "text": "Dominica's own lager, brewed with water from the island's springs and drunk ice-cold after a hike."
+      }
+    ],
+    "phrases": {
+      "language": "Kwéyòl (Antillean Creole French)",
+      "intro": "Alongside English, many Dominicans, especially in the villages, speak Kwéyòl, a Creole based on French. A few words are warmly received:",
+      "items": [
+        { "phrase": "Bonjou", "say": "bon-ZHOO", "meaning": "Good morning; hello" },
+        { "phrase": "Bonswè", "say": "bon-SWAY", "meaning": "Good evening" },
+        { "phrase": "Sa ka fèt?", "say": "sah kah FET", "meaning": "How are things?" },
+        { "phrase": "Mwen la", "say": "mwen LAH", "meaning": "I'm fine (\"I'm here\")" },
+        { "phrase": "Mèsi anpil", "say": "MAY-see an-PEEL", "meaning": "Thank you very much" },
+        { "phrase": "Souplé", "say": "soo-PLAY", "meaning": "Please" },
+        { "phrase": "Pa ni pwoblèm", "say": "pah nee pwoh-BLEM", "meaning": "No problem" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q784",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Eastern Caribbean dollar (EC$, XCD). US dollars are accepted in many places, with change in EC dollars.",
+        "sources": [{ "property": "P38", "values": ["Q26365"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Many Dominicans also speak Kwéyòl, a French-based Creole.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q60740126"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q2085376", "Q109529721"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 767",
+        "sources": [{ "property": "P474", "values": ["+1767"] }]
+      }
+    ]
+  }
+}

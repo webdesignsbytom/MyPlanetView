@@ -1,0 +1,170 @@
+{
+  "code": "HT",
+  "slug": "haiti",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonjou", "Ayiti", "Byenvini"],
+  "summary": "Born of a revolt by enslaved people: a mountaintop citadel, Jacmel's carnival masks and rara bands.",
+  "overview": [
+    "Haiti fills the western third of Hispaniola, an island it shares with the Dominican Republic. In 1804 it became the first independent nation in the Caribbean, after a revolution by enslaved people ended French rule, and that story is told in stone in the north: the Citadelle Laferrière, a huge fortress on a peak above Milot built to hold off a French return, and the ruined Sans-Souci Palace at its foot, both part of a World Heritage Site.",
+    "Most of the country is mountainous. Pine woods and cool air are a short drive above Port-au-Prince, around Kenscoff and Furcy. Jacmel, on the south coast, keeps old merchants' houses with iron balconies and makes painted papier-mâché masks, and the turquoise pools of Bassin Bleu are in the hills behind it. Cap-Haïtien, the French colony's capital for much of the 1700s, is the base for the Citadelle and the beaches of the north coast. Haitian painting, the cut-steel art of Croix-des-Bouquets, made from flattened oil drums, and kompa music are known well beyond the island.",
+    "Brightly painted tap-taps (shared pick-ups and buses) and motorbike taxis carry most Haitians, while visitors usually travel with a driver or guide they trust. Roads are rough and slow, and power cuts are common, so hotels run generators. Prices are in gourdes, though many hotels take US dollars.",
+    "Many governments advise against all travel to Haiti. The situation can change fast: read your own government's latest advice when you start planning, and again just before you leave."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3],
+        "text": "Sunny, a little less humid, and the most comfortable time to visit, with warm days in Port-au-Prince and chilly nights in the mountains. Independence Day and Kanaval both fall in these months."
+      },
+      {
+        "name": "Spring rains",
+        "months": [4, 5, 6],
+        "text": "Afternoon thunderstorms return in April and are heaviest around May; mornings are often clear. Rara bands fill the roads in the weeks before Easter."
+      },
+      {
+        "name": "Summer and hurricane season",
+        "months": [7, 8, 9, 10, 11],
+        "text": "The hottest, most humid months. July is often drier, then a second rainy spell runs from about August to October, at the height of the hurricane season, with September the riskiest month. Rain eases in the south during November."
+      }
+    ],
+    "weather": "Haiti is hot all year at sea level. Port-au-Prince, in a sheltered bay, is one of the hotter Caribbean capitals, with afternoons of 31–35°C. Mountain towns such as Kenscoff, about 1,500 m up, are much cooler, and winter nights there can drop to around 10°C. The south has two rainy spells, roughly April to June and August to October, and the hurricane season runs from June to November. The north coast around Cap-Haïtien gets more of its rain in late autumn and winter, from showers carried in on the north-east wind. Rain usually falls as short, heavy downpours late in the day rather than all day long.",
+    "festivals": [
+      {
+        "name": "Independence Day and Ancestors' Day",
+        "place": "Across Haiti",
+        "when": "1 and 2 January",
+        "months": [1],
+        "text": "New Year's Day is also Independence Day, when families share soup joumou, the pumpkin soup that enslaved people were once forbidden to eat. 2 January honours the founders of the nation. Both are public holidays."
+      },
+      {
+        "name": "Kanaval (Carnival)",
+        "place": "Port-au-Prince, Jacmel and other towns",
+        "when": "The Sunday, Monday and Tuesday before Ash Wednesday; in 2027, 7–9 February",
+        "months": [2, 3],
+        "text": "Floats carrying kompa bands, costumed dancers and satirical songs written for the year. Jacmel's parade is famous for its papier-mâché masks of animals, devils and spirits."
+      },
+      {
+        "name": "Rara",
+        "place": "Léogâne and the countryside",
+        "when": "Lent, from Ash Wednesday to Easter; in 2027, Easter is 28 March",
+        "months": [2, 3, 4],
+        "text": "Street bands walk for miles playing bamboo trumpets (vaksin), drums and tin horns, with singers and dancers following, and reach their biggest days in Holy Week. Léogâne is the best-known place to hear them."
+      },
+      {
+        "name": "Saut-d'Eau pilgrimage",
+        "place": "Ville-Bonheur, in the centre of the country",
+        "when": "Around 16 July",
+        "months": [7],
+        "text": "Thousands of pilgrims, Catholic and Vodou alike, bathe beneath a waterfall where the Virgin Mary is said to have appeared in the nineteenth century; Vodou followers honour the spirit Ezili there at the same time."
+      },
+      {
+        "name": "Fèt Gede (Days of the Dead)",
+        "place": "Cemeteries across Haiti",
+        "when": "1 and 2 November",
+        "months": [11],
+        "text": "The Gede, Vodou spirits of death and fertility led by Baron Samedi, are honoured with offerings of rum steeped in hot peppers, and people dressed in black, purple and white crowd the cemeteries."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greet everyone when you arrive: \"Bonjou\" until about midday, \"Bonswa\" after it, with a handshake, or a kiss on the cheek between women and between friends. Arriving at someone's home, call \"Onè!\" (Honour) from the gate and wait for the answer, \"Respè!\" (Respect), before going in. Older people are addressed as \"Madanm\" or \"Msye\" with their surname until they suggest otherwise.",
+    "etiquette": [
+      "Ask before photographing anyone, in markets and at religious gatherings above all, and accept a no.",
+      "Many Haitians practise Vodou alongside the Catholic or Protestant faith. Go to a ceremony only when invited by someone who knows the temple (hounfò), and follow their lead.",
+      "Haggling is normal for crafts and in markets, and done with good humour; shop and restaurant prices are fixed.",
+      "Travel with a local guide or driver you trust, who knows which roads are passable and what is happening in each area.",
+      "Drink bottled or treated water, and ask a travel clinic about malaria tablets: malaria and dengue are both present.",
+      "Sunday mornings belong to church for many families, and towns are quiet until the afternoon."
+    ],
+    "tipping": "Appreciated. About 10% in restaurants unless service is already on the bill, small amounts for porters and housekeeping, and more for a guide or driver who has looked after you all day. Gourdes and US dollars are both welcome.",
+    "dress": "Haitians dress neatly and take pride in it, above all for church. Light cotton suits the heat, with long sleeves and repellent for the evening mosquitoes; keep swimwear and very short shorts for the beach. Pack a warm layer for Kenscoff or the climb to the Citadelle, which are cooler and often misty.",
+    "food": [
+      {
+        "name": "Griot",
+        "text": "Pork marinated in sour orange, simmered, then fried until crisp. It comes with pikliz, a fiery relish of pickled cabbage, carrot and Scotch bonnet peppers."
+      },
+      {
+        "name": "Soup joumou",
+        "text": "A thick soup of pumpkin, beef, vegetables and pasta, eaten by every family on 1 January to mark independence, and on Sundays in many homes."
+      },
+      {
+        "name": "Diri ak djon djon",
+        "text": "Rice cooked black in the dark liquid of dried djon djon mushrooms, a dish from the north served at weddings and celebrations."
+      },
+      {
+        "name": "Bannann peze",
+        "text": "Slices of green plantain fried, pressed flat and fried again, eaten with griot, fried fish or a spoonful of pikliz."
+      },
+      {
+        "name": "Lambi",
+        "text": "Conch, grilled or stewed in a spicy tomato sauce (lambi en sauce), on menus all along the coast."
+      },
+      {
+        "name": "Rum, clairin and coffee",
+        "text": "Barbancourt rum has been distilled near Port-au-Prince since 1862, while clairin, a raw cane-juice spirit, comes from small village stills. Mountain-grown coffee is strong and usually served sweet."
+      }
+    ],
+    "phrases": {
+      "language": "Haitian Creole (Kreyòl)",
+      "intro": "Everyone speaks Haitian Creole; French is used in government, schools and the press, and many people in tourism speak some English. A few words of Creole are warmly received.",
+      "items": [
+        { "phrase": "Bonjou", "say": "bon-ZHOO", "meaning": "Hello; good morning (until about midday)" },
+        { "phrase": "Bonswa", "say": "bon-SWAH", "meaning": "Good afternoon; good evening" },
+        { "phrase": "Kijan ou ye?", "say": "kee-ZHAHN oo YEH", "meaning": "How are you?" },
+        { "phrase": "N ap boule", "say": "nahp boo-LEH", "meaning": "I'm doing well (\"We're burning\")" },
+        { "phrase": "Mèsi anpil", "say": "meh-SEE ahn-PEEL", "meaning": "Thank you very much" },
+        { "phrase": "Souple", "say": "soo-PLEH", "meaning": "Please" },
+        { "phrase": "Konbyen li ye?", "say": "kohm-BYEN lee YEH", "meaning": "How much is it?" },
+        { "phrase": "Mwen pa konprann", "say": "mwen pah kom-PRAHN", "meaning": "I don't understand" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q790",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Haitian gourde (G, HTG). Many hotels take US dollars, and some prices are quoted in \"Haitian dollars\", an old unit worth five gourdes.",
+        "sources": [{ "property": "P38", "values": ["Q203955"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Haitian Creole and French, both official. Everyone speaks Creole; French is the language of government, schools and the press.",
+        "sources": [{ "property": "P37", "values": ["Q33491", "Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern Time, UTC−5, and UTC−4 in summer (from March to early November, on the same dates as the US)",
+        "sources": [{ "property": "P421", "values": ["Q5390", "Q63286064"] }],
+        "note": "Wikidata gives UTC−5 alone; Haiti also keeps summer time, changing its clocks with the United States."
+      },
+      {
+        "key": "emergency",
+        "text": "114 or 122 for police; 115 for fire; 116 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q2945964", "Q25648812", "Q25648805", "Q25648807"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+509",
+        "sources": [{ "property": "P474", "values": ["+509"] }]
+      }
+    ]
+  }
+}

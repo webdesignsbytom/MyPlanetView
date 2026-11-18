@@ -1,0 +1,170 @@
+{
+  "code": "MQ",
+  "slug": "martinique",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonjou", "Madinina", "Bienvenue"],
+  "summary": "French and Creole at once: rum distilleries, a volcano that buried a town, and southern beaches.",
+  "overview": [
+    "Martinique is part of France, an overseas region in the Lesser Antilles with French roads, bakeries, pharmacies and prices in euros, and a Creole culture all its own. The north is volcanic and green, with rainforest along the Route de la Trace and Mont Pelée, 1,397 m, above it all. The south is lower and drier, with the island's best beaches around Sainte-Anne and Les Salines, and Diamond Rock standing out of the sea off its south-west corner.",
+    "In 1902 Mont Pelée erupted and destroyed Saint-Pierre, then the island's largest town, killing almost all of its roughly 28,000 people; the walls of its theatre and churches still stand among the rebuilt streets. Since 2023 the volcano and the forested peaks of the north have been a World Heritage Site. Fort-de-France, the capital, has a busy covered market and the domed Schoelcher Library, and the poet and politician Aimé Césaire is remembered everywhere, from the airport's name onwards.",
+    "Rum is a point of pride. Martinique's rhum agricole is distilled from fresh sugar-cane juice rather than molasses and has a French appellation of origin, so distilleries such as Clément, Depaz and Saint-James are part of most visits. A hire car is the easy way round, as buses are few outside Fort-de-France, and ferries cross the bay from the capital to the beaches at Les Trois-Îlets. French is what you'll need: English is spoken less than on most Caribbean islands."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Carême (dry season)",
+        "months": [1, 2, 3, 4, 5],
+        "text": "Named after Lent, which falls within it: sunny and breezy, about 29°C by day, with short showers. The best time for the southern beaches, and the season of Carnival. May turns hotter and stiller as the dry months end."
+      },
+      {
+        "name": "Hivernage (wet season)",
+        "months": [6, 7, 8, 9, 10, 11],
+        "text": "Warm, sticky and showery, with heavy downpours and the risk of hurricanes greatest from August to October. Plenty of days are still sunny between storms, the rainforest is at its fullest, and the yole races fill the coast in summer."
+      },
+      {
+        "name": "December",
+        "months": [12],
+        "text": "The rain tapers off and the trade winds pick up, though early December still brings showers. Christmas carol evenings fill the weekends, and hotels fill for the holidays."
+      }
+    ],
+    "weather": "Warm all year, about 25–31°C, cooled by the trade winds from the east. The Atlantic coast takes the wind and rough seas, while the Caribbean coast on the west is calmer for swimming. The mountainous north catches far more rain than the south, and Mont Pelée's summit is often in cloud. The dry season, carême, runs roughly from January to May, and the wet season, hivernage, from about June to November, the same months as the Atlantic hurricane season.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "Fort-de-France and towns across the island",
+        "when": "Weekend parades from January, then the four days to Ash Wednesday; in 2027, 7–10 February",
+        "months": [1, 2, 3],
+        "text": "Each of the last days has its theme: on Monday, burlesque weddings with men dressed as brides; on Tuesday, crowds in red as devils; on Ash Wednesday, black and white for the she-devils, ending with the burning of Vaval, the carnival king, at nightfall."
+      },
+      {
+        "name": "Abolition Day",
+        "place": "Across Martinique",
+        "when": "22 May",
+        "months": [5],
+        "text": "A public holiday for the end of slavery in 1848, when an uprising on the island forced its governor to free the enslaved before the decree from Paris arrived."
+      },
+      {
+        "name": "Tour des Yoles Rondes",
+        "place": "All around the island",
+        "when": "Usually late July to early August, over about a week",
+        "months": [7, 8],
+        "text": "Yoles, light wooden boats with tall square sails, race round Martinique in stages, their crews leaning far out on poles to keep them upright, while crowds follow along the shore. UNESCO lists the boat and its sailing as cultural heritage."
+      },
+      {
+        "name": "All Saints' Day (Toussaint)",
+        "place": "Cemeteries across the island",
+        "when": "1 November",
+        "months": [11],
+        "text": "Families clean and decorate their graves and light candles on them at nightfall, so the cemeteries glow with thousands of flames."
+      },
+      {
+        "name": "Chanté Nwel",
+        "place": "Homes and village squares",
+        "when": "Weekends in December, before Christmas",
+        "months": [12],
+        "text": "Neighbours gather to sing Creole Christmas carols to drums and shak-shak shakers, with ham, boudin and schrubb, a liqueur of rum and orange peel."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Say \"Bonjour\" to everyone when you walk into a shop, a bus or a waiting room, and \"Bonsoir\" from late afternoon; starting with a question, or leaving without a word, seems rude. Friends kiss on both cheeks and strangers shake hands. Use \"vous\" with adults you don't know.",
+    "etiquette": [
+      "Learn a little French: people are friendly, but English is limited outside the big hotels, and an attempt makes everything easier.",
+      "In the markets, sellers often prefer not to be photographed, so check first.",
+      "Many shops close for a couple of hours at midday, and Sunday afternoons and public holidays are quiet.",
+      "Keep away from the manchineel trees that grow along some beaches, often marked with a red band of paint: their small green apples are poisonous, and their sap burns, even dripping in the rain.",
+      "The roads of the north are steep, narrow and winding; around Fort-de-France, expect traffic jams at rush hour."
+    ],
+    "tipping": "Not expected: service is included in French bills (service compris). Leaving a few euros for good service in a restaurant, or rounding up a taxi fare, is welcome but optional.",
+    "dress": "Light summer clothes, with swimwear kept for the beach. For Mont Pelée or the rainforest trails, wear proper walking shoes and bring a rain jacket and a warm layer: the summit is cool, windy and often wet. Something smarter for dinner in the better restaurants.",
+    "food": [
+      {
+        "name": "Accras de morue",
+        "text": "Small, peppery salt-cod fritters, served hot as a starter or with a ti-punch before dinner."
+      },
+      {
+        "name": "Colombo",
+        "text": "Chicken, pork or goat cooked with a curry spice blend brought by Indian workers in the nineteenth century, often with aubergine and potatoes."
+      },
+      {
+        "name": "Féroce d'avocat",
+        "text": "Avocado mashed with salt cod, cassava flour and hot pepper: a fierce starter, as its name says."
+      },
+      {
+        "name": "Blaff",
+        "text": "Fish or shellfish poached in a broth of lime, garlic, chilli and herbs; the name is said to echo the sound of the fish dropping into the pot."
+      },
+      {
+        "name": "Ti-punch",
+        "text": "The island's aperitif: white rhum agricole, a slice of lime and cane syrup. You're often handed the bottle and glass to mix your own, as strong as you like."
+      },
+      {
+        "name": "Sorbet coco",
+        "text": "Coconut sorbet churned by hand in wooden tubs, sold on beaches and at markets."
+      }
+    ],
+    "phrases": {
+      "language": "French, with a little Martinican Creole",
+      "intro": "French is the language you'll need. Creole (Kréyòl), which almost everyone speaks among themselves, is a language of its own, built on French with African roots; a word of it raises a smile.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello; good morning" },
+        { "phrase": "Bonsoir", "say": "bon-SWAHR", "meaning": "Good evening (from late afternoon)" },
+        { "phrase": "Merci beaucoup", "say": "mair-SEE boh-KOO", "meaning": "Thank you very much" },
+        { "phrase": "S'il vous plaît", "say": "seel voo PLEH", "meaning": "Please" },
+        { "phrase": "Je ne parle pas français", "say": "zhuh nuh parl pah frahn-SEH", "meaning": "I don't speak French" },
+        { "phrase": "L'addition, s'il vous plaît", "say": "lah-dee-SYOHN seel voo PLEH", "meaning": "The bill, please" },
+        { "phrase": "Sa ou fè ?", "say": "sah oo FEH", "meaning": "How are you? (Creole)" },
+        { "phrase": "Mèsi anpil", "say": "meh-SEE ahn-PEEL", "meaning": "Thanks a lot (Creole)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q17054",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€), as in mainland France",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French, the official language. Martinican Creole is spoken by almost everyone day to day.",
+        "sources": [],
+        "note": "Wikidata's item has no official-language statement; French is official here, as everywhere in France."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins, the French socket with an earth pin), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata also lists the British family of plugs; the page gives the French sockets visitors find."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112, or France's own numbers: 15 for an ambulance, 17 for police, 18 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata gives 112 only; France's short numbers work in Martinique too."
+      },
+      {
+        "key": "callingCode",
+        "text": "+596",
+        "sources": [{ "property": "P474", "values": ["+596"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "code": "BN",
+  "slug": "brunei",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salam", "Brunei", "Darussalam"],
+  "summary": "Gold-domed mosques, a water village on stilts and Borneo rainforest in a small, quiet sultanate.",
+  "overview": [
+    "Brunei is a small, wealthy sultanate on the north coast of Borneo, split in two by a strip of Malaysia's Sarawak state. Few tourists come, so its sights are rarely crowded. Most of them are in the capital, Bandar Seri Begawan: the Omar Ali Saifuddien Mosque, its golden dome rising over a lagoon; the larger Jame' Asr Hassanil Bolkiah Mosque, with 29 golden domes; the Royal Regalia Museum; and Kampong Ayer, a village of stilt houses, schools and mosques on the Brunei River, reached by water taxi from the waterfront.",
+    "Boat trips from the capital go into the mangroves at dusk to look for proboscis monkeys, which live only on Borneo. The eastern district, Temburong, is almost all rainforest: Ulu Temburong National Park is reached by road over the long Temburong Bridge, then by longboat upriver, and a canopy walkway climbs high above the trees. Buses are few and taxis scarce, so most visitors hire a car or use Dart, the local ride-hailing app.",
+    "Brunei is an Islamic monarchy and its laws are strict. Alcohol isn't sold anywhere; non-Muslim visitors may bring in a small personal allowance, which must be declared at customs, and drink it in private. Friday midday prayers close many businesses for a while."
+  ],
+  "whenToGo": {
+    "months": ["good", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "The drier months",
+        "months": [2, 3, 4],
+        "text": "The least rain of the year, more clear mornings, and calmer, safer rivers for the longboat trip into Temburong. Still hot, with afternoons in the low 30s."
+      },
+      {
+        "name": "Mid-year",
+        "months": [5, 6, 7, 8, 9],
+        "text": "Hot and sticky, with short, heavy thunderstorms, often in the afternoon or at night. In dry years, smoke from forest fires elsewhere on Borneo and in Sumatra can drift in as haze towards the end of this stretch."
+      },
+      {
+        "name": "The wettest months",
+        "months": [10, 11, 12, 1],
+        "text": "The north-east monsoon brings the heaviest rain, with long downpours that can flood low-lying roads; November and December are usually the wettest. Mornings are often still bright."
+      }
+    ],
+    "weather": "Brunei lies about five degrees north of the equator, so it's hot and humid in every month: around 32°C by day and 24°C at night, with little change through the year. Rain falls in all seasons, mostly as heavy afternoon or evening storms. The wettest stretch runs from about October to January, and February to April is the driest. Brunei is too far south for typhoons, but haze from distant forest fires can hang over it in dry years.",
+    "festivals": [
+      {
+        "name": "Chinese New Year",
+        "place": "Across Brunei",
+        "when": "Usually late January or February: in 2027, 6 February",
+        "months": [1, 2],
+        "text": "Brunei's Chinese community, around one person in ten, celebrates with lion dances, firecrackers and family visits. The first day is a public holiday."
+      },
+      {
+        "name": "National Day",
+        "place": "Bandar Seri Begawan",
+        "when": "23 February",
+        "months": [2],
+        "text": "Brunei became fully independent from Britain on 1 January 1984 but celebrates on 23 February, with a parade and mass displays at the capital's main parade ground in front of the Sultan."
+      },
+      {
+        "name": "Ramadan and Hari Raya Aidilfitri",
+        "place": "Across Brunei",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting ends with Hari Raya Aidilfitri, Brunei's biggest holiday. For a few days the Sultan's palace, the Istana Nurul Iman, opens to the public: visitors queue to be received, men by the Sultan and women by the Queen, and are given a meal. Families hold open houses of their own."
+      },
+      {
+        "name": "Hari Raya Aidiladha",
+        "place": "Across Brunei",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice: morning prayers at the mosques, then animals are sacrificed and the meat shared with relatives and people in need. Government offices shut for the holiday."
+      },
+      {
+        "name": "The Sultan's Birthday",
+        "place": "Across Brunei",
+        "when": "15 July",
+        "months": [7],
+        "text": "A public holiday for Sultan Hassanal Bolkiah's birthday, with a ceremony in the capital, lights strung over government buildings and events in each district through the month."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Assalamualaikum\" (peace be upon you) is answered with \"Waalaikumsalam\". Malay Bruneians greet each other with the salam: a light touch of the hands, then the right hand drawn back to the chest. Many Muslims don't touch someone of the opposite sex, so wait for a hand to be offered; a smile with your hand on your heart is a polite reply. People are often addressed as Awang (Mr) or Dayang (Ms) before their first name.",
+    "etiquette": [
+      "Don't criticise the Sultan or the royal family, even as a joke: it's an offence under Brunei's laws.",
+      "Shoes are left outside homes and mosques. Mosques welcome visitors outside prayer times, and the big ones in the capital lend robes to anyone not dressed for the visit.",
+      "During Ramadan, don't eat, drink or smoke in public in daylight.",
+      "Use your right hand to eat and to give or take things.",
+      "Hugging and kissing in public are frowned on: keep affection for private."
+    ],
+    "tipping": "Not expected. Some hotel restaurants add a service charge to the bill; elsewhere, leaving small change for good service is appreciated but never asked for.",
+    "dress": "Modest and light: shoulders and knees covered in town, and a scarf for women visiting mosques. Swimwear belongs at hotel pools and on the beach. Long sleeves and trousers help against mosquitoes and leeches in Temburong's forest, and a light rain jacket is useful in any month.",
+    "food": [
+      {
+        "name": "Ambuyat",
+        "text": "The national dish: a sticky, almost tasteless starch from the sago palm, twirled around a two-pronged bamboo fork (candas) and dipped in a sour sauce called cacah, with side dishes of fish, greens and sambal."
+      },
+      {
+        "name": "Nasi katok",
+        "text": "Rice, a piece of fried chicken and a spoonful of sambal, wrapped in paper: the cheap meal everyone eats. Katok means to knock, said to come from knocking on a seller's door late at night."
+      },
+      {
+        "name": "Kelupis",
+        "text": "Glutinous rice cooked with coconut milk and steamed in a long leaf wrapper, eaten with curry, at breakfast or on festival days."
+      },
+      {
+        "name": "Gadong night market",
+        "text": "The capital's best-known pasar malam, busy from late afternoon: grilled chicken wings, satay, fried fish, rice parcels and sweet cakes, mostly bought to take home."
+      }
+    ],
+    "phrases": {
+      "language": "Malay",
+      "intro": "Bruneians speak their own form of Malay among themselves, but standard Malay is understood everywhere, and English is widely spoken.",
+      "items": [
+        { "phrase": "Assalamualaikum", "say": "ah-sah-LAH-moo ah-LAY-koom", "meaning": "Peace be upon you (hello)" },
+        { "phrase": "Apa khabar?", "say": "AH-pah KAH-bar", "meaning": "How are you?" },
+        { "phrase": "Terima kasih", "say": "teh-REE-mah KAH-see", "meaning": "Thank you" },
+        { "phrase": "Sama-sama", "say": "SAH-mah SAH-mah", "meaning": "You're welcome" },
+        { "phrase": "Minta maaf", "say": "MIN-tah mah-AHF", "meaning": "Sorry; excuse me" },
+        { "phrase": "Berapa harganya?", "say": "beh-RAH-pah har-GAH-nyah", "meaning": "How much is it?" },
+        { "phrase": "Bah", "say": "BAH", "meaning": "OK, then; go on (heard in almost every Bruneian conversation)" },
+        { "phrase": "Selamat jalan", "say": "seh-LAH-maht JAH-lahn", "meaning": "Goodbye (to someone leaving)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q921",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Brunei dollar (B$, BND). It's worth the same as the Singapore dollar, and Singapore notes are accepted at par.",
+        "sources": [{ "property": "P38", "values": ["Q206319"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Malay is the official language. English is widely spoken and used in business, schools and the courts.",
+        "sources": [{ "property": "P37", "values": ["Q9237", "Q7979"] }],
+        "note": "Wikidata lists Malay and British English as official; the constitution names Malay as the official language, with English used alongside it, so the page puts it that way."
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Brunei Time, UTC+8, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6985", "Q63225362"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "993 for police, 991 for ambulance and 995 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25743569", "Q25648868", "Q25267554"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+673",
+        "sources": [{ "property": "P474", "values": ["+673"] }]
+      }
+    ]
+  }
+}

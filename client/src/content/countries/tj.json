@@ -1,0 +1,191 @@
+{
+  "code": "TJ",
+  "slug": "tajikistan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salom", "Tojikiston", "Khush omaded"],
+  "summary": "The Pamir Highway, turquoise lakes in the Fann Mountains and Wakhan villages facing Afghanistan.",
+  "overview": [
+    "Tajikistan is the most mountainous country in Central Asia: more than nine tenths of it is mountains, and the Pamirs in the east rise above 7,000 m. The great journey is the Pamir Highway, a mostly paved but often broken road from Dushanbe to Khorog and across the high plateau to Murghab, on into Kyrgyzstan over passes of more than 4,000 m. The Wakhan valley is the favourite detour: the Panj River, with Afghan villages on the far bank, ruined fortresses, rock carvings and hot springs. Family homestays are the usual places to sleep.",
+    "Closer to Dushanbe, the Fann Mountains have the lake of Iskanderkul and the Seven Lakes (Haft Kul), each a different shade of blue and green, with treks between them. Penjikent, near the Uzbek border, has the ruins of a Sogdian city from the 5th to the 8th centuries, and Khujand, in the north, has the busy Panjshanbe bazaar. Dushanbe itself has wide avenues, parks and new monumental buildings. Outside the cities, shared taxis and 4×4s do most of the work, and the drive from Dushanbe to Khorog alone takes a long day or more.",
+    "Check your government's current advice before travelling, especially for the areas along the border with Afghanistan, which the Pamir Highway follows for hundreds of kilometres."
+  ],
+  "whenToGo": {
+    "stripLabel": "The mountains, the Pamirs and the Fanns, which are what most visitors come for. Dushanbe and the lowlands have a strip of their own below.",
+    "months": ["avoid", "avoid", "avoid", "good", "good", "best", "best", "best", "best", "good", "avoid", "avoid"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The wettest time of year in Dushanbe, with Navruz in March and orchards in flower in April. Landslides and snow still block mountain roads, and the high passes usually open only in late May or June."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "The season for the Pamirs and the Fanns: roads and trails are open, and the high plateau has warm days and cold nights. Dushanbe and the lowlands are very hot, often near 40°C."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is clear and cooler, one of the best months for the Pamir Highway, and in October the poplars of the Wakhan turn gold. Snow returns to the passes by November."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "The Pamirs are among the coldest inhabited places in Central Asia, with nights around −30°C on the plateau. Mountain roads can close for days after snow or avalanches. Dushanbe is cool and damp, near freezing at night."
+      }
+    ],
+    "weather": "Huge differences in height decide the weather in this dry, continental country. Dushanbe, at about 800 m, has long, rainless summers, often 35–40°C, and mild winters with rain and the odd snowfall; most of its rain falls from about December to May. The eastern Pamir plateau, around Murghab at about 3,600 m, is a high, cold desert with summer days near 20°C, frost at night in most months and bitter winters. The Fann Mountains and the western valleys sit between the two.",
+    "festivals": [
+      {
+        "name": "Ramadan and Idi Ramazon (Eid al-Fitr)",
+        "place": "Across Tajikistan",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Many people keep the fast from dawn to sunset. At the end comes a public holiday, when families dress up, visit relatives and spread their tables with sweets for visitors."
+      },
+      {
+        "name": "Navruz",
+        "place": "Across Tajikistan",
+        "when": "Usually 21–24 March",
+        "months": [3],
+        "text": "Tajikistan's biggest holiday, with several days off at the spring equinox. Families cook sumanak, a sweet paste of sprouted wheat, and there are concerts, wrestling and buzkashi, the rough horseback game played with a goat carcass."
+      },
+      {
+        "name": "Idi Qurbon (Eid al-Adha)",
+        "place": "Across Tajikistan",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Idi Qurbon is a public holiday, and the meat of a sacrificed sheep is shared with neighbours and the poor."
+      },
+      {
+        "name": "Day of National Unity",
+        "place": "Across Tajikistan",
+        "when": "27 June",
+        "months": [6],
+        "text": "Remembers the peace agreement of 1997 that ended the civil war; a public holiday."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Tajikistan",
+        "when": "9 September",
+        "months": [9],
+        "text": "Tajikistan's break from the Soviet Union in 1991, marked with concerts, parades and fireworks in Dushanbe."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Dushanbe and the lowlands",
+        "months": ["good", "good", "good", "best", "best", "good", "avoid", "avoid", "best", "best", "good", "good"],
+        "text": "Dushanbe, Khujand and the valleys of the west and north. April, May, September and October are warm and pleasant; July and August are scorching. Winters are mild and grey, with some rain."
+      },
+      {
+        "name": "The Pamirs",
+        "text": "The Pamir Highway is best driven from June to September, when the passes are clear. Even in summer, nights at Murghab and on the plateau can fall below freezing, and the sun at that height burns quickly."
+      },
+      {
+        "name": "The Fann Mountains",
+        "text": "A few hours north of Dushanbe, with lakes, high passes and village homestays. Treks are best from June to September; Iskanderkul is reached by a side road off the main road to Khujand."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Assalomu alaykum\" (peace be upon you), or simply \"Salom\", with the right hand on the heart. Men shake hands, and greetings run on for a while as each asks after the other's health, family and work. A man greeting a woman usually puts his hand on his heart and nods, unless she offers her hand.",
+    "etiquette": [
+      "Guests are served tea, flatbread (non), sweets and fruit before anything else, and often a full meal after. Accept bread and tea with your right hand, or with both.",
+      "Meals are eaten sitting on padded mats (kurpacha) around a cloth on the floor. Don't step over the cloth or point the soles of your feet at it.",
+      "Bread is never put upside down or left on the ground.",
+      "Most people in the Pamirs are Ismaili Muslims, with their own customs and prayer houses; Pamiri houses are built round five wooden pillars, standing for the Prophet and four of his family. Take off your shoes inside.",
+      "Get a nod before you take someone's picture. Soldiers, border posts and the Afghan bank of the river are never to be photographed."
+    ],
+    "tipping": "Not expected, but welcome. Homestays charge an agreed price, and a small tip or gift for the family on top is a kind thank-you. Tip drivers and guides at the end of a trip.",
+    "dress": "Modest, especially outside Dushanbe: long trousers for men, and long skirts or loose trousers with covered shoulders for women. Bring warm layers and sun protection for the Pamirs, and a scarf against the dust on the roads.",
+    "food": [
+      {
+        "name": "Qurutob",
+        "text": "The national dish: torn layers of flaky flatbread soaked in a sauce of dried yoghurt (qurut) dissolved in water, topped with fried onions, tomatoes and herbs, and eaten by hand from a shared wooden dish."
+      },
+      {
+        "name": "Osh",
+        "text": "Tajik plov: rice cooked with mutton, yellow carrots, onions and chickpeas in a big iron pot, the dish of weddings and Friday lunches."
+      },
+      {
+        "name": "Non",
+        "text": "Round flatbread baked on the walls of a clay oven, stamped with patterns in the middle. Every meal starts with bread broken and shared by the host."
+      },
+      {
+        "name": "Sambusa",
+        "text": "Triangular pastries of minced meat and onion, sometimes pumpkin, baked in the clay oven and sold hot in markets."
+      },
+      {
+        "name": "Shirchoy",
+        "text": "The Pamirs' tea: black tea with milk, a pinch of salt and butter, often with bread broken into it. Warming on a cold morning."
+      },
+      {
+        "name": "Fruit",
+        "text": "Apricots, cherries, melons, grapes and pomegranates in summer and autumn, and dried apricots and mulberries all year."
+      }
+    ],
+    "phrases": {
+      "language": "Tajik",
+      "intro": "Tajik is a form of Persian written in Cyrillic letters. Russian is widely understood in the towns, and in the Pamirs people speak their own languages at home.",
+      "items": [
+        { "phrase": "Salom (Салом)", "say": "sah-LOHM", "meaning": "Hello" },
+        { "phrase": "Chi khel shumo? (Чӣ хел шумо?)", "say": "CHEE khel shoo-MOH", "meaning": "How are you?" },
+        { "phrase": "Rahmat (Раҳмат)", "say": "rah-MAHT", "meaning": "Thank you" },
+        { "phrase": "Marhamat (Марҳамат)", "say": "mar-hah-MAHT", "meaning": "Please; here you are" },
+        { "phrase": "Ha / Ne (Ҳа / Не)", "say": "HAH / NEH", "meaning": "Yes / No" },
+        { "phrase": "Chand pul? (Чанд пул?)", "say": "CHAND pool", "meaning": "How much?" },
+        { "phrase": "Bisyor bomaza (Бисёр бомаза)", "say": "bis-YOR boh-mah-ZAH", "meaning": "Very tasty" },
+        { "phrase": "Khayr (Хайр)", "say": "KHIRE", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q863",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Tajikistani somoni (TJS). Carry cash: cards are taken only in some Dushanbe hotels and shops, and cash machines are rare in the Pamirs.",
+        "sources": [{ "property": "P38", "values": ["Q199886"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Tajik, the state language. Russian is used widely in government and business, Uzbek is common in the north and west, and the Pamir languages are spoken in the east.",
+        "sources": [{ "property": "P37", "values": ["Q9260", "Q7737"] }],
+        "note": "Wikidata lists Tajik and Russian; the page adds Uzbek and the Pamir languages, which many people speak at home."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata also lists the Australian type I; the page gives types C and F, the sockets travellers find, as the IEC's list of plugs by country does."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Tajikistan Time, UTC+5, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6806", "Q63285959"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; also 101 for fire, 102 for police and 103 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata lists only 112; the page adds 101, 102 and 103, the service numbers still used across the former Soviet Union."
+      },
+      {
+        "key": "callingCode",
+        "text": "+992",
+        "sources": [{ "property": "P474", "values": ["+992"] }]
+      }
+    ]
+  }
+}

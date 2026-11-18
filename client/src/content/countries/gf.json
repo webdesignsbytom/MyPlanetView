@@ -1,0 +1,180 @@
+{
+  "code": "GF",
+  "slug": "french-guiana",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonjour", "Guyane", "Bienvenue"],
+  "summary": "Rocket launches at Kourou, old prison islands and Amazon rainforest, in a corner of France.",
+  "overview": [
+    "French Guiana is not a country but a region of France, on the north-east shoulder of South America between Suriname and Brazil, so it uses the euro and is part of the European Union. About 300,000 people live here, almost all along the coast; over nine-tenths of the land is rainforest, much of it in the Amazonian Park of French Guiana. Cayenne, the capital, has wooden Creole houses with balconies and shutters, a palm-lined square, and a busy market with Creole, Brazilian, Hmong and Surinamese stalls.",
+    "Kourou is home to the Guiana Space Centre, Europe's spaceport, where Ariane and other rockets are launched; it runs guided tours, and launches can be watched from viewing sites booked in advance. A boat ride offshore, the Îles du Salut were part of the infamous prison colony France ran here until the 1950s: on Île Royale you can wander among the old prison buildings with monkeys and agoutis, while Devil's Island, where Alfred Dreyfus was held, can only be seen from the water. At Saint-Laurent-du-Maroni, on the Suriname border, the Camp de la Transportation was where every convict arrived, and dugout canoes (pirogues) go up the Maroni River to Maroon and Amerindian villages.",
+    "Beyond the towns lie the marshes of Kaw, with black caimans and the strange hoatzin bird, and to the beaches of Awala-Yalimapo and Rémire-Montjoly, where giant leatherback turtles come ashore at night to lay their eggs. On Sunday mornings the village of Cacao, settled by Hmong refugees from Laos in the 1970s, holds a market of soups, embroidery and vegetables.",
+    "Public transport is thin, so most visitors hire a car for the coast road; the interior is reached only by river or small plane, and nights there are spent in hammocks under open shelters called carbets. Prices are French or higher. Check vaccination advice before you go: yellow fever and malaria are present in parts of the forest."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "good", "good", "best", "best", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [8, 9, 10, 11],
+        "text": "The sunniest and hottest months, with the least rain and the easiest forest trips. Turtle hatchlings scramble down the beaches to the sea in August and September. By late in the season some rivers run low for the pirogues."
+      },
+      {
+        "name": "Short rains and Carnival",
+        "months": [12, 1, 2],
+        "text": "Showers return from about December. From early January to Ash Wednesday, Carnival takes over weekends across the coast."
+      },
+      {
+        "name": "The \"little summer of March\"",
+        "months": [3],
+        "text": "A short break in the rains, often a few weeks of drier, sunnier weather, known locally as le petit été de mars."
+      },
+      {
+        "name": "Long rains",
+        "months": [4, 5, 6, 7],
+        "text": "The wettest months, with May and June the heaviest: downpours most days, muddy forest tracks and high rivers. This is also when the leatherback turtles nest, mostly from April to July."
+      }
+    ],
+    "weather": "Hot and humid all year, with days of about 30–32°C and nights around 23°C, cooled by the trade winds on the coast. Rain falls in two seasons: short rains from about December to February, then, after a brief drier spell in March, long rains from about April to July. The dry season runs from August to November. French Guiana lies south of the hurricane belt.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "Cayenne, Kourou and Saint-Laurent-du-Maroni",
+        "when": "From Epiphany in early January to Ash Wednesday (10 February in 2027)",
+        "months": [1, 2, 3],
+        "text": "One of the longest carnivals in the world, with Sunday afternoon parades all season. On Saturday nights, at the touloulou balls, women disguised from head to toe, gloved and masked so no one knows them, choose the men they dance with. King Vaval is burned on Ash Wednesday."
+      },
+      {
+        "name": "The turtle season",
+        "place": "Awala-Yalimapo and Rémire-Montjoly",
+        "when": "Nesting from about April to July; hatching from about July to September",
+        "months": [4, 5, 6, 7, 8, 9],
+        "text": "Leatherbacks, the largest turtles, and green and olive ridley turtles lay their eggs on the beaches at night. Go with a local nature group, keep your distance and use no white lights."
+      },
+      {
+        "name": "Abolition of slavery day",
+        "place": "Across French Guiana",
+        "when": "10 June",
+        "months": [6],
+        "text": "France abolished slavery in its colonies in 1848, and French Guiana marks the day with a public holiday of ceremonies, drumming and concerts."
+      },
+      {
+        "name": "Bastille Day (14 Juillet)",
+        "place": "Across French Guiana",
+        "when": "14 July",
+        "months": [7],
+        "text": "France's national day, with parades and fireworks in Cayenne and Kourou."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The coast",
+        "text": "Cayenne, Kourou, the Îles du Salut and Saint-Laurent-du-Maroni, linked by the main road. Hot all year, at its driest from August to November."
+      },
+      {
+        "name": "The interior",
+        "text": "Rainforest reached by pirogue or small plane, with Maroon and Amerindian villages along the Maroni and Oyapock rivers and the remote village of Saül. River levels decide what's possible: high in the rains, low late in the dry season. Visits to some Amerindian villages need permission from the authorities, which tour firms arrange."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greet as in France: \"Bonjour\" when you walk into a shop, a café or a bus, a handshake when you meet, and kisses on the cheek between friends. In Creole, \"Bonjou\" is the everyday hello. French Guiana is a meeting place of many peoples, Creole, Maroon, Amerindian, Hmong, Brazilian, Chinese and Surinamese among them, and most people switch easily between languages.",
+    "etiquette": [
+      "At turtle beaches, keep well back, never touch the turtles or their eggs, and use only a red light, never a white torch or a flash.",
+      "Maroon and Amerindian villagers expect to be asked before they're photographed.",
+      "Shops and offices often close for a long lunch break and on Sunday afternoons, as in much of France.",
+      "The coastal towns' mains water is fine to drink; in the forest, drink what your guide provides.",
+      "Leave the forest trails only with a guide: the forest is huge and easy to get lost in.",
+      "Book space-centre tours and launch viewing in advance, and leave spare days around a launch: dates often slip at short notice."
+    ],
+    "tipping": "Service is included in restaurant prices, as in France. Leave small change or round up for good service; tip forest guides and boatmen if you wish.",
+    "dress": "Light, loose clothes for the heat, with long sleeves and trousers against mosquitoes at dusk and in the forest. A light rain jacket in any month. Swimwear stays on the beach. For a hammock night in the forest, tour firms supply the hammock and mosquito net.",
+    "food": [
+      {
+        "name": "Bouillon d'awara",
+        "text": "The national dish, cooked for Easter and Pentecost: a thick orange stew of awara palm fruit with smoked meat, salt fish, crab and vegetables, simmered for hours. Locals say that whoever eats it will return to French Guiana."
+      },
+      {
+        "name": "Blaff",
+        "text": "Fish or seafood poached in a light broth of lime, garlic, chilli and herbs, a Creole favourite across the French Caribbean."
+      },
+      {
+        "name": "Colombo",
+        "text": "A Creole curry of chicken, goat or fish, flavoured with colombo powder, brought by Indian workers in the 19th century."
+      },
+      {
+        "name": "Couac",
+        "text": "Coarse, toasted cassava flour, an Amerindian staple, eaten alongside fish and stews or soaked in water or juice."
+      },
+      {
+        "name": "Hmong soups at Cacao",
+        "text": "Noodle soups and fresh vegetable dishes at the Sunday market in Cacao, cooked by the families who farm the hills around the village."
+      },
+      {
+        "name": "Ti' punch and fruit juices",
+        "text": "Ti' punch, white rum with lime and cane syrup, is the drink before dinner. Stalls sell fresh juices of passion fruit (maracudja), soursop and wassaï, the local açaí."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "French is the language of every official and most shops; Creole, Portuguese and Sranan are common too. English is little spoken outside the tourist businesses.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello; good morning" },
+        { "phrase": "Bonsoir", "say": "bon-SWAHR", "meaning": "Good evening" },
+        { "phrase": "Merci", "say": "mair-SEE", "meaning": "Thank you" },
+        { "phrase": "S'il vous plaît", "say": "seel voo PLAY", "meaning": "Please" },
+        { "phrase": "C'est combien ?", "say": "say kom-BYAN", "meaning": "How much is it?" },
+        { "phrase": "L'addition, s'il vous plaît", "say": "lah-dee-SYON seel voo PLAY", "meaning": "The bill, please" },
+        { "phrase": "Bonjou", "say": "bon-ZHOO", "meaning": "Hello (Creole)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q3769",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }],
+        "note": "Wikidata also lists the old French Guianan franc without an end date; the euro has been the currency since 2002, as in the rest of France."
+      },
+      {
+        "key": "languages",
+        "text": "French, the official language. French Guianese Creole is widely spoken, along with Maroon languages, Amerindian languages, Portuguese and Hmong.",
+        "sources": [{ "property": "P37", "values": ["Q150", "Q1363072"] }],
+        "note": "Wikidata lists Guianan Creole as an official language; French is the only official one, so the page gives Creole as widely spoken."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins, as in France), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata also lists British-type sockets, which aren't used here; the page gives the French ones."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "French Guiana Time, UTC−3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6513"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112, or 15 for an ambulance, 17 for police and 18 for the fire service, as in mainland France",
+        "sources": [],
+        "note": "Wikidata's item has no emergency number statement; the page gives France's numbers, which apply here."
+      },
+      {
+        "key": "callingCode",
+        "text": "+594",
+        "sources": [{ "property": "P474", "values": ["+594"] }]
+      }
+    ]
+  }
+}

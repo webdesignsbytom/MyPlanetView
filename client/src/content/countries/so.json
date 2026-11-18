@@ -1,0 +1,184 @@
+{
+  "code": "SO",
+  "slug": "somalia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Nabad", "Soomaaliya", "Soo dhawoow"],
+  "summary": "Laas Geel's ancient cave paintings, Berbera's coral-stone port and Mogadishu's Lido Beach.",
+  "overview": [
+    "Somalia wraps round the Horn of Africa, with the longest coastline of any country on the African mainland, along the Gulf of Aden and the Indian Ocean. Almost all Somalis share one language and one faith, and a deep love of poetry; many still herd camels, goats and sheep across the dry plains. Mogadishu, the capital, has the long sands of Lido Beach, crowded on Friday afternoons, and the old quarter of Hamar Weyne, shaped by centuries of trade with Arabia and India.",
+    "The north-west, Somaliland, has run its own affairs since 1991 and declared itself independent, though most countries don't recognise it. It has its own government, currency and border controls, and most foreign visitors to the Somali lands go there. Near Hargeisa, its capital, the rock shelters of Laas Geel are painted with cattle and herders thousands of years old, some of the best-kept rock art in Africa. Berbera, on the Gulf of Aden, has Ottoman-era coral-stone houses and long, empty beaches. Puntland, in the north-east, also governs itself, as a state within Somalia.",
+    "Between the main cities, most people fly, or go by road with local drivers who know the way. Mobile money pays for almost everything, from taxis to market stalls, and the US dollar is widely used.",
+    "Many governments advise against all or most travel to Somalia, Somaliland included. That advice shifts as conditions change, so check your own government's current guidance first."
+  ],
+  "whenToGo": {
+    "stripLabel": "The country taken as a whole. The hot north coast and the milder Hargeisa highlands differ from Mogadishu and the south; see below.",
+    "months": ["best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Jilaal (long dry season)",
+        "months": [12, 1, 2, 3],
+        "text": "Sunny and dry, with the north-east monsoon blowing: around 30°C on the south coast, and the most comfortable months in the north, where Hargeisa's nights are cool. By March, the heat builds and water runs short for the herds."
+      },
+      {
+        "name": "Gu (main rains)",
+        "months": [4, 5, 6],
+        "text": "The main rains, falling in heavy bursts from about April into June. Pastures turn green, and dirt roads can wash out."
+      },
+      {
+        "name": "Xagaa (windy dry season)",
+        "months": [7, 8, 9],
+        "text": "The south-west monsoon blows: in Mogadishu it's a little cooler and breezy, with light showers by the coast, while on the Gulf of Aden it's fiercely hot, with Berbera often above 40°C."
+      },
+      {
+        "name": "Deyr (short rains)",
+        "months": [10, 11],
+        "text": "A second, shorter rainy season, lighter and less reliable than the Gu."
+      }
+    ],
+    "weather": "Hot and mostly dry, with two short rainy seasons, the Gu from about April to June and the Deyr in October and November; when either fails, drought follows. Mogadishu is warm and humid all year, around 30°C by day, cooled a little by the sea breeze. The Gulf of Aden coast is among the hottest places in Africa in summer, while the northern highlands around Hargeisa, at about 1,300 m, are milder, with warm days and cool nights.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across the Somali lands",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "A month of fasting from dawn to sunset, broken each evening with dates, sambuusa and tea. It ends with Eid al-Fitr: new clothes, sweets and visits to relatives over several days."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across the Somali lands",
+        "when": "About ten weeks after Ramadan ends, so also about 11 days earlier each year: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice, the year's biggest holiday: goats, sheep and camels are slaughtered and the meat shared with family, neighbours and the poor."
+      },
+      {
+        "name": "18 May",
+        "place": "Hargeisa and across Somaliland",
+        "when": "18 May",
+        "months": [5],
+        "text": "Somaliland marks the day in 1991 when it declared independence, with parades and flags in Hargeisa."
+      },
+      {
+        "name": "Independence and union days",
+        "place": "Across the Somali lands",
+        "when": "26 June and 1 July",
+        "months": [6, 7],
+        "text": "26 June marks the end of British rule in the north in 1960, and 1 July the union a few days later with the former Italian-ruled south, which made Somalia."
+      },
+      {
+        "name": "The Prophet's Birthday (Mawlid)",
+        "place": "Across the Somali lands",
+        "when": "About 11 days earlier each year: in 2027, about mid-August",
+        "months": [8],
+        "text": "Marked with gatherings, recitations of poems in praise of the Prophet, and shared meals."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Somaliland: Hargeisa and Berbera",
+        "text": "Hargeisa, at about 1,300 m, is warm rather than hot, with cool nights from about November to February and light rain in spring and late summer. Berbera, down on the coast, is pleasant in winter but extremely hot from about June to September."
+      },
+      {
+        "name": "Mogadishu and the south",
+        "text": "Hot and humid in every month, close to 30°C. December to February is dry and sunny; the Gu rains arrive in April, and July and August are breezy, with the sea at its roughest."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Asalaamu calaykum\" is answered with \"wacalaykum salaan\", followed by questions about health and news. Men shake hands with men, but many Somali men and women don't shake hands with each other: wait to see whether a hand is offered, and if not, a hand on your heart is a polite greeting.",
+    "etiquette": [
+      "Use your right hand to eat and to hand things over.",
+      "Dress very modestly; women visitors are expected to cover their hair in public.",
+      "Photographs of soldiers, police, checkpoints, government buildings or airports can land you in trouble; always ask people first, women especially.",
+      "Alcohol is banned, and not sold.",
+      "Friday is the day of prayer and rest, and during Ramadan food and drink stay out of sight until sunset."
+    ],
+    "tipping": "Somalis rarely tip in local eateries. Drivers, guides and hotel staff welcome a tip at the end, in dollars or by mobile money.",
+    "dress": "Men wear long trousers, or, like many Somali men, a macawiis, a wrapped cloth. Women wear long, loose clothes that cover arms and legs, and a headscarf. Light fabrics help in the heat; bring a hat and sunglasses for the north coast.",
+    "food": [
+      {
+        "name": "Canjeero",
+        "text": "A thin, spongy, slightly sour pancake, eaten for breakfast with ghee and sugar, or with fried liver and onions."
+      },
+      {
+        "name": "Bariis and banana",
+        "text": "Rice cooked with cumin, cardamom and cinnamon, heaped with goat or camel meat, with a banana on the side to mash into each mouthful."
+      },
+      {
+        "name": "Sambuusa",
+        "text": "Triangles of thin pastry filled with spiced minced meat or vegetables and fried, the favourite snack for breaking the Ramadan fast."
+      },
+      {
+        "name": "Xalwo",
+        "text": "A sticky, glossy sweet of sugar, ghee and cardamom, served in slices at weddings and at Eid."
+      },
+      {
+        "name": "Shaah",
+        "text": "Black tea brewed with milk, sugar, cardamom and cloves, drunk many times a day."
+      },
+      {
+        "name": "Camel milk",
+        "text": "Somalia has more camels than any other country, and their milk, fresh or soured, is sold at markets and roadside stalls."
+      }
+    ],
+    "phrases": {
+      "language": "Somali",
+      "intro": "Somali is spoken almost everywhere, and has been written in Latin letters since 1972: c and x stand for throaty sounds with no English match. Arabic is widely understood, and English is common in Somaliland.",
+      "items": [
+        { "phrase": "Asalaamu calaykum", "say": "ah-sah-LAH-moo ah-LAY-kum", "meaning": "Peace be upon you (hello)" },
+        { "phrase": "Subax wanaagsan", "say": "SOO-bah wah-NAHG-sahn", "meaning": "Good morning" },
+        { "phrase": "Soo dhawoow", "say": "soh dah-WOH", "meaning": "Welcome" },
+        { "phrase": "Fadlan", "say": "FAHD-lahn", "meaning": "Please" },
+        { "phrase": "Mahadsanid", "say": "mah-hahd-SAH-nid", "meaning": "Thank you" },
+        { "phrase": "Hagaag", "say": "hah-GAHG", "meaning": "OK; fine" },
+        { "phrase": "Nabadgelyo", "say": "nah-bahd-GEL-yoh", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1045",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Somali shilling (SOS), though US dollars are used for most larger payments and mobile money for almost everything. Somaliland uses its own Somaliland shilling.",
+        "sources": [{ "property": "P38", "values": ["Q4603"] }],
+        "note": "Wikidata gives the Somali shilling only; the page adds the dollar and mobile money, which most payments use, and the Somaliland shilling, used in the north-west."
+      },
+      {
+        "key": "languages",
+        "text": "Somali and Arabic, both official. English is widely spoken in Somaliland, and some older people in the south know Italian.",
+        "sources": [{ "property": "P37", "values": ["Q13275", "Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type C (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "East Africa Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q4689513"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "888 for police, 555 for ambulance and 999 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q60061962", "Q60061960", "Q3086706"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+252",
+        "sources": [{ "property": "P474", "values": ["+252"] }]
+      }
+    ]
+  }
+}

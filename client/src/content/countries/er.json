@@ -1,0 +1,182 @@
+{
+  "code": "ER",
+  "slug": "eritrea",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Selam", "ኤርትራ", "Ertra"],
+  "summary": "Asmara's Italian modernist streets, a mountain railway and the coral islands of the Red Sea.",
+  "overview": [
+    "Eritrea lies on the Red Sea between Sudan, Ethiopia and Djibouti, and sees very few tourists. Asmara, the capital, stands at about 2,300 m on the edge of the highland plateau. Much of it was built by the Italians in the 1930s as a showcase of modern design, and its centre is a UNESCO World Heritage Site. Walk Harnet Avenue past the Cinema Impero and the cathedral, find the Fiat Tagliero service station, built in 1938 in the shape of an aeroplane, and join the evening stroll and the café life of macchiatos and pastries.",
+    "From Asmara, the road and the old Italian railway drop about 2,300 m to the coast in little more than 100 km, through tunnels and hairpin bends; steam trains still run on parts of the line for groups that hire them. Massawa, the port, is a town of coral-stone houses and arcades on two islands joined to the mainland by causeways, still scarred by war, and the place to find boats to the reefs and beaches of the Dahlak islands. On the plateau south of Asmara, Qohaito has the ruins of a town from the time of the kingdom of Aksum, and Keren, to the north-west, has a lively livestock market and the cemeteries of a Second World War battle.",
+    "Travel outside Asmara has long needed a permit, arranged in the city: ask your hotel or a local agency about the current rules. Cash is essential. Many governments advise against travel to parts of Eritrea, especially near its borders. Conditions change, so see what your own government currently advises before you plan anything."
+  ],
+  "whenToGo": {
+    "stripLabel": "Asmara and the coast taken together. The highlands and the Red Sea coast have opposite seasons; each has its own line below.",
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "best", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool, dry season",
+        "months": [10, 11, 12, 1, 2, 3],
+        "text": "Sunny and dry in Asmara, with cold nights from about November to February, and the pleasant months on the coast, around 30°C. The best time for almost everything."
+      },
+      {
+        "name": "Small rains and rising heat",
+        "months": [4, 5, 6],
+        "text": "A few showers in the highlands in spring, while the coast heats up fast, beyond 35°C by June."
+      },
+      {
+        "name": "Big rains",
+        "months": [7, 8, 9],
+        "text": "Afternoon storms over Asmara, heaviest in July and August, leaving the hills green by September. Down on the coast, the heat and humidity are fierce."
+      }
+    ],
+    "weather": "Height decides the weather. Asmara, on the plateau, is mild in every month, about 22–25°C by day, with nights cold enough for a coat in December and January; its main rains fall in July and August, with a lighter spell in spring. The Red Sea coast is hot all year and fierce in summer: Massawa often passes 40°C from June to September, with heavy humidity, and its little rain falls in winter. The Danakil lowlands in the south-east are among the hottest places on earth.",
+    "festivals": [
+      {
+        "name": "Lidet (Christmas)",
+        "place": "Across the country",
+        "when": "7 January",
+        "months": [1],
+        "text": "Orthodox Christians celebrate Christmas after weeks of fasting, with services through the night and a family feast the next day."
+      },
+      {
+        "name": "Fenkil Day",
+        "place": "Massawa",
+        "when": "10 February",
+        "months": [2],
+        "text": "Massawa celebrates its capture by Eritrean independence fighters in February 1990; the day is a public holiday."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across the country",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "About half of Eritreans are Muslim. They fast from dawn to sunset for a month, then celebrate Eid al-Fitr, a public holiday, with family visits and sweets."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Asmara and across the country",
+        "when": "24 May",
+        "months": [5],
+        "text": "The biggest celebration of the year, marking the day independence fighters entered Asmara in 1991. The city fills with parades, music and dancing for days beforehand."
+      },
+      {
+        "name": "Martyrs' Day",
+        "place": "Across the country",
+        "when": "20 June",
+        "months": [6],
+        "text": "A quiet day remembering those who died in the war of independence, with candles lit in the evening."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Asmara and the highlands",
+        "months": ["best", "best", "best", "best", "best", "good", "good", "good", "best", "best", "best", "best"],
+        "text": "Spring-like all year at about 2,300 m: sunny days in the low to mid-20s °C and chilly nights. The big rains fall in July and August, mostly as afternoon storms, with smaller rains in spring."
+      },
+      {
+        "name": "Massawa and the Red Sea coast",
+        "months": ["best", "best", "best", "good", "good", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+        "text": "From June to September, days above 40°C and heavy humidity make this one of the hottest coasts anywhere. Winter is warm and pleasant, around 30°C, and the best time for boat trips to the Dahlak reefs."
+      },
+      {
+        "name": "The eastern escarpment",
+        "text": "Between the plateau and the coast, the green slopes around Filfil catch rain from about October to March, when the highlands are dry, and hold Eritrea's last patches of forest."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Eritreans take their time over hellos: a handshake, a run of questions about health and family, and between men who know each other a bump of the right shoulders. \"Selam\" is hello, and many people say \"ciao\" for goodbye, a word left by the Italians. Greet older people first.",
+    "etiquette": [
+      "Keep your camera off soldiers, military sites, government buildings, bridges and the port, and ask before taking anyone's portrait.",
+      "Eat with your right hand from the shared injera, tearing pieces from the side nearest you.",
+      "If you're invited to a coffee ceremony, stay for it: three rounds are poured, and it takes about an hour.",
+      "Take off your shoes in mosques and Orthodox churches; women cover their hair in church.",
+      "Outside Asmara, keep your passport and travel permit with you: there are checkpoints on the roads."
+    ],
+    "tipping": "Not a habit in local cafés. In restaurants used to visitors, leave 5–10%, and tip guides and drivers at the end of a trip.",
+    "dress": "Asmara is neat and conservative, and people dress up for the evening walk. Wear long trousers or skirts and cover your shoulders; for Massawa, light, loose clothes and a hat; for highland evenings, a jacket.",
+    "food": [
+      {
+        "name": "Zigni",
+        "text": "Beef or lamb stewed slowly with onions, tomato and berbere, the red chilli spice blend, served on injera, the spongy, sour flatbread that's plate and cutlery at once."
+      },
+      {
+        "name": "Shiro tegamino",
+        "text": "Ground chickpeas simmered with garlic, onion and spice into a thick sauce, brought to the table still bubbling in the small pan, the tegamino, that gives it its Italian name."
+      },
+      {
+        "name": "Kicha fit-fit",
+        "text": "Thin flatbread torn into pieces and tossed with spiced butter and berbere, eaten for breakfast with a spoonful of yoghurt."
+      },
+      {
+        "name": "Pasta",
+        "text": "Left by Italian rule and now everyday food: spaghetti with a meat sauce warmed with berbere, lasagne and pizza are on Asmara's menus."
+      },
+      {
+        "name": "Macchiato and pastries",
+        "text": "Asmara's old cafés make excellent espresso and macchiato, served with sweet pastries at the bar, morning and evening."
+      }
+    ],
+    "phrases": {
+      "language": "Tigrinya",
+      "intro": "Tigrinya, written in the Ge'ez script, is the main language of the highlands and Asmara. Arabic is widely spoken, English is used in business, and some older people speak Italian. Some phrases change when you speak to a woman.",
+      "items": [
+        { "phrase": "Selam (ሰላም)", "say": "SEH-lahm", "meaning": "Hello" },
+        { "phrase": "Kemey aleka? (ከመይ ኣለኻ)", "say": "keh-MAY ah-leh-KAH", "meaning": "How are you? (to a man; to a woman, kemey aleki)" },
+        { "phrase": "Dehan (ደሓን)", "say": "DEH-hahn", "meaning": "Fine; well" },
+        { "phrase": "Yekenyeley (የቐንየለይ)", "say": "yeh-ken-yeh-LAY", "meaning": "Thank you" },
+        { "phrase": "Bejaka (በጃኻ)", "say": "beh-JAH-kah", "meaning": "Please (to a man)" },
+        { "phrase": "Kndey? (ክንደይ)", "say": "KIN-day", "meaning": "How much?" },
+        { "phrase": "Ewe / Aykonen (እወ / ኣይኮነን)", "say": "EH-weh / ai-KOH-nen", "meaning": "Yes / No" },
+        { "phrase": "Ciao", "say": "CHOW", "meaning": "Goodbye (borrowed from Italian)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q986",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Nakfa (Nfk, ERN). Foreign cards are of almost no use: bring cash, US dollars or euros, to change at official exchange offices.",
+        "sources": [{ "property": "P38", "values": ["Q171503"] }]
+      },
+      {
+        "key": "languages",
+        "text": "No official language in law: Tigrinya, Arabic and English are the main working languages. Tigre, Afar, Saho, Bilen, Kunama, Nara and Hedareb are also spoken, and older people in Asmara often know some Italian.",
+        "sources": [{ "property": "P37", "values": ["Q34124", "Q13955", "Q1860"] }],
+        "note": "Wikidata lists Tigrinya, Arabic and English, and also a \"no value\" statement, as the constitution names no official language; the page says both."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C (two round pins) and L (three round pins in a row, as in Italy), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1520890"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "East Africa Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760"] }],
+        "note": "Wikidata also gives the time-zone database's Africa/Addis_Ababa, Ethiopia's zone; Eritrea's own is Africa/Asmara, on the same time."
+      },
+      {
+        "key": "emergency",
+        "text": "113 for police, 114 for ambulance and 116 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648804", "Q2945964", "Q25648807"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+291",
+        "sources": [{ "property": "P474", "values": ["+291"] }]
+      }
+    ]
+  }
+}

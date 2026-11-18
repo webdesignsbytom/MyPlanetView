@@ -138,4 +138,12 @@ describe('countryAtPosition (map shapes, no external service)', () => {
   it('returns null for an invalid position', () => {
     expect(countryAtPosition(200, 0)).toBeNull();
   });
+
+  // The whole territory, as the old map had it, not only Natural Earth's part east of the berm
+  it("puts all of Western Sahara in Western Sahara, and Morocco north of its border", () => {
+    expect(countryAtPosition(27.15, -13.2)).toBe('EH'); // Laâyoune
+    expect(countryAtPosition(23.7, -15.93)).toBe('EH'); // Dakhla
+    expect(countryAtPosition(26.16, -10.57)).toBe('EH'); // Tifariti
+    expect(countryAtPosition(27.94, -12.92)).toBe('MA'); // Tarfaya
+  });
 });

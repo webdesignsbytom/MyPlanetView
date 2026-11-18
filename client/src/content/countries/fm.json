@@ -1,0 +1,158 @@
+{
+  "code": "FM",
+  "slug": "micronesia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Kaselehlie", "Ran annim", "Mogethin"],
+  "summary": "Stone money on Yap, a lagoon full of wartime wrecks in Chuuk and the basalt ruins of Nan Madol.",
+  "overview": [
+    "The Federated States of Micronesia is four island states, Yap, Chuuk, Pohnpei and Kosrae, spread across more than 2,500 km of the western Pacific, with about 100,000 people. Each state has its own language, customs and character, and flights between them are infrequent, so a first trip usually covers one state, or two at most. The capital, Palikir, is on Pohnpei.",
+    "Yap keeps its traditions most visibly: rai, giant stone discs quarried in Palau and carried home by canoe, still change hands in village transactions and stand in rows along the stone paths, and manta rays gather in its channels all year round. Chuuk Lagoon holds dozens of Japanese ships and planes sunk by US air raids in February 1944, one of the world's great wreck dives.",
+    "Pohnpei is high, green and among the rainiest places on earth, with waterfalls in the interior and Nan Madol, a World Heritage Site of artificial islets built from stacked basalt columns on the reef off Temwen Island, the seat of the Saudeleur rulers who governed the island for centuries. Kosrae, the easternmost state, is a quiet volcanic island with the stone ruins of Lelu, mangrove channels and very few visitors. Sunday is kept strictly, above all in Kosrae: shops shut and dive boats stay in."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Drier months",
+        "months": [1, 2, 3, 4],
+        "text": "January to March brings the most sunshine to all four states, steady north-east trade winds and the calmest crossings to the dive sites. April is still fairly dry in Yap, wetter further east."
+      },
+      {
+        "name": "Wetter months",
+        "months": [5, 6, 7, 8, 9, 10, 11, 12],
+        "text": "Rain builds from May, and Yap and Chuuk, the western states, are within reach of typhoons, most often from about August to December. Pohnpei and Kosrae are wet in every month but rarely see a typhoon."
+      }
+    ],
+    "weather": "A few degrees north of the equator, the four states share one steady climate of 30°C afternoons, 24°C nights and seas of 28–29°C. Rainfall rises from west to east: Yap gets roughly 3,000 mm in a year, while Pohnpei's coast gets around 4,800 mm and its mountain interior far more. Many western Pacific typhoons begin as storms in these waters before moving off towards the Philippines and Japan.",
+    "festivals": [
+      {
+        "name": "Yap Day",
+        "place": "Colonia, Yap",
+        "when": "1 March, with events usually over two days",
+        "months": [3],
+        "text": "Yap's biggest gathering: villages perform the standing, sitting and bamboo dances they've rehearsed for months, in traditional dress, with displays of weaving, canoe-building and stone money."
+      },
+      {
+        "name": "Constitution Day",
+        "place": "Across the four states",
+        "when": "10 May",
+        "months": [5],
+        "text": "Marks the day in 1979 when the constitution took effect and the four states began governing themselves as one federation."
+      },
+      {
+        "name": "Pohnpei Liberation Day",
+        "place": "Pohnpei",
+        "when": "11 September",
+        "months": [9],
+        "text": "Pohnpei's own holiday for the end of Japanese rule in 1945, marked with sports, music and food stalls around Kolonia."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the four states",
+        "when": "3 November",
+        "months": [11],
+        "text": "The national day, for the start in 1986 of the Compact of Free Association with Washington, which ended four decades of US-run United Nations trusteeship."
+      },
+      {
+        "name": "Christmas",
+        "place": "Churches across Micronesia, above all on Kosrae",
+        "when": "25 December",
+        "months": [12],
+        "text": "Kosrae is known for its church singing, and Christmas services there and in Chuuk run long, with hymns sung in parts by village choirs."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings change from state to state: \"Kaselehlie\" on Pohnpei, \"Ran annim\" in Chuuk and \"Mogethin\" on Yap. People can seem reserved with strangers at first; a gentle handshake, a smile and a few local words change that quickly. Rank matters, above all on Pohnpei, where chiefly titles decide the order of seating and serving at feasts.",
+    "etiquette": [
+      "On Yap, beaches, paths, stone money and reefs all belong to someone. Ask in the nearest village before you walk, swim or take photographs, and pay any fee asked.",
+      "Women's thighs are considered private across much of Micronesia: wear knee-length shorts or a skirt, and cover up over swimwear anywhere near a village.",
+      "Chuuk's wrecks are war graves and protected. Dive with a licensed operator, who arranges the permit, and take nothing from them.",
+      "At a sakau (kava) session on Pohnpei, the first cup goes to the highest-ranking person present; accept what you're offered and sip slowly, as it's strong.",
+      "On Sunday, especially on Kosrae, keep things quiet: no swimming near villages, and expect most businesses to be closed."
+    ],
+    "tipping": "Not traditional and not expected. In hotels and dive shops that cater to visitors, a tip for good guides and boat crews is welcome.",
+    "dress": "Modest clothes outside the resorts: knees and thighs covered for women, and shirts on for men in town. On Yap, some people still wear traditional dress every day, wrapped skirts for women and the thu loincloth for men, especially in the outer islands and on Yap Day. Pack a light raincoat; showers come in any month.",
+    "food": [
+      {
+        "name": "Sakau",
+        "text": "Pohnpei's kava, pounded on flat stones and squeezed through strips of hibiscus bark into a thick, slippery drink that numbs the mouth. Roadside sakau bars open in the late afternoon."
+      },
+      {
+        "name": "Breadfruit and taro",
+        "text": "The staples, roasted, boiled or pounded with coconut; breadfruit was also traditionally stored by fermenting it in leaf-lined pits."
+      },
+      {
+        "name": "Tuna sashimi",
+        "text": "Fresh yellowfin, sliced and eaten with soy sauce, lemon and hot pepper, a habit left by the Japanese years."
+      },
+      {
+        "name": "Pohnpei pepper",
+        "text": "Black pepper grown on the island's farms, sold in Kolonia's shops and worth taking home."
+      },
+      {
+        "name": "Kosrae citrus",
+        "text": "Kosrae's tangerines and limes are prized across Micronesia; buy them at roadside stalls when they're in season."
+      }
+    ],
+    "phrases": {
+      "language": "Pohnpeian, Chuukese, Yapese and Kosraean",
+      "intro": "Government and schools run in English, but each state speaks its own language, and the outer islands add several more.",
+      "items": [
+        { "phrase": "Kaselehlie", "say": "kah-seh-leh-LEE-eh", "meaning": "Hello (Pohnpeian)" },
+        { "phrase": "Kalahngan", "say": "kah-lahng-AHN", "meaning": "Thank you (Pohnpeian)" },
+        { "phrase": "Ran annim", "say": "rahn AH-neem", "meaning": "Good day (Chuukese)" },
+        { "phrase": "Kinisou chapur", "say": "kee-nee-SOH chah-POOR", "meaning": "Thank you very much (Chuukese)" },
+        { "phrase": "Mogethin", "say": "moh-geh-THEEN", "meaning": "Hello (Yapese)" },
+        { "phrase": "Kammagar", "say": "kah-mah-GAHR", "meaning": "Thank you (Yapese)" },
+        { "phrase": "Kulo", "say": "KOO-loh", "meaning": "Thank you (Kosraean)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q702",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar ($, USD). Cash is king outside a few hotels and shops; ATMs are few, so bring enough.",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the official language. Each state also has its own: Yapese, Chuukese, Pohnpeian and Kosraean, with several more in the outer islands.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+10 in Yap and Chuuk; UTC+11 in Pohnpei and Kosrae. No summer time.",
+        "sources": [{ "property": "P421", "values": ["Q7056", "Q7069"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 in most states; Chuuk uses local numbers for the police and fire service, so ask your hotel on arrival",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }],
+        "note": "Wikidata also gives 111 for an ambulance, which no current source confirms. Canadian travel advice gives local police and fire numbers for Chuuk instead of 911."
+      },
+      {
+        "key": "callingCode",
+        "text": "+691",
+        "sources": [{ "property": "P474", "values": ["+691"] }]
+      }
+    ]
+  }
+}

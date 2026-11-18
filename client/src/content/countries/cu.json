@@ -1,0 +1,189 @@
+{
+  "code": "CU",
+  "slug": "cuba",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Hola!", "Cuba", "Bienvenidos"],
+  "summary": "Havana's old squares and classic cars, Viñales' tobacco farms and live son music in every town.",
+  "overview": [
+    "Cuba is the largest island in the Caribbean, about 1,200 km from end to end, and it rewards time. Havana comes first for most visitors: the old city, Habana Vieja, a World Heritage Site, has four colonial squares and streets of faded mansions, the Malecón sea wall fills with people in the evening, and 1950s American cars still work as taxis. West of the capital, in the Viñales valley, tobacco farmers plough with oxen among steep limestone hills called mogotes.",
+    "In the centre of the island, Trinidad is a cobbled colonial town with the old sugar estates of the Valley of the Mills (Valle de los Ingenios) beyond; Cienfuegos, founded by French settlers, sits on a wide bay; Santa Clara has Che Guevara's memorial; and Camagüey's streets are a deliberate maze. The east, the Oriente, is hotter and more mountainous: Santiago de Cuba is the home of son music and the country's best-known carnival, and Baracoa, the first Spanish settlement, grows cacao and coconuts. For beaches, there's the long Varadero peninsula and the cays off the north coast, such as Cayo Coco and Cayo Santa María, reached by causeways.",
+    "Many visitors stay in casas particulares, rooms in private homes licensed to take guests, and eat in paladares, privately run restaurants. Víazul coaches link the main cities, shared taxis (colectivos) run fixed routes, and there are domestic flights; the trains are slow and unreliable. Cuba works differently from most countries: card payments are unreliable, so carry enough cash; the internet is slow and patchy; and in recent years power cuts and shortages of fuel, medicines and some foods have been common. Bring the medicines and toiletries you need, and check recent advice before you go, as conditions change often."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Sunny, warm days and fresher nights. A cold front from the north can bring a few chilly, windy days and rough seas on the north coast, especially in January and February. The busiest time, above all at Christmas, New Year and Easter."
+      },
+      {
+        "name": "Wet season",
+        "months": [5, 6, 7, 8],
+        "text": "Sticky heat, often 32°C, with heavy thunderstorms most afternoons, especially in May and June. Cubans take their own holidays in July and August, so beaches and buses fill up; Santiago's carnival is in July."
+      },
+      {
+        "name": "Hurricane peak",
+        "months": [9, 10],
+        "text": "The wettest weeks and the greatest risk of hurricanes, which have struck Cuba hard; storms can cut power and close roads for days. October is a little safer than September, but still a gamble."
+      }
+    ],
+    "weather": "Cuba has a hot, humid wet season from about May to October and a drier, more comfortable season from November to April. In Havana, January afternoons are about 26°C and nights about 18°C, while August reaches about 32°C with sticky humidity. The east is hotter than the west, and the mountains are cooler. Hurricanes are most likely in September and October: Ian, which struck the west in 2022, left the whole island without power for a time.",
+    "festivals": [
+      {
+        "name": "Triumph of the Revolution",
+        "place": "Across Cuba",
+        "when": "1 January, with 2 January also a holiday",
+        "months": [1],
+        "text": "The anniversary of the revolution's victory in 1959 is also New Year's Day: a national holiday with speeches, music and family gatherings."
+      },
+      {
+        "name": "Havana International Jazz Festival (Jazz Plaza)",
+        "place": "Havana",
+        "when": "Usually in January, in some years December",
+        "months": [12, 1],
+        "text": "Cuban and foreign musicians play theatres, clubs and open-air stages around the city for about a week."
+      },
+      {
+        "name": "Carnival of Santiago de Cuba",
+        "place": "Santiago de Cuba",
+        "when": "Usually in the second half of July",
+        "months": [7],
+        "text": "Cuba's most famous carnival: dance groups (comparsas) and congas parade to drums and the shrill Chinese trumpet, the corneta china, with floats and street parties into the night."
+      },
+      {
+        "name": "National Rebellion Day",
+        "place": "Across Cuba",
+        "when": "25–27 July",
+        "months": [7],
+        "text": "A three-day national holiday around 26 July, the anniversary of the attack on the Moncada Barracks in Santiago in 1953."
+      },
+      {
+        "name": "International Festival of New Latin American Cinema",
+        "place": "Havana",
+        "when": "Usually in December",
+        "months": [12],
+        "text": "About ten days of films from across Latin America, shown in the city's old cinemas to packed, talkative audiences."
+      },
+      {
+        "name": "Parrandas de Remedios",
+        "place": "Remedios, Villa Clara",
+        "when": "24 December",
+        "months": [12],
+        "text": "The town's two halves, San Salvador and El Carmen, compete through Christmas Eve night with huge illuminated floats, music and deafening fireworks."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Havana and the west",
+        "text": "The capital, Viñales and the tobacco country of Pinar del Río. Winter nights here are the coolest in Cuba, and cold fronts reach it first."
+      },
+      {
+        "name": "The centre",
+        "text": "Trinidad, Cienfuegos, Santa Clara and Camagüey, with the resort beaches of Varadero and the northern cays."
+      },
+      {
+        "name": "The east (Oriente)",
+        "text": "Hotter and more mountainous, with Santiago de Cuba, Baracoa and the Sierra Maestra, where Pico Turquino, the highest peak, rises to about 1,970 m. Further from Havana and less visited."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Cubans are warm and talkative. Men shake hands; women, and men and women who know each other, greet with a single kiss on the cheek. Say \"Buenos días\" or \"Buenas\" when you walk into a shop or a casa. Strangers call each other \"mi amor\", \"mi vida\" or \"cariño\" (my love, my life, darling) without meaning anything by it.",
+    "etiquette": [
+      "Steer clear of political arguments with people you've just met, and don't photograph police, soldiers or military sites.",
+      "Hustlers (jineteros) offer cigars, rooms, restaurants and tours; a polite, firm \"No, gracias\" is enough. Buy cigars only from official shops.",
+      "To join a queue, ask \"¿Quién es el último?\" (who's last?), then follow that person.",
+      "Drink bottled, boiled or filtered water rather than water from the tap.",
+      "Bring what's hard to find, such as medicines, sun cream and batteries. Many visitors leave spares with their hosts when they go."
+    ],
+    "tipping": "Tips matter a great deal, as state wages are very low. Leave about 10% in restaurants, and something for musicians who play at your table, toilet attendants, guides, drivers and housekeepers. Carry plenty of small notes.",
+    "dress": "Light cotton clothes for the heat, and a jumper for winter evenings and for the air conditioning on long-distance coaches, which can be fierce. Cover your shoulders in churches. Comfortable shoes for cobbled streets.",
+    "food": [
+      {
+        "name": "Ropa vieja",
+        "text": "Beef simmered until it falls into shreds, then cooked with tomato, sweet pepper and onion. The name means \"old clothes\"."
+      },
+      {
+        "name": "Moros y cristianos",
+        "text": "Black beans and rice cooked together, \"Moors and Christians\". In the east, congrí is made the same way with red beans."
+      },
+      {
+        "name": "Lechón asado",
+        "text": "Pork marinated in garlic and bitter orange and roasted slowly, the centre of family feasts, above all on Christmas Eve."
+      },
+      {
+        "name": "Yuca con mojo",
+        "text": "Boiled cassava under a hot dressing of garlic, citrus juice and oil, served with roast pork and rice."
+      },
+      {
+        "name": "Café cubano",
+        "text": "Small cups of strong, very sweet coffee, offered to guests as a welcome and drunk all day."
+      },
+      {
+        "name": "Mojito and daiquirí",
+        "text": "Cuba's two famous rum cocktails, both made with white rum and lime: the mojito with mint and soda, the daiquirí shaken with ice. El Floridita in Havana is known for its daiquirís."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish",
+      "intro": "Cuban Spanish is quick, and syllables at the ends of words often vanish. English is spoken in hotels and some casas, but much less elsewhere, so a little Spanish goes a long way.",
+      "items": [
+        { "phrase": "¿Qué bolá?", "say": "keh boh-LAH", "meaning": "What's up? (Cuban slang)" },
+        { "phrase": "Asere", "say": "AH-seh-reh", "meaning": "Mate, pal (Cuban slang)" },
+        { "phrase": "Por favor", "say": "por fah-VOR", "meaning": "Please" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAN-toh KWES-tah", "meaning": "How much does it cost?" },
+        { "phrase": "La cuenta, por favor", "say": "lah KWEN-tah por fah-VOR", "meaning": "The bill, please" },
+        { "phrase": "¿Quién es el último?", "say": "kee-EN es el OOL-tee-moh", "meaning": "Who's last in the queue?" },
+        { "phrase": "No, gracias", "say": "noh GRAH-see-ahs", "meaning": "No, thank you" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q241",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Cuban peso (CUP). Card payments and cash machines are unreliable and many foreign cards don't work, so most visitors bring enough cash in euros or another major currency.",
+        "sources": [{ "property": "P38", "values": ["Q201505"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Cuba Standard Time, UTC−5, and UTC−4 in summer (usually from March to early November)",
+        "sources": [{ "property": "P421", "values": ["Q5390", "Q63230233"] }],
+        "note": "Wikidata gives UTC−5 only; Cuba moves its clocks forward in summer, usually on dates close to those of the United States."
+      },
+      {
+        "key": "emergency",
+        "text": "106 for police, 104 for an ambulance and 105 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q4546664", "Q25648855", "Q25648856"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+53",
+        "sources": [{ "property": "P474", "values": ["+53"] }]
+      }
+    ]
+  }
+}

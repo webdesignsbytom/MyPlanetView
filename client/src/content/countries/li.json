@@ -1,0 +1,160 @@
+{
+  "code": "LI",
+  "slug": "liechtenstein",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Grüezi", "Liechtenstein", "Willkommen"],
+  "summary": "A prince's castle over Vaduz, Rhine-valley vineyards and Alpine trails, all in 25 km of land.",
+  "overview": [
+    "Liechtenstein is a principality of about 40,000 people in the Alps, squeezed between Switzerland and Austria along the east bank of the Rhine, about 25 km from end to end. It is a constitutional monarchy, and the prince lives in the castle on the hillside above Vaduz, the small capital. The country is closely tied to Switzerland: it uses the Swiss franc and there are no border checks between the two, while the border with Austria is a customs frontier.",
+    "Vaduz has the Kunstmuseum Liechtenstein, a black cube of modern art, the national museum and a postal museum, a reminder that the country's stamps are prized by collectors. The prince's winery has vineyards right in the town. From the valley, roads climb steeply to Triesenberg, a village founded by Walser settlers from the Valais in the Middle Ages, and through a tunnel to Malbun, a small family ski resort at about 1,600 m. In summer, the mountains have marked trails and huts, and the Liechtenstein Trail crosses the whole country through all its villages in about 75 km.",
+    "There's no airport: most visitors come from Zurich, a little over an hour away by road, or by train to Sargans or Buchs in Switzerland or Feldkirch in Austria, then by bus. Buses run up and down the valley and into the mountains. You can see the sights in a day, but the walking deserves longer."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "The valley is often grey and foggy, around freezing, while Malbun above it gets the sun and snow; the ski season usually runs from mid-December to March."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Blossom in the valley orchards in April, snow on the peaks into May, and the higher trails and mountain huts opening from late May or June."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm in the valley, around 23–25°C, with thunderstorms building over the mountains on some afternoons. The best season for hiking, and for cycling the flat path along the Rhine dam."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Clear, mild days in September and October, the grape harvest on the slopes around Vaduz, and the first snow on the heights by November, when the valley turns damp and grey."
+      }
+    ],
+    "weather": "Mild for the Alps, thanks to the shelter of the Rhine valley and the foehn, a warm, dry wind from the south that can lift temperatures suddenly. Vaduz, at about 450 m, has summer days around 24°C and winter days near freezing, with far less snow than the mountains, where Malbun gets plenty. Most rain falls in summer, often in thunderstorms.",
+    "festivals": [
+      {
+        "name": "Fasnacht",
+        "place": "Schaan, Vaduz and other villages",
+        "when": "The days before Lent: in 2027, early February",
+        "months": [2],
+        "text": "Carnival, with masked parades, brass bands playing loud and out of tune on purpose, and costumed parties in village halls."
+      },
+      {
+        "name": "Funkensonntag",
+        "place": "Villages across Liechtenstein",
+        "when": "The first Sunday of Lent: in 2027, 14 February",
+        "months": [2, 3],
+        "text": "Each village builds a tall tower of wood, the Funken, topped with a witch figure, and burns it after dark to drive out winter."
+      },
+      {
+        "name": "National Day (Staatsfeiertag)",
+        "place": "Vaduz",
+        "when": "15 August",
+        "months": [8],
+        "text": "The prince and the president of parliament give speeches on the meadow below the castle, the people are invited up to the castle gardens for a drink, and fireworks light up Vaduz at night."
+      },
+      {
+        "name": "Cattle coming down (Alpabfahrt)",
+        "place": "Malbun and Steg",
+        "when": "Usually in September",
+        "months": [9],
+        "text": "Herds that spent the summer on the high pastures are brought down to the valley, the cows decked with flowers and big bells."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and \"Grüezi\", or \"Hoi\" among friends, as in eastern Switzerland. People are polite and fairly formal with strangers: use \"Herr\" and \"Frau\" with a surname until you're asked to use first names. In a country this small, everyone seems to know everyone.",
+    "etiquette": [
+      "Be on time: punctuality is expected, for meetings and meals alike.",
+      "Sundays are quiet: most shops close, and noisy jobs such as mowing the lawn are frowned on.",
+      "Greet people you pass on mountain paths with a \"Grüezi\" or \"Hoi\".",
+      "Water from village fountains is safe to drink unless a sign says \"Kein Trinkwasser\".",
+      "Sort your rubbish for recycling, as locals do with great care."
+    ],
+    "tipping": "Service is included in prices, as in Switzerland. Round up or add a little for good service.",
+    "dress": "Smart-casual in Vaduz. Walking boots, layers and a rain jacket for the mountains, and warm ski clothing for Malbun in winter.",
+    "food": [
+      {
+        "name": "Käsknöpfle",
+        "text": "Small flour dumplings layered with grated local cheese and topped with crisp fried onions, often with apple sauce or potato salad on the side: the national dish."
+      },
+      {
+        "name": "Ribel",
+        "text": "Coarse ground maize from the Rhine valley, soaked and slowly fried into golden crumbs, eaten with coffee, milk, apple sauce or jam."
+      },
+      {
+        "name": "Hafaläb",
+        "text": "A hearty soup in which a large dumpling of wheat and maize flour is cooked with smoked pork."
+      },
+      {
+        "name": "Wine",
+        "text": "Mostly Pinot Noir from the sunny slopes of the Rhine valley, including the prince's own winery in Vaduz."
+      },
+      {
+        "name": "Birnbrot",
+        "text": "A spiced loaf filled with dried pears, figs and nuts in a thin bread casing, baked for Christmas."
+      }
+    ],
+    "phrases": {
+      "language": "German",
+      "intro": "Standard German is the official language, but Liechtensteiners speak an Alemannic dialect close to Swiss German among themselves. They switch to standard German, and often English, for visitors.",
+      "items": [
+        { "phrase": "Grüezi", "say": "GROO-ets-ee", "meaning": "Hello (polite)" },
+        { "phrase": "Hoi", "say": "HOY", "meaning": "Hi" },
+        { "phrase": "Danke schön", "say": "DAHN-keh SHURN", "meaning": "Thank you very much" },
+        { "phrase": "Bitte", "say": "BIT-teh", "meaning": "Please; you're welcome" },
+        { "phrase": "Entschuldigung", "say": "ent-SHOOL-dee-goong", "meaning": "Excuse me; sorry" },
+        { "phrase": "Was kostet das?", "say": "vahs KOS-tet dahs", "meaning": "How much is it?" },
+        { "phrase": "Auf Wiedersehen", "say": "owf VEE-der-zay-en", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q347",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Swiss franc (CHF, Fr.). Some hotels and shops also take euros.",
+        "sources": [{ "property": "P38", "values": ["Q25344"] }]
+      },
+      {
+        "key": "languages",
+        "text": "German, official; people speak an Alemannic dialect among themselves.",
+        "sources": [{ "property": "P37", "values": ["Q188"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and J (Swiss sockets with three round pins, which also take two-pin Type C plugs), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335530"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1; UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; also 117 for police, 118 for fire and 144 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q4547615", "Q11185210", "Q25648814"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+423",
+        "sources": [{ "property": "P474", "values": ["+423"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "code": "LK",
+  "slug": "sri-lanka",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ayubowan", "Sri Lanka", "Vanakkam"],
+  "summary": "Rock fortresses and cave temples, tea-country trains and two coasts with opposite monsoons.",
+  "overview": [
+    "Sri Lanka fits a great deal into an island about 430 km long. In the dry north-centre, the Cultural Triangle holds the ruined royal cities of Anuradhapura and Polonnaruwa, the cave temples of Dambulla, painted with rows of Buddhas, and Sigiriya, a palace built on top of a rock about 180 m high, with old frescoes on its face and a pair of giant stone lion's paws at its stairway. Kandy, the last royal capital, keeps the Temple of the Tooth, which houses a relic of the Buddha.",
+    "South of Kandy lies the hill country, all tea estates, waterfalls and cool air, and the slow train from Kandy to Ella winds through it. Leopards are often seen at Yala, and elephants at Udawalawe and Minneriya. The coast is lined with beaches, from the walled fort town of Galle and the bays beyond it in the south-west to Trincomalee and the surf at Arugam Bay in the east.",
+    "The two monsoons strike opposite sides of the island at different times of year, so one coast is usually dry when the other is wet. Trains, buses and tuk-tuks reach almost everywhere, though journeys are slow, and many visitors hire a car with a driver for their trip."
+  ],
+  "whenToGo": {
+    "stripLabel": "The classic round of the Cultural Triangle, the hill country and the south-west coast. The two coasts have opposite seasons, each shown in its own strip below.",
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "avoid", "good", "best"],
+    "seasons": [
+      {
+        "name": "North-east monsoon",
+        "months": [12, 1, 2],
+        "text": "Dry and sunny on the west and south coasts and in the hill country, the main season for most of the island. The north and east get the rain, heaviest in November and December."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4],
+        "text": "Hot and humid everywhere, with afternoon thunderstorms building in April. The Sinhala and Tamil New Year in mid-April fills buses and trains as families go home."
+      },
+      {
+        "name": "South-west monsoon",
+        "months": [5, 6, 7, 8, 9],
+        "text": "Rain and rough seas on the west and south coasts and in the western hills, heaviest in May and June, with sunny spells between. The east coast and the Cultural Triangle are dry, and Kandy's Esala Perahera comes in July or August."
+      },
+      {
+        "name": "Between the monsoons",
+        "months": [10, 11],
+        "text": "The wettest time over much of the island, with heavy afternoon downpours almost anywhere and landslides in the hills. The rain eases through November."
+      }
+    ],
+    "weather": "Warm all year on the coast, around 30°C by day, and cooler in the hills: Kandy, at about 500 m, is a few degrees cooler, and Nuwara Eliya, at about 1,900 m, has days around 20°C and chilly nights. Two monsoons bring the rain. The south-west monsoon, from about May to September, soaks the west and south coasts and the western hills; the north-east monsoon, from about November to February, wets the north and east. Between them, in October and November and again in April, storms can break anywhere.",
+    "festivals": [
+      {
+        "name": "Thai Pongal",
+        "place": "Jaffna and Tamil communities",
+        "when": "14 or 15 January",
+        "months": [1],
+        "text": "The Tamil harvest festival: rice is boiled with milk and jaggery in a new pot until it bubbles over, a sign of plenty, and offered to the sun."
+      },
+      {
+        "name": "Navam Perahera",
+        "place": "Gangaramaya Temple, Colombo",
+        "when": "The full moon in February",
+        "months": [2],
+        "text": "A night procession of decorated elephants, drummers, fire dancers and whip-crackers round the lake and streets near the temple."
+      },
+      {
+        "name": "Sinhala and Tamil New Year (Avurudu)",
+        "place": "Across Sri Lanka",
+        "when": "13–14 April",
+        "months": [4],
+        "text": "The biggest family holiday: the new year begins at a time set by astrologers, families eat milk rice (kiribath) and sweets, and villages hold games and contests. Many shops and businesses close for several days."
+      },
+      {
+        "name": "Vesak",
+        "place": "Across Sri Lanka",
+        "when": "The full moon in May",
+        "months": [5],
+        "text": "The birth, enlightenment and death of the Buddha. Streets are hung with paper lanterns, huge lit-up panels tell stories from his life, and roadside stalls (dansal) give out free food and drinks to passers-by."
+      },
+      {
+        "name": "Esala Perahera",
+        "place": "Kandy",
+        "when": "Usually in July or August, over ten nights ending at the full moon",
+        "months": [7, 8],
+        "text": "The island's greatest procession: dozens of elephants in lit-up costumes, dancers and drummers parade through Kandy at night, the leading elephant carrying the casket of the sacred tooth relic. Rooms fill months ahead."
+      },
+      {
+        "name": "Deepavali",
+        "place": "Hindu communities, especially in the north and the hill country",
+        "when": "Usually late October or early November",
+        "months": [10, 11],
+        "text": "The Hindu festival of lights, with oil lamps, new clothes, sweets and temple visits; a public holiday."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The west and south coasts",
+        "months": ["best", "best", "best", "best", "avoid", "avoid", "good", "good", "good", "avoid", "good", "best"],
+        "text": "Colombo, Bentota, Galle, Unawatuna and Mirissa. December to April is calm, dry and sunny, the beach season, with whale-watching boats out of Mirissa. From May the south-west monsoon brings heavy rain and dangerous seas, easing a little from July; October is wet again."
+      },
+      {
+        "name": "The east coast",
+        "months": ["good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "avoid", "avoid"],
+        "text": "Trincomalee, Pasikudah and Arugam Bay. Dry and calm from about April to September, when the west is wet: Arugam Bay's surf season, and whale and dolphin trips off Trincomalee. From November to January the north-east monsoon brings heavy rain and many places close."
+      },
+      {
+        "name": "The hill country",
+        "text": "Kandy, Nuwara Eliya, Ella and Horton Plains are greenest and clearest from about December to March. The western slopes are wet and windy in the south-west monsoon, and October and November bring the heaviest rain and some landslides. Pilgrims climb Adam's Peak (Sri Pada) by night to see the sunrise, in the season from about December to May."
+      },
+      {
+        "name": "The Cultural Triangle and the north",
+        "text": "Hot and dry for most of the year, often 32–34°C, with the rain mostly from about October to January. From about July to September, hundreds of elephants gather on the drying shores of Minneriya's reservoir. Jaffna, in the far north, has its own Tamil culture and cooking."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Ayubowan\" (\"may you live long\"), said with palms pressed together and a small bow, is the Sinhala greeting; Tamils say \"Vanakkam\" in the same way. Men shake hands. The gentle sideways tilt of the head that you'll see often means yes, or that's fine.",
+    "etiquette": [
+      "At temples, cover shoulders and knees, take off shoes and hats, and leave them at the entrance. White clothes are worn by many worshippers and always welcome.",
+      "Never pose for a photo with your back to a Buddha statue, touch or climb on statues, or show a Buddha tattoo: visitors have been refused entry or sent home for it.",
+      "Each full moon (Poya) is a public holiday: alcohol isn't sold, and many shops close.",
+      "Use your right hand to eat, pay and pass things. Rice and curry is often eaten with the fingers; ask for a spoon if you like.",
+      "Agree the fare before a tuk-tuk ride, or use a ride-hailing app or a metered tuk-tuk in Colombo and Kandy."
+    ],
+    "tipping": "Hotels and restaurants usually add a 10% service charge; a little extra for good service is welcome. Drivers and guides are tipped at the end of a trip, and safari trackers and jeep drivers after each drive.",
+    "dress": "Light, loose cotton for the heat. Swimwear belongs on the beach; cover up in towns. Bring something that covers shoulders and knees for temples, a warm layer for the hill country, where nights can be cold, and a light rain jacket.",
+    "food": [
+      {
+        "name": "Rice and curry",
+        "text": "The everyday meal: a mound of rice with several small curries, such as dhal, jackfruit, aubergine, fish or chicken, and a coconut sambol. Lunch is the big meal."
+      },
+      {
+        "name": "Hoppers",
+        "text": "Bowl-shaped pancakes of fermented rice flour and coconut milk, crisp at the edges and soft in the middle, often with an egg cooked in the bottom. String hoppers are steamed nests of rice noodles, eaten with curry at breakfast."
+      },
+      {
+        "name": "Kottu roti",
+        "text": "Flatbread chopped on a hot griddle with vegetables, egg and meat, to a loud clatter of steel blades that you'll hear down the street at night."
+      },
+      {
+        "name": "Pol sambol",
+        "text": "Freshly grated coconut pounded with chilli, red onion, lime and dried fish, served with almost every meal."
+      },
+      {
+        "name": "Lamprais",
+        "text": "A dish of the Dutch Burgher community: rice cooked in stock, with curries, a meatball and sambol, wrapped in a banana leaf and baked."
+      },
+      {
+        "name": "Tea and king coconut",
+        "text": "Ceylon tea, best tasted at an estate in the hill country, and king coconut (thambili), orange-shelled drinking coconuts sold at roadside stalls."
+      }
+    ],
+    "phrases": {
+      "language": "Sinhala",
+      "intro": "Sinhala, with its own rounded script, is the language of most people; Tamil is spoken in the north, the east and the tea estates, where hello is \"vanakkam\" and thank you \"nandri\". English is widely understood.",
+      "items": [
+        { "phrase": "Ayubowan (ආයුබෝවන්)", "say": "AH-yoo-boh-wahn", "meaning": "Hello; goodbye (\"May you live long\")" },
+        { "phrase": "Kohomada? (කොහොමද?)", "say": "KOH-hoh-mah-dah", "meaning": "How are you?" },
+        { "phrase": "Sthuthiyi (ස්තූතියි)", "say": "STOO-tee-yee", "meaning": "Thank you" },
+        { "phrase": "Karunakarala (කරුණාකරලා)", "say": "kah-roo-NAH-kah-rah-lah", "meaning": "Please" },
+        { "phrase": "Ow / Naha (ඔව් / නැහැ)", "say": "OH / NAH-hah", "meaning": "Yes / No" },
+        { "phrase": "Kiyada? (කීයද?)", "say": "KEE-yah-dah", "meaning": "How much?" },
+        { "phrase": "Hari rasai (හරි රසයි)", "say": "HAH-ree RAH-sai", "meaning": "Very tasty" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q854",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Sri Lankan rupee (Rs, LKR). Cards are taken in hotels and bigger restaurants; carry cash for tuk-tuks, buses and small places.",
+        "sources": [{ "property": "P38", "values": ["Q4596"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Sinhala and Tamil, both official. English is widely spoken and used in business and tourism.",
+        "sources": [{ "property": "P37", "values": ["Q13267", "Q5885"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types D (three large round pins) and G (as in the UK), 230 V; many sockets take both",
+        "sources": [
+          { "property": "P2853", "values": ["Q60740126", "Q1383497", "Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Sri Lanka Standard Time, UTC+5:30, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6828", "Q63230234"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "119 for police; 110 for fire and ambulance; 1990 for the free national ambulance service (Suwa Seriya)",
+        "sources": [{ "property": "P2852", "values": ["Q2807090", "Q25648823"] }],
+        "note": "Wikidata lists 119 and 110; the page adds 1990, the free island-wide ambulance service."
+      },
+      {
+        "key": "callingCode",
+        "text": "+94",
+        "sources": [{ "property": "P474", "values": ["+94"] }]
+      }
+    ]
+  }
+}

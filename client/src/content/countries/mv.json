@@ -1,0 +1,183 @@
+{
+  "code": "MV",
+  "slug": "maldives",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Assalaamu", "Dhivehi Raajje", "Marhabaa"],
+  "summary": "Coral atolls barely above the sea, with island resorts, guesthouse islands and manta reefs.",
+  "overview": [
+    "The Maldives is a chain of about 1,200 low coral islands, grouped in 26 ring-shaped atolls across the Indian Ocean south-west of Sri Lanka. It is the lowest-lying country in the world: its highest ground is only about 2.4 m above the sea. Most visitors stay at resorts, each usually with an island to itself, with white sand, a house reef for snorkelling and villas on stilts over the lagoon, and come for the reefs: manta rays, reef sharks, turtles and, in South Ari Atoll, whale sharks.",
+    "Since the late 2000s, guesthouses have opened on local islands such as Maafushi, Thoddoo and Dhigurah, a cheaper way to visit that shows everyday island life, with fishing harbours, mosques and evening football. Local islands follow Muslim customs: there's no alcohol, and swimwear is worn only on beaches set aside for visitors. Malé, the capital, is a crowded island city of narrow streets, with a busy fish market and the Old Friday Mosque, built of carved coral stone in the 17th century.",
+    "Most international flights land at Velana airport, on its own island next to Malé. From there, islands are reached by speedboat, by seaplane, which flies in daylight only, or by a domestic flight and a boat, usually arranged by the resort or guesthouse. Public ferries link local islands more slowly and cheaply."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "The north-east monsoon brings the sunniest, driest and calmest weather, with clear water for diving. Christmas, New Year and February are the busiest and dearest weeks; April is the hottest month, with very calm seas."
+      },
+      {
+        "name": "Wet season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "The south-west monsoon brings more cloud, wind and rain, usually in heavy showers and storms with sunny spells between, rather than days of steady rain. Boat crossings get choppier and seaplanes are sometimes delayed. Prices drop, the surf is up, and manta rays gather in Baa Atoll."
+      },
+      {
+        "name": "Change of monsoon",
+        "months": [11],
+        "text": "Unsettled, with showers and shifting winds as the north-east monsoon returns. Usually quieter and cheaper before the Christmas season starts."
+      }
+    ],
+    "weather": "Hot and humid all year, around 30°C by day and 26°C at night, with the sea close to 28°C. From about December to April the north-east monsoon brings the driest and calmest weather; from about May to November the south-west monsoon brings more cloud, wind and rain, often in short, heavy storms. The islands lie close to the equator, so cyclones rarely reach them, though storms further north can bring a few days of rough seas.",
+    "festivals": [
+      {
+        "name": "Ramadan and Kuda Eid (Eid al-Fitr)",
+        "place": "Across the Maldives",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "On local islands, cafés close by day and life slows down, then comes alive after sunset. Resorts carry on as normal. Kuda Eid, the \"small Eid\", is a holiday of several days at the end."
+      },
+      {
+        "name": "Bodu Eid (Eid al-Adha)",
+        "place": "Across the Maldives",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The \"big Eid\", a holiday of several days, when many Maldivians travel home to their islands and ferries and domestic flights are busy."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Malé and across the Maldives",
+        "when": "26 July",
+        "months": [7],
+        "text": "Independence from Britain in 1965 is the main national holiday, celebrated with parades, music and fireworks in Malé."
+      },
+      {
+        "name": "The Prophet's Birthday (Mawlid)",
+        "place": "Across the Maldives",
+        "when": "Moves with the Islamic calendar: in 2027, about mid-August",
+        "months": [8],
+        "text": "A public holiday, marked on many islands with prayers and shared feasts of traditional dishes."
+      },
+      {
+        "name": "Republic Day",
+        "place": "Across the Maldives",
+        "when": "11 November",
+        "months": [11],
+        "text": "The second republic was founded on this day in 1968; a public holiday, with flags and events in Malé."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Malé and the nearby atolls",
+        "text": "North and South Malé atolls are closest to the airport, reached by speedboat, with the most resorts and guesthouse islands. The quickest transfers, but the busiest waters."
+      },
+      {
+        "name": "Baa Atoll",
+        "text": "A UNESCO biosphere reserve north-west of Malé. From about June to November, plankton draws manta rays, sometimes by the dozen, into Hanifaru Bay, where only snorkelling is allowed."
+      },
+      {
+        "name": "Ari Atoll",
+        "text": "West of Malé, reached by seaplane or a longer boat ride. The southern rim is known for whale sharks, seen in every month, and the atoll has some of the best dive sites in the country."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Assalaamu alaikum\" is the polite greeting, and \"Kihineh?\" (how are you?) the friendly one. Men shake hands; with women, wait for her to offer. At resorts, staff greet guests in English, often by name.",
+    "etiquette": [
+      "On local islands and in Malé, cover shoulders and knees away from the beaches set aside for visitors, and save swimwear for those beaches or for boat trips.",
+      "Alcohol is served only at resorts and on boats with a licence. Bringing alcohol, pork or religious idols into the country isn't allowed, and bags are scanned on arrival.",
+      "Shops and cafés close for about a quarter of an hour at each prayer time, and for longer at Friday midday prayers.",
+      "Don't stand on, touch or take coral, and don't take shells or sand home; feeding fish is discouraged.",
+      "Keep affection private on local islands, and ask before photographing people."
+    ],
+    "tipping": "Resorts and many restaurants add a 10% service charge. Many guests also leave a tip for room attendants, butlers and dive guides at the end of a stay, often in US dollars. On local islands, tipping isn't expected but is welcome.",
+    "dress": "At resorts, beachwear and light, casual clothes; some restaurants ask for a shirt and long trousers in the evening. On local islands and in Malé, loose clothes that cover shoulders and knees. Bring reef-safe sun cream, a rash vest and a hat: the sun is fierce, and the light off the water doubles it.",
+    "food": [
+      {
+        "name": "Mas huni",
+        "text": "The breakfast dish: shredded smoked tuna mixed with grated coconut, onion, chilli and lime, scooped up with roshi, a thin flatbread."
+      },
+      {
+        "name": "Garudhiya",
+        "text": "A clear tuna broth, eaten with rice, lime, chilli and onion: the oldest everyday meal of the islands."
+      },
+      {
+        "name": "Mas riha",
+        "text": "Tuna curry, made with coconut milk and curry leaves, eaten with rice or roshi."
+      },
+      {
+        "name": "Hedhikaa",
+        "text": "Short eats served with sweet tea in the afternoon: gulha (fried balls of tuna and coconut), bajiya and other small fried snacks, laid out on plates in every café."
+      },
+      {
+        "name": "Kulhi boakibaa",
+        "text": "A spicy baked fish cake of tuna, rice and coconut, cut into squares and served at teatime and celebrations."
+      },
+      {
+        "name": "Bondibaiy",
+        "text": "Rice pudding cooked with coconut milk, sugar and cardamom, sometimes with rose water, a sweet for Eid and festive days."
+      }
+    ],
+    "phrases": {
+      "language": "Dhivehi",
+      "intro": "Dhivehi is written in its own right-to-left script, Thaana. English is spoken by almost everyone who works with visitors, and taught in schools.",
+      "items": [
+        { "phrase": "Assalaamu alaikum (އައްސަލާމު ޢަލައިކުމް)", "say": "ah-sah-LAA-moo ah-LAI-koom", "meaning": "Hello (\"Peace be upon you\")" },
+        { "phrase": "Kihineh? (ކިހިނެއް؟)", "say": "kee-HEE-neh", "meaning": "How are you?" },
+        { "phrase": "Rangalhu (ރަނގަޅު)", "say": "RUN-gah-loo", "meaning": "Good; fine" },
+        { "phrase": "Shukuriyaa (ޝުކުރިއްޔާ)", "say": "shoo-koo-REE-yah", "meaning": "Thank you" },
+        { "phrase": "Aan / Noon (އާން / ނޫން)", "say": "AAN / NOON", "meaning": "Yes / No" },
+        { "phrase": "Kihaa vareh? (ކިހާ ވަރެއް؟)", "say": "kee-HAA VAH-reh", "meaning": "How much?" },
+        { "phrase": "Varah meeru (ވަރަށް މީރު)", "say": "VAH-rah MEE-roo", "meaning": "Very tasty" },
+        { "phrase": "Dhanee (ދަނީ)", "say": "DAH-nee", "meaning": "Goodbye (\"I'm going\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q826",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Maldivian rufiyaa (Rf, MVR). Resorts price and charge in US dollars and take cards; on local islands, rufiyaa or dollars in cash are useful.",
+        "sources": [{ "property": "P38", "values": ["Q206600"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Dhivehi. English is widely spoken, especially in tourism and business.",
+        "sources": [{ "property": "P37", "values": ["Q32656"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Mostly type G (as in the UK), with type D (three large round pins) in places; many resorts have universal sockets. 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q60740126"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata also lists types A, C, J, K and L; the page names the sockets travellers usually find."
+      },
+      {
+        "key": "driving",
+        "text": "On the left (few visitors drive: most islands have no roads to speak of)",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Maldives Time, UTC+5, all year (no summer time). Some resorts set their own clocks an hour ahead, so check on arrival.",
+        "sources": [{ "property": "P421", "values": ["Q6806", "Q63285949"] }],
+        "note": "Wikidata gives the national time; the page adds that some resorts keep their own \"island time\", an hour ahead."
+      },
+      {
+        "key": "emergency",
+        "text": "119 for police, 102 for ambulance and 118 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q2807090", "Q25648798", "Q11185210"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+960",
+        "sources": [{ "property": "P474", "values": ["+960"] }]
+      }
+    ]
+  }
+}

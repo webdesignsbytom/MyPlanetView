@@ -1,0 +1,151 @@
+{
+  "code": "TC",
+  "slug": "turks-and-caicos-islands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Good morning", "Turks & Caicos"],
+  "summary": "Turquoise shallows, Grace Bay's white sand, rock iguanas and whales off Salt Cay.",
+  "overview": [
+    "The Turks and Caicos Islands are a British Overseas Territory of about 40 low limestone islands and cays, eight of them inhabited, south-east of the Bahamas and north of Hispaniola. They lie in the Atlantic rather than the Caribbean Sea, on shallow banks of white sand that turn the water a pale turquoise, and the reef walls just offshore drop away into deep blue water, famous with divers.",
+    "Providenciales, known as Provo, is where most visitors stay. Grace Bay is a long beach of soft white sand backed by hotels and villas, with snorkelling over the reef at Bight Reef and Smith's Reef; Chalk Sound is a turquoise lagoon dotted with tiny islets; and Long Bay, shallow and windy, is the place for kitesurfing. Small boats run out to the cays, among them Little Water Cay, or Iguana Island, home of the rare Turks and Caicos rock iguana.",
+    "Grand Turk, the capital island, is small and old-fashioned, with the colonial buildings of Cockburn Town, donkeys left wandering from the days of the salt trade, a cruise port, and a reef wall within swimming distance of the beach. Salt Cay, nearby, was the heart of the salt industry. North and Middle Caicos, joined by a causeway and reached by ferry from Provo, are green and quiet, with caves and empty beaches. A hire car is the easy way around Provo; buses are few."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Dry, sunny and pleasantly warm, about 27–28°C by day, with the sea around 24–26°C. Windy spells and the odd cold front can stir the water up. Humpback whales pass from January to April."
+      },
+      {
+        "name": "Early summer",
+        "months": [5, 6, 7],
+        "text": "Hotter but still mostly dry, with calm, very clear water: some of the best weeks for diving and snorkelling, and fewer visitors than in winter."
+      },
+      {
+        "name": "Late summer and autumn",
+        "months": [8, 9, 10, 11],
+        "text": "The hottest, most humid stretch and the heart of the hurricane season. September and October carry the most risk, and some resorts and restaurants close for part of September. November is calm and quiet."
+      }
+    ],
+    "weather": "Sunnier and drier than most Caribbean islands, as the islands are low and flat, with no mountains to wring rain from the clouds. Highs run from about 27°C in winter to 32°C in late summer, steady trade winds blow most of the year, and the sea stays between about 24 and 29°C. Short showers make up most of the rain, mainly in autumn, and tropical storms threaten from June to November.",
+    "festivals": [
+      {
+        "name": "Humpback whale season",
+        "place": "Salt Cay and Grand Turk",
+        "when": "Usually January to April",
+        "months": [1, 2, 3, 4],
+        "text": "Humpback whales pass through the deep Turks Island Passage on their way to and from their breeding grounds on the Silver Bank to the south-east, and boats from Salt Cay and Grand Turk take small groups out to watch."
+      },
+      {
+        "name": "Emancipation Day",
+        "place": "Across the islands",
+        "when": "Around 1 August",
+        "months": [8],
+        "text": "A public holiday marking the end of slavery in the British Empire in the 1830s, with church services, music and family gatherings."
+      },
+      {
+        "name": "Conch Festival",
+        "place": "Blue Hills, Providenciales",
+        "when": "Usually in November",
+        "months": [11],
+        "text": "A one-day food fair for the islands' favourite shellfish: local restaurants compete with conch cooked every way they can think of, with live music on the beach."
+      },
+      {
+        "name": "Maskanoo",
+        "place": "Grace Bay, Providenciales",
+        "when": "Usually around Christmas, often on Boxing Day",
+        "months": [12],
+        "text": "A street festival mixing masquerade and Bahamian-style Junkanoo: costumed dancers, drums and cowbells along Grace Bay Road."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Islanders born here, known as Belongers, are polite and rather reserved, and courtesy matters: open with a greeting for the time of day before asking for anything, and offer a handshake when introduced.",
+    "etiquette": [
+      "Most reefs are in national parks: don't touch or stand on coral, and never take live conch, coral or shells.",
+      "On Iguana Island, keep to the boardwalks and don't feed or handle the iguanas.",
+      "On Grand Turk and Salt Cay, donkeys and horses roam freely: drive slowly, especially after dark.",
+      "Beach clothes belong on the beach: in Cockburn Town, shops and restaurants, people dress more modestly."
+    ],
+    "tipping": "Resort and restaurant bills often carry a 10–15% service charge plus tax; where there's no charge, allow about 15%. Dive and boat crews and taxi drivers expect something too.",
+    "dress": "Casual resort clothes and swimwear, with a light jacket for breezy winter evenings and boat trips. Winter divers may want a thicker wetsuit, as the water cools to about 24°C.",
+    "food": [
+      {
+        "name": "Conch",
+        "text": "On every menu: cracked conch, beaten thin and fried; conch fritters; conch chowder; and conch salad, raw and \"cooked\" in lime juice with peppers and onion."
+      },
+      {
+        "name": "Peas and grits",
+        "text": "Hominy grits cooked with pigeon peas and salted meat, the islands' everyday side dish."
+      },
+      {
+        "name": "Spiny lobster",
+        "text": "Caught on the shallow banks and served grilled, in salads or in fritters."
+      },
+      {
+        "name": "Fresh fish",
+        "text": "Snapper, grouper and mahi-mahi from the boats of South Caicos, often blackened or grilled."
+      }
+    ],
+    "phrases": {
+      "language": "Turks and Caicos English",
+      "intro": "English is the language here, with an accent close to the Bahamas'. These are the names and words worth getting right.",
+      "items": [
+        { "phrase": "Caicos", "say": "KAY-kos", "meaning": "The larger group of islands" },
+        { "phrase": "Provo", "say": "PROH-voh", "meaning": "Providenciales, the main island" },
+        { "phrase": "Cockburn Town", "say": "KOH-burn town", "meaning": "The capital, on Grand Turk" },
+        { "phrase": "Cay", "say": "KEE", "meaning": "A small, low island" },
+        { "phrase": "Belonger", "say": "bee-LONG-er", "meaning": "An islander with local status" },
+        { "phrase": "Conch", "say": "KONK", "meaning": "The shellfish on every menu" },
+        { "phrase": "Rake and scrape", "say": "RAYK an SKRAYP", "meaning": "Local folk music, with a hand saw scraped by a knife, drums and accordion" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q18221",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar (US$)",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left, though many cars are American, with the steering wheel on the left too",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern Time, UTC−5, and UTC−4 in summer (from March to early November, as in the US)",
+        "sources": [{ "property": "P421", "values": ["Q941023", "Q5390"] }],
+        "note": "Wikidata also lists UTC−4 alone, from the years 2015 to 2018 when the islands kept Atlantic time all year; they returned to Eastern Time with summer time in 2018."
+      },
+      {
+        "key": "emergency",
+        "text": "911",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 649",
+        "sources": [{ "property": "P474", "values": ["+1649"] }]
+      }
+    ]
+  }
+}

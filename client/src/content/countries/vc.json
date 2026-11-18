@@ -1,0 +1,173 @@
+{
+  "code": "VC",
+  "slug": "saint-vincent-and-the-grenadines",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Good morning", "Vincy", "Hairoun"],
+  "summary": "St Vincent's volcano and rainforest, then the Grenadines' yachts and turtles.",
+  "overview": [
+    "Saint Vincent and the Grenadines is one main island and a chain of about 30 smaller ones, strung out to the south towards Grenada. St Vincent is steep, green and volcanic, with black-sand beaches and La Soufrière, 1,234 m, at its northern end; the volcano last erupted in 2021, and a trail climbs to the crater rim when it's open. Kingstown, the capital, is a working port with a crowded market and botanical gardens founded in 1765, among the oldest in the Americas, where a breadfruit tree is said to descend from one Captain Bligh brought in 1793.",
+    "The Grenadines are what draw most visitors. Bequia, about an hour by ferry from Kingstown, has Admiralty Bay full of yachts, boat-builders on the beach and a long whaling tradition. Mustique is a privately run island of villas; Canouan and Mayreau are small and quiet; Union Island is a base for sailors and kitesurfers. The Tobago Cays, a marine park of uninhabited islets inside a horseshoe reef, are where you swim with green turtles. The islands are reached by small plane, ferry or chartered yacht.",
+    "Back on St Vincent, the Vermont Nature Trail climbs through rainforest that is home to the St Vincent parrot, found nowhere else; Dark View Falls drop in two tiers in the north-west; and Wallilabou Bay was a set for the Pirates of the Caribbean films. St Vincent was also the homeland of the Garifuna, or Black Caribs, who fought the British until most were deported to Central America in 1797."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [1, 2, 3, 4, 5],
+        "text": "Sunny and breezy, about 28–30°C, with the steady trade winds sailors come for: the best months for chartering in the Grenadines and climbing La Soufrière. Bequia's Easter Regatta falls in these months."
+      },
+      {
+        "name": "Wet season",
+        "months": [6, 7, 8, 9, 10, 11],
+        "text": "Warm and humid, with heavy showers, often in the afternoon. Being so far south, the islands are hit by hurricanes less often than those further north, though it does happen. Vincy Mas takes over Kingstown in early July."
+      },
+      {
+        "name": "Christmas",
+        "months": [12],
+        "text": "The showers ease and the trade winds return, and the Nine Mornings festival gets Kingstown out of bed before dawn."
+      }
+    ],
+    "weather": "Warm all year, 25–31°C. St Vincent's mountains catch heavy rain, above all on the windward east side, while the low Grenadines are much drier, with scrubby hills and little fresh water. The rainy season runs from about June to November, the same months as the hurricane season.",
+    "festivals": [
+      {
+        "name": "National Heroes' Day",
+        "place": "Across St Vincent",
+        "when": "14 March",
+        "months": [3],
+        "text": "Honours Joseph Chatoyer, the Garifuna chief killed fighting the British in 1795 and the country's first national hero."
+      },
+      {
+        "name": "Bequia Easter Regatta",
+        "place": "Admiralty Bay, Bequia",
+        "when": "Easter weekend; in 2027, 26–29 March",
+        "months": [3, 4],
+        "text": "Visiting yachts race alongside Bequia's own wooden double-ended boats, built on the island, with music and food ashore."
+      },
+      {
+        "name": "Vincy Mas",
+        "place": "Kingstown",
+        "when": "Usually late June to early July, peaking on a Monday and Tuesday",
+        "months": [6, 7],
+        "text": "St Vincent's carnival: steel pan and calypso competitions, the dawn street party of J'ouvert, and mas bands in costume on the road."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the country",
+        "when": "27 October",
+        "months": [10],
+        "text": "A public holiday for independence from Britain in 1979, with parades and ceremonies."
+      },
+      {
+        "name": "Nine Mornings",
+        "place": "Kingstown and towns across St Vincent",
+        "when": "The nine days before Christmas, 16–24 December",
+        "months": [12],
+        "text": "A Vincentian tradition: people get up before dawn for street parties, concerts, bike rides and early swims, counting down to Christmas."
+      }
+    ],
+    "regions": [
+      {
+        "name": "St Vincent",
+        "text": "Mountainous and much wetter, especially on the windward side. January to May is the time for hiking La Soufrière and the rainforest trails, which turn slippery in the rains."
+      },
+      {
+        "name": "The Grenadines",
+        "text": "Low and dry, with steady trade winds that make about December to June the main sailing season. Water is scarce on the smaller islands, and much of it comes from rain tanks."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Say \"Good morning\" or \"Good afternoon\" first, to drivers, shopkeepers and anyone you pass on a village road; it counts for more than any local phrase. Strangers shake hands, and older people are given a title, \"Miss\" or \"Mister\".",
+    "etiquette": [
+      "Don't wear camouflage-print clothes: by law they're reserved for the security forces.",
+      "In anchorages, \"boat boys\" come out to yachts selling fruit, bread, ice or help with moorings. Be polite, and agree the price before you accept anything.",
+      "In the Tobago Cays, follow the marine park's rules: anchor only where allowed, never on coral, take nothing, and pay the park fee to the rangers.",
+      "Ask the vendors at Kingstown market before photographing them or their stalls.",
+      "Sundays are quiet, with shops shut and churches full."
+    ],
+    "tipping": "Restaurants without a service charge get about 10%; skippers, guides and taxi drivers who've done well get a tip too.",
+    "dress": "Loose cotton clothes suit the heat; in Kingstown and the villages people cover up, so wear a shirt over swimwear. For La Soufrière, bring walking boots, a rain jacket and a warm layer: the rim is often wet, windy and chilly. On a boat, a hat, a long-sleeved top and reef-safe sunscreen.",
+    "food": [
+      {
+        "name": "Roasted breadfruit and fried jackfish",
+        "text": "The national dish: breadfruit roasted whole in its skin over coals, then peeled and served with small fried jackfish."
+      },
+      {
+        "name": "Callaloo soup",
+        "text": "Young dasheen leaves cooked down with okra, onion and coconut milk into a dark green soup; crab or salt meat often goes in too."
+      },
+      {
+        "name": "Lobster on the beach",
+        "text": "Spiny lobster grilled over driftwood at beach barbecues in the Grenadines."
+      },
+      {
+        "name": "Arrowroot",
+        "text": "St Vincent was long the world's leading grower of arrowroot, and its fine starch still goes into local biscuits, puddings and porridge."
+      },
+      {
+        "name": "Hairoun beer and Sunset rum",
+        "text": "Hairoun, the local lager, takes the islands' old Kalinago name. The local distillery's Sunset Very Strong rum is famous for its strength: locals drink it with care, and visitors should too."
+      }
+    ],
+    "phrases": {
+      "language": "Vincentian English",
+      "intro": "English is the language of the islands, with Vincentian Creole spoken among friends. A few of the names and words you'll come across:",
+      "items": [
+        { "phrase": "Vincy", "say": "VIN-see", "meaning": "A Vincentian, and a fond name for the islands" },
+        { "phrase": "Hairoun", "meaning": "St Vincent's Kalinago name, often given as \"land of the blessed\"" },
+        { "phrase": "Bequia", "say": "BEK-way", "meaning": "The largest of the Grenadines" },
+        { "phrase": "Mustique", "say": "moo-STEEK", "meaning": "The privately run island of villas" },
+        { "phrase": "La Soufrière", "say": "lah soo-free-AIR", "meaning": "The volcano at the north end of St Vincent" },
+        { "phrase": "Vincy Mas", "say": "VIN-see MAS", "meaning": "The summer carnival" },
+        { "phrase": "Nine Mornings", "meaning": "The dawn festivities in the nine days before Christmas" },
+        { "phrase": "Boat boy", "meaning": "A vendor who comes out to yachts by boat with fruit, bread and ice" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q757",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Eastern Caribbean dollar (EC$, XCD), fixed to the US dollar. US dollars are accepted in most tourist places.",
+        "sources": [{ "property": "P38", "values": ["Q26365"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Vincentian Creole is spoken day to day.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Several types: British Type G (three rectangular pins), with A, C, E, I and K also listed; 230 V. A universal adapter is the safe choice.",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q24288454", "Q1378312", "Q2335536", "Q2335539", "Q1502017"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q109529581"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 or 911",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 784",
+        "sources": [{ "property": "P474", "values": ["+1784"] }]
+      }
+    ]
+  }
+}

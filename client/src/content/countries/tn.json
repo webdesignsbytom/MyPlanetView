@@ -1,0 +1,194 @@
+{
+  "code": "TN",
+  "slug": "tunisia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Aslema", "Tounes", "Marhba"],
+  "summary": "Carthage, El Jem's Roman amphitheatre, and the dunes of the Sahara past Douz.",
+  "overview": [
+    "Tunisia fits a great deal into a small country. Tunis has a walled medina of covered souks and old mosques, and a light railway runs out to the ruins of Carthage and the blue-and-white clifftop village of Sidi Bou Said. Inland are Dougga, a whole Roman town spread over a hillside among olive groves, and Kairouan, one of Islam's holy cities. Down the coast, the vast Roman amphitheatre of El Jem rises over a small town, and Sousse and Monastir keep their old medinas behind the beach hotels.",
+    "The south turns to desert. In Matmata, families made their homes in pits dug into the soft ground, and a few still live in them; around Tataouine, fortified granaries (ksour) stand on the hilltops; and the palm groves of Tozeur, the salt flat of Chott el Jerid and the dunes beyond Douz lead into the Sahara. Several of these places were sets for the Star Wars films. The island of Djerba, with long beaches, the old El Ghriba synagogue and a village of painted walls, is the south's resort.",
+    "Louages, shared minibuses that leave when they're full, run between almost every town. Trains link Tunis with the coast as far as Gabès, and the TGM light railway goes from central Tunis to Carthage, Sidi Bou Said and La Marsa. Cash is still needed in markets and cafés. Some governments advise against travel close to the borders with Libya and Algeria: check your own government's current advice."
+  ],
+  "whenToGo": {
+    "stripLabel": "Tunis, the north and the coast, where most visitors spend their time. The desert south has a strip of its own below.",
+    "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cool and changeable in the north, about 15°C by day in Tunis, with rain on and off. The beach resorts are quiet and some hotels close, but it's the best time for the Sahara."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The country is green and the wild flowers are out at Dougga and in the hills. April and May are warm and dry, good for the ruins and the medinas, though the sea is still cool for swimming."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and dry, about 33°C in Tunis in August and over 40°C in the south. The resorts are full of European and Tunisian families, and the summer festivals bring concerts to Roman theatres."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The sea is at its warmest in September, around 27°C, and the crowds thin out. October is still warm; the rains usually return in November."
+      }
+    ],
+    "weather": "The north has a Mediterranean climate, with mild, wet winters and hot, dry summers; most of the rain falls between October and March. The hills of the north-west, around Ain Draham, are the wettest part of the country, with snow in some winters. Going south, the land dries to steppe and then desert, where summer days pass 40°C and winter nights can drop close to freezing. Djerba and the south-east coast are drier and sunnier than the north all year.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Tunisia",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "During the fast, many cafés close or cover their windows by day, offices work short hours, and the medinas fill at night with families out for sweets and coffee. The Eid that ends it is a holiday of two or three days."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Tunisia",
+        "when": "20 March",
+        "months": [3],
+        "text": "A public holiday marking the end of French rule in 1956, with flags on every street."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Tunisia",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Sheep are tethered on balconies and in courtyards in the days before; on the feast, families slaughter them and share the meat. Transport is crowded as people travel home."
+      },
+      {
+        "name": "Carthage International Festival",
+        "place": "The Roman theatre, Carthage",
+        "when": "Usually in July and August",
+        "months": [7, 8],
+        "text": "Running since 1964: evening concerts by Arab and international singers, plays and dance in the restored Roman theatre of Carthage."
+      },
+      {
+        "name": "Republic Day",
+        "place": "Across Tunisia",
+        "when": "25 July",
+        "months": [7],
+        "text": "A public holiday for the end of the monarchy and the founding of the republic in 1957."
+      },
+      {
+        "name": "International Festival of the Sahara",
+        "place": "Douz",
+        "when": "Usually in late December, over four days",
+        "months": [12],
+        "text": "Camel and horse races on the sand, desert hunting dogs, music, poetry and the traditional dress of the nomadic peoples of the south, held at the edge of the dunes."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The south and the Sahara",
+        "months": ["best", "best", "best", "best", "good", "avoid", "avoid", "avoid", "good", "best", "best", "best"],
+        "text": "Tozeur, Douz, Matmata, Tataouine and Ksar Ghilane are for the cooler half of the year, with sunny days of 17 to 28°C. Winter nights in the desert are cold, so bring a warm layer for a camp. In May and September the middle of the day is very hot, and from June to August temperatures above 40°C are normal."
+      },
+      {
+        "name": "The coast and Djerba",
+        "text": "Hammamet, Sousse, Monastir, Mahdia and Djerba are beach towns first. The sea is warm enough for most swimmers from June to October; in winter the resorts are calm, and some hotels close until spring."
+      },
+      {
+        "name": "The north-west",
+        "text": "Greener and wetter than the rest: cork-oak forests round Ain Draham, the coral coast at Tabarka, and the Roman sites of Dougga and Bulla Regia, whose villas were built with rooms underground to escape the summer heat. Spring is the best time."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Aslema\" is the everyday Tunisian hello, followed by \"Labes?\" (all well?), which is also the answer. Handshakes are usual, and friends kiss on both cheeks, often more than twice. French is the second language of greetings: \"Bonjour\" works everywhere.",
+    "etiquette": [
+      "Haggle in the souks, calmly and with a smile; fixed-price craft shops are an option if you'd rather not. Yellow city taxis have meters: ask the driver to switch it on.",
+      "Most mosques are closed to non-Muslims. Kairouan's Great Mosque lets visitors into its courtyard at set times, with shoulders and knees covered.",
+      "During Ramadan, eat and drink discreetly by day outside hotels and tourist restaurants.",
+      "Alcohol is sold in hotels, some restaurants and supermarkets, including local wine and Celtia beer; don't drink in the street.",
+      "Many Tunisians, older women in the south above all, would rather not be photographed: ask first, and keep cameras away from police and official buildings."
+    ],
+    "tipping": "Welcome rather than required. Round up in cafés and taxis, leave about 10% in restaurants where service isn't added, and give guides and drivers a few dinars at the end of a tour.",
+    "dress": "Relaxed in Tunis, Sidi Bou Said and the resorts, where beachwear is fine at the beach and pool but not in town. Away from them, and in the south and the medinas, cover shoulders and knees. Pack a scarf and a warm layer for desert nights in winter.",
+    "food": [
+      {
+        "name": "Brik",
+        "text": "Paper-thin pastry folded round an egg, tuna, capers and parsley and fried until crisp. Eat it with your fingers, biting carefully so the runny yolk doesn't go down your sleeve."
+      },
+      {
+        "name": "Couscous",
+        "text": "Tunisian couscous is red with tomato and harissa, and comes with lamb, chicken or, on the coast around Sfax, fish."
+      },
+      {
+        "name": "Lablabi",
+        "text": "A cheap, filling bowl of chickpeas in a garlic and cumin broth, poured over torn bread and topped with harissa, olive oil, an egg and often tuna. A winter breakfast."
+      },
+      {
+        "name": "Ojja",
+        "text": "Eggs cooked in a spicy sauce of tomatoes and peppers, often with merguez sausage or prawns, mopped up with bread."
+      },
+      {
+        "name": "Fricassé",
+        "text": "Small fried bread rolls split open and filled with tuna, boiled egg, potato, olives and a smear of harissa, sold from snack shops."
+      },
+      {
+        "name": "Mint tea with pine nuts",
+        "text": "Sweet green tea with mint, served in small glasses with a spoonful of pine nuts floating on top. Order it in a café in Sidi Bou Said, looking out over the bay."
+      }
+    ],
+    "phrases": {
+      "language": "Tunisian Arabic (Derja)",
+      "intro": "French is widely spoken, and English in hotels and tourist areas. Tunisian Arabic borrows many words from French and Italian; spellings in Latin letters vary.",
+      "items": [
+        { "phrase": "Aslema (عسلامة)", "say": "as-LEH-ma", "meaning": "Hello" },
+        { "phrase": "Labes? (لاباس)", "say": "LEH-bes", "meaning": "All well? (and the answer: fine)" },
+        { "phrase": "Yaïshek (يعيشك)", "say": "ya-EE-shek", "meaning": "Thank you" },
+        { "phrase": "Behi (باهي)", "say": "BEH-hee", "meaning": "Good; OK" },
+        { "phrase": "Qaddech? (قداش)", "say": "kad-DESH", "meaning": "How much is it?" },
+        { "phrase": "Barcha (برشا)", "say": "BAR-sha", "meaning": "A lot; very" },
+        { "phrase": "Bslema (بالسلامة)", "say": "b-SLEH-ma", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q948",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Tunisian dinar (DT, TND). Cards are taken in hotels and larger shops; markets, cafés and louages want cash.",
+        "sources": [{ "property": "P38", "values": ["Q4602"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic; everyday speech is Tunisian Arabic. French is widely used in business, signs and menus.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q25989", "Q4689524"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "197 for police, 190 for ambulance and 198 for fire; 193 for the National Guard outside towns",
+        "sources": [{ "property": "P2852", "values": ["Q25743553", "Q25648833", "Q25648880", "Q25648835"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+216",
+        "sources": [{ "property": "P474", "values": ["+216"] }]
+      }
+    ]
+  }
+}

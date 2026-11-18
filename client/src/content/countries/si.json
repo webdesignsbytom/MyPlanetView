@@ -1,0 +1,179 @@
+{
+  "code": "SI",
+  "slug": "slovenia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dober dan", "Slovenija"],
+  "summary": "Lake Bled's island church, the Julian Alps, the Škocjan caves and a short Adriatic coast.",
+  "overview": [
+    "Slovenia squeezes Alpine peaks, limestone caves, a strip of Mediterranean coast and rolling vineyards into about 20,000 km², more than half of it forest. Ljubljana, the capital, is small, with a largely car-free centre, cafés along the Ljubljanica river, Jože Plečnik's Triple Bridge and a castle on the hill above. In the Julian Alps to the north-west, Lake Bled has a church on its island, reached by wooden pletna boats rowed standing up, and a castle on a cliff; Lake Bohinj, larger and quieter, lies inside Triglav National Park below Triglav, at 2,864 m the highest peak and the mountain on the national flag. Over the Vršič Pass, a road of some fifty hairpins, the emerald Soča runs down a valley of rafting, kayaking and First World War sites.",
+    "South-west of the capital lies the Karst, the limestone plateau that gave its name to such landscapes everywhere. The Škocjan Caves, a UNESCO World Heritage Site, have an underground canyon where the Reka river roars far below a footbridge; Postojna Cave is toured partly by a little train, and Predjama Castle is built into the mouth of a cave halfway up a cliff. Lipica is the original home of the Lipizzaner horses. Slovenia's coast is less than 50 km long, and Piran, an old Venetian-style town on a narrow point, is the place to stay. Maribor, far to the east, has the world's oldest vine still bearing grapes, over 400 years old, and the wine hills of Štajerska spread around it.",
+    "Trains and buses link the main towns, but a car makes the Alps and the Karst much easier, and nowhere is more than a few hours' drive from anywhere else. Walking trails are well marked, with mountain huts (koče) across the Alps."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Snow in the Alps, with skiing at Kranjska Gora, Vogel and Krvavec. Ljubljana's basin often sits in fog, around freezing, while the coast is mild but swept at times by the burja, a cold north-easterly wind. Lights and markets brighten Ljubljana in December."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Waterfalls run full with snowmelt and the valleys turn green, and the Planica ski-flying final draws big crowds in March. The high road passes, Vršič among them, usually reopen in spring once the snow is cleared."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm, 25–30°C, with thunderstorms building over the mountains in the afternoon. The best time for high walks and the Soča. In August the sea is at about 25°C, and Bled and Bohinj are at their busiest."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is calm and often clear; in October the larches turn gold in the Alps and the vineyards bring in the harvest. November is the wettest month, and St Martin's Day, on the 11th, toasts the new wine."
+      }
+    ],
+    "weather": "Three climates meet here. The Alps have snowy winters and fresh summers and catch some of the heaviest rain in Europe. On the coast the climate is Mediterranean, mild in winter and about 28°C on summer days. Ljubljana and the east are continental, with July days around 27°C, January days only a few degrees above freezing, and fog that can sit over the capital's basin for days. The burja (bora), a cold, gusty north-easterly, sometimes blasts across the Karst in winter.",
+    "festivals": [
+      {
+        "name": "Kurentovanje",
+        "place": "Ptuj",
+        "when": "The days before Shrove Tuesday, usually in February",
+        "months": [2],
+        "text": "Slovenia's best-known carnival: kurenti, figures in shaggy sheepskins, horned masks and heavy cowbells, dance through the streets to chase winter away."
+      },
+      {
+        "name": "Planica ski flying",
+        "place": "Planica, near Kranjska Gora",
+        "when": "Usually in late March",
+        "months": [3],
+        "text": "Ski jumpers fly well over 200 m from one of the world's biggest hills at the season's last World Cup event, watched by tens of thousands."
+      },
+      {
+        "name": "Statehood Day",
+        "place": "Across Slovenia",
+        "when": "25 June",
+        "months": [6],
+        "text": "The anniversary of Slovenia's declaration of independence from Yugoslavia in 1991, and a day off for most people."
+      },
+      {
+        "name": "Ljubljana Festival",
+        "place": "Ljubljana",
+        "when": "Usually in July and August",
+        "months": [7, 8],
+        "text": "Concerts, opera and dance through the summer, many of them in the open-air Križanke theatre in the old town."
+      },
+      {
+        "name": "Cows' Ball (Kravji bal)",
+        "place": "Bohinj",
+        "when": "Usually in mid-September",
+        "months": [9],
+        "text": "A folk festival for the return of the cows from the high pastures, with music, dancing and the valley's cheeses."
+      },
+      {
+        "name": "St Martin's Day",
+        "place": "Across Slovenia, above all the wine regions",
+        "when": "11 November",
+        "months": [11],
+        "text": "The day the new wine is christened, with roast goose or duck, red cabbage and mlinci (baked pasta sheets soaked in the roasting juices), and tastings in every wine region."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and eye contact on meeting. Slovenes can seem reserved at first, and use “gospod” (Mr) and “gospa” (Mrs) with surnames in formal settings. On mountain paths, walkers greet everyone they pass with a cheerful “Dober dan”.",
+    "etiquette": [
+      "Saunas at spas and hotels are usually mixed and nude: swimsuits aren't allowed inside, so bring a towel to sit on.",
+      "Many Slovenes are used to their country being mixed up with Slovakia, and notice when you get it right.",
+      "Expect to leave your shoes at the door when visiting a home.",
+      "Wild camping isn't allowed: use campsites, which are plentiful in the Alps and on the coast.",
+      "Book mountain huts ahead in summer, and carry cash for them."
+    ],
+    "tipping": "Tips aren't expected, but rounding up, or adding about a tenth in restaurants for good service, is common.",
+    "dress": "Practical and outdoorsy: walking boots and a rain jacket are useful in any season, and the Alps need warm layers even in summer. In churches, keep shoulders covered.",
+    "food": [
+      {
+        "name": "Kranjska klobasa",
+        "text": "Carniolan sausage, a smoked pork sausage with a protected name, served with mustard, sauerkraut and bread."
+      },
+      {
+        "name": "Idrijski žlikrofi",
+        "text": "Small dumplings from the mercury-mining town of Idrija, filled with potato, onion and herbs and served with a meat sauce or butter."
+      },
+      {
+        "name": "Jota",
+        "text": "A thick soup of beans, sauerkraut or sour turnip and potato, often with smoked pork, from the Karst and the coast."
+      },
+      {
+        "name": "Kraški pršut and teran",
+        "text": "Ham dried in the Karst's wind, sliced thin, with teran, a deep red wine from the iron-rich red soil there."
+      },
+      {
+        "name": "Potica",
+        "text": "A rolled cake swirled with walnut, poppy seed or tarragon filling, baked for Easter and Christmas."
+      },
+      {
+        "name": "Prekmurska gibanica",
+        "text": "A tall layered cake from the north-east, with poppy seed, cottage cheese, walnut and apple between sheets of pastry."
+      }
+    ],
+    "phrases": {
+      "language": "Slovene",
+      "intro": "Most Slovenes speak good English, and many speak German or Italian too, but a word or two of Slovene is always appreciated.",
+      "items": [
+        { "phrase": "Dober dan", "say": "DOH-ber dahn", "meaning": "Good day; hello" },
+        { "phrase": "Živjo", "say": "ZHEEV-yoh", "meaning": "Hi; bye" },
+        { "phrase": "Hvala", "say": "HVAH-lah", "meaning": "Thank you" },
+        { "phrase": "Prosim", "say": "PROH-seem", "meaning": "Please; you're welcome" },
+        { "phrase": "Oprostite", "say": "oh-PROS-tee-teh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Koliko stane?", "say": "KOH-lee-koh STAH-neh", "meaning": "How much is it?" },
+        { "phrase": "Na zdravje!", "say": "nah ZDRAHV-yeh", "meaning": "Cheers!" },
+        { "phrase": "Nasvidenje", "say": "nah-SVEE-deh-nyeh", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q215",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€), since 2007",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Slovene. Italian is also official on the coast, and Hungarian in the areas of the north-east where those communities live.",
+        "sources": [{ "property": "P37", "values": ["Q9063", "Q652", "Q9067"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, and UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q5412110"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for fire, ambulance and mountain rescue; 113 for police",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648804"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+386",
+        "sources": [{ "property": "P474", "values": ["+386"] }]
+      }
+    ]
+  }
+}

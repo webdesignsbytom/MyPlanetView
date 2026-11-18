@@ -1,0 +1,167 @@
+{
+  "code": "CG",
+  "slug": "republic-of-the-congo",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Mbote", "Congo", "Bienvenue"],
+  "summary": "Lowland gorillas in the northern rainforest, and Brazzaville's sapeurs and rumba.",
+  "overview": [
+    "The Republic of the Congo is the smaller of the two Congos, on the west bank of the great river. Most people live in the south, in Brazzaville and the Atlantic port of Pointe-Noire; the north is rainforest, threaded by rivers and with few roads. Brazzaville looks across the Congo River at Kinshasa, capital of the much larger DR Congo: apart from Rome and the Vatican, no two capitals in the world are closer. In the city, see the green-tiled Basilica of Sainte-Anne, the Poto-Poto school of painting, the rapids just downstream, and the music bars of Poto-Poto and Bacongo.",
+    "Most visitors come for Odzala-Kokoua National Park, created in 1935 and one of Africa's oldest, where western lowland gorillas are tracked on foot and forest elephants, buffalo and red river hogs come out into open clearings called bais. Nouabalé-Ndoki, further north where the country meets Cameroon and the Central African Republic, is wilder still. On the coast, Pointe-Noire has beaches, the eroded red cliffs of the Diosso Gorge and the old slave-trading port of Loango, and Conkouati-Douli National Park runs from forest and lagoons to the sea.",
+    "Brazzaville and Pointe-Noire are about 500 km apart, joined by a paved road, short flights and the old Congo-Ocean Railway when its trains are running. The northern parks are reached by small plane, or by long road and river journeys, almost always as part of an organised trip. Cards are taken in a few large hotels; everywhere else it's cash. Police checks are common, so keep your passport or a copy on you, and check your government's travel advice before you go."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [6, 7, 8, 9],
+        "text": "Next to no rain and a little cooler, in the mid-20s °C by day, under a lid of grey cloud that can sit over Brazzaville for days. The easiest months for road travel and forest walks."
+      },
+      {
+        "name": "First rains",
+        "months": [10, 11, 12],
+        "text": "Storms return in October, and November is usually Brazzaville's wettest month. The air turns hot and sticky, and the rain comes in short, heavy bursts, often in the afternoon or at night."
+      },
+      {
+        "name": "Main rains",
+        "months": [1, 2, 3, 4, 5],
+        "text": "Hot and humid, around 30°C. The rain eases slightly in January and February in most years, then the storms build again in March and April, when dirt roads in the countryside can become impassable. They fade out through May."
+      }
+    ],
+    "weather": "Hot and humid all year, with little change from month to month: about 30°C by day in the rainy months and a few degrees less in the dry season, with warm nights around 20°C. The south, Brazzaville and Pointe-Noire included, has a single long dry season from June to September and rain for the rest of the year, falling as heavy thunderstorms rather than all-day drizzle. The north, on the equator, gets rain in almost every month, with drier spells roughly from December to February and from June to August.",
+    "festivals": [
+      {
+        "name": "Easter",
+        "place": "Across the country",
+        "when": "Usually in March or April: in 2027, 28 March",
+        "months": [3, 4],
+        "text": "Most Congolese are Christian, Catholic or from the many Protestant and revival churches, and Easter weekend fills the churches with singing and the streets with people in their best clothes."
+      },
+      {
+        "name": "Pan-African Music Festival (FESPAM)",
+        "place": "Brazzaville",
+        "when": "Usually in July, about every two years",
+        "months": [7],
+        "text": "A week of concerts, parades and talks with musicians from across Africa and its diaspora, with Congolese rumba at the centre."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the country",
+        "when": "15 August",
+        "months": [8],
+        "text": "The national day, marking independence from France in 1960, with a military parade in Brazzaville."
+      },
+      {
+        "name": "Christmas and New Year",
+        "place": "Across the country",
+        "when": "25 December and 1 January",
+        "months": [12, 1],
+        "text": "Church services, long family meals and loud music in the bars; Brazzaville and Pointe-Noire stay up late to see in the New Year."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Odzala-Kokoua and the north",
+        "text": "Rainforest on the equator, humid in every month. Trips usually run in the drier spells, roughly June to September and December to February, when trails are less muddy; in the wettest weeks, river crossings and forest paths are hard going."
+      },
+      {
+        "name": "Pointe-Noire and the coast",
+        "text": "The dry season here is cooler and greyer than inland, and the sea is cooler too. The water is warmest in the rainy months, when sunny spells come between the storms."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Shake hands with everyone when you arrive and again when you leave, whether in an office, a shop or a small group. \"Bonjour\" is always right, and \"Mbote\" (hello), which works in both Lingala and Kituba, will raise a smile. Older people are called \"Papa\" and \"Maman\" as a mark of respect, even by strangers.",
+    "etiquette": [
+      "Never photograph soldiers, police, the presidential palace, the airport, bridges or government buildings, and ask before photographing people.",
+      "Carry your passport, or a copy, at all times: police and gendarmerie checkpoints are common in town and on the roads.",
+      "The sapeurs, Brazzaville's dandies in designer suits and polished shoes, enjoy an audience, but ask before you take a picture. Bacongo is their home ground.",
+      "Give and take things with your right hand, or with both hands when it's something that matters.",
+      "Bargain in markets such as the Marché Total in Bacongo; in shops and restaurants, prices are fixed.",
+      "On a gorilla trek, follow the trackers' rules on distance and face masks, and don't go if you have a cold: gorillas catch human illnesses."
+    ],
+    "tipping": "Not expected in ordinary bars and cafés, but welcome in restaurants in Brazzaville and Pointe-Noire, where 5–10% is generous. In the national parks, guides, trackers and camp staff are usually tipped at the end of a stay.",
+    "dress": "Congolese dress with care, and neat clothes earn respect: the sapeurs are an extreme form of a common habit. Wear light cotton for the heat. In the forest, wear long sleeves and trousers in muted colours, and bring a rain jacket and boots that can get wet, since gorilla treks often wade through swamps and streams.",
+    "food": [
+      {
+        "name": "Saka-saka",
+        "text": "Cassava leaves pounded and simmered for hours with palm oil, peanut paste or smoked fish: the dark green stew at the heart of most family meals."
+      },
+      {
+        "name": "Chikwangue",
+        "text": "Fermented cassava dough, boiled in a wrapping of leaves into a firm, slightly sour loaf. It keeps for days and is sliced to eat with stews and grilled fish."
+      },
+      {
+        "name": "Maboké",
+        "text": "Fish, chicken or meat steamed in a parcel of leaves with onion, tomato and chilli, and opened at the table so the juices stay inside."
+      },
+      {
+        "name": "Grilled fish and plantain",
+        "text": "Riverside bars in Brazzaville and the beaches of Pointe-Noire grill whole fish and chicken, served with fried plantain and pili-pili, a fierce chilli sauce."
+      },
+      {
+        "name": "Palm wine and beer",
+        "text": "Palm wine (malafu) is tapped fresh in the villages and turns sour within a day; in town, the usual beers are Ngok' and Primus, both brewed in the country."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "French is the language of the state, schools, signs and business. In the street, Lingala is the common language of Brazzaville and the north, and Kituba of Pointe-Noire and the south.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello; good day" },
+        { "phrase": "Bonsoir", "say": "bon-SWAHR", "meaning": "Good evening" },
+        { "phrase": "Merci beaucoup", "say": "mair-SEE boh-KOO", "meaning": "Thank you very much" },
+        { "phrase": "S'il vous plaît", "say": "seel voo PLAY", "meaning": "Please" },
+        { "phrase": "C'est combien ?", "say": "say kom-BYAN", "meaning": "How much is it?" },
+        { "phrase": "Excusez-moi", "say": "ex-kew-zay-MWAH", "meaning": "Excuse me" },
+        { "phrase": "Je ne comprends pas", "say": "zhuh nuh kom-PRON pah", "meaning": "I don't understand" },
+        { "phrase": "Mbote", "say": "MBOH-teh", "meaning": "Hello (in Lingala and Kituba)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q971",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Central African CFA franc (FCFA, XAF), tied to the euro at a fixed rate. Carry cash: few places take cards.",
+        "sources": [{ "property": "P38", "values": ["Q847739"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French, the official language. Lingala, in Brazzaville and the north, and Kituba, in the south, are the languages most people use day to day.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "West Africa Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "117 for police and 118 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q4547615", "Q11185210"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+242",
+        "sources": [{ "property": "P474", "values": ["+242"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "code": "BM",
+  "slug": "bermuda",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bermuda", "Welcome"],
+  "summary": "Pink-sand coves, pastel cottages and old forts on a mid-Atlantic island with mild winters.",
+  "overview": [
+    "Bermuda isn't in the Caribbean at all. It's a small cluster of islands, joined by bridges and causeways into the shape of a fish-hook, alone in the Atlantic about 1,000 km east of North Carolina. The land is green and closely built, with pastel houses under white, stepped limestone roofs that catch rainwater for the tanks underneath. The south shore has the beaches, small coves of pinkish sand between rocks: Horseshoe Bay, Warwick Long Bay and Elbow Beach among them, with Tobacco Bay near St George's for snorkelling. The reefs around the islands hold hundreds of shipwrecks, and divers come for them.",
+    "The town of St George's, founded in 1612, and its ring of forts are a World Heritage Site. Hamilton, the capital, is a small, smart town of shops and offices on Front Street, busy with the island's finance and insurance trade. At the western tip, the Royal Naval Dockyard has the cruise ship pier and the National Museum of Bermuda in its old fortress. In between are the Crystal and Fantasy Caves, the cast-iron Gibbs Hill Lighthouse and the Railway Trail, a walking and cycling path along the line of a railway that closed in 1948.",
+    "Visitors can't hire cars. Pink-and-blue buses and ferries across the harbour cover most places, and taxis, scooters and small electric two-seaters do the rest, on narrow, winding roads with a low speed limit. Bermuda is expensive, and smartly dressed: men really do wear Bermuda shorts to the office, with knee socks and a blazer."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2, 3],
+        "text": "Mild but often grey, windy and wet, around 20°C by day and 15°C at night. The sea is too cool for most swimmers, but it's a good, quiet time for walking, golf, the forts and museums, and hotel rates are at their lowest."
+      },
+      {
+        "name": "Spring",
+        "months": [4, 5],
+        "text": "Warmer and brighter, with humpback whales passing offshore in March and April and longtail birds back on the cliffs. Bermuda Day, at the end of May, is traditionally when Bermudians take their first swim of the year."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and humid, about 29°C to 30°C, with the sea warm and calm: the beach season, and the busiest and dearest time. Cup Match closes the island for two days at the end of July or start of August. August brings rising storm risk."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The sea stays warm into October and the crowds thin, but September and October are the peak of the hurricane season, and Bermuda has taken direct hits. November turns cooler and windier."
+      }
+    ],
+    "weather": "Warmed by the Gulf Stream, Bermuda is subtropical rather than tropical, with no dry season: rain falls in every month, often in short, heavy showers. Afternoons reach about 20°C from January to March and about 30°C in August, and summer humidity is high. The sea runs from about 19°C in late winter to 28°C at the end of summer. Hurricanes are a risk from June to November, most of all from August to October; Fabian in 2003 and Gonzalo in 2014 both struck the island.",
+    "festivals": [
+      {
+        "name": "Good Friday kite flying",
+        "place": "Across Bermuda, especially Horseshoe Bay",
+        "when": "Good Friday (26 March in 2027)",
+        "months": [3, 4],
+        "text": "Families fly home-made, many-sided kites of coloured tissue paper and wooden sticks, and eat codfish cakes on hot cross buns."
+      },
+      {
+        "name": "Bermuda Day",
+        "place": "Hamilton and across the island",
+        "when": "The last Friday in May",
+        "months": [5],
+        "text": "A public holiday of Bermudian culture: a parade through Hamilton with Gombey troupes and floats, a half-marathon race, and boats and picnics everywhere."
+      },
+      {
+        "name": "Cup Match",
+        "place": "St George's or Somerset, alternating",
+        "when": "A Thursday and Friday at the end of July or start of August",
+        "months": [7, 8],
+        "text": "Two days of cricket between the St George's and Somerset clubs, on the holidays of Emancipation Day and Mary Prince Day. Almost everything closes; fans wear their club's colours, and people picnic, party and anchor their boats in the bays."
+      },
+      {
+        "name": "Boxing Day Gombeys",
+        "place": "Across Bermuda",
+        "when": "26 December",
+        "months": [12],
+        "text": "Gombey troupes, masked and in tall headdresses of peacock feathers, dance through the streets to drums and whistles, a tradition with African, Caribbean and Native American roots."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Bermudians greet everyone: the bus driver as you board, the shop assistant before you ask for anything, strangers walking past. Skipping the \"Good morning\" or \"Good afternoon\" is noticed, and taken as rude. Handshakes are usual on meeting.",
+    "etiquette": [
+      "Cover up away from the beach: walking through Hamilton in swimwear or without a shirt is frowned on.",
+      "Homes rely on rainwater from their roofs for much of their water, so take short showers.",
+      "If you hire a scooter, keep left, take bends slowly and keep to the low speed limit; the roads are narrow, with walls on either side.",
+      "Leave shells, coral and anything from the wrecks where you find them.",
+      "Dress up a little for dinner; Bermudians do."
+    ],
+    "tipping": "Most restaurants add a service charge of their own, often around 17%, which covers the tip. Taxi drivers, porters and housekeeping staff expect one too.",
+    "dress": "Smart casual, a step up from most beach destinations. Swimwear only at the beach or pool. In winter, bring a warm layer, a jacket and something waterproof; in summer, light clothes and a hat.",
+    "food": [
+      {
+        "name": "Fish chowder",
+        "text": "The national dish, a dark, rich fish soup, seasoned at the table with black rum and sherry peppers (sherry steeped with hot peppers)."
+      },
+      {
+        "name": "Fish sandwich",
+        "text": "Fried fish, often wahoo or snapper, piled into toasted raisin bread with coleslaw, tartare sauce and hot sauce. The odd mix works."
+      },
+      {
+        "name": "Codfish and potatoes",
+        "text": "Sunday breakfast: salt cod and boiled potatoes, with sliced banana, avocado, egg and a tomato and onion sauce."
+      },
+      {
+        "name": "Dark 'n Stormy",
+        "text": "Gosling's black rum floated on ginger beer, the island's own drink. The name belongs to Gosling's."
+      },
+      {
+        "name": "Rum swizzle",
+        "text": "A punch of rum, fruit juices and bitters, shaken with ice, and claimed by the Swizzle Inn as its own."
+      }
+    ],
+    "phrases": {
+      "language": "English (Bermudian)",
+      "intro": "Bermudians speak English, with an accent and words of their own. A few you'll hear:",
+      "items": [
+        { "phrase": "Onion", "meaning": "A Bermudian, after the onions the island once grew for export" },
+        { "phrase": "Bike", "meaning": "A moped or motor scooter, not a bicycle" },
+        { "phrase": "Ace boy, ace girl", "meaning": "Best friend" },
+        { "phrase": "Gombey", "say": "GOM-bee", "meaning": "A masked dance troupe, or one of its dancers" },
+        { "phrase": "Cup Match", "meaning": "The two-day cricket holiday in summer" },
+        { "phrase": "Longtail", "meaning": "The white-tailed tropicbird, whose return each spring Bermudians watch for" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q23635",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Bermudian dollar (BD$, BMD), worth the same as the US dollar; both are used everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q210478"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Portuguese is spoken in some families with roots in the Azores.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left. Visitors can't hire cars, only scooters and small electric two-seaters.",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Time, UTC−4, and UTC−3 in summer (as in the US, usually from mid-March to early November)",
+        "sources": [{ "property": "P421", "values": ["Q5762"] }],
+        "note": "Wikidata gives UTC−4 only; Bermuda moves its clocks forward in summer on the same dates as the United States."
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 441",
+        "sources": [{ "property": "P474", "values": ["+1441"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "code": "OM",
+  "slug": "oman",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Hayyak Allah", "Uman"],
+  "summary": "Forts and date-palm oases, turquoise wadis, desert camps and the green monsoon hills of Dhofar.",
+  "overview": [
+    "Oman has kept more of old Arabia than its neighbours: mud-brick forts and watchtowers on the hilltops, villages of date palms watered by ancient channels (aflaj), and a capital with no skyscrapers. Muscat is a long, low, white city strung between rocky hills and the sea. The Sultan Qaboos Grand Mosque has one of the largest hand-woven carpets in the world beneath a vast chandelier; Mutrah has a seafront promenade and a covered souq of frankincense, silver and textiles; and the old walled town of Muscat sits in a cove guarded by two Portuguese-era forts.",
+    "Inland, Nizwa has a great round fort and a Friday morning livestock market, Bahla a ring of mud walls, and the terraced villages of Jebel Akhdar grow roses, pomegranates and walnuts 2,000 m up. Jebel Shams, the highest mountain, looks down into the deep canyon of Wadi Ghul. Wadi Shab and Wadi Bani Khalid have clear green pools for swimming between canyon walls, the Wahiba Sands have desert camps among orange dunes, and green turtles come ashore to nest at Ras al Jinz. Far to the south, Dhofar has frankincense trees and a summer monsoon, and to the north, cut off by the UAE, the Musandam peninsula has fjord-like inlets explored by dhow.",
+    "Most visitors hire a car: the roads are excellent and well signed, but the mountain tracks and dunes need a 4×4, and the police at the foot of the Jebel Akhdar road turn back anything else. Buses link the main towns, and flights cover the long distances to Salalah, about 1,000 km from Muscat, and to Khasab in Musandam. Offices close on Fridays and Saturdays. Alcohol is served only in licensed hotels and some restaurants."
+  ],
+  "whenToGo": {
+    "stripLabel": "Muscat and the north, from the mountains to the Wahiba Sands. Dhofar, in the south, has a monsoon of its own and a strip below.",
+    "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [11, 12, 1, 2, 3],
+        "text": "The main season. Muscat is warm and sunny, around 25 to 30°C, ideal for wadi swims, desert nights and the coast. The mountains are cool by day and can drop below freezing at night on Jebel Shams. A few days of rain may bring flash floods."
+      },
+      {
+        "name": "Spring",
+        "months": [4, 5],
+        "text": "Heating up fast: the low 30s in April, near 40°C in May. The roses bloom on Jebel Akhdar, and the mountain villages stay pleasant when the coast is too hot."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8, 9],
+        "text": "Very hot in the north, often above 45°C inland, and humid on the coast. Omanis and Gulf visitors head south to Dhofar for the monsoon, or up to Jebel Akhdar, which stays in the 20s."
+      },
+      {
+        "name": "Autumn",
+        "months": [10],
+        "text": "Still hot in early October, easing through the month. The season reopens: desert camps, boat trips and mountain walks start again."
+      }
+    ],
+    "weather": "A hot, dry climate in most of the country, with mild winters and fierce summers, and very little rain, falling mainly in short winter storms that can fill the wadis in minutes. The Hajar Mountains are much cooler, and get some summer thunderstorms. Dhofar, in the far south, is different: from about mid-June to mid-September the south-west monsoon (khareef) wraps the coast round Salalah in mist and drizzle, keeping it near 25°C and turning the hills green.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Oman",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Business hours are short and most restaurants close in daylight, but hotels serve visitors. After sunset, families gather for iftar and the souqs open late. Eid al-Fitr brings several days of holiday, visits and new clothes."
+      },
+      {
+        "name": "Rose harvest",
+        "place": "Jebel Akhdar",
+        "when": "Usually late March to May, at its height in April",
+        "months": [3, 4, 5],
+        "text": "Villagers pick damask roses on the terraces at dawn and distil them into rosewater over wood fires in clay pots, a centuries-old craft. Visitors can walk the terraces and watch."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Oman",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Families slow-roast shuwa in underground pits, and in the days before, the Eid markets (habta) sell goats, cattle and clothes."
+      },
+      {
+        "name": "Khareef season and festival",
+        "place": "Salalah, Dhofar",
+        "when": "Usually from mid-June to mid-September, with the festival in July and August",
+        "months": [7, 8],
+        "text": "Visitors from across the Gulf drive south to enjoy the cool mist, waterfalls and green hills. Salalah holds a festival of concerts, markets and Dhofari folk dance, and hotels fill up."
+      },
+      {
+        "name": "National Day",
+        "place": "Across Oman",
+        "when": "20 November",
+        "months": [11],
+        "text": "A public holiday, often joined by a second day, with flags along the roads, buildings lit up in red, white and green, and fireworks in Muscat."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Dhofar and Salalah",
+        "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "best", "best", "best"],
+        "text": "Sunny, warm and dry in winter, with long empty beaches. During the khareef the hills and wadis turn green and waterfalls run, but the sky is grey, the sea is rough and swimming unsafe, and Salalah is crowded with Gulf holidaymakers. The frankincense sites of Al Baleed and Khor Rori are here."
+      },
+      {
+        "name": "Jebel Akhdar and Jebel Shams",
+        "text": "Cool when the lowlands are scorching: in the 20s in summer, and around freezing on winter nights. Spring brings the roses; late summer the pomegranates. Bring warm layers in any season."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Omanis are known across the Gulf for their courtesy and calm. Greetings are unhurried: after \"as-salamu alaykum\" come questions about health, family and news, and it's polite to ask in return. A man shakes hands with other men and waits for a woman to offer hers. Guests are welcomed with kahwa (coffee), dates and halwa; take a little, and shake the cup gently when you've had enough.",
+    "etiquette": [
+      "When swimming in wadis and village pools, keep shorts and a T-shirt on over swimwear: they're used by local families, and bikinis offend.",
+      "Don't wash, swim or throw anything into a falaj: the channels carry drinking water and water for the fields.",
+      "Never drive into a wadi with flowing water: flash floods after rain sweep away cars every year.",
+      "Wild camping is common on beaches and in the desert: stay well away from villages and farms, and take your rubbish with you.",
+      "Women in villages may not want to be photographed: always ask first. The Grand Mosque asks women to cover their hair, and everyone their arms and legs."
+    ],
+    "tipping": "Not traditional, but welcome in tourism. In hotels and tourist restaurants about 10% is generous where no service charge is added. Tip drivers and guides at the end of a trip, and desert camp staff.",
+    "dress": "Modest: cover shoulders and knees in towns, souqs and villages, men as well as women. Many Omani men wear the dishdasha, a long white robe, with an embroidered cap (kumma). Bikinis and trunks stay at hotel beaches. Pack sturdy shoes for wadi walks, and a fleece for the mountains and desert nights in winter.",
+    "food": [
+      {
+        "name": "Shuwa",
+        "text": "Lamb or goat rubbed with spices, wrapped in palm fronds or banana leaves and cooked for a day or more in an underground oven, the feast dish of Eid."
+      },
+      {
+        "name": "Mashuai",
+        "text": "A whole kingfish roasted on a spit and served with lemony rice, found in seaside restaurants."
+      },
+      {
+        "name": "Mishkak",
+        "text": "Skewers of marinated beef or chicken grilled over charcoal at evening street stalls, especially along the corniches."
+      },
+      {
+        "name": "Khubz rakhal",
+        "text": "Paper-thin bread cooked on a hot iron plate, eaten at breakfast with honey, eggs or cheese."
+      },
+      {
+        "name": "Halwa and kahwa",
+        "text": "Omani halwa is a sticky, glossy sweet of sugar, ghee, saffron, rosewater and nuts, stirred for hours in big copper pans. It comes with kahwa, a light coffee spiced with cardamom, in every home and office."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Omani Arabic)",
+      "intro": "English is widely spoken in hotels and towns. In Dhofar many people also speak Jibbali or Mehri, old languages of southern Arabia.",
+      "items": [
+        { "phrase": "Hayyak Allah (حياك الله)", "say": "HAY-yak al-LAH", "meaning": "Welcome (\"God greet you\")" },
+        { "phrase": "Ish al-akhbar? (ايش الأخبار)", "say": "eesh al-akh-BAAR", "meaning": "What's the news? (how are you?)" },
+        { "phrase": "Bikhair (بخير)", "say": "bi-KHAYR", "meaning": "Well; fine" },
+        { "phrase": "Shukran (شكرا)", "say": "SHOOK-ran", "meaning": "Thank you" },
+        { "phrase": "Kam si'r hatha? (كم سعر هذا)", "say": "kam SI-er HAA-tha", "meaning": "What's the price of this?" },
+        { "phrase": "Wayn al-wadi? (وين الوادي)", "say": "wayn al-WAA-dee", "meaning": "Where's the wadi?" },
+        { "phrase": "Shway shway (شوي شوي)", "say": "SHWAY SHWAY", "meaning": "Slowly; a little" },
+        { "phrase": "Allah yisallimak (الله يسلمك)", "say": "al-LAH yi-SAL-li-mak", "meaning": "God keep you safe (a goodbye, to a man)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q842",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Omani rial (RO, OMR), divided into 1,000 baisa. Cards are widely taken in towns; carry cash for villages, souqs and fuel in remote areas.",
+        "sources": [{ "property": "P38", "values": ["Q272290"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic. English is widely used in tourism and business; Balochi, Swahili and, in Dhofar, Jibbali and Mehri are also spoken.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), with some two-pin Type C sockets; 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q1378312"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Gulf Standard Time, UTC+4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6779", "Q109529041"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "9999 for police, fire and ambulance",
+        "sources": [],
+        "note": "Wikidata lists 112 and \"968\", which is Oman's calling code rather than an emergency number; the page gives 9999, the Royal Oman Police's number for all emergencies, as travel advice pages do."
+      },
+      {
+        "key": "callingCode",
+        "text": "+968",
+        "sources": [{ "property": "P474", "values": ["+968"] }]
+      }
+    ]
+  }
+}

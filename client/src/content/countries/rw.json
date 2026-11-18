@@ -1,0 +1,168 @@
+{
+  "code": "RW",
+  "slug": "rwanda",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Muraho", "Rwanda", "Murakaza neza"],
+  "summary": "Gorillas on the Virungas, chimps in Nyungwe and Lake Kivu's quiet shores.",
+  "overview": [
+    "Rwanda is small, green and steep, the \"land of a thousand hills\", with almost every slope farmed in terraces of beans, bananas and tea. Kigali, the capital, is orderly and spotless, and most visitors begin at the Kigali Genocide Memorial. It tells the story of 1994, when hundreds of thousands of people, most of them Tutsi, were killed in about a hundred days, and of how the country has rebuilt since. The church memorials at Nyamata and Ntarama, south of the city, are harder still to visit, and just as important.",
+    "Volcanoes National Park, in the north-west, is where mountain gorillas are tracked on the bamboo and forest slopes of the Virunga volcanoes. Golden monkeys live there too, and a hike leads to Dian Fossey's grave at her old research camp. Nyungwe, in the south-west, is an ancient mountain rainforest with chimpanzees, colobus monkeys and a walkway through the canopy. Akagera, on the Tanzanian border, is savannah and lakes, with lions and rhinos brought back in recent years. Lake Kivu, along the western border, has quiet lakeside towns such as Rubavu and Karongi, and the Congo Nile Trail, a long hiking and cycling route along its shore.",
+    "Roads are good and distances short: Volcanoes National Park is two to three hours' drive from Kigali, and Nyungwe a long day. Rwanda banned plastic bags in 2008, long before most countries, and the streets show it."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Main dry season",
+        "months": [6, 7, 8, 9],
+        "text": "Sunny and pleasant, about 27°C by day in Kigali and much cooler up on the volcanoes. Trails are at their firmest, so gorilla permits are in highest demand."
+      },
+      {
+        "name": "Autumn rains",
+        "months": [10, 11, 12],
+        "text": "Showers return, usually in the afternoon. The hills turn green again, and visitors are fewer."
+      },
+      {
+        "name": "January break",
+        "months": [1, 2],
+        "text": "A drier spell between the two rainy seasons, warm and bright, and a good time for trekking."
+      },
+      {
+        "name": "March to May rains",
+        "months": [3, 4, 5],
+        "text": "The wettest stretch of the year, at its heaviest in April. Gorilla treks go ahead, but slopes are slick with mud and cloud often hides the volcanoes."
+      }
+    ],
+    "weather": "Rwanda lies just south of the equator, but most of it is between 1,500 and 2,500 m, which keeps it mild: Kigali has days around 26–28°C all year and nights in the mid-teens. The volcanoes and Nyungwe are cooler and wetter, and cold at night. Rain falls in two seasons, about March to May and October to December, with April usually the wettest month; June to September is the main dry season, with a shorter, drier break around January and February.",
+    "festivals": [
+      {
+        "name": "Kwibuka",
+        "place": "Across the country",
+        "when": "From 7 April, for 100 days",
+        "months": [4],
+        "text": "The national remembrance of the 1994 genocide against the Tutsi begins on 7 April with a week of mourning. That week, music and celebrations are muted, and 7 April is a public holiday; visitors are welcome at memorial ceremonies."
+      },
+      {
+        "name": "Liberation Day",
+        "place": "Across the country",
+        "when": "4 July",
+        "months": [7],
+        "text": "The day the genocide ended in July 1994, kept as a public holiday."
+      },
+      {
+        "name": "Umuganura",
+        "place": "Across the country",
+        "when": "The first Friday of August",
+        "months": [8],
+        "text": "An old harvest festival, revived as a national holiday, when communities give thanks for the year's first crops and share food and drink."
+      },
+      {
+        "name": "Kwita Izina",
+        "place": "Kinigi, by Volcanoes National Park",
+        "when": "Usually in September or October",
+        "months": [9, 10],
+        "text": "The gorilla naming ceremony: every baby gorilla born in the past year is given a name, announced one by one by invited guests, with drumming and dancing."
+      },
+      {
+        "name": "Umuganda",
+        "place": "Across the country",
+        "when": "The last Saturday of every month, in the morning",
+        "months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        "text": "A morning of community work: adults clean streets, plant trees and repair paths until late morning. Shops close and traffic is restricted until it ends, so plan around it, or join in."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Rwandans greet gently: a soft handshake, often held for a moment, with \"Muraho\" (hello) or \"Mwaramutse\" (good morning). People speak quietly and avoid open confrontation, so a raised voice loses you respect rather than winning the argument.",
+    "etiquette": [
+      "At the genocide memorials, keep your voice low, and photograph only where you're told it's allowed.",
+      "Don't ask people whether they are Hutu or Tutsi: Rwandans identify as Rwandan, and the subject is deeply painful.",
+      "Groups of up to eight people track each gorilla family and spend one hour with it, at least 7 m away, with masks on if the rangers say so.",
+      "Motorbike taxi drivers carry a helmet for their passenger: wear it.",
+      "Leave plastic bags at home: they're banned, and may be taken from you on arrival."
+    ],
+    "tipping": "Local cafés and bars don't expect it; in restaurants used to visitors, leave 5–10%. After a gorilla or chimpanzee trek, the guide, trackers and any porters you hired are tipped separately.",
+    "dress": "Rwandans dress neatly and modestly, and shorts are rare in town. For treks, wear long trousers tucked into your socks against ants, gloves for nettles, waterproof boots and a rain jacket. Nights at Volcanoes and Nyungwe are cold, so pack a fleece.",
+    "food": [
+      {
+        "name": "Brochettes",
+        "text": "Skewers of goat, beef or fish grilled over charcoal in every bar and roadside grill, served with roasted plantain or chips."
+      },
+      {
+        "name": "Isombe",
+        "text": "A deep green mash of cassava leaves, often cooked with aubergine, onion and peanut paste, served with rice or plantain."
+      },
+      {
+        "name": "Akabenz",
+        "text": "Crisp, spicy fried pork, nicknamed after Mercedes-Benz because it was once a treat few could afford."
+      },
+      {
+        "name": "Ikivuguto",
+        "text": "Thick fermented milk, drunk like yoghurt, from Rwanda's long tradition of keeping cattle."
+      },
+      {
+        "name": "Urwagwa",
+        "text": "Home-brewed banana beer, cloudy and only mildly alcoholic, shared from a common pot at weddings and gatherings."
+      }
+    ],
+    "phrases": {
+      "language": "Kinyarwanda",
+      "intro": "Almost every Rwandan speaks Kinyarwanda. English is the language of schools and business, many older people speak French, and Swahili is heard in markets.",
+      "items": [
+        { "phrase": "Muraho", "say": "moo-RAH-hoh", "meaning": "Hello" },
+        { "phrase": "Mwaramutse", "say": "mwah-rah-MOOT-seh", "meaning": "Good morning" },
+        { "phrase": "Mwiriwe", "say": "mwee-REE-weh", "meaning": "Good afternoon; good evening" },
+        { "phrase": "Murakoze cyane", "say": "moo-rah-KOH-zeh CHAH-neh", "meaning": "Thank you very much" },
+        { "phrase": "Yego / Oya", "say": "YEH-goh / OH-yah", "meaning": "Yes / No" },
+        { "phrase": "Mbabarira", "say": "mbah-bah-REE-rah", "meaning": "Sorry; excuse me" },
+        { "phrase": "Murakaza neza", "say": "moo-rah-KAH-zah NEH-zah", "meaning": "Welcome" },
+        { "phrase": "Murabeho", "say": "moo-rah-BEH-hoh", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1037",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Rwandan franc (RF, RWF). Cards work in Kigali's hotels, restaurants and many shops, and mobile money is used everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q4741"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Kinyarwanda, English, French and Swahili, all official. Nearly everyone speaks Kinyarwanda.",
+        "sources": [{ "property": "P37", "values": ["Q33573", "Q1860", "Q150", "Q7838"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), with British-style type G in places; 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Africa Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q4689501"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police and fire; 912 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648878"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+250",
+        "sources": [{ "property": "P474", "values": ["+250"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "code": "GW",
+  "slug": "guinea-bissau",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bon dia", "Guiné-Bissau"],
+  "summary": "Mangrove creeks, cashew orchards and the islands of the Bijagós, where hippos swim in the sea.",
+  "overview": [
+    "Guinea-Bissau is a small, low-lying country of mangrove creeks, rice paddies and cashew orchards, and it sees few tourists. Its great draw lies offshore: the Bijagós Archipelago, 88 islands and islets and a UNESCO biosphere reserve, where villages keep their own beliefs and ceremonies, hippos live in the brackish lagoons of Orango, and green turtles crawl ashore to nest on Poilão. On the mainland, Bissau's old Portuguese quarter, Bissau Velho, sits beside the port; in the north-west, the old trading post of Cacheu keeps its small fort, and Varela has long, empty beaches near the border with Senegal.",
+    "Boats to the islands leave from Bissau: a slow public ferry runs to Bubaque, the island with the most guesthouses, and island lodges arrange their own speedboats. Every crossing depends on the tides. On the mainland, shared taxis and minibuses link the towns, and roads off the main routes are rough, worst in the rains. Bring euros in cash to change, since cash machines are found mainly in Bissau and cards are rarely accepted. Politics here can be unsettled, so read your government's travel advice before booking."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "good", "good", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [11, 12, 1, 2, 3],
+        "text": "Sunny and dry, around 30°C by day with comfortable nights, and the time when every island lodge is open. From about December to February the harmattan, a dusty wind off the Sahara, can turn the sky a milky white for days."
+      },
+      {
+        "name": "Hot season",
+        "months": [4, 5],
+        "text": "The heat and humidity build before the rains, with afternoons of 33–35°C inland. It's also the cashew harvest: orchards fill with red and yellow cashew apples, and villages brew cashew wine from their juice."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9],
+        "text": "Nearly all of the year's rain falls now, in storms that are heaviest in July and August. Dirt roads turn to mud, boats to the islands run less often, and several Bijagós lodges close until the rains end."
+      },
+      {
+        "name": "End of the rains",
+        "months": [10],
+        "text": "Storms grow fewer through October. The rice paddies are high and green, but it's sticky, and tracks stay muddy for a few more weeks."
+      }
+    ],
+    "weather": "Hot all year, with one wet season and one long dry one. In Bissau, daytime highs stay around 30–32°C in most months, peaking in April and May, and nights rarely fall below 20°C. The rain comes from about June to October, most of it in July and August; from December to April it hardly rains at all. The south, near Guinea, is the wettest part of the country, and the north-east, towards the savanna, the driest.",
+    "festivals": [
+      {
+        "name": "Heroes' Day (Dia dos Heróis Nacionais)",
+        "place": "Across Guinea-Bissau",
+        "when": "20 January",
+        "months": [1],
+        "text": "A public holiday on the anniversary of the killing of Amílcar Cabral in 1973, the leader of the struggle for independence. His tomb is in the Amura fortress in Bissau."
+      },
+      {
+        "name": "Carnival",
+        "place": "Bissau",
+        "when": "Usually in February or early March, in the days before Lent",
+        "months": [2, 3],
+        "text": "The country's biggest party: groups from the regions and the islands parade through the capital in costumes and huge masks, with drumming and dancing in the streets."
+      },
+      {
+        "name": "Ramadan and Korité",
+        "place": "Across Guinea-Bissau",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Nearly half the people are Muslim, most of all in the east around Bafatá and Gabú. During the month of fasting, eateries there are quiet by day and busy after sunset; Korité, as Eid al-Fitr is called here, ends it with new clothes, visits and a public holiday."
+      },
+      {
+        "name": "Tabaski (Eid al-Adha)",
+        "place": "Across Guinea-Bissau",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Families buy a ram weeks ahead and share the meat after prayers. Shared taxis fill up as people head home to their villages for the holiday."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Guinea-Bissau",
+        "when": "24 September",
+        "months": [9],
+        "text": "Marks independence, declared in 1973 and recognised by Portugal the following year, with parades in Bissau. Offices and shops close."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Take your time over a greeting: ask how the person is, how their family is and how the day is going before you get to your question. A light handshake is usual, and older people are greeted first. In Kriol, \"Kuma ku bu sta?\" asks how someone is, and \"N sta bon\" says you're well. Some Muslim men and women prefer not to shake hands with the opposite sex; a nod and a hand on your chest does just as well.",
+    "etiquette": [
+      "On the Bijagós, some forests, beaches and whole islands are sacred and closed to outsiders, and some ceremonies can't be watched. Go with a local guide and do as they say.",
+      "Eat, pay and pass things with your right hand.",
+      "Carry plenty of small notes: change is often short, in Bissau as much as in the villages.",
+      "In the mainly Muslim east, cover your shoulders and knees, and during Ramadan don't eat or drink in the street by day."
+    ],
+    "tipping": "There's no tipping habit in daily life, but it's welcome where people have looked after you: round up a restaurant bill, and give something to boatmen, guides and lodge staff at the end of a stay.",
+    "dress": "Light cotton clothes and a hat. Long sleeves and repellent help in the evenings, when the mosquitoes come out, and malaria is present all year. Swimwear stays on the beach; in town, shorts are fine for men, but knee-length or longer clothes fit in better for everyone.",
+    "food": [
+      {
+        "name": "Caldo de mancarra",
+        "text": "A thick groundnut stew, usually with chicken or fish, ladled over rice. Mancarra is the Kriol word for peanut."
+      },
+      {
+        "name": "Caldo de chabéu",
+        "text": "Fish or meat stewed in a rich orange sauce made from the pulp of palm nuts, the country's favourite dish for a celebration."
+      },
+      {
+        "name": "Rice",
+        "text": "The staple of every meal, much of it grown in paddies (bolanhas) carved out of the mangroves, where the tide is kept out by earth banks."
+      },
+      {
+        "name": "Mangrove oysters",
+        "text": "Small oysters gathered from mangrove roots, grilled over charcoal at the roadside and eaten with lime and chilli."
+      },
+      {
+        "name": "Cashew wine",
+        "text": "In the harvest season, from about April to June, the juice of the cashew apple is fermented into a sweet, cloudy wine (vinho de caju) that grows stronger by the day."
+      }
+    ],
+    "phrases": {
+      "language": "Kriol (Guinea-Bissau Creole)",
+      "intro": "Portuguese is the official language, but Kriol, a creole that grew from Portuguese and West African languages, is what you'll hear in the streets, at the market and on the boats. Spellings vary.",
+      "items": [
+        { "phrase": "Bon dia", "say": "bon DEE-ah", "meaning": "Good morning" },
+        { "phrase": "Kuma ku bu sta?", "say": "KOO-mah koo boo STAH", "meaning": "How are you?" },
+        { "phrase": "N sta bon", "say": "n stah BON", "meaning": "I'm fine" },
+        { "phrase": "Obrigadu", "say": "oh-bree-GAH-doo", "meaning": "Thank you" },
+        { "phrase": "Kantu?", "say": "KAHN-too", "meaning": "How much?" },
+        { "phrase": "N ka sibi", "say": "n kah SEE-bee", "meaning": "I don't know" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1007",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "West African CFA franc (CFA, XOF), shared with seven other West African countries and tied to the euro. Cash pays for almost everything.",
+        "sources": [{ "property": "P38", "values": ["Q861690"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Portuguese, the official language. Most people speak Kriol, a Portuguese-based creole, as well as the language of their own community, such as Balanta, Fula or Mandinka.",
+        "sources": [{ "property": "P37", "values": ["Q5146"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type C (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689478"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; or 121 for police, 119 for an ambulance and 180 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648877", "Q2807090", "Q25648853"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+245",
+        "sources": [{ "property": "P474", "values": ["+245"] }]
+      }
+    ]
+  }
+}

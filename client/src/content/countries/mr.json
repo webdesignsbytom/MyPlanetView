@@ -1,0 +1,178 @@
+{
+  "code": "MR",
+  "slug": "mauritania",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salam", "Mūrītānyā", "Marhba"],
+  "summary": "Chinguetti's old libraries, the Banc d'Arguin's birds and the desert's iron-ore train.",
+  "overview": [
+    "Mauritania is where the Sahara meets the Atlantic: a huge, mostly empty country of dunes, stony plateaus and a long, wild coast, with a strip of farmland along the Senegal River in the south. Its old caravan towns are the main draw. On the Adrar plateau, reached through the market town of Atar, Chinguetti and Ouadane have stone houses, mosques and family libraries that still keep manuscripts several centuries old. The palm oasis of Terjit lies in a gorge nearby, and north-east of Ouadane the Richat Structure, rings of rock about 40 km across, makes sense only from the air.",
+    "On the coast, the Banc d'Arguin National Park protects shallows and islands where millions of migrating birds spend the winter, and where Imraguen fishermen still go out in sailing boats, as motorboats are banned. Nouadhibou, the fishing port at the northern end, is where the iron-ore train arrives from the mines at Zouérat, about 700 km away by rail; often more than 2 km long, it's one of the longest trains in the world.",
+    "Nouakchott, the capital, was built almost from nothing around independence in 1960. Paved roads link the main towns, and visitors reach the desert sites by 4×4 with a driver, usually arranged through a local agency. Alcohol isn't sold openly, and outside Nouakchott and Nouadhibou you'll need cash for almost everything.",
+    "Many governments advise against all travel to the east, near the border with Mali, and to the remote north, and against some travel elsewhere in the interior. Advice changes with conditions, so check your own government's before setting off."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool season",
+        "months": [11, 12, 1, 2],
+        "text": "Sunny, warm days and cold nights in the desert, the season for the Adrar and for camping in the dunes. The Banc d'Arguin's birds are there in their greatest numbers."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5, 6],
+        "text": "The heat builds fast inland, above 40°C in the Adrar by May, and dusty winds and sandstorms are common. The coast stays more bearable."
+      },
+      {
+        "name": "Rains and date harvest",
+        "months": [7, 8, 9, 10],
+        "text": "Humid heat, with storms in the south from about July to September. Mauritanian families head for the Adrar's oases for the date harvest (guetna) in July and August. October is still hot."
+      }
+    ],
+    "weather": "A desert climate almost everywhere. Nouakchott, cooled by the sea, is about 29°C by day in January, with cool nights, and in the low to mid-30s through the summer. Inland, at Atar and Chinguetti, winter days are around 25 to 28°C and nights can fall to about 5°C, while summer afternoons go well past 40°C. The only real rain comes from about July to September, mostly in the south along the Senegal River; the Adrar gets almost none. Dust in the air often hazes the sky in winter and spring.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Mauritania",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The whole country fasts by day, and offices keep short hours. After sunset, families break the fast with dates, zrig and soup, then tea late into the night. Eid al-Fitr is a holiday of visits and new clothes."
+      },
+      {
+        "name": "Eid al-Adha (Tabaski)",
+        "place": "Across Mauritania",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The biggest feast of the year. Sheep fill the markets beforehand, each family slaughters one on the day, and Nouakchott empties as people travel to their home villages."
+      },
+      {
+        "name": "Guetna (the date harvest)",
+        "place": "The Adrar oases, around Atar",
+        "when": "Usually July and August",
+        "months": [7, 8],
+        "text": "When the dates ripen, families camp in the palm groves for weeks to eat them fresh, with music and long evenings of tea. It's in the hottest months, so few foreign visitors see it."
+      },
+      {
+        "name": "Festival of the Ancient Cities",
+        "place": "Chinguetti, Ouadane, Tichitt or Oualata, in turn",
+        "when": "Usually late in the year, around November or December",
+        "months": [11, 12],
+        "text": "A few days of music, poetry, camel races and crafts, held in a different one of the four old caravan towns each year."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Mauritania",
+        "when": "28 November",
+        "months": [11],
+        "text": "Mauritania's day of independence in 1960: offices close, and the government holds ceremonies in Nouakchott."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The coast",
+        "text": "Nouakchott, the Banc d'Arguin and Nouadhibou are cooled by the Atlantic and often windy. Nouadhibou rarely gets very hot. The birds are at their best from about November to March."
+      },
+      {
+        "name": "The Senegal River valley",
+        "text": "The green south, around Rosso and Kaédi, where Pulaar, Soninke and Wolof villages farm along the river. The rains here fall from about July to September, and it's very hot just before them."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings come first and take time: \"Salam alaykum\", then a string of questions (\"Ishtari?\", what's new?) about health, family and the journey, each answered with \"labas\". Men shake hands, softly and at length. Many Mauritanian women don't touch hands with men outside the family; a nod and the spoken greeting are enough.",
+    "etiquette": [
+      "Tea is made slowly, often by the youngest man present, and offered in three rounds. Accepting is polite, and refusing all three can seem cold.",
+      "In a tent or a home, take your shoes off, sit on the mats with your feet tucked away rather than pointed at anyone, and eat from the shared dish with your right hand.",
+      "Many Mauritanians, women above all, would rather not be photographed: ask, and accept a no. Military sites and checkpoints are off limits to cameras.",
+      "Mauritania is an Islamic republic, and alcohol is all but unobtainable: don't bring any.",
+      "If you visit in Ramadan, plan to eat indoors: outside hotels, very little opens by day."
+    ],
+    "tipping": "Mauritanians rarely tip each other. Drivers and cooks who have looked after you in the desert are the exception; in restaurants used to foreigners, rounding up is enough.",
+    "dress": "Long, loose and covering: trousers and long sleeves for men, and for women clothes that cover arms and legs, with a scarf for the head. Mauritanian men wear the boubou, a wide robe in pale blue or white, and women the colourful melhfa. A turban or scarf protects against sun and blown sand, and desert nights need a fleece.",
+    "food": [
+      {
+        "name": "Méchoui",
+        "text": "A whole lamb or goat roasted slowly over coals, the dish for guests and feasts. The meat is pulled apart by hand from a shared tray."
+      },
+      {
+        "name": "Tichtar",
+        "text": "Strips of camel or mutton dried in the sun, then cooked in a stew with vegetables and served over rice or couscous."
+      },
+      {
+        "name": "Mullet and bottarga",
+        "text": "Fish is plentiful on the coast, and grilled mullet is common. The Imraguen salt and dry the mullet's roe into bottarga, sold in thin slices."
+      },
+      {
+        "name": "Camel milk",
+        "text": "Drunk fresh, often warm from the herd, or soured and thinned with water and sugar as zrig, the drink of hot afternoons."
+      },
+      {
+        "name": "Dates",
+        "text": "The Adrar's palm groves grow many kinds of date, eaten fresh at the summer harvest and dried for the rest of the year. Ramadan's fast is broken with them."
+      },
+      {
+        "name": "Tea",
+        "text": "Chinese green tea, boiled with plenty of sugar and sometimes mint, poured back and forth until it foams. The first glass is strong and bitter, the next ones sweeter."
+      }
+    ],
+    "phrases": {
+      "language": "Hassaniya Arabic",
+      "intro": "French is spoken in hotels, shops and offices in Nouakchott and Nouadhibou, and Pulaar, Soninke and Wolof in the south. Spellings in Latin letters vary.",
+      "items": [
+        { "phrase": "Salam alaykum (السلام عليكم)", "say": "sa-LAAM a-LAY-kum", "meaning": "Peace be upon you: the greeting to start with" },
+        { "phrase": "Ishtari? (اشطاري)", "say": "ish-TAA-ree", "meaning": "What's new? (part of every greeting)" },
+        { "phrase": "Labas (لاباس)", "say": "LAA-bas", "meaning": "Fine; no trouble" },
+        { "phrase": "Kettar kheirak (كثر خيرك)", "say": "KET-tar KHAY-rak", "meaning": "Thank you (\"may your good increase\")" },
+        { "phrase": "Bismillah (بسم الله)", "say": "bis-MIL-lah", "meaning": "In the name of God: said before eating or setting off" },
+        { "phrase": "Insha'Allah (إن شاء الله)", "say": "in-SHAA-al-lah", "meaning": "God willing" },
+        { "phrase": "Ma'a salama (مع السلامة)", "say": "ma-sa-LAA-ma", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1025",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Mauritanian ouguiya (UM, MRU). A new ouguiya replaced the old one in 2018 at one for ten, and some prices are still quoted in old ouguiya. Cash is needed almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q207024"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic; everyday speech is Hassaniya Arabic. Pulaar, Soninke and Wolof are national languages, and French is widely used in business and government.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }],
+        "note": "Wikidata also lists French as official; the constitution names only Arabic, though French is still widely used, as the page says."
+      },
+      {
+        "key": "plugs",
+        "text": "Type C (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689519"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "117 for police, 118 for fire and 101 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q4547615", "Q11185210", "Q25648794"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+222",
+        "sources": [{ "property": "P474", "values": ["+222"] }]
+      }
+    ]
+  }
+}

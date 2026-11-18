@@ -1,0 +1,176 @@
+{
+  "code": "TD",
+  "slug": "chad",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salam", "Tchad"],
+  "summary": "Ennedi's sandstone arches, the desert lakes of Ounianga and Zakouma's elephant herds.",
+  "overview": [
+    "Chad lies in the middle of the continent, far from any sea: desert in the north, the dry Sahel across the middle and wooded savannah in the south. Its most extraordinary places are in the Sahara. The Ennedi Plateau is a maze of sandstone towers, arches and canyons with ancient rock paintings, and at the Guelta d'Archei herders bring their camels to drink from a pool in a gorge where a few crocodiles have survived from wetter times. Further north lie the Lakes of Ounianga, a chain of lakes of different colours among the dunes, and the volcanic Tibesti Mountains, where Emi Koussi is the highest point in the Sahara.",
+    "In the south-east, Zakouma National Park has become one of the best places in Central Africa to see wildlife since poaching was brought under control and its elephant herds began to grow again; buffalo, giraffes, lions and great flocks of birds share it. N'Djamena, the capital, stands on the Chari River across from Cameroon. Outside the towns most roads are rough or unpaved, and trips to the north are long 4×4 expeditions, usually arranged with a specialist tour company.",
+    "Many governments advise against all or most travel to Chad, and against any travel near its borders. Because conditions change, look at your own government's current advice before you go."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Dry, sunny and warm, about 33°C by day in N'Djamena, with cool nights. The season for the Ennedi and Ounianga, and Zakouma's camps open. Dust carried by the harmattan often dulls the sky."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5, 6],
+        "text": "Temperatures climb above 40°C across most of the country by April. In Zakouma, animals crowd round the last water, but the heat is fierce. The first storms reach the south in May and June."
+      },
+      {
+        "name": "Rainy season",
+        "months": [7, 8, 9, 10],
+        "text": "Heavy rain in the south and centre, wettest in August, when dirt roads become impassable and Zakouma closes. The north stays dry. October is hot as the land dries out."
+      }
+    ],
+    "weather": "Hot for most of the year, with one rainy season that shortens from south to north. The south, around Moundou and Sarh, gets over 1,000 mm of rain from about May to October; N'Djamena gets about half that, mostly from July to September; and the Saharan north gets almost none. April and May are the hottest months, often above 40°C in N'Djamena. From November to February days are warm, nights cool and the air dusty with the harmattan; in the desert, nights can be cold, and there's frost on the heights of the Tibesti.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Chad",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Across the Muslim north and centre, people fast from dawn to dusk, and N'Djamena's markets come alive after sunset. Eid al-Fitr is a public holiday, with prayers, new clothes and family visits."
+      },
+      {
+        "name": "Eid al-Adha (Tabaski)",
+        "place": "Across Chad",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Herds of rams and goats are driven into the towns for the feast, and families slaughter one and share the meat. Offices and many shops close."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Chad",
+        "when": "11 August",
+        "months": [8],
+        "text": "Chad's independence in 1960 is marked with official ceremonies and a day off for most workers."
+      },
+      {
+        "name": "Republic Day",
+        "place": "Across Chad",
+        "when": "28 November",
+        "months": [11],
+        "text": "A public holiday for the proclamation of the republic in 1958, with official ceremonies in N'Djamena."
+      },
+      {
+        "name": "Christmas",
+        "place": "Above all the south",
+        "when": "25 December",
+        "months": [12],
+        "text": "Many people in the south are Christian, and Christmas is a public holiday, with church services, music and family meals in towns such as Moundou and Sarh."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Ennedi, Ounianga and the Tibesti",
+        "text": "Deep Sahara, with almost no rain. From November to February days are about 30°C and nights cold; from April to September the heat is extreme. Expeditions here take a week or more by 4×4."
+      },
+      {
+        "name": "Zakouma",
+        "text": "The camps open in the dry season, roughly December to June. Early on, the grass is still long; from about March, animals gather at the remaining water and are easiest to see, though middays are very hot. In the rains the park is cut off."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Take time over greetings, asking after health and family before anything else; in Chadian Arabic, \"Salam alaykum\" opens and \"Lâfe?\" (all well?) follows. Men shake hands and may hold on for a while; in the north and among Muslims, many women don't shake hands with men. In the south, French \"Bonjour\" is just as common.",
+    "etiquette": [
+      "Be very careful with your camera: never photograph soldiers, police, airports, bridges or government buildings, and ask before taking anyone's picture.",
+      "Carry your passport: there are police checkpoints on the roads.",
+      "When a meal is shared, a jug and basin come round for washing hands before and after; eat with the right hand only.",
+      "Greet first, then talk business, whether in a shop or at a checkpoint.",
+      "Take your shoes off before stepping onto the mats in a home, and let elders sit and eat first."
+    ],
+    "tipping": "Not expected in daily life. Expedition and safari staff are tipped when you leave, and a little extra in hotel restaurants is welcome.",
+    "dress": "Loose cotton that covers arms and legs, for modesty and for the sun. Women do well to carry a scarf, especially in the Muslim north. A scarf wrapped round the head keeps off dust and sand, and desert nights in winter need a warm jacket.",
+    "food": [
+      {
+        "name": "Boule",
+        "text": "A firm ball of millet, sorghum or maize porridge, the everyday staple, eaten with the fingers and dipped in sauce, often of okra or dried fish."
+      },
+      {
+        "name": "Kissar",
+        "text": "Thin, slightly sour pancakes of fermented sorghum, cooked on a griddle and torn to scoop up stews."
+      },
+      {
+        "name": "Daraba",
+        "text": "A thick stew of okra, tomatoes and other vegetables, often enriched with ground peanuts and eaten with boule."
+      },
+      {
+        "name": "River fish",
+        "text": "Fish from the Chari and Logone rivers and Lake Chad, grilled or fried fresh in N'Djamena, or smoked and dried to keep for sauces."
+      },
+      {
+        "name": "Karkanji",
+        "text": "A cold, sweet drink of hibiscus flowers, often spiced with ginger, sold everywhere in the heat."
+      },
+      {
+        "name": "Bili-bili",
+        "text": "A cloudy home-brewed sorghum beer of the south, drunk from calabashes at markets and celebrations."
+      }
+    ],
+    "phrases": {
+      "language": "Chadian Arabic",
+      "intro": "Chadian Arabic is the common language of markets and streets in N'Djamena and the north. French is used in offices, hotels and schools, and Sara and other languages in the south. Spellings vary.",
+      "items": [
+        { "phrase": "Salam alaykum (السلام عليكم)", "say": "sa-LAAM a-LAY-kum", "meaning": "Hello (\"peace be upon you\")" },
+        { "phrase": "Lâfe? (لافي)", "say": "LAA-feh", "meaning": "All well? (and the answer: well)" },
+        { "phrase": "Shukran (شكرا)", "say": "SHOOK-ran", "meaning": "Thank you" },
+        { "phrase": "Aywa (أيوه)", "say": "AY-wa", "meaning": "Yes" },
+        { "phrase": "La (لا)", "say": "LAA", "meaning": "No" },
+        { "phrase": "Bi kam? (بكم)", "say": "bee KAM", "meaning": "How much?" },
+        { "phrase": "Ma'a salama (مع السلامة)", "say": "ma-sa-LAA-ma", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q657",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Central African CFA franc (FCFA, XAF), pegged to the euro and shared with five other Central African countries; it isn't the same as the West African franc. Chad runs on cash.",
+        "sources": [{ "property": "P38", "values": ["Q847739"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French and Arabic, both official. Chadian Arabic is the everyday common language, and more than a hundred others are spoken, Sara the largest in the south.",
+        "sources": [{ "property": "P37", "values": ["Q150", "Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, E and F (two round pins), with some British-style sockets; 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1123613", "Q60740126"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "West Africa Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q4689517"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "17 for police and 18 for ambulance; the fire service in N'Djamena is on 2251 4242",
+        "sources": [{ "property": "P2852", "values": ["Q25648842", "Q25648843", "Q60061550"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+235",
+        "sources": [{ "property": "P474", "values": ["+235"] }]
+      }
+    ]
+  }
+}

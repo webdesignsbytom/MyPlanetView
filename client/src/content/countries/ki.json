@@ -1,0 +1,139 @@
+{
+  "code": "KI",
+  "slug": "kiribati",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Mauri", "Kiribati"],
+  "summary": "Atolls astride the equator in three time zones, from wartime Tarawa to Kiritimati's fishing flats.",
+  "overview": [
+    "Kiribati (said 'KIRR-ee-bahss') is 32 atolls and one raised coral island, Banaba, scattered across nearly 4,000 km of ocean on both sides of the equator, with only about 800 km² of land. It has three island groups: the Gilbert Islands in the west, where nearly all of its 120,000 or so people live; the almost empty Phoenix Islands in the middle; and the Line Islands far to the east, including Kiritimati, the largest coral atoll on earth by land area.",
+    "Most people live on South Tarawa, a string of islets joined by causeways along one road, crowded and busy by Pacific standards. On Betio, at its western end, US Marines fought one of the bloodiest battles of the Pacific war in November 1943, and Japanese bunkers and coastal guns still stand among the houses. The outer Gilbert atolls, served by light aircraft and island boats, are a world of thatched houses, sailing canoes and maneaba, the great open meeting houses at the heart of each village.",
+    "Kiritimati, more than 3,000 km east of Tarawa, is known for fly-fishing for bonefish on its lagoon flats and for huge seabird colonies; Britain and the United States tested nuclear weapons near it between 1957 and 1962. The Phoenix Islands Protected Area, one of the largest marine reserves on earth, is a World Heritage Site. In 1995 Kiribati moved the date line east so the whole country shares the same day, and the Line Islands, at UTC+14, are the first inhabited place to see in each new year."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "good", "good", "best", "best", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Wetter months",
+        "months": [12, 1, 2, 3, 4, 5],
+        "text": "On Tarawa and the Gilberts, the westerlies deliver the bulk of the rain, often in heavy showers and squalls, with highs around 31°C. Crossings by small boat can be rough."
+      },
+      {
+        "name": "Drier months",
+        "months": [6, 7, 8, 9, 10, 11],
+        "text": "The easterly trade winds settle in and the rain eases, most of all from August to November, when the Gilberts can go weeks with little rain and the steady breeze makes the heat easier to bear."
+      }
+    ],
+    "weather": "Kiribati sits on the equator, so it's hot in every month, with highs of 30–32°C, nights around 25°C and almost no change through the year. Rain is what varies, from season to season and from one year to the next: El Niño years bring heavy rain to the central and southern islands, while La Niña years can bring months of drought. The Gilberts average about 2,000 mm a year; Kiritimati is much drier. The islands lie too close to the equator for tropical cyclones, though distant storms can send high waves onto the low shores.",
+    "festivals": [
+      {
+        "name": "New Year on Kiritimati",
+        "place": "Kiritimati (Christmas Island)",
+        "when": "1 January",
+        "months": [1],
+        "text": "With the Line Islands on UTC+14, Kiritimati is the first inhabited island to reach midnight on New Year's Eve, hours ahead of Auckland and Sydney."
+      },
+      {
+        "name": "Independence Day",
+        "place": "South Tarawa and across Kiribati",
+        "when": "12 July, with celebrations over several days around it",
+        "months": [7],
+        "text": "The year's biggest celebration: Kiribati left British rule in 1979, and the anniversary brings parades, sports and dance competitions. Gospel Day and a culture day fall alongside it, so offices close for most of a week."
+      },
+      {
+        "name": "Christmas",
+        "place": "Across Kiribati",
+        "when": "25 and 26 December",
+        "months": [12],
+        "text": "Church services, feasts and dancing in the maneaba, and many people travel back to their home islands for the holidays."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Mauri\" is hello, and it also wishes good health and blessing. The I-Kiribati, as the people call themselves, are warm but modest: a gentle handshake and a smile are enough, and boasting or showing off is frowned on. A welcome for a group of guests may begin with \"Kam na bane ni mauri\", greetings to you all.",
+    "etiquette": [
+      "The maneaba has its own rules: don't go in without being invited, and sit where you're shown, as each family has its traditional place along the edge.",
+      "Fresh water is scarce on the atolls. Use it sparingly, and drink bottled, boiled or rain water.",
+      "Ask before photographing people or walking through a village, and greet the people you pass.",
+      "Wartime relics on Betio and elsewhere are protected, and some are still dangerous: look, but don't touch or take.",
+      "On Kiritimati, keep well back from nesting seabirds and fish only with a licensed guide."
+    ],
+    "tipping": "Not part of local custom and rarely expected. A gift or a hand with chores is the usual way to thank a host family.",
+    "dress": "Loose cotton clothes, a wide hat and strong sun cream: the equatorial sun is fierce. In villages, women keep shoulders and thighs covered, and a wrap over swimwear is useful; many local people swim in their clothes.",
+    "food": [
+      {
+        "name": "Babai",
+        "text": "Giant swamp taro, grown for years in pits dug down to the fresh groundwater and served at feasts. A big, well-grown babai is a mark of a family's standing."
+      },
+      {
+        "name": "Karewe and kamaimai",
+        "text": "Karewe is sap tapped from coconut flower stalks, drunk fresh and sweet; kamaimai is the same sap boiled down into a dark syrup for drinks and cooking."
+      },
+      {
+        "name": "Tuna and reef fish",
+        "text": "Caught daily from the lagoon and the open sea, eaten fried, grilled, or raw with lime, coconut or soy sauce."
+      },
+      {
+        "name": "Pandanus",
+        "text": "The fruit is eaten fresh, or dried and pounded into a long-keeping flour, an old way of getting through droughts."
+      }
+    ],
+    "phrases": {
+      "language": "Gilbertese (Te taetae ni Kiribati)",
+      "intro": "English is official and used in government and schools, but Gilbertese is what you'll hear. The letters ti are said like s, which is why Kiribati sounds like 'KIRR-ee-bahss'.",
+      "items": [
+        { "phrase": "Mauri", "say": "MOW-ree", "meaning": "Hello" },
+        { "phrase": "Kam na bane ni mauri", "say": "kahm nah BAH-neh nee MOW-ree", "meaning": "Greetings, everyone" },
+        { "phrase": "Ko rabwa", "say": "koh RAH-bah", "meaning": "Thank you (to one person)" },
+        { "phrase": "Kam rabwa", "say": "kahm RAH-bah", "meaning": "Thank you (to several people)" },
+        { "phrase": "Eng / Tiaki", "say": "ENG / SEE-ah-kee", "meaning": "Yes / No" },
+        { "phrase": "Ti a bo", "say": "sah BOH", "meaning": "Goodbye; see you" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q710",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Australian dollar (A$, AUD), alongside Kiribati's own coins, worth the same. Bring cash: cards are taken in very few places.",
+        "sources": [{ "property": "P38", "values": ["Q259502", "Q1049963"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English and Gilbertese, both official",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q30898"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (two flat pins in a V, as in Australia), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Three time zones, none with summer time: UTC+12 in the Gilbert Islands (with Tarawa) and Banaba; UTC+13 in the Phoenix Islands; UTC+14 in the Line Islands, with Kiritimati",
+        "sources": [{ "property": "P421", "values": ["Q7105", "Q7118", "Q7130", "Q63285968", "Q109531307", "Q7122270"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "192 for the police, 193 for fire, 194 for an ambulance (195 in Betio)",
+        "sources": [{ "property": "P2852", "values": ["Q25648834", "Q25648835", "Q25648914", "Q25743518"] }],
+        "note": "Wikidata also gives 999. The page gives the service numbers in Kiribati's current numbering plan, which Canadian and Irish travel advice also list."
+      },
+      {
+        "key": "callingCode",
+        "text": "+686",
+        "sources": [{ "property": "P474", "values": ["+686"] }]
+      }
+    ]
+  }
+}

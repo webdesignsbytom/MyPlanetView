@@ -13,18 +13,19 @@ async function choosePins(page, label) {
   await expect(settings).toBeHidden();
 }
 
-test('the landmark pins show when zoomed in, always, only the passport’s, or not at all', async ({ page }) => {
+test('the landmark pins show only the passport’s, when zoomed in, always, or not at all', async ({ page }) => {
   await openMap(page);
-  // The default: the whole world is too far out for them
+  // The default (18 Nov 2026): only the passport's, whatever the zoom
+  await expect(pins(page)).toHaveAttribute('data-landmark-pins', '0');
+  await expect(pins(page)).toHaveAttribute('data-stamped-pins', '13');
+
+  // When zoomed in: the whole world is too far out for them
+  await choosePins(page, 'When zoomed in');
   await expect(pins(page)).toHaveCount(0);
 
   await choosePins(page, 'Always, at every zoom');
   await expect(pins(page)).toHaveCount(1);
   await expect.poll(async () => Number(await pins(page).getAttribute('data-landmark-pins'))).toBeGreaterThan(0);
-
-  await choosePins(page, 'Only the landmarks in your passport');
-  await expect(pins(page)).toHaveAttribute('data-landmark-pins', '0');
-  await expect(pins(page)).toHaveAttribute('data-stamped-pins', '13');
 
   await choosePins(page, 'Off');
   await expect(pins(page)).toHaveCount(0);

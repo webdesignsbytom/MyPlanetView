@@ -1,0 +1,158 @@
+{
+  "code": "CF",
+  "slug": "central-african-republic",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bara ala", "Centrafrique"],
+  "summary": "Forest elephants at Dzanga Bai, lowland gorillas and BaAka forest guides.",
+  "overview": [
+    "The Central African Republic lies at the very centre of the continent: a rolling plateau of savanna and woodland in the north, rainforest in the south-west, and the Ubangi River along much of the southern border with the Democratic Republic of the Congo. Its best-known wild place is Dzanga-Sangha, in the far south-western corner, part of the Sangha Trinational, a UNESCO World Heritage Site shared with Cameroon and the Republic of the Congo. Forest elephants gather by the dozen, sometimes by the hundred, in the Dzanga Bai, a mineral-rich clearing in the forest; researchers have habituated groups of western lowland gorillas to people; and BaAka hunter-gatherers lead walks and net hunts in the forest.",
+    "Bangui, the capital, stands on the Ubangi facing the Democratic Republic of the Congo, with markets along the river where pirogues land fish and produce. Roads are few and mostly unpaved, many are cut in the rainy season, and reaching Dzanga-Sangha means a very long drive or a charter flight. The north holds the Manovo-Gounda St Floris National Park, a World Heritage Site listed as in danger.",
+    "Many governments advise against all travel to the Central African Republic: armed groups are active across much of the country, and conditions can change quickly. Check your own government's current advice before considering a trip."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "good", "good", "avoid", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2],
+        "text": "Sunny and dry, with Bangui at about 32–34°C by day and the harmattan blowing dust across the north. The easiest time to travel, as the tracks are dry."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "March is the hottest month, close to 35°C in Bangui. Thunderstorms return from about April, and the first heavy downpours lay the dust."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Rain on most days, heaviest in August and September. Unpaved roads turn to mud and some become impassable for weeks, while the rivers rise high."
+      },
+      {
+        "name": "End of the rains",
+        "months": [11],
+        "text": "The storms die away, the grass is tall and green, and the roads slowly dry out."
+      }
+    ],
+    "weather": "Tropical and hot all year, with one long rainy season from about April or May to October and a dry season from about November to March. Bangui gets about 1,500 mm of rain a year, with highs of 30–35°C in every month. The south-western rainforest around Dzanga-Sangha is more humid, with rain in most months, while the far north is drier and harsher, close to the Sahel.",
+    "festivals": [
+      {
+        "name": "Boganda Day",
+        "place": "Across the Central African Republic",
+        "when": "29 March",
+        "months": [3],
+        "text": "A public holiday on the anniversary of the death in 1959 of Barthélemy Boganda, the founder of the republic, who is remembered as the father of the nation."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the Central African Republic",
+        "when": "13 August",
+        "months": [8],
+        "text": "Independence from France came in 1960, the year after Boganda's death. Official ceremonies in Bangui, and offices close."
+      },
+      {
+        "name": "National Day",
+        "place": "Across the Central African Republic",
+        "when": "1 December",
+        "months": [12],
+        "text": "The anniversary of the proclamation of the republic in 1958, and the country's national day, a public holiday."
+      },
+      {
+        "name": "Christmas",
+        "place": "Across the Central African Republic",
+        "when": "25 December",
+        "months": [12],
+        "text": "Most Central Africans are Christian, and Christmas is a public holiday, with churches full to overflowing and families gathered for a big meal."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A greeting in Sango opens doors. \"Bara ala\" greets several people at once and \"Bara mo\" one person; then comes \"Mo yeke nzoni?\" (are you well?), answered with \"Mbi yeke nzoni\" (I'm well). Handshakes go to the oldest person first. French greetings are understood in Bangui.",
+    "etiquette": [
+      "Ask before photographing anyone, and keep your camera in its bag near soldiers, police, checkpoints and official buildings, where it can cause trouble.",
+      "Checkpoints are many, in Bangui and on the roads: keep your passport on you, not in the hotel safe.",
+      "On forest walks, follow your BaAka trackers: keep quiet, stay behind them, and keep the distance they set from gorillas and elephants.",
+      "Bring the cash and supplies you'll need for a trip into the forest: there's little to buy on the way."
+    ],
+    "tipping": "Not part of daily life, but guides, trackers, drivers and camp staff on a forest trip expect a tip at the end.",
+    "dress": "Long, light clothes in neutral colours for the forest, with closed shoes and a rain jacket, as it can pour in any month there. In town, modest, neat clothes are best.",
+    "food": [
+      {
+        "name": "Gozo",
+        "text": "Cassava flour cooked into a stiff dough, the staple of nearly every meal, eaten with the fingers of the right hand and dipped in a stew."
+      },
+      {
+        "name": "Ngunza",
+        "text": "Cassava leaves pounded and stewed for hours, often with peanut paste, palm oil and smoked fish."
+      },
+      {
+        "name": "Koko",
+        "text": "The leaves of a forest vine, sliced thread-thin and cooked with peanuts and meat or fish; gathered wild in the south-west."
+      },
+      {
+        "name": "River fish",
+        "text": "Fish from the Ubangi, grilled over charcoal or smoked to keep, sold at the riverside markets in Bangui and eaten with gozo and a chilli sauce."
+      },
+      {
+        "name": "Caterpillars and termites",
+        "text": "In season, edible caterpillars and winged termites are gathered, fried or smoked, and sold in heaps at the markets: a much-loved source of protein."
+      }
+    ],
+    "phrases": {
+      "language": "Sango",
+      "intro": "Sango and French are both official, but Sango is the language nearly everyone shares, in Bangui and across the country.",
+      "items": [
+        { "phrase": "Bara ala", "say": "BAH-rah AH-lah", "meaning": "Hello (to more than one person)" },
+        { "phrase": "Bara mo", "say": "BAH-rah MOH", "meaning": "Hello (to one person)" },
+        { "phrase": "Mo yeke nzoni?", "say": "moh YEH-keh n-ZOH-nee", "meaning": "Are you well?" },
+        { "phrase": "Mbi yeke nzoni", "say": "mbee YEH-keh n-ZOH-nee", "meaning": "I'm well" },
+        { "phrase": "Singila", "say": "seen-GEE-lah", "meaning": "Thank you" },
+        { "phrase": "Singila mingi", "say": "seen-GEE-lah MEEN-gee", "meaning": "Thank you very much" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q929",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Central African CFA franc (CFA, XAF). Cash is used for almost everything; euros are the easiest to change.",
+        "sources": [{ "property": "P38", "values": ["Q847739"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Sango and French, both official. Sango is spoken by almost everyone; French is used in government and schools.",
+        "sources": [{ "property": "P37", "values": ["Q150", "Q33954"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "West Africa Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q4689476"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "117 for police, 118 for fire and 1220 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q4547615", "Q11185210", "Q25648850"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+236",
+        "sources": [{ "property": "P474", "values": ["+236"] }]
+      }
+    ]
+  }
+}

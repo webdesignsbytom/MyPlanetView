@@ -1,0 +1,193 @@
+{
+  "code": "GE",
+  "slug": "georgia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Gamarjoba", "Sakartvelo"],
+  "summary": "Clay-jar wine, Tbilisi's sulphur baths and stone tower villages in the Caucasus.",
+  "overview": [
+    "Georgia fits a great deal into a small country between the Black Sea and the Greater Caucasus. Tbilisi, the capital, climbs the hills on both sides of the Mtkvari River: brick-domed sulphur baths, old houses with carved wooden balconies, and a fortress above them reached by cable car. Mtskheta, the old capital, with its cathedral and the hilltop Jvari monastery, is half an hour away. Kakheti, in the east, is wine country, where wine is still made in clay jars (qvevri) buried in the ground, and the walled hill town of Sighnaghi looks across the Alazani valley to the mountains.",
+    "To the north, the Georgian Military Road crosses the Cross Pass, at about 2,400 m, to Stepantsminda, where Gergeti Trinity Church stands on a ridge below Mount Kazbek (5,054 m). Svaneti, in the north-west, has villages of medieval stone defence towers, Mestia and Ushguli, below glaciers. In the west, Kutaisi has the Gelati monastery, and Batumi is the summer resort on the Black Sea. Shared minibuses (marshrutkas) go almost everywhere, trains link Tbilisi with Batumi, and app taxis are cheap in the cities.",
+    "Two regions, Abkhazia and South Ossetia, are not under the control of the government in Tbilisi. Most governments advise against travel to them, and entering them from Russia breaks Georgian law."
+  ],
+  "whenToGo": {
+    "stripLabel": "Tbilisi and the lowlands of the east. The high mountains and the Black Sea coast keep their own calendars, shown below.",
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Fruit trees flower in Kakheti in April, and the hills are green by May. The high mountains are still under snow, and May and June bring Tbilisi's wettest weather, mostly in short thunderstorms."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot in Tbilisi and Kakheti, often 30–35°C in July and August. The best time for the mountains: the passes are clear, the Tusheti road is open, and Svaneti's meadows are in flower. Batumi's beaches are packed."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Warm, clear days and the grape harvest in Kakheti. The leaves turn in the mountains in October, and November is cool and damp."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Ski season at Gudauri, on the Military Road, and at Bakuriani. Tbilisi is cool, around freezing at night, with the odd snowfall. Snow or avalanche risk can close the road to Stepantsminda for a day or two."
+      }
+    ],
+    "weather": "The Greater Caucasus shelters Georgia from the cold north, so the lowlands are mild for their latitude. The east is drier: Tbilisi has hot summers and cool winters, with the most rain in late spring. The west is wet and subtropical, with tea gardens and citrus trees, and Batumi gets heavy rain from autumn into winter. In the mountains, snow lies from about November to April or May on the heights, and the high road to Tusheti is open only from about June to early October.",
+    "festivals": [
+      {
+        "name": "Christmas and Alilo",
+        "place": "Across Georgia",
+        "when": "7 January",
+        "months": [1],
+        "text": "Orthodox Christmas. On the day, Alilo processions of singers in costume walk the streets of Tbilisi and other towns, collecting food and gifts for those in need."
+      },
+      {
+        "name": "Easter",
+        "place": "Across Georgia",
+        "when": "Orthodox Easter, usually in April or early May: in 2027, 2 May",
+        "months": [4, 5],
+        "text": "The most important feast of the year, with a midnight service on Saturday night and red-dyed eggs and a sweet Easter bread (paska) at home. Public holidays run from Good Friday to Easter Monday, and during Easter week families visit their relatives' graves with eggs, bread and wine."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Georgia",
+        "when": "26 May",
+        "months": [5],
+        "text": "The anniversary of the first Georgian republic, declared in 1918, with flags, concerts and crowds in central Tbilisi."
+      },
+      {
+        "name": "Rtveli (the grape harvest)",
+        "place": "Kakheti and other wine regions",
+        "when": "Usually from mid-September to October",
+        "months": [9, 10],
+        "text": "Families and friends pick grapes and tread or press them, then pour the juice into the qvevri, with a feast to finish the day. Many guesthouses and wineries invite visitors to join."
+      },
+      {
+        "name": "Tbilisoba",
+        "place": "Tbilisi",
+        "when": "Usually in October, over a weekend",
+        "months": [10],
+        "text": "The city's own festival at harvest time: food and wine stalls from every region, folk music and dancing in the old town."
+      },
+      {
+        "name": "Giorgoba (St George's Day)",
+        "place": "Across Georgia",
+        "when": "23 November",
+        "months": [11],
+        "text": "A public holiday for St George, the country's patron saint, with church services and family feasts."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The high Caucasus: Kazbegi, Svaneti and Tusheti",
+        "months": ["good", "good", "good", "avoid", "good", "best", "best", "best", "best", "good", "avoid", "good"],
+        "text": "Hiking is best from late June to September, when the snow has left the passes. From December to March, Gudauri and the slopes above Mestia have skiing. April and November fall between the two: melting snow, mud, closed passes and few places open."
+      },
+      {
+        "name": "Batumi and the Black Sea coast",
+        "months": ["good", "good", "good", "good", "good", "best", "best", "best", "good", "good", "good", "good"],
+        "text": "Warm, humid summers on pebble beaches, with the sea warm enough for swimming from about June to October. Autumn and winter are mild but very wet, with many grey days."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Gamarjoba\" (hello) means \"victory\", and the reply is \"Gagimarjos\". A handshake is the usual greeting between men, and friends and family kiss once on the cheek. Georgians say a guest is a gift from God, and visitors are often treated that way: expect to be fed.",
+    "etiquette": [
+      "A feast (supra) is led by a toastmaster (tamada), who proposes toast after toast: to Georgia, to parents, to the dead, to friendship. Drink when a toast is made rather than in between, and it's fine to sip.",
+      "Don't make a toast with beer: by tradition, that's kept for enemies. Wine and chacha are the drinks for toasting.",
+      "In churches, women cover their hair and wear a skirt (wraps are often lent at the door), men take off hats and wear long trousers, and no one should stand with their back to the altar.",
+      "Take care crossing roads: drivers don't always stop at pedestrian crossings, and in Tbilisi it's often safer to use the underpasses.",
+      "Ask before photographing people or the inside of a church; many don't allow it during services."
+    ],
+    "tipping": "Many restaurants add a service charge of about 10%, so check the bill before leaving more; without one, about 10% is usual. Rounding up a taxi fare is enough, and guides and drivers get a tip at the end of a day.",
+    "dress": "Casual, with something to cover shoulders and knees for churches, and a scarf for women. Warm layers and rain gear for the mountains in any season, and good shoes: many old streets are steep cobbles.",
+    "food": [
+      {
+        "name": "Khachapuri",
+        "text": "Cheese bread, made differently in each region: round and filled in Imereti, or Adjarian style, boat-shaped and topped with an egg and a knob of butter to stir into the hot cheese."
+      },
+      {
+        "name": "Khinkali",
+        "text": "Big twisted dumplings of spiced meat and broth. Hold them by the knot, bite a small hole and drink the broth first; the knot is left on the plate."
+      },
+      {
+        "name": "Pkhali and badrijani",
+        "text": "Pkhali are little balls of minced spinach, beetroot or beans with walnuts, garlic and herbs; badrijani are fried aubergine slices rolled round walnut paste and topped with pomegranate seeds."
+      },
+      {
+        "name": "Mtsvadi",
+        "text": "Pork or veal grilled on skewers over vine cuttings, served with raw onion and a sour plum sauce (tkemali)."
+      },
+      {
+        "name": "Churchkhela",
+        "text": "Strings of walnuts or hazelnuts dipped again and again in thickened grape juice and dried, sold hanging in bunches at every market."
+      },
+      {
+        "name": "Qvevri wine and chacha",
+        "text": "Amber wine, white grapes fermented on their skins in clay jars, is Georgia's speciality; Saperavi makes deep red wines. Chacha is the strong grape spirit offered with almost any welcome."
+      }
+    ],
+    "phrases": {
+      "language": "Georgian",
+      "intro": "Georgian has its own rounded alphabet, used for nothing else. Russian is widely understood by older people, and many younger people speak English.",
+      "items": [
+        { "phrase": "Gamarjoba (გამარჯობა)", "say": "gah-mar-JOH-bah", "meaning": "Hello" },
+        { "phrase": "Madloba (მადლობა)", "say": "mahd-LOH-bah", "meaning": "Thank you" },
+        { "phrase": "Gtkhovt (გთხოვთ)", "say": "guh-TKHOVT", "meaning": "Please" },
+        { "phrase": "Ki / Ara (კი / არა)", "say": "KEE / AH-rah", "meaning": "Yes / No" },
+        { "phrase": "Ra ghirs? (რა ღირს?)", "say": "rah GHEERS", "meaning": "How much is it?" },
+        { "phrase": "Gemrielia (გემრიელია)", "say": "gem-ree-EH-lee-ah", "meaning": "It's delicious" },
+        { "phrase": "Gaumarjos (გაუმარჯოს)", "say": "gow-mar-JOSS", "meaning": "Cheers! (\"To victory\")" },
+        { "phrase": "Nakhvamdis (ნახვამდის)", "say": "nakh-VAHM-dis", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q230",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Georgian lari (₾, GEL). Cards are widely taken in towns; carry cash in the mountains and at markets.",
+        "sources": [{ "property": "P38", "values": ["Q4608"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Georgian. Russian is widely understood, and English is common among younger people.",
+        "sources": [{ "property": "P37", "values": ["Q8108"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Georgia Time, UTC+4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6779"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata also lists 111, 113 and 122, the older numbers for fire, ambulance and police; 112 has been Georgia's single emergency number since about 2012, so the page gives only that."
+      },
+      {
+        "key": "callingCode",
+        "text": "+995",
+        "sources": [{ "property": "P474", "values": ["+995"] }]
+      }
+    ]
+  }
+}

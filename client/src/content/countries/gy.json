@@ -1,0 +1,183 @@
+{
+  "code": "GY",
+  "slug": "guyana",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Welcome", "Guyana", "Many waters"],
+  "summary": "Kaieteur Falls, Rupununi wildlife and the wooden city of Georgetown.",
+  "overview": [
+    "Guyana is the only English-speaking country in South America, and it feels as much Caribbean as South American: cricket on every patch of grass, soca and chutney music, rum, roti and curry. Most of its people live on a narrow coastal strip, descendants of Indian indentured workers, of enslaved Africans, of Portuguese and Chinese settlers, and of the Amerindian peoples who were here first. Georgetown, the capital, lies below sea level behind a long sea wall, crossed by old Dutch drainage canals. Its white wooden buildings include St George's Cathedral, one of the tallest wooden churches in the world, and Stabroek Market under its iron clock tower; manatees live in the ponds of the Botanical Gardens.",
+    "Most of the country is rainforest and savannah with very few roads. Kaieteur Falls, where the Potaro River drops about 226 m in a single fall, several times the height of Niagara, is a day trip by small plane from Georgetown, and the forest around it is home to tiny golden frogs living in giant bromeliads. Further south, the Iwokrama Forest has a canopy walkway and a road where jaguars are sometimes seen at dawn, and beyond it the Rupununi savannah has ranches and lodges run by Amerindian villages such as Surama and Rewa, with giant otters, giant anteaters, black caimans and arapaima, one of the world's largest freshwater fish.",
+    "Small planes reach Kaieteur and the Rupununi, and a long road, rough in parts, runs south through the forest to Lethem on the Brazilian border. Minibuses cover the coast. Trips to the interior are best arranged with a local operator, as lodges are remote and transport must be booked together. In Georgetown, take a taxi after dark rather than walking."
+  ],
+  "whenToGo": {
+    "months": ["good", "best", "best", "best", "good", "avoid", "good", "good", "best", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Short rains",
+        "months": [12, 1],
+        "text": "Showers on the coast, often heavy for an hour or two, with dry spells between. The Rupununi stays dry. Christmas and New Year bring Guyanese home from abroad, and flights are full."
+      },
+      {
+        "name": "Short dry season",
+        "months": [2, 3, 4],
+        "text": "Sunny and breezy on the coast, with the Mashramani parade in February and Phagwah in March. A good time for the interior before the rains."
+      },
+      {
+        "name": "Long rains",
+        "months": [5, 6, 7, 8],
+        "text": "Downpours on most days, wettest in June. The Rupununi savannah floods, the road south can become impassable, and cloud sometimes grounds flights to Kaieteur, though the falls are at their most powerful."
+      },
+      {
+        "name": "Long dry season",
+        "months": [9, 10, 11],
+        "text": "The driest and sunniest months, the best time for the interior: the savannah dries out, animals gather at the shrinking rivers and pools, and the trails are firm. Very hot inland."
+      }
+    ],
+    "weather": "The heat and humidity hardly vary: coastal days are around 29–31°C and nights near 24°C, cooled by the north-east trade winds. The coast has two rainy seasons: a long one from about May to August and a short one from about December to January. The Rupununi in the south has a single wet season, from about May to August, and is hotter and drier than the coast the rest of the year. Guyana lies south of the hurricane belt.",
+    "festivals": [
+      {
+        "name": "Mashramani",
+        "place": "Georgetown",
+        "when": "23 February",
+        "months": [2],
+        "text": "Republic Day, marking the republic proclaimed in 1970, celebrated with a carnival-style parade of costumed bands, calypso and soca contests and steel bands. The name is said to come from an Arawak word for a celebration after hard work."
+      },
+      {
+        "name": "Phagwah (Holi)",
+        "place": "Across Guyana",
+        "when": "Usually in March (about 22 March in 2027)",
+        "months": [3],
+        "text": "On this public holiday for the Hindu spring festival, everyone, Hindu or not, is drenched in coloured powder and water in the streets and villages."
+      },
+      {
+        "name": "Rupununi Rodeo",
+        "place": "Lethem",
+        "when": "Easter weekend (Easter Sunday is 28 March in 2027)",
+        "months": [3, 4],
+        "text": "The vaqueros, the cowboys of the savannah ranches, compete at bronco and bull riding and roping, with music, food stalls and a crowd from across the south and over the Brazilian border."
+      },
+      {
+        "name": "Emancipation Day",
+        "place": "Across Guyana, with the main gathering in Georgetown",
+        "when": "1 August",
+        "months": [8],
+        "text": "Guyana celebrates the end of slavery in 1838 with African drumming, dance, dress and food at a big festival in Georgetown's National Park."
+      },
+      {
+        "name": "Diwali",
+        "place": "Across Guyana",
+        "when": "Usually late October or early November",
+        "months": [10, 11],
+        "text": "The Hindu festival of lights, a public holiday: houses and temples are lined with clay lamps (diyas), and a motorcade of lit-up floats drives through Georgetown."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The coast and Georgetown",
+        "text": "Hot and humid, with two rainy seasons, May to August and December to January. Sea breezes make Georgetown's evenings pleasant."
+      },
+      {
+        "name": "The interior",
+        "text": "Kaieteur, Iwokrama and the Rupununi. One long wet season from about May to August, when the savannah turns into wetland; from September to April it's dry, dusty and hot, and the wildlife is easiest to find."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Guyanese are friendly and talkative. Greet everyone with \"Good morning\" or \"Good afternoon\" when you get into a minibus, walk into a shop or join a queue: skipping it seems rude. Friends greet each other in Creole, which can be hard to follow at first: ask people to slow down and they will.",
+    "etiquette": [
+      "Many interior lodges belong to Amerindian villages, so you're the community's guest: ask before photographing anyone.",
+      "Take your shoes off before entering a Hindu temple or a mosque, and dress modestly.",
+      "Buy bottled water rather than drinking from the tap.",
+      "In Georgetown, use registered taxis, especially at night, and keep valuables out of sight.",
+      "Cricket is close to a religion: an opinion on the West Indies team is a quick way into a conversation.",
+      "In the interior, plans depend on the weather and the planes: keep a spare day before an international flight home."
+    ],
+    "tipping": "Check the restaurant bill: if no service charge is added, leave around 10%. Guides, boatmen and lodge staff in the interior should be tipped too.",
+    "dress": "Cool cotton for the coast, and long sleeves, trousers and insect repellent for the forest and savannah. Pack a light rain jacket whatever the month. Cover shoulders and knees in temples and mosques.",
+    "food": [
+      {
+        "name": "Pepperpot",
+        "text": "The national dish, made at Christmas: beef or pork stewed slowly with cassareep, a black syrup made from cassava by Amerindian cooks, with cinnamon and hot pepper, eaten with thick bread."
+      },
+      {
+        "name": "Cook-up rice",
+        "text": "Rice and black-eyed peas cooked in coconut milk with chicken, beef or salt meat, a one-pot Saturday lunch and a New Year's Eve tradition."
+      },
+      {
+        "name": "Curry and roti",
+        "text": "Indian-Guyanese cooking is everywhere: chicken, goat or duck curry with roti or dhal puri, a flatbread filled with ground split peas."
+      },
+      {
+        "name": "Metemgee",
+        "text": "A thick stew of cassava, plantain, yam and eddo in coconut milk, topped with flour dumplings (duff) and fried fish or salt fish."
+      },
+      {
+        "name": "Bake and saltfish",
+        "text": "Small fried breads split open and filled with salt cod cooked with onion, tomato and pepper: the classic breakfast."
+      },
+      {
+        "name": "Demerara rum",
+        "text": "Rum distilled from sugar cane grown along the Demerara River, which gave its name to demerara sugar too. El Dorado's aged rums are the best known."
+      }
+    ],
+    "phrases": {
+      "language": "Guyanese Creole (Creolese)",
+      "intro": "English is used in every school, office and shop, but most Guyanese speak Creole among themselves.",
+      "items": [
+        { "phrase": "Wha' happenin'?", "say": "wah HAP-nin", "meaning": "How's it going?" },
+        { "phrase": "Bai", "say": "BAI", "meaning": "Mate; friend (to a man)" },
+        { "phrase": "Lime", "meaning": "To hang out with friends" },
+        { "phrase": "Gyaff", "say": "GYAHF", "meaning": "To chat; to gossip" },
+        { "phrase": "Sweet hand", "meaning": "Someone who cooks well" },
+        { "phrase": "Tek time", "say": "tek TAIM", "meaning": "Take it easy; go carefully" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q734",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Guyanese dollar (G$, GYD). US dollars are taken by many hotels and tour operators.",
+        "sources": [{ "property": "P38", "values": ["Q213005"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the official language. Most Guyanese speak Guyanese Creole at home, and Amerindian languages such as Makushi and Wapishana are spoken in the interior.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US) and G (three rectangular pins, as in the UK), 240 V; many buildings also have 110–120 V sockets, so check before plugging in",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456", "Q1528507"] },
+          { "property": "P2884", "values": ["240"] }
+        ],
+        "note": "Wikidata gives 240 V only; Guyana's supply also comes at 110–120 V in many buildings, so the page says to check."
+      },
+      {
+        "key": "driving",
+        "text": "On the left, as in neighbouring Suriname",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Guyana Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q63225363"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police; 912 for the fire service; 913 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806", "Q25648878", "Q25648879"] }],
+        "note": "Wikidata also lists 999; the page gives Guyana's three service numbers."
+      },
+      {
+        "key": "callingCode",
+        "text": "+592",
+        "sources": [{ "property": "P474", "values": ["+592"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "code": "GT",
+  "slug": "guatemala",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Buenos días", "Guatemala", "Bienvenidos"],
+  "summary": "Maya temples above the Petén forest, a volcano-ringed lake and the ruined churches of Antigua.",
+  "overview": [
+    "Guatemala is the heart of the Maya world, past and present: around four in ten Guatemalans are Maya, many still wearing their village's handwoven clothes and speaking one of more than twenty Mayan languages. Antigua, the old Spanish capital, is the place most trips begin, a grid of cobbled streets, earthquake-ruined churches and coffee houses beneath the volcanoes Agua, Fuego and Acatenango. Fit walkers climb Acatenango overnight to watch Fuego, one of the most active volcanoes in the Americas, throw out lava in the dark.",
+    "West of Antigua, Lake Atitlán lies in a deep basin ringed by three volcanoes, with villages around its shore linked by small public boats: busy Panajachel, backpackers' San Pedro, the weavers of San Juan and the Tz'utujil town of Santiago Atitlán. Chichicastenango's market fills its plaza on Thursdays and Sundays. In the northern lowlands of Petén, the temples of Tikal rise above the rainforest canopy, with howler monkeys roaring at dawn; the island town of Flores is the base. Other trips lead to the turquoise limestone pools of Semuc Champey, and down the Río Dulce gorge to Livingston, a Garifuna town on the Caribbean reached only by boat.",
+    "Tourist shuttle vans link Guatemala City's airport, Antigua, Atitlán and Chichicastenango; colourful \"chicken buses\" go everywhere for much less, but are crowded and best avoided with luggage. Flores is a short flight or a long overnight bus from the capital. Petty theft is the main risk for visitors: use shuttles or registered taxis, and hike volcanoes with a guide."
+  ],
+  "whenToGo": {
+    "stripLabel": "The highlands (Antigua, Lake Atitlán, Chichicastenango) and the country taken together. Petén is hotter, and has its own strip below.",
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Clear blue skies, the best volcano views and dry trails. Days are warm, but highland nights can drop to near freezing in December and January. Christmas and New Year are busy."
+      },
+      {
+        "name": "Warm, dry spring",
+        "months": [3, 4],
+        "text": "Warmer days and dusty, hazy views as farmers burn their fields. Holy Week brings Antigua's great processions, its busiest and dearest days of the year; Petén is at its hottest."
+      },
+      {
+        "name": "Rainy season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Mornings are usually bright, with heavy downpours in the afternoon and evening. The hills turn green and visitors thin out, but landslides can close mountain roads, and September and October are the wettest and stormiest months."
+      }
+    ],
+    "weather": "Guatemala calls itself the land of eternal spring, which is true of its highlands. Antigua, at about 1,500 m, has days of 22–27°C all year and cool nights; Quetzaltenango, at about 2,300 m, sees frost on winter nights; the summit of Acatenango, nearly 4,000 m, is below freezing most nights. The Pacific lowlands, Petén and the Caribbean coast are hot and humid, often 30–35°C. November to April is the dry half of the year; May to October brings the rains. The Caribbean side and the cloud forests of Alta Verapaz get rain in most months.",
+    "festivals": [
+      {
+        "name": "Semana Santa (Holy Week)",
+        "place": "Antigua, and towns across Guatemala",
+        "when": "Every Sunday in Lent, building to Holy Week (Easter Sunday is 28 March in 2027)",
+        "months": [3, 4],
+        "text": "Antigua's processions are among the largest in the world: huge wooden floats carried for hours by men and women in purple robes, over carpets of dyed sawdust, flowers and fruit laid in the streets during the night. Rooms are booked months ahead."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Guatemala",
+        "when": "15 September",
+        "months": [9],
+        "text": "The 1821 break from Spanish rule is marked on the eve by relay runners carrying torches from town to town, and the next morning by school bands. A public holiday."
+      },
+      {
+        "name": "Giant kites (Barriletes Gigantes)",
+        "place": "Sumpango and Santiago Sacatepéquez, near Antigua",
+        "when": "1 November",
+        "months": [11],
+        "text": "On All Saints' Day, villages fly round kites of tissue paper and bamboo, the largest many metres across, in their cemeteries, to carry messages to the dead. Families eat fiambre at the graves, and in Todos Santos Cuchumatán, in the north-western mountains, the day brings a famous horse race."
+      },
+      {
+        "name": "La Quema del Diablo (Burning the Devil)",
+        "place": "Across Guatemala",
+        "when": "7 December, at 6 pm",
+        "months": [12],
+        "text": "Families burn rubbish and devil figures outside their homes to clear out the year's evils before the feast of the Immaculate Conception. Expect bonfires, fireworks and smoke in every street."
+      },
+      {
+        "name": "Fiesta de Santo Tomás",
+        "place": "Chichicastenango",
+        "when": "Usually the week before 21 December",
+        "months": [12],
+        "text": "The town's feast, with masked dances, processions and the palo volador, in which men swing on ropes from the top of a tall pole, circling to the ground."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Petén",
+        "months": ["best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "best", "best"],
+        "text": "Tikal, Yaxhá and the lakeside town of Flores, in lowland rainforest. Sticky heat all year, worst from March to May, often above 35°C; the rains from June to October turn forest paths to mud. Arrive at Tikal early, when the animals are about and the air is cooler."
+      },
+      {
+        "name": "The Caribbean side",
+        "text": "Río Dulce, Livingston and the lowlands near Lake Izabal are hot, wet and green, with rain in most months and the Atlantic hurricane season from June to November."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Guatemalans greet with a gentle handshake and \"Buenos días\" or \"Buenas tardes\", and say it to everyone in a room, shop or minibus. Use \"usted\" with anyone you don't know. In Maya villages people can be reserved with strangers, and a smile and a greeting in Spanish go further than a camera. Passing someone who is eating, it's polite to say \"Buen provecho\".",
+    "etiquette": [
+      "Always ask before photographing people, and especially children and Maya ceremonies. Photography is not allowed inside the church of Santo Tomás in Chichicastenango.",
+      "Bargain at markets with a smile; prices in shops are fixed.",
+      "Drink bottled or purified water (agua pura), not from the tap.",
+      "Most plumbing can't cope with paper: the small bin beside the toilet is for that.",
+      "Hike volcanoes and remote trails with a registered guide; Pacaya can only be climbed with one.",
+      "Speak quietly in churches, where incense, candles and Maya prayers often share the space with Catholic saints."
+    ],
+    "tipping": "Around 10% in restaurants; tourist restaurants often add it to the bill as \"propina\", so check first. Tip volcano guides, porters and shuttle drivers too.",
+    "dress": "Layers: warm days in the highlands, cold mornings and nights. For Acatenango bring (or rent in Antigua) a warm jacket, hat and gloves. Dress modestly in villages and churches; shorts are rarely worn by local adults outside the coast and Petén. Antigua's cobbles are hard on thin soles.",
+    "food": [
+      {
+        "name": "Pepián",
+        "text": "Often called the national dish: chicken or beef in a thick, smoky sauce of toasted squash and sesame seeds, dried chillies and tomatoes, served with rice and tortillas."
+      },
+      {
+        "name": "Kak'ik",
+        "text": "A Q'eqchi' Maya turkey soup from Cobán, red with chillies and annatto, and fragrant with coriander and mint."
+      },
+      {
+        "name": "Tamales and chuchitos",
+        "text": "Tamales of soft corn dough with a meat and tomato sauce, wrapped in banana leaves, are Saturday and Christmas Eve food; chuchitos are smaller and firmer, tied in corn husks."
+      },
+      {
+        "name": "Fiambre",
+        "text": "A huge cold salad of cured meats, sausages, cheeses, pickled vegetables and beetroot, made by families for All Saints' Day on 1 November."
+      },
+      {
+        "name": "Rellenitos",
+        "text": "Mashed plantain filled with sweet black beans and chocolate, fried and dusted with sugar."
+      },
+      {
+        "name": "Coffee",
+        "text": "Grown on volcanic slopes around Antigua and in the high valleys of Huehuetenango and Atitlán. Farms near Antigua show you from cherry to cup."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Guatemalan)",
+      "intro": "Spanish is understood almost everywhere, though for many Maya people it's a second language. English is spoken in Antigua and around tourist businesses.",
+      "items": [
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "Con gusto", "say": "kohn GOOS-toh", "meaning": "You're welcome" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAHN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "¿Me hace un descuento?", "say": "meh AH-seh oon des-KWEN-toh", "meaning": "Could you give me a discount?" },
+        { "phrase": "Buen provecho", "say": "bwen proh-VEH-choh", "meaning": "Enjoy your meal" },
+        { "phrase": "¡Qué chilero!", "say": "keh chee-LEH-roh", "meaning": "How cool! (Guatemalan slang)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q774",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Quetzal (Q, GTQ), named after the national bird. ATMs are easy to find in towns; US dollars are taken only in some tourist businesses.",
+        "sources": [{ "property": "P38", "values": ["Q207396"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish, the official language. More than twenty Mayan languages, among them K'iche', Q'eqchi', Kaqchikel and Mam, are recognised, along with Garifuna and Xinka.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Standard Time, UTC−6, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5385", "Q63286063"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "110 or 120 for police; 123 for the fire service; 128 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648823", "Q25648851", "Q25648825", "Q25648801"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+502",
+        "sources": [{ "property": "P474", "values": ["+502"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "code": "BD",
+  "slug": "bangladesh",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salam", "Bangladesh", "Shagotom"],
+  "summary": "River boats, the Sundarbans mangroves, Old Dhaka's crowded lanes and green tea hills.",
+  "overview": [
+    "Bangladesh is a flat, green delta where the Ganges, the Brahmaputra and the Meghna run into the Bay of Bengal: a country of rivers, rice fields and boats, and one of the most crowded on earth. Few tourists come, so visitors are met with curiosity, questions and a great deal of friendliness. Dhaka, the capital, is huge and loud; Old Dhaka has the Mughal Lalbagh Fort, the pink Ahsan Manzil palace and Sadarghat, the river port where wooden boats and big ferries crowd the Buriganga.",
+    "In the south-west, the Sundarbans, the largest mangrove forest in the world, shared with India, is explored on boat trips of two or three days from Khulna or Mongla. Spotted deer, monkeys, crocodiles and kingfishers are easy to see; the Bengal tigers rarely are. Nearby Bagerhat has the 15th-century Sixty Dome Mosque. In the north-east, Srimangal and Sylhet are tea country, with forest walks, and in the south-east, Cox's Bazar has a sandy beach running for more than 100 km. The Chittagong Hill Tracts, with their hill peoples and lakes, need special permission for foreigners.",
+    "Cycle rickshaws and green motor rickshaws (CNGs) fill the cities, and Dhaka's traffic is among the slowest anywhere: allow hours to cross it. Trains, buses and overnight river ferries link the regions, and short flights save long journeys. Protests and strikes can disrupt travel at short notice, so check your government's current advice before you go."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool season",
+        "months": [11, 12, 1, 2],
+        "text": "Dry, sunny and comfortable, around 25°C by day and cooler at night, with morning fog in December and January. The main season for the Sundarbans boats and the beach at Cox's Bazar."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "Heat and humidity build fast, often to 35°C, with violent afternoon thunderstorms (nor'westers). Pohela Boishakh brightens April, and cyclones can hit the coast in April and May."
+      },
+      {
+        "name": "Monsoon",
+        "months": [6, 7, 8, 9],
+        "text": "Heavy rain on most days, hot and sticky air, and floods in many districts, with roads cut and ferries delayed. The countryside is at its greenest, and the flooded Ratargul swamp forest near Sylhet is visited by boat."
+      },
+      {
+        "name": "After the rains",
+        "months": [10],
+        "text": "The rain eases but it stays hot and humid. The rice ripens, Durga Puja fills the streets, and a late cyclone can still strike the coast."
+      }
+    ],
+    "weather": "Tropical and humid, shaped by the monsoon. The cool, dry months from about November to February are the most pleasant, with clear days and mild nights. From March the heat climbs, with storms in the afternoons, and the monsoon, from about June to September, brings most of the year's rain; Sylhet in the north-east is one of the wettest places in the country. Cyclones from the Bay of Bengal can strike the coast, mostly in April and May and in October and November.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Bangladesh",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting: eating places close or hide behind curtains by day, and streets fill with stalls selling fried snacks for iftar, the meal that breaks the fast. For Eid, millions leave Dhaka for their home villages, and buses, trains and ferries are packed for days before and after."
+      },
+      {
+        "name": "Language Martyrs' Day",
+        "place": "Shaheed Minar, Dhaka, and across Bangladesh",
+        "when": "21 February",
+        "months": [2],
+        "text": "Honouring the students killed in 1952 while demanding that Bangla be a state language; the date is now International Mother Language Day. From midnight, people walk barefoot to the Shaheed Minar memorials to lay flowers."
+      },
+      {
+        "name": "Pohela Boishakh",
+        "place": "Dhaka and across Bangladesh",
+        "when": "14 April",
+        "months": [4],
+        "text": "The Bengali New Year. People dress in red and white, and in Dhaka a colourful procession of giant masks and figures sets off from the Faculty of Fine Arts in the morning, with music and fairs all day."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Bangladesh",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Before the feast, cattle markets fill the cities; on the day, animals are sacrificed in the streets and the meat shared with family and the poor. Travel is busy for days, and much is closed."
+      },
+      {
+        "name": "Durga Puja",
+        "place": "Dhaka and Hindu communities across Bangladesh",
+        "when": "Usually in October, sometimes late September",
+        "months": [9, 10],
+        "text": "The biggest festival of the Hindu minority: painted clay images of the goddess Durga are worshipped in thousands of decorated pavilions, then carried to the rivers on the last day."
+      },
+      {
+        "name": "Victory Day",
+        "place": "Across Bangladesh",
+        "when": "16 December",
+        "months": [12],
+        "text": "Marking the end of the 1971 war of independence, with flags everywhere and ceremonies at the National Martyrs' Memorial at Savar, near Dhaka."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Sundarbans and the south-west",
+        "text": "Boat trips run mainly from about November to March, when the weather is calm and dry. Monsoon rains and cyclones make the delta rough from April onwards, and some trips stop."
+      },
+      {
+        "name": "Sylhet and Srimangal",
+        "text": "Rolling tea gardens and patches of forest in the north-east, a little cooler than Dhaka. Pleasant in the cool season, and green and very wet in the monsoon, when the swamp forests and lakes of the region fill up."
+      },
+      {
+        "name": "Cox's Bazar and the south-east",
+        "text": "The beach is busy with Bangladeshi holidaymakers from about November to March. In the monsoon, rough seas and strong currents make swimming dangerous."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Most Bangladeshis are Muslim and greet with \"Assalamu alaikum\", answered with \"Walaikum assalam\"; Hindus say \"Nomoshkar\" with palms pressed together. Men shake hands, but don't offer a hand to a woman unless she offers hers. Expect lots of questions, from your name to whether you're married, and requests for selfies.",
+    "etiquette": [
+      "Eat, give and receive with your right hand. Many people eat rice with their fingers; restaurants will bring a spoon if you ask.",
+      "Take off your shoes at homes, mosques and temples.",
+      "Crowds gather quickly round foreigners. It's curiosity, not hostility: a smile and patience go a long way.",
+      "On buses, the seats at the front are kept for women, and women travellers often sit with other women.",
+      "Agree the fare with rickshaw and CNG drivers before you set off, and keep small notes for them.",
+      "Eating, drinking or smoking in public by day during Ramadan is best avoided."
+    ],
+    "tipping": "Small local restaurants don't expect a tip, but rounding up is appreciated. In better restaurants, 5–10% is usual if no service charge is added. Tip guides, drivers and the crew of a Sundarbans boat at the end of the trip.",
+    "dress": "Loose, light cotton that covers shoulders and legs. Women may want a long scarf (orna) to wear over the shoulders; men wear long trousers, as shorts are rarely seen. Bring an umbrella in the monsoon, and long sleeves and repellent against mosquitoes in the Sundarbans.",
+    "food": [
+      {
+        "name": "Ilish",
+        "text": "Hilsa, the national fish, a bony but rich river fish, cooked in a sharp mustard sauce (shorshe ilish) and eaten with rice, especially in the monsoon."
+      },
+      {
+        "name": "Bhorta",
+        "text": "Mashes of potato, aubergine, lentils or dried fish, mixed with mustard oil, raw onion and green chilli, served in small heaps alongside rice."
+      },
+      {
+        "name": "Kacchi biryani",
+        "text": "Old Dhaka's pride: mutton and rice layered raw in a sealed pot and slow-cooked together, with potatoes and a scent of saffron and rose water."
+      },
+      {
+        "name": "Fuchka",
+        "text": "The favourite street snack: crisp, hollow balls filled with spiced chickpeas and potato and dipped in tangy tamarind water, eaten in one bite."
+      },
+      {
+        "name": "Mishti",
+        "text": "Bengali sweets: soft roshogolla in syrup, and mishti doi, sweet yoghurt set in clay pots, Bogra's being the most famous."
+      },
+      {
+        "name": "Cha",
+        "text": "Sweet, milky tea from roadside stalls, drunk all day. In Srimangal, try the \"seven-layer tea\", poured so each layer has a different colour and flavour."
+      }
+    ],
+    "phrases": {
+      "language": "Bangla (Bengali)",
+      "intro": "Bangla has its own script and is spoken by almost everyone. English is used in business and by many educated people in the cities.",
+      "items": [
+        { "phrase": "Assalamu alaikum (আসসালামু আলাইকুম)", "say": "ah-sah-LAA-moo ah-LAI-kum", "meaning": "Hello (to Muslims)" },
+        { "phrase": "Nomoshkar (নমস্কার)", "say": "NO-mosh-kar", "meaning": "Hello (to Hindus)" },
+        { "phrase": "Kemon achhen? (কেমন আছেন?)", "say": "KEH-mon AA-chhen", "meaning": "How are you?" },
+        { "phrase": "Bhalo achhi (ভালো আছি)", "say": "BHAA-loh AA-chhee", "meaning": "I'm fine" },
+        { "phrase": "Dhonnobad (ধন্যবাদ)", "say": "DHON-noh-bahd", "meaning": "Thank you" },
+        { "phrase": "Eta koto? (এটা কত?)", "say": "EH-tah KOH-toh", "meaning": "How much is this?" },
+        { "phrase": "Khub moja (খুব মজা)", "say": "KHOOB MO-jah", "meaning": "Very tasty" },
+        { "phrase": "Ami bujhi na (আমি বুঝি না)", "say": "AA-mee BOO-jhee nah", "meaning": "I don't understand" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q902",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Bangladeshi taka (৳, BDT). Cash for almost everything; cards are taken in bigger hotels, shops and restaurants in the cities.",
+        "sources": [{ "property": "P38", "values": ["Q194453"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Bangla (Bengali). English is widely used in business, government and higher education.",
+        "sources": [{ "property": "P37", "values": ["Q9610"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C (two round pins), D (three large round pins) and G (as in the UK), 220 V. A universal adapter is the easiest choice.",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q60740126", "Q1528507"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata also lists types A and K; the page names the three types travellers mostly meet."
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Bangladesh Standard Time, UTC+6, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q3248716", "Q6906", "Q16879288"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+880",
+        "sources": [{ "property": "P474", "values": ["+880"] }]
+      }
+    ]
+  }
+}

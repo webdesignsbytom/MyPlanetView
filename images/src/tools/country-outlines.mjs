@@ -22,7 +22,8 @@
 // where they differ (CLAUDE.md, "Shapes"): Crimea is Ukraine's, the four southern Kurils
 // Japan's, Kinmen China's; every part of Cyprus is Cyprus; Somaliland is Somalia, the Golan
 // Syria's (Israel's outline is cut along the 1967 line: GOLAN_LINE), Siachen Pakistan's, Bir
-// Tawil Sudan's. Areas without a place of
+// Tawil Sudan's, all of Western Sahara Western Sahara's (cut from Morocco along 27°40′N:
+// WESTERN_SAHARA_LINE). Areas without a place of
 // their own join their country (Hong Kong and Macau China, Svalbard and Bouvet Norway,
 // Åland Finland, Jersey, Guernsey, the Isle of Man and the UK's far islands the UK...).
 // The Canaries are cut out of Spain (IC). The micro-states stay dots (no shape).
@@ -40,7 +41,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { DOTS, GOLAN_LINE, GOLAN_POINT, JOINS, LEAVE_OUT, NATIONS, cutRing, insideRing, placeOfPolygon, ringsOfGeometry } from './lib/mapPlaces.mjs';
+import { DOTS, GOLAN_LINE, GOLAN_POINT, JOINS, LEAVE_OUT, NATIONS, cutRing, insideRing, placeOfPolygon, ringsOfGeometry, splitWesternSahara } from './lib/mapPlaces.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const CLIENT_SHAPES = path.join(ROOT, 'client/src/utils/map/countryShapes.js');
@@ -111,6 +112,11 @@ for (const feature of geo.features) {
       if (!pieces) throw new Error(`The Golan line should cross Israel's outline twice`);
       for (const piece of pieces) addPolygon(insideRing(GOLAN_POINT[0], GOLAN_POINT[1], piece) ? 'SY' : 'IL', [piece]);
       report.joined['the Golan (cut from Israel)'] = 'SY';
+      continue;
+    }
+    // Western Sahara: the whole territory, cut from Morocco along its northern border
+    if (code === 'MA') {
+      for (const [place, ring] of splitWesternSahara(polygon[0])) addPolygon(place, [ring]);
       continue;
     }
     const place = placeOfPolygon(code, polygon);

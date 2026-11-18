@@ -1,0 +1,184 @@
+{
+  "code": "GL",
+  "slug": "greenland",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Aluu", "Kalaallit", "Nunaat"],
+  "summary": "Icebergs off Ilulissat, midnight sun, sled dogs and northern lights, with no roads between towns.",
+  "overview": [
+    "Greenland is the world's largest island, and about four-fifths of it lies under an ice sheet up to 3 km thick. Its 57,000 or so people live in towns and settlements along the ice-free coast, most of them Inuit, who call themselves Kalaallit. It is self-governing within the Danish realm, with its own parliament in Nuuk, and is not part of the European Union. Nuuk, the capital, mixes brightly painted wooden houses with apartment blocks under the steep peak of Sermitsiaq.",
+    "Ilulissat, on Disko Bay north of the Arctic Circle, is where most visitors head. Its icefjord, a World Heritage Site, is packed with icebergs calved from Sermeq Kujalleq, one of the fastest-moving glaciers in the world, and a boardwalk leads from town to the edge. Kangerlussuaq, inland at the head of a long fjord, has a gravel road to the edge of the ice sheet and musk oxen grazing the tundra, and the Arctic Circle Trail runs from there to Sisimiut on the coast, about 160 km of hiking. In the south, around Narsarsuaq and Qaqortoq, sheep farms share green fjords with Kujataa, a World Heritage Site of Norse and Inuit farmland that includes the stone church at Hvalsey. East Greenland, around Tasiilaq, is the wildest and most remote part.",
+    "No roads link the towns, so everyone travels by plane, helicopter or boat: Air Greenland flies between towns all year, and in summer a coastal passenger ship and local boats work the west coast. Fog and wind often delay flights by a day or more, so build spare days into any trip, and book well ahead for summer, when beds are few."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "good", "good", "good", "good", "best", "best", "best", "good", "good", "avoid", "avoid"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [11, 12, 1],
+        "text": "Dark and cold. North of the Arctic Circle the sun doesn't rise for weeks around the turn of the year, and Nuuk gets only a few hours of daylight. Ilulissat averages about −15°C in January, and inland Kangerlussuaq can fall below −30°C. Clear, still nights bring the northern lights."
+      },
+      {
+        "name": "Late winter and spring",
+        "months": [2, 3, 4, 5],
+        "text": "The light returns fast, and February to April is the season for dog sledding on the snow and sea ice, from Sisimiut northwards and in the east, with northern lights in the evenings until about mid-April. The thaw begins in May, a slushy, in-between month."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Mild, about 5–12°C on the coast and warmer inland, with the midnight sun north of the Arctic Circle from about late May to late July. The season for boat trips among the icebergs, whale watching and hiking; mosquitoes and blackflies swarm inland in July."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10],
+        "text": "The tundra turns red and gold in early September, the nights grow dark enough for the northern lights again, and the boat trips thin out. By October it's cold and stormy, with the sledding season still months away."
+      }
+    ],
+    "weather": "Arctic, though the coast is milder than its latitude suggests, as the sea keeps temperatures steady. Summer days on the west coast are about 5–12°C, and inland Kangerlussuaq can reach the high teens; winter averages about −7°C in Nuuk and −15°C in Ilulissat, and much colder inland and in the far north. The south is the mildest and greenest part, while the east coast is colder and its sea ice lasts longer. Weather changes quickly, with fog, strong winds and sudden storms, so planes and boats are often held up.",
+    "festivals": [
+      {
+        "name": "Return of the sun",
+        "place": "Towns north of the Arctic Circle, such as Ilulissat",
+        "when": "Around 13 January in Ilulissat; later further north",
+        "months": [1, 2],
+        "text": "After weeks of polar night, people climb the hills above town to greet the first sliver of sun over the horizon, then celebrate with coffee and cake."
+      },
+      {
+        "name": "Arctic Circle Race",
+        "place": "Sisimiut",
+        "when": "Usually late March or early April, over three days",
+        "months": [3, 4],
+        "text": "A cross-country ski race of about 160 km through the hills behind Sisimiut, with the skiers camping out on the course overnight."
+      },
+      {
+        "name": "National Day (Ullortuneq)",
+        "place": "Across Greenland",
+        "when": "21 June",
+        "months": [6],
+        "text": "The longest day of the year is the national day: people wear national dress, with beaded collars and sealskin boots, and there are kayak displays, choirs and open-house kaffemik gatherings."
+      },
+      {
+        "name": "Christmas and New Year",
+        "place": "Across Greenland",
+        "when": "Advent to 31 December",
+        "months": [12],
+        "text": "Lit paper stars hang in almost every window through Advent, and families go visiting for coffee and cake. On New Year's Eve the fireworks go up twice: at Denmark's midnight, early in the evening, and again at Greenland's own."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Disko Bay and Ilulissat",
+        "text": "North of the Arctic Circle: icebergs all year, the midnight sun from about late May to late July, humpback whales in summer, and dog sledding from about February to April. The polar night lasts from about late November to mid-January."
+      },
+      {
+        "name": "Kangerlussuaq and the ice sheet",
+        "text": "Inland, with a drier climate than the coast: warmer summers, colder and clearer winters, which make it a good place for the northern lights from about September to April. Musk oxen and reindeer roam the tundra."
+      },
+      {
+        "name": "South Greenland",
+        "text": "The mildest region, with green valleys, sheep farms, Norse ruins and the hot springs on the island of Uunartoq. Best from June to early September; ice drifting round from the east coast can fill some fjords in spring and early summer."
+      },
+      {
+        "name": "East Greenland",
+        "text": "Remote and dramatic, around Tasiilaq and Ittoqqortoormiit, with jagged mountains and a strong hunting life. Sea ice keeps ships away for much of the year, so most visits are by boat from about July to September, or by air for winter sledding."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greenlanders are friendly but reserved, and a pause in conversation is comfortable rather than awkward. A handshake is the usual greeting, and a casual \"Aluu\" (hi) works anywhere. Many people answer yes by raising their eyebrows and no by wrinkling their nose, so watch faces as well as words.",
+    "etiquette": [
+      "Sled dogs are working animals: don't pet or feed them, and keep away from the chained adults. North of the Arctic Circle and in the east, only sled dogs may be kept, so no other dog can be brought there.",
+      "Hunting seals, whales, reindeer and musk oxen is part of everyday life and of many families' food; respect it, even if it's new to you.",
+      "Ask people before you photograph them, and never take pictures inside a home without permission.",
+      "If you're invited to a kaffemik, an open house with coffee and cakes for a birthday or other celebration, drop in, eat something, chat, and make room for the next guests.",
+      "Never hike far from town without telling someone your route: the weather turns fast, and in the north and east polar bears are a real danger, so go with a guide who carries a rifle."
+    ],
+    "tipping": "Not expected: service is included, as in Denmark. Rounding up, or a tip for an exceptional guide, is appreciated.",
+    "dress": "Layers in every season: thermal underwear, a fleece, and windproof, waterproof jacket and trousers, with a warm hat and gloves even in summer, when boat trips among the ice are cold. Sturdy boots for rocky ground, and a mosquito head net for inland walks in July. Winter visitors need full Arctic clothing, which sledding operators often lend.",
+    "food": [
+      {
+        "name": "Suaasat",
+        "text": "The national dish: a soup of seal, whale, reindeer or seabird simmered with onion and thickened with rice or barley."
+      },
+      {
+        "name": "Mattak",
+        "text": "Raw whale skin with a layer of blubber, cut into chewy cubes: a delicacy, and rich in vitamin C."
+      },
+      {
+        "name": "Musk ox and reindeer",
+        "text": "Lean, gamey meat from animals hunted on the tundra, served as steaks and stews, and as burgers in Kangerlussuaq and Nuuk."
+      },
+      {
+        "name": "Fish and shellfish",
+        "text": "Arctic char, Greenland halibut and cod, often smoked or dried, and sweet cold-water prawns and snow crab, among the country's main exports."
+      },
+      {
+        "name": "Crowberries and blueberries",
+        "text": "Picked on the tundra in late summer and early autumn, eaten fresh or baked into cakes."
+      },
+      {
+        "name": "Kaffemik",
+        "text": "Not a dish but a custom: coffee and a table of home-made cakes, open to friends, neighbours and sometimes visitors, for any celebration."
+      }
+    ],
+    "phrases": {
+      "language": "Greenlandic (Kalaallisut)",
+      "intro": "Greenlandic is an Inuit language in which one long word can be a whole sentence. Danish is widely spoken, and English is common in tourism. The q is said deep in the throat, and ll sounds like the Welsh ll.",
+      "items": [
+        { "phrase": "Aluu", "say": "ah-LOO", "meaning": "Hi" },
+        { "phrase": "Qujanaq", "say": "KOO-yah-nak", "meaning": "Thank you" },
+        { "phrase": "Qujanarsuaq", "say": "koo-yah-NAHR-soo-ak", "meaning": "Thank you very much" },
+        { "phrase": "Aap", "say": "AHP", "meaning": "Yes" },
+        { "phrase": "Naamik", "say": "NAH-mik", "meaning": "No" },
+        { "phrase": "Ajunngilaq", "say": "ah-YOONG-ee-lak", "meaning": "It's fine; no problem" },
+        { "phrase": "Inuulluarit", "say": "ee-NOO-shloo-ah-rit", "meaning": "Goodbye (\"live well\"), to one person" },
+        { "phrase": "Kalaallit Nunaat", "say": "kah-LAH-tlit noo-NAHT", "meaning": "Greenland (\"land of the Greenlanders\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q223",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Danish krone (kr., DKK). Cards are widely taken in towns; small settlements may want cash.",
+        "sources": [{ "property": "P38", "values": ["Q25417"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Greenlandic (Kalaallisut), the official language. Danish is widely spoken, and English is common in tourism.",
+        "sources": [{ "property": "P37", "values": ["Q25355"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, E, F and K (two round pins; the Danish Type K socket adds a rounded earth pin and takes most European two-pin plugs), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1123613", "Q1502017"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right, though no roads link the towns",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Most of Greenland, Nuuk and the east coast included, is on UTC−2, and UTC−1 in summer (late March to late October). Pituffik Space Base in the far north-west keeps UTC−4 (UTC−3 in summer), and the remote Danmarkshavn weather station UTC+0.",
+        "sources": [{ "property": "P421", "values": ["Q6536", "Q6540", "Q5762", "Q6513", "Q6574"] }],
+        "note": "Wikidata lists five offsets without saying where each applies; the page names the places, after the west coast moved from UTC−3 to UTC−2 in 2023 and Ittoqqortoormiit, in the east, joined it in 2024."
+      },
+      {
+        "key": "emergency",
+        "text": "112",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+299",
+        "sources": [{ "property": "P474", "values": ["+299"] }]
+      }
+    ]
+  }
+}

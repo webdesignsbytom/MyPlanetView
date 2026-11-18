@@ -1,0 +1,184 @@
+{
+  "code": "GP",
+  "slug": "guadeloupe",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonjou", "Gwadloup"],
+  "summary": "A butterfly-shaped French island: volcano and rainforest on one wing, beaches on the other.",
+  "overview": [
+    "Guadeloupe is a region of France, and so part of the European Union, using the euro. Its two main islands, separated by a narrow channel and joined by bridges, together make the shape of a butterfly. Basse-Terre, the western wing, is mountainous, volcanic and wet, much of it covered by the rainforest of Guadeloupe National Park. La Soufrière, an active volcano of 1,467 m and the highest peak in the Lesser Antilles, can be climbed in a couple of hours from the road's end, though the top is often in cloud. The Carbet Falls drop down its eastern side, and the Route de la Traversée crosses the forest from coast to coast. Off the west coast, the Cousteau Reserve around the Pigeon Islets is the best-known place to snorkel and dive, and the fishing village of Deshaies has a botanical garden and is where a British TV crime series is filmed.",
+    "Grande-Terre, the eastern wing, is low limestone country of sugar cane, with the beaches of Le Gosier, Sainte-Anne and Saint-François along its south coast and the jagged cliffs of Pointe des Châteaux at its eastern tip. Pointe-à-Pitre, the main town, has the Mémorial ACTe, a large museum of slavery and the slave trade, and covered markets selling spices and madras cloth. Ferries run to the smaller islands: round, flat Marie-Galante, known for its rum distilleries and sugar cane; Les Saintes, with a bay ringed by hills and an old fort above it; and quiet La Désirade.",
+    "A hire car is the easiest way around, driving on the right; buses run but irregularly, and traffic jams build around Pointe-à-Pitre. French is the language you'll need, with Creole spoken everywhere among locals; English is less common outside the hotels."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Carême (dry season)",
+        "months": [12, 1, 2, 3, 4],
+        "text": "The dry season, named after Lent: sunny and breezy, with clear views from the volcano on good days. Carnival runs from January to Ash Wednesday, and the French winter holidays in February are the busiest weeks."
+      },
+      {
+        "name": "Early hivernage",
+        "months": [5, 6, 7, 8],
+        "text": "More heat, more humidity and more showers. July and August bring holidaymakers from mainland France, and in some years mats of sargassum seaweed wash up on east-facing beaches."
+      },
+      {
+        "name": "Height of the hivernage",
+        "months": [9, 10, 11],
+        "text": "The wet season's heaviest rain and its greatest risk of hurricanes, which are most likely in September; some hotels and restaurants close then. November is greener and quieter as the rain eases."
+      }
+    ],
+    "weather": "On the coast, days reach about 29°C to 31°C and nights fall to 21°C to 24°C in every month. Islanders speak of two seasons, the drier carême from about December to May and the wetter hivernage from about June to November. Rainfall depends on where you are: the windward mountains of Basse-Terre are among the wettest places in the Caribbean, while Grande-Terre and the small islands are much drier. Storms are the great danger: Hugo did great damage in 1989, and Maria struck in 2017.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "Pointe-à-Pitre, Basse-Terre and towns across the island",
+        "when": "Every Sunday from early January to Ash Wednesday (10 February in 2027)",
+        "months": [1, 2, 3],
+        "text": "Drum-led groups march through the streets every Sunday, building to the parades of Mardi Gras. On Ash Wednesday crowds wear black and white, and Vaval, the carnival king, is burned at nightfall."
+      },
+      {
+        "name": "Abolition of Slavery Day",
+        "place": "Across Guadeloupe",
+        "when": "27 May",
+        "months": [5],
+        "text": "Guadeloupe's holiday for the end of slavery in 1848, with ceremonies, gwo ka drumming and events at the Mémorial ACTe."
+      },
+      {
+        "name": "Fête des Cuisinières",
+        "place": "Pointe-à-Pitre",
+        "when": "Usually a Saturday in August, near the feast of St Lawrence (10 August)",
+        "months": [8],
+        "text": "Women cooks in Creole dress and madras head-ties parade to mass with baskets of food and kitchen tools, then hold a great feast. The tradition dates from 1916."
+      },
+      {
+        "name": "Toussaint (All Saints' Day)",
+        "place": "Cemeteries across Guadeloupe",
+        "when": "1 November",
+        "months": [11],
+        "text": "Families gather in the cemeteries at nightfall and light thousands of candles on the graves. The black-and-white chequered tombs of Morne-à-l'Eau are the best known."
+      },
+      {
+        "name": "Chanté Nwèl",
+        "place": "Across Guadeloupe",
+        "when": "Weekends through December",
+        "months": [12],
+        "text": "Friends and neighbours gather to sing Christmas carols in French and Creole to drums and shakers, with food and rum late into the night."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Basse-Terre",
+        "text": "The volcano, rainforest, waterfalls and rivers, black-sand beaches in the south and golden ones in the north-west. Much wetter, especially on the east side."
+      },
+      {
+        "name": "Grande-Terre",
+        "text": "Flatter and drier, with most of the beach resorts, the main town and the busiest roads."
+      },
+      {
+        "name": "Marie-Galante, Les Saintes and La Désirade",
+        "text": "Small, quiet islands reached by ferry, good for a day trip or a slow few days, with fewer cars and visitors."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Always say \"Bonjour\" when you go into a shop, a bar or a waiting room, and to the driver as you board a bus; asking a question without it is rude. In the Antilles, \"Bonsoir\" takes over early, from about the middle of the afternoon. Friends kiss on both cheeks; otherwise, shake hands, and use \"vous\" with people you don't know.",
+    "etiquette": [
+      "Many shops and offices close for a long lunch, and much is shut on Sunday afternoons.",
+      "Manchineel trees grow along some beaches, often marked with a red band: don't touch the small green apples, and don't shelter under one in the rain, as the sap burns skin.",
+      "When sargassum rots on a beach it smells of bad eggs and its gas is unhealthy; swim elsewhere.",
+      "At the top of La Soufrière, keep to the marked path: gas vents make some areas off-limits.",
+      "A few words of French make everything easier, even if you then switch to English."
+    ],
+    "tipping": "Service is included in bills, as in mainland France, so tipping isn't expected. Leaving some coins, or rounding up for good service, is appreciated.",
+    "dress": "For the volcano and the rainforest, pack good shoes, a rain jacket and a warm layer: the summit is cool, wet and windy. On the coast, summer clothes, with something over your swimwear in town.",
+    "food": [
+      {
+        "name": "Colombo",
+        "text": "A curry of chicken, pork or goat cooked with colombo, a spice mix brought by workers from India who came after slavery ended."
+      },
+      {
+        "name": "Accras de morue",
+        "text": "Light, peppery fritters of salt cod and herbs, eaten hot as a snack or with an aperitif."
+      },
+      {
+        "name": "Bokit",
+        "text": "Guadeloupe's own street food: a round of fried bread, puffed up and split, stuffed with saltfish, chicken, ham or cheese and salad."
+      },
+      {
+        "name": "Boudin créole",
+        "text": "A slim, spicy blood sausage with chilli, lime and herbs, served hot as a starter or bought by the length at markets."
+      },
+      {
+        "name": "Ti-punch",
+        "text": "Rhum agricole, made from fresh sugar-cane juice rather than molasses, with a slice of lime and cane sugar, mixed by each drinker. Marie-Galante's distilleries are famous for it."
+      },
+      {
+        "name": "Sorbet coco",
+        "text": "Coconut sorbet churned by hand in wooden buckets packed with ice and salt, sold on beaches and at the roadside."
+      }
+    ],
+    "phrases": {
+      "language": "French (and Guadeloupean Creole)",
+      "intro": "French is the official language and the one visitors use; among themselves most people speak Guadeloupean Creole. English is less common outside the hotels.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello; good morning" },
+        { "phrase": "Bonsoir", "say": "bon-SWAHR", "meaning": "Good evening, used from the afternoon" },
+        { "phrase": "Merci", "say": "mair-SEE", "meaning": "Thank you" },
+        { "phrase": "S'il vous plaît", "say": "seel voo PLAY", "meaning": "Please" },
+        { "phrase": "Excusez-moi", "say": "ex-kew-zay MWAH", "meaning": "Excuse me" },
+        { "phrase": "L'addition, s'il vous plaît", "say": "lah-dee-SYON seel voo PLAY", "meaning": "The bill, please" },
+        { "phrase": "Sa ou fè?", "say": "sah oo FAY", "meaning": "How are you? (Creole)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q17012",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€, EUR). Guadeloupe is part of France and the European Union.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French. Guadeloupean Creole is widely spoken day to day.",
+        "sources": [],
+        "note": "Wikidata's item has no official-language statement; French is the official language, as everywhere in France."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins, as in France), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata also lists British-type plugs. Guadeloupe uses France's sockets, so the page leaves them out."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762"] }],
+        "note": "Wikidata also lists UTC−3, which isn't used; Guadeloupe keeps UTC−4 all year."
+      },
+      {
+        "key": "emergency",
+        "text": "112, or as in mainland France 15 for an ambulance, 17 for police and 18 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata gives 112; France's own emergency numbers work too, and the page adds them."
+      },
+      {
+        "key": "callingCode",
+        "text": "+590",
+        "sources": [{ "property": "P474", "values": ["+590"] }]
+      }
+    ]
+  }
+}

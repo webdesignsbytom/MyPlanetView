@@ -1,0 +1,155 @@
+{
+  "code": "MH",
+  "slug": "marshall-islands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Iakwe", "Ṃajeļ"],
+  "summary": "Thin coral atolls round wide lagoons, stick-chart navigators and Bikini's nuclear past.",
+  "overview": [
+    "The Marshall Islands are 29 coral atolls and five single islands in two parallel chains, Ratak (sunrise) to the east and Ralik (sunset) to the west. Their land adds up to only about 180 km², almost none of it more than a few metres above the sea, so rising seas and the highest spring tides, which already wash over parts of the capital, shape everyday life and politics.",
+    "Majuro, the capital atoll, is a thin strip of land curving round a lagoon, with one road running about 50 km from Laura, with its beach and gardens at the western end, past the airport to the town of Delap-Uliga-Djarrit at the other. Outer atolls such as Arno, Mili and Maloelap, where Japanese guns and aircraft wrecks remain from the Second World War, have air and ship services on irregular schedules, and staying there means a homestay or a basic guesthouse arranged with the landowners.",
+    "From 1946 to 1958 the United States tested 67 nuclear weapons at Bikini and Enewetak, including the 1954 Castle Bravo blast whose fallout reached inhabited atolls; Bikini is a World Heritage Site, but its people have not been able to move back. Kwajalein, one of the largest coral atolls on earth, is a US Army base closed to casual visitors. The Marshallese were among the great Pacific navigators, steering by stick charts that map how ocean swells bend around islands."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Drier season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Steady north-east trade winds, more sunshine and less rain, above all from January to March; the northern atolls can go weeks without a shower. The breeze keeps the heat bearable."
+      },
+      {
+        "name": "Wetter season",
+        "months": [5, 6, 7, 8, 9, 10, 11],
+        "text": "The trades slacken and the rain increases, falling as heavy showers, most of all from about September to November on Majuro. Typhoons are uncommon this far east, though storms can form close by."
+      }
+    ],
+    "weather": "Steamy in every season: about 30°C by day, rarely below 24°C at night, and a lagoon at 28°C or more. Rain falls away from south to north: Majuro gets about 3,300 mm a year, while the northern atolls get far less and sometimes suffer drought. King tides, the year's highest tides, can flood low parts of Majuro, most often early in the year.",
+    "festivals": [
+      {
+        "name": "Nuclear Victims Remembrance Day",
+        "place": "Majuro and across the islands",
+        "when": "1 March",
+        "months": [3],
+        "text": "A public holiday on the anniversary of the Castle Bravo test in 1954, remembering the people harmed by the US nuclear tests, with ceremonies in Majuro."
+      },
+      {
+        "name": "Constitution Day",
+        "place": "Majuro",
+        "when": "1 May",
+        "months": [5],
+        "text": "Marks self-government under the constitution of 1979, with a parade and events in the capital."
+      },
+      {
+        "name": "Fishermen's Day",
+        "place": "Majuro and the outer atolls",
+        "when": "The first Friday of July",
+        "months": [7],
+        "text": "A day off in honour of the fishing that feeds the islands, often with fishing tournaments on the lagoon."
+      },
+      {
+        "name": "Manit Day",
+        "place": "Majuro",
+        "when": "The last Friday of September",
+        "months": [9],
+        "text": "A day for Marshallese custom: traditional dance, weaving, food and outrigger canoes, with schools and community groups taking part."
+      },
+      {
+        "name": "Gospel Day",
+        "place": "Churches across the islands",
+        "when": "The first Friday of December",
+        "months": [12],
+        "text": "Marks the arrival of Christianity, with services, singing and feasts; church groups spend the following weeks rehearsing songs and dances for Christmas."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Iakwe\" means hello, goodbye and love all at once, and it's said to everyone. Marshallese are soft-spoken and indirect, so raising your voice or being blunt comes across badly. Society is matrilineal: people inherit their land rights from their mother, and every parcel of land belongs to a clan under an iroij, a chief.",
+    "etiquette": [
+      "Women's thighs should stay covered: wear skirts or loose trousers below the knee, and go into the water dressed, as Marshallese women do, even at the beach.",
+      "Every islet belongs to someone. On the outer atolls, ask for the landowner's permission, usually through the local council or your host, before you walk, fish or camp.",
+      "When you stay with a family on an outer island, bring something to share, such as rice or other food: generosity is expected in both directions.",
+      "Most Marshallese are church-goers, and Sunday is quiet, with shops shut and noisy activities frowned on.",
+      "Swim on the ocean side or at Laura rather than in the lagoon beside Majuro's town, and leave shells, coral and wartime relics where they lie."
+    ],
+    "tipping": "Not customary and not expected, though hotel, restaurant and dive staff appreciate a tip for good service.",
+    "dress": "Loose, light clothes. Marshallese women usually wear long, loose dresses; visitors needn't copy them, but long skirts or loose trousers are respectful. Sunglasses and a hat help against the glare off the lagoon.",
+    "food": [
+      {
+        "name": "Breadfruit",
+        "text": "Roasted whole over coals, boiled, fried as chips, or preserved as bwiro, a fermented paste wrapped in leaves to last through the lean months."
+      },
+      {
+        "name": "Pandanus",
+        "text": "The fruit's fibrous segments are chewed for their sweet juice, or cooked down into a dark paste that keeps for months."
+      },
+      {
+        "name": "Jekaro",
+        "text": "Sap tapped from the flower stalks of coconut palms, drunk fresh and sweet, or simmered for hours until it thickens like molasses."
+      },
+      {
+        "name": "Lagoon fish",
+        "text": "Reef fish and tuna caught that day, fried, grilled, or eaten raw with lime and coconut."
+      },
+      {
+        "name": "Rice and canned meat",
+        "text": "Imported rice, canned fish and corned beef are today's everyday food, so a meal of island food is often a treat, even for the Marshallese."
+      }
+    ],
+    "phrases": {
+      "language": "Marshallese",
+      "intro": "Most people learn English at school, but Marshallese fills homes and churches and is all you'll hear on the outer atolls.",
+      "items": [
+        { "phrase": "Iakwe", "say": "YAH-kweh", "meaning": "Hello; goodbye; love" },
+        { "phrase": "Kommol tata", "say": "KOM-mol TAH-tah", "meaning": "Thank you very much" },
+        { "phrase": "Ej et am mour?", "say": "ej et ahm MOH-oor", "meaning": "How are you? (\"How is your life?\")" },
+        { "phrase": "Emman", "say": "EM-mahn", "meaning": "Good" },
+        { "phrase": "Aet / Jaab", "say": "AH-et / jahb", "meaning": "Yes / No" },
+        { "phrase": "Jen etal", "say": "jen eh-TAHL", "meaning": "Let's go" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q709",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar ($, USD). Bring cash: cards work in only a few places in Majuro, and not at all on the outer atolls.",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }],
+        "note": "Wikidata also lists the SOV, a digital currency the government has legislated for but which isn't in everyday use; the page gives the US dollar, the money everyone uses."
+      },
+      {
+        "key": "languages",
+        "text": "Marshallese and English, both official",
+        "sources": [{ "property": "P37", "values": ["Q36280", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 120 V",
+        "sources": [],
+        "note": "Wikidata's item has no plug or voltage statement; the page gives the US-style sockets used in the islands."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+12, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q7105", "Q63285970", "Q63285971"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+692",
+        "sources": [{ "property": "P474", "values": ["+692"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "code": "PS",
+  "slug": "palestine",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ahlan", "Filastin"],
+  "summary": "Bethlehem's Nativity church, palm-shaded Jericho and the souqs of Nablus.",
+  "overview": [
+    "The Palestinian territories are the West Bank, including East Jerusalem, and the Gaza Strip, and their status is disputed. The Palestinian Authority runs the main towns of the West Bank, while Israel controls most of the land around them and every crossing in and out; Israel also administers East Jerusalem, which the Palestinians claim as their capital. Gaza is closed to visitors.",
+    "Jerusalem's walled Old City holds the Al-Aqsa Mosque and the Dome of the Rock, the Church of the Holy Sepulchre and the Western Wall, with covered souqs between them. Bethlehem is about 10 km south: its Church of the Nativity, entered through a doorway so low you have to stoop, is built over the cave where Christians believe Jesus was born, and is one of the oldest churches still in daily use. The concrete barrier along the edge of town is covered in murals and graffiti, and Banksy has left several works around the town. East of the hills, in the Jordan Valley, Jericho is a palm-shaded oasis about 250 m below sea level, with the excavated mound of one of the world's oldest towns, the mosaic floors of the Umayyad Hisham's Palace, and a cable car up to a monastery on the Mount of Temptation.",
+    "Further north, Nablus has a busy Ottoman-era souq, old olive-oil soap factories and the region's most famous knafeh; Ramallah has cafés, bars and the museum of the poet Mahmoud Darwish; and Hebron's old city has glass-blowing workshops and the Tomb of the Patriarchs, divided into a mosque and a synagogue. Nearly all visitors arrive through Israel, or from Jordan over the King Hussein (Allenby) Bridge near Jericho. Arab buses run from near Jerusalem's Damascus Gate to Bethlehem and Ramallah, and shared minibuses link the West Bank towns; Israeli hire cars are usually not insured in Palestinian-run areas, so many people travel with a local driver or guide. Carry your passport for the checkpoints, especially on the way back to Jerusalem.",
+    "Gaza is off limits under almost every government's travel advice, and many also warn against travel to parts of the West Bank, or all of it. Things can change from one week to the next: look up your own government's current advice before you plan a visit, and check it again before each journey."
+  ],
+  "whenToGo": {
+    "stripLabel": "The hill towns of the West Bank, from Hebron and Bethlehem to Ramallah and Nablus, and Jerusalem. Jericho, low and hot, has a strip of its own below.",
+    "months": ["good", "good", "best", "best", "best", "good", "good", "good", "best", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "The rainy season in the hills: Bethlehem, Hebron and Ramallah are about 12°C by day and near freezing on some nights, and snow falls in some years. Jericho stays mild and sunny, around 20°C. Christmas brings crowds to Bethlehem."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Green hills, almond blossom and wild flowers early in the season, warm days by May. Easter fills Jerusalem and Bethlehem with pilgrims, so book ahead."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Dry and sunny. The hill towns reach about 29°C with cool evenings, but Jericho and the Jordan Valley pass 38°C on most days."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Warm and clear in September and October. The olive harvest fills the groves in October and November, and the first rains usually arrive in November."
+      }
+    ],
+    "weather": "The hills, which run at about 500 to 1,000 m, have a Mediterranean climate: dry, warm summers with cool nights, and cool, wet winters, with nearly all the year's rain between November and March. The Jordan Valley, east of the hills and far below sea level, is a desert, hot from May to September and warm in winter.",
+    "festivals": [
+      {
+        "name": "Christmas in Bethlehem",
+        "place": "Bethlehem",
+        "when": "24–25 December, 6–7 January (Orthodox) and 18–19 January (Armenian)",
+        "months": [12, 1],
+        "text": "Bethlehem keeps Christmas three times, once for each of the churches that share the Church of the Nativity. On Christmas Eve, scout bands parade into Manger Square, and Midnight Mass is held in St Catherine's Church beside the Nativity."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across the West Bank and Jerusalem",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Streets are hung with lights and lanterns, and the evenings are busy after iftar, with sweet shops and coffee stalls open late. On the Fridays of Ramadan, huge crowds come to pray at Al-Aqsa. At its end comes Eid al-Fitr, days of family visits, new clothes and date-filled ka'ak biscuits."
+      },
+      {
+        "name": "Easter",
+        "place": "Jerusalem and Bethlehem",
+        "when": "Usually between late March and early May, Western and Orthodox on different Sundays in most years: in 2027, 28 March and 2 May",
+        "months": [3, 4, 5],
+        "text": "Holy Week brings the Palm Sunday procession down the Mount of Olives and, on the Orthodox Holy Saturday, the ceremony of the Holy Fire in the Church of the Holy Sepulchre, when candles are lit from a flame carried out of the tomb. Crowds are enormous."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across the West Bank and Jerusalem",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Families who can afford it sacrifice a sheep and share the meat with neighbours and the poor; shops close for several days."
+      },
+      {
+        "name": "The olive harvest",
+        "place": "Villages across the West Bank",
+        "when": "Usually from October to November",
+        "months": [10, 11],
+        "text": "Whole families head to the groves to pick olives by hand, and presses work day and night. Some local organisations invite visitors to help, and new-season oil is sold in every village."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Jericho and the Jordan Valley",
+        "months": ["best", "best", "best", "best", "good", "avoid", "avoid", "avoid", "good", "best", "best", "best"],
+        "text": "Warm and dry in winter, when people from the cold hills come down for the day, and very hot in summer, close to 40°C. Visit the ruins and St George's Monastery, clinging to the cliffs of Wadi Qelt, early in the morning from May to September."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Marhaba\" and \"ahlan wa sahlan\" (welcome) are heard everywhere, with \"as-salamu alaykum\" for more formal moments. Palestinians are generous hosts, and a visit to a shop or a home often comes with coffee scented with cardamom, or sweet tea with sage or mint. Men shake hands; a woman may or may not offer hers to a man, so let her decide.",
+    "etiquette": [
+      "Keep your passport with you at all times, and expect queues and questions at checkpoints. Don't photograph soldiers, checkpoints or military posts.",
+      "Ask first before taking pictures of people, in villages above all.",
+      "Hebron and Nablus are conservative: dress modestly, and keep affection for private. Bethlehem and Ramallah are more relaxed.",
+      "At churches and mosques, cover shoulders and knees, and women need a headscarf inside a mosque.",
+      "During Ramadan, avoid eating, drinking or smoking in the street in daylight.",
+      "Accept coffee or tea when it's offered: refusing a host's hospitality can seem unfriendly."
+    ],
+    "tipping": "Usual in restaurants, about 10%, unless service is included. Guides and drivers expect a tip at the end of the day; taxi fares can be rounded up.",
+    "dress": "Modest: men and women both keep shoulders and knees covered, especially outside Ramallah and Bethlehem. Loose, light clothes for summer, and warm layers and a waterproof for winter in the hills, which are colder than many visitors expect.",
+    "food": [
+      {
+        "name": "Musakhan",
+        "text": "Often called the national dish: taboon flatbread spread with onions slow-cooked in plenty of olive oil, sumac and roast chicken, eaten with the hands."
+      },
+      {
+        "name": "Maqluba",
+        "text": "\"Upside down\": a pot of rice layered with fried aubergine or cauliflower and chicken or lamb, turned out onto a tray at the table in one tall, steaming cake."
+      },
+      {
+        "name": "Knafeh Nabulsiyeh",
+        "text": "Nablus's famous sweet: soft white cheese under a layer of orange-coloured semolina or fine pastry, baked in vast round trays and soaked in syrup. Eat it hot."
+      },
+      {
+        "name": "Qidreh",
+        "text": "Hebron's feast dish: rice, lamb, chickpeas and garlic cooked slowly in a tall copper pot, traditionally sent to a bakery's oven."
+      },
+      {
+        "name": "Za'atar and olive oil",
+        "text": "The everyday breakfast: warm bread dipped first in the local olive oil, then in za'atar, a mix of wild thyme, sumac and sesame."
+      },
+      {
+        "name": "Taybeh beer",
+        "text": "Brewed in Taybeh, a Christian village near Ramallah, since the 1990s, and served in Ramallah's and Bethlehem's bars and restaurants."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Palestinian Arabic)",
+      "intro": "English is spoken in hotels, shops and among guides; many Palestinians also speak Hebrew.",
+      "items": [
+        { "phrase": "Marhaba (مرحبا)", "say": "MAR-ha-ba", "meaning": "Hello" },
+        { "phrase": "Ahlan fik (أهلا فيك)", "say": "AH-lan FEEK", "meaning": "Welcome to you too (the answer to a welcome, to a man)" },
+        { "phrase": "Sabah al-khair (صباح الخير)", "say": "sa-BAAH al-KHAYR", "meaning": "Good morning (answered with sabah an-noor)" },
+        { "phrase": "Shukran ktir (شكرا كتير)", "say": "SHOOK-ran k-TEER", "meaning": "Thanks a lot" },
+        { "phrase": "Bikam hada? (بكم هاد)", "say": "bi-KAM HAA-da", "meaning": "How much is this?" },
+        { "phrase": "Sahtein (صحتين)", "say": "sah-TAYN", "meaning": "Enjoy your meal" },
+        { "phrase": "Yislamu ideik (يسلمو إيديك)", "say": "yis-LA-moo ee-DAYK", "meaning": "Bless your hands (thanks for a meal)" },
+        { "phrase": "Mashallah (ما شاء الله)", "say": "ma-SHAA-lah", "meaning": "Wonderful (praise that wishes no envy)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q219060",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "There is no Palestinian currency: the Israeli new shekel (₪, ILS) is used day to day, and Jordanian dinars (JD) for some large payments. Cash is needed for buses, taxis and small shops.",
+        "sources": [{ "property": "P38", "values": ["Q131309", "Q203722"] }],
+        "note": "Wikidata also lists the Egyptian pound, which has been used in Gaza; the page leaves it out, as Gaza is closed to visitors."
+      },
+      {
+        "key": "languages",
+        "text": "Arabic. English is spoken in tourism and by many younger people, and Hebrew is widely understood.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type H (three pins in a triangle, the Israeli plug) and Type C (two round pins, which fit Type H sockets), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1266396", "Q1378312"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "BS 546 (Type D) is also on Wikidata's list; the page leaves it out, as sockets here follow the Israeli system of Types H and C."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+2, and UTC+3 in summer, usually from spring to late October. The clocks don't always change on the same day as Israel's.",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q6760", "Q63285940"] }],
+        "note": "Wikidata gives Asia/Jerusalem; the tz database keeps separate zones for the West Bank and Gaza (Asia/Hebron, Asia/Gaza) because their clock changes have often fallen on different days from Israel's."
+      },
+      {
+        "key": "emergency",
+        "text": "100 for police, 101 for ambulance (the Palestine Red Crescent) and 102 for fire",
+        "sources": [],
+        "note": "Wikidata's item has no emergency-number statement; the page gives the numbers used in the West Bank."
+      },
+      {
+        "key": "callingCode",
+        "text": "+970",
+        "sources": [{ "property": "P474", "values": ["+970"] }]
+      }
+    ]
+  }
+}

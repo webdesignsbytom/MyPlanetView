@@ -1,0 +1,179 @@
+{
+  "code": "BS",
+  "slug": "bahamas",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bahamas", "Welcome"],
+  "summary": "Hundreds of low islands and cays on clear, shallow water, from busy Nassau to the quiet Exumas.",
+  "overview": [
+    "The Bahamas is a chain of around 700 islands and cays reaching from just off Florida almost to Cuba and Haiti, of which only about 30 are lived on. None of them is high: they sit on wide limestone banks under shallow, very clear water, which gives the sea its pale turquoise colour. Nassau, on New Providence, is the capital and home to most Bahamians, with a cruise port, Bay Street's shops and the Queen's Staircase, a flight of steps cut into the limestone in the 1790s. A bridge leads to Paradise Island and its big resort, and Cable Beach runs to the west. Grand Bahama, the other busy island, has Freeport and the caves and long beach of Lucayan National Park.",
+    "The rest are called the Out Islands or Family Islands, and they are quieter by far. The Exumas are a string of cays and sandbars, with the swimming pigs of Big Major Cay and Thunderball Grotto for snorkelling. Eleuthera is long and thin, with the pink sand of Harbour Island; Andros, the largest island, is mostly mangroves, with blue holes and a long barrier reef offshore; Long Island has Dean's Blue Hole, one of the deepest known. The Abacos are for sailing between small towns such as Hope Town, with its striped lighthouse, and Great Inagua in the far south has tens of thousands of flamingos.",
+    "Small planes from Nassau reach most islands, and fast ferries and slower mail boats link many of them. In Nassau, minibuses called jitneys run the main roads, and taxis and water taxis do the rest. Traffic keeps to the left, though many cars are imported from the US with the wheel on the left. The Bahamian dollar and the US dollar are worth the same and used side by side."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "best", "best", "best", "good", "good", "good", "avoid", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Mild winter",
+        "months": [12, 1, 2],
+        "text": "Sunny days around 25°C, but cold fronts from North America bring a few windy, cooler days at a time, and the sea is too fresh for some swimmers. Busy over Christmas and New Year, when Junkanoo fills Nassau's streets."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm, mostly dry and settled, with the sea warming up: ideal for the Out Islands and for sailing. Students on spring break crowd Nassau and Paradise Island in March."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and humid, often 32°C, with thunderstorms building on many afternoons. The sea is calm and warm for diving, and rates drop. Independence Day and Emancipation Day bring holidays and parties."
+      },
+      {
+        "name": "Storm season",
+        "months": [9, 10, 11],
+        "text": "September and early October are the riskiest weeks for hurricanes, and some Out Island hotels close. The weather settles in November, though storms are possible until the season ends on 30 November."
+      }
+    ],
+    "weather": "Lying further north than most of the Caribbean, the Bahamas has a real, if mild, winter. In Nassau, January days are about 25°C and nights about 18°C, while July and August reach about 32°C with sticky humidity. Most rain falls from about May or June to October, in heavy, short showers; winter is drier. The northern islands are a few degrees cooler in winter than the southern ones, and the far south, such as Inagua, gets much less rain. Hurricanes are a real risk: Dorian did terrible damage in the Abacos and on Grand Bahama in 2019.",
+    "festivals": [
+      {
+        "name": "Junkanoo",
+        "place": "Bay Street, Nassau, and other islands",
+        "when": "26 December and 1 January, from the small hours until after dawn",
+        "months": [12, 1],
+        "text": "Groups of hundreds, in huge, glittering costumes made of card and crêpe paper, dance (\"rush\") along Bay Street to goatskin drums, cowbells and horns, competing for prizes. Get to the stands early."
+      },
+      {
+        "name": "National Family Island Regatta",
+        "place": "George Town, Exuma",
+        "when": "Usually in late April",
+        "months": [4],
+        "text": "Bahamian-built wooden sloops race in Elizabeth Harbour, with music, food stalls and crowds along the shore."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the Bahamas",
+        "when": "10 July",
+        "months": [7],
+        "text": "The Bahamas became independent from Britain on this day in 1973; the anniversary brings fireworks, church services and Junkanoo music."
+      },
+      {
+        "name": "Emancipation Day and Fox Hill Day",
+        "place": "Across the Bahamas; Fox Hill, Nassau",
+        "when": "The first Monday of August; Fox Hill Day the second Tuesday",
+        "months": [8],
+        "text": "The holiday for the end of slavery, followed a week later by a celebration in the village of Fox Hill, where, people say, the news arrived late."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Nassau and Paradise Island",
+        "text": "The capital, the cruise port and the big resorts, with the most restaurants, nightlife and things to do, and the busiest beaches."
+      },
+      {
+        "name": "Grand Bahama",
+        "text": "The second city, Freeport, with resorts at Lucaya, a national park of caves and mangroves, and wide empty beaches on the east of the island."
+      },
+      {
+        "name": "The Out Islands",
+        "text": "The Exumas, Eleuthera, the Abacos, Andros and many more: small inns, fishing and diving, long empty beaches and a slow pace. Fewer places to eat and shop, and some close in the autumn."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Bahamians are courteous and fairly formal with people they don't know. Use \"Good morning\", \"Good afternoon\" or \"Good evening\" with a handshake, and Mr, Mrs or Ms with a surname until you're invited to use a first name. On the Out Islands, people often wave at passing cars and strangers.",
+    "etiquette": [
+      "In Nassau's Straw Market polite bargaining is expected; in shops, prices are fixed.",
+      "With the swimming pigs, follow the guides' rules: food dropped on the sand makes the animals ill.",
+      "Don't touch or stand on coral, and leave live conch and shells in the water.",
+      "In Nassau, take a taxi after dark rather than walking between areas, and keep valuables out of sight."
+    ],
+    "tipping": "Restaurants often add a gratuity of about 15%, especially for groups, so check before tipping again. Tip taxi drivers, porters, housekeeping and boat crews.",
+    "dress": "Light clothes in summer; a sweater or light jacket for winter evenings and windy boat trips. Cover shoulders in churches. Some smart restaurants and casinos expect long trousers and closed shoes in the evening.",
+    "food": [
+      {
+        "name": "Conch salad",
+        "text": "Raw conch diced with onion, tomato and sweet pepper and \"cooked\" in lime and sour orange juice, made to order at seafront stalls."
+      },
+      {
+        "name": "Cracked conch",
+        "text": "Conch pounded thin, battered and fried, served with peas 'n' rice or fries. The Fish Fry at Arawak Cay in Nassau is the place to try it."
+      },
+      {
+        "name": "Peas 'n' rice",
+        "text": "Rice cooked with pigeon peas, salt pork, tomato and thyme: the side dish with almost everything."
+      },
+      {
+        "name": "Souse",
+        "text": "A clear, peppery soup of chicken or pig's feet with onion, lime and allspice, a weekend breakfast with johnnycake."
+      },
+      {
+        "name": "Guava duff",
+        "text": "A steamed roll of dough and guava, sliced and covered in a sweet butter sauce, often with rum in it."
+      },
+      {
+        "name": "Sky juice",
+        "text": "Gin, coconut water and sweet condensed milk, sometimes with nutmeg: a Bahamian favourite at the Fish Fry."
+      }
+    ],
+    "phrases": {
+      "language": "English (Bahamian dialect)",
+      "intro": "English is the language of the Bahamas, but Bahamians have a dialect with its own sound and words. Some you'll hear:",
+      "items": [
+        { "phrase": "Wha' ya sayin'?", "say": "wah yah SAY-in", "meaning": "Hi, what's going on?" },
+        { "phrase": "Bey", "say": "BAY", "meaning": "Boy; mate, to a friend" },
+        { "phrase": "Sip-sip", "meaning": "Gossip" },
+        { "phrase": "Potcake", "meaning": "A mixed-breed island dog, named after the scraps left in the cooking pot" },
+        { "phrase": "Mudda sick!", "meaning": "An exclamation of surprise" },
+        { "phrase": "Jitney", "say": "JIT-nee", "meaning": "A minibus in Nassau" },
+        { "phrase": "Rake 'n' scrape", "meaning": "Bahamian folk music, played on a saw scraped with a knife, an accordion and a goatskin drum" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q778",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Bahamian dollar (B$, BSD), worth exactly one US dollar. US dollars are used everywhere alongside it.",
+        "sources": [{ "property": "P38", "values": ["Q194339"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Bahamians also speak their own dialect, and Haitian Creole is common among people with roots in Haiti.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern Time, UTC−5, and UTC−4 in summer (as in the US, usually from mid-March to early November)",
+        "sources": [{ "property": "P421", "values": ["Q5390", "Q63230241"] }],
+        "note": "Wikidata gives UTC−5 only; the Bahamas moves its clocks forward in summer on the same dates as the United States."
+      },
+      {
+        "key": "emergency",
+        "text": "919 or 911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648815"] }],
+        "note": "Wikidata gives 919; 911 also reaches the emergency services, and the page gives both."
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 242",
+        "sources": [{ "property": "P474", "values": ["+1242"] }]
+      }
+    ]
+  }
+}

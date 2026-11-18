@@ -1,0 +1,186 @@
+{
+  "code": "AZ",
+  "slug": "azerbaijan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salam", "Azərbaycan", "Xoş gəlmisiniz"],
+  "summary": "Baku's walled old town and Flame Towers, mud volcanoes and silk-road Sheki.",
+  "overview": [
+    "Azerbaijan lies where the Caucasus Mountains run down to the Caspian Sea, and most visits begin in Baku, the capital. Its walled old city, Icherisheher, keeps the Maiden Tower and the palace of the Shirvanshahs, the medieval rulers of the region, among lanes of carpet shops. Around the walls spread grand mansions from the first oil boom of the late 19th century, a long seaside boulevard and new glass towers, with the three Flame Towers lit up above them at night. Day trips reach the rock carvings of Gobustan and the mud volcanoes near them, about an hour south, and Yanar Dag, a hillside where gas seeping from the ground has burned for decades.",
+    "North-west of Baku, on the wooded slopes of the Greater Caucasus, Sheki has the 18th-century Khan's Palace, its walls set with coloured glass in carved wooden lattices, and old caravanserais where silk traders stayed. Khinaliq, high above Quba at about 2,300 m, is one of the highest villages in the Caucasus and has a language of its own. Most visitors fly into Baku; trains and buses link it with the regions, but a car and driver is the easier way into the mountains. Baku has app taxis and a metro, and cards are taken widely there."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Novruz opens the season in March. April is mild but changeable, and by May the mountain meadows are green and Baku's days are around 22°C."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "June is the pick of the summer months. In July and August Baku turns hot and humid, often above 30°C, and locals go to the Caspian beaches of the Absheron peninsula or up to Sheki, Quba and Gabala, where the air is cooler and the hiking good."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Warm, clear September and October are the best months for travelling round the country, with pomegranates and persimmons in the markets. The south around Lankaran gets its heaviest rain in autumn."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Baku is mild, rarely far below freezing, but grey and buffeted by cold winds off the sea. Snow falls in the mountains, and the Shahdag resort near Qusar is open for skiing."
+      }
+    ],
+    "weather": "Baku and the Absheron peninsula are dry and very windy, the wind famous enough to give Baku its nickname, the city of winds. Summers there are hot, around 30°C or more from July to August, and winters cool, with January days of about 7°C. The Greater Caucasus in the north is cooler and wetter, with snow from about December to March on the heights. Lankaran, in the far south by the border with Iran, is green and subtropical, with tea plantations and rain mostly in autumn and winter.",
+    "festivals": [
+      {
+        "name": "Ramadan and Ramazan Bayramı (Eid al-Fitr)",
+        "place": "Across Azerbaijan",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Azerbaijan is a secular country where most people are Muslim, and fewer keep the fast than in many Muslim countries; life in Baku carries on much as usual by day. The feast at the end is a public holiday of two days."
+      },
+      {
+        "name": "Novruz",
+        "place": "Across Azerbaijan",
+        "when": "Around 20–21 March, with a holiday of several days",
+        "months": [3],
+        "text": "The spring New Year, the biggest celebration of the year. On the Tuesdays before it, people jump over bonfires in the streets. Tables hold a dish of green wheat sprouts (samani), painted eggs and sweet pastries, and the old city in Baku fills with music and stalls."
+      },
+      {
+        "name": "Gurban Bayramı (Eid al-Adha)",
+        "place": "Across Azerbaijan",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Two days off work, when families who can afford it sacrifice a sheep and share the meat with relatives and neighbours."
+      },
+      {
+        "name": "Azerbaijan Grand Prix",
+        "place": "Baku",
+        "when": "Once a year; in recent years in September",
+        "months": [9],
+        "text": "A Formula One race on a street circuit round the old city walls and along the seafront. Roads in the centre close for days around it, and hotels fill and raise their rates."
+      },
+      {
+        "name": "Pomegranate Festival",
+        "place": "Goychay",
+        "when": "Usually in late October or early November",
+        "months": [10, 11],
+        "text": "The pomegranate-growing town of Goychay, a few hours west of Baku by road, marks the harvest with stalls of fruit, juice and sauce (narsharab), music and dancing."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Baku and the Absheron peninsula",
+        "text": "Dry, sunny and windy, with hot summers and cool winters. Baku is good to visit all year; summer is for the beaches, spring and autumn for walking the city."
+      },
+      {
+        "name": "Sheki, Quba and the Caucasus",
+        "text": "Green foothills and high valleys, cooler than Baku in summer and best from May to October for walking. In winter, snow can close the road to Khinaliq, while Shahdag has skiing from about December to March."
+      },
+      {
+        "name": "Lankaran and the south",
+        "text": "Humid and green, with tea gardens and the forested Talysh Mountains. Warm summers and mild winters, and the wettest weather in the country, mostly from autumn into winter."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Salam\" covers most greetings, with \"Salam aleykum\" for older people. Men shake hands, and close friends touch cheeks. Between men and women, wait for the woman to offer her hand. Older people are greeted first, and you may be asked about your family before anything else.",
+    "etiquette": [
+      "Tea is the heart of hospitality, served in small pear-shaped glasses (armudu) with jams, sugar and lemon. Accept a glass when it's offered, and expect another.",
+      "Take off your shoes when you enter a home. At a mosque, women cover their hair, and everyone covers shoulders and knees.",
+      "The conflict with Armenia is a painful subject for many families. Let your hosts raise it, if they wish to.",
+      "Don't photograph military sites, police or government buildings, and ask people before taking their picture.",
+      "Bargaining is expected for carpets and in markets, less so in shops with marked prices."
+    ],
+    "tipping": "About 10% in Baku restaurants, where a service charge is sometimes added already. Taxi drivers don't expect a tip, though rounding up is welcome; guides and drivers on tours are tipped at the end.",
+    "dress": "Baku is modern and dresses smartly; ordinary European clothes are fine. In villages and the countryside, longer skirts or trousers and covered shoulders are more comfortable. Bring a windproof jacket for Baku in any season but summer.",
+    "food": [
+      {
+        "name": "Plov",
+        "text": "Saffron rice cooked so each grain stays separate, served with toppings cooked on their own: lamb, chestnuts, dried apricots and onions. Shah plov is baked inside a crisp lavash crust and cut open at the table."
+      },
+      {
+        "name": "Dushbara",
+        "text": "Tiny lamb dumplings, so small that a spoonful holds several, served in a clear broth with dried mint and vinegar with garlic."
+      },
+      {
+        "name": "Qutab",
+        "text": "Thin, half-moon flatbreads cooked on a domed griddle (saj), filled with fresh herbs, minced meat or pumpkin, and eaten hot with yoghurt."
+      },
+      {
+        "name": "Piti",
+        "text": "Sheki's mutton and chickpea stew, baked in its own clay pot. Tear bread into a bowl and pour the broth over it first, then eat the meat."
+      },
+      {
+        "name": "Pakhlava and Sheki halva",
+        "text": "Diamond-shaped pastries of nuts and syrup, made by every family for Novruz, and Sheki's halva: a lacework of rice flour over a layer of nuts, soaked in syrup."
+      },
+      {
+        "name": "Chay",
+        "text": "Black tea, drunk all day and often flavoured with thyme or rose petals, with a dish of cherry, quince or walnut jam on the side."
+      }
+    ],
+    "phrases": {
+      "language": "Azerbaijani",
+      "intro": "Azerbaijani is close to Turkish and written in Latin letters. Russian is widely spoken in Baku, and many younger people speak English.",
+      "items": [
+        { "phrase": "Salam", "say": "sah-LAHM", "meaning": "Hello" },
+        { "phrase": "Necəsiniz?", "say": "neh-JEH-see-niz", "meaning": "How are you? (polite)" },
+        { "phrase": "Sağ olun", "say": "SAH-oh-loon", "meaning": "Thank you; goodbye" },
+        { "phrase": "Zəhmət olmasa", "say": "zah-MET ol-mah-SAH", "meaning": "Please" },
+        { "phrase": "Bu neçəyədir?", "say": "boo neh-cheh-YEH-dir", "meaning": "How much is this?" },
+        { "phrase": "Çox dadlıdır", "say": "CHOKH dahd-luh-DUHR", "meaning": "It's delicious" },
+        { "phrase": "Nuş olsun", "say": "NOOSH ol-SOON", "meaning": "Enjoy your meal; cheers" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q227",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Azerbaijani manat (₼, AZN). Cards are widely taken in Baku; carry cash in the regions.",
+        "sources": [{ "property": "P38", "values": ["Q483725"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Azerbaijani. Russian is widely spoken in Baku, and English among younger people.",
+        "sources": [{ "property": "P37", "values": ["Q9292"] }],
+        "note": "Wikidata also lists Azerbaijani Sign Language as official; the page names the spoken language visitors meet."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Azerbaijan Time, UTC+4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6779", "Q63285931"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; also 101 for fire, 102 for police and 103 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648794", "Q25648798", "Q25648811"] }],
+        "note": "Wikidata lists 102 without saying which service it is; the page gives it as the police, its use in Azerbaijan."
+      },
+      {
+        "key": "callingCode",
+        "text": "+994",
+        "sources": [{ "property": "P474", "values": ["+994"] }]
+      }
+    ]
+  }
+}

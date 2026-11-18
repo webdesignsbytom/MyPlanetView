@@ -26,7 +26,15 @@ const POSTER_DATA = join(root, 'client/src/utils/map/posterData.js');
 const WIDTH = 800;
 
 // File names that don't start with the country list's slug
-const ALIASES = { 'cabo-verde': 'CV', 'cote-divoire': 'CI', 'dr-congo': 'CD', turkiye: 'TR', 'south-georgia': 'GS' };
+const ALIASES = {
+  'cabo-verde': 'CV',
+  'cote-divoire': 'CI',
+  'dr-congo': 'CD',
+  turkiye: 'TR',
+  'south-georgia': 'GS',
+  'turks-and-caicos': 'TC',
+  'united-state-virgin-islands': 'VI',
+};
 
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
@@ -49,13 +57,14 @@ const unmatched = [];
 const files = (await readdir(folder)).filter((f) => ['.png', '.jpg', '.jpeg', '.webp'].includes(extname(f).toLowerCase())).sort();
 for (const file of files) {
   const base = file.slice(0, -extname(file).length).toLowerCase();
-  const hit = prefixes.find(([slug]) => base.startsWith(`${slug}-`));
+  // "<slug>-<title>", or the slug alone ("puerto-rico.png"), whose poster is titled "poster"
+  const hit = prefixes.find(([slug]) => base === slug || base.startsWith(`${slug}-`));
   if (!hit) {
     unmatched.push(file);
     continue;
   }
   const [slug, code] = hit;
-  const title = base.slice(slug.length + 1).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const title = base === slug ? 'poster' : base.slice(slug.length + 1).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const { width, height } = await sharp(join(folder, file)).metadata();
   if (!byCode.has(code)) byCode.set(code, []);
   byCode.get(code).push({ name: `${code.toLowerCase()}-${title}`, ratio: `${width}/${height}`, file });

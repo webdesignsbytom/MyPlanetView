@@ -1,0 +1,196 @@
+{
+  "code": "BO",
+  "slug": "bolivia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Kamisaraki", "Bolivia", "Bienvenidos"],
+  "summary": "The white salt flat of Uyuni, Lake Titicaca's islands and La Paz's cable cars, high in the Andes.",
+  "overview": [
+    "Bolivia has the largest share of indigenous people of any South American country, and much of what visitors come for lies above 3,500 m. La Paz, the seat of government, fills a deep canyon below the plateau city of El Alto, and the two are linked by a network of cable cars, the easiest way to see the city and the snowy peak of Illimani behind it. A few hours away, Lake Titicaca's town of Copacabana is the jumping-off point for Isla del Sol, with Inca ruins and footpaths along its ridge. In the south-west, the Salar de Uyuni, the largest salt flat in the world, is crossed on three-day 4×4 trips that go on past red and green lagoons with flamingos, geysers and volcanoes to the Chilean border.",
+    "Potosí, one of the highest cities on earth at about 4,000 m, grew rich on the silver of the Cerro Rico above it, and its mines are still worked: guided visits go underground. Sucre, the constitutional capital, is a white-walled colonial city with a gentler climate, and Samaipata, near Santa Cruz, has the carved rock of El Fuerte. Two-thirds of the country is lowland: from Rurrenabaque, boats go up the rivers into the rainforest of Madidi National Park and out to the wetlands of the pampas, full of caimans, capybaras and pink river dolphins.",
+    "Take a few easy days on arrival at altitude: headaches and breathlessness are normal at first, and mate de coca, a tea of coca leaves, is offered everywhere to help. Buses are cheap and go everywhere, often overnight; flights save long days, especially to Uyuni and Rurrenabaque. Road blockades by protesters are common and can hold up travel for a day or more, so leave some slack in your plans."
+  ],
+  "whenToGo": {
+    "stripLabel": "The Andes (La Paz, Lake Titicaca, Uyuni, Potosí and Sucre), where most visitors go. The Amazon lowlands have a strip of their own below.",
+    "months": ["good", "good", "good", "best", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Rainy season",
+        "months": [12, 1, 2, 3],
+        "text": "Afternoon storms over the Andes and heavy rain in the lowlands. A thin layer of water on the Salar de Uyuni turns it into a giant mirror, though some routes across it close when it's too deep. Roads can wash out, and the Death Road is at its most slippery. Carnival falls in February or early March."
+      },
+      {
+        "name": "Autumn",
+        "months": [4, 5],
+        "text": "The rains stop, skies clear, the countryside is still green, and the nights are not yet bitter. A good balance of weather and quiet."
+      },
+      {
+        "name": "Dry winter",
+        "months": [6, 7, 8],
+        "text": "Clear blue skies and dry trails, the best time for trekking in the Cordillera Real and for wildlife in the lowlands. Nights on the Altiplano fall far below freezing, to about −20°C around Uyuni. The busiest months for visitors."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Warmer days, wind and dust on the Altiplano, and fewer visitors. The first storms usually arrive in November."
+      }
+    ],
+    "weather": "Height decides everything. On the Altiplano, at around 3,600–4,000 m, the sun is fierce and days reach about 15°C, but nights are cold all year and well below freezing from May to August. The valleys of Sucre and Cochabamba, at around 2,500–2,800 m, have mild, spring-like weather. The lowlands of Santa Cruz and the Amazon are hot and humid, often above 30°C, though a cold wind from the south, the surazo, can drop temperatures sharply for a few days in winter. Rain falls mostly from December to March.",
+    "festivals": [
+      {
+        "name": "Alasitas",
+        "place": "La Paz",
+        "when": "From 24 January, for several weeks",
+        "months": [1, 2],
+        "text": "A fair of miniatures: tiny houses, cars, passports, banknotes and diplomas, bought and blessed so that the real thing arrives in the coming year, under the eye of Ekeko, the moustachioed god of plenty."
+      },
+      {
+        "name": "Carnaval de Oruro",
+        "place": "Oruro",
+        "when": "The Saturday before Ash Wednesday and the days after (6 February in 2027)",
+        "months": [2, 3],
+        "text": "Bolivia's greatest festival, recognised by UNESCO: tens of thousands of dancers in elaborate costumes parade for the Virgen del Socavón, led by the diablada, the devil dance, with brass bands all day and night. Water fights break out across the country."
+      },
+      {
+        "name": "Gran Poder",
+        "place": "La Paz",
+        "when": "The Saturday before Trinity Sunday, usually late May or June",
+        "months": [5, 6],
+        "text": "A huge parade of dance groups through the centre of La Paz, with morenada dancers in heavy, glittering costumes and Aymara women in their finest shawls and bowler hats."
+      },
+      {
+        "name": "Aymara New Year (Willkakuti)",
+        "place": "Tiwanaku and across the Altiplano",
+        "when": "21 June",
+        "months": [6],
+        "text": "A public holiday at the winter solstice. Thousands gather in the cold before dawn at the ruins of Tiwanaku to greet the first sun of the new year with outstretched hands."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Bolivia, especially Sucre and La Paz",
+        "when": "6 August",
+        "months": [8],
+        "text": "The national day, for independence in 1825, with military and school parades. Hotels and buses fill around the holiday."
+      },
+      {
+        "name": "Todos Santos and the Ñatitas",
+        "place": "Across Bolivia; the Ñatitas in La Paz's General Cemetery",
+        "when": "1–2 November, and the Ñatitas on 8 November",
+        "months": [11],
+        "text": "Families build altars for their dead with bread figures called t'antawawas, flowers and the dead's favourite food. A week later, at the Ñatitas, people bring decorated skulls to the cemetery to be blessed and thanked."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Altiplano and Uyuni",
+        "text": "La Paz, Lake Titicaca, Potosí and the salt flat. Clear and dry from about April to November, with freezing nights; January to March brings storms and the mirror on the salt flat. Bring warm layers for the Uyuni trip in any month: the lodges on the way are basic and unheated."
+      },
+      {
+        "name": "The valleys",
+        "text": "Sucre, Cochabamba, Tarija and Samaipata, lower and milder than the Altiplano, with pleasant days most of the year and rain from about December to March. Tarija is wine country."
+      },
+      {
+        "name": "The Amazon lowlands",
+        "months": ["avoid", "avoid", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+        "text": "Rurrenabaque, Madidi and the pampas, hot and humid all year. The dry months, about May to September, bring animals to the shrinking rivers and make the trails passable. In January and February floods and mud can cancel flights and close the roads."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Bolivians are polite and a little reserved with strangers. Greet with \"Buenos días\" or \"Buenas tardes\", add \"señor\" or \"señora\" for older people, and shake hands lightly. In Aymara and Quechua villages a soft handshake and a few words matter more than conversation. Use \"usted\" until invited to be informal.",
+    "etiquette": [
+      "Ask before photographing anyone, especially Aymara and Quechua women in their bowler hats and layered skirts; many say no, or ask for a coin.",
+      "Coca leaves and coca tea are legal and everyday in Bolivia, but illegal in most other countries: don't pack them for home.",
+      "Choose Uyuni tours and Death Road bike operators with care, by recent reviews and the state of their vehicles and bikes, not by the lowest price.",
+      "Drink bottled or boiled water, and put toilet paper in the bin.",
+      "Bargain gently at markets such as La Paz's Witches' Market; prices are often already low.",
+      "At altitude, walk slowly, drink plenty of water and go easy on alcohol for the first few days."
+    ],
+    "tipping": "Not a strong habit locally. Leave around 10% in restaurants that cater to visitors, and tip guides, drivers and cooks at the end of a tour.",
+    "dress": "Layers for every day in the Andes: a thermal base, fleece, down jacket, warm hat and gloves for nights and early starts. The sun at altitude burns fast, so bring a sunhat, sunglasses and strong sun cream. Light long sleeves and insect repellent for the lowlands. Alpaca jumpers are cheap in La Paz.",
+    "food": [
+      {
+        "name": "Salteñas",
+        "text": "Baked pastries filled with a juicy, slightly sweet stew of beef or chicken, eaten mid-morning. Hold one upright and bite the top off, or the juice runs down your arm."
+      },
+      {
+        "name": "Api con pastel",
+        "text": "A thick, hot drink of purple corn with cinnamon and cloves, served with a crisp fried pastry filled with cheese and dusted with sugar: breakfast in La Paz's markets."
+      },
+      {
+        "name": "Sopa de maní",
+        "text": "A creamy peanut soup with potatoes, pasta and a little beef, topped with crisp fried potato straws."
+      },
+      {
+        "name": "Silpancho",
+        "text": "Cochabamba's big plate: beef pounded paper-thin and breaded, over rice and potatoes, with a fried egg and a tomato and onion salsa."
+      },
+      {
+        "name": "Quinoa and llama",
+        "text": "Quinoa grows on the Altiplano and goes into soups and salads; llama meat, lean and tender, is grilled or cooked into a stew."
+      },
+      {
+        "name": "Mate de coca and singani",
+        "text": "Coca leaf tea helps with the altitude and is drunk at any hour. Singani, a grape brandy from the southern valleys, is the national spirit, mixed with ginger ale into a chuflay."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Bolivian)",
+      "intro": "Bolivian Spanish is spoken slowly and clearly, which helps. Many Bolivians grew up speaking Aymara, Quechua or Guaraní, and a greeting in one of them is warmly received.",
+      "items": [
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAHN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "Más despacio, por favor", "say": "mahs des-PAH-see-oh por fah-VOR", "meaning": "More slowly, please" },
+        { "phrase": "Tengo soroche", "say": "TEN-goh soh-ROH-cheh", "meaning": "I have altitude sickness" },
+        { "phrase": "¡Salud!", "say": "sah-LOOD", "meaning": "Cheers!" },
+        { "phrase": "Kamisaraki", "say": "kah-mee-sah-RAH-kee", "meaning": "Hello; how are you? (Aymara)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q750",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Boliviano (Bs, BOB). Cash is needed outside the cities: take enough before setting out for Uyuni, Lake Titicaca's islands or Rurrenabaque.",
+        "sources": [{ "property": "P38", "values": ["Q200737"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish, Quechua, Aymara and Guaraní, the most widely spoken of the 37 languages the constitution makes official.",
+        "sources": [{ "property": "P37", "values": ["Q1321", "Q5218", "Q4627", "Q35876"] }],
+        "note": "Wikidata lists these four; the 2009 constitution names Spanish and 36 indigenous languages as official, which the page mentions by number."
+      },
+      {
+        "key": "plugs",
+        "text": "Types A (two flat pins) and C (two round pins), mostly 230 V; some buildings in La Paz have 115 V sockets, so check before plugging in",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q1378312"] },
+          { "property": "P2884", "values": ["230", "115"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Bolivia Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q63286077"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911; or 110 for police, 119 for the fire service and 160 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806", "Q25648823", "Q2807090", "Q25648824"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+591",
+        "sources": [{ "property": "P474", "values": ["+591"] }]
+      }
+    ]
+  }
+}

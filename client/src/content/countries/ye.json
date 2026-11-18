@@ -1,0 +1,171 @@
+{
+  "code": "YE",
+  "slug": "yemen",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Hayyakum", "Al-Yaman"],
+  "summary": "Sana'a's decorated tower houses, Shibam's mud high-rises and Socotra's dragon's blood trees.",
+  "overview": [
+    "Yemen, the mountainous south-western corner of Arabia, was the Romans' \"Arabia Felix\", rich from frankincense, myrrh and later coffee. Its towns look like nowhere else. The old city of Sana'a, more than 2,000 m up, is a crowd of tower houses built of stone and brick, their walls patterned with white gypsum and their windows topped with half-moons of coloured glass. Around the capital, villages such as Thula, Kawkaban and those of the Haraz mountains perch on ridges above terraced fields of grain and coffee.",
+    "In the east, Wadi Hadhramaut is a long desert valley of palm groves and mud-brick towns. The best known is Shibam, where hundreds of tall mud-brick tower houses stand packed together inside a wall, an early city of high-rises. Aden, on the south coast, is built in and around the crater of an old volcano. Far out in the Arabian Sea, the island of Socotra has plants found nowhere else on Earth, among them the umbrella-shaped dragon's blood tree. And the Red Sea port of Mocha gave its name to the coffee that Yemen was the first to brew as a drink.",
+    "Daily life has its own rhythm: in the afternoons, men gather in a top-floor sitting room (mafraj) to chew qat, a mildly stimulating leaf, and talk for hours, and many still wear a curved dagger, the jambiya, in their belts.",
+    "Yemen has been at war for many years, and most governments advise against all travel to every part of it. Conditions vary from region to region and can change suddenly, and help from abroad may be impossible to arrange; anyone considering a trip should first read their own government's current advice."
+  ],
+  "whenToGo": {
+    "stripLabel": "Sana'a and the highlands, the heart of the country. The lowland coasts and Socotra have climates of their own, with strips below.",
+    "months": ["best", "best", "good", "good", "good", "good", "good", "good", "best", "best", "best", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [9, 10, 11, 12, 1, 2],
+        "text": "Clear, sunny skies in the highlands, around 22 to 25°C by day in Sana'a, but cold nights, with frost on the high ground from December to February. The coasts are warm rather than scorching."
+      },
+      {
+        "name": "Spring rains",
+        "months": [3, 4, 5],
+        "text": "Showers and thunderstorms in the highlands, greening the terraces. The lowlands heat up fast, passing 35°C by May."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "The second, heavier rainy season in the mountains, with afternoon storms in July and August; Sana'a stays near 30°C. The coasts and Hadhramaut are fiercely hot, and strong monsoon winds cut Socotra off by sea."
+      }
+    ],
+    "weather": "Height decides almost everything. The highlands round Sana'a have a mild climate with warm days, cool nights and two rainy seasons, a lighter one in spring and a heavier one in late summer. The Red Sea plain (the Tihama) and the south coast round Aden are hot and humid all year and very hot in summer. Wadi Hadhramaut is desert, hot by day for most of the year, and Socotra is battered by the south-west monsoon from about June to September.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Yemen",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Days of fasting, with work and markets slowing in the afternoon, and long evenings of prayer, food and visiting. After it comes Eid al-Fitr: new clothes, bowls of raisins and nuts for visitors, and days of family calls."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Yemen",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The year's biggest holiday, when families gather and livestock markets are at their busiest in the days before."
+      },
+      {
+        "name": "The Prophet's Birthday (Mawlid)",
+        "place": "Across Yemen",
+        "when": "About 11 days earlier each year: in 2027, about mid-August",
+        "months": [8],
+        "text": "Marked with gatherings, religious songs and poetry, and with lights and green banners in the streets of many towns."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The coasts: Aden and the Tihama",
+        "months": ["best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+        "text": "Warm and humid in winter, around 28°C in Aden, and close to 40°C with heavy humidity from May to September, when the Tihama's plain is one of the hottest places in Arabia."
+      },
+      {
+        "name": "Socotra",
+        "months": ["best", "best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "best", "best", "best"],
+        "text": "Warm and dry from October to April, the time for its beaches, canyons and dragon's blood forests. From about June to September, monsoon gales whip up the sea and make the island hard to reach."
+      },
+      {
+        "name": "Wadi Hadhramaut",
+        "text": "A desert valley with very little rain: pleasant from November to February, hot from April, and well over 40°C in summer."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"As-salamu alaykum\" opens every meeting, followed by a string of polite questions about health and family. Yemenis are known for their warm welcome to guests, who are offered tea, qishr or a meal. Men shake hands, often holding on as they talk; most Yemeni women don't shake hands with men, and a nod and a hand on the heart is the polite greeting.",
+    "etiquette": [
+      "Take off your shoes when entering a home or a mafraj, and sit on the floor cushions with your feet tucked away from others.",
+      "If you're invited to a qat chew, you don't have to chew: drinking tea and joining the talk is welcome.",
+      "Ask before photographing anyone, and never photograph women, soldiers or checkpoints.",
+      "Meals are often eaten by hand from a shared dish: use only the right, which is also the hand for giving and taking.",
+      "Avoid talking about politics and the war unless your hosts bring them up."
+    ],
+    "tipping": "Small tips are welcome for drivers, guides and anyone who helps you; in restaurants, rounding up or leaving a little is enough.",
+    "dress": "Very conservative. For men, long trousers and shirts with sleeves; for women, loose, long clothes covering arms and legs, and a headscarf in public. Bring warm layers for highland nights in winter.",
+    "food": [
+      {
+        "name": "Saltah",
+        "text": "The national dish: a bubbling meat broth with vegetables, topped with a whipped froth of fenugreek and served boiling hot in a stone pot, scooped up with flatbread."
+      },
+      {
+        "name": "Mandi",
+        "text": "Lamb or chicken cooked over rice in a sealed pit oven, so the meat falls from the bone and the rice soaks up its juices. It comes from Hadhramaut and is now eaten across Arabia."
+      },
+      {
+        "name": "Bint al-sahn",
+        "text": "\"Daughter of the plate\": a round of many thin, buttery layers of dough, baked and soaked in honey, sprinkled with black seeds."
+      },
+      {
+        "name": "Shafut",
+        "text": "Spongy flatbread soaked in spiced yoghurt or buttermilk with herbs, garlic and chilli, served cold, especially in Ramadan."
+      },
+      {
+        "name": "Qishr and coffee",
+        "text": "Qishr is a sweet, spiced drink brewed from coffee husks with ginger and cardamom, the everyday hot drink in many homes. Yemeni coffee beans are grown on mountain terraces and prized abroad."
+      },
+      {
+        "name": "Sidr honey",
+        "text": "Dark, thick honey from bees that feed on the flowers of the sidr tree, above all in Hadhramaut; among the most highly valued honeys in the world."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Yemeni Arabic)",
+      "intro": "Few people speak English outside a handful of hotels and offices. On Socotra and in the far east, people also speak Soqotri and Mehri, old languages of southern Arabia.",
+      "items": [
+        { "phrase": "As-salamu alaykum (السلام عليكم)", "say": "as-sa-LAA-mu a-LAY-kum", "meaning": "Peace be upon you (hello)" },
+        { "phrase": "Hayyakum Allah (حياكم الله)", "say": "hay-YAA-kum al-LAH", "meaning": "Welcome (to a group)" },
+        { "phrase": "Kayf al-hal? (كيف الحال)", "say": "kayf al-HAAL", "meaning": "How are things?" },
+        { "phrase": "Al-hamdulillah (الحمد لله)", "say": "al-HAM-du-LIL-lah", "meaning": "Fine, thank God" },
+        { "phrase": "Shukran (شكرا)", "say": "SHOOK-ran", "meaning": "Thank you" },
+        { "phrase": "Bish / ma bish (بش / ما بش)", "say": "BISH / ma BISH", "meaning": "There is / there isn't (the Sana'a way)" },
+        { "phrase": "Bikam? (بكم)", "say": "bi-KAM", "meaning": "How much?" },
+        { "phrase": "Ma'a as-salama (مع السلامة)", "say": "MA-a sa-LAA-ma", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q805",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Yemeni rial (YER). Cash is used for almost everything.",
+        "sources": [{ "property": "P38", "values": ["Q240512"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic. Soqotri is spoken on Socotra and Mehri in the far east, near Oman.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK) and Type A (two flat pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q60740126", "Q24288454"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Arabia Standard Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q4806272"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "199 for police",
+        "sources": [{ "property": "P2852", "values": ["Q25648881"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+967",
+        "sources": [{ "property": "P474", "values": ["+967"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "code": "TM",
+  "slug": "turkmenistan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salam", "Türkmenistan", "Hoş geldiňiz"],
+  "summary": "White-marble Ashgabat, Darvaza's fire crater and the ruined oasis of Merv.",
+  "overview": [
+    "Turkmenistan is mostly desert: the Karakum covers about seven tenths of the country, and people live round its edges, in oases watered by the Amu Darya, the Murghab and the long Karakum Canal. Ashgabat, the capital, has been rebuilt in white marble, with gold domes, giant monuments and wide boulevards that are often almost empty of traffic. On its edge lie the ruins of Nisa, an early capital of the Parthians.",
+    "The best-known sight is the gas crater at Darvaza, in the middle of the Karakum: a pit of flames that has burned since the 1970s, though the fire has weakened in recent years. Tours camp near it to see it after dark. In the east, Merv was one of the great cities of the Silk Road, and its mud-brick walls, fortresses and the domed tomb of Sultan Sanjar spread across a wide plain. In the north, Konye-Urgench has a 14th-century minaret about 60 m tall and the tombs of the rulers of Khorezm.",
+    "Turkmenistan is one of the most closed countries in the world, and most visitors travel with a local tour agency, which arranges a guide, transport and the paperwork. Photographing government buildings, police or soldiers is forbidden, many websites and apps are blocked, and border areas are closed without special permits. Cash is needed for almost everything."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "good", "avoid", "avoid", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The short green season: the desert carries grass and flowers for a few weeks in April, and days are around 25°C. Nowruz comes in March and the horse races in April. The heat builds fast through May."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Fierce, dry heat: Ashgabat averages about 38°C in July and the Karakum passes 45°C. Sightseeing means dawn starts and the afternoon indoors, and a night at Darvaza stays warm."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The heat eases from late September, and October is warm and clear, the best month for camping in the desert. Melons and grapes fill the markets. November nights turn cold."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Short but cold: around freezing at night in Ashgabat, colder in the north around Dashoguz and Konye-Urgench, with the odd snowfall. Desert nights are well below freezing, but the sites are quiet and days often sunny."
+      }
+    ],
+    "weather": "A harsh desert climate, far from any ocean. Summers are long, very hot and almost rainless; winters are short and cold, with frost most nights. The little rain falls mostly from about December to April. The north, around Dashoguz, has colder winters than Ashgabat, and the Caspian coast round Turkmenbashi is a little milder in both seasons.",
+    "festivals": [
+      {
+        "name": "Ramadan and Oraza Bayramy (Eid al-Fitr)",
+        "place": "Across Turkmenistan",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting is kept quietly by some, and life goes on much as usual. Oraza Bayramy, when it ends, is a public holiday for family visits and shared meals."
+      },
+      {
+        "name": "Nowruz",
+        "place": "Across Turkmenistan",
+        "when": "21–22 March",
+        "months": [3],
+        "text": "Spring's arrival is a public holiday, with concerts, folk games and a sweet dish of sprouted wheat (semeni) cooked overnight in a big pot."
+      },
+      {
+        "name": "Akhal-Teke Horse Day",
+        "place": "Ashgabat and across the country",
+        "when": "The last Sunday in April",
+        "months": [4],
+        "text": "A national holiday for the Akhal-Teke, the slim, golden-coated racing horse that is the country's pride, with races at Ashgabat's racecourse and a beauty contest for horses."
+      },
+      {
+        "name": "Gurban Bayramy (Eid al-Adha)",
+        "place": "Across Turkmenistan",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "A public holiday: families sacrifice a sheep and cook it for relatives and neighbours, and the towns are quiet."
+      },
+      {
+        "name": "Melon Day",
+        "place": "Across Turkmenistan",
+        "when": "The second Sunday in August",
+        "months": [8],
+        "text": "A national holiday for Turkmenistan's melons, with fairs of the hundreds of local kinds, tastings and contests for the biggest."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Ashgabat",
+        "when": "27 September",
+        "months": [9],
+        "text": "The biggest state holiday, for the country's independence in 1991, with parades and concerts in the capital. Roads in central Ashgabat close for the events."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Salam\" or \"Salam aleýkum\". Men shake hands, often with both hands, and greet older men first. Women are greeted with a nod rather than a handshake. Many people in Ashgabat speak Russian, and \"zdravstvuyte\" (hello) is understood there.",
+    "etiquette": [
+      "Keep politics out of conversation: open criticism of the government or the president can make trouble for the people you're talking to.",
+      "Follow your guide on photographs. Government buildings, the presidential palace, police and soldiers are off limits, and some sites charge a fee for cameras.",
+      "Take off your shoes in homes and sit on the carpet or cushions; don't stretch your legs out with your soles towards anyone.",
+      "Guests are offered green tea (gök çaý) poured into small bowls, with bread, sweets and dried fruit.",
+      "Carpets are a national treasure: buying an old one means paperwork and a certificate to take it out of the country, so buy through a shop that arranges it."
+    ],
+    "tipping": "Not traditional. Leaving about 10% in Ashgabat restaurants is appreciated, and guides and drivers expect a tip at the end of a tour.",
+    "dress": "Modest: men in long trousers, women in long skirts or dresses with shoulders covered; local women wear long, embroidered national dresses. In the desert, bring a sun hat, sunglasses and a scarf against dust and wind, and warm layers for cold nights at Darvaza.",
+    "food": [
+      {
+        "name": "Palaw",
+        "text": "Turkmen plov: rice cooked with mutton, onions and carrots in a big cauldron, served for guests and at weddings."
+      },
+      {
+        "name": "Dograma",
+        "text": "A dish for special days: bread torn into small pieces by hand and mixed with mutton, onion and a rich broth."
+      },
+      {
+        "name": "Ishlekli",
+        "text": "A desert pie: minced mutton and onion sealed in dough and baked under the hot sand and embers of a campfire."
+      },
+      {
+        "name": "Gutap",
+        "text": "Thin half-moon pastries filled with meat, pumpkin, spinach or herbs and fried, eaten hot from street stalls."
+      },
+      {
+        "name": "Melons",
+        "text": "Turkmenistan grows hundreds of kinds, from small and honey-sweet to long and pale. Late summer is the season, and dried melon is sold all year."
+      },
+      {
+        "name": "Chal and green tea",
+        "text": "Chal is fermented camel's milk, sour and fizzy; green tea is drunk at almost every meal, even in the heat."
+      }
+    ],
+    "phrases": {
+      "language": "Turkmen",
+      "intro": "Turkmen is related to Turkish and Azerbaijani and is written in Latin letters. In Ashgabat, many people are just as comfortable in Russian.",
+      "items": [
+        { "phrase": "Salam", "say": "sah-LAHM", "meaning": "Hello" },
+        { "phrase": "Sag boluň", "say": "SAHG boh-loon", "meaning": "Thank you" },
+        { "phrase": "Haýyş edýärin", "say": "hah-YUSH ed-YAH-rin", "meaning": "Please" },
+        { "phrase": "Hawa / Ýok", "say": "hah-WAH / YOHK", "meaning": "Yes / No" },
+        { "phrase": "Bu näçe?", "say": "boo NAH-cheh", "meaning": "How much is this?" },
+        { "phrase": "Gaty tagamly", "say": "gah-TUH tah-gahm-LUH", "meaning": "Very tasty" },
+        { "phrase": "Hoş galyň", "say": "HOHSH gah-LUN", "meaning": "Goodbye (to someone staying)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q874",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Turkmen manat (TMT). Cards are rarely taken outside big hotels, so bring cash, in clean US dollar notes, to change.",
+        "sources": [{ "property": "P38", "values": ["Q486637"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Turkmen. Russian is widely spoken in Ashgabat, and Uzbek in the north and east.",
+        "sources": [{ "property": "P37", "values": ["Q9267"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), sometimes type B (two flat pins and a round one), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613", "Q24288456"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Turkmenistan Time, UTC+5, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6806", "Q4806278"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; also 01 for fire, 02 for police and 03 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata lists only 112; the page adds 01, 02 and 03, the older service numbers still given for Turkmenistan by travel advice pages."
+      },
+      {
+        "key": "callingCode",
+        "text": "+993",
+        "sources": [{ "property": "P474", "values": ["+993"] }]
+      }
+    ]
+  }
+}

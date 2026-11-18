@@ -1,0 +1,150 @@
+{
+  "code": "NR",
+  "slug": "nauru",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ekamawir omo", "Naoero"],
+  "summary": "One small island you can drive round in half an hour, its centre stripped bare by phosphate mining.",
+  "overview": [
+    "Nauru is the world's smallest island republic: one raised coral island of about 21 km², just south of the equator, with some 12,000 people. A single road, about 19 km long, circles the narrow coastal strip where nearly everyone lives. Government offices are in Yaren, though Nauru has no official capital, and its people belong to twelve traditional clans, traced through the mother's line.",
+    "The interior, called Topside, was mined for phosphate for most of the 20th century, leaving a grey landscape of jagged coral pinnacles where the soil once was. Mining made Nauruans, for a time, among the richest people in the world per head, and its decline brought hard years; much of the island's food and almost everything else now arrives by ship.",
+    "There are few sights in the usual sense, which is part of the appeal. You can walk or cycle round the island in a day, swim in the boat harbour cut through the reef at Anibare Bay, climb Command Ridge, the highest point at about 70 m, to see Japanese wartime guns, and visit Buada Lagoon, a small inland lake ringed by palms, and Moqua Well, an underground lake in a cave near the airport. Few tourists ever come, and beds are scarce, so book before you fly."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Wetter months",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "The wind swings round to the west and the big downpours arrive, especially from about December to March. Hot and sticky, with highs around 31°C."
+      },
+      {
+        "name": "Drier months",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Easterly trade winds blow and rainfall drops, sometimes to almost nothing for weeks. Just as hot, but the breeze makes walking the ring road easier."
+      }
+    ],
+    "weather": "Nauru is hot all year, with afternoons at 30–32°C and warm nights. Rainfall averages roughly 2,000 mm but swings wildly from year to year: El Niño years can be very wet, while La Niña years may bring droughts that last for months, a real problem on an island that relies on rain tanks and a desalination plant for its water. Tropical cyclones don't form this close to the equator.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "Across Nauru",
+        "when": "31 January",
+        "months": [1],
+        "text": "Independence in 1968, on the anniversary of the day in 1946 when the Nauruans deported by Japan to Chuuk came home. Sports, music and gatherings round the island."
+      },
+      {
+        "name": "Constitution Day",
+        "place": "Across Nauru",
+        "when": "17 May",
+        "months": [5],
+        "text": "Celebrates the constitution adopted at independence in 1968; government offices close."
+      },
+      {
+        "name": "RONPhos Handover Day",
+        "place": "Across Nauru",
+        "when": "1 July",
+        "months": [7],
+        "text": "Marks the day in 1970 when Nauru took control of phosphate mining from the British Phosphate Commissioners."
+      },
+      {
+        "name": "Angam Day",
+        "place": "Across Nauru",
+        "when": "26 October",
+        "months": [10],
+        "text": "Angam means homecoming. The day celebrates the times Nauru's population climbed back to 1,500, the number thought needed for the people to survive, after epidemics and wartime losses."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Ekamawir omo\" is the formal Nauruan hello, but most people will greet a visitor in English. The island is small enough that everyone knows everyone, so a newcomer is noticed at once and will probably be asked where they're from. The mood is easy-going, and a simple handshake does for any introduction.",
+    "etiquette": [
+      "Topside is mostly clan-owned land, and the old mining areas have sharp pinnacles and deep holes: go with someone who knows the way.",
+      "Swim only in the boat harbour or where local people do: past the reef edge, strong currents run and the seabed plunges steeply.",
+      "Water comes from rain tanks and a desalination plant, so take short showers and don't leave taps running.",
+      "Casual clothes are fine around the island, but keep swimwear for the harbours and beaches.",
+      "Ask before photographing people and government buildings."
+    ],
+    "tipping": "Not customary and not expected.",
+    "dress": "Casual, light clothing and something to shade your head, as there's little shade along the road. A light rain jacket helps from December to March.",
+    "food": [
+      {
+        "name": "Fish",
+        "text": "Tuna and reef fish, often sliced raw and dipped in soy sauce, or cooked in coconut milk; the ocean is the island's one plentiful local food."
+      },
+      {
+        "name": "Chinese cooking",
+        "text": "Most of Nauru's small restaurants and shops are run by Chinese families, so fried rice, noodles and stir-fries are the everyday meal out."
+      },
+      {
+        "name": "Shipped-in food",
+        "text": "Rice, tinned meat, frozen chicken and most vegetables arrive by ship, since mining left little land to farm; fresh produce can run short before the next delivery."
+      },
+      {
+        "name": "Coconut",
+        "text": "Fresh coconut water and toddy, the sweet sap of the coconut flower, from palms along the coast."
+      },
+      {
+        "name": "Noddy birds",
+        "text": "A traditional delicacy: black noddies, caught as they fly home to the high ground at dusk."
+      }
+    ],
+    "phrases": {
+      "language": "Nauruan",
+      "intro": "English is used in government, business and schools; Nauruan is spoken at home and among friends.",
+      "items": [
+        { "phrase": "Ekamawir omo", "say": "eh-kah-MAH-weer OH-moh", "meaning": "Hello (formal)" },
+        { "phrase": "Omo yoran", "say": "OH-moh YOR-ahn", "meaning": "Good morning" },
+        { "phrase": "Omo yemero", "say": "OH-moh yeh-MEH-roh", "meaning": "Good evening" },
+        { "phrase": "Wo areit ed?", "say": "woh ah-RAYT ed", "meaning": "How are you?" },
+        { "phrase": "Tubwa kor", "say": "TOOB-wah KOR", "meaning": "Thank you very much" },
+        { "phrase": "Magada", "say": "mah-GAH-dah", "meaning": "Please" },
+        { "phrase": "Tarawong", "say": "tah-rah-WONG", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q697",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Australian dollar (A$, AUD). Bring cash: cards are taken in few places.",
+        "sources": [{ "property": "P38", "values": ["Q259502"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Nauruan and English, both official. Nauruan is spoken at home; English in government and business.",
+        "sources": [{ "property": "P37", "values": ["Q13307", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (two angled flat pins, as in Australia), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+12, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q7105", "Q63285974"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "110 for the police, 111 for an ambulance, 112 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648823", "Q4547309", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+674",
+        "sources": [{ "property": "P474", "values": ["+674"] }]
+      }
+    ]
+  }
+}

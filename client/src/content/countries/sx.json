@@ -1,0 +1,158 @@
+{
+  "code": "SX",
+  "slug": "sint-maarten",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Welkom", "Sint Maarten", "Soualiga"],
+  "summary": "The Dutch side: duty-free Philipsburg, Simpson Bay's lagoon and jets low over Maho Beach.",
+  "overview": [
+    "Sint Maarten is the Dutch side of an island shared with France, and since 2010 a country of its own within the Kingdom of the Netherlands. It covers the southern 34 km² or so of the island and is the busier half, with the main airport, the cruise port, most of the big hotels and the casinos. The border with the French side is open, without checks, and most visitors see both.",
+    "Philipsburg, the capital, sits on a strip of land between Great Bay and the Great Salt Pond. Front Street, behind the beach boardwalk, is lined with duty-free shops, and cruise ships berth at the edge of town, sometimes several at once. Fort Amsterdam, on the headland across the bay, was built by the Dutch in 1631, among their first forts in the Caribbean.",
+    "Simpson Bay, to the west, is where most people stay and eat out, around a lagoon full of yachts whose bridge opens at set times to let boats through. At the end of the runway at Princess Juliana airport, Maho Beach is famous for planes passing a few metres above the sand. Quieter beaches include Mullet Bay, Cupecoy with its sandstone cliffs, and Dawn Beach on the east coast. Taxis charge fixed fares, minibuses run along the main roads, and a hire car is the easy way to see the whole island."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Winter high season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "The driest, breeziest months, at about 27–29°C: high season in the hotels, with the Heineken Regatta in March and carnival after Easter."
+      },
+      {
+        "name": "Spring into summer",
+        "months": [5, 6, 7, 8],
+        "text": "May is still mostly dry. From June it grows hotter and stickier, with passing showers, calmer seas and lower hotel prices."
+      },
+      {
+        "name": "Hurricane months",
+        "months": [9, 10, 11],
+        "text": "The riskiest weeks of the hurricane season, often wet and sultry; a number of restaurants and beach bars close for a while. The season officially ends on 30 November."
+      }
+    ],
+    "weather": "The island is small and fairly low, so it stays warm and mostly dry, with highs of about 29°C in winter and 31°C in summer and the sea rarely below 26°C. Late summer and autumn bring most of the year's showers and the greatest risk of hurricanes. Irma, in September 2017, was the most destructive storm in living memory, and rebuilding took years.",
+    "festivals": [
+      {
+        "name": "St Maarten Heineken Regatta",
+        "place": "Simpson Bay and the waters around the island",
+        "when": "Usually early March, over four days",
+        "months": [3],
+        "text": "One of the Caribbean's biggest sailing regattas, racing by day and parties with live bands by night; its motto is \"Serious fun\"."
+      },
+      {
+        "name": "Carnival",
+        "place": "Philipsburg",
+        "when": "Usually from around Easter to the end of April or early May",
+        "months": [4, 5],
+        "text": "The Dutch side holds its carnival after Easter, weeks after the French side's: a carnival village of food stalls and concerts, J'ouvert at dawn and a grand parade, ending with the burning of King Momo, the carnival king."
+      },
+      {
+        "name": "King's Day",
+        "place": "Across Sint Maarten",
+        "when": "27 April",
+        "months": [4],
+        "text": "The Dutch king's birthday, a public holiday with orange clothes and flags, a ceremony in Philipsburg and street markets."
+      },
+      {
+        "name": "Emancipation Day",
+        "place": "Across Sint Maarten",
+        "when": "1 July",
+        "months": [7],
+        "text": "A public holiday for the end of slavery in the Dutch colonies in 1863, with cultural events and remembrance."
+      },
+      {
+        "name": "St Martin's Day",
+        "place": "Both sides of the island",
+        "when": "11 November",
+        "months": [11],
+        "text": "The island's shared day, a holiday on the Dutch and French sides alike, celebrating St Martin as one island with two flags."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "English is the everyday language here, spoken with a Caribbean lilt, and a \"Good morning\" or \"Good afternoon\" to the driver, the shopkeeper or the people at the next table goes a long way. People greet with a handshake or a nod and a smile; Dutch formality is rare.",
+    "etiquette": [
+      "At Maho Beach, read the warning signs and never stand behind the airport fence when a plane is taking off: jet blast has injured people and killed one.",
+      "Cruise days fill Front Street from mid-morning to late afternoon; go early or late, or on a day with fewer ships in port.",
+      "Taxi fares are fixed: ask the price before you get in, and whether it's per person.",
+      "In Front Street's jewellery and electronics shops, asking for a better price is normal.",
+      "Put a shirt and shorts on over your swimwear before heading into Philipsburg's shops and cafés."
+    ],
+    "tipping": "Look for a service charge of 10–15% on restaurant bills before adding anything; without one, about 15% is usual, as most visitors are American. Tip taxi drivers, guides and boat crews.",
+    "dress": "Light, casual clothes and beachwear by day. Casinos and the smarter restaurants of Simpson Bay and Maho expect smart-casual clothes in the evening.",
+    "food": [
+      {
+        "name": "Guavaberry liqueur",
+        "text": "Sint Maarten's own drink, made from small wild guavaberries that grow in the hills, steeped in rum with spice. A guavaberry colada is the local twist on the piña colada."
+      },
+      {
+        "name": "Johnny cakes and saltfish",
+        "text": "The island breakfast: fried bread, crisp outside and fluffy within, split and filled with salt cod stewed with peppers and onion."
+      },
+      {
+        "name": "Stewed goat with peas and rice",
+        "text": "Home cooking served in local restaurants: goat or chicken stewed until tender, with pigeon peas and rice and fried plantain."
+      },
+      {
+        "name": "Dutch cheeses",
+        "text": "Gouda and other Dutch cheeses are sold in the shops, a reminder of the island's ties to the Netherlands."
+      }
+    ],
+    "phrases": {
+      "language": "English, with a little Dutch",
+      "intro": "English is everyone's first language, and you won't need anything else. Dutch is used in government and on official signs, and Spanish is often heard too.",
+      "items": [
+        { "phrase": "Soualiga", "say": "soo-ah-LEE-gah", "meaning": "What the first islanders called it: \"land of salt\", for its salt ponds" },
+        { "phrase": "Sint Maarten", "say": "sint MAR-ten", "meaning": "The Dutch side, in Dutch" },
+        { "phrase": "The Friendly Island", "meaning": "The island's nickname" },
+        { "phrase": "Maho", "say": "MAH-hoh", "meaning": "The beach under the airport's flight path" },
+        { "phrase": "Guavaberry", "say": "GWAH-vuh-berry", "meaning": "The local liqueur" },
+        { "phrase": "Welkom", "say": "VEL-kom", "meaning": "Welcome (Dutch)" },
+        { "phrase": "Goedemorgen", "say": "KHOO-duh-MOR-khun", "meaning": "Good morning (Dutch)" },
+        { "phrase": "Dank u wel", "say": "DAHNK oo vel", "meaning": "Thank you (Dutch)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q26273",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Caribbean guilder (Cg, XCG), which replaced the Netherlands Antillean guilder in 2025. US dollars are accepted almost everywhere, and many prices are given in them.",
+        "sources": [{ "property": "P38", "values": ["Q737779"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Dutch and English, both official. English is the everyday language, and Spanish is widely heard.",
+        "sources": [{ "property": "P37", "values": ["Q7411", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 110 V. The French side uses French sockets at 220 V.",
+        "sources": [],
+        "note": "Wikidata's item has no plug or voltage statement; the page gives the American-style sockets and 110 V supply of the Dutch side."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q2085376", "Q28145653"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [],
+        "note": "Wikidata's item has no emergency-number statement; 911 is the Dutch side's emergency number."
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 721. Calls to the French side (+590) are international.",
+        "sources": [{ "property": "P474", "values": ["+1721"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "code": "KY",
+  "slug": "cayman-islands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Cayman", "Islands", "Welcome"],
+  "summary": "Seven Mile Beach, stingrays on a sandbar and wall dives off the quiet Sister Islands.",
+  "overview": [
+    "The Cayman Islands are three low, flat islands of limestone in the western Caribbean, south of Cuba and north-west of Jamaica. Grand Cayman is by far the biggest and busiest; Cayman Brac and Little Cayman, together called the Sister Islands, lie about 140 km to the north-east. The territory is British, wealthy from offshore finance, orderly and expensive. George Town, the capital, is small, and cruise passengers come ashore by tender, as there's no deep-water pier. North of town, Seven Mile Beach (a little under 10 km, despite the name) is lined with hotels and condominiums, and has calm, clear water.",
+    "The best-known trip is out to the shallow sandbar in North Sound, where southern stingrays glide up to waist-deep visitors. On the island's quieter side are Rum Point, Starfish Point and a bay that glows with bioluminescent plankton at night, while the east has the Queen Elizabeth II Botanic Park, home to the blue iguana, found only on Grand Cayman, and Pedro St James, a stone great house from 1780. In West Bay, the black, jagged limestone of Hell is a short stop with its own post office.",
+    "Diving is the other great draw: the islands sit on the edges of underwater mountains, and coral walls drop away into very deep water close to shore. Bloody Bay Wall off Little Cayman is world-famous, and old ships have been sunk as reefs off Grand Cayman and the Brac. Cayman Brac has The Bluff, a limestone cliff at its eastern end with caves and climbing; Little Cayman, home to only a few hundred people, has a large colony of red-footed boobies. Small planes link the islands. On Grand Cayman, public minibuses run the main roads, and taxis and hire cars do the rest, driving on the left."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "avoid", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Dry, bright weather, about 28°C by day and 22°C at night. Now and then a cold front, called a nor'wester, brings a day or two of wind and rough sea to Seven Mile Beach. Hotels are at their fullest and dearest."
+      },
+      {
+        "name": "Early wet season",
+        "months": [5, 6, 7, 8],
+        "text": "Hotter and more humid, with short, heavy afternoon showers. The sea is usually calm and very clear, which divers love, and hotel rates drop. Batabano fills the streets in May."
+      },
+      {
+        "name": "Storm season",
+        "months": [9, 10, 11],
+        "text": "September and October are the wettest months and the riskiest for hurricanes; some restaurants and dive shops close for a while. November dries out and brings Pirates Week."
+      }
+    ],
+    "weather": "Hot all year: afternoons of about 28°C in winter and 32°C in summer, with nights from 22°C to 26°C. The rainy season runs from about May or June into November, mostly as short, heavy storms, and the winter is drier and breezier. The sea is between about 26°C and 30°C, and underwater visibility is often excellent. Hurricanes are the main hazard: Ivan, in 2004, flooded and damaged much of Grand Cayman.",
+    "festivals": [
+      {
+        "name": "National Heroes Day",
+        "place": "George Town",
+        "when": "The fourth Monday of January",
+        "months": [1],
+        "text": "A public holiday honouring Caymanians who served the islands, with a ceremony at Heroes Square in George Town."
+      },
+      {
+        "name": "Batabano",
+        "place": "Grand Cayman; Brachanal on Cayman Brac",
+        "when": "Usually in early May",
+        "months": [5],
+        "text": "Cayman's carnival, with costumed bands, steel pan and soca on a road parade, and a junior parade for children. The name is the old word for the tracks turtles leave in the sand. Cayman Brac holds its own, Brachanal."
+      },
+      {
+        "name": "Pirates Week",
+        "place": "Grand Cayman",
+        "when": "Usually in November, over about ten days",
+        "months": [11],
+        "text": "Running since 1977: a mock pirate landing in George Town's harbour, street dances, fireworks and heritage days in each district, with local food, music and crafts."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Grand Cayman",
+        "text": "Most hotels, restaurants and nightlife, Seven Mile Beach and the stingrays; the east end is quieter and more rural."
+      },
+      {
+        "name": "Cayman Brac and Little Cayman",
+        "text": "Small, slow and uncrowded, for diving, walking, birdwatching and empty beaches, with a handful of places to stay."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Caymanians are polite and a little reserved: offer a greeting and a handshake first, and the warmth follows. Many of the people serving in shops, bars and hotels have come from abroad, from Jamaica, the Philippines, Britain, Canada and beyond, so you'll hear many accents.",
+    "etiquette": [
+      "At the stingray sandbar, follow your guide: touch the rays gently and only as shown, and never lift one out of the water.",
+      "Large parts of the coast are marine parks where nothing may be taken, not even an empty shell.",
+      "Wear shoes on the ironshore, the sharp, pitted rock along much of the coast: it cuts bare feet easily.",
+      "Drive on the left and take the many roundabouts slowly. On Little Cayman, signs say iguanas have the right of way."
+    ],
+    "tipping": "A gratuity, often about 15%, is usually built into restaurant bills, which makes anything extra optional. Dive crews, taxi drivers and tour guides are tipped around 10–15%.",
+    "dress": "Casual clothes, plus a rash vest for snorkelling. The better restaurants expect smart casual, and winter evenings and air-conditioned rooms call for a light layer.",
+    "food": [
+      {
+        "name": "Turtle stew",
+        "text": "The old national dish, made from farmed green turtle and still on some local menus, though many visitors choose to pass."
+      },
+      {
+        "name": "Fish rundown",
+        "text": "Fish simmered in coconut milk with breadfruit, plantain, cassava and hot pepper until the sauce \"runs down\" and thickens."
+      },
+      {
+        "name": "Cayman-style beef",
+        "text": "Beef stewed slowly with onion, sweet pepper, thyme and hot pepper until very tender, a dish for celebrations."
+      },
+      {
+        "name": "Heavy cake",
+        "text": "A dense, sticky cake of grated cassava or yam with coconut milk, brown sugar and spice, dark and chewy at the edges."
+      },
+      {
+        "name": "Rum cake",
+        "text": "Moist cake soaked in rum, sold in tins all over the islands; Tortuga's, baked on Grand Cayman, is the best known."
+      }
+    ],
+    "phrases": {
+      "language": "English (Caymanian)",
+      "intro": "Caymanians speak English, with a soft accent and some words of their own:",
+      "items": [
+        { "phrase": "Swanky", "meaning": "Home-made lemonade" },
+        { "phrase": "Ironshore", "meaning": "The sharp, pitted limestone along much of the coast: wear shoes" },
+        { "phrase": "Nor'wester", "say": "nor-WEST-er", "meaning": "A winter cold front, bringing wind and rough sea from the north-west" },
+        { "phrase": "Sister Islands", "meaning": "Cayman Brac and Little Cayman together" },
+        { "phrase": "The Brac", "meaning": "Cayman Brac" },
+        { "phrase": "Batabano", "say": "bah-tah-BAH-noh", "meaning": "The tracks a turtle leaves in the sand, and the name of the carnival" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q5785",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Cayman Islands dollar (CI$, KYD), worth a little more than the US dollar. US dollars are accepted almost everywhere, with change often given in CI dollars.",
+        "sources": [{ "property": "P38", "values": ["Q319885"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern Standard Time, UTC−5, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5390", "Q109521239"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 345",
+        "sources": [{ "property": "P474", "values": ["+1345"] }]
+      }
+    ]
+  }
+}

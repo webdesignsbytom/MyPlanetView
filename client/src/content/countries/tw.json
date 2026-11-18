@@ -1,0 +1,210 @@
+{
+  "code": "TW",
+  "slug": "taiwan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Nǐ hǎo", "Táiwān"],
+  "summary": "Night markets, busy temples and high mountains, linked by fast, easy trains.",
+  "overview": [
+    "Taiwan is a mountainous island across the Taiwan Strait from south-east China. More than 200 of its peaks rise above 3,000 m, and most of its 23 million people live on the plains along the west coast. It's safe, easy to travel and full of food, with convenience stores on every corner.",
+    "Taipei has the National Palace Museum, with one of the world's great collections of Chinese imperial art; Taipei 101, the tallest building in the world when it opened in 2004; old temples such as Longshan; hot springs at Beitou; and night markets such as Shilin and Raohe. Day trips reach Jiufen, a hillside town of teahouses above the sea, and the villages of the Pingxi line, where visitors write wishes on paper lanterns and let them float away. Further south, Sun Moon Lake lies in the hills, Alishan has a forest railway and sunrise over a sea of cloud, Tainan, the old capital, is full of temples and snack stalls, and Kenting, at the southern tip, has beaches. On the east coast, Taroko Gorge cuts through marble cliffs near Hualien.",
+    "The high-speed railway runs down the west coast from Taipei to Kaohsiung in under two hours, and slower trains circle the whole island, east coast included. An EasyCard pays for metros, buses, trains and convenience-store shopping. Earthquakes are common, and rockfalls and typhoons close mountain roads and trails from time to time, Taroko's among them, so check what's open before you go.",
+    "Taiwan, with the islands of Penghu, Kinmen and Matsu, is governed from Taipei by the Republic of China, while the People's Republic of China claims it as part of its territory. Most visitors arrive by air, at Taoyuan International Airport near Taipei."
+  ],
+  "whenToGo": {
+    "stripLabel": "Taipei and the north, where most visits begin. The south has a strip of its own below, and the east coast and the high mountains are described there too.",
+    "months": ["good", "good", "best", "best", "good", "good", "good", "avoid", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4],
+        "text": "Mild and pleasant, 20–25°C in Taipei, with azaleas in the city and the last cherry blossom in the hills. Tomb Sweeping Day, on 4 or 5 April, makes a busy long weekend."
+      },
+      {
+        "name": "Plum rains",
+        "months": [5, 6],
+        "text": "Fronts of steady rain stall over the island for days at a time, and the heat and humidity build. The Dragon Boat Festival usually falls in June."
+      },
+      {
+        "name": "Summer and typhoons",
+        "months": [7, 8, 9],
+        "text": "Hot and humid, about 34°C in Taipei, with afternoon thunderstorms. A typhoon can stop trains, flights and ferries for a day or two. The mountains are cooler, and the outlying islands are at their busiest."
+      },
+      {
+        "name": "Autumn",
+        "months": [10, 11],
+        "text": "Dry, sunny and warm, around 25°C: the best time for hiking, and for cycling round the island."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cool, cloudy and drizzly in Taipei and the north, around 15°C, in buildings that are rarely heated, while the south stays sunny and mild. Lunar New Year closes many shops and fills the trains."
+      }
+    ],
+    "weather": "The Tropic of Cancer crosses Taiwan, so the north is subtropical and the south tropical. Taipei has damp, grey winters around 15°C, with drizzle brought by the north-east monsoon, and hot, humid summers, often 34°C or more. The south is drier and sunnier in winter, in the mid-20s. The plum rains (meiyu), bands of steady rain, usually arrive in May and June, and typhoons are most likely from July to September, sometimes into October, bringing downpours and landslides that are worst in the mountains and on the east coast. Up high it's cold: snow falls on the highest peaks in most winters.",
+    "festivals": [
+      {
+        "name": "Lunar New Year",
+        "place": "Across Taiwan",
+        "when": "Usually late January or February: in 2027, 6 February",
+        "months": [1, 2],
+        "text": "The biggest holiday: families gather for a reunion dinner on New Year's Eve, many shops and restaurants close for several days, and trains and buses are booked solid."
+      },
+      {
+        "name": "Lantern Festival",
+        "place": "Pingxi, Yanshui and across Taiwan",
+        "when": "Usually in February or early March, 15 days after Lunar New Year",
+        "months": [2, 3],
+        "text": "Pingxi releases thousands of paper sky lanterns into the night. At Yanshui, in Tainan, rockets are fired into the crowd from great racks called beehives, so people come in helmets and thick clothes. A big lantern show is held in a different city each year."
+      },
+      {
+        "name": "Dajia Mazu Pilgrimage",
+        "place": "From Dajia, Taichung, through central Taiwan",
+        "when": "Usually in March or April, over nine days",
+        "months": [3, 4],
+        "text": "Hundreds of thousands of people follow a statue of Mazu, goddess of the sea, on foot for about 300 km, with firecrackers, drums and free food and drink handed out along the route."
+      },
+      {
+        "name": "Dragon Boat Festival",
+        "place": "Across Taiwan",
+        "when": "Usually in June, on the fifth day of the fifth lunar month",
+        "months": [5, 6],
+        "text": "Dragon-boat races on rivers and lakes, and zongzi, sticky rice wrapped in bamboo leaves, in every home and shop."
+      },
+      {
+        "name": "Mid-Autumn Festival",
+        "place": "Across Taiwan",
+        "when": "Usually in September or early October",
+        "months": [9, 10],
+        "text": "Families gather to look at the full moon and eat mooncakes and pomelos, and, a Taiwanese habit, barbecue on the pavement outside their homes."
+      },
+      {
+        "name": "National Day (Double Tenth)",
+        "place": "Taipei and across Taiwan",
+        "when": "10 October",
+        "months": [10],
+        "text": "The anniversary of the 1911 uprising that led to the founding of the Republic of China, with a ceremony in front of the Presidential Office in Taipei and fireworks in a different city each year."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The south: Tainan, Kaohsiung and Kenting",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "avoid", "good", "best", "best", "best"],
+        "text": "Warmer and much drier in winter than Taipei, with sunny days in the low to mid-20s from November to April, the best time for Tainan's temples and Kenting's beaches. Summers are hot and wet, with heavy rain and typhoons, worst in August."
+      },
+      {
+        "name": "The east coast: Hualien, Taroko and Taitung",
+        "text": "Quieter, with mountains dropping straight into the Pacific. It takes the full force of many typhoons from July to October, when roads and trails can close. In summer, a hot-air balloon festival is usually held on the Luye plateau near Taitung."
+      },
+      {
+        "name": "The high mountains",
+        "text": "Alishan, Hehuanshan and Yushan, Taiwan's highest peak at 3,952 m, are cool in summer and cold in winter, with frost and some snow on the summits. Climbing Yushan needs a permit, booked well ahead; autumn is the clearest season for it."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A nod, a smile and \"nǐ hǎo\" are enough; handshakes are light. Business cards are offered and taken with both hands and read before being put away. Names put the family name first, so Chen Mei-ling is Ms Chen. Older people often greet each other in Taiwanese Hokkien, with \"lí-hó\".",
+    "etiquette": [
+      "Give and receive things, especially money, cards and gifts, with both hands.",
+      "Don't eat, drink or chew gum inside metro stations and trains, and leave the dark-blue priority seats free even when the train is full.",
+      "Stand on the right on Taipei's escalators, leaving the left for people walking up.",
+      "At temples, step over the high threshold rather than on it; by custom you go in by the door on the right and leave by the one on the left.",
+      "Four sounds like the word for death, so some buildings have no fourth floor, and gifts avoid sets of four."
+    ],
+    "tipping": "Tips aren't part of life in Taiwan. Hotels and better restaurants add 10% to the bill, and that covers it.",
+    "dress": "Casual clothes are fine almost everywhere; cover your shoulders in temples. Carry an umbrella in any season and a jumper for the air-conditioning, and bring warm clothes for winter in the north and for the mountains, where dawn at Alishan is near freezing in winter.",
+    "food": [
+      {
+        "name": "Beef noodle soup",
+        "text": "Chunks of braised beef and thick wheat noodles in a rich, dark broth, often with star anise: Taipei's comfort food, with contests held for the best bowl."
+      },
+      {
+        "name": "Xiaolongbao",
+        "text": "Steamed dumplings filled with pork and hot soup: bite a corner, sip the broth, then eat. Din Tai Fung, now worldwide, began in Taipei."
+      },
+      {
+        "name": "Lu rou fan",
+        "text": "Minced pork belly braised in soy sauce and spices and spooned over rice: cheap, filling and found everywhere."
+      },
+      {
+        "name": "Stinky tofu",
+        "text": "Fermented tofu whose smell carries down a whole street, deep-fried and served with pickled cabbage and chilli. It tastes far milder than it smells."
+      },
+      {
+        "name": "Oyster omelette",
+        "text": "Small oysters, egg and leafy greens fried in a sticky starch batter and topped with a sweet red sauce: a night-market staple."
+      },
+      {
+        "name": "Bubble tea",
+        "text": "Milk tea with chewy tapioca pearls, first made in Taiwan in the 1980s and sold on almost every street."
+      }
+    ],
+    "phrases": {
+      "language": "Mandarin Chinese",
+      "intro": "Mandarin is spoken everywhere and written in traditional characters; many older people also speak Taiwanese Hokkien. Mandarin is tonal, so these spellings (in pinyin) are only a guide.",
+      "items": [
+        { "phrase": "Nǐ hǎo (你好)", "say": "nee HOW", "meaning": "Hello" },
+        { "phrase": "Xièxie (謝謝)", "say": "SHYEH-shyeh", "meaning": "Thank you" },
+        { "phrase": "Bù kèqì (不客氣)", "say": "boo kuh-CHEE", "meaning": "You're welcome" },
+        { "phrase": "Bù hǎo yìsi (不好意思)", "say": "boo how EE-suh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Duōshǎo qián? (多少錢?)", "say": "dwaw-shaow CHYEN", "meaning": "How much?" },
+        { "phrase": "Bú yào là (不要辣)", "say": "boo yow LAH", "meaning": "Not spicy, please" },
+        { "phrase": "Hǎo chī! (好吃)", "say": "how CHUR", "meaning": "Delicious!" },
+        { "phrase": "Lí-hó (你好)", "say": "LEE-hoh", "meaning": "Hello, in Taiwanese Hokkien" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q865",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "New Taiwan dollar (NT$, TWD). An EasyCard pays for public transport and convenience stores; night markets and small restaurants want cash.",
+        "sources": [{ "property": "P38", "values": ["Q208526"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Mandarin is the main language. Taiwanese Hokkien, Hakka, the Indigenous languages, the dialects of Kinmen and Matsu, and Taiwan Sign Language are also national languages.",
+        "sources": [
+          {
+            "property": "P37",
+            "values": [
+              "Q262828", "Q36778", "Q2391532", "Q35132", "Q715755", "Q716695", "Q716690", "Q715766",
+              "Q716681", "Q56505", "Q49232", "Q11071864", "Q716686", "Q718269", "Q715760", "Q716627",
+              "Q172244", "Q716599", "Q56278342", "Q61055662", "Q19599280", "Q34019"
+            ]
+          }
+        ]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (flat pins, as in the US), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Taiwan time, UTC+8, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6985", "Q4806305", "Q712168"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "110 for police; 119 for fire and ambulance; 112 from a mobile phone",
+        "sources": [{ "property": "P2852", "values": ["Q25648823", "Q2807090", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+886",
+        "sources": [{ "property": "P474", "values": ["+886"] }]
+      }
+    ]
+  }
+}

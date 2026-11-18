@@ -37,7 +37,10 @@
 //     "queried": "2026-11-16",          when the query below was run
 //     "items": [{ "key", "text", "sources": [{ "property": "P38", "values": ["Q4916"] }],
 //                 "note"? }]            one per FACT_FIELDS key; "text" is what the page
-//                                       says; "note" records where it departs from Wikidata
+//                                       says; "note" records where it departs from Wikidata.
+//                                       "sources": [] only when the item has no statement
+//                                       for it (a territory's plugs), and then the note
+//                                       says where the fact comes from
 //   }
 // }
 //
