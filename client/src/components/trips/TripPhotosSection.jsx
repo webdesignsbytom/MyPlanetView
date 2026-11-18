@@ -28,7 +28,9 @@ import { isUpcomingPlannedTrip, todayString } from '@/utils/offers/offerContext'
 // for a paying viewer, or on a First Class map) and one at the end of the slideshow,
 // chosen for this trip's destination and dates while it's planned and still to come.
 function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
-  const source = shareCode ? { shareCode } : { tripId: trip.id };
+  // With their screen-sized copies, so the viewer opens a photo at once (and the trip page
+  // starts this same list alongside the trip: TripPage)
+  const source = useMemo(() => (shareCode ? { shareCode, display: true } : { tripId: trip.id, display: true }), [shareCode, trip.id]);
   const photos = usePhotoPage(source);
   const adEvery = trip.ads?.every ?? null;
   // A client-only page, so today can be read here
@@ -88,6 +90,8 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
       {openId ? (
         <PhotoViewer
           photoId={openId}
+          photo={photos.photos.find((p) => p.id === openId) || null}
+          list={{ filters: source }}
           shareCode={shareCode}
           canEdit={(canEdit || locked) && !shareCode}
           locked={locked}

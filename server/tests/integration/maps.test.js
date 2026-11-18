@@ -71,6 +71,37 @@ describe('onboarding and travellers', () => {
     expect(last.status).toBe(409);
   });
 
+  it('keeps each kind of map to its number of travellers: one just for you, two for a couple', async () => {
+    const { agent: owner } = await signUp('Capped');
+    const capped = await defaultMapOf(owner);
+    const add = (name) => owner.post(`/api/maps/${capped.id}/travellers`).send({ name });
+    const kind = (groupType, extra = {}) => owner.patch(`/api/maps/${capped.id}`).send({ groupType, ...extra });
+
+    // Just me: one
+    const second = await add('Two');
+    expect(second.status).toBe(409);
+    expect(second.body.message).toBe(`A map that's just for you has one traveller. Choose "A couple" or "A family" to add more.`);
+    // A couple: two, then no more
+    expect((await kind('COUPLE')).status).toBe(200);
+    expect((await add('Two')).status).toBe(201);
+    const third = await add('Three');
+    expect(third.status).toBe(409);
+    expect(third.body.message).toBe(`A couple's map has two travellers. Choose "A family" to add more.`);
+    // Never back to a kind with room for fewer than it has
+    const solo = await kind('SOLO');
+    expect(solo.status).toBe(409);
+    expect(solo.body.message).toBe('"Just me" is for one traveller: remove the others first.');
+    // A family: more, and then a couple only once it's two again
+    expect((await kind('FAMILY')).status).toBe(200);
+    expect((await add('Three')).status).toBe(201);
+    expect((await kind('COUPLE')).status).toBe(409);
+    // Saving the map with the kind it already has (a rename) is fine
+    expect((await kind('FAMILY', { name: 'All of us' })).status).toBe(200);
+    // A new map: no more travellers than its kind has
+    const tooMany = await owner.post('/api/maps').send({ name: 'Us', groupType: 'COUPLE', travellers: [{ name: 'A' }, { name: 'B' }, { name: 'C' }] });
+    expect(tooMany.status).toBe(400);
+  });
+
   it("can't touch a traveller on someone else's map", async () => {
     const other = await signUp('Other');
     const otherMap = await defaultMapOf(other.agent);
@@ -89,6 +120,8 @@ describe('onboarding and travellers', () => {
     const visitsNow = async () => data(await born.agent.get(`/api/maps/${bornMap.id}`)).map.visits;
     const visitOf = (visits, code) => visits.find((v) => v.countryCode === code);
     const me = data(await born.agent.get(`/api/maps/${bornMap.id}`)).map.travellers[0];
+    // Three people: a family's map ("just me" has one traveller)
+    expect((await born.agent.patch(`/api/maps/${bornMap.id}`).send({ groupType: 'FAMILY' })).status).toBe(200);
     await born.agent.put(`/api/maps/${bornMap.id}/visits/PT`).send({ status: 'WANT_TO_GO' });
     await born.agent.put(`/api/maps/${bornMap.id}/visits/JP`).send({ status: 'LIVED' });
 
@@ -220,6 +253,7 @@ describe('countries visited and stats', () => {
   it("lets a traveller be born in Antarctica, but not at a pole", async () => {
     const { agent } = await signUp('Born');
     const map = await defaultMapOf(agent);
+    await agent.patch(`/api/maps/${map.id}`).send({ groupType: 'FAMILY' });
     const ok = await agent.post(`/api/maps/${map.id}/travellers`).send({ name: 'Emilio', birthCountryCode: 'AQ' });
     expect(ok.status).toBe(201);
     const pole = await agent.post(`/api/maps/${map.id}/travellers`).send({ name: 'Santa', birthCountryCode: 'XN' });

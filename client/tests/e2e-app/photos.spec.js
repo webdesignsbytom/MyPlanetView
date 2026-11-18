@@ -106,6 +106,44 @@ test.describe('Photos', () => {
     await expectStats(page, '9 countries, 2 continents, 17 photos');
   });
 
+  // 17 Nov 2026, the user's wishes: no wait for a photo already on screen, Previous and
+  // Next under it, and a tap for full screen
+  test('a gallery photo opens at once, steps with Previous and Next, and shows full screen', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    const list = await openTool(page, 'Country list', 'Countries');
+    await list.getByRole('searchbox', { name: 'Search countries' }).fill('france');
+    await list.getByRole('button', { name: 'France', exact: true }).click();
+    const gallery = page.getByRole('dialog', { name: 'France' }).getByRole('region', { name: 'Photos' });
+    const thumbs = gallery.getByRole('button', { name: /^Open / });
+    await expect(thumbs).toHaveCount(3);
+    const names = await thumbs.evaluateAll((buttons) => buttons.map((b) => b.getAttribute('aria-label').replace(/^Open /, '')));
+
+    // At once, from the gallery's own copy: no "Opening photo…" while its reply comes
+    await thumbs.first().click();
+    const first = page.getByRole('dialog', { name: names[0] });
+    await expect(first.getByRole('button', { name: `Show ${names[0]} full screen` })).toBeVisible();
+    await expect(first.getByText('Opening photo…')).toHaveCount(0);
+    await expect(first.getByText('1 of 3')).toBeVisible();
+    await expect(first.getByRole('button', { name: 'Previous photo' })).toBeDisabled();
+
+    await first.getByRole('button', { name: 'Next photo' }).click();
+    const second = page.getByRole('dialog', { name: names[1] });
+    await expect(second.getByText('2 of 3')).toBeVisible();
+    await expectPictureLoaded(second);
+
+    // Full screen steps through the same list; closing it leaves the viewer on that photo
+    await second.getByRole('button', { name: `Show ${names[1]} full screen` }).click();
+    const full = page.getByRole('dialog').filter({ has: page.getByRole('button', { name: 'Close the photo' }) });
+    await expect(full).toHaveAccessibleName(names[1]);
+    await full.getByRole('button', { name: 'Next photo' }).click();
+    await expect(full).toHaveAccessibleName(names[2]);
+    await page.keyboard.press('Escape');
+    await expect(full).toHaveCount(0);
+    const third = page.getByRole('dialog', { name: names[2] });
+    await expect(third.getByText('3 of 3')).toBeVisible();
+    await expect(third.getByRole('button', { name: 'Next photo' })).toBeDisabled();
+  });
+
   test('a photo is deleted from the viewer, after a second press', async ({ page }) => {
     await openMap(page);
     const list = await openTool(page, 'Country list', 'Countries');

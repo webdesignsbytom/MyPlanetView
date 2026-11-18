@@ -2,8 +2,10 @@
 // one with preloadPhotoPage() as soon as it knows the map's id, alongside the map itself.
 // (The hover postcards show the country's poster, never photos: no list for them.)
 
-// The photos with no country: the most a page holds; the count reads "60+" beyond it
-export const UNPLACED_PHOTOS = { unplaced: true, limit: 60 };
+// The photos with no country: the most a page holds; the count reads "60+" beyond it. Like
+// every gallery, each with its screen-sized copy (`display`), so the photo viewer shows
+// one at once, without waiting for the photo's own reply
+export const UNPLACED_PHOTOS = { unplaced: true, limit: 60, display: true };
 
 // The photo album's list (MapPhotosPanel): the whole map, newest first, a page at a time,
 // each with its screen-sized copy (`display`) for the album's full-screen viewer

@@ -34,6 +34,8 @@ function ThemeAlbumDialog({ theme, mapId = null, shareCode = null, canEdit = fal
         <Suspense fallback={null}>
           <PhotoViewer
             photoId={openId}
+            photo={album.photos.find((p) => p.id === openId) || null}
+            list={{ photos: album.photos }}
             shareCode={shareCode}
             canEdit={(canEdit || locked) && !shareCode}
             locked={locked}

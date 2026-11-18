@@ -124,9 +124,20 @@ test.describe('Badges and goals', () => {
     await expect(page.getByRole('dialog', { name: 'Badges and goals' })).toBeVisible();
   });
 
-  test('each traveller has their own travel badges, from the completed trips they were on', async ({ page }) => {
+  test('a couple shares its badges; on a family’s map each traveller has their own, from the completed trips they were on', async ({ page }) => {
     await openMap(page);
-    const panel = await openTool(page, 'Badges and goals', 'Badges and goals');
+    // A couple travels together: one set of badges, no one's own (18 Nov 2026, the user's wish)
+    let panel = await openTool(page, 'Badges and goals', 'Badges and goals');
+    await expect(panel.getByRole('group', { name: 'Whose badges' })).toHaveCount(0);
+
+    const settings = await openTool(page, 'Map settings', 'Settings');
+    await settings.getByRole('tab', { name: 'This map' }).click();
+    const thisMap = settings.getByRole('tabpanel', { name: 'This map' });
+    await thisMap.getByText('A family', { exact: true }).click();
+    await thisMap.getByRole('button', { name: 'Save map' }).click();
+    await expect(thisMap.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
+
+    panel = await openTool(page, 'Badges and goals', 'Badges and goals');
     const whose = panel.getByRole('group', { name: 'Whose badges' });
     await expect(whose.getByRole('button', { name: 'Everyone' })).toHaveAttribute('aria-pressed', 'true');
 

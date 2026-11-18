@@ -13,14 +13,21 @@ test.describe('Map tips', () => {
     const tips = tipsDialog(page);
     await expect(tips).toBeVisible();
 
-    // A phone hears about full screen first (the menu's Full screen: Chromium has it); a wide screen doesn't
+    // A phone hears first that the site installs as an app (here from the browser's menu: in
+    // development the browser makes no offer of its own), then about full screen (the menu's
+    // Full screen: Chromium has it); a wide screen hears neither
     const phone = page.viewportSize().width < 768;
+    const install = tips.getByRole('heading', { name: 'Install the app', exact: true });
     const fullScreen = tips.getByRole('heading', { name: 'Full screen', exact: true });
     if (phone) {
+      await expect(install).toBeVisible();
+      await expect(tips).toContainText('works as an app on your phone, with no app store needed');
+      await expect(tips).toContainText('choose Install app or Add to Home screen');
       await expect(fullScreen).toBeVisible();
       await expect(tips).toContainText('Open the Menu and choose Full screen');
       await expect(tips).toContainText('Tap a country to open its ticket');
     } else {
+      await expect(install).toHaveCount(0);
       await expect(fullScreen).toHaveCount(0);
       await expect(tips).toContainText('Click a country to open its ticket');
     }

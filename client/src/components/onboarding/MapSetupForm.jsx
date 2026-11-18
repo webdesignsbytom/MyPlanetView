@@ -5,18 +5,28 @@ import TextInput from '@/components/ui/TextInput';
 import SwitchInput from '@/components/ui/SwitchInput';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
+import SavedStamp from '@/components/common/SavedStamp';
 import GroupTypePicker from './GroupTypePicker';
 import TravellerFieldset from './TravellerFieldset';
 // Utils
-import { minTravellersFor } from '@/utils/map/saveMapSetup';
+import { maxTravellersFor, minTravellersFor } from '@/utils/map/saveMapSetup';
 
 const blankTraveller = () => ({ name: '', birthCountryCode: '', favouriteCountryCode: '' });
 
+const isBlankNew = (t) => !t.id && !t.name.trim() && !t.birthCountryCode && !t.favouriteCountryCode;
+
+// As many rows as the kind of map needs; rows added but never filled in go when it has no
+// room for them (a family's third, empty, when it becomes a couple)
 const padTravellers = (travellers, groupType) => {
   const list = [...travellers];
   while (list.length < minTravellersFor(groupType)) list.push(blankTraveller());
+  while (list.length > maxTravellersFor(groupType) && isBlankNew(list[list.length - 1])) list.pop();
   return list;
 };
+
+// As the server says it (EVENT_MESSAGES.soloTooManyTravellers, coupleTooManyTravellers)
+const tooManyFor = (groupType) =>
+  groupType === 'SOLO' ? '"Just me" is for one traveller: remove the others first.' : '"A couple" is for two travellers: remove the others first.';
 
 // A suggested map name from the group and the first names given
 function suggestName(groupType, travellers) {
@@ -29,12 +39,23 @@ function suggestName(groupType, travellers) {
 
 /**
  * The map's set-up: who it's for, the travellers, its name, and whether it shows the UK
- * as England, Scotland, Wales and Northern Ireland (off by default; docs/API.md "The UK's
+ * as England, Scotland, Wales and Northern Ireland (on for a new map; docs/API.md "The UK's
  * nations"). `onSubmit(form)` saves; `canRename` is false for editors (only the owner names
  * the map, sets its group and splits the UK). `splitUkNote`: what changing it does to a map
- * that has places already (the settings panel; a new map has none).
+ * that has places already (the settings panel; a new map has none). `saved` and
+ * `onSavedChange` keep "Saved" with the parent, as the settings panel builds the form afresh
+ * after a save that changes the map (its key), which used to take the stamp away at once.
  */
-function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = true, splitUkNote = false, wideSubmit = false }) {
+function MapSetupForm({
+  initial,
+  onSubmit,
+  submitLabel = 'Save',
+  canRename = true,
+  splitUkNote = false,
+  wideSubmit = false,
+  saved: savedProp,
+  onSavedChange,
+}) {
   const [form, setForm] = useState(() => ({
     name: initial.name || '',
     groupType: initial.groupType || 'SOLO',
@@ -52,7 +73,12 @@ function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = tru
   const [nameTouched, setNameTouched] = useState(Boolean(initial.name) && initial.name !== 'My map');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  const [saved, setSaved] = useState(false);
+  const [savedOwn, setSavedOwn] = useState(false);
+  const saved = savedProp ?? savedOwn;
+  const setSaved = (value) => {
+    setSavedOwn(value);
+    onSavedChange?.(value);
+  };
 
   const update = (patch) => {
     setSaved(false);
@@ -73,6 +99,7 @@ function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = tru
     setError(null);
     if (!form.name.trim()) return setError('Give the map a name.');
     if (!form.travellers.some((t) => t.name.trim())) return setError('Add at least one traveller’s name.');
+    if (form.travellers.filter((t) => t.name.trim()).length > maxTravellersFor(form.groupType)) return setError(tooManyFor(form.groupType));
     setSaving(true);
     try {
       await onSubmit(form);
@@ -85,6 +112,8 @@ function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = tru
   };
 
   const min = minTravellersFor(form.groupType);
+  // A couple's map is two people (17 Nov 2026, the user's wish), just me one, a family up to 20
+  const roomForMore = form.travellers.length < maxTravellersFor(form.groupType);
 
   return (
     <form onSubmit={handleSubmit} className='grid gap-5' noValidate>
@@ -101,7 +130,7 @@ function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = tru
             canRemove={form.travellers.length > min}
           />
         ))}
-        {form.groupType !== 'SOLO' ? (
+        {roomForMore ? (
           <button
             type='button'
             onClick={() => update({ travellers: [...form.travellers, blankTraveller()] })}
@@ -149,7 +178,7 @@ function MapSetupForm({ initial, onSubmit, submitLabel = 'Save', canRename = tru
       ) : null}
 
       <InlineAlert>{error}</InlineAlert>
-      {saved ? <InlineAlert tone='good'>Saved.</InlineAlert> : null}
+      {saved ? <SavedStamp /> : null}
       {/* `wideSubmit`: across the form (Settings' Save map, 17 Nov 2026, the user's wish) */}
       <div className={wideSubmit ? 'grid' : 'grid justify-end'}>
         <Button type='submit' busy={saving}>

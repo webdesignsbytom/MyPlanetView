@@ -128,6 +128,7 @@ describe('travellers’ badges', () => {
   it('gives each person the travel badges of the completed trips they were on, dated by the trip', async () => {
     const owner = await signUp('TravBadgeOwner');
     const map = await defaultMapOf(owner.agent);
+    await owner.agent.patch(`/api/maps/${map.id}`).send({ groupType: 'FAMILY' });
     const add = async (name) => data(await owner.agent.post(`/api/maps/${map.id}/travellers`).send({ name })).traveller;
     const ann = await add('Ann');
     const bo = await add('Bo');

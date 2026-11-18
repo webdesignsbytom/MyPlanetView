@@ -84,7 +84,7 @@ Emails and share URLs point at these client routes, built from `server/src/utils
 
 ### The UK's nations
 
-A map can show and keep the UK as England, Scotland, Wales and Northern Ireland (`splitUk`, the owner's choice: on `PATCH /maps/:mapId`, and the welcome page's set-up; off by default). Everyone on the map sees it the same way; it's on `GET /maps/:mapId`, the share link's map, the trip replies (`splitUk` of the trip's map) and "Your data". The rules are `server/src/utils/ukNations.js` (the client copies them in `utils/map/ukNations.js`).
+A map can show and keep the UK as England, Scotland, Wales and Northern Ireland (`splitUk`, the owner's choice: on `PATCH /maps/:mapId`, and the welcome page's set-up; on for every new map since 18 Nov 2026, while maps made before keep theirs). Everyone on the map sees it the same way; it's on `GET /maps/:mapId`, the share link's map, the trip replies (`splitUk` of the trip's map) and "Your data". The rules are `server/src/utils/ukNations.js` (the client copies them in `utils/map/ukNations.js`).
 
 - **Places:** on a split map, visits, photos, videos, trip stops and moments take the nations; on a map that doesn't split the UK, a nation sent for any of them is kept as the UK (`GB`), and `PUT …/visits/XE` there is 404. Travellers' birth and favourite places are always countries: a nation is kept as the UK. On a split map `GB` itself means "in the UK, nation not chosen yet".
 - **GPS:** a photo whose position is in the UK goes to the nation it's in (Natural Earth's real outlines, `src/data/ukNations.json`; the nearest one for a position just offshore). The UK's crown dependencies, which the map folds into the UK, go to the nearest nation.
@@ -98,7 +98,7 @@ A map can show and keep the UK as England, Scotland, Wales and Northern Ireland 
 
 | Method and path | Role | Body |
 | --- | --- | --- |
-| `POST /maps/:mapId/travellers` | editor | `{ name, birthCountryCode?, favouriteCountryCode?, position? }` → `{ traveller }` |
+| `POST /maps/:mapId/travellers` | editor | `{ name, birthCountryCode?, favouriteCountryCode?, position? }` → `{ traveller }`. Only while the map's kind has room (17 Nov 2026): `SOLO` one traveller, `COUPLE` two, `FAMILY` up to 20; else **409** `A couple's map has two travellers. Choose "A family" to add more.` (or the `SOLO` wording). `POST /maps` refuses more travellers than its kind has (400), and `PATCH /maps/:mapId` refuses a `groupType` with room for fewer than the map has (409 `"A couple" is for two travellers: remove the others first.`). |
 | `PATCH /maps/:mapId/travellers/:travellerId` | editor | same fields, all optional |
 | `DELETE /maps/:mapId/travellers/:travellerId` | editor | 409 if it's the map's last traveller |
 

@@ -16,6 +16,10 @@ export const NOTES_MAX = 1000;
 export const DESCRIPTION_MAX = 2000;
 export const CAPTION_MAX = 500;
 export const MAX_TRAVELLERS = 20;
+// The most travellers each kind of map has (17 Nov 2026, the user's wish: a couple's map
+// is two people): one for "just me", two for a couple, the cap for a family
+export const GROUP_MAX_TRAVELLERS = Object.freeze({ SOLO: 1, COUPLE: 2, FAMILY: MAX_TRAVELLERS });
+export const maxTravellersFor = (groupType) => GROUP_MAX_TRAVELLERS[groupType] ?? MAX_TRAVELLERS;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})$/;

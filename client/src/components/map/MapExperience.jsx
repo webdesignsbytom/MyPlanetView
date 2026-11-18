@@ -49,6 +49,7 @@ import {
   preloadWhenIdle,
 } from './lazyMapPanels';
 // Utils
+import { maxTravellersFor } from '@/utils/map/saveMapSetup';
 import { nearestGoal } from '@/utils/achievements/goals';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { MAP_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
@@ -70,7 +71,9 @@ const warmCountryPanel = () => CountryPanel.preload().catch(() => {});
 // slideshow (`{ country }`: one country's, or null for the whole map's): one reducer, so
 // opening one panel closes the last. The slideshow plays over everything, leaving the
 // panel it was opened from (a country's) there for when it closes.
-const initialUi = { panel: null, selectedCode: null, uploadCountry: null, photoId: null, sharing: false, slideshow: null };
+// `photo` is the open photo as its list had it (shown at once, before its own reply) and
+// `photoList` the list it came from ({ filters } or { photos }), for stepping through it.
+const initialUi = { panel: null, selectedCode: null, uploadCountry: null, photoId: null, photo: null, photoList: null, sharing: false, slideshow: null };
 
 // The longest the loading screen waits for the panels' data (a slow connection): the map
 // shows then, and whatever is still on its way arrives as each panel opens
@@ -89,9 +92,9 @@ function uiReducer(state, action) {
     case 'upload':
       return { ...state, panel: 'upload', uploadCountry: action.code || null };
     case 'openPhoto':
-      return { ...state, photoId: action.photoId };
+      return { ...state, photoId: action.photo.id, photo: action.photo, photoList: action.list || null };
     case 'closePhoto':
-      return { ...state, photoId: null };
+      return { ...state, photoId: null, photo: null, photoList: null };
     case 'share':
       return { ...state, sharing: action.open };
     case 'play':
@@ -299,7 +302,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const stampedLandmarks = useMemo(() => new Set(stampedIds || []), [stampedIds]);
 
   // Photos with no country: no country panel shows them, so they get their own list
-  const unplaced = usePhotoPage({ ...photoSource, ...UNPLACED_PHOTOS });
+  const unplacedFilters = useMemo(() => ({ ...photoSource, ...UNPLACED_PHOTOS }), [photoSource]);
+  const unplaced = usePhotoPage(unplacedFilters);
+  const openUnplacedPhoto = useCallback(
+    (photo) => dispatch({ type: 'openPhoto', photo, list: { filters: unplacedFilters } }),
+    [unplacedFilters],
+  );
   const unplacedCount = unplaced.photos.length;
   const unplacedMore = Boolean(unplaced.nextCursor);
   const showUnplaced = useCallback(() => dispatch({ type: 'toggle', panel: 'unplaced' }), []);
@@ -329,7 +337,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     },
     [viewport],
   );
-  const openPhoto = useCallback((photo) => dispatch({ type: 'openPhoto', photoId: photo.id }), []);
+  // `list`: the gallery it was opened from ({ filters } of a usePhotoPage list, or { photos })
+  const openPhoto = useCallback((photo, list) => dispatch({ type: 'openPhoto', photo, list }), []);
   const close = useCallback(() => dispatch({ type: 'close' }), []);
   // A visit changed by hand: then see whether it earned a badge or met a goal
   const changeVisit = actions?.setVisit;
@@ -399,6 +408,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             wantToGo={wantToGo}
             mapId={map.id}
             shareCode={shareCode}
+            // One person's badges only on a family's map: a couple travels together
+            perPerson={map.groupType === 'FAMILY'}
             onClose={close}
           />
         );
@@ -417,7 +428,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           />
         );
       case 'unplaced':
-        return <UnplacedPhotosPanel photos={unplaced} canEdit={canChange} onOpenPhoto={openPhoto} onClose={close} />;
+        return <UnplacedPhotosPanel photos={unplaced} canEdit={canChange} onOpenPhoto={openUnplacedPhoto} onClose={close} />;
       case 'photos':
         return (
           <MapPhotosPanel
@@ -446,7 +457,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             mapId={shareCode ? null : map.id}
             travellers={map.travellers}
             trips={ownTrips}
-            onAddTraveller={actions?.addTraveller}
+            // A baby born there joins the map's travellers only while its kind has room (a
+            // couple's map is two people: a family's has room)
+            onAddTraveller={map.travellers.length < maxTravellersFor(map.groupType) ? actions?.addTraveller : undefined}
             onMomentsChanged={refreshMap}
             {...offerProps}
             onClose={close}
@@ -609,11 +622,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             on the right. The wrapper has a definite height, so a panel's `nophone:max-h-full` keeps it
             on screen. On phones every panel fills the screen but for a 0.75rem margin all round, over the
             Menu stamp (17 Nov 2026, the user's wish; it started below it), and is shut with its
-            own close stamp. */}
+            own close stamp; a country's ticket fills it right to the edges (18 Nov 2026, the
+            user's wish: the margin was wasted room there). */}
         {panel ? (
           <div
             data-map-panels=''
-            className={`pointer-events-none absolute inset-3 z-30 grid grid-rows-[minmax(0,1fr)] nophone:inset-x-24 nophone:z-10 nophone:place-items-center ${
+            className={`pointer-events-none absolute z-30 grid grid-rows-[minmax(0,1fr)] nophone:inset-x-24 nophone:z-10 nophone:place-items-center ${
+              ui.panel === 'country' ? 'inset-0' : 'inset-3'
+            } ${
               bannerShows ? 'nophone:bottom-18 nophone:top-24' : 'nophone:inset-y-18'
             }`}
           >
@@ -690,6 +706,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         <Suspense fallback={null}>
           <PhotoViewer
             photoId={ui.photoId}
+            photo={ui.photo}
+            list={ui.photoList}
             shareCode={shareCode}
             canEdit={canEdit}
             locked={locked}

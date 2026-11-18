@@ -17,7 +17,8 @@ import PaperCard from '@/components/common/PaperCard';
  */
 function TripMoments({ trip, canEdit, shareCode = null, onTripChange }) {
   const list = useMomentPage(shareCode ? { shareCode } : { tripId: trip.id });
-  const [openPhotoId, setOpenPhotoId] = useState(null);
+  // The moment photo open, with the moment's photos to step through
+  const [open, setOpen] = useState(null);
 
   const addTraveller = trip.canDelete
     ? async (body) => {
@@ -37,7 +38,7 @@ function TripMoments({ trip, canEdit, shareCode = null, onTripChange }) {
         headingLevel={3}
         travellers={trip.travellers}
         showCountry
-        onOpenPhoto={(photo) => setOpenPhotoId(photo.id)}
+        onOpenPhoto={(photo, photoList) => setOpen({ photo, list: photoList })}
         emptyText='No moments on this trip yet.'
         form={{
           mapId: trip.mapId,
@@ -48,7 +49,7 @@ function TripMoments({ trip, canEdit, shareCode = null, onTripChange }) {
           onAddTraveller: addTraveller,
         }}
       />
-      {openPhotoId ? <PhotoViewer photoId={openPhotoId} shareCode={shareCode} onClose={() => setOpenPhotoId(null)} /> : null}
+      {open ? <PhotoViewer photoId={open.photo.id} photo={open.photo} list={open.list} shareCode={shareCode} onClose={() => setOpen(null)} /> : null}
     </PaperCard>
   );
 }

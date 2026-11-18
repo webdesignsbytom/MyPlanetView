@@ -11,6 +11,7 @@ import { canEdit, canManage, canView } from '../utils/access.js';
 import {
   GROUP_TYPES,
   MAX_TRAVELLERS,
+  maxTravellersFor,
   NAME_MAX,
   NOTES_MAX,
   VISIT_STATUSES,
@@ -200,6 +201,7 @@ export const createMapHandler = handler(D, 'Create map', async (req, res) => {
   const rawTravellers = Array.isArray(body.travellers) ? body.travellers : [];
   if (!rawTravellers.length) return badRequest(req, res, D, EVENT_MESSAGES.lastTraveller);
   if (rawTravellers.length > MAX_TRAVELLERS) return badRequest(req, res, D, EVENT_MESSAGES.tooManyTravellers);
+  if (rawTravellers.length > maxTravellersFor(body.groupType)) return badRequest(req, res, D, tooManyForGroup(body.groupType));
 
   const travellers = [];
   for (const raw of rawTravellers) {
@@ -246,6 +248,9 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
   }
   if (body.groupType !== undefined) {
     if (!isOneOf(body.groupType, GROUP_TYPES)) return badRequest(req, res, D, EVENT_MESSAGES.invalidGroupType);
+    if (body.groupType !== map.groupType && (await countTravellers(map.id)) > maxTravellersFor(body.groupType)) {
+      return conflict(req, res, D, tooManyForGroup(body.groupType));
+    }
     data.groupType = body.groupType;
   }
   // The UK as its four nations: changing it moves the map's UK data (services/travel/ukNations.js)
@@ -339,6 +344,11 @@ export const getMapStatsHandler = handler(D, 'Get map stats', async (req, res) =
 const markBirthplaces = (map, codes) =>
   createMissingVisits(map.id, [...new Set(codes.filter(Boolean).map((code) => placeOnMap(code, Boolean(map.splitUk))))], 'MANUAL');
 
+// A map's kind decides how many travellers it has (maxTravellersFor): a couple's is two
+const groupFull = (groupType) => (groupType === 'SOLO' ? EVENT_MESSAGES.soloMapFull : EVENT_MESSAGES.coupleMapFull);
+const tooManyForGroup = (groupType) =>
+  groupType === 'SOLO' ? EVENT_MESSAGES.soloTooManyTravellers : EVENT_MESSAGES.coupleTooManyTravellers;
+
 export const createTravellerHandler = handler(D, 'Create traveller', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.mapNotFound)) return undefined;
@@ -347,6 +357,7 @@ export const createTravellerHandler = handler(D, 'Create traveller', async (req,
   if (parsed.error) return badRequest(req, res, D, parsed.error);
   const count = await countTravellers(map.id);
   if (count >= MAX_TRAVELLERS) return badRequest(req, res, D, EVENT_MESSAGES.tooManyTravellers);
+  if (count >= maxTravellersFor(map.groupType)) return conflict(req, res, D, groupFull(map.groupType));
 
   const traveller = await createTravellerInDB({ mapId: map.id, position: count, ...parsed.value });
   await markBirthplaces(map, [traveller.birthCountryCode]);

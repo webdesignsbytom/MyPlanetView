@@ -105,7 +105,7 @@ function MomentCard({
                   {onOpenPhoto ? (
                     <button
                       type='button'
-                      onClick={() => onOpenPhoto(photo)}
+                      onClick={() => onOpenPhoto(photo, { photos: moment.photos })}
                       aria-label={`Open photo ${i + 1} of ${moment.title}`}
                       className='grid aspect-square w-full overflow-hidden border-2 border-poster-cream bg-poster-cream shadow-paper'
                     >
