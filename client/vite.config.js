@@ -104,8 +104,15 @@ const siteServiceWorker = () => ({
   generateBundle(_options, bundle) {
     const build = crypto.createHash('sha256').update(Object.keys(bundle).sort().join('\n')).digest('hex').slice(0, 12);
     const siteCode = Object.keys(bundle)
-      // Not the map's detailed outlines (`outline-*`, 2.7 MB): fetched as the map is zoomed in
-      .filter((name) => name.startsWith('assets/') && !name.startsWith('assets/outline-') && /\.(js|css|woff2?|ttf)$/.test(name))
+      // Not the map's detailed outlines (`outline-*`, 2.7 MB), fetched as the map is zoomed in,
+      // or the countries' own maps (`countrymap-*`, 7 MB), fetched as one is opened
+      .filter(
+        (name) =>
+          name.startsWith('assets/') &&
+          !name.startsWith('assets/outline-') &&
+          !name.startsWith('assets/countrymap-') &&
+          /\.(js|css|woff2?|ttf)$/.test(name),
+      )
       .sort()
       .map((name) => `/${name}`);
     const source = fs
@@ -254,10 +261,12 @@ export default defineConfig({
       output: {
         // The map's detailed outlines, one chunk per place (hooks/useDetailedShapes.js), named
         // so the service worker's list can leave them out
-        chunkFileNames: (chunk) =>
-          chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]detailShapes[\\/]/.test(chunk.facadeModuleId)
-            ? 'assets/outline-[name]-[hash].js'
-            : 'assets/[name]-[hash].js',
+        // and each country's own map (utils/map/countryMapGeo.js), likewise
+        chunkFileNames: (chunk) => {
+          if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]detailShapes[\\/]/.test(chunk.facadeModuleId)) return 'assets/outline-[name]-[hash].js';
+          if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]countryMaps[\\/]/.test(chunk.facadeModuleId)) return 'assets/countrymap-[name]-[hash].js';
+          return 'assets/[name]-[hash].js';
+        },
         manualChunks(id) {
           // React, React DOM and the router: every page needs them and they change rarely,
           // so they are one chunk that stays cached when the app's own code changes. Not

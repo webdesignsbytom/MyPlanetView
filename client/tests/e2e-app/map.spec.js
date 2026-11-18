@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, MOCK_STORE_KEY, expectStats, openMap, openStats, openTool, pressCountry, showsBanner, showTools, toolbar } from './fixtures.js';
+import { test, expect, HOME_MAP, MOCK_STORE_KEY, REGION_COUNT, expectStats, openMap, openStats, openTool, pressCountry, showsBanner, showTools, toolbar } from './fixtures.js';
 
 test.describe('The map page', () => {
   test('opens the default map with its stats', { tag: '@phone' }, async ({ page }) => {
@@ -53,9 +53,9 @@ test.describe('The map page', () => {
     await openStats(page);
     const stats = page.getByRole('dialog', { name: 'Travel statistics' });
     await expect(stats).toBeVisible();
-    // Countries, continents (of 7), special places (of 5), regions (of 6), photos, landmarks (stamped: confirmed
+    // Countries, continents (of 7), special places (of 5), regions (of every region), photos, landmarks (stamped: confirmed
     // matches, the owner counting the one on a hidden photo too), trips
-    await expect(stats.getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '0 of 6', '16', '13', '3']);
+    await expect(stats.getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', `0 of ${REGION_COUNT}`, '16', '13', '3']);
     await expect(stats.getByRole('listitem')).toHaveText([/Charlie\s*1/, /Alex\s*1/]);
   });
 

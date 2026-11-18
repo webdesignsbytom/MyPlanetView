@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 // Icons
-import { FaPlay } from 'react-icons/fa';
+import { FaMapMarkedAlt, FaPlay } from 'react-icons/fa';
 // Hooks
 import usePhotoPage from '@/hooks/usePhotoPage';
 import useMomentPage from '@/hooks/useMomentPage';
@@ -32,6 +32,8 @@ import { formatDay } from '@/utils/functions/dates';
 import { isMagneticPole, isSpecialPlace } from '@/utils/map/specialPlaces';
 import { countryPhotoFilters } from '@/utils/map/preloadCountryLists';
 import { regionParent } from '@/utils/map/regionPlaces';
+import { countryMapCodeFor, countryMapInfo } from '@/utils/map/countryMapGeo';
+import { getSubdivisions } from '@/api/travelApi';
 
 const NO_TRIPS = [];
 
@@ -78,6 +80,7 @@ function CountryPanel({
   canFetchTrips = true,
   mapKey = '',
   onOpenPlace,
+  onOpenCountryMap,
   onClose,
 }) {
   const country = COUNTRY_BY_CODE[code];
@@ -97,6 +100,20 @@ function CountryPanel({
   const deskCountries = useMemo(() => [parent ?? code], [parent, code]);
   // md and up: the status controls go in the stub (Tailwind's md, 48rem)
   const controlsInStub = useMediaQuery(NOT_PHONE_QUERY);
+  // Its own map (a region's is its country's): how many of its states the map has been to
+  const mapCode = countryMapCodeFor(code);
+  const stateInfo = mapCode ? countryMapInfo(mapCode) : null;
+  const [statesMarked, setStatesMarked] = useState(null);
+  useEffect(() => {
+    if (!mapCode || !stateInfo?.count || !photoSource) return undefined;
+    let live = true;
+    getSubdivisions(photoSource, mapCode)
+      .then(({ subdivisions = [] }) => live && setStatesMarked(subdivisions.filter((s) => countsAsVisited(s.status)).length))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [mapCode, stateInfo?.count, photoSource]);
   const { reload } = photos;
   const { reload: reloadMoments } = moments;
 
@@ -177,6 +194,20 @@ function CountryPanel({
     <CountryTicket
       title={country.name}
       kicker={kicker}
+      // The country on its own, with its states and pins (a region opens its country's)
+      action={
+        mapCode && onOpenCountryMap ? (
+          <button
+            type='button'
+            onClick={() => onOpenCountryMap(mapCode)}
+            aria-label={mapCode === code ? `Open ${country.name} on its own map` : `Open the map of ${COUNTRY_BY_CODE[mapCode]?.name ?? mapCode}`}
+            className='btn-paper grid-flow-col gap-2 [--btn-pad-x:0.75rem] [--btn-pad-y:0.375rem] [--btn-size:0.9375rem]'
+          >
+            <FaMapMarkedAlt aria-hidden='true' className='self-center' />
+            <span className='phone:sr-only'>Open country</span>
+          </button>
+        ) : null
+      }
       onClose={onClose}
       stub={
         <CountryTicketStub
@@ -194,6 +225,11 @@ function CountryPanel({
             <ExpeditionStampIcon className='h-4 w-4' />
             Special place
           </span>
+        </p>
+      ) : null}
+      {stateInfo?.count > 1 && statesMarked !== null ? (
+        <p className='text-sm font-medium' data-states-marked=''>
+          {statesMarked} of {stateInfo.count} {stateInfo.word[1]} visited{mapCode !== code ? ` in ${COUNTRY_BY_CODE[mapCode]?.name}` : ''}
         </p>
       ) : null}
       {parent ? (

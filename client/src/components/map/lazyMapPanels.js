@@ -58,6 +58,10 @@ export const MapTipsDialog = lazyPanel(() => import('./MapTipsDialog'));
 export const BadgesGoalsPanel = lazyPanel(() => import('@/components/achievements/BadgesGoalsPanel'));
 // The slideshows: the map's ("Play my world"), a country's, and a trip's (the trip page)
 export const Slideshow = lazyPanel(() => import('@/components/slideshow/Slideshow'));
+// A country opened on its own, with its states and pins (a country's ticket's "Open country"),
+// and a pin there with its visits
+export const CountryMapView = lazyPanel(() => import('@/components/countryMap/CountryMapView'));
+export const PinPanel = lazyPanel(() => import('@/components/countryMap/PinPanel'));
 
 // What each toolbar stamp (and the title and stats tags) opens. The country list also
 // warms up the country panel, as picking a country is what it's for.

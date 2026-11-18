@@ -17,6 +17,7 @@ import { adsFor } from '../services/offers.js';
 import { buildPassport } from '../services/travel/passport.js';
 import { mapBadges, mapGoals } from '../services/travel/achievements.js';
 import { mapThemesView, themeAlbumPage } from './themes.js';
+import { countryMapOf, pinDetail, pinList, subdivisionStatuses } from './countryMaps.js';
 
 const D = DOMAINS.sharing;
 
@@ -120,6 +121,39 @@ async function sharedMap(req, res) {
   }
   return shared;
 }
+
+// A country map through a map's share link (docs/API.md "Country maps"): its states visited
+// and its pins, as a viewer sees them (never a hidden pin, or a hidden photo in a visit)
+async function sharedCountryMap(req, res) {
+  const shared = await sharedMap(req, res);
+  if (!shared) return null;
+  const country = await countryMapOf(req.query?.country, shared.map.splitUk);
+  if (!country) {
+    badRequest(req, res, D, EVENT_MESSAGES.countryMapNotFound);
+    return null;
+  }
+  return { shared, country };
+}
+
+export const getSharedSubdivisionsHandler = handler(D, 'Open share link states', async (req, res) => {
+  const found = await sharedCountryMap(req, res);
+  if (!found) return undefined;
+  return sendDataResponse(res, 200, { subdivisions: await subdivisionStatuses(found.shared.map.id, found.country) });
+});
+
+export const getSharedPinsHandler = handler(D, 'Open share link pins', async (req, res) => {
+  const found = await sharedCountryMap(req, res);
+  if (!found) return undefined;
+  return sendDataResponse(res, 200, { pins: await pinList(found.shared.map.id, found.country, found.shared.role) });
+});
+
+export const getSharedPinHandler = handler(D, 'Open share link pin', async (req, res) => {
+  const shared = await sharedMap(req, res);
+  if (!shared) return undefined;
+  const pin = isUuid(req.params.pinId) ? await pinDetail(req.params.pinId, shared.role, { mapId: shared.map.id }) : null;
+  if (!pin) return notFound(req, res, D, EVENT_MESSAGES.pinNotFound);
+  return sendDataResponse(res, 200, { pin });
+});
 
 export const getSharedPassportHandler = handler(D, 'Open share link passport', async (req, res) => {
   const shared = await sharedMap(req, res);

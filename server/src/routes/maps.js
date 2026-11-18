@@ -17,6 +17,13 @@ import {
 import { createTripHandler, getMapTripsHandler } from '../controllers/trips.js';
 import { createPhotoHandler, getMapPhotosHandler, presignPhotoHandler } from '../controllers/photos.js';
 import { createMomentHandler, getMapMomentsHandler } from '../controllers/moments.js';
+import {
+  createPinHandler,
+  deleteSubdivisionHandler,
+  getPinsHandler,
+  getSubdivisionsHandler,
+  putSubdivisionHandler,
+} from '../controllers/countryMaps.js';
 import { saveVideoHandler, startVideoUploadHandler } from '../controllers/videos.js';
 import {
   clearStampPhotoHandler,
@@ -88,6 +95,14 @@ router.post('/:mapId/videos', verified, saveVideoHandler);
 // Moments on the map (a trip editor may add one on their trip: tripId in the body)
 router.get('/:mapId/moments', getMapMomentsHandler);
 router.post('/:mapId/moments', verified, createMomentHandler);
+
+// Country maps (docs/API.md "Country maps"): one country's states visited (?country=US),
+// and its pins (each pin's own routes are /api/pins)
+router.get('/:mapId/subdivisions', getSubdivisionsHandler);
+router.put('/:mapId/subdivisions/:code', verified, putSubdivisionHandler);
+router.delete('/:mapId/subdivisions/:code', verified, deleteSubdivisionHandler);
+router.get('/:mapId/pins', getPinsHandler);
+router.post('/:mapId/pins', verified, createPinHandler);
 
 // The passport, badges and goals (badges and goals are awarded as the owner or an editor
 // loads them; docs/API.md, "Badges and goals")

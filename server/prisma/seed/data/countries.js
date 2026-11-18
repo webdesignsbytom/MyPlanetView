@@ -256,10 +256,12 @@ export const COUNTRIES = [
   // and ticket, never counted as countries (utils/map/regionPlaces.js, server's
   // utils/regionPlaces.js: each one's country). Codes from ISO 3166's user-assigned range,
   // except New Caledonia's own (a country on the map until then: the user, it's France's).
+  { code: 'XZ', name: "Azores", slug: 'azores', continent: 'EUROPE', kind: 'REGION', pinX: 852.2, pinY: 259.1 },
   { code: 'XB', name: "Bali", slug: 'bali', continent: 'ASIA', kind: 'REGION', pinX: 1638.8, pinY: 555.8 },
   { code: 'XA', name: "Galápagos Islands", slug: 'galapagos-islands', continent: 'SOUTH_AMERICA', kind: 'REGION', pinX: 469.4, pinY: 506.9 },
   { code: 'XG', name: "Goa", slug: 'goa', continent: 'ASIA', kind: 'REGION', pinX: 1403.2, pinY: 403.2 },
   { code: 'XH', name: "Hawaii", slug: 'hawaii', continent: 'OCEANIA', kind: 'REGION', pinX: 118.9, pinY: 376 },
   { code: 'NC', name: "New Caledonia", slug: 'new-caledonia', continent: 'OCEANIA', kind: 'REGION', pinX: 1905.8, pinY: 638.7 },
+  { code: 'GS', name: "South Georgia and the South Sandwich Islands", slug: 'south-georgia-and-the-south-sandwich-islands', continent: 'SOUTH_AMERICA', kind: 'REGION', pinX: 812.1, pinY: 849 },
   { code: 'XT', name: "Tasmania", slug: 'tasmania', continent: 'OCEANIA', kind: 'REGION', pinX: 1746, pinY: 772.2 },
 ];

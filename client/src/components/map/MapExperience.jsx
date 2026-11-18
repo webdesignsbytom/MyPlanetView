@@ -17,6 +17,7 @@ import MapBackground from './MapBackground';
 import MapBanner from './MapBanner';
 import MapToolbar from './MapToolbar';
 import MapZoomControls from './MapZoomControls';
+import CountryMapLoading from '@/components/countryMap/CountryMapLoading';
 import MapLegend from './MapLegend';
 import MapHoverLayer from './MapHoverLayer';
 import MapPanelFallback from './MapPanelFallback';
@@ -31,6 +32,7 @@ import ErrorBoundary from '@/utils/error/ErrorBoundary';
 import {
   BadgesGoalsPanel,
   CountryListPanel,
+  CountryMapView,
   CountryPanel,
   ExtraMapDialog,
   MapSwitcher,
@@ -45,6 +47,7 @@ import {
   TripsPanel,
   UnplacedPhotosPanel,
   MapPhotosPanel,
+  PinPanel,
   preloadTool,
   preloadWhenIdle,
 } from './lazyMapPanels';
@@ -73,7 +76,20 @@ const warmCountryPanel = () => CountryPanel.preload().catch(() => {});
 // panel it was opened from (a country's) there for when it closes.
 // `photo` is the open photo as its list had it (shown at once, before its own reply) and
 // `photoList` the list it came from ({ filters } or { photos }), for stepping through it.
-const initialUi = { panel: null, selectedCode: null, uploadCountry: null, photoId: null, photo: null, photoList: null, sharing: false, slideshow: null };
+// countryMap: a country opened on its own (its code), in the world map's place; pin: the pin
+// panel's pin there ({ id }, or { draft } for a new one)
+const initialUi = {
+  panel: null,
+  selectedCode: null,
+  uploadCountry: null,
+  photoId: null,
+  photo: null,
+  photoList: null,
+  sharing: false,
+  slideshow: null,
+  countryMap: null,
+  pin: null,
+};
 
 // The longest the loading screen waits for the panels' data (a slow connection): the map
 // shows then, and whatever is still on its way arrives as each panel opens
@@ -101,6 +117,14 @@ function uiReducer(state, action) {
       return { ...state, slideshow: { country: action.country || null } };
     case 'stopPlaying':
       return { ...state, slideshow: null };
+    case 'openCountryMap':
+      return { ...state, countryMap: action.code, panel: null, selectedCode: null, pin: null };
+    case 'closeCountryMap':
+      return { ...state, countryMap: null, panel: state.panel === 'pin' ? null : state.panel, pin: null };
+    case 'openPin':
+      return { ...state, panel: 'pin', pin: { id: action.id } };
+    case 'newPin':
+      return { ...state, panel: 'pin', pin: { draft: action.draft } };
     default:
       return state;
   }
@@ -321,6 +345,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     reloadUnplaced();
     refreshMap?.();
   }, [reloadUnplaced, refreshMap]);
+  // A country map's pins changed (one saved or deleted in the pin panel): its pins reload
+  const [pinsVersion, setPinsVersion] = useState(0);
+  const pinsChanged = useCallback(() => setPinsVersion((v) => v + 1), []);
+  const openCountryMap = useCallback((code) => dispatch({ type: 'openCountryMap', code }), []);
   // A photo changed in the viewer (a landmark confirmed, a country given): it may have
   // earned something. Uploads ask once their batch is done (onBatchDone), not per photo.
   const photoEdited = useCallback(() => {
@@ -464,6 +492,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             {...offerProps}
             // A region's ticket opens its country's
             onOpenPlace={selectCountry}
+            onOpenCountryMap={openCountryMap}
             onClose={close}
           />
         ) : null;
@@ -513,6 +542,35 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         return (
           <MapSwitcher currentMapId={map.id} userId={currentUser?.id} userName={currentUser?.name} locked={mustVerify} onClose={close} />
         );
+      case 'pin':
+        return ui.pin && ui.countryMap ? (
+          <PinPanel
+            key={ui.pin.id ?? 'new'}
+            pinId={ui.pin.id ?? null}
+            draft={ui.pin.draft ?? null}
+            source={photoSource}
+            mapId={map.id}
+            canEdit={canEdit}
+            locked={locked}
+            // A visit's new photos, uploaded from the pin (editors who may add photos)
+            uploader={
+              canChange && !mapLocked
+                ? { mapId: map.id, uploadRules, photoCounts: map.photoCounts || null, videoCounts: map.videoCounts || null, isOwner, onUploaded: photosChanged }
+                : null
+            }
+            onOpenPhoto={openPhoto}
+            onCreated={(pin) => {
+              pinsChanged();
+              dispatch({ type: 'openPin', id: pin.id });
+            }}
+            onChanged={pinsChanged}
+            onDeleted={() => {
+              pinsChanged();
+              close();
+            }}
+            onClose={close}
+          />
+        ) : null;
       default:
         return null;
     }
@@ -532,6 +590,24 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
         <main id='main-content' tabIndex={-1} role='main' className='absolute inset-0' onPointerDownCapture={warmCountryPanel}>
           <h1 className='sr-only'>{map.name}</h1>
+          {ui.countryMap ? (
+            <ErrorBoundary key={ui.countryMap} fallback={<MapPanelFallback failed onClose={() => dispatch({ type: 'closeCountryMap' })} />}>
+              <Suspense fallback={<CountryMapLoading name={COUNTRY_BY_CODE[ui.countryMap]?.name} />}>
+                <CountryMapView
+                  code={ui.countryMap}
+                  source={photoSource}
+                  canEdit={canEdit}
+                  locked={locked}
+                  pinsVersion={pinsVersion}
+                  selectedPinId={ui.panel === 'pin' ? (ui.pin?.id ?? null) : null}
+                  onOpenPin={(id) => dispatch({ type: 'openPin', id })}
+                  onNewPin={(draft) => dispatch({ type: 'newPin', draft })}
+                  onVisitsChanged={refreshMap}
+                  onClose={() => dispatch({ type: 'closeCountryMap' })}
+                />
+              </Suspense>
+            </ErrorBoundary>
+          ) : (
           <WorldMap
             viewport={viewport}
             seaDepths={!mapStyleById(settings.style).background}
@@ -554,6 +630,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             landmarkPins={pinMode}
             label={`${map.name}: world map`}
           />
+          )}
         </main>
         <div className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2 phone:right-3'>
           {mustVerify ? <VerifyEmailBanner /> : null}
@@ -571,7 +648,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               below them). On phones first (17 Nov 2026): its flag sits level with the Menu
               stamp, and the banners come below them both, or below an empty row as tall as
               the stamps when there's no flag, never under the Menu. */}
-          {settings.showGoalTag !== false ? (
+          {/* Not while a country is open on its own: its map has the room (18 Nov 2026, the
+              user's wish) */}
+          {settings.showGoalTag !== false && !ui.countryMap ? (
             <div className='grid phone:order-first'>
               <GoalTag
                 goals={achievements.goals}
@@ -584,7 +663,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           {phoneFlag ? null : <span aria-hidden='true' className='h-10 phone:order-first nophone:hidden' />}
         </div>
 
-        {bannerShows ? (
+        {/* A country's own map has its own header there */}
+        {bannerShows && !ui.countryMap ? (
           <div className='pointer-events-none absolute inset-x-0 top-3 grid justify-items-center'>
             <MapBanner map={map} />
           </div>
@@ -604,15 +684,18 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           />
         </div>
 
-        {/* As far from the bottom as the toolbar is from the top (both 3) */}
-        <div className='pointer-events-none absolute bottom-3 right-3 grid'>
-          <div className='pointer-events-auto'>
-            <MapZoomControls viewport={viewport} />
+        {/* As far from the bottom as the toolbar is from the top (both 3); a country's own map
+            has its own (CountryMapView) */}
+        {ui.countryMap ? null : (
+          <div className='pointer-events-none absolute bottom-3 right-3 grid'>
+            <div className='pointer-events-auto'>
+              <MapZoomControls viewport={viewport} />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* The key hides while a panel is open: the panel covers that corner */}
-        {panel ? null : (
+        {panel || ui.countryMap ? null : (
           <div className='pointer-events-none absolute bottom-3 left-3 hidden nophone:grid'>
             <MapLegend showMoments={settings.showMoments} showSpots={Boolean(map.momentSpots?.length)} showStamps={stampedLandmarks.size > 0} />
           </div>
@@ -647,7 +730,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
         <MapHoverLayer
           hover={hover}
-          hidden={Boolean(ui.photoId)}
+          hidden={Boolean(ui.photoId) || Boolean(ui.countryMap)}
           visitsByCode={visitsByCode}
           showPoster={settings.hoverPreview}
         />

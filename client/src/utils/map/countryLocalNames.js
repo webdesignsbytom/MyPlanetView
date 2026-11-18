@@ -384,10 +384,12 @@ export const LOCAL_NAMES = {
     ['sco', 'Norlin Airlann'],
   ],
   // Regions (regionPlaces.js; New Caledonia's is NC's, above)
+  XZ: [['pt', 'Açores']],
   XB: [['id', 'Bali']],
   XA: [['es', 'Islas Galápagos']],
   XG: [['kok', 'गोंय']],
   XH: [['haw', 'Hawaiʻi']],
+  GS: [['en', 'South Georgia and the South Sandwich Islands']],
   XT: [['en', 'Tasmania']],
 };
 

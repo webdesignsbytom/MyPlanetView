@@ -29,6 +29,9 @@ const PASTEL_FILLS = [
 ];
 
 // A region (Bali, Tasmania) wears its country's, as part of it (18 Nov 2026, the user's wish)
+/** One of the seven pastels' fill classes by number (a country map's states: CountryMapView). */
+export const pastelFill = (n) => PASTEL_FILLS[((n || 1) - 1) % PASTEL_FILLS.length];
+
 const pastelFor = (code) => PASTEL_FILLS[(COUNTRY_COLOUR[regionParent(code) ?? code] || UK_NATION_COLOUR[code] || 1) - 1];
 
 // Antarctica isn't a country: it's drawn as ice, with an ice-blue outline, as an atlas

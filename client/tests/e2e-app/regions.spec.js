@@ -42,7 +42,8 @@ test('a region is drawn in its country’s colour, with a card of its own', asyn
   await expect(card).toContainText('Hawaii');
   await expect(card).toContainText('Region');
   await expect(card).toContainText('of United States');
-  await expect(card).toContainText('United States: Visited. A region, never counted as a country.');
+  // Nothing under the poster about the country (18 Nov 2026, the user's wish)
+  await expect(card).not.toContainText('never counted as a country');
   await expect(card.locator('img')).toHaveAttribute('src', /visitCountryPosters\/xh-/);
 });
 

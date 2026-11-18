@@ -26,7 +26,7 @@ const POSTER_DATA = join(root, 'client/src/utils/map/posterData.js');
 const WIDTH = 800;
 
 // File names that don't start with the country list's slug
-const ALIASES = { 'cabo-verde': 'CV', 'cote-divoire': 'CI', 'dr-congo': 'CD', turkiye: 'TR' };
+const ALIASES = { 'cabo-verde': 'CV', 'cote-divoire': 'CI', 'dr-congo': 'CD', turkiye: 'TR', 'south-georgia': 'GS' };
 
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');

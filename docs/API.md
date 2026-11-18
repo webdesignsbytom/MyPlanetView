@@ -56,7 +56,7 @@ Emails and share URLs point at these client routes, built from `server/src/utils
 
 ### Regions
 
-**Regions** (18 Nov 2026) are rows with `kind: 'REGION'`: places that are part of a country but that travellers name on their own. Bali (`XB`, Indonesia), the Galápagos Islands (`XA`, Ecuador), Goa (`XG`, India), Hawaii (`XH`, the US), New Caledonia (`NC`, France; a country until then) and Tasmania (`XT`, Australia). Each one's country is in `server/src/utils/regionPlaces.js` (`REGION_PARENT`; the client copies it):
+**Regions** (18 Nov 2026) are rows with `kind: 'REGION'`: places that are part of a country but that travellers name on their own. the Azores (`XZ`, Portugal), Bali (`XB`, Indonesia), the Galápagos Islands (`XA`, Ecuador), Goa (`XG`, India), Hawaii (`XH`, the US), New Caledonia (`NC`, France; a country until then), South Georgia and the South Sandwich Islands (`GS`, the UK; drawn as part of the UK until then) and Tasmania (`XT`, Australia). Each one's country is in `server/src/utils/regionPlaces.js` (`REGION_PARENT`; the client copies it):
 - **Visits:** a region has its own visit (`PUT …/visits/XB`, with its note and first visit). One marked `VISITED` or `LIVED` also visits its country, as the South Pole does Antarctica (`implied`). Removing it leaves the country.
 - **Stats:** a region is never a country, nor a special place, and opens no continent (its country does): `countries`, `GET /maps` counts, badges and goals leave them out; `stats.regions` and the passport's `totals.regions` count them. A region visited or lived in gets its own visa page in the passport.
 - **Everything else is the country's:** a photo, video, trip stop, moment or traveller's place sent with a region's code is kept as its country's, and GPS finds the country (a photo in Bali is in Indonesia). Landmarks are the country's too (the Lagoons of New Caledonia are France's).
@@ -311,6 +311,32 @@ Life events and notes on a map: "We had our baby in Paris", "Got engaged at the 
   - **viewers and share links** read them, never `hidden` ones (as hidden photos: a hidden moment answers 404 to a viewer, and isn't counted for them). Hidden photos inside a moment show only to editors (of the map, or of the trip for the trip's photos). Someone who reaches moments through a trip (its list or its share link) sees only that trip's photos in them.
 - **On the map:** `GET /maps/:mapId` has `momentCountsByCountry` (see "Maps") and `momentSpots: [{ id, kind, title, countryCode, latitude, longitude }]` (date order): every pin for the owner and editors, hidden moments' too; for viewers and share links (`GET /shared/:code`) only the shared pins of moments they can see. "Download my data" carries each moment's `spot` with `shared`.
 - **Events:** `moments`, `Create Success`, `Update Success` (the names of the fields changed) and `Delete Success`, with the moment's id and `map=<id>`; never a title, story or place.
+
+## Country maps
+
+A country opened on its own (18 Nov 2026; "Open country" on its ticket): its states or provinces, which the map has been to, and its pins, places someone keeps going back to, each with a visit for every time. The states are Natural Earth's 1:10m (public domain), made by `images/src/tools/country-maps.mjs` into the client's maps (`client/src/utils/map/countryMaps/`) and the server's list (`server/src/data/subdivisions.json`; `utils/subdivisions.js`): each code is ISO 3166-2's ("US-CA") where Natural Earth has a clean one, else Natural Earth's own ("NC-X02"). A country's map is its own (a region's is its country's: Bali is on Indonesia's); on a map that splits the UK, each nation has one too (the UK's states in it), and the UK's has them all.
+
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `GET /maps/:mapId/subdivisions?country=US` | viewer | `{ subdivisions: [{ code, status }] }`: the states marked on that country's map. `country` a country (or a nation on a map that splits the UK; a region's is its country's), else 400 `Only a country has a map of its own.` |
+| `PUT /maps/:mapId/subdivisions/:code` | editor | `{ status }` (`VISITED`, `LIVED`, `WANT_TO_GO`) → `{ subdivision: { code, status }, implied }`. An unknown code is 404. |
+| `DELETE /maps/:mapId/subdivisions/:code` | editor | Clears it; the country stays. |
+| `GET /maps/:mapId/pins?country=US` | viewer | `{ pins: [{ id, name, countryCode, latitude, longitude, visitCount, latestVisit: { visitedOn, datePrecision } | null, hidden? }] }`, by name. |
+| `POST /maps/:mapId/pins` | editor | `{ name, notes?, countryCode, latitude, longitude, visit?: { visitedOn?, datePrecision?, notes?, photoIds? } }` → 201 `{ pin }` |
+| `GET /pins/:pinId` | viewer | `{ pin: { id, name, notes, countryCode, latitude, longitude, hidden?, createdAt, visits: [{ id, visitedOn, datePrecision, notes, photos: [{ id, countryCode, thumbUrl }] }] } }`, visits newest first, undated last |
+| `PATCH /pins/:pinId` | editor | `{ name?, notes?, latitude?, longitude?, hidden? }` → `{ pin }` |
+| `DELETE /pins/:pinId` | editor | The pin and its visits (never the photos). |
+| `POST /pins/:pinId/visits` | editor | `{ visitedOn?, datePrecision?, notes?, photoIds? }` → 201 `{ pin }` |
+| `PATCH /pins/:pinId/visits/:visitId` | editor | the same, each field optional; `photoIds` replaces the list → `{ pin }` |
+| `DELETE /pins/:pinId/visits/:visitId` | editor | → `{ pin }` |
+
+Through a map's share link: `GET /shared/:code/subdivisions?country=`, `/shared/:code/pins?country=` and `/shared/:code/pins/:pinId`, as a viewer sees them.
+
+- **States** are never countries (no count includes them). One marked visited or lived brings its country as VISITED (missing, or only wanted), and the region it's in (New Caledonia's provinces: NC), in the same transaction: `implied` is those visits as they now are. A state that is a region on its own (Hawaii is US-HI and the region XH; Tasmania, Goa, Bali, the Galápagos, South Georgia) has no visit of its own: its status is the region's `CountryVisit`, so marking either marks both.
+- **Pins:** a name (80 characters), notes (2,000), and a position in the pin's country (as a moment's spot, with the coastline tolerance; 400 `That spot isn't in this country. Put the pin inside it.`). A pin is kept under its country for good: a UK pin under GB (a nation's map lists the UK's pins inside it), a region's under its country. 1,000 pins a map, 100 visits a pin (409). `hidden`: editors only, as a hidden photo; viewers get a 404.
+- **Visits:** a date as a moment's (`visitedOn` "2019", "2019-06" or "2019-06-14", with `datePrecision`; empty for none), notes, and up to 50 of the map's own photos, in order (400 `Choose up to 50 photos, each from this map.`). A visit's photo hidden from viewers isn't listed for them. Deleting a photo takes it out of its visits.
+- **Events:** `countryMaps`, `State Save Success` and `State Delete Success` (the state's code and status), `Pin …` and `Pin Visit …` with ids only; never a pin's name, notes or position.
+- "Download my data" carries each map's `statesVisited` and `pins` (with their visits and photo ids).
 
 ## Slideshows
 
@@ -567,7 +593,7 @@ When the account is deleted (better-auth's `beforeDelete`, `services/travel/acco
 | Method and path | Role | Returns |
 | --- | --- | --- |
 | `GET /users/export` | signed in | `{ format: 'my-planet-view-data', version: 1, site, exportedAt, linksWorkUntil, account, plan, mapsYouOwn, mapsSharedWithYou, tripsSharedWithYou, photosOnOtherMaps }`: the account (name, email, home country, map settings, the promo code signed up with), the plan in force (`{ id, name, from }`), the subscription and complimentary memberships, and the maps and trips you're on (`photosOnOtherMaps` is a count) |
-| `GET /users/export/maps/:mapId` | the map's **owner** | `{ map }`: its fields, travellers, `countries` (status, source, first visit, notes), `sharedWith` (names and roles) and `invites` (addresses you typed), trips with their stops, travellers, people and invites, `groupTripsAdded`, moments, goals, badges, `passportStampPhotos`, `photoCount` |
+| `GET /users/export/maps/:mapId` | the map's **owner** | `{ map }`: its fields, travellers, `countries` (status, source, first visit, notes), `sharedWith` (names and roles) and `invites` (addresses you typed), trips with their stops, travellers, people and invites, `groupTripsAdded`, moments, `statesVisited`, `pins` (with their visits), goals, badges, `passportStampPhotos`, `photoCount` |
 | `GET /users/export/maps/:mapId/photos?cursor=` | the map's **owner** | `{ photos, nextCursor }`: 500 a page, newest upload first, hidden ones too. Each: caption, dates, country, trip, position, landmarks (with confirmation), who uploaded it, and `file: { copy, contentType, bytes, width, height, url }`, a signed link to its best copy (`ORIGINAL`, else `PRINT`) that saves as `photo-<date>-<id>.<ext>` and works for 7 days. A video has `file: null` and a `fileNote`: Stream keeps no original to hand back |
 | `GET /users/export/uploads?cursor=` | signed in | `{ photos, nextCursor }`: the photos you added to maps you don't own, the same shape plus `mapId`, `map` and `mapOwner` |
 

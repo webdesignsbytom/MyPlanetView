@@ -43,6 +43,7 @@ model User {
   travellerOf       Traveller[]
   addedTripLinks    TripMap[]
   createdMoments    Moment[]
+  createdPins       MapPin[]
   createdGoals      Goal[]
   // Photos this user entered in a monthly theme
   themeEntries      PhotoThemeEntry[]
@@ -201,6 +202,8 @@ model Country {
   homeProfiles Profile[]
   moments      Moment[]
   offers       AffiliateOffer[]
+  subdivisionVisits SubdivisionVisit[]
+  pins         MapPin[]
 
   birthTravellers     Traveller[] @relation("TravellerBirthCountry")
   favouriteTravellers Traveller[] @relation("TravellerFavouriteCountry")
@@ -312,6 +315,9 @@ model TravelMap {
   // Group trips from other people's maps shown on this one ("Add to my map")
   tripLinks  TripMap[]
   moments    Moment[]
+  // Its country maps' states visited, and its pins (docs/API.md "Country maps")
+  subdivisionVisits SubdivisionVisit[]
+  pins              MapPin[]
 
   // The passport, badges and goals (docs/API.md, "Passport", "Badges and goals")
   landmarkMatches  PhotoLandmark[]
@@ -639,6 +645,8 @@ model Photo {
   landmarks    PhotoLandmark[]
   coverOf      Trip[]            @relation("TripCover")
   moments      MomentPhoto[]
+  // The pins' visits it's in (a country map's pins: docs/API.md "Country maps")
+  pinVisits    MapPinVisitPhoto[]
   // Passport stamps showing this photo
   stampCovers  LandmarkCover[]
   // The monthly themes it's entered in
@@ -824,6 +832,101 @@ model MomentPhoto {
   // Foreign key: deleting a photo (or a whole map's) finds its moments
   @@index([photoId])
   @@map("moment_photo")
+}
+
+// ── Country maps (18 Nov 2026; docs/API.md "Country maps") ───────────────────────
+// A country opened on its own, with its states or provinces: which of them a map has been
+// to, and its pins, each with its visits (the same holiday spot every year)
+
+// A state or province marked on a map. The states are Natural Earth's, listed in
+// src/data/subdivisions.json (made by images/src/tools/country-maps.mjs; utils/subdivisions.js),
+// not a table: a code there is checked in code. A state that is a region on its own (Hawaii
+// is the region XH) has no row: its visit is the region's CountryVisit.
+model SubdivisionVisit {
+  mapId           String
+  map             TravelMap   @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  // ISO 3166-2 ("US-CA") where Natural Earth has one of its own, else Natural Earth's code
+  subdivisionCode String      @db.VarChar(12)
+  // The country whose map it's on: the UK's for every UK state (a nation's map picks its
+  // own), France's for New Caledonia's provinces
+  countryCode     String      @db.Char(2)
+  country         Country     @relation(fields: [countryCode], references: [code], onDelete: Restrict)
+  status          VisitStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([mapId, subdivisionCode])
+  // A country map's list
+  @@index([mapId, countryCode])
+  @@map("subdivision_visit")
+}
+
+// A pin on a country map: a place someone keeps going back to ("Our spot in Crete"), with
+// its visits. Seen by everyone the map is shared with unless `hidden` (editors only).
+model MapPin {
+  id    String    @id @default(uuid())
+  mapId String
+  map   TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
+  // The country it's in, as the map keeps places for good: the UK for a UK pin (a nation's
+  // map picks its own by position), a region's country for one in a region (Bali: Indonesia)
+  countryCode String  @db.Char(2)
+  country     Country @relation(fields: [countryCode], references: [code], onDelete: Restrict)
+  name        String
+  notes       String?
+  // Where it is (CHECK map_pin_position), checked in code to be in its country
+  latitude    Float
+  longitude   Float
+  hidden      Boolean @default(false)
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  visits MapPinVisit[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // A country map's pins
+  @@index([mapId, countryCode])
+  @@index([createdById])
+  @@map("map_pin")
+}
+
+// One time at a pin: when (a day, a month or a year, or neither; CHECK
+// map_pin_visit_date_and_precision), a note, and its photos (the map's own)
+model MapPinVisit {
+  id    String @id @default(uuid())
+  pinId String
+  pin   MapPin @relation(fields: [pinId], references: [id], onDelete: Cascade)
+
+  visitedOn     DateTime?      @db.Date
+  datePrecision DatePrecision?
+  notes         String?
+
+  photos MapPinVisitPhoto[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // A pin's visits, newest first
+  @@index([pinId, visitedOn])
+  @@map("map_pin_visit")
+}
+
+// A photo in a pin's visit, in order
+model MapPinVisitPhoto {
+  visitId  String
+  visit    MapPinVisit @relation(fields: [visitId], references: [id], onDelete: Cascade)
+  photoId  String
+  photo    Photo       @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  position Int         @default(0)
+
+  @@id([visitId, photoId])
+  // Foreign key: deleting a photo finds the visits it's in
+  @@index([photoId])
+  @@map("map_pin_visit_photo")
 }
 
 // ── Media (from the dummy; blog links removed, photo variants added) ─────────

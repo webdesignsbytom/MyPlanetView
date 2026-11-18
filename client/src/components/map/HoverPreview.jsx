@@ -55,9 +55,9 @@ function nameSize(name) {
 // It follows the pointer, and goes above it near the bottom of the screen, where it
 // wouldn't fit below. Mouse and pen only; every listener is cleared when the box goes.
 // A region (Bali, Tasmania: regionPlaces.js) says so above its name, a "Region" stamp and
-// the country it's part of, and under its poster how the map stands with that country
-// (`parentStatus`), as it's never a country itself (18 Nov 2026, the user's wish).
-function HoverPreview({ code, status, parentStatus = null, showPoster }) {
+// the country it's part of (18 Nov 2026, the user's wish; the line under its poster on how
+// the map stood with that country went the same day, the user's wish).
+function HoverPreview({ code, status, showPoster }) {
   // A long press starts at the finger (`touch`); a mouse at its first move
   const [position, setPosition] = useState(() => {
     const at = takeHoverPoint();
@@ -153,11 +153,6 @@ function HoverPreview({ code, status, parentStatus = null, showPoster }) {
         <PosterImage poster={poster} alt='' className='overflow-hidden shadow-paper' />
       ) : showPoster ? (
         <PosterPlaceholder countryName={name} compact />
-      ) : null}
-      {parent ? (
-        <p className='border-t-2 border-dashed border-poster-brown pt-2 text-sm'>
-          {countryName(parent)}: {parentStatus ? VISIT_STATUS_LABELS[parentStatus] : 'not been yet'}. A region, never counted as a country.
-        </p>
       ) : null}
     </div>
   );

@@ -1,5 +1,6 @@
 // Mock mode only: Google Docs style sharing for maps and trips (one module for both),
 // invite links and share codes.
+import { MESSAGES as COUNTRY_MAP_MESSAGES, countryMapOf, pinDetail, pinList, subdivisionStatuses } from '../countryMaps';
 import { RANK, deny, fail, ok, route } from '../mockAdapter';
 import { formatShareCode, getDb, me, newId, newShareCode, normaliseShareCode, session, shareUrlFor } from '../store';
 import { canSeePhoto, higherRole, mapRole, mapTripsView, mapView, photoDetail, photoPage, tripRole, tripView } from '../views';
@@ -218,6 +219,28 @@ export function registerSharingRoutes() {
     const filters = shared.kind === 'trip' ? { ...query, tripId: shared.item.id } : query;
     const page = photoPage(photos, shared.role, filters, { allowBest: false });
     return page.error ? fail(page.status ?? 400, page.error) : ok(page);
+  });
+
+  // A country map through a map's link: its states visited and pins, as a viewer sees them
+  route('GET', '/api/shared/:code/subdivisions', ({ params, query }) => {
+    const shared = resolveCode(params.code);
+    if (!shared || shared.kind !== 'map') return fail(404, NOT_FOUND);
+    const country = countryMapOf(query.country, shared.item.splitUk);
+    if (!country) return fail(400, COUNTRY_MAP_MESSAGES.countryMapNotFound);
+    return ok({ subdivisions: subdivisionStatuses(shared.item.id, country) });
+  });
+  route('GET', '/api/shared/:code/pins', ({ params, query }) => {
+    const shared = resolveCode(params.code);
+    if (!shared || shared.kind !== 'map') return fail(404, NOT_FOUND);
+    const country = countryMapOf(query.country, shared.item.splitUk);
+    if (!country) return fail(400, COUNTRY_MAP_MESSAGES.countryMapNotFound);
+    return ok({ pins: pinList(shared.item.id, country, shared.role) });
+  });
+  route('GET', '/api/shared/:code/pins/:pinId', ({ params }) => {
+    const shared = resolveCode(params.code);
+    if (!shared || shared.kind !== 'map') return fail(404, NOT_FOUND);
+    const pin = pinDetail(params.pinId, shared.role, { mapId: shared.item.id });
+    return pin ? ok({ pin }) : fail(404, COUNTRY_MAP_MESSAGES.pinNotFound);
   });
 
   // The map's moments, or the trip's (with that trip's photos only); never hidden ones below editor

@@ -16,7 +16,7 @@ import { REGION_CODES } from '@/utils/map/regionPlaces';
 import MapRoundButton from './MapRoundButton';
 
 // "8 countries, 2 continents, 16 photos. Special places 0 of 5" (special places: Antarctica
-// and the poles), then ". Regions 1 of 6" once one's visited (Bali, Tasmania), or nothing
+// and the poles), then ". Regions 1 of 7" once one's visited (Bali, Tasmania), or nothing
 // before the map's stats arrive
 function statsSummary(stats) {
   if (!stats) return undefined;

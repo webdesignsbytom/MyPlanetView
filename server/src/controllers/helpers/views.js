@@ -278,6 +278,53 @@ export async function momentView(moment, { role, photoAccess }) {
 }
 
 /**
+ * A country map's pin in a list (docs/API.md "Country maps"): where it is, how many visits
+ * and the latest one's date; `hidden` for editors only.
+ */
+export const pinSummaryView = (pin, { role }) => ({
+  id: pin.id,
+  name: pin.name,
+  countryCode: pin.countryCode,
+  latitude: pin.latitude,
+  longitude: pin.longitude,
+  visitCount: pin.visitCount,
+  latestVisit: pin.latestVisit ? { visitedOn: toDateOnly(pin.latestVisit.visitedOn), datePrecision: pin.latestVisit.datePrecision } : null,
+  ...(canEdit(role) ? { hidden: pin.hidden } : {}),
+});
+
+/**
+ * One pin with its visits, newest first, each with the photos the caller may see (as a
+ * moment's: never a hidden one below editor).
+ */
+export async function pinView(pin, { role }) {
+  const photoAccess = { mapRole: role, trip: null };
+  return {
+    id: pin.id,
+    name: pin.name,
+    notes: pin.notes,
+    countryCode: pin.countryCode,
+    latitude: pin.latitude,
+    longitude: pin.longitude,
+    ...(canEdit(role) ? { hidden: pin.hidden } : {}),
+    createdAt: pin.createdAt,
+    visits: await Promise.all(
+      pin.visits.map(async (visit) => ({
+        id: visit.id,
+        visitedOn: toDateOnly(visit.visitedOn),
+        datePrecision: visit.datePrecision,
+        notes: visit.notes,
+        photos: await Promise.all(
+          visit.photos
+            .map((p) => p.photo)
+            .filter((photo) => canSeeMomentPhoto(photo, photoAccess))
+            .map(async (p) => ({ id: p.id, countryCode: p.countryCode, thumbUrl: await signed(keyOf(p, 'THUMB')) })),
+        ),
+      })),
+    ),
+  };
+}
+
+/**
  * What a map's stats need beyond its visits and travellers, counting only what the
  * caller may see. All side by side; continents come from the cached country list.
  */

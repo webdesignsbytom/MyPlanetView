@@ -9,6 +9,7 @@ import {
   MAP_SETTINGS_API,
   MOMENTS_API,
   PHOTOS_API,
+  PINS_API,
   SHARED_API,
   TRIPS_API,
 } from '@/utils/constants/apiRoutes';
@@ -88,6 +89,26 @@ export const getMomentPage = ({ mapId, tripId, shareCode, country, cursor, limit
 export const createMoment = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/moments`, body));
 export const updateMoment = (momentId, body) => data(client.patch(`${MOMENTS_API}/${enc(momentId)}`, body));
 export const deleteMoment = (momentId) => data(client.delete(`${MOMENTS_API}/${enc(momentId)}`));
+
+// Country maps (docs/API.md "Country maps"): one country's states visited and pins, on a map
+// or through its share link (`source`: { mapId } or { shareCode }), and the changes
+const countryMapBase = ({ mapId, shareCode }) => (shareCode ? `${SHARED_API}/${enc(shareCode)}` : `${MAPS_API}/${enc(mapId)}`);
+// -> { subdivisions: [{ code, status }] }
+export const getSubdivisions = (source, country) => data(client.get(`${countryMapBase(source)}/subdivisions${query({ country })}`));
+// -> { subdivision, implied }: the visits it brought (its country, a region)
+export const setSubdivision = (mapId, code, status) => data(client.put(`${MAPS_API}/${enc(mapId)}/subdivisions/${enc(code)}`, { status }));
+export const clearSubdivision = (mapId, code) => data(client.delete(`${MAPS_API}/${enc(mapId)}/subdivisions/${enc(code)}`));
+// -> { pins: [{ id, name, countryCode, latitude, longitude, visitCount, latestVisit, hidden? }] }
+export const getPins = (source, country) => data(client.get(`${countryMapBase(source)}/pins${query({ country })}`));
+// -> { pin } with its visits, newest first
+export const getPin = (source, pinId) =>
+  data(client.get(source.shareCode ? `${SHARED_API}/${enc(source.shareCode)}/pins/${enc(pinId)}` : `${PINS_API}/${enc(pinId)}`));
+export const createPin = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/pins`, body));
+export const updatePin = (pinId, body) => data(client.patch(`${PINS_API}/${enc(pinId)}`, body));
+export const deletePin = (pinId) => data(client.delete(`${PINS_API}/${enc(pinId)}`));
+export const addPinVisit = (pinId, body) => data(client.post(`${PINS_API}/${enc(pinId)}/visits`, body));
+export const updatePinVisit = (pinId, visitId, body) => data(client.patch(`${PINS_API}/${enc(pinId)}/visits/${enc(visitId)}`, body));
+export const deletePinVisit = (pinId, visitId) => data(client.delete(`${PINS_API}/${enc(pinId)}/visits/${enc(visitId)}`));
 
 // Photos: a page of a map's, a trip's or a share link's photos (`unplaced`: only those with no
 // country). The slideshows (docs/API.md, "Slideshows") pass `order` ('taken', or 'shuffle'

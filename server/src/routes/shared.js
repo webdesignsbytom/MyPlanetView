@@ -8,6 +8,9 @@ import {
   getSharedPhotoHandler,
   getSharedPhotosHandler,
   getSharedThemeAlbumHandler,
+  getSharedPinHandler,
+  getSharedPinsHandler,
+  getSharedSubdivisionsHandler,
   getSharedThemesHandler,
 } from '../controllers/shared.js';
 import { attachUserIfPresent } from '../middleware/auth.js';
@@ -41,5 +44,9 @@ router.get('/:code/badges', failedLookupLimiter, shareBrowseLimiter, getSharedBa
 router.get('/:code/goals', failedLookupLimiter, shareBrowseLimiter, getSharedGoalsHandler);
 router.get('/:code/themes', failedLookupLimiter, shareBrowseLimiter, getSharedThemesHandler);
 router.get('/:code/themes/:themeId/photos', failedLookupLimiter, shareBrowseLimiter, getSharedThemeAlbumHandler);
+// Country maps: one country's states visited and pins (?country=US), and one pin
+router.get('/:code/subdivisions', failedLookupLimiter, shareBrowseLimiter, getSharedSubdivisionsHandler);
+router.get('/:code/pins', failedLookupLimiter, shareBrowseLimiter, getSharedPinsHandler);
+router.get('/:code/pins/:pinId', failedLookupLimiter, shareBrowseLimiter, getSharedPinHandler);
 
 export default router;
