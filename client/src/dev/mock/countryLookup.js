@@ -9,6 +9,7 @@
 // answers. Loaded only when a photo first needs it.
 import { projectToMap } from '@/utils/map/projection';
 import { poleAt } from '@/utils/map/specialPlaces';
+import { regionParent } from '@/utils/map/regionPlaces';
 
 export const COASTLINE_TOLERANCE = 6;
 const EARTH_RADIUS_M = 6371000;
@@ -155,12 +156,19 @@ const distanceToPolygon = (poly, x, y) => {
   return best;
 };
 
-// Built on first use: every country's polygons with their bounds and areas
+// Built on first use: every country's polygons with their bounds and areas. A region's
+// shapes (Bali, Tasmania) are its country's, as in the server's countryShapes.json: a photo
+// in Bali is in Indonesia (utils/map/regionPlaces.js)
 let index = null;
 async function loadIndex() {
   if (!index) {
     const { COUNTRY_SHAPES } = await import('@/utils/map/countryShapes');
-    index = Object.entries(COUNTRY_SHAPES).map(([code, paths]) => ({
+    const pathsOf = new Map();
+    for (const [code, paths] of Object.entries(COUNTRY_SHAPES)) {
+      const place = regionParent(code) ?? code;
+      pathsOf.set(place, [...(pathsOf.get(place) ?? []), ...paths]);
+    }
+    index = [...pathsOf].map(([code, paths]) => ({
       code,
       polygons: paths.flatMap(parsePath).map((points) => ({ points, bounds: boundsOf(points), area: polygonArea(points) })),
     }));

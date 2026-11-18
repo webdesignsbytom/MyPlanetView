@@ -114,6 +114,8 @@ export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT 
   const viewRef = useRef(homeView(viewAspectFor(0, extentRef.current), extentRef.current));
   const zoomRef = useRef(1);
   const listenersRef = useRef(new Set());
+  // Told of every change of view, a pan too (the detailed outlines: useDetailedShapes)
+  const viewListenersRef = useRef(new Set());
   const pendingRef = useRef(false);
   const pointersRef = useRef(new Map());
   const gestureRef = useRef(null);
@@ -142,6 +144,7 @@ export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT 
     pendingRef.current = false;
     const view = viewRef.current;
     svgNodeRef.current?.setAttribute('viewBox', viewBoxOf(view));
+    viewListenersRef.current.forEach((listener) => listener());
     const zoom = zoomFor(view.w, screenWidthRef.current);
     if (zoom === zoomRef.current) return;
     zoomRef.current = zoom;
@@ -438,12 +441,20 @@ export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT 
     return () => listenersRef.current.delete(listener);
   }, []);
   const getZoom = useCallback(() => zoomRef.current, []);
+  // Every change of view (pans too), and the view itself ({ x, y, w, h } in map units)
+  const subscribeView = useCallback((listener) => {
+    viewListenersRef.current.add(listener);
+    return () => viewListenersRef.current.delete(listener);
+  }, []);
+  const getView = useCallback(() => viewRef.current, []);
 
   return useMemo(
     () => ({
       svgRef,
       subscribe,
       getZoom,
+      subscribeView,
+      getView,
       zoomIn,
       zoomOut,
       reset,
@@ -457,7 +468,7 @@ export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT 
         onKeyDown,
       },
     }),
-    [svgRef, subscribe, getZoom, zoomIn, zoomOut, reset, focusOn, afterTap, onPointerDown, onPointerMove, onPointerUp, endPointer, onKeyDown],
+    [svgRef, subscribe, getZoom, subscribeView, getView, zoomIn, zoomOut, reset, focusOn, afterTap, onPointerDown, onPointerMove, onPointerUp, endPointer, onKeyDown],
   );
 }
 

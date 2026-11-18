@@ -2,6 +2,7 @@ import { prisma } from '../prisma.js';
 import { COUNTED_VISIT_STATUSES } from '../utils/travelValidation.js';
 import { PARENT_PLACE, SPECIAL_PLACE_CODES, withParentPlaces } from '../utils/specialPlaces.js';
 import { UK, UK_NATION_CODES } from '../utils/ukNations.js';
+import { REGION_CODES } from '../utils/regionPlaces.js';
 import { canEdit } from '../utils/access.js';
 import { countPerParent, countPhotosPer } from './counts.js';
 
@@ -69,10 +70,11 @@ async function mapsWithUkAndNations(ids) {
 async function withMapCounts(maps, includeHidden) {
   const ids = maps.map((m) => m.id);
   const [countries, ukBoth, photos, trips, linkedTrips] = await Promise.all([
-    // Countries only: special places (Antarctica, the poles) have their own stat
+    // Countries only: special places (Antarctica, the poles) and regions (Bali, Tasmania)
+    // have their own stats
     countPerParent('countryVisit', 'mapId', ids, {
       status: { in: [...COUNTED_VISIT_STATUSES] },
-      countryCode: { notIn: [...SPECIAL_PLACE_CODES] },
+      countryCode: { notIn: [...SPECIAL_PLACE_CODES, ...REGION_CODES] },
     }),
     // A map with the UK marked and some of its nations too (the UK from before the split,
     // not yet given its nations) counts the nations, not the UK as well (utils/ukNations.js)

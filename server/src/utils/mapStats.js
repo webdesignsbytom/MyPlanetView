@@ -2,6 +2,7 @@
 import { COUNTED_VISIT_STATUSES } from './travelValidation.js';
 import { isSpecialPlace } from './specialPlaces.js';
 import { countedCountryCodes } from './ukNations.js';
+import { isRegion } from './regionPlaces.js';
 
 /**
  * @param {object} input
@@ -25,12 +26,14 @@ export function buildMapStats({
   completedTrips = [],
   splitUk = false,
 }) {
-  // Countries and special places (Antarctica, the poles) are counted apart; both count
-  // towards the continents (Antarctica and the South Pole give the seventh)
+  // Countries, special places (Antarctica, the poles) and regions (Bali, Tasmania) are
+  // counted apart; countries and special places count towards the continents (Antarctica
+  // and the South Pole give the seventh), regions don't (their country does)
   const counted = visits.filter((v) => COUNTED_VISIT_STATUSES.includes(v.status)).map((v) => v.countryCode);
   const visited = new Set(countedCountryCodes(counted.filter((code) => !isSpecialPlace(code)), splitUk));
   const specialPlaces = new Set(counted.filter(isSpecialPlace));
-  const continents = new Set(counted.map((code) => continentByCode.get(code)).filter(Boolean));
+  const regions = new Set(counted.filter(isRegion));
+  const continents = new Set(counted.filter((code) => !isRegion(code)).map((code) => continentByCode.get(code)).filter(Boolean));
 
   // Per person: the countries of the completed trips they went on
   const byTraveller = travellers.map((traveller) => {
@@ -43,6 +46,7 @@ export function buildMapStats({
   return {
     countries: visited.size,
     specialPlaces: specialPlaces.size,
+    regions: regions.size,
     continents: continents.size,
     photos: photoCount,
     landmarks: landmarkCount,

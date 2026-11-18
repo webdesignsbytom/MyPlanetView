@@ -11,15 +11,18 @@ import useFullscreen from '@/hooks/useFullscreen';
 // Utils
 import { plural } from '@/utils/functions/plural';
 import { SPECIAL_PLACE_TOTAL } from '@/utils/map/specialPlaces';
+import { REGION_CODES } from '@/utils/map/regionPlaces';
 // Components
 import MapRoundButton from './MapRoundButton';
 
 // "8 countries, 2 continents, 16 photos. Special places 0 of 5" (special places: Antarctica
-// and the poles), or nothing before the map's stats arrive
+// and the poles), then ". Regions 1 of 6" once one's visited (Bali, Tasmania), or nothing
+// before the map's stats arrive
 function statsSummary(stats) {
   if (!stats) return undefined;
   const counts = [plural(stats.countries, 'country', 'countries'), plural(stats.continents, 'continent'), plural(stats.photos, 'photo')];
-  return `${counts.join(', ')}. Special places ${stats.specialPlaces ?? 0} of ${SPECIAL_PLACE_TOTAL}`;
+  const regions = stats.regions ? `. Regions ${stats.regions} of ${REGION_CODES.length}` : '';
+  return `${counts.join(', ')}. Special places ${stats.specialPlaces ?? 0} of ${SPECIAL_PLACE_TOTAL}${regions}`;
 }
 
 // The same counts as figures for the phone's menu, [value, word] each

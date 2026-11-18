@@ -1,6 +1,7 @@
 // The visit badges (components/map/StarBadge.jsx, VisitBadges.jsx): the star sticker on
 // countries, the gold expedition stamp on special places (Antarctica and the poles).
 import { isSpecialPlace } from './specialPlaces.js';
+import { isRegion } from './regionPlaces.js';
 
 // <symbol> ids inside the map's <svg>
 export const BADGE_IDS = {
@@ -20,6 +21,8 @@ export function badgeIdFor(code, status) {
 // The badge's radius in map units: a little bigger on screen as you zoom in, but never
 // so big that Europe disappears under stars at world view.
 export const badgeRadius = (zoom) => 9 / Math.sqrt(zoom);
+// A region's (Bali, Tasmania) is smaller: it's a place inside a country, often beside its star
+export const badgeRadiusFor = (code, zoom) => badgeRadius(zoom) * (isRegion(code) ? 0.75 : 1);
 
 // A pole's compass rose (components/map/PoleMarker.jsx): its points are thin, so it's
 // drawn a little bigger than a badge to read as clearly

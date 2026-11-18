@@ -26,6 +26,16 @@
 // their own join their country (Hong Kong and Macau China, Svalbard and Bouvet Norway,
 // Åland Finland, Jersey, Guernsey, the Isle of Man and the UK's far islands the UK...).
 // The Canaries are cut out of Spain (IC). The micro-states stay dots (no shape).
+// Regions (utils/map/regionPlaces.js) are cut out of their country: Bali (XB) from Indonesia,
+// Tasmania (XT) from Australia, Hawaii's main islands (XH) from the US; New Caledonia is
+// Natural Earth's own unit. Goa (XG) is a dot. In the server's lookup outlines each region is
+// part of its country again (a photo in Bali is in Indonesia).
+//
+// It also writes the detailed outlines (18 Nov 2026, the user's wish: islands looked jagged
+// zoomed in): client/src/utils/map/detailShapes/<code>.js, each place simplified to
+// DETAIL_TOLERANCE (about 1 px at the closest zoom), rounded to 0.01, with islets down to
+// DETAIL_MIN_SPAN, and their bounds in detailShapeBounds.js. The map loads them for the
+// places in view once zoomed in (hooks/useDetailedShapes.js).
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -36,6 +46,8 @@ const CLIENT_SHAPES = path.join(ROOT, 'client/src/utils/map/countryShapes.js');
 const SERVER_SHAPES = path.join(ROOT, 'server/src/data/countryShapes.json');
 const STYLE = path.join(ROOT, 'client/src/utils/map/countryStyle.js');
 const NATIONS_FILE = path.join(ROOT, 'client/src/utils/map/ukNationShapes.js');
+const DETAIL_DIR = path.join(ROOT, 'client/src/utils/map/detailShapes');
+const DETAIL_BOUNDS = path.join(ROOT, 'client/src/utils/map/detailShapeBounds.js');
 // Natural Earth's UK units → the map's nation codes (drawn on maps that split the UK)
 const NATIONS = { ENG: 'XE', SCT: 'XC', WLS: 'XW', NIR: 'XI' };
 
@@ -47,6 +59,9 @@ const BORDER_TOLERANCE = 0.12;
 // island lies within NEAR_OTHERS of another place's land (Symi and Leros off Turkey: left
 // out, the nearest coast would answer for them)
 const MIN_SPAN = 1;
+// The detailed outlines: every line to this (coasts and borders alike), islets from this span
+const DETAIL_TOLERANCE = 0.05;
+const DETAIL_MIN_SPAN = 0.2;
 const NEAR_SPAN = 0.25;
 const NEAR_OTHERS = 6;
 // A small place (its biggest piece under SMALL_PLACE across: the Caribbean islands, the
@@ -69,11 +84,12 @@ const { projectExact } = await import(pathToFileURL(tmp).href);
 fs.unlinkSync(tmp);
 
 const { COUNTRIES } = await import(pathToFileURL(path.join(ROOT, 'client/src/utils/map/countries.js')).href);
+const { REGION_AREA, REGION_PARENT } = await import(pathToFileURL(path.join(ROOT, 'client/src/utils/map/regionPlaces.js')).href);
 const { COUNTRY_SHAPES: OLD_SHAPES } = await import(pathToFileURL(CLIENT_SHAPES).href);
 
-const PLACES = new Set(COUNTRIES.filter((c) => !c.kind).map((c) => c.code));
-// Drawn as dots, with no shape (MicroStateDot)
-const DOTS = new Set(['AD', 'GI', 'LI', 'MC', 'SM', 'SG', 'VA']);
+const PLACES = new Set(COUNTRIES.filter((c) => !c.kind || c.kind === 'REGION').map((c) => c.code));
+// Drawn as dots, with no shape (MicroStateDot; Goa, a region inside India)
+const DOTS = new Set(['AD', 'GI', 'LI', 'MC', 'SM', 'SG', 'VA', 'XG']);
 
 // Natural Earth areas with no place of their own (by ADM0_A3 or GU_A3) → the map's place
 const JOINS = {
@@ -110,6 +126,12 @@ function placeOfPolygon(code, polygon) {
   if (code === 'RU' && b.maxY < 45.7 && b.minX > 145.2 && b.maxX < 149.2) return 'JP'; // the southern Kurils
   if (code === 'TW' && b.minX > 118.1 && b.maxX < 118.6 && b.minY > 24.3 && b.maxY < 24.6) return 'CN'; // Kinmen
   if (code === 'ES' && b.maxY < 30) return 'IC'; // the Canaries
+  // A region (utils/map/regionPlaces.js): a piece of its country inside the region's box
+  // (Bali, Tasmania, Hawaii's main islands, the Galápagos)
+  for (const [region, parent] of Object.entries(REGION_PARENT)) {
+    const a = REGION_AREA[region];
+    if (code === parent && b.minX > a.west && b.maxX < a.east && b.minY > a.south && b.maxY < a.north) return region;
+  }
   return code;
 }
 
@@ -254,10 +276,13 @@ const spanOfKeys = (ring) => {
   return Math.max(maxX - minX, maxY - minY);
 };
 const smallPlaces = new Set([...ringsByPlace].filter(([, rings]) => Math.max(...rings.map(spanOfKeys)) < SMALL_PLACE).map(([place]) => place));
-const toleranceOf = (a, b) => {
+// The two sets of outlines: the whole map's (BASE), and the detailed ones (DETAIL)
+const BASE = { coast: TOLERANCE, border: BORDER_TOLERANCE, fine: FINE_TOLERANCE, minSpan: MIN_SPAN, nearSpan: NEAR_SPAN, digits: 1 };
+const DETAIL = { coast: DETAIL_TOLERANCE, border: DETAIL_TOLERANCE, fine: DETAIL_TOLERANCE, minSpan: DETAIL_MIN_SPAN, nearSpan: DETAIL_MIN_SPAN, digits: 2 };
+const toleranceOf = (a, b, level) => {
   const ids = owners.get(edgeKey(a, b));
-  if (ids.some((id) => smallPlaces.has(allRings[id].place))) return FINE_TOLERANCE;
-  return new Set(ids.map((id) => allRings[id].place)).size > 1 ? BORDER_TOLERANCE : TOLERANCE;
+  if (ids.some((id) => smallPlaces.has(allRings[id].place))) return Math.min(level.fine, level.coast);
+  return new Set(ids.map((id) => allRings[id].place)).size > 1 ? level.border : level.coast;
 };
 
 // Each place's land, by grid cell (NEAR_OTHERS across), to find islands near another place
@@ -278,8 +303,9 @@ const nearOtherPlace = (place, pts) => {
   }
   return false;
 };
-// GB and its own nations aren't "another place" to each other
-const nationOf = (a, b) => (a === 'GB' && /^X[ECWI]$/.test(b)) || (b === 'GB' && /^X[ECWI]$/.test(a));
+// GB and its own nations, or a region and its country, aren't "another place" to each other
+const nationOf = (a, b) =>
+  (a === 'GB' && /^X[ECWI]$/.test(b)) || (b === 'GB' && /^X[ECWI]$/.test(a)) || REGION_PARENT[a] === b || REGION_PARENT[b] === a;
 
 // Douglas-Peucker with both ends kept
 function simplifyLine(pts, tolerance) {
@@ -306,8 +332,8 @@ function simplifyLine(pts, tolerance) {
 
 // A line between two junctions, simplified once whichever ring asks (cached in one direction)
 const lines = new Map();
-function simplifiedChain(keys) {
-  const tolerance = toleranceOf(keys[0], keys[1]);
+function simplifiedChain(keys, level) {
+  const tolerance = toleranceOf(keys[0], keys[1], level);
   const forward = keys[0] < keys[keys.length - 1] || (keys[0] === keys[keys.length - 1] && keys[1] < keys[keys.length - 2]);
   const canon = forward ? keys : [...keys].reverse();
   const id = `${canon[0]}~${canon[1]}~${canon[canon.length - 2]}~${canon[canon.length - 1]}~${canon.length}~${tolerance}`;
@@ -318,30 +344,30 @@ function simplifiedChain(keys) {
 
 // A ring with no junction (an island, or an enclave and the hole round it): split at the
 // vertex farthest from its smallest key, both halves simplified (the same for both sides)
-function simplifiedLoop(ring) {
+function simplifiedLoop(ring, level) {
   let start = 0;
   for (let i = 1; i < ring.length; i++) if (ring[i] < ring[start]) start = i;
   const rotated = [...ring.slice(start), ...ring.slice(0, start)];
   const [sx, sy] = point(rotated[0]);
   let far = 1, best = -1;
   rotated.forEach((k, i) => { const [x, y] = point(k); const d = Math.hypot(x - sx, y - sy); if (d > best) { best = d; far = i; } });
-  const first = simplifiedChain([...rotated.slice(0, far + 1)]);
-  const second = simplifiedChain([...rotated.slice(far), rotated[0]]);
+  const first = simplifiedChain([...rotated.slice(0, far + 1)], level);
+  const second = simplifiedChain([...rotated.slice(far), rotated[0]], level);
   return [...first.slice(0, -1), ...second.slice(0, -1)];
 }
 
-function simplifyRing(ring) {
+function simplifyRing(ring, level) {
   const n = ring.length;
   const junction = ring.map((_, i) => ownersOf(ring[(i - 1 + n) % n], ring[i]) !== ownersOf(ring[i], ring[(i + 1) % n]));
   const firstJunction = junction.indexOf(true);
-  if (firstJunction === -1) return simplifiedLoop(ring);
+  if (firstJunction === -1) return simplifiedLoop(ring, level);
   const out = [];
   let chain = [ring[firstJunction]];
   for (let s = 1; s <= n; s++) {
     const i = (firstJunction + s) % n;
     chain.push(ring[i]);
     if (junction[i]) {
-      out.push(...simplifiedChain(chain).slice(0, -1));
+      out.push(...simplifiedChain(chain, level).slice(0, -1));
       chain = [ring[i]];
     }
   }
@@ -357,20 +383,21 @@ const spanOf = (pts) => {
 };
 const widthOf = (pts) => { const xs = pts.map(([x]) => x); return Math.max(...xs) - Math.min(...xs); };
 
-// Each place's simplified, rounded rings (islets and specks left out)
+// Each place's simplified, rounded rings (islets and specks left out), at one level
+function shapesFor(level) {
 const shapes = {};
 for (const [place, rings] of ringsByPlace) {
   const small = smallPlaces.has(place);
-  const round = small ? round2 : round1;
+  const round = small || level.digits === 2 ? round2 : round1;
   let polys = rings
-    .map((ring) => simplifyRing(ring).map(([x, y]) => [round(x), round(y)]))
+    .map((ring) => simplifyRing(ring, level).map(([x, y]) => [round(x), round(y)]))
     .map((pts) => pts.filter((p, i) => i === 0 || p[0] !== pts[i - 1][0] || p[1] !== pts[i - 1][1]))
     .filter((pts) => pts.length >= 3 && Math.abs(signedArea(pts)) > 0);
   const biggest = Math.max(0, ...polys.map(spanOf));
   polys = polys.filter((pts) => {
     const span = spanOf(pts);
     if (small) return span >= DUST;
-    return span >= MIN_SPAN || (span >= NEAR_SPAN && nearOtherPlace(place, pts));
+    return span >= level.minSpan || (span >= level.nearSpan && nearOtherPlace(place, pts));
   });
   // Never no shape: at least the biggest piece, as it is
   if (!polys.length) {
@@ -379,6 +406,10 @@ for (const [place, rings] of ringsByPlace) {
   }
   shapes[place] = polys;
 }
+return shapes;
+}
+const shapes = shapesFor(BASE);
+const detail = shapesFor(DETAIL);
 // Antarctica keeps its drawing
 const parseOld = (d) => d.replace(/[MZ]/g, ' ').trim().split(/\s+/).map(Number).reduce((pts, v, i, all) => (i % 2 ? pts : [...pts, [v, all[i + 1]]]), []);
 shapes.AQ = OLD_SHAPES.AQ.map(parseOld);
@@ -403,8 +434,41 @@ ${codes.map((code) => `  ${code}: [${shapes[code].map((pts) => `'${pathOf(pts)}'
 `;
 fs.writeFileSync(CLIENT_SHAPES, header);
 
-// server/src/data/countryShapes.json
-fs.writeFileSync(SERVER_SHAPES, JSON.stringify(Object.fromEntries(codes.map((code) => [code, shapes[code]]))));
+// server/src/data/countryShapes.json: a region is part of its country there
+const serverShapes = {};
+for (const code of codes) {
+  const into = REGION_PARENT[code] ?? code;
+  serverShapes[into] = [...(serverShapes[into] ?? []), ...shapes[code]];
+}
+fs.writeFileSync(SERVER_SHAPES, JSON.stringify(Object.fromEntries(Object.keys(serverShapes).sort().map((code) => [code, serverShapes[code]]))));
+
+// client/src/utils/map/detailShapes/<code>.js (the nations' too), and their bounds
+fs.rmSync(DETAIL_DIR, { recursive: true, force: true });
+fs.mkdirSync(DETAIL_DIR);
+const detailCodes = Object.keys(detail).sort();
+for (const code of detailCodes) {
+  fs.writeFileSync(
+    path.join(DETAIL_DIR, `${code}.js`),
+    `// Generated by images/src/tools/country-outlines.mjs: ${code}'s detailed outline. Don't edit by hand.
+export default [${detail[code].map((pts) => `'${pathOf(pts)}'`).join(',')}];
+`
+  );
+}
+const boundsOf = (polys) => {
+  const xs = polys.flatMap((pts) => pts.map(([x]) => x)), ys = polys.flatMap((pts) => pts.map(([, y]) => y));
+  return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)].map(round1);
+};
+fs.writeFileSync(
+  DETAIL_BOUNDS,
+  `// Generated by images/src/tools/country-outlines.mjs. Don't edit by hand.
+
+// Each place's detailed outline's bounds, [minX, minY, maxX, maxY] in map units: which to
+// load for the view (hooks/useDetailedShapes.js; the outlines are in detailShapes/)
+export const DETAIL_SHAPE_BOUNDS = {
+${detailCodes.map((code) => `  ${code}: [${boundsOf(detail[code]).join(', ')}],`).join('\n')}
+};
+`
+);
 
 // COUNTRY_LABEL_WIDTH in countryStyle.js: each place's largest shape's width
 const widths = Object.fromEntries(
@@ -445,8 +509,10 @@ ${pins[0]}
 const chars = codes.reduce((n, code) => n + shapes[code].reduce((m, pts) => m + pathOf(pts).length, 0), 0);
 const points = codes.reduce((n, code) => n + shapes[code].reduce((m, pts) => m + pts.length, 0), 0);
 console.log(`Wrote ${codes.length} places: ${points} points, ${Math.round(chars / 1000)}k characters of outline`);
+const detailPoints = detailCodes.reduce((n, code) => n + detail[code].reduce((m, pts) => m + pts.length, 0), 0);
+const detailChars = detailCodes.reduce((n, code) => n + detail[code].reduce((m, pts) => m + pathOf(pts).length, 0), 0);
+console.log(`Detailed: ${detailCodes.length} places, ${detailPoints} points, ${Math.round(detailChars / 1000)}k characters`);
 console.log('Joined to a place:', Object.entries(report.joined).map(([name, code]) => `${name} → ${code}`).join(', '));
 console.log('Left out:', report.leftOut.join(', '));
 if (report.unknown.length) console.log('No place for:', report.unknown.join(', '));
 if (missing.length) console.log('Places with no shape:', missing.join(', '));
-console.log('Now run: node images/src/tools/uk-nations.mjs <the same file>');

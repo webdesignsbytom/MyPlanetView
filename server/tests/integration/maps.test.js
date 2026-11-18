@@ -250,6 +250,31 @@ describe('countries visited and stats', () => {
     expect(data(await uploadPhoto(agent, map.id, { latitude: -77.846, longitude: 166.676 })).photo.countryCode).toBe('AQ');
   });
 
+  it('keeps a region apart: its own visit brings its country, and only the country counts', async () => {
+    const { agent } = await signUp('Island');
+    const map = await defaultMapOf(agent);
+
+    // Bali is in Indonesia: marking it adds Indonesia, and says so
+    let res = await agent.put(`/api/maps/${map.id}/visits/XB`).send({ status: 'VISITED', notes: 'Rice terraces' });
+    expect(res.status).toBe(200);
+    expect(data(res).visit).toMatchObject({ countryCode: 'XB', status: 'VISITED', notes: 'Rice terraces' });
+    expect(data(res).implied).toEqual([expect.objectContaining({ countryCode: 'ID', status: 'VISITED', source: 'MANUAL' })]);
+    // Wanting to go to Tasmania adds nothing
+    res = await agent.put(`/api/maps/${map.id}/visits/XT`).send({ status: 'WANT_TO_GO' });
+    expect(data(res).implied).toEqual([]);
+
+    const stats = data(await agent.get(`/api/maps/${map.id}/stats`)).stats;
+    expect(stats).toMatchObject({ countries: 1, specialPlaces: 0, regions: 1, continents: 1 });
+    const listed = data(await agent.get('/api/maps')).maps.find((m) => m.id === map.id);
+    expect(listed.counts.countries).toBe(1);
+
+    // A photo or a trip's stop never goes to a region: New Caledonia's go to France
+    const photo = data(await uploadPhoto(agent, map.id, { countryCode: 'NC' })).photo;
+    expect(photo.countryCode).toBe('FR');
+    const noumea = data(await uploadPhoto(agent, map.id, { latitude: -22.27, longitude: 166.45 })).photo;
+    expect(noumea.countryCode).toBe('FR');
+  });
+
   it("lets a traveller be born in Antarctica, but not at a pole", async () => {
     const { agent } = await signUp('Born');
     const map = await defaultMapOf(agent);

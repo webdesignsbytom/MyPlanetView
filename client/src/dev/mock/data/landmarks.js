@@ -943,7 +943,7 @@ export const LANDMARKS = [
   { countryCode: "NL", name: "Rietveld Schröder House", latitude: 52.08533, longitude: 5.1476, matchRadiusM: 500, isUnesco: true },
   { countryCode: "NL", name: "Schokland", latitude: 52.63861, longitude: 5.77167, matchRadiusM: 2500, isUnesco: true },
   { countryCode: "NL", name: "Van Nelle Factory", latitude: 51.92278, longitude: 4.43361, matchRadiusM: 400, isUnesco: true },
-  { countryCode: "NC", name: "Lagoons of New Caledonia (Grand Lagon Sud)", latitude: -22.5125, longitude: 166.95972, matchRadiusM: 38000, isUnesco: true },
+  { countryCode: "FR", name: "Lagoons of New Caledonia (Grand Lagon Sud)", latitude: -22.5125, longitude: 166.95972, matchRadiusM: 38000, isUnesco: true },
   { countryCode: "NZ", name: "NZ Sub-Antarctic Islands (Auckland Islands)", latitude: -50.7, longitude: 166.1, matchRadiusM: 17000, isUnesco: true },
   { countryCode: "NZ", name: "Tongariro National Park", latitude: -39.2, longitude: 175.58333, matchRadiusM: 19000, isUnesco: true },
   { countryCode: "NI", name: "León Cathedral", latitude: 12.435, longitude: -86.8781, matchRadiusM: 300, isUnesco: true },

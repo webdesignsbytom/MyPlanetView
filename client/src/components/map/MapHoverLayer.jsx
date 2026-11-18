@@ -1,6 +1,7 @@
 import React, { Suspense, memo, useEffect, useSyncExternalStore } from 'react';
 // Components
 import { HoverPreview } from './lazyMapPanels';
+import { regionParent } from '@/utils/map/regionPlaces';
 
 // The postcard that follows the pointer over a country. It follows `hover` (a value store
 // the map writes the hovered country to), so moving between countries re-renders only
@@ -21,7 +22,7 @@ function MapHoverLayer({ hover, hidden = false, visitsByCode, showPoster }) {
   if (!code || hidden) return null;
   return (
     <Suspense fallback={null}>
-      <HoverPreview code={code} status={visitsByCode[code]} showPoster={showPoster} />
+      <HoverPreview code={code} status={visitsByCode[code]} parentStatus={visitsByCode[regionParent(code)]} showPoster={showPoster} />
     </Suspense>
   );
 }

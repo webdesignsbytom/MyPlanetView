@@ -137,7 +137,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/stays?country={country}&q={destination}&checkin={checkin}&checkout={checkout}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/us-800.avif",
+    "imageKey": "visitCountryPosters/us-land-of-freedom-800.avif",
     "weight": 3
   },
   {
@@ -350,7 +350,7 @@ export const EXAMPLE_OFFERS = [
       "TRAVEL_DESK"
     ],
     "url": "https://www.example.com/tours?country={country}&q={destination}&date={checkin}&ref=myplanetview-example",
-    "imageKey": "visitCountryPosters/us-800.avif",
+    "imageKey": "visitCountryPosters/us-land-of-freedom-800.avif",
     "weight": 2
   },
   {

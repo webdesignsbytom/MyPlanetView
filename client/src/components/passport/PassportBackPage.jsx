@@ -9,7 +9,8 @@ import { CONTINENT_TOTAL, SPECIAL_PLACE_TOTAL } from '@/utils/map/specialPlaces'
 
 /**
  * The back page: the passport's totals (countries and special places as the map's stats
- * count them, continents with Antarctica, and the landmarks and UNESCO sites stamped), and
+ * count them, regions once there's one, continents with Antarctica, and the landmarks and
+ * UNESCO sites stamped), and
  * how a landmark gets its stamp.
  */
 function PassportBackPage({ totals, hasVisas, pageNumber, headingId }) {
@@ -25,6 +26,7 @@ function PassportBackPage({ totals, hasVisas, pageNumber, headingId }) {
             <StatTile label='Countries' value={totals.countries} />
             <StatTile label='Continents' value={totals.continents} outOf={CONTINENT_TOTAL} />
             <StatTile label='Special places' value={totals.specialPlaces} outOf={SPECIAL_PLACE_TOTAL} />
+            {totals.regions ? <StatTile label='Regions' value={totals.regions} /> : null}
             <StatTile label='Landmarks stamped' value={totals.landmarks} />
             <StatTile label='UNESCO sites' value={totals.unesco} />
           </dl>

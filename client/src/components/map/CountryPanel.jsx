@@ -31,6 +31,7 @@ import { VISIT_STATUS_LABELS, countsAsVisited } from '@/utils/map/visitStatus';
 import { formatDay } from '@/utils/functions/dates';
 import { isMagneticPole, isSpecialPlace } from '@/utils/map/specialPlaces';
 import { countryPhotoFilters } from '@/utils/map/preloadCountryLists';
+import { regionParent } from '@/utils/map/regionPlaces';
 
 const NO_TRIPS = [];
 
@@ -51,6 +52,9 @@ const NO_TRIPS = [];
 // through a share link). `mapKey` names the map in each card slot's seed.
 // "Print or download" (docs/API.md, "Downloads"): the country's photos as a zip, for the
 // map's editors (verified or not), never through a share link.
+// A region (Bali, Tasmania: regionPlaces.js) has its own ticket, with its poster, status, first
+// visit, note and the landmarks inside it; its photos and moments are its country's, which
+// `onOpenPlace(code)` opens from here (18 Nov 2026, the user's wish).
 function CountryPanel({
   code,
   visit,
@@ -73,20 +77,24 @@ function CountryPanel({
   nextTrip = null,
   canFetchTrips = true,
   mapKey = '',
+  onOpenPlace,
   onClose,
 }) {
   const country = COUNTRY_BY_CODE[code];
+  // A region's country (Bali: Indonesia), where its photos, moments and landmarks are kept
+  const parent = regionParent(code);
+  const parentName = parent ? COUNTRY_BY_CODE[parent]?.name : null;
   const splitUk = useSplitUk();
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [deskOpened, setDeskOpened] = useState(false);
   const photoFilters = useMemo(() => countryPhotoFilters(photoSource, code), [photoSource, code]);
-  const photos = usePhotoPage({ ...photoFilters, enabled: Boolean(code) });
-  const moments = useMomentPage({ ...photoSource, country: code, enabled: Boolean(code) });
+  const photos = usePhotoPage({ ...photoFilters, enabled: Boolean(code) && !parent });
+  const moments = useMomentPage({ ...photoSource, country: code, enabled: Boolean(code) && !parent });
   const cardsDue = Boolean(adEvery) && photos.photos.length >= adEvery;
   const plannedTrip = usePlannedTripPlace(nextTrip, { enabled: cardsDue || deskOpened, canFetch: canFetchTrips });
   const offerSlots = useGalleryOffers({ every: adEvery, slotKey: `${mapKey}:${code}`, country: code, plannedTrip });
-  const deskCountries = useMemo(() => [code], [code]);
+  const deskCountries = useMemo(() => [parent ?? code], [parent, code]);
   // md and up: the status controls go in the stub (Tailwind's md, 48rem)
   const controlsInStub = useMediaQuery(NOT_PHONE_QUERY);
   const { reload } = photos;
@@ -130,13 +138,14 @@ function CountryPanel({
     }
   };
 
-  // The kicker over the name: the place's badge once visited, and its continent
+  // The kicker over the name: the place's badge once visited, and its continent (a
+  // region's country)
   const kicker = (
     <p className='grid grid-cols-reg items-center justify-start gap-2'>
       {countsAsVisited(status) ? (
         <PlaceBadgeIcon code={code} lived={status === 'LIVED'} className='h-7 w-7 -rotate-6 drop-shadow-md' />
       ) : null}
-      <span>{continent || 'The world'}</span>
+      <span>{parentName ? `A region of ${parentName}` : continent || 'The world'}</span>
     </p>
   );
 
@@ -187,6 +196,13 @@ function CountryPanel({
           </span>
         </p>
       ) : null}
+      {parent ? (
+        <p className='grid justify-start'>
+          <span className='-rotate-2 border-2 border-double border-colour9 px-2 py-0.5 font-travel text-xs uppercase tracking-wide text-colour9'>
+            Region
+          </span>
+        </p>
+      ) : null}
       {isMagneticPole(code) ? (
         <p className='text-sm'>
           The magnetic poles wander, tens of kilometres a year. This is where NOAA’s World Magnetic Model puts it for 2025.
@@ -213,6 +229,21 @@ function CountryPanel({
       )}
       {locked ? <VerifyFirstNote action='mark countries, write notes, or add moments and photos' /> : null}
 
+      {parent ? (
+        <section className='grid gap-2' aria-labelledby={`part-of-${code}`}>
+          <h3 id={`part-of-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
+            Part of {parentName}
+          </h3>
+          <p className='text-sm'>
+            {country.name} has its own visit and note, but it’s never counted as a country: marking it visited or lived in marks{' '}
+            {parentName} visited too. Its photos and moments are kept with {parentName}.
+          </p>
+          {onOpenPlace ? (
+            <MapActionButton onClick={() => onOpenPlace(parent)}>Open {parentName}</MapActionButton>
+          ) : null}
+        </section>
+      ) : (
+        <>
       <section className='grid gap-2' aria-labelledby={`moments-${code}`}>
         <h3 id={`moments-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
           Moments
@@ -269,17 +300,20 @@ function CountryPanel({
           <PrintDownload inMapPanel scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
         ) : null}
       </section>
+        </>
+      )}
 
       {/* Partner offers for this country, only when asked for (every plan), before the
           landmarks, whose list can be long */}
       <TravelDesk
         inMapPanel
         countryCodes={deskCountries}
-        trip={plannedTrip && plannedTrip.stops.some((s) => s.countryCode === code) ? plannedTrip : null}
+        trip={plannedTrip && plannedTrip.stops.some((s) => s.countryCode === (parent ?? code)) ? plannedTrip : null}
         onOpen={() => setDeskOpened(true)}
       />
 
-      <CountryLandmarks countryCode={code} moments={moments.moments} />
+      {/* A region's: its country's landmarks inside it (useLandmarks) */}
+      <CountryLandmarks countryCode={code} moments={parent ? [] : moments.moments} />
     </CountryTicket>
   );
 }

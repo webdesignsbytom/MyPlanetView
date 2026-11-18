@@ -462,6 +462,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onAddTraveller={map.travellers.length < maxTravellersFor(map.groupType) ? actions?.addTraveller : undefined}
             onMomentsChanged={refreshMap}
             {...offerProps}
+            // A region's ticket opens its country's
+            onOpenPlace={selectCountry}
             onClose={close}
           />
         ) : null;

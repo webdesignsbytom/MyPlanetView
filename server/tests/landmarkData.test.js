@@ -8,6 +8,7 @@ import { MAX_MATCH_RADIUS_M } from '../src/utils/landmarkMatch.js';
 import { slugify } from '../src/utils/slug.js';
 import { SPECIAL_PLACE_CODES } from '../src/utils/specialPlaces.js';
 import { UK_NATION_CODES } from '../src/utils/ukNations.js';
+import { REGION_CODES } from '../src/utils/regionPlaces.js';
 
 const countryCodes = new Set(COUNTRIES.map((c) => c.code));
 const COUNTRY_BY_CODE = Object.fromEntries(COUNTRIES.map((c) => [c.code, c]));
@@ -25,10 +26,12 @@ describe('countries seed', () => {
     }
   });
 
-  it('has 227 countries, the five special places and the UK’s four nations, matching utils/specialPlaces.js and utils/ukNations.js', () => {
+  it('has 226 countries, the five special places, the UK’s four nations and six regions, matching utils/specialPlaces.js, utils/ukNations.js and utils/regionPlaces.js', () => {
     const special = COUNTRIES.filter((c) => c.kind === 'SPECIAL');
     const nations = COUNTRIES.filter((c) => c.kind === 'NATION');
-    expect(COUNTRIES.length - special.length - nations.length).toBe(227);
+    const regions = COUNTRIES.filter((c) => c.kind === 'REGION');
+    expect(COUNTRIES.length - special.length - nations.length - regions.length).toBe(226);
+    expect(regions.map((c) => c.code).sort()).toEqual([...REGION_CODES].sort());
     expect(nations.map((c) => c.code).sort()).toEqual([...UK_NATION_CODES].sort());
     expect(nations.every((c) => c.continent === 'EUROPE')).toBe(true);
     expect(special.map((c) => c.code).sort()).toEqual([...SPECIAL_PLACE_CODES].sort());

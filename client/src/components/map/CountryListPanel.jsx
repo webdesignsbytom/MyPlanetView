@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useId, useMemo, useRef, useState } from 'react';
 // Data
-import { COUNTRY_BY_CODE, SPECIAL_PLACES, countriesOnMap } from '@/utils/map/countries';
+import { COUNTRY_BY_CODE, REGION_PLACES, SPECIAL_PLACES, countriesOnMap } from '@/utils/map/countries';
 // Hooks
 import useSplitUk from '@/hooks/useSplitUk';
 // Components
@@ -54,7 +54,8 @@ function scrollerOf(element) {
 // country's own (CountryTicket, with no stub) that the map page centres on wide screens.
 // The countries come under A–Z index letters, each status a rubber stamp
 // (CountryListItem), then the special places (Antarctica and the poles) under their own
-// heading, which the stamp beside the counts jumps to. Photos with no country have their
+// heading, which the stamp beside the counts jumps to, then the regions (Bali, Tasmania:
+// regionPlaces.js) under theirs. Photos with no country have their
 // own list, opened from the top. The rows are
 // memoised and get only stable callbacks, so a status change re-renders one row, and the
 // map moving none.
@@ -81,7 +82,7 @@ function CountryListPanel({
   const splitUk = useSplitUk();
   const countries = useMemo(() => countriesOnMap(splitUk), [splitUk]);
   const ukPending = splitUk && Boolean(visitsByCode.GB);
-  const [shownCountries, shownSpecial] = useMemo(() => {
+  const [shownCountries, shownSpecial, shownRegions] = useMemo(() => {
     const term = fold(search.trim());
     const matches = (place) => {
       const status = visitsByCode[place.code] || 'NONE';
@@ -89,7 +90,7 @@ function CountryListPanel({
       return !term || fold(place.name).includes(term);
     };
     const listed = ukPending ? [...countries, COUNTRY_BY_CODE.GB].sort((a, b) => a.name.localeCompare(b.name)) : countries;
-    return [listed.filter(matches), SPECIAL_PLACES.filter(matches)];
+    return [listed.filter(matches), SPECIAL_PLACES.filter(matches), REGION_PLACES.filter(matches)];
   }, [search, filter, visitsByCode, countries, ukPending]);
   const letters = useMemo(() => byLetter(shownCountries), [shownCountries]);
 
@@ -136,7 +137,7 @@ function CountryListPanel({
       <div className='grid gap-2 sm:grid-cols-[minmax(0,1fr)_12rem]'>
         {/* The placeholder isn't a name: it goes as soon as you type */}
         <label htmlFor='country-search' className='sr-only'>
-          Search countries and special places
+          Search countries, special places and regions
         </label>
         <TextInput
           id='country-search'
@@ -161,8 +162,8 @@ function CountryListPanel({
       ) : null}
       <div className='grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3'>
         <p className='text-xs opacity-80' aria-live='polite'>
-          {shownCountries.length} of {countries.length} countries, {shownSpecial.length} of {SPECIAL_PLACES.length}{' '}
-          special places
+          {shownCountries.length} of {countries.length} countries, {shownSpecial.length} of {SPECIAL_PLACES.length} special places,{' '}
+          {shownRegions.length} of {REGION_PLACES.length} regions
         </p>
         {shownSpecial.length ? (
           <button
@@ -175,7 +176,7 @@ function CountryListPanel({
           </button>
         ) : null}
       </div>
-      {letters.length || shownSpecial.length ? null : <p className='text-sm'>Nowhere matches that. Try another spelling or show all places.</p>}
+      {letters.length || shownSpecial.length || shownRegions.length ? null : <p className='text-sm'>Nowhere matches that. Try another spelling or show all places.</p>}
       {letters.map(({ letter, places }) => (
         <section key={letter} className='grid' aria-labelledby={`${headingId}-${letter}`}>
           <h3 id={`${headingId}-${letter}`} className={`${INDEX_HEADING} text-2xl`}>
@@ -193,6 +194,16 @@ function CountryListPanel({
           </h3>
           <p className='text-xs opacity-80'>Not countries, so they have their own count.</p>
           <ul className={ROWS}>{shownSpecial.map(row)}</ul>
+        </section>
+      ) : null}
+      {shownRegions.length ? (
+        <section className='grid gap-1' aria-labelledby={`${headingId}-regions`}>
+          <h3 id={`${headingId}-regions`} className={`${INDEX_HEADING} text-lg`}>
+            Regions
+            <span aria-hidden='true' className='border-t-2 border-dashed border-poster-brown/50' />
+          </h3>
+          <p className='text-xs opacity-80'>Part of a country, so never counted as one: marking one visited marks its country too.</p>
+          <ul className={ROWS}>{shownRegions.map(row)}</ul>
         </section>
       ) : null}
     </CountryTicket>

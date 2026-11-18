@@ -5,6 +5,7 @@
 // Northern Ireland). Pure, so it's unit-tested. The client's copy is
 // client/src/utils/map/ukNations.js; keep the two in step.
 import UK_NATION_OUTLINES from '../data/ukNations.json' with { type: 'json' };
+import { isRegion, regionParent } from './regionPlaces.js';
 
 export const UK = 'GB';
 export const UK_NATION_CODES = Object.freeze(['XE', 'XC', 'XW', 'XI']);
@@ -13,10 +14,15 @@ export const UK_NATION_NAMES = Object.freeze({ XE: 'England', XC: 'Scotland', XW
 export const isUkNation = (code) => UK_NATION_CODES.includes(code);
 
 /**
- * The place a map keeps for a code: on a map that doesn't split the UK, a nation is the
- * UK. (On one that does, GB stays GB: something in the UK whose nation isn't known yet.)
+ * The place a map keeps for a code (photos, videos, stops, moments, travellers): on a map that doesn't
+ * split the UK, a nation is the UK (on one that does, GB stays GB: something in the UK whose
+ * nation isn't known yet). A region is its country's: its photos, trips and moments
+ * are kept there (regionPlaces.js); only its visit is its own.
  */
-export const placeOnMap = (code, splitUk) => (!splitUk && isUkNation(code) ? UK : code);
+export const placeOnMap = (code, splitUk) => {
+  const place = regionParent(code) ?? code;
+  return !splitUk && isUkNation(place) ? UK : place;
+};
 
 /**
  * The place a landmark (`{ countryCode, latitude, longitude }`) is in on a map: on a map
@@ -34,10 +40,12 @@ export const withUk = (codes) => (codes.some(isUkNation) && !codes.includes(UK) 
 /**
  * The visited codes that count as countries on a map: on a map that splits the UK, the
  * nations count one each, and GB itself only while no nation is visited (the UK marked
- * from before the split, its nations not chosen yet). Other codes pass through.
+ * from before the split, its nations not chosen yet). Regions are left out (they're never
+ * countries: regionPlaces.js); other codes pass through.
  */
 export function countedCountryCodes(codes, splitUk) {
-  const list = [...new Set(codes)];
+  // A region (Bali, Tasmania) is never a country: its country counts (regionPlaces.js)
+  const list = [...new Set(codes)].filter((code) => !isRegion(code));
   if (!splitUk) return list.filter((code) => !isUkNation(code));
   return list.some(isUkNation) ? list.filter((code) => code !== UK) : list;
 }

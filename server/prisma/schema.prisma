@@ -176,6 +176,9 @@ enum PlaceKind {
   // The UK's nations (England XE, Scotland XC, Wales XW, Northern Ireland XI): in place of
   // GB on a map that splits the UK (TravelMap.splitUk; utils/ukNations.js)
   NATION
+  // Part of a country, with its own visit (Bali, the Galapagos, Goa, Hawaii, New Caledonia,
+  // Tasmania: utils/regionPlaces.js, which names each one's country); never counted as one
+  REGION
 }
 
 model Country {

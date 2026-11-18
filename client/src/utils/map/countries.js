@@ -4,7 +4,9 @@
 // pole lines are at -16.6 and 1020.6). Countries have no `kind`; special places are
 // 'SPECIAL' (utils/map/specialPlaces.js), and the UK's nations 'NATION', places only on a
 // map that splits the UK (utils/map/ukNations.js; the lists below leave them out unless
-// asked for one that does).
+// asked for one that does). Regions (Bali, Tasmania: utils/map/regionPlaces.js) are
+// 'REGION', places on every map with their own visit, but never in a picker: their photos,
+// trips and moments are their country's.
 import { isPole } from './specialPlaces.js';
 
 export const COUNTRIES = [
@@ -150,7 +152,6 @@ export const COUNTRIES = [
   { code: 'NR', name: "Nauru", slug: 'nauru', continent: 'OCEANIA', pinX: 1935.3, pinY: 505.3 },
   { code: 'NP', name: "Nepal", slug: 'nepal', continent: 'ASIA', pinX: 1446.1, pinY: 320.5 },
   { code: 'NL', name: "Netherlands", slug: 'netherlands', continent: 'EUROPE', pinX: 1013, pinY: 167.9 },
-  { code: 'NC', name: "New Caledonia", slug: 'new-caledonia', continent: 'OCEANIA', pinX: 1905.8, pinY: 638.7 },
   { code: 'NZ', name: "New Zealand", slug: 'new-zealand', continent: 'OCEANIA', pinX: 1858.2, pinY: 783.7 },
   { code: 'NI', name: "Nicaragua", slug: 'nicaragua', continent: 'NORTH_AMERICA', pinX: 507.9, pinY: 419.3 },
   { code: 'NE', name: "Niger", slug: 'niger', continent: 'AFRICA', pinX: 1038.4, pinY: 390.5 },
@@ -251,6 +252,16 @@ export const COUNTRIES = [
   { code: 'XC', name: "Scotland", slug: 'scotland', continent: 'EUROPE', kind: 'NATION', pinX: 968.2, pinY: 140.2 },
   { code: 'XW', name: "Wales", slug: 'wales', continent: 'EUROPE', kind: 'NATION', pinX: 969.4, pinY: 168.6 },
   { code: 'XI', name: "Northern Ireland", slug: 'northern-ireland', continent: 'EUROPE', kind: 'NATION', pinX: 956.3, pinY: 153.1 },
+  // Regions (18 Nov 2026, the user's wish): part of a country, with their own visit, poster
+  // and ticket, never counted as countries (utils/map/regionPlaces.js, server's
+  // utils/regionPlaces.js: each one's country). Codes from ISO 3166's user-assigned range,
+  // except New Caledonia's own (a country on the map until then: the user, it's France's).
+  { code: 'XB', name: "Bali", slug: 'bali', continent: 'ASIA', kind: 'REGION', pinX: 1638.8, pinY: 555.8 },
+  { code: 'XA', name: "Galápagos Islands", slug: 'galapagos-islands', continent: 'SOUTH_AMERICA', kind: 'REGION', pinX: 469.4, pinY: 506.9 },
+  { code: 'XG', name: "Goa", slug: 'goa', continent: 'ASIA', kind: 'REGION', pinX: 1403.2, pinY: 403.2 },
+  { code: 'XH', name: "Hawaii", slug: 'hawaii', continent: 'OCEANIA', kind: 'REGION', pinX: 118.9, pinY: 376 },
+  { code: 'NC', name: "New Caledonia", slug: 'new-caledonia', continent: 'OCEANIA', kind: 'REGION', pinX: 1905.8, pinY: 638.7 },
+  { code: 'XT', name: "Tasmania", slug: 'tasmania', continent: 'OCEANIA', kind: 'REGION', pinX: 1746, pinY: 772.2 },
 ];
 
 export const COUNTRY_BY_CODE = Object.fromEntries(COUNTRIES.map((country) => [country.code, country]));
@@ -265,7 +276,7 @@ export const CONTINENT_LABELS = {
   SOUTH_AMERICA: 'South America',
 };
 
-// The 227 countries, and the five special places (Antarctica and the poles), each in
+// The 226 countries, and the five special places (Antarctica and the poles), each in
 // the list's order
 export const PLAIN_COUNTRIES = COUNTRIES.filter((country) => !country.kind);
 export const SPECIAL_PLACES = COUNTRIES.filter((country) => country.kind === 'SPECIAL');
@@ -273,6 +284,8 @@ export const SPECIAL_PLACES = COUNTRIES.filter((country) => country.kind === 'SP
 export const POLE_PLACES = SPECIAL_PLACES.filter((place) => isPole(place.code));
 // England, Scotland, Wales and Northern Ireland
 export const UK_NATION_PLACES = COUNTRIES.filter((country) => country.kind === 'NATION');
+// Bali, Goa, Hawaii, New Caledonia and Tasmania, alphabetically
+export const REGION_PLACES = COUNTRIES.filter((country) => country.kind === 'REGION');
 
 /**
  * The countries on a map: on one that splits the UK (`splitUk`), the nations in the UK's
@@ -302,7 +315,7 @@ const SPLIT_UK_OPTION_GROUPS = [
 export const countryOptionsFor = (splitUk) => (splitUk ? SPLIT_UK_OPTIONS : COUNTRY_OPTIONS);
 export const countryOptionGroupsFor = (splitUk) => (splitUk ? SPLIT_UK_OPTION_GROUPS : COUNTRY_OPTION_GROUPS);
 // Where someone was born or likes best: the countries and Antarctica, never a pole (the
-// server refuses one there)
-export const HOME_COUNTRY_OPTIONS = COUNTRIES.filter((country) => !isPole(country.code) && country.kind !== 'NATION').map(toOption);
+// server refuses one there) or a region (its country stands for it)
+export const HOME_COUNTRY_OPTIONS = COUNTRIES.filter((country) => !isPole(country.code) && !country.kind?.match(/^(NATION|REGION)$/)).map(toOption);
 
 export const countryName = (code) => COUNTRY_BY_CODE[code]?.name ?? code;

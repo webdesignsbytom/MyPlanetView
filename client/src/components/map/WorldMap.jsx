@@ -1,6 +1,7 @@
 import React, { memo, useId } from 'react';
 // Hooks
 import { useViewportZoom } from '@/hooks/useMapViewport';
+import useDetailedShapes from '@/hooks/useDetailedShapes';
 import useSplitUk from '@/hooks/useSplitUk';
 // Components
 import CountryLayer from './CountryLayer';
@@ -78,6 +79,8 @@ function WorldMap({
 }) {
   const hintId = useId();
   const zoom = useViewportZoom(viewport);
+  // Zoomed in, the places in view are drawn from their detailed outlines
+  const detail = useDetailedShapes(viewport, panZoom);
   const splitUk = useSplitUk();
   // Clicks wait for afterTap only when the map can be dragged and double-tapped
   const afterTap = panZoom ? viewport.afterTap : undefined;
@@ -112,6 +115,7 @@ function WorldMap({
           showUnvisited={showUnvisited}
           showAntarctica={showAntarctica}
           splitUk={splitUk}
+          detail={detail}
         />
         {showSky ? <SkyBodies zoom={zoom} /> : null}
         {showCountryNames ? (

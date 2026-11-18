@@ -53,9 +53,9 @@ test.describe('The map page', () => {
     await openStats(page);
     const stats = page.getByRole('dialog', { name: 'Travel statistics' });
     await expect(stats).toBeVisible();
-    // Countries, continents (of 7), special places (of 5), photos, landmarks (stamped: confirmed
+    // Countries, continents (of 7), special places (of 5), regions (of 6), photos, landmarks (stamped: confirmed
     // matches, the owner counting the one on a hidden photo too), trips
-    await expect(stats.getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '16', '13', '3']);
+    await expect(stats.getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '0 of 6', '16', '13', '3']);
     await expect(stats.getByRole('listitem')).toHaveText([/Charlie\s*1/, /Alex\s*1/]);
   });
 
@@ -110,22 +110,22 @@ test.describe('The map page', () => {
   test('the country list filters, searches and sets statuses', { tag: '@phone' }, async ({ page }) => {
     await openMap(page);
     const list = await openTool(page, 'Country list', 'Countries');
-    // Every country and every special place showing
-    await expect(list.getByText(/^(\d+) of \1 countries, (\d+) of \2 special places$/)).toBeVisible();
+    // Every country, special place and region showing
+    await expect(list.getByText(/^(\d+) of \1 countries, (\d+) of \2 special places, (\d+) of \3 regions$/)).toBeVisible();
 
     const show = list.getByRole('combobox', { name: 'Show' });
     await show.selectOption('Visited');
-    await expect(list.getByText(/^6 of \d+ countries, 0 of \d+ special places$/)).toBeVisible();
+    await expect(list.getByText(/^6 of \d+ countries, 0 of \d+ special places, 0 of \d+ regions$/)).toBeVisible();
     for (const name of ['France', 'Spain', 'Italy', 'Portugal', 'Netherlands']) {
       await expect(list.getByRole('button', { name: `Status for ${name}: Visited` })).toBeVisible();
     }
     await show.selectOption('Want to go');
-    await expect(list.getByText(/^3 of \d+ countries, 0 of \d+ special places$/)).toBeVisible();
+    await expect(list.getByText(/^3 of \d+ countries, 0 of \d+ special places, 0 of \d+ regions$/)).toBeVisible();
     await expect(list.getByRole('button', { name: 'Status for Japan: Want to go' })).toBeVisible();
 
     await show.selectOption('All places');
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('braz');
-    await expect(list.getByText(/^1 of \d+ countries, 0 of \d+ special places$/)).toBeVisible();
+    await expect(list.getByText(/^1 of \d+ countries, 0 of \d+ special places, 0 of \d+ regions$/)).toBeVisible();
 
     // The row's button turns into the real dropdown, focused and opened (a customizable
     // select: focus is then on its chosen option, inside it)
@@ -140,7 +140,7 @@ test.describe('The map page', () => {
 
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('');
     await show.selectOption('Lived there');
-    await expect(list.getByText(/^3 of \d+ countries, 0 of \d+ special places$/)).toBeVisible();
+    await expect(list.getByText(/^3 of \d+ countries, 0 of \d+ special places, 0 of \d+ regions$/)).toBeVisible();
     await expect(list.getByRole('button', { name: /^Status for (United Kingdom|Ireland|Brazil): Lived there$/ })).toHaveCount(3);
   });
 });

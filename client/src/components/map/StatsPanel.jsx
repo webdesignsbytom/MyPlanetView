@@ -9,10 +9,12 @@ import StatTile from './StatTile';
 import UnplacedPhotosButton from './UnplacedPhotosButton';
 // Utils
 import { CONTINENT_TOTAL, SPECIAL_PLACE_TOTAL } from '@/utils/map/specialPlaces';
+import { REGION_CODES } from '@/utils/map/regionPlaces';
 
 // Travel statistics, counted by the server from what this viewer may see. Countries
 // leave out the special places (Antarctica and the poles), which have their own count;
-// continents count them (Antarctica is the seventh). The photos with no country
+// continents count them (Antarctica is the seventh). Regions (Bali, Tasmania) have their own
+// count too, and open no continent (their country does). The photos with no country
 // (counted, but on no country) are a button away, and so are the badges and goals (on a
 // phone, the toolbar leaves their stamp out: MapToolbar). `passportHref` links to the map's
 // passport (its own address, or through the share link).
@@ -26,6 +28,7 @@ function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = 
             <StatTile label='Countries' value={stats.countries} />
             <StatTile label='Continents' value={stats.continents} outOf={CONTINENT_TOTAL} />
             <StatTile label='Special places' value={stats.specialPlaces} outOf={SPECIAL_PLACE_TOTAL} />
+            <StatTile label='Regions' value={stats.regions ?? 0} outOf={REGION_CODES.length} />
             <StatTile label='Photos' value={stats.photos} />
             <StatTile label='Landmarks' value={stats.landmarks} />
             <StatTile label='Trips' value={stats.trips} />

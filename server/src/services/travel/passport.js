@@ -3,6 +3,7 @@
 // the landmarks still to stamp, and the totals.
 import { canEdit } from '../../utils/access.js';
 import { isSpecialPlace } from '../../utils/specialPlaces.js';
+import { isRegion } from '../../utils/regionPlaces.js';
 import { COUNTED_VISIT_STATUSES, toDateOnly } from '../../utils/travelValidation.js';
 import { signPhotoUrl } from '../s3/mediaService.js';
 import {
@@ -116,8 +117,9 @@ export async function buildPassport(mapId, role) {
     })
   );
 
+  // Regions (Bali, Tasmania) have their own visa page, but count only as their own total
   const counted = [...facts.visited];
-  const countries = counted.filter((code) => !isSpecialPlace(code));
+  const countries = counted.filter((code) => !isSpecialPlace(code) && !isRegion(code));
   return {
     // The owner's plan picks the cover (Economy, Business, First Class), as it picks every rule
     map: {
@@ -131,8 +133,9 @@ export async function buildPassport(mapId, role) {
     pages,
     totals: {
       countries: countries.length,
-      specialPlaces: counted.length - countries.length,
-      continents: new Set(counted.map((code) => facts.continentByCode.get(code)).filter(Boolean)).size,
+      specialPlaces: counted.filter(isSpecialPlace).length,
+      regions: counted.filter(isRegion).length,
+      continents: new Set(counted.filter((code) => !isRegion(code)).map((code) => facts.continentByCode.get(code)).filter(Boolean)).size,
       landmarks: facts.stamps.length,
       unesco: facts.stamps.filter((s) => s.isUnesco).length,
     },
