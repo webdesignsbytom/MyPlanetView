@@ -350,7 +350,7 @@ function CountryPanel({
           "Add photos" joined it the same day), one to a row below */}
       <div className='grid gap-2 lg:auto-cols-fr lg:grid-flow-col'>
         {!parent && canEdit && onAddPhotos ? (
-          <MapActionButton onClick={() => onAddPhotos(code)}>Add photos from {country.name}</MapActionButton>
+          <MapActionButton onClick={() => onAddPhotos(code)}>Add photos</MapActionButton>
         ) : null}
         {!parent && (canEdit || locked) && photoSource?.mapId && photos.photos.length ? (
           <PrintDownload inMapPanel fill scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
