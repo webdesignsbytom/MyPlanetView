@@ -8,9 +8,11 @@ import HomeStartButton from './HomeStartButton';
 // The home hero (17 Nov 2026, the user's artwork): about a screen tall, the art filling it,
 // with the round start stamp over its foot (its "How it works" link went on 18 Nov 2026, the
 // user's wish) and no text over it (the art carries the name and the tagline). A portrait phone's box takes the phone art's own
-// shape, so the name across it is never cut off at the sides. The h1 is for screen readers
-// and search engines only. Inside <main>, so the skip link lands on it. Poster colours are
-// fixed artwork, the same in light and dark mode.
+// shape, so the name across it is never cut off at the sides. The h1 and the tagline under it
+// are the art's own words as text (it's decorative, alt=''), for screen readers and search
+// engines only; without the tagline the page's <main> had 34 characters and the build's
+// check-seo failed (18 Nov 2026). Inside <main>, so the skip link lands on it. Poster colours
+// are fixed artwork, the same in light and dark mode.
 function HomePageHeader() {
   return (
     <section
@@ -20,6 +22,7 @@ function HomePageHeader() {
       <h1 id='home-heading' className='sr-only'>
         {homeHero.title}
       </h1>
+      <p className='sr-only'>{homeHero.tagline}</p>
       <HomeHeroArtwork />
 
       <div className='relative grid content-end justify-center px-4 pb-8 sm:pb-10'>
