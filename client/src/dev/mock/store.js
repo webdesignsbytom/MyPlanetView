@@ -102,6 +102,10 @@ export function loadStore() {
   // ...and before friends challenges (16 Nov 2026): none, unless the seed has them
   if (!Array.isArray(db.challenges)) db.challenges = buildSeed().challenges;
   if (!Array.isArray(db.challengeEntries)) db.challengeEntries = buildSeed().challengeEntries;
+  // ...and before country maps (18 Nov 2026): the seed's states and pin
+  if (!Array.isArray(db.subdivisionVisits)) db.subdivisionVisits = buildSeed().subdivisionVisits;
+  if (!Array.isArray(db.pins)) db.pins = buildSeed().pins;
+  if (!Array.isArray(db.pinVisits)) db.pinVisits = buildSeed().pinVisits;
   db.users[0].role = getMockRole();
   saveStore();
   return db;

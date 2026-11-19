@@ -1,0 +1,203 @@
+{
+  "code": "PK",
+  "slug": "pakistan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salaam", "Pakistan", "Khush amdeed"],
+  "summary": "Lahore's Mughal forts and mosques, and the Karakoram Highway to Hunza's peaks.",
+  "overview": [
+    "Pakistan runs from the Arabian Sea to some of the highest mountains on earth: five of the world's fourteen peaks above 8,000 m, K2 among them, stand in its north. The Karakoram Highway climbs from near Islamabad along the Indus and Hunza rivers to the Khunjerab Pass on the Chinese border, passing Hunza, a valley of apricot orchards and old stone forts below snowy peaks, and Attabad Lake, formed by a landslide in 2010. From Skardu, treks lead towards K2, and a jeep ride and a hike from the highway reach Fairy Meadows, below the face of Nanga Parbat.",
+    "Lahore is the country's cultural capital, with its Mughal fort, the vast courtyard of the Badshahi Mosque, the tiled Wazir Khan Mosque in the walled city and the Shalimar Gardens. Near it, at the Wagah crossing, Pakistani and Indian border guards perform a flag-lowering ceremony each evening before cheering crowds. Islamabad, a planned capital at the foot of the Margalla Hills, has the Faisal Mosque, and the Buddhist ruins of Taxila are under an hour away. In Sindh, Mohenjo-daro is one of the great cities of the Indus civilisation, about 4,500 years old.",
+    "Motorways and trains link the big cities, and flights to Gilgit and Skardu save long drives, though they're often cancelled in bad weather. Hospitality is warm, and visitors are often invited for tea or a meal by people they've only just met.",
+    "Many governments advise against travel to parts of Pakistan, especially areas close to the borders with Afghanistan, Iran and India, and conditions there can change quickly. Read your own government's latest advice before planning a route, and again just before you travel."
+  ],
+  "whenToGo": {
+    "stripLabel": "Lahore, Islamabad and the plains of Punjab. The northern mountains follow almost the opposite calendar, shown in their own strip below.",
+    "months": ["good", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "good", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Cool season",
+        "months": [11, 12, 1, 2],
+        "text": "Sunny, mild days around 20°C on the plains and cold nights. From about November to January, thick fog and smog often settle over Lahore and Punjab, delaying trains and flights. The northern valleys are snowbound."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4],
+        "text": "Warm and bright on the plains, with blossom in the gardens of Lahore. In April, Hunza's apricot and cherry trees flower, though nights in the north are still cold."
+      },
+      {
+        "name": "Hot season",
+        "months": [5, 6],
+        "text": "Fierce, dry heat on the plains: Lahore often passes 40°C and parts of Sindh come close to 50°C. The mountain roads and passes open, and the north fills with Pakistani holidaymakers escaping the heat."
+      },
+      {
+        "name": "Monsoon",
+        "months": [7, 8, 9],
+        "text": "Humid heat and heavy downpours on the plains, with floods in some years. The high mountains get little monsoon rain, and July and August are the main trekking months, though landslides can block the Karakoram Highway."
+      },
+      {
+        "name": "Autumn",
+        "months": [10],
+        "text": "Dry, clear and warm on the plains. In the north the poplars and orchards turn gold and red, Hunza's finest colours, before the cold arrives in November."
+      }
+    ],
+    "weather": "Most of Pakistan is hot and dry. On the plains the heat builds from April to June, and the monsoon brings humid air and heavy rain from about July to September, more in Punjab and the north-east than in Sindh and Balochistan. Winters on the plains are mild by day and cool at night. Karachi, on the coast, is hot most of the year but rarely as fierce as the inland plains. The far north is the opposite: snow from about November to March, and warm, mostly dry summers in the valleys, with glaciers and snow peaks above them.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Pakistan",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting, when offices work short hours and streets empty just before sunset, then fill again after the fast is broken. The night before Eid (Chaand Raat), markets stay open late and women and girls have henna painted on their hands. Eid al-Fitr is a holiday of several days."
+      },
+      {
+        "name": "Pakistan Day",
+        "place": "Islamabad and across Pakistan",
+        "when": "23 March",
+        "months": [3],
+        "text": "Remembers the Lahore Resolution of 1940, which called for a separate homeland; a public holiday, usually with a military parade in Islamabad."
+      },
+      {
+        "name": "Chilam Joshi",
+        "place": "The Kalash valleys, Chitral",
+        "when": "Usually in mid-May, over several days",
+        "months": [5],
+        "text": "The Kalash, a small community with their own religion, welcome the spring with days of singing and dancing in their valleys, the women in black dresses with bright embroidery and beaded headdresses."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Pakistan",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "In the weeks before, animal markets spring up in the cities and goats and cattle are kept in the streets; on the day, families share the meat with relatives and the poor. Offices close for several days."
+      },
+      {
+        "name": "Shandur Polo Festival",
+        "place": "Shandur Pass, between Chitral and Gilgit",
+        "when": "Usually in early July",
+        "months": [7],
+        "text": "Freestyle polo on one of the highest polo grounds in the world, at about 3,700 m, between teams from Chitral and Gilgit, with folk music and a tent camp by the lake."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Pakistan",
+        "when": "14 August",
+        "months": [8],
+        "text": "Independence in 1947 is celebrated with green and white flags on houses, cars and bazaars, and fireworks at midnight as the day begins."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Gilgit-Baltistan and the Karakoram",
+        "months": ["avoid", "avoid", "avoid", "good", "best", "best", "best", "best", "best", "best", "avoid", "avoid"],
+        "text": "Hunza, Skardu, Fairy Meadows and the treks to K2's base. The season runs from about May to October, with blossom in April and autumn colours in late October. Winters are very cold and many hotels close; the Khunjerab Pass is open only from spring to late autumn, and high plateaus such as Deosai only in summer."
+      },
+      {
+        "name": "Swat and Chitral",
+        "text": "Green valleys in the north-west, cooler than the plains, with orchards, rivers and the Kalash villages near Chitral. Best from April to October; the Lowari tunnel keeps Chitral reachable in winter, but snow cuts off the high side valleys."
+      },
+      {
+        "name": "Karachi and Sindh",
+        "text": "Hot almost all year, with humid sea air in Karachi and dry heat inland. November to February is the time for Mohenjo-daro and the great necropolis of Makli; from April to October the heat is draining."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Assalam-o-alaikum\" (peace be upon you), answered with \"Wa alaikum assalam\". Men shake hands, often warmly and at length, and friends embrace. Men don't usually offer a hand to women; a hand on the heart with a nod is polite. Expect questions about your family, your country and what you think of Pakistan.",
+    "etiquette": [
+      "Hospitality is a matter of pride: you'll be offered tea everywhere, and strangers may quietly pay for your meal. Offer to pay, but accept with thanks if they insist.",
+      "Eat, give and take with your right hand.",
+      "At mosques, take off your shoes, cover your arms and legs, and women cover their hair. Avoid Friday midday prayers.",
+      "During Ramadan, don't eat, drink or smoke in public by day.",
+      "Alcohol is banned for Muslims and hard to find; never drink in public.",
+      "Ask before photographing people, especially women, and never photograph military sites, police or airports."
+    ],
+    "tipping": "Usual: about 10% in restaurants where no service charge is added, and small tips for porters, drivers and anyone who helps. On treks, tip guides and porters at the end; agree the amount with your agency first.",
+    "dress": "Loose clothes that cover arms and legs. Many visitors wear the shalwar kameez, a long tunic over loose trousers, which is cool and respectful. Women should carry a long scarf (dupatta) for mosques and conservative areas. Men rarely wear shorts. Bring warm layers for the north, even in summer.",
+    "food": [
+      {
+        "name": "Biryani",
+        "text": "Layered rice and spiced meat, cooked with potatoes, plums and plenty of chilli in the Karachi style. Sold from giant pots at roadside stalls all day."
+      },
+      {
+        "name": "Nihari",
+        "text": "Beef or mutton stewed overnight into a rich, spicy gravy, eaten for breakfast in Lahore and Karachi with naan, ginger and a squeeze of lemon."
+      },
+      {
+        "name": "Karahi",
+        "text": "Chicken or mutton cooked fast in a deep iron pan with tomatoes, ginger and green chillies, and brought to the table in the pan."
+      },
+      {
+        "name": "Chapshuro",
+        "text": "Hunza's meat pie: spiced minced yak or beef baked inside a round of thin bread, cut into wedges. The valley's apricots and walnut cake are worth trying too."
+      },
+      {
+        "name": "Mangoes",
+        "text": "Pakistan grows some of the world's sweetest, sold by the crate from June to August, when each region argues for its own kind."
+      },
+      {
+        "name": "Doodh patti and lassi",
+        "text": "Doodh patti is strong tea boiled in milk with plenty of sugar, served everywhere from roadside stalls; lassi is a cool yoghurt drink, salty or sweet."
+      }
+    ],
+    "phrases": {
+      "language": "Urdu",
+      "intro": "Urdu is the national language and understood almost everywhere, though most people speak a regional language at home, such as Punjabi, Sindhi or Pashto. English is widely spoken in cities and by educated people.",
+      "items": [
+        { "phrase": "Assalam-o-alaikum (السلام علیکم)", "say": "ah-sah-LAAM-oh ah-LAY-kum", "meaning": "Hello (\"Peace be upon you\")" },
+        { "phrase": "Aap kaise hain? (آپ کیسے ہیں؟)", "say": "AAP KAI-seh hain", "meaning": "How are you?" },
+        { "phrase": "Shukriya (شکریہ)", "say": "SHOOK-ree-yah", "meaning": "Thank you" },
+        { "phrase": "Meherbani karke (مہربانی کر کے)", "say": "meh-her-BAH-nee KAR-keh", "meaning": "Please" },
+        { "phrase": "Ji haan / Ji nahin (جی ہاں / جی نہیں)", "say": "jee HAAN / jee na-HEEN", "meaning": "Yes / No (polite)" },
+        { "phrase": "Kitne ka hai? (کتنے کا ہے؟)", "say": "KIT-neh kah hai", "meaning": "How much is it?" },
+        { "phrase": "Bahut mazedar (بہت مزیدار)", "say": "ba-HUT ma-zeh-DAAR", "meaning": "Very tasty" },
+        { "phrase": "Khuda hafiz (خدا حافظ)", "say": "khoo-DAH HAA-fiz", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q843",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Pakistani rupee (Rs, PKR). Cards are taken in city hotels, malls and bigger restaurants; carry cash for everything else.",
+        "sources": [{ "property": "P38", "values": ["Q188289"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Urdu, the national language, and English, both official. Punjabi, Sindhi, Pashto, Saraiki and Balochi are widely spoken in their regions.",
+        "sources": [{ "property": "P37", "values": ["Q1617", "Q1860"] }],
+        "note": "The regional languages aren't official nationally; the page adds them because most Pakistanis speak one at home."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C (two round pins) and D (three large round pins), and type G (as in the UK) in some newer buildings, 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1383497", "Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Pakistan Standard Time, UTC+5, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6806", "Q4806288"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "15 for police, 16 for fire, and 1122 for ambulance and rescue",
+        "sources": [{ "property": "P2852", "values": ["Q25648869", "Q25648895", "Q7314973"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+92",
+        "sources": [{ "property": "P474", "values": ["+92"] }]
+      }
+    ]
+  }
+}

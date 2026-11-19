@@ -73,6 +73,7 @@ describe('buildMapStats', () => {
     expect(buildMapStats({ photoCount: 12, landmarkCount: 3, tripCount: 2 })).toEqual({
       countries: 0,
       specialPlaces: 0,
+      regions: 0,
       continents: 0,
       photos: 12,
       landmarks: 3,

@@ -79,12 +79,13 @@ describe('site badges', () => {
     expect(of(badgeProgress({}), 'countries-all')).toMatchObject({ have: 0, need: 1, earned: false });
   });
 
-  it('need all 227 countries of the seeded list for "All countries", or 230 with the UK split', () => {
+  it('need all 226 countries of the seeded list for "All countries", or 229 with the UK split (never a region)', () => {
     const table = new Map(COUNTRIES.map((c) => [c.code, c.continent]));
-    expect(of(badgeProgress({ continentByCode: table }), 'countries-all').need).toBe(227);
-    expect(of(badgeProgress({ continentByCode: table, splitUk: true }), 'countries-all').need).toBe(230);
+    expect(of(badgeProgress({ continentByCode: table }), 'countries-all').need).toBe(226);
+    expect(of(badgeProgress({ continentByCode: table, splitUk: true }), 'countries-all').need).toBe(229);
+    // Every country and region visited: the regions add nothing
     const everywhere = new Set(COUNTRIES.filter((c) => c.kind !== 'NATION').map((c) => c.code));
-    expect(of(badgeProgress({ visited: everywhere, continentByCode: table }), 'countries-all')).toMatchObject({ have: 227, earned: true });
+    expect(of(badgeProgress({ visited: everywhere, continentByCode: table }), 'countries-all')).toMatchObject({ have: 226, earned: true });
   });
 });
 

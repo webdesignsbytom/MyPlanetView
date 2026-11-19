@@ -1,0 +1,169 @@
+{
+  "code": "VA",
+  "slug": "vatican-city",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salve", "Città del", "Vaticano"],
+  "summary": "St Peter's, the Sistine Chapel and papal audiences, all inside Rome.",
+  "overview": [
+    "About 44 hectares behind high walls on the west bank of the Tiber, inside Rome, make up the smallest country in the world. Vatican City is the seat of the Pope and of the Holy See, which governs the Catholic Church, and became a state of its own under the Lateran Treaty of 1929. Bernini's colonnades curve round St Peter's Square like open arms, leading to St Peter's Basilica, built over what is believed to be the tomb of St Peter. Inside are Michelangelo's Pietà, Bernini's bronze canopy over the high altar and, below, the grottoes where many popes are buried; a climb, partly by lift, reaches the top of the dome.",
+    "The Vatican Museums hold the popes' collections, from ancient statues and Egyptian mummies to the rooms painted by Raphael, and lead to the Sistine Chapel, with Michelangelo's ceiling and his Last Judgement on the altar wall. It is here that the cardinals meet in conclave to elect a new pope. The museums are among the busiest in the world, and a timed ticket booked ahead saves hours of queuing. The Vatican Gardens, which cover much of the state, are seen only on guided tours, and the Swiss Guard, in striped Renaissance uniforms, keep the gates.",
+    "When the Pope is in Rome, he usually holds a general audience in St Peter's Square on Wednesday mornings, moving indoors to the Paul VI Hall in cold weather, and leads a short prayer from a window of the Apostolic Palace at noon on Sundays; audience tickets are free. There are no border checks: you simply walk in from Rome, by Metro Line A to Ottaviano or Cipro, or on foot over the Tiber from Castel Sant'Angelo."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild, with days of 12–14°C, cold nights and rain. January and February have the shortest queues, apart from the Christmas holidays, when a nativity scene and a tall tree stand in St Peter's Square."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm and bright, with days of 18–25°C, but Holy Week and Easter bring the biggest crowds of the year, and school groups fill the museums."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot, often 32–35°C, with long queues in the sun on a square with no shade. The Pope usually takes a summer break in July, when the general audiences pause."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Settled, warm weather usually lasts through September and into October, though the crowds stay. Rain returns in October and November, the wettest month, and the crowds thin."
+      }
+    ],
+    "weather": "Rome's Mediterranean climate: hot, dry summers, with days of 30–33°C and heatwaves near 40°C, and mild, wet winters, with days around 12–13°C and nights a few degrees above freezing. October to December is the rainy stretch, with sudden heavy downpours. The queues for the museums and the basilica are mostly outdoors, so both heat and rain matter.",
+    "festivals": [
+      {
+        "name": "Epiphany",
+        "place": "St Peter's Basilica",
+        "when": "6 January",
+        "months": [1],
+        "text": "The Pope celebrates Mass in the basilica for the feast of the Three Kings, and outside a costumed parade usually walks down Via della Conciliazione towards the square."
+      },
+      {
+        "name": "Holy Week and Easter",
+        "place": "St Peter's Square and Basilica",
+        "when": "Moves each year: Easter Sunday is 28 March in 2027, with Holy Week the week before",
+        "months": [3, 4],
+        "text": "The Pope leads the services of Holy Week, from Palm Sunday in the square to the Way of the Cross on Good Friday, held at Rome's Colosseum. On Easter Sunday he gives the Urbi et Orbi blessing (“to the city and the world”) from the basilica's central balcony."
+      },
+      {
+        "name": "Saints Peter and Paul",
+        "place": "St Peter's Basilica",
+        "when": "29 June",
+        "months": [6],
+        "text": "Rome's two patron saints share this feast day. The Pope celebrates Mass in St Peter's, and the basilica's old bronze statue of St Peter is dressed for the day in a red cope and the papal tiara."
+      },
+      {
+        "name": "Papal general audience",
+        "place": "St Peter's Square, or the Paul VI Hall in winter",
+        "when": "Most Wednesday mornings, usually paused in July",
+        "months": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12],
+        "text": "The Pope speaks to pilgrims from around the world, greets groups in many languages and gives his blessing. Tickets are free."
+      },
+      {
+        "name": "Christmas",
+        "place": "St Peter's Basilica and Square",
+        "when": "24–25 December",
+        "months": [12],
+        "text": "Mass in the basilica on Christmas Eve; on Christmas Day the Pope gives the Urbi et Orbi blessing from the central balcony to a crowd that fills the square."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Life inside the walls runs in Italian, and a “Buongiorno” to guards, staff and shopkeepers goes a long way. Priests are addressed as “Padre” (Father), and the Pope as “Santo Padre” (Holy Father). At an audience, the crowd greets him with applause, cheers and the flags of many nations.",
+    "etiquette": [
+      "Shoulders and knees must be covered to enter the basilica and the museums, and staff turn people away at the door. Take hats off inside.",
+      "The Sistine Chapel is kept quiet, and no photographs or filming are allowed there; guards enforce both.",
+      "Where Mass is being said, and in the chapels set aside for prayer, don't walk about or take photos.",
+      "Security at the basilica is like an airport's, and big bags aren't allowed in; the museums have a cloakroom.",
+      "Touts in the streets outside sell queue-jumping tickets: buy from the museums' own website or a known agency.",
+      "Watch for pickpockets in the crowds of the square, on Metro Line A and on the buses to the Vatican."
+    ],
+    "tipping": "Inside the walls there's little to tip for beyond a guide. In the cafés and restaurants of the streets around, it's as in Rome: a cover charge (coperto) is common, and rounding up or leaving 5–10% for good service is plenty.",
+    "dress": "Covered shoulders and knees, as above; a light scarf or shawl helps in summer. The museums mean a long walk and the dome a steep climb, so wear shoes you can stand in all day, and bring water and a hat for queues in the sun.",
+    "food": [
+      {
+        "name": "Prati, next door",
+        "text": "The Vatican has few places to eat beyond the museums' cafés. The Prati district alongside, in Rome, is full of bars, pizzerias and trattorias."
+      },
+      {
+        "name": "Supplì",
+        "text": "Fried rice balls with a string of molten mozzarella in the middle, Rome's favourite snack."
+      },
+      {
+        "name": "Pizza al taglio",
+        "text": "Pizza by the slice, cut from big trays and sold by weight: a quick lunch near the museums."
+      },
+      {
+        "name": "Carbonara and cacio e pepe",
+        "text": "Rome's own pasta dishes: one with egg, guanciale (cured pork cheek) and pecorino, the other with just pecorino and black pepper."
+      },
+      {
+        "name": "Maritozzo",
+        "text": "A soft, sweet bun split and filled with whipped cream, eaten with a cappuccino for breakfast."
+      }
+    ],
+    "phrases": {
+      "language": "Italian",
+      "intro": "Italian is the everyday language inside the walls. Latin, the Holy See's official language, is seen on inscriptions and coins, and the Swiss Guard works in German. Staff at the basilica and museums speak English.",
+      "items": [
+        { "phrase": "Salve", "say": "SAHL-veh", "meaning": "Hello (polite, any time of day)" },
+        { "phrase": "Grazie mille", "say": "GRAHT-see-eh MEEL-leh", "meaning": "Thanks very much" },
+        { "phrase": "Scusi", "say": "SKOO-zee", "meaning": "Excuse me" },
+        { "phrase": "Permesso", "say": "pair-MESS-oh", "meaning": "May I get past?" },
+        { "phrase": "Dov'è l'ingresso?", "say": "doh-VEH leen-GRESS-oh", "meaning": "Where's the entrance?" },
+        { "phrase": "Un biglietto, per favore", "say": "oon beel-YET-toh pair fah-VOH-reh", "meaning": "One ticket, please" },
+        { "phrase": "Silenzio!", "say": "see-LENT-see-oh", "meaning": "Silence! (called out by the Sistine Chapel's guards)" },
+        { "phrase": "Santo Padre", "say": "SAHN-toh PAH-dreh", "meaning": "Holy Father (the Pope)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q237",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). The Vatican mints its own euro coins, bought mostly by collectors, and its post office issues its own stamps.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Italian in daily life. Latin is the official language of the Holy See, used in its documents, and the Swiss Guard works in German.",
+        "sources": [{ "property": "P37", "values": ["Q652", "Q397"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, F and L, as in Rome (L: three round pins in a row), 230 V",
+        "sources": [],
+        "note": "Wikidata's item has no plug or voltage statement; the page gives the sockets and voltage of Italy, whose electricity the Vatican shares."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, and UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q109522221"] }],
+        "note": "Wikidata gives only the winter offset; the Vatican changes its clocks for summer with Italy, so the page adds UTC+2."
+      },
+      {
+        "key": "emergency",
+        "text": "112, as in Rome",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+39 06 698…, part of Rome's numbering (+379 is set aside for the Vatican but not in use)",
+        "sources": [{ "property": "P474", "values": ["+379"] }],
+        "note": "Wikidata gives +379, which the ITU reserved for the Vatican but which has never been brought into use; Vatican phones are on Rome's +39 06 698 numbers."
+      }
+    ]
+  }
+}

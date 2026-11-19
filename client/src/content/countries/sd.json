@@ -1,0 +1,169 @@
+{
+  "code": "SD",
+  "slug": "sudan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salaam", "As-Sūdān", "Ahlan"],
+  "summary": "The pyramids of Meroë, Nubian villages on the Nile, and Red Sea reefs off Port Sudan.",
+  "overview": [
+    "Sudan is Africa's third-largest country, reaching from the Sahara in the north to the savannahs of Kordofan and Darfur, with the Nile running its whole length. Along the river in the north lie the remains of the kingdoms of Kush, whose kings once ruled Egypt too. Sudan has more pyramids than Egypt, smaller and steeper; the best known stand in rows on the dunes at Meroë. Jebel Barkal, a flat-topped sacred mountain near Karima, has temples and pyramids at its foot, and Nubian villages with painted gateways line the river between the sites.",
+    "Khartoum stands where the Blue Nile and the White Nile meet. Across the river in Omdurman, Sufi dervishes gather by the tomb of Hamed al-Nil on Friday afternoons to chant and whirl. On the Red Sea, Port Sudan is the base for diving on reefs such as Sanganeb, among the least visited in the sea, and the ruined coral-stone port of Suakin lies to the south. Sudanese hospitality is famous: strangers are often invited in for tea, a meal, or a bed for the night.",
+    "Many governments advise against all travel to Sudan. Conditions change, and the places in this guide may be out of reach, so check your own government's current advice before planning anything."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "The only truly comfortable months: sunny, in the low 30s °C by day in Khartoum and the high 20s in the north, with cool nights and cold ones in the desert. The season for the pyramids and the Nile."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5, 6],
+        "text": "Temperatures climb fast, past 40°C by April, and May and June are the hottest months. Towering dust storms, called haboobs, roll over Khartoum in early summer."
+      },
+      {
+        "name": "Rains",
+        "months": [7, 8, 9],
+        "text": "Short, violent storms in Khartoum and the centre, longer rains further south; still hot, and now humid too. Roads in the south and west turn to mud."
+      },
+      {
+        "name": "Autumn",
+        "months": [10, 11],
+        "text": "Dry and still very hot in October. The heat eases through November, the start of the season for visitors."
+      }
+    ],
+    "weather": "Hot and dry in the north, wetter in the south. Khartoum is one of the hottest big cities in the world: above 40°C by day from April to June, and still in the high 30s °C in September and October, though the air is dry. Its little rain falls from July to September, mostly in short storms; the far north gets almost none, while Darfur and the south-east have a longer rainy season, from about June to October. From December to February the days are warm and desert nights can drop below 10°C. The Red Sea coast is hot and sticky in summer and, unusually, gets its rain in the winter months.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "Across the country",
+        "when": "1 January",
+        "months": [1],
+        "text": "Sudan's national day: on 1 January 1956, joint British and Egyptian rule came to an end."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across the country",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting from dawn to sunset. At sunset, men lay mats by the roadside and wave passing strangers over to share the meal. It ends with Eid al-Fitr, a holiday of several days."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across the country",
+        "when": "About ten weeks after Ramadan ends, so also about 11 days earlier each year: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice: families slaughter a sheep and share the meat with neighbours and the poor, and offices and shops close for several days."
+      },
+      {
+        "name": "The Prophet's Birthday (Mawlid)",
+        "place": "Omdurman and towns across the country",
+        "when": "About 11 days earlier each year: in 2027, about mid-August",
+        "months": [8],
+        "text": "Sufi orders pitch tents on open ground for days of drumming, chanting and processions, with sweets sold at every corner."
+      },
+      {
+        "name": "Friday dhikr",
+        "place": "Hamed al-Nil tomb, Omdurman",
+        "when": "Every Friday, in the late afternoon",
+        "months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        "text": "Dervishes in patched green and red robes gather by the domed tomb to chant, drum and whirl until sunset, and visitors are welcome to watch."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Expect a long greeting: \"salaam alaykum\", a handshake, then a string of questions about health and family, each answered with \"al-hamdulillah\" (praise be to God). Men often hold a handshake for a while; between a man and a woman, let her decide whether to shake hands. Tea or coffee is offered to almost every visitor.",
+    "etiquette": [
+      "Eat and pass things with your right hand; meals are often shared from one big tray, sitting on the floor.",
+      "Hospitality is a duty: accept the first offer of tea or food, and you can decline later ones with thanks.",
+      "Anything military, from soldiers to bridges and government buildings, is off limits to cameras, and people should be asked first.",
+      "In Ramadan, keep food, water and cigarettes out of sight in daylight.",
+      "Friday, the weekly day of prayer, is the main day off: offices and many shops are shut."
+    ],
+    "tipping": "Not a strong tradition, but welcome: a little for guides, drivers and anyone who helps you, and rounding up in restaurants. Never offer money to a host who has fed you or put you up; a small gift is the way to say thank you.",
+    "dress": "Modest for everyone: long trousers and covered shoulders, and for women loose clothes and a scarf to hand, especially outside the capital. Bring a hat, sunglasses and plenty of water for the ancient sites, which have little shade, and a warm layer for winter nights in the desert.",
+    "food": [
+      {
+        "name": "Ful",
+        "text": "The national breakfast: stewed fava beans mashed with sesame oil and cumin, crumbled white cheese and sometimes an egg, scooped from a shared bowl with bread."
+      },
+      {
+        "name": "Kisra and mullah",
+        "text": "Kisra is a paper-thin, slightly sour sorghum pancake cooked on a hot plate, served folded beside a mullah: a stew of dried okra (weika), meat or yoghurt."
+      },
+      {
+        "name": "Asida",
+        "text": "A firm porridge of sorghum or wheat, turned out as a dome with stew poured round it, for family gatherings and feast days."
+      },
+      {
+        "name": "Jabana coffee",
+        "text": "Beans roasted on the spot, ground with ginger or cloves, brewed in a clay pot (jabana) and poured into tiny cups by the tea ladies who set up stoves on street corners."
+      },
+      {
+        "name": "Helo-mur",
+        "text": "Ramadan's drink: flakes of spiced, fermented sorghum soaked in water. The name means \"sweet-bitter\", which is how it tastes."
+      }
+    ],
+    "phrases": {
+      "language": "Sudanese Arabic",
+      "intro": "Sudanese Arabic differs from Egyptian or Gulf Arabic in some words and sounds, but these will be understood everywhere. Many educated Sudanese speak English. Spellings in Latin letters vary.",
+      "items": [
+        { "phrase": "Salaam alaykum (السلام عليكم)", "say": "sah-LAHM ah-LAY-kum", "meaning": "Peace be upon you (hello)" },
+        { "phrase": "Wa alaykum as-salaam (وعليكم السلام)", "say": "wah ah-LAY-kum ah-sah-LAHM", "meaning": "And upon you peace (the reply)" },
+        { "phrase": "Shukran (شكرا)", "say": "SHOOK-ran", "meaning": "Thank you" },
+        { "phrase": "Min fadlak (من فضلك)", "say": "min FAD-lak", "meaning": "Please (to a man)" },
+        { "phrase": "Bikam? (بكم؟)", "say": "bee-KAM", "meaning": "How much?" },
+        { "phrase": "Kwayyis (كويس)", "say": "KWAI-yis", "meaning": "Good; fine" },
+        { "phrase": "Inshallah (إن شاء الله)", "say": "in-SHAH-lah", "meaning": "God willing" },
+        { "phrase": "Ma'a as-salaama (مع السلامة)", "say": "MAH-ah sah-LAH-mah", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1049",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Sudanese pound (SDG). Foreign bank cards work almost nowhere, so visitors bring cash, usually US dollars or euros.",
+        "sources": [{ "property": "P38", "values": ["Q271206"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic and English, both official; everyday speech is Sudanese Arabic. Nubian languages are spoken along the northern Nile, Beja in the east and Fur in Darfur, among many others.",
+        "sources": [{ "property": "P37", "values": ["Q13955", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C (two round pins) and D (three large round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q60740126"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata gives \"British and related types\" as one of the plugs; the page names type D, the one of those usually listed for Sudan."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Africa Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q4689499"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999",
+        "sources": [{ "property": "P2852", "values": ["Q3086706"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+249",
+        "sources": [{ "property": "P474", "values": ["+249"] }]
+      }
+    ]
+  }
+}

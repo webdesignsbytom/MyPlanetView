@@ -1,0 +1,171 @@
+{
+  "code": "LU",
+  "slug": "luxembourg",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Moien", "Lëtzebuerg", "Wëllkomm"],
+  "summary": "A gorge-cut fortress city, Ardennes castles and Moselle vines, all on free public transport.",
+  "overview": [
+    "Luxembourg is a grand duchy between Belgium, France and Germany, about 82 km from north to south, and one of the six countries that founded what became the European Union; the EU's Court of Justice and other institutions stand on the Kirchberg plateau in the capital. Luxembourg City is built on rock above deep river gorges: its old quarters and the remains of its fortress, including the Bock casemates, tunnels cut into the cliff, and the riverside Grund below, are on UNESCO's list, linked by stairs, lifts and bridges.",
+    "North of the capital, the Éislek, Luxembourg's share of the Ardennes, is wooded hills and winding river valleys with castles at Vianden, Clervaux and Bourscheid; Clervaux also keeps The Family of Man, a famous photography exhibition. To the east, the Mullerthal, nicknamed Little Switzerland, has sandstone gorges, mossy forest and a long-distance trail. Along the Moselle, on the German border, terraced vineyards grow crisp white wines and Crémant de Luxembourg, a sparkling wine.",
+    "Trains, trams and buses have been free for everyone since 2020, apart from first class on trains, and most of the country is within about an hour of the capital. Almost half the people who live here are foreign nationals, and many more cross the border to work each day, so the city is busy on weekdays and quiet on Sundays."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Cool and showery in March and April, warming to around 18–20°C in May, when the Mullerthal's woods turn green and the walking season begins."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm, usually 22–25°C, with the odd heatwave and thunderstorm. Many residents leave on holiday from late July, so the capital is calmer, while the castles and campsites of the north are at their busiest."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The grape harvest and wine festivals along the Moselle in September and October, and the Ardennes woods turning gold; November is grey and damp."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, damp and often grey, around 0–5°C, with occasional snow, more of it in the north. Christmas markets and lights fill the capital's squares from late November."
+      }
+    ],
+    "weather": "A mild, damp climate with four seasons, shaped by the Atlantic: summer days average about 23°C and winter days a few degrees above freezing, with rain spread evenly through the year. The Éislek in the north is higher, cooler and snowier; the Moselle valley in the south-east is the warmest and sunniest corner, which is why vines grow there.",
+    "festivals": [
+      {
+        "name": "Éimaischen",
+        "place": "Luxembourg City and Nospelt",
+        "when": "Easter Monday: in 2027, 29 March",
+        "months": [3, 4],
+        "text": "An old Easter Monday market where potters sell Péckvillercher, little clay birds that whistle when you blow into them."
+      },
+      {
+        "name": "The Octave",
+        "place": "Notre-Dame Cathedral, Luxembourg City",
+        "when": "Two weeks from the third Sunday after Easter: usually late April into May",
+        "months": [4, 5],
+        "text": "A pilgrimage to Our Lady, Comforter of the Afflicted, the country's patron. Pilgrims walk to the cathedral from across the country, a small market runs alongside, and it ends with a procession through the city."
+      },
+      {
+        "name": "Hopping procession",
+        "place": "Echternach",
+        "when": "Whit Tuesday, seven weeks after Easter: usually in May or June",
+        "months": [5, 6],
+        "text": "Thousands of people, linked in rows by white handkerchiefs, hop from side to side through the town to a polka-like tune in honour of St Willibrord. UNESCO lists it as living heritage."
+      },
+      {
+        "name": "National Day",
+        "place": "Luxembourg City and across the country",
+        "when": "23 June, with the celebrations starting on the evening of the 22nd",
+        "months": [6],
+        "text": "The Grand Duke's official birthday. On the eve, a torchlit procession, fireworks over the Pétrusse valley and parties in the streets; on the day itself, a military parade and a service in the cathedral."
+      },
+      {
+        "name": "Schueberfouer",
+        "place": "Glacis, Luxembourg City",
+        "when": "Usually late August to mid-September",
+        "months": [8, 9],
+        "text": "A huge funfair that began as a market in 1340, with big rides, beer tents and stalls selling fried fish and potato fritters."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake for people you don't know; friends kiss on the cheeks. Luxembourgers switch easily between Luxembourgish, French, German and English, and a \"Moien\", the all-purpose hello, goes down well.",
+    "etiquette": [
+      "French is the language of most shops, menus and signs, German of many newspapers, and Luxembourgish of everyday talk among Luxembourgers; English works almost everywhere in the capital.",
+      "Luxembourgers are proud of being their own nation, not a corner of Belgium, France or Germany; the national motto is \"Mir wëlle bleiwe wat mir sinn\" (We want to remain what we are).",
+      "Be punctual, and fairly formal with people you don't know.",
+      "Lunch, from about noon to 2 pm, is taken seriously: book city restaurants on weekdays."
+    ],
+    "tipping": "Service is included in restaurant prices. Rounding up or leaving 5–10% for good service is common but not expected.",
+    "dress": "Smart-casual, especially in the capital, where office workers dress well. An umbrella or waterproof in every season, and good shoes for the city's steep streets and the trails of the Mullerthal.",
+    "food": [
+      {
+        "name": "Judd mat Gaardebounen",
+        "text": "Smoked pork collar with broad beans in a creamy sauce, the national dish, at its best in early summer."
+      },
+      {
+        "name": "Bouneschlupp",
+        "text": "A thick green bean soup with potatoes, bacon and onions."
+      },
+      {
+        "name": "Gromperekichelcher",
+        "text": "Crisp, flat potato fritters with onion and parsley, sold at fairs and Christmas markets."
+      },
+      {
+        "name": "Rieslingspaschtéit",
+        "text": "A pastry loaf filled with meat and set with jelly made from Riesling wine, eaten cold in slices."
+      },
+      {
+        "name": "Quetschentaart",
+        "text": "Plum tart, made in late summer and early autumn when the small damson-like plums ripen."
+      },
+      {
+        "name": "Crémant de Luxembourg",
+        "text": "The Moselle's sparkling wine, made the same way as champagne and poured at every celebration."
+      }
+    ],
+    "phrases": {
+      "language": "Luxembourgish (Lëtzebuergesch)",
+      "intro": "Luxembourgish, related to the German dialects across the border, is the national language. Everyone also speaks French and German, and most people English.",
+      "items": [
+        { "phrase": "Moien", "say": "MOY-en", "meaning": "Hello" },
+        { "phrase": "Wéi geet et?", "say": "vay GATE et", "meaning": "How are you?" },
+        { "phrase": "Merci", "say": "MER-see", "meaning": "Thank you" },
+        { "phrase": "Wann ech gelift", "say": "vahn esh geh-LIFT", "meaning": "Please" },
+        { "phrase": "Entschëllegt", "say": "ent-SHELL-ekt", "meaning": "Excuse me; sorry" },
+        { "phrase": "Jo / Neen", "say": "YOH / NAYN", "meaning": "Yes / No" },
+        { "phrase": "Gudden Appetit", "say": "GOOD-en ah-peh-TEET", "meaning": "Enjoy your meal" },
+        { "phrase": "Äddi", "say": "AD-dee", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q32",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€)",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Luxembourgish, French and German, all official. English is widely spoken, and Portuguese by a large community.",
+        "sources": [{ "property": "P37", "values": ["Q9051", "Q150", "Q188"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1; UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; 113 for the police",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648804"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+352",
+        "sources": [{ "property": "P474", "values": ["+352"] }]
+      }
+    ]
+  }
+}

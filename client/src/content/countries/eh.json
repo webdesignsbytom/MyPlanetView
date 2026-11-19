@@ -1,0 +1,160 @@
+{
+  "code": "EH",
+  "slug": "western-sahara",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salam", "Es-Sahra", "Marhba"],
+  "summary": "A long Atlantic desert coast, the town of Laayoune and Dakhla's kitesurfing lagoon.",
+  "overview": [
+    "Western Sahara is a thinly peopled stretch of desert on the Atlantic, between Morocco and Mauritania, and its status is disputed. Morocco administers most of it, including the whole coast and every town, and regards it as part of Morocco. The Polisario Front claims it as the Sahrawi Arab Democratic Republic and holds a strip of desert in the east, beyond a long defensive sand wall known as the berm. The United Nations lists it as a non-self-governing territory, and a UN mission has been there since 1991.",
+    "Laayoune, the largest town, is a planned administrative city a little inland, with a beach and port at Foum el Oued about 20 km away. Most visitors, though, come for Dakhla, more than 500 km further down the coast. The town sits at the tip of a long, narrow peninsula, and the shallow lagoon behind it, with flat water and a steady wind, is one of the world's best-known kitesurfing spots. Camps along its shore hire out gear and teach beginners, and oysters farmed in the bay are served in town.",
+    "Visitors usually arrive by air at Laayoune or Dakhla from Moroccan cities, or by road down the coast from Agadir, a long desert drive with police checkpoints where passports are checked. The same road carries on south to the border with Mauritania, used by overland travellers heading for West Africa. Away from the coast, the desert near the berm still holds landmines: keep to the main roads unless you're with a local guide, and check your own government's current advice before you go."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "good", "best", "best", "best"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Sunny and mild on the coast, about 22°C by day in Dakhla, with cool nights. The wind is less reliable than in summer, which suits beginners."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm, dry and bright, with the trade wind setting in for the season. Dust storms blow in from the interior on a few days."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8, 9],
+        "text": "The windiest months on the Dakhla lagoon, and still only about 27°C on the coast, but hazy, and very hot inland. A wind from the east now and then brings hot, dusty days to Laayoune."
+      },
+      {
+        "name": "Autumn",
+        "months": [10, 11],
+        "text": "Warm and calmer, with the sea at its warmest early in the season. The few showers of the year, if they come, usually fall from now until winter."
+      }
+    ],
+    "weather": "A desert coast kept mild by the cold Canary Current offshore: Dakhla stays between about 20 and 27°C by day in every month, and mornings are often hazy or foggy. Rain is rare, a few short showers a year, mostly in autumn and winter. Away from the sea it's a different climate, with summer days above 40°C around Smara. A strong north wind blows down the coast for much of the year, steadiest from about April to September; the lagoon's water is cool, about 18 to 22°C.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Laayoune, Dakhla and the other towns",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Days are quiet and the towns wake up after sunset, when the fast is broken with dates, milk and soup. The clocks go back an hour for the month, as in Morocco. Eid al-Fitr brings family visits and new clothes."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Laayoune, Dakhla and the other towns",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The great feast of the year: families slaughter a sheep and share the meat with relatives and neighbours. Shops close for several days."
+      },
+      {
+        "name": "Throne Day",
+        "place": "The towns Morocco administers",
+        "when": "30 July",
+        "months": [7],
+        "text": "A Moroccan public holiday marking the king's accession in 1999, with flags and official ceremonies."
+      },
+      {
+        "name": "Green March Day",
+        "place": "The towns Morocco administers",
+        "when": "6 November",
+        "months": [11],
+        "text": "A Moroccan public holiday recalling the Green March of 1975, when about 350,000 Moroccans walked into the territory as Spain prepared to leave it. Offices close and Laayoune is hung with flags."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Sahrawis greet with \"Salam alaykum\", then a long run of questions about health, family and news, each answered with \"labas\" (fine) or \"al-hamdu lillah\" (thanks be to God). Men shake hands lightly and may hold on for a while. A man greeting a Sahrawi woman usually says the words with a hand on his heart, unless she offers hers.",
+    "etiquette": [
+      "Tea is the heart of hospitality, served in three rounds: the first glass bitter like life, the second sweet like love, the third gentle like death, as the Sahrawi saying goes. Stay for all three if you can.",
+      "The territory's status is a sensitive subject. Avoid political talk in public, and never photograph police, soldiers, checkpoints or demonstrations.",
+      "Keep your passport to hand: it's checked on the roads and registered by hotels.",
+      "During the Ramadan fast, keep eating, drinking and smoking out of public view until sunset."
+    ],
+    "tipping": "Small tips are welcome rather than expected: round up in cafés and taxis, add about 10% in restaurants used to visitors, and tip kitesurf instructors and desert guides at the end.",
+    "dress": "Modest clothes in town: long trousers or a long skirt and covered shoulders. Sahrawi women wear the melhfa, a long, brightly coloured cloth wrapped round the body and head, and men the daraa, a wide blue or white robe. For the lagoon, bring a wetsuit, a windproof layer and strong sun protection.",
+    "food": [
+      {
+        "name": "Atay",
+        "text": "Green tea brewed very sweet, with or without mint, poured from a height between glass and pot until a thick froth forms. Making it slowly is the point."
+      },
+      {
+        "name": "Camel",
+        "text": "Camel meat is grilled on skewers, stewed with vegetables or cooked as liver on the coals, and fresh camel milk is drunk warm or cold."
+      },
+      {
+        "name": "Dakhla oysters",
+        "text": "Farmed in the lagoon and eaten raw with lemon, cheaply and very fresh, in the town's restaurants and at farms by the water."
+      },
+      {
+        "name": "Fish and octopus",
+        "text": "Dakhla is a big fishing port, and octopus is its main catch. Grilled fish, fried calamari and fish tagine fill the menus along the waterfront."
+      },
+      {
+        "name": "Zrig",
+        "text": "Soured milk, often camel's or goat's, whisked with water and sugar and served cold: the drink of the desert's hot afternoons."
+      }
+    ],
+    "phrases": {
+      "language": "Hassaniya Arabic",
+      "intro": "Sahrawis speak Hassaniya, the Arabic of the western Sahara. Moroccan Arabic and French are common in the towns, and many older Sahrawis learned Spanish under Spanish rule.",
+      "items": [
+        { "phrase": "Salam alaykum (السلام عليكم)", "say": "sa-LAAM a-LAY-kum", "meaning": "Hello (\"peace be upon you\")" },
+        { "phrase": "Labas? (لاباس)", "say": "LAA-bas", "meaning": "All well? (and the answer: fine)" },
+        { "phrase": "Al-hamdu lillah (الحمد لله)", "say": "al-HAM-du lil-LAH", "meaning": "Thanks be to God (I'm well)" },
+        { "phrase": "Shukran (شكرا)", "say": "SHOOK-ran", "meaning": "Thank you" },
+        { "phrase": "Atay (أتاي)", "say": "a-TAY", "meaning": "Tea" },
+        { "phrase": "Bshhal? (بشحال)", "say": "b-SHHAL", "meaning": "How much? (Moroccan Arabic, used in shops)" },
+        { "phrase": "Ma'a salama (مع السلامة)", "say": "ma-sa-LAA-ma", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q6250",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Moroccan dirham (DH, MAD), in the area Morocco administers. Laayoune and Dakhla have cash machines; elsewhere, carry cash.",
+        "sources": [{ "property": "P38", "values": ["Q200192"] }],
+        "note": "Wikidata also lists Q2094914, a duplicate item for the same dirham with an Arabic label; the page cites the main item."
+      },
+      {
+        "key": "languages",
+        "text": "Arabic. Sahrawis speak Hassaniya Arabic; Moroccan Arabic, French and some Spanish are heard in the towns.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 220 V, as in Morocco",
+        "sources": [],
+        "note": "Wikidata's item has no plug or voltage statement; the page gives Morocco's, the supply in the towns Morocco administers."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+1 most of the year, as in Morocco; the clocks go back to UTC+0 for the month of Ramadan",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q6574", "Q4689492"] }],
+        "note": "Wikidata marks UTC+0 as summer time; it is in fact used during Ramadan, as in Morocco."
+      },
+      {
+        "key": "emergency",
+        "text": "19 for police in the towns, 177 for the gendarmerie outside them, and 15 for fire and ambulance, as in Morocco",
+        "sources": [],
+        "note": "Wikidata's item has no emergency number; the page gives Morocco's, used in the area it administers."
+      },
+      {
+        "key": "callingCode",
+        "text": "+212, as in Morocco",
+        "sources": [{ "property": "P474", "values": ["+212"] }]
+      }
+    ]
+  }
+}

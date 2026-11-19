@@ -1,0 +1,200 @@
+{
+  "code": "PH",
+  "slug": "philippines",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Mabuhay", "Pilipinas"],
+  "summary": "More than 7,000 islands of coral reefs, limestone lagoons, rice terraces and town fiestas.",
+  "overview": [
+    "The Philippines is an archipelago of more than 7,000 islands in three main groups: Luzon in the north, with the capital, Manila; the Visayas in the centre; and Mindanao in the south. More than three centuries of Spanish rule, then nearly fifty years under the United States, left a mostly Catholic country where English is widely spoken, every town has a fiesta for its patron saint, and Christmas decorations go up in September.",
+    "The sea is the main draw. Palawan has El Nido's limestone islands and lagoons, Coron's lakes and Second World War wrecks, and an underground river that runs through a cave into the sea near Puerto Princesa. In the Visayas, Boracay's White Beach, Bohol's Chocolate Hills and its tiny, big-eyed tarsiers, and the reefs around Cebu are the best-known sights. Inland in northern Luzon, the Ifugao rice terraces climb the mountainsides around Banaue and Batad, and Vigan keeps a Spanish colonial town of cobbled streets. In Manila, the walled old city of Intramuros holds San Agustin, the oldest stone church in the country.",
+    "Island-hopping means domestic flights from Manila and Cebu, ferries, and outrigger boats called bangkas; in towns, jeepneys and motorised tricycles do the work, and Grab covers the cities. Leave spare days in any plan, as typhoons and rough seas often cancel boats and flights, and allow plenty of time to cross Manila, where traffic is heavy at almost any hour.",
+    "Many governments advise against travel to parts of Mindanao and to the Sulu archipelago, in the far south-west. Conditions change, so check your own government's current advice."
+  ],
+  "whenToGo": {
+    "stripLabel": "The country taken together, a compromise. Luzon, Palawan, the Visayas and Mindanao differ in their rains and typhoon risk, and each has a strip of its own below.",
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Cool, dry season (amihan)",
+        "months": [12, 1, 2],
+        "text": "Breezy, dry and comfortable, about 30°C, and the busiest time of year, with Filipinos travelling home for Christmas and New Year. Coasts facing east, Siargao and Samar among them, get rain from the north-east wind."
+      },
+      {
+        "name": "Hot, dry season",
+        "months": [3, 4, 5],
+        "text": "Sunny and calm, with the clearest water for diving and island-hopping, and heat building to 35°C or more in Manila by May. Holy Week, in March or April, fills the beaches and ferries."
+      },
+      {
+        "name": "Wet and typhoon season (habagat)",
+        "months": [6, 7, 8, 9, 10, 11],
+        "text": "Heavy rain in Manila and the west, worst from July to September, and typhoons at any time; boats and flights are often cancelled and some resorts close. The rain usually comes in bursts with dry spells between, and prices drop. Late typhoons can still cross the Visayas in October and November."
+      }
+    ],
+    "weather": "Lowland temperatures hardly change through the year, around 30–33°C by day with heavy humidity; it's cooler only in the mountains, where Baguio, at about 1,500 m, stays in the low 20s. The cool, dry north-east monsoon (amihan) blows from about December to February; March to May is hot and dry; then the wet south-west monsoon (habagat) brings heavy rain to Manila and the west from about June to September or October. Around twenty tropical storms and typhoons enter Philippine waters in a typical year, most between June and December. Luzon and the eastern Visayas are hit most often, and Mindanao least.",
+    "festivals": [
+      {
+        "name": "Sinulog",
+        "place": "Cebu City",
+        "when": "Usually on the third Sunday of January",
+        "months": [1],
+        "text": "Cebu's festival for the Santo Niño, a statue of the child Jesus given to the island's ruler by Magellan's expedition in 1521: days of processions and Masses, then a street parade of dancers in feathers and sequins moving to drums. Kalibo's Ati-Atihan, on Panay, falls on the same weekend."
+      },
+      {
+        "name": "Panagbenga",
+        "place": "Baguio",
+        "when": "Through February, with the big parades on its last weekends",
+        "months": [2, 3],
+        "text": "Baguio's flower festival: floats covered in flowers and street dancers in costume through the cool mountain city."
+      },
+      {
+        "name": "Holy Week",
+        "place": "Across the Philippines",
+        "when": "Usually in March or April: in 2027, the week before Easter on 28 March",
+        "months": [3, 4],
+        "text": "Processions, passion plays and the Pasyon, the story of Christ's suffering, chanted through the night. In some villages of Pampanga, devotees re-enact the crucifixion on Good Friday. Offices and many shops close from Maundy Thursday, and Filipinos head for the beaches and their home provinces."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the Philippines",
+        "when": "12 June",
+        "months": [6],
+        "text": "Flag-raising ceremonies and a public holiday for the declaration of independence from Spain, made at Kawit, in Cavite, in 1898."
+      },
+      {
+        "name": "MassKara Festival",
+        "place": "Bacolod, Negros",
+        "when": "Usually in October, with the main parade near the end of the month",
+        "months": [10],
+        "text": "Street dancers in smiling masks and bright costumes fill the city, a festival started in 1980 to lift spirits after hard times."
+      },
+      {
+        "name": "Simbang Gabi and Christmas",
+        "place": "Across the Philippines",
+        "when": "Simbang Gabi from 16 to 24 December; Christmas Day 25 December",
+        "months": [12],
+        "text": "Nine dawn Masses lead up to Christmas, with rice cakes (bibingka and puto bumbong) sold outside the churches afterwards. Star lanterns (parol) hang everywhere, and San Fernando, in Pampanga, holds a giant lantern festival in December."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Luzon: Manila, the rice terraces and the north",
+        "months": ["best", "best", "best", "good", "good", "good", "avoid", "avoid", "avoid", "good", "good", "best"],
+        "text": "In the typhoon belt. The south-west monsoon drenches Manila and western Luzon from about June to September, and typhoons are most likely from about July to October, so July to September is the hardest time. December to March is dry and pleasant, about 30°C in Manila; April and May are the hottest months. The Cordillera, with the rice terraces of Banaue and Batad, Sagada's caves and Baguio, is cooler, with chilly nights from December to February."
+      },
+      {
+        "name": "Palawan",
+        "months": ["best", "best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "best"],
+        "text": "El Nido's lagoons, Coron's lakes and wrecks, and the underground river near Puerto Princesa. December to May is dry, with calm seas for island-hopping; from about June to October the south-west monsoon brings rain and rough water on the west side, and boat tours are often called off. Palawan gets fewer typhoons than the islands to the east, but not none."
+      },
+      {
+        "name": "The Visayas: Cebu, Bohol, Boracay and Siquijor",
+        "months": ["best", "best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good"],
+        "text": "January to May is the most settled time. Rain falls through the rest of the year, and some of the strongest typhoons cross the central islands late in the season, from October to December, especially Samar and Leyte on the eastern side. Divers come for Moalboal's huge shoal of sardines and for Malapascua, where thresher sharks rise to cleaning stations at dawn."
+      },
+      {
+        "name": "Mindanao and Siargao",
+        "months": ["good", "good", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good"],
+        "text": "Mostly south of the typhoon belt, with rain spread through the year and a drier spell from about March to May. Siargao, off the north-east coast, is a surfing island: its best-known break, Cloud 9, is at its best from about August to November, and its heaviest rain usually falls from November to January. Camiguin has volcanoes and hot springs. Check travel advice for the rest of the island before you go."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Filipinos are warm and chatty with visitors, and a smile and a handshake are the usual greeting. Younger people greet their elders with the mano, taking the older person's right hand and pressing the back of it to their own forehead. Adding \"po\" to a sentence in Tagalog makes it polite, and anyone a little older than you is called Kuya (big brother) or Ate (big sister), shop staff and drivers included.",
+    "etiquette": [
+      "A raised eyebrow often means yes, and Filipinos point with their lips rather than a finger.",
+      "People avoid a flat no: \"maybe\" or \"I'll try\" can mean no, so ask open questions.",
+      "Keep your temper: shouting at someone or criticising them in public shames them and rarely gets results.",
+      "Smoking and vaping are banned in public places across the country.",
+      "In the Cordillera, some elders in traditional dress expect a small payment for a photo, so ask first.",
+      "Dress modestly for churches, and in the Muslim areas of Mindanao."
+    ],
+    "tipping": "Many restaurants add a 10% service charge; where they don't, 10% is a generous tip. Tip boat crews and guides at the end of an island-hopping tour, and give porters, drivers and hotel staff a little for their help.",
+    "dress": "Pack for sun and heat: a hat, plenty of sun cream, and a rash vest for long snorkelling trips. Wear something with sleeves for church. Malls, buses and ferries are strongly air-conditioned, so carry a layer, and a warm one for nights in Baguio and Sagada.",
+    "food": [
+      {
+        "name": "Adobo",
+        "text": "Chicken or pork braised in vinegar, soy sauce, garlic, bay leaves and black pepper until rich and tangy: the national dish, made differently in every household."
+      },
+      {
+        "name": "Lechon",
+        "text": "A whole pig roasted on a spit until the skin cracks like glass. Cebu's is stuffed with lemongrass and garlic and needs no sauce."
+      },
+      {
+        "name": "Sinigang",
+        "text": "A sour soup, usually soured with tamarind, with pork, prawns or fish and vegetables such as water spinach and radish."
+      },
+      {
+        "name": "Kinilaw",
+        "text": "Raw fish \"cooked\" in vinegar or calamansi juice with onion, ginger and chilli, a favourite in the Visayas."
+      },
+      {
+        "name": "Silog breakfasts",
+        "text": "Garlic fried rice (sinangag) and a fried egg (itlog) with meat: tapsilog with cured beef, longsilog with sweet sausage."
+      },
+      {
+        "name": "Halo-halo",
+        "text": "The name means mix-mix: shaved ice with evaporated milk, sweet beans, jellies, fruit, leche flan and purple yam (ube), all stirred together."
+      }
+    ],
+    "phrases": {
+      "language": "Filipino (Tagalog)",
+      "intro": "English is spoken almost everywhere. In Cebu and much of the Visayas and Mindanao the local language is Cebuano, but these Tagalog words are understood across the country.",
+      "items": [
+        { "phrase": "Kumusta?", "say": "koo-moos-TAH", "meaning": "How are you?" },
+        { "phrase": "Magandang umaga", "say": "mah-gahn-DAHNG oo-MAH-gah", "meaning": "Good morning" },
+        { "phrase": "Salamat po", "say": "sah-LAH-maht poh", "meaning": "Thank you (polite)" },
+        { "phrase": "Opo / Hindi po", "say": "OH-poh / hin-DEE poh", "meaning": "Yes / No (polite)" },
+        { "phrase": "Magkano?", "say": "mahg-KAH-noh", "meaning": "How much?" },
+        { "phrase": "Masarap!", "say": "mah-sah-RAHP", "meaning": "Delicious!" },
+        { "phrase": "Ingat", "say": "EE-ngaht", "meaning": "Take care (said when parting)" },
+        { "phrase": "Paalam", "say": "pah-AH-lahm", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q928",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Philippine peso (₱, PHP). Carry cash on smaller islands, where cash machines are few.",
+        "sources": [{ "property": "P38", "values": ["Q17193"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Filipino (based on Tagalog) and English, both official. Many people's first language is a regional one, such as Cebuano, Ilocano or Hiligaynon.",
+        "sources": [{ "property": "P37", "values": ["Q33298", "Q1860"] }],
+        "note": "Wikidata also lists Taglish, the everyday mix of Tagalog and English; it isn't an official language, so the page leaves it out."
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (flat pins, as in the US), with Type C (two round pins) in some places, 220 V: the sockets look American, but the voltage isn't",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456", "Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Philippine Standard Time, UTC+8, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q3543509", "Q63285954"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q60061806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+63",
+        "sources": [{ "property": "P474", "values": ["+63"] }]
+      }
+    ]
+  }
+}

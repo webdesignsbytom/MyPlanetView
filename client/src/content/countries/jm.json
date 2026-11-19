@@ -1,0 +1,176 @@
+{
+  "code": "JM",
+  "slug": "jamaica",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Wah gwaan", "Jamaica", "Respect"],
+  "summary": "Reggae's home: jerk smoke, Blue Mountain coffee, waterfalls and Negril's long sunset beach.",
+  "overview": [
+    "Jamaica is the third-largest island in the Caribbean, after Cuba and Hispaniola, and it has given the world reggae, jerk cooking and a long line of Olympic sprinters. The north coast is the resort strip: Montego Bay, where most visitors land; Ocho Rios, where you can climb the stepped cascades of Dunn's River Falls; and Negril in the far west, with Seven Mile Beach and low cliffs for watching the sunset. Port Antonio, in the rainy north-east, is quieter, with the Blue Lagoon and bamboo rafts on the Rio Grande, and Treasure Beach, on the dry south coast, is a string of fishing villages.",
+    "Kingston, the capital, is where the music lives: the Bob Marley Museum in his old home on Hope Road, the Culture Yard in Trench Town, and the sound systems of weekend street dances. Behind the city rise the Blue Mountains, where coffee grows on steep slopes and hikers set off in the small hours to watch the sunrise from Blue Mountain Peak, 2,256 m. Nine Mile, where Bob Marley was born and is buried, is in the hills of St Ann.",
+    "Coaches link the main towns, and route taxis, shared cars on fixed routes, are cheap and everywhere; licensed taxis carry red number plates. Main highways are good, country roads narrow, winding and potholed. Many visitors stay in all-inclusive resorts, but the island is best met outside them: at a roadside jerk pit, a river swimming hole or a Sunday beach full of Jamaican families."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Winter dry season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Sunny and breezy, about 28–30°C by day on the coast, with cooler evenings. The resorts are busiest and dearest, above all over Christmas, New Year and Easter."
+      },
+      {
+        "name": "Early rains",
+        "months": [5, 6],
+        "text": "Heavy but usually brief showers and thunderstorms return, and the hills turn a deeper green. Fewer visitors and lower prices."
+      },
+      {
+        "name": "High summer",
+        "months": [7, 8],
+        "text": "Hot and humid, with the sea at about 29°C. July is often fairly dry; the hurricane season is under way, though the strongest storms usually come later."
+      },
+      {
+        "name": "Autumn rains",
+        "months": [9, 10, 11],
+        "text": "The wettest and riskiest stretch: September and October bring the heaviest rain and the peak of the hurricane season, though most days still have sunny spells. November dries out as the season ends."
+      }
+    ],
+    "weather": "Hot and humid on the coast all year, with highs of about 30°C in winter and 32°C in summer, eased by sea breezes. The Blue Mountains are much cooler, and near the peak winter nights often drop below 10°C. Rain is heaviest in the north-east around Port Antonio, which stays green all year, and lightest on the south coast around Kingston and Treasure Beach. Rain comes in two bursts on most of the island, around May and June and again from September to November; hurricanes are possible from June to November.",
+    "festivals": [
+      {
+        "name": "Accompong Maroon Festival",
+        "place": "Accompong, in the hills of St Elizabeth",
+        "when": "6 January",
+        "months": [1],
+        "text": "The Maroons, descended from Africans who escaped slavery and fought the British to a peace treaty in 1739, celebrate their freedom and the birthday of their leader Cudjoe with drumming, a procession to the old Kindah tree and traditional food."
+      },
+      {
+        "name": "Reggae Month",
+        "place": "Kingston and across the island",
+        "when": "February, with Bob Marley's birthday on 6 February",
+        "months": [2],
+        "text": "Concerts, talks and free shows all month. The Bob Marley Museum and his birthplace at Nine Mile hold events on his birthday."
+      },
+      {
+        "name": "Carnival",
+        "place": "Kingston",
+        "when": "Usually in April, in the weeks after Easter",
+        "months": [4],
+        "text": "Soca rather than reggae: weeks of fêtes, then a road march of feathered and jewelled costume bands through the streets of the capital."
+      },
+      {
+        "name": "Reggae Sumfest",
+        "place": "Montego Bay",
+        "when": "Usually in July, for about a week",
+        "months": [7],
+        "text": "Jamaica's biggest music festival, with long nights of dancehall and reggae stars that run until dawn."
+      },
+      {
+        "name": "Emancipation Day and Independence Day",
+        "place": "Across Jamaica",
+        "when": "1 August and 6 August",
+        "months": [8],
+        "text": "The first marks the end of slavery in the 1830s, the second independence from Britain in 1962. The days between, nicknamed Emancipendence, bring street celebrations and the Grand Gala show in Kingston."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greet before you ask: say \"Good morning\" or \"Good afternoon\" when you walk into a shop, get into a taxi or stop someone for directions, and shake hands or bump fists with people you meet. Skipping the greeting comes across as rude. Older people are often called \"Miss\" or \"Mister\" with their first name, and \"Respect\" works as hello, thanks and goodbye.",
+    "etiquette": [
+      "In the resorts, people offering tours, taxis and other things can be persistent. A firm, friendly \"No thanks\" and walking on works better than ignoring them.",
+      "Ask before taking photos of people, and expect some to ask for a tip in return.",
+      "Ganja is part of local life, and possessing small amounts was decriminalised in 2015, but smoking it in public is still an offence, and carrying any out of the country is a serious crime.",
+      "Camouflage-pattern clothing is for the military only, so leave it at home.",
+      "Most taxis have no meter: agree the fare before you get in.",
+      "Sunday is family day: shops close, churches are full, and beaches and river spots fill up in the afternoon."
+    ],
+    "tipping": "Expected in tourism: 10–15% in restaurants when no service charge has been added (check the bill, as many add one), and a tip for guides, drivers and hotel staff. Some all-inclusive resorts say tips are included or not allowed; follow their lead.",
+    "dress": "Light, casual clothes, with swimwear for the beach and pool only; cover up in towns, shops and restaurants. Jamaicans dress smartly for church and for an evening out in Kingston. Bring a fleece for the Blue Mountains and a light rain jacket from May to November.",
+    "food": [
+      {
+        "name": "Ackee and saltfish",
+        "text": "The national dish: salt cod fried with onion, peppers and ackee, a fruit that cooks to soft yellow curds like scrambled egg. Ackee is picked only once its pods have opened on the tree by themselves, as the unripe fruit is poisonous."
+      },
+      {
+        "name": "Jerk",
+        "text": "Chicken or pork rubbed with Scotch bonnet pepper, allspice (pimento) and thyme, then smoked slowly over pimento wood. Boston Bay, near Port Antonio, claims to be its birthplace, but roadside jerk drums are everywhere."
+      },
+      {
+        "name": "Patties",
+        "text": "Flaky, turmeric-yellow pastries filled with spicy beef, chicken or vegetables, the island's favourite snack, sometimes eaten inside a slice of soft coco bread."
+      },
+      {
+        "name": "Curry goat with rice and peas",
+        "text": "Goat stewed slowly in curry, served at parties and on Sundays with rice and peas: rice cooked with kidney beans, coconut milk and thyme."
+      },
+      {
+        "name": "Escovitch fish",
+        "text": "Whole fried fish under a sharp pickle of vinegar, onion and peppers, eaten with bammy, a cassava flatbread, and festival, a sweet fried dumpling. Hellshire Beach near Kingston is famous for it."
+      },
+      {
+        "name": "Blue Mountain coffee and rum",
+        "text": "Coffee from the high slopes of the Blue Mountains is among the world's most prized. Rum ranges from aged Appleton Estate, made in the Nassau Valley, to fiery white overproof, usually mixed."
+      }
+    ],
+    "phrases": {
+      "language": "Jamaican Patois (Patwa)",
+      "intro": "English is used everywhere in tourism, but on the street you'll hear Patois, a creole built on English with words from West African languages. Listen for these; there's no need to put on an accent.",
+      "items": [
+        { "phrase": "Wah gwaan?", "say": "wah GWAHN", "meaning": "Hi; what's going on?" },
+        { "phrase": "Mi deh yah", "say": "mee deh YAH", "meaning": "I'm here; I'm all right (the usual reply)" },
+        { "phrase": "Irie", "say": "EYE-ree", "meaning": "Good; all is well" },
+        { "phrase": "Big up", "say": "BIG up", "meaning": "Well done; praise for someone" },
+        { "phrase": "Nuh problem", "say": "noh PROB-lem", "meaning": "No problem" },
+        { "phrase": "Mi soon come", "say": "mee soon KUM", "meaning": "I'm on my way (in my own time)" },
+        { "phrase": "Weh yuh a go?", "say": "weh yuh ah GOH", "meaning": "Where are you going?" },
+        { "phrase": "Likkle more", "say": "LIK-ul MOR", "meaning": "See you later" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q766",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Jamaican dollar (J$, JMD). US dollars are taken widely in resorts and tourist areas, though change often comes in Jamaican dollars.",
+        "sources": [{ "property": "P38", "values": ["Q209792"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English is the language of government and schools; most Jamaicans speak Jamaican Patois (Patwa) day to day.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q35939"] }],
+        "note": "Wikidata lists both as official. The constitution names no official language: English is used for everything official, and Patois is what most people speak at home."
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["116"] }
+        ],
+        "note": "Wikidata gives 116 V; the public supply is 110 V."
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern Standard Time, UTC−5, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5390", "Q63286066"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "119 for police; 110 for fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q2807090", "Q25648823"] }],
+        "note": "Wikidata also lists 112 and 911 for the police; the page gives the two numbers Jamaica publishes."
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 876",
+        "sources": [{ "property": "P474", "values": ["+1876"] }]
+      }
+    ]
+  }
+}

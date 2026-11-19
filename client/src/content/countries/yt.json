@@ -1,0 +1,159 @@
+{
+  "code": "YT",
+  "slug": "mayotte",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Jéjé", "Maore", "Bienvenue"],
+  "summary": "A French island in the Comoros archipelago with a vast reef-ringed lagoon, turtles and whales.",
+  "overview": [
+    "Mayotte is the south-easternmost island of the Comoros archipelago, governed by France as an overseas department since 2011; the Union of the Comoros also claims it. It is made up of two main islands, Grande-Terre and the much smaller Petite-Terre, where the airport is, joined by a car ferry (la barge) across the lagoon to Mamoudzou, the main town.",
+    "The lagoon is the reason to come. A coral barrier reef, double in places, encloses one of the largest lagoons in the world, about 1,100 km², with green turtles grazing the seagrass off N'Gouja beach, dolphins in the channels and humpback whales from about July to October. On land, the steep climb up Mont Choungui gives a view over the whole lagoon, and on Petite-Terre the green crater lake of Dziani lies in an old volcano a short walk from the sea.",
+    "Tourism is small: a handful of hotels, guesthouses and dive centres, and little public transport beyond shared taxis, so most visitors hire a car. Most people are Muslim and speak Shimaore or Kibushi at home, and village life, from the women's pale face masks to the dances at weddings, has more in common with the neighbouring Comoros than with mainland France.",
+    "Check your government's current advice before going: in recent years the island has had water shortages, unrest and severe cyclone damage, and services can be stretched."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "avoid", "avoid", "good", "good", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Cooler and breezier under the south-east trade winds, about 27–28°C by day, with the least rain from about June and the clearest water for diving. Whales arrive in July, and the lagoon trips are at their best from August to October."
+      },
+      {
+        "name": "Wet season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Hot and sticky, often above 30°C, with heavy downpours and thunderstorms, worst from January to March. Cyclones are possible from about December to April. The sea is at its warmest, but rain and run-off cloud the water."
+      }
+    ],
+    "weather": "Hot all year. In the wet season days reach about 30°C and nights stay around 23–24°C, with very humid air; in the dry season days are a little cooler and the evenings pleasant. Rain falls mostly from November to April, heaviest from January to March, and the sea stays warm, around 26–29°C.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Mayotte",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Days are quiet and many snack bars stay shut until the fast is broken at sunset; evenings are busy with family meals. Eid al-Fitr ends the month with morning prayers and visits to relatives."
+      },
+      {
+        "name": "Abolition of Slavery Day",
+        "place": "Across Mayotte",
+        "when": "27 April",
+        "months": [4],
+        "text": "A public holiday remembering the end of slavery in the French colonies."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Mayotte",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Families gather to share the meat of the sacrifice, and offices and many shops close."
+      },
+      {
+        "name": "Manzaraka (the great wedding)",
+        "place": "Across Mayotte",
+        "when": "Mostly in the dry season, above all July and August",
+        "months": [7, 8],
+        "text": "Weddings are the big social events of the year: processions of women in bright salouva wraps, gifts of money and gold, and the debaa, a sung dance of praise performed by women. The school holidays bring the busiest weeks."
+      },
+      {
+        "name": "Humpback whales",
+        "place": "The lagoon",
+        "when": "Usually July to October",
+        "months": [7, 8, 9, 10],
+        "text": "Mothers and calves rest in the shelter of the lagoon. Boat trips go out to watch them, keeping their distance under strict rules."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Jéjé\" is the Shimaore hello, \"bonjour\" works anywhere, and \"salam aleikoum\" is understood by everyone. Men shake hands; with women, let them offer first. In villages, take time over greetings and greet older people first.",
+    "etiquette": [
+      "Dress modestly away from the beach, with shoulders and knees covered in villages and in Mamoudzou.",
+      "Ask before photographing people, women above all. Many wear the msindzano, a pale paste of ground sandalwood on the face, for beauty and to protect the skin.",
+      "In the water, keep your distance from turtles, dolphins and whales, and never touch them.",
+      "Don't walk alone at night or leave belongings in a parked car, and ask your host which areas to avoid.",
+      "Use your right hand to eat and to give and take things."
+    ],
+    "tipping": "Not customary, as in mainland France. A few euros for a boat guide or dive crew who looked after you is appreciated.",
+    "dress": "Light, loose cotton that covers shoulders and knees; swimwear only on the beach. Bring reef shoes, a hat and reef-safe sunscreen for boat trips, and good shoes for the steep top of Mont Choungui.",
+    "food": [
+      {
+        "name": "Mabawa",
+        "text": "Marinated chicken wings grilled over charcoal at roadside stalls in the evening: the island's favourite snack."
+      },
+      {
+        "name": "Voulé",
+        "text": "The weekend barbecue on the beach: fish, chicken and green bananas grilled over a wood fire and shared among family and friends."
+      },
+      {
+        "name": "Bananes coco",
+        "text": "Green bananas simmered in coconut milk, sometimes with fish: an everyday family dish."
+      },
+      {
+        "name": "Lagoon fish and octopus",
+        "text": "Tuna, snapper and octopus, grilled or cooked in a coconut sauce and served with rice."
+      },
+      {
+        "name": "Fresh juices",
+        "text": "Stalls and snack bars squeeze passion fruit, guava, mango and other fruit into cold juices, welcome in the heat."
+      }
+    ],
+    "phrases": {
+      "language": "French and Shimaore",
+      "intro": "French is the official language and the one used in town. At home most people speak Shimaore, close to the language of the Comoros, or Kibushi, a dialect of Malagasy. English is rare.",
+      "items": [
+        { "phrase": "Jéjé", "say": "JEH-jeh", "meaning": "Hello (Shimaore)" },
+        { "phrase": "Marahaba", "say": "mah-rah-HAH-bah", "meaning": "Thank you (Shimaore)" },
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello (French)" },
+        { "phrase": "Merci", "say": "mair-SEE", "meaning": "Thank you (French)" },
+        { "phrase": "Combien ça coûte ?", "say": "kom-BYAN sah KOOT", "meaning": "How much does it cost?" },
+        { "phrase": "Je ne comprends pas", "say": "zhuh nuh kom-PRAHN pah", "meaning": "I don't understand" },
+        { "phrase": "Où est la plage ?", "say": "oo ay lah PLAHZH", "meaning": "Where is the beach?" },
+        { "phrase": "Bonne journée", "say": "bon zhoor-NAY", "meaning": "Have a good day" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q17063",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Cards work in town; carry cash for taxis, markets and roadside stalls.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French is the official language; most people speak Shimaore (a Comorian language) or Kibushi (a Malagasy dialect) at home.",
+        "sources": [{ "property": "P37", "values": ["Q150", "Q34075", "Q5150795"] }],
+        "note": "Wikidata lists Shimaore and Kibushi as official languages; only French is official, so the page gives them as the languages most people speak."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins, as in France), 230 V",
+        "sources": [],
+        "note": "Wikidata's item has no plug or voltage statement; the page gives the French sockets and supply used on the island."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "East Africa Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q109520467"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; the French numbers work too: 15 for an ambulance (SAMU), 17 for police and 18 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata lists only 112; the page adds France's national emergency numbers, which work in Mayotte as in mainland France."
+      },
+      {
+        "key": "callingCode",
+        "text": "+262",
+        "sources": [{ "property": "P474", "values": ["+262"] }]
+      }
+    ]
+  }
+}

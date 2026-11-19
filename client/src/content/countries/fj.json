@@ -1,0 +1,163 @@
+{
+  "code": "FJ",
+  "slug": "fiji",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bula!", "Viti", "Ni sa bula"],
+  "summary": "Kava ceremonies, Indo-Fijian curries and reef islands, from the sunny west to rainy Suva.",
+  "overview": [
+    "Fiji is about 330 islands, roughly a third of them lived on, with most people on the two largest, Viti Levu and Vanua Levu. Nadi, on Viti Levu's dry western side, has the international airport and is where most trips begin; the capital, Suva, is on the wetter south-east coast, a few hours' drive away along the Queens Road.",
+    "Just off Nadi, the Mamanuca and Yasawa groups are the classic island-hopping trip: small sandy islands with resorts and backpacker lodges, reached by fast catamarans and boat transfers from Denarau. Along Viti Levu's south shore, the Coral Coast has the Sigatoka Sand Dunes and family resorts, and Pacific Harbour is known for shark dives in the Beqa Lagoon. Taveuni, the 'Garden Island', has rainforest waterfalls and the soft corals of the Somosomo Strait, and Levuka, on Ovalau, the first colonial capital, is a World Heritage port town of wooden shopfronts.",
+    "About six in ten Fijians are iTaukei (indigenous Fijians) and about a third are Indo-Fijians, descended mostly from labourers the British brought from India to work the sugar plantations from 1879 onwards. You'll hear Fijian, Fiji Hindi and English, and find Methodist churches, Hindu temples and mosques in the same town. Visiting a village means bringing a gift of kava root for the chief, the sevusevu described below."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Cool, dry season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Days of 26–28°C, cooler evenings and low humidity, with the most sunshine on the western side. July is busy, when Australian and New Zealand school holidays fill the resorts."
+      },
+      {
+        "name": "Warm, wet season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Hotter, often 30–31°C, and humid, with heavy showers and thunderstorms, more in the east than the west. Tropical cyclones are possible, most often from January to March, though most weeks pass without one."
+      }
+    ],
+    "weather": "Fiji's temperatures change little through the year: coastal highs of about 26°C in July and 31°C in January, with the sea between 25 and 29°C. Rainfall depends on which side of the mountains you're on. The south-east, facing the trade winds, is wet in every month, and Suva gets about 3,000 mm a year. The western side, with Nadi, Lautoka and the Mamanuca and Yasawa islands, gets far less and is mostly dry from May to October.",
+    "festivals": [
+      {
+        "name": "Bula Festival",
+        "place": "Nadi",
+        "when": "Usually in July, for about a week",
+        "months": [7],
+        "text": "Nadi's town festival: fairground rides, food stalls, music and dance, ending with the crowning of Miss Bula."
+      },
+      {
+        "name": "Hibiscus Festival",
+        "place": "Suva",
+        "when": "Usually in August, for about a week",
+        "months": [8],
+        "text": "Fiji's oldest town festival, first held in 1956: a fair in central Suva with live bands, food and the Miss Hibiscus pageant."
+      },
+      {
+        "name": "Fiji Day",
+        "place": "Across Fiji, with the main events in Suva",
+        "when": "10 October",
+        "months": [10],
+        "text": "Fiji became independent of Britain on this date in 1970, the anniversary of the 1874 deed by which Fijian chiefs ceded the islands to Britain. Flag-raisings, parades and a week of events lead up to it."
+      },
+      {
+        "name": "Diwali",
+        "place": "Across Fiji, above all in Nadi, Lautoka and Suva",
+        "when": "Usually in October or November",
+        "months": [10, 11],
+        "text": "Diwali is a public holiday in Fiji. Indo-Fijian homes are strung with lights and clay lamps, families share sweets with neighbours, and fireworks go off long into the night."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The west: Nadi, the Mamanucas and the Yasawas",
+        "text": "The sunniest part of Fiji, in the rain shadow of Viti Levu's mountains. Even in the wet season, the rain often comes as short afternoon storms."
+      },
+      {
+        "name": "Suva, Taveuni and the east",
+        "text": "Greener and much wetter, with rain likely in any month and very heavy falls from about December to April, when Taveuni's waterfalls run at their fullest."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Bula!\" (literally \"life\") is the hello you'll hear everywhere, often called out with a wide smile from across the road; \"Ni sa bula vinaka\" is the fuller, more formal version. Indo-Fijians usually greet each other with \"Namaste\". A handshake is normal, and it may carry on well into the conversation.",
+    "etiquette": [
+      "When you visit a village, bring a bundle of dried kava root (yaqona), sold in every market, as your sevusevu. It's presented to the chief or headman, and once it's accepted you're the village's guest.",
+      "In a village, take off your hat and sunglasses, as only the chief wears a hat, and never touch anyone's head.",
+      "Take your shoes off before entering a house and sit cross-legged on the mat, without pointing your feet at anyone.",
+      "At a kava session, clap once, say \"Bula\", drink the bowl in one go, hand it back and clap three times.",
+      "At Hindu temples, such as Sri Siva Subramaniya in Nadi, take off your shoes and cover your shoulders and legs.",
+      "\"Fiji time\" is real: things start late and move slowly, and showing impatience gets you nowhere."
+    ],
+    "tipping": "Not expected and not part of Fijian custom. Many resorts keep a staff Christmas fund, shared among everyone from gardeners to chefs; a contribution at the end of your stay is the usual way to say thank you.",
+    "dress": "Cotton and linen suit the humidity. In villages, women cover their shoulders and wear a skirt or sulu (sarong) below the knee, and men wear a shirt; carry a sulu to wrap over swimwear when you leave the beach. Bikinis are fine at resorts, not in towns or villages.",
+    "food": [
+      {
+        "name": "Kokoda",
+        "text": "Fiji's raw-fish dish: mahi-mahi or walu (Spanish mackerel) soaked in lime, then mixed with coconut cream, chilli, onion and tomato, sometimes served in a coconut shell."
+      },
+      {
+        "name": "Lovo",
+        "text": "A feast cooked in a pit lined with hot stones: fish, chicken, pork, taro and cassava wrapped in leaves and buried for a few hours. Resorts hold lovo nights; in villages it's for weddings, funerals and church days."
+      },
+      {
+        "name": "Rourou",
+        "text": "Taro leaves cooked down with coconut milk to a soft green purée, eaten with boiled cassava (tavioka) or taro."
+      },
+      {
+        "name": "Curry and roti",
+        "text": "Indo-Fijian cooking is everywhere: goat, chicken or fish curry and dhal, scooped up with roti, from cheap curry houses and market stalls."
+      },
+      {
+        "name": "Yaqona (kava)",
+        "text": "The pounded root of the kava plant, mixed with water in a big wooden bowl (tanoa). It looks muddy, tastes peppery and numbs the lips, and it's shared at almost every gathering, often far into the night."
+      }
+    ],
+    "phrases": {
+      "language": "Fijian (iTaukei)",
+      "intro": "English is spoken almost everywhere you're likely to go. Fijian spelling has its own rules: c sounds like th, g like ng, q like ngg, and b and d are said mb and nd.",
+      "items": [
+        { "phrase": "Bula", "say": "mBOO-lah", "meaning": "Hello" },
+        { "phrase": "Ni sa bula vinaka", "say": "nee sah mBOO-lah vee-NAH-kah", "meaning": "Hello (formal)" },
+        { "phrase": "Vinaka vakalevu", "say": "vee-NAH-kah vah-kah-LEH-voo", "meaning": "Thank you very much" },
+        { "phrase": "Kerekere", "say": "keh-reh-KEH-reh", "meaning": "Please" },
+        { "phrase": "Io / Sega", "say": "EE-oh / SENG-ah", "meaning": "Yes / No" },
+        { "phrase": "Moce", "say": "MOH-theh", "meaning": "Goodbye" },
+        { "phrase": "Sota tale", "say": "SOH-tah TAH-leh", "meaning": "See you again" },
+        { "phrase": "Namaste", "say": "nah-mah-STAY", "meaning": "Hello (Fiji Hindi)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q712",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Fijian dollar (FJ$, FJD). Cards are taken at resorts and in towns; carry cash for markets, buses, village visits and the outer islands.",
+        "sources": [{ "property": "P38", "values": ["Q4592"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, Fijian (iTaukei) and Fiji Hindi. English is the language of government and schools; most people speak Fijian or Fiji Hindi at home.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q33295", "Q46728"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (angled flat pins, as in Australia), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Fiji Time, UTC+12. Summer time was used in some earlier years but hasn't been kept recently.",
+        "sources": [{ "property": "P421", "values": ["Q7105", "Q63285964"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for an ambulance; 917 for the police; 910 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }],
+        "note": "Wikidata also gives 000, and 919 for the police. The page gives the numbers Fiji's tourism body and Australian travel advice list: 917 for the police and 910 for fire; 919 is Crime Stoppers."
+      },
+      {
+        "key": "callingCode",
+        "text": "+679",
+        "sources": [{ "property": "P474", "values": ["+679"] }]
+      }
+    ]
+  }
+}

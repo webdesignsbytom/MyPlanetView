@@ -1,0 +1,172 @@
+{
+  "code": "EE",
+  "slug": "estonia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Tere", "Eesti", "Tere tulemast"],
+  "summary": "A walled medieval capital, boardwalks over raised bogs and quiet islands, in a country run online.",
+  "overview": [
+    "Estonia is the northernmost of the three Baltic states, a small, low country of forest, bog and more than 2,000 islands, facing Finland across the Gulf of Finland. Tallinn's old town, still ringed by much of its medieval wall and towers, is one of the best preserved in northern Europe: the upper town on Toompea hill, where the parliament sits, and the merchants' lower town around Town Hall Square. Outside the walls, the city is a hub of tech start-ups, and Estonians do almost everything online, from paying for parking to voting.",
+    "Tartu, the university town, is the second city and the most relaxed; Pärnu, on the west coast, is the summer beach resort. Lahemaa National Park, east of Tallinn, has restored manor houses, fishing villages and forest trails, and in Soomaa, in the south-west, spring meltwater floods the woods so deeply that people paddle canoes between the trees. Walking a boardwalk across a raised bog, among pools and stunted pines, is a classic Estonian outing. The big western islands, Saaremaa and Hiiumaa, have windmills, juniper heaths, lighthouses and very little traffic.",
+    "Long-distance buses are comfortable and frequent, and trains run from Tallinn to Tartu and other towns; ferries cross to the islands. Cards and phones pay for almost everything, and English is widely spoken, Russian too in Tallinn and the north-east."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and dark, with about six hours of daylight around Christmas, temperatures usually below freezing and snow for much of the season. Tallinn's Christmas market fills Town Hall Square, Otepää in the south is the place for cross-country skiing, and in a hard winter ice roads open across the sea to the islands."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Slow to arrive: ice and snow linger into March, and April is chilly. In Soomaa the melt brings the floods Estonians call the fifth season. By late May the trees are green and the evenings long."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Mild, about 20–23°C by day, with long, light evenings; around midsummer the sky barely darkens. The season for the islands, the beaches and the festivals, and the busiest time in Tallinn's old town."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is often clear and cool, with berry and mushroom picking in the forests and colour in the trees. By November it's grey and wet, and dark by mid-afternoon."
+      }
+    ],
+    "weather": "Cool and damp, softened by the Baltic. Winter runs from about December to March, a few degrees below freezing on the coast and colder inland, with snow on the ground most years. Summers are short and pleasant, rarely hot, with days around 20°C and the odd warm spell; July and August are also the wettest months. Daylight swings from about six hours at midwinter to more than eighteen in late June.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "Tallinn and across Estonia",
+        "when": "24 February",
+        "months": [2],
+        "text": "The national day, marking the declaration of independence in 1918. Blue, black and white flags fly from every house, the army parades in Tallinn, and the president's evening reception is shown on television."
+      },
+      {
+        "name": "Midsummer (Jaanipäev)",
+        "place": "Across Estonia",
+        "when": "23–24 June",
+        "months": [6],
+        "text": "Victory Day on 23 June and St John's Day on 24 June are both public holidays. Towns empty as people head to the countryside for bonfires, singing, beer and, by tradition, a search for the fern flower that blooms only that night."
+      },
+      {
+        "name": "Song Festival (Laulupidu)",
+        "place": "Tallinn Song Festival Grounds",
+        "when": "Usually every five years, in early July; the last was in 2025",
+        "months": [7],
+        "text": "Choirs of tens of thousands sing together on a vast open-air stage, with a dance festival alongside. Mass singing helped carry the independence movement of the late 1980s, remembered as the Singing Revolution."
+      },
+      {
+        "name": "Viljandi Folk Music Festival",
+        "place": "Viljandi",
+        "when": "Usually late July, over four days",
+        "months": [7],
+        "text": "Estonian and international folk music in the castle ruins and parks of a small southern town, the country's biggest music festival."
+      },
+      {
+        "name": "Black Nights Film Festival (PÖFF)",
+        "place": "Tallinn",
+        "when": "Usually in November",
+        "months": [11],
+        "text": "A large international film festival that brightens the darkest weeks, with screenings in cinemas across the capital."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Estonians are reserved and value personal space and quiet; small talk is brief, and nobody minds a silence. Shake hands firmly with eye contact when you meet; hugs and kisses are for close friends. \"Tere\" (hello) works at any time of day.",
+    "etiquette": [
+      "Sauna is a big part of life, and you may be invited to one, perhaps a smoke sauna (savusaun) in the countryside. Nudity is normal in single-sex saunas; ask your hosts what's usual.",
+      "Take your shoes off when you go into someone's home.",
+      "By law, pedestrians walking in the dark outside lit areas must wear a reflector: clip one to your coat or bag in the dark months.",
+      "Everyman's right lets you walk and pick berries and mushrooms in most forests, and camp for a night on unfenced land outside gardens and protected zones; leave nothing behind.",
+      "Queue patiently and keep your voice down on buses and trains."
+    ],
+    "tipping": "Not expected, though about 10% for good service in restaurants is common in Tallinn, and rounding up elsewhere.",
+    "dress": "Layers and a waterproof in any season; summer evenings by the sea can be cool. In winter, a proper coat, hat, gloves and boots with grip for icy pavements.",
+    "food": [
+      {
+        "name": "Rye bread (rukkileib)",
+        "text": "Dense, dark and slightly sour, on the table at almost every meal and the base of many snacks."
+      },
+      {
+        "name": "Kiluvõileib",
+        "text": "Open sandwich of rye bread with butter, boiled egg and spiced Baltic sprats, a favourite snack with beer."
+      },
+      {
+        "name": "Verivorst",
+        "text": "Blood sausage with barley, eaten at Christmas with sauerkraut, roast potatoes and lingonberry jam."
+      },
+      {
+        "name": "Mulgipuder",
+        "text": "Potato and barley mash topped with fried bacon and onion, from the Mulgimaa region in the south."
+      },
+      {
+        "name": "Kama",
+        "text": "A flour of roasted barley, rye, oats and peas, stirred into kefir or buttermilk for breakfast or whipped into desserts."
+      },
+      {
+        "name": "Vana Tallinn",
+        "text": "A dark, sweet rum-based liqueur flavoured with spices, drunk neat, in coffee or poured over ice cream."
+      }
+    ],
+    "phrases": {
+      "language": "Estonian (eesti keel)",
+      "intro": "Estonian is related to Finnish, not to its Baltic neighbours' languages. English is spoken by most younger people.",
+      "items": [
+        { "phrase": "Tere", "say": "TEH-reh", "meaning": "Hello" },
+        { "phrase": "Tere hommikust", "say": "TEH-reh HOM-mee-koost", "meaning": "Good morning" },
+        { "phrase": "Aitäh", "say": "EYE-tah", "meaning": "Thank you" },
+        { "phrase": "Palun", "say": "PAH-loon", "meaning": "Please; here you are" },
+        { "phrase": "Vabandust", "say": "VAH-bahn-doost", "meaning": "Excuse me; sorry" },
+        { "phrase": "Kui palju see maksab?", "say": "KOO-ee PAHL-yoo seh MAHK-sahb", "meaning": "How much is it?" },
+        { "phrase": "Terviseks!", "say": "TEHR-vee-sex", "meaning": "Cheers!" },
+        { "phrase": "Head aega", "say": "HEH-ahd AH-eh-gah", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q191",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). Cards and phones are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Estonian, official. Russian is the first language of more than a quarter of the people, mostly in Tallinn and the north-east.",
+        "sources": [{ "property": "P37", "values": ["Q9072"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time, UTC+2; UTC+3 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q190252", "Q6723", "Q6760", "Q1109976"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+372",
+        "sources": [{ "property": "P474", "values": ["+372"] }]
+      }
+    ]
+  }
+}

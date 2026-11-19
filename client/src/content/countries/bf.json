@@ -1,0 +1,168 @@
+{
+  "code": "BF",
+  "slug": "burkina-faso",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ne y windiga", "Burkina Faso"],
+  "summary": "Ouagadougou's film festival, the painted houses of Tiébélé and Banfora's waterfalls.",
+  "overview": [
+    "Burkina Faso, \"the land of upright people\", is a landlocked country of savannah, baobabs and villages of round mud houses. Ouagadougou, the capital, is the home of FESPACO, Africa's biggest film festival, and has a busy scene of live music, theatre and crafts; on Friday mornings the Mogho Naba, king of the Mossi, holds a short ceremony outside his palace. Bobo-Dioulasso, the second city, has a Grand Mosque of mud brick, its towers studded with the wooden stakes used to climb them for repairs, and an old quarter of griots and blacksmiths.",
+    "The green south-west, around Banfora, has the Karfiguéla waterfalls, the sandstone domes of Fabédougou, the jagged rock pinnacles of Sindou and hippos in Lake Tengréla. Near the border with Ghana, the Kassena women of Tiébélé paint their houses in bold geometric patterns of red, black and white. At Bazoulé and Sabou, villagers keep sacred crocodiles in their ponds, calm enough to stand beside.",
+    "Coaches run by private companies link the main towns, and bush taxis go everywhere else. Cash pays for nearly everything, and French will get you by in towns.",
+    "Many governments advise against all or most travel to Burkina Faso. The advice is updated as things change: check your own government's current guidance before travelling."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "avoid", "avoid", "good", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Clear mornings and warm afternoons, about 33°C in Ouagadougou in December and January, and nights cool enough for a light layer. The harmattan off the Sahara turns the sky milky with dust. FESPACO falls at the end of it in odd-numbered years."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "Close to 40°C by day in April, with warm nights and little relief until the first storms. The middle of the day is for resting in the shade."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Storms from about June, heaviest in August, when the country turns green and farmers plant millet and sorghum. Unpaved tracks get slippery and some villages are cut off. The heat returns in October."
+      }
+    ],
+    "weather": "Hot all year, with a single rainy season from about June to September. Ouagadougou gets roughly 750 mm of rain a year; the south-west, around Bobo-Dioulasso and Banfora, gets more and is greener, and the Sahel in the north gets much less. The hottest months are March to May, with April the peak. From about November to March the harmattan brings dry, dusty air, warm days and cool nights.",
+    "festivals": [
+      {
+        "name": "FESPACO",
+        "place": "Ouagadougou",
+        "when": "Every two years, in odd-numbered years, usually in late February or early March",
+        "months": [2, 3],
+        "text": "The Pan-African Film and Television Festival of Ouagadougou, running since 1969: a week of screenings of African films, open-air shows and street parties, ending with the award of the Golden Stallion of Yennenga."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Burkina Faso",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Many Burkinabè fast, and the streets are quiet in the hottest part of the day. Eid al-Fitr is a public holiday, and Christians and people of other faiths often join their Muslim friends for the meal."
+      },
+      {
+        "name": "Eid al-Adha (Tabaski)",
+        "place": "Across Burkina Faso",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Rams are fattened for weeks and sold at roadside markets. On the day, families slaughter one, share the meat and visit friends in their best clothes."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Burkina Faso",
+        "when": "5 August",
+        "months": [8],
+        "text": "Burkina, then called Upper Volta, became independent on 5 August 1960. A public holiday."
+      },
+      {
+        "name": "Proclamation of the Republic",
+        "place": "Across Burkina Faso",
+        "when": "11 December",
+        "months": [12],
+        "text": "Burkina's national day, recalling the republic proclaimed in 1958, with parades and speeches."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Banfora and the south-west",
+        "text": "The wettest and greenest part of the country, with mango orchards and sugar cane. The waterfalls are at their fullest from about August to November; by the end of the dry season they shrink to a trickle."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greeting is the start of everything: in Mooré, the Mossi language, it changes through the day, from \"Ne y yibeoogo\" in the morning to \"Ne y windiga\" in the afternoon, and goes on to ask after the family, each answered with \"Laafi\" (health). Handshakes are gentle and can be long. In the west, Dioula speakers say \"I ni ce\", and French \"Bonjour\" is understood everywhere.",
+    "etiquette": [
+      "If someone teases you about your name or people, it's probably the parenté à plaisanterie, a joking relationship between groups that keeps the peace: laugh and tease back.",
+      "Pass money, food and gifts with your right hand, or with both hands to an elder as a mark of respect.",
+      "Cameras near soldiers, police posts or government buildings cause trouble; with people, ask first.",
+      "At sacred sites, such as the crocodile ponds, follow the guardian's rules; a small offering, often a chicken, may be expected."
+    ],
+    "tipping": "Not expected in small eating places. In restaurants for visitors, leave about 5–10%, and give guides and drivers a tip at the end of a trip.",
+    "dress": "Light, loose cotton, covering shoulders and knees, especially in Muslim areas and villages. Burkinabè dress up in tailored clothes of printed cloth and of Faso Dan Fani, the country's hand-woven cotton. A scarf helps against harmattan dust.",
+    "food": [
+      {
+        "name": "Tô",
+        "text": "Called saghbo in Mooré: a smooth, firm millet or sorghum porridge, cut with the fingers and dipped in sauces of okra, baobab leaves or groundnuts."
+      },
+      {
+        "name": "Poulet bicyclette",
+        "text": "\"Bicycle chicken\": a lean village chicken, named for the bicycles that carry them to market, grilled or braised with onions and chilli."
+      },
+      {
+        "name": "Babenda",
+        "text": "A Mossi dish of bitter leaves and greens cooked with cracked rice or millet and soumbala, a strong-smelling seasoning of fermented néré seeds."
+      },
+      {
+        "name": "Dolo",
+        "text": "A cloudy, slightly sour millet beer brewed by women and served in calabashes at small neighbourhood bars."
+      },
+      {
+        "name": "Zoom-koom",
+        "text": "\"Flour water\" in Mooré: a cold drink of millet flour with ginger, tamarind and sugar, cool and filling on a hot day."
+      }
+    ],
+    "phrases": {
+      "language": "Mooré",
+      "intro": "Mooré, the language of the Mossi, is spoken in Ouagadougou and the centre. Dioula, close to Mali's Bambara, is the language of markets in Bobo-Dioulasso and the west, and French is used in offices, hotels and schools.",
+      "items": [
+        { "phrase": "Ne y yibeoogo", "say": "nay ee yee-BAY-oh-go", "meaning": "Good morning" },
+        { "phrase": "Ne y windiga", "say": "nay ee win-DEE-ga", "meaning": "Good afternoon" },
+        { "phrase": "Ne y zabre", "say": "nay ee ZAH-breh", "meaning": "Good evening" },
+        { "phrase": "Laafi bala?", "say": "LAA-fee BAH-la", "meaning": "All well? (and the answer: fine)" },
+        { "phrase": "Barka", "say": "BAR-ka", "meaning": "Thank you" },
+        { "phrase": "Barka wusgo", "say": "BAR-ka WOOS-go", "meaning": "Thank you very much" },
+        { "phrase": "I ni ce", "say": "ee nee CHEH", "meaning": "Hello; thank you (in Dioula, in the west)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q965",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "West African CFA franc (CFA, XOF), the currency of eight West African countries, pegged to the euro. Cash is used for almost everything; cash machines are in the big towns.",
+        "sources": [{ "property": "P38", "values": ["Q861690"] }]
+      },
+      {
+        "key": "languages",
+        "text": "The national languages are official, among them Mooré, Dioula and Bissa. French is still used in government, business and schools.",
+        "sources": [{ "property": "P37", "values": ["Q36096", "Q32706", "Q32934"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689520"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "17 for police, 18 for fire and 112 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648842", "Q25648843", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+226",
+        "sources": [{ "property": "P474", "values": ["+226"] }]
+      }
+    ]
+  }
+}

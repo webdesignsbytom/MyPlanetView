@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, expectStats, openMap, openStats, openTool } from './fixtures.js';
+import { test, expect, HOME_MAP, REGION_COUNT, expectStats, openMap, openStats, openTool } from './fixtures.js';
 
 const stopsCard = (page) => page.getByRole('region', { name: 'Stops' });
 const stopItems = (page) => stopsCard(page).getByRole('listitem');
@@ -161,7 +161,7 @@ test.describe('Trips', () => {
     await expect(trips.getByRole('link', { name: /Japan in spring/ })).toHaveCount(0);
     await openStats(page);
     // Countries, continents, special places, photos, landmarks, trips
-    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '16', '13', '2']);
+    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', `0 of ${REGION_COUNT}`, '16', '13', '2']);
 
     // The old address now says so
     await page.goto('/trips/trip-japan');

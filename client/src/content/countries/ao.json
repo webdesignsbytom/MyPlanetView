@@ -1,0 +1,170 @@
+{
+  "code": "AO",
+  "slug": "angola",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Olá", "Angola", "Bem-vindo"],
+  "summary": "Kalandula's great falls, the Serra da Leba hairpins, the Namib coast and Luanda's bay.",
+  "overview": [
+    "Angola is a big country that few tourists have reached yet. Luanda, the capital, curves round a bay with a long seafront promenade, the Marginal, and the Ilha, a sandbar lined with beach bars and fish restaurants. The city's past is told at the Fortress of São Miguel and at the National Museum of Slavery on the coast to the south. Further south again, the eroded cliffs of the Miradouro da Lua, the Viewpoint of the Moon, look out to sea, and Kissama National Park has been restocked with elephants, giraffes and antelope.",
+    "Inland, the Kalandula Falls on the Lucala River are among the largest in Africa by volume, at their fullest after the rains, and the giant black boulders of Pungo Andongo rise from the plain not far away. In the south, the highland city of Lubango has a statue of Christ watching over it, the sheer drop of the Tundavala gap, and the Serra da Leba road, whose hairpins wind down the escarpment towards the coast. Beyond lies Namibe, where the Namib Desert meets the Atlantic and the strange two-leaved welwitschia grows on the gravel plains of Iona National Park.",
+    "Roads between the main cities are mostly paved but long, and domestic flights save days. Portuguese is needed for almost everything outside the big hotels. The civil war ended in 2002, and landmines are still being cleared in parts of the countryside, so stay on roads and well-used paths. Your government's travel advice is worth reading before you book."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Cacimbo (cool, dry season)",
+        "months": [5, 6, 7, 8, 9],
+        "text": "Dry, and cooler on the coast, about 22–25°C by day in Luanda, with a grey sea mist, the cacimbo, hanging over many mornings. Inland, days are sunny and nights crisp, and cold in the southern highlands."
+      },
+      {
+        "name": "Heat builds",
+        "months": [10, 11, 12],
+        "text": "Temperatures climb and thunderstorms break over the plateau from October; on the coast, showers are light and irregular."
+      },
+      {
+        "name": "Main rains",
+        "months": [1, 2, 3, 4],
+        "text": "Hot and humid, 30°C and more in Luanda, with the coast's heaviest rain in March and April. Dirt roads inland can turn to mud, but the waterfalls fill and the country is green."
+      }
+    ],
+    "weather": "The cold Benguela current keeps the coast drier and cooler than its latitude suggests: Luanda gets little rain, mostly from February to April, and Namibe in the south almost none. The cacimbo, May to September, is the cool, dry season, around 20–25°C on the coast under grey skies; from October to April it's hot and humid, around 30°C. The central plateau, at about 1,500–1,800 m around Huambo and Lubango, is milder, with rain from about October to April and cold nights in June and July.",
+    "festivals": [
+      {
+        "name": "Liberation Struggle Day",
+        "place": "Across the country",
+        "when": "4 February",
+        "months": [2],
+        "text": "A public holiday marking the start of the armed struggle against Portuguese rule in 1961."
+      },
+      {
+        "name": "Luanda Carnival",
+        "place": "Luanda",
+        "when": "Carnival Tuesday, in February or early March: in 2027, 9 February",
+        "months": [2, 3],
+        "text": "Carnival groups from the city's neighbourhoods parade along the Marginal in costume, dancing semba and other Angolan rhythms, and compete for the year's prizes. The Tuesday is a public holiday."
+      },
+      {
+        "name": "Peace Day",
+        "place": "Across the country",
+        "when": "4 April",
+        "months": [4],
+        "text": "The Day of Peace and National Reconciliation, marking the end of the civil war in 2002."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the country",
+        "when": "11 November",
+        "months": [11],
+        "text": "Angola's independence from Portugal in 1975 is celebrated with parades and concerts in Luanda."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Luanda and the coast",
+        "text": "Dry for most of the year: grey skies and a cool sea in the cacimbo, then hot sun, high humidity and short, heavy showers, mostly from about February to April."
+      },
+      {
+        "name": "Lubango and the southern highlands",
+        "text": "Warm, sunny days in most months at about 1,700 m, with rain from about October to April and cold nights in June and July: pack a warm layer."
+      },
+      {
+        "name": "Namibe and the desert",
+        "text": "Almost rainless, with cool fog rolling in from the ocean in the mornings and hot days inland. Fine in any month."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Start with a handshake and a \"bom dia\" or \"boa tarde\"; women, and friends, often greet with a kiss on the cheek. Greet older people first and with care: Angolans call an elder a \"kota\", a word from Kimbundu said with respect.",
+    "etiquette": [
+      "Government buildings, the presidential palace, soldiers, police and the port are strictly off limits to cameras: keep yours out of sight near them.",
+      "Police may stop you to see ID: keep your passport or a copy on you.",
+      "In the countryside, stay on roads and well-trodden paths, and never pick up metal objects: landmines and unexploded shells remain in places.",
+      "Bargain in markets; in shops, prices are fixed.",
+      "Luanda's traffic is slow, so allow plenty of time, and at night take a taxi booked through your hotel."
+    ],
+    "tipping": "About 10% in restaurants where service isn't included, and small tips for porters and the men who watch parked cars. Guides and drivers on longer trips are usually tipped at the end.",
+    "dress": "Angolans dress well in town, and in Luanda people dress up to go out in the evening. Bring a jacket or jumper for cacimbo evenings on the coast and for highland nights, which can be cold in June and July.",
+    "food": [
+      {
+        "name": "Muamba de galinha",
+        "text": "Chicken stewed in a palm-oil sauce with okra, garlic and squash: the national dish, eaten with funge."
+      },
+      {
+        "name": "Funge",
+        "text": "A smooth, elastic porridge of cassava flour in the north, or maize flour in the south, used to scoop up sauces."
+      },
+      {
+        "name": "Mufete",
+        "text": "Grilled fish with black-eyed beans in palm oil, sweet potato, plantain and cassava, and a sharp onion and vinegar sauce: Luanda's weekend lunch on the Ilha."
+      },
+      {
+        "name": "Gindungo",
+        "text": "A fiery chilli sauce of small peppers, garlic and lemon, set on almost every table."
+      },
+      {
+        "name": "Cuca and kissângua",
+        "text": "Cuca is the beer most Angolans reach for; kissângua is a home-made, lightly fermented maize drink, sweet and slightly sour."
+      }
+    ],
+    "phrases": {
+      "language": "Portuguese",
+      "intro": "Most Angolans speak Portuguese, and in the cities it's often their first language; many also speak Umbundu, Kimbundu or Kikongo. Angolan Portuguese has words of its own, some borrowed from Kimbundu.",
+      "items": [
+        { "phrase": "Olá", "say": "oh-LAH", "meaning": "Hello" },
+        { "phrase": "Como está?", "say": "KOH-moo esh-TAH", "meaning": "How are you?" },
+        { "phrase": "Muito obrigado / obrigada", "say": "MWEE-too oh-bree-GAH-doo / oh-bree-GAH-dah", "meaning": "Thank you very much (said by a man / by a woman)" },
+        { "phrase": "Com licença", "say": "kom lee-SEN-sah", "meaning": "Excuse me (to get past)" },
+        { "phrase": "Quanto é?", "say": "KWAN-too EH", "meaning": "How much is it?" },
+        { "phrase": "Fala inglês?", "say": "FAH-lah een-GLESH", "meaning": "Do you speak English?" },
+        { "phrase": "Bué", "say": "BWEH", "meaning": "A lot; very (Angolan slang)" },
+        { "phrase": "Kota", "say": "KOH-tah", "meaning": "An elder (said with respect)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q916",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Angolan kwanza (Kz, AOA). Foreign cards are taken mainly in large hotels and some Luanda restaurants, so carry cash.",
+        "sources": [{ "property": "P38", "values": ["Q200337"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Portuguese, the official language. Umbundu, Kimbundu and Kikongo are the most widely spoken of the country's African languages.",
+        "sources": [{ "property": "P37", "values": ["Q5146"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type C (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "West Africa Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q4689506"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "113 for police, 115 for fire and 116 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648804", "Q25648805", "Q25648807"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+244",
+        "sources": [{ "property": "P474", "values": ["+244"] }]
+      }
+    ]
+  }
+}

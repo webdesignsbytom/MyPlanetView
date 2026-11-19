@@ -823,7 +823,7 @@ export const UNESCO_LANDMARKS = [
   { countryCode: 'NL', name: 'Rietveld Schröder House', category: 'building', latitude: 52.08533, longitude: 5.1476, matchRadiusM: 500, wikidataId: 'Q914231', isUnesco: true }, // WHS 965, 2000
   { countryCode: 'NL', name: 'Schokland', category: 'site', latitude: 52.63861, longitude: 5.77167, matchRadiusM: 2500, wikidataId: 'Q140869527', isUnesco: true }, // WHS 739, 1995
   { countryCode: 'NL', name: 'Van Nelle Factory', category: 'building', latitude: 51.92278, longitude: 4.43361, matchRadiusM: 400, wikidataId: 'Q2328849', isUnesco: true }, // WHS 1441, 2014
-  { countryCode: 'NC', name: 'Lagoons of New Caledonia (Grand Lagon Sud)', category: 'park', latitude: -22.5125, longitude: 166.95972, matchRadiusM: 38000, wikidataId: 'Q64399599', isUnesco: true }, // WHS 1115, 2008; site Q1330981
+  { countryCode: 'FR', name: 'Lagoons of New Caledonia (Grand Lagon Sud)', category: 'park', latitude: -22.5125, longitude: 166.95972, matchRadiusM: 38000, wikidataId: 'Q64399599', isUnesco: true }, // WHS 1115, 2008; site Q1330981
   { countryCode: 'NZ', name: 'NZ Sub-Antarctic Islands (Auckland Islands)', category: 'archipelago', latitude: -50.7, longitude: 166.1, matchRadiusM: 17000, wikidataId: 'Q326951', isUnesco: true }, // WHS 877, 1998; site Q46275
   { countryCode: 'NZ', name: 'Tongariro National Park', category: 'park', latitude: -39.2, longitude: 175.58333, matchRadiusM: 19000, wikidataId: 'Q202845', isUnesco: true }, // WHS 421, 1990
   { countryCode: 'NI', name: 'León Cathedral', category: 'building', latitude: 12.435, longitude: -86.8781, matchRadiusM: 300, wikidataId: 'Q48605', isUnesco: true }, // WHS 1236, 2011

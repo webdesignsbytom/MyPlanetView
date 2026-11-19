@@ -1,0 +1,189 @@
+{
+  "code": "RO",
+  "slug": "romania",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bună ziua", "România"],
+  "summary": "Painted monasteries, Saxon fortified churches, Carpathian bears and Danube Delta pelicans.",
+  "overview": [
+    "The Carpathians bend through the middle of Romania in a great arc, and inside it lies Transylvania: the old Saxon towns of Brașov, Sibiu and Sighișoara, whose walled hilltop citadel is said to be the birthplace of Vlad the Impaler; villages such as Biertan and Viscri, gathered round fortified churches; and Bran Castle, sold as Dracula's, though its link with Vlad is thin. To the north, Maramureș keeps wooden churches with tall shingled spires, carved gateways and the Merry Cemetery at Săpânța, whose painted crosses tell the lives of the dead in pictures and verse. Bucovina, to the north-east, has monasteries such as Voroneț and Sucevița, painted inside and out in the 15th and 16th centuries.",
+    "Bucharest, the capital, mixes grand boulevards, the Palace of the Parliament, one of the largest buildings in the world, and the bars of its small Old Town. In the south-east the Danube spreads into a delta of reed beds and channels, Europe's second largest after the Volga's, where boats from Tulcea go looking for pelicans and hundreds of other kinds of birds; beyond it, the Black Sea coast has busy summer resorts around Constanța. The Carpathians hold more brown bears than any other European country outside Russia, and high mountain roads such as the Transfăgărășan and the Transalpina, which snow closes for much of the year.",
+    "Trains reach most cities but are slow, and buses and minibuses fill the gaps; to see the villages, a car or a driver helps. Cards are widely taken. Bears do wander to roadsides and the edges of mountain towns: never feed them, and keep food packed away."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Frosty nights and snow in the hills. Skiing at Poiana Brașov and Sinaia, Christmas markets in Sibiu, Brașov and Bucharest, and carol singers and masked processions in the villages of the north-east around New Year."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "A changeable March, then green and warm from April. Orthodox Easter is the year's great feast, with painted eggs in Bucovina, and the Delta's birds arrive in April and May. Snow lingers on the high ridges into May."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot on the plains, often above 30°C and sometimes near 40°C in Bucharest, with thunderstorms. The mountains are the place to be, for hiking and the high roads, while the Black Sea resorts fill in July and August."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is warm and settled, the best month for many trips. October brings forest colours and cold nights; November is grey, damp and short of daylight."
+      }
+    ],
+    "weather": "A continental climate, with hot summers, cold winters and short seasons in between. Bucharest's summer days usually reach 29–31°C, with heatwaves near 40°C; in January, days are around 2°C and nights fall to −5°C or lower. The Carpathians are cooler all year, with deep snow in winter. Rain falls mostly in late spring and early summer, often as thunderstorms. Along the Black Sea it's milder, and the water reaches about 24°C in August.",
+    "festivals": [
+      {
+        "name": "Orthodox Easter",
+        "place": "Across Romania",
+        "when": "Usually in April or early May (2 May in 2027)",
+        "months": [4, 5],
+        "text": "Midnight services end with candles carried home still lit and the greeting “Hristos a înviat!” (“Christ is risen!”). The meal that follows has red-dyed eggs, lamb and cozonac."
+      },
+      {
+        "name": "Sibiu International Theatre Festival",
+        "place": "Sibiu",
+        "when": "Usually in June, for about ten days",
+        "months": [6],
+        "text": "One of Europe's biggest performing-arts festivals, filling the old town's squares and streets with theatre, dance and music, much of it free and outdoors."
+      },
+      {
+        "name": "Sighișoara Medieval Festival",
+        "place": "Sighișoara",
+        "when": "Usually in late July",
+        "months": [7],
+        "text": "Knights, jugglers, archers and musicians in costume take over the lanes inside the citadel walls."
+      },
+      {
+        "name": "Untold",
+        "place": "Cluj-Napoca",
+        "when": "Usually in early August",
+        "months": [8],
+        "text": "One of Europe's largest electronic music festivals, held over four days around the city's Central Park and stadium."
+      },
+      {
+        "name": "George Enescu Festival",
+        "place": "Bucharest",
+        "when": "Late August to September, in odd-numbered years",
+        "months": [8, 9],
+        "text": "A month of classical concerts by leading orchestras and soloists, named after Romania's best-known composer. The next one is in 2027."
+      },
+      {
+        "name": "Great Union Day",
+        "place": "Across Romania",
+        "when": "1 December",
+        "months": [12],
+        "text": "Romania's national day, for the union of Transylvania with Romania in 1918, with a military parade under Bucharest's Arc de Triomphe."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Transylvania and the Carpathians",
+        "text": "Hiking runs from about June, once the high trails are clear of snow, to September, and skiing from December to March. In Brașov and Sibiu, July and August are pleasant, around 22–25°C by day, with cool nights."
+      },
+      {
+        "name": "The Danube Delta and the Black Sea",
+        "text": "Birdwatching is best in April and May and again in September and October. The beach resorts are open in summer and busiest in July and August, and mosquitoes in the Delta are fierce on summer evenings."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake with eye contact is the usual greeting, and good friends kiss on both cheeks. Older men sometimes greet a woman with “Sărut mâna” (“I kiss your hand”), now said rather than done. Use “Domnule” (sir) and “Doamnă” (madam) with surnames until you're invited to use first names.",
+    "etiquette": [
+      "Bring flowers in an odd number: even numbers are for funerals.",
+      "In monasteries, women are expected to wear a skirt and cover their shoulders, sometimes their hair too. Wraps are lent at the gate in Bucovina.",
+      "Saying “mulțumesc” as you hand over money can be taken to mean “keep the change”, so wait for it first if you want it.",
+      "Never feed a bear, however tame it looks by the road: it's dangerous, and it teaches them to come back.",
+      "Take your shoes off when you enter a home."
+    ],
+    "tipping": "Waiters expect about 10%, in cash even when the bill goes on a card. Round up for taxis.",
+    "dress": "Layers and good walking shoes for cobbled old towns and the hills, modest clothes for churches and monasteries, and a warm jacket for mountain evenings, even in summer.",
+    "food": [
+      {
+        "name": "Sarmale",
+        "text": "Cabbage leaves rolled round minced pork and rice, simmered for hours and served with mămăligă (maize porridge) and sour cream."
+      },
+      {
+        "name": "Ciorbă",
+        "text": "Sour soups, soured with borș or lemon. Ciorbă de burtă, made with tripe, garlic and sour cream, is the classic; ciorbă de perișoare has meatballs."
+      },
+      {
+        "name": "Mici",
+        "text": "Small skinless sausages of mixed minced meat and garlic, grilled and eaten with mustard and a cold beer."
+      },
+      {
+        "name": "Papanași",
+        "text": "Fried cheese doughnuts topped with sour cream and berry jam, the favourite dessert."
+      },
+      {
+        "name": "Cozonac",
+        "text": "A sweet loaf swirled with walnut and cocoa, baked for Easter and Christmas."
+      },
+      {
+        "name": "Țuică and pălincă",
+        "text": "Plum brandies. Țuică is distilled once; pălincă, from Transylvania and Maramureș, is distilled twice and much stronger."
+      }
+    ],
+    "phrases": {
+      "language": "Romanian",
+      "intro": "Romanian is a Romance language, so speakers of Italian, Spanish or French will recognise many words. Younger people often speak English, and Hungarian is common in parts of Transylvania.",
+      "items": [
+        { "phrase": "Bună!", "say": "BOO-nuh", "meaning": "Hi" },
+        { "phrase": "Bună dimineața", "say": "BOO-nuh dee-mee-NYAH-tsah", "meaning": "Good morning" },
+        { "phrase": "Mersi", "say": "MER-see", "meaning": "Thanks" },
+        { "phrase": "Te rog / Vă rog", "say": "teh ROHG / vuh ROHG", "meaning": "Please (to a friend / politely)" },
+        { "phrase": "Scuzați-mă", "say": "skoo-ZAHTS-uh-muh", "meaning": "Excuse me" },
+        { "phrase": "Nu înțeleg", "say": "noo uhn-tseh-LEG", "meaning": "I don't understand" },
+        { "phrase": "Poftă bună!", "say": "POF-tuh BOO-nuh", "meaning": "Enjoy your meal" },
+        { "phrase": "Nota, vă rog", "say": "NOH-tah vuh ROHG", "meaning": "The bill, please" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q218",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Romanian leu (plural lei; RON)",
+        "sources": [{ "property": "P38", "values": ["Q131645"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Romanian. Hungarian is widely spoken in parts of Transylvania.",
+        "sources": [{ "property": "P37", "values": ["Q7913"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time, UTC+2, and UTC+3 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q190252", "Q6723", "Q1109976", "Q6760", "Q5412100"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+40",
+        "sources": [{ "property": "P474", "values": ["+40"] }]
+      }
+    ]
+  }
+}

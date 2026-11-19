@@ -1,0 +1,138 @@
+{
+  "code": "TV",
+  "slug": "tuvalu",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Tālofa", "Tuvalu"],
+  "summary": "Nine low atolls, a runway that doubles as the town's playing field, and a lagoon at every door.",
+  "overview": [
+    "Tuvalu is one of the world's smallest countries: nine low islands, six of them atolls, with about 26 km² of land and around 11,000 people. The highest ground is under 5 m above the sea and most of it far lower, so rising seas, salt water seeping into gardens and king tides that flood the land are the nation's great concern.",
+    "Almost every visitor stays on Funafuti, the capital atoll, whose main islet, Fongafale, is in places only a few dozen metres wide, with the lagoon on one side and the ocean on the other. The runway runs down its middle; when no plane is due, which is most of the time, it becomes the island's football pitch, volleyball court and, on hot nights, a cool place to sleep. The Funafuti Conservation Area, on the western islets across the lagoon, has the clearest water and the best snorkelling, reached by boat.",
+    "The outer islands are reached only by government ships that call every few weeks, so a visit means days at sea and staying with families or in very simple guesthouses. Tuvalu earns much of its income from fishing licences and from leasing its internet domain, .tv."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Wet season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Westerly winds bring heavy rain and squalls, peaking from December to March, and cyclones are possible. King tides around February and March can push seawater up through the porous ground on Funafuti, leaving pools between the houses."
+      },
+      {
+        "name": "Drier season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "South-easterly trade winds, somewhat less rain and calmer water, which makes the crossing to the conservation area easier. Still hot, around 30–31°C."
+      }
+    ],
+    "weather": "Tuvalu barely cools down: days reach 30–31°C year-round, nights stay near 26°C and the lagoon is 29°C or more. It's wet too: Funafuti's yearly rainfall is around 3,500 mm, with no truly dry month and the heaviest falls from about December to March. Cyclones are not frequent, but their storm surges can wash right over the low land, as Cyclone Pam's did in 2015.",
+    "festivals": [
+      {
+        "name": "Gospel Day (Te Aso o te Tala Lei)",
+        "place": "Churches across Tuvalu",
+        "when": "The second Monday of May",
+        "months": [5],
+        "text": "Marks the arrival of Christianity in 1861, with services, choirs and feasts."
+      },
+      {
+        "name": "National Children's Day (Aso Tamaliki)",
+        "place": "Across Tuvalu",
+        "when": "The first Monday of August",
+        "months": [8],
+        "text": "A public holiday for children, with games, sports and church events."
+      },
+      {
+        "name": "Tuvalu Day",
+        "place": "Funafuti and every island",
+        "when": "1 October, with the holiday running on into 2 October",
+        "months": [10],
+        "text": "The national day, for the end of British rule on 1 October 1978: two days of fatele (dance) in the meeting houses, sports between the islands' communities, and feasts."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Tālofa\" is hello; Tuvaluan is a close cousin of Samoan, and a few words carry over. On an island this small, everyone soon knows who you are and where you're staying. Each island has its own community and its own falekaupule, the meeting house where the elders decide local matters, and on Funafuti the people of each outer island keep a meeting hall of their own.",
+    "etiquette": [
+      "If you're invited into a falekaupule, sit cross-legged on the mats round the edge, where you're shown, and wait for the elders to speak first.",
+      "The runway is shared ground: when the siren sounds before a flight, clear off it at once.",
+      "Sunday belongs to church and family; keep things quiet and save swimming and fishing for another day.",
+      "Fatele dances start slowly and speed up song by song; if you're pulled in to dance, join in: it's meant as a welcome.",
+      "Ask before photographing people, and leave shells and coral in the conservation area where they are."
+    ],
+    "tipping": "Not part of Tuvaluan custom and not expected.",
+    "dress": "Light, modest clothes: knee-length shorts and T-shirts are fine, but bikinis and very short shorts stand out away from the water, and local people swim in T-shirts and shorts or a wrap. Church calls for skirts well below the knee.",
+    "food": [
+      {
+        "name": "Pulaka",
+        "text": "Giant swamp taro, the old staple, which needs the thin layer of fresh water that floats under each islet. As the sea rises, salt water seeping up through the ground is spoiling many of the gardens."
+      },
+      {
+        "name": "Raw fish",
+        "text": "Tuna or reef fish cut small and 'cooked' in citrus juice, with coconut cream stirred through; flying fish, caught at night by torchlight, are fried or grilled."
+      },
+      {
+        "name": "Kaleve",
+        "text": "Coconut sap, collected morning and evening by men who climb the palms: sweet and fresh, poured over food, or boiled down into a thick syrup."
+      },
+      {
+        "name": "Feast pork",
+        "text": "Pigs are kept for celebrations, and a whole roast pig, with breadfruit and pulaka, is the centre of a wedding or Tuvalu Day feast."
+      }
+    ],
+    "phrases": {
+      "language": "Tuvaluan",
+      "intro": "Officials and teachers use English, but Tuvaluan is what you'll hear in the street, and on Nui people speak a form of Gilbertese.",
+      "items": [
+        { "phrase": "Tālofa", "say": "tah-LOH-fah", "meaning": "Hello" },
+        { "phrase": "Tālofa koutou", "say": "tah-LOH-fah koh-OO-toh", "meaning": "Hello, everyone" },
+        { "phrase": "E ā koe?", "say": "eh AH koh-eh", "meaning": "How are you?" },
+        { "phrase": "Au e mālosi, fakafetai", "say": "ow eh mah-LOH-see, fah-kah-feh-TAI", "meaning": "I'm well, thank you" },
+        { "phrase": "Fakafetai lasi", "say": "fah-kah-feh-TAI LAH-see", "meaning": "Thank you very much" },
+        { "phrase": "Tōfā", "say": "toh-FAH", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q672",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Australian dollar (A$, AUD), alongside Tuvalu's own coins of equal value. Cards are rarely accepted: bring cash.",
+        "sources": [{ "property": "P38", "values": ["Q259502", "Q4406"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Tuvaluan and English, both official",
+        "sources": [{ "property": "P37", "values": ["Q34055", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (angled flat pins, as in Australia), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+12, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q7105", "Q63285989"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+688",
+        "sources": [{ "property": "P474", "values": ["+688"] }]
+      }
+    ]
+  }
+}

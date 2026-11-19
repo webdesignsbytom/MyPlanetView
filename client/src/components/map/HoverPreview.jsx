@@ -8,6 +8,7 @@ import { PlaceBadgeIcon } from './StarBadge';
 import { postersFor } from '@/utils/map/posterData';
 // Utils
 import { countryName } from '@/utils/map/countries';
+import { regionParent } from '@/utils/map/regionPlaces';
 import { VISIT_STATUS_LABELS, countsAsVisited } from '@/utils/map/visitStatus';
 import { takeHoverPoint } from '@/utils/map/hoverPoint';
 
@@ -53,6 +54,9 @@ function nameSize(name) {
 // photos (17 Nov 2026, the user's wish; it was a slideshow of the newest ones from there).
 // It follows the pointer, and goes above it near the bottom of the screen, where it
 // wouldn't fit below. Mouse and pen only; every listener is cleared when the box goes.
+// A region (Bali, Tasmania: regionPlaces.js) says so above its name, a "Region" stamp and
+// the country it's part of (18 Nov 2026, the user's wish; the line under its poster on how
+// the map stood with that country went the same day, the user's wish).
 function HoverPreview({ code, status, showPoster }) {
   // A long press starts at the finger (`touch`); a mouse at its first move
   const [position, setPosition] = useState(() => {
@@ -115,6 +119,7 @@ function HoverPreview({ code, status, showPoster }) {
 
   const [poster] = postersFor(code);
   const name = countryName(code);
+  const parent = regionParent(code);
   const starred = countsAsVisited(status);
 
   return (
@@ -132,6 +137,12 @@ function HoverPreview({ code, status, showPoster }) {
       ) : null}
       {/* minmax(0, 1fr): a long name must never widen the card (and the poster with it).
           pr-6 keeps the postmark clear of the star; with no star it goes to the edge. */}
+      {parent ? (
+        <p className={`grid grid-cols-[auto_minmax(0,1fr)] items-center gap-2 font-travel text-xs uppercase tracking-wide text-poster-brown ${starred ? 'pr-6' : ''}`}>
+          <span className='-rotate-3 border-2 border-double border-poster-brown px-1.5 py-0.5'>Region</span>
+          <span className='break-words'>of {countryName(parent)}</span>
+        </p>
+      ) : null}
       <div className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 ${starred ? 'pr-6' : ''}`}>
         <p className={`break-words font-travel ${nameSize(name)} uppercase leading-tight tracking-wide text-colour6`}>{name}</p>
         <Postmark>{status ? VISIT_STATUS_LABELS[status] : 'Not been yet'}</Postmark>

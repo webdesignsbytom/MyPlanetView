@@ -1,0 +1,184 @@
+{
+  "code": "LB",
+  "slug": "lebanon",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ahlein", "Lubnan"],
+  "summary": "Baalbek's Roman temples, old Byblos, mountain cedars and long Beirut dinners.",
+  "overview": [
+    "Lebanon is a small country, under 250 km from north to south, where mountains climb steeply from the Mediterranean: snow lies on the peaks in spring while people swim off the coast below. Beirut, the capital, is a city of seafront walks along the Corniche to the Pigeon Rocks, a fine National Museum, and restaurants and bars in the old streets of Gemmayzeh and Mar Mikhael that stay busy far into the night.",
+    "Byblos (Jbeil), an hour north, is one of the oldest towns in the world still lived in, with a small harbour, a Crusader castle and ruins going back to the Phoenicians. Inland are the Jeita Grotto's limestone caverns, explored partly by boat; the Qadisha Valley, where monasteries cling to the cliffs; and, above the town of Bsharri, a grove of the ancient cedars that are the country's emblem. Across the mountains in the Bekaa Valley, Baalbek has some of the largest temples the Romans ever built, and wineries among the vineyards. South of Beirut are the Beiteddine palace in the Chouf hills and the seafront souks and castle of Sidon.",
+    "There are no trains. Shared taxis called \"service\" pick up and drop off along fixed routes, minibuses link the towns, and many visitors hire a driver for the day; Beirut's traffic is heavy. The army runs checkpoints on main roads, so carry your passport. Since the financial crisis that began in 2019, cash rules: US dollars circulate alongside Lebanese pounds, and cards aren't taken everywhere.",
+    "Lebanon is covered by travel warnings from many governments: some advise against all travel there, others against parts of the country, above all the south and the areas near the Syrian border. Advice is updated often as things change, so check what your own government says now, not what it said when you first started planning."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "The wet season: heavy rain on the coast, about 17°C by day in Beirut, and snow on the mountains, where the ski resorts of Faraya and the Cedars open. The Bekaa is cold, and mountain roads can close."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Showers in March, then mild, green and flowering in April and May, the best time for walking in the hills and the Qadisha Valley. Snow lingers on the high peaks."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Dry and sunny. The coast is hot and sticky, around 31°C in August, so the Lebanese head for the mountain villages, which are fresh and green. The beach clubs and the big summer festivals are in full swing."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Warm, settled days and a sea still good for swimming into October; the grape harvest in the Bekaa. The first rains arrive, usually in November."
+      }
+    ],
+    "weather": "A Mediterranean climate shaped by the mountains. The coast has long, hot, humid summers and mild winters, with most of the rain falling from November to March in heavy bursts. The Mount Lebanon range catches that rain and is covered in snow from about December to March or April. Behind it, the Bekaa Valley, around 1,000 m up, is drier, with hot summer days, cool nights and cold winters.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Lebanon",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Kept by Lebanon's Muslims; Christian districts carry on as usual. In Beirut and Tripoli the evenings come alive after iftar, with special Ramadan sweets in the bakeries. Eid al-Fitr is a public holiday."
+      },
+      {
+        "name": "Easter",
+        "place": "Across Lebanon",
+        "when": "Western and Orthodox Easter, usually from late March to early May: in 2027, 28 March and 2 May",
+        "months": [3, 4, 5],
+        "text": "Both Easters bring public holidays. Church processions wind through the streets on Good Friday, and families share ma'amoul, small shortbread pastries filled with dates or nuts."
+      },
+      {
+        "name": "Baalbek International Festival",
+        "place": "Baalbek",
+        "when": "Usually in July and August",
+        "months": [7, 8],
+        "text": "Concerts of Arab and Western music, opera and dance on a stage set among the Roman temples, lit up at night. Running since the 1950s."
+      },
+      {
+        "name": "Beiteddine and Byblos festivals",
+        "place": "Beiteddine and Byblos",
+        "when": "Usually from July to August",
+        "months": [7, 8],
+        "text": "Summer concerts in the courtyards of the Beiteddine palace in the Chouf and by the old harbour at Byblos, with Lebanese stars and international names."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Lebanon",
+        "when": "22 November",
+        "months": [11],
+        "text": "Celebrates the end of French rule in 1943, with a military parade in Beirut and flags on balconies; offices and schools close."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The mountains",
+        "text": "Villages such as Bsharri, Ehden and Faraya are cool in summer, when many Lebanese spend weekends there, and snowbound from about December to March, the ski season. Hiking is best from April to June and in September and October."
+      },
+      {
+        "name": "The Bekaa Valley",
+        "text": "The broad plain between Lebanon's two mountain ranges, home to Baalbek, Anjar's Umayyad ruins and the wineries. Hot and dry by day in summer, cold in winter, and lovely in spring and at the autumn harvest."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Lebanese greetings slip between languages: \"Hi, kifak, ça va?\" mixes English, Arabic and French in one breath. Friends kiss three times on the cheeks, and men shake hands warmly. Hospitality is generous and insistent: expect food to keep arriving, and coffee to be offered on every visit.",
+    "etiquette": [
+      "Lebanon has 18 officially recognised religious communities. Religion and politics are sensitive, so leave them alone with people you've just met.",
+      "Never photograph army checkpoints, soldiers or military buildings.",
+      "Mezze is for sharing: dishes go in the middle of the table and everyone helps themselves, and meals are long.",
+      "In mosques, and in conservative towns such as Tripoli and Baalbek, cover your shoulders and knees; women cover their hair to enter a mosque.",
+      "Being late by Lebanese standards is normal for social plans, but be on time for business and tours."
+    ],
+    "tipping": "Usual: about 10% in restaurants and cafés where service isn't already on the bill, often more in smart places. Tip valet parkers, who are everywhere in Beirut, and guides and drivers at the end of a day.",
+    "dress": "Beirut is fashionable, and people dress up for an evening out. Modest clothes are expected in mosques, churches and conservative areas outside the capital. Beachwear stays at the beach. Bring warm clothes for the mountains, even in summer evenings, and a waterproof in winter.",
+    "food": [
+      {
+        "name": "Mezze",
+        "text": "A spread of small dishes that can make a whole meal: hummus, moutabal (smoky aubergine), tabbouleh heavy with parsley, fattoush salad with crisp bread, little pies and grilled meats to follow."
+      },
+      {
+        "name": "Manakish",
+        "text": "Flatbread baked with za'atar (thyme, sumac and sesame) and olive oil, or with cheese, straight from the oven of a corner bakery: Lebanon's breakfast."
+      },
+      {
+        "name": "Kibbeh",
+        "text": "The national dish: bulgur wheat and minced lamb, shaped into fried torpedoes, baked in a tray or, in the mountains, served raw (kibbeh nayyeh) with olive oil and mint."
+      },
+      {
+        "name": "Sfeeha Baalbakiyeh",
+        "text": "Small open pies of minced lamb, tomato and pomegranate molasses, the speciality of Baalbek, baked by the dozen and eaten hot."
+      },
+      {
+        "name": "Arak and Bekaa wine",
+        "text": "Arak, a clear aniseed spirit that turns milky white when water is added, is the drink of a long mezze lunch. The Bekaa's wineries have made wine for generations, some since the 19th century."
+      },
+      {
+        "name": "Tripoli's sweets",
+        "text": "The northern city is famous for its pastry shops: knefeh with melted cheese, baklava, and halawet el jibn, soft cheese rolls filled with cream and drizzled with syrup."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Lebanese Arabic)",
+      "intro": "Most Lebanese speak French or English, or both, and switch between them and Arabic without a pause.",
+      "items": [
+        { "phrase": "Ahlein (أهلين)", "say": "ah-LAYN", "meaning": "Hi; welcome" },
+        { "phrase": "Shu l-akhbar? (شو الأخبار)", "say": "SHOO lakh-BAAR", "meaning": "What's new? How are things?" },
+        { "phrase": "Merci (ميرسي)", "say": "MER-see", "meaning": "Thank you (borrowed from French)" },
+        { "phrase": "Ya'tik al-afieh (يعطيك العافية)", "say": "YA-tee-kil AA-fyeh", "meaning": "God give you strength (to someone working)" },
+        { "phrase": "Kteer tayyeb (كتير طيب)", "say": "k-TEER TAY-yeb", "meaning": "Delicious; very good" },
+        { "phrase": "Addesh haida? (قديش هيدا)", "say": "ad-DAYSH HAY-da", "meaning": "How much is this?" },
+        { "phrase": "Ma fi mishkle (ما في مشكلة)", "say": "MA fee MISH-kleh", "meaning": "No problem" },
+        { "phrase": "Yalla bye (يلا باي)", "say": "YAL-la BYE", "meaning": "Bye, then (the everyday goodbye)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q822",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Lebanese pound (LL, LBP). US dollars in cash are used widely alongside it and many prices are quoted in dollars; carry cash, as cards aren't taken everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q201880"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic, the official language. French is used widely in schools, business and government, and English is spoken by most younger people.",
+        "sources": [{ "property": "P37", "values": ["Q13955", "Q150"] }],
+        "note": "Wikidata lists French as an official language too; Lebanon's constitution names Arabic as the official language and leaves it to the law to say where French may be used, so the page describes French that way."
+      },
+      {
+        "key": "plugs",
+        "text": "A mix: mostly Type C (two round pins) and Type G (three rectangular pins, as in the UK), with American Types A and B in places; 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1528507", "Q60740126", "Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time, UTC+2; summer time, UTC+3, from late March to late October",
+        "sources": [{ "property": "P421", "values": ["Q190252", "Q1109976", "Q6723", "Q6760", "Q63285946"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 or 160 for police, 140 for ambulance (the Lebanese Red Cross) and 175 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648824", "Q25648888", "Q25648889"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+961",
+        "sources": [{ "property": "P474", "values": ["+961"] }]
+      }
+    ]
+  }
+}

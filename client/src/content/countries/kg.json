@@ -1,0 +1,187 @@
+{
+  "code": "KG",
+  "slug": "kyrgyzstan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salam", "Kyrgyzstan", "Kosh keliniz"],
+  "summary": "Yurt camps on high summer pastures, Issyk-Kul's shores and horse treks through the Tian Shan.",
+  "overview": [
+    "Kyrgyzstan is almost all mountains. The Tian Shan covers most of the country, and in summer herders still drive their horses, sheep and cattle up to high pastures (jailoo) and live there in yurts until the autumn. Visitors come to walk and ride: horse treks between mountain lakes, nights in yurt camps, and homestays and guides arranged through community tourism offices in the towns.",
+    "Bishkek, the capital, is a green, Soviet-planned city with snowy peaks behind it; Ala-Archa national park, about an hour away, has glaciers and good day walks. Issyk-Kul, a huge lake at about 1,600 m that never freezes, fills the east, with beaches on its north shore and Karakol at its eastern end, the base for treks to the hot springs of Altyn-Arashan. Song-Kol, at about 3,000 m, is the classic summer yurt stay, and near the Chinese border, Tash Rabat is a stone caravanserai from the Silk Road. In the south, Osh grows round Sulaiman-Too, a sacred rocky hill, and has one of the biggest bazaars in Central Asia.",
+    "Shared taxis and minibuses (marshrutkas) link the towns, and the road between Bishkek and Osh, over two high passes, takes most of a day. Russian is widely spoken, and English is rare outside Bishkek and tourism. Carry cash away from the cities."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "avoid", "avoid", "good", "good", "best", "best", "best", "best", "good", "avoid", "avoid"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Nooruz in March comes as the valleys thaw; apricot trees flower in the south in April. By May the lowlands are green and warm, but tracks are muddy and the high passes and lakes are still under snow."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "The season for the mountains: yurt camps open on the pastures from about June, and the treks and passes are clear. Issyk-Kul's beaches are busy in July and August. Bishkek and Osh are hot, often above 30°C."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Clear, golden September is the last month of the yurt camps, as herders bring their flocks down. Arslanbob's walnut forests are harvested from late September into October. By November, snow has closed the high country."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, with snow in the valleys and far deeper snow in the mountains. Karakol has a ski resort, but the high pastures, Song-Kol and most treks are out of reach, and Bishkek's air is smoky from coal heating."
+      }
+    ],
+    "weather": "Dry and continental, with height deciding most things. Bishkek, at about 800 m, has summers of 30–35°C and winters below freezing with snow. Issyk-Kul's water keeps its shores milder in both seasons. In the high country, summer days are sunny and warm but nights can fall close to freezing, and snow can come to the passes in any month. Most rain falls in spring and early summer, often as afternoon storms over the mountains.",
+    "festivals": [
+      {
+        "name": "Orthodox Christmas",
+        "place": "Across Kyrgyzstan",
+        "when": "7 January",
+        "months": [1],
+        "text": "A public holiday for the Russian Orthodox minority, with services at the cathedrals in Bishkek and Karakol."
+      },
+      {
+        "name": "Orozo Ait (Eid al-Fitr)",
+        "place": "Across Kyrgyzstan",
+        "when": "At the end of Ramadan, about 11 days earlier each year: in 2027, in March",
+        "months": [3],
+        "text": "A public holiday after the month of fasting. Families visit relatives and neighbours, and tables are spread with fried bread, sweets and dried fruit for anyone who calls. Fasting is kept by some but not all, more in the south than in Bishkek."
+      },
+      {
+        "name": "Nooruz",
+        "place": "Across Kyrgyzstan",
+        "when": "21 March",
+        "months": [3],
+        "text": "A public holiday for the equinox and the new year. Women cook sumolok, a sweet paste of sprouted wheat stirred through the night, and there are concerts, games and horseback contests in the towns."
+      },
+      {
+        "name": "Kurman Ait (Eid al-Adha)",
+        "place": "Across Kyrgyzstan",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Sheep are slaughtered and the meat shared, and families visit the graves of their relatives; a public holiday."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Kyrgyzstan",
+        "when": "31 August",
+        "months": [8],
+        "text": "Kyrgyzstan's independence in 1991 is celebrated with concerts in Bishkek's central square and, in many places, kok-boru: two teams on horseback wrestling over a goat carcass."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Issyk-Kul and Karakol",
+        "text": "The lake's beaches are warm enough for swimming from about July to early September. Karakol, with a wooden Orthodox cathedral and a Chinese-style Dungan mosque, is the base for treks into the valleys south of the lake, and for skiing from about December to March."
+      },
+      {
+        "name": "Song-Kol and the high pastures",
+        "text": "Reached only from about June to September, when the road is clear of snow and herders have set up their yurts. Even in July, nights can be close to freezing."
+      },
+      {
+        "name": "Osh and the south",
+        "text": "Lower and hotter, on the edge of the Fergana Valley, with a more traditional, Uzbek-influenced way of life. Good in spring and autumn; summer days in Osh are often above 33°C. Arslanbob, a village in the walnut forests, is a good base for walks."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Salamatsyzby\" is the polite hello, and \"Assalamu alaikum\" is common too, especially in the south. Men shake hands with every man in the room, often with the left hand on the heart or both hands held out to an older man. Between men and women, a nod and a smile is the safe greeting unless she offers her hand.",
+    "etiquette": [
+      "In a yurt, take off your shoes at the door and don't step on the threshold. The place of honour (tör) is opposite the door, and guests are often seated there.",
+      "Bread is sacred: never put it on the ground or upside down, and don't leave a broken piece uneaten if you can help it.",
+      "At the end of a meal, people pass their hands down over their face in a small blessing, saying \"Omin\". Joining in is welcome.",
+      "Women in particular may not want to be photographed: ask first, and ask before flying a drone too.",
+      "On treks, pay herders and homestay families what was agreed, and leave nothing behind on the pastures."
+    ],
+    "tipping": "Not traditional, but welcome. Bishkek restaurants often add a service charge of 10–15%. On treks, tip guides, cooks and horsemen at the end, ideally in som.",
+    "dress": "Casual in Bishkek; more covered in the south and in villages, with shoulders and knees covered. For the mountains, bring warm layers, a waterproof jacket and a hat for the sun and the cold, even in midsummer: nights by the high lakes are cold.",
+    "food": [
+      {
+        "name": "Beshbarmak",
+        "text": "The dish for guests: boiled mutton or horse meat, chopped fine and mixed with hand-cut noodles and onion, served with the broth (shorpo) to drink."
+      },
+      {
+        "name": "Lagman",
+        "text": "Thick hand-pulled noodles under a stir-fry of beef, peppers, tomatoes and garlic, brought by the Dungan and Uyghur communities and served in almost every café."
+      },
+      {
+        "name": "Ashlyan-fu",
+        "text": "Karakol's speciality: a cold, sour and spicy soup of noodles and strips of starch jelly, eaten with a fried meat pastry on hot days."
+      },
+      {
+        "name": "Samsa",
+        "text": "Flaky pastries filled with mutton and onion, baked on the inside walls of a clay oven and sold hot at bazaars."
+      },
+      {
+        "name": "Kurut",
+        "text": "Small, hard balls of dried, salted yoghurt, the herders' snack for the road; sour and chalky at first bite."
+      },
+      {
+        "name": "Kymyz",
+        "text": "Fermented mare's milk, slightly sour and fizzy, made on the summer pastures and offered to guests at every yurt; it's mildly alcoholic."
+      }
+    ],
+    "phrases": {
+      "language": "Kyrgyz",
+      "intro": "Kyrgyz is written in Cyrillic letters. Russian is spoken by most people in Bishkek and the north, and \"spasibo\" (thank you) works everywhere.",
+      "items": [
+        { "phrase": "Salamatsyzby (Саламатсызбы)", "say": "sah-lah-maht-suhz-BUH", "meaning": "Hello (polite)" },
+        { "phrase": "Rakhmat (Рахмат)", "say": "rakh-MAHT", "meaning": "Thank you" },
+        { "phrase": "Ooba / Jok (Ооба / Жок)", "say": "OH-bah / JOHK", "meaning": "Yes / No" },
+        { "phrase": "Kechiresiz (Кечиресиз)", "say": "keh-chee-reh-SIZ", "meaning": "Excuse me; sorry" },
+        { "phrase": "Kancha turat? (Канча турат?)", "say": "kahn-CHAH too-RAHT", "meaning": "How much is it?" },
+        { "phrase": "Daamduu (Даамдуу)", "say": "dahm-DOO", "meaning": "Tasty" },
+        { "phrase": "Jakshy kalyngyz (Жакшы калыңыз)", "say": "jahk-SHUH kah-luhn-GUHZ", "meaning": "Goodbye (to someone staying)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q813",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Kyrgyz som (KGS). Carry cash outside Bishkek, Osh and Karakol.",
+        "sources": [{ "property": "P38", "values": ["Q35881"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Kyrgyz, the state language, and Russian, also official and widely spoken in the cities and the north. Uzbek is common in the south.",
+        "sources": [{ "property": "P37", "values": ["Q9255", "Q7737"] }],
+        "note": "Uzbek isn't official; the page adds it because it's the everyday language of many people around Osh."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Kyrgyzstan Time, UTC+6, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6906", "Q63285943"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "101 for fire, 102 for police and 103 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648794", "Q25648798", "Q25648811"] }],
+        "note": "Wikidata also lists 161; the page gives the numbers for the three main services."
+      },
+      {
+        "key": "callingCode",
+        "text": "+996",
+        "sources": [{ "property": "P474", "values": ["+996"] }]
+      }
+    ]
+  }
+}

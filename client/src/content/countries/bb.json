@@ -1,0 +1,159 @@
+{
+  "code": "BB",
+  "slug": "barbados",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Wuh gine on?", "Bim", "Barbados"],
+  "summary": "Calm west-coast beaches, Atlantic surf, a rum shop in every village and the Crop Over carnival.",
+  "overview": [
+    "Barbados sits out in the Atlantic, east of the rest of the Caribbean's chain of islands, a gently rolling coral island of sugar-cane fields and small parish villages. Each coast is different. The west, around Holetown and Speightstown, has calm, clear water and the smartest hotels; the south, from Bridgetown to Oistins, is livelier, with guesthouses, the bars of St Lawrence Gap and the Friday-night fish fry at Oistins. The east faces the open ocean: wild, rocky and beautiful, with rough water that isn't for swimming and the surf break called the Soup Bowl at Bathsheba.",
+    "Historic Bridgetown and its Garrison are a World Heritage Site, with the Parliament buildings, the Garrison Savannah racecourse and George Washington House, where the future president stayed in 1751. Inland, a tram takes visitors through the limestone chambers of Harrison's Cave, and St Nicholas Abbey, a plantation house from the 1650s, distils its own rum. Mount Gay, which has made rum on the island since at least 1703, has a visitor centre in Bridgetown. Cricket is followed with passion, at Kensington Oval and on every patch of grass.",
+    "Buses go almost everywhere for a flat fare: blue ones run by the government, yellow private ones and white minibuses called ZRs, which are fast, crowded and loud with music. Taxis have no meters, so agree the fare before you set off. Barbados became a republic in 2021, and is still a member of the Commonwealth."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Bright days, low humidity and little rain. The busiest and dearest months, especially over Christmas and when England's cricketers are touring."
+      },
+      {
+        "name": "Hot season and Crop Over",
+        "months": [5, 6, 7, 8],
+        "text": "Hotter and stickier, with more showers as the months go on, and rafts of sargassum seaweed washing up on the south and east coasts in some years. Crop Over builds through July to Grand Kadooment in early August."
+      },
+      {
+        "name": "Wettest months",
+        "months": [9, 10, 11],
+        "text": "The heaviest rain of the year, often in short downpours, and the main risk of tropical storms. Hotels are quiet and rates low; the weather begins to dry out in late November."
+      }
+    ],
+    "weather": "Days run from 29°C to 31°C and nights from 22°C to 25°C in every month, and the north-east trade wind keeps the heat bearable. The dry season runs from about December to May, the wet season from June to November. Lying east of the island chain, Barbados is hit by hurricanes less often than islands further north and west, but storms do reach it: Hurricane Elsa passed over the island in 2021.",
+    "festivals": [
+      {
+        "name": "Holetown Festival",
+        "place": "Holetown",
+        "when": "Usually in mid-February, for about a week",
+        "months": [2],
+        "text": "Marks the landing of the first English settlers at Holetown in 1627, with a street fair, crafts, music and a parade."
+      },
+      {
+        "name": "Oistins Fish Festival",
+        "place": "Oistins",
+        "when": "Usually over the Easter weekend",
+        "months": [3, 4],
+        "text": "The fishing town's celebration, with fish-boning contests, boat races, music and food stalls along the bay."
+      },
+      {
+        "name": "Crop Over",
+        "place": "Across Barbados, above all Bridgetown",
+        "when": "Usually through July, ending with Grand Kadooment on the first Monday of August",
+        "months": [7, 8],
+        "text": "It began as the party for the end of the sugar-cane harvest. Now it's weeks of calypso tents and soca, Foreday Morning Jam (a night-long street party in paint and powder) and finally the Grand Kadooment parade of costumed bands."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Barbados",
+        "when": "30 November",
+        "months": [11],
+        "text": "Marks independence from Britain in 1966; on the same date in 2021 Barbados became a republic. Buildings are lit in the national blue and gold, and the month is full of events."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Bajans are friendly but fairly formal in public. Open with \"Good morning\" or \"Good afternoon\" when you step onto a bus, into a shop or up to a counter, then say what you want. People shake hands on meeting, and friends greet each other with a kiss on the cheek or a hug.",
+    "etiquette": [
+      "Camouflage-print clothing is illegal for civilians, children included, and can be confiscated: don't pack it.",
+      "No beach in Barbados is private: you can walk along the sand in front of any hotel, though its sunbeds are for guests.",
+      "Swim on the calm west and south coasts, ideally where there are lifeguards; currents on the east coast are deadly.",
+      "Rum shops, the small bars found in every village, are where people meet, talk cricket and slam down dominoes. Visitors are welcome."
+    ],
+    "tipping": "Restaurants usually add a 10% service charge; leave a little more for very good service. Taxi drivers, tour guides and hotel staff appreciate a tip.",
+    "dress": "Light summer clothes, swimwear only on the beach, and no camouflage. Dinner on the west coast can be dressy, and some restaurants expect long trousers for men. Church is an occasion: people wear their best.",
+    "food": [
+      {
+        "name": "Cou-cou and flying fish",
+        "text": "The national dish: cornmeal and okra stirred into a smooth, firm mash, with flying fish steamed in a spicy sauce of tomato, onion and herbs."
+      },
+      {
+        "name": "Fish cakes",
+        "text": "Crisp, peppery salt-cod fritters, sold by the bag at snack bars and served at every party."
+      },
+      {
+        "name": "Cutters",
+        "text": "The Bajan sandwich: a crusty salt-bread roll filled with fried flying fish, ham, egg or cheese, and a dash of pepper sauce."
+      },
+      {
+        "name": "Macaroni pie",
+        "text": "Baked macaroni cheese, firm enough to cut in slices, a fixture of Sunday lunch."
+      },
+      {
+        "name": "Pudding and souse",
+        "text": "The Saturday dish: souse is pork pickled in lime with cucumber and hot pepper, and pudding is steamed, seasoned sweet potato."
+      },
+      {
+        "name": "Rum and pepper sauce",
+        "text": "Rum is everywhere, from Mount Gay to small estate distilleries. Bajan pepper sauce is yellow, made with Scotch bonnets and mustard, and very hot."
+      }
+    ],
+    "phrases": {
+      "language": "English (Bajan)",
+      "intro": "Barbadians speak English, and among themselves Bajan, a Creole with a strong rhythm of its own. Words you'll hear:",
+      "items": [
+        { "phrase": "Wuh gine on?", "say": "wuh GYNE on", "meaning": "What's going on? How are you?" },
+        { "phrase": "Wunna", "say": "WUN-nah", "meaning": "You, to more than one person" },
+        { "phrase": "Cheese on bread!", "meaning": "Said in surprise or dismay" },
+        { "phrase": "Sea bath", "meaning": "A swim in the sea" },
+        { "phrase": "Bim", "meaning": "Barbados: an old nickname Bajans use themselves" },
+        { "phrase": "ZR", "say": "zed AR", "meaning": "A white minibus that runs as a shared route taxi" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q244",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Barbados dollar (Bds$, BBD), fixed at two to the US dollar. US dollars are widely accepted.",
+        "sources": [{ "property": "P38", "values": ["Q194351"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Bajan, the island's Creole, is what most people speak day to day.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q2524014"] }],
+        "note": "Wikidata lists Bajan Creole as an official language too. English is the language of government, schools and the courts, so the page gives Bajan as the everyday spoken language."
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 115 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["115"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q63286056"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "211 for police, 311 for fire and 511 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25743482", "Q25743486", "Q25648820"] }],
+        "note": "Wikidata also lists 911. The page gives the three numbers Barbados's emergency services have long published, as it couldn't confirm that 911 connects from every phone."
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 246",
+        "sources": [{ "property": "P474", "values": ["+1246"] }]
+      }
+    ]
+  }
+}

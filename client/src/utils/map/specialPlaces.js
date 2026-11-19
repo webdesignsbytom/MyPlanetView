@@ -2,6 +2,7 @@
 // countries.js, `kind: 'SPECIAL'`) but aren't countries: the country counts leave them
 // out, they have their own stat, and a visit shows a gold expedition stamp instead of
 // the star sticker. A copy of server/src/utils/specialPlaces.js; keep the two in step.
+import { REGION_PARENT } from './regionPlaces.js';
 
 // Antarctica (its ISO code, a drawn shape) and the four poles (points, from ISO's
 // user-assigned range: X = geographic, Q = magnetic)
@@ -22,9 +23,10 @@ export const isMagneticPole = (code) => MAGNETIC_POLE_CODES.includes(code);
 const ANTARCTIC_CODES = Object.freeze(['AQ', 'XS', 'QS']);
 export const isAntarctic = (code) => ANTARCTIC_CODES.includes(code);
 
-// A visit here means a visit to its parent too: the South Pole is in Antarctica. (The
-// magnetic south pole is offshore, so it has none.)
-export const PARENT_PLACE = Object.freeze({ XS: 'AQ' });
+// A visit here means a visit to its parent too: the South Pole is in Antarctica (the
+// magnetic south pole is offshore, so it has none), and a region is in its country (Bali in
+// Indonesia: regionPlaces.js)
+export const PARENT_PLACE = Object.freeze({ XS: 'AQ', ...REGION_PARENT });
 
 /** The codes plus the parents they imply, each once. */
 export const withParentPlaces = (codes) => [
@@ -33,9 +35,9 @@ export const withParentPlaces = (codes) => [
 
 /**
  * The visits a status set by hand brings with it, as the server's `implied`
- * (PUT /maps/:mapId/visits/:countryCode): the South Pole marked visited or lived adds
- * Antarctica as VISITED when it's missing, or turns a "want to go" one visited. Used to
- * show them at once, before the server's answer.
+ * (PUT /maps/:mapId/visits/:countryCode): the South Pole (or a region) marked visited or
+ * lived adds Antarctica (or its country) as VISITED when it's missing, or turns a "want to
+ * go" one visited. Used to show them at once, before the server's answer.
  */
 export function impliedVisits(visits, countryCode, status) {
   const parent = PARENT_PLACE[countryCode];

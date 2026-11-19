@@ -1,0 +1,166 @@
+{
+  "code": "SS",
+  "slug": "south-sudan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salaam", "South Sudan", "Welcome"],
+  "summary": "Mundari cattle camps near Juba, the Sudd's wetlands and great migrations of antelope.",
+  "overview": [
+    "South Sudan became independent from Sudan in 2011, the newest country in the world. It is a land of flat savannah, swamp and river: the White Nile flows north through Juba, the capital, then spreads out into the Sudd, one of the largest wetlands on earth. For many people, life turns around cattle. The Dinka, Nuer and Mundari move with their herds between dry-season camps by the rivers and higher ground in the rains, and a family's wealth is counted in cows.",
+    "The few visitors who come mostly stay around Juba. The best-known sight is a Mundari cattle camp near Terekeka, a couple of hours north: at dusk, long-horned cattle are tethered in the smoke of dung fires, and herders dust themselves with pale ash against the insects. Boma and Badingilo National Parks, in the east, see one of the largest migrations of land mammals on earth, as white-eared kob, tiang and Mongalla gazelles cross the plains with the seasons. Nimule National Park, on the Ugandan border, has elephants and rapids on the White Nile.",
+    "Roads are few and mostly unpaved, and in the rains much of the country can be reached only by air or by river. There's very little tourism, so trips are usually arranged through a local operator who knows what paperwork travel and photography need.",
+    "Many governments advise against all travel to South Sudan. The situation can change quickly, so read your own government's latest advice before making any plans."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "good", "avoid", "avoid", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2],
+        "text": "Dry and hot, in the mid-30s °C by day in Juba, with dusty winds from the north. Roads are at their best and the cattle camps gather by the rivers: the time to go."
+      },
+      {
+        "name": "Hottest weeks",
+        "months": [3, 4],
+        "text": "The heat peaks in March, close to 40°C, before the first storms arrive in April."
+      },
+      {
+        "name": "Rainy season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Rain on many days, heaviest from about July to September. It's a little cooler, around 30°C, but dirt roads become impassable and the Sudd floods far beyond its banks."
+      },
+      {
+        "name": "Rains ease",
+        "months": [11],
+        "text": "The rain tails off and the plains start to dry, though many roads stay cut for weeks."
+      }
+    ],
+    "weather": "Hot all year, with one long rainy season. In Juba, rain falls from about April to November, heaviest from July to September, and December to March is dry, with the hottest days, near 40°C, just before the rains. The north is drier, with a shorter rainy season, and the far south, towards Uganda and the Imatong Mountains, is greener and wetter. Nights stay warm everywhere except high in the mountains.",
+    "festivals": [
+      {
+        "name": "Peace Agreement Day",
+        "place": "Across the country",
+        "when": "9 January",
+        "months": [1],
+        "text": "Remembers the Comprehensive Peace Agreement of 2005, which ended Sudan's long civil war and led to the vote for independence."
+      },
+      {
+        "name": "Dry-season cattle camps",
+        "place": "Along the Nile and its swamps",
+        "when": "Usually from about December to April",
+        "months": [12, 1, 2, 3, 4],
+        "text": "As the floods drain away, herders bring their cattle down to the rivers and set up big camps that last until the rains return."
+      },
+      {
+        "name": "Easter",
+        "place": "Across the country",
+        "when": "Usually in March or April: in 2027, 28 March",
+        "months": [3, 4],
+        "text": "Most South Sudanese are Christian, and Easter services fill Juba's churches with choirs and drums."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the country",
+        "when": "9 July",
+        "months": [7],
+        "text": "The anniversary of independence in 2011, with celebrations in Juba."
+      },
+      {
+        "name": "Christmas",
+        "place": "Across the country",
+        "when": "25 December",
+        "months": [12],
+        "text": "Church services, singing and family gatherings; many people travel home to their villages for the holiday."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake, often a long one, with a few words of Juba Arabic or English: \"Salaam\", then \"Ita kweis?\" (are you well?). People ask about your journey and your family, and it's polite to ask about theirs. Greet the oldest people in a group first.",
+    "etiquette": [
+      "Ask before photographing anyone, and agree terms first in cattle camps. Soldiers, police, government buildings, bridges and the airport must never appear in your pictures.",
+      "In a cattle camp, the animals are wealth and identity: don't walk between tethered cattle or go near the bulls without a herder.",
+      "Checkpoints are frequent: have your passport and any permits to hand.",
+      "Pass food and money with your right hand; the left is kept for washing."
+    ],
+    "tipping": "Not usual in local places, but expected by guides, drivers and fixers, and welcome in hotel restaurants. A visit to a cattle camp usually comes with a gift or payment to the community, which your guide will arrange.",
+    "dress": "Light, loose clothes that cover you against the sun and mosquitoes, with long sleeves at dusk. Modest dress is respected, above all in the villages. Wear boots for cattle camps, which are dusty and thick with dung.",
+    "food": [
+      {
+        "name": "Sorghum porridge",
+        "text": "The staple almost everywhere: a thick porridge of sorghum flour, eaten with okra, greens or a meat stew."
+      },
+      {
+        "name": "Okra stew",
+        "text": "Okra cooked down with tomato and onion, often with goat or beef, until thick and slippery; sometimes made with dried okra powder."
+      },
+      {
+        "name": "Nile fish",
+        "text": "Tilapia and Nile perch, grilled whole at Juba's riverside restaurants, or sun-dried and smoked to keep for the dry months."
+      },
+      {
+        "name": "Milk from the cattle camps",
+        "text": "Fresh and soured milk is the herders' everyday food, and a bowl offered in a cattle camp is a real welcome."
+      },
+      {
+        "name": "Merissa",
+        "text": "A thick, sour beer brewed at home from sorghum, shared at gatherings and celebrations."
+      }
+    ],
+    "phrases": {
+      "language": "Juba Arabic",
+      "intro": "English is the official language, used in government, schools and the media. In the towns, people from different communities talk to each other in Juba Arabic, a simplified Arabic usually written in Latin letters; Dinka, Nuer, Bari and dozens of other languages are spoken at home.",
+      "items": [
+        { "phrase": "Salaam", "say": "sah-LAHM", "meaning": "Hello" },
+        { "phrase": "Ita kweis?", "say": "EE-tah KWAYS", "meaning": "Are you well?" },
+        { "phrase": "Ana kweis", "say": "AH-nah KWAYS", "meaning": "I'm fine" },
+        { "phrase": "Shukran", "say": "SHOOK-ran", "meaning": "Thank you" },
+        { "phrase": "Aiwa / La", "say": "AY-wah / LAH", "meaning": "Yes / No" },
+        { "phrase": "Bi kam?", "say": "bee-KAM", "meaning": "How much?" },
+        { "phrase": "Mafi mushkila", "say": "MAH-fee mush-KEE-lah", "meaning": "No problem" },
+        { "phrase": "Ma salaama", "say": "mah sah-LAH-mah", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q958",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "South Sudanese pound (SSP). US dollars are widely used for hotels, flights and larger payments: bring clean, recent notes. Cards are rarely accepted.",
+        "sources": [{ "property": "P38", "values": ["Q244366"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the official language. Juba Arabic is the common language of the towns, and Dinka, Nuer, Bari and dozens of others are spoken.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "No single standard: European two-pin (type C) and British-style sockets are both found, 230 V. Bring a universal adapter.",
+        "sources": [],
+        "note": "Wikidata's item has no plug or voltage statement; the page gives what visitors usually find, as published plug guides describe it."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Africa Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q15936666"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+211",
+        "sources": [{ "property": "P474", "values": ["+211"] }]
+      }
+    ]
+  }
+}

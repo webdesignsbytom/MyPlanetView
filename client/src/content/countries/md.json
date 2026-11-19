@@ -1,0 +1,161 @@
+{
+  "code": "MD",
+  "slug": "moldova",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bine ați venit", "Moldova"],
+  "summary": "Vast wine cellars, a cliffside cave monastery and quiet farming villages.",
+  "overview": [
+    "Wine is what brings most visitors to Moldova, a landlocked stretch of rolling hills, vineyards and orchards between Romania and Ukraine. Under the village of Mileștii Mici, old limestone quarries have become cellars holding well over a million bottles along some 200 km of tunnels; at Cricova, just north of Chișinău, a little electric train runs through underground streets named after the wines stored in them. Orheiul Vechi, about an hour's drive north of the capital, has a monastery dug into a limestone cliff above a tight loop of the Răut river, with the village of Butuceni below.",
+    "Chișinău is a city of wide Soviet-era avenues, leafy parks and a big central market, and the base for most trips. Further afield, Soroca's round stone fortress guards the Dniester in the north, the monasteries of Saharna and Țipova sit in wooded gorges above the same river, and in the south the Gagauz, Orthodox Christians who speak a Turkic language, have their own autonomous region around Comrat. Minibuses (rutiere) link most towns from Chișinău's bus stations; trains are few and slow, so many visitors hire a driver or join a winery tour. Cards work in the capital, but carry lei in the countryside.",
+    "The land east of the Dniester, Transnistria, has been run by its own authorities since the early 1990s, with their own currency and checkpoints on the roads in. No UN member recognises them, and Moldova's government has no control there. Several governments advise against travel to Transnistria, so check your own government's current advice before going."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Grey skies, short days and snow in most years. Christmas is a public holiday twice, on 25 December and 7 January, and carol singers go from door to door. The cellars stay open, and feel no colder underground than in summer."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Chilly in March; April warms quickly as the orchards blossom and the hills turn green, and families gather for Orthodox Easter. May is warm and fresh, one of the nicest months for walking at Orheiul Vechi."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Afternoons are often near 30°C, with sudden thunderstorms and dusty country roads. Markets fill with cherries and apricots, then melons, and two national holidays come at the end of August."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The grape harvest runs through September into October, the vineyards turn gold, and days stay mild until late October. National Wine Day falls at the start of October. November is cold, damp and often foggy."
+      }
+    ],
+    "weather": "Four distinct seasons, as in much of eastern Europe. In Chișinău, summer days usually reach 26–29°C, and heatwaves can pass 35°C; winter days hover around freezing, nights fall to −5°C or lower, and snow comes most years. Rainfall is modest, about 550 mm a year, falling mostly in late-spring and summer thunderstorms. The deep wine cellars stay at about 12–14°C whatever the season.",
+    "festivals": [
+      {
+        "name": "Mărțișor",
+        "place": "Across Moldova",
+        "when": "1 March",
+        "months": [3],
+        "text": "People give one another small tokens tied with red and white thread to welcome spring, and pin them to their clothes for much of March. Chișinău also holds the Mărțișor music festival in the first days of the month."
+      },
+      {
+        "name": "Orthodox Easter and Paștele Blajinilor",
+        "place": "Across Moldova",
+        "when": "Usually in April or early May (2 May in 2027), with Paștele Blajinilor eight days later",
+        "months": [4, 5],
+        "text": "Easter brings midnight church services, dyed eggs and a sweet bread called pască. On Paștele Blajinilor, a public holiday on a Monday, families gather at their relatives' graves to share food and wine in their memory."
+      },
+      {
+        "name": "Independence Day and Our Language Day",
+        "place": "Across Moldova",
+        "when": "27 and 31 August",
+        "months": [8],
+        "text": "Two public holidays a few days apart: independence from the Soviet Union in 1991, then a day for the national language (Limba noastră, “our language”), with concerts in Chișinău's central square."
+      },
+      {
+        "name": "National Wine Day",
+        "place": "Chișinău",
+        "when": "Usually the first weekend of October",
+        "months": [10],
+        "text": "Wineries large and small set up stalls in the centre of the capital for two days of tastings, folk music and dancing as the harvest ends."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake is the usual greeting between men; women often greet friends with a kiss on the cheek, and a man waits for a woman to offer her hand. “Bună ziua” works in any shop or office, and “Salut” among friends. Many people switch easily between Romanian and Russian: start in Romanian and follow the other person's lead.",
+    "etiquette": [
+      "Guests are fed generously, often with home-made wine. Accept at least a little, and leave some food on your plate when you've had enough, or it will be refilled.",
+      "Shoes come off just inside the front door of a home, and hosts usually offer slippers.",
+      "In churches and monasteries, women cover their hair and wear a skirt below the knee, and men take their hats off. Wraps are often lent at the door.",
+      "Toasts are made with “Noroc!” (“Good luck!”), looking the other person in the eye.",
+      "Ask before photographing people in villages, and before taking pictures inside a church."
+    ],
+    "tipping": "About 10% in Chișinău's restaurants and cafés, left in cash. Elsewhere, and in taxis, rounding up is enough.",
+    "dress": "Casual, in layers. Take a warm top on cellar tours, which stay at about 12°C even in August, shoes that can cope with dusty or muddy country paths, and something to cover your shoulders, knees and, for women, hair in monasteries.",
+    "food": [
+      {
+        "name": "Mămăligă and tochitură",
+        "text": "A stiff maize porridge, served with crumbled brânză (sheep's cheese) and sour cream, and often with tochitură, pieces of pork fried in a garlicky sauce and topped with a fried egg."
+      },
+      {
+        "name": "Plăcinte",
+        "text": "Thin pastry folded or coiled around cheese, potato, cabbage or pumpkin, then baked or fried. Sold on every street, and made at home when guests come."
+      },
+      {
+        "name": "Zeamă",
+        "text": "Chicken soup with home-made noodles, soured with borș (fermented bran) and flavoured with lovage. Moldovans swear by it after a long night."
+      },
+      {
+        "name": "Fetească and Rara Neagră",
+        "text": "Moldova's own grape varieties: white Fetească Albă and Fetească Regală, and red Fetească Neagră and Rara Neagră. Wineries such as Purcari and Castel Mimi welcome visitors for tastings."
+      },
+      {
+        "name": "Divin",
+        "text": "Moldova's grape brandy, aged in oak barrels like cognac, and a usual gift to take home."
+      }
+    ],
+    "phrases": {
+      "language": "Romanian",
+      "intro": "Romanian is the official language and Russian is widely spoken, especially by older people, in the north around Bălți and in the south. Younger people in Chișinău often speak English.",
+      "items": [
+        { "phrase": "Bună ziua", "say": "BOO-nuh ZEE-wah", "meaning": "Hello; good day" },
+        { "phrase": "Mulțumesc", "say": "mool-tsoo-MESK", "meaning": "Thank you" },
+        { "phrase": "Vă rog", "say": "vuh ROHG", "meaning": "Please" },
+        { "phrase": "Da / Nu", "say": "DAH / NOO", "meaning": "Yes / No" },
+        { "phrase": "Cât costă?", "say": "KUHT KOS-tuh", "meaning": "How much is it?" },
+        { "phrase": "Unde este…?", "say": "OON-deh YES-teh", "meaning": "Where is…?" },
+        { "phrase": "Noroc!", "say": "noh-ROK", "meaning": "Cheers! (“Good luck!”)" },
+        { "phrase": "La revedere", "say": "lah reh-veh-DEH-reh", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q217",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Moldovan leu (plural lei; MDL). Cards are taken in Chișinău; carry cash in the countryside.",
+        "sources": [{ "property": "P38", "values": ["Q181129"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Romanian, which the laws called Moldovan until 2023. Russian is widely spoken, and Gagauz in the autonomous south.",
+        "sources": [{ "property": "P37", "values": ["Q7913"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern European Time, UTC+2, and UTC+3 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q6760", "Q63286001"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+373",
+        "sources": [{ "property": "P474", "values": ["+373"] }]
+      }
+    ]
+  }
+}

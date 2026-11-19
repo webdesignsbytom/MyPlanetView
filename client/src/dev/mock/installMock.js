@@ -19,6 +19,7 @@ import { registerPhotoRoutes } from './handlers/photos';
 import { registerVideoRoutes } from './handlers/videos';
 import { registerDataExportRoutes } from './handlers/dataExport';
 import { registerMomentRoutes } from './handlers/moments';
+import { registerCountryMapRoutes } from './handlers/countryMaps';
 import { registerSharingRoutes } from './handlers/sharing';
 import { registerAdminRoutes } from './handlers/admin';
 import { registerBillingRoutes } from './handlers/billing';
@@ -38,6 +39,7 @@ export function installMock() {
   loadStore();
   registerAccountRoutes();
   registerMapRoutes();
+  registerCountryMapRoutes();
   registerTripRoutes();
   registerPhotoRoutes();
   registerVideoRoutes();

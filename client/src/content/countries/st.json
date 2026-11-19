@@ -1,0 +1,161 @@
+{
+  "code": "ST",
+  "slug": "sao-tome-and-principe",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bom dia", "São Tomé", "Leve-leve"],
+  "summary": "Volcanic islands on the equator: old cocoa estates, rainforest and empty beaches.",
+  "overview": [
+    "São Tomé and Príncipe is two small volcanic islands and a scatter of islets in the Gulf of Guinea, off the coast of Gabon; only the Seychelles is a smaller country in Africa. Nobody lived here when Portuguese sailors arrived in the 1470s. The islands became a hub of the slave trade and, around 1900, one of the world's biggest cocoa producers, and the old plantation estates, called roças, still stand in the hills with their hospitals, chapels and rows of workers' houses, some in ruins, some still lived in, a few turned into guesthouses.",
+    "The capital, São Tomé, is a quiet town of faded colonial buildings on a bay. Roads follow the north and east coasts to beaches and fishing villages, and run south to Porto Alegre and the Ilhéu das Rolas, an islet the equator passes over. Inland, Obô Natural Park covers the mountain rainforest, with trails to waterfalls and up the Pico de São Tomé (2,024 m), and the needle of Pico Cão Grande rises straight out of the southern forest. Príncipe, a short flight away, is smaller, greener and quieter still, and the whole island is a UNESCO biosphere reserve. At its Roça Sundy, in 1919, Arthur Eddington photographed the solar eclipse that bore out Einstein's prediction that gravity bends light.",
+    "Visitors get about by hired car with a driver, by taxi or by shared minibus, on narrow, slow roads. \"Leve-leve\", take it easy, is the islands' unofficial motto, and it sets the pace for everything from restaurant service to bus timetables. Bring euros in cash: few places take foreign cards."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Gravana (dry season)",
+        "months": [6, 7, 8, 9],
+        "text": "Little rain and a few degrees cooler, around 26°C by day, though skies are often overcast. Forest trails are at their driest, humpback whales are offshore, and it's the busiest time for visitors."
+      },
+      {
+        "name": "First rains",
+        "months": [10, 11],
+        "text": "Rain returns in October, often as heavy afternoon showers, and the first turtles come ashore to nest."
+      },
+      {
+        "name": "Gravanito",
+        "months": [12, 1, 2],
+        "text": "A short, very warm spell with less rain, usually around December and January, though its timing varies from year to year. Turtles nest and hatch on the beaches."
+      },
+      {
+        "name": "Long rains",
+        "months": [3, 4, 5],
+        "text": "The wettest months: hot and steamy, with downpours that can make forest trails and the southern road hard going. The islands are at their greenest."
+      }
+    ],
+    "weather": "Hot and humid all year, about 30°C by day on the coast and in the low 20s °C at night, cooler in the hills. Rain falls on many days from October to May, heaviest from March to May, and the dry season, the gravana, runs from June to September. Rainfall varies hugely across São Tomé: the north-east, around the capital, is fairly dry, while the mountainous south-west gets several times as much. The sea is warm enough for swimming in every month.",
+    "festivals": [
+      {
+        "name": "Turtle nesting",
+        "place": "Beaches of both islands",
+        "when": "Mainly from about November to March",
+        "months": [11, 12, 1, 2, 3],
+        "text": "Green, hawksbill, olive ridley and leatherback turtles crawl ashore at night to lay their eggs, and the hatchlings head for the sea a couple of months later. Local conservation groups lead night walks to watch."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the islands",
+        "when": "12 July",
+        "months": [7],
+        "text": "The islands broke from Portugal on this day in 1975, and the capital fills with music, speeches and crowds."
+      },
+      {
+        "name": "Humpback whales",
+        "place": "The waters around both islands",
+        "when": "Usually July to October",
+        "months": [7, 8, 9, 10],
+        "text": "Humpbacks come to the warm water here to breed and calve, and can be watched from boats and, on calm days, from the shore."
+      },
+      {
+        "name": "Auto de Floripes",
+        "place": "Santo António, Príncipe",
+        "when": "Usually in mid-August",
+        "months": [8],
+        "text": "A street play acted out across the island's small capital for a whole day, telling the old tale of Charlemagne's knights and the Moorish princess Floripes, in masks and costume."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "People greet each other in passing, strangers included, so say \"bom dia\" or \"boa tarde\" when you walk into a shop or pass someone on a country road. A handshake is usual on meeting; ask after the family before getting to business, and expect the conversation to take its time.",
+    "etiquette": [
+      "Leve-leve sets the pace: service is slow and plans shift, and impatience gets you nowhere.",
+      "Ask before photographing people, especially in markets and fishing villages.",
+      "Many roças are still home to the families of former plantation workers. Ask before wandering round, and pay a local guide if one offers to show you the estate.",
+      "Ask locally before swimming off an unfamiliar beach: some have strong currents.",
+      "On turtle nights, use no torch or flash unless the guide says so, and keep well back from a nesting turtle."
+    ],
+    "tipping": "Not a tradition, but welcome: leave about 10% in restaurants used to visitors, and tip guides after forest walks and turtle nights.",
+    "dress": "Light, quick-drying clothes and a rain jacket in any month. For the forest, wear sturdy shoes with good grip, as trails are steep and muddy. Beachwear stays at the beach; in town and in villages, cover up a little more.",
+    "food": [
+      {
+        "name": "Calulu",
+        "text": "The national dish: smoked fish or chicken simmered for hours with palm oil, aubergine, okra and a heap of herbs and leaves, served with rice, banana or cassava porridge."
+      },
+      {
+        "name": "Izaquente",
+        "text": "The seeds of the African breadfruit tree, cooked slowly with palm oil and smoked fish or meat into a thick, nutty stew."
+      },
+      {
+        "name": "Fish with breadfruit",
+        "text": "Fresh fish grilled on the beach, served with roasted breadfruit, boiled green banana and a spoonful of chilli."
+      },
+      {
+        "name": "Chocolate and coffee",
+        "text": "Cocoa still grows on the old estates, and the islands make fine dark chocolate; in the capital, Claudio Corallo's workshop offers tastings. Coffee from the hills is good too."
+      },
+      {
+        "name": "Palm wine and cacharamba",
+        "text": "Palm wine is tapped from the trees and drunk fresh the same day; cacharamba, a strong spirit distilled from sugar cane, is for the brave."
+      }
+    ],
+    "phrases": {
+      "language": "Portuguese",
+      "intro": "Almost everyone speaks Portuguese, with a softer, slower accent than in Lisbon. Many people also speak Forro, a creole of Portuguese and African languages; Angolar is spoken on São Tomé's south coast, and Príncipe has its own creole, Lung'ie.",
+      "items": [
+        { "phrase": "Bom dia", "say": "bom DEE-ah", "meaning": "Good morning" },
+        { "phrase": "Boa tarde", "say": "BOH-ah TAR-deh", "meaning": "Good afternoon" },
+        { "phrase": "Obrigado / Obrigada", "say": "oh-bree-GAH-doo / oh-bree-GAH-dah", "meaning": "Thank you (said by a man / by a woman)" },
+        { "phrase": "Por favor", "say": "poor fah-VOR", "meaning": "Please" },
+        { "phrase": "Tudo bem?", "say": "TOO-doo BAYNG", "meaning": "All well? (How are you?)" },
+        { "phrase": "Quanto custa?", "say": "KWAN-too KOOS-tah", "meaning": "How much is it?" },
+        { "phrase": "Desculpe", "say": "desh-KOOL-peh", "meaning": "Sorry; excuse me" },
+        { "phrase": "Leve-leve", "say": "LEH-veh LEH-veh", "meaning": "Take it easy; slowly, slowly" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1039",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Dobra (Db, STN), tied to the euro at a fixed rate. Euros are welcome in many hotels, and few places take foreign cards, so bring cash.",
+        "sources": [{ "property": "P38", "values": ["Q193712"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Portuguese, the official language. Forro is widely spoken, Angolar in the south of São Tomé, and Lung'ie by a few people on Príncipe.",
+        "sources": [{ "property": "P37", "values": ["Q5146"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689522"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+239",
+        "sources": [{ "property": "P474", "values": ["+239"] }]
+      }
+    ]
+  }
+}

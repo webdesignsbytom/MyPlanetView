@@ -115,6 +115,8 @@ export function exportMapView(rows, { userId }) {
   const invitesByTrip = groupBy(rows.tripInvites, 'tripId');
   const travellersByMoment = groupBy(rows.momentTravellers, 'momentId');
   const photosByMoment = groupBy(rows.momentPhotos, 'momentId');
+  const visitsByPin = groupBy(rows.pinVisits ?? [], 'pinId');
+  const photosByPinVisit = groupBy(rows.pinVisitPhotos ?? [], 'visitId');
   return {
     id: map.id,
     name: map.name,
@@ -189,6 +191,33 @@ export function exportMapView(rows, { userId }) {
       photoIds: (photosByMoment.get(m.id) ?? []).map((r) => r.photoId),
       createdAt: iso(m.createdAt),
       updatedAt: iso(m.updatedAt),
+    })),
+    // Country maps: the states marked, and the pins with a visit for every time
+    statesVisited: (rows.subdivisionVisits ?? []).map((s) => ({
+      code: s.subdivisionCode,
+      countryCode: s.countryCode,
+      status: s.status,
+      createdAt: iso(s.createdAt),
+      updatedAt: iso(s.updatedAt),
+    })),
+    pins: (rows.pins ?? []).map((p) => ({
+      id: p.id,
+      countryCode: p.countryCode,
+      name: p.name,
+      notes: p.notes ?? null,
+      latitude: p.latitude,
+      longitude: p.longitude,
+      hidden: p.hidden,
+      visits: (visitsByPin.get(p.id) ?? []).map((v) => ({
+        id: v.id,
+        visitedOn: day(v.visitedOn),
+        datePrecision: v.datePrecision ?? null,
+        notes: v.notes ?? null,
+        photoIds: (photosByPinVisit.get(v.id) ?? []).map((r) => r.photoId),
+        createdAt: iso(v.createdAt),
+      })),
+      createdAt: iso(p.createdAt),
+      updatedAt: iso(p.updatedAt),
     })),
     goals: rows.goals.map((g) => ({
       id: g.id,

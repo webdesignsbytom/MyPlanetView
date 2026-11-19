@@ -148,6 +148,33 @@ function mapView(map) {
         createdAt: iso(m.createdAt),
         updatedAt: iso(m.updatedAt),
       })),
+    // Country maps: the states marked, and the pins with a visit for every time (as the server)
+    statesVisited: (db.subdivisionVisits || [])
+      .filter((s) => s.mapId === map.id)
+      .map((s) => ({ code: s.code, countryCode: s.countryCode, status: s.status, createdAt: null, updatedAt: null })),
+    pins: (db.pins || [])
+      .filter((p) => p.mapId === map.id)
+      .map((p) => ({
+        id: p.id,
+        countryCode: p.countryCode,
+        name: p.name,
+        notes: p.notes ?? null,
+        latitude: p.latitude,
+        longitude: p.longitude,
+        hidden: Boolean(p.hidden),
+        visits: (db.pinVisits || [])
+          .filter((v) => v.pinId === p.id)
+          .map((v) => ({
+            id: v.id,
+            visitedOn: day(v.visitedOn),
+            datePrecision: v.datePrecision ?? null,
+            notes: v.notes ?? null,
+            photoIds: v.photoIds || [],
+            createdAt: iso(v.createdAt),
+          })),
+        createdAt: iso(p.createdAt),
+        updatedAt: iso(p.createdAt),
+      })),
     goals: (db.goals || [])
       .filter((g) => g.mapId === map.id)
       .map((g) => ({ id: g.id, kind: g.kind, title: g.title ?? null, target: g.target ?? null, countryCodes: g.countryCodes || [], region: g.region ?? null, deadline: day(g.deadline), achievedAt: iso(g.achievedAt), createdAt: iso(g.createdAt) })),

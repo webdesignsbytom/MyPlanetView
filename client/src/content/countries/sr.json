@@ -1,0 +1,190 @@
+{
+  "code": "SR",
+  "slug": "suriname",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Fa waka?", "Suriname", "Welkom"],
+  "summary": "Wooden Paramaribo, Maroon river villages and vast, roadless rainforest.",
+  "overview": [
+    "Suriname is the smallest country in South America, a former Dutch colony that became independent in 1975, and it still uses Dutch as its official language. Its people come from almost everywhere: descendants of Indian and Javanese contract workers, Creoles, Maroons, whose ancestors escaped slavery and built free villages deep in the forest, Chinese, Amerindian, Lebanese, Jewish and Dutch families, and newer arrivals from Brazil. On the streets they share Sranan Tongo, an English-based creole, and the food is as mixed as the people.",
+    "Paramaribo, the capital, has a historic centre of white wooden houses with dark shutters along the brown Suriname River, a World Heritage Site. The cathedral of Saints Peter and Paul is one of the largest wooden buildings in the Americas, and on Keizerstraat a mosque and a synagogue stand side by side. Across the river, the old plantations of Commewijne are explored by bicycle, with dolphins in the river mouth nearby, and on the beaches of Galibi, in the north-east, leatherback turtles nest at night.",
+    "More than nine-tenths of the country is rainforest. The Central Suriname Nature Reserve, also a World Heritage Site, has the rapids of Raleighvallen and the bare granite dome of the Voltzberg, climbed for a view over unbroken forest; Brownsberg looks down on the huge Brokopondo reservoir. Lodges on the Upper Suriname River, reached by road to Atjoni and then by motorised dugout canoe, sit beside Saamaka Maroon villages.",
+    "Minibuses run around Paramaribo and along the coast, but trips to the interior go by boat or small plane and are best booked through a Paramaribo tour operator. Cards are taken in the capital's hotels and bigger shops, but carry cash elsewhere."
+  ],
+  "whenToGo": {
+    "months": ["good", "best", "best", "good", "good", "good", "good", "good", "best", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Short rainy season",
+        "months": [12, 1],
+        "text": "Heavy showers return, though rarely all day. Paramaribo is lively over Christmas and New Year, when Surinamese living in the Netherlands come home."
+      },
+      {
+        "name": "Short dry season",
+        "months": [2, 3],
+        "text": "Drier, sunnier weeks, good for both the city and the interior, with Phagwa colouring the streets in March."
+      },
+      {
+        "name": "Long rainy season",
+        "months": [4, 5, 6, 7, 8],
+        "text": "The wettest stretch, with downpours most days from about late April, heaviest in May and June. Rivers run high, which makes boat trips to the interior easier, and leatherback turtles nest at Galibi from about April to August."
+      },
+      {
+        "name": "Long dry season",
+        "months": [9, 10, 11],
+        "text": "From about mid-August, the most reliable dry weather of the year, hot and sunny. The best time for forest walks; by November some rapids and creeks run low."
+      }
+    ],
+    "weather": "Suriname is hot and humid in every season, with days around 30–32°C and nights near 23°C; the interior is a little cooler at night. Suriname has two rainy seasons, a long one from about late April to mid-August and a short one from about December to January, separated by two dry seasons. Rain usually comes in heavy bursts with sun between. The country lies south of the hurricane belt.",
+    "festivals": [
+      {
+        "name": "Phagwa (Holi)",
+        "place": "Across Suriname",
+        "when": "In March; about 22 March in 2027",
+        "months": [3],
+        "text": "Hindus welcome spring by throwing red powder and coloured water at everyone in sight, especially around Paramaribo's parks; everyone gets the day off."
+      },
+      {
+        "name": "Ied-ul-Fitr (Eid al-Fitr)",
+        "place": "Across Suriname",
+        "when": "At the end of Ramadan, about 11 days earlier each year: in 2027, in March",
+        "months": [3],
+        "text": "A public holiday for Suriname's Javanese and Hindustani Muslims, with prayers in the mosques, visits to family and plenty of food."
+      },
+      {
+        "name": "Keti Koti",
+        "place": "Paramaribo and across Suriname",
+        "when": "1 July",
+        "months": [7],
+        "text": "\"Broken chains\": Emancipation Day, marking the abolition of slavery in 1863. Women wear the koto, a traditional dress of starched cotton with a folded headscarf, and Paramaribo celebrates with music, food and dancing."
+      },
+      {
+        "name": "Day of the Maroons",
+        "place": "Across Suriname",
+        "when": "10 October",
+        "months": [10],
+        "text": "A public holiday honouring the Maroons and their struggle for freedom, with drumming, dance and food from the river villages."
+      },
+      {
+        "name": "Diwali",
+        "place": "Across Suriname",
+        "when": "Late October or early November, by the Hindu calendar",
+        "months": [10, 11],
+        "text": "Homes, temples and gardens glow with small oil lamps for the Hindu festival of lights, a national holiday."
+      },
+      {
+        "name": "Owru Yari (New Year's Eve)",
+        "place": "Paramaribo",
+        "when": "31 December",
+        "months": [12],
+        "text": "Paramaribo's great street party, when long strings of red firecrackers, called pagara, are set off in the old centre all afternoon and evening. Bring earplugs."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Paramaribo and the coast",
+        "text": "The capital, Commewijne's plantations and the turtle beaches of Galibi. Hot all year; the rainy seasons bring short, heavy showers rather than days of rain."
+      },
+      {
+        "name": "The interior",
+        "text": "The Upper Suriname River, Brownsberg and the Central Suriname Nature Reserve. Wetter than the coast. River levels decide which journeys are possible: high from about May to August, lowest late in the long dry season."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Surinamese are relaxed and courteous. Shake hands and say \"Goedemorgen\" in Dutch, or \"Odi\" (\"Hello\") and \"Fa waka?\" (\"How are you?\") in Sranan, answered with \"Mi de\" (\"I'm fine\"). Many people switch between Dutch, Sranan, English and a home language in one conversation.",
+    "etiquette": [
+      "In Maroon villages, go with a guide, who will introduce you to the village chief or elders; ask before taking photographs, and keep away from shrines unless invited.",
+      "Women visiting Maroon villages may be asked to wear a wrap skirt (pangi) over trousers or shorts.",
+      "Shoes come off at the door of mosques and Hindu temples.",
+      "Drink bottled or filtered water, especially outside Paramaribo.",
+      "Suriname's peoples are proud of their own histories: ask about them rather than assume.",
+      "Avoid walking alone in quiet parts of Paramaribo after dark; take a taxi."
+    ],
+    "tipping": "Add about 10% in restaurants when service isn't included. Interior guides, boat crews and lodge staff count on tips.",
+    "dress": "Breathable clothes for the heat, with long sleeves, trousers and insect repellent for the forest. In villages and places of worship, cover shoulders and knees. Showers come in every season, so bring a light waterproof.",
+    "food": [
+      {
+        "name": "Roti",
+        "text": "Suriname's favourite meal: a thin, soft flatbread served with chicken curry, potatoes, long beans and pumpkin. Tear off the bread and scoop up the rest."
+      },
+      {
+        "name": "Pom",
+        "text": "A Creole oven dish of grated pomtajer root layered with chicken in a citrus and tomato sauce, made for birthdays and parties, and sold in sandwiches (broodje pom)."
+      },
+      {
+        "name": "Saoto soup",
+        "text": "A Javanese chicken broth with bean sprouts, fried potato sticks, egg and a spoon of hot sambal, best at the warungs (small Javanese restaurants) of Paramaribo."
+      },
+      {
+        "name": "Moksi alesi",
+        "text": "\"Mixed rice\": rice cooked with salted meat or fish, beans and coconut, a filling Creole one-pot dish."
+      },
+      {
+        "name": "Bakabana",
+        "text": "Slices of ripe plantain fried in batter and dipped in peanut sauce, sold at street stalls."
+      },
+      {
+        "name": "Parbo and Borgoe",
+        "text": "Parbo is the local beer, often shared from a large bottle; Borgoe is Suriname's best-known rum."
+      }
+    ],
+    "phrases": {
+      "language": "Sranan Tongo",
+      "intro": "Dutch is the official language and English is widely understood, but Sranan Tongo, an English-based creole, is the language everyone shares on the street.",
+      "items": [
+        { "phrase": "Odi", "say": "OH-dee", "meaning": "Hello" },
+        { "phrase": "Fa waka?", "say": "fah WAH-kah", "meaning": "How are you? (\"How's it walking?\")" },
+        { "phrase": "Mi de", "say": "mee DEH", "meaning": "I'm fine" },
+        { "phrase": "Grantangi", "say": "gran-TAHN-ghee", "meaning": "Thank you" },
+        { "phrase": "Omeni?", "say": "oh-MEH-nee", "meaning": "How much?" },
+        { "phrase": "A swit", "say": "ah SWEET", "meaning": "It's tasty" },
+        { "phrase": "Te lata", "say": "teh LAH-tah", "meaning": "See you later" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q730",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Surinamese dollar (SRD). Euros and US dollars are easy to change at exchange offices (cambios) in Paramaribo.",
+        "sources": [{ "property": "P38", "values": ["Q202036"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Dutch, the official language. Sranan Tongo is spoken by nearly everyone, alongside Sarnami Hindustani, Javanese, Maroon languages, Chinese and English.",
+        "sources": [{ "property": "P37", "values": ["Q7411"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 127 V: lower than Europe's, so check that your appliances accept it",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["127"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Suriname Time, UTC−3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6513", "Q63286102"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; or 115 or 111 for police, 110 for the fire service and 113 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648805", "Q4547309", "Q25648823", "Q25648804"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+597",
+        "sources": [{ "property": "P474", "values": ["+597"] }]
+      }
+    ]
+  }
+}

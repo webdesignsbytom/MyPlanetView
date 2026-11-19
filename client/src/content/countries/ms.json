@@ -1,0 +1,151 @@
+{
+  "code": "MS",
+  "slug": "montserrat",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Good morning", "Montserrat", "Emerald Isle"],
+  "summary": "A volcano buried its capital: a ghost town seen from the hills, rainforest and black-sand coves.",
+  "overview": [
+    "Montserrat is a small, steep British Overseas Territory, about 16 km long, with fewer than 5,000 people. It's called the Emerald Isle of the Caribbean for its green hills and its Irish past: many of its early settlers came from Ireland, and immigration officers traditionally stamp visitors' passports with a shamrock.",
+    "Its modern story was written by the Soufrière Hills volcano, which woke in 1995 after centuries of quiet. Eruptions over the following years buried the capital, Plymouth, in ash and mud, closed the old airport and drove about two-thirds of the islanders abroad. The south is still an exclusion zone, entered only with permission and on terms set by the volcano's hazard level, but the ruined town can be seen from Garibaldi Hill, and the Montserrat Volcano Observatory, which watches the mountain day and night, has a visitor centre looking towards the dome.",
+    "Life goes on in the north: around Little Bay, with the ferry port and a new capital slowly growing beside it, and Brades, the seat of government. Trails climb into the Centre Hills, home of the Montserrat oriole, a bird found nowhere else. Most beaches are black volcanic sand; Rendezvous Bay, the one white-sand beach, is reached by boat or a steep walk over the headland. Visitors come over from Antigua by small plane or ferry, then hire a car or a taxi driver who doubles as a guide."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [1, 2, 3, 4],
+        "text": "Sunny days of about 28–29°C, fresher nights and steady trade winds: the driest weeks, and the best for hiking the Centre Hills and diving off the west coast. St Patrick's Festival falls in March."
+      },
+      {
+        "name": "Early summer",
+        "months": [5, 6, 7],
+        "text": "Hotter and stiller, with showers more frequent from June. The sea is warm and visitors are few."
+      },
+      {
+        "name": "Storm season",
+        "months": [8, 9, 10, 11],
+        "text": "The wettest months, with the greatest chance of tropical storms from August to October and rough seas that can stop boat trips. November is usually calmer."
+      },
+      {
+        "name": "Festival month",
+        "months": [12],
+        "text": "Showers thin out as the dry season begins, and the island's Christmas carnival runs through the second half of the month, when many Montserratians living abroad come home."
+      }
+    ],
+    "weather": "Warm all year, about 24–31°C, with little difference between winter and summer. The hills catch cloud and rain, so the Centre Hills stay green and their trails are often muddy, while the coast is drier. Most rain falls from about June to November, in short, heavy showers, and the Atlantic hurricane season covers the same months: Hurricane Hugo did great damage in 1989, six years before the volcano woke.",
+    "festivals": [
+      {
+        "name": "St Patrick's Festival",
+        "place": "Across the island",
+        "when": "Around 17 March, over about ten days",
+        "months": [3],
+        "text": "17 March is a public holiday, for the Irish saint and for an uprising planned by enslaved Africans on St Patrick's Day 1768. The festival around it brings masquerade dancers, music and local food."
+      },
+      {
+        "name": "August Monday (Emancipation Day)",
+        "place": "Across Montserrat",
+        "when": "The first Monday in August",
+        "months": [8],
+        "text": "A holiday weekend marking the end of slavery, with music, food and family gatherings."
+      },
+      {
+        "name": "Festival",
+        "place": "Little Bay and around the island",
+        "when": "Usually from mid-December to New Year's Day",
+        "months": [12, 1],
+        "text": "Montserrat's carnival, held at Christmas: calypso contests, a pageant and street jump-ups behind the bands, ending at New Year."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "With so few people on the island, greetings are personal: say \"Good morning\" or \"Good afternoon\" to people you pass on the road and to everyone in a shop, and expect drivers to wave. A handshake is usual on meeting, and first names follow quickly.",
+    "etiquette": [
+      "Respect the exclusion zone: entering it without permission is against the law and dangerous, and its limits can change with the volcano's hazard level.",
+      "People are happy to chat, but ask before taking their picture.",
+      "Shops, restaurants and fuel stations are few and close early, and many are shut on Sundays: carry some cash and plan meals ahead.",
+      "On the longer Centre Hills trails, walk with a local guide and tell someone your plans.",
+      "If you see a mountain chicken, the island's giant frog, leave it alone: it's critically endangered and protected."
+    ],
+    "tipping": "About 10% in restaurants if no service charge has been added, and a tip for guides, taxi drivers and boat crews who have looked after you.",
+    "dress": "Casual and light, with a cover-up for anywhere off the sand. Sturdy shoes for the hill trails, which are steep and slippery after rain, and a rain jacket in the wet months.",
+    "food": [
+      {
+        "name": "Goat water",
+        "text": "The national dish: a thick, spiced stew of goat, served with crusty bread rolls at festivals and family gatherings."
+      },
+      {
+        "name": "Mountain chicken",
+        "text": "Not a bird but a giant frog, once the island's favourite delicacy. Disease and the eruptions brought it close to extinction, so it's now protected and off every menu."
+      },
+      {
+        "name": "Johnny cakes",
+        "text": "Slightly sweet fried dough, eaten at breakfast with saltfish or alongside fried fish."
+      },
+      {
+        "name": "Fresh fish",
+        "text": "Snapper, mahi-mahi and wahoo caught off the island, grilled or fried at the few beach bars and restaurants."
+      }
+    ],
+    "phrases": {
+      "language": "Montserrat English",
+      "intro": "English is the language of the island. These are words and names you'll hear.",
+      "items": [
+        { "phrase": "Montserrat", "say": "mont-ser-RAT", "meaning": "The island, with the stress at the end" },
+        { "phrase": "Montserratian", "say": "mont-ser-RAY-shun", "meaning": "Someone from Montserrat" },
+        { "phrase": "Alliouagana", "say": "al-ee-wah-GAH-nah", "meaning": "The island's old Kalinago name, said to mean \"land of the prickly bush\"" },
+        { "phrase": "Good morning", "meaning": "The way to start any conversation, even with a stranger on the road" },
+        { "phrase": "Masquerade", "say": "mas-keh-RAYD", "meaning": "Costumed dancers with masks and tall headdresses, out at St Patrick's and Christmas" },
+        { "phrase": "Jump-up", "say": "JUMP-up", "meaning": "Dancing in the street behind a band" },
+        { "phrase": "Goat water", "meaning": "The national dish, a goat stew" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q13353",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Eastern Caribbean dollar (EC$, XCD), fixed to the US dollar. US dollars are widely accepted.",
+        "sources": [{ "property": "P38", "values": ["Q26365"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (the North American plugs), but 230 V: check that American devices can take it",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [],
+        "note": "Wikidata's item has no time-zone statement; Montserrat keeps UTC−4 all year, like its Eastern Caribbean neighbours."
+      },
+      {
+        "key": "emergency",
+        "text": "911 or 999",
+        "sources": [],
+        "note": "Wikidata's item has no emergency-number statement; the page gives the island's two emergency numbers."
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 664",
+        "sources": [{ "property": "P474", "values": ["+1664"] }]
+      }
+    ]
+  }
+}

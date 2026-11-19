@@ -1,0 +1,182 @@
+{
+  "code": "HN",
+  "slug": "honduras",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Hola!", "Honduras", "Bienvenido"],
+  "summary": "Cheap dive courses on the Bay Islands, carved Maya stelae at Copán and Garifuna drums on the coast.",
+  "overview": [
+    "Most visitors to Honduras come for two places. Off the Caribbean coast, the Bay Islands sit on the same reef system as Belize's: Roatán, the largest, has the beach resorts of West Bay and the dive shops of West End; Utila is known for some of the cheapest diving courses in the world and a relaxed backpacker crowd; and hilly Guanaja is the quietest. In the western hills near Guatemala, the Maya city of Copán is famous for the depth of its carving: tall stone stelae of its kings, altars, and a Hieroglyphic Stairway covered in some two thousand glyphs. Scarlet macaws, the national bird, fly over the ruins, and the cobbled town of Copán Ruinas is a pleasant base.",
+    "The mainland has more for those with time. Lake Yojoa, the largest lake, is a stop for birdwatchers and for the waterfall of Pulhapanzak; La Ceiba is the jumping-off point for white-water rafting on the Río Cangrejal and the forest of Pico Bonito; Garifuna villages line the north coast around Tela and Trujillo; and Lenca villages and the cloud forest of Celaque lie around the colonial town of Gracias. In the far east, the roadless rainforest of La Mosquitia, with the Río Plátano Biosphere Reserve, is reached only by small plane and boat on an organised trip.",
+    "Ferries run from La Ceiba to Roatán and Utila, and small planes fly to the islands from the mainland. Comfortable express buses link the main cities; avoid local buses in the cities and travel by day.",
+    "Crime rates are high in parts of the mainland, especially the big cities, and some governments advise against travel to certain areas. Conditions shift, so read your own government's latest advice before you book."
+  ],
+  "whenToGo": {
+    "stripLabel": "The Bay Islands and Copán taken together. The islands' rains come late in the year and the hills' in summer, so each has a strip of its own below.",
+    "months": ["good", "best", "best", "best", "good", "good", "good", "good", "good", "avoid", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [2, 3, 4],
+        "text": "Sunny across most of the country, with calm seas and clear water around the islands. Semana Santa, in March or April, is when Hondurans pack the beaches, so book ahead."
+      },
+      {
+        "name": "Hot, showery summer",
+        "months": [5, 6, 7, 8, 9],
+        "text": "Afternoon thunderstorms in the highlands and around Copán, while the Bay Islands stay mostly dry and hot. Humid everywhere, and the hurricane season starts in June."
+      },
+      {
+        "name": "Storms and northers",
+        "months": [10, 11, 12, 1],
+        "text": "Rain is heaviest on the islands and the north coast, and the risk of hurricanes greatest in October. In December and January, cold fronts from the north bring windy, grey days to the coast; the highlands dry out from November."
+      }
+    ],
+    "weather": "Hot and humid on the Caribbean coast and the islands, with days of about 28–32°C and the sea warm all year. The highlands are milder: Tegucigalpa, at about 1,000 m, has warm days and cool nights, and the higher towns, such as La Esperanza, can be chilly. The Pacific lowlands around the Gulf of Fonseca are the hottest part, often above 35°C. Inland, the rains run from about May to October. On the Caribbean side they come later, heaviest from October to January, when cold fronts known as nortes push in from the north.",
+    "festivals": [
+      {
+        "name": "Garifuna Day",
+        "place": "Roatán and the north coast",
+        "when": "12 April",
+        "months": [4],
+        "text": "Marks the landing of the Garifuna people on Roatán in 1797, after the British deported them from Saint Vincent. Drumming, punta dancing and re-enactments in Punta Gorda on Roatán and in the coastal villages."
+      },
+      {
+        "name": "Semana Santa (Holy Week)",
+        "place": "Comayagua, and across Honduras",
+        "when": "The days leading up to Easter (28 March in 2027)",
+        "months": [3, 4],
+        "text": "Comayagua's streets are covered in carpets of coloured sawdust for its Good Friday processions. Elsewhere, much closes from Thursday and the beaches fill."
+      },
+      {
+        "name": "Carnaval de La Ceiba",
+        "place": "La Ceiba",
+        "when": "Usually in the second half of May",
+        "months": [5],
+        "text": "Honduras's biggest party, for the city's patron saint, San Isidro: a week of neighbourhood street parties ending in a great parade of floats, bands and dancers."
+      },
+      {
+        "name": "Feria Juniana",
+        "place": "San Pedro Sula",
+        "when": "June, ending around 29 June",
+        "months": [6],
+        "text": "A month-long fair for Saint Peter, the city's patron, with concerts, food stalls and a parade."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Honduras",
+        "when": "15 September",
+        "months": [9],
+        "text": "Honduras marks the end of Spanish rule in 1821 with marching bands of schoolchildren in every town; you'll hear them rehearsing for weeks before."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Bay Islands",
+        "months": ["good", "good", "best", "best", "best", "best", "best", "best", "good", "avoid", "avoid", "good"],
+        "text": "Roatán, Utila and Guanaja. Dry, hot and calm from about March to August, the best time for diving. The rains are heaviest from October to December, with windy cold fronts into January and February. Utila is known for whale sharks, though no month guarantees them."
+      },
+      {
+        "name": "Copán and the western hills",
+        "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best", "best"],
+        "text": "Copán Ruinas, Gracias and the Lenca villages. Dry from about November to April, with fresh mornings; April is hot and hazy from burning fields. Showers most afternoons from May to October, though the ruins stay open."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Hondurans, who call themselves catrachos, greet with a handshake and \"Buenos días\" or \"Buenas\", and women who are friends kiss once on the cheek. Use \"usted\" with people you don't know. On the Bay Islands many people speak English as their first language and greet you in it.",
+    "etiquette": [
+      "Garifuna and Lenca villagers are used to visitors but not to cameras pointed at them uninvited: ask first.",
+      "At Copán, keep off the carved stelae and altars, and don't touch the carvings.",
+      "Divers and snorkellers should keep hands and fins off the coral, and never buy shells or coral as souvenirs.",
+      "In San Pedro Sula, Tegucigalpa and La Ceiba, take taxis your hotel calls for you rather than walking after dark, and keep phones and jewellery out of sight.",
+      "Stick to bottled water, for brushing your teeth too.",
+      "Outside the big resorts, used toilet paper goes in the bin, not down the toilet."
+    ],
+    "tipping": "Leave about 10% at restaurants that don't add a service charge. Dive instructors, boat crews and guides expect a tip too, in lempiras or US dollars.",
+    "dress": "Light clothes, sun protection and insect repellent; sandflies bite on the islands' beaches at dawn and dusk. Bring a warm layer for the highlands and for air-conditioned buses. Dress neatly in towns and churches, and keep beachwear for the beach.",
+    "food": [
+      {
+        "name": "Baleada",
+        "text": "Honduras's favourite street food: a thick flour tortilla folded over refried beans, crumbled cheese and sour cream, with eggs, avocado or meat added for a \"baleada con todo\"."
+      },
+      {
+        "name": "Plato típico",
+        "text": "The national plate: grilled beef with refried beans, fried plantain, rice, cheese, sour cream, avocado and tortillas."
+      },
+      {
+        "name": "Sopa de caracol",
+        "text": "Conch soup cooked in coconut milk with green banana, cassava and spices, a dish of the Caribbean coast made famous by a Honduran pop song."
+      },
+      {
+        "name": "Pollo con tajadas",
+        "text": "Fried chicken piled on crisp slices of green plantain, with shredded cabbage, pickled onion and a pink sauce, from the stalls of San Pedro Sula."
+      },
+      {
+        "name": "Tapado",
+        "text": "A Garifuna stew of fish, crab or prawns with coconut milk, plantain and cassava, best in the coastal villages."
+      },
+      {
+        "name": "Fried fish at Lake Yojoa",
+        "text": "Whole fried tilapia from the lake, served at roadside restaurants with pickled onions and fried plantain."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Honduran)",
+      "intro": "On the Bay Islands English is spoken everywhere; on the mainland, Spanish.",
+      "items": [
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "Con mucho gusto", "say": "kohn MOO-choh GOOS-toh", "meaning": "You're welcome" },
+        { "phrase": "¿Cuánto vale?", "say": "KWAHN-toh VAH-leh", "meaning": "How much is it?" },
+        { "phrase": "Una baleada, por favor", "say": "OO-nah bah-leh-AH-dah por fah-VOR", "meaning": "A baleada, please" },
+        { "phrase": "¡Qué macizo!", "say": "keh mah-SEE-soh", "meaning": "How great! (Honduran slang)" },
+        { "phrase": "Cheque", "say": "CHEH-keh", "meaning": "OK; all right (slang)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q783",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Honduran lempira (L, HNL), named after a Lenca chief who fought the Spanish. On Roatán and Utila, US dollars are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q4719"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. English is the everyday language of many Bay Islanders, and Garifuna, Miskito and other indigenous languages are spoken in their communities.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Standard Time, UTC−6, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5385", "Q63286065"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance; 198 for the fire service",
+        "sources": [{ "property": "P2852", "values": ["Q25648880"] }],
+        "note": "Wikidata gives 199 for police and ambulance and 198 for fire; Honduras has had a national 911 line since 2015, which the page gives in place of 199."
+      },
+      {
+        "key": "callingCode",
+        "text": "+504",
+        "sources": [{ "property": "P474", "values": ["+504"] }]
+      }
+    ]
+  }
+}

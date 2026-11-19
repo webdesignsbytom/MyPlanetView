@@ -1,0 +1,147 @@
+{
+  "code": "AI",
+  "slug": "anguilla",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Good morning", "Anguilla"],
+  "summary": "A low, dry coral island of white-sand bays, sloop races and grilled crayfish, reached by ferry.",
+  "overview": [
+    "Anguilla is a flat strip of coral and limestone about 26 km long, the most northerly of the Leeward Islands. There are no mountains, rivers or rainforest here: people come for the sand. Shoal Bay East is a long curve of pale beach with snorkelling over the reef, Meads Bay and Rendezvous Bay on the west end look across the channel to the hills of St Martin, and Little Bay is a cove under a cliff that you reach by boat or by climbing down a rope. Day trips go out to the tiny cays offshore, such as Sandy Island and Prickly Pear.",
+    "Most visitors arrive through St Martin and cross on a ferry from Marigot to Blowing Point, about 25 minutes. Big cruise ships don't call, and the island keeps to low-rise villas and resorts. There is no public bus, so people hire a car (driving on the left, with goats and speed bumps to watch for) or use taxis. The Valley, the small capital, has Wallblake House, a plantation house from the 1780s, and Fountain Cavern, a national park with rock carvings left by the island's first Amerindian people.",
+    "Food is a big part of a stay: there are more good restaurants than the size of the place suggests, from smart dining rooms to beach shacks and the bars of Sandy Ground. Boat racing, with locally built wooden sloops, is the national sport and the heart of every holiday."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Winter high season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Clear skies, a fresh easterly breeze and hardly any rain, with the most comfortable nights of the year. Villas and resorts fill up, especially over Christmas and New Year, and need booking well ahead."
+      },
+      {
+        "name": "Early summer",
+        "months": [5, 6, 7],
+        "text": "Hotter and calmer, with fewer visitors and lower rates. On still days the water is at its clearest for snorkelling, and the Summer Festival starts at the end of July."
+      },
+      {
+        "name": "Storm season",
+        "months": [8, 9, 10, 11],
+        "text": "The hurricane season peaks from August to October, and Hurricane Irma did great damage in 2017. Many hotels and restaurants close for some or all of September and October; most reopen by November."
+      }
+    ],
+    "weather": "Being low and flat, Anguilla catches less rain than its hilly neighbours, under 1,000 mm a year in most places, and much of it falls in short, heavy showers between September and November. Days are warm all year, about 28°C in January and 31°C in August, with nights from about 23°C to 26°C. An easterly trade wind blows most of the time and takes the edge off the heat. The sea stays between about 26°C and 29°C.",
+    "festivals": [
+      {
+        "name": "Festival del Mar",
+        "place": "Island Harbour",
+        "when": "Usually over the Easter weekend",
+        "months": [3, 4],
+        "text": "The fishing village's festival: fishing contests, boat and swimming races, music and plenty of fresh seafood cooked on the waterfront."
+      },
+      {
+        "name": "Anguilla Day",
+        "place": "Across Anguilla",
+        "when": "30 May",
+        "months": [5],
+        "text": "Remembers the uprising of 30 May 1967 against rule from St Kitts; the holiday is kept with boat racing and celebrations around the island."
+      },
+      {
+        "name": "Summer Festival",
+        "place": "The Valley and the beaches",
+        "when": "Usually from late July into the second week of August",
+        "months": [7, 8],
+        "text": "Anguilla's carnival, built around August Monday, the holiday for the end of slavery: calypso shows, a pageant, J'ouvert in the early morning, street parades and the year's biggest sloop races."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Say \"Good morning\", \"Good afternoon\" or \"Good night\" before anything else, whether to a shop assistant, a taxi driver or someone passing on the road; launching straight into a question comes across as rude. Shake hands when you're introduced. People are relaxed and friendly, and conversation often comes before business.",
+    "etiquette": [
+      "All of Anguilla's beaches are open to the public, including those in front of resorts, though the loungers belong to the hotel.",
+      "Nude bathing isn't allowed, and swimwear is for the beach: put on a shirt or cover-up before going into a shop or village.",
+      "Sunday is a day for church and family; many shops close, and people dress up for services.",
+      "Goats, sheep and chickens wander across the roads, so drive slowly, especially after dark.",
+      "People like to be asked before they're photographed."
+    ],
+    "tipping": "Hotels and most restaurants add a service charge to the bill, so look before adding more; leaving a little extra for good service is welcome. Taxi drivers and boat crews usually get about 10%.",
+    "dress": "Light cotton or linen and good sun protection. Carry a cover-up for the walk from beach to bar. For dinner at the smarter restaurants, people wear resort clothes: a collared shirt and long trousers or smart shorts, a sundress.",
+    "food": [
+      {
+        "name": "Crayfish and lobster",
+        "text": "Anguilla's own catch: the spiny lobster and its smaller, sweeter cousin, the local crayfish, usually grilled and served with garlic butter."
+      },
+      {
+        "name": "Pigeon peas and rice",
+        "text": "The national dish, rice cooked with pigeon peas, often with coconut and thyme, served next to fish or meat at almost every local meal."
+      },
+      {
+        "name": "Johnny cakes",
+        "text": "Fried dough, crisp outside and soft inside, eaten at breakfast or alongside saltfish."
+      },
+      {
+        "name": "Saltfish",
+        "text": "Salted cod soaked and cooked with onion, sweet pepper and tomato: a breakfast favourite, with johnny cakes or boiled dumplings."
+      },
+      {
+        "name": "Roadside barbecue",
+        "text": "Ribs and chicken smoked over drums at stands along the roads, eaten with a cold drink from the shack next door."
+      }
+    ],
+    "phrases": {
+      "language": "English (Anguillian Creole)",
+      "intro": "English is the only language, but among themselves Anguillians talk in a quick, rolling Creole English. Some greetings and words you'll hear:",
+      "items": [
+        { "phrase": "Good morning", "meaning": "The greeting for everyone you meet before midday" },
+        { "phrase": "Good night", "meaning": "Hello, after dark (not only goodbye)" },
+        { "phrase": "Limin'", "say": "LYE-min", "meaning": "Relaxing and chatting with friends, with nothing to do" },
+        { "phrase": "August Monday", "meaning": "The holiday for emancipation, the high point of the Summer Festival" },
+        { "phrase": "J'ouvert", "say": "joo-VAY", "meaning": "The dawn street party that opens carnival" },
+        { "phrase": "Bush tea", "meaning": "Tea brewed from garden or wild leaves, an old home remedy" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q25228",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Eastern Caribbean dollar (EC$, XCD). US dollars are taken almost everywhere, and many prices are given in them.",
+        "sources": [{ "property": "P38", "values": ["Q26365"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Anguillians also speak a Creole English among themselves.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type A (two flat pins, as in North America), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454"] },
+          { "property": "P2884", "values": ["110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 264",
+        "sources": [{ "property": "P474", "values": ["+1264"] }]
+      }
+    ]
+  }
+}

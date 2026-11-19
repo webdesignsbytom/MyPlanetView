@@ -1,0 +1,173 @@
+{
+  "code": "BH",
+  "slug": "bahrain",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ahlan", "Al Bahrain"],
+  "summary": "A small island kingdom of pearl merchants' houses, Dilmun burial mounds and Formula One at Sakhir.",
+  "overview": [
+    "Bahrain is the smallest country in the Gulf: one low, flat main island about 50 km long, with a scatter of smaller ones, joined to Saudi Arabia by the 25 km King Fahd Causeway. It has been a trading stop for more than 4,000 years. The mound of Qal'at al-Bahrain, by the sea west of Manama, holds layers of towns going back to Dilmun, the Bronze Age kingdom, under a Portuguese fort; thousands of Dilmun burial mounds rise in the desert around A'ali; and in Muharraq the Pearling Path links the restored houses of the merchants and divers who made the island rich before oil.",
+    "Manama, the capital, mixes glass towers on reclaimed land with an old souq behind the Bab al-Bahrain gate. The Bahrain National Museum is the best introduction, and the Al Fateh Grand Mosque welcomes visitors with guided tours. The south of the island is desert: the Formula One circuit at Sakhir, the museum at Bahrain's first oil well, which struck oil in 1932, and the Tree of Life, a lone mesquite tree several centuries old standing on bare sand.",
+    "Nowhere is more than about an hour's drive away. Taxis and ride-hailing apps are the easiest way round, buses cover the main roads, and car hire is simple. Bahrain is more relaxed than its neighbours about alcohol, which licensed hotels, bars and restaurants serve, and Saudi visitors drive over the causeway for the weekend (Friday and Saturday), so traffic and hotels are busiest then."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "The cool months",
+        "months": [12, 1, 2],
+        "text": "Mild and sunny, about 20°C by day and 14°C at night, with occasional showers and blustery days. Comfortable for walking the souq and the Pearling Path at any hour."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4],
+        "text": "Warm, from the mid-20s in March to the low 30s by late April, and the season of the Grand Prix. Dust-laden winds blow on some days."
+      },
+      {
+        "name": "Summer",
+        "months": [5, 6, 7, 8, 9],
+        "text": "Hot, around 38°C by day, and so humid that it feels hotter than drier places that measure more: nights stay near 30°C, and glasses steam up when you step out of air conditioning. Outdoor sightseeing means early mornings only."
+      },
+      {
+        "name": "Autumn",
+        "months": [10, 11],
+        "text": "Heat and humidity hang on through October, in the low 30s. November turns pleasant, with warm days and the sea still good for swimming."
+      }
+    ],
+    "weather": "A hot desert climate made heavier by the sea all round: the humidity is high for much of the year and worst from July to September. Rain is scarce, about 75 mm a year, falling in a handful of winter showers between November and March. Winters are mild rather than cold, and the north-westerly shamal can raise dust in late spring and early summer.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Bahrain",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Days are quiet and evenings lively, with families gathering in Ramadan tents and majlises after sunset and souqs open late. Visitors are expected not to eat, drink or smoke in public by day. Eid al-Fitr ends the month with a holiday of several days."
+      },
+      {
+        "name": "Bahrain Grand Prix",
+        "place": "Bahrain International Circuit, Sakhir",
+        "when": "Usually in March or April",
+        "months": [3, 4],
+        "text": "Formula One's night race in the desert, often one of the first of the season. Hotels across the island fill and prices rise for the race weekend."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Bahrain",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Families gather for the feast, government offices close for several days, and the causeway is busy in both directions."
+      },
+      {
+        "name": "Ashura",
+        "place": "Manama and villages across Bahrain",
+        "when": "The tenth day of the Islamic year, about 11 days earlier each year: in 2027, in June",
+        "months": [6],
+        "text": "The Shia day of mourning for Imam Hussein, the Prophet's grandson, kept with great feeling in Bahrain. Processions fill the lanes of old Manama, black banners hang from the buildings, and stalls hand out free food and drinks to everyone, visitors included. It's a public holiday."
+      },
+      {
+        "name": "National Day",
+        "place": "Across Bahrain",
+        "when": "16 and 17 December",
+        "months": [12],
+        "text": "Two days of holiday with the red and white flag everywhere, fireworks over Manama Bay, and concerts and family events in the evenings."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greet with \"as-salamu alaykum\" or a simple \"ahlan\" (hi). Bahrainis are known around the Gulf for being easy-going and chatty with foreigners, and conversation often opens with questions about your family and your trip. Men shake hands; with a woman, a man waits for her to offer her hand, and a hand on the heart works when she doesn't.",
+    "etiquette": [
+      "Ask before photographing people, and above all women. During Ashura, watch the processions quietly from the side, dressed in dark clothes, and ask before taking pictures.",
+      "At the Al Fateh Grand Mosque, women are lent an abaya and headscarf at the door; everyone takes off their shoes.",
+      "If you're invited into a majlis, a family's sitting room for guests, accept the coffee and dates you're offered and don't point the soles of your feet at anyone.",
+      "Your right hand is for eating and handing things over.",
+      "Drinking is for licensed venues; being drunk in public is an offence.",
+      "Bargaining is normal in the Manama and Muharraq souqs, but not in malls or supermarkets."
+    ],
+    "tipping": "Hotel and restaurant bills often carry a service charge. Where they don't, leave about 10%, and round taxi fares up. Small tips for porters and the men who help with bags at the souq are welcome.",
+    "dress": "Covered shoulders and knees for both men and women in the souqs, villages and public places; Manama's hotels and malls are more relaxed, but shorts and vests stand out. Save swimwear for the beach and the pool. Mosques ask for long sleeves and, for women, covered hair.",
+    "food": [
+      {
+        "name": "Machboos",
+        "text": "Bahrain's national dish: spiced rice with chicken, lamb or the local hamour fish, cooked with dried lime and tomato and served on a big shared platter."
+      },
+      {
+        "name": "Muhammar",
+        "text": "Rice sweetened with date syrup or sugar and scented with cardamom and saffron, eaten with fried or grilled fish, often safi (rabbitfish), the islanders' favourite."
+      },
+      {
+        "name": "Bahraini halwa",
+        "text": "A dense, jelly-like sweet of cornflour, sugar, rosewater, saffron and nuts, made in huge copper pots by family firms in Muharraq and given as a gift."
+      },
+      {
+        "name": "Khubz from the tannour",
+        "text": "Flatbread slapped onto the wall of a clay oven at small neighbourhood bakeries, eaten hot for breakfast with cheese, eggs or date syrup."
+      },
+      {
+        "name": "Samboosa",
+        "text": "Triangles of thin pastry filled with cheese, meat or vegetables and fried, the snack of every Ramadan evening."
+      },
+      {
+        "name": "Karak",
+        "text": "Strong tea boiled with milk, sugar and cardamom, sold from cafés and roadside windows at all hours."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Bahraini Arabic)",
+      "intro": "English is spoken widely in Manama and anywhere visitors go; these words are for the greetings and thanks that people appreciate.",
+      "items": [
+        { "phrase": "Ahlan wa sahlan (أهلا وسهلا)", "say": "AH-lan wa SAH-lan", "meaning": "Welcome" },
+        { "phrase": "Kaif halak? (كيف حالك)", "say": "kayf HAA-lak", "meaning": "How are you? (to a man; kaif halich to a woman)" },
+        { "phrase": "Al-hamdulillah (الحمد لله)", "say": "al-HAM-doo-LIL-lah", "meaning": "Fine, thanks be to God" },
+        { "phrase": "Shukran jazeelan (شكرا جزيلا)", "say": "SHOOK-ran ja-ZEE-lan", "meaning": "Thank you very much" },
+        { "phrase": "Min fadlak (من فضلك)", "say": "min FAD-lak", "meaning": "Please (to a man)" },
+        { "phrase": "Kam hatha? (كم هذا)", "say": "kam HAA-tha", "meaning": "How much is this?" },
+        { "phrase": "La, shukran (لا شكرا)", "say": "LAA SHOOK-ran", "meaning": "No, thank you" },
+        { "phrase": "Ma'a as-salama (مع السلامة)", "say": "MA-a sa-LAA-ma", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q398",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Bahraini dinar (BD, BHD), divided into 1,000 fils. Cards are widely taken; carry cash for the souqs.",
+        "sources": [{ "property": "P38", "values": ["Q201871"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic. English is widely spoken, and many residents speak Hindi, Urdu, Malayalam or Persian.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Arabia Standard Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q109526592"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police, fire and ambulance; 112 also works",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+973",
+        "sources": [{ "property": "P474", "values": ["+973"] }]
+      }
+    ]
+  }
+}

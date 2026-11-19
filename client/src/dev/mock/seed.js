@@ -358,6 +358,19 @@ function buildBaseSeed() {
       { challengeId: 'challenge-two-years', userId: USER_ID, mapId: homeMap, joinedAt: daysAgo(50) },
       { challengeId: 'challenge-two-years', userId: JO_ID, mapId: joMap, joinedAt: daysAgo(40) },
     ],
+    // Country maps (18 Nov 2026): the US's New York and Massachusetts ("New York and Boston"),
+    // and a pin in Paris gone back to twice, each visit with its own photos
+    subdivisionVisits: [
+      { mapId: homeMap, code: 'US-NY', countryCode: 'US', status: 'VISITED' },
+      { mapId: homeMap, code: 'US-MA', countryCode: 'US', status: 'VISITED' },
+    ],
+    pins: [
+      { id: 'pin-paris', mapId: homeMap, countryCode: 'FR', name: 'Paris', notes: 'Our city: we keep coming back.', latitude: 48.8566, longitude: 2.3522, hidden: false, createdById: USER_ID, createdAt: daysAgo(60) },
+    ],
+    pinVisits: [
+      { id: 'pin-visit-paris-2019', pinId: 'pin-paris', visitedOn: '2019-04-01', datePrecision: 'MONTH', notes: 'Engaged by the Eiffel Tower.', photoIds: ['photo-eiffel'], createdAt: daysAgo(60) },
+      { id: 'pin-visit-paris-2025', pinId: 'pin-paris', visitedOn: '2025-05-01', datePrecision: 'MONTH', notes: 'Back for the Louvre.', photoIds: ['photo-louvre'], createdAt: daysAgo(20) },
+    ],
     themeEntries: exampleThemeEntries(new Date(), {
       mapId: homeMap,
       userId: USER_ID,

@@ -1,0 +1,183 @@
+{
+  "code": "PG",
+  "slug": "papua-new-guinea",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Apinun", "Papua Niugini", "Welkam"],
+  "summary": "Highland sing-sings, Sepik spirit houses and the Kokoda Track, in the land of 800 languages.",
+  "overview": [
+    "Papua New Guinea covers the eastern half of the island of New Guinea and some 600 smaller islands, with a population estimated at well over ten million and more than 800 languages, more than any other country. Most people live in rural villages, many reachable only on foot, by small plane or by boat, and clan and custom shape daily life. Port Moresby, the capital, has no road link to most of the country, the Highlands included.",
+    "The Highlands, around Goroka and Mount Hagen, are cool valleys of gardens and coffee where, each August and September, clans gather for the great shows in face paint, shell ornaments and the long plumes of the bird-of-paradise, the bird on the national flag. The Sepik River, in the north, winds past villages with towering haus tambaran (spirit houses), master carvers and men whose backs carry crocodile-scale scars from initiation. Trekkers walk the Kokoda Track, about 96 km over the Owen Stanley Range, where Australian and Japanese troops fought in 1942; most take eight to ten days.",
+    "On the coasts and islands, Milne Bay, Kimbe Bay and Madang have some of the richest coral reefs on earth; Rabaul sits beside an active volcano whose 1994 eruption buried much of the old town; and the Trobriand Islands keep their yam-harvest celebrations and the kula ring, an ancient exchange of shell valuables between islands. Domestic flights are the only practical link between many towns.",
+    "Many governments advise a high degree of caution in Papua New Guinea because of serious crime, especially in Port Moresby, Lae and the Highland towns, and advise against travel to some Highland areas because of tribal fighting. Conditions change, so check your own government's current advice before you go, and travel with a reputable local guide or tour operator where you can."
+  ],
+  "whenToGo": {
+    "stripLabel": "A compromise across very different climates. Port Moresby and the Kokoda Track, the Highlands, and Lae and the islands each have their own section below.",
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Drier season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "While the trades blow from the south-east, Port Moresby, the Kokoda Track and much of the Highlands have their driest weather: the season for trekking and for the big Highland shows. Lae and some coasts facing the trade winds get their heaviest rain now."
+      },
+      {
+        "name": "Wetter season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "With the monsoon blowing from the north-west, heavy rain soaks most of the country, above all from December to March. Highland roads turn to mud, the Kokoda Track becomes slippery and many trek operators stop, and the lowlands are hot and steamy."
+      }
+    ],
+    "weather": "Papua New Guinea lies just south of the equator, so height matters more than season. The coasts are hot and humid, with highs of 30–32°C. In the Highlands, at about 1,500–1,600 m, days are around 25°C and nights can drop to 12–14°C, colder still on the peaks around Mount Wilhelm (4,509 m). Rain is heavy almost everywhere, from about 1,000 mm a year in Port Moresby, which sits in a rain shadow, to 4,000 mm or more in Lae.",
+    "festivals": [
+      {
+        "name": "National Mask Festival",
+        "place": "Kokopo, East New Britain",
+        "when": "Usually in July",
+        "months": [7],
+        "text": "Masked dancers from across the islands, among them the Tolai's tall, cone-headed dukduk figures and the Baining fire dancers, who leap through bonfires at night."
+      },
+      {
+        "name": "Sepik Crocodile Festival",
+        "place": "Ambunti, East Sepik",
+        "when": "Usually in early August, over three days",
+        "months": [8],
+        "text": "Celebrates the crocodile at the heart of Sepik belief, with dancing, carving and men showing the crocodile scars cut into their skin at initiation."
+      },
+      {
+        "name": "Mount Hagen Show",
+        "place": "Mount Hagen, Western Highlands",
+        "when": "Usually in mid-August, over a weekend",
+        "months": [8],
+        "text": "One of the two great Highland sing-sings: dozens of clan groups dance and chant in full traditional dress, with painted faces, wigs and towering feather headdresses."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Papua New Guinea",
+        "when": "16 September",
+        "months": [9],
+        "text": "Independence from Australia in 1975, with flag-raisings, sing-sings and sports, and offices closed across the country."
+      },
+      {
+        "name": "Goroka Show",
+        "place": "Goroka, Eastern Highlands",
+        "when": "Usually over the Independence Day weekend in mid-September",
+        "months": [9],
+        "text": "The oldest of the Highland shows, first held in the 1950s, where the Asaro Mudmen, in clay masks and grey mud, appear among a great many other groups."
+      },
+      {
+        "name": "Kenu and Kundu Festival",
+        "place": "Alotau, Milne Bay",
+        "when": "Usually in early November",
+        "months": [11],
+        "text": "Milne Bay's festival of war canoes (kenu) and hourglass drums (kundu): canoe races in the bay, dancing and crafts from the surrounding islands."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Port Moresby and the Kokoda Track",
+        "months": ["avoid", "avoid", "avoid", "good", "best", "best", "best", "best", "best", "best", "good", "avoid"],
+        "text": "Port Moresby is among the least rainy places in the country, with little rain at all from about May to November. The Kokoda Track is walked mostly from April to October; from December to March, rain turns it into mud and swollen creeks, and few operators run treks."
+      },
+      {
+        "name": "The Highlands",
+        "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+        "text": "Goroka, Mount Hagen and Tari have warm days and cool, sometimes cold nights all year. Rain falls in every month, mostly as afternoon storms, and is heaviest from about December to March. August and September bring the big shows."
+      },
+      {
+        "name": "Lae, the north coast and the islands",
+        "text": "Wet in every month. Lae is one of the rainiest towns in the country, and its heaviest rain comes in the middle of the year, the opposite of Port Moresby. On the islands, which months are wettest depends on whether a coast faces the north-west monsoon (December to March) or the south-east trades (May to October)."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "People shake hands gently, often holding on for a moment, with \"Moning\" or \"Apinun\" in Tok Pisin. Wantok, literally 'one talk', means someone who shares your language, and the obligations between wantoks run deep: a wantok is expected to help, house and feed their own, which shapes jobs, money and politics.",
+    "etiquette": [
+      "Almost all land belongs to clans under custom. Ask before walking onto land, photographing a village or swimming at a beach, and expect to pay the landowners.",
+      "Ask before photographing people; at the shows, performers away from the main arena may ask for a small payment.",
+      "Compensation is central to custom: an accident or insult, even an unintended one, can bring a claim on the person responsible and their family. If you're in a road accident, travel advice is to drive on to the nearest police station rather than stop at the scene.",
+      "On treks, hire guides and porters from the villages along the route: the land is theirs, and the trek runs on their knowledge.",
+      "Women travellers should dress conservatively, keep thighs covered and avoid going out alone, especially after dark."
+    ],
+    "tipping": "Not traditional, but guides, porters and drivers on treks and tours usually receive a tip at the end. Elsewhere it isn't expected.",
+    "dress": "Thin cotton for the lowlands, a fleece or jumper for Highland nights. Keep knees and thighs covered, women especially. Good boots and rain gear for any trek, and insect repellent: malaria is present in the lowlands.",
+    "food": [
+      {
+        "name": "Mumu",
+        "text": "The Highland feast: pork, sweet potato, greens and bananas wrapped in leaves and cooked for hours over hot stones in a pit."
+      },
+      {
+        "name": "Kaukau",
+        "text": "Sweet potato, the Highland staple, roasted in the embers, boiled, or cooked in a mumu."
+      },
+      {
+        "name": "Sago",
+        "text": "In the Sepik and other lowlands, starch scraped and washed from the trunk of the sago palm is the staple, eaten as a sticky jelly or baked into flat cakes."
+      },
+      {
+        "name": "Buai",
+        "text": "Betel nut, chewed with a mustard stick and lime powder by almost everyone. The red splashes on every pavement are its spit."
+      },
+      {
+        "name": "Highland coffee",
+        "text": "Arabica grown mostly by village smallholders around Goroka and Mount Hagen; buy beans in the Highland towns."
+      }
+    ],
+    "phrases": {
+      "language": "Tok Pisin",
+      "intro": "English is used in schools and business, but Tok Pisin is the language that links the country, and Hiri Motu is heard around Port Moresby.",
+      "items": [
+        { "phrase": "Moning", "say": "MOR-ning", "meaning": "Good morning" },
+        { "phrase": "Apinun", "say": "AH-pee-noon", "meaning": "Good afternoon" },
+        { "phrase": "Yu stap gut?", "say": "yoo stap GOOT", "meaning": "How are you?" },
+        { "phrase": "Mi stap gut", "say": "mee stap GOOT", "meaning": "I'm fine" },
+        { "phrase": "Tenkyu tru", "say": "TENK-yoo TROO", "meaning": "Thank you very much" },
+        { "phrase": "Em hamas?", "say": "em HAH-mas", "meaning": "How much is it?" },
+        { "phrase": "Wantok", "say": "WAN-tok", "meaning": "Friend; someone who speaks your language" },
+        { "phrase": "Lukim yu bihain", "say": "LOO-kim yoo bee-HINE", "meaning": "See you later" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q691",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Kina (K, PGK), divided into 100 toea. Cards work in larger hotels in the main towns; elsewhere, cash only.",
+        "sources": [{ "property": "P38", "values": ["Q200759"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, Tok Pisin, Hiri Motu and Papua New Guinean Sign Language, all official, among more than 800 languages",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q34159", "Q33617", "Q25044405"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (angled flat pins, as in Australia), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+10, all year (no summer time); Bougainville keeps UTC+11",
+        "sources": [{ "property": "P421", "values": ["Q7056", "Q7069", "Q63285983"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for the police, 111 for an ambulance, 110 for fire. They work mainly in Port Moresby and the larger towns.",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q4547309", "Q25648823"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+675",
+        "sources": [{ "property": "P474", "values": ["+675"] }]
+      }
+    ]
+  }
+}

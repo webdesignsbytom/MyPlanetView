@@ -1,0 +1,189 @@
+{
+  "code": "AF",
+  "slug": "afghanistan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salaam", "Khush amadid", "Afghanistan"],
+  "summary": "Blue-tiled shrines, Bamiyan's empty Buddha niches and the Hindu Kush.",
+  "overview": [
+    "Afghanistan is a mountain country: the Hindu Kush runs across its middle, and most people live in the valleys and on the plains around it. Kabul, the capital, sits in a high basin at about 1,800 m, with Babur's Gardens, where the first Mughal emperor is buried, on the slope above the old city. In the west, Herat has a restored citadel and a Friday Mosque covered in blue and green tilework; in the north, Mazar-i-Sharif grows out from the blue-tiled shrine of Hazrat Ali. In the central highlands, Bamiyan's valley keeps the empty niches of two giant Buddhas destroyed in 2001, and the chain of deep blue lakes at Band-e-Amir lies a few hours' drive to the west.",
+    "Distances are long and many roads are rough. The main road north crosses the Hindu Kush through the Salang Tunnel, about 3,400 m up, which can close for snow or avalanches in winter. Most visitors travel with a local guide and driver who plan the route, sort out the paperwork and find places to stay, and checkpoints on the roads are common. Cards are hardly used and cash machines are few, so carry cash.",
+    "Rules on dress and behaviour are strict and enforced, above all for women, and they can differ from one province to the next. A guide who knows the current rules is the best way to stay on the right side of them.",
+    "Many governments advise against all travel, or all but essential travel, to Afghanistan, and conditions there can change quickly. Check your own government's current advice before planning a trip and again before you leave, and make sure your travel insurance covers you there."
+  ],
+  "whenToGo": {
+    "stripLabel": "Kabul, where most trips begin. The lowland cities and the central highlands differ, and each has a strip of its own below.",
+    "months": ["avoid", "avoid", "good", "best", "best", "good", "good", "good", "best", "best", "good", "avoid"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "March is cool and often wet, with late snow in the hills, and Nowruz on the equinox. April and May are the green months: almond and apricot trees in flower, fresh grass on the slopes and mild days in Kabul."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Dry and hot. Kabul reaches the low 30s°C, while Herat, Mazar-i-Sharif and Kandahar pass 40°C, and a strong north wind blows dust across Herat for much of the summer. The best season for Bamiyan, Band-e-Amir and the high valleys."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Clear, settled days and the harvest: grapes, melons and Kandahar's pomegranates fill the bazaars. Nights turn cold by November, and the first snow reaches the passes."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, with snow in Kabul and heavy snow in the mountains. Passes close for days at a time, Bamiyan is cut off for long spells, and smoke from coal and wood stoves hangs over Kabul."
+      }
+    ],
+    "weather": "A dry continental climate with big swings between summer and winter, and between day and night. Most of the year's rain and snow falls from December to April; the summer months are almost rainless. Height decides the rest: Kabul, at about 1,800 m, has highs in the low 30s°C in July and nights well below freezing in January, while the lowland cities of the south, west and north are hotter in summer and milder in winter. The Hindu Kush and the Pamirs rise above 7,000 m, with snow on the high peaks all year.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Afghanistan",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting from dawn to sunset. Most eating places close by day, and towns come alive after the evening meal. Eid al-Fitr, at the end, brings new clothes, family visits and bowls of dried fruit and sweets for guests."
+      },
+      {
+        "name": "Nowruz",
+        "place": "Mazar-i-Sharif and across the north and west",
+        "when": "20 or 21 March, the spring equinox",
+        "months": [3],
+        "text": "The Persian New Year and the first day of the Afghan calendar. Families eat haft mewa, seven dried fruits and nuts soaked in water, and Mazar-i-Sharif has long marked it at the shrine of Hazrat Ali. Public celebrations have been much reduced in recent years."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Afghanistan",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice: families who can afford it slaughter a sheep or goat and share the meat with relatives and the poor. Offices and most shops close for several days."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Afghanistan",
+        "when": "19 August",
+        "months": [8],
+        "text": "Commemorates the treaty of 1919 that gave Afghanistan full control of its own foreign affairs; a public holiday."
+      },
+      {
+        "name": "Buzkashi",
+        "place": "Mazar-i-Sharif, Kabul and the north",
+        "when": "Usually from late autumn to early spring, often on Fridays",
+        "months": [11, 12, 1, 2, 3],
+        "text": "The national game: dozens of riders fight to snatch a headless goat or calf from the ground and carry it to a scoring circle. Matches are rough, loud and watched by big crowds from the edge of the field; stand well back."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The lowland cities: Herat, Mazar-i-Sharif and Kandahar",
+        "months": ["good", "good", "best", "best", "good", "avoid", "avoid", "avoid", "good", "best", "best", "good"],
+        "text": "Milder winters than Kabul, with frost at night but often sunny days, and fierce summers, above 40°C from June to August. Spring and autumn are the times for Herat's old town and Mazar's shrine."
+      },
+      {
+        "name": "Bamiyan and the central highlands",
+        "months": ["avoid", "avoid", "avoid", "good", "good", "best", "best", "best", "best", "good", "avoid", "avoid"],
+        "text": "At about 2,500 m, Bamiyan has cool, sunny summers and long, hard winters, with nights far below freezing and snow from November into March. Band-e-Amir's lakes are at their bluest from June to September."
+      },
+      {
+        "name": "The Wakhan Corridor",
+        "text": "The thin finger of land in the far north-east, between Tajikistan and Pakistan, where Wakhi villagers and Kyrgyz herders live below the peaks of the Pamirs and the Hindu Kush. Treks reach the high pastures only from about July to September; the rest of the year the passes are snowbound."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Salaam alaikum\" (peace be upon you), answered with \"Wa alaikum salaam\", often with the right hand laid on the heart. Men shake hands and ask after each other's health and family at some length before getting down to business. A man shouldn't offer his hand to a woman, and a hand on the heart with a slight nod is the respectful greeting between men and women.",
+    "etiquette": [
+      "Hospitality is a point of honour: you'll be offered tea again and again. Accept at least one cup, and refuse further ones with a hand over the glass.",
+      "Take off your shoes before stepping onto carpets, in homes and in mosques. Sit cross-legged or with your feet tucked under you, and don't point the soles of your feet at anyone.",
+      "Meals are often eaten sitting on the floor around a cloth (dastarkhan). Eat and pass food with your right hand.",
+      "Never photograph women, and ask men before photographing them. Never photograph checkpoints, soldiers, police or government buildings.",
+      "Friday is the day of rest and prayer, when offices and many shops close.",
+      "Bargaining is normal in bazaars, but keep it good-humoured, and agree taxi fares before getting in."
+    ],
+    "tipping": "Not expected in local eateries, though rounding up is welcome. Guides, drivers and hotel staff who've looked after you expect a tip at the end of a trip, and it's an important part of their income.",
+    "dress": "Very conservative. Men wear long trousers and keep their shoulders covered; many visitors buy a local tunic and loose trousers (perahan tunban), which are cool and draw less attention. Women need at least a headscarf, long sleeves and loose clothing to the ankles, and local women mostly wear far more; follow your guide's advice for each place. Pack warm clothes for nights in the mountains in any season.",
+    "food": [
+      {
+        "name": "Kabuli pulao",
+        "text": "The national dish: rice cooked in a rich lamb stock, with lamb hidden underneath and sweet strips of carrot, raisins and almonds on top."
+      },
+      {
+        "name": "Mantu",
+        "text": "Steamed dumplings filled with spiced minced meat and onion, topped with yoghurt and a sauce of split peas or tomato."
+      },
+      {
+        "name": "Ashak",
+        "text": "Dumplings filled with chopped leeks or chives, served under yoghurt, a meat sauce and dried mint. Often made at home for guests and holidays."
+      },
+      {
+        "name": "Bolani",
+        "text": "Thin flatbread folded around a filling of potato, leeks or pumpkin and fried until crisp; a favourite street snack."
+      },
+      {
+        "name": "Naan and kebabs",
+        "text": "Long, oval flatbread straight from the tandoor oven, eaten with skewers of lamb kebab or, in the east, chapli kebab, a flat, spiced mince patty fried in a big pan."
+      },
+      {
+        "name": "Chai",
+        "text": "Green tea (chai sabz), often with cardamom, or black tea, drunk all day and served with sugared almonds, raisins and other small sweets."
+      }
+    ],
+    "phrases": {
+      "language": "Dari",
+      "intro": "Dari, Afghanistan's form of Persian, is the common language of Kabul, Herat and the north. In the south and east, Pashto is spoken, where \"thank you\" is \"manana\". English is spoken by few people outside hotels and offices.",
+      "items": [
+        { "phrase": "Salaam alaikum (السلام علیکم)", "say": "sah-LAAM ah-LAY-kum", "meaning": "Hello (\"Peace be upon you\")" },
+        { "phrase": "Chetor hasti? (چطور هستی؟)", "say": "che-TOR has-TEE", "meaning": "How are you?" },
+        { "phrase": "Khub hastam (خوب هستم)", "say": "KHOOB has-TAM", "meaning": "I'm fine" },
+        { "phrase": "Tashakor (تشکر)", "say": "tah-shah-KOOR", "meaning": "Thank you" },
+        { "phrase": "Lutfan (لطفاً)", "say": "LOOT-fan", "meaning": "Please" },
+        { "phrase": "Chand ast? (چند است؟)", "say": "CHAND ast", "meaning": "How much is it?" },
+        { "phrase": "Khoda hafez (خدا حافظ)", "say": "kho-DAH hah-FEZ", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q889",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Afghani (؋, AFN). Afghanistan runs on cash: cards are hardly taken.",
+        "sources": [{ "property": "P38", "values": ["Q199471"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Pashto and Dari, both official. Uzbek, Turkmen and several smaller languages, such as Balochi, Pashayi, Nuristani and the Pamir languages, are spoken in their own regions.",
+        "sources": [{ "property": "P37", "values": ["Q58680", "Q178440", "Q9264", "Q9267", "Q33049", "Q36670", "Q161804", "Q1772864"] }],
+        "note": "Wikidata also lists Arabic as a regional language; the page leaves it out, as it's the language of religion and scholarship rather than of everyday speech in any region."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [{ "property": "P2853", "values": ["Q1378312", "Q1123613"] }],
+        "note": "Wikidata gives 240 V and also lists British-type sockets; the page gives types C and F at 220 V, as the IEC's list of plugs by country does for Afghanistan."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Afghanistan Time, UTC+4:30, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6792", "Q63285929"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "100 for police, 101 for fire and 102 for ambulance; 112 is also listed. Help can be slow outside the cities, so keep your guide's and hotel's numbers to hand.",
+        "sources": [{ "property": "P2852", "values": ["Q25648793", "Q25648794", "Q25648798", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+93",
+        "sources": [{ "property": "P474", "values": ["+93"] }]
+      }
+    ]
+  }
+}

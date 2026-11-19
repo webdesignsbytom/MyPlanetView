@@ -25,14 +25,23 @@ function ChosenMark() {
  * Up to 20 of the map's photos for a moment (nothing is uploaded). `chosen` is
  * `[{ id, thumbUrl }]` in order. The photos offered come from `source` (a country's on
  * the map, or a trip's); `wholeMap` (a map editor's) adds a switch for every photo on
- * the map. Chosen photos stay chosen whatever is listed.
+ * the map. Chosen photos stay chosen whatever is listed. `max` is a pin's visit's 50
+ * (components/countryMap/PinVisitForm.jsx), with `fullText` saying so.
  */
-function MomentPhotoPicker({ idPrefix, source, wholeMap = null, chosen, onChange }) {
+function MomentPhotoPicker({
+  idPrefix,
+  source,
+  wholeMap = null,
+  chosen,
+  onChange,
+  max = MOMENT_PHOTOS_MAX,
+  fullText = 'That’s the most a moment can have. Untick one to choose another.',
+}) {
   const [open, setOpen] = useState(false);
   const [everywhere, setEverywhere] = useState(false);
   const photos = usePhotoPage({ ...(everywhere && wholeMap ? wholeMap : source), enabled: open });
   const chosenIds = new Set(chosen.map((p) => p.id));
-  const full = chosen.length >= MOMENT_PHOTOS_MAX;
+  const full = chosen.length >= max;
   const listedIds = new Set(photos.photos.map((p) => p.id));
   // Chosen photos the list doesn't show (another country, say) come first
   const offered = open ? [...chosen.filter((p) => !listedIds.has(p.id)), ...photos.photos] : [];
@@ -44,7 +53,7 @@ function MomentPhotoPicker({ idPrefix, source, wholeMap = null, chosen, onChange
     <fieldset className='grid gap-2'>
       <legend className='font-travel text-base uppercase tracking-wide text-poster-brown'>Photos</legend>
       <p className='text-sm' aria-live='polite'>
-        {chosen.length} of {MOMENT_PHOTOS_MAX} chosen
+        {chosen.length} of {max} chosen
       </p>
       {!open && chosen.length ? (
         <ul className='grid grid-cols-5 gap-1.5' aria-label='Chosen photos'>
@@ -109,7 +118,7 @@ function MomentPhotoPicker({ idPrefix, source, wholeMap = null, chosen, onChange
               Show more photos
             </button>
           ) : null}
-          {full ? <p className='text-xs'>That’s the most a moment can have. Untick one to choose another.</p> : null}
+          {full ? <p className='text-xs'>{fullText}</p> : null}
         </div>
       ) : null}
     </fieldset>

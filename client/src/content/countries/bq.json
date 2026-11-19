@@ -1,0 +1,176 @@
+{
+  "code": "BQ",
+  "slug": "caribbean-netherlands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bon bini", "Boneiru", "Saba · Statia"],
+  "summary": "Bonaire's shore dives and flamingos, with Saba and Statia, two tiny volcanoes.",
+  "overview": [
+    "The Caribbean Netherlands are three small islands that became special municipalities of the Netherlands in 2010, and they could hardly be more different. Bonaire lies off the coast of Venezuela, next to Curaçao; Saba and Sint Eustatius (known as Statia) are far to the north-east, close to St Martin. All three use the US dollar.",
+    "Bonaire is low, dry and covered in cactus, and its whole coastline has been a marine park since 1979. The reefs start a few strokes from the shore, so divers load tanks into a pick-up and drive the coast road to dive sites marked with yellow-painted stones. Kralendijk, the small capital, faces the uninhabited islet of Klein Bonaire. In the south, flamingos feed in the salt pans beside white mountains of sea salt and rows of tiny stone huts where enslaved salt workers once slept. Washington Slagbaai National Park covers the hilly north, and on the east coast Lac Bay has shallow water for windsurfing and mangroves to kayak through. Wild donkeys roam all over.",
+    "Saba is a single steep volcano rising out of the sea, with no real beaches, white cottages with red roofs, and one winding road, built largely by hand. Its summit, Mount Scenery, at almost 900 m, is the highest point in the Kingdom of the Netherlands, and walkers climb through cloud forest to reach it; divers come for the pinnacles of the marine park. Statia is quieter still: the old fort and ruined warehouses of Oranjestad recall the 18th century, when it was one of the busiest ports in the Caribbean, and a trail leads up into the rainforest inside the crater of The Quill. Both are reached by small plane or ferry from St Martin, and Saba's runway is one of the shortest in the world."
+  ],
+  "whenToGo": {
+    "stripLabel": "Bonaire and the two northern islands taken together. Bonaire, outside the hurricane belt, differs from Saba and Statia, and each has a strip of its own below.",
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Sunny and breezy on all three islands, and the clearest weather for climbing Mount Scenery and The Quill. Bonaire's carnival comes in February; Easter and the Dutch school holidays bring crowds."
+      },
+      {
+        "name": "Windy summer",
+        "months": [5, 6, 7, 8],
+        "text": "Hot, with Bonaire's trade wind at its strongest in June and July, which windsurfers at Lac Bay love. Further north, Saba and Statia stay green and pleasant, but the storm risk grows through August."
+      },
+      {
+        "name": "Calm and storm season",
+        "months": [9, 10, 11],
+        "text": "On Bonaire the wind drops and the sea goes flat, opening up the wilder east-coast dive sites, before short showers arrive from October. Saba and Statia are in the hurricane belt, and these are their riskiest months."
+      }
+    ],
+    "weather": "Bonaire is close to a desert, with about 500 mm of rain in a year, most of it in short showers from October to January, and afternoons of 29°C to 32°C all year, tempered by a constant wind. Saba and Statia are greener and wetter, with the same warm temperatures at sea level; the top of Mount Scenery is cooler and often in cloud. The northern pair lie in the path of hurricanes, which are most likely from August to October: Irma damaged both in 2017.",
+    "festivals": [
+      {
+        "name": "Bonaire Carnival",
+        "place": "Kralendijk",
+        "when": "Usually in January and February, ending before Lent",
+        "months": [1, 2],
+        "text": "Tumba music contests, a children's parade, and a grand parade of costumed groups along the waterfront."
+      },
+      {
+        "name": "King's Day and Dia di Rincon",
+        "place": "All three islands; Rincon, Bonaire",
+        "when": "27 April",
+        "months": [4],
+        "text": "The Dutch king's birthday is a holiday on all three islands. On Bonaire it is also Rincon Day, when people crowd into the island's oldest village for music, food stalls and a parade."
+      },
+      {
+        "name": "Saba Carnival",
+        "place": "The Bottom and Windwardside, Saba",
+        "when": "Usually in late July",
+        "months": [7],
+        "text": "Saba's summer festival: a week of music, pageants, food and a parade, when the small island is at its liveliest."
+      },
+      {
+        "name": "Dia di Boneiru (Bonaire Day)",
+        "place": "Bonaire",
+        "when": "6 September",
+        "months": [9],
+        "text": "Bonaire's own day, a holiday kept with the island flag, traditional music and dance, and local food."
+      },
+      {
+        "name": "Statia Day",
+        "place": "Oranjestad, Sint Eustatius",
+        "when": "16 November",
+        "months": [11],
+        "text": "Marks the \"First Salute\" of 1776, when Fort Oranje answered the salute of an American warship, remembered as the first foreign salute to the flag of the United States. Ceremonies at the fort, music and food."
+      },
+      {
+        "name": "Saba Day",
+        "place": "Saba",
+        "when": "Usually early December",
+        "months": [12],
+        "text": "Saba's island holiday, with contests, music, dances and plenty of food, when Sabans living abroad often come home."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Bonaire",
+        "months": ["best", "best", "best", "best", "best", "best", "good", "good", "good", "good", "good", "good"],
+        "text": "Dry and sunny all year, south of the usual path of hurricanes. Diving is good in every month; the wind is strongest in June and July and weakest in September and October, when the hottest days come. The light rains come mainly from October to January."
+      },
+      {
+        "name": "Saba and Sint Eustatius",
+        "months": ["best", "best", "best", "best", "best", "good", "good", "good", "avoid", "good", "good", "best"],
+        "text": "Hiking and diving islands with few visitors. Drier from December to May, when trails are firmer and the views clearest; September is the height of the hurricane season, and some places close then."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "On Bonaire, people greet with \"Bon dia\" or \"Bon tardi\" and a handshake, or a kiss on the cheek between friends. On Saba and Statia, where everyone knows everyone, people say hello to anyone they pass and wave at passing cars; a visitor who does the same soon gets to know people.",
+    "etiquette": [
+      "Bonaire's reefs are protected: don't touch, kick or stand on the coral, wear gloves while diving, or feed the fish.",
+      "Donkeys and goats wander across Bonaire's roads, especially at dusk; drive slowly and don't feed them.",
+      "On Saba, getting a lift from passing drivers on The Road is an accepted way of getting about.",
+      "Stay on the marked trails on Mount Scenery and The Quill; the paths are steep and slippery after rain."
+    ],
+    "tipping": "Restaurants on Bonaire sometimes add a service charge; where they don't, around 10% is usual for good service. Tip dive guides and boat crews, and round up taxi fares.",
+    "dress": "Casual everywhere. On Bonaire, reef shoes for the rocky shore entries. On Saba and Statia, walking boots, long trousers and a light rain jacket for the trails, and something warm for the cloud forest at the top of Mount Scenery.",
+    "food": [
+      {
+        "name": "Kadushi soup",
+        "text": "An old Bonairean soup made from the tall kadushi cactus, green and slippery like okra."
+      },
+      {
+        "name": "Stoba di kabritu",
+        "text": "Goat stewed slowly with onion, sweet peppers and spices, served with funchi (stiff cornmeal) or rice. Bonaire's goats roam free, and they end up here."
+      },
+      {
+        "name": "Fresh fish",
+        "text": "Wahoo, dorado and snapper, caught by local boats and grilled or fried, with fried plantain and a bottle of hot sauce."
+      },
+      {
+        "name": "Saba Spice",
+        "text": "A strong rum steeped with spices and sweetened, made at home on Saba to family recipes and sold in bottles around the island."
+      }
+    ],
+    "phrases": {
+      "language": "Papiamentu (Bonaire)",
+      "intro": "On Bonaire most people speak Papiamentu at home, and Dutch, English and Spanish are widely understood. Saba and Statia are English-speaking. On Bonaire, try:",
+      "items": [
+        { "phrase": "Bon bini na Boneiru", "say": "bon BEE-nee nah boh-NAY-roo", "meaning": "Welcome to Bonaire" },
+        { "phrase": "Kon ta bai?", "say": "kon tah BYE", "meaning": "How are you?" },
+        { "phrase": "Mi ta bon", "say": "mee tah BON", "meaning": "I'm fine" },
+        { "phrase": "Hopi bon", "say": "HOH-pee BON", "meaning": "Very good" },
+        { "phrase": "Laman", "say": "lah-MAHN", "meaning": "The sea" },
+        { "phrase": "Bientu", "say": "bee-EN-too", "meaning": "Wind" },
+        { "phrase": "Piska", "say": "PEES-kah", "meaning": "Fish" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q27561",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar ($, USD), used on all three islands since 2011",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Dutch and English, with Papiamentu on Bonaire. English is the everyday language on Saba and Sint Eustatius.",
+        "sources": [{ "property": "P37", "values": ["Q7411", "Q1860", "Q33856"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America); about 127 V on Bonaire and 110 V on Saba and Sint Eustatius",
+        "sources": [],
+        "note": "Wikidata's item has no plug or voltage statement; the page gives the islands' usual sockets and supply."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q2085376", "Q4742647"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [],
+        "note": "Wikidata's item has no emergency number statement; 911 is the number on all three islands."
+      },
+      {
+        "key": "callingCode",
+        "text": "+599",
+        "sources": [{ "property": "P474", "values": ["+599"] }]
+      }
+    ]
+  }
+}

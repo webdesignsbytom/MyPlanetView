@@ -38,8 +38,13 @@ const UNDRAWN_ISLANDS = [
   { code: 'GR', name: 'Farmakonisi', latitude: 37.293, longitude: 27.088, radiusM: 1500 },
 ];
 
+// Places the map's outlines are too coarse to settle, answered as the user decided: the Old
+// City of Jerusalem is Palestine's (16 Nov 2026; the outlines from 18 Nov put it a hair
+// inside Israel)
+const DECIDED_PLACES = [{ code: 'PS', name: 'Old City of Jerusalem', latitude: 31.7767, longitude: 35.2345, radiusM: 1000 }];
+
 const smallCountryAt = (latitude, longitude) =>
-  [...SMALL_COUNTRIES, ...UNDRAWN_ISLANDS].find(
+  [...DECIDED_PLACES, ...SMALL_COUNTRIES, ...UNDRAWN_ISLANDS].find(
     (c) => haversineMeters(latitude, longitude, c.latitude, c.longitude) <= c.radiusM
   )?.code ?? null;
 

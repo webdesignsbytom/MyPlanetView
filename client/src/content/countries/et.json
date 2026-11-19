@@ -1,0 +1,194 @@
+{
+  "code": "ET",
+  "slug": "ethiopia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Selam", "ኢትዮጵያ", "Ityop'ya"],
+  "summary": "Lalibela's rock-cut churches, the Simien peaks, coffee ceremonies and a calendar of its own.",
+  "overview": [
+    "Ethiopia is a land of high plateaus split by deep gorges, with one of the world's oldest Christian churches and a history all its own: apart from five years of Italian occupation, it was never colonised. Most first visits follow the historic route in the north. At Lalibela, eleven churches were carved down into the solid rock some 800 years ago and are still in use; Gondar has the castles of 17th-century emperors; Aksum's granite stelae mark an ancient kingdom; and Bahir Dar is the base for the island monasteries of Lake Tana and the Blue Nile Falls.",
+    "The Simien Mountains, north of Gondar, have some of Africa's finest trekking, with troops of gelada monkeys grazing along the cliff edges, and the Bale Mountains in the south shelter the rare Ethiopian wolf. To the east, the walled Muslim city of Harar packs dozens of mosques into its old town, and at night men feed wild hyenas by hand outside the walls. The Danakil Depression, in the far north-east, is one of the hottest places on earth, with the yellow and green sulphur springs of Dallol, and the Omo Valley in the south-west is home to peoples such as the Hamar and the Mursi.",
+    "Ethiopia keeps its own calendar, seven to eight years behind the Western one, with twelve months of 30 days and a short thirteenth. Many people also count the hours from dawn, so 7 a.m. is \"one o'clock\": check which a time is given in. Addis Ababa, the capital, stands at about 2,350 m and is the seat of the African Union, and domestic flights save long days on the road.",
+    "Parts of Ethiopia have seen armed conflict, and many governments advise against travel to some regions, which can include places on the usual routes. Since conditions change, look at your own government's current advice when you start planning."
+  ],
+  "whenToGo": {
+    "stripLabel": "The highlands and the historic route, where most trips go. The Danakil and the Omo Valley follow other seasons; see below.",
+    "months": ["best", "best", "good", "good", "good", "good", "avoid", "avoid", "good", "best", "best", "best"],
+    "seasons": [
+      {
+        "name": "Bega (dry season)",
+        "months": [10, 11, 12, 1, 2],
+        "text": "Sunny and dry in the highlands, about 22–25°C by day in Addis Ababa, with cold nights in the mountains. October is fresh and green after the rains, with yellow Meskel daisies on the hillsides; Genna and Timkat bring crowds to Lalibela and Gondar."
+      },
+      {
+        "name": "Belg (small rains)",
+        "months": [3, 4, 5],
+        "text": "Warmer, with showers on some afternoons. The highlands are dry and brown, and it's a quieter time to visit."
+      },
+      {
+        "name": "Kiremt (main rains)",
+        "months": [6, 7, 8, 9],
+        "text": "Heavy rain in the highlands, almost daily and often for hours in July and August. Roads turn to mud, trekking trails are slippery and views misty, and nights are cool. The rains end around Meskel, late in September."
+      }
+    ],
+    "weather": "Height matters more than the time of year. The highlands, where most people live and most visitors go, are mild all year: Addis Ababa has days of about 20–25°C and cool nights, and above 3,000 m the nights can be freezing. The main rains, the kiremt, fall from about June to September, heaviest in July and August, with lighter rains in spring. The lowlands are another world: the Danakil is ferociously hot, often well over 40°C in summer, and the south-west and east are hot and dry, with rains mostly from about March to May.",
+    "festivals": [
+      {
+        "name": "Genna (Christmas)",
+        "place": "Lalibela and across the country",
+        "when": "7 January",
+        "months": [1],
+        "text": "Pilgrims dressed in white cotton crowd Lalibela for services that last through the night, and families end weeks of fasting with a feast."
+      },
+      {
+        "name": "Timkat (Epiphany)",
+        "place": "Gondar, Lalibela, Addis Ababa and across the country",
+        "when": "19 January (20 January in a leap year, as in 2028)",
+        "months": [1],
+        "text": "The feast of Christ's baptism. Priests carry the tabots, covered replicas of the Ark of the Covenant, in procession to water on the eve; in Gondar, crowds leap into the pool at Fasilides' Bath once it's blessed the next morning."
+      },
+      {
+        "name": "Fasika (Easter)",
+        "place": "Across the country",
+        "when": "Orthodox Easter, usually in April or early May: in 2027, 2 May",
+        "months": [4, 5],
+        "text": "The end of the 55-day Lenten fast, broken after a midnight service with doro wat, meat and celebrations at home."
+      },
+      {
+        "name": "Enkutatash (New Year)",
+        "place": "Across the country",
+        "when": "11 September (12 September in the year before a leap year, as in 2027)",
+        "months": [9],
+        "text": "The Ethiopian New Year comes as the rains end: girls go from house to house singing, and the hills are yellow with daisies."
+      },
+      {
+        "name": "Meskel",
+        "place": "Meskel Square, Addis Ababa, and across the country",
+        "when": "27 September (28 September in the year before a leap year, as in 2027)",
+        "months": [9],
+        "text": "The Finding of the True Cross. On the eve, towering bonfires (demera) topped with crosses are lit across the country, the biggest in the capital's Meskel Square."
+      },
+      {
+        "name": "Irreecha",
+        "place": "Bishoftu and Addis Ababa",
+        "when": "Usually on a weekend in early October",
+        "months": [10],
+        "text": "The Oromo thanksgiving at the end of the rains: huge crowds, many in white, gather by Lake Hora Arsadi carrying fresh grass and flowers."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Danakil Depression",
+        "months": ["best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+        "text": "Below sea level and one of the hottest places on earth. Trips run in the cooler months, roughly November to March, when days are a mere mid-30s °C, and always as organised group tours."
+      },
+      {
+        "name": "The Omo Valley",
+        "text": "Hot lowlands, with rains from about March to May and a shorter spell around October and November, when tracks can be cut. The drier months, roughly December to February and June to September, are the usual time to go."
+      },
+      {
+        "name": "The Simien and Bale Mountains",
+        "text": "The trekking season runs from October to March, greenest at the start. High camps drop below freezing at night, and from June to September rain makes trails slippery and hides the views."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings are courteous and repeated: Ethiopians ask after your health, your family and your night, more than once. Men who know each other shake hands and bump right shoulders, and friends kiss on alternate cheeks, often three times. \"Selam\" is hello for anyone; \"tenayistilign\" is the formal greeting for elders and first meetings.",
+    "etiquette": [
+      "Food is shared from one large tray of injera: eat with your right hand from the part in front of you. A host may feed you a mouthful by hand, a gursha, as a sign of friendship.",
+      "Orthodox Christians fast on most Wednesdays and Fridays and through Lent, eating no meat, eggs or dairy, so \"fasting food\" (yetsom migib), all vegan, is easy to find.",
+      "Take off your shoes at churches, and women cover their hair; some monasteries admit men only.",
+      "Ask before photographing people, priests included, who may ask for a tip; in the Omo Valley, a fee per photograph is usual.",
+      "When arranging a time, check whether it's in Ethiopian or Western hours."
+    ],
+    "tipping": "Usual and appreciated: about 10% in restaurants, small notes for porters and anyone who helps, and more for guides, drivers, scouts and mule handlers at the end of a trek. Priests who unveil a church's treasures may expect a little too.",
+    "dress": "Modest clothes that cover shoulders and knees are respected, especially at churches and in Harar. Highland nights are cold, so bring a warm jacket, and for the Simien or Bale, a hat, gloves and a sleeping bag rated below freezing. For the Danakil, light, loose clothes, sturdy shoes and serious sun protection.",
+    "food": [
+      {
+        "name": "Injera",
+        "text": "A large, soft pancake of fermented teff, a tiny grain grown mostly in Ethiopia, spread on a tray beneath the stews and torn by hand to scoop them up. Its sour taste takes a meal or two to get used to."
+      },
+      {
+        "name": "Doro wat",
+        "text": "Chicken stewed for hours with mounds of onion, spiced butter and berbere, with hard-boiled eggs: the dish for feasts such as Genna and Fasika."
+      },
+      {
+        "name": "Kitfo",
+        "text": "Minced beef warmed in spiced butter and hot mitmita chilli, eaten raw or lightly cooked (leb leb), with fresh cheese (ayib) and greens."
+      },
+      {
+        "name": "Beyaynetu",
+        "text": "The fasting platter: small heaps of lentils, chickpea shiro, split peas, cabbage, beetroot and greens arranged on injera, every one vegan."
+      },
+      {
+        "name": "Tej",
+        "text": "Honey wine, golden and sweet, fermented with the leaves of the gesho shrub and poured from round-bellied glass flasks in tej houses."
+      },
+      {
+        "name": "Buna (the coffee ceremony)",
+        "text": "The coffee plant grows wild in Ethiopia's forests, where it comes from. Green beans are roasted over charcoal, ground by hand and brewed in a clay jebena with incense burning, and three rounds are poured, often with popcorn on the side."
+      }
+    ],
+    "phrases": {
+      "language": "Amharic",
+      "intro": "Amharic, written in the Ge'ez script, is understood across most of the country; in the south and east, Oromo is more widely spoken. English is common in hotels and among young people in the cities. Some phrases change when you speak to a woman.",
+      "items": [
+        { "phrase": "Selam (ሰላም)", "say": "SEH-lahm", "meaning": "Hello" },
+        { "phrase": "Tenayistilign (ጤና ይስጥልኝ)", "say": "teh-nah-yis-TIL-lin", "meaning": "Hello (formal: \"may God give you health\")" },
+        { "phrase": "Indemin neh? (እንደምን ነህ)", "say": "in-deh-MIN neh", "meaning": "How are you? (to a man; to a woman, indemin nesh)" },
+        { "phrase": "Dehna (ደህና)", "say": "DEH-nah", "meaning": "Fine; well" },
+        { "phrase": "Amesegnalehu (አመሰግናለሁ)", "say": "ah-meh-seg-NAH-leh-hu", "meaning": "Thank you" },
+        { "phrase": "Ishi (እሺ)", "say": "EE-shee", "meaning": "OK; all right" },
+        { "phrase": "Sint new? (ስንት ነው)", "say": "SINT no", "meaning": "How much is it?" },
+        { "phrase": "Betam tiru (በጣም ጥሩ)", "say": "beh-TAHM TEE-roo", "meaning": "Very good" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q115",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Ethiopian birr (Br, ETB). Outside the larger hotels and city restaurants, expect to pay in cash.",
+        "sources": [{ "property": "P38", "values": ["Q206243"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Amharic, the federal government's working language. Oromo, the most widely spoken first language, Tigrinya, Somali, Afar and dozens more are used in their own regions, and English is taught in schools.",
+        "sources": [{ "property": "P37", "values": ["Q28244"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Mixed: types C, E and F (two round pins) are the most common, with type L (three pins in a row, as in Italy) in places; 220 V. A universal adapter helps.",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1123613", "Q1520890"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata also lists British-style and Swiss (type J) plugs; the page names the most common types and suggests a universal adapter."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "East Africa Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q1773949"] }],
+        "note": "Wikidata also gives the time-zone database's Africa/Asmara, Eritrea's zone; Ethiopia's own is Africa/Addis_Ababa, on the same time."
+      },
+      {
+        "key": "emergency",
+        "text": "991 for police, 907 for ambulance and 939 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648868", "Q25648865", "Q25648866"] }],
+        "note": "Wikidata also lists 911 without saying which service it reaches; the page gives the three numbers whose service it names."
+      },
+      {
+        "key": "callingCode",
+        "text": "+251",
+        "sources": [{ "property": "P474", "values": ["+251"] }]
+      }
+    ]
+  }
+}

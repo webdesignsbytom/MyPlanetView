@@ -1,0 +1,175 @@
+{
+  "code": "UG",
+  "slug": "uganda",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Oli otya?", "Uganda", "Gyebale ko"],
+  "summary": "Mountain gorillas in Bwindi, chimps in Kibale and white water on the Nile.",
+  "overview": [
+    "Uganda sits on the equator between Lake Victoria and the western arm of the Rift Valley, and fits a great deal into a fairly small country: savannah parks, mountain rainforest, crater lakes and the beginning of the Nile. Most visitors come for the mountain gorillas. Bwindi Impenetrable National Park, in the south-west, has about half of all the mountain gorillas left in the world, tracked on foot through steep forest, and Mgahinga, on the slopes of the Virunga volcanoes, has gorillas and golden monkeys. Kibale Forest is the place to walk with chimpanzees.",
+    "The savannah parks have the classic animals: Queen Elizabeth National Park, with boat trips on the Kazinga Channel and the tree-climbing lions of Ishasha; Murchison Falls, where the Nile forces its way through a gorge about 7 m wide; and remote Kidepo Valley in the far north-east. The Rwenzori, the \"Mountains of the Moon\", rise to 5,109 m on the Congo border, with a long, muddy trek to glaciers near the top. At Jinja, where the Nile leaves Lake Victoria, there's rafting and kayaking on its rapids.",
+    "Kampala, the capital, spreads over green hills, its traffic threaded by boda-bodas, the motorbike taxis. Gorilla and chimpanzee treks need permits, booked well ahead for the busiest months, and Lake Bunyonyi, with its terraced hills and islands, is the usual place to rest after Bwindi. Read your own government's travel advice before you go: it can differ from one region to the next."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "best", "best", "best", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Mid-year dry season",
+        "months": [6, 7, 8],
+        "text": "Sunny and dry, with cool nights in the south-west. The best months for gorilla treks and game drives, and the busiest, so permits and lodges fill early."
+      },
+      {
+        "name": "Second rains",
+        "months": [9, 10, 11],
+        "text": "Rain returns, mostly as afternoon storms. Forest trails get muddier, the parks turn green, and there are fewer visitors."
+      },
+      {
+        "name": "Year-end dry spell",
+        "months": [12, 1, 2],
+        "text": "Warm and mostly dry, with clear skies: another good time for trekking and the savannah parks, and busy over Christmas."
+      },
+      {
+        "name": "Heavy rains",
+        "months": [3, 4, 5],
+        "text": "The wettest months, peaking in April: steep trails in Bwindi are slippery, and some tracks in the north become hard to drive. Lodges are quiet."
+      }
+    ],
+    "weather": "The equator runs through Uganda, but most of the country is a plateau at 1,000–1,500 m, so it's warm rather than hot: Kampala has days of about 25–28°C all year and mild nights. The south has two rainy seasons, roughly March to May and September to November, with April usually the wettest month; the north has one longer rainy season, from about April to October. Bwindi and the Rwenzori get rain in every month and are cool at night, while Kidepo, in the dry north-east, is the hottest of the parks.",
+    "festivals": [
+      {
+        "name": "Uganda Martyrs' Day",
+        "place": "Namugongo, near Kampala",
+        "when": "3 June",
+        "months": [6],
+        "text": "Huge crowds of pilgrims, many of whom walk for days or weeks from across Uganda and neighbouring countries, gather at the shrine to honour the Christians put to death by the king of Buganda in the 1880s."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the country",
+        "when": "9 October",
+        "months": [10],
+        "text": "Uganda marks the end of British rule in 1962 with a parade, speeches and a day off for everyone."
+      },
+      {
+        "name": "Nyege Nyege",
+        "place": "By the Nile, near Jinja",
+        "when": "Usually over four days late in the year; in November in recent years",
+        "months": [11],
+        "text": "A festival of electronic and experimental music from across Africa, with stages, camping and dancing through the night on the riverbank."
+      },
+      {
+        "name": "Christmas and New Year",
+        "place": "Across the country",
+        "when": "25 December and 1 January",
+        "months": [12, 1],
+        "text": "Kampala empties as people head home to their villages; churches are full, and buses and roads are packed in the days before."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Bwindi and the south-west",
+        "text": "Rainforest on steep ridges between about 1,100 and 2,600 m, cool and damp, with rain possible in any month. Treks run all year; June to August and December to February are the driest. Mornings can be chilly."
+      },
+      {
+        "name": "Murchison Falls and the north",
+        "text": "Hotter and drier, with one long rainy season. The dry months, roughly December to March, are the best for game drives, when the grass is short and animals gather near water."
+      },
+      {
+        "name": "The Rwenzori",
+        "text": "Among the wettest mountains in Africa. The drier windows, roughly June to August and December to February, are the time to climb, and even then expect deep mud and bogs."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Ugandans greet everyone and take their time about it: a handshake and \"How are you?\" come before any question, even when asking the way. In Buganda, the central region, women and girls traditionally kneel to greet elders and guests, though no one expects it of visitors. Say \"Gyebale ko\" to someone working: it thanks them for their effort.",
+    "etiquette": [
+      "On a gorilla trek, keep at least 7 m from the gorillas, speak quietly, wear a face mask when asked, and stay behind if you're ill. The visit with the family lasts one hour.",
+      "Ask before photographing people, and never photograph soldiers, police or government buildings.",
+      "Same-sex relationships are against the law, with heavy penalties. Public affection between any couple is rare: keep it private.",
+      "On a boda-boda, insist on a helmet; in Kampala, ride-hailing apps offer motorbikes with helmets.",
+      "Give and take with your right hand, or with both hands for something that matters."
+    ],
+    "tipping": "Not usual in local eateries; about 10% in restaurants used to visitors. On gorilla and chimpanzee treks, ranger guides, trackers and porters are tipped at the end, and lodges keep a box for their staff. Hiring a porter for a trek also helps local families.",
+    "dress": "For treks, long sleeves and trousers in muted colours, garden gloves for the nettles, waterproof boots and a rain jacket; nights in the south-west are cool. Ugandans dress smartly in town. For weddings and Sunday best, women wear the gomesi, a long dress with puffed shoulders, and men the kanzu, a long white robe.",
+    "food": [
+      {
+        "name": "Matoke",
+        "text": "Green cooking bananas, peeled, wrapped in banana leaves and steamed, then mashed into a soft yellow mound. Served with groundnut sauce or a meat stew at almost every meal."
+      },
+      {
+        "name": "Rolex",
+        "text": "Kampala's street snack: an omelette with tomato, onion and cabbage, rolled up in a chapati. The name comes from \"rolled eggs\"."
+      },
+      {
+        "name": "Luwombo",
+        "text": "Chicken, beef or fish slow-steamed in a parcel of banana leaves, once a dish of the Buganda royal court and now made for celebrations."
+      },
+      {
+        "name": "Groundnut sauce",
+        "text": "A smooth, rich sauce of ground peanuts, spooned over matoke, sweet potatoes, rice or posho, the stiff maize porridge."
+      },
+      {
+        "name": "Nile Special and waragi",
+        "text": "Nile Special is the best-known local beer, brewed at Jinja; waragi is Uganda's gin, sold in small sachets and bottles and mixed with soda."
+      }
+    ],
+    "phrases": {
+      "language": "Luganda",
+      "intro": "English is the official language and widely spoken. Uganda has more than 40 languages; Luganda, the language of Buganda, is the one you'll hear most in Kampala and the centre, and Swahili is understood in many places.",
+      "items": [
+        { "phrase": "Oli otya?", "say": "oh-lee OH-tyah", "meaning": "How are you?" },
+        { "phrase": "Bulungi", "say": "boo-LOON-gee", "meaning": "Fine; good" },
+        { "phrase": "Gyebale ko", "say": "jeh-BAH-leh koh", "meaning": "Well done (a greeting to someone working)" },
+        { "phrase": "Webale nnyo", "say": "weh-BAH-leh NYOH", "meaning": "Thank you very much" },
+        { "phrase": "Ssebo / Nnyabo", "say": "SEH-boh / NYAH-boh", "meaning": "Sir / Madam" },
+        { "phrase": "Kale", "say": "KAH-leh", "meaning": "OK" },
+        { "phrase": "Ssente mmeka?", "say": "SEN-teh MEH-kah", "meaning": "How much money?" },
+        { "phrase": "Weraba", "say": "weh-RAH-bah", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1036",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Ugandan shilling (USh, UGX). Mobile money is used everywhere, and safari lodges often quote in US dollars.",
+        "sources": [{ "property": "P38", "values": ["Q4598"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English and Swahili, both official. Luganda is the most widely spoken language in Kampala and the centre, one of more than 40 in the country.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q7838"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "East Africa Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q4689498"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 or 999 for police and fire; 911 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q3086706", "Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+256",
+        "sources": [{ "property": "P474", "values": ["+256"] }]
+      }
+    ]
+  }
+}

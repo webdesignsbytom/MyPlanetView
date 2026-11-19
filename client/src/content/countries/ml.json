@@ -1,0 +1,184 @@
+{
+  "code": "ML",
+  "slug": "mali",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["I ni ce", "Mali"],
+  "summary": "Djenné's great mud mosque, Dogon cliff villages and music along the Niger River.",
+  "overview": [
+    "Mali follows the Niger River as it bends through the Sahel towards the Sahara, and its great sights lie along it. Djenné's Great Mosque is the largest mud-brick building in the world, and the whole town turns out each year to give it a fresh coat of mud. Mopti, where the Bani joins the Niger, is a river port of pirogues, fish and salt slabs; far downstream, on the edge of the desert, Timbuktu has earthen mosques from its centuries as a city of scholars, whose families kept libraries of old manuscripts. East of Mopti, the Dogon people built their villages and granaries against the foot of the Bandiagara cliffs, a sandstone wall about 150 km long.",
+    "Bamako, the capital, sprawls along the river in the south, and music is everywhere: griots singing the praises of families to the kora, the guitar blues of the north, and the stars who took Malian music round the world, such as Ali Farka Touré, Salif Keita and Oumou Sangaré. People travel by bush taxi and bus on the main roads, and by pirogue or slow boat on the river when the water is high.",
+    "Many governments advise against all travel to Mali. Their advice is revised as conditions change, so read your own government's latest guidance before making any plans."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "avoid", "avoid", "avoid", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Warm, dry days, around 32°C in Bamako, and cool nights. The harmattan, a dry wind off the Sahara, hazes the sky with dust, especially from December. The water is still high in the inland delta early in the season."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "The heat builds to about 40°C in Bamako by April and higher still in Timbuktu and Gao. Most people rest through the middle of the day."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Storms arrive from about June, and the rains are heaviest in July and August in the south, when dirt roads turn to mud. The country turns green and the Dogon cliffs run with waterfalls. October is hot and humid as the rains end and the river rises."
+      }
+    ],
+    "weather": "Hot all year, with one rainy season. The south, around Bamako and Sikasso, is the wettest part, with about 1,000 mm of rain a year, almost all of it between June and September. Further north the rains get shorter and lighter, and Timbuktu and Gao, on the edge of the Sahara, get little rain and some of the highest temperatures in Africa, well above 40°C from April to June. After the rains, the Niger floods its inland delta, around Mopti, from about September to December.",
+    "festivals": [
+      {
+        "name": "Festival sur le Niger",
+        "place": "Ségou",
+        "when": "Usually in early February, over several days",
+        "months": [2],
+        "text": "Concerts on a stage by the river, with Malian and West African musicians, plus puppet shows, art exhibitions and crafts. One of the country's biggest music festivals."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr (Korité)",
+        "place": "Across Mali",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Markets slow down by day while people fast, then fill at dusk. Eid al-Fitr, called Korité here, fills the mosques and streets with people in new boubous."
+      },
+      {
+        "name": "Crépissage of the Great Mosque",
+        "place": "Djenné",
+        "when": "Usually in spring, before the rains",
+        "months": [4, 5],
+        "text": "Over a single day, the town's men and boys climb the mosque's walls and the wooden beams that stick out of them to spread fresh mud mixed by the women, racing between neighbourhoods, to repair what the last rains washed away."
+      },
+      {
+        "name": "Eid al-Adha (Tabaski)",
+        "place": "Across Mali",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The great feast: every family that can buys a ram, and the streets are full of people in their best clothes visiting relatives. Transport is packed before and after."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Mali",
+        "when": "22 September",
+        "months": [9],
+        "text": "Mali became independent on this day in 1960, after its short-lived federation with Senegal broke up. Offices and schools close."
+      },
+      {
+        "name": "Cattle crossing (Dégal)",
+        "place": "Diafarabé, in the inland delta",
+        "when": "Usually in December, on a day the herders choose",
+        "months": [12],
+        "text": "Fula herders swim thousands of cattle across the Niger as they bring them back into the delta's pastures after the rainy season, a day of music, dancing and celebration. It's on UNESCO's list of intangible heritage."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Mopti, Djenné and the inland delta",
+        "text": "From about September to December the Niger and the Bani spread over the plain in a maze of lakes and channels, and Djenné becomes an island. Pirogue trips are best as the water falls in November and December."
+      },
+      {
+        "name": "Timbuktu and the north",
+        "text": "The Sahara's edge, hotter and drier than the south, with sand blowing through the streets. December to February is the only comfortable time; from April to June, days are over 40°C."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings are long and matter a great deal: you ask after the other person's health, family and work, and they ask after yours, before anything else. In Bambara, \"I ni ce\" is the all-purpose hello; men reply \"Nba\" and women \"Nse\". Handshakes are gentle, and many people touch their heart afterwards. Visitors are often given a Malian family name, and joking with someone about theirs is part of the fun.",
+    "etiquette": [
+      "Never skip the greetings, even to ask the way or buy something: going straight to business is rude.",
+      "Use your right hand to eat, shake hands and pass things. Meals are often shared from one bowl, eaten with the right hand.",
+      "In Dogon villages, ask your guide which places are sacred: some can't be entered or photographed, and people should always be asked before you take their picture.",
+      "Show respect to older people: greet them first, and let them sit and eat first.",
+      "Haggling is normal in markets; keep it friendly."
+    ],
+    "tipping": "Small tips are welcome for guides, drivers and boatmen, and in restaurants that serve visitors. Elsewhere it isn't expected.",
+    "dress": "Light, loose cotton that covers your shoulders and knees; most Malians are Muslim and dress modestly. Malians dress up for Fridays, weddings and feasts, in boubous of bazin, a stiff, shiny cotton dyed in strong colours. Bring a scarf against the harmattan dust.",
+    "food": [
+      {
+        "name": "Tô",
+        "text": "A stiff porridge of millet or sorghum, the everyday staple, served with a sauce of baobab leaves or okra and eaten with the right hand."
+      },
+      {
+        "name": "Riz gras",
+        "text": "\"Fat rice\": rice cooked in a rich stock with tomato, onion and meat, the dish for celebrations and Sunday lunches."
+      },
+      {
+        "name": "Tigadèguèna",
+        "text": "A thick peanut sauce with beef or chicken and vegetables, served over rice. Tiga is Bambara for peanut."
+      },
+      {
+        "name": "Capitaine",
+        "text": "Nile perch from the Niger, grilled or fried whole with onions and chilli, a speciality of Bamako's riverside restaurants and Mopti."
+      },
+      {
+        "name": "Fonio",
+        "text": "One of the oldest cereals grown in West Africa, a tiny grain cooked like couscous and served with sauce or with milk."
+      },
+      {
+        "name": "Gnamakoudji and bissap",
+        "text": "Fiery fresh ginger juice and deep-red hibiscus juice, sweetened and sold chilled in plastic bags and bottles on the street."
+      }
+    ],
+    "phrases": {
+      "language": "Bambara (Bamanankan)",
+      "intro": "Bambara is the language most Malians share. French is spoken in offices, hotels and by anyone who went to school, but greeting someone in Bambara always brings a smile.",
+      "items": [
+        { "phrase": "I ni ce", "say": "ee nee CHEH", "meaning": "Hello; thank you" },
+        { "phrase": "I ni sogoma", "say": "ee nee so-GO-ma", "meaning": "Good morning" },
+        { "phrase": "Nba / Nse", "say": "n-BAH / n-SEH", "meaning": "The reply to a greeting (said by a man / by a woman)" },
+        { "phrase": "I ka kɛnɛ?", "say": "ee ka KEH-neh", "meaning": "Are you well?" },
+        { "phrase": "Tɔɔrɔ tɛ", "say": "TOR-oh teh", "meaning": "No problem (I'm fine)" },
+        { "phrase": "Joli?", "say": "JO-lee", "meaning": "How much?" },
+        { "phrase": "Ayiwa", "say": "a-YEE-wa", "meaning": "OK; well then" },
+        { "phrase": "K'an bɛn", "say": "kahn BEN", "meaning": "See you later" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q912",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "West African CFA franc (CFA, XOF), shared with seven other West African countries and tied to the euro. Mali runs on cash.",
+        "sources": [{ "property": "P38", "values": ["Q861690"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Thirteen national languages are official, among them Bambara, Fula, Songhay, Soninke, Tamasheq and Dogon. Bambara is the most widely spoken, and French is still used in government and business.",
+        "sources": [{ "property": "P37", "values": ["Q33243", "Q12628055", "Q35021", "Q1234776", "Q33454", "Q56231", "Q36905", "Q36186", "Q36187", "Q33795", "Q505198", "Q36660", "Q4670066"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689475"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "17 for police, 15 for ambulance and 18 for fire; 112 also works",
+        "sources": [{ "property": "P2852", "values": ["Q25648842", "Q25648869", "Q25648843", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+223",
+        "sources": [{ "property": "P474", "values": ["+223"] }]
+      }
+    ]
+  }
+}

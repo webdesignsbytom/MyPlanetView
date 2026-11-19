@@ -1,0 +1,170 @@
+{
+  "code": "LS",
+  "slug": "lesotho",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Lumela", "Lesotho", "Khotso"],
+  "summary": "A mountain kingdom above 1,400 m, with pony treks, Sani Pass and winter snow.",
+  "overview": [
+    "Lesotho is a mountain kingdom entirely surrounded by South Africa, and the only country in the world whose land lies wholly above 1,000 m: its lowest point is about 1,400 m. Most of it is high, treeless country in the Maloti and Drakensberg ranges, cut by deep river gorges, and Thabana Ntlenyana, at 3,482 m, is the highest peak in southern Africa. Herders wrapped in thick woollen blankets ride sure-footed Basotho ponies between villages of round, thatched stone huts, and snow settles on the high passes in winter.",
+    "Visitors come for the mountains and the quiet. Pony treks, from a few hours to several days, set out from lodges at Malealea and Semonkong, where the Maletsunyane Falls drop about 190 m in a single leap into a gorge. Sani Pass, a steep, unpaved road of hairpin bends climbing from KwaZulu-Natal, is the classic way up, with a lodge and pub at the top. Thaba-Bosiu, the flat-topped mountain where King Moshoeshoe I gathered the Basotho nation in the 19th century, is a short drive from Maseru, the capital, and Sehlabathebe National Park, in the remote south-east, is part of a World Heritage Site shared with South Africa's Drakensberg.",
+    "Roads through the mountains are slow, and many need high clearance; Sani Pass needs a 4×4. The weather turns quickly, with storms on summer afternoons and snow that can close passes in winter. Shared minibus taxis link the towns, and the South African rand is accepted everywhere alongside the loti."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "best", "best", "good", "good", "good", "good", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [12, 1, 2],
+        "text": "Warm days, around 25°C in the lowlands and cooler in the mountains, with frequent afternoon thunderstorms and the year's heaviest rain. The highlands are green, and swollen rivers can cut off tracks."
+      },
+      {
+        "name": "Autumn",
+        "months": [3, 4, 5],
+        "text": "Clear, settled weather with warm days and crisp nights: the best time for trekking. By May the nights in the highlands are frosty."
+      },
+      {
+        "name": "Winter",
+        "months": [6, 7, 8],
+        "text": "Dry and sunny but cold: the lowlands reach about 15–17°C by day and fall below freezing at night, and the highlands can drop below −10°C. Snow falls in the mountains and can close the passes, Sani included, and the ski runs at Afriski open."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "September can still be cold and windy. October and November bring warm days and long, clear views, with the first storms of the rainy season."
+      }
+    ],
+    "weather": "A mountain climate, cooler than the land around it in every season. Maseru, at about 1,600 m, has summer days of about 28°C and winter days of about 16°C, with frost on most winter nights. The highlands, mostly above 2,000 m, are colder still: snow is common from about May to September and can fall in any month on the highest ground. Most rain comes from about October to April, in afternoon storms that build quickly.",
+    "festivals": [
+      {
+        "name": "Moshoeshoe's Day",
+        "place": "Thaba-Bosiu and across Lesotho",
+        "when": "11 March",
+        "months": [3],
+        "text": "Honours King Moshoeshoe I, founder of the Basotho nation, with ceremonies at Thaba-Bosiu, where he is buried."
+      },
+      {
+        "name": "The ski season",
+        "place": "Afriski, in the northern highlands",
+        "when": "Usually June to August",
+        "months": [6, 7, 8],
+        "text": "One of the very few places to ski in southern Africa, on a short run kept white by snow-making when the natural snow is thin."
+      },
+      {
+        "name": "King's Birthday",
+        "place": "Across Lesotho",
+        "when": "17 July",
+        "months": [7],
+        "text": "A public holiday for King Letsie III."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Maseru and across Lesotho",
+        "when": "4 October",
+        "months": [10],
+        "text": "Marks independence from Britain in 1966, with parades and celebrations."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The lowlands",
+        "text": "The western strip along the border, with Maseru, the museum at Morija and Thaba-Bosiu: warmer and drier than the mountains, and where most people live."
+      },
+      {
+        "name": "The highlands",
+        "text": "Above about 2,000 m: pony treks, the Katse and Mohale dams, Sehlabathebe National Park and the top of Sani Pass. Cold nights in every month, snow from about May to September, and storms on summer afternoons."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings matter, even with strangers on a mountain path: \"Lumela, ntate\" to a man and \"Lumela, 'me\" to a woman, then \"U phela joang?\" (how are you?). \"Khotso\" (peace), the first word of the national motto, is also used as a greeting. Village children may ask for sweets; it's kinder not to hand them out.",
+    "etiquette": [
+      "Ask before photographing people, herders and villagers above all.",
+      "If you want to camp near a village, ask the chief first: it's polite, and safer.",
+      "Keep away from initiation schools, the remote huts where young people go through traditional initiation, and don't photograph them.",
+      "Mountain weather changes fast: carry warm and waterproof layers even on a sunny morning, and set off early."
+    ],
+    "tipping": "About 10% in restaurants and lodges. Pony-trek guides and the men who lead the packhorses expect a tip at the end of the trek.",
+    "dress": "Warm clothes in every season: a fleece and jacket even on summer evenings, and thermals, hat and gloves from May to September. Waterproofs for summer storms, and sunglasses and sun cream for the strong sun at altitude. A Basotho blanket, or a mokorotlo, the cone-shaped straw hat shown on the national flag, makes a good souvenir.",
+    "food": [
+      {
+        "name": "Papa and moroho",
+        "text": "Papa, a stiff maize porridge, is the everyday staple, eaten with moroho, cooked greens such as spinach or cabbage, and meat when there is some."
+      },
+      {
+        "name": "Motoho",
+        "text": "A thin, slightly sour porridge of fermented sorghum, often eaten at breakfast."
+      },
+      {
+        "name": "Joala",
+        "text": "Home-brewed sorghum beer. A white flag on a pole outside a house means it's for sale there; flags of other colours mark other goods, such as meat or vegetables."
+      },
+      {
+        "name": "Highland trout",
+        "text": "Rainbow and brown trout from the mountain rivers and dams, served at highland lodges."
+      },
+      {
+        "name": "Maluti lager",
+        "text": "The national beer, brewed in Maseru."
+      }
+    ],
+    "phrases": {
+      "language": "Sesotho",
+      "intro": "English is an official language and understood in towns and lodges, but in the mountains Sesotho is what you'll hear. \"Ntate\" (sir; father) and \"'me\" (madam; mother) make any greeting polite.",
+      "items": [
+        { "phrase": "Lumela, ntate / 'me", "say": "loo-MEH-lah n-TAH-teh / MEH", "meaning": "Hello (to a man / to a woman)" },
+        { "phrase": "U phela joang?", "say": "oo PEH-lah JWAHNG", "meaning": "How are you?" },
+        { "phrase": "Ke phela hantle", "say": "keh PEH-lah HAHN-tleh", "meaning": "I'm well" },
+        { "phrase": "Kea leboha", "say": "KEH-ah leh-BOH-hah", "meaning": "Thank you" },
+        { "phrase": "Khotso", "say": "KHOHT-soh", "meaning": "Peace (also a greeting)" },
+        { "phrase": "Ho lokile", "say": "hoh loh-KEE-leh", "meaning": "It's fine; OK" },
+        { "phrase": "Sala hantle", "say": "SAH-lah HAHN-tleh", "meaning": "Goodbye (to someone staying)" },
+        { "phrase": "Tsamaea hantle", "say": "tsah-MAH-yah HAHN-tleh", "meaning": "Goodbye (to someone leaving)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1013",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Lesotho loti (plural maloti; M, LSL), worth the same as the South African rand, which is accepted everywhere. Maloti aren't taken in South Africa.",
+        "sources": [{ "property": "P38", "values": ["Q208039", "Q181907"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Sesotho and English, both official. Almost everyone speaks Sesotho.",
+        "sources": [{ "property": "P37", "values": ["Q34340", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type M (three large round pins, as in South Africa), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1383497"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+2 all year, the same as South Africa (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q4689510"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, 114 for an ambulance and 115 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q2945964", "Q25648805"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+266",
+        "sources": [{ "property": "P474", "values": ["+266"] }]
+      }
+    ]
+  }
+}

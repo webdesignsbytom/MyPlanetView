@@ -1,0 +1,157 @@
+{
+  "code": "PF",
+  "slug": "french-polynesia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ia ora na", "Pōrīnetia", "Maeva"],
+  "summary": "Overwater bungalows, black pearls and Polynesian dance across five far-flung archipelagos.",
+  "overview": [
+    "French Polynesia is an overseas collectivity of France: 118 islands in five archipelagos, scattered over a stretch of ocean as wide as Western Europe. Tahiti, the biggest of them, is home to Papeete, the capital, and the international airport at Faa'a. Most visitors pair it with Moorea, a short ferry crossing away, and Bora Bora, whose lagoon below the peak of Mount Otemanu is the islands' best-known view.",
+    "Beyond the Society Islands, the Tuamotus are low coral atolls, such as Rangiroa and Fakarava, with some of the world's best drift diving in the passes, where grey reef sharks gather in their hundreds; Tahitian black pearls are farmed in these lagoons and the Gambier Islands'. The Marquesas, far to the north-east, are steep and green, with stone tiki and the graves of the painter Paul Gauguin and the singer Jacques Brel at Atuona on Hiva Oa. The Australs, to the south, are cooler, and humpback whales calve off Rurutu in the southern winter.",
+    "Inter-island flights are often the only practical way between archipelagos; ferries cover the shorter hops, such as Tahiti to Moorea, and a cargo ship that carries passengers sails to the Marquesas. Officials and businesses work in French, Tahitian is heard on every island, and hotel and dive-centre staff usually speak English."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season (the southern winter)",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Drier and a little cooler, with highs of 26–28°C and steady trade winds. The maraamu, a fresh south-easterly, can blow for days at a time from June to August and roughen the lagoons. Hotels fill up most in July and August."
+      },
+      {
+        "name": "Wet season (the southern summer)",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Hot and humid, around 30°C, with heavy downpours, most of all from December to February, and sunny spells between. Cyclones are uncommon this far east but possible, more so in El Niño years."
+      }
+    ],
+    "weather": "Tahiti and the Society Islands never turn cool: days reach about 30°C in the wet season and 27°C in the dry, and the lagoons stay at 26–29°C. Most rain falls from November to April, and the mountainous islands catch much more on their windward sides than the flat atolls of the Tuamotus. The Marquesas, nearer the equator, have a less regular rainy season, and the Australs, far to the south, can drop below 20°C at night in July and August.",
+    "festivals": [
+      {
+        "name": "Arrival of the Gospel",
+        "place": "Across French Polynesia, notably Point Venus on Tahiti",
+        "when": "5 March",
+        "months": [3],
+        "text": "A public holiday for the landing of the first Protestant missionaries in 1797, marked with church services and gatherings at Point Venus, where they came ashore."
+      },
+      {
+        "name": "Heiva i Tahiti",
+        "place": "Papeete",
+        "when": "Usually from late June to late July",
+        "months": [6, 7],
+        "text": "The biggest festival of Polynesian culture: weeks of dance and drumming contests on To'ata, the open-air stage on Papeete's waterfront, with traditional sports such as fruit-carrying races, stone lifting and outrigger canoe races."
+      },
+      {
+        "name": "14 July",
+        "place": "Papeete and across the islands",
+        "when": "14 July",
+        "months": [7],
+        "text": "France's national day is a public holiday here too, with a parade in Papeete in the middle of the Heiva season."
+      },
+      {
+        "name": "Humpback whale season",
+        "place": "Rurutu, Moorea and Tahiti",
+        "when": "Usually from about August to October",
+        "months": [8, 9, 10],
+        "text": "Humpbacks migrate north from the Southern Ocean to calve and mate. Licensed boats run whale-watching trips, and in some places let a few people into the water near them under strict rules."
+      },
+      {
+        "name": "Hawaiki Nui Va'a",
+        "place": "Huahine, Raiatea, Taha'a and Bora Bora",
+        "when": "Usually in late October or early November, over three days",
+        "months": [10, 11],
+        "text": "An outrigger canoe race between the Leeward Islands, paddled from Huahine to Raiatea, then to Taha'a and across open sea to Bora Bora, with crowds on the beaches and boats following the crews."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Ia ora na\" is the Tahitian hello, used alongside the French \"Bonjour\". Friends often kiss on both cheeks, as in France, and men shake hands. Visitors are often met with a flower garland or a single tiare blossom: worn behind the left ear, a flower means you're taken; behind the right, that you're free.",
+    "etiquette": [
+      "Greet the room with \"Bonjour\" or \"Ia ora na\" as you enter a shop or a small restaurant, French-style, before asking for anything.",
+      "Marae, the old stone temple platforms, and the stone tiki are still considered sacred: don't climb on them or move their stones.",
+      "Take your shoes off when you enter someone's home.",
+      "In the lagoons, don't stand on or touch coral, and keep your distance from turtles, rays and sharks.",
+      "On Sunday, many shops and restaurants close, especially outside Papeete, and the day belongs to church and family."
+    ],
+    "tipping": "Not expected: as in France, service is included, and tipping isn't part of Polynesian custom. Guides and hotel staff used to American visitors will accept something, but nobody asks.",
+    "dress": "Light, casual clothes. A pareu (sarong) works as a skirt, a beach cover-up or a shawl. Keep swimwear for the lagoon and the hotel, and put a shirt on for town and shops. Pack a warmer layer for evenings in the Australs and in the Marquesas' high country.",
+    "food": [
+      {
+        "name": "Poisson cru (i'a ota)",
+        "text": "Raw tuna marinated in lime juice, then mixed with coconut milk, cucumber, tomato and onion. The national dish, on almost every menu."
+      },
+      {
+        "name": "Roulottes",
+        "text": "Food trucks that gather each evening at Place Vai'ete on Papeete's waterfront, serving grilled fish, steak frites, chow mein and crêpes at shared tables."
+      },
+      {
+        "name": "Ma'a Tahiti",
+        "text": "The Sunday feast, cooked for hours in an ahima'a, an earth oven of hot stones: pork, breadfruit, taro, fish and chicken with fafa (taro leaves), eaten with the fingers."
+      },
+      {
+        "name": "Po'e",
+        "text": "A dense, sticky pudding of mashed fruit, such as banana, papaya or pumpkin, baked with starch and served with coconut milk."
+      },
+      {
+        "name": "Fafaru",
+        "text": "Fish soaked in seawater fermented with crushed shellfish or fish. The smell is famously strong; Tahitians love it, and it's worth one try."
+      }
+    ],
+    "phrases": {
+      "language": "Tahitian (Reo Tahiti)",
+      "intro": "French is used for most business, and English in the hotels, but a little Tahitian always earns a smile.",
+      "items": [
+        { "phrase": "Ia ora na", "say": "yah OH-rah nah", "meaning": "Hello" },
+        { "phrase": "Maeva", "say": "mah-AY-vah", "meaning": "Welcome" },
+        { "phrase": "Māuruuru roa", "say": "mah-oo-roo-OO-roo ROH-ah", "meaning": "Thank you very much" },
+        { "phrase": "E / Aita", "say": "EH / ah-EE-tah", "meaning": "Yes / No" },
+        { "phrase": "Aita pe'ape'a", "say": "ah-EE-tah peh-AH-peh-ah", "meaning": "No worries" },
+        { "phrase": "Manuia!", "say": "mah-noo-EE-ah", "meaning": "Cheers!" },
+        { "phrase": "Nana", "say": "NAH-nah", "meaning": "Bye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q30971",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "CFP franc (XPF), pegged to the euro. Cards are widely taken on Tahiti, Moorea and Bora Bora; take cash to the smaller islands.",
+        "sources": [{ "property": "P38", "values": ["Q214393"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French, the only official language. Tahitian is widely spoken, and the other archipelagos have Polynesian languages of their own, such as Marquesan.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins, as in France), 220 V. Some hotels also have US-style sockets.",
+        "sources": [],
+        "note": "Wikidata's item has no plug or voltage statement; the page gives the French sockets usually found, and the US-style outlets some hotels add."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC−10 on Tahiti and most islands; the Marquesas keep UTC−9:30 and the Gambier Islands UTC−9. No summer time.",
+        "sources": [{ "property": "P421", "values": ["Q2163"] }],
+        "note": "Wikidata gives only UTC−10, Tahiti's time; the page adds the Marquesas' and the Gambier Islands' own times."
+      },
+      {
+        "key": "emergency",
+        "text": "15 for an ambulance (SAMU), 17 for the police, 18 or 112 for fire and rescue",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata gives only 112. The page adds the French short numbers that the islands' own services use: 15, 17 and 18."
+      },
+      {
+        "key": "callingCode",
+        "text": "+689",
+        "sources": [{ "property": "P474", "values": ["+689"] }]
+      }
+    ]
+  }
+}

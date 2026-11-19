@@ -145,7 +145,7 @@ test.describe('Sharing a map', () => {
     const thailand = page.getByRole('dialog', { name: 'Thailand' });
     await expect(thailand.getByText(/^Visited, first on /)).toBeVisible();
     await expect(thailand.getByRole('combobox')).toHaveCount(0);
-    await expect(thailand.getByRole('button', { name: /^Add photos from/ })).toHaveCount(0);
+    await expect(thailand.getByRole('button', { name: 'Add photos', exact: true })).toHaveCount(0);
 
     // Its photo opens, with nothing to change and no original to download
     await thailand.getByRole('button', { name: 'Open Temple roofs' }).click();

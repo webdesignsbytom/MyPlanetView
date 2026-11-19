@@ -1,0 +1,188 @@
+{
+  "code": "SA",
+  "slug": "saudi-arabia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Ya hala", "As-Su'udiyah"],
+  "summary": "Nabataean tombs at Hegra, Jeddah's coral-stone old town, Red Sea reefs and the Asir hills.",
+  "overview": [
+    "Saudi Arabia covers most of the Arabian Peninsula and only began issuing tourist visas in 2019, so much of it is still new to visitors. It is the birthplace of Islam, and millions of pilgrims come each year to Mecca and Medina; Mecca is closed to non-Muslims, and road signs direct other traffic round it. The country is far more varied than its image of sand: lava fields, granite mountains, a long coral coast and cool, green highlands in the south-west.",
+    "In the north-west, AlUla's valley of sandstone outcrops holds Hegra, a city of more than a hundred tombs carved by the Nabataeans, the builders of Petra, as well as older inscriptions and the wind-carved Elephant Rock. Riyadh, the capital, has the restored mud-brick district of At-Turaif in Diriyah, where the Saudi state began, the old Masmak Fort, and the Edge of the World, a line of cliffs dropping into the desert a couple of hours' drive away. Jeddah's old quarter, Al-Balad, is a maze of coral-stone houses with carved wooden balconies, and the Red Sea offshore has coral reefs for diving. The Asir mountains round Abha, more than 2,000 m high, have terraced valleys, with old stone villages such as Rijal Almaa on the slopes below.",
+    "Distances are huge, Riyadh to Jeddah is about 950 km, so most visitors fly between regions. A high-speed railway links Jeddah, Mecca and Medina, Riyadh has a new metro, and ride-hailing apps work in the cities; hiring a car is easy, but watch for camels on desert roads. Alcohol is forbidden, the weekend is Friday and Saturday, and some shops still close briefly at prayer times."
+  ],
+  "whenToGo": {
+    "stripLabel": "Riyadh, AlUla and Jeddah, the usual route. The Asir mountains have a cooler climate and a strip of their own below.",
+    "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [11, 12, 1, 2],
+        "text": "The season for sightseeing. Riyadh and AlUla have sunny days around 20°C but cold nights, sometimes near freezing in the north and in the desert; Jeddah stays warm, near 29°C. AlUla's and Riyadh's winter festivals bring concerts and crowds."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4],
+        "text": "Warm, turning hot by late April. A little rain may green the desert in March, and sandstorms blow on some days."
+      },
+      {
+        "name": "Summer",
+        "months": [5, 6, 7, 8, 9],
+        "text": "Brutal in the lowlands: Riyadh passes 43°C most days with dry, burning air, and Jeddah is slightly cooler but steamy. Saudis who stay head for the Asir and Taif, where the mountains keep it near 30°C."
+      },
+      {
+        "name": "Autumn",
+        "months": [10],
+        "text": "Still hot, in the mid-30s in Riyadh, but easing by the end of the month as the outdoor season starts."
+      }
+    ],
+    "weather": "Most of the country is desert, with long, extremely hot summers and short, mild winters; nights in the interior are cold from December to February. Rain is scarce and falls in a few winter and spring storms that can cause flash floods. The Red Sea coast is humid all year. The Asir highlands in the south-west are the exception: cooler, greener and wetter, with summer thunderstorms and fog.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Saudi Arabia",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Life turns upside down: quiet days with short working hours, then cities that come alive after iftar and stay up until the pre-dawn meal. Don't eat, drink or smoke in public by day. Mecca and Medina are packed with pilgrims for the last ten nights. Eid al-Fitr brings fireworks and a holiday of several days."
+      },
+      {
+        "name": "Founding Day",
+        "place": "Across Saudi Arabia",
+        "when": "22 February",
+        "months": [2],
+        "text": "A public holiday, first held in 2022, remembering the founding of the first Saudi state in Diriyah in 1727. People wear traditional dress, and there are heritage markets, sword dances and fireworks."
+      },
+      {
+        "name": "Hajj and Eid al-Adha",
+        "place": "Mecca, and across Saudi Arabia",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The pilgrimage to Mecca, open only to Muslims, ends with Eid al-Adha, the Feast of the Sacrifice. For the weeks around it, flights into Jeddah and Medina and hotels in the west are full, and the holiday closes offices for several days."
+      },
+      {
+        "name": "Saudi National Day",
+        "place": "Across Saudi Arabia",
+        "when": "23 September",
+        "months": [9],
+        "text": "Marks the unification of the kingdom in 1932. Buildings and towers are lit green, cars fly flags, and the cities hold fireworks, air shows and concerts."
+      },
+      {
+        "name": "Riyadh Season",
+        "place": "Riyadh",
+        "when": "Usually from October into the new year, running for several months",
+        "months": [10, 11, 12, 1, 2, 3],
+        "text": "The capital's long entertainment season: concerts, boxing, theatre, food markets and big themed zones open late into the night."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Asir mountains",
+        "months": ["good", "good", "best", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+        "text": "Abha and the villages round it stand about 2,200 m up, so summer days are around 30°C when the rest of the country swelters, and the season is busy with Saudi families. Afternoon storms and fog are common in summer, and winter nights are cold."
+      },
+      {
+        "name": "Jeddah and the Red Sea",
+        "text": "Warm all year, humid in every season and sticky from June to September. Diving and snorkelling are possible in any month; winter, at around 29°C, is the most comfortable time for the old town."
+      },
+      {
+        "name": "AlUla",
+        "text": "Desert country around 700 m up: sunny days in the low 20s and very cold nights in winter, the main season, and above 40°C in summer, when tours start at dawn."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Saudis greet each other with \"as-salamu alaykum\", and hosts welcome guests with \"ya hala\" and pour Saudi coffee, pale gold and spiced with cardamom and cloves, with dates. Saudi men greet each other at length and may touch noses; with visitors, a handshake. Men shouldn't offer to shake a woman's hand unless she offers first. Saudis are often curious about visitors and quick to invite them for coffee.",
+    "etiquette": [
+      "Non-Muslims may not enter Mecca, or the central area round the Prophet's Mosque in Medina; road signs mark the limits.",
+      "Alcohol is illegal, and so is bringing it in. Penalties for drug offences are very severe.",
+      "Photographing people, especially women and families, needs their permission; government buildings, palaces and security forces are off limits for cameras.",
+      "Public kissing or embracing can cause offence and trouble; keep affection for private.",
+      "Coffee comes in small cups: take it with your right hand, and shake the cup gently from side to side when you've had enough."
+    ],
+    "tipping": "Not required, but common in restaurants, where 10% is usual unless service is included. Porters, drivers and tour guides expect something; with taxis, rounding up is enough.",
+    "dress": "Modest and loose for both men and women: cover shoulders and knees, and avoid tight or see-through clothes. Foreign women don't have to wear an abaya or cover their hair, except when visiting a mosque. Desert nights and the mountains are cold in winter, so bring a warm layer.",
+    "food": [
+      {
+        "name": "Kabsa",
+        "text": "The national dish: long-grain rice cooked with chicken, lamb or camel, tomatoes, dried lime and a warm spice mix, piled on a big shared platter and topped with nuts and raisins."
+      },
+      {
+        "name": "Mutabbaq",
+        "text": "A thin dough folded round minced meat, egg and leek, or banana and cheese, and fried crisp on a griddle: Jeddah's favourite street snack."
+      },
+      {
+        "name": "Saleeg",
+        "text": "A Hijazi dish from Taif and Jeddah: short-grain rice simmered in chicken stock and milk until creamy, served with roast chicken on top."
+      },
+      {
+        "name": "Jareesh",
+        "text": "Cracked wheat cooked slowly with yoghurt or milk and topped with fried onions, a comforting dish from the Najd, the central region round Riyadh."
+      },
+      {
+        "name": "Masoub",
+        "text": "Bread, ripe banana, honey and cream mashed together in a bowl, a filling breakfast from the south and the Hijaz."
+      },
+      {
+        "name": "Dates",
+        "text": "Saudi Arabia grows hundreds of kinds, from the soft, caramel-like sukkari of Qassim to the dark ajwa of Medina. They're served with coffee everywhere you go."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Saudi Arabic)",
+      "intro": "English is used at airports, hotels and in business, and many young Saudis speak it well. The words below are from the everyday speech of Riyadh and the centre.",
+      "items": [
+        { "phrase": "Ya hala (يا هلا)", "say": "ya HA-la", "meaning": "Hi; welcome" },
+        { "phrase": "Wish lonak? (وش لونك)", "say": "wish LOH-nak", "meaning": "How are you? (to a man)" },
+        { "phrase": "Tayyib (طيب)", "say": "TAY-yib", "meaning": "Fine; OK" },
+        { "phrase": "Ashkurak (أشكرك)", "say": "ASH-ku-rak", "meaning": "Thank you (to a man)" },
+        { "phrase": "Abgha hadha (أبغى هذا)", "say": "AB-gha HAA-dha", "meaning": "I'd like this" },
+        { "phrase": "Bikam hadha? (بكم هذا)", "say": "bi-KAM HAA-dha", "meaning": "How much is this?" },
+        { "phrase": "Taal umrak (طال عمرك)", "say": "TAAL OOM-rak", "meaning": "A polite way to address a man, like \"sir\" (\"may your life be long\")" },
+        { "phrase": "Wallah? (والله)", "say": "WAL-lah", "meaning": "Really? (\"by God\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q851",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Saudi riyal (SR, SAR), divided into 100 halalas. Cards and phone payments are used for almost everything.",
+        "sources": [{ "property": "P38", "values": ["Q199857"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic. English is widely used at airports, in hotels and in business.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 220–230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["220", "230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Arabia Standard Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q63285956"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for all emergencies; 999 also reaches the police, and 112 works too",
+        "sources": [{ "property": "P2852", "values": ["Q533806", "Q25648903", "Q3086706", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+966",
+        "sources": [{ "property": "P474", "values": ["+966"] }]
+      }
+    ]
+  }
+}

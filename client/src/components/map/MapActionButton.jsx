@@ -2,8 +2,8 @@ import React from 'react';
 
 // A button inside a map panel, in the travel-paperwork style (a compact btn-poster), the
 // same in every map style. `quiet` for secondary actions (parchment), `danger` for
-// removing things (parchment with deep-red lettering). A long label ("Add photos from
-// Saint Vincent and the Grenadines") wraps inside the button instead of widening the panel.
+// removing things (parchment with deep-red lettering). A long label wraps inside the
+// button instead of widening the panel.
 function MapActionButton({ children, onClick, type = 'button', disabled = false, quiet = false, danger = false, busy = false }) {
   return (
     <button

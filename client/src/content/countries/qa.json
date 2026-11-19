@@ -1,0 +1,161 @@
+{
+  "code": "QA",
+  "slug": "qatar",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Marhaba", "Qatar"],
+  "summary": "Doha's Islamic art museum and souq, a falcon hospital and desert dunes that run into the sea.",
+  "overview": [
+    "Qatar is a flat desert peninsula pushing north into the Gulf, and almost everyone lives in and around Doha, its capital; Qatari citizens are a small minority among people from all over the world. Doha's Corniche curves for several kilometres round the bay, with a cluster of glass towers on one side and, on the other, the Museum of Islamic Art, I. M. Pei's pale stone building on its own island, holding one of the finest collections of its kind. The National Museum, shaped like a desert rose crystal, tells the country's story from pearling to gas.",
+    "Souq Waqif, rebuilt in the old style, is the place for evenings: spices, perfume and textiles, cafés and grills, shops selling falcons, and a hospital that treats them. Msheireb's museums, the Katara Cultural Village and the shops and marinas of the Pearl show the newer city. Beyond Doha are the ruined pearling town and fort of Al Zubarah, a World Heritage Site on the north-west coast; mangroves for kayaking at Al Thakira; Richard Serra's tall steel plates standing in the Zekreet desert; and, in the south, Khor Al Adaid, the Inland Sea, where high dunes run down into a tidal bay, reached only by 4×4.",
+    "Doha's driverless metro links the airport, the centre and the main districts, and taxis and ride-hailing apps cover the rest. To leave the city, hire a car or join a tour; the desert drives need an experienced driver. Visitors are asked to cover shoulders and knees in public places such as malls and museums, alcohol is served only in licensed hotel bars and restaurants, and the working week runs from Sunday to Thursday."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Sunny and mild, about 22°C by day and 14°C at night, the season for desert camping and evenings outdoors in the souq. A handful of rainy days, and some cold, windy ones."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4],
+        "text": "Warm and pleasant in March, and above 30°C by late April. The sea is good for swimming, and dust storms blow on some days."
+      },
+      {
+        "name": "Summer",
+        "months": [5, 6, 7, 8, 9],
+        "text": "Over 40°C on most days from June to September, with heavy humidity on the coast in late summer and nights that barely cool. Days are spent in air-conditioned malls and museums, and outdoor sightseeing in the hour after sunrise."
+      },
+      {
+        "name": "Autumn",
+        "months": [10, 11],
+        "text": "The heat lingers into October, still in the mid-30s; by November the weather is warm and dry and the outdoor season begins again."
+      }
+    ],
+    "weather": "Long, very hot summers and short, mild winters: a true desert climate. Rain is rare, around 75 mm a year, almost all of it in winter, sometimes in short heavy downpours. Humidity is highest from July to September. In early summer the north-westerly shamal can blow for days, filling the air with dust.",
+    "festivals": [
+      {
+        "name": "National Sport Day",
+        "place": "Across Qatar",
+        "when": "The second Tuesday of February",
+        "months": [2],
+        "text": "A public holiday given to exercise: free races, games and fitness events in parks, at the Aspire Zone and along the Corniche, with ministers and office workers taking part."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Qatar",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "A cannon is fired at sunset in Souq Waqif to mark the breaking of the fast, and the souq and malls stay busy past midnight. In the middle of the month children go door to door in traditional dress for Garangao, collecting sweets and nuts. Eid al-Fitr follows, with family visits and Eid events in the malls and on the Corniche."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Qatar",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Families gather, offices shut for several days, and Doha puts on fireworks and family events."
+      },
+      {
+        "name": "Qatar National Day",
+        "place": "Doha and across Qatar",
+        "when": "18 December",
+        "months": [12],
+        "text": "A public holiday with a parade along the Corniche and fireworks over the bay. In the days before, Darb Al Saai, a fair of traditional crafts, food and performances, celebrates Qatari heritage."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"As-salamu alaykum\" or \"marhaba\" will do for a greeting. Qatari men wear a white thobe and headdress (ghutra), and women a black abaya. Between men, a handshake; a man waits for a Qatari woman to offer her hand, which she may not, and a smile or a hand on the heart is the polite answer. Most people serving in hotels, shops and restaurants are from South Asia, the Philippines or Africa, and English is the language between them and visitors.",
+    "etiquette": [
+      "Signs in malls and museums ask visitors to keep shoulders and knees covered, and staff may turn away anyone who doesn't.",
+      "Don't photograph people without asking, and above all women and children; leave government buildings and palaces out of your pictures.",
+      "Alcohol is for licensed hotel bars and restaurants only. Public drunkenness is an offence, and so is bringing alcohol into the country.",
+      "In Ramadan's daylight hours, keep food, drink and cigarettes out of public view.",
+      "Keep the soles of your feet out of sight when sitting, and pass things with the right hand."
+    ],
+    "tipping": "Not expected but welcome: many hotel restaurants add a service charge, and elsewhere 10% is generous. Taxi drivers appreciate the change being left, and porters, valets and tour drivers a tip.",
+    "dress": "Light, loose and modest: no bare shoulders or knees for men or women in public places, and nothing tight or see-through. Swimwear is fine at hotel pools and beaches. Indoors the air conditioning is fierce, so carry a light layer.",
+    "food": [
+      {
+        "name": "Madrouba",
+        "text": "Rice or wheat cooked with chicken, spices and butter until it breaks down into a thick, creamy porridge, a Qatari comfort dish."
+      },
+      {
+        "name": "Thareed",
+        "text": "Thin bread layered in a dish and soaked with a stew of lamb or chicken and vegetables, eaten above all in Ramadan."
+      },
+      {
+        "name": "Saloona",
+        "text": "A spiced stew of tomatoes, vegetables and meat or fish, served with rice: the everyday dish of Qatari homes."
+      },
+      {
+        "name": "Chebab",
+        "text": "Soft pancakes flavoured with cardamom and saffron, eaten for breakfast with date syrup or cheese."
+      },
+      {
+        "name": "Khanfaroosh",
+        "text": "Small cakes of flour, eggs, saffron and cardamom, fried until golden and served with tea or coffee to guests."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Gulf Arabic)",
+      "intro": "English is the working language of Doha's shops, hotels and taxis. A few words of Arabic are for greeting Qataris, who notice and appreciate them.",
+      "items": [
+        { "phrase": "Hala wallah (هلا والله)", "say": "HA-la WAL-lah", "meaning": "Welcome; great to see you" },
+        { "phrase": "Kaif al-hal? (كيف الحال)", "say": "kayf al-HAAL", "meaning": "How are things?" },
+        { "phrase": "Tamam (تمام)", "say": "ta-MAAM", "meaning": "Fine; OK" },
+        { "phrase": "Jazak Allah khair (جزاك الله خير)", "say": "JA-zak al-LAH KHAYR", "meaning": "Thank you (\"God reward you\")" },
+        { "phrase": "Na'am / la (نعم / لا)", "say": "NA-am / LAA", "meaning": "Yes / no" },
+        { "phrase": "Kam al-hisab? (كم الحساب)", "say": "kam al-hi-SAAB", "meaning": "How much is the bill?" },
+        { "phrase": "Masa al-khair (مساء الخير)", "say": "MA-sa al-KHAYR", "meaning": "Good evening" },
+        { "phrase": "Allah yihfathak (الله يحفظك)", "say": "al-LAH yih-FA-thak", "meaning": "God protect you (a goodbye, to a man)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q846",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Qatari riyal (QR, QAR), divided into 100 dirhams. Cards and phone payments are taken almost everywhere.",
+        "sources": [{ "property": "P38", "values": ["Q206386"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic. English is used everywhere in business, shops and hotels.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q60740126"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Arabia Standard Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q63285955"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police, fire and ambulance; 112 also works",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+974",
+        "sources": [{ "property": "P474", "values": ["+974"] }]
+      }
+    ]
+  }
+}

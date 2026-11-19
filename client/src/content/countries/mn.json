@@ -1,0 +1,181 @@
+{
+  "code": "MN",
+  "slug": "mongolia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Sain uu", "Mongol Uls", "Tavtai moril"],
+  "summary": "Nomad gers on open grassland, the Gobi's singing dunes and Naadam's horse races in July.",
+  "overview": [
+    "Mongolia is a vast country of grassland, mountains and desert with only about three and a half million people, nearly half of them in Ulaanbaatar. Beyond the capital, herding families still move with the seasons, living in round felt tents (ger) among their horses, sheep, goats, yaks and camels. Staying with a family or in a ger camp, riding, and night skies thick with stars are at the heart of most trips.",
+    "Ulaanbaatar has the Gandan monastery and a national museum of Chinggis Khaan's empire, and within two hours are the granite outcrops of Terelj national park and a 40 m steel statue of Chinggis Khaan on horseback. To the west, Kharkhorin stands by the site of Karakorum, the old imperial capital, with the Erdene Zuu monastery inside a wall of 108 stupas. To the south, the Gobi has the tall sand dunes of Khongoryn Els, the Flaming Cliffs at Bayanzag, where fossil dinosaur eggs were first recognised for what they were in the 1920s, and Yolyn Am, a gorge that keeps its ice into summer. Lake Khövsgöl lies in the far north, and the Altai mountains, home of Kazakh eagle hunters, in the far west.",
+    "Outside the towns, travel is by 4×4 or sturdy Russian-built van along dirt tracks, with long days of driving, or by domestic flights to the provinces; most visitors join a tour with a driver and guide. Ger camps mostly open from about mid-May to early October."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "avoid", "avoid", "avoid", "good", "best", "best", "best", "best", "good", "avoid", "avoid"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Cold and very windy, with dust storms in the Gobi and snow possible into May. Lambs, kids and camel calves are born on the steppe, and the ger camps open from about mid-May."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "The main season: the steppe is green, days are warm and nights cool, and Naadam fills mid-July. July and August bring most of the year's rain, in short storms that turn tracks to mud and raise the rivers."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is clear and dry, with golden larch forests in the north and the first frosts. The Golden Eagle Festival comes in early October, as camps close and nights fall well below freezing. By November it's winter."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Extreme cold, often below −30°C at night, under bright blue skies. Ulaanbaatar's air is thick with smoke from coal stoves. Tsagaan Sar brings families together, and a few hardy tours visit herders and ride on the frozen Lake Khövsgöl."
+      }
+    ],
+    "weather": "A harsh, dry climate: Mongolia is high and far from any sea. Ulaanbaatar, at about 1,350 m, is the coldest capital city in the world, with January averages around −20°C. Summers are short and pleasant, around 20–25°C by day in the capital and hotter in the Gobi, with cold nights everywhere. What little rain there is falls mostly in July and August. The sun shines on most days, in every season.",
+    "festivals": [
+      {
+        "name": "Tsagaan Sar",
+        "place": "Across Mongolia",
+        "when": "The lunar New Year, usually late January or February",
+        "months": [1, 2],
+        "text": "The \"White Month\", a three-day public holiday. Families visit their elders in order of age, greet them by holding their forearms, and eat mountains of steamed dumplings (buuz) round a tower of biscuits and a whole mutton back."
+      },
+      {
+        "name": "Khövsgöl Ice Festival",
+        "place": "Lake Khövsgöl",
+        "when": "Usually in early March",
+        "months": [3],
+        "text": "Horse-sledge races, ice sculptures and tug-of-war on the frozen lake, with reindeer herders from the northern forests."
+      },
+      {
+        "name": "Naadam",
+        "place": "Ulaanbaatar and across Mongolia",
+        "when": "11–15 July",
+        "months": [7],
+        "text": "The national festival of the \"three manly games\": wrestling, archery and horse racing, with child jockeys racing across the open steppe over 15 to 30 km. The opening ceremony fills Ulaanbaatar's stadium on 11 July, and every province and many villages hold their own."
+      },
+      {
+        "name": "Golden Eagle Festival",
+        "place": "Ölgii, Bayan-Ölgii",
+        "when": "Usually the first weekend of October",
+        "months": [10],
+        "text": "Kazakh eagle hunters in fox-fur hats compete on horseback with their golden eagles, which dive to a lure dragged behind a rider. There are also horse games and camel races."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Gobi",
+        "text": "The desert of the south, with gravel plains more than sand. Summer days can pass 35°C on the dunes, and spring brings sandstorms; June and September are the most comfortable months. Winter is bitterly cold."
+      },
+      {
+        "name": "Lake Khövsgöl and the north",
+        "text": "A deep, clear lake among larch forest near the Russian border, frozen from about December to May. Summers are cool and wetter than the south, and the reindeer-herding Dukha live in the forests to the west."
+      },
+      {
+        "name": "The Altai and Bayan-Ölgii",
+        "text": "The high, snow-capped west, where most people are Kazakh. Best from late June to September, when the passes are clear; snow can fall in any month, and the eagle hunters are seen at their best at the October festivals."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Sain baina uu?\" (\"Are you well?\") is the everyday hello. Handshakes are common in town. If you accidentally kick or step on someone's foot, shake their hand straight away: it's a way to show there's no quarrel. Visiting a ger, call out \"Nokhoi khor!\" (\"Hold the dog!\") as you approach.",
+    "etiquette": [
+      "In a ger, don't step on or lean on the threshold, move round inside clockwise, and don't walk between the two central posts or lean on them. The back, facing the door, is the place of honour.",
+      "Fire is sacred: never throw rubbish into the stove, and don't point your feet at it.",
+      "Accept food and drink with your right hand, or both hands, perhaps with your left hand under your right elbow. Take at least a sip or a taste of what you're offered before passing it back.",
+      "Don't touch people's heads or hats, and don't step over a person or their belongings.",
+      "Herders are often happy to be photographed, but ask first, and pay families what was agreed for a stay or a ride."
+    ],
+    "tipping": "Not traditional, but tour guides, drivers and cooks expect a tip at the end of a trip, and it's an important part of their pay. Some Ulaanbaatar restaurants add a service charge; otherwise leave about 10%.",
+    "dress": "Layers for every season: summer days can be warm and nights near freezing, and a windproof jacket is essential. Winter visits need serious cold-weather clothing, with good boots, gloves and a hat. Sturdy shoes, sunglasses and sun cream for the steppe and the Gobi.",
+    "food": [
+      {
+        "name": "Buuz",
+        "text": "Steamed dumplings of minced mutton and onion, pinched at the top, with hot fat and juice inside. Made by the hundred for Tsagaan Sar."
+      },
+      {
+        "name": "Khuushuur",
+        "text": "Flat, half-moon pastries of mutton fried until crisp, the food sold at every Naadam ground."
+      },
+      {
+        "name": "Khorkhog",
+        "text": "Mutton cooked in a sealed metal churn or pot with hot stones and a little water, made for guests in the countryside. The greasy hot stones are passed from hand to hand, for good health."
+      },
+      {
+        "name": "Tsuivan",
+        "text": "Thick, hand-cut noodles fried with strips of mutton and a little cabbage, potato or carrot, the everyday lunch at roadside canteens."
+      },
+      {
+        "name": "Suutei tsai",
+        "text": "Milk tea with a pinch of salt, sometimes butter or rice, offered the moment you sit down in any ger."
+      },
+      {
+        "name": "Airag",
+        "text": "Fermented mare's milk, made in summer by stirring it in a leather bag or churn: sour, fizzy and slightly alcoholic. You'll be handed a bowl; sip it and hand it back."
+      }
+    ],
+    "phrases": {
+      "language": "Mongolian",
+      "intro": "Mongolian is written in Cyrillic letters; the old vertical Mongol script appears on signs and is being taught again. Kazakh is spoken in the far west, and English among younger people in Ulaanbaatar.",
+      "items": [
+        { "phrase": "Sain baina uu? (Сайн байна уу?)", "say": "SAIN bain OO", "meaning": "Hello (\"Are you well?\")" },
+        { "phrase": "Bayarlalaa (Баярлалаа)", "say": "bah-yar-lah-LAH", "meaning": "Thank you" },
+        { "phrase": "Tiim / Ügüi (Тийм / Үгүй)", "say": "TEEM / oo-GWEE", "meaning": "Yes / No" },
+        { "phrase": "Uuchlaarai (Уучлаарай)", "say": "OOCH-laa-rai", "meaning": "Sorry; excuse me" },
+        { "phrase": "Ene yamar ünetei ve? (Энэ ямар үнэтэй вэ?)", "say": "EN YAH-mar OO-neh-tay veh", "meaning": "How much is this?" },
+        { "phrase": "Amttai baina (Амттай байна)", "say": "AHMT-tai bain", "meaning": "It's tasty" },
+        { "phrase": "Nokhoi khor! (Нохой хорь!)", "say": "NOH-khoi KHOR", "meaning": "Hold the dog!" },
+        { "phrase": "Bayartai (Баяртай)", "say": "BAH-yar-tai", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q711",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Mongolian tögrög (₮, MNT). Cards are widely taken in Ulaanbaatar; carry cash in the countryside.",
+        "sources": [{ "property": "P38", "values": ["Q183435"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Mongolian. Kazakh is the main language of Bayan-Ölgii in the far west.",
+        "sources": [{ "property": "P37", "values": ["Q9246"] }],
+        "note": "Kazakh isn't official; the page adds it because it's the everyday language of most people in Bayan-Ölgii."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins; type E sockets have an earth pin), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+8 in most of the country, Ulaanbaatar included; UTC+7 in the five western provinces, Bayan-Ölgii, Uvs, Khovd, Zavkhan and Govi-Altai. No summer time.",
+        "sources": [{ "property": "P421", "values": ["Q6985", "Q4806310", "Q4806280", "Q4806283"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "101 for fire, 102 for police and 103 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648794", "Q25648798", "Q25648811"] }],
+        "note": "Wikidata also lists 105 without saying which service it is; the page gives the numbers for the three main services."
+      },
+      {
+        "key": "callingCode",
+        "text": "+976",
+        "sources": [{ "property": "P474", "values": ["+976"] }]
+      }
+    ]
+  }
+}

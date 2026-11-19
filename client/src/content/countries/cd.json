@@ -1,0 +1,175 @@
+{
+  "code": "CD",
+  "slug": "democratic-republic-of-the-congo",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Mbote", "RD Congo", "Karibu"],
+  "summary": "Mountain gorillas, a lava-lake volcano, bonobos and Kinshasa's rumba.",
+  "overview": [
+    "The DR Congo is Africa's second-largest country, almost all of it in the basin of the Congo River, with the world's second-largest rainforest at its heart. Few travellers come and getting about is hard, but those who do find wildlife seen nowhere else. Kinshasa, across the river from Brazzaville, is one of Africa's biggest cities and the home of Congolese rumba and its faster offshoots, soukous and ndombolo; live bands play the bars of Matonge, above all at weekends. On the city's edge, the Lola ya Bonobo sanctuary cares for orphaned bonobos, apes found only in this country.",
+    "The east, along the borders with Uganda, Rwanda and Burundi, is green volcanic highland and deep lakes. Virunga National Park, founded in 1925 and the oldest in Africa, has mountain gorillas and Nyiragongo, a volcano with a lake of molten lava in its crater, which hikers climb to watch through the night. Near Bukavu, Kahuzi-Biega shelters Grauer's gorillas, the largest gorillas of all, and Lake Kivu lies between the two cities.",
+    "Distances are huge and roads few: many towns are linked only by air or by boat on the river. US dollars are used alongside Congolese francs. Cameras draw attention from police and soldiers, so keep yours away near anything official.",
+    "Many governments advise against all travel to the eastern provinces, Virunga and Kahuzi-Biega among them, and against travel to other parts of the country too. Conditions change, sometimes quickly, so check your own government's current advice before planning a trip."
+  ],
+  "whenToGo": {
+    "stripLabel": "Kinshasa and the eastern highlands taken together. The country spans the equator, so its regions differ; each has its own line below.",
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Southern dry season",
+        "months": [6, 7, 8],
+        "text": "Kinshasa is dry and slightly cooler, about 27°C by day under grey skies, and Lubumbashi has sunny days and cold nights. In the east it's the main dry spell, the easiest time for gorilla treks and the climb up Nyiragongo."
+      },
+      {
+        "name": "Rains return",
+        "months": [9, 10, 11, 12],
+        "text": "Showers return to the east in September and to Kinshasa in October, and November is one of the capital's wettest months. North of the equator, meanwhile, the rains are fading by the end of the year."
+      },
+      {
+        "name": "Main rains",
+        "months": [1, 2, 3, 4, 5],
+        "text": "Hot and wet in Kinshasa, heaviest in March and April, when dirt roads outside the cities turn to deep mud. North of the equator, December to February is the driest time; in the east, January and February bring a short break before the long rains of March to May."
+      }
+    ],
+    "weather": "The equator runs through the middle of the country, so the seasons in the north and south are the reverse of each other. Kinshasa, in the south-west, is hot and humid, about 30°C by day, with rain from October to May and a dry, cloudier spell from June to September. The central basin is steamy and rainy in every month. The eastern highlands, at 1,500 m and more around Goma and Bukavu, are mild, in the low to mid-20s °C by day, with two rainy seasons; Lubumbashi, on a plateau in the south-east, has a long dry winter from about May to September with cool nights.",
+    "festivals": [
+      {
+        "name": "Heroes' Days",
+        "place": "Across the country",
+        "when": "16 and 17 January",
+        "months": [1],
+        "text": "Two public holidays remembering President Laurent-Désiré Kabila, assassinated in January 2001, and Patrice Lumumba, the country's first prime minister, killed in January 1961."
+      },
+      {
+        "name": "Amani Festival",
+        "place": "Goma",
+        "when": "Usually in February, in the years it goes ahead",
+        "months": [2],
+        "text": "A music festival by Lake Kivu with Congolese and East African bands, started to bring the region's people together; amani means peace in Swahili."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the country",
+        "when": "30 June",
+        "months": [6],
+        "text": "Kinshasa celebrates the end of Belgian rule in 1960 with parades, speeches and concerts."
+      },
+      {
+        "name": "Christmas and New Year",
+        "place": "Across the country",
+        "when": "25 December and 1 January",
+        "months": [12, 1],
+        "text": "Most Congolese are Christian, and churches overflow with choirs at Christmas. In Kinshasa, the New Year is seen in with music that goes on until morning."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Kinshasa and the west",
+        "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+        "text": "Hot and humid, with rain from October to May, heaviest in November and in March and April, and a dry, overcast season from June to September. The short Atlantic coast at Moanda, the country's only stretch of sea, is a weekend escape."
+      },
+      {
+        "name": "Goma, Bukavu and the east",
+        "months": ["best", "best", "good", "good", "good", "best", "best", "best", "good", "good", "good", "good"],
+        "text": "Highland weather: warm days and cool nights all year. Drier from about June to August and in January and February; the long rains, March to May, and the short rains, about September to November, turn forest trails into steep mud."
+      },
+      {
+        "name": "Lubumbashi and the south-east",
+        "text": "A high plateau with a clear dry season from about May to September, sunny by day and chilly at night in June and July. The rains, from about November to March, come mostly as afternoon storms."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Nobody rushes a greeting: shake hands with each person in a group, and ask after their family before getting to business. \"Mbote\" is hello in Kinshasa, \"Jambo\" or \"Habari\" in the Swahili-speaking east, and French works everywhere. Friends call each other \"ndeko\", brother or sister, and strangers often do the same once they've shared a joke.",
+    "etiquette": [
+      "Cameras worry officials here: keep yours away from soldiers, police, bridges, airports and government buildings, and ask people before you take their picture. Even street scenes can draw questions.",
+      "Carry your passport, or a good copy, and stay calm and polite at checkpoints.",
+      "Agree the fare before you get into a taxi or onto a motorbike taxi.",
+      "The left hand counts as unclean, so offer money, food and gifts with the right.",
+      "At Lola ya Bonobo and in the gorilla parks, the rangers decide how close you go; speak softly, and put on a mask if they hand you one."
+    ],
+    "tipping": "A tip is a \"matabiche\", a word you may also hear when someone in uniform hints at a payment; politely decline those. In restaurants, 10% is generous. On gorilla treks and volcano hikes, rangers, trackers and porters are tipped at the end, usually in dollars.",
+    "dress": "Kinshasa dresses smartly, from the sapeurs' suits to bright wax-print outfits made to measure, and neat clothes go a long way. Evenings in the east are cool, so pack a fleece. For gorilla treks, bring sturdy boots, garden gloves for grabbing nettles and vines, and a rain jacket; for Nyiragongo, warm layers too, as the crater rim is cold and windy at night.",
+    "food": [
+      {
+        "name": "Moambe chicken",
+        "text": "Chicken stewed in a rich sauce of palm-nut pulp, often called the national dish, served with rice, fufu or plantain."
+      },
+      {
+        "name": "Pondu",
+        "text": "Cassava leaves pounded to a pulp and cooked down with onion, palm oil and sometimes aubergine or smoked fish. Every family has its own way of making it."
+      },
+      {
+        "name": "Fufu",
+        "text": "A stiff, pale dough of cassava or maize flour cooked in water. Plain on its own, it's there to carry the sauce."
+      },
+      {
+        "name": "Mbinzo",
+        "text": "Caterpillars, fried crisp or stewed with tomato and chilli, sold by the bowl in markets when they're in season. A delicacy, not a dare."
+      },
+      {
+        "name": "Primus and Simba",
+        "text": "The country's two best-known beers, sold in big bottles and drunk slowly with music. Simba comes from Lubumbashi, and Primus is everywhere."
+      }
+    ],
+    "phrases": {
+      "language": "Lingala",
+      "intro": "French is the official language and works across the country. Lingala is the language of Kinshasa, the army and most of the songs; in the east, Goma and Bukavu included, Swahili takes its place.",
+      "items": [
+        { "phrase": "Mbote", "say": "MBOH-teh", "meaning": "Hello" },
+        { "phrase": "Sango nini?", "say": "SAHN-goh NEE-nee", "meaning": "What's new? (How are you?)" },
+        { "phrase": "Malamu", "say": "mah-LAH-moo", "meaning": "Good; fine" },
+        { "phrase": "Matondo", "say": "mah-TOHN-doh", "meaning": "Thank you" },
+        { "phrase": "Iyo / Te", "say": "EE-yoh / TEH", "meaning": "Yes / No" },
+        { "phrase": "Ntalo boni?", "say": "NTAH-loh BOH-nee", "meaning": "How much is it?" },
+        { "phrase": "Ndeko", "say": "NDEH-koh", "meaning": "Brother or sister; friend" },
+        { "phrase": "Tikala malamu", "say": "tee-KAH-lah mah-LAH-moo", "meaning": "Goodbye (to someone staying: \"stay well\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q974",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Congolese franc (FC, CDF). US dollars are used for most larger payments: bring clean, recent notes, as worn or older ones are often refused.",
+        "sources": [{ "property": "P38", "values": ["Q4734"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French, the official language. Lingala, Swahili, Kikongo and Tshiluba are the national languages, each spoken across a large region.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), and type D (three large round pins) in places; 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q60740126"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata gives \"British and related types\" as one of the plugs; the page names type D, the one of those usually listed for the country."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Two zones, all year (no summer time): West Africa Time, UTC+1, in Kinshasa and the west; Central Africa Time, UTC+2, in Lubumbashi, Goma and the east",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q6723"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "113 for fire; 114 or 118 for police",
+        "sources": [{ "property": "P2852", "values": ["Q25648804", "Q2945964", "Q11185210"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+243",
+        "sources": [{ "property": "P474", "values": ["+243"] }]
+      }
+    ]
+  }
+}

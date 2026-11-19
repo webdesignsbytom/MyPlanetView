@@ -1,0 +1,198 @@
+{
+  "code": "VN",
+  "slug": "vietnam",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Xin chào", "Việt Nam"],
+  "summary": "Hanoi's old streets, Ha Long Bay's limestone islands, Hoi An's lanterns and the Mekong Delta.",
+  "overview": [
+    "Vietnam stretches about 1,650 km from the Chinese border to the Mekong Delta, a long S-shape along the South China Sea. Most visitors travel its length in two or three weeks, between Hanoi in the north and Ho Chi Minh City, still often called Saigon, in the south. The north, the centre and the south differ in weather, food and feel, and their best seasons don't match.",
+    "Hanoi's Old Quarter is a tangle of narrow streets, each once named after the goods made or sold there, around Hoan Kiem Lake; the Temple of Literature, founded in 1070, housed the country's first university. Ha Long Bay, a few hours east, has more than a thousand limestone islands rising from green water, best seen from an overnight boat, and at Trang An, near Ninh Binh, rowing boats slip through caves among karst towers. In the far north, Sapa's rice terraces and the villages of the Hmong and Dao peoples draw trekkers, and the mountain roads of Ha Giang make a well-known motorbike loop.",
+    "In the centre, Hue was the seat of the Nguyen emperors, with a walled citadel and royal tombs along the Perfume River, and Hoi An is an old trading port of yellow merchants' houses, silk lanterns and tailors. Da Nang, between them, has a long city beach, and Phong Nha-Ke Bang has some of the largest caves in the world. In the south, Ho Chi Minh City has the War Remnants Museum, the Cu Chi tunnels and French-era buildings such as the cathedral and the central post office; beyond it, the Mekong Delta is a maze of rivers, canals, orchards and floating markets, and Phu Quoc island has beaches on the Gulf of Thailand.",
+    "The Reunification Express runs between Hanoi and Ho Chi Minh City in a day and a half or more, with sleeper berths; domestic flights and sleeper buses are quicker. In cities, Grab cars and motorbike taxis are cheap and easy. Traffic is mostly motorbikes: to cross a street, walk slowly and steadily and let them flow around you, without stopping or running."
+  ],
+  "whenToGo": {
+    "stripLabel": "The whole country end to end, a compromise. The north, the centre and the south have different seasons, and each has a strip of its own below.",
+    "months": ["good", "good", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Northern winter, southern dry season",
+        "months": [12, 1, 2],
+        "text": "Hanoi is cool and often grey with drizzle, Ha Long Bay misty and Sapa cold; the centre is drying out after its rains; the south is sunny, dry and at its most pleasant. Tet, the Lunar New Year, closes much of the country for several days in January or February."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4],
+        "text": "The best time to see the whole country: warm and fairly dry in the north, dry and sunny in the centre, and hot in the south, where April is the hottest month."
+      },
+      {
+        "name": "Summer",
+        "months": [5, 6, 7, 8],
+        "text": "Hot everywhere, with heavy afternoon rain in the north and south and the first typhoons reaching the northern coast from about July. The centre is dry and at its best for beaches, and the northern rice terraces fill with water and turn green."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Clear, mild and dry in the north, the other best time for Hanoi, Ha Long Bay and Sapa, where the rice ripens to gold in September. The centre has its heaviest rain, with typhoons and floods in October and November, while the south's rains ease off by late November."
+      }
+    ],
+    "weather": "Vietnam spans about 15 degrees of latitude, so it has three climates. The north has four seasons: a cool, damp winter from about December to February, around 17°C in Hanoi and near freezing at night in Sapa, and a hot, humid summer, often 33–35°C, with heavy rain from about May to September and typhoons on the coast from about July. The centre is hot and dry from about February to August and has its rainy season from about September to December, when typhoons and floods are most likely, especially in October and November. The south is hot all year, 30–35°C, dry from about December to April, with short, heavy afternoon downpours from about May to November. The highlands around Dalat stay mild all year.",
+    "festivals": [
+      {
+        "name": "Tết (Lunar New Year)",
+        "place": "Across Vietnam",
+        "when": "Usually late January or February: in 2027, 6 February",
+        "months": [1, 2],
+        "text": "Vietnam's most important festival. Homes fill with peach blossom in the north and yellow apricot blossom and kumquat trees in the south, families gather and visit pagodas, and many shops, restaurants and sights close for several days to a week. Trains, buses and flights are booked solid on either side of it."
+      },
+      {
+        "name": "Hung Kings Temple Festival",
+        "place": "Phu Tho and across Vietnam",
+        "when": "Usually in April, on the 10th day of the third lunar month",
+        "months": [4],
+        "text": "A public holiday honouring the legendary first kings of Vietnam, with pilgrims climbing to their temples on a hill at Phu Tho, north-west of Hanoi."
+      },
+      {
+        "name": "Reunification Day and Labour Day",
+        "place": "Across Vietnam",
+        "when": "30 April and 1 May",
+        "months": [4, 5],
+        "text": "Two public holidays back to back, marking the end of the war and the reunification of the north and south in 1975, then May Day. Vietnamese families head for the coast, so trains, flights and beach hotels fill."
+      },
+      {
+        "name": "National Day",
+        "place": "Across Vietnam",
+        "when": "2 September, with a second day of holiday beside it",
+        "months": [9],
+        "text": "Ho Chi Minh read the declaration of independence in Hanoi's Ba Dinh Square on this day in 1945; flags hang along every street for the anniversary."
+      },
+      {
+        "name": "Mid-Autumn Festival (Tết Trung Thu)",
+        "place": "Across Vietnam",
+        "when": "Usually in September or early October, at the full moon",
+        "months": [9, 10],
+        "text": "A festival for children: lantern processions, lion dances and mooncakes. In Hanoi, Hang Ma street fills with lanterns and toys in the weeks before."
+      },
+      {
+        "name": "Hoi An Full Moon Festival",
+        "place": "Hoi An",
+        "when": "Every month, on the 14th day of the lunar month",
+        "months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        "text": "On the evening before each full moon, the old town dims many of its electric lights, and people float paper lanterns with candles on the Thu Bon River."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The north: Hanoi, Ha Long Bay and Sapa",
+        "months": ["good", "good", "best", "best", "good", "good", "good", "good", "good", "best", "best", "good"],
+        "text": "Spring (March and April) and autumn (October and November) are the most comfortable. Winter is cool and grey, with mist over Ha Long Bay, and Sapa can see frost and, rarely, snow. Summer is hot, humid and wet, and typhoons can cancel Ha Long Bay cruises from about July to September."
+      },
+      {
+        "name": "The centre: Hue, Hoi An and Da Nang",
+        "months": ["good", "best", "best", "best", "best", "good", "good", "good", "good", "avoid", "avoid", "good"],
+        "text": "Dry and warm from about February to May, then hot, often 35°C, through the summer, when the beaches are busiest. From about September to December the rains set in, and October and November bring typhoons and floods that can put Hoi An's old town under water."
+      },
+      {
+        "name": "The south: Ho Chi Minh City, the Mekong Delta and Phu Quoc",
+        "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good", "best"],
+        "text": "Hot all year, about 32°C. The dry months, December to March, are sunny, and April is the hottest. From about May to November, short, heavy downpours fall most afternoons, then clear. Phu Quoc's sea is calmest from about November to April. Typhoons rarely reach the south."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Xin chào\" with a slight nod is the polite greeting, and men often shake hands. Vietnamese has no single word for \"you\": people choose a family word that fits the other person's age, such as anh (older brother) for a young man, chị (older sister) for a young woman, and ông or bà for an older man or woman. The family name comes first, but people go by the last part, their given name, so Nguyễn Văn Minh is Mr Minh.",
+    "etiquette": [
+      "Homes and some pagoda halls are entered barefoot; follow your host's lead at the door.",
+      "Don't leave chopsticks standing upright in a bowl of rice: it looks like the incense burned for the dead.",
+      "At the Ho Chi Minh Mausoleum in Hanoi, dress modestly, keep silent, keep your hands out of your pockets and take no photos inside.",
+      "Agree the price before a cyclo or motorbike-taxi ride, or book through an app, and bargain with good humour in markets.",
+      "Getting angry in public embarrasses everyone and rarely gets results; a calm smile works better."
+    ],
+    "tipping": "Tipping wasn't part of Vietnamese life, but it's now usual in tourist areas: tip guides, drivers and boat crews at the end of a trip, and leave a little change in restaurants. Upmarket hotels and restaurants often add a service charge.",
+    "dress": "The north needs a proper jacket from December to February, when Hanoi feels cold and few buildings are heated, and warmer clothes still for Sapa; the south and the summer need only light ones. A rain poncho from May. Pagodas and the mausoleum want shoulders and knees covered. Hoi An's tailors can make or copy clothes in a day or two.",
+    "food": [
+      {
+        "name": "Phở",
+        "text": "A clear, slow-simmered broth poured over flat rice noodles and beef (bò) or chicken (gà). Hanoi's is plain and pure; in the south it comes with a plate of herbs, bean sprouts and lime to add yourself."
+      },
+      {
+        "name": "Bún chả",
+        "text": "Hanoi's lunch: grilled pork patties and slices of pork belly in a sweet-sour fish-sauce dressing, with cold rice noodles and a basket of herbs."
+      },
+      {
+        "name": "Bánh mì",
+        "text": "A light, crisp baguette, a legacy of French rule, filled with pâté, cold meats, pickled carrot and daikon, coriander and chilli. Hoi An's are especially well known."
+      },
+      {
+        "name": "Cao lầu",
+        "text": "Hoi An's own noodles: thick and chewy, served with slices of pork, fresh greens, crisp crackers and only a little broth."
+      },
+      {
+        "name": "Bún bò Huế",
+        "text": "Hue's spicy beef noodle soup, fragrant with lemongrass and fermented shrimp paste, with round noodles and slices of beef and pork."
+      },
+      {
+        "name": "Cà phê sữa đá and egg coffee",
+        "text": "Strong coffee dripped through a small metal filter onto condensed milk and poured over ice; in Hanoi, try cà phê trứng, topped with egg yolk whipped with sugar into a sweet foam."
+      }
+    ],
+    "phrases": {
+      "language": "Vietnamese",
+      "intro": "Vietnamese is tonal: the marks over the letters show the tone, and a change of tone changes the meaning. Northern and southern accents differ. English is spoken in hotels and tourist areas.",
+      "items": [
+        { "phrase": "Xin chào", "say": "sin CHOW", "meaning": "Hello" },
+        { "phrase": "Cảm ơn", "say": "gahm UHN", "meaning": "Thank you" },
+        { "phrase": "Không, cảm ơn", "say": "khome, gahm UHN", "meaning": "No, thank you" },
+        { "phrase": "Bao nhiêu tiền?", "say": "bow nyew TYEN", "meaning": "How much?" },
+        { "phrase": "Xin lỗi", "say": "sin LOY", "meaning": "Sorry; excuse me" },
+        { "phrase": "Không cay", "say": "khome KAI", "meaning": "Not spicy" },
+        { "phrase": "Ngon quá!", "say": "ngon KWAH", "meaning": "Delicious!" },
+        { "phrase": "Tạm biệt", "say": "tahm BYET", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q881",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Vietnamese đồng (₫, VND). Prices run into the hundreds of thousands, and the blue 20,000 and 500,000 notes are easily confused.",
+        "sources": [{ "property": "P38", "values": ["Q192090"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Vietnamese. English is spoken in hotels and tourist areas, and some older people speak French.",
+        "sources": [{ "property": "P37", "values": ["Q9199"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A, C and F (two flat or two round pins; many sockets take both), and Type G in some hotels, 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q1378312", "Q1123613", "Q1528507"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Indochina Time, UTC+7, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6940", "Q63285961"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "113 for police, 114 for fire and 115 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648804", "Q2945964", "Q25648805"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+84",
+        "sources": [{ "property": "P474", "values": ["+84"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "code": "CL",
+  "slug": "chile",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Hola!", "Chile", "¿Cachai?"],
+  "summary": "The Atacama's salt flats, Patagonia's granite towers and Easter Island's giant stone heads.",
+  "overview": [
+    "Chile is a ribbon of land about 4,300 km long and rarely more than 200 km wide, squeezed between the Andes and the Pacific, so a trip here is really a choice of climates. In the far north, the Atacama is the driest non-polar desert on earth. The adobe oasis town of San Pedro de Atacama is the base for the Valle de la Luna, salt flats with flamingos, high lagoons and the El Tatio geysers, which steam at dawn at over 4,000 m; the clear, dry skies also draw the world's great telescopes and nightly stargazing tours.",
+    "In the middle, Santiago sits beneath a wall of snowy peaks, a modern city with good museums and food markets. An hour and a half west, the port of Valparaíso climbs its hills in painted houses and old funicular lifts; around both lie the wine valleys of Maipo, Casablanca and Colchagua. Further south, the Lake District has lakes beneath snow-capped volcanoes such as Osorno and Villarrica, which is climbed from the resort town of Pucón, and the island of Chiloé has wooden churches and houses on stilts. The Carretera Austral road runs on through fjords and forest into Patagonia, where the granite towers and glaciers of Torres del Paine are one of the great treks of the world.",
+    "Easter Island (Rapa Nui), about 3,500 km out in the Pacific and a flight of roughly five hours from Santiago, is famous for its moai, the giant stone figures carved by its Polynesian people. Its national park needs a ticket, and many sites can only be visited with a licensed guide.",
+    "Comfortable long-distance buses with reclining seats link the mainland's cities, and flights save days on the longer hops: Calama for the Atacama, Puerto Montt for the lakes, Punta Arenas or Puerto Natales for Patagonia. Chile is earthquake country, with strict building rules; on the coast, follow the blue tsunami evacuation signs if the ground shakes hard."
+  ],
+  "whenToGo": {
+    "stripLabel": "The country taken together. The desert, the centre, the south and Easter Island have very different climates, and each has a strip of its own below.",
+    "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [12, 1, 2],
+        "text": "The season for Patagonia and the Lake District: long days, the trails and boats all running, and the strongest winds of the year in the far south. Santiago is hot and dry, and in February, Chile's holiday month, beaches and the south are busy. Summer storms sometimes close high roads near San Pedro de Atacama."
+      },
+      {
+        "name": "Autumn",
+        "months": [3, 4, 5],
+        "text": "Grape harvest festivals in the wine valleys in March, and the beech forests of Patagonia turning red and gold in April, with calmer winds and fewer people. By May the far south grows cold and quiet."
+      },
+      {
+        "name": "Winter",
+        "months": [6, 7, 8],
+        "text": "Skiing in the Andes a short drive from Santiago, usually from about June to September. Rain and smog in the centre, wet, grey weather in the Lake District, and cold, short days in Patagonia, where many lodges, boats and buses stop. The Atacama stays clear, with freezing nights."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "The national holidays in mid-September, wildflowers in the centre and, in rare years after rain, flowers across the southern Atacama. Patagonia's season opens again from about October, still cool and windy."
+      }
+    ],
+    "weather": "The seasons are the reverse of Europe's. The Atacama gets almost no rain: days are around 25°C, nights near or below freezing, and the high Andes above it have summer storms. Santiago has a Mediterranean climate, with hot, dry summers around 30°C and cool, damp winters near freezing at night. The Lake District is green and rainy in every month, most of all in winter. Patagonia is cool even in summer, about 10–18°C by day, with fierce westerly winds; its winters are cold and snowy. Easter Island is mild and humid all year, around 20–28°C.",
+    "festivals": [
+      {
+        "name": "New Year in Valparaíso",
+        "place": "Valparaíso and Viña del Mar",
+        "when": "31 December",
+        "months": [12, 1],
+        "text": "Fireworks fired from barges along the bay light up the whole curve of the coast, watched by crowds packed onto Valparaíso's hills. Rooms are booked long ahead."
+      },
+      {
+        "name": "Semanas Musicales de Frutillar",
+        "place": "Frutillar, on Lake Llanquihue",
+        "when": "Usually late January and early February",
+        "months": [1, 2],
+        "text": "A classical music festival in a lakeside town settled by German immigrants, with concerts in the Teatro del Lago, a modern hall with a stage looking out over the water to Osorno volcano."
+      },
+      {
+        "name": "Tapati Rapa Nui",
+        "place": "Easter Island",
+        "when": "Usually the first two weeks of February",
+        "months": [2],
+        "text": "Two rival clans compete in Polynesian dance, song, body painting, canoe races and the haka pei, sliding down a steep hillside on banana-tree trunks."
+      },
+      {
+        "name": "Fiestas de la Vendimia",
+        "place": "Santa Cruz (Colchagua) and other wine towns",
+        "when": "Usually in March",
+        "months": [3],
+        "text": "Grape harvest festivals, with tastings from the valleys' wineries, folk music, food stalls and grape-treading contests."
+      },
+      {
+        "name": "Fiesta de La Tirana",
+        "place": "La Tirana, in the desert inland from Iquique",
+        "when": "Usually around 16 July",
+        "months": [7],
+        "text": "A tiny desert village swells with pilgrims for the Virgen del Carmen, with masked dance groups in devil costumes and brass bands day and night."
+      },
+      {
+        "name": "Fiestas Patrias",
+        "place": "Across Chile",
+        "when": "18 and 19 September, often with extra days off",
+        "months": [9],
+        "text": "Independence Day and Army Day: the country stops for several days of fondas, outdoor halls serving empanadas, grilled meat and chicha, with cueca dancing and rodeos."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Atacama Desert",
+        "months": ["good", "good", "best", "best", "best", "good", "good", "good", "best", "best", "best", "best"],
+        "text": "San Pedro de Atacama, the geysers and the salt flats. Dry and sunny all year. In January and February, storms over the high Andes (the \"Bolivian winter\") can close roads to the lagoons and geysers; from June to August, nights fall well below freezing and snow can block high passes."
+      },
+      {
+        "name": "Santiago and central Chile",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "best", "best", "best"],
+        "text": "Santiago, Valparaíso and the wine valleys. Warm and dry from October to April, with the grape harvest in March and April. Winters are cool and damp, with smog in Santiago and snow on the peaks for skiing."
+      },
+      {
+        "name": "The Lake District and Patagonia",
+        "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "good", "good", "best", "best"],
+        "text": "Pucón, Chiloé, the Carretera Austral and Torres del Paine. November to March is the season, with long days and everything open, though Patagonia's winds can knock walkers off their feet. October and April are quieter, cooler and changeable; from May to August many services in Patagonia close."
+      },
+      {
+        "name": "Easter Island (Rapa Nui)",
+        "months": ["best", "best", "best", "good", "good", "good", "good", "good", "good", "best", "best", "best"],
+        "text": "Mild all year. The warmest, calmest weather is from about December to March, with the Tapati festival in February; showers are more frequent from about April to September, and the island is quietest then."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Chileans greet with a single kiss on the right cheek between women, and between men and women, even on first meeting; men shake hands, or hug if they're friends. \"Hola, ¿cómo estás?\" is the usual start, and Chilean Spanish is fast, clipped and full of its own slang, with \"po\" added to the end of many words: \"sí, po\".",
+    "etiquette": [
+      "Never touch or climb on the moai, and don't step onto the stone platforms (ahu) they stand on: it is against the law and fined.",
+      "In Torres del Paine and other parks, camp and cook only where it's allowed: fires started by visitors have burned large parts of the park.",
+      "Lunch is the main meal, and dinner is late, often after 9 pm. Many families also take \"once\", afternoon tea with bread, avocado and ham.",
+      "Chile's tap water is treated and fine to drink in most places.",
+      "On the coast, learn the tsunami evacuation route from your hotel; after a long, strong earthquake, go uphill at once.",
+      "Chileans are courteous and fairly formal at first: wait to be invited before using first names with older people."
+    ],
+    "tipping": "About 10% in restaurants, where the bill or card machine will ask whether you'd like to add the suggested tip (propina). Tip guides and porters on treks; round up for taxi drivers.",
+    "dress": "Layers for every region. In Patagonia, even in summer, bring a waterproof and windproof jacket, a warm fleece, a hat and gloves. In the Atacama, the sun is strong by day and nights are cold, so pack both a sunhat and a down jacket. Santiago dresses neatly and a little conservatively.",
+    "food": [
+      {
+        "name": "Empanadas de pino",
+        "text": "Baked pastries filled with minced beef, onion, a slice of hard-boiled egg and a black olive. Fried cheese empanadas are the seaside version."
+      },
+      {
+        "name": "Pastel de choclo",
+        "text": "A summer favourite baked in a clay bowl: beef, chicken, onion, egg and olive under a crust of sweetcorn paste, sprinkled with sugar and browned in the oven."
+      },
+      {
+        "name": "Completo",
+        "text": "Chile's loaded hot dog, the \"italiano\" topped with mashed avocado, chopped tomato and mayonnaise in the colours of the Italian flag."
+      },
+      {
+        "name": "Curanto",
+        "text": "Chiloé's feast: shellfish, sausages, pork, chicken and potato breads cooked together over hot stones in a pit, covered with large leaves."
+      },
+      {
+        "name": "Mote con huesillo",
+        "text": "A summer drink sold from street carts: dried peaches stewed in sweet syrup, served over cooked husked wheat."
+      },
+      {
+        "name": "Pisco sour and Carménère",
+        "text": "Chile claims the pisco sour as its own, made with grape brandy from the Elqui Valley, lemon and sugar. Carménère, a red grape almost lost in France, became Chile's signature wine."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Chilean)",
+      "intro": "English is spoken in hotels and tour agencies, less so elsewhere. Chilean Spanish is quick and drops the end of words, so ask people to slow down.",
+      "items": [
+        { "phrase": "Hola, ¿cómo estás?", "say": "OH-lah, KOH-moh es-TAHS", "meaning": "Hello, how are you?" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto sale?", "say": "KWAHN-toh SAH-leh", "meaning": "How much is it?" },
+        { "phrase": "¿Me trae la cuenta?", "say": "meh TRAH-eh lah KWEN-tah", "meaning": "Could you bring the bill?" },
+        { "phrase": "¿Cachai?", "say": "kah-CHAI", "meaning": "Get it? You know? (slang)" },
+        { "phrase": "¡Bacán!", "say": "bah-KAHN", "meaning": "Great! Cool! (slang)" },
+        { "phrase": "Al tiro", "say": "ahl TEE-roh", "meaning": "Right away" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q298",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Chilean peso ($, CLP). Cards are taken almost everywhere, even for small amounts.",
+        "sources": [{ "property": "P38", "values": ["Q200050"] }],
+        "note": "Wikidata also lists the Unidad de Fomento, an inflation-linked unit of account used for property and contracts rather than cash; the page leaves it out."
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. Mapudungun, the language of the Mapuche people, is spoken in the south, and Rapa Nui on Easter Island.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C (two round pins) and L (three round pins in a row, as in Italy), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1520890"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Most of Chile: UTC−4, with summer time (UTC−3) from about September to early April. The Magallanes region, Torres del Paine included: UTC−3 all year. Easter Island: UTC−6, with summer time (UTC−5).",
+        "sources": [],
+        "note": "Wikidata's time-zone statements for Chile have all ended; the page gives the current zones: the mainland's, Magallanes' (on UTC−3 all year since 2017) and Easter Island's."
+      },
+      {
+        "key": "emergency",
+        "text": "133 for police (Carabineros); 131 for an ambulance; 132 for the fire service; 130 for forest fires; 134 for the PDI, the investigations police",
+        "sources": [{ "property": "P2852", "values": ["Q25648813", "Q25648848", "Q25648849", "Q25648847", "Q79049177"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+56",
+        "sources": [{ "property": "P474", "values": ["+56"] }]
+      }
+    ]
+  }
+}

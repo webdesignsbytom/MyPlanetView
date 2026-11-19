@@ -1,0 +1,159 @@
+{
+  "code": "BJ",
+  "slug": "benin",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonne arrivée", "Bénin"],
+  "summary": "The home of Vodun, the royal palaces of Abomey, Ouidah's slave route and a village on stilts.",
+  "overview": [
+    "Benin is the birthplace of Vodun (voodoo), still the faith of many people here, and the heart of the old kingdom of Dahomey, whose royal palaces at Abomey are a UNESCO World Heritage Site, their walls decorated with clay bas-reliefs that tell the kings' history. On the coast, Ouidah was one of the busiest slave ports on the Atlantic: the Route des Esclaves, about 4 km long, leads from the town's old auction square to the beach and the Door of No Return memorial. Ouidah also has the Temple of Pythons, a Vodun shrine where royal pythons are kept, and the Sacred Forest of Kpassè.",
+    "Cotonou, the biggest city and the seat of government, is the gateway; Porto-Novo, the official capital, is a short drive east, with Afro-Brazilian houses built by families who returned from Brazil in the 19th century. North of Cotonou, Ganvié, a village of wooden houses on stilts in Lake Nokoué, is home to around 20,000 people who get about by pirogue. West along the coast, Grand-Popo has a wide, empty beach between the lagoon and the sea.",
+    "Zémidjans, motorbike taxis whose riders wear numbered yellow shirts in Cotonou, are the usual way round town, and a paved highway runs north through Bohicon and Parakou. In the north-west, Natitingou and the Atakora hills have the fortified earthen houses of the Betammaribe, the tata somba. Many governments advise against travel to the far north, near the borders with Burkina Faso and Niger, an area that includes the Pendjari and W national parks: check your own government's current advice before planning a trip there."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "avoid", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "The dry months",
+        "months": [11, 12, 1, 2],
+        "text": "Warm, sunny and dry on the coast, around 31°C, and the season for Vodun ceremonies, with the national Vodun festival on 10 January. The harmattan blows from about December to February, dusty and hazy, with cool mornings in the north."
+      },
+      {
+        "name": "Heat, then the main rains",
+        "months": [3, 4, 5, 6, 7],
+        "text": "March and April are the hottest and stickiest months. The south's main rains come from about April to July, heaviest in June, when unpaved streets in Cotonou turn to ponds."
+      },
+      {
+        "name": "The August lull",
+        "months": [8],
+        "text": "A cool, dry, cloudy interlude on the coast, about 27°C, often good for sightseeing in the south, while the north gets its heaviest rain."
+      },
+      {
+        "name": "Second rains",
+        "months": [9, 10],
+        "text": "A shorter, lighter rainy season in the south, with storms that pass quickly, and the end of the rains in the north."
+      }
+    ],
+    "weather": "Along the coast it's hot and humid all year, with highs of 28–33°C and two rainy seasons, roughly April to July and September to October, with a cooler, drier break in August between them. Cotonou gets about 1,300 mm of rain a year. North of Parakou there's a single, longer rainy season from about May to October and a long dry season, with hot days in March and April, when temperatures pass 38°C, and cool, dusty harmattan nights in the Atakora hills.",
+    "festivals": [
+      {
+        "name": "Fête du Vodoun (Vodun Days)",
+        "place": "Across Benin, above all Ouidah",
+        "when": "10 January, with events in Ouidah over the days around it",
+        "months": [1],
+        "text": "A national holiday for Vodun. In Ouidah, priests and followers gather on the beach and in the town, with drumming, offerings, dancers, and the masked Egungun, who are said to carry the spirits of the dead."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Benin, above all the north and Porto-Novo",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "About a quarter of Beninese are Muslim. Porto-Novo's Great Mosque, built in the Afro-Brazilian style like a church, fills for prayers, and the Eid at the end of the fast is a public holiday."
+      },
+      {
+        "name": "Tabaski (Eid al-Adha)",
+        "place": "Across Benin",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Prayers in the open air in the morning, then a family feast: a public holiday for everyone, and the biggest celebration of the year in the mostly Muslim north."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Benin",
+        "when": "1 August",
+        "months": [8],
+        "text": "Dahomey, as Benin was called until 1975, became independent of France on this day in 1960. A public holiday, with a parade."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Everyone gets a greeting, and a proper one: a \"bonjour\" or \"bonsoir\" and a question about the family before any business. Someone who has just arrived is welcomed with \"bonne arrivée\". Children often sing out \"Yovo, yovo, bonsoir!\" (foreigner, foreigner, good evening) to visitors; it's a playground song rather than an insult, and a wave back delights them.",
+    "etiquette": [
+      "Vodun is a religion, not a show. Ask before photographing shrines, ceremonies or the Zangbeto, the straw-covered guardians of the night, and let your guide tell you what not to touch.",
+      "At ceremonies and temples, a small offering or a fee may be expected; agree it first.",
+      "Settle the fare with a zémidjan rider before setting off, and ask them to go slowly (\"doucement\") if you're nervous.",
+      "Soldiers, police, the port and government buildings in Cotonou are off limits for photos."
+    ],
+    "tipping": "The guides at Ganvié, Abomey and Ouidah rely on tips. Elsewhere, leave the change, or about 10% in hotels and restaurants used to visitors; nobody expects it at a maquis, the local open-air eatery.",
+    "dress": "Light, modest clothes. Beninese love bold wax-print cloth, and a tailor can make you an outfit in a day or two. Away from the beach, shorts and short skirts draw looks; cover up for mosques and for ceremonies.",
+    "food": [
+      {
+        "name": "Amiwo",
+        "text": "A red maize paste cooked in a spiced tomato and palm-oil stock, served with chicken or fish: a dish for celebrations in the south."
+      },
+      {
+        "name": "Akassa",
+        "text": "Fermented maize dough wrapped in leaves, with a tangy taste, eaten with fried fish and a fierce pepper sauce."
+      },
+      {
+        "name": "Igname pilée",
+        "text": "Yam pounded into a smooth, stretchy dough, the staple of the centre and the north around Parakou, eaten with a peanut or vegetable sauce."
+      },
+      {
+        "name": "Wagashi",
+        "text": "A soft cheese made by Fulani herders in the north, often with a red rind from sorghum leaves, fried or cooked in sauce."
+      },
+      {
+        "name": "Sodabi",
+        "text": "A strong spirit distilled from palm wine, drunk in small glasses and poured as an offering at Vodun shrines."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "French is the official language and widely understood in towns. Fon is the most spoken language in the south, with Yoruba in the south-east and Bariba and Dendi in the north.",
+      "items": [
+        { "phrase": "Bonne arrivée", "say": "bon ah-ree-VAY", "meaning": "Welcome (to someone just arrived)" },
+        { "phrase": "Bonsoir", "say": "bon-SWAHR", "meaning": "Good evening" },
+        { "phrase": "Ça va ?", "say": "sah VAH", "meaning": "How are you?" },
+        { "phrase": "Ça coûte combien ?", "say": "sah koot kom-BYAN", "meaning": "How much does it cost?" },
+        { "phrase": "Doucement", "say": "doos-MON", "meaning": "Slowly, please (to a driver)" },
+        { "phrase": "Je voudrais aller à …", "say": "zhuh voo-DRAY ah-LAY ah", "meaning": "I'd like to go to …" },
+        { "phrase": "Yovo", "say": "YOH-voh", "meaning": "Foreigner (what children call out)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q962",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "West African CFA franc (CFA, XOF). Pegged to the euro, so euros are the easiest money to change; mobile money is widely used.",
+        "sources": [{ "property": "P38", "values": ["Q861690"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French, the official language. Fon is the most widely spoken language, and Yoruba, Bariba, Dendi and many others are spoken in their regions.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "West Africa Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q4689521"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for an ambulance, 117 for police and 118 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q4547615", "Q11185210"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+229",
+        "sources": [{ "property": "P474", "values": ["+229"] }]
+      }
+    ]
+  }
+}

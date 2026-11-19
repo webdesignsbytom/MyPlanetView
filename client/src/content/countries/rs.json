@@ -1,0 +1,173 @@
+{
+  "code": "RS",
+  "slug": "serbia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Zdravo", "Srbija", "Dobrodošli"],
+  "summary": "Belgrade's fortress and river clubs, old monasteries and the Danube gorge.",
+  "overview": [
+    "Serbia's flat north, the farmland of Vojvodina, gives way to wooded hills and mountains as you travel south. Belgrade stands where the Sava flows into the Danube, with the walls of Kalemegdan fortress above the meeting of the rivers, the shopping street of Knez Mihailova, the old bohemian quarter of Skadarlija and the huge white Church of Saint Sava. The city's nightlife is famous, much of it on splavovi, floating bars and clubs moored along both rivers. Novi Sad, a short ride north on the fast train, has a relaxed old centre below Petrovaradin Fortress, with the monasteries of Fruška Gora in the hills nearby.",
+    "Medieval monasteries such as Studenica and Sopoćani keep 13th-century frescoes in quiet valleys of the south-west. In the east, the Danube squeezes through the Iron Gates gorge on the border with Romania, past Golubac Fortress and the Stone Age settlement of Lepenski Vir. Zlatibor and Tara, in the west, are walking country, and at Mokra Gora the Šargan Eight, a narrow-gauge railway, loops back over itself in a figure of eight. Kopaonik is the main ski resort, and Niš, in the south, was the birthplace of the Roman emperor Constantine.",
+    "Most journeys are by bus; trains are slow away from the fast line between Belgrade and Novi Sad. Cards are taken widely in towns, but carry dinars for markets, small cafés and village guesthouses."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Belgrade's days sit between freezing and about 5°C, often under grey skies, and the košava, a cold, gusty wind, sweeps along the Danube. Skiing at Kopaonik. Orthodox Christmas falls on 7 January, and the Orthodox New Year on the night of 13 January brings concerts and fireworks."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Quick to warm: by April the riverside cafés fill and the parks are green, and May is warm, with the first thunderstorms."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot, often over 30°C, with heatwaves near 40°C. Belgraders cool off at Ada Ciganlija, a lake on the Sava with long beaches, and nightlife moves out onto the rivers."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September and October are warm and mellow, with the grape harvest on Fruška Gora and the hills turning colour. November is foggy and damp."
+      }
+    ],
+    "weather": "Belgrade's summer days usually reach 28–30°C, and heatwaves can pass 38°C; winter days are just above freezing, nights below it, and snow comes in most winters. Rain, about 700 mm a year, peaks in May and June, often as thunderstorms. The southern and western mountains are cooler and snowier, and the košava, a cold south-easterly, can blow hard along the Danube in autumn and winter.",
+    "festivals": [
+      {
+        "name": "Orthodox Christmas",
+        "place": "Across Serbia",
+        "when": "6–7 January",
+        "months": [1],
+        "text": "On Christmas Eve, oak branches (badnjak) burn on bonfires outside churches. On Christmas Day families break česnica, a round loaf with a coin baked inside: whoever finds the coin is said to have luck all year."
+      },
+      {
+        "name": "Sretenje (Statehood Day)",
+        "place": "Across Serbia",
+        "when": "15–16 February",
+        "months": [2],
+        "text": "Public holidays marking the start of the First Serbian Uprising against Ottoman rule in 1804 and the first constitution in 1835."
+      },
+      {
+        "name": "Orthodox Easter",
+        "place": "Across Serbia",
+        "when": "Usually in April or early May (2 May in 2027)",
+        "months": [4, 5],
+        "text": "Families dye eggs, often red with onion skins, and knock them together end to end: the egg whose shell holds wins."
+      },
+      {
+        "name": "Guča Trumpet Festival",
+        "place": "Guča",
+        "when": "Usually in August",
+        "months": [8],
+        "text": "Brass bands from across the Balkans compete in a small town in central Serbia, playing day and night to crowds that camp in the fields around it."
+      },
+      {
+        "name": "BITEF",
+        "place": "Belgrade",
+        "when": "Usually in September",
+        "months": [9],
+        "text": "Belgrade's international theatre festival, running since 1967, with experimental and new work from around the world."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Shake hands with everyone when you arrive and when you leave; friends greet with three kisses on alternate cheeks. “Dobar dan” is the polite hello, “Ćao” or “Zdravo” the casual one. Hospitality is a point of pride, so expect to be offered rakija, coffee and more food than you can eat.",
+    "etiquette": [
+      "If you're invited to a slava, a family's feast day for its patron saint, bring wine or sweets. You'll be offered žito, sweet boiled wheat: take a spoonful.",
+      "Toast with “Živeli!”, looking each person in the eye, and wait for the first toast before you drink.",
+      "Smoking is still allowed in many cafés and bars, so ask for a non-smoking area if it matters to you.",
+      "The wars of the 1990s and Kosovo are sensitive subjects: let your hosts raise them, and listen rather than argue.",
+      "Monasteries expect women in skirts with covered shoulders, and men in long trousers."
+    ],
+    "tipping": "A tip of around 10% is normal in restaurants; in cafés and taxis, people round up.",
+    "dress": "Belgraders dress up for an evening out, so bring something smart for the city. Cover up for monasteries, and pack warm layers for winter and the mountains.",
+    "food": [
+      {
+        "name": "Ćevapi",
+        "text": "Small grilled fingers of minced meat, served in a soft lepinja bun with chopped raw onion and kajmak, a rich clotted cream. Leskovac, in the south, is famous for its grills."
+      },
+      {
+        "name": "Pljeskavica",
+        "text": "A large, flat patty of spiced minced meat, the Balkan burger, sold from grills all over town."
+      },
+      {
+        "name": "Karađorđeva šnicla",
+        "text": "A rolled steak of veal or pork stuffed with kajmak, breaded and fried, and served with tartar sauce."
+      },
+      {
+        "name": "Gibanica",
+        "text": "Filo pastry layered with white cheese and eggs and baked, eaten warm, often for breakfast."
+      },
+      {
+        "name": "Domaća kafa",
+        "text": "Coffee boiled Turkish-style in a small pot (džezva), served with a glass of water and sometimes a cube of ratluk (Turkish delight)."
+      },
+      {
+        "name": "Šljivovica",
+        "text": "Plum rakija, the national drink, often home-made and very strong, offered as a welcome at any time of day."
+      }
+    ],
+    "phrases": {
+      "language": "Serbian",
+      "intro": "Serbian is written in both Cyrillic and Latin letters, and signs often show both. Many younger people speak good English.",
+      "items": [
+        { "phrase": "Dobar dan (Добар дан)", "say": "DOH-bar dahn", "meaning": "Good day; hello" },
+        { "phrase": "Hvala lepo (Хвала лепо)", "say": "HVAH-lah LEH-poh", "meaning": "Thank you very much" },
+        { "phrase": "Molim vas (Молим вас)", "say": "MOH-leem vahs", "meaning": "Please" },
+        { "phrase": "Izvinite (Извините)", "say": "eez-VEE-nee-teh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Gde je…? (Где је…?)", "say": "GDEH yeh", "meaning": "Where is…?" },
+        { "phrase": "Ne razumem (Не разумем)", "say": "neh RAH-zoo-mem", "meaning": "I don't understand" },
+        { "phrase": "Živeli! (Живели!)", "say": "ZHEE-veh-lee", "meaning": "Cheers!" },
+        { "phrase": "Prijatno (Пријатно)", "say": "PREE-yaht-noh", "meaning": "Enjoy your meal; goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q403",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Serbian dinar (RSD)",
+        "sources": [{ "property": "P38", "values": ["Q172524"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Serbian, in Cyrillic and Latin letters. Hungarian and several other languages are also official in parts of Vojvodina, in the north.",
+        "sources": [{ "property": "P37", "values": ["Q9299"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, and UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q5412095"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "192 for police, 193 for fire, 194 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648834", "Q25648835", "Q25648914"] }],
+        "note": "Wikidata also lists 92, 93 and 94, shorter forms of the same numbers; the page gives the three-digit numbers that are published."
+      },
+      {
+        "key": "callingCode",
+        "text": "+381",
+        "sources": [{ "property": "P474", "values": ["+381"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "code": "BA",
+  "slug": "bosnia-and-herzegovina",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dobar dan", "Bosna i", "Hercegovina"],
+  "summary": "Sarajevo's Ottoman bazaar, Mostar's high bridge and fast green rivers.",
+  "overview": [
+    "Bosnia and Herzegovina is a mountainous country in the western Balkans that reaches the Adriatic only along a strip of about 20 km at Neum. Sarajevo, the capital, fills a narrow valley: in a ten-minute walk from Baščaršija, the Ottoman bazaar of copper workshops and grill houses, you pass mosques, a Catholic cathedral, an Orthodox church and an old synagogue before reaching streets built under Austria-Hungary. The Tunnel of Hope museum by the airport and the scars still visible on some buildings recall the siege of the city in the 1990s.",
+    "Mostar, in Herzegovina to the south, is known for the Stari Most, a single stone arch high over the green Neretva, built by the Ottomans in the 16th century and rebuilt after it was destroyed in the war; local divers still jump from it into the cold river. Near Mostar are the Kravice waterfalls, the dervish house at Blagaj, set against a cliff where the River Buna wells up, and the hillside fortress village of Počitelj. Further north, Jajce has a waterfall in the middle of town, and the mountains above Sarajevo that held the 1984 Winter Olympics, Jahorina and Bjelašnica, are now ski resorts.",
+    "The country is made up of two parts, the Federation of Bosnia and Herzegovina and the Republika Srpska, plus the small Brčko District; visitors pass between them without noticing. Buses link the towns, and the railway from Sarajevo to Mostar follows the Neretva gorge. Landmines from the war remain in some rural areas: keep to paved roads and well-used paths, and never wander into abandoned houses or overgrown fields."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Snow hangs on in the mountains into April while Herzegovina warms early. By May the rivers run full and fast, the start of the rafting season on the Neretva, the Una and the Tara."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm and sunny in Sarajevo and the hills, but hot in Mostar; see the Old Bridge early or late in the day, when the coach parties from the Croatian coast have gone. Swimming at Kravice and in the rivers."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is settled and still warm, and the grape and fig harvests come in across Herzegovina. Beech forests colour in October; by November it's cold and rainy."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and snowy inland, with skiing at Jahorina and Bjelašnica, usually from December to March. Herzegovina stays mild and wet."
+      }
+    ],
+    "weather": "The interior has a continental climate: Sarajevo, at about 500 m, has cold, snowy winters with days near 0°C and warm summers with days around 27°C. Herzegovina in the south is Mediterranean, and Mostar is one of the hottest towns in the region, often over 35°C in July and August, with mild, rainy winters. Rain falls in every season, most of it in late autumn and early winter, and in cold, still weather smog from stoves and traffic can settle over Sarajevo's valley.",
+    "festivals": [
+      {
+        "name": "Ramadan and Ramazanski Bajram",
+        "place": "Across the country, above all Sarajevo",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting for Bosnian Muslims. In Sarajevo a cannon on the Yellow Fortress (Žuta tabija) fires at sunset to end each day's fast, and evenings are busy with iftar meals. It closes with Bajram, three days of family visits and sweets."
+      },
+      {
+        "name": "Kurban Bajram",
+        "place": "Across the country",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice: families gather, many shops in Muslim areas close for a day or two, and the roads are busy."
+      },
+      {
+        "name": "Baščaršija Nights",
+        "place": "Sarajevo",
+        "when": "Usually through July",
+        "months": [7],
+        "text": "A summer festival of concerts, theatre and dance, much of it outdoors in the old town and many events free."
+      },
+      {
+        "name": "Mostar diving competition",
+        "place": "Mostar",
+        "when": "Usually late July",
+        "months": [7],
+        "text": "Divers leap from the Old Bridge, over 20 m above the Neretva, in a contest held most summers since the 1960s; crowds pack both banks."
+      },
+      {
+        "name": "Sarajevo Film Festival",
+        "place": "Sarajevo",
+        "when": "Usually in mid-August, for about a week",
+        "months": [8],
+        "text": "Founded during the siege, now the biggest film festival in south-east Europe, with open-air screenings and parties across the city."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Sarajevo and the mountains",
+        "text": "Cool nights even in summer and proper winters, with snow from about December to March. The capital is pleasant from May to October; the ski resorts above it are busiest in January and February."
+      },
+      {
+        "name": "Herzegovina",
+        "text": "Mostar, Blagaj, Počitelj and the Kravice falls. Spring comes early and autumn lasts, making April, May, September and October the most comfortable months; July and August are very hot."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake with eye contact when you meet someone; friends greet each other with kisses on the cheeks. \"Zdravo\" (hello) and \"Dobar dan\" (good day) work with everyone. Coffee is how people welcome you, so expect to be offered a cup and to sit for a while.",
+    "etiquette": [
+      "Bosniaks, Serbs and Croats speak one language under three names: call it by the name the person you're talking to uses, and leave the war for them to bring up.",
+      "Mosques are open to visitors outside prayer times; cover arms and legs, and women cover their hair. Shoes come off at the door.",
+      "If you're invited to someone's home, take at least a little of what's offered; refusing food or coffee outright can give offence.",
+      "During Ramadan many Bosnian Muslims fast by day, but cafés and restaurants stay open and nobody expects visitors to fast.",
+      "Red signs with a skull and crossbones, or tape across a path, mark land still not cleared of mines: never pass them."
+    ],
+    "tipping": "Round up the bill or leave about 10% in restaurants; it's appreciated, not demanded.",
+    "dress": "Casual. For mosques and churches, cover shoulders and knees, and women bring a scarf for mosques (some lend them). Sarajevo evenings are cool even in summer, and winter needs proper warm clothes and boots.",
+    "food": [
+      {
+        "name": "Ćevapi",
+        "text": "Small grilled sausages of minced meat, served by the five or ten in a soft flatbread (somun) with raw onion and kajmak, a salty clotted cream. Baščaršija is lined with ćevabdžinicas."
+      },
+      {
+        "name": "Burek and pita",
+        "text": "Coiled filo pies, baked in round trays. Only the meat one is called burek here; with cheese it's sirnica, with spinach zeljanica and with potato krompiruša."
+      },
+      {
+        "name": "Bosanski lonac",
+        "text": "Bosnian pot: chunks of meat and vegetables layered in a deep pot and stewed slowly for hours."
+      },
+      {
+        "name": "Begova čorba",
+        "text": "The bey's soup, a creamy chicken and vegetable soup thickened with okra."
+      },
+      {
+        "name": "Bosnian coffee",
+        "text": "Strong, unfiltered coffee brewed in a small copper pot (džezva) and poured into a tiny cup, served with a sugar cube and a piece of rahat lokum. It's for sipping slowly while you talk."
+      },
+      {
+        "name": "Tufahija",
+        "text": "Whole apples poached in syrup, stuffed with walnuts and topped with whipped cream."
+      }
+    ],
+    "phrases": {
+      "language": "Bosnian, Croatian and Serbian",
+      "intro": "Three names for what is essentially one language; in Serb areas the Cyrillic alphabet is used as well as Latin. Many young people in towns speak English.",
+      "items": [
+        { "phrase": "Zdravo", "say": "ZDRAH-voh", "meaning": "Hello" },
+        { "phrase": "Dobar dan", "say": "DOH-bar DAHN", "meaning": "Good day" },
+        { "phrase": "Hvala", "say": "HVAH-lah", "meaning": "Thank you" },
+        { "phrase": "Molim", "say": "MOH-leem", "meaning": "Please; you're welcome" },
+        { "phrase": "Izvinite", "say": "eez-VEE-nee-teh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Koliko košta?", "say": "KOH-lee-koh KOSH-tah", "meaning": "How much is it?" },
+        { "phrase": "Živjeli!", "say": "ZHEE-vyeh-lee", "meaning": "Cheers!" },
+        { "phrase": "Doviđenja", "say": "doh-vee-JEH-nyah", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q225",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Convertible mark (KM, BAM), fixed to the euro. Euros are often taken in Mostar and in hotels.",
+        "sources": [{ "property": "P38", "values": ["Q179620"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Bosnian, Croatian and Serbian, all official; Serbian is often written in Cyrillic.",
+        "sources": [{ "property": "P37", "values": ["Q9303", "Q6654", "Q9299"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1; UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; also 122 for police, 123 for fire and 124 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648812", "Q25648825", "Q25648826"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+387",
+        "sources": [{ "property": "P474", "values": ["+387"] }]
+      }
+    ]
+  }
+}

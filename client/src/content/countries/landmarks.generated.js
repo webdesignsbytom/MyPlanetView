@@ -3,7 +3,7 @@
 // Don't edit it here: change those, then run `node scripts/generate-country-landmarks.mjs` in
 // client/. The country pages show these, since a pre-rendered page can't ask the API: each
 // country's well-known landmarks, then its World Heritage Sites (earliest inscribed first),
-// 9 at most. 833 landmarks in 203 countries.
+// 9 at most. 832 landmarks in 202 countries.
 export const COUNTRY_LANDMARKS = {
   AD: [{"name":"Madriu-Perafita-Claror Valley","category":"park","matchRadiusM":5000,"wikidataId":"Q332800","slug":"madriu-perafita-claror-valley"}],
   AE: [{"name":"Burj Khalifa","category":"building","matchRadiusM":500,"wikidataId":"Q12495","slug":"burj-khalifa"}, {"name":"Cultural Sites of Al Ain","category":"park","matchRadiusM":15000,"wikidataId":"Q3962347","slug":"cultural-sites-of-al-ain"}, {"name":"Wadi Wurayah","category":"park","matchRadiusM":20000,"wikidataId":"Q2538723","slug":"wadi-wurayah"}, {"name":"Faya Palaeolandscape","category":"site","matchRadiusM":1500,"wikidataId":"Q6172505","slug":"faya-palaeolandscape"}],
@@ -134,7 +134,6 @@ export const COUNTRY_LANDMARKS = {
   MY: [{"name":"Petronas Towers","category":"building","matchRadiusM":400,"wikidataId":"Q83063","slug":"petronas-towers"}, {"name":"Kinabalu Park","category":"park","matchRadiusM":19000,"wikidataId":"Q834893","slug":"kinabalu-park"}, {"name":"Gunung Mulu National Park","category":"park","matchRadiusM":16000,"wikidataId":"Q61535","slug":"gunung-mulu-national-park"}, {"name":"Niah Caves","category":"park","matchRadiusM":5000,"wikidataId":"Q1984562","slug":"niah-caves"}, {"name":"Melaka and George Town (Melaka)","category":"old town","matchRadiusM":1500,"wikidataId":"Q61089","slug":"melaka-and-george-town-melaka"}, {"name":"Lenggong Valley","category":"site","matchRadiusM":9500,"wikidataId":"Q3370009","slug":"lenggong-valley"}, {"name":"FRIM Forest Park, Selangor","category":"park","matchRadiusM":20000,"wikidataId":"Q135315506","slug":"frim-forest-park-selangor"}],
   MZ: [{"name":"Island of Mozambique","category":"old town","matchRadiusM":2000,"wikidataId":"Q331099","slug":"island-of-mozambique"}],
   NA: [{"name":"Etosha National Park","category":"park","matchRadiusM":60000,"wikidataId":"Q675633","slug":"etosha-national-park"}, {"name":"Twyfelfontein","category":"site","matchRadiusM":1000,"wikidataId":"Q754791","slug":"twyfelfontein"}, {"name":"Namib Sand Sea","category":"park","matchRadiusM":20000,"wikidataId":"Q65241628","slug":"namib-sand-sea"}],
-  NC: [{"name":"Lagoons of New Caledonia (Grand Lagon Sud)","category":"park","matchRadiusM":38000,"wikidataId":"Q64399599","slug":"lagoons-of-new-caledonia-grand-lagon-sud"}],
   NE: [{"name":"Aïr and Ténéré Natural Reserves","category":"park","matchRadiusM":60000,"wikidataId":"Q794643","slug":"air-and-tenere-natural-reserves"}, {"name":"Historic Centre of Agadez","category":"old town","matchRadiusM":1500,"wikidataId":"Q47800464","slug":"historic-centre-of-agadez"}],
   NG: [{"name":"Sukur Cultural Landscape","category":"site","matchRadiusM":3000,"wikidataId":"Q1123956","slug":"sukur-cultural-landscape"}, {"name":"Osun-Osogbo Sacred Grove","category":"park","matchRadiusM":5000,"wikidataId":"Q621498","slug":"osun-osogbo-sacred-grove"}],
   NI: [{"name":"Ruins of León Viejo","category":"site","matchRadiusM":1000,"wikidataId":"Q1422898","slug":"ruins-of-leon-viejo"}, {"name":"León Cathedral","category":"building","matchRadiusM":300,"wikidataId":"Q48605","slug":"leon-cathedral"}],
@@ -619,7 +618,6 @@ export const LANDMARK_PHOTOS = {
   "la-fortaleza-and-old-san-juan": [480,640,"User:Mtmelendez",8,"La Fortaleza Street.JPG"],
   "la-soufriere-volcano": [480,319,"Unknown author",8,"Soufriere.jpg"],
   "laas-geel": [480,320,"Abdullah Geelah",8,"Laas Geel.jpg"],
-  "lagoons-of-new-caledonia-grand-lagon-sud": [480,360,"the Enhanced Thematic Mapper Plus on NASA’s Landsat 7 satellite, Jesse Allen, Michon Scott.",5,"Lagoons and Reefs of New Caledonia May 10, 2001.jpg"],
   "lahore-fort-and-shalamar-gardens": [480,362,"Unknown author",8,"The Lahore Forts Alamgiri Gate Picture2 taken at night - July 20 2005.jpg"],
   "lake-assal": [480,329,"NASA",5,"Lake Assal NASA.jpg"],
   "lake-bled": [480,371,"Carsten Steger",2,"Aerial image of Lake Bled (view from the southwest).jpg"],

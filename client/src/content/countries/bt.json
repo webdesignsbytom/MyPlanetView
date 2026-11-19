@@ -1,0 +1,191 @@
+{
+  "code": "BT",
+  "slug": "bhutan",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Kuzuzangpo", "Druk Yul", "Tashi delek"],
+  "summary": "Tiger's Nest on its cliff, fortress-monasteries and masked festival dances.",
+  "overview": [
+    "Bhutan is a small Buddhist kingdom in the eastern Himalaya, between India and Tibet, that has guarded its way of life closely. It measures its progress by Gross National Happiness, its constitution keeps at least 60% of the land under forest, and Bhutanese wear national dress, the gho for men and the kira for women, at work and in dzongs. The dzongs, great whitewashed fortress-monasteries that house both monks and government offices, are the country's landmarks, along with its temples, prayer flags and festivals.",
+    "Most visitors fly into Paro, down a steep valley where only specially trained pilots may land. Paro has Tiger's Nest (Taktsang), a monastery clinging to a cliff about 900 m above the valley floor, reached by a steep walk of two to three hours. Thimphu, the capital, has a giant seated Buddha above the city and a police officer directing traffic at its main crossing instead of traffic lights. Over the Dochula pass, with its 108 chortens and, on clear days, a view of the high Himalaya, Punakha Dzong stands where two rivers meet. The Phobjikha valley and the old temples of Bumthang are a long, winding drive further east.",
+    "Roads are narrow and twisting, so journeys take far longer than the map suggests: Thimphu to Bumthang is a full day. Most visitors book through a Bhutanese tour operator, who arranges the guide, driver and hotels."
+  ],
+  "whenToGo": {
+    "stripLabel": "The valleys of the west and centre, where the dzongs and temples are. High treks have a shorter season, shown in their own strip below.",
+    "months": ["good", "good", "best", "best", "good", "good", "avoid", "avoid", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Rhododendrons flower on the passes in March and April, and the days are warm in the valleys; the Paro festival is the big event. Cloud and haze build through May, and the mountain views come and go."
+      },
+      {
+        "name": "Monsoon",
+        "months": [6, 7, 8],
+        "text": "Rain most days, often in the afternoon and at night. Cloud hides the peaks, landslides close roads for hours at a time, and leeches wait on forest trails. The valleys are green and quiet."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The rains end during September. October and November are clear and dry, with the best mountain views and the biggest festivals; they're also the busiest months for visitors."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, dry and very clear, with sunny days around 10–15°C in Thimphu and nights below freezing. Snow can close the high passes on the road east. Black-necked cranes winter in the Phobjikha valley, and low-lying Punakha stays mild."
+      }
+    ],
+    "weather": "The climate changes with height. Punakha, at about 1,200 m, is warm in summer and mild in winter; Paro and Thimphu, at about 2,200–2,300 m, have warm summers and cold, dry winters with frosty nights; Bumthang, higher still, is colder. The monsoon brings most of the year's rain from about June to September, heaviest in the south near India, which is hot and humid. Spring and autumn have the clearest skies, autumn above all.",
+    "festivals": [
+      {
+        "name": "Losar",
+        "place": "Across Bhutan",
+        "when": "Usually in February or early March, by the lunar calendar",
+        "months": [2, 3],
+        "text": "Families gather, visit temples and play archery and darts, and prayer flags are renewed on the hillsides."
+      },
+      {
+        "name": "Punakha Drubchen and Tsechu",
+        "place": "Punakha Dzong",
+        "when": "Usually in February or March",
+        "months": [2, 3],
+        "text": "The Drubchen re-enacts a 17th-century battle against Tibetan invaders, with local men dressed as the old militia, and is followed by the masked dances of the tsechu in the dzong's courtyards."
+      },
+      {
+        "name": "Paro Tsechu",
+        "place": "Paro Dzong",
+        "when": "Usually in March or April, over five days",
+        "months": [3, 4],
+        "text": "Monks and laymen in masks and silk costumes dance stories of the Buddhist teachings, and families come in their best clothes. Before dawn on the last day, a huge embroidered thangka is unrolled on the hillside for a few hours."
+      },
+      {
+        "name": "Thimphu Tsechu",
+        "place": "Tashichho Dzong, Thimphu",
+        "when": "Usually in September or October",
+        "months": [9, 10],
+        "text": "The capital's three days of masked dances, the biggest festival of the year, with crowds from all over the country. Hotels fill up months ahead."
+      },
+      {
+        "name": "Black-Necked Crane Festival",
+        "place": "Gangtey Monastery, Phobjikha",
+        "when": "11 November",
+        "months": [11],
+        "text": "Schoolchildren dance in crane costumes and villagers perform folk songs to welcome the rare cranes back from Tibet for the winter."
+      },
+      {
+        "name": "National Day",
+        "place": "Across Bhutan",
+        "when": "17 December",
+        "months": [12],
+        "text": "The anniversary of the crowning of the first king in 1907, a public holiday with an address by the king and celebrations in the towns."
+      }
+    ],
+    "regions": [
+      {
+        "name": "High treks",
+        "months": ["avoid", "avoid", "good", "best", "good", "avoid", "avoid", "avoid", "good", "best", "best", "avoid"],
+        "text": "The Druk Path, the Jomolhari trek and the long Snowman trek cross passes of 4,000–5,000 m. October and early November give the clearest, driest weather, and April the flowers. High passes are snowbound in winter, and trails are wet and full of leeches in the monsoon."
+      },
+      {
+        "name": "Bumthang and the east",
+        "text": "Bumthang's valleys, at about 2,600 m and above, hold some of the oldest temples in the country and grow buckwheat and apples. Colder than the west, with snow in winter; the east beyond is little visited, with long drives on mountain roads."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Kuzuzangpo la\" is hello; adding \"la\" at the end of a sentence makes it polite. A slight bow is respectful, and handshakes are fine with visitors. People often refuse food or a gift politely once or twice (\"meshu meshu\") before accepting, so offer again.",
+    "etiquette": [
+      "Walk clockwise round chortens, temples and prayer wheels, and turn prayer wheels clockwise too.",
+      "In dzongs and temples, wear long sleeves and long trousers or a long skirt, take off hats, and don't photograph inside the temple rooms; courtyards are usually fine.",
+      "Don't point your feet at altars or people, and don't touch anyone's head.",
+      "Archery is the national sport, played with loud singing and dancing; watch from well behind the archers, as the targets are about 140 m away.",
+      "Ask before photographing monks or people at festivals, and keep back from the dancers."
+    ],
+    "tipping": "Not expected in hotels or restaurants. Guides and drivers are usually given a tip at the end of a tour, in an envelope with a word of thanks, and trek crews too.",
+    "dress": "Modest clothes for dzongs and temples: collared shirts, long sleeves, and long trousers or skirts. Bring layers, as mornings and evenings are cold even when days are warm, a rain jacket from June to September, and good walking shoes for Tiger's Nest.",
+    "food": [
+      {
+        "name": "Ema datshi",
+        "text": "The national dish: chillies cooked as a vegetable in a melted cheese sauce. It's very hot; ask for it mild if you're not used to chilli."
+      },
+      {
+        "name": "Kewa and shamu datshi",
+        "text": "The same cheese sauce with potatoes (kewa) or mushrooms (shamu), gentler versions that go with every meal."
+      },
+      {
+        "name": "Red rice",
+        "text": "Bhutan's nutty, slightly sticky red rice, grown in the warmer valleys and served in big heaps with the datshi."
+      },
+      {
+        "name": "Momos",
+        "text": "Steamed dumplings filled with cheese, cabbage or meat, dipped in a fiery chilli sauce."
+      },
+      {
+        "name": "Puta",
+        "text": "Bumthang's buckwheat noodles, tossed with butter, Sichuan pepper and spring onion. Buckwheat pancakes (khuli) come from the same valleys."
+      },
+      {
+        "name": "Suja and ara",
+        "text": "Suja is salty butter tea, offered in homes and temples; ara is a home-made spirit of rice or maize, sometimes warmed with butter and egg."
+      }
+    ],
+    "phrases": {
+      "language": "Dzongkha",
+      "intro": "Dzongkha is written in the Tibetan script. English is the language of schooling, so many Bhutanese, especially younger people, speak it well; Nepali is common in the south.",
+      "items": [
+        { "phrase": "Kuzuzangpo la (སྐུ་གཟུགས་བཟང་པོ་ལགས།)", "say": "KOO-zoo-ZANG-poh lah", "meaning": "Hello" },
+        { "phrase": "Kadrinchhe la (བཀའ་དྲིན་ཆེ་ལགས།)", "say": "kah-DRIN-chay lah", "meaning": "Thank you" },
+        { "phrase": "Lasso (ལགས་སོ།)", "say": "LAH-soh", "meaning": "Yes; all right" },
+        { "phrase": "Gadem chi mo? (ག་དེམ་ཅིག་མོ།)", "say": "GAH-dem chee moh", "meaning": "How much is it?" },
+        { "phrase": "Tashi delek (བཀྲ་ཤིས་བདེ་ལེགས།)", "say": "TAH-shee DEH-lek", "meaning": "Good luck; cheers" },
+        { "phrase": "Log jay ge (ལོག་འཇལ་གེ།)", "say": "LOG JAY geh", "meaning": "See you again" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q917",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Bhutanese ngultrum (Nu, BTN), worth the same as the Indian rupee, which is also accepted. Cash is needed outside the bigger hotels and shops.",
+        "sources": [{ "property": "P38", "values": ["Q201799"] }],
+        "note": "Wikidata lists the ngultrum; the page adds that the Indian rupee, to which it is pegged at par, is also legal tender in Bhutan."
+      },
+      {
+        "key": "languages",
+        "text": "Dzongkha. English is widely spoken, as it's the language of schooling, and Nepali is common in the south.",
+        "sources": [{ "property": "P37", "values": ["Q33081"] }],
+        "note": "Wikidata lists Dzongkha; the page adds English and Nepali, which visitors hear every day."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), D (three large round pins) and G (as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613", "Q1383497", "Q1528507", "Q60740126"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Bhutan Time, UTC+6, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6906", "Q1087393"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "113 for police, 110 for fire and 112 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648804", "Q25648823", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+975",
+        "sources": [{ "property": "P474", "values": ["+975"] }]
+      }
+    ]
+  }
+}

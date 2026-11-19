@@ -24,6 +24,8 @@ export const createPhotoEvent = mk(DOMAINS.photos);
 export const createSharingEvent = mk(DOMAINS.sharing);
 // Moments: ids and field names only, never a title, story or place name
 export const createMomentEvent = mk(DOMAINS.moments);
+// Country maps: ids and state codes only (never a pin's name, notes or position)
+export const createCountryMapEvent = mk(DOMAINS.countryMaps);
 // Plans, payments and complimentary memberships (never an email address or a reason text)
 export const createBillingEvent = mk(DOMAINS.billing);
 // Travel offers: ids and keys only (clicks are never events: OfferClickDaily counts them)

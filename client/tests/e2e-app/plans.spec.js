@@ -197,7 +197,7 @@ test.describe('Plans', () => {
     const list = await openTool(page, 'Country list', 'Countries');
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('france');
     await list.getByRole('button', { name: 'France', exact: true }).click();
-    await page.getByRole('dialog', { name: 'France' }).getByRole('button', { name: 'Add photos from France' }).click();
+    await page.getByRole('dialog', { name: 'France' }).getByRole('button', { name: 'Add photos', exact: true }).click();
     const upload = page.getByRole('dialog', { name: 'Add photos: France' });
     await expect(upload.getByText('30 of 30 photos of France on this map.')).toBeVisible();
     await expect(upload.getByLabel(/choose photos/i)).toBeDisabled();

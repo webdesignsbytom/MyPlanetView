@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 // Icons
-import { FaPlay } from 'react-icons/fa';
+import { FaMapMarkedAlt, FaPlay } from 'react-icons/fa';
 // Hooks
 import usePhotoPage from '@/hooks/usePhotoPage';
 import useMomentPage from '@/hooks/useMomentPage';
@@ -31,6 +31,9 @@ import { VISIT_STATUS_LABELS, countsAsVisited } from '@/utils/map/visitStatus';
 import { formatDay } from '@/utils/functions/dates';
 import { isMagneticPole, isSpecialPlace } from '@/utils/map/specialPlaces';
 import { countryPhotoFilters } from '@/utils/map/preloadCountryLists';
+import { regionParent } from '@/utils/map/regionPlaces';
+import { countryMapCodeFor, countryMapInfo } from '@/utils/map/countryMapGeo';
+import { getSubdivisions } from '@/api/travelApi';
 
 const NO_TRIPS = [];
 
@@ -51,6 +54,9 @@ const NO_TRIPS = [];
 // through a share link). `mapKey` names the map in each card slot's seed.
 // "Print or download" (docs/API.md, "Downloads"): the country's photos as a zip, for the
 // map's editors (verified or not), never through a share link.
+// A region (Bali, Tasmania: regionPlaces.js) has its own ticket, with its poster, status, first
+// visit, note and the landmarks inside it; its photos and moments are its country's, which
+// `onOpenPlace(code)` opens from here (18 Nov 2026, the user's wish).
 function CountryPanel({
   code,
   visit,
@@ -73,22 +79,41 @@ function CountryPanel({
   nextTrip = null,
   canFetchTrips = true,
   mapKey = '',
+  onOpenPlace,
+  onOpenCountryMap,
   onClose,
 }) {
   const country = COUNTRY_BY_CODE[code];
+  // A region's country (Bali: Indonesia), where its photos, moments and landmarks are kept
+  const parent = regionParent(code);
+  const parentName = parent ? COUNTRY_BY_CODE[parent]?.name : null;
   const splitUk = useSplitUk();
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [deskOpened, setDeskOpened] = useState(false);
   const photoFilters = useMemo(() => countryPhotoFilters(photoSource, code), [photoSource, code]);
-  const photos = usePhotoPage({ ...photoFilters, enabled: Boolean(code) });
-  const moments = useMomentPage({ ...photoSource, country: code, enabled: Boolean(code) });
+  const photos = usePhotoPage({ ...photoFilters, enabled: Boolean(code) && !parent });
+  const moments = useMomentPage({ ...photoSource, country: code, enabled: Boolean(code) && !parent });
   const cardsDue = Boolean(adEvery) && photos.photos.length >= adEvery;
   const plannedTrip = usePlannedTripPlace(nextTrip, { enabled: cardsDue || deskOpened, canFetch: canFetchTrips });
   const offerSlots = useGalleryOffers({ every: adEvery, slotKey: `${mapKey}:${code}`, country: code, plannedTrip });
-  const deskCountries = useMemo(() => [code], [code]);
+  const deskCountries = useMemo(() => [parent ?? code], [parent, code]);
   // md and up: the status controls go in the stub (Tailwind's md, 48rem)
   const controlsInStub = useMediaQuery(NOT_PHONE_QUERY);
+  // Its own map (a region's is its country's): how many of its states the map has been to
+  const mapCode = countryMapCodeFor(code);
+  const stateInfo = mapCode ? countryMapInfo(mapCode) : null;
+  const [statesMarked, setStatesMarked] = useState(null);
+  useEffect(() => {
+    if (!mapCode || !stateInfo?.count || !photoSource) return undefined;
+    let live = true;
+    getSubdivisions(photoSource, mapCode)
+      .then(({ subdivisions = [] }) => live && setStatesMarked(subdivisions.filter((s) => countsAsVisited(s.status)).length))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [mapCode, stateInfo?.count, photoSource]);
   const { reload } = photos;
   const { reload: reloadMoments } = moments;
 
@@ -104,6 +129,10 @@ function CountryPanel({
 
   if (!country) return null;
   const status = visit?.status || null;
+  // Moments belong to a place you've been: the section shows once the country is visited or
+  // lived in (18 Nov 2026, the user's wish), or when it has some already (a status cleared
+  // later never hides them)
+  const showMoments = countsAsVisited(status) || moments.moments.length > 0;
   const special = isSpecialPlace(code);
   const continent = CONTINENT_LABELS[country.continent];
 
@@ -130,13 +159,14 @@ function CountryPanel({
     }
   };
 
-  // The kicker over the name: the place's badge once visited, and its continent
+  // The kicker over the name: the place's badge once visited, and its continent (a
+  // region's country)
   const kicker = (
     <p className='grid grid-cols-reg items-center justify-start gap-2'>
       {countsAsVisited(status) ? (
         <PlaceBadgeIcon code={code} lived={status === 'LIVED'} className='h-7 w-7 -rotate-6 drop-shadow-md' />
       ) : null}
-      <span>{continent || 'The world'}</span>
+      <span>{parentName ? `A region of ${parentName}` : continent || 'The world'}</span>
     </p>
   );
 
@@ -168,6 +198,28 @@ function CountryPanel({
     <CountryTicket
       title={country.name}
       kicker={kicker}
+      // How many of its states the map has been to, under its name
+      subtitle={
+        stateInfo?.count > 1 && statesMarked !== null ? (
+          <span data-states-marked=''>
+            {statesMarked} of {stateInfo.count} {stateInfo.word[1]} visited{mapCode !== code ? ` in ${COUNTRY_BY_CODE[mapCode]?.name}` : ''}
+          </span>
+        ) : null
+      }
+      // The country on its own, with its states and pins (a region opens its country's)
+      action={
+        mapCode && onOpenCountryMap ? (
+          <button
+            type='button'
+            onClick={() => onOpenCountryMap(mapCode)}
+            aria-label={mapCode === code ? `Open ${country.name} on its own map` : `Open the map of ${COUNTRY_BY_CODE[mapCode]?.name ?? mapCode}`}
+            className='btn-paper grid-flow-col gap-2 [--btn-pad-x:0.75rem] [--btn-pad-y:0.375rem] [--btn-size:0.9375rem]'
+          >
+            <FaMapMarkedAlt aria-hidden='true' className='self-center' />
+            <span className='phone:sr-only'>Open country</span>
+          </button>
+        ) : null
+      }
       onClose={onClose}
       stub={
         <CountryTicketStub
@@ -184,6 +236,13 @@ function CountryPanel({
           <span className='grid -rotate-2 grid-cols-reg items-center gap-1.5 border-2 border-double border-colour9 px-2 py-0.5 font-travel text-xs uppercase tracking-wide text-colour9'>
             <ExpeditionStampIcon className='h-4 w-4' />
             Special place
+          </span>
+        </p>
+      ) : null}
+      {parent ? (
+        <p className='grid justify-start'>
+          <span className='-rotate-2 border-2 border-double border-colour9 px-2 py-0.5 font-travel text-xs uppercase tracking-wide text-colour9'>
+            Region
           </span>
         </p>
       ) : null}
@@ -213,12 +272,30 @@ function CountryPanel({
       )}
       {locked ? <VerifyFirstNote action='mark countries, write notes, or add moments and photos' /> : null}
 
-      <section className='grid gap-2' aria-labelledby={`moments-${code}`}>
-        <h3 id={`moments-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
-          Moments
-        </h3>
+      {parent ? (
+        <section className='grid gap-2' aria-labelledby={`part-of-${code}`}>
+          <h3 id={`part-of-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
+            Part of {parentName}
+          </h3>
+          <p className='text-sm'>
+            {country.name} has its own visit and note, but it’s never counted as a country: marking it visited or lived in marks{' '}
+            {parentName} visited too. Its photos and moments are kept with {parentName}.
+          </p>
+          {onOpenPlace ? (
+            <MapActionButton onClick={() => onOpenPlace(parent)}>Open {parentName}</MapActionButton>
+          ) : null}
+        </section>
+      ) : (
+        <>
+      {showMoments ? (
+      <section className='grid' aria-labelledby={`moments-${code}`}>
         <MomentList
           inPanel
+          header={
+            <h3 id={`moments-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
+              Moments
+            </h3>
+          }
           list={moments}
           canEdit={canEdit && Boolean(mapId)}
           travellers={travellers}
@@ -239,6 +316,7 @@ function CountryPanel({
           }}
         />
       </section>
+      ) : null}
 
       <section className='grid gap-2' aria-labelledby={`photos-${code}`}>
         <h3 id={`photos-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
@@ -262,24 +340,32 @@ function CountryPanel({
             <span>Slideshow of {country.name}</span>
           </MapActionButton>
         ) : null}
-        {canEdit && onAddPhotos ? (
-          <MapActionButton onClick={() => onAddPhotos(code)}>Add photos from {country.name}</MapActionButton>
-        ) : null}
-        {(canEdit || locked) && photoSource?.mapId && photos.photos.length ? (
-          <PrintDownload inMapPanel scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
-        ) : null}
       </section>
+        </>
+      )}
 
-      {/* Partner offers for this country, only when asked for (every plan), before the
-          landmarks, whose list can be long */}
-      <TravelDesk
-        inMapPanel
-        countryCodes={deskCountries}
-        trip={plannedTrip && plannedTrip.stops.some((s) => s.countryCode === code) ? plannedTrip : null}
-        onOpen={() => setDeskOpened(true)}
-      />
+      {/* Adding photos, the country's photos as a zip, and partner offers for it (every
+          plan, only when asked for), before the landmarks, whose list can be long: side by
+          side from lg, in equal columns that fill the row (18 Nov 2026, the user's wish:
+          "Add photos" joined it the same day), one to a row below */}
+      <div className='grid gap-2 lg:auto-cols-fr lg:grid-flow-col'>
+        {!parent && canEdit && onAddPhotos ? (
+          <MapActionButton onClick={() => onAddPhotos(code)}>Add photos</MapActionButton>
+        ) : null}
+        {!parent && (canEdit || locked) && photoSource?.mapId && photos.photos.length ? (
+          <PrintDownload inMapPanel fill scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
+        ) : null}
+        <TravelDesk
+          inMapPanel
+          fill
+          countryCodes={deskCountries}
+          trip={plannedTrip && plannedTrip.stops.some((s) => s.countryCode === (parent ?? code)) ? plannedTrip : null}
+          onOpen={() => setDeskOpened(true)}
+        />
+      </div>
 
-      <CountryLandmarks countryCode={code} moments={moments.moments} />
+      {/* A region's: its country's landmarks inside it (useLandmarks) */}
+      <CountryLandmarks countryCode={code} moments={parent ? [] : moments.moments} />
     </CountryTicket>
   );
 }

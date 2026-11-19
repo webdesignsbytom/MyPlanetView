@@ -1,0 +1,192 @@
+{
+  "code": "DZ",
+  "slug": "algeria",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Saha", "El Djazaïr", "Marhba"],
+  "summary": "Roman ruins, the Casbah of Algiers, and rock art deep in the Sahara.",
+  "overview": [
+    "Algeria is Africa's largest country, and most of it is Sahara. Its people live mainly in the north, along the Mediterranean, where Algiers climbs a hillside above its bay with the old Ottoman Casbah near the top. Inland, the Roman towns of Timgad and Djémila are among the best preserved anywhere, Tipasa's ruins run down to the sea west of the capital, and Constantine sits on a rock split by a deep gorge, crossed by a string of bridges.",
+    "In the desert, the five walled towns of the M'zab Valley around Ghardaïa, founded from the 11th century on, still keep their old shape; Timimoun's red clay buildings and the high dunes of Taghit lie further west; and in the far south-east, the plateau of Tassili n'Ajjer near Djanet holds thousands of rock paintings and engravings, while the volcanic peaks of the Hoggar rise around Tamanrasset.",
+    "Tourism is small, so you may be the only visitor at a Roman site. Trains and long-distance buses link the northern cities, and Air Algérie flies to the Saharan towns. Trips into the deep south are arranged with a licensed local agency and guide, which the authorities generally expect, and police checkpoints on the roads are routine. Cards are little used: carry dinars in cash.",
+    "Many governments advise against all travel to Algeria's border areas, above all near Libya, Niger, Mali and Mauritania, and against some travel elsewhere in the far south. Conditions change, so check your own government's current advice before you go."
+  ],
+  "whenToGo": {
+    "stripLabel": "The north: Algiers, the coast and the Roman sites, where most visits begin. The Sahara's best season is the other way round, and has a strip of its own below.",
+    "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild and wet on the coast, about 17°C by day in Algiers, with grey spells between sunny ones. Inland towns such as Constantine and Sétif are cold, and snow falls on the Djurdjura mountains of Kabylie. The best time for the desert."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The rain eases through March, and April and May are green, warm and clear in the north, the best time for Timgad and Djémila. The Sahara is still pleasant in March, then heats up fast."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and dry: about 30°C and humid on the coast, where Algerian families fill the beaches, and well above 40°C in much of the Sahara. A hot wind from the desert, the sirocco, brings dusty days to the north."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September and October are warm and settled in the north, with the sea still warm. The first heavy rains usually reach the coast in November, as the desert season begins."
+      }
+    ],
+    "weather": "The coast has a Mediterranean climate: mild, rainy winters and hot, dry summers, with most of the rain from November to March. Behind it, the Tell Atlas and the high plateaus have colder winters and hotter summers. South of the Saharan Atlas it's desert: almost no rain, days of 45°C or more in summer at towns such as Adrar and In Salah, and warm winter days of about 20°C with nights close to freezing. Tamanrasset, at about 1,300 m, is cooler than the desert around it.",
+    "festivals": [
+      {
+        "name": "Yennayer (Amazigh New Year)",
+        "place": "Across Algeria, above all Kabylie",
+        "when": "12 January",
+        "months": [1],
+        "text": "The Berber new year, a public holiday since 2018. Families share a big meal, often couscous with chicken, and towns hold concerts and craft fairs."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Algeria",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "A month of fasting from dawn to sunset. Most cafés and restaurants close by day, then the streets come alive after the evening meal, with chorba frik on every table and honey-soaked zlabia sold in the markets. Eid al-Fitr ends it with two or three days of visits and new clothes."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Algeria",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice, when families who can afford it slaughter a sheep and share the meat. Shops and offices close, and buses and flights are full for a few days either side."
+      },
+      {
+        "name": "Sebiba",
+        "place": "Djanet",
+        "when": "At Ashura, ten days into the Islamic year, so also about 11 days earlier each year: in 2027, in June",
+        "months": [6],
+        "text": "A Tuareg ritual held in the oasis for centuries: the women sing and beat drums while men in their finest robes dance, and two of the old quarters compete. It's on UNESCO's list of intangible heritage."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Algeria",
+        "when": "5 July",
+        "months": [7],
+        "text": "Algeria's independence in 1962, after nearly eight years of war, is celebrated with flags in the streets, fireworks and official ceremonies."
+      },
+      {
+        "name": "Revolution Day",
+        "place": "Across Algeria",
+        "when": "1 November",
+        "months": [11],
+        "text": "A public holiday for the start of the War of Independence on 1 November 1954, marked with flags and official ceremonies."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Sahara",
+        "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+        "text": "Ghardaïa, Timimoun, Taghit, Djanet and Tamanrasset are at their best from November to March, with warm days and clear, cold nights; bring a warm layer and a good sleeping bag for camping. October and April are hot by midday, and from May to September the heat is fierce almost everywhere."
+      },
+      {
+        "name": "The mountains and high plateaus",
+        "text": "Constantine, Sétif and Batna (for Timgad) stand between about 600 and 1,100 m, and the villages of Kabylie climb the slopes of the Djurdjura. Winters are cold, with snow on the Djurdjura and the Aurès, and summers dry and hot, often around 35°C. Spring and early autumn are the best times."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Salam alaykum\" (peace be upon you) is the greeting everywhere, answered with \"wa alaykum salam\". Algerians also say \"Saha\", literally \"health\", for hello, thanks and well done, and many mix French into everyday talk. Men shake hands, and friends kiss on both cheeks; between a man and a woman, wait for her to offer her hand.",
+    "etiquette": [
+      "Algerians are known for their hospitality: an offer of coffee or a meal at home is meant, and it's polite to accept. Take your shoes off at the door if your hosts do.",
+      "The weekend is Friday and Saturday. Many shops and offices close on Friday, above all around the midday prayers.",
+      "Police and soldiers are wary of cameras: keep yours away from checkpoints and official buildings, and ask people first, women especially.",
+      "In Ramadan, Algerians fast from dawn to dusk; keep food, drinks and cigarettes out of sight in the street until sunset.",
+      "Alcohol is sold in some hotels, bars and restaurants in the big cities, but not in most places; don't drink in the street.",
+      "Eat with your right hand when sharing a dish, and take what's nearest you."
+    ],
+    "tipping": "Not a big custom. Round up in cafés and taxis, and leave about 10% in better restaurants. A Sahara crew of driver, cook and guide is tipped together when the trip is over.",
+    "dress": "Modest clothes are best for men and women: long trousers or skirts and covered shoulders, above all outside central Algiers and Oran. Women may want a scarf for mosques. In the desert, a light long-sleeved shirt and a scarf (chèche) wrapped round the head keep off sun and sand, and winter nights call for a warm jacket.",
+    "food": [
+      {
+        "name": "Couscous",
+        "text": "Steamed semolina under a stew of vegetables and lamb or chicken: the Friday family meal, made a little differently in every region."
+      },
+      {
+        "name": "Chorba frik",
+        "text": "A tomato soup with lamb and green cracked wheat, flavoured with coriander and mint. It opens the evening meal every day of Ramadan."
+      },
+      {
+        "name": "Chakhchoukha",
+        "text": "Thin flatbread torn into pieces and soaked in a spicy sauce of tomato, chickpeas and lamb, a dish of Biskra, Constantine and the Aurès."
+      },
+      {
+        "name": "Mhadjeb",
+        "text": "Square semolina pancakes folded round a filling of onion, tomato and pepper, cooked on a griddle and sold hot from street stalls."
+      },
+      {
+        "name": "Garantita",
+        "text": "A soft chickpea-flour bake from Oran, cut in slices, sprinkled with cumin and harissa and eaten in a bread roll."
+      },
+      {
+        "name": "Dates and mint tea",
+        "text": "Algeria grows some of the best Deglet Nour dates, around Biskra and Tolga. In the south, sweet green tea with mint is poured from a height and served in three rounds."
+      }
+    ],
+    "phrases": {
+      "language": "Algerian Arabic (Darja)",
+      "intro": "French is widely understood in the cities, and Berber languages (Tamazight) are spoken in Kabylie, the Aurès, the M'zab and among the Tuareg. Spellings in Latin letters vary.",
+      "items": [
+        { "phrase": "Salam alaykum (السلام عليكم)", "say": "sa-LAAM a-LAY-kum", "meaning": "Hello (\"peace be upon you\")" },
+        { "phrase": "Wesh rak? (واش راك)", "say": "wesh RAK", "meaning": "How are you? (to a man; to a woman, wesh rakî)" },
+        { "phrase": "Saha (صحة)", "say": "SAH-ha", "meaning": "Hi; thanks; well done (\"health\")" },
+        { "phrase": "Sahit (صحيت)", "say": "sah-HEET", "meaning": "Thank you" },
+        { "phrase": "Bshhal? (بشحال)", "say": "b-SHHAL", "meaning": "How much?" },
+        { "phrase": "Mlih (مليح)", "say": "m-LEEH", "meaning": "Good" },
+        { "phrase": "Bslama (بالسلامة)", "say": "b-SLAA-ma", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q262",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Algerian dinar (DA, DZD). Algeria runs on cash: cards are taken in few places outside the big hotels.",
+        "sources": [{ "property": "P38", "values": ["Q199674"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic and Tamazight (Berber), both official. Everyday speech is Algerian Arabic, and French is widely understood in the cities.",
+        "sources": [{ "property": "P37", "values": ["Q13955", "Q61053330"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, E and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q4689473"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "17 or 1548 for police; 1055 for the gendarmerie, outside the towns; 14 for fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648842", "Q28790066", "Q79972766", "Q25648803"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+213",
+        "sources": [{ "property": "P474", "values": ["+213"] }]
+      }
+    ]
+  }
+}

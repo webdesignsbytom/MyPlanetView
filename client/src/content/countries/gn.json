@@ -1,0 +1,177 @@
+{
+  "code": "GN",
+  "slug": "guinea",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonjour", "Guinée"],
+  "summary": "Waterfalls and cool tablelands in the Fouta Djallon, tool-using chimpanzees and griot music.",
+  "overview": [
+    "Guinea is a land of highlands and great rivers: the Niger, the Senegal and the Gambia all rise here, which is why it's called the water tower of West Africa. Few tourists come, and those who do head for the Fouta Djallon, a plateau of sandstone tablelands, waterfalls and Fula villages around Dalaba, Pita and Labé, cooler than the coast; for the forests of the south-east, where the chimpanzees of Bossou crack nuts with stones and Mount Nimba rises on the border with Côte d'Ivoire; and for the music: Guinea is a home of the Mande griots, the hereditary singers and kora players, and of Bembeya Jazz and the dancers of Les Ballets Africains.",
+    "Conakry, the capital, stretches along a narrow peninsula into the Atlantic, and boats cross in under an hour to the Îles de Los for beaches at weekends. Distances inland are long and most roads are poor: shared taxis and minibuses link the towns slowly, and visitors usually hire a 4×4 with a driver for the Fouta and the forest. The Guinean franc is hard to get outside the country, so bring euros or US dollars in cash to change; cards work in only a few big hotels in Conakry. Politics can be tense, with protests in the capital at times: read your government's current travel advice before you go."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Dry and sunny, with Conakry around 30°C and the Fouta Djallon pleasant by day and chilly at night: Dalaba and Mali-ville can drop to about 10°C. From about December the harmattan fills the air with Saharan dust, which softens the views from the plateau."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "The hottest months, above all on the savanna of Upper Guinea, where Kankan passes 35°C in the afternoons. The waterfalls shrink to trickles by April, and the first storms roll in during May."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9],
+        "text": "Conakry is one of Africa's wettest capitals, and July and August bring rain almost every day. Roads wash out across the country and travel slows to a crawl, though the Fouta's falls are at their fullest."
+      },
+      {
+        "name": "After the rains",
+        "months": [10],
+        "text": "Showers thin out and the hills are green, but the roads need weeks to dry, and it stays humid."
+      }
+    ],
+    "weather": "Tropical, with one rainy season from about May or June to October and a dry season for the rest of the year. The coast is hot and very wet, with well over 3,000 mm of rain a year in Conakry. The Fouta Djallon, at about 800 to 1,500 m, is several degrees cooler; Upper Guinea, around Kankan and Siguiri, is hotter and drier, with a shorter rainy season; and the forest region of the south-east is humid, with rain in most months.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Guinea",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Most Guineans are Muslim, so the month of fasting changes the rhythm of the whole country: slow afternoons, roadside stalls selling dates and juice before sunset, and long evenings. The Eid that ends it is a public holiday spent visiting family in new clothes."
+      },
+      {
+        "name": "Tabaski (Eid al-Adha)",
+        "place": "Across Guinea",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice. Rams are sold on every street corner in the days before, and transport out of Conakry is packed as people go home to their villages."
+      },
+      {
+        "name": "Mawlid (the Prophet's Birthday)",
+        "place": "Across Guinea",
+        "when": "About 11 days earlier each year: in 2027, about mid-August",
+        "months": [8],
+        "text": "A public holiday marked with night-long prayers and readings in the mosques, and big gatherings in the religious towns of the Fouta and Upper Guinea."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Guinea",
+        "when": "2 October",
+        "months": [10],
+        "text": "In 1958 Guinea became the first of France's colonies south of the Sahara to choose full independence, voting no to staying in a French community. The day is a holiday, with parades in Conakry."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Conakry and the coast",
+        "text": "Hot and humid all year and soaked from June to September. The Îles de Los, a short boat ride from the capital, have the nearest beaches; the dry months are the time for them."
+      },
+      {
+        "name": "The Fouta Djallon",
+        "text": "The main reason to visit: walks between villages and up to viewpoints, the Kambadaga and Kinkon falls near Pita, the Voile de la Mariée (Bride's Veil) falls near Kindia, and the rock called the Dame de Mali, a cliff in the shape of a woman's face, near Mali-ville. Best from November to February, when it's dry and cool."
+      },
+      {
+        "name": "Upper Guinea",
+        "text": "The savanna heartland of the Maninka people, along the upper Niger, with Kankan its main town. It's the hottest part of the country from March to May and has a shorter rainy season than the coast."
+      },
+      {
+        "name": "Forest Guinea",
+        "text": "Rainforest and hills in the south-east around Nzérékoré, with the chimpanzees of Bossou and the Mount Nimba reserve, a UNESCO World Heritage Site. Rain falls for most of the year, so the short dry season, from about December to February, is the time to go."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings are long and come before anything else. People ask after your health, your family and your work, and expect the same questions back. Men shake hands; with women, and with devout Muslims of either sex, wait to see whether a hand is offered. Elders are greeted first. In the Fouta, a Pular \"a jaraama\" (thank you) brings smiles.",
+    "etiquette": [
+      "Photography is a touchy subject: ask people before you raise a camera, and keep it away from bridges, soldiers, police, the port and official buildings.",
+      "Police and army checkpoints are common on the roads. Keep your passport, or a copy, to hand, and stay calm and polite.",
+      "The Fouta and Upper Guinea are strongly Muslim: dress conservatively there, and during Ramadan eat and drink out of sight by day.",
+      "Bargain in markets such as Madina in Conakry, one of the biggest in West Africa, with patience and good humour."
+    ],
+    "tipping": "Not a fixed custom. A small tip for a driver, guide or porter is appreciated, and so is leaving the change in a restaurant.",
+    "dress": "Loose trousers or long skirts and tops with sleeves fit in everywhere. Bring a fleece for the Fouta's cold dry-season nights, and from June a rain jacket and sandals that can get wet.",
+    "food": [
+      {
+        "name": "Riz sauce",
+        "text": "Rice with a sauce is the everyday meal: sauce feuille, made from cassava or sweet potato leaves cooked in palm oil, or sauce arachide, a peanut stew, with fish or meat."
+      },
+      {
+        "name": "Fonio",
+        "text": "A tiny grain grown in the Fouta Djallon for centuries, cooked like couscous and served with sauce or as a sweet porridge."
+      },
+      {
+        "name": "Grilled fish",
+        "text": "In Conakry, fish from the Atlantic is grilled over charcoal in the evenings and eaten with onions, chilli and a lime."
+      },
+      {
+        "name": "Gnamakoudji and bissap",
+        "text": "Fiery fresh ginger juice and deep-red hibiscus juice, sold chilled in plastic bags and bottles on every street."
+      },
+      {
+        "name": "Mangoes and Kindia fruit",
+        "text": "Guinea's mangoes are at their best from about April to June, and the Kindia region supplies pineapples, bananas and oranges to the whole country."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "French is the language of government, business and hotels, but at home and in the market people speak Susu on the coast, Pular in the Fouta Djallon and Maninka in Upper Guinea. A word or two of one of them goes down well.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello; good day" },
+        { "phrase": "Merci beaucoup", "say": "mair-SEE boh-KOO", "meaning": "Thank you very much" },
+        { "phrase": "C'est combien ?", "say": "say kom-BYAN", "meaning": "How much is it?" },
+        { "phrase": "Je ne comprends pas", "say": "zhuh nuh kom-PRON pah", "meaning": "I don't understand" },
+        { "phrase": "Où est la gare routière ?", "say": "oo ay lah gar roo-TYAIR", "meaning": "Where is the bus and taxi station?" },
+        { "phrase": "A jaraama (Pular)", "say": "ah jah-RAH-mah", "meaning": "Thank you, in Pular" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1006",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Guinean franc (FG, GNF). Cash pays for nearly everything; euros and US dollars are the easiest to change.",
+        "sources": [{ "property": "P38", "values": ["Q213311"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French, the official language. Susu, Pular and Maninka are the most widely spoken of Guinea's national languages.",
+        "sources": [{ "property": "P37", "values": ["Q150", "Q1339026"] }],
+        "note": "Wikidata also gives \"languages of Guinea\", a general item for the national languages; the page names the three most widely spoken."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, F and K (two round pins; K adds a half-round earth pin, as in Denmark), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613", "Q1502017"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689487"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "117 for police and 18 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q4547615", "Q25648843"] }],
+        "note": "Wikidata also gives 442-020 for ambulances, a local number that couldn't be confirmed, so the page leaves it out."
+      },
+      {
+        "key": "callingCode",
+        "text": "+224",
+        "sources": [{ "property": "P474", "values": ["+224"] }]
+      }
+    ]
+  }
+}

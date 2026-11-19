@@ -9,6 +9,7 @@
 // answers. Loaded only when a photo first needs it.
 import { projectToMap } from '@/utils/map/projection';
 import { poleAt } from '@/utils/map/specialPlaces';
+import { regionParent } from '@/utils/map/regionPlaces';
 
 export const COASTLINE_TOLERANCE = 6;
 const EARTH_RADIUS_M = 6371000;
@@ -24,6 +25,8 @@ const SMALL_COUNTRIES = [
   { code: 'AD', latitude: 42.546, longitude: 1.592, radiusM: 13500 },
   { code: 'GI', latitude: 36.1315, longitude: -5.349, radiusM: 2700 },
 ];
+// As the server's DECIDED_PLACES: the Old City of Jerusalem is Palestine's
+const DECIDED_PLACES = [{ code: 'PS', latitude: 31.7767, longitude: 35.2345, radiusM: 1000 }];
 const UNDRAWN_ISLANDS = [
   { code: 'GQ', latitude: 3.53, longitude: 8.7, radiusM: 40000 },
   { code: 'GR', latitude: 36.145, longitude: 29.585, radiusM: 2200 },
@@ -153,12 +156,19 @@ const distanceToPolygon = (poly, x, y) => {
   return best;
 };
 
-// Built on first use: every country's polygons with their bounds and areas
+// Built on first use: every country's polygons with their bounds and areas. A region's
+// shapes (Bali, Tasmania) are its country's, as in the server's countryShapes.json: a photo
+// in Bali is in Indonesia (utils/map/regionPlaces.js)
 let index = null;
 async function loadIndex() {
   if (!index) {
     const { COUNTRY_SHAPES } = await import('@/utils/map/countryShapes');
-    index = Object.entries(COUNTRY_SHAPES).map(([code, paths]) => ({
+    const pathsOf = new Map();
+    for (const [code, paths] of Object.entries(COUNTRY_SHAPES)) {
+      const place = regionParent(code) ?? code;
+      pathsOf.set(place, [...(pathsOf.get(place) ?? []), ...paths]);
+    }
+    index = [...pathsOf].map(([code, paths]) => ({
       code,
       polygons: paths.flatMap(parsePath).map((points) => ({ points, bounds: boundsOf(points), area: polygonArea(points) })),
     }));
@@ -217,7 +227,7 @@ export async function countryAtPosition(latitude, longitude) {
   if (pole) return pole;
   const countries = await loadIndex();
   const shaped = new Set(countries.map((c) => c.code));
-  const small = [...SMALL_COUNTRIES.filter((c) => !shaped.has(c.code)), ...UNDRAWN_ISLANDS].find(
+  const small = [...DECIDED_PLACES, ...SMALL_COUNTRIES.filter((c) => !shaped.has(c.code)), ...UNDRAWN_ISLANDS].find(
     (c) => haversineMeters(latitude, longitude, c.latitude, c.longitude) <= c.radiusM,
   );
   return small?.code ?? countryAtMapPoint(countries, point.x, point.y);

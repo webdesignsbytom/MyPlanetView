@@ -1,0 +1,151 @@
+{
+  "code": "GA",
+  "slug": "gabon",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Mbolo", "Gabon"],
+  "summary": "Elephants and hippos on the beach at Loango, mandrills at Lopé and whales offshore.",
+  "overview": [
+    "Gabon is one of the greenest countries on Earth: rainforest covers close to nine-tenths of it, and thirteen national parks, created together in 2002, protect about a tenth of the land. Loango, on the coast, is famous for wildlife on the beach, where forest elephants, buffalo and hippos walk the sand between the lagoons and the surf, and humpback whales pass offshore in the middle of the year. Lopé, in the centre, mixes savanna and forest and is a UNESCO World Heritage Site, with mandrills that move in troops of hundreds; Ivindo, in the north-east, has the Kongou Falls; and at Pongara, across the estuary from the capital, leatherback turtles nest on the beaches.",
+    "Libreville, the capital, sits on the Komo estuary, with a seafront boulevard, beaches, markets, and the church of Saint-Michel at Nkembo, whose carved wooden columns tell Bible stories. The Transgabonais railway runs inland from Owendo, the port beside Libreville, past Lopé to Franceville; elsewhere, travel is by rough road, boat or small plane, and Loango is usually reached by boat through Port-Gentil and Omboué. Gabon is one of the dearer places to travel in Africa, and most park visits are arranged through lodges or operators."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "avoid", "avoid", "good"],
+    "seasons": [
+      {
+        "name": "Long dry season",
+        "months": [6, 7, 8, 9],
+        "text": "Grey skies but almost no rain, and cooler, around 25–28°C by day. The best time for wildlife: animals come out onto the beaches and savanna clearings, and humpback whales pass off Loango and Mayumba."
+      },
+      {
+        "name": "Short rains",
+        "months": [10, 11],
+        "text": "The wettest weeks of the year, with heavy downpours most days; tracks in the parks get very hard going."
+      },
+      {
+        "name": "Short dry season",
+        "months": [12, 1],
+        "text": "A break in the rains, hot and bright between showers, when leatherback turtles come ashore to lay their eggs at Pongara and Mayumba."
+      },
+      {
+        "name": "Long rains",
+        "months": [2, 3, 4, 5],
+        "text": "Hot and humid, around 31°C, with heavy storms, often in the afternoon or at night, and sunshine between them. Forest trips are still possible, if muddy."
+      }
+    ],
+    "weather": "Equatorial: hot and humid all year, about 22–31°C, with plenty of rain, close to 3,000 mm a year in Libreville. The year has two dry seasons and two rainy ones: a long dry season from about June to September, cloudy and cooler; the heaviest rain in October and November; a shorter, patchy dry spell in December and January; and long rains from about February to May.",
+    "festivals": [
+      {
+        "name": "Leatherback turtle nesting",
+        "place": "Pongara, Mayumba and other beaches",
+        "when": "Usually from about November to February",
+        "months": [11, 12, 1, 2],
+        "text": "Gabon's beaches host one of the world's biggest nesting populations of leatherbacks, the largest turtles alive. Females haul themselves up the sand at night to lay, and the hatchlings run for the sea about two months later. Go with the park's guides."
+      },
+      {
+        "name": "Humpback whale season",
+        "place": "Off Loango and Mayumba",
+        "when": "Usually from about July to September",
+        "months": [7, 8, 9],
+        "text": "Humpbacks come up from the Southern Ocean to calve and breed in the warm water off the coast. They can be seen from boats, and sometimes from the beach."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Gabon",
+        "when": "17 August",
+        "months": [8],
+        "text": "Gabon has been independent of France since this day in 1960. A public holiday with a parade in Libreville; the day before is often a holiday too."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and a \"bonjour\" for everyone, and take a moment to ask how people are before getting to the point. \"Mbolo\", hello in Fang, is used well beyond the Fang themselves and always earns a smile, even in French-speaking Libreville.",
+    "etiquette": [
+      "Bwiti, a spiritual tradition built around the sacred iboga plant, is a serious religion. If you're invited to a ceremony, treat it as you would a church service, and ask before taking any photos.",
+      "On wildlife walks, do exactly as the guide says: forest elephants are shy but can charge, and the forest is no place to wander off alone.",
+      "Libreville's taxis are shared: call out where you're going and what you'll pay as the taxi slows, and the driver either nods or drives on.",
+      "Carry ID, as police checks are common, and keep your camera away from official buildings and anyone in uniform."
+    ],
+    "tipping": "Park guides, boat crews and lodge staff should be tipped at the end of a stay. In town, smarter restaurants welcome 5–10%, while taxis and local cafés expect nothing.",
+    "dress": "Light, quick-drying clothes in neutral colours, with long sleeves and trousers for the forest, and a rain jacket in any month outside the long dry season. In Libreville, people dress neatly, so leave beachwear on the beach.",
+    "food": [
+      {
+        "name": "Poulet nyembwe",
+        "text": "The national dish: chicken simmered in a thick, orange sauce made from palm-nut pulp, served with rice or cassava."
+      },
+      {
+        "name": "Odika",
+        "text": "Called \"Gabonese chocolate\" for its colour: the roasted kernels of wild mango, ground and pressed into dark blocks, then melted into sauces for meat and fish."
+      },
+      {
+        "name": "Bâton de manioc",
+        "text": "Cassava soaked, pounded and steamed in long leaf parcels: chewy, slightly sour, and eaten with almost everything."
+      },
+      {
+        "name": "Brochettes and grilled fish",
+        "text": "In the evening, Libreville's street grills turn out skewers of beef and goat and whole fish with chilli, eaten with fried plantain."
+      },
+      {
+        "name": "Régab",
+        "text": "Gabon's own lager, sold in large bottles everywhere, cold if you're lucky."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "French is spoken by almost everyone in Gabon, more than in most of Africa, so it's the language to use. Fang, Myene, Punu and Nzebi are among the main local languages.",
+      "items": [
+        { "phrase": "Bonjour, ça va ?", "say": "bon-ZHOOR sah VAH", "meaning": "Hello, how are you?" },
+        { "phrase": "Mbolo (Fang)", "say": "m-BOH-loh", "meaning": "Hello, in Fang" },
+        { "phrase": "Merci, c'est gentil", "say": "mair-SEE say zhon-TEE", "meaning": "Thank you, that's kind" },
+        { "phrase": "Combien pour aller à … ?", "say": "kom-BYAN poor ah-LAY ah", "meaning": "How much to go to …? (in a taxi)" },
+        { "phrase": "Je cherche …", "say": "zhuh SHAIRSH", "meaning": "I'm looking for …" },
+        { "phrase": "Pas de problème", "say": "pah duh pro-BLEM", "meaning": "No problem" },
+        { "phrase": "À demain", "say": "ah duh-MAN", "meaning": "See you tomorrow" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1000",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Central African CFA franc (CFA, XAF). Cards work in Libreville's hotels and larger shops; elsewhere, bring cash.",
+        "sources": [{ "property": "P38", "values": ["Q847739"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French, the official language, spoken by nearly everyone. Fang is the largest of some 40 local languages.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type C (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "West Africa Time, UTC+1, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q1773995", "Q4689504"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "1300 for an ambulance, 1722 for police and 18 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648870", "Q25648875", "Q25648843"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+241",
+        "sources": [{ "property": "P474", "values": ["+241"] }]
+      }
+    ]
+  }
+}

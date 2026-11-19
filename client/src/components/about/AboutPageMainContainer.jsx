@@ -7,8 +7,8 @@ import AboutSection from './AboutSection';
 import HowItWorksSection from './HowItWorksSection';
 
 // The About page under its title: the story on one sheet of paper (sections split by
-// dashed perforations), then How it works (#how-it-works, linked from the home hero;
-// hooks/FocusMainOnRouteChange.js scrolls to it, as to every hash link).
+// dashed perforations), then How it works (#how-it-works; a link to it scrolls there:
+// hooks/FocusMainOnRouteChange.js, as for every hash link).
 function AboutPageMainContainer() {
   return (
     <>

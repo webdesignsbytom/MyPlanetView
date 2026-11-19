@@ -1,8 +1,9 @@
 // Home page copy. Each section component reads its part from here.
 
-// The poster hero, from my_planet's home page
+// The poster hero, from my_planet's home page: the two lines written on the artwork
 export const homeHero = {
   title: 'Picture your travel',
+  tagline: 'Your private travel photo album',
 };
 
 // "How it works": one card per idea, in the order people use them

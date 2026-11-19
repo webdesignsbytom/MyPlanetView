@@ -1,0 +1,149 @@
+{
+  "code": "GU",
+  "slug": "guam",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Håfa adai", "Guåhan"],
+  "summary": "Chamorro village fiestas, Spanish-era ruins and Second World War beaches on a US island in Micronesia.",
+  "overview": [
+    "Guam is the biggest of the Mariana Islands and the furthest south, about 50 km long, and a US territory whose people are US citizens. The Chamorro people have lived here for around 3,500 years; Spain ruled from the late 1600s, the United States took the island in 1898, and Japan occupied it from December 1941 until US forces retook it in 1944. Military bases cover about a quarter of the island.",
+    "Most visitors, many of them from Japan and South Korea, stay along Tumon Bay, a sheltered beach with a shallow reef, lined with hotels, shops and restaurants. Beyond it are Two Lovers Point, a cliff with wide views over the bay; Hagåtña, the capital, with the Plaza de España and the cathedral of Dulce Nombre de Maria; and the War in the Pacific National Historical Park, whose units at Asan and Agat take in the 1944 landing beaches. The quieter south has Umatac, where Magellan's ships are said to have anchored in 1521, and the ruins of the Spanish Fort Nuestra Señora de la Soledad above the bay.",
+    "Beyond the shuttle and trolley buses that link Tumon's hotels and shopping centres there's little public transport, and a rental car is the easy way round the island. The forests are strangely quiet: the brown tree snake, which arrived by accident after the Second World War, wiped out most of Guam's native forest birds."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [1, 2, 3, 4, 5, 6],
+        "text": "North-east trade winds, lower humidity and mostly sunny days around 30°C. January to April is the most comfortable stretch; May and June grow hotter and stickier before the rains."
+      },
+      {
+        "name": "Rainy season",
+        "months": [7, 8, 9, 10, 11, 12],
+        "text": "Sudden heavy showers, sticky air, with typhoons most likely from about August to November. December is a changeover month that often dries out towards Christmas."
+      }
+    ],
+    "weather": "Guam's heat and humidity hardly vary: 29–31°C by day, 24–25°C at night and a sea near 28°C. Annual rain is around 2,500 mm, the bulk of it between July and November. The island lies in the path of some of the strongest storms on earth; a direct typhoon strike is rare but can cut power and water for weeks. January to April is the driest and breeziest time.",
+    "festivals": [
+      {
+        "name": "Guam History and Chamorro Heritage Day",
+        "place": "Across Guam, with a festival in Umatac",
+        "when": "The first Monday of March",
+        "months": [3],
+        "text": "A public holiday, once called Discovery Day after Magellan's arrival, now given over to Chamorro history. Umatac holds a re-enactment and village festival, and all of March is Mes Chamorro, Chamorro Month, with dance, music and food events."
+      },
+      {
+        "name": "Liberation Day",
+        "place": "Hagåtña",
+        "when": "21 July",
+        "months": [7],
+        "text": "Marks the US landings of 1944 that ended the Japanese occupation. Families stake out spots along Marine Corps Drive days ahead for the island's biggest parade, and a carnival runs for weeks around it."
+      },
+      {
+        "name": "Village fiestas",
+        "place": "Every village, on its patron saint's day",
+        "when": "Through the year",
+        "months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        "text": "On its saint's day, each village holds a Mass and a procession, then a fiesta: long tables of red rice, kelaguen and barbecue that friends, relatives and passing guests are welcome to share."
+      },
+      {
+        "name": "Santa Marian Kamalen",
+        "place": "Hagåtña",
+        "when": "8 December",
+        "months": [12],
+        "text": "The feast of Guam's patron saint, a public holiday. A statue of Mary, said to have been found floating in the sea by a fisherman, is carried through the streets of the capital after Mass at the cathedral."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Håfa adai\" is everywhere, from shop signs to the radio: hello, welcome and goodwill in one. Respect for elders runs deep, and Chamorro families greet the oldest people in the room first, often with manginge', bowing to sniff the back of an elder's hand. Visitors aren't expected to do it, but a handshake and a smile for the grandparents will be noticed.",
+    "etiquette": [
+      "Inafa'maolek, the Chamorro ideal of keeping the peace through helping one another, shapes social life: food is pressed on guests, and turning it all down can hurt; take a small plate even if you've eaten.",
+      "At a fiesta or a family party, guests are often sent home with balutan, a plate of leftovers wrapped to take away. Accept it with thanks.",
+      "Latte stones, the stone pillars that once held up Chamorro houses, are protected and treated with respect: no sitting or climbing on them.",
+      "Many beaches have strong currents where the reef ends, especially in the rainy season. Swim inside the reef, and ask locally before going further out.",
+      "Military bases are fenced and signed; don't photograph their gates or try to wander in."
+    ],
+    "tipping": "American rules apply: restaurant bills usually get 15–20% on top, and drivers, guides and housekeeping staff a few dollars.",
+    "dress": "Beach clothes and flip-flops are normal almost everywhere. Dress up a little for Mass and for visits to family homes. Pack reef shoes for the shallow coral flats, and a light rain jacket earns its place from July to November.",
+    "food": [
+      {
+        "name": "Red rice (hineksa' agaga')",
+        "text": "Rice coloured orange-red with achiote seeds, served with nearly every meal."
+      },
+      {
+        "name": "Kelaguen",
+        "text": "Chopped chicken, shrimp, fish or beef 'cooked' in lemon juice with grated coconut, onion and hot pepper, often wrapped in titiyas, a flat bread a little like a tortilla."
+      },
+      {
+        "name": "Finadene",
+        "text": "The sauce on every table: soy sauce with lemon juice or vinegar, onion and hot pepper, spooned over meat and rice."
+      },
+      {
+        "name": "Chamorro barbecue",
+        "text": "Short ribs, chicken and pork marinated in soy sauce, vinegar and garlic, then grilled over charcoal: the centre of every fiesta and beach party."
+      },
+      {
+        "name": "Latiya",
+        "text": "A sponge cake topped with a thick layer of vanilla custard and dusted with cinnamon, a fixture on fiesta dessert tables."
+      }
+    ],
+    "phrases": {
+      "language": "Chamorro (CHamoru)",
+      "intro": "English is the everyday language, but Chamorro is taught in schools and heard at home, in church and on the radio.",
+      "items": [
+        { "phrase": "Håfa adai", "say": "HAH-fah dye", "meaning": "Hello" },
+        { "phrase": "Buenas", "say": "BWAY-nahs", "meaning": "Good day (a greeting)" },
+        { "phrase": "Si Yu'os ma'åse'", "say": "see DZOOS mah-AH-seh", "meaning": "Thank you" },
+        { "phrase": "Hunggan / Åhe'", "say": "HOONG-gahn / AH-heh", "meaning": "Yes / No" },
+        { "phrase": "Adios", "say": "ah-DYOS", "meaning": "Goodbye" },
+        { "phrase": "Biba Guam!", "say": "BEE-bah GWAHM", "meaning": "Long live Guam! (a cheer)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q16635",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar ($, USD). Cards are taken almost everywhere in Tumon and Hagåtña.",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English and Chamorro, both official. Filipino languages, Japanese and Korean are widely heard too.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q33262"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Chamorro Standard Time, UTC+10, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q7056"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 671",
+        "sources": [{ "property": "P474", "values": ["+1671"] }]
+      }
+    ]
+  }
+}

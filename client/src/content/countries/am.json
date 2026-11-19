@@ -1,0 +1,187 @@
+{
+  "code": "AM",
+  "slug": "armenia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Barev", "Hayastan", "Bari galust"],
+  "summary": "Cliff-top monasteries, Lake Sevan and Yerevan's cafés in sight of Mount Ararat.",
+  "overview": [
+    "Armenia is a small, high, landlocked country in the southern Caucasus, and it was the first to make Christianity its state religion, early in the 4th century. Its stone churches and monasteries are the reason most people come: Geghard, partly cut into the rock of a gorge; Noravank, among red cliffs; Tatev, on a spur above a canyon in the south, reached by a long cable car; and Khor Virap, with snow-capped Mount Ararat, across the border in Turkey, filling the sky behind it. Garni, a temple with Greek columns from Roman times, stands near Geghard, and Echmiadzin, west of Yerevan, is the seat of the Armenian church.",
+    "Yerevan, the capital, is built of pink and orange volcanic stone, with wide avenues, outdoor cafés, a big Soviet-era staircase called the Cascade, and Matenadaran, a museum of old manuscripts. Lake Sevan, at about 1,900 m, is an hour away, and the forests round Dilijan and the monasteries of Haghpat and Sanahin are in the green north. Most visitors fly into Yerevan or come by road from Tbilisi in Georgia, about five or six hours. Shared minibuses (marshrutkas) and cheap app taxis cover the country, though many people hire a car and driver for day trips. Check your government's advice before travelling in the areas close to the border with Azerbaijan."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Snow lingers in the mountains into April, and the apricot trees of the Ararat plain flower. By May the hillsides are green with wild flowers and the days warm, around 22°C in Yerevan."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "June is warm and bright. July and August are hot and dry in Yerevan, often 35°C and sometimes near 40°C, so locals head for Lake Sevan and the cooler forests of Dilijan. Mountain hiking is at its best."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Warm, dry September and October bring the grape harvest and golden leaves in the gorges, and are the best months for walking between monasteries. November turns grey and cold."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, often below freezing at night in Yerevan, with snow in the mountains; Tsaghkadzor, an hour north of Yerevan, is the ski resort. Mountain roads in the south and the pass to Lake Sevan can be icy."
+      }
+    ],
+    "weather": "Hot, dry summers and cold winters, both sharpened by height: almost the whole country is above 1,000 m. Yerevan, in a basin at about 1,000 m, gets little rain, with summer highs in the mid-30s°C and January nights around −5°C. Higher places such as Gyumri, Lake Sevan and Goris are cooler in summer and much colder in winter. Most of the rain falls in spring, from about April to June.",
+    "festivals": [
+      {
+        "name": "Christmas",
+        "place": "Across Armenia",
+        "when": "6 January",
+        "months": [1],
+        "text": "The Armenian church keeps Christmas and the baptism of Christ together on 6 January, after an evening service on the 5th. With the New Year, it makes the first week of January one long holiday."
+      },
+      {
+        "name": "Trndez",
+        "place": "Across Armenia",
+        "when": "Evening of 13 February",
+        "months": [2],
+        "text": "Bonfires are lit outside churches, and young couples and newlyweds jump over them for luck. Others carry the fire home or walk through the smoke."
+      },
+      {
+        "name": "Genocide Remembrance Day",
+        "place": "Tsitsernakaberd, Yerevan",
+        "when": "24 April",
+        "months": [4],
+        "text": "A national day of mourning for the Armenians killed in the Ottoman Empire from 1915. Crowds walk up the hill to the memorial all day to lay flowers round its eternal flame."
+      },
+      {
+        "name": "Vardavar",
+        "place": "Across Armenia",
+        "when": "A Sunday 14 weeks after Easter, usually in late June or July: in 2027, 4 July",
+        "months": [6, 7],
+        "text": "A church feast with older roots, celebrated as a nationwide water fight: anyone in the street, visitors included, may get a bucket of water over them. Leave phones and cameras somewhere dry."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Armenia",
+        "when": "21 September",
+        "months": [9],
+        "text": "The anniversary of the vote for independence from the Soviet Union in 1991, with concerts and fireworks in Yerevan."
+      },
+      {
+        "name": "Areni Wine Festival",
+        "place": "Areni, Vayots Dzor",
+        "when": "Usually in early October",
+        "months": [10],
+        "text": "The village whose cave held one of the oldest known winemaking sites holds a harvest fair of local wines, music, dancing and food stalls."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Lake Sevan",
+        "text": "A big mountain lake at about 1,900 m, with a monastery on a peninsula on its north-west shore. The water is warm enough to swim only from about July to early September, and from November to March the shore is cold, windy and quiet."
+      },
+      {
+        "name": "Syunik, the south",
+        "text": "Deep gorges, cave villages and Tatev monastery, a long drive south from Yerevan over high passes. Best from May to October; in winter the passes can close for snow, and Tatev's cable car can stop in high winds."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Barev\" (hello) or the politer \"Barev dzez\". Men shake hands, and friends kiss once on the cheek. Many Armenians say \"merci\" for thank you, which is easier than the long Armenian word. Expect to be asked where you're from, and asked again to eat.",
+    "etiquette": [
+      "At a shared meal, toasts come one after another: to the guests, to parents, to those who have died. Raise your glass to each one; a sip is enough, and saying no to strong drink is accepted.",
+      "Hospitality runs deep, and refusing food can offend. Take a little of each dish and leave a little on your plate, or more will come.",
+      "In churches, dress modestly, speak quietly and light a thin candle in the sand trays if you wish. Women may cover their hair, though it's rarely required.",
+      "Mount Ararat, across the border, and the Armenian genocide are deeply felt subjects. Listen rather than debate.",
+      "Use ride-hailing apps or agree the fare first in Yerevan taxis; drivers often speak Russian rather than English."
+    ],
+    "tipping": "Many Yerevan restaurants add a service charge of about 10% to the bill; where none is added, leaving about 10% is usual. Round up taxi fares, and tip guides and drivers at the end of a day.",
+    "dress": "Yerevan dresses smartly, especially in the evening. Shoulders and knees covered for churches and monasteries, and good shoes for steep, uneven paths and steps. Bring a warm layer for the mountains, even in summer.",
+    "food": [
+      {
+        "name": "Khorovats",
+        "text": "Barbecue: pork, lamb or chicken grilled on long skewers over embers, with grilled peppers, tomatoes and aubergines, and the heart of every feast."
+      },
+      {
+        "name": "Tolma",
+        "text": "Minced meat and rice wrapped in vine leaves in summer and in cabbage leaves in winter, served with garlic yoghurt."
+      },
+      {
+        "name": "Lavash",
+        "text": "Thin, soft flatbread slapped onto the walls of a clay oven dug into the ground (tonir). It's eaten with everything and wrapped round herbs and cheese."
+      },
+      {
+        "name": "Khash",
+        "text": "A winter ritual: a broth of slow-boiled cow's feet, eaten early in the morning with crushed garlic, dried lavash and a glass of vodka."
+      },
+      {
+        "name": "Ghapama",
+        "text": "A whole pumpkin stuffed with rice, dried apricots, raisins and honey and baked, cut open at the table for the New Year holidays."
+      },
+      {
+        "name": "Brandy and apricots",
+        "text": "Armenian brandy has been made in Yerevan since the 19th century, and the brandy factories run tastings. Apricots, the country's symbol, are at their best in July."
+      }
+    ],
+    "phrases": {
+      "language": "Armenian",
+      "intro": "Armenian has its own alphabet, from the 5th century. Russian is widely understood, and many younger people in Yerevan speak English.",
+      "items": [
+        { "phrase": "Barev dzez (Բարև ձեզ)", "say": "bah-REV dzez", "meaning": "Hello (polite)" },
+        { "phrase": "Shnorhakalutyun (Շնորհակալություն)", "say": "shnor-hah-kah-loo-TYOON", "meaning": "Thank you" },
+        { "phrase": "Khndrem (Խնդրեմ)", "say": "khuhn-DREM", "meaning": "Please; you're welcome" },
+        { "phrase": "Inch arzhe? (Ինչ արժե՞)", "say": "inch ar-ZHEH", "meaning": "How much is it?" },
+        { "phrase": "Shat hamov er (Շատ համով էր)", "say": "SHAHT hah-MOHV ehr", "meaning": "It was very tasty" },
+        { "phrase": "Kenats (Կենաց)", "say": "keh-NAHTS", "meaning": "Cheers! (\"To life\")" },
+        { "phrase": "Ts'tesutyun (Ցտեսություն)", "say": "tsuh-teh-soo-TYOON", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q399",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Armenian dram (֏, AMD). Cards are widely taken in Yerevan; carry cash in villages and at markets.",
+        "sources": [{ "property": "P38", "values": ["Q130498"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Armenian. Russian is widely understood, and English is common among younger people in Yerevan.",
+        "sources": [{ "property": "P37", "values": ["Q8785"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Armenia Time, UTC+4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6779", "Q4127120", "Q4806317"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; also 101 for fire, 102 for police and 103 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648794", "Q25648798", "Q25648811"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+374",
+        "sources": [{ "property": "P474", "values": ["+374"] }]
+      }
+    ]
+  }
+}

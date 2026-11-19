@@ -1,0 +1,161 @@
+{
+  "code": "AG",
+  "slug": "antigua-and-barbuda",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Wadadli", "Antigua", "Barbuda"],
+  "summary": "Bay after bay of beaches, Nelson's dockyard, and Barbuda's pink sand and frigatebirds.",
+  "overview": [
+    "Antigua, the larger of the two islands, has a coast so cut with bays that Antiguans like to say there's a beach for every day of the year. Dickenson Bay and Runaway Bay lie close to St John's in the north-west, Half Moon Bay faces the Atlantic in the east, and Darkwood and the long beaches of the south-west look towards Montserrat. Inland the island is low and dry, dotted with the stone towers of old sugar mills; at Betty's Hope one has been restored with its sails, and Fig Tree Drive winds through the greener hills of the south, below Mount Obama, the highest point at 402 m.",
+    "English Harbour, on the south coast, is the place most visitors remember. Nelson's Dockyard, the Royal Navy's Georgian base, has been restored as a working marina and is a World Heritage Site, and above it the lookout at Shirley Heights has a long-running Sunday afternoon party with a steel band and a barbecue. St John's, the capital, is where the cruise ships dock, with a busy market and a white cathedral with twin towers. Minibuses run from the capital's bus stations, but most visitors use taxis or a hire car, driving on the left on narrow, bumpy roads.",
+    "Barbuda, a flat island to the north, is reached by ferry or a small plane. It has long empty beaches with a pink tint from crushed shells, and a frigatebird colony in Codrington Lagoon, one of the largest in the Caribbean, best seen from a boat in the nesting months of autumn and winter. Hurricane Irma badly damaged the island in 2017."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Sunny season",
+        "months": [12, 1, 2, 3, 4, 5],
+        "text": "Low humidity, steady trade winds and very little rain. This is the sailing season too: superyachts fill the harbours in winter, and the regattas come in April and early May. Book Christmas and Sailing Week well ahead."
+      },
+      {
+        "name": "High summer",
+        "months": [6, 7, 8],
+        "text": "Hot and more humid, with passing showers and a growing chance of tropical storms. Carnival fills St John's at the end of July and the start of August."
+      },
+      {
+        "name": "Peak of the hurricane season",
+        "months": [9, 10, 11],
+        "text": "September and October carry the highest risk of storms and are the wettest months. Some restaurants and hotels shut for a few weeks around September; November is quieter, greener and usually drier."
+      }
+    ],
+    "weather": "Antigua is one of the drier islands of the eastern Caribbean, with roughly 1,000 mm of rain in an average year and long dry spells; much of the island's water comes from desalination. Daytime temperatures run from about 28°C in January to 31°C in August, and nights rarely fall below 22°C. The trade wind blows from the east most of the year, which is why the island draws so many sailors. Barbuda is flatter and drier still.",
+    "festivals": [
+      {
+        "name": "Antigua Classic Yacht Regatta",
+        "place": "English Harbour and Falmouth Harbour",
+        "when": "Usually in mid-April",
+        "months": [4],
+        "text": "Wooden schooners, ketches and other classic yachts race off the south coast, with a parade of sail through the harbour."
+      },
+      {
+        "name": "Antigua Sailing Week",
+        "place": "English Harbour and Falmouth Harbour",
+        "when": "Usually late April into early May",
+        "months": [4, 5],
+        "text": "One of the Caribbean's best-known regattas, held since 1968: racing by day and crowded bars around the dockyard by night."
+      },
+      {
+        "name": "Antigua Carnival",
+        "place": "St John's",
+        "when": "Usually from late July to the first Tuesday of August",
+        "months": [7, 8],
+        "text": "Celebrates the end of slavery in 1834, with calypso and soca contests, a pageant, J'ouvert before dawn on Carnival Monday and the costumed bands parading through the capital on the Monday and Tuesday."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Antigua and Barbuda",
+        "when": "1 November",
+        "months": [11],
+        "text": "A public holiday marking independence from Britain in 1981, with a ceremonial parade and events in the days around it."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Antigua",
+        "text": "Nearly all the hotels, restaurants and sights, and the yachting harbours of the south coast."
+      },
+      {
+        "name": "Barbuda",
+        "text": "Quiet, with one village, Codrington, and few visitors. Best as a day trip or a short stay for the beaches and the frigatebirds, in the calm, dry months."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Start every exchange with a greeting for the time of day: Antiguans take it as basic good manners, and skipping it is the quickest way to seem rude. A handshake is usual between strangers, and friends often bump fists. Older people may be addressed as Mr or Miss followed by their first name.",
+    "etiquette": [
+      "Wearing camouflage-pattern clothing is against the law for anyone who isn't in the armed forces, children's clothes included: leave it at home.",
+      "Barbuda's frigatebird colony is visited by boat with a local guide: keep your distance from the nests.",
+      "Water is precious on a dry island that relies on desalination, so keep showers short.",
+      "Ask before taking photographs of people, including vendors at the market.",
+      "The roads have potholes, sharp bends and few signs: drive slowly, and take a taxi home from the Sunday party at Shirley Heights."
+    ],
+    "tipping": "About 10% is the norm in restaurants, but many already put it on the bill as a service charge. Guides and boat crews on day trips expect something, and taxi fares can be rounded up.",
+    "dress": "Light, loose clothes and a hat. Smart casual in the evening at the dockyard's restaurants. Leave camouflage prints behind (see above), and pack a light layer for breezy boat trips.",
+    "food": [
+      {
+        "name": "Fungee and pepperpot",
+        "text": "The national dish: fungee is cornmeal cooked with okra and shaped into a smooth ball, and pepperpot a thick stew of salted meat, spinach, aubergine and squash."
+      },
+      {
+        "name": "Ducana and saltfish",
+        "text": "Ducana is grated sweet potato with coconut, sugar and spice, wrapped in a banana leaf and boiled. It's served beside stewed saltfish, a pairing found on most local menus."
+      },
+      {
+        "name": "Antigua Black pineapple",
+        "text": "A small, very sweet pineapple grown on the island for centuries. Look for it at the market in St John's and in fresh juices."
+      },
+      {
+        "name": "Wadadli and local rum",
+        "text": "Wadadli is the island's own lager, and the Antigua Distillery makes English Harbour and Cavalier rums, poured neat or in a rum punch."
+      }
+    ],
+    "phrases": {
+      "language": "English (Antiguan Creole)",
+      "intro": "Antiguans use English at school, at work and in government. At home and among friends they speak Antiguan Creole, which can be hard to follow at first. A few words:",
+      "items": [
+        { "phrase": "Mornin'", "say": "MOR-nin", "meaning": "Good morning: say it when you walk into a shop, a bus or a bar" },
+        { "phrase": "Wha' happ'n?", "say": "wah HAP-n", "meaning": "Hi, how's it going?" },
+        { "phrase": "Wadadli", "say": "wah-DAHD-lee", "meaning": "Antigua's old Amerindian name, and the local beer" },
+        { "phrase": "Jumbie", "say": "JUM-bee", "meaning": "A ghost or spirit" },
+        { "phrase": "Jump-up", "meaning": "A street party with music and dancing" },
+        { "phrase": "Mas", "say": "MAHSS", "meaning": "Carnival costume, and the bands that parade in it" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q781",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Eastern Caribbean dollar (EC$, XCD). US dollars are widely accepted, though change usually comes in EC dollars.",
+        "sources": [{ "property": "P38", "values": ["Q26365"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Antiguan Creole is spoken day to day.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }],
+        "note": "Wikidata also lists Spanish as an official language. English is the language of government; Spanish is spoken by a minority with roots elsewhere in the Caribbean and Latin America, so the page leaves it out."
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 230 V: more than many North American appliances take, so check the label",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q109529671"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 or 911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 268",
+        "sources": [{ "property": "P474", "values": ["+1268"] }]
+      }
+    ]
+  }
+}

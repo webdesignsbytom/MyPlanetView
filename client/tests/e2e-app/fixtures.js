@@ -6,6 +6,10 @@ import { test as base, expect } from '@playwright/test';
 // Constants
 import { COOKIE_POLICY_NAME } from '../../src/utils/constants/constants.js';
 import { TIPS_SHOWN_KEY } from '../../src/utils/map/mapTips.js';
+import { REGION_CODES } from '../../src/utils/map/regionPlaces.js';
+
+// How many regions there are (Bali, the Azores…): the stats say "Regions 1 of <this>"
+export const REGION_COUNT = REGION_CODES.length;
 
 export { expect };
 
@@ -103,10 +107,11 @@ export const openStats = (page) => pressTool(page, 'Travel statistics');
 
 /**
  * The map's counts, from the statistics stamp's description: "8 countries, 2 continents, 16
- * photos. Special places 0 of 5" (special places: Antarctica and the poles). Read from the
- * page, as the stamp is hidden on phones.
+ * photos. Special places 0 of 5" (special places: Antarctica and the poles), and ". Regions
+ * 1 of 7" once one's visited (out of every region: regionPlaces.js). Read from the page, as
+ * the stamp is hidden on phones.
  */
-export const expectStats = (page, text, specialPlaces = 0) =>
+export const expectStats = (page, text, specialPlaces = 0, regions = 0) =>
   expect
     .poll(() =>
       toolbar(page)
@@ -115,7 +120,7 @@ export const expectStats = (page, text, specialPlaces = 0) =>
         .first()
         .evaluate((stamp) => document.getElementById(stamp.getAttribute('aria-describedby'))?.textContent ?? ''),
     )
-    .toBe(`${text}. Special places ${specialPlaces} of 5`);
+    .toBe(`${text}. Special places ${specialPlaces} of 5${regions ? `. Regions ${regions} of ${REGION_COUNT}` : ''}`);
 
 /**
  * On a phone the map's tools are a "Menu" button at the top right that drops the list

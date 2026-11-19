@@ -1,0 +1,174 @@
+{
+  "code": "PR",
+  "slug": "puerto-rico",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Wepa!", "Borinquen", "Bienvenidos"],
+  "summary": "Old San Juan's forts and blue cobbles, a rainforest of singing frogs, bays that glow at night.",
+  "overview": [
+    "Puerto Rico is a US territory with a Spanish-speaking Caribbean soul: Puerto Ricans are US citizens and pay in dollars, but salsa, reggaeton and bomba drums are the soundtrack. Old San Juan, on a walled islet at the mouth of the harbour, has blue cobblestones, houses painted every colour and two great Spanish forts, El Morro and San Cristóbal, which with the city walls and La Fortaleza, the governor's mansion, form a World Heritage Site.",
+    "El Yunque, about an hour east of San Juan, is the only tropical rainforest in the US National Forest System, with waterfalls by day and the two-note call of the tiny coquí frog after dark. Off the east coast, the islands of Vieques and Culebra have quieter beaches, Culebra's Flamenco Beach among them, and Vieques's Mosquito Bay glows blue-green at night with microscopic plankton. Ponce, on the drier south coast, has a fine art museum and an old fire station painted in red and black stripes; Rincón, in the west, has big surf in winter; and the mountains down the middle of the island hold coffee farms and cool country towns.",
+    "Getting around means driving: buses are few outside San Juan, though ferries and small planes link the main island to Vieques and Culebra. In the capital, Condado and Isla Verde have the hotel beaches, while Santurce and the La Placita market square are where locals go out at night."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Sunny and breezy, about 27–29°C by day in San Juan: the busiest months, with cruise ships in port most days. Winter swells bring surfers to Rincón, and the Christmas season runs on into January."
+      },
+      {
+        "name": "Early rainy season",
+        "months": [5, 6, 7, 8],
+        "text": "Hotter and more humid, with afternoon showers that usually clear quickly. July fills the beaches with Puerto Rican families on holiday, and the hurricane season begins in June."
+      },
+      {
+        "name": "Storm season",
+        "months": [9, 10, 11],
+        "text": "September and October carry the highest risk of hurricanes and the heaviest rain. November is calmer, and the Christmas lights go up before its end."
+      }
+    ],
+    "weather": "Warm all year: San Juan's highs run from about 28°C in January to 31°C in summer, and the sea stays between 26 and 29°C. The north coast catches the trade-wind showers, and El Yunque gets rain on almost every afternoon, while the south coast around Ponce and Guánica is much drier, with cactus scrub in Guánica's dry forest. Mountain towns in the interior are several degrees cooler. Most rain falls from May to November, and the hurricane season runs from June to November.",
+    "festivals": [
+      {
+        "name": "Christmas and Three Kings Day",
+        "place": "Across the island",
+        "when": "From late November to mid-January; Three Kings Day is 6 January",
+        "months": [12, 1],
+        "text": "Puerto Rico's Christmas is famously long. Friends turn up at night with guitars and güiros for a parranda, a musical surprise visit, and on the eve of Three Kings Day children leave grass in a shoebox for the kings' camels."
+      },
+      {
+        "name": "Fiestas de la Calle San Sebastián",
+        "place": "Old San Juan",
+        "when": "Usually the third weekend of January, over four days",
+        "months": [1],
+        "text": "The street party that closes the Christmas season: bands on every corner, craft stalls, and cabezudos, big-headed figures from island folklore, parading through the old town. Crowds are huge at night."
+      },
+      {
+        "name": "Ponce Carnival",
+        "place": "Ponce",
+        "when": "The week before Ash Wednesday; in 2027, 3–9 February",
+        "months": [2, 3],
+        "text": "Vejigantes, devils in bright suits and spiky papier-mâché masks, chase the crowds through the streets, and the week ends with the mock burial of a sardine."
+      },
+      {
+        "name": "Noche de San Juan",
+        "place": "Beaches across the island",
+        "when": "23 June",
+        "months": [6],
+        "text": "On the eve of the feast of St John the Baptist, the island's patron saint, people gather on the beach and go into the sea backwards at midnight to wash away bad luck for the year ahead."
+      },
+      {
+        "name": "Fiestas de Santiago Apóstol",
+        "place": "Loíza",
+        "when": "Usually late July, around 25 July",
+        "months": [7],
+        "text": "The heart of Afro-Puerto Rican culture: processions for St James, bomba drumming and dancing, and vejigantes in masks carved from coconut shells."
+      },
+      {
+        "name": "Festival de las Máscaras",
+        "place": "Hatillo",
+        "when": "28 December",
+        "months": [12],
+        "text": "On Holy Innocents' Day, masked riders in costumes of every colour parade through this north-coast town, recalling Herod's soldiers."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Warm and close: a handshake between men, and a kiss on the right cheek between women, and between men and women once introduced. Say \"Buenos días\" or simply \"Buenas\" when you walk into a shop or a lift, and leave time to chat. Puerto Ricans often call themselves boricuas, after Borinquen, the island's Taíno name.",
+    "etiquette": [
+      "Puerto Ricans are US citizens with a strong identity of their own: the island's flag flies everywhere beside the US one, and Puerto Rico competes as its own team at the Olympics.",
+      "Bio bays are seen by kayak or boat on dark nights; swimming isn't allowed in most of them, and repellent and sunscreen harm the plankton that glow, so go without.",
+      "In Old San Juan, keep the noise down late at night: people live in those painted houses.",
+      "Lunch is often the main meal and dinner starts late; on weekend nights, restaurants fill after 8 pm.",
+      "Ask before photographing people, and before joining a bomba circle: the dancer leads the drums, and visitors are often invited to try."
+    ],
+    "tipping": "As on the US mainland: 15–20% in restaurants (check the bill, as some tourist places add it as servicio), a dollar or two a drink at bars, and tips for taxi drivers, guides and hotel staff.",
+    "dress": "Casual by day, smart by night: Puerto Ricans dress up to go out, so pack something better for evenings in San Juan, and keep beachwear on the beach. Bring a rain jacket for El Yunque and long trousers for cool evenings in the mountains.",
+    "food": [
+      {
+        "name": "Mofongo",
+        "text": "Green plantains fried, then pounded in a wooden pilón with garlic and pork crackling, and served as a mound with shrimp, chicken or a garlicky broth."
+      },
+      {
+        "name": "Lechón asado",
+        "text": "Whole pig roasted slowly over a fire until the skin crackles. On weekends, the lechoneras of Guavate, in the hills near Cayey, serve it with live music."
+      },
+      {
+        "name": "Arroz con gandules",
+        "text": "Rice with pigeon peas, sofrito and pork, on every holiday table, and at Christmas above all."
+      },
+      {
+        "name": "Frituras",
+        "text": "Fried snacks from beach kiosks: alcapurrias, green banana and taro dough stuffed with meat or crab, and bacalaítos, crisp salt-cod fritters. Piñones and Luquillo are the places to try them."
+      },
+      {
+        "name": "Coquito",
+        "text": "A Christmas drink of coconut milk, condensed milk, cinnamon and rum, made in every home in December and given as presents."
+      },
+      {
+        "name": "Piña colada and coffee",
+        "text": "The piña colada was created in San Juan, though two bars there dispute which mixed it first. The island's mountain-grown coffee is strong; ask for a cortadito."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Puerto Rican)",
+      "intro": "Spanish is the everyday language, and many people speak English, especially in San Juan and in tourism. Puerto Rican Spanish is fast and often swallows the s at the end of a word.",
+      "items": [
+        { "phrase": "Buenos días", "say": "BWEH-nos DEE-as", "meaning": "Good morning" },
+        { "phrase": "Buenas", "say": "BWEH-nas", "meaning": "Hi (at any time of day)" },
+        { "phrase": "¿Cómo estás?", "say": "KOH-moh es-TAHS", "meaning": "How are you?" },
+        { "phrase": "Gracias", "say": "GRAH-syas", "meaning": "Thank you" },
+        { "phrase": "Por favor", "say": "por fah-VOR", "meaning": "Please" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "¡Wepa!", "say": "WEH-pah", "meaning": "Woo-hoo! (a shout of joy)" },
+        { "phrase": "Boricua", "say": "boh-REE-kwah", "meaning": "Puerto Rican" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1183",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar (US$)",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish and English, both official. Spanish is the everyday language; English is widely understood in San Juan and in tourism.",
+        "sources": [{ "property": "P37", "values": ["Q1321", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as on the US mainland), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right. Road signs give distances in kilometres but speed limits in miles per hour.",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 787 and +1 939",
+        "sources": [{ "property": "P474", "values": ["+1787", "+1939"] }]
+      }
+    ]
+  }
+}

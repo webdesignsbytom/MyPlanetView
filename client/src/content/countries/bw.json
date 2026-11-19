@@ -1,0 +1,183 @@
+{
+  "code": "BW",
+  "slug": "botswana",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dumela", "Botswana", "Pula!"],
+  "summary": "Mokoro trips in the Okavango Delta, Chobe's elephants and the salt pans of the Kalahari.",
+  "overview": [
+    "Botswana is mostly Kalahari: flat, sandy bush and grassland, dry for much of the year. Its great sight is the Okavango Delta, where a river from the highlands of Angola spreads out into the sand and never reaches the sea, making a maze of channels, lagoons and islands full of elephants, buffalo, lions, hippos and birds. The floodwater arrives months after the rains, so the delta is fullest in the dry winter, from about June to August, just as animals from the parched country around gather on its edges.",
+    "To the north-east, Chobe National Park has some of the largest elephant herds in Africa, best seen from a boat on the Chobe River near Kasane; Savuti and Linyanti are its wilder corners. To the south, the Makgadikgadi Pans are a white expanse of salt crust where zebra migrate in the rains, and the Central Kalahari Game Reserve is known for its black-maned lions. The Tsodilo Hills, in the far north-west, hold thousands of San rock paintings and are a World Heritage Site.",
+    "Tourism follows a policy of few visitors paying high prices, so many delta lodges are small, remote camps reached by light aircraft from Maun or Kasane. Self-drive camping in a 4×4 is possible in Chobe, Moremi and the Kalahari, but the sand tracks are hard work and campsites must be booked ahead. Botswana has been peaceful and democratic since independence in 1966."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry winter",
+        "months": [5, 6, 7, 8],
+        "text": "Clear skies, almost no rain and days of about 25°C, but cold nights and early mornings, near or below freezing in the Kalahari in June and July. The delta's floods spread out and mokoro trips are at their best; the bush thins and game is easier to see."
+      },
+      {
+        "name": "Hot, dry season",
+        "months": [9, 10],
+        "text": "The last waterholes and rivers pull in huge numbers of animals, above all elephants along the Chobe, and game viewing peaks. But it's hot, often 35–40°C by October, and the land is brown and dusty."
+      },
+      {
+        "name": "Rainy (green) season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Hot and humid, with short, heavy afternoon storms. The Kalahari and the pans turn green, antelope give birth, zebra and wildebeest gather on the Makgadikgadi and Nxai Pan, and migrant birds arrive. Some camps close, and sandy tracks can turn to mud."
+      }
+    ],
+    "weather": "Semi-arid, with hot summers and dry, mild winters. Summer days reach 30–35°C, and more in October before the rains; winter days are about 25°C, but nights on the Kalahari can drop below freezing in June and July. Almost all the rain falls from about November to March, as afternoon storms, and the south-west is the driest part. The Okavango's flood keeps its own calendar, rising after the rains have ended.",
+    "festivals": [
+      {
+        "name": "The zebra migration",
+        "place": "Makgadikgadi and Nxai Pan",
+        "when": "Usually December to April",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Thousands of zebra and wildebeest move onto the pans to graze the fresh grass after the rains, followed by lions and other predators."
+      },
+      {
+        "name": "The Okavango flood",
+        "place": "The Okavango Delta",
+        "when": "Usually at its height from June to August",
+        "months": [6, 7, 8],
+        "text": "The rain that fell months earlier in Angola reaches the delta, filling its channels and lagoons in the middle of the dry season: the classic time for mokoro trips."
+      },
+      {
+        "name": "Sir Seretse Khama Day",
+        "place": "Across Botswana",
+        "when": "1 July",
+        "months": [7],
+        "text": "A public holiday honouring the first president, who led the country to independence."
+      },
+      {
+        "name": "President's Day",
+        "place": "Across Botswana",
+        "when": "The third Monday of July and the day after",
+        "months": [7],
+        "text": "Two more public holidays in mid-winter, a few weeks after Sir Seretse Khama Day."
+      },
+      {
+        "name": "Botswana Day",
+        "place": "Gaborone and across Botswana",
+        "when": "30 September and 1 October",
+        "months": [9, 10],
+        "text": "Independence from Britain in 1966, celebrated with music, dancing and speeches."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Okavango Delta and Moremi",
+        "text": "Mokoro trips, walks on the islands and game drives in the Moremi Game Reserve. The water is highest from about June to August; from about December to March the channels are lower, but the land is green and full of birds."
+      },
+      {
+        "name": "Chobe and Kasane",
+        "text": "Boat trips on the Chobe River among swimming elephants, best from about July to October, when the herds come down to drink. Victoria Falls is an easy day trip from Kasane."
+      },
+      {
+        "name": "The Kalahari and the pans",
+        "text": "The Central Kalahari and the Makgadikgadi and Nxai pans are at their best in the rains, from about December to April, when animals gather on the fresh grass. In the dry season the pans are bare and white, and you can sleep out under the stars."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greet before anything else: \"Dumela, rra\" to a man and \"Dumela, mma\" to a woman. Asking a question without greeting first comes across as rude. Handshakes are light and unhurried, and people may keep holding hands for a while as they talk.",
+    "etiquette": [
+      "In unfenced camps, animals walk through at night: never walk around alone after dark, and wait for a guide to take you to your tent.",
+      "On a mokoro, sit still and keep your hands out of the water: hippos and crocodiles share the channels.",
+      "Cattle, donkeys and goats wander onto the roads, and elephants cross them in the north, so drive in daylight only.",
+      "In a village, ask the chief (kgosi) before camping nearby; the kgotla, the open meeting place, is the centre of village life.",
+      "Soldiers, police and government buildings are off limits to cameras."
+    ],
+    "tipping": "Expected in safari camps, where guides, mokoro polers and staff share a tip box; the camp will suggest an amount. About 10% in restaurants. Pula or US dollars are both fine.",
+    "dress": "Light aircraft to the camps usually limit luggage to about 20 kg in a soft bag. Pack khaki and green, a warm jacket, hat and gloves for winter dawn drives, and a light rain jacket from November to March.",
+    "food": [
+      {
+        "name": "Seswaa",
+        "text": "Beef or goat boiled for hours with salt, then pounded into shreds: the national dish, served at weddings and celebrations."
+      },
+      {
+        "name": "Bogobe and ting",
+        "text": "Bogobe is a porridge of sorghum or maize; ting is the same left to ferment, with a pleasantly sour taste."
+      },
+      {
+        "name": "Phane",
+        "text": "Mopane worms, the caterpillars of a large moth, picked from mopane trees, dried, and eaten fried crisp or in a stew."
+      },
+      {
+        "name": "Morogo",
+        "text": "Wild spinach and other leafy greens, cooked as a side to bogobe and meat."
+      },
+      {
+        "name": "Magwinya",
+        "text": "Fat cakes: rounds of deep-fried dough sold at roadside stalls in the morning."
+      },
+      {
+        "name": "Madila",
+        "text": "Thick soured milk, eaten with porridge or on its own."
+      }
+    ],
+    "phrases": {
+      "language": "Setswana",
+      "intro": "English is the official language and widely spoken; Setswana, the national language, is spoken by most people. Adding \"rra\" (sir) or \"mma\" (madam) makes any phrase polite.",
+      "items": [
+        { "phrase": "Dumela, rra / mma", "say": "doo-MEH-lah RRAH / MMAH", "meaning": "Hello (to a man / to a woman)" },
+        { "phrase": "O tsogile jang?", "say": "oh tsoh-KHEE-leh JAHNG", "meaning": "How are you? (\"How did you wake?\")" },
+        { "phrase": "Ke tsogile sentle", "say": "keh tsoh-KHEE-leh SEN-tleh", "meaning": "I'm fine" },
+        { "phrase": "Ke a leboga", "say": "keh ah leh-BOH-khah", "meaning": "Thank you" },
+        { "phrase": "Ke bokae?", "say": "keh boh-KAH-eh", "meaning": "How much is it?" },
+        { "phrase": "Go siame", "say": "khoh see-AH-meh", "meaning": "It's fine; OK" },
+        { "phrase": "Tsamaya sentle", "say": "tsah-MAH-yah SEN-tleh", "meaning": "Goodbye (to someone leaving)" },
+        { "phrase": "Pula!", "say": "POO-lah", "meaning": "Rain! (a blessing, and the name of the currency)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q963",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Botswana pula (P, BWP), divided into 100 thebe; pula means \"rain\" in Setswana. Safari camps often quote prices in US dollars.",
+        "sources": [{ "property": "P38", "values": ["Q186794"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English is the official language; Setswana, the national language, is spoken by most people.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }],
+        "note": "Wikidata lists only English; the page adds Setswana, the national language and the one most people speak."
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK) and types D and M (three round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q60740126", "Q1383497"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Africa Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q1053705", "Q4689494"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police, 997 for an ambulance and 998 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q25648827", "Q25648832"] }],
+        "note": "Wikidata also lists 911; the page gives the three long-standing service numbers."
+      },
+      {
+        "key": "callingCode",
+        "text": "+267",
+        "sources": [{ "property": "P474", "values": ["+267"] }]
+      }
+    ]
+  }
+}

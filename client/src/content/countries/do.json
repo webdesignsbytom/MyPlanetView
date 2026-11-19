@@ -1,0 +1,185 @@
+{
+  "code": "DO",
+  "slug": "dominican-republic",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Bienvenidos!", "Quisqueya"],
+  "summary": "Old Santo Domingo, resort beaches, humpback whales and the Caribbean's highest peak.",
+  "overview": [
+    "The Dominican Republic covers the eastern two-thirds of the island of Hispaniola, which it shares with Haiti, and is the second-largest country in the Caribbean after Cuba. Most visitors stay at the all-inclusive resorts of Punta Cana and Bávaro on the east coast, but there's far more to the country. Santo Domingo, the capital, was the first lasting European city in the Americas, and its Colonial City (Ciudad Colonial) is a World Heritage Site, with the first cathedral built in the Americas, the Alcázar de Colón, home of Columbus's son Diego, and the cobbled Calle de las Damas.",
+    "On the north coast, a cable car climbs Mount Isabel de Torres above Puerto Plata, and Cabarete is one of the Caribbean's best-known kitesurfing beaches. The Samaná peninsula has the beaches of Las Terrenas and the El Limón waterfall, and across the bay, Los Haitises National Park has mangroves and caves with Taíno drawings. In the south-east, Bayahibe is the base for diving and boat trips to Saona Island. Inland, the Cordillera Central rises to Pico Duarte, 3,098 m, the highest point in the Caribbean, with rafting and waterfalls around Jarabacoa; in the dry south-west, Lago Enriquillo, a salt lake below sea level, has crocodiles and iguanas.",
+    "Long-distance coach companies link the cities in comfort; locally, people ride guaguas (minibuses) and motoconchos (motorbike taxis), and Santo Domingo has a metro. Driving is fast and chaotic. This is the home of merengue and bachata, which play from every corner shop, and of a passion for baseball: the winter league plays from about October to January."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Sunny and less humid on the coast, around 29°C by day, while mountain nights turn cold. Humpback whales are in Samaná Bay from about mid-January to March, and carnival fills the February weekends. Holy Week (Semana Santa) packs beaches and roads."
+      },
+      {
+        "name": "Hot, wet season",
+        "months": [5, 6, 7, 8],
+        "text": "The heat and humidity climb, and heavy afternoon showers, usually brief, become common. Prices fall outside the July and August school holidays, and the risk of storms grows from August."
+      },
+      {
+        "name": "Hurricane peak",
+        "months": [9, 10, 11],
+        "text": "September is the riskiest month, with October close behind; storms can bring flooding and cut roads. November turns quieter and drier in the south, though the north coast starts its winter showers."
+      }
+    ],
+    "weather": "Tropical and hot on the coast, with days of about 29°C in January and 32°C in August and warm nights. Height cools things a great deal: Jarabacoa is mild, Constanza, at about 1,200 m, can have frost on winter nights, and Pico Duarte's summit drops below freezing. On the south and east coasts most rain falls from May to November; the north coast and Samaná get showers in winter too, carried by the north-east trade wind. The hurricane season runs from June to November, most dangerous in September.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "La Vega, Santo Domingo and towns across the country",
+        "when": "Every Sunday in February, ending with a big parade in Santo Domingo in late February or early March",
+        "months": [2, 3],
+        "text": "La Vega's is the most famous: the diablos cojuelos, devils in horned masks and bright suits, swing inflated bladders at passers-by. Each town has its own characters."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the country; parade on Santo Domingo's Malecón",
+        "when": "27 February",
+        "months": [2],
+        "text": "Marks independence from Haiti in 1844, with a military parade, flags everywhere and carnival groups out in force."
+      },
+      {
+        "name": "Semana Santa (Holy Week)",
+        "place": "Across the country",
+        "when": "The week before Easter (21–28 March in 2027)",
+        "months": [3, 4],
+        "text": "Processions in the towns, and a mass exodus to beaches and rivers. Many businesses close on Holy Thursday and Good Friday, and families make habichuelas con dulce."
+      },
+      {
+        "name": "Humpback whales",
+        "place": "Samaná Bay and the Silver Bank",
+        "when": "Usually from mid-January to late March",
+        "months": [1, 2, 3],
+        "text": "Thousands of humpback whales come to the warm waters off the north-east to mate and give birth. Boats leave from Samaná town to watch them."
+      },
+      {
+        "name": "Restoration Day",
+        "place": "Across the country",
+        "when": "16 August",
+        "months": [8],
+        "text": "Marks the start of the war of 1863 that restored independence from Spain, with ceremonies in Santiago and the capital."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Punta Cana and the east",
+        "text": "Long beaches lined with resorts, the driest weather in the country and the easiest holiday, if not the most varied."
+      },
+      {
+        "name": "Santo Domingo and the south",
+        "text": "The capital's old city and nightlife, Bayahibe and the islands of the south-east, and the wild, dry south-west towards Haiti."
+      },
+      {
+        "name": "The north coast and Samaná",
+        "text": "Puerto Plata, Cabarete and Las Terrenas: greener and windier, with some winter rain. The whales come from mid-January to March."
+      },
+      {
+        "name": "The mountains",
+        "text": "Jarabacoa and Constanza, cool pine country with rivers and farms. Pico Duarte is climbed over two or three days, best in the dry months."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Dominicans are warm, loud and sociable. Greet everyone when you walk into a small shop or a room, with \"Buenos días\" or simply \"Buenas\". Men shake hands; women usually greet with a kiss on one cheek. Use \"usted\" rather than \"tú\" with older people and anyone you don't know.",
+    "etiquette": [
+      "Dominicans dress neatly in town; wear long trousers or a skirt, and cover your shoulders, for churches and government offices.",
+      "Agree the fare before getting on a motoconcho or into a taxi without a meter, and bargain gently at markets.",
+      "Drink bottled water; Dominicans buy it in big refillable jugs.",
+      "A game of dominoes outside a colmado (corner shop) is serious business: watching is welcome, interrupting less so.",
+      "Roads are dangerous: motorbikes weave everywhere, and driving outside the cities after dark is best avoided."
+    ],
+    "tipping": "Restaurant bills include a 10% service charge, the propina legal, and many people leave a little more for good service. Tip hotel staff, guides and drivers too.",
+    "dress": "Beachwear and cool clothes on the coast, something smarter for an evening out in the capital, and warm layers for the mountains, where nights in Constanza and on Pico Duarte can be freezing.",
+    "food": [
+      {
+        "name": "La bandera",
+        "text": "\"The flag\", the everyday lunch: white rice, red beans and stewed chicken or beef, often with a little salad and fried plantain."
+      },
+      {
+        "name": "Mangú",
+        "text": "Mashed green plantain topped with pickled red onion, served at breakfast with \"los tres golpes\" (the three hits): fried salami, fried cheese and eggs."
+      },
+      {
+        "name": "Sancocho",
+        "text": "A thick stew of several meats with yam, cassava, plantain and corn, cooked for family gatherings and eaten with rice and avocado."
+      },
+      {
+        "name": "Habichuelas con dulce",
+        "text": "A sweet, spiced cream of red beans with coconut milk, sweet potato and raisins, made in Lent and shared between neighbours."
+      },
+      {
+        "name": "Mamajuana",
+        "text": "Rum, red wine and honey left to steep in a bottle of tree bark and herbs. Sold everywhere, and claimed to cure most things."
+      },
+      {
+        "name": "Presidente",
+        "text": "The national beer, served so cold the bottle frosts over (\"vestida de novia\", dressed as a bride)."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish",
+      "intro": "Dominican Spanish is quick and often drops its s sounds. Outside the resorts few people speak English, so some Spanish helps.",
+      "items": [
+        { "phrase": "Hola", "say": "OH-lah", "meaning": "Hello" },
+        { "phrase": "¿Qué lo que?", "say": "keh loh KEH", "meaning": "What's up? (Dominican slang)" },
+        { "phrase": "Muchas gracias", "say": "MOO-chahs GRAH-see-ahs", "meaning": "Thank you very much" },
+        { "phrase": "¿Cuánto vale?", "say": "KWAN-toh VAH-leh", "meaning": "How much is it?" },
+        { "phrase": "Chévere", "say": "CHEH-veh-reh", "meaning": "Great, cool" },
+        { "phrase": "Vaina", "say": "VAI-nah", "meaning": "Thing, stuff: a word for almost anything" },
+        { "phrase": "Guagua", "say": "GWAH-gwah", "meaning": "Minibus; bus" },
+        { "phrase": "Colmado", "say": "kol-MAH-doh", "meaning": "Corner shop, often with music and cold beer" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q786",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Dominican peso (RD$, DOP). US dollars are accepted at resorts and in tourist areas.",
+        "sources": [{ "property": "P38", "values": ["Q242922"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. Haitian Creole is spoken by many people of Haitian descent, and English in the resorts.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q63286061"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 809, +1 829 or +1 849",
+        "sources": [{ "property": "P474", "values": ["+1809", "+1829", "+1849"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "code": "PY",
+  "slug": "paraguay",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Mba'éichapa", "Paraguay", "Bienvenidos"],
+  "summary": "Jesuit ruins, the wild Chaco and tereré passed round in every town square.",
+  "overview": [
+    "Paraguay is one of the least visited countries in South America, landlocked between Argentina, Brazil and Bolivia, and it rewards the curious. It's one of the few countries in the Americas where most people speak an indigenous language: Guaraní is official alongside Spanish, and many Paraguayans mix the two in the same sentence. Asunción, the capital, founded in 1537 on a bend of the Paraguay River, is relaxed and green, with the Palacio de López, the domed Panteón de los Héroes and the painted lanes of Loma San Jerónimo.",
+    "In the south-east, near Encarnación, the red sandstone ruins of the Jesuit missions of Trinidad and Jesús, where Jesuits and Guaraní people built towns in the 17th and 18th centuries, are a World Heritage Site, quiet enough to have almost to yourself. Encarnación itself has a sandy river beach and Paraguay's biggest carnival. Near Ciudad del Este, a busy shopping city on the Brazilian border, you can tour the Itaipú Dam, one of the largest hydroelectric plants in the world, and cross to Iguazú Falls. Closer to Asunción, the villages of the Cordillera keep crafts alive: pottery in Areguá, ñandutí, a lace like a spider's web, in Itauguá.",
+    "West of the river lies the Chaco, more than half the country's land but home to only a small share of its people: dry thorn forest, palm savannah and wetlands, with jaguars, giant anteaters and the Chacoan peccary, once known only from fossils. Mennonite farmers settled its centre from the 1920s, and their tidy towns of Filadelfia and Loma Plata are the base for exploring it.",
+    "Long-distance buses leave Asunción's terminal for every corner of the country, and fares are low. Life slows in the midday heat, when many shops close for a siesta, and everyone carries a flask of iced water for tereré."
+  ],
+  "whenToGo": {
+    "stripLabel": "Asunción, the missions and the east, where most visitors go. The Chaco is hotter in summer and has a strip of its own below.",
+    "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [12, 1, 2],
+        "text": "Very hot and humid, often 35°C and more in Asunción, with heavy thunderstorms. Paraguayans head for the river beaches, and Encarnación holds its carnival. Sightseeing is best done early and late in the day."
+      },
+      {
+        "name": "Autumn",
+        "months": [3, 4, 5],
+        "text": "The heat eases from late March, and April and May bring warm, sunny days and cooler nights: the most comfortable time to visit. Independence Day falls in mid-May."
+      },
+      {
+        "name": "Winter",
+        "months": [6, 7, 8],
+        "text": "Mild, mostly dry days around 20–23°C, but cold nights, occasionally near freezing when winds blow up from the south, and houses are rarely heated. The San Juan fire festivals are in June. By August, smoke from burning fields can haze the sky."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Warm days and the pink and yellow blossom of the lapacho trees, which flower from late winter into spring. The heat and the storms build again through November."
+      }
+    ],
+    "weather": "Paraguay has a subtropical climate with long, hot summers and short, mild winters. Asunción averages around 33–35°C by day from December to February, with sticky nights; the Chaco is hotter still and can pass 40°C. Winters, from June to August, have pleasant days and cool to cold nights. Rain falls in every month, mostly in short, heavy thunderstorms, and is heaviest from about October to April. The Chaco is much drier than the east, and its dirt roads turn to mud after rain.",
+    "festivals": [
+      {
+        "name": "Carnaval Encarnaceño",
+        "place": "Encarnación",
+        "when": "Usually Saturday nights in January and February",
+        "months": [1, 2],
+        "text": "Paraguay's biggest carnival: samba schools and feathered dancers parade through a purpose-built stadium by the river, with foam sprays and music until dawn."
+      },
+      {
+        "name": "Semana Santa (Holy Week)",
+        "place": "Across Paraguay; Tañarandy, near San Ignacio",
+        "when": "Easter week (Easter Sunday falls on 28 March in 2027)",
+        "months": [3, 4],
+        "text": "Families bake mountains of chipa to share over the holiday. On Good Friday, the village of Tañarandy lights its path with thousands of candles and bonfires for a procession and living tableaux."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Paraguay",
+        "when": "14 and 15 May",
+        "months": [5],
+        "text": "Two public holidays for independence in 1811, with parades in Asunción. 15 May is also Mother's Day."
+      },
+      {
+        "name": "San Juan",
+        "place": "Across Paraguay",
+        "when": "Around 24 June, often on several evenings in June",
+        "months": [6],
+        "text": "Fire games for Saint John: walking barefoot over embers, kicking a flaming ball of rags (pelota tata), and the toro candil, a man in a bull's head with burning horns, charging the crowd. Stalls sell traditional food."
+      },
+      {
+        "name": "Transchaco Rally",
+        "place": "The Chaco",
+        "when": "Usually in September",
+        "months": [9],
+        "text": "A tough motor rally over the dust and dirt roads of the Chaco, with crowds camping out along the route to watch."
+      },
+      {
+        "name": "Virgen de Caacupé",
+        "place": "Caacupé",
+        "when": "8 December",
+        "months": [12],
+        "text": "Paraguay's largest pilgrimage: hundreds of thousands walk the roughly 50 km from Asunción, often through the night, to the basilica of the Virgin of Caacupé. A public holiday."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Chaco",
+        "months": ["avoid", "avoid", "good", "best", "best", "best", "best", "best", "good", "good", "good", "avoid"],
+        "text": "Filadelfia, Loma Plata and the national parks of the north-west. Winter, from about April to August, is dry and mild, the best time to see wildlife at the waterholes. From December to February heat above 40°C and rain that turns tracks to mud make travel hard. Carry water and fuel, and travel with a guide off the main highway."
+      },
+      {
+        "name": "The east",
+        "text": "Asunción, the Cordillera villages, the Jesuit missions and Encarnación, greener and wetter than the Chaco. Spring and autumn are the most comfortable; summer is hot but lively on the river beaches."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Paraguayans are friendly and unhurried. Men shake hands; a kiss on the cheek is the greeting between women, and between men and women. In Spanish, \"Buenas\" covers any time of day; in Guaraní, \"Mba'éichapa?\" (\"How are you?\") is answered \"Iporã\" (\"Good\"), and trying it always brings a laugh and a welcome.",
+    "etiquette": [
+      "If you're offered tereré, drink the whole cup through the metal straw and hand it back to the person pouring, who refills it for the next in the circle. Saying \"gracias\" means you've had enough.",
+      "Many shops and offices close for a siesta in the middle of the day, especially outside Asunción and in summer.",
+      "Mennonite and indigenous families often prefer not to be photographed; ask first.",
+      "Bottled water is cheap and sold everywhere; drink it rather than tap water.",
+      "In Ciudad del Este and around Asunción's bus terminal, keep a close eye on bags and phones.",
+      "Paraguayans are proud of Guaraní: even a word or two of it is warmly received."
+    ],
+    "tipping": "Paraguayan restaurants rarely include service, so add about 10%. Tour guides and drivers expect something; taxi drivers don't, though rounding up is welcome.",
+    "dress": "The lightest clothes you have for summer, with a hat and sun cream. Bring warm layers for winter nights, as few buildings are heated. Paraguayans dress neatly in town, and churches expect covered shoulders.",
+    "food": [
+      {
+        "name": "Chipa",
+        "text": "Chewy rings of cassava starch, cheese and egg, sometimes with aniseed, baked in clay ovens and sold warm from baskets at bus stops and on every road."
+      },
+      {
+        "name": "Sopa paraguaya",
+        "text": "A \"soup\" you eat with a fork: a dense, moist cornbread with cheese and onion, served alongside grilled meat."
+      },
+      {
+        "name": "Mbejú",
+        "text": "A thick, crisp-edged pancake of cassava starch and cheese, eaten with coffee or cocido, a sweet drink of toasted yerba mate and burnt sugar."
+      },
+      {
+        "name": "Vori vori",
+        "text": "A comforting chicken soup with little balls of cornmeal and cheese, the vori, a winter favourite."
+      },
+      {
+        "name": "Asado",
+        "text": "Beef from the Chaco's cattle, grilled slowly over wood or charcoal and eaten with cassava and sopa paraguaya at long Sunday lunches."
+      },
+      {
+        "name": "Tereré",
+        "text": "Yerba mate steeped in iced water, often with crushed medicinal herbs (yuyos), sipped through a metal straw from a cup of horn or wood. It's drunk everywhere, all day, and UNESCO lists it as part of the world's living heritage."
+      }
+    ],
+    "phrases": {
+      "language": "Guaraní",
+      "intro": "Spanish works everywhere for visitors, but most Paraguayans speak Guaraní among themselves, and a few words of it go a long way. Most words are stressed on the last syllable.",
+      "items": [
+        { "phrase": "Mba'éichapa?", "say": "mbah-AY-chah-pah", "meaning": "Hello; how are you?" },
+        { "phrase": "Iporã", "say": "ee-poh-RAHN", "meaning": "Good; fine" },
+        { "phrase": "Aguyje", "say": "ah-goo-JEH", "meaning": "Thank you" },
+        { "phrase": "Hẽe", "say": "heh-EH", "meaning": "Yes" },
+        { "phrase": "Nahániri", "say": "nah-HAH-nee-ree", "meaning": "No" },
+        { "phrase": "Jajotopata", "say": "jah-joh-toh-pah-TAH", "meaning": "See you later" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q733",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Paraguayan guaraní (₲, PYG). Prices run into tens of thousands, so check the zeros.",
+        "sources": [{ "property": "P38", "values": ["Q207514"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish and Guaraní, both official. Most Paraguayans speak Guaraní, many mixing it with Spanish.",
+        "sources": [{ "property": "P37", "values": ["Q1321", "Q35876"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type C (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC−3, all year: Paraguay stopped changing its clocks in 2024",
+        "sources": [{ "property": "P421", "values": ["Q6513", "Q63286098"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+595",
+        "sources": [{ "property": "P474", "values": ["+595"] }]
+      }
+    ]
+  }
+}

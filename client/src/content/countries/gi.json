@@ -1,0 +1,154 @@
+{
+  "code": "GI",
+  "slug": "gibraltar",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Hola", "Gibraltar", "Welcome"],
+  "summary": "Wild macaques, siege tunnels and views to Africa from a British rock.",
+  "overview": [
+    "Gibraltar is a British Overseas Territory on a narrow peninsula at the southern tip of Spain, under the Rock, a limestone ridge 426 m high that looks across the Strait of Gibraltar to the mountains of Morocco. The whole territory covers under 7 square kilometres, and over 30,000 people live squeezed between the Rock and the sea. Main Street has British shops, red post boxes and pubs, but the talk around you is often a quick mix of English and Andalusian Spanish known as Llanito.",
+    "Most of the Rock is a nature reserve, reached on foot, by cable car or on a minibus tour. Up top are the Barbary macaques, the only wild monkeys in Europe; St Michael's Cave, a show cave whose largest chamber holds concerts; the Great Siege Tunnels, cut into the rock by hand during the siege of 1779 to 1783; and the tower of the Moorish Castle above the town. Europa Point, at the southern tip, has a lighthouse, a large mosque and, on clear days, Africa on the horizon.",
+    "Most visitors walk across the land border from La Línea de la Concepción in Spain, many on a day trip from the Costa del Sol. The town is compact enough to explore on foot, helped by local buses, and the Mediterranean Steps, a steep path on the Rock's eastern side, are a good half-day walk for the fit."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm and fresh, about 18–24°C, with wild flowers on the upper Rock and the spring bird migration overhead, as eagles, kites and storks cross the Strait from Africa."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot, around 28–30°C, and muggy when the Levanter, an easterly wind, wraps the top of the Rock in cloud. Cruise passengers and day trippers crowd Main Street; swim at Catalan Bay or Camp Bay."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The sea stays warm into October and birds pass south again on their way to Africa. Heavy rain usually returns in November."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild, about 16°C by day and seldom below 10°C at night, with rainy, windy spells between bright days that are good for walking the Rock."
+      }
+    ],
+    "weather": "Mediterranean and mild all year: winter days around 16°C, summer days around 28–30°C. Most rain falls between October and April, often in heavy bursts. The Strait's winds decide the weather: the Levanter from the east brings damp air and the cloud that sits on the Rock's crest, while the Poniente from the west is drier and clearer.",
+    "festivals": [
+      {
+        "name": "Bird migration",
+        "place": "The Upper Rock and Europa Point",
+        "when": "Spring, about March to May; autumn, about August to October",
+        "months": [3, 4, 5, 8, 9, 10],
+        "text": "The Strait is the shortest crossing between Europe and Africa, so huge numbers of birds of prey, storks and smaller birds funnel over Gibraltar. Watch from the Upper Rock on days with the right wind."
+      },
+      {
+        "name": "Gibraltar National Day",
+        "place": "Across Gibraltar",
+        "when": "10 September",
+        "months": [9],
+        "text": "A public holiday marking the 1967 referendum in which Gibraltarians voted to stay British. People dress in red and white, the colours of the flag, and gather for speeches, music and a party that runs into the night."
+      },
+      {
+        "name": "Trafalgar Day",
+        "place": "Trafalgar Cemetery",
+        "when": "Usually on or near 21 October",
+        "months": [10],
+        "text": "A ceremony in the small cemetery by the old town walls remembers the battle of 1805, fought off Cape Trafalgar to the west; Nelson's flagship, HMS Victory, was brought into Gibraltar for repairs afterwards."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "British manners with Spanish warmth: a handshake to meet, a kiss on each cheek among friends. People move between English and Spanish in mid-sentence and will usually answer in whichever language you start with.",
+    "etiquette": [
+      "Don't feed or touch the macaques: feeding them is against the law and fined, and they bite. Keep food and plastic bags out of sight, as they snatch them.",
+      "Gibraltarians see themselves as Gibraltarian and British, and the territory's status is a touchy subject; leave it for them to raise.",
+      "Carry your passport across the land border, even for a day trip from Spain, and allow for queues at busy times.",
+      "The Upper Rock's paths and steps are steep and exposed: wear proper shoes and carry water in summer."
+    ],
+    "tipping": "As in the UK: about 10% in restaurants when service isn't already on the bill, and nothing expected in pubs.",
+    "dress": "Casual. Light clothes in summer, a jacket for the wind and winter rain, and good shoes for the Rock.",
+    "food": [
+      {
+        "name": "Calentita",
+        "text": "The national dish: a thin bake of chickpea flour, water and olive oil, cut into slices and peppered, brought by Genoese settlers."
+      },
+      {
+        "name": "Rosto",
+        "text": "Pasta in a tomato sauce cooked with beef, carrots and mushrooms, a family Sunday lunch with Italian roots."
+      },
+      {
+        "name": "Torta de acelga",
+        "text": "A pie of Swiss chard, eggs and cheese in pastry, sold by the slice and baked at home."
+      },
+      {
+        "name": "Pan dulce",
+        "text": "A sweet bread packed with raisins, candied fruit and pine nuts, made for Christmas."
+      },
+      {
+        "name": "Pub food",
+        "text": "Fish and chips, pies and Sunday roasts in Main Street's pubs, often followed by tapas across the border."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish",
+      "intro": "English is the official language and everyone speaks it, but most Gibraltarians also speak Spanish, and among themselves mix the two in Llanito. A little Spanish helps across the border in La Línea.",
+      "items": [
+        { "phrase": "Hola", "say": "OH-lah", "meaning": "Hello" },
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "Por favor", "say": "por fah-VOR", "meaning": "Please" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "Hasta luego", "say": "AHS-tah LWEH-goh", "meaning": "See you later; bye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1410",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Gibraltar pound (£), equal in value to sterling; UK notes and coins are used alongside, and many shops take euros. Gibraltar's own notes aren't easily spent in the UK, so use them up before you leave.",
+        "sources": [{ "property": "P38", "values": ["Q41429"] }],
+        "note": "Wikidata lists the Gibraltar pound alone; it is issued at par with sterling, and UK money circulates freely, so the page says so."
+      },
+      {
+        "key": "languages",
+        "text": "English, official. Spanish is widely spoken, and many Gibraltarians mix the two in Llanito.",
+        "sources": [{ "property": "P37", "values": ["Q7979"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["240"] }
+        ],
+        "note": "Wikidata also lists the two-pin Europlug (Type C); the page gives its preferred statement, the British socket found in homes and hotels."
+      },
+      {
+        "key": "driving",
+        "text": "On the right, unlike the UK",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1; UTC+2 in summer (late March to late October), as in Spain",
+        "sources": [{ "property": "P421", "values": ["Q6655"] }],
+        "note": "Wikidata gives UTC+1 only; Gibraltar changes to summer time (UTC+2) on the same dates as Spain."
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+350",
+        "sources": [{ "property": "P474", "values": ["+350"] }]
+      }
+    ]
+  }
+}

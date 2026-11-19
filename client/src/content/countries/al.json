@@ -1,0 +1,185 @@
+{
+  "code": "AL",
+  "slug": "albania",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Përshëndetje", "Shqipëria", "Mirë se vini"],
+  "summary": "Ottoman hill towns, wild northern peaks and clear Ionian bays, in a country long sealed off.",
+  "overview": [
+    "Albania spent most of the 20th century cut off from the outside world, and tourism here is still young, though it is growing quickly. The coast runs from the sandy Adriatic beaches around Durrës to the clearer, pebbly bays of the Ionian Riviera in the south: Dhërmi, Himarë, Sarandë and Ksamil, which look across the strait to Corfu. Inland, two Ottoman-era towns on UNESCO's list are the classic stops: Berat, whose white houses climb a hill beneath a castle, and Gjirokastër, built of grey stone with slate roofs. Near the Greek border, Butrint has Greek, Roman and Venetian ruins in a forest beside a lagoon.",
+    "In the north, the Albanian Alps, also called the Accursed Mountains, are some of the wildest ranges in Europe. A favourite trip takes the ferry along narrow, steep-sided Lake Koman, then a long day's hike over the pass between Valbona and Theth, where families put walkers up in their guesthouses. Tirana, the capital, is loud and cheerful, with blocks of flats painted in bright colours, cafés full at every hour and Bunk'Art, museums built into Cold War bunkers.",
+    "Trains are few, so buses and furgons (shared minibuses) link the towns, often leaving when they're full rather than to a timetable. Hiring a car is popular: the main roads are good now, but mountain roads are narrow and slow. Carry cash outside the cities and resorts. The small concrete bunkers of the communist era, built in their hundreds of thousands, still sit in fields and on beaches all over the country."
+  ],
+  "whenToGo": {
+    "stripLabel": "Tirana, the museum towns and the coast. The northern mountains have a strip of their own below.",
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Green hills, wild flowers and mild days of about 15–25°C, with showers into April. The sea is too cool for most swimmers until late May, and snow lingers on the high passes of the north."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and dry: Tirana and Berat often pass 30°C. In July and August the Riviera fills with Albanian, Kosovar and other European holidaymakers, beach bars play music late and rooms are hard to find. The northern mountains are the cool escape and in their hiking season."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is the pick of the year: the sea is at its warmest and the crowds have gone home. Rain returns in October, November is one of the wettest months, and many coastal hotels and mountain guesthouses close."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild and rainy on the coast, about 12–15°C by day, colder inland. Snow buries the northern mountains. Tirana, Berat and Gjirokastër stay open and quiet, and good for museums and cafés."
+      }
+    ],
+    "weather": "The coast and lowlands have a Mediterranean climate: hot, dry summers, with July and August often above 30°C inland, and mild, wet winters. Most rain falls between October and March, and the northern mountains are among the wettest places in Europe, with heavy snow in winter. The sea is warm enough for most swimmers from about June to early October.",
+    "festivals": [
+      {
+        "name": "Summer Day (Dita e Verës)",
+        "place": "Elbasan and across Albania",
+        "when": "14 March",
+        "months": [3],
+        "text": "A public holiday from pagan times that celebrates the end of winter. Elbasan holds the biggest party, and bakers everywhere sell ballokume, crumbly cornmeal and butter biscuits made for the day."
+      },
+      {
+        "name": "Easter, twice",
+        "place": "Across Albania",
+        "when": "Western Easter and Orthodox Easter: in 2027, 28 March and 2 May",
+        "months": [3, 4, 5],
+        "text": "Both Easters are public holidays, a sign of the country's mix of Catholics in the north and Orthodox Christians in the south. Churches hold midnight services and families share lamb."
+      },
+      {
+        "name": "The two Bajrams",
+        "place": "Across Albania",
+        "when": "Both about 11 days earlier each year: in 2027, the Great Bajram in March and Kurban Bajram in May",
+        "months": [3, 5],
+        "text": "The Great Bajram (Eid al-Fitr), at the end of Ramadan, and Kurban Bajram (Eid al-Adha) are public holidays. Albanian Islam is relaxed, and most visitors notice little more than family visits, sweets such as baklava and some offices closing."
+      },
+      {
+        "name": "Pilgrimage to Mount Tomorr",
+        "place": "Mount Tomorr, near Berat",
+        "when": "Usually in late August",
+        "months": [8],
+        "text": "Bektashi Muslims, a Sufi order with its world centre in Tirana, climb to the shrine of Abbas Ali near the summit. Pilgrims camp on the mountain for several days, and many sacrifice a lamb."
+      },
+      {
+        "name": "Independence Day and Liberation Day",
+        "place": "Across Albania",
+        "when": "28 and 29 November",
+        "months": [11],
+        "text": "Two public holidays in a row: independence from the Ottoman Empire in 1912, declared in Vlorë, and the end of German occupation in 1944. Red flags with the black double-headed eagle hang everywhere."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Albanian Alps",
+        "months": ["avoid", "avoid", "avoid", "avoid", "good", "best", "best", "best", "best", "good", "avoid", "avoid"],
+        "text": "Theth, Valbona and the Lake Koman ferry. Guesthouses open from about May to October; the pass between Valbona and Theth is usually clear of snow by June, and July to September are the surest months for walking. In winter, snow cuts off the high villages and most places close."
+      },
+      {
+        "name": "The Riviera",
+        "text": "Dhërmi, Himarë, Sarandë and Ksamil. Beach weather from June to September, with the sea still warm in early October. July and August are packed and noisy; from about November to April many hotels and beach bars shut, though Sarandë stays a working town."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake on meeting, and kisses on both cheeks among friends. Albanians take pride in hospitality, tied to besa, an old code of keeping your word and protecting a guest, so in villages you may be offered coffee or raki by people you met a minute ago. Watch heads: some Albanians, older people above all, shake the head for yes and nod for no, so check with words: \"po\" is yes, \"jo\" is no.",
+    "etiquette": [
+      "Join the xhiro, the early-evening stroll along the main street or seafront, when whole towns come out to walk and talk.",
+      "Accept a coffee or a glass of raki if you can when it's offered; turning down hospitality flatly can seem cold.",
+      "Most Albanians are Muslim by background, with Orthodox and Catholic minorities, and faith is worn lightly. Even so, cover shoulders and knees in mosques, churches and Bektashi tekkes, and take your shoes off where others do.",
+      "Drivers are impatient and often ignore zebra crossings: look both ways and cross with care.",
+      "Small guesthouses, furgons and village cafés rarely take cards, so keep lek in small notes."
+    ],
+    "tipping": "Welcome rather than expected. Round up the bill or leave about 10% in restaurants, and give something to guides and drivers who've looked after you.",
+    "dress": "Casual. Summer calls for light clothes, a hat and sun cream; the mountains need proper boots and a warm layer, as nights are cold even in July. Away from the beach, swimwear stays at the beach.",
+    "food": [
+      {
+        "name": "Byrek",
+        "text": "Flaky filo pie filled with cheese, spinach, minced meat or tomato and onion, sold warm by bakeries from early morning: the usual breakfast on the go."
+      },
+      {
+        "name": "Tavë kosi",
+        "text": "Lamb and rice baked under a set topping of yogurt and eggs, from Elbasan, and for many Albanians the national dish."
+      },
+      {
+        "name": "Fërgesë",
+        "text": "A rich pan dish from Tirana of peppers, tomatoes and salty curd cheese, eaten hot with bread; some versions add liver or meat."
+      },
+      {
+        "name": "Qofte",
+        "text": "Small grilled meatballs or sausages of minced lamb or beef with herbs, served with chips, salad and yogurt in simple grill houses."
+      },
+      {
+        "name": "Raki",
+        "text": "Clear, strong brandy, usually from grapes, sometimes from mulberries, often home-made and poured for guests at any hour."
+      },
+      {
+        "name": "Trileçe",
+        "text": "Sponge cake soaked in three kinds of milk and topped with caramel, on sale in almost every pastry shop."
+      }
+    ],
+    "phrases": {
+      "language": "Albanian (shqip)",
+      "intro": "Italian is widely understood, thanks to Italian television, and many young people speak good English. A few words of Albanian are warmly received.",
+      "items": [
+        { "phrase": "Përshëndetje", "say": "pur-shun-DET-yeh", "meaning": "Hello" },
+        { "phrase": "Mirëdita", "say": "meer-uh-DEE-tah", "meaning": "Good day" },
+        { "phrase": "Faleminderit", "say": "fah-leh-meen-DEH-reet", "meaning": "Thank you" },
+        { "phrase": "Ju lutem", "say": "yoo LOO-tem", "meaning": "Please" },
+        { "phrase": "Po / Jo", "say": "POH / YOH", "meaning": "Yes / No" },
+        { "phrase": "Sa kushton?", "say": "sah koosh-TOHN", "meaning": "How much is it?" },
+        { "phrase": "Gëzuar!", "say": "guh-ZOO-ar", "meaning": "Cheers!" },
+        { "phrase": "Mirupafshim", "say": "meer-oo-PAHF-sheem", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q222",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Albanian lek (L, ALL). Cash is used for most things; euros are taken in many hotels and shops on the coast.",
+        "sources": [{ "property": "P38", "values": ["Q125999"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Albanian, official. Greek is spoken in parts of the south, Italian is widely understood and English common among younger people.",
+        "sources": [{ "property": "P37", "values": ["Q8748"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata gives 220 V, the older figure; Albania's supply is now given as 230 V, as in the rest of Europe. Appliances made for either work."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1; UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; also 127 for an ambulance, 128 for fire and 129 for police",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648800", "Q25648801", "Q25648802"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+355",
+        "sources": [{ "property": "P474", "values": ["+355"] }]
+      }
+    ]
+  }
+}

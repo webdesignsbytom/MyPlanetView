@@ -1,0 +1,186 @@
+{
+  "code": "SK",
+  "slug": "slovakia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dobrý deň", "Slovensko", "Vitajte"],
+  "summary": "The High Tatras' granite peaks, castle ruins on the hilltops and a compact capital on the Danube.",
+  "overview": [
+    "The Carpathians cover much of Slovakia's north and centre. The High Tatras, on the Polish border, are their highest range, topped by Gerlachovský štít at 2,655 m; marked trails climb from Štrbské Pleso and other resort villages to glacial lakes, mountain huts and rocky passes. Nearby, the Slovenský raj national park has gorges climbed by ladders, chains and footbridges over waterfalls, and the Dobšinská ice cave. Further east come Spiš Castle, one of the largest castle sites in Central Europe, the walled town of Levoča, whose church holds a carved Gothic altar about 18 m tall, and the wooden churches of the villages towards Ukraine.",
+    "Bratislava, the capital, sits on the Danube close to both Austria and Hungary, with Vienna about an hour away. Its compact old town has St Martin's Cathedral, where the kings of Hungary were crowned for almost three centuries, and a square white castle on the hill above. Banská Štiavnica, an old silver-mining town in the crater of an ancient volcano, and Bardejov, with its Gothic and Renaissance square, are among the best-kept towns, and Košice, the second city, has the largest church in the country.",
+    "Trains run between Bratislava, Žilina, Poprad and Košice, the little Tatra Electric Railway links Poprad with the mountain resorts, and buses cover the rest. Some huts in the Tatras are still supplied by porters, who carry loads of 50 kg or more up on their backs."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, with snow in the hills and mountains from about December: skiing at Jasná in the Low Tatras and at Štrbské Pleso and Tatranská Lomnica in the High Tatras. Bratislava hovers around freezing, and Christmas markets fill its squares in December."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The lowlands warm through April, but the thaw is slow in the mountains, with snow on the high trails into June. On Easter Monday, an old custom has boys splashing girls with water and switching them with willow twigs."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm, 25–30°C in the lowlands, with afternoon thunderstorms in the mountains. The high Tatra trails open on 16 June, and hikers and festival crowds peak in July and August."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is often settled and clear, the best month for walking; October turns the beech forests gold, and the wine villages celebrate the harvest. The high Tatra trails close from 1 November, a grey, wet month."
+      }
+    ],
+    "weather": "A central European climate of warm summers and cold winters, with the mountains far colder than the Danube lowlands. Bratislava's July days usually reach 26–28°C, with heatwaves above 33°C, and its January days are about 2°C. High in the Tatras, snow can fall in any month above about 2,000 m, and the weather changes fast. Summer brings the most rain, usually as afternoon storms.",
+    "festivals": [
+      {
+        "name": "Easter Monday",
+        "place": "Across Slovakia",
+        "when": "Usually in March or April (29 March in 2027)",
+        "months": [3, 4],
+        "text": "Boys go from house to house splashing girls with water and lightly whipping them with braided willow switches, an old wish for health; in return they're given painted eggs, ribbons or a drink."
+      },
+      {
+        "name": "Východná Folklore Festival",
+        "place": "Východná, below the High Tatras",
+        "when": "Usually in early July",
+        "months": [7],
+        "text": "The oldest and largest folk festival in Slovakia, held since 1953, with dancers, musicians and singers in village dress from across the country."
+      },
+      {
+        "name": "Pohoda",
+        "place": "Trenčín",
+        "when": "Usually in July",
+        "months": [7],
+        "text": "A three-day music festival on the town's airfield, mixing rock, electronic, jazz and world music with theatre and talks."
+      },
+      {
+        "name": "Slovak National Uprising Day",
+        "place": "Across Slovakia, above all Banská Bystrica",
+        "when": "29 August",
+        "months": [8],
+        "text": "A public holiday marking the uprising of 1944 against the Nazis and Slovakia's wartime regime, which began in the hills around Banská Bystrica."
+      },
+      {
+        "name": "Pezinok Vintage Festival (Pezinské vinobranie)",
+        "place": "Pezinok, in the Small Carpathians",
+        "when": "Usually in September",
+        "months": [9],
+        "text": "The wine town celebrates the harvest with burčiak, the cloudy, half-fermented new wine, food stalls, music and a parade."
+      },
+      {
+        "name": "Christmas markets",
+        "place": "Bratislava and Košice",
+        "when": "Late November to December",
+        "months": [11, 12],
+        "text": "Stalls of mulled wine, lokše and crafts in the old-town squares, busy every evening until Christmas."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The High Tatras",
+        "text": "The high trails, above the mountain huts, are open from 16 June to 31 October and closed the rest of the year. The busy months are July and August; September is quieter and often clearer. In winter, the resorts below the peaks have skiing and cross-country trails."
+      },
+      {
+        "name": "Bratislava and the south-west",
+        "text": "The warmest, driest corner of the country, with long summers, the Danube and the vineyards of the Small Carpathians. Pleasant from April to October, though July and August can be hot."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A firm handshake with eye contact is the usual greeting. Slovaks use titles: “pán” (Mr) and “pani” (Mrs) with the surname, and academic titles such as Ing. (engineer) or Mgr. (master's degree) appear on doorbells and business cards and in introductions. Friends say “Ahoj”.",
+    "etiquette": [
+      "When you pay in a restaurant, tell the waiter the total you want to pay, tip included, rather than leaving money on the table.",
+      "Visitors to a home take their shoes off in the hall.",
+      "Validate a paper ticket as soon as you board a bus or tram in Bratislava; inspectors fine anyone without one.",
+      "In the mountains, keep to the marked trails, carry water and a warm layer, and turn back if a storm builds. Mountain rescue can be costly without insurance.",
+      "Toast with “Na zdravie!”, looking each person in the eye."
+    ],
+    "tipping": "Round up, or add about 10% in restaurants for good service, saying the total as you pay.",
+    "dress": "Proper boots, waterproofs and a warm layer in the mountains, even in summer. Casual clothes elsewhere, and covered shoulders in churches.",
+    "food": [
+      {
+        "name": "Bryndzové halušky",
+        "text": "Small potato dumplings tossed with bryndza, a soft, tangy sheep's cheese, and topped with crisp bacon. The national dish, best at a mountain salaš (sheep farm)."
+      },
+      {
+        "name": "Kapustnica",
+        "text": "A sour sauerkraut soup with smoked sausage, mushrooms and sometimes dried plums, the centre of the Christmas Eve meal."
+      },
+      {
+        "name": "Lokše",
+        "text": "Thin potato pancakes, spread with goose fat or filled with poppy seeds, jam or duck liver."
+      },
+      {
+        "name": "Oštiepok and parenica",
+        "text": "Smoked sheep's cheeses: oštiepok is pressed into carved wooden moulds, parenica rolled up in a spiral of ribbons."
+      },
+      {
+        "name": "Kofola and borovička",
+        "text": "Kofola, a herbal cola first made in Czechoslovakia around 1960, is on tap everywhere; borovička is a juniper spirit, like a strong gin."
+      }
+    ],
+    "phrases": {
+      "language": "Slovak",
+      "intro": "Slovak is close to Czech, and the two are understood by both peoples. The stress always falls on the first syllable. Younger people often speak English.",
+      "items": [
+        { "phrase": "Dobrý deň", "say": "DOH-bree dyen", "meaning": "Good day; hello" },
+        { "phrase": "Ahoj", "say": "AH-hoy", "meaning": "Hi; bye (informal)" },
+        { "phrase": "Ďakujem", "say": "DYAH-koo-yem", "meaning": "Thank you" },
+        { "phrase": "Prosím", "say": "PROH-seem", "meaning": "Please; you're welcome" },
+        { "phrase": "Prepáčte", "say": "PREH-pahch-teh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Koľko to stojí?", "say": "KOL-koh toh STOH-yee", "meaning": "How much is it?" },
+        { "phrase": "Na zdravie!", "say": "NAH-zdrah-vyeh", "meaning": "Cheers!" },
+        { "phrase": "Dovidenia", "say": "DOH-vee-deh-nyah", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q214",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€), since 2009",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Slovak. Hungarian is widely spoken in the south, and Czech is understood everywhere.",
+        "sources": [{ "property": "P37", "values": ["Q9058"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins; E sockets have an earth pin, as in France), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, and UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q16891899"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; 150 for fire, 155 for ambulance, 158 for police; 18 300 for mountain rescue",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648839", "Q25648862", "Q25648863"] }],
+        "note": "Wikidata has no statement for the Mountain Rescue Service (Horská záchranná služba); the page adds its number, 18 300, for the Tatras."
+      },
+      {
+        "key": "callingCode",
+        "text": "+421",
+        "sources": [{ "property": "P474", "values": ["+421"] }]
+      }
+    ]
+  }
+}

@@ -16,13 +16,8 @@ import SocialMediaCTA from '@/components/socialMedia/SocialMediaCTA';
 import MenuStampButton from './MenuStampButton';
 // Utils
 import { prefetchRoute } from '@/utils/navigation/prefetchRoute';
-
-// my_planet's red poster buttons: travel face, black outline; the current page is inverted.
-const navButtonClass = ({ isActive }) =>
-  `grid items-center rounded-sm px-4 py-1 border-2 border-poster-brown font-travel text-xl tracking-wide shadow-paper transition hover:brightness-110 active:scale-95 ${
-    isActive ? 'bg-poster-brown text-poster-paper' : 'bg-poster-red text-poster-ink'
-  }`;
-const navButtonStatic = navButtonClass({ isActive: false });
+// Each button a different look for now, to choose one (navStyleTrial.js; 18 Nov 2026)
+import { navTrialClass } from './navStyleTrial';
 
 // The column on short windows (a laptop's browser page is often 600 to 700 px tall): its
 // spacing, logo and buttons shrink in two steps, so every link fits without scrolling (a
@@ -173,13 +168,13 @@ function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut
         ref={desktopNavRef}
         className={`grid gap-2 ${column ? COLUMN_LIST : 'grid-row justify-self-end items-center'}`}
       >
-        {navLinkItemsArray.map(({ path, label, subpages }) =>
+        {navLinkItemsArray.map(({ path, label, subpages }, index) =>
           subpages ? (
             <li key={label} className='relative grid'>
               {/* Click-only toggle (no hover-to-open) */}
               <button
                 type='button'
-                className={`${navButtonStatic} grid-cols-a1a gap-2`}
+                className={`${navTrialClass(index)} grid-cols-a1a gap-2`}
                 aria-haspopup='true'
                 aria-expanded={openDesktopDropdown === label}
                 aria-controls={`desktop-submenu-${label}`}
@@ -203,20 +198,20 @@ function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut
                   aria-label={`${label} submenu`}
                 >
                   {subpages.map(({ path: sp, label: sl }) => (
-                    <NavItem key={sl} path={sp} title={sl} />
+                    <NavItem key={sl} path={sp} title={sl} styleIndex={index} />
                   ))}
                 </ul>
               )}
             </li>
           ) : (
-            <NavItem key={label} path={path} title={label} />
+            <NavItem key={label} path={path} title={label} styleIndex={index} />
           )
         )}
 
         {/* Logout button */}
         {user?.email && (
           <li className='grid gap-2'>
-            <LogoutButton user={user} onLogout={handleLogout} isLoggingOut={isLoggingOut} />
+            <LogoutButton user={user} onLogout={handleLogout} isLoggingOut={isLoggingOut} styleIndex={navLinkItemsArray.length} />
             <LogoutError message={logoutError} />
           </li>
         )}
@@ -264,12 +259,12 @@ function MobileNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut,
         }`}
       >
         <ul className='mx-auto grid w-full max-w-xs gap-3 text-center'>
-          {navLinkItemsArray.map(({ path, label, subpages }) =>
+          {navLinkItemsArray.map(({ path, label, subpages }, index) =>
             subpages ? (
               <li key={label} className='grid gap-2'>
                 <button
                   onClick={() => handleMobileDropdownToggle(label)}
-                  className={`${navButtonStatic} grid-cols-a1a gap-2`}
+                  className={`${navTrialClass(index)} grid-cols-a1a gap-2`}
                   aria-haspopup='true'
                   aria-expanded={openMobileDropdown === label}
                   aria-controls={`mobile-submenu-${label}`}
@@ -286,20 +281,20 @@ function MobileNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut,
                 {openMobileDropdown === label && (
                   <ul id={`mobile-submenu-${label}`} className='grid gap-2 pl-3' aria-label={`${label} submenu`}>
                     {subpages.map(({ path: sp, label: sl }) => (
-                      <NavItem key={sl} path={sp} title={sl} />
+                      <NavItem key={sl} path={sp} title={sl} styleIndex={index} />
                     ))}
                   </ul>
                 )}
               </li>
             ) : (
-              <NavItem key={label} path={path} title={label} />
+              <NavItem key={label} path={path} title={label} styleIndex={index} />
             )
           )}
 
           {/* Logout button */}
           {user?.email && (
             <li className='grid gap-2'>
-              <LogoutButton user={user} onLogout={logoutAndClose} isLoggingOut={isLoggingOut} />
+              <LogoutButton user={user} onLogout={logoutAndClose} isLoggingOut={isLoggingOut} styleIndex={navLinkItemsArray.length} />
               <LogoutError message={logoutError} />
             </li>
           )}
@@ -323,12 +318,12 @@ function LogoutError({ message }) {
   );
 }
 
-function LogoutButton({ user, onLogout, isLoggingOut }) {
+function LogoutButton({ user, onLogout, isLoggingOut, styleIndex = 0 }) {
   return (
     <button
       type='button'
       onClick={onLogout}
-      className={navButtonStatic}
+      className={navTrialClass(styleIndex)}
       aria-label={`Log out ${user.email} from ${CompanyName}`}
       aria-busy={isLoggingOut}
       data-analytics-action='logout'
@@ -340,7 +335,7 @@ function LogoutButton({ user, onLogout, isLoggingOut }) {
   );
 }
 
-const NavItem = ({ path, title }) => {
+const NavItem = ({ path, title, styleIndex = 0 }) => {
   const doPrefetch = () => prefetchRoute(path);
 
   return (
@@ -348,7 +343,7 @@ const NavItem = ({ path, title }) => {
       <NavLink
         to={path}
         aria-label={`${title} page navigation tab`}
-        className={navButtonClass}
+        className={({ isActive }) => navTrialClass(styleIndex, isActive)}
         onMouseEnter={doPrefetch} // desktop hover
         onFocus={doPrefetch} // keyboard focus
         onTouchStart={doPrefetch} // mobile intent

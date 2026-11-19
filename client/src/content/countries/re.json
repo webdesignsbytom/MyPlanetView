@@ -1,0 +1,177 @@
+{
+  "code": "RE",
+  "slug": "reunion",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Koman i lé ?", "La Réunion", "Bienvenue"],
+  "summary": "A French island of volcanic peaks, roadless cirques and an active volcano, made for hiking.",
+  "overview": [
+    "Réunion is an overseas department of France, about 175 km south-west of Mauritius, and it runs like a piece of France in the Indian Ocean: the euro, French road signs, bakeries and supermarkets. It is almost all mountain. Piton des Neiges, an extinct volcano of 3,070 m, is the highest point in the Indian Ocean, and around it lie three huge collapsed basins, the cirques of Cilaos, Salazie and Mafate, whose villages are reached by hairpin roads or, in Mafate's case, by footpaths alone. The peaks, cirques and cliffs are a World Heritage Site.",
+    "In the south-east, Piton de la Fournaise is one of the most active volcanoes in the world, erupting most years; when it's quiet, a marked path crosses its lava plain to the rim of the summit crater. Walking is what most visitors come for, on hundreds of kilometres of waymarked trails, including the long-distance GR R1 and GR R2, with mountain gîtes to sleep in. The west coast, around Saint-Gilles and L'Hermitage, has the beaches and the coral lagoons; the east is green, wet and full of waterfalls.",
+    "A hire car is the easiest way around, and the yellow Car Jaune buses link the main towns. Roads into the cirques are slow, and the one up to Cilaos has hundreds of bends. Sharks are a real danger off this coast: outside the lagoons and the supervised bathing areas, swimming and surfing are banned."
+  ],
+  "whenToGo": {
+    "months": ["good", "avoid", "avoid", "good", "best", "best", "best", "best", "best", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [5, 6, 7, 8, 9, 10, 11],
+        "text": "Sunny days, little rain on the sheltered west coast, and the best walking weather. The coast is about 25°C; in the cirques the nights are chilly, and on the high peaks it can freeze before dawn. September to November are the driest months, and the Grand Raid runs in October."
+      },
+      {
+        "name": "Hot, wet season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Hot and humid, around 30°C on the coast, with heavy afternoon rain in the mountains and on the east side. Cyclones are a risk from about January to March, and Réunion holds world records for the most rain in a day and in a few days; trails and roads close after storms, sometimes for weeks. December and April are gentler, and the lagoon is at its warmest."
+      }
+    ],
+    "weather": "Tropical, but height and slope change everything. The west and south-west, sheltered from the trade winds, are dry and sunny, while the east and north-east catch the wind and get several times as much rain. The coast stays between about 25°C in winter and 30°C in summer; Cilaos, at about 1,200 m, is roughly 10°C cooler, and the high peaks see frost in winter. In most months cloud builds over the mountains by late morning, so walkers set off at dawn.",
+    "festivals": [
+      {
+        "name": "Sakifo Musik Festival",
+        "place": "Saint-Pierre",
+        "when": "Usually late May or early June",
+        "months": [5, 6],
+        "text": "A weekend of music by the sea, from maloya and séga to bands from France, Africa and the other Indian Ocean islands."
+      },
+      {
+        "name": "Bastille Day (Fête nationale)",
+        "place": "Across Réunion",
+        "when": "14 July",
+        "months": [7],
+        "text": "France's national day, with parades, dances and fireworks in the towns."
+      },
+      {
+        "name": "Grand Raid (Diagonale des Fous)",
+        "place": "Across the island",
+        "when": "Usually in October",
+        "months": [10],
+        "text": "A mountain race across the island of about 170 km with close to 10,000 m of climbing, which the fastest runners finish in about a day. Thousands take part, and villages turn out to cheer them through the night."
+      },
+      {
+        "name": "Dipavali",
+        "place": "Saint-André",
+        "when": "Usually in October or November",
+        "months": [10, 11],
+        "text": "The island's Tamil community celebrates the festival of light with a long parade of floats, dancers and lamps through the streets of Saint-André."
+      },
+      {
+        "name": "Fèt Kaf (Abolition of Slavery Day)",
+        "place": "Across Réunion",
+        "when": "20 December",
+        "months": [12],
+        "text": "A public holiday kept only in Réunion, for the day in 1848 when slavery ended here, with maloya music, dancing and gatherings across the island."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The west coast",
+        "text": "Saint-Gilles, L'Hermitage and La Saline: the sunny side, with the lagoons, surf schools, restaurants and most of the hotels. Very little rain from May to November."
+      },
+      {
+        "name": "The cirques and the high peaks",
+        "text": "Cilaos for its spa, canyoning and the climb to Piton des Neiges; Salazie for waterfalls and the old Creole houses of Hell-Bourg; Mafate, reached only on foot or by helicopter, for days of walking between hamlets. Best from May to November; in the wet season, rain and landslides close trails."
+      },
+      {
+        "name": "The east, the south and the volcano",
+        "text": "The windward side: rainforest, sugar cane and waterfalls such as the Anse des Cascades. In the wild south-east, the coast road crosses the lava flows of Piton de la Fournaise down to the sea, and the road up to the Pas de Bellecombe gives the classic view over the crater. The summit paths close during eruptions."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "As in France, say \"bonjour\" when you walk into a shop, a café or a bus; friends greet each other with a kiss on each cheek. Among themselves people speak Réunion Creole, and \"Koman i lé ?\" (how are you?), answered with \"Lé la\" (fine), will earn a smile.",
+    "etiquette": [
+      "Swim only in the lagoons and supervised bathing areas: sharks have killed several people off the island.",
+      "Start walks at dawn: cloud and rain usually close in over the mountains by midday, and night falls early all year.",
+      "Book mountain gîtes well ahead, above all in Mafate and below the summit of Piton des Neiges: they fill up.",
+      "When the volcano erupts, the road and trails to the crater close; check the official announcements before you go.",
+      "Take your shoes off at Tamil temples, and ask before photographing ceremonies.",
+      "Sunday is for family picnics: forest parks and beaches fill up early, and many shops close."
+    ],
+    "tipping": "Service is included in French bills, so a tip is never required. Leaving a few euros for good service, or rounding up a taxi fare, is appreciated.",
+    "dress": "Proper walking boots, a waterproof and a warm layer: the peaks can be near freezing at dawn when the coast is 25°C. Sun protection matters at altitude. Casual clothes in town; beachwear stays on the beach.",
+    "food": [
+      {
+        "name": "Cari",
+        "text": "The everyday dish: chicken, pork, fish or octopus cooked slowly with onion, garlic, ginger and turmeric (called safran here), served with rice, beans or lentils and a fiery rougail on the side."
+      },
+      {
+        "name": "Rougail saucisses",
+        "text": "Smoked sausages simmered with tomato, onion and chilli, one of the island's best-loved meals."
+      },
+      {
+        "name": "Bouchons and samoussas",
+        "text": "Steamed pork dumplings from the Chinese community and crisp samosas, sold by the bagful at snack bars and eaten before dinner."
+      },
+      {
+        "name": "Achards",
+        "text": "Cabbage, carrots and green beans pickled with turmeric, vinegar and chilli, served with almost everything."
+      },
+      {
+        "name": "Bourbon vanilla",
+        "text": "Vanilla was first pollinated by hand here, in 1841, by Edmond Albius, an enslaved boy of 12, and the method spread round the world. Buy pods from the farms in the east."
+      },
+      {
+        "name": "La Dodo",
+        "text": "The island's own lager, Bourbon, known to everyone by the dodo on its label."
+      }
+    ],
+    "phrases": {
+      "language": "French and Réunion Creole",
+      "intro": "French is the official language and everyone speaks it; Creole is the language of home and the street. English is limited outside the bigger hotels.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello (say it on entering a shop)" },
+        { "phrase": "Merci", "say": "mair-SEE", "meaning": "Thank you" },
+        { "phrase": "S'il vous plaît", "say": "seel voo PLAY", "meaning": "Please" },
+        { "phrase": "Pardon", "say": "par-DON", "meaning": "Sorry; excuse me" },
+        { "phrase": "Où est le sentier ?", "say": "oo ay luh sahn-TYAY", "meaning": "Where is the path?" },
+        { "phrase": "C'est loin ?", "say": "say LWAN", "meaning": "Is it far?" },
+        { "phrase": "Koman i lé ?", "say": "koh-MAHN ee LAY", "meaning": "How are you? (Creole)" },
+        { "phrase": "Lé la", "say": "lay LAH", "meaning": "I'm fine (Creole: \"it's there\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q17070",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€), as in mainland France. Cards are widely taken.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French. Réunion Creole is the everyday language of most people.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }],
+        "note": "Wikidata gives French, the only official language; the page adds Réunion Creole, which most people speak at home."
+      },
+      {
+        "key": "plugs",
+        "text": "Type E (two round pins, as in France; two-pin type C plugs fit too), 230 V",
+        "sources": [{ "property": "P2853", "values": ["Q2335536"] }],
+        "note": "Wikidata gives 220 V; the page gives 230 V, the standard supply in France and its overseas departments."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Réunion Time, UTC+4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6779"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies; the French numbers work too: 15 for an ambulance (SAMU), 17 for police and 18 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }],
+        "note": "Wikidata lists only 112; the page adds France's national emergency numbers, which work in Réunion as in mainland France."
+      },
+      {
+        "key": "callingCode",
+        "text": "+262",
+        "sources": [{ "property": "P474", "values": ["+262"] }]
+      }
+    ]
+  }
+}

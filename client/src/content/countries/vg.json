@@ -1,0 +1,152 @@
+{
+  "code": "VG",
+  "slug": "british-virgin-islands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Good day", "BVI", "Welcome"],
+  "summary": "Sixty sailing islands, the boulders of The Baths and beach bars reached by dinghy.",
+  "overview": [
+    "The British Virgin Islands are some 60 islands, cays and rocks, most of them steep, green and empty, gathered around the Sir Francis Drake Channel. That sheltered stretch of water, with a steady easterly breeze and anchorages a short sail apart, has made the territory one of the world's favourite places to charter a yacht, and many visitors sleep on a boat for the whole stay. Tortola, the largest island, holds most of the people, the capital Road Town and the beach at Cane Garden Bay; Sage Mountain, about 520 m, keeps a patch of old forest at the top.",
+    "Each island has its own draw. On Virgin Gorda, The Baths is a beach piled with house-sized granite boulders, with pools and tunnels between them and a trail through to Devil's Bay. Jost Van Dyke has White Bay, where the Soggy Dollar Bar takes its name from the wet notes of customers who swim ashore, and Foxy's at Great Harbour. Anegada, flat and made of coral, is ringed by Horseshoe Reef, one of the largest barrier reefs in the Caribbean, and is known for lobster and the flamingos in its salt ponds. Off Salt Island lies the wreck of the RMS Rhone, sunk in a hurricane in 1867 and now a favourite dive.",
+    "Ferries link Tortola with Virgin Gorda, Jost Van Dyke and Anegada, and with the US Virgin Islands next door. On land, taxis are often open-sided safari buses, and hire cars face steep, twisting roads, driving on the left. The territory uses the US dollar."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "avoid", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Christmas winds",
+        "months": [12, 1, 2],
+        "text": "Dry and sunny but often very breezy: strong easterlies, known as the Christmas winds, can blow for days around the turn of the year, making crossings lively and some snorkelling spots choppy. Charters and moorings are in heavy demand over Christmas and New Year."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Settled sunshine, gentler wind and calm, clear water: the easiest sailing for most people. The Spring Regatta fills Nanny Cay in late March or early April, and May is quieter and cheaper."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hotter, with lighter winds, warm water and uncrowded anchorages. The chance of a tropical storm grows through August, so keep an eye on forecasts. The Emancipation Festival runs into early August."
+      },
+      {
+        "name": "Hurricane season's height",
+        "months": [9, 10, 11],
+        "text": "The riskiest weeks fall in September and October, and many beach bars, restaurants and some hotels close for weeks. Things reopen through November, ready for the new sailing season."
+      }
+    ],
+    "weather": "Winter afternoons are about 28°C and summer ones 31°C, with nights of 23°C to 26°C, with the sea between 26°C and 29°C. Rain comes mostly as brief showers, more of them from late summer into November; Anegada is drier and the heights of Tortola wetter. Most days, a steady breeze comes in from the east. Hurricane Irma struck the islands directly in September 2017, doing great damage.",
+    "festivals": [
+      {
+        "name": "BVI Spring Regatta",
+        "place": "Nanny Cay, Tortola",
+        "when": "Usually late March or early April",
+        "months": [3, 4],
+        "text": "A week of racing for everything from fast race boats to family cruising yachts, with parties at the marina every night."
+      },
+      {
+        "name": "Emancipation Festival",
+        "place": "Road Town and villages on Tortola",
+        "when": "Usually from mid-July to the first week of August",
+        "months": [7, 8],
+        "text": "The territory's party for emancipation, with food fairs, music in the festival village, the early-morning Rise and Shine Tramp behind a band, and a parade through Road Town on the August holidays."
+      },
+      {
+        "name": "Old Year's Night",
+        "place": "Great Harbour, Jost Van Dyke",
+        "when": "31 December",
+        "months": [12],
+        "text": "Hundreds of yachts crowd the bay, and the beach bars, Foxy's above all, throw one of the Caribbean's biggest New Year's Eve parties."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Virgin Islanders can seem reserved at first, and they set great store by manners. A \"Good day\" as you get into a taxi or step up to a bar or counter, before anything else, is expected, and makes everything after it easier. Shake hands on meeting.",
+    "etiquette": [
+      "In the marine parks, such as at the Rhone and The Baths, tie up to a mooring buoy rather than dropping anchor on the coral.",
+      "Many evenings end with a dinghy ride back to the boat in the dark: go easy on the rum, and carry a torch.",
+      "Never stand on coral or touch it, and leave conch and shells where they are.",
+      "Photographing people at markets and in villages is fine once you've asked."
+    ],
+    "tipping": "Bills often include 10–15% for service; if yours doesn't, add about that. On a crewed yacht charter the crew is usually tipped at the end of the trip, and taxi drivers and dive guides get something too.",
+    "dress": "Boat clothes: swimsuits, a long-sleeved rash vest or shirt against the sun, light cover-ups and sandals or deck shoes that grip. Casual shirts and shorts in town and for most evenings.",
+    "food": [
+      {
+        "name": "Fish and fungi",
+        "text": "The national dish. Fungi, cornmeal and okra worked into a firm mound, sits beside stewed or boiled fish in a light, peppery broth."
+      },
+      {
+        "name": "Anegada lobster",
+        "text": "Spiny lobster caught off Anegada and grilled over open fires on the beach in the evening, usually ordered ahead in the afternoon."
+      },
+      {
+        "name": "Pate",
+        "text": "Fried pastry turnovers filled with saltfish, conch, chicken or spiced beef, sold from snack vans and roadside stalls."
+      },
+      {
+        "name": "Painkiller",
+        "text": "Dark rum, pineapple and orange juice and cream of coconut, with nutmeg grated on top, first mixed at the Soggy Dollar Bar."
+      },
+      {
+        "name": "Callwood rum",
+        "text": "Rum made at Cane Garden Bay in an old stone distillery, worked by the Callwood family with equipment that has hardly changed in generations."
+      }
+    ],
+    "phrases": {
+      "language": "English (Virgin Islands Creole)",
+      "intro": "Officially the territory speaks English; among themselves, islanders use a Creole English shared with the US Virgin Islands. Some words worth knowing:",
+      "items": [
+        { "phrase": "Good day", "meaning": "The greeting for a shop, a taxi or a bar, at any hour" },
+        { "phrase": "Belonger", "say": "bee-LONG-er", "meaning": "A Virgin Islander by birth or descent, with the rights that go with it" },
+        { "phrase": "Fungi", "say": "FUN-ghee", "meaning": "Cornmeal and okra; also the islands' music, played by bands on washboard, gourd, guitar and ukulele" },
+        { "phrase": "Down island", "meaning": "Any island further south in the Eastern Caribbean" },
+        { "phrase": "Mash up", "meaning": "Broken or wrecked" },
+        { "phrase": "The Valley", "meaning": "Spanish Town, Virgin Gorda's main settlement" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q25305",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar ($, USD). The territory has no currency of its own.",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 or 911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706"] }],
+        "note": "Wikidata gives 999; 911 also reaches the emergency services in the territory, and the page gives both."
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 284",
+        "sources": [{ "property": "P474", "values": ["+1284"] }]
+      }
+    ]
+  }
+}

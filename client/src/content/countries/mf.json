@@ -1,0 +1,158 @@
+{
+  "code": "MF",
+  "slug": "saint-martin",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonjour", "Saint-Martin", "Côté français"],
+  "summary": "The French side of a shared island: Marigot's market, Grand Case's grills and Orient Bay.",
+  "overview": [
+    "Saint Martin is the French half of an island shared with the Netherlands. The north, about 53 km², is a French overseas collectivity; the south is Sint Maarten, part of the Kingdom of the Netherlands. A treaty divided the island in 1648, and today you cross between the two sides with no checks at all, past a monument and a welcome sign.",
+    "Marigot, the capital, has a waterfront market, French cafés and the ruins of Fort Louis, built in 1789, on the hill above the bay; ferries leave from its harbour for Anguilla. Grand Case, a fishing village strung along one street, is the island's restaurant row, where French chefs' dining rooms stand beside lolos, open-air barbecue stalls. Orient Bay, on the windward coast, is a long beach of bars and water sports, with a naturist section at its southern end, and the islet of Pinel, a short boat ride from Cul-de-Sac, has calm water for snorkelling.",
+    "Inland, Pic Paradis, at 424 m the island's highest point, is reached by a steep road and trails through dry forest, and Loterie Farm, on its slopes, has zip lines and walks. Most visitors fly into Princess Juliana airport on the Dutch side and hire a car to explore the whole island; the French side's small airport, by Grand Case, has flights to the islands nearby. The euro is the currency, but US dollars are taken almost everywhere, and English is spoken as widely as French."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4, 5],
+        "text": "Sunny and breezy at about 27–29°C, with the most settled weather from February to April. This is high season, when prices and crowds peak, above all over Christmas and New Year."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Showers become more frequent and the air steamier; the sea is at its warmest and often flat calm, and the island is quieter."
+      },
+      {
+        "name": "Storm season",
+        "months": [9, 10, 11],
+        "text": "Hurricane risk is highest in September and October, and some restaurants and hotels close for a few weeks. November brings the first visitors of the new season."
+      }
+    ],
+    "weather": "Warm all year, around 25–31°C, and fairly dry: the hills are low, so the island catches less rain than its mountainous neighbours, and much of it is covered in dry scrub. What rain there is comes as short showers, mostly between August and November, when hurricanes are also most likely. Hurricane Irma did great damage to both sides of the island in 2017.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "Marigot and Grand Case",
+        "when": "January to Ash Wednesday, with the biggest parades just before it; in 2027, Ash Wednesday is 10 February",
+        "months": [1, 2, 3],
+        "text": "The French side keeps carnival on the French calendar, before Lent, with costumed parades through the streets, while the Dutch side holds its own after Easter."
+      },
+      {
+        "name": "Tuesday nights in Grand Case",
+        "place": "Grand Case",
+        "when": "Weekly in high season, usually from about January to April",
+        "months": [1, 2, 3, 4],
+        "text": "The main street closes to cars for an evening of live music, craft stalls and food, with the lolos and restaurants busy until late."
+      },
+      {
+        "name": "Bastille Day",
+        "place": "Marigot",
+        "when": "14 July",
+        "months": [7],
+        "text": "France's national day, a public holiday, with an official ceremony, music and fireworks over the bay."
+      },
+      {
+        "name": "St Martin's Day",
+        "place": "Both sides of the island",
+        "when": "11 November",
+        "months": [11],
+        "text": "A holiday on both the French and Dutch sides, recalling the story that Columbus named the island on St Martin's Day in 1493, and celebrating its people as one."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A \"Bonjour\" as you walk into a shop or restaurant sets the right tone on the French side, even though the talk usually carries on in English, the first language of most islanders. People greet each other warmly; a handshake suits a first meeting, and kisses on the cheek come with friendship.",
+    "etiquette": [
+      "The border is open, but the two sides have different currencies, phone networks and emergency numbers: check your phone's roaming before crossing back and forth.",
+      "Naturism is accepted only at the south end of Orient Bay; everywhere else, keep swimwear on, and keep it for the beach.",
+      "Leave nothing in a parked car, at beaches and viewpoints above all.",
+      "Marigot keeps French hours: shops shut over lunch, and most stay closed on Sunday.",
+      "Lolos are casual: order at the grill, sit at a shared table and eat with your fingers."
+    ],
+    "tipping": "Restaurant bills on the French side usually include service. On an island full of American visitors, leaving another 10% for good service is common, and some bills suggest an amount, so read yours before adding more.",
+    "dress": "Beachwear on the beach; a shirt or sarong over it for lunch at a beach bar, and smart-casual clothes for dinner in Grand Case. Light clothes all year, and walking shoes for the trail up Pic Paradis.",
+    "food": [
+      {
+        "name": "Lolos",
+        "text": "Grand Case's open-air grills: ribs, chicken, lobster and fish, with rice and peas, plantain and coleslaw, eaten at plastic tables by the road."
+      },
+      {
+        "name": "Conch and dumplings",
+        "text": "Conch stewed in a rich, peppery sauce with flour dumplings, a favourite of island home cooking."
+      },
+      {
+        "name": "French bakeries",
+        "text": "Croissants, pains au chocolat and baguettes every morning in Marigot and Grand Case, and French cheeses and pâtés in the supermarkets."
+      },
+      {
+        "name": "Rhum arrangé",
+        "text": "Rum steeped for months with fruit, vanilla or spices in big glass jars, poured as a digestif in bars and sold in shops to take home."
+      },
+      {
+        "name": "Fresh seafood",
+        "text": "Spiny lobster, red snapper and mahi-mahi landed by local boats, grilled simply or cooked in a Creole sauce."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "English is the first language of most islanders on both sides, so you can get by in it everywhere. French is the official language on this side, and the polite basics in it are welcome in shops and at the market.",
+      "items": [
+        { "phrase": "Bonjour, madame / monsieur", "say": "bon-ZHOOR mah-DAHM / muh-SYUH", "meaning": "Hello (to a woman / to a man)" },
+        { "phrase": "Bonsoir", "say": "bon-SWAHR", "meaning": "Good evening" },
+        { "phrase": "Parlez-vous anglais ?", "say": "par-lay voo ahn-GLEH", "meaning": "Do you speak English?" },
+        { "phrase": "Je voudrais…", "say": "zhuh voo-DREH", "meaning": "I'd like…" },
+        { "phrase": "C'est combien ?", "say": "say kom-BYAN", "meaning": "How much is it?" },
+        { "phrase": "Merci", "say": "mair-SEE", "meaning": "Thank you" },
+        { "phrase": "Où sont les toilettes ?", "say": "oo son lay twah-LET", "meaning": "Where are the toilets?" },
+        { "phrase": "Au revoir", "say": "oh ruh-VWAHR", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q126125",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€). US dollars are accepted almost everywhere, at each shop's own rate.",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French, the official language. English is the first language of most islanders and is spoken everywhere.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins, as in France), 220 V. The Dutch side uses American plugs at 110 V.",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ],
+        "note": "Wikidata also lists the Schuko (Type F) plug and 120 V; the page gives the French sockets at 220 V used on this side, and puts the lower voltage on the Dutch side, where it belongs."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112, or France's own numbers: 15 for an ambulance, 17 for police, 18 for fire. The Dutch side uses 911.",
+        "sources": [],
+        "note": "Wikidata's item has no emergency-number statement; the French side of the island uses 112 and France's short numbers."
+      },
+      {
+        "key": "callingCode",
+        "text": "+590. Calls to the Dutch side (+1 721) are international.",
+        "sources": [{ "property": "P474", "values": ["+590"] }]
+      }
+    ]
+  }
+}

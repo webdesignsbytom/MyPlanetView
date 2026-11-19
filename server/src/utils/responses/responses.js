@@ -36,6 +36,8 @@ export const DOMAINS = {
   themes: 'themes',
   // Friends challenges
   challenges: 'challenges',
+  // Country maps: states visited and pins (docs/API.md "Country maps")
+  countryMaps: 'countryMaps',
 };
 
 export const EVENT_MESSAGES = {
@@ -177,6 +179,20 @@ export const EVENT_MESSAGES = {
   momentLandmarkWrongCountry: `That landmark isn't in the moment's country.`,
   invalidMomentSpot: `A pin needs a latitude from -90 to 90 and a longitude from -180 to 180, and "shared" is true or false.`,
   momentSpotWrongCountry: `That spot isn't in the moment's country. Move the pin, or take it off.`,
+  // Country maps (docs/API.md "Country maps")
+  subdivisionNotFound: `That state or province isn't on any country's map.`,
+  countryMapNotFound: `Only a country has a map of its own.`,
+  pinNotFound: `That pin doesn't exist, or it hasn't been shared with you.`,
+  pinVisitNotFound: `That visit isn't on this pin.`,
+  invalidPinName: `A pin needs a name, up to 80 characters.`,
+  invalidPinNotes: `A note is text, up to 2,000 characters.`,
+  invalidPinPosition: `A pin needs a place on the map: a latitude and a longitude.`,
+  invalidPinHidden: `hidden must be true or false.`,
+  pinWrongCountry: `That spot isn't in this country. Put the pin inside it.`,
+  pinsFull: `A map can have up to 1,000 pins.`,
+  pinVisitsFull: `A pin can have up to 100 visits.`,
+  invalidPinVisitDate: `A visit's date is a year (2019), a month (2019-06) or a day (2019-06-14), from 1800 to 2200, with DAY, MONTH or YEAR saying how much of it is known. Leave it empty if you're not sure.`,
+  pinVisitPhotosInvalid: `Choose up to 50 photos, each from this map.`,
   momentPhotosInvalid: `Choose up to 20 photos, each from this map.`,
   momentPhotosNotOnTrip: `You can only choose photos from this trip.`,
   momentTripChangeNeedsMap: `Only the map's owner and its editors can move a moment to another trip.`,

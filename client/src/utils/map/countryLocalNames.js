@@ -383,6 +383,14 @@ export const LOCAL_NAMES = {
     ['ga', 'Tuaisceart Éireann'],
     ['sco', 'Norlin Airlann'],
   ],
+  // Regions (regionPlaces.js; New Caledonia's is NC's, above)
+  XZ: [['pt', 'Açores']],
+  XB: [['id', 'Bali']],
+  XA: [['es', 'Islas Galápagos']],
+  XG: [['kok', 'गोंय']],
+  XH: [['haw', 'Hawaiʻi']],
+  GS: [['en', 'South Georgia and the South Sandwich Islands']],
+  XT: [['en', 'Tasmania']],
 };
 
 // Case aside, the same name: "eSwatini" is Eswatini; "México" isn't Mexico

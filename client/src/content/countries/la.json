@@ -1,0 +1,166 @@
+{
+  "code": "LA",
+  "slug": "laos",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Sabaidee", "Pathet Lao"],
+  "summary": "Luang Prabang's temples and dawn alms, slow boats on the Mekong and karst hills at Vang Vieng.",
+  "overview": [
+    "Laos is landlocked, mostly mountains and forest, with the Mekong running along much of its border with Thailand. It's the quietest country in the region to travel in, and the pace is slow. Luang Prabang, the old royal capital where the Nam Khan river joins the Mekong, is the highlight: a small town of gilded temples such as Wat Xieng Thong, French-era houses and a night market, where lines of monks walk the streets at dawn to collect alms. The turquoise pools of the Kuang Si waterfalls are about 30 km away.",
+    "Vientiane, the capital, is a low-key riverside city with the golden That Luang stupa, the national symbol. Vang Vieng, between the two, sits among limestone peaks, with caves, kayaking and tubing on the river. In the south, Champasak has the hillside Khmer temple of Wat Phou, the Bolaven Plateau grows coffee among waterfalls, and at Si Phan Don (the 4,000 Islands) the Mekong spreads wide around river islands before pouring over the Khone Phapheng falls near the Cambodian border. In the north-east, the Plain of Jars is scattered with huge stone jars made more than 1,500 years ago, thought to be linked to burials.",
+    "Since late 2021, a fast railway built with China has linked Vientiane, Vang Vieng and Luang Prabang, turning a day on winding roads into a couple of hours. Elsewhere, buses and minivans take the mountain roads slowly, and the two-day slow boat down the Mekong from Huay Xai, on the Thai border, to Luang Prabang is a trip in itself. Laos was heavily bombed in the 1960s and early 1970s, and unexploded bombs still lie in the countryside, above all around the Plain of Jars and in the east: stay on marked paths."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "avoid", "good", "good", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool, dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Clear skies and warm days, with chilly mornings in Luang Prabang and the north, where mist often fills the Mekong valley at dawn. The busiest time, especially around Christmas, New Year and Lunar New Year."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "Hot and hazy, 35°C or more in Vientiane, with smoke from burning fields hanging over the north until the first rains, usually in May. Pi Mai, the Lao New Year, cools things down with water fights in mid-April."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Heavy showers most days, wettest in July and August. Rice fields turn bright green, rivers run high and fast, and the waterfalls are at their fullest, but some roads in the north and south become slow or impassable."
+      }
+    ],
+    "weather": "The dry season runs from about November to April and the rainy season from about May to October, with the heaviest rain in July and August. From November to February the days are warm and sunny, around 28°C in Vientiane, while nights in the northern hills turn cold: on the Plain of Jars they can drop close to freezing. March and April are hot, 35°C or more in the lowlands, and farmers burning their fields fill the north with smoke until the rains clear the air. The rains wash out mountain roads, but they also leave the countryside at its greenest.",
+    "festivals": [
+      {
+        "name": "Pi Mai (Lao New Year)",
+        "place": "Across Laos, above all Luang Prabang",
+        "when": "Usually 14 to 16 April",
+        "months": [4],
+        "text": "Buddha images are washed with scented water, people build little sand stupas on the riverbanks, and the streets become a three-day water fight. Luang Prabang adds processions and a parade of Miss New Year."
+      },
+      {
+        "name": "Boun Bang Fai (Rocket Festival)",
+        "place": "Villages across Laos",
+        "when": "Usually in May, before the rice is planted",
+        "months": [5],
+        "text": "Villages build bamboo rockets packed with gunpowder and fire them into the sky to call for rain, with music, dancing and plenty of lao-lao, the local rice whisky."
+      },
+      {
+        "name": "Boun Ok Phansa and Lai Heua Fai",
+        "place": "Luang Prabang and Vientiane",
+        "when": "Usually in October, at the full moon that ends the Buddhist rains retreat",
+        "months": [10],
+        "text": "The end of Buddhist Lent. In Luang Prabang, lit boats are paraded through the streets and small candlelit rafts of banana leaf are floated on the Mekong; in Vientiane, long-boat races are held on the river the next day."
+      },
+      {
+        "name": "That Luang Festival",
+        "place": "Vientiane",
+        "when": "Usually in November, at the full moon",
+        "months": [11],
+        "text": "Monks from across the country gather at the great golden stupa, people carry offerings in candlelit processions around it, and a fair fills the grounds for several days."
+      },
+      {
+        "name": "National Day",
+        "place": "Across Laos",
+        "when": "2 December",
+        "months": [12],
+        "text": "A public holiday marking the founding of the Lao People's Democratic Republic in 1975, with flags on every street and parades in Vientiane."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Lao people greet each other with the nop: hands pressed together at chest height and a slight bow, with \"Sabaidee\". Return it in kind, though men often shake hands with foreigners. The mood is gentle and unhurried, summed up in the phrase \"bo pen nyang\": never mind, no problem. Raising your voice or showing anger gets you nowhere.",
+    "etiquette": [
+      "At Luang Prabang's dawn alms round, watch quietly from across the street, without flash and without blocking the monks' path. Only take part if it means something to you, with sticky rice from a trusted shop rather than from street sellers.",
+      "Leave your shoes at the door of homes and temple halls, and sit with your feet tucked to one side, never stretched towards a Buddha image.",
+      "Monks may not touch women: a woman offering something to a monk sets it down within his reach, or on a cloth he holds out.",
+      "Never pick up metal objects in the countryside, and keep to marked paths: unexploded bombs still kill and injure people every year."
+    ],
+    "tipping": "Lao people don't tip each other, but rounding up in restaurants is welcome, and a tip for guides, drivers and boat crews at the end of a trip is appreciated. Some tourist restaurants add a service charge.",
+    "dress": "Temples and villages expect shoulders and knees to be covered; in Luang Prabang, signs ask visitors to dress modestly in town. Lao women wear the sinh, a long wrapped skirt, especially for temples and festivals. Bring a warm layer for northern mornings and the cold air-conditioning on minivans and trains, and a rain jacket from May.",
+    "food": [
+      {
+        "name": "Khao niao",
+        "text": "Sticky rice, the heart of every meal, served in a small woven basket. Roll a little into a ball with your fingers and use it to pick up the other dishes."
+      },
+      {
+        "name": "Larb",
+        "text": "Minced meat or fish tossed with lime, fish sauce, chilli, mint and toasted ground rice: Laos's national dish, served at every celebration."
+      },
+      {
+        "name": "Tam mak hoong",
+        "text": "Green papaya salad pounded in a mortar, the Lao way with padaek, a pungent fermented fish sauce, and as much chilli as you'll take."
+      },
+      {
+        "name": "Khao piak sen",
+        "text": "A thick, slightly sticky soup of rice-and-tapioca noodles in chicken broth, with fried garlic and herbs: the usual breakfast."
+      },
+      {
+        "name": "Mok pa",
+        "text": "Fish steamed in a banana-leaf parcel with lemongrass, dill and chilli."
+      },
+      {
+        "name": "Beerlao and Lao coffee",
+        "text": "Beerlao, the national beer, is on almost every table. Coffee from the Bolaven Plateau is served strong, sweetened with condensed milk."
+      }
+    ],
+    "phrases": {
+      "language": "Lao",
+      "intro": "English is spoken in guesthouses and tourist towns. Lao is close to Thai, and many Lao people understand Thai from television.",
+      "items": [
+        { "phrase": "Sabaidee (ສະບາຍດີ)", "say": "sah-bai-DEE", "meaning": "Hello" },
+        { "phrase": "Khop chai (ຂອບໃຈ)", "say": "kawp JAI", "meaning": "Thank you" },
+        { "phrase": "Khop chai lai lai (ຂອບໃຈຫຼາຍໆ)", "say": "kawp jai LAI LAI", "meaning": "Thank you very much" },
+        { "phrase": "Bo pen nyang (ບໍ່ເປັນຫຍັງ)", "say": "baw pen NYANG", "meaning": "Never mind; no problem" },
+        { "phrase": "Tao dai? (ເທົ່າໃດ)", "say": "tao DAI", "meaning": "How much?" },
+        { "phrase": "Kho thot (ຂໍໂທດ)", "say": "kaw TOHT", "meaning": "Sorry; excuse me" },
+        { "phrase": "Sep lai (ແຊບຫຼາຍ)", "say": "sep LAI", "meaning": "Very tasty" },
+        { "phrase": "Sok dee (ໂຊກດີ)", "say": "sok DEE", "meaning": "Good luck (a friendly goodbye)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q819",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Lao kip (₭, LAK). Carry cash: cards are taken mainly in larger hotels and restaurants.",
+        "sources": [{ "property": "P38", "values": ["Q200055"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Lao. English is spoken in tourist towns, and some older people speak French.",
+        "sources": [{ "property": "P37", "values": ["Q9211"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (flat pins, as in the US) and C, E and F (round pins, as in mainland Europe), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456", "Q1378312", "Q2335536", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Indochina Time, UTC+7, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6940", "Q109528882"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "191 for police, 195 for ambulance and 190 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648876", "Q25743518", "Q25648833"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+856",
+        "sources": [{ "property": "P474", "values": ["+856"] }]
+      }
+    ]
+  }
+}

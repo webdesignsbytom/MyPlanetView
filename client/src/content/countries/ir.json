@@ -1,0 +1,197 @@
+{
+  "code": "IR",
+  "slug": "iran",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Salaam", "Iran", "Khosh amadid"],
+  "summary": "Isfahan's tiled domes, Persepolis, the gardens of Shiraz and Yazd's wind towers.",
+  "overview": [
+    "Iran, the old Persia, has some of the finest buildings in the Islamic world and the ruins of empires far older. Most first visits follow a classic route south from Tehran. Kashan has grand merchants' houses built round courtyards and the Fin Garden with its running water; Isfahan has Naqsh-e Jahan Square, one of the largest city squares anywhere, framed by the turquoise-tiled Imam Mosque, the Sheikh Lotfollah Mosque and a long covered bazaar, and old bridges arching over the Zayandeh River; and Yazd, a desert city of mud-brick lanes, cools its houses with tall wind towers and keeps a Zoroastrian fire temple.",
+    "Shiraz is the city of poets and gardens, where people visit the tombs of Hafez and Saadi and come early to the Nasir al-Mulk Mosque to see the morning sun pour through its coloured windows. Persepolis, about an hour away, was the ceremonial capital of the Persian kings Darius and Xerxes, with stone reliefs of tribute bearers still crisp after 2,500 years; nearby are the rock-cut royal tombs of Naqsh-e Rostam and the tomb of Cyrus the Great at Pasargadae. Beyond the classic route, Tehran has the Golestan Palace and fine museums, the north-west has Tabriz's vast bazaar, the Caspian shore is green and wooded, and in the Gulf the island of Hormuz has hills and beaches of red, ochre and silver earth.",
+    "Overnight trains, comfortable long-distance buses and domestic flights link the cities, and the Snapp app calls taxis. Foreign bank cards don't work in Iran, so visitors bring all their money in cash, usually euros or US dollars. By law, women must cover their hair in public and wear loose clothes; alcohol is illegal. Friday is the weekly day off.",
+    "Iran is on the list of countries that many governments advise against visiting at all, and several warn that foreign and dual nationals risk being detained. Things can shift quickly; look at your own government's current advice before making any plans, and again before you go."
+  ],
+  "whenToGo": {
+    "stripLabel": "Tehran and the classic route through Kashan, Isfahan, Yazd and Shiraz. The Gulf coast and its islands are hottest in summer and best in winter, with a strip below.",
+    "months": ["good", "good", "good", "best", "best", "good", "avoid", "avoid", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold on the plateau: Tehran and Tabriz have snow, Isfahan and Shiraz are around 10 to 14°C by day and freezing at night. The skies are often clear and the sights quiet, and the ski slopes above Tehran open. The Gulf coast is warm."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The best season, with orange blossom in Shiraz and roses in Kashan. Nowruz, the New Year in late March, sends the whole country travelling: trains, flights and hotels are full, and many shops close for the first days. By April and May it's warm, green and calmer."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot and dry: Isfahan and Shiraz in the high 30s, Yazd and Kashan close to 40°C, though the nights cool down. Iranians head for the Caspian forests and the mountains; the Gulf coast is extremely hot and humid. The climbing season on Mount Damavand runs through the summer."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "The heat hangs on through September. October and November bring warm days, cool nights and the pomegranate harvest, and the gardens of Shiraz and Kashan turn gold."
+      }
+    ],
+    "weather": "Iran is mostly a high, dry plateau ringed by mountains, so it has four real seasons: summers are hot and dry, winters cold, with snow in the north and west. Rain is light and falls mostly between November and April. The Caspian shore, north of the Alborz, is the exception: mild, humid and green, with rain in every season. The Gulf coast in the south is hot all year and fiercely so in summer, and the deserts of the east and centre are among the hottest places on Earth.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Iran",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Restaurants close in daylight and visitors shouldn't eat or drink in public, though hotels serve guests. Shops open later, and evenings are busy once the fast is broken with dates, tea and sweet zoolbia and bamieh. The Eid at the end of the month is a public holiday."
+      },
+      {
+        "name": "Chaharshanbe Suri",
+        "place": "Across Iran",
+        "when": "The evening of the last Tuesday before Nowruz, in March",
+        "months": [3],
+        "text": "A fire festival from before Islam: people jump over small bonfires in the street, chanting for the fire to take their troubles, and set off firecrackers late into the night."
+      },
+      {
+        "name": "Nowruz",
+        "place": "Across Iran",
+        "when": "At the spring equinox, usually 20 or 21 March, with about two weeks of holiday",
+        "months": [3, 4],
+        "text": "The Persian New Year and the biggest celebration of the year. Families set out a haft-sin table of seven symbolic things, visit relatives and travel; for the first days many shops, offices and some museums close, and every hotel is booked."
+      },
+      {
+        "name": "Sizdah Bedar",
+        "place": "Across Iran",
+        "when": "The 13th day of the new year, usually 1 or 2 April",
+        "months": [4],
+        "text": "Nature Day, the end of the Nowruz holiday: everyone picnics outdoors, in parks and along roadsides, and the sprouted greens from the New Year table are thrown into running water."
+      },
+      {
+        "name": "Tasua and Ashura",
+        "place": "Across Iran",
+        "when": "The 9th and 10th days of the Islamic year: in 2027, in June",
+        "months": [6],
+        "text": "Two days of mourning for Imam Hussein, the most solemn holidays of the year. Black banners hang in the streets, men march in processions beating their chests, and free food (nazri) is handed out. Most shops and sights close."
+      },
+      {
+        "name": "Yalda Night",
+        "place": "Across Iran",
+        "when": "The longest night of the year, usually 20 or 21 December",
+        "months": [12],
+        "text": "Families stay up late together eating pomegranates, watermelon and nuts, and reading poems of Hafez aloud to tell each other's fortunes."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Gulf coast and islands",
+        "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+        "text": "Bandar Abbas and the islands of Hormuz, Qeshm and Kish are warm and sunny from November to March, about 25°C, and unbearably hot and humid from May to September."
+      },
+      {
+        "name": "The Caspian shore",
+        "text": "A green strip of rice fields, tea gardens and forest between the Alborz mountains and the sea, with stepped hill villages such as Masuleh. Mild and wet: summer is the busy season, when Iranians escape the heat, and autumn is the rainiest time."
+      },
+      {
+        "name": "The north-west",
+        "text": "Tabriz, the cliff village of Kandovan and the lands round them are high and cold, with snow from December to March. Late spring and summer are the best times."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Salaam\" is hello, often followed by \"khoobi?\" (are you well?). Iranians are famously hospitable, and the art of taarof, elaborate politeness, shapes everyday life: a host offers again and again, a guest refuses before accepting, and a shopkeeper or driver may say there's nothing to pay. That's a courtesy, so offer to pay two or three times. Men shake hands; in public, men and women usually don't, so wait for a woman to offer.",
+    "etiquette": [
+      "Women must wear a headscarf and loose clothes in public, and the rule applies to visitors. At shrines such as Shah Cheragh in Shiraz and the Imam Reza shrine in Mashhad, women wear a chador, lent at the entrance, and non-Muslims may be shown round by a guide.",
+      "Drinking, selling and bringing in alcohol are all against the law.",
+      "Don't photograph government or military buildings, police or soldiers, and ask before photographing people.",
+      "The thumbs-up sign is traditionally rude; avoid it.",
+      "Shoes come off in homes and at the entrance to shrines and many mosques.",
+      "Keep affection between couples private."
+    ],
+    "tipping": "Expected in better restaurants, about 10% if service isn't added, and welcome for guides, drivers, porters and anyone who goes out of their way to help. In taxis and cafés, round up.",
+    "dress": "Set by law. Women wear a headscarf, a loose long top or coat covering the hips, and trousers or a long skirt; many Iranian women wear the scarf loosely, but it must stay on. Men need long trousers and no sleeveless tops. Winter and desert nights call for warm layers.",
+    "food": [
+      {
+        "name": "Chelow kabab",
+        "text": "The national dish: a mound of saffron-topped rice with grilled skewers of minced lamb (koobideh), grilled tomatoes, raw onion and a sprinkle of sumac. Ask for the tahdig, the crisp golden rice from the bottom of the pot."
+      },
+      {
+        "name": "Ghormeh sabzi",
+        "text": "A slow-cooked stew of fried herbs, kidney beans, lamb and dried limes, dark green and sour, eaten with rice in almost every home."
+      },
+      {
+        "name": "Fesenjan",
+        "text": "Chicken or duck in a thick, dark sauce of ground walnuts and pomegranate molasses, sweet and sour together, made for celebrations."
+      },
+      {
+        "name": "Dizi",
+        "text": "Lamb, chickpeas and potatoes cooked in a stone pot. Pour the broth over torn bread and eat it first, then pound what's left into a paste with a pestle."
+      },
+      {
+        "name": "Faloodeh and bastani",
+        "text": "Shiraz's faloodeh is a frozen dessert of thin rice noodles in rosewater syrup with lime juice; bastani is ice cream flavoured with saffron and rosewater, studded with pistachios."
+      },
+      {
+        "name": "Chai",
+        "text": "Black tea, drunk all day in small glasses, with a sugar cube held between the teeth or a stick of saffron rock sugar (nabat). Traditional teahouses are good places to rest."
+      }
+    ],
+    "phrases": {
+      "language": "Persian (Farsi)",
+      "intro": "Persian is written in the Arabic script but is a different language, related to the languages of Europe. Younger people in the cities often speak some English.",
+      "items": [
+        { "phrase": "Salaam (سلام)", "say": "sa-LAAM", "meaning": "Hello" },
+        { "phrase": "Khoobi? (خوبی)", "say": "KHOO-bee", "meaning": "Are you well? (informal)" },
+        { "phrase": "Merci (مرسی)", "say": "mer-SEE", "meaning": "Thanks" },
+        { "phrase": "Khahesh mikonam (خواهش می‌کنم)", "say": "khaa-HESH mee-ko-NAM", "meaning": "Please; you're welcome" },
+        { "phrase": "Bebakhshid (ببخشید)", "say": "be-bakh-SHEED", "meaning": "Excuse me; sorry" },
+        { "phrase": "Chande? (چنده)", "say": "CHAN-deh", "meaning": "How much is it?" },
+        { "phrase": "Khoshmazeh (خوشمزه)", "say": "khosh-ma-ZEH", "meaning": "Delicious" },
+        { "phrase": "Khodahafez (خداحافظ)", "say": "kho-daa-HAA-fez", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q794",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Iranian rial (IRR), though prices are usually given in tomans (one toman is ten rials), so check which is meant. Foreign bank cards don't work: bring cash.",
+        "sources": [{ "property": "P38", "values": ["Q188608"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Persian (Farsi). Azerbaijani, Kurdish, Luri, Gilaki, Mazandarani, Balochi and Arabic are spoken in different regions.",
+        "sources": [{ "property": "P37", "values": ["Q9168"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Iran Standard Time, UTC+3:30, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6773", "Q2392297", "Q4806307"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "110 for police, 115 for ambulance and 125 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648823", "Q25648805", "Q25648885"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+98",
+        "sources": [{ "property": "P474", "values": ["+98"] }]
+      }
+    ]
+  }
+}

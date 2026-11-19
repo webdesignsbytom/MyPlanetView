@@ -1,0 +1,183 @@
+{
+  "code": "MZ",
+  "slug": "mozambique",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Olá", "Moçambique", "Bem-vindo"],
+  "summary": "Coral islands and whale sharks, Portuguese-era towns and prawns grilled with piri-piri.",
+  "overview": [
+    "Mozambique has about 2,500 km of Indian Ocean coast, and that is what most visitors come for: coral reefs, islands, and long beaches backed by dunes and coconut palms. In the far south, Ponta do Ouro has dolphins and diving close to the South African border, and Tofo, near the old town of Inhambane, is known for whale sharks and manta rays. Further north, Vilanculos is the base for the Bazaruto Archipelago, a marine park of sand islands where dugongs still live.",
+    "Maputo, the capital, has wide avenues lined with flowering trees, a busy central market, art deco buildings and live music in its bars. In the centre of the country, Gorongosa National Park has been brought back from near-emptiness after the civil war, and has elephants, lions and great herds of waterbuck. In the north, the Island of Mozambique, a World Heritage Site and once the colonial capital, keeps a stone town of churches, mosques and a 16th-century fortress.",
+    "Distances are long and the main north–south road, the EN1, is slow in places, so many visitors fly between regions. Chapas (minibuses) are the everyday transport. Portuguese is the official language and a few words go a long way, though English is common in the southern beach towns. Malaria is present all year.",
+    "An armed insurgency has affected Cabo Delgado province, in the far north, for several years. Many governments advise against all or most travel to parts of the north; conditions change, so check your own government's current advice."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "avoid", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry winter",
+        "months": [5, 6, 7, 8],
+        "text": "Sunny days of about 25°C on the southern coast, cool evenings, little rain and low humidity. Humpback whales pass along the coast from about July, and the sea can be choppy when southerly winds blow."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Warming and still dry, with clear water for diving and whales offshore into October. November turns hot and humid as the rains approach."
+      },
+      {
+        "name": "Hot, wet season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Hot, humid and rainy, with storms most afternoons. Cyclones can strike the coast from about January to March, and roads and bridges wash out. The southern beaches fill with South African holidaymakers at Christmas and Easter. April is drier and green."
+      }
+    ],
+    "weather": "Tropical along the coast, and hotter and more humid the further north you go. Maputo has summer days of about 30°C and winter days of about 25°C, with cool nights in June and July. The rains fall from about November to April, heaviest from January to March, and the dry season from May to October is sunny with little rain. The sea is warm all year, from about 22°C off the south in winter to 28°C in summer.",
+    "festivals": [
+      {
+        "name": "Heroes' Day",
+        "place": "Across Mozambique",
+        "when": "3 February",
+        "months": [2],
+        "text": "Honours Eduardo Mondlane, founder of the liberation movement Frelimo, killed on this day in 1969, and others who died for independence."
+      },
+      {
+        "name": "Mozambican Women's Day",
+        "place": "Across Mozambique",
+        "when": "7 April",
+        "months": [4],
+        "text": "A public holiday on the anniversary of the death of Josina Machel, a leading figure of the independence struggle."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Maputo and across Mozambique",
+        "when": "25 June",
+        "months": [6],
+        "text": "Marks independence from Portugal in 1975, with parades, concerts and speeches."
+      },
+      {
+        "name": "Humpback whales",
+        "place": "Ponta do Ouro, Tofo and the southern coast",
+        "when": "Usually July to October",
+        "months": [7, 8, 9, 10],
+        "text": "Thousands of humpbacks travel north to breed and back south again, often seen breaching from the beach as well as on boat trips."
+      },
+      {
+        "name": "Peace and Reconciliation Day",
+        "place": "Across Mozambique",
+        "when": "4 October",
+        "months": [10],
+        "text": "Marks the peace agreement of 1992 that ended the civil war."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The south, from Maputo to Vilanculos",
+        "text": "Ponta do Ouro, Tofo, Inhambane, Vilanculos and the Bazaruto islands: the easiest part of the country, with the best roads and the most places to stay. Whale sharks are seen off Tofo in most months, most often from about October to March."
+      },
+      {
+        "name": "Gorongosa",
+        "text": "Best from about June to November, when the grass is short and the animals gather near water. In the heaviest rains, parts of the park are cut off."
+      },
+      {
+        "name": "The Island of Mozambique and the north",
+        "text": "The Island of Mozambique, joined to the mainland by a long, narrow bridge, has its stone town and a mixed Swahili, Muslim and Portuguese past. Further north, Pemba and the Quirimbas islands lie in Cabo Delgado: check your government's advice before going anywhere there."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greet before anything else, with a handshake and \"bom dia\" (good morning) or \"boa tarde\" (good afternoon). Friends often kiss on both cheeks, and older people are addressed as \"senhor\" or \"senhora\".",
+    "etiquette": [
+      "Carry your passport, or a certified copy, at all times: police checks are common.",
+      "Don't photograph police, soldiers or government buildings.",
+      "Driving on beaches is banned outside a few marked places.",
+      "On the Island of Mozambique and along the northern coast most people are Muslim: dress modestly in town.",
+      "Agree the price of boat trips and rides before setting off; haggling is normal for crafts.",
+      "In Maputo, avoid walking alone at night and keep valuables out of sight."
+    ],
+    "tipping": "About 10% in restaurants if service isn't included, and a tip for dive and boat crews and guides. Small notes in meticais are best.",
+    "dress": "Light clothes and swimwear, a warm layer for winter evenings in the south, and shoulders and knees covered in the towns of the north.",
+    "food": [
+      {
+        "name": "Prawns (camarão)",
+        "text": "Mozambique's prawns are famous across southern Africa: large, grilled over charcoal and basted with garlic, lemon and piri-piri."
+      },
+      {
+        "name": "Piri-piri chicken",
+        "text": "Chicken grilled with the fiery local chilli; frango à zambeziana, from the Zambezi region, is cooked with coconut milk and lime."
+      },
+      {
+        "name": "Matapa",
+        "text": "Cassava leaves pounded and cooked with ground peanuts and coconut milk, often with crab or prawns, served with rice or xima, the maize porridge."
+      },
+      {
+        "name": "Pão and prego",
+        "text": "Portuguese-style bread rolls baked fresh every morning, and the prego, a roll filled with thin, garlicky steak."
+      },
+      {
+        "name": "Chamuças",
+        "text": "Triangular pastries filled with meat or fish, Mozambique's version of the samosa, sold at markets and bus stops."
+      },
+      {
+        "name": "2M and Laurentina",
+        "text": "The local lagers; Laurentina also makes a dark beer."
+      }
+    ],
+    "phrases": {
+      "language": "Portuguese",
+      "intro": "Portuguese is spoken in the towns and understood across the country, though for many people it's a second language. In Maputo and the south you'll also hear Changana.",
+      "items": [
+        { "phrase": "Bom dia", "say": "bong DEE-ah", "meaning": "Good morning; hello" },
+        { "phrase": "Boa tarde", "say": "BOH-ah TAR-deh", "meaning": "Good afternoon" },
+        { "phrase": "Tudo bem?", "say": "TOO-doo BENG", "meaning": "How are you?" },
+        { "phrase": "Obrigado / Obrigada", "say": "oh-bree-GAH-doo / oh-bree-GAH-dah", "meaning": "Thank you (said by a man / a woman)" },
+        { "phrase": "Por favor", "say": "poor fah-VOR", "meaning": "Please" },
+        { "phrase": "Quanto custa?", "say": "KWAN-too KOOSH-tah", "meaning": "How much is it?" },
+        { "phrase": "Desculpe", "say": "desh-KOOL-peh", "meaning": "Sorry; excuse me" },
+        { "phrase": "Khanimambo", "say": "kah-nee-MAHM-boh", "meaning": "Thank you (Changana, in the south)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1029",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Mozambican metical (MT, MZN; plural meticais). Carry cash away from the cities and resorts.",
+        "sources": [{ "property": "P38", "values": ["Q200753"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Portuguese is the official language. Most Mozambicans speak an African language at home, such as Emakhuwa, Changana or Sena.",
+        "sources": [{ "property": "P37", "values": ["Q5146"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins) and type M (three large round pins, as in South Africa), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613", "Q1383497"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central Africa Time, UTC+2, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6723", "Q4689511"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "119 for police, 117 for fire and 198 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q2807090", "Q4547615", "Q25648880"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+258",
+        "sources": [{ "property": "P474", "values": ["+258"] }]
+      }
+    ]
+  }
+}

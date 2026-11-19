@@ -1,0 +1,165 @@
+{
+  "code": "GM",
+  "slug": "gambia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Kori tanante?", "The Gambia"],
+  "summary": "Winter sun on the Atlantic, hundreds of bird species and boat trips up the Gambia River.",
+  "overview": [
+    "The Gambia is mainland Africa's smallest country: a ribbon of land on both banks of the Gambia River, nowhere more than about 50 km wide, reaching far inland and surrounded by Senegal except on its short Atlantic coast. Most visitors come for winter sun on the beaches between Bakau and Kololi, close to the capital, Banjul, and many are birdwatchers: more than 500 species have been recorded here, from kingfishers and bee-eaters in hotel gardens to herons and pelicans in the mangroves.",
+    "A short drive from the coast are the forest of Abuko, with monkeys and forest birds; the fishing beach at Tanji, where painted boats land their catch and fish is smoked on racks; and the sacred crocodile pool of Kachikally in Bakau. Upriver lie Kunta Kinteh Island, once a base for the slave trade and tied to the story told in Roots, the stone circles of Wassu, and the River Gambia National Park, where chimpanzees live on islands watched from a boat.",
+    "A ferry crosses the river mouth between Banjul and Barra, and a bridge spans it further inland at Farafenni. Green tourist taxis charge fixed fares; the yellow-and-green shared taxis and bush taxis cost far less. English is the official language, which makes The Gambia an easy first trip to West Africa."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Sunny and breezy, about 30°C on the coast, with fresh nights in December and January. The harmattan can haze the sky with dust. The busiest time for visitors and the best for birdwatching."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5, 6],
+        "text": "Sea breezes keep the coast pleasant, but upriver it's close to 40°C in April and May. The air grows humid in May and June as the rains approach."
+      },
+      {
+        "name": "Green season",
+        "months": [7, 8, 9, 10],
+        "text": "Heavy downpours and thunderstorms, often at night, peaking in August; the land is lush and birds are breeding. It's hot and sticky, mosquitoes are many, and some hotels close. October dries out."
+      }
+    ],
+    "weather": "Tropical, with a long dry season from about November to June and one rainy season from about July to October, wettest in August; the coast gets roughly 1,000 mm a year. On the coast, days are around 30°C for most of the year and nights cool to the mid-teens in December and January. Away from the sea it's hotter, especially before the rains. The Atlantic is coolest in February, about 21°C, and warmest in September.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "Banjul and across The Gambia",
+        "when": "18 February",
+        "months": [2],
+        "text": "The Gambia became independent from Britain on this day in 1965. A public holiday, with parades and official celebrations."
+      },
+      {
+        "name": "Ramadan and Koriteh",
+        "place": "Across The Gambia",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Life slows by day during the fast, and the compounds fill with family after dark. Koriteh, as Eid al-Fitr is called here, brings prayers, new clothes and children going door to door for small gifts (salibo)."
+      },
+      {
+        "name": "Tobaski",
+        "place": "Across The Gambia",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Eid al-Adha, the biggest holiday of the year. Every family that can buys a ram, and people travel home to their villages, so transport is packed."
+      },
+      {
+        "name": "Mawlid (the Prophet's Birthday)",
+        "place": "Across The Gambia",
+        "when": "About 11 days earlier each year: in 2027, about mid-August",
+        "months": [8],
+        "text": "A public holiday, with gatherings that chant and pray through the night at mosques and in the compounds of religious leaders."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Up the river",
+        "text": "Janjanbureh, the national park and the stone circles are hotter and drier than the coast in the dry season, very hot by April. November to February is the most comfortable time for river trips."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greetings are warm and unhurried. \"Salaam aleekum\" works everywhere; in Mandinka people then ask \"Kori tanante?\" (is there peace?) and answer \"Tanante\" (peace only), with questions about the family. Handshakes are relaxed and may last through the whole exchange. Children may call out \"toubab\", the word for a foreigner, without meaning any harm.",
+    "etiquette": [
+      "On the beaches, young men (known as bumsters) often offer to guide or befriend visitors. A friendly, firm \"no, thank you\" is enough; official guides carry ID badges.",
+      "Green tourist taxis work to set fares; with any other taxi, agree the price before you get in.",
+      "Start any request with a greeting: going straight to the point seems abrupt.",
+      "Keep cameras away from soldiers, police and State House, and ask people before you take their picture.",
+      "Away from the beach, cover up: swimwear and very short shorts in town or a village give offence."
+    ],
+    "tipping": "Welcome and usually modest: about 10% in restaurants for visitors, and a tip for guides, drivers and boatmen at the end of a trip.",
+    "dress": "Light cotton for the heat, with long sleeves and trousers for the evenings, when mosquitoes bite. Beachwear belongs on the beach and at the pool. Gambians dress up on Fridays and feast days in bright, flowing outfits, often made to measure by a local tailor.",
+    "food": [
+      {
+        "name": "Domoda",
+        "text": "The Gambia's best-loved dish: a thick stew of ground peanuts with beef, chicken or fish and pumpkin or sweet potato, served over rice."
+      },
+      {
+        "name": "Benachin",
+        "text": "\"One pot\" in Wolof: rice cooked in a tomato stock with fish or meat and vegetables, so it takes on all their flavour. West Africa's jollof rice is its cousin."
+      },
+      {
+        "name": "Superkanja",
+        "text": "Okra soup with palm oil, fish and meat, thick and slightly slippery, eaten with rice."
+      },
+      {
+        "name": "Ebbeh",
+        "text": "A spicy, sour soup of cassava, fish and shellfish with lime, sold in bowls at street stalls in the late afternoon."
+      },
+      {
+        "name": "Afra",
+        "text": "Beef or lamb grilled at night at roadside stalls, chopped and served with raw onion and mustard, wrapped in paper with bread."
+      },
+      {
+        "name": "Wonjo",
+        "text": "Cold, sweet hibiscus juice, often with a hint of mint or vanilla, sold in bottles and small plastic bags."
+      }
+    ],
+    "phrases": {
+      "language": "Mandinka",
+      "intro": "English is the official language and spoken in hotels, shops and offices. Mandinka is the largest local language; Wolof, Fula and Jola are widely spoken too.",
+      "items": [
+        { "phrase": "Salaam aleekum", "say": "sa-LAAM a-LAY-kum", "meaning": "Hello (\"peace be upon you\")" },
+        { "phrase": "I ning somo", "say": "ee ning SO-mo", "meaning": "Good morning" },
+        { "phrase": "Kori tanante?", "say": "KO-ree ta-NAN-teh", "meaning": "How are you? (\"Is there peace?\")" },
+        { "phrase": "Tanante", "say": "ta-NAN-teh", "meaning": "Fine (\"peace only\")" },
+        { "phrase": "Abaraka", "say": "a-BA-ra-ka", "meaning": "Thank you" },
+        { "phrase": "Fo tuma doo", "say": "fo TOO-ma DOH", "meaning": "See you later; goodbye" },
+        { "phrase": "Jërëjëf", "say": "JEH-reh-jef", "meaning": "Thank you (in Wolof)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1005",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Gambian dalasi (D, GMD). Cash is used for most things; cards are taken in the bigger hotels and some restaurants on the coast.",
+        "sources": [{ "property": "P38", "values": ["Q202885"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the official language. Mandinka, Wolof, Fula, Jola and Serahule are the main languages of daily life.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689477"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, 116 for ambulance and 118 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648807", "Q11185210"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+220",
+        "sources": [{ "property": "P474", "values": ["+220"] }]
+      }
+    ]
+  }
+}

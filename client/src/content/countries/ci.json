@@ -1,0 +1,191 @@
+{
+  "code": "CI",
+  "slug": "cote-d-ivoire",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Akwaba", "Côte d'Ivoire"],
+  "summary": "Abidjan by its lagoon, colonial Grand-Bassam, a vast basilica and the forests of Taï.",
+  "overview": [
+    "Côte d'Ivoire is the world's largest grower of cocoa and one of West Africa's busiest economies. Abidjan, its business capital, spreads around the Ébrié Lagoon, with office towers on the Plateau, markets in Adjamé and Treichville, and a nightlife and music scene, from zouglou to coupé-décalé, that is heard across French-speaking Africa. East along the coast, Grand-Bassam, the first colonial capital, has faded French buildings on a sandbar (a UNESCO World Heritage Site), and Assinie has beaches between the lagoon and the sea. Yamoussoukro, the official capital, is a quiet town with one of the largest churches in the world, the Basilica of Our Lady of Peace.",
+    "The west is greener and hillier: around Man, the forests hide waterfalls and bridges woven from lianas, and the Dan people are known for their carved masks. Taï National Park, in the south-west, protects one of the last large blocks of West African rainforest, where chimpanzees crack nuts with stone tools. In the north, Korhogo is the home of the Senufo, whose painted cloth and woodcarving are sold across the country.",
+    "Abidjan has orange metered taxis, shared woro-woro taxis, gbaka minibuses, water buses across the lagoon and ride-hailing apps. Paved roads and comfortable coaches link it with Yamoussoukro and the main towns. Some governments advise against travel to the far north, near the borders with Mali and Burkina Faso: check your own government's current advice before heading there."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "good", "good", "avoid", "good", "good", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Main dry season",
+        "months": [12, 1, 2, 3],
+        "text": "Hot and mostly dry in the south, about 31°C in Abidjan with sticky air, and the best months for the beaches and for trips upcountry. The harmattan brings dust in December and January, thickest in the north. March is the hottest month of the year."
+      },
+      {
+        "name": "Long rains",
+        "months": [4, 5, 6, 7],
+        "text": "The south's main rainy season, building through April and May and peaking in June, when Abidjan's downpours flood whole streets in minutes. The sea is rough and grey."
+      },
+      {
+        "name": "Short dry season",
+        "months": [8, 9],
+        "text": "A cooler, cloudier break in the south, around 27°C, with little rain. The north, meanwhile, has its wettest weeks."
+      },
+      {
+        "name": "Short rains",
+        "months": [10, 11],
+        "text": "A second, lighter rainy season in the south, with showers and evening storms, while the north dries out."
+      }
+    ],
+    "weather": "Two climates. The south, from the Ghanaian border to Liberia, is hot and humid all year, about 24–32°C, with two rainy seasons: the long one from about April to July and a shorter one in October and November. The north, around Korhogo, is savanna, with one rainy season from about June to September and a long dry season, when afternoons pass 35°C in March and April and harmattan nights are cooler. The mountains around Man are a little cooler and wetter.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Côte d'Ivoire",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Most people in the north are Muslim, and so are many in Abidjan's busy districts such as Adjamé and Abobo. Evenings fill with the smell of grilled meat once the fast is broken; the Eid is a public holiday."
+      },
+      {
+        "name": "Paquinou",
+        "place": "Baoulé country, around Bouaké and Yamoussoukro",
+        "when": "Easter: in 2027, the weekend of 28 March",
+        "months": [3, 4],
+        "text": "The Baoulé people's Easter homecoming: those who've moved to the cities go back to their villages for a long weekend of family reunions, dances and feasts."
+      },
+      {
+        "name": "FEMUA",
+        "place": "Abidjan",
+        "when": "Usually in April or May, over several days",
+        "months": [4, 5],
+        "text": "The Festival des Musiques Urbaines d'Anoumabo, started by the band Magic System in the district where they grew up, brings big African stars to open-air stages."
+      },
+      {
+        "name": "Tabaski (Eid al-Adha)",
+        "place": "Across Côte d'Ivoire",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Sheep markets spring up along Abidjan's roadsides in the week before, and the day itself is a public holiday of prayer and family meals."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across Côte d'Ivoire",
+        "when": "7 August",
+        "months": [8],
+        "text": "Côte d'Ivoire left French rule on this day in 1960, with Félix Houphouët-Boigny as its first president. A public holiday, with a military parade."
+      },
+      {
+        "name": "Abissa",
+        "place": "Grand-Bassam",
+        "when": "Usually late October or early November, for about a week",
+        "months": [10, 11],
+        "text": "The N'zima people's new-year festival: drumming, dancing and a time when people may mock anyone, the powerful included, in song, so that the year starts afresh."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Abidjan and the coast",
+        "text": "Hot and humid all year, with the long rains from about April to July. Grand-Bassam, Assinie and Assouindé are the weekend beaches, but the surf and currents along this coast are dangerous."
+      },
+      {
+        "name": "Man and the west",
+        "text": "Hills, forest and waterfalls around Man and the tooth-shaped peak of La Dent de Man, with liana bridges and Dan villages nearby. Taï National Park lies further south-west, near the Liberian border. Wetter and a little cooler than Abidjan."
+      },
+      {
+        "name": "Korhogo and the north",
+        "text": "Savanna country, with one rainy season from about June to September. Korhogo's painters and carvers are worth the trip in the dry months. Check your government's advice for areas near the northern borders."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Say \"bonjour\" when you walk into a shop, a waiting room or a shared taxi, and shake hands with people you're introduced to. Ivorians don't rush: ask how the family is (\"Et la famille ?\") before getting to business. Among friends in Abidjan you'll hear \"On dit quoi ?\" (what's up?), from Nouchi, the city's street slang.",
+    "etiquette": [
+      "The sea at Grand-Bassam and along much of the coast has powerful currents and a heavy shore break, and people drown there every year. Ask hotel staff where it's safe to go in.",
+      "Some masks are sacred and not for outsiders to see or photograph. Ask before taking pictures of ceremonies, and of people.",
+      "Woro-woro and unmetered taxis have no set fare for visitors, so settle the price before you get in.",
+      "Police checkpoints on the roads ask for papers: keep your passport, or a copy of it, with you."
+    ],
+    "tipping": "Rounding up is enough in a maquis, the open-air restaurants; in smarter places, about 5–10% if service isn't included. Give something to hotel porters and to guides.",
+    "dress": "Abidjan is stylish, and people dress well, especially for an evening out: smart-casual in the city, shorts for the beach. Bring light rain gear from April to July, and a layer for harmattan evenings in the north.",
+    "food": [
+      {
+        "name": "Attiéké",
+        "text": "Grated, fermented cassava steamed into a light, slightly sour couscous. With grilled fish, tomato, onion and chilli it's the dish every maquis serves."
+      },
+      {
+        "name": "Garba",
+        "text": "The cheapest filling meal in Abidjan: attiéké with chunks of fried tuna, raw onion, chilli and a splash of oil, sold from street stalls."
+      },
+      {
+        "name": "Alloco",
+        "text": "Ripe plantain fried in palm oil, sold in the evening with chilli sauce and onions, or with grilled fish or eggs."
+      },
+      {
+        "name": "Kedjenou",
+        "text": "Chicken or guinea fowl slow-cooked with tomato, onion and chilli in a sealed clay pot (canari), with almost no water, so the meat cooks in its own juices."
+      },
+      {
+        "name": "Foutou and sauce graine",
+        "text": "Foutou is boiled plantain or yam pounded into a soft dough, eaten with sauce graine, a deep-red palm-nut stew with meat or fish."
+      },
+      {
+        "name": "Bangui",
+        "text": "Palm wine, tapped from the oil palm and drunk fresh; the strong spirit distilled from it is called koutoukou."
+      }
+    ],
+    "phrases": {
+      "language": "French",
+      "intro": "French is spoken everywhere, with an Ivorian accent and plenty of local words. Dioula (Jula) is the common language of markets and of the north, and Baoulé is widely spoken in the centre.",
+      "items": [
+        { "phrase": "Bonjour", "say": "bon-ZHOOR", "meaning": "Hello" },
+        { "phrase": "Akwaba", "say": "ah-KWAH-bah", "meaning": "Welcome" },
+        { "phrase": "On dit quoi ?", "say": "on dee KWAH", "meaning": "What's up? (Abidjan slang)" },
+        { "phrase": "Merci", "say": "mair-SEE", "meaning": "Thank you" },
+        { "phrase": "Ça fait combien ?", "say": "sah fay kom-BYAN", "meaning": "How much does it come to?" },
+        { "phrase": "Y a pas drap", "say": "yah pah DRAH", "meaning": "No problem (Nouchi)" },
+        { "phrase": "I ni ce (Dioula)", "say": "ee nee CHEH", "meaning": "Hello; thank you, in Dioula" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1008",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "West African CFA franc (CFA, XOF), tied to the euro. Mobile money such as Orange Money and Wave is used everywhere; cards work in Abidjan's hotels and bigger shops.",
+        "sources": [{ "property": "P38", "values": ["Q861690"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French, the official language. Dioula is the common language of trade, and Baoulé is the most widely spoken of the country's many local languages.",
+        "sources": [{ "property": "P37", "values": ["Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689469"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "110, 111 or 170 for police; 180 for fire; 185 for an ambulance (SAMU)",
+        "sources": [{ "property": "P2852", "values": ["Q25648823", "Q4547309", "Q25743493", "Q25648853", "Q25648854"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+225",
+        "sources": [{ "property": "P474", "values": ["+225"] }]
+      }
+    ]
+  }
+}

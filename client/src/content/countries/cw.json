@@ -1,0 +1,165 @@
+{
+  "code": "CW",
+  "slug": "curacao",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bon tardi", "Kòrsou"],
+  "summary": "Willemstad's painted Dutch waterfront, a swinging pontoon bridge and small coves of clear water.",
+  "overview": [
+    "Curaçao is the largest of the three Dutch islands off Venezuela, between Aruba and Bonaire, and like them it's dry, with cactus, thorny scrub and a steady wind. Its capital, Willemstad, is a World Heritage Site. St Anna Bay divides it in two, Punda on one side and Otrobanda on the other, joined by the Queen Emma Bridge, a long pontoon bridge that swings aside to let ships through. Along Punda's quay, the Handelskade, stand gabled merchants' houses painted yellow, blue and pink. Nearby, the Mikvé Israel-Emanuel synagogue of 1732, with sand on its floor, is the oldest in continuous use in the Americas, and the Kura Hulanda museum tells the story of the slave trade. Pietermaai, a district of restored mansions, is where people go out at night.",
+    "The west of the island, Banda Abou, has the beaches: small coves with very clear water, such as Grote Knip (Kenepa Grandi), Playa Lagun and Cas Abao, and Playa Piskado, where turtles feed among the fishing boats. Christoffel National Park climbs to Mount Christoffel, 372 m, the island's highest point, and Shete Boka National Park has blowholes on the wild north coast. Boat trips run to Klein Curaçao, a flat, uninhabited islet with a lighthouse. The reefs along the south coast are easy to dive and snorkel from the shore.",
+    "Buses are few, so most visitors hire a car, driving on the right, to reach the western beaches. Papiamentu is the language of daily life, but almost everyone also speaks English, Dutch or Spanish, often all three, and US dollars are accepted widely."
+  ],
+  "whenToGo": {
+    "months": ["good", "best", "best", "best", "best", "best", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [2, 3, 4, 5, 6],
+        "text": "Sunny, breezy and dry, with the trade wind blowing strongly. Carnival's parades come in February or early March, depending on Easter, and Dutch school holidays fill the island around Easter."
+      },
+      {
+        "name": "Hot, calm late summer",
+        "months": [7, 8, 9],
+        "text": "The hottest weeks, often 32°C or more, as the wind eases. The sea is at its calmest and clearest for diving, and the north coast's blowholes are quieter."
+      },
+      {
+        "name": "Short rainy season",
+        "months": [10, 11, 12, 1],
+        "text": "Short showers and the odd heavy downpour, followed by sun; the island turns briefly green. Christmas and New Year are busy, and on New Year's Eve businesses set off pagara, long strings of firecrackers, at midday."
+      }
+    ],
+    "weather": "Curaçao is dry and warm all year, with about 550 mm of rain in a typical year, most of it from October to January. Afternoons reach 29°C to 32°C, nights stay around 25°C to 27°C, and the north-east trade wind blows almost without a break. The island lies south of the main hurricane belt, so direct hits are rare, but passing storms can bring floods: Tropical Storm Tomas did in 2010. The water is warm enough for a long snorkel in any month.",
+    "festivals": [
+      {
+        "name": "Carnival",
+        "place": "Willemstad",
+        "when": "From early January to Shrove Tuesday; the Grand Parade is on the Sunday before Lent",
+        "months": [1, 2],
+        "text": "It opens with the Tumba Festival, a contest of carnival songs whose winner becomes the year's road march, and ends with the Farewell Parade on the Tuesday night and the burning of King Momo."
+      },
+      {
+        "name": "Seú",
+        "place": "Willemstad",
+        "when": "Usually on Easter Monday",
+        "months": [3, 4],
+        "text": "The harvest festival: groups in traditional dress parade with baskets of produce on their heads, dancing to drums and work songs that go back to the plantation era."
+      },
+      {
+        "name": "King's Day",
+        "place": "Across Curaçao",
+        "when": "27 April",
+        "months": [4],
+        "text": "A holiday across the Dutch kingdom for the king's birthday, with street markets, music and plenty of orange."
+      },
+      {
+        "name": "Flag Day",
+        "place": "Across Curaçao",
+        "when": "2 July",
+        "months": [7],
+        "text": "A holiday marking the island's blue and yellow flag, adopted in 1984, with ceremonies and flags on every building."
+      },
+      {
+        "name": "Curaçao Day (Dia di Kòrsou)",
+        "place": "Across Curaçao",
+        "when": "10 October",
+        "months": [10],
+        "text": "Marks 10 October 2010, when Curaçao became a country of its own within the Kingdom of the Netherlands."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "People here greet everyone, including strangers on the street, with \"Bon dia\", \"Bon tardi\" or \"Bon nochi\" for morning, afternoon or evening. Strangers shake hands and friends kiss on the cheek. Ask how someone is, and wait for the answer: a hurried exchange feels rude.",
+    "etiquette": [
+      "Many beaches are privately run and charge for entry, sunbeds or parking; others are free and have nothing at all.",
+      "Give turtles plenty of room at Playa Piskado: don't touch, chase or feed them.",
+      "When the Queen Emma Bridge swings open for a ship, wait, or cross the bay on the free ferry that runs while it's open.",
+      "Don't leave bags or valuables in view in parked cars at beaches and lookouts."
+    ],
+    "tipping": "Look at the bill first, as a service charge is often included. Leave a little extra if service was good, and tip dive guides and boat crews.",
+    "dress": "Something cool and loose for the heat, and a hat against the sun. Reef shoes make the rocky beaches and shore dives easier, and Pietermaai's better restaurants expect smart casual in the evening.",
+    "food": [
+      {
+        "name": "Keshi yena",
+        "text": "A whole round of Edam or Gouda stuffed with spiced chicken, olives, raisins and capers, then baked: Dutch cheese meeting Caribbean cooking."
+      },
+      {
+        "name": "Stoba di konkomber",
+        "text": "Beef or goat stewed with the island's small, spiny cucumbers, served with funchi (stiff cornmeal) or rice."
+      },
+      {
+        "name": "Sopi di yuana",
+        "text": "Iguana soup, an old Curaçao dish, said by those who eat it to taste like chicken."
+      },
+      {
+        "name": "Plasa Bieuw",
+        "text": "The old market hall in Punda, where cooks serve home-style lunches of stews, fried fish, funchi and beans at long shared tables."
+      },
+      {
+        "name": "Blue Curaçao",
+        "text": "The liqueur is made from the dried peel of the laraha, a bitter orange grown on the island. Landhuis Chobolobo distils it and offers tastings."
+      },
+      {
+        "name": "Bolo pretu",
+        "text": "A rich, dark fruitcake soaked in rum, baked for weddings, christenings and Christmas."
+      }
+    ],
+    "phrases": {
+      "language": "Papiamentu",
+      "intro": "Papiamentu is the island's own language, a Creole with roots in Portuguese, Spanish, Dutch and West African languages, spelled here as it sounds. A few words:",
+      "items": [
+        { "phrase": "Bon tardi", "say": "bon TAR-dee", "meaning": "Good afternoon" },
+        { "phrase": "Masha danki", "say": "MAH-shah DAHN-kee", "meaning": "Thank you very much" },
+        { "phrase": "Kuantu e ta kosta?", "say": "KWAN-too eh tah KOS-tah", "meaning": "How much does it cost?" },
+        { "phrase": "Pasa bon", "say": "PAH-sah BON", "meaning": "Have a good time" },
+        { "phrase": "Ayó", "say": "ah-YOH", "meaning": "Goodbye" },
+        { "phrase": "Te aworo", "say": "teh ah-WOH-roh", "meaning": "See you later" },
+        { "phrase": "Kòrsou", "say": "KOR-sow", "meaning": "Curaçao, in Papiamentu" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q25279",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Caribbean guilder (Cg, XCG), fixed to the US dollar, which in 2025 replaced the Netherlands Antillean guilder and is shared with Sint Maarten. US dollars are widely accepted.",
+        "sources": [{ "property": "P38", "values": ["Q737779"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Papiamentu, Dutch and English. Spanish is widely understood.",
+        "sources": [{ "property": "P37", "values": ["Q33856", "Q7411", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in North America), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q2085376", "Q4742647"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+599 9",
+        "sources": [{ "property": "P474", "values": ["+5999"] }]
+      }
+    ]
+  }
+}

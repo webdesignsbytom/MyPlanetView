@@ -1,0 +1,177 @@
+{
+  "code": "SN",
+  "slug": "senegal",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Dalal ak jàmm", "Senegaal", "Teranga"],
+  "summary": "Dakar's music and markets, the island of Gorée, old Saint-Louis and the Saloum's mangroves.",
+  "overview": [
+    "Senegal is the westernmost country of mainland Africa, and one of the easiest in West Africa to travel in. Dakar, spread over a peninsula pushing into the Atlantic, is a big, busy city of markets, surf beaches, fish grilled by the shore and live music, above all mbalax, the drum-driven pop made famous by Youssou N'Dour. A short ferry ride away, the car-free island of Gorée has quiet lanes of colonial houses and the House of Slaves, a memorial to the Atlantic slave trade. North-east of the city, salt collectors work the Lac Rose, which can look pink in the dry season.",
+    "Up the coast, Saint-Louis, the old colonial capital, sits on an island in the mouth of the Senegal River, joined to the mainland by the iron Faidherbe Bridge; nearby, the Djoudj sanctuary fills with pelicans and flamingos in winter. South of Dakar, the beaches of the Petite Côte lead to the Sine-Saloum delta, a maze of mangroves, creeks and islands built up from shells. The far south, Casamance, is greener, with Jola villages among the rice fields and the beaches of Cap Skirring.",
+    "Sept-places, old seven-seat estate cars, and minibuses run between the towns, and boats link Dakar with Ziguinchor in Casamance. Senegalese take pride in teranga, their word for hospitality. Some governments advise against travel to rural parts of Casamance near the borders, so check your own government's current advice."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Sunny and breezy on the coast, about 25°C by day in Dakar, with cool evenings. The birds are in at Djoudj, and inland the harmattan brings dusty haze."
+      },
+      {
+        "name": "Hot dry season",
+        "months": [3, 4, 5, 6],
+        "text": "The coast stays pleasant, but inland Tambacounda and Kédougou pass 40°C in April and May. Humidity climbs through June, and the first storms reach Casamance."
+      },
+      {
+        "name": "Rainy season",
+        "months": [7, 8, 9, 10],
+        "text": "Hot, humid and green, with heavy storms, most of all in August and September, when Dakar's streets flood and unsurfaced roads become hard going. Many beach hotels in Casamance close. The rains taper off in October."
+      }
+    ],
+    "weather": "A dry season of about eight months and a rainy season from about July to October. The Atlantic keeps the coast mild: Dakar is around 25°C by day from December to March and about 31°C in the wet months. Inland it's much hotter, especially before the rains. Rainfall rises from north to south: Saint-Louis gets about 300 mm a year, Dakar about 450 mm, and Ziguinchor in Casamance more than 1,000 mm.",
+    "festivals": [
+      {
+        "name": "Ramadan and Korité",
+        "place": "Across Senegal",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Most Senegalese fast, and the city sounds change: quiet days, then a rush home to break the fast (ndogou) with dates, sweet coffee and bread. Korité, as Eid al-Fitr is called here, is a day of prayers, new clothes and asking forgiveness of friends and family."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Dakar and across Senegal",
+        "when": "4 April",
+        "months": [4],
+        "text": "A public holiday marking independence in 1960, with a big parade in Dakar."
+      },
+      {
+        "name": "Tabaski",
+        "place": "Across Senegal",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Eid al-Adha, the biggest feast of the year. Rams fill every roadside for weeks before, Dakar empties as people go home to their villages, and families dress in their finest for the day."
+      },
+      {
+        "name": "Saint-Louis Jazz Festival",
+        "place": "Saint-Louis",
+        "when": "Usually in May or early June",
+        "months": [5, 6],
+        "text": "Several days of jazz and African music on stages around the island's old squares and in its clubs."
+      },
+      {
+        "name": "Grand Magal of Touba",
+        "place": "Touba",
+        "when": "On 18 Safar of the Islamic calendar, so about 11 days earlier each year: in 2027, in late July",
+        "months": [7],
+        "text": "Millions of followers of the Mouride brotherhood travel to their holy city to mark the day their founder, Cheikh Amadou Bamba, was sent into exile in 1895. Roads to Touba are packed for days."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Casamance",
+        "text": "South of The Gambia: wetter, greener and more tropical than the north, with forest, mangroves and rice fields. Best from about November to May; the rains are heavy from July to October, when many hotels at Cap Skirring close."
+      },
+      {
+        "name": "The east: Niokolo-Koba and Kédougou",
+        "text": "Savannah, forest and the hills of the Bassari country near the border with Guinea. Very hot in April and May; December to March is the time for the national park, and the waterfalls run in the rains."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Every meeting starts with greetings, in Wolof \"Salaam aleekum\", answered \"Maleekum salaam\", then \"Na nga def?\" (how are you?) and questions about the family. People often ask your family name, and may give you a Senegalese one. Handshakes are light and sometimes long; some Muslim men and women don't shake hands with the other sex.",
+    "etiquette": [
+      "Lunch is often eaten from one big shared bowl: eat from the part in front of you, with your right hand or a spoon, and let your host push the best pieces of fish your way.",
+      "Bargain in markets such as Dakar's Sandaga and HLM, and settle a taxi fare before getting in.",
+      "In villages and markets, ask before taking pictures; some people will ask for a little money in return, and a no should be respected.",
+      "Touba is a holy city: smoking and alcohol aren't allowed there, and women should cover their hair.",
+      "Wrestling (laamb) is the national passion: a big Sunday bout in Dakar, with drummers and charms, is worth seeing."
+    ],
+    "tipping": "Not a strong habit locally, but welcome: round up in taxis, leave about 5–10% in restaurants for visitors, and tip guides, drivers and boatmen at the end of a trip.",
+    "dress": "Light cotton for the heat. In towns, villages and mosques, cover shoulders and knees; swimwear is for the beach and the pool. Senegalese dress well, and on Fridays and feast days men and women wear the grand boubou, a long, flowing robe in bright cloth.",
+    "food": [
+      {
+        "name": "Thiéboudienne",
+        "text": "The national dish, ceebu jën in Wolof: fish stuffed with parsley and garlic, cooked with vegetables in tomato sauce, and broken rice that soaks up the stock. The crisp rice from the bottom of the pot is the best part."
+      },
+      {
+        "name": "Yassa",
+        "text": "Chicken or fish marinated in lemon juice and mustard with a mountain of onions, cooked down until soft and served over rice. A dish from Casamance."
+      },
+      {
+        "name": "Mafé",
+        "text": "Lamb or beef in a smooth, rich sauce of ground peanuts and tomato, with rice. Peanuts have long been Senegal's biggest crop."
+      },
+      {
+        "name": "Dibi",
+        "text": "Lamb grilled over charcoal at dibiteries, served on paper with raw onion, mustard and bread."
+      },
+      {
+        "name": "Thiakry",
+        "text": "A sweet dessert of millet grains stirred into sweetened curd or yoghurt, often with nutmeg or vanilla, eaten cold."
+      },
+      {
+        "name": "Café Touba",
+        "text": "Coffee roasted with grains of Selim, a peppery spice, and brewed sweet. Linked to the Mouride brotherhood, it's sold in small cups from street stands all day."
+      }
+    ],
+    "phrases": {
+      "language": "Wolof",
+      "intro": "Wolof is spoken by most Senegalese, whatever their first language. French is used in offices, hotels and on signs, and English in some tourist areas.",
+      "items": [
+        { "phrase": "Salaam aleekum", "say": "sa-LAAM a-LAY-kum", "meaning": "Hello (\"peace be upon you\")" },
+        { "phrase": "Na nga def?", "say": "nan-ga DEF", "meaning": "How are you?" },
+        { "phrase": "Maa ngi fi rekk", "say": "MAAN-gee fee REK", "meaning": "I'm fine (\"I'm just here\")" },
+        { "phrase": "Jërëjëf", "say": "JEH-reh-jef", "meaning": "Thank you" },
+        { "phrase": "Ñaata la?", "say": "NYAA-ta la", "meaning": "How much is it?" },
+        { "phrase": "Waaw / Déedéet", "say": "WOW / DAY-dayt", "meaning": "Yes / No" },
+        { "phrase": "Ba beneen yoon", "say": "ba BEH-nehn YOHN", "meaning": "See you next time" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1041",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "West African CFA franc (CFA, XOF), pegged to the euro. Senegalese pay by phone with mobile money; visitors mostly use cash, and cards in hotels and bigger restaurants.",
+        "sources": [{ "property": "P38", "values": ["Q861690"] }]
+      },
+      {
+        "key": "languages",
+        "text": "French is the official language. Wolof is the everyday language for most people, and Pulaar, Serer, Jola, Mandinka and others are recognised as national languages.",
+        "sources": [{ "property": "P37", "values": ["Q150", "Q34257"] }],
+        "note": "Wikidata also lists Wolof, Badyara and Balanta as official; the constitution makes French the official language and recognises these and others as national languages."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins), with some British-style D and Danish K sockets; 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q60740126", "Q1502017"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Greenwich Mean Time, UTC+0, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6574", "Q4689488"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "17 for police and 18 for the fire brigade",
+        "sources": [{ "property": "P2852", "values": ["Q25648842", "Q25648843"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+221",
+        "sources": [{ "property": "P474", "values": ["+221"] }]
+      }
+    ]
+  }
+}

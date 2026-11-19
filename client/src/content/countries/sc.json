@@ -1,0 +1,185 @@
+{
+  "code": "SC",
+  "slug": "seychelles",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonzour", "Sesel"],
+  "summary": "Granite-boulder beaches, giant tortoises and Praslin's coco de mer palms.",
+  "overview": [
+    "The Seychelles are 115 islands spread across the western Indian Ocean, north-east of Madagascar. Most visitors stay on the granite islands near the middle. Mahé, the largest, has the small capital, Victoria, and a forested ridge rising to Morne Seychellois at 905 m. Praslin has the Vallée de Mai, a World Heritage forest of coco de mer palms, whose nuts are the largest seeds of any plant. On La Digue most people get about by bicycle, and the pink-grey boulders of Anse Source d'Argent stand on the sand.",
+    "The outer islands are low coral islands and atolls, many with a single lodge or none at all. Aldabra, far to the south-west, is another World Heritage Site, home to about 100,000 giant tortoises, but it is very hard to reach. Tortoises also roam on Curieuse, a short boat ride from Praslin, and Cousin and Bird Island are crowded with nesting seabirds.",
+    "Ferries link Mahé, Praslin and La Digue, and small planes fly to Praslin and some outer islands. Mahé and Praslin have buses and hire cars, driving on the left on narrow, steep roads. Places to stay range from family guesthouses to private-island resorts, and much of the land is protected as national park or reserve."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "good", "good", "good", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "North-west monsoon",
+        "months": [12, 1, 2, 3],
+        "text": "Hot and humid, about 30°C, with the year's heaviest rain in December and January, often in short, hard bursts. Winds are light and the south- and east-facing beaches are calm. The islands lie north of the usual cyclone tracks."
+      },
+      {
+        "name": "Calm months (April and May)",
+        "months": [4, 5],
+        "text": "The winds drop, the sea is flat and clear and the weather warm and settled: the best months for snorkelling and diving."
+      },
+      {
+        "name": "South-east trade winds",
+        "months": [6, 7, 8, 9],
+        "text": "Cooler and drier, about 26–27°C, with a steady wind from the south-east. The sea is rough on beaches facing that way, and seaweed washes up on some, so pick a sheltered north- or west-facing beach. Good for sailing and walking."
+      },
+      {
+        "name": "Calm months (October and November)",
+        "months": [10, 11],
+        "text": "The wind fades again, the water is clear and warm, and hawksbill turtles begin to nest."
+      }
+    ],
+    "weather": "Warm and humid all year, with days between about 26°C and 31°C and the sea rarely below 26°C. There are no cold months: the year turns on the winds. From about May to September the south-east trades blow steadily and the air is drier; from about December to March the north-west monsoon brings lighter winds and more rain. April–May and October–November, when the winds change over, are the calmest. Mahé's mountains catch more rain than the coast, and the outer islands get less.",
+    "festivals": [
+      {
+        "name": "New Year",
+        "place": "Across the Seychelles",
+        "when": "1 and 2 January",
+        "months": [1],
+        "text": "Two days of public holiday, with fireworks over Victoria and families on the beaches."
+      },
+      {
+        "name": "Independence Day (National Day)",
+        "place": "Victoria",
+        "when": "29 June",
+        "months": [6],
+        "text": "Marks independence from Britain in 1976, with a parade and celebrations in the capital."
+      },
+      {
+        "name": "La Digue Festival",
+        "place": "La Digue",
+        "when": "15 August (the Assumption)",
+        "months": [8],
+        "text": "The island's Catholic feast day: a procession to the church, then music, food stalls and dancing. Ferries from Mahé and Praslin are full."
+      },
+      {
+        "name": "Festival Kreol",
+        "place": "Victoria and across the islands",
+        "when": "Usually in the last week of October",
+        "months": [10],
+        "text": "A week of Creole music, dance, food and fashion, with stages in the capital and events on the main islands."
+      },
+      {
+        "name": "Hawksbill turtles nesting",
+        "place": "Cousin, Bird Island and other beaches",
+        "when": "Usually October to February",
+        "months": [10, 11, 12, 1, 2],
+        "text": "Hawksbills here often nest by day, so you may see one hauling herself up the sand. Keep well back, and don't use a flash."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Mahé",
+        "text": "The main island: Victoria's market and Hindu temple, beaches such as Beau Vallon and Anse Intendance, and trails through the Morne Seychellois National Park."
+      },
+      {
+        "name": "Praslin and La Digue",
+        "text": "Praslin has the Vallée de Mai, home also of the rare black parrot, and the beach at Anse Lazio. La Digue has little traffic but bicycles and the boulder beaches of Anse Source d'Argent and Grand Anse."
+      },
+      {
+        "name": "The outer islands",
+        "text": "Coral islands such as Bird, Denis, Alphonse and Desroches, reached by small plane: few people, many birds, diving, and fly-fishing on the flats."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Seychellois are easygoing: a handshake with \"bonzour\" or \"good morning\" is the usual greeting, and friends kiss on the cheek. Everyone speaks Creole and most people also speak English and French, so use whichever comes easily.",
+    "etiquette": [
+      "Nude bathing is illegal, and topless sunbathing is frowned on outside resorts.",
+      "Don't take or buy shells, coral or turtle shell. A coco de mer nut may leave the country only with an official export permit.",
+      "Many beaches have strong currents and no lifeguards, above all when the south-east trades blow: swim where locals do and heed the warning signs.",
+      "Drive slowly on Mahé's mountain roads: they are narrow, steep and twisting, with deep open drains at the edges.",
+      "Dress modestly in churches and temples and away from the beach."
+    ],
+    "tipping": "Not expected; many hotels and restaurants add a service charge. Rounding up, or a little extra for a boat skipper or guide, is welcome.",
+    "dress": "Light cotton and swimwear, a hat and strong sun cream, with a light rain jacket from December to March. Walking shoes for the mountain trails on Mahé and Praslin.",
+    "food": [
+      {
+        "name": "Kari koko",
+        "text": "Fish or octopus (zourit) curry in coconut milk, mild and fragrant, served with rice."
+      },
+      {
+        "name": "Grilled bourzwa",
+        "text": "Red snapper grilled whole and served with Creole sauces of tomato, onion and chilli."
+      },
+      {
+        "name": "Satini reken",
+        "text": "Shark chutney: boiled shark mashed with bilimbi fruit, lime and onion, an old island dish."
+      },
+      {
+        "name": "Kari sousouri",
+        "text": "Fruit bat curry, a Creole speciality for the curious; the bats feed only on fruit."
+      },
+      {
+        "name": "Ladob",
+        "text": "Plantain or breadfruit cooked in coconut milk with nutmeg, sugar and vanilla and eaten as a pudding; a savoury version uses salted fish."
+      },
+      {
+        "name": "Takamaka rum and SeyBrew",
+        "text": "Rum distilled on Mahé, and SeyBrew, the local lager."
+      }
+    ],
+    "phrases": {
+      "language": "Seychellois Creole (Kreol Seselwa)",
+      "intro": "Creole, which grew from French, is the first language of almost everyone. English is used in government and tourism, and French is widely understood.",
+      "items": [
+        { "phrase": "Bonzour", "say": "bon-ZOOR", "meaning": "Hello" },
+        { "phrase": "Ki mannyer?", "say": "kee man-YEH", "meaning": "How are you?" },
+        { "phrase": "Mon byen", "say": "mon BYAN", "meaning": "I'm fine" },
+        { "phrase": "Mersi bokou", "say": "mair-SEE boh-KOO", "meaning": "Thank you very much" },
+        { "phrase": "Silvouple", "say": "seel-voo-PLAY", "meaning": "Please" },
+        { "phrase": "Konbyen sa?", "say": "kom-BYAN sah", "meaning": "How much is it?" },
+        { "phrase": "Orevwar", "say": "oh-rev-WAHR", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1042",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Seychellois rupee (SR, SCR). Cards are widely taken in hotels and restaurants.",
+        "sources": [{ "property": "P38", "values": ["Q4595"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Seychellois Creole (Kreol Seselwa), English and French, all three official.",
+        "sources": [{ "property": "P37", "values": ["Q34015", "Q1860", "Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Seychelles Time, UTC+4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6779", "Q63285927"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 or 112 for police, fire and ambulance; also 133 for police and 151 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q1061257", "Q25648813", "Q25648906"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+248",
+        "sources": [{ "property": "P474", "values": ["+248"] }]
+      }
+    ]
+  }
+}

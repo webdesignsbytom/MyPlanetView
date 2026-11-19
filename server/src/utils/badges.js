@@ -15,7 +15,7 @@ const continentKey = (continent) => continent.toLowerCase().replace(/_/g, '-');
 export const BADGES = Object.freeze([
   ...[1, 5, 10, 25, 50, 100].map((need) => ({ key: `countries-${need}`, group: 'countries', measure: 'countries', need })),
   // Every country on the map (17 Nov 2026, the user's wish): its `need` is the map's own
-  // count, 227, or 230 on a map that shows the UK as its four nations (from continentByCode)
+  // count, 226, or 229 on a map that shows the UK as its four nations (from continentByCode)
   { key: 'countries-all', group: 'countries', measure: 'allCountries', need: 1 },
   ...INHABITED_CONTINENTS.map((continent) => ({
     key: `continent-${continentKey(continent)}`,

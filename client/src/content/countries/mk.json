@@ -1,0 +1,179 @@
+{
+  "code": "MK",
+  "slug": "north-macedonia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Zdravo", "Makedonija"],
+  "summary": "Byzantine churches above Lake Ohrid and a busy Ottoman bazaar in Skopje.",
+  "overview": [
+    "Lake Ohrid, in the south-west, is where most visitors head first. It is one of the oldest lakes in the world, well over a million years old, very deep and very clear, and its southern shore belongs to Albania. The town of Ohrid climbs a hill above the water, with Samuel's Fortress at the top, the rebuilt church of St Clement and St Panteleimon at Plaošnik, and the little church of St John at Kaneo on a rock above the lake. Boats run down the shore to the monastery of St Naum, near the Albanian border, where springs feed the lake. The lake and the town are a UNESCO World Heritage Site.",
+    "Skopje, the capital, sits on the Vardar river. North of the 15th-century Stone Bridge lies the Old Bazaar, one of the largest left from Ottoman times in the Balkans, with mosques, an old caravanserai and hundreds of small shops; south of it, the statues and columned buildings of the Skopje 2014 project, put up in the 2010s, crowd the main square. Mother Teresa was born in the city, and a memorial house stands on the site of the church where she was baptised. Matka Canyon, a short drive away, has kayaks and boat trips to a cave. Further south, Bitola has a long café street, Širok Sokak, and the ruins of Heraclea Lynkestis, while the Tikveš region around Kavadarci makes much of the country's wine.",
+    "Buses are the main way between towns; trains are few and slow. About a quarter of the people are Albanians, living mostly in the north-west around Tetovo and Gostivar, where Albanian is heard as often as Macedonian. The country took the name North Macedonia in 2019."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, with frost most nights. Skopje often sits under fog, and smoke from home heating makes its air poor on still days. Snow falls in the mountains, with skiing at Mavrovo and Popova Šapka, while Ohrid is quiet and many lakeside places close."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Mild from late March, with blossom in the orchards and green hills by May, and churches full for Orthodox Easter. The lake is still too cold for most swimmers."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Hot in Skopje and the Vardar valley, often 32–35°C or more. Ohrid, higher up, is a few degrees cooler; its swimming season peaks in July and August, along with its crowds and its summer festival."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Warm, golden days last through September and October, with the grape harvest in Tikveš and peppers roasting for ajvar in back yards. November turns cold and grey."
+      }
+    ],
+    "weather": "The country is a bowl of mountains with a hot valley down the middle. Skopje has a continental climate: summer days usually reach 31–33°C, with heatwaves near 40°C, while winter days are only a few degrees above freezing and nights fall below it. Rain is fairly light, about 500 mm a year, with a little more in spring and autumn. Ohrid, at about 700 m, has warm rather than hot summers, and the western mountains get heavy snow.",
+    "festivals": [
+      {
+        "name": "Vodici (Epiphany)",
+        "place": "Ohrid and across the country",
+        "when": "19 January",
+        "months": [1],
+        "text": "Priests throw a wooden cross into lakes and rivers, and men dive into the icy water to bring it back; whoever reaches it first is said to have luck all year. Ohrid's is the biggest."
+      },
+      {
+        "name": "Galičnik Wedding",
+        "place": "Galičnik, in Mavrovo National Park",
+        "when": "Usually a weekend in mid-July, around St Peter's Day (12 July)",
+        "months": [7],
+        "text": "One couple marries in the village's old way, in traditional dress, with drums, music and dancing watched by crowds from across the country."
+      },
+      {
+        "name": "Ohrid Summer Festival",
+        "place": "Ohrid",
+        "when": "Usually mid-July to late August",
+        "months": [7, 8],
+        "text": "Classical concerts, opera and theatre in the churches, squares and ancient theatre of the old town, held every summer since the 1960s."
+      },
+      {
+        "name": "Ilinden",
+        "place": "Across the country, above all Kruševo",
+        "when": "2 August",
+        "months": [8],
+        "text": "The Day of the Republic, a public holiday marking the Ilinden Uprising against Ottoman rule in 1903, remembered most of all in the mountain town of Kruševo."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Across the country",
+        "when": "8 September",
+        "months": [9],
+        "text": "The day of the 1991 referendum on independence from Yugoslavia, kept as a public holiday."
+      },
+      {
+        "name": "Skopje Jazz Festival",
+        "place": "Skopje",
+        "when": "Usually in October",
+        "months": [10],
+        "text": "One of the best-known jazz festivals in the Balkans, running since the early 1980s, with international names and late-night sessions."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "People shake hands on meeting, and friends and relatives kiss three times on the cheeks. “Zdravo” is hello and “Dobar den” the more formal good day. In Albanian-speaking towns you'll hear “Përshëndetje” (hello) and “Faleminderit” (thank you).",
+    "etiquette": [
+      "Hospitality is taken seriously, and guests are pressed to eat and drink more: say no politely but firmly when you've had enough.",
+      "Bring something small, such as sweets or flowers, when you're invited home, and leave your shoes by the door.",
+      "In mosques, take your shoes off, women cover their hair, and visitors keep away at prayer times. In Orthodox churches and monasteries, cover shoulders and knees.",
+      "A Turkish-style coffee in the bazaar is meant to be sipped slowly over conversation, not gulped.",
+      "Carry denars in cash for the bazaar, village guesthouses and buses."
+    ],
+    "tipping": "Round up the bill in cafés, and leave about 10% in restaurants for good service.",
+    "dress": "Casual and light in summer, with a cover-up for churches and mosques. Skopje's winter needs a warm coat, and the mountains need layers at any time of year.",
+    "food": [
+      {
+        "name": "Tavče gravče",
+        "text": "The national dish: white beans baked with onion, paprika and dried peppers, served bubbling in the earthenware dish they were cooked in."
+      },
+      {
+        "name": "Ajvar",
+        "text": "A relish of roasted red peppers, sometimes with aubergine, made in huge batches every autumn and spread on bread all year."
+      },
+      {
+        "name": "Šopska salata",
+        "text": "Tomatoes, cucumber, onion and peppers buried under grated white cheese (sirenje), eaten with a small glass of rakija before the meal."
+      },
+      {
+        "name": "Pastrmajlija",
+        "text": "An oval bread pie topped with chopped cured meat and often an egg, a speciality of Štip in the east."
+      },
+      {
+        "name": "Burek and yoghurt",
+        "text": "Flaky pastry filled with cheese, meat or spinach, bought warm from a bakery in the morning and eaten with a glass of drinking yoghurt."
+      },
+      {
+        "name": "Vranec and rakija",
+        "text": "Vranec is the country's main red grape, made into dark, fruity wine around Kavadarci and Negotino. Grape rakija is the usual welcome drink."
+      }
+    ],
+    "phrases": {
+      "language": "Macedonian",
+      "intro": "Macedonian is written in Cyrillic, though many signs in towns repeat names in Latin letters. Albanian is spoken in the west and north-west, and young people often speak English.",
+      "items": [
+        { "phrase": "Zdravo (Здраво)", "say": "ZDRAH-voh", "meaning": "Hello" },
+        { "phrase": "Dobar den (Добар ден)", "say": "DOH-bar den", "meaning": "Good day" },
+        { "phrase": "Blagodaram (Благодарам)", "say": "blah-GOH-dah-ram", "meaning": "Thank you" },
+        { "phrase": "Ve molam (Ве молам)", "say": "veh MOH-lahm", "meaning": "Please" },
+        { "phrase": "Izvinete (Извинете)", "say": "eez-VEE-neh-teh", "meaning": "Excuse me; sorry" },
+        { "phrase": "Kolku čini? (Колку чини?)", "say": "KOL-koo CHEE-nee", "meaning": "How much is it?" },
+        { "phrase": "Na zdravje! (На здравје!)", "say": "nah ZDRAHV-yeh", "meaning": "Cheers!" },
+        { "phrase": "Prijatno (Пријатно)", "say": "PREE-yaht-noh", "meaning": "Enjoy your meal; goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q221",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Macedonian denar (MKD). Cards are taken in towns; carry cash for markets and villages.",
+        "sources": [{ "property": "P38", "values": ["Q177875"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Macedonian, written in Cyrillic, and Albanian, both official.",
+        "sources": [{ "property": "P37", "values": ["Q9296", "Q8748"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, and UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q207020", "Q6723", "Q28148762"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; 192 for police, 193 for fire, 194 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648834", "Q25648835", "Q25648914"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+389",
+        "sources": [{ "property": "P474", "values": ["+389"] }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "code": "MP",
+  "slug": "northern-mariana-islands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Håfa adai", "Tirow", "Marianas"],
+  "summary": "War memorials and a calm lagoon on Saipan, Tinian's bomb pits and sleepy Rota.",
+  "overview": [
+    "The Northern Mariana Islands are a US commonwealth of 14 islands running north from Guam, though nearly everyone lives on the three southern ones: Saipan, Tinian and Rota. The islanders are Chamorro and Refaluwasch (Carolinian), whose ancestors sailed here from the Caroline Islands in the 1800s, alongside large Filipino, Chinese and Korean communities. East of the chain lies the Mariana Trench, the deepest part of the world's oceans.",
+    "Saipan has the hotels, most of them in Garapan and along the western lagoon, with Managaha Island a short boat ride out. In June and July 1944 it was the scene of one of the Pacific war's fiercest battles, remembered at the American Memorial Park in Garapan, the Last Japanese Command Post, and Banzai Cliff and Suicide Cliff in the north, where many Japanese civilians jumped to their deaths rather than surrender. The Grotto, a sea-filled limestone cave on the north-east coast, is one of the islands' best-known dives.",
+    "Tinian, a short hop south by small plane, is quiet farmland and beaches, but from its North Field runways the B-29s that dropped the atomic bombs on Hiroshima and Nagasaki took off in August 1945; the pits where the bombs were loaded are marked. The House of Taga, the ruin of the largest latte stones known, stands in San Jose. Rota, further south, sees few visitors and has the Swimming Hole, a natural pool on the reef, and the limestone cliffs of As Matmos."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4, 5, 6],
+        "text": "A steady north-easterly breeze, passing showers rather than downpours, and a calm, clear lagoon off Saipan's west coast. The pleasantest weeks fall between December and April; by May and June it's hotter and the air heavier."
+      },
+      {
+        "name": "Wet season",
+        "months": [7, 8, 9, 10, 11],
+        "text": "Hotter, stickier and wetter, with heavy showers and the main typhoon risk. Storms can strike in any month, the peak risk running from August to November, and a bad one can close airports and cut power for days."
+      }
+    ],
+    "weather": "Saipan's thermometer barely moves from month to month: about 30°C in the afternoon, a few degrees cooler after dark, with the water around 28°C. Annual rainfall is roughly 2,000 mm, and the wettest months are July to November. The islands lie on the main track of western Pacific typhoons, so check the forecast before travelling in the second half of the year.",
+    "festivals": [
+      {
+        "name": "Commonwealth Covenant Day",
+        "place": "Across the islands",
+        "when": "24 March",
+        "months": [3],
+        "text": "Marks the day in 1976 when the Covenant making the islands a US commonwealth was signed into US law; government offices close."
+      },
+      {
+        "name": "Flame Tree Arts Festival",
+        "place": "Saipan",
+        "when": "Usually in spring, as the flame trees start to bloom",
+        "months": [4, 5],
+        "text": "Saipan's arts festival, named after the trees that turn the roadsides scarlet from about April to June: dance, music, crafts and food stalls from across the islands."
+      },
+      {
+        "name": "Liberation Day",
+        "place": "Garapan, Saipan",
+        "when": "4 July",
+        "months": [7],
+        "text": "The commonwealth's biggest celebration falls on US Independence Day but marks the release, on 4 July 1946, of the islands' Chamorro and Carolinian people from the camps where US forces had held them since the 1944 battle. A parade, a carnival and the crowning of a Liberation Day queen."
+      },
+      {
+        "name": "Commonwealth Cultural Day",
+        "place": "Across the islands",
+        "when": "The second Monday of October",
+        "months": [10],
+        "text": "A public holiday for the islands' Chamorro and Carolinian heritage, in place of the US Columbus Day."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Two greetings share the islands: the Chamorro \"Håfa adai\" and the Carolinian \"Tirow\", and official speeches often begin with both. People are friendly and unhurried; expect a handshake and a few questions about where you're from before getting down to business.",
+    "etiquette": [
+      "Many war sites are graves as well as memorials. Keep your voice down at Banzai Cliff, Suicide Cliff and the Last Command Post, and leave offerings and markers as you find them.",
+      "Wartime relics, from shell casings to aircraft wrecks on the reef, are protected: look, photograph and leave them.",
+      "At family gatherings, older relatives get the first greeting and the first plate; let them go ahead of you.",
+      "The Grotto and the reefs beyond Managaha can have strong currents and surges, so go with a local guide or dive shop.",
+      "Dress modestly at Mass, and check that people are happy to be photographed at church or village events."
+    ],
+    "tipping": "US customs apply: around 15–20% in restaurants, and a few dollars for guides, dive crews and hotel staff.",
+    "dress": "Beachwear is fine at hotels, on Managaha and at the beach; cover up a little in shops, churches and villages. The sun is fierce in every season, so pack a wide-brimmed hat and a sun cream that's kind to coral.",
+    "food": [
+      {
+        "name": "Tinaktak",
+        "text": "Minced beef simmered in coconut milk with green beans or other vegetables, eaten with rice."
+      },
+      {
+        "name": "Fiesta plates",
+        "text": "Paper plates piled with red rice, barbecued ribs and chicken, kelaguen and pancit (Filipino noodles), handed round at every family party."
+      },
+      {
+        "name": "Donne' sali",
+        "text": "Tiny, fierce 'boonie peppers' that grow wild on Tinian, chopped into sauces and pickled in jars that islanders carry home as gifts."
+      },
+      {
+        "name": "Kalamai",
+        "text": "A firm, sweet pudding of corn and coconut milk, cut into squares and dusted with cinnamon."
+      },
+      {
+        "name": "Apigigi'",
+        "text": "Grated young coconut and tapioca, wrapped in banana leaves and grilled until sticky and slightly smoky."
+      }
+    ],
+    "phrases": {
+      "language": "Chamorro and Carolinian",
+      "intro": "English is used everywhere, but Chamorro and Carolinian are spoken at home, and Filipino languages, Chinese and Korean in many shops.",
+      "items": [
+        { "phrase": "Håfa adai", "say": "HAH-fah dye", "meaning": "Hello (Chamorro)" },
+        { "phrase": "Tirow", "say": "tee-ROH", "meaning": "Hello (Carolinian)" },
+        { "phrase": "Saina ma'åse'", "say": "SAI-nah mah-AH-seh", "meaning": "Thank you (Chamorro)" },
+        { "phrase": "Ghilisou", "say": "ghee-lee-SOH", "meaning": "Thank you (Carolinian)" },
+        { "phrase": "Buenas tåtdes", "say": "BWAY-nahs TAHT-dehs", "meaning": "Good afternoon (Chamorro)" },
+        { "phrase": "Buenas noches", "say": "BWAY-nahs NOH-chehs", "meaning": "Good evening; good night (Chamorro)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q16644",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar ($, USD). Cards are widely taken on Saipan; carry more cash on Tinian and Rota.",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, Chamorro and Carolinian, all official",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q33262", "Q28427"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 120 V",
+        "sources": [],
+        "note": "Wikidata's item has no plug or voltage statement; the page gives the US sockets used on the islands, as on Guam."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Chamorro Standard Time, UTC+10, all year (no summer time), the same as Guam",
+        "sources": [{ "property": "P421", "values": ["Q7056", "Q3446496", "Q109531433"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [],
+        "note": "Wikidata's item has no emergency-number statement; 911 is the number used on the islands, as across the US."
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 670",
+        "sources": [{ "property": "P474", "values": ["+1670"] }]
+      }
+    ]
+  }
+}

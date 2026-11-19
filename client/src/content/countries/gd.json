@@ -1,0 +1,161 @@
+{
+  "code": "GD",
+  "slug": "grenada",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Spice Isle", "Grenada", "Welcome"],
+  "summary": "Nutmeg and cocoa estates, a sculpture park under the sea and the long sweep of Grand Anse beach.",
+  "overview": [
+    "Grenada, the southernmost of the Windward Islands, is a country of three islands: Grenada itself, and Carriacou and Petite Martinique to the north-east. The main island is volcanic, hilly and green, and it calls itself the Spice Isle: nutmeg grows so widely that it's on the flag, along with mace, cinnamon, cloves and cocoa. St George's, the capital, wraps around a horseshoe harbour called the Carenage, with red-roofed houses climbing the hills, Fort George on the point and a spice market in Market Square. Just south, Grand Anse is a curve of pale sand about 3 km long, with most of the hotels behind it.",
+    "Underwater, the Molinère sculpture park has dozens of figures by Jason deCaires Taylor and other artists on the sea floor, now covered in coral, and the wreck of the Bianca C, a cruise liner that burned and sank in 1961, is one of the Caribbean's largest dive wrecks. Inland, Grand Etang National Park has a crater lake, rainforest trails and mona monkeys, and waterfalls such as Annandale and the Seven Sisters. On the estates, visitors can see cocoa grown and made into chocolate at Belmont Estate and the Grenada Chocolate Company, nutmeg sorted at the processing station in Gouyave, and rum distilled at River Antoine with machinery driven by a water wheel. Leatherback turtles nest on the beaches of the north-east from about April to July.",
+    "Privately run minibuses, with names painted on and music playing, follow numbered routes from St George's, and water taxis cross to Grand Anse; hire cars face steep, narrow roads, driving on the left. Carriacou, reached by ferry or small plane, is quieter, with boatbuilders working on the beach at Windward and the tiny Sandy Island offshore. Hurricane Ivan, in 2004, flattened much of Grenada's nutmeg, and Hurricane Beryl, in 2024, did severe damage to Carriacou and Petite Martinique."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [1, 2, 3, 4, 5],
+        "text": "Little rain, steady breezes and clear water for diving. Independence Day falls in February, and from April the leatherback turtles begin to come ashore at night."
+      },
+      {
+        "name": "Wet season and Spice Mas",
+        "months": [6, 7, 8],
+        "text": "More frequent showers and stickier heat, but usually plenty of sun between them. The turtle nesting continues into July, and August belongs to Spice Mas and the Carriacou Regatta."
+      },
+      {
+        "name": "Wettest months",
+        "months": [9, 10, 11, 12],
+        "text": "The heaviest rain falls from September to November, and storms are possible, though they come less often than further north. December dries out for Christmas, when the sailing season begins."
+      }
+    ],
+    "weather": "Warm and humid all year, with afternoons of 29°C to 31°C and nights of 23°C to 25°C. From about January to May it's dry; the wet season follows from June to December, wettest from September to November. The mountains inland get far more rain than the south coast around Grand Anse. Grenada lies near the southern edge of the hurricane belt, so storms strike less often than on the islands to the north, but they do come: Ivan in 2004 and Beryl in 2024 both caused great destruction. Swimming is comfortable in any month, with the water at 27°C or more.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "St George's and across Grenada",
+        "when": "7 February",
+        "months": [2],
+        "text": "Grenada has been independent since this day in 1974, and the anniversary brings a parade, cultural shows and flags all over the island."
+      },
+      {
+        "name": "Carriacou Maroon and String Band Music Festival",
+        "place": "Carriacou",
+        "when": "Usually in late April",
+        "months": [4],
+        "text": "Celebrates Carriacou's African heritage, with Big Drum dancing, string bands and food cooked outdoors and shared, in the old maroon tradition."
+      },
+      {
+        "name": "Fisherman's Birthday",
+        "place": "Gouyave",
+        "when": "29 June, the feast of St Peter",
+        "months": [6],
+        "text": "The fishing town's boats are blessed in the morning, then the streets fill with music, food stalls and races."
+      },
+      {
+        "name": "Spice Mas",
+        "place": "St George's",
+        "when": "Usually the second weekend of August, with Carnival Monday and Tuesday",
+        "months": [8],
+        "text": "Grenada's carnival. At J'ouvert, before dawn on the Monday, the Jab Jabs roam the streets smeared black with oil, wearing horns and chains; later come the night-time Monday mas and the parade of costumed bands on the Tuesday."
+      },
+      {
+        "name": "Carriacou Regatta",
+        "place": "Hillsborough, Carriacou",
+        "when": "Usually in early August",
+        "months": [8],
+        "text": "Races for Carriacou's locally built wooden sloops, held for decades, with festivities and music ashore."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A greeting comes before everything: \"Good morning\" or \"Good afternoon\" to the shopkeeper, the driver and the people already on the minibus when you climb in. Grenadians are relaxed and friendly, quick to chat and to joke. Handshakes on meeting; friends often bump fists.",
+    "etiquette": [
+      "Military-style camouflage is banned for civilians, children included, so don't bring any.",
+      "To get off a minibus, call out or knock on the side, and pay as you leave.",
+      "Don't touch the statues in the sculpture park: they're covered in living coral.",
+      "Watch nesting turtles only with a licensed guide, and never use a torch or a flash near them."
+    ],
+    "tipping": "Bills often carry a 10% service charge; with none, add about the same. Something extra for taxi drivers, guides and boat crews is appreciated.",
+    "dress": "Walking shoes for the waterfall trails, which are often muddy, and cool clothes for the heat. Wear a shirt over swimwear in St George's, cover up in churches, and leave camouflage prints behind.",
+    "food": [
+      {
+        "name": "Oil down",
+        "text": "The national dish: breadfruit, salted meat, chicken, dumplings and callaloo leaves cooked slowly in coconut milk and turmeric until the liquid is soaked up. It's often made outdoors in a big pot for a gathering."
+      },
+      {
+        "name": "Lambie",
+        "text": "The local name for conch, stewed in a spicy Creole sauce or curried, and served with rice or provisions."
+      },
+      {
+        "name": "Roti",
+        "text": "Curried chicken, goat or vegetables with potato, wrapped in a soft flatbread: the island's favourite lunch on the move."
+      },
+      {
+        "name": "Nutmeg",
+        "text": "It turns up everywhere: grated over rum punch and ice cream, in jams and syrups, and pressed into ointments in the market."
+      },
+      {
+        "name": "Grenada chocolate",
+        "text": "Dark chocolate made on the island from Grenada-grown cocoa, by small makers such as the Grenada Chocolate Company and Belmont Estate."
+      }
+    ],
+    "phrases": {
+      "language": "English (Grenadian Creole)",
+      "intro": "English is the official language, and most Grenadians speak a Creole English among themselves, with French words left from the island's French years. Some you'll hear:",
+      "items": [
+        { "phrase": "Fête", "say": "FET", "meaning": "A party" },
+        { "phrase": "Jab Jab", "meaning": "The carnival devil, smeared in oil, with horns and chains" },
+        { "phrase": "Spice Mas", "meaning": "Grenada's carnival in August" },
+        { "phrase": "Bacchanal", "say": "BAK-a-nal", "meaning": "Wild partying; also a scandal or a big fuss" },
+        { "phrase": "Ah eh able", "say": "ah eh AY-bul", "meaning": "I can't cope; I'm worn out" },
+        { "phrase": "Spice Isle", "meaning": "Grenada's nickname, for its nutmeg, cinnamon, cloves and cocoa" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q769",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Eastern Caribbean dollar (EC$, XCD). US dollars are widely accepted, with change in EC dollars.",
+        "sources": [{ "property": "P38", "values": ["Q26365"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Most Grenadians speak Grenadian Creole English day to day.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q4252500"] }],
+        "note": "Wikidata lists Grenadian Creole English as an official language too. English is the language of government and schools, so the page gives Creole as the everyday spoken language."
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q109529664"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance; for an ambulance, also 434, 724 or 774, depending on the area",
+        "sources": [{ "property": "P2852", "values": ["Q533806", "Q25743506", "Q25743510", "Q25743511"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 473",
+        "sources": [{ "property": "P474", "values": ["+1473"] }]
+      }
+    ]
+  }
+}

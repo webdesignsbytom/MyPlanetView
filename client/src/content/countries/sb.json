@@ -1,0 +1,150 @@
+{
+  "code": "SB",
+  "slug": "solomon-islands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Halo", "Solomon Aelan", "Welkam"],
+  "summary": "Guadalcanal's war relics, the Western Province's lagoons and shell money on Malaita.",
+  "overview": [
+    "The Solomon Islands are nearly a thousand islands in a double chain east of Papua New Guinea, with about 720,000 people and some 70 languages. Most visitors arrive in Honiara, the capital, on Guadalcanal, where one of the turning points of the Pacific war was fought in 1942 and 1943: wrecked ships lie in Iron Bottom Sound off the coast, two Japanese transport ships lie in shallow water off the beach at Bonegi, and memorials on the ridges above the town mark the campaign.",
+    "The Western Province is where most travellers head next: Gizo and Munda for diving among reefs and sunken aircraft, and Marovo Lagoon, one of the largest saltwater lagoons in the world, where villages carve ebony and kerosene wood and run small eco-lodges. On Malaita, the most populous island, families in the Langa Langa and Lau lagoons live on islands built by hand from coral rock, and shell money, strings of tiny polished shell discs, is still made and used for bride price.",
+    "Far to the south, East Rennell, a raised coral atoll around Lake Tegano, the largest lake in the island Pacific, is a World Heritage Site. Travel is slow: domestic flights and passenger boats link the provinces, roads are few outside Guadalcanal and Malaita, and most places to stay are simple guesthouses and lodges. In Honiara, take care after dark and use taxis your hotel recommends."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Drier season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "With the trades blowing from the south-east, rain eases and the air feels fresher, especially from June to October: the best months for diving in the west and for walking the battlefields around Honiara."
+      },
+      {
+        "name": "Wetter season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "North-west monsoon winds bring heavier rain, hot and sticky days, and the risk of cyclones, mostly in the south and east of the country, from about December to March."
+      }
+    ],
+    "weather": "The Solomons stay warm and muggy through the year, with coastal days of 30–31°C, nights of 22–23°C and seas of 28–30°C. Rainfall depends on which way a coast faces: Honiara, on Guadalcanal's sheltered north shore, gets around 2,000 mm a year, while the island's south side, the Weather Coast, gets far more. Most places are wettest from about December to April.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "Honiara and the provincial towns",
+        "when": "7 July",
+        "months": [7],
+        "text": "Independence from Britain in 1978, with flag-raisings, parades, sports and music, and offices closed."
+      },
+      {
+        "name": "Guadalcanal landings anniversary",
+        "place": "Honiara",
+        "when": "Around 7 August",
+        "months": [8],
+        "text": "US Marines landed on Guadalcanal on 7 August 1942. Officials, veterans' families and visitors gather for ceremonies at the US memorial on Skyline Ridge and other war sites."
+      },
+      {
+        "name": "Province days",
+        "place": "Each province's main town",
+        "when": "Different dates: Guadalcanal's on 1 August, the Western Province's on 7 December",
+        "months": [8, 12],
+        "text": "Each of the nine provinces has a holiday of its own, marked with local celebrations, so offices may close in one province and not the next."
+      },
+      {
+        "name": "Christmas",
+        "place": "Across the Solomon Islands",
+        "when": "25 and 26 December",
+        "months": [12],
+        "text": "Church is at the centre of life, and Christmas brings long services with choirs, family feasts, and crowded boats and planes as people head back to their home villages."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Halo\" or \"Gud moning\" with a light handshake is the usual greeting. Solomon Islanders are polite and quiet with strangers but quick to laugh, and in the villages children call out \"Halo!\" from every doorway. Asking about someone's home island and family is the natural way into a conversation.",
+    "etiquette": [
+      "Almost all land and reefs are customary land. Expect to pay a small custom fee to dive, snorkel, swim or visit a war relic, and ask in the nearest village first.",
+      "Wartime relics usually sit on someone's land: ask before visiting, take nothing, and remember that unexploded shells still turn up in the bush.",
+      "Betel nut is chewed widely, but many hotels, shops and offices ban chewing and spitting it on their premises.",
+      "Get a nod of permission before you point a camera at anyone, and never film a custom ceremony without asking.",
+      "In Honiara, don't walk alone at night, and don't flash phones or cameras in the market crowds."
+    ],
+    "tipping": "Nobody expects it, and in some places a tip embarrasses people. A thank-you in Pijin goes further.",
+    "dress": "Light, loose clothes that cover the knees; women in particular should keep their thighs covered, and swim with a sarong or shorts over swimwear outside the resorts. Sturdy shoes for jungle trails and battlefields, and reef shoes for the lagoons.",
+    "food": [
+      {
+        "name": "Slippery cabbage",
+        "text": "A leafy green (also called aibika) cooked in coconut milk, often with tinned tuna, on almost every table."
+      },
+      {
+        "name": "Ngali nuts",
+        "text": "Canarium nuts, eaten fresh, roasted, or baked into puddings, and sold in little bundles at the markets."
+      },
+      {
+        "name": "Motu",
+        "text": "Food cooked over hot stones under layers of leaves: fish, pork, taro, sweet potato and cassava pudding, made for feasts and church days."
+      },
+      {
+        "name": "Tuna and rice",
+        "text": "The everyday meal. Fresh tuna comes in from the boats, and the cannery at Noro in the Western Province fills the tins sold all over the islands."
+      },
+      {
+        "name": "Honiara Central Market",
+        "text": "Piles of fruit, root crops, betel nut and fish, sold by growers who come in from across Guadalcanal and by boat from Malaita."
+      }
+    ],
+    "phrases": {
+      "language": "Solomons Pijin",
+      "intro": "Schools and government use English, but Pijin is what links speakers of the country's 70 or so local languages.",
+      "items": [
+        { "phrase": "Halo", "say": "HAH-loh", "meaning": "Hello" },
+        { "phrase": "Iu hao?", "say": "yoo HOW", "meaning": "How are you?" },
+        { "phrase": "Mi oraet", "say": "mee oh-RAIT", "meaning": "I'm fine" },
+        { "phrase": "Tanggio tumas", "say": "TANG-gee-oh too-MAS", "meaning": "Thank you very much" },
+        { "phrase": "Haomas nao?", "say": "HOW-mas now", "meaning": "How much is it?" },
+        { "phrase": "Hem nao!", "say": "hem NOW", "meaning": "That's it! Exactly!" },
+        { "phrase": "Lukim iu", "say": "LOO-kim yoo", "meaning": "See you" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q685",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Solomon Islands dollar (SI$, SBD). Cards are taken in a few Honiara hotels and shops; carry cash everywhere else.",
+        "sources": [{ "property": "P38", "values": ["Q4597"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the official language. Pijin is spoken everywhere, and there are some 70 local languages.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (angled flat pins, as in Australia) and type G (three rectangular pins, as in the UK), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539", "Q1528507"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+11, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q7069", "Q63285988"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for the police, 988 for fire, 911 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q25648907", "Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+677",
+        "sources": [{ "property": "P474", "values": ["+677"] }]
+      }
+    ]
+  }
+}

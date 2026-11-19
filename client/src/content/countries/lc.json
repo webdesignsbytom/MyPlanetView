@@ -1,0 +1,166 @@
+{
+  "code": "LC",
+  "slug": "saint-lucia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonjou", "Sent Lisi"],
+  "summary": "Twin volcanic spires over Soufrière, a drive-in crater, cocoa estates and Friday street parties.",
+  "overview": [
+    "Saint Lucia is a mountainous, green island in the Windward Islands, best known for the Pitons: two steep volcanic spires, Gros Piton and Petit Piton, rising straight from the sea beside the old French town of Soufrière. With the reefs and forest around them they are a World Heritage Site. Soufrière also has Sulphur Springs, a steaming volcanic crater you can drive into, with warm mud pools to bathe in below it, and the gardens and waterfall of Diamond Falls.",
+    "France and Britain fought over the island so often that it changed hands about fourteen times before Britain kept it in 1814. So the place names are French, and the language most people speak among themselves is Kwéyòl, a French-based creole, though English is the official one. The north, around Rodney Bay and Gros Islet, has most of the hotels, the marina and Pigeon Island, an old fort now joined to the mainland by a causeway. Castries, the capital, has a busy market and a cathedral painted inside by the Saint Lucian artist Dunstan St Omer.",
+    "This small country has produced two Nobel laureates, the poet Derek Walcott and the economist Sir Arthur Lewis, both born on 23 January, fifteen years apart. The island is only about 43 km long, but its roads twist and climb: the drive from Hewanorra airport in the south to Rodney Bay takes about an hour and a half. Minibuses run between towns, taxis are plentiful, and water taxis link Soufrière with the beaches nearby."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Sunny days of about 28–30°C, steady trade winds and short showers, often at night. The busiest season in the hotels; in December, yachts from the transatlantic sailing rally crowd into Rodney Bay."
+      },
+      {
+        "name": "Early summer",
+        "months": [5, 6, 7, 8],
+        "text": "June brings the rains, heavy but brief, and the air grows sticky; Carnival takes over Castries in July."
+      },
+      {
+        "name": "Storm season",
+        "months": [9, 10, 11],
+        "text": "The wettest months and the peak of the hurricane season, with downpours that can bring landslides on mountain roads. October is the month of Creole heritage, ending with Jounen Kwéyòl."
+      }
+    ],
+    "weather": "Warm all year at sea level, about 25–31°C, while the rainforest in the mountainous interior, rising to Mount Gimie at about 950 m, is cooler and far wetter. Rain is lightest from about December to May; from June to November, the hurricane season, it comes more often and harder. Even then, rain usually comes in heavy bursts with sunshine between.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "Across the island",
+        "when": "22 February",
+        "months": [2],
+        "text": "Independence from Britain in 1979, with a parade, flags on every house and events through the month."
+      },
+      {
+        "name": "Carnival",
+        "place": "Castries",
+        "when": "Usually in July, ending with two parade days on a Monday and Tuesday",
+        "months": [7],
+        "text": "Moved from its old date before Lent to the summer in 1999: soca and calypso contests, J'ouvert at dawn, then costumed bands parading through the capital."
+      },
+      {
+        "name": "La Rose",
+        "place": "Across the island",
+        "when": "30 August",
+        "months": [8],
+        "text": "The feast of the La Rose flower society, with choirs singing old Kwéyòl songs, processions in costume and a mock royal court of kings, queens and officers."
+      },
+      {
+        "name": "La Marguerite",
+        "place": "Across the island",
+        "when": "17 October",
+        "months": [10],
+        "text": "La Rose's rival society holds its own feast with its own songs and pageantry; the two have competed for well over a century."
+      },
+      {
+        "name": "Jounen Kwéyòl (Creole Day)",
+        "place": "Villages chosen each year",
+        "when": "The last Sunday of October",
+        "months": [10],
+        "text": "The close of the month of Creole heritage: traditional food, drumming, storytelling and national dress in madras cloth, in the villages picked to host it."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Greet first: \"Good morning\" or \"Good afternoon\", or the Kwéyòl \"Bonjou\", before any question, and shake hands on meeting. Saint Lucians use titles with older people, \"Miss\" and \"Mister\", and value good manners; a question fired off without a greeting goes down badly.",
+    "etiquette": [
+      "Leave camouflage clothing at home: wearing it is illegal for anyone outside the military.",
+      "The Friday night street party at Gros Islet and the fish fry at Anse La Raye are friendly and lively; take only the cash you need.",
+      "Vendors on the beaches and at viewpoints can be insistent: a smile and one clear no does the job.",
+      "Cover up away from the beach, in Castries especially, and in churches.",
+      "If you drive, take the mountain roads slowly: they are steep, with blind hairpin bends, and many drivers sound their horn before each one."
+    ],
+    "tipping": "Hotels and restaurants often include a 10% service charge, in which case nothing more is needed; otherwise leave 10–15%. Guides, drivers and boat crews appreciate a tip.",
+    "dress": "Cotton and linen for the heat; Saint Lucians cover up in town, so save swimwear for the sand and the pool. Bring shoes with good grip for the rainforest trails and the steep, rocky climb up Gros Piton, and a light rain jacket in any month.",
+    "food": [
+      {
+        "name": "Green fig and saltfish",
+        "text": "The national dish: green bananas, called figs here, boiled and served with salt cod cooked with onion, peppers and tomato."
+      },
+      {
+        "name": "Bouyon",
+        "text": "A thick one-pot soup of red beans, yams and other root vegetables, dumplings and meat, often pig tail."
+      },
+      {
+        "name": "Accra",
+        "text": "Salt-cod fritters, sold hot by the bagful at the Friday fish fries."
+      },
+      {
+        "name": "Fish fry plates",
+        "text": "Grilled or fried fish, lobster and conch with bakes and macaroni pie, cooked at stalls on the street at Anse La Raye and Gros Islet."
+      },
+      {
+        "name": "Cocoa tea",
+        "text": "A breakfast drink of local cocoa grated into hot milk with cinnamon and nutmeg; several old estates near Soufrière still grow cocoa."
+      },
+      {
+        "name": "Piton beer and rum",
+        "text": "Piton is the island's lager, and its rums, plain and spiced, are distilled in the Roseau Valley and mixed into rum punch."
+      }
+    ],
+    "phrases": {
+      "language": "Saint Lucian Kwéyòl",
+      "intro": "English is the official language and everyone in tourism speaks it, but most Saint Lucians talk among themselves in Kwéyòl, a French-based creole, and a word or two of it is welcomed.",
+      "items": [
+        { "phrase": "Bonjou", "say": "bon-ZHOO", "meaning": "Hello; good morning" },
+        { "phrase": "Bonswè", "say": "bon-SWEH", "meaning": "Good evening" },
+        { "phrase": "Sa ka fèt?", "say": "sah kah FET", "meaning": "How are things? (\"What's happening?\")" },
+        { "phrase": "Mwen la", "say": "mwen LAH", "meaning": "I'm fine (\"I'm here\")" },
+        { "phrase": "Mèsi", "say": "meh-SEE", "meaning": "Thank you" },
+        { "phrase": "Souplé", "say": "soo-PLAY", "meaning": "Please" },
+        { "phrase": "Konmen?", "say": "kon-MEN", "meaning": "How much?" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q760",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Eastern Caribbean dollar (EC$, XCD), fixed to the US dollar. US dollars are widely taken in tourism.",
+        "sources": [{ "property": "P38", "values": ["Q26365"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English, the official language. Most Saint Lucians also speak Kwéyòl, a French-based creole.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), 240 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507"] },
+          { "property": "P2884", "values": ["240"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762", "Q109529611"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police; 911 for fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 758",
+        "sources": [{ "property": "P474", "values": ["+1758"] }]
+      }
+    ]
+  }
+}

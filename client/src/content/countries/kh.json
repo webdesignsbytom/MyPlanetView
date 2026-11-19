@@ -1,0 +1,169 @@
+{
+  "code": "KH",
+  "slug": "cambodia",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Chum reap suor", "Kampuchea"],
+  "summary": "The temples of Angkor, Phnom Penh's riverfront and quiet islands off the southern coast.",
+  "overview": [
+    "Most visitors come for Angkor, outside the town of Siem Reap. From the 9th to the 15th centuries it was the seat of the Khmer Empire, and its temples are spread over a wide area of forest and rice fields: Angkor Wat, built in the early 12th century and the largest religious monument in the world; the Bayon, at the centre of the walled city of Angkor Thom, with its towers of huge, calm stone faces; and Ta Prohm, left with fig and silk-cotton trees growing through its walls. Passes are sold for one, three or seven days, and outlying temples such as Banteay Srei, with its fine carving in pink sandstone, need a day of their own.",
+    "Phnom Penh, the capital, sits where the Tonlé Sap river meets the Mekong. It has the Royal Palace and its Silver Pagoda, Khmer sculpture in the National Museum, and a long riverside promenade. The Tuol Sleng Genocide Museum, a school turned into a prison, and the memorial at Choeung Ek outside the city tell the story of the Khmer Rouge years, 1975 to 1979, when up to two million people died. Further afield, Battambang has colonial streets and villages to cycle to, Kampot grows its well-known pepper, Kep is famous for crab, and the islands of Koh Rong and Koh Rong Samloem, off Sihanoukville, have simple beach huts and clear water. Near Kratie, in the north-east, rare Irrawaddy dolphins live in the Mekong.",
+    "Buses and minibuses link the towns, and tuk-tuks, called remorks, are the way around them; apps such as PassApp and Grab fix the fare before you set off. US dollars are used alongside the riel: most prices for visitors are in dollars, with change under a dollar given in riel. Landmines and unexploded bombs still lie in some remote countryside, mainly in the north-west near the Thai border, so keep to well-used paths away from the towns and temples."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "avoid", "good", "good", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool dry season",
+        "months": [11, 12, 1, 2],
+        "text": "Sunny and dry, around 30°C by day with fresher nights. The main season: Angkor is busiest around Christmas, New Year and Lunar New Year, and sunrise at Angkor Wat draws a crowd every morning."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "The heat builds to 35°C or more in April, the hottest month, and the countryside turns dry and dusty. Temple visits mean starting at dawn and resting through the middle of the day. The first storms arrive in May and take the edge off the heat."
+      },
+      {
+        "name": "Wet season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Rain on most days, usually a hard shower in the afternoon, with mornings often clear. The rice fields and temple moats are green and there are far fewer visitors. September and October are the wettest, when low-lying areas flood and some country roads turn to mud."
+      }
+    ],
+    "weather": "Cambodia is hot all year, with a dry season from about November to April and a wet season from about May to October. December and January are the coolest months, around 30°C by day and the low 20s at night; April is the hottest, often 35°C or more, with heavy, humid air. In the wet season, rain usually falls as a short, hard downpour in the afternoon, and September and October bring the most. The Tonlé Sap lake, fed by the swollen Mekong, grows to several times its dry-season size, and the river that drains it runs backwards until the rains end.",
+    "festivals": [
+      {
+        "name": "Equinox sunrise at Angkor Wat",
+        "place": "Angkor",
+        "when": "Around 21 March and 22 September",
+        "months": [3, 9],
+        "text": "On the mornings of the equinoxes, the sun rises over the top of the central tower when seen from the western causeway. Crowds gather in the dark to watch, cloud permitting."
+      },
+      {
+        "name": "Choul Chnam Thmey (Khmer New Year)",
+        "place": "Across Cambodia",
+        "when": "Usually three days from 13 or 14 April",
+        "months": [4],
+        "text": "The biggest holiday of the year, at the end of the harvest. Families go home to their villages, monks are given food, and young people throw water and talcum powder at each other in the streets. Many shops and restaurants in Phnom Penh close, and buses are packed."
+      },
+      {
+        "name": "Pchum Ben",
+        "place": "Across Cambodia",
+        "when": "Usually in September or early October, over 15 days, with three days of public holiday at the end",
+        "months": [9, 10],
+        "text": "The festival of the dead: before dawn, people take rice and food to the pagodas for the spirits of their ancestors, and monks chant through the night. The last days are for family, and many businesses close."
+      },
+      {
+        "name": "Bon Om Touk (Water Festival)",
+        "place": "Phnom Penh",
+        "when": "Usually in late October or November, at the full moon",
+        "months": [10, 11],
+        "text": "Three days marking the time when the Tonlé Sap river turns to flow back into the Mekong. Long boats with dozens of paddlers race in front of the Royal Palace, and the riverside fills with crowds, food stalls and fireworks."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Phnom Penh",
+        "when": "9 November",
+        "months": [11],
+        "text": "Marking independence from France in 1953, with ceremonies and fireworks at the lotus-shaped Independence Monument."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "The traditional greeting is the sampeah: palms pressed together in front of you with a small bow. The higher the hands, the greater the respect: around the chest for friends, higher for elders, and higher still for monks. Cambodians will often offer visitors a handshake instead, and it's usual in business. Men are addressed as Lok (Mr) and women as Lok Srey (Madam).",
+    "etiquette": [
+      "Cover your shoulders and knees at temples and the Royal Palace: guards turn people away, and the steep upper level of Angkor Wat is strict about it.",
+      "Take your shoes off in homes and pagoda halls, and never point your feet at a Buddha image or a monk.",
+      "Women shouldn't touch a monk or hand him anything directly; place it in front of him instead.",
+      "Don't touch anyone on the head, which is held to be the most sacred part of the body.",
+      "Tuol Sleng and Choeung Ek are places of mourning for many Cambodians: keep your voice down and dress as you would for a temple.",
+      "Bargain with a smile at markets such as Phnom Penh's Russian Market; shops with price tags are usually fixed."
+    ],
+    "tipping": "Not traditional, but welcome. Leave some change or 5–10% in restaurants that don't add a service charge, and tip your temple guide and tuk-tuk driver at the end of a day at Angkor.",
+    "dress": "Light, loose cotton, a hat and plenty of sun cream. For temples and the palace, a top with sleeves and trousers or a skirt below the knee, with shoes that grip on Angkor's steep stone stairs. A rain jacket from May to October.",
+    "food": [
+      {
+        "name": "Fish amok",
+        "text": "Fish in a coconut curry paste of lemongrass, galangal and turmeric (kroeung), steamed in a banana-leaf cup until it sets like a soft custard."
+      },
+      {
+        "name": "Lok lak",
+        "text": "Cubes of stir-fried beef in a savoury sauce, served with rice, salad and a dip of lime juice and black Kampot pepper."
+      },
+      {
+        "name": "Num banh chok",
+        "text": "Fresh rice noodles under a mild fish gravy flavoured with lemongrass, with raw herbs, banana flower and cucumber: a breakfast sold from baskets and market stalls."
+      },
+      {
+        "name": "Bai sach chrouk",
+        "text": "Pork marinated in coconut milk and garlic, grilled slowly over charcoal and served on broken rice with pickles and a bowl of clear soup: a morning favourite."
+      },
+      {
+        "name": "Kep crab with Kampot pepper",
+        "text": "At the crab market in Kep, crabs are lifted from baskets kept in the sea and stir-fried with sprigs of fresh green Kampot peppercorns."
+      },
+      {
+        "name": "Prahok",
+        "text": "Fermented fish paste, salty and strong-smelling, which flavours much of Khmer cooking; it's also served as a dip with raw vegetables."
+      }
+    ],
+    "phrases": {
+      "language": "Khmer",
+      "intro": "English is spoken in hotels and around the temples, and some older people speak French. Men and women say yes differently.",
+      "items": [
+        { "phrase": "Chum reap suor (ជម្រាបសួរ)", "say": "chum-REEP SOO-uh", "meaning": "Hello (polite)" },
+        { "phrase": "Suosdei (សួស្តី)", "say": "soo-uhs-DAY", "meaning": "Hi (informal)" },
+        { "phrase": "Orkun (អរគុណ)", "say": "aw-KOON", "meaning": "Thank you" },
+        { "phrase": "Baat / Chaa (បាទ / ចាស)", "say": "BAHT / CHAH", "meaning": "Yes (said by a man / by a woman)" },
+        { "phrase": "Ot te (អត់ទេ)", "say": "awt TAY", "meaning": "No" },
+        { "phrase": "Tlai ponmaan? (ថ្លៃប៉ុន្មាន?)", "say": "tlai pon-MAHN", "meaning": "How much?" },
+        { "phrase": "Som toh (សុំទោស)", "say": "som TOH", "meaning": "Sorry; excuse me" },
+        { "phrase": "Ot panyaha (អត់បញ្ហា)", "say": "awt pan-YAH-hah", "meaning": "No problem" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q424",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Cambodian riel (KHR), used alongside US dollars: most prices for visitors are in dollars, with small change given in riel.",
+        "sources": [{ "property": "P38", "values": ["Q204737"] }],
+        "note": "Wikidata gives the riel; the page adds the US dollar, which circulates alongside it and in which most prices for visitors are quoted."
+      },
+      {
+        "key": "languages",
+        "text": "Khmer. English is spoken in tourism, and some older people speak French.",
+        "sources": [{ "property": "P37", "values": ["Q9205"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A (two flat pins), C (two round pins) and G (three rectangular pins, as in the UK); many sockets take both two-pin kinds. 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q1378312", "Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Indochina Time, UTC+7, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6940", "Q109527628"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "117 for police, 118 for fire and 119 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q4547615", "Q11185210", "Q2807090"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+855",
+        "sources": [{ "property": "P474", "values": ["+855"] }]
+      }
+    ]
+  }
+}

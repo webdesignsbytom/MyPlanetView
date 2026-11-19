@@ -47,7 +47,7 @@ const PLACE = { landmarkId: true, landmark: { select: { name: true } }, placeNam
 export async function findMapForExport(mapId) {
   const onMap = { mapId };
   const onMapsTrips = { trip: { mapId } };
-  const [map, travellers, visits, members, invites, trips, stops, tripTravellers, tripMembers, tripInvites, tripLinks, moments, momentTravellers, momentPhotos, goals, badges, stampPhotos, photoCount] =
+  const [map, travellers, visits, members, invites, trips, stops, tripTravellers, tripMembers, tripInvites, tripLinks, moments, momentTravellers, momentPhotos, goals, badges, stampPhotos, photoCount, subdivisionVisits, pins, pinVisits, pinVisitPhotos] =
     await Promise.all([
       prisma.travelMap.findUnique({
         where: { id: mapId },
@@ -94,8 +94,25 @@ export async function findMapForExport(mapId) {
       prisma.badgeAward.findMany({ where: onMap, select: { badgeKey: true, earnedAt: true }, orderBy: { earnedAt: 'asc' } }),
       prisma.landmarkCover.findMany({ where: onMap, select: { landmarkId: true, photoId: true, landmark: { select: { name: true } } } }),
       prisma.photo.count({ where: onMap }),
+      // Country maps: states visited, and pins with their visits and those visits' photos
+      prisma.subdivisionVisit.findMany({
+        where: onMap,
+        select: { subdivisionCode: true, countryCode: true, status: true, createdAt: true, updatedAt: true },
+        orderBy: { subdivisionCode: 'asc' },
+      }),
+      prisma.mapPin.findMany({
+        where: onMap,
+        select: { id: true, countryCode: true, name: true, notes: true, latitude: true, longitude: true, hidden: true, createdAt: true, updatedAt: true },
+        orderBy: { createdAt: 'asc' },
+      }),
+      prisma.mapPinVisit.findMany({
+        where: { pin: onMap },
+        select: { id: true, pinId: true, visitedOn: true, datePrecision: true, notes: true, createdAt: true },
+        orderBy: { createdAt: 'asc' },
+      }),
+      prisma.mapPinVisitPhoto.findMany({ where: { visit: { pin: onMap } }, select: { visitId: true, photoId: true, position: true }, orderBy: { position: 'asc' } }),
     ]);
-  return { map, travellers, visits, members, invites, trips, stops, tripTravellers, tripMembers, tripInvites, tripLinks, moments, momentTravellers, momentPhotos, goals, badges, stampPhotos, photoCount };
+  return { map, travellers, visits, members, invites, trips, stops, tripTravellers, tripMembers, tripInvites, tripLinks, moments, momentTravellers, momentPhotos, goals, badges, stampPhotos, photoCount, subdivisionVisits, pins, pinVisits, pinVisitPhotos };
 }
 
 const PHOTO_EXPORT_SELECT = {

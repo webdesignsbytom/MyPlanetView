@@ -4,6 +4,7 @@
 import { COUNTRIES } from '@/utils/map/countries';
 import { landmarkPlace } from '@/utils/map/ukNations';
 import { isSpecialPlace } from '@/utils/map/specialPlaces';
+import { isRegion } from '@/utils/map/regionPlaces';
 import { getDb } from './store';
 import { LANDMARK_ROWS, atLeast, landmarkById, photoThumbUrl, userName } from './views';
 import { mapPlanId } from './plans';
@@ -119,7 +120,7 @@ export function buildPassport(map, role) {
   });
 
   const counted = [...visited];
-  const countries = counted.filter((code) => !isSpecialPlace(code));
+  const countries = counted.filter((code) => !isSpecialPlace(code) && !isRegion(code));
   return {
     // The owner's plan picks the cover, as on the server
     map: {
@@ -136,8 +137,9 @@ export function buildPassport(map, role) {
     pages,
     totals: {
       countries: countries.length,
-      specialPlaces: counted.length - countries.length,
-      continents: new Set(counted.map((code) => CONTINENT_BY_CODE.get(code)).filter(Boolean)).size,
+      specialPlaces: counted.filter(isSpecialPlace).length,
+      regions: counted.filter(isRegion).length,
+      continents: new Set(counted.filter((code) => !isRegion(code)).map((code) => CONTINENT_BY_CODE.get(code)).filter(Boolean)).size,
       landmarks: stamps.length,
       unesco: stamps.filter((s) => s.landmark.isUnesco).length,
     },

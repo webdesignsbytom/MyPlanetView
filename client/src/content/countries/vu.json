@@ -1,0 +1,159 @@
+{
+  "code": "VU",
+  "slug": "vanuatu",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Halo", "Vanuatu", "Welkam"],
+  "summary": "A volcano you can peer into, land divers on Pentecost and strong kava, across 83 islands.",
+  "overview": [
+    "Vanuatu is a Y-shaped chain of 83 islands, about 65 of them lived on, where some 300,000 people speak more than 100 languages, more for its size than anywhere else on earth. Until independence in 1980 it was the New Hebrides, governed jointly by Britain and France, and both languages are still used in schools; Bislama, a creole built largely from English words, is what everyone speaks to each other. Kastom, traditional custom, governs land, ceremonies and village life alongside the churches.",
+    "Port Vila, the capital on Efate, has the markets, restaurants and most of the hotels, with the Mele Cascades and the Erakor lagoon nearby. On Tanna, in the south, Mount Yasur is one of the world's most accessible active volcanoes: when the official alert level allows, visitors stand on the crater rim at dusk as it throws up glowing lava. Espiritu Santo, the largest island, has white beaches such as Champagne Beach, clear freshwater blue holes, and the SS President Coolidge, a troopship sunk in 1942 and one of the great wreck dives. On Pentecost, men leap from wooden towers with vines tied to their ankles, the ancestor of the bungee jump.",
+    "Getting between islands means domestic flights or slow inter-island boats. Outside Port Vila and Luganville, villages are small, roads few and places to stay usually simple bungalows run by local families."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Port Vila has days of 23–27°C, cool nights and the clearest skies, the best conditions for diving and for seeing Yasur. Tanna's crater rim can be cold and windy after dark in July and August, so bring a jumper."
+      },
+      {
+        "name": "Wet and cyclone season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Sultry and wet, with highs near 30°C and cyclones most likely from about January to March; Vanuatu is among the countries most exposed to them. Santo and the northern islands are wetter still."
+      }
+    ],
+    "weather": "Vanuatu stretches over more than 1,000 km and gets warmer and wetter from south to north. Port Vila's yearly average is close to 2,000 mm, concentrated between November and April; Santo gets more, Tanna less. Highs run from about 25°C in July to 30°C in February, and the sea stays between 24 and 28°C. Severe cyclones have struck several times in recent years.",
+    "festivals": [
+      {
+        "name": "John Frum Day",
+        "place": "Sulphur Bay, Tanna",
+        "when": "15 February",
+        "months": [2],
+        "text": "Followers of the John Frum movement, a faith that grew up on Tanna in the late 1930s and during the Second World War, march with painted bamboo 'rifles' and raise the US flag. Visitors can watch with the village's permission."
+      },
+      {
+        "name": "Custom Chiefs' Day",
+        "place": "Across Vanuatu",
+        "when": "5 March",
+        "months": [3],
+        "text": "A public holiday honouring the chiefs who keep kastom, with ceremonies, dancing and food at village nakamals (meeting places)."
+      },
+      {
+        "name": "Naghol (land diving)",
+        "place": "South Pentecost",
+        "when": "Usually on set days from about April to June",
+        "months": [4, 5, 6],
+        "text": "Men and boys dive head-first from towers of lashed saplings, the highest about 30 m, with liana vines tied to their ankles, to bless the yam harvest. It's done only while the vines are supple; visitors can watch at certain villages, usually through a tour."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Port Vila and across the islands",
+        "when": "30 July",
+        "months": [7],
+        "text": "Vanuatu's main national celebration, for independence in 1980: a week of sports, string-band music, parades and food stalls in Port Vila leading up to the day itself."
+      },
+      {
+        "name": "Fest'Napuan",
+        "place": "Port Vila",
+        "when": "Usually in October, over several days",
+        "months": [10],
+        "text": "Vanuatu's biggest music festival, held since 1996, with local reggae and string bands alongside acts from around the Pacific."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Halo\" works anywhere, and a handshake that lingers is normal. People can be reserved at first but smile easily; \"Yu blong wea?\" (where are you from?) starts most conversations, because in Vanuatu your home island says a great deal about you.",
+    "etiquette": [
+      "Nearly all land is kastom land, owned by families and chiefs. A fee to the landowner is normal at waterfalls, blue holes and snorkelling spots, even ones that look wild.",
+      "At a nakamal, the kava bar, keep your voice low: kava is drunk in one go, often in the half-dark, and people then sit quietly. Some village nakamals are for men only.",
+      "Check before taking pictures of people, and above all of kastom ceremonies; some may not be photographed at all.",
+      "On Mount Yasur, follow your guide and the alert level exactly: volcanic bombs can land on the crater rim.",
+      "Sunday is church day in most villages, but Seventh-day Adventist communities rest on Saturday instead."
+    ],
+    "tipping": "Not customary, and in villages it can cause awkwardness, since giving and receiving follow kastom rules. Warm thanks, or buying from local stalls, says more.",
+    "dress": "Light clothes that reach the knee and cover the shoulders are right for villages and town; outside the resorts, wrap a sarong over swimwear. Many women wear the loose, long 'island dress' (aelan dres in Bislama) introduced by missionaries. Bring a warm layer for Tanna's crater rim at night.",
+    "food": [
+      {
+        "name": "Laplap",
+        "text": "The national dish: grated yam, taro, banana or manioc pounded into a paste, topped with coconut cream and sometimes meat, wrapped in leaves and baked in an earth oven."
+      },
+      {
+        "name": "Simboro",
+        "text": "Grated manioc or banana rolled in island cabbage leaves and simmered in coconut milk."
+      },
+      {
+        "name": "Santo beef",
+        "text": "Cattle graze under the coconut palms of Espiritu Santo, and their grass-fed beef is the islands' best-known meat, on menus in Port Vila and Luganville."
+      },
+      {
+        "name": "Kava",
+        "text": "Vanuatu's kava is among the strongest in the Pacific, served in half coconut shells at nakamals from about dusk. A couple of shells can leave your mouth numb and your legs heavy."
+      },
+      {
+        "name": "Port Vila market",
+        "text": "The covered market on the waterfront, where women from the villages sell fruit, vegetables, flowers and cheap plates of hot food."
+      }
+    ],
+    "phrases": {
+      "language": "Bislama",
+      "intro": "English and French are both widely spoken, but Bislama, built mostly from English words, is the language everyone shares, and it's easier to pick up than it looks.",
+      "items": [
+        { "phrase": "Halo", "say": "HAH-loh", "meaning": "Hello" },
+        { "phrase": "Gud moning", "say": "good MOR-ning", "meaning": "Good morning" },
+        { "phrase": "Olsem wanem?", "say": "OL-sem WAH-nem", "meaning": "How are you? What's up?" },
+        { "phrase": "Tank yu tumas", "say": "TANK yoo too-MAS", "meaning": "Thank you very much" },
+        { "phrase": "Plis", "say": "PLEES", "meaning": "Please" },
+        { "phrase": "Hamas long hem?", "say": "hah-MAS long hem", "meaning": "How much is it?" },
+        { "phrase": "Mi no save", "say": "mee noh SAH-veh", "meaning": "I don't know; I don't understand" },
+        { "phrase": "Lukim yu", "say": "LOO-kim yoo", "meaning": "See you later" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q686",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Vanuatu vatu (VT, VUV). Cards are taken in Port Vila and Luganville; elsewhere, cash only.",
+        "sources": [{ "property": "P38", "values": ["Q207523"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Bislama, English and French, all official, alongside more than 100 local languages",
+        "sources": [{ "property": "P37", "values": ["Q35452", "Q1860", "Q150"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Mostly type I (angled flat pins, as in Australia), 220 V; some sockets take type C (two round pins) or type G (three rectangular pins)",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539", "Q1378312", "Q1528507"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+11, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q7069", "Q63285991"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "111 for the police, 113 for fire, 112 for Vila Central Hospital and its ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648804"] }],
+        "note": "Wikidata gives the police number as 11; Vanuatu's telecoms regulator lists it as 111, which the page gives. Wikidata's 112 is the hospital and ambulance line rather than a general number."
+      },
+      {
+        "key": "callingCode",
+        "text": "+678",
+        "sources": [{ "property": "P474", "values": ["+678"] }]
+      }
+    ]
+  }
+}

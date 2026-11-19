@@ -1,0 +1,150 @@
+{
+  "code": "PW",
+  "slug": "palau",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Alii", "Belau"],
+  "summary": "Coral walls, a lake of stingless jellyfish and the Rock Islands' green limestone domes.",
+  "overview": [
+    "Palau is an archipelago of about 340 islands at the western edge of Micronesia, with around 18,000 people, most of them in and around Koror. The capital moved in 2006 to Ngerulmud on Babeldaob, the big island to the north, which is joined to Koror by a bridge and has the airport. Palau has been independent since 1994, in free association with the United States, and uses the US dollar.",
+    "Most people come for what's underwater. The Rock Islands Southern Lagoon, a World Heritage Site, is a maze of hundreds of forested limestone islets, worn away at the waterline into mushroom shapes. Dive sites such as Blue Corner and German Channel bring reef sharks, manta rays and great schools of fish; boats stop at the Milky Way, a cove of soft white limestone mud; and Jellyfish Lake, on Eil Malk, lets snorkellers swim among swarms of golden jellyfish whose sting is too weak to feel, in the years when their numbers are healthy and the lake is open.",
+    "On land, Babeldaob has the Ngardmau waterfall, the stone monoliths of Badrulchau and the Airai bai, a steep-roofed men's meeting house with painted gables. Peleliu and Angaur, to the south, were battlefields in 1944, and tanks and guns still sit in the jungle. On arrival every visitor signs the Palau Pledge, a promise to the islands' children to tread lightly, stamped into the passport, and sunscreens made with coral-damaging chemicals may not be sold or brought in."
+  ],
+  "whenToGo": {
+    "months": ["good", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Drier months",
+        "months": [1, 2, 3, 4],
+        "text": "Less rain and more sun, with calm seas on the western reefs and the best chance of clear water for diving. Dive boats are busiest from February to April, the least rainy stretch."
+      },
+      {
+        "name": "Rainier months",
+        "months": [5, 6, 7, 8, 9, 10, 11, 12],
+        "text": "More rain, often in short, hard bursts, wettest from about June to August, with some windy spells that roughen the crossings to the outer dive sites. Palau lies south of the main typhoon track, but storms do sometimes reach it, most often late in the year."
+      }
+    ],
+    "weather": "Palau is hot and humid all year: highs of about 31°C, nights around 24°C and a sea of 28–29°C. Rain is plentiful, close to 3,800 mm a year in Koror, and no month is truly dry, though February to April gets the least.",
+    "festivals": [
+      {
+        "name": "Youth Day",
+        "place": "Across Palau",
+        "when": "15 March",
+        "months": [3],
+        "text": "A public holiday for young Palauans, with sports days and school events, and government offices closed."
+      },
+      {
+        "name": "Constitution Day",
+        "place": "Ngerulmud, Koror and across Palau",
+        "when": "9 July",
+        "months": [7],
+        "text": "Marks the constitution of 1981, the first in the world to ban nuclear weapons from a country's land and waters."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Koror and across Palau",
+        "when": "1 October",
+        "months": [10],
+        "text": "Marks independence in 1994, with a flag-raising, speeches and traditional games, and offices and many businesses closed."
+      },
+      {
+        "name": "Olechotel Belau Fair",
+        "place": "Koror or a host state",
+        "when": "Usually in October, often around Independence Day",
+        "months": [10],
+        "text": "Each of Palau's 16 states sets up stalls of its own food, crafts and farm produce, with dancing and music; the best place to try local dishes in one go."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Alii\" is the everyday hello; \"Ungil tutau\" (good morning) or \"Ungil kebesengei\" (good evening) is more polite. Handshakes are gentle. Palauan society is matrilineal: land and clan membership pass through the mother's line, and the senior women of a clan choose who holds its chiefly titles.",
+    "etiquette": [
+      "Keep the pledge you signed: don't touch or stand on coral, don't feed fish, and take every bit of rubbish back from the Rock Islands.",
+      "Permits are needed for the Rock Islands, Jellyfish Lake and some state sites; dive shops and tour operators arrange them with your trip.",
+      "Beaches, waterfalls and old village sites belong to a clan or a state: pay the entry fee where asked and keep off private land.",
+      "Wartime wrecks and the battlefield remains on Peleliu are protected; leave everything where it lies.",
+      "Ask before entering a bai or photographing inside one."
+    ],
+    "tipping": "Not a Palauan custom, but usual in tourism: dive and boat crews, guides and restaurant staff in Koror expect a tip for good service, in the American way.",
+    "dress": "Light clothes, plus a rash vest or thin wetsuit for long days on the boats, as the sun off the water is intense. In villages and in town, wear a shirt and shorts or a skirt to the knee. Bring reef-safe sunscreen or buy it in Koror: products with oxybenzone and similar ingredients are banned.",
+    "food": [
+      {
+        "name": "Taro",
+        "text": "The staple, grown by women in flooded gardens and served at every feast; a gift of taro carries real weight in custom."
+      },
+      {
+        "name": "Mangrove crab",
+        "text": "Big mud crabs from the mangroves, steamed or cooked in coconut milk, one of the best things on Koror's menus."
+      },
+      {
+        "name": "Fruit bat soup",
+        "text": "Palau's most famous dish: a whole fruit bat simmered in coconut milk or broth. A few restaurants still serve it, mostly as a curiosity for visitors."
+      },
+      {
+        "name": "Sashimi and bento",
+        "text": "Japan ruled Palau from 1914 until 1945, and Japanese food is part of everyday life: sashimi of fresh tuna, rice balls, noodles and boxed lunches for the boats."
+      },
+      {
+        "name": "Buuch (betel nut)",
+        "text": "Not a food but chewed everywhere: the nut is wrapped in a pepper leaf with powdered lime, and turns the mouth and the spat-out juice bright red."
+      }
+    ],
+    "phrases": {
+      "language": "Palauan",
+      "intro": "English is official and widely used; Palauan is spoken at home and in all matters of custom, and some older people also speak Japanese.",
+      "items": [
+        { "phrase": "Alii", "say": "ah-LEE", "meaning": "Hello" },
+        { "phrase": "Ungil tutau", "say": "oo-NGEEL too-TOW", "meaning": "Good morning" },
+        { "phrase": "Ungil kebesengei", "say": "oo-NGEEL keh-beh-SENG-ay", "meaning": "Good evening" },
+        { "phrase": "Ke ua ngerang?", "say": "keh wah NGEH-rahng", "meaning": "How are you?" },
+        { "phrase": "Sulang", "say": "soo-LAHNG", "meaning": "Thank you" },
+        { "phrase": "Mesulang", "say": "meh-soo-LAHNG", "meaning": "Thank you (more formal)" },
+        { "phrase": "Ochoi / Diak", "say": "oh-HOY / dee-AHK", "meaning": "Yes / No" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q695",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar ($, USD). Cards are taken by hotels, dive shops and larger restaurants in Koror; carry cash for state fees and small shops.",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Palauan and English, official throughout. On Angaur, Japanese is official too, a legacy of Japanese rule.",
+        "sources": [{ "property": "P37", "values": ["Q33776", "Q1860", "Q5287"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 120 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right, though many cars are right-hand-drive imports from Japan",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Palau Time, UTC+9, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q7041", "Q63285982"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+680",
+        "sources": [{ "property": "P474", "values": ["+680"] }]
+      }
+    ]
+  }
+}

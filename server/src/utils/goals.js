@@ -5,13 +5,15 @@ import { sanitizeText } from './sanitize.js';
 import { isCountryCode, parseDateOnly } from './travelValidation.js';
 import { INHABITED_CONTINENTS, REGIONS, regionCodesOnMap } from './constants/regions.js';
 import { isSpecialPlace } from './specialPlaces.js';
+// Regions (Bali, Tasmania): places in a country, never in a continent's list of countries
+import { isRegion as isRegionPlace } from './regionPlaces.js';
 import { UK, UK_NATION_CODES, countedCountryCodes, isUkNation, placeOnMap } from './ukNations.js';
 
 export const GOAL_KINDS = Object.freeze(['COUNTRY_COUNT', 'COUNTRY_LIST', 'REGION', 'LANDMARK_COUNT']);
 export const GOALS_PER_MAP = 50;
 export const GOAL_TITLE_MAX = 80;
 export const GOAL_LIST_MAX = 100;
-// A target above every country there is (227) or every landmark (1,332) can't be met
+// A target above every country there is (226) or every landmark (1,332) can't be met
 export const GOAL_TARGET_MAX = { COUNTRY_COUNT: 250, LANDMARK_COUNT: 2000 };
 // A goal's region: a region (utils/constants/regions.js) or an inhabited continent
 export const GOAL_REGIONS = Object.freeze([...Object.keys(REGIONS), ...INHABITED_CONTINENTS]);
@@ -83,7 +85,7 @@ export const changesWhatsAsked = (data) =>
 export function regionCodes(region, countriesByContinent, splitUk = false) {
   if (REGIONS[region]) return regionCodesOnMap(region, splitUk);
   return (countriesByContinent.get(region) ?? []).filter(
-    (code) => !isSpecialPlace(code) && (splitUk ? code !== UK : !isUkNation(code))
+    (code) => !isSpecialPlace(code) && !isRegionPlace(code) && (splitUk ? code !== UK : !isUkNation(code))
   );
 }
 

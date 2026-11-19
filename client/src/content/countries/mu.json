@@ -1,0 +1,189 @@
+{
+  "code": "MU",
+  "slug": "mauritius",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bonzour", "Moris", "Byenveni"],
+  "summary": "Reef-sheltered lagoons, Hindu festivals and dholl puri from roadside stalls.",
+  "overview": [
+    "Mauritius is a volcanic island about 65 km long, ringed almost all the way round by a coral reef, so most of its beaches face a calm, shallow lagoon. Behind them, sugar cane covers the lowlands and jagged green peaks rise in the south-west, where the Black River Gorges National Park protects most of what is left of the native forest. Le Morne Brabant, the basalt mountain on the south-west tip, is a World Heritage Site: escaped slaves once hid on its cliffs.",
+    "Its people descend from French settlers, enslaved Africans and Malagasy, Indian labourers and Chinese traders, and it shows: Hindu and Tamil temples stand near churches and mosques, the calendar holds everyone's festivals, and the food mixes all of them. Port Louis, the capital, has a busy covered market and the Aapravasi Ghat, the World Heritage depot where indentured workers from India landed in the 19th century. Inland are the bands of coloured earth at Chamarel and Grand Bassin, a crater lake sacred to Hindus.",
+    "Buses run all over the island but are slow, so most visitors use taxis or hire a car; traffic drives on the left. Rodrigues, a much smaller and quieter island about 600 km to the east, is part of the country and reached by a flight of about an hour and a half."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Summer",
+        "months": [12, 1, 2, 3],
+        "text": "Hot and humid, around 30°C on the coast, with the sea at its warmest. Short, heavy showers are common, above all from January to March, and this is the cyclone season: most years none comes close, but when one does, expect a day or two indoors. The Christmas holidays are busy and dear."
+      },
+      {
+        "name": "Autumn",
+        "months": [4, 5],
+        "text": "The heat and humidity ease, the rain lessens and the sea is still warm: one of the most comfortable times of year."
+      },
+      {
+        "name": "Winter",
+        "months": [6, 7, 8],
+        "text": "Mild, about 24°C on the coast by day and cooler on the plateau, with a steady south-east trade wind that makes the east coast breezy and the sea a little cool for some. Good for walking in the hills, and for kitesurfing off Le Morne."
+      },
+      {
+        "name": "Spring",
+        "months": [9, 10, 11],
+        "text": "Dry, sunny and warming, with calm seas. These are among the driest months of the year, and good for diving."
+      }
+    ],
+    "weather": "Tropical, with a hot, wet summer from about November to April and a mild, drier winter from May to October. The coast ranges from about 30°C in January to 24°C in July; the central plateau around Curepipe is several degrees cooler, much wetter and often in cloud. The east and south-east coasts catch the trade winds and more showers, while the west, around Flic en Flac and Tamarin, is drier and calmer. Cyclones are possible from about November to April, most often from January to March.",
+    "festivals": [
+      {
+        "name": "Thaipoosam Cavadee",
+        "place": "Tamil temples across the island",
+        "when": "Usually in January or February",
+        "months": [1, 2],
+        "text": "Tamil devotees who have fasted for days carry the cavadee, a wooden arch decked with flowers, to the temple, many with needles through their cheeks and tongues. A public holiday."
+      },
+      {
+        "name": "Abolition of Slavery Day",
+        "place": "Le Morne and across Mauritius",
+        "when": "1 February",
+        "months": [2],
+        "text": "Marks the end of slavery in 1835, with a ceremony at the foot of Le Morne."
+      },
+      {
+        "name": "Maha Shivaratri",
+        "place": "Grand Bassin",
+        "when": "Usually in February or March",
+        "months": [2, 3],
+        "text": "Hundreds of thousands of Hindus walk to the crater lake of Grand Bassin, many carrying kanwars, bamboo frames decked with flowers and mirrors, to collect holy water. Roads near the lake close and buses are full."
+      },
+      {
+        "name": "Independence and Republic Day",
+        "place": "Port Louis and across Mauritius",
+        "when": "12 March",
+        "months": [3],
+        "text": "The national day: independence from Britain in 1968, and becoming a republic on the same date in 1992. Flags fly from houses and cars."
+      },
+      {
+        "name": "Divali",
+        "place": "Across Mauritius",
+        "when": "Usually in October or November",
+        "months": [10, 11],
+        "text": "The Hindu festival of light: houses are lined with clay oil lamps and strings of bulbs, and neighbours share plates of sweets. A public holiday."
+      },
+      {
+        "name": "Arrival of Indentured Labourers",
+        "place": "The Aapravasi Ghat, Port Louis",
+        "when": "2 November",
+        "months": [11],
+        "text": "A public holiday remembering the workers who came from India from 1834 onwards, with a ceremony at the depot where they landed."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The north and west coasts",
+        "text": "Grand Baie in the north is the busiest resort, with restaurants, shops and boat trips to the northern islets. The west, from Flic en Flac down to Le Morne, is the driest and calmest coast, with sunsets over the sea and dolphin-watching trips from Tamarin."
+      },
+      {
+        "name": "The east and south coasts",
+        "text": "Long beaches such as Belle Mare, and boat trips to Île aux Cerfs. The trade winds keep the east breezy and cooler from May to October. The south is wilder, with black cliffs where the reef breaks, as at Gris Gris."
+      },
+      {
+        "name": "Rodrigues",
+        "text": "Small and slow, with a wide lagoon, fishing villages, walking trails and the François Leguat reserve of giant tortoises. Almost everyone is Creole, and the island feels a world away from the main one."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Bonzour\" in Creole, or \"bonjour\" in French, with a handshake is the everyday greeting; friends and family kiss on the cheek. Mauritians move easily between Creole, French and English, and most will answer in whichever you use.",
+    "etiquette": [
+      "Take off your shoes before entering a Hindu or Tamil temple or a mosque, and cover shoulders and knees.",
+      "Beachwear is for the beach and the hotel; put on a shirt for town.",
+      "Don't stand on coral when snorkelling, and don't take or buy coral and shells.",
+      "Swim inside the lagoon: beyond the reef the currents are strong, and where there's no reef, as at Gris Gris, stay out of the water.",
+      "Many buses stop running in the early evening, so plan a taxi back after dinner."
+    ],
+    "tipping": "Not obligatory. Hotels and many restaurants add a service charge; where they don't, 5–10% is a kind gesture. Boat crews and drivers who have looked after you appreciate a tip.",
+    "dress": "Light summer clothes all year, with a jumper or light jacket for winter evenings and the cool, rainy plateau. Reef shoes for rocky lagoons, and covered shoulders and knees for temples and mosques.",
+    "food": [
+      {
+        "name": "Dholl puri",
+        "text": "Thin flatbreads filled with ground yellow split peas, rolled round a bean curry, a tomato rougaille and chutney: the island's favourite street food, sold from stalls and bicycle carts."
+      },
+      {
+        "name": "Gâteaux piments",
+        "text": "Crisp little split-pea fritters with chilli, eaten hot from a paper bag or stuffed into a buttered bread roll."
+      },
+      {
+        "name": "Mine frit and boulettes",
+        "text": "Fried noodles, and Chinese-style dumplings of fish, chicken or chayote in a clear broth, from the island's Chinese cooks."
+      },
+      {
+        "name": "Vindaye",
+        "text": "Fish or octopus cooked with mustard seed, turmeric, garlic and vinegar: sharp, pickle-like, and eaten warm or cold."
+      },
+      {
+        "name": "Alouda",
+        "text": "A sweet, cold milk drink with basil seeds and strips of agar jelly, best from the stalls in Port Louis market."
+      }
+    ],
+    "phrases": {
+      "language": "Mauritian Creole (Kreol Morisien)",
+      "intro": "Creole, based on French, is what nearly everyone speaks at home. Most people also speak French and English, and many families keep Bhojpuri or another language of their ancestors.",
+      "items": [
+        { "phrase": "Bonzour", "say": "bon-ZOOR", "meaning": "Hello" },
+        { "phrase": "Ki manyer?", "say": "kee man-YEH", "meaning": "How are you?" },
+        { "phrase": "Mo byen, mersi", "say": "moh BYAN, mair-SEE", "meaning": "I'm fine, thanks" },
+        { "phrase": "Komie sa?", "say": "kom-YEH sah", "meaning": "How much is it?" },
+        { "phrase": "Ou koz angle?", "say": "oo koz ahn-GLAY", "meaning": "Do you speak English?" },
+        { "phrase": "Mo pa konpran", "say": "moh pah kom-PRAHN", "meaning": "I don't understand" },
+        { "phrase": "Orevwar", "say": "oh-rev-WAHR", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1027",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Mauritian rupee (Rs, MUR). Cards are widely taken; carry rupees for buses, markets and street food.",
+        "sources": [{ "property": "P38", "values": ["Q212967"] }]
+      },
+      {
+        "key": "languages",
+        "text": "The constitution names no official language. English is the language of parliament and the law, French of most newspapers, and Mauritian Creole is what almost everyone speaks.",
+        "sources": [{ "property": "P37", "values": ["Q1860", "Q150"] }],
+        "note": "Wikidata records that no official language is set in law and lists English and French as used officially; the page adds Creole, the everyday language."
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK) and type C (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q1378312"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Mauritius Time, UTC+4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6779", "Q63224579"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 or 112 for police, 114 for an ambulance (SAMU), and 115 or 995 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q1061257", "Q2945964", "Q25648805", "Q25267554"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+230",
+        "sources": [{ "property": "P474", "values": ["+230"] }]
+      }
+    ]
+  }
+}

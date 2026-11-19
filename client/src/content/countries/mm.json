@@ -1,0 +1,169 @@
+{
+  "code": "MM",
+  "slug": "myanmar",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Mingalaba", "Myanma"],
+  "summary": "Bagan's plain of temples, the gilded Shwedagon pagoda and the leg-rowing fishermen of Inle Lake.",
+  "overview": [
+    "Myanmar, also called Burma, is a country of Buddhist pagodas, monasteries and slow river journeys, lying between India, China and Thailand. Yangon, the largest city, is crowned by the Shwedagon Pagoda, a gilded stupa that glows at sunset, and keeps whole streets of weathered British-era buildings. Bagan, on the Ayeyarwady (Irrawaddy) River, has more than 2,000 brick temples and stupas from the 11th to the 13th centuries spread across a dry plain, best seen from a bicycle or, in the cool season, from a hot-air balloon at dawn.",
+    "Mandalay, the last royal capital, is the base for the old cities around it and for U Bein Bridge, a teak footbridge more than a kilometre long across a lake at Amarapura. Inle Lake, in the Shan hills, has villages on stilts, floating gardens and fishermen who row with one leg wrapped around the oar, leaving their hands free for the nets. The Golden Rock at Kyaiktiyo, a gilded boulder balanced on the edge of a cliff, is one of the country's holiest places of pilgrimage, and Ngapali, on the Bay of Bengal, is its best-known beach.",
+    "Buddhism shapes daily life: monks in maroon robes collect alms in the morning, nuns wear pink, and men and women alike wear the longyi, a long wrapped cloth. Many people paint their cheeks with thanaka, a pale yellow paste of ground bark, against the sun.",
+    "Parts of Myanmar are affected by armed conflict, and many governments advise against all or most travel there. Conditions change quickly, so check your own government's current advice before planning a trip."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "good", "avoid", "avoid", "good", "good", "good", "good", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Cool season",
+        "months": [11, 12, 1, 2],
+        "text": "Dry and sunny, the main travel season, with balloon flights over Bagan and clear views at Inle Lake. Dawn on the lake and in the hills is cold, so bring a warm layer."
+      },
+      {
+        "name": "Hot season",
+        "months": [3, 4, 5],
+        "text": "Hot everywhere and scorching in the central dry zone, where temple visits in Bagan mean starting at first light. Thingyan, the water festival in April, brings the country to a halt for several days."
+      },
+      {
+        "name": "Rainy season",
+        "months": [6, 7, 8, 9, 10],
+        "text": "Downpours most days in Yangon and along the coast, where Ngapali's hotels mostly close until the rains end; Bagan and Mandalay stay much drier. The countryside is green, and the end of Buddhist Lent in October fills the towns with lights."
+      }
+    ],
+    "weather": "Myanmar has three seasons. The cool, dry season, from about November to February, has sunny days around 30°C in Yangon and Bagan, and cold nights in the Shan hills, where Inle Lake and Kalaw can fall to around 5°C. The hot season, from March to May, is fierce in the central dry zone: Bagan and Mandalay often reach 40°C in April. From about late May to October, the south-west monsoon soaks Yangon and the coast, while the dry zone around Bagan gets far less rain. Cyclones from the Bay of Bengal can strike the coast, most often around April and May or October and November.",
+    "festivals": [
+      {
+        "name": "Thingyan (Water Festival)",
+        "place": "Across Myanmar",
+        "when": "Usually around 13 to 16 April, before the Burmese New Year",
+        "months": [4],
+        "text": "The New Year is welcomed with several days of water thrown from hoses, buckets and stages built along the streets; nobody stays dry. Most offices and shops shut, and buses and trains are full."
+      },
+      {
+        "name": "Phaung Daw U Pagoda Festival",
+        "place": "Inle Lake",
+        "when": "Usually in September or October",
+        "months": [9, 10],
+        "text": "Gilded Buddha images from the Phaung Daw U pagoda are carried from village to village around the lake on a golden barge shaped like a mythical bird, towed by teams of leg-rowers, with boat races along the way."
+      },
+      {
+        "name": "Thadingyut (Festival of Lights)",
+        "place": "Across Myanmar",
+        "when": "Usually in October, at the full moon that ends Buddhist Lent",
+        "months": [10],
+        "text": "Houses, pagodas and streets are lit with candles and coloured lanterns for three nights to welcome the Buddha's return from heaven, and younger people pay their respects to their elders."
+      },
+      {
+        "name": "Tazaungdaing",
+        "place": "Taunggyi, Shan State, and across Myanmar",
+        "when": "Usually in November, at the full moon",
+        "months": [11],
+        "text": "In Taunggyi, paper hot-air balloons, some hung with fireworks, are launched day and night in a competition. Elsewhere, weavers race through the night to finish new robes for the monks by dawn."
+      },
+      {
+        "name": "Ananda Pagoda Festival",
+        "place": "Bagan",
+        "when": "Usually in December or January, around the full moon",
+        "months": [12, 1],
+        "text": "Villagers arrive by ox cart and camp around the Ananda Temple for days, with a market, music and food offered to hundreds of monks."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Mingalaba\" works at any time of day, usually with a smile and a slight nod; men will often shake hands with foreigners. Burmese people have no family names, so a name is used whole, with a title in front: U for an older man and Daw for an older woman, Ko and Ma for younger ones. U Thant, the UN secretary-general in the 1960s, was simply \"Mr Thant\".",
+    "etiquette": [
+      "Take off your shoes and socks before walking into any pagoda or monastery, often from the outer gate. Carry a bag for them, and expect hot stone underfoot at midday.",
+      "Walk clockwise around a stupa, and never point your feet at a Buddha image or a monk.",
+      "At the Golden Rock, only men may cross to the boulder to press gold leaf onto it, and women should avoid touching monks anywhere.",
+      "Give and take things with your right hand, with your left hand touching your right forearm as a mark of respect.",
+      "Ask before photographing people, and don't photograph soldiers, police or checkpoints.",
+      "Avoid raising politics in conversation."
+    ],
+    "tipping": "Tipping isn't a Burmese custom, but guides, drivers and hotel staff appreciate a tip, and small donations at pagodas go towards their upkeep.",
+    "dress": "Shoulders and knees must be covered at every religious site, and guards check. A longyi costs little in any market and is the easiest way to dress for temples. Wear sandals or slip-on shoes you can take off quickly, and pack a warm layer for Inle Lake and the hills from December to February.",
+    "food": [
+      {
+        "name": "Mohinga",
+        "text": "The national breakfast: thin rice noodles in a fish broth thickened with toasted rice or chickpea flour and flavoured with lemongrass and banana stem, topped with crisp fritters and a boiled egg."
+      },
+      {
+        "name": "Lahpet thoke",
+        "text": "Tea-leaf salad: fermented tea leaves mixed with fried beans, peanuts, sesame, garlic, tomato and cabbage. It's crunchy, sour and a little bitter, and the leaves alone are served as a snack after meals."
+      },
+      {
+        "name": "Shan noodles",
+        "text": "From the Shan hills: flat rice noodles with chicken or pork in a light tomato sauce, with pickled greens on the side, served dry or in broth."
+      },
+      {
+        "name": "Burmese curry",
+        "text": "Meat or fish cooked slowly until the oil rises to the top, served with rice and a spread of side dishes: a sour soup, raw and boiled vegetables to dip, and pungent fish pastes."
+      },
+      {
+        "name": "Ohn no khauk swe",
+        "text": "Wheat noodles in a coconut-milk chicken broth, topped with sliced onion, lime, chilli and crisp fried noodles."
+      },
+      {
+        "name": "Tea shops",
+        "text": "The centre of social life: low stools, strong sweet milky tea, and snacks such as samosas, fried dough and steamed buns, from early morning."
+      }
+    ],
+    "phrases": {
+      "language": "Burmese",
+      "intro": "English is spoken in hotels and by guides. Burmese is tonal, so these are only approximations; a smile does much of the work.",
+      "items": [
+        { "phrase": "Mingalaba (မင်္ဂလာပါ)", "say": "min-gah-lah-BAH", "meaning": "Hello" },
+        { "phrase": "Kyay zu tin ba deh (ကျေးဇူးတင်ပါတယ်)", "say": "JAY-zoo tin-bah-DEH", "meaning": "Thank you" },
+        { "phrase": "Ne kaung la? (နေကောင်းလား)", "say": "nay KOWNG lah", "meaning": "How are you?" },
+        { "phrase": "Hoke kae (ဟုတ်ကဲ့)", "say": "HOAK-keh", "meaning": "Yes" },
+        { "phrase": "Beh lauk leh? (ဘယ်လောက်လဲ)", "say": "beh LOWK leh", "meaning": "How much?" },
+        { "phrase": "Sa lo kaung deh (စားလို့ကောင်းတယ်)", "say": "SAH loh kowng-DEH", "meaning": "It's delicious" },
+        { "phrase": "Taung ban ba deh (တောင်းပန်ပါတယ်)", "say": "TOWNG bahn bah-DEH", "meaning": "Sorry" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q836",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Myanmar kyat (K, MMK). Cash is used for almost everything.",
+        "sources": [{ "property": "P38", "values": ["Q201875"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Burmese. Many ethnic groups have languages of their own, such as Shan, Karen and Mon; English is spoken in hotels.",
+        "sources": [{ "property": "P37", "values": ["Q9228"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, D, F and G, depending on the building: two round pins, three large round pins, or three rectangular pins as in the UK. 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q60740126", "Q1123613", "Q1528507"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata lists \"British and related types\" as well as BS 1363 (Type G); the page reads it as Type D, the older British three-round-pin socket still found in Myanmar."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Myanmar Standard Time, UTC+6:30, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6923", "Q29692762"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "199 for police, 192 for ambulance and 191 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q25648881", "Q25648834", "Q25648876"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+95",
+        "sources": [{ "property": "P474", "values": ["+95"] }]
+      }
+    ]
+  }
+}

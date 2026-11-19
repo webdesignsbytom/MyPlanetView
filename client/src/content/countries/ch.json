@@ -1,0 +1,196 @@
+{
+  "code": "CH",
+  "slug": "switzerland",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Grüezi", "Helvetia"],
+  "summary": "Glacier-cut valleys, lakeside cities and mountain railways that climb almost to the summits.",
+  "overview": [
+    "Mountains make up most of Switzerland. The Alps fill the south and centre, the lower ridges of the Jura run along the north-west, and between them a rolling plateau holds most of the people, the cities and the big lakes. In the Bernese Oberland, Interlaken sits between two lakes below the Eiger, Mönch and Jungfrau; the Lauterbrunnen valley is lined with waterfalls, and a cog railway climbs to the Jungfraujoch at 3,454 m. Car-free Zermatt lies below the Matterhorn (4,478 m), the Aletsch, the longest glacier in the Alps, flows south from the Jungfrau massif, and St Moritz and the Engadine valley spread out in the south-east, in Graubünden.",
+    "Zürich, the largest city, sits at the end of its lake. Geneva, at the far end of Lake Geneva, has the European offices of the United Nations and the headquarters of the Red Cross; Bern, the federal city, has a medieval old town of arcaded streets; and Lucerne has covered wooden bridges and paddle steamers. Above Lake Geneva the Lavaux vineyards climb in terraces, and south of the Alps, Ticino's lakes Lugano and Maggiore have palm trees and an Italian feel.",
+    "Trains, buses, boats and mountain railways run to connected timetables, and passes for visitors cover most of them. Scenic lines such as the Glacier Express, between Zermatt and St Moritz, and the Bernina line, over the Alps to Tirano in Italy, are journeys in themselves. Switzerland is one of Europe's most expensive countries; it isn't in the European Union, and it has its own currency, the franc."
+  ],
+  "whenToGo": {
+    "stripLabel": "The country taken together. The Alps run to their own seasons, and have a strip of their own below.",
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "The ski season runs at most resorts from about mid-December to April. Cities on the plateau are cold, around 0–5°C, and often grey under low cloud while the mountains above are sunny. Christmas markets light up Basel, Zürich and Montreux in December."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Spring skiing in March and April, and fruit blossom on the plateau. After Easter many mountain lifts and hotels close until June, and the high passes stay shut by snow until about late May or June. Ticino warms and flowers early."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm in the valleys, 25–30°C, and cooler higher up, with afternoon thunderstorms. Mountain trails and passes open, lakes and rivers are warm enough to swim in, and people in Basel float down the Rhine. The busiest season in the mountains."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September and early October are often clear and calm; the cows come down from the high pastures, and the larches of Valais and the Engadine turn gold in October. From late October to early December the mountain resorts go quiet, and the plateau is often foggy."
+      }
+    ],
+    "weather": "The weather depends on height. On the plateau, Zürich and Bern have summer days of about 24–26°C and winter days around 3°C; temperatures drop roughly 6°C for every 1,000 m you climb, so summits stay cold all year and snow lies at resort height from about December to April. South of the Alps, Ticino is sunnier and milder. Rain is spread through the year, heaviest in summer thunderstorms, and the föhn, a warm, dry wind from the south, can raise temperatures suddenly on the northern side of the Alps.",
+    "festivals": [
+      {
+        "name": "Basler Fasnacht",
+        "place": "Basel",
+        "when": "From 4 am on the Monday after Ash Wednesday, for three days; usually in February or March",
+        "months": [2, 3],
+        "text": "The city's lights go out for the Morgestraich, when masked fife-and-drum bands march through the old town behind huge glowing lanterns. Then come three days of parades, music and satirical verse."
+      },
+      {
+        "name": "Sechseläuten",
+        "place": "Zürich",
+        "when": "Usually on a Monday in April",
+        "months": [4],
+        "text": "The city's guilds parade in costume, then set fire to the Böögg, a snowman packed with fireworks, on top of a huge bonfire. The quicker its head explodes, the better the summer is meant to be."
+      },
+      {
+        "name": "Montreux Jazz Festival",
+        "place": "Montreux",
+        "when": "Usually the first two weeks of July",
+        "months": [7],
+        "text": "Concerts by Lake Geneva since 1967, from jazz to rock and pop, with free stages along the waterfront."
+      },
+      {
+        "name": "Swiss National Day",
+        "place": "Across Switzerland",
+        "when": "1 August",
+        "months": [8],
+        "text": "Bonfires on the hills, fireworks, lanterns and speeches across the country, marking the alliance of the first cantons in 1291."
+      },
+      {
+        "name": "Désalpe (Alpabzug)",
+        "place": "Alpine villages, such as in Valais, Fribourg and Appenzell",
+        "when": "Usually in September and early October",
+        "months": [9, 10],
+        "text": "Cows wearing flower headdresses and great bells are walked down from the summer pastures by herders in traditional dress, with cheese stalls and music in the villages."
+      },
+      {
+        "name": "Zibelemärit",
+        "place": "Bern",
+        "when": "The fourth Monday in November",
+        "months": [11],
+        "text": "Bern's onion market: stalls of braided onions and garlic, onion tart and soup, and confetti battles in the streets from early morning."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Alps",
+        "months": ["best", "best", "best", "good", "good", "good", "best", "best", "best", "good", "avoid", "good"],
+        "text": "Resorts such as Zermatt, Grindelwald, Davos and St Moritz have two seasons: winter sports from about mid-December to April, and walking from about late June to mid-October, when the high trails are clear of snow. In between, many lifts, hotels and restaurants close, above all in November. The railways to the Jungfraujoch and the Gornergrat run all year."
+      },
+      {
+        "name": "Ticino",
+        "text": "Switzerland's Italian-speaking south, around Lugano, Locarno and Lake Maggiore. Spring comes early, with camellias in March; summers are hot, around 28°C, with thunderstorms; and autumn stays warm into October, the season for chestnuts."
+      },
+      {
+        "name": "The plateau and the cities",
+        "text": "Zürich, Bern, Basel, Lucerne, Lausanne and Geneva are good to visit all year. In late autumn and winter a lid of low cloud (Hochnebel) can sit over them for days while the mountains above are in sunshine."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Shake hands on meeting and again when you leave; friends greet with three kisses on alternate cheeks. The greeting changes with the language: “Grüezi” in most German-speaking areas (“Grüessech” in Bern), “Bonjour” in the French-speaking west, “Buongiorno” in Ticino and “Allegra” in Romansh villages.",
+    "etiquette": [
+      "Be punctual: trains leave to the minute, and people arrive on time.",
+      "Sundays and late evenings are kept quiet: no noisy chores, and no dropping bottles in the recycling bins on a Sunday.",
+      "Rubbish is sorted carefully, and litter is frowned on.",
+      "Tap water and most village fountains are safe to drink, unless a sign says “Kein Trinkwasser” or “Eau non potable”.",
+      "Paths are marked by colour: yellow for walking paths, white-red-white for mountain trails that need sure feet, and white-blue-white for alpine routes that need experience and equipment."
+    ],
+    "tipping": "Prices include service, so tipping isn't expected; a few francs left for good service is usual.",
+    "dress": "Neat and practical. Layers and a waterproof for the mountains, where it can snow even in summer; sunglasses and sun cream for the strong sun at height; and proper boots on mountain trails.",
+    "food": [
+      {
+        "name": "Fondue",
+        "text": "Melted cheese, often Gruyère with Vacherin fribourgeois, with white wine and a dash of kirsch, shared from one pot with cubes of bread on long forks. A winter dish above all."
+      },
+      {
+        "name": "Raclette",
+        "text": "A wheel of Valais cheese, melted and scraped onto boiled potatoes, with pickled onions and gherkins."
+      },
+      {
+        "name": "Rösti",
+        "text": "Grated potato fried into a crisp golden cake, from Bern. The language line between German and French Switzerland is jokingly called the Röstigraben, the “rösti ditch”."
+      },
+      {
+        "name": "Zürcher Geschnetzeltes",
+        "text": "Thin strips of veal in a creamy white wine and mushroom sauce, served with rösti."
+      },
+      {
+        "name": "Chocolate",
+        "text": "Milk chocolate was first made in Vevey in the 1870s, and the Swiss still eat more chocolate per head than almost anyone. Every town has a chocolatier."
+      },
+      {
+        "name": "Birchermüesli",
+        "text": "Oats soaked overnight with grated apple, nuts and yoghurt or milk, created by a Zürich doctor, Maximilian Bircher-Benner, around 1900."
+      }
+    ],
+    "phrases": {
+      "language": "Swiss German",
+      "intro": "These words are Swiss German, spoken in the north, centre and east. Signs and menus there use standard German, which everyone understands; French is the language of the west, and Italian of Ticino. Most Swiss speak good English.",
+      "items": [
+        { "phrase": "Grüezi", "say": "GROO-ets-ee", "meaning": "Hello (polite)" },
+        { "phrase": "Merci vielmal", "say": "MAIR-see FEEL-mahl", "meaning": "Thank you very much" },
+        { "phrase": "Bitte", "say": "BIT-teh", "meaning": "Please" },
+        { "phrase": "Exgüsi", "say": "EKS-goo-zee", "meaning": "Excuse me" },
+        { "phrase": "Was choschtet das?", "say": "vahs KHOSH-tet dahs", "meaning": "How much is it?" },
+        { "phrase": "En Guete!", "say": "en GOO-eh-teh", "meaning": "Enjoy your meal" },
+        { "phrase": "Proscht!", "say": "PROSHT", "meaning": "Cheers!" },
+        { "phrase": "Uf Widerluege", "say": "oof VEE-der-loo-eh-geh", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q39",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Swiss franc (CHF, Fr.). Some shops and stations take euros, giving change in francs.",
+        "sources": [{ "property": "P38", "values": ["Q25344"] }]
+      },
+      {
+        "key": "languages",
+        "text": "German, French, Italian and Romansh, each in its own region: German in the north, centre and east, French in the west, Italian in Ticino and Romansh in parts of Graubünden.",
+        "sources": [{ "property": "P37", "values": ["Q188", "Q150", "Q652", "Q13199"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type J (Switzerland's own, three round pins) and Type C (two round pins), 230 V. Slim two-pin Europlugs fit Swiss sockets; thicker two-pin plugs from Germany or France don't.",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335530", "Q1378312"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1, and UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q25989", "Q6655", "Q6723", "Q16919450"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112; 117 for police, 118 for fire, 144 for ambulance; 1414 for Rega, the air rescue service, in the mountains",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q4547615", "Q11185210", "Q25648814", "Q26258266"] }],
+        "note": "Wikidata also lists 140 (roadside assistance) and 145 (poisons); the page keeps to the emergency services."
+      },
+      {
+        "key": "callingCode",
+        "text": "+41",
+        "sources": [{ "property": "P474", "values": ["+41"] }]
+      }
+    ]
+  }
+}

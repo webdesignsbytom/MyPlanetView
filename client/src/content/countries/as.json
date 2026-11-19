@@ -1,0 +1,150 @@
+{
+  "code": "AS",
+  "slug": "american-samoa",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Tālofa", "Amerika Sāmoa", "Susū mai"],
+  "summary": "US-run Samoan islands with a rainforest national park, a deep harbour and quiet Sundays.",
+  "overview": [
+    "American Samoa is the eastern end of the Samoan chain, a US territory since 1900 where Samoan custom still runs daily life. Tutuila, the main island, wraps around Pago Pago Harbor, a long, deep inlet ringed by steep green ridges and by Mount Pioa, nicknamed the Rainmaker for the cloud that sits on its summit. A tuna cannery on the waterfront is the territory's biggest private employer.",
+    "The National Park of American Samoa covers rainforest and reef on Tutuila and on the Manu'a Islands, about 100 km to the east. On Tutuila, a ridge trail climbs Mount 'Alava above the harbour, and a short walk on the north coast ends opposite Pola Island, a sea stack where frigatebirds and boobies nest. In Manu'a, Ofu has a long white beach and a clear lagoon with hardly anyone on it; getting there takes a small plane or a boat, and services are few and often change.",
+    "Aiga buses, brightly painted and privately run, follow Tutuila's coast road during the day and stop wherever you wave them down; they rarely run in the evening or on Sundays. Most land belongs to extended families under their matai (chiefs), so ask before you walk onto a beach or swim near a village, and expect a small custom fee in some places."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "good", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Wet season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Hot and sticky, around 30°C by day, with heavy downpours most days and the highest chance of a tropical cyclone from about December to March. Squalls tend to pass quickly, leaving sunny spells, but trails turn slippery and the sea along the north coast can be rough."
+      },
+      {
+        "name": "Dry season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "South-east trade winds bring lower humidity and more settled days, though Tutuila's mountains still catch frequent showers. June to September is the most comfortable stretch for ridge walks, snorkelling and the trip out to Manu'a."
+      }
+    ],
+    "weather": "At about 14° south of the equator, American Samoa never really cools off: daytime highs are 29–31°C and nights rarely drop below 23°C. Rain is heavy by any standard: the airport gets around 3,000 mm a year, and the harbour beneath the Rainmaker gets a good deal more. The wettest months run from about December to March, when tropical cyclones are possible; June to September is drier and breezier.",
+    "festivals": [
+      {
+        "name": "Flag Day",
+        "place": "Around Pago Pago Harbor, Tutuila",
+        "when": "17 April",
+        "months": [4],
+        "text": "The territory's biggest celebration, marking the raising of the US flag on Tutuila in 1900. Days of dancing, singing and sport lead up to it, and the highlight is the fautasi race: long wooden boats, each rowed by a crew of dozens, racing across the harbour."
+      },
+      {
+        "name": "US public holidays",
+        "place": "Across American Samoa",
+        "when": "4 July, Thanksgiving (the fourth Thursday of November) and the other federal holidays",
+        "months": [7, 11],
+        "text": "American Samoa keeps the US public holidays as well as its own, so government offices and banks close on Independence Day, Thanksgiving and the rest."
+      },
+      {
+        "name": "Lotu a Tamaiti (White Sunday)",
+        "place": "Churches across the islands",
+        "when": "The second Sunday of October, with a holiday on the Monday after",
+        "months": [10],
+        "text": "Children's Sunday: children dressed in white lead the services with Bible readings, songs and short plays, and at the family meal afterwards they are served first, the reverse of the usual order."
+      },
+      {
+        "name": "Christmas",
+        "place": "Across American Samoa",
+        "when": "25 December",
+        "months": [12],
+        "text": "Church choirs rehearse for weeks beforehand, and services on Christmas Eve and Christmas Day are packed and long. Most shops and offices close, and many families spend the holidays with relatives in Samoa, Hawaii or the US mainland."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "People greet each other with \"Tālofa\" and a handshake; between friends it's often a quick \"Malō\". Walking through a village, you're expected to stop and say hello rather than pass with a nod. Matai and older people are treated with marked respect: let them speak first, and if you're invited into a fale (an open-sided house), sit down on the mat before you start a conversation.",
+    "etiquette": [
+      "Ask permission before swimming, snorkelling or taking photographs at a village beach; the family that owns it may ask a small fee.",
+      "Sunday is for church and the to'ona'i, a long midday family meal. Keep swimming and noisy activity away from villages, and expect most shops to be shut.",
+      "In a fale, sit cross-legged and don't stretch your legs out towards anyone; if you can't sit that way, cover your legs with a mat or cloth.",
+      "Don't eat, drink or smoke while walking through a village.",
+      "Much of the national park is leased from Samoan villages, so keep to the trails and leave shells and coral where they are."
+    ],
+    "tipping": "Tipping isn't part of Samoan custom and is rarely expected. In hotels and restaurants used by visitors, staff will accept a tip graciously, though nobody will ask.",
+    "dress": "Light cotton clothes and something for the rain. Away from the beach, cover shoulders and knees; a lavalava, a wrapped cloth worn by men as well as women, is easy to buy and fits in anywhere. For church, women wear long skirts or dresses and men long trousers or a formal lavalava with a collared shirt; many locals wear white.",
+    "food": [
+      {
+        "name": "Oka",
+        "text": "Raw fish, usually tuna, cut into cubes, soaked in lime or lemon juice and finished with coconut cream, onion and cucumber."
+      },
+      {
+        "name": "Fa'alifu fa'i",
+        "text": "Green bananas simmered in coconut cream until soft and glossy, the everyday side dish; fa'alifu talo is made the same way with taro."
+      },
+      {
+        "name": "Sapasui",
+        "text": "Samoan chop suey: glass noodles fried with soy sauce, garlic, ginger and chicken or beef, served at almost every family feast."
+      },
+      {
+        "name": "Panikeke",
+        "text": "Round banana fritters, fried as balls rather than flat like pancakes, sold by the bag at roadside stalls and corner stores for breakfast."
+      },
+      {
+        "name": "Pisupo",
+        "text": "Canned corned beef, brought by traders long ago and now part of custom: cartons of it are given as gifts at weddings and funerals, and it turns up in stews and baked taro-leaf parcels."
+      }
+    ],
+    "phrases": {
+      "language": "Samoan",
+      "intro": "Nearly everyone speaks English too, but Samoan is the language of home, church and village meetings.",
+      "items": [
+        { "phrase": "Tālofa", "say": "tah-LOH-fah", "meaning": "Hello" },
+        { "phrase": "Malō", "say": "mah-LOH", "meaning": "Hi; well done (between friends)" },
+        { "phrase": "O ā mai oe?", "say": "oh AH mai OH-eh", "meaning": "How are you?" },
+        { "phrase": "Manuia, fa'afetai", "say": "mah-noo-EE-ah, fah-ah-feh-TAI", "meaning": "Fine, thank you" },
+        { "phrase": "Ioe / Leai", "say": "ee-OH-eh / leh-AI", "meaning": "Yes / No" },
+        { "phrase": "Susū mai", "say": "soo-SOO mai", "meaning": "Welcome; come in (polite)" },
+        { "phrase": "Tōfā", "say": "toh-FAH", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q16641",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar ($, USD). Cards are taken in hotels, larger shops and restaurants around Pago Pago; carry cash for buses, roadside stalls and village fees.",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Samoan and English, both official. Samoan is spoken at home and in the villages; English in government, business and schools.",
+        "sources": [{ "property": "P37", "values": ["Q34011", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 120 V. Australian-style type I and European type F sockets are also found.",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456", "Q2335539", "Q1123613"] },
+          { "property": "P2884", "values": ["120"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Samoa Standard Time, UTC−11, all year (no summer time). Independent Samoa, across the date line, keeps the same clock time a day later.",
+        "sources": [{ "property": "P421", "values": ["Q2154", "Q4816926", "Q63285986"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 684",
+        "sources": [{ "property": "P474", "values": ["+1684"] }]
+      }
+    ]
+  }
+}

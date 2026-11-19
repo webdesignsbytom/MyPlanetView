@@ -19,6 +19,16 @@ const PLANE = 'M0-6 1.4-2 7 0 1.4 2 0 6-1 2-5 1.6-6.2 3.4-7.2 3.4-6.2 0-7.2-3.4-
 const STAR = '0,-9 2.6,-3 9,-2.8 4,1.6 5.6,8 0,4.4 -5.6,8 -4,1.6 -9,-2.8 -2.6,-3';
 const ANCHOR = 'M0-7V7M-6 1C-6 6 6 6 6 1M-3.5-3.5H3.5';
 
+// A rosette's scalloped edge: 24 bumps round a 62-unit circle (the Sydney stamp)
+const SCALLOP = (() => {
+  const bumps = 24;
+  const r = 62;
+  const at = (radius, turn) => `${(radius * Math.cos(turn * 2 * Math.PI)).toFixed(1)} ${(radius * Math.sin(turn * 2 * Math.PI)).toFixed(1)}`;
+  let d = `M${at(r, 0)}`;
+  for (let i = 0; i < bumps; i++) d += `Q${at(r + 14, (i + 0.5) / bumps)} ${at(r, (i + 1) / bumps)}`;
+  return `${d}Z`;
+})();
+
 // A word on a stamp, in the travel face, centred on x
 const label = (ink, { y, size, spacing = 1, x = 0 }, word) => (
   <text x={x} y={y} fontSize={size} letterSpacing={spacing} textAnchor='middle' className={`font-travel ${ink.text}`}>
@@ -180,17 +190,22 @@ export const PASSPORT_STAMPS = [
       </>
     ),
   },
-  // A postal cancel: wavy lines
+  // Sydney: a scalloped rosette with a star (18 Nov 2026, the user's wish: it replaced a postal
+  // cancel of wavy lines, which wasn't a country's stamp)
   {
     x: 770,
     y: 520,
-    rotate: -4,
+    rotate: -10,
     ink: 'cream',
     draw: (c) => (
       <>
-        {[-24, -8, 8, 24].map((dy) => (
-          <path key={dy} d={`M-80 ${dy}q10-10 20 0t20 0 20 0 20 0 20 0 20 0 20 0 20 0`} strokeWidth={2.5} className={lines(c)} />
-        ))}
+        <path d={SCALLOP} strokeWidth={3.5} className={lines(c)} />
+        <circle r={56} strokeWidth={1.5} className={lines(c)} />
+        <polygon points={STAR} transform='translate(0 -40) scale(0.75)' className={c.text} />
+        {label(c, { y: -18, size: 11, spacing: 3 }, 'AUSTRALIA')}
+        {label(c, { y: 8, size: 22, spacing: 3 }, 'SYDNEY')}
+        <line x1={-40} x2={40} y1={16} y2={16} strokeWidth={1.5} className={lines(c)} />
+        {label(c, { y: 32, size: 11, spacing: 1.5 }, '09.02.2023')}
       </>
     ),
   },

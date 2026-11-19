@@ -96,7 +96,12 @@ export function countryContentProblems(content) {
     }
     const [item] = found;
     need(isText(item.text), `facts ${field.key}: text is missing`);
-    need(Array.isArray(item.sources) && item.sources.length > 0, `facts ${field.key}: sources are missing`);
+    need(item.note === undefined || isText(item.note), `facts ${field.key}: note must be text`);
+    // No sources only when Wikidata has no statement for it, and the note says where it's from
+    need(
+      Array.isArray(item.sources) && (item.sources.length > 0 || isText(item.note)),
+      `facts ${field.key}: sources are missing (or, with no Wikidata statement, a note saying where it comes from)`,
+    );
     for (const source of item.sources || []) {
       need(field.properties.includes(source?.property), `facts ${field.key}: property ${source?.property} isn't one of ${field.properties.join(', ')}`);
       need(Array.isArray(source?.values) && source.values.length > 0 && source.values.every(isText), `facts ${field.key}: ${source?.property} needs its values`);

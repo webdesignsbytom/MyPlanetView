@@ -1,0 +1,198 @@
+{
+  "code": "NP",
+  "slug": "nepal",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Namaste", "Nepal", "Swagatam"],
+  "summary": "Treks below Everest and Annapurna, and temple squares of the Kathmandu Valley.",
+  "overview": [
+    "Nepal climbs from the hot, flat Terai on the Indian border to the highest mountains on earth: eight of the world's ten highest peaks, Everest (8,849 m) among them, stand in Nepal or on its borders. Most visitors come to trek: to Everest Base Camp from the airstrip at Lukla, round or into the Annapurnas from Pokhara, or up the Langtang valley north of Kathmandu, sleeping in family-run teahouses along the trails. Rules introduced in 2023 require trekkers in most areas to walk with a licensed guide, so check the current rules for your route.",
+    "The Kathmandu Valley holds three old royal cities, Kathmandu, Patan and Bhaktapur, each with a Durbar Square of carved wooden temples and palaces, many rebuilt since the earthquake of 2015, and two great Buddhist stupas: Swayambhunath on its hill, and the huge white dome of Boudhanath. At Pashupatinath, Hindu cremations take place on the riverbank. Pokhara, beside Phewa Lake, looks straight up at the Annapurna range. In the Terai, Chitwan national park has one-horned rhinos, elephants and, rarely seen, tigers, and Lumbini is the birthplace of the Buddha.",
+    "Roads are slow and winding: the 200 km from Kathmandu to Pokhara takes six to eight hours by bus. Short flights save time but are often delayed by cloud, especially to Lukla, so leave spare days at the end of a trek."
+  ],
+  "whenToGo": {
+    "stripLabel": "The Kathmandu Valley and Pokhara. The high treks and the lowland Terai each keep a strip of their own below.",
+    "months": ["good", "good", "best", "best", "good", "avoid", "avoid", "avoid", "good", "best", "best", "good"],
+    "seasons": [
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Warm, mostly dry weather, with rhododendron forests in flower on the hillsides in March and April. Haze often softens the mountain views, and April and May are the climbing season on Everest. The Terai turns very hot by May."
+      },
+      {
+        "name": "Monsoon",
+        "months": [6, 7, 8, 9],
+        "text": "Rain on most days, cloud over the peaks, leeches on the lower trails and landslides on the roads; flights to the mountains are often cancelled. The rains ease during September. Upper Mustang and Dolpo, in the rain shadow north of the Himalaya, stay much drier."
+      },
+      {
+        "name": "Autumn",
+        "months": [10, 11],
+        "text": "The main season: washed-clear skies, sharp mountain views, warm days and cold nights on the trails, and Dashain and Tihar, the year's biggest festivals. Popular trails and lodges are at their busiest."
+      },
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and clear. Kathmandu has sunny days and frosty nights, and lower treks such as the walk to Poon Hill are quiet and fine. High passes can be closed by snow, and fog settles over the Terai in the mornings."
+      }
+    ],
+    "weather": "Height decides the temperature and the monsoon decides the rain. The Terai is hot, often above 35°C from April to June, and mild in winter. Kathmandu, at about 1,400 m, has warm summers and cool winters, with nights near freezing in December and January. On the high treks, nights are well below freezing from about November to March. About four fifths of the year's rain falls in the monsoon, from about June to September, and October and November are dry and clear.",
+    "festivals": [
+      {
+        "name": "Losar",
+        "place": "Boudhanath and the Sherpa and Tibetan communities",
+        "when": "The Tibetan New Year, usually in February or early March",
+        "months": [2, 3],
+        "text": "Boudhanath fills with families in their best clothes, prayer flags are renewed and monasteries hold masked dances. Other mountain peoples keep their own New Years earlier in winter."
+      },
+      {
+        "name": "Holi",
+        "place": "Across Nepal",
+        "when": "At the full moon in spring: in 2027, about 22 March",
+        "months": [3],
+        "text": "The festival of colours: people throw coloured powder and water at each other in the streets, visitors included. The hills celebrate a day before the Terai."
+      },
+      {
+        "name": "Nepali New Year and Bisket Jatra",
+        "place": "Bhaktapur and across Nepal",
+        "when": "Usually 13 or 14 April",
+        "months": [4],
+        "text": "Nepal's own calendar starts its year in mid-April. In Bhaktapur, the festival runs over several days, with huge temple chariots hauled through the streets in a tug-of-war between neighbourhoods and a tall wooden pole raised and pulled down."
+      },
+      {
+        "name": "Buddha Jayanti",
+        "place": "Lumbini, Swayambhunath and Boudhanath",
+        "when": "At the full moon in spring, usually in May",
+        "months": [5],
+        "text": "The birth of the Buddha, marked with processions, butter lamps and prayers at the great stupas and at his birthplace."
+      },
+      {
+        "name": "Dashain",
+        "place": "Across Nepal",
+        "when": "Usually in late September or October, over about 15 days",
+        "months": [9, 10],
+        "text": "The longest and biggest Hindu festival. Families gather, elders put red tika on the foreheads of the young, bamboo swings go up in villages and kites fill the sky. Offices close for days, and buses out of Kathmandu are packed."
+      },
+      {
+        "name": "Tihar",
+        "place": "Across Nepal",
+        "when": "Late October or November, usually about three weeks after Dashain's main day",
+        "months": [10, 11],
+        "text": "The festival of lights, over five days: crows, dogs and cows are honoured in turn with garlands, houses are lit with oil lamps, and sisters bless their brothers on the last day."
+      }
+    ],
+    "regions": [
+      {
+        "name": "High treks",
+        "months": ["avoid", "avoid", "good", "best", "best", "avoid", "avoid", "avoid", "good", "best", "best", "good"],
+        "text": "Everest, the Annapurnas, Langtang and Manaslu. October and November bring the clearest views, April and May warmer days and flowers lower down. In winter, nights at high camps are bitterly cold and passes such as the Thorong La can close; in the monsoon, trails are wet and the peaks are hidden."
+      },
+      {
+        "name": "The Terai: Chitwan, Bardia and Lumbini",
+        "months": ["good", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "best", "best", "good"],
+        "text": "Lowland jungle and farmland. February to April are good for seeing wildlife, as the tall grass is cut; May and June are very hot, and the monsoon floods rivers and closes some lodges. Winter mornings are foggy and cool."
+      },
+      {
+        "name": "Upper Mustang",
+        "text": "A dry, high valley north of the Annapurnas, behind the Himalaya, with walled villages and cave monasteries. It gets little monsoon rain, so it's a good trek from about May to October, when much of Nepal is wet."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Namaste\", with palms pressed together, is the greeting for everyone; \"Namaskar\" is more formal. Handshakes are common between men in the cities. People address each other as family: \"didi\" (elder sister), \"dai\" (elder brother), or add \"-ji\" to a name for respect.",
+    "etiquette": [
+      "Walk clockwise round stupas and Buddhist temples, keeping them on your right.",
+      "Some Hindu temples, including the main temple at Pashupatinath, are open to Hindus only. Take off your shoes, and leather items where asked, before entering a temple.",
+      "Food or drink that has touched someone's lips or plate is considered impure (jutho). Don't offer someone food you've bitten, and pour water into your mouth without touching the bottle when sharing.",
+      "At Pashupatinath, watch cremations quietly from across the river, and don't photograph mourners close up.",
+      "On treks, go up slowly to avoid altitude sickness, and turn back if symptoms get worse."
+    ],
+    "tipping": "Many tourist restaurants add a 10% service charge; elsewhere, leaving about that much is welcome. Trekking guides and porters count on tips at the end of a trek, given to each person directly.",
+    "dress": "Modest clothes cover shoulders and knees, especially at temples and in villages. For treks, pack layers, a warm down jacket, a hat and gloves for the high nights, sun cream and sunglasses for the glare off the snow, and a rain jacket outside the dry season.",
+    "food": [
+      {
+        "name": "Dal bhat",
+        "text": "The daily meal: rice with lentil soup, vegetable curry and a sharp pickle, eaten twice a day by most Nepalis. Second and third helpings are normal and usually free; trekkers live on it."
+      },
+      {
+        "name": "Momo",
+        "text": "Steamed or fried dumplings of buffalo, chicken or vegetables, with a spicy tomato and sesame dip. Nepal's favourite snack, sold everywhere."
+      },
+      {
+        "name": "Newari food",
+        "text": "The cooking of the Kathmandu Valley's Newar people: samay baji, a feast plate of beaten rice, spiced meat, egg, black soybeans and ginger, and bara, savoury lentil pancakes."
+      },
+      {
+        "name": "Thukpa",
+        "text": "A Tibetan noodle soup with vegetables or meat, warming food in the mountain teahouses."
+      },
+      {
+        "name": "Sel roti",
+        "text": "Sweet, ring-shaped bread of rice flour, deep-fried and made by every family for Dashain and Tihar."
+      },
+      {
+        "name": "Chiya",
+        "text": "Milky tea boiled with sugar and spices, drunk at every stop on the road and the trail."
+      }
+    ],
+    "phrases": {
+      "language": "Nepali",
+      "intro": "Nepali is written in the Devanagari script, as Hindi is, and many people speak another language at home, such as Maithili, Newari or Tamang. In Kathmandu, Pokhara and on the main trekking routes, English gets you by.",
+      "items": [
+        { "phrase": "Namaste (नमस्ते)", "say": "nah-mah-STAY", "meaning": "Hello; goodbye" },
+        { "phrase": "Sanchai chha? (सन्चै छ?)", "say": "SUN-chai chha", "meaning": "How are you?" },
+        { "phrase": "Dhanyabad (धन्यवाद)", "say": "DHUN-yuh-bahd", "meaning": "Thank you" },
+        { "phrase": "Ho / Hoina (हो / होइन)", "say": "HOH / HOY-nah", "meaning": "Yes / No" },
+        { "phrase": "Kati ho? (कति हो?)", "say": "KUH-tee hoh", "meaning": "How much is it?" },
+        { "phrase": "Mitho chha (मिठो छ)", "say": "MEE-thoh chha", "meaning": "It's tasty" },
+        { "phrase": "Pugyo (पुग्यो)", "say": "POOG-yoh", "meaning": "That's enough (when offered more food)" },
+        { "phrase": "Bistarai (बिस्तारै)", "say": "bis-TAH-rai", "meaning": "Slowly" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q837",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Nepalese rupee (Rs, NPR). Cash machines are common in Kathmandu and Pokhara; carry enough cash for a whole trek, as there are few or none on the trails.",
+        "sources": [{ "property": "P38", "values": ["Q202895"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Nepali. Maithili, Bhojpuri, Newari, Tamang and dozens of other languages are spoken in their regions, and English is widely understood in tourism.",
+        "sources": [{ "property": "P37", "values": ["Q33823"] }],
+        "note": "Wikidata lists Nepali; the page adds the main regional languages, which many Nepalis speak at home."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C (two round pins) and D (three large round pins, as in India), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q60740126", "Q1383497"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Nepal Standard Time, UTC+5:45, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6890", "Q3297477", "Q63285950"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "100 for police, 101 for fire and 102 for ambulance. The tourist police are on 1144.",
+        "sources": [{ "property": "P2852", "values": ["Q25648793", "Q25648794", "Q25648798"] }],
+        "note": "Wikidata lists 100, 101 and 102; the page adds 1144, the tourist police hotline."
+      },
+      {
+        "key": "callingCode",
+        "text": "+977",
+        "sources": [{ "property": "P474", "values": ["+977"] }]
+      }
+    ]
+  }
+}

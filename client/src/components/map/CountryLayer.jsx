@@ -13,7 +13,8 @@ import { setHoverPoint } from '@/utils/map/hoverPoint';
 
 // The shapes (countries and Antarctica), the micro-states' dots, and the poles' markers;
 // each list also without Antarctica's places, for when that's hidden, and with the UK's
-// four nations drawn in its place, for a map that splits the UK (ukNationShapes.js)
+// four nations drawn in its place, for a map that splits the UK (ukNationShapes.js). Regions
+// (regionPlaces.js) are shapes and a dot like any place, in their country's colour.
 const shapesOf = (code) => COUNTRY_SHAPES[code] ?? UK_NATION_SHAPES[code];
 const SHAPED = COUNTRIES.filter((c) => COUNTRY_SHAPES[c.code]);
 const SHAPED_SPLIT_UK = [...SHAPED.filter((c) => c.code !== 'GB'), ...COUNTRIES.filter((c) => c.kind === 'NATION')];
@@ -44,7 +45,8 @@ const FADE_NOT_BEEN = '[&_[data-been=false]]:opacity-15';
 // Every country and special place, with one set of listeners for all of them (event
 // delegation), so a hover or click never re-renders the 614 paths. With Antarctica
 // hidden (`showAntarctica` off), it and the poles beside it aren't drawn. On a map that
-// splits the UK (`splitUk`), its four nations are drawn instead of it.
+// splits the UK (`splitUk`), its four nations are drawn instead of it. Zoomed in, `detail`
+// (useDetailedShapes: code -> paths) replaces the outlines of the places it has.
 function CountryLayer({
   visitsByCode,
   selectedCode,
@@ -56,6 +58,7 @@ function CountryLayer({
   showUnvisited = true,
   showAntarctica = true,
   splitUk = false,
+  detail = null,
 }) {
   const hoveredRef = useRef(null);
   // Set by a long press (below), so the click it ends with opens nothing
@@ -172,7 +175,7 @@ function CountryLayer({
         <CountryShape
           key={country.code}
           code={country.code}
-          paths={shapesOf(country.code)}
+          paths={detail?.[country.code] ?? shapesOf(country.code)}
           status={visitsByCode[country.code]}
           selected={selectedCode === country.code}
         />

@@ -1,0 +1,186 @@
+{
+  "code": "IQ",
+  "slug": "iraq",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Hala wallah", "Al Iraq"],
+  "summary": "Babylon and Ur, reed villages in the marshes, Karbala's shrines and the Kurdish mountains.",
+  "overview": [
+    "Iraq is the land between the Tigris and the Euphrates, ancient Mesopotamia, where some of the first cities and the first writing appeared. South of Baghdad are the ruins of Babylon, partly rebuilt in the 1980s on top of the old walls; near Nasiriyah stands the great stepped ziggurat of Ur, about 4,000 years old; and further south, in the marshes where the two rivers meet, families still live in houses of woven reeds and travel the channels by narrow boat.",
+    "Baghdad has the Iraq Museum, the Friday book market on al-Mutanabbi Street, old tea houses and riverside restaurants on the Tigris. Najaf and Karbala hold the gold-domed shrines of Imam Ali and Imam Hussein, the holiest places of Shia Islam after Mecca and Medina, and draw millions of pilgrims; Samarra has a ninth-century spiral minaret. The Kurdistan Region in the north, run by its own regional government, has a different feel: Erbil's citadel on its mound above the modern city, the bazaars of Sulaymaniyah, and mountain roads to waterfalls, gorges and old villages such as Amedi on its cliff-top.",
+    "Domestic flights link Baghdad, Basra, Najaf, Erbil and Sulaymaniyah, and shared taxis run between cities. Roads have frequent checkpoints, so keep your passport to hand and never photograph them. The country runs mostly on cash, and outside the Kurdistan Region many visitors travel with a local guide or driver who knows the roads and the paperwork.",
+    "Many governments advise against all or most travel to Iraq, more strongly for some areas than others. Conditions can change quickly, so check your own government's current advice before you plan a trip, and again before you go."
+  ],
+  "whenToGo": {
+    "stripLabel": "Baghdad and the middle of the country, from Babylon to Samarra. The Kurdistan Region and the far south differ, and each has a strip of its own below.",
+    "months": ["good", "good", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "good", "best", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Mild days in Baghdad, around 16°C, and cold nights that can touch freezing, with occasional rain. The southern marshes and Basra are at their most pleasant, while the Kurdish mountains are under snow."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "The best season: green fields, wild flowers in the north and days in the mid-20s in March and April. Newroz brings bonfires and picnics to Kurdistan. By late May Baghdad is close to 40°C."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8, 9],
+        "text": "Extreme heat: Baghdad passes 44°C on most July and August days, Basra is hotter and more humid, and dust storms can close airports. Iraqis who can escape head for the mountains round Duhok and Rawanduz."
+      },
+      {
+        "name": "Autumn",
+        "months": [10, 11],
+        "text": "October starts hot and cools steadily; November brings clear, warm days and cool evenings, good for long days at the ancient sites."
+      }
+    ],
+    "weather": "The middle and south have a hot desert climate, with long, rainless summers that are among the hottest anywhere on Earth, and short, mild winters. What little rain falls comes between November and April. The Kurdistan Region is higher and greener, with real winters: rain in the valleys, snow on the mountains and summers that are hot in Erbil but fresher in the hills.",
+    "festivals": [
+      {
+        "name": "Newroz",
+        "place": "The Kurdistan Region, and a holiday across Iraq",
+        "when": "21 March",
+        "months": [3],
+        "text": "The Kurdish New Year and the start of spring. Families picnic in the hills in their best traditional clothes, and fires are lit on the eve; in the town of Akre, people carry torches up the mountainside above the houses."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Iraq",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "A month of fasting from dawn to sunset, with quiet days, busy nights and tables of food at sunset. Most restaurants close by day outside hotels. Three or more days of Eid al-Fitr follow, with new clothes and family visits."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Iraq",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Sheep are bought for the sacrifice in the days before, families visit each other, offices and many shops close for several days, and roads and flights are full."
+      },
+      {
+        "name": "Ashura",
+        "place": "Karbala, and Shia towns and neighbourhoods across Iraq",
+        "when": "On 10 Muharram, in the first month of the Islamic year: in 2027, in June",
+        "months": [6],
+        "text": "The day Shia Muslims mourn the death of Imam Hussein at Karbala in 680. Black banners go up, processions and passion plays fill the streets, and Karbala is crowded with pilgrims."
+      },
+      {
+        "name": "Arbaeen",
+        "place": "From Najaf, Basra and elsewhere to Karbala",
+        "when": "Forty days after Ashura: in 2027, in July",
+        "months": [7],
+        "text": "One of the largest gatherings in the world: millions of pilgrims walk to Karbala, many of them the 80 km from Najaf. Along the way, roadside tents (mawakib) give walkers food, tea and a place to sleep, free of charge. Roads in the south are closed or jammed for days."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The Kurdistan Region",
+        "months": ["good", "good", "good", "best", "best", "good", "avoid", "avoid", "good", "best", "best", "good"],
+        "text": "Erbil, Sulaymaniyah and Duhok, and the mountains along the Turkish and Iranian borders. Spring is green and full of flowers; summers are hot in the cities, over 40°C in Erbil, but cooler in the hills. Winters are cold and wet, and mountain roads can close with snow."
+      },
+      {
+        "name": "Basra and the marshes",
+        "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+        "text": "The far south is hot and humid near the Gulf, close to 50°C on the worst summer days. Winter is the time to go: mild, sunny and the season for birds on the marshes, where boats glide between the reed islands."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"As-salamu alaykum\" is the greeting everywhere; \"hala\" or \"hala wallah\" is a warmer welcome. Iraqis are famous for hospitality, and a visitor is often offered tea, a meal or a lift, and may find the bill already paid. Men shake hands and friends kiss on the cheeks; between men and women, wait for the woman to offer her hand. In the Kurdistan Region, \"silaw\" is hello in Kurdish.",
+    "etiquette": [
+      "Never photograph checkpoints, soldiers, police or government buildings, and carry your passport at all times.",
+      "At the shrines of Najaf, Karbala and Baghdad's Kadhimiya, women must wear a black abaya, often lent at the entrance, and everyone leaves their shoes at the door. Non-Muslims may be asked to stay out of the inner sanctuaries.",
+      "Accept the tea you're offered: turning down hospitality can seem cold. Paying for a host's meal is hard; offer, but don't insist too long.",
+      "Eat, give and take with your right hand.",
+      "Friday is the main day of prayer, and many shops and offices stay shut until afternoon; Saturday is the second day of the weekend."
+    ],
+    "tipping": "Not expected in tea houses or cheap restaurants. In better restaurants about 10% is kind, and guides and drivers expect a tip at the end of a tour. Taxi fares are agreed before the ride, so there's nothing to add.",
+    "dress": "Conservative. Men wear long trousers; women cover their arms and legs, and in Najaf, Karbala and other religious towns they should wear a headscarf and loose, long clothes. Erbil and Sulaymaniyah are more relaxed. Pack warm layers for winter, especially in the north.",
+    "food": [
+      {
+        "name": "Masgouf",
+        "text": "Iraq's national dish: a river carp split open and grilled slowly beside a wood fire, served with flatbread, pickles and onions. Baghdad's riverside restaurants have made it for generations."
+      },
+      {
+        "name": "Dolma",
+        "text": "Vine leaves, onions, peppers and courgettes stuffed with rice and meat, cooked tightly packed in a pot with a sour sauce, then turned out whole onto a tray."
+      },
+      {
+        "name": "Kubba",
+        "text": "Shells of bulgur or ground rice filled with spiced minced meat. Mosul's version is a large, flat disc; elsewhere they're fried torpedoes or dumplings simmered in soup."
+      },
+      {
+        "name": "Geymar and kahi",
+        "text": "The classic Baghdad breakfast: thick clotted cream from buffalo milk, spread on flaky, syrup-soaked pastry or bread and drizzled with date syrup or honey."
+      },
+      {
+        "name": "Tashreeb",
+        "text": "Pieces of flatbread soaked in a broth of lamb or chicken with chickpeas and dried lime, a warming dish for cold mornings."
+      },
+      {
+        "name": "Chai",
+        "text": "Strong black tea, very sweet, served in small waisted glasses (istikan) at every meeting, shop and roadside stop."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Iraqi Arabic)",
+      "intro": "English is limited outside hotels and among older people. In the Kurdistan Region, Kurdish comes first: \"choni?\" (how are you?) and \"supas\" (thank you) are welcome there.",
+      "items": [
+        { "phrase": "As-salamu alaykum (السلام عليكم)", "say": "as-sa-LAA-mu a-LAY-kum", "meaning": "Peace be upon you (hello)" },
+        { "phrase": "Shaku maku? (شكو ماكو)", "say": "SHA-koo MA-koo", "meaning": "What's new? (a very Iraqi hello)" },
+        { "phrase": "Kullish zein (كلش زين)", "say": "KUL-lish ZAYN", "meaning": "Very good" },
+        { "phrase": "Mashkoor (مشكور)", "say": "mash-KOOR", "meaning": "Thanks" },
+        { "phrase": "Tfaddal (تفضل)", "say": "TFAD-dal", "meaning": "Please, go ahead; help yourself (to a man)" },
+        { "phrase": "Beesh? (بيش)", "say": "BEESH", "meaning": "How much?" },
+        { "phrase": "Aku / maku (اكو / ماكو)", "say": "A-koo / MA-koo", "meaning": "There is / there isn't" },
+        { "phrase": "Allah wiyak (الله وياك)", "say": "al-LAH WEE-yak", "meaning": "Goodbye (\"God be with you\")" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q796",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Iraqi dinar (IQD). Cash is used for almost everything, and foreign cards work only in some hotels and larger shops.",
+        "sources": [{ "property": "P38", "values": ["Q193094"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic and Kurdish, both official. Kurdish is the main language in the Kurdistan Region; Turkmen, Syriac and Armenian are spoken by smaller communities.",
+        "sources": [{ "property": "P37", "values": ["Q13955", "Q36368"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C (two round pins) and G (three rectangular pins, as in the UK), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q1528507", "Q60740126"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Arabia Standard Time, UTC+3, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q63285939"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for all emergencies; also 104 for police, 115 for fire and 122 for ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q25648903", "Q25648855", "Q25648805", "Q25648812"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+964",
+        "sources": [{ "property": "P474", "values": ["+964"] }]
+      }
+    ]
+  }
+}

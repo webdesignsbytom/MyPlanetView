@@ -4,7 +4,7 @@ import { COUNTRIES } from '@/utils/map/countries';
 import { COUNTRY_LABEL_WIDTH } from '@/utils/map/countryStyle';
 import { UK_NATION_LABEL_WIDTH } from '@/utils/map/ukNationShapes';
 // Utils
-import { badgeRadius } from '@/utils/map/badges';
+import { badgeRadiusFor } from '@/utils/map/badges';
 import { isAntarctic } from '@/utils/map/specialPlaces';
 
 // Roughly how wide a character is, as a share of the font size (Poppins, medium)
@@ -37,23 +37,23 @@ const outsideFrom = (width) => (width ? Math.min(OUTSIDE_LATEST, Math.max(OUTSID
 function CountryNameLabels({ zoom, visitsByCode, showAntarctica = true, splitUk = false }) {
   const fontSize = 10 / Math.sqrt(zoom) / Math.max(zoom / 4, 1);
   const minSize = Math.min(fontSize, Math.max(fontSize * MIN_SHRINK, MIN_SCREEN_SIZE / zoom));
-  const radius = badgeRadius(zoom);
   return (
     <g className='pointer-events-none fill-map-ink font-medium' fontSize={fontSize} textAnchor='middle' aria-hidden='true'>
       {COUNTRIES.map((country) => {
         const width = splitUk
           ? country.code !== 'GB' && (COUNTRY_LABEL_WIDTH[country.code] ?? UK_NATION_LABEL_WIDTH[country.code])
           : COUNTRY_LABEL_WIDTH[country.code];
-        // A micro-state drawn as a dot: a country (not a special place or a UK nation) with no shape
-        const dotted = !country.kind && COUNTRY_LABEL_WIDTH[country.code] == null;
+        // Drawn as a dot: a micro-state, or a region too small for a shape (Goa); never a
+        // special place or a UK nation
+        const dotted = (!country.kind || country.kind === 'REGION') && COUNTRY_LABEL_WIDTH[country.code] == null;
         if ((!width && !dotted) || (!showAntarctica && isAntarctic(country.code))) return null;
 
         const inside = width ? Math.min(fontSize, width / (country.name.length * CHAR_WIDTH)) : 0;
         const outside = inside < minSize;
         if (outside && zoom < outsideFrom(width)) return null;
         const size = outside ? minSize : inside;
-        const badge = HAS_BADGE[visitsByCode?.[country.code]] ? radius : 0;
-        const y = country.pinY + (outside ? badge + Math.min((width || 0) * 0.45, 4) + size * 1.1 : badge ? radius + size * 0.9 : size * 0.35);
+        const badge = HAS_BADGE[visitsByCode?.[country.code]] ? badgeRadiusFor(country.code, zoom) : 0;
+        const y = country.pinY + (outside ? badge + Math.min((width || 0) * 0.45, 4) + size * 1.1 : badge ? badge + size * 0.9 : size * 0.35);
         return (
           <text key={country.code} x={country.pinX} y={y} fontSize={size < fontSize ? size : undefined}>
             {country.name}

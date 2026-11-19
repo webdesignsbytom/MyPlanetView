@@ -1,0 +1,159 @@
+{
+  "code": "VI",
+  "slug": "united-states-virgin-islands",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Good day", "Virgin Islands", "Welcome"],
+  "summary": "Danish towns under the US flag, St John's national park and St Croix's rum.",
+  "overview": [
+    "The US Virgin Islands are an American territory of three main islands, St Thomas, St John and St Croix, plus little Water Island and many cays, east of Puerto Rico. Denmark ruled them for about two centuries as the Danish West Indies before selling them to the United States in 1917, so the towns have Danish street names, old Danish forts and arcaded stone warehouses, while the money, the post and the cars are American. Traffic, though, keeps to the left.",
+    "St Thomas is the busiest island. Charlotte Amalie, the capital, is one of the Caribbean's main cruise ports, its old warehouses now shops, with the 99 Steps climbing the hill behind them; Magens Bay, over the ridge, is a long, sheltered curve of sand. St John, a short ferry ride from Red Hook on St Thomas, is more than half national park, with forest trails to old sugar mills, an underwater snorkelling trail at Trunk Bay, and the calm bays of Cinnamon and Maho.",
+    "St Croix, the largest island, lies about 65 km to the south and feels like a place apart: two Danish towns, Christiansted and Frederiksted, the Cruzan and Captain Morgan rum distilleries, and Buck Island, a protected reef a short boat ride offshore. Point Udall, at its eastern tip, is often called the easternmost point of the United States, and people gather there for the first sunrise of the year. Ferries and small planes link the islands; on each one, open-sided safari taxis on fixed routes and hire cars are the usual way round."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "avoid", "good", "good", "best"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "The trade winds blow steadily, rain is light and days reach about 28–29°C: the high season, when the islands are busiest and rooms dearest."
+      },
+      {
+        "name": "Early summer",
+        "months": [5, 6, 7, 8],
+        "text": "Hotter and more humid, with calm seas, warm water and more frequent showers. The hurricane season starts in June, though the riskiest weeks come later, and St John's festival peaks on 4 July."
+      },
+      {
+        "name": "Storm season",
+        "months": [9, 10, 11],
+        "text": "The rainiest weeks and the peak of the hurricane season. Some inns and restaurants shut for part of September or October, and by November things are quieter again."
+      }
+    ],
+    "weather": "Nights are about 24°C and days 29–32°C all year, with a breeze off the Atlantic on most days. St Thomas and St John are steep and catch more showers; St Croix is flatter, with a dry, scrubby east end and a greener, wetter west. August to November is the rainiest stretch and the peak of the storm season; Irma and Maria both struck in September 2017, two weeks apart.",
+    "festivals": [
+      {
+        "name": "Crucian Christmas Festival",
+        "place": "Christiansted and Frederiksted, St Croix",
+        "when": "Usually from early December to around Three Kings Day, 6 January",
+        "months": [12, 1],
+        "text": "St Croix's carnival: a festival village of food stalls and music, J'ouvert, calypso contests and parades led by mocko jumbies, stilt dancers in bright costumes."
+      },
+      {
+        "name": "Transfer Day",
+        "place": "Across the islands",
+        "when": "31 March",
+        "months": [3],
+        "text": "A public holiday for the anniversary of the handover from Denmark to the United States in 1917."
+      },
+      {
+        "name": "Virgin Islands Carnival",
+        "place": "Charlotte Amalie, St Thomas",
+        "when": "Usually in April or early May, after Easter",
+        "months": [4, 5],
+        "text": "St Thomas's carnival: calypso and pageants, a food fair, J'ouvert and two big parades of costumed troupes and steel bands."
+      },
+      {
+        "name": "St John Festival",
+        "place": "Cruz Bay, St John",
+        "when": "Usually from mid-June to 4 July",
+        "months": [6, 7],
+        "text": "St John's carnival builds through June to a parade and fireworks on 4 July, US Independence Day and the island's own big celebration."
+      },
+      {
+        "name": "Emancipation Day",
+        "place": "Frederiksted, St Croix, and across the islands",
+        "when": "3 July",
+        "months": [7],
+        "text": "Marks 3 July 1848, when enslaved people rose up on St Croix and marched on Frederiksted, and the Danish governor declared them free the same day."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Virgin Islanders take greetings seriously: say \"Good morning\", \"Good afternoon\" or, after dark, \"Good night\", which works as a greeting here, before any question, in shops, taxis and offices. Leaving it out is taken as rudeness. A handshake is usual on meeting.",
+    "etiquette": [
+      "Traffic keeps left, but the cars are American, with the wheel on the left: take extra care at junctions and on the steep, twisting roads of St Thomas and St John.",
+      "Safari taxis run along fixed routes for a set fare; private taxis charge per person by destination, so ask the price before you get in.",
+      "Sunscreens containing oxybenzone and similar chemicals that harm coral are banned in the territory: bring a reef-safe one.",
+      "On St John, stay on the marked trails and leave the old ruins as you find them."
+          ],
+    "tipping": "American habits apply: leave 15–20% in restaurants unless service is already on the bill, and tip taxi drivers, guides, boat crews and hotel staff.",
+    "dress": "Shorts, T-shirts and sandals do for most places, with a cover-up over swimwear in shops and restaurants. Walking shoes for St John's trails, which are rocky and steep in places.",
+    "food": [
+      {
+        "name": "Fungi",
+        "text": "Cornmeal cooked with okra into a firm, smooth mound, the islands' classic side dish, served with boiled fish or stew. It's said \"FOON-jee\"."
+      },
+      {
+        "name": "Pates",
+        "text": "Fried pastries filled with salt fish, beef, chicken or conch, sold from roadside stands and bakeries."
+      },
+      {
+        "name": "Kallaloo",
+        "text": "A thick stew of local greens, okra, seafood and salted meat."
+      },
+      {
+        "name": "Maubi",
+        "text": "A home-brewed drink fermented from the bark of the maubi tree with spices, bittersweet and refreshing."
+      },
+      {
+        "name": "Crucian rum",
+        "text": "Cruzan and Captain Morgan rums are both distilled on St Croix, and both distilleries can be visited."
+      }
+    ],
+    "phrases": {
+      "language": "Virgin Islands English",
+      "intro": "English is everyone's language here, spoken with a lilting Virgin Islands accent, and Spanish is widely spoken on St Croix. Listen out for these.",
+      "items": [
+        { "phrase": "Charlotte Amalie", "say": "SHAR-lot ah-MAHL-yah", "meaning": "The capital, on St Thomas" },
+        { "phrase": "Christiansted", "say": "KRIS-chun-sted", "meaning": "St Croix's main town" },
+        { "phrase": "Crucian", "say": "KROO-shun", "meaning": "Someone or something from St Croix" },
+        { "phrase": "Good night", "meaning": "A greeting after dark, not only a goodbye" },
+        { "phrase": "Fungi", "say": "FOON-jee", "meaning": "The cornmeal and okra side dish" },
+        { "phrase": "Mocko jumbie", "say": "MOK-oh JUM-bee", "meaning": "A stilt dancer at carnival, said to watch over the town" },
+        { "phrase": "Continental", "meaning": "What islanders call a mainland American" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q11703",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar (US$)",
+        "sources": [{ "property": "P38", "values": ["Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "English. Spanish is widely spoken on St Croix, and Virgin Islands Creole among islanders.",
+        "sources": [{ "property": "P37", "values": ["Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as on the US mainland), 110 V",
+        "sources": [{ "property": "P2884", "values": ["110"] }],
+        "note": "Wikidata's item has no plug statement; the page gives the American sockets used across the islands."
+      },
+      {
+        "key": "driving",
+        "text": "On the left, unusually for the US, in cars with the steering wheel on the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Atlantic Standard Time, UTC−4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5762"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911",
+        "sources": [{ "property": "P2852", "values": ["Q533806"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+1 340",
+        "sources": [{ "property": "P474", "values": ["+1340"] }]
+      }
+    ]
+  }
+}

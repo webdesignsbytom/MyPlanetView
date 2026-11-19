@@ -1,0 +1,151 @@
+{
+  "code": "WS",
+  "slug": "samoa",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Tālofa lava", "Sāmoa", "Afio mai"],
+  "summary": "Beach fales, lava fields and swimming holes on two volcanic islands that keep Samoan custom close.",
+  "overview": [
+    "Samoa is two large volcanic islands, Upolu and Savai'i, and a few small ones, home to about 200,000 people who live mostly in villages along the coast. It became independent from New Zealand in 1962, the first Pacific island nation to do so in the 20th century, and fa'a Sāmoa, the Samoan way, still shapes everyday life: villages are run by councils of matai (chiefs), extended families share land and duties, and church fills Sunday.",
+    "Upolu has the capital, Apia, and most of the sights: the To Sua Ocean Trench, a deep swimming hole reached by a long wooden ladder; the white sand of Lalomanu on the south-east coast; the Papase'ea Sliding Rocks; and Vailima, the house where Robert Louis Stevenson spent his last years, with his grave on Mount Vaea above it. Savai'i, an hour's ferry crossing from Upolu's western tip, is bigger, quieter and wilder, with the black lava fields of Saleaula, left by eruptions between 1905 and 1911, the Alofaaga blowholes at Taga and the Afu Aau waterfall.",
+    "Many visitors stay in beach fales: open-sided huts with a mattress, a mosquito net and woven blinds, often with breakfast and dinner included. Local buses, wooden-bodied and loud with music, run between the villages and Apia but follow no printed timetable. Samoa switched to driving on the left in 2009, and at the end of 2011 it moved to the west side of the international date line, skipping 30 December that year altogether."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season",
+        "months": [5, 6, 7, 8, 9, 10],
+        "text": "Steady south-east trade winds, blue skies and highs around 29°C, with cooler nights near 22°C. The easiest months for driving round Savai'i, swimming on the south coast and sleeping in an open fale."
+      },
+      {
+        "name": "Wet season",
+        "months": [11, 12, 1, 2, 3, 4],
+        "text": "Steamier, with heavy rain on many days and the chance of a cyclone, most often between December and March. December is busy, as Samoans living overseas fly home for Christmas."
+      }
+    ],
+    "weather": "Samoa stays warm all year: coastal afternoons reach 29–31°C, and the hills above Apia are a little fresher. Apia's yearly total is about 2,900 mm, the greater part between November and April, and the mountains and the coasts facing the south-east trade winds catch more. Cyclones are possible in the wet season. The sea stays around 27–29°C in every month.",
+    "festivals": [
+      {
+        "name": "Independence Day",
+        "place": "Apia and across Samoa",
+        "when": "1 June",
+        "months": [6],
+        "text": "Independence came on 1 January 1962, but the national celebrations are held in June, with a parade and ceremonies in Apia, singing and dancing by village groups, and government offices and most businesses closed."
+      },
+      {
+        "name": "Teuila Festival",
+        "place": "Apia",
+        "when": "Usually in early September, for about a week",
+        "months": [9],
+        "text": "Apia's festival, named after the red ginger flower: fire-knife dancing, the Miss Samoa pageant, choir and dance contests, and stalls of food and crafts along the waterfront."
+      },
+      {
+        "name": "Aso Sā Pa'epa'e (White Sunday)",
+        "place": "Churches across Samoa",
+        "when": "The second Sunday of October; the Monday after is a public holiday",
+        "months": [10],
+        "text": "Families go to church in white, and the children take over the services with recitations, hymns and short plays they have rehearsed for weeks."
+      },
+      {
+        "name": "Palolo rising",
+        "place": "Reefs around Upolu and Savai'i",
+        "when": "Usually in October or November, about a week after the full moon",
+        "months": [10, 11],
+        "text": "On one or two nights a year, before dawn, reef worms called palolo release their long spawning tails into the sea, and villagers wade out with torches and nets to catch them. They're eaten raw, fried with onion or spread on toast, and sell out fast."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Tālofa lava\" is the full, polite hello, and it comes with a smile and a handshake; visitors are often welcomed with \"Afio mai\". A quick lift of the eyebrows often means yes, which newcomers can easily miss. Chiefly titles come before people's names, and formal speeches follow a fixed order of courtesy, so don't be surprised if a welcome takes a while.",
+    "etiquette": [
+      "Most villages keep sā, a short prayer time around dusk, announced by a bell, a gong or a blown conch. Stop where you are, keep quiet and don't walk, drive or swim through the village until a second signal ends it.",
+      "At an 'ava (kava) ceremony, when the cup is handed to you, tip a few drops onto the ground, say \"Manuia\", then drink it all.",
+      "Beaches, waterfalls and swimming holes belong to families or villages, and most charge a small entry fee at the gate or the nearest house.",
+      "On Sunday, avoid swimming near villages and anything noisy; many shops shut and buses are scarce.",
+      "When people are sitting in a fale, sit down before you talk rather than standing over them, and tuck your feet in rather than pointing them at anyone."
+    ],
+    "tipping": "Not expected: looking after guests is part of Samoan custom, and leaving money can embarrass people. If you want to thank staff, some hotels keep a shared staff fund.",
+    "dress": "Cover shoulders and knees in villages, in Apia and at church; men as well as women often wear a lavalava, a wrapped cloth. Swimwear belongs at resorts and beaches away from village houses: at village pools, swim in a T-shirt and shorts or a lavalava. Reef shoes help on lava and coral.",
+    "food": [
+      {
+        "name": "Umu",
+        "text": "The Sunday oven: stones heated on the ground, then covered with food and banana leaves. Taro, breadfruit, pork and fish come out in time for the to'ona'i, the big meal after church."
+      },
+      {
+        "name": "Palusami",
+        "text": "Young taro leaves folded round thick coconut cream, sometimes with onion or corned beef, and baked in the umu until soft, rich and smoky."
+      },
+      {
+        "name": "Koko Samoa",
+        "text": "A drink made from Samoa's own cocoa beans, roasted and pounded into a paste, then stirred into hot water with sugar. Served at breakfast, it's strong, gritty and nothing like milky cocoa."
+      },
+      {
+        "name": "Supo esi",
+        "text": "Ripe papaya cooked with coconut cream and thickened with starch into a sweet, warm pudding, often eaten for breakfast."
+      },
+      {
+        "name": "Pani popo",
+        "text": "Soft bread rolls baked in a sticky coconut sauce, sold warm in Apia's bakeries."
+      }
+    ],
+    "phrases": {
+      "language": "Samoan",
+      "intro": "English is widely understood, especially in Apia, but Samoan is almost everyone's first language.",
+      "items": [
+        { "phrase": "Tālofa lava", "say": "tah-LOH-fah LAH-vah", "meaning": "Hello (polite)" },
+        { "phrase": "Afio mai", "say": "ah-FEE-oh mai", "meaning": "Welcome (respectful)" },
+        { "phrase": "Fa'afetai tele lava", "say": "fah-ah-feh-TAI TEH-leh LAH-vah", "meaning": "Thank you very much" },
+        { "phrase": "Fa'amolemole", "say": "fah-ah-moh-leh-MOH-leh", "meaning": "Please" },
+        { "phrase": "E fia le tau?", "say": "eh FEE-ah leh TOW", "meaning": "How much is it?" },
+        { "phrase": "Lelei", "say": "leh-LAY", "meaning": "Good" },
+        { "phrase": "Manuia!", "say": "mah-noo-EE-ah", "meaning": "Cheers! (said before drinking)" },
+        { "phrase": "Tōfā soifua", "say": "toh-FAH soy-FOO-ah", "meaning": "Goodbye (formal)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q683",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Samoan tālā (WS$, WST), divided into 100 sene. Cards work in Apia's hotels and larger shops; take cash to Savai'i and the villages.",
+        "sources": [{ "property": "P38", "values": ["Q4588"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Samoan and English, both official. Samoan is used in daily life, parliament and church; English in business and much of schooling.",
+        "sources": [{ "property": "P37", "values": ["Q34011", "Q1860"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type I (two flat pins in a V, as in Australia and New Zealand), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q2335539"] },
+          { "property": "P2884", "values": ["230"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left, since September 2009 (on the right before then)",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+13, all year (summer time was dropped in 2021). American Samoa, on the other side of the date line, shows the same clock time a day earlier.",
+        "sources": [{ "property": "P421", "values": ["Q7118", "Q63285987"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for emergencies; 995 for the police, 994 for fire, 996 for an ambulance",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q25267554", "Q25648901", "Q25648902"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+685",
+        "sources": [{ "property": "P474", "values": ["+685"] }]
+      }
+    ]
+  }
+}

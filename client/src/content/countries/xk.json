@@ -1,0 +1,173 @@
+{
+  "code": "XK",
+  "slug": "kosovo",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Tungjatjeta", "Kosova", "Kosovo"],
+  "summary": "Ottoman Prizren, frescoed monasteries and the Rugova peaks, in one of Europe's youngest countries.",
+  "overview": [
+    "Kosovo is a small, landlocked country in the Balkans, ringed by mountains and bordered by Albania, North Macedonia, Montenegro and Serbia. It declared independence from Serbia in 2008 and has its own government, though Serbia still regards it as part of its territory. Most people are Albanians; Serbs live mainly in the north and in towns and villages around the old monasteries, and there are smaller Bosniak, Turkish and Roma communities. It has one of the youngest populations in Europe, and its towns feel busy and young, with cafés full until late.",
+    "Prizren, in the south, is the favourite town: an Ottoman centre with a stone bridge over the Lumbardhi river, mosques, Orthodox churches and a hilltop fortress with wide views. Pristina, the capital, is busy and unpolished, with the National Library, a building of white domes under a metal lattice, the Newborn monument and a long café-lined pedestrian street, Mother Teresa Boulevard. The Serbian Orthodox monasteries of Visoki Dečani, the Patriarchate of Peć and Gračanica, with their medieval frescoes, are listed by UNESCO, and Peja (Peć) is the gateway to the Rugova Gorge and hiking in the mountains along the Albanian and Montenegrin borders. Many places have both an Albanian and a Serbian name.",
+    "Buses link all the towns often and cheaply. Most visitors fly into Pristina or come by road from Albania, North Macedonia or Montenegro. Serbia doesn't accept Kosovo's own border crossings as international ones, which can make travelling straight on from Kosovo into Serbia difficult, so check the current rules before planning that route. Some governments also advise extra care in the north, around Mitrovica."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold, with snow and frequent hard frosts; on still days Pristina's air can be thick with smoke from coal and stoves. The mountains are deep in snow."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "Changeable, with rain and late snow on the heights into April, then green valleys, blossom and mild days by May."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Warm and mostly dry, about 27–30°C by day, cooler in the Rugova mountains. In July and August the large diaspora comes home from Germany, Switzerland and elsewhere: roads, cafés and wedding halls fill, and Dokufest takes over Prizren."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "September is settled and mild, the season for the grape harvest around Rahovec and for roasting red peppers to make ajvar. October cools, and November is grey and wet."
+      }
+    ],
+    "weather": "Continental, shaped by the mountains around the country: warm, dry summers around 28°C by day, and cold winters near freezing with regular snow. Rain is spread through the year, with a little more in late spring and late autumn. Most towns lie at about 300–700 m, and the highest peaks, over 2,500 m on the borders with Albania and Montenegro, keep snow until early summer.",
+    "festivals": [
+      {
+        "name": "Christmas, twice",
+        "place": "Across Kosovo",
+        "when": "25 December and 7 January",
+        "months": [12, 1],
+        "text": "Catholic Christmas and Orthodox Christmas are both public holidays, kept by the country's Catholic Albanians and its Serbs."
+      },
+      {
+        "name": "Independence Day",
+        "place": "Pristina and across Kosovo",
+        "when": "17 February",
+        "months": [2],
+        "text": "A public holiday marking the declaration of 2008. Crowds gather in Pristina around the Newborn monument, whose giant letters are repainted with a new design each year."
+      },
+      {
+        "name": "Ramadan and Fitër Bajram",
+        "place": "Across Kosovo",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Many Kosovars fast from dawn to dusk, though daily life carries on much as usual and cafés stay open. The end of the fast is a public holiday, with family visits and baklava."
+      },
+      {
+        "name": "Kurban Bajram",
+        "place": "Across Kosovo",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice, a public holiday, when families gather and share meat with neighbours and those in need."
+      },
+      {
+        "name": "Dokufest",
+        "place": "Prizren",
+        "when": "Usually in early August, for about a week",
+        "months": [8],
+        "text": "An international festival of documentary and short films, screened in cinemas and open-air venues around the old town, with concerts late into the night."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake on meeting, and kisses on the cheeks among friends. \"Tungjatjeta\" is the formal Albanian hello and \"Mirëdita\" good day; in Serbian areas, \"Zdravo\" or \"Dobar dan\". Expect plenty of questions about where you're from: guests are treated as honoured, and a coffee or a meal offered by a host is meant sincerely.",
+    "etiquette": [
+      "Order a macchiato (makiato): Kosovars take great pride in their coffee and cafés are where life happens.",
+      "Places, and the language itself, are sensitive: use the name the people you're with use (Peja or Peć, Mitrovicë or Mitrovica), and don't start political talk yourself.",
+      "Mosques and monasteries welcome visitors: cover shoulders and knees, women bring a scarf for mosques, and be quiet during services.",
+      "Bring your passport when visiting the Serbian Orthodox monasteries, some of which have guards at the gate.",
+      "Shoes come off at the door of a home."
+    ],
+    "tipping": "Round up or leave about 10% in restaurants; it's appreciated, not demanded.",
+    "dress": "Pristina's young crowd dresses smartly, so pack something beyond hiking clothes. Cover up for religious buildings, and bring warm clothes for winter and the mountains.",
+    "food": [
+      {
+        "name": "Flija",
+        "text": "Layer upon layer of thin batter brushed with cream, baked for hours under a metal lid heaped with hot embers; a dish for gatherings, eaten with yogurt, pickles or honey."
+      },
+      {
+        "name": "Pite",
+        "text": "Big round pies of thin pastry filled with cheese, spinach, leek or meat, cut in wedges for breakfast or lunch."
+      },
+      {
+        "name": "Pasul",
+        "text": "Slow-cooked white bean stew, often with smoked meat, scooped up with bread."
+      },
+      {
+        "name": "Ajvar",
+        "text": "A relish of roasted red peppers, sometimes with aubergine, made in big batches each autumn and eaten with bread and cheese."
+      },
+      {
+        "name": "Makiato",
+        "text": "Espresso with a cap of foamed milk, made with care in every café and a point of national pride."
+      },
+      {
+        "name": "Birra Peja",
+        "text": "The local lager, brewed in Peja and poured in bars across the country."
+      }
+    ],
+    "phrases": {
+      "language": "Albanian",
+      "intro": "Albanian is spoken by most people and Serbian in Serb areas. Many young people speak English, and German is widely understood, thanks to the diaspora.",
+      "items": [
+        { "phrase": "Tungjatjeta", "say": "toon-jaht-YEH-tah", "meaning": "Hello (formal)" },
+        { "phrase": "Si jeni?", "say": "see YEH-nee", "meaning": "How are you?" },
+        { "phrase": "Faleminderit shumë", "say": "fah-leh-meen-DEH-reet SHOO-muh", "meaning": "Thank you very much" },
+        { "phrase": "Ju lutem", "say": "yoo LOO-tem", "meaning": "Please" },
+        { "phrase": "Një makiato, ju lutem", "say": "nyuh mah-kee-AH-toh yoo LOO-tem", "meaning": "A macchiato, please" },
+        { "phrase": "Sa kushton?", "say": "sah koosh-TOHN", "meaning": "How much is it?" },
+        { "phrase": "Hvala (Хвала)", "say": "HVAH-lah", "meaning": "Thank you (in Serbian)" },
+        { "phrase": "Mirupafshim", "say": "meer-oo-PAHF-sheem", "meaning": "Goodbye" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q1246",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Euro (€), adopted without being part of the eurozone",
+        "sources": [{ "property": "P38", "values": ["Q4916"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Albanian and Serbian, both official; Turkish, Bosnian and Romani have official status in some municipalities.",
+        "sources": [{ "property": "P37", "values": ["Q8748", "Q9299"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and F (two round pins), 230 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1123613"] },
+          { "property": "P2884", "values": ["230"] }
+        ],
+        "note": "Wikidata lists only the Schuko socket (Type F); the two-pin Europlug (Type C) fits the same sockets, so the page names both."
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Central European Time, UTC+1; UTC+2 in summer (late March to late October)",
+        "sources": [{ "property": "P421", "values": ["Q6655", "Q6723"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for all emergencies",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+383",
+        "sources": [{ "property": "P474", "values": ["+383"] }]
+      }
+    ]
+  }
+}

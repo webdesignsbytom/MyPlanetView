@@ -1,0 +1,200 @@
+{
+  "code": "PE",
+  "slug": "peru",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Allillanchu", "Perú"],
+  "summary": "Machu Picchu above the cloud forest, Cusco's Inca walls, Amazon river lodges and Lima's ceviche.",
+  "overview": [
+    "Peru is three countries in one: a desert coast, the high Andes and the Amazon rainforest, which covers more than half its land. Most first trips are built around Machu Picchu, the Inca citadel on a ridge above the Urubamba River, reached by train to Aguas Calientes and a bus up the hill, or on foot along the classic four-day Inca Trail. Entry to the site is by timed ticket and the trail's permits are limited, so both sell out months ahead in the dry season; the trail closes every February for maintenance. Cusco, the old Inca capital at about 3,400 m, has colonial churches built on fitted Inca stone walls, and the Sacred Valley below it has the terraced ruins of Pisac and Ollantaytambo and the salt pans of Maras.",
+    "There's much more in the Andes. Arequipa is built of white volcanic stone beneath the cone of El Misti, a few hours from the Colca Canyon, where Andean condors ride the morning air. From Puno, boats go out on Lake Titicaca to the floating reed islands of the Uros and the weavers of Taquile. Huaraz is the base for trekking in the Cordillera Blanca, the highest tropical mountain range in the world.",
+    "On the coast, Lima is one of the great food cities of the world, with cliff-top parks in Miraflores and the old colonial centre. South of it come the Ballestas Islands, crowded with sea lions and seabirds, the sand dunes of Huacachina, and the Nazca Lines, giant figures scratched into the desert, best seen from a light aircraft. In the north lie the adobe city of Chan Chan and the royal tombs of Sipán. In the Amazon, Puerto Maldonado is the gateway to lodges in Tambopata, and Iquitos, which no road reaches, to river cruises.",
+    "Comfortable overnight buses link the cities, but the distances are huge and flights save days. Arrive in Cusco gently: spending the first nights in the lower Sacred Valley helps with the altitude. Protests occasionally block roads and railways, so keep some flexibility."
+  ],
+  "whenToGo": {
+    "stripLabel": "All three of Peru's worlds combined. The coast, the Andes and the Amazon each have their own seasons, shown in the strips below.",
+    "months": ["good", "good", "good", "best", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Rainy season",
+        "months": [12, 1, 2, 3],
+        "text": "Afternoon rain in the Andes, heaviest in January and February, when landslides can cut roads and the railway, and the Inca Trail is closed for all of February. Machu Picchu stays open and greener than ever. On the coast it's summer: Lima is sunny and warm and its beaches are busy. The Amazon is at its wettest."
+      },
+      {
+        "name": "Autumn",
+        "months": [4, 5],
+        "text": "The rains fade, the hills are still green, and the crowds of mid-year haven't arrived. Many think this the best time for Machu Picchu."
+      },
+      {
+        "name": "Dry season",
+        "months": [6, 7, 8, 9],
+        "text": "Cloudless days and dry paths in the Andes, with nights below freezing at altitude. The busiest months, when Inca Trail permits and Machu Picchu tickets go fastest. Lima lies under a grey, damp sky, and the Amazon is at its driest."
+      },
+      {
+        "name": "Spring",
+        "months": [10, 11],
+        "text": "Warm, mostly dry days, with the first showers in the Andes by November and fewer visitors than in midsummer."
+      }
+    ],
+    "weather": "The coast is a desert where it almost never rains. Lima has warm, sunny summers from about December to April, around 26–28°C, and from June to October a low grey sky and damp air at about 15–19°C. The north coast is sunnier and warmer all year. In the Andes, days are bright and mild, around 18–20°C in Cusco, and nights cold, often below freezing in the dry season from May to September; the rains fall from about November to March. The Amazon is hot and humid all year, with most rain from December to March; in the south, cold winds from Patagonia sometimes chill it for a few days in winter.",
+    "festivals": [
+      {
+        "name": "Virgen de la Candelaria",
+        "place": "Puno",
+        "when": "Early February, around 2 February, for about two weeks",
+        "months": [2],
+        "text": "Puno fills with dancers and musicians in masks and glittering costumes, parading for the Virgin beside Lake Titicaca: one of South America's biggest dance festivals, recognised by UNESCO."
+      },
+      {
+        "name": "Semana Santa in Ayacucho",
+        "place": "Ayacucho",
+        "when": "The week up to Easter Sunday (28 March in 2027)",
+        "months": [3, 4],
+        "text": "The most famous Holy Week in Peru, with nightly candlelit processions through a city of more than thirty churches, carpets of flowers, and a great fair on Easter Sunday."
+      },
+      {
+        "name": "Corpus Christi",
+        "place": "Cusco",
+        "when": "60 days after Easter: 27 May in 2027",
+        "months": [5, 6],
+        "text": "Statues of the saints and the Virgin from Cusco's parishes are carried into the cathedral square and stay there for a week. Families eat chiriuchu, a cold feast of guinea pig, chicken, sausage, seaweed and corn cakes."
+      },
+      {
+        "name": "Inti Raymi",
+        "place": "Cusco",
+        "when": "24 June",
+        "months": [6],
+        "text": "A grand re-enactment of the Inca festival of the sun at the winter solstice, beginning at the Qorikancha temple and ending at the walls of Sacsayhuamán above the city. Cusco is fully booked for days around it."
+      },
+      {
+        "name": "Fiestas Patrias",
+        "place": "Across Peru",
+        "when": "28 and 29 July",
+        "months": [7],
+        "text": "Independence Day and the day after, public holidays with parades and the busiest week of the year for travel within Peru."
+      },
+      {
+        "name": "Señor de los Milagros",
+        "place": "Lima",
+        "when": "October, with the biggest processions usually around 18 and 28 October",
+        "months": [10],
+        "text": "Lima's great religious procession: crowds dressed in purple follow a heavy image of Christ through the streets for a whole day and night. Stalls sell turrón de Doña Pepa, an aniseed cake with sticky syrup and sprinkles."
+      }
+    ],
+    "regions": [
+      {
+        "name": "The coast",
+        "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "best"],
+        "text": "Lima, Paracas, Nazca and the north coast. Sunny and warm from about December to April; from May to November Lima and the south coast lie under grey cloud, cool but dry. The north coast, around Máncora, has sun almost all year."
+      },
+      {
+        "name": "The Andes",
+        "months": ["good", "avoid", "good", "best", "best", "best", "best", "best", "best", "best", "good", "good"],
+        "text": "Cusco, the Sacred Valley, Machu Picchu, Arequipa, Lake Titicaca and Huaraz. The dry months run from about April to October, with frosty nights; wet from about November to March. February is the wettest month, and the Inca Trail is closed throughout it."
+      },
+      {
+        "name": "The Amazon",
+        "months": ["good", "good", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+        "text": "Puerto Maldonado, Tambopata, Manu and Iquitos. Hot and sticky in every month. The drier months, about May to October, make trails easier and animals gather at the clay licks and rivers; from December to April, heavy rain brings high rivers, and around Iquitos boats can explore deep into the flooded forest."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "Peruvians shake hands and say \"Buenos días\"; between women, or a man and a woman, it's one kiss on the right cheek. Use \"usted\" with older people and anyone you don't know. In the Andes, many people speak Quechua or Aymara at home, and a greeting in Quechua, \"Allillanchu?\" (\"Are you well?\"), is a warm surprise.",
+    "etiquette": [
+      "In Cusco, women and children in traditional dress, often with a lamb or llama, pose for photos in return for a tip; ask first, and pay what's asked. Elsewhere, always ask before photographing people.",
+      "At Machu Picchu, follow the set routes and your ticket's entry time, and leave food and drones behind.",
+      "Peru allows coca leaves and tea, which help with the altitude, but most countries ban them: finish them before you fly home.",
+      "Avoid tap water, and ice in cheap places, and drop used toilet paper in the bin provided.",
+      "Haggling is expected at craft markets such as Pisac's, never in shops with marked prices.",
+      "Stay away from demonstrations, and allow spare days in case of strikes or road blockades."
+    ],
+    "tipping": "About 10% in restaurants that don't add a service charge. On treks, tip your guide, cook and porters at the end; the Inca Trail's porters carry heavy loads and rely on it.",
+    "dress": "Layers for the Andes: warm hat, gloves and a down jacket for nights and early starts, a waterproof for the rains, and strong sun protection at altitude. A jumper for Lima's grey winter. Long, light clothes and repellent for the Amazon, where lodges lend rubber boots.",
+    "food": [
+      {
+        "name": "Ceviche",
+        "text": "The national dish: raw white fish cured in lime juice with ají limo chilli and red onion, served with sweet potato and big kernels of Andean corn. Eat it at lunch, when cevicherías serve the day's catch, and drink the citrus juice left in the bowl, the leche de tigre."
+      },
+      {
+        "name": "Lomo saltado",
+        "text": "Strips of beef stir-fried in a wok with onion, tomato and soy sauce, served with chips and rice: a dish of chifa, the cooking of Peru's Chinese community."
+      },
+      {
+        "name": "Ají de gallina",
+        "text": "Shredded chicken in a creamy sauce of yellow chilli (ají amarillo), bread and walnuts, with rice, potato and olives."
+      },
+      {
+        "name": "Anticuchos",
+        "text": "Skewers of beef heart marinated in chilli, vinegar and spices, grilled over charcoal at evening street stalls."
+      },
+      {
+        "name": "Causa",
+        "text": "Layers of cold, chilli-yellow mashed potato filled with chicken, tuna or prawns and avocado. Peru grows thousands of potato varieties, and it shows."
+      },
+      {
+        "name": "Pisco sour and chicha morada",
+        "text": "The pisco sour, of grape brandy, lime, sugar and egg white, is the national cocktail. Chicha morada, a sweet, spiced drink of purple corn, is what children drink with lunch."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Peruvian)",
+      "intro": "Away from tourist businesses in Cusco and Lima, English is rarely heard. In the Andes, many people's first language is Quechua.",
+      "items": [
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAHN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "¿Dónde está …?", "say": "DON-deh es-TAH", "meaning": "Where is …?" },
+        { "phrase": "Al toque", "say": "ahl TOH-keh", "meaning": "Right away (slang)" },
+        { "phrase": "Pata", "say": "PAH-tah", "meaning": "Friend; mate (slang)" },
+        { "phrase": "Allillanchu?", "say": "ah-yee-YAHN-choo", "meaning": "Are you well? (Quechua greeting)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q419",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Peruvian sol (S/, PEN). Some hotels and tour firms quote and take US dollars.",
+        "sources": [{ "property": "P38", "values": ["Q204656"] }],
+        "note": "Wikidata's item is labelled nuevo sol, the currency's name until 2015; it is now simply the sol."
+      },
+      {
+        "key": "languages",
+        "text": "Spanish, with Quechua and Aymara also official where they are mainly spoken. Many Amazonian languages are spoken too.",
+        "sources": [{ "property": "P37", "values": ["Q1321", "Q5218", "Q4627"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (flat pins) and C (two round pins), 220 V; many sockets take both flat and round two-pin plugs",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456", "Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Peru Time, UTC−5, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5390", "Q7805356", "Q63286099"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "105 for police; 116 for the fire service; 106 for an ambulance (SAMU)",
+        "sources": [{ "property": "P2852", "values": ["Q25648856", "Q25648807", "Q4546664"] }],
+        "note": "Wikidata also lists 911, 111 and 117; the page gives the three numbers Peru's police, fire and ambulance services publish."
+      },
+      {
+        "key": "callingCode",
+        "text": "+51",
+        "sources": [{ "property": "P474", "values": ["+51"] }]
+      }
+    ]
+  }
+}

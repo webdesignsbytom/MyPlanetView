@@ -1,0 +1,160 @@
+{
+  "code": "TL",
+  "slug": "timor-leste",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Bondia", "Timór Lorosa'e"],
+  "summary": "Coral reefs off Atauro, coffee-growing mountains and a seaside capital that sees few tourists.",
+  "overview": [
+    "Timor-Leste, also called East Timor, takes up the eastern half of the island of Timor, north of Australia, together with the enclave of Oecusse on the island's north coast and the islands of Atauro and Jaco. It was a Portuguese colony for centuries, then ruled by Indonesia from 1975 until 1999, when a vote organised by the United Nations chose independence, which came in 2002. Most people are Catholic, and visitors are few.",
+    "Dili, the capital, curves around a bay. Steps climb a headland east of the city to Cristo Rei, a large statue of Christ looking out to sea, with beaches below, and the Resistance Museum tells the story of the years before independence. Atauro, a boat ride north of Dili, is the place for snorkelling and diving: scientists have counted more kinds of reef fish around its shores than almost anywhere else on Earth. In the mountains, Maubisse is a cool base among coffee farms, and Mount Ramelau, at 2,986 m the highest peak, is climbed in the dark for sunrise beside the statue of the Virgin Mary on its summit. At the eastern tip, the island of Jaco, sacred to local people, has white sand and clear water; visitors go across by boat for the day, as nobody may stay the night.",
+    "Roads outside Dili are rough, narrow and slow, and landslides close mountain roads in the wet season, so most visitors hire a 4×4 with a driver; in Dili, minibuses called microlets and taxis get you around. Cash machines are rare outside the capital. Saltwater crocodiles live along parts of the coast, especially in the east and south, so ask locally before swimming. In Timorese tradition the island itself is a crocodile, and the animal is respected as an ancestor."
+  ],
+  "whenToGo": {
+    "months": ["avoid", "avoid", "good", "good", "best", "best", "best", "best", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Wet season",
+        "months": [12, 1, 2, 3, 4],
+        "text": "Heavy rain, mostly in the afternoons and at night, humid heat on the coast, and landslides that block mountain roads. Getting around is hardest in January and February."
+      },
+      {
+        "name": "Early dry season",
+        "months": [5, 6, 7],
+        "text": "The rains ease on the north coast while the hills are still green, and mountain nights turn cool. Showers can carry on along the south coast."
+      },
+      {
+        "name": "Late dry season",
+        "months": [8, 9, 10, 11],
+        "text": "Dry, sunny and dusty, with the clearest water for diving. From about October, whales pass through the deep strait between Dili and Atauro on their migration, and the rains usually return in late November."
+      }
+    ],
+    "weather": "Timor-Leste is hot on the coast all year, around 30–32°C by day in Dili, and much cooler in the mountains, where Maubisse can fall to around 10°C at night in the dry season and the top of Ramelau is close to freezing at dawn. On the north coast the rains fall from about December to April and the rest of the year is dry, with Dili at its driest and dustiest from about August to October. The south coast is wetter, and its rains last longer, often with a second wet spell from about May to July.",
+    "festivals": [
+      {
+        "name": "Holy Week and Easter",
+        "place": "Dili and across Timor-Leste",
+        "when": "Usually in March or April: in 2027, Easter on 28 March",
+        "months": [3, 4],
+        "text": "Processions, Masses and passion plays in a strongly Catholic country. Good Friday is a public holiday."
+      },
+      {
+        "name": "Restoration of Independence Day",
+        "place": "Dili and across Timor-Leste",
+        "when": "20 May",
+        "months": [5],
+        "text": "Flag ceremonies, speeches and celebrations in Dili for the anniversary of independence in 2002."
+      },
+      {
+        "name": "Popular Consultation Day",
+        "place": "Across Timor-Leste",
+        "when": "30 August",
+        "months": [8],
+        "text": "Remembers the 1999 vote, organised by the United Nations, in which Timorese chose independence. A public holiday."
+      },
+      {
+        "name": "All Saints' and All Souls' Days",
+        "place": "Across Timor-Leste",
+        "when": "1 and 2 November",
+        "months": [11],
+        "text": "Families clean and decorate their relatives' graves and gather in the cemeteries with candles and flowers, above all on the evening of 2 November."
+      },
+      {
+        "name": "Proclamation of Independence Day",
+        "place": "Across Timor-Leste",
+        "when": "28 November",
+        "months": [11],
+        "text": "Independence from Portugal was declared on this day in 1975, nine days before Indonesian troops landed in Dili."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake is the usual greeting, and it's polite to greet everyone in the room. Say \"bondia\" in the morning, \"botarde\" in the afternoon and \"bonoite\" in the evening. Maun (older brother) is a polite way to address a man, Mana (older sister) a woman, and Avó (grandparent) an elder.",
+    "etiquette": [
+      "Many places are lulik, sacred: certain houses, trees, springs and rocks. Ask before entering or photographing anything that might be, and follow what local people do.",
+      "In villages, ask before taking anyone's picture.",
+      "Dress modestly in villages and churches; Sunday Mass is a big part of life.",
+      "The years before independence touched almost every family. Let people raise the subject themselves.",
+      "Plans and timetables are loose: patience works far better than pushing."
+    ],
+    "tipping": "Not customary, but rounding up in restaurants and a tip for drivers and guides are appreciated.",
+    "dress": "Modest clothes, with shoulders and knees covered in villages and churches, and swimwear only at the beach. Bring a fleece for the mountains, sturdy shoes for rough paths, and a rain jacket from December to April.",
+    "food": [
+      {
+        "name": "Batar da'an",
+        "text": "Corn boiled with mung beans and pumpkin: a simple, filling village dish."
+      },
+      {
+        "name": "Tukir",
+        "text": "Meat, usually goat or pork, cooked with herbs and spices inside a length of bamboo over the fire."
+      },
+      {
+        "name": "Grilled fish",
+        "text": "Fish caught that day and grilled over coals at simple stalls along Dili's seafront, eaten with rice and ai-manas, a fiery chilli sauce."
+      },
+      {
+        "name": "Timorese coffee",
+        "text": "Grown in the hills of Ermera, Aileu and Maubisse, mostly by smallholders who use no chemicals, and one of the country's main exports. Dili's cafés serve it strong."
+      }
+    ],
+    "phrases": {
+      "language": "Tetum",
+      "intro": "Tetum is spoken everywhere and has many Portuguese words. Portuguese is the other official language, many adults who went to school before 1999 also speak Indonesian, and some people in Dili speak English.",
+      "items": [
+        { "phrase": "Bondia", "say": "bon-DEE-ah", "meaning": "Good morning" },
+        { "phrase": "Botarde", "say": "boh-TAR-deh", "meaning": "Good afternoon" },
+        { "phrase": "Diak ka lae?", "say": "DEE-ak kah LAH-eh", "meaning": "How are you? (\"Good or not?\")" },
+        { "phrase": "Obrigadu / Obrigada", "say": "oh-bree-GAH-doo / oh-bree-GAH-dah", "meaning": "Thank you (said by a man / by a woman)" },
+        { "phrase": "Folin hira?", "say": "FOH-leen HEE-rah", "meaning": "How much is it?" },
+        { "phrase": "Deskulpa", "say": "des-KOOL-pah", "meaning": "Sorry; excuse me" },
+        { "phrase": "La iha problema", "say": "lah EE-ah proh-BLEH-mah", "meaning": "No problem" },
+        { "phrase": "Até logu", "say": "ah-TEH LOH-goo", "meaning": "See you later" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q574",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "US dollar ($, USD), with Timor-Leste's own centavo coins used alongside US coins. Cash is needed almost everywhere outside Dili.",
+        "sources": [{ "property": "P38", "values": ["Q4917", "Q572213"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Tetum and Portuguese, both official. Indonesian and English are working languages, and more than a dozen local languages are spoken.",
+        "sources": [{ "property": "P37", "values": ["Q34125", "Q5146"] }],
+        "note": "Wikidata gives Tetum and Portuguese; the page adds Indonesian and English, which the constitution names as working languages."
+      },
+      {
+        "key": "plugs",
+        "text": "Types C, E and F (two round pins) and I (two angled flat pins, as in Australia), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1123613", "Q2335539"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the left",
+        "sources": [{ "property": "P1622", "values": ["Q11920728"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Timor-Leste Time, UTC+9, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q7041", "Q63285938"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for emergencies",
+        "sources": [{ "property": "P2852", "values": ["Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+670",
+        "sources": [{ "property": "P474", "values": ["+670"] }]
+      }
+    ]
+  }
+}

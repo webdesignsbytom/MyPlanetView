@@ -1,0 +1,165 @@
+{
+  "code": "SY",
+  "slug": "syria",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Marhaba", "Suriya"],
+  "summary": "The Umayyad Mosque of Damascus, Krak des Chevaliers, Palmyra and Aleppo's citadel.",
+  "overview": [
+    "Syria has been at the crossroads of empires for thousands of years, and it shows. Damascus claims to be the oldest continuously inhabited capital in the world. Inside its Roman and medieval walls, the Umayyad Mosque, built in the early 8th century on the site of a Roman temple and a church, opens onto a vast marble courtyard; around it are the covered Souq al-Hamidiyah, Straight Street, old caravan inns (khans), courtyard houses turned into restaurants, and the Christian quarter round Bab Touma.",
+    "Aleppo's citadel rises on its mound over a city once famous for the longest covered souqs in the Middle East. Krak des Chevaliers, on a hill west of Homs, is one of the best-preserved Crusader castles anywhere. In the desert, Palmyra was a rich caravan city of colonnaded streets and temples; in the south, Bosra has a Roman theatre of black basalt still standing whole; in Hama, giant wooden waterwheels creak on the Orontes; and in the mountain village of Maaloula, people still speak a form of Aramaic, the language of Jesus.",
+    "Many of these places were damaged, some badly, during the long war, and which ones can be visited changes. Buses and shared taxis link the cities, and there are checkpoints on the roads, so keep your passport with you. Bring cash, as foreign bank cards often don't work.",
+    "Most governments advise against all travel to Syria, and their embassies may be unable to help anyone who gets into difficulty there. The situation can change fast and without warning; the latest advice from your own government is the place to start before considering a trip."
+  ],
+  "whenToGo": {
+    "months": ["good", "good", "good", "best", "best", "good", "good", "good", "best", "best", "good", "good"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "Cold and wet inland: Damascus is about 12°C by day and close to freezing at night, Aleppo colder, and snow falls on the mountains and sometimes in the cities. The coast round Latakia is milder but rainy."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4, 5],
+        "text": "March is showery and cool; April and May are warm and sunny, with green fields and flowers, the best time for the ruins and the castles."
+      },
+      {
+        "name": "Summer",
+        "months": [6, 7, 8],
+        "text": "Dry and hot: about 36°C in Damascus and Aleppo, near 40°C at Palmyra and in the desert. The air is dry and evenings are pleasant in Damascus. The coast is cooler but humid."
+      },
+      {
+        "name": "Autumn",
+        "months": [9, 10, 11],
+        "text": "Warm, clear and settled in September and October, the grape and olive season. The rains return and the nights turn cold in November."
+      }
+    ],
+    "weather": "A Mediterranean climate on the narrow coast, with mild, wet winters and warm, humid summers. Behind the coastal mountains, the interior, where most of the sights are, has hot, dry summers and cold winters, with most rain between November and March. The east and the land round Palmyra are desert, very hot in summer and cold on winter nights.",
+    "festivals": [
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across Syria",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "Days are slow and evenings crowded, with juice sellers pouring tamarind and liquorice drinks before iftar and the souqs of Damascus busy late into the night. Then comes Eid al-Fitr, when swings and small fairground rides are set up for children in the squares."
+      },
+      {
+        "name": "Easter",
+        "place": "Damascus, Aleppo, Maaloula and Christian villages",
+        "when": "Two Easters, Western then Orthodox, usually from late March to early May: in 2027, 28 March and 2 May",
+        "months": [3, 4, 5],
+        "text": "Syria's old Christian communities fill their churches, with scout bands and processions in the streets of the Christian quarters."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across Syria",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "Several days of holiday, with family visits, new clothes, and sweets such as ma'amoul in every home."
+      },
+      {
+        "name": "Feast of the Cross",
+        "place": "Maaloula",
+        "when": "13–14 September",
+        "months": [9],
+        "text": "On the eve of the feast, bonfires are lit on the cliffs above the village, and people gather with music, fireworks and dancing to mark the finding of the True Cross."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"Marhaba\" is hello, answered with \"marhabtein\", and \"ahlan wa sahlan\" (welcome) is said again and again. Syrian hospitality is generous: visitors are pressed to take coffee or tea, and shopkeepers may invite you to sit before talking business. Among men, a handshake, and kisses on the cheek between friends; a woman decides whether to offer her hand.",
+    "etiquette": [
+      "Let people raise the war and politics themselves, if they want to: many have lost relatives and homes.",
+      "Never photograph soldiers, checkpoints or official buildings, and ask before photographing people.",
+      "At the Umayyad Mosque, women are lent a hooded cloak at the entrance, and everyone takes off their shoes.",
+      "Bargaining is expected in the souqs; take your time, and accept the tea if it's offered.",
+      "The left hand is considered unclean, so eat, pay and pass food with the right."
+    ],
+    "tipping": "Small tips are usual: about 10% in restaurants, a little for porters, drivers and anyone who helps you, and more for guides.",
+    "dress": "Conservative: long trousers for men, and covered shoulders, arms and knees for women, especially outside the centre of Damascus. Women need a headscarf for mosques. Winters are cold indoors as well as out, so bring warm layers.",
+    "food": [
+      {
+        "name": "Fatteh",
+        "text": "A Damascus breakfast: toasted bread and chickpeas under warm yoghurt mixed with tahini and garlic, topped with pine nuts fried in butter."
+      },
+      {
+        "name": "Muhammara",
+        "text": "A thick dip of roasted red peppers, walnuts, breadcrumbs and pomegranate molasses, spiced with the mild Aleppo pepper."
+      },
+      {
+        "name": "Kebab with cherries",
+        "text": "Aleppo is known for its cooking, and this is its best-known dish: small lamb meatballs in a sweet-sour sauce of sour cherries, served on flatbread."
+      },
+      {
+        "name": "Shawarma",
+        "text": "Thin slices of chicken or beef cut from a turning spit and rolled in thin bread with garlic sauce and pickles. Syrian shawarma is famous across the Arab world."
+      },
+      {
+        "name": "Booza",
+        "text": "Damascus ice cream, thickened with mastic and salep, pounded with wooden mallets until stretchy and rolled in chopped pistachios, sold in the Souq al-Hamidiyah."
+      },
+      {
+        "name": "Jallab",
+        "text": "A cold drink of grape molasses and rosewater with pine nuts and raisins floating in it, popular in summer and at Ramadan."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Syrian Arabic)",
+      "intro": "English is spoken by some people in hotels and shops, and older people may know French. These words are from the speech of Damascus.",
+      "items": [
+        { "phrase": "Marhaba (مرحبا)", "say": "MAR-ha-ba", "meaning": "Hello (answered with marhabtein)" },
+        { "phrase": "Shlonak? (شلونك)", "say": "SHLOH-nak", "meaning": "How are you? (to a man; shlonik to a woman)" },
+        { "phrase": "Mashi al-hal (ماشي الحال)", "say": "MAA-shee el-HAAL", "meaning": "Getting along; all right" },
+        { "phrase": "Mamnoon (ممنون)", "say": "mam-NOON", "meaning": "Thanks (\"I'm grateful\")" },
+        { "phrase": "Tikram (تكرم)", "say": "TIK-ram", "meaning": "With pleasure (said when agreeing to a request, to a man)" },
+        { "phrase": "Ghali ktir! (غالي كتير)", "say": "GHAA-lee k-TEER", "meaning": "Too expensive! (for bargaining)" },
+        { "phrase": "Allah ma'ak (الله معك)", "say": "al-LAH MA-ak", "meaning": "Goodbye (\"God be with you\", to a man)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q858",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Syrian pound (SYP, also written S£ or LS). Expect to pay for everything in cash.",
+        "sources": [{ "property": "P38", "values": ["Q240468"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic. Kurdish is spoken in the north-east, Armenian in Aleppo and Damascus, and a form of Aramaic in Maaloula and two nearby villages.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types C and E (two round pins) and Type L (three round pins in a row, as in Italy), 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1378312", "Q2335536", "Q1520890"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "UTC+3 all year (no clock changes)",
+        "sources": [{ "property": "P421", "values": ["Q6760", "Q63285958"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "112 for police, 110 for ambulance and 113 for fire",
+        "sources": [{ "property": "P2852", "values": ["Q1061257", "Q25648823", "Q25648804"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+963",
+        "sources": [{ "property": "P474", "values": ["+963"] }]
+      }
+    ]
+  }
+}

@@ -4,6 +4,7 @@ import { COUNTRIES } from '@/utils/map/countries';
 import { posterUrl } from '@/utils/map/posterData';
 import { projectToMap } from '@/utils/map/projection';
 import { PARENT_PLACE, isSpecialPlace, withParentPlaces } from '@/utils/map/specialPlaces';
+import { isRegion } from '@/utils/map/regionPlaces';
 import { UK, countedCountryCodes, placeOnMap } from '@/utils/map/ukNations';
 import { ukNationAt } from './ukNationLookup';
 import { LANDMARKS } from './data/landmarks';
@@ -313,7 +314,9 @@ export function mapStats(map, role) {
   // On a map that splits the UK, its nations count one each (utils/map/ukNations.js)
   const countries = countedCountryCodes([...counted].filter((c) => !isSpecialPlace(c)), map.splitUk);
   const specialPlaces = [...counted].filter(isSpecialPlace);
-  const continents = new Set([...counted].map((c) => continentByCode.get(c)).filter(Boolean));
+  // Regions (Bali, Tasmania) have their own count, and their country opens the continent
+  const regions = [...counted].filter(isRegion);
+  const continents = new Set([...counted].filter((c) => !isRegion(c)).map((c) => continentByCode.get(c)).filter(Boolean));
   const photos = visibleMapPhotos(map, role);
   const landmarks = stampedLandmarkIds(map, role);
   const trips = db.trips.filter((t) => t.mapId === map.id);
@@ -325,6 +328,7 @@ export function mapStats(map, role) {
   return {
     countries: countries.length,
     specialPlaces: specialPlaces.length,
+    regions: regions.length,
     continents: continents.size,
     photos: photos.length,
     landmarks: landmarks.length,

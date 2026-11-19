@@ -1,0 +1,173 @@
+{
+  "code": "AE",
+  "slug": "united-arab-emirates",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["Marhaba", "Al Imarat"],
+  "summary": "Dubai's towers and souks, Abu Dhabi's white mosque and red dunes under winter sun.",
+  "overview": [
+    "The United Arab Emirates is a federation of seven emirates on the southern shore of the Gulf, and most visitors start in Dubai. There's the Burj Khalifa, the world's tallest building at 828 m, the giant malls and the man-made islands, but also the older city round Dubai Creek: wooden abra boats ferry people across it, the gold and spice souks fill the lanes of Deira, and the wind-tower houses of Al Fahidi show how the town looked before oil. Abu Dhabi, the capital, is about 140 km down the coast, with the Sheikh Zayed Grand Mosque and the Louvre Abu Dhabi on Saadiyat Island.",
+    "Beyond the two big cities, Sharjah has the country's best museums of Islamic art and history; Al Ain, on the Omani border, has palm oases watered by ancient channels (falaj); and the Hajar Mountains rise in the east, with Hatta's dams and trails and the long mountain road up Jebel Jais in Ras Al Khaimah. In the far south, the dunes round Liwa Oasis run into the Empty Quarter, among the tallest sand dunes anywhere.",
+    "Dubai has a driverless metro, and taxis and ride-hailing apps such as Careem and Uber are everywhere; buses link the emirates, and hiring a car is easy on the wide motorways. Most people living here are foreign, and English is the everyday language. The law is stricter than the skyline suggests: alcohol is only for licensed hotels, bars and restaurants (none at all in Sharjah), being drunk in public or kissing in the street can lead to arrest, and some prescription medicines, including codeine, need approval before you bring them in."
+  ],
+  "whenToGo": {
+    "months": ["best", "best", "best", "good", "avoid", "avoid", "avoid", "avoid", "avoid", "good", "best", "best"],
+    "seasons": [
+      {
+        "name": "Winter",
+        "months": [12, 1, 2],
+        "text": "The high season. Days are around 24°C on the coast and nights drop to about 15°C, colder in the desert and on Jebel Jais. A few days bring rain, sometimes in short, heavy storms that flood roads. Christmas, New Year and the Dubai Shopping Festival fill the hotels."
+      },
+      {
+        "name": "Spring",
+        "months": [3, 4],
+        "text": "Warm and bright, from about 28°C in March to well over 30°C by late April. The sea is pleasant for swimming, and the shamal, a north-west wind, can blow sand across the roads for a day or two."
+      },
+      {
+        "name": "Summer",
+        "months": [5, 6, 7, 8, 9],
+        "text": "Fiercely hot: above 40°C most days from June to August, and close to 50°C inland at Al Ain and Liwa. On the coast the humidity makes even the nights sticky. Life moves indoors to malls, cinemas and Dubai's indoor ski slope, and hotel prices are at their lowest."
+      },
+      {
+        "name": "Autumn",
+        "months": [10, 11],
+        "text": "October is still in the mid-30s, but the heat breaks through the month. By November the beach clubs, desert camps and outdoor restaurants are open again."
+      }
+    ],
+    "weather": "A desert climate with very little rain, about 100 mm a year, nearly all of it between December and March. Winters are warm and sunny, summers among the hottest anywhere, and the coast is humid from June to September, when the sea passes 32°C. The Hajar Mountains in the east are a few degrees cooler than the coast, and winter nights near the top of Jebel Jais can fall close to freezing.",
+    "festivals": [
+      {
+        "name": "Dubai Shopping Festival",
+        "place": "Dubai",
+        "when": "Usually from mid-December into January",
+        "months": [12, 1],
+        "text": "About six weeks of sales in the malls and souks, with raffles, fireworks over the creek and the beaches, and concerts in the evenings."
+      },
+      {
+        "name": "Ramadan and Eid al-Fitr",
+        "place": "Across the UAE",
+        "when": "About 11 days earlier each year: in 2027, February into March",
+        "months": [2, 3],
+        "text": "The month of fasting from dawn to sunset. Working hours are shorter, hotels lay on huge iftar meals to break the fast at sunset, and the malls stay open late into the night. Visitors shouldn't eat, drink or smoke in the street by day. It ends with Eid al-Fitr, a holiday of several days."
+      },
+      {
+        "name": "Eid al-Adha",
+        "place": "Across the UAE",
+        "when": "About ten weeks after Ramadan ends: in 2027, in May",
+        "months": [5],
+        "text": "The Feast of the Sacrifice, the year's longest holiday: offices close for several days, and many residents fly home or head to the mountains and hotels."
+      },
+      {
+        "name": "Abu Dhabi Grand Prix",
+        "place": "Yas Marina Circuit, Abu Dhabi",
+        "when": "Usually late November or early December",
+        "months": [11, 12],
+        "text": "Formula One's race on Yas Island, run from late afternoon into the night under floodlights, with concerts after each day's racing. Hotels in Abu Dhabi fill well ahead."
+      },
+      {
+        "name": "National Day (Eid Al Etihad)",
+        "place": "Across the UAE",
+        "when": "2 December",
+        "months": [12],
+        "text": "Marks the union of the emirates in 1971. Buildings are lit in the flag's red, green, white and black, cars are draped in flags, and there are fireworks and parades. It comes with a holiday of two days or more."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "\"As-salamu alaykum\" (peace be upon you) is the greeting, answered with \"wa alaykum as-salam\"; \"marhaba\" is a simple hello. Men shake hands with the right hand. Many Emirati women don't shake hands with men: a man should wait for her to offer hers, and a hand on the heart is a polite answer either way. Most of the people a visitor meets in hotels, shops and taxis come from South Asia, the Philippines or elsewhere, and English is the language between them.",
+    "etiquette": [
+      "Don't photograph people, and above all women, without asking: taking or posting pictures of someone without their consent can break privacy laws. Leave government buildings, palaces and military sites out of your photos too.",
+      "Swearing and rude gestures are offences, in person, in messages and online, and so is insulting someone on social media.",
+      "Drink only in licensed hotels, bars and restaurants, never in the street or on the beach. The rule on drink-driving is zero.",
+      "The Sheikh Zayed Grand Mosque welcomes visitors outside prayer times: wrists and ankles covered, women's hair covered, and shoes off at the door.",
+      "Use your right hand to eat, give and take, and avoid pointing the soles of your feet at anyone when sitting.",
+      "Holding hands is fine for couples; kissing and embracing in public are not."
+    ],
+    "tipping": "Not required, and many hotel and restaurant bills already add a service charge. Where none is added, about 10% is a kind tip. Round up taxi fares, and give a few dirhams to porters, valets and the people who carry shopping bags: many service workers earn very little.",
+    "dress": "Light, loose clothes for the heat, but modest ones in malls, souks, old quarters and government offices: shoulders and knees covered is the safe rule, and some malls post signs saying so. Swimwear belongs at the beach or pool. Air conditioning is strong everywhere indoors, so carry a layer, and a scarf for mosque visits.",
+    "food": [
+      {
+        "name": "Machboos",
+        "text": "Rice cooked with chicken, lamb or fish in spices and dried black lime (loomi), the Gulf's everyday family dish, eaten at lunch."
+      },
+      {
+        "name": "Harees",
+        "text": "Wheat and meat cooked for hours and beaten into a smooth, buttery porridge. It's made for Ramadan, Eid and weddings."
+      },
+      {
+        "name": "Balaleet",
+        "text": "Thin vermicelli sweetened with sugar, saffron and cardamom, topped with a thin omelette: an Emirati breakfast of sweet and savoury together."
+      },
+      {
+        "name": "Luqaimat",
+        "text": "Small balls of dough fried crisp and soaked in date syrup, sometimes with sesame seeds, sold at markets and served at Ramadan."
+      },
+      {
+        "name": "Gahwa and dates",
+        "text": "Arabic coffee, pale and flavoured with cardamom and sometimes saffron, poured in small handleless cups with dates. When you've had enough, shake the cup gently from side to side as you hand it back."
+      },
+      {
+        "name": "Dubai's other kitchens",
+        "text": "Most residents come from elsewhere, and so does most of the food: Keralan fish curry and Pakistani grills in Karama, Iranian kebabs and Lebanese shawarma in Deira, all far cheaper than hotel dining."
+      }
+    ],
+    "phrases": {
+      "language": "Arabic (Gulf Arabic)",
+      "intro": "English gets you everywhere, and many people serving you don't speak Arabic at all, but Emiratis are pleased to hear a greeting in it. Arabic spellings in Latin letters vary.",
+      "items": [
+        { "phrase": "As-salamu alaykum (السلام عليكم)", "say": "as-sa-LAH-moo a-LAY-koom", "meaning": "Peace be upon you (hello)" },
+        { "phrase": "Shlonak? (شلونك)", "say": "SHLOH-nak", "meaning": "How are you? (to a man; shlonich to a woman)" },
+        { "phrase": "Zain (زين)", "say": "ZAYN", "meaning": "Good; fine" },
+        { "phrase": "Shukran (شكرا)", "say": "SHOOK-ran", "meaning": "Thank you" },
+        { "phrase": "Law samaht (لو سمحت)", "say": "law sa-MAHT", "meaning": "Please; excuse me (to a man)" },
+        { "phrase": "Bikam? (بكم)", "say": "bi-KAM", "meaning": "How much?" },
+        { "phrase": "Yalla (يلا)", "say": "YAL-la", "meaning": "Let's go; come on" },
+        { "phrase": "Inshallah (إن شاء الله)", "say": "in-SHAH-lah", "meaning": "God willing (heard with any plan)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q878",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "UAE dirham (Dh, AED). Cards and phone payments are taken almost everywhere; keep a few coins and small notes for abras, souks and tips.",
+        "sources": [{ "property": "P38", "values": ["Q200294"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Arabic, the official language. English is the common language of shops, hotels and business, and residents speak Hindi, Urdu, Malayalam, Tagalog and many more.",
+        "sources": [{ "property": "P37", "values": ["Q13955"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Type G (three rectangular pins, as in the UK), with two-pin Type C sockets in some places; 220 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q1528507", "Q60740126", "Q1378312"] },
+          { "property": "P2884", "values": ["220"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Gulf Standard Time, UTC+4, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q6779", "Q22948941"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "999 for police, 998 for ambulance and 997 for fire; 112 also works",
+        "sources": [{ "property": "P2852", "values": ["Q3086706", "Q25648832", "Q25648827", "Q1061257"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+971",
+        "sources": [{ "property": "P474", "values": ["+971"] }]
+      }
+    ]
+  }
+}

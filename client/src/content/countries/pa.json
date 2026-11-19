@@ -1,0 +1,190 @@
+{
+  "code": "PA",
+  "slug": "panama",
+  "status": "draft",
+  "lastChecked": null,
+  "stamp": ["¡Qué xopá!", "Panamá"],
+  "summary": "Ships rising through the canal locks, Guna islands in the Caribbean and highland coffee in Boquete.",
+  "overview": [
+    "Panama is the narrow neck of land between Central and South America, and its canal, opened in 1914 and widened with new locks in 2016, is the reason most people know its name. At the Miraflores Locks, just outside Panama City, you can watch huge cargo ships raised and lowered between the oceans. The city itself has a skyline of towers on the bay, the restored colonial streets of Casco Viejo on a small peninsula, and the ruins of Panamá Viejo, the first city, sacked by the pirate Henry Morgan in 1671. Within an hour's drive, the forest along the canal, in Soberanía National Park, is one of the best birdwatching areas in the Americas.",
+    "In the Caribbean, the islands of Guna Yala (San Blas) are governed by the Guna people themselves; visitors stay in simple cabins on palm-covered islets, reached by a 4×4 road and a boat. Bocas del Toro, near the Costa Rican border, is a chain of islands linked by water taxis, with reefs, mangroves and an easy-going Afro-Caribbean town. Inland, the highland town of Boquete is known for coffee, hiking and Volcán Barú, the highest point at about 3,475 m, from whose summit both oceans can be seen on a clear morning. The Azuero Peninsula keeps Panama's folk traditions, and the marine park of Coiba, off the Pacific coast, is a World Heritage Site for its reefs and sharks.",
+    "Buses leave Panama City's Albrook terminal for the whole country, and short flights reach Bocas del Toro and David, the gateway to Boquete. The roadless forest of the Darién Gap, on the Colombian border, is not a place for casual visits, and many governments advise against travel to much of it."
+  ],
+  "whenToGo": {
+    "stripLabel": "Panama City, the canal and the Pacific side, where most visitors go. Bocas del Toro, on the Caribbean, has a different pattern and its own strip below.",
+    "months": ["best", "best", "best", "best", "good", "good", "good", "good", "good", "good", "good", "good"],
+    "seasons": [
+      {
+        "name": "Dry season (verano)",
+        "months": [12, 1, 2, 3, 4],
+        "text": "From about mid-December, steady trade winds bring sunny, breezy days to Panama City and the Pacific side. The busiest time for visitors, with Carnival in February or early March. Guna Yala is dry too, but the sea between the islands can be choppy."
+      },
+      {
+        "name": "Rainy season (invierno)",
+        "months": [5, 6, 7, 8, 9],
+        "text": "Mornings often bright, with heavy rain most afternoons. Humpback whales visit the Pacific coast, around the Pearl Islands and the Gulf of Chiriquí, from about July to October, and the forests are lush."
+      },
+      {
+        "name": "Wettest months",
+        "months": [10, 11],
+        "text": "On the Pacific side, rain at its heaviest, often for hours at a time. November is also Panama's month of national holidays, with marching bands in every town."
+      }
+    ],
+    "weather": "Panama lies well south of the hurricane belt, so its seasons are wet and dry rather than stormy. The lowlands are hot and humid all year: Panama City sees about 24°C at night and 30–32°C by day. Boquete, at about 1,200 m, is fresher, around 15–25°C, with a fine misty drizzle called bajareque in the windy dry season. Panama City and the Pacific side are dry from about mid-December to April and wet from May to early December, with October and November the wettest. Across the mountains, the Caribbean side sees rain in most months.",
+    "festivals": [
+      {
+        "name": "Feria de las Flores y del Café",
+        "place": "Boquete",
+        "when": "Usually in January, for about ten days",
+        "months": [1],
+        "text": "Gardens of flowers laid out by the river, coffee tastings from the highland farms, crafts and evening concerts, at the start of the dry season."
+      },
+      {
+        "name": "Carnaval",
+        "place": "Las Tablas, Panama City and across the country",
+        "when": "The four days before Ash Wednesday (in 2027, 6–9 February)",
+        "months": [2, 3],
+        "text": "Parades, queens and music day and night. In Las Tablas, the streets of Calle Arriba and Calle Abajo compete to outdo each other, and by day trucks spray the crowds with water in the culecos. Much of the country stops for the holiday."
+      },
+      {
+        "name": "Corpus Christi",
+        "place": "La Villa de Los Santos",
+        "when": "Usually late May or June (60 days after Easter)",
+        "months": [5, 6],
+        "text": "Dancers in masks and costumes, the diablos, act out the struggle between good and evil in the streets of this Azuero town."
+      },
+      {
+        "name": "Festival de la Mejorana",
+        "place": "Guararé",
+        "when": "Usually in late September",
+        "months": [9],
+        "text": "Panama's national folk festival: music of the mejorana, a small five-string guitar, dancers in the embroidered pollera dress, and a parade of ox carts."
+      },
+      {
+        "name": "Festival del Cristo Negro",
+        "place": "Portobelo",
+        "when": "21 October",
+        "months": [10],
+        "text": "Tens of thousands of pilgrims, many dressed in purple, come to the old Caribbean fort town to honour a black wooden figure of Christ, some walking the last stretch on their knees."
+      },
+      {
+        "name": "Fiestas Patrias",
+        "place": "Across Panama",
+        "when": "3, 4, 5, 10 and 28 November",
+        "months": [11],
+        "text": "A month of national days, marking separation from Colombia in 1903 (3 November), the flag (4 November), Colón's day (5 November), the first cry for independence at La Villa de Los Santos (10 November) and independence from Spain in 1821 (28 November). Expect drum bands, parades and closed offices."
+      }
+    ],
+    "regions": [
+      {
+        "name": "Bocas del Toro",
+        "months": ["good", "best", "best", "good", "good", "good", "good", "good", "best", "best", "good", "good"],
+        "text": "Rain can come in any month on these Caribbean islands, but February and March, and above all September and October, are usually the driest and calmest, with the clearest water for snorkelling. November to January and June to July are the wettest."
+      },
+      {
+        "name": "Guna Yala (San Blas)",
+        "text": "Dry from about mid-December to April, though trade winds can make the boat rides rough; calmer but wetter from May to November. Days are hot all year."
+      },
+      {
+        "name": "Boquete and the Chiriquí highlands",
+        "text": "Cool and green, with coffee and hiking all year. The dry season brings wind and fine drizzle; the rainy season, afternoon downpours. Barú's summit is usually clearest at dawn in the dry months."
+      }
+    ]
+  },
+  "culture": {
+    "greetings": "A handshake and \"Buenos días\" are the usual greeting, and women greet friends with a kiss on the cheek. Panamanians are relaxed and quick with slang: among friends, \"¡Qué xopá!\" (\"What's up?\", \"¿Qué pasó?\" said backwards) is everywhere.",
+    "etiquette": [
+      "In Guna Yala, pay the community's entry fees, follow the rules of each island, and ask before photographing anyone; a small payment is often expected for a photo.",
+      "Carry your passport: Panamanian law asks everyone to carry identification, and police checks happen.",
+      "Shorts and flip-flops are for the beach: some offices, banks and government buildings in Panama City turn people away in them.",
+      "Tap water is safe to drink in Panama City and most towns, but not in Bocas del Toro or Guna Yala.",
+      "Buy molas, the layered cloth panels Guna women sew, from the women who make them.",
+      "Use Uber or a registered taxi in Panama City, and agree a fare before getting into an unmetered cab."
+    ],
+    "tipping": "A tip of about 10% is normal where the bill doesn't already include one. Guides, boat captains and hotel staff appreciate one too.",
+    "dress": "Light, breathable clothes for the lowlands and a light jacket for Boquete, air-conditioned buses and the ferries. The \"Panama hat\" is in fact woven in Ecuador; Panama's own is the sombrero pintao, of black and white plant fibres, worn on the Azuero Peninsula.",
+    "food": [
+      {
+        "name": "Sancocho",
+        "text": "The national dish: a chicken soup with yam (ñame), corn and culantro, a herb like a strong coriander, served with white rice on the side. Said to cure anything, a hangover included."
+      },
+      {
+        "name": "Ceviche",
+        "text": "Raw white fish or prawns cured in lime juice with onion and hot pepper, sold in little cups at the fish market in Panama City."
+      },
+      {
+        "name": "Patacones",
+        "text": "Slices of green plantain fried, flattened and fried again, served with almost everything."
+      },
+      {
+        "name": "Carimañolas and hojaldras",
+        "text": "Breakfast foods: carimañolas are cassava fritters stuffed with seasoned meat; hojaldras are puffy fried dough, eaten with eggs or a cup of coffee."
+      },
+      {
+        "name": "Raspao",
+        "text": "Shaved ice drenched in fruit syrup and condensed milk, sold from push-carts in town squares on hot afternoons."
+      },
+      {
+        "name": "Geisha coffee",
+        "text": "A variety grown on the slopes around Boquete that has sold for record prices at auction. Farms around the town offer tours and tastings."
+      }
+    ],
+    "phrases": {
+      "language": "Spanish (Panamanian)",
+      "intro": "English is common in Panama City's business and tourist areas and in Bocas del Toro, where many families have Caribbean roots.",
+      "items": [
+        { "phrase": "Buenos días", "say": "BWEH-nohs DEE-ahs", "meaning": "Good morning" },
+        { "phrase": "Gracias", "say": "GRAH-see-ahs", "meaning": "Thank you" },
+        { "phrase": "¿Cuánto cuesta?", "say": "KWAHN-toh KWES-tah", "meaning": "How much is it?" },
+        { "phrase": "Un raspao, por favor", "say": "oon rahs-PAH-oh por fah-VOR", "meaning": "A shaved ice, please" },
+        { "phrase": "¡Qué xopá!", "say": "keh shoh-PAH", "meaning": "What's up? (slang)" },
+        { "phrase": "Fren", "say": "FREN", "meaning": "Friend; mate (from English)" },
+        { "phrase": "Buco", "say": "BOO-koh", "meaning": "A lot (\"buco gente\": lots of people)" }
+      ]
+    }
+  },
+  "facts": {
+    "wikidata": "Q804",
+    "queried": "2026-11-18",
+    "items": [
+      {
+        "key": "currency",
+        "text": "Panamanian balboa (B/.) and US dollar, used side by side at one to one: all notes are US dollars, while coins are either US or Panamanian.",
+        "sources": [{ "property": "P38", "values": ["Q210472", "Q4917"] }]
+      },
+      {
+        "key": "languages",
+        "text": "Spanish. English is widely spoken in Panama City and on the Caribbean coast, and Ngäbere, Guna and Emberá are spoken in their own territories.",
+        "sources": [{ "property": "P37", "values": ["Q1321"] }]
+      },
+      {
+        "key": "plugs",
+        "text": "Types A and B (two flat pins, as in the US), 110 V",
+        "sources": [
+          { "property": "P2853", "values": ["Q24288454", "Q24288456"] },
+          { "property": "P2884", "values": ["110"] }
+        ]
+      },
+      {
+        "key": "driving",
+        "text": "On the right",
+        "sources": [{ "property": "P1622", "values": ["Q14565199"] }]
+      },
+      {
+        "key": "timeZones",
+        "text": "Eastern Standard Time, UTC−5, all year (no summer time)",
+        "sources": [{ "property": "P421", "values": ["Q5390", "Q63286069"] }]
+      },
+      {
+        "key": "emergency",
+        "text": "911 for police, fire and ambulance; 104 for police; 103 for the fire service",
+        "sources": [{ "property": "P2852", "values": ["Q533806", "Q25648855", "Q25648811"] }]
+      },
+      {
+        "key": "callingCode",
+        "text": "+507",
+        "sources": [{ "property": "P474", "values": ["+507"] }]
+      }
+    ]
+  }
+}
