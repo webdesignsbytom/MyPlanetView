@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 // Api
 import { getMapThemes } from '@/api/themesApi';
 
@@ -10,30 +10,36 @@ import { getMapThemes } from '@/api/themesApi';
  */
 export default function useMapThemes({ mapId = null, shareCode = null, enabled = true }) {
   const [state, setState] = useState({ themes: null, loading: Boolean(enabled), error: null });
+  // Every request is numbered and only the newest one's answer counts: a reload still on its
+  // way when the map changes never lands on the next map (19 Nov 2026, the audit)
+  const runRef = useRef(0);
 
-  const load = useCallback(
-    () =>
-      getMapThemes({ mapId, shareCode }).then(
-        (themes) => setState({ themes, loading: false, error: null }),
-        (err) => setState((prev) => ({ ...prev, loading: false, error: err.friendlyMessage || 'The monthly theme could not be loaded.' })),
-      ),
-    [mapId, shareCode],
-  );
+  const load = useCallback(() => {
+    const run = ++runRef.current;
+    return getMapThemes({ mapId, shareCode }).then(
+      (themes) => {
+        if (run === runRef.current) setState({ themes, loading: false, error: null });
+      },
+      (err) => {
+        if (run === runRef.current) setState((prev) => ({ ...prev, loading: false, error: err.friendlyMessage || 'The monthly theme could not be loaded.' }));
+      },
+    );
+  }, [mapId, shareCode]);
 
   useEffect(() => {
     if (!enabled || (!mapId && !shareCode)) return undefined;
-    let cancelled = false;
+    const run = ++runRef.current;
     setState((prev) => ({ ...prev, loading: true, error: null }));
     getMapThemes({ mapId, shareCode }).then(
       (themes) => {
-        if (!cancelled) setState({ themes, loading: false, error: null });
+        if (run === runRef.current) setState({ themes, loading: false, error: null });
       },
       (err) => {
-        if (!cancelled) setState({ themes: null, loading: false, error: err.friendlyMessage || 'The monthly theme could not be loaded.' });
+        if (run === runRef.current) setState({ themes: null, loading: false, error: err.friendlyMessage || 'The monthly theme could not be loaded.' });
       },
     );
     return () => {
-      cancelled = true;
+      runRef.current += 1;
     };
   }, [mapId, shareCode, enabled]);
 

@@ -5,7 +5,7 @@ import { test, expect, MOCK_STORE_KEY, openMap, openTool, pressTool, mapReady } 
 // cards; the tests that need them make the test user Economy (their own map is then an
 // Economy map, a card every 12 photos). France has 3 photos in the seed, so they add more.
 // The map's soonest planned trip is "Japan in spring" (Tokyo first, 1–14 April 2027), so
-// its cards are Japan's, carrying Tokyo and those dates. Partner links go to
+// its cards are Japan's, carrying Japan (never a stop's own place name) and those dates. Partner links go to
 // www.example.com, answered here and never fetched.
 
 const TRIP_DATES = 'from=2027-04-01&to=2027-04-14';
@@ -75,7 +75,7 @@ test.describe('Travel offers', () => {
     // A plain sponsored link through /go/, for the gallery, chosen for the planned trip to Japan
     await expect(card).toHaveAttribute('rel', 'sponsored noopener');
     await expect(card).toHaveAttribute('target', '_blank');
-    await expect(card).toHaveAttribute('href', new RegExp(`/go/[0-9a-f-]+\\?p=GALLERY&dest=Tokyo&country=JP&${TRIP_DATES}$`));
+    await expect(card).toHaveAttribute('href', new RegExp(`/go/[0-9a-f-]+\\?p=GALLERY&dest=Japan&country=JP&${TRIP_DATES}$`));
 
     // The next page brings 4 more photos after it; the card keeps its place
     await panel.getByRole('button', { name: 'Show more photos' }).click();
@@ -107,7 +107,7 @@ test.describe('Travel offers', () => {
 
     const [partner] = await Promise.all([context.waitForEvent('page'), card.click()]);
     // The partner's own link, its placeholders filled from the card's place and dates
-    await expect.poll(() => partner.url()).toMatch(/^https:\/\/www\.example\.com\/.*Tokyo.*ref=myplanetview-example/);
+    await expect.poll(() => partner.url()).toMatch(/^https:\/\/www\.example\.com\/.*Japan.*ref=myplanetview-example/);
     expect(partner.url()).toContain('2027-04-01');
 
     // One more in today's (UTC) tally for that offer in a gallery, and nothing else kept
@@ -136,7 +136,7 @@ test.describe('Travel offers', () => {
     const links = adLinks(desk);
     await expect(links.first()).toBeVisible();
     for (const href of await links.evaluateAll((all) => all.map((a) => a.getAttribute('href')))) {
-      expect(href).toMatch(new RegExp(`\\?p=TRAVEL_DESK&dest=Tokyo&country=JP&${TRIP_DATES}$`));
+      expect(href).toMatch(new RegExp(`\\?p=TRAVEL_DESK&dest=Japan&country=JP&${TRIP_DATES}$`));
     }
     await expect(desk.getByRole('link', { name: /^Ad: Hotels in Japan\. / })).toBeVisible();
 
@@ -162,6 +162,6 @@ test.describe('Travel offers', () => {
     await expect(stage).toHaveAttribute('data-slide-kind', 'end');
     const card = adLinks(show);
     await expect(card).toHaveCount(1);
-    await expect(card).toHaveAttribute('href', new RegExp(`\\?p=SLIDESHOW&dest=Tokyo&country=JP&${TRIP_DATES}$`));
+    await expect(card).toHaveAttribute('href', new RegExp(`\\?p=SLIDESHOW&dest=Japan&country=JP&${TRIP_DATES}$`));
   });
 });

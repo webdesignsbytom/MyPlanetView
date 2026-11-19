@@ -52,7 +52,7 @@ const MOMENT_SELECT = {
   createdAt: true,
   travellers: { select: { travellerId: true }, orderBy: { traveller: { position: 'asc' } } },
   photos: {
-    select: { photo: { select: { id: true, tripId: true, hidden: true, variants: thumbOf } } },
+    select: { photo: { select: { id: true, tripId: true, hidden: true, kind: true, videoState: true, variants: thumbOf } } },
     orderBy: [{ position: 'asc' }, { photoId: 'asc' }],
   },
 };

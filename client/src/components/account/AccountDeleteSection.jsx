@@ -144,8 +144,8 @@ function AccountDeleteSection() {
 
       <button
         type='submit'
-        // The danger button (components/common/Button's `danger`): parchment, deep-red ink
-        className='btn-paper [--btn-ink:var(--poster-red-deep)]'
+        // The danger button (components/common/Button's `danger`): a delete button's red
+        className='btn-danger'
         disabled={busy || !options}
       >
         {busy ? <LoadingSpinner xs /> : 'Delete my account'}

@@ -14,7 +14,7 @@ import AppErrorScreen from './components/utils/AppErrorScreen.jsx';
 import { CLIENT_ONLY_ROUTE_PREFIXES, PUBLIC_STATIC_ROUTES } from './utils/constants/routes.js';
 import { COUNTRY_ROUTES } from './utils/countries/countryPages.js';
 // Pages
-import { preloadPage } from './utils/navigation/lazyPages.js';
+import { MONTH_GUIDE_PAGES, preloadPage } from './utils/navigation/lazyPages.js';
 import { registerServiceWorker } from './utils/pwa/registerServiceWorker.js';
 import { listenForInstallOffer } from './utils/pwa/installPrompt.js';
 // Styles
@@ -30,6 +30,7 @@ const path = window.location.pathname.replace(/\/+$/, '').toLowerCase() || '/';
 // 404.html can also be served for a real page's address in another case (/About): the
 // router matches that page, not the 404 markup, so it's drawn from scratch
 const isRoutedPath = PUBLIC_STATIC_ROUTES.includes(path) || COUNTRY_ROUTES.includes(path) ||
+  MONTH_GUIDE_PAGES.some((month) => month.path === path) ||
   CLIENT_ONLY_ROUTE_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
 const hydrate = container.hasChildNodes() && (prerendered === 'page' || (prerendered === '404' && !isRoutedPath));
 const firstPage = prerendered === '404' && hydrate ? '*' : window.location.pathname;

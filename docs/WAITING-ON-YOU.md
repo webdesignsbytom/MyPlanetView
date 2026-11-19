@@ -190,6 +190,8 @@ The seed has one account per plan (`user@gmail.com` Economy, `business@gmail.com
 
 **Until then:** the seed skips them with a message; everything else works.
 
+**Once Cloudflare Stream is set up** (the audit's B13, 19 Nov 2026): upload one video by hand on the live site, signed in as a First Class account. Cloudflare doesn't say which address the browser sends a video to. If it isn't one the site's security policy allows, every video upload fails with "The video couldn't be sent", and the admin events page names the address. Claude then adds it to `client/public/.htaccess`, `client/netlify.toml` and `UPLOAD_HOSTS` in `server/src/services/stream/streamApi.js`. Until Stream is set up, video uploads answer "Videos aren't set up yet."
+
 ## 5. What a travel offer link tells the partner
 
 When someone clicks an offer card or a Travel Desk offer **on a planned trip**, the link carries the trip's first stop and its dates, so the partner's page opens on the right search. Example: "Hotels in Japan" on the trip "Japan in spring" opens the partner's site at Tokyo, 1–14 April. That's what makes the offer useful, and the privacy policy says so. Nothing else is sent: no name, no map, no photos, and not the page the click came from.

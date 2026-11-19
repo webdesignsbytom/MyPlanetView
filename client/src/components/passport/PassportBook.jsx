@@ -271,9 +271,11 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
       {/* The page list between the two buttons, in one row on every screen; on phones the
           buttons are arrows alone (17 Nov 2026, the user's wish), named "Previous page" and
           "Next page" all the same, and as tall as the list (items-stretch) */}
+      {/* Kept at the bottom of the window while the book is in view: under a 40rem book it
+          was below the fold on a 1440×900 screen, a scroll for every page (19 Nov 2026, the audit) */}
       <nav
         aria-label='Passport pages'
-        className='paper-aged paper-fields ticket-edge grid grid-cols-[auto_minmax(0,1fr)_auto] items-stretch gap-3 rounded-lg px-3 py-3 text-poster-ink sm:px-4'
+        className='paper-aged paper-fields ticket-edge sticky bottom-2 z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-stretch gap-3 rounded-lg px-3 py-3 text-poster-ink sm:px-4'
       >
         <Button quiet onClick={() => go(at - 1)} disabled={at === 0}>
           <IoChevronBack aria-hidden='true' />

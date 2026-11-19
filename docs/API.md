@@ -12,6 +12,7 @@ All paths are under `/api`. Responses use the template's envelope: `{ status, da
 | Role | How you get it | What it allows |
 | --- | --- | --- |
 | `OWNER` | You own the map (`TravelMap.ownerId`) | Everything, plus sharing settings, members, renaming, group type, making it the main map, transferring it, deleting the map. The map has the owner's plan (see "Map limits"). |
+| `CO_OWNER` | Added to a map as co-owner, as one of its travellers (see "Co-owners") | Everything the owner can do on that map except deleting it, transferring it, making it the main map, paying for it and removing or demoting a co-owner. Maps only |
 | `EDITOR` | Added to the map, or to a trip, as editor | Add and change content: visits, trips, stops, travellers, photos, landmark matches |
 | `VIEWER` | Added as viewer, or opening a share code with "Anyone with the link" on | Read only. Never sees hidden photos, GPS coordinates or originals |
 
@@ -29,7 +30,7 @@ All paths are under `/api`. Responses use the template's envelope: `{ status, da
   - **answer:** 403 `{ status: 'fail', message }` with "Verify your email address to add to your map or share it…", checked before any lookup, so it's the same for every id, real or not, and reveals nothing about other people's maps.
 - **Link viewers:** anyone holding a share code whose resource has `ANYONE_WITH_LINK` gets `VIEWER`, signed in or not, through `/api/shared/:code` only.
 - **No access:** a resource the user has no role on answers **404**, not 403, so ids and codes can't be probed.
-- **Not enough access:** a user who can see a resource but lacks the role for an action (a viewer trying to edit, an editor trying to share) gets **403**.
+- **Not enough access:** a user who can see a resource but lacks the role for an action (a viewer trying to edit, an editor trying to share, a co-owner trying to delete the map) gets **403**.
 - **Pure rules:** all role rules live in `server/src/utils/access.js`, which is unit-tested.
 - **Deletes:** every delete answers 200 with `{ message }`, except removing a photo's landmark match and the trip-stop delete, which answer with the changed photo or trip.
 
@@ -94,10 +95,10 @@ Emails and share URLs point at these client routes, built from `server/src/utils
 A map can show and keep the UK as England, Scotland, Wales and Northern Ireland (`splitUk`, the owner's choice: on `PATCH /maps/:mapId`, and the welcome page's set-up; on for every new map since 18 Nov 2026, while maps made before keep theirs). Everyone on the map sees it the same way; it's on `GET /maps/:mapId`, the share link's map, the trip replies (`splitUk` of the trip's map) and "Your data". The rules are `server/src/utils/ukNations.js` (the client copies them in `utils/map/ukNations.js`).
 
 - **Places:** on a split map, visits, photos, videos, trip stops and moments take the nations; on a map that doesn't split the UK, a nation sent for any of them is kept as the UK (`GB`), and `PUT …/visits/XE` there is 404. Travellers' birth and favourite places are always countries: a nation is kept as the UK. On a split map `GB` itself means "in the UK, nation not chosen yet".
-- **GPS:** a photo whose position is in the UK goes to the nation it's in (Natural Earth's real outlines, `src/data/ukNations.json`; the nearest one for a position just offshore). The UK's crown dependencies, which the map folds into the UK, go to the nearest nation.
+- **GPS:** a photo whose position is in the UK goes to the nation it's in (Natural Earth's real outlines, `src/data/ukNations.json`; the nearest one for a position just offshore). The UK's crown dependencies, which the map folds into the UK, go to the nearest nation if it's within half a degree (the Isle of Man); further than that from every nation (the Channel Islands, South Georgia: a region the lookup folds into the UK), a position stays `GB`, "nation not chosen" (19 Nov 2026, the audit: South Georgia went to England).
 - **Counting:** each nation is a country (stats, `GET /maps` counts, badges, goals, each traveller's countries). The UK counts only while none of its nations is marked. The British Isles region (badge and goal) is the four nations and Ireland (5 places, not 2). A goal listing `GB` is met by any nation, and on a map that doesn't split the UK, one listing a nation is met by the UK.
 - **Landmarks:** a UK landmark is in its nation on a split map (its `nation`): the country's landmark list, a moment's landmark check, the passport's pages.
-- **Turning it on** (one transaction): each UK photo, stop (on the map's own trips) and moment goes to the nation it had when the split was last turned off, else its GPS nation (photos), else its landmark's (a confirmed match, a stop's or moment's landmark); anything else stays `GB`. The nations get the `PHOTO` and `TRIP` visits their photos and completed trips bring, and their own visits from before come back if the UK's visit is unchanged since. The UK's own visit goes when the nations say all it said (it came from located photos or stops, has no note, and nothing is left in the UK); one marked by hand stays, and the map asks which nations it means. Photos left in `GB` are listed with `?unplaced=1`.
+- **Turning it on** (one transaction): each UK photo, stop (on the map's own trips) and moment goes to the nation it had when the split was last turned off, else its GPS nation (photos) or its pin's nation (a moment with a spot; 19 Nov 2026), else its landmark's (a confirmed match, a stop's or moment's landmark); anything else stays `GB`. The nations get the `PHOTO` and `TRIP` visits their photos and completed trips bring, and each UK state marked visited or lived brings its nation (`MANUAL`, as marking it on a split map does; 19 Nov 2026), and their own visits from before come back if the UK's visit is unchanged since. The UK's own visit goes when the nations say all it said (it came from located photos or stops, has no note, and nothing is left in the UK); one marked by hand stays, and the map asks which nations it means. Photos left in `GB` are listed with `?unplaced=1`.
 - **Turning it off:** the nations' visits become one UK visit (the highest status, the earliest first visit, the UK's note or else theirs, each named), kept so turning it on again restores them; photos, stops and moments go back to `GB`, each remembering its nation (`ukNation`). Nothing is deleted. A nation's photos join the UK's gallery, and may then be over the UK's photo cap (no new UK photos until it's under).
 - **Group trips** keep the trip's own map's places; on a linked map, its stops' visits are marked as that map keeps places.
 
@@ -133,7 +134,7 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
 | `PUT /users/map-settings` | signed in | `{ mapSettings }` → `{ mapSettings }` as saved. Creates the `Profile` row if it's missing. |
 
 - **Accepted keys:**
-  - `style`: `animated` or `old-map` (`jupiter` and `galaxy` were taken out on 16 Nov 2026 and are now refused; a profile that saved one keeps it until the next save, and the client opens it as `animated`);
+  - `style`: `animated` (the world map), `mono` (that map in black and white: until 19 Nov 2026 the switch `blackAndWhite`, now dropped like any unknown key), `old-map` or `starry` (the night sky, 19 Nov 2026; `jupiter` and `galaxy` were taken out on 16 Nov 2026 and are now refused; a profile that saved one keeps it until the next save, and the client opens it as `animated`);
   - `mapType`: `regular`, or `detailed` (country names and grid lines at every zoom);
   - `landmarkPins`: `zoomed` (from zoom 3), `always`, `stamped` (the default since 18 Nov 2026: only the landmarks stamped in the map's passport) or `off` (17 Nov 2026); any other value is refused;
   - the booleans `showGrid`, `showGridLabels`, `animatedSea`, `sunAndMoon`, `showCountryNames` and `hoverPreview`;
@@ -141,7 +142,6 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
   - `showAntarctica` (on unless set to `false`): draws Antarctica and the two South Poles, and extends the map down to them. It changes only the view, never visits or stats;
   - `showMoments` (on unless set to `false`): the pinned-note mark beside places with moments. Only the view changes;
   - `showGoalTag` (on unless set to `false`): the luggage tag under the map's title with the nearest unmet goal (see "Badges and goals");
-  - `blackAndWhite` (off unless set to `true`): the map page, and the trip page's map, in greys. Only the view changes;
   - `showTips` (on unless set to `false`): the tips the map page opens with, once a visit (17 Nov 2026).
 - **Unknown keys** are dropped. A known key with the wrong kind of value is refused (400).
 - **The whole object is replaced** on each `PUT`. Send every setting, not just the one that changed.
@@ -322,7 +322,7 @@ A country opened on its own (18 Nov 2026; "Open country" on its ticket): its sta
 | `PUT /maps/:mapId/subdivisions/:code` | editor | `{ status }` (`VISITED`, `LIVED`, `WANT_TO_GO`) → `{ subdivision: { code, status }, implied }`. An unknown code is 404. |
 | `DELETE /maps/:mapId/subdivisions/:code` | editor | Clears it; the country stays. |
 | `GET /maps/:mapId/pins?country=US` | viewer | `{ pins: [{ id, name, countryCode, latitude, longitude, visitCount, latestVisit: { visitedOn, datePrecision } | null, hidden? }] }`, by name. |
-| `POST /maps/:mapId/pins` | editor | `{ name, notes?, countryCode, latitude, longitude, visit?: { visitedOn?, datePrecision?, notes?, photoIds? } }` → 201 `{ pin }` |
+| `POST /maps/:mapId/pins` | editor | `{ name, notes?, countryCode, latitude, longitude, hidden?, visit?: { visitedOn?, datePrecision?, notes?, photoIds? } }` → 201 `{ pin }`. `hidden` is true unless sent as false: a new pin is the map's editors' own until shared |
 | `GET /pins/:pinId` | viewer | `{ pin: { id, name, notes, countryCode, latitude, longitude, hidden?, createdAt, visits: [{ id, visitedOn, datePrecision, notes, photos: [{ id, countryCode, thumbUrl }] }] } }`, visits newest first, undated last |
 | `PATCH /pins/:pinId` | editor | `{ name?, notes?, latitude?, longitude?, hidden? }` → `{ pin }` |
 | `DELETE /pins/:pinId` | editor | The pin and its visits (never the photos). |
@@ -333,10 +333,19 @@ A country opened on its own (18 Nov 2026; "Open country" on its ticket): its sta
 Through a map's share link: `GET /shared/:code/subdivisions?country=`, `/shared/:code/pins?country=` and `/shared/:code/pins/:pinId`, as a viewer sees them.
 
 - **States** are never countries (no count includes them). One marked visited or lived brings its country as VISITED (missing, or only wanted), and the region it's in (New Caledonia's provinces: NC), in the same transaction: `implied` is those visits as they now are. A state that is a region on its own (Hawaii is US-HI and the region XH; Tasmania, Goa, Bali, the Galápagos, South Georgia) has no visit of its own: its status is the region's `CountryVisit`, so marking either marks both.
-- **Pins:** a name (80 characters), notes (2,000), and a position in the pin's country (as a moment's spot, with the coastline tolerance; 400 `That spot isn't in this country. Put the pin inside it.`). A pin is kept under its country for good: a UK pin under GB (a nation's map lists the UK's pins inside it), a region's under its country. 1,000 pins a map, 100 visits a pin (409). `hidden`: editors only, as a hidden photo; viewers get a 404.
+- **Pins:** a name (80 characters), notes (2,000), and a position in the pin's country (as a moment's spot, with the coastline tolerance; 400 `That spot isn't in this country. Put the pin inside it.`). A pin is kept under its country for good: a UK pin under GB (a nation's map lists the UK's pins inside it), a region's under its country. 1,000 pins a map, 100 visits a pin (409). `hidden`: editors only, as a hidden photo; viewers get a 404. A pin is an exact spot, so it's hidden until an editor shares it ("Show this pin to everyone the map is shared with", off to start with), as a moment's spot is (19 Nov 2026, the user's decision: a pin on someone's home was public on any shared map). Pins made before then keep the setting they had.
 - **Visits:** a date as a moment's (`visitedOn` "2019", "2019-06" or "2019-06-14", with `datePrecision`; empty for none), notes, and up to 50 of the map's own photos, in order (400 `Choose up to 50 photos, each from this map.`). A visit's photo hidden from viewers isn't listed for them. Deleting a photo takes it out of its visits.
 - **Events:** `countryMaps`, `State Save Success` and `State Delete Success` (the state's code and status), `Pin …` and `Pin Visit …` with ids only; never a pin's name, notes or position.
 - "Download my data" carries each map's `statesVisited` and `pins` (with their visits and photo ids).
+
+## Country lists
+
+Every country ticket's first page of photos and of moments in one reply (19 Nov 2026, the audit): the map page loads them all behind its loading screen, which took a request per list.
+
+| Route | Who | What |
+| --- | --- | --- |
+| `GET /maps/:mapId/country-lists?photos=FR,IT&moments=FR&limit=12&display=1&momentLimit=30` | viewer | `{ photos: { [code]: { photos, nextCursor } }, moments: { [code]: { moments, nextCursor } } }`: for each code in `photos`, the first page `GET /maps/:mapId/photos?country=<code>&limit=&display=` would give, and for each in `moments`, the first page of `GET /maps/:mapId/moments?country=<code>&limit=<momentLimit>`, built by the same code, so every rule of theirs holds (hidden ones, videos still converting, never GPS or best copies). Either list may be left out; up to 300 codes each. Not a list of two-letter codes, or an unknown country → 400. |
+| `GET /shared/:code/country-lists` (same query) | anyone with a map's link | The same, as the link's viewer sees them; one request against the link's browse limit. A trip's link → 404 (its page has no country tickets). |
 
 ## Slideshows
 
@@ -390,7 +399,7 @@ Counted from the map's own data (visits, photos, stamps); only awards and goals 
   - `REGION`: every country in `region`, a key of `utils/constants/regions.js` or an inhabited continent (`EUROPE`…); `progress.done` too;
   - `LANDMARK_COUNT`: `target` stamps (1–2,000).
 
-  `title` is optional (up to 80 characters, cleaned). Without a `deadline`, a country counts when it's marked visited or lived. With one (`"YYYY-MM-DD"`), only what a photo taken by the end of that day proves counts (a hand-ticked country has no date), and `missed` is true once the day has passed unmet. Anything that doesn't fit the kind → 400 `That goal isn't complete: check what it asks for.`
+  `title` is optional (up to 80 characters, cleaned). Without a `deadline`, a country counts when it's marked visited or lived. With one (`"YYYY-MM-DD"`), a country counts when it was reached by the end of that day: its first photo was taken by then, or its visit (visited or lived) is dated by then, by its `firstVisitedOn`, else the day it was marked (19 Nov 2026, the user's decision: a hand-ticked country used never to count, and the goal looked stuck); stamps by their photos. `missed` is true once the day has passed unmet. Anything that doesn't fit the kind → 400 `That goal isn't complete: check what it asks for.`
 
 ## Photo themes
 
@@ -433,7 +442,7 @@ A challenge's fields: `{ id, title, measure, startsOn, endsOn, target, status }`
 | Method and path | Who | Body / returns |
 | --- | --- | --- |
 | `GET /challenges` | signed in | `{ challenges: [{ ...fields, memberCount, myCount, reachedTarget, counting, youStartedIt }], perUserLimit }`, newest joined first. Your own count only: the ranks are on each challenge (ranking every challenge here would count everyone in all of them). |
-| `POST /challenges` | signed in, **verified** | `{ title, measure, startsOn, endsOn, target?, mapId }` → 201 `{ challenge }`: you're in it, counting `mapId`. 400 for anything wrong (`The last day must be on or after the first, and a challenge can last up to two years.`; `Choose one of your maps to count: one you own or edit.`). 10 a day per user. |
+| `POST /challenges` | signed in, **verified** | `{ title, measure, startsOn, endsOn, target?, mapId }` → 201 `{ challenge }`: you're in it, counting `mapId`. 400 for anything wrong (`The last day must be on or after the first, and a challenge can last up to two years.`; `Choose one of your maps to count: one you own or edit.`). 10 a day per user. Starting one counts towards the 30 challenges a person can be in, as joining does (409 past it; counted with the person's row locked, so starting and joining at once can't pass it). |
 | `GET /challenges/:challengeId` | in it | `{ challenge: { ...fields, joinCode, youStartedIt, myMap: { id, name }, members: [{ name, count, rank, reachedTarget, counting, isYou, startedIt }], memberLimit } }`. `joinCode` is `XXXX-XXXX-XXXX`; any member may pass the link on. |
 | `PATCH /challenges/:challengeId` | the starter, **verified** | `{ title?, startsOn?, endsOn?, target? }` → `{ challenge }`. The measure never changes (400 `What a challenge counts can't change once it's made.`). Others → 403. |
 | `DELETE /challenges/:challengeId` | the starter, **verified** | Deletes it for everyone → `{ message }` |
@@ -453,9 +462,9 @@ Influencer codes (docs/FEATURE-PLAN.md, "Getting the word out"): a code per crea
 
 **Codes for life** (the user's own codes, 17 Nov 2026): a code made with `freePlan` (`REGULAR` or `PREMIUM`, chosen when it's made and never changed; CHECK `promo_code_free_plan`) gives whoever signs up with it that plan **for life**, once the address is verified (17 Nov 2026: it was given at sign-up, to unverified accounts): a complimentary membership (`PlanGrant`) ending `9999-12-31T00:00:00.000Z` (`FOR_LIFE_ENDS_AT`; the client shows "for life", `isForLife`), granted by whoever made the code, reason `Promo code <CODE>, for life`, given once (`giveLifetimePlan`, from the user update hook when `emailVerified`, or at sign-up for an account made verified). It works at sign-up only and gives no free month on top (`promoTrialDays` is 0). An admin can still end the membership like any other.
 
-**A code's limit holds** (17 Nov 2026): the sign-up's after hook claims the code with its row locked (`claimPromoCodeInDB`), counting the uses under the lock, so sign-ups at the same moment can't take it past `maxUses`; one that loses the race is made without the code. Sign-up, like change-email, password reset and resending verification, is limited to 5 per 15 minutes per IP (`AUTH_EMAIL_RATE_LIMIT`), so codes can't be tried faster than the check route allows.
+**A code's limit holds** (17 Nov 2026): the sign-up's after hook claims the code with its row locked (`claimPromoCodeInDB`), counting the uses under the lock, so sign-ups at the same moment can't take it past `maxUses`; one that loses the race is made without the code. **A use** is an account that signed up with the code and verified its address, or one made in the last 24 hours that still may (19 Nov 2026, the audit: never-verified throwaway sign-ups used a code up); a code for life's plans are also counted under the code's lock when each is given, so no more accounts than `maxUses` ever get one. Sign-up, like change-email, password reset and resending verification, is limited to 5 per 15 minutes per IP (`AUTH_EMAIL_RATE_LIMIT`), so codes can't be tried faster than the check route allows.
 
-- **Codes** are 3–24 letters and digits, stored upper case; what people type is cleaned (`sam-travels` is `SAMTRAVELS`). A code can be used while it's `active`, before `endsAt`, and while fewer than `maxUses` accounts have it (no limit when null). The count isn't locked, so two sign-ups at the same moment can take a code one over its limit; a code that fills up between the check and the account being made is simply not recorded.
+- **Codes** are 3–24 letters and digits, stored upper case; what people type is cleaned (`sam-travels` is `SAMTRAVELS`). A code can be used while it's `active`, before `endsAt`, and while it has fewer than `maxUses` uses (above; no limit when null). A code that fills up between the check and the account being made is simply not recorded.
 - **Signing up with one:** `POST /api/auth/sign-up/email` takes an optional `promoCode` beside the usual fields. A code that can't be used → 400 `That code isn't valid. Check it, or sign up without one.`, and no account is made. A good one goes on the new account's profile (`Profile.promoCodeId`), and stays there if the code is turned off later.
 - **The free month** (`promoTrialDays`): `POST /billing/checkout` for `REGULAR` or `PREMIUM` from an account with a code whose free month hasn't started (`Profile.promoTrialUsedAt` null) adds `subscription_data.trial_period_days: 30` and `metadata.promoCode`, and asks for a card. Extra maps alone (`plan: 'FREE'`, or `POST /billing/extra-maps` without a subscription) get no trial, and the month stays for later. The webhook records the month as started when a subscription with `trial_end` and `metadata.promoCode` arrives (any event; once), so cancelling during the trial and buying again pays from the first day. `GET /billing` carries `promoTrial: { code, days }` while the account has the month and no live subscription.
 
@@ -467,6 +476,16 @@ Influencer codes (docs/FEATURE-PLAN.md, "Getting the word out"): a code per crea
 | `PATCH /users/admin/promo-codes/:promoCodeId` | ADMIN or DEVELOPER | `{ label?, active?, maxUses?, endsAt? }` → `{ promoCode }`. The code itself and what it gives (`freePlan`, 400) never change (it's in people's posts); turn it off with `active: false`. Accounts that already signed up keep their free month. |
 - **Events:** `billing`, `Promo Code Create Success` (with the code), `Promo Code Update Success`, and `Checkout Started` with `trialDays=30` when the free month applies; never the label.
 
+## The invite offer
+
+A welcome offer for people invited to a paid map (19 Nov 2026, the user's wish; docs/FEATURE-PLAN.md "Couples and families"). The rules are pure, in `server/src/utils/inviteOffer.js` (tested; the client copies the numbers in `utils/plans/inviteOffer.js`); `services/billing/inviteOffer.js` reads and writes them.
+
+- **Who:** an account made after the invite was sent (signing up from its link, or later with that address) whose invite is accepted, when the invited map (a trip's map for a trip invite) runs on **Business or First Class**: the map's plan, whoever sent the invite. Kept on the profile (`inviteOfferPlan`, `inviteOfferEndsAt`, `inviteOfferUsedAt`; CHECK `profile_invite_offer`, migration `20261119160000_invite_offer`). Someone who already had an account gets none.
+- **What:** that plan, or a lower paid one, at **half price for the first 3 months**: a Checkout started before `inviteOfferEndsAt` (7 days after signing up) gets Stripe's coupon `invite-offer-half-3-months` (50% off, repeating 3 months) on a monthly plan, or `invite-offer-year-<plan>` on a yearly one: the same saving taken once off the first year (£14.99 on First Class, £7.49 on Business), since a 3-month coupon would halve a yearly plan's one bill. The server makes the coupons in Stripe the first time (fixed ids). Not with extra maps in the same Checkout, and never with a free month.
+- **One offer per account:** a promo code recorded at sign-up drops it, and an account with a promo code never gets it.
+- **Used** when the webhook sees the subscription it started (`subscription_data.metadata.inviteOffer`), once.
+- **Where it shows:** `GET /billing` `inviteOffer: { plan, endsAt }` (null when there's none, it's used or ended, or a subscription exists); `GET /invites/:token` `invite.offer: { plan, planName }` for a paid map; the share email to an address with no account (`offerPlanName`, `offerYearly`).
+
 ## Travel offers
 
 Partner offers shown as our own cards (docs/FEATURE-PLAN.md, "Ads" and "Travel Desk"): in photo galleries, at the end of a slideshow and on the public country pages, as the viewer's plan allows, and on the Travel Desk when someone asks. Nothing about the viewer is sent to choose them: the client gets every live offer once and picks one per slot.
@@ -474,7 +493,7 @@ Partner offers shown as our own cards (docs/FEATURE-PLAN.md, "Ads" and "Travel D
 | Method and path | Who | Body / returns |
 | --- | --- | --- |
 | `GET /offers` | anyone | `{ offers: [{ id, partner, kind, title, blurb, countryCode, placements, imageKey, weight }] }`: every offer live now (active, after `startsAt`, before `endsAt`). Never the link or the key. Cached 5 minutes (`public, max-age=300, s-maxage=300, stale-while-revalidate=3600`, `Vary: Origin`). |
-| `GET /go/:offerId?p=&dest=&country=&from=&to=` (mounted at `/go`, not `/api`) | anyone | A card's link. Adds one to today's (UTC) tally for that offer and placement `p` (one of the placements; anything else isn't counted), then **302** to the offer's `url` with its placeholders filled: `{destination}` from `dest` (a place name, cleaned, 80 characters at most), `{country}` from `country` (a code), `{checkin}` and `{checkout}` from `from` and `to` (`YYYY-MM-DD`). Each is URL-encoded, and left empty when unknown or malformed: a click is never refused for its query. At most 60 clicks per 15 minutes per IP are counted; past that it still redirects. `Cache-Control: no-store`, `Referrer-Policy: no-referrer`. An unknown offer → 404 `That offer doesn't exist.`; one that's off or outside its dates → 404 `That offer has ended.` |
+| `GET /go/:offerId?p=&dest=&country=&from=&to=` (mounted at `/go`, not `/api`) | anyone | A card's link. Adds one to today's (UTC) tally for that offer and placement `p` (one of the placements; anything else isn't counted), then **302** to the offer's `url` with its placeholders filled: `{destination}` from `dest` (a place name, cleaned, 80 characters at most; the client sends a landmark's or a country's name, never a stop's own place name), `{country}` from `country` (a code), `{checkin}` and `{checkout}` from `from` and `to` (`YYYY-MM-DD`). Each is URL-encoded, and left empty when unknown or malformed: a click is never refused for its query. At most 60 clicks per 15 minutes per IP are counted; past that it still redirects. `Cache-Control: no-store`, `Referrer-Policy: no-referrer`. An unknown offer → 404 `That offer doesn't exist.`; one that's off or outside its dates → 404 `That offer has ended.` |
 | `GET /users/admin/offers` | ADMIN or DEVELOPER | `{ offers: [{ ...every field, key, url, active, startsAt, endsAt, createdAt, updatedAt, clicks: { total, byPlacement: { GALLERY: n, … }, byDay: [{ day, count }] } }], clicksSince }`: the clicks of the last 30 days (`clicksSince` is the first day counted). |
 | `POST /users/admin/offers` | ADMIN or DEVELOPER | One offer (below) → 201 `{ offer }`. A taken key → 409; anything wrong → 400 `Check the offer's details: … (<field>)`. |
 | `PATCH /users/admin/offers/:offerId` | ADMIN or DEVELOPER | Any fields but `key` (sending another key → 400) → `{ offer }`. `active: false` takes it off every card and the Travel Desk, and keeps its tallies. |
@@ -492,7 +511,7 @@ Partner offers shown as our own cards (docs/FEATURE-PLAN.md, "Ads" and "Travel D
 | `blurb` | Optional, up to 200 |
 | `countryCode` | A country or special place, or null for a general offer (insurance, eSIMs, luggage) |
 | `placements` | Required, at least one of `GALLERY`, `SLIDESHOW`, `COUNTRY_PAGE`, `TRAVEL_DESK`, `PRINT` (under "Print or download": see "Downloads") |
-| `url` | Required, `https://`, up to 2,000 characters, no user or password, and no placeholders but `{destination}`, `{country}`, `{checkin}`, `{checkout}` |
+| `url` | Required, `https://`, up to 2,000 characters, no user or password, and no placeholders but `{destination}`, `{country}`, `{checkin}`, `{checkout}`, never in the host (a click's `dest` would choose where `/go` sends people) |
 | `imageKey` | Optional: a picture in the public bucket (`visitCountryPosters/jp-800.avif`), letters, digits, `/_.-` only, no `..`, ending `.avif`, `.webp`, `.jpg`, `.jpeg` or `.png` (never SVG). Without one the card draws its kind. |
 | `weight` | 1–100 (default 1): how often it's picked among the offers that fit a slot |
 | `active` | Default true |
@@ -505,17 +524,18 @@ Partner offers shown as our own cards (docs/FEATURE-PLAN.md, "Ads" and "Travel D
 
 ## Sharing
 
-The same routes exist for maps and trips: `:resource` is `maps` or `trips`. A trip's "owner" is the owner of its map.
+The same routes exist for maps and trips: `:resource` is `maps` or `trips`. A trip's "owner" is the owner of its map. "Managers" are the owner and, on a map (and its trips), its co-owners.
 
 | Method and path | Role | Body / returns |
 | --- | --- | --- |
-| `GET /:resource/:id/sharing` | owner (a trip's map owner) | `{ linkAccess, shareCode, shareUrl, members: [{ userId, name, email, role }], invites: [{ id, email, role, expiresAt }] }` |
-| `PATCH /:resource/:id/sharing` | owner | `{ linkAccess }` → the same as `GET` |
-| `POST /:resource/:id/sharing/reset-link` | owner | → `{ shareCode, shareUrl }`. Old links stop working. |
-| `POST /:resource/:id/members` | owner, with a **verified** email | `{ email, role }`. An active account whose address is **verified** is added and emailed → 201 `{ member }`. Anyone else (no account, or an unverified or deactivated one) gets a `ShareInvite` (token emailed, 14 days; replaces an earlier pending one for that address) → 201 `{ invite }`. Your own address → 400. An owner whose own address isn't verified → 403 `{ message }` (after the 404/403 role checks), and nothing is sent. Rate limited per IP and per user (below). |
-| `PATCH /:resource/:id/members/:userId` | owner | `{ role }` → `{ member }`. Promoting a map viewer to `EDITOR` when the map has 10 editors → 409 (below). |
-| `DELETE /:resource/:id/members/:userId` | owner, or the member themselves (leaving) | Leaving a trip also takes it off the maps that person added it to (see "Group trips"). |
-| `DELETE /:resource/:id/invites/:inviteId` | owner | |
+| `GET /:resource/:id/sharing` | managers | `{ owner: { userId, name, email }, linkAccess, shareCode, shareUrl, members: [{ userId, name, email, role, travellerId?, travellerName? }], invites: [{ id, email, role, expiresAt, travellerId?, travellerName? }] }` (a co-owner's traveller comes with them) |
+| `PATCH /:resource/:id/sharing` | managers | `{ linkAccess }` → the same as `GET` |
+| `POST /:resource/:id/sharing/reset-link` | managers | → `{ shareCode, shareUrl }`. Old links stop working. |
+| `POST /:resource/:id/members` | managers, with a **verified** email | `{ email, role, travellerId? }` (`role` `VIEWER`, `EDITOR`, or on a map `CO_OWNER` with the `travellerId` they'll be; see "Co-owners"). An active account whose address is **verified** is added and emailed → 201 `{ member }` (re-adding someone changes their role: how an editor becomes a co-owner). Anyone else (no account, or an unverified or deactivated one) gets a `ShareInvite` (token emailed, 14 days; replaces an earlier pending one for that address) → 201 `{ invite }`. Your own address, or the owner's → 400. A co-owner lowering a co-owner's role → 403. A manager whose own address isn't verified → 403 `{ message }` (after the 404/403 role checks), and nothing is sent. Rate limited per IP and per user (below). |
+| `PATCH /:resource/:id/members/:userId` | managers (only the owner changes a co-owner's role) | `{ role, travellerId? }` → `{ member }`. Promoting a map viewer to `EDITOR` when the map has 5 editors → 409 (below). |
+| `DELETE /:resource/:id/members/:userId` | the owner; a co-owner, anyone but a co-owner; or the member themselves (leaving) | Leaving a trip also takes it off the maps that person added it to (see "Group trips"). A co-owner leaving or removed lets go of their traveller (it stays, with no login). |
+| `DELETE /:resource/:id/invites/:inviteId` | managers | |
+| `GET /invites/:token` | anyone | What an invite is for, before signing in: `{ invite: { email, role, kind: 'map'|'trip', id, name, invitedBy, travellerName, expiresAt } }`. Holding the token is what proves the inbox, so it tells its holder nothing new. A bad, used or expired token → 404. Rate limited like accepting. |
 | `POST /invites/accept` | signed in | `{ token }` → `{ resource: 'map'|'trip', id }`. A bad, used or expired token → 400. The invite's address must be the user's **verified** email, else 403. Never lowers a role the user already has. Marking the invite used and adding the member is one transaction, so the same invite accepted twice at once counts once (the other gets 400). Rate limited like share codes. |
 | `GET /shared/:code` | anyone | Normalises the code (upper case, no dashes or spaces). A map → `{ resource: 'map', id, role, map, trips }` (`map` as `GET /maps/:id`, `trips` as `GET /maps/:id/trips`, with group trips added from other maps always in their limited form, `canOpen: false`). A trip → `{ resource: 'trip', id, role, trip }` (as `GET /trips/:id`, with `canOpenMap` always false: the share page doesn't link to the map). `role` is the caller's: `VIEWER` for link visitors, while a signed-in member keeps their own. 404 when the code is unknown, or the link is off and the caller isn't a member. Rate limited per IP (the lookup count). |
 | `GET /shared/:code/photos?country=&unplaced=&tripId=&cursor=&limit=` | anyone with the code | Like the map or trip photo list, with the same `role` rules. Rate limited (the browsing count; a code that matches nothing also uses the lookup count). |
@@ -523,20 +543,32 @@ The same routes exist for maps and trips: `:resource` is `maps` or `trips`. A tr
 | `GET /shared/:code/moments?country=&tripId=&cursor=&limit=` | anyone with the code | The map's moments, or the trip's, as `GET /maps/:mapId/moments` (see "Moments"), with the same `role` rules; a trip's link shows only that trip's photos in them. Rate limited like the photo list. |
 
 - **Pending invites are accepted automatically** too: as soon as an account verifies the invited address, or signs up already verified.
+- **Signing up from an invite's link** (19 Nov 2026): `POST /auth/sign-up/email` with the link's `inviteToken` and the invite's own address makes the account **verified** at once (the link only went to that inbox, which is what a verification email proves), sends no verification email, and accepts its invites. Any other address, or a used or expired token, signs up as usual.
 - **Caps on people** (every plan; `EDITORS_PER_MAP`, `PEOPLE_PER_TRIP` in `server/src/utils/constants/plans.js`):
-  - **a map** has up to 10 editors: its `EDITOR` members plus pending `EDITOR` invites. Adding the 11th (`POST …/members` with `role: 'EDITOR'`, as a member or an invite) or promoting a viewer → 409 `A map can have up to 10 editors.`. Viewers are unlimited;
+  - **a map** has up to 5 editors (10 until 19 Nov 2026): its `EDITOR` members plus pending `EDITOR` invites. Adding the 6th (`POST …/members` with `role: 'EDITOR'`, as a member or an invite) or promoting a viewer → 409 `A map can have up to 5 editors.`. Co-owners never count (see "Co-owners"). Viewers are unlimited;
   - **a trip** has up to 20 people: its members of any role plus pending trip invites, apart from the map's editors. The 21st → 409 `A trip can have up to 20 people.`. Changing a trip member's role adds nobody;
   - the person being added is left out of the count, so adding someone again (or replacing their pending invite) never trips it;
   - **accepting an invite never fails on a cap** (its place was held from when it was sent).
 - **Share emails** have a fixed subject, `<BusinessName>: a map was shared with you` (or `a trip`). The sharer's name appears only in the body, escaped; names are cleaned when they're set (see "Accounts").
 
 - **Share codes:** 12 characters from `23456789ABCDEFGHJKMNPQRSTVWXYZ`, shown as `XXXX-XXXX-XXXX`, stored without dashes.
+
+### Co-owners
+
+For couples and families (19 Nov 2026, the user's wish; docs/FEATURE-PLAN.md "Couples and families"): each adult has their own login, and the people a map is about share it as co-owners. Rules in `server/src/utils/access.js` (`canManage`, `isOwner`, `canSetMemberRole`, `canRemoveMember`) and `utils/planLimits.js` (`checkCoOwnerCap`).
+
+- **What a co-owner can do:** everything on that map (its content, its name, kind and UK split, its travellers, its sharing and its trips' sharing) except delete it, transfer it, make it the main map, pay for it, or take a co-owner's role away (only the owner does that). The map runs on the owner's plan, whoever looks. Each person's map settings (style, pins) stay their own.
+- **Every co-owner is one of the map's travellers:** `POST …/members` with `role: 'CO_OWNER'` needs a `travellerId` (400 without), one of the map's travellers with no login and no other pending co-owner invite (409 otherwise). Becoming a co-owner links that traveller to their account (`Traveller.userId`); a pending co-owner invite carries the traveller (`ShareInvite.travellerId`, CHECK `share_invite_co_owner`).
+- **How many:** one fewer than the map's travellers (the owner keeps one): none on a solo map, one on a couple's map. Counted as `CO_OWNER` members plus pending `CO_OWNER` invites, with the map row locked → 409 past it. Co-owners never count as editors.
+- **Travellers they need:** deleting a co-owner's traveller, or one invited as a co-owner, → 409; so does deleting a traveller that would leave fewer than the co-owners plus one.
+- **Maps only:** a trip's people are `VIEWER` or `EDITOR` (400 otherwise). A map's co-owner is a co-owner of its trips too (the higher of the two roles).
+- **Leaving and handing over:** a co-owner leaving, or removed, lets go of their traveller. When the owner deletes their account, a co-owner comes before an editor as the default heir (`heirFor`). Transferring a map to a co-owner keeps the old owner on as a co-owner when they're one of its travellers (they swap places).
 - **Share URL:** `https://<site>/shared/<code>`.
 - **Invite tokens:** 32 random bytes, base64url. Only their SHA-256 hash is stored.
 
 ## Map limits
 
-A map's plan is always its **owner's** plan, for everything: photos per country, originals or print copies, storage. An editor's own plan adds nothing. The rules are pure functions: `server/src/utils/plans.js` (the plan in force), `utils/mapSlots.js` (which maps are active) and `utils/planLimits.js` (the caps and their messages), all unit-tested. Names, prices and limits are in `utils/constants/plans.js`.
+A map's plan comes from its **owner**, for everything: photos per country, originals or print copies, storage, videos, ads, the passport cover: the owner's plan when the map is on it, else Economy's (one of the free maps; 19 Nov 2026). An editor's or co-owner's own plan adds nothing. The rules are pure functions: `server/src/utils/plans.js` (the plan in force), `utils/mapSlots.js` (which maps are active) and `utils/planLimits.js` (the caps and their messages), all unit-tested. Names, prices and limits are in `utils/constants/plans.js`.
 
 | | Economy (`FREE`) | Business (`REGULAR`) | First Class (`PREMIUM`) |
 | --- | --- | --- | --- |
@@ -545,11 +577,12 @@ A map's plan is always its **owner's** plan, for everything: photos per country,
 | Videos | no | no | yes |
 | Storage safety net, on each map | none | 50 GB | 200 GB |
 
-- **Map slots.** Every account has 1 included map slot, for its default map, plus one per extra map paid for (the subscription's extra-map quantity, while its status is `active`, `trialing` or `past_due`). An owner's maps are **active** when they are:
-  - the default map, always;
-  - in a transfer's grace period (`graceUntil` after now), whatever the slots;
-  - one of the first *n* other maps, oldest first, where *n* is the extra maps paid for. A map that came by transfer (it has a past `graceUntil`) queues behind the owner's own maps, so once its grace ends it's the one that needs paying for.
-- **Every other owned map is locked:** it stays viewable and shareable, and its countries, trips and travellers can still be changed, but it takes **no new photos** (presign and confirm → 403). Nothing is ever deleted for lack of payment; paying for another extra map, or making the map the main one (`POST /maps/:mapId/main`), unlocks it.
+- **Three free maps, then extra maps** (19 Nov 2026, the user's wish; `FREE_MAPS`, `INCLUDED_MAPS`, `FREE_ECONOMY_MAPS`). Every account owns 3 maps without paying, and each extra map paid for (the subscription's extra-map quantity, while its status is `active`, `trialing` or `past_due`) is one more on the plan. Each owned map has a `tier` (`utils/mapSlots.js`, on `GET /maps` and the owner's map reply):
+  - **`PLAN`**, the owner's plan: the default map, always; a map in a transfer's grace period (`graceUntil` after now), whatever the slots; then the first *n* others, *n* the extra maps paid for. The maps the owner chose to upgrade (`TravelMap.upgradedAt`) come first, in the order chosen; then the rest oldest first, a map that came by transfer (a past `graceUntil`) behind the owner's own;
+  - **`ECONOMY`**: the next 2 (the free maps), oldest first: Economy's limits whatever the owner pays;
+  - **`LOCKED`**: any more (a payment that stopped, or a map handed to someone who already has theirs).
+- **Upgrading a map:** `POST /maps/:mapId/upgrade` (the owner, verified) records the choice and answers `{ map }`: its `tier` is `PLAN` when an extra map already paid for was free to move (it was upgrading an unchosen map), else still `ECONOMY` until another extra map is paid for (the app then offers it). `DELETE /maps/:mapId/upgrade` takes the choice back. The main map is always on the plan. The owner's map reply carries `plan` (the map's own), `accountPlan` (the owner's), `tier` and `upgraded`; `GET /billing` carries `freeEconomyMaps` and `economyMapIds`. A new map past the 3 free ones and those paid for → 402 `You have your 3 free maps, and every extra map you've paid for is in use. An extra map costs …`.
+- **A locked map:** it stays viewable and shareable, and its countries, trips and travellers can still be changed, but it takes **no new photos** (presign and confirm → 403). Nothing is ever deleted for lack of payment; paying for another extra map, or making the map the main one (`POST /maps/:mapId/main`), unlocks it.
 - **A new map** (`POST /maps`) needs the active maps (grace ones included) to be fewer than the slots, else 402. The default map made at sign-up, or again by `GET /maps`, needs none.
 - **Photos per country** count every photo on the map in that country, hidden ones included, whoever uploaded them. Photos with no country are one more gallery under the same cap (17 Nov 2026: they had none, so Economy's storage had no limit): full → 409 `30 of 30 photos with no country on this map. Upgrade to add more.`, at confirm and when `PATCH /photos/:photoId` takes a photo out of its country; videos likewise under their own cap. Checked at presign (with the `countryCode` hint), at confirm (with the final country) and when `PATCH /photos/:photoId` changes the country; full → 409. A map over the cap after a downgrade keeps its photos; the country just takes no more.
 - **Downgrades** delete nothing: originals already kept stay, and new uploads keep a print copy.
@@ -559,7 +592,7 @@ A map's plan is always its **owner's** plan, for everything: photos per country,
 | Method and path | Role | Body / returns |
 | --- | --- | --- |
 | `POST /maps/:mapId/transfer` | owner, with a **verified** email | `{ userId, stayAsEditor = true }`. The new owner must already be on the map (a member of any role), with an active account and a verified address, else 400. Your own id → 400. → `{ map }`: the map as an editor sees it when you stay, else `{ id, name, role: null }`. |
-| `POST /users/admin/transfer-map` | ADMIN or DEVELOPER | `{ mapId, toEmail, keepOldOwnerAsEditor = false }`: for an owner who can't do it (a death, a lost address), after checking off the site. The target needs an active account (not necessarily on the map); none, or a deactivated one → 400 `That address has no active account to move the map to.`; the current owner → 400; an unknown map → 404. → `{ map: { id, name, ownerId, previousOwnerId, graceUntil } }` |
+| `POST /users/admin/transfer-map` | ADMIN or DEVELOPER | `{ mapId, toEmail, keepOldOwnerAsEditor = false }`: for an owner who can't do it (a death, a lost address), after checking off the site. The target needs an active account (not necessarily on the map); none, or a deactivated one → 400 `That address has no active account to move the map to.`; the current owner → 400; an unverified one → 400 `The new owner needs an active account with a verified email address.`; the admin's own account → 403 `You can't move a map to your own account from the admin panel.`; a developer's map moved by an admin who isn't one → 403 `Only a developer can manage developer accounts.` (19 Nov 2026, the audit); an unknown map → 404. → `{ map: { id, name, ownerId, previousOwnerId, graceUntil } }` |
 
 Both do the same, in one transaction:
 - `ownerId` becomes the new owner, and their `MapMember` row goes;
@@ -595,7 +628,7 @@ When the account is deleted (better-auth's `beforeDelete`, `services/travel/acco
 | `GET /users/export` | signed in | `{ format: 'my-planet-view-data', version: 1, site, exportedAt, linksWorkUntil, account, plan, mapsYouOwn, mapsSharedWithYou, tripsSharedWithYou, photosOnOtherMaps }`: the account (name, email, home country, map settings, the promo code signed up with), the plan in force (`{ id, name, from }`), the subscription and complimentary memberships, and the maps and trips you're on (`photosOnOtherMaps` is a count) |
 | `GET /users/export/maps/:mapId` | the map's **owner** | `{ map }`: its fields, travellers, `countries` (status, source, first visit, notes), `sharedWith` (names and roles) and `invites` (addresses you typed), trips with their stops, travellers, people and invites, `groupTripsAdded`, moments, `statesVisited`, `pins` (with their visits), goals, badges, `passportStampPhotos`, `photoCount` |
 | `GET /users/export/maps/:mapId/photos?cursor=` | the map's **owner** | `{ photos, nextCursor }`: 500 a page, newest upload first, hidden ones too. Each: caption, dates, country, trip, position, landmarks (with confirmation), who uploaded it, and `file: { copy, contentType, bytes, width, height, url }`, a signed link to its best copy (`ORIGINAL`, else `PRINT`) that saves as `photo-<date>-<id>.<ext>` and works for 7 days. A video has `file: null` and a `fileNote`: Stream keeps no original to hand back |
-| `GET /users/export/uploads?cursor=` | signed in | `{ photos, nextCursor }`: the photos you added to maps you don't own, the same shape plus `mapId`, `map` and `mapOwner` |
+| `GET /users/export/uploads?cursor=` | signed in | `{ photos, nextCursor }`: the photos you added to maps you don't own and can still open (you're on the map, or on the photo's trip), the same shape plus `mapId`, `map` and `mapOwner`. Taken off a map, or having left it, you no longer get the photos you added there (19 Nov 2026, the user's decision); `photosOnOtherMaps` counts the same |
 
 - Someone else's map, an editor's included, is a 404 (as if it didn't exist); a cursor that can't be one is a 400.
 - Other people appear by name only, never by address, apart from the invites you sent yourself.
@@ -609,7 +642,7 @@ The plan in force is computed, never stored: the highest of the subscription's p
 | --- | --- | --- | --- | --- |
 | Economy (`FREE`) | 0 | 0 | 399 | 3900 |
 | Business (`REGULAR`) | 499 | 4900 | 399 | 3900 |
-| First Class (`PREMIUM`) | 899 | 8900 | 599 | 5900 |
+| First Class (`PREMIUM`) | 999 | 9900 | 599 | 5900 |
 
 All under `/api/billing`, signed in. Every write needs a **verified** email and is rate limited per user. Without `STRIPE_SECRET_KEY` the writes answer **503** `Payments aren't set up yet.` (also when a price id they need isn't configured).
 

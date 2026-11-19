@@ -14,8 +14,6 @@ import { spotFitsPlace } from '../utils/momentSpots.js';
 import { deleteVisitInDB, upsertVisitInDB } from '../domain/maps.js';
 import { findMapPhotosByIds } from '../domain/moments.js';
 import {
-  countMapPins,
-  countPinVisits,
   createPinInDB,
   createPinVisitInDB,
   deletePinInDB,
@@ -174,9 +172,18 @@ export const createPinHandler = handler(D, 'Create pin', async (req, res) => {
     if (result.error) return badRequest(req, res, D, result.error);
     visit = result.value;
   }
-  if ((await countMapPins(map.id)) >= PINS_PER_MAP) return sendMessageResponse(res, 409, EVENT_MESSAGES.pinsFull);
-
-  const created = await createPinInDB({ ...parsed.value, mapId: map.id, countryCode: country, createdById: req.user.id, visit });
+  // A pin is an exact spot: a new one is seen by the map's editors only unless it's shared
+  // (`hidden: false`), as a moment's spot (19 Nov 2026, the user's decision, the audit's D1)
+  const created = await createPinInDB({
+    hidden: true,
+    ...parsed.value,
+    mapId: map.id,
+    countryCode: country,
+    createdById: req.user.id,
+    visit,
+    cap: PINS_PER_MAP,
+  });
+  if (!created) return sendMessageResponse(res, 409, EVENT_MESSAGES.pinsFull);
   // Ids only: never the pin's name, notes or position
   logEvent(createCountryMapEvent({ user: req.user, action: 'Pin Create Success', id: created.id, detail: `map=${map.id}`, statusCode: 201 }));
   return sendDataResponse(res, 201, { pin: await pinDetail(created.id, role) });
@@ -235,8 +242,8 @@ export const addPinVisitHandler = handler(D, 'Add pin visit', async (req, res) =
   const { pin, role } = loaded;
   const parsed = await parseVisitFor(pin.mapId, req.body);
   if (parsed.error) return badRequest(req, res, D, parsed.error);
-  if ((await countPinVisits(pin.id)) >= VISITS_PER_PIN) return sendMessageResponse(res, 409, EVENT_MESSAGES.pinVisitsFull);
-  const created = await createPinVisitInDB(pin.id, parsed.value);
+  const created = await createPinVisitInDB(pin.id, parsed.value, VISITS_PER_PIN);
+  if (!created) return sendMessageResponse(res, 409, EVENT_MESSAGES.pinVisitsFull);
   logEvent(createCountryMapEvent({ user: req.user, action: 'Pin Visit Create Success', id: created.id, detail: `pin=${pin.id}`, statusCode: 201 }));
   return sendDataResponse(res, 201, { pin: await pinDetail(pin.id, role) });
 });

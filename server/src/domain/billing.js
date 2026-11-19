@@ -18,7 +18,7 @@ const SUBSCRIPTION_SELECT = {
 const GRANT_SELECT = { id: true, plan: true, startsAt: true, endsAt: true, reason: true, grantedById: true, createdAt: true };
 
 // What decides which maps are active
-const SLOT_MAP_SELECT = { id: true, isDefault: true, createdAt: true, graceUntil: true };
+const SLOT_MAP_SELECT = { id: true, isDefault: true, createdAt: true, graceUntil: true, upgradedAt: true };
 
 const grantsInForce = (now) => ({ startsAt: { lte: now }, endsAt: { gt: now } });
 
@@ -67,13 +67,31 @@ export const findSubscriptionByCustomer = (stripeCustomerId) =>
  * Link a Stripe customer (and subscription, when known) to a user: from checkout, or
  * the first subscription event. A user has one row; a newer customer replaces the old id.
  */
-export const linkStripeCustomer = ({ userId, stripeCustomerId, stripeSubscriptionId }) =>
+export const linkStripeCustomer = ({ userId, stripeCustomerId, stripeSubscriptionId, clearStatus = false }) =>
   prisma.subscription.upsert({
     where: { userId },
     create: { userId, stripeCustomerId, stripeSubscriptionId: stripeSubscriptionId ?? null },
-    update: { stripeCustomerId, ...(stripeSubscriptionId ? { stripeSubscriptionId } : {}) },
+    update: { stripeCustomerId, ...(stripeSubscriptionId ? { stripeSubscriptionId } : {}), ...(clearStatus ? { status: null } : {}) },
     select: SUBSCRIPTION_SELECT,
   });
+
+/**
+ * Give the account this newly made Stripe customer, unless it has one already: two Checkouts
+ * at once each make one, and only the first to get here is kept (19 Nov 2026, the audit).
+ * -> the customer id the account has now: this one, or the other request's
+ */
+export async function claimStripeCustomer({ userId, stripeCustomerId }) {
+  // A row always has its customer (the column is required), so an account with none has no
+  // row: the first request to make one wins, and the other reads it
+  try {
+    await prisma.subscription.create({ data: { userId, stripeCustomerId } });
+    return stripeCustomerId;
+  } catch (err) {
+    if (err?.code !== 'P2002') throw err;
+  }
+  const row = await prisma.subscription.findUnique({ where: { userId }, select: { stripeCustomerId: true } });
+  return row?.stripeCustomerId ?? stripeCustomerId;
+}
 
 /** Write what Stripe says a subscription is now (its customer must already be this user's). */
 export const saveSubscriptionState = (userId, state) =>
@@ -85,9 +103,6 @@ export const findGrantsForUser = (userId) =>
   prisma.planGrant.findMany({ where: { userId }, select: GRANT_SELECT, orderBy: { createdAt: 'desc' } });
 
 export const createGrantInDB = (data) => prisma.planGrant.create({ data, select: GRANT_SELECT });
-
-/** A grant of the account's with this reason (a promo code's plan for life), or null. */
-export const findGrantByReason = (userId, reason) => prisma.planGrant.findFirst({ where: { userId, reason }, select: { id: true } });
 
 export const findGrant = (grantId) => prisma.planGrant.findUnique({ where: { id: grantId }, select: { ...GRANT_SELECT, userId: true } });
 

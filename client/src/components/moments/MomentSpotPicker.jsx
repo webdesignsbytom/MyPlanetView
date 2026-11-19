@@ -48,6 +48,9 @@ function MomentSpotPicker({ countryCode, value = null, onPick, onClose }) {
   // A tap (not the end of a drag, nor half of a double-tap, which zooms): the map point
   // under it, from the SVG's own screen transform
   const place = (e) => {
+    // Only a tap on the map itself: the zoom stamps sit in the same box (their icons are SVGs
+    // too), and a key pressed on one is a click at 0,0 (19 Nov 2026, the audit: they moved the pin)
+    if (e.detail === 0 || e.target.closest?.('button') || !e.target.closest?.('svg')) return;
     const ctm = e.currentTarget.querySelector('svg')?.getScreenCTM();
     if (!ctm) return;
     const point = new DOMPoint(e.clientX, e.clientY).matrixTransform(ctm.inverse());

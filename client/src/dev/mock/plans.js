@@ -6,6 +6,7 @@ import {
   COUNTING_SUBSCRIPTION_STATUSES,
   EDITORS_PER_MAP,
   INCLUDED_MAPS,
+  FREE_ECONOMY_MAPS,
   PEOPLE_PER_TRIP,
   TRANSFER_GRACE_DAYS,
   VIDEO_MAX_SECONDS,
@@ -64,32 +65,40 @@ export function addMonths(date, months) {
 
 const inGrace = (map, now) => Boolean(map.graceUntil) && time(map.graceUntil) > now;
 
+// As the server's utils/mapSlots.js (19 Nov 2026: 3 free maps, the main one on the plan and
+// two on Economy; chosen upgrades take the paid slots first)
+const byQueue = (a, b) =>
+  Number(!a.upgradedAt) - Number(!b.upgradedAt) ||
+  (a.upgradedAt && b.upgradedAt ? time(a.upgradedAt) - time(b.upgradedAt) : 0) ||
+  Number(Boolean(a.graceUntil)) - Number(Boolean(b.graceUntil)) ||
+  time(a.createdAt) - time(b.createdAt) ||
+  String(a.id).localeCompare(String(b.id));
+
 /** An owner's maps against their slots (optionally leaving one map out, for a transfer's grace). */
 export function mapSlots(ownerId, { exceptMapId = null, now = Date.now() } = {}) {
   const maps = getDb().maps.filter((m) => m.ownerId === ownerId && m.id !== exceptMapId);
   const paid = extraMapsPaid(ownerId);
-  const active = new Set(maps.filter((m) => m.isDefault || inGrace(m, now)).map((m) => m.id));
+  const onPlan = new Set(maps.filter((m) => m.isDefault || inGrace(m, now)).map((m) => m.id));
   const includedLeft = Math.max(0, INCLUDED_MAPS - maps.filter((m) => m.isDefault).length);
-  maps
-    .filter((m) => !active.has(m.id))
-    .sort(
-      (a, b) =>
-        Number(Boolean(a.graceUntil)) - Number(Boolean(b.graceUntil)) ||
-        time(a.createdAt) - time(b.createdAt) ||
-        String(a.id).localeCompare(String(b.id)),
-    )
-    .slice(0, includedLeft + paid)
-    .forEach((m) => active.add(m.id));
+  const queue = maps.filter((m) => !onPlan.has(m.id)).sort(byQueue);
+  const planned = queue.slice(0, includedLeft + paid);
+  planned.forEach((m) => onPlan.add(m.id));
+  const rest = queue.slice(planned.length).sort((a, b) => byQueue({ ...a, upgradedAt: null }, { ...b, upgradedAt: null }));
+  const onEconomy = new Set(rest.slice(0, FREE_ECONOMY_MAPS).map((m) => m.id));
+  const tierOf = (id) => (onPlan.has(id) ? 'PLAN' : onEconomy.has(id) ? 'ECONOMY' : 'LOCKED');
   const slots = INCLUDED_MAPS + paid;
   return {
-    lockedIds: maps.filter((m) => !active.has(m.id)).map((m) => m.id),
+    economyIds: maps.filter((m) => onEconomy.has(m.id)).map((m) => m.id),
+    lockedIds: maps.filter((m) => tierOf(m.id) === 'LOCKED').map((m) => m.id),
+    tiers: Object.fromEntries(maps.map((m) => [m.id, tierOf(m.id)])),
     slots,
-    used: active.size,
-    canCreate: active.size < slots,
+    used: onPlan.size,
+    canCreate: onPlan.size + onEconomy.size < slots + FREE_ECONOMY_MAPS,
   };
 }
 
-export const isMapLocked = (map) => mapSlots(map.ownerId).lockedIds.includes(map.id);
+export const mapTier = (map) => mapSlots(map.ownerId).tiers[map.id] || 'LOCKED';
+export const isMapLocked = (map) => mapTier(map) === 'LOCKED';
 
 /** A map going to `toUserId`: 60 days' grace when they have no free slot, else none. */
 export const graceForNewOwner = (mapId, toUserId) =>
@@ -97,7 +106,8 @@ export const graceForNewOwner = (mapId, toUserId) =>
 
 // What the map and trip views carry (owner and editors, never share links)
 
-export const mapPlanId = (map) => effectivePlan(map.ownerId).plan;
+// A map's own plan: the owner's when it's on it, else Economy's (a free map, or a locked one)
+export const mapPlanId = (map) => (mapTier(map) === 'PLAN' ? effectivePlan(map.ownerId).plan : 'FREE');
 
 // Photos per country, or with kind 'VIDEO' videos per country (each has its own cap),
 // hidden ones included
@@ -130,6 +140,9 @@ export function uploadRules(map) {
 
 export const mapPlanFields = (map) => ({
   plan: planView(mapPlanId(map)),
+  accountPlan: planView(effectivePlan(map.ownerId).plan),
+  tier: mapTier(map),
+  upgraded: Boolean(map.upgradedAt),
   locked: isMapLocked(map),
   graceUntil: map.graceUntil || null,
   photoCounts: photoCounts(map.id),
@@ -143,7 +156,7 @@ export const LOCKED_MAP_MESSAGE =
   "This map isn't paid for, so it can't take new photos. Its owner can pay for it as an extra map, or make it their main map.";
 
 export const mapSlotsMessage = (planId) =>
-  `Your plan includes 1 map, and every extra map you've paid for is in use. ${extraMapPriceText(planId)}`;
+  `You have your 3 free maps, and every extra map you've paid for is in use. ${extraMapPriceText(planId)}`;
 
 /** The third file a photo may send on this plan: null, or the 400 message. */
 export function photoSizesProblem(sizes, planId) {
@@ -242,6 +255,27 @@ export function setMockPlan(userId, choice, extraMaps) {
   }
 }
 
+// The invite offer (19 Nov 2026, the server's utils/inviteOffer.js): kept on the user, as the
+// server keeps it on the profile
+
+const paidPlan = (plan) => plan === 'REGULAR' || plan === 'PREMIUM';
+
+/** The offer `user` can use now (for `plan` when given): `{ plan, endsAt }` or null. */
+export function usableInviteOffer(user, { plan = null } = {}) {
+  if (!user?.inviteOfferPlan || user.inviteOfferUsedAt || !user.inviteOfferEndsAt || isLive(subscriptionOf(user.id))) return null;
+  if (time(user.inviteOfferEndsAt) <= Date.now()) return null;
+  if (plan !== null && (!paidPlan(plan) || planOf(plan).rank > planOf(user.inviteOfferPlan).rank)) return null;
+  return { plan: user.inviteOfferPlan, endsAt: user.inviteOfferEndsAt };
+}
+
+/** A new account from an invite to a paid map (`mapPlan`): the offer, unless it has a promo code or one already. */
+export function recordInviteOffer(user, mapPlan) {
+  if (!paidPlan(mapPlan) || user.promoCodeId || user.inviteOfferPlan) return;
+  user.inviteOfferPlan = mapPlan;
+  user.inviteOfferEndsAt = new Date(Date.now() + 7 * DAY_MS).toISOString();
+  user.inviteOfferUsedAt = null;
+}
+
 // GET /billing
 
 export function billingView(userId) {
@@ -257,9 +291,12 @@ export function billingView(userId) {
     cancelAtPeriodEnd: sub?.cancelAtPeriodEnd ?? false,
     grant: grant ? { plan: grant.plan, endsAt: grant.endsAt } : null,
     promoTrial: isLive(sub) ? null : promoTrialFor(getDb().users.find((u) => u.id === userId)),
+    inviteOffer: usableInviteOffer(getDb().users.find((u) => u.id === userId)),
     includedMaps: INCLUDED_MAPS,
+    freeEconomyMaps: FREE_ECONOMY_MAPS,
     extraMapsPaid: extraMapsPaid(userId),
     ownedMaps: getDb().maps.filter((m) => m.ownerId === userId).length,
+    economyMapIds: mapSlots(userId).economyIds,
     lockedMapIds: mapSlots(userId).lockedIds,
     prices: pricesView(),
     paymentsEnabled: true,

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../prisma.js';
 import { createMissingVisits } from './maps.js';
 import { withParentPlaces } from '../utils/specialPlaces.js';
@@ -95,12 +96,13 @@ export const findPins = async (mapId, { countryCode, includeHidden = false } = {
   const ids = pins.map((p) => p.id);
   const [visits, latest] = await Promise.all([
     prisma.mapPinVisit.groupBy({ by: ['pinId'], where: { pinId: { in: ids } }, _count: { _all: true } }),
-    prisma.mapPinVisit.findMany({
-      where: { pinId: { in: ids }, visitedOn: { not: null } },
-      select: { pinId: true, visitedOn: true, datePrecision: true },
-      orderBy: [{ pinId: 'asc' }, { visitedOn: 'desc' }],
-      distinct: ['pinId'],
-    }),
+    // Each pin's latest dated visit, chosen by Postgres (Prisma's `distinct` fetches every
+    // row and drops the rest itself; 19 Nov 2026, the audit)
+    prisma.$queryRaw`
+      SELECT DISTINCT ON ("pinId") "pinId", "visitedOn", "datePrecision"::text AS "datePrecision"
+      FROM "map_pin_visit"
+      WHERE "pinId" IN (${Prisma.join(ids)}) AND "visitedOn" IS NOT NULL
+      ORDER BY "pinId", "visitedOn" DESC, "id"`,
   ]);
   const countOf = new Map(visits.map((v) => [v.pinId, v._count._all]));
   const latestOf = new Map(latest.map((v) => [v.pinId, v]));
@@ -121,7 +123,7 @@ export const findPinDetail = (pinId) =>
           notes: true,
           createdAt: true,
           photos: {
-            select: { photo: { select: { id: true, tripId: true, hidden: true, countryCode: true, variants: thumbOf } } },
+            select: { photo: { select: { id: true, tripId: true, hidden: true, kind: true, videoState: true, countryCode: true, variants: thumbOf } } },
             orderBy: [{ position: 'asc' }, { photoId: 'asc' }],
           },
         },
@@ -130,19 +132,24 @@ export const findPinDetail = (pinId) =>
     },
   });
 
-export const countMapPins = (mapId) => prisma.mapPin.count({ where: { mapId } });
-export const countPinVisits = (pinId) => prisma.mapPinVisit.count({ where: { pinId } });
-
-/** A new pin, with its first visit when given (and that visit's photos, in order). -> `{ id }` */
-export const createPinInDB = ({ visit, ...data }) =>
-  prisma.mapPin.create({
-    data: {
-      ...data,
-      ...(visit
-        ? { visits: { create: { ...visit.data, photos: { create: (visit.photoIds ?? []).map((photoId, position) => ({ photoId, position })) } } } }
-        : {}),
-    },
-    select: { id: true },
+/**
+ * A new pin, with its first visit when given (and that visit's photos, in order), unless the
+ * map has `cap` pins already: counted with the map row locked, so two at once can't both
+ * pass it (19 Nov 2026, the audit). -> `{ id }`, or null when full
+ */
+export const createPinInDB = ({ visit, cap, ...data }) =>
+  prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT 1 FROM "travel_map" WHERE "id" = ${data.mapId} FOR NO KEY UPDATE`;
+    if ((await tx.mapPin.count({ where: { mapId: data.mapId } })) >= cap) return null;
+    return tx.mapPin.create({
+      data: {
+        ...data,
+        ...(visit
+          ? { visits: { create: { ...visit.data, photos: { create: (visit.photoIds ?? []).map((photoId, position) => ({ photoId, position })) } } } }
+          : {}),
+      },
+      select: { id: true },
+    });
   });
 
 export const updatePinInDB = (pinId, data) => prisma.mapPin.update({ where: { id: pinId }, data, select: { id: true } });
@@ -151,10 +158,15 @@ export const deletePinInDB = (pinId) => prisma.mapPin.delete({ where: { id: pinI
 /** One of a pin's visits (`{ id, pinId }`), or null. */
 export const findPinVisit = (visitId, pinId) => prisma.mapPinVisit.findFirst({ where: { id: visitId, pinId }, select: { id: true, pinId: true } });
 
-export const createPinVisitInDB = (pinId, { data, photoIds = [] }) =>
-  prisma.mapPinVisit.create({
-    data: { ...data, pinId, photos: { create: photoIds.map((photoId, position) => ({ photoId, position })) } },
-    select: { id: true },
+/** A new visit to a pin, unless it has `cap` already (counted with the pin row locked). -> `{ id }`, or null when full */
+export const createPinVisitInDB = (pinId, { data, photoIds = [] }, cap) =>
+  prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT 1 FROM "map_pin" WHERE "id" = ${pinId} FOR NO KEY UPDATE`;
+    if ((await tx.mapPinVisit.count({ where: { pinId } })) >= cap) return null;
+    return tx.mapPinVisit.create({
+      data: { ...data, pinId, photos: { create: photoIds.map((photoId, position) => ({ photoId, position })) } },
+      select: { id: true },
+    });
   });
 
 /** Change a visit; `photoIds`, when given, replaces its photos (in that order). One transaction. */

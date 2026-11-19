@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 // Icons
-import { FaConciergeBell } from 'react-icons/fa';
+import { FaPlane } from 'react-icons/fa';
 // Hooks
 import useOffers from '@/hooks/useOffers';
 import useCountryGuides from '@/hooks/useCountryGuides';
@@ -41,7 +41,7 @@ function TravelDeskDialog({ countryCodes, trip = null, guideOnPage = null, onClo
     <Modal title='Travel Desk' onClose={onClose} wide>
       <div className='grid gap-2'>
         <p className='grid grid-cols-reg items-center gap-2 font-travel text-lg uppercase leading-tight tracking-wide text-poster-brown'>
-          <FaConciergeBell aria-hidden='true' />
+          <FaPlane aria-hidden='true' />
           <span>{[place ? `For ${place}` : 'For your travels', dates].filter(Boolean).join(' · ')}</span>
         </p>
         <p className='justify-self-start -rotate-1 border-2 border-dashed border-poster-red-deep px-3 py-1.5 text-sm font-semibold text-poster-red-deep'>

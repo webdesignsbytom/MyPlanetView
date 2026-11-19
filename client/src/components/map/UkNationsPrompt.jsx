@@ -7,8 +7,6 @@ import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { UK_NATION_CODES } from '@/utils/map/ukNations';
 import { VISIT_STATUS_LABELS } from '@/utils/map/visitStatus';
 
-const RANK = { WANT_TO_GO: 1, VISITED: 2, LIVED: 3 };
-
 /**
  * The UK's ticket on a map that splits it, while the UK itself is still marked from before
  * the split (docs/API.md "The UK's nations"): which of its nations does that mark mean?
@@ -37,7 +35,9 @@ function UkNationsPrompt({ ukStatus, visitOf, canEdit, onChoose }) {
     setSaving(true);
     setError(null);
     try {
-      await onChoose(chosen.filter((code) => (RANK[visitOf(code)?.status] ?? 0) < RANK[ukStatus]));
+      // Every nation ticked, those marked already too: the UK's note and first visit go to
+      // the first of them (CountryPanel), and none is lowered there
+      await onChoose(chosen);
     } catch (err) {
       setError(err.friendlyMessage || 'That change could not be saved.');
       setSaving(false);

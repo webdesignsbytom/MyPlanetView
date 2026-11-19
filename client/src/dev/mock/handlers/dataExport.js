@@ -16,6 +16,13 @@ const BAD_CURSOR = 'That page of the export doesn’t exist. Start the download 
 const iso = (value) => (value ? new Date(value).toISOString() : null);
 const day = (value) => (value ? String(value).slice(0, 10) : null);
 const place = (row) => ({ landmarkId: row.landmarkId ?? null, landmarkName: landmarkById(row.landmarkId)?.name ?? null, placeName: row.placeName ?? null });
+// A photo someone added to a map they don't own and can still open (a member of the map, or
+// of the photo's trip), as the server: taken off a map, they no longer get its photos
+const isUploadElsewhere = (db, photo, userId) =>
+  photo.uploaderId === userId &&
+  db.maps.find((m) => m.id === photo.mapId)?.ownerId !== userId &&
+  (db.mapMembers.some((m) => m.mapId === photo.mapId && m.userId === userId) ||
+    (Boolean(photo.tripId) && db.tripMembers.some((m) => m.tripId === photo.tripId && m.userId === userId)));
 const newestFirst = (a, b) => (a.createdAt === b.createdAt ? (a.id < b.id ? 1 : -1) : a.createdAt < b.createdAt ? 1 : -1);
 
 // The server's cursor: "<createdAt in ms>.<photo id>"
@@ -233,7 +240,7 @@ export function registerDataExportRoutes() {
           const map = db.maps.find((x) => x.id === trip?.mapId);
           return { id: m.tripId, title: trip?.title ?? null, map: map?.name ?? null, owner: userName(map?.ownerId), role: m.role, since: iso(m.createdAt) };
         }),
-      photosOnOtherMaps: db.photos.filter((p) => p.uploaderId === user.id && db.maps.find((m) => m.id === p.mapId)?.ownerId !== user.id).length,
+      photosOnOtherMaps: db.photos.filter((p) => isUploadElsewhere(db, p, user.id)).length,
     });
   });
 
@@ -252,7 +259,7 @@ export function registerDataExportRoutes() {
 
   route('GET', '/api/users/export/uploads', ({ query }) => {
     const db = getDb();
-    const mine = db.photos.filter((p) => p.uploaderId === me().id && db.maps.find((m) => m.id === p.mapId)?.ownerId !== me().id);
+    const mine = db.photos.filter((p) => isUploadElsewhere(db, p, me().id));
     const page = pageAfterCursor(mine, query.cursor);
     if (!page) return fail(400, BAD_CURSOR);
     return ok({

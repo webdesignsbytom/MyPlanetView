@@ -108,6 +108,8 @@ export const EVENT_MESSAGES = {
   invalidName: `Give it a name of 1 to 80 characters.`,
   travellerNotFound: `That traveller isn't on this map.`,
   lastTraveller: `A map needs at least one traveller.`,
+  travellerIsCoOwner: `This traveller is a co-owner, or invited as one. Take that away in Share first.`,
+  coOwnersNeedTravellers: `Every co-owner is one of the map's travellers, and the owner needs one too.`,
   tooManyTravellers: `A map can have up to 20 travellers.`,
   soloMapFull: `A map that's just for you has one traveller. Choose "A couple" or "A family" to add more.`,
   coupleMapFull: `A couple's map has two travellers. Choose "A family" to add more.`,
@@ -117,7 +119,7 @@ export const EVENT_MESSAGES = {
   invalidDate: `Dates must be real dates written as YYYY-MM-DD.`,
   visitNotFound: `That country isn't marked on this map.`,
   notesInvalid: `A country's notes must be text.`,
-  invalidMapSettings: `Map settings must be an object: style is animated or old-map; the switches are true or false.`,
+  invalidMapSettings: `Map settings must be an object: style is animated, mono, old-map or starry; the switches are true or false.`,
   // Trips
   tripNotFound: `That trip doesn't exist, or it hasn't been shared with you.`,
   invalidTripStatus: `Status must be PLANNED, ACTIVE or COMPLETED.`,
@@ -209,6 +211,10 @@ export const EVENT_MESSAGES = {
   photoMoveTargetGone: `The photo it was dropped next to has moved or gone. Reload and try again.`,
   // Sharing
   invalidShareRole: `Role must be VIEWER or EDITOR.`,
+  invalidMapShareRole: `Role must be VIEWER, EDITOR or CO_OWNER.`,
+  coOwnerNeedsTraveller: `Choose which of the map's travellers a co-owner is.`,
+  coOwnerTravellerTaken: `That traveller already has a login, or is invited as a co-owner.`,
+  onlyOwnerChangesCoOwner: `Only the map's owner can take away a co-owner's role.`,
   invalidLinkAccess: `General access must be RESTRICTED or ANYONE_WITH_LINK.`,
   invalidEmail: `Enter a valid email address.`,
   cannotShareWithOwner: `The owner already has access.`,
@@ -221,11 +227,12 @@ export const EVENT_MESSAGES = {
   shareNeedsVerifiedEmail: `Verify your email address before adding people. Use the link we emailed you, or send a new one from your account page.`,
   contentNeedsVerifiedEmail: `Verify your email address to add to your map or share it. Use the link we emailed you, or send a new one from your account page.`,
   // Map limits and transfers
-  mapSlotsUsed: `Your plan includes 1 map, and every extra map you've paid for is in use.`,
+  mapSlotsUsed: `You have your 3 free maps, and every extra map you've paid for is in use.`,
   transferTargetNotMember: `Only someone already on this map can become its owner. Add them first.`,
   transferTargetNotReady: `The new owner needs an active account with a verified email address.`,
   transferToSelf: `You already own this map.`,
   transferTargetNoAccount: `That address has no active account to move the map to.`,
+  cannotTransferToSelfAdmin: `You can't move a map to your own account from the admin panel.`,
   invalidUserId: `Say who the new owner is (their user id).`,
   // Leaving
   leavingPlanInvalid: `List each map you own once, with TRANSFER (to someone on that map) or DELETE, and say whether to leave your photos.`,

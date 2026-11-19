@@ -1,6 +1,8 @@
 import React, { useEffect, useId, useRef } from 'react';
 // Components
 import Button from '@/components/common/Button';
+// Utils
+import { lockBodyScroll } from '@/utils/layout/bodyScrollLock';
 
 function ConfirmModal({ onClose, onConfirm, header, message }) {
   const titleId = useId();
@@ -13,8 +15,8 @@ function ConfirmModal({ onClose, onConfirm, header, message }) {
   useEffect(() => {
     previouslyFocusedRef.current = document.activeElement;
 
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    // The page's one counted lock (bodyScrollLock.js), shared with every other dialog
+    const releaseScroll = lockBodyScroll();
 
     if (cancelButtonRef.current) {
       cancelButtonRef.current.focus();
@@ -56,9 +58,9 @@ function ConfirmModal({ onClose, onConfirm, header, message }) {
     document.addEventListener('keydown', onKeyDown, true);
 
     return () => {
-      document.body.style.overflow = prevOverflow;
+      releaseScroll();
       document.removeEventListener('keydown', onKeyDown, true);
-      if (previouslyFocusedRef.current?.focus) {
+      if (previouslyFocusedRef.current?.isConnected && previouslyFocusedRef.current.focus) {
         previouslyFocusedRef.current.focus();
       }
     };

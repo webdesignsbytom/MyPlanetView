@@ -7,9 +7,9 @@ import VerifyFirstNote from './VerifyFirstNote';
 // Utils
 import { forgetMapLists } from '@/utils/map/mapListCache';
 
-// The owner's choice of main map (POST /maps/:mapId/main): every plan includes one map,
-// the rest are extra maps that need paying for. Making this one the main map unlocks it,
-// and the old main map becomes an extra map. Shown for a map that isn't the main one.
+// The owner's choice of main map (POST /maps/:mapId/main): the main map always runs on the
+// account's plan; the others are free maps on Economy, or extra maps paid for (19 Nov 2026).
+// Making this one the main map puts it on the plan, and the old main map takes its place. Shown for a map that isn't the main one.
 // `locked`: the email address isn't verified yet, so it says that instead.
 function MainMapSection({ map, locked = false, onChanged }) {
   const [busy, setBusy] = useState(false);
@@ -35,8 +35,8 @@ function MainMapSection({ map, locked = false, onChanged }) {
         Main map
       </h3>
       <p className='text-sm opacity-80'>
-        Your plan includes one map; the others are extra maps. Make “{map.name}” the included one, and your current main map
-        becomes an extra map.
+        Your main map always runs on your plan; the others are free maps on Economy, or extra maps you pay for. Make
+        “{map.name}” your main map, and your current main map takes its place.
       </p>
       {locked ? (
         <VerifyFirstNote action='choose your main map' />

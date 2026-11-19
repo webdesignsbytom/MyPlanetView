@@ -38,13 +38,16 @@ const presign = (agent, mapId, sizes, extra = {}) =>
   });
 
 describe('map slots', () => {
-  it('a second map needs a paid extra map (402); a paid slot makes room', async () => {
+  it('three maps free, then a paid extra map (402); paying makes room', async () => {
     const { agent, user } = await signUp('Slots');
+    const first = data(await agent.post('/api/maps').send(NEW_MAP)).map;
+    expect(first).toBeTruthy();
+    expect((await agent.post('/api/maps').send(NEW_MAP)).status).toBe(201);
     const refused = await agent.post('/api/maps').send(NEW_MAP);
     expect(refused.status).toBe(402);
     expect(refused.body).toEqual({
       status: 'fail',
-      message: "Your plan includes 1 map, and every extra map you've paid for is in use. An extra map costs £3.99 a month or £39 a year.",
+      message: "You have your 3 free maps, and every extra map you've paid for is in use. An extra map costs £3.99 a month or £39 a year.",
     });
     // The body is checked before the slot
     expect((await agent.post('/api/maps').send({ ...NEW_MAP, travellers: [] })).status).toBe(400);
@@ -59,18 +62,48 @@ describe('map slots', () => {
     await givePlan(user.id, { plan: 'PREMIUM', extraMaps: 1 });
     expect((await agent.post('/api/maps').send(NEW_MAP)).body.message).toMatch(/An extra map costs £5\.99 a month or £59 a year\.$/);
 
-    // A subscription that has ended pays for nothing: the extra map is locked, not deleted
+    // A subscription that has ended pays for nothing: the newest map is locked, not deleted
     await givePlan(user.id, { extraMaps: 1, status: 'canceled' });
     const maps = data(await agent.get('/api/maps')).maps;
-    expect(maps.find((m) => m.id === extra.id)).toMatchObject({ locked: true, graceUntil: null });
-    expect(maps.find((m) => m.isDefault)).toMatchObject({ locked: false, graceUntil: null });
-    expect(await prisma.travelMap.count({ where: { ownerId: user.id } })).toBe(2);
+    expect(maps.find((m) => m.id === extra.id)).toMatchObject({ locked: true, tier: 'LOCKED', graceUntil: null });
+    expect(maps.find((m) => m.id === first.id)).toMatchObject({ locked: false, tier: 'ECONOMY' });
+    expect(maps.find((m) => m.isDefault)).toMatchObject({ locked: false, tier: 'PLAN', graceUntil: null });
+    expect(await prisma.travelMap.count({ where: { ownerId: user.id } })).toBe(4);
+  });
+
+  it('a free map runs on Economy until the owner upgrades it with a paid extra map', async () => {
+    const owner = await signUp('Upgrader');
+    await givePlan(owner.user.id, { plan: 'PREMIUM' });
+    const older = data(await owner.agent.post('/api/maps').send(NEW_MAP)).map;
+    const solo = data(await owner.agent.post('/api/maps').send(NEW_MAP)).map;
+    const view = async (id) => data(await owner.agent.get(`/api/maps/${id}`)).map;
+    expect(await view(solo.id)).toMatchObject({ tier: 'ECONOMY', plan: { id: 'FREE' }, accountPlan: { id: 'PREMIUM' }, upgraded: false });
+    expect((await view(solo.id)).uploadRules).toMatchObject({ keepsOriginals: false, photosPerCountry: 30, videos: null });
+
+    // Chosen, but no extra map paid for yet: it waits
+    const chosen = await owner.agent.post(`/api/maps/${solo.id}/upgrade`);
+    expect(chosen.status).toBe(200);
+    expect(data(chosen).map).toMatchObject({ tier: 'ECONOMY', upgraded: true });
+    // Paid for: the chosen map takes the slot, not the older one
+    await givePlan(owner.user.id, { plan: 'PREMIUM', extraMaps: 1 });
+    expect(await view(solo.id)).toMatchObject({ tier: 'PLAN', plan: { id: 'PREMIUM' } });
+    expect((await view(solo.id)).uploadRules).toMatchObject({ keepsOriginals: true, photosPerCountry: 1000 });
+    expect(await view(older.id)).toMatchObject({ tier: 'ECONOMY' });
+    // Moving the upgrade: the choice taken back, the older map has the slot again
+    expect((await owner.agent.delete(`/api/maps/${solo.id}/upgrade`)).status).toBe(200);
+    expect(await view(older.id)).toMatchObject({ tier: 'PLAN' });
+    expect(await view(solo.id)).toMatchObject({ tier: 'ECONOMY', upgraded: false });
+    // The owner's alone
+    const stranger = await signUp('NotYours');
+    expect((await stranger.agent.post(`/api/maps/${solo.id}/upgrade`)).status).toBe(404);
   });
 
   it('a locked map takes no photos but stays editable; the owner picks the main map', async () => {
     const owner = await signUp('Locky');
     await givePlan(owner.user.id, { extraMaps: 1 });
-    const home = await defaultMapOf(owner.agent);
+    // Three free maps and one paid for: the newest is locked once the payment stops
+    await owner.agent.post('/api/maps').send(NEW_MAP);
+    const second = data(await owner.agent.post('/api/maps').send(NEW_MAP)).map;
     const extra = data(await owner.agent.post('/api/maps').send(NEW_MAP)).map;
     expect((await uploadPhoto(owner.agent, extra.id, { countryCode: 'FR' })).status).toBe(201);
 
@@ -103,7 +136,9 @@ describe('map slots', () => {
     expect(view).toMatchObject({ locked: true, uploadRules: { locked: true } });
     expect(view.photoCounts).toEqual({ FR: 1 });
 
-    // Making it the main map unlocks it, and locks the old default instead
+    // Making it the main map unlocks it; the old default becomes a free map, and the newest
+    // of the others is the one locked instead
+    const home = await defaultMapOf(owner.agent);
     const main = await owner.agent.post(`/api/maps/${extra.id}/main`);
     expect(main.status).toBe(200);
     expect(data(main).map).toMatchObject({ id: extra.id, isDefault: true, locked: false });
@@ -111,7 +146,7 @@ describe('map slots', () => {
     expect(rows.find((m) => m.id === extra.id)).toMatchObject({ isDefault: true, defaultForOwnerId: owner.user.id });
     expect(rows.find((m) => m.id === home.id)).toMatchObject({ isDefault: false, defaultForOwnerId: null });
     expect((await uploadPhoto(owner.agent, extra.id, { countryCode: 'FR' })).status).toBe(201);
-    expect((await presign(owner.agent, home.id, ['THUMB', 'DISPLAY', 'PRINT'])).status).toBe(403);
+    expect((await presign(owner.agent, second.id, ['THUMB', 'DISPLAY', 'PRINT'])).status).toBe(403);
     // Nobody else can choose it
     const stranger = await signUp('NotOwner');
     expect((await stranger.agent.post(`/api/maps/${home.id}/main`)).status).toBe(404);
@@ -351,24 +386,24 @@ describe('plan fields on maps and trips', () => {
 describe('caps on people', () => {
   const shareEmailTo = (to) => sentEmails().filter((e) => e.to === to && e.template === 'shareEmail');
 
-  it('a map takes 10 editors, members and pending invites together; viewers are unlimited', async () => {
+  it('a map takes 5 editors, members and pending invites together; viewers are unlimited', async () => {
     const owner = await signUp('Crowded');
     const map = await defaultMapOf(owner.agent);
     const members = [await signUp('Ed1'), await signUp('Viewer1')];
     expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: members[0].email, role: 'EDITOR' })).status).toBe(201);
     expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: members[1].email, role: 'VIEWER' })).status).toBe(201);
-    // 9 invites to addresses with no account: 10 editors in all
+    // 4 invites to addresses with no account: 5 editors in all
     const invited = [];
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 4; i++) {
       const email = testEmail(`editor-invite-${i}`);
       invited.push(email);
       expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email, role: 'EDITOR' })).status).toBe(201);
     }
 
-    const message = 'A map can have up to 10 editors.';
-    const eleventh = await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: testEmail('one-too-many'), role: 'EDITOR' });
-    expect(eleventh.status).toBe(409);
-    expect(eleventh.body).toEqual({ status: 'fail', message });
+    const message = 'A map can have up to 5 editors.';
+    const sixth = await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: testEmail('one-too-many'), role: 'EDITOR' });
+    expect(sixth.status).toBe(409);
+    expect(sixth.body).toEqual({ status: 'fail', message });
     const promote = await owner.agent.patch(`/api/maps/${map.id}/members/${members[1].user.id}`).send({ role: 'EDITOR' });
     expect(promote.status).toBe(409);
     expect(promote.body.message).toBe(message);
@@ -382,7 +417,7 @@ describe('caps on people', () => {
     // An invite holds its place, and accepting it never fails on the cap
     const newcomer = await signUp('editor-invite-late', { verified: true });
     const lateEmail = testEmail('accepting');
-    await prisma.shareInvite.deleteMany({ where: { mapId: map.id, email: invited[8] } });
+    await prisma.shareInvite.deleteMany({ where: { mapId: map.id, email: invited[3] } });
     expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: lateEmail, role: 'EDITOR' })).status).toBe(201);
     await prisma.user.update({ where: { id: newcomer.user.id }, data: { email: lateEmail } });
     await vi.waitFor(() => expect(shareEmailTo(lateEmail)).toHaveLength(1));

@@ -15,7 +15,8 @@ function ShareInviteRow({ invite, busy, onCancel }) {
       <span className='col-span-2 grid min-w-0'>
         <span className='truncate font-medium'>{invite.email}</span>
         <span className='text-xs opacity-80'>
-          Invited as {ROLE_LABELS[invite.role]?.toLowerCase()}, until {formatDay(invite.expiresAt)}
+          Invited as {ROLE_LABELS[invite.role]?.toLowerCase()}
+          {invite.travellerName ? ` (${invite.travellerName})` : ''}, until {formatDay(invite.expiresAt)}
         </span>
       </span>
       <button

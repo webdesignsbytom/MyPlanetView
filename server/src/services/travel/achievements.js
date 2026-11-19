@@ -52,9 +52,13 @@ export async function loadMapFacts(mapId, { includeHidden }) {
       photoCount: Number(row.photoCount),
       confirmedAt: row.confirmedAt ? new Date(row.confirmedAt) : null,
     }));
+  const counted = visits.filter((v) => COUNTED_VISIT_STATUSES.includes(v.status));
   return {
     visits,
-    visited: new Set(visits.filter((v) => COUNTED_VISIT_STATUSES.includes(v.status)).map((v) => v.countryCode)),
+    visited: new Set(counted.map((v) => v.countryCode)),
+    // A visited or lived-in country's date, for goals with a deadline: its "First went" day,
+    // else the day it was marked (utils/goals.js)
+    firstVisitAt: new Map(counted.map((v) => [v.countryCode, new Date(v.firstVisitedOn ?? v.createdAt)])),
     continentByCode,
     countriesByContinent: byContinent,
     firstPhotoAt,

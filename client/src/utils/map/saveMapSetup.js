@@ -33,7 +33,7 @@ const changed = (before, body) =>
 
 /**
  * `original` is the map as loaded; `form` is { name, groupType, splitUk, travellers: [{ id?, name, ... }] }.
- * Only the owner (`canRename`) changes the map itself; turning `splitUk` on or off moves the
+ * Only the owner or a co-owner (`canRename`) changes the map itself; turning `splitUk` on or off moves the
  * map's UK data on the server (docs/API.md "The UK's nations").
  */
 export async function saveMapSetup(mapId, original, form, { canRename = true } = {}) {
@@ -41,7 +41,7 @@ export async function saveMapSetup(mapId, original, form, { canRename = true } =
   const kept = form.travellers.filter((t) => t.name.trim());
   const removed = original.travellers.filter((before) => !kept.some((t) => t.id === before.id));
   // Those taken off go first, so a map becoming a smaller kind has room for it; but a map
-  // keeping none of its old travellers keeps one until the new ones are there (the server
+  // keeping none of its old travellers keeps one until the last new one is added (the server
   // never lets a map go without a traveller)
   const keepsOne = kept.some((t) => t.id && original.travellers.some((o) => o.id === t.id));
   const later = keepsOne ? [] : removed.slice(-1);
@@ -57,13 +57,27 @@ export async function saveMapSetup(mapId, original, form, { canRename = true } =
     forgetMapLists(); // the switcher lists maps by name
   }
 
+  // The one kept back goes just before the last new traveller is added: the map never has
+  // nobody, and never more than its kind has room for (a couple's map replacing both of its
+  // travellers reached three, and the server said no; 19 Nov 2026, the audit). With only one
+  // new traveller it would be the map's last, which the server never deletes: it becomes the
+  // new person instead.
+  let heldBackGone = !later.length;
   for (const [i, t] of kept.entries()) {
     const body = travellerBody(t, i);
+    if (!heldBackGone && i === kept.length - 1) {
+      heldBackGone = true;
+      if (kept.length === 1 && !t.id) {
+        await updateTraveller(mapId, later[0].id, body);
+        continue;
+      }
+      for (const before of later) await deleteTraveller(mapId, before.id);
+    }
     if (!t.id) await createTraveller(mapId, body);
     else {
       const before = original.travellers.find((o) => o.id === t.id);
       if (!before || changed(before, body)) await updateTraveller(mapId, t.id, body);
     }
   }
-  for (const before of later) await deleteTraveller(mapId, before.id);
+  if (!heldBackGone) for (const before of later) await deleteTraveller(mapId, before.id);
 }

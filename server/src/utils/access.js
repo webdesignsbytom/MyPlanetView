@@ -1,11 +1,16 @@
 // Who may do what on maps, trips and photos (docs/API.md, "Access").
 // Pure: callers load the rows, these decide.
 
-export const ROLES = Object.freeze({ OWNER: 'OWNER', EDITOR: 'EDITOR', VIEWER: 'VIEWER' });
-export const SHARE_ROLES = Object.freeze(['VIEWER', 'EDITOR']); // what can be granted
+export const ROLES = Object.freeze({ OWNER: 'OWNER', CO_OWNER: 'CO_OWNER', EDITOR: 'EDITOR', VIEWER: 'VIEWER' });
+// What can be granted on a map, and on a trip. A co-owner (19 Nov 2026, the user's wish:
+// couples and families, docs/API.md "Co-owners") is one of a map's travellers with their own
+// login and every power the owner has on that map except deleting it, handing it over,
+// paying for it and removing a co-owner. Maps only: a trip's people are editors or viewers.
+export const SHARE_ROLES = Object.freeze(['VIEWER', 'EDITOR', 'CO_OWNER']);
+export const TRIP_SHARE_ROLES = Object.freeze(['VIEWER', 'EDITOR']);
 export const LINK_ACCESS = Object.freeze({ RESTRICTED: 'RESTRICTED', ANYONE_WITH_LINK: 'ANYONE_WITH_LINK' });
 
-const RANK = { VIEWER: 1, EDITOR: 2, OWNER: 3 };
+const RANK = { VIEWER: 1, EDITOR: 2, CO_OWNER: 3, OWNER: 4 };
 
 /** The higher of two roles (null when neither). */
 export function higherRole(a, b) {
@@ -23,7 +28,7 @@ export function hasAtLeast(role, needed) {
  * A user's role on a map: owner, else their MapMember row, else none.
  * @param {{ ownerId: string } | null} map
  * @param {string | null | undefined} userId
- * @param {{ role: 'VIEWER' | 'EDITOR' } | null | undefined} membership the user's MapMember row
+ * @param {{ role: 'VIEWER' | 'EDITOR' | 'CO_OWNER' } | null | undefined} membership the user's MapMember row
  */
 export function mapRoleFor(map, userId, membership) {
   if (!map) return null;
@@ -43,7 +48,10 @@ export function linkRoleFor(linkAccess) {
 
 export const canView = (role) => hasAtLeast(role, ROLES.VIEWER);
 export const canEdit = (role) => hasAtLeast(role, ROLES.EDITOR);
-export const canManage = (role) => role === ROLES.OWNER;
+/** The map's settings (name, kind, UK split, travellers) and its sharing: the owner or a co-owner. */
+export const canManage = (role) => hasAtLeast(role, ROLES.CO_OWNER);
+/** Deleting the map, handing it to someone, making it the main map, paying for it: the owner alone. */
+export const isOwner = (role) => role === ROLES.OWNER;
 
 /**
  * Deleting a trip: the map's owner or an editor of the map. Someone added to the trip
@@ -62,9 +70,24 @@ export const canSeePhoto = (role, photo) =>
 /** GPS coordinates and originals: editors and the owner only. */
 export const canSeeLocation = (role) => canEdit(role);
 
-/** Removing a member: the owner, or the member leaving. */
-export function canRemoveMember({ actorRole, actorId, targetUserId }) {
-  return canManage(actorRole) || (Boolean(actorId) && actorId === targetUserId);
+/**
+ * Removing a member: the member leaving; the owner, anyone; a co-owner, anyone but another
+ * co-owner. `targetRole` is the member's role now.
+ */
+export function canRemoveMember({ actorRole, actorId, targetUserId, targetRole }) {
+  if (Boolean(actorId) && actorId === targetUserId) return true;
+  if (isOwner(actorRole)) return true;
+  return canManage(actorRole) && targetRole !== ROLES.CO_OWNER;
+}
+
+/**
+ * Giving someone a role, or changing theirs: the owner, any; a co-owner, any but taking a
+ * co-owner's away (only the owner removes a co-owner). `currentRole` is null for someone new.
+ */
+export function canSetMemberRole({ actorRole, currentRole, newRole }) {
+  if (isOwner(actorRole)) return true;
+  if (!canManage(actorRole)) return false;
+  return currentRole !== ROLES.CO_OWNER || newRole === ROLES.CO_OWNER;
 }
 
 // Group trips (docs/API.md "Group trips")
@@ -108,5 +131,9 @@ export function canSeeMomentPhoto(photo, { mapRole = null, trip = null } = {}) {
   if (!photo) return false;
   const onTrip = Boolean(trip?.id) && photo.tripId === trip.id;
   if (!canView(mapRole) && !(onTrip && canView(trip.role))) return false;
-  return !photo.hidden || canEdit(mapRole) || (onTrip && canEdit(trip.role));
+  const editor = canEdit(mapRole) || (onTrip && canEdit(trip.role));
+  // A video still converting (or failed) is the editors' only, as in canSeePhoto (19 Nov
+  // 2026, the audit: a moment or pin visit gave link visitors its id)
+  if (photo.kind === 'VIDEO' && photo.videoState !== 'READY' && !editor) return false;
+  return !photo.hidden || editor;
 }

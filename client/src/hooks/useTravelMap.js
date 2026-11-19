@@ -34,6 +34,10 @@ const withVisits = (visits, changed) => {
  * with it (the South Pole visited: Antarctica too, the server's `implied`) shows both
  * together, and rolls both back together.
  */
+// Is the map on show still the one a change was made to? One answered after the page moved
+// to another map must never land on that map (19 Nov 2026, the audit)
+const onMap = (prev, mapId) => prev.map?.id === mapId;
+
 export default function useTravelMap(mapId, { optimistic = true } = {}) {
   const [state, setState] = useState(EMPTY);
   const optimisticRef = useRef(optimistic);
@@ -45,9 +49,13 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
   // map starts loading before the map list confirms it, and a slower answer for that one
   // (or its 404) must never replace the map that's open
   const loadRef = useRef(0);
+  // Refreshes are numbered too (below), and visit changes counted: started, and still saving
+  const refreshRef = useRef(0);
+  const editsRef = useRef({ started: 0, pending: 0 });
   const load = useCallback(async () => {
     if (!mapId) return;
     const run = ++loadRef.current;
+    refreshRef.current += 1;
     setState((prev) => ({ ...prev, loading: true, error: null }));
     try {
       const [{ map }, { trips }] = await Promise.all([getMap(mapId), getMapTrips(mapId)]);
@@ -67,15 +75,37 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
   // The map and its trips again, without the loading state (the map stays on screen):
   // after photos change, as an upload or a photo's new country can add a PHOTO visit,
   // and moving or deleting photos changes the trips' counts
+  // Only the newest refresh's answer counts, and a load drops any refresh before it. A visit
+  // changed since one was asked for, or still being saved when it was, keeps the visits on
+  // screen: the server may have answered before the change was saved (19 Nov 2026, the audit:
+  // a country marked with a new moment flipped back to unmarked)
+  // The visits a reply brought that were set aside (an upload's PHOTO visit, say) come with
+  // the next one: asked for once every visit change is saved (setVisit), or at once
+  const staleVisitsRef = useRef(false);
   const refresh = useCallback(async () => {
     if (!mapId) return;
-    try {
-      const [{ map }, { trips }] = await Promise.all([getMap(mapId), getMapTrips(mapId)]);
-      // Never onto another map (the page moved on while it was asked for)
-      setState((prev) => (prev.map && map && prev.map.id === map.id ? { ...prev, map, trips: trips || prev.trips } : prev));
-    } catch {
-      // A nicety; the next full load corrects it
-    }
+    const ask = async () => {
+      const run = ++refreshRef.current;
+      const edits = { ...editsRef.current };
+      try {
+        const [{ map }, { trips }] = await Promise.all([getMap(mapId), getMapTrips(mapId)]);
+        if (run !== refreshRef.current) return;
+        const visitsMoved = edits.pending > 0 || editsRef.current.started !== edits.started;
+        // Never onto another map (the page moved on while it was asked for)
+        setState((prev) => {
+          if (!(prev.map && map && prev.map.id === map.id)) return prev;
+          const next = visitsMoved ? { ...map, visits: prev.map.visits, stats: prev.map.stats } : map;
+          return { ...prev, map: next, trips: trips || prev.trips };
+        });
+        if (visitsMoved) {
+          if (editsRef.current.pending) staleVisitsRef.current = true;
+          else await ask();
+        }
+      } catch {
+        // A nicety; the next full load corrects it
+      }
+    };
+    await ask();
   }, [mapId]);
 
   const refreshStats = useCallback(async () => {
@@ -96,7 +126,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
       let restore = null;
       const show = () =>
         setState((prev) => {
-          if (!prev.map) return prev;
+          if (!onMap(prev, mapId)) return prev;
           const implied = status ? impliedVisits(prev.map.visits, countryCode, status) : [];
           const affected = new Set([countryCode, ...implied.map((v) => v.countryCode)]);
           const before = prev.map.visits.filter((v) => affected.has(v.countryCode));
@@ -114,9 +144,11 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
       // The server's word on what the change brought with it
       const showImplied = (implied) =>
         setState((prev) =>
-          prev.map && implied?.length ? { ...prev, map: { ...prev.map, visits: withVisits(prev.map.visits, implied) } } : prev,
+          onMap(prev, mapId) && implied?.length ? { ...prev, map: { ...prev.map, visits: withVisits(prev.map.visits, implied) } } : prev,
         );
       const optimisticNow = optimisticRef.current;
+      editsRef.current.started += 1;
+      editsRef.current.pending += 1;
       if (optimisticNow) show();
       try {
         const answer = status ? await putVisit(mapId, countryCode, { status, ...extra }) : await deleteVisit(mapId, countryCode);
@@ -124,11 +156,17 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
         showImplied(answer?.implied);
         refreshStats();
       } catch (err) {
-        setState((prev) => (prev.map && restore ? { ...prev, map: { ...prev.map, visits: restore(prev.map.visits) } } : prev));
+        setState((prev) => (onMap(prev, mapId) && restore ? { ...prev, map: { ...prev.map, visits: restore(prev.map.visits) } } : prev));
         throw err;
+      } finally {
+        editsRef.current.pending -= 1;
+        if (!editsRef.current.pending && staleVisitsRef.current) {
+          staleVisitsRef.current = false;
+          refresh();
+        }
       }
     },
-    [mapId, refreshStats],
+    [mapId, refresh, refreshStats],
   );
 
   const saveMapDetails = useCallback(
@@ -136,7 +174,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
       const { map } = await updateMap(mapId, body);
       forgetMapLists(); // the switcher lists maps by name
       // PATCH's answer has no `ads` (only GET /maps/:mapId says how often cards show): keep it
-      setState((prev) => ({ ...prev, map: map ? { ...map, ads: map.ads ?? prev.map?.ads } : prev.map }));
+      setState((prev) => (onMap(prev, mapId) ? { ...prev, map: map ? { ...map, ads: map.ads ?? prev.map?.ads } : prev.map } : prev));
     },
     [mapId],
   );
@@ -145,7 +183,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     async (body) => {
       const { traveller } = await createTraveller(mapId, body);
       setState((prev) =>
-        prev.map ? { ...prev, map: { ...prev.map, travellers: [...prev.map.travellers, traveller] } } : prev,
+        onMap(prev, mapId) ? { ...prev, map: { ...prev.map, travellers: [...prev.map.travellers, traveller] } } : prev,
       );
       return traveller;
     },
@@ -156,7 +194,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     async (travellerId, body) => {
       const { traveller } = await updateTraveller(mapId, travellerId, body);
       setState((prev) =>
-        prev.map
+        onMap(prev, mapId)
           ? {
               ...prev,
               map: { ...prev.map, travellers: prev.map.travellers.map((t) => (t.id === travellerId ? traveller : t)) },
@@ -171,7 +209,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     async (travellerId) => {
       await deleteTraveller(mapId, travellerId);
       setState((prev) =>
-        prev.map
+        onMap(prev, mapId)
           ? { ...prev, map: { ...prev.map, travellers: prev.map.travellers.filter((t) => t.id !== travellerId) } }
           : prev,
       );
@@ -182,7 +220,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
   const addTrip = useCallback(
     async (body) => {
       const { trip } = await createTrip(mapId, body);
-      setState((prev) => ({ ...prev, trips: [trip, ...prev.trips] }));
+      setState((prev) => (onMap(prev, mapId) ? { ...prev, trips: [trip, ...prev.trips] } : prev));
       refreshStats();
       return trip;
     },
@@ -194,7 +232,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
   const unlinkTrip = useCallback(
     async (tripId) => {
       await removeTripFromMap(tripId, mapId);
-      setState((prev) => ({ ...prev, trips: prev.trips.filter((t) => t.id !== tripId) }));
+      setState((prev) => (onMap(prev, mapId) ? { ...prev, trips: prev.trips.filter((t) => t.id !== tripId) } : prev));
       forgetMapLists();
       refreshStats();
     },

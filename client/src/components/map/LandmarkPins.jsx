@@ -28,8 +28,10 @@ function pinsFor(landmarks) {
 // Their dark edge is one path under all of them.
 const DOT_PX = 7;
 const EDGE_PX = DOT_PX + 2;
-const STAMP_PX = 9;
-const STAMP_EDGE_PX = STAMP_PX + 2;
+// A stamped landmark's dot: half the size it was (19 Nov 2026, the user's wish), in the
+// style's stamp colour (--map-stamp: gold, navy on the starry night)
+const STAMP_PX = 4.5;
+const STAMP_EDGE_PX = STAMP_PX + 1.5;
 const dot = (x, y) => `M${x} ${y}h0`;
 const NO_STAMPS = new Set();
 
@@ -65,7 +67,7 @@ function LandmarkPins({ landmarks, zoom, onSelectCountry, afterTap, mode = 'zoom
         strokeWidth={isStamp ? STAMP_PX : DOT_PX}
         data-country={landmarkPlace(landmark, splitUk)}
         data-stamped={isStamp ? '' : undefined}
-        className={`cursor-pointer ${isStamp ? 'stroke-poster-gold-light' : 'stroke-poster-red'}`}
+        className={`cursor-pointer ${isStamp ? 'stroke-map-stamp' : 'stroke-poster-red'}`}
       >
         <title>{isStamp ? `${landmark.name}, stamped in the passport` : landmark.name}</title>
       </path>

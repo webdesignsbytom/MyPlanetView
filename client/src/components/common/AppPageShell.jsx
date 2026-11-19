@@ -17,9 +17,8 @@ import PosterFrame from './PosterFrame';
  */
 function AppPageShell({ children, width = 'max-w-5xl', mainProps = {}, backdrop = null }) {
   return (
-    <PosterFrame backdrop={backdrop}>
-      <Navbar variant='column' />
-      <div className='grid min-w-0 grid-rows-[minmax(0,1fr)_auto] gap-4 pt-2 lg:gap-2 lg:pt-0'>
+    <PosterFrame nav={<Navbar variant='column' />} backdrop={backdrop}>
+      <div className='grid min-w-0 grid-rows-[minmax(0,1fr)_auto] gap-4 lg:gap-2'>
         <main
           id='main-content'
           role='main'

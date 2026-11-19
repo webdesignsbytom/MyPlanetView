@@ -146,7 +146,8 @@ export const createChallengeHandler = handler(D, 'Create challenge', async (req,
   if (!parsed.ok) return badRequest(req, res, D, EVENT_MESSAGES[parsed.message]);
   const mapId = await checkMapChoice(req, res);
   if (!mapId) return undefined;
-  const challenge = await createChallengeInDB({ data: parsed.data, userId: req.user.id, mapId });
+  const { challenge, tooMany } = await createChallengeInDB({ data: parsed.data, userId: req.user.id, mapId, perUserCap: CHALLENGE_LIMITS.perUser });
+  if (tooMany) return conflict(req, res, D, EVENT_MESSAGES.challengesPerUserFull);
   logEvent(createChallengeEvent({ user: req.user, action: 'Create Success', id: challenge.id, detail: `measure=${challenge.measure}`, statusCode: 201 }));
   const entry = await findChallengeEntry(challenge.id, req.user.id);
   return sendDataResponse(res, 201, { challenge: await challengeDetail(challenge, req.user.id, entry) });

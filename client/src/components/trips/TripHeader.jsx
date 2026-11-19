@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { Link } from 'react-router-dom';
 // Icons
 import { FiArrowLeft } from 'react-icons/fi';
@@ -7,7 +7,6 @@ import { putTripTravellers, updateTrip } from '@/api/travelApi';
 // Constants
 import { mapPath } from '@/utils/constants/routes';
 // Components
-import TripForm from './TripForm';
 import TripTravellerChips from './TripTravellerChips';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
@@ -17,6 +16,9 @@ import VerifyFirstNote from '@/components/map/VerifyFirstNote';
 // Utils
 import { TRIP_STATUS_LABELS } from '@/utils/trips/tripStatus';
 import { formatDayRange } from '@/utils/functions/dates';
+
+// The editors' form, loaded when editing starts: share links never download it (19 Nov 2026, the audit)
+const TripForm = lazy(() => import('./TripForm'));
 
 // The action buttons: two to a row, filling it, on a phone; side by side from sm up
 const ACTIONS_ROW = 'grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-2 sm:grid-row sm:grid-cols-none';
@@ -89,17 +91,19 @@ function TripHeader({ trip, canEdit, locked = false, linkToMap = true, onChanged
           <h2 id='trip-edit-heading' className='font-travel text-xl uppercase tracking-wide text-poster-red-deep'>
             Edit trip
           </h2>
-          <TripForm
-            initial={trip}
-            showTravellers={false}
-            submitLabel='Save trip'
-            onCancel={() => setEditing(false)}
-            onSubmit={async (body) => {
-              const { trip: updated } = await updateTrip(trip.id, body);
-              onChanged(updated);
-              setEditing(false);
-            }}
-          />
+          <Suspense fallback={null}>
+            <TripForm
+              initial={trip}
+              showTravellers={false}
+              submitLabel='Save trip'
+              onCancel={() => setEditing(false)}
+              onSubmit={async (body) => {
+                const { trip: updated } = await updateTrip(trip.id, body);
+                onChanged(updated);
+                setEditing(false);
+              }}
+            />
+          </Suspense>
         </section>
       ) : (
         <>

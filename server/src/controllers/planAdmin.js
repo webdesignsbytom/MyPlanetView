@@ -12,6 +12,7 @@ import { findUserById, findUserForTransfer } from '../domain/users.js';
 import { findMapAccess } from '../domain/maps.js';
 import { ensureDefaultMap, transferMap } from '../services/travel/maps.js';
 import { badRequest, conflict, forbidden, handler, notFound } from './helpers/travel.js';
+import { ROLES } from '../utils/constants/userConstants.js';
 
 const REASON_MAX = 200;
 
@@ -88,6 +89,15 @@ export const adminTransferMapHandler = handler(DOMAINS.maps, 'Admin transfer map
   const target = await findUserForTransfer({ email });
   if (!target || target.isActive === false) return badRequest(req, res, DOMAINS.maps, EVENT_MESSAGES.transferTargetNoAccount);
   if (target.id === map.ownerId) return badRequest(req, res, DOMAINS.maps, EVENT_MESSAGES.transferToSelf);
+  // The admin rules for accounts (checkAdminAction) hold here too: never to the admin's own
+  // account, a developer's map only by a developer, and the new owner verified, as the
+  // owner's own transfer needs (19 Nov 2026, the audit)
+  if (target.id === req.user.id) return forbidden(req, res, DOMAINS.maps, EVENT_MESSAGES.cannotTransferToSelfAdmin);
+  const owner = await findUserById(map.ownerId);
+  if (owner?.role === ROLES.DEVELOPER && req.user.role !== ROLES.DEVELOPER) {
+    return forbidden(req, res, DOMAINS.maps, EVENT_MESSAGES.cannotActOnDeveloper);
+  }
+  if (target.emailVerified !== true) return badRequest(req, res, DOMAINS.maps, EVENT_MESSAGES.transferTargetNotReady);
 
   const result = await transferMap({ mapId: map.id, toUserId: target.id, keepOldOwnerAsEditor });
   if (!result) return notFound(req, res, DOMAINS.maps, EVENT_MESSAGES.mapNotFound);

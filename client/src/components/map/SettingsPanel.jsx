@@ -7,6 +7,7 @@ import LandmarkPinsPicker from './LandmarkPinsPicker';
 import MapSettingsToggles from './MapSettingsToggles';
 import DeleteMapSection from './DeleteMapSection';
 import MainMapSection from './MainMapSection';
+import MapUpgradeSection from './MapUpgradeSection';
 import MapDownloadSection from './MapDownloadSection';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
 // Utils
@@ -23,7 +24,7 @@ const TABS = [
 // ticket tabs: the open one is parchment and sits on the panel's brown rule. They follow
 // the ARIA tabs pattern: only the open tab is in the tab order, the arrow keys (and Home,
 // End) move between tabs and open them, and each tab names its panel.
-function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locked = false, onMapSaved, onMapDeleted, onClose }) {
+function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, canManage = isOwner, locked = false, onMapSaved, onMapDeleted, onUpgradePay, onClose }) {
   const [tab, setTab] = useState('view');
   // "Saved" outlives the form, which starts afresh after a save that changes the map
   const [mapSaved, setMapSaved] = useState(false);
@@ -95,18 +96,19 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locke
             // Fresh after each save, so new travellers carry their ids
             key={`${map.name}|${map.groupType}|${map.travellers.map((t) => `${t.id}:${t.name}`).join(',')}`}
             initial={map}
-            canRename={isOwner}
+            canRename={canManage}
             splitUkNote
             submitLabel='Save map'
             saved={mapSaved}
             onSavedChange={setMapSaved}
             wideSubmit
             onSubmit={async (form) => {
-              await saveMapSetup(map.id, map, form, { canRename: isOwner });
+              await saveMapSetup(map.id, map, form, { canRename: canManage });
               await onMapSaved();
             }}
           />
           <MapDownloadSection map={map} />
+          {isOwner && !map.isDefault ? <MapUpgradeSection map={map} locked={locked} onChanged={onMapSaved} onPay={onUpgradePay} /> : null}
           {isOwner && !map.isDefault ? <MainMapSection map={map} locked={locked} onChanged={onMapSaved} /> : null}
           {isOwner && !map.isDefault ? <DeleteMapSection map={map} locked={locked} onDeleted={onMapDeleted} /> : null}
         </div>

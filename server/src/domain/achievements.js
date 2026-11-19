@@ -30,11 +30,16 @@ const GOAL_SELECT = {
 export const findGoals = (mapId) =>
   prisma.goal.findMany({ where: { mapId }, select: GOAL_SELECT, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] });
 
-export const countGoals = (mapId) => prisma.goal.count({ where: { mapId } });
 
 export const findGoal = (goalId) => prisma.goal.findUnique({ where: { id: goalId }, select: GOAL_SELECT });
 
-export const createGoalInDB = (data) => prisma.goal.create({ data, select: GOAL_SELECT });
+/** A new goal, unless the map has `cap` already (counted with the map row locked). -> the goal, or null when full */
+export const createGoalInDB = ({ cap, ...data }) =>
+  prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT 1 FROM "travel_map" WHERE "id" = ${data.mapId} FOR NO KEY UPDATE`;
+    if ((await tx.goal.count({ where: { mapId: data.mapId } })) >= cap) return null;
+    return tx.goal.create({ data, select: GOAL_SELECT });
+  });
 
 export const updateGoalInDB = (goalId, data) => prisma.goal.update({ where: { id: goalId }, data, select: GOAL_SELECT });
 

@@ -5,6 +5,7 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '../prisma.js';
 import { generateShareCode } from '../utils/shareCodes.js';
 import { isSpecialPlace } from '../utils/specialPlaces.js';
+import { countedCountryCodes, isUkNation } from '../utils/ukNations.js';
 
 const CHALLENGE_SELECT = {
   id: true,
@@ -31,13 +32,23 @@ async function withFreshCode(write) {
   throw new Error('Could not make a unique join code');
 }
 
-/** Make a challenge with its creator in it, counting `mapId`. -> the challenge */
-export const createChallengeInDB = ({ data, userId, mapId }) =>
+// The person's row locked while their challenges are counted (starting one, or joining), so
+// two at once can't take them past `perUserCap` together (19 Nov 2026, the audit: starting
+// one didn't count at all)
+const lockPerson = (tx, userId) => tx.$queryRaw`SELECT 1 FROM "user" WHERE "id" = ${userId} FOR NO KEY UPDATE`;
+
+/**
+ * Make a challenge with its creator in it, counting `mapId`, unless they're in `perUserCap`
+ * already. -> `{ challenge }`, or `{ tooMany: true }`
+ */
+export const createChallengeInDB = ({ data, userId, mapId, perUserCap }) =>
   withFreshCode((joinCode) =>
     prisma.$transaction(async (tx) => {
+      await lockPerson(tx, userId);
+      if ((await tx.friendChallengeEntry.count({ where: { userId } })) >= perUserCap) return { tooMany: true };
       const challenge = await tx.friendChallenge.create({ data: { ...data, joinCode, createdById: userId }, select: CHALLENGE_SELECT });
       await tx.friendChallengeEntry.create({ data: { challengeId: challenge.id, userId, mapId } });
-      return challenge;
+      return { challenge };
     }),
   );
 
@@ -82,6 +93,7 @@ export async function findChallengeMembers(challengeId) {
 export const joinChallengeInDB = ({ challengeId, userId, mapId, memberCap, perUserCap }) =>
   prisma.$transaction(async (tx) => {
     await tx.$queryRaw`SELECT 1 FROM "friend_challenge" WHERE "id" = ${challengeId} FOR NO KEY UPDATE`;
+    await lockPerson(tx, userId);
     const existing = await tx.friendChallengeEntry.findUnique({ where: { challengeId_userId: { challengeId, userId } }, select: { userId: true } });
     if (existing) return { joined: false };
     if ((await tx.friendChallengeEntry.count({ where: { challengeId } })) >= memberCap) return { full: true };
@@ -97,7 +109,6 @@ export const setEntryMap = (challengeId, userId, mapId) =>
 export const deleteChallengeEntry = async (challengeId, userId) =>
   (await prisma.friendChallengeEntry.deleteMany({ where: { challengeId, userId } })).count > 0;
 
-export const countUserChallenges = (userId) => prisma.friendChallengeEntry.count({ where: { userId } });
 
 export const updateChallengeInDB = (id, data) => prisma.friendChallenge.update({ where: { id }, data, select: CHALLENGE_SELECT });
 
@@ -117,7 +128,7 @@ export async function mapsStillTheirs(pairs) {
   const userIds = [...new Set(wanted.map((p) => p.userId))];
   const [maps, editors] = await Promise.all([
     prisma.travelMap.findMany({ where: { id: { in: mapIds } }, select: { id: true, ownerId: true } }),
-    prisma.mapMember.findMany({ where: { mapId: { in: mapIds }, userId: { in: userIds }, role: 'EDITOR' }, select: { mapId: true, userId: true } }),
+    prisma.mapMember.findMany({ where: { mapId: { in: mapIds }, userId: { in: userIds }, role: { in: ['EDITOR', 'CO_OWNER'] } }, select: { mapId: true, userId: true } }),
   ]);
   const ok = new Set([...maps.map((m) => `${m.ownerId}:${m.id}`), ...editors.map((e) => `${e.userId}:${e.mapId}`)]);
   return new Set(wanted.map((p) => `${p.userId}:${p.mapId}`).filter((key) => ok.has(key)));
@@ -133,7 +144,14 @@ export const findMapName = async (mapId) => (await prisma.travelMap.findUnique({
 const firstShotByCountry = (where) =>
   prisma.photo.groupBy({ by: ['countryCode'], where: { countryCode: { not: null }, ...where }, _min: { shotAt: true } });
 
-const countriesOnly = (rows) => rows.filter((row) => !isSpecialPlace(row.countryCode)).map((row) => row._min.shotAt);
+// Countries as the map's stats count them: not the special places, and on a split map the UK's
+// nations, with GB ("nation not chosen") only while no nation has a photo (countedCountryCodes;
+// a photo can only be in a nation on a split map; 19 Nov 2026, the audit)
+const countriesOnly = (rows) => {
+  const codes = rows.map((row) => row.countryCode);
+  const counted = new Set(countedCountryCodes(codes, codes.some(isUkNation)));
+  return rows.filter((row) => !isSpecialPlace(row.countryCode) && counted.has(row.countryCode)).map((row) => row._min.shotAt);
+};
 
 const COUNTERS = {
   // Countries whose first-ever photo on the map was taken in the dates

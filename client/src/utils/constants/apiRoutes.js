@@ -59,6 +59,7 @@ export const ADMIN_THEMES_API = '/api/users/admin/themes'; // GET, POST, PATCH|D
 export const CHALLENGES_API = '/api/challenges'; // GET, POST, /:challengeId (GET, PATCH, DELETE), /reset-link, /me, /join/:code (docs/API.md, "Friends challenges")
 export const OFFER_CLICK_PATH = '/go'; // /:offerId?p=&dest=&country=&from=&to= on the API's host (a card's link)
 export const ACCEPT_INVITE_API = '/api/invites/accept'; // POST { token }
+export const inviteApi = (token) => `/api/invites/${encodeURIComponent(token)}`; // GET: what an invite is for, signed out too
 export const MAP_SETTINGS_API = '/api/users/map-settings'; // GET, PUT { mapSettings }
 
 // Plans and billing (docs/API.md, "Plans and billing"). Paths below it are built in src/api/plansApi.js.

@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 // Icons
 import { FiPlus } from 'react-icons/fi';
 // Api
 import { createStop, deleteStop, reorderStops, updateStop } from '@/api/travelApi';
 // Components
 import TripStopItem from './TripStopItem';
-import TripStopForm from './TripStopForm';
 import TripStopFormCard from './TripStopFormCard';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
@@ -14,6 +13,9 @@ import PaperCard from '@/components/common/PaperCard';
 // The trip's stops in order, as ticket stubs on a paper card, with adding, editing,
 // removing and reordering for editors. "Add a stop" opens its form on its own card (open
 // from the start when there are no stops). Every change hands back the whole trip.
+// The editors' form, loaded when it's first opened: share links never download it (19 Nov 2026, the audit)
+const TripStopForm = lazy(() => import('./TripStopForm'));
+
 function TripStopList({ trip, canEdit, onChanged }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
@@ -105,7 +107,9 @@ function TripStopList({ trip, canEdit, onChanged }) {
       {canEdit ? (
         adding ? (
           <TripStopFormCard title='Add a stop' closeLabel='Close the new stop form' onClose={closeAdding} autoFocus={focusForm}>
-            <TripStopForm idPrefix='new-stop' onSubmit={(body) => run(() => createStop(trip.id, body))} />
+            <Suspense fallback={null}>
+              <TripStopForm idPrefix='new-stop' onSubmit={(body) => run(() => createStop(trip.id, body))} />
+            </Suspense>
           </TripStopFormCard>
         ) : (
           <div className='grid justify-items-start pt-1'>

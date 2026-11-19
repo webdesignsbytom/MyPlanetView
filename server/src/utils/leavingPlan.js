@@ -63,5 +63,6 @@ export const heirOf = (editors) => (editors.find((e) => e.user?.isActive !== fal
 export function heirFor(map, choice) {
   if (choice?.action === 'DELETE') return null;
   if (choice?.action === 'TRANSFER' && map.members.some((m) => m.userId === choice.toUserId)) return choice.toUserId;
-  return heirOf(map.members.filter((m) => m.role === 'EDITOR'));
+  // A co-owner before an editor (19 Nov 2026): the map is theirs too
+  return heirOf([...map.members.filter((m) => m.role === 'CO_OWNER'), ...map.members.filter((m) => m.role === 'EDITOR')]);
 }

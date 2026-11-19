@@ -74,7 +74,6 @@ function TripPage() {
             onTripChange={(updated) => setTrip((prev) => ({ ...prev, ...updated }))}
             styleId={settings.style}
             showAntarctica={settings.showAntarctica}
-            blackAndWhite={settings.blackAndWhite}
             currentUser={user}
             onDelete={async () => {
               await deleteTrip(trip.id);

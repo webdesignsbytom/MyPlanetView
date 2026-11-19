@@ -31,7 +31,7 @@ describe('plan constants', () => {
     expect(PLAN_IDS.map((id) => PLANS[id].price)).toEqual([
       { MONTH: 0, YEAR: 0 },
       { MONTH: 499, YEAR: 4900 },
-      { MONTH: 899, YEAR: 8900 },
+      { MONTH: 999, YEAR: 9900 },
     ]);
     expect(PLAN_IDS.map((id) => PLANS[id].extraMap)).toEqual([
       { MONTH: 399, YEAR: 3900 },
@@ -47,7 +47,7 @@ describe('plan constants', () => {
 
   it('has the shared numbers', () => {
     expect(INCLUDED_MAPS).toBe(1);
-    expect(EDITORS_PER_MAP).toBe(10);
+    expect(EDITORS_PER_MAP).toBe(5);
     expect(PEOPLE_PER_TRIP).toBe(20);
     expect(TRANSFER_GRACE_DAYS).toBe(60);
     expect(LEAVING_PLAN_TTL_MINUTES).toBe(60);
@@ -91,11 +91,11 @@ describe('plan constants', () => {
   it('lists every price for GET /billing', () => {
     const prices = pricesView();
     expect(prices.currency).toBe('GBP');
-    expect(prices.plans.PREMIUM).toEqual({ MONTH: 899, YEAR: 8900 });
+    expect(prices.plans.PREMIUM).toEqual({ MONTH: 999, YEAR: 9900 });
     expect(prices.extraMap.PREMIUM).toEqual({ MONTH: 599, YEAR: 5900 });
     // A copy: changing it changes nothing
     prices.plans.PREMIUM.MONTH = 1;
-    expect(PLANS.PREMIUM.price.MONTH).toBe(899);
+    expect(PLANS.PREMIUM.price.MONTH).toBe(999);
   });
 });
 
@@ -198,57 +198,75 @@ describe('addMonths', () => {
 });
 
 describe('mapSlots', () => {
-  const map = (id, createdAt, extra = {}) => ({ id, isDefault: false, createdAt: new Date(createdAt), graceUntil: null, ...extra });
+  // 3 free maps (19 Nov 2026): the main one on the plan, two more on Economy; each paid extra
+  // map is one more on the plan
+  const map = (id, createdAt, extra = {}) => ({ id, isDefault: false, createdAt: new Date(createdAt), graceUntil: null, upgradedAt: null, ...extra });
   const home = map('home', '2026-01-01', { isDefault: true });
 
-  it('keeps the default map active, always', () => {
+  it('keeps the default map on the plan, always, with room for two free maps', () => {
     const slots = mapSlots({ maps: [home], extraMapsPaid: 0, now: NOW });
-    expect(slots).toEqual({ activeIds: ['home'], lockedIds: [], slots: 1, used: 1, canCreate: false });
+    expect(slots).toMatchObject({ planIds: ['home'], economyIds: [], lockedIds: [], activeIds: ['home'], slots: 1, used: 1, canCreate: true });
+    expect(slots.tiers).toEqual({ home: 'PLAN' });
   });
 
-  it('a new account with only its default map has no room for another unpaid map', () => {
-    expect(mapSlots({ maps: [home], now: NOW }).canCreate).toBe(false);
-    expect(mapSlots({ maps: [home], extraMapsPaid: 1, now: NOW }).canCreate).toBe(true);
+  it('gives an account three maps for free: the main one on the plan, two on Economy', () => {
+    const maps = [home, map('a', '2026-02-01'), map('b', '2026-03-01')];
+    const slots = mapSlots({ maps, extraMapsPaid: 0, now: NOW });
+    expect(slots.planIds).toEqual(['home']);
+    expect(slots.economyIds).toEqual(['a', 'b']);
+    expect(slots.lockedIds).toEqual([]);
+    expect(slots.canCreate).toBe(false);
+    // An extra map paid for: the oldest free one moves onto the plan, and there's room again
+    const paid = mapSlots({ maps, extraMapsPaid: 1, now: NOW });
+    expect(paid.planIds.sort()).toEqual(['a', 'home']);
+    expect(paid.economyIds).toEqual(['b']);
+    expect(paid.canCreate).toBe(true);
   });
 
-  it('activates the paid extra maps oldest first, and locks the rest', () => {
-    const maps = [map('c', '2026-03-01'), home, map('a', '2026-02-01'), map('b', '2026-02-15')];
-    const slots = mapSlots({ maps, extraMapsPaid: 2, now: NOW });
-    expect(slots.activeIds.sort()).toEqual(['a', 'b', 'home']);
-    expect(slots.lockedIds).toEqual(['c']);
-    expect(slots).toMatchObject({ slots: 3, used: 3, canCreate: false });
+  it('puts the maps the owner chose to upgrade on the plan first, in the order chosen', () => {
+    const maps = [home, map('a', '2026-02-01'), map('b', '2026-03-01', { upgradedAt: new Date('2026-06-01') }), map('c', '2026-04-01', { upgradedAt: new Date('2026-05-01') })];
+    const one = mapSlots({ maps, extraMapsPaid: 1, now: NOW });
+    expect(one.planIds.sort()).toEqual(['c', 'home']);
+    // The rest are free maps, oldest first, whatever was chosen
+    expect(one.economyIds).toEqual(['a', 'b']);
+    expect(mapSlots({ maps, extraMapsPaid: 2, now: NOW }).planIds.sort()).toEqual(['b', 'c', 'home']);
   });
 
-  it('locks every extra map when nothing is paid (nothing is deleted)', () => {
-    const slots = mapSlots({ maps: [home, map('a', '2026-02-01'), map('b', '2026-03-01')], extraMapsPaid: 0, now: NOW });
-    expect(slots.activeIds).toEqual(['home']);
-    expect(slots.lockedIds).toEqual(['a', 'b']);
+  it('locks maps beyond the free ones and those paid for (nothing is deleted)', () => {
+    const maps = [map('c', '2026-03-01'), home, map('a', '2026-02-01'), map('b', '2026-02-15'), map('d', '2026-04-01')];
+    const slots = mapSlots({ maps, extraMapsPaid: 1, now: NOW });
+    expect(slots.planIds.sort()).toEqual(['a', 'home']);
+    expect(slots.economyIds.sort()).toEqual(['b', 'c']);
+    expect(slots.lockedIds).toEqual(['d']);
+    expect(slots).toMatchObject({ slots: 2, used: 2, canCreate: false });
+    expect(mapSlots({ maps, extraMapsPaid: 0, now: NOW }).lockedIds.sort()).toEqual(['c', 'd']);
   });
 
-  it('keeps a map in its grace period active without using a paid slot', () => {
+  it('keeps a map in its grace period on the plan without using a paid slot', () => {
     const graced = map('given', '2020-01-01', { graceUntil: days(10) });
     const own = map('own', '2026-05-01');
     const slots = mapSlots({ maps: [home, graced, own], extraMapsPaid: 1, now: NOW });
-    expect(slots.activeIds.sort()).toEqual(['given', 'home', 'own']);
-    // Grace maps count as used, so there's no room for a new one
-    expect(slots).toMatchObject({ used: 3, slots: 2, canCreate: false });
+    expect(slots.planIds.sort()).toEqual(['given', 'home', 'own']);
+    expect(slots).toMatchObject({ used: 3, slots: 2 });
     expect(inGrace(graced, NOW)).toBe(true);
   });
 
   it('after its grace, a handed-over map queues behind the owner’s own maps', () => {
     const handed = map('given', '2020-01-01', { graceUntil: days(-1) });
     const own = map('own', '2026-05-01');
-    const slots = mapSlots({ maps: [home, handed, own], extraMapsPaid: 1, now: NOW });
-    expect(slots.activeIds.sort()).toEqual(['home', 'own']);
+    const maps = [home, handed, own, map('own2', '2026-06-01'), map('own3', '2026-07-01')];
+    const slots = mapSlots({ maps, extraMapsPaid: 1, now: NOW });
+    expect(slots.planIds.sort()).toEqual(['home', 'own']);
+    expect(slots.economyIds).toEqual(['own2', 'own3']);
     expect(slots.lockedIds).toEqual(['given']);
     // Paying for another brings it back
-    expect(mapSlots({ maps: [home, handed, own], extraMapsPaid: 2, now: NOW }).lockedIds).toEqual([]);
+    expect(mapSlots({ maps, extraMapsPaid: 2, now: NOW }).lockedIds).toEqual([]);
   });
 
   it('gives the included slot to the oldest map when there is no default', () => {
     const slots = mapSlots({ maps: [map('b', '2026-03-01'), map('a', '2026-02-01')], extraMapsPaid: 0, now: NOW });
-    expect(slots.activeIds).toEqual(['a']);
-    expect(slots.lockedIds).toEqual(['b']);
+    expect(slots.planIds).toEqual(['a']);
+    expect(slots.economyIds).toEqual(['b']);
   });
 
   it('has room for the first map of an account with none', () => {
@@ -257,6 +275,7 @@ describe('mapSlots', () => {
 
   it('breaks createdAt ties by id, so the answer never flips', () => {
     const maps = [home, map('y', '2026-02-01'), map('x', '2026-02-01')];
-    expect(mapSlots({ maps, extraMapsPaid: 1, now: NOW }).lockedIds).toEqual(['y']);
+    expect(mapSlots({ maps, extraMapsPaid: 1, now: NOW }).planIds.sort()).toEqual(['home', 'x']);
+    expect(mapSlots({ maps, extraMapsPaid: 1, now: NOW }).economyIds).toEqual(['y']);
   });
 });

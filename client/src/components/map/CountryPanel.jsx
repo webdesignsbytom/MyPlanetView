@@ -34,6 +34,10 @@ import { countryPhotoFilters } from '@/utils/map/preloadCountryLists';
 import { regionParent } from '@/utils/map/regionPlaces';
 import { countryMapCodeFor, countryMapInfo } from '@/utils/map/countryMapGeo';
 import { getSubdivisions } from '@/api/travelApi';
+import { NOTES_MAX } from '@/utils/map/visitNotes';
+
+// A status's weight, to raise a nation to the UK's mark and never lower it
+const STATUS_RANK = { WANT_TO_GO: 1, VISITED: 2, LIVED: 3 };
 
 const NO_TRIPS = [];
 
@@ -103,12 +107,16 @@ function CountryPanel({
   // Its own map (a region's is its country's): how many of its states the map has been to
   const mapCode = countryMapCodeFor(code);
   const stateInfo = mapCode ? countryMapInfo(mapCode) : null;
-  const [statesMarked, setStatesMarked] = useState(null);
+  // The count is drawn at once as 0 while it loads, so the ticket's header doesn't change size
+  // when it arrives (19 Nov 2026, the user's wish); kept with its country's code, so another
+  // country's count never shows for a moment
+  const [statesMarked, setStatesMarked] = useState({ code: null, count: 0 });
+  const markedHere = statesMarked.code === mapCode ? statesMarked.count : 0;
   useEffect(() => {
     if (!mapCode || !stateInfo?.count || !photoSource) return undefined;
     let live = true;
     getSubdivisions(photoSource, mapCode)
-      .then(({ subdivisions = [] }) => live && setStatesMarked(subdivisions.filter((s) => countsAsVisited(s.status)).length))
+      .then(({ subdivisions = [] }) => live && setStatesMarked({ code: mapCode, count: subdivisions.filter((s) => countsAsVisited(s.status)).length }))
       .catch(() => {});
     return () => {
       live = false;
@@ -139,10 +147,25 @@ function CountryPanel({
   // On a map that splits the UK, the UK itself is marked only from before the split: its
   // ticket asks which nations that means (UkNationsPrompt) instead of offering a status
   const ukToPlace = splitUk && code === 'GB';
+  // `codes`: every nation ticked. Each is raised to the UK's status (never lowered), and the
+  // UK's note and first visit go to the first of them: the note after its own, the date when
+  // it's earlier. Nothing is lost when the nations ticked were marked already (19 Nov 2026,
+  // the audit: the note was deleted with the UK's mark, and the date never carried over)
   const chooseNations = async (codes) => {
-    // The UK's note goes with it, to the first of them that has none
-    const noteTo = visit?.notes ? codes.find((nation) => !visitOf(nation)?.notes) : null;
-    for (const nation of codes) await onSetVisit(nation, status, nation === noteTo ? { notes: visit.notes } : undefined);
+    const [first] = codes;
+    for (const nation of codes) {
+      const current = visitOf(nation);
+      const raise = (STATUS_RANK[current?.status] ?? 0) < STATUS_RANK[status];
+      const extra = {};
+      if (nation === first && visit?.notes) {
+        extra.notes = current?.notes ? `${current.notes}\n\n${visit.notes}`.slice(0, NOTES_MAX) : visit.notes;
+      }
+      if (nation === first && visit?.firstVisitedOn && (!current?.firstVisitedOn || visit.firstVisitedOn < current.firstVisitedOn)) {
+        extra.firstVisitedOn = visit.firstVisitedOn;
+      }
+      const hasExtra = Object.keys(extra).length > 0;
+      if (raise || hasExtra) await onSetVisit(nation, raise ? status : current.status, hasExtra ? extra : undefined);
+    }
     await onSetVisit(code, null);
     onClose();
   };
@@ -200,9 +223,9 @@ function CountryPanel({
       kicker={kicker}
       // How many of its states the map has been to, under its name
       subtitle={
-        stateInfo?.count > 1 && statesMarked !== null ? (
-          <span data-states-marked=''>
-            {statesMarked} of {stateInfo.count} {stateInfo.word[1]} visited{mapCode !== code ? ` in ${COUNTRY_BY_CODE[mapCode]?.name}` : ''}
+        stateInfo?.count > 1 ? (
+          <span data-states-marked='' aria-busy={statesMarked.code === mapCode ? undefined : 'true'}>
+            {markedHere} of {stateInfo.count} {stateInfo.word[1]} visited{mapCode !== code ? ` in ${COUNTRY_BY_CODE[mapCode]?.name}` : ''}
           </span>
         ) : null
       }
@@ -252,6 +275,10 @@ function CountryPanel({
         </p>
       ) : null}
 
+      {/* On phones "Been there?" heads the content, before the notes (the stub is too narrow
+          for it; 19 Nov 2026, the audit: it came after them) */}
+      {editsStatus && !controlsInStub ? statusControls : null}
+
       {/* The note belongs to the visit, so an editor writes one once the country has a status */}
       <CountryNotes
         code={code}
@@ -262,9 +289,7 @@ function CountryPanel({
 
       {ukToPlace && status ? <UkNationsPrompt ukStatus={status} visitOf={visitOf} canEdit={canEdit} onChoose={chooseNations} /> : null}
 
-      {editsStatus ? (
-        controlsInStub ? null : statusControls
-      ) : (
+      {editsStatus ? null : (
         <p className='text-sm font-medium'>
           {status ? VISIT_STATUS_LABELS[status] : 'Not been yet'}
           {visit?.firstVisitedOn ? `, first on ${formatDay(visit.firstVisitedOn)}` : ''}
@@ -334,21 +359,23 @@ function CountryPanel({
           offerSlots={offerSlots}
           emptyText={`No photos from ${country.name} yet.`}
         />
-        {onPlay && photos.photos.length ? (
-          <MapActionButton quiet onClick={() => onPlay(code)}>
-            <FaPlay aria-hidden='true' className='self-center text-sm' />
-            <span>Slideshow of {country.name}</span>
-          </MapActionButton>
-        ) : null}
       </section>
         </>
       )}
 
-      {/* Adding photos, the country's photos as a zip, and partner offers for it (every
-          plan, only when asked for), before the landmarks, whose list can be long: side by
-          side from lg, in equal columns that fill the row (18 Nov 2026, the user's wish:
-          "Add photos" joined it the same day), one to a row below */}
+      {/* The slideshow, adding photos, the country's photos as a zip, and partner offers for
+          it (every plan, only when asked for), before the landmarks, whose list can be long:
+          side by side from lg, in equal columns that fill the row (18 Nov 2026, the user's
+          wish: "Add photos" joined it the same day), one to a row below, evenly spaced (19
+          Nov 2026, the user's wish: the slideshow sat further off, under the photos; the
+          labels name no country) */}
       <div className='grid gap-2 lg:auto-cols-fr lg:grid-flow-col'>
+        {!parent && onPlay && photos.photos.length ? (
+          <MapActionButton quiet onClick={() => onPlay(code)}>
+            <FaPlay aria-hidden='true' className='self-center text-sm' />
+            <span>Play slideshow</span>
+          </MapActionButton>
+        ) : null}
         {!parent && canEdit && onAddPhotos ? (
           <MapActionButton onClick={() => onAddPhotos(code)}>Add photos</MapActionButton>
         ) : null}

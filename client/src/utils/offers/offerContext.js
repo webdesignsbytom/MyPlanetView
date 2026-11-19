@@ -31,16 +31,18 @@ export const isUpcomingPlannedTrip = (trip, today) => Boolean(trip && trip.statu
 
 /**
  * Where a trip goes, for offers: `{ tripId, from, to, stops: [{ countryCode, destination }] }`,
- * from a whole trip (its stops, in order: each stop's own place name, else its country's)
- * or a group trip's list summary (its countries only). The dates are the trip's, else its
- * stops' first arrival and last departure.
+ * from a whole trip (its stops, in order: each stop's landmark, else its country) or a group
+ * trip's list summary (its countries only). Never a stop's own place name: that's the
+ * person's free text ("Gran's flat, 12 High St"), and it would go to a partner in the link
+ * (19 Nov 2026, the audit). The dates are the trip's, else its stops' first arrival and
+ * last departure.
  */
 export function tripPlace(trip) {
   const stops = Array.isArray(trip.stops)
     ? [...trip.stops]
         .sort((a, b) => a.position - b.position)
         .filter((s) => s.countryCode)
-        .map((s) => ({ countryCode: s.countryCode, destination: s.placeName || countryName(s.countryCode) }))
+        .map((s) => ({ countryCode: s.countryCode, destination: s.landmarkName || countryName(s.countryCode) }))
     : (trip.countryCodes || []).map((code) => ({ countryCode: code, destination: countryName(code) }));
   return {
     tripId: trip.id,

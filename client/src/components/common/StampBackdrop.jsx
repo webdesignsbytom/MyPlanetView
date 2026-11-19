@@ -3,8 +3,8 @@ import React, { useId } from 'react';
 import { ARC_PATH, PASSPORT_STAMPS, TILE_H, TILE_W, drawStamp } from './passportStampArt';
 
 /**
- * The account page's backdrop: rubber-stamp outlines from passports (ovals, circles,
- * hexagons, an octagon, rectangles, a postal cancel), drawn once and repeated over the whole
+ * The account page's backdrop: rubber-stamp outlines from passports, every one a country's
+ * (ovals, a ring, a hexagon, a square, a rectangle, an octagon, a triangle, a rosette), drawn once and repeated over the whole
  * poster frame as two SVG pattern layers (a fainter one shifted and turned beneath, so
  * stamps overlap and the repeat doesn't show), in two faint inks on its red. Decorative only.
  * Text is the travel face, set in SVG, so it follows the site's font; colours are the

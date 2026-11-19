@@ -67,9 +67,11 @@
      like a printed poster. Text on poster-red is poster-ink (5.6:1). */
   --poster-red: #ef4444;
   --poster-red-deep: #991b1b;
-  /* A stamp's green ink (the loading screen's San Francisco stamp, 18 Nov 2026), as dark as
-     the deep red so it reads on the sea */
+  /* Stamp inks besides cream and deep red, on the loading screen (StampLoading): green (18
+     Nov 2026; as dark as the deep red so it reads on the sea) and orange (19 Nov 2026, the
+     user's wish: too many red and white stamps) */
   --poster-green: #166534;
+  --poster-orange: #e05a0c;
   --poster-gold-dark: #665426;
   --poster-gold-light: #ba9f0b;
   --poster-paper: #dcbc90;
@@ -78,8 +80,19 @@
   /* Ink on poster red (the poster buttons): poster-ink, white in black and white, where
      the red turns black */
   --poster-red-ink: var(--poster-ink);
+  /* A delete button's red (btn-danger; 19 Nov 2026, the user's wish: "not site red, a delete
+     button red"): a true red, darker than the poster red, in white (5.5:1) */
+  --danger-red: #d10f0f;
+  --danger-ink: #ffffff;
   --poster-cream: #ffffff;
   --poster-wash: rgb(255 255 255 / 0.65);
+  /* The map's ribbon banner (MapBanner): its band, lettering, and the tails and folds behind
+     it, darker the further back. The poster's deep red and cream; a map style whose map is
+     close to those sets its own (the starry night: 19 Nov 2026, the user's wish). */
+  --banner: var(--poster-red-deep);
+  --banner-ink: var(--poster-cream);
+  --banner-tail: color-mix(in oklab, var(--banner) 80%, #000000);
+  --banner-fold: color-mix(in oklab, var(--banner) 50%, #000000);
   /* Passport covers by plan (components/passport/PassportCover.jsx): leather boards with
      foil stamping, Economy burgundy with gold, Business navy with silver, First Class black
      with gold. Each foil runs light, mid, dark for its shine. Fixed, like printed covers. */
@@ -139,7 +152,8 @@
        sea / sea-mid / sea-deep  the water, and the animated sea's three shades
        sea-ink    text drawn straight on the sea (also the home page hero)
        ink        lines and labels drawn on the map (names, grid, trip routes)
-       edge       outlines drawn on the map (grid lines, pins)
+       edge       outlines drawn on the map (the landmark pins' and trip stops' rings)
+       grid       the grid lines
      The panels, tags and buttons over the map are travel paperwork (paper-cream and
      poster-* tokens), the same in every style. */
   /* An atlas's ocean azure (it was #007bff). The depth tints over it, lighter over the
@@ -150,6 +164,9 @@
   --map-sea-ink: #ffffff;
   --map-ink: #000000;
   --map-edge: #000000;
+  --map-grid: #000000;
+  /* A stamped landmark's dot (LandmarkPins, the key): the poster's light gold */
+  --map-stamp: #ba9f0b;
 
   /* my_planet's sun ball and moon (fixed artwork) */
   --sky-sun: #ffa500;
@@ -177,6 +194,15 @@
   --map-ice-edge: #8fb3d1;
 }
 
+/* The world map's own water, for its card in the style picker on another style's page, and
+   Black and white's charcoal (the grey tokens' sea) for its card */
+[data-map-style='animated'] {
+  --map-sea: #1d9dda;
+}
+[data-map-style='mono'] {
+  --map-sea: #262626;
+}
+
 [data-map-style='old-map'] {
   --map-sea: #c9a86a;
   --map-sea-mid: #c9a86a;
@@ -186,6 +212,139 @@
   --map-land-edge: #7c2d12;
   --map-ice: #eef1ea;
   --map-ice-edge: #8c9a96;
+}
+
+/* The starry night (19 Nov 2026, the user's wish, after a travel brand's world map on deep
+   space): the night sky is the style's image (starry-night-*); every country, Antarctica
+   and every state on a country's map the same pale blue at 90%, so the sky shows faintly
+   through, with a thin deeper-blue border. Visits show by their star badges, as on every
+   style. The sea colours are the sky's navy, for while the image loads. */
+[data-map-style='starry'] {
+  --map-sea: #06102b;
+  --map-sea-mid: #06102b;
+  --map-sea-deep: #030818;
+  --map-sea-ink: #e3f0fb;
+  --map-ink: #0b2240;
+  /* The pins' rings navy and the grid the land's blue: no white (19 Nov 2026, the user's
+     wish: "white doesn't go with the theme") */
+  --map-edge: #0b2240;
+  --map-grid: #8ec3e6;
+  /* Stamped landmarks in the theme's navy, and "want to go" a nebula violet that stands out
+     on the pale-blue land (19 Nov 2026, the user's wish: not gold, not brown) */
+  --map-stamp: #0b2240;
+  --map-wish: #6d28d9;
+  /* The country under the pointer a deep blue, not the other styles' bright green (19 Nov
+     2026, the user's wish) */
+  --map-hover: #1e4f94;
+  --map-land: rgb(142 195 230 / 0.9);
+  --map-land-edge: rgb(52 104 158 / 0.8);
+  --map-visit-1: var(--map-land);
+  --map-visit-2: var(--map-land);
+  --map-visit-3: var(--map-land);
+  --map-visit-4: var(--map-land);
+  --map-visit-5: var(--map-land);
+  --map-visit-6: var(--map-land);
+  --map-visit-7: var(--map-land);
+  --map-ice: var(--map-land);
+  --map-ice-edge: var(--map-land-edge);
+}
+
+/* Its words (country, pole and state names, the grid's degrees) are the ink on the land,
+   so each wears a halo of the land's blue: a name drawn on the sky (a small island's, under
+   it) reads there too. The size is the label's own, so it scales with it. */
+[data-map-style='starry'] g.fill-map-ink {
+  stroke: rgb(142 195 230);
+  stroke-width: 0.3em;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
+}
+
+/* ── The containers over the map follow its style (19 Nov 2026, the user's wish) ──
+   MapExperience puts the style on <html> as data-map-theme while the map page is open (on
+   <html>, so dialogs drawn in portals follow it, and so the poster colours' utilities,
+   which read them on :root, do too). The animated sea keeps the travel paperwork as it
+   is; these two swap its colours. Each pairs a fill with the ink drawn on it, as the
+   paperwork does: paper with ink, poster red with red-ink, the deep red with cream.
+   Before the black-and-white block, which wins when both are on. */
+
+/* Starry night: navy paper, pale-blue edges and lettering, the land's blue for the main
+   buttons and headings, dark ink on the light fills; the status colours are their dark
+   theme's, which read on navy */
+:root[data-map-theme='starry'] {
+  --poster-paper: #152d5c;
+  --paper-cream: #0c1c40;
+  --paper-burn: rgb(0 0 0 / 0.3);
+  --poster-brown: #6fa8d8;
+  --poster-ink: #e3f0fb;
+  --poster-red: #8ec3e6;
+  --poster-red-ink: #08183a;
+  --poster-red-deep: #bfe0f7;
+  --poster-cream: #08183a;
+  --poster-wash: rgb(8 24 58 / 0.65);
+  --paper-shadow: 0 2px 0 rgb(0 0 0 / 0.4), 0 10px 24px rgb(0 0 0 / 0.5);
+  --btn-shadow: 0 10px 24px rgb(0 0 0 / 0.45);
+  --colour1: #0c1c40;
+  --colour2: #e3f0fb;
+  --colour3: #12264f;
+  --colour4: #e3f0fb;
+  --colour5: #9fbad6;
+  --colour6: #9fd0f2;
+  --colour8: #152d5c;
+  --colour9: #8ec3e6;
+  --field: #0a1836;
+  --field-edge: #6fa8d8;
+  --status-critical: #ff5a50;
+  --status-warning: #e0ab5a;
+  --status-minor: #7ab3e0;
+  --status-good: #5fc796;
+  /* The banner a nebula violet with pale lettering: the land's pale blue (the paperwork's
+     deep accent here) made it part of the map */
+  --banner: #4c2a9a;
+  --banner-ink: #e3f0fb;
+  color-scheme: dark;
+}
+
+/* Old map: aged paper, sepia ink and edges, a brick red for the main buttons (cream
+   lettering) and an oxblood for headings, instead of the poster's bright red */
+:root[data-map-theme='old-map'] {
+  --poster-paper: #e6d3a8;
+  --paper-cream: #f4e8cc;
+  --paper-burn: rgb(107 68 35 / 0.3);
+  --poster-brown: #6b4423;
+  --poster-ink: #2a1a0c;
+  --poster-red: #9a3324;
+  --poster-red-ink: #f6ead0;
+  --poster-red-deep: #6e2318;
+  --poster-cream: #f6ead0;
+  --paper-shadow: 0 2px 0 rgb(107 68 35 / 0.4), 0 10px 24px rgb(60 35 10 / 0.3);
+  --colour1: #f4e8cc;
+  --colour3: #eadcb9;
+  --colour4: #2a1a0c;
+  --colour5: #6b5640;
+  --colour6: #8a2f20;
+  --colour8: #e6d3a8;
+  --colour9: #6b4423;
+  --field: #f8eed6;
+  color-scheme: light;
+}
+
+/* The map's own artwork (badges, pins, poles, moment marks, the key's badges) keeps the
+   poster's colours in every style. Its utilities read --color-poster-*, so those are set
+   here too. */
+:root[data-map-theme] svg {
+  --poster-paper: #dcbc90;
+  --poster-brown: #97572b;
+  --poster-ink: #000000;
+  --poster-red: #ef4444;
+  --poster-red-ink: #000000;
+  --poster-red-deep: #991b1b;
+  --poster-cream: #ffffff;
+  --color-poster-paper: #dcbc90;
+  --color-poster-brown: #97572b;
+  --color-poster-ink: #000000;
+  --color-poster-red: #ef4444;
+  --color-poster-red-deep: #991b1b;
+  --color-poster-cream: #ffffff;
 }
 
 /* mono-tokens:start */
@@ -209,14 +368,19 @@
   --poster-red: #000000;
   --poster-red-deep: #000000;
   --poster-green: #515151;
+  --poster-orange: #717171;
   --poster-gold-dark: #555555;
   --poster-gold-light: #9a9a9a;
   --poster-paper: #e4e4e4;
   --poster-brown: #000000;
   --poster-ink: #000000;
   --poster-red-ink: #ffffff;
+  --danger-red: #000000;
+  --danger-ink: #ffffff;
   --poster-cream: #ffffff;
   --poster-wash: rgb(255 255 255 / 0.65);
+  --banner-tail: color-mix(in oklab, var(--banner) 80%, #000000);
+  --banner-fold: color-mix(in oklab, var(--banner) 50%, #000000);
   --cover-burgundy: #252525;
   --cover-navy: #272727;
   --cover-black: #151515;
@@ -249,6 +413,8 @@
   --map-sea-ink: #ffffff;
   --map-ink: #000000;
   --map-edge: #000000;
+  --map-grid: #000000;
+  --map-stamp: #9a9a9a;
   --sky-sun: #acacac;
   --sky-sun-glow: #ededed;
   --sky-moon: #b2b2b2;
@@ -278,6 +444,8 @@
   --color-map-sea-ink: var(--map-sea-ink);
   --color-map-ink: var(--map-ink);
   --color-map-edge: var(--map-edge);
+  --color-map-grid: var(--map-grid);
+  --color-map-stamp: var(--map-stamp);
   --color-map-land: var(--map-land);
   --color-map-land-edge: var(--map-land-edge);
   --color-map-hover: var(--map-hover);
@@ -340,6 +508,7 @@
   --color-poster-red: var(--poster-red);
   --color-poster-red-deep: var(--poster-red-deep);
   --color-poster-green: var(--poster-green);
+  --color-poster-orange: var(--poster-orange);
   --color-poster-gold-dark: var(--poster-gold-dark);
   --color-poster-gold-light: var(--poster-gold-light);
   --color-poster-paper: var(--poster-paper);
@@ -741,10 +910,10 @@ textarea:-webkit-autofill {
 }
 
 /* The site's buttons, matching the nav: poster red with a brown edge, the travel face
-   and the warm paper shadow. btn-paper is the quieter one (parchment). Use these for
-   every form submit and call-to-action button. A smaller or danger version sets the
-   variables on the same element, e.g. [--btn-size:1rem] [--btn-leading:1.5rem]
-   [--btn-pad-y:0.25rem] [--btn-pad-x:0.75rem] [--btn-ink:var(--poster-red-deep)]. */
+   and the warm paper shadow. btn-paper is the quieter one (parchment), btn-danger the
+   delete button. Use these for every form submit and call-to-action button. A smaller
+   version sets the variables on the same element, e.g. [--btn-size:1rem]
+   [--btn-leading:1.5rem] [--btn-pad-y:0.25rem] [--btn-pad-x:0.75rem]. */
 @utility btn-poster {
   display: grid;
   place-items: center;
@@ -762,6 +931,34 @@ textarea:-webkit-autofill {
   transition: filter 150ms, transform 150ms;
   &:hover {
     filter: brightness(1.1);
+  }
+  &:active {
+    transform: scale(0.97);
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+/* The delete button (Button's and MapActionButton's `danger`): btn-poster's shape in a
+   delete button's red with white lettering, for anything that removes or can't be undone */
+@utility btn-danger {
+  display: grid;
+  place-items: center;
+  padding: var(--btn-pad-y, 0.5rem) var(--btn-pad-x, 1.25rem);
+  border: 2px solid var(--poster-red-deep);
+  border-radius: var(--radius-xs);
+  background-color: var(--danger-red);
+  color: var(--danger-ink);
+  font-family: var(--font-travel);
+  font-size: var(--btn-size, 1.25rem);
+  line-height: var(--btn-leading, 1.75rem);
+  letter-spacing: 0.025em;
+  box-shadow: var(--btn-shadow);
+  cursor: pointer;
+  transition: filter 150ms, transform 150ms;
+  &:hover {
+    filter: brightness(1.12);
   }
   &:active {
     transform: scale(0.97);

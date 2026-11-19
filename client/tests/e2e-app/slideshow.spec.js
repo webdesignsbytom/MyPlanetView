@@ -120,7 +120,7 @@ test.describe('Slideshows', () => {
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('france');
     await list.getByRole('button', { name: 'France', exact: true }).click();
     const france = page.getByRole('dialog', { name: 'France' });
-    await france.getByRole('button', { name: 'Slideshow of France' }).click();
+    await france.getByRole('button', { name: 'Play slideshow' }).click();
     const show = page.getByRole('dialog', { name: 'Slideshow: France' });
     // One country: no title cards. The engagement (2019) came before its oldest photo
     await expect(show.getByRole('article', { name: 'Moment: Got engaged at the Eiffel Tower' })).toBeVisible();

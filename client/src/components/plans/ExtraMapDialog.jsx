@@ -28,7 +28,9 @@ import { plural } from '@/utils/functions/plural';
  * Paying for one more extra map (POST /billing/extra-maps), on a small paper dialog:
  * - `reason: 'new'`: a new map was refused (402); `pendingMap` is its body, kept while
  *   they pay on Stripe so the account page can make it when they come back;
- * - `reason: 'locked'`: the map on screen isn't paid for.
+ * - `reason: 'locked'`: the map on screen isn't paid for;
+ * - `reason: 'upgrade'`: the map on screen, one of the free maps on Economy, was chosen to go
+ *   onto the account's plan (POST /maps/:mapId/upgrade) and waits for an extra map (19 Nov 2026).
  * With a subscription the extra map is added to it at once (`onPaid(billing)`); without
  * one, it's a Stripe Checkout, monthly or yearly, and the page goes there.
  */
@@ -77,7 +79,7 @@ function ExtraMapDialog({ reason = 'new', pendingMap = null, onPaid, onClose }) 
 
   // On the page itself, above the map's panels (it opens from the map switcher's panel)
   return createPortal(
-    <Modal title={reason === 'locked' ? 'Pay for this map' : 'Pay for another map'} onClose={onClose}>
+    <Modal title={reason === 'locked' ? 'Pay for this map' : reason === 'upgrade' ? 'Upgrade this map' : 'Pay for another map'} onClose={onClose}>
       <InlineAlert>{error}</InlineAlert>
       {!billing && !error ? (
         <div className='grid place-items-center py-6' role='status'>
@@ -91,14 +93,16 @@ function ExtraMapDialog({ reason = 'new', pendingMap = null, onPaid, onClose }) 
           <p>
             {reason === 'locked'
               ? 'This map isn’t paid for, so it can’t take new photos. Pay for one more extra map and it takes photos again.'
-              : `Your plan includes ${plural(billing.includedMaps, 'map')}${
-                  billing.extraMapsPaid ? `, and the ${plural(billing.extraMapsPaid, 'extra map')} you pay for ${billing.extraMapsPaid === 1 ? 'is' : 'are'} in use` : ', and you’re using it'
-                }.`}
+              : reason === 'upgrade'
+                ? `Pay for one more extra map and this map moves from Economy onto your ${planOf(billing.plan).name} plan.`
+                : `You have your 3 free maps${
+                    billing.extraMapsPaid ? `, and the ${plural(billing.extraMapsPaid, 'extra map')} you pay for ${billing.extraMapsPaid === 1 ? 'is' : 'are'} in use` : ''
+                  }.`}
           </p>
           <p className='font-semibold'>{extraMapSentence(billing)}</p>
           <p className='text-sm opacity-80'>
             It gets your {planOf(billing.plan).name} limits: {planOf(billing.plan).limits.photosPerCountry.toLocaleString('en-GB')} photos of
-            each country, and up to 10 editors. Maps other people share with you are always free.
+            each country, and up to 5 editors. Maps other people share with you are always free.
           </p>
 
           {!billing.paymentsEnabled ? (

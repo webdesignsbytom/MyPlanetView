@@ -193,23 +193,30 @@ export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT 
   // The SVG gets its viewBox from here, never from a React prop. Measured as it's attached,
   // before the first paint, so a portrait screen never shows the whole world first (the
   // zoom subscribers catch up in their own layout effects; see useViewportZoom).
+  // The size watcher and the wheel listener go on the <svg> itself, here, and come off it in
+  // this ref's clean-up (React 19): a new <svg> (the world map back after a country's own map)
+  // gets its own. Effects run once had kept them on the first, detached one, so the wheel
+  // did nothing and a resize was never measured (19 Nov 2026, the audit).
+  const wheelRef = useRef(null);
   const svgRef = useCallback(
     (node) => {
       svgNodeRef.current = node;
-      if (!node) return;
+      if (!node) return undefined;
       node.setAttribute('viewBox', viewBoxOf(viewRef.current));
       measure(true);
+      const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => measure());
+      observer?.observe(node);
+      // Non-passive, so it can stop the page scrolling; only where the wheel zooms
+      const onWheel = (e) => wheelRef.current?.(e);
+      if (wheelZoom) node.addEventListener('wheel', onWheel, { passive: false });
+      return () => {
+        observer?.disconnect();
+        node.removeEventListener('wheel', onWheel);
+        if (svgNodeRef.current === node) svgNodeRef.current = null;
+      };
     },
-    [measure],
+    [measure, wheelZoom],
   );
-
-  useEffect(() => {
-    const svg = svgNodeRef.current;
-    if (!svg || typeof ResizeObserver === 'undefined') return undefined;
-    const observer = new ResizeObserver(() => measure());
-    observer.observe(svg);
-    return () => observer.disconnect();
-  }, [measure]);
 
   // A new extent (Antarctica shown or hidden): the view's shape follows the map's on a
   // landscape screen, and the view is kept on the map. Before the paint that draws the
@@ -282,18 +289,14 @@ export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT 
     [apply],
   );
 
-  // The wheel needs a non-passive listener to stop the page scrolling
+  // What a wheel tick does (the listener itself is attached in svgRef)
   useEffect(() => {
-    const svg = svgNodeRef.current;
-    if (!svg || !wheelZoom) return undefined;
-    const onWheel = (e) => {
+    wheelRef.current = (e) => {
       e.preventDefault();
       const at = toMap(e.clientX, e.clientY);
       zoomAround(e.deltaY < 0 ? 1.15 : 1 / 1.15, at);
     };
-    svg.addEventListener('wheel', onWheel, { passive: false });
-    return () => svg.removeEventListener('wheel', onWheel);
-  }, [toMap, zoomAround, wheelZoom]);
+  }, [toMap, zoomAround]);
 
   // The grabbing hand: set straight on the SVG, so holding the mouse doesn't re-render the map
   const setGrabbing = useCallback((on) => {

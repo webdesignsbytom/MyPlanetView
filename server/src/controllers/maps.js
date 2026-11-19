@@ -7,7 +7,7 @@ import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/re
 import { logEvent } from '../utils/events/logEvent.js';
 import { createMapEvent } from '../event/travelUtils.js';
 import { sanitizeText } from '../utils/sanitize.js';
-import { canEdit, canManage, canView } from '../utils/access.js';
+import { canEdit, canManage, canView, isOwner } from '../utils/access.js';
 import {
   GROUP_TYPES,
   MAX_TRAVELLERS,
@@ -34,6 +34,7 @@ import {
   updateMapInDB,
   updateTravellerInDB,
   upsertVisitInDB,
+  setMapUpgradedInDB,
 } from '../domain/maps.js';
 import { findSubscription } from '../domain/billing.js';
 import { countPhotosByCountry } from '../domain/photos.js';
@@ -93,7 +94,8 @@ const summaryView = (map, role, slots = null) => ({
   ownerName: map.owner?.name ?? null,
   // { countries, photos, trips }, from findOwnedMaps/findMemberMaps (photos per the caller's role)
   counts: map.counts,
-  ...(slots ? { locked: slots.lockedIds.includes(map.id), graceUntil: map.graceUntil ?? null } : {}),
+  // `tier`: on the owner's plan, on Economy (a free map), or locked (19 Nov 2026)
+  ...(slots ? { locked: slots.lockedIds.includes(map.id), tier: slots.tiers[map.id], graceUntil: map.graceUntil ?? null } : {}),
 });
 
 /**
@@ -110,7 +112,11 @@ async function mapPlanView(mapId) {
   ]);
   if (!mapPlan) return {};
   return {
+    // The map's own plan (Economy for a free extra map), the owner's, and which it is
     plan: planView(mapPlan.plan),
+    accountPlan: planView(mapPlan.accountPlan),
+    tier: mapPlan.tier,
+    upgraded: Boolean(mapPlan.upgradedAt),
     locked: mapPlan.locked,
     graceUntil: mapPlan.graceUntil,
     photoCounts,
@@ -191,7 +197,7 @@ export const getMyMapsHandler = handler(D, 'Get my maps', async (req, res) => {
   return sendDataResponse(res, 200, { maps });
 });
 
-// A new map needs a free map slot: the included one, or an extra map paid for (402)
+// A new map needs room: one of the 3 free maps, or an extra map paid for (402)
 export const createMapHandler = handler(D, 'Create map', async (req, res) => {
   const body = req.body || {};
   const name = cleanName(body.name);
@@ -259,7 +265,8 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
   }
   const splitChange = body.splitUk !== undefined && body.splitUk !== map.splitUk;
   if (Object.keys(data).length) {
-    await updateMapInDB(map.id, data);
+    // The new kind is checked again with the map locked (a traveller added meanwhile)
+    if ((await updateMapInDB(map.id, data)).tooMany) return conflict(req, res, D, tooManyForGroup(data.groupType));
     logEvent(createMapEvent({ user: req.user, action: 'Update Success', id: map.id, detail: Object.keys(data).join(',') }));
   }
   if (splitChange) {
@@ -269,9 +276,11 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
   return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role, WITH_PLAN) });
 });
 
+// Deleting, choosing the main map and handing a map over are the owner's alone, never a
+// co-owner's (they're about the owner's account and what it pays for)
 export const deleteMapHandler = handler(D, 'Delete map', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
-  if (denyUnless(req, res, D, role, canManage, EVENT_MESSAGES.mapNotFound)) return undefined;
+  if (denyUnless(req, res, D, role, isOwner, EVENT_MESSAGES.mapNotFound)) return undefined;
   if (map.isDefault) return conflict(req, res, D, EVENT_MESSAGES.defaultMapDelete);
 
   await deleteMapWithFiles(map.id);
@@ -283,11 +292,39 @@ export const deleteMapHandler = handler(D, 'Delete map', async (req, res) => {
 // ordinary map, which needs a paid slot to stay active
 export const makeMainMapHandler = handler(D, 'Make main map', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
-  if (denyUnless(req, res, D, role, canManage, EVENT_MESSAGES.mapNotFound)) return undefined;
+  if (denyUnless(req, res, D, role, isOwner, EVENT_MESSAGES.mapNotFound)) return undefined;
   if (!map.isDefault) {
     await makeDefaultMapInDB(map.id, req.user.id);
     logEvent(createMapEvent({ user: req.user, action: 'Main Map Success', id: map.id }));
   }
+  return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role, WITH_PLAN) });
+});
+
+/**
+ * The owner chooses to put a map on their plan (19 Nov 2026, docs/API.md "Map limits"): the
+ * maps chosen take the paid extra-map slots first, in the order chosen, before the rest
+ * oldest first (utils/mapSlots.js). With a slot to spare (one an unchosen map was using) the
+ * map moves onto the plan at once; with none it waits for another extra map paid for: the
+ * reply's `tier` says which, and the app then offers to buy one. The main map is always on
+ * the plan. Choosing again keeps the first choice's place.
+ */
+export const upgradeMapHandler = handler(D, 'Upgrade map', async (req, res) => {
+  const { map, role } = await loadMap(req, req.params.mapId);
+  if (denyUnless(req, res, D, role, isOwner, EVENT_MESSAGES.mapNotFound)) return undefined;
+  const mapPlan = await loadMapPlan(map.id);
+  if (!map.isDefault && !mapPlan?.upgradedAt) {
+    await setMapUpgradedInDB(map.id, new Date());
+    logEvent(createMapEvent({ user: req.user, action: 'Upgrade Success', id: map.id }));
+  }
+  return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role, WITH_PLAN) });
+});
+
+/** Taking that choice back: the map queues with the rest again (it may stay on the plan if a slot is spare). */
+export const downgradeMapHandler = handler(D, 'Downgrade map', async (req, res) => {
+  const { map, role } = await loadMap(req, req.params.mapId);
+  if (denyUnless(req, res, D, role, isOwner, EVENT_MESSAGES.mapNotFound)) return undefined;
+  await setMapUpgradedInDB(map.id, null);
+  logEvent(createMapEvent({ user: req.user, action: 'Downgrade Success', id: map.id }));
   return sendDataResponse(res, 200, { map: await mapDetailView(map.id, role, WITH_PLAN) });
 });
 
@@ -298,7 +335,7 @@ export const makeMainMapHandler = handler(D, 'Make main map', async (req, res) =
  */
 export const transferMapHandler = handler(D, 'Transfer map', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
-  if (denyUnless(req, res, D, role, canManage, EVENT_MESSAGES.mapNotFound)) return undefined;
+  if (denyUnless(req, res, D, role, isOwner, EVENT_MESSAGES.mapNotFound)) return undefined;
 
   const body = req.body || {};
   const { userId } = body;
@@ -324,7 +361,9 @@ export const transferMapHandler = handler(D, 'Transfer map', async (req, res) =>
     targetId: userId,
     detail: `stayAsEditor=${stayAsEditor} grace=${Boolean(result.graceUntil)}`,
   }));
-  const view = stayAsEditor ? await mapDetailView(map.id, 'EDITOR', WITH_PLAN) : { id: map.id, name: map.name, role: null };
+  // Staying on: an editor, or a co-owner when it went to a co-owner (transferMapInDB)
+  const stayedAs = stayAsEditor ? (await findMapMember(map.id, req.user.id))?.role ?? 'EDITOR' : null;
+  const view = stayedAs ? await mapDetailView(map.id, stayedAs, WITH_PLAN) : { id: map.id, name: map.name, role: null };
   return sendDataResponse(res, 200, { map: view });
 });
 
@@ -355,11 +394,10 @@ export const createTravellerHandler = handler(D, 'Create traveller', async (req,
 
   const parsed = await parseTraveller(req.body || {});
   if (parsed.error) return badRequest(req, res, D, parsed.error);
-  const count = await countTravellers(map.id);
-  if (count >= MAX_TRAVELLERS) return badRequest(req, res, D, EVENT_MESSAGES.tooManyTravellers);
-  if (count >= maxTravellersFor(map.groupType)) return conflict(req, res, D, groupFull(map.groupType));
+  const { traveller, full } = await createTravellerInDB(map.id, parsed.value);
+  if (full === 'total') return badRequest(req, res, D, EVENT_MESSAGES.tooManyTravellers);
+  if (full) return conflict(req, res, D, groupFull(full));
 
-  const traveller = await createTravellerInDB({ mapId: map.id, position: count, ...parsed.value });
   await markBirthplaces(map, [traveller.birthCountryCode]);
   logEvent(createMapEvent({ user: req.user, action: 'Traveller Create Success', id: map.id, detail: `traveller=${traveller.id}`, statusCode: 201 }));
   return sendDataResponse(res, 201, { traveller });
@@ -386,9 +424,11 @@ export const deleteTravellerHandler = handler(D, 'Delete traveller', async (req,
   if (!(await findTraveller(map.id, req.params.travellerId))) {
     return notFound(req, res, D, EVENT_MESSAGES.travellerNotFound);
   }
-  if ((await countTravellers(map.id)) <= 1) return conflict(req, res, D, EVENT_MESSAGES.lastTraveller);
-
-  await deleteTravellerInDB(req.params.travellerId);
+  const removed = await deleteTravellerInDB(map.id, req.params.travellerId);
+  if (removed.last) return conflict(req, res, D, EVENT_MESSAGES.lastTraveller);
+  if (removed.coOwner) return conflict(req, res, D, EVENT_MESSAGES.travellerIsCoOwner);
+  if (removed.coOwnerRoom) return conflict(req, res, D, EVENT_MESSAGES.coOwnersNeedTravellers);
+  if (!removed.deleted) return notFound(req, res, D, EVENT_MESSAGES.travellerNotFound);
   logEvent(createMapEvent({ user: req.user, action: 'Traveller Delete Success', id: map.id, detail: `traveller=${req.params.travellerId}` }));
   return sendDataResponse(res, 200, { message: 'Traveller removed.' });
 });

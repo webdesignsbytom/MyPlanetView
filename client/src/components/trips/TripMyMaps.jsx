@@ -10,7 +10,7 @@ import LoadingSpinner from '@/components/utils/LoadingSpinner';
 // Utils
 import { forgetMapLists, myMaps } from '@/utils/map/mapListCache';
 
-const canAddTo = (map) => map.role === 'OWNER' || map.role === 'EDITOR';
+const canAddTo = (map) => map.role === 'OWNER' || map.role === 'CO_OWNER' || map.role === 'EDITOR';
 
 /**
  * A group trip on your own maps (docs/API.md "Group trips"): which of your maps show it

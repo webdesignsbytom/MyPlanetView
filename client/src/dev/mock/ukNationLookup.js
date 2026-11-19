@@ -1,7 +1,7 @@
 // Which of the UK's nations a position is in, for the mock (a copy of
 // server/src/utils/ukNations.js ukNationAt, over the same outlines: data/ukNations.js, made
 // with server/src/data/ukNations.json by images/src/tools/uk-nations.mjs). For a position
-// already found in the UK: inside a nation, else the nearest.
+// already found in the UK: inside a nation, else the nearest within half a degree.
 import { UK_NATION_OUTLINES } from './data/ukNations';
 import { UK_NATION_CODES } from '@/utils/map/ukNations';
 
@@ -40,5 +40,6 @@ export function ukNationAt(latitude, longitude) {
       if (!nearest || distance < nearest.distance) nearest = { code, distance };
     }
   }
-  return nearest?.code ?? null;
+  // Only within half a degree, as the server: South Georgia and the Channel Islands stay the UK's
+  return nearest && nearest.distance <= 0.5 ? nearest.code : null;
 }

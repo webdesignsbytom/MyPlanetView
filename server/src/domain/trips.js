@@ -220,9 +220,14 @@ export const updateTripInDB = (tripId, data, { markVisited = false } = {}) => {
   });
 };
 
-/** A stop's country on a completed trip counts as visited on the trip's maps (in `tx`). */
+/**
+ * A stop's country on a completed trip counts as visited on the trip's maps (in `tx`). The
+ * trip's row is locked first (FOR NO KEY UPDATE, which also waits for addTripToMapInDB's FOR
+ * SHARE): a completion or a new link at the same moment either sees this stop or is seen by
+ * it, so no map misses the country (19 Nov 2026, the audit).
+ */
 async function markStopVisited(tx, tripId, countryCode) {
-  const trip = await tx.trip.findUnique({ where: { id: tripId }, select: { mapId: true, status: true } });
+  const [trip] = await tx.$queryRaw`SELECT "mapId", "status"::text AS "status" FROM "trip" WHERE "id" = ${tripId} FOR NO KEY UPDATE`;
   if (trip?.status === 'COMPLETED') await markVisitedOnTripMaps(tx, { tripId, mapId: trip.mapId }, [countryCode]);
 }
 
@@ -297,8 +302,8 @@ export const findTripMembers = (tripId) =>
 export const findTripMember = (tripId, userId) =>
   prisma.tripMember.findUnique({ where: { tripId_userId: { tripId, userId } }, select: { role: true } });
 
-export const upsertTripMember = (tripId, userId, role) =>
-  prisma.tripMember.upsert({
+export const upsertTripMember = (tripId, userId, role, db = prisma) =>
+  db.tripMember.upsert({
     where: { tripId_userId: { tripId, userId } },
     create: { tripId, userId, role },
     update: { role },
@@ -348,7 +353,7 @@ export const findTripMapLink = (tripId, mapId) =>
 export const deleteTripMapLink = (tripId, mapId) => prisma.tripMap.deleteMany({ where: { tripId, mapId } });
 
 // Maps a user owns or edits (where they may add a trip). `userId` is always set here.
-const mapsUserEdits = (userId) => ({ OR: [{ ownerId: userId }, { members: { some: { userId, role: 'EDITOR' } } }] });
+const mapsUserEdits = (userId) => ({ OR: [{ ownerId: userId }, { members: { some: { userId, role: { in: ['EDITOR', 'CO_OWNER'] } } } }] });
 
 /**
  * The maps of `userId` (owned or edited) a trip was added to, first added first:

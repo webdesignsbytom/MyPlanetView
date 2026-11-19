@@ -105,12 +105,15 @@ const siteServiceWorker = () => ({
     const build = crypto.createHash('sha256').update(Object.keys(bundle).sort().join('\n')).digest('hex').slice(0, 12);
     const siteCode = Object.keys(bundle)
       // Not the map's detailed outlines (`outline-*`, 2.7 MB), fetched as the map is zoomed in,
-      // or the countries' own maps (`countrymap-*`, 7 MB), fetched as one is opened
+      // the countries' own maps (`countrymap-*`, 7 MB), fetched as one is opened, or code that
+      // needs the network anyway (`online-*`: video playback and upload, and the pre-render's
+      // server renderer)
       .filter(
         (name) =>
           name.startsWith('assets/') &&
           !name.startsWith('assets/outline-') &&
           !name.startsWith('assets/countrymap-') &&
+          !name.startsWith('assets/online-') &&
           /\.(js|css|woff2?|ttf)$/.test(name),
       )
       .sort()
@@ -265,6 +268,13 @@ export default defineConfig({
         chunkFileNames: (chunk) => {
           if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]detailShapes[\\/]/.test(chunk.facadeModuleId)) return 'assets/outline-[name]-[hash].js';
           if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]countryMaps[\\/]/.test(chunk.facadeModuleId)) return 'assets/countrymap-[name]-[hash].js';
+          // Code that only works online (hls.js plays Stream's videos, tus-js-client sends
+          // them) or that only the build's pre-render loads (React DOM's server renderer):
+          // named so the installed app doesn't keep it (19 Nov 2026, the audit: 190 KB gzip)
+          // (the renderer comes through CommonJS, so it's known by its chunk's name)
+          if ((chunk.facadeModuleId && /node_modules[\\/](hls\.js|tus-js-client)[\\/]/.test(chunk.facadeModuleId)) || chunk.name === 'server.browser') {
+            return 'assets/online-[name]-[hash].js';
+          }
           return 'assets/[name]-[hash].js';
         },
         manualChunks(id) {
@@ -274,6 +284,14 @@ export default defineConfig({
           if (/node_modules[\\/]react-dom[\\/](server|cjs[\\/]react-dom-server)/.test(id)) return undefined;
           if (/node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom|cookie|set-cookie-parser)[\\/]/.test(id)) {
             return 'react';
+          }
+
+          // The world map's outline data (about 750 KB of path strings, 270 KB gzip) on its own:
+          // in one chunk with the map's code, which changes often, every deploy made returning
+          // visitors download the unchanged outlines again (19 Nov 2026, the audit). These are
+          // only ever imported by lazy code, so the chunk still loads only with the map.
+          if (/[\\/]src[\\/]utils[\\/]map[\\/](countryShapes|ukNationShapes|countryStyle|detailShapeBounds)\.js$/.test(id)) {
+            return 'map-shapes';
           }
 
           // Every other package goes with the code that imports it, so a page downloads only

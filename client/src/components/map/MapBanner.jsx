@@ -3,11 +3,12 @@ import React from 'react';
 // The ribbon's parts behind the band, as a vintage banner draws them. The tails hang a
 // little lower than the band (top-3, -bottom-3) and reach under it; the folds are the
 // ribbon's back showing where it turns under the band's lower corners. Shades of the
-// poster's deep red, darker the further back.
-const TAIL = 'absolute -bottom-3 top-3 w-15 bg-[color-mix(in_oklab,var(--poster-red-deep)_80%,var(--poster-ink))]';
+// banner's colour (--banner: the poster's deep red, or the map style's own), darker the
+// further back.
+const TAIL = 'absolute -bottom-3 top-3 w-15 bg-[var(--banner-tail)]';
 const LEFT_TAIL = `${TAIL} -left-12 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%,30%_50%)]`;
 const RIGHT_TAIL = `${TAIL} -right-12 [clip-path:polygon(0_0,100%_0,70%_50%,100%_100%,0_100%)]`;
-const FOLD = 'absolute top-full h-3 w-3 bg-[color-mix(in_oklab,var(--poster-red-deep)_50%,var(--poster-ink))]';
+const FOLD = 'absolute top-full h-3 w-3 bg-[var(--banner-fold)]';
 
 /**
  * my_planet's user banner (OwnerDisplayContainer), top centre on wide screens, where it
@@ -27,8 +28,8 @@ function MapBanner({ map }) {
         <span aria-hidden='true' className={RIGHT_TAIL} />
         <span aria-hidden='true' className={`${FOLD} left-0 [clip-path:polygon(0_0,100%_0,100%_100%)]`} />
         <span aria-hidden='true' className={`${FOLD} right-0 [clip-path:polygon(0_0,100%_0,0_100%)]`} />
-        <div className='relative grid bg-poster-red-deep p-1 text-poster-cream'>
-          <div className='grid grid-cols-a1a items-center gap-3 border-y border-dashed border-poster-cream/50 px-5 py-1'>
+        <div className='relative grid bg-[var(--banner)] p-1 text-[var(--banner-ink)]'>
+          <div className='grid grid-cols-a1a items-center gap-3 border-y border-dashed border-[color-mix(in_oklab,var(--banner-ink)_50%,transparent)] px-5 py-1'>
             <span aria-hidden='true' className='text-xs'>
               ★
             </span>

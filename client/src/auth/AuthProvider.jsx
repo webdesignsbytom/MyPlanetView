@@ -118,6 +118,8 @@ export function AuthProvider({ children }) {
           password: registerFormData.password,
           name: registerFormData.username,
           ...(registerFormData.promoCode ? { promoCode: registerFormData.promoCode } : {}),
+          // From an invite's link: the server makes the account verified and accepts the invite
+          ...(registerFormData.inviteToken ? { inviteToken: registerFormData.inviteToken } : {}),
         },
         true,
       );

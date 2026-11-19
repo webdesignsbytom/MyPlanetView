@@ -2,7 +2,7 @@
 
 What comes after the port, and how it pays for itself. [SITE-DESIGN.md](SITE-DESIGN.md) records what is built; this file is what's planned. When a feature here is built, move its decisions into SITE-DESIGN.md.
 
-Last updated: 16 November 2026.
+Last updated: 19 November 2026.
 
 ## Build status
 
@@ -30,12 +30,13 @@ Last updated: 16 November 2026.
 - **Phase 2, started (16 Nov 2026, evening):** "Print or download", version 1 (see "Printing"; docs/API.md "Downloads"): a country's, a trip's or the whole map's best copies as a zip made in the browser, for editors, then the print partner's link, imported like any travel offer (an example printer until one is chosen). Monthly photo themes (see "Monthly photo themes"; docs/API.md "Photo themes"): the admin page, the albums in the badges panel, entering from the photo viewer and the theme badges, with an example year in development until the real one is written. Friends challenges (see "Friends challenges"; docs/API.md "Friends challenges"): start one, send its link, each friend picks the map that counts, a leaderboard of names and counts. Each plan's passport cover (16 Nov): the map owner's plan picks it. The next 20 country guides, drafted (16 Nov): the popular countries that have a poster (United Kingdom, Belgium, Austria, Czechia, Poland, Hungary, Denmark, Norway, Sweden, Finland, Malta, Cyprus, India, Indonesia, South Korea, China, South Africa, Kenya, Brazil, Argentina), waiting for the user's proofreading (WAITING-ON-YOU.md).
 - **Phase 3, started (16 Nov 2026, night):** the twelve "Where to go in <month>" pages, as drafts until the user passes their introductions (see "Country pages"); per-traveller badges (see "Badges and goals"); moments on landmark cards and passport stamps, and as cards in the slideshows (see "Moments"); stamped landmarks gold on the map, and the stamp photo picker finding a landmark's photos placed in another country (see "The passport"); moments pinned to their exact spot, each pin shown to the people the map is shared with only when its owner says so (see "Moments").
 - **Phase 1, what's left is the user's** (WAITING-ON-YOU.md, LAUNCH-CHECKLIST.md): choosing First Class's extra map styles (the Pricing page still marks them "soon"); joining the travel partners; the influencer outreach; the brand's icons; and trying everything for real (R2, Stream, Stripe, phones).
+- **Couples and families (19 Nov 2026; see "Couples and families" below):** built the same day: the co-owner role, invites that sign people up and verify them in one step, editors down to 5 (server, app, mock and tests; docs/API.md "Co-owners"). Three free maps per account, each extra map paid for upgrading one (the owner chooses which), built the same evening (docs/API.md "Map limits"). The invite offer (half price for 3 months, the same saving off a year) too (docs/API.md "The invite offer"). The terms and Pricing page say so; someone qualified should read them before payments go live.
 
 ## Agreed so far
 
 | Idea | Decision (14 Nov 2026) |
 | --- | --- |
-| Tiers | Three: **Economy** (free), **Business** (£4.99 a month) and **First Class** (£8.99 a month), with yearly prices. |
+| Tiers | Three: **Economy** (free), **Business** (£4.99 a month) and **First Class** (£9.99 a month), with yearly prices. |
 | What sells it | The features and the style: the map, the passport, private sharing. Never gigabytes. |
 | Ads | Travel affiliate cards in photo galleries, on Economy maps and (fewer) for non-paying viewers of Business maps. Paying members never see them; First Class maps show none to anyone. |
 | Travel Desk | A button that opens travel offers when someone asks: on every tier, so paying members can earn the site commission too. |
@@ -50,9 +51,11 @@ Last updated: 16 November 2026.
 | Promotion | Influencers who promote the site get two years free; their followers get their first month free with the creator's code (16 Nov). |
 | Installable app | A PWA (15 Nov): installable from the browser, online only at first. No app store, no Next.js. |
 | Moments | Life events and notes on a country or landmark, e.g. "Had a baby in Canada" (15 Nov). Free on every tier. |
-| Maps you own | (16 Nov) Every plan includes 1 map, and any account can pay for more, with no limit: £3.99 a month (£39 a year) on Economy and Business, £5.99 (£59 a year) on First Class. An extra map gets the owner's plan limits. Maps shared with you are free and never count. |
+| Maps you own | (16 Nov) Every plan includes 1 map, and any account can pay for more, with no limit: £3.99 a month (£39 a year) on Economy and Business, £5.99 (£59 a year) on First Class. An extra map gets the owner's plan limits. Maps shared with you are free and never count. **Changing (19 Nov, to build):** every account owns up to 3 maps free, the main one on its plan and the others on Economy's limits; each extra map paid for is one more map on the plan (see "Couples and families"). |
 | Photo allowance | (16 Nov) Belongs to the map, not to each uploader. Every map you own gets your plan's full allowance; nothing is split between maps. |
-| Editors | (16 Nov) Up to 10 editors on any map, on every tier: the family adds photos to the owner's map with their own logins. Viewers and share-link visitors are unlimited. |
+| Editors | (16 Nov) Up to 10 editors on any map, on every tier: the family adds photos to the owner's map with their own logins. Viewers and share-link visitors are unlimited. **Changing (19 Nov, to build):** up to 5 editors, with co-owners counted apart. |
+| Co-owners | (19 Nov, to build) A partner or the other parent gets their own login and every power the owner has on that one map except deleting it, handing it over, paying for it and removing a co-owner. One login per person, never shared. |
+| Invite offer | (19 Nov, to build) Someone who signs up from an invite to a Business or First Class map gets that plan at half price for their first 3 months, if they subscribe within 7 days. Never on top of a promo code. |
 | Children | (16 Nov) Under 13: no account, but they can be travellers on a map. 13 to 17: an account with a parent's or guardian's permission, so teenagers can be editors. The terms say so. |
 | Group trips | (16 Nov) A trip can be shared between people's accounts: everyone on it adds photos, and each can add the trip to their own map. Up to 20 people per trip, separate from the map's 10 editors. Their photos use the organiser's map allowance. |
 | Transferring a map | (16 Nov) An owner can make someone else the owner (e.g. Mum, when Dad's email is no longer used), and an admin can do it when the owner can't (a death, a lost email). |
@@ -87,13 +90,13 @@ Affiliate income stays small until the country pages bring visitors, so the memb
 
 | | Economy | Business | First Class |
 | --- | --- | --- | --- |
-| Price | Free | £4.99 a month or £49 a year | £8.99 a month or £89 a year |
-| Maps you own | 1 included; each extra map £3.99 a month or £39 a year | 1 included; each extra map £3.99 a month or £39 a year | 1 included; each extra map £5.99 a month or £59 a year |
+| Price | Free | £4.99 a month or £49 a year | £9.99 a month or £99 a year |
+| Maps you own | 1 included; each extra map £3.99 a month or £39 a year (to build: 3 free) | 1 included; each extra map £3.99 a month or £39 a year (to build: 3 free, 2 of them on Economy's limits) | 1 included; each extra map £5.99 a month or £59 a year (to build: 3 free, 2 of them on Economy's limits) |
 | Photos per country, on each map | 30 | 200 | 1,000 |
 | Best copy kept of each photo | A 2,400 px print copy | The untouched original | The untouched original |
 | Videos | No | No | Yes |
 | Ad cards in galleries | Shown to everyone viewing your maps | You never see them; non-paying people viewing your maps see fewer | None, for anyone viewing your maps |
-| Editors on each map (people besides the owner who can add photos) | Up to 10 | Up to 10 | Up to 10 |
+| Editors on each map (people besides the owner who can add photos) | Up to 10 (to build: 5, plus co-owners) | Up to 10 (to build: 5, plus co-owners) | Up to 10 (to build: 5, plus co-owners) |
 | Extras | The red and gold Economy passport cover | A navy and silver Business Class passport cover | A black and gold First Class passport cover; extra map styles (to choose); a print discount once printing goes through the site |
 | Storage safety net, on each map | Not needed | 50 GB | 200 GB |
 
@@ -146,6 +149,8 @@ Friends viewing a Business member's map aren't paying, so they see some ads, but
 
 ### Maps
 
+**Changing (19 Nov 2026, to build):** three free maps per account, editors down to 5, and co-owners. The rules below are what's built; "Couples and families" below is what replaces them.
+
 An **account** is one person's login. A **map** is one world map with its countries, trips and photos. One login can own maps and be added to other people's, and the map switcher (the map's name at the top of the map page) flips between them: "Your maps", then "Shared with you" and "Trips shared with you".
 
 **The rules:**
@@ -172,7 +177,7 @@ An **account** is one person's login. A **map** is one world map with its countr
 | Sam, travels alone | "Sam's travels" (Economy) | None | £0 |
 | Sam wants a family map as well, and stays on Economy | Economy: "Sam's travels" plus "The Smiths" as an extra map, both with Economy's limits | None | £3.99 |
 | Sam later fills up France and upgrades | Business: both maps get Business limits | None | £4.99 + £3.99 = £8.98 |
-| Jo, First Class, with a solo map and a couple's map | First Class: one included, one extra | None | £8.99 + £5.99 = £14.98 |
+| Jo, First Class, with a solo map and a couple's map | First Class: one included, one extra | None | £9.99 + £5.99 = £15.98 |
 | Dad, family of five | "The Smiths" (Business); Mum and three teenagers are editors (4 of 10) | None | £4.99 |
 | Mum, an editor on Dad's map | Optionally her own "Girls' trips" (Economy) | "The Smiths" | £0 |
 | Grandma | None, and no account | Opens the family map's share link | £0 |
@@ -258,6 +263,70 @@ Cloudflare R2 charges **$0.015 per GB a month**. The first 10 GB a month are fre
 Most people will use far less, so the prices are about value, not cost.
 
 A later saving: R2's Infrequent Access class costs $0.01 per GB a month and suits originals, which are rarely opened. It adds a fee each time a file is read and bills each file for at least 30 days.
+
+## Couples and families: co-owners, free maps and the invite offer
+
+Decided with the user on 19 Nov 2026; not built yet. When it's built, move the rules into SITE-DESIGN.md and docs/API.md, and rewrite "Maps" and the tiers table above.
+
+**One login per person.** An account is one email address and one password, and two people never share one. A shared login would give a partner the other's solo maps, account, billing and password, and every photo would look like one person's. Each adult has their own account. Children under 13 are travellers with no login (see "Children and editors").
+
+### Roles on a map
+
+| | Viewer | Editor | Co-owner | Owner |
+| --- | --- | --- | --- | --- |
+| Sees the map | ✓ | ✓ | ✓ | ✓ |
+| Countries, notes, trips, photos, videos, moments, pins, goals, travellers | – | ✓ | ✓ | ✓ |
+| The map's name, kind (solo, couple, family) and UK split | – | – | ✓ | ✓ |
+| Sharing: adding and removing editors and viewers, the share link | – | – | ✓ | ✓ |
+| Removing a co-owner | – | – | – | ✓ |
+| Deleting the map, handing it to someone, paying for it | – | – | – | ✓ |
+
+- **Co-owner is for the people the map is about:** a partner, the other parent. Editor stays for helpers, such as a friend adding photos.
+- **Every co-owner is one of the map's travellers,** with their own login. Adding one asks which traveller they are, and links that traveller to their account (today only the owner's own traveller is linked, at sign-up). So a solo map has no co-owners, a couple's map one, and a family map up to one fewer than its travellers (at most 19).
+- **Limits:**
+  - co-owners don't count towards the editors;
+  - editors go down from 10 to **5** per map (members plus pending invites). A map that already has more keeps them, but can't add another until it's under 5;
+  - viewers stay unlimited;
+  - a trip keeps 20 people of any role.
+- **The look stays each person's own.** Map style, landmark pins, the sea and the banner are already chosen per account, so a co-owner never changes the owner's.
+- **The map runs on the owner's plan,** whoever is looking. A co-owner's own plan doesn't change it.
+- **Leaving:** a co-owner can leave at any time; only the owner removes one. If the owner deletes their account, the map passes to a co-owner first (today: the longest-standing editor), and from then on runs on the new owner's plan.
+
+### Inviting someone
+
+1. The owner or a co-owner adds them by email in the share dialog, or from that traveller's row in Settings. They choose the role, and for a co-owner, which traveller this is.
+2. An address with an active, verified account becomes a member at once, and gets a "you've been added" email. Any other address gets an invite email, as now (`ShareInvite`, which now also carries the co-owner role and the traveller).
+3. The invite's link opens sign-up with the address filled in and fixed, and the traveller's name as the name.
+4. **Signing up from the invite link verifies the address.** Only that inbox received the link, which is what a verification email proves. The same step accepts the invite and links the traveller, so there's no second email.
+5. They land on the shared map, with a note that their own map is under "Your maps". Their own map's set-up (`/welcome`) waits until they open it.
+6. Signing up later with the same address, without the link, still works as it does now: the invite is accepted once the address is verified.
+
+Being on someone else's map never uses one of your own 3 maps.
+
+**Example:** Jo is on First Class, with a couple's map for Jo and Alex. Jo invites Alex as co-owner and as the traveller "Alex". Alex opens the email, signs up from the link and lands on the First Class couple's map as co-owner. Alex also has their own map, on Economy, which they can upgrade by paying for a plan.
+
+### Maps you own: 3 free, then pay per map
+
+- **Every account can own 3 maps without paying.** The main map runs on the account's plan; the other two run on Economy's limits (30 photos per country, print copies, ads).
+- **Each extra map paid for is one more map on the account's plan,** at today's prices: £3.99 a month or £39 a year on Economy and Business, £5.99 or £59 on First Class. Paying for one upgrades an Economy map to the plan, or starts a 4th map.
+- **An upgrade takes a map to the account's plan,** never higher. Someone on Economy who wants a First Class couple's map makes it their main map and takes First Class.
+- **More maps than the account allows** stay viewable and shareable but take no new photos, as unpaid maps do now. This happens when payment stops, or when a map passes to someone who already has 3. Nothing is deleted. A map handed over still gets 60 days' grace.
+- The 20-new-maps-a-day limit stays, against abuse.
+
+### The invite offer
+
+- **Who gets it:** a new account made from an invite to a **Business or First Class map**. It goes by the map's plan (the owner's), whoever sent the invite. An Economy map gives no offer.
+- **What it is:** **half price for the first 3 months** on that plan, or a lower paid one, for a subscription started within **7 days** of signing up.
+- **Once per account,** and only for accounts made from an invite. Someone who already had an account and is added to a map gets none.
+- **Never on top of another offer:** an account gets one introductory offer. A promo code typed at sign-up wins (its free month, or its plan for life), and then there's no invite offer.
+- **Yearly plans get it too** (confirmed by the user, 19 Nov 2026): the same saving as 3 half-price months, taken off the first year. That's about £15 off First Class (£84.01 instead of £99) and £7.50 off Business (£41.50 instead of £49). Stripe's "half price for 3 months" coupon halves every bill in those 3 months. A yearly plan has one bill, the whole year, so the plain coupon would take £49.50 off a First Class year: hence a fixed amount off for yearly.
+- **Where it shows:**
+  - the invite email ("Jo's map is First Class: join within 7 days and get First Class at half price for 3 months");
+  - sign-up from the invite;
+  - the note on arriving;
+  - the account's "Your plan" card, with the date the offer ends.
+- **In Stripe:** a 50% coupon lasting 3 months for monthly plans, and a fixed amount off once for yearly ones. It's kept on the profile like the promo free month: the plan offered, when the offer ends, and when it was used.
+- **The terms and the Pricing page** need to say so, and someone qualified should read them before payments go live.
 
 ## Ads: travel affiliate cards
 
@@ -642,6 +711,7 @@ Reviewed on 15 Nov 2026 in [DATABASE-REVIEW.md](DATABASE-REVIEW.md), which chang
 | `Moment` (map, kind, title, text, `happenedOn` with `datePrecision` `DAY` / `MONTH` / `YEAR`, country, landmark?, place name?, trip?, hidden, created by), indexed `[mapId, happenedOn]` and `[mapId, countryCode, happenedOn]`; `MomentTraveller` (moment, traveller); `MomentPhoto` (moment, photo, position). `CountryVisit.notes` stays (the country note) | Moments |
 
 | `TripMap` (trip, map, added by, added at): a group trip added to someone's own map. The trip shows in that map's trips, and completing it adds `TRIP` visits there too | Group trips |
+| (19 Nov, to build) A `CO_OWNER` member role; `ShareInvite` carries the traveller a co-owner will be; `Traveller.userId` set when a co-owner joins; the invite offer on `Profile` (plan, ends at, used at) | Couples and families |
 
 The per-country cap counts the map's existing `Photo` rows in that country (the `[mapId, countryCode, …]` index serves it). The 10-editor cap counts `MapMember` rows with the `EDITOR` role.
 

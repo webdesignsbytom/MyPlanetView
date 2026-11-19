@@ -69,7 +69,8 @@ describe('pins with visits', () => {
     });
     expect(res.status).toBe(201);
     const pin = data(res).pin;
-    expect(pin).toMatchObject({ name: 'Our spot in Crete', countryCode: 'GR', hidden: false });
+    // An exact spot: the map's editors' own until shared (19 Nov 2026, the user's decision)
+    expect(pin).toMatchObject({ name: 'Our spot in Crete', countryCode: 'GR', hidden: true });
     expect(pin.visits).toEqual([expect.objectContaining({ visitedOn: '2023-08-01', datePrecision: 'MONTH', photos: [expect.objectContaining({ id: photoId })] })]);
 
     // Going back every year: each visit its own, newest first
@@ -102,6 +103,9 @@ describe('pins with visits', () => {
 
     await owner.agent.patch(`/api/maps/${map.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' });
     const code = data(await owner.agent.get(`/api/maps/${map.id}/sharing`)).shareCode;
+    // Not shared yet: the link shows none; shared, it shows it
+    expect(data(await anon().get(`/api/shared/${code}/pins?country=GR`)).pins).toEqual([]);
+    await owner.agent.patch(`/api/pins/${pin.id}`).send({ hidden: false });
     const shared = data(await anon().get(`/api/shared/${code}/pins?country=GR`)).pins;
     expect(shared).toEqual([expect.not.objectContaining({ hidden: expect.anything() })]);
     expect(data(await anon().get(`/api/shared/${code}/pins/${pin.id}`)).pin).toMatchObject({ name: 'Our spot in Crete' });

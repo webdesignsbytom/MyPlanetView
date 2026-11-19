@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { Suspense, useMemo, useState } from 'react';
 // Components
 import TripHeader from './TripHeader';
 import TravelDesk from '@/components/offers/TravelDesk';
@@ -7,7 +7,8 @@ import TripStopList from './TripStopList';
 import TripPhotosSection from './TripPhotosSection';
 import TripMoments from './TripMoments';
 import TripMyMaps from './TripMyMaps';
-import ShareDialog from '@/components/sharing/ShareDialog';
+// Lazy: only the trip's owner opens it, and share links never (19 Nov 2026, the audit)
+import { ShareDialog } from '@/components/map/lazyMapPanels';
 import Button from '@/components/common/Button';
 import InlineAlert from '@/components/common/InlineAlert';
 // Hooks
@@ -24,9 +25,9 @@ import { isUpcomingPlannedTrip, placeCountries, todayString, tripPlace } from '@
  * a share-link visitor (`shareCode`) only views. `onDelete` returns a promise that
  * removes the trip. An editor whose email address isn't verified yet (`locked`) sees it
  * as a viewer would, with the reason where the edit controls would be.
- * `styleId`, `showAntarctica` and `blackAndWhite` are the viewer's map settings, for the route map.
+ * `styleId` and `showAntarctica` are the viewer's map settings, for the route map.
  */
-function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctica = true, blackAndWhite = false, currentUser = null, onDelete, onLeft }) {
+function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctica = true, currentUser = null, onDelete, onLeft }) {
   const roleCanEdit = !shareCode && canEditRole(trip.role);
   const mustVerify = useMustVerifyEmail();
   const locked = roleCanEdit && mustVerify;
@@ -91,21 +92,23 @@ function TripView({ trip, onTripChange, shareCode = null, styleId, showAntarctic
         <TripMyMaps trip={trip} userId={currentUser.id} locked={mustVerify} onTripChange={onTripChange} />
       ) : null}
 
-      <TripMiniMap trip={trip} styleId={styleId} showAntarctica={showAntarctica} blackAndWhite={blackAndWhite} />
+      <TripMiniMap trip={trip} styleId={styleId} showAntarctica={showAntarctica} />
       <TripStopList trip={trip} canEdit={canEdit} onChanged={onTripChange} />
       <TripMoments trip={trip} canEdit={canEdit} shareCode={shareCode} onTripChange={onTripChange} />
       <TripPhotosSection trip={trip} canEdit={canEdit} locked={locked} shareCode={shareCode} />
 
       {sharing ? (
-        <ShareDialog
-          resource='trips'
-          id={trip.id}
-          name={trip.title}
-          role={trip.role}
-          currentUserId={currentUser?.id}
-          onLeft={onLeft}
-          onClose={() => setSharing(false)}
-        />
+        <Suspense fallback={null}>
+          <ShareDialog
+            resource='trips'
+            id={trip.id}
+            name={trip.title}
+            role={trip.role}
+            currentUserId={currentUser?.id}
+            onLeft={onLeft}
+            onClose={() => setSharing(false)}
+          />
+        </Suspense>
       ) : null}
     </div>
     </SplitUkProvider>

@@ -18,12 +18,14 @@ import { formatMomentDate } from '@/utils/moments/momentDates';
 const NAME_MAX = 80;
 const NOTES_MAX = 2000;
 
-// A pin's name and notes, and (editing) whether viewers see it; `initial`: a new pin's so far
+// A pin's name and notes, and whether everyone the map is shared with sees it: a pin is an
+// exact spot, so it's the map's editors' own until shared, off to start with, as a moment's
+// spot (19 Nov 2026, the user's decision); `initial`: a new pin's so far
 function PinDetailsForm({ pin = null, initial = null, onSave, onCancel, saveLabel, children }) {
   const uid = useId();
   const [name, setName] = useState((pin ?? initial)?.name ?? '');
   const [notes, setNotes] = useState((pin ?? initial)?.notes ?? '');
-  const [hidden, setHidden] = useState(Boolean(pin?.hidden));
+  const [shared, setShared] = useState(pin ? !pin.hidden : Boolean(initial?.hidden === false));
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
 
@@ -36,7 +38,7 @@ function PinDetailsForm({ pin = null, initial = null, onSave, onCancel, saveLabe
     setSaving(true);
     setError(null);
     try {
-      await onSave({ name: name.trim(), notes: notes.trim() || null, ...(pin ? { hidden } : {}) });
+      await onSave({ name: name.trim(), notes: notes.trim() || null, hidden: !shared });
     } catch (err) {
       setError(err.friendlyMessage || 'That pin could not be saved.');
       setSaving(false);
@@ -51,9 +53,12 @@ function PinDetailsForm({ pin = null, initial = null, onSave, onCancel, saveLabe
       <FormField id={`${uid}-notes`} label='Notes' align='start'>
         <TextAreaInput value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} maxLength={NOTES_MAX} />
       </FormField>
-      {pin ? (
-        <CheckboxInput id={`${uid}-hidden`} checked={hidden} onChange={(e) => setHidden(e.target.checked)} label='Hide this pin from people the map is shared with' />
-      ) : null}
+      <CheckboxInput
+        id={`${uid}-shared`}
+        checked={shared}
+        onChange={(e) => setShared(e.target.checked)}
+        label='Show this pin to everyone the map is shared with'
+      />
       {children}
       {error ? (
         <p role='alert' className='rounded-lg border px-3 py-2 text-sm tone-danger'>
@@ -201,7 +206,8 @@ function PinPanel({ pinId = null, draft = null, source, mapId, canEdit = false, 
         <div className='grid gap-4' data-pin-panel={pin.id}>
           <p className='font-travel text-sm uppercase tracking-wide text-poster-brown'>
             {countryName(pin.countryCode)} · {visits.length === 1 ? '1 visit' : `${visits.length} visits`}
-            {pin.hidden ? ' · hidden from viewers' : ''}
+            {/* `hidden` comes to the map's editors only */}
+            {pin.hidden === undefined ? '' : pin.hidden ? ' · only the map’s editors see it' : ' · shared'}
           </p>
           {mode === 'details' ? (
             <PinDetailsForm pin={pin} saveLabel='Save the pin' onCancel={() => setMode(null)} onSave={(body) => apply(updatePin(pin.id, body))} />

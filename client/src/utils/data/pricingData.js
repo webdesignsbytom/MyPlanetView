@@ -6,7 +6,7 @@
 // "Phases"): the page shows it with a clock and "Coming soon" (PricingFeature), never as
 // there. Take the flag off once it's live.
 import { CompanyName } from '../constants/constants.js';
-import { EDITORS_PER_MAP, INCLUDED_MAPS, PLANS, formatPence } from '../constants/plans.js';
+import { EDITORS_PER_MAP, FREE_MAPS, INCLUDED_MAPS, PLANS, formatPence } from '../constants/plans.js';
 import { REFUND_DAYS } from '../plans/billing.js';
 
 const count = (n) => n.toLocaleString('en-GB');
@@ -82,12 +82,12 @@ export const everyPlanFeatures = [
 // More than one map (FEATURE-PLAN.md, "Maps")
 const extra = (planId, interval) => formatPence(PLANS[planId].extraMap[interval]);
 export const extraMaps = {
-  intro: `Every plan includes ${INCLUDED_MAPS === 1 ? 'one map' : `${INCLUDED_MAPS} maps`}. Want a family map as well as your own? Add as many extra maps as you like: each gets your plan’s full limits, and nothing is split between them.`,
+  intro: `Every account has ${FREE_MAPS} maps free: your main map on your plan, and ${FREE_MAPS - INCLUDED_MAPS} more on Economy. Want another of them on your plan, or more maps? Each extra map you pay for is one more map with your plan’s full limits, and nothing is split between them.`,
   prices: [
     { plans: `${PLANS.FREE.name} and ${PLANS.REGULAR.name}`, month: extra('REGULAR', 'MONTH'), year: extra('REGULAR', 'YEAR') },
     { plans: PLANS.PREMIUM.name, month: extra('PREMIUM', 'MONTH'), year: extra('PREMIUM', 'YEAR'), note: 'More, as it keeps videos' },
   ],
-  example: `Sam keeps a solo map on Economy, and adds “The Smiths” for the family at ${extra('FREE', 'MONTH')} a month. When France fills up, Sam moves to ${PLANS.REGULAR.name}, and both maps get ${count(PLANS.REGULAR.limits.photosPerCountry)} photos of each country.`,
+  example: `Sam keeps a solo map and “The Smiths” for the family, both free. When France fills up on the family map, Sam moves to ${PLANS.REGULAR.name} with it as the main map (${count(PLANS.REGULAR.limits.photosPerCountry)} photos of each country), and later upgrades the solo map too, for ${extra('REGULAR', 'MONTH')} a month.`,
 };
 
 // The small print, kept honest
@@ -95,6 +95,7 @@ export const pricingNotes = [
   { text: `Paying yearly gets you about two months free: ${formatPence(PLANS.REGULAR.price.YEAR)} a year for ${PLANS.REGULAR.name}, ${formatPence(PLANS.PREMIUM.price.YEAR)} for ${PLANS.PREMIUM.name}.` },
   { text: 'Upgrade the day you need it. Changing plan never deletes anything: originals already kept stay, and a country over the new limit keeps its photos but takes no more.' },
   { text: `A fair-use limit of ${Math.round(PLANS.REGULAR.limits.storageCapBytes / GB)} GB of photos on each Business map, and ${Math.round(PLANS.PREMIUM.limits.storageCapBytes / GB)} GB on First Class, keeps things fair. Most people never get near it.` },
+  { text: 'Invited to a Business or First Class map? Join within 7 days and that plan is half price for your first 3 months (or the same saving off a year). One welcome offer per account: not with a promo code.' },
   { text: `Payments go through Stripe. Cancel any time from your account page, and the plan runs to the end of the period you’ve paid for. Changed your mind? Tell us within ${REFUND_DAYS} days of your first payment for a full refund.` },
   // "Download my data" is on the account page (docs/API.md, "Your data")
   { text: `Prices are in pounds sterling. Getting a copy of all your data is free on every plan, as the law says it should be: it’s a button on your account page.` },

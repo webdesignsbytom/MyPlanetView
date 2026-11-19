@@ -8,6 +8,7 @@ import {
 } from '@/utils/constants/routes';
 // Utls
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
+import { isValidEmail } from '@/utils/regex/regex';
 // Auth
 import { useAuth } from '@/auth/AuthContext';
 // Components
@@ -27,6 +28,8 @@ function LoginForm() {
 
   const [loginInProgress, setLoginInProgress] = useState(false);
   const [loginError, setLoginError] = useState(null);
+  // What a field still needs (checked before sending): { email?, password? }
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loginFormData, setLoginFormData] = useState({
     email: '',
     password: '',
@@ -59,6 +62,16 @@ function LoginForm() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    // Each field says what it needs before anything is sent: both empty used to go to the
+    // server, which only answered "Invalid email" (19 Nov 2026, the audit)
+    const problems = {};
+    if (!isValidEmail(loginFormData.email.trim())) problems.email = 'Enter the email address you signed up with.';
+    if (!loginFormData.password) problems.password = 'Enter your password.';
+    setFieldErrors(problems);
+    if (problems.email || problems.password) {
+      (problems.email ? emailRef : passwordRef).current?.focus();
+      return;
+    }
     setLoginInProgress(true);
     setLoginError(null);
 
@@ -81,6 +94,7 @@ function LoginForm() {
   const handleChange = (event) => {
     setLoginError(null);
     const { name, value } = event.target;
+    setFieldErrors((prev) => (prev[name] ? { ...prev, [name]: undefined } : prev));
     setLoginFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -107,7 +121,7 @@ function LoginForm() {
         id='email'
         label='Email'
         hint='Enter the email you used to sign up.'
-        error={Boolean(loginError)}
+        error={fieldErrors.email || Boolean(loginError)}
       >
         <TextInput
           refProp={emailRef}
@@ -128,8 +142,8 @@ function LoginForm() {
       <FormField
         id='password'
         label='Password'
-        hint='Password is required.'
-        error={Boolean(loginError)}
+        hint='The password you chose for your account.'
+        error={fieldErrors.password || Boolean(loginError)}
       >
         <PasswordInput
           refProp={passwordRef}

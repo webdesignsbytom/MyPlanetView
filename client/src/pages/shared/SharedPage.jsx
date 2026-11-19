@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 // Api
 import { openShareCode } from '@/api/travelApi';
@@ -11,9 +11,15 @@ import useMapSettings from '@/hooks/useMapSettings';
 // Components
 import AppPageHead from '@/components/utils/AppPageHead';
 import PublicPageLayout from '@/components/common/PublicPageLayout';
-import MapExperience from '@/components/map/MapExperience';
 import MapStatusScreen from '@/components/map/MapStatusScreen';
-import TripView from '@/components/trips/TripView';
+
+// The map's code (about 320 KB gzip) starts loading as this page's code runs, alongside the
+// link's own request, behind the loading stamps (19 Nov 2026, the audit: it had to arrive
+// before the page showed or asked anything); a trip's page only for a trip's link
+const mapExperience = import('@/components/map/MapExperience');
+mapExperience.catch(() => {}); // a failure shows when it's drawn (the error screen)
+const MapExperience = lazy(() => mapExperience);
+const TripView = lazy(() => import('@/components/trips/TripView'));
 
 // What a share link opens: a map or a trip, to view. No sign-in needed; a signed-in
 // member still sees it with their own role (editing happens on the map or trip page).
@@ -50,7 +56,7 @@ function SharedPage() {
     return (
       <>
         <AppPageHead route={SHARED_PAGE_URL} />
-        <MapStatusScreen title='Link not working' message={error}>
+        <MapStatusScreen styleId={settings.style} title='Link not working' message={error}>
           <Link to={HOME_PAGE_URL} className='btn-poster'>
             What is this site?
           </Link>
@@ -63,7 +69,7 @@ function SharedPage() {
     return (
       <>
         <AppPageHead route={SHARED_PAGE_URL} />
-        <MapStatusScreen loading />
+        <MapStatusScreen loading styleId={settings.style} />
       </>
     );
   }
@@ -72,16 +78,17 @@ function SharedPage() {
     return (
       <>
         <AppPageHead route={SHARED_PAGE_URL} title={shared.trip.title} />
-        <PublicPageLayout>
-          <TripView
-            trip={{ ...shared.trip, role: shared.role }}
-            shareCode={code}
-            styleId={settings.style}
-            showAntarctica={settings.showAntarctica}
-            blackAndWhite={settings.blackAndWhite}
-            onTripChange={() => {}}
-          />
-        </PublicPageLayout>
+        <Suspense fallback={<MapStatusScreen loading styleId={settings.style} />}>
+          <PublicPageLayout>
+            <TripView
+              trip={{ ...shared.trip, role: shared.role }}
+              shareCode={code}
+              styleId={settings.style}
+              showAntarctica={settings.showAntarctica}
+              onTripChange={() => {}}
+            />
+          </PublicPageLayout>
+        </Suspense>
       </>
     );
   }
@@ -89,15 +96,17 @@ function SharedPage() {
   return (
     <>
       <AppPageHead route={SHARED_PAGE_URL} title={shared.map.name} />
-      <MapExperience
-        map={shared.map}
-        trips={shared.trips || []}
-        role={shared.role}
-        shareCode={code}
-        currentUser={user}
-        settings={settings}
-        onChangeSetting={updateSetting}
-      />
+      <Suspense fallback={<MapStatusScreen loading styleId={settings.style} />}>
+        <MapExperience
+          map={shared.map}
+          trips={shared.trips || []}
+          role={shared.role}
+          shareCode={code}
+          currentUser={user}
+          settings={settings}
+          onChangeSetting={updateSetting}
+        />
+      </Suspense>
     </>
   );
 }

@@ -13,6 +13,17 @@ let measurement = '';
 let page = '';
 let referrer = '';
 
+// GA's page title: the address's route pattern ('/maps/:mapId', '/about'), never
+// document.title, which on the map, trip and passport pages is the person's own map or trip
+// name; without one set, gtag.js sends document.title with every hit (19 Nov 2026, the audit)
+const titleOf = (address) => {
+  try {
+    return new URL(address).pathname;
+  } catch {
+    return '';
+  }
+};
+
 // tiny helper: run after the browser is idle (with a fallback)
 function onIdle(fn) {
   if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
@@ -66,7 +77,7 @@ export function trackAddress(measurementId) {
   // address redacted, e.g. after a reload from a reset link)
   referrer = page || redactUrl(document.referrer);
   page = next;
-  if (gaReady) window.gtag('set', { page_location: page, page_referrer: referrer });
+  if (gaReady) window.gtag('set', { page_location: page, page_referrer: referrer, page_title: titleOf(page) });
 }
 
 // gtag.js can report address changes itself (GA4's "page changes based on browser history
@@ -126,7 +137,7 @@ export function initGA(measurementId) {
     // Init – do NOT auto-send pageviews. initialize defines window.gtag (a dataLayer push);
     // don't replace it with one that calls ReactGA.gtag, which calls window.gtag back.
     ReactGA.initialize(measurementId, { gaOptions: {}, gtagOptions: { send_page_view: false } });
-    window.gtag('set', { page_location: page, page_referrer: referrer });
+    window.gtag('set', { page_location: page, page_referrer: referrer, page_title: titleOf(page) });
 
     // Grant analytics consent
     window.gtag('consent', 'update', {
@@ -152,7 +163,7 @@ export function initGA(measurementId) {
 /** Queue-safe pageview for the address trackAddress last saw; never for a secret page */
 export function sendPageView() {
   if (stopped || isAnalyticsExcluded(window.location.pathname)) return;
-  const params = { page_location: page, page_referrer: referrer };
+  const params = { page_location: page, page_referrer: referrer, page_title: titleOf(page) };
   const run = () => {
     if (typeof window.gtag === 'function') window.gtag('event', 'page_view', params);
   };

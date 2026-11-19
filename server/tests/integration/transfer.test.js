@@ -17,6 +17,8 @@ describe('the owner transfers a map', () => {
     const family = data(await dad.agent.post('/api/maps').send(NEW_MAP)).map;
     await dad.agent.post(`/api/maps/${family.id}/members`).send({ email: mum.email, role: 'EDITOR' });
     await dad.agent.put(`/api/maps/${family.id}/visits/FR`).send({ status: 'VISITED' });
+    // Mum already has her 3 free maps, so there's no room for it
+    for (let i = 0; i < 2; i++) await mum.agent.post('/api/maps').send(NEW_MAP);
 
     const before = Date.now();
     const res = await dad.agent.post(`/api/maps/${family.id}/transfer`).send({ userId: mum.user.id });
@@ -27,7 +29,7 @@ describe('the owner transfers a map', () => {
     const row = await prisma.travelMap.findUnique({ where: { id: family.id }, include: { members: true } });
     expect(row).toMatchObject({ ownerId: mum.user.id, isDefault: false, defaultForOwnerId: null });
     expect(row.members.map((m) => [m.userId, m.role])).toEqual([[dad.user.id, 'EDITOR']]);
-    // Mum (Economy, her one slot used by her own map) gets 60 days before it needs paying for
+    // Mum (Economy, her three free maps in use) gets 60 days before it needs paying for
     expect(row.graceUntil.getTime()).toBeGreaterThanOrEqual(before + 60 * DAY - 1000);
     expect(row.graceUntil.getTime()).toBeLessThanOrEqual(Date.now() + 60 * DAY);
 
@@ -100,7 +102,10 @@ describe('an admin transfers a map', () => {
     const admin = await signUp('MapAdmin');
     await prisma.user.update({ where: { id: admin.user.id }, data: { role: 'ADMIN' } });
     const gone = await signUp('LostEmail');
-    const heir = await signUp('Heir', { verified: false });
+    const heir = await signUp('Heir');
+    // The heir already has their 3 free maps
+    for (let i = 0; i < 2; i++) await heir.agent.post('/api/maps').send(NEW_MAP);
+    const unverified = await signUp('Unverified', { verified: false });
     const map = await defaultMapOf(gone.agent);
     await gone.agent.put(`/api/maps/${map.id}/visits/IT`).send({ status: 'LIVED' });
 
@@ -110,6 +115,13 @@ describe('an admin transfers a map', () => {
     expect((await move({ mapId: map.id, toEmail: 'nobody@example.test' })).status).toBe(400);
     expect((await move({ mapId: map.id, toEmail: gone.email })).status).toBe(400);
     expect((await move({ mapId: '00000000-0000-4000-8000-000000000000', toEmail: heir.email })).status).toBe(404);
+    // The admin rules (19 Nov 2026, the audit): never to an unverified account or the admin's
+    // own, and a developer's map only by a developer
+    expect((await move({ mapId: map.id, toEmail: unverified.email })).status).toBe(400);
+    expect((await move({ mapId: map.id, toEmail: admin.email })).status).toBe(403);
+    await prisma.user.update({ where: { id: gone.user.id }, data: { role: 'DEVELOPER' } });
+    expect((await move({ mapId: map.id, toEmail: heir.email })).status).toBe(403);
+    await prisma.user.update({ where: { id: gone.user.id }, data: { role: 'USER' } });
 
     const res = await move({ mapId: map.id, toEmail: heir.email.toUpperCase(), keepOldOwnerAsEditor: true });
     expect(res.status).toBe(200);

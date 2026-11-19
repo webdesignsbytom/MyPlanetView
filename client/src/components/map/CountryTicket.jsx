@@ -41,14 +41,16 @@ function CountryTicket({ title, kicker, subtitle = null, stub = null, action = n
     >
       {stub ? <div className={`contents ${formTakesStub}`}>{stub}</div> : null}
       <div className='grid min-h-0 min-w-0 grid-rows-[auto_minmax(0,1fr)]'>
-        <header className='paper-aged grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border-b-2 border-dashed border-poster-brown py-4 pl-5 pr-4 text-poster-ink'>
+        {/* Slimmer on a phone held sideways (under 500px tall), where it took a third of the
+            screen and left room for a row or two of the list (19 Nov 2026, the audit) */}
+        <header className='paper-aged grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border-b-2 border-dashed border-poster-brown py-4 pl-5 pr-4 text-poster-ink sideways:py-2'>
           <div className='grid min-w-0 gap-1'>
-            {kicker ? <div className='font-travel text-sm uppercase tracking-xl text-poster-brown'>{kicker}</div> : null}
+            {kicker ? <div className='font-travel text-sm uppercase tracking-xl text-poster-brown sideways:hidden'>{kicker}</div> : null}
             <h2
               id={titleId}
               ref={headingRef}
               tabIndex={-1}
-              className='-rotate-1 break-words font-travel text-3xl uppercase leading-none text-poster-red text-stroke-poster focus:outline-none nophone:text-4xl'
+              className='-rotate-1 break-words font-travel text-3xl uppercase leading-none text-poster-red text-stroke-poster focus:outline-none nophone:text-4xl sideways:text-2xl'
             >
               {title}
             </h2>

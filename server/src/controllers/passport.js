@@ -10,7 +10,7 @@ import { GOALS_PER_MAP, changesWhatsAsked, parseGoalInput } from '../utils/goals
 import { buildPassport } from '../services/travel/passport.js';
 import { mapBadges, mapGoals, oneGoalView } from '../services/travel/achievements.js';
 import { deleteLandmarkCover, findConfirmedMatch, upsertLandmarkCover } from '../domain/passport.js';
-import { countGoals, createGoalInDB, deleteGoalInDB, findGoal, updateGoalInDB } from '../domain/achievements.js';
+import { createGoalInDB, deleteGoalInDB, findGoal, updateGoalInDB } from '../domain/achievements.js';
 import { continentsByCode } from './helpers/countries.js';
 import { badRequest, conflict, forbidden, handler, loadMap, notFound } from './helpers/travel.js';
 
@@ -98,8 +98,8 @@ export const createGoalHandler = handler(D, 'Create goal', async (req, res) => {
   if (!loaded) return undefined;
   const parsed = parseGoalInput(req.body, { isKnownCode: await knownCodes() });
   if (!parsed.ok) return badRequest(req, res, D, EVENT_MESSAGES.goalInvalid);
-  if ((await countGoals(loaded.map.id)) >= GOALS_PER_MAP) return conflict(req, res, D, EVENT_MESSAGES.goalsFull);
-  const goal = await createGoalInDB({ ...parsed.data, mapId: loaded.map.id, createdById: req.user.id });
+  const goal = await createGoalInDB({ ...parsed.data, mapId: loaded.map.id, createdById: req.user.id, cap: GOALS_PER_MAP });
+  if (!goal) return conflict(req, res, D, EVENT_MESSAGES.goalsFull);
   // Ids and the kind only: a goal's title is the person's own words
   logEvent(createMapEvent({ user: req.user, action: 'Goal Create Success', id: goal.id, detail: `map=${loaded.map.id} kind=${goal.kind}`, statusCode: 201 }));
   return sendDataResponse(res, 201, { goal: await oneGoalView(goal, { award: true }) });

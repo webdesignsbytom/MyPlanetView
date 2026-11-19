@@ -2,7 +2,7 @@
 // The rules are pure (utils/plans.js, utils/mapSlots.js); this reads their inputs.
 import { findMapGraceUntil, findPlanInputsForMap, findPlanInputsForUser } from '../../domain/billing.js';
 import { effectivePlan, extraMapsPaid } from '../../utils/plans.js';
-import { mapSlots } from '../../utils/mapSlots.js';
+import { MAP_TIERS, mapSlots } from '../../utils/mapSlots.js';
 import { TRANSFER_GRACE_DAYS, VIDEO_MAX_SECONDS, planOf } from '../../utils/constants/plans.js';
 import { VIDEO_CONTENT_TYPES, VIDEO_MAX_BYTES } from '../../utils/constants/mediaConstants.js';
 
@@ -27,18 +27,27 @@ export function planStateFrom({ subscription, grants, maps }, now = new Date()) 
 export const loadUserPlan = async (userId, now = new Date()) => planStateFrom(await findPlanInputsForUser(userId, now), now);
 
 /**
- * A map's owner's plan, and whether the map is locked (no new photos).
- * -> `{ ...planStateFrom, ownerId, locked, graceUntil }`, or null when there's no such map
+ * A map's plan: its owner's when the map is on it (the main map, a grace period, a paid extra
+ * map), else Economy's (one of the free maps, or a locked one; 19 Nov 2026, utils/mapSlots.js),
+ * and whether the map is locked (no new photos). `plan` is the map's, `accountPlan` the
+ * owner's, `tier` PLAN, ECONOMY or LOCKED.
+ * -> `{ ...planStateFrom, plan, accountPlan, tier, ownerId, locked, graceUntil, upgradedAt }`, or null when there's no such map
  */
 export async function loadMapPlan(mapId, now = new Date()) {
   const inputs = await findPlanInputsForMap(mapId, now);
   if (!inputs) return null;
   const state = planStateFrom(inputs, now);
+  const tier = state.slots.tiers[mapId] ?? MAP_TIERS.LOCKED;
+  const map = inputs.maps.find((m) => m.id === mapId);
   return {
     ...state,
+    plan: tier === MAP_TIERS.PLAN ? state.plan : 'FREE',
+    accountPlan: state.plan,
+    tier,
     ownerId: inputs.ownerId,
-    locked: state.slots.lockedIds.includes(mapId),
-    graceUntil: inputs.maps.find((m) => m.id === mapId)?.graceUntil ?? null,
+    locked: tier === MAP_TIERS.LOCKED,
+    graceUntil: map?.graceUntil ?? null,
+    upgradedAt: map?.upgradedAt ?? null,
   };
 }
 

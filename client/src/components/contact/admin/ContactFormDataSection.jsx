@@ -14,9 +14,9 @@ import PaperCard from '@/components/common/PaperCard';
 import ContactFormItem from './ContactFormItem';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 
-// components/common/Button's `danger` at its `small` size: parchment, deep-red ink
+// components/common/Button's `danger` at its `small` size: a delete button's red
 const DANGER_BUTTON =
-  'btn-paper [--btn-ink:var(--poster-red-deep)] [--btn-leading:1.25rem] [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:1rem] pointer-coarse:[--btn-pad-y:0.5rem]';
+  'btn-danger [--btn-leading:1.25rem] [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:1rem] pointer-coarse:[--btn-pad-y:0.5rem]';
 
 // The contact form submissions (the admin dashboard and its contact forms page), as a
 // paper card with "Delete All" on its title strip

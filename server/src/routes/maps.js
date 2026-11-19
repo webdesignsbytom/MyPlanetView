@@ -9,6 +9,8 @@ import {
   getMapStatsHandler,
   getMyMapsHandler,
   makeMainMapHandler,
+  upgradeMapHandler,
+  downgradeMapHandler,
   putVisitHandler,
   transferMapHandler,
   updateMapHandler,
@@ -36,6 +38,7 @@ import {
 import { sharingHandlers } from '../controllers/sharing.js';
 import { getMapThemeAlbumHandler, getMapThemesHandler } from '../controllers/themes.js';
 import { requireVerifiedEmail as verified, validateAuthentication } from '../middleware/auth.js';
+import { getCountryListsHandler } from '../controllers/countryLists.js';
 import { createDbRateLimiter, keyByUserId } from '../middleware/dbRateLimit.js';
 import {
   MAP_CREATE_DAILY_USER_LIMIT,
@@ -67,6 +70,9 @@ router.delete('/:mapId', verified, deleteMapHandler);
 router.get('/:mapId/stats', getMapStatsHandler);
 // Owner only: the included (main) map, and handing a map to someone on it
 router.post('/:mapId/main', verified, makeMainMapHandler);
+// Put a map on the owner's plan (a paid extra map's slot), or take it back (19 Nov 2026)
+router.post('/:mapId/upgrade', verified, upgradeMapHandler);
+router.delete('/:mapId/upgrade', verified, downgradeMapHandler);
 // Counts as making a map: handing over your main map makes you a new one (17 Nov 2026)
 router.post('/:mapId/transfer', verified, mapCreateDailyLimiter, transferMapHandler);
 
@@ -87,6 +93,8 @@ router.post('/:mapId/trips', verified, createTripHandler);
 router.post('/:mapId/photos/presign', verified, photoPresignLimiter, presignPhotoHandler);
 router.post('/:mapId/photos', verified, createPhotoHandler);
 router.get('/:mapId/photos', getMapPhotosHandler);
+// Every country ticket's first pages of photos and moments, in one reply (the map's loading screen)
+router.get('/:mapId/country-lists', getCountryListsHandler);
 
 // First Class videos (Cloudflare Stream; docs/API.md "Videos"): start the upload, then save it
 router.post('/:mapId/videos/upload', verified, photoPresignLimiter, startVideoUploadHandler);

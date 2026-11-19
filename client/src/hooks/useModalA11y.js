@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+// Utils
+import { lockBodyScroll } from '@/utils/layout/bodyScrollLock';
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -28,8 +30,7 @@ export default function useModalA11y(onClose, { open = true } = {}) {
     openModals.push(token);
     previouslyFocusedRef.current = document.activeElement;
 
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const releaseScroll = lockBodyScroll();
 
     const focusables = () =>
       Array.from(dialogRef.current?.querySelectorAll(FOCUSABLE) || []).filter(
@@ -67,9 +68,13 @@ export default function useModalA11y(onClose, { open = true } = {}) {
 
     return () => {
       openModals.splice(openModals.indexOf(token), 1);
-      document.body.style.overflow = prevOverflow;
+      releaseScroll();
       document.removeEventListener('keydown', onKeyDown, true);
-      previouslyFocusedRef.current?.focus?.();
+      // Only to an element still on the page: a dialog closed together with the one it was
+      // opened from would hand focus to a button that's gone, after the outer one had given
+      // it back to its own opener
+      const opener = previouslyFocusedRef.current;
+      if (opener?.isConnected) opener.focus?.();
     };
   }, [open]);
 

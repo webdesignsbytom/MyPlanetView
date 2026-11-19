@@ -21,6 +21,11 @@ export const PROMO_TRIAL_DAYS = 30;
 export const FREE_PLAN_IDS = PAID_PLAN_IDS;
 export const FOR_LIFE_ENDS_AT = new Date('9999-12-31T00:00:00.000Z');
 
+// A code's uses (for `maxUses`) are the accounts that signed up with it and verified their
+// address, plus unverified ones made in the last day, which may still verify: never-verified
+// throwaway sign-ups stop holding a code after that (19 Nov 2026, the audit)
+export const PROMO_UNVERIFIED_HOLD_MS = 24 * 60 * 60 * 1000;
+
 /** Does a membership ending at `endsAt` last for life? (The client shows "for life".) */
 export const isForLife = (endsAt) => Boolean(endsAt) && new Date(endsAt).getTime() >= FOR_LIFE_ENDS_AT.getTime();
 

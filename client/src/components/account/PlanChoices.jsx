@@ -8,6 +8,8 @@ import AppLink from '@/components/common/AppLink';
 import { PAID_PLAN_IDS, planOf } from '@/utils/constants/plans';
 import { INTERVAL_NAMES, hasSubscription, planPrice, priceText } from '@/utils/plans/billing';
 import { promoTrialText } from '@/utils/plans/promoCodes';
+import { inviteOfferText, offerCovers, offerMonthlyPrice, yearlyInviteSaving } from '@/utils/plans/inviteOffer';
+import { formatPence } from '@/utils/constants/plans';
 
 // The plans the account can move to, on the `interval` chosen above. With a subscription
 // the plan line changes in place (change-plan, prorated by Stripe; the same plan on the
@@ -29,12 +31,19 @@ function PlanChoices({ billing, interval, busy, onChoose }) {
 
   // A promo code's free month: only for a Checkout (no subscription yet)
   const trial = !paying && !hasSubscription(billing) ? billing.promoTrial : null;
+  // The invite offer (19 Nov 2026): half price for 3 months, likewise only for a Checkout
+  const offer = !trial && !hasSubscription(billing) ? billing.inviteOffer : null;
 
   return (
     <div className='grid gap-3'>
       {trial ? (
         <p className='border-2 border-dashed border-status-good bg-paper-cream p-3 text-sm' data-testid='promo-trial'>
           {promoTrialText(trial)}
+        </p>
+      ) : null}
+      {offer ? (
+        <p className='border-2 border-dashed border-status-good bg-paper-cream p-3 text-sm' data-testid='invite-offer'>
+          {inviteOfferText(offer)}
         </p>
       ) : null}
       <ul className='grid gap-2 sm:grid-cols-2'>
@@ -53,6 +62,11 @@ function PlanChoices({ billing, interval, busy, onChoose }) {
                 <span className='font-travel text-lg uppercase leading-tight tracking-wide'>{plan.name}</span>
                 <span className='text-sm'>
                   {trial ? `Free for ${trial.days} days, then ` : ''}
+                  {offerCovers(offer, plan.id)
+                    ? interval === 'YEAR'
+                      ? `${formatPence(planPrice(billing, plan.id, 'YEAR') - yearlyInviteSaving(plan.id))} for your first year, then `
+                      : `${formatPence(offerMonthlyPrice(plan.id))} a month for 3 months, then `
+                    : ''}
                   {priceText(planPrice(billing, plan.id, interval), interval)}.{' '}
                   {plan.limits.photosPerCountry.toLocaleString('en-GB')} photos of each country, originals kept
                   {plan.limits.videos ? ', videos' : ''}.

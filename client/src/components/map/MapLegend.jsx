@@ -44,7 +44,7 @@ function MapLegend({ showMoments = true, showSpots = false, showStamps = false }
         ) : null}
         {showStamps ? (
           <li className='grid grid-cols-reg items-center gap-2'>
-            <span aria-hidden='true' className='mx-1 h-3 w-3 rounded-full border border-map-edge bg-poster-gold-light' />
+            <span aria-hidden='true' className='mx-1 h-3 w-3 rounded-full border-[3px] border-map-land bg-map-stamp outline outline-1 outline-map-edge' />
             Stamped landmark
           </li>
         ) : null}

@@ -252,7 +252,9 @@ function PhotoViewer({ photoId, photo: openedWith = null, list = null, shareCode
                   width={photo.width || undefined}
                   height={photo.height || undefined}
                   style={thumbBehind}
-                  className='h-auto max-h-[60vh] w-full bg-contain bg-center bg-no-repeat object-contain'
+                  // The same height for every photo, portrait or landscape, so Previous and Next
+                  // stay under the pointer as the photos change (19 Nov 2026, the audit)
+                  className='h-[60vh] w-full bg-contain bg-center bg-no-repeat object-contain'
                 />
               </button>
             )}
@@ -276,7 +278,9 @@ function PhotoViewer({ photoId, photo: openedWith = null, list = null, shareCode
             ) : null}
           </div>
 
-          <div className='grid content-start gap-4'>
+          {/* One column the details keep to: an auto column grew to their widest row, and
+              its buttons ran 17px onto the dialog's edge (19 Nov 2026, the audit) */}
+          <div className='grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-4'>
             <dl className='grid gap-1 text-sm'>
               {photo.takenAt ? (
                 <div className='grid grid-cols-reg gap-2'>
@@ -319,9 +323,12 @@ function PhotoViewer({ photoId, photo: openedWith = null, list = null, shareCode
 
             <InlineAlert>{actionError}</InlineAlert>
             {canEdit && locked ? <VerifyFirstNote action='change or delete photos' /> : null}
-            {/* One to a row on a phone, so nothing runs off the side; in a row from sm up */}
+            {/* One to a row on a phone, so nothing runs off the side; in a row from sm up,
+                where the details run the dialog's width; stacked again from md, where they're
+                the narrow column beside the photo (in a row they ran past its edge; 19 Nov
+                2026, the audit) */}
             {canEdit && !editing ? (
-              <div className='grid gap-2 sm:grid-row sm:justify-start'>
+              <div className='grid gap-2 sm:grid-row sm:justify-start md:grid-flow-row md:justify-items-start'>
                 {locked ? null : (
                   <Button quiet onClick={() => setEditing(true)}>
                     Edit

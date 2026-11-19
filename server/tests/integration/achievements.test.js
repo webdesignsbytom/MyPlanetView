@@ -61,8 +61,9 @@ describe('badges and goals', () => {
     expect(data(list).goal).toMatchObject({ achievedAt: null, progress: { have: 1, need: 3, done: ['FR'] } });
 
     const region = await owner.agent.post(`/api/maps/${map.id}/goals`).send({ kind: 'REGION', region: 'scandinavia', deadline: '2030-12-31' });
-    // With a deadline only photographed countries count, and nothing has a photo yet
-    expect(data(region).goal).toMatchObject({ deadline: '2030-12-31', progress: { have: 0, need: 3, missed: false } });
+    // With a deadline a country counts by its photo or its visit's date: Denmark and Norway,
+    // marked today, count; Sweden was unmarked above (19 Nov 2026, the user's decision)
+    expect(data(region).goal).toMatchObject({ deadline: '2030-12-31', progress: { have: 2, need: 3, missed: false } });
 
     for (const body of [{ kind: 'COUNTRY_COUNT' }, { kind: 'REGION', region: 'atlantis' }, { kind: 'COUNTRY_LIST', countryCodes: ['ZZ'] }]) {
       expect((await owner.agent.post(`/api/maps/${map.id}/goals`).send(body)).status).toBe(400);

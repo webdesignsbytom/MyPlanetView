@@ -51,7 +51,7 @@ test.describe('Plans', () => {
     await expect(business).toContainText('£4.99');
     await expect(business).toContainText('or £49 a year: two months free');
     await expect(business).toContainText('200 photos of each country, on each map');
-    await expect(page.getByRole('article', { name: 'First Class' })).toContainText('£8.99');
+    await expect(page.getByRole('article', { name: 'First Class' })).toContainText('£9.99');
     await expect(page.getByText('Business and First Class members never see ad cards on a map.')).toBeVisible();
     await expect(page.getByRole('region', { name: 'More than one map' })).toContainText('£5.99 a month');
     await expect(page.getByRole('region', { name: 'On every plan' })).toBeVisible();
@@ -65,13 +65,13 @@ test.describe('Plans', () => {
     await expect(card.getByText('Business', { exact: true })).toBeVisible();
     await expect(card.getByText('Paid monthly, £4.99 a month')).toBeVisible();
     await expect(card.getByText(/^Renews on /)).toBeVisible();
-    await expect(card).toContainText('You own 1 map. Your plan includes 1 map, and you pay for 1 extra map (0 in use).');
+    await expect(card).toContainText('You own 1 map. You have 3 free maps: your main one on your plan, and 2 more on Economy (0 in use). You pay for 1 extra map (0 in use), each one more map on your plan.');
 
     // An upgrade changes the subscription in place
     await card.getByRole('button', { name: 'Upgrade to First Class' }).click();
     await expect(card.getByRole('status').filter({ hasText: 'Done: you’re on First Class, paid monthly.' })).toBeVisible();
     await expect(card.getByText('First Class', { exact: true }).first()).toBeVisible();
-    await expect(card.getByText('Paid monthly, £8.99 a month')).toBeVisible();
+    await expect(card.getByText('Paid monthly, £9.99 a month')).toBeVisible();
 
     // An extra map on First Class costs more, and goes on the same payment
     await expect(card.getByText(/^£5\.99 a month, on your monthly payment/)).toBeVisible();
@@ -97,14 +97,16 @@ test.describe('Plans', () => {
     await expect(planCard(page).getByText('Paid yearly, £49 a year')).toBeVisible();
   });
 
-  test('a map beyond the paid slots asks to pay for an extra map, then is made', async ({ page }) => {
+  test('a map beyond the free and paid ones asks to pay for an extra map, then is made', async ({ page }) => {
     await openMap(page);
-    // The seed's extra map makes room for one
+    // Two free maps, and the seed's extra map makes room for one more
     await newMap(page, HOME_MAP, 'Road trips');
-    await expectMapOpen(page, 'Road trips');
+    await newMap(page, 'Road trips', 'Weekends');
+    await newMap(page, 'Weekends', 'City breaks');
+    await expectMapOpen(page, 'City breaks');
 
     // The next is refused (402): the dialog offers the plan's price, then makes it
-    const switcher = await newMap(page, 'Road trips', 'Family');
+    const switcher = await newMap(page, 'City breaks', 'Family');
     const dialog = page.getByRole('dialog', { name: 'Pay for another map' });
     await expect(dialog.getByText('An extra map is £3.99 a month or £39 a year.')).toBeVisible();
     await dialog.getByRole('button', { name: 'Pay £3.99 a month' }).click();
@@ -119,7 +121,10 @@ test.describe('Plans', () => {
     await chooseInBadge(page, 'Extra maps paid', '0');
     await expectMapOpen(page, HOME_MAP);
 
-    await newMap(page, HOME_MAP, 'Girls’ trips');
+    // Two more are free; the fourth waits for Checkout
+    await newMap(page, HOME_MAP, 'Weekends');
+    await newMap(page, 'Weekends', 'City breaks');
+    await newMap(page, 'City breaks', 'Girls’ trips');
     const dialog = page.getByRole('dialog', { name: 'Pay for another map' });
     await dialog.getByText('Yearly', { exact: true }).click();
     await dialog.getByRole('button', { name: 'Go to checkout' }).click();
@@ -133,9 +138,11 @@ test.describe('Plans', () => {
 
   test('a map that isn’t paid for takes no photos, says why, and paying unlocks it', async ({ page }) => {
     await openMap(page);
-    await newMap(page, HOME_MAP, 'Road trips');
+    await newMap(page, HOME_MAP, 'Weekends');
+    await newMap(page, 'Weekends', 'City breaks');
+    await newMap(page, 'City breaks', 'Road trips');
     await expectMapOpen(page, 'Road trips');
-    // No extra maps paid any more: the newer map is locked
+    // No extra maps paid any more: the newest map is locked (the other two are free maps)
     await chooseInBadge(page, 'Extra maps paid', '0');
 
     const banner = page.getByRole('region', { name: 'This map isn’t paid for' });
@@ -151,6 +158,38 @@ test.describe('Plans', () => {
     await expect(banner).toHaveCount(0);
     const unlocked = await openUploader(page);
     await expect(unlocked.getByLabel(/choose photos/i)).toBeAttached();
+  });
+
+  // 19 Nov 2026: a new account from an invite to a First Class map gets the invite offer
+  test('the invite offer shows half prices on the account page until it ends', async ({ page }) => {
+    await page.goto('/account');
+    await chooseInBadge(page, 'Plan', 'Economy');
+    await chooseInBadge(page, 'Extra maps paid', '0');
+    await editStore(page, (db, endsAt) => {
+      const me = db.users.find((u) => u.email === 'test@myplanetview.local');
+      Object.assign(me, { inviteOfferPlan: 'PREMIUM', inviteOfferEndsAt: endsAt, inviteOfferUsedAt: null, promoCodeId: null });
+    }, new Date(Date.now() + 5 * 86400000).toISOString());
+    const card = planCard(page);
+    await expect(card.getByTestId('invite-offer')).toContainText('First Class or Business at half price for your first 3 months, or £14.99 off a year of First Class.');
+    await expect(card).toContainText('£4.99 a month for 3 months, then £9.99 a month');
+    await expect(card).toContainText('£2.49 a month for 3 months, then £4.99 a month');
+  });
+
+  // 19 Nov 2026: the owner chooses which free map an extra map upgrades
+  test('a free map runs on Economy, and the owner moves the paid extra map onto it', async ({ page }) => {
+    await openMap(page);
+    // The seed pays for one extra map: the first new map takes it, the second is a free map
+    await newMap(page, HOME_MAP, 'Road trips');
+    await newMap(page, 'Road trips', 'Weekends');
+    await expectMapOpen(page, 'Weekends');
+
+    const settings = await openTool(page, 'Map settings', 'Settings');
+    await settings.getByRole('tab', { name: 'This map' }).click();
+    const plan = settings.getByRole('tabpanel', { name: 'This map' }).getByRole('region', { name: 'This map’s plan' });
+    await expect(plan).toContainText('“Weekends” is one of your 3 free maps, on Economy');
+    await plan.getByRole('button', { name: 'Upgrade this map to Business' }).click();
+    await expect(plan).toContainText('“Weekends” runs on your Business plan, as one of the extra maps you pay for.');
+    await expect(plan.getByRole('button', { name: 'Move the upgrade off this map' })).toBeVisible();
   });
 
   test('on Economy an upload keeps a print copy, not the original', async ({ page }) => {
@@ -245,16 +284,16 @@ test.describe('Plans', () => {
 
   test('the editor cap shows as an error in the share dialog', async ({ page }) => {
     await openMap(page);
-    // Alex and nine more editors: ten
+    // Alex and four more editors: five (co-owners never count)
     await editStore(page, (db) => {
-      for (let i = 0; i < 9; i++) {
+      for (let i = 0; i < 4; i++) {
         db.mapMembers.push({ mapId: 'map-home', userId: `mock-extra-editor-${i}`, role: 'EDITOR', createdAt: new Date().toISOString() });
       }
     });
     await pressTool(page, 'Share this map');
     const share = page.getByRole('dialog', { name: `Share “${HOME_MAP}”` });
     await share.getByRole('combobox', { name: 'Role for Sam Rivers' }).selectOption('Editor');
-    await expect(share.getByRole('alert')).toHaveText('A map can have up to 10 editors.');
+    await expect(share.getByRole('alert')).toHaveText('A map can have up to 5 editors.');
     await expect(share.getByRole('combobox', { name: 'Role for Sam Rivers' })).toHaveValue('VIEWER');
   });
 

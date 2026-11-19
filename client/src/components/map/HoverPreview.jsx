@@ -20,6 +20,8 @@ const MARGIN = 8;
 // A finger's card (a long press: CountryLayer) clears the fingertip by this much
 const FINGER = 36;
 const CARD_WIDTH = 256; // w-64
+// How long the pointer rests on a country before its poster is fetched
+const POSTER_DELAY_MS = 180;
 
 // A finger's card: above the finger, centred on it, or below when there's no room above
 function fingerTop(y, height) {
@@ -104,6 +106,16 @@ function HoverPreview({ code, status, showPoster }) {
     };
   }, []);
 
+  // The poster (about 200 KB) is fetched once the pointer has rested on the country a moment:
+  // a sweep across Europe started a download for every country it crossed (19 Nov 2026, the
+  // audit). Its box keeps the poster's shape meanwhile, so the card doesn't jump.
+  const [posterCode, setPosterCode] = useState(null);
+  useEffect(() => {
+    if (!code || !showPoster) return undefined;
+    const timer = window.setTimeout(() => setPosterCode(code), POSTER_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [code, showPoster]);
+
   if (!code || !position) return null;
 
   // Keep the box on screen: flip to the pointer's left near the right edge (its top is
@@ -150,7 +162,11 @@ function HoverPreview({ code, status, showPoster }) {
       {showPoster && poster ? (
         // The whole poster at its own shape, with no mat: the posters have their own
         // printed border (17 Nov 2026, the user's wish; it was cropped square on a cream mat)
-        <PosterImage poster={poster} alt='' className='overflow-hidden shadow-paper' />
+        posterCode === code ? (
+          <PosterImage poster={poster} alt='' className='overflow-hidden shadow-paper' />
+        ) : (
+          <div aria-hidden='true' className='w-full shadow-paper' style={{ aspectRatio: poster.ratio }} />
+        )
       ) : showPoster ? (
         <PosterPlaceholder countryName={name} compact />
       ) : null}

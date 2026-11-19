@@ -8,6 +8,11 @@ import { hasRole, ROLES } from './permissions';
 // Components
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 
+// Where sign-in sends you back to: the whole address, its query and hash too (back from
+// Stripe at /account?billing=success, the waiting new map is made only with ?billing=;
+// 19 Nov 2026, the audit)
+const returnPath = (location) => `${location.pathname}${location.search}${location.hash}`;
+
 function GuardSpinner() {
   return (
     <div className='grid place-items-center min-h-screen' role='status'>
@@ -25,7 +30,7 @@ export function AuthenticateUser({ children, redirectPath = LOGIN_PAGE_URL }) {
   if (loading) return <GuardSpinner />;
 
   if (!isAuthenticated || !user) {
-    return <Navigate to={redirectPath} replace state={{ from: location.pathname }} />;
+    return <Navigate to={redirectPath} replace state={{ from: returnPath(location) }} />;
   }
 
   return <>{children}</>;
@@ -39,7 +44,7 @@ export function AuthenticateAdmin({ children, redirectPath = HOME_PAGE_URL }) {
   if (loading) return <GuardSpinner />;
 
   if (!isAuthenticated || !user) {
-    return <Navigate to={LOGIN_PAGE_URL} replace state={{ from: location.pathname }} />;
+    return <Navigate to={LOGIN_PAGE_URL} replace state={{ from: returnPath(location) }} />;
   }
 
   // Admin or developer only
@@ -58,7 +63,7 @@ export function AuthenticateDeveloper({ children, redirectPath = HOME_PAGE_URL }
   if (loading) return <GuardSpinner />;
 
   if (!isAuthenticated || !user) {
-    return <Navigate to={LOGIN_PAGE_URL} replace state={{ from: location.pathname }} />;
+    return <Navigate to={LOGIN_PAGE_URL} replace state={{ from: returnPath(location) }} />;
   }
 
   if (!hasRole(user, ROLES.DEVELOPER)) {

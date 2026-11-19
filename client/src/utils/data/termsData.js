@@ -122,7 +122,7 @@ export const TermsSectionsArray = [
     content: [
       'A change of plan takes effect straight away. Moving up, you pay the difference for the rest of the period; moving down, the difference comes off your next payment.',
       `Nothing is deleted when you move down or a plan ends. Your photos, the originals already kept and your videos all stay. A country already over the new plan’s limit keeps its photos but takes no more; on ${PLANS.FREE.name}, new uploads keep a print-quality copy instead of the original; and videos stay viewable, but no new ones can be added.`,
-      'Extra maps you stop paying for are never deleted either. They stay viewable and shareable but take no new photos until they are paid for again. Your first map always stays fully active, and you choose which of the others do.',
+      'Every account has 3 maps free: your main map, on your plan, and two more on Economy. Each extra map you pay for puts one more map on your plan. Maps you stop paying for are never deleted either: they go back to Economy while one of your free maps is spare, and otherwise stay viewable and shareable but take no new photos until they are paid for again. Your main map always stays on your plan, and you choose which of the others do.',
       `A map someone hands over to you keeps working fully for ${TRANSFER_GRACE_DAYS} days, so you have time to add an extra map for it if you need one.`,
     ],
   },
@@ -133,6 +133,7 @@ export const TermsSectionsArray = [
     content: [
       `We sometimes give a plan free for a set time, for example to people who help us spread the word. When it ends, your account moves to ${PLANS.FREE.name} unless you choose to pay. Nothing is charged and nothing is deleted.`,
       `A promo code gives you your first month of ${PAID} free, once per account. You give a card at checkout. If you don’t cancel within the ${PROMO_TRIAL_DAYS} days, the plan carries on as a paid plan: your card is charged when the free month ends, and at each renewal after that.`,
+      `If you create your account from an invite to someone’s ${PAID} map, you can have that plan, or a lower paid one, at half price for your first 3 monthly payments, or the same amount off your first yearly payment, if you choose it within 7 days of creating your account. It is once per account, and not with a promo code: an account gets one introductory offer. After the offer, the plan carries on at its usual price unless you cancel.`,
     ],
   },
   {

@@ -4,7 +4,7 @@ import { FiTrash2 } from 'react-icons/fi';
 // Components
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 // Utils
-import { SHARE_ROLE_OPTIONS } from '@/utils/sharing/shareRoles';
+import { MAP_SHARE_ROLE_OPTIONS, SHARE_ROLE_OPTIONS } from '@/utils/sharing/shareRoles';
 
 // The columns every "People with access" row shares (you, members, invites): name, a
 // fixed-width role column, a bin. Fixed widths keep the dropdowns, "Owner" and the bins
@@ -19,14 +19,21 @@ export const BIN_BUTTON_CLASS =
   'grid h-10 w-10 justify-self-center place-items-center rounded-full text-xl text-status-critical transition hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-colour6 disabled:opacity-50 disabled:hover:scale-100';
 
 // Someone with access: change their role, or remove them. `onMakeOwner` (a map's owner)
-// adds "Make owner" under their name, which asks first (MakeOwnerDialog).
-function ShareMemberRow({ member, busy, onChangeRole, onRemove, onMakeOwner }) {
+// adds "Make owner" under their name, which asks first (MakeOwnerDialog). A co-owner shows
+// the traveller they are; only the owner changes or removes one (`locked`; 19 Nov 2026).
+// Becoming a co-owner needs a traveller, so it's the add form's (re-adding them), never this
+// dropdown's. `isYou`: your own row (a co-owner's), where the bin means leaving.
+function ShareMemberRow({ member, busy, locked = false, isYou = false, onChangeRole, onRemove, onMakeOwner }) {
   const who = member.name || member.email;
+  const coOwner = member.role === 'CO_OWNER';
   return (
     <li className={ACCESS_ROW_CLASS}>
       <span className='grid min-w-0 justify-items-start'>
-        <span className='w-full truncate font-medium'>{who}</span>
-        {member.name ? <span className='w-full truncate text-xs opacity-80'>{member.email}</span> : null}
+        <span className='w-full truncate font-medium'>{isYou ? 'You' : who}</span>
+        {member.name && !isYou ? <span className='w-full truncate text-xs opacity-80'>{member.email}</span> : null}
+        {coOwner && member.travellerName ? (
+          <span className='w-full truncate text-xs opacity-80'>Traveller: {member.travellerName}</span>
+        ) : null}
         {onMakeOwner ? (
           <button
             type='button'
@@ -42,14 +49,25 @@ function ShareMemberRow({ member, busy, onChangeRole, onRemove, onMakeOwner }) {
       <PlainOptionSelect
         id={`member-role-${member.userId}`}
         value={member.role}
-        options={SHARE_ROLE_OPTIONS}
-        disabled={busy}
+        options={coOwner ? MAP_SHARE_ROLE_OPTIONS : SHARE_ROLE_OPTIONS}
+        disabled={busy || locked || isYou}
         ariaLabel={`Role for ${who}`}
         onChange={(e) => onChangeRole(e.target.value)}
       />
-      <button type='button' onClick={onRemove} disabled={busy} className={BIN_BUTTON_CLASS} aria-label={`Remove ${who}`} title={`Remove ${who}`}>
-        <FiTrash2 aria-hidden='true' />
-      </button>
+      {locked ? (
+        <span aria-hidden='true' />
+      ) : (
+        <button
+          type='button'
+          onClick={onRemove}
+          disabled={busy}
+          className={BIN_BUTTON_CLASS}
+          aria-label={isYou ? 'Leave this map' : `Remove ${who}`}
+          title={isYou ? 'Leave this map' : `Remove ${who}`}
+        >
+          <FiTrash2 aria-hidden='true' />
+        </button>
+      )}
     </li>
   );
 }

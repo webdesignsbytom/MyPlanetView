@@ -158,6 +158,10 @@ describe('deleting an account with a plan', () => {
         { mapId: s.solo.id, action: 'TRANSFER', toUserId: s.friend.user.id },
       ],
     });
+    // The friend already has their 3 free maps, so there's no room for it
+    for (let i = 0; i < 2; i++) {
+      await s.friend.agent.post('/api/maps').send({ name: `Friend's ${i}`, groupType: 'SOLO', travellers: [{ name: 'Me' }] });
+    }
     expect((await s.leaver.agent.post('/api/auth/delete-user').send({ password: PASSWORD })).status).toBe(200);
     const solo = await prisma.travelMap.findUnique({ where: { id: s.solo.id } });
     expect(solo).toMatchObject({ ownerId: s.friend.user.id, isDefault: false });

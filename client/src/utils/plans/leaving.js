@@ -3,12 +3,13 @@
 export const DELETE_MAP = 'DELETE';
 
 /**
- * What a map goes to unless chosen otherwise, as the server's heirOf: its longest-standing
- * active editor, else a deactivated one, else nobody (17 Nov 2026, the audit: a deactivated
- * editor could be the default while an active one waited).
+ * What a map goes to unless chosen otherwise, as the server's heirFor: its longest-standing
+ * active co-owner, else editor (19 Nov 2026: a co-owner first), else a deactivated one, else
+ * nobody (17 Nov 2026, the audit: a deactivated editor could be the default while an active
+ * one waited).
  */
 export const defaultChoiceFor = (map) => {
-  const editors = map.members.filter((m) => m.role === 'EDITOR');
+  const editors = [...map.members.filter((m) => m.role === 'CO_OWNER'), ...map.members.filter((m) => m.role === 'EDITOR')];
   return (editors.find((m) => m.isActive !== false) ?? editors[0])?.userId || DELETE_MAP;
 };
 

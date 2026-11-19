@@ -153,7 +153,6 @@ function ResetLostPasswordForm() {
           name='password'
           value={formData.password}
           onChange={onChange}
-          placeholder='••••••••'
           required
           autoComplete='new-password'
           ariaInvalid={Boolean(errorMsg)}
@@ -173,7 +172,6 @@ function ResetLostPasswordForm() {
           name='confirmPassword'
           value={formData.confirmPassword}
           onChange={onChange}
-          placeholder='••••••••'
           required
           autoComplete='new-password'
           ariaInvalid={Boolean(errorMsg)}

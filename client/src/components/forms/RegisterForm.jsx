@@ -14,7 +14,10 @@ import {
   WELCOME_PAGE_URL,
   LOGIN_PAGE_URL,
   LEGAL_AGREEMENTS_PAGE_URL,
+  mapPath,
+  tripPath,
 } from '@/utils/constants/routes';
+import { forgetMapLists } from '@/utils/map/mapListCache';
 // Hooks
 import { useLocation } from 'react-router-dom';
 import useNavigateToPage from '@/hooks/useNavigateToPage';
@@ -35,15 +38,19 @@ import { useAuth } from '@/auth/AuthContext';
 function RegisterForm() {
   const { register } = useAuth();
   const navigateToPage = useNavigateToPage();
-  // An invite link sends people here with somewhere to come back to
+  // An invite link sends people here with somewhere to come back to, and the invite itself
+  // (`{ token, email, name, kind, id }`, InviteAcceptPage; 19 Nov 2026): its address is
+  // filled in and kept, and signing up with it verifies the address and accepts the invite
+  // on the server, so they go straight to the map or trip
   const location = useLocation();
   const returnTo = location.state?.from || null;
+  const invite = location.state?.invite?.token ? location.state.invite : null;
 
   const [registerFormData, setRegisterFormData] = useState({
-    email: '',
+    email: invite?.email || '',
     password: '',
     confirmPassword: '',
-    username: '',
+    username: invite?.name || '',
     country: 'United Kingdom',
     // Unticked: it's the age confirmation as well as the terms (docs/FEATURE-PLAN.md,
     // "Children and editors"), so the person has to tick it themselves
@@ -144,6 +151,7 @@ function RegisterForm() {
     const result = await register({
       ...registerFormData,
       promoCode: typedCode ? normalisePromoCode(typedCode) || typedCode : '',
+      inviteToken: invite?.token || '',
     });
 
     setRegistrationInProgress(false);
@@ -154,8 +162,15 @@ function RegisterForm() {
       return;
     }
 
-    // Signed in: back to the invite that sent them here, else set up their map
+    // Signed in: from an invite, straight to what they were invited to (its own set-up page
+    // waits until they open their own map); else back to where they came from, or set up
+    // their map
     forgetPromoCode();
+    if (invite?.id) {
+      forgetMapLists();
+      navigateToPage(invite.kind === 'trip' ? tripPath(invite.id) : mapPath(invite.id), { joinedByInvite: true });
+      return;
+    }
     navigateToPage(returnTo || WELCOME_PAGE_URL);
   };
 
@@ -211,7 +226,7 @@ function RegisterForm() {
       <FormField
         id='email'
         label='Email'
-        hint='Enter a valid email address.'
+        hint={invite ? 'The address your invite was sent to.' : 'Enter a valid email address.'}
         error={Boolean(registerError)}
       >
         <TextInput
@@ -220,6 +235,7 @@ function RegisterForm() {
           id='email'
           name='email'
           value={registerFormData.email}
+          readOnly={Boolean(invite)}
           onChange={handleChange}
           placeholder='name@email.com'
           required

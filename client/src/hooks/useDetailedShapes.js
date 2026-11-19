@@ -24,13 +24,16 @@ const LOADERS = Object.fromEntries(
 export const DETAIL_FROM_ZOOM = 4;
 // A pan or zoom settles this long before the places in view are worked out
 const SETTLE_MS = 150;
-// Fetched ahead of a pan: the view and this share of its size all round
-const MARGIN = 0.25;
+// Fetched ahead of a pan: the view and this share of its size all round (a quarter fetched
+// about a fifth more for little gain; 19 Nov 2026, the audit)
+const MARGIN = 0.1;
 
 // code -> paths, for the visit; codes being fetched
 const loaded = {};
 const fetching = new Set();
 
+// The places with land in the view and its margin: each place has a box per stretch of its
+// land (detailShapeBounds.js), so the US isn't "in view" over Germany because of Alaska
 function placesInView(view) {
   const mx = view.w * MARGIN;
   const my = view.h * MARGIN;
@@ -38,30 +41,43 @@ function placesInView(view) {
   const right = view.x + view.w + mx;
   const top = view.y - my;
   const bottom = view.y + view.h + my;
-  return Object.keys(DETAIL_SHAPE_BOUNDS).filter((code) => {
-    const [minX, minY, maxX, maxY] = DETAIL_SHAPE_BOUNDS[code];
-    return maxX >= left && minX <= right && maxY >= top && minY <= bottom;
-  });
+  return Object.keys(DETAIL_SHAPE_BOUNDS).filter((code) =>
+    DETAIL_SHAPE_BOUNDS[code].some(([minX, minY, maxX, maxY]) => maxX >= left && minX <= right && maxY >= top && minY <= bottom),
+  );
 }
 
+// The loaded outlines of the places in view: only those are drawn in detail, so the map
+// doesn't carry every detailed path met on the visit, nor rewrite them all when the zoom
+// crosses DETAIL_FROM_ZOOM (19 Nov 2026, the audit)
+function shownFor(view) {
+  return Object.fromEntries(placesInView(view).filter((code) => loaded[code]).map((code) => [code, loaded[code]]));
+}
+
+const sameShapes = (a, b) => {
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every((code) => a[code] === b[code]);
+};
+
 /**
- * The detailed outlines to draw instead of the whole map's: `{ code: paths }` for every
- * place fetched so far, once the view is zoomed in to DETAIL_FROM_ZOOM; null further out,
- * or when `enabled` is false (a map that can't be zoomed). A place not fetched yet keeps
- * its usual outline until it arrives.
+ * The detailed outlines to draw instead of the whole map's: `{ code: paths }` for the places
+ * in view whose detail has arrived, once the view is zoomed in to DETAIL_FROM_ZOOM; null
+ * further out, or when `enabled` is false (a map that can't be zoomed). A place not fetched
+ * yet, or out of view, keeps its usual outline.
  */
 export default function useDetailedShapes(viewport, enabled = true) {
   const close = useViewportZoom(viewport, (zoom) => zoom >= DETAIL_FROM_ZOOM);
-  // A fresh object whenever more arrive (the paths themselves keep their identity, so a
-  // place already drawn in detail doesn't re-render)
-  const [shapes, setShapes] = useState(() => ({ ...loaded }));
+  // A fresh object whenever what's shown changes (the paths themselves keep their identity,
+  // so a place already drawn in detail doesn't re-render)
+  const [shapes, setShapes] = useState(() => ({}));
 
   useEffect(() => {
     if (!enabled || !close) return undefined;
     let live = true;
     let timer = 0;
     const show = () => {
-      if (live) setShapes((prev) => (Object.keys(prev).length === Object.keys(loaded).length ? prev : { ...loaded }));
+      if (!live) return;
+      const next = shownFor(viewport.getView());
+      setShapes((prev) => (sameShapes(prev, next) ? prev : next));
     };
     const settle = () => {
       if (!live || viewport.getZoom() < DETAIL_FROM_ZOOM) return;

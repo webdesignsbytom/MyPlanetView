@@ -1,4 +1,4 @@
-import React, { useId, useState } from 'react';
+import React, { useId, useRef, useState } from 'react';
 // Api
 import { createMoment, updateMoment } from '@/api/travelApi';
 // Hooks
@@ -81,6 +81,8 @@ function MomentForm({
     babyName: '',
   }));
   const [saving, setSaving] = useState(false);
+  // The traveller this form added for a birth, if it has (kept across a retry)
+  const babyIdRef = useRef(null);
   const [error, setError] = useState(null);
   // The map's places: the UK's nations instead of it on a map that splits it
   const splitUk = useSplitUk();
@@ -110,10 +112,14 @@ function MomentForm({
     setSaving(true);
     try {
       const travellerIds = [...form.travellerIds];
-      if (offerBaby && form.addBaby) {
+      // The baby is added once: a retry after the moment was refused (a spot outside the
+      // country, say) links the one already added instead of adding them again, and still
+      // links them on a couple's map, which has no room left to offer it (19 Nov 2026, the audit)
+      if (offerBaby && form.addBaby && !babyIdRef.current) {
         const traveller = await onAddTraveller({ name: babyName, birthCountryCode: country });
-        if (traveller?.id) travellerIds.push(traveller.id);
+        babyIdRef.current = traveller?.id ?? null;
       }
+      if (form.addBaby && babyIdRef.current && !travellerIds.includes(babyIdRef.current)) travellerIds.push(babyIdRef.current);
       const body = {
         kind: form.kind,
         title: form.title,
@@ -130,8 +136,16 @@ function MomentForm({
         ...(trips ? { tripId: form.tripId || null } : isNew && tripId ? { tripId } : {}),
       };
       const { moment: saved } = isNew ? await createMoment(mapId, body) : await updateMoment(moment.id, body);
-      // A new moment in a country with no status: mark it, as offered (the panel shows a failure)
-      if (offerVisit && form.markVisit) onMarkVisit(statusForKind(form.kind));
+      // A new moment in a country with no status: mark it, as offered (the panel shows a
+      // failure). Waited for, so the map's refresh that follows the save sees the mark: asked
+      // for at the same time, it could come back without it (19 Nov 2026, the audit)
+      if (offerVisit && form.markVisit) {
+        try {
+          await onMarkVisit(statusForKind(form.kind));
+        } catch {
+          // The moment is saved; the panel says the mark didn't take
+        }
+      }
       onSaved(saved);
     } catch (err) {
       setError(err.friendlyMessage || 'The moment could not be saved.');

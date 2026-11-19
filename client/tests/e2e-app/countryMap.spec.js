@@ -40,6 +40,15 @@ test('a country opens on its own, with its states and a pin’s visits kept apar
   await map.getByRole('button', { name: 'World map' }).click();
   await expect(page.locator('[data-country-map]')).toHaveCount(0);
   await expect(page.locator('[data-code="FR"]')).toBeVisible();
+  // The world map is a new <svg>: focus is on it, and its wheel still zooms (19 Nov 2026,
+  // the audit: the listener had stayed on the old one)
+  const world = page.locator('#main-content svg[role="application"]');
+  await expect(world).toBeFocused();
+  const before = await world.getAttribute('viewBox');
+  const box = await world.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.wheel(0, -400);
+  await expect.poll(() => world.getAttribute('viewBox')).not.toBe(before);
 });
 
 test('marking a state colours it and brings its country', async ({ page }) => {
@@ -63,12 +72,14 @@ test('an editor drops a pin and saves its first visit', async ({ page }) => {
   await pressState(page, 'US-TX');
   const panel = page.getByRole('dialog', { name: 'New pin in United States' });
   await panel.getByRole('textbox', { name: 'Name' }).fill('Austin');
+  // An exact spot: shared with the map's viewers only when chosen (19 Nov 2026, the user's decision)
+  await expect(panel.getByRole('checkbox', { name: 'Show this pin to everyone the map is shared with' })).not.toBeChecked();
   await panel.getByRole('button', { name: 'Next: the first visit' }).click();
   await panel.getByRole('combobox', { name: 'When' }).selectOption('Only the year');
   await panel.getByRole('textbox', { name: 'Year' }).fill('2024');
   await panel.getByRole('button', { name: 'Save the pin' }).click();
   const pin = page.getByRole('dialog', { name: 'Austin' });
-  await expect(pin.getByText('United States · 1 visit')).toBeVisible();
+  await expect(pin.getByText('United States · 1 visit · only the map’s editors see it')).toBeVisible();
   await expect(pin.locator('[data-pin-visit]').getByRole('heading')).toHaveText('2024');
   await expect(map.locator('[data-pin]')).toHaveCount(1);
 

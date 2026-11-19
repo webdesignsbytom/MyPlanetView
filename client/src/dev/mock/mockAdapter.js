@@ -14,7 +14,8 @@ export const raw = (body, status = 200) => ({ status, body });
 export const fail = (status, message) => ({ status, body: { status: status >= 500 ? 'error' : 'fail', message } });
 
 // No role at all is a 404 (nothing to probe); a role that isn't enough is a 403
-export const RANK = { VIEWER: 1, EDITOR: 2, OWNER: 3 };
+// A co-owner (19 Nov 2026) sits between an editor and the owner, as on the server
+export const RANK = { VIEWER: 1, EDITOR: 2, CO_OWNER: 3, OWNER: 4 };
 export function deny(role, needed, notFoundMessage = 'Not found.') {
   if (!role) return fail(404, notFoundMessage);
   if (RANK[role] < RANK[needed]) return fail(403, 'You do not have permission to do that.');
@@ -33,6 +34,8 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   'POST /api/maps',
   'DELETE /api/maps/:mapId',
   'POST /api/maps/:mapId/main',
+  'POST /api/maps/:mapId/upgrade',
+  'DELETE /api/maps/:mapId/upgrade',
   'POST /api/maps/:mapId/transfer',
   'POST /api/billing/checkout',
   'POST /api/billing/change-plan',

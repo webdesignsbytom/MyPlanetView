@@ -8,16 +8,15 @@ import PosterFrame from '@/components/common/PosterFrame';
 // `mainProps` carries the page's own aria-labelledby / aria-describedby.
 function AuthPageLayout({ children, mainProps = {} }) {
   return (
-    <PosterFrame>
-      <Navbar variant='column' />
+    <PosterFrame nav={<Navbar variant='column' />}>
       <main
         id='main-content'
         role='main'
         tabIndex={-1}
-        // Below lg the frame's padding sets the edges, so the ticket lines up with the nav
-        // bar, and the ticket sits 16px under it (the frame's 8px gap + 8px here), at the
-        // top rather than centred; from lg it's centred beside the nav column
-        className='grid min-w-0 items-start justify-items-center pb-6 pt-2 lg:items-center lg:px-6 lg:py-6'
+        // Below lg the frame's padding sets the edges, and the ticket sits at the top of the
+        // frame under the nav bar rather than centred; from lg it's centred beside the nav
+        // column
+        className='grid min-w-0 items-start justify-items-center pb-6 lg:items-center lg:px-6 lg:py-6'
         {...mainProps}
       >
         {children}

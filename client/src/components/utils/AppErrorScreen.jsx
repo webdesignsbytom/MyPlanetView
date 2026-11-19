@@ -36,8 +36,8 @@ function AppErrorScreen() {
         role='main'
         tabIndex={-1}
         aria-labelledby='app-error-heading'
-        // Both of the frame's rows (columns from lg up): there's no nav beside it
-        className='row-span-2 grid w-full min-w-0 place-items-center lg:col-span-2 lg:row-span-1'
+        // Both of the frame's columns from lg up: there's no nav beside it
+        className='grid w-full min-w-0 place-items-center lg:col-span-2'
       >
         <PaperCard
           className='w-full max-w-xl'
