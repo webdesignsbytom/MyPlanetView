@@ -1,4 +1,4 @@
-// Black and white (the map setting `blackAndWhite`): writes, into src/styles/index.css
+// Black and white (the map style `mono`, a switch until 19 Nov 2026): writes, into src/styles/index.css
 // between the "mono-tokens" markers, a :root[data-mono] block that gives every colour token
 // of the :root block the grey a greyscale filter makes of it (its luminance:
 // 0.2126 R + 0.7152 G + 0.0722 B), alpha kept, except the countries' (CHOSEN, below). The map page sets data-mono on <html> while
@@ -41,6 +41,8 @@ const CHOSEN = {
   '--poster-red': '#000000',
   '--poster-red-ink': '#ffffff',
   '--poster-red-deep': '#000000',
+  '--danger-red': '#000000',
+  '--danger-ink': '#ffffff',
   '--poster-brown': '#000000',
   '--poster-paper': '#e4e4e4',
   '--paper-cream': 'light-dark(#ffffff, #111111)',

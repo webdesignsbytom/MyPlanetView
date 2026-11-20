@@ -10,6 +10,7 @@ import useLandmarks, { preloadLandmarks } from '@/hooks/useLandmarks';
 import { SplitUkProvider } from '@/hooks/useSplitUk';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
+import useMapTheme from '@/hooks/useMapTheme';
 import useAchievements from '@/hooks/useAchievements';
 // Components
 import WorldMap from './WorldMap';
@@ -21,9 +22,12 @@ import CountryMapLoading from '@/components/countryMap/CountryMapLoading';
 import MapLegend from './MapLegend';
 import MapHoverLayer from './MapHoverLayer';
 import MapPanelFallback from './MapPanelFallback';
+import MapOverlayBoundary from './MapOverlayBoundary';
 import VerifyEmailBanner from './VerifyEmailBanner';
+import JoinedMapNote from './JoinedMapNote';
 import MapStatusScreen from './MapStatusScreen';
 import MapPlanBanner from './MapPlanBanner';
+import TravelCopyBanner from '@/components/travelCopies/TravelCopyBanner';
 import GoalTag from '@/components/achievements/GoalTag';
 import AwardNews from '@/components/achievements/AwardNews';
 import { LANDMARK_MIN_ZOOM } from './LandmarkPins';
@@ -60,9 +64,9 @@ import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/m
 import { countryListsOf, countryMomentFilters, countryPhotoFilters, preloadCountryLists } from '@/utils/map/preloadCountryLists';
 import { preloadSharing } from '@/utils/sharing/sharingCache';
 import { createValueStore } from '@/utils/map/valueStore';
-import { canEditRole } from '@/utils/sharing/shareRoles';
+import { canEditRole, canManageRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
-import { mapStyleById } from '@/utils/map/mapStyles';
+import { isMonoStyle, mapStyleById } from '@/utils/map/mapStyles';
 import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
 import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
 
@@ -156,6 +160,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const locked = canEdit && mustVerify;
   const canChange = canEdit && !mustVerify;
   const isOwner = !shareCode && role === 'OWNER';
+  // The map's settings and sharing: the owner or a co-owner (19 Nov 2026)
+  const canManage = !shareCode && canManageRole(role);
   const canShare = Boolean(currentUser) && !shareCode;
   const photoSource = useMemo(() => (shareCode ? { shareCode } : { mapId: map.id }), [shareCode, map.id]);
   // The map's plan (the owner and editors get it; docs/API.md, "Map limits"): a locked map
@@ -208,7 +214,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   useEffect(() => {
     let left = false;
     const jobs = [
-      isOwner ? preloadSharing('maps', map.id) : null,
+      canManage ? preloadSharing('maps', map.id) : null,
       preloadPhotoPage({ ...photoSource, ...MAP_PHOTOS }),
       preloadMomentPage({ ...photoSource, limit: 30 }),
       preloadLandmarks(),
@@ -227,7 +233,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       left = true;
       window.clearTimeout(cap);
     };
-  }, [map.id, isOwner, photoSource, userId, shareCode]);
+  }, [map.id, canManage, photoSource, userId, shareCode]);
 
   // A country the pointer rests on: its ticket's photos and moments start loading, so it
   // opens with them (phones open a ticket at the first press, so it loads then). Never a
@@ -249,15 +255,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   );
   useEffect(() => () => window.clearTimeout(hoverTimerRef.current), []);
 
-  // Black and white: the grey tokens on <html> too (index.css :root[data-mono]), for what
-  // sits outside the page's greyscale filter: the photo viewer's and slideshow's frames
-  // (their photos keep their colour) and dialogs drawn in portals
-  const blackAndWhite = Boolean(settings.blackAndWhite);
-  useEffect(() => {
-    if (!blackAndWhite) return undefined;
-    document.documentElement.setAttribute('data-mono', '');
-    return () => document.documentElement.removeAttribute('data-mono');
-  }, [blackAndWhite]);
+  // The containers over the map follow its style (19 Nov 2026, the user's wish); Black and
+  // white puts the grey tokens on <html> (useMapTheme)
+  useMapTheme(settings.style);
+  const blackAndWhite = isMonoStyle(settings.style);
 
   // Badges and goals (docs/API.md, "Badges and goals"): loaded with the map, and asked
   // again (debounced) after anything that might earn one: a visit changed, a batch of
@@ -348,7 +349,33 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // A country map's pins changed (one saved or deleted in the pin panel): its pins reload
   const [pinsVersion, setPinsVersion] = useState(0);
   const pinsChanged = useCallback(() => setPinsVersion((v) => v + 1), []);
-  const openCountryMap = useCallback((code) => dispatch({ type: 'openCountryMap', code }), []);
+  // The world map goes, so no pointer leaves its country: the hover postcard is cleared, or
+  // it showed again on the way back (19 Nov 2026, the audit)
+  const openCountryMap = useCallback(
+    (code) => {
+      hoverCountry(null);
+      dispatch({ type: 'openCountryMap', code });
+    },
+    [hoverCountry],
+  );
+  // A state's change on a country's map moved the map's visits: the world map and the badges
+  // catch up (19 Nov 2026, the audit: badges were never checked after one)
+  const stateVisitsChanged = useCallback(() => {
+    refreshMap?.();
+    checkAchievements();
+  }, [refreshMap, checkAchievements]);
+  // Back from a country's map, focus goes to the world map: the "Open country" button that
+  // opened it went with its ticket, and focus was left on the page (19 Nov 2026, the audit)
+  const backToWorldRef = useRef(false);
+  const closeCountryMap = useCallback(() => {
+    backToWorldRef.current = true;
+    dispatch({ type: 'closeCountryMap' });
+  }, []);
+  useEffect(() => {
+    if (ui.countryMap || !backToWorldRef.current) return;
+    backToWorldRef.current = false;
+    document.querySelector('#main-content svg[role="application"]')?.focus({ preventScroll: true });
+  }, [ui.countryMap]);
   // A photo changed in the viewer (a landmark confirmed, a country given): it may have
   // earned something. Uploads ask once their batch is done (onBatchDone), not per photo.
   const photoEdited = useCallback(() => {
@@ -405,12 +432,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             map={map}
             canEdit={canEdit}
             isOwner={isOwner}
+            canManage={canManage}
             locked={mustVerify}
             onMapSaved={actions?.reload}
             onMapDeleted={() => {
               forgetMapLists();
               navigate(MAP_PAGE_URL, { replace: true });
             }}
+            onUpgradePay={isOwner && !mustVerify ? () => setPayingForMap('upgrade') : null}
             onClose={close}
           />
         );
@@ -581,17 +610,17 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     // (the drawing, the country list, every country picker and landmark list)
     <SplitUkProvider value={Boolean(map.splitUk)}>
     <div data-map-style={settings.style} className='relative h-dvh w-full overflow-hidden bg-map-sea text-map-ink'>
-      {/* Black and white (the viewer's setting): everything here in greys, one greyscale filter
+      {/* Black and white (a map style): everything here in greys, one greyscale filter
           over the lot (the GPU applies it). The photo viewer and the slideshow sit outside it,
           so a photo opened is in colour. */}
       {/* Out of reach while the loading screen is over it */}
-      <div inert={!dataReady} className={`absolute inset-0 ${settings.blackAndWhite ? 'grayscale' : ''}`}>
+      <div inert={!dataReady} className={`absolute inset-0 ${blackAndWhite ? 'grayscale' : ''}`}>
         <MapBackground styleId={settings.style} animatedSea={settings.animatedSea} />
 
         <main id='main-content' tabIndex={-1} role='main' className='absolute inset-0' onPointerDownCapture={warmCountryPanel}>
           <h1 className='sr-only'>{map.name}</h1>
           {ui.countryMap ? (
-            <ErrorBoundary key={ui.countryMap} fallback={<MapPanelFallback failed onClose={() => dispatch({ type: 'closeCountryMap' })} />}>
+            <ErrorBoundary key={ui.countryMap} fallback={<MapPanelFallback failed onClose={closeCountryMap} />}>
               <Suspense fallback={<CountryMapLoading name={COUNTRY_BY_CODE[ui.countryMap]?.name} />}>
                 <CountryMapView
                   code={ui.countryMap}
@@ -602,8 +631,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
                   selectedPinId={ui.panel === 'pin' ? (ui.pin?.id ?? null) : null}
                   onOpenPin={(id) => dispatch({ type: 'openPin', id })}
                   onNewPin={(draft) => dispatch({ type: 'newPin', draft })}
-                  onVisitsChanged={refreshMap}
-                  onClose={() => dispatch({ type: 'closeCountryMap' })}
+                  onVisitsChanged={stateVisitsChanged}
+                  onClose={closeCountryMap}
                 />
               </Suspense>
             </ErrorBoundary>
@@ -634,6 +663,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         </main>
         <div className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2 phone:right-3'>
           {mustVerify ? <VerifyEmailBanner /> : null}
+          {shareCode ? null : <JoinedMapNote mapName={map.name} role={role} />}
           {planBanner ? (
             <MapPlanBanner
               locked={mapLocked}
@@ -641,9 +671,11 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               graceUntil={map.graceUntil}
               isOwner={isOwner}
               // Paying needs a verified address (the verify banner above says so)
-              onPay={isOwner && !mustVerify ? () => setPayingForMap(true) : null}
+              onPay={isOwner && !mustVerify ? () => setPayingForMap('locked') : null}
             />
           ) : null}
+          {/* Someone asks for copies of their travels from this map (docs/API.md, "Travel copies") */}
+          {canManage ? <TravelCopyBanner mapId={map.id} /> : null}
           {/* Last in the column, so the banners above keep their place (the map switcher opens
               below them). On phones first (17 Nov 2026): its flag sits level with the Menu
               stamp, and the banners come below them both, or below an empty row as tall as
@@ -736,12 +768,13 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         />
 
         {ui.sharing ? (
-          <Suspense fallback={null}>
+          <MapOverlayBoundary onClose={() => dispatch({ type: 'share', open: false })}>
             <ShareDialog
               resource='maps'
               id={map.id}
               name={map.name}
               role={role}
+              travellers={map.travellers}
               currentUserId={currentUser?.id}
               onLeft={() => {
                 forgetMapLists();
@@ -758,24 +791,24 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               }}
               onClose={() => dispatch({ type: 'share', open: false })}
             />
-          </Suspense>
+          </MapOverlayBoundary>
         ) : null}
 
         {tipsOpen ? (
-          <Suspense fallback={null}>
+          <MapOverlayBoundary onClose={() => setTipsOpen(false)}>
             <MapTipsDialog
               hideTips={!tipsWanted}
               onHideTips={(hide) => onChangeSetting('showTips', !hide)}
               posters={settings.hoverPreview}
               onClose={() => setTipsOpen(false)}
             />
-          </Suspense>
+          </MapOverlayBoundary>
         ) : null}
 
         {payingForMap ? (
-          <Suspense fallback={null}>
+          <MapOverlayBoundary onClose={() => setPayingForMap(false)}>
             <ExtraMapDialog
-              reason='locked'
+              reason={payingForMap === 'upgrade' ? 'upgrade' : 'locked'}
               onClose={() => setPayingForMap(false)}
               onPaid={() => {
                 setPayingForMap(false);
@@ -783,12 +816,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
                 actions?.reload();
               }}
             />
-          </Suspense>
+          </MapOverlayBoundary>
         ) : null}
       </div>
 
       {ui.photoId ? (
-        <Suspense fallback={null}>
+        <MapOverlayBoundary onClose={() => dispatch({ type: 'closePhoto' })}>
           <PhotoViewer
             photoId={ui.photoId}
             photo={ui.photo}
@@ -801,11 +834,11 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onDeleted={photosChanged}
             onClose={() => dispatch({ type: 'closePhoto' })}
           />
-        </Suspense>
+        </MapOverlayBoundary>
       ) : null}
 
       {ui.slideshow ? (
-        <Suspense fallback={null}>
+        <MapOverlayBoundary onClose={() => dispatch({ type: 'stopPlaying' })}>
           <Slideshow
             source={photoSource}
             country={ui.slideshow.country}
@@ -814,7 +847,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             title={`Slideshow: ${ui.slideshow.country ? COUNTRY_BY_CODE[ui.slideshow.country]?.name || ui.slideshow.country : map.name}`}
             onClose={() => dispatch({ type: 'stopPlaying' })}
           />
-        </Suspense>
+        </MapOverlayBoundary>
       ) : null}
 
       {dataReady ? null : <MapStatusScreen loading overlay />}

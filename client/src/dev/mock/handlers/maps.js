@@ -1,5 +1,6 @@
 // Mock mode only: maps, travellers, visits, stats, and the map's trips and photos.
 import { deny, fail, ok, route } from '../mockAdapter';
+import { countryListPages } from '../countryLists';
 import { getDb, me, newId, newShareCode, session } from '../store';
 import { declaredSizeProblem, mockUpload, presignMockUpload } from '../uploads';
 import { countryAtPosition } from '../countryLookup';
@@ -150,12 +151,20 @@ export function transferMapRecord(map, toUserId, { keepOldOwnerAsEditor = false 
   const fromUserId = map.ownerId;
   const wasDefault = map.isDefault;
   const graceUntil = graceForNewOwner(map.id, toUserId);
+  const before = db.mapMembers.find((m) => m.mapId === map.id && m.userId === toUserId);
   db.mapMembers = db.mapMembers.filter((m) => !(m.mapId === map.id && m.userId === toUserId));
   Object.assign(map, { ownerId: toUserId, isDefault: false, graceUntil });
   if (keepOldOwnerAsEditor && fromUserId !== toUserId) {
+    // Handed to a co-owner, the two swap places when the old owner is a traveller (as the server)
+    const isTraveller = db.travellers.some((t) => t.mapId === map.id && t.userId === fromUserId);
+    const role = before?.role === 'CO_OWNER' && isTraveller ? 'CO_OWNER' : 'EDITOR';
     const existing = db.mapMembers.find((m) => m.mapId === map.id && m.userId === fromUserId);
-    if (existing) existing.role = 'EDITOR';
-    else db.mapMembers.push({ mapId: map.id, userId: fromUserId, role: 'EDITOR', createdAt: new Date().toISOString() });
+    if (existing) existing.role = role;
+    else db.mapMembers.push({ mapId: map.id, userId: fromUserId, role, createdAt: new Date().toISOString() });
+  } else if (fromUserId !== toUserId) {
+    db.travellers.forEach((t) => {
+      if (t.mapId === map.id && t.userId === fromUserId) t.userId = null;
+    });
   }
   const oldOwner = db.users.find((u) => u.id === fromUserId);
   if (wasDefault && oldOwner && !db.maps.some((m) => m.ownerId === fromUserId && m.isDefault)) {
@@ -220,6 +229,24 @@ export function registerMapRoutes() {
     return ok({ map: mapView(map, role, WITH_PLAN) });
   });
 
+  // The owner puts a map on their plan (a paid extra map's slot), or takes it back (19 Nov 2026, as the server)
+  route('POST', '/api/maps/:mapId/upgrade', ({ params }) => {
+    const map = findMap(params.mapId);
+    const role = mapRole(map);
+    const denied = deny(role, 'OWNER', NOT_FOUND);
+    if (denied) return denied;
+    if (!map.isDefault && !map.upgradedAt) map.upgradedAt = new Date().toISOString();
+    return ok({ map: mapView(map, role, WITH_PLAN) });
+  });
+  route('DELETE', '/api/maps/:mapId/upgrade', ({ params }) => {
+    const map = findMap(params.mapId);
+    const role = mapRole(map);
+    const denied = deny(role, 'OWNER', NOT_FOUND);
+    if (denied) return denied;
+    map.upgradedAt = null;
+    return ok({ map: mapView(map, role, WITH_PLAN) });
+  });
+
   // Hand the map to someone already on it (an active account, verified address)
   route('POST', '/api/maps/:mapId/transfer', ({ params, body }) => {
     const db = getDb();
@@ -236,13 +263,15 @@ export function registerMapRoutes() {
     if (!member || !target) return fail(400, TRANSFER.notMember);
     if (target.isActive === false || target.emailVerified !== true) return fail(400, TRANSFER.notReady);
     transferMapRecord(map, userId, { keepOldOwnerAsEditor: stayAsEditor });
-    return ok({ map: stayAsEditor ? mapView(map, 'EDITOR', WITH_PLAN) : { id: map.id, name: map.name, role: null } });
+    const stayedAs = stayAsEditor ? mapRole(map) || 'EDITOR' : null;
+    return ok({ map: stayedAs ? mapView(map, stayedAs, WITH_PLAN) : { id: map.id, name: map.name, role: null } });
   });
 
+  // The map's settings: the owner or a co-owner (19 Nov 2026)
   route('PATCH', '/api/maps/:mapId', ({ params, body }) => {
     const map = findMap(params.mapId);
     const role = mapRole(map);
-    const denied = deny(role, 'OWNER', NOT_FOUND);
+    const denied = deny(role, 'CO_OWNER', NOT_FOUND);
     if (denied) return denied;
     // Everything is checked before anything changes, as on the server
     const name = body.name !== undefined ? cleanText(body.name, 80) : null;
@@ -343,6 +372,17 @@ export function registerMapRoutes() {
     const travellers = db.travellers.filter((t) => t.mapId === map.id);
     if (!travellers.some((t) => t.id === params.travellerId)) return fail(404, 'That traveller could not be found.');
     if (travellers.length <= 1) return fail(409, 'A map needs at least one traveller.');
+    // A co-owner is their traveller, and the owner keeps one (as the server)
+    const traveller = travellers.find((t) => t.id === params.travellerId);
+    const coOwnerHere = (userId) => db.mapMembers.some((m) => m.mapId === map.id && m.userId === userId && m.role === 'CO_OWNER');
+    const pending = (i) => !i.acceptedAt && i.expiresAt > new Date().toISOString();
+    if ((traveller.userId && coOwnerHere(traveller.userId)) || db.invites.some((i) => i.travellerId === traveller.id && pending(i))) {
+      return fail(409, 'This traveller is a co-owner, or invited as one. Take that away in Share first.');
+    }
+    const coOwners =
+      db.mapMembers.filter((m) => m.mapId === map.id && m.role === 'CO_OWNER').length +
+      db.invites.filter((i) => i.mapId === map.id && i.role === 'CO_OWNER' && pending(i)).length;
+    if (travellers.length - 1 < coOwners + 1) return fail(409, "Every co-owner is one of the map's travellers, and the owner needs one too.");
     db.travellers = db.travellers.filter((t) => t.id !== params.travellerId);
     db.trips.forEach((t) => {
       t.travellerIds = t.travellerIds.filter((id) => id !== params.travellerId);
@@ -440,6 +480,17 @@ export function registerMapRoutes() {
     if (denied) return denied;
     const page = photoPage(getDb().photos.filter((p) => p.mapId === map.id), role, query);
     return page.error ? fail(page.status ?? 400, page.error) : ok(page);
+  });
+
+  // Every country ticket's first pages in one reply (dev/mock/countryLists.js)
+  route('GET', '/api/maps/:mapId/country-lists', ({ params, query }) => {
+    const map = findMap(params.mapId);
+    const role = mapRole(map);
+    const denied = deny(role, 'VIEWER', NOT_FOUND);
+    if (denied) return denied;
+    const photos = getDb().photos.filter((p) => p.mapId === map.id);
+    const lists = countryListPages({ query, photos, role, mapId: map.id, photoAccess: { mapRole: role, trip: null } });
+    return lists.error ? fail(lists.status ?? 400, lists.error) : ok(lists);
   });
 
   route('POST', '/api/maps/:mapId/photos/presign', ({ params, body }) => {

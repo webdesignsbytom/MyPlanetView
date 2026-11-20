@@ -11,8 +11,10 @@
 // country on each load, which a share link's per-visitor limit (docs/API.md, "Rate
 // limits") couldn't afford: those lists load when the pointer rests on the country or its
 // ticket opens (MapExperience's hoverCountry).
-import { preloadPhotoPage, rememberEmptyPhotoPage } from '@/hooks/usePhotoPage';
-import { preloadMomentPage, rememberEmptyMomentPage } from '@/hooks/useMomentPage';
+import { photoPageCacheEntry, preloadPhotoPage, rememberEmptyPhotoPage } from '@/hooks/usePhotoPage';
+import { momentPageCacheEntry, preloadMomentPage, rememberEmptyMomentPage } from '@/hooks/useMomentPage';
+import { getCountryLists } from '@/api/travelApi';
+import { prefetchMany } from '@/utils/data/panelCache';
 import { SPECIAL_PLACES, countriesOnMap } from './countries';
 import { countsAsVisited } from './visitStatus';
 
@@ -27,7 +29,10 @@ const visitedCodes = (map) => new Set((map.visits || []).filter((v) => countsAsV
  * The ticket's lists: CountryPanel's usePhotoPage and useMomentPage filters exactly. The
  * photos come with their screen-sized copies (`display`), so the viewer opens one at once.
  */
-export const countryPhotoFilters = (source, code) => ({ ...source, country: code, limit: 12, display: true });
+const COUNTRY_PHOTOS_LIMIT = 12;
+// useMomentPage's own page size, which its cache key takes when none is given
+const COUNTRY_MOMENTS_LIMIT = 30;
+export const countryPhotoFilters = (source, code) => ({ ...source, country: code, limit: COUNTRY_PHOTOS_LIMIT, display: true });
 export const countryMomentFilters = (source, code) => ({ ...source, country: code });
 
 /**
@@ -47,24 +52,45 @@ export function countryListsOf(map, code, visited = visitedCodes(map)) {
  * country ticket (CountryPanel) asks for them. `stopped()` says the map page has gone or
  * moved to another map, and the rest aren't fetched. The promise settles once they're all in.
  */
-export function preloadCountryLists(map, source, stopped = () => false) {
+export async function preloadCountryLists(map, source, stopped = () => false) {
   const visited = visitedCodes(map);
+  const wanted = [];
   const jobs = [];
 
   for (const { code } of [...countriesOnMap(Boolean(map.splitUk)), ...SPECIAL_PLACES]) {
     const lists = countryListsOf(map, code, visited);
     const photos = countryPhotoFilters(source, code);
-    if (lists.photos === 'some') jobs.push(() => preloadPhotoPage(photos));
-    else if (lists.photos === 'none') rememberEmptyPhotoPage(photos);
+    if (lists.photos === 'some') {
+      wanted.push({ ...photoPageCacheEntry(photos), kind: 'photos', code });
+      jobs.push(() => preloadPhotoPage(photos));
+    } else if (lists.photos === 'none') rememberEmptyPhotoPage(photos);
 
     const moments = countryMomentFilters(source, code);
-    if (lists.moments === 'some') jobs.push(() => preloadMomentPage(moments));
-    else rememberEmptyMomentPage(moments);
+    if (lists.moments === 'some') {
+      wanted.push({ ...momentPageCacheEntry(moments), kind: 'moments', code });
+      jobs.push(() => preloadMomentPage(moments));
+    } else rememberEmptyMomentPage(moments);
   }
+
+  // All of them in one request (docs/API.md "Country lists"; 19 Nov 2026, the audit: a
+  // request per list was about a hundred on a well-travelled map, every one counted against
+  // the rate limits). The lists' own requests, a few at a time, only if that one fails.
+  const together = await prefetchMany(
+    wanted.map((item) => ({ ...item, pick: (reply) => reply?.[item.kind]?.[item.code] })),
+    (todo) =>
+      getCountryLists(source, {
+        photos: todo.filter((item) => item.kind === 'photos').map((item) => item.code),
+        moments: todo.filter((item) => item.kind === 'moments').map((item) => item.code),
+        limit: COUNTRY_PHOTOS_LIMIT,
+        display: true,
+        momentLimit: COUNTRY_MOMENTS_LIMIT,
+      }),
+  );
+  if (together || stopped()) return;
 
   let next = 0;
   const worker = async () => {
     while (next < jobs.length && !stopped()) await jobs[next++]();
   };
-  return Promise.all(Array.from({ length: AT_ONCE }, worker));
+  await Promise.all(Array.from({ length: AT_ONCE }, worker));
 }

@@ -53,6 +53,18 @@ vi.mock('stripe', async (importOriginal) => {
           }),
         },
       };
+      // The invite offer's coupons (made once, by id)
+      this.coupons = {
+        retrieve: record('coupons.retrieve', (id) => {
+          if (!fake.coupons?.has(id)) throw Object.assign(new Error(`No such coupon: '${id}'`), { code: 'resource_missing', statusCode: 404 });
+          return fake.coupons.get(id);
+        }),
+        create: record('coupons.create', (params) => {
+          fake.coupons ??= new Map();
+          fake.coupons.set(params.id, params);
+          return params;
+        }),
+      };
       this.billingPortal = {
         sessions: { create: record('billingPortal.sessions.create', () => ({ url: 'https://billing.stripe.test/p/session' })) },
       };
@@ -91,7 +103,7 @@ Object.assign(process.env, PRICES, { STRIPE_SECRET_KEY: 'sk_test_it_placeholder'
 
 const { default: Stripe } = await import('stripe');
 const { default: app } = await import('../../src/server.js');
-const { PASSWORD, anon, cleanUp, data, defaultMapOf, givePlan, prisma, signUp } = await import('./helpers.js');
+const { PASSWORD, anon, cleanUp, data, defaultMapOf, givePlan, prisma, sentEmails, signUp, testEmail, trackUser } = await import('./helpers.js');
 
 const RUN = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 const eventIds = [];
@@ -135,7 +147,7 @@ const subscriptionObject = ({ id, customer, userId, status = 'active', lines, ca
 });
 
 describe('GET /billing', () => {
-  it('starts on Economy with one map and every price', async () => {
+  it('starts on Economy with one map, room for two more free, and every price', async () => {
     const { agent } = await signUp('Newbie');
     const res = await agent.get('/api/billing');
     expect(res.status).toBe(200);
@@ -149,13 +161,16 @@ describe('GET /billing', () => {
       cancelAtPeriodEnd: false,
       grant: null,
       promoTrial: null,
+      inviteOffer: null,
       includedMaps: 1,
+      freeEconomyMaps: 2,
       extraMapsPaid: 0,
       ownedMaps: 1,
+      economyMapIds: [],
       lockedMapIds: [],
       prices: {
         currency: 'GBP',
-        plans: { FREE: { MONTH: 0, YEAR: 0 }, REGULAR: { MONTH: 499, YEAR: 4900 }, PREMIUM: { MONTH: 899, YEAR: 8900 } },
+        plans: { FREE: { MONTH: 0, YEAR: 0 }, REGULAR: { MONTH: 499, YEAR: 4900 }, PREMIUM: { MONTH: 999, YEAR: 9900 } },
         extraMap: { FREE: { MONTH: 399, YEAR: 3900 }, REGULAR: { MONTH: 399, YEAR: 3900 }, PREMIUM: { MONTH: 599, YEAR: 5900 } },
       },
       paymentsEnabled: true,
@@ -394,14 +409,15 @@ describe('changing a subscription', () => {
     expect(Object.keys(data(added))).toEqual(['billing']);
     expect(data(added).billing).toMatchObject({ plan: 'REGULAR', extraMapsPaid: 3 });
     expect(callsTo('subscriptions.update')[0].args[1].items).toEqual([{ price: 'price_it_extra_month', quantity: 3 }]);
-    // Three new maps fit now
-    for (let i = 0; i < 3; i++) {
+    // Five new maps fit now: two free, three paid for
+    for (let i = 0; i < 5; i++) {
       expect((await s.agent.post('/api/maps').send({ name: `Extra ${i}`, groupType: 'SOLO', travellers: [{ name: 'Me' }] })).status).toBe(201);
     }
 
     const fewer = await s.agent.post('/api/billing/extra-maps').send({ quantity: 1 });
-    expect(data(fewer).billing).toMatchObject({ extraMapsPaid: 1, ownedMaps: 4 });
-    // Fewer paid than in use: two are locked, none deleted
+    expect(data(fewer).billing).toMatchObject({ extraMapsPaid: 1, ownedMaps: 6 });
+    // Fewer paid than in use: two run on Economy, two are locked, none deleted
+    expect(data(fewer).billing.economyMapIds).toHaveLength(2);
     expect(data(fewer).billing.lockedMapIds).toHaveLength(2);
     const removed = await s.agent.post('/api/billing/extra-maps').send({ quantity: 0 });
     expect(data(removed).billing).toMatchObject({ extraMapsPaid: 0 });
@@ -570,6 +586,35 @@ describe('the webhook', () => {
     expect(data(await agent.get('/api/billing'))).toMatchObject({ plan: 'FREE', status: 'canceled', extraMapsPaid: 0 });
   });
 
+  // 19 Nov 2026, the audit: the checkout linked the new subscription to a row still saying
+  // "canceled", so every event about it was taken for a late one about a dead subscription
+  it('applies a returning subscriber’s new subscription when the checkout’s event comes first', async () => {
+    const { agent, user } = await signUp('Returning');
+    const customer = `cus_it_back_${RUN}`;
+    const before = subscriptionObject({ id: `sub_it_back1_${RUN}`, customer, userId: user.id, lines: [['price_it_regular_year', 1]] });
+    await sendEvent('customer.subscription.created', before);
+    await sendEvent('customer.subscription.deleted', { ...before, status: 'canceled' });
+    expect((await prisma.subscription.findUnique({ where: { userId: user.id } })).status).toBe('canceled');
+
+    const again = subscriptionObject({ id: `sub_it_back2_${RUN}`, customer, userId: user.id, lines: [['price_it_premium_month', 1]] });
+    await sendEvent('checkout.session.completed', {
+      id: 'cs_fake_back',
+      object: 'checkout.session',
+      mode: 'subscription',
+      client_reference_id: user.id,
+      metadata: { userId: user.id },
+      customer,
+      subscription: again.id,
+    });
+    expect((await sendEvent('customer.subscription.created', again)).status).toBe(200);
+    expect(await prisma.subscription.findUnique({ where: { userId: user.id } })).toMatchObject({
+      stripeSubscriptionId: again.id,
+      plan: 'PREMIUM',
+      status: 'active',
+    });
+    expect(data(await agent.get('/api/billing'))).toMatchObject({ plan: 'PREMIUM', source: 'STRIPE' });
+  });
+
   it('finds the account by the subscription’s metadata when it comes before the checkout', async () => {
     const { user } = await signUp('EarlyEvent');
     const sub = subscriptionObject({
@@ -724,5 +769,74 @@ describe('the daily clean-up', () => {
     expect(data(res).oldStripeEvents).toBeGreaterThanOrEqual(1);
     expect(await prisma.stripeEvent.findUnique({ where: { id: old } })).toBeNull();
     expect(await prisma.stripeEvent.findUnique({ where: { id: recent } })).not.toBeNull();
+  });
+});
+
+// The invite offer (19 Nov 2026, docs/API.md "The invite offer"): half price for 3 months on the
+// invited map's paid plan, for a new account that subscribes within 7 days
+describe('the invite offer', () => {
+  /** A First Class owner invites a new address; it signs up from the link. */
+  async function invitedNewcomer(label) {
+    const owner = await signUp(`${label}Owner`);
+    await givePlan(owner.user.id, { plan: 'PREMIUM' });
+    const map = await defaultMapOf(owner.agent);
+    const email = testEmail(label);
+    expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email, role: 'VIEWER' })).status).toBe(201);
+    await vi.waitFor(() => expect(sentEmails().filter((e) => e.to === email && e.template === 'shareEmail')).toHaveLength(1));
+    const mail = sentEmails().find((e) => e.to === email && e.template === 'shareEmail');
+    expect(mail.context).toMatchObject({ offerPlanName: 'First Class', offerYearly: '£14.99' });
+    const token = mail.context.actionUrl.split('/').pop();
+    expect(data(await anon().get(`/api/invites/${token}`)).invite.offer).toEqual({ plan: 'PREMIUM', planName: 'First Class' });
+    const agent = anon();
+    const res = await agent.post('/api/auth/sign-up/email').send({ email, password: PASSWORD, name: label, inviteToken: token });
+    expect(res.status).toBe(200);
+    const user = await prisma.user.findUniqueOrThrow({ where: { email } });
+    trackUser(user.id);
+    return { agent, user, map };
+  }
+
+  it('gives the new account the map’s plan at half price, for monthly and yearly Checkouts', async () => {
+    const { agent, user } = await invitedNewcomer('Halfprice');
+    await vi.waitFor(async () => expect(data(await agent.get('/api/billing')).inviteOffer).toMatchObject({ plan: 'PREMIUM' }));
+
+    expect((await agent.post('/api/billing/checkout').send({ plan: 'PREMIUM', interval: 'MONTH' })).status).toBe(200);
+    expect(callsTo('checkout.sessions.create').at(-1).args[0]).toMatchObject({
+      discounts: [{ coupon: 'invite-offer-half-3-months' }],
+      subscription_data: { metadata: { userId: user.id, inviteOffer: 'PREMIUM' } },
+    });
+    expect(callsTo('coupons.create').at(-1).args[0]).toMatchObject({ id: 'invite-offer-half-3-months', percent_off: 50, duration: 'repeating', duration_in_months: 3 });
+
+    // Yearly: the same saving off the first year, never half the year
+    expect((await agent.post('/api/billing/checkout').send({ plan: 'REGULAR', interval: 'YEAR' })).status).toBe(200);
+    expect(callsTo('checkout.sessions.create').at(-1).args[0].discounts).toEqual([{ coupon: 'invite-offer-year-regular' }]);
+    expect(callsTo('coupons.create').at(-1).args[0]).toMatchObject({ amount_off: 749, currency: 'gbp', duration: 'once' });
+    // Not with extra maps in the same Checkout
+    await agent.post('/api/billing/checkout').send({ plan: 'PREMIUM', interval: 'MONTH', extraMaps: 1 });
+    expect(callsTo('checkout.sessions.create').at(-1).args[0].discounts).toBeUndefined();
+
+    // The subscription it started: used, once
+    const sub = subscriptionObject({ id: `sub_it_${RUN}_offer`, customer: `cus_it_${RUN}_offer`, userId: user.id, lines: [['price_it_premium_month', 1]] });
+    sub.metadata.inviteOffer = 'PREMIUM';
+    expect((await sendEvent('customer.subscription.created', sub)).status).toBe(200);
+    expect((await prisma.profile.findUnique({ where: { userId: user.id } })).inviteOfferUsedAt).toBeInstanceOf(Date);
+    expect(data(await agent.get('/api/billing')).inviteOffer).toBeNull();
+  });
+
+  it('ends 7 days after signing up', async () => {
+    const { agent, user } = await invitedNewcomer('Lateone');
+    await vi.waitFor(async () => expect(data(await agent.get('/api/billing')).inviteOffer).not.toBeNull());
+    await prisma.profile.update({ where: { userId: user.id }, data: { inviteOfferEndsAt: new Date(Date.now() - 1000) } });
+    expect(data(await agent.get('/api/billing')).inviteOffer).toBeNull();
+    await agent.post('/api/billing/checkout').send({ plan: 'PREMIUM', interval: 'MONTH' });
+    expect(callsTo('checkout.sessions.create').at(-1).args[0].discounts).toBeUndefined();
+  });
+
+  it('is never given to someone who already had an account', async () => {
+    const owner = await signUp('PaidOwner');
+    await givePlan(owner.user.id, { plan: 'PREMIUM' });
+    const map = await defaultMapOf(owner.agent);
+    const old = await signUp('OldTimer');
+    expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: old.email, role: 'EDITOR' })).status).toBe(201);
+    expect(data(await old.agent.get('/api/billing')).inviteOffer).toBeNull();
   });
 });

@@ -248,7 +248,8 @@ export async function createPin(map, body = {}) {
   db.pinVisits ||= [];
   if (db.pins.filter((p) => p.mapId === map.id).length >= PINS_PER_MAP) return { status: 409, error: MESSAGES.pinsFull };
   const now = new Date().toISOString();
-  const pin = { id: newId(), mapId: map.id, countryCode: country, notes: null, hidden: false, createdById: me().id, createdAt: now, ...parsed.value };
+  // A new pin is the editors' own unless shared (`hidden: false`), as the server (a pin is an exact spot)
+  const pin = { id: newId(), mapId: map.id, countryCode: country, notes: null, hidden: true, createdById: me().id, createdAt: now, ...parsed.value };
   db.pins.push(pin);
   if (visit) db.pinVisits.push({ id: newId(), pinId: pin.id, notes: null, photoIds: [], createdAt: now, ...visit });
   return { pin: pinDetail(pin.id, 'OWNER') };

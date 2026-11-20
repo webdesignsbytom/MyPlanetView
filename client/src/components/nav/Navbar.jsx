@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 // Icons
-import { FaCaretDown } from 'react-icons/fa6';
+import SvgIcon from '@/components/common/SvgIcon';
+import { CARET_DOWN_ICON } from '@/utils/data/svgIcons';
 // Context
 import { useAuth } from '@/auth/AuthContext';
 // Constants
@@ -88,11 +89,11 @@ function Navbar({ variant = 'bar' }) {
       ref={navRef}
       role='navigation'
       aria-label='Main Navigation'
-      // The column variant lives in PosterFrame, whose side padding keeps the bar clear of
-      // the brass corners below lg; from lg it's a full-height column (the corners sit over
-      // its ends). The plain bar (pages without the frame) stops short of the corners from
-      // md up. Both are the travel-paperwork card: aged parchment, thin brown edge, dashed
-      // printed line.
+      // The column variant is PosterFrame's `nav`: below lg a full-width bar across the top
+      // of the screen, the red frame and its brass corners starting under it; from lg a
+      // full-height column inside the frame (the corners sit over its ends). The plain bar
+      // (pages without the frame) stops short of the corners from md up. Both are the
+      // travel-paperwork card: aged parchment, thin brown edge, dashed printed line.
       className={`relative z-50 h-fit rounded-lg paper-aged ticket-edge text-poster-ink no__highlights ${
         column ? COLUMN_NAV : 'md:mx-14'
       }`}
@@ -185,7 +186,7 @@ function DesktopNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut
               >
                 <span aria-hidden='true' />
                 <span itemProp='name'>{label}</span>
-                <FaCaretDown size={12} aria-hidden='true' />
+                <SvgIcon icon={CARET_DOWN_ICON} height={12} width={12} />
               </button>
               {/* In the column it opens beside the button and upward: the button is near the
                   column's foot, so opening downward ran off the bottom of the screen */}
@@ -274,7 +275,7 @@ function MobileNavSection({ navLinkItemsArray, user, handleLogout, isLoggingOut,
                   <span aria-hidden='true' />
                   <span>{label}</span>
                   <span className={`grid transition-transform duration-300 ${openMobileDropdown === label ? 'rotate-180' : ''}`}>
-                    <FaCaretDown size={12} aria-hidden='true' />
+                    <SvgIcon icon={CARET_DOWN_ICON} height={12} width={12} />
                   </span>
                 </button>
 

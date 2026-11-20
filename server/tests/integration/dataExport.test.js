@@ -103,4 +103,11 @@ describe('data export', () => {
     expect((await owner.agent.get(`/api/users/export/maps/${map.id}/photos?cursor=nonsense`)).status).toBe(400);
     expect((await anon().get('/api/users/export')).status).toBe(401);
   });
+
+  // 19 Nov 2026, the user's decision: taken off a map, you no longer get the photos you'd added there
+  it('leaves out photos on a map you’ve been taken off', async () => {
+    expect((await friend.agent.delete(`/api/maps/${friendsMap.id}/members/${owner.user.id}`)).status).toBe(200);
+    expect(data(await owner.agent.get('/api/users/export/uploads')).photos).toEqual([]);
+    expect(data(await owner.agent.get('/api/users/export')).photosOnOtherMaps).toBe(0);
+  });
 });

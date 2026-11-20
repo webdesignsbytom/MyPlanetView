@@ -18,10 +18,17 @@ import PoleNameLabels from './PoleNameLabels';
 import { StarBadgeSymbols } from './StarBadge';
 import { PoleMarkerSymbols } from './PoleMarker';
 import { MomentMarkSymbol } from './MomentMark';
+import MapKeyboardHint from './MapKeyboardHint';
+// Utils
+import { clearPointerFocus, markPointerFocus } from '@/utils/map/pointerFocus';
 
 const NO_VISITS = {};
 const NO_MOMENTS = {};
 const NO_SPOTS = [];
+// The country names are drawn for the zoom rounded down to eighths of a doubling (about 9%
+// apart), so about 250 labels are resized a few times per doubling, not on every wheel tick
+// or pinch frame (the landmark pins' rule, pinZoomStep; 19 Nov 2026, the audit)
+const labelZoom = (zoom) => 2 ** (Math.floor(Math.log2(Math.max(zoom, 1e-3)) * 8) / 8);
 // The badge, pole and moment art, defined once in the SVG; constant elements, so zoom
 // re-renders skip them
 const BADGE_SYMBOLS = <StarBadgeSymbols />;
@@ -90,13 +97,18 @@ function WorldMap({
       <svg
         ref={viewport.svgRef}
         preserveAspectRatio='xMidYMid meet'
-        className={`h-full w-full select-none [&_path]:[vector-effect:non-scaling-stroke] [&_circle]:[vector-effect:non-scaling-stroke] [&_polyline]:[vector-effect:non-scaling-stroke] ${
+        // Never a focus ring round the whole map (19 Nov 2026, the user's wish: a click then
+        // any key, a screenshot's shortcut too, drew one): its keyboard focus shows as the
+        // hint below instead
+        className={`peer h-full w-full select-none outline-none [&_path]:[vector-effect:non-scaling-stroke] [&_circle]:[vector-effect:non-scaling-stroke] [&_polyline]:[vector-effect:non-scaling-stroke] ${
           panZoom ? GRAB_CURSORS : ''
         }`}
         role={panZoom ? 'application' : 'img'}
         aria-label={label}
         aria-describedby={panZoom ? hintId : undefined}
         tabIndex={panZoom ? 0 : undefined}
+        onPointerDownCapture={panZoom ? markPointerFocus : undefined}
+        onBlur={panZoom ? clearPointerFocus : undefined}
         {...(panZoom ? viewport.handlers : {})}
       >
         {BADGE_SYMBOLS}
@@ -119,7 +131,7 @@ function WorldMap({
         />
         {showSky ? <SkyBodies zoom={zoom} /> : null}
         {showCountryNames ? (
-          <CountryNameLabels zoom={zoom} visitsByCode={visitsByCode} showAntarctica={showAntarctica} splitUk={splitUk} />
+          <CountryNameLabels zoom={labelZoom(zoom)} visitsByCode={visitsByCode} showAntarctica={showAntarctica} splitUk={splitUk} />
         ) : null}
         <VisitBadges visitsByCode={visitsByCode} zoom={zoom} faded={!showVisited} showAntarctica={showAntarctica} splitUk={splitUk} />
         {showMoments ? <MomentMarks counts={momentCounts} zoom={zoom} showAntarctica={showAntarctica} /> : null}
@@ -140,11 +152,12 @@ function WorldMap({
         ) : null}
         {stops?.length ? <StopMarkers stops={stops} zoom={zoom} /> : null}
       </svg>
+      {/* How to move the map: read out with it, and shown while it has the keyboard's focus */}
       {panZoom ? (
-        <p id={hintId} className='sr-only'>
+        <MapKeyboardHint id={hintId}>
           Drag, or use the arrow keys, to move the map. Plus and minus zoom, as does a double-tap; 0 shows the whole
           world. Every country and special place is also in the country list.
-        </p>
+        </MapKeyboardHint>
       ) : null}
     </>
   );

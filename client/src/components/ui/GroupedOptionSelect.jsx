@@ -1,4 +1,5 @@
 import React from 'react';
+import useHydrated from '@/hooks/useHydrated';
 
 // Dropdown for long lists, with options under group headings, styled by styles/select.css.
 // groups: [{ label, options }], each option a string or { value, label, disabled }
@@ -19,6 +20,8 @@ function GroupedOptionSelect({
   ariaLabel,
   className = '',
 }) {
+  // The custom box only once hydrated: a pre-rendered page must not carry it (useHydrated)
+  const hydrated = useHydrated();
   const chosen = groups
     .flatMap((group) => group.options)
     .map((option) => (typeof option === 'string' ? { value: option, label: option } : option))
@@ -45,9 +48,11 @@ function GroupedOptionSelect({
           name is the title), so dropdowns side by side are always the same height (17 Nov 2026).
           Customizable select only; other browsers ignore it. React 19 logs a "cannot be a
           child of" warning in development for it, as for RichOptionSelect. */}
-      <button type='button'>
-        <selectedcontent></selectedcontent>
-      </button>
+      {hydrated ? (
+        <button type='button'>
+          <selectedcontent></selectedcontent>
+        </button>
+      ) : null}
 
       {placeholder ? (
         <option value='' disabled hidden>

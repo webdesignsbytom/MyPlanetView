@@ -1,14 +1,19 @@
 import React, { memo, useCallback, useEffect, useId, useRef, useState } from 'react';
 // Icons
 import { FaArrowLeft } from 'react-icons/fa';
+import { FiList } from 'react-icons/fi';
 // Hooks
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import useCountryMapData from '@/hooks/useCountryMapData';
 // Components
 import MapZoomControls from '@/components/map/MapZoomControls';
+import MapRoundButton from '@/components/map/MapRoundButton';
+import MapPanel from '@/components/map/MapPanel';
+import MapKeyboardHint from '@/components/map/MapKeyboardHint';
 import { StarBadgeSymbols } from '@/components/map/StarBadge';
 import { MomentSpotIcon } from '@/components/map/MomentSpotPins';
 import StatePopover from './StatePopover';
+import CountryMapList from './CountryMapList';
 import CountryMapLoading from './CountryMapLoading';
 import CountryFlag from './CountryFlag';
 // Utils
@@ -17,6 +22,7 @@ import { badgeIdFor, badgeRadius } from '@/utils/map/badges';
 import { countryName } from '@/utils/map/countries';
 import { placeOnCountryMap, positionOnCountryMap } from '@/utils/map/countryMapGeo';
 import { MAP_WIDTH, REFERENCE_PX_PER_UNIT } from '@/utils/map/projection';
+import { clearPointerFocus, markPointerFocus } from '@/utils/map/pointerFocus';
 
 // A map pin, its tip at (0, 0) (MomentSpotPins' drop), about 3 units tall
 const PIN_PATH = 'M0 0C-0.35-0.7-1-1.25-1-2A1 1 0 0 1 1-2C1-1.25 0.35-0.7 0 0Z';
@@ -65,18 +71,35 @@ const StateBadges = memo(function StateBadges({ areas, statuses, countryCode, zo
 
 // The states' names, each drawn once it fits inside its state at the zoom (under its star
 // when it has one)
+// The names that fit inside their state and don't run into a name already placed, the widest
+// states first, so a small state's name never overlaps its neighbour's (France's Nord and
+// Pas-de-Calais did; 19 Nov 2026, the audit). Zoomed in, the names shrink and more fit.
+function placedNames(areas, statuses, size, r) {
+  const boxes = [];
+  const shown = [];
+  const byWidth = areas.filter((area) => area.name).sort((a, b) => b.width - a.width);
+  for (const area of byWidth) {
+    const w = area.name.length * CHAR_WIDTH * size;
+    if (w > area.width * 0.92) continue;
+    const y = area.at[1] + (countsAsVisited(statuses.get(area.code)) ? r + size * 0.9 : size * 0.35);
+    const box = [area.at[0] - w / 2, y - size * 0.8, area.at[0] + w / 2, y + size * 0.25];
+    if (boxes.some((b) => box[0] < b[2] && b[0] < box[2] && box[1] < b[3] && b[1] < box[3])) continue;
+    boxes.push(box);
+    shown.push({ area, y });
+  }
+  return shown;
+}
+
 const StateNames = memo(function StateNames({ areas, statuses, zoom }) {
   const size = LABEL_PX / (zoom * REFERENCE_PX_PER_UNIT);
   const r = badgeRadius(zoom);
   return (
     <g className='pointer-events-none fill-map-ink font-medium' fontSize={size} textAnchor='middle' aria-hidden='true'>
-      {areas.map((area, i) =>
-        area.name && area.name.length * CHAR_WIDTH * size <= area.width * 0.92 ? (
-          <text key={area.code ?? i} x={area.at[0]} y={area.at[1] + (countsAsVisited(statuses.get(area.code)) ? r + size * 0.9 : size * 0.35)}>
-            {area.name}
-          </text>
-        ) : null,
-      )}
+      {placedNames(areas, statuses, size, r).map(({ area, y }, i) => (
+        <text key={area.code ?? i} x={area.at[0]} y={y}>
+          {area.name}
+        </text>
+      ))}
     </g>
   );
 });
@@ -89,7 +112,8 @@ const Pins = memo(function Pins({ geo, pins, zoom, selectedId }) {
     return (
       <g key={pin.id} data-pin={pin.id} transform={`translate(${at.x} ${at.y}) scale(${selected ? scale * 1.25 : scale})`} className='cursor-pointer'>
         <title>{pin.name}</title>
-        <path d={PIN_PATH} strokeWidth={1.5} className={`${pin.hidden ? 'opacity-60' : ''} fill-poster-red stroke-poster-ink`} />
+        {/* Every pin the same: most are the editors' own now (shared ones are the exception) */}
+        <path d={PIN_PATH} strokeWidth={1.5} className='fill-poster-red stroke-poster-ink' />
         <circle cy={-2} r={0.42} className='fill-poster-cream' />
       </g>
     );
@@ -108,6 +132,7 @@ const Pins = memo(function Pins({ geo, pins, zoom, selectedId }) {
  */
 function CountryMapView({ code, source, canEdit = false, locked = false, pinsVersion = 0, selectedPinId = null, onOpenPin, onNewPin, onVisitsChanged, onClose }) {
   const headingId = useId();
+  const hintId = useId();
   const { geo, statuses, pins, error, setStatus } = useCountryMapData({ source, code, pinsVersion });
   const extent = geo ? { top: 0, bottom: geo.height } : EMPTY_EXTENT;
   const viewport = useMapViewport({ extent });
@@ -117,8 +142,13 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
   const [placing, setPlacing] = useState(false);
   const [popover, setPopover] = useState(null); // { code, name, x, y }
   const [statusError, setStatusError] = useState(null);
+  // The states and pins as a list: a round stamp at the top left on every screen, the list a
+  // panel in the middle (19 Nov 2026, the user's wish: its button made the header look poor)
+  const [listOpen, setListOpen] = useState(false);
   const name = countryName(code);
   const info = geo?.word;
+  const many = info?.[1] || 'states';
+  const listTitle = `${many[0].toUpperCase()}${many.slice(1)} and pins`;
   const marked = geo ? geo.areas.filter((a) => a.code && ['VISITED', 'LIVED'].includes(statuses.get(a.code))).length : 0;
   const total = geo ? geo.areas.filter((a) => a.code).length : 0;
 
@@ -149,16 +179,44 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
     return () => cancelAnimationFrame(frame);
   }, [geo, fitCountry]);
 
+  // Focus starts on the country's name: the button that opened the map went with the world
+  // map, and focus was left on the page (19 Nov 2026, the audit)
+  const headingRef = useRef(null);
+  useEffect(() => {
+    headingRef.current?.focus({ preventScroll: true });
+  }, []);
+
+  // A state's card gives focus back to what opened it (the map, or the list's button)
+  const popoverOpenerRef = useRef(null);
+  const openPopover = useCallback((next, opener) => {
+    popoverOpenerRef.current = opener ?? null;
+    setStatusError(null);
+    setPopover(next);
+  }, []);
+  const closePopover = useCallback(() => {
+    setPopover(null);
+    const opener = popoverOpenerRef.current;
+    popoverOpenerRef.current = null;
+    if (opener?.isConnected) opener.focus({ preventScroll: true });
+  }, []);
+
   // Escape: stop placing a pin, else close the popover
   useEffect(() => {
     const onKey = (e) => {
       if (e.key !== 'Escape') return;
       if (placing) setPlacing(false);
-      else if (popover) setPopover(null);
+      else if (popover) closePopover();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [placing, popover]);
+  }, [placing, popover, closePopover]);
+
+  // A state from the list: its card beside the list's button
+  const openStateFromList = (stateCode, button) => {
+    const area = geo?.areas.find((a) => a.code === stateCode);
+    const rect = button.getBoundingClientRect();
+    openPopover({ code: stateCode, name: area?.name ?? stateCode, x: rect.right, y: rect.top }, button);
+  };
 
   const svgPoint = (e) => {
     const svg = e.currentTarget.ownerSVGElement ?? e.currentTarget;
@@ -188,8 +246,7 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
       }
       if (stateCode) {
         const area = geo.areas.find((a) => a.code === stateCode);
-        setStatusError(null);
-        setPopover({ code: stateCode, name: area?.name ?? stateCode, ...at });
+        openPopover({ code: stateCode, name: area?.name ?? stateCode, ...at }, document.activeElement);
       } else setPopover(null);
     });
   };
@@ -198,7 +255,10 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
     setStatusError(null);
     try {
       const implied = await setStatus(stateCode, status);
-      if (implied.length) onVisitsChanged?.();
+      // The world map and the badges catch up after a change that brought visits, and after
+      // a clear: a state that is a region's own visit (Hawaii's) takes that visit with it
+      // (19 Nov 2026, the audit)
+      if (implied.length || status === null) onVisitsChanged?.();
     } catch (err) {
       setStatusError(err.friendlyMessage || 'That change could not be saved.');
     }
@@ -234,8 +294,13 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
         preserveAspectRatio='xMidYMid meet'
         role='application'
         aria-label={`Map of ${name}${info ? `: its ${info[1]}` : ''}${placing ? '. Press where the pin goes' : ''}`}
+        aria-describedby={hintId}
         tabIndex={0}
-        className={`h-full w-full select-none [&_path]:[vector-effect:non-scaling-stroke] ${placing ? 'cursor-crosshair' : 'cursor-grab data-[grabbing]:cursor-grabbing'}`}
+        // No focus ring, as on the world map (utils/map/pointerFocus.js): the hint below shows
+        // the keyboard's focus instead
+        onPointerDownCapture={markPointerFocus}
+        onBlur={clearPointerFocus}
+        className={`peer h-full w-full select-none outline-none [&_path]:[vector-effect:non-scaling-stroke] ${placing ? 'cursor-crosshair' : 'cursor-grab data-[grabbing]:cursor-grabbing'}`}
         {...viewport.handlers}
         onClick={handleClick}
       >
@@ -262,18 +327,22 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
           </>
         ) : null}
       </svg>
+      <MapKeyboardHint id={hintId}>
+        Drag, or use the arrow keys, to move the map. Plus and minus zoom; 0 shows all of it. Every {info?.[0] || 'state'} and
+        pin is also in the list, top left.
+      </MapKeyboardHint>
 
       {/* The header, centred: back to the world, the country and how many of its states, a
           new pin; one slim row on wide screens, stacked on phones */}
       <div className='pointer-events-none absolute inset-x-16 top-3 grid justify-items-center nophone:inset-x-72'>
-        <div ref={headerRef} className='ticket-edge paper-aged pointer-events-auto grid max-w-full justify-items-center gap-2 px-4 py-2 text-center'>
+        <div ref={headerRef} className='ticket-edge paper-aged pointer-events-auto grid max-w-full justify-items-center gap-2 px-4 py-2 text-center text-poster-ink'>
           <div className='grid items-center justify-items-center gap-2 nophone:grid-cols-[auto_auto_auto] nophone:gap-4'>
             <div className='hidden nophone:grid'>{backToWorld}</div>
             {/* The flag beside the name and the count, the two lined up on the left */}
             <div className='grid grid-flow-col items-center gap-3'>
               <CountryFlag code={code} name={name} />
               <div className='grid justify-items-start text-left'>
-                <h2 id={headingId} className='font-travel text-2xl uppercase leading-tight tracking-wide text-colour6'>
+                <h2 id={headingId} ref={headingRef} tabIndex={-1} className='font-travel text-2xl uppercase leading-tight tracking-wide text-colour6 outline-none'>
                   {name}
                 </h2>
                 {geo && info ? (
@@ -302,6 +371,35 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
         </div>
       </div>
 
+      {/* The list's stamp, top left on every screen (the goal tag steps aside while a country is open) */}
+      {geo ? (
+        <div className='absolute left-3 top-3'>
+          <MapRoundButton label={`List the ${many} and pins`} pressed={listOpen} onClick={() => setListOpen((on) => !on)}>
+            <FiList aria-hidden='true' />
+          </MapRoundButton>
+        </div>
+      ) : null}
+
+      {/* The list, a panel in the middle of the screen (the whole screen less a margin on phones) */}
+      {listOpen && geo ? (
+        <div className='pointer-events-none absolute inset-3 z-30 grid nophone:inset-x-0 nophone:inset-y-6 nophone:place-items-center'>
+          <MapPanel title={listTitle} onClose={() => setListOpen(false)}>
+            <CountryMapList
+              areas={geo.areas}
+              statuses={statuses}
+              pins={pins}
+              word={info}
+              onOpenState={openStateFromList}
+              onOpenPin={(id) => {
+                setPopover(null);
+                setListOpen(false);
+                onOpenPin?.(id);
+              }}
+            />
+          </MapPanel>
+        </div>
+      ) : null}
+
       {geo ? (
         <div className='pointer-events-none absolute bottom-3 right-3 grid'>
           <div className='pointer-events-auto'>
@@ -324,7 +422,7 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
           y={popover.y}
           canEdit={canEdit && !locked}
           onChange={(status) => changeStatus(popover.code, status)}
-          onClose={() => setPopover(null)}
+          onClose={closePopover}
         />
       ) : null}
     </section>

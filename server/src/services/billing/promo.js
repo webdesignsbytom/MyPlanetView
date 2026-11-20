@@ -5,8 +5,7 @@
 // needed and the address must be verified (Checkout's own rules), so throwaway sign-ups
 // get nothing. The webhook records when the free month started (subscriptions.js).
 import { normalisePromoCode, promoCodeUsable, promoTrialDays, PROMO_TRIAL_DAYS } from '../../utils/promoCodes.js';
-import { claimPromoCodeInDB, countPromoUses, findProfilePromo, findPromoCodeByCode } from '../../domain/promoCodes.js';
-import { createGrantInDB, findGrantByReason } from '../../domain/billing.js';
+import { claimPromoCodeInDB, countPromoUses, findProfilePromo, findPromoCodeByCode, giveLifetimePlanInDB } from '../../domain/promoCodes.js';
 import { FOR_LIFE_ENDS_AT } from '../../utils/promoCodes.js';
 
 /** A code that a new account may sign up with now, or null. */
@@ -46,9 +45,11 @@ export async function giveLifetimePlan(userId) {
   const promo = profile?.promoCode;
   if (!promo?.freePlan) return false;
   const reason = `Promo code ${promo.code}, for life`;
-  if (await findGrantByReason(userId, reason)) return false;
-  await createGrantInDB({ userId, plan: promo.freePlan, endsAt: FOR_LIFE_ENDS_AT, reason, grantedById: promo.createdById ?? null });
-  return true;
+  return giveLifetimePlanInDB({
+    promoCodeId: promo.id,
+    maxUses: promo.maxUses,
+    grant: { userId, plan: promo.freePlan, endsAt: FOR_LIFE_ENDS_AT, reason, grantedById: promo.createdById ?? null },
+  });
 }
 
 /**

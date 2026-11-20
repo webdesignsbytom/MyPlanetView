@@ -10,7 +10,8 @@ function PasswordInput({
   onChange,
   onBlur,
   onFocus,
-  placeholder = '••••••••',
+  // None by default: dots looked like a password already typed in (19 Nov 2026, the audit)
+  placeholder = '',
   required = false,
   disabled = false,
   readOnly = false,

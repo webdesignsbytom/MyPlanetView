@@ -59,7 +59,7 @@ Shared CSS pieces in `client/src/styles/index.css`:
 - `btn-poster` (primary: poster red, brown edge, travel font, paper shadow, like the nav buttons) and `btn-paper` (secondary, on parchment), for every form submit and call to action;
 - **square corners everywhere**: Tailwind's `--radius-*` tokens are set to 0 in `@theme`, so every `rounded-*` class, the buttons and the dropdowns are square. Only true circles (`rounded-full`) stay round: stamps, badges, rivets, notches.
 
-The red poster frame's corners are brass corner protectors, like an old steamer trunk's (`components/common/BrassCorner.jsx`, placed by `BrassCorners.jsx`; `--brass-*` tokens). They replaced the flat gold triangles. The navbar sits above them.
+The red poster frame's corners are brass corner protectors, like an old steamer trunk's (`components/common/BrassCorner.jsx`, placed by `BrassCorners.jsx`; `--brass-*` tokens). They replaced the flat gold triangles. Below lg (phones, and tablets held upright) the nav is a full-width bar across the top of the screen and the red frame starts under it, its corners on the content alone (`PosterFrame`'s `nav`; 19 Nov 2026, the user's wish); from lg the nav is a column inside the frame, under the corners.
 
 - **Colour tokens** follow NextDummy's `globals.css` approach:
   - `colour1`–`colour5` are fixed neutrals (white, black, greys) and never change between projects.
@@ -161,6 +161,11 @@ It works like Google Docs.
 - **Link previews** (WhatsApp, iMessage) come from a small Vercel route, e.g. `share.<domain>/<code>`, because the cPanel host only serves fixed files.
   - The preview shows the owner's coloured world map, never their photos.
   - The route then sends the visitor on to the app.
+- **Taking your travels with you** (19 Nov 2026, the user's design; docs/API.md "Travel copies"): a child who grows up can ask for copies of the trips, moments and photos they're in on the family map, for a map of their own.
+  - **Copies, not links:** each copied photo has its own files, so the family deleting a photo, or the whole map, never takes the child's away, and the child deleting theirs never touches the family's. Copying costs a little storage; sharing files would have saved it at the price of every delete checking who else uses a file.
+  - **The owner approves, and only the child asks:** the photos are the owner's uploads, and a parent handing travels over unasked wasn't wanted.
+  - **Chosen by trip, by country or photo by photo,** then tidied on their own map: photos aren't tagged with people, so the child removes any they aren't in.
+  - **Never hidden photos or moments, never videos** (their files are in Stream), and the copy follows the child's own plan, as any upload does.
 
 ## Photos
 
@@ -246,7 +251,7 @@ Badges are luggage stickers on a suitcase: an earned one is stuck on, tilted, wi
 
 Built on 16 Nov 2026 (FEATURE-PLAN.md, "Tiers" and "Maps", has the reasons; docs/API.md, "Plans and billing" and "Map limits", the rules).
 
-- **Three plans:** Economy (free), Business (£4.99 a month, £49 a year) and First Class (£8.99, £89), paid through Stripe Checkout, with Stripe's billing portal for the card, invoices and cancelling. Admins can give complimentary memberships for a set time. Names, prices and limits live in one constants file on each side (`plans.js`), so renaming a plan never touches the database.
+- **Three plans:** Economy (free), Business (£4.99 a month, £49 a year) and First Class (£9.99, £99), paid through Stripe Checkout, with Stripe's billing portal for the card, invoices and cancelling. Admins can give complimentary memberships for a set time. Names, prices and limits live in one constants file on each side (`plans.js`), so renaming a plan never touches the database.
 - **A map's plan is its owner's,** for everything: photos per country (30, 200, 1,000, every uploader together), originals or a print copy, and the storage safety net (50 GB and 200 GB per map).
 - **One map is included;** each extra map is £3.99 a month (£5.99 on First Class). An extra map that isn't paid for is locked: viewable, shareable and editable, but it takes no new photos. Nothing is ever deleted for lack of payment.
 - **People:** up to 10 editors per map and 20 people per trip, on every plan; viewers and share links are unlimited.

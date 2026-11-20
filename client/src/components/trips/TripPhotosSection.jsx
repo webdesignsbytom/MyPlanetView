@@ -1,4 +1,4 @@
-import React, { Suspense, useMemo, useState } from 'react';
+import React, { Suspense, lazy, useMemo, useState } from 'react';
 // Icons
 import { FaPlay } from 'react-icons/fa';
 // Hooks
@@ -8,8 +8,8 @@ import usePlannedTripPlace from '@/hooks/usePlannedTripPlace';
 // Components
 import { Slideshow } from '@/components/map/lazyMapPanels';
 import PhotoGrid from '@/components/photos/PhotoGrid';
-import PhotoUploader from '@/components/photos/PhotoUploader';
 import PhotoViewer from '@/components/photos/PhotoViewer';
+import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import PrintDownload from '@/components/photos/PrintDownload';
 import Modal from '@/components/common/Modal';
 import Button from '@/components/common/Button';
@@ -17,6 +17,10 @@ import PaperCard from '@/components/common/PaperCard';
 import LockedMapNote from '@/components/plans/LockedMapNote';
 // Utils
 import { isUpcomingPlannedTrip, todayString } from '@/utils/offers/offerContext';
+
+// The uploader is the editors' only: loaded when it's opened, so a share link never downloads
+// it (19 Nov 2026, the audit)
+const PhotoUploader = lazy(() => import('@/components/photos/PhotoUploader'));
 
 // The trip's photos on a paper card (each on its white photo border, from PhotoThumb),
 // with adding (editors), the viewer, and the trip's slideshow (everyone, oldest taken
@@ -76,14 +80,22 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
 
       {uploading ? (
         <Modal title={`Add photos to ${trip.title}`} onClose={() => setUploading(false)}>
-          <PhotoUploader
-            mapId={trip.mapId}
-            tripId={trip.id}
-            defaultCountryCode={trip.stops?.[0]?.countryCode || ''}
-            uploadRules={uploadRules}
-            isOwner={isOwner}
-            onUploaded={(photo) => photos.addPhotos([photo])}
-          />
+          <Suspense
+            fallback={
+              <div className='grid place-items-center py-6' role='status'>
+                <LoadingSpinner />
+              </div>
+            }
+          >
+            <PhotoUploader
+              mapId={trip.mapId}
+              tripId={trip.id}
+              defaultCountryCode={trip.stops?.[0]?.countryCode || ''}
+              uploadRules={uploadRules}
+              isOwner={isOwner}
+              onUploaded={(photo) => photos.addPhotos([photo])}
+            />
+          </Suspense>
         </Modal>
       ) : null}
 

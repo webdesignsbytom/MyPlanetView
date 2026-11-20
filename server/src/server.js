@@ -20,6 +20,7 @@ import mapRouter from './routes/maps.js';
 import tripRouter from './routes/trips.js';
 import photoRouter from './routes/photos.js';
 import momentRouter from './routes/moments.js';
+import travelCopyRouter from './routes/travelCopies.js';
 import pinRouter from './routes/pins.js';
 import goalRouter from './routes/goals.js';
 import promoRouter from './routes/promoCodes.js';
@@ -138,6 +139,8 @@ app.use('/api/maps', mapRouter);
 app.use('/api/trips', tripRouter);
 app.use('/api/photos', photoRouter);
 app.use('/api/moments', momentRouter);
+// Taking your travels with you: one request (docs/API.md "Travel copies")
+app.use('/api/travel-copies', travelCopyRouter);
 app.use('/api/pins', pinRouter);
 app.use('/api/goals', goalRouter);
 app.use('/api/promo-codes', promoRouter);

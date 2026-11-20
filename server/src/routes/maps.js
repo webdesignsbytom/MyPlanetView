@@ -9,6 +9,8 @@ import {
   getMapStatsHandler,
   getMyMapsHandler,
   makeMainMapHandler,
+  upgradeMapHandler,
+  downgradeMapHandler,
   putVisitHandler,
   transferMapHandler,
   updateMapHandler,
@@ -34,14 +36,22 @@ import {
   setStampPhotoHandler,
 } from '../controllers/passport.js';
 import { sharingHandlers } from '../controllers/sharing.js';
+import {
+  createCopyHandler,
+  getCopyChoicesHandler,
+  getMapCopiesHandler,
+  previewCopyHandler,
+} from '../controllers/travelCopies.js';
 import { getMapThemeAlbumHandler, getMapThemesHandler } from '../controllers/themes.js';
 import { requireVerifiedEmail as verified, validateAuthentication } from '../middleware/auth.js';
+import { getCountryListsHandler } from '../controllers/countryLists.js';
 import { createDbRateLimiter, keyByUserId } from '../middleware/dbRateLimit.js';
 import {
   MAP_CREATE_DAILY_USER_LIMIT,
   MEMBER_INVITE_DAILY_USER_LIMIT,
   MEMBER_INVITE_RATE_LIMIT,
   PHOTO_PRESIGN_RATE_LIMIT,
+  TRAVEL_COPY_DAILY_USER_LIMIT,
 } from '../utils/constants/rateLimitConstants.js';
 
 // Mounted at /api/maps. Everything needs a signed-in user; roles are checked per map.
@@ -55,6 +65,8 @@ const memberInviteLimiter = createDbRateLimiter(MEMBER_INVITE_RATE_LIMIT);
 const memberInviteDailyLimiter = createDbRateLimiter({ ...MEMBER_INVITE_DAILY_USER_LIMIT, keyFor: keyByUserId });
 // New maps a day, per user
 const mapCreateDailyLimiter = createDbRateLimiter({ ...MAP_CREATE_DAILY_USER_LIMIT, keyFor: keyByUserId });
+// Requests to copy your travels a day, per user (each emails the family map's owner)
+const travelCopyDailyLimiter = createDbRateLimiter({ ...TRAVEL_COPY_DAILY_USER_LIMIT, keyFor: keyByUserId });
 
 router.use(validateAuthentication);
 
@@ -67,6 +79,9 @@ router.delete('/:mapId', verified, deleteMapHandler);
 router.get('/:mapId/stats', getMapStatsHandler);
 // Owner only: the included (main) map, and handing a map to someone on it
 router.post('/:mapId/main', verified, makeMainMapHandler);
+// Put a map on the owner's plan (a paid extra map's slot), or take it back (19 Nov 2026)
+router.post('/:mapId/upgrade', verified, upgradeMapHandler);
+router.delete('/:mapId/upgrade', verified, downgradeMapHandler);
 // Counts as making a map: handing over your main map makes you a new one (17 Nov 2026)
 router.post('/:mapId/transfer', verified, mapCreateDailyLimiter, transferMapHandler);
 
@@ -87,6 +102,8 @@ router.post('/:mapId/trips', verified, createTripHandler);
 router.post('/:mapId/photos/presign', verified, photoPresignLimiter, presignPhotoHandler);
 router.post('/:mapId/photos', verified, createPhotoHandler);
 router.get('/:mapId/photos', getMapPhotosHandler);
+// Every country ticket's first pages of photos and moments, in one reply (the map's loading screen)
+router.get('/:mapId/country-lists', getCountryListsHandler);
 
 // First Class videos (Cloudflare Stream; docs/API.md "Videos"): start the upload, then save it
 router.post('/:mapId/videos/upload', verified, photoPresignLimiter, startVideoUploadHandler);
@@ -116,6 +133,14 @@ router.post('/:mapId/goals', verified, createGoalHandler);
 // Monthly photo themes: the map's albums (docs/API.md, "Photo themes")
 router.get('/:mapId/themes', getMapThemesHandler);
 router.get('/:mapId/themes/:themeId/photos', getMapThemeAlbumHandler);
+
+// Taking your travels with you (docs/API.md "Travel copies"): on the family map, what a
+// traveller can take, what it comes to on their own map, and asking for it; on any map, the
+// requests to copy from it and onto it (its owner and co-owners)
+router.get('/:mapId/travel-copy-choices', getCopyChoicesHandler);
+router.post('/:mapId/travel-copies/preview', verified, previewCopyHandler);
+router.post('/:mapId/travel-copies', verified, travelCopyDailyLimiter, createCopyHandler);
+router.get('/:mapId/travel-copies', getMapCopiesHandler);
 
 // Sharing
 router.get('/:id/sharing', sharing.get);

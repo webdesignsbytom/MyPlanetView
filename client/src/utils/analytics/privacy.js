@@ -23,14 +23,20 @@ const ROUTES = [
 // Campaign tags are the only query parameters kept; any other one could be a token
 const KEPT_PARAM = /^utm_[a-z]+$/;
 
+// Matched in lower case: the router opens '/Shared/<code>' as it does '/shared/<code>', so the
+// secret must be found whatever the case (19 Nov 2026, the audit)
+
 // A page whose address carries a secret: no analytics while it shows
-export const isAnalyticsExcluded = (pathname) =>
-  ANALYTICS_EXCLUDED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+export const isAnalyticsExcluded = (pathname) => {
+  const path = String(pathname).toLowerCase();
+  return ANALYTICS_EXCLUDED_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
+};
 
 // '/shared/K7QX-M2PA-9RTW' -> '/shared/:code' (anything below the prefix, however deep);
 // '/maps/abc/passport' -> '/maps/:mapId/passport'
 function redactPath(pathname) {
-  const route = ROUTES.find(({ test }) => test(pathname));
+  const path = pathname.toLowerCase();
+  const route = ROUTES.find(({ test }) => test(path));
   return route ? route.pattern : pathname;
 }
 

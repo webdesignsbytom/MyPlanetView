@@ -50,6 +50,10 @@ model User {
   // Friends challenges this user started, and the ones they're in
   startedChallenges FriendChallenge[]      @relation("ChallengeCreator")
   challengeEntries  FriendChallengeEntry[]
+  // Taking your travels with you (docs/API.md "Travel copies"): the copies this user asked
+  // for, and the ones they approved or declined as a family map's owner or co-owner
+  travelCopyRequests  TravelCopyRequest[] @relation("TravelCopyRequester")
+  travelCopyDecisions TravelCopyRequest[] @relation("TravelCopyDecider")
 
   // Influencer codes this admin made (docs/API.md, "Promo codes")
   createdPromoCodes PromoCode[]
@@ -146,6 +150,14 @@ model Profile {
   promoCodeId      String?
   promoCode        PromoCode? @relation(fields: [promoCodeId], references: [id], onDelete: SetNull)
   promoTrialUsedAt DateTime?
+
+  // The invite offer (19 Nov 2026, docs/API.md "The invite offer"): an account made from an
+  // invite to a Business or First Class map may have that plan, or a lower paid one, at half
+  // price for its first 3 months, if it subscribes before `inviteOfferEndsAt` (7 days after
+  // signing up). Never with a promo code. Used once (`inviteOfferUsedAt`, from the webhook).
+  inviteOfferPlan   Plan?
+  inviteOfferEndsAt DateTime?
+  inviteOfferUsedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -254,6 +266,10 @@ model Landmark {
 enum ShareRole {
   VIEWER
   EDITOR
+  // Maps only (19 Nov 2026): one of the map's travellers with their own login, with every
+  // power the owner has on that map but deleting it, handing it over, paying for it and
+  // removing a co-owner. Linked to their traveller by Traveller.userId (docs/API.md "Co-owners")
+  CO_OWNER
 }
 
 enum LinkAccess {
@@ -297,6 +313,11 @@ model TravelMap {
   // the owner's own maps for paid slots (utils/mapSlots.js).
   graceUntil DateTime?
 
+  // When the owner chose to put this map on their plan (POST /maps/:mapId/upgrade; 19 Nov
+  // 2026): such maps take the paid extra-map slots first, in this order, before the rest
+  // oldest first (utils/mapSlots.js). Null: never chosen, or the choice taken back.
+  upgradedAt DateTime?
+
   // The UK as its four nations (England, Scotland, Wales, Northern Ireland) instead of
   // one country, for everyone on the map (docs/API.md "The UK's nations"). On by default
   // for new maps (18 Nov 2026, the user's wish); changing it moves the map's UK visits,
@@ -328,6 +349,10 @@ model TravelMap {
   themeEntries     PhotoThemeEntry[]
   // Friends challenges it counts for (docs/API.md, "Friends challenges")
   challengeEntries FriendChallengeEntry[]
+  // Travel copied from this map to a traveller's own map, and copied onto this one
+  // (docs/API.md "Travel copies")
+  travelCopiesOut TravelCopyRequest[] @relation("TravelCopyFrom")
+  travelCopiesIn  TravelCopyRequest[] @relation("TravelCopyTo")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -356,6 +381,10 @@ model Traveller {
 
   trips   TripTraveller[]
   moments MomentTraveller[]
+  // A pending co-owner invite for this traveller (it goes with the traveller)
+  invites ShareInvite[]
+  // Their travels copied to their own map (docs/API.md "Travel copies")
+  travelCopies TravelCopyRequest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -399,6 +428,11 @@ model ShareInvite {
   invitedById String
   invitedBy   User   @relation(fields: [invitedById], references: [id], onDelete: Cascade)
 
+  // A co-owner invite's traveller: the one they'll be (set exactly when role is CO_OWNER,
+  // CHECK share_invite_co_owner, which also keeps co-owners to maps)
+  travellerId String?
+  traveller   Traveller? @relation(fields: [travellerId], references: [id], onDelete: Cascade)
+
   // The emailed link's token, stored hashed
   tokenHash  String    @unique
   expiresAt  DateTime
@@ -411,6 +445,7 @@ model ShareInvite {
   @@index([mapId])
   @@index([tripId])
   @@index([invitedById])
+  @@index([travellerId])
   @@map("share_invite")
 }
 
@@ -488,9 +523,14 @@ model Trip {
   mapLinks   TripMap[]
   moments    Moment[]
 
+  // The family map's trip this one was copied from (docs/API.md "Travel copies"). No foreign
+  // key: the original may go, and the id only stops the same trip being copied twice
+  copiedFromId String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([mapId, copiedFromId])
   @@index([mapId, startDate])
   // Foreign keys: without these, the SET NULL for each deleted photo or user
   // scans every trip (deleting a 20k-photo map took 148 s, 1.9 s with them)
@@ -652,9 +692,15 @@ model Photo {
   // The monthly themes it's entered in
   themeEntries PhotoThemeEntry[]
 
+  // The family map's photo this one was copied from (docs/API.md "Travel copies"): no
+  // foreign key, as for trips. A copy has files of its own
+  copiedFromId String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // One copy of a photo per map (several NULLs are allowed)
+  @@unique([mapId, copiedFromId])
   // The photo lists' order, keyset on id: the whole map's newest upload first (the
   // hover postcards), a country's and a trip's in their own order. They also serve
   // the photo counts.
@@ -795,9 +841,13 @@ model Moment {
   travellers MomentTraveller[]
   photos     MomentPhoto[]
 
+  // The family map's moment this one was copied from (docs/API.md "Travel copies"), as for trips
+  copiedFromId String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([mapId, copiedFromId])
   // The lists: the map's moments in date order, and a country's
   @@index([mapId, happenedOn])
   @@index([mapId, countryCode, happenedOn])
@@ -806,6 +856,66 @@ model Moment {
   @@index([landmarkId])
   @@index([createdById])
   @@map("moment")
+}
+
+// Taking your travels with you (docs/API.md "Travel copies"; FEATURE-PLAN.md, 19 Nov 2026):
+// someone on a family map asks to copy the trips, moments and photos they're in onto a map of
+// their own, and the family map's owner or a co-owner approves. Approved, the photos' files
+// are copied in R2 under the new map's keys, a batch at a time (services/travel/travelCopies.js).
+// The copies are the new map's own: the family map keeps everything. CHECK
+// travel_copy_maps_differ: never from a map onto itself.
+model TravelCopyRequest {
+  id String @id @default(uuid())
+
+  fromMapId String
+  fromMap   TravelMap @relation("TravelCopyFrom", fields: [fromMapId], references: [id], onDelete: Cascade)
+  toMapId   String
+  toMap     TravelMap @relation("TravelCopyTo", fields: [toMapId], references: [id], onDelete: Cascade)
+  // Who they are on the family map
+  travellerId String
+  traveller   Traveller @relation(fields: [travellerId], references: [id], onDelete: Cascade)
+
+  requestedById String
+  requestedBy   User    @relation("TravelCopyRequester", fields: [requestedById], references: [id], onDelete: Cascade)
+  decidedById   String?
+  decidedBy     User?   @relation("TravelCopyDecider", fields: [decidedById], references: [id], onDelete: SetNull)
+
+  status TravelCopyStatus @default(PENDING)
+
+  // What was chosen, on the family map: its trips and moments, and every photo (the chosen
+  // trips' and countries', the moments', and those picked by hand), resolved when asked
+  tripIds   String[]
+  momentIds String[]
+  photoIds  String[]
+
+  // Progress: how far through photoIds the copying has gone, the photos copied, and the
+  // photos left out (over the new map's plan, or gone since)
+  photoCursor   Int @default(0)
+  copiedPhotos  Int @default(0)
+  skippedPhotos Int @default(0)
+  // A run copying it holds this until it finishes, so two runs never copy at once
+  lockedUntil DateTime?
+
+  createdAt  DateTime  @default(now())
+  decidedAt  DateTime?
+  finishedAt DateTime?
+  updatedAt  DateTime  @updatedAt
+
+  @@index([fromMapId, status])
+  @@index([toMapId, createdAt])
+  // The daily cron finishes approved copies a run left unfinished
+  @@index([status])
+  @@index([travellerId])
+  @@index([requestedById])
+  @@index([decidedById])
+  @@map("travel_copy_request")
+}
+
+enum TravelCopyStatus {
+  PENDING // waiting for the family map's owner or a co-owner
+  APPROVED // approved, copying
+  DONE
+  DECLINED
 }
 
 // Which of the map's travellers a moment is about

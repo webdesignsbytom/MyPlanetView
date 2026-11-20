@@ -11,6 +11,7 @@ import { acceptInviteInDB, findUsableInvitesForEmail } from '../../domain/sharin
 import { heirFor, heirOf, usableLeavingPlan } from '../../utils/leavingPlan.js';
 import { deleteStoredObjects } from '../s3/mediaService.js';
 import { transferMap } from './maps.js';
+import { recordInviteOffer } from '../billing/inviteOffer.js';
 
 // The editor a map passes to by default: the longest-standing active one (a deactivated
 // owner couldn't sign in to manage it), else a deactivated one rather than deleting the
@@ -81,7 +82,11 @@ export async function acceptInvitesForVerifiedUser(user) {
   const invites = await findUsableInvitesForEmail(String(user.email).toLowerCase());
   let accepted = 0;
   for (const invite of invites) {
-    if (await acceptInviteInDB(invite, user.id)) accepted++;
+    if (await acceptInviteInDB(invite, user.id)) {
+      accepted++;
+      // A new account invited to a paid map: half price for 3 months (utils/inviteOffer.js)
+      await recordInviteOffer(user.id, invite).catch((err) => console.error('[INVITE] offer not recorded:', err.message));
+    }
   }
   return accepted;
 }

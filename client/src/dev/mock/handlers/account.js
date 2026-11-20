@@ -4,6 +4,8 @@ import { fail, ok, raw, route, verifyFirst } from '../mockAdapter';
 import { getDb, me, newId, resetStore, saveStore, session } from '../store';
 import { MOCK_PASSWORD } from '../seed';
 import { PROMO_MESSAGES, usablePromoCode } from '../promoCodes';
+import { acceptInviteFor } from './sharing';
+import { mapPlanId, recordInviteOffer } from '../plans';
 import {
   GENERIC_MAX_BYTES,
   UPLOAD_IMAGE_EXTENSIONS,
@@ -34,15 +36,15 @@ const cleanName = (value) =>
 const NAME_REQUIRED = 'Enter your name.';
 
 const MAP_SETTING_KEYS = {
-  style: ['animated', 'old-map'],
+  style: ['animated', 'mono', 'old-map', 'starry'],
   mapType: ['regular', 'detailed'],
   // The landmark pins (the server's LANDMARK_PIN_MODES)
   landmarkPins: ['zoomed', 'always', 'stamped', 'off'],
 };
 // `showMoments`: the marks beside countries with moments; `showGoalTag`: the goal's luggage
-// tag under the map's title; `blackAndWhite`: the map page in greys; `showTips`: the tips
+// tag under the map's title; `showTips`: the tips
 // the map opens with (the server's MAP_SETTING_FLAGS need each of them too)
-const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments', 'showGoalTag', 'blackAndWhite', 'showTips'];
+const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments', 'showGoalTag', 'showTips'];
 
 // The test user's password: the seeded one until changed or reset here. Sign-in isn't
 // held to the rules below (the seeded one doesn't meet them, as on the server).
@@ -77,7 +79,7 @@ export function registerAccountRoutes() {
     return raw({ redirect: false, token: 'mock-session', user: publicUser() });
   });
   // Signing up makes you the test user (renamed), with an address still to verify, as a new
-  // account is; an address a mock user has is taken (422). An optional promo code
+  // account is (unless from an invite's link to that address: verified, and the invite accepted); an address a mock user has is taken (422). An optional promo code
   // (docs/API.md, "Promo codes") that can't be used is refused before anything changes;
   // a good one is recorded (its free month waits for the first paid Checkout).
   route('POST', '/api/auth/sign-up/email', ({ body }) => {
@@ -97,9 +99,26 @@ export function registerAccountRoutes() {
       return authError(422, 'USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL', 'User already exists. Use another email.');
     }
     if (name) me().name = name;
-    me().emailVerified = false;
+    // From an invite's link to this address (19 Nov 2026, as the server): verified at once,
+    // and the invite accepted, so the new account lands on the map it was invited to
+    const invite =
+      typeof body.inviteToken === 'string'
+        ? getDb().invites.find((i) => i.token === body.inviteToken && !i.acceptedAt && i.expiresAt > new Date().toISOString())
+        : null;
+    const fromInvite = Boolean(invite) && invite.email.toLowerCase() === email;
+    me().emailVerified = fromInvite;
     me().promoCodeId = promo ? promo.id : null;
     me().promoTrialUsedAt = null;
+    // A new account: no invite offer until its invite gives one
+    me().inviteOfferPlan = null;
+    me().inviteOfferEndsAt = null;
+    me().inviteOfferUsedAt = null;
+    if (fromInvite) {
+      acceptInviteFor(invite, me().id);
+      // A paid map's invite offer, unless a promo code came with the sign-up (the server's rule)
+      const map = getDb().maps.find((m) => m.id === (invite.mapId || getDb().trips.find((t) => t.id === invite.tripId)?.mapId));
+      if (map) recordInviteOffer(me(), mapPlanId(map));
+    }
     session.signedIn = true;
     return raw({ token: 'mock-session', user: publicUser() });
   });

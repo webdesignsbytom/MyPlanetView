@@ -7,7 +7,7 @@ import { OtherErrorEvent } from '../event/errorUtils.js';
 import { FRONTEND_ORIGINS } from '../utils/config.js';
 import { FrontendUrl } from '../utils/constants/siteConstants.js';
 import {
-  INCLUDED_MAPS,
+  FREE_ECONOMY_MAPS, INCLUDED_MAPS,
   MAX_EXTRA_MAPS,
   isBillingInterval,
   isPlanId,
@@ -15,7 +15,7 @@ import {
   pricesView,
 } from '../utils/constants/plans.js';
 import { hasLiveSubscription } from '../utils/stripeState.js';
-import { findSubscription, forgetStripeEvent, linkStripeCustomer, recordStripeEvent } from '../domain/billing.js';
+import { claimStripeCustomer, findSubscription, forgetStripeEvent, recordStripeEvent } from '../domain/billing.js';
 import { loadUserPlan } from '../services/travel/plans.js';
 import {
   extraMapPriceId,
@@ -27,6 +27,7 @@ import {
 } from '../services/billing/stripe.js';
 import { applyStripeSubscription, latestSubscription, linkCheckoutSession } from '../services/billing/subscriptions.js';
 import { promoTrialFor } from '../services/billing/promo.js';
+import { inviteOfferCouponId, inviteOfferFor } from '../services/billing/inviteOffer.js';
 import { badRequest, conflict, handler, reply } from './helpers/travel.js';
 
 const D = DOMAINS.billing;
@@ -54,9 +55,15 @@ async function billingView(userId) {
     grant: state.grant ? { plan: state.grant.plan, endsAt: state.grant.endsAt } : null,
     // A promo code's free month not yet used, `{ code, days }`: the next paid Checkout gets it
     promoTrial: hasLiveSubscription(sub) ? null : await promoTrialFor(userId),
+    // The invite offer, `{ plan, endsAt }`: half price for 3 months on that plan or a lower paid one
+    inviteOffer: await inviteOfferFor(userId, { hasSubscription: hasLiveSubscription(sub) }),
     includedMaps: INCLUDED_MAPS,
+    // 3 free maps (19 Nov 2026): the main one on the plan and these many more on Economy
+    freeEconomyMaps: FREE_ECONOMY_MAPS,
     extraMapsPaid: state.extraMapsPaid,
     ownedMaps: state.maps.length,
+    // Which owned maps are on Economy (free) and which are locked
+    economyMapIds: state.slots.economyIds,
     lockedMapIds: state.slots.lockedIds,
     prices: pricesView(),
     paymentsEnabled: paymentsEnabled(),
@@ -73,7 +80,7 @@ async function billingView(userId) {
  * click can't pay for two subscriptions (17 Nov 2026, the audit).
  * -> `{ url }`, or null when a price id isn't configured
  */
-async function createCheckout(user, { plan, interval, extraMaps, customerId, trial = null }) {
+async function createCheckout(user, { plan, interval, extraMaps, customerId, trial = null, inviteOffer = null }) {
   const lineItems = [];
   if (plan !== 'FREE') lineItems.push({ price: planPriceId(plan, interval), quantity: 1 });
   if (extraMaps > 0) lineItems.push({ price: extraMapPriceId(plan, interval), quantity: extraMaps });
@@ -81,18 +88,30 @@ async function createCheckout(user, { plan, interval, extraMaps, customerId, tri
   const stripe = await stripeClient();
   let customer = customerId;
   if (!customer) {
-    customer = (await stripe.customers.create({ email: user.email, metadata: { userId: user.id } })).id;
-    await linkStripeCustomer({ userId: user.id, stripeCustomerId: customer });
+    const made = (await stripe.customers.create({ email: user.email, metadata: { userId: user.id } })).id;
+    customer = await claimStripeCustomer({ userId: user.id, stripeCustomerId: made });
+    // Another Checkout (a double click) gave the account its customer first: this one is
+    // never used, so it goes, and both Checkouts share one customer (its open sessions below)
+    if (customer !== made) {
+      try {
+        await stripe.customers.del(made);
+      } catch {
+        // An unused customer left in Stripe: harmless
+      }
+    }
   }
   const open = await stripe.checkout.sessions.list({ customer, status: 'open', limit: 10 });
   for (const session of open?.data ?? []) await stripe.checkout.sessions.expire(session.id);
+  // The invite offer: half price for 3 months (a fixed amount off a yearly plan's first year)
+  const coupon = inviteOffer ? await inviteOfferCouponId(stripe, plan, interval) : null;
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
     line_items: lineItems,
     client_reference_id: user.id,
     metadata: { userId: user.id },
+    ...(coupon ? { discounts: [{ coupon }] } : {}),
     subscription_data: {
-      metadata: { userId: user.id, ...(trial ? { promoCode: trial.code } : {}) },
+      metadata: { userId: user.id, ...(trial ? { promoCode: trial.code } : {}), ...(coupon ? { inviteOffer: inviteOffer.plan } : {}) },
       ...(trial ? { trial_period_days: trial.days } : {}),
     },
     ...(trial ? { payment_method_collection: 'always' } : {}),
@@ -143,15 +162,19 @@ export const checkoutHandler = handler(D, 'Checkout', async (req, res) => {
   // maps in the same Checkout: a trial covers every line, so they'd be free too; the month
   // stays for a later Checkout of the plan alone.
   const trial = extraMaps > 0 ? null : await promoTrialFor(req.user.id, body.plan);
+  // The invite offer, on its plan or a lower paid one, likewise not with extra maps (a coupon
+  // would halve them too) and never with a free month (utils/inviteOffer.js)
+  const inviteOffer = extraMaps > 0 || trial ? null : await inviteOfferFor(req.user.id, { plan: body.plan });
   const checkout = await createCheckout(req.user, {
     plan: body.plan,
     interval: body.interval,
     extraMaps,
     customerId: sub?.stripeCustomerId,
     trial,
+    inviteOffer,
   });
   if (!checkout) return paymentsOff(req, res);
-  const trialDetail = trial ? ` trialDays=${trial.days}` : '';
+  const trialDetail = (trial ? ` trialDays=${trial.days}` : '') + (inviteOffer ? ' inviteOffer' : '');
   logEvent(createBillingEvent({ user: req.user, action: 'Checkout Started', detail: `plan=${body.plan} interval=${body.interval} extraMaps=${extraMaps}${trialDetail}` }));
   return sendDataResponse(res, 200, checkout);
 });

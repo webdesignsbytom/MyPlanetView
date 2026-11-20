@@ -30,7 +30,9 @@ function ChallengeFields({ idPrefix, form, errors = {}, onChange, measureFixed =
       >
         <PlainOptionSelect value={form.measure} onChange={set('measure')} options={MEASURE_OPTIONS} disabled={measureFixed} />
       </FormField>
-      <div className='grid gap-3 sm:grid-cols-2'>
+      {/* Not stretched to one height: the field without a hint grew, and its input sat
+          about 12px off its neighbour's (19 Nov 2026, the audit) */}
+      <div className='grid items-start gap-3 sm:grid-cols-2'>
         <FormField id={`${idPrefix}-starts`} label='First day' error={errors.startsOn} required>
           <TextInput type='date' value={form.startsOn} onChange={set('startsOn')} />
         </FormField>

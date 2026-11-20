@@ -57,13 +57,18 @@ export function checkOfferUrl(value) {
   if (typeof value !== 'string' || !value || value.length > OFFER_LIMITS.url) return null;
   const placeholders = [...value.matchAll(/\{([^{}]*)\}/g)].map((m) => m[1]);
   if (placeholders.some((name) => !URL_PLACEHOLDERS.includes(name))) return null;
-  // Parse with the placeholders filled, so a URL with them in the path or query is valid
+  // Parse with the placeholders filled, so a URL with them in the path or query is valid;
+  // filled two ways, the host must come out the same (no placeholder in the host: the
+  // server's rule, 19 Nov 2026)
   let parsed;
+  let other;
   try {
     parsed = new URL(value.replace(/\{[a-z]+\}/g, 'x'));
+    other = new URL(value.replace(/\{[a-z]+\}/g, 'y'));
   } catch {
     return null;
   }
+  if (parsed.origin !== other.origin) return null;
   if (parsed.protocol !== 'https:' || parsed.username || parsed.password) return null;
   return value;
 }

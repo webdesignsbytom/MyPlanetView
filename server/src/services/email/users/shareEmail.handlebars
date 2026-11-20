@@ -38,10 +38,19 @@
         <h1>{{sharerName}} shared {{resourceKind}} with you</h1>
         <h2>{{resourceName}}</h2>
 
-        <p>You can {{#if canEdit}}view and add to{{else}}view{{/if}} it on {{businessName}}.</p>
+        {{#if isCoOwner}}
+          <p>You're a co-owner{{#if travellerName}}, as {{travellerName}}{{/if}}: you can view it, add to it and
+            change its settings on {{businessName}}.</p>
+        {{else}}
+          <p>You can {{#if canEdit}}view and add to{{else}}view{{/if}} it on {{businessName}}.</p>
+        {{/if}}
+        {{#if offerPlanName}}
+          <p><strong>A welcome offer:</strong> join within 7 days and get {{offerPlanName}} at half price for your
+            first 3 months (or {{offerYearly}} off your first year).</p>
+        {{/if}}
         {{#if isInvite}}
-          <p>To open it, sign in or create a free account with this email address ({{email}}),
-            and verify the address. <strong>This invite expires on {{expiryTime}}.</strong></p>
+          <p>To open it, press the button below, then create a free account with this email address
+            ({{email}}), or sign in if you already have one. <strong>This invite expires on {{expiryTime}}.</strong></p>
         {{/if}}
 
         <p>

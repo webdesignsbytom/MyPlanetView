@@ -1,5 +1,5 @@
 import { test, expect, openMap, openTool, openUploader as openUploadPanel, MOCK_STORE_KEY, mapReady } from './fixtures.js';
-import { hasLocationMarker, readVideoInfo, stripVideoLocation, VIDEO_CHECK_FAILED } from '../../src/utils/photos/videoFile.js';
+import { hasLocationMarker, readVideoInfo, stripVideoLocation, VIDEO_CHECK_FAILED, VIDEO_HAS_GPS_TRACK } from '../../src/utils/photos/videoFile.js';
 
 // First Class videos (docs/API.md, "Videos"). The seeded test user is on Business, so
 // their map refuses videos until the mock badge makes them First Class. A video goes to
@@ -198,7 +198,7 @@ test.describe('Videos', () => {
 
     // The country's slideshow, at 8 seconds a photo: the video starts muted, can be
     // unmuted, and when it ends (2 s) the show moves on without waiting for the timer
-    await iceland.getByRole('button', { name: 'Slideshow of Iceland' }).click();
+    await iceland.getByRole('button', { name: 'Play slideshow' }).click();
     const show = page.getByRole('dialog', { name: 'Slideshow: Iceland' });
     await show.getByRole('button', { name: '8 seconds a photo' }).click();
     const stage = show.locator('[data-slide-id]');
@@ -352,6 +352,18 @@ test.describe('Video files', () => {
     for (const buffer of [noMovie, broken, timed]) {
       await expect(stripVideoLocation(asFile(buffer))).rejects.toThrow(VIDEO_CHECK_FAILED);
     }
+  });
+
+  test('XMP in the user data is taken out; XMP with GPS at the top level, or a GPS track of its own, is refused', async () => {
+    const xmp = mp4(10, box('udta', box('XMP_', Buffer.from('<exif:GPSLatitude>41,53.41N</exif:GPSLatitude>', 'latin1'))));
+    const cleaned = Buffer.from(await (await stripVideoLocation(asFile(xmp))).arrayBuffer());
+    expect(cleaned.length).toBe(xmp.length);
+    expect(hasLocationMarker(cleaned)).toBe(false);
+    const topXmp = Buffer.concat([mp4(10), box('uuid', Buffer.alloc(16), Buffer.from('<exif:GPSLongitude>12,29.53E</exif:GPSLongitude>', 'latin1'))]);
+    await expect(stripVideoLocation(asFile(topXmp))).rejects.toThrow(VIDEO_CHECK_FAILED);
+    // An action camera's telemetry track (GoPro's gpmd): the positions are in mdat
+    const goPro = mp4(10, box('trak', box('mdia', box('minf', box('stbl', box('stsd', u32(0), u32(1), box('gpmd', Buffer.alloc(8))))))));
+    await expect(stripVideoLocation(asFile(goPro))).rejects.toThrow(VIDEO_HAS_GPS_TRACK);
   });
 
   test('its length is rounded up to whole seconds, and an upright phone video is upright', async () => {

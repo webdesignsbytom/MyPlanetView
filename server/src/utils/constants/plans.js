@@ -35,7 +35,7 @@ export const PLANS = Object.freeze({
     id: 'PREMIUM',
     name: 'First Class',
     rank: 2,
-    price: Object.freeze({ MONTH: 899, YEAR: 8900 }),
+    price: Object.freeze({ MONTH: 999, YEAR: 9900 }),
     extraMap: Object.freeze({ MONTH: 599, YEAR: 5900 }),
     // A First Class map shows no cards to anyone
     adEvery: null,
@@ -43,11 +43,16 @@ export const PLANS = Object.freeze({
   }),
 });
 
-// Maps every account owns without paying; more are extra maps
+// Maps every account owns without paying (19 Nov 2026, the user's wish: 3 free maps): the
+// main one on the account's plan, and FREE_ECONOMY_MAPS more on Economy's limits. Each extra
+// map paid for is one more on the plan (upgrading one of those, or a 4th map and on)
 export const INCLUDED_MAPS = 1;
-// On every plan: editors on a map (EDITOR members plus pending EDITOR invites), and
+export const FREE_MAPS = 3;
+export const FREE_ECONOMY_MAPS = FREE_MAPS - INCLUDED_MAPS;
+// On every plan: editors on a map (EDITOR members plus pending EDITOR invites; 5 since 19 Nov
+// 2026, was 10; co-owners are counted apart: utils/planLimits.js checkCoOwnerCap), and
 // people on a trip (members of any role plus pending invites), counted apart
-export const EDITORS_PER_MAP = 10;
+export const EDITORS_PER_MAP = 5;
 export const PEOPLE_PER_TRIP = 20;
 // A map handed to someone with no free slot stays fully usable this long
 export const TRANSFER_GRACE_DAYS = 60;

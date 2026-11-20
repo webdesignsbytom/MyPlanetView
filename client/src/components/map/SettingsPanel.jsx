@@ -7,7 +7,9 @@ import LandmarkPinsPicker from './LandmarkPinsPicker';
 import MapSettingsToggles from './MapSettingsToggles';
 import DeleteMapSection from './DeleteMapSection';
 import MainMapSection from './MainMapSection';
+import MapUpgradeSection from './MapUpgradeSection';
 import MapDownloadSection from './MapDownloadSection';
+import TravelCopySection from '@/components/travelCopies/TravelCopySection';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
 // Utils
 import { saveMapSetup } from '@/utils/map/saveMapSetup';
@@ -18,12 +20,14 @@ const TABS = [
 ];
 
 // Settings: how the map looks to you (yours alone, on every map), and, for editors,
-// this map's travellers and its photos as a zip ("Print or download"); for the owner, its
+// this map's travellers and its photos as a zip ("Print or download"); for the owner and
+// co-owners, bringing travels from another map and the requests to copy from this one
+// (TravelCopySection); for the owner, its
 // name, group, making it the main map (the one the plan includes) and deletion. The two tabs are
 // ticket tabs: the open one is parchment and sits on the panel's brown rule. They follow
 // the ARIA tabs pattern: only the open tab is in the tab order, the arrow keys (and Home,
 // End) move between tabs and open them, and each tab names its panel.
-function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locked = false, onMapSaved, onMapDeleted, onClose }) {
+function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, canManage = isOwner, locked = false, onMapSaved, onMapDeleted, onUpgradePay, onClose }) {
   const [tab, setTab] = useState('view');
   // "Saved" outlives the form, which starts afresh after a save that changes the map
   const [mapSaved, setMapSaved] = useState(false);
@@ -95,18 +99,21 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, locke
             // Fresh after each save, so new travellers carry their ids
             key={`${map.name}|${map.groupType}|${map.travellers.map((t) => `${t.id}:${t.name}`).join(',')}`}
             initial={map}
-            canRename={isOwner}
+            canRename={canManage}
             splitUkNote
             submitLabel='Save map'
             saved={mapSaved}
             onSavedChange={setMapSaved}
             wideSubmit
             onSubmit={async (form) => {
-              await saveMapSetup(map.id, map, form, { canRename: isOwner });
+              await saveMapSetup(map.id, map, form, { canRename: canManage });
               await onMapSaved();
             }}
           />
           <MapDownloadSection map={map} />
+          {/* Bringing travels from another map, and the requests to copy from this one (docs/API.md, "Travel copies") */}
+          {canManage ? <TravelCopySection map={map} /> : null}
+          {isOwner && !map.isDefault ? <MapUpgradeSection map={map} locked={locked} onChanged={onMapSaved} onPay={onUpgradePay} /> : null}
           {isOwner && !map.isDefault ? <MainMapSection map={map} locked={locked} onChanged={onMapSaved} /> : null}
           {isOwner && !map.isDefault ? <DeleteMapSection map={map} locked={locked} onDeleted={onMapDeleted} /> : null}
         </div>

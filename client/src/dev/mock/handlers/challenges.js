@@ -127,6 +127,8 @@ export function registerChallengeRoutes() {
     if (!parsed.ok) return fail(400, MESSAGES[parsed.message]);
     const db = getDb();
     if (!canCountMap(db, me().id, body?.mapId)) return fail(400, MESSAGES.mapInvalid);
+    // Starting one counts towards the person's challenges too (the server's rule)
+    if (entries().filter((e) => e.userId === me().id).length >= CHALLENGE_LIMITS.perUser) return fail(409, MESSAGES.tooMany);
     const now = new Date().toISOString();
     const challenge = { id: newId(), ...parsed.data, joinCode: newShareCode(), createdById: me().id, createdAt: now };
     db.challenges.push(challenge);

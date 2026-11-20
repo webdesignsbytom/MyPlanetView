@@ -4,6 +4,7 @@
 // kept as `{ id, title, measure, startsOn, endsOn, target, joinCode, createdById, createdAt }`
 // (days "YYYY-MM-DD"), people in them as `{ challengeId, userId, mapId, joinedAt }`.
 import { isSpecialPlace } from '@/utils/map/specialPlaces';
+import { countedCountryCodes, isUkNation } from '@/utils/map/ukNations';
 
 export const CHALLENGE_MEASURES = ['NEW_COUNTRIES', 'COUNTRIES', 'LANDMARKS', 'THEME_PHOTOS'];
 export const CHALLENGE_LIMITS = Object.freeze({ title: 80, target: 500, days: 730, members: 50, perUser: 30 });
@@ -55,7 +56,10 @@ export function countedDates(db, measure, mapId, { from, before }) {
       const seen = first.get(photo.countryCode);
       if (!seen || shot < seen) first.set(photo.countryCode, shot);
     }
-    return [...first.values()];
+    // As the map's stats count: on a split map the UK's nations, GB only while none has a photo
+    const codes = [...first.keys()];
+    const counted = new Set(countedCountryCodes(codes, codes.some(isUkNation)));
+    return [...first.entries()].filter(([code]) => counted.has(code)).map(([, shot]) => shot);
   };
   if (measure === 'NEW_COUNTRIES') return firstByCountry(photos).filter(inside);
   if (measure === 'COUNTRIES') return firstByCountry(photos.filter((p) => inside(new Date(p.shotAt ?? p.takenAt ?? p.createdAt))));
@@ -79,7 +83,7 @@ export function countedDates(db, measure, mapId, { from, before }) {
 /** Does `userId` own or edit `mapId` (so it can count for them)? */
 export const canCountMap = (db, userId, mapId) =>
   db.maps.some((m) => m.id === mapId && m.ownerId === userId) ||
-  db.mapMembers.some((m) => m.mapId === mapId && m.userId === userId && m.role === 'EDITOR');
+  db.mapMembers.some((m) => m.mapId === mapId && m.userId === userId && (m.role === 'EDITOR' || m.role === 'CO_OWNER'));
 
 /** The server's parseChallengeInput. -> `{ ok, data }` or `{ ok: false, message }` */
 export function parseChallengeInput(body, { existing = null } = {}) {

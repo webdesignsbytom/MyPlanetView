@@ -1,14 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
 // Icons
 import { FiArrowDown, FiArrowUp } from 'react-icons/fi';
 // Components
-import TripStopForm from './TripStopForm';
 import TripStopFormCard from './TripStopFormCard';
 import Button from '@/components/common/Button';
 import MapRoundButton from '@/components/map/MapRoundButton';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { formatDayRange } from '@/utils/functions/dates';
+
+// The editors' form, loaded when editing starts: share links never download it (19 Nov 2026, the audit)
+const TripStopForm = lazy(() => import('./TripStopForm'));
 
 // One stop in the list, as a ticket stub: its number as a red rubber stamp behind a
 // dashed perforation, then where and when. Editors move it up or down with round stamps
@@ -113,16 +115,18 @@ function TripStopItem({ stop, index, count, canEdit, busy, onMove, onSave, onRem
 
       {editing ? (
         <TripStopFormCard title={`Edit stop ${index + 1}`} closeLabel={`Stop editing ${label}`} onClose={closeEditing} autoFocus>
-          <TripStopForm
-            idPrefix={`stop-${stop.id}`}
-            initial={stop}
-            submitLabel='Save stop'
-            onCancel={closeEditing}
-            onSubmit={async (body) => {
-              await onSave(body);
-              closeEditing();
-            }}
-          />
+          <Suspense fallback={null}>
+            <TripStopForm
+              idPrefix={`stop-${stop.id}`}
+              initial={stop}
+              submitLabel='Save stop'
+              onCancel={closeEditing}
+              onSubmit={async (body) => {
+                await onSave(body);
+                closeEditing();
+              }}
+            />
+          </Suspense>
         </TripStopFormCard>
       ) : null}
     </li>

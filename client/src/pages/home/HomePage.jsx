@@ -32,8 +32,7 @@ const HomePage = React.memo(() => {
 
       {/* Page: my_planet's poster frame, with the nav as a column from lg up, and the
           poster hero alone (everything else is on the About page) */}
-      <PosterFrame>
-        <Navbar variant='column' />
+      <PosterFrame nav={<Navbar variant='column' />}>
         <HomePageMainContainer />
       </PosterFrame>
     </>

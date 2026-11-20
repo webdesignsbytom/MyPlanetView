@@ -87,6 +87,19 @@ describe('the UK’s nations', () => {
     expect((await mapOf(owner.agent, map.id)).stats.countries).toBe(1);
   });
 
+  // 19 Nov 2026, the audit: a moment pinned in Cardiff stayed in the UK
+  it('moves a pinned moment to the nation its pin is in when the split is turned on', async () => {
+    const owner = await signUp('SplitMoment');
+    const map = await defaultMapOf(owner.agent);
+    await split(owner.agent, map.id, false);
+    const created = await owner.agent
+      .post(`/api/maps/${map.id}/moments`)
+      .send({ kind: 'SAW_OR_DID', title: 'The bay', countryCode: 'GB', spot: { ...CARDIFF, shared: false } });
+    expect(created.status).toBe(201);
+    await split(owner.agent, map.id, true);
+    expect((await prisma.moment.findUnique({ where: { id: data(created).moment.id }, select: { countryCode: true } })).countryCode).toBe('XW');
+  });
+
   it('merges the nations into the UK when the split is turned off, and puts them back when it’s turned on again', async () => {
     const owner = await signUp('SplitOff');
     const map = await defaultMapOf(owner.agent);
@@ -137,7 +150,11 @@ describe('the UK’s nations', () => {
   it('gives each UK landmark its nation', async () => {
     const landmarks = data(await anon().get('/api/landmarks?country=GB')).landmarks;
     expect(landmarks.length).toBeGreaterThan(20);
-    expect(landmarks.every((l) => ['XE', 'XC', 'XW', 'XI'].includes(l.nation))).toBe(true);
+    // The overseas territories' sites are in no nation (half a world away: ukNationAt's
+    // limit, 19 Nov 2026, the audit; they went to England); every other has one
+    const overseas = ['Gough and Inaccessible Islands', 'Henderson Island'];
+    expect(landmarks.filter((l) => !l.nation).map((l) => l.name).sort()).toEqual(overseas);
+    expect(landmarks.filter((l) => !overseas.includes(l.name)).every((l) => ['XE', 'XC', 'XW', 'XI'].includes(l.nation))).toBe(true);
     const nationOf = (part) => landmarks.find((l) => l.name.includes(part))?.nation;
     expect(nationOf('Stonehenge')).toBe('XE');
     expect(nationOf('Edinburgh')).toBe('XC');

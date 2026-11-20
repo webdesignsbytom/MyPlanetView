@@ -69,7 +69,9 @@ function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDe
             />
           </FormField>
 
-          <div className='grid grid-row-wrap gap-2'>
+          {/* Cells as wide as the longest label ("Reactivate", "Membership"), as many to a row
+              as fit: grid-row-wrap squeezed them into each other on a phone (19 Nov 2026, the audit) */}
+          <div className='grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-2'>
             <button
               type='button'
               onClick={() => onSaveRole(user, draftRole)}
@@ -85,7 +87,7 @@ function UserAdminItem({ user, roleOptions, lockedReason, busy, onSaveRole, onDe
                 type='button'
                 onClick={() => onDeactivate(user)}
                 disabled={isLocked || busy}
-                className={`btn-paper [--btn-ink:var(--poster-red-deep)] ${SMALL}`}
+                className={`btn-danger ${SMALL}`}
                 aria-label={`Deactivate ${name}`}
               >
                 Deactivate

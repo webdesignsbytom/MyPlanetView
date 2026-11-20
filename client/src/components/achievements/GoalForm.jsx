@@ -20,14 +20,15 @@ const changedFields = (goal, body) => Object.fromEntries(Object.entries(body).fi
 const DEADLINE_HINTS = {
   LANDMARK_COUNT: 'With a deadline, only stamps whose photo was taken by the end of that day count.',
   default:
-    'With a deadline, a country only counts once a photo taken there by the end of that day proves it: a country ticked by hand has no date.',
+    'With a deadline, a country counts once you went there by the end of that day: by its first photo there, or the "First went" date you gave it, or else the day you marked it visited.',
 };
 
 /**
  * A goal, new or (`goal`) being changed (docs/API.md, "Badges and goals"): its kind (fixed
  * once made), what it asks (a number of countries or stamps, a bucket list of places, or a
  * region or continent), an optional name and an optional deadline, which the form says
- * counts only what a photo proves. A bucket list can start from the map's "want to go"
+ * counts a country by its first photo, its "First went" date, or the day it was marked. A
+ * bucket list can start from the map's "want to go"
  * countries (`wantToGo`). `onSave(body)` sends it and throws the server's refusal.
  */
 function GoalForm({ goal = null, wantToGo = [], onSave, onCancel }) {

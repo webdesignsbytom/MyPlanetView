@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 // Constants
 import { MAP_PAGE_URL, WELCOME_PAGE_URL } from '@/utils/constants/routes';
@@ -11,12 +11,19 @@ import { preloadPhotoPage } from '@/hooks/usePhotoPage';
 import { preloadLandmarks } from '@/hooks/useLandmarks';
 // Components
 import AppPageHead from '@/components/utils/AppPageHead';
-import MapExperience from '@/components/map/MapExperience';
 import MapStatusScreen from '@/components/map/MapStatusScreen';
 // Utils
 import { getStoredItem, setStoredItem } from '@/utils/functions/safeStorage';
 import { myMaps } from '@/utils/map/mapListCache';
 import { UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
+
+// The map itself (the outlines and every layer: about 320 KB gzip) loads while this page asks
+// for the map's data behind its loading stamps: with it imported here, the first visit to
+// /map showed nothing, and asked for nothing, until it had all arrived (19 Nov 2026, the
+// audit). Started as this page's code runs (a navbar prefetch too).
+const mapExperience = import('@/components/map/MapExperience');
+mapExperience.catch(() => {}); // a failure shows when it's drawn (the error screen)
+const MapExperience = lazy(() => mapExperience);
 
 // Which map /map opened last time, for this user: it starts loading at once, while the
 // map list confirms it (or picks another)
@@ -91,7 +98,7 @@ function MapPage() {
     return (
       <>
         <AppPageHead route={MAP_PAGE_URL} />
-        <MapStatusScreen title='No map yet' message='Set one up and start colouring in the world.'>
+        <MapStatusScreen styleId={settings.style} title='No map yet' message='Set one up and start colouring in the world.'>
           <Link to={WELCOME_PAGE_URL} className='btn-poster'>
             Set up my map
           </Link>
@@ -107,7 +114,7 @@ function MapPage() {
     return (
       <>
         <AppPageHead route={MAP_PAGE_URL} />
-        <MapStatusScreen title='This map can’t be opened' message={error}>
+        <MapStatusScreen styleId={settings.style} title='This map can’t be opened' message={error}>
           {routeMapId ? (
             <Link to={MAP_PAGE_URL} className='btn-poster'>
               Go to your own map
@@ -122,7 +129,7 @@ function MapPage() {
     return (
       <>
         <AppPageHead route={MAP_PAGE_URL} />
-        <MapStatusScreen loading />
+        <MapStatusScreen loading styleId={settings.style} />
       </>
     );
   }
@@ -130,16 +137,18 @@ function MapPage() {
   return (
     <>
       <AppPageHead route={MAP_PAGE_URL} title={travelMap.map.name} />
-      <MapExperience
-        key={travelMap.map.id}
-        map={travelMap.map}
-        trips={travelMap.trips}
-        role={travelMap.map.role}
-        actions={travelMap}
-        currentUser={user}
-        settings={settings}
-        onChangeSetting={updateSetting}
-      />
+      <Suspense fallback={<MapStatusScreen loading styleId={settings.style} />}>
+        <MapExperience
+          key={travelMap.map.id}
+          map={travelMap.map}
+          trips={travelMap.trips}
+          role={travelMap.map.role}
+          actions={travelMap}
+          currentUser={user}
+          settings={settings}
+          onChangeSetting={updateSetting}
+        />
+      </Suspense>
     </>
   );
 }

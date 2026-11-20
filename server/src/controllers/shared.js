@@ -13,6 +13,7 @@ import { mapDetailView } from './maps.js';
 import { mapTripsView, tripView } from './trips.js';
 import { photoPage } from './photos.js';
 import { momentPage } from './moments.js';
+import { countryListPages } from './countryLists.js';
 import { adsFor } from '../services/offers.js';
 import { buildPassport } from '../services/travel/passport.js';
 import { mapBadges, mapGoals } from '../services/travel/achievements.js';
@@ -76,6 +77,22 @@ export const getSharedPhotosHandler = handler(D, 'Open share link photos', async
   // Never the best copies (`best=1`): those are for the map's own editors, on its own routes
   const result = await photoPage({ query: req.query || {}, ...scope, role: shared.role, allowBest: false });
   if (result.forbidden) return forbidden(req, res, D);
+  if (result.error) return badRequest(req, res, D, result.error);
+  return sendDataResponse(res, 200, result);
+});
+
+// A map link's country tickets, every first page in one reply (controllers/countryLists.js):
+// one request against the link's browse limit instead of one per country. Map links only:
+// a trip's page has no country tickets
+export const getSharedCountryListsHandler = handler(D, 'Open share link country lists', async (req, res) => {
+  const shared = await resolveCode(req);
+  if (!shared || shared.kind !== 'map') return notFound(req, res, D, EVENT_MESSAGES.shareCodeNotFound);
+  const result = await countryListPages({
+    query: req.query || {},
+    mapId: shared.map.id,
+    role: shared.role,
+    photoAccess: { mapRole: shared.role, trip: null },
+  });
   if (result.error) return badRequest(req, res, D, result.error);
   return sendDataResponse(res, 200, result);
 });

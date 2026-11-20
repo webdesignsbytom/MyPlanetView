@@ -93,6 +93,7 @@ export function checkStorageCap({ storedBytes, addingBytes, planId }) {
 export const PEOPLE_CAP_MESSAGES = Object.freeze({
   editors: `A map can have up to ${EDITORS_PER_MAP} editors.`,
   tripPeople: `A trip can have up to ${PEOPLE_PER_TRIP} people.`,
+  coOwners: `Every co-owner is one of the map's travellers, and the owner needs one too. Add a traveller first.`,
 });
 
 /**
@@ -106,6 +107,16 @@ export const checkEditorCap = ({ editors }) => (editors + 1 > EDITORS_PER_MAP ? 
  * Adding someone to a trip: `people` counts its members of any role and pending
  * invites, leaving out the person being added. -> null, or the 409 message
  */
+/**
+ * Adding or promoting a co-owner (19 Nov 2026): every co-owner is one of the map's
+ * travellers and the owner keeps one, so a map has at most one fewer co-owners than
+ * travellers (none on a solo map, one on a couple's). `coOwners` counts CO_OWNER members and
+ * pending CO_OWNER invites, the person being added left out. Co-owners never count as editors.
+ * -> null, or the 409 message
+ */
+export const checkCoOwnerCap = ({ coOwners, travellers }) =>
+  coOwners + 1 > Math.max(0, travellers - 1) ? PEOPLE_CAP_MESSAGES.coOwners : null;
+
 export const checkTripPeopleCap = ({ people }) => (people + 1 > PEOPLE_PER_TRIP ? PEOPLE_CAP_MESSAGES.tripPeople : null);
 
 // ── Locked maps ──────────────────────────────────────────────────────────────

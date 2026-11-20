@@ -31,7 +31,7 @@ export async function findAccountForExport(userId) {
       select: { role: true, createdAt: true, trip: { select: { id: true, title: true, map: { select: { name: true, owner: { select: { name: true } } } } } } },
       orderBy: { createdAt: 'asc' },
     }),
-    prisma.photo.count({ where: { uploaderId: userId, map: { ownerId: { not: userId } } } }),
+    prisma.photo.count({ where: uploadsElsewhere(userId) }),
     prisma.avatarMediaItem.findUnique({ where: { userId }, select: { media: { select: { key: true } } } }),
   ]);
   return { user, profile, subscription, grants, ownedMaps, mapMemberships, tripMemberships, photosOnOtherMaps, avatarKey: avatar?.media?.key ?? null };
@@ -146,10 +146,25 @@ const NEWEST_FIRST = [{ createdAt: 'desc' }, { id: 'desc' }];
 export const findMapPhotosForExport = (mapId, { cursor, take }) =>
   prisma.photo.findMany({ where: { mapId, ...afterCursor(cursor) }, orderBy: NEWEST_FIRST, take: take + 1, select: PHOTO_EXPORT_SELECT });
 
-/** A page of the photos someone added to maps they don't own (one more than `take`). */
+/**
+ * The photos someone added to maps they don't own and can still open: as a member of the map,
+ * or of the photo's trip. Someone taken off a map (or who left it) no longer gets the photos
+ * they'd added there, with their originals and positions (19 Nov 2026, the user's decision,
+ * the audit's D2).
+ */
+function uploadsElsewhere(userId) {
+  return {
+    uploaderId: userId,
+    map: { ownerId: { not: userId } },
+    OR: [{ map: { members: { some: { userId } } } }, { trip: { members: { some: { userId } } } }],
+  };
+}
+
+/** A page of the photos someone added to maps they don't own and can still open (one more than `take`). */
 export const findUploadsElsewhereForExport = (userId, { cursor, take }) =>
   prisma.photo.findMany({
-    where: { uploaderId: userId, map: { ownerId: { not: userId } }, ...afterCursor(cursor) },
+    // AND, not a spread: the cursor's own OR would replace the membership's
+    where: { AND: [uploadsElsewhere(userId), afterCursor(cursor)] },
     orderBy: NEWEST_FIRST,
     take: take + 1,
     select: { ...PHOTO_EXPORT_SELECT, map: { select: { name: true, owner: { select: { name: true } } } } },

@@ -17,7 +17,8 @@
 // remembering their nation in `ukNation`.
 import { Prisma } from '@prisma/client';
 import { prisma } from '../../prisma.js';
-import { NOTES_MAX } from '../../utils/travelValidation.js';
+import { COUNTED_VISIT_STATUSES, NOTES_MAX } from '../../utils/travelValidation.js';
+import { placesOfSubdivision } from '../../utils/subdivisions.js';
 import { UK, UK_NATION_CODES, UK_NATION_NAMES, isUkNation, landmarkPlace, ukNationAt } from '../../utils/ukNations.js';
 import { createMissingVisits } from '../../domain/maps.js';
 
@@ -51,7 +52,12 @@ function mergedUkVisit(ukVisit, nationVisits) {
   return { status: best.status, source: best.source, firstVisitedOn: dates[0] ?? null, notes };
 }
 
+// The map's row locked first (FOR NO KEY UPDATE, as a photo save takes it): a photo saved at
+// the same moment waits, then sees the new setting (createPhotoInDB; 19 Nov 2026, the audit)
+const lockMap = (tx, mapId) => tx.$queryRaw`SELECT 1 FROM "travel_map" WHERE "id" = ${mapId} FOR NO KEY UPDATE`;
+
 async function splitOn(mapId, tx) {
+  await lockMap(tx, mapId);
   const map = await tx.travelMap.findUnique({ where: { id: mapId }, select: { splitUk: true, ukNationVisits: true } });
   if (!map || map.splitUk) return;
 
@@ -82,8 +88,14 @@ async function splitOn(mapId, tx) {
   });
   const stopTargets = stops.map((s) => [s.id, located(s)]);
   await moveTo('tripStop', stopTargets, tx);
-  const moments = await tx.moment.findMany({ where: { mapId, countryCode: UK }, select: { id: true, ukNation: true, landmark: LANDMARK } });
-  await moveTo('moment', moments.map((m) => [m.id, located(m)]), tx);
+  // A moment: remembered, else the nation its pin is in, else its landmark's (19 Nov 2026,
+  // the audit: a birth pinned in Manchester stayed in the UK)
+  const moments = await tx.moment.findMany({
+    where: { mapId, countryCode: UK },
+    select: { id: true, ukNation: true, latitude: true, longitude: true, landmark: LANDMARK },
+  });
+  const pinned = (m) => (m.latitude !== null && m.longitude !== null ? ukNationAt(m.latitude, m.longitude) : null);
+  await moveTo('moment', moments.map((m) => [m.id, nationOrNull(m.ukNation) ?? pinned(m) ?? located(m)]), tx);
 
   // Visits: the nations' from before, then what the moved photos and completed trips bring
   const ukVisit = await tx.countryVisit.findUnique({ where: { mapId_countryCode: { mapId, countryCode: UK } }, select: VISIT_FIELDS });
@@ -101,6 +113,13 @@ async function splitOn(mapId, tx) {
   await createMissingVisits(mapId, withPhotos, 'PHOTO', tx);
   const fromTrips = [...new Set(stops.map((s, i) => (s.trip.status === 'COMPLETED' ? stopTargets[i][1] : null)).filter(Boolean))];
   await createMissingVisits(mapId, fromTrips, 'TRIP', tx);
+  // UK states marked visited or lived bring their nation, as marking one on a split map does
+  const states = await tx.subdivisionVisit.findMany({
+    where: { mapId, countryCode: UK, status: { in: [...COUNTED_VISIT_STATUSES] } },
+    select: { subdivisionCode: true },
+  });
+  const fromStates = [...new Set(states.flatMap((s) => placesOfSubdivision(s.subdivisionCode, true)).filter(isUkNation))];
+  await createMissingVisits(mapId, fromStates, 'MANUAL', tx);
 
   // The UK's own visit: gone once the nations say all it did
   if (ukVisit) {
@@ -114,6 +133,7 @@ async function splitOn(mapId, tx) {
 }
 
 async function splitOff(mapId, tx) {
+  await lockMap(tx, mapId);
   const map = await tx.travelMap.findUnique({ where: { id: mapId }, select: { splitUk: true } });
   if (!map || !map.splitUk) return;
 

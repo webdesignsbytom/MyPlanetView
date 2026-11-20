@@ -15,7 +15,6 @@ describe('cleanMapSettings', () => {
       showVisited: true,
       showUnvisited: false,
       showUserBanner: true,
-      blackAndWhite: true,
       showTips: false,
     };
     expect(cleanMapSettings(input)).toEqual({ ok: true, value: input });
@@ -53,6 +52,13 @@ describe('cleanMapSettings', () => {
   it('refuses a known key with a wrong value', () => {
     expect(cleanMapSettings({ style: 'neon' }).ok).toBe(false);
     expect(cleanMapSettings({ showGrid: 'yes' }).ok).toBe(false);
+  });
+
+  it('accepts every style, Black and white among them, and drops the old switch for it', () => {
+    for (const style of ['animated', 'mono', 'old-map', 'starry']) {
+      expect(cleanMapSettings({ style })).toEqual({ ok: true, value: { style } });
+    }
+    expect(cleanMapSettings({ style: 'animated', blackAndWhite: true })).toEqual({ ok: true, value: { style: 'animated' } });
   });
 
   it('refuses the styles taken out (Jupiter clouds and Galaxy, 16 Nov 2026)', () => {

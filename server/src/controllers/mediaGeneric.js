@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { deleteOrphanStreamVideos } from '../services/stream/videos.js';
+import { continueApprovedCopies } from '../services/travel/travelCopies.js';
 import {
   mintUploadUrl,
   signDownloadUrl,
@@ -66,8 +67,9 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
   // (docs/AUDIT.md B3), expired sessions and verifications, invites accepted or
   // expired over 30 days ago, Stripe webhook event ids over 90 days old (Stripe
   // retries for 3 days at most), and Cloudflare Stream videos no row points at (an upload
-  // never saved, a video deleted with its map or account; services/stream/videos.js)
-  const [expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents, orphanStreamVideos] =
+  // never saved, a video deleted with its map or account; services/stream/videos.js). Also
+  // approved travel copies nobody's browser finished (docs/API.md "Travel copies")
+  const [expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents, orphanStreamVideos, travelCopiesFinished] =
     await Promise.all([
       purge('rate-limit', deleteExpiredRateLimits),
       purge('event', () => deleteOldEvents()),
@@ -76,8 +78,18 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
       purge('invite', () => deleteOldInvites()),
       purge('stripe-event', () => deleteOldStripeEvents()),
       purge('stream-video', () => deleteOrphanStreamVideos({ budgetMs: 15000 })),
+      purge('travel-copy', () => continueApprovedCopies({ budgetMs: 15000 })),
     ]);
-  const purged = { expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents, orphanStreamVideos };
+  const purged = {
+    expiredRateLimits,
+    oldEvents,
+    expiredSessions,
+    expiredVerifications,
+    oldInvites,
+    oldStripeEvents,
+    orphanStreamVideos,
+    travelCopiesFinished,
+  };
 
   try {
     const result = await deleteOrphanUploads({ deadline: startedAt + CRON_BUDGET_MS });

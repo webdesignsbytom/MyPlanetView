@@ -13,7 +13,7 @@ function MapGridLines({ showLabels, zoom, showAntarctica = true }) {
   const grid = showAntarctica ? GRID : GRID_WITHOUT_ANTARCTICA;
   const fontSize = 13 / zoom;
   return (
-    <g className='pointer-events-none fill-none stroke-map-edge opacity-30' aria-hidden='true'>
+    <g className='pointer-events-none fill-none stroke-map-grid opacity-30' aria-hidden='true'>
       {grid.parallels.map((line) => (
         <polyline
           key={`lat${line.lat}`}

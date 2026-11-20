@@ -3,7 +3,6 @@ import { Link as HeadLink } from 'react-head';
 // Images (imported directly: the home page is eager, and the image manifest is not)
 import phone480 from '@/assets/images/pages/home/home-hero-v3-phone-480.avif';
 import phone720 from '@/assets/images/pages/home/home-hero-v3-phone-720.avif';
-import phone941 from '@/assets/images/pages/home/home-hero-v3-phone-941.avif';
 import phoneWebp from '@/assets/images/pages/home/home-hero-v3-phone-720.webp';
 import tablet600 from '@/assets/images/pages/home/home-hero-v3-tablet-600.avif';
 import tablet800 from '@/assets/images/pages/home/home-hero-v3-tablet-800.avif';
@@ -21,7 +20,10 @@ import desktopWebp from '@/assets/images/pages/home/home-hero-v3-desktop-1200.we
 const PHONE = '(max-width: 767px) and (orientation: portrait)';
 const TABLET = '(max-width: 1279px) and (orientation: portrait)';
 const ART = {
-  phone: { avif: `${phone480} 480w, ${phone720} 720w, ${phone941} 941w`, webp: phoneWebp, sizes: '100vw', preload: PHONE },
+  // Phones get at most the 720 copy: the 941 one (the art's own width, 226 KB, the largest
+  // paint on any phone at 2× or more) cost 59 KB more for a little sharpness (19 Nov 2026,
+  // the user's decision, the audit's C37). Its file stays in assets, unused.
+  phone: { avif: `${phone480} 480w, ${phone720} 720w`, webp: phoneWebp, sizes: '100vw', preload: PHONE },
   tablet: {
     avif: `${tablet600} 600w, ${tablet800} 800w, ${tablet1086} 1086w`,
     webp: tabletWebp,

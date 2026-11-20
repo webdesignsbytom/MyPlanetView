@@ -33,9 +33,11 @@ export default function AppImage({
   const [loaded, setLoaded] = useState(false);
   const [hadError, setHadError] = useState(false);
 
+  // `alt=''` marks a decorative image (a poster beside its country's name): only a missing
+  // alt is a mistake (19 Nov 2026, the audit: decorative posters logged this 126 times a visit)
   if (import.meta.env.DEV) {
-    if (!alt || !alt.trim()) {
-      console.warn('[AppImage] `alt` is required and should be meaningful:', src);
+    if (alt === undefined || alt === null) {
+      console.warn('[AppImage] `alt` is required (`alt=""` for a decorative image):', src);
     }
   }
 

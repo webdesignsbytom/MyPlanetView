@@ -182,10 +182,13 @@ const endOfDay = (day) => new Date(new Date(`${day}T00:00:00.000Z`).getTime() + 
 export function goalProgress(goal, facts, now = new Date()) {
   const deadline = goal.deadline ? endOfDay(goal.deadline) : null;
   const splitUk = Boolean(facts.splitUk);
+  // With a deadline: a photo taken by then, or the visit's own date (its "First went" day,
+  // else when it was marked), as the server (19 Nov 2026, the user's decision)
+  const firstVisitAt = facts.firstVisitAt ?? new Map();
+  const byDeadline = (date) => Boolean(date) && date.getTime() <= deadline.getTime();
   const placeDone = (code) => {
     if (!deadline) return facts.visited.has(code);
-    const first = facts.firstPhotoAt.get(code);
-    return Boolean(first) && first.getTime() <= deadline.getTime();
+    return byDeadline(facts.firstPhotoAt.get(code)) || (facts.visited.has(code) && byDeadline(firstVisitAt.get(code)));
   };
   // A goal naming the UK is met by any nation on a map that splits it; one naming a nation by
   // the UK on a map that doesn't
@@ -198,7 +201,7 @@ export function goalProgress(goal, facts, now = new Date()) {
   let need;
   let done;
   if (goal.kind === 'COUNTRY_COUNT') {
-    const codes = deadline ? [...facts.firstPhotoAt.keys()] : [...facts.visited];
+    const codes = deadline ? [...new Set([...facts.firstPhotoAt.keys(), ...facts.visited])] : [...facts.visited];
     have = countedCountryCodes(
       codes.filter((code) => !isSpecialPlace(code) && placeDone(code)),
       splitUk,
@@ -241,9 +244,12 @@ function findStamps(mapPhotos) {
 
 export function loadMapFacts(mapId, { includeHidden }) {
   const db = getDb();
-  const visited = new Set(
-    db.visits.filter((v) => v.mapId === mapId && COUNTED_VISIT_STATUSES.includes(v.status)).map((v) => v.countryCode),
-  );
+  const counted = db.visits.filter((v) => v.mapId === mapId && COUNTED_VISIT_STATUSES.includes(v.status));
+  const visited = new Set(counted.map((v) => v.countryCode));
+  // Each visited country's date: its "First went" day, else when it was marked (the mock's
+  // visits don't keep that: now, as for one just marked)
+  const now = new Date();
+  const firstVisitAt = new Map(counted.map((v) => [v.countryCode, v.firstVisitedOn ? new Date(v.firstVisitedOn) : v.createdAt ? new Date(v.createdAt) : now]));
   const photos = db.photos.filter((p) => p.mapId === mapId && (includeHidden || !p.hidden));
   // Each country's earliest photo (when it was taken)
   const firstPhotoAt = new Map();
@@ -257,7 +263,7 @@ export function loadMapFacts(mapId, { includeHidden }) {
   const shown = new Set(photos.map((p) => p.id));
   const themes = new Set((db.themeEntries || []).filter((e) => e.mapId === mapId && shown.has(e.photoId)).map((e) => e.themeId)).size;
   const splitUk = Boolean(db.maps.find((m) => m.id === mapId)?.splitUk);
-  return { visited, firstPhotoAt, stamps: findStamps(photos), photos: photos.length, themes, splitUk };
+  return { visited, firstVisitAt, firstPhotoAt, stamps: findStamps(photos), photos: photos.length, themes, splitUk };
 }
 
 /**

@@ -49,6 +49,9 @@ export const MAPS_API = '/api/maps'; // /:mapId, /:mapId/stats|travellers|visits
 export const TRIPS_API = '/api/trips'; // /:tripId, /:tripId/stops|travellers|photos|moments|maps|sharing|members|invites, /shared-with-me
 export const PHOTOS_API = '/api/photos'; // /:photoId, /:photoId/landmarks, /:photoId/move
 export const MOMENTS_API = '/api/moments'; // /:momentId (PATCH, DELETE)
+// Taking your travels with you (docs/API.md, "Travel copies"): one request, /:id (GET, DELETE),
+// /:id/approve|decline|continue. Choosing and asking are on the map: MAPS_API/:mapId/travel-copy-choices, /travel-copies
+export const TRAVEL_COPIES_API = '/api/travel-copies';
 export const PINS_API = '/api/pins'; // /:pinId (GET, PATCH, DELETE), /:pinId/visits, /:pinId/visits/:visitId
 export const GOALS_API = '/api/goals'; // /:goalId (PATCH, DELETE)
 export const SHARED_API = '/api/shared'; // /:code, /:code/photos, /:code/photos/:photoId, /:code/moments|passport|badges|goals
@@ -59,6 +62,7 @@ export const ADMIN_THEMES_API = '/api/users/admin/themes'; // GET, POST, PATCH|D
 export const CHALLENGES_API = '/api/challenges'; // GET, POST, /:challengeId (GET, PATCH, DELETE), /reset-link, /me, /join/:code (docs/API.md, "Friends challenges")
 export const OFFER_CLICK_PATH = '/go'; // /:offerId?p=&dest=&country=&from=&to= on the API's host (a card's link)
 export const ACCEPT_INVITE_API = '/api/invites/accept'; // POST { token }
+export const inviteApi = (token) => `/api/invites/${encodeURIComponent(token)}`; // GET: what an invite is for, signed out too
 export const MAP_SETTINGS_API = '/api/users/map-settings'; // GET, PUT { mapSettings }
 
 // Plans and billing (docs/API.md, "Plans and billing"). Paths below it are built in src/api/plansApi.js.

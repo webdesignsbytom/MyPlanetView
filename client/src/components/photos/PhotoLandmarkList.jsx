@@ -44,8 +44,8 @@ function PhotoLandmarkList({ photo, canEdit, onChanged }) {
       {matched.length ? (
         <ul className='grid gap-2'>
           {matched.map((landmark) => (
-            <li key={landmark.id} className='grid grid-cols-rev items-center gap-2 text-sm'>
-              <span>
+            <li key={landmark.id} className='grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 text-sm'>
+              <span className='break-words'>
                 {landmark.name}
                 {landmark.confirmed ? '' : ` — suggested${distanceText(landmark.distanceM)}`}
               </span>
@@ -78,7 +78,7 @@ function PhotoLandmarkList({ photo, canEdit, onChanged }) {
         <p className='text-sm opacity-80'>No landmarks matched yet.</p>
       )}
       {canEdit && addable.length ? (
-        <div className='grid grid-cols-rev items-stretch gap-2'>
+        <div className='grid grid-cols-[minmax(0,1fr)_auto] items-stretch gap-2'>
           {/* The Add button as tall as the dropdown beside it (stretched to the row) */}
           <PlainOptionSelect
             id={`add-landmark-${photo.id}`}

@@ -1,7 +1,9 @@
 // Build-time image manifest for `<name>-<width>.<ext>` files
 
 // Vite 7+ deprecation fix: use query/import instead of `as: 'url'`
-const allImages = import.meta.glob('/src/assets/images/**/*.{jpg,jpeg,webp,avif}', {
+// Not the home hero's sets: HomeHeroArtwork imports its own files, and through this glob every
+// older set (v1, v2: 24 files, 4.3 MB) was emitted into dist unused (19 Nov 2026, the audit)
+const allImages = import.meta.glob(['/src/assets/images/**/*.{jpg,jpeg,webp,avif}', '!**/home-hero-*'], {
   eager: true,
   query: '?url',
   import: 'default',

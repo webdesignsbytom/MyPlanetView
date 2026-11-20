@@ -2,7 +2,9 @@
 // test user's couple's map (owned), a map someone shared with them, a trip shared on
 // its own, a group trip from Tom's map that Alex added to the test user's map, moments,
 // the test user's plan (Business with one extra map), and the admin lists. The test user's map has real photos (the repo's
-// seed-photos/, from Wikimedia Commons); the other maps use posters as stand-ins.
+// seed-photos/, from Wikimedia Commons); the other maps use posters as stand-ins, but for
+// Alex's family map "The Morgans" (travel copies, docs/API.md: the test user is on it as a
+// viewer and as its traveller Charlie, not linked to the account), which reuses three of them.
 import { seedPhotoBySlug } from './data/seedPhotos';
 import { EXAMPLE_OFFERS } from './data/offers';
 // Fran's First Class map of videos, shared with the test user (seedFirstClass.js)
@@ -157,6 +159,12 @@ function buildBaseSeed() {
   // test user isn't on it, so it shows there with its limited fields only
   const tomMap = 'map-tom';
   const stagTrip = 'trip-tom-stag';
+  // Alex's family map (travel copies, docs/API.md): Alex, the test user's traveller Charlie
+  // (not linked to their account: the test user says which one they are) and Nora. The test
+  // user views it, and can ask for copies of the Easter trip they went on (two photos and a
+  // hidden one), the moment about them and the photo of Ireland
+  const morgansMap = 'map-morgans';
+  const morgansTrip = 'trip-morgans-spain';
 
   return {
     version: 1,
@@ -175,6 +183,7 @@ function buildBaseSeed() {
       { id: samMap, name: "Sam's gap year", groupType: 'SOLO', isDefault: true, ownerId: SAM_ID, linkAccess: 'ANYONE_WITH_LINK', shareCode: 'SAMG4PYEAR22', createdAt: daysAgo(200) },
       { id: joMap, name: "Jo's family trips", groupType: 'FAMILY', isDefault: true, ownerId: JO_ID, linkAccess: 'RESTRICTED', shareCode: 'J0FAM7TRP5QX'.replace('0', 'D'), createdAt: daysAgo(150) },
       { id: tomMap, name: "Tom's map", groupType: 'SOLO', isDefault: true, ownerId: TOM_ID, linkAccess: 'RESTRICTED', shareCode: 'TQMB7KX2PRG4', createdAt: daysAgo(300) },
+      { id: morgansMap, name: 'The Morgans', groupType: 'FAMILY', isDefault: true, ownerId: ALEX_ID, linkAccess: 'RESTRICTED', shareCode: 'MRGNSFAM7KQX', createdAt: daysAgo(400) },
     ],
     travellers: [
       { id: 'trav-test', mapId: homeMap, name: 'Charlie', position: 0, userId: USER_ID, birthCountryCode: 'GB', favouriteCountryCode: 'JP' },
@@ -183,11 +192,15 @@ function buildBaseSeed() {
       { id: 'trav-jo', mapId: joMap, name: 'Jo', position: 0, userId: JO_ID, birthCountryCode: 'GB', favouriteCountryCode: 'PT' },
       { id: 'trav-jo-kid', mapId: joMap, name: 'Mia', position: 1, userId: null, birthCountryCode: 'GB', favouriteCountryCode: null },
       { id: 'trav-tom', mapId: tomMap, name: 'Tom', position: 0, userId: TOM_ID, birthCountryCode: 'GB', favouriteCountryCode: 'CZ' },
+      { id: 'trav-morgan-alex', mapId: morgansMap, name: 'Alex', position: 0, userId: ALEX_ID, birthCountryCode: 'IE', favouriteCountryCode: 'IT' },
+      { id: 'trav-morgan-charlie', mapId: morgansMap, name: 'Charlie', position: 1, userId: null, birthCountryCode: 'GB', favouriteCountryCode: null },
+      { id: 'trav-morgan-nora', mapId: morgansMap, name: 'Nora', position: 2, userId: null, birthCountryCode: 'IE', favouriteCountryCode: 'ES' },
     ],
     mapMembers: [
       { mapId: homeMap, userId: ALEX_ID, role: 'EDITOR', createdAt: daysAgo(80) },
       { mapId: homeMap, userId: SAM_ID, role: 'VIEWER', createdAt: daysAgo(30) },
       { mapId: samMap, userId: USER_ID, role: 'VIEWER', createdAt: daysAgo(25) },
+      { mapId: morgansMap, userId: USER_ID, role: 'VIEWER', createdAt: daysAgo(8) },
     ],
     tripMembers: [
       { tripId: lisbonTrip, userId: USER_ID, role: 'EDITOR', createdAt: daysAgo(12) },
@@ -219,6 +232,8 @@ function buildBaseSeed() {
       { mapId: joMap, countryCode: 'PT', status: 'VISITED', source: 'TRIP', firstVisitedOn: '2026-10-03', notes: null },
       { mapId: joMap, countryCode: 'GB', status: 'LIVED', source: 'MANUAL', firstVisitedOn: null, notes: null },
       { mapId: tomMap, countryCode: 'GB', status: 'LIVED', source: 'MANUAL', firstVisitedOn: null, notes: null },
+      { mapId: morgansMap, countryCode: 'IE', status: 'LIVED', source: 'MANUAL', firstVisitedOn: null, notes: null },
+      { mapId: morgansMap, countryCode: 'ES', status: 'VISITED', source: 'TRIP', firstVisitedOn: '2010-04-01', notes: null },
     ],
     trips: [
       { id: italyTrip, mapId: homeMap, createdById: USER_ID, title: 'Italian summer', description: 'Rome to Florence by train, with a few days by the sea.', status: 'COMPLETED', startDate: '2025-07-02', endDate: '2025-07-16', coverPhotoId: 'photo-colosseum', linkAccess: 'RESTRICTED', shareCode: 'TRPTAK7SMR42', travellerIds: ['trav-test', 'trav-alex'], createdAt: daysAgo(140) },
@@ -226,6 +241,7 @@ function buildBaseSeed() {
       { id: samTrip, mapId: samMap, createdById: SAM_ID, title: 'South-East Asia loop', description: null, status: 'COMPLETED', startDate: '2024-01-08', endDate: '2024-03-01', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'SEAK22P7MKQ3', travellerIds: ['trav-sam'], createdAt: daysAgo(190) },
       { id: lisbonTrip, mapId: joMap, createdById: JO_ID, title: 'Lisbon weekend', description: 'Planning together: add ideas!', status: 'COMPLETED', startDate: '2026-10-03', endDate: '2026-10-06', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'K5BNWK3ND7QT', travellerIds: ['trav-jo', 'trav-jo-kid'], createdAt: daysAgo(40) },
       { id: stagTrip, mapId: tomMap, createdById: TOM_ID, title: 'Stag do in Prague', description: 'Three nights, eleven friends.', status: 'PLANNED', startDate: '2027-05-14', endDate: '2027-05-17', coverPhotoId: null, linkAccess: 'RESTRICTED', shareCode: 'STGPRG5QW8MN', travellerIds: ['trav-tom'], createdAt: daysAgo(15) },
+      { id: morgansTrip, mapId: morgansMap, createdById: ALEX_ID, title: 'Spain at Easter', description: 'Barcelona, then the train to Granada.', status: 'COMPLETED', startDate: '2010-04-01', endDate: '2010-04-10', coverPhotoId: 'photo-morgans-sagrada', linkAccess: 'RESTRICTED', shareCode: 'MRGN7SPAQX42', travellerIds: ['trav-morgan-alex', 'trav-morgan-charlie', 'trav-morgan-nora'], createdAt: daysAgo(390) },
     ],
     stops: [
       { id: 'stop-rome', tripId: italyTrip, position: 0, countryCode: 'IT', landmarkId: 'lm-colosseum', placeName: 'Rome', arriveOn: '2025-07-02', leaveOn: '2025-07-07', notes: null },
@@ -239,6 +255,8 @@ function buildBaseSeed() {
       { id: 'stop-siem', tripId: samTrip, position: 2, countryCode: 'KH', landmarkId: null, placeName: 'Siem Reap', arriveOn: '2024-02-19', leaveOn: '2024-03-01', notes: null },
       { id: 'stop-lisbon', tripId: lisbonTrip, position: 0, countryCode: 'PT', landmarkId: 'lm-tower-of-belem', placeName: 'Lisbon', arriveOn: '2026-10-03', leaveOn: '2026-10-06', notes: null },
       { id: 'stop-prague', tripId: stagTrip, position: 0, countryCode: 'CZ', landmarkId: 'lm-prague-castle', placeName: 'Prague', arriveOn: '2027-05-14', leaveOn: '2027-05-17', notes: null },
+      { id: 'stop-morgans-barcelona', tripId: morgansTrip, position: 0, countryCode: 'ES', landmarkId: null, placeName: 'Barcelona', arriveOn: '2010-04-01', leaveOn: '2010-04-06', notes: null },
+      { id: 'stop-morgans-granada', tripId: morgansTrip, position: 1, countryCode: 'ES', landmarkId: 'lm-alhambra', placeName: 'Granada', arriveOn: '2010-04-06', leaveOn: '2010-04-10', notes: null },
     ],
     // Moments (docs/API.md "Moments"). The test user's map: one a year back to a birth, one
     // on the Italian trip, and one hidden from viewers. Sam's map: one on his trip and one
@@ -255,6 +273,7 @@ function buildBaseSeed() {
       moment('moment-passport', { mapId: samMap, createdById: SAM_ID, kind: 'SAW_OR_DID', title: 'Lost my passport in Bangkok', happenedOn: '2024-01-15', datePrecision: 'DAY', countryCode: 'TH', hidden: true, tripId: samTrip, travellerIds: ['trav-sam'], photoIds: ['photo-bangkok'] }),
       moment('moment-nata', { mapId: joMap, createdById: JO_ID, kind: 'SAW_OR_DID', title: 'Pastéis de nata at Belém', happenedOn: '2026-10-04', datePrecision: 'DAY', countryCode: 'PT', landmarkId: 'lm-tower-of-belem', tripId: lisbonTrip, travellerIds: ['trav-jo', 'trav-jo-kid'], photoIds: ['photo-lisbon'] }),
       moment('moment-mia', { mapId: joMap, createdById: JO_ID, kind: 'BORN', title: 'Mia was born', happenedOn: '2018-03-01', datePrecision: 'MONTH', countryCode: 'GB', travellerIds: ['trav-jo-kid'] }),
+      moment('moment-morgans-churros', { mapId: morgansMap, createdById: ALEX_ID, kind: 'SAW_OR_DID', title: 'Charlie’s first churros', happenedOn: '2010-04-03', datePrecision: 'DAY', countryCode: 'ES', placeName: 'Barcelona', tripId: morgansTrip, travellerIds: ['trav-morgan-charlie'], photoIds: ['photo-morgans-sagrada'] }),
     ],
     // Personal goals (docs/API.md "Badges and goals"). The test user's map: ten countries by
     // a deadline (8 of 10, every one with a photo, which a deadline needs), a bucket list of
@@ -288,6 +307,11 @@ function buildBaseSeed() {
       })),
       { id: 'photo-bangkok', mapId: samMap, uploaderId: SAM_ID, tripId: samTrip, countryCode: 'TH', caption: 'Temple roofs', takenAt: '2024-01-12T09:00:00.000Z', latitude: null, longitude: null, width: 1024, height: 1792, hidden: false, image: { kind: 'asset', name: 'th' }, createdAt: daysAgo(180) },
       { id: 'photo-lisbon', mapId: joMap, uploaderId: JO_ID, tripId: lisbonTrip, countryCode: 'PT', caption: 'Belém', takenAt: '2026-10-04T11:00:00.000Z', latitude: 38.6916, longitude: -9.216, width: 1024, height: 1792, hidden: false, image: { kind: 'asset', name: 'pt' }, createdAt: daysAgo(35) },
+      // The Morgans' (Alex's family map): the Easter trip's two photos and a hidden one, and Ireland
+      seedPhoto('sagrada-familia', { id: 'photo-morgans-sagrada', mapId: morgansMap, uploaderId: ALEX_ID, tripId: morgansTrip, caption: 'Sagrada Família, still building', takenAt: '2010-04-02T11:00:00.000Z', createdAt: daysAgo(380) }),
+      seedPhoto('alhambra', { id: 'photo-morgans-alhambra', mapId: morgansMap, uploaderId: ALEX_ID, tripId: morgansTrip, caption: 'The Alhambra at last', takenAt: '2010-04-07T17:30:00.000Z', createdAt: daysAgo(379) }),
+      seedPhoto('alhambra', { id: 'photo-morgans-hidden', mapId: morgansMap, uploaderId: ALEX_ID, tripId: morgansTrip, caption: 'Hidden from viewers (editors only)', takenAt: '2010-04-08T10:00:00.000Z', hidden: true, createdAt: daysAgo(378) }),
+      seedPhoto('cliffs-of-moher', { id: 'photo-morgans-moher', mapId: morgansMap, uploaderId: ALEX_ID, caption: 'Christmas walk on the cliffs', takenAt: '2012-12-27T13:00:00.000Z', createdAt: daysAgo(370) }),
     ],
     // Landmark matches: a confirmed one stamps the map's passport (docs/API.md "Passport").
     // The test user's map has stamps in seven countries: two photos of Paris's banks of the
@@ -312,7 +336,10 @@ function buildBaseSeed() {
       landmarkMatch('photo-cliffs-of-moher', homeMap, 'lm-cliffs-of-moher', { source: 'MANUAL', confirmedDaysAgo: 72 }),
       landmarkMatch('photo-bangkok', samMap, 'lm-historic-city-of-ayutthaya', { source: 'MANUAL', confirmedDaysAgo: 170 }),
       landmarkMatch('photo-lisbon', joMap, 'lm-tower-of-belem', { distanceM: 8, confirmedDaysAgo: 34 }),
+      landmarkMatch('photo-morgans-alhambra', morgansMap, 'lm-alhambra', { distanceM: 15, confirmedDaysAgo: 370 }),
     ],
+    // Taking your travels with you (docs/API.md "Travel copies"): none asked for yet
+    travelCopyRequests: [],
     // The photo an editor picked for a stamp (none yet: each shows its earliest photo)
     landmarkCovers: [],
     // Plans (docs/API.md, "Plans and billing"). The test user pays monthly for Business

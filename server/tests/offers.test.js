@@ -40,6 +40,10 @@ describe('an offer', () => {
   it('takes https links with known placeholders only', () => {
     expect(checkOfferUrl(good.url)).toBe(good.url);
     expect(checkOfferUrl('https://example.com/{destination}/hotels')).not.toBeNull();
+    // A placeholder in the host would make /go an open redirect
+    for (const bad of ['https://www.partner.com{destination}', 'https://{destination}/hotels', 'https://{country}.partner.com/']) {
+      expect(checkOfferUrl(bad), bad).toBeNull();
+    }
     for (const bad of ['http://example.com', 'javascript:alert(1)', 'https://example.com/?a={user}', 'https://u:p@example.com', '', null]) {
       expect(checkOfferUrl(bad), String(bad)).toBeNull();
     }

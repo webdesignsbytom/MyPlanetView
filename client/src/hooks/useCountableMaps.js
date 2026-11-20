@@ -9,7 +9,10 @@ import { getMyMaps } from '@/api/travelApi';
  * -> `{ options, loading, error }`
  */
 export default function useCountableMaps({ enabled = true } = {}) {
-  const [state, setState] = useState({ options: [], loading: enabled, error: null });
+  // `loading` is worked out, not stored: still loading whenever enabled and nothing has
+  // come back yet, so turning on (once the session is read) never shows "no maps" for a
+  // moment before they arrive (19 Nov 2026, the audit)
+  const [state, setState] = useState({ options: [], loaded: false, error: null });
 
   useEffect(() => {
     if (!enabled) return undefined;
@@ -18,17 +21,20 @@ export default function useCountableMaps({ enabled = true } = {}) {
       .then(({ maps }) => {
         if (cancelled) return;
         const options = (maps || [])
-          .filter((map) => map.role === 'OWNER' || map.role === 'EDITOR')
-          .map((map) => ({ value: map.id, label: map.role === 'OWNER' ? map.name : `${map.name} (you edit it)` }));
-        setState({ options, loading: false, error: null });
+          .filter((map) => map.role === 'OWNER' || map.role === 'CO_OWNER' || map.role === 'EDITOR')
+          .map((map) => ({
+            value: map.id,
+            label: map.role === 'OWNER' ? map.name : `${map.name} (${map.role === 'CO_OWNER' ? 'you co-own it' : 'you edit it'})`,
+          }));
+        setState({ options, loaded: true, error: null });
       })
       .catch((err) => {
-        if (!cancelled) setState({ options: [], loading: false, error: err.friendlyMessage || 'Your maps could not be loaded.' });
+        if (!cancelled) setState({ options: [], loaded: true, error: err.friendlyMessage || 'Your maps could not be loaded.' });
       });
     return () => {
       cancelled = true;
     };
   }, [enabled]);
 
-  return state;
+  return { options: state.options, error: state.error, loading: enabled && !state.loaded };
 }

@@ -9,12 +9,12 @@ import CloseStamp from './CloseStamp';
 function PaperStripHeader({ titleId, title, headingRef, onClose, closeLabel, headingLevel = 2 }) {
   const Heading = `h${headingLevel}`;
   return (
-    <header className='paper-aged grid grid-cols-rev items-center gap-3 border-b-2 border-dashed border-poster-brown py-3 pl-5 pr-4 text-poster-ink'>
+    <header className='paper-aged grid grid-cols-rev items-center gap-3 border-b-2 border-dashed border-poster-brown py-3 pl-5 pr-4 text-poster-ink sideways:py-1.5'>
       <Heading
         id={titleId}
         ref={headingRef}
         tabIndex={headingRef ? -1 : undefined}
-        className='min-w-0 break-words font-travel text-2xl uppercase leading-tight tracking-wide text-poster-red-deep focus:outline-none'
+        className='min-w-0 break-words font-travel text-2xl uppercase leading-tight tracking-wide text-poster-red-deep focus:outline-none sideways:text-xl'
       >
         {title}
       </Heading>

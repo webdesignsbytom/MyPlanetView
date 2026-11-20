@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../prisma.js';
 import { createMissingVisits } from './maps.js';
-import { UK } from '../utils/ukNations.js';
+import { UK, isUkNation } from '../utils/ukNations.js';
 import { POSITION_FIELD, POSITION_STEP, positionBetween, positionFirst } from '../utils/photoOrder.js';
 import { checkCountryCap, checkStorageCap, checkVideoCap } from '../utils/planLimits.js';
 import { planOf } from '../utils/constants/plans.js';
@@ -330,6 +330,11 @@ async function photoLimitProblem(tx, { mapId, countryCode, addingBytes = 0, limi
  */
 export const createPhotoInDB = ({ photo, variants, landmarkMatches, limits = null }) =>
   prisma.$transaction(async (tx) => {
+    // The map's UK split as it is now, its row locked: if the split was turned off since this
+    // photo was placed, a nation's photo goes to the UK remembering its nation, as turning it
+    // off does (setMapSplitUk takes the same lock; 19 Nov 2026, the audit)
+    const [map] = await tx.$queryRaw`SELECT "splitUk" FROM "travel_map" WHERE "id" = ${photo.mapId} FOR NO KEY UPDATE`;
+    if (map && !map.splitUk && isUkNation(photo.countryCode)) photo = { ...photo, countryCode: UK, ukNation: photo.countryCode };
     if (limits) {
       // A video has no files here (it's in Stream): its own size counts instead
       const addingBytes = variants.reduce((sum, v) => sum + (Number(v.bytes) || 0), 0) + (Number(photo.videoBytes) || 0);

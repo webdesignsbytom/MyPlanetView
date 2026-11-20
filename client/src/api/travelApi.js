@@ -3,6 +3,7 @@
 import client from './client';
 import {
   ACCEPT_INVITE_API,
+  inviteApi,
   GOALS_API,
   LANDMARKS_API,
   MAPS_API,
@@ -42,6 +43,9 @@ export const deleteMap = (mapId) => data(client.delete(`${MAPS_API}/${enc(mapId)
 export const getMapStats = (mapId) => data(client.get(`${MAPS_API}/${enc(mapId)}/stats`));
 // The owner's main (included) map; the old one becomes an extra map
 export const makeMainMap = (mapId) => data(client.post(`${MAPS_API}/${enc(mapId)}/main`, {}));
+// Put a map on the owner's plan (a paid extra map's slot), or take it back -> { map } (its `tier` says where it is)
+export const upgradeMap = (mapId) => data(client.post(`${MAPS_API}/${enc(mapId)}/upgrade`, {}));
+export const cancelMapUpgrade = (mapId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/upgrade`));
 // Hand the map to someone already on it -> { map } (as an editor sees it when you stay)
 export const transferMap = (mapId, { userId, stayAsEditor = true }) =>
   data(client.post(`${MAPS_API}/${enc(mapId)}/transfer`, { userId, stayAsEditor }));
@@ -93,6 +97,24 @@ export const deleteMoment = (momentId) => data(client.delete(`${MOMENTS_API}/${e
 // Country maps (docs/API.md "Country maps"): one country's states visited and pins, on a map
 // or through its share link (`source`: { mapId } or { shareCode }), and the changes
 const countryMapBase = ({ mapId, shareCode }) => (shareCode ? `${SHARED_API}/${enc(shareCode)}` : `${MAPS_API}/${enc(mapId)}`);
+
+/**
+ * Every country ticket's first pages at once (docs/API.md "Country lists"): `photos` and
+ * `moments` are lists of codes, `limit`/`display` the photo list's, `momentLimit` the moment
+ * list's. -> `{ photos: { [code]: { photos, nextCursor } }, moments: { [code]: { moments, nextCursor } } }`
+ */
+export const getCountryLists = (source, { photos = [], moments = [], limit, display, momentLimit }) =>
+  data(
+    client.get(
+      `${countryMapBase(source)}/country-lists${query({
+        photos: photos.length ? photos.join(',') : undefined,
+        moments: moments.length ? moments.join(',') : undefined,
+        limit,
+        display: display ? 1 : undefined,
+        momentLimit,
+      })}`,
+    ),
+  );
 // -> { subdivisions: [{ code, status }] }
 export const getSubdivisions = (source, country) => data(client.get(`${countryMapBase(source)}/subdivisions${query({ country })}`));
 // -> { subdivision, implied }: the visits it brought (its country, a region)
@@ -171,6 +193,8 @@ export const removeMember = (resource, id, userId) =>
 export const cancelInvite = (resource, id, inviteId) =>
   data(client.delete(`${resourceBase(resource, id)}/invites/${enc(inviteId)}`));
 export const acceptInvite = (token) => data(client.post(ACCEPT_INVITE_API, { token }));
+// What an invite is for, before signing in: { invite: { email, role, kind, id, name, invitedBy, travellerName, expiresAt } }
+export const getInvite = (token) => data(client.get(inviteApi(token)));
 
 // Share links (no sign-in needed; cookies still go, so members get their own role)
 export const openShareCode = (code) => data(client.get(`${SHARED_API}/${enc(code)}`));

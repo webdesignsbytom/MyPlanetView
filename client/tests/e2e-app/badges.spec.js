@@ -44,7 +44,7 @@ test.describe('Badges and goals', () => {
     const form = panel.getByRole('form', { name: 'New goal' });
     await expect(form.getByRole('combobox', { name: 'What kind of goal' })).toBeFocused();
     await form.getByRole('combobox', { name: 'What kind of goal' }).selectOption('Every country in a region or continent');
-    await expect(form.getByText(/only counts once a photo taken there by the end of that day proves it/)).toBeVisible();
+    await expect(form.getByText(/counts once you went there by the end of that day/)).toBeVisible();
     await form.getByRole('button', { name: 'Add goal' }).click();
     await expect(form.getByRole('alert')).toHaveText('Choose a region or a continent.');
     await form.getByRole('combobox', { name: 'Which region or continent' }).selectOption('Benelux');
@@ -66,8 +66,9 @@ test.describe('Badges and goals', () => {
     await expect(news).toBeHidden();
     await expect(sticker(again, 'A first country in Asia.')).toContainText(/Earned/);
     await expect(again.getByRole('article', { name: 'Our bucket list' })).toContainText('1 of 3 places');
-    // With a deadline only a photo counts: Japan, ticked by hand, doesn't move this one
-    await expect(again.getByRole('article', { name: 'Ten countries by the end of 2027' })).toContainText('8 of 10 countries');
+    // A deadline counts the day a country was marked too (19 Nov 2026, the user's decision):
+    // Japan, ticked by hand today, moves this one
+    await expect(again.getByRole('article', { name: 'Ten countries by the end of 2027' })).toContainText('9 of 10 countries');
   });
 
   test('a goal is changed and deleted, and a bucket list starts from the “want to go” countries', async ({ page }) => {

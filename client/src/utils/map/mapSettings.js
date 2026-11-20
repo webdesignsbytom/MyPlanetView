@@ -40,10 +40,6 @@ export const DEFAULT_MAP_SETTINGS = {
   // The luggage tag under the map's title with the nearest goal's progress
   // (components/achievements/GoalTag.jsx)
   showGoalTag: true,
-  // The whole map page in greys (a greyscale filter: the sea's depths, the countries, the
-  // tags and every panel), except the photo viewer and slideshow, where photos keep their
-  // colour; the trip page's map too
-  blackAndWhite: false,
   // The tips the map opens with, once a visit (components/map/MapTipsDialog.jsx, whose box
   // turns this off)
   showTips: true,
@@ -53,7 +49,6 @@ export const DEFAULT_MAP_SETTINGS = {
 // `detailed`: the Detailed map type always shows it, so its switch is locked on there.
 // `wideOnly`: only drawn on wide screens (lg and up), so its switch is hidden elsewhere.
 export const MAP_SETTING_TOGGLES = [
-  { key: 'blackAndWhite', label: 'Black and white', group: 'colour' },
   { key: 'showVisited', label: 'Countries you have been to', group: 'countries' },
   { key: 'showUnvisited', label: 'Countries you have not been to', group: 'countries' },
   { key: 'showAntarctica', label: 'Antarctica', group: 'countries' },
@@ -70,7 +65,6 @@ export const MAP_SETTING_TOGGLES = [
 ];
 
 export const MAP_SETTING_GROUPS = [
-  { id: 'colour', legend: 'Colour' },
   { id: 'countries', legend: 'Show on the map' },
   { id: 'map', legend: 'Map details' },
   { id: 'sky', legend: 'Sea, sky and hover' },
@@ -82,6 +76,9 @@ export function cleanMapSettings(value) {
   const input = value && typeof value === 'object' ? value : {};
   const clean = { ...DEFAULT_MAP_SETTINGS };
   if (MAP_STYLE_IDS.includes(input.style)) clean.style = input.style;
+  // Black and white was a switch until 19 Nov 2026: one left on over the world map opens as
+  // the Black and white style (the next save drops the switch)
+  if (input.blackAndWhite === true && clean.style === 'animated') clean.style = 'mono';
   if (MAP_TYPE_IDS.includes(input.mapType)) clean.mapType = input.mapType;
   if (LANDMARK_PIN_MODE_IDS.includes(input.landmarkPins)) clean.landmarkPins = input.landmarkPins;
   for (const { key } of MAP_SETTING_TOGGLES) {

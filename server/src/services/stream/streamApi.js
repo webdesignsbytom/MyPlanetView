@@ -61,8 +61,27 @@ export async function createDirectUpload({ bytes, maxDurationSeconds, name, expi
   const uploadUrl = res.headers.get('location');
   const uid = res.headers.get('stream-media-id');
   if (!res.ok || !uploadUrl || !uid) throw new StreamApiError(`Stream direct upload failed (${res.status})`, res.status);
+  const host = uploadHostOf(uploadUrl);
+  if (!host || !UPLOAD_HOSTS.some((allowed) => allowed.test(host))) {
+    throw new StreamApiError(`Stream gave an upload host the site's CSP doesn't allow: ${host ?? 'none'}`, 502);
+  }
   return { uid, uploadUrl };
 }
+
+// Where the browser may send a video: the hosts in the CSP's connect-src (client/public/.htaccess,
+// client/netlify.toml). Stream names the host in its Location header, and nobody has seen a
+// real one yet (19 Nov 2026, the audit, B13): one outside these would be blocked in the browser
+// with nothing to say why, so it's refused here instead, and the logged error names it. Add it
+// to both CSP files and here.
+const UPLOAD_HOSTS = [/^upload\.videodelivery\.net$/, /(^|\.)cloudflarestream\.com$/];
+const uploadHostOf = (url) => {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' ? parsed.hostname : null;
+  } catch {
+    return null;
+  }
+};
 
 /** A video's details, or null when Stream has no such video. */
 export const getVideo = (uid) => json(`/${encodeURIComponent(uid)}`);

@@ -91,8 +91,11 @@ function PhotoAlbumViewer({ photos, index, onIndex, hasMore = false, onLoadMore,
         <CloseStamp label='Close the photo' onClick={onClose} />
       </header>
 
+      {/* One row and column that fill the space, so the photo's max-h-full and max-w-full
+          have a size to keep to: an auto row grew to the photo, which was drawn at its own
+          size, cut off by the screen with the buttons over it (19 Nov 2026, the audit) */}
       <div
-        className='grid min-h-0 touch-pan-y place-items-center px-2'
+        className='grid min-h-0 touch-pan-y grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)] place-items-center overflow-hidden px-2'
         onPointerDown={(e) => {
           if (e.pointerType !== 'mouse') swipeRef.current = { x: e.clientX, y: e.clientY };
         }}

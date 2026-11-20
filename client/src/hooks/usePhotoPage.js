@@ -39,6 +39,12 @@ export function preloadPhotoPage(filters) {
   return prefetch(cacheKey(filters), () => getPhotoPage({ ...filters, cursor: undefined }), asList);
 }
 
+/**
+ * A list's place in the panel cache, for a fetch that brings several lists at once
+ * (panelCache prefetchMany): `{ key, toValue }`.
+ */
+export const photoPageCacheEntry = (filters) => ({ key: cacheKey(filters), toValue: asList });
+
 /** A list the map's counts say has no photos: kept empty, so it opens without a spinner. */
 export function rememberEmptyPhotoPage(filters) {
   rememberIfMissing(cacheKey(filters), { photos: [], nextCursor: null });
@@ -100,6 +106,11 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, unplac
   const listKeyRef = useRef(null);
   const reload = useCallback(() => {
     generationRef.current += 1;
+    // A page still on its way is dropped (its generation is old), so its spinner goes with it:
+    // a quiet refresh never touches `loading`, and "Load more" stayed a spinner for good
+    // (19 Nov 2026, the audit). A fetch below that isn't quiet sets it again.
+    setLoading(false);
+    setError(null);
     const filters = { mapId, tripId, shareCode, country, unplaced, limit, display };
     const key = enabled ? keyOf(filters) : null;
     const kept = enabled ? recall(cacheKey(filters)) : null;
@@ -119,10 +130,13 @@ export default function usePhotoPage({ mapId, tripId, shareCode, country, unplac
     reload();
   }, [reload]);
 
-  // The list as it stands goes into the panel cache: after a page, a move, an edit, a delete
+  // The list as it stands goes into the panel cache: after a page, a move, an edit, a delete.
+  // Never from a `refresh: false` copy (the photo viewer's): it would put back a list older
+  // than the panel's, or one with a photo the viewer moved to another country (the panel
+  // reloads its own after a change; 19 Nov 2026, the audit)
   useEffect(() => {
-    if (readyRef.current && listKeyRef.current) remember(`photos:${listKeyRef.current}`, { photos, nextCursor });
-  }, [photos, nextCursor]);
+    if (refresh && readyRef.current && listKeyRef.current) remember(`photos:${listKeyRef.current}`, { photos, nextCursor });
+  }, [refresh, photos, nextCursor]);
 
   // A quiet refresh still on its way is dropped: it would replace the pages added here
   const loadMore = useCallback(() => {

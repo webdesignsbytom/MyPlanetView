@@ -7,12 +7,15 @@
 // original, so a 500 MB video costs a few hundred kilobytes of memory.
 //
 // The location check after cleaning uses the server's own markers (mp4Info.js
-// LOCATION_MARKERS): a file still holding either, or one that can't be read well enough
-// to check, is refused, never uploaded.
+// LOCATION_MARKERS) and XMP's GPS fields: a file still holding any, one with a GPS track of
+// its own (an action camera's or a drone's), or one that can't be read well enough to check,
+// is refused, never uploaded.
 //
 // Pure (no DOM): the e2e suite runs it in Node too (tests/e2e-app/videos.spec.js).
 
 export const VIDEO_CHECK_FAILED = 'This video couldn’t be checked for its location, so it wasn’t uploaded.';
+export const VIDEO_HAS_GPS_TRACK =
+  'This video carries GPS from the camera (a GoPro’s or a drone’s, say), which can’t be taken out here, so it wasn’t uploaded.';
 
 // The largest movie box read into memory (a 3-minute phone video's is well under 1 MB)
 const MOVIE_MAX_BYTES = 64 * 1024 * 1024;
@@ -23,19 +26,25 @@ const QUICKTIME_EPOCH_OFFSET = 2_082_844_800;
 
 const asciiBytes = (text) => Uint8Array.from(text, (char) => char.charCodeAt(0));
 const XYZ = Uint8Array.of(0xa9, 0x78, 0x79, 0x7a);
-// The server's markers: the user-data location atom "©xyz", and QuickTime's location key
-const LOCATION_MARKERS = [XYZ, asciiBytes('com.apple.quicktime.location.ISO6709')];
+// The server's markers: the user-data location atom "©xyz", and QuickTime's location key;
+// plus, here only, EXIF's GPS fields as XMP writes them (19 Nov 2026, the audit)
+const LOCATION_MARKERS = [
+  XYZ,
+  asciiBytes('com.apple.quicktime.location.ISO6709'),
+  asciiBytes('GPSLatitude'),
+  asciiBytes('GPSLongitude'),
+];
 const FREE = asciiBytes('free');
 
-/** A video that can't be read well enough to check for a location. */
+/** A video that can't be read well enough to check for a location (or holds one it can't take out). */
 export class UncheckableVideoError extends Error {
-  constructor() {
-    super(VIDEO_CHECK_FAILED);
+  constructor(message = VIDEO_CHECK_FAILED) {
+    super(message);
     this.name = 'UncheckableVideoError';
   }
 }
-const refuse = () => {
-  throw new UncheckableVideoError();
+const refuse = (message) => {
+  throw new UncheckableVideoError(message);
 };
 
 const fourcc = (bytes, at) => String.fromCharCode(bytes[at], bytes[at + 1], bytes[at + 2], bytes[at + 3]);
@@ -131,8 +140,24 @@ function childBoxes(bytes, start, end) {
 
 // Boxes whose contents are boxes, on the way to the metadata
 const CONTAINERS = new Set(['moov', 'trak', 'mdia', 'minf', 'edts', 'udta']);
-// "©xyz" (QuickTime's and Android's) and "loci" (3GPP's) hold a place
-const isLocationBox = (type) => type === '©xyz' || type === 'loci';
+// "©xyz" (QuickTime's and Android's) and "loci" (3GPP's) hold a place; "XMP_" (XMP in the
+// user data) may, and nothing plays from it
+const isLocationBox = (type) => type === '©xyz' || type === 'loci' || type === 'XMP_';
+
+// Timed GPS from action cameras and drones, in a track of its own (GoPro's gpmd, Google's
+// camm, DJI's djmd): its values are in mdat, which is never changed here, so such a video is
+// refused (19 Nov 2026, the audit)
+const GPS_TRACK_FORMATS = new Set(['gpmd', 'camm', 'djmd']);
+const childOf = (bytes, box, type) => (box ? childBoxes(bytes, box.body, box.end).find((child) => child.type === type) ?? null : null);
+
+/** Does a track's first sample description (stsd: version and flags, a count, then size and format) name a GPS format? */
+function hasGpsTrack(bytes, movieChildren) {
+  for (const trak of movieChildren.filter((box) => box.type === 'trak')) {
+    const stsd = ['mdia', 'minf', 'stbl', 'stsd'].reduce((box, type) => childOf(bytes, box, type), trak);
+    if (stsd && stsd.end - stsd.body >= 16 && GPS_TRACK_FORMATS.has(fourcc(bytes, stsd.body + 12))) return true;
+  }
+  return false;
+}
 
 /** The box becomes a `free` box of the same size, its contents zeroed. */
 function blank(bytes, box) {
@@ -219,8 +244,9 @@ function cleanItems(bytes, ilst, locationKeys) {
   }
 }
 
-// Unusual places for metadata at the top level, checked with the same markers
-const TOP_LEVEL_METADATA = new Set(['udta', 'meta']);
+// Unusual places for metadata at the top level, checked with the same markers (a `uuid` box
+// is where XMP goes at the top level)
+const TOP_LEVEL_METADATA = new Set(['udta', 'meta', 'uuid']);
 
 /**
  * A copy of the video with its location taken out, exactly the same size, so nothing in
@@ -232,6 +258,7 @@ const TOP_LEVEL_METADATA = new Set(['udta', 'meta']);
  */
 export async function stripVideoLocation(file, { type = file.type } = {}) {
   const { top, moov, bytes } = await readMovie(file);
+  if (hasGpsTrack(bytes, childBoxes(bytes, moov.header, bytes.length))) refuse(VIDEO_HAS_GPS_TRACK);
   cleanList(bytes, moov.header, bytes.length);
   if (hasLocationMarker(bytes)) refuse();
   for (const box of top) {

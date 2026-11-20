@@ -2,6 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 // Constants
 import { HOME_PAGE_URL } from '@/utils/constants/routes';
+// Hooks
+import useMapTheme from '@/hooks/useMapTheme';
+// Utils
+import { mapStyleById } from '@/utils/map/mapStyles';
 // Components
 import StampLoading from './StampLoading';
 
@@ -11,13 +15,18 @@ import StampLoading from './StampLoading';
 // travel paperwork). `children` adds a way out (a btn-poster link).
 // `overlay`: over the map page while its panels' data loads (MapExperience), a layer of its
 // own instead of the page's <main>.
-function MapStatusScreen({ loading = false, overlay = false, title, message, children }) {
+// `styleId`: the viewer's map style, from the settings this browser kept, so the page's own
+// screen is in the style from the start, sea and paperwork alike, not the animated sea's
+// until the map arrives (19 Nov 2026, the user's wish). The overlay takes the map page's.
+function MapStatusScreen({ loading = false, overlay = false, styleId, title, message, children }) {
+  useMapTheme(styleId);
   const Shell = overlay ? 'div' : 'main';
   // data-map-loading: the e2e tests wait for the overlay to go before using the map
   const shellProps = overlay ? { 'data-map-loading': '' } : { id: 'main-content', tabIndex: -1, role: 'main' };
   return (
     <Shell
       {...shellProps}
+      data-map-style={styleId === undefined ? undefined : mapStyleById(styleId).id}
       className={`grid place-items-center overflow-hidden bg-map-sea px-4 animate-ocean motion-reduce:animate-none ${
         overlay ? 'fixed inset-0 z-[60]' : 'relative min-h-dvh'
       }`}
@@ -29,7 +38,7 @@ function MapStatusScreen({ loading = false, overlay = false, title, message, chi
         <>
           <StampLoading />
           <div role='status' className='relative z-10 grid justify-items-center'>
-            <span className='font-travel text-3xl uppercase tracking-wide text-poster-cream [text-shadow:0_0_6px_var(--color-map-sea),0_0_14px_var(--color-map-sea),0_0_24px_var(--color-map-sea)] sm:text-4xl'>
+            <span className='font-travel text-3xl uppercase tracking-wide text-map-sea-ink [text-shadow:0_0_6px_var(--color-map-sea),0_0_14px_var(--color-map-sea),0_0_24px_var(--color-map-sea)] sm:text-4xl'>
               {title || 'Loading…'}
             </span>
           </div>

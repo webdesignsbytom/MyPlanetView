@@ -66,4 +66,12 @@ describe('the UK’s nations', () => {
   it('gives no nation for an invalid position', () => {
     expect(ukNationAt(Number.NaN, 0)).toBe(null);
   });
+
+  // The UK's lookup takes in South Georgia (a region) and the Channel Islands, far from every
+  // nation: they stay "nation not chosen", as the states' list has them (19 Nov 2026, the audit)
+  it('gives no nation far from all of them', () => {
+    expect(countryAtPosition(-54.28, -36.51)).toBe('GB');
+    expect(ukNationAt(-54.28, -36.51)).toBe(null); // Grytviken, South Georgia
+    expect(ukNationAt(49.19, -2.11)).toBe(null); // St Helier, Jersey
+  });
 });

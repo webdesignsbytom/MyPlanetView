@@ -51,7 +51,7 @@ const LANDMARK_BY_ID = new Map(LANDMARK_ROWS.map((l) => [l.id, l]));
 export const landmarkById = (id) => LANDMARK_BY_ID.get(id) || null;
 
 // Roles
-const RANK = { VIEWER: 1, EDITOR: 2, OWNER: 3 };
+const RANK = { VIEWER: 1, EDITOR: 2, CO_OWNER: 3, OWNER: 4 };
 export const higherRole = (a, b) => (!a ? b || null : !b ? a : RANK[a] >= RANK[b] ? a : b);
 export const atLeast = (role, needed) => Boolean(role && RANK[role] >= RANK[needed]);
 
@@ -353,7 +353,7 @@ export function mapSummary(map, role) {
     role,
     ownerName: userName(map.ownerId),
     counts: { countries: stats.countries, photos: stats.photos, trips: stats.trips },
-    ...(role === 'OWNER' ? { locked: mapSlots(map.ownerId).lockedIds.includes(map.id), graceUntil: map.graceUntil || null } : {}),
+    ...(role === 'OWNER' ? { locked: mapSlots(map.ownerId).lockedIds.includes(map.id), tier: mapSlots(map.ownerId).tiers[map.id], graceUntil: map.graceUntil || null } : {}),
   };
 }
 

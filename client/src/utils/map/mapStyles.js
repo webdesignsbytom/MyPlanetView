@@ -2,12 +2,24 @@
 // switches the --map-* tokens in styles/index.css. `background` is an image set in
 // src/assets/images/map-styles/ (null: the animated sea). Jupiter clouds and Galaxy were
 // taken out on 16 Nov 2026 (the user's wish); a saved one opens as the animated sea
-// (cleanMapSettings falls back to the first).
+// (cleanMapSettings falls back to the first). The starry night (19 Nov 2026, the user's
+// wish, after a travel brand's world map on deep space): every country the same pale blue,
+// a little see-through, on a night sky that stays still while the map pans. The first is
+// the standard world map (its sea animated when the viewer's setting says so: 'World map',
+// 19 Nov 2026, the user's wish, was 'Animated sea'), and Black and white is that map in
+// greys, every feature the same (19 Nov 2026, the user's wish: a style, not a switch).
 export const MAP_STYLES = [
-  { id: 'animated', label: 'Animated sea', background: null },
+  { id: 'animated', label: 'World map', background: null },
+  { id: 'mono', label: 'Black and white', background: null },
   { id: 'old-map', label: 'Old map', background: 'old-map' },
+  { id: 'starry', label: 'Starry night', background: 'starry-night' },
 ];
 
 export const MAP_STYLE_IDS = MAP_STYLES.map((style) => style.id);
 
 export const mapStyleById = (id) => MAP_STYLES.find((style) => style.id === id) || MAP_STYLES[0];
+
+// Black and white: the world map in greys (MapExperience's greyscale filter, the grey
+// tokens on <html>: useMapTheme)
+export const MONO_STYLE = 'mono';
+export const isMonoStyle = (id) => mapStyleById(id).id === MONO_STYLE;

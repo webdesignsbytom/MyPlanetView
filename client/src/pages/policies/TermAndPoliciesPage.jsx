@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 // Constants
 import { CompanyName } from '@/utils/constants/constants';
@@ -37,7 +37,12 @@ const groupBy = (sections) =>
 function TermAndPoliciesPage() {
   const pageHelmet = helmetData[LEGAL_AGREEMENTS_PAGE_URL];
   const location = useLocation();
-  const activeHash = (location.hash || '').replace('#', '');
+  // The section in the address, read after the first render: the pre-rendered page was made
+  // without one, so hydration matches, and the contents mark it then (19 Nov 2026, the audit)
+  const [activeHash, setActiveHash] = useState('');
+  useEffect(() => {
+    setActiveHash((location.hash || '').replace('#', ''));
+  }, [location.hash]);
 
   const termsGroups = useMemo(() => groupBy(TermsSectionsArray), []);
   const privacyGroups = useMemo(() => groupBy(PrivacySectionsArray), []);
@@ -50,6 +55,7 @@ function TermAndPoliciesPage() {
     target.setAttribute('tabIndex', '-1');
     target.focus({ preventScroll: true });
     window.history.replaceState(null, '', `#${id}`);
+    setActiveHash(id);
   }, []);
 
   const isCurrent = (id) => activeHash === id;

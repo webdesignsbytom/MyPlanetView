@@ -80,10 +80,15 @@ const distanceToRing = (ring, x, y, kx) => {
 /**
  * The nation a position in the UK is in, from the nations' real outlines (Natural Earth
  * 1:10m, simplified to about 150 m: src/data/ukNations.json, made by
- * images/src/tools/uk-nations.mjs): the one it's inside, else the nearest (a photo from a
- * pier, or a coast the map draws further out). For a position already found in the UK
- * (countryAtPosition); null for an invalid one.
+ * images/src/tools/uk-nations.mjs): the one it's inside, else the nearest within
+ * NEAREST_NATION_MAX_DEG (a photo from a pier, a coast the map draws further out, an islet
+ * the outlines leave out). For a position already found in the UK (countryAtPosition);
+ * null for an invalid one, or one far from every nation: South Georgia (a region folded into
+ * the UK's lookup) and the Channel Islands stay the UK's, "nation not chosen", as the states'
+ * list has them (19 Nov 2026, the audit: they went to England).
  */
+const NEAREST_NATION_MAX_DEG = 0.5;
+
 export function ukNationAt(latitude, longitude) {
   if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
   const kx = Math.cos((latitude * Math.PI) / 180);
@@ -95,5 +100,5 @@ export function ukNationAt(latitude, longitude) {
       if (!nearest || distance < nearest.distance) nearest = { code, distance };
     }
   }
-  return nearest?.code ?? null;
+  return nearest && nearest.distance <= NEAREST_NATION_MAX_DEG ? nearest.code : null;
 }

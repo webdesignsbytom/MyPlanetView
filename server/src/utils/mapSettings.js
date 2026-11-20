@@ -2,7 +2,9 @@
 
 // Jupiter clouds and Galaxy were taken out on 16 Nov 2026 (the user's wish): a profile
 // that saved one keeps it until the next save, and the client opens it as the animated sea
-export const MAP_STYLES = Object.freeze(['animated', 'old-map']);
+// 'mono' is Black and white, the world map in greys (19 Nov 2026: it was the switch
+// blackAndWhite, which is now dropped like any unknown key)
+export const MAP_STYLES = Object.freeze(['animated', 'mono', 'old-map', 'starry']);
 // 'detailed' shows country names, grid lines and landmarks at every zoom
 export const MAP_TYPES = Object.freeze(['regular', 'detailed']);
 // The landmark pins (17 Nov 2026): when zoomed in, at every zoom, only the passport's
@@ -25,8 +27,6 @@ export const MAP_SETTING_FLAGS = Object.freeze([
   'showMoments',
   // The luggage tag under the map's title with the nearest unmet goal (on unless turned off)
   'showGoalTag',
-  // The map page in greys (off unless turned on)
-  'blackAndWhite',
   // The tips the map opens with, once a visit (on unless turned off)
   'showTips',
 ]);

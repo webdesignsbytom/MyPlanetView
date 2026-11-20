@@ -14,7 +14,8 @@ export const raw = (body, status = 200) => ({ status, body });
 export const fail = (status, message) => ({ status, body: { status: status >= 500 ? 'error' : 'fail', message } });
 
 // No role at all is a 404 (nothing to probe); a role that isn't enough is a 403
-export const RANK = { VIEWER: 1, EDITOR: 2, OWNER: 3 };
+// A co-owner (19 Nov 2026) sits between an editor and the owner, as on the server
+export const RANK = { VIEWER: 1, EDITOR: 2, CO_OWNER: 3, OWNER: 4 };
 export function deny(role, needed, notFoundMessage = 'Not found.') {
   if (!role) return fail(404, notFoundMessage);
   if (RANK[role] < RANK[needed]) return fail(403, 'You do not have permission to do that.');
@@ -33,6 +34,8 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   'POST /api/maps',
   'DELETE /api/maps/:mapId',
   'POST /api/maps/:mapId/main',
+  'POST /api/maps/:mapId/upgrade',
+  'DELETE /api/maps/:mapId/upgrade',
   'POST /api/maps/:mapId/transfer',
   'POST /api/billing/checkout',
   'POST /api/billing/change-plan',
@@ -84,6 +87,13 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   'PATCH /api/challenges/:challengeId/me',
   'PUT /api/maps/:mapId/passport/stamps/:landmarkId/photo',
   'DELETE /api/maps/:mapId/passport/stamps/:landmarkId/photo',
+  // Taking your travels with you (docs/API.md "Travel copies")
+  'POST /api/maps/:mapId/travel-copies/preview',
+  'POST /api/maps/:mapId/travel-copies',
+  'POST /api/travel-copies/:id/approve',
+  'POST /api/travel-copies/:id/decline',
+  'POST /api/travel-copies/:id/continue',
+  'DELETE /api/travel-copies/:id',
   ...kinds('PATCH /api/{kind}/:id/sharing'),
   ...kinds('POST /api/{kind}/:id/sharing/reset-link'),
   ...kinds('POST /api/{kind}/:id/members'),

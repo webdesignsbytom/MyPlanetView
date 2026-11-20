@@ -94,12 +94,16 @@ const endOfDay = (date) => new Date(new Date(date).getTime() + 24 * 60 * 60 * 10
 
 /**
  * How far a goal has got. Without a deadline, a country counts when it's marked visited
- * or lived, and every stamp counts. With one, only what a photo taken by the end of that
- * day proves counts (a hand-ticked country has no date).
+ * or lived, and every stamp counts. With one, a country counts when a photo taken by the
+ * end of that day, or its visit's date, says it was reached by then: the visit's "First
+ * went" day, else the day it was marked (19 Nov 2026, the user's decision: a goal moved only
+ * with photos, and looked stuck when a country was marked by hand). Stamps by their photos.
  * @param {object} goal `{ kind, target, countryCodes, region, deadline }`
  * @param {object} facts
  * @param {Set<string>} facts.visited
  * @param {Map<string, Date>} facts.firstPhotoAt each country's earliest photo (shotAt)
+ * @param {Map<string, Date>} [facts.firstVisitAt] each visited or lived-in country's date:
+ *   its "First went" day, else when it was marked
  * @param {{ firstShotAt: Date }[]} facts.stamps
  * @param {Map<string, string[]>} facts.countriesByContinent
  * @param {boolean} facts.splitUk the map shows the UK as its four nations: they count as
@@ -111,10 +115,11 @@ const endOfDay = (date) => new Date(new Date(date).getTime() + 24 * 60 * 60 * 10
 export function goalProgress(goal, facts, now = new Date()) {
   const deadline = goal.deadline ? endOfDay(goal.deadline) : null;
   const splitUk = Boolean(facts.splitUk);
+  const firstVisitAt = facts.firstVisitAt ?? new Map();
+  const byDeadline = (date) => Boolean(date) && date.getTime() <= deadline.getTime();
   const placeDone = (code) => {
     if (!deadline) return facts.visited.has(code);
-    const first = facts.firstPhotoAt.get(code);
-    return Boolean(first) && first.getTime() <= deadline.getTime();
+    return byDeadline(facts.firstPhotoAt.get(code)) || (facts.visited.has(code) && byDeadline(firstVisitAt.get(code)));
   };
   const countryDone = (code) => {
     const place = placeOnMap(code, splitUk);
@@ -125,7 +130,7 @@ export function goalProgress(goal, facts, now = new Date()) {
   let need;
   let done;
   if (goal.kind === 'COUNTRY_COUNT') {
-    const codes = deadline ? [...facts.firstPhotoAt.keys()] : [...facts.visited];
+    const codes = deadline ? [...new Set([...facts.firstPhotoAt.keys(), ...facts.visited])] : [...facts.visited];
     have = countedCountryCodes(
       codes.filter((code) => !isSpecialPlace(code) && placeDone(code)),
       splitUk

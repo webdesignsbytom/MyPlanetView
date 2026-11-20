@@ -10,8 +10,10 @@ const entries = new Map();
 // Old enough to show while a fresh copy loads; a photo's signed links (signed at the start
 // of an hour, valid for two) outlast it
 const SHOW_FOR_MS = 20 * 60 * 1000;
-// Recent enough that a background fetch isn't worth making again
-const FRESH_MS = 60 * 1000;
+// Recent enough that a background fetch isn't worth making again: as long as it's shown (a
+// panel opened refreshes its own list quietly anyway). It was a minute, so coming back to
+// the map after one fetched every country's lists again (19 Nov 2026, the audit)
+const FRESH_MS = SHOW_FOR_MS;
 
 /** Keep `value` under `key` (a list as it stands, a reply). */
 export function remember(key, value) {
@@ -39,7 +41,41 @@ export function prefetch(key, fetcher, toValue = (reply) => reply) {
   if (entry?.promise) return entry.promise.then(settled, settled);
   if (entry && 'value' in entry && Date.now() - entry.at < FRESH_MS) return Promise.resolve();
   const promise = fetcher();
-  entries.set(key, { ...entry, promise });
+  track(key, promise, toValue);
+  return promise.then(settled, settled);
+}
+
+/**
+ * Several keys fetched in one request (every country ticket's lists: getCountryLists).
+ * `wanted` is `[{ key, pick, toValue }]`: `fetchAll(todo)` makes the request for those not
+ * fresh or already on their way, `pick(reply)` is a key's own part of it (what its single
+ * fetch would have answered; nothing there counts as a failure), kept as `toValue(part)`.
+ * Each key waits on the shared request as a prefetch does (inFlight). Settles (never
+ * rejects) once done: to true, or false when the shared request failed.
+ */
+export function prefetchMany(wanted, fetchAll) {
+  const now = Date.now();
+  const todo = wanted.filter(({ key }) => {
+    const entry = entries.get(key);
+    return !entry?.promise && !(entry && 'value' in entry && now - entry.at < FRESH_MS);
+  });
+  if (!todo.length) return Promise.resolve(true);
+  const request = fetchAll(todo);
+  for (const { key, pick, toValue = (reply) => reply } of todo) {
+    const promise = request.then((reply) => {
+      const part = pick(reply);
+      if (!part) throw new Error('Not in the reply');
+      return part;
+    });
+    track(key, promise, toValue);
+  }
+  return request.then(() => true, () => false);
+}
+
+// A fetch for `key` on its way: kept with the entry (inFlight), then its answer kept, or on
+// a failure the old value left as it was
+function track(key, promise, toValue) {
+  entries.set(key, { ...entries.get(key), promise });
   promise.then(
     (reply) => {
       if (entries.get(key)?.promise !== promise) return;
@@ -53,7 +89,6 @@ export function prefetch(key, fetcher, toValue = (reply) => reply) {
       else entries.delete(key);
     },
   );
-  return promise.then(settled, settled);
 }
 
 const settled = () => undefined;

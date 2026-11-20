@@ -138,7 +138,7 @@ test.describe('Print or download', () => {
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('thailand');
     await list.getByRole('button', { name: 'Thailand', exact: true }).click();
     const thailand = page.getByRole('dialog', { name: 'Thailand' });
-    await expect(thailand.getByRole('button', { name: 'Slideshow of Thailand' })).toBeVisible();
+    await expect(thailand.getByRole('button', { name: 'Play slideshow' })).toBeVisible();
     await expect(thailand.getByRole('button', { name: 'Print or download' })).toHaveCount(0);
   });
 });

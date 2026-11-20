@@ -49,6 +49,20 @@ vi.hoisted(() => {
       globalThis.__fakeR2.set(input.Key, { bytes: input.ContentLength ?? input.Body?.length, contentType: input.ContentType });
       return {};
     }
+    // A travel copy (docs/API.md "Travel copies"): R2 copies the file itself. CopySource is
+    // "bucket/key", the key URL-encoded
+    if (name === 'CopyObjectCommand') {
+      const sourceKey = decodeURIComponent(String(input.CopySource).split('/').slice(1).join('/'));
+      const stored = globalThis.__fakeR2.get(sourceKey);
+      if (!stored) {
+        const err = new Error('NoSuchKey');
+        err.name = 'NoSuchKey';
+        err.$metadata = { httpStatusCode: 404 };
+        throw err;
+      }
+      globalThis.__fakeR2.set(input.Key, { ...stored });
+      return {};
+    }
     if (name === 'DeleteObjectCommand') {
       if (globalThis.__fakeR2FailDeletes) throw unreachable();
       globalThis.__fakeR2.delete(input.Key);

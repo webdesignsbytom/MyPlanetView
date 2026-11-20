@@ -6,6 +6,7 @@ import {
   PEOPLE_CAP_MESSAGES,
   bestCopySize,
   checkCountryCap,
+  checkCoOwnerCap,
   checkEditorCap,
   checkPhotoSizesForPlan,
   checkStorageCap,
@@ -99,10 +100,20 @@ describe('the storage safety net', () => {
 });
 
 describe('people', () => {
-  it('a map takes up to 10 editors', () => {
-    expect(checkEditorCap({ editors: 9 })).toBeNull();
-    expect(checkEditorCap({ editors: 10 })).toBe('A map can have up to 10 editors.');
-    expect(PEOPLE_CAP_MESSAGES.editors).toBe('A map can have up to 10 editors.');
+  it('a map takes up to 5 editors', () => {
+    expect(checkEditorCap({ editors: 4 })).toBeNull();
+    expect(checkEditorCap({ editors: 5 })).toBe('A map can have up to 5 editors.');
+    expect(PEOPLE_CAP_MESSAGES.editors).toBe('A map can have up to 5 editors.');
+  });
+
+  it('a map has one fewer co-owners than travellers', () => {
+    // Solo: none; a couple: one; a family of four: three
+    expect(checkCoOwnerCap({ coOwners: 0, travellers: 1 })).toBe(PEOPLE_CAP_MESSAGES.coOwners);
+    expect(checkCoOwnerCap({ coOwners: 0, travellers: 2 })).toBeNull();
+    expect(checkCoOwnerCap({ coOwners: 1, travellers: 2 })).toBe(PEOPLE_CAP_MESSAGES.coOwners);
+    expect(checkCoOwnerCap({ coOwners: 2, travellers: 4 })).toBeNull();
+    expect(checkCoOwnerCap({ coOwners: 3, travellers: 4 })).toBe(PEOPLE_CAP_MESSAGES.coOwners);
+    expect(checkCoOwnerCap({ coOwners: 0, travellers: 0 })).toBe(PEOPLE_CAP_MESSAGES.coOwners);
   });
 
   it('a trip takes up to 20 people', () => {
@@ -176,6 +187,20 @@ describe('the leaving plan', () => {
     expect(heirFor(map, { action: 'TRANSFER', toUserId: 'gone' })).toBe('mum');
     expect(heirFor({ id: 'solo', members: [] }, undefined)).toBeNull();
     expect(heirOf([{ userId: 'sleepy', user: { isActive: false } }])).toBe('sleepy');
+  });
+
+  it('passes a map to a co-owner before an editor', () => {
+    const map = {
+      id: 'm',
+      members: [
+        { userId: 'friend', role: 'EDITOR', user: { isActive: true } },
+        { userId: 'partner', role: 'CO_OWNER', user: { isActive: true } },
+      ],
+    };
+    expect(heirFor(map, undefined)).toBe('partner');
+    // An active editor before a deactivated co-owner
+    map.members[1].user.isActive = false;
+    expect(heirFor(map, undefined)).toBe('friend');
   });
 });
 

@@ -4,7 +4,7 @@
 // back to /account?billing=success; the billing portal is the account page itself.
 import { fail, ok, route } from '../mockAdapter';
 import { getDb, me, newId, session } from '../store';
-import { addMonths, billingView, effectivePlan, grantIsActive, grantsOf, isLive, subscriptionOf } from '../plans';
+import { addMonths, billingView, effectivePlan, grantIsActive, grantsOf, isLive, subscriptionOf , usableInviteOffer } from '../plans';
 import { transferMapRecord } from './maps';
 import { promoTrialFor } from '../promoCodes';
 import { GRANT_MONTHS, MAX_EXTRA_MAPS, PAID_PLAN_IDS, isBillingInterval, isPlanId } from '@/utils/constants/plans';
@@ -27,6 +27,10 @@ const M = {
   invalidEmail: 'Enter a valid email address.',
   transferTargetNoAccount: 'That address has no active account to move the map to.',
   transferToSelf: 'You already own this map.',
+  extraMapsAfterFreeMonth: 'Extra maps can be added once your free month ends.',
+  cannotTransferToSelfAdmin: 'You can’t move a map to your own account from the admin panel.',
+  cannotActOnDeveloper: 'Only a developer can manage developer accounts.',
+  transferTargetNotReady: 'The new owner needs an active account with a verified email address.',
 };
 
 // Where Checkout and the portal send you in mock mode
@@ -124,10 +128,13 @@ export function registerBillingRoutes() {
     if (!isQuantity(extraMaps)) return fail(400, M.invalidExtraMaps);
     if (body.plan === 'FREE' && extraMaps === 0) return fail(400, M.nothingToBuy);
     if (isLive(subscriptionOf(me().id))) return fail(409, M.subscriptionExists);
-    // A promo code's free month, on a paid plan; as the webhook, it's then used
-    const trial = promoTrialFor(me(), body.plan);
+    // A promo code's free month, on a paid plan; as the webhook, it's then used. Never with
+    // extra maps in the same Checkout: the month would cover them too (the server's rule)
+    const trial = extraMaps > 0 ? null : promoTrialFor(me(), body.plan);
     subscribe(me().id, { plan: body.plan, interval: body.interval, extraMaps, trialDays: trial?.days });
     if (trial) me().promoTrialUsedAt = new Date().toISOString();
+    // The invite offer, as its coupon would: used (never with a free month or extra maps)
+    if (!trial && extraMaps === 0 && usableInviteOffer(me(), { plan: body.plan })) me().inviteOfferUsedAt = new Date().toISOString();
     return ok({ url: CHECKOUT_DONE_URL });
   });
 
@@ -137,6 +144,8 @@ export function registerBillingRoutes() {
     const sub = subscriptionOf(me().id);
     if (!isLive(sub)) return fail(409, M.noSubscription);
     if (body.plan === 'FREE' && !(sub.extraMaps > 0)) return fail(409, M.cancelInPortal);
+    // A new plan ends a free month: paid from now (the server's trial_end: 'now')
+    if (sub.status === 'trialing' && body.plan !== sub.plan) Object.assign(sub, { status: 'active', currentPeriodEnd: periodEnd(body.interval) });
     Object.assign(sub, { plan: body.plan, interval: body.interval });
     return ok({ billing: billingView(me().id) });
   });
@@ -153,6 +162,8 @@ export function registerBillingRoutes() {
       subscribe(me().id, { plan: 'FREE', interval, extraMaps: quantity });
       return ok({ url: CHECKOUT_DONE_URL });
     }
+    // A free month covers every line: extra maps wait until it ends (the server's rule)
+    if (sub.status === 'trialing' && quantity > (sub.extraMaps ?? 0)) return fail(409, M.extraMapsAfterFreeMonth);
     if (quantity === 0 && sub.plan === 'FREE' && sub.extraMaps > 0) return fail(409, M.cancelInPortal);
     sub.extraMaps = quantity;
     return ok({ billing: billingView(me().id) });
@@ -241,6 +252,12 @@ export function registerBillingRoutes() {
     const target = db.users.find((u) => u.email.toLowerCase() === email);
     if (!target || target.isActive === false) return fail(400, M.transferTargetNoAccount);
     if (target.id === map.ownerId) return fail(400, M.transferToSelf);
+    // The server's admin rules: not to yourself, a developer's map by a developer only, and
+    // a verified new owner
+    if (target.id === me().id) return fail(403, M.cannotTransferToSelfAdmin);
+    const owner = db.users.find((u) => u.id === map.ownerId);
+    if (owner?.role === 'DEVELOPER' && me().role !== 'DEVELOPER') return fail(403, M.cannotActOnDeveloper);
+    if (target.emailVerified === false) return fail(400, M.transferTargetNotReady);
     const result = transferMapRecord(map, target.id, { keepOldOwnerAsEditor });
     return ok({ map: { id: map.id, name: map.name, ownerId: target.id, previousOwnerId: result.fromUserId, graceUntil: result.graceUntil } });
   });

@@ -1,0 +1,78 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>{{title}}</title>
+    <style>
+      body, table, td, a { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+      body { margin:0; padding:0; width:100% !important; background-color:#f4f4f4;
+      font-family:'Poppins', Arial, sans-serif; color:#333; }
+      .preheader { display:none !important; visibility:hidden; opacity:0; color:transparent;
+      height:0; width:0; mso-hide:all; overflow:hidden; }
+      .wrapper { width:100%; background-color:#f4f4f4; padding:24px 12px; }
+      .container { max-width:640px; margin:0 auto; background-color:#ffffff; border-radius:12px;
+      box-shadow:0 4px 14px rgba(0,0,0,0.08); padding:32px 28px; text-align:center; }
+      .logo img { max-width:160px; height:auto; display:block; margin:0 auto 16px auto; }
+      h1 { font-size:26px; line-height:1.25; margin:0 0 8px 0; color:#333; font-weight:700; }
+      h2 { font-size:18px; line-height:1.4; margin:0 0 18px 0; color:#333; font-weight:500; }
+      p { font-size:16px; line-height:1.6; margin:12px 0; color:#333; }
+      a { color:#32931D; text-decoration:underline; font-weight:600; }
+      .btn { display:inline-block; padding:14px 28px; background-color:#32931D; color:#ffffff !important;
+      text-decoration:none; border-radius:8px; font-weight:700; font-size:16px; line-height:1.2;
+      margin:12px 0 4px 0; }
+      .url { word-break:break-all; font-size:14px; }
+      footer { max-width:640px; margin:14px auto 0 auto; text-align:center; font-size:14px; color:#999; }
+      footer a { color:#32931D; }
+    </style>
+  </head>
+  <body>
+    <div class='preheader'>{{preheader}}</div>
+
+    <div class='wrapper'>
+      <div class='container'>
+        <div class='logo'>
+          <img src='{{logoUrl}}' alt='{{businessName}} logo' />
+        </div>
+
+        {{#if isRequest}}
+          <h1>{{requesterName}} asks to copy their travels</h1>
+          <h2>{{fromMapName}}</h2>
+          <p>{{requesterName}} would like a copy of their travels as {{travellerName}} on "{{fromMapName}}" for
+            their own map: {{summary}}.</p>
+          <p>Nothing on your map changes: they get copies of their own. Open your map to see what they chose,
+            then approve or decline it.</p>
+        {{else if isDone}}
+          <h1>Your travels are on your map</h1>
+          <h2>{{toMapName}}</h2>
+          <p>Your travels from "{{fromMapName}}" have been copied to "{{toMapName}}": {{summary}}.</p>
+          {{#if skipped}}
+            <p>{{skipped}} {{#if oneSkipped}}photo didn't{{else}}photos didn't{{/if}} fit within your plan's photos
+              per country, so {{#if oneSkipped}}it stayed{{else}}they stayed{{/if}} on the family map.</p>
+          {{/if}}
+          <p>They're yours now: remove any photos you aren't in.</p>
+        {{else}}
+          <h1>Your request wasn't approved</h1>
+          <h2>{{fromMapName}}</h2>
+          <p>Your request to copy your travels from "{{fromMapName}}" was declined. Nothing was copied.</p>
+        {{/if}}
+
+        <p>
+          <a class='btn' href='{{actionUrl}}' target='_blank' rel='noreferrer'>Open the map</a>
+        </p>
+
+        <p class='url'>
+          If the button doesn't work, copy and paste this link into your browser:<br />
+          <a href='{{actionUrl}}' target='_blank' rel='noreferrer'>{{actionUrl}}</a>
+        </p>
+      </div>
+
+      <footer>
+        <p>
+          <a href='{{businessSiteUrl}}' target='_blank' rel='noreferrer'>{{businessUrl}}</a><br />
+          &copy; {{year}} {{businessName}}. All rights reserved.
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

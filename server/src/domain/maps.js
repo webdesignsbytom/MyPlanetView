@@ -1,5 +1,5 @@
 import { prisma } from '../prisma.js';
-import { COUNTED_VISIT_STATUSES } from '../utils/travelValidation.js';
+import { COUNTED_VISIT_STATUSES, MAX_TRAVELLERS, maxTravellersFor } from '../utils/travelValidation.js';
 import { PARENT_PLACE, SPECIAL_PLACE_CODES, withParentPlaces } from '../utils/specialPlaces.js';
 import { UK, UK_NATION_CODES } from '../utils/ukNations.js';
 import { REGION_CODES } from '../utils/regionPlaces.js';
@@ -46,8 +46,9 @@ const mapSummarySelect = {
   isDefault: true,
   ownerId: true,
   createdAt: true,
-  // Which of an owner's maps are active (utils/mapSlots.js); shown to the owner only
+  // Which of an owner's maps are on their plan, on Economy or locked (utils/mapSlots.js); shown to the owner only
   graceUntil: true,
+  upgradedAt: true,
   owner: { select: { name: true } },
 };
 
@@ -175,8 +176,20 @@ export const createMapInDB = ({ ownerId, name, groupType, isDefault = false, sha
     select: { id: true },
   });
 
+/**
+ * Change a map's fields. A new kind (`groupType`) is checked against its travellers with the
+ * map row locked, so a traveller added at the same moment can't take it past the new kind's
+ * room. -> `{ ok: true }`, or `{ tooMany: true }` (nothing changed)
+ */
 export const updateMapInDB = (mapId, data) =>
-  prisma.travelMap.update({ where: { id: mapId }, data, select: { id: true } });
+  prisma.$transaction(async (tx) => {
+    if (data.groupType) {
+      await lockMap(tx, mapId);
+      if ((await tx.traveller.count({ where: { mapId } })) > maxTravellersFor(data.groupType)) return { tooMany: true };
+    }
+    await tx.travelMap.update({ where: { id: mapId }, data, select: { id: true } });
+    return { ok: true };
+  });
 
 export const deleteMapInDB = (mapId) => prisma.travelMap.delete({ where: { id: mapId } });
 
@@ -194,7 +207,7 @@ export const isShareCodeTaken = async (shareCode) => {
 
 // Travellers
 
-export const countTravellers = (mapId) => prisma.traveller.count({ where: { mapId } });
+export const countTravellers = (mapId, db = prisma) => db.traveller.count({ where: { mapId } });
 
 export const findMapTravellers = (mapId) =>
   prisma.traveller.findMany({
@@ -207,7 +220,7 @@ export const findTravellerIds = async (mapId) =>
   (await prisma.traveller.findMany({ where: { mapId }, select: { id: true } })).map((t) => t.id);
 
 export const findTraveller = (mapId, travellerId) =>
-  prisma.traveller.findFirst({ where: { id: travellerId, mapId }, select: { id: true, birthCountryCode: true } });
+  prisma.traveller.findFirst({ where: { id: travellerId, mapId }, select: { id: true, name: true, birthCountryCode: true } });
 
 const TRAVELLER_SELECT = {
   id: true,
@@ -218,12 +231,49 @@ const TRAVELLER_SELECT = {
   favouriteCountryCode: true,
 };
 
-export const createTravellerInDB = (data) => prisma.traveller.create({ data, select: TRAVELLER_SELECT });
+// A map's row locked while its travellers are counted (FOR NO KEY UPDATE), so two adds, two
+// removals, or an add and a change of kind at the same moment can't pass a cap together
+// (19 Nov 2026, the audit)
+const lockMap = (tx, mapId) => tx.$queryRaw`SELECT "groupType"::text AS "groupType" FROM "travel_map" WHERE "id" = ${mapId} FOR NO KEY UPDATE`;
+
+/**
+ * A new traveller, last in order, unless the map is full: `{ traveller }`, or
+ * `{ full: 'total' }` (MAX_TRAVELLERS) or `{ full: <the map's kind> }` (maxTravellersFor).
+ */
+export const createTravellerInDB = (mapId, data) =>
+  prisma.$transaction(async (tx) => {
+    const [map] = await lockMap(tx, mapId);
+    const count = await tx.traveller.count({ where: { mapId } });
+    if (count >= MAX_TRAVELLERS) return { full: 'total' };
+    if (count >= maxTravellersFor(map?.groupType)) return { full: map.groupType };
+    return { traveller: await tx.traveller.create({ data: { ...data, mapId, position: count }, select: TRAVELLER_SELECT }) };
+  });
 
 export const updateTravellerInDB = (travellerId, data) =>
   prisma.traveller.update({ where: { id: travellerId }, data, select: TRAVELLER_SELECT });
 
-export const deleteTravellerInDB = (travellerId) => prisma.traveller.delete({ where: { id: travellerId } });
+/** Remove a traveller, never the map's last one. -> `{ deleted }` (false when not there), or `{ last: true }` */
+export const deleteTravellerInDB = (mapId, travellerId) =>
+  prisma.$transaction(async (tx) => {
+    await lockMap(tx, mapId);
+    const travellers = await tx.traveller.count({ where: { mapId } });
+    if (travellers <= 1) return { last: true };
+    // A co-owner is their traveller, and the owner keeps one (19 Nov 2026): a co-owner's, or
+    // one invited as a co-owner, stays until that's taken away; the rest stay one more
+    // than the co-owners
+    const traveller = await tx.traveller.findFirst({ where: { id: travellerId, mapId }, select: { userId: true } });
+    if (!traveller) return { deleted: false };
+    const now = new Date();
+    const [ownCoOwner, invited, coOwners] = await Promise.all([
+      traveller.userId ? tx.mapMember.count({ where: { mapId, userId: traveller.userId, role: 'CO_OWNER' } }) : 0,
+      tx.shareInvite.count({ where: { travellerId, ...pendingInvite(now) } }),
+      countMapCoOwnerSeats(mapId, {}, tx),
+    ]);
+    if (ownCoOwner || invited) return { coOwner: true };
+    if (travellers - 1 < coOwners + 1) return { coOwnerRoom: true };
+    const { count } = await tx.traveller.deleteMany({ where: { id: travellerId, mapId } });
+    return { deleted: count > 0 };
+  });
 
 // Visits
 
@@ -293,8 +343,9 @@ export const createMissingVisits = async (mapId, places, source, db = prisma) =>
 
 // Stats inputs
 
+// With each visit's dates, for goals with a deadline (utils/goals.js)
 export const findMapVisitsForStats = (mapId) =>
-  prisma.countryVisit.findMany({ where: { mapId }, select: { countryCode: true, status: true } });
+  prisma.countryVisit.findMany({ where: { mapId }, select: { countryCode: true, status: true, firstVisitedOn: true, createdAt: true } });
 
 export const countMapPhotos = (mapId, { includeHidden }) =>
   prisma.photo.count({ where: { mapId, ...(includeHidden ? {} : { hidden: false }) } });
@@ -305,11 +356,12 @@ export const countMapPhotos = (mapId, { includeHidden }) =>
  */
 export const findMapStampedLandmarkIds = async (mapId, { includeHidden }) =>
   (
-    await prisma.photoLandmark.findMany({
+    // Grouped by Postgres: Prisma's `distinct` would fetch every match and drop the repeats
+    // itself (19 Nov 2026, the audit)
+    await prisma.photoLandmark.groupBy({
+      by: ['landmarkId'],
       // The match's own mapId (index [mapId, landmarkId]); viewers' only from visible photos
       where: { mapId, confirmed: true, ...(includeHidden ? {} : { photo: { hidden: false } }) },
-      distinct: ['landmarkId'],
-      select: { landmarkId: true },
     })
   ).map((row) => row.landmarkId);
 
@@ -347,14 +399,19 @@ export const findCompletedTripsForStats = async (mapId) => {
 
 const MEMBER_SELECT = { userId: true, role: true, user: { select: { name: true, email: true } } };
 
+/** A map's members, longest-standing first, each with the traveller they are on it (co-owners). */
 export const findMapMembers = (mapId) =>
-  prisma.mapMember.findMany({ where: { mapId }, select: MEMBER_SELECT, orderBy: { createdAt: 'asc' } });
+  prisma.mapMember.findMany({
+    where: { mapId },
+    select: { ...MEMBER_SELECT, user: { select: { name: true, email: true, travellerOf: { where: { mapId }, select: { id: true, name: true }, take: 1 } } } },
+    orderBy: { createdAt: 'asc' },
+  });
 
 export const findMapMember = (mapId, userId) =>
   prisma.mapMember.findUnique({ where: { mapId_userId: { mapId, userId } }, select: { role: true } });
 
-export const upsertMapMember = (mapId, userId, role) =>
-  prisma.mapMember.upsert({
+export const upsertMapMember = (mapId, userId, role, db = prisma) =>
+  db.mapMember.upsert({
     where: { mapId_userId: { mapId, userId } },
     create: { mapId, userId, role },
     update: { role },
@@ -372,6 +429,8 @@ export const deleteMapMember = async (mapId, userId) => {
   const [, member] = await prisma.$transaction([
     prisma.tripMap.deleteMany({ where: { addedById: userId, trip: { mapId, members: { none: { userId } } } } }),
     prisma.mapMember.deleteMany({ where: { mapId, userId } }),
+    // A co-owner's traveller stays on the map, with no login (19 Nov 2026)
+    prisma.traveller.updateMany({ where: { mapId, userId }, data: { userId: null } }),
   ]);
   return member;
 };
@@ -408,6 +467,7 @@ export const transferMapInDB = ({ mapId, toUserId, keepOldOwnerAsEditor = false,
   prisma.$transaction(async (tx) => {
     const map = await tx.travelMap.findUnique({ where: { id: mapId }, select: { ownerId: true, isDefault: true } });
     if (!map) return null;
+    const before = await tx.mapMember.findUnique({ where: { mapId_userId: { mapId, userId: toUserId } }, select: { role: true } });
     await tx.mapMember.deleteMany({ where: { mapId, userId: toUserId } });
     // isDefault and defaultForOwnerId change together (the travel_map_default_owner CHECK)
     await tx.travelMap.update({
@@ -415,11 +475,22 @@ export const transferMapInDB = ({ mapId, toUserId, keepOldOwnerAsEditor = false,
       data: { ownerId: toUserId, isDefault: false, defaultForOwnerId: null, graceUntil },
     });
     if (keepOldOwnerAsEditor && map.ownerId !== toUserId) {
+      // Handed to a co-owner, the two swap places when the old owner is one of the travellers
+      // (co-owners are travellers; 19 Nov 2026), so the count of co-owners stays the same
+      const isTraveller = await tx.traveller.count({ where: { mapId, userId: map.ownerId } });
+      const role = before?.role === 'CO_OWNER' && isTraveller ? 'CO_OWNER' : 'EDITOR';
       await tx.mapMember.upsert({
         where: { mapId_userId: { mapId, userId: map.ownerId } },
-        create: { mapId, userId: map.ownerId, role: 'EDITOR' },
-        update: { role: 'EDITOR' },
+        create: { mapId, userId: map.ownerId, role },
+        update: { role },
       });
+    } else if (map.ownerId !== toUserId) {
+      // Gone from the map: their traveller stays, with no login
+      await tx.traveller.updateMany({ where: { mapId, userId: map.ownerId }, data: { userId: null } });
+      // Leaving the map: the links they added to its trips on their other maps go too,
+      // unless they're on that trip themselves, as when a member is removed (deleteMapMember;
+      // 19 Nov 2026, the audit). The visits already marked stay.
+      await tx.tripMap.deleteMany({ where: { addedById: map.ownerId, trip: { mapId, members: { none: { userId: map.ownerId } } } } });
     }
     return { fromUserId: map.ownerId, wasDefault: map.isDefault };
   });
@@ -445,23 +516,38 @@ export const makeDefaultMapInDB = (mapId, ownerId) =>
 const pendingInvite = (now) => ({ acceptedAt: null, expiresAt: { gt: now } });
 
 /** A map's editors: EDITOR members plus pending EDITOR invites. */
-export const countMapEditorSeats = async (mapId, { exceptUserId, exceptEmail } = {}) => {
+export const countMapEditorSeats = async (mapId, { exceptUserId, exceptEmail } = {}, db = prisma) => {
   const now = new Date();
   const [members, invites] = await Promise.all([
-    prisma.mapMember.count({ where: { mapId, role: 'EDITOR', ...(exceptUserId ? { userId: { not: exceptUserId } } : {}) } }),
-    prisma.shareInvite.count({
+    db.mapMember.count({ where: { mapId, role: 'EDITOR', ...(exceptUserId ? { userId: { not: exceptUserId } } : {}) } }),
+    db.shareInvite.count({
       where: { mapId, role: 'EDITOR', ...pendingInvite(now), ...(exceptEmail ? { email: { not: exceptEmail } } : {}) },
     }),
   ]);
   return members + invites;
 };
 
-/** A trip's people: members of any role plus pending invites. */
-export const countTripSeats = async (tripId, { exceptUserId, exceptEmail } = {}) => {
+/** The owner's choice to put a map on their plan (POST /maps/:mapId/upgrade), or taking it back (null). */
+export const setMapUpgradedInDB = (mapId, upgradedAt) => prisma.travelMap.update({ where: { id: mapId }, data: { upgradedAt } });
+
+/** A map's co-owners: CO_OWNER members plus pending CO_OWNER invites. */
+export const countMapCoOwnerSeats = async (mapId, { exceptUserId, exceptEmail } = {}, db = prisma) => {
   const now = new Date();
   const [members, invites] = await Promise.all([
-    prisma.tripMember.count({ where: { tripId, ...(exceptUserId ? { userId: { not: exceptUserId } } : {}) } }),
-    prisma.shareInvite.count({ where: { tripId, ...pendingInvite(now), ...(exceptEmail ? { email: { not: exceptEmail } } : {}) } }),
+    db.mapMember.count({ where: { mapId, role: 'CO_OWNER', ...(exceptUserId ? { userId: { not: exceptUserId } } : {}) } }),
+    db.shareInvite.count({
+      where: { mapId, role: 'CO_OWNER', ...pendingInvite(now), ...(exceptEmail ? { email: { not: exceptEmail } } : {}) },
+    }),
+  ]);
+  return members + invites;
+};
+
+/** A trip's people: members of any role plus pending invites. */
+export const countTripSeats = async (tripId, { exceptUserId, exceptEmail } = {}, db = prisma) => {
+  const now = new Date();
+  const [members, invites] = await Promise.all([
+    db.tripMember.count({ where: { tripId, ...(exceptUserId ? { userId: { not: exceptUserId } } : {}) } }),
+    db.shareInvite.count({ where: { tripId, ...pendingInvite(now), ...(exceptEmail ? { email: { not: exceptEmail } } : {}) } }),
   ]);
   return members + invites;
 };

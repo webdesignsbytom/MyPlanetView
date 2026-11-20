@@ -7,6 +7,8 @@ import {
   canView,
   canEdit,
   canManage,
+  isOwner,
+  canSetMemberRole,
   canSeePhoto,
   canSeeLocation,
   canRemoveMember,
@@ -65,6 +67,30 @@ describe('permissions', () => {
     expect([canView('EDITOR'), canEdit('EDITOR'), canManage('EDITOR')]).toEqual([true, true, false]);
     expect([canView('OWNER'), canEdit('OWNER'), canManage('OWNER')]).toEqual([true, true, true]);
     expect([canView(null), canEdit(null), canManage(null)]).toEqual([false, false, false]);
+  });
+
+  it("gives a co-owner the owner's powers on the map except the owner's own", () => {
+    expect([canView('CO_OWNER'), canEdit('CO_OWNER'), canManage('CO_OWNER')]).toEqual([true, true, true]);
+    expect([isOwner('OWNER'), isOwner('CO_OWNER'), isOwner('EDITOR'), isOwner(null)]).toEqual([true, false, false, false]);
+    expect(higherRole('CO_OWNER', 'EDITOR')).toBe('CO_OWNER');
+    expect(higherRole('CO_OWNER', 'OWNER')).toBe('OWNER');
+    // A map's co-owner is a co-owner of its trips too (their sharing included)
+    expect(tripRoleFor('CO_OWNER', { role: 'EDITOR' })).toBe('CO_OWNER');
+  });
+
+  it('lets a co-owner share, but only the owner take a co-owner away', () => {
+    expect(canSetMemberRole({ actorRole: 'OWNER', currentRole: 'CO_OWNER', newRole: 'EDITOR' })).toBe(true);
+    expect(canSetMemberRole({ actorRole: 'CO_OWNER', currentRole: null, newRole: 'CO_OWNER' })).toBe(true);
+    expect(canSetMemberRole({ actorRole: 'CO_OWNER', currentRole: 'VIEWER', newRole: 'EDITOR' })).toBe(true);
+    expect(canSetMemberRole({ actorRole: 'CO_OWNER', currentRole: 'CO_OWNER', newRole: 'EDITOR' })).toBe(false);
+    expect(canSetMemberRole({ actorRole: 'CO_OWNER', currentRole: 'CO_OWNER', newRole: 'CO_OWNER' })).toBe(true);
+    expect(canSetMemberRole({ actorRole: 'EDITOR', currentRole: null, newRole: 'VIEWER' })).toBe(false);
+
+    expect(canRemoveMember({ actorRole: 'CO_OWNER', actorId: 'partner', targetUserId: 'friend', targetRole: 'EDITOR' })).toBe(true);
+    expect(canRemoveMember({ actorRole: 'CO_OWNER', actorId: 'partner', targetUserId: 'mum', targetRole: 'CO_OWNER' })).toBe(false);
+    expect(canRemoveMember({ actorRole: 'OWNER', actorId: 'owner', targetUserId: 'mum', targetRole: 'CO_OWNER' })).toBe(true);
+    // Leaving is always allowed
+    expect(canRemoveMember({ actorRole: 'CO_OWNER', actorId: 'mum', targetUserId: 'mum', targetRole: 'CO_OWNER' })).toBe(true);
   });
 
   it('hides hidden photos and locations from viewers only', () => {

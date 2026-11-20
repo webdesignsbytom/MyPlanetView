@@ -7,7 +7,7 @@ import MapBackground from '@/components/map/MapBackground';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { mapExtent } from '@/utils/map/projection';
-import { mapStyleById } from '@/utils/map/mapStyles';
+import { isMonoStyle, mapStyleById } from '@/utils/map/mapStyles';
 import { isAntarctic } from '@/utils/map/specialPlaces';
 
 // The card's shape is the map's: 2000 wide, pole line to pole line (1037.2) with
@@ -19,8 +19,9 @@ const ASPECT = { true: 'aspect-[2000/1037.2]', false: 'aspect-[2000/873.6]' };
 // A still overview, so the page scrolls past it normally on a phone. Mounted on a cream
 // card in the shared ticket-edge, so the dashed printed line shows on the paper margin
 // around the map, like a postcard. Antarctica follows the viewer's setting, but is
-// always drawn when the trip stops there. `blackAndWhite` (the viewer's setting) draws it in greys.
-function TripMiniMap({ trip, styleId = 'animated', showAntarctica = true, blackAndWhite = false }) {
+// always drawn when the trip stops there. The Black and white style draws it in greys.
+function TripMiniMap({ trip, styleId = 'animated', showAntarctica = true }) {
+  const blackAndWhite = isMonoStyle(styleId);
   const stops = useMemo(() => trip.stops || [], [trip.stops]);
   const withAntarctica = showAntarctica || stops.some((stop) => isAntarctic(stop.countryCode));
   const extent = useMemo(() => mapExtent(withAntarctica), [withAntarctica]);

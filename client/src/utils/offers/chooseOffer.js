@@ -1,7 +1,7 @@
 // Choosing the travel offer for a slot (docs/API.md, "Travel offers": "Choosing a card").
 // The client gets every live offer once (GET /offers) and picks here, so nothing about the
-// viewer is ever sent to choose one. Pure, with no imports: the same in every browser and
-// under Node.
+// viewer is ever sent to choose one. Pure, importing only regionPlaces.js (itself import-free):
+// the same in every browser and under Node.
 //
 // Among the offers for the slot's placement, the first group that has any wins:
 //   1. 'trip':    a planned trip on this map with future dates: its destination's country;
@@ -11,6 +11,8 @@
 // Within the group, one is picked by `weight`, the same way for the same slot every time:
 // the pick is seeded from the slot's key (its gallery and number), never Math.random, so
 // a page draws the same card on every render and every visit.
+
+import { REGION_PARENT } from '../map/regionPlaces.js';
 
 /** The offers that may go in a placement (GALLERY, SLIDESHOW, COUNTRY_PAGE, TRAVEL_DESK). */
 export const offersForPlacement = (offers, placement) =>
@@ -56,8 +58,9 @@ export function pickByWeight(list, seed) {
  * `context`: `{ placement, tripCountry, country, aroundCountry }` (any may be null).
  */
 // Offers are kept per country: one of the UK's nations (a map that splits the UK) takes the
-// UK's (a copy of utils/map/ukNations.js countryOf, as this file has no imports)
-const offerCountry = (code) => (['XE', 'XC', 'XW', 'XI'].includes(code) ? 'GB' : code);
+// UK's, and a region its country's, Bali Indonesia's (utils/map/ukNations.js countryOf, as
+// this file imports only regionPlaces.js, which has no imports; 19 Nov 2026, the audit)
+const offerCountry = (code) => (['XE', 'XC', 'XW', 'XI'].includes(code) ? 'GB' : (REGION_PARENT[code] ?? code));
 
 export function offerGroups(offers, { placement, tripCountry = null, country = null, aroundCountry = null }) {
   const fitting = offersForPlacement(offers, placement);

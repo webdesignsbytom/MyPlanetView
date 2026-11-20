@@ -1,5 +1,6 @@
 import { prisma } from '../prisma.js';
 import { COUNTING_SUBSCRIPTION_STATUSES } from '../utils/constants/plans.js';
+import { PROMO_UNVERIFIED_HOLD_MS } from '../utils/promoCodes.js';
 
 // Influencer codes (docs/API.md, "Promo codes")
 
@@ -19,8 +20,14 @@ export const findPromoCodeByCode = (code) => prisma.promoCode.findUnique({ where
 
 export const findPromoCodeById = (id) => prisma.promoCode.findUnique({ where: { id }, select: PROMO_SELECT });
 
-/** Accounts that signed up with it. */
-export const countPromoUses = (promoCodeId) => prisma.profile.count({ where: { promoCodeId } });
+/** The accounts using it: signed up with it and verified, or made in the last day (PROMO_UNVERIFIED_HOLD_MS). */
+export const countPromoUses = (promoCodeId, now = new Date(), db = prisma) =>
+  db.profile.count({
+    where: {
+      promoCodeId,
+      user: { OR: [{ emailVerified: true }, { createdAt: { gt: new Date(now.getTime() - PROMO_UNVERIFIED_HOLD_MS) } }] },
+    },
+  });
 
 export const createPromoCodeInDB = (data) => prisma.promoCode.create({ data, select: PROMO_SELECT });
 
@@ -65,7 +72,7 @@ export const claimPromoCodeInDB = ({ userId, promoCodeId, usable }) =>
   prisma.$transaction(async (tx) => {
     await tx.$queryRaw`SELECT 1 FROM "promo_code" WHERE "id" = ${promoCodeId} FOR UPDATE`;
     const promo = await tx.promoCode.findUnique({ where: { id: promoCodeId }, select: PROMO_SELECT });
-    const uses = await tx.profile.count({ where: { promoCodeId } });
+    const uses = await countPromoUses(promoCodeId, new Date(), tx);
     if (!usable(promo, uses)) return null;
     await tx.profile.upsert({ where: { userId }, update: { promoCodeId }, create: { userId, promoCodeId } });
     return promo;
@@ -75,7 +82,22 @@ export const claimPromoCodeInDB = ({ userId, promoCodeId, usable }) =>
 export const findProfilePromo = (userId) =>
   prisma.profile.findUnique({
     where: { userId },
-    select: { promoTrialUsedAt: true, promoCode: { select: { code: true, freePlan: true, createdById: true } } },
+    select: { promoTrialUsedAt: true, promoCode: { select: { id: true, code: true, freePlan: true, maxUses: true, createdById: true } } },
+  });
+
+/**
+ * A code's plan for life, given once per account and never to more accounts than the code's
+ * `maxUses`: counted with the code's row locked, as its claims are (more accounts can hold
+ * the code than verify in time, but no more get the plan; 19 Nov 2026, the audit).
+ * `grant` is the PlanGrant's data, `reason` naming the code. -> true when given now
+ */
+export const giveLifetimePlanInDB = ({ promoCodeId, maxUses, grant }) =>
+  prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT 1 FROM "promo_code" WHERE "id" = ${promoCodeId} FOR UPDATE`;
+    if (await tx.planGrant.findFirst({ where: { userId: grant.userId, reason: grant.reason }, select: { id: true } })) return false;
+    if (maxUses !== null && maxUses !== undefined && (await tx.planGrant.count({ where: { reason: grant.reason } })) >= maxUses) return false;
+    await tx.planGrant.create({ data: grant });
+    return true;
   });
 
 /**

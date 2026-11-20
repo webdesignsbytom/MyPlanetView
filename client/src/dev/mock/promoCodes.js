@@ -26,8 +26,13 @@ export const PROMO_MESSAGES = {
 
 const codes = () => getDb().promoCodes || [];
 
-/** Accounts that signed up with it. */
-const usesOf = (promoId) => getDb().users.filter((u) => u.promoCodeId === promoId).length;
+// The server's uses: accounts that signed up with it and verified, or were made in the last
+// day and still may (PROMO_UNVERIFIED_HOLD_MS)
+const HOLD_MS = 24 * 60 * 60 * 1000;
+const usesOf = (promoId, now = Date.now()) =>
+  getDb().users.filter(
+    (u) => u.promoCodeId === promoId && (u.emailVerified !== false || !u.createdAt || new Date(u.createdAt).getTime() > now - HOLD_MS),
+  ).length;
 
 /** A code a new account may sign up with now (as typed), or null. */
 export function usablePromoCode(value, now = Date.now()) {
@@ -35,7 +40,7 @@ export function usablePromoCode(value, now = Date.now()) {
   const promo = code ? codes().find((p) => p.code === code) : null;
   if (!promo || !promo.active) return null;
   if (promo.endsAt && new Date(promo.endsAt).getTime() <= now) return null;
-  if (promo.maxUses != null && usesOf(promo.id) >= promo.maxUses) return null;
+  if (promo.maxUses != null && usesOf(promo.id, now) >= promo.maxUses) return null;
   return promo;
 }
 

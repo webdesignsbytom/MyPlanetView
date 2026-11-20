@@ -20,6 +20,9 @@ export function preloadMomentPage(filters) {
   return prefetch(cacheKey(filters), () => getMomentPage({ ...filters, cursor: undefined, limit: filters.limit ?? 30 }), asList);
 }
 
+/** A list's place in the panel cache, for a fetch that brings several at once: `{ key, toValue }`. */
+export const momentPageCacheEntry = (filters) => ({ key: cacheKey(filters), toValue: asList });
+
 /** A list the map's counts say has no moments: kept empty, so it opens without a spinner. */
 export function rememberEmptyMomentPage(filters) {
   rememberIfMissing(cacheKey(filters), { moments: [], nextCursor: null });
@@ -72,6 +75,10 @@ export default function useMomentPage({ mapId, tripId, shareCode, country, limit
   const listKeyRef = useRef(null);
   const reload = useCallback(() => {
     generationRef.current += 1;
+    // A page still on its way is dropped, and its spinner with it (a quiet refresh never
+    // clears `loading`; 19 Nov 2026, the audit). A fetch below that isn't quiet sets it again.
+    setLoading(false);
+    setError(null);
     const filters = { mapId, tripId, shareCode, country, limit };
     const key = enabled ? keyOf(filters) : null;
     const kept = enabled ? recall(cacheKey(filters)) : null;

@@ -34,8 +34,11 @@ function splitOn(db, map) {
   });
   const stops = db.stops.filter((s) => tripIds.has(s.tripId) && s.countryCode === UK);
   const stopTargets = stops.map((s) => [s, nationOrNull(s.ukNation) ?? landmarkNation(s.landmarkId)]);
+  // A moment: remembered, else the nation its pin is in, else its landmark's (as the server)
   const moments = db.moments.filter((m) => m.mapId === map.id && m.countryCode === UK);
-  for (const [row, nation] of [...photoTargets, ...stopTargets, ...moments.map((m) => [m, nationOrNull(m.ukNation) ?? landmarkNation(m.landmarkId)])]) {
+  const pinned = (m) => (Number.isFinite(m.latitude) && Number.isFinite(m.longitude) ? ukNationAt(m.latitude, m.longitude) : null);
+  const momentTargets = moments.map((m) => [m, nationOrNull(m.ukNation) ?? pinned(m) ?? landmarkNation(m.landmarkId)]);
+  for (const [row, nation] of [...photoTargets, ...stopTargets, ...momentTargets]) {
     if (nation) Object.assign(row, { countryCode: nation, ukNation: null });
   }
 

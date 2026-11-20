@@ -32,7 +32,9 @@ function Modal({ title, onClose, children, wide = false, fill = false }) {
         className={`ticket-edge paper-fields grid max-h-full w-full grid-rows-[auto_minmax(0,1fr)] overflow-hidden bg-paper-cream text-colour4 ${wide ? 'max-w-4xl' : 'max-w-lg'} ${fill ? 'phone:h-full' : ''}`}
       >
         <PaperStripHeader titleId={titleId} title={title} onClose={onClose} closeLabel='Close' />
-        <div className='grid min-h-0 min-w-0 content-start gap-4 overflow-y-auto overscroll-contain px-5 pb-6 pt-5'>{children}</div>
+        {/* One column as wide as the body (its scrollbar left out): an implicit column grew to
+            its content, and the photo viewer's buttons ran onto the dialog's edge (19 Nov 2026, the audit) */}
+        <div className='grid min-h-0 min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-4 overflow-y-auto overscroll-contain px-5 pb-6 pt-5 sideways:pb-3 sideways:pt-3'>{children}</div>
       </div>
     </div>
   );

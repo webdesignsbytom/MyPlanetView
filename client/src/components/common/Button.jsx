@@ -6,8 +6,8 @@ const SIZE_DEFAULT = '[--btn-leading:1.5rem] [--btn-pad-x:1rem] [--btn-pad-y:0.3
 const SIZE_SMALL = '[--btn-leading:1.25rem] [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:1rem] pointer-coarse:[--btn-pad-y:0.5rem]';
 
 // A form or dialog button, in the site's travel-paperwork style: poster red with a brown
-// edge (btn-poster); `quiet` is the parchment one (btn-paper); `danger` is parchment
-// with deep-red lettering, for removing things. `ariaLabel` names it when the visible
+// edge (btn-poster); `quiet` is the parchment one (btn-paper); `danger` is a delete
+// button's red with white lettering (btn-danger), for removing things. `ariaLabel` names it when the visible
 // word alone is ambiguous (one "Edit" per list item); `ref` reaches the <button>.
 // `ariaExpanded` for a button that shows and hides something below it.
 function Button({
@@ -33,7 +33,7 @@ function Button({
       aria-label={ariaLabel}
       aria-expanded={ariaExpanded}
       className={`grid-row justify-center gap-2 ${small ? SIZE_SMALL : SIZE_DEFAULT} ${
-        danger ? 'btn-paper [--btn-ink:var(--poster-red-deep)]' : quiet ? 'btn-paper' : 'btn-poster'
+        danger ? 'btn-danger' : quiet ? 'btn-paper' : 'btn-poster'
       }`}
     >
       {children}

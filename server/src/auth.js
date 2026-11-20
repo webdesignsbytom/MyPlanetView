@@ -40,9 +40,13 @@ import {
   acceptInvitesForVerifiedUser,
   releaseTravelDataForDeletedUser,
 } from './services/travel/accounts.js';
+// Signing up from an invite's link verifies the address (the link only went to that inbox)
+import { findUsableInviteByHash } from './domain/sharing.js';
+import { hashInviteToken } from './utils/shareCodes.js';
 // Promo codes: checked before sign-up, recorded after (a code for life gives its membership then)
 import { giveLifetimePlan, recordSignUpPromoCode, usablePromoCode } from './services/billing/promo.js';
 import { endSubscriptionOfDeletedAccount } from './services/billing/subscriptions.js';
+import { dropInviteOffer } from './services/billing/inviteOffer.js';
 // Responses
 import { EVENT_MESSAGES } from './utils/responses/responses.js';
 // Events
@@ -133,6 +137,23 @@ const AUDITED_PATHS = {
   '/update-user': (user) => createUserUpdateSuccessEvent({ user, target: user }),
 };
 
+// A sign-up from an invite's link carries its token (`inviteToken`; better-auth ignores
+// fields it doesn't know). 19 Nov 2026, the user's wish: the link was emailed to that address
+// alone, which is what a verification email proves, so an account made with the invite's own
+// address starts verified, and its invites are accepted at once (create.after). Any other
+// address, or a used or expired token, signs up as usual.
+const inviteTokenIn = (body) =>
+  body && typeof body === 'object' && typeof body.inviteToken === 'string' && body.inviteToken.length >= 20 && body.inviteToken.length <= 200
+    ? body.inviteToken
+    : null;
+
+async function verifiedByInvite(user, context) {
+  const token = context?.path === '/sign-up/email' ? inviteTokenIn(context.body) : null;
+  if (!token || !user?.email) return false;
+  const invite = await findUsableInviteByHash(hashInviteToken(token));
+  return Boolean(invite) && invite.email === String(user.email).toLowerCase();
+}
+
 // A sign-up's promo code (optional; better-auth ignores fields it doesn't know)
 const promoCodeIn = (body) =>
   body && typeof body === 'object' && typeof body.promoCode === 'string' && body.promoCode.trim() ? body.promoCode : null;
@@ -142,11 +163,16 @@ const auditAfterHook = createAuthMiddleware(async (ctx) => {
   if (!audit || ctx.context.returned instanceof Error) return;
   const user = ctx.context.newSession?.user ?? ctx.context.session?.user ?? null;
   logEvent(audit(user));
-  // The new account keeps the code it signed up with; a failure never fails the sign-up
-  if (ctx.path === '/sign-up/email' && user && promoCodeIn(ctx.body)) {
-    await recordSignUpPromoCode(user, promoCodeIn(ctx.body)).catch((err) =>
+  // The new account keeps the code it signed up with; a failure never fails the sign-up.
+  // Only the account this sign-up made (its new session), never a session the caller already
+  // had: with autoSignIn off that would be someone else's account (19 Nov 2026, the audit)
+  const newUser = ctx.context.newSession?.user ?? null;
+  if (ctx.path === '/sign-up/email' && newUser && promoCodeIn(ctx.body)) {
+    await recordSignUpPromoCode(newUser, promoCodeIn(ctx.body)).catch((err) =>
       console.error('[AUTH] promo code not recorded:', err.message)
     );
+    // One introductory offer: the code's wins over an invite's (utils/inviteOffer.js)
+    await dropInviteOffer(newUser.id).catch((err) => console.error('[AUTH] invite offer not dropped:', err.message));
   }
 });
 
@@ -269,8 +295,10 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     expiresIn: EMAIL_VERIFICATION_EXPIRES_IN_SECONDS,
-    sendVerificationEmail: async ({ user, token }) => {
+    sendVerificationEmail: async ({ user, token }, request) => {
       if (!authEmailsEnabled) return;
+      // Verified already by its invite's link (verifiedByInvite): sign-up still calls this
+      if (user?.emailVerified === true && request?.url && new URL(request.url).pathname.endsWith('/sign-up/email')) return;
       const confirmationUrl = `${UserEmailVerificationUrl}/${user.id}/${token}`;
 
       // Send in background
@@ -350,7 +378,9 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        before: async () => ({ data: { image: null } }),
+        before: async (user, context) => ({
+          data: { image: null, ...((await verifiedByInvite(user, context)) ? { emailVerified: true } : {}) },
+        }),
         // Every account starts with its own map ("My map", solo); a failure here
         // never blocks sign-up (GET /api/maps makes it on demand)
         after: async (user) => {

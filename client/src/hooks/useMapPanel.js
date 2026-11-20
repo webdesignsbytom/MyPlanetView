@@ -50,10 +50,15 @@ export default function useMapPanel(onClose) {
   useEffect(() => {
     headingRef.current?.focus();
     return () => {
-      // By now the panel is gone: focus that was in it has dropped to the page
+      // By now the panel is gone: focus that was in it has dropped to the page. Back to the
+      // opener, or, when there's none left (a panel whose code arrived after the one that
+      // opened it had gone, or an opener that went with its panel), to the map itself, so
+      // focus never starts again from the top of the page (19 Nov 2026, the audit)
       const active = document.activeElement;
       const lost = !active || active === document.body;
-      if (lost && opener?.isConnected) opener.focus({ preventScroll: true });
+      if (!lost) return;
+      const target = opener?.isConnected ? opener : document.querySelector('#main-content [role="application"]');
+      target?.focus({ preventScroll: true });
     };
   }, [opener]);
 

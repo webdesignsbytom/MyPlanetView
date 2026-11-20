@@ -55,8 +55,9 @@ function WelcomePage() {
             favouriteCountryCode: t.favouriteCountryCode || null,
           })),
       });
-      // A new map starts with the UK whole
-      if (form.splitUk && created?.map?.id) await updateMap(created.map.id, { splitUk: true });
+      // A new map starts with the UK as its four nations (the server's default since 18 Nov
+      // 2026): only turning that off needs saying (19 Nov 2026, the audit)
+      if (!form.splitUk && created?.map?.id) await updateMap(created.map.id, { splitUk: false });
     }
     navigate(MAP_PAGE_URL, { replace: true });
   };
@@ -97,6 +98,7 @@ function WelcomePage() {
                   map || {
                     name: '',
                     groupType: 'SOLO',
+                    splitUk: true,
                     travellers: [{ name: user?.name || '', birthCountryCode: '', favouriteCountryCode: '' }],
                   }
                 }

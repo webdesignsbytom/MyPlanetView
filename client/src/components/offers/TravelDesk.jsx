@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useState } from 'react';
 import { createPortal } from 'react-dom';
 // Icons
-import { FaConciergeBell } from 'react-icons/fa';
+import { FaPlane } from 'react-icons/fa';
 // Components
 import Button from '@/components/common/Button';
 import MapActionButton from '@/components/map/MapActionButton';
@@ -33,7 +33,7 @@ function TravelDesk({ countryCodes, trip = null, guideOnPage = null, inMapPanel 
     <>
       <span className={fill ? 'grid' : inMapPanel ? 'grid justify-items-start phone:justify-items-stretch' : 'grid justify-items-start'} onPointerEnter={loadDialog} onFocus={loadDialog}>
         <ButtonKind quiet onClick={show}>
-          <FaConciergeBell aria-hidden='true' className='self-center text-sm' />
+          <FaPlane aria-hidden='true' className='self-center text-sm' />
           <span>Travel Desk</span>
         </ButtonKind>
       </span>

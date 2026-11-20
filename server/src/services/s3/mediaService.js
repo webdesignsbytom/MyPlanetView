@@ -595,6 +595,29 @@ export async function putPrivateObject({ key, body, contentType }) {
   );
 }
 
+/**
+ * Copy a photo file to a new key in the private bucket, for a travel copy (docs/API.md
+ * "Travel copies"): the new file is recorded first as a MediaItem of `userId`'s (so a copy
+ * that's never saved as a photo is removed by the daily cron, as an unsaved upload is),
+ * then R2 copies it itself, nothing passing through the server. -> the MediaItem's id.
+ * Throws if the bucket refuses it.
+ */
+export async function copyPrivatePhotoFile({ fromKey, toKey, contentType, userId }) {
+  if (!isPrivateKey(fromKey) || !isPrivateKey(toKey)) throw httpError(400, 'Key prefix not allowed');
+  await recordMediaItem({ key: toKey, resource: 'photo', cfg: MEDIA_CFG.photo, userId, contentType });
+  const { sdk, priv } = await storage();
+  await priv.default.send(
+    new sdk.CopyObjectCommand({
+      Bucket: priv.PRIVATE_BUCKET,
+      Key: toKey,
+      // The source as "bucket/key", the key URL-encoded (its slashes kept)
+      CopySource: `${priv.PRIVATE_BUCKET}/${encodeURIComponent(fromKey).replace(/%2F/g, '/')}`,
+    }),
+  );
+  const item = await prisma.mediaItem.findUnique({ where: { key: toKey }, select: { id: true } });
+  return item.id;
+}
+
 /** What R2 actually holds for a photo key: `{ bytes, contentType }`, or null if it isn't there. */
 export const headPrivateObject = (key) => {
   if (!isPrivateKey(key)) throw httpError(400, 'Key prefix not allowed');

@@ -28,29 +28,32 @@ import ShareLinkBox from './ShareLinkBox';
 import MakeOwnerDialog from './MakeOwnerDialog';
 import RemoveAccessDialog from './RemoveAccessDialog';
 // Utils
-import { ROLE_LABELS } from '@/utils/sharing/shareRoles';
+import { MAP_SHARE_ROLE_OPTIONS, ROLE_WITH_ARTICLE, SHARE_ROLE_OPTIONS, canManageRole, coOwnerChoices } from '@/utils/sharing/shareRoles';
 import { forgetMapLists } from '@/utils/map/mapListCache';
 import { inFlight, recall, remember } from '@/utils/data/panelCache';
 import { sharingKey } from '@/utils/sharing/sharingCache';
 
-// Sharing a map or a trip, Google Docs style. The owner adds people by email as viewer or
-// editor, changes or removes them, cancels invites, and sets general access. Anyone else
-// sees their own role and can leave. `resource` is 'maps' or 'trips'. Every change here
+// Sharing a map or a trip, Google Docs style. The owner, or a map's co-owner (19 Nov 2026),
+// adds people by email as viewer or editor (or, on a map, co-owner: one of `travellers`, the
+// map's), changes or removes them, cancels invites, and sets general access; only the owner
+// changes or removes a co-owner, or makes someone the owner. Anyone else sees their own role
+// and can leave. `resource` is 'maps' or 'trips'. Every change here
 // (adding, changing or removing people, link access, a new link, leaving) needs a verified
 // email address: the server refuses otherwise (403, shown as the error), so until then
 // those controls are locked and the dialog says why; the link can still be copied.
-// The plan's caps on people (10 editors a map, 20 people a trip) come back as 409s,
+// The plan's caps on people (5 editors a map, co-owners by travellers, 20 people a trip) come back as 409s,
 // shown as the error. A map's owner can make a member the owner (`onTransferred` gets
 // `{ stayed, map }` once it's done; the map lists are forgotten first). A bin (removing a
 // member, cancelling an invite) asks first (RemoveAccessDialog).
-function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransferred, onClose }) {
+function ShareDialog({ resource, id, name, role, travellers = null, currentUserId, onLeft, onTransferred, onClose }) {
   const { user } = useAuth();
   const isOwner = role === 'OWNER';
+  const canManage = canManageRole(role);
   const mustVerifyEmail = user?.emailVerified === false;
   // The settings the map page fetched once the map drew, or this dialog last saw, show at
   // once (17 Nov 2026); a fresh copy replaces them as soon as it arrives
   const cacheKey = sharingKey(resource, id);
-  const [sharing, setSharing] = useState(() => (isOwner ? recall(cacheKey) : null));
+  const [sharing, setSharing] = useState(() => (canManage ? recall(cacheKey) : null));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
@@ -59,7 +62,8 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
   // A bin pressed: { member } or { invite }, asked about first (RemoveAccessDialog)
   const [removing, setRemoving] = useState(null);
   const kind = resource === 'trips' ? 'trip' : 'map';
-  const canTransfer = resource === 'maps' && !mustVerifyEmail && Boolean(onTransferred);
+  const canTransfer = isOwner && resource === 'maps' && !mustVerifyEmail && Boolean(onTransferred);
+  const isMap = resource === 'maps';
 
   const transfer = async (stayAsEditor) => {
     const { map } = await transferMap(id, { userId: newOwner.userId, stayAsEditor });
@@ -83,8 +87,8 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
   );
 
   useEffect(() => {
-    if (isOwner) load(Boolean(recall(cacheKey)));
-  }, [isOwner, load, cacheKey]);
+    if (canManage) load(Boolean(recall(cacheKey)));
+  }, [canManage, load, cacheKey]);
 
   const run = async (action, doneMessage) => {
     setBusy(true);
@@ -119,10 +123,10 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
       <InlineAlert>{error}</InlineAlert>
       {notice ? <InlineAlert tone='good'>{notice}</InlineAlert> : null}
 
-      {!isOwner ? (
+      {!canManage ? (
         <div className='grid gap-3 text-sm'>
           <p>
-            You’re {ROLE_LABELS[role] === 'Editor' ? 'an editor' : 'a viewer'} on this {kind}. Only its owner can
+            You’re {ROLE_WITH_ARTICLE[role] || 'a viewer'} on this {kind}. Only its owner{isMap ? ' and co-owners' : ''} can
             change who has access.
           </p>
           {currentUserId && onLeft && mustVerifyEmail ? (
@@ -151,6 +155,8 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
             </InlineAlert>
           ) : (
             <ShareAddPersonForm
+              roleOptions={isMap ? MAP_SHARE_ROLE_OPTIONS : SHARE_ROLE_OPTIONS}
+              coOwner={isMap ? coOwnerChoices(travellers || [], sharing) : null}
               onAdd={(body) =>
                 run(async () => {
                   const result = await addMember(resource, id, body);
@@ -167,7 +173,10 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
             <ul className='grid divide-y divide-dashed divide-poster-brown/40'>
               {/* "Owner" sits in the role column, where the members' dropdowns are */}
               <li className={ACCESS_ROW_CLASS}>
-                <span className='font-medium'>You</span>
+                <span className='grid min-w-0'>
+                  <span className='truncate font-medium'>{isOwner ? 'You' : sharing.owner?.name || sharing.owner?.email || 'The owner'}</span>
+                  {!isOwner && sharing.owner?.name ? <span className='truncate text-xs opacity-80'>{sharing.owner.email}</span> : null}
+                </span>
                 <span className='px-3.5 opacity-80'>Owner</span>
               </li>
               {sharing.members.map((member) => (
@@ -175,6 +184,8 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
                   key={member.userId}
                   member={member}
                   busy={busy || mustVerifyEmail}
+                  isYou={member.userId === currentUserId}
+                  locked={!isOwner && member.role === 'CO_OWNER' && member.userId !== currentUserId}
                   onChangeRole={(next) => run(() => updateMember(resource, id, member.userId, next)).catch(() => {})}
                   onRemove={() => setRemoving({ member })}
                   onMakeOwner={canTransfer ? () => setNewOwner(member) : undefined}
@@ -224,7 +235,13 @@ function ShareDialog({ resource, id, name, role, currentUserId, onLeft, onTransf
           invite={removing.invite}
           kind={kind}
           name={name}
+          leaving={removing.member?.userId === currentUserId}
           onConfirm={async () => {
+            if (removing.member?.userId === currentUserId) {
+              await removeMember(resource, id, currentUserId);
+              onLeft?.();
+              return;
+            }
             await run(() =>
               removing.member ? removeMember(resource, id, removing.member.userId) : cancelInvite(resource, id, removing.invite.id),
             );

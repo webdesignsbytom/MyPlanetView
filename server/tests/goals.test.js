@@ -64,6 +64,21 @@ describe('goal progress', () => {
     expect(sameDay.met).toBe(true);
   });
 
+  // 19 Nov 2026, the user's decision: a country marked by hand counts by its visit's date
+  it('counts a marked country by its "First went" day, else the day it was marked', () => {
+    const dated = {
+      ...facts,
+      // Spain: first went in 2025; Germany: marked in 2027 (no date of its own)
+      visited: new Set([...facts.visited, 'DE']),
+      firstVisitAt: new Map([['ES', new Date('2025-08-01T00:00:00Z')], ['DE', new Date('2027-02-01T00:00:00Z')]]),
+    };
+    // By 2026: Italy (a photo) and Spain (its date); not France (a 2027 photo) or Germany (2027)
+    expect(goalProgress({ kind: 'COUNTRY_COUNT', target: 3, deadline: new Date('2026-01-01') }, dated, now)).toMatchObject({ have: 2, met: false });
+    expect(goalProgress({ kind: 'COUNTRY_LIST', countryCodes: ['ES', 'DE'], deadline: new Date('2026-01-01') }, dated, now)).toMatchObject({ have: 1, done: ['ES'] });
+    // By 2028 all four
+    expect(goalProgress({ kind: 'COUNTRY_COUNT', target: 4, deadline: new Date('2028-01-01') }, dated, now)).toMatchObject({ have: 4, met: true });
+  });
+
   it('lists what is done on a bucket list or in a region', () => {
     const list = goalProgress({ kind: 'COUNTRY_LIST', countryCodes: ['ES', 'JP', 'XN'] }, facts, now);
     expect(list).toMatchObject({ have: 2, need: 3, met: false, done: ['ES', 'XN'] });

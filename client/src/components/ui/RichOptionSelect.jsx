@@ -1,4 +1,5 @@
 import React from 'react';
+import useHydrated from '@/hooks/useHydrated';
 
 // Dropdown whose options have an icon, a title and a description line, styled by styles/select.css.
 // options: { value, label, description, icon (a react-icons component), disabled }.
@@ -22,6 +23,8 @@ function RichOptionSelect({
   ariaLabel,
   className = '',
 }) {
+  // The custom box only once hydrated: a pre-rendered page must not carry it (useHydrated)
+  const hydrated = useHydrated();
   return (
     <select
       ref={refProp}
@@ -38,9 +41,11 @@ function RichOptionSelect({
       aria-label={ariaLabel}
       className={`app-select ${className}`}
     >
-      <button type='button'>
-        <selectedcontent></selectedcontent>
-      </button>
+      {hydrated ? (
+        <button type='button'>
+          <selectedcontent></selectedcontent>
+        </button>
+      ) : null}
 
       {placeholder ? (
         <option value='' disabled hidden>

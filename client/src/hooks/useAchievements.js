@@ -26,8 +26,8 @@ export default function useAchievements({ mapId = null, shareCode = null, enable
     const generation = ++generationRef.current;
     try {
       const [badges, goals] = await Promise.all([getBadges(where), getGoals(where)]);
-      if (generation !== generationRef.current) return;
-      setState({ badges: badges.badges || [], goals: goals.goals || [], travellers: badges.travellers || [], loading: false, error: null });
+      // The news is kept even from an answer whose lists are dropped (a goal changed while it
+      // was on its way): the server says what was newly earned once only (19 Nov 2026, the audit)
       const fresh = [
         ...(badges.newlyEarned || []).map((key) => ({ type: 'badge', key })),
         ...(goals.newlyAchieved || [])
@@ -36,6 +36,8 @@ export default function useAchievements({ mapId = null, shareCode = null, enable
           .map((goal) => ({ type: 'goal', goal })),
       ];
       if (fresh.length) setNews((prev) => [...prev, ...fresh]);
+      if (generation !== generationRef.current) return;
+      setState({ badges: badges.badges || [], goals: goals.goals || [], travellers: badges.travellers || [], loading: false, error: null });
     } catch (err) {
       if (generation !== generationRef.current) return;
       setState((prev) => ({ ...prev, loading: false, error: err.friendlyMessage || 'Badges and goals could not be loaded.' }));

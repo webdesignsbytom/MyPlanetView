@@ -9,6 +9,7 @@ import {
 } from '../../domain/billing.js';
 import { hasLiveSubscription, isDuplicateSubscription, shouldApplySubscriptionEvent, stripeIdOf, subscriptionStateFrom } from '../../utils/stripeState.js';
 import { markPromoTrialUsedInDB } from '../../domain/promoCodes.js';
+import { markInviteOfferUsedInDB } from './inviteOffer.js';
 import { paymentsEnabled, priceKind, stripeClient } from './stripe.js';
 
 /**
@@ -84,8 +85,15 @@ export async function linkCheckoutSession(session) {
   const tracked = await findSubscription(userId);
   const newId = stripeIdOf(session.subscription);
   const keepTracked = hasLiveSubscription(tracked) && tracked.stripeSubscriptionId && tracked.stripeSubscriptionId !== newId;
+  // Nor is the row moved to another customer while it tracks a live subscription: "Manage
+  // billing" would then open a customer without it (19 Nov 2026, the audit)
+  if (keepTracked) return userId;
+  // A new subscription on the row takes it from the old one's status: a "canceled" left
+  // there made every event about the new one look like a late one about the old (a returning
+  // subscriber paid and stayed on Economy; 19 Nov 2026, the audit)
+  const replacing = Boolean(newId) && tracked?.stripeSubscriptionId !== newId;
   try {
-    await linkStripeCustomer({ userId, stripeCustomerId, stripeSubscriptionId: keepTracked ? undefined : newId });
+    await linkStripeCustomer({ userId, stripeCustomerId, stripeSubscriptionId: newId, clearStatus: replacing });
   } catch (err) {
     // The customer or subscription is already another account's: nothing to change here
     if (err?.code === 'P2002') return null;
@@ -112,13 +120,18 @@ export async function applyStripeSubscription(sub, { deleted = false } = {}) {
   if (!row) {
     const userId = sub.metadata?.userId;
     if (!(await userExists(userId))) return null;
-    row = await linkStripeCustomer({ userId, stripeCustomerId });
+    // A row tracking a live subscription keeps its customer: this one (another customer's,
+    // from two Checkouts at once) is judged against it, and cancelled as a duplicate
+    const tracked = await findSubscription(userId);
+    row = hasLiveSubscription(tracked) ? tracked : await linkStripeCustomer({ userId, stripeCustomerId });
   }
   if (isDuplicateSubscription(row, sub, { deleted })) {
     await cancelDuplicate(sub);
     return { userId: row.userId, duplicate: sub.id };
   }
   if (sub.trial_end && sub.metadata?.promoCode) await markPromoTrialUsedInDB(row.userId);
+  // A Checkout with the invite offer (its coupon): used, once
+  if (sub.metadata?.inviteOffer) await markInviteOfferUsedInDB(row.userId);
   if (!shouldApplySubscriptionEvent(row, sub, { deleted })) return null;
   const subscription = await saveSubscriptionState(row.userId, subscriptionStateFrom(sub, priceKind, { deleted }));
   return { userId: row.userId, subscription };
