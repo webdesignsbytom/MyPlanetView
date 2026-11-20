@@ -27,6 +27,7 @@ import VerifyEmailBanner from './VerifyEmailBanner';
 import JoinedMapNote from './JoinedMapNote';
 import MapStatusScreen from './MapStatusScreen';
 import MapPlanBanner from './MapPlanBanner';
+import TravelCopyBanner from '@/components/travelCopies/TravelCopyBanner';
 import GoalTag from '@/components/achievements/GoalTag';
 import AwardNews from '@/components/achievements/AwardNews';
 import { LANDMARK_MIN_ZOOM } from './LandmarkPins';
@@ -673,6 +674,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               onPay={isOwner && !mustVerify ? () => setPayingForMap('locked') : null}
             />
           ) : null}
+          {/* Someone asks for copies of their travels from this map (docs/API.md, "Travel copies") */}
+          {canManage ? <TravelCopyBanner mapId={map.id} /> : null}
           {/* Last in the column, so the banners above keep their place (the map switcher opens
               below them). On phones first (17 Nov 2026): its flag sits level with the Menu
               stamp, and the banners come below them both, or below an empty row as tall as

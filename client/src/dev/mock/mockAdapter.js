@@ -87,6 +87,13 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   'PATCH /api/challenges/:challengeId/me',
   'PUT /api/maps/:mapId/passport/stamps/:landmarkId/photo',
   'DELETE /api/maps/:mapId/passport/stamps/:landmarkId/photo',
+  // Taking your travels with you (docs/API.md "Travel copies")
+  'POST /api/maps/:mapId/travel-copies/preview',
+  'POST /api/maps/:mapId/travel-copies',
+  'POST /api/travel-copies/:id/approve',
+  'POST /api/travel-copies/:id/decline',
+  'POST /api/travel-copies/:id/continue',
+  'DELETE /api/travel-copies/:id',
   ...kinds('PATCH /api/{kind}/:id/sharing'),
   ...kinds('POST /api/{kind}/:id/sharing/reset-link'),
   ...kinds('POST /api/{kind}/:id/members'),

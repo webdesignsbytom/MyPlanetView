@@ -49,6 +49,9 @@ export const MAPS_API = '/api/maps'; // /:mapId, /:mapId/stats|travellers|visits
 export const TRIPS_API = '/api/trips'; // /:tripId, /:tripId/stops|travellers|photos|moments|maps|sharing|members|invites, /shared-with-me
 export const PHOTOS_API = '/api/photos'; // /:photoId, /:photoId/landmarks, /:photoId/move
 export const MOMENTS_API = '/api/moments'; // /:momentId (PATCH, DELETE)
+// Taking your travels with you (docs/API.md, "Travel copies"): one request, /:id (GET, DELETE),
+// /:id/approve|decline|continue. Choosing and asking are on the map: MAPS_API/:mapId/travel-copy-choices, /travel-copies
+export const TRAVEL_COPIES_API = '/api/travel-copies';
 export const PINS_API = '/api/pins'; // /:pinId (GET, PATCH, DELETE), /:pinId/visits, /:pinId/visits/:visitId
 export const GOALS_API = '/api/goals'; // /:goalId (PATCH, DELETE)
 export const SHARED_API = '/api/shared'; // /:code, /:code/photos, /:code/photos/:photoId, /:code/moments|passport|badges|goals

@@ -14,7 +14,9 @@ import { ensureThemes } from './themes';
 // v4: the passport (16 Nov 2026): confirmed landmark matches (stamps) on the seeded
 // photos, each match with its map and confirmation date, and the stamps' picked photos
 // v5: real names for the seeded people (17 Nov 2026): the test user is Charlie Reid
-const STORE_KEY = 'mpvMockStore.v5';
+// v6: travel copies (19 Nov 2026): Alex's family map "The Morgans", with the test user on it
+// as a viewer and as its traveller Charlie, to bring travels from
+const STORE_KEY = 'mpvMockStore.v6';
 const ROLE_KEY = 'mpvMockRole';
 
 export const ROLES = ['USER', 'ADMIN', 'DEVELOPER'];
@@ -106,6 +108,8 @@ export function loadStore() {
   if (!Array.isArray(db.subdivisionVisits)) db.subdivisionVisits = buildSeed().subdivisionVisits;
   if (!Array.isArray(db.pins)) db.pins = buildSeed().pins;
   if (!Array.isArray(db.pinVisits)) db.pinVisits = buildSeed().pinVisits;
+  // ...and before travel copies (19 Nov 2026): none asked for
+  if (!Array.isArray(db.travelCopyRequests)) db.travelCopyRequests = [];
   db.users[0].role = getMockRole();
   saveStore();
   return db;

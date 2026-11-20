@@ -212,6 +212,20 @@ A trip can be shared between people's accounts (decided 16 Nov). Example: Tom ha
 - **The UK Children's Code** (the ICO's Age Appropriate Design Code) applies to a service teenagers use: high privacy by default, no nudging, location off by default, no profiling. The site is already private by default and shows locations only to editors; do the code's self-assessment before launch (LAUNCH-CHECKLIST.md).
 - **Later, if asked for:** child logins a parent creates and manages, without an email address.
 
+### Taking your travels with you (built 19 Nov 2026; docs/API.md "Travel copies")
+
+A child who grows up and starts their own solo map can bring their share of the family map with them. Decided by the user on 19 Nov 2026:
+
+- **Copied, not linked:** the photos, trips and moments become theirs for good, so changes to the family map, or its deletion, never take them away. The family map keeps everything too.
+- **The owner approves:** the child (signed in, on the family map in any role) asks, saying which of its travellers they are, and the family map's owner (or a co-owner) approves, since the photos are the owner's uploads. A traveller linked to someone else's account can't be chosen.
+- **Choosing what comes across:** by trip (the trips they went on, `TripTraveller`), by country, or photo by photo. The moments about them (`MomentTraveller`) and their photos are offered too, as are the countries those trips visited, with their first-visit dates, and the passport stamps from the copied photos.
+- **Edited afterwards:** the copies are ordinary photos on their own map, so they remove any they aren't in.
+- **Plan limits apply** on their map, as for any upload: an Economy account takes up to 30 photos a country and is offered an upgrade for the rest.
+- **It can be done again,** for family trips after they've left home.
+- **Real copies of the files:** R2's server-side copy, under new keys on their map, so each photo has its own files and deleting one never touches the other (decided 19 Nov 2026). Storage for the copies costs a few cents a month.
+- **Only the child starts it:** a parent can't hand the travels over unasked (decided 19 Nov 2026).
+- **As built:** hidden photos and moments stay behind, and so do videos (their files are in Cloudflare Stream, not R2); a copied moment's exact spot is private on the new map until they share it; a country's first visit on the new map comes from the copied photos and completed stops, never the family's own first visit (which may be before the child was born). Where to find it: Settings, "This map", "Bring your travels" (the person asking), and a luggage tag on the family map plus the same section (the owner).
+
 ### Upgrades and downgrades
 
 - **Upgrading** takes effect as soon as Stripe confirms payment. Switching between Business and First Class is prorated by Stripe.

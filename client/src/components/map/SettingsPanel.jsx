@@ -9,6 +9,7 @@ import DeleteMapSection from './DeleteMapSection';
 import MainMapSection from './MainMapSection';
 import MapUpgradeSection from './MapUpgradeSection';
 import MapDownloadSection from './MapDownloadSection';
+import TravelCopySection from '@/components/travelCopies/TravelCopySection';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
 // Utils
 import { saveMapSetup } from '@/utils/map/saveMapSetup';
@@ -19,7 +20,9 @@ const TABS = [
 ];
 
 // Settings: how the map looks to you (yours alone, on every map), and, for editors,
-// this map's travellers and its photos as a zip ("Print or download"); for the owner, its
+// this map's travellers and its photos as a zip ("Print or download"); for the owner and
+// co-owners, bringing travels from another map and the requests to copy from this one
+// (TravelCopySection); for the owner, its
 // name, group, making it the main map (the one the plan includes) and deletion. The two tabs are
 // ticket tabs: the open one is parchment and sits on the panel's brown rule. They follow
 // the ARIA tabs pattern: only the open tab is in the tab order, the arrow keys (and Home,
@@ -108,6 +111,8 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, canMa
             }}
           />
           <MapDownloadSection map={map} />
+          {/* Bringing travels from another map, and the requests to copy from this one (docs/API.md, "Travel copies") */}
+          {canManage ? <TravelCopySection map={map} /> : null}
           {isOwner && !map.isDefault ? <MapUpgradeSection map={map} locked={locked} onChanged={onMapSaved} onPay={onUpgradePay} /> : null}
           {isOwner && !map.isDefault ? <MainMapSection map={map} locked={locked} onChanged={onMapSaved} /> : null}
           {isOwner && !map.isDefault ? <DeleteMapSection map={map} locked={locked} onDeleted={onMapDeleted} /> : null}

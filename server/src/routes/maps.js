@@ -36,6 +36,12 @@ import {
   setStampPhotoHandler,
 } from '../controllers/passport.js';
 import { sharingHandlers } from '../controllers/sharing.js';
+import {
+  createCopyHandler,
+  getCopyChoicesHandler,
+  getMapCopiesHandler,
+  previewCopyHandler,
+} from '../controllers/travelCopies.js';
 import { getMapThemeAlbumHandler, getMapThemesHandler } from '../controllers/themes.js';
 import { requireVerifiedEmail as verified, validateAuthentication } from '../middleware/auth.js';
 import { getCountryListsHandler } from '../controllers/countryLists.js';
@@ -45,6 +51,7 @@ import {
   MEMBER_INVITE_DAILY_USER_LIMIT,
   MEMBER_INVITE_RATE_LIMIT,
   PHOTO_PRESIGN_RATE_LIMIT,
+  TRAVEL_COPY_DAILY_USER_LIMIT,
 } from '../utils/constants/rateLimitConstants.js';
 
 // Mounted at /api/maps. Everything needs a signed-in user; roles are checked per map.
@@ -58,6 +65,8 @@ const memberInviteLimiter = createDbRateLimiter(MEMBER_INVITE_RATE_LIMIT);
 const memberInviteDailyLimiter = createDbRateLimiter({ ...MEMBER_INVITE_DAILY_USER_LIMIT, keyFor: keyByUserId });
 // New maps a day, per user
 const mapCreateDailyLimiter = createDbRateLimiter({ ...MAP_CREATE_DAILY_USER_LIMIT, keyFor: keyByUserId });
+// Requests to copy your travels a day, per user (each emails the family map's owner)
+const travelCopyDailyLimiter = createDbRateLimiter({ ...TRAVEL_COPY_DAILY_USER_LIMIT, keyFor: keyByUserId });
 
 router.use(validateAuthentication);
 
@@ -124,6 +133,14 @@ router.post('/:mapId/goals', verified, createGoalHandler);
 // Monthly photo themes: the map's albums (docs/API.md, "Photo themes")
 router.get('/:mapId/themes', getMapThemesHandler);
 router.get('/:mapId/themes/:themeId/photos', getMapThemeAlbumHandler);
+
+// Taking your travels with you (docs/API.md "Travel copies"): on the family map, what a
+// traveller can take, what it comes to on their own map, and asking for it; on any map, the
+// requests to copy from it and onto it (its owner and co-owners)
+router.get('/:mapId/travel-copy-choices', getCopyChoicesHandler);
+router.post('/:mapId/travel-copies/preview', verified, previewCopyHandler);
+router.post('/:mapId/travel-copies', verified, travelCopyDailyLimiter, createCopyHandler);
+router.get('/:mapId/travel-copies', getMapCopiesHandler);
 
 // Sharing
 router.get('/:id/sharing', sharing.get);

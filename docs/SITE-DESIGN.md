@@ -161,6 +161,11 @@ It works like Google Docs.
 - **Link previews** (WhatsApp, iMessage) come from a small Vercel route, e.g. `share.<domain>/<code>`, because the cPanel host only serves fixed files.
   - The preview shows the owner's coloured world map, never their photos.
   - The route then sends the visitor on to the app.
+- **Taking your travels with you** (19 Nov 2026, the user's design; docs/API.md "Travel copies"): a child who grows up can ask for copies of the trips, moments and photos they're in on the family map, for a map of their own.
+  - **Copies, not links:** each copied photo has its own files, so the family deleting a photo, or the whole map, never takes the child's away, and the child deleting theirs never touches the family's. Copying costs a little storage; sharing files would have saved it at the price of every delete checking who else uses a file.
+  - **The owner approves, and only the child asks:** the photos are the owner's uploads, and a parent handing travels over unasked wasn't wanted.
+  - **Chosen by trip, by country or photo by photo,** then tidied on their own map: photos aren't tagged with people, so the child removes any they aren't in.
+  - **Never hidden photos or moments, never videos** (their files are in Stream), and the copy follows the child's own plan, as any upload does.
 
 ## Photos
 

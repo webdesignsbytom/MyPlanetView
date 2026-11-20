@@ -92,6 +92,14 @@ export const MAP_CREATE_DAILY_USER_LIMIT = {
   max: 20,
 };
 
+// Requests to copy your travels from a family map, per user per day: each emails the map's
+// owner (docs/API.md "Travel copies")
+export const TRAVEL_COPY_DAILY_USER_LIMIT = {
+  name: 'travel-copy-user-day',
+  windowMs: DAY,
+  max: 20,
+};
+
 // Friends challenges started per user per day (keyed by user, as new maps)
 export const CHALLENGE_CREATE_DAILY_USER_LIMIT = {
   name: 'challenge-create-user-day',

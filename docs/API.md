@@ -602,6 +602,30 @@ Both do the same, in one transaction:
 
 An event is logged (`maps`, `Transfer Success` or `Admin Transfer Success`) with the new owner as `targetId`; no email addresses.
 
+## Travel copies
+
+Taking your travels with you (19 Nov 2026, the user's design; FEATURE-PLAN.md "Taking your travels with you"): someone on a family map (any role; a child grown up, say) picks the trips they went on, the moments about them, countries' photos and photos one by one, and asks for **copies** on a map of their own (one they own or co-own). The family map's owner or a co-owner approves or declines. Approved, the copies become the new map's own: new photo rows with **their own files** (R2 copies each file under the new map's keys, nothing passing through the server), new trips with their stops, new moments; the family map keeps everything. Only the person who asked starts it (a parent can't hand travels over unasked).
+
+- **What can go:** the family map's own trips that list the traveller (`TripTraveller`), its moments about them that aren't hidden (`MomentTraveller`), and its photos that aren't hidden. **Never a hidden photo or moment, and never a video** (its file is in Cloudflare Stream).
+- **Who they are:** one of the family map's travellers, chosen by them (the owner's approval confirms it). A traveller linked to another account → 403 `That traveller is someone else's account.`
+- **On the new map,** everything is placed as that map keeps places (`utils/travelCopies.js` `placeCopy`: a nation is the UK remembering it on an unsplit map; the UK is its remembered nation, else the nation of the photo's or landmark's position, on a split one; a region is its country). Each photo keeps its caption, date taken, position and landmark matches (so its passport stamps), goes on the copied trip if that came too, and is checked against the new map's plan exactly as an upload is (photos per country, storage): a photo that doesn't fit is **skipped** and counted. A completed trip marks its countries visited (`TRIP`), photos theirs (`PHOTO`); each country's first visit becomes the earliest copied photo or completed stop there when that's earlier than what the map has (never the family's own first visit, which may predate the traveller). Copied moments' spots are private (`spotShared: false`). The person copying uploads the photos, creates the trips and moments, and is their traveller on the new map (their own traveller there, else its only one).
+- **Never twice:** every copied photo, trip and moment keeps `copiedFromId` (unique per map, no foreign key), so a later request skips what's already there.
+- **Copying runs a little at a time:** approving copies for up to 8 s (`COPY_RUN_BUDGET_MS`); the browser on either side asks for more (`POST …/continue`) until it's `DONE`, and the daily cron finishes any left. A run holds the request (`lockedUntil`, 60 s) so two never copy at once; progress (`photoCursor`) is saved every 10 photos.
+
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `GET /maps/:mapId/travel-copy-choices?traveller=` | viewer of the family map | `{ travellers: [{ id, name, mine, taken }], travellerId, trips: [{ id, title, status, startDate, endDate, countries, photos }], moments: [{ id, kind, title, happenedOn, datePrecision, countryCode, photoIds }], countries: [{ countryCode, photos }] }`. `travellerId` is the one asked for, else the caller's own (`mine`), else null (then the lists are empty). `taken`: linked to another account. Photo counts leave out hidden photos and videos. |
+| `POST /maps/:mapId/travel-copies/preview` | viewer of the family map, **verified** | `{ toMapId, travellerId, tripIds?, momentIds?, countryCodes?, photoIds? }` (at least one of the lists). What it comes to on the new map: `{ photos, alreadyCopied, fits, countries: [{ countryCode, photos, room, fits }], trips, moments, locked }` (`room`: under the new map's photos per country now; `countryCode` null for photos with no country). |
+| `POST /maps/:mapId/travel-copies` | viewer of the family map, **verified** | The same body. Asks: 201 `{ request }`, and the family map's owner is emailed (`users/travelCopyEmail.handlebars`). A locked new map → 403; one already waiting for the same traveller and maps → 409 `You've already asked for a copy onto that map. Wait for an answer, or withdraw it first.` Rate limited (20 a day per user). |
+| `GET /maps/:mapId/travel-copies` | the map's owner or a co-owner (anyone else gets empty lists) | `{ incoming, outgoing }`: requests to copy from this map, and onto it: every one waiting or copying, and the last 20 finished. |
+| `GET /travel-copies/:id` | the person who asked, the family map's owner or a co-owner, or the new map's | `{ request }` with `tripList: [{ id, title, startDate }]`, `momentList: [{ id, title, happenedOn }]`, `countries: [{ countryCode, photos }]` (photos per country on the family map). |
+| `POST /travel-copies/:id/approve` | family map's owner or a co-owner, **verified** | Approves and runs the first copy → `{ request }`. Not waiting → 409 `That request has already been answered.` |
+| `POST /travel-copies/:id/decline` | family map's owner or a co-owner, **verified** | → `{ request }`; the person who asked is emailed. |
+| `POST /travel-copies/:id/continue` | anyone who can see it, **verified** | One more run of an approved copy → `{ request }` (as it is, when not approved). |
+| `DELETE /travel-copies/:id` | the person who asked, **verified** | Withdraws one still waiting (409 otherwise). |
+
+`request` is `{ id, status: 'PENDING' | 'APPROVED' | 'DONE' | 'DECLINED', fromMap: { id, name }, toMap: { id, name }, traveller: { id, name }, requestedBy: { id, name }, trips, moments, photos, progress: { done, copied, skipped }, createdAt, decidedAt, finishedAt, mine, canDecide, canCancel }` (`trips`, `moments`, `photos`: how many were chosen). Someone with no say over a request gets 404; an unknown traveller 404; a trip they didn't go on, a hidden photo, or a photo from another map → 400 `That choice of travels can't be copied.` When the copy is done, the person who asked is emailed (how many photos came, and how many didn't fit). Events: `maps`, `Travel Copy Request|Approve|Decline|Withdraw Success`, ids and counts only.
+
 ## Leaving
 
 What happens to your maps, and to the photos you added to other people's maps, when you delete your account (`POST /auth/delete-user`, or an admin's delete). An account change: signed in, no verified email needed.
@@ -721,6 +745,7 @@ Shared, database-backed counters (`RateLimit` table, from NextDummy), keyed per 
 | Member invites (`POST …/members`) | 20 per hour |
 | Member invites, per signed-in user (maps and trips together) | 25 per 24 hours |
 | New maps (`POST /maps`), per signed-in user | 20 per 24 hours |
+| Requests to copy your travels (`POST /maps/:mapId/travel-copies`), per signed-in user | 20 per 24 hours |
 | Billing writes (`POST /billing/checkout`, `change-plan`, `extra-maps`, `portal`), per signed-in user | 20 per 15 min |
 | "Download my data" (every `GET /users/export…` together), per signed-in user | 600 per hour |
 
@@ -733,5 +758,5 @@ Shared, database-backed counters (`RateLimit` table, from NextDummy), keyed per 
 
 `GET /media-services/cron/cleanup-orphans`, run by Vercel once a day with `Authorization: Bearer <CRON_SECRET>` (401 otherwise). It answers `{ status, data: { checked, deleted, failed, batches, complete, expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents } }`.
 
-1. **Purges**, together and each on its own (a failed one is logged and reported as `null`): finished rate-limit windows, events older than 90 days, sessions and verifications past their expiry, invites accepted or expired over 30 days ago, and Stripe webhook event ids recorded over 90 days ago.
+1. **Purges**, together and each on its own (a failed one is logged and reported as `null`): finished rate-limit windows, events older than 90 days, sessions and verifications past their expiry, invites accepted or expired over 30 days ago, and Stripe webhook event ids recorded over 90 days ago. Alongside them, approved travel copies nobody's browser finished are carried on for up to 15 s (`travelCopiesFinished`: how many it finished; see "Travel copies").
 2. **Unused uploads**, oldest first, 500 at a time: photo files nothing uses after an hour, other uploads after a day. Never a file a photo or an avatar uses, nor a contact image a form shows. Each batch is one DeleteObjects request per bucket and one row delete. Files that can't be deleted are skipped until the next day. No batch starts 40 s after the request began (the function's limit is 60 s); `complete: false` means some were left for the next run.
