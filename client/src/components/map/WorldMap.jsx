@@ -58,6 +58,7 @@ const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[da
  * page provides the map's `splitUk`).
  * `seaDepths`: the sea tinted by depth (SeaDepths), for the styles whose sea is plain
  * (mapStyles.js `background: null`, the animated sea).
+ * `gridColoured`: a map design gave the grid its own colour, so it's drawn stronger.
  */
 function WorldMap({
   viewport,
@@ -71,6 +72,7 @@ function WorldMap({
   onHoverCountry,
   seaDepths = false,
   showGrid = false,
+  gridColoured = false,
   showGridLabels = false,
   showCountryNames = false,
   showVisited = true,
@@ -115,7 +117,7 @@ function WorldMap({
         {POLE_SYMBOLS}
         {MOMENT_SYMBOL}
         {seaDepths ? DEPTHS : null}
-        {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} showAntarctica={showAntarctica} /> : null}
+        {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} showAntarctica={showAntarctica} coloured={gridColoured} /> : null}
         <CountryLayer
           visitsByCode={visitsByCode}
           selectedCode={selectedCode}

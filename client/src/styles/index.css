@@ -252,7 +252,7 @@
 /* Its words (country, pole and state names, the grid's degrees) are the ink on the land,
    so each wears a halo of the land's blue: a name drawn on the sky (a small island's, under
    it) reads there too. The size is the label's own, so it scales with it. */
-[data-map-style='starry'] g.fill-map-ink {
+[data-map-style='starry'] g.fill-map-names {
   stroke: rgb(142 195 230);
   stroke-width: 0.3em;
   stroke-linejoin: round;
@@ -443,6 +443,9 @@
   --color-map-sea: var(--map-sea);
   --color-map-sea-ink: var(--map-sea-ink);
   --color-map-ink: var(--map-ink);
+  /* The words on the map (country, pole and state names, the grid's degrees): the ink, or a
+     map design's own colour (--map-names on the map's wrapper; docs/API.md "Map designs") */
+  --color-map-names: var(--map-names, var(--map-ink));
   --color-map-edge: var(--map-edge);
   --color-map-grid: var(--map-grid);
   --color-map-stamp: var(--map-stamp);

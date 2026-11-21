@@ -51,7 +51,11 @@ export async function findMapForExport(mapId) {
     await Promise.all([
       prisma.travelMap.findUnique({
         where: { id: mapId },
-        select: { id: true, name: true, groupType: true, isDefault: true, splitUk: true, linkAccess: true, shareCode: true, graceUntil: true, createdAt: true, updatedAt: true },
+        select: {
+          id: true, name: true, groupType: true, isDefault: true, splitUk: true, linkAccess: true, shareCode: true, graceUntil: true, createdAt: true, updatedAt: true,
+          // Its own design (docs/API.md "Map designs"): the colours, and whether it has a picture
+          design: { select: { shown: true, countryColours: true, namesColour: true, gridColour: true, pictureId: true } },
+        },
       }),
       prisma.traveller.findMany({
         where: onMap,

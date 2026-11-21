@@ -265,6 +265,15 @@ export const EVENT_MESSAGES = {
   copyAlreadyDecided: `That request has already been answered.`,
   copyNotWaiting: `Only a request still waiting can be withdrawn.`,
   copyRequestWithdrawn: `Request withdrawn.`,
+  // Map designs (docs/API.md "Map designs")
+  invalidDesign: `That design can't be saved.`,
+  invalidDesignColour: `Colours must be six-digit colour codes, as a colour picker gives them.`,
+  invalidDesignPlace: `That place isn't on the map, so it can't take a colour.`,
+  designPictureType: `The picture must be a JPEG, PNG or WebP image.`,
+  designPictureInvalid: `That picture upload isn't valid. Please try again.`,
+  designPictureTooLarge: `That picture is too big. Please choose a smaller one.`,
+  designPictureExpired: `That upload took too long. Please choose the picture again.`,
+  designPictureRemoved: `Picture removed.`,
   // Verification
   verificationTag: `Verification database.`,
   verificationNotFound: `Failed to find verification.`,

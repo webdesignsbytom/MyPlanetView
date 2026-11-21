@@ -10,16 +10,20 @@ import MainMapSection from './MainMapSection';
 import MapUpgradeSection from './MapUpgradeSection';
 import MapDownloadSection from './MapDownloadSection';
 import TravelCopySection from '@/components/travelCopies/TravelCopySection';
+import MapDesignSection from './design/MapDesignSection';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
 // Utils
 import { saveMapSetup } from '@/utils/map/saveMapSetup';
+import { shownDesign } from '@/utils/map/mapDesign';
 
 const TABS = [
   { id: 'view', label: 'How it looks' },
   { id: 'map', label: 'This map' },
 ];
 
-// Settings: how the map looks to you (yours alone, on every map), and, for editors,
+// Settings: how the map looks to you (yours alone, on every map), unless the map has its own
+// design (docs/API.md "Map designs"), which the owner and co-owners set at the top of the same
+// tab (MapDesignSection) and everyone sees; and, for editors,
 // this map's travellers and its photos as a zip ("Print or download"); for the owner and
 // co-owners, bringing travels from another map and the requests to copy from this one
 // (TravelCopySection); for the owner, its
@@ -27,7 +31,7 @@ const TABS = [
 // ticket tabs: the open one is parchment and sits on the panel's brown rule. They follow
 // the ARIA tabs pattern: only the open tab is in the tab order, the arrow keys (and Home,
 // End) move between tabs and open them, and each tab names its panel.
-function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, canManage = isOwner, locked = false, onMapSaved, onMapDeleted, onUpgradePay, onClose }) {
+function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, canManage = isOwner, locked = false, onMapSaved, onDesignChange, designPreview, onMapDeleted, onUpgradePay, onClose }) {
   const [tab, setTab] = useState('view');
   // "Saved" outlives the form, which starts afresh after a save that changes the map
   const [mapSaved, setMapSaved] = useState(false);
@@ -88,6 +92,14 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, canMa
       {/* Both panels stay on the page (the closed one hidden), so every tab's
           aria-controls has its panel, and a half-filled map form survives a look at the other tab */}
       <div {...panelProps('view')} hidden={showTabs && tab !== 'view'} className='grid gap-5'>
+        {map && canManage && onDesignChange ? <MapDesignSection map={map} onDesignChange={onDesignChange} preview={designPreview} /> : null}
+        {shownDesign(map?.design) ? (
+          <p className='text-sm'>
+            {canManage
+              ? 'This map shows its own design, so the style below applies to your other maps.'
+              : 'This map has its own design, so everyone sees it the same way. The style below applies to maps without one.'}
+          </p>
+        ) : null}
         <MapStylePicker value={settings.style} onChange={(style) => onChangeSetting('style', style)} />
         <MapTypePicker value={settings.mapType} onChange={(type) => onChangeSetting('mapType', type)} />
         <LandmarkPinsPicker value={settings.landmarkPins} onChange={(mode) => onChangeSetting('landmarkPins', mode)} />

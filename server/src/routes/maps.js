@@ -17,6 +17,12 @@ import {
   updateTravellerHandler,
 } from '../controllers/maps.js';
 import { createTripHandler, getMapTripsHandler } from '../controllers/trips.js';
+import {
+  deleteDesignPictureHandler,
+  presignDesignPictureHandler,
+  saveDesignPictureHandler,
+  updateMapDesignHandler,
+} from '../controllers/mapDesigns.js';
 import { createPhotoHandler, getMapPhotosHandler, presignPhotoHandler } from '../controllers/photos.js';
 import { createMomentHandler, getMapMomentsHandler } from '../controllers/moments.js';
 import {
@@ -77,6 +83,13 @@ router.get('/:mapId', getMapHandler);
 router.patch('/:mapId', updateMapHandler);
 router.delete('/:mapId', verified, deleteMapHandler);
 router.get('/:mapId/stats', getMapStatsHandler);
+
+// Its own design (docs/API.md "Map designs"): colours like the map's settings (no verified
+// email needed); a picture upload as an avatar (verified), removing it not
+router.patch('/:mapId/design', updateMapDesignHandler);
+router.post('/:mapId/design/picture/presign', verified, presignDesignPictureHandler);
+router.put('/:mapId/design/picture', verified, saveDesignPictureHandler);
+router.delete('/:mapId/design/picture', deleteDesignPictureHandler);
 // Owner only: the included (main) map, and handing a map to someone on it
 router.post('/:mapId/main', verified, makeMainMapHandler);
 // Put a map on the owner's plan (a paid extra map's slot), or take it back (19 Nov 2026)

@@ -2,6 +2,7 @@
 import { generateShareCode } from '../../utils/shareCodes.js';
 import { createMapInDB, deleteMapInDB, findDefaultMap, isShareCodeTaken, transferMapInDB } from '../../domain/maps.js';
 import { findMapPhotoKeys } from '../../domain/photos.js';
+import { findMapDesignPictureKeys } from '../../domain/mapDesigns.js';
 import { deleteStoredObjects } from '../s3/mediaService.js';
 import { graceForNewOwner } from './plans.js';
 
@@ -45,13 +46,13 @@ export async function ensureDefaultMap(user) {
 }
 
 /**
- * Delete a map, then its photos' files. The rows go first (the map cascades to its
+ * Delete a map, then its photos' files (and its design's picture). The rows go first (the map cascades to its
  * photos and their PhotoVariants), so nobody is ever shown a photo whose file is gone.
  * The files then go in batches (one DeleteObjects per 1,000), with their MediaItem
  * rows; any that fail stay as unused uploads for the daily clean-up.
  */
 export async function deleteMapWithFiles(mapId) {
-  const keys = await findMapPhotoKeys(mapId);
+  const keys = [...(await findMapPhotoKeys(mapId)), ...(await findMapDesignPictureKeys(mapId))];
   await deleteMapInDB(mapId);
   await deleteStoredObjects(keys);
 }

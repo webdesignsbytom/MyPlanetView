@@ -6,6 +6,7 @@ import {
   findUploadedPhotoFiles,
   reassignUploadsToMapOwners,
 } from '../../domain/photos.js';
+import { findMapDesignPictureKeys } from '../../domain/mapDesigns.js';
 import { findLeavingPlan } from '../../domain/profiles.js';
 import { acceptInviteInDB, findUsableInvitesForEmail } from '../../domain/sharing.js';
 import { heirFor, heirOf, usableLeavingPlan } from '../../utils/leavingPlan.js';
@@ -59,7 +60,7 @@ export async function releaseTravelDataForDeletedUser(user) {
 
   if (toDelete.length) {
     try {
-      const mapKeys = await findMapPhotoKeys(toDelete);
+      const mapKeys = [...(await findMapPhotoKeys(toDelete)), ...(await findMapDesignPictureKeys(toDelete))];
       await deleteMapsInDB(toDelete);
       keys.push(...mapKeys);
     } catch (err) {

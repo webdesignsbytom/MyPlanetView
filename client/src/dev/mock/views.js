@@ -15,6 +15,7 @@ import { mapPlanFields, mapSlots, uploadRules } from './plans';
 import { mockPlayback } from './stream';
 import { mockUpload } from './uploads';
 import { photoThemes } from './themes';
+import { designView } from './mapDesigns';
 import { compareMoments } from '@/utils/moments/momentDates';
 
 export const slugify = (text) =>
@@ -390,6 +391,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
     momentSpots: momentSpots(map.id, { includeHidden: atLeast(role, 'EDITOR') }),
     // The passport's stamped landmarks, to mark their pins (hidden photos' for editors)
     stampedLandmarkIds: stampedLandmarkIds(map, role),
+    // Its own design, for everyone who opens it (docs/API.md "Map designs")
+    design: designView(map),
   };
 }
 

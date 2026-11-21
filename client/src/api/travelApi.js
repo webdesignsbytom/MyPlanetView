@@ -41,6 +41,12 @@ export const getMap = (mapId) => data(client.get(`${MAPS_API}/${enc(mapId)}`));
 export const updateMap = (mapId, body) => data(client.patch(`${MAPS_API}/${enc(mapId)}`, body));
 export const deleteMap = (mapId) => data(client.delete(`${MAPS_API}/${enc(mapId)}`));
 export const getMapStats = (mapId) => data(client.get(`${MAPS_API}/${enc(mapId)}/stats`));
+// A map's own design (docs/API.md "Map designs"): { shown?, countries?, names?, grid? } -> { design }
+export const updateMapDesign = (mapId, body) => data(client.patch(`${MAPS_API}/${enc(mapId)}/design`, body));
+// Its sea picture: presign ({ contentType, bytes } -> { key, upload }), save ({ key } -> { design }), remove
+export const presignDesignPicture = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/design/picture/presign`, body));
+export const saveDesignPicture = (mapId, key) => data(client.put(`${MAPS_API}/${enc(mapId)}/design/picture`, { key }));
+export const removeDesignPicture = (mapId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/design/picture`));
 // The owner's main (included) map; the old one becomes an extra map
 export const makeMainMap = (mapId) => data(client.post(`${MAPS_API}/${enc(mapId)}/main`, {}));
 // Put a map on the owner's plan (a paid extra map's slot), or take it back -> { map } (its `tier` says where it is)

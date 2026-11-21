@@ -15,6 +15,7 @@ import useAchievements from '@/hooks/useAchievements';
 // Components
 import WorldMap from './WorldMap';
 import MapBackground from './MapBackground';
+import MapDesignStyle from './MapDesignStyle';
 import MapBanner from './MapBanner';
 import MapToolbar from './MapToolbar';
 import MapZoomControls from './MapZoomControls';
@@ -67,6 +68,7 @@ import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole, canManageRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
 import { isMonoStyle, mapStyleById } from '@/utils/map/mapStyles';
+import { DESIGN_BASE_STYLE, shownDesign } from '@/utils/map/mapDesign';
 import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
 import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
 
@@ -255,10 +257,18 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   );
   useEffect(() => () => window.clearTimeout(hoverTimerRef.current), []);
 
+  // The map's own design, when it has one switched on (docs/API.md "Map designs"; 21 Nov
+  // 2026, the user's wish): everyone sees the map in it, on the World map's look, in place of
+  // their own map style: its picture for the sea, its colours for countries, names and grid
+  const design = shownDesign(map.design);
+  const styleId = design ? DESIGN_BASE_STYLE : settings.style;
+  // The design as Settings changes it, before it's saved (MapDesignStyle follows it alone)
+  const [designPreview] = useState(() => createValueStore(null));
+
   // The containers over the map follow its style (19 Nov 2026, the user's wish); Black and
   // white puts the grey tokens on <html> (useMapTheme)
-  useMapTheme(settings.style);
-  const blackAndWhite = isMonoStyle(settings.style);
+  useMapTheme(styleId);
+  const blackAndWhite = isMonoStyle(styleId);
 
   // Badges and goals (docs/API.md, "Badges and goals"): loaded with the map, and asked
   // again (debounced) after anything that might earn one: a visit changed, a batch of
@@ -435,6 +445,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             canManage={canManage}
             locked={mustVerify}
             onMapSaved={actions?.reload}
+            onDesignChange={actions?.setDesign}
+            designPreview={designPreview}
             onMapDeleted={() => {
               forgetMapLists();
               navigate(MAP_PAGE_URL, { replace: true });
@@ -609,13 +621,18 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     // The map's own choice to show the UK as its four nations, for everything on the page
     // (the drawing, the country list, every country picker and landmark list)
     <SplitUkProvider value={Boolean(map.splitUk)}>
-    <div data-map-style={settings.style} className='relative h-dvh w-full overflow-hidden bg-map-sea text-map-ink'>
+    <div
+      data-map-style={styleId}
+      data-map-design={design ? '' : undefined}
+      className='relative h-dvh w-full overflow-hidden bg-map-sea text-map-ink'
+    >
+      {design ? <MapDesignStyle design={design} preview={designPreview} /> : null}
       {/* Black and white (a map style): everything here in greys, one greyscale filter
           over the lot (the GPU applies it). The photo viewer and the slideshow sit outside it,
           so a photo opened is in colour. */}
       {/* Out of reach while the loading screen is over it */}
       <div inert={!dataReady} className={`absolute inset-0 ${blackAndWhite ? 'grayscale' : ''}`}>
-        <MapBackground styleId={settings.style} animatedSea={settings.animatedSea} />
+        <MapBackground styleId={styleId} animatedSea={settings.animatedSea} pictureUrl={design?.picture?.url ?? null} />
 
         <main id='main-content' tabIndex={-1} role='main' className='absolute inset-0' onPointerDownCapture={warmCountryPanel}>
           <h1 className='sr-only'>{map.name}</h1>
@@ -639,16 +656,17 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           ) : (
           <WorldMap
             viewport={viewport}
-            seaDepths={!mapStyleById(settings.style).background}
+            seaDepths={!mapStyleById(styleId).background && !design?.picture}
             visitsByCode={visitsByCode}
             momentCounts={map.momentCountsByCountry || undefined}
             momentSpots={map.momentSpots || undefined}
-            showSky={settings.style === 'animated' && settings.sunAndMoon}
+            showSky={styleId === 'animated' && settings.sunAndMoon}
             showMoments={settings.showMoments}
             selectedCode={ui.panel === 'country' ? ui.selectedCode : null}
             onSelectCountry={selectCountry}
             onHoverCountry={hoverCountry}
             showGrid={settings.showGrid || detailed}
+            gridColoured={Boolean(design?.grid)}
             showGridLabels={settings.showGridLabels || detailed}
             showCountryNames={settings.showCountryNames || detailed}
             showVisited={settings.showVisited}

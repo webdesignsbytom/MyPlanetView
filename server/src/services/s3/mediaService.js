@@ -80,6 +80,16 @@ export const MEDIA_CFG = {
     maxBytes: 0,
     generic: false,
   },
+  // A map design's sea picture (docs/API.md "Map designs"): private bucket, only through
+  // the design routes (owner and co-owners upload; whoever can open the map sees it)
+  mapDesign: {
+    prefix: `${BucketNamespace}/designs/`,
+    visibility: 'private',
+    requiresAuth: true,
+    allowedTypes: [],
+    maxBytes: 0,
+    generic: false,
+  },
 };
 
 /** An error the generic media handlers answer with as it is (4xx). */
@@ -554,6 +564,26 @@ export function buildPhotoKey({ mapId, photoId, size, contentType }) {
 /** The folder every file of one photo sits in (used to check confirmed keys). */
 export const photoKeyFolder = ({ mapId, photoId }) => `${PHOTO_PREFIX}${mapId}/${photoId}/`;
 
+// ── A map design's sea picture (docs/API.md "Map designs") ──────────────────
+
+export const MAP_DESIGN_PREFIX = MEDIA_CFG.mapDesign.prefix;
+
+/** `<namespace>/designs/<mapId>/<random>.<ext>`: a new name for every picture (browsers cache them). */
+export const buildDesignPictureKey = ({ mapId, contentType }) =>
+  `${MAP_DESIGN_PREFIX}${mapId}/sea-${randomBase32(12)}.${PHOTO_EXTENSIONS[contentType] || 'bin'}`;
+
+/** The folder a map's design pictures sit in (used to check a saved key). */
+export const designPictureFolder = (mapId) => `${MAP_DESIGN_PREFIX}${mapId}/`;
+
+/**
+ * Presign a design picture's upload, after refusing (429) one that would leave the user
+ * more than `limit` unsaved ones. -> `{ url, expiresIn }`
+ */
+export async function presignDesignPicture({ key, contentType, bytes, userId, limit }) {
+  await assertUnconfirmedUploadsUnder({ userId, resources: ['mapDesign'], limit });
+  return presignPrivateUpload({ key, resource: 'mapDesign', contentType, bytes, userId });
+}
+
 /** Refuse (429) a photo presign that would leave the user more than the cap of unconfirmed photo files. */
 export const assertPhotoUploadsUnderCap = (userId, adding) =>
   assertUnconfirmedUploadsUnder({ userId, resources: ['photo'], limit: UNCONFIRMED_UPLOAD_LIMIT.photo, adding });
@@ -562,8 +592,12 @@ export const assertPhotoUploadsUnderCap = (userId, adding) =>
  * Record the file (bytes stay null until confirmed) and presign its upload. The URL
  * signs `contentType` and `bytes` (the caller checks them against PHOTO_MAX_BYTES).
  */
-export async function presignPhotoUpload({ key, contentType, bytes, userId }) {
-  await recordMediaItem({ key, resource: 'photo', cfg: MEDIA_CFG.photo, userId, contentType });
+export const presignPhotoUpload = ({ key, contentType, bytes, userId }) =>
+  presignPrivateUpload({ key, resource: 'photo', contentType, bytes, userId });
+
+// A private resource's upload: the file recorded (bytes null until saved), then presigned
+async function presignPrivateUpload({ key, resource, contentType, bytes, userId }) {
+  await recordMediaItem({ key, resource, cfg: MEDIA_CFG[resource], userId, contentType });
   const { priv } = await storage();
   const url = await priv.signPrivatePutObject({
     bucket: priv.PRIVATE_BUCKET,

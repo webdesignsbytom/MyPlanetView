@@ -32,7 +32,10 @@ const PASTEL_FILLS = [
 /** One of the seven pastels' fill classes by number (a country map's states: CountryMapView). */
 export const pastelFill = (n) => PASTEL_FILLS[((n || 1) - 1) % PASTEL_FILLS.length];
 
-const pastelFor = (code) => PASTEL_FILLS[(COUNTRY_COLOUR[regionParent(code) ?? code] || UK_NATION_COLOUR[code] || 1) - 1];
+/** Which of the seven pastels (1 to 7) a place wears: a region its country's, a UK nation its own. */
+export const pastelNumberFor = (code) => COUNTRY_COLOUR[regionParent(code) ?? code] || UK_NATION_COLOUR[code] || 1;
+
+const pastelFor = (code) => PASTEL_FILLS[pastelNumberFor(code) - 1];
 
 // Antarctica isn't a country: it's drawn as ice, with an ice-blue outline, as an atlas
 // draws it (the --map-ice tokens, per map style)

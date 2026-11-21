@@ -38,7 +38,7 @@ function CountryNameLabels({ zoom, visitsByCode, showAntarctica = true, splitUk 
   const fontSize = 10 / Math.sqrt(zoom) / Math.max(zoom / 4, 1);
   const minSize = Math.min(fontSize, Math.max(fontSize * MIN_SHRINK, MIN_SCREEN_SIZE / zoom));
   return (
-    <g className='pointer-events-none fill-map-ink font-medium' fontSize={fontSize} textAnchor='middle' aria-hidden='true'>
+    <g className='pointer-events-none fill-map-names font-medium' fontSize={fontSize} textAnchor='middle' aria-hidden='true'>
       {COUNTRIES.map((country) => {
         const width = splitUk
           ? country.code !== 'GB' && (COUNTRY_LABEL_WIDTH[country.code] ?? UK_NATION_LABEL_WIDTH[country.code])

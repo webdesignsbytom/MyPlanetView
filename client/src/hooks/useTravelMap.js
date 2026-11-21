@@ -179,6 +179,13 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     [mapId],
   );
 
+  // The map's own design as it now stands (docs/API.md "Map designs"): shown at once while
+  // it's edited, and with the server's answer after each save
+  const setDesign = useCallback(
+    (design) => setState((prev) => (onMap(prev, mapId) ? { ...prev, map: { ...prev.map, design } } : prev)),
+    [mapId],
+  );
+
   const addTraveller = useCallback(
     async (body) => {
       const { traveller } = await createTraveller(mapId, body);
@@ -246,6 +253,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     refreshStats,
     setVisit,
     saveMapDetails,
+    setDesign,
     addTraveller,
     editTraveller,
     removeTraveller,

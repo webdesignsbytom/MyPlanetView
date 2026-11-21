@@ -88,6 +88,9 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   'PUT /api/maps/:mapId/passport/stamps/:landmarkId/photo',
   'DELETE /api/maps/:mapId/passport/stamps/:landmarkId/photo',
   // Taking your travels with you (docs/API.md "Travel copies")
+  // A map design's picture (docs/API.md "Map designs"); its colours and removing it need none
+  'POST /api/maps/:mapId/design/picture/presign',
+  'PUT /api/maps/:mapId/design/picture',
   'POST /api/maps/:mapId/travel-copies/preview',
   'POST /api/maps/:mapId/travel-copies',
   'POST /api/travel-copies/:id/approve',

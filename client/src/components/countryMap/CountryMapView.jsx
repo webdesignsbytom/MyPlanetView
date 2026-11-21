@@ -94,7 +94,7 @@ const StateNames = memo(function StateNames({ areas, statuses, zoom }) {
   const size = LABEL_PX / (zoom * REFERENCE_PX_PER_UNIT);
   const r = badgeRadius(zoom);
   return (
-    <g className='pointer-events-none fill-map-ink font-medium' fontSize={size} textAnchor='middle' aria-hidden='true'>
+    <g className='pointer-events-none fill-map-names font-medium' fontSize={size} textAnchor='middle' aria-hidden='true'>
       {placedNames(areas, statuses, size, r).map(({ area, y }, i) => (
         <text key={area.code ?? i} x={area.at[0]} y={y}>
           {area.name}

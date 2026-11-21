@@ -21,7 +21,7 @@ export const ORIGINAL_TYPES = ['image/jpeg', 'image/webp', 'image/png'];
 /** An iPhone's own format, by type or by name (Windows often gives HEIC files no type). */
 export const isHeic = (file) => /image\/hei[cf]/i.test(file.type) || /\.(heic|heif)$/i.test(file.name);
 
-async function decode(file) {
+export async function decode(file) {
   try {
     return await createImageBitmap(file, { imageOrientation: 'from-image' });
   } catch {

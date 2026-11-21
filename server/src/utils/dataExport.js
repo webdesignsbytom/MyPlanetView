@@ -7,6 +7,7 @@ import { BusinessName } from './constants/siteConstants.js';
 import { planOf } from './constants/plans.js';
 import { effectivePlan } from './plans.js';
 import { isUuid } from './travelValidation.js';
+import { storedColours } from './mapDesigns.js';
 
 export const EXPORT_FORMAT = 'my-planet-view-data';
 export const EXPORT_VERSION = 1;
@@ -124,6 +125,16 @@ export function exportMapView(rows, { userId }) {
     isDefault: map.isDefault,
     // The UK shown as its four nations (docs/API.md "The UK's nations")
     splitUk: Boolean(map.splitUk),
+    // Its own design (docs/API.md "Map designs"): a picture for the sea and its colours
+    design: map.design
+      ? {
+          shown: map.design.shown,
+          countryColours: storedColours(map.design.countryColours),
+          namesColour: map.design.namesColour ?? null,
+          gridColour: map.design.gridColour ?? null,
+          hasSeaPicture: Boolean(map.design.pictureId),
+        }
+      : null,
     linkAccess: map.linkAccess,
     shareCode: map.shareCode,
     graceUntil: iso(map.graceUntil),

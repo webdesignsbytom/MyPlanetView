@@ -22,6 +22,8 @@ export const planTickets = [
     tagline: 'Start your map',
     features: [
       { text: 'Your private travel map, with every country you’ve been coloured in' },
+      // A map's own design (docs/API.md "Map designs"; 21 Nov 2026): free on every plan
+      { text: 'Your own map design: a picture of yours on the sea, and your colours for every country' },
       { text: perCountry('FREE') },
       { text: 'A print-quality copy of every photo, good up to A4' },
       { text: 'Travel offer cards in your photo galleries keep it free' },
@@ -45,9 +47,9 @@ export const planTickets = [
       { text: 'Everything in Business' },
       { text: perCountry('PREMIUM') },
       { text: 'Videos of your trips, beside the photos' },
-      // Each plan has its own passport cover (16 Nov); the map styles wait on the user's choice
+      // Each plan has its own passport cover (16 Nov). "Extra map styles" (never built) gave
+      // way to every map's own design, free (21 Nov 2026, the user's wish)
       { text: 'A black and gold First Class passport cover' },
-      { text: 'Extra map styles', soon: true },
       { text: 'No ad cards on your maps, for anyone who looks' },
     ],
   },
