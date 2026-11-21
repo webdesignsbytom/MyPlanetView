@@ -81,6 +81,8 @@ export const everyPlanFeatures = [
   { text: 'Badges as your map fills up, and goals of your own: a number of countries, a bucket list, a whole region.' },
   // Friends challenges, monthly photo themes and the first 20 country guides (checked 16 Nov)
   { text: 'Challenges with friends, monthly photo themes and country guides.' },
+  // The map poster (22 Nov 2026)
+  { text: 'A print-ready poster of your map, up to 70 × 50 cm, for any print shop.' },
   // The importer (docs/API.md "Importing from Polarsteps")
   { text: 'Coming from Polarsteps? Bring your trips, photos and stories with you.' },
 ];

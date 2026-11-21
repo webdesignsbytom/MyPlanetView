@@ -42,6 +42,8 @@ Last updated: 19 November 2026.
 
 - **Selling points, richer stats, family extras and give a month, get a month (21 Nov 2026, the user's wish, from "what else can we do to compete"):** the About, FAQ and Pricing pages say "no followers, no public profiles", "the map is the album", and how this differs from Polarsteps (named only in the FAQ and the Pricing page's import line; the home page is the poster alone, so its search description carries the first). The statistics add the share of the world's countries, days away and the distance on completed trips (home and back), and the place furthest from home, from a "Home" each map can set in Settings, else a traveller's birth country (docs/API.md "Stats"). Each traveller on a family's map has their own passport (their trips, photos and moments; "Whose passport"), moments gain "First trip" and "Anniversary", and a moment dated to the day comes round: a tag on the map that day, and the "On this day" email sends it before any photo (docs/API.md "Moments", "Emails"). Each member has an invite link: the friend's first month free, and the member's when the friend first pays, as Stripe credit or a month of Business, up to 12 a year (docs/API.md "Give a month, get a month"; the terms' "Invite a friend", 1.3.0).
 
+- **A poster of the map, and "Where to go next" (22 Nov 2026, the user's wish, from the ideas list):** the statistics panel's "A poster of my map" makes a print-ready PNG in the browser (A4, A3, A2 or 70 × 50 cm, landscape, 300 dpi written into the file, or the most a phone's browser can draw; the map's name, its numbers, the countries coloured in and named, in "Blue sea" or "Old paper"), with the print partners' offers under it; nothing is sent anywhere. A new map tool, "Where to go next", lists the want-to-go countries good to visit this month, then the rest at their next best month, from the country guides' ratings.
+
 ## Agreed so far
 
 | Idea | Decision (14 Nov 2026) |
@@ -773,7 +775,29 @@ When each part is built, update these sections there:
 
 ## Ideas not built yet
 
-- **A visited-country animation** (21 Nov 2026, the user's wish): marking a country visited or lived in (the ticket, the country list, a "been here" tick) should feel like a moment: the country fills in with its colour and its star sticker is pressed on like a stamp. A plain change with reduced motion.
+The list from "what else can we do to compete" (21 Nov 2026) and the user's own additions. Built from it: on 21 Nov 2026 the selling-point wording, richer travel stats, family extras, and give a month, get a month; on 22 Nov 2026 the map as a printed poster (its file) and "Where to go next" (see "Build status").
+
+**Quick**
+- **Supporter badge:** a small mark on paid members' shared maps, so every shared map advertises the paid plans.
+- **Waiting list and founder pre-sales** ("Get early access"): shows whether people will pay before spending on launch.
+- **A visited-country animation** (21 Nov 2026, the user's wish; the same idea as the scratch-off reveal, so built as one): marking a country visited or lived in (the ticket, the country list, a "been here" tick) should feel like a moment: the country fills in with its colour (or is scratched off, as the Scratch Map does) and its star sticker is pressed on like a stamp. Made for short videos. A plain change with reduced motion.
+
+**Medium**
+- **A cities checklist:** Visited sells cities as a paid add-on; we could give it free.
+- **String between the countries** (22 Nov 2026, the user's wish): red string from pin to pin linking the countries you've been to, like a map on a corkboard with pins and thread. A map setting you switch on and off (the user's decision, 22 Nov 2026). Still open: what order the string follows (when each country was first visited, or each trip's own route).
+- **A Google Play app:** the site wrapped as an Android app (not being in the app stores is the business review's biggest risk).
+
+**Big**
+- **Photo scan:** reads the person's photo library and fills in the map from where the photos were taken: years of travel on the map in minutes. The strongest reason to sign up.
+- **Fly-through video:** the map flying through a trip or a year (Polarsteps' Trip Reels). Very shareable, heavy to build.
+- **Other languages:** Spanish, French, German and Dutch.
+
+**Things to sell**
+- **The map as a printed poster, printed and posted:** the print-ready file is built (22 Nov 2026); ordering it through the site needs a print partner.
+- **Photo books** of a trip, a country, a year or a life.
+- **A printed passport** with the stamps.
+- **Prints of the country posters,** once the rights to the art are checked.
+- **A logo shop** through a print-on-demand printer.
 
 ## Open decisions
 

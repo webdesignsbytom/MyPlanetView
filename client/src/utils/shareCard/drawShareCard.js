@@ -17,10 +17,11 @@ import { DISPLAY_BUSINESS_URL } from '@/utils/constants/constants';
 export const CARD_WIDTH = 1080;
 export const CARD_HEIGHT = 1350;
 
-const MAP_WIDTH = 2000; // the projection's width (utils/map/projection.js)
-const MAP_TOP = -5; // just above the northernmost land
-const MAP_BOTTOM_NO_ANTARCTICA = 860;
-const MAP_BOTTOM_WITH_ANTARCTICA = 1022;
+// The map's drawing is shared with the map poster (utils/poster/drawMapPoster.js)
+export const MAP_WIDTH = 2000; // the projection's width (utils/map/projection.js)
+export const MAP_TOP = -5; // just above the northernmost land
+export const MAP_BOTTOM_NO_ANTARCTICA = 860;
+export const MAP_BOTTOM_WITH_ANTARCTICA = 1022;
 
 const SHAPED = COUNTRIES.filter((c) => COUNTRY_SHAPES[c.code]);
 const SHAPED_SPLIT_UK = [...SHAPED.filter((c) => c.code !== 'GB'), ...COUNTRIES.filter((c) => c.kind === 'NATION')];
@@ -34,7 +35,7 @@ function pathsOf(code) {
   return pathCache.get(code);
 }
 
-async function loadFonts() {
+export async function loadFonts() {
   if (typeof document === 'undefined' || !document.fonts?.load) return;
   try {
     await Promise.all([
@@ -47,14 +48,14 @@ async function loadFonts() {
   }
 }
 
-const font = (size, family = 'TravelFont', weight = '') => `${weight ? `${weight} ` : ''}${size}px ${family}`;
+export const font = (size, family = 'TravelFont', weight = '') => `${weight ? `${weight} ` : ''}${size}px ${family}`;
 
 /** Draw `text` centred at `y` at the largest size from `max` down to `min` that fits `width`, else cut short. */
-function fittedText(ctx, text, { x, y, width, max, min, family, weight }) {
+export function fittedText(ctx, text, { x, y, width, max, min, family, weight, step = 2 }) {
   let size = max;
   ctx.font = font(size, family, weight);
   while (size > min && ctx.measureText(text).width > width) {
-    size -= 2;
+    size -= step;
     ctx.font = font(size, family, weight);
   }
   let shown = text;
@@ -64,7 +65,7 @@ function fittedText(ctx, text, { x, y, width, max, min, family, weight }) {
 }
 
 /** The places' names, A to Z: countries, the UK's nations and special places (a region's country is listed already). */
-const namesOf = (codes) =>
+export const namesOf = (codes) =>
   [...codes]
     .map((code) => COUNTRY_BY_CODE[code])
     .filter((place) => place && place.kind !== 'REGION')
@@ -75,7 +76,7 @@ const namesOf = (codes) =>
  * The names as lines of at most `width`, joined by " · ", at most `maxLines`; the last says
  * "and N more" when they don't all fit.
  */
-function nameLines(ctx, names, width, maxLines) {
+export function nameLines(ctx, names, width, maxLines) {
   const lines = [];
   let line = '';
   for (let i = 0; i < names.length; i++) {
@@ -112,26 +113,31 @@ function fillFor(code, colours) {
   return C.visits[pastelNumberFor(code) - 1] ?? C.visits[0];
 }
 
-function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica }) {
+/**
+ * The world map in `box` (its height follows the width). `palette` (sea, land, edges, ice,
+ * frame) and the line widths and dot radius, in canvas pixels, default to the share card's;
+ * the poster draws it bigger in its own colours. -> the map's height in pixels
+ */
+export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica, palette = C, edgeWidth = 0.8, dotRadius = 5, frameWidth = 3 }) {
   const bottom = withAntarctica ? MAP_BOTTOM_WITH_ANTARCTICA : MAP_BOTTOM_NO_ANTARCTICA;
   const scale = box.width / MAP_WIDTH;
   ctx.save();
   ctx.beginPath();
   ctx.rect(box.x, box.y, box.width, box.height);
   ctx.clip();
-  ctx.fillStyle = C.sea;
+  ctx.fillStyle = palette.sea;
   ctx.fillRect(box.x, box.y, box.width, box.height);
 
   ctx.translate(box.x, box.y - MAP_TOP * scale);
   ctx.scale(scale, scale);
   ctx.lineJoin = 'round';
-  ctx.lineWidth = 0.8 / scale;
+  ctx.lineWidth = edgeWidth / scale;
   for (const place of splitUk ? SHAPED_SPLIT_UK : SHAPED) {
     const antarctic = isAntarctic(place.code);
     if (antarctic && !withAntarctica) continue;
     const marked = highlight.has(place.code);
-    ctx.fillStyle = marked ? fillFor(place.code, colours) : antarctic ? C.ice : C.land;
-    ctx.strokeStyle = antarctic ? C.iceEdge : C.landEdge;
+    ctx.fillStyle = marked ? fillFor(place.code, colours) : antarctic ? palette.ice : palette.land;
+    ctx.strokeStyle = antarctic ? palette.iceEdge : palette.landEdge;
     for (const path of pathsOf(place.code)) {
       ctx.fill(path);
       ctx.stroke(path);
@@ -141,15 +147,15 @@ function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica }) {
   for (const place of DOTTED) {
     if (!highlight.has(place.code) || place.pinY > bottom) continue;
     ctx.beginPath();
-    ctx.arc(place.pinX, place.pinY, 5 / scale, 0, Math.PI * 2);
+    ctx.arc(place.pinX, place.pinY, dotRadius / scale, 0, Math.PI * 2);
     ctx.fillStyle = fillFor(place.code, colours);
     ctx.fill();
     ctx.stroke();
   }
   ctx.restore();
 
-  ctx.strokeStyle = C.brown;
-  ctx.lineWidth = 3;
+  ctx.strokeStyle = palette.brown;
+  ctx.lineWidth = frameWidth;
   ctx.strokeRect(box.x, box.y, box.width, box.height);
   return (bottom - MAP_TOP) * scale;
 }

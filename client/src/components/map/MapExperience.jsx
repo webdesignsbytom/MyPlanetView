@@ -41,6 +41,7 @@ import {
   CountryPanel,
   ExtraMapDialog,
   ShareCardDialog,
+  MapPosterDialog,
   YearRecapDialog,
   MapSwitcher,
   MapTipsDialog,
@@ -52,6 +53,7 @@ import {
   StatsPanel,
   TimelinePanel,
   TripsPanel,
+  WhereNextPanel,
   UnplacedPhotosPanel,
   MapPhotosPanel,
   PinPanel,
@@ -72,6 +74,7 @@ import { mapExtent } from '@/utils/map/projection';
 import { isMonoStyle, mapStyleById } from '@/utils/map/mapStyles';
 import { DESIGN_BASE_STYLE, shownDesign } from '@/utils/map/mapDesign';
 import { mapCardOptions } from '@/utils/shareCard/cardOptions';
+import { mapPosterOptions } from '@/utils/poster/posterOptions';
 import { recapYearFor } from '@/utils/recap/recap';
 import RecapTag from '@/components/recap/RecapTag';
 import AnniversaryTag from '@/components/moments/AnniversaryTag';
@@ -183,6 +186,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const [payingForMap, setPayingForMap] = useState(false);
   // A share card being made (the stats panel's "Share a picture of my map"): its options
   const [shareCard, setShareCard] = useState(null);
+  // The poster dialog's options (mapPosterOptions), while it's open
+  const [poster, setPoster] = useState(null);
   // "Your year in travel" open on this year (docs/API.md "Year in travel"), or null
   const [recapYear, setRecapYear] = useState(null);
 
@@ -195,6 +200,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         'countries',
         'stats',
         'trips',
+        'next',
         'timeline',
         'badges',
         'settings',
@@ -486,6 +492,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onShowBadges={openBadges}
             // Not through a share link: the card is the map of someone who's on it
             onShareCard={shareCode ? undefined : () => setShareCard(mapCardOptions(map))}
+            onPoster={shareCode ? undefined : () => setPoster(mapPosterOptions(map))}
             onYearRecap={shareCode ? undefined : () => setRecapYear(recapYearFor())}
             collected={landmarkMarks}
             passportHref={shareCode ? sharedPassportPath(shareCode) : mapPassportPath(map.id)}
@@ -603,6 +610,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onClose={close}
           />
         );
+      case 'next':
+        return <WhereNextPanel visits={map.visits} onShowCountry={showCountry} onClose={close} />;
       case 'switcher':
         return (
           <MapSwitcher currentMapId={map.id} userId={currentUser?.id} userName={currentUser?.name} locked={mustVerify} onClose={close} />
@@ -861,6 +870,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         {shareCard ? (
           <MapOverlayBoundary onClose={() => setShareCard(null)}>
             <ShareCardDialog card={shareCard} title={shareCard.dialogTitle} onClose={() => setShareCard(null)} />
+          </MapOverlayBoundary>
+        ) : null}
+
+        {poster ? (
+          <MapOverlayBoundary onClose={() => setPoster(null)}>
+            <MapPosterDialog poster={poster} onClose={() => setPoster(null)} />
           </MapOverlayBoundary>
         ) : null}
 

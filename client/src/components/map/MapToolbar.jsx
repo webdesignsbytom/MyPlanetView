@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // Icons
 import { IoContract, IoExpand, IoHome, IoMap, IoMenu, IoSettings, IoShareSocial } from 'react-icons/io5';
 import { IoIosImages, IoIosStats } from 'react-icons/io';
-import { FaHistory, FaListOl, FaPlay, FaRoute, FaSuitcase } from 'react-icons/fa';
+import { FaCompass, FaHistory, FaListOl, FaPlay, FaRoute, FaSuitcase } from 'react-icons/fa';
 // Constants
 import { HOME_PAGE_URL } from '@/utils/constants/routes';
 // Hooks
@@ -235,6 +235,8 @@ function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false
     },
     { id: 'countries', label: 'Country list', icon: <FaListOl aria-hidden='true' /> },
     { id: 'trips', label: 'Trips', icon: <FaRoute aria-hidden='true' /> },
+    // The want-to-go countries by the best time for each (22 Nov 2026)
+    { id: 'next', label: 'Where to go next', icon: <FaCompass aria-hidden='true' /> },
     { id: 'timeline', label: 'Timeline', icon: <FaHistory aria-hidden='true' /> },
     { id: 'badges', label: 'Badges and goals', icon: <FaSuitcase aria-hidden='true' /> },
     { id: 'play', label: 'Play my world', icon: <FaPlay aria-hidden='true' /> },

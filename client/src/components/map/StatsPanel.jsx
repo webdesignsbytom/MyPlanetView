@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 // Icons
-import { FaCalendarAlt, FaPassport, FaShareAlt, FaSuitcase } from 'react-icons/fa';
+import { FaCalendarAlt, FaPassport, FaPrint, FaShareAlt, FaSuitcase } from 'react-icons/fa';
 // Components
 import MapPanel from './MapPanel';
 import MapActionButton from './MapActionButton';
@@ -22,14 +22,15 @@ import { aboutKm, aboutMiles, withThe, worldShare } from '@/utils/map/travelStat
 // (counted, but on no country) are a button away, and so are the badges and goals (on a
 // phone, the toolbar leaves their stamp out: MapToolbar). `passportHref` links to the map's
 // passport (its own address, or through the share link).
-// `onShareCard` makes a picture of the map to share (ShareCardDialog); `onYearRecap` opens
+// `onShareCard` makes a picture of the map to share (ShareCardDialog), `onPoster` the map as a
+// printed poster (MapPosterDialog, 22 Nov 2026); `onYearRecap` opens
 // "Your year in travel" (YearRecapDialog). `collected` (the map's landmark marks: stamped and
 // ticked Sets) counts the collection (docs/API.md "Collecting"): the landmarks been to, and
 // the World Heritage Sites among them, out of all there are. Then how far they've gone
 // (docs/API.md "Stats"; 21 Nov 2026): the share of the world's countries, the days away and
 // the distance on completed trips (home, the stops, home again), and the place furthest from
 // the map's home (Settings, "This map").
-function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onYearRecap, collected = null, passportHref, onClose }) {
+function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onPoster, onYearRecap, collected = null, passportHref, onClose }) {
   const byTraveller = stats?.byTraveller || [];
   const { landmarks } = useLandmarks(null, { enabled: Boolean(collected) });
   const collection = useMemo(() => {
@@ -89,6 +90,12 @@ function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = 
             <MapActionButton onClick={onShareCard}>
               <FaShareAlt aria-hidden='true' />
               <span>Share a picture of my map</span>
+            </MapActionButton>
+          ) : null}
+          {onPoster ? (
+            <MapActionButton quiet onClick={onPoster}>
+              <FaPrint aria-hidden='true' />
+              <span>A poster of my map</span>
             </MapActionButton>
           ) : null}
           {onYearRecap ? (
