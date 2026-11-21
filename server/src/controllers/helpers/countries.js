@@ -1,16 +1,30 @@
 // Countries are seeded and only change with a deploy, so they're read once per instance.
 import { isCountryCode } from '../../utils/travelValidation.js';
 import { findAllCountries } from '../../domain/places.js';
+import { positionFromMap } from '../../utils/projection.js';
 
-// code -> continent, and code -> name, for every country on the map
+// code -> continent, code -> name and code -> the real position of its pin (the travel
+// stats' distances), for every place on the map, and how many countries the world has: the
+// countries, or with the UK as its four nations, those four instead of the UK
 let countriesPromise = null;
 
 const loadCountryTables = () => {
   countriesPromise ??= findAllCountries()
-    .then((rows) => ({
-      continents: new Map(rows.map((c) => [c.code, c.continent])),
-      names: new Map(rows.map((c) => [c.code, c.name])),
-    }))
+    .then((rows) => {
+      const countries = rows.filter((c) => c.kind === 'COUNTRY').length;
+      const nations = rows.filter((c) => c.kind === 'NATION').length;
+      return {
+        continents: new Map(rows.map((c) => [c.code, c.continent])),
+        names: new Map(rows.map((c) => [c.code, c.name])),
+        positions: new Map(
+          rows.flatMap((c) => {
+            const position = c.pinX === null || c.pinY === null ? null : positionFromMap(c.pinX, c.pinY);
+            return position ? [[c.code, position]] : [];
+          }),
+        ),
+        worldTotals: { whole: countries, splitUk: nations ? countries - 1 + nations : countries },
+      };
+    })
     .catch((err) => {
       countriesPromise = null; // try again next time
       throw err;
@@ -31,6 +45,12 @@ export async function isKnownCountry(code) {
 
 /** Every country's continent, as a Map of code -> continent (for map stats). */
 export const continentsByCode = () => loadCountries();
+
+/** Every place's pin as a real position, a Map of code -> { latitude, longitude } (for map stats). */
+export const placePositions = async () => (await loadCountryTables()).positions;
+
+/** How many countries the world has, on a map that splits the UK or not: `{ whole, splitUk }`. */
+export const worldCountryTotals = async () => (await loadCountryTables()).worldTotals;
 
 /**
  * An optional country field: undefined (leave), null/"" (clear) or a known code.

@@ -1,5 +1,11 @@
 import { test, expect, HOME_MAP, HOME_SHARE_CODE, SAM_MAP, expectMapOpen, expectStats, goInApp, openMap, openStats, openSwitcher, openTool, pressTool, showTools, toolbar } from './fixtures.js';
 
+// The statistics' Trips tile (the map's own trips and the group trips added to it)
+const tripsCount = (page) => {
+  const stats = page.getByRole('dialog', { name: 'Travel statistics' });
+  return stats.locator('div').filter({ has: page.getByText('Trips', { exact: true }) }).last().getByRole('definition');
+};
+
 // Group trips (docs/API.md "Group trips"): a trip shown on other people's maps ("Add to my
 // map"), its countries marked there when it's done. Seeded (src/dev/mock/seed.js): the
 // test user views Sam's map, so is on its completed South-East Asia loop (Thailand,
@@ -92,7 +98,7 @@ test.describe('Group trips', () => {
     await openMap(page);
     await openStats(page);
     // Trips: the map's own two and the group trip
-    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition').last()).toHaveText('3');
+    await expect(tripsCount(page)).toHaveText('3');
 
     const trips = await openTool(page, 'Trips', 'Trips');
     const stag = trips.getByRole('listitem').filter({ hasText: 'Stag do in Prague' });
@@ -106,7 +112,7 @@ test.describe('Group trips', () => {
     await stag.getByRole('button', { name: 'Take Stag do in Prague off this map' }).click();
     await expect(trips.getByText('Stag do in Prague')).toHaveCount(0);
     await openStats(page);
-    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition').last()).toHaveText('2');
+    await expect(tripsCount(page)).toHaveText('2');
 
     // Its page is still closed to them
     await page.goto('/trips/trip-tom-stag');

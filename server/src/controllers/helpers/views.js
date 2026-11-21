@@ -9,6 +9,7 @@ import {
 } from '../../utils/access.js';
 import { toDateOnly } from '../../utils/travelValidation.js';
 import { buildMapStats } from '../../utils/mapStats.js';
+import { homeOf } from '../../utils/travelStats.js';
 import { bestCopySize } from '../../utils/planLimits.js';
 import { themeView } from '../../utils/themes.js';
 import { signPhotoUrl } from '../../services/s3/mediaService.js';
@@ -17,12 +18,12 @@ import {
   countMapPhotos,
   countMapTrips,
   findCompletedTripsForStats,
-  findMapSplitUk,
+  findMapStatsRow,
   findMapStampedLandmarkIds,
   findMapTravellers,
   findMapVisitsForStats,
 } from '../../domain/maps.js';
-import { continentsByCode } from './countries.js';
+import { continentsByCode, placePositions, worldCountryTotals } from './countries.js';
 import { spotView } from '../../utils/momentSpots.js';
 
 const keyOf = (photo, size) => photo.variants?.find((v) => v.size === size)?.media?.key ?? null;
@@ -330,31 +331,34 @@ export async function pinView(pin, { role }) {
  */
 export async function loadStatsCounts(mapId, role) {
   const includeHidden = canEdit(role);
-  const [photoCount, stampedLandmarkIds, tripCount, completedTrips, continentByCode] = await Promise.all([
+  const [photoCount, stampedLandmarkIds, tripCount, completedTrips, continentByCode, positions, worldTotals] = await Promise.all([
     countMapPhotos(mapId, { includeHidden }),
     findMapStampedLandmarkIds(mapId, { includeHidden }),
     countMapTrips(mapId),
     findCompletedTripsForStats(mapId),
     continentsByCode(),
+    placePositions(),
+    worldCountryTotals(),
   ]);
   // The ids too: the map's reply marks those landmarks' pins (mapDetailView)
-  return { photoCount, landmarkCount: stampedLandmarkIds.length, stampedLandmarkIds, tripCount, completedTrips, continentByCode };
+  return { photoCount, landmarkCount: stampedLandmarkIds.length, stampedLandmarkIds, tripCount, completedTrips, continentByCode, positions, worldTotals };
 }
 
 /**
- * Stats from a map's visits and travellers (`[{ id, name }]`) and loadStatsCounts; `splitUk`:
- * the map counts the UK's nations one each (utils/ukNations.js).
+ * Stats from a map's visits and travellers (`[{ id, name, userId, birthCountryCode }]`) and
+ * loadStatsCounts; `splitUk`: the map counts the UK's nations one each (utils/ukNations.js);
+ * `homeCountryCode` and `ownerId` find its home (utils/travelStats.js homeOf).
  */
-export const statsFrom = ({ visits, travellers, splitUk = false }, counts) =>
-  buildMapStats({ visits, travellers, splitUk, ...counts });
+export const statsFrom = ({ visits, travellers, splitUk = false, homeCountryCode = null, ownerId = null }, counts) =>
+  buildMapStats({ visits, travellers, splitUk, ...counts, homeCountryCode: homeOf({ homeCountryCode, ownerId, travellers }) });
 
 /** Stats for a map, counting only what the caller may see (GET /maps/:mapId/stats). */
 export async function loadMapStats(mapId, role) {
-  const [visits, travellers, counts, splitUk] = await Promise.all([
+  const [visits, travellers, counts, row] = await Promise.all([
     findMapVisitsForStats(mapId),
     findMapTravellers(mapId),
     loadStatsCounts(mapId, role),
-    findMapSplitUk(mapId),
+    findMapStatsRow(mapId),
   ]);
-  return statsFrom({ visits, travellers, splitUk }, counts);
+  return statsFrom({ visits, travellers, splitUk: Boolean(row?.splitUk), homeCountryCode: row?.homeCountryCode, ownerId: row?.ownerId }, counts);
 }

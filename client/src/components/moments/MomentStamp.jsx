@@ -9,7 +9,9 @@ import {
   FaGraduationCap,
   FaHeart,
   FaHome,
+  FaPlaneDeparture,
   FaRing,
+  FaStar,
 } from 'react-icons/fa';
 
 // Each kind of moment's mark (utils/moments/momentKinds.js): a small round rubber stamp in
@@ -24,6 +26,8 @@ const KIND_ICONS = {
   MET_SOMEONE: FaHeart,
   CELEBRATION: FaGlassCheers,
   SAW_OR_DID: FaBinoculars,
+  FIRST_TRIP: FaPlaneDeparture,
+  ANNIVERSARY: FaStar,
 };
 
 // Decorative: the kind is always written beside it

@@ -67,11 +67,13 @@ export const adsLine = {
 // What every plan has
 export const everyPlanFeatures = [
   { text: 'Private by default: your map is seen only by the people you add, or give the link to.' },
+  { text: 'No followers, no public profiles and no feed. Nobody comes across your map unless you send it to them.' },
+  { text: 'The map is the album: every photo sits in the country it was taken in.' },
   { text: `As many viewers and share links as you like, and up to ${EDITORS_PER_MAP} editors on each map, each with their own login.` },
   { text: 'One trip shared on its own, so friends from one holiday see only that holiday.' },
   { text: 'Trips with their stops, dates and route drawn on the map.' },
   { text: 'Landmarks suggested from where each photo was taken.' },
-  { text: 'Two looks for the map: the animated sea and the old map.' },
+  { text: 'Four looks for the map, or a design of your own: your picture on the sea and your colours on the countries.' },
   { text: 'Every map other people share with you, free: they never count as yours.' },
   { text: 'A passport with a stamp for every landmark you photograph.' },
   { text: 'Slideshows of your whole map, one country or one trip.' },
@@ -79,6 +81,8 @@ export const everyPlanFeatures = [
   { text: 'Badges as your map fills up, and goals of your own: a number of countries, a bucket list, a whole region.' },
   // Friends challenges, monthly photo themes and the first 20 country guides (checked 16 Nov)
   { text: 'Challenges with friends, monthly photo themes and country guides.' },
+  // The importer (docs/API.md "Importing from Polarsteps")
+  { text: 'Coming from Polarsteps? Bring your trips, photos and stories with you.' },
 ];
 
 // More than one map (FEATURE-PLAN.md, "Maps")
@@ -92,12 +96,20 @@ export const extraMaps = {
   example: `Sam keeps a solo map and “The Smiths” for the family, both free. When France fills up on the family map, Sam moves to ${PLANS.REGULAR.name} with it as the main map (${count(PLANS.REGULAR.limits.photosPerCountry)} photos of each country), and later upgrades the solo map too, for ${extra('REGULAR', 'MONTH')} a month.`,
 };
 
+// Gifts (docs/API.md "Gifts"; 21 Nov 2026): a year of a paid plan, paid once
+export const gifts = {
+  intro: `Give someone a year of ${PLANS.REGULAR.name} (${formatPence(PLANS.REGULAR.price.YEAR)}) or ${PLANS.PREMIUM.name} (${formatPence(PLANS.PREMIUM.price.YEAR)}), paid once, for Christmas, a wedding or a birthday. Its code comes to you to give, with a page to print or send on, and their year starts the day they redeem it.`,
+  cta: 'Give a year of travel',
+};
+
 // The small print, kept honest
 export const pricingNotes = [
   { text: `Paying yearly gets you about two months free: ${formatPence(PLANS.REGULAR.price.YEAR)} a year for ${PLANS.REGULAR.name}, ${formatPence(PLANS.PREMIUM.price.YEAR)} for ${PLANS.PREMIUM.name}.` },
   { text: 'Upgrade the day you need it. Changing plan never deletes anything: originals already kept stay, and a country over the new limit keeps its photos but takes no more.' },
   { text: `A fair-use limit of ${Math.round(PLANS.REGULAR.limits.storageCapBytes / GB)} GB of photos on each Business map, and ${Math.round(PLANS.PREMIUM.limits.storageCapBytes / GB)} GB on First Class, keeps things fair. Most people never get near it.` },
   { text: 'Invited to a Business or First Class map? Join within 7 days and that plan is half price for your first 3 months (or the same saving off a year). One welcome offer per account: not with a promo code.' },
+  // Give a month, get a month (docs/API.md; 21 Nov 2026)
+  { text: 'Give a month, get a month: send a friend your invite link from your account page. Their first month is free, and when they go on to pay, you get a month free too, up to 12 a year.' },
   { text: `Payments go through Stripe. Cancel any time from your account page, and the plan runs to the end of the period you’ve paid for. Changed your mind? Tell us within ${REFUND_DAYS} days of your first payment for a full refund.` },
   // "Download my data" is on the account page (docs/API.md, "Your data")
   { text: `Prices are in pounds sterling. Getting a copy of all your data is free on every plan, as the law says it should be: it’s a button on your account page.` },

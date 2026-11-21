@@ -58,6 +58,16 @@ export const tripPath = (tripId) => `/trips/${encodeURIComponent(tripId)}`;
 export const CHALLENGES_PAGE_URL = '/challenges';
 export const CHALLENGE_PAGE_URL = '/challenges/:challengeId';
 export const CHALLENGE_JOIN_PAGE_URL = '/challenges/join/:code';
+// Gifts of a year of a plan (docs/API.md "Gifts"): buying and yours (signed in), and a
+// gift's own page (anyone with its code)
+export const GIFTS_PAGE_URL = '/gifts';
+// Bringing your travels from Polarsteps (docs/API.md "Importing from Polarsteps"; signed in)
+export const IMPORT_PAGE_URL = '/import';
+// An email's unsubscribe link (docs/API.md "Emails"; anyone, with its signed ?u=&t=)
+export const UNSUBSCRIBE_PAGE_URL = '/unsubscribe';
+export const importPath = (mapId) => (mapId ? `${IMPORT_PAGE_URL}?map=${encodeURIComponent(mapId)}` : IMPORT_PAGE_URL);
+export const GIFT_PAGE_URL = '/gift/:code';
+export const giftPath = (code) => `/gift/${encodeURIComponent(code)}`;
 export const challengePath = (challengeId) => `/challenges/${encodeURIComponent(challengeId)}`;
 export const challengeJoinPath = (code) => `/challenges/join/${encodeURIComponent(code)}`;
 
@@ -101,6 +111,10 @@ export const CLIENT_ONLY_ROUTE_PREFIXES = [
   SHARED_PAGE_URL.split('/:')[0],
   INVITE_PAGE_URL.split('/:')[0],
   CHALLENGES_PAGE_URL,
+  GIFTS_PAGE_URL,
+  GIFT_PAGE_URL.split('/:')[0],
+  IMPORT_PAGE_URL,
+  UNSUBSCRIBE_PAGE_URL,
 ];
 
 // Pages whose address carries a secret (share code, invite token, password-reset or
@@ -108,6 +122,10 @@ export const CLIENT_ONLY_ROUTE_PREFIXES = [
 export const ANALYTICS_EXCLUDED_PREFIXES = [
   SHARED_PAGE_URL.split('/:')[0],
   CHALLENGE_JOIN_PAGE_URL.split('/:')[0],
+  // A gift's code is worth a year of a plan
+  GIFT_PAGE_URL.split('/:')[0],
+  // Its query is a signed link to someone's account
+  UNSUBSCRIBE_PAGE_URL,
   INVITE_PAGE_URL.split('/:')[0],
   RESET_PASS_PAGE_URL.split('/:')[0],
   VERIFY_EMAIL_PAGE_URL.split('/:')[0],
@@ -118,6 +136,7 @@ export const ANALYTICS_EXCLUDED_PREFIXES = [
 // anything under their prefix (utils/analytics/privacy.js)
 export const ANALYTICS_REDACTED_ROUTES = [
   CHALLENGE_JOIN_PAGE_URL,
+  GIFT_PAGE_URL,
   CHALLENGE_PAGE_URL,
   MAP_PASSPORT_PAGE_URL,
   SHARED_PASSPORT_PAGE_URL,

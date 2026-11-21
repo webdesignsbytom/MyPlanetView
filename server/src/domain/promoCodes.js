@@ -13,6 +13,8 @@ const PROMO_SELECT = {
   endsAt: true,
   freePlan: true,
   createdById: true,
+  // A member's own invite code (docs/API.md "Give a month, get a month"); null for an admin's
+  ownerId: true,
   createdAt: true,
 };
 
@@ -40,7 +42,8 @@ export const updatePromoCodeInDB = (id, data) => prisma.promoCode.update({ where
  * profiles, merged in.
  */
 export const listPromoCodesWithCounts = async () => {
-  const codes = await prisma.promoCode.findMany({ select: PROMO_SELECT, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] });
+  // The admins' codes only: members' invite codes are their own (docs/API.md "Give a month, get a month")
+  const codes = await prisma.promoCode.findMany({ where: { ownerId: null }, select: PROMO_SELECT, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] });
   if (!codes.length) return [];
   const withCode = { promoCodeId: { in: codes.map((c) => c.id) } };
   const count = (where) =>
@@ -77,6 +80,9 @@ export const claimPromoCodeInDB = ({ userId, promoCodeId, usable }) =>
     await tx.profile.upsert({ where: { userId }, update: { promoCodeId }, create: { userId, promoCodeId } });
     return promo;
   });
+
+/** A member's first name, for their invite code's check ("From Sam"), or null. */
+export const findOwnerName = async (userId) => (await prisma.user.findUnique({ where: { id: userId }, select: { name: true } }))?.name ?? null;
 
 /** The code an account signed up with, and when its free month started (null: not yet). */
 export const findProfilePromo = (userId) =>

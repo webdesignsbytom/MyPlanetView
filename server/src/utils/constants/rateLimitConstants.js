@@ -63,6 +63,21 @@ export const SHARE_BROWSE_RATE_LIMIT = {
   max: 300,
 };
 
+// An import's photos (docs/API.md "Importing from Polarsteps"), per user: a presign carrying an
+// import key counts here instead, as an import uploads hundreds of photos in one sitting
+export const IMPORT_PHOTO_PRESIGN_RATE_LIMIT = {
+  name: 'import-photo-presign',
+  windowMs: 15 * MINUTES,
+  max: 600,
+};
+
+// An import's batches of trips, per user
+export const IMPORT_TRIPS_RATE_LIMIT = {
+  name: 'import-trips',
+  windowMs: 15 * MINUTES,
+  max: 60,
+};
+
 export const PHOTO_PRESIGN_RATE_LIMIT = {
   name: 'photo-presign',
   windowMs: 15 * MINUTES,
@@ -110,6 +125,20 @@ export const CHALLENGE_CREATE_DAILY_USER_LIMIT = {
 // Opening or joining a challenge by its link, per IP: codes would be guessed here
 export const CHALLENGE_LOOKUP_RATE_LIMIT = {
   name: 'challenge-lookup',
+  windowMs: 15 * MINUTES,
+  max: 30,
+};
+
+// The links in emails people can stop (their picture, unsubscribing), per IP (docs/API.md "Emails")
+export const EMAIL_LINK_RATE_LIMIT = {
+  name: 'email-link',
+  windowMs: 15 * MINUTES,
+  max: 120,
+};
+
+// Opening or redeeming a gift by its code, per IP: codes would be guessed here (docs/API.md "Gifts")
+export const GIFT_LOOKUP_RATE_LIMIT = {
+  name: 'gift-lookup',
   windowMs: 15 * MINUTES,
   max: 30,
 };

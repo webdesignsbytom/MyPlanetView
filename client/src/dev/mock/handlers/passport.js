@@ -7,6 +7,7 @@ import { buildPassport } from '../passport';
 
 const MAP_NOT_FOUND = "That map doesn't exist, or it hasn't been shared with you.";
 const LINK_NOT_FOUND = "That share link doesn't exist or has been turned off.";
+const TRAVELLER_NOT_FOUND = "That traveller isn't on this map.";
 const STAMP_PHOTO_INVALID = "Pick a photo of this landmark that's confirmed on this map.";
 
 const findMap = (id) => getDb().maps.find((m) => m.id === id) || null;
@@ -22,15 +23,21 @@ function sharedMap(code) {
 }
 
 export function registerPassportRoutes() {
-  route('GET', '/api/maps/:mapId/passport', ({ params }) => {
+  // ?traveller=<id>: that traveller's own passport (21 Nov 2026), as the server's
+  const answer = (map, role, query) => {
+    const passport = buildPassport(map, role, { travellerId: query?.traveller || null });
+    return passport ? ok({ passport }) : fail(404, TRAVELLER_NOT_FOUND);
+  };
+
+  route('GET', '/api/maps/:mapId/passport', ({ params, query }) => {
     const map = findMap(params.mapId);
     const role = mapRole(map);
-    return deny(role, 'VIEWER', MAP_NOT_FOUND) || ok({ passport: buildPassport(map, role) });
+    return deny(role, 'VIEWER', MAP_NOT_FOUND) || answer(map, role, query);
   });
 
-  route('GET', '/api/shared/:code/passport', ({ params }) => {
+  route('GET', '/api/shared/:code/passport', ({ params, query }) => {
     const shared = sharedMap(params.code);
-    return shared ? ok({ passport: buildPassport(shared.map, shared.role) }) : fail(404, LINK_NOT_FOUND);
+    return shared ? answer(shared.map, shared.role, query) : fail(404, LINK_NOT_FOUND);
   });
 
   // `{ photoId }`: one of the landmark's confirmed photos on this map

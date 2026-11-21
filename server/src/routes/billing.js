@@ -6,6 +6,7 @@ import {
   getBillingHandler,
   portalHandler,
 } from '../controllers/billing.js';
+import { giftCheckoutHandler } from '../controllers/gifts.js';
 import { requireVerifiedEmail as verified, validateAuthentication } from '../middleware/auth.js';
 import { createDbRateLimiter, keyByUserId } from '../middleware/dbRateLimit.js';
 import { BILLING_RATE_LIMIT } from '../utils/constants/rateLimitConstants.js';
@@ -24,5 +25,7 @@ router.post('/checkout', verified, billingLimiter, checkoutHandler);
 router.post('/change-plan', verified, billingLimiter, changePlanHandler);
 router.post('/extra-maps', verified, billingLimiter, extraMapsHandler);
 router.post('/portal', verified, billingLimiter, portalHandler);
+// A year of a plan as a gift (docs/API.md "Gifts"): a one-off payment
+router.post('/gift-checkout', verified, billingLimiter, giftCheckoutHandler);
 
 export default router;

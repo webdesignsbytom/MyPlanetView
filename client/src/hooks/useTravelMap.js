@@ -10,6 +10,8 @@ import {
   getMapTrips,
   putVisit,
   removeTripFromMap,
+  tickLandmark,
+  untickLandmark,
   updateMap,
   updateTraveller,
 } from '@/api/travelApi';
@@ -186,6 +188,30 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     [mapId],
   );
 
+  // A landmark ticked "been here", or not (docs/API.md "Collecting"): shown at once, undone if
+  // it fails. A tick can mark its country visited, so the map is read again quietly after one.
+  const setLandmarkBeen = useCallback(
+    async (landmarkId, been) => {
+      const apply = (on) =>
+        setState((prev) => {
+          if (!onMap(prev, mapId)) return prev;
+          const ids = (prev.map.tickedLandmarkIds || []).filter((id) => id !== landmarkId);
+          return { ...prev, map: { ...prev.map, tickedLandmarkIds: on ? [...ids, landmarkId] : ids } };
+        });
+      apply(been);
+      try {
+        if (been) {
+          await tickLandmark(mapId, landmarkId);
+          refresh();
+        } else await untickLandmark(mapId, landmarkId);
+      } catch (err) {
+        apply(!been);
+        throw err;
+      }
+    },
+    [mapId, refresh],
+  );
+
   const addTraveller = useCallback(
     async (body) => {
       const { traveller } = await createTraveller(mapId, body);
@@ -254,6 +280,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     setVisit,
     saveMapDetails,
     setDesign,
+    setLandmarkBeen,
     addTraveller,
     editTraveller,
     removeTraveller,

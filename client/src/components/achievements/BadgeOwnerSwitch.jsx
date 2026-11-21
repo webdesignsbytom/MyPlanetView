@@ -3,12 +3,13 @@ import React from 'react';
 /**
  * Whose badges the suitcase shows: the whole map's ("Everyone") or one traveller's (from
  * the completed trips they were on). Buttons in a labelled group, the chosen one pressed.
- * `value` is null for the map, else a traveller's id.
+ * `value` is null for the map, else a traveller's id. The passport page uses it too
+ * (`label` "Whose passport", `everyone` "The whole family").
  */
-function BadgeOwnerSwitch({ travellers, value, onChange }) {
-  const options = [{ id: null, name: 'Everyone' }, ...travellers];
+function BadgeOwnerSwitch({ travellers, value, onChange, label = 'Whose badges', everyone = 'Everyone' }) {
+  const options = [{ id: null, name: everyone }, ...travellers];
   return (
-    <div role='group' aria-label='Whose badges' className='grid grid-flow-row grid-cols-2 gap-2 sm:grid-cols-3'>
+    <div role='group' aria-label={label} className='grid grid-flow-row grid-cols-2 gap-2 sm:grid-cols-3'>
       {options.map((option) => {
         const on = option.id === value;
         return (

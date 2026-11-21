@@ -56,7 +56,12 @@ model User {
   travelCopyDecisions TravelCopyRequest[] @relation("TravelCopyDecider")
 
   // Influencer codes this admin made (docs/API.md, "Promo codes")
-  createdPromoCodes PromoCode[]
+  createdPromoCodes PromoCode[] @relation("PromoCodeCreatedBy")
+  // Their own code for inviting friends, and the free months friends brought them (docs/API.md
+  // "Give a month, get a month"; 21 Nov 2026)
+  referralCode    PromoCode?       @relation("ReferralCodeOwner")
+  referralRewards ReferralReward[] @relation("ReferralRewardReferrer")
+  referredBy      ReferralReward?  @relation("ReferralRewardFriend")
 
   // App events
   actedAppEvents    AppEvent[] @relation("AppEventActor")
@@ -67,6 +72,11 @@ model User {
   subscription Subscription?
   planGrants   PlanGrant[]   @relation("PlanGrantUser")
   grantedPlans PlanGrant[]   @relation("PlanGrantGrantedBy")
+  // Gifts of a year's plan bought, and redeemed (docs/API.md "Gifts")
+  giftsBought   GiftCode[] @relation("GiftBuyer")
+  giftsRedeemed GiftCode[] @relation("GiftRedeemer")
+  // Landmarks ticked "been here" on maps (docs/API.md "Collecting")
+  landmarkTicks LandmarkVisit[]
 
   @@unique([email])
   @@map("user")
@@ -151,6 +161,12 @@ model Profile {
   promoCode        PromoCode? @relation(fields: [promoCodeId], references: [id], onDelete: SetNull)
   promoTrialUsedAt DateTime?
 
+  // "On this day" emails (docs/API.md "Emails"; 21 Nov 2026): a photo taken on this day in an
+  // earlier year, at most once a week. On unless switched off (the account page, or the
+  // email's unsubscribe link); `lastOnThisDayAt` is when the last one went.
+  onThisDayEmails Boolean   @default(true)
+  lastOnThisDayAt DateTime?
+
   // The invite offer (19 Nov 2026, docs/API.md "The invite offer"): an account made from an
   // invite to a Business or First Class map may have that plan, or a lower paid one, at half
   // price for its first 3 months, if it subscribes before `inviteOfferEndsAt` (7 days after
@@ -217,6 +233,7 @@ model Country {
   subdivisionVisits SubdivisionVisit[]
   pins         MapPin[]
 
+  homeMaps            TravelMap[] @relation("TravelMapHome")
   birthTravellers     Traveller[] @relation("TravellerBirthCountry")
   favouriteTravellers Traveller[] @relation("TravellerFavouriteCountry")
 
@@ -255,6 +272,8 @@ model Landmark {
   tripStops    TripStop[]
   moments      Moment[]
   covers       LandmarkCover[]
+  // Maps that ticked it "been here" (docs/API.md "Collecting")
+  visits       LandmarkVisit[]
 
   @@index([countryCode])
   @@index([latitude, longitude])
@@ -326,6 +345,11 @@ model TravelMap {
   // The nations' visits as they were when the split was last turned off, put back if it's
   // turned on again while the map still has the UK; null otherwise
   ukNationVisits Json?
+  // Where the map's people live, for the stats' distances and the place furthest from home
+  // (docs/API.md "Stats"; 21 Nov 2026): a country (or Antarctica), set in Settings; null
+  // means the birth country of the owner's traveller, else of the first traveller with one
+  homeCountryCode String?  @db.Char(2)
+  homeCountry     Country? @relation("TravelMapHome", fields: [homeCountryCode], references: [code], onDelete: SetNull)
 
   travellers Traveller[]
   members    MapMember[]
@@ -343,6 +367,8 @@ model TravelMap {
   // The passport, badges and goals (docs/API.md, "Passport", "Badges and goals")
   landmarkMatches  PhotoLandmark[]
   landmarkCovers   LandmarkCover[]
+  // Landmarks ticked "been here", photo or not (docs/API.md "Collecting")
+  landmarkVisits   LandmarkVisit[]
   badges           BadgeAward[]
   goals            Goal[]
   // Its photos entered in the monthly themes (docs/API.md, "Photo themes")
@@ -556,11 +582,15 @@ model Trip {
   // The family map's trip this one was copied from (docs/API.md "Travel copies"). No foreign
   // key: the original may go, and the id only stops the same trip being copied twice
   copiedFromId String?
+  // Brought in from another app (docs/API.md "Importing from Polarsteps"): "polarsteps:…", unique
+  // per map, so an import run again adds nothing twice
+  importedFrom String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([mapId, copiedFromId])
+  @@unique([mapId, importedFrom])
   @@index([mapId, startDate])
   // Foreign keys: without these, the SET NULL for each deleted photo or user
   // scans every trip (deleting a 20k-photo map took 148 s, 1.9 s with them)
@@ -725,12 +755,16 @@ model Photo {
   // The family map's photo this one was copied from (docs/API.md "Travel copies"): no
   // foreign key, as for trips. A copy has files of its own
   copiedFromId String?
+  // Brought in from another app (docs/API.md "Importing from Polarsteps"): "polarsteps:…", unique
+  // per map, so an import run again adds nothing twice
+  importedFrom String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // One copy of a photo per map (several NULLs are allowed)
   @@unique([mapId, copiedFromId])
+  @@unique([mapId, importedFrom])
   // The photo lists' order, keyset on id: the whole map's newest upload first (the
   // hover postcards), a country's and a trip's in their own order. They also serve
   // the photo counts.
@@ -873,11 +907,15 @@ model Moment {
 
   // The family map's moment this one was copied from (docs/API.md "Travel copies"), as for trips
   copiedFromId String?
+  // Brought in from another app (docs/API.md "Importing from Polarsteps"): "polarsteps:…", unique
+  // per map, so an import run again adds nothing twice
+  importedFrom String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([mapId, copiedFromId])
+  @@unique([mapId, importedFrom])
   // The lists: the map's moments in date order, and a country's
   @@index([mapId, happenedOn])
   @@index([mapId, countryCode, happenedOn])
@@ -1337,7 +1375,14 @@ model PromoCode {
   freePlan Plan?
 
   createdById String?
-  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy   User?   @relation("PromoCodeCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  // A member's own code for inviting friends (docs/API.md "Give a month, get a month"; 21 Nov
+  // 2026, the user's wish): the friend gets the usual first month free, and the member a month
+  // when the friend first pays (ReferralReward). One per account, made when they ask for it;
+  // never on the admins' list. Null: an admin's code.
+  ownerId String? @unique
+  owner   User?   @relation("ReferralCodeOwner", fields: [ownerId], references: [id], onDelete: Cascade)
 
   profiles Profile[]
 
@@ -1487,6 +1532,11 @@ model PlanGrant {
   grantedById String?
   grantedBy   User?   @relation("PlanGrantGrantedBy", fields: [grantedById], references: [id], onDelete: SetNull)
 
+  // The gift that gave it, when one did (docs/API.md "Gifts")
+  gift GiftCode?
+  // The friend whose first payment gave it (docs/API.md "Give a month, get a month")
+  referralReward ReferralReward?
+
   createdAt DateTime @default(now())
 
   // The plan in force: a user's grants that haven't ended
@@ -1494,6 +1544,70 @@ model PlanGrant {
   // Foreign key: SET NULL when the admin's account is deleted
   @@index([grantedById])
   @@map("plan_grant")
+}
+
+// A landmark ticked "been here" on a map (docs/API.md "Collecting"; 21 Nov 2026, the user's wish,
+// from the business review: "23 of 1,273 World Heritage Sites", a checklist per country): for
+// places with no photo to stamp the passport. A photo's confirmed match still makes the stamp;
+// the checklist counts either. Ticking one marks its country visited.
+model LandmarkVisit {
+  mapId      String
+  map        TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  landmarkId String
+  landmark   Landmark  @relation(fields: [landmarkId], references: [id], onDelete: Cascade)
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+
+  @@id([mapId, landmarkId])
+  // Foreign keys: a landmark removed by hand, a user deleted (SET NULL)
+  @@index([landmarkId])
+  @@index([createdById])
+  @@map("landmark_visit")
+}
+
+// A year of a paid plan bought as a gift (docs/API.md "Gifts"; 21 Nov 2026, the user's wish,
+// from the business review: "a year of Business or First Class as a gift, for Christmas,
+// weddings and anniversaries"). Made when the buyer starts Checkout (a one-off payment), usable
+// once Stripe says it's paid (`paidAt`), its code given to someone who redeems it for a
+// PlanGrant of `months`. Refunded before it's redeemed, it can't be redeemed. Unpaid rows are
+// removed by the daily clean-up after two days.
+model GiftCode {
+  id   String @id @default(uuid())
+  // 12 characters from the share codes' alphabet, shown XXXX-XXXX-XXXX (utils/shareCodes.js)
+  code String @unique
+  plan Plan
+  // CHECK gift_code_shape: a paid plan, 1 to 24 months, a positive price
+  months      Int    @default(12)
+  amountPence Int
+  currency    String @default("gbp")
+
+  buyerId String?
+  buyer   User?   @relation("GiftBuyer", fields: [buyerId], references: [id], onDelete: SetNull)
+  // On the gift's page (both optional, cleaned): who it's for, and a few words from the buyer
+  toName  String?
+  message String?
+
+  stripeSessionId       String? @unique
+  stripePaymentIntentId String? @unique
+  paidAt                DateTime?
+  refundedAt            DateTime?
+
+  redeemedById String?
+  redeemedBy   User?      @relation("GiftRedeemer", fields: [redeemedById], references: [id], onDelete: SetNull)
+  redeemedAt   DateTime?
+  grantId      String?    @unique
+  grant        PlanGrant? @relation(fields: [grantId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  // The buyer's gifts, newest first; the clean-up of unpaid ones
+  @@index([buyerId, createdAt])
+  @@index([paidAt, createdAt])
+  // Foreign key: SET NULL when the redeemer's account is deleted
+  @@index([redeemedById])
+  @@map("gift_code")
 }
 
 // Webhook idempotency: Stripe retries, so each event id is applied once. The
@@ -1578,4 +1692,37 @@ model AppEvent {
   @@index([targetId])
   @@index([requestId])
   @@map("app_event")
+}
+
+// Give a month, get a month (docs/API.md "Give a month, get a month"; 21 Nov 2026, the user's
+// wish): one row per friend who signed up with a member's code and then paid (their
+// subscription first active), claimed before anything is given, so a webhook seen twice gives
+// once. The member's month: CREDIT (a month of their plan's price off their next Stripe
+// invoice, `amountPence`; `appliedAt` once Stripe has it), GRANT (a month of a plan as a
+// complimentary membership, `planGrantId`), or CAPPED (past 12 a year: nothing given).
+model ReferralReward {
+  id         String             @id @default(uuid())
+  referrerId String
+  referrer   User               @relation("ReferralRewardReferrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  // Unique: one month per friend, ever; SET NULL if the friend's account goes
+  friendId   String?            @unique
+  friend     User?              @relation("ReferralRewardFriend", fields: [friendId], references: [id], onDelete: SetNull)
+  kind       ReferralRewardKind
+
+  amountPence Int?
+  planGrantId String?    @unique
+  planGrant   PlanGrant? @relation(fields: [planGrantId], references: [id], onDelete: SetNull)
+  appliedAt   DateTime?
+
+  createdAt DateTime @default(now())
+
+  // A member's rewards, newest first (the account page, and the cap of 12 a year)
+  @@index([referrerId, createdAt])
+  @@map("referral_reward")
+}
+
+enum ReferralRewardKind {
+  CREDIT
+  GRANT
+  CAPPED
 }

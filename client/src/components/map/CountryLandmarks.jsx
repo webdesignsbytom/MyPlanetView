@@ -3,6 +3,7 @@ import { FaLandmark } from 'react-icons/fa';
 // Hooks
 import useLandmarks from '@/hooks/useLandmarks';
 import useLandmarkPhotos from '@/hooks/useLandmarkPhotos';
+import useLandmarkMarks from '@/hooks/useLandmarkMarks';
 // Components
 import LandmarkCard from './LandmarkCard';
 // Utils
@@ -16,8 +17,12 @@ const FIRST = 6;
 // credit (LandmarkCard), the UNESCO World Heritage Sites marked. A long list shows its
 // first few, with a button for the rest. `moments` (the country's, as the panel has them)
 // puts the landmarks where something happened first, each card naming its moments.
+// It's also the country's checklist (docs/API.md "Collecting"): how many the map has been to
+// (stamped in the passport, or ticked "been here"), and each card's tick for editors.
 function CountryLandmarks({ countryCode, moments = [] }) {
   const { landmarks: allLandmarks, loading, error } = useLandmarks(countryCode);
+  const marks = useLandmarkMarks();
+  const [tickError, setTickError] = useState('');
   const momentsByLandmark = useMemo(() => {
     const byId = new Map();
     for (const moment of moments) {
@@ -41,11 +46,27 @@ function CountryLandmarks({ countryCode, moments = [] }) {
 
   const shown = all ? landmarks : landmarks.slice(0, FIRST);
   const listId = `landmarks-list-${countryCode}`;
+  const beenTo = landmarks.filter((l) => marks.stamped.has(l.id) || marks.ticked.has(l.id)).length;
+  const toggle = marks.onToggle
+    ? (landmarkId, been) => {
+        setTickError('');
+        marks.onToggle(landmarkId, been).catch((err) => setTickError(err?.friendlyMessage || 'That couldn’t be saved. Please try again.'));
+      }
+    : null;
   return (
     <section className='grid gap-3' aria-labelledby={`landmarks-${countryCode}`}>
       <h3 id={`landmarks-${countryCode}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
         Landmarks <span className='font-main text-sm normal-case tracking-normal'>({landmarks.length})</span>
       </h3>
+      <p className='text-sm' data-landmark-progress={beenTo}>
+        Been to {beenTo} of {landmarks.length}
+        {toggle ? ': tick the ones you’ve seen, photo or not.' : '.'}
+      </p>
+      {tickError ? (
+        <p role='alert' className='text-sm font-medium text-status-critical'>
+          {tickError}
+        </p>
+      ) : null}
       <ul id={listId} className='grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-x-4 gap-y-5'>
         {shown.map((landmark) => (
           <LandmarkCard
@@ -53,6 +74,8 @@ function CountryLandmarks({ countryCode, moments = [] }) {
             landmark={landmark}
             photo={landmarkPhotoInfo(photos, landmark.slug)}
             moments={momentsByLandmark.get(landmark.id)}
+            mark={marks.stamped.has(landmark.id) ? 'stamped' : marks.ticked.has(landmark.id) ? 'ticked' : null}
+            onToggle={toggle}
           />
         ))}
       </ul>

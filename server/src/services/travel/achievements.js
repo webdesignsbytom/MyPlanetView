@@ -22,6 +22,27 @@ export async function countriesByContinent() {
 }
 
 /**
+ * The stamps from findStamps' rows, each with its landmark's place (on a map that splits the
+ * UK, a UK landmark's nation: utils/ukNations.js), name and UNESCO mark:
+ * `[{ landmarkId, countryCode, isUnesco, name, firstShotAt, photoId, photoCount, confirmedAt }]`.
+ */
+export async function stampsFrom(stampRows, splitUk) {
+  const landmarks = new Map((await findLandmarksByIds(stampRows.map((s) => s.landmarkId))).map((l) => [l.id, l]));
+  return stampRows
+    .filter((row) => landmarks.has(row.landmarkId))
+    .map((row) => ({
+      landmarkId: row.landmarkId,
+      countryCode: landmarkPlace(landmarks.get(row.landmarkId), splitUk),
+      isUnesco: landmarks.get(row.landmarkId).isUnesco,
+      name: landmarks.get(row.landmarkId).name,
+      firstShotAt: new Date(row.shotAt),
+      photoId: row.photoId,
+      photoCount: Number(row.photoCount),
+      confirmedAt: row.confirmedAt ? new Date(row.confirmedAt) : null,
+    }));
+}
+
+/**
  * A map's facts, as the caller may see them (`includeHidden` for the owner and editors):
  * `{ visited, continentByCode, countriesByContinent, firstPhotoAt, stamps, photos, themes, splitUk }`.
  * `stamps` is `[{ landmarkId, countryCode, isUnesco, firstShotAt, photoId, photoCount, confirmedAt }]`.
@@ -38,20 +59,7 @@ export async function loadMapFacts(mapId, { includeHidden }) {
     countMapThemesEntered(mapId, { includeHidden }),
     findMapSplitUk(mapId),
   ]);
-  const landmarks = new Map((await findLandmarksByIds(stampRows.map((s) => s.landmarkId))).map((l) => [l.id, l]));
-  const stamps = stampRows
-    .filter((row) => landmarks.has(row.landmarkId))
-    .map((row) => ({
-      landmarkId: row.landmarkId,
-      // On a map that splits the UK, a UK landmark's nation (utils/ukNations.js)
-      countryCode: landmarkPlace(landmarks.get(row.landmarkId), splitUk),
-      isUnesco: landmarks.get(row.landmarkId).isUnesco,
-      name: landmarks.get(row.landmarkId).name,
-      firstShotAt: new Date(row.shotAt),
-      photoId: row.photoId,
-      photoCount: Number(row.photoCount),
-      confirmedAt: row.confirmedAt ? new Date(row.confirmedAt) : null,
-    }));
+  const stamps = await stampsFrom(stampRows, splitUk);
   const counted = visits.filter((v) => COUNTED_VISIT_STATUSES.includes(v.status));
   return {
     visits,

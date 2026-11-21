@@ -17,6 +17,7 @@ import { mockUpload } from './uploads';
 import { photoThemes } from './themes';
 import { designView } from './mapDesigns';
 import { compareMoments } from '@/utils/moments/momentDates';
+import { PLACE_POSITIONS, countriesInWorld, homeOf, travelExtras } from './travelStats';
 
 export const slugify = (text) =>
   String(text)
@@ -77,7 +78,7 @@ export const photoRole = (photo) => {
 export const userName = (id) => getDb().users.find((u) => u.id === id)?.name || 'Someone';
 
 // Photos
-function photoUrls(photo) {
+export function photoUrls(photo) {
   // A real test photo from the repo's seed-photos/, which the dev server serves
   // (vite.config.js), in the three copies an upload makes
   if (photo.image?.kind === 'seed') {
@@ -322,10 +323,17 @@ export function mapStats(map, role) {
   const landmarks = stampedLandmarkIds(map, role);
   const trips = db.trips.filter((t) => t.mapId === map.id);
   // The group trips added from other maps count too; per person, only the map's own trips
+  // Each completed trip's stops (with their landmarks' positions) and dates, for the extras too
   const completed = trips
     .filter((t) => t.status === 'COMPLETED')
-    .map((t) => ({ travellerIds: t.travellerIds, countryCodes: db.stops.filter((s) => s.tripId === t.id).map((s) => s.countryCode) }));
+    .map((t) => {
+      const stops = db.stops
+        .filter((s) => s.tripId === t.id)
+        .map((s) => ({ ...s, landmark: s.landmarkId ? landmarkById(s.landmarkId) : null }));
+      return { travellerIds: t.travellerIds, countryCodes: stops.map((s) => s.countryCode), startDate: t.startDate, endDate: t.endDate, stops };
+    });
   const travellers = db.travellers.filter((t) => t.mapId === map.id).sort((a, b) => a.position - b.position);
+  const homeCountryCode = homeOf({ homeCountryCode: map.homeCountryCode ?? null, ownerId: map.ownerId, travellers });
   return {
     countries: countries.length,
     specialPlaces: specialPlaces.length,
@@ -340,6 +348,9 @@ export function mapStats(map, role) {
         .flatMap((trip) => trip.countryCodes.filter((c) => !isSpecialPlace(c)));
       return { travellerId: t.id, name: t.name, countries: countedCountryCodes(codes, map.splitUk).length };
     }),
+    // How much of the world, the days away, the distance and the furthest place (21 Nov 2026)
+    countriesInWorld: countriesInWorld(Boolean(map.splitUk)),
+    ...travelExtras({ completedTrips: completed, visitedCodes: [...counted], positions: PLACE_POSITIONS, homeCountryCode }),
   };
 }
 
@@ -370,6 +381,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
     isDefault: map.isDefault,
     // The UK as its four nations (docs/API.md "The UK's nations")
     splitUk: Boolean(map.splitUk),
+    // Its home as set (null: from a traveller's birth country; the stats carry the one in use)
+    homeCountryCode: map.homeCountryCode ?? null,
     role,
     ownerName: userName(map.ownerId),
     travellers: db.travellers
@@ -391,6 +404,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
     momentSpots: momentSpots(map.id, { includeHidden: atLeast(role, 'EDITOR') }),
     // The passport's stamped landmarks, to mark their pins (hidden photos' for editors)
     stampedLandmarkIds: stampedLandmarkIds(map, role),
+    // The landmarks ticked "been here" (docs/API.md "Collecting")
+    tickedLandmarkIds: (db.landmarkVisits || []).filter((v) => v.mapId === map.id).map((v) => v.landmarkId),
     // Its own design, for everyone who opens it (docs/API.md "Map designs")
     design: designView(map),
   };

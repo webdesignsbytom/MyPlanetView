@@ -50,6 +50,7 @@ import { badRequest, conflict, denyUnless, handler, loadMap, notFound, reply } f
 import { isKnownCountry, parseOptionalCountry } from './helpers/countries.js';
 import { loadMapStats, loadStatsCounts, statsFrom, visitView } from './helpers/views.js';
 import { mapDesignView } from './mapDesigns.js';
+import { findTickedLandmarkIds } from '../domain/landmarkVisits.js';
 
 const D = DOMAINS.maps;
 
@@ -137,7 +138,7 @@ const WITH_PLAN = { withPlan: true };
  */
 export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
   const editor = canEdit(role);
-  const [detail, counts, planFields, momentCountsByCountry, momentSpots, design] = await Promise.all([
+  const [detail, counts, planFields, momentCountsByCountry, momentSpots, design, tickedLandmarkIds] = await Promise.all([
     findMapDetail(mapId),
     loadStatsCounts(mapId, role),
     editor && withPlan ? mapPlanView(mapId) : {},
@@ -147,6 +148,8 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     findMomentSpots(mapId, { includeHidden: editor }),
     // Its own design, for everyone who opens it (docs/API.md "Map designs")
     mapDesignView(mapId),
+    // The landmarks ticked "been here" (docs/API.md "Collecting")
+    findTickedLandmarkIds(mapId),
   ]);
   if (!detail) return null;
   const stats = statsFrom(detail, counts);
@@ -157,6 +160,8 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     isDefault: detail.isDefault,
     // The UK as its four nations (docs/API.md "The UK's nations")
     splitUk: detail.splitUk,
+    // Its home as set (null: from a traveller's birth country; the stats carry the one in use)
+    homeCountryCode: detail.homeCountryCode ?? null,
     role,
     ownerName: detail.owner?.name ?? null,
     travellers: detail.travellers.map((t) => ({
@@ -173,6 +178,7 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     momentSpots,
     // The landmarks stamped in the passport, to mark their pins (hidden photos' for editors)
     stampedLandmarkIds: counts.stampedLandmarkIds,
+    tickedLandmarkIds,
     design,
     ...planFields,
   };
@@ -262,6 +268,14 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
       return conflict(req, res, D, tooManyForGroup(body.groupType));
     }
     data.groupType = body.groupType;
+  }
+  // Where the map's people live, for the stats' distances (docs/API.md "Stats"): a country or
+  // Antarctica, as a traveller's places are (a UK nation is the UK, a region its country)
+  if (body.homeCountryCode !== undefined) {
+    const parsed = await parseOptionalCountry(body.homeCountryCode);
+    if (!parsed.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
+    if (isPole(parsed.value)) return badRequest(req, res, D, EVENT_MESSAGES.poleNotATravellerCountry);
+    data.homeCountryCode = parsed.value ? placeOnMap(parsed.value, false) : null;
   }
   // The UK as its four nations: changing it moves the map's UK data (services/travel/ukNations.js)
   if (body.splitUk !== undefined && typeof body.splitUk !== 'boolean') {

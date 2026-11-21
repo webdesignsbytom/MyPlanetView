@@ -9,6 +9,8 @@ import DeleteMapSection from './DeleteMapSection';
 import MainMapSection from './MainMapSection';
 import MapUpgradeSection from './MapUpgradeSection';
 import MapDownloadSection from './MapDownloadSection';
+import MapImportSection from './MapImportSection';
+import MapHomeSection from './MapHomeSection';
 import TravelCopySection from '@/components/travelCopies/TravelCopySection';
 import MapDesignSection from './design/MapDesignSection';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
@@ -122,7 +124,11 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, canMa
               await onMapSaved();
             }}
           />
+          {/* Where the map's people live, for the statistics' distances (docs/API.md "Stats") */}
+          {canManage ? <MapHomeSection map={map} onChanged={onMapSaved} /> : null}
           <MapDownloadSection map={map} />
+          {/* Trips, photos and stories from Polarsteps (docs/API.md, "Importing from Polarsteps") */}
+          <MapImportSection map={map} />
           {/* Bringing travels from another map, and the requests to copy from this one (docs/API.md, "Travel copies") */}
           {canManage ? <TravelCopySection map={map} /> : null}
           {isOwner && !map.isDefault ? <MapUpgradeSection map={map} locked={locked} onChanged={onMapSaved} onPay={onUpgradePay} /> : null}

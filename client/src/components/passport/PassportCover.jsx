@@ -16,6 +16,7 @@ import { passportCover } from '@/utils/passport/passportBook';
  * colours come from the book's passport-* class. On wide screens it's one page wide, the shape
  * of a passport, and opens on its own spine.
  */
+// `map.traveller`: one traveller's own passport, which carries their name instead of the map's
 function PassportCover({ map, headingId }) {
   const cover = passportCover(map.plan);
   return (
@@ -50,7 +51,7 @@ function PassportCover({ map, headingId }) {
       </div>
 
       <div className='grid justify-items-center gap-2.5'>
-        <p className='foil-text max-w-full text-balance break-words pl-[0.2em] text-sm font-bold uppercase tracking-xl'>{map.name}</p>
+        <p className='foil-text max-w-full text-balance break-words pl-[0.2em] text-sm font-bold uppercase tracking-xl'>{map.traveller?.name ?? map.name}</p>
         <p className='foil-text pl-[0.45em] text-2xs font-bold uppercase tracking-3xl'>{cover.label}</p>
         <PassportChipMark className='foil-raise w-10 text-[var(--foil)]' />
       </div>

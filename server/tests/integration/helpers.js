@@ -122,6 +122,8 @@ export async function uploadPhoto(
     // A First Class video: its length, and its file as the ORIGINAL (pass sizes: VIDEO_SIZES)
     kind,
     durationS,
+    // An import's key for the photo (docs/API.md "Importing from Polarsteps")
+    importedFrom,
   } = {}
 ) {
   const fileFor = (size) => (kind === 'VIDEO' && size === 'ORIGINAL' ? VIDEO_FILE : FILES[size]);
@@ -130,6 +132,7 @@ export async function uploadPhoto(
     countryCode: countryHint,
     kind,
     durationS,
+    importedFrom,
     files: sizes.map((size) => ({ size, contentType: fileFor(size).contentType, bytes: fileFor(size).bytes })),
   });
   if (presign.status !== 200) return presign;
@@ -151,6 +154,7 @@ export async function uploadPhoto(
     takenAt,
     kind,
     durationS,
+    importedFrom,
     width: 4000,
     height: 3000,
     variants: uploads.map((u) => ({ size: u.size, key: u.key, width: fileFor(u.size).width, height: fileFor(u.size).height })),

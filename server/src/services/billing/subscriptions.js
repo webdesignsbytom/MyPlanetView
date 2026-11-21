@@ -11,6 +11,7 @@ import { hasLiveSubscription, isDuplicateSubscription, shouldApplySubscriptionEv
 import { markPromoTrialUsedInDB } from '../../domain/promoCodes.js';
 import { markInviteOfferUsedInDB } from './inviteOffer.js';
 import { paymentsEnabled, priceKind, stripeClient } from './stripe.js';
+import { rewardReferrerFor } from './referrals.js';
 
 /**
  * Deleting an account ends its subscription at once, before anything is deleted (auth.js
@@ -134,5 +135,16 @@ export async function applyStripeSubscription(sub, { deleted = false } = {}) {
   if (sub.metadata?.inviteOffer) await markInviteOfferUsedInDB(row.userId);
   if (!shouldApplySubscriptionEvent(row, sub, { deleted })) return null;
   const subscription = await saveSubscriptionState(row.userId, subscriptionStateFrom(sub, priceKind, { deleted }));
+  // Paying now (after a friend's free month, its first payment): the month for whoever
+  // invited them, once (docs/API.md "Give a month, get a month"). It never holds up this
+  // account's own subscription: a credit Stripe didn't take is tried again on the account's
+  // next subscription event (its reward row waits with no `appliedAt`)
+  if (subscription?.status === 'active') {
+    try {
+      await rewardReferrerFor(row.userId);
+    } catch (err) {
+      console.error('[billing] referral reward failed (tried again on the next event):', err?.message);
+    }
+  }
   return { userId: row.userId, subscription };
 }

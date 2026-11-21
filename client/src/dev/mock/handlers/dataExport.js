@@ -87,6 +87,7 @@ function mapView(map) {
     groupType: map.groupType,
     isDefault: map.isDefault,
     splitUk: Boolean(map.splitUk),
+    homeCountryCode: map.homeCountryCode ?? null,
     linkAccess: map.linkAccess,
     shareCode: map.shareCode,
     graceUntil: iso(map.graceUntil),

@@ -265,6 +265,22 @@ export const EVENT_MESSAGES = {
   copyAlreadyDecided: `That request has already been answered.`,
   copyNotWaiting: `Only a request still waiting can be withdrawn.`,
   copyRequestWithdrawn: `Request withdrawn.`,
+  // Emails people can stop (docs/API.md "Emails")
+  unsubscribeInvalid: `That unsubscribe link doesn't work. Change your emails on your account page instead.`,
+  invalidEmailPreferences: `Say whether you want "On this day" emails.`,
+  // Importing (docs/API.md "Importing from Polarsteps")
+  invalidImport: `That import can't be read. Choose the download from Polarsteps again.`,
+  invalidImportKey: `That import key isn't valid.`,
+  photoAlreadyImported: `That photo has been imported already.`,
+  momentAlreadyImported: `That story has been imported already.`,
+  // Gifts (docs/API.md "Gifts")
+  invalidGiftPlan: `Choose Business or First Class for the gift.`,
+  invalidGiftText: `Keep the name to 60 characters and the message to 300.`,
+  giftNotFound: `That gift code doesn't exist. Check it and try again.`,
+  giftUsed: `That gift has already been used.`,
+  giftCovered: `You already have that plan or a better one, so keep this gift for someone else.`,
+  // Year in travel (docs/API.md "Year in travel")
+  invalidRecapYear: `Choose a year from 1900 to next year.`,
   // Map designs (docs/API.md "Map designs")
   invalidDesign: `That design can't be saved.`,
   invalidDesignColour: `Colours must be six-digit colour codes, as a colour picker gives them.`,

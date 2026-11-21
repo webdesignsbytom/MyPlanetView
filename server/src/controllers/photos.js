@@ -1,4 +1,5 @@
 // Photos: upload (presign, then confirm), list, open, change, delete, landmark matches
+import { parseImportKey } from '../utils/imports.js';
 import crypto from 'node:crypto';
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse, sendMessageResponse } from '../utils/responses/responses.js';
 import { logEvent } from '../utils/events/logEvent.js';
@@ -282,6 +283,9 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
   // isn't in any country (a photo taken at sea)
   const chosenCountry = await parseOptionalCountry(body.countryCode);
   if (!chosenCountry.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
+  // An imported photo's source (docs/API.md "Importing from Polarsteps"): unique on the map
+  const imported = parseImportKey(body.importedFrom, 'photo');
+  if (!imported.ok) return badRequest(req, res, D, EVENT_MESSAGES.invalidImportKey);
 
   const checked = await checkUploadedFiles({ mapId: map.id, photoId, variants, userId: req.user.id });
   if (checked.status) {
@@ -300,27 +304,36 @@ export const createPhotoHandler = handler(D, 'Save photo', async (req, res) => {
     ? matchLandmarks(position, await findLandmarksInBox(boundingBox(position.latitude, position.longitude)))
     : [];
 
-  const saved = await createPhotoInDB({
-    photo: {
-      id: photoId,
-      mapId: map.id,
-      uploaderId: req.user.id,
-      tripId,
-      kind,
-      durationS,
-      countryCode,
-      caption: sanitizeText(body.caption, { maxLength: CAPTION_MAX }),
-      takenAt: takenAt.value ?? null,
-      latitude: position.latitude,
-      longitude: position.longitude,
-      width: body.width,
-      height: body.height,
-    },
-    variants: checked.variants,
-    landmarkMatches,
-    // The country cap with the final country (the video cap for a video), and the storage safety net
-    limits: await photoLimits(mapPlan.plan, countryCode, kind),
-  });
+  let saved;
+  try {
+    saved = await createPhotoInDB({
+      photo: {
+        id: photoId,
+        mapId: map.id,
+        ...(imported.value ? { importedFrom: imported.value } : {}),
+        uploaderId: req.user.id,
+        tripId,
+        kind,
+        durationS,
+        countryCode,
+        caption: sanitizeText(body.caption, { maxLength: CAPTION_MAX }),
+        takenAt: takenAt.value ?? null,
+        latitude: position.latitude,
+        longitude: position.longitude,
+        width: body.width,
+        height: body.height,
+      },
+      variants: checked.variants,
+      landmarkMatches,
+      // The country cap with the final country (the video cap for a video), and the storage safety net
+      limits: await photoLimits(mapPlan.plan, countryCode, kind),
+    });
+  } catch (err) {
+    // Imported before (its key is on the map already): this upload's files go
+    if (err?.code !== 'P2002' || !imported.value) throw err;
+    await discardUpload();
+    return conflict(req, res, D, EVENT_MESSAGES.photoAlreadyImported);
+  }
   if (saved.refused) {
     await discardUpload();
     return conflict(req, res, D, saved.refused);

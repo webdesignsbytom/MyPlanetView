@@ -248,6 +248,35 @@ Badges are luggage stickers on a suitcase: an earned one is stuck on, tilted, wi
 
 **Friends challenges** (16 Nov 2026; docs/API.md "Friends challenges") have their own pages, linked from the nav: `/challenges` lists yours with your count and starts a new one; a challenge's page is its leaderboard (ordinal ranks in the travel face, "(you)" on a red-edged row, a chequered flag for whoever reached the target), the join link to copy, the map that counts for you, and for the starter its changes and deleting it. The join link opens a race ticket (the sign-in pages' boarding pass) saying what it counts, when, and who started it. Others only ever see names and counts.
 
+## Share cards and the year in travel
+
+From the business review's ideas for being seen (21 Nov 2026, the user's wish): every map someone shares is an advert, so sharing it is one tap.
+
+- **Share cards** (`utils/shareCard/`): a picture of a map for Instagram, WhatsApp or anywhere, drawn in the browser on a canvas and sent nowhere. Portrait, 1080 × 1350 (Instagram's 4:5): the poster frame and paper, the map's name in the travel face, the world with the places visited or lived in coloured in (their pastels, or the map design's colours) and the rest plain land, Antarctica only when it's one of them, up to three big numbers (countries, continents, landmarks stamped) and the places' names, and the site's address at the foot. Never a photo or a pin. The colours are fixed (`brandColours.js` `SHARE_CARD_COLOURS`), so a card always has the poster look whatever map style the person uses. The statistics panel's "Share a picture of my map" makes one, then the device's share sheet takes it where it can (`navigator.share` with a file), else it's saved.
+- **Your year in travel** (docs/API.md "Year in travel"): a year of a map as a few slides in a dialog: the year, its places (their posters, the new ones named), its photos (one from each country), the landmarks stamped, its trips and moments, then the year's share card ("2026 in travel": that year's places coloured in, its countries, new countries and photos). Back and Next, the arrow keys, focus on each slide's heading. Any year with something in it can be chosen. From the statistics panel any time; in December and January a luggage tag on the map ("Your 2026 in travel is ready", last year's in January) offers it once there's something, and closes for the visit.
+
+## Collecting and "On this day"
+
+- **Collecting** (21 Nov 2026; docs/API.md "Collecting"): each country's ticket is a checklist of its landmarks: "Been to 3 of 12", each card saying "Stamped in the passport" (a photo) or, for editors, a "Been here" tick (no photo needed), which marks the country visited. The statistics count "Landmarks been to: 14 of 1,332" and "World Heritage Sites: 11 of 1,273". The passport stays photos only.
+- **"On this day" emails** (docs/API.md "Emails"): a photo of yours taken on this day in an earlier year, at most once a week, opening your map. Every one can be stopped from its own link (a page that asks first) or the account page's "Emails we send" card, and mail apps' own unsubscribe button works too.
+
+## How far you've gone, families and friends (21 Nov 2026)
+
+The user's wishes, from "what else can we do to compete":
+- **The pitch** on About, the FAQ and Pricing: no followers, no public profiles, no feed; the map is the album; Polarsteps records a trip, this is the map of a whole life (named only in the FAQ and the Pricing page's import line; the home page stays the poster alone).
+- **The statistics** add how much of the world (the share of its countries), the days away and the distance on completed trips (home, the stops, home again), and the place furthest from home. Distances are "about": places are where their pins are, so km and miles are rounded. Home is each map's own setting (Settings, "This map"), else a traveller's birth country.
+- **Each traveller's own passport** on a family's map ("Whose passport" above the book), with only their places and stamps and their name on the cover: a child's passport grows up with the family map. A couple's map has one, as its badges do.
+- **Anniversaries:** "First trip" and "Anniversary" moments, and a moment dated to the day comes round as a luggage tag on the map that day ("7 years ago today: …") and in the "On this day" email before any photo.
+- **Give a month, get a month:** an invite link on the account page. The friend's first month is free (any code's offer); the member's month comes when the friend first pays, as credit off their bill or a month of Business, up to 12 a year. Paying friends only, so made-up accounts earn nothing.
+
+## Importing from Polarsteps
+
+"Already on Polarsteps? Bring your trips." (21 Nov 2026; docs/API.md "Importing from Polarsteps"). `/import` (signed in), from Settings' "This map" (for that map) and the account page: how to get the download, then the zip or the unzipped folder, read on the device (the route history never leaves it); then the map to bring them to (one you own or edit), the trips (all ticked), and whether their photos and each step's story (as a moment) come; what can't (videos, HEIC files) and the plan's photos per country are said up front. It runs on the page with its progress (trips, photos, stories, anything left out), waits out the site's limits by itself, and can be stopped; leaving asks first. Run again, it brings only what's missing. Each Polarsteps trip becomes a trip with a stop per step (one after another in the same place made one), completed when Polarsteps' has ended.
+
+## Gifts
+
+A year of Business or First Class as a gift (21 Nov 2026, the user's wish; docs/API.md "Gifts"), for Christmas, weddings and birthdays: the gift-shop market the Scratch Map sells in. `/gifts` (signed in): choose the plan (a year at its yearly price, paid once), who it's for and a few words if you like, then Stripe's Checkout; your gifts with their codes, "Open the gift" and "Copy the link". The code comes by email too. A gift's page (`/gift/<code>`, anyone with the code) is a gift ticket: the plan, for and from whom, the message, and "Redeem the gift" (signed out: create an account or sign in, and back). The year starts the day it's redeemed, after any gifted year of the same plan already running; someone who already pays for that plan or better is told to keep it for someone else. The Pricing page has a "Give it as a gift" card; the account page a "Gifts" card to open a code or give one. A refund before it's redeemed stops it working.
+
 ## Plans and limits
 
 Built on 16 Nov 2026 (FEATURE-PLAN.md, "Tiers" and "Maps", has the reasons; docs/API.md, "Plans and billing" and "Map limits", the rules).

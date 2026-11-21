@@ -55,6 +55,10 @@ export const ShareDialog = lazyPanel(() => import('@/components/sharing/ShareDia
 export const ExtraMapDialog = lazyPanel(() => import('@/components/plans/ExtraMapDialog'));
 // The tips the map opens with, once a visit (fetched as the loading screen lifts)
 export const MapTipsDialog = lazyPanel(() => import('./MapTipsDialog'));
+// A picture of the map to share (utils/shareCard/)
+export const ShareCardDialog = lazyPanel(() => import('@/components/shareCard/ShareCardDialog'));
+// "Your year in travel" (docs/API.md "Year in travel")
+export const YearRecapDialog = lazyPanel(() => import('@/components/recap/YearRecapDialog'));
 export const BadgesGoalsPanel = lazyPanel(() => import('@/components/achievements/BadgesGoalsPanel'));
 // The slideshows: the map's ("Play my world"), a country's, and a trip's (the trip page)
 export const Slideshow = lazyPanel(() => import('@/components/slideshow/Slideshow'));

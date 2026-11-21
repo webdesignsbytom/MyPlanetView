@@ -90,6 +90,27 @@ export const findMomentsPage = ({ mapId, tripId, countryCode, includeHidden, cur
   });
 
 /**
+ * A map's moments whose day comes round on a day (docs/API.md "Moments": anniversaries; 21 Nov
+ * 2026): dated to the day (`DAY`), on `month` and one of `days`, before `before` (an earlier
+ * year), newest first, at most `limit`; hidden ones only with `includeHidden`. The month and
+ * day are found by one small scan of the map's dated moments.
+ */
+export async function findAnniversaryMoments({ mapId, month, days, before, includeHidden, limit = 20 }) {
+  const rows = await prisma.$queryRaw`
+    SELECT "id" FROM "moment"
+    WHERE "mapId" = ${mapId} AND "datePrecision" = 'DAY' AND "happenedOn" < ${before}
+      AND EXTRACT(MONTH FROM "happenedOn") = ${month} AND EXTRACT(DAY FROM "happenedOn") = ANY(${days}::int[])
+      AND (${includeHidden} OR NOT "hidden")
+    ORDER BY "happenedOn" DESC, "id"
+    LIMIT ${limit}`;
+  if (!rows.length) return [];
+  const found = new Map(
+    (await prisma.moment.findMany({ where: { id: { in: rows.map((r) => r.id) } }, select: MOMENT_SELECT })).map((m) => [m.id, m]),
+  );
+  return rows.map((r) => found.get(r.id)).filter(Boolean);
+}
+
+/**
  * The map's pinned moments, to draw their pins: `[{ id, kind, title, countryCode, latitude,
  * longitude }]`. Editors (`includeHidden`) get every pin, hidden moments' too; anyone else
  * only the pins shared with them, on moments they can see.

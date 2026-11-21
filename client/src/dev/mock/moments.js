@@ -88,7 +88,36 @@ const clampLimit = (value) => {
  * `cursor` and `limit` from the query. Below editor, hidden ones are left out.
  * -> `{ moments, nextCursor }` or `{ error }`
  */
+// The day an anniversary list looks for (the server's utils/onThisDay.js anniversaryDay):
+// `{ month, days, year }` from "YYYY-MM-DD", a leap day's moments on 28 February in other years
+function anniversaryDay(text) {
+  if (typeof text !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(text)) return null;
+  const date = new Date(`${text}T12:00:00Z`);
+  if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== text) return null;
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth() + 1;
+  const day = date.getUTCDate();
+  const leap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  return { year, month, days: month === 2 && day === 28 && !leap ? [28, 29] : [day] };
+}
+
 export function momentPage({ query = {}, mapId, tripId, role, photoAccess }) {
+  // ?anniversary=YYYY-MM-DD: the moments dated to that day in an earlier year, newest first,
+  // one page of 20 (the server's)
+  if (query.anniversary !== undefined && !tripId) {
+    const day = anniversaryDay(query.anniversary);
+    if (!day) return { error: MOMENT_MESSAGES.malformed };
+    const onDay = (m) => {
+      if (m.datePrecision !== 'DAY' || !m.happenedOn) return false;
+      const [y, mo, d] = m.happenedOn.split('-').map(Number);
+      return y < day.year && mo === day.month && day.days.includes(d);
+    };
+    const list = getDb()
+      .moments.filter((m) => m.mapId === mapId && onDay(m) && canSeeMoment(role, m))
+      .sort((a, b) => (a.happenedOn < b.happenedOn ? 1 : a.happenedOn > b.happenedOn ? -1 : a.id < b.id ? -1 : 1))
+      .slice(0, 20);
+    return { moments: list.map((m) => momentView(m, { role, photoAccess })), nextCursor: null };
+  }
   const country = query.country;
   if (country !== undefined && !countryExists(country)) return { error: MOMENT_MESSAGES.countryNotFound };
   const filterTrip = tripId ?? query.tripId;

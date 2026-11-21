@@ -66,7 +66,8 @@ export const inviteApi = (token) => `/api/invites/${encodeURIComponent(token)}`;
 export const MAP_SETTINGS_API = '/api/users/map-settings'; // GET, PUT { mapSettings }
 
 // Plans and billing (docs/API.md, "Plans and billing"). Paths below it are built in src/api/plansApi.js.
-export const BILLING_API = '/api/billing'; // GET; POST /checkout, /change-plan, /extra-maps, /portal
+export const BILLING_API = '/api/billing'; // GET; POST /checkout, /change-plan, /extra-maps, /portal, /gift-checkout
+export const GIFTS_API = '/api/gifts'; // GET (yours); GET /:code; POST /redeem
 // Leaving (docs/API.md, "Leaving")
 export const LEAVING_OPTIONS_API = '/api/users/leaving-options'; // GET
 export const LEAVING_PLAN_API = '/api/users/leaving-plan'; // PUT { maps, leavePhotos }

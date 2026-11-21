@@ -49,11 +49,17 @@ export const PROMO_OFFER_WORDS = `First month free on ${PAID_PLAN_NAMES} (${PROM
 /** What a code gives in a few words, for the admin page: its plan for life, or the free month. */
 export const promoOfferWords = (promo) => (promo?.freePlan ? `${planOf(promo.freePlan).name}, free for life, once their email is verified` : PROMO_OFFER_WORDS);
 
-/** What a usable code gives, for the sign-up form. */
-export const promoOfferText = ({ code, freePlan }) =>
+/**
+ * What a usable code gives, for the sign-up form. A member's invite code (docs/API.md "Give a
+ * month, get a month") says who it's from: `fromFriend`, their first name.
+ */
+export const promoOfferText = ({ code, freePlan, fromFriend = null }) =>
   freePlan
     ? `${code}: ${planOf(freePlan).name} is yours, free for life. It starts once you’ve verified your email address.`
-    : `${code}: your first month of ${PAID_PLAN_NAMES} is free. Choose one on your account page once your email is verified. Stripe asks for a card, and nothing is charged for ${PROMO_TRIAL_DAYS} days.`;
+    : `${fromFriend ? `${fromFriend} invited you` : code}: your first month of ${PAID_PLAN_NAMES} is free. Choose one on your account page once your email is verified. Stripe asks for a card, and nothing is charged for ${PROMO_TRIAL_DAYS} days.`;
+
+/** A member's invite link: the sign-up page on this site, with their code filled in. */
+export const inviteLinkFor = (code, origin) => `${origin}${SIGN_UP_PAGE_URL}?code=${encodeURIComponent(code)}`;
 
 /** The account page's offer: `promoTrial` is GET /billing's `{ code, days }`. */
 export const promoTrialText = (promoTrial) =>

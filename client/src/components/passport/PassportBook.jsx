@@ -171,7 +171,14 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
       case 'cover':
         return <PassportCover map={passport.map} headingId={headingFor(leaf)} />;
       case 'travellers':
-        return <PassportPhotoPage travellers={passport.travellers} pageNumber={pageNumber} headingId={headingFor(leaf)} />;
+        // One traveller's own passport has their photo page alone
+        return (
+          <PassportPhotoPage
+            travellers={passport.map.traveller ? passport.travellers.filter((t) => t.id === passport.map.traveller.id) : passport.travellers}
+            pageNumber={pageNumber}
+            headingId={headingFor(leaf)}
+          />
+        );
       case 'visa':
         return (
           <PassportVisaPage

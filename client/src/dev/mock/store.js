@@ -66,6 +66,8 @@ export function loadStore() {
   // Stores saved before the plans (16 Nov 2026): the seed's subscription, no memberships
   if (!Array.isArray(db.subscriptions)) db.subscriptions = buildSeed().subscriptions;
   if (!Array.isArray(db.planGrants)) db.planGrants = [];
+  // Landmarks ticked "been here" (docs/API.md "Collecting"): { mapId, landmarkId, createdAt }
+  if (!Array.isArray(db.landmarkVisits)) db.landmarkVisits = [];
   if (!Array.isArray(db.moments)) db.moments = [];
   if (!Array.isArray(db.tripMaps)) db.tripMaps = [];
   if (!Array.isArray(db.landmarkCovers)) db.landmarkCovers = [];

@@ -1,3 +1,5 @@
+import { deleteUnpaidGiftsInDB } from '../domain/gifts.js';
+import { GIFT_UNPAID_DAYS } from '../utils/gifts.js';
 import crypto from 'node:crypto';
 import { deleteOrphanStreamVideos } from '../services/stream/videos.js';
 import { continueApprovedCopies } from '../services/travel/travelCopies.js';
@@ -68,8 +70,9 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
   // expired over 30 days ago, Stripe webhook event ids over 90 days old (Stripe
   // retries for 3 days at most), and Cloudflare Stream videos no row points at (an upload
   // never saved, a video deleted with its map or account; services/stream/videos.js). Also
-  // approved travel copies nobody's browser finished (docs/API.md "Travel copies")
-  const [expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents, orphanStreamVideos, travelCopiesFinished] =
+  // approved travel copies nobody's browser finished (docs/API.md "Travel copies"), and gifts
+  // whose Checkout was never finished (docs/API.md "Gifts")
+  const [expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents, orphanStreamVideos, travelCopiesFinished, unpaidGifts] =
     await Promise.all([
       purge('rate-limit', deleteExpiredRateLimits),
       purge('event', () => deleteOldEvents()),
@@ -79,6 +82,7 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
       purge('stripe-event', () => deleteOldStripeEvents()),
       purge('stream-video', () => deleteOrphanStreamVideos({ budgetMs: 15000 })),
       purge('travel-copy', () => continueApprovedCopies({ budgetMs: 15000 })),
+      purge('gift', () => deleteUnpaidGiftsInDB(new Date(Date.now() - GIFT_UNPAID_DAYS * 24 * 60 * 60 * 1000))),
     ]);
   const purged = {
     expiredRateLimits,
@@ -89,6 +93,7 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
     oldStripeEvents,
     orphanStreamVideos,
     travelCopiesFinished,
+    unpaidGifts,
   };
 
   try {

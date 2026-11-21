@@ -88,8 +88,9 @@ vi.mock('../../src/services/s3/s3private.js', async (importOriginal) => {
 });
 
 vi.mock('../../src/services/email/emailHandler.js', () => {
-  const record = (kind) => async (to, subject, template, context) => {
-    globalThis.__sentEmails.push({ kind, to, subject, template, context });
+  // `options` carries an email's headers (List-Unsubscribe on "On this day")
+  const record = (kind) => async (to, subject, template, context, options) => {
+    globalThis.__sentEmails.push({ kind, to, subject, template, context, headers: options?.headers ?? null });
     return true;
   };
   return {
@@ -98,6 +99,7 @@ vi.mock('../../src/services/email/emailHandler.js', () => {
     sendUserPasswordResetEmail: record('reset'),
     sendUserChangeEmailConfirmation: record('change-email'),
     sendContactEmail: record('contact'),
+    sendMemoryEmail: record('memory'),
   };
 });
 

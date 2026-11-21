@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { MOMENT_KINDS, MOMENT_KIND_LABELS, isMomentKind } from '../src/utils/constants/momentKinds.js';
 
 describe('moment kinds', () => {
-  it('has the starter list, ending on the general kind', () => {
+  it('has the starter list and the general kind, then the kinds added since, at the end', () => {
     expect(MOMENT_KINDS).toEqual([
       'BORN',
       'MOVED_HERE',
@@ -13,6 +13,9 @@ describe('moment kinds', () => {
       'MET_SOMEONE',
       'CELEBRATION',
       'SAW_OR_DID',
+      // 21 Nov 2026
+      'FIRST_TRIP',
+      'ANNIVERSARY',
     ]);
     expect(Object.isFrozen(MOMENT_KINDS)).toBe(true);
   });

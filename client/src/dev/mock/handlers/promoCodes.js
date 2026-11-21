@@ -16,13 +16,23 @@ export function registerPromoCodeRoutes() {
   route('GET', '/api/promo-codes/:code', ({ params }) => {
     const promo = usablePromoCode(params.code);
     if (!promo) return fail(404, PROMO_MESSAGES.invalid);
-    return ok({ promoCode: { code: promo.code, freePlan: promo.freePlan ?? null, trialDays: promo.freePlan ? 0 : PROMO_TRIAL_DAYS } });
+    // A member's invite code says who it's from, by first name (docs/API.md "Give a month, get a month")
+    const owner = promo.ownerId ? getDb().users.find((u) => u.id === promo.ownerId) : null;
+    return ok({
+      promoCode: {
+        code: promo.code,
+        freePlan: promo.freePlan ?? null,
+        trialDays: promo.freePlan ? 0 : PROMO_TRIAL_DAYS,
+        fromFriend: owner ? String(owner.name || '').trim().split(/\s+/)[0] || null : null,
+      },
+    });
   });
 
   route('GET', '/api/users/admin/promo-codes', () => {
     if (!isAdmin()) return forbidden();
     const db = getDb();
-    return ok({ promoCodes: [...(db.promoCodes || [])].sort(newestFirst).map(promoCodeView) });
+    // The admins' codes only: members' invite codes are their own
+    return ok({ promoCodes: [...(db.promoCodes || [])].filter((p) => !p.ownerId).sort(newestFirst).map(promoCodeView) });
   });
 
   route('POST', '/api/users/admin/promo-codes', ({ body }) => {
@@ -48,7 +58,7 @@ export function registerPromoCodeRoutes() {
   // The code itself never changes (it's in people's posts); `active: false` turns it off
   route('PATCH', '/api/users/admin/promo-codes/:promoCodeId', ({ params, body }) => {
     if (!isAdmin()) return forbidden();
-    const promo = (getDb().promoCodes || []).find((p) => p.id === params.promoCodeId);
+    const promo = (getDb().promoCodes || []).find((p) => p.id === params.promoCodeId && !p.ownerId);
     if (!promo) return fail(404, PROMO_MESSAGES.notFound);
     const parsed = parsePromoCodeInput(body, { existing: promo });
     if (!parsed.ok) return fail(400, PROMO_MESSAGES[parsed.message]);

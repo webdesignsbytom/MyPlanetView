@@ -6,9 +6,11 @@ import { createBillingEvent } from '../event/travelUtils.js';
 import { isUuid } from '../utils/travelValidation.js';
 import { PROMO_TRIAL_DAYS, parsePromoCodeInput } from '../utils/promoCodes.js';
 import { usablePromoCode } from '../services/billing/promo.js';
+import { firstNameOf } from '../utils/referrals.js';
 import {
   createPromoCodeInDB,
   findPromoCodeByCode,
+  findOwnerName,
   findPromoCodeById,
   listPromoCodesWithCounts,
   updatePromoCodeInDB,
@@ -19,16 +21,27 @@ const D = DOMAINS.billing;
 
 // Before signing up: is this code usable, and what does it give? (No label: that's for
 // admins.) A plan for life (`freePlan`), or the first PROMO_TRIAL_DAYS free on a paid plan.
+// A member's invite code also says who it's from, by first name (`fromFriend`: they shared
+// it; docs/API.md "Give a month, get a month").
 export const checkPromoCodeHandler = handler(D, 'Check promo code', async (req, res) => {
   const promo = await usablePromoCode(req.params.code);
   if (!promo) return notFound(req, res, D, EVENT_MESSAGES.promoCodeInvalid);
   return sendDataResponse(res, 200, {
-    promoCode: { code: promo.code, freePlan: promo.freePlan ?? null, trialDays: promo.freePlan ? 0 : PROMO_TRIAL_DAYS },
+    promoCode: {
+      code: promo.code,
+      freePlan: promo.freePlan ?? null,
+      trialDays: promo.freePlan ? 0 : PROMO_TRIAL_DAYS,
+      fromFriend: promo.ownerId ? firstNameOf(await findOwnerName(promo.ownerId)) : null,
+    },
   });
 });
 
 // Admins see what each gives; who made it stays out of the reply
-const promoView = ({ createdById: _createdById, ...promo }) => ({ ...promo, freePlan: promo.freePlan ?? null, trialDays: promo.freePlan ? 0 : PROMO_TRIAL_DAYS });
+const promoView = ({ createdById: _createdById, ownerId: _ownerId, ...promo }) => ({
+  ...promo,
+  freePlan: promo.freePlan ?? null,
+  trialDays: promo.freePlan ? 0 : PROMO_TRIAL_DAYS,
+});
 
 export const listPromoCodesHandler = handler(D, 'List promo codes', async (req, res) => {
   const promoCodes = await listPromoCodesWithCounts();
@@ -56,7 +69,8 @@ export const createPromoCodeHandler = handler(D, 'Create promo code', async (req
 // `{ label?, active?, maxUses?, endsAt? }`: the code itself and what it gives never change
 export const updatePromoCodeHandler = handler(D, 'Update promo code', async (req, res) => {
   const existing = isUuid(req.params.promoCodeId) ? await findPromoCodeById(req.params.promoCodeId) : null;
-  if (!existing) return notFound(req, res, D, EVENT_MESSAGES.promoCodeNotFound);
+  // A member's own invite code isn't the admins' to change
+  if (!existing || existing.ownerId) return notFound(req, res, D, EVENT_MESSAGES.promoCodeNotFound);
   const parsed = parsePromoCodeInput(req.body, { existing });
   if (!parsed.ok) return badRequest(req, res, D, EVENT_MESSAGES[parsed.message]);
   const promo = Object.keys(parsed.data).length ? await updatePromoCodeInDB(existing.id, parsed.data) : existing;

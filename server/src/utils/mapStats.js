@@ -3,6 +3,7 @@ import { COUNTED_VISIT_STATUSES } from './travelValidation.js';
 import { isSpecialPlace } from './specialPlaces.js';
 import { countedCountryCodes } from './ukNations.js';
 import { isRegion } from './regionPlaces.js';
+import { travelExtras } from './travelStats.js';
 
 /**
  * @param {object} input
@@ -12,9 +13,13 @@ import { isRegion } from './regionPlaces.js';
  * @param {number} input.landmarkCount distinct confirmed landmarks on those photos
  * @param {number} input.tripCount
  * @param {{ id: string, name: string }[]} input.travellers
- * @param {{ travellerIds: string[], countryCodes: string[] }[]} input.completedTrips
+ * @param {{ travellerIds: string[], countryCodes: string[], startDate, endDate, stops: object[] }[]} input.completedTrips
  * @param {boolean} input.splitUk the map shows the UK as its four nations: they count one
  *   each, and the UK only while none is visited (utils/ukNations.js countedCountryCodes)
+ * @param {Map<string, { latitude: number, longitude: number }>} input.positions each place's
+ *   pin, for the distances (utils/travelStats.js)
+ * @param {string|null} input.homeCountryCode the map's home (travelStats.js homeOf)
+ * @param {{ whole: number, splitUk: number }} input.worldTotals how many countries the world has
  */
 export function buildMapStats({
   visits = [],
@@ -25,6 +30,9 @@ export function buildMapStats({
   travellers = [],
   completedTrips = [],
   splitUk = false,
+  positions = new Map(),
+  homeCountryCode = null,
+  worldTotals = null,
 }) {
   // Countries, special places (Antarctica, the poles) and regions (Bali, Tasmania) are
   // counted apart; countries and special places count towards the continents (Antarctica
@@ -52,5 +60,8 @@ export function buildMapStats({
     landmarks: landmarkCount,
     trips: tripCount,
     byTraveller,
+    // How much of the world, the days away, the distance and the furthest place (21 Nov 2026)
+    countriesInWorld: worldTotals ? (splitUk ? worldTotals.splitUk : worldTotals.whole) : null,
+    ...travelExtras({ completedTrips, visitedCodes: counted, positions, homeCountryCode }),
   };
 }

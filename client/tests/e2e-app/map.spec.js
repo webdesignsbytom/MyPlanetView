@@ -55,7 +55,21 @@ test.describe('The map page', () => {
     await expect(stats).toBeVisible();
     // Countries, continents (of 7), special places (of 5), regions (of every region), photos, landmarks (stamped: confirmed
     // matches, the owner counting the one on a hidden photo too), trips
-    await expect(stats.getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', `0 of ${REGION_COUNT}`, '16', '13', '3']);
+    // Then how far (docs/API.md "Stats"): the share of the world, the days away on "Italian summer"
+    // (2 to 16 July 2025), the distance home and back, the furthest place from the UK
+    await expect(stats.getByRole('definition')).toHaveText([
+      '8',
+      '3.5%',
+      '8 of 226 countries',
+      '2 of 7',
+      '0 of 5',
+      `0 of ${REGION_COUNT}`,
+      '16',
+      '13 of 1,332',
+      '10 of 1,273',
+      '3',
+      '15', 'On completed trips', '3,500 km', 'About 2,200 miles', 'United States', 'About 7,000 km from the United Kingdom',
+    ]);
     await expect(stats.getByRole('listitem')).toHaveText([/Charlie\s*1/, /Alex\s*1/]);
   });
 

@@ -127,6 +127,10 @@ export const findDefaultMap = (userId) =>
 export const findMapSplitUk = async (mapId) =>
   Boolean((await prisma.travelMap.findUnique({ where: { id: mapId }, select: { splitUk: true } }))?.splitUk);
 
+/** What the stats need of the map row: `{ splitUk, homeCountryCode, ownerId }`, or null. */
+export const findMapStatsRow = (mapId) =>
+  prisma.travelMap.findUnique({ where: { id: mapId }, select: { splitUk: true, homeCountryCode: true, ownerId: true } });
+
 /**
  * The whole map: its row, owner's name, travellers and visits. Four flat queries run
  * side by side (a nested select reads the map first, then the rest).
@@ -135,7 +139,7 @@ export const findMapDetail = async (mapId) => {
   const [map, owner, travellers, visits] = await Promise.all([
     prisma.travelMap.findUnique({
       where: { id: mapId },
-      select: { id: true, name: true, groupType: true, isDefault: true, ownerId: true, splitUk: true },
+      select: { id: true, name: true, groupType: true, isDefault: true, ownerId: true, splitUk: true, homeCountryCode: true },
     }),
     prisma.user.findFirst({ where: { ownedMaps: { some: { id: mapId } } }, select: { name: true } }),
     prisma.traveller.findMany({
@@ -212,7 +216,8 @@ export const countTravellers = (mapId, db = prisma) => db.traveller.count({ wher
 export const findMapTravellers = (mapId) =>
   prisma.traveller.findMany({
     where: { mapId },
-    select: { id: true, name: true },
+    // The account and birth country find the map's home when it has none set (utils/travelStats.js homeOf)
+    select: { id: true, name: true, userId: true, birthCountryCode: true },
     orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
   });
 
@@ -375,23 +380,38 @@ export const countMapTrips = async (mapId) => {
 };
 
 /**
- * Who went on each completed trip and where it stopped: `[{ travellerIds, countryCodes }]`.
- * Two flat queries side by side; a completed trip with neither travellers nor stops
- * adds nothing to the stats, so it's not listed.
+ * Each completed trip of the map's own, for the stats: who went, where it stopped (each
+ * stop's place, dates, position and its landmark's position) and its dates:
+ * `[{ travellerIds, countryCodes, startDate, endDate, stops }]`. Three flat queries side by side.
  */
 export const findCompletedTripsForStats = async (mapId) => {
   const completed = { mapId, status: 'COMPLETED' };
-  const [travellers, stops] = await Promise.all([
+  const [trips, travellers, stops] = await Promise.all([
+    prisma.trip.findMany({ where: completed, select: { id: true, startDate: true, endDate: true } }),
     prisma.tripTraveller.findMany({ where: { trip: completed }, select: { tripId: true, travellerId: true } }),
-    prisma.tripStop.findMany({ where: { trip: completed }, select: { tripId: true, countryCode: true } }),
+    prisma.tripStop.findMany({
+      where: { trip: completed },
+      select: {
+        tripId: true,
+        position: true,
+        countryCode: true,
+        arriveOn: true,
+        leaveOn: true,
+        landmark: { select: { latitude: true, longitude: true } },
+      },
+      orderBy: [{ tripId: 'asc' }, { position: 'asc' }],
+    }),
   ]);
-  const byTrip = new Map();
-  const tripOf = (tripId) => {
-    if (!byTrip.has(tripId)) byTrip.set(tripId, { travellerIds: [], countryCodes: [] });
-    return byTrip.get(tripId);
-  };
-  for (const t of travellers) tripOf(t.tripId).travellerIds.push(t.travellerId);
-  for (const s of stops) tripOf(s.tripId).countryCodes.push(s.countryCode);
+  const byTrip = new Map(
+    trips.map((t) => [t.id, { travellerIds: [], countryCodes: [], startDate: t.startDate, endDate: t.endDate, stops: [] }]),
+  );
+  for (const t of travellers) byTrip.get(t.tripId)?.travellerIds.push(t.travellerId);
+  for (const { tripId, ...stop } of stops) {
+    const trip = byTrip.get(tripId);
+    if (!trip) continue;
+    trip.countryCodes.push(stop.countryCode);
+    trip.stops.push(stop);
+  }
   return [...byTrip.values()];
 };
 

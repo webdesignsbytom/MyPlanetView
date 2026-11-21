@@ -5,11 +5,11 @@ import { prisma } from '../prisma.js';
 
 /** The account part: who they are, their plan, and the maps and trips they're on. */
 export async function findAccountForExport(userId) {
-  const [user, profile, subscription, grants, ownedMaps, mapMemberships, tripMemberships, photosOnOtherMaps, avatar] = await Promise.all([
+  const [user, profile, subscription, grants, ownedMaps, mapMemberships, tripMemberships, photosOnOtherMaps, avatar, giftsBought, referralCode, referralRewards] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId }, select: { id: true, name: true, email: true, emailVerified: true, createdAt: true } }),
     prisma.profile.findUnique({
       where: { userId },
-      select: { username: true, homeCountryCode: true, mapSettings: true, promoTrialUsedAt: true, promoCode: { select: { code: true } } },
+      select: { username: true, homeCountryCode: true, mapSettings: true, onThisDayEmails: true, promoTrialUsedAt: true, promoCode: { select: { code: true } } },
     }),
     prisma.subscription.findUnique({
       where: { userId },
@@ -33,8 +33,34 @@ export async function findAccountForExport(userId) {
     }),
     prisma.photo.count({ where: uploadsElsewhere(userId) }),
     prisma.avatarMediaItem.findUnique({ where: { userId }, select: { media: { select: { key: true } } } }),
+    // Gifts they bought (docs/API.md "Gifts"), paid for
+    prisma.giftCode.findMany({
+      where: { buyerId: userId, paidAt: { not: null } },
+      select: { code: true, plan: true, months: true, amountPence: true, toName: true, message: true, paidAt: true, redeemedAt: true, refundedAt: true },
+      orderBy: { paidAt: 'asc' },
+    }),
+    // Their own invite code and the months it brought (docs/API.md "Give a month, get a month")
+    prisma.promoCode.findUnique({ where: { ownerId: userId }, select: { code: true, createdAt: true } }),
+    prisma.referralReward.findMany({
+      where: { referrerId: userId },
+      select: { kind: true, amountPence: true, appliedAt: true, createdAt: true },
+      orderBy: { createdAt: 'asc' },
+    }),
   ]);
-  return { user, profile, subscription, grants, ownedMaps, mapMemberships, tripMemberships, photosOnOtherMaps, avatarKey: avatar?.media?.key ?? null };
+  return {
+    user,
+    profile,
+    subscription,
+    grants,
+    ownedMaps,
+    mapMemberships,
+    tripMemberships,
+    photosOnOtherMaps,
+    avatarKey: avatar?.media?.key ?? null,
+    giftsBought,
+    referralCode,
+    referralRewards,
+  };
 }
 
 /** Who owns a map: -> its ownerId, or null when there's no such map. */
@@ -52,9 +78,11 @@ export async function findMapForExport(mapId) {
       prisma.travelMap.findUnique({
         where: { id: mapId },
         select: {
-          id: true, name: true, groupType: true, isDefault: true, splitUk: true, linkAccess: true, shareCode: true, graceUntil: true, createdAt: true, updatedAt: true,
+          id: true, name: true, groupType: true, isDefault: true, splitUk: true, homeCountryCode: true, linkAccess: true, shareCode: true, graceUntil: true, createdAt: true, updatedAt: true,
           // Its own design (docs/API.md "Map designs"): the colours, and whether it has a picture
           design: { select: { shown: true, countryColours: true, namesColour: true, gridColour: true, pictureId: true } },
+          // Landmarks ticked "been here" (docs/API.md "Collecting")
+          landmarkVisits: { select: { landmarkId: true, createdAt: true, landmark: { select: { name: true, countryCode: true } } }, orderBy: { createdAt: 'asc' } },
         },
       }),
       prisma.traveller.findMany({

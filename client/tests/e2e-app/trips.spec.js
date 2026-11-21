@@ -161,7 +161,19 @@ test.describe('Trips', () => {
     await expect(trips.getByRole('link', { name: /Japan in spring/ })).toHaveCount(0);
     await openStats(page);
     // Countries, continents, special places, photos, landmarks, trips
-    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', `0 of ${REGION_COUNT}`, '16', '13', '2']);
+    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText([
+      '8',
+      '3.5%',
+      '8 of 226 countries',
+      '2 of 7',
+      '0 of 5',
+      `0 of ${REGION_COUNT}`,
+      '16',
+      '13 of 1,332',
+      '10 of 1,273',
+      '2',
+      '15', 'On completed trips', '3,500 km', 'About 2,200 miles', 'United States', 'About 7,000 km from the United Kingdom',
+    ]);
 
     // The old address now says so
     await page.goto('/trips/trip-japan');

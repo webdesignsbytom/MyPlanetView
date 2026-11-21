@@ -39,11 +39,20 @@ async function editableMap(req, res) {
 
 // Passport
 
+/** `?traveller=<id>` for one traveller's own passport; anything that can't be an id finds no one. */
+export const travellerOption = (req) => {
+  const id = req.query?.traveller;
+  if (id === undefined || id === '') return {};
+  return { travellerId: typeof id === 'string' && isUuid(id) ? id : '00000000-0000-4000-8000-000000000000' };
+};
+
 export const getPassportHandler = handler(D, 'Get passport', async (req, res) => {
   const loaded = await viewableMap(req, res);
   if (!loaded) return undefined;
-  const passport = await buildPassport(loaded.map.id, loaded.role);
+  // ?traveller=<id>: that traveller's own passport (docs/API.md "Passport")
+  const passport = await buildPassport(loaded.map.id, loaded.role, travellerOption(req));
   if (!passport) return notFound(req, res, D, EVENT_MESSAGES.mapNotFound);
+  if (passport.travellerNotFound) return notFound(req, res, D, EVENT_MESSAGES.travellerNotFound);
   return sendDataResponse(res, 200, { passport });
 });
 

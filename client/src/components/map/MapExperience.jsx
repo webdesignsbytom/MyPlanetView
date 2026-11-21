@@ -40,6 +40,8 @@ import {
   CountryMapView,
   CountryPanel,
   ExtraMapDialog,
+  ShareCardDialog,
+  YearRecapDialog,
   MapSwitcher,
   MapTipsDialog,
   PhotoUploadPanel,
@@ -69,6 +71,11 @@ import { canEditRole, canManageRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
 import { isMonoStyle, mapStyleById } from '@/utils/map/mapStyles';
 import { DESIGN_BASE_STYLE, shownDesign } from '@/utils/map/mapDesign';
+import { mapCardOptions } from '@/utils/shareCard/cardOptions';
+import { recapYearFor } from '@/utils/recap/recap';
+import RecapTag from '@/components/recap/RecapTag';
+import AnniversaryTag from '@/components/moments/AnniversaryTag';
+import { LandmarkMarksContext } from '@/hooks/useLandmarkMarks';
 import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
 import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
 
@@ -174,6 +181,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const inGrace = !shareCode && !mapLocked && Boolean(map.graceUntil) && new Date(map.graceUntil).getTime() > Date.now();
   const planBanner = mapLocked || (inGrace && isOwner);
   const [payingForMap, setPayingForMap] = useState(false);
+  // A share card being made (the stats panel's "Share a picture of my map"): its options
+  const [shareCard, setShareCard] = useState(null);
+  // "Your year in travel" open on this year (docs/API.md "Year in travel"), or null
+  const [recapYear, setRecapYear] = useState(null);
 
   // The panels are separate downloads (lazyMapPanels.js): once the map has drawn, fetch
   // the ones this toolbar offers while the browser is idle, the country list (and a
@@ -335,6 +346,15 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // confirmed landmark shows once the map refreshes after the photo's change)
   const stampedIds = map.stampedLandmarkIds;
   const stampedLandmarks = useMemo(() => new Set(stampedIds || []), [stampedIds]);
+  // The landmarks ticked "been here" (docs/API.md "Collecting"), and the marks the panels'
+  // checklists read (an editor ticks; useLandmarkMarks)
+  const tickedIds = map.tickedLandmarkIds;
+  const tickedLandmarks = useMemo(() => new Set(tickedIds || []), [tickedIds]);
+  const toggleLandmark = canChange ? actions?.setLandmarkBeen : null;
+  const landmarkMarks = useMemo(
+    () => ({ stamped: stampedLandmarks, ticked: tickedLandmarks, onToggle: toggleLandmark ?? null }),
+    [stampedLandmarks, tickedLandmarks, toggleLandmark],
+  );
 
   // Photos with no country: no country panel shows them, so they get their own list
   const unplacedFilters = useMemo(() => ({ ...photoSource, ...UNPLACED_PHOTOS }), [photoSource]);
@@ -464,6 +484,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             unplacedMore={unplacedMore}
             onShowUnplaced={showUnplaced}
             onShowBadges={openBadges}
+            // Not through a share link: the card is the map of someone who's on it
+            onShareCard={shareCode ? undefined : () => setShareCard(mapCardOptions(map))}
+            onYearRecap={shareCode ? undefined : () => setRecapYear(recapYearFor())}
+            collected={landmarkMarks}
             passportHref={shareCode ? sharedPassportPath(shareCode) : mapPassportPath(map.id)}
             onClose={close}
           />
@@ -621,6 +645,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     // The map's own choice to show the UK as its four nations, for everything on the page
     // (the drawing, the country list, every country picker and landmark list)
     <SplitUkProvider value={Boolean(map.splitUk)}>
+    <LandmarkMarksContext.Provider value={landmarkMarks}>
     <div
       data-map-style={styleId}
       data-map-design={design ? '' : undefined}
@@ -694,6 +719,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           ) : null}
           {/* Someone asks for copies of their travels from this map (docs/API.md, "Travel copies") */}
           {canManage ? <TravelCopyBanner mapId={map.id} /> : null}
+          {/* In December and January, the year's recap (docs/API.md "Year in travel") */}
+          {shareCode ? null : <RecapTag mapId={map.id} onOpen={setRecapYear} />}
+          {/* A moment's day come round: "10 years ago today: Our wedding" (21 Nov 2026) */}
+          {shareCode ? null : <AnniversaryTag mapId={map.id} onOpenCountry={selectCountry} />}
           {/* Last in the column, so the banners above keep their place (the map switcher opens
               below them). On phones first (17 Nov 2026): its flag sits level with the Menu
               stamp, and the banners come below them both, or below an empty row as tall as
@@ -823,6 +852,18 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           </MapOverlayBoundary>
         ) : null}
 
+        {recapYear ? (
+          <MapOverlayBoundary onClose={() => setRecapYear(null)}>
+            <YearRecapDialog map={map} year={recapYear} onClose={() => setRecapYear(null)} />
+          </MapOverlayBoundary>
+        ) : null}
+
+        {shareCard ? (
+          <MapOverlayBoundary onClose={() => setShareCard(null)}>
+            <ShareCardDialog card={shareCard} title={shareCard.dialogTitle} onClose={() => setShareCard(null)} />
+          </MapOverlayBoundary>
+        ) : null}
+
         {payingForMap ? (
           <MapOverlayBoundary onClose={() => setPayingForMap(false)}>
             <ExtraMapDialog
@@ -870,6 +911,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
       {dataReady ? null : <MapStatusScreen loading overlay />}
     </div>
+    </LandmarkMarksContext.Provider>
     </SplitUkProvider>
   );
 }
