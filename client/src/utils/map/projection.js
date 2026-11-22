@@ -95,7 +95,7 @@ function solveRising(fn, lo, hi, target) {
  * (beyond a pole line, or past the world's edge at that latitude): the projection
  * inverted, for a spot picked by tapping the map. The height gives the latitude alone, and
  * at a latitude the width grows with the longitude, so each is found by halving (the
- * widened south included). Client only: the server never needs it.
+ * widened south included). The server has the same (its travel stats read the places' pins).
  */
 export function positionFromMap(x, y) {
   if (!Number.isFinite(x) || !Number.isFinite(y) || y < MAP_TOP || y > MAP_BOTTOM) return null;

@@ -17,6 +17,7 @@
     { "src": "/(.*)", "dest": "src/server.js" }
   ],
   "crons": [
-    { "path": "/api/media-services/cron/cleanup-orphans", "schedule": "0 4 * * *" }
+    { "path": "/api/media-services/cron/cleanup-orphans", "schedule": "0 4 * * *" },
+    { "path": "/api/emails/on-this-day/cron", "schedule": "0 8 * * *" }
   ]
 }

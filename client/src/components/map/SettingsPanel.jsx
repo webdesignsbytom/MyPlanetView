@@ -9,7 +9,10 @@ import DeleteMapSection from './DeleteMapSection';
 import MainMapSection from './MainMapSection';
 import MapUpgradeSection from './MapUpgradeSection';
 import MapDownloadSection from './MapDownloadSection';
+import MapImportSection from './MapImportSection';
+import MapHomeSection from './MapHomeSection';
 import TravelCopySection from '@/components/travelCopies/TravelCopySection';
+import MapDesignSection from './design/MapDesignSection';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
 // Utils
 import { saveMapSetup } from '@/utils/map/saveMapSetup';
@@ -19,7 +22,13 @@ const TABS = [
   { id: 'map', label: 'This map' },
 ];
 
-// Settings: how the map looks to you (yours alone, on every map), and, for editors,
+// Settings: how the map looks. Its style is the map's (docs/API.md "Map styles"; 22 Nov 2026,
+// the user's wish): the owner and co-owners choose it (`onMapStyleChange`, also kept as their
+// own for maps without one) and everyone who opens the map sees it, share links too; anyone
+// else's choice is for their own maps. The rest is yours alone, on every map. The owner and
+// co-owners also set the map's own design at the top of the same tab (MapDesignSection,
+// docs/API.md "Map designs"): one per map style, so the section is the map style's own; and,
+// for editors,
 // this map's travellers and its photos as a zip ("Print or download"); for the owner and
 // co-owners, bringing travels from another map and the requests to copy from this one
 // (TravelCopySection); for the owner, its
@@ -27,7 +36,25 @@ const TABS = [
 // ticket tabs: the open one is parchment and sits on the panel's brown rule. They follow
 // the ARIA tabs pattern: only the open tab is in the tab order, the arrow keys (and Home,
 // End) move between tabs and open them, and each tab names its panel.
-function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, canManage = isOwner, locked = false, onMapSaved, onMapDeleted, onUpgradePay, onClose }) {
+function SettingsPanel({
+  settings,
+  onChangeSetting,
+  map,
+  mapStyle = settings.style,
+  onMapStyleChange = null,
+  canEdit,
+  isOwner,
+  canManage = isOwner,
+  locked = false,
+  onMapSaved,
+  onDesignChange,
+  designPreview,
+  onMapDeleted,
+  onUpgradePay,
+  onClose,
+}) {
+  // Someone else's choice of style is what this map shows (their own applies to their maps)
+  const ownersStyle = !onMapStyleChange && mapStyle !== settings.style;
   const [tab, setTab] = useState('view');
   // "Saved" outlives the form, which starts afresh after a save that changes the map
   const [mapSaved, setMapSaved] = useState(false);
@@ -88,7 +115,22 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, canMa
       {/* Both panels stay on the page (the closed one hidden), so every tab's
           aria-controls has its panel, and a half-filled map form survives a look at the other tab */}
       <div {...panelProps('view')} hidden={showTabs && tab !== 'view'} className='grid gap-5'>
-        <MapStylePicker value={settings.style} onChange={(style) => onChangeSetting('style', style)} />
+        {map && canManage && onDesignChange ? (
+          <MapDesignSection key={mapStyle} map={map} styleId={mapStyle} onDesignChange={onDesignChange} preview={designPreview} />
+        ) : null}
+        {onMapStyleChange ? (
+          <MapStylePicker
+            value={mapStyle}
+            note='Everyone who opens this map sees it in this style, people you share it with too.'
+            onChange={onMapStyleChange}
+          />
+        ) : (
+          <MapStylePicker
+            value={settings.style}
+            note={ownersStyle ? 'This map is shown in the style its owner chose, so the one you pick here is for your own maps.' : null}
+            onChange={(style) => onChangeSetting('style', style)}
+          />
+        )}
         <MapTypePicker value={settings.mapType} onChange={(type) => onChangeSetting('mapType', type)} />
         <LandmarkPinsPicker value={settings.landmarkPins} onChange={(mode) => onChangeSetting('landmarkPins', mode)} />
         <MapSettingsToggles settings={settings} onChange={onChangeSetting} />
@@ -110,7 +152,11 @@ function SettingsPanel({ settings, onChangeSetting, map, canEdit, isOwner, canMa
               await onMapSaved();
             }}
           />
+          {/* Where the map's people live, for the statistics' distances (docs/API.md "Stats") */}
+          {canManage ? <MapHomeSection map={map} onChanged={onMapSaved} /> : null}
           <MapDownloadSection map={map} />
+          {/* Trips, photos and stories from Polarsteps (docs/API.md, "Importing from Polarsteps") */}
+          <MapImportSection map={map} />
           {/* Bringing travels from another map, and the requests to copy from this one (docs/API.md, "Travel copies") */}
           {canManage ? <TravelCopySection map={map} /> : null}
           {isOwner && !map.isDefault ? <MapUpgradeSection map={map} locked={locked} onChanged={onMapSaved} onPay={onUpgradePay} /> : null}

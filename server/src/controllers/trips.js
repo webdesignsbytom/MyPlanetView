@@ -43,6 +43,7 @@ import {
   findTripPhoto,
   findTripsForMap,
   findTripsLinkedToMap,
+  findStopCountriesForMap,
   findTripsSharedWithUser,
   hasEditableMapOtherThan,
   reorderStopsInDB,
@@ -121,9 +122,12 @@ export async function tripView(tripId, role, mapRole = null, { forUser = null } 
  * Its photos stay on the organiser's map, so they're in none of this map's counts.
  */
 export async function mapTripsView(mapId, role, userId, { viaShareLink = false } = {}) {
-  const [own, linked] = await Promise.all([
+  const [own, linked, ownCountries] = await Promise.all([
     findTripsForMap(mapId, { includeHidden: canEdit(role) }),
     findTripsLinkedToMap(mapId),
+    // The places of the map's own trips (the map outlines the planned ones), never through a
+    // share link: it would tell anyone with the link where the map's people are going, and when
+    viaShareLink ? null : findStopCountriesForMap(mapId),
   ]);
 
   // The caller's role on each linked trip: the higher of their role on its map (owner or
@@ -142,7 +146,15 @@ export async function mapTripsView(mapId, role, userId, { viaShareLink = false }
   );
 
   const rows = [
-    ...own.map((trip) => ({ trip, view: async () => ({ ...(await tripSummary(trip, role)), linked: false, canOpen: true }) })),
+    ...own.map((trip) => ({
+      trip,
+      view: async () => ({
+        ...(await tripSummary(trip, role)),
+        ...(ownCountries ? { countryCodes: ownCountries.get(trip.id) ?? [] } : {}),
+        linked: false,
+        canOpen: true,
+      }),
+    })),
     ...linked.map((trip) => ({
       trip,
       view: () =>

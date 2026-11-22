@@ -44,7 +44,8 @@ function ChallengeDetail({ challengeId }) {
 
   if (error) {
     return (
-      <PaperCard title='Challenge' titleId='challenge-page-heading'>
+      // The page's only heading here, so its h1 (the page title card's, when the challenge opens)
+      <PaperCard title='Challenge' titleId='challenge-page-heading' headingLevel={1}>
         <p role='alert' className='text-sm'>
           {error}
         </p>

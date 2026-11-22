@@ -80,6 +80,16 @@ export const MEDIA_CFG = {
     maxBytes: 0,
     generic: false,
   },
+  // A map design's sea picture (docs/API.md "Map designs"): private bucket, only through
+  // the design routes (owner and co-owners upload; whoever can open the map sees it)
+  mapDesign: {
+    prefix: `${BucketNamespace}/designs/`,
+    visibility: 'private',
+    requiresAuth: true,
+    allowedTypes: [],
+    maxBytes: 0,
+    generic: false,
+  },
 };
 
 /** An error the generic media handlers answer with as it is (4xx). */
@@ -453,7 +463,10 @@ export async function confirmUpload({ key, user }) {
 }
 
 // Hard delete
-export async function hardDeleteObject({ key, user }) {
+// `keepIfInUse` (the generic delete route): a 409 instead when the file is still used.
+// Other callers delete a file once nothing points at it any more (an old avatar, a deleted
+// form's image), or have just let it go (a deleted account's avatar).
+export async function hardDeleteObject({ key, user, keepIfInUse = false }) {
   assertAllowedKey(key);
   assertGenericKey(key);
 
@@ -469,8 +482,20 @@ export async function hardDeleteObject({ key, user }) {
     err.status = 403;
     throw err;
   }
+  if (keepIfInUse && (await isMediaInUse(key))) throw httpError(409, 'This file is still in use, so it can’t be deleted.');
 
   await deleteObjectAndRecord(key);
+}
+
+// Whether a generic upload is still used: someone's avatar, or a contact form's image. The
+// generic delete route refuses these (409): deleting the file left the avatar or the form
+// pointing at nothing, as the avatar's row holds the MediaItem (onDelete: Restrict)
+async function isMediaInUse(key) {
+  const [avatar, form] = await Promise.all([
+    prisma.avatarMediaItem.findFirst({ where: { media: { key } }, select: { userId: true } }),
+    prisma.contactForm.findFirst({ where: { imageKey: key }, select: { id: true } }),
+  ]);
+  return Boolean(avatar || form);
 }
 
 // for controllers/utilities
@@ -554,6 +579,26 @@ export function buildPhotoKey({ mapId, photoId, size, contentType }) {
 /** The folder every file of one photo sits in (used to check confirmed keys). */
 export const photoKeyFolder = ({ mapId, photoId }) => `${PHOTO_PREFIX}${mapId}/${photoId}/`;
 
+// ── A map design's sea picture (docs/API.md "Map designs") ──────────────────
+
+export const MAP_DESIGN_PREFIX = MEDIA_CFG.mapDesign.prefix;
+
+/** `<namespace>/designs/<mapId>/<random>.<ext>`: a new name for every picture (browsers cache them). */
+export const buildDesignPictureKey = ({ mapId, contentType }) =>
+  `${MAP_DESIGN_PREFIX}${mapId}/sea-${randomBase32(12)}.${PHOTO_EXTENSIONS[contentType] || 'bin'}`;
+
+/** The folder a map's design pictures sit in (used to check a saved key). */
+export const designPictureFolder = (mapId) => `${MAP_DESIGN_PREFIX}${mapId}/`;
+
+/**
+ * Presign a design picture's upload, after refusing (429) one that would leave the user
+ * more than `limit` unsaved ones. -> `{ url, expiresIn }`
+ */
+export async function presignDesignPicture({ key, contentType, bytes, userId, limit }) {
+  await assertUnconfirmedUploadsUnder({ userId, resources: ['mapDesign'], limit });
+  return presignPrivateUpload({ key, resource: 'mapDesign', contentType, bytes, userId });
+}
+
 /** Refuse (429) a photo presign that would leave the user more than the cap of unconfirmed photo files. */
 export const assertPhotoUploadsUnderCap = (userId, adding) =>
   assertUnconfirmedUploadsUnder({ userId, resources: ['photo'], limit: UNCONFIRMED_UPLOAD_LIMIT.photo, adding });
@@ -562,8 +607,12 @@ export const assertPhotoUploadsUnderCap = (userId, adding) =>
  * Record the file (bytes stay null until confirmed) and presign its upload. The URL
  * signs `contentType` and `bytes` (the caller checks them against PHOTO_MAX_BYTES).
  */
-export async function presignPhotoUpload({ key, contentType, bytes, userId }) {
-  await recordMediaItem({ key, resource: 'photo', cfg: MEDIA_CFG.photo, userId, contentType });
+export const presignPhotoUpload = ({ key, contentType, bytes, userId }) =>
+  presignPrivateUpload({ key, resource: 'photo', contentType, bytes, userId });
+
+// A private resource's upload: the file recorded (bytes null until saved), then presigned
+async function presignPrivateUpload({ key, resource, contentType, bytes, userId }) {
+  await recordMediaItem({ key, resource, cfg: MEDIA_CFG[resource], userId, contentType });
   const { priv } = await storage();
   const url = await priv.signPrivatePutObject({
     bucket: priv.PRIVATE_BUCKET,

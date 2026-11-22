@@ -2,7 +2,7 @@ import React from 'react';
 // Icons
 import { FiMap, FiImage, FiFlag, FiCompass } from 'react-icons/fi';
 // Data
-import { homeFeatures } from '@/utils/data/homeData';
+import { homeFeatures, homeFeaturesIntro } from '@/utils/data/homeData';
 // Components
 import HowItWorksHeading from './HowItWorksHeading';
 
@@ -26,6 +26,7 @@ function HowItWorksFeatures() {
           eyebrow='How it works'
           title='Everywhere you have been, in one place'
         />
+        <p className='max-w-prose justify-self-center text-center text-lg leading-relaxed'>{homeFeaturesIntro}</p>
 
         <ul className='grid gap-6 sm:grid-cols-2 xl:grid-cols-4'>
           {homeFeatures.map(({ id, title, text }) => {

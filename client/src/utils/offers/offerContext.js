@@ -122,7 +122,8 @@ export function deskShelves(offers, countryCodes) {
   const fitting = offersForPlacement(offers, 'TRAVEL_DESK')
     .filter((offer) => !offer.countryCode || codes.includes(offer.countryCode))
     .sort((a, b) => rank(a) - rank(b) || (b.weight || 1) - (a.weight || 1) || String(a.title).localeCompare(String(b.title)));
-  const kinds = [...OFFER_KIND_ORDER, ...new Set(fitting.map((o) => o.kind).filter((kind) => !OFFER_KIND_ORDER.includes(kind)))];
+  // Any kind the order doesn't know gets its own shelf after them; an offer with none is on OTHER's
+  const kinds = [...OFFER_KIND_ORDER, ...new Set(fitting.map((o) => o.kind).filter((kind) => kind && !OFFER_KIND_ORDER.includes(kind)))];
   return kinds
     .map((kind) => ({ kind, offers: fitting.filter((offer) => offer.kind === kind || (kind === 'OTHER' && !offer.kind)) }))
     .filter((shelf) => shelf.offers.length);

@@ -181,6 +181,9 @@
   --map-land-edge: #b91c1c;
   --map-hover: #66ff66;
   --map-wish: #b45309;
+  /* A planned trip's places (not yet visited): a dash-dot outline in violet, apart from "want
+     to go"'s brown dashes and the borders' red (22 Nov 2026, the user's wish) */
+  --map-planned: #6d28d9;
   --map-visit-1: #f0f038;
   --map-visit-2: #0eb4a6;
   --map-visit-3: #d8845a;
@@ -212,6 +215,8 @@
   --map-land-edge: #7c2d12;
   --map-ice: #eef1ea;
   --map-ice-edge: #8c9a96;
+  /* A planned trip's outline in an atlas's deep teal ink, which the parchment carries */
+  --map-planned: #0f766e;
 }
 
 /* The starry night (19 Nov 2026, the user's wish, after a travel brand's world map on deep
@@ -233,6 +238,8 @@
      on the pale-blue land (19 Nov 2026, the user's wish: not gold, not brown) */
   --map-stamp: #0b2240;
   --map-wish: #6d28d9;
+  /* A planned trip's outline a bright pink, as "want to go" here is the violet */
+  --map-planned: #db2777;
   /* The country under the pointer a deep blue, not the other styles' bright green (19 Nov
      2026, the user's wish) */
   --map-hover: #1e4f94;
@@ -252,7 +259,7 @@
 /* Its words (country, pole and state names, the grid's degrees) are the ink on the land,
    so each wears a halo of the land's blue: a name drawn on the sky (a small island's, under
    it) reads there too. The size is the label's own, so it scales with it. */
-[data-map-style='starry'] g.fill-map-ink {
+[data-map-style='starry'] g.fill-map-names {
   stroke: rgb(142 195 230);
   stroke-width: 0.3em;
   stroke-linejoin: round;
@@ -423,6 +430,7 @@
   --map-land-edge: #000000;
   --map-hover: #d3d3d3;
   --map-wish: #626262;
+  --map-planned: #434343;
   --map-visit-1: #dcdcdc;
   --map-visit-2: #cdcdcd;
   --map-visit-3: #bebebe;
@@ -435,6 +443,20 @@
 }
 /* mono-tokens:end */
 
+/* The map page in Black and white (MapExperience's data-mono-map): the map's drawing is grey
+   through the tokens above, so it takes no filter, and a map design's own colours (names,
+   grid, countries) show on it in colour (22 Nov 2026, the user's wish: chosen on Black and
+   white, they turned grey and seemed to do nothing). Everything else on the page, and the
+   pictures inside the map, are filtered to grey: HTML ones by CSS, the map's SVG pictures
+   by MonoPictureFilter's SVG filter (CSS filter functions don't reach SVG elements everywhere). */
+[data-mono-map] > :not(main),
+[data-mono-map] main :is(img, video, canvas) {
+  filter: grayscale(1);
+}
+[data-mono-map] main image {
+  filter: url('#mpv-mono-pictures');
+}
+
 /* The map's colours switch with data-map-style (the blocks above), so their utilities
    must read the --map-* tokens where they're used: `inline` puts var(--map-…) straight
    into each utility. A plain @theme resolves var() once, on :root, and every map style
@@ -443,6 +465,9 @@
   --color-map-sea: var(--map-sea);
   --color-map-sea-ink: var(--map-sea-ink);
   --color-map-ink: var(--map-ink);
+  /* The words on the map (country, pole and state names, the grid's degrees): the ink, or a
+     map design's own colour (--map-names on the map's wrapper; docs/API.md "Map designs") */
+  --color-map-names: var(--map-names, var(--map-ink));
   --color-map-edge: var(--map-edge);
   --color-map-grid: var(--map-grid);
   --color-map-stamp: var(--map-stamp);
@@ -450,6 +475,7 @@
   --color-map-land-edge: var(--map-land-edge);
   --color-map-hover: var(--map-hover);
   --color-map-wish: var(--map-wish);
+  --color-map-planned: var(--map-planned);
   --color-map-visit-1: var(--map-visit-1);
   --color-map-visit-2: var(--map-visit-2);
   --color-map-visit-3: var(--map-visit-3);

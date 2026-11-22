@@ -6,10 +6,11 @@ import { prisma } from '../prisma.js';
 /**
  * Each stamped landmark on a map, with its earliest confirmed photo (by when it was
  * taken), how many confirmed photos it has, and when it was first confirmed. Below
- * editor, hidden photos neither count nor show.
+ * editor, hidden photos neither count nor show. `scope` (one traveller's passport:
+ * `{ tripIds, photoIds }`) counts only the photos on those trips or among those photos.
  * -> `[{ landmarkId, photoId, shotAt, photoCount, confirmedAt }]`
  */
-export const findStamps = (mapId, { includeHidden }) =>
+export const findStamps = (mapId, { includeHidden, scope = null }) =>
   prisma.$queryRaw`
     SELECT DISTINCT ON (pl."landmarkId")
       pl."landmarkId",
@@ -20,6 +21,7 @@ export const findStamps = (mapId, { includeHidden }) =>
     FROM "photo_landmark" AS pl
     JOIN "photo" AS p ON p."id" = pl."photoId"
     WHERE pl."mapId" = ${mapId} AND pl."confirmed" AND p."kind" = 'PHOTO' AND (${includeHidden} OR NOT p."hidden")
+      AND (${scope === null} OR p."tripId" = ANY(${scope?.tripIds ?? []}::text[]) OR p."id" = ANY(${scope?.photoIds ?? []}::text[]))
     ORDER BY pl."landmarkId", p."shotAt", p."id"`;
 
 /** The photos picked for a map's stamps: `[{ landmarkId, photoId, hidden }]`. */
@@ -31,11 +33,19 @@ export const findLandmarkCovers = async (mapId) =>
     })
   ).map((cover) => ({ landmarkId: cover.landmarkId, photoId: cover.photoId, hidden: cover.photo.hidden }));
 
-/** Each country's earliest photo on a map (when it was taken): Map code -> Date. */
-export const findFirstPhotoByCountry = async (mapId, { includeHidden }) => {
+/**
+ * Each country's earliest photo on a map (when it was taken): Map code -> Date. `scope` as
+ * findStamps: one traveller's photos only.
+ */
+export const findFirstPhotoByCountry = async (mapId, { includeHidden, scope = null }) => {
   const rows = await prisma.photo.groupBy({
     by: ['countryCode'],
-    where: { mapId, countryCode: { not: null }, ...(includeHidden ? {} : { hidden: false }) },
+    where: {
+      mapId,
+      countryCode: { not: null },
+      ...(includeHidden ? {} : { hidden: false }),
+      ...(scope ? { OR: [{ tripId: { in: scope.tripIds } }, { id: { in: scope.photoIds } }] } : {}),
+    },
     _min: { shotAt: true },
   });
   return new Map(rows.map((row) => [row.countryCode, row._min.shotAt]));
@@ -66,6 +76,29 @@ export const findLandmarksByIds = (ids) =>
         select: { id: true, name: true, countryCode: true, isUnesco: true, latitude: true, longitude: true },
       })
     : [];
+
+/**
+ * What one traveller's passport is made of (docs/API.md "Passport"; 21 Nov 2026): the trips
+ * they went on (status, dates and stops' places and first days) and the moments about them
+ * (place, date and photos; hidden ones only with `includeHidden`).
+ * -> `{ trips: [{ id, status, startDate, stops: [{ countryCode, arriveOn }] }], moments: [{ countryCode, happenedOn, photoIds }] }`
+ */
+export async function findTravellerTravel(mapId, travellerId, { includeHidden }) {
+  const [trips, moments] = await Promise.all([
+    prisma.trip.findMany({
+      where: { mapId, travellers: { some: { travellerId } } },
+      select: { id: true, status: true, startDate: true, stops: { select: { countryCode: true, arriveOn: true } } },
+    }),
+    prisma.moment.findMany({
+      where: { mapId, travellers: { some: { travellerId } }, ...(includeHidden ? {} : { hidden: false }) },
+      select: { countryCode: true, happenedOn: true, photos: { select: { photoId: true } } },
+    }),
+  ]);
+  return {
+    trips,
+    moments: moments.map((m) => ({ countryCode: m.countryCode, happenedOn: m.happenedOn, photoIds: m.photos.map((p) => p.photoId) })),
+  };
+}
 
 /** The travellers on the passport's photo page. */
 export const findPassportTravellers = (mapId) =>

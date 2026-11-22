@@ -10,6 +10,8 @@ import {
   getMapTrips,
   putVisit,
   removeTripFromMap,
+  tickLandmark,
+  untickLandmark,
   updateMap,
   updateTraveller,
 } from '@/api/travelApi';
@@ -179,6 +181,59 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     [mapId],
   );
 
+  // The map's style, for everyone who opens it (docs/API.md "Map styles"; the owner and
+  // co-owners): shown at once, then saved; if the save fails, the map is read again, so it
+  // shows the style it really has
+  const setMapStyle = useCallback(
+    async (style) => {
+      setState((prev) => (onMap(prev, mapId) ? { ...prev, map: { ...prev.map, style } } : prev));
+      try {
+        await updateMap(mapId, { style });
+      } catch {
+        refresh();
+      }
+    },
+    [mapId, refresh],
+  );
+
+  // The map's own design for a map style as it now stands (docs/API.md "Map designs"; one per
+  // style): shown at once while it's edited, and with the server's answer after each save
+  const setDesign = useCallback(
+    (style, design) =>
+      setState((prev) => {
+        if (!onMap(prev, mapId)) return prev;
+        const designs = { ...prev.map.designs };
+        if (design) designs[style] = design;
+        else delete designs[style];
+        return { ...prev, map: { ...prev.map, designs } };
+      }),
+    [mapId],
+  );
+
+  // A landmark ticked "been here", or not (docs/API.md "Collecting"): shown at once, undone if
+  // it fails. A tick can mark its country visited, so the map is read again quietly after one.
+  const setLandmarkBeen = useCallback(
+    async (landmarkId, been) => {
+      const apply = (on) =>
+        setState((prev) => {
+          if (!onMap(prev, mapId)) return prev;
+          const ids = (prev.map.tickedLandmarkIds || []).filter((id) => id !== landmarkId);
+          return { ...prev, map: { ...prev.map, tickedLandmarkIds: on ? [...ids, landmarkId] : ids } };
+        });
+      apply(been);
+      try {
+        if (been) {
+          await tickLandmark(mapId, landmarkId);
+          refresh();
+        } else await untickLandmark(mapId, landmarkId);
+      } catch (err) {
+        apply(!been);
+        throw err;
+      }
+    },
+    [mapId, refresh],
+  );
+
   const addTraveller = useCallback(
     async (body) => {
       const { traveller } = await createTraveller(mapId, body);
@@ -246,6 +301,9 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     refreshStats,
     setVisit,
     saveMapDetails,
+    setDesign,
+    setMapStyle,
+    setLandmarkBeen,
     addTraveller,
     editTraveller,
     removeTraveller,

@@ -40,6 +40,11 @@ import {
   CHALLENGES_PAGE_URL,
   CHALLENGE_PAGE_URL,
   CHALLENGE_JOIN_PAGE_URL,
+  GIFTS_PAGE_URL,
+  COMPARE_PAGE_URL,
+  GIFT_PAGE_URL,
+  IMPORT_PAGE_URL,
+  UNSUBSCRIBE_PAGE_URL,
   MAP_PASSPORT_PAGE_URL,
   SHARED_PASSPORT_PAGE_URL,
 } from '@/utils/constants/routes';
@@ -87,6 +92,11 @@ import {
   ChallengesPage,
   ChallengePage,
   ChallengeJoinPage,
+  GiftsPage,
+  ComparePage,
+  GiftPage,
+  ImportPage,
+  UnsubscribePage,
   PassportPage,
   CountriesIndexPage,
   COUNTRY_GUIDE_PAGES,
@@ -325,6 +335,40 @@ function App() {
             element={
               <AuthenticateUser>
                 <ChallengePage />
+              </AuthenticateUser>
+            }
+          />
+
+          {/* Gifts of a year of a plan: buying and yours (signed in), and a gift's page (anyone) */}
+          <Route
+            path={GIFTS_PAGE_URL}
+            element={
+              <AuthenticateUser>
+                <GiftsPage />
+              </AuthenticateUser>
+            }
+          />
+          <Route path={GIFT_PAGE_URL} element={<GiftPage />} />
+
+          {/* Comparing two maps the person can open (signed in) */}
+          <Route
+            path={COMPARE_PAGE_URL}
+            element={
+              <AuthenticateUser>
+                <ComparePage />
+              </AuthenticateUser>
+            }
+          />
+
+          {/* An email's unsubscribe link (anyone) */}
+          <Route path={UNSUBSCRIBE_PAGE_URL} element={<UnsubscribePage />} />
+
+          {/* Bringing your travels from Polarsteps (signed in) */}
+          <Route
+            path={IMPORT_PAGE_URL}
+            element={
+              <AuthenticateUser>
+                <ImportPage />
               </AuthenticateUser>
             }
           />

@@ -2,6 +2,10 @@ import React from 'react';
 // Components
 import AccountCard from './AccountCard';
 import AccountProfileSection from './AccountProfileSection';
+import AccountGiftsSection from './AccountGiftsSection';
+import AccountReferralSection from './AccountReferralSection';
+import AccountImportSection from './AccountImportSection';
+import AccountEmailsSection from './AccountEmailsSection';
 import AccountPlanSection from './AccountPlanSection';
 import AccountEmailSection from './AccountEmailSection';
 import AccountSessionsSection from './AccountSessionsSection';
@@ -19,6 +23,23 @@ function AccountPageMainContainer() {
 
       <AccountCard id='account-plan' title='Your plan'>
         <AccountPlanSection />
+      </AccountCard>
+
+      <AccountCard id='account-gifts' title='Gifts'>
+        <AccountGiftsSection />
+      </AccountCard>
+
+      {/* Give a month, get a month (docs/API.md) */}
+      <AccountCard id='account-invite' title='Invite a friend'>
+        <AccountReferralSection />
+      </AccountCard>
+
+      <AccountCard id='account-import' title='Bring your travels'>
+        <AccountImportSection />
+      </AccountCard>
+
+      <AccountCard id='account-emails' title='Emails we send'>
+        <AccountEmailsSection />
       </AccountCard>
 
       <AccountCard id='account-email' title='Email'>

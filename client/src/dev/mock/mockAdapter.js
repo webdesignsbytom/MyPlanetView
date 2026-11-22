@@ -31,6 +31,8 @@ export const VERIFY_EMAIL_FIRST =
   'Verify your email address to add to your map or share it. Use the link we emailed you, or send a new one from your account page.';
 const kinds = (path) => ['maps', 'trips'].map((kind) => path.replace('{kind}', kind));
 const NEEDS_VERIFIED_EMAIL = new Set([
+  // Give a month, get a month: making a member's invite code
+  'POST /api/users/referral',
   'POST /api/maps',
   'DELETE /api/maps/:mapId',
   'POST /api/maps/:mapId/main',
@@ -88,6 +90,17 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   'PUT /api/maps/:mapId/passport/stamps/:landmarkId/photo',
   'DELETE /api/maps/:mapId/passport/stamps/:landmarkId/photo',
   // Taking your travels with you (docs/API.md "Travel copies")
+  // Collecting (docs/API.md "Collecting")
+  'PUT /api/maps/:mapId/landmarks/:landmarkId/been',
+  'DELETE /api/maps/:mapId/landmarks/:landmarkId/been',
+  // Importing from Polarsteps (docs/API.md "Importing from Polarsteps")
+  'POST /api/maps/:mapId/imports/polarsteps',
+  // Gifts (docs/API.md "Gifts"): buying and redeeming
+  'POST /api/billing/gift-checkout',
+  'POST /api/gifts/redeem',
+  // A map design's picture (docs/API.md "Map designs"); its colours and removing it need none
+  'POST /api/maps/:mapId/design/picture/presign',
+  'PUT /api/maps/:mapId/design/picture',
   'POST /api/maps/:mapId/travel-copies/preview',
   'POST /api/maps/:mapId/travel-copies',
   'POST /api/travel-copies/:id/approve',

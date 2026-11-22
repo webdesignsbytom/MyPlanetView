@@ -17,7 +17,7 @@ function MapPanelFallback({ failed = false, onClose }) {
     );
   }
   return (
-    <div role='status' className='ticket-edge pointer-events-auto grid w-full place-items-center bg-paper-cream px-5 py-6 md:w-[26rem]'>
+    <div role='status' className='ticket-edge pointer-events-auto grid w-full place-items-center bg-paper-cream px-5 py-6 md:w-[28.5rem]'>
       <LoadingSpinner />
     </div>
   );

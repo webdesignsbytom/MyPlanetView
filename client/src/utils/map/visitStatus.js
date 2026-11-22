@@ -32,19 +32,33 @@ const PASTEL_FILLS = [
 /** One of the seven pastels' fill classes by number (a country map's states: CountryMapView). */
 export const pastelFill = (n) => PASTEL_FILLS[((n || 1) - 1) % PASTEL_FILLS.length];
 
-const pastelFor = (code) => PASTEL_FILLS[(COUNTRY_COLOUR[regionParent(code) ?? code] || UK_NATION_COLOUR[code] || 1) - 1];
+/** Which of the seven pastels (1 to 7) a place wears: a region its country's, a UK nation its own. */
+export const pastelNumberFor = (code) => COUNTRY_COLOUR[regionParent(code) ?? code] || UK_NATION_COLOUR[code] || 1;
+
+const pastelFor = (code) => PASTEL_FILLS[pastelNumberFor(code) - 1];
 
 // Antarctica isn't a country: it's drawn as ice, with an ice-blue outline, as an atlas
 // draws it (the --map-ice tokens, per map style)
 const ICE = 'AQ';
 
-export function countryFillClass(code, status) {
+// A planned trip's places (utils/trips/plannedTrips.js): a dash-dot outline, like a route
+export const PLANNED_OUTLINE = 'stroke-map-planned stroke-[1.6] [stroke-dasharray:6_2_1.5_2]';
+
+/**
+ * A place's fill and outline. `planned`: a planned trip goes there (plannedOutlineCodes),
+ * which outlines it in place of "want to go"; never a visited or lived-in place, whose look
+ * stays as it is.
+ */
+export function countryFillClass(code, status, planned = false) {
   const ice = code === ICE;
   const fill = ice ? 'fill-map-ice' : pastelFor(code);
   // Visited and lived-in countries keep the same border as every other country: their
   // star badge marks them. "Want to go" has no badge, so it keeps a dashed outline.
+  if (planned && !countsAsVisited(status)) return `${fill} ${PLANNED_OUTLINE}`;
   if (status === 'WANT_TO_GO') return `${fill} stroke-map-wish stroke-[1.4] [stroke-dasharray:3_2]`;
   return `${fill} ${ice ? 'stroke-map-ice-edge' : 'stroke-map-land-edge'}`;
 }
 
-export const countsAsVisited = (status) => status === 'VISITED' || status === 'LIVED';
+export function countsAsVisited(status) {
+  return status === 'VISITED' || status === 'LIVED';
+}

@@ -17,9 +17,14 @@ const SHOWN = 2;
  * print partners' offers (placement PRINT, imported like every travel offer; heaviest
  * first), each a link through /go/ that counts the click. The person uploads the zip's
  * photos on the printer's own site; nothing is sent from here. With no print partner
- * yet, it says any photo printer takes the files.
+ * yet, it says any photo printer takes the files. The map poster (MapPosterDialog) gives
+ * its own `title`, `lead` (with printers) and `fallback` (without).
  */
-function PrintPartnerOffers() {
+function PrintPartnerOffers({
+  title = 'Print them',
+  lead = 'Open the zip, then upload the photos you want on the printer’s site and order there.',
+  fallback = 'Every photo printer’s website takes these files: open the zip and upload the ones you want.',
+}) {
   const { offers, loading } = useOffers();
   const printers = useMemo(
     () =>
@@ -32,11 +37,11 @@ function PrintPartnerOffers() {
   return (
     <section className='grid gap-3 border-t-2 border-dashed border-poster-brown/50 pt-4' aria-labelledby='print-them-heading'>
       <h3 id='print-them-heading' className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
-        Print them
+        {title}
       </h3>
       {printers.length ? (
         <>
-          <p className='text-sm'>Open the zip, then upload the photos you want on the printer’s site and order there.</p>
+          <p className='text-sm'>{lead}</p>
           <p className='justify-self-start -rotate-1 border-2 border-dashed border-poster-red-deep px-3 py-1.5 text-sm font-semibold text-poster-red-deep'>
             {PRINT_OFFERS_NOTE}
           </p>
@@ -47,7 +52,7 @@ function PrintPartnerOffers() {
           </div>
         </>
       ) : loading ? null : (
-        <p className='text-sm'>Every photo printer’s website takes these files: open the zip and upload the ones you want.</p>
+        <p className='text-sm'>{fallback}</p>
       )}
     </section>
   );

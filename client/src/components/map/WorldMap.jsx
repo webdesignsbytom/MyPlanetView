@@ -24,6 +24,7 @@ import { clearPointerFocus, markPointerFocus } from '@/utils/map/pointerFocus';
 
 const NO_VISITS = {};
 const NO_MOMENTS = {};
+const NO_PLANS = new Set();
 const NO_SPOTS = [];
 // The country names are drawn for the zoom rounded down to eighths of a doubling (about 9%
 // apart), so about 250 labels are resized a few times per doubling, not on every wheel tick
@@ -51,6 +52,8 @@ const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[da
  * `momentCounts` (the map's momentCountsByCountry) marks the places with moments, beside
  * their badges, unless `showMoments` is off (the viewer's setting).
  * `stampedLandmarks` (a Set of the map's stampedLandmarkIds) turns those pins gold.
+ * `plannedCodes` (a Set: utils/trips/plannedTrips.js plannedOutlineCodes) outlines the places
+ * a planned trip goes to.
  * `showSky`: the sun and the moon over where each is overhead now (SkyBodies).
  * `momentSpots` (the map's momentSpots) puts a pin on each moment's spot, while
  * `showMoments` is on; a pin opens its country with `onSelectCountry`.
@@ -58,10 +61,12 @@ const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[da
  * page provides the map's `splitUk`).
  * `seaDepths`: the sea tinted by depth (SeaDepths), for the styles whose sea is plain
  * (mapStyles.js `background: null`, the animated sea).
+ * `gridColoured`: a map design gave the grid its own colour, so it's drawn stronger.
  */
 function WorldMap({
   viewport,
   visitsByCode = NO_VISITS,
+  plannedCodes = NO_PLANS,
   momentCounts = NO_MOMENTS,
   momentSpots = NO_SPOTS,
   showSky = false,
@@ -71,6 +76,7 @@ function WorldMap({
   onHoverCountry,
   seaDepths = false,
   showGrid = false,
+  gridColoured = false,
   showGridLabels = false,
   showCountryNames = false,
   showVisited = true,
@@ -115,9 +121,10 @@ function WorldMap({
         {POLE_SYMBOLS}
         {MOMENT_SYMBOL}
         {seaDepths ? DEPTHS : null}
-        {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} showAntarctica={showAntarctica} /> : null}
+        {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} showAntarctica={showAntarctica} coloured={gridColoured} /> : null}
         <CountryLayer
           visitsByCode={visitsByCode}
+          plannedCodes={plannedCodes}
           selectedCode={selectedCode}
           zoom={zoom}
           onSelect={onSelectCountry}

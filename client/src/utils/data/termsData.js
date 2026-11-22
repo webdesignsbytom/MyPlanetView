@@ -16,8 +16,8 @@ import { PROMO_TRIAL_DAYS } from '../plans/promoCodes.js';
 const PAID = `${PLANS.REGULAR.name} and ${PLANS.PREMIUM.name}`;
 
 export const LEGAL_VERSION = {
-  lastUpdated: '2026-11-16',
-  version: '1.1.1',
+  lastUpdated: '2026-11-21',
+  version: '1.3.0',
 };
 
 // Terms of use
@@ -137,6 +137,27 @@ export const TermsSectionsArray = [
     ],
   },
   {
+    id: 'gifts',
+    title: 'Gifts',
+    group: 'agreements',
+    content: [
+      `You can buy a year of ${PAID} as a gift, paid once at the plan’s yearly price. We send you a code, and the gift has its own page; whoever has the code can redeem it, so give it only to the person it’s for. Redeeming it needs an account with a verified email address.`,
+      'The year starts the day the gift is redeemed, not the day it’s bought, and the gift doesn’t run out before then. If the person already has a year of the same plan from a gift, the new year starts when that one ends. It can’t be redeemed by an account that already pays for the same plan or a better one, so it stays free for someone else.',
+      `A gift that hasn’t been redeemed can be refunded in full within ${REFUND_DAYS} days of buying it: email ${CompanyEmailAddress}. A refunded gift can’t be redeemed. Once redeemed, it isn’t refunded. A gift can’t be exchanged for cash.`,
+      `When the year ends, the account moves to ${PLANS.FREE.name} unless they choose to pay, as with a free membership: nothing is charged and nothing is deleted.`,
+    ],
+  },
+  {
+    id: 'invite-a-friend',
+    title: 'Invite a friend',
+    group: 'agreements',
+    content: [
+      `Your account page gives you an invite link with your own code. A friend who creates an account with it gets the same offer as any promo code: their first month of ${PAID} free. It shows them your first name, so they know who invited them.`,
+      `When a friend you invited first pays for a plan, after their free month, you get a free month too: a month of your plan’s monthly price off your next bill if you pay by card, or otherwise a free month of ${PLANS.REGULAR.name} (or of the paid plan a free membership gives you), which starts when any free month you already have ends. It’s once per friend, up to 12 months in any year, and it can’t be exchanged for cash.`,
+      'Invite only people you know, who want to hear from you. Links shared as spam, or accounts made to earn months, are against these terms: we may take back months earned that way and turn the code off.',
+    ],
+  },
+  {
     id: 'changes-to-the-service',
     title: 'Changes to the service',
     group: 'agreements',
@@ -240,6 +261,8 @@ export const PrivacySectionsArray = [
       'Your maps: the countries you mark, your trips and their stops, and the travellers on each map (names, and optionally a birth country and favourite country).',
       'Your photos: the files you upload, their captions, the date each was taken and, where your phone saved it, the place it was taken.',
       `Your plan, if you pay: which plan and how often you pay, any extra maps, the promo code you signed up with, and the references Stripe gives your customer record and subscription. Your card details go straight to Stripe; we never see or store them.`,
+      'Gifts you buy: the plan, who it’s for and your message, if you write them. Anyone with the gift’s code sees those on its page, with your name as who it’s from.',
+      'Your invite code, if you ask for one: the friends who create accounts with it and the free months they bring you. Anyone with the code sees your first name.',
       'Messages you send through the contact form.',
       'Security records: sign-in sessions, the device and IP address they came from, and a log of important actions, used to protect accounts and investigate problems.',
     ],
@@ -262,6 +285,7 @@ export const PrivacySectionsArray = [
     content: [
       `To run ${CompanyName}: show your map, place and match your photos, and share what you choose with the people you choose.`,
       'To send the emails the service needs: confirming your address, resetting your password and telling you when someone shares something with you.',
+      'Now and then, at most once a week, an “On this day” email with one of your own photos from that day in an earlier year. It’s on to start with; switch it off on your account page, or with the link in any of them.',
       'To keep the site secure and working, and to answer you when you contact us.',
     ],
   },

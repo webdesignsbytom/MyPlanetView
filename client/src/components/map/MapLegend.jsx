@@ -4,13 +4,16 @@ import { ExpeditionStampIcon, StarBadgeIcon } from './StarBadge';
 import { MomentMarkIcon } from './MomentMark';
 import { MomentSpotIcon } from './MomentSpotPins';
 import LuggageTag from './LuggageTag';
+// Utils
+import { PLANNED_OUTLINE } from '@/utils/map/visitStatus';
 
 // What the map's marks mean (shown on wide screens), on a luggage tag. Every country has
 // its own colour; the badges and outlines show where you've been, the gold stamp which
 // special places (Antarctica and the poles) you've reached, the pinned note where
-// there are moments (while `showMoments`, the viewer's setting, is on), and the gold pin of
-// a landmark stamped in the passport (once the map has one; pins show zoomed in).
-function MapLegend({ showMoments = true, showSpots = false, showStamps = false }) {
+// there are moments (while `showMoments`, the viewer's setting, is on), the gold pin of
+// a landmark stamped in the passport (once the map has one; pins show zoomed in), and a
+// planned trip's dash-dot outline (once one goes somewhere not yet visited: `showPlanned`).
+function MapLegend({ showMoments = true, showSpots = false, showStamps = false, showPlanned = false }) {
   return (
     <LuggageTag className='text-xs'>
       <ul aria-label='Map key' className='grid gap-1'>
@@ -30,6 +33,14 @@ function MapLegend({ showMoments = true, showSpots = false, showStamps = false }
           <span aria-hidden='true' className='h-3 w-5 rounded-sm border-2 border-dashed border-map-wish bg-map-visit-3' />
           Want to go
         </li>
+        {showPlanned ? (
+          <li className='grid grid-cols-reg items-center gap-2'>
+            <svg aria-hidden='true' viewBox='0 0 20 12' className='h-3 w-5'>
+              <rect x='1' y='1' width='18' height='10' rx='1.5' className={`fill-map-visit-3 ${PLANNED_OUTLINE}`} />
+            </svg>
+            Planned trip
+          </li>
+        ) : null}
         {showMoments ? (
           <li className='grid grid-cols-reg items-center gap-2'>
             <MomentMarkIcon />

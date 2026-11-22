@@ -387,18 +387,40 @@ export const findTripsLinkedToMap = async (mapId) => {
   });
   const trips = links.map((l) => l.trip);
   if (!trips.length) return [];
-  const stops = await prisma.tripStop.findMany({
-    where: { tripId: { in: trips.map((t) => t.id) } },
-    select: { tripId: true, countryCode: true },
-    orderBy: [{ tripId: 'asc' }, { position: 'asc' }],
-  });
-  const countries = new Map(trips.map((t) => [t.id, []]));
+  const countries = stopCountriesByTrip(
+    await prisma.tripStop.findMany({
+      where: { tripId: { in: trips.map((t) => t.id) } },
+      select: { tripId: true, countryCode: true },
+      orderBy: [{ tripId: 'asc' }, { position: 'asc' }],
+    }),
+  );
+  return trips.map((t) => ({ ...t, countryCodes: countries.get(t.id) ?? [] }));
+};
+
+// Stops (`{ tripId, countryCode }`, in trip order) → trip id → its places, each once
+const stopCountriesByTrip = (stops) => {
+  const countries = new Map();
   for (const s of stops) {
+    if (!countries.has(s.tripId)) countries.set(s.tripId, []);
     const list = countries.get(s.tripId);
     if (!list.includes(s.countryCode)) list.push(s.countryCode);
   }
-  return trips.map((t) => ({ ...t, countryCodes: countries.get(t.id) }));
+  return countries;
 };
+
+/**
+ * The places of a map's own trips' stops, in trip order: trip id → codes (a trip with no
+ * stops isn't in it). One query, side by side with the trips' own (the planned trips the
+ * map outlines: docs/API.md "Planned trips on the map").
+ */
+export const findStopCountriesForMap = async (mapId) =>
+  stopCountriesByTrip(
+    await prisma.tripStop.findMany({
+      where: { trip: { mapId } },
+      select: { tripId: true, countryCode: true },
+      orderBy: [{ tripId: 'asc' }, { position: 'asc' }],
+    }),
+  );
 
 /**
  * The caller's own memberships behind some trips (from other maps): their MapMember rows

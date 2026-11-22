@@ -1,11 +1,15 @@
 // Constants
 import { CompanyName } from '../constants/constants';
-import { PLANS, formatPence } from '../constants/plans';
+import { FREE_MAPS, PLANS, formatPence } from '../constants/plans';
 
 export const faqsArray = [
   {
     question: 'Who can see my map?',
-    answer: `Only you, until you share it. Your map, your trips and your photos are private by default, and nothing on ${CompanyName} is public unless you choose to share it.`,
+    answer: `Only you, until you share it. Your map, your trips and your photos are private by default, and nothing on ${CompanyName} is public unless you choose to share it. There are no followers, no public profiles and no feed, so nobody can search for you or come across your map.`,
+  },
+  {
+    question: 'How is this different from Polarsteps?',
+    answer: `Polarsteps records a trip while you are on it, and it does that well. ${CompanyName} is the map of your whole life: every country you have been to, lived in or want to see, a passport stamp for each landmark, and the moments that matter, for you, a couple or a whole family. The map is the album: open a country and its photos are there. Already on Polarsteps? Bring your trips, photos and stories over from your Polarsteps download; Polarsteps keeps everything it has.`,
   },
   {
     question: 'How does sharing work?',
@@ -40,11 +44,11 @@ export const faqsArray = [
   {
     question: 'Can a couple or a family share one map?',
     answer:
-      'Yes. When you set up, choose solo, couple or family and add everyone as travellers. Children do not need accounts. A couple can share one login, but we recommend each adult signs in separately and is added as an editor, so you can both add photos from your own phones.',
+      'Yes. When you set up, choose solo, couple or family and add everyone as travellers. Children do not need accounts. Each adult signs in with their own login and joins the map as a co-owner, so you can both add photos from your own phones.',
   },
   {
     question: `What does ${CompanyName} cost?`,
-    answer: `Economy is free: one map, 30 photos of each country and sharing with as many people as you like. Business is ${formatPence(PLANS.REGULAR.price.MONTH)} a month and First Class ${formatPence(PLANS.PREMIUM.price.MONTH)}, with full-size originals and more photos of each country. Extra maps are extra on any plan. The Pricing page has every detail.`,
+    answer: `Economy is free: ${FREE_MAPS} maps, ${PLANS.FREE.limits.photosPerCountry} photos of each country and sharing with as many people as you like. Business is ${formatPence(PLANS.REGULAR.price.MONTH)} a month and First Class ${formatPence(PLANS.PREMIUM.price.MONTH)}, with full-size originals and more photos of each country. Extra maps are extra on any plan. The Pricing page has every detail.`,
   },
   {
     question: 'Why are there travel offers, and do they track me?',

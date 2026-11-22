@@ -16,6 +16,7 @@ import { setHoverPoint } from '@/utils/map/hoverPoint';
 // four nations drawn in its place, for a map that splits the UK (ukNationShapes.js). Regions
 // (regionPlaces.js) are shapes and a dot like any place, in their country's colour.
 const shapesOf = (code) => COUNTRY_SHAPES[code] ?? UK_NATION_SHAPES[code];
+const NO_PLANS = new Set();
 const SHAPED = COUNTRIES.filter((c) => COUNTRY_SHAPES[c.code]);
 const SHAPED_SPLIT_UK = [...SHAPED.filter((c) => c.code !== 'GB'), ...COUNTRIES.filter((c) => c.kind === 'NATION')];
 const DOTTED = COUNTRIES.filter((c) => !COUNTRY_SHAPES[c.code] && !isPole(c.code) && c.kind !== 'NATION');
@@ -49,6 +50,8 @@ const FADE_NOT_BEEN = '[&_[data-been=false]]:opacity-15';
 // (useDetailedShapes: code -> paths) replaces the outlines of the places it has.
 function CountryLayer({
   visitsByCode,
+  // The places a planned trip goes to (their outline: countryFillClass)
+  plannedCodes = NO_PLANS,
   selectedCode,
   zoom,
   onSelect,
@@ -177,6 +180,7 @@ function CountryLayer({
           code={country.code}
           paths={detail?.[country.code] ?? shapesOf(country.code)}
           status={visitsByCode[country.code]}
+          planned={plannedCodes.has(country.code)}
           selected={selectedCode === country.code}
         />
       ))}
@@ -188,6 +192,7 @@ function CountryLayer({
           y={country.pinY}
           zoom={zoom}
           status={visitsByCode[country.code]}
+          planned={plannedCodes.has(country.code)}
           selected={selectedCode === country.code}
         />
       ))}
@@ -199,6 +204,7 @@ function CountryLayer({
           y={pole.pinY}
           zoom={zoom}
           status={visitsByCode[pole.code]}
+          planned={plannedCodes.has(pole.code)}
           selected={selectedCode === pole.code}
         />
       ))}

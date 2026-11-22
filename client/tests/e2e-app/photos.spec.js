@@ -75,7 +75,24 @@ test.describe('Photos', () => {
 
     // A confirmed landmark counts (the seeded map has 13 stamps)
     await openStats(page);
-    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText(['9', '2 of 7', '0 of 5', `0 of ${REGION_COUNT}`, '17', '14', '3']);
+    await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText([
+      '9',
+      '4.0%',
+      '9 of 226 countries',
+      '2 of 7',
+      '0 of 5',
+      `0 of ${REGION_COUNT}`,
+      '17',
+      '14 of 1,332',
+      /^1[01] of 1,273$/,
+      '3',
+      '15',
+      'On completed trips',
+      '3,500 km',
+      'About 2,200 miles',
+      /.+/,
+      /^About [\d,]+ km from the United Kingdom$/,
+    ]);
   });
 
   test('a photo with no country waits under Unplaced photos until it is given one', { tag: '@phone' }, async ({ page }) => {

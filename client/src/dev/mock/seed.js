@@ -342,6 +342,7 @@ function buildBaseSeed() {
     travelCopyRequests: [],
     // The photo an editor picked for a stamp (none yet: each shows its earliest photo)
     landmarkCovers: [],
+    landmarkVisits: [],
     // Plans (docs/API.md, "Plans and billing"). The test user pays monthly for Business
     // and one extra map: originals kept, and room for one more map than the one they own
     // (the switcher's "New map" works). Everyone else is on Economy. The mock badge's

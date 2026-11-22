@@ -1,5 +1,7 @@
 import React from 'react';
 import { FaLandmark, FaThumbtack } from 'react-icons/fa';
+// Components
+import CheckboxInput from '@/components/ui/CheckboxInput';
 // Utils
 import { formatMomentDate } from '@/utils/moments/momentDates';
 
@@ -14,7 +16,9 @@ const CREDIT_LINK = 'underline underline-offset-2 hover:text-colour6';
 // first two, then how many more).
 const MOMENTS_SHOWN = 2;
 
-function LandmarkCard({ landmark, photo, moments = [] }) {
+// `mark`: 'stamped' (the passport, from a confirmed photo), 'ticked' ("been here") or null;
+// `onToggle(landmarkId, been)` gives an editor the "Been here" tick (docs/API.md "Collecting").
+function LandmarkCard({ landmark, photo, moments = [], mark = null, onToggle = null }) {
   return (
     <li className='group'>
       <figure className='grid content-start gap-2'>
@@ -49,6 +53,23 @@ function LandmarkCard({ landmark, photo, moments = [] }) {
             </span>
             {landmark.isUnesco ? <FaLandmark aria-hidden='true' className='h-3.5 w-3.5 translate-y-0.5 text-colour9' /> : null}
           </span>
+          {mark === 'stamped' ? (
+            <span className='text-xs font-semibold text-poster-red-deep' data-landmark-mark='stamped'>
+              Stamped in the passport
+            </span>
+          ) : onToggle ? (
+            <CheckboxInput
+              id={`been-${landmark.id}`}
+              checked={mark === 'ticked'}
+              onChange={(e) => onToggle(landmark.id, e.target.checked)}
+              label={<span className='text-xs font-medium'>Been here</span>}
+              ariaLabel={`Been to ${landmark.name}`}
+            />
+          ) : mark === 'ticked' ? (
+            <span className='text-xs font-semibold text-poster-red-deep' data-landmark-mark='ticked'>
+              Been here
+            </span>
+          ) : null}
           {photo ? (
             <span className='text-xs leading-snug opacity-80 [overflow-wrap:anywhere]'>
               Photo:{' '}

@@ -43,6 +43,9 @@ export const DEFAULT_MAP_SETTINGS = {
   // The tips the map opens with, once a visit (components/map/MapTipsDialog.jsx, whose box
   // turns this off)
   showTips: true,
+  // Whether the map has offered "Where have you been?" (components/map/QuickFillDialog.jsx;
+  // 22 Nov 2026): once per account. Not a switch in Settings
+  countriesAsked: false,
 };
 
 // Grouped as the settings panel shows them.
@@ -84,5 +87,6 @@ export function cleanMapSettings(value) {
   for (const { key } of MAP_SETTING_TOGGLES) {
     if (typeof input[key] === 'boolean') clean[key] = input[key];
   }
+  if (typeof input.countriesAsked === 'boolean') clean.countriesAsked = input.countriesAsked;
   return clean;
 }

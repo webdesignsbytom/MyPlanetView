@@ -9,11 +9,13 @@ import { buildGridLines, latitudeLabel, longitudeLabel } from '@/utils/map/proje
 const GRID = buildGridLines(30);
 const GRID_WITHOUT_ANTARCTICA = buildGridLines(30, { south: false });
 
-function MapGridLines({ showLabels, zoom, showAntarctica = true }) {
+// `coloured`: a map design gave the grid its own colour (docs/API.md "Map designs"), chosen
+// to be seen over the picture or the countries, so it's drawn stronger
+function MapGridLines({ showLabels, zoom, showAntarctica = true, coloured = false }) {
   const grid = showAntarctica ? GRID : GRID_WITHOUT_ANTARCTICA;
   const fontSize = 13 / zoom;
   return (
-    <g className='pointer-events-none fill-none stroke-map-grid opacity-30' aria-hidden='true'>
+    <g className={`pointer-events-none fill-none stroke-map-grid ${coloured ? 'opacity-70' : 'opacity-30'}`} aria-hidden='true'>
       {grid.parallels.map((line) => (
         <polyline
           key={`lat${line.lat}`}
@@ -32,7 +34,7 @@ function MapGridLines({ showLabels, zoom, showAntarctica = true }) {
         />
       ))}
       {showLabels ? (
-        <g className='fill-map-ink stroke-none opacity-100' fontSize={fontSize}>
+        <g className='fill-map-names stroke-none opacity-100' fontSize={fontSize}>
           {grid.parallels.map((line) => (
             <text key={`latl${line.lat}`} x={line.labelAt.x + 4 / zoom} y={line.labelAt.y - 3 / zoom}>
               {latitudeLabel(line.lat)}

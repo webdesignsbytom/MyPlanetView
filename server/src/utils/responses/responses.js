@@ -98,6 +98,8 @@ export const EVENT_MESSAGES = {
   avatarInvalid: `Upload an avatar image first, then save it.`,
   // Places
   countryNotFound: `That country isn't on the map.`,
+  // Ticking several countries at once (POST /maps/:mapId/visits/quick-fill)
+  quickFillInvalid: `Choose between 1 and 300 countries, each one on the map.`,
   poleNotATravellerCountry: 'Choose a country or Antarctica, not a pole.',
   landmarkNotFound: `That landmark doesn't exist.`,
   // Maps
@@ -105,6 +107,7 @@ export const EVENT_MESSAGES = {
   defaultMapDelete: `Your first map can't be deleted. You can rename it instead.`,
   invalidGroupType: `Who the map is for must be SOLO, COUPLE or FAMILY.`,
   invalidSplitUk: `splitUk must be true or false.`,
+  invalidMapStyle: `Choose one of the map styles.`,
   invalidName: `Give it a name of 1 to 80 characters.`,
   travellerNotFound: `That traveller isn't on this map.`,
   lastTraveller: `A map needs at least one traveller.`,
@@ -265,6 +268,31 @@ export const EVENT_MESSAGES = {
   copyAlreadyDecided: `That request has already been answered.`,
   copyNotWaiting: `Only a request still waiting can be withdrawn.`,
   copyRequestWithdrawn: `Request withdrawn.`,
+  // Emails people can stop (docs/API.md "Emails")
+  unsubscribeInvalid: `That unsubscribe link doesn't work. Change your emails on your account page instead.`,
+  invalidEmailPreferences: `Say whether you want "On this day" emails.`,
+  // Importing (docs/API.md "Importing from Polarsteps")
+  invalidImport: `That import can't be read. Choose the download from Polarsteps again.`,
+  invalidImportKey: `That import key isn't valid.`,
+  photoAlreadyImported: `That photo has been imported already.`,
+  momentAlreadyImported: `That story has been imported already.`,
+  // Gifts (docs/API.md "Gifts")
+  invalidGiftPlan: `Choose Business or First Class for the gift.`,
+  invalidGiftText: `Keep the name to 60 characters and the message to 300.`,
+  giftNotFound: `That gift code doesn't exist. Check it and try again.`,
+  giftUsed: `That gift has already been used.`,
+  giftCovered: `You already have that plan or a better one, so keep this gift for someone else.`,
+  // Year in travel (docs/API.md "Year in travel")
+  invalidRecapYear: `Choose a year from 1900 to next year.`,
+  // Map designs (docs/API.md "Map designs")
+  invalidDesign: `That design can't be saved.`,
+  invalidDesignColour: `Colours must be six-digit colour codes, as a colour picker gives them.`,
+  invalidDesignPlace: `That place isn't on the map, so it can't take a colour.`,
+  designPictureType: `The picture must be a JPEG, PNG or WebP image.`,
+  designPictureInvalid: `That picture upload isn't valid. Please try again.`,
+  designPictureTooLarge: `That picture is too big. Please choose a smaller one.`,
+  designPictureExpired: `That upload took too long. Please choose the picture again.`,
+  designPictureRemoved: `Picture removed.`,
   // Verification
   verificationTag: `Verification database.`,
   verificationNotFound: `Failed to find verification.`,

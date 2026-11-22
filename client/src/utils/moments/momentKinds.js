@@ -13,6 +13,10 @@ export const MOMENT_KINDS = Object.freeze([
   'CELEBRATION',
   // "We saw a volcano": the general kind
   'SAW_OR_DID',
+  // 21 Nov 2026 (the user's wish, "anniversaries as moments"): a first trip (a child's
+  // first trip abroad, a couple's first holiday) and an anniversary celebrated somewhere
+  'FIRST_TRIP',
+  'ANNIVERSARY',
 ]);
 
 export const MOMENT_KIND_LABELS = Object.freeze({
@@ -25,6 +29,8 @@ export const MOMENT_KIND_LABELS = Object.freeze({
   MET_SOMEONE: 'Met someone',
   CELEBRATION: 'Celebration',
   SAW_OR_DID: 'Something we saw or did',
+  FIRST_TRIP: 'First trip',
+  ANNIVERSARY: 'Anniversary',
 });
 
 export const MOMENT_KIND_OPTIONS = MOMENT_KINDS.map((kind) => ({ value: kind, label: MOMENT_KIND_LABELS[kind] }));

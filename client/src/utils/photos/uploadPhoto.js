@@ -26,10 +26,11 @@ export const LOCKED_MAP = "This map isn't paid for, so it can't take new photos.
  * has no location of its own, or a location in no country (taken at sea). For a photo
  * with no location it's also the presign's hint, so a country that's full is refused
  * before anything uploads (409). `uploadRules` is `{ keepsOriginals, locked }`; without
- * it, the original is kept.
+ * it, the original is kept. An import (utils/import/) gives `importedFrom`, the photo's key
+ * (one photo per key on a map), and `fallbackTakenAt`, the date when the file has none.
  * Resolves { photo, hadLocation }; rejects with a message people can read.
  */
-export async function uploadPhoto({ mapId, tripId, file, countryCode, uploadRules = null, onStage, onProgress }) {
+export async function uploadPhoto({ mapId, tripId, file, countryCode, uploadRules = null, importedFrom, fallbackTakenAt, onStage, onProgress }) {
   if (uploadRules?.locked) throw new Error(LOCKED_MAP);
   if (isHeic(file)) {
     throw new Error('This is a HEIC photo, which can’t be added. Save it as a JPEG first, or add it from your iPhone, which sends a JPEG.');
@@ -64,6 +65,7 @@ export async function uploadPhoto({ mapId, tripId, file, countryCode, uploadRule
   for (const f of files) f.bytes = f.blob.size;
   const { photoId, uploads } = await presignPhoto(mapId, {
     tripId: tripId || undefined,
+    importedFrom,
     // Where a photo with no location will go; one with a location is placed by it at confirm
     countryCode: !hadLocation && countryCode ? countryCode : undefined,
     files: files.map((f) => ({ size: f.size, contentType: f.contentType, bytes: f.bytes })),
@@ -75,7 +77,8 @@ export async function uploadPhoto({ mapId, tripId, file, countryCode, uploadRule
   const { photo } = await createPhoto(mapId, {
     photoId,
     tripId: tripId || undefined,
-    takenAt: meta.takenAt || undefined,
+    takenAt: meta.takenAt || fallbackTakenAt || undefined,
+    importedFrom,
     latitude: hadLocation ? meta.latitude : undefined,
     longitude: hadLocation ? meta.longitude : undefined,
     countryCode: countryCode || undefined,

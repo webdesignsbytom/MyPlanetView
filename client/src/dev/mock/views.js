@@ -6,6 +6,7 @@ import { projectToMap } from '@/utils/map/projection';
 import { PARENT_PLACE, isSpecialPlace, withParentPlaces } from '@/utils/map/specialPlaces';
 import { isRegion } from '@/utils/map/regionPlaces';
 import { UK, countedCountryCodes, placeOnMap } from '@/utils/map/ukNations';
+import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
 import { ukNationAt } from './ukNationLookup';
 import { LANDMARKS } from './data/landmarks';
 import { getDb, me, session } from './store';
@@ -15,7 +16,9 @@ import { mapPlanFields, mapSlots, uploadRules } from './plans';
 import { mockPlayback } from './stream';
 import { mockUpload } from './uploads';
 import { photoThemes } from './themes';
+import { designsView } from './mapDesigns';
 import { compareMoments } from '@/utils/moments/momentDates';
+import { PLACE_POSITIONS, countriesInWorld, homeOf, travelExtras } from './travelStats';
 
 export const slugify = (text) =>
   String(text)
@@ -76,7 +79,7 @@ export const photoRole = (photo) => {
 export const userName = (id) => getDb().users.find((u) => u.id === id)?.name || 'Someone';
 
 // Photos
-function photoUrls(photo) {
+export function photoUrls(photo) {
   // A real test photo from the repo's seed-photos/, which the dev server serves
   // (vite.config.js), in the three copies an upload makes
   if (photo.image?.kind === 'seed') {
@@ -321,10 +324,17 @@ export function mapStats(map, role) {
   const landmarks = stampedLandmarkIds(map, role);
   const trips = db.trips.filter((t) => t.mapId === map.id);
   // The group trips added from other maps count too; per person, only the map's own trips
+  // Each completed trip's stops (with their landmarks' positions) and dates, for the extras too
   const completed = trips
     .filter((t) => t.status === 'COMPLETED')
-    .map((t) => ({ travellerIds: t.travellerIds, countryCodes: db.stops.filter((s) => s.tripId === t.id).map((s) => s.countryCode) }));
+    .map((t) => {
+      const stops = db.stops
+        .filter((s) => s.tripId === t.id)
+        .map((s) => ({ ...s, landmark: s.landmarkId ? landmarkById(s.landmarkId) : null }));
+      return { travellerIds: t.travellerIds, countryCodes: stops.map((s) => s.countryCode), startDate: t.startDate, endDate: t.endDate, stops };
+    });
   const travellers = db.travellers.filter((t) => t.mapId === map.id).sort((a, b) => a.position - b.position);
+  const homeCountryCode = homeOf({ homeCountryCode: map.homeCountryCode ?? null, ownerId: map.ownerId, travellers });
   return {
     countries: countries.length,
     specialPlaces: specialPlaces.length,
@@ -339,6 +349,9 @@ export function mapStats(map, role) {
         .flatMap((trip) => trip.countryCodes.filter((c) => !isSpecialPlace(c)));
       return { travellerId: t.id, name: t.name, countries: countedCountryCodes(codes, map.splitUk).length };
     }),
+    // How much of the world, the days away, the distance and the furthest place (21 Nov 2026)
+    countriesInWorld: countriesInWorld(Boolean(map.splitUk)),
+    ...travelExtras({ completedTrips: completed, visitedCodes: [...counted], positions: PLACE_POSITIONS, homeCountryCode }),
   };
 }
 
@@ -357,6 +370,15 @@ export function mapSummary(map, role) {
   };
 }
 
+// The style a map is shown in to everyone (the server's utils/mapSettings.js mapStyleOf;
+// docs/API.md "Map styles"): its own, else its owner's own, else null. The mock keeps map
+// settings for the test user alone, so other people's maps have only their own.
+export function mapStyleOf(map) {
+  if (MAP_STYLE_IDS.includes(map.style)) return map.style;
+  const owners = map.ownerId === me().id ? getDb().mapSettings?.style : null;
+  return MAP_STYLE_IDS.includes(owners) ? owners : null;
+}
+
 // `withPlan`: the map routes' own answers, where the owner and editors also get the
 // owner's plan, locked, graceUntil, photoCounts, videoCounts and uploadRules (never through a share link)
 export function mapView(map, role, { withPlan = false } = {}) {
@@ -369,6 +391,10 @@ export function mapView(map, role, { withPlan = false } = {}) {
     isDefault: map.isDefault,
     // The UK as its four nations (docs/API.md "The UK's nations")
     splitUk: Boolean(map.splitUk),
+    // Its home as set (null: from a traveller's birth country; the stats carry the one in use)
+    homeCountryCode: map.homeCountryCode ?? null,
+    // The style everyone sees it in: its own, else the owner's (null: each viewer's own)
+    style: mapStyleOf(map),
     role,
     ownerName: userName(map.ownerId),
     travellers: db.travellers
@@ -390,6 +416,10 @@ export function mapView(map, role, { withPlan = false } = {}) {
     momentSpots: momentSpots(map.id, { includeHidden: atLeast(role, 'EDITOR') }),
     // The passport's stamped landmarks, to mark their pins (hidden photos' for editors)
     stampedLandmarkIds: stampedLandmarkIds(map, role),
+    // The landmarks ticked "been here" (docs/API.md "Collecting")
+    tickedLandmarkIds: (db.landmarkVisits || []).filter((v) => v.mapId === map.id).map((v) => v.landmarkId),
+    // Its own designs, one per map style, for everyone who opens it (docs/API.md "Map designs")
+    designs: designsView(map),
   };
 }
 
@@ -465,12 +495,17 @@ export function linkedTripSummary(trip, { canOpen, role = null }) {
 /**
  * A map's trips for someone with `role` on it: its own trips and the group trips added to
  * it, in one list, in the trips' order. A linked trip opens only for someone with a role
- * on the trip itself; through a share link (`viaShareLink`), never.
+ * on the trip itself; through a share link (`viaShareLink`), never. Its own trips carry
+ * their stops' places (`countryCodes`, for the planned trips the map outlines), except
+ * through a share link, as on the server.
  */
 export function mapTripsView(map, role, { viaShareLink = false } = {}) {
   const own = getDb()
     .trips.filter((t) => t.mapId === map.id)
-    .map((trip) => ({ trip, view: { ...tripSummary(trip, role), linked: false, canOpen: true } }));
+    .map((trip) => ({
+      trip,
+      view: { ...tripSummary(trip, role), ...(viaShareLink ? {} : { countryCodes: tripCountryCodes(trip.id) }), linked: false, canOpen: true },
+    }));
   const linked = linkedTrips(map.id).map((trip) => {
     const onTrip = viaShareLink ? null : tripRole(trip);
     return {

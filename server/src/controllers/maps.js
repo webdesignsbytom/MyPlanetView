@@ -7,6 +7,7 @@ import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/re
 import { logEvent } from '../utils/events/logEvent.js';
 import { createMapEvent } from '../event/travelUtils.js';
 import { sanitizeText } from '../utils/sanitize.js';
+import { MAP_STYLES, mapStyleOf } from '../utils/mapSettings.js';
 import { canEdit, canManage, canView, isOwner } from '../utils/access.js';
 import {
   GROUP_TYPES,
@@ -49,6 +50,8 @@ import { OtherErrorEvent } from '../event/errorUtils.js';
 import { badRequest, conflict, denyUnless, handler, loadMap, notFound, reply } from './helpers/travel.js';
 import { isKnownCountry, parseOptionalCountry } from './helpers/countries.js';
 import { loadMapStats, loadStatsCounts, statsFrom, visitView } from './helpers/views.js';
+import { mapDesignsView } from './mapDesigns.js';
+import { findTickedLandmarkIds } from '../domain/landmarkVisits.js';
 
 const D = DOMAINS.maps;
 
@@ -136,7 +139,7 @@ const WITH_PLAN = { withPlan: true };
  */
 export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
   const editor = canEdit(role);
-  const [detail, counts, planFields, momentCountsByCountry, momentSpots] = await Promise.all([
+  const [detail, counts, planFields, momentCountsByCountry, momentSpots, designs, tickedLandmarkIds] = await Promise.all([
     findMapDetail(mapId),
     loadStatsCounts(mapId, role),
     editor && withPlan ? mapPlanView(mapId) : {},
@@ -144,6 +147,10 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     countMomentsByCountry(mapId, { includeHidden: editor }),
     // The moments pinned to a spot: every pin for editors, the shared ones for anyone else
     findMomentSpots(mapId, { includeHidden: editor }),
+    // Its own designs, one per map style, for everyone who opens it (docs/API.md "Map designs")
+    mapDesignsView(mapId),
+    // The landmarks ticked "been here" (docs/API.md "Collecting")
+    findTickedLandmarkIds(mapId),
   ]);
   if (!detail) return null;
   const stats = statsFrom(detail, counts);
@@ -154,6 +161,10 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     isDefault: detail.isDefault,
     // The UK as its four nations (docs/API.md "The UK's nations")
     splitUk: detail.splitUk,
+    // Its home as set (null: from a traveller's birth country; the stats carry the one in use)
+    homeCountryCode: detail.homeCountryCode ?? null,
+    // The style everyone sees it in: its own, else the owner's (null: each viewer's own)
+    style: mapStyleOf(detail.style, detail.ownerSettings),
     role,
     ownerName: detail.owner?.name ?? null,
     travellers: detail.travellers.map((t) => ({
@@ -170,6 +181,8 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     momentSpots,
     // The landmarks stamped in the passport, to mark their pins (hidden photos' for editors)
     stampedLandmarkIds: counts.stampedLandmarkIds,
+    tickedLandmarkIds,
+    designs,
     ...planFields,
   };
 }
@@ -258,6 +271,19 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
       return conflict(req, res, D, tooManyForGroup(body.groupType));
     }
     data.groupType = body.groupType;
+  }
+  // Where the map's people live, for the stats' distances (docs/API.md "Stats"): a country or
+  // Antarctica, as a traveller's places are (a UK nation is the UK, a region its country)
+  if (body.homeCountryCode !== undefined) {
+    const parsed = await parseOptionalCountry(body.homeCountryCode);
+    if (!parsed.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
+    if (isPole(parsed.value)) return badRequest(req, res, D, EVENT_MESSAGES.poleNotATravellerCountry);
+    data.homeCountryCode = parsed.value ? placeOnMap(parsed.value, false) : null;
+  }
+  // The style everyone who opens the map sees it in, share links too (docs/API.md "Map styles")
+  if (body.style !== undefined) {
+    if (!MAP_STYLES.includes(body.style)) return badRequest(req, res, D, EVENT_MESSAGES.invalidMapStyle);
+    data.style = body.style;
   }
   // The UK as its four nations: changing it moves the map's UK data (services/travel/ukNations.js)
   if (body.splitUk !== undefined && typeof body.splitUk !== 'boolean') {
@@ -434,6 +460,33 @@ export const deleteTravellerHandler = handler(D, 'Delete traveller', async (req,
 });
 
 // Countries visited
+
+// At most this many countries ticked at once (more than the world has)
+export const QUICK_FILL_MAX = 300;
+
+/**
+ * Ticking the countries you've been to, several at once (22 Nov 2026, the user's wish: the
+ * map offers it the first time it loads, and the country list any time after). The owner or a
+ * co-owner; like setting the map up (and its birthplaces), it needs no verified email, as a new
+ * account opens its map before verifying, and it only adds to their own map. `{ countryCodes }`:
+ * each place is marked visited (MANUAL) where it isn't marked visited or lived already (a "want
+ * to go" becomes visited), as the map keeps places (placeOnMap). Nothing is ever taken off.
+ * -> `{ added }`
+ */
+export const quickFillVisitsHandler = handler(D, 'Quick fill visits', async (req, res) => {
+  const { map, role } = await loadMap(req, req.params.mapId);
+  if (denyUnless(req, res, D, role, canManage, EVENT_MESSAGES.mapNotFound)) return undefined;
+  const codes = req.body?.countryCodes;
+  if (!Array.isArray(codes) || !codes.length || codes.length > QUICK_FILL_MAX || !codes.every((code) => typeof code === 'string')) {
+    return badRequest(req, res, D, EVENT_MESSAGES.quickFillInvalid);
+  }
+  const known = await Promise.all(codes.map((code) => isKnownCountry(code)));
+  if (known.includes(false)) return badRequest(req, res, D, EVENT_MESSAGES.quickFillInvalid);
+  const places = [...new Set(codes.map((code) => placeOnMap(code, Boolean(map.splitUk))))];
+  const { count } = await createMissingVisits(map.id, places, 'MANUAL');
+  logEvent(createMapEvent({ user: req.user, action: 'Update Success', id: map.id, detail: `quickFill=${count}` }));
+  return sendDataResponse(res, 200, { added: count });
+});
 
 export const putVisitHandler = handler(D, 'Save visit', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);

@@ -6,7 +6,12 @@ export const homeHero = {
   tagline: 'Your private travel photo album',
 };
 
-// "How it works": one card per idea, in the order people use them
+// "How it works": the line under its heading (the business review's selling point: trip apps
+// record a journey; this is the whole life's map), then one card per idea, in the order people
+// use them
+export const homeFeaturesIntro =
+  'Trip apps record the journey you are on. This is the map of your whole life: every country, every photo and every year, kept for the people you travel with.';
+
 export const homeFeatures = [
   {
     id: 'map',
@@ -15,8 +20,8 @@ export const homeFeatures = [
   },
   {
     id: 'photos',
-    title: 'Photos that find their place',
-    text: 'Upload your travel photos and each one lands in the country it was taken in, using the location your phone saved with it.',
+    title: 'The map is the album',
+    text: 'Each photo lands in the country it was taken in, using the location your phone saved with it. Open a country and its photos are there: no folders to sort, no feed to scroll.',
   },
   {
     id: 'landmarks',
@@ -40,7 +45,7 @@ export const homeGroups = [
   {
     id: 'couple',
     title: 'Couples',
-    text: 'One shared map for the trips you take together. Share a login, or each sign in and add photos from your own phone.',
+    text: 'One shared map for the trips you take together. You each sign in with your own login and add photos from your own phone.',
   },
   {
     id: 'family',
@@ -55,6 +60,7 @@ export const homePrivacy = {
   intro: 'Sharing works like a shared document: you decide who sees what, and you can change your mind at any time.',
   points: [
     'Your map, trips and photos are private by default.',
+    'No followers, no public profiles and no feed: nobody comes across your map unless you send it to them.',
     'Add people by email as viewers or editors, or turn on a link anyone can view.',
     'Share one trip without sharing your whole map.',
     'Reset a link and every old copy of it stops working.',

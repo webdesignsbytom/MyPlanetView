@@ -3,14 +3,16 @@ import React, { memo } from 'react';
 import { countryFillClass, countsAsVisited } from '@/utils/map/visitStatus';
 
 // One country's shapes (islands are separate paths). Re-renders only when its own
-// status or selection changes; hover is pure CSS. data-been feeds the visited /
-// not-visited filters (CountryLayer fades one group with CSS, no re-render).
-function CountryShape({ code, paths, status, selected }) {
+// status, planned trip or selection changes; hover is pure CSS. data-been feeds the visited /
+// not-visited filters (CountryLayer fades one group with CSS, no re-render). `planned`: a
+// planned trip goes there (its outline; data-planned for the tests).
+function CountryShape({ code, paths, status, planned = false, selected }) {
   return (
     <g
       data-code={code}
       data-been={countsAsVisited(status) ? 'true' : 'false'}
-      className={`cursor-pointer transition-colors hover:fill-map-hover ${countryFillClass(code, status)} ${
+      data-planned={planned && !countsAsVisited(status) ? '' : undefined}
+      className={`cursor-pointer transition-colors hover:fill-map-hover ${countryFillClass(code, status, planned)} ${
         selected ? 'stroke-map-ink stroke-[1.8]' : ''
       }`}
     >

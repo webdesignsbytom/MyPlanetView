@@ -5,7 +5,7 @@ import { REFERENCE_PX_PER_UNIT } from '@/utils/map/projection';
 
 // Liechtenstein, Monaco, San Marino, Singapore and the Vatican have no shape at this
 // scale: a dot at the pin, sized so it stays clickable at any zoom.
-function MicroStateDot({ code, x, y, zoom, status, selected }) {
+function MicroStateDot({ code, x, y, zoom, status, planned = false, selected }) {
   const r = Math.max(3.2 / Math.sqrt(zoom), 0.6);
   // Too small to aim a finger at (under 4px across on screen), it takes no touches: the
   // browser's tap targeting picked the dot over the country under the finger, so a tap on
@@ -15,7 +15,8 @@ function MicroStateDot({ code, x, y, zoom, status, selected }) {
     <g
       data-code={code}
       data-been={countsAsVisited(status) ? 'true' : 'false'}
-      className={`cursor-pointer hover:fill-map-hover ${countryFillClass(code, status)} ${
+      data-planned={planned && !countsAsVisited(status) ? '' : undefined}
+      className={`cursor-pointer hover:fill-map-hover ${countryFillClass(code, status, planned)} ${
         selected ? 'stroke-map-ink stroke-[1.8]' : ''
       } ${tooSmallToTouch ? 'pointer-coarse:pointer-events-none' : ''}`}
     >

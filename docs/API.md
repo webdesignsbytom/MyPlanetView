@@ -75,10 +75,10 @@ Emails and share URLs point at these client routes, built from `server/src/utils
 | --- | --- | --- |
 | `GET /maps` | signed in | `{ maps: [{ id, name, groupType, isDefault, role, ownerName, counts: { countries, photos, trips }, locked, graceUntil }] }`: maps you own, then maps shared with you. `locked` and `graceUntil` are on the maps you own only (see "Map limits"). `trips` counts the group trips added to the map too, as the stats do (see "Group trips"). |
 | `POST /maps` | signed in | `{ name, groupType, travellers: [{ name, birthCountryCode?, favouriteCountryCode? }] }` → `{ map }`. Needs a free map slot, else **402** `{ status: 'fail', message }`, e.g. `Your plan includes 1 map, and every extra map you've paid for is in use. An extra map costs £3.99 a month or £39 a year.` (the owner's plan's price; £5.99 and £59 on First Class). The body is checked first (400), then the slot. 20 new maps a day per user (429 after). |
-| `GET /maps/:mapId` | viewer | `{ map: { id, name, groupType, isDefault, splitUk, role, ownerName, travellers: [{ id, name, position, birthCountryCode, favouriteCountryCode, userId (editors only) }], visits: [{ countryCode, status, source, firstVisitedOn, notes }], stats, momentCountsByCountry, stampedLandmarkIds, plan, locked, graceUntil, photoCounts, uploadRules } }`. The last five are for the owner and editors only (below); viewers, and everyone through a share link, never get them. `momentCountsByCountry: { [countryCode]: n }` is everyone's: the map's moments per country (see "Moments"), hidden ones counted for the owner and editors only; countries with none are left out. `stampedLandmarkIds` is everyone's too: the landmarks stamped in the map's passport (a confirmed photo of each; see "Passport"), from the same read as `stats.landmarks`, so hidden photos' stamps only for the owner and editors. The map draws their pins in gold. |
-| `PATCH /maps/:mapId` | owner | `{ name?, groupType?, splitUk? }` → `{ map }`. `splitUk` (true or false, else 400 `splitUk must be true or false.`) shows the UK as its four nations, and changing it moves the map's UK data (see "The UK's nations"). |
+| `GET /maps/:mapId` | viewer | `{ map: { id, name, groupType, isDefault, splitUk, style, role, ownerName, travellers: [{ id, name, position, birthCountryCode, favouriteCountryCode, userId (editors only) }], visits: [{ countryCode, status, source, firstVisitedOn, notes }], stats, momentCountsByCountry, stampedLandmarkIds, designs, plan, locked, graceUntil, photoCounts, uploadRules } }`. The last five are for the owner and editors only (below); viewers, and everyone through a share link, never get them. `momentCountsByCountry: { [countryCode]: n }` is everyone's: the map's moments per country (see "Moments"), hidden ones counted for the owner and editors only; countries with none are left out. `stampedLandmarkIds` is everyone's too: the landmarks stamped in the map's passport (a confirmed photo of each; see "Passport"), from the same read as `stats.landmarks`, so hidden photos' stamps only for the owner and editors. The map draws their pins in gold. `designs` is everyone's too, share links included: the map's own designs, one per map style (see "Map designs"); so is `style`, the map style everyone sees it in, or null (see "Map styles"). |
+| `PATCH /maps/:mapId` | owner, co-owner | `{ name?, groupType?, splitUk?, homeCountryCode?, style? }` → `{ map }`. `style` is the map style everyone who opens the map sees it in (one of `animated`, `mono`, `old-map`, `starry`, else 400 `Choose one of the map styles.`; see "Map styles"). `splitUk` (true or false, else 400 `splitUk must be true or false.`) shows the UK as its four nations, and changing it moves the map's UK data (see "The UK's nations"). `homeCountryCode` is where the map's people live, for the stats' distances (below, "Stats"): a country or Antarctica, as a traveller's places are (a UK nation is stored as the UK, a region as its country; a pole → 400 `Choose a country or Antarctica, not a pole.`; unknown → 400), or `null` to clear it. The map reply carries it as set (`homeCountryCode`, null when not). |
 | `DELETE /maps/:mapId` | owner | Refused (409) for the default map. Deletes the map's rows, then its photos' files, up to 1,000 per DeleteObjects request; a file that can't be deleted is left for the daily clean-up. |
-| `GET /maps/:mapId/stats` | viewer | `{ stats: { countries, specialPlaces, regions, continents, photos, landmarks, trips, byTraveller: [{ travellerId, name, countries }] } }`. `countries` (and each traveller's) counts countries only; `specialPlaces` counts Antarctica and the poles; `regions` the regions (see "Regions"). `trips` counts the map's own trips and the group trips added to it; `byTraveller` comes from the map's own completed trips only. |
+| `GET /maps/:mapId/stats` | viewer | `{ stats: { countries, specialPlaces, regions, continents, photos, landmarks, trips, byTraveller: [{ travellerId, name, countries }], countriesInWorld, homeCountryCode, daysAway, distanceKm, furthest } }` (the last five: "Stats", below). `countries` (and each traveller's) counts countries only; `specialPlaces` counts Antarctica and the poles; `regions` the regions (see "Regions"). `trips` counts the map's own trips and the group trips added to it; `byTraveller` comes from the map's own completed trips only. |
 | `POST /maps/:mapId/main` | owner | Makes this map the default (included) one; the old default becomes an ordinary map (see "Map limits"). One transaction. Already the default → nothing changes. → `{ map }` |
 | `POST /maps/:mapId/transfer` | owner | See "Transferring a map". |
 
@@ -90,6 +90,14 @@ Emails and share URLs point at these client routes, built from `server/src/utils
   - `uploadRules: { keepsOriginals, photosPerCountry, locked }`: what an uploader needs, the same shape as on `GET /trips/:tripId`.
 - **Visited countries** in stats count `VISITED` and `LIVED`, not `WANT_TO_GO`.
 
+### Stats
+
+How far the map's people have gone (21 Nov 2026, the user's wish; `server/src/utils/travelStats.js`, tested; the mock's copy is `dev/mock/travelStats.js`), on `stats` everywhere it comes (the map reply, `GET /maps/:mapId/stats`, share links):
+- **`countriesInWorld`:** how many countries the world has, for "% of the world": the `COUNTRY` rows (226), or on a map that splits the UK those less the UK plus its four nations (229).
+- **`homeCountryCode`:** the home the distances start from: the map's own (`PATCH /maps/:mapId` `homeCountryCode`, Settings "This map"), else the birth country of the owner's own traveller, else of the first traveller with one, else null.
+- **`daysAway`:** every day of the map's own completed trips, both ends included, a day two trips share counted once. A trip's days are its dates, else its stops' first and last days; an undated trip adds none.
+- **`distanceKm`:** for each completed trip, home, then its stops in order, then home again, great-circle (without a home, stop to stop), summed and rounded. A stop is at its landmark, else at its place's pin (each place's pin turned back into a position by `positionFromMap` in `utils/projection.js`), so the browser says "about".
+- **`furthest`:** `{ countryCode, km }`, the place counted visited (visited or lived) whose pin is furthest from home, never home itself or a part of it (the UK's nations, a country's regions); null without a home or anywhere else.
 ### The UK's nations
 
 A map can show and keep the UK as England, Scotland, Wales and Northern Ireland (`splitUk`, the owner's choice: on `PATCH /maps/:mapId`, and the welcome page's set-up; on for every new map since 18 Nov 2026, while maps made before keep theirs). Everyone on the map sees it the same way; it's on `GET /maps/:mapId`, the share link's map, the trip replies (`splitUk` of the trip's map) and "Your data". The rules are `server/src/utils/ukNations.js` (the client copies them in `utils/map/ukNations.js`).
@@ -118,15 +126,44 @@ A map can show and keep the UK as England, Scotland, Wales and Northern Ireland 
 | --- | --- | --- |
 | `PUT /maps/:mapId/visits/:countryCode` | editor | `{ status, firstVisitedOn?, notes? }`: creates or updates → `{ visit, implied }`. A new visit, or a changed status, gets `source: MANUAL`; saving only `notes` or `firstVisitedOn` keeps the source it had (`TRIP`, `PHOTO`). `implied` lists the other visits this one added or changed, in the same shape: `[]`, or Antarctica's for a South Pole visit (see "Special places") |
 | `DELETE /maps/:mapId/visits/:countryCode` | editor | |
+| `POST /maps/:mapId/visits/quick-fill` | owner or co-owner; **no verified email needed** | `{ countryCodes }`: 1 to 300 known places (else 400 `Choose between 1 and 300 countries, each one on the map.`), each marked `VISITED` (`MANUAL`) where it isn't visited or lived in already (a "want to go" becomes visited), placed as the map keeps places (a UK nation is the UK on a map that doesn't split it); nothing is ever taken off → `{ added }`. "Where have you been?" (below) |
 
 - **Notes** (`notes`) are the country's one free-text box: a plan or a reminder ("I want to visit here", "Cherry blossom is in early April"). Something that happened is a moment (see "Moments").
   - **Writing:** text or `null`; anything else → 400 `A country's notes must be text.`. It's cleaned like other text (tags and control characters removed, trimmed) and cut to 1,000 characters (`NOTES_MAX`). Left out of the body, the note stays as it is; `null`, `""` or nothing left after cleaning clears it.
   - **Any status**, "want to go" included. A completed trip or a photo turning the status into `VISITED` keeps the note; removing the country (`DELETE`) removes it with the row.
   - **Reading:** in `visits` on `GET /maps/:mapId`, for everyone who can see the map, viewers and share links included (and in `PUT`'s `visit` and `implied`).
+- **"Where have you been?"** (22 Nov 2026, the user's wish: optional, once the map first loads, never on the sign-up or welcome pages): every country by continent with a tick box, to colour in many at once (`components/map/QuickFillDialog.jsx`, the `quick-fill` route). The map offers it by itself once per account (the viewer's map setting `countriesAsked`, set as it opens) and once a visit, to the owner or a co-owner, on a map with no more than 3 countries visited or lived in (a new map: its birthplaces), so a full map never asks; the tips wait for it. The country list's "Tick several countries" opens it any time after. Like setting the map up and its birthplaces, it needs no verified email: a new account opens its map before verifying, and it only adds to their own map.
+
+## Map designs
+
+A map's own design (21 Nov 2026, the user's wish: other sites charge for map looks, so this is free on every plan, locked maps too): a picture of the owner's for the sea, a colour for any place on the map, and the colours of the country names and the grid lines, for when chosen colours make them hard to see. It belongs to the map, **one per map style** (`MapDesign`, keyed by map and `style`; 22 Nov 2026, the user's wish: colours chosen on Black and white turned grey there and showed on the World map instead), and everyone who opens the map sees it, people it's shared with and share links' visitors included. The map shows the design of the style it's in (see "Map styles"; until 22 Nov 2026 a design was always drawn on the World map's look, so on a starry night the colour pickers offered the World map's pastels and the first colour turned the map into the World map), and Settings' colour pickers start from that style's own colours (a starry night's pale blue, Black and white's greys). Black and white shows its design's colours in colour on its grey map (only the pictures and what's around the map are filtered to grey). With a picture, the picture fills the screen behind the countries (cropped to it, still while the map pans), with no sea depths or animated sea; without one, the usual sea. A place's colour replaces its pastel; badges and "want to go" outlines show as ever, and the country under the pointer still turns the hover colour. A region with no colour of its own wears its country's. The names' colour is every word on the map (country, pole and state names, the grid's degrees); the grid's is its lines, drawn stronger once coloured. Only the owner and co-owners change it.
+
+`designs` on `GET /maps/:mapId` (and every reply carrying the map, share links' too) is `{ [style]: design }`, only the styles that have one (`{}` for a map that never had one). A design is `{ style, shown, countries: { [code]: '#rrggbb' }, names, grid, picture }`: `shown` false keeps the design but shows the map in that style's plain look; `names` and `grid` are `'#rrggbb'` or null (the usual colour); `picture` is `{ url }` (a signed link, as a photo's: signed on the hour, for two) or null.
+
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `PATCH /maps/:mapId/design` | owner, co-owner | `{ style, shown?, countries?, names?, grid? }` → `{ design }`: the design for `style` (a map style's id, else 400 "Choose one of the map styles."), made if that style has none; other styles' designs are untouched. `countries` replaces the whole set; a code given null, or left out, keeps its usual colour. Colours are `#rrggbb` (any case; kept in lower case); places are countries, Antarctica, the UK's nations and regions (never a pole: they're compass roses), at most 400. No verified email needed, as for the map's settings. |
+| `POST /maps/:mapId/design/picture/presign` | owner, co-owner (verified) | `{ contentType, bytes }` → `{ key, upload: { url, method: 'PUT', headers, bytes, expiresIn } }`: a PUT into the private bucket signing both (as a photo's). JPEG, PNG or WebP, at most 8 MB (413 above); the browser draws the chosen picture again first, at most 2,560 px wide or tall, as WebP (JPEG where it can't write WebP), which also leaves its location and camera details behind. At most 10 presigned and never saved per person a day (429). |
+| `PUT /maps/:mapId/design/picture` | owner, co-owner (verified) | `{ key, style }` → `{ design }` (that style's; a style that isn't one is a 400): within 50 minutes of its presign, by the person who presigned it, in this map's folder; the server checks the stored file's real type and size (a wrong one is deleted, 400 or 413). The picture goes on the style's design and switches it on; the one it replaced is deleted (file and row), so each style's design has one picture at a time. |
+| `DELETE /maps/:mapId/design/picture?style=` | owner, co-owner | → `{ design }`: that style's sea is the usual one again, the file deleted (a style that isn't one is a 400). No verified email needed, as for removing an avatar. |
+
+- A stranger gets a 404, anyone else below co-owner a 403.
+- The pictures live under `myplanetview/designs/<mapId>/sea-<random>.<ext>` (resource `mapDesign`, private). The daily clean-up never deletes one a design uses, and deletes an unsaved one after a day. Deleting the map (or an account that deletes it) deletes every style's picture with its photos'. Migration `20261122140000_map_design_per_style` made each design there was the World map's (`animated`): until then designs were always drawn on it.
+- "Your data" carries each owned map's `designs`, a list (`style`, `shown`, `countryColours`, `namesColour`, `gridColour`, `hasSeaPicture`).
+
+## Map styles
+
+A map's style (World map `animated`, Black and white `mono`, Old map `old-map`, Starry night `starry`) is the owner's choice, and everyone who opens the map sees it, people it's shared with and share links' visitors included (22 Nov 2026, the user's wish: "this is a map design I choose to reflect my travel"; until then everyone saw every map in their own style).
+
+- `TravelMap.style` (migration `20261122120000_map_style`): the map's own, set with `PATCH /maps/:mapId` `{ style }` by the owner or a co-owner (Settings' "Map style" on their map, which also keeps it as their own map setting). Null until someone chooses one.
+- `style` on `GET /maps/:mapId` (and every reply carrying the map, share links' too) is the style the map is shown in: its own, else its owner's own (`Profile.mapSettings.style`), else null, when each viewer sees it in their own (`utils/mapSettings.js` `mapStyleOf`). A style taken out since it was saved counts as none.
+- The map's design for that style is drawn on it (see "Map designs": one per style).
+- Anyone else's style setting is for their own maps (and maps whose owner never chose one); Settings says so on a map shown in its owner's style.
+- "Your data" carries each owned map's `style` as set (null: the owner's own).
 
 ## Map settings
 
-Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (JSON). They belong to the person, not the map: everyone sees any map in their own style.
+Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (JSON). They belong to the person, not the map, except the style: a map is shown in its owner's (see "Map styles").
 
 | Method and path | Role | Body / returns |
 | --- | --- | --- |
@@ -150,7 +187,7 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
 
 | Method and path | Role | Body / returns |
 | --- | --- | --- |
-| `GET /maps/:mapId/trips` | viewer | `{ trips: [{ id, mapId, title, status, startDate, endDate, coverThumbUrl, stopCount, photoCount, travellerIds, linked: false, canOpen: true }] }`: the map's own trips and the group trips added to it (see "Group trips", where the linked ones' shape is), latest start first (undated first), then newest. |
+| `GET /maps/:mapId/trips` | viewer | `{ trips: [{ id, mapId, title, status, startDate, endDate, coverThumbUrl, stopCount, photoCount, travellerIds, countryCodes, linked: false, canOpen: true }] }`: the map's own trips and the group trips added to it (see "Group trips", where the linked ones' shape is), latest start first (undated first), then newest. `countryCodes` are the trip's stops' places, each once, in stop order (`[]` with no stops), for the planned trips the map outlines (see "Planned trips on the map"); a share link's list leaves them out of its own trips. |
 | `POST /maps/:mapId/trips` | editor | `{ title, description?, status?, startDate?, endDate?, travellerIds? }` → `{ trip }` |
 | `GET /trips/shared-with-me` | signed in | `{ trips: [{ ...summary, role, mapName }] }`: trips you were added to directly (a trip-only member can't list the map). `role` is your trip role, the higher of that membership and your role on the trip's map, and hidden photos count where it's editor |
 | `GET /trips/:tripId` | viewer of the trip | `{ trip: { id, mapId, mapName, splitUk, canOpenMap, canDelete, onMyMaps, canAddToMyMap, title, description, status, startDate, endDate, coverPhotoId, coverThumbUrl, role, travellerIds, travellers: [{ id, name }], stops: [{ id, position, countryCode, landmarkId, landmarkName, placeName, arriveOn, leaveOn, notes }], uploadRules } }`. `onMyMaps` and `canAddToMyMap`: see "Group trips". `travellers` are the map's, for showing names. `splitUk`: the trip's map shows the UK as its nations (its stops' places, the trip page's mini map; see "The UK's nations"). `canOpenMap` is whether the caller has a role on the trip's map (false for a trip-only member, so the page doesn't link to a map they can't open). `canDelete` is whether they may delete the trip (the map's owner or an editor of the map; false through a share link). `uploadRules: { keepsOriginals, photosPerCountry, locked }` (the map owner's plan, and whether the map is locked; see "Map limits") is there for anyone who can upload to the trip (trip role `EDITOR` or above, trip-only editors included), on every trip route that answers `{ trip }`; viewers and share links never get it. |
@@ -169,6 +206,12 @@ Each signed-in user's own viewing preferences, stored in `Profile.mapSettings` (
 - Every change to a trip, its travellers or its stops answers with the whole trip (`{ trip }`, as `GET /trips/:tripId`).
 - **`coverPhotoId`** must be a photo on that trip, or `null`.
 - **Completed trips:** when a trip is set to `COMPLETED`, each stop's country gets a `CountryVisit` (`VISITED`, `source: TRIP`), on the trip's map and on every map it was added to (see "Group trips"). A `WANT_TO_GO` country becomes `VISITED`; an existing `VISITED` or `LIVED` one is left as it is. The same applies to stops added to, or changed on, a trip that's already completed. The change and its visits are saved in one transaction.
+
+## Planned trips on the map
+
+A place a planned or under-way trip goes to (22 Nov 2026, the user's wish: "a different outline colour on the map to show it's a planned trip") is outlined on the map, dash-dot in the style's `--map-planned`, in place of "want to go"'s dashes; the map key adds "Planned trip", and the place's ticket lists the trips (each opening its trip, with its dates). It comes from the trips themselves, never a status set by hand: the client reads the trip list's `countryCodes` (the map's own trips and the group trips added to it; `utils/trips/plannedTrips.js`), so the outline comes with a trip's first stop and goes when the trip is completed (its countries turn visited, as ever) or deleted. A place already visited or lived in keeps its look. Never through a share link: its trip list has no `countryCodes` for the map's own trips, and the page draws none (it would tell anyone with the link when the map's people are away).
+
+"Plan a trip" on a place's ticket (an editor with a verified email) opens the trips panel's form titled "Trip to <place>", then creates the trip (`POST /maps/:mapId/trips`) and adds the place as its first stop (`POST /trips/:tripId/stops`; a region as its country, with the region's name as the place), and opens the trip.
 
 ## Group trips
 
@@ -288,6 +331,7 @@ Life events and notes on a map: "We had our baby in Paris", "Got engaged at the 
 
 | Method and path | Role | Body / returns |
 | --- | --- | --- |
+| `GET /maps/:mapId/moments?anniversary=YYYY-MM-DD` | viewer | The moments whose day comes round on that day (the viewer's own today): dated to the day (`DAY`), on that month and day in an earlier year (a 29 February one on 28 February in other years), newest first, at most 20, `nextCursor` null; hidden ones for the owner and editors only. Not a date → 400. The map's "On this day" tag (see "Anniversaries" below). |
 | `GET /maps/:mapId/moments?country=&tripId=&cursor=&limit=` | viewer | `{ moments: [moment], nextCursor }`, in date order, oldest first, undated last (then by id). `country` and `tripId` filter (an unknown country, or a `tripId` that isn't an id → 400). `limit` 1–60 (default 30). `nextCursor` is null on the last page; pass it back as `cursor` (opaque: `<YYYY-MM-DD or undated>_<id>`, so it still works if that moment was deleted meanwhile; anything else → 400). |
 | `POST /maps/:mapId/moments` | editor of the map, or editor of the trip given in `tripId`; **verified** | `{ kind, title, text?, happenedOn?, datePrecision?, countryCode, landmarkId?, placeName?, spot?, tripId?, hidden?, travellerIds?, photoIds? }` → 201 `{ moment }` |
 | `PATCH /moments/:momentId` | editor of the moment, **verified** | The same fields, all optional (`travellerIds` and `photoIds` replace the lists) → `{ moment }` |
@@ -297,7 +341,7 @@ Life events and notes on a map: "We had our baby in Paris", "Got engaged at the 
 
 **A moment** (`moment`): `{ id, kind, title, text, happenedOn, datePrecision, countryCode, landmark: { id, name } | null, placeName, spot, tripId, travellerIds, photos: [{ id, thumbUrl }], hidden (editors only), createdAt }`. No coordinates but the moment's own pin (`spot`, below): a landmark is its id and name, and a photo its thumbnail.
 
-- **Kinds** (`server/src/utils/constants/momentKinds.js`; stored as text, so a new kind needs no migration): `BORN`, `MOVED_HERE`, `WEDDING`, `ENGAGEMENT`, `GRADUATED`, `NEW_JOB`, `MET_SOMEONE`, `CELEBRATION`, `SAW_OR_DID` ("something we saw or did"). Anything else → 400 `Choose what kind of moment it is from the list.`.
+- **Kinds** (`server/src/utils/constants/momentKinds.js`; stored as text, so a new kind needs no migration): `BORN`, `MOVED_HERE`, `WEDDING`, `ENGAGEMENT`, `GRADUATED`, `NEW_JOB`, `MET_SOMEONE`, `CELEBRATION`, `SAW_OR_DID` ("something we saw or did"), and since 21 Nov 2026 `FIRST_TRIP` ("first trip": a child's first trip abroad, a couple's first holiday) and `ANNIVERSARY`. Anything else → 400 `Choose what kind of moment it is from the list.`.
 - **Text:** `title` is required, 1–120 characters after cleaning (as captions: tags and control characters removed, trimmed; longer is cut), else 400 `Give the moment a title of 1 to 120 characters.`; `text` (the story) up to 2,000 and `placeName` up to 120, both optional (`null` or `""` clears). A field that isn't text → 400 `A moment's title, story and place name must be text.`.
 - **Dates** (`utils/moments.js` `parseMomentDate`): `happenedOn` is a year (`"2019"`), a month (`"2019-06"`) or a day (`"2019-06-14"`), from 1800 to 2200, and must exist as written. `datePrecision` (`DAY`, `MONTH` or `YEAR`) follows the form when left out; it may be coarser than what's written (`"2019-06-14"` with `YEAR`), never finer (`"2019"` with `DAY`). A month or a year is stored, and returned, as its first day (`happenedOn: "2019-01-01", datePrecision: "YEAR"`). Left out on `POST`, or `null`/`""`: an undated note (both null). A precision sent without a date, or anything else → 400 `A moment's date is a year (2019), a month (2019-06) or a day (2019-06-14), …`. The database holds the rule too (a CHECK: both null or both set).
 - **Where:** `countryCode` is required (a country or special place; unknown → 400 `That country isn't on the map.`). `landmarkId` must be a landmark in that country (400 `That landmark isn't in the moment's country.`; unknown → 400). Changing the country keeps the landmark only if it's in the new country: send a new `landmarkId`, or `null`, with it.
@@ -310,6 +354,7 @@ Life events and notes on a map: "We had our baby in Paris", "Got engaged at the 
   - **a trip-only editor** (or a map viewer who edits the trip) does the same for moments whose `tripId` is their trip: creating one needs that `tripId` (without it → 404, as for a map they can't see), and other moments answer 404;
   - **viewers and share links** read them, never `hidden` ones (as hidden photos: a hidden moment answers 404 to a viewer, and isn't counted for them). Hidden photos inside a moment show only to editors (of the map, or of the trip for the trip's photos). Someone who reaches moments through a trip (its list or its share link) sees only that trip's photos in them.
 - **On the map:** `GET /maps/:mapId` has `momentCountsByCountry` (see "Maps") and `momentSpots: [{ id, kind, title, countryCode, latitude, longitude }]` (date order): every pin for the owner and editors, hidden moments' too; for viewers and share links (`GET /shared/:code`) only the shared pins of moments they can see. "Download my data" carries each moment's `spot` with `shared`.
+- **Anniversaries** (21 Nov 2026, the user's wish: "anniversaries as moments", with a reminder when the date comes round): a moment dated to the day comes round each year. The map page (not a share link) asks for the day's (`?anniversary=`, above) with the viewer's own date and shows a tag, "7 years ago today: Got engaged at the Eiffel Tower", which opens the moment's country; closed, it stays away for the day. The "On this day" email sends one before any photo (see "Emails").
 - **Events:** `moments`, `Create Success`, `Update Success` (the names of the fields changed) and `Delete Success`, with the moment's id and `map=<id>`; never a title, story or place.
 
 ## Country maps
@@ -368,16 +413,17 @@ The landmark book (docs/FEATURE-PLAN.md, "The passport"). A landmark is **stampe
 
 | Method and path | Role | Body / returns |
 | --- | --- | --- |
-| `GET /maps/:mapId/passport` | viewer | `{ passport }` (below) |
+| `GET /maps/:mapId/passport?traveller=` | viewer | `{ passport }` (below). With `traveller` (one of the map's travellers' ids), that traveller's own passport (below); a traveller not on the map, or anything that isn't an id → 404 `That traveller isn't on this map.` |
 | `PUT /maps/:mapId/passport/stamps/:landmarkId/photo` | editor, **verified** | `{ photoId }`: the photo the stamp shows, which must be one of that landmark's confirmed photos on this map (else 400 `Pick a photo of this landmark that's confirmed on this map.`) → `{ cover: { landmarkId, photoId } }` |
 | `DELETE /maps/:mapId/passport/stamps/:landmarkId/photo` | editor, **verified** | Back to the earliest photo → `{ message }` |
-| `GET /shared/:code/passport` | anyone with a map's code | The same, with the link's role. A trip's code → 404. |
+| `GET /shared/:code/passport?traveller=` | anyone with a map's code | The same, with the link's role. A trip's code → 404. |
 
-**A passport:** `{ map: { id, name, groupType, ownerName, plan: { id, name } }, travellers: [{ id, name, birthCountryCode, favouriteCountryCode }], pages: [page], totals: { countries, specialPlaces, regions, continents, landmarks, unesco } }`.
+**A passport:** `{ map: { id, name, groupType, ownerName, plan: { id, name }, traveller: { id, name } | null }, travellers: [{ id, name, birthCountryCode, favouriteCountryCode }], pages: [page], totals: { countries, specialPlaces, regions, continents, landmarks, unesco } }`. `map.traveller` is whose passport it is (one traveller's own), else null; `travellers` is always every traveller on the map.
 - **Pages:** one per country (or special place) marked `VISITED` or `LIVED`, plus any country with a stamp. Each is `{ countryCode, status, enteredOn, stamps: [stamp], toStamp: [{ id, name, isUnesco }] }`, in the order they were first visited: `enteredOn` is the date of the country's earliest photo (when it was taken), else the visit's `firstVisitedOn`, else null (those go last, by when they were marked). `status` is null for a page that has only stamps. `toStamp` lists the country's landmarks not stamped yet, by name (the book's dotted outlines).
 - **A stamp:** `{ landmarkId, name, isUnesco, stampedOn, photoCount, photo: { id, thumbUrl }, photoChosen (editors only), moments: [{ id, title, kind, happenedOn, datePrecision }] }`, in the order they were stamped. `moments` are the map's moments at that landmark (see "Moments"), oldest first, undated last; hidden ones only for editors, never through a share link. `stampedOn` is when its earliest confirmed photo was taken. `photo` is the one an editor picked (`LandmarkCover`), else the earliest. A picked photo goes when its match or the photo does (the cover points at the match itself, `ON DELETE CASCADE`).
 - **Below editor** (viewers, share links), hidden photos neither stamp nor count: a stamp whose only photos are hidden isn't there, and one whose picked photo is hidden shows its earliest visible photo. `totals` follow the same rule.
 - **Totals:** `countries`, `specialPlaces` and `regions` as the map's stats; `continents` counts Antarctica; `landmarks` and `unesco` are the stamps.
+- **One traveller's own** (21 Nov 2026, the user's wish: each child's own passport, from the family map; `services/travel/passport.js` `travellerFacts`): their pages are the places they've been: their completed trips' stops, the places of the photos on any trip they went on or in a moment about them, those moments' places and where they were born; their stamps are those photos' confirmed landmarks. `enteredOn` is the first day any of those reached the place (the birth country's none); `status` is the map's (visited or lived), else `VISITED`. Picking a stamp's photo still changes the map's (one per landmark). The passport page shows "Whose passport" on a family's map with two or more travellers (`?traveller=` in its address), and the cover carries the traveller's name.
 
 ## Badges and goals
 
@@ -400,6 +446,36 @@ Counted from the map's own data (visits, photos, stamps); only awards and goals 
   - `LANDMARK_COUNT`: `target` stamps (1–2,000).
 
   `title` is optional (up to 80 characters, cleaned). Without a `deadline`, a country counts when it's marked visited or lived. With one (`"YYYY-MM-DD"`), a country counts when it was reached by the end of that day: its first photo was taken by then, or its visit (visited or lived) is dated by then, by its `firstVisitedOn`, else the day it was marked (19 Nov 2026, the user's decision: a hand-ticked country used never to count, and the goal looked stuck); stamps by their photos. `missed` is true once the day has passed unmet. Anything that doesn't fit the kind → 400 `That goal isn't complete: check what it asks for.`
+
+## Collecting
+
+"23 of 1,273 World Heritage Sites", and a checklist per country (21 Nov 2026, the user's wish, from the business review). A landmark the map has been to is one stamped in its passport (a photo's confirmed match, as ever) or ticked "been here" (`LandmarkVisit`, map × landmark, for places with no photo). The map's reply carries `tickedLandmarkIds` beside `stampedLandmarkIds`, for everyone who can see it (share links too); the client counts the rest from the landmark list (`isUnesco`).
+
+| Method and path | Role | Returns |
+| --- | --- | --- |
+| `PUT /maps/:mapId/landmarks/:landmarkId/been` | editor, verified | → `{ landmarkId, been: true, countryCode }`: ticked (again is fine), and its place marked visited (`MANUAL`; a UK landmark's nation on a map that splits the UK) |
+| `DELETE /maps/:mapId/landmarks/:landmarkId/been` | editor, verified | → `{ landmarkId, been: false }`; the country stays visited |
+
+- An unknown landmark → 404. A stamp can't be unticked here: it's the photo's match.
+- "Your data" carries each owned map's `landmarksBeenTo`.
+
+## Year in travel
+
+"Your year in travel" (21 Nov 2026, the user's wish, from the business review: a December recap made to share, as Polarsteps' Unpacked is): one calendar year (UTC) of a map, for anyone on it, never through a share link. It counts what the caller may see: the owner and editors hidden photos and moments too, others never.
+
+| Method and path | Role | Returns |
+| --- | --- | --- |
+| `GET /maps/:mapId/recap/:year` | viewer | `{ recap: { year, years, places, countries, newCountries, specialPlaces, continents, photos, videos, topCountries, moments, trips, stamps, highlights } }` |
+
+- `places`: every place the year touched, as the map keeps them (a UK nation on a split map, a region): photos and videos shot that year (`shotAt`), the stops of trips done or under way that year (a stop dated in the year, or undated on a trip whose dates touch it), moments dated that year, and countries first visited that year (a visited or lived-in country's `firstVisitedOn`). Planned trips never count.
+- `countries` counts those that are countries (`countedCountryCodes`), special places apart (`specialPlaces`); `newCountries` lists the countries first visited that year; `continents` counts the places' continents (a region's country gives it).
+- `photos` and `videos` count the year's; `topCountries` the three countries with most photos (`[{ countryCode, photos }]`); `highlights` one photo from each of up to six countries with photos, most first, the earliest shot that year, as the slideshows' lists give them (with `displayUrl`).
+- `stamps`: `{ count, landmarks }`, the landmarks confirmed on the year's photos, A to Z, the first 12 listed.
+- `trips`: `[{ id, title, status, startDate, endDate }]`; `moments`: a count.
+- `years`: every year the map has anything in (photos, first visits, trips done or under way, moments), newest first, so the client can offer them.
+- A year from 1900 to next year (else 400); one with nothing is answered empty. No role → 404.
+
+The client (`components/recap/`) shows it as slides (the cover, the places with their posters, the photos, the stamps, the trips and moments) ending on its share card (docs/SITE-DESIGN.md, "Share cards"), from the statistics panel any time, and in December and January from a tag on the map.
 
 ## Photo themes
 
@@ -470,11 +546,31 @@ Influencer codes (docs/FEATURE-PLAN.md, "Getting the word out"): a code per crea
 
 | Method and path | Who | Body / returns |
 | --- | --- | --- |
-| `GET /promo-codes/:code` | anyone (rate limited: 30 per 15 min per IP) | `{ promoCode: { code, freePlan, trialDays } }` for a usable code (`freePlan` null and `trialDays: 30` for the usual offer; a plan and `trialDays: 0` for a code for life), else 404. No label. |
+| `GET /promo-codes/:code` | anyone (rate limited: 30 per 15 min per IP) | `{ promoCode: { code, freePlan, trialDays, fromFriend } }` (`fromFriend`: a member's invite code's owner's first name, else null; see "Give a month, get a month") for a usable code (`freePlan` null and `trialDays: 30` for the usual offer; a plan and `trialDays: 0` for a code for life), else 404. No label. |
 | `GET /users/admin/promo-codes` | ADMIN or DEVELOPER | `{ promoCodes: [{ id, code, label, freePlan, trialDays, active, maxUses, endsAt, createdAt, signUps, verified, trials, paying }] }`, newest first. `signUps` counts accounts with the code, `verified` those whose address is verified, `trials` those whose free month has started, `paying` those with a subscription that counts now (a trial included). |
 | `POST /users/admin/promo-codes` | ADMIN or DEVELOPER | `{ code, label, freePlan?, maxUses?, endsAt? }` → 201 `{ promoCode }`. `freePlan`: `REGULAR` or `PREMIUM` makes a code for life (anything else → 400); null or left out, the usual free month. Other fields (an old `offerPlan` or `offerDays`) are ignored. A taken code → 409; a bad one → 400. |
 | `PATCH /users/admin/promo-codes/:promoCodeId` | ADMIN or DEVELOPER | `{ label?, active?, maxUses?, endsAt? }` → `{ promoCode }`. The code itself and what it gives (`freePlan`, 400) never change (it's in people's posts); turn it off with `active: false`. Accounts that already signed up keep their free month. |
 - **Events:** `billing`, `Promo Code Create Success` (with the code), `Promo Code Update Success`, and `Checkout Started` with `trialDays=30` when the free month applies; never the label.
+
+## Give a month, get a month
+
+Invite a friend and both get a free month (21 Nov 2026, the user's wish; `utils/referrals.js`, tested; `services/billing/referrals.js`, `domain/referrals.js`, `controllers/referrals.js`; migration `20261121220000_referrals`):
+- **The member's code** is a promo code with an owner (`PromoCode.ownerId`, unique: one per account; `label` "A member’s invite code"), made the first time they ask: their first name's letters (up to 8, A–Z) and four random characters from the share codes' alphabet ("ROBIN7KQ2", "FRIEND…" for a name with none). It has no limit or end date. It's never on the admins' list, and the admins' `PATCH` answers 404 for it. Deleting the account deletes it (the friends' profiles keep their account, their code SET NULL).
+- **The friend** signs up with it like any promo code (the link is the sign-up page, `/sign-up?code=`), and gets every code's offer: the first month free on a paid plan (see "Promo codes"). The code's check says who it's from (`fromFriend`, a first name), and the sign-up form says "Robin invited you: your first month … is free".
+- **The member's month** comes when the friend first pays: the Stripe webhook's subscription handler (`applyStripeSubscription`), on a subscription now `active` (after the free month's `trialing`), calls `rewardReferrerFor`. A `ReferralReward` (one per friend, `friendId` unique) is claimed with the member's code row locked, then given:
+  - `CREDIT` when the member pays by card now (a live subscription for Business or First Class): their plan's monthly price (499 or 999 pence) off their next invoices, as a Stripe customer balance transaction (negative `amount`, `gbp`, the idempotency key `referral-reward-<id>`), `appliedAt` once Stripe has it; if Stripe doesn't take it, the friend's own subscription is still saved, and the credit is tried again on their next subscription event (a renewal);
+  - `GRANT` otherwise: a month of Business (or of the paid plan a complimentary membership gives them) as a `PlanGrant` ("A friend joined"), after any month of that plan already running or waiting (the gifts' `giftWindow`);
+  - `CAPPED` past 12 given in the last 365 days (`REFERRAL_REWARDS_PER_YEAR`), or when the plan is theirs for life: nothing given. CHECK `referral_reward_shape`.
+- Seen again (a renewal, a repeated event), nothing more. The friend cancelling before paying gives nothing.
+
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `GET /users/referral` | signed in | `{ referral: { code, friendDays, perYear, friendsJoined, friendsPaid, monthsEarned, monthsLeftThisYear } }`: `code` null until made; `friendsJoined` the verified accounts that signed up with it; `friendsPaid` the rewards (capped ones too); `monthsEarned` those given; `monthsLeftThisYear` of the 12 in the last 365 days. The browser makes the link from its own address. |
+| `POST /users/referral` | signed in, **verified** | The member's code, made now if they have none (201), else as it is (200) → as `GET` |
+
+- The account page's "Invite a friend" card (`AccountReferralSection`): "Get my invite link", then the link to copy or share and the counts. The Pricing page and the terms ("Invite a friend", 1.3.0) say so. "Your data" carries `account.inviteCode` and `account.friendRewards`.
+- **Events:** `billing`, `Referral Code Create Success`.
+- **Mock mode:** the code and counts (`handlers/referrals.js`); with no Stripe, no friend ever pays there.
 
 ## The invite offer
 
@@ -485,6 +581,22 @@ A welcome offer for people invited to a paid map (19 Nov 2026, the user's wish; 
 - **One offer per account:** a promo code recorded at sign-up drops it, and an account with a promo code never gets it.
 - **Used** when the webhook sees the subscription it started (`subscription_data.metadata.inviteOffer`), once.
 - **Where it shows:** `GET /billing` `inviteOffer: { plan, endsAt }` (null when there's none, it's used or ended, or a subscription exists); `GET /invites/:token` `invite.offer: { plan, planName }` for a paid map; the share email to an address with no account (`offerPlanName`, `offerYearly`).
+
+## Gifts
+
+A year of a paid plan as a gift (21 Nov 2026, the user's wish, from the business review: "a year of Business or First Class as a gift, for Christmas, weddings and anniversaries"). `GiftCode` (code, plan, `months` 12, `amountPence`, the buyer, `toName` and `message` (optional, cleaned), the Stripe session and payment, `paidAt`, `refundedAt`, who redeemed it and the `PlanGrant` it gave; CHECKs `gift_code_shape`, `gift_code_paid_before_redeemed`). Rules in `server/src/utils/gifts.js`.
+
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `POST /billing/gift-checkout` | signed in, verified (the billing limit) | `{ plan: 'REGULAR' \| 'PREMIUM', toName?, message? }` (60 and 300 characters at most) → `{ url }`: a one-off Checkout (mode `payment`, `price_data` at the plan's yearly price, so no Stripe price to set up) on the account's Stripe customer. The gift is made now, unpaid; only ids go in Stripe's metadata. Returns to `/gifts?bought=1` or `?cancelled=1`. Payments off → 503. |
+| `GET /gifts` | signed in | `{ offers: [{ plan, name, months, pence }], gifts, paymentsEnabled }`: the gifts you bought and paid for, newest first, each `{ id, code, plan, planName, months, amountPence, toName, message, status, paidAt, redeemedAt, createdAt }` (`status`: `READY`, `REDEEMED` or `REFUNDED`) |
+| `GET /gifts/:code` | anyone (rate limited) | `{ gift: { code, plan, planName, months, toName, message, fromName, status } }`: a paid gift's page, never the buyer's address. The code in any case, with or without dashes or spaces. Unknown or unpaid → 404. |
+| `POST /gifts/redeem` | signed in, verified (rate limited) | `{ code }` → `{ grant: { plan, planName, startsAt, endsAt } }`: a complimentary membership (`PlanGrant`, reason "A gift") of the gift's plan for its months, from now, or from the end of a year of the same plan the account already has running or waiting (gifts stack). With the gift's row locked, so it's redeemed once. Unknown → 404; redeemed or refunded → 409; an account that already pays for that plan or better, or has it for life → 409, the gift kept for someone else. |
+
+- The webhook's `checkout.session.completed` for a gift (paid) sets `paidAt` and emails the buyer its code and link (`users/giftEmail.handlebars`, a fixed subject; the names and message only in the escaped body). `charge.refunded` makes an unredeemed gift unusable (`refundedAt`); a redeemed one is logged (`Redeemed Gift Refunded`) for an admin to end its membership by hand if wanted.
+- Unpaid gifts (a Checkout left) are deleted by the daily clean-up after 2 days. A buyer's deleted account leaves its gifts usable (`buyerId` SET NULL).
+- `/api/gifts/<code>` is logged as `:code`; the client's `/gift/:code` pauses analytics and is reported as the pattern.
+- "Your data" carries the gifts bought (`plan.giftsBought`).
 
 ## Travel offers
 
@@ -602,6 +714,22 @@ Both do the same, in one transaction:
 
 An event is logged (`maps`, `Transfer Success` or `Admin Transfer Success`) with the new owner as `targetId`; no email addresses.
 
+## Importing from Polarsteps
+
+"Already on Polarsteps? Bring your trips." (21 Nov 2026, the user's wish, from the business review.) The person downloads their data from Polarsteps (account settings, "Download my data": a zip by email) and chooses it, or the folder they unzipped it to, on `/import`. The browser reads it (`client/src/utils/import/`: a zip reader that takes one file at a time, `polarsteps.js` for the layout); the server only ever gets what's imported. Polarsteps doesn't document the download; the reader follows open-source readers of it and doesn't rely on the details they disagree on: every `trip.json` is a trip (`id`, `name`, `start_date`/`end_date` in Unix seconds, `timezone_id`, `all_steps`, each step's `location.country_code`, `name`, `lat`, `lon`, `description`, `start_time`), and a photo belongs to the step whose id ends a folder it's in (`<slug>_<stepId>/photos/…`), else to its trip. The route (`locations.json`) is never read or sent. Check against a real download before launch.
+
+- **Keys:** every imported trip, photo and moment carries `importedFrom` (`polarsteps:trip:<id>`, `polarsteps:photo:<stepId>/<path>`, `polarsteps:moment:<stepId>`), unique per map (`@@unique([mapId, importedFrom])` on each), so a second run adds only what's missing.
+
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `GET /maps/:mapId/imports/polarsteps` | editor | `{ trips: [{ key, tripId }], photos: [key], moments: [key] }`: what the map has imported already |
+| `POST /maps/:mapId/imports/polarsteps` | editor, verified (60 per 15 min a person) | `{ trips: [{ key, title, status, startDate, endDate, stops: [{ countryCode, placeName, arriveOn, leaveOn, latitude, longitude }] }] }` (100 trips, 1,000 stops each at most) → `{ trips: [{ key, tripId, created }] }` (201 when any was made). A trip imported before is answered with its id and left alone. Stops follow the map (`placeCopy`: a UK stop in its nation on a map that splits the UK, by its position); a stop in a place the map doesn't have is left out. The importer's own traveller goes on each trip. A completed trip marks its countries visited (`TRIP`) and gives a country its first visit when its earliest stop is earlier. Bad input → 400. |
+
+- **Photos** come through the usual upload (`POST …/photos/presign`, then `POST …/photos`) with `importedFrom`; the presign then counts against its own limit, 600 per 15 min a person, instead of the everyday 120 per IP. A key the map has already → 409 (`That photo has been imported already.`), the upload's files deleted. The step's country is the photo's when it has no position of its own, and the step's time its date when the file has none. The plan's photos per country apply as ever (409, counted by the importer as "left out").
+- **Stories:** a step with text and a country becomes a moment (`POST …/moments`, kind `SAW_OR_DID`, its title, text, day and place, its trip, up to 20 of its photos imported in the same run) with `importedFrom`; a key the map has already → 409.
+- Videos and HEIC files aren't brought (counted on the page).
+- The page waits out a 429 as long as `Retry-After` says (the site-wide backstop too) and goes on.
+
 ## Travel copies
 
 Taking your travels with you (19 Nov 2026, the user's design; FEATURE-PLAN.md "Taking your travels with you"): someone on a family map (any role; a child grown up, say) picks the trips they went on, the moments about them, countries' photos and photos one by one, and asks for **copies** on a map of their own (one they own or co-own). The family map's owner or a co-owner approves or declines. Approved, the copies become the new map's own: new photo rows with **their own files** (R2 copies each file under the new map's keys, nothing passing through the server), new trips with their stops, new moments; the family map keeps everything. Only the person who asked starts it (a parent can't hand travels over unasked).
@@ -650,7 +778,7 @@ When the account is deleted (better-auth's `beforeDelete`, `services/travel/acco
 | Method and path | Role | Returns |
 | --- | --- | --- |
 | `GET /users/export` | signed in | `{ format: 'my-planet-view-data', version: 1, site, exportedAt, linksWorkUntil, account, plan, mapsYouOwn, mapsSharedWithYou, tripsSharedWithYou, photosOnOtherMaps }`: the account (name, email, home country, map settings, the promo code signed up with), the plan in force (`{ id, name, from }`), the subscription and complimentary memberships, and the maps and trips you're on (`photosOnOtherMaps` is a count) |
-| `GET /users/export/maps/:mapId` | the map's **owner** | `{ map }`: its fields, travellers, `countries` (status, source, first visit, notes), `sharedWith` (names and roles) and `invites` (addresses you typed), trips with their stops, travellers, people and invites, `groupTripsAdded`, moments, `statesVisited`, `pins` (with their visits), goals, badges, `passportStampPhotos`, `photoCount` |
+| `GET /users/export/maps/:mapId` | the map's **owner** | `{ map }`: its fields (its `designs` too: "Map designs"), travellers, `countries` (status, source, first visit, notes), `sharedWith` (names and roles) and `invites` (addresses you typed), trips with their stops, travellers, people and invites, `groupTripsAdded`, moments, `statesVisited`, `pins` (with their visits), goals, badges, `passportStampPhotos`, `photoCount` |
 | `GET /users/export/maps/:mapId/photos?cursor=` | the map's **owner** | `{ photos, nextCursor }`: 500 a page, newest upload first, hidden ones too. Each: caption, dates, country, trip, position, landmarks (with confirmation), who uploaded it, and `file: { copy, contentType, bytes, width, height, url }`, a signed link to its best copy (`ORIGINAL`, else `PRINT`) that saves as `photo-<date>-<id>.<ext>` and works for 7 days. A video has `file: null` and a `fileNote`: Stream keeps no original to hand back |
 | `GET /users/export/uploads?cursor=` | signed in | `{ photos, nextCursor }`: the photos you added to maps you don't own and can still open (you're on the map, or on the photo's trip), the same shape plus `mapId`, `map` and `mapOwner`. Taken off a map, or having left it, you no longer get the photos you added there (19 Nov 2026, the user's decision); `photosOnOtherMaps` counts the same |
 
@@ -677,11 +805,13 @@ All under `/api/billing`, signed in. Every write needs a **verified** email and 
 | `POST /billing/change-plan` | `{ plan, interval }` → `{ billing }` (as `GET /billing`). Changes the plan line, prorated; the extra-map line keeps its quantity on the new interval and the new plan's extra-map price. `FREE` drops the plan line, which needs extra maps on it (else 409 `To stop paying altogether, cancel from the billing portal.`). No subscription → 409. A new plan during a promo code's free month (`status: trialing`) ends it (`trial_end: 'now'`): the new plan is paid from then (17 Nov 2026). |
 | `POST /billing/extra-maps` | `{ quantity, interval? }` (0–1000). Always one of two answers: **`{ billing }`** (as `GET /billing`) when the account has a subscription: the extra-map line's quantity is set, prorated (0 removes it; 0 on a subscription of extra maps only → 409, cancel in the portal); or **`{ url }`** (a Checkout for that many extra maps on Economy's line, `interval` defaulting to `MONTH`) when it has none (0 → 400). Fewer extra maps than maps in use locks the newest ones; nothing is deleted. More extra maps during a free month → 409 `Extra maps can be added once your free month ends.` |
 | `POST /billing/portal` | → `{ url }`: Stripe's customer portal (payment method, invoices, cancelling), returning to `/account`. No Stripe customer yet → 409. |
+| `POST /billing/gift-checkout` | `{ plan: 'REGULAR' \| 'PREMIUM', toName?, message? }` → `{ url }`: a one-off Checkout for a year of the plan as a gift (see "Gifts"). |
 | `POST /billing/webhook` | Stripe only (see below). |
 
 - **The webhook** (`POST /api/billing/webhook`) takes the raw body (mounted before the JSON parser) and checks the `Stripe-Signature` header with `STRIPE_WEBHOOK_SECRET` (none → 503; a bad signature → 400). Stripe sends no `Origin` or `Sec-Fetch-Site`, so the cross-site check lets it through. Each event id is recorded first (`StripeEvent`): a repeat answers 200 `{ received: true, duplicate: true }` and changes nothing; if handling fails the record is removed and the answer is 500, so Stripe's retry runs it again. It handles:
-  - `checkout.session.completed`: links the Stripe customer and subscription to the user (`client_reference_id`, also `metadata.userId`);
-  - `customer.subscription.created`, `updated` and `deleted`: the subscription is fetched from Stripe as it is now (events can arrive late or out of order), then the handler writes the plan line's plan and interval (by price id), the extra-map quantity, status, period end and cancel flag (`cancel_at_period_end`, or a `cancel_at` date). `deleted` → plan `FREE`, no extra maps, status `canceled`. The account is found by customer id, else by the subscription's `metadata.userId`. A late event about an older, ended subscription, or one that would revive a canceled subscription, is ignored.
+  - `checkout.session.completed`: links the Stripe customer and subscription to the user (`client_reference_id`, also `metadata.userId`); a gift's (mode `payment`, `metadata.giftId`) makes the gift usable instead (see "Gifts");
+  - `charge.refunded`: a gift not yet redeemed can't be redeemed any more (see "Gifts"). The webhook's endpoint in Stripe's dashboard must send this event;
+  - `customer.subscription.created`, `updated` and `deleted`: the subscription is fetched from Stripe as it is now (events can arrive late or out of order); then the handler writes the plan line's plan and interval (by price id), the extra-map quantity, status, period end and cancel flag (`cancel_at_period_end`, or a `cancel_at` date). `deleted` → plan `FREE`, no extra maps, status `canceled`. The account is found by customer id, else by the subscription's `metadata.userId`. A late event about an older, ended subscription, or one that would revive a canceled subscription, is ignored. Once one is written `active`, whoever invited the account gets their month (see "Give a month, get a month").
 
   A second live subscription for an account whose row tracks another live one (two Checkouts completed at once) is cancelled at once and logged (`Duplicate Subscription Cancelled`, with its id, so its first payment can be refunded); its `checkout.session.completed` never replaces the tracked one.
 
@@ -693,6 +823,22 @@ All under `/api/billing`, signed in. Every write needs a **verified** email and 
   | `GET /users/admin/plan-grants/:userId` | `{ grants: [{ id, plan, startsAt, endsAt, reason, grantedById, createdAt, active }], plan, source }`, newest first, with the plan the user has now. Unknown user → 404. |
   | `POST /users/admin/plan-grants/:userId` | `{ plan: 'REGULAR' \| 'PREMIUM', months: 1–36, reason? }` → 201 `{ grant }`, from now for whole calendar months. A creator with a promo code gets 24 months (the admin dialog's default; the user's decision, 16 Nov 2026). Bad values → 400; yourself → 403 `You can't give yourself a membership.` |
   | `PATCH /users/admin/end-plan-grant/:grantId` | Ends it now → `{ grant }`. Already ended → 409; unknown → 404. The account drops to its other plan, or Economy; nothing is deleted. |
+
+## Emails
+
+Emails people can stop (21 Nov 2026, the user's wish). Account emails (verifying, passwords, invites, payments, gifts, travel copies) always go; these don't have to.
+
+- **"On this day"** (from the business review: "Three years ago today you were in Kyoto", with the photo): once a day (Vercel's cron, 08:00 UTC, `GET /api/emails/on-this-day/cron` with `CRON_SECRET`), each account that wants them (`Profile.onThisDayEmails`, on unless switched off; an account with no profile row yet counts as on), is verified and active, and has a photo **taken** (`takenAt`, not the upload date) on today's month and day (UTC; a 29 February photo on 28 February in other years) in an earlier year, on a map it owns, not hidden, gets one email with one such photo: one at a landmark first, else one in a country, the same pick for the same day. At most one a week (`lastOnThisDayAt`, claimed before sending, so two runs never both send it). Subject "3 years ago today: Fushimi Inari-taisha", headline "3 years ago today you were in Japan" (`utils/onThisDay.js`). 300 emails a run, 45 s at most (`ON_THIS_DAY_MAX_EMAILS`, `ON_THIS_DAY_BUDGET_MS`); the run answers `{ accounts, sent, skipped, complete }`.
+- **A moment's anniversary first** (21 Nov 2026, "anniversaries as moments"): an account with a moment dated to the day (`DAY`) on today's month and day in an earlier year, not hidden, on a map it owns (`findOnThisDayMomentCandidates`) gets that instead: a day of life first (`LIFE_MOMENT_KINDS`: a wedding, an anniversary, an engagement, meeting someone, a birth, a first trip, a move, graduating, a new job), else any; subject "10 years ago today: Our wedding", headline "10 years ago today, in Italy", the moment's title under it, and its first visible photo if it has one (none: no picture). The same once a week.
+- **The picture** is `GET /api/emails/photos/:photoId?t=` (anyone with the link, rate limited): a signed link (HMAC with `BETTER_AUTH_SECRET`) that redirects to a fresh signed link to the photo's DISPLAY copy, so the email shows it however long after it's opened. A wrong signature or a photo that's gone → 404.
+- **Unsubscribing:** each email has a link to `/unsubscribe?u=&t=` (a page that asks first, as mail scanners open links on their own) and the `List-Unsubscribe` and `List-Unsubscribe-Post: List-Unsubscribe=One-Click` headers (RFC 8058, which Gmail and Yahoo expect), pointing at `POST /api/emails/unsubscribe?u=&t=` (also with `{ u, t }` in the body, from the page): no sign-in, the signature is the proof. → `{ onThisDay: false }`; a bad link → 400.
+
+| Method and path | Role | Body / returns |
+| --- | --- | --- |
+| `GET /users/email-preferences` | signed in | `{ onThisDay }` |
+| `PUT /users/email-preferences` | signed in | `{ onThisDay: boolean }` → `{ onThisDay }` (no verified email needed) |
+
+- "Your data" carries `account.emails`. Logs show the links' `u` and `t` as `:redacted`.
 
 ## Accounts
 
@@ -737,6 +883,10 @@ Shared, database-backed counters (`RateLimit` table, from NextDummy), keyed per 
 | Share-code lookups: opening a link (`GET /shared/:code`), and any `/shared/:code/photos…`, `moments`, `passport`, `badges` or `goals` request whose code matches no map or trip | 30 per 15 min (one counter) |
 | Browsing an open link (`/shared/:code/photos…`, `moments`, `passport`, `badges`, `goals`) | 300 per 15 min (separate counter) |
 | Promo code checks (`GET /promo-codes/:code`) | 30 per 15 min |
+| Gift lookups and redeeming (`GET /gifts/:code`, `POST /gifts/redeem`) | 30 per 15 min |
+| An email's links (`GET /emails/photos/:photoId`, `POST /emails/unsubscribe`) | 120 per 15 min |
+| An import's photo presigns (a presign with `importedFrom`) | 600 per 15 min, per user |
+| Importing trips (`POST /maps/:mapId/imports/polarsteps`) | 60 per 15 min, per user |
 | Offer clicks counted (`GET /go/:offerId`; past it the click still redirects, uncounted) | 60 per 15 min |
 | Invite accepts | 30 per 15 min (separate counter) |
 | Photo presigns | 120 per 15 min |
@@ -756,7 +906,7 @@ Shared, database-backed counters (`RateLimit` table, from NextDummy), keyed per 
 
 ## Daily clean-up (cron)
 
-`GET /media-services/cron/cleanup-orphans`, run by Vercel once a day with `Authorization: Bearer <CRON_SECRET>` (401 otherwise). It answers `{ status, data: { checked, deleted, failed, batches, complete, expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents } }`.
+`GET /media-services/cron/cleanup-orphans`, run by Vercel once a day with `Authorization: Bearer <CRON_SECRET>` (401 otherwise). It answers `{ status, data: { checked, deleted, failed, batches, complete, expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents, orphanStreamVideos, travelCopiesFinished, unpaidGifts } }`.
 
-1. **Purges**, together and each on its own (a failed one is logged and reported as `null`): finished rate-limit windows, events older than 90 days, sessions and verifications past their expiry, invites accepted or expired over 30 days ago, and Stripe webhook event ids recorded over 90 days ago. Alongside them, approved travel copies nobody's browser finished are carried on for up to 15 s (`travelCopiesFinished`: how many it finished; see "Travel copies").
-2. **Unused uploads**, oldest first, 500 at a time: photo files nothing uses after an hour, other uploads after a day. Never a file a photo or an avatar uses, nor a contact image a form shows. Each batch is one DeleteObjects request per bucket and one row delete. Files that can't be deleted are skipped until the next day. No batch starts 40 s after the request began (the function's limit is 60 s); `complete: false` means some were left for the next run.
+1. **Purges**, together and each on its own (a failed one is logged and reported as `null`): finished rate-limit windows, events older than 90 days, sessions and verifications past their expiry, invites accepted or expired over 30 days ago, and Stripe webhook event ids recorded over 90 days ago. Alongside them, approved travel copies nobody's browser finished are carried on for up to 15 s (`travelCopiesFinished`: how many it finished; see "Travel copies"), and gifts whose Checkout was never finished, over 2 days old, are deleted (`unpaidGifts`; see "Gifts").
+2. **Unused uploads**, oldest first, 500 at a time: photo files nothing uses after an hour, other uploads after a day. Never a file a photo, an avatar or a map design uses, nor a contact image a form shows. Each batch is one DeleteObjects request per bucket and one row delete. Files that can't be deleted are skipped until the next day. No batch starts 40 s after the request began (the function's limit is 60 s); `complete: false` means some were left for the next run.

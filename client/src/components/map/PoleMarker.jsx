@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import { poleMarkerRadius } from '@/utils/map/badges';
 import { insidePoleLines } from '@/utils/map/projection';
 import { isMagneticPole } from '@/utils/map/specialPlaces';
-import { countsAsVisited } from '@/utils/map/visitStatus';
+import { PLANNED_OUTLINE, countsAsVisited } from '@/utils/map/visitStatus';
 
 // The four poles are points, not shapes: each is a small compass rose at its pin, or for
 // the magnetic poles where NOAA's model puts them this year. The map ends at the pole
@@ -62,18 +62,21 @@ export function PoleMarkerSymbols() {
 
 // One pole. The hover green fills a disc behind the rose (which is also what takes the
 // pointer, so the gaps between the points count); "want to go" is a dashed ring, as a
-// country's dashed outline; the selected pole gets an ink ring. Once visited, the gold
-// expedition stamp (VisitBadges) takes the rose's place; the disc still takes the click.
-function PoleMarker({ code, x, y: pinY, zoom, status, selected }) {
+// country's dashed outline, and a planned trip's (`planned`) a dash-dot one in its place; the
+// selected pole gets an ink ring. Once visited, the gold expedition stamp (VisitBadges) takes
+// the rose's place; the disc still takes the click.
+function PoleMarker({ code, x, y: pinY, zoom, status, planned = false, selected }) {
   const r = poleMarkerRadius(zoom);
   // Touching the edge, not cut by it (the ring of "want to go" or the selection too)
   const y = insidePoleLines(pinY, r * 1.05);
   const visited = countsAsVisited(status);
   const symbol = isMagneticPole(code) ? POLE_SYMBOL.MAGNETIC : POLE_SYMBOL.GEOGRAPHIC;
   return (
-    <g data-code={code} data-been={visited ? 'true' : 'false'} className='group cursor-pointer'>
+    <g data-code={code} data-been={visited ? 'true' : 'false'} data-planned={planned && !visited ? '' : undefined} className='group cursor-pointer'>
       <circle cx={x} cy={y} r={r * 0.9} className='fill-map-hover opacity-0 group-hover:opacity-70' />
-      {status === 'WANT_TO_GO' ? (
+      {planned && !visited ? (
+        <circle cx={x} cy={y} r={r * 1.05} className={`fill-none ${PLANNED_OUTLINE}`} />
+      ) : status === 'WANT_TO_GO' ? (
         <circle cx={x} cy={y} r={r * 1.05} className='fill-none stroke-map-wish stroke-[1.4] [stroke-dasharray:3_2]' />
       ) : null}
       {selected ? <circle cx={x} cy={y} r={r * 1.05} className='fill-none stroke-map-ink stroke-[1.8]' /> : null}

@@ -10,6 +10,7 @@ import PublicPageLayout from '@/components/common/PublicPageLayout';
 import PricingPageHeader from '@/components/pricing/PricingPageHeader';
 import PricingPlans from '@/components/pricing/PricingPlans';
 import PricingExtraMaps from '@/components/pricing/PricingExtraMaps';
+import PricingGifts from '@/components/pricing/PricingGifts';
 import PricingEveryPlan from '@/components/pricing/PricingEveryPlan';
 import PricingCta from '@/components/pricing/PricingCta';
 
@@ -35,6 +36,7 @@ function PricingPage() {
         <PricingPageHeader />
         <PricingPlans />
         <PricingExtraMaps />
+        <PricingGifts />
         <PricingEveryPlan />
         <PricingCta />
       </PublicPageLayout>

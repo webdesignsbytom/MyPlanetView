@@ -1,5 +1,6 @@
 // Moments: life events and notes on a map ("We had our baby in Paris", "We saw a
 // volcano"), with the same access rules as photos (docs/API.md "Moments")
+import { parseImportKey } from '../utils/imports.js';
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
 import { logEvent } from '../utils/events/logEvent.js';
 import { createMomentEvent } from '../event/travelUtils.js';
@@ -19,10 +20,12 @@ import {
   parseMomentDate,
 } from '../utils/moments.js';
 import { findTravellerIds } from '../domain/maps.js';
+import { anniversaryDay } from '../utils/onThisDay.js';
 import { findLandmarkById } from '../domain/places.js';
 import {
   createMomentInDB,
   deleteMomentInDB,
+  findAnniversaryMoments,
   findMapPhotosByIds,
   findMomentDetail,
   findMomentPhotoRefs,
@@ -30,7 +33,7 @@ import {
   isTripOnMap,
   updateMomentInDB,
 } from '../domain/moments.js';
-import { badRequest, denyUnless, forbidden, handler, loadMap, loadMoment, loadTrip, notFound } from './helpers/travel.js';
+import { badRequest, conflict, denyUnless, forbidden, handler, loadMap, loadMoment, loadTrip, notFound } from './helpers/travel.js';
 import { landmarkPlace, placeOnMap } from '../utils/ukNations.js';
 import { parseMomentSpot, spotFitsPlace } from '../utils/momentSpots.js';
 import { isKnownCountry } from './helpers/countries.js';
@@ -149,6 +152,17 @@ async function writerView(momentId, { role, mapRole }) {
  * -> `{ moments, nextCursor }` or `{ error }`
  */
 export async function momentPage({ query, mapId, tripId, role, photoAccess }) {
+  // ?anniversary=YYYY-MM-DD (the viewer's today): the moments dated to that day in an earlier
+  // year, newest first, one page (docs/API.md "Moments": anniversaries)
+  if (query.anniversary !== undefined && !tripId) {
+    const day = anniversaryDay(query.anniversary);
+    if (!day) return { error: EVENT_MESSAGES.malformedData };
+    const rows = await findAnniversaryMoments({ mapId, ...day, includeHidden: canEdit(role) });
+    return {
+      moments: await Promise.all(rows.filter((m) => canSeeMoment(role, m)).map((m) => momentView(m, { role, photoAccess }))),
+      nextCursor: null,
+    };
+  }
   const country = query.country;
   if (country !== undefined && !(await isKnownCountry(country))) return { error: EVENT_MESSAGES.countryNotFound };
   const filterTrip = tripId ?? query.tripId;
@@ -224,17 +238,27 @@ export const createMomentHandler = handler(D, 'Create moment', async (req, res) 
   const parsed = await parseMoment(body, { mapId: map.id, photoScope: momentPhotoScope(mapRole, tripId), splitUk: map.splitUk });
   if (parsed.error) return badRequest(req, res, D, parsed.error);
   const { data, travellerIds = [], photoIds = [] } = parsed.value;
+  // An imported step's story (docs/API.md "Importing from Polarsteps"): unique on the map
+  const imported = parseImportKey(body.importedFrom, 'moment');
+  if (!imported.ok) return badRequest(req, res, D, EVENT_MESSAGES.invalidImportKey);
 
-  const created = await createMomentInDB({
-    happenedOn: null,
-    datePrecision: null,
-    ...data,
-    mapId: map.id,
-    tripId,
-    createdById: req.user.id,
-    travellerIds,
-    photoIds,
-  });
+  let created;
+  try {
+    created = await createMomentInDB({
+      happenedOn: null,
+      datePrecision: null,
+      ...data,
+      mapId: map.id,
+      tripId,
+      createdById: req.user.id,
+      ...(imported.value ? { importedFrom: imported.value } : {}),
+      travellerIds,
+      photoIds,
+    });
+  } catch (err) {
+    if (err?.code !== 'P2002' || !imported.value) throw err;
+    return conflict(req, res, D, EVENT_MESSAGES.momentAlreadyImported);
+  }
   // Ids only: never the title, story or place
   logEvent(createMomentEvent({ user: req.user, action: 'Create Success', id: created.id, detail: `map=${map.id}`, statusCode: 201 }));
   return sendDataResponse(res, 201, { moment: await writerView(created.id, { role, mapRole }) });

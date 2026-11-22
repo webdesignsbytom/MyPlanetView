@@ -24,6 +24,8 @@ import travelCopyRouter from './routes/travelCopies.js';
 import pinRouter from './routes/pins.js';
 import goalRouter from './routes/goals.js';
 import promoRouter from './routes/promoCodes.js';
+import giftRouter from './routes/gifts.js';
+import emailRouter from './routes/emails.js';
 import { offerClickRouter, offersRouter } from './routes/offers.js';
 import themeRouter from './routes/themes.js';
 import challengeRouter from './routes/challenges.js';
@@ -144,6 +146,10 @@ app.use('/api/travel-copies', travelCopyRouter);
 app.use('/api/pins', pinRouter);
 app.use('/api/goals', goalRouter);
 app.use('/api/promo-codes', promoRouter);
+// Gifts of a year of a plan (docs/API.md "Gifts")
+app.use('/api/gifts', giftRouter);
+// "On this day" and the links in its emails (docs/API.md "Emails")
+app.use('/api/emails', emailRouter);
 app.use('/api/offers', offersRouter);
 app.use('/api/themes', themeRouter);
 app.use('/api/challenges', challengeRouter);

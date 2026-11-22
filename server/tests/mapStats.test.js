@@ -79,7 +79,19 @@ describe('buildMapStats', () => {
       landmarks: 3,
       trips: 2,
       byTraveller: [],
+      // The travel extras (tests/travelStats.test.js): nothing to count yet
+      countriesInWorld: null,
+      homeCountryCode: null,
+      daysAway: 0,
+      distanceKm: 0,
+      furthest: null,
     });
+  });
+
+  it('says how many countries the world has, with the UK whole or as its nations', () => {
+    const worldTotals = { whole: 226, splitUk: 229 };
+    expect(buildMapStats({ worldTotals }).countriesInWorld).toBe(226);
+    expect(buildMapStats({ worldTotals, splitUk: true }).countriesInWorld).toBe(229);
   });
 });
 

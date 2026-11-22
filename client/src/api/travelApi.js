@@ -41,6 +41,20 @@ export const getMap = (mapId) => data(client.get(`${MAPS_API}/${enc(mapId)}`));
 export const updateMap = (mapId, body) => data(client.patch(`${MAPS_API}/${enc(mapId)}`, body));
 export const deleteMap = (mapId) => data(client.delete(`${MAPS_API}/${enc(mapId)}`));
 export const getMapStats = (mapId) => data(client.get(`${MAPS_API}/${enc(mapId)}/stats`));
+// A landmark ticked "been here", or not (docs/API.md "Collecting")
+export const tickLandmark = (mapId, landmarkId) => data(client.put(`${MAPS_API}/${enc(mapId)}/landmarks/${enc(landmarkId)}/been`, {}));
+export const untickLandmark = (mapId, landmarkId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/landmarks/${enc(landmarkId)}/been`));
+// One year of a map (docs/API.md "Year in travel") -> { recap }
+export const getYearRecap = (mapId, year) => data(client.get(`${MAPS_API}/${enc(mapId)}/recap/${enc(year)}`));
+// A map's own design for a map style (docs/API.md "Map designs"):
+// { style, shown?, countries?, names?, grid? } -> { design }
+export const updateMapDesign = (mapId, body) => data(client.patch(`${MAPS_API}/${enc(mapId)}/design`, body));
+// Its sea picture: presign ({ contentType, bytes } -> { key, upload }), save ({ key, style } ->
+// { design }), remove (that style's)
+export const presignDesignPicture = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/design/picture/presign`, body));
+export const saveDesignPicture = (mapId, style, key) => data(client.put(`${MAPS_API}/${enc(mapId)}/design/picture`, { key, style }));
+export const removeDesignPicture = (mapId, style) =>
+  data(client.delete(`${MAPS_API}/${enc(mapId)}/design/picture${query({ style })}`));
 // The owner's main (included) map; the old one becomes an extra map
 export const makeMainMap = (mapId) => data(client.post(`${MAPS_API}/${enc(mapId)}/main`, {}));
 // Put a map on the owner's plan (a paid extra map's slot), or take it back -> { map } (its `tier` says where it is)
@@ -83,9 +97,11 @@ export const removeTripFromMap = (tripId, mapId) =>
   data(client.delete(`${TRIPS_API}/${enc(tripId)}/maps/${enc(mapId)}`));
 
 // Moments: a page of a map's, a trip's or a share link's moments, in date order
-// (`country` and, on a map or a share link, `tripId` filter) -> { moments, nextCursor }
-export const getMomentPage = ({ mapId, tripId, shareCode, country, cursor, limit }) => {
-  const filters = query({ country, cursor, limit, tripId: mapId || shareCode ? tripId : undefined });
+// (`country` and, on a map or a share link, `tripId` filter) -> { moments, nextCursor }.
+// `anniversary` ("YYYY-MM-DD", the viewer's today): instead, the moments dated to that day in
+// an earlier year, newest first (21 Nov 2026)
+export const getMomentPage = ({ mapId, tripId, shareCode, country, cursor, limit, anniversary }) => {
+  const filters = query({ country, cursor, limit, anniversary, tripId: mapId || shareCode ? tripId : undefined });
   if (shareCode) return data(client.get(`${SHARED_API}/${enc(shareCode)}/moments${filters}`));
   if (mapId) return data(client.get(`${MAPS_API}/${enc(mapId)}/moments${filters}`));
   return data(client.get(`${TRIPS_API}/${enc(tripId)}/moments${filters}`));
@@ -203,7 +219,11 @@ export const openShareCode = (code) => data(client.get(`${SHARED_API}/${enc(code
 // `shareCode`, through the map's share link (read only).
 const mapOrShared = ({ mapId, shareCode }, what) =>
   shareCode ? `${SHARED_API}/${enc(shareCode)}/${what}` : `${MAPS_API}/${enc(mapId)}/${what}`;
-export const getPassport = (where) => data(client.get(mapOrShared(where, 'passport')));
+// `travellerId`: that traveller's own passport (their places and stamps; 21 Nov 2026)
+// Ticking several countries at once (the map's "Where have you been?"; 22 Nov 2026) -> { added }
+export const quickFillVisits = (mapId, countryCodes) => data(client.post(`${MAPS_API}/${enc(mapId)}/visits/quick-fill`, { countryCodes }));
+export const getPassport = (where, { travellerId = null } = {}) =>
+  data(client.get(`${mapOrShared(where, 'passport')}${query({ traveller: travellerId || undefined })}`));
 export const setStampPhoto = (mapId, landmarkId, photoId) =>
   data(client.put(`${MAPS_API}/${enc(mapId)}/passport/stamps/${enc(landmarkId)}/photo`, { photoId }));
 export const clearStampPhoto = (mapId, landmarkId) =>

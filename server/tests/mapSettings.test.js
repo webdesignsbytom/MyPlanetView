@@ -1,5 +1,20 @@
 import { describe, it, expect } from 'vitest';
-import { cleanMapSettings } from '../src/utils/mapSettings.js';
+import { cleanMapSettings, mapStyleOf } from '../src/utils/mapSettings.js';
+
+describe('mapStyleOf', () => {
+  it('is the map’s own style, else the owner’s, else none', () => {
+    expect(mapStyleOf('starry', { style: 'old-map' })).toBe('starry');
+    expect(mapStyleOf(null, { style: 'old-map' })).toBe('old-map');
+    expect(mapStyleOf(null, { showGrid: true })).toBeNull();
+    expect(mapStyleOf(null, null)).toBeNull();
+  });
+
+  it('skips a style taken out since it was saved', () => {
+    expect(mapStyleOf('galaxy', { style: 'mono' })).toBe('mono');
+    expect(mapStyleOf(null, { style: 'jupiter' })).toBeNull();
+    expect(mapStyleOf(null, 'starry')).toBeNull();
+  });
+});
 
 describe('cleanMapSettings', () => {
   it('keeps the known settings', () => {

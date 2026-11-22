@@ -7,6 +7,7 @@ import { BusinessName } from './constants/siteConstants.js';
 import { planOf } from './constants/plans.js';
 import { effectivePlan } from './plans.js';
 import { isUuid } from './travelValidation.js';
+import { storedColours } from './mapDesigns.js';
 
 export const EXPORT_FORMAT = 'my-planet-view-data';
 export const EXPORT_VERSION = 1;
@@ -52,7 +53,21 @@ export function pageOf(rows, take) {
 
 // ── The account ──────────────────────────────────────────────────────────────
 
-export function exportAccountView({ user, profile, subscription, grants, ownedMaps, mapMemberships, tripMemberships, photosOnOtherMaps, avatarUrl = null, now = new Date() }) {
+export function exportAccountView({
+  user,
+  profile,
+  subscription,
+  grants,
+  ownedMaps,
+  mapMemberships,
+  tripMemberships,
+  photosOnOtherMaps,
+  giftsBought = [],
+  referralCode = null,
+  referralRewards = [],
+  avatarUrl = null,
+  now = new Date(),
+}) {
   const inForce = effectivePlan({ subscription, grants, now });
   return {
     format: EXPORT_FORMAT,
@@ -70,8 +85,13 @@ export function exportAccountView({ user, profile, subscription, grants, ownedMa
       username: profile?.username ?? null,
       homeCountryCode: profile?.homeCountryCode ?? null,
       mapSettings: profile?.mapSettings ?? null,
+      // Emails people can stop (docs/API.md "Emails")
+      emails: { onThisDay: profile?.onThisDayEmails ?? true },
       signedUpWithPromoCode: profile?.promoCode?.code ?? null,
       promoFreeMonthUsedAt: iso(profile?.promoTrialUsedAt),
+      // Give a month, get a month: their own invite code and each month a friend brought
+      inviteCode: referralCode?.code ?? null,
+      friendRewards: referralRewards.map((r) => ({ kind: r.kind, amountPence: r.amountPence ?? null, given: iso(r.appliedAt), at: iso(r.createdAt) })),
     },
     plan: {
       inForce: { id: inForce.plan, name: planOf(inForce.plan).name, from: inForce.source },
@@ -87,6 +107,18 @@ export function exportAccountView({ user, profile, subscription, grants, ownedMa
           }
         : null,
       complimentary: grants.map((g) => ({ plan: g.plan, startsAt: iso(g.startsAt), endsAt: iso(g.endsAt), reason: g.reason ?? null })),
+      // Gifts of a year of a plan they bought (docs/API.md "Gifts")
+      giftsBought: giftsBought.map((g) => ({
+        code: g.code,
+        plan: g.plan,
+        months: g.months,
+        pricePence: g.amountPence,
+        forName: g.toName ?? null,
+        message: g.message ?? null,
+        paidAt: iso(g.paidAt),
+        redeemedAt: iso(g.redeemedAt),
+        refundedAt: iso(g.refundedAt),
+      })),
     },
     mapsYouOwn: ownedMaps.map((m) => ({ id: m.id, name: m.name, isDefault: m.isDefault, createdAt: iso(m.createdAt) })),
     mapsSharedWithYou: mapMemberships.map((m) => ({ id: m.map.id, name: m.map.name, owner: m.map.owner?.name ?? null, role: m.role, since: iso(m.createdAt) })),
@@ -124,6 +156,21 @@ export function exportMapView(rows, { userId }) {
     isDefault: map.isDefault,
     // The UK shown as its four nations (docs/API.md "The UK's nations")
     splitUk: Boolean(map.splitUk),
+    homeCountryCode: map.homeCountryCode ?? null,
+    // The style chosen for it, shown to everyone who opens it (null: the owner's own)
+    style: map.style ?? null,
+    // Its own designs, one per map style (docs/API.md "Map designs"): a picture for the sea
+    // and its colours
+    designs: (map.designs ?? []).map((design) => ({
+      style: design.style,
+      shown: design.shown,
+      countryColours: storedColours(design.countryColours),
+      namesColour: design.namesColour ?? null,
+      gridColour: design.gridColour ?? null,
+      hasSeaPicture: Boolean(design.pictureId),
+    })),
+    // Landmarks ticked "been here" (docs/API.md "Collecting")
+    landmarksBeenTo: (map.landmarkVisits ?? []).map((v) => ({ landmarkId: v.landmarkId, name: v.landmark?.name ?? null, countryCode: v.landmark?.countryCode ?? null, since: iso(v.createdAt) })),
     linkAccess: map.linkAccess,
     shareCode: map.shareCode,
     graceUntil: iso(map.graceUntil),

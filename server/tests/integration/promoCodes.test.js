@@ -49,7 +49,7 @@ describe('promo codes', () => {
   it('can be checked before signing up, without the label', async () => {
     const res = await anon().get(`/api/promo-codes/${code.code.toLowerCase()}`);
     expect(res.status).toBe(200);
-    expect(data(res).promoCode).toEqual({ code: code.code, freePlan: null, trialDays: 30 });
+    expect(data(res).promoCode).toEqual({ code: code.code, freePlan: null, trialDays: 30, fromFriend: null });
     expect((await anon().get('/api/promo-codes/NOSUCHCODE')).status).toBe(404);
   });
 
@@ -83,7 +83,7 @@ describe('promo codes', () => {
     promoIds.push(life.id);
     expect(life).toMatchObject({ freePlan: 'PREMIUM', trialDays: 0 });
     expect(life).not.toHaveProperty('createdById');
-    expect(data(await anon().get(`/api/promo-codes/${life.code}`)).promoCode).toEqual({ code: life.code, freePlan: 'PREMIUM', trialDays: 0 });
+    expect(data(await anon().get(`/api/promo-codes/${life.code}`)).promoCode).toEqual({ code: life.code, freePlan: 'PREMIUM', trialDays: 0, fromFriend: null });
     // Only a paid plan, and never changed once made
     expect((await admin.agent.post('/api/users/admin/promo-codes').send({ code: 'ITLIFEFREE', label: 'x', freePlan: 'FREE' })).status).toBe(400);
     expect((await admin.agent.patch(`/api/users/admin/promo-codes/${life.id}`).send({ freePlan: 'REGULAR' })).status).toBe(400);

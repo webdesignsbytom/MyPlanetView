@@ -34,6 +34,11 @@ import {
   CHALLENGES_PAGE_URL,
   CHALLENGE_PAGE_URL,
   CHALLENGE_JOIN_PAGE_URL,
+  GIFTS_PAGE_URL,
+  COMPARE_PAGE_URL,
+  GIFT_PAGE_URL,
+  IMPORT_PAGE_URL,
+  UNSUBSCRIBE_PAGE_URL,
   MAP_PASSPORT_PAGE_URL,
   SHARED_PASSPORT_PAGE_URL,
 } from '../constants/routes.js';
@@ -43,7 +48,7 @@ export const helmetData = {
   [HOME_PAGE_URL]: {
     pageName: 'Home',
     title: `${CompanyName} | Your Private Travel Map and Photos`,
-    desc: 'Keep a private map of every country you have visited. Add your travel photos, match them to landmarks, plan new trips and share only with who you choose.',
+    desc: 'A private map of every country you have been to, with your photos in their places. No followers and no public profiles: share it only with who you choose.',
     indexing: 'index,follow',
   },
 
@@ -167,6 +172,36 @@ export const helmetData = {
   [CHALLENGE_JOIN_PAGE_URL]: {
     pageName: 'Join a challenge',
     desc: `A friend has challenged you on ${CompanyName}. Join with your travel map.`,
+    indexing: 'noindex,nofollow',
+  },
+
+  // Comparing two maps (signed in)
+  [COMPARE_PAGE_URL]: {
+    pageName: 'Compare two maps',
+    desc: `Compare two ${CompanyName} maps: the countries both have been to, only one, and where you both want to go.`,
+    indexing: 'noindex,nofollow',
+  },
+
+  // Gifts (docs/API.md "Gifts")
+  [GIFTS_PAGE_URL]: {
+    pageName: 'Give a year of travel',
+    desc: `Give someone a year of ${CompanyName} Business or First Class: their whole life's travel on one map.`,
+    indexing: 'noindex,nofollow',
+  },
+  [GIFT_PAGE_URL]: {
+    pageName: 'A gift for you',
+    desc: `Someone has given you a year of ${CompanyName}. Redeem it for your travel map.`,
+    indexing: 'noindex,nofollow',
+  },
+
+  [UNSUBSCRIBE_PAGE_URL]: {
+    pageName: 'Stop emails',
+    desc: `Stop ${CompanyName}'s "On this day" emails.`,
+    indexing: 'noindex,nofollow',
+  },
+  [IMPORT_PAGE_URL]: {
+    pageName: 'Bring your travels from Polarsteps',
+    desc: `Bring your Polarsteps trips, photos and stories to your ${CompanyName} map, read on your own device.`,
     indexing: 'noindex,nofollow',
   },
 

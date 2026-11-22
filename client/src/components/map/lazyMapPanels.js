@@ -55,7 +55,17 @@ export const ShareDialog = lazyPanel(() => import('@/components/sharing/ShareDia
 export const ExtraMapDialog = lazyPanel(() => import('@/components/plans/ExtraMapDialog'));
 // The tips the map opens with, once a visit (fetched as the loading screen lifts)
 export const MapTipsDialog = lazyPanel(() => import('./MapTipsDialog'));
+// A picture of the map to share (utils/shareCard/)
+export const ShareCardDialog = lazyPanel(() => import('@/components/shareCard/ShareCardDialog'));
+// "Where have you been?": ticking many countries at once (the first time a map loads, or the country list)
+export const QuickFillDialog = lazyPanel(() => import('./QuickFillDialog'));
+// The map as a printed poster (utils/poster/)
+export const MapPosterDialog = lazyPanel(() => import('@/components/poster/MapPosterDialog'));
+// "Your year in travel" (docs/API.md "Year in travel")
+export const YearRecapDialog = lazyPanel(() => import('@/components/recap/YearRecapDialog'));
 export const BadgesGoalsPanel = lazyPanel(() => import('@/components/achievements/BadgesGoalsPanel'));
+// "Where to go next": the want-to-go countries by the best time for each (utils/countries/whereNext.js)
+export const WhereNextPanel = lazyPanel(() => import('./WhereNextPanel'));
 // The slideshows: the map's ("Play my world"), a country's, and a trip's (the trip page)
 export const Slideshow = lazyPanel(() => import('@/components/slideshow/Slideshow'));
 // A country opened on its own, with its states and pins (a country's ticket's "Open country"),
@@ -69,6 +79,8 @@ const FOR_TOOL = {
   stats: [StatsPanel],
   countries: [CountryListPanel, CountryPanel],
   trips: [TripsPanel],
+  // A place there opens its country
+  next: [WhereNextPanel, CountryPanel],
   // A moment on the timeline opens its country
   timeline: [TimelinePanel, CountryPanel],
   upload: [PhotoUploadPanel],

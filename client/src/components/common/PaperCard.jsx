@@ -6,7 +6,8 @@ import React from 'react';
  * printed line, warm shadow).
  * - `title` adds an aged-parchment header strip with the title in the travel face over
  *   a dashed perforation, like the boarding pass (`titleId` names the card for
- *   assistive tech; `headingLevel` 2–4; `kicker` is a small line above it).
+ *   assistive tech; `headingLevel` 2–4, or 1 when the card is all the page shows, such as an
+ *   error; `kicker` is a small line above it).
  * - `action` sits at the right end of that strip (e.g. a list's "Delete All" button).
  * - `header` replaces that strip with your own (e.g. an embedded PageTitleCard).
  * - `as` picks the element: section (default), article, aside, nav…

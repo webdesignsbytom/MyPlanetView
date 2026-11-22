@@ -46,11 +46,49 @@ function widened(latitude, longitude, x) {
   return x + (full - x) * t;
 }
 
+// The projection itself, unrounded (projectToMap rounds it; positionFromMap inverts it)
+function projectExact(latitude, longitude) {
+  const robinsonX = MAP_CENTRE_X + MAP_X_SCALE * interpolate(X_TABLE, latitude) * longitude;
+  return {
+    x: widened(latitude, longitude, robinsonX),
+    y: MAP_EQUATOR_Y - MAP_Y_SCALE * Math.sign(latitude) * interpolate(Y_TABLE, latitude),
+  };
+}
+
 /** Real position -> SVG map position ({ x, y }), or null for an invalid position. */
 export function projectToMap(latitude, longitude) {
   if (!isValidLatLng(latitude, longitude)) return null;
-  const robinsonX = MAP_CENTRE_X + MAP_X_SCALE * interpolate(X_TABLE, latitude) * longitude;
-  const x = widened(latitude, longitude, robinsonX);
-  const y = MAP_EQUATOR_Y - MAP_Y_SCALE * Math.sign(latitude) * interpolate(Y_TABLE, latitude);
+  const { x, y } = projectExact(latitude, longitude);
   return { x: round1(x), y: round1(y) };
+}
+
+// The pole lines, projectToMap(90, 0).y and projectToMap(-90, 0).y
+const MAP_TOP = -16.6;
+const MAP_BOTTOM = 1020.6;
+
+// The value in [lo, hi] where a rising function reaches `target` (48 halvings: far finer
+// than a metre)
+function solveRising(fn, lo, hi, target) {
+  let low = lo;
+  let high = hi;
+  for (let i = 0; i < 48; i++) {
+    const mid = (low + high) / 2;
+    if (fn(mid) < target) low = mid;
+    else high = mid;
+  }
+  return (low + high) / 2;
+}
+
+/**
+ * SVG map position -> real position ({ latitude, longitude }), or null off the world: the
+ * client's positionFromMap (client/src/utils/map/projection.js), the same maths. The travel
+ * stats use it for the places' pins (utils/travelStats.js).
+ */
+export function positionFromMap(x, y) {
+  if (!Number.isFinite(x) || !Number.isFinite(y) || y < MAP_TOP || y > MAP_BOTTOM) return null;
+  // y falls as the latitude rises
+  const latitude = solveRising((lat) => -projectExact(lat, 0).y, -90, 90, -y);
+  if (x < projectExact(latitude, -180).x || x > projectExact(latitude, 180).x) return null;
+  const longitude = solveRising((lng) => projectExact(latitude, lng).x, -180, 180, x);
+  return { latitude, longitude };
 }

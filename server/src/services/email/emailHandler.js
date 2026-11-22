@@ -27,6 +27,7 @@ const EMAIL_PROFILES = {
   userVerify: { templatesDir: 'users' },
   userReset: { templatesDir: 'users' },
   userChangeEmail: { templatesDir: 'users' }, // to the current address before an email change
+  memories: { templatesDir: 'users' }, // "On this day" (docs/API.md "Emails"), with an unsubscribe link
   contact: { templatesDir: 'contact' },
 };
 
@@ -88,7 +89,7 @@ const isRetryable = (error) =>
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Send one email. Never throws: returns true once Resend accepts it, false otherwise.
-async function sendEmail(profileKey, recipient, subject, template, context = {}, { replyTo } = {}) {
+async function sendEmail(profileKey, recipient, subject, template, context = {}, { replyTo, headers } = {}) {
   let html;
   try {
     const profile = EMAIL_PROFILES[profileKey];
@@ -111,6 +112,8 @@ async function sendEmail(profileKey, recipient, subject, template, context = {},
     subject,
     html,
     ...(replyTo ? { replyTo } : {}),
+    // List-Unsubscribe and its one-click partner, on emails people can stop (docs/API.md "Emails")
+    ...(headers ? { headers } : {}),
   };
   // One key for every attempt, so a retry after a lost reply can't send the email twice
   const idempotencyKey = `${profileKey}-${template}-${crypto.randomUUID()}`;
@@ -153,6 +156,10 @@ export const sendUserPasswordResetEmail = (recipient, subject, template, context
 
 export const sendUserChangeEmailConfirmation = (recipient, subject, template, context) =>
   sendEmail('userChangeEmail', recipient, subject, template, context);
+
+// "On this day" (docs/API.md "Emails"): `headers` carries List-Unsubscribe
+export const sendMemoryEmail = (recipient, subject, template, context, { headers } = {}) =>
+  sendEmail('memories', recipient, subject, template, context, { headers });
 
 // Replying to a contact-form notification goes to the person who sent the form
 export const sendContactEmail = (recipient, subject, template, context = {}) =>

@@ -19,9 +19,11 @@ import {
 } from '../plans';
 import { isPole } from '@/utils/map/specialPlaces';
 import { UK, isUkNation, placeOnMap } from '@/utils/map/ukNations';
+import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
 import { ukNationAt } from '../ukNationLookup';
 import { setMapSplitUk } from '../ukNationSplit';
 import { adsFor } from '../offers';
+import { parseRecapYear, yearRecap } from '../recaps';
 import {
   LANDMARK_ROWS,
   atLeast,
@@ -281,7 +283,19 @@ export function registerMapRoutes() {
       const count = getDb().travellers.filter((t) => t.mapId === map.id).length;
       if (body.groupType !== map.groupType && count > GROUP_MAX_TRAVELLERS[body.groupType]) return fail(409, tooManyForGroup(body.groupType));
     }
+    // Where the map's people live (docs/API.md "Stats"): a country or Antarctica, as a
+    // traveller's places are (a UK nation is the UK, a region its country)
+    let home;
+    if (body.homeCountryCode !== undefined) {
+      home = body.homeCountryCode ? cleanCountry(body.homeCountryCode) : null;
+      if (body.homeCountryCode && !home) return fail(400, COUNTRY_NOT_FOUND);
+      if (isPole(home)) return fail(400, POLE_NOT_A_HOME);
+    }
+    // The style everyone who opens the map sees it in (docs/API.md "Map styles")
+    if (body.style !== undefined && !MAP_STYLE_IDS.includes(body.style)) return fail(400, 'Choose one of the map styles.');
     if (name) map.name = name;
+    if (home !== undefined) map.homeCountryCode = home ? placeOnMap(home, false) : null;
+    if (body.style !== undefined) map.style = body.style;
     if (body.groupType !== undefined) map.groupType = body.groupType;
     // The UK as its four nations: changing it moves the map's UK data (as the server)
     if (body.splitUk !== undefined) {
@@ -328,6 +342,17 @@ export function registerMapRoutes() {
     const map = findMap(params.mapId);
     const role = mapRole(map);
     return deny(role, 'VIEWER', NOT_FOUND) || ok({ stats: mapStats(map, role) });
+  });
+
+  // Its year in travel (docs/API.md "Year in travel"): anyone on the map
+  route('GET', '/api/maps/:mapId/recap/:year', ({ params }) => {
+    const map = findMap(params.mapId);
+    const role = mapRole(map);
+    const denied = deny(role, 'VIEWER', NOT_FOUND);
+    if (denied) return denied;
+    const year = parseRecapYear(params.year);
+    if (!year) return fail(400, 'Choose a year from 1900 to next year.');
+    return ok({ recap: yearRecap(map, role, year) });
   });
 
   // Travellers
@@ -394,6 +419,23 @@ export function registerMapRoutes() {
   });
 
   // Visits
+  // Ticking several countries at once (the map's "Where have you been?"), as the server's
+  // quickFillVisitsHandler: the owner or a co-owner, no verified email needed, 1 to 300 known
+  // places, each marked visited where it isn't already
+  route('POST', '/api/maps/:mapId/visits/quick-fill', ({ params, body }) => {
+    const map = findMap(params.mapId);
+    const denied = deny(mapRole(map), 'CO_OWNER', NOT_FOUND);
+    if (denied) return denied;
+    const codes = body?.countryCodes;
+    const invalid = 'Choose between 1 and 300 countries, each one on the map.';
+    if (!Array.isArray(codes) || !codes.length || codes.length > 300 || !codes.every((code) => typeof code === 'string' && countryExists(code))) {
+      return fail(400, invalid);
+    }
+    let added = 0;
+    for (const code of new Set(codes)) added += markVisited(map.id, code, 'MANUAL').length;
+    return ok({ added });
+  });
+
   route('PUT', '/api/maps/:mapId/visits/:countryCode', ({ params, body }) => {
     const db = getDb();
     const map = findMap(params.mapId);
@@ -596,6 +638,15 @@ export function registerMapRoutes() {
     const gpsPlace = gpsCountry === UK && map.splitUk ? (ukNationAt(body.latitude, body.longitude) ?? UK) : gpsCountry;
     const chosen = cleanCountry(body.countryCode);
     const countryCode = gpsPlace ?? (chosen ? placeOnMap(chosen, map.splitUk) : null);
+    // An import's key (docs/API.md "Importing from Polarsteps"): one photo per key on a map
+    if (body.importedFrom !== undefined && !/^polarsteps:photo:[A-Za-z0-9._/-]{1,200}$/.test(String(body.importedFrom))) {
+      return fail(400, 'That import key isn’t valid.');
+    }
+    if (body.importedFrom && db.photos.some((p) => p.mapId === map.id && p.importedFrom === body.importedFrom)) {
+      dropUpload();
+      session.presigned.delete(body.photoId);
+      return fail(409, 'That photo has been imported already.');
+    }
     // The country cap with the final country: full -> 409, and the files go
     const full = countryCapProblem(map, countryCode, kind);
     if (full) {
@@ -618,6 +669,7 @@ export function registerMapRoutes() {
       width: Number(body.width) || 0,
       height: Number(body.height) || 0,
       hidden: false,
+      ...(body.importedFrom ? { importedFrom: body.importedFrom } : {}),
       image: {
         kind: 'blob',
         thumbKey: pending.keys.THUMB,

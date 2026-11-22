@@ -8,6 +8,7 @@ import CountryTicket from './CountryTicket';
 import CountryListItem from './CountryListItem';
 import { ExpeditionStampIcon } from './StarBadge';
 import UnplacedPhotosButton from './UnplacedPhotosButton';
+import MapActionButton from './MapActionButton';
 import VerifyFirstNote from './VerifyFirstNote';
 import TextInput from '@/components/ui/TextInput';
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
@@ -68,6 +69,9 @@ function CountryListPanel({
   unplacedCount = 0,
   unplacedMore = false,
   onShowUnplaced,
+  // "Where have you been?": tick several countries at once (QuickFillDialog; the owner and
+  // co-owners; 22 Nov 2026)
+  onQuickFill = null,
   onClose,
 }) {
   const [search, setSearch] = useState('');
@@ -134,6 +138,11 @@ function CountryListPanel({
     <CountryTicket title='Countries' kicker='Travel log, A to Z' onClose={onClose}>
       {onShowUnplaced ? <UnplacedPhotosButton count={unplacedCount} more={unplacedMore} onOpen={onShowUnplaced} /> : null}
       {locked ? <VerifyFirstNote action='tick off countries' /> : null}
+      {onQuickFill ? (
+        <MapActionButton quiet onClick={onQuickFill}>
+          Tick several countries
+        </MapActionButton>
+      ) : null}
       <div className='grid gap-2 sm:grid-cols-[minmax(0,1fr)_12rem]'>
         {/* The placeholder isn't a name: it goes as soon as you type */}
         <label htmlFor='country-search' className='sr-only'>

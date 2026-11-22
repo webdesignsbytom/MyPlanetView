@@ -16,6 +16,7 @@ import { momentPage } from './moments.js';
 import { countryListPages } from './countryLists.js';
 import { adsFor } from '../services/offers.js';
 import { buildPassport } from '../services/travel/passport.js';
+import { travellerOption } from './passport.js';
 import { mapBadges, mapGoals } from '../services/travel/achievements.js';
 import { mapThemesView, themeAlbumPage } from './themes.js';
 import { countryMapOf, pinDetail, pinList, subdivisionStatuses } from './countryMaps.js';
@@ -175,8 +176,9 @@ export const getSharedPinHandler = handler(D, 'Open share link pin', async (req,
 export const getSharedPassportHandler = handler(D, 'Open share link passport', async (req, res) => {
   const shared = await sharedMap(req, res);
   if (!shared) return undefined;
-  const passport = await buildPassport(shared.map.id, shared.role);
+  const passport = await buildPassport(shared.map.id, shared.role, travellerOption(req));
   if (!passport) return notFound(req, res, D, EVENT_MESSAGES.shareCodeNotFound);
+  if (passport.travellerNotFound) return notFound(req, res, D, EVENT_MESSAGES.travellerNotFound);
   return sendDataResponse(res, 200, { passport });
 });
 

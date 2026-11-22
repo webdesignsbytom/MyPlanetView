@@ -46,8 +46,9 @@ const listOrder = ({ tripId, countryCode, unplaced, landmarkId, order }) => {
   return [{ createdAt: 'desc' }, { id: 'desc' }];
 };
 
-// The slideshows' lists: the DISPLAY copy too (a video's playback link comes from Stream)
-const DISPLAY_LIST_SELECT = {
+// The slideshows' lists: the DISPLAY copy too (a video's playback link comes from Stream);
+// the year recap's highlights too (domain/recaps.js)
+export const DISPLAY_LIST_SELECT = {
   ...PHOTO_LIST_SELECT,
   variants: { where: { size: { in: ['THUMB', 'DISPLAY'] } }, ...variantKeys },
 };

@@ -43,3 +43,25 @@ test('a traveller’s two country dropdowns are the same height, even with a lon
   const [a, b] = await Promise.all([born.boundingBox(), favourite.boundingBox()]);
   expect(Math.round(a.height)).toBe(Math.round(b.height));
 });
+
+// 22 Nov 2026 (the user's report): choosing a style or a map type low down in Settings moved
+// the whole map page up, leaving a blank strip at the bottom. Each card's radio is hidden
+// (sr-only, absolutely placed), and without a positioned card it was placed against the page,
+// far below the scrolled panel, so focusing it scrolled the page to show it.
+test('choosing a style or a map type low in Settings leaves the map page where it is', async ({ page }) => {
+  await openMap(page);
+  const settings = await openTool(page, 'Map settings', 'Settings');
+  const frame = page.locator('[data-map-style]:has(#main-content)');
+  const pageMoved = () =>
+    frame.evaluate((el) => Math.round(el.scrollTop + document.scrollingElement.scrollTop + el.getBoundingClientRect().top));
+
+  for (const name of ['Detailed', 'Starry night', 'Regular', 'World map']) {
+    const named = { name: new RegExp(`^${name}`) };
+    const radio = settings.getByRole('radio', named);
+    const card = settings.locator('label').filter({ has: page.getByRole('radio', named) });
+    await card.scrollIntoViewIfNeeded();
+    await card.click();
+    await expect(radio).toBeChecked();
+    expect(await pageMoved()).toBe(0);
+  }
+});

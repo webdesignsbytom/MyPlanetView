@@ -68,6 +68,13 @@ export function registerMomentRoutes() {
     if (pin.error) return fail(400, pin.error);
     const data = { latitude: null, longitude: null, spotShared: false, ...parsed.value.data, ...pin.data };
     const { travellerIds = [], photoIds = [] } = parsed.value;
+    // An imported step's story (docs/API.md "Importing from Polarsteps"): one per key on a map
+    if (body.importedFrom !== undefined && !/^polarsteps:moment:[A-Za-z0-9._/-]{1,200}$/.test(String(body.importedFrom))) {
+      return fail(400, 'That import key isn’t valid.');
+    }
+    if (body.importedFrom && getDb().moments.some((m) => m.mapId === map.id && m.importedFrom === body.importedFrom)) {
+      return fail(409, 'That story has been imported already.');
+    }
     const now = new Date().toISOString();
     const moment = {
       id: newId(),
@@ -83,6 +90,7 @@ export function registerMomentRoutes() {
       createdById: session.signedIn ? me().id : null,
       travellerIds,
       photoIds,
+      ...(body.importedFrom ? { importedFrom: body.importedFrom } : {}),
       createdAt: now,
       updatedAt: now,
     };

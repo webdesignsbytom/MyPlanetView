@@ -51,6 +51,159 @@ test('a country opens on its own, with its states and a pin’s visits kept apar
   await expect.poll(() => world.getAttribute('viewBox')).not.toBe(before);
 });
 
+// The little 3D landmark models (22 Nov 2026, the user's wish): on the country maps only, each
+// standing on its real spot, as Big Ben does on Westminster and the Eiffel Tower on Paris
+
+/**
+ * The model is drawn, its picture has loaded, and the spot its tile stands on is in the state
+ * (`inBounds`: within the state's bounds, for a spot off its shore, as Liberty Island is).
+ */
+async function expectModelOn(map, id, stateCode, { inBounds = false } = {}) {
+  const model = map.locator(`[data-landmark-model="${id}"]`);
+  await expect(model.locator('image')).toBeVisible();
+  await expect
+    .poll(() =>
+      model.locator('image').evaluate((image) => {
+        const probe = new Image();
+        probe.src = image.href.baseVal;
+        return probe.decode().then(
+          () => probe.naturalWidth,
+          () => 0,
+        );
+      }),
+    )
+    .toBeGreaterThan(0);
+  const onState = await model.evaluate(
+    (group, { code, bounds }) => {
+      const { e: x, f: y } = group.transform.baseVal.consolidate().matrix;
+      const state = document.querySelector(`[data-state="${code}"]`);
+      if (bounds) {
+        const box = state.getBBox();
+        return x >= box.x && x <= box.x + box.width && y >= box.y && y <= box.y + box.height;
+      }
+      const point = new DOMPoint(x, y);
+      return [...state.querySelectorAll('path')].some((path) => path.isPointInFill(point));
+    },
+    { code: stateCode, bounds: inBounds },
+  );
+  expect(onState).toBe(true);
+  return model;
+}
+
+test('Big Ben stands on Westminster on the United Kingdom’s own map', async ({ page }) => {
+  await openMap(page);
+  await expect(page.locator('[data-landmark-model]')).toHaveCount(0);
+  const map = await openCountryMap(page, 'United Kingdom');
+  await expectModelOn(map, 'big-ben', 'GB-WSM');
+  await expect(map.locator('[data-landmark-model]')).toHaveCount(1);
+  // Only the country's own map has it: none on the world map
+  await map.getByRole('button', { name: 'World map' }).click();
+  await expect(page.locator('[data-country-map]')).toHaveCount(0);
+  await expect(page.locator('[data-landmark-model]')).toHaveCount(0);
+});
+
+test('the Eiffel Tower stands on Paris on France’s own map, a little taller than Big Ben', async ({ page }) => {
+  await openMap(page);
+  const map = await openCountryMap(page, 'France');
+  const tower = await expectModelOn(map, 'eiffel-tower', 'FR-75');
+  await expect(map.locator('[data-landmark-model]')).toHaveCount(1);
+  // Every model is drawn at one scale: at the same zoom the tower is taller than Big Ben (64 px
+  // at zoom 1), and the pin in Paris is still drawn over it
+  const height = await tower.locator('image').evaluate((image) => image.getBoundingClientRect().height);
+  const zoom = await map.locator('svg[role="application"]').evaluate((svg) => svg.getBoundingClientRect().width / svg.viewBox.baseVal.width / 0.96);
+  expect(height).toBeGreaterThan(Math.min(150, Math.max(40, 64 * Math.sqrt(zoom))) * 1.02);
+  await map.locator('[data-pin]').first().click();
+  await expect(page.getByRole('dialog', { name: 'Paris' })).toBeVisible();
+});
+
+test('the Colosseum stands on Rome on Italy’s own map, low and wide', async ({ page }) => {
+  await openMap(page);
+  const map = await openCountryMap(page, 'Italy');
+  const colosseum = await expectModelOn(map, 'colosseum', 'IT-RM');
+  await expect(map.locator('[data-landmark-model]')).toHaveCount(1);
+  // Low and wide (drawn at least 0.7 of Big Ben's height, bigger than the one scale, so it reads at a glance)
+  const box = await colosseum.locator('image').boundingBox();
+  expect(box.width).toBeGreaterThan(box.height);
+});
+
+test('the Statue of Liberty stands in New York Harbor on the United States’ own map', async ({ page }) => {
+  await openMap(page);
+  const map = await openCountryMap(page, 'United States');
+  // Liberty Island is off New York's shore at the map's detail: its spot is in the harbour
+  await expectModelOn(map, 'statue-of-liberty', 'US-NY', { inBounds: true });
+  await expect(map.locator('[data-landmark-model]')).toHaveCount(1);
+});
+
+// The next five (22 Nov 2026), each on its own country's map, inside its state or province
+for (const [country, id, area, place] of [
+  ['India', 'taj-mahal', 'IN-UP', 'Uttar Pradesh'],
+  ['Egypt', 'pyramids-of-giza', 'EG-GZ', 'Giza'],
+  ['Australia', 'sydney-opera-house', 'AUS-2654', 'New South Wales'],
+  ['Brazil', 'christ-the-redeemer', 'BR-RJ', 'Rio de Janeiro'],
+  ['China', 'great-wall', 'CN-BJ', 'Beijing'],
+  // and the five after them
+  ['Japan', 'mount-fuji', 'JP-19', 'Yamanashi (its summit on the border)'],
+  ['Greece', 'parthenon', 'GR-A1', 'Attica'],
+  ['Spain', 'sagrada-familia', 'ES-B', 'Barcelona'],
+  // Natural Earth swaps Moscow's two codes: RU-MOS is the city, "Moskva"
+  ['Russia', 'saint-basils', 'RU-MOS', 'Moscow'],
+  ['Mexico', 'chichen-itza', 'MX-YUC', 'Yucatán'],
+  // and the five after those
+  ['Peru', 'machu-picchu', 'PE-CUS', 'Cusco'],
+  ['Cambodia', 'angkor-wat', 'KH-17', 'Siem Reap'],
+  ['Jordan', 'petra', 'JO-MN', 'Ma’an'],
+  ['Germany', 'neuschwanstein', 'DE-BY', 'Bavaria'],
+  // Easter Island is in one of Chile's insets, part of Valparaíso
+  ['Chile', 'moai', 'CL-VS', 'Valparaíso'],
+  // and the five after those
+  ['Netherlands', 'kinderdijk', 'NL-ZH', 'South Holland'],
+  ['Turkey', 'hagia-sophia', 'TR-34', 'Istanbul'],
+  ['Canada', 'cn-tower', 'CA-ON', 'Ontario'],
+  ['United Arab Emirates', 'burj-khalifa', 'AE-DU', 'Dubai'],
+  ['Singapore', 'marina-bay-sands', 'SG-01', 'Central Singapore'],
+  // and the five after those
+  ['South Africa', 'table-mountain', 'ZA-WC', 'the Western Cape'],
+  ['Indonesia', 'borobudur', 'ID-JT', 'Central Java'],
+  // Kuala Lumpur is inside Selangor on the map; the city's own outline is drawn over it
+  ['Malaysia', 'petronas-towers', 'MY-14', 'Kuala Lumpur'],
+  ['Thailand', 'ayutthaya', 'TH-14', 'Ayutthaya'],
+  // and the five after those
+  ['Tanzania', 'kilimanjaro', 'TZ-09', 'Kilimanjaro'],
+  ['Myanmar', 'bagan', 'MM-04', 'Mandalay'],
+  // Prague is inside Central Bohemia on the map; the city's own outline is drawn over it
+  ['Czechia', 'prague-castle', 'CZ-PR', 'Prague'],
+  // and the five after those
+  ['Argentina', 'perito-moreno', 'AR-Z', 'Santa Cruz'],
+  // Seoul is inside Gyeonggi on the map; the city's own outline is drawn over it
+  ['South Korea', 'gyeongbokgung', 'KR-11', 'Seoul'],
+  ['Cuba', 'old-havana', 'CU-03', 'Havana'],
+  ['Norway', 'bryggen', 'NO-12', 'Hordaland'],
+]) {
+  test(`${country}’s own map has its landmark model, in ${place}`, async ({ page }) => {
+    await openMap(page);
+    const map = await openCountryMap(page, country);
+    await expectModelOn(map, id, area);
+    await expect(map.locator('[data-landmark-model]')).toHaveCount(1);
+  });
+}
+
+// Spots just off their area's outline at the map's detail: within its bounds. The Tower of
+// Belém stands in the Tagus; Victoria Falls is on the Zambezi, the border; Ha Long Bay is the bay
+for (const [country, id, area, place] of [
+  ['Portugal', 'belem-tower', 'PT-11', 'Lisbon'],
+  ['Zambia', 'victoria-falls', 'ZM-07', 'Southern Province'],
+  ['Vietnam', 'ha-long-bay', 'VN-13', 'Quảng Ninh'],
+  // the Cliffs of Moher are Clare's very edge, the sea's side of its coastline at the map's detail
+  ['Ireland', 'cliffs-of-moher', 'IE-CE', 'Clare'],
+]) {
+  test(`${country}’s own map has its landmark model, by ${place}`, async ({ page }) => {
+    await openMap(page);
+    const map = await openCountryMap(page, country);
+    await expectModelOn(map, id, area, { inBounds: true });
+    await expect(map.locator('[data-landmark-model]')).toHaveCount(1);
+  });
+}
+
 test('marking a state colours it and brings its country', async ({ page }) => {
   await openMap(page);
   const map = await openCountryMap(page, 'Canada');

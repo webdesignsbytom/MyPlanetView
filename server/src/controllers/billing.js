@@ -15,7 +15,8 @@ import {
   pricesView,
 } from '../utils/constants/plans.js';
 import { hasLiveSubscription } from '../utils/stripeState.js';
-import { claimStripeCustomer, findSubscription, forgetStripeEvent, recordStripeEvent } from '../domain/billing.js';
+import { findSubscription, forgetStripeEvent, recordStripeEvent } from '../domain/billing.js';
+import { ensureStripeCustomer } from '../services/billing/customers.js';
 import { loadUserPlan } from '../services/travel/plans.js';
 import {
   extraMapPriceId,
@@ -29,6 +30,7 @@ import { applyStripeSubscription, latestSubscription, linkCheckoutSession } from
 import { promoTrialFor } from '../services/billing/promo.js';
 import { inviteOfferCouponId, inviteOfferFor } from '../services/billing/inviteOffer.js';
 import { badRequest, conflict, handler, reply } from './helpers/travel.js';
+import { handleGiftCheckout, handleGiftRefund } from './gifts.js';
 
 const D = DOMAINS.billing;
 
@@ -86,20 +88,8 @@ async function createCheckout(user, { plan, interval, extraMaps, customerId, tri
   if (extraMaps > 0) lineItems.push({ price: extraMapPriceId(plan, interval), quantity: extraMaps });
   if (lineItems.some((item) => !item.price)) return null;
   const stripe = await stripeClient();
-  let customer = customerId;
-  if (!customer) {
-    const made = (await stripe.customers.create({ email: user.email, metadata: { userId: user.id } })).id;
-    customer = await claimStripeCustomer({ userId: user.id, stripeCustomerId: made });
-    // Another Checkout (a double click) gave the account its customer first: this one is
-    // never used, so it goes, and both Checkouts share one customer (its open sessions below)
-    if (customer !== made) {
-      try {
-        await stripe.customers.del(made);
-      } catch {
-        // An unused customer left in Stripe: harmless
-      }
-    }
-  }
+  // Shared with a double click's Checkout, whose open session goes below
+  const customer = await ensureStripeCustomer(stripe, user, customerId);
   const open = await stripe.checkout.sessions.list({ customer, status: 'open', limit: 10 });
   for (const session of open?.data ?? []) await stripe.checkout.sessions.expire(session.id);
   // The invite offer: half price for 3 months (a fixed amount off a yearly plan's first year)
@@ -279,6 +269,8 @@ const SUBSCRIPTION_EVENTS = new Set([
 async function handleStripeEvent(event) {
   const object = event.data?.object;
   if (event.type === 'checkout.session.completed') {
+    // A gift's one-off payment (docs/API.md "Gifts"): its own handling, nothing to link
+    if (await handleGiftCheckout(object)) return;
     const userId = await linkCheckoutSession(object);
     if (userId) logEvent(createBillingEvent({ user: { id: userId }, action: 'Checkout Completed', detail: `event=${event.id}` }));
     return;
@@ -303,6 +295,11 @@ async function handleStripeEvent(event) {
         detail: `${event.type} plan=${s.plan} extraMaps=${s.extraMaps} status=${s.status}`,
       }));
     }
+  }
+  // A refund: a gift not yet redeemed stops working (subscriptions' refunds change nothing here)
+  if (event.type === 'charge.refunded') {
+    await handleGiftRefund(object);
+    return;
   }
   // Anything else is recorded (so a retry is skipped) and ignored
 }

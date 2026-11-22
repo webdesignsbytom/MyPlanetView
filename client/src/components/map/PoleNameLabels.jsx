@@ -16,7 +16,7 @@ function PoleNameLabels({ zoom, visitsByCode, always = false, showAntarctica = t
   if (!always && zoom < NAME_ZOOM) return null;
   const fontSize = 10 / Math.sqrt(zoom) / Math.max(zoom / 4, 1);
   return (
-    <g className='pointer-events-none fill-map-ink font-medium' fontSize={fontSize} textAnchor='middle' aria-hidden='true'>
+    <g className='pointer-events-none fill-map-names font-medium' fontSize={fontSize} textAnchor='middle' aria-hidden='true'>
       {POLE_PLACES.map((pole) => {
         if (!showAntarctica && isAntarctic(pole.code)) return null;
         // Clear of the marker or the stamp, where they're drawn (just inside the pole lines)
