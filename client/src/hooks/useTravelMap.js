@@ -196,10 +196,17 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     [mapId, refresh],
   );
 
-  // The map's own design as it now stands (docs/API.md "Map designs"): shown at once while
-  // it's edited, and with the server's answer after each save
+  // The map's own design for a map style as it now stands (docs/API.md "Map designs"; one per
+  // style): shown at once while it's edited, and with the server's answer after each save
   const setDesign = useCallback(
-    (design) => setState((prev) => (onMap(prev, mapId) ? { ...prev, map: { ...prev.map, design } } : prev)),
+    (style, design) =>
+      setState((prev) => {
+        if (!onMap(prev, mapId)) return prev;
+        const designs = { ...prev.map.designs };
+        if (design) designs[style] = design;
+        else delete designs[style];
+        return { ...prev, map: { ...prev.map, designs } };
+      }),
     [mapId],
   );
 

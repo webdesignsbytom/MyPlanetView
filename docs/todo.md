@@ -1,2 +1,2 @@
-2. should we have the posters local or in bucket? 
-3. whats the deal with the bucket not working in indonesia
+1. select colour for hover country colour
+2. string

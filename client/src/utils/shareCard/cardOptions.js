@@ -1,6 +1,5 @@
 // What goes on a share card (drawShareCard.js): a map's, from what the map page already has.
 import { countsAsVisited } from '@/utils/map/visitStatus';
-import { shownDesign } from '@/utils/map/mapDesign';
 
 const word = (n, one, many) => (n === 1 ? one : many);
 
@@ -17,15 +16,18 @@ export function mapCardStats(stats) {
   return out;
 }
 
-/** The card of a whole map: the places visited or lived in, coloured in. */
-export function mapCardOptions(map) {
+/**
+ * The card of a whole map: the places visited or lived in, coloured in (in `design`'s colours:
+ * the design the map is shown in, or null).
+ */
+export function mapCardOptions(map, design = null) {
   return {
     kicker: 'My travel map',
     title: map.name,
     highlight: (map.visits || []).filter((visit) => countsAsVisited(visit.status)).map((visit) => visit.countryCode),
     stats: mapCardStats(map.stats),
     splitUk: Boolean(map.splitUk),
-    colours: shownDesign(map.design)?.countries ?? null,
+    colours: design?.countries ?? null,
     fileName: 'my-planet-view-map.png',
     shareText: `My travel map: ${map.stats?.countries ?? 0} ${word(map.stats?.countries, 'country', 'countries')} so far.`,
   };

@@ -1,0 +1,117 @@
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import BadgeOwnerSwitch from '@/components/achievements/BadgeOwnerSwitch';
+import BadgeSticker from '@/components/achievements/BadgeSticker';
+import BadgeSuitcase from '@/components/achievements/BadgeSuitcase';
+import GoalProgressBar from '@/components/achievements/GoalProgressBar';
+
+const TRAVELLERS = [
+  { id: 't-1', name: 'Charlie' },
+  { id: 't-2', name: 'Alex' },
+];
+
+describe('BadgeOwnerSwitch', () => {
+  it('offers everyone first, then each traveller, in a labelled group', () => {
+    render(<BadgeOwnerSwitch travellers={TRAVELLERS} value={null} onChange={vi.fn()} />);
+    const group = screen.getByRole('group');
+    expect(group.getAttribute('aria-label')).toBe('Whose badges');
+    const buttons = within(group).getAllByRole('button');
+    expect(buttons.map((b) => b.textContent)).toEqual(['Everyone', 'Charlie', 'Alex']);
+    expect(buttons.map((b) => b.getAttribute('aria-pressed'))).toEqual(['true', 'false', 'false']);
+  });
+
+  it('presses the chosen traveller and reports each choice', () => {
+    const onChange = vi.fn();
+    render(<BadgeOwnerSwitch travellers={TRAVELLERS} value='t-2' onChange={onChange} />);
+    expect(screen.getByText('Alex').getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByText('Everyone').getAttribute('aria-pressed')).toBe('false');
+    fireEvent.click(screen.getByText('Charlie'));
+    expect(onChange).toHaveBeenLastCalledWith('t-1');
+    fireEvent.click(screen.getByText('Everyone'));
+    expect(onChange).toHaveBeenLastCalledWith(null);
+  });
+
+  it('takes the passport page’s words', () => {
+    render(<BadgeOwnerSwitch travellers={TRAVELLERS} value={null} onChange={vi.fn()} label='Whose passport' everyone='The whole family' />);
+    expect(screen.getByRole('group').getAttribute('aria-label')).toBe('Whose passport');
+    expect(screen.getByText('The whole family')).toBeTruthy();
+  });
+});
+
+describe('BadgeSticker', () => {
+  const sticker = (badge) => render(<ul><BadgeSticker badge={badge} /></ul>).container.querySelector('li');
+
+  it('shows an earned badge with its day and description', () => {
+    const li = sticker({ key: 'countries-10', group: 'countries', earnedAt: '2026-03-12T10:00:00Z' });
+    expect(li.textContent).toContain('Ten countries');
+    expect(li.textContent).toContain('Earned 12 Mar 2026');
+    expect(li.getAttribute('title')).toContain('10 countries visited or lived in');
+    expect(li.querySelector('.sr-only').textContent).toContain('10 countries visited');
+    expect(li.querySelector('[aria-hidden="true"]').className).toContain('border-double');
+  });
+
+  it('says only "Earned" for a traveller’s badge from a trip with no dates', () => {
+    const li = sticker({ key: 'landmarks-1', group: 'landmarks', earned: true });
+    expect(li.textContent).toContain('First stamp');
+    expect(screen.getByText('Earned').className).toContain('text-poster-red-deep');
+  });
+
+  it('shows how far along one not earned yet is, as a dashed outline', () => {
+    const li = sticker({ key: 'countries-25', group: 'countries', have: 3, need: 25 });
+    expect(li.textContent).toContain('3 of 25');
+    expect(li.textContent).not.toContain('Earned');
+    expect(li.querySelector('[aria-hidden="true"]').className).toContain('border-dashed');
+  });
+
+  it('names a badge the client doesn’t know from its key', () => {
+    const li = sticker({ key: 'secret-new-badge', group: 'countries', have: 0, need: 1 });
+    expect(li.textContent).toContain('secret new badge');
+    expect(li.getAttribute('title')).toBeNull();
+  });
+});
+
+describe('BadgeSuitcase', () => {
+  const BADGES = [
+    { key: 'photos-100', group: 'photos', have: 10, need: 100 },
+    { key: 'countries-1', group: 'countries', earnedAt: '2026-01-01' },
+    { key: 'countries-5', group: 'countries', have: 2, need: 5 },
+    { key: 'mystery', group: 'later', earned: true },
+  ];
+
+  it('counts the earned ones and groups the stickers in the server’s order, unknown groups last', () => {
+    const { container } = render(<BadgeSuitcase badges={BADGES} />);
+    expect(screen.getByText(/2 of 4 earned\./)).toBeTruthy();
+    expect(screen.getByText(/Each is a sticker on the suitcase/)).toBeTruthy();
+    const headings = [...container.querySelectorAll('h4')].map((h) => h.textContent);
+    expect(headings).toEqual(['Countries', 'Photos', 'later']);
+    expect(container.querySelectorAll('li').length).toBe(4);
+  });
+
+  it('puts its note and the switch above the case', () => {
+    render(
+      <BadgeSuitcase badges={BADGES} note='From the completed trips Charlie was on.'>
+        <span data-testid='switch'>switch</span>
+      </BadgeSuitcase>,
+    );
+    expect(screen.getByText(/From the completed trips Charlie was on\./)).toBeTruthy();
+    expect(screen.queryByText(/Each is a sticker/)).toBeNull();
+    expect(screen.getByTestId('switch')).toBeTruthy();
+  });
+});
+
+describe('GoalProgressBar', () => {
+  const width = (fraction) => render(<GoalProgressBar fraction={fraction} />).container.querySelector('span span').style.width;
+
+  it('fills to the rounded share, held between 0 and 100%', () => {
+    expect(width(0.456)).toBe('46%');
+    expect(width(1.7)).toBe('100%');
+    expect(width(-2)).toBe('0%');
+  });
+
+  it('is decorative', () => {
+    const { container } = render(<GoalProgressBar fraction={0.5} className='extra' />);
+    expect(container.firstChild.getAttribute('aria-hidden')).toBe('true');
+    expect(container.firstChild.className).toContain('extra');
+  });
+});

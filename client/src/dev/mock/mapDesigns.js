@@ -1,10 +1,12 @@
-// Mock mode only: a map's own design (docs/API.md "Map designs"), as the server's
-// utils/mapDesigns.js and controllers/mapDesigns.js. Kept on the map row (`map.design`:
-// { shown, countries, names, grid, pictureKey }); the picture is the session's blob of the
-// upload (a reload loses it, as every mock upload: the design then shows without it).
+// Mock mode only: a map's own designs, one per map style (docs/API.md "Map designs"), as the
+// server's utils/mapDesigns.js and controllers/mapDesigns.js. Kept on the map row
+// (`map.designs`: style -> { shown, countries, names, grid, pictureKey }); the picture is the
+// session's blob of the upload (a reload loses it, as every mock upload: the design then
+// shows without it).
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { isPole } from '@/utils/map/specialPlaces';
 import { DESIGN_COLOUR } from '@/utils/map/mapDesign';
+import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
 import { session } from './store';
 
 const MB = 1024 * 1024;
@@ -20,7 +22,26 @@ export const DESIGN_MESSAGES = {
   designPictureType: 'The picture must be a JPEG, PNG or WebP image.',
   designPictureInvalid: 'That picture upload isn’t valid. Please try again.',
   designPictureTooLarge: 'That picture is too big. Please choose a smaller one.',
+  invalidMapStyle: 'Choose one of the map styles.',
 };
+
+/** The map style a design request names, or null. */
+export const designStyleOf = (value) => (MAP_STYLE_IDS.includes(value) ? value : null);
+
+/**
+ * A map's designs (style -> design). A store from before designs were per style kept one as
+ * `map.design`: it was drawn on the World map, so it becomes that style's, as the server's
+ * migration does.
+ */
+export function designsOf(map) {
+  if (!map) return {};
+  if (map.design) {
+    map.designs = { animated: map.design, ...map.designs };
+    delete map.design;
+  }
+  map.designs ??= {};
+  return map.designs;
+}
 
 function cleanColour(value) {
   if (value === null) return { ok: true, value: null };
@@ -77,12 +98,13 @@ export function checkDesignPicture({ contentType, bytes }) {
 /** A new design, as the server makes one. */
 export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, pictureKey: null });
 
-/** The design as the replies give it, or null for a map without one. */
-export function designView(map) {
-  const design = map?.design;
+/** A map's design for a style as the replies give it, or null when it has none. */
+export function designView(map, style) {
+  const design = designsOf(map)[style];
   if (!design) return null;
   const url = design.pictureKey ? session.blobs.get(design.pictureKey) : null;
   return {
+    style,
     shown: Boolean(design.shown),
     countries: { ...design.countries },
     names: design.names ?? null,
@@ -90,3 +112,6 @@ export function designView(map) {
     picture: url ? { url } : null,
   };
 }
+
+/** A map's designs as its reply gives them: style -> design. */
+export const designsView = (map) => Object.fromEntries(Object.keys(designsOf(map)).map((style) => [style, designView(map, style)]));

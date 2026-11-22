@@ -1,8 +1,9 @@
 // A map's own design (docs/API.md "Map designs"; 21 Nov 2026, the user's wish): the colour
-// rules (a copy of the server's utils/mapDesigns.js) and how the map wears a design. The
-// design is the map's, shown to everyone who opens it, on the map's own style (mapStyles.js
-// shownStyle; 22 Nov 2026, the user's wish: it was always the World map's look): its own
-// picture for the sea, its colours for countries, the names and the grid.
+// rules (a copy of the server's utils/mapDesigns.js) and how the map wears a design. A map
+// has one design per map style (22 Nov 2026, the user's wish: colours chosen on Black and
+// white showed on the World map), shown to everyone who opens the map while it's in that
+// style (mapStyles.js shownStyle): its own picture for the sea, its colours for countries,
+// the names and the grid.
 import { REGION_PARENT } from './regionPlaces';
 import { REGION_PLACES, SPECIAL_PLACES, countriesOnMap } from './countries';
 import { isPole } from './specialPlaces';
@@ -24,6 +25,9 @@ export const DESIGN_PICTURE_ACCEPT = 'image/*';
 
 // A colour is saved this long after the last change (a colour picker sends one per move)
 export const DESIGN_SAVE_DELAY_MS = 500;
+
+/** A map's design for a map style (the reply's `designs`, style -> design), or null. */
+export const designFor = (map, styleId) => map?.designs?.[styleId] ?? null;
 
 /** The design the map shows: its own when switched on, else null (the plain style). */
 export const shownDesign = (design) => (design?.shown ? design : null);

@@ -1,6 +1,5 @@
 // What goes on a map's poster (drawMapPoster.js), from what the map page already has.
 import { countsAsVisited } from '@/utils/map/visitStatus';
-import { shownDesign } from '@/utils/map/mapDesign';
 import { worldShare } from '@/utils/map/travelStatWords';
 
 const plural = (n, one, many) => `${(n ?? 0).toLocaleString('en-GB')} ${n === 1 ? one : many}`;
@@ -24,14 +23,17 @@ export const posterFileBase = (name) =>
     .replace(/^-+|-+$/g, '')
     .slice(0, 60) || 'my-map';
 
-/** A map's poster: its name, numbers, the places visited or lived in, its design's colours. */
-export function mapPosterOptions(map) {
+/**
+ * A map's poster: its name, numbers, the places visited or lived in, and the colours of
+ * `design` (the design the map is shown in, or null).
+ */
+export function mapPosterOptions(map, design = null) {
   return {
     title: map.name,
     subtitle: posterSubtitle(map.stats),
     highlight: (map.visits || []).filter((visit) => countsAsVisited(visit.status)).map((visit) => visit.countryCode),
     splitUk: Boolean(map.splitUk),
-    colours: shownDesign(map.design)?.countries ?? null,
+    colours: design?.countries ?? null,
     fileBase: posterFileBase(map.name),
   };
 }

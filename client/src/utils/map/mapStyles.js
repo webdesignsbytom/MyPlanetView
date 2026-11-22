@@ -8,9 +8,12 @@
 // the standard world map (its sea animated when the viewer's setting says so: 'World map',
 // 19 Nov 2026, the user's wish, was 'Animated sea'), and Black and white is that map in
 // greys, every feature the same (19 Nov 2026, the user's wish: a style, not a switch).
+// `preview` is the picture on a style's card in Settings when it isn't its background: the
+// World map's is the Regular map type's screenshot, and Black and white's the same in greys
+// (`previewGrey`; 22 Nov 2026, the user's wish: they were plain blocks of sea).
 export const MAP_STYLES = [
-  { id: 'animated', label: 'World map', background: null },
-  { id: 'mono', label: 'Black and white', background: null },
+  { id: 'animated', label: 'World map', background: null, preview: 'regular' },
+  { id: 'mono', label: 'Black and white', background: null, preview: 'regular', previewGrey: true },
   { id: 'old-map', label: 'Old map', background: 'old-map' },
   { id: 'starry', label: 'Starry night', background: 'starry-night' },
 ];

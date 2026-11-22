@@ -16,7 +16,7 @@ import { mapPlanFields, mapSlots, uploadRules } from './plans';
 import { mockPlayback } from './stream';
 import { mockUpload } from './uploads';
 import { photoThemes } from './themes';
-import { designView } from './mapDesigns';
+import { designsView } from './mapDesigns';
 import { compareMoments } from '@/utils/moments/momentDates';
 import { PLACE_POSITIONS, countriesInWorld, homeOf, travelExtras } from './travelStats';
 
@@ -418,8 +418,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
     stampedLandmarkIds: stampedLandmarkIds(map, role),
     // The landmarks ticked "been here" (docs/API.md "Collecting")
     tickedLandmarkIds: (db.landmarkVisits || []).filter((v) => v.mapId === map.id).map((v) => v.landmarkId),
-    // Its own design, for everyone who opens it (docs/API.md "Map designs")
-    design: designView(map),
+    // Its own designs, one per map style, for everyone who opens it (docs/API.md "Map designs")
+    designs: designsView(map),
   };
 }
 

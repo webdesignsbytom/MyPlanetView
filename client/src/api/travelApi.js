@@ -46,12 +46,15 @@ export const tickLandmark = (mapId, landmarkId) => data(client.put(`${MAPS_API}/
 export const untickLandmark = (mapId, landmarkId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/landmarks/${enc(landmarkId)}/been`));
 // One year of a map (docs/API.md "Year in travel") -> { recap }
 export const getYearRecap = (mapId, year) => data(client.get(`${MAPS_API}/${enc(mapId)}/recap/${enc(year)}`));
-// A map's own design (docs/API.md "Map designs"): { shown?, countries?, names?, grid? } -> { design }
+// A map's own design for a map style (docs/API.md "Map designs"):
+// { style, shown?, countries?, names?, grid? } -> { design }
 export const updateMapDesign = (mapId, body) => data(client.patch(`${MAPS_API}/${enc(mapId)}/design`, body));
-// Its sea picture: presign ({ contentType, bytes } -> { key, upload }), save ({ key } -> { design }), remove
+// Its sea picture: presign ({ contentType, bytes } -> { key, upload }), save ({ key, style } ->
+// { design }), remove (that style's)
 export const presignDesignPicture = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/design/picture/presign`, body));
-export const saveDesignPicture = (mapId, key) => data(client.put(`${MAPS_API}/${enc(mapId)}/design/picture`, { key }));
-export const removeDesignPicture = (mapId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/design/picture`));
+export const saveDesignPicture = (mapId, style, key) => data(client.put(`${MAPS_API}/${enc(mapId)}/design/picture`, { key, style }));
+export const removeDesignPicture = (mapId, style) =>
+  data(client.delete(`${MAPS_API}/${enc(mapId)}/design/picture${query({ style })}`));
 // The owner's main (included) map; the old one becomes an extra map
 export const makeMainMap = (mapId) => data(client.post(`${MAPS_API}/${enc(mapId)}/main`, {}));
 // Put a map on the owner's plan (a paid extra map's slot), or take it back -> { map } (its `tier` says where it is)

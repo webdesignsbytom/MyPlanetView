@@ -1,10 +1,12 @@
 // A map's own design (docs/API.md "Map designs"; 21 Nov 2026): its colours, and the sea's
-// picture. The owner and co-owners change it; everyone who can open the map sees it (the
-// map's reply carries it, share links' too). Free on every plan, locked maps included.
+// picture, one design per map style (22 Nov 2026, the user's wish), shown while the map is in
+// that style. The owner and co-owners change them; everyone who can open the map sees them
+// (the map's reply carries them, share links' too). Free on every plan, locked maps included.
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse, sendMessageResponse } from '../utils/responses/responses.js';
 import { logEvent } from '../utils/events/logEvent.js';
 import { createMapEvent } from '../event/travelUtils.js';
 import { canManage } from '../utils/access.js';
+import { MAP_STYLES } from '../utils/mapSettings.js';
 import {
   DESIGN_PICTURE_MAX_BYTES,
   DESIGN_PICTURE_SAVE_WINDOW_MINUTES,
@@ -18,7 +20,7 @@ import {
 import {
   clearDesignPictureInDB,
   findDesignUpload,
-  findMapDesign,
+  findMapDesigns,
   findPlaceKinds,
   saveMapDesignInDB,
   setDesignPictureInDB,
@@ -39,6 +41,7 @@ const D = DOMAINS.maps;
 export async function designView(design) {
   if (!design) return null;
   return {
+    style: design.style,
     shown: design.shown,
     countries: storedColours(design.countryColours),
     names: design.namesColour,
@@ -48,8 +51,14 @@ export async function designView(design) {
   };
 }
 
-/** A map's design for its reply (GET /maps/:mapId and the share link's). */
-export const mapDesignView = async (mapId) => designView(await findMapDesign(mapId));
+/** A map's designs for its reply (GET /maps/:mapId and the share link's): style -> design. */
+export const mapDesignsView = async (mapId) => {
+  const designs = await findMapDesigns(mapId);
+  return Object.fromEntries(await Promise.all(designs.map(async (design) => [design.style, await designView(design)])));
+};
+
+/** The map style a design request is for (`style`, body or query), or null when it names none. */
+const designStyleOf = (value) => (MAP_STYLES.includes(value) ? value : null);
 
 /** The map, if the caller may change its design; otherwise the reply has been sent. */
 async function loadDesignableMap(req, res) {
@@ -61,12 +70,14 @@ async function loadDesignableMap(req, res) {
 const logDesign = (req, map, action) =>
   logEvent(createMapEvent({ user: req.user, action, id: map.id, statusCode: 200 }));
 
-// PATCH /maps/:mapId/design: { shown?, countries?, names?, grid? }. `countries` replaces the
-// whole set; a colour of null is the usual one again.
+// PATCH /maps/:mapId/design: { style, shown?, countries?, names?, grid? }. `countries`
+// replaces the whole set; a colour of null is the usual one again.
 export const updateMapDesignHandler = handler(D, 'Update map design', async (req, res) => {
   const map = await loadDesignableMap(req, res);
   if (!map) return undefined;
 
+  const style = designStyleOf(req.body?.style);
+  if (!style) return badRequest(req, res, D, EVENT_MESSAGES.invalidMapStyle);
   const change = parseDesignChange(req.body);
   if (change.error) return badRequest(req, res, D, EVENT_MESSAGES[change.error]);
   if (change.codes.length) {
@@ -76,7 +87,7 @@ export const updateMapDesignHandler = handler(D, 'Update map design', async (req
     }
   }
 
-  const design = await saveMapDesignInDB(map.id, change.data);
+  const design = await saveMapDesignInDB(map.id, style, change.data);
   logDesign(req, map, 'Design Update');
   return sendDataResponse(res, 200, { design: await designView(design) });
 });
@@ -106,12 +117,14 @@ export const presignDesignPictureHandler = handler(D, 'Presign map design pictur
   });
 });
 
-// PUT /maps/:mapId/design/picture: { key } -> the picture checked in the bucket, put on the
-// design (which then shows), and the picture it replaced deleted.
+// PUT /maps/:mapId/design/picture: { key, style } -> the picture checked in the bucket, put on
+// the style's design (which then shows), and the picture it replaced deleted.
 export const saveDesignPictureHandler = handler(D, 'Save map design picture', async (req, res) => {
   const map = await loadDesignableMap(req, res);
   if (!map) return undefined;
 
+  const style = designStyleOf(req.body?.style);
+  if (!style) return badRequest(req, res, D, EVENT_MESSAGES.invalidMapStyle);
   const key = req.body?.key;
   const invalid = () => badRequest(req, res, D, EVENT_MESSAGES.designPictureInvalid);
   if (typeof key !== 'string' || !key.startsWith(`${designPictureFolder(map.id)}sea-`)) return invalid();
@@ -132,6 +145,7 @@ export const saveDesignPictureHandler = handler(D, 'Save map design picture', as
 
   const { design, oldKey } = await setDesignPictureInDB({
     mapId: map.id,
+    style,
     mediaId: item.id,
     bytes: stored.bytes,
     contentType: stored.contentType,
@@ -143,12 +157,14 @@ export const saveDesignPictureHandler = handler(D, 'Save map design picture', as
   return sendDataResponse(res, 200, { design: await designView(design) });
 });
 
-// DELETE /maps/:mapId/design/picture: the sea goes back to its usual look
+// DELETE /maps/:mapId/design/picture?style=: the style's sea goes back to its usual look
 export const deleteDesignPictureHandler = handler(D, 'Remove map design picture', async (req, res) => {
   const map = await loadDesignableMap(req, res);
   if (!map) return undefined;
 
-  const { design, oldKey } = await clearDesignPictureInDB(map.id);
+  const style = designStyleOf(req.query?.style);
+  if (!style) return badRequest(req, res, D, EVENT_MESSAGES.invalidMapStyle);
+  const { design, oldKey } = await clearDesignPictureInDB(map.id, style);
   if (oldKey) await deleteStoredObjects([oldKey]);
   if (oldKey) logDesign(req, map, 'Design Picture Removed');
   return sendDataResponse(res, 200, { design: await designView(design) });

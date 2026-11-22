@@ -11,8 +11,9 @@ import { loadYearRecap, recapCardOptions, recapSlides } from '@/utils/recap/reca
 
 // "Your year in travel" (docs/API.md "Year in travel"; 21 Nov 2026, the user's wish): one year
 // of the map as a few slides (RecapSlide), Back and Next (or the arrow keys), ending on its
-// share card. Any year the map has something in can be chosen. Portalled over the page.
-function YearRecapDialog({ map, year: firstYear, onClose }) {
+// share card, in `design`'s colours (the design the map is shown in, or null). Any year the
+// map has something in can be chosen. Portalled over the page.
+function YearRecapDialog({ map, design = null, year: firstYear, onClose }) {
   const uid = useId();
   const [year, setYear] = useState(firstYear);
   // Each year's answer as it arrives (`{ recap }` or `{ error }`), so a year comes back at once
@@ -34,7 +35,7 @@ function YearRecapDialog({ map, year: firstYear, onClose }) {
   const answer = loaded[year];
   const recap = answer?.recap ?? null;
   const slides = useMemo(() => recapSlides(recap), [recap]);
-  const card = useMemo(() => (recap ? recapCardOptions(recap, map) : null), [recap, map]);
+  const card = useMemo(() => (recap ? recapCardOptions(recap, map, design) : null), [recap, map, design]);
   const at = Math.min(index, Math.max(0, slides.length - 1));
   const years = recap?.years?.length ? [...new Set([year, ...recap.years])].sort((a, b) => b - a) : [year];
 

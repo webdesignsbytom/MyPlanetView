@@ -50,6 +50,9 @@ jobs:
           node scripts/generate-mock-landmarks.mjs --check
           node scripts/generate-mock-offers.mjs --check
           node scripts/generate-country-landmarks.mjs --check
+      # The client's unit tests (tests/unit: utils, hooks, the API layer, the mock, components)
+      - name: Unit tests
+        run: npm run test:unit
       # The site compiles (a plain Vite build, quick; the whole production build, with the
       # pre-render and the SEO checks, is the client-build job below)
       - name: Build

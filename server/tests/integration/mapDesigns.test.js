@@ -1,6 +1,7 @@
 // A map's own design (docs/API.md "Map designs"): the owner colours countries, the names and
 // the grid, and puts a picture of theirs on the sea; everyone who opens the map sees it, a
-// share link's visitors too. One picture per map: a new one deletes the old.
+// share link's visitors too. One design per map style (22 Nov 2026), each with one picture:
+// a new one deletes the old.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { anon, cleanUp, data, defaultMapOf, inBucket, prisma, signUp } from './helpers.js';
 
@@ -23,16 +24,21 @@ describe('map designs', () => {
   let stranger;
   let map;
 
-  const designOf = async (agent) => data(await agent.get(`/api/maps/${map.id}`)).map.design;
-  const patch = (agent, body) => agent.patch(`/api/maps/${map.id}/design`).send(body);
+  // The World map's design unless another style is named
+  const designsOf = async (agent) => data(await agent.get(`/api/maps/${map.id}`)).map.designs;
+  const designOf = async (agent, style = 'animated') => (await designsOf(agent))[style] ?? null;
+  const patch = (agent, body) => agent.patch(`/api/maps/${map.id}/design`).send({ style: 'animated', ...body });
+  const removePicture = (agent, mapId = map.id, style = 'animated') => agent.delete(`/api/maps/${mapId}/design/picture?style=${style}`);
+  const designRow = (style = 'animated') =>
+    prisma.mapDesign.findUnique({ where: { mapId_style: { mapId: map.id, style } }, include: { picture: true } });
 
   /** The browser's upload: presign, "PUT" into the fake bucket, save. -> the save's response */
-  async function uploadPicture(agent, { put = PICTURE, file = PICTURE } = {}) {
+  async function uploadPicture(agent, { put = PICTURE, file = PICTURE, style = 'animated' } = {}) {
     const presign = await agent.post(`/api/maps/${map.id}/design/picture/presign`).send(file);
     if (presign.status !== 200) return presign;
     const { key } = data(presign);
     if (put) fakeR2().set(key, { bytes: put.bytes, contentType: put.contentType });
-    const res = await agent.put(`/api/maps/${map.id}/design/picture`).send({ key });
+    const res = await agent.put(`/api/maps/${map.id}/design/picture`).send({ key, style });
     res.key = key;
     return res;
   }
@@ -46,13 +52,14 @@ describe('map designs', () => {
   });
 
   it('starts with none', async () => {
-    expect(await designOf(owner.agent)).toBeNull();
+    expect(await designsOf(owner.agent)).toEqual({});
   });
 
   it('saves colours, and gives them to everyone who opens the map', async () => {
     const res = await patch(owner.agent, { countries: { FR: '#AA0000', XE: '#00aa00', AQ: '#ffffff' }, names: '#ffffff', grid: '#ffcc00' });
     expect(res.status).toBe(200);
     expect(data(res).design).toEqual({
+      style: 'animated',
       shown: true,
       countries: { FR: '#aa0000', XE: '#00aa00', AQ: '#ffffff' },
       names: '#ffffff',
@@ -74,10 +81,27 @@ describe('map designs', () => {
     expect(data(await patch(owner.agent, { shown: true })).design.shown).toBe(true);
   });
 
-  it('refuses bad colours and places', async () => {
+  it('refuses bad colours and places, and a style that isn’t one', async () => {
     for (const body of [{ names: 'white' }, { countries: { FR: 'red' } }, { countries: { XN: '#000000' } }, { countries: { ZZ: '#000000' } }, {}]) {
       expect((await patch(owner.agent, body)).status).toBe(400);
     }
+    for (const style of [undefined, null, 'jupiter']) {
+      expect((await owner.agent.patch(`/api/maps/${map.id}/design`).send({ style, names: '#000000' })).status).toBe(400);
+    }
+    expect((await owner.agent.delete(`/api/maps/${map.id}/design/picture`)).status).toBe(400);
+  });
+
+  it('keeps one design per map style, each shown in its own style', async () => {
+    const starry = await patch(owner.agent, { style: 'starry', names: '#ff0000', countries: { JP: '#123456' } });
+    expect(starry.status).toBe(200);
+    expect(data(starry).design).toMatchObject({ style: 'starry', shown: true, names: '#ff0000', countries: { JP: '#123456' } });
+    // The World map's is untouched, and both reach everyone on the map
+    const designs = await designsOf(viewer.agent);
+    expect(Object.keys(designs).sort()).toEqual(['animated', 'starry']);
+    expect(designs.animated).toMatchObject({ names: '#ffffff', countries: { FR: '#aa0000' } });
+    expect(designs.starry).toMatchObject({ names: '#ff0000', countries: { JP: '#123456' } });
+    // Black and white has none until one is made
+    expect(designs.mono).toBeUndefined();
   });
 
   it('only the owner (and co-owners) change it; strangers get a 404', async () => {
@@ -85,7 +109,7 @@ describe('map designs', () => {
     expect((await patch(viewer.agent, { names: '#000000' })).status).toBe(403);
     expect((await patch(stranger.agent, { names: '#000000' })).status).toBe(404);
     expect((await editor.agent.post(`/api/maps/${map.id}/design/picture/presign`).send(PICTURE)).status).toBe(403);
-    expect((await editor.agent.delete(`/api/maps/${map.id}/design/picture`)).status).toBe(403);
+    expect((await removePicture(editor.agent)).status).toBe(403);
   });
 
   it('puts a picture on the sea, which a new one replaces and deletes', async () => {
@@ -100,7 +124,17 @@ describe('map designs', () => {
     expect(inBucket(second.key)).toBe(true);
     expect(inBucket(first.key)).toBe(false);
     expect(await prisma.mediaItem.findUnique({ where: { key: first.key } })).toBeNull();
-    expect((await prisma.mapDesign.findUnique({ where: { mapId: map.id }, include: { picture: true } })).picture.key).toBe(second.key);
+    expect((await designRow()).picture.key).toBe(second.key);
+
+    // Another style's picture is its own: it replaces nothing of the World map's
+    const starry = await uploadPicture(owner.agent, { style: 'starry' });
+    expect(starry.status).toBe(200);
+    expect(data(starry).design.style).toBe('starry');
+    expect(inBucket(second.key)).toBe(true);
+    expect((await designRow('starry')).picture.key).toBe(starry.key);
+    expect((await designOf(viewer.agent, 'starry')).picture).not.toBeNull();
+    expect((await designOf(viewer.agent)).picture).not.toBeNull();
+    expect((await uploadPicture(owner.agent, { style: 'jupiter' })).status).toBe(400);
   });
 
   it('refuses a picture that is not a web image, too big, or not what was presigned', async () => {
@@ -122,20 +156,21 @@ describe('map designs', () => {
     designers.push(unverified.user.id);
     const own = await defaultMapOf(unverified.agent);
     expect((await unverified.agent.post(`/api/maps/${own.id}/design/picture/presign`).send(PICTURE)).status).toBe(403);
-    expect((await unverified.agent.patch(`/api/maps/${own.id}/design`).send({ names: '#000000' })).status).toBe(200);
-    expect((await unverified.agent.delete(`/api/maps/${own.id}/design/picture`)).status).toBe(200);
+    expect((await unverified.agent.patch(`/api/maps/${own.id}/design`).send({ style: 'mono', names: '#000000' })).status).toBe(200);
+    expect((await removePicture(unverified.agent, own.id, 'mono')).status).toBe(200);
   });
 
   it('shows on a share link', async () => {
     expect((await owner.agent.patch(`/api/maps/${map.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' })).status).toBe(200);
     const { shareCode } = await prisma.travelMap.findUnique({ where: { id: map.id }, select: { shareCode: true } });
     const shared = data(await anon().get(`/api/shared/${shareCode}`));
-    expect(shared.map.design).toMatchObject({ shown: true, countries: { FR: '#aa0000' } });
-    expect(shared.map.design.picture.url).toContain('designs');
+    expect(shared.map.designs.animated).toMatchObject({ shown: true, countries: { FR: '#aa0000' } });
+    expect(shared.map.designs.animated.picture.url).toContain('designs');
+    expect(shared.map.designs.starry).toMatchObject({ names: '#ff0000' });
   });
 
   it('the daily clean-up keeps a picture in use, and removes an unsaved one', async () => {
-    const used = (await prisma.mapDesign.findUnique({ where: { mapId: map.id }, include: { picture: true } })).picture.key;
+    const used = (await designRow()).picture.key;
     const presign = data(await owner.agent.post(`/api/maps/${map.id}/design/picture/presign`).send(PICTURE));
     fakeR2().set(presign.key, PICTURE);
     await prisma.mediaItem.updateMany({ where: { key: { in: [used, presign.key] } }, data: { createdAt: new Date(Date.now() - 26 * 60 * 60 * 1000) } });
@@ -146,20 +181,27 @@ describe('map designs', () => {
   });
 
   it('removes the picture, and deleting the map deletes its file', async () => {
-    const removed = await owner.agent.delete(`/api/maps/${map.id}/design/picture`);
+    const starryKey = (await designRow('starry')).picture.key;
+    const removed = await removePicture(owner.agent);
     expect(removed.status).toBe(200);
     expect(data(removed).design.picture).toBeNull();
+    // Only that style's
+    expect(inBucket(starryKey)).toBe(true);
+    expect((await designOf(owner.agent, 'starry')).picture).not.toBeNull();
 
     // A second map with a picture, then deleted
     const other = data(await owner.agent.post('/api/maps').send({ name: 'Designed', groupType: 'SOLO', travellers: [{ name: 'Me' }] })).map;
-    const saved = await (async () => {
+    const saved = [];
+    for (const style of ['animated', 'old-map']) {
       const presign = data(await owner.agent.post(`/api/maps/${other.id}/design/picture/presign`).send(PICTURE));
       fakeR2().set(presign.key, PICTURE);
-      expect((await owner.agent.put(`/api/maps/${other.id}/design/picture`).send({ key: presign.key })).status).toBe(200);
-      return presign.key;
-    })();
+      expect((await owner.agent.put(`/api/maps/${other.id}/design/picture`).send({ key: presign.key, style })).status).toBe(200);
+      saved.push(presign.key);
+    }
     expect((await owner.agent.delete(`/api/maps/${other.id}`)).status).toBe(200);
-    expect(inBucket(saved)).toBe(false);
-    expect(await prisma.mediaItem.findUnique({ where: { key: saved } })).toBeNull();
+    for (const key of saved) {
+      expect(inBucket(key)).toBe(false);
+      expect(await prisma.mediaItem.findUnique({ where: { key } })).toBeNull();
+    }
   });
 });

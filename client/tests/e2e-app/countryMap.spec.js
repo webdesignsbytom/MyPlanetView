@@ -141,11 +141,65 @@ for (const [country, id, area, place] of [
   ['Australia', 'sydney-opera-house', 'AUS-2654', 'New South Wales'],
   ['Brazil', 'christ-the-redeemer', 'BR-RJ', 'Rio de Janeiro'],
   ['China', 'great-wall', 'CN-BJ', 'Beijing'],
+  // and the five after them
+  ['Japan', 'mount-fuji', 'JP-19', 'Yamanashi (its summit on the border)'],
+  ['Greece', 'parthenon', 'GR-A1', 'Attica'],
+  ['Spain', 'sagrada-familia', 'ES-B', 'Barcelona'],
+  // Natural Earth swaps Moscow's two codes: RU-MOS is the city, "Moskva"
+  ['Russia', 'saint-basils', 'RU-MOS', 'Moscow'],
+  ['Mexico', 'chichen-itza', 'MX-YUC', 'Yucatán'],
+  // and the five after those
+  ['Peru', 'machu-picchu', 'PE-CUS', 'Cusco'],
+  ['Cambodia', 'angkor-wat', 'KH-17', 'Siem Reap'],
+  ['Jordan', 'petra', 'JO-MN', 'Ma’an'],
+  ['Germany', 'neuschwanstein', 'DE-BY', 'Bavaria'],
+  // Easter Island is in one of Chile's insets, part of Valparaíso
+  ['Chile', 'moai', 'CL-VS', 'Valparaíso'],
+  // and the five after those
+  ['Netherlands', 'kinderdijk', 'NL-ZH', 'South Holland'],
+  ['Turkey', 'hagia-sophia', 'TR-34', 'Istanbul'],
+  ['Canada', 'cn-tower', 'CA-ON', 'Ontario'],
+  ['United Arab Emirates', 'burj-khalifa', 'AE-DU', 'Dubai'],
+  ['Singapore', 'marina-bay-sands', 'SG-01', 'Central Singapore'],
+  // and the five after those
+  ['South Africa', 'table-mountain', 'ZA-WC', 'the Western Cape'],
+  ['Indonesia', 'borobudur', 'ID-JT', 'Central Java'],
+  // Kuala Lumpur is inside Selangor on the map; the city's own outline is drawn over it
+  ['Malaysia', 'petronas-towers', 'MY-14', 'Kuala Lumpur'],
+  ['Thailand', 'ayutthaya', 'TH-14', 'Ayutthaya'],
+  // and the five after those
+  ['Tanzania', 'kilimanjaro', 'TZ-09', 'Kilimanjaro'],
+  ['Myanmar', 'bagan', 'MM-04', 'Mandalay'],
+  // Prague is inside Central Bohemia on the map; the city's own outline is drawn over it
+  ['Czechia', 'prague-castle', 'CZ-PR', 'Prague'],
+  // and the five after those
+  ['Argentina', 'perito-moreno', 'AR-Z', 'Santa Cruz'],
+  // Seoul is inside Gyeonggi on the map; the city's own outline is drawn over it
+  ['South Korea', 'gyeongbokgung', 'KR-11', 'Seoul'],
+  ['Cuba', 'old-havana', 'CU-03', 'Havana'],
+  ['Norway', 'bryggen', 'NO-12', 'Hordaland'],
 ]) {
   test(`${country}’s own map has its landmark model, in ${place}`, async ({ page }) => {
     await openMap(page);
     const map = await openCountryMap(page, country);
     await expectModelOn(map, id, area);
+    await expect(map.locator('[data-landmark-model]')).toHaveCount(1);
+  });
+}
+
+// Spots just off their area's outline at the map's detail: within its bounds. The Tower of
+// Belém stands in the Tagus; Victoria Falls is on the Zambezi, the border; Ha Long Bay is the bay
+for (const [country, id, area, place] of [
+  ['Portugal', 'belem-tower', 'PT-11', 'Lisbon'],
+  ['Zambia', 'victoria-falls', 'ZM-07', 'Southern Province'],
+  ['Vietnam', 'ha-long-bay', 'VN-13', 'Quảng Ninh'],
+  // the Cliffs of Moher are Clare's very edge, the sea's side of its coastline at the map's detail
+  ['Ireland', 'cliffs-of-moher', 'IE-CE', 'Clare'],
+]) {
+  test(`${country}’s own map has its landmark model, by ${place}`, async ({ page }) => {
+    await openMap(page);
+    const map = await openCountryMap(page, country);
+    await expectModelOn(map, id, area, { inBounds: true });
     await expect(map.locator('[data-landmark-model]')).toHaveCount(1);
   });
 }

@@ -19,13 +19,15 @@ function FormField({
 
   const hintId = hint ? `${id}-hint` : undefined;
   const errorId = errorMessage ? `${id}-error` : undefined;
-  const describedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined;
+  const ownProps = React.isValidElement(children) ? children.props : {};
 
-  // Inject id + aria props into the child input
+  // Inject id + aria props into the child input, keeping any description and invalid mark the
+  // input was given itself (a note elsewhere on the page: the admin users page's locked role)
+  const describedBy = [ownProps.ariaDescribedBy, hintId, errorId].filter(Boolean).join(' ') || undefined;
   const child = React.isValidElement(children)
     ? React.cloneElement(children, {
         id,
-        ariaInvalid: isInvalid,
+        ariaInvalid: isInvalid || Boolean(ownProps.ariaInvalid),
         ariaDescribedBy: describedBy,
       })
     : children;

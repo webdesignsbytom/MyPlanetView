@@ -183,7 +183,8 @@ export const deleteMediaHandler = async (req, res) => {
       return res.status(400).json({ error: 'key required', message: 'key required' });
     }
 
-    await hardDeleteObject({ key: String(key), user: req.user });
+    // A file still in use stays (409): removing an avatar or a contact form has its own route
+    await hardDeleteObject({ key: String(key), user: req.user, keepIfInUse: true });
 
     return res.sendStatus(204);
   } catch (e) {

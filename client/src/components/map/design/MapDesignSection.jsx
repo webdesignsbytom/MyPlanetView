@@ -8,8 +8,8 @@ import DesignPictureField from './DesignPictureField';
 import useMapDesignEditor from '@/hooks/useMapDesignEditor';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 // Utils
-import { readStyleColours } from '@/utils/map/mapDesign';
-import { isMonoStyle } from '@/utils/map/mapStyles';
+import { designFor, readStyleColours } from '@/utils/map/mapDesign';
+import { mapStyleById } from '@/utils/map/mapStyles';
 
 // The map style's own colours, as the pickers start from them (22 Nov 2026, the user's wish:
 // they were always the World map's, so a starry night's showed pastels): read from the tokens
@@ -23,8 +23,10 @@ const readUsualColours = (styleId) => {
 // Settings, "How it looks", for the owner and co-owners: this map's own design (docs/API.md
 // "Map designs"; 21 Nov 2026, the user's wish, free on every plan): a picture for the sea,
 // the countries' colours, and the names' and grid's, for when chosen colours make them hard
-// to see. Everyone who opens the map sees it, share links too, on the map's own style
-// (`styleId`). Each change shows on the map at once and is saved a moment later (useMapDesignEditor).
+// to see. One design per map style (22 Nov 2026, the user's wish): this is the one for the
+// map's style (`styleId`), and another style keeps its own (SettingsPanel gives each style's
+// its own section, keyed by it). Everyone who opens the map sees it, share links too. Each
+// change shows on the map at once and is saved a moment later (useMapDesignEditor).
 function MapDesignSection({ map, styleId, onDesignChange, preview }) {
   const uid = useId();
   const mustVerify = useMustVerifyEmail();
@@ -35,7 +37,7 @@ function MapDesignSection({ map, styleId, onDesignChange, preview }) {
     const frame = window.requestAnimationFrame(() => setUsual(readUsualColours(styleId)));
     return () => window.cancelAnimationFrame(frame);
   }, [styleId]);
-  const editor = useMapDesignEditor({ mapId: map.id, design: map.design, onDesignChange, preview });
+  const editor = useMapDesignEditor({ mapId: map.id, style: styleId, design: designFor(map, styleId), onDesignChange, preview });
   const { design, status, picture } = editor;
 
   return (
@@ -45,8 +47,8 @@ function MapDesignSection({ map, styleId, onDesignChange, preview }) {
           This map’s design
         </h3>
         <p className='text-sm opacity-80'>
-          A picture of yours on the sea, and your own colours. Everyone who opens “{map.name}” sees it this way, people you share it
-          with too.
+          A picture of yours on the sea, and your own colours, for the {mapStyleById(styleId).label} style: each style keeps its own.
+          Everyone who opens “{map.name}” sees it this way, people you share it with too.
         </p>
       </div>
       {design ? (
@@ -85,7 +87,6 @@ function MapDesignSection({ map, styleId, onDesignChange, preview }) {
         onChange={editor.setCountryColour}
         onResetAll={() => editor.change({ countries: {} })}
       />
-      {isMonoStyle(styleId) ? <p className='text-sm opacity-80'>The map is in black and white, so it shows these colours in grey.</p> : null}
       {status.error ? (
         <p role='alert' className='text-sm font-medium text-status-critical'>
           {status.error}

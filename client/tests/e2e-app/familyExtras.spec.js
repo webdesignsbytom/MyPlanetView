@@ -39,7 +39,11 @@ test('a moment’s day come round shows on the map, and opens its country', asyn
   const tag = page.getByRole('region', { name: 'On this day' });
   await expect(tag).toContainText('7 years ago today: Got engaged at the Eiffel Tower');
   await tag.getByRole('button', { name: 'Open France' }).click();
-  await expect(page.getByRole('dialog', { name: 'France' })).toBeVisible();
+  const france = page.getByRole('dialog', { name: 'France' });
+  await expect(france).toBeVisible();
+  // The ticket opens over the dimmed map, tags and all (22 Nov 2026): closed first
+  await france.getByRole('button', { name: /^Close/ }).first().click();
+  await expect(france).toBeHidden();
 
   // Closed, it stays away for the day
   await tag.getByRole('button', { name: 'Close: on this day' }).click();

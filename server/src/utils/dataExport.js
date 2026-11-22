@@ -159,16 +159,16 @@ export function exportMapView(rows, { userId }) {
     homeCountryCode: map.homeCountryCode ?? null,
     // The style chosen for it, shown to everyone who opens it (null: the owner's own)
     style: map.style ?? null,
-    // Its own design (docs/API.md "Map designs"): a picture for the sea and its colours
-    design: map.design
-      ? {
-          shown: map.design.shown,
-          countryColours: storedColours(map.design.countryColours),
-          namesColour: map.design.namesColour ?? null,
-          gridColour: map.design.gridColour ?? null,
-          hasSeaPicture: Boolean(map.design.pictureId),
-        }
-      : null,
+    // Its own designs, one per map style (docs/API.md "Map designs"): a picture for the sea
+    // and its colours
+    designs: (map.designs ?? []).map((design) => ({
+      style: design.style,
+      shown: design.shown,
+      countryColours: storedColours(design.countryColours),
+      namesColour: design.namesColour ?? null,
+      gridColour: design.gridColour ?? null,
+      hasSeaPicture: Boolean(design.pictureId),
+    })),
     // Landmarks ticked "been here" (docs/API.md "Collecting")
     landmarksBeenTo: (map.landmarkVisits ?? []).map((v) => ({ landmarkId: v.landmarkId, name: v.landmark?.name ?? null, countryCode: v.landmark?.countryCode ?? null, since: iso(v.createdAt) })),
     linkAccess: map.linkAccess,

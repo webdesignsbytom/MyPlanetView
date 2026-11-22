@@ -16,6 +16,7 @@ import useAchievements from '@/hooks/useAchievements';
 import WorldMap from './WorldMap';
 import MapBackground from './MapBackground';
 import MapDesignStyle from './MapDesignStyle';
+import MonoPictureFilter from './MonoPictureFilter';
 import MapBanner from './MapBanner';
 import MapToolbar from './MapToolbar';
 import MapZoomControls from './MapZoomControls';
@@ -74,7 +75,7 @@ import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole, canManageRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
 import { isMonoStyle, mapStyleById, shownStyle } from '@/utils/map/mapStyles';
-import { shownDesign } from '@/utils/map/mapDesign';
+import { designFor, shownDesign } from '@/utils/map/mapDesign';
 import { mapCardOptions } from '@/utils/shareCard/cardOptions';
 import { mapPosterOptions } from '@/utils/poster/posterOptions';
 import { recapYearFor } from '@/utils/recap/recap';
@@ -93,8 +94,10 @@ const warmCountryPanel = () => CountryPanel.preload().catch(() => {});
 
 // Which overlay is open, the selected country, the open photo, the share dialog and the
 // slideshow (`{ country }`: one country's, or null for the whole map's): one reducer, so
-// opening one panel closes the last. The slideshow plays over everything, leaving the
-// panel it was opened from (a country's) there for when it closes.
+// opening one panel closes the last. A tool from the toolbar or the phone's menu closes the
+// open panel, the share dialog and the whole map's slideshow included (`fromMenu`; 22 Nov
+// 2026, the user's wish: "Play my world" played over the open photo album). A country's
+// slideshow plays over its ticket, leaving it there for when it closes.
 // `photo` is the open photo as its list had it (shown at once, before its own reply) and
 // `photoList` the list it came from ({ filters } or { photos }), for stepping through it.
 // countryMap: a country opened on its own (its code), in the world map's place; pin: the pin
@@ -121,6 +124,15 @@ const LOADING_CAP_MS = 20000;
 // No planned trips (a share link's map)
 const NO_PLANNED = new Map();
 
+// The open panel closed (a country's forgets which country)
+const withoutPanel = (state) => ({
+  ...state,
+  panel: null,
+  selectedCode: state.panel === 'country' ? null : state.selectedCode,
+  uploadCountry: null,
+  planCountry: null,
+});
+
 function uiReducer(state, action) {
   switch (action.type) {
     case 'toggle':
@@ -131,6 +143,12 @@ function uiReducer(state, action) {
       return { ...state, panel: 'trips', planCountry: action.code };
     case 'close':
       return { ...state, panel: null, selectedCode: state.panel === 'country' ? null : state.selectedCode };
+    case 'tool':
+      // From the toolbar or the phone's menu: the share dialog and the whole map's slideshow
+      // replace the open panel, as another panel does
+      if (action.panel === 'share') return { ...withoutPanel(state), sharing: true };
+      if (action.panel === 'play') return { ...withoutPanel(state), slideshow: { country: null } };
+      return { ...state, panel: state.panel === action.panel ? null : action.panel, uploadCountry: null, planCountry: null };
     case 'selectCountry':
       return { ...state, panel: 'country', selectedCode: action.code };
     case 'upload':
@@ -287,11 +305,11 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   useEffect(() => () => window.clearTimeout(hoverTimerRef.current), []);
 
   // The map's style: the one its owner chose, for everyone who opens it, share links too
-  // (docs/API.md "Map styles"; 22 Nov 2026, the user's wish), else the viewer's own. Its own
-  // design, when it has one switched on (docs/API.md "Map designs"; 21 Nov 2026), goes on top:
-  // its picture for the sea, its colours for countries, names and grid
-  const design = shownDesign(map.design);
+  // (docs/API.md "Map styles"; 22 Nov 2026, the user's wish), else the viewer's own. The map's
+  // own design for that style, when it has one switched on (docs/API.md "Map designs"; one per
+  // style), goes on top: its picture for the sea, its colours for countries, names and grid
   const styleId = shownStyle(map, settings.style);
+  const design = shownDesign(designFor(map, styleId));
   // The owner or a co-owner choosing it in Settings: the map's, and kept as their own too
   // (for their maps that have none, and maps whose owner never chose one)
   const setMapStyle = actions?.setMapStyle;
@@ -516,11 +534,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     [changeVisit, checkAchievements],
   );
 
-  const handleToggle = useCallback((panel) => {
-    if (panel === 'share') dispatch({ type: 'share', open: true });
-    else if (panel === 'play') dispatch({ type: 'play', country: null });
-    else dispatch({ type: 'toggle', panel });
-  }, []);
+  // A tool from the toolbar or the phone's menu: whatever was open closes (uiReducer 'tool')
+  const handleToggle = useCallback((panel) => dispatch({ type: 'tool', panel }), []);
   const playCountry = useCallback((code) => dispatch({ type: 'play', country: code }), []);
 
   // A panel listing photos is open: the viewer is probably next
@@ -564,8 +579,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onShowUnplaced={showUnplaced}
             onShowBadges={openBadges}
             // Not through a share link: the card is the map of someone who's on it
-            onShareCard={shareCode ? undefined : () => setShareCard(mapCardOptions(map))}
-            onPoster={shareCode ? undefined : () => setPoster(mapPosterOptions(map))}
+            onShareCard={shareCode ? undefined : () => setShareCard(mapCardOptions(map, design))}
+            onPoster={shareCode ? undefined : () => setPoster(mapPosterOptions(map, design))}
             compareHref={shareCode ? null : comparePath(map.id)}
             onYearRecap={shareCode ? undefined : () => setRecapYear(recapYearFor())}
             collected={landmarkMarks}
@@ -742,11 +757,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       className='relative h-dvh w-full overflow-hidden bg-map-sea text-map-ink'
     >
       {design ? <MapDesignStyle design={design} preview={designPreview} /> : null}
-      {/* Black and white (a map style): everything here in greys, one greyscale filter
-          over the lot (the GPU applies it). The photo viewer and the slideshow sit outside it,
-          so a photo opened is in colour. */}
+      {/* Black and white (a map style): everything here in greys (data-mono-map in index.css):
+          the map's drawing through the grey tokens, so a design's own colours show on it (22 Nov
+          2026, the user's wish: they turned grey), and a greyscale filter over the rest and the
+          pictures in the map. The photo viewer and the slideshow sit outside it, so a photo
+          opened is in colour. */}
       {/* Out of reach while the loading screen is over it */}
-      <div inert={!dataReady} className={`absolute inset-0 ${blackAndWhite ? 'grayscale' : ''}`}>
+      <div inert={!dataReady} data-mono-map={blackAndWhite ? '' : undefined} className='absolute inset-0'>
+        {blackAndWhite ? <MonoPictureFilter /> : null}
         <MapBackground styleId={styleId} animatedSea={settings.animatedSea} pictureUrl={design?.picture?.url ?? null} />
 
         <main id='main-content' tabIndex={-1} role='main' className='absolute inset-0' onPointerDownCapture={warmCountryPanel}>
@@ -886,6 +904,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             Menu stamp (17 Nov 2026, the user's wish; it started below it), and is shut with its
             own close stamp; a country's ticket fills it right to the edges (18 Nov 2026, the
             user's wish: the margin was wasted room there). */}
+        {/* Every panel opens over the dimmed map, as the dialogs do (22 Nov 2026, the user's
+            wish), and a press on it closes the panel. On wide screens it sits under the toolbar
+            (z-20), which stays bright and works, so another tool is one press away. */}
+        {panel ? (
+          <div aria-hidden='true' data-map-scrim='' onClick={close} className='absolute inset-0 z-30 bg-scrim nophone:z-10' />
+        ) : null}
         {panel ? (
           <div
             data-map-panels=''
@@ -965,7 +989,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
         {recapYear ? (
           <MapOverlayBoundary onClose={() => setRecapYear(null)}>
-            <YearRecapDialog map={map} year={recapYear} onClose={() => setRecapYear(null)} />
+            <YearRecapDialog map={map} design={design} year={recapYear} onClose={() => setRecapYear(null)} />
           </MapOverlayBoundary>
         ) : null}
 

@@ -22,7 +22,7 @@ from bpy_extras.object_utils import world_to_camera_view
 from mathutils import Vector, Matrix
 
 __all__ = ['bpy', 'bmesh', 'math', 'Vector', 'Matrix', 'setup', 'toon', 'flat', 'M', 'finish', 'box', 'cyl',
-           'pyramid', 'ball', 'loft', 'bar', 'rod', 'each_side', 'tile', 'turn', 'render']
+           'pyramid', 'ball', 'loft', 'lathe', 'bar', 'rod', 'each_side', 'tile', 'turn', 'render']
 
 ARGV = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 SIZE = int(ARGV[1]) if len(ARGV) > 1 else 1024
@@ -210,6 +210,13 @@ def loft(name, mat, rings, outline=0.045, bevel=0.0, smooth=False):
     bm.faces.new(verts[-1])
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     return finish(name, bm, mat, outline, bevel, smooth)
+
+
+def lathe(name, mat, profile, z0, x=0.0, y=0.0, segs=28, outline=0.03, smooth=True):
+    """A round solid from (radius, height) pairs, bottom to top, standing at (x, y) on z0
+    (segs=8 makes an octagonal one, with smooth=False)."""
+    return loft(name, mat, [[(x + r * math.cos(2 * math.pi * k / segs), y + r * math.sin(2 * math.pi * k / segs), z0 + z)
+                              for k in range(segs)] for r, z in profile], outline=outline, smooth=smooth)
 
 
 def bar(name, mat, p0, p1, thickness, outline=0.03):

@@ -50,7 +50,7 @@ import { OtherErrorEvent } from '../event/errorUtils.js';
 import { badRequest, conflict, denyUnless, handler, loadMap, notFound, reply } from './helpers/travel.js';
 import { isKnownCountry, parseOptionalCountry } from './helpers/countries.js';
 import { loadMapStats, loadStatsCounts, statsFrom, visitView } from './helpers/views.js';
-import { mapDesignView } from './mapDesigns.js';
+import { mapDesignsView } from './mapDesigns.js';
 import { findTickedLandmarkIds } from '../domain/landmarkVisits.js';
 
 const D = DOMAINS.maps;
@@ -139,7 +139,7 @@ const WITH_PLAN = { withPlan: true };
  */
 export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
   const editor = canEdit(role);
-  const [detail, counts, planFields, momentCountsByCountry, momentSpots, design, tickedLandmarkIds] = await Promise.all([
+  const [detail, counts, planFields, momentCountsByCountry, momentSpots, designs, tickedLandmarkIds] = await Promise.all([
     findMapDetail(mapId),
     loadStatsCounts(mapId, role),
     editor && withPlan ? mapPlanView(mapId) : {},
@@ -147,8 +147,8 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     countMomentsByCountry(mapId, { includeHidden: editor }),
     // The moments pinned to a spot: every pin for editors, the shared ones for anyone else
     findMomentSpots(mapId, { includeHidden: editor }),
-    // Its own design, for everyone who opens it (docs/API.md "Map designs")
-    mapDesignView(mapId),
+    // Its own designs, one per map style, for everyone who opens it (docs/API.md "Map designs")
+    mapDesignsView(mapId),
     // The landmarks ticked "been here" (docs/API.md "Collecting")
     findTickedLandmarkIds(mapId),
   ]);
@@ -182,7 +182,7 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     // The landmarks stamped in the passport, to mark their pins (hidden photos' for editors)
     stampedLandmarkIds: counts.stampedLandmarkIds,
     tickedLandmarkIds,
-    design,
+    designs,
     ...planFields,
   };
 }

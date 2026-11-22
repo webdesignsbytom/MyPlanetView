@@ -9,9 +9,13 @@ const previewUrl = (name) => {
   return sets.pick('avif', 800) || sets.pick('webp', 800) || sets.pick('jpg', 800);
 };
 
-// The four looks of the map, each previewed in its own colours (the preview carries the
-// style's data-map-style, so its sea colour applies to it), as paper cards: the chosen
-// one is parchment with a red edge. `note` says whose style it is (SettingsPanel).
+// The four looks of the map, each previewed by its picture (`preview`, else its background;
+// Black and white's in greys), else in its own colours (the card carries the style's
+// data-map-style, so its sea colour applies to a plain block), as paper cards: the chosen
+// one is parchment with a red edge. `note` says whose style it is (SettingsPanel). Each card is
+// `relative`, so its hidden radio (sr-only, absolutely placed) sits inside it: placed against
+// the page instead, far below the scrolled panel, focusing it scrolled the whole map page up
+// (22 Nov 2026, the user's report: a blank strip at the bottom of the screen).
 function MapStylePicker({ value, onChange, note = null }) {
   return (
     <fieldset className='grid gap-2'>
@@ -22,7 +26,7 @@ function MapStylePicker({ value, onChange, note = null }) {
           <label
             key={style.id}
             data-map-style={style.id}
-            className={`grid cursor-pointer gap-1 overflow-hidden border-2 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-colour6 ${
+            className={`relative grid cursor-pointer gap-1 overflow-hidden border-2 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-colour6 ${
               value === style.id ? 'paper-aged border-poster-red text-poster-ink shadow-paper' : 'border-dashed border-poster-brown/60 bg-paper-cream'
             }`}
           >
@@ -34,8 +38,13 @@ function MapStylePicker({ value, onChange, note = null }) {
               onChange={() => onChange(style.id)}
               className='sr-only'
             />
-            {style.background ? (
-              <img src={previewUrl(style.background)} alt='' className='h-16 w-full object-cover' loading='lazy' />
+            {style.preview || style.background ? (
+              <img
+                src={previewUrl(style.preview || style.background)}
+                alt=''
+                className={`h-16 w-full object-cover ${style.previewGrey ? 'grayscale' : ''}`}
+                loading='lazy'
+              />
             ) : (
               <span aria-hidden='true' className='block h-16 w-full bg-map-sea' />
             )}

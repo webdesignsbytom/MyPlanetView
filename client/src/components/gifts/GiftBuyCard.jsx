@@ -49,7 +49,7 @@ function GiftBuyCard({ offers, paymentsEnabled, locked }) {
             {offers.map((offer) => (
               <label
                 key={offer.plan}
-                className={`grid cursor-pointer gap-1 border-2 p-3 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-colour6 ${
+                className={`relative grid cursor-pointer gap-1 border-2 p-3 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-colour6 ${
                   plan === offer.plan ? 'paper-aged border-poster-red text-poster-ink shadow-paper' : 'border-dashed border-poster-brown/60 bg-paper-cream'
                 }`}
               >

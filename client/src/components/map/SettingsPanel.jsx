@@ -27,7 +27,8 @@ const TABS = [
 // own for maps without one) and everyone who opens the map sees it, share links too; anyone
 // else's choice is for their own maps. The rest is yours alone, on every map. The owner and
 // co-owners also set the map's own design at the top of the same tab (MapDesignSection,
-// docs/API.md "Map designs"), drawn on the map's style; and, for editors,
+// docs/API.md "Map designs"): one per map style, so the section is the map style's own; and,
+// for editors,
 // this map's travellers and its photos as a zip ("Print or download"); for the owner and
 // co-owners, bringing travels from another map and the requests to copy from this one
 // (TravelCopySection); for the owner, its
@@ -115,7 +116,7 @@ function SettingsPanel({
           aria-controls has its panel, and a half-filled map form survives a look at the other tab */}
       <div {...panelProps('view')} hidden={showTabs && tab !== 'view'} className='grid gap-5'>
         {map && canManage && onDesignChange ? (
-          <MapDesignSection map={map} styleId={mapStyle} onDesignChange={onDesignChange} preview={designPreview} />
+          <MapDesignSection key={mapStyle} map={map} styleId={mapStyle} onDesignChange={onDesignChange} preview={designPreview} />
         ) : null}
         {onMapStyleChange ? (
           <MapStylePicker

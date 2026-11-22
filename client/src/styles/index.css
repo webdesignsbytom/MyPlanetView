@@ -443,6 +443,20 @@
 }
 /* mono-tokens:end */
 
+/* The map page in Black and white (MapExperience's data-mono-map): the map's drawing is grey
+   through the tokens above, so it takes no filter, and a map design's own colours (names,
+   grid, countries) show on it in colour (22 Nov 2026, the user's wish: chosen on Black and
+   white, they turned grey and seemed to do nothing). Everything else on the page, and the
+   pictures inside the map, are filtered to grey: HTML ones by CSS, the map's SVG pictures
+   by MonoPictureFilter's SVG filter (CSS filter functions don't reach SVG elements everywhere). */
+[data-mono-map] > :not(main),
+[data-mono-map] main :is(img, video, canvas) {
+  filter: grayscale(1);
+}
+[data-mono-map] main image {
+  filter: url('#mpv-mono-pictures');
+}
+
 /* The map's colours switch with data-map-style (the blocks above), so their utilities
    must read the --map-* tokens where they're used: `inline` puts var(--map-…) straight
    into each utility. A plain @theme resolves var() once, on :root, and every map style

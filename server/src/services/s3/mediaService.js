@@ -463,7 +463,10 @@ export async function confirmUpload({ key, user }) {
 }
 
 // Hard delete
-export async function hardDeleteObject({ key, user }) {
+// `keepIfInUse` (the generic delete route): a 409 instead when the file is still used.
+// Other callers delete a file once nothing points at it any more (an old avatar, a deleted
+// form's image), or have just let it go (a deleted account's avatar).
+export async function hardDeleteObject({ key, user, keepIfInUse = false }) {
   assertAllowedKey(key);
   assertGenericKey(key);
 
@@ -479,8 +482,20 @@ export async function hardDeleteObject({ key, user }) {
     err.status = 403;
     throw err;
   }
+  if (keepIfInUse && (await isMediaInUse(key))) throw httpError(409, 'This file is still in use, so it can’t be deleted.');
 
   await deleteObjectAndRecord(key);
+}
+
+// Whether a generic upload is still used: someone's avatar, or a contact form's image. The
+// generic delete route refuses these (409): deleting the file left the avatar or the form
+// pointing at nothing, as the avatar's row holds the MediaItem (onDelete: Restrict)
+async function isMediaInUse(key) {
+  const [avatar, form] = await Promise.all([
+    prisma.avatarMediaItem.findFirst({ where: { media: { key } }, select: { userId: true } }),
+    prisma.contactForm.findFirst({ where: { imageKey: key }, select: { id: true } }),
+  ]);
+  return Boolean(avatar || form);
 }
 
 // for controllers/utilities

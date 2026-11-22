@@ -2,7 +2,6 @@
 // business review: a December recap made to share, as Polarsteps' Unpacked is): which year
 // to show, which slides a recap gets, its share card, and the session's recaps.
 import { getYearRecap } from '@/api/travelApi';
-import { shownDesign } from '@/utils/map/mapDesign';
 
 /** The year to show: last year in January, this year otherwise. */
 export const recapYearFor = (now = new Date()) => (now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear());
@@ -28,8 +27,11 @@ export function recapSlides(recap) {
   return slides;
 }
 
-/** The year's share card (drawShareCard's options): its places coloured in, three numbers. */
-export function recapCardOptions(recap, map) {
+/**
+ * The year's share card (drawShareCard's options): its places coloured in (in `design`'s
+ * colours: the design the map is shown in, or null), three numbers.
+ */
+export function recapCardOptions(recap, map, design = null) {
   const stats = [{ value: recap.countries, label: word(recap.countries, 'country', 'countries') }];
   if (recap.newCountries.length) stats.push({ value: recap.newCountries.length, label: word(recap.newCountries.length, 'new country', 'new countries') });
   if (recap.photos) stats.push({ value: recap.photos, label: word(recap.photos, 'photo', 'photos') });
@@ -41,7 +43,7 @@ export function recapCardOptions(recap, map) {
     highlight: recap.places,
     stats: stats.slice(0, 3),
     splitUk: Boolean(map.splitUk),
-    colours: shownDesign(map.design)?.countries ?? null,
+    colours: design?.countries ?? null,
     fileName: `my-planet-view-${recap.year}.png`,
     shareText: `My ${recap.year} in travel: ${recap.countries} ${word(recap.countries, 'country', 'countries')}.`,
   };

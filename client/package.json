@@ -15,6 +15,7 @@
     "preview": "vite preview",
     "postbuild": "node scripts/prerender.mjs && node scripts/inline-critical.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-robots.mjs && node scripts/check-seo.mjs",
     "knip": "knip",
+    "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:app": "playwright test --config playwright.app.config.js",
     "lighthouse": "node scripts/generate-lighthouse-urls.mjs && lhci autorun",
@@ -47,6 +48,8 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.1.16",
     "@tailwindcss/typography": "^0.5.19",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
@@ -56,10 +59,12 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
+    "jsdom": "26.1.0",
     "knip": "^6.24.0",
     "postcss": "^8.5.6",
     "rollup-plugin-visualizer": "^6.0.5",
     "tailwindcss": "^4.1.16",
-    "vite": "^7.1.7"
+    "vite": "^7.1.7",
+    "vitest": "4.1.12"
   }
 }

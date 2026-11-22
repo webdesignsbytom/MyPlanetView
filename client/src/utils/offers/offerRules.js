@@ -43,13 +43,15 @@ const isCountryCode = (value) => typeof value === 'string' && /^[A-Z]{2}$/.test(
 export const cleanOfferText = (value, max) => (value == null ? null : serverText(value).slice(0, max) || null);
 
 // As the server's parseDateTime: missing -> undefined (leave it), null or '' -> null
-// (clear it), an ISO time -> a Date, anything else -> not ok
+// (clear it), an ISO time in the years 1 to 9999 -> a Date, anything else -> not ok
 function parseDateTime(input) {
   if (input === undefined) return { ok: true, value: undefined };
   if (input === null || input === '') return { ok: true, value: null };
   if (typeof input !== 'string') return { ok: false };
   const date = new Date(input);
-  return Number.isNaN(date.getTime()) ? { ok: false } : { ok: true, value: date };
+  if (Number.isNaN(date.getTime())) return { ok: false };
+  const year = date.getUTCFullYear();
+  return year < 1 || year > 9999 ? { ok: false } : { ok: true, value: date };
 }
 
 /** An https link with only known placeholders in it, or null. */

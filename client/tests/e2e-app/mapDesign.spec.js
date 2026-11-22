@@ -149,3 +149,50 @@ test('the owner’s map style is everyone’s, and the design’s colours start 
   await expect(shared.getByText('This map is shown in the style its owner chose')).toBeVisible();
   await expect(mapFrame(page)).toHaveAttribute('data-map-style', 'starry');
 });
+
+// 22 Nov 2026 (the user's report): colours chosen on Black and white turned grey, so seemed to
+// do nothing, and showed on the World map instead. Each style keeps its own design now, and
+// Black and white shows the colours chosen for it.
+test('each map style keeps its own design, and Black and white shows its colours', async ({ page }) => {
+  await openMap(page);
+  const { settings } = await openDesign(page);
+  await settings.getByText('Black and white', { exact: true }).click();
+  await expect(mapFrame(page)).toHaveAttribute('data-map-style', 'mono');
+  // The section is Black and white's own (a new one for each style)
+  const editor = settings.locator('[data-map-design-editor]');
+  await expect(editor.getByText('for the Black and white style')).toBeVisible();
+
+  await editor.getByLabel('Country names', { exact: true }).fill('#e92525');
+  await editor.getByLabel('Grid lines', { exact: true }).fill('#2563eb');
+  await expect(editor.getByText('Saved.')).toBeVisible();
+  await expect.poll(() => tokenOnMap(page, '--map-names')).toBe('#e92525');
+  // Shown in colour: the map's drawing takes no greyscale filter (only what's around it, and
+  // the pictures in it)
+  for (const box of [mapFrame(page), page.locator('[data-mono-map]'), page.locator('#main-content'), page.locator('#main-content svg').first()]) {
+    await expect(box).toHaveCSS('filter', 'none');
+  }
+  // The toolbar, beside the map, is still greyed
+  const toolbarFilter = () =>
+    page.getByRole('navigation', { name: 'Map tools' }).evaluate((el) => {
+      let box = el;
+      while (box.parentElement && !box.parentElement.hasAttribute('data-mono-map')) box = box.parentElement;
+      return getComputedStyle(box).filter;
+    });
+  await expect.poll(toolbarFilter).toBe('grayscale(1)');
+
+  // The World map keeps its own (none here): the usual colours, on the map and in the pickers
+  await settings.getByText('World map', { exact: true }).click();
+  await expect(mapFrame(page)).toHaveAttribute('data-map-style', 'animated');
+  await expect(designed(page)).toHaveCount(0);
+  await expect(editor.getByText('for the World map style')).toBeVisible();
+  await expect(editor.getByLabel('Country names', { exact: true })).toHaveValue('#000000');
+
+  // Back on Black and white, its colours are there, and stay after a reload
+  await settings.getByText('Black and white', { exact: true }).click();
+  await expect.poll(() => tokenOnMap(page, '--map-names')).toBe('#e92525');
+  await expect(editor.getByLabel('Grid lines', { exact: true })).toHaveValue('#2563eb');
+  await closeSettings(settings);
+  await page.reload();
+  await expect(mapFrame(page)).toHaveAttribute('data-map-style', 'mono');
+  await expect.poll(() => tokenOnMap(page, '--map-grid')).toBe('#2563eb');
+});

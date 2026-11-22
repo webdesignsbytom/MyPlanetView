@@ -14,7 +14,8 @@ const DESCRIPTIONS = {
   detailed: 'Names and lines everywhere',
 };
 
-// my_planet's map types: Regular, or Detailed (every label and pin at every zoom).
+// my_planet's map types: Regular, or Detailed (every label and pin at every zoom). Each card is
+// `relative` to keep its hidden radio inside it (see MapStylePicker).
 function MapTypePicker({ value, onChange }) {
   return (
     <fieldset className='grid gap-2'>
@@ -23,7 +24,7 @@ function MapTypePicker({ value, onChange }) {
         {MAP_TYPES.map((type) => (
           <label
             key={type.id}
-            className={`grid cursor-pointer gap-1 overflow-hidden border-2 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-colour6 ${
+            className={`relative grid cursor-pointer gap-1 overflow-hidden border-2 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-colour6 ${
               value === type.id ? 'paper-aged border-poster-red text-poster-ink shadow-paper' : 'border-dashed border-poster-brown/60 bg-paper-cream'
             }`}
           >

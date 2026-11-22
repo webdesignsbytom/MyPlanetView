@@ -79,8 +79,12 @@ export async function findMapForExport(mapId) {
         where: { id: mapId },
         select: {
           id: true, name: true, groupType: true, isDefault: true, splitUk: true, homeCountryCode: true, style: true, linkAccess: true, shareCode: true, graceUntil: true, createdAt: true, updatedAt: true,
-          // Its own design (docs/API.md "Map designs"): the colours, and whether it has a picture
-          design: { select: { shown: true, countryColours: true, namesColour: true, gridColour: true, pictureId: true } },
+          // Its own designs, one per map style (docs/API.md "Map designs"): the colours, and
+          // whether each has a picture
+          designs: {
+            select: { style: true, shown: true, countryColours: true, namesColour: true, gridColour: true, pictureId: true },
+            orderBy: { style: 'asc' },
+          },
           // Landmarks ticked "been here" (docs/API.md "Collecting")
           landmarkVisits: { select: { landmarkId: true, createdAt: true, landmark: { select: { name: true, countryCode: true } } }, orderBy: { createdAt: 'asc' } },
         },

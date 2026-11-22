@@ -7,28 +7,136 @@
 // `size` its height against Big Ben's (every model at one scale), `images` the picture by
 // its height in pixels. `landmark` is the Wikidata item of the
 // landmark it belongs to.
+import angkorWat160 from '@/assets/map/landmarkModels/angkor-wat-160.webp';
+import angkorWat320 from '@/assets/map/landmarkModels/angkor-wat-320.webp';
+import ayutthaya160 from '@/assets/map/landmarkModels/ayutthaya-160.webp';
+import ayutthaya320 from '@/assets/map/landmarkModels/ayutthaya-320.webp';
+import bagan160 from '@/assets/map/landmarkModels/bagan-160.webp';
+import bagan320 from '@/assets/map/landmarkModels/bagan-320.webp';
+import belemTower160 from '@/assets/map/landmarkModels/belem-tower-160.webp';
+import belemTower320 from '@/assets/map/landmarkModels/belem-tower-320.webp';
 import bigBen160 from '@/assets/map/landmarkModels/big-ben-160.webp';
 import bigBen320 from '@/assets/map/landmarkModels/big-ben-320.webp';
+import borobudur160 from '@/assets/map/landmarkModels/borobudur-160.webp';
+import borobudur320 from '@/assets/map/landmarkModels/borobudur-320.webp';
+import bryggen160 from '@/assets/map/landmarkModels/bryggen-160.webp';
+import bryggen320 from '@/assets/map/landmarkModels/bryggen-320.webp';
+import burjKhalifa160 from '@/assets/map/landmarkModels/burj-khalifa-160.webp';
+import burjKhalifa320 from '@/assets/map/landmarkModels/burj-khalifa-320.webp';
+import chichenItza160 from '@/assets/map/landmarkModels/chichen-itza-160.webp';
+import chichenItza320 from '@/assets/map/landmarkModels/chichen-itza-320.webp';
 import christTheRedeemer160 from '@/assets/map/landmarkModels/christ-the-redeemer-160.webp';
 import christTheRedeemer320 from '@/assets/map/landmarkModels/christ-the-redeemer-320.webp';
+import cliffsOfMoher160 from '@/assets/map/landmarkModels/cliffs-of-moher-160.webp';
+import cliffsOfMoher320 from '@/assets/map/landmarkModels/cliffs-of-moher-320.webp';
+import cnTower160 from '@/assets/map/landmarkModels/cn-tower-160.webp';
+import cnTower320 from '@/assets/map/landmarkModels/cn-tower-320.webp';
 import colosseum160 from '@/assets/map/landmarkModels/colosseum-160.webp';
 import colosseum320 from '@/assets/map/landmarkModels/colosseum-320.webp';
 import eiffelTower160 from '@/assets/map/landmarkModels/eiffel-tower-160.webp';
 import eiffelTower320 from '@/assets/map/landmarkModels/eiffel-tower-320.webp';
 import greatWall160 from '@/assets/map/landmarkModels/great-wall-160.webp';
 import greatWall320 from '@/assets/map/landmarkModels/great-wall-320.webp';
+import gyeongbokgung160 from '@/assets/map/landmarkModels/gyeongbokgung-160.webp';
+import gyeongbokgung320 from '@/assets/map/landmarkModels/gyeongbokgung-320.webp';
+import haLongBay160 from '@/assets/map/landmarkModels/ha-long-bay-160.webp';
+import haLongBay320 from '@/assets/map/landmarkModels/ha-long-bay-320.webp';
+import hagiaSophia160 from '@/assets/map/landmarkModels/hagia-sophia-160.webp';
+import hagiaSophia320 from '@/assets/map/landmarkModels/hagia-sophia-320.webp';
+import kilimanjaro160 from '@/assets/map/landmarkModels/kilimanjaro-160.webp';
+import kilimanjaro320 from '@/assets/map/landmarkModels/kilimanjaro-320.webp';
+import kinderdijk160 from '@/assets/map/landmarkModels/kinderdijk-160.webp';
+import kinderdijk320 from '@/assets/map/landmarkModels/kinderdijk-320.webp';
+import machuPicchu160 from '@/assets/map/landmarkModels/machu-picchu-160.webp';
+import machuPicchu320 from '@/assets/map/landmarkModels/machu-picchu-320.webp';
+import marinaBaySands160 from '@/assets/map/landmarkModels/marina-bay-sands-160.webp';
+import marinaBaySands320 from '@/assets/map/landmarkModels/marina-bay-sands-320.webp';
+import moai160 from '@/assets/map/landmarkModels/moai-160.webp';
+import moai320 from '@/assets/map/landmarkModels/moai-320.webp';
+import mountFuji160 from '@/assets/map/landmarkModels/mount-fuji-160.webp';
+import mountFuji320 from '@/assets/map/landmarkModels/mount-fuji-320.webp';
+import neuschwanstein160 from '@/assets/map/landmarkModels/neuschwanstein-160.webp';
+import neuschwanstein320 from '@/assets/map/landmarkModels/neuschwanstein-320.webp';
+import oldHavana160 from '@/assets/map/landmarkModels/old-havana-160.webp';
+import oldHavana320 from '@/assets/map/landmarkModels/old-havana-320.webp';
+import parthenon160 from '@/assets/map/landmarkModels/parthenon-160.webp';
+import parthenon320 from '@/assets/map/landmarkModels/parthenon-320.webp';
+import peritoMoreno160 from '@/assets/map/landmarkModels/perito-moreno-160.webp';
+import peritoMoreno320 from '@/assets/map/landmarkModels/perito-moreno-320.webp';
+import petra160 from '@/assets/map/landmarkModels/petra-160.webp';
+import petra320 from '@/assets/map/landmarkModels/petra-320.webp';
+import petronasTowers160 from '@/assets/map/landmarkModels/petronas-towers-160.webp';
+import petronasTowers320 from '@/assets/map/landmarkModels/petronas-towers-320.webp';
+import pragueCastle160 from '@/assets/map/landmarkModels/prague-castle-160.webp';
+import pragueCastle320 from '@/assets/map/landmarkModels/prague-castle-320.webp';
 import pyramidsOfGiza160 from '@/assets/map/landmarkModels/pyramids-of-giza-160.webp';
 import pyramidsOfGiza320 from '@/assets/map/landmarkModels/pyramids-of-giza-320.webp';
+import sagradaFamilia160 from '@/assets/map/landmarkModels/sagrada-familia-160.webp';
+import sagradaFamilia320 from '@/assets/map/landmarkModels/sagrada-familia-320.webp';
+import saintBasils160 from '@/assets/map/landmarkModels/saint-basils-160.webp';
+import saintBasils320 from '@/assets/map/landmarkModels/saint-basils-320.webp';
 import statueOfLiberty160 from '@/assets/map/landmarkModels/statue-of-liberty-160.webp';
 import statueOfLiberty320 from '@/assets/map/landmarkModels/statue-of-liberty-320.webp';
 import sydneyOperaHouse160 from '@/assets/map/landmarkModels/sydney-opera-house-160.webp';
 import sydneyOperaHouse320 from '@/assets/map/landmarkModels/sydney-opera-house-320.webp';
+import tableMountain160 from '@/assets/map/landmarkModels/table-mountain-160.webp';
+import tableMountain320 from '@/assets/map/landmarkModels/table-mountain-320.webp';
 import tajMahal160 from '@/assets/map/landmarkModels/taj-mahal-160.webp';
 import tajMahal320 from '@/assets/map/landmarkModels/taj-mahal-320.webp';
+import victoriaFalls160 from '@/assets/map/landmarkModels/victoria-falls-160.webp';
+import victoriaFalls320 from '@/assets/map/landmarkModels/victoria-falls-320.webp';
 
 export const LANDMARK_MODEL_HEIGHTS = [160, 320];
 
 export const LANDMARK_MODELS = [
+  {
+    id: 'angkor-wat',
+    name: 'Angkor Wat',
+    latitude: 13.4125,
+    longitude: 103.86667,
+    maps: ['KH'],
+    landmark: 'Q43473',
+    aspect: 1.4636,
+    size: 0.7,
+    anchor: [0.5, 0.4965],
+    images: { 160: angkorWat160, 320: angkorWat320 },
+  },
+  {
+    id: 'ayutthaya',
+    name: 'Ayutthaya (Wat Phra Si Sanphet)',
+    latitude: 14.35583,
+    longitude: 100.55833,
+    maps: ['TH'],
+    landmark: 'Q1025100',
+    aspect: 1.6592,
+    size: 0.7,
+    anchor: [0.5, 0.4289],
+    images: { 160: ayutthaya160, 320: ayutthaya320 },
+  },
+  {
+    id: 'bagan',
+    name: 'Bagan',
+    latitude: 21.1725,
+    longitude: 94.86,
+    maps: ['MM'],
+    landmark: 'Q29317',
+    aspect: 1.2,
+    size: 0.7,
+    anchor: [0.5, 0.5867],
+    images: { 160: bagan160, 320: bagan320 },
+  },
+  {
+    id: 'belem-tower',
+    name: 'Tower of Belém',
+    latitude: 38.69139,
+    longitude: -9.21583,
+    maps: ['PT'],
+    landmark: 'Q215003',
+    aspect: 1.5198,
+    size: 0.7,
+    anchor: [0.5, 0.4774],
+    images: { 160: belemTower160, 320: belemTower320 },
+  },
   {
     id: 'big-ben',
     name: 'Big Ben',
@@ -42,6 +150,54 @@ export const LANDMARK_MODELS = [
     images: { 160: bigBen160, 320: bigBen320 },
   },
   {
+    id: 'borobudur',
+    name: 'Borobudur',
+    latitude: -7.60793,
+    longitude: 110.20384,
+    maps: ['ID'],
+    landmark: 'Q42798',
+    aspect: 1.5965,
+    size: 0.7,
+    anchor: [0.5, 0.4509],
+    images: { 160: borobudur160, 320: borobudur320 },
+  },
+  {
+    id: 'bryggen',
+    name: 'Bryggen',
+    latitude: 60.3975,
+    longitude: 5.32333,
+    maps: ['NO'],
+    landmark: 'Q153430',
+    aspect: 1.4877,
+    size: 0.7,
+    anchor: [0.5, 0.4882],
+    images: { 160: bryggen160, 320: bryggen320 },
+  },
+  {
+    id: 'burj-khalifa',
+    name: 'Burj Khalifa',
+    latitude: 25.19722,
+    longitude: 55.27417,
+    maps: ['AE'],
+    landmark: 'Q12495',
+    aspect: 0.579,
+    size: 1.08,
+    anchor: [0.5, 0.7999],
+    images: { 160: burjKhalifa160, 320: burjKhalifa320 },
+  },
+  {
+    id: 'chichen-itza',
+    name: 'Chichén Itzá',
+    latitude: 20.68285,
+    longitude: -88.56862,
+    maps: ['MX'],
+    landmark: 'Q5859',
+    aspect: 1.5235,
+    size: 0.7,
+    anchor: [0.5, 0.4756],
+    images: { 160: chichenItza160, 320: chichenItza320 },
+  },
+  {
     id: 'christ-the-redeemer',
     name: 'Christ the Redeemer',
     latitude: -22.95192,
@@ -52,6 +208,30 @@ export const LANDMARK_MODELS = [
     size: 0.867,
     anchor: [0.5, 0.6525],
     images: { 160: christTheRedeemer160, 320: christTheRedeemer320 },
+  },
+  {
+    id: 'cliffs-of-moher',
+    name: 'Cliffs of Moher',
+    latitude: 52.93611,
+    longitude: -9.47083,
+    maps: ['IE'],
+    landmark: 'Q239477',
+    aspect: 1.5308,
+    size: 0.7,
+    anchor: [0.5, 0.4728],
+    images: { 160: cliffsOfMoher160, 320: cliffsOfMoher320 },
+  },
+  {
+    id: 'cn-tower',
+    name: 'CN Tower',
+    latitude: 43.64275,
+    longitude: -79.38715,
+    maps: ['CA'],
+    landmark: 'Q134883',
+    aspect: 0.6616,
+    size: 0.946,
+    anchor: [0.5, 0.7718],
+    images: { 160: cnTower160, 320: cnTower320 },
   },
   {
     id: 'colosseum',
@@ -90,6 +270,198 @@ export const LANDMARK_MODELS = [
     images: { 160: greatWall160, 320: greatWall320 },
   },
   {
+    id: 'gyeongbokgung',
+    name: 'Gyeongbokgung Palace',
+    latitude: 37.57988,
+    longitude: 126.9768,
+    maps: ['KR'],
+    landmark: 'Q482485',
+    aspect: 1.402,
+    size: 0.7,
+    anchor: [0.5, 0.5179],
+    images: { 160: gyeongbokgung160, 320: gyeongbokgung320 },
+  },
+  {
+    id: 'ha-long-bay',
+    name: 'Ha Long Bay',
+    latitude: 20.9,
+    longitude: 107.2,
+    maps: ['VN'],
+    landmark: 'Q190128',
+    aspect: 1.5925,
+    size: 0.7,
+    anchor: [0.5, 0.4523],
+    images: { 160: haLongBay160, 320: haLongBay320 },
+  },
+  {
+    id: 'hagia-sophia',
+    name: 'Hagia Sophia',
+    latitude: 41.00833,
+    longitude: 28.98,
+    maps: ['TR'],
+    landmark: 'Q12506',
+    aspect: 1.2932,
+    size: 0.7,
+    anchor: [0.5, 0.5548],
+    images: { 160: hagiaSophia160, 320: hagiaSophia320 },
+  },
+  {
+    id: 'kilimanjaro',
+    name: 'Mount Kilimanjaro',
+    latitude: -3.06667,
+    longitude: 37.35917,
+    maps: ['TZ'],
+    landmark: 'Q7296',
+    aspect: 1.5383,
+    size: 0.7,
+    anchor: [0.5, 0.471],
+    images: { 160: kilimanjaro160, 320: kilimanjaro320 },
+  },
+  {
+    id: 'kinderdijk',
+    name: 'Kinderdijk windmills',
+    latitude: 51.88861,
+    longitude: 4.63472,
+    maps: ['NL'],
+    landmark: 'Q12012965',
+    aspect: 1.5985,
+    size: 0.7,
+    anchor: [0.5, 0.4495],
+    images: { 160: kinderdijk160, 320: kinderdijk320 },
+  },
+  {
+    id: 'machu-picchu',
+    name: 'Machu Picchu',
+    latitude: -13.16333,
+    longitude: -72.54556,
+    maps: ['PE'],
+    landmark: 'Q676203',
+    aspect: 1.2046,
+    size: 0.7,
+    anchor: [0.5, 0.5854],
+    images: { 160: machuPicchu160, 320: machuPicchu320 },
+  },
+  {
+    id: 'marina-bay-sands',
+    name: 'Marina Bay Sands',
+    latitude: 1.2825,
+    longitude: 103.86,
+    maps: ['SG'],
+    landmark: 'Q548679',
+    aspect: 1.3201,
+    size: 0.7,
+    anchor: [0.5, 0.5457],
+    images: { 160: marinaBaySands160, 320: marinaBaySands320 },
+  },
+  {
+    id: 'moai',
+    name: 'Moai of Ahu Tongariki',
+    latitude: -27.12583,
+    longitude: -109.27694,
+    maps: ['CL'],
+    landmark: 'Q14452',
+    aspect: 1.7559,
+    size: 0.7,
+    anchor: [0.5, 0.396],
+    images: { 160: moai160, 320: moai320 },
+  },
+  {
+    id: 'mount-fuji',
+    name: 'Mount Fuji',
+    latitude: 35.36056,
+    longitude: 138.7275,
+    maps: ['JP'],
+    landmark: 'Q39231',
+    aspect: 1.4403,
+    size: 0.7,
+    anchor: [0.5, 0.5041],
+    images: { 160: mountFuji160, 320: mountFuji320 },
+  },
+  {
+    id: 'neuschwanstein',
+    name: 'Neuschwanstein Castle',
+    latitude: 47.55749,
+    longitude: 10.74944,
+    maps: ['DE'],
+    landmark: 'Q4152',
+    aspect: 1.2932,
+    size: 0.7,
+    anchor: [0.5, 0.5555],
+    images: { 160: neuschwanstein160, 320: neuschwanstein320 },
+  },
+  {
+    id: 'old-havana',
+    name: 'Old Havana',
+    latitude: 23.13594,
+    longitude: -82.35833,
+    maps: ['CU'],
+    landmark: 'Q1165566',
+    aspect: 1.5198,
+    size: 0.7,
+    anchor: [0.5, 0.4775],
+    images: { 160: oldHavana160, 320: oldHavana320 },
+  },
+  {
+    id: 'parthenon',
+    name: 'Parthenon',
+    latitude: 37.97153,
+    longitude: 23.72664,
+    maps: ['GR'],
+    landmark: 'Q131013',
+    aspect: 1.4807,
+    size: 0.7,
+    anchor: [0.5, 0.4906],
+    images: { 160: parthenon160, 320: parthenon320 },
+  },
+  {
+    id: 'perito-moreno',
+    name: 'Perito Moreno Glacier',
+    latitude: -50.49322,
+    longitude: -73.12798,
+    maps: ['AR'],
+    landmark: 'Q367943',
+    aspect: 1.5054,
+    size: 0.7,
+    anchor: [0.5, 0.4816],
+    images: { 160: peritoMoreno160, 320: peritoMoreno320 },
+  },
+  {
+    id: 'petra',
+    name: 'Petra (the Treasury)',
+    latitude: 30.32222,
+    longitude: 35.45139,
+    maps: ['JO'],
+    landmark: 'Q5788',
+    aspect: 1.2424,
+    size: 0.7,
+    anchor: [0.5, 0.5723],
+    images: { 160: petra160, 320: petra320 },
+  },
+  {
+    id: 'petronas-towers',
+    name: 'Petronas Towers',
+    latitude: 3.15778,
+    longitude: 101.71167,
+    maps: ['MY'],
+    landmark: 'Q83063',
+    aspect: 0.683,
+    size: 0.915,
+    anchor: [0.5, 0.7643],
+    images: { 160: petronasTowers160, 320: petronasTowers320 },
+  },
+  {
+    id: 'prague-castle',
+    name: 'Prague Castle',
+    latitude: 50.09,
+    longitude: 14.4,
+    maps: ['CZ'],
+    landmark: 'Q193369',
+    aspect: 1.3425,
+    size: 0.7,
+    anchor: [0.5, 0.5385],
+    images: { 160: pragueCastle160, 320: pragueCastle320 },
+  },
+  {
     id: 'pyramids-of-giza',
     name: 'Pyramids of Giza',
     latitude: 29.97611,
@@ -100,6 +472,30 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3738],
     images: { 160: pyramidsOfGiza160, 320: pyramidsOfGiza320 },
+  },
+  {
+    id: 'sagrada-familia',
+    name: 'Sagrada Família',
+    latitude: 41.40356,
+    longitude: 2.17435,
+    maps: ['ES'],
+    landmark: 'Q14468710',
+    aspect: 1.1436,
+    size: 0.7,
+    anchor: [0.5, 0.6066],
+    images: { 160: sagradaFamilia160, 320: sagradaFamilia320 },
+  },
+  {
+    id: 'saint-basils',
+    name: 'Saint Basil\'s Cathedral',
+    latitude: 55.7525,
+    longitude: 37.62306,
+    maps: ['RU'],
+    landmark: 'Q41116',
+    aspect: 1.3425,
+    size: 0.7,
+    anchor: [0.5, 0.5377],
+    images: { 160: saintBasils160, 320: saintBasils320 },
   },
   {
     id: 'statue-of-liberty',
@@ -126,6 +522,18 @@ export const LANDMARK_MODELS = [
     images: { 160: sydneyOperaHouse160, 320: sydneyOperaHouse320 },
   },
   {
+    id: 'table-mountain',
+    name: 'Table Mountain',
+    latitude: -33.96216,
+    longitude: 18.41352,
+    maps: ['ZA'],
+    landmark: 'Q213360',
+    aspect: 1.5198,
+    size: 0.7,
+    anchor: [0.5, 0.4775],
+    images: { 160: tableMountain160, 320: tableMountain320 },
+  },
+  {
     id: 'taj-mahal',
     name: 'Taj Mahal',
     latitude: 27.175,
@@ -136,5 +544,17 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.5761],
     images: { 160: tajMahal160, 320: tajMahal320 },
+  },
+  {
+    id: 'victoria-falls',
+    name: 'Victoria Falls',
+    latitude: -17.92478,
+    longitude: 25.85806,
+    maps: ['ZM'],
+    landmark: 'Q43278',
+    aspect: 1.4842,
+    size: 0.7,
+    anchor: [0.5, 0.4889],
+    images: { 160: victoriaFalls160, 320: victoriaFalls320 },
   },
 ];

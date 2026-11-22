@@ -1,10 +1,11 @@
-// Changing a map's own design in Settings (docs/API.md "Map designs"). Each change shows on
-// the map at once and is saved DESIGN_SAVE_DELAY_MS after the last one (a colour picker
+// Changing a map's own design for a map style in Settings (docs/API.md "Map designs"; one
+// design per style, `style` the one the map is in). Each change shows on the map at once and is saved DESIGN_SAVE_DELAY_MS after the last one (a colour picker
 // sends one change per move). Colours go through `preview` (a value store MapDesignStyle
 // follows), so the page isn't re-rendered on every move; a change that adds or removes the
 // design itself (the first, or turning it on or off) goes to the map's state
-// (`onDesignChange`, useTravelMap's setDesign), as does each saved answer. Changing anything
-// switches the design on. Closing Settings sends what's still waiting.
+// (`onDesignChange(style, design)`, useTravelMap's setDesign), as does each saved answer.
+// Changing anything switches the design on. Closing Settings (or choosing another style, which
+// gives that style's design its own editor) keeps what's shown and sends what's waiting.
 import { useCallback, useEffect, useRef, useState } from 'react';
 // API
 import { removeDesignPicture, updateMapDesign } from '@/api/travelApi';
@@ -14,7 +15,7 @@ import { uploadDesignPicture } from '@/utils/map/uploadDesignPicture';
 
 const failed = (err, fallback) => err?.friendlyMessage || err?.message || fallback;
 
-export default function useMapDesignEditor({ mapId, design, onDesignChange, preview }) {
+export default function useMapDesignEditor({ mapId, style, design, onDesignChange, preview }) {
   // The design as changed here and not saved yet; null when it's the map's own
   const [draft, setDraft] = useState(null);
   const [status, setStatus] = useState({ state: 'idle', error: '' });
@@ -35,9 +36,9 @@ export default function useMapDesignEditor({ mapId, design, onDesignChange, prev
       draftRef.current = null;
       setDraft(null);
       preview?.set(null);
-      onDesignChange?.(saved);
+      onDesignChange?.(style, saved);
     },
-    [onDesignChange, preview],
+    [onDesignChange, preview, style],
   );
 
   const send = useCallback(async () => {
@@ -48,7 +49,7 @@ export default function useMapDesignEditor({ mapId, design, onDesignChange, prev
     const mine = ++sentRef.current;
     setStatus({ state: 'saving', error: '' });
     try {
-      const { design: saved } = await updateMapDesign(mapId, body);
+      const { design: saved } = await updateMapDesign(mapId, { style, ...body });
       // A newer change is waiting or on its way: its answer settles it
       if (mine !== sentRef.current || Object.keys(waitingRef.current).length) return;
       settle(saved);
@@ -59,13 +60,21 @@ export default function useMapDesignEditor({ mapId, design, onDesignChange, prev
       draftRef.current = null;
       setDraft(null);
       preview?.set(null);
-      onDesignChange?.(designRef.current);
+      onDesignChange?.(style, designRef.current);
       setStatus({ state: 'idle', error: failed(err, 'The design couldn’t be saved. Please try again.') });
     }
-  }, [mapId, settle, preview, onDesignChange]);
+  }, [mapId, style, settle, preview, onDesignChange]);
 
-  // Closing Settings (or another map) sends what's waiting
-  useEffect(() => () => void send(), [send]);
+  // Closing Settings (or another map, or another style) sends what's waiting, and puts what's
+  // shown in the map's state first, so the preview can go (another style must not wear it)
+  useEffect(
+    () => () => {
+      if (draftRef.current) onDesignChange?.(style, draftRef.current);
+      preview?.set(null);
+      void send();
+    },
+    [send, style, onDesignChange, preview],
+  );
 
   /** Change part of the design: `{ shown?, countries?, names?, grid? }` as the API takes it. */
   const change = useCallback(
@@ -83,14 +92,14 @@ export default function useMapDesignEditor({ mapId, design, onDesignChange, prev
       // Showing or hiding the design changes the page; a colour only the style sheet
       if (next.shown !== Boolean(before?.shown)) {
         preview?.set(null);
-        onDesignChange?.(next);
+        onDesignChange?.(style, next);
       } else preview?.set(next);
       Object.assign(waitingRef.current, body);
       setStatus({ state: 'idle', error: '' });
       window.clearTimeout(timerRef.current);
       timerRef.current = window.setTimeout(send, DESIGN_SAVE_DELAY_MS);
     },
-    [onDesignChange, preview, send],
+    [onDesignChange, preview, send, style],
   );
 
   /** One place's colour ("#rrggbb"), or null for its usual one. */
@@ -118,7 +127,7 @@ export default function useMapDesignEditor({ mapId, design, onDesignChange, prev
           const next = { ...draftRef.current, picture: saved?.picture ?? null, shown: saved?.shown ?? true };
           draftRef.current = next;
           setDraft(next);
-          onDesignChange?.(next);
+          onDesignChange?.(style, next);
         } else settle(saved);
       } catch (err) {
         setStatus({ state: 'idle', error: failed(err, fallback) });
@@ -126,20 +135,20 @@ export default function useMapDesignEditor({ mapId, design, onDesignChange, prev
         setPicture({ busy: false, progress: 0 });
       }
     },
-    [send, settle, onDesignChange],
+    [send, settle, onDesignChange, style],
   );
 
   const choosePicture = useCallback(
     (file) =>
       runPicture(
-        () => uploadDesignPicture(mapId, file, (progress) => setPicture({ busy: true, progress })),
+        () => uploadDesignPicture(mapId, style, file, (progress) => setPicture({ busy: true, progress })),
         'The picture couldn’t be uploaded. Please try again.',
       ),
-    [mapId, runPicture],
+    [mapId, style, runPicture],
   );
   const removePicture = useCallback(
-    () => runPicture(async () => (await removeDesignPicture(mapId)).design, 'The picture couldn’t be removed. Please try again.'),
-    [mapId, runPicture],
+    () => runPicture(async () => (await removeDesignPicture(mapId, style)).design, 'The picture couldn’t be removed. Please try again.'),
+    [mapId, style, runPicture],
   );
 
   return { design: current, change, setCountryColour, choosePicture, removePicture, picture, status };

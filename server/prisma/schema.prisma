@@ -384,8 +384,9 @@ model TravelMap {
   // (docs/API.md "Travel copies")
   travelCopiesOut TravelCopyRequest[] @relation("TravelCopyFrom")
   travelCopiesIn  TravelCopyRequest[] @relation("TravelCopyTo")
-  // Its own design: a picture for the sea, its own colours (docs/API.md "Map designs")
-  design          MapDesign?
+  // Its own designs, one per map style: a picture for the sea, its own colours (docs/API.md
+  // "Map designs")
+  designs         MapDesign[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -397,11 +398,15 @@ model TravelMap {
 // A map's own design (docs/API.md "Map designs"; 21 Nov 2026, the user's wish: free on every
 // plan, where other sites charge for map looks): a picture of the owner's for the sea, a
 // colour for any country, and the colours of the country names and the grid. Everyone who
-// opens the map sees it (share links too), in place of their own map style; the owner and
-// co-owners set it. One picture per map: a new one replaces it, and the old file is deleted.
+// opens the map sees it (share links too); the owner and co-owners set it. One per map style
+// (22 Nov 2026, the user's wish: colours chosen on Black and white showed on the World map),
+// drawn when the map is in that style. One picture per design: a new one replaces it, and
+// the old file is deleted.
 model MapDesign {
-  mapId String    @id
+  mapId String
   map   TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  // The map style it's for (utils/mapSettings.js MAP_STYLES, checked in code, no CHECK)
+  style String
 
   // Whether the map shows it: the owner can keep a design and turn it off
   shown          Boolean @default(true)
@@ -419,6 +424,7 @@ model MapDesign {
 
   updatedAt DateTime @updatedAt
 
+  @@id([mapId, style])
   @@map("map_design")
 }
 
