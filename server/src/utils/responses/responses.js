@@ -105,6 +105,7 @@ export const EVENT_MESSAGES = {
   defaultMapDelete: `Your first map can't be deleted. You can rename it instead.`,
   invalidGroupType: `Who the map is for must be SOLO, COUPLE or FAMILY.`,
   invalidSplitUk: `splitUk must be true or false.`,
+  invalidMapStyle: `Choose one of the map styles.`,
   invalidName: `Give it a name of 1 to 80 characters.`,
   travellerNotFound: `That traveller isn't on this map.`,
   lastTraveller: `A map needs at least one traveller.`,

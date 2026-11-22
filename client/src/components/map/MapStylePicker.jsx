@@ -11,11 +11,12 @@ const previewUrl = (name) => {
 
 // The four looks of the map, each previewed in its own colours (the preview carries the
 // style's data-map-style, so its sea colour applies to it), as paper cards: the chosen
-// one is parchment with a red edge.
-function MapStylePicker({ value, onChange }) {
+// one is parchment with a red edge. `note` says whose style it is (SettingsPanel).
+function MapStylePicker({ value, onChange, note = null }) {
   return (
     <fieldset className='grid gap-2'>
       <legend className='pb-3 font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>Map style</legend>
+      {note ? <p className='text-sm'>{note}</p> : null}
       <div className='grid grid-cols-2 gap-2'>
         {MAP_STYLES.map((style) => (
           <label

@@ -1,7 +1,7 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Constants
-import { MAP_PAGE_URL, mapPassportPath, mapPath, sharedPassportPath } from '@/utils/constants/routes';
+import { MAP_PAGE_URL, comparePath, mapPassportPath, mapPath, sharedPassportPath } from '@/utils/constants/routes';
 // Hooks
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import usePhotoPage, { preloadPhotoPage } from '@/hooks/usePhotoPage';
@@ -71,13 +71,14 @@ import { preloadSharing } from '@/utils/sharing/sharingCache';
 import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole, canManageRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
-import { isMonoStyle, mapStyleById } from '@/utils/map/mapStyles';
-import { DESIGN_BASE_STYLE, shownDesign } from '@/utils/map/mapDesign';
+import { isMonoStyle, mapStyleById, shownStyle } from '@/utils/map/mapStyles';
+import { shownDesign } from '@/utils/map/mapDesign';
 import { mapCardOptions } from '@/utils/shareCard/cardOptions';
 import { mapPosterOptions } from '@/utils/poster/posterOptions';
 import { recapYearFor } from '@/utils/recap/recap';
 import RecapTag from '@/components/recap/RecapTag';
 import AnniversaryTag from '@/components/moments/AnniversaryTag';
+import TripCountdownTag from '@/components/trips/TripCountdownTag';
 import { LandmarkMarksContext } from '@/hooks/useLandmarkMarks';
 import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
 import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
@@ -274,11 +275,22 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   );
   useEffect(() => () => window.clearTimeout(hoverTimerRef.current), []);
 
-  // The map's own design, when it has one switched on (docs/API.md "Map designs"; 21 Nov
-  // 2026, the user's wish): everyone sees the map in it, on the World map's look, in place of
-  // their own map style: its picture for the sea, its colours for countries, names and grid
+  // The map's style: the one its owner chose, for everyone who opens it, share links too
+  // (docs/API.md "Map styles"; 22 Nov 2026, the user's wish), else the viewer's own. Its own
+  // design, when it has one switched on (docs/API.md "Map designs"; 21 Nov 2026), goes on top:
+  // its picture for the sea, its colours for countries, names and grid
   const design = shownDesign(map.design);
-  const styleId = design ? DESIGN_BASE_STYLE : settings.style;
+  const styleId = shownStyle(map, settings.style);
+  // The owner or a co-owner choosing it in Settings: the map's, and kept as their own too
+  // (for their maps that have none, and maps whose owner never chose one)
+  const setMapStyle = actions?.setMapStyle;
+  const changeMapStyle = useCallback(
+    (style) => {
+      onChangeSetting('style', style);
+      setMapStyle?.(style);
+    },
+    [onChangeSetting, setMapStyle],
+  );
   // The design as Settings changes it, before it's saved (MapDesignStyle follows it alone)
   const [designPreview] = useState(() => createValueStore(null));
 
@@ -466,6 +478,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             settings={settings}
             onChangeSetting={onChangeSetting}
             map={map}
+            mapStyle={styleId}
+            onMapStyleChange={canManage && actions?.setMapStyle ? changeMapStyle : null}
             canEdit={canEdit}
             isOwner={isOwner}
             canManage={canManage}
@@ -493,6 +507,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             // Not through a share link: the card is the map of someone who's on it
             onShareCard={shareCode ? undefined : () => setShareCard(mapCardOptions(map))}
             onPoster={shareCode ? undefined : () => setPoster(mapPosterOptions(map))}
+            compareHref={shareCode ? null : comparePath(map.id)}
             onYearRecap={shareCode ? undefined : () => setRecapYear(recapYearFor())}
             collected={landmarkMarks}
             passportHref={shareCode ? sharedPassportPath(shareCode) : mapPassportPath(map.id)}
@@ -732,6 +747,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           {shareCode ? null : <RecapTag mapId={map.id} onOpen={setRecapYear} />}
           {/* A moment's day come round: "10 years ago today: Our wedding" (21 Nov 2026) */}
           {shareCode ? null : <AnniversaryTag mapId={map.id} onOpenCountry={selectCountry} />}
+          {/* The countdown to the next planned trip: "12 days until Japan in spring" (22 Nov 2026) */}
+          {shareCode ? null : <TripCountdownTag trips={trips} />}
           {/* Last in the column, so the banners above keep their place (the map switcher opens
               below them). On phones first (17 Nov 2026): its flag sits level with the Menu
               stamp, and the banners come below them both, or below an empty row as tall as

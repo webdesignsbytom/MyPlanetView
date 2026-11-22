@@ -9,6 +9,7 @@ import {
   ADMIN_THEMES_PAGE_URL,
   CHALLENGES_PAGE_URL,
   GIFTS_PAGE_URL,
+  COMPARE_PAGE_URL,
   IMPORT_PAGE_URL,
   ADMIN_PAGE_URL,
   ADMIN_PROMO_CODES_PAGE_URL,
@@ -73,6 +74,7 @@ export const ChallengePage = lazyPage(() => import('@/pages/challenges/Challenge
 export const ChallengeJoinPage = lazyPage(() => import('@/pages/challenges/ChallengeJoinPage'));
 // Gifts of a year of a plan (docs/API.md "Gifts")
 export const GiftsPage = lazyPage(() => import('@/pages/gifts/GiftsPage'));
+export const ComparePage = lazyPage(() => import('@/pages/compare/ComparePage'));
 export const GiftPage = lazyPage(() => import('@/pages/gifts/GiftPage'));
 // Bringing your travels from Polarsteps (docs/API.md "Importing from Polarsteps")
 export const ImportPage = lazyPage(() => import('@/pages/import/ImportPage'));
@@ -130,6 +132,7 @@ const PAGES_BY_PATH = {
   [ADMIN_THEMES_PAGE_URL]: AdminThemesPage,
   [CHALLENGES_PAGE_URL]: ChallengesPage,
   [GIFTS_PAGE_URL]: GiftsPage,
+  [COMPARE_PAGE_URL]: ComparePage,
   [IMPORT_PAGE_URL]: ImportPage,
   [ACCOUNT_PAGE_URL]: AccountPage,
   [LOGIN_PAGE_URL]: LoginPage,

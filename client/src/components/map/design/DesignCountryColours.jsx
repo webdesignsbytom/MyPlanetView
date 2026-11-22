@@ -15,7 +15,7 @@ const plain = (text) => text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toL
 // A map design's country colours (docs/API.md "Map designs"): every place the map draws (the
 // UK's nations on a map that splits it, Antarctica, the regions), each with its own colour
 // picker, behind a button so Settings stays short; a search to find one, and a way back to
-// the usual colours for all of them. `usual` holds the World map's colours by token.
+// the usual colours for all of them. `usual` holds the map style's colours by token.
 function DesignCountryColours({ countries, usual, onChange, onResetAll }) {
   const splitUk = useSplitUk();
   const uid = useId();

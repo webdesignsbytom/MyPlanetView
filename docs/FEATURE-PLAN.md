@@ -44,6 +44,9 @@ Last updated: 19 November 2026.
 
 - **A poster of the map, and "Where to go next" (22 Nov 2026, the user's wish, from the ideas list):** the statistics panel's "A poster of my map" makes a print-ready PNG in the browser (A4, A3, A2 or 70 × 50 cm, landscape, 300 dpi written into the file, or the most a phone's browser can draw; the map's name, its numbers, the countries coloured in and named, in "Blue sea" or "Old paper"), with the print partners' offers under it; nothing is sent anywhere. A new map tool, "Where to go next", lists the want-to-go countries good to visit this month, then the rest at their next best month, from the country guides' ratings.
 
+- **The countdown to the next trip, and comparing maps (22 Nov 2026, the user's wish, from the ideas list):** the map shows a luggage tag counting down to its soonest planned trip up to a year ahead ("12 days until Japan in spring"), whether that month suits the trip's first country with a guide, the trip and the Travel Desk for it. `/compare` puts two maps the person can already open side by side (theirs, one shared with them, or a map's share link): the countries both have been to, only one, only the other, and both want to go to, with a picture of the world in three colours. From the statistics panel's "Compare with another map".
+- **Little 3D landmark models, on the country maps (22 Nov 2026, the user's wish, from the ideas list):** a cartoony toy model on its own grass tile, standing on its real spot on a country's own map: the first is Big Ben at Westminster, on the UK's map and England's. They're not on the world map: the user wants them there only when zoomed in really far, later. Each model is made in Blender from a script (`images/src/models/<id>/`, with a `model.json` giving its place and maps), and `node images/src/tools/landmark-models.mjs` turns the render into the map's pictures (6 and 14 KB) and the list the country map draws.
+
 ## Agreed so far
 
 | Idea | Decision (14 Nov 2026) |
@@ -775,17 +778,25 @@ When each part is built, update these sections there:
 
 ## Ideas not built yet
 
-The list from "what else can we do to compete" (21 Nov 2026) and the user's own additions. Built from it: on 21 Nov 2026 the selling-point wording, richer travel stats, family extras, and give a month, get a month; on 22 Nov 2026 the map as a printed poster (its file) and "Where to go next" (see "Build status").
+The lists from "what else can we do to compete" (21 and 22 Nov 2026) and the user's own additions. Built from it: on 21 Nov 2026 the selling-point wording, richer travel stats, family extras, and give a month, get a month; on 22 Nov 2026 the map as a printed poster (its file), "Where to go next", the countdown to the next trip and comparing maps (see "Build status").
 
 **Quick**
 - **Supporter badge:** a small mark on paid members' shared maps, so every shared map advertises the paid plans.
 - **Waiting list and founder pre-sales** ("Get early access"): shows whether people will pay before spending on launch.
 - **A visited-country animation** (21 Nov 2026, the user's wish; the same idea as the scratch-off reveal, so built as one): marking a country visited or lived in (the ticket, the country list, a "been here" tick) should feel like a moment: the country fills in with its colour (or is scratched off, as the Scratch Map does) and its star sticker is pressed on like a stamp. Made for short videos. A plain change with reduced motion.
+- **Tick your countries at sign-up** (22 Nov 2026, from "what else can we do to compete"): the welcome page gets a step listing every country by continent with a tick box each, so a new map starts full rather than empty (Visited and Been both open this way). The biggest win for people who stay after signing up.
+- **Your map as a phone or desktop wallpaper:** the poster drawn phone-shaped or screen-shaped, free; seen every day, and shared.
+- **Seasonal pushes:** Valentine's Day (a couple's poster, a gift year) and Mother's and Father's Day (a family's poster); marketing on what's built.
 
 **Medium**
 - **A cities checklist:** Visited sells cities as a paid add-on; we could give it free.
 - **String between the countries** (22 Nov 2026, the user's wish): red string from pin to pin linking the countries you've been to, like a map on a corkboard with pins and thread. A map setting you switch on and off (the user's decision, 22 Nov 2026). Still open: what order the string follows (when each country was first visited, or each trip's own route).
 - **A Google Play app:** the site wrapped as an Android app (not being in the app stores is the business review's biggest risk).
+- **Import from Google Maps Timeline:** the Timeline export people can save from Google Maps on their phone (Google moved Timeline onto phones in 2024), read in the browser like the Polarsteps import: every country they've been to, with first-visit dates, in one go. A cheaper first step towards the photo scan. Check the file's format with a real export first.
+- **Switch from other map apps:** bring a country list from Visited, Been or a pasted list of country names.
+- **A couple's shared bucket list:** each partner marks the countries they want to go to; the map shows the ones you both want, and "Where to go next" puts those first.
+- **People on the map:** pins for where family and friends live ("Gran in Dublin"), so the map of a life includes its people.
+- **More little 3D landmark models, and on the world map** (22 Nov 2026, the user's wish): Big Ben is on the country maps (see "Build status"). Still to do: more models (the famous landmarks first; the rest keep their dots), the world map once zoomed in really far (the user's wish: not before), and perhaps the landmark cards and passport stamps.
 
 **Big**
 - **Photo scan:** reads the person's photo library and fills in the map from where the photos were taken: years of travel on the map in minutes. The strongest reason to sign up.
@@ -798,6 +809,8 @@ The list from "what else can we do to compete" (21 Nov 2026) and the user's own 
 - **A printed passport** with the stamps.
 - **Prints of the country posters,** once the rights to the art are checked.
 - **A logo shop** through a print-on-demand printer.
+- **Postcards from your photos:** a real printed postcard sent from one of your photos, through a print partner, as the posters will be.
+- **A child's travel book:** their own passport (built on 21 Nov 2026) printed as a keepsake book with sticker sheets of their stamps.
 
 ## Open decisions
 

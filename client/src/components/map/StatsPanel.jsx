@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 // Icons
-import { FaCalendarAlt, FaPassport, FaPrint, FaShareAlt, FaSuitcase } from 'react-icons/fa';
+import { FaBalanceScale, FaCalendarAlt, FaPassport, FaPrint, FaShareAlt, FaSuitcase } from 'react-icons/fa';
 // Components
 import MapPanel from './MapPanel';
 import MapActionButton from './MapActionButton';
@@ -23,14 +23,15 @@ import { aboutKm, aboutMiles, withThe, worldShare } from '@/utils/map/travelStat
 // phone, the toolbar leaves their stamp out: MapToolbar). `passportHref` links to the map's
 // passport (its own address, or through the share link).
 // `onShareCard` makes a picture of the map to share (ShareCardDialog), `onPoster` the map as a
-// printed poster (MapPosterDialog, 22 Nov 2026); `onYearRecap` opens
+// printed poster (MapPosterDialog, 22 Nov 2026); `compareHref` the compare page with this
+// map first (22 Nov 2026); `onYearRecap` opens
 // "Your year in travel" (YearRecapDialog). `collected` (the map's landmark marks: stamped and
 // ticked Sets) counts the collection (docs/API.md "Collecting"): the landmarks been to, and
 // the World Heritage Sites among them, out of all there are. Then how far they've gone
 // (docs/API.md "Stats"; 21 Nov 2026): the share of the world's countries, the days away and
 // the distance on completed trips (home, the stops, home again), and the place furthest from
 // the map's home (Settings, "This map").
-function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onPoster, onYearRecap, collected = null, passportHref, onClose }) {
+function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onPoster, compareHref, onYearRecap, collected = null, passportHref, onClose }) {
   const byTraveller = stats?.byTraveller || [];
   const { landmarks } = useLandmarks(null, { enabled: Boolean(collected) });
   const collection = useMemo(() => {
@@ -110,6 +111,15 @@ function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = 
               <FaSuitcase aria-hidden='true' />
               <span>Badges and goals</span>
             </MapActionButton>
+          ) : null}
+          {compareHref ? (
+            <Link
+              to={compareHref}
+              className='btn-paper grid-flow-col justify-center gap-2 text-center [grid-auto-columns:minmax(0,max-content)] [--btn-leading:1.5rem] [--btn-pad-x:1rem] [--btn-pad-y:0.25rem] [--btn-size:1.0625rem]'
+            >
+              <FaBalanceScale aria-hidden='true' />
+              <span>Compare with another map</span>
+            </Link>
           ) : null}
           {passportHref ? (
             <Link

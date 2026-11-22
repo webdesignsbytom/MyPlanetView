@@ -60,3 +60,12 @@ export const POSTER_COLOURS = Object.freeze({
     iceEdge: '#b89a74',
   }),
 });
+
+// Comparing two maps (utils/compare/drawCompareMap.js; 22 Nov 2026): the countries on both,
+// only on the first, only on the second, on the share card's sea and land. Three hues told
+// apart without colour vision too (purple, amber, teal), and the page lists each group in words.
+export const COMPARE_COLOURS = Object.freeze({
+  both: '#7b2d8b',
+  onlyA: '#f0a830',
+  onlyB: '#2a9d8f',
+});

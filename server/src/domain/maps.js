@@ -132,16 +132,18 @@ export const findMapStatsRow = (mapId) =>
   prisma.travelMap.findUnique({ where: { id: mapId }, select: { splitUk: true, homeCountryCode: true, ownerId: true } });
 
 /**
- * The whole map: its row, owner's name, travellers and visits. Four flat queries run
- * side by side (a nested select reads the map first, then the rest).
+ * The whole map: its row, owner's name and map settings (the style the map is shown in when
+ * it has none of its own), travellers and visits. Five flat queries run side by side (a
+ * nested select reads the map first, then the rest).
  */
 export const findMapDetail = async (mapId) => {
-  const [map, owner, travellers, visits] = await Promise.all([
+  const [map, owner, ownerProfile, travellers, visits] = await Promise.all([
     prisma.travelMap.findUnique({
       where: { id: mapId },
-      select: { id: true, name: true, groupType: true, isDefault: true, ownerId: true, splitUk: true, homeCountryCode: true },
+      select: { id: true, name: true, groupType: true, isDefault: true, ownerId: true, splitUk: true, homeCountryCode: true, style: true },
     }),
     prisma.user.findFirst({ where: { ownedMaps: { some: { id: mapId } } }, select: { name: true } }),
+    prisma.profile.findFirst({ where: { user: { ownedMaps: { some: { id: mapId } } } }, select: { mapSettings: true } }),
     prisma.traveller.findMany({
       where: { mapId },
       select: { id: true, name: true, position: true, userId: true, birthCountryCode: true, favouriteCountryCode: true },
@@ -153,7 +155,7 @@ export const findMapDetail = async (mapId) => {
       orderBy: { countryCode: 'asc' },
     }),
   ]);
-  return map && { ...map, owner, travellers, visits };
+  return map && { ...map, owner, ownerSettings: ownerProfile?.mapSettings ?? null, travellers, visits };
 };
 
 /** A new map with its travellers (one transaction). */

@@ -7,6 +7,7 @@ import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/re
 import { logEvent } from '../utils/events/logEvent.js';
 import { createMapEvent } from '../event/travelUtils.js';
 import { sanitizeText } from '../utils/sanitize.js';
+import { MAP_STYLES, mapStyleOf } from '../utils/mapSettings.js';
 import { canEdit, canManage, canView, isOwner } from '../utils/access.js';
 import {
   GROUP_TYPES,
@@ -162,6 +163,8 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     splitUk: detail.splitUk,
     // Its home as set (null: from a traveller's birth country; the stats carry the one in use)
     homeCountryCode: detail.homeCountryCode ?? null,
+    // The style everyone sees it in: its own, else the owner's (null: each viewer's own)
+    style: mapStyleOf(detail.style, detail.ownerSettings),
     role,
     ownerName: detail.owner?.name ?? null,
     travellers: detail.travellers.map((t) => ({
@@ -276,6 +279,11 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
     if (!parsed.ok) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
     if (isPole(parsed.value)) return badRequest(req, res, D, EVENT_MESSAGES.poleNotATravellerCountry);
     data.homeCountryCode = parsed.value ? placeOnMap(parsed.value, false) : null;
+  }
+  // The style everyone who opens the map sees it in, share links too (docs/API.md "Map styles")
+  if (body.style !== undefined) {
+    if (!MAP_STYLES.includes(body.style)) return badRequest(req, res, D, EVENT_MESSAGES.invalidMapStyle);
+    data.style = body.style;
   }
   // The UK as its four nations: changing it moves the map's UK data (services/travel/ukNations.js)
   if (body.splitUk !== undefined && typeof body.splitUk !== 'boolean') {

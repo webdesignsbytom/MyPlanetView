@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useId, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 // Icons
 import { FaArrowLeft } from 'react-icons/fa';
 import { FiList } from 'react-icons/fi';
@@ -21,6 +21,7 @@ import { countsAsVisited, pastelFill } from '@/utils/map/visitStatus';
 import { badgeIdFor, badgeRadius } from '@/utils/map/badges';
 import { countryName } from '@/utils/map/countries';
 import { placeOnCountryMap, positionOnCountryMap } from '@/utils/map/countryMapGeo';
+import { LANDMARK_MODELS, LANDMARK_MODEL_HEIGHTS } from '@/utils/map/landmarkModels';
 import { MAP_WIDTH, REFERENCE_PX_PER_UNIT } from '@/utils/map/projection';
 import { clearPointerFocus, markPointerFocus } from '@/utils/map/pointerFocus';
 
@@ -31,6 +32,10 @@ const EMPTY_EXTENT = { top: 0, bottom: 2000 };
 const LABEL_PX = 11;
 const PIN_PX = 30;
 const CHAR_WIDTH = 0.55;
+// The closest zoom, set apart from the world map's so each can be tuned: 64, two of the zoom
+// stamps' steps (×1.6) past the old 25 (22 Nov 2026, the user's wish: on the UK's map London's
+// boroughs were as close as it went)
+const COUNTRY_MAX_ZOOM = 64;
 
 // A state's look, as a country's on the world map (18 Nov 2026, the user's wish): every one
 // wears one of the seven pastels (`colour`, no two neighbours alike), a visited or lived-in
@@ -104,6 +109,38 @@ const StateNames = memo(function StateNames({ areas, statuses, zoom }) {
   );
 });
 
+// The little 3D landmark models (22 Nov 2026, the user's wish: on the country maps for now, not
+// the world map): toy models made in Blender, each standing with its grass tile's middle on its
+// real spot (Big Ben at Westminster). Made by images/src/tools/landmark-models.mjs, which
+// writes utils/map/landmarkModels.js. On screen MODEL_PX tall at zoom 1, growing with the
+// square root of the zoom (a thing on the map, yet never covering a city), between MODEL_MIN_PX
+// and MODEL_MAX_PX; the smaller picture while it's sharp enough on a 2× screen. Nothing to
+// press: a press goes through to the state under it.
+const MODEL_PX = 64;
+const MODEL_MIN_PX = 40;
+const MODEL_MAX_PX = 150;
+
+const LandmarkModels = memo(function LandmarkModels({ geo, models, zoom }) {
+  if (!models.length) return null;
+  const px = Math.min(MODEL_MAX_PX, Math.max(MODEL_MIN_PX, MODEL_PX * Math.sqrt(zoom)));
+  const h = px / (zoom * REFERENCE_PX_PER_UNIT);
+  const size = LANDMARK_MODEL_HEIGHTS.find((height) => height >= px * 2) ?? LANDMARK_MODEL_HEIGHTS.at(-1);
+  return (
+    <g aria-hidden='true' className='pointer-events-none'>
+      {models.map((model) => {
+        const at = placeOnCountryMap(geo, model.latitude, model.longitude);
+        const w = h * model.aspect;
+        // The group stands on the spot; the picture is moved so its tile's middle is there
+        return (
+          <g key={model.id} data-landmark-model={model.id} transform={`translate(${at.x} ${at.y})`}>
+            <image href={model.images[size]} x={-w * model.anchor[0]} y={-h * model.anchor[1]} width={w} height={h} />
+          </g>
+        );
+      })}
+    </g>
+  );
+});
+
 const Pins = memo(function Pins({ geo, pins, zoom, selectedId }) {
   const scale = PIN_PX / 3 / (zoom * REFERENCE_PX_PER_UNIT);
   return pins.map((pin) => {
@@ -135,7 +172,7 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
   const hintId = useId();
   const { geo, statuses, pins, error, setStatus } = useCountryMapData({ source, code, pinsVersion });
   const extent = geo ? { top: 0, bottom: geo.height } : EMPTY_EXTENT;
-  const viewport = useMapViewport({ extent });
+  const viewport = useMapViewport({ extent, maxZoom: COUNTRY_MAX_ZOOM });
   const zoom = useViewportZoom(viewport);
   const boxRef = useRef(null);
   const headerRef = useRef(null);
@@ -146,6 +183,7 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
   // panel in the middle (19 Nov 2026, the user's wish: its button made the header look poor)
   const [listOpen, setListOpen] = useState(false);
   const name = countryName(code);
+  const models = useMemo(() => LANDMARK_MODELS.filter((model) => model.maps.includes(code)), [code]);
   const info = geo?.word;
   const many = info?.[1] || 'states';
   const listTitle = `${many[0].toUpperCase()}${many.slice(1)} and pins`;
@@ -323,6 +361,7 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
             </g>
             <StateBadges areas={geo.areas} statuses={statuses} countryCode={code} zoom={zoom} />
             <StateNames areas={geo.areas} statuses={statuses} zoom={zoom} />
+            <LandmarkModels geo={geo} models={models} zoom={zoom} />
             <Pins geo={geo} pins={pins} zoom={zoom} selectedId={selectedPinId} />
           </>
         ) : null}

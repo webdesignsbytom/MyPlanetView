@@ -31,6 +31,18 @@ export const MAP_SETTING_FLAGS = Object.freeze([
   'showTips',
 ]);
 
+/**
+ * The style a map is shown in to everyone who opens it, share links too (docs/API.md "Map
+ * styles"; 22 Nov 2026, the user's wish): its own (`TravelMap.style`, chosen in Settings by
+ * the owner or a co-owner), else the owner's own style, else null (each viewer's own).
+ * A style taken out since it was saved counts as none.
+ */
+export const mapStyleOf = (style, ownerSettings) => {
+  if (MAP_STYLES.includes(style)) return style;
+  const owners = ownerSettings && typeof ownerSettings === 'object' ? ownerSettings.style : null;
+  return MAP_STYLES.includes(owners) ? owners : null;
+};
+
 const isPlainObject = (value) =>
   value !== null && typeof value === 'object' && !Array.isArray(value) && Object.getPrototypeOf(value) === Object.prototype;
 

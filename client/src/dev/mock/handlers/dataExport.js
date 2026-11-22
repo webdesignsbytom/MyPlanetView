@@ -88,6 +88,8 @@ function mapView(map) {
     isDefault: map.isDefault,
     splitUk: Boolean(map.splitUk),
     homeCountryCode: map.homeCountryCode ?? null,
+    // The style chosen for it (null: the owner's own)
+    style: map.style ?? null,
     linkAccess: map.linkAccess,
     shareCode: map.shareCode,
     graceUntil: iso(map.graceUntil),

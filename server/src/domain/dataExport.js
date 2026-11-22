@@ -78,7 +78,7 @@ export async function findMapForExport(mapId) {
       prisma.travelMap.findUnique({
         where: { id: mapId },
         select: {
-          id: true, name: true, groupType: true, isDefault: true, splitUk: true, homeCountryCode: true, linkAccess: true, shareCode: true, graceUntil: true, createdAt: true, updatedAt: true,
+          id: true, name: true, groupType: true, isDefault: true, splitUk: true, homeCountryCode: true, style: true, linkAccess: true, shareCode: true, graceUntil: true, createdAt: true, updatedAt: true,
           // Its own design (docs/API.md "Map designs"): the colours, and whether it has a picture
           design: { select: { shown: true, countryColours: true, namesColour: true, gridColour: true, pictureId: true } },
           // Landmarks ticked "been here" (docs/API.md "Collecting")

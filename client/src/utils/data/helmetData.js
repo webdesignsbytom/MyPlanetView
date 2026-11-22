@@ -35,6 +35,7 @@ import {
   CHALLENGE_PAGE_URL,
   CHALLENGE_JOIN_PAGE_URL,
   GIFTS_PAGE_URL,
+  COMPARE_PAGE_URL,
   GIFT_PAGE_URL,
   IMPORT_PAGE_URL,
   UNSUBSCRIBE_PAGE_URL,
@@ -171,6 +172,13 @@ export const helmetData = {
   [CHALLENGE_JOIN_PAGE_URL]: {
     pageName: 'Join a challenge',
     desc: `A friend has challenged you on ${CompanyName}. Join with your travel map.`,
+    indexing: 'noindex,nofollow',
+  },
+
+  // Comparing two maps (signed in)
+  [COMPARE_PAGE_URL]: {
+    pageName: 'Compare two maps',
+    desc: `Compare two ${CompanyName} maps: the countries both have been to, only one, and where you both want to go.`,
     indexing: 'noindex,nofollow',
   },
 

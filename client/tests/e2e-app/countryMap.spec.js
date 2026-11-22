@@ -51,6 +51,39 @@ test('a country opens on its own, with its states and a pin’s visits kept apar
   await expect.poll(() => world.getAttribute('viewBox')).not.toBe(before);
 });
 
+// The little 3D landmark models (22 Nov 2026, the user's wish): on the country maps only, each
+// standing on its real spot, as Big Ben does on Westminster
+test('Big Ben stands on Westminster on the United Kingdom’s own map', async ({ page }) => {
+  await openMap(page);
+  await expect(page.locator('[data-landmark-model]')).toHaveCount(0);
+  const map = await openCountryMap(page, 'United Kingdom');
+  const model = map.locator('[data-landmark-model="big-ben"]');
+  await expect(model.locator('image')).toBeVisible();
+  // The picture has loaded, and the spot its tile stands on is inside Westminster
+  await expect
+    .poll(() =>
+      model.locator('image').evaluate((image) => {
+        const probe = new Image();
+        probe.src = image.href.baseVal;
+        return probe.decode().then(
+          () => probe.naturalWidth,
+          () => 0,
+        );
+      }),
+    )
+    .toBeGreaterThan(0);
+  const onWestminster = await model.evaluate((group) => {
+    const { e: x, f: y } = group.transform.baseVal.consolidate().matrix;
+    const point = new DOMPoint(x, y);
+    return [...document.querySelectorAll('[data-state="GB-WSM"] path')].some((path) => path.isPointInFill(point));
+  });
+  expect(onWestminster).toBe(true);
+  // Only the country's own map has it: none on the world map
+  await map.getByRole('button', { name: 'World map' }).click();
+  await expect(page.locator('[data-country-map]')).toHaveCount(0);
+  await expect(page.locator('[data-landmark-model]')).toHaveCount(0);
+});
+
 test('marking a state colours it and brings its country', async ({ page }) => {
   await openMap(page);
   const map = await openCountryMap(page, 'Canada');

@@ -7,10 +7,12 @@ import { MAP_HOME_BOTTOM, MAP_WIDTH, REFERENCE_PX_PER_UNIT, mapExtent } from '@/
 // and pins were tuned at. (It was the share of the map's width on show, so a phone, which
 // shows a narrow strip of the map at the same size, counted as zoomed in five times and
 // drew every landmark pin and the smallest badges, 16 Nov 2026.) The closest zoom is
-// MAX_ZOOM on every screen; MIN_WIDTH is that view's width before the screen is measured.
-const MAX_ZOOM = 25;
+// MAX_ZOOM on every screen, unless the caller gives its own (`maxZoom`: a country's own map
+// has its own); MIN_WIDTH is that view's width before the screen is measured. 64 is two of
+// the zoom stamps' steps (×1.6) past the old 25 (22 Nov 2026, the user's wish).
+const MAX_ZOOM = 64;
 const MIN_WIDTH = MAP_WIDTH / MAX_ZOOM;
-const closestWidthFor = (screenPx) => (screenPx ? screenPx / (MAX_ZOOM * REFERENCE_PX_PER_UNIT) : MIN_WIDTH);
+const closestWidthFor = (screenPx, maxZoom) => (screenPx ? screenPx / (maxZoom * REFERENCE_PX_PER_UNIT) : MAP_WIDTH / maxZoom);
 const zoomFor = (viewWidth, screenPx) => (screenPx ? screenPx / viewWidth / REFERENCE_PX_PER_UNIT : MAP_WIDTH / viewWidth);
 const FULL_EXTENT = mapExtent(true);
 const DRAG_THRESHOLD_PX = 5;
@@ -105,9 +107,10 @@ function homeView(aspect, extent, closest = MIN_WIDTH) {
  * `extent` ({ top, bottom } in map units, from projection.js mapExtent) is how far the map
  * reaches: further down with Antarctica. A new extent re-fits the view before the next
  * paint (the opening view again, unless the user has moved it).
+ * `maxZoom` is the closest zoom allowed (screen scale, as above; MAX_ZOOM by default).
  * The returned object never changes, so it can be passed to memoised components.
  */
-export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT } = {}) {
+export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT, maxZoom = MAX_ZOOM } = {}) {
   const svgNodeRef = useRef(null);
   const extentRef = useRef({ top: extent.top, bottom: extent.bottom });
   // The live view, and the zoom the subscribers last saw
@@ -133,7 +136,7 @@ export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT 
   // The SVG's width on screen (CSS pixels), which turns the view into a zoom, and the
   // closest view that allows
   const screenWidthRef = useRef(0);
-  const closestRef = useRef(MIN_WIDTH);
+  const closestRef = useRef(closestWidthFor(0, maxZoom));
   const movedRef = useRef(false);
 
   useEffect(() => () => clearTimeout(pendingTapRef.current), []);
@@ -174,7 +177,7 @@ export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT 
       if (!rect?.width || !rect?.height) return;
       const resized = rect.width !== screenWidthRef.current;
       screenWidthRef.current = rect.width;
-      closestRef.current = closestWidthFor(rect.width);
+      closestRef.current = closestWidthFor(rect.width, maxZoom);
       screenAspectRef.current = rect.height / rect.width;
       const extent = extentRef.current;
       const aspect = viewAspectFor(screenAspectRef.current, extent);
@@ -187,7 +190,7 @@ export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT 
       const prev = viewRef.current;
       apply(movedRef.current ? fit(prev, aspect, extent, closestRef.current) : homeView(aspect, extent, closestRef.current), first);
     },
-    [apply],
+    [apply, maxZoom],
   );
 
   // The SVG gets its viewBox from here, never from a React prop. Measured as it's attached,

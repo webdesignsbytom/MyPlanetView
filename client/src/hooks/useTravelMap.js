@@ -181,6 +181,21 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     [mapId],
   );
 
+  // The map's style, for everyone who opens it (docs/API.md "Map styles"; the owner and
+  // co-owners): shown at once, then saved; if the save fails, the map is read again, so it
+  // shows the style it really has
+  const setMapStyle = useCallback(
+    async (style) => {
+      setState((prev) => (onMap(prev, mapId) ? { ...prev, map: { ...prev.map, style } } : prev));
+      try {
+        await updateMap(mapId, { style });
+      } catch {
+        refresh();
+      }
+    },
+    [mapId, refresh],
+  );
+
   // The map's own design as it now stands (docs/API.md "Map designs"): shown at once while
   // it's edited, and with the server's answer after each save
   const setDesign = useCallback(
@@ -280,6 +295,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     setVisit,
     saveMapDetails,
     setDesign,
+    setMapStyle,
     setLandmarkBeen,
     addTraveller,
     editTraveller,

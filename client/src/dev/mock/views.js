@@ -6,6 +6,7 @@ import { projectToMap } from '@/utils/map/projection';
 import { PARENT_PLACE, isSpecialPlace, withParentPlaces } from '@/utils/map/specialPlaces';
 import { isRegion } from '@/utils/map/regionPlaces';
 import { UK, countedCountryCodes, placeOnMap } from '@/utils/map/ukNations';
+import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
 import { ukNationAt } from './ukNationLookup';
 import { LANDMARKS } from './data/landmarks';
 import { getDb, me, session } from './store';
@@ -369,6 +370,15 @@ export function mapSummary(map, role) {
   };
 }
 
+// The style a map is shown in to everyone (the server's utils/mapSettings.js mapStyleOf;
+// docs/API.md "Map styles"): its own, else its owner's own, else null. The mock keeps map
+// settings for the test user alone, so other people's maps have only their own.
+export function mapStyleOf(map) {
+  if (MAP_STYLE_IDS.includes(map.style)) return map.style;
+  const owners = map.ownerId === me().id ? getDb().mapSettings?.style : null;
+  return MAP_STYLE_IDS.includes(owners) ? owners : null;
+}
+
 // `withPlan`: the map routes' own answers, where the owner and editors also get the
 // owner's plan, locked, graceUntil, photoCounts, videoCounts and uploadRules (never through a share link)
 export function mapView(map, role, { withPlan = false } = {}) {
@@ -383,6 +393,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
     splitUk: Boolean(map.splitUk),
     // Its home as set (null: from a traveller's birth country; the stats carry the one in use)
     homeCountryCode: map.homeCountryCode ?? null,
+    // The style everyone sees it in: its own, else the owner's (null: each viewer's own)
+    style: mapStyleOf(map),
     role,
     ownerName: userName(map.ownerId),
     travellers: db.travellers

@@ -19,6 +19,14 @@ export const MAP_STYLE_IDS = MAP_STYLES.map((style) => style.id);
 
 export const mapStyleById = (id) => MAP_STYLES.find((style) => style.id === id) || MAP_STYLES[0];
 
+/**
+ * The style a map is drawn in (docs/API.md "Map styles"; 22 Nov 2026, the user's wish: the
+ * owner's choice is what everyone sees, share links too): the map's own (`map.style`, which
+ * the server fills with the owner's own style when the map has none), else the viewer's.
+ * A map's design is drawn on it too.
+ */
+export const shownStyle = (map, viewerStyle) => (MAP_STYLE_IDS.includes(map?.style) ? map.style : viewerStyle);
+
 // Black and white: the world map in greys (MapExperience's greyscale filter, the grey
 // tokens on <html>: useMapTheme)
 export const MONO_STYLE = 'mono';

@@ -157,6 +157,8 @@ export function exportMapView(rows, { userId }) {
     // The UK shown as its four nations (docs/API.md "The UK's nations")
     splitUk: Boolean(map.splitUk),
     homeCountryCode: map.homeCountryCode ?? null,
+    // The style chosen for it, shown to everyone who opens it (null: the owner's own)
+    style: map.style ?? null,
     // Its own design (docs/API.md "Map designs"): a picture for the sea and its colours
     design: map.design
       ? {

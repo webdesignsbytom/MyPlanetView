@@ -41,6 +41,7 @@ import {
   CHALLENGE_PAGE_URL,
   CHALLENGE_JOIN_PAGE_URL,
   GIFTS_PAGE_URL,
+  COMPARE_PAGE_URL,
   GIFT_PAGE_URL,
   IMPORT_PAGE_URL,
   UNSUBSCRIBE_PAGE_URL,
@@ -92,6 +93,7 @@ import {
   ChallengePage,
   ChallengeJoinPage,
   GiftsPage,
+  ComparePage,
   GiftPage,
   ImportPage,
   UnsubscribePage,
@@ -347,6 +349,16 @@ function App() {
             }
           />
           <Route path={GIFT_PAGE_URL} element={<GiftPage />} />
+
+          {/* Comparing two maps the person can open (signed in) */}
+          <Route
+            path={COMPARE_PAGE_URL}
+            element={
+              <AuthenticateUser>
+                <ComparePage />
+              </AuthenticateUser>
+            }
+          />
 
           {/* An email's unsubscribe link (anyone) */}
           <Route path={UNSUBSCRIBE_PAGE_URL} element={<UnsubscribePage />} />

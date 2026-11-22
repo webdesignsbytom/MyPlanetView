@@ -63,6 +63,9 @@ export const CHALLENGE_JOIN_PAGE_URL = '/challenges/join/:code';
 export const GIFTS_PAGE_URL = '/gifts';
 // Bringing your travels from Polarsteps (docs/API.md "Importing from Polarsteps"; signed in)
 export const IMPORT_PAGE_URL = '/import';
+// Comparing two maps (22 Nov 2026; signed in): ?a=&b= are map ids
+export const COMPARE_PAGE_URL = '/compare';
+export const comparePath = (mapId) => `${COMPARE_PAGE_URL}?a=${encodeURIComponent(mapId)}`;
 // An email's unsubscribe link (docs/API.md "Emails"; anyone, with its signed ?u=&t=)
 export const UNSUBSCRIBE_PAGE_URL = '/unsubscribe';
 export const importPath = (mapId) => (mapId ? `${IMPORT_PAGE_URL}?map=${encodeURIComponent(mapId)}` : IMPORT_PAGE_URL);
@@ -115,6 +118,7 @@ export const CLIENT_ONLY_ROUTE_PREFIXES = [
   GIFT_PAGE_URL.split('/:')[0],
   IMPORT_PAGE_URL,
   UNSUBSCRIBE_PAGE_URL,
+  COMPARE_PAGE_URL,
 ];
 
 // Pages whose address carries a secret (share code, invite token, password-reset or

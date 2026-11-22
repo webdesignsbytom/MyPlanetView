@@ -350,6 +350,11 @@ model TravelMap {
   // means the birth country of the owner's traveller, else of the first traveller with one
   homeCountryCode String?  @db.Char(2)
   homeCountry     Country? @relation("TravelMapHome", fields: [homeCountryCode], references: [code], onDelete: SetNull)
+  // The map style everyone who opens the map sees it in, share links too (22 Nov 2026, the
+  // user's wish): one of utils/mapSettings.js MAP_STYLES, chosen by the owner or a co-owner
+  // in Settings; null means the owner's own style (Profile.mapSettings.style). Checked in
+  // code, not by a CHECK, as styles come and go
+  style String?
 
   travellers Traveller[]
   members    MapMember[]

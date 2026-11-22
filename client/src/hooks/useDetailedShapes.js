@@ -6,8 +6,9 @@ import { DETAIL_SHAPE_BOUNDS } from '@/utils/map/detailShapeBounds';
 
 // The detailed outlines (18 Nov 2026, the user's wish: islands such as the Falklands looked
 // jagged zoomed in). The whole map's outlines are simplified to 0.35 map units, fine for the
-// world but eight pixels out at the closest zoom; utils/map/detailShapes/ has each place to
-// 0.05 (about a pixel there), made by images/src/tools/country-outlines.mjs with the rest.
+// world but eight pixels out at zoom 25 (twenty at the closest, 64); utils/map/detailShapes/
+// has each place to 0.05 (about a pixel at 25, three at 64), made by
+// images/src/tools/country-outlines.mjs with the rest.
 // One module per place (about 2.7 MB in all, Canada's the biggest at 330 KB), so only the
 // places in view are fetched: once the map is zoomed in to DETAIL_FROM_ZOOM, after a pan
 // or zoom settles, for the view and a margin round it. They're kept for the visit, and the

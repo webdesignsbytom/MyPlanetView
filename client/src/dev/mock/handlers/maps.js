@@ -19,6 +19,7 @@ import {
 } from '../plans';
 import { isPole } from '@/utils/map/specialPlaces';
 import { UK, isUkNation, placeOnMap } from '@/utils/map/ukNations';
+import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
 import { ukNationAt } from '../ukNationLookup';
 import { setMapSplitUk } from '../ukNationSplit';
 import { adsFor } from '../offers';
@@ -290,8 +291,11 @@ export function registerMapRoutes() {
       if (body.homeCountryCode && !home) return fail(400, COUNTRY_NOT_FOUND);
       if (isPole(home)) return fail(400, POLE_NOT_A_HOME);
     }
+    // The style everyone who opens the map sees it in (docs/API.md "Map styles")
+    if (body.style !== undefined && !MAP_STYLE_IDS.includes(body.style)) return fail(400, 'Choose one of the map styles.');
     if (name) map.name = name;
     if (home !== undefined) map.homeCountryCode = home ? placeOnMap(home, false) : null;
+    if (body.style !== undefined) map.style = body.style;
     if (body.groupType !== undefined) map.groupType = body.groupType;
     // The UK as its four nations: changing it moves the map's UK data (as the server)
     if (body.splitUk !== undefined) {

@@ -1,4 +1,4 @@
-import React, { useId, useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 // Components
 import CheckboxInput from '@/components/ui/CheckboxInput';
 import DesignColourField from './DesignColourField';
@@ -8,26 +8,33 @@ import DesignPictureField from './DesignPictureField';
 import useMapDesignEditor from '@/hooks/useMapDesignEditor';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 // Utils
-import { readColourToken } from '@/utils/map/mapDesign';
+import { readStyleColours } from '@/utils/map/mapDesign';
+import { isMonoStyle } from '@/utils/map/mapStyles';
 
-// The World map's own colours, as the pickers start from them: read once from the tokens
+// The map style's own colours, as the pickers start from them (22 Nov 2026, the user's wish:
+// they were always the World map's, so a starry night's showed pastels): read from the tokens
 // (a colour picker takes "#rrggbb" only, and the tokens are the one place colours live)
 const USUAL_TOKENS = ['--map-visit-1', '--map-visit-2', '--map-visit-3', '--map-visit-4', '--map-visit-5', '--map-visit-6', '--map-visit-7', '--map-ice'];
-const readUsualColours = () => ({
-  names: readColourToken('--map-ink'),
-  grid: readColourToken('--map-grid'),
-  places: Object.fromEntries(USUAL_TOKENS.map((token) => [token, readColourToken(token)])),
-});
+const readUsualColours = (styleId) => {
+  const read = readStyleColours(styleId, ['--map-ink', '--map-grid', ...USUAL_TOKENS]);
+  return { names: read['--map-ink'], grid: read['--map-grid'], places: read };
+};
 
 // Settings, "How it looks", for the owner and co-owners: this map's own design (docs/API.md
 // "Map designs"; 21 Nov 2026, the user's wish, free on every plan): a picture for the sea,
 // the countries' colours, and the names' and grid's, for when chosen colours make them hard
-// to see. Everyone who opens the map sees it, share links too, in place of their own style.
-// Each change shows on the map at once and is saved a moment later (useMapDesignEditor).
-function MapDesignSection({ map, onDesignChange, preview }) {
+// to see. Everyone who opens the map sees it, share links too, on the map's own style
+// (`styleId`). Each change shows on the map at once and is saved a moment later (useMapDesignEditor).
+function MapDesignSection({ map, styleId, onDesignChange, preview }) {
   const uid = useId();
   const mustVerify = useMustVerifyEmail();
-  const [usual] = useState(readUsualColours);
+  const [usual, setUsual] = useState(() => readUsualColours(styleId));
+  // Read again when the style changes, once the page has it: Black and white's greys reach
+  // <html> in the map page's own effect (useMapTheme), which runs after this one
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setUsual(readUsualColours(styleId)));
+    return () => window.cancelAnimationFrame(frame);
+  }, [styleId]);
   const editor = useMapDesignEditor({ mapId: map.id, design: map.design, onDesignChange, preview });
   const { design, status, picture } = editor;
 
@@ -78,6 +85,7 @@ function MapDesignSection({ map, onDesignChange, preview }) {
         onChange={editor.setCountryColour}
         onResetAll={() => editor.change({ countries: {} })}
       />
+      {isMonoStyle(styleId) ? <p className='text-sm opacity-80'>The map is in black and white, so it shows these colours in grey.</p> : null}
       {status.error ? (
         <p role='alert' className='text-sm font-medium text-status-critical'>
           {status.error}

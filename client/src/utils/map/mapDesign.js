@@ -1,8 +1,8 @@
 // A map's own design (docs/API.md "Map designs"; 21 Nov 2026, the user's wish): the colour
 // rules (a copy of the server's utils/mapDesigns.js) and how the map wears a design. The
-// design is the map's, shown to everyone who opens it in place of their own map style, on
-// the World map's look: its own picture for the sea, its colours for countries, the names
-// and the grid.
+// design is the map's, shown to everyone who opens it, on the map's own style (mapStyles.js
+// shownStyle; 22 Nov 2026, the user's wish: it was always the World map's look): its own
+// picture for the sea, its colours for countries, the names and the grid.
 import { REGION_PARENT } from './regionPlaces';
 import { REGION_PLACES, SPECIAL_PLACES, countriesOnMap } from './countries';
 import { isPole } from './specialPlaces';
@@ -25,10 +25,7 @@ export const DESIGN_PICTURE_ACCEPT = 'image/*';
 // A colour is saved this long after the last change (a colour picker sends one per move)
 export const DESIGN_SAVE_DELAY_MS = 500;
 
-// The map style a design is drawn on: the World map's
-export const DESIGN_BASE_STYLE = 'animated';
-
-/** The design the map shows: its own when switched on, else null (the viewer's style). */
+/** The design the map shows: its own when switched on, else null (the plain style). */
 export const shownDesign = (design) => (design?.shown ? design : null);
 
 /** A design with nothing in it yet, as the editor starts one. */
@@ -80,7 +77,7 @@ export const colourablePlaces = (splitUk) => [
   ...REGION_PLACES,
 ];
 
-/** The CSS token of the colour a place wears on the World map (Antarctica is ice). */
+/** The CSS token of the colour a place wears on the map (Antarctica is ice). */
 export const usualColourToken = (code) => (code === 'AQ' ? '--map-ice' : `--map-visit-${pastelNumberFor(code)}`);
 
 /** "#rrggbb" from three channel values (0 to 255). */
@@ -100,4 +97,22 @@ export function readColourToken(name, element = document.documentElement) {
   probe.remove();
   const [r = 0, g = 0, b = 0] = (resolved.match(/[\d.]+/g) || []).map(Number);
   return toHex([r, g, b]);
+}
+
+/**
+ * Colour tokens as a map style draws them (`{ token: "#rrggbb" }`): read inside a hidden
+ * element carrying that style's data-map-style, so it's the style's own colours, never a
+ * design's (which sit on [data-map-design]). Black and white's greys are on <html> while
+ * it's the map's style (useMapTheme), so they come through too.
+ */
+export function readStyleColours(styleId, tokens) {
+  const probe = document.createElement('div');
+  probe.hidden = true;
+  probe.dataset.mapStyle = styleId;
+  document.body.appendChild(probe);
+  try {
+    return Object.fromEntries(tokens.map((token) => [token, readColourToken(token, probe)]));
+  } finally {
+    probe.remove();
+  }
 }
