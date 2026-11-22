@@ -41,11 +41,11 @@ export const DOMAINS = {
 };
 
 export const EVENT_MESSAGES = {
-  badRequest: `Bad Request`,
-  notFound: `Not Found`,
-  missingUserIdentifier: `Missing User identifier`,
-  missingFields: `Missing fields in request`,
-  malformedData: `Data incorrectly formatted or malformed request`,
+  badRequest: `Something in that request wasn't right. Please check it and try again.`,
+  notFound: `That couldn't be found.`,
+  missingUserIdentifier: `The request didn't say which one it's for.`,
+  missingFields: `Some required details are missing. Please fill them in and try again.`,
+  malformedData: `Some details weren't in the right format. Please check them and try again.`,
   // Audits
   auditTag: `Audit database.`,
   auditNotFound: `Failed to find audit(s).`,

@@ -137,7 +137,7 @@ describe('moments', () => {
       [{ ...base, photoIds: [photos.off.id, photos.off.id] }, 'Choose up to 20 photos, each from this map.'],
       [{ ...base, photoIds: Array.from({ length: 21 }, () => photos.off.id) }, 'Choose up to 20 photos, each from this map.'],
       [{ ...base, photoIds: ['not-a-photo'] }, 'Choose up to 20 photos, each from this map.'],
-      [{ ...base, hidden: 'yes' }, 'Data incorrectly formatted or malformed request'],
+      [{ ...base, hidden: 'yes' }, "Some details weren't in the right format. Please check them and try again."],
     ];
     for (const [body, message] of cases) {
       const res = await create(owner, body);
