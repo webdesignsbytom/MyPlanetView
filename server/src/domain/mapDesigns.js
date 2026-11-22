@@ -7,6 +7,7 @@ const DESIGN_SELECT = {
   countryColours: true,
   namesColour: true,
   gridColour: true,
+  hoverColour: true,
   picture: { select: { key: true } },
 };
 

@@ -62,7 +62,8 @@ const StateShapes = memo(function StateShapes({ areas, statuses }) {
 });
 
 // A visited or lived-in state's star sticker at its label point, as the world map's badges
-const StateBadges = memo(function StateBadges({ areas, statuses, countryCode, zoom }) {
+const StateBadges = memo(function StateBadges({ areas, statuses, countryCode, viewport }) {
+  const zoom = useViewportZoom(viewport);
   const r = badgeRadius(zoom);
   return (
     <g aria-hidden='true' className='pointer-events-none'>
@@ -95,7 +96,8 @@ function placedNames(areas, statuses, size, r) {
   return shown;
 }
 
-const StateNames = memo(function StateNames({ areas, statuses, zoom }) {
+const StateNames = memo(function StateNames({ areas, statuses, viewport }) {
+  const zoom = useViewportZoom(viewport);
   const size = LABEL_PX / (zoom * REFERENCE_PX_PER_UNIT);
   const r = badgeRadius(zoom);
   return (
@@ -121,7 +123,8 @@ const MODEL_PX = 64;
 const MODEL_MIN_PX = 40;
 const MODEL_MAX_PX = 150;
 
-const LandmarkModels = memo(function LandmarkModels({ geo, models, zoom }) {
+const LandmarkModels = memo(function LandmarkModels({ geo, models, viewport }) {
+  const zoom = useViewportZoom(viewport);
   if (!models.length) return null;
   const px = Math.min(MODEL_MAX_PX, Math.max(MODEL_MIN_PX, MODEL_PX * Math.sqrt(zoom)));
   const unitsPerPx = 1 / (zoom * REFERENCE_PX_PER_UNIT);
@@ -144,7 +147,8 @@ const LandmarkModels = memo(function LandmarkModels({ geo, models, zoom }) {
   );
 });
 
-const Pins = memo(function Pins({ geo, pins, zoom, selectedId }) {
+const Pins = memo(function Pins({ geo, pins, viewport, selectedId }) {
+  const zoom = useViewportZoom(viewport);
   const scale = PIN_PX / 3 / (zoom * REFERENCE_PX_PER_UNIT);
   return pins.map((pin) => {
     const at = placeOnCountryMap(geo, pin.latitude, pin.longitude);
@@ -175,8 +179,10 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
   const hintId = useId();
   const { geo, statuses, pins, error, setStatus } = useCountryMapData({ source, code, pinsVersion });
   const extent = geo ? { top: 0, bottom: geo.height } : EMPTY_EXTENT;
+  // The view lives in the viewport, not here: only the layers drawn by zoom (badges, names,
+  // models, pins) read it, each with useViewportZoom, so a pinch re-renders them alone, as on
+  // the world map (23 Nov 2026: this whole view re-rendered on every zoom step)
   const viewport = useMapViewport({ extent, maxZoom: COUNTRY_MAX_ZOOM });
-  const zoom = useViewportZoom(viewport);
   const boxRef = useRef(null);
   const headerRef = useRef(null);
   const [placing, setPlacing] = useState(false);
@@ -338,10 +344,12 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
         aria-describedby={hintId}
         tabIndex={0}
         // No focus ring, as on the world map (utils/map/pointerFocus.js): the hint below shows
-        // the keyboard's focus instead
+        // the keyboard's focus instead. `touch-none`, as the world map's: a finger's drag and
+        // pinch are the map's own, not the browser's scroll and page zoom, which held back and
+        // cut off the touch moves (23 Nov 2026, the user's report: jerky, delayed panning on a phone)
         onPointerDownCapture={markPointerFocus}
         onBlur={clearPointerFocus}
-        className={`peer h-full w-full select-none outline-none [&_path]:[vector-effect:non-scaling-stroke] ${placing ? 'cursor-crosshair' : 'cursor-grab data-[grabbing]:cursor-grabbing'}`}
+        className={`peer h-full w-full touch-none select-none outline-none [&_path]:[vector-effect:non-scaling-stroke] ${placing ? 'cursor-crosshair' : 'cursor-grab data-[grabbing]:cursor-grabbing'}`}
         {...viewport.handlers}
         onClick={handleClick}
       >
@@ -362,10 +370,10 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
             <g className='stroke-[0.8]'>
               <StateShapes areas={geo.areas} statuses={statuses} />
             </g>
-            <StateBadges areas={geo.areas} statuses={statuses} countryCode={code} zoom={zoom} />
-            <StateNames areas={geo.areas} statuses={statuses} zoom={zoom} />
-            <LandmarkModels geo={geo} models={models} zoom={zoom} />
-            <Pins geo={geo} pins={pins} zoom={zoom} selectedId={selectedPinId} />
+            <StateBadges areas={geo.areas} statuses={statuses} countryCode={code} viewport={viewport} />
+            <StateNames areas={geo.areas} statuses={statuses} viewport={viewport} />
+            <LandmarkModels geo={geo} models={models} viewport={viewport} />
+            <Pins geo={geo} pins={pins} viewport={viewport} selectedId={selectedPinId} />
           </>
         ) : null}
       </svg>

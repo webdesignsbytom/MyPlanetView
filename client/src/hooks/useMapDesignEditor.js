@@ -76,7 +76,7 @@ export default function useMapDesignEditor({ mapId, style, design, onDesignChang
     [send, style, onDesignChange, preview],
   );
 
-  /** Change part of the design: `{ shown?, countries?, names?, grid? }` as the API takes it. */
+  /** Change part of the design: `{ shown?, countries?, names?, grid?, hover? }` as the API takes it. */
   const change = useCallback(
     (patch) => {
       const before = draftRef.current ?? designRef.current ?? null;

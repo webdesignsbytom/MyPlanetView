@@ -127,7 +127,12 @@ export async function api(method, url, { body, params } = {}) {
       () => (settled = true),
       () => (settled = true),
     );
-    for (let i = 0; i < 200 && !settled; i++) await vi.advanceTimersByTimeAsync(130);
+    // A handler may wait on real work first (the GPS lookup loads its shapes): let that run
+    // between ticks of the fake clock, until the reply is in
+    while (!settled) {
+      await vi.advanceTimersByTimeAsync(130);
+      if (!settled) await new Promise((resolve) => setImmediate(resolve));
+    }
     const result = await promise;
     return { ...result, data: result.body?.data, message: result.body?.message };
   } finally {
@@ -140,3 +145,38 @@ export const post = (url, body) => api('POST', url, { body });
 export const put = (url, body) => api('PUT', url, { body });
 export const patch = (url, body) => api('PATCH', url, { body });
 export const del = (url, body) => api('DELETE', url, { body });
+
+// MP4 boxes for the video tests: `box('moov', bytes)` is a size, a type and the bytes
+export function box(type, ...parts) {
+  const payload = parts.flatMap((part) => (typeof part === 'string' ? [...part].map((c) => c.charCodeAt(0)) : [...part]));
+  const out = new Uint8Array(8 + payload.length);
+  new DataView(out.buffer).setUint32(0, out.length);
+  [...type].forEach((c, i) => (out[4 + i] = c.charCodeAt(0)));
+  out.set(payload, 8);
+  return out;
+}
+/** A video file of `boxes`, as a Blob. */
+export const videoBlob = (...boxes) => new Blob(boxes, { type: 'video/mp4' });
+/** URL.createObjectURL, which jsdom lacks: each call answers blob:mock/<n>, and the calls are kept. */
+export function stubObjectUrls() {
+  const made = [];
+  URL.createObjectURL = (blob) => {
+    made.push(blob);
+    return `blob:mock/${made.length}`;
+  };
+  URL.revokeObjectURL = () => {};
+  return made;
+}
+
+// jsdom's Blob has no arrayBuffer() or text(): read them with FileReader, as a browser would
+export function polyfillBlobReads() {
+  const read = (blob, how) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader[how](blob);
+    });
+  if (!Blob.prototype.arrayBuffer) Blob.prototype.arrayBuffer = function arrayBuffer() { return read(this, 'readAsArrayBuffer'); };
+  if (!Blob.prototype.text) Blob.prototype.text = function text() { return read(this, 'readAsText'); };
+}

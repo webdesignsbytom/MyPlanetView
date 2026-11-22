@@ -416,6 +416,9 @@ model MapDesign {
   // "#rrggbb" or null (the usual ink); CHECK map_design_colours
   namesColour    String?
   gridColour     String?
+  // The country under the pointer, "#rrggbb" or null (the style's usual highlight; 23 Nov
+  // 2026, the user's wish); CHECK map_design_hover_colour
+  hoverColour    String?
 
   // The sea's picture, in the private bucket (resource 'mapDesign'); unique, so a file is
   // one map's. The daily clean-up never deletes a picture a design uses.

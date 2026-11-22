@@ -235,14 +235,15 @@ function CountryPanel({
           </span>
         ) : null
       }
-      // The country on its own, with its states and pins (a region opens its country's)
+      // The country on its own, with its states and pins (a region opens its country's).
+      // Smaller on phones and tablets, where it shares the continent's row (CountryTicket).
       action={
         mapCode && onOpenCountryMap ? (
           <button
             type='button'
             onClick={() => onOpenCountryMap(mapCode)}
             aria-label={mapCode === code ? `Open ${country.name} on its own map` : `Open the map of ${COUNTRY_BY_CODE[mapCode]?.name ?? mapCode}`}
-            className='btn-paper grid-flow-col gap-2 [--btn-pad-x:0.75rem] [--btn-pad-y:0.375rem] [--btn-size:0.9375rem]'
+            className='btn-paper grid-flow-col gap-2 [--btn-leading:1.25rem] [--btn-pad-x:0.625rem] [--btn-pad-y:0.3125rem] [--btn-size:0.875rem] lg:[--btn-leading:1.75rem] lg:[--btn-pad-x:0.75rem] lg:[--btn-pad-y:0.375rem] lg:[--btn-size:0.9375rem]'
           >
             <FaMapMarkedAlt aria-hidden='true' className='self-center' />
             <span className='phone:sr-only'>Open country</span>

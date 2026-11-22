@@ -55,7 +55,7 @@ describe('designFor and shownDesign', () => {
   });
 
   it('start an empty design switched on, with nothing in it', () => {
-    expect(EMPTY_DESIGN).toEqual({ shown: true, countries: {}, names: null, grid: null, picture: null });
+    expect(EMPTY_DESIGN).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, picture: null });
     expect(Object.isFrozen(EMPTY_DESIGN)).toBe(true);
   });
 });
@@ -98,6 +98,14 @@ describe('designCss', () => {
     expect(designCss({ names: '#ffffff' })).toBe('[data-map-design]{--map-names:#ffffff}');
   });
 
+  it('sets the hovered country’s colour as the token the highlight reads', () => {
+    expect(designCss({ hover: '#ff00aa' })).toBe('[data-map-design]{--map-hover:#ff00aa}');
+    expect(designCss({ names: '#ffffff', grid: '#102030', hover: '#00aa00' })).toBe(
+      '[data-map-design]{--map-names:#ffffff;--map-grid:#102030;--map-hover:#00aa00}',
+    );
+    expect(designCss({ hover: null })).toBe('');
+  });
+
   it('colours each place’s shape but the one under the pointer (Germany: no region of its own)', () => {
     expect(designCss({ countries: { DE: '#aa0000' } })).toBe('[data-map-design] svg g[data-code="DE"]:not(:hover){fill:#aa0000}');
   });
@@ -113,11 +121,13 @@ describe('designCss', () => {
     const css = designCss({
       names: 'red;}body{background:url(x)}',
       grid: '#FFF',
+      hover: 'lime}svg{display:none',
       countries: { FR: 'blue', 'X"]{}': '#aa0000', de: '#aa0000', JP: '#00ff00' },
     });
     expect(css).toBe('[data-map-design] svg g[data-code="JP"]:not(:hover){fill:#00ff00}');
     expect(css).not.toContain('url(');
     expect(css).not.toContain('--map-names');
+    expect(css).not.toContain('--map-hover');
   });
 
   it('puts the tokens first, then a rule per place, on one line', () => {

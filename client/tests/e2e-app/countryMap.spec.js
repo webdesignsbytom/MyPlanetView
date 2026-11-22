@@ -250,4 +250,7 @@ test('a country opens on its own on a phone too', { tag: '@phone' }, async ({ pa
   const map = await openCountryMap(page, 'United States');
   await expect(map.getByText('2 of 51 states visited')).toBeVisible();
   await expect(page.locator('[data-state="US-NY"]')).toHaveAttribute('data-status', 'VISITED');
+  // A finger's drag and pinch are the map's own, as on the world map: without it the phone's
+  // browser held back the touch moves, and panning was jerky (23 Nov 2026, the user's report)
+  await expect(map.getByRole('application')).toHaveCSS('touch-action', 'none');
 });

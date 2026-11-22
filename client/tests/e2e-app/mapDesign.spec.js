@@ -196,3 +196,32 @@ test('each map style keeps its own design, and Black and white shows its colours
   await expect(mapFrame(page)).toHaveAttribute('data-map-style', 'mono');
   await expect.poll(() => tokenOnMap(page, '--map-grid')).toBe('#2563eb');
 });
+
+// 23 Nov 2026 (the user's wish): the country under the pointer takes a colour of the design's own
+test('the design sets the colour a country turns under the pointer', async ({ page }) => {
+  await openMap(page);
+  const { settings, editor } = await openDesign(page);
+  const hover = editor.getByLabel('Country highlight when hovered', { exact: true });
+  // It starts from the style's own highlight, the World map's bright green
+  await expect(hover).toHaveValue('#66ff66');
+  await hover.fill('#ff00aa');
+  await expect(editor.getByText('Saved.')).toBeVisible();
+  await expect.poll(() => tokenOnMap(page, '--map-hover')).toBe('#ff00aa');
+  await closeSettings(settings);
+
+  // Australia under the pointer wears it: the middle of its mainland, its largest shape (the
+  // whole shape's middle is at sea, as it takes in far islands)
+  const australia = page.locator('[data-map-design] svg g[data-code="AU"]').first();
+  const shapes = australia.locator('path');
+  const sizes = await shapes.evaluateAll((paths) => paths.map((path) => path.getBBox().width * path.getBBox().height));
+  await shapes.nth(sizes.indexOf(Math.max(...sizes))).hover();
+  await expect.poll(() => australia.evaluate((el) => getComputedStyle(el).fill)).toBe('rgb(255, 0, 170)');
+
+  // Kept after a reload, and back to the usual green on request
+  await page.reload();
+  await expect.poll(() => tokenOnMap(page, '--map-hover')).toBe('#ff00aa');
+  const again = await openDesign(page);
+  await again.editor.getByRole('button', { name: 'Country highlight when hovered: back to the usual colour' }).click();
+  await expect(again.editor.getByText('Saved.')).toBeVisible();
+  await expect(again.editor.getByLabel('Country highlight when hovered', { exact: true })).toHaveValue('#66ff66');
+});

@@ -27,13 +27,16 @@ describe('cleanColour', () => {
 
 describe('parseDesignChange', () => {
   it('reads every field', () => {
-    expect(parseDesignChange({ shown: false, names: '#FFFFFF', grid: null, countries: { FR: '#AA0000', GB: null } })).toEqual({
-      data: { shown: false, namesColour: '#ffffff', gridColour: null, countryColours: { FR: '#aa0000' } },
+    expect(parseDesignChange({ shown: false, names: '#FFFFFF', grid: null, hover: '#22AA44', countries: { FR: '#AA0000', GB: null } })).toEqual({
+      data: { shown: false, namesColour: '#ffffff', gridColour: null, hoverColour: '#22aa44', countryColours: { FR: '#aa0000' } },
       codes: ['FR'],
     });
   });
   it('leaves out what is not sent', () => {
     expect(parseDesignChange({ names: '#000000' })).toEqual({ data: { namesColour: '#000000' }, codes: [] });
+    // The hover colour alone, and back to the style's usual one
+    expect(parseDesignChange({ hover: '#ff00ff' })).toEqual({ data: { hoverColour: '#ff00ff' }, codes: [] });
+    expect(parseDesignChange({ hover: null })).toEqual({ data: { hoverColour: null }, codes: [] });
   });
   it('empties the colours with an empty set', () => {
     expect(parseDesignChange({ countries: {} })).toEqual({ data: { countryColours: {} }, codes: [] });
@@ -43,6 +46,8 @@ describe('parseDesignChange', () => {
     expect(parseDesignChange(null)).toEqual({ error: 'invalidDesign' });
     expect(parseDesignChange({ shown: 'yes' })).toEqual({ error: 'invalidDesign' });
     expect(parseDesignChange({ names: 'white' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ hover: 'green' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ hover: '#0f0' })).toEqual({ error: 'invalidDesignColour' });
     expect(parseDesignChange({ countries: { FR: 'blue' } })).toEqual({ error: 'invalidDesignColour' });
   });
   it('refuses a list, a code that is not a place code, or too many', () => {

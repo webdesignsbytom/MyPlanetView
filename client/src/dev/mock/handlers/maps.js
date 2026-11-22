@@ -207,8 +207,9 @@ export function registerMapRoutes() {
     // The body first, then a free map slot (402 with the extra map's price on the plan)
     if (!mapSlots(me().id).canCreate) return fail(402, mapSlotsMessage(effectivePlan(me().id).plan));
     const map = createMapRecord({ name, groupType: body.groupType, travellers });
-    // Born there is been there, as the server's markBirthplaces
-    for (const t of travellers) markVisited(map.id, t?.birthCountryCode, 'MANUAL');
+    // Born there is been there, as the server's markBirthplaces: the place as each traveller
+    // was saved ("de" is DE, a UK nation the UK), never the code as sent
+    for (const t of db.travellers.filter((row) => row.mapId === map.id)) markVisited(map.id, t.birthCountryCode, 'MANUAL');
     return ok({ map: mapView(map, 'OWNER', WITH_PLAN) }, 201);
   });
 

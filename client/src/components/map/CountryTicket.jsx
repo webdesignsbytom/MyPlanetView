@@ -10,6 +10,14 @@ import CloseStamp from '@/components/common/CloseStamp';
 // stub's width (6.5rem on phones, 15rem from md up) less half a punch.
 const PUNCH = 'pointer-events-none absolute h-5 w-5 rounded-full border-2 border-poster-brown bg-poster-red left-[5.875rem] nophone:left-[14.375rem]';
 
+// The header's layout. On phones and tablets the action and the close stamp share the
+// kicker's row, and the name has the whole width under them (23 Nov 2026, the user's wish:
+// a long name ran under them). From lg they stand beside the name, in the middle of the
+// header's height (18 Nov 2026, the user's wish). A phone held sideways hides the kicker, so
+// there they stand beside the name too, keeping that header slim.
+const HEADER_AREAS =
+  "[grid-template-areas:'kicker_actions'_'title_title'_'subtitle_subtitle'] lg:[grid-template-areas:'kicker_actions'_'title_actions'_'subtitle_actions'] sideways:[grid-template-areas:'title_actions'_'subtitle_actions']";
+
 /**
  * A country's card on the map, styled as a boarding pass like the sign-in pages'
  * TravelTicket: the `stub` (the country's poster, CountryTicketStub) on the left behind a
@@ -43,24 +51,26 @@ function CountryTicket({ title, kicker, subtitle = null, stub = null, action = n
       <div className='grid min-h-0 min-w-0 grid-rows-[auto_minmax(0,1fr)]'>
         {/* Slimmer on a phone held sideways (under 500px tall), where it took a third of the
             screen and left room for a row or two of the list (19 Nov 2026, the audit) */}
-        <header className='paper-aged grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border-b-2 border-dashed border-poster-brown py-4 pl-5 pr-4 text-poster-ink sideways:py-2'>
-          <div className='grid min-w-0 gap-1'>
-            {kicker ? <div className='font-travel text-sm uppercase tracking-xl text-poster-brown sideways:hidden'>{kicker}</div> : null}
-            <h2
-              id={titleId}
-              ref={headingRef}
-              tabIndex={-1}
-              className='-rotate-1 break-words font-travel text-3xl uppercase leading-none text-poster-red text-stroke-poster focus:outline-none nophone:text-4xl sideways:text-2xl'
-            >
-              {title}
-            </h2>
-            {subtitle ? <div className='pt-1 text-sm font-medium'>{subtitle}</div> : null}
-          </div>
-          {/* The action and the close stamp in one row, lined up on each other's middles, in the
-              middle of the header's height (18 Nov 2026, the user's wish) */}
-          <div className='grid grid-flow-col items-center gap-3 self-center'>
+        <header
+          className={`paper-aged grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 border-b-2 border-dashed border-poster-brown py-4 pl-5 pr-4 text-poster-ink sideways:py-2 ${HEADER_AREAS}`}
+        >
+          {kicker ? (
+            <div className='font-travel text-sm uppercase tracking-xl text-poster-brown [grid-area:kicker] sideways:hidden'>{kicker}</div>
+          ) : null}
+          {/* The name a size smaller on phones and tablets (23 Nov 2026, the user's wish) */}
+          <h2
+            id={titleId}
+            ref={headingRef}
+            tabIndex={-1}
+            className='-rotate-1 break-words pt-1 font-travel text-2xl uppercase leading-none text-poster-red text-stroke-poster [grid-area:title] focus:outline-none md:text-3xl lg:text-4xl sideways:pt-0 sideways:text-xl'
+          >
+            {title}
+          </h2>
+          {subtitle ? <div className='pt-2 text-sm font-medium [grid-area:subtitle]'>{subtitle}</div> : null}
+          {/* The action and the close stamp in one row, lined up on each other's middles */}
+          <div className='grid grid-flow-col items-center gap-3 [grid-area:actions]' data-ticket-actions=''>
             {action}
-            <CloseStamp label={`Close ${title}`} onClick={onClose} />
+            <CloseStamp label={`Close ${title}`} onClick={onClose} smallUntilLg />
           </div>
         </header>
         <div className='grid content-start gap-4 overflow-y-auto px-5 py-4'>{children}</div>

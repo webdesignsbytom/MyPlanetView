@@ -47,7 +47,7 @@ export const untickLandmark = (mapId, landmarkId) => data(client.delete(`${MAPS_
 // One year of a map (docs/API.md "Year in travel") -> { recap }
 export const getYearRecap = (mapId, year) => data(client.get(`${MAPS_API}/${enc(mapId)}/recap/${enc(year)}`));
 // A map's own design for a map style (docs/API.md "Map designs"):
-// { style, shown?, countries?, names?, grid? } -> { design }
+// { style, shown?, countries?, names?, grid?, hover? } -> { design }
 export const updateMapDesign = (mapId, body) => data(client.patch(`${MAPS_API}/${enc(mapId)}/design`, body));
 // Its sea picture: presign ({ contentType, bytes } -> { key, upload }), save ({ key, style } ->
 // { design }), remove (that style's)
