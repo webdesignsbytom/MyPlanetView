@@ -29,6 +29,9 @@ export const MAP_SETTING_FLAGS = Object.freeze([
   'showGoalTag',
   // The tips the map opens with, once a visit (on unless turned off)
   'showTips',
+  // Whether the map has offered "Where have you been?" (ticking countries; 22 Nov 2026): once
+  // per account, the first time a map of theirs with few countries opens
+  'countriesAsked',
 ]);
 
 /**

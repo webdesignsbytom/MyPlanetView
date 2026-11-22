@@ -5,16 +5,26 @@
 //   - <id>.py, the Blender script that builds and renders it (open <id>.blend to tweak it
 //     by hand), run as: blender -b --factory-startup -P <id>.py -- <id>-1024.png 1024 <id>.blend
 //     It writes <id>-1024.png (transparent) and <id>-1024.json (`anchor`: where the middle
-//     of its grass tile falls in the picture, as fractions from the top left);
+//     of its grass tile falls in the picture, as fractions from the top left; and
+//     `unitsPerPixel`). The set's shared look (shading, outline, tile, camera, sun) is
+//     images/src/models/toon.py, which every model's script imports;
 //   - model.json: `name`, `latitude` and `longitude` (the spot the tile's middle stands on),
-//     `maps` (the country maps that show it, e.g. GB and England's XE), and `landmark` (the
-//     Wikidata item of the landmark it belongs to, as in the seed's landmark files).
+//     `maps` (the country maps that show it, e.g. GB and England's XE), `landmark` (the
+//     Wikidata item of the landmark it belongs to, as in the seed's landmark files), and
+//     optionally `scale` (see below).
 //
 // Then, from the repo root: node images/src/tools/landmark-models.mjs
 // For each model it trims the render, puts a soft shadow under the tile (baked in, so the
 // map draws no blur filter while it pans), and writes client/src/assets/map/landmarkModels/
 // <id>-<height>.webp at two heights; then client/src/utils/map/landmarkModels.js, the list
-// the country map draws (CountryMapView's LandmarkModels).
+// the country map draws (CountryMapView's LandmarkModels). Every model is drawn at one scale:
+// its `size` is its picture's height in the scene's units over Big Ben's (REFERENCE_UNITS),
+// so every grass tile is the same size on the map and a taller model stands taller. A low,
+// wide landmark would be too small to read that way (the Colosseum came out half Big Ben's
+// height, its arches a blur with a whole country in view), so none is drawn smaller than
+// MIN_SIZE, tile and all (the Colosseum, the Pyramids, the Opera House, the Great Wall, the
+// Taj Mahal, Christ on his mountain). model.json's `scale` (1 when left out) can still make
+// one bigger or smaller by hand, before that floor.
 import { readdir, readFile, writeFile, mkdir, access } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
@@ -29,6 +39,11 @@ const listFile = resolve(root, 'client/src/utils/map/landmarkModels.js');
 const HEIGHTS = [160, 320];
 // The shadow: an ellipse under the tile, this share of the tile's width across, blurred
 const SHADOW = { width: 1.12, height: 0.16, blur: 0.025, opacity: 0.3 };
+// A model whose picture (tile and shadow included) is this many of the scene's units tall is
+// drawn at the map's own model height (size 1): Big Ben's, the first model
+const REFERENCE_UNITS = 6.0;
+// No model is drawn smaller than this share of Big Ben's height
+const MIN_SIZE = 0.7;
 
 const exists = (file) => access(file).then(() => true, () => false);
 const quote = (text) => `'${String(text).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
@@ -39,7 +54,8 @@ async function buildModel(id) {
   const dir = join(modelsDir, id);
   const render = join(dir, `${id}-1024.png`);
   const info = JSON.parse(await readFile(join(dir, 'model.json'), 'utf8'));
-  const { anchor } = JSON.parse(await readFile(join(dir, `${id}-1024.json`), 'utf8'));
+  const { anchor, unitsPerPixel } = JSON.parse(await readFile(join(dir, `${id}-1024.json`), 'utf8'));
+  if (!unitsPerPixel) throw new Error(`${id}-1024.json has no unitsPerPixel: render the model again`);
   for (const key of ['name', 'latitude', 'longitude', 'maps']) {
     if (info[key] === undefined) throw new Error(`${id}/model.json has no ${key}`);
   }
@@ -84,6 +100,8 @@ async function buildModel(id) {
     maps: info.maps,
     landmark: info.landmark ?? null,
     aspect: Number((width / height).toFixed(4)),
+    units: height * unitsPerPixel,
+    size: Number(Math.max(MIN_SIZE, ((height * unitsPerPixel) / REFERENCE_UNITS) * (info.scale ?? 1)).toFixed(3)),
     anchor: [Number(((ax + padX) / width).toFixed(4)), Number((ay / height).toFixed(4))],
     files,
   };
@@ -99,14 +117,15 @@ for (const entry of await readdir(modelsDir, { withFileTypes: true })) {
 ids.sort();
 const models = [];
 for (const id of ids) {
-  models.push(await buildModel(id));
-  console.log(`wrote ${id}: ${HEIGHTS.map((h) => `${id}-${h}.webp`).join(', ')}`);
+  const model = await buildModel(id);
+  models.push(model);
+  console.log(`wrote ${id}: ${HEIGHTS.map((h) => `${id}-${h}.webp`).join(', ')} (${model.units.toFixed(2)} units tall, size ${model.size})`);
 }
 
 const imports = models.flatMap((m) => HEIGHTS.map((h) => `import ${camel(m.id)}${h} from '@/assets/map/landmarkModels/${m.files[h]}';`));
 const rows = models.map(
   (m) =>
-    `  {\n    id: '${m.id}',\n    name: ${quote(m.name)},\n    latitude: ${m.latitude},\n    longitude: ${m.longitude},\n    maps: ${list(m.maps.map(quote))},\n    landmark: ${m.landmark ? quote(m.landmark) : 'null'},\n    aspect: ${m.aspect},\n    anchor: [${m.anchor.join(', ')}],\n    images: { ${HEIGHTS.map((h) => `${h}: ${camel(m.id)}${h}`).join(', ')} },\n  },`,
+    `  {\n    id: '${m.id}',\n    name: ${quote(m.name)},\n    latitude: ${m.latitude},\n    longitude: ${m.longitude},\n    maps: ${list(m.maps.map(quote))},\n    landmark: ${m.landmark ? quote(m.landmark) : 'null'},\n    aspect: ${m.aspect},\n    size: ${m.size},\n    anchor: [${m.anchor.join(', ')}],\n    images: { ${HEIGHTS.map((h) => `${h}: ${camel(m.id)}${h}`).join(', ')} },\n  },`,
 );
 await writeFile(
   listFile,
@@ -115,8 +134,9 @@ await writeFile(
 //
 // The little 3D landmark models the country maps draw (CountryMapView's LandmarkModels): each
 // stands with its grass tile's middle (\`anchor\`, fractions of the picture from its top left)
-// on \`latitude\`/\`longitude\`, on the country maps in \`maps\`. \`aspect\` is width over height;
-// \`images\` the picture by its height in pixels. \`landmark\` is the Wikidata item of the
+// on \`latitude\`/\`longitude\`, on the country maps in \`maps\`. \`aspect\` is width over height,
+// \`size\` its height against Big Ben's (every model at one scale), \`images\` the picture by
+// its height in pixels. \`landmark\` is the Wikidata item of the
 // landmark it belongs to.
 ${imports.join('\n')}
 

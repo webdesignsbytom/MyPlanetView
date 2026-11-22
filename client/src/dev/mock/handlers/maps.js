@@ -419,6 +419,23 @@ export function registerMapRoutes() {
   });
 
   // Visits
+  // Ticking several countries at once (the map's "Where have you been?"), as the server's
+  // quickFillVisitsHandler: the owner or a co-owner, no verified email needed, 1 to 300 known
+  // places, each marked visited where it isn't already
+  route('POST', '/api/maps/:mapId/visits/quick-fill', ({ params, body }) => {
+    const map = findMap(params.mapId);
+    const denied = deny(mapRole(map), 'CO_OWNER', NOT_FOUND);
+    if (denied) return denied;
+    const codes = body?.countryCodes;
+    const invalid = 'Choose between 1 and 300 countries, each one on the map.';
+    if (!Array.isArray(codes) || !codes.length || codes.length > 300 || !codes.every((code) => typeof code === 'string' && countryExists(code))) {
+      return fail(400, invalid);
+    }
+    let added = 0;
+    for (const code of new Set(codes)) added += markVisited(map.id, code, 'MANUAL').length;
+    return ok({ added });
+  });
+
   route('PUT', '/api/maps/:mapId/visits/:countryCode', ({ params, body }) => {
     const db = getDb();
     const map = findMap(params.mapId);

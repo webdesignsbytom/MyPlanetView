@@ -12,6 +12,7 @@ import {
   upgradeMapHandler,
   downgradeMapHandler,
   putVisitHandler,
+  quickFillVisitsHandler,
   transferMapHandler,
   updateMapHandler,
   updateTravellerHandler,
@@ -125,6 +126,9 @@ router.patch('/:mapId/travellers/:travellerId', updateTravellerHandler);
 router.delete('/:mapId/travellers/:travellerId', deleteTravellerHandler);
 
 // Countries visited
+// Ticking several countries at once: like setting the map up, no verified email needed (a new
+// account's map offers it before the address is verified)
+router.post('/:mapId/visits/quick-fill', quickFillVisitsHandler);
 router.put('/:mapId/visits/:countryCode', verified, putVisitHandler);
 router.delete('/:mapId/visits/:countryCode', verified, deleteVisitHandler);
 

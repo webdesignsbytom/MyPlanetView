@@ -495,12 +495,17 @@ export function linkedTripSummary(trip, { canOpen, role = null }) {
 /**
  * A map's trips for someone with `role` on it: its own trips and the group trips added to
  * it, in one list, in the trips' order. A linked trip opens only for someone with a role
- * on the trip itself; through a share link (`viaShareLink`), never.
+ * on the trip itself; through a share link (`viaShareLink`), never. Its own trips carry
+ * their stops' places (`countryCodes`, for the planned trips the map outlines), except
+ * through a share link, as on the server.
  */
 export function mapTripsView(map, role, { viaShareLink = false } = {}) {
   const own = getDb()
     .trips.filter((t) => t.mapId === map.id)
-    .map((trip) => ({ trip, view: { ...tripSummary(trip, role), linked: false, canOpen: true } }));
+    .map((trip) => ({
+      trip,
+      view: { ...tripSummary(trip, role), ...(viaShareLink ? {} : { countryCodes: tripCountryCodes(trip.id) }), linked: false, canOpen: true },
+    }));
   const linked = linkedTrips(map.id).map((trip) => {
     const onTrip = viaShareLink ? null : tripRole(trip);
     return {

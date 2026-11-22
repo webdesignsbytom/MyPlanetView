@@ -20,6 +20,7 @@ import CountryLandmarks from './CountryLandmarks';
 import { ExpeditionStampIcon, PlaceBadgeIcon } from './StarBadge';
 import VerifyFirstNote from './VerifyFirstNote';
 import UkNationsPrompt from './UkNationsPrompt';
+import CountryPlannedTrips from './CountryPlannedTrips';
 import MomentList from '@/components/moments/MomentList';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import PrintDownload from '@/components/photos/PrintDownload';
@@ -61,6 +62,9 @@ const NO_TRIPS = [];
 // A region (Bali, Tasmania: regionPlaces.js) has its own ticket, with its poster, status, first
 // visit, note and the landmarks inside it; its photos and moments are its country's, which
 // `onOpenPlace(code)` opens from here (18 Nov 2026, the user's wish).
+// Planned trips (22 Nov 2026, the user's wish): `plannedTrips` are the trips planned to it
+// (utils/trips/plannedTrips.js; none through a share link), and an editor's "Plan a trip"
+// (`onPlanTrip(code)`) starts one with it as the first stop.
 function CountryPanel({
   code,
   visit,
@@ -77,6 +81,8 @@ function CountryPanel({
   mapId = null,
   travellers = [],
   trips = NO_TRIPS,
+  plannedTrips = NO_TRIPS,
+  onPlanTrip = null,
   onAddTraveller,
   onMomentsChanged,
   adEvery = null,
@@ -295,7 +301,9 @@ function CountryPanel({
           {visit?.firstVisitedOn ? `, first on ${formatDay(visit.firstVisitedOn)}` : ''}
         </p>
       )}
-      {locked ? <VerifyFirstNote action='mark countries, write notes, or add moments and photos' /> : null}
+      {locked ? <VerifyFirstNote action='mark countries, write notes, plan trips, or add moments and photos' /> : null}
+
+      <CountryPlannedTrips code={code} trips={plannedTrips} />
 
       {parent ? (
         <section className='grid gap-2' aria-labelledby={`part-of-${code}`}>
@@ -379,6 +387,7 @@ function CountryPanel({
         {!parent && canEdit && onAddPhotos ? (
           <MapActionButton onClick={() => onAddPhotos(code)}>Add photos</MapActionButton>
         ) : null}
+        {canEdit && onPlanTrip ? <MapActionButton onClick={() => onPlanTrip(code)}>Plan a trip</MapActionButton> : null}
         {!parent && (canEdit || locked) && photoSource?.mapId && photos.photos.length ? (
           <PrintDownload inMapPanel fill scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
         ) : null}

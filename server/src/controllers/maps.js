@@ -461,6 +461,33 @@ export const deleteTravellerHandler = handler(D, 'Delete traveller', async (req,
 
 // Countries visited
 
+// At most this many countries ticked at once (more than the world has)
+export const QUICK_FILL_MAX = 300;
+
+/**
+ * Ticking the countries you've been to, several at once (22 Nov 2026, the user's wish: the
+ * map offers it the first time it loads, and the country list any time after). The owner or a
+ * co-owner; like setting the map up (and its birthplaces), it needs no verified email, as a new
+ * account opens its map before verifying, and it only adds to their own map. `{ countryCodes }`:
+ * each place is marked visited (MANUAL) where it isn't marked visited or lived already (a "want
+ * to go" becomes visited), as the map keeps places (placeOnMap). Nothing is ever taken off.
+ * -> `{ added }`
+ */
+export const quickFillVisitsHandler = handler(D, 'Quick fill visits', async (req, res) => {
+  const { map, role } = await loadMap(req, req.params.mapId);
+  if (denyUnless(req, res, D, role, canManage, EVENT_MESSAGES.mapNotFound)) return undefined;
+  const codes = req.body?.countryCodes;
+  if (!Array.isArray(codes) || !codes.length || codes.length > QUICK_FILL_MAX || !codes.every((code) => typeof code === 'string')) {
+    return badRequest(req, res, D, EVENT_MESSAGES.quickFillInvalid);
+  }
+  const known = await Promise.all(codes.map((code) => isKnownCountry(code)));
+  if (known.includes(false)) return badRequest(req, res, D, EVENT_MESSAGES.quickFillInvalid);
+  const places = [...new Set(codes.map((code) => placeOnMap(code, Boolean(map.splitUk))))];
+  const { count } = await createMissingVisits(map.id, places, 'MANUAL');
+  logEvent(createMapEvent({ user: req.user, action: 'Update Success', id: map.id, detail: `quickFill=${count}` }));
+  return sendDataResponse(res, 200, { added: count });
+});
+
 export const putVisitHandler = handler(D, 'Save visit', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.mapNotFound)) return undefined;

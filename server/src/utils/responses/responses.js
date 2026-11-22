@@ -98,6 +98,8 @@ export const EVENT_MESSAGES = {
   avatarInvalid: `Upload an avatar image first, then save it.`,
   // Places
   countryNotFound: `That country isn't on the map.`,
+  // Ticking several countries at once (POST /maps/:mapId/visits/quick-fill)
+  quickFillInvalid: `Choose between 1 and 300 countries, each one on the map.`,
   poleNotATravellerCountry: 'Choose a country or Antarctica, not a pole.',
   landmarkNotFound: `That landmark doesn't exist.`,
   // Maps

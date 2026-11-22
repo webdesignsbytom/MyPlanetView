@@ -217,6 +217,8 @@ export const openShareCode = (code) => data(client.get(`${SHARED_API}/${enc(code
 const mapOrShared = ({ mapId, shareCode }, what) =>
   shareCode ? `${SHARED_API}/${enc(shareCode)}/${what}` : `${MAPS_API}/${enc(mapId)}/${what}`;
 // `travellerId`: that traveller's own passport (their places and stamps; 21 Nov 2026)
+// Ticking several countries at once (the map's "Where have you been?"; 22 Nov 2026) -> { added }
+export const quickFillVisits = (mapId, countryCodes) => data(client.post(`${MAPS_API}/${enc(mapId)}/visits/quick-fill`, { countryCodes }));
 export const getPassport = (where, { travellerId = null } = {}) =>
   data(client.get(`${mapOrShared(where, 'passport')}${query({ traveller: travellerId || undefined })}`));
 export const setStampPhoto = (mapId, landmarkId, photoId) =>

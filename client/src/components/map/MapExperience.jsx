@@ -42,6 +42,7 @@ import {
   ExtraMapDialog,
   ShareCardDialog,
   MapPosterDialog,
+  QuickFillDialog,
   YearRecapDialog,
   MapSwitcher,
   MapTipsDialog,
@@ -64,6 +65,7 @@ import {
 import { maxTravellersFor } from '@/utils/map/saveMapSetup';
 import { nearestGoal } from '@/utils/achievements/goals';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
+import { countsAsVisited } from '@/utils/map/visitStatus';
 import { MAP_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/map/mapListCache';
 import { countryListsOf, countryMomentFilters, countryPhotoFilters, preloadCountryLists } from '@/utils/map/preloadCountryLists';
@@ -81,7 +83,9 @@ import AnniversaryTag from '@/components/moments/AnniversaryTag';
 import TripCountdownTag from '@/components/trips/TripCountdownTag';
 import { LandmarkMarksContext } from '@/hooks/useLandmarkMarks';
 import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
+import { QUICK_FILL_MAX_VISITS, QUICK_FILL_SHOWN_KEY } from '@/utils/map/quickFill';
 import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
+import { plannedOutlineCodes, plannedTripsByPlace, plannedTripsFor } from '@/utils/trips/plannedTrips';
 
 const atLandmarkZoom = (zoom) => zoom >= LANDMARK_MIN_ZOOM;
 // Opening a country from the map: its panel's code is fetched on the first press
@@ -106,18 +110,25 @@ const initialUi = {
   slideshow: null,
   countryMap: null,
   pin: null,
+  // The place a trip is being planned to from its ticket (the trips panel's form opens for it)
+  planCountry: null,
 };
 
 // The longest the loading screen waits for the panels' data (a slow connection): the map
 // shows then, and whatever is still on its way arrives as each panel opens
 const LOADING_CAP_MS = 20000;
 
+// No planned trips (a share link's map)
+const NO_PLANNED = new Map();
+
 function uiReducer(state, action) {
   switch (action.type) {
     case 'toggle':
-      return { ...state, panel: state.panel === action.panel ? null : action.panel, uploadCountry: null };
+      return { ...state, panel: state.panel === action.panel ? null : action.panel, uploadCountry: null, planCountry: null };
     case 'open':
-      return { ...state, panel: action.panel, uploadCountry: null };
+      return { ...state, panel: action.panel, uploadCountry: null, planCountry: null };
+    case 'planTrip':
+      return { ...state, panel: 'trips', planCountry: action.code };
     case 'close':
       return { ...state, panel: null, selectedCode: state.panel === 'country' ? null : state.selectedCode };
     case 'selectCountry':
@@ -315,13 +326,52 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       document.getElementById('main-content')?.focus({ preventScroll: true });
     }
   }, [dataReady]);
+  // "Where have you been?" (QuickFillDialog; 22 Nov 2026, the user's wish: optional, once the
+  // map first loads, never on the sign-up pages): once per account (the viewer's setting
+  // `countriesAsked`, set as it opens) and once a visit, for the owner or a co-owner, on a map
+  // with no more than QUICK_FILL_MAX_VISITS countries on it (a new map: its birthplaces), so a
+  // full map never asks. The tips wait for it. The country list opens it any time ('later').
+  const countedVisits = useMemo(() => map.visits.filter((v) => countsAsVisited(v.status)).length, [map.visits]);
+  const askCountries = canManage && settings.countriesAsked !== true && countedVisits <= QUICK_FILL_MAX_VISITS;
+  const [quickFill, setQuickFill] = useState(null); // 'first' | 'later' | null
+  const [quickFillChecked, setQuickFillChecked] = useState(false);
+  useEffect(() => {
+    if (!dataReady || quickFillChecked) return;
+    let shown = !askCountries;
+    if (!shown) {
+      try {
+        shown = sessionStorage.getItem(QUICK_FILL_SHOWN_KEY) === '1';
+        if (!shown) sessionStorage.setItem(QUICK_FILL_SHOWN_KEY, '1');
+      } catch {
+        // Storage blocked: the setting alone keeps it to once
+      }
+    }
+    if (shown) {
+      setQuickFillChecked(true);
+      return;
+    }
+    QuickFillDialog.preload().then(
+      () => {
+        setQuickFill('first');
+        onChangeSetting('countriesAsked', true);
+        setQuickFillChecked(true);
+      },
+      () => setQuickFillChecked(true),
+    );
+  }, [dataReady, askCountries, quickFillChecked, onChangeSetting]);
+  const refreshAfterQuickFill = actions?.refresh;
+  const quickFillSaved = useCallback(async () => {
+    await refreshAfterQuickFill?.();
+    checkAchievements();
+  }, [refreshAfterQuickFill, checkAchievements]);
+
   // The tips (MapTipsDialog; 17 Nov 2026, the user's wish), once the loading screen lifts:
   // once a visit, on whichever map opens first, while the viewer's `showTips` is on. Its box
-  // turns the setting off without closing it.
+  // turns the setting off without closing it. After "Where have you been?" when that opens.
   const tipsWanted = settings.showTips !== false;
   const [tipsOpen, setTipsOpen] = useState(false);
   useEffect(() => {
-    if (!dataReady || !tipsWanted) return;
+    if (!dataReady || !tipsWanted || !quickFillChecked || quickFill) return;
     try {
       if (sessionStorage.getItem(TIPS_SHOWN_KEY) === '1') return;
       sessionStorage.setItem(TIPS_SHOWN_KEY, '1');
@@ -332,7 +382,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       () => setTipsOpen(true),
       () => {},
     );
-  }, [dataReady, tipsWanted]);
+  }, [dataReady, tipsWanted, quickFillChecked, quickFill]);
   const wantToGo = useMemo(() => map.visits.filter((v) => v.status === 'WANT_TO_GO').map((v) => v.countryCode), [map.visits]);
   const openBadges = useCallback(() => {
     dismissNews();
@@ -349,6 +399,15 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const adEvery = map.ads?.every ?? null;
   const nextTrip = useMemo(() => nextPlannedTrip(trips, todayString()), [trips]);
   const offerProps = { adEvery, nextTrip, canFetchTrips: !shareCode, mapKey: `map:${map.id}` };
+  // Planned trips on the map (utils/trips/plannedTrips.js; 22 Nov 2026, the user's wish): the
+  // places they go to, outlined unless already visited, and listed on their tickets. Never
+  // through a share link, which would tell anyone with it when the map's people are away.
+  const plannedByPlace = useMemo(
+    () => (shareCode ? NO_PLANNED : plannedTripsByPlace(trips, Boolean(map.splitUk))),
+    [shareCode, trips, map.splitUk],
+  );
+  const plannedCodes = useMemo(() => plannedOutlineCodes(plannedByPlace, visitsByCode), [plannedByPlace, visitsByCode]);
+  const planTrip = useCallback((code) => dispatch({ type: 'planTrip', code }), []);
 
   // my_planet's Detailed map type: names and lines at every zoom. The landmark pins follow
   // their own setting on either type (17 Nov 2026): when zoomed in (re-renders this page
@@ -536,6 +595,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             locked={locked}
             onChangeStatus={setVisit}
             onShowCountry={showCountry}
+            // Ticking several at once: the owner and co-owners (as the first-load offer)
+            onQuickFill={canManage ? () => setQuickFill('later') : null}
             unplacedCount={unplacedCount}
             unplacedMore={unplacedMore}
             onShowUnplaced={showUnplaced}
@@ -572,6 +633,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             mapId={shareCode ? null : map.id}
             travellers={map.travellers}
             trips={ownTrips}
+            plannedTrips={plannedTripsFor(plannedByPlace, ui.selectedCode)}
+            onPlanTrip={canChange && actions?.addTrip ? planTrip : null}
             // A baby born there joins the map's travellers only while its kind has room (a
             // couple's map is two people: a family's has room)
             onAddTraveller={map.travellers.length < maxTravellersFor(map.groupType) ? actions?.addTraveller : undefined}
@@ -614,11 +677,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       case 'trips':
         return (
           <TripsPanel
+            // Fresh for each place a trip is planned to from its ticket
+            key={ui.planCountry || 'trips'}
             trips={trips}
             travellers={map.travellers}
             canEdit={canChange}
             locked={locked}
             onCreate={actions?.addTrip}
+            planCountry={ui.planCountry}
             noLinks={Boolean(shareCode)}
             // The map's owner can take a group trip off it (whoever added it can too, from the trip)
             onRemoveLinked={isOwner && !mustVerify ? actions?.unlinkTrip : null}
@@ -707,6 +773,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             viewport={viewport}
             seaDepths={!mapStyleById(styleId).background && !design?.picture}
             visitsByCode={visitsByCode}
+            plannedCodes={plannedCodes}
             momentCounts={map.momentCountsByCountry || undefined}
             momentSpots={map.momentSpots || undefined}
             showSky={styleId === 'animated' && settings.sunAndMoon}
@@ -802,7 +869,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         {/* The key hides while a panel is open: the panel covers that corner */}
         {panel || ui.countryMap ? null : (
           <div className='pointer-events-none absolute bottom-3 left-3 hidden nophone:grid'>
-            <MapLegend showMoments={settings.showMoments} showSpots={Boolean(map.momentSpots?.length)} showStamps={stampedLandmarks.size > 0} />
+            <MapLegend
+              showMoments={settings.showMoments}
+              showSpots={Boolean(map.momentSpots?.length)}
+              showStamps={stampedLandmarks.size > 0}
+              showPlanned={plannedCodes.size > 0}
+            />
           </div>
         )}
 
@@ -863,6 +935,19 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
                 } else navigate(MAP_PAGE_URL, { replace: true });
               }}
               onClose={() => dispatch({ type: 'share', open: false })}
+            />
+          </MapOverlayBoundary>
+        ) : null}
+
+        {quickFill ? (
+          <MapOverlayBoundary onClose={() => setQuickFill(null)}>
+            <QuickFillDialog
+              mapId={map.id}
+              splitUk={Boolean(map.splitUk)}
+              visitsByCode={visitsByCode}
+              first={quickFill === 'first'}
+              onSaved={quickFillSaved}
+              onClose={() => setQuickFill(null)}
             />
           </MapOverlayBoundary>
         ) : null}

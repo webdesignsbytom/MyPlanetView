@@ -3,6 +3,11 @@ import { FaCameraRetro, FaFlagCheckered, FaMapMarkedAlt, FaSuitcaseRolling } fro
 import { useNavigate } from 'react-router-dom';
 // Constants
 import { tripPath } from '@/utils/constants/routes';
+// API
+import { createStop } from '@/api/travelApi';
+// Utils
+import { COUNTRY_BY_CODE } from '@/utils/map/countries';
+import { firstStopFor } from '@/utils/trips/plannedTrips';
 // Components
 import MapPanel from '@/components/map/MapPanel';
 import MapActionButton from '@/components/map/MapActionButton';
@@ -16,9 +21,12 @@ import PanelEmptyState from '@/components/map/PanelEmptyState';
 // verified). `onRemoveLinked(tripId)` (the map's owner) takes a group trip off the map. With
 // no trips yet, a passport page waiting for its first stamp (PanelEmptyState) says what a
 // trip does, with "Plan a new trip" on it for an editor.
-function TripsPanel({ trips, travellers, canEdit, locked = false, onCreate, noLinks = false, onRemoveLinked = null, onClose }) {
+// `planCountry`: opened from a place's ticket ("Plan a trip", 22 Nov 2026, the user's wish):
+// the form is open at once, titled for it, and the new trip gets the place as its first stop.
+function TripsPanel({ trips, travellers, canEdit, locked = false, onCreate, planCountry = null, noLinks = false, onRemoveLinked = null, onClose }) {
   const navigate = useNavigate();
-  const [creating, setCreating] = useState(false);
+  const planPlace = canEdit && planCountry ? COUNTRY_BY_CODE[planCountry] : null;
+  const [creating, setCreating] = useState(Boolean(planPlace));
   const [removingId, setRemovingId] = useState(null);
   const [error, setError] = useState(null);
 
@@ -41,12 +49,20 @@ function TripsPanel({ trips, travellers, canEdit, locked = false, onCreate, noLi
     <MapPanel title='Trips' onClose={onClose} fill={empty}>
       <div className={`grid gap-4 ${empty ? (locked || error ? 'grid-rows-[auto_minmax(0,1fr)]' : 'grid-rows-[minmax(0,1fr)]') : 'content-start'}`}>
       {creating ? (
-        <div className='grid border-2 border-dashed border-poster-brown/60 p-3'>
+        <div className='grid gap-3 border-2 border-dashed border-poster-brown/60 p-3'>
+          {planPlace ? (
+            <p className='text-sm'>
+              A trip to {planPlace.name}: it starts with {planPlace.name} as its first stop, and you can add more on the trip’s page.
+            </p>
+          ) : null}
           <TripForm
+            initial={planPlace ? { title: `Trip to ${planPlace.name}` } : undefined}
             travellers={travellers}
             onCancel={() => setCreating(false)}
             onSubmit={async (body) => {
               const trip = await onCreate(body);
+              // The place as its first stop; if that fails, the trip is still there to add it on its page
+              if (planPlace) await createStop(trip.id, firstStopFor(planPlace.code, planPlace.name)).catch(() => {});
               navigate(tripPath(trip.id));
             }}
           />

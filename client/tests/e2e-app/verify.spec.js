@@ -28,7 +28,7 @@ test.describe('An unverified email address', () => {
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('france');
     await list.getByRole('button', { name: 'France', exact: true }).click();
     const france = page.getByRole('dialog', { name: 'France' });
-    await expect(france.getByText('Verify your email address to mark countries, write notes, or add moments and photos.')).toBeVisible();
+    await expect(france.getByText('Verify your email address to mark countries, write notes, plan trips, or add moments and photos.')).toBeVisible();
     await expect(france.getByRole('combobox')).toHaveCount(0);
     await expect(france.getByRole('button', { name: 'Add photos', exact: true })).toHaveCount(0);
     // Its moment is read, not changed; there's no note box to write in

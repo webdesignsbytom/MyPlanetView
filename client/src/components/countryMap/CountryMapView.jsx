@@ -114,8 +114,9 @@ const StateNames = memo(function StateNames({ areas, statuses, zoom }) {
 // real spot (Big Ben at Westminster). Made by images/src/tools/landmark-models.mjs, which
 // writes utils/map/landmarkModels.js. On screen MODEL_PX tall at zoom 1, growing with the
 // square root of the zoom (a thing on the map, yet never covering a city), between MODEL_MIN_PX
-// and MODEL_MAX_PX; the smaller picture while it's sharp enough on a 2× screen. Nothing to
-// press: a press goes through to the state under it.
+// and MODEL_MAX_PX, times the model's `size` (every model at one scale: the Eiffel Tower a
+// little taller than Big Ben); the smaller picture while it's sharp enough on a 2× screen.
+// Nothing to press: a press goes through to the state under it.
 const MODEL_PX = 64;
 const MODEL_MIN_PX = 40;
 const MODEL_MAX_PX = 150;
@@ -123,17 +124,19 @@ const MODEL_MAX_PX = 150;
 const LandmarkModels = memo(function LandmarkModels({ geo, models, zoom }) {
   if (!models.length) return null;
   const px = Math.min(MODEL_MAX_PX, Math.max(MODEL_MIN_PX, MODEL_PX * Math.sqrt(zoom)));
-  const h = px / (zoom * REFERENCE_PX_PER_UNIT);
-  const size = LANDMARK_MODEL_HEIGHTS.find((height) => height >= px * 2) ?? LANDMARK_MODEL_HEIGHTS.at(-1);
+  const unitsPerPx = 1 / (zoom * REFERENCE_PX_PER_UNIT);
   return (
     <g aria-hidden='true' className='pointer-events-none'>
       {models.map((model) => {
         const at = placeOnCountryMap(geo, model.latitude, model.longitude);
+        const tall = px * model.size;
+        const h = tall * unitsPerPx;
         const w = h * model.aspect;
+        const picture = LANDMARK_MODEL_HEIGHTS.find((height) => height >= tall * 2) ?? LANDMARK_MODEL_HEIGHTS.at(-1);
         // The group stands on the spot; the picture is moved so its tile's middle is there
         return (
           <g key={model.id} data-landmark-model={model.id} transform={`translate(${at.x} ${at.y})`}>
-            <image href={model.images[size]} x={-w * model.anchor[0]} y={-h * model.anchor[1]} width={w} height={h} />
+            <image href={model.images[picture]} x={-w * model.anchor[0]} y={-h * model.anchor[1]} width={w} height={h} />
           </g>
         );
       })}

@@ -6,6 +6,7 @@ import { test as base, expect } from '@playwright/test';
 // Constants
 import { COOKIE_POLICY_NAME } from '../../src/utils/constants/constants.js';
 import { TIPS_SHOWN_KEY } from '../../src/utils/map/mapTips.js';
+import { QUICK_FILL_SHOWN_KEY } from '../../src/utils/map/quickFill.js';
 import { REGION_CODES } from '../../src/utils/map/regionPlaces.js';
 
 // How many regions there are (Bali, the Azores…): the stats say "Regions 1 of <this>"
@@ -25,8 +26,11 @@ export const test = base.extend({
   // The tips the map opens with (MapTipsDialog) cover it, so every test starts as if they'd
   // shown already this visit; mapTips.spec.js turns this on to see them
   mapTips: [false, { option: true }],
+  // "Where have you been?" (QuickFillDialog) opens over a new map once, so tests start as if
+  // it had shown already this visit; quickFill.spec.js turns this on to see it
+  quickFill: [false, { option: true }],
 
-  page: async ({ page, mapTips }, provide) => {
+  page: async ({ page, mapTips, quickFill }, provide) => {
     // Vite's hot-reload socket, answered here and kept silent: a source file saved during
     // a run would otherwise reload the page in the middle of a test
     // (the app opens no other socket; Vite's is ws://<host>/?token=…)
@@ -52,6 +56,15 @@ export const test = base.extend({
           // Storage blocked: the tips may show
         }
       }, TIPS_SHOWN_KEY);
+    }
+    if (!quickFill) {
+      await page.addInitScript((key) => {
+        try {
+          sessionStorage.setItem(key, '1');
+        } catch {
+          // Storage blocked: it may show over a new map
+        }
+      }, QUICK_FILL_SHOWN_KEY);
     }
 
     // An uncaught error, or a mock handler that threw or is missing, fails the test

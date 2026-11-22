@@ -57,6 +57,8 @@ export const ExtraMapDialog = lazyPanel(() => import('@/components/plans/ExtraMa
 export const MapTipsDialog = lazyPanel(() => import('./MapTipsDialog'));
 // A picture of the map to share (utils/shareCard/)
 export const ShareCardDialog = lazyPanel(() => import('@/components/shareCard/ShareCardDialog'));
+// "Where have you been?": ticking many countries at once (the first time a map loads, or the country list)
+export const QuickFillDialog = lazyPanel(() => import('./QuickFillDialog'));
 // The map as a printed poster (utils/poster/)
 export const MapPosterDialog = lazyPanel(() => import('@/components/poster/MapPosterDialog'));
 // "Your year in travel" (docs/API.md "Year in travel")

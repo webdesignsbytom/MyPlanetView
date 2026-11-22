@@ -3,11 +3,28 @@
 //
 // The little 3D landmark models the country maps draw (CountryMapView's LandmarkModels): each
 // stands with its grass tile's middle (`anchor`, fractions of the picture from its top left)
-// on `latitude`/`longitude`, on the country maps in `maps`. `aspect` is width over height;
-// `images` the picture by its height in pixels. `landmark` is the Wikidata item of the
+// on `latitude`/`longitude`, on the country maps in `maps`. `aspect` is width over height,
+// `size` its height against Big Ben's (every model at one scale), `images` the picture by
+// its height in pixels. `landmark` is the Wikidata item of the
 // landmark it belongs to.
 import bigBen160 from '@/assets/map/landmarkModels/big-ben-160.webp';
 import bigBen320 from '@/assets/map/landmarkModels/big-ben-320.webp';
+import christTheRedeemer160 from '@/assets/map/landmarkModels/christ-the-redeemer-160.webp';
+import christTheRedeemer320 from '@/assets/map/landmarkModels/christ-the-redeemer-320.webp';
+import colosseum160 from '@/assets/map/landmarkModels/colosseum-160.webp';
+import colosseum320 from '@/assets/map/landmarkModels/colosseum-320.webp';
+import eiffelTower160 from '@/assets/map/landmarkModels/eiffel-tower-160.webp';
+import eiffelTower320 from '@/assets/map/landmarkModels/eiffel-tower-320.webp';
+import greatWall160 from '@/assets/map/landmarkModels/great-wall-160.webp';
+import greatWall320 from '@/assets/map/landmarkModels/great-wall-320.webp';
+import pyramidsOfGiza160 from '@/assets/map/landmarkModels/pyramids-of-giza-160.webp';
+import pyramidsOfGiza320 from '@/assets/map/landmarkModels/pyramids-of-giza-320.webp';
+import statueOfLiberty160 from '@/assets/map/landmarkModels/statue-of-liberty-160.webp';
+import statueOfLiberty320 from '@/assets/map/landmarkModels/statue-of-liberty-320.webp';
+import sydneyOperaHouse160 from '@/assets/map/landmarkModels/sydney-opera-house-160.webp';
+import sydneyOperaHouse320 from '@/assets/map/landmarkModels/sydney-opera-house-320.webp';
+import tajMahal160 from '@/assets/map/landmarkModels/taj-mahal-160.webp';
+import tajMahal320 from '@/assets/map/landmarkModels/taj-mahal-320.webp';
 
 export const LANDMARK_MODEL_HEIGHTS = [160, 320];
 
@@ -20,7 +37,104 @@ export const LANDMARK_MODELS = [
     maps: ['GB', 'XE'],
     landmark: 'Q10344038',
     aspect: 0.6281,
+    size: 1,
     anchor: [0.5, 0.7845],
     images: { 160: bigBen160, 320: bigBen320 },
+  },
+  {
+    id: 'christ-the-redeemer',
+    name: 'Christ the Redeemer',
+    latitude: -22.95192,
+    longitude: -43.21046,
+    maps: ['BR'],
+    landmark: 'Q79961',
+    aspect: 1.0101,
+    size: 0.867,
+    anchor: [0.5, 0.6525],
+    images: { 160: christTheRedeemer160, 320: christTheRedeemer320 },
+  },
+  {
+    id: 'colosseum',
+    name: 'Colosseum',
+    latitude: 41.89028,
+    longitude: 12.49222,
+    maps: ['IT'],
+    landmark: 'Q10285',
+    aspect: 1.2724,
+    size: 0.7,
+    anchor: [0.5, 0.562],
+    images: { 160: colosseum160, 320: colosseum320 },
+  },
+  {
+    id: 'eiffel-tower',
+    name: 'Eiffel Tower',
+    latitude: 48.8583,
+    longitude: 2.29448,
+    maps: ['FR'],
+    landmark: 'Q243',
+    aspect: 0.5989,
+    size: 1.046,
+    anchor: [0.5, 0.7933],
+    images: { 160: eiffelTower160, 320: eiffelTower320 },
+  },
+  {
+    id: 'great-wall',
+    name: 'Great Wall of China',
+    latitude: 40.35428,
+    longitude: 116.00649,
+    maps: ['CN'],
+    landmark: 'Q798826',
+    aspect: 1.5054,
+    size: 0.7,
+    anchor: [0.5, 0.4817],
+    images: { 160: greatWall160, 320: greatWall320 },
+  },
+  {
+    id: 'pyramids-of-giza',
+    name: 'Pyramids of Giza',
+    latitude: 29.97611,
+    longitude: 31.13278,
+    maps: ['EG'],
+    landmark: 'Q12508',
+    aspect: 1.8216,
+    size: 0.7,
+    anchor: [0.5, 0.3738],
+    images: { 160: pyramidsOfGiza160, 320: pyramidsOfGiza320 },
+  },
+  {
+    id: 'statue-of-liberty',
+    name: 'Statue of Liberty',
+    latitude: 40.68921,
+    longitude: -74.04443,
+    maps: ['US'],
+    landmark: 'Q9202',
+    aspect: 0.6943,
+    size: 0.902,
+    anchor: [0.5, 0.7608],
+    images: { 160: statueOfLiberty160, 320: statueOfLiberty320 },
+  },
+  {
+    id: 'sydney-opera-house',
+    name: 'Sydney Opera House',
+    latitude: -33.85706,
+    longitude: 151.2149,
+    maps: ['AU'],
+    landmark: 'Q45178',
+    aspect: 1.6858,
+    size: 0.7,
+    anchor: [0.5, 0.4196],
+    images: { 160: sydneyOperaHouse160, 320: sydneyOperaHouse320 },
+  },
+  {
+    id: 'taj-mahal',
+    name: 'Taj Mahal',
+    latitude: 27.175,
+    longitude: 78.04194,
+    maps: ['IN'],
+    landmark: 'Q9141',
+    aspect: 1.2327,
+    size: 0.7,
+    anchor: [0.5, 0.5761],
+    images: { 160: tajMahal160, 320: tajMahal320 },
   },
 ];
