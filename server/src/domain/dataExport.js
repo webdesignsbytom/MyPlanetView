@@ -95,6 +95,21 @@ export async function findMapForExport(mapId) {
             orderBy: [{ flownOn: 'asc' }, { createdAt: 'asc' }],
           },
           guessGames: { select: { code: true, title: true, photoIds: true, createdAt: true }, orderBy: { createdAt: 'asc' } },
+          // Life's One Shots ticked (docs/API.md "Life's One Shots")
+          oneShots: {
+            select: {
+              itemKey: true,
+              seenOn: true,
+              datePrecision: true,
+              countryCode: true,
+              notes: true,
+              source: true,
+              photoId: true,
+              createdAt: true,
+              travellers: { select: { travellerId: true } },
+            },
+            orderBy: { createdAt: 'asc' },
+          },
         },
       }),
       prisma.traveller.findMany({

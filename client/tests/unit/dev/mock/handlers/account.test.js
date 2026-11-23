@@ -186,6 +186,9 @@ describe('map settings', () => {
     expect((await put('/api/users/map-settings', { mapSettings: { style: 'jupiter' } })).status).toBe(400);
     expect((await put('/api/users/map-settings', { mapSettings: { showGrid: 'yes' } })).status).toBe(400);
     expect((await put('/api/users/map-settings', { mapSettings: { landmarkPins: 'stamped' } })).data.mapSettings).toEqual({ landmarkPins: 'stamped' });
+    // The celebration screen's switch (24 Nov 2026)
+    expect((await put('/api/users/map-settings', { mapSettings: { showCelebrations: false } })).data.mapSettings).toEqual({ showCelebrations: false });
+    expect((await put('/api/users/map-settings', { mapSettings: { showCelebrations: 'off' } })).status).toBe(400);
   });
 });
 
@@ -197,5 +200,7 @@ describe('reference data', () => {
     expect((await get('/api/landmarks')).data.landmarks).toHaveLength(1366);
     const french = (await get('/api/landmarks', { country: 'FR' })).data.landmarks;
     expect(french.every((l) => l.countryCode === 'FR')).toBe(true);
+    // Each with its Wikidata item, as the server's (the celebration finds a model by it)
+    expect(french.find((l) => l.name === 'Eiffel Tower').wikidataId).toBe('Q243');
   });
 });

@@ -24,6 +24,9 @@ export const LANDMARK_SELECT = {
   pinY: true,
   matchRadiusM: true,
   isUnesco: true,
+  // The landmark's Wikidata item: the client finds its little 3D model by it (the
+  // celebration screen; client/src/utils/map/landmarkModels.js `landmark`)
+  wikidataId: true,
 };
 
 export const findAllCountries = () =>
@@ -38,6 +41,10 @@ export const findLandmarks = ({ countryCode } = {}) =>
     select: LANDMARK_SELECT,
     orderBy: { name: 'asc' },
   });
+
+// Every landmark's country and position: where each counts (the country collections'
+// totals; a UK landmark's nation on a map that splits the UK)
+export const findLandmarkPlaces = () => prisma.landmark.findMany({ select: { countryCode: true, latitude: true, longitude: true } });
 
 export const findLandmarkById = (id) =>
   prisma.landmark.findUnique({ where: { id }, select: LANDMARK_SELECT });

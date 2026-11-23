@@ -60,6 +60,13 @@ describe('badgeGroupLabel', () => {
   });
 
   it('keeps the groups in the suitcase’s order', () => {
-    expect(BADGE_GROUPS.map((group) => group.id)).toEqual(['countries', 'continents', 'special', 'regions', 'landmarks', 'photos', 'themes']);
+    expect(BADGE_GROUPS.map((group) => group.id)).toEqual(['countries', 'continents', 'special', 'regions', 'landmarks', 'collections', 'oneShots', 'photos', 'themes']);
+  });
+
+  // 24 Nov 2026: the World Heritage tiers up to 250, and the country collections
+  it('names the new World Heritage tiers and each country’s medals', () => {
+    expect(badgeWords('unesco-250')).toEqual({ name: '250 World Heritage Sites', short: '250', description: '250 UNESCO World Heritage Sites stamped.' });
+    expect(badgeWords('collect-MT-bronze').name).toBe('Bronze for Malta');
+    expect(badgeWords('collect-MT-bronze').description).toMatch(/^A quarter of Malta’s landmarks/);
   });
 });

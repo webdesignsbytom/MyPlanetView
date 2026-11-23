@@ -160,13 +160,73 @@ export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica,
   return (bottom - MAP_TOP) * scale;
 }
 
+// A five-pointed star's corners round (cx, cy), the outer ones `r` out
+function starPath(ctx, cx, cy, r) {
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const angle = -Math.PI / 2 + (i * Math.PI) / 5;
+    const radius = i % 2 ? r * 0.42 : r;
+    const x = cx + Math.cos(angle) * radius;
+    const y = cy + Math.sin(angle) * radius;
+    if (i) ctx.lineTo(x, y);
+    else ctx.moveTo(x, y);
+  }
+  ctx.closePath();
+}
+
+/**
+ * A country collection's medal (24 Nov 2026), standing in `box` where a card's map goes: a
+ * ribbon of two red straps from the top, then the disc in its metal (`tier`: bronze, silver
+ * or gold), with its rim, an inner ring, a star and the metal's name.
+ */
+export function drawMedal(ctx, { box, tier }) {
+  const metal = C.medals[tier] || C.medals.gold;
+  const cx = box.x + box.width / 2;
+  const r = Math.min(box.height * 0.42, box.width * 0.32);
+  const cy = box.y + box.height - r - 12;
+  const top = box.y;
+  const strap = r * 0.42;
+  // The straps, crossing to the disc's top
+  [
+    [cx - r * 0.95, cx - r * 0.95 + strap, cx + r * 0.25, cx + r * 0.25 - strap, C.ribbon[0]],
+    [cx + r * 0.95, cx + r * 0.95 - strap, cx - r * 0.25, cx - r * 0.25 + strap, C.ribbon[1]],
+  ].forEach(([x1, x2, x3, x4, colour]) => {
+    ctx.fillStyle = colour;
+    ctx.beginPath();
+    ctx.moveTo(x1, top);
+    ctx.lineTo(x2, top);
+    ctx.lineTo(x3, cy - r * 0.55);
+    ctx.lineTo(x4, cy - r * 0.55);
+    ctx.closePath();
+    ctx.fill();
+  });
+  // The disc, its rim and an inner ring
+  ctx.fillStyle = metal.face;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = metal.rim;
+  ctx.lineWidth = r * 0.09;
+  ctx.stroke();
+  ctx.lineWidth = r * 0.025;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 0.8, 0, Math.PI * 2);
+  ctx.stroke();
+  // The star, and the metal's name under it
+  ctx.fillStyle = metal.rim;
+  starPath(ctx, cx, cy - r * 0.14, r * 0.38);
+  ctx.fill();
+  fittedText(ctx, String(tier).toUpperCase(), { x: cx, y: cy + r * 0.56, width: r * 1.2, max: Math.round(r * 0.3), min: 18, family: 'TravelFont' });
+}
+
 /**
  * The card as a PNG blob. `title` (the map's name, or "2026 in travel"), `kicker` (a small
  * line above it), `highlight` (place codes to colour in), `stats` ([{ value, label }], at
  * most three, drawn big under the map), `splitUk` (the UK as its four nations, as the map
- * shows it), `colours` (a map design's country colours, or null).
+ * shows it), `colours` (a map design's country colours, or null). `medal` (bronze, silver or
+ * gold: a country collection's card) draws that medal where the map goes.
  */
-export async function drawShareCard({ title, kicker = '', highlight = [], stats = [], splitUk = false, colours = null }) {
+export async function drawShareCard({ title, kicker = '', highlight = [], stats = [], splitUk = false, colours = null, medal = null }) {
   await loadFonts();
   const canvas = document.createElement('canvas');
   canvas.width = CARD_WIDTH;
@@ -202,7 +262,9 @@ export async function drawShareCard({ title, kicker = '', highlight = [], stats 
   const withAntarctica = marked.has('AQ') || marked.has('XS');
   const box = { x: 70, y: 262, width: CARD_WIDTH - 140, height: 0 };
   box.height = ((withAntarctica ? MAP_BOTTOM_WITH_ANTARCTICA : MAP_BOTTOM_NO_ANTARCTICA) - MAP_TOP) * (box.width / MAP_WIDTH);
-  const mapHeight = drawMap(ctx, { box, highlight: marked, splitUk, colours: ownColours, withAntarctica });
+  let mapHeight = box.height;
+  if (medal) drawMedal(ctx, { box, tier: medal });
+  else mapHeight = drawMap(ctx, { box, highlight: marked, splitUk, colours: ownColours, withAntarctica });
 
   // Up to three big numbers, evenly across, then the places' names: together, centred in
   // the room between the map and the foot

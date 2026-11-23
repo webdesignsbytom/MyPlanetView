@@ -52,6 +52,7 @@ model User {
   // "Guess where I was" games they made, and the flights they logged (docs/API.md)
   guessGames        GuessGame[]            @relation("GuessGameCreator")
   flightsLogged     Flight[]               @relation("FlightLogger")
+  oneShotsTicked    OneShot[]              @relation("OneShotTicker")
   challengeEntries  FriendChallengeEntry[]
   // Taking your travels with you (docs/API.md "Travel copies"): the copies this user asked
   // for, and the ones they approved or declined as a family map's owner or co-owner
@@ -237,6 +238,7 @@ model Country {
   photos       Photo[]
   homeProfiles Profile[]
   moments      Moment[]
+  oneShots     OneShot[]
   offers       AffiliateOffer[]
   subdivisionVisits SubdivisionVisit[]
   pins         MapPin[]
@@ -403,6 +405,8 @@ model TravelMap {
   // "Guess where I was" games made from its photos, and its flight log (docs/API.md)
   guessGames      GuessGame[]
   flights         Flight[]
+  // Life's One Shots ticked on it (docs/API.md "Life's One Shots")
+  oneShots        OneShot[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -474,6 +478,7 @@ model Traveller {
 
   trips   TripTraveller[]
   moments MomentTraveller[]
+  oneShots OneShotTraveller[]
   // A pending co-owner invite for this traveller (it goes with the traveller)
   invites ShareInvite[]
   // Their travels copied to their own map (docs/API.md "Travel copies")
@@ -789,6 +794,8 @@ model Photo {
   landmarks    PhotoLandmark[]
   coverOf      Trip[]            @relation("TripCover")
   moments      MomentPhoto[]
+  // Life's One Shots it's the picture of
+  oneShots     OneShot[]
   // The pins' visits it's in (a country map's pins: docs/API.md "Country maps")
   pinVisits    MapPinVisitPhoto[]
   // Passport stamps showing this photo
@@ -1878,4 +1885,62 @@ model Flight {
 enum FlightSource {
   BOARDING_PASS
   MANUAL
+}
+
+// Life's One Shots (24 Nov 2026, the user's wish and name; docs/API.md "Life's One Shots"):
+// an item of the catalogue (src/utils/constants/oneShots.js, checked in code, so a new item
+// needs no migration) ticked on a map, once: when it was seen or done, where, who on the map
+// was there, a photo of the map's and a note
+model OneShot {
+  id      String    @id @default(uuid())
+  mapId   String
+  map     TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  itemKey String
+
+  // Both null when undated, both set otherwise (CHECK one_shot_date_and_precision)
+  seenOn        DateTime?      @db.Date
+  datePrecision DatePrecision?
+
+  // Where, as the map places it (utils/ukNations.js placeOnMap); optional
+  countryCode String?  @db.Char(2)
+  country     Country? @relation(fields: [countryCode], references: [code], onDelete: Restrict)
+
+  // One of the map's photos to show with it (deleting the photo keeps the tick)
+  photoId String?
+  photo   Photo?  @relation(fields: [photoId], references: [id], onDelete: SetNull)
+
+  notes String?
+
+  // Ticked by hand, or from a flight the flight log says crossed a line on the globe
+  source OneShotSource @default(MANUAL)
+
+  createdById String?
+  createdBy   User?   @relation("OneShotTicker", fields: [createdById], references: [id], onDelete: SetNull)
+
+  travellers OneShotTraveller[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([mapId, itemKey])
+  @@index([countryCode])
+  @@index([photoId])
+  @@index([createdById])
+  @@map("one_shot")
+}
+
+// Who on the map saw it or did it (a child's own list on a family's map)
+model OneShotTraveller {
+  oneShotId   String
+  oneShot     OneShot   @relation(fields: [oneShotId], references: [id], onDelete: Cascade)
+  travellerId String
+  traveller   Traveller @relation(fields: [travellerId], references: [id], onDelete: Cascade)
+
+  @@id([oneShotId, travellerId])
+  @@index([travellerId])
+  @@map("one_shot_traveller")
+}
+
+enum OneShotSource {
+  MANUAL
+  FLIGHT
 }

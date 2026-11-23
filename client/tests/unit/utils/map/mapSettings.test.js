@@ -52,6 +52,11 @@ describe('the switches', () => {
     expect(new Set(toggles).size).toBe(toggles.length);
   });
 
+  it('put the tips and the celebrations under Help (24 Nov 2026)', () => {
+    expect(MAP_SETTING_TOGGLES.filter((toggle) => toggle.group === 'help').map((toggle) => toggle.key)).toEqual(['showTips', 'showCelebrations']);
+    expect(DEFAULT_MAP_SETTINGS.showCelebrations).toBe(true);
+  });
+
   it('every group has a switch', () => {
     for (const group of MAP_SETTING_GROUPS) expect(MAP_SETTING_TOGGLES.some((toggle) => toggle.group === group.id), group.id).toBe(true);
   });
@@ -111,6 +116,7 @@ describe('cleanMapSettings', () => {
       showGoalTag: false,
       showStrings: false,
       showTips: false,
+      showCelebrations: false,
       countriesAsked: true,
     };
     expect(cleanMapSettings(input)).toEqual(input);
@@ -128,9 +134,10 @@ describe('cleanMapSettings', () => {
   });
 
   it('falls back to the default for a value of the wrong kind', () => {
-    const clean = cleanMapSettings({ showGrid: 'yes', showTips: 0, countriesAsked: 'true', mapType: 'satellite', landmarkPins: true });
+    const clean = cleanMapSettings({ showGrid: 'yes', showTips: 0, showCelebrations: 'no', countriesAsked: 'true', mapType: 'satellite', landmarkPins: true });
     expect(clean.showGrid).toBe(true);
     expect(clean.showTips).toBe(true);
+    expect(clean.showCelebrations).toBe(true);
     expect(clean.countriesAsked).toBe(false);
     expect(clean.mapType).toBe('regular');
     expect(clean.landmarkPins).toBe('stamped');

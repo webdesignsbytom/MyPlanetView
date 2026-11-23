@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { addPhotoLandmark, confirmPhotoLandmark, removePhotoLandmark } from '@/api/travelApi';
 // Hooks
 import useLandmarks from '@/hooks/useLandmarks';
+import useLandmarkMarks from '@/hooks/useLandmarkMarks';
 // Components
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 import Button from '@/components/common/Button';
@@ -11,19 +12,23 @@ import InlineAlert from '@/components/common/InlineAlert';
 const distanceText = (m) => (m == null ? '' : m < 1000 ? ` (${m} m away)` : ` (${(m / 1000).toFixed(1)} km away)`);
 
 // The landmarks matched to a photo. Matches from the photo's location wait for a yes;
-// an editor can also add one by hand, from the photo's country.
+// an editor can also add one by hand, from the photo's country. Either stamps the passport:
+// on the map page that's told (useLandmarkMarks' onPhotoStamped), for its celebration.
 function PhotoLandmarkList({ photo, canEdit, onChanged }) {
+  const { onPhotoStamped } = useLandmarkMarks();
   const [busy, setBusy] = useState(null);
   const [error, setError] = useState(null);
   const [adding, setAdding] = useState('');
   const { landmarks: available } = useLandmarks(photo.countryCode, { enabled: canEdit && Boolean(photo.countryCode) });
 
-  const run = async (key, action) => {
+  // `stamps`: the landmark this action confirms, if any
+  const run = async (key, action, stamps = null) => {
     setBusy(key);
     setError(null);
     try {
       const { photo: updated } = await action();
       onChanged(updated);
+      if (stamps && updated?.landmarks?.some((l) => l.id === stamps && l.confirmed)) onPhotoStamped?.(stamps, updated);
     } catch (err) {
       setError(err.friendlyMessage || 'That change could not be saved.');
     } finally {
@@ -56,7 +61,7 @@ function PhotoLandmarkList({ photo, canEdit, onChanged }) {
                       quiet
                       busy={busy === `c${landmark.id}`}
                       ariaLabel={`That's right: ${landmark.name}`}
-                      onClick={() => run(`c${landmark.id}`, () => confirmPhotoLandmark(photo.id, landmark.id))}
+                      onClick={() => run(`c${landmark.id}`, () => confirmPhotoLandmark(photo.id, landmark.id), landmark.id)}
                     >
                       That's right
                     </Button>
@@ -92,11 +97,15 @@ function PhotoLandmarkList({ photo, canEdit, onChanged }) {
             disabled={!adding}
             busy={busy === 'add'}
             onClick={() =>
-              run('add', async () => {
-                const result = await addPhotoLandmark(photo.id, adding);
-                setAdding('');
-                return result;
-              })
+              run(
+                'add',
+                async () => {
+                  const result = await addPhotoLandmark(photo.id, adding);
+                  setAdding('');
+                  return result;
+                },
+                adding,
+              )
             }
           >
             Add

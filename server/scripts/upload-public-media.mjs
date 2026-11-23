@@ -1,5 +1,5 @@
-// Uploads the repo's media/ folder (the country posters, the landmark photos and the
-// country guides' festival photos) to the public bucket, keeping its paths:
+// Uploads the repo's media/ folder (the country posters, the landmark photos, the
+// country guides' festival photos and Life's One Shots' photos) to the public bucket, keeping its paths:
 // media/visitCountryPosters/ru-800.avif becomes
 // visitCountryPosters/ru-800.avif, where the client's posterUrl() and landmarkPhotoInfo
 // look for it. Only files the bucket lacks, or holds at another size, are sent, so a
@@ -27,6 +27,8 @@ export const FOLDERS = {
   landmarkPhotos: 'public, max-age=604800',
   // images/src/tools/festival-photos.mjs: a re-picked photo of the same width keeps its name
   festivalPhotos: 'public, max-age=604800',
+  // images/src/tools/one-shot-photos.mjs (Life's One Shots, 24 Nov 2026): the same
+  oneShotPhotos: 'public, max-age=604800',
 };
 
 const CONTENT_TYPES = {

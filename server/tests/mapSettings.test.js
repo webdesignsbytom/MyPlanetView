@@ -31,8 +31,15 @@ describe('cleanMapSettings', () => {
       showUnvisited: false,
       showUserBanner: true,
       showTips: false,
+      showCelebrations: false,
     };
     expect(cleanMapSettings(input)).toEqual({ ok: true, value: input });
+  });
+
+  // The celebration screen's switch (24 Nov 2026): true or false, nothing else
+  it('keeps the celebrations switch, refusing a value that isn’t true or false', () => {
+    expect(cleanMapSettings({ showCelebrations: true })).toEqual({ ok: true, value: { showCelebrations: true } });
+    expect(cleanMapSettings({ showCelebrations: 'off' }).ok).toBe(false);
   });
 
   it('accepts both map types and refuses any other', () => {

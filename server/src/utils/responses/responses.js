@@ -151,6 +151,10 @@ export const EVENT_MESSAGES = {
   flightNotFound: `That flight isn't on this map.`,
   flightsInvalid: `Give 1 to 10 flights, each between two different airports (IATA codes such as LHR) on a real day.`,
   flightTripInvalid: `That trip isn't one of this map's own.`,
+  // Life's One Shots (docs/API.md "Life's One Shots")
+  oneShotNotFound: `That isn't one of Life's One Shots.`,
+  oneShotInvalid: `Check the tick: a real date, a country on the map, a note of up to 500 characters and the map's own travellers.`,
+  oneShotPhotoInvalid: `The picture must be one of this map's photos.`,
   travellersNotOnMap: `Every traveller must be one of this map's travellers.`,
   stopNotFound: `That stop isn't on this trip.`,
   invalidStopOrder: `Send every stop of the trip exactly once.`,

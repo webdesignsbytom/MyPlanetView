@@ -68,6 +68,7 @@ import { tickLandmarkHandler, untickLandmarkHandler } from '../controllers/landm
 import { addAutoStringsHandler, addMapStringHandler, deleteAllMapStringsHandler, deleteMapStringHandler } from '../controllers/mapStrings.js';
 import { createGuessGameHandler, getMapGuessGamesHandler } from '../controllers/guessGames.js';
 import { addFlightsHandler, getMapFlightsHandler } from '../controllers/flights.js';
+import { deleteOneShotHandler, getOneShotsHandler, saveOneShotHandler } from '../controllers/oneShots.js';
 
 // Mounted at /api/maps. Everything needs a signed-in user; roles are checked per map.
 // `verified`: adding or changing content needs a verified email address. Setting up the
@@ -106,6 +107,11 @@ router.post('/:mapId/imports/polarsteps', verified, importTripsLimiter, importTr
 // Collecting (docs/API.md "Collecting"): a landmark ticked "been here", or not
 router.put('/:mapId/landmarks/:landmarkId/been', verified, tickLandmarkHandler);
 router.delete('/:mapId/landmarks/:landmarkId/been', verified, untickLandmarkHandler);
+// Life's One Shots (docs/API.md "Life's One Shots"): the ticks (and what the flights suggest),
+// one ticked or changed, one taken off
+router.get('/:mapId/one-shots', getOneShotsHandler);
+router.put('/:mapId/one-shots/:itemKey', verified, saveOneShotHandler);
+router.delete('/:mapId/one-shots/:itemKey', verified, deleteOneShotHandler);
 // Strings between places (docs/API.md "Strings"): tie one, the automatic ones, untie one or all
 router.post('/:mapId/strings', verified, addMapStringHandler);
 router.post('/:mapId/strings/auto', verified, addAutoStringsHandler);

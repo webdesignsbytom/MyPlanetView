@@ -5,6 +5,9 @@ import {
   awardQuietly,
   badgeProgress,
   changesWhatsAsked,
+  collectionProgress,
+  collectionTiers,
+  landmarkTotals,
   goalProgress,
   goalView,
   loadMapFacts,
@@ -14,7 +17,7 @@ import {
   parseGoalInput,
 } from '@/dev/mock/achievements';
 import { COUNTRIES } from '@/utils/map/countries';
-import { countryExists } from '@/dev/mock/views';
+import { LANDMARK_ROWS, countryExists } from '@/dev/mock/views';
 import * as serverBadges from '../../../../../server/src/utils/badges.js';
 import * as serverGoals from '../../../../../server/src/utils/goals.js';
 import { HOME_MAP, JO_MAP, SAM_MAP, db, freshStore } from './mockApi';
@@ -44,6 +47,43 @@ describe('the badges', () => {
     const earned = (visited) => badgeProgress({ visited: new Set(visited) }).filter((b) => b.earned).map((b) => b.key);
     expect(earned(['FR'])).toEqual(expect.arrayContaining(['countries-1', 'continent-europe']));
     expect(earned(['AQ'])).toEqual(['antarctica']);
+  });
+});
+
+// The country collections (24 Nov 2026): the server's rules, over the mock's own landmarks
+describe('the country collections', () => {
+  it('are counted as the server counts them', () => {
+    for (const total of [1, 2, 3, 4, 7, 58]) expect(collectionTiers(total)).toEqual(serverBadges.collectionTiers(total));
+    const stamps = [{ countryCode: 'MT' }, { countryCode: 'IT' }, { countryCode: 'IT' }];
+    const totals = landmarkTotals(false);
+    expect(collectionProgress({ stamps, totals, keep: ['VA'] })).toEqual(serverBadges.collectionProgress({ stamps, totals, keep: ['VA'] }));
+  });
+
+  it('count each place’s landmarks, the UK’s in their nations on a split map', () => {
+    expect(landmarkTotals(false).get('MT')).toBe(3);
+    const uk = LANDMARK_ROWS.filter((l) => l.countryCode === 'GB');
+    const ukWhole = uk.length;
+    const split = landmarkTotals(true);
+    // Every UK landmark in a nation counts there (one in none stays the UK's, as on the server)
+    expect(['XE', 'XC', 'XW', 'XI'].reduce((sum, code) => sum + (split.get(code) || 0), 0)).toBe(uk.filter((l) => l.nation).length);
+    expect(split.get('XC')).toBe(uk.filter((l) => l.nation === 'XC').length);
+    // A UK collection from before the split is still the whole UK's
+    expect(split.get('GB')).toBe(ukWhole);
+  });
+
+  it('list a started place’s medals with the map’s badges, and award them', () => {
+    const malta = LANDMARK_ROWS.filter((l) => l.countryCode === 'MT');
+    db().landmarkVisits.push({ mapId: HOME_MAP, landmarkId: malta[0].id, createdById: null, createdAt: new Date().toISOString() });
+    const { badges, newlyEarned } = mapBadges(HOME_MAP, { award: true });
+    expect(newlyEarned).toContain('collect-MT-bronze');
+    expect(badges.filter((b) => b.place === 'MT').map((b) => [b.key, b.tier, b.have, b.need])).toEqual([
+      ['collect-MT-bronze', 'bronze', 1, 1],
+      ['collect-MT-silver', 'silver', 1, 2],
+      ['collect-MT-gold', 'gold', 1, 3],
+    ]);
+    // Taken off: the bronze stays
+    db().landmarkVisits = db().landmarkVisits.filter((v) => v.landmarkId !== malta[0].id);
+    expect(mapBadges(HOME_MAP, { award: true }).badges.find((b) => b.key === 'collect-MT-bronze')).toMatchObject({ have: 1, earnedAt: expect.any(String) });
   });
 });
 

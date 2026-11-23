@@ -161,6 +161,19 @@ describe('drawShareCard', () => {
     expect(texts).not.toContain('never shown');
   });
 
+  // A country collection's card (24 Nov 2026): the medal in its metal where the map goes
+  it('draws a medal instead of the map, in its metal, with the metal’s name', async () => {
+    await drawShareCard({ kicker: 'Gold medal', title: 'Malta', medal: 'gold', stats: [{ value: 3, label: 'landmarks stamped' }] });
+    const ctx = contexts.at(-1);
+    const texts = textsDrawn(ctx);
+    expect(texts).toEqual(expect.arrayContaining(['GOLD MEDAL', 'Malta', 'GOLD', '3', 'landmarks stamped', 'myplanetview.com']));
+    // No map: no place's shape filled
+    expect(fillsOf(ctx, COUNTRY_SHAPES.FR)).toEqual([]);
+    const arcs = ctx.calls.filter((c) => c.name === 'arc');
+    expect(arcs).toHaveLength(2);
+    expect(ctx.calls.filter((c) => c.name === 'fill').map((c) => c.fillStyle)).toEqual(expect.arrayContaining([C.medals.gold.face, C.medals.gold.rim, ...C.ribbon]));
+  });
+
   it('leaves out the kicker when there’s none', async () => {
     await drawShareCard({ title: '2026 in travel' });
     expect(textsDrawn(contexts.at(-1))[0]).toBe('2026 in travel');

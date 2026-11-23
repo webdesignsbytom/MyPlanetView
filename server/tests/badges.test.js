@@ -1,5 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { BADGES, BADGE_KEYS, TRAVELLER_BADGE_GROUPS, badgeProgress, travellerBadges } from '../src/utils/badges.js';
+import {
+  BADGES,
+  BADGE_KEYS,
+  TRAVELLER_BADGE_GROUPS,
+  badgeProgress,
+  collectionKey,
+  collectionProgress,
+  collectionTiers,
+  parseCollectionKey,
+  travellerBadges,
+} from '../src/utils/badges.js';
 import { REGIONS } from '../src/utils/constants/regions.js';
 import { COUNTRIES } from '../prisma/seed/data/countries.js';
 
@@ -141,5 +151,101 @@ describe('badges on a map that splits the UK', () => {
     const trips = [{ travellerIds: ['t1'], countryCodes: ['XE', 'XC'], endDate: '2025-06-01' }];
     const countries = travellerBadges({ trips, travellerId: 't1', continentByCode: uk, splitUk: true }).find((b) => b.key === 'countries-1');
     expect(countries).toMatchObject({ have: 1, earned: true });
+  });
+});
+
+// The country collections (24 Nov 2026, the user's wish): bronze, silver and gold for a
+// quarter, half and all of a place's landmarks stamped in the passport
+describe('country collections', () => {
+  it('need a quarter, half and all of a place’s landmarks, rounded up', () => {
+    expect(collectionTiers(60)).toEqual([
+      { tier: 'bronze', need: 15 },
+      { tier: 'silver', need: 30 },
+      { tier: 'gold', need: 60 },
+    ]);
+    expect(collectionTiers(7)).toEqual([
+      { tier: 'bronze', need: 2 },
+      { tier: 'silver', need: 4 },
+      { tier: 'gold', need: 7 },
+    ]);
+  });
+
+  it('never let one stamp earn two tiers: a small place has fewer', () => {
+    expect(collectionTiers(1)).toEqual([{ tier: 'gold', need: 1 }]);
+    expect(collectionTiers(2)).toEqual([
+      { tier: 'silver', need: 1 },
+      { tier: 'gold', need: 2 },
+    ]);
+    expect(collectionTiers(3)).toEqual([
+      { tier: 'bronze', need: 1 },
+      { tier: 'silver', need: 2 },
+      { tier: 'gold', need: 3 },
+    ]);
+    expect(collectionTiers(0)).toEqual([]);
+    expect(collectionTiers(undefined)).toEqual([]);
+  });
+
+  it('have keys that read back, and no other key reads as one', () => {
+    expect(collectionKey('FR', 'gold')).toBe('collect-FR-gold');
+    expect(parseCollectionKey('collect-XE-bronze')).toEqual({ place: 'XE', tier: 'bronze' });
+    expect(parseCollectionKey('collect-FR-platinum')).toBeNull();
+    expect(parseCollectionKey('countries-5')).toBeNull();
+    expect(parseCollectionKey(undefined)).toBeNull();
+  });
+
+  it('list only the places started, or with a tier awarded, by code, each tier with its progress', () => {
+    const stamps = [{ countryCode: 'IT' }, { countryCode: 'IT' }, { countryCode: 'FR' }, { countryCode: 'VA' }];
+    const totals = new Map([['IT', 8], ['FR', 4], ['VA', 1], ['ES', 6], ['JP', 3]]);
+    const progress = collectionProgress({ stamps, totals, keep: ['JP'] });
+    expect(progress.map((b) => b.key)).toEqual([
+      'collect-FR-bronze', 'collect-FR-silver', 'collect-FR-gold',
+      'collect-IT-bronze', 'collect-IT-silver', 'collect-IT-gold',
+      'collect-JP-bronze', 'collect-JP-silver', 'collect-JP-gold',
+      'collect-VA-gold',
+    ]);
+    expect(progress.find((b) => b.key === 'collect-IT-bronze')).toEqual({
+      key: 'collect-IT-bronze', group: 'collections', place: 'IT', tier: 'bronze', have: 2, need: 2, earned: true,
+    });
+    expect(progress.find((b) => b.key === 'collect-IT-gold')).toMatchObject({ have: 2, need: 8, earned: false });
+    expect(progress.find((b) => b.key === 'collect-JP-bronze')).toMatchObject({ have: 0, earned: false });
+    expect(progress.find((b) => b.key === 'collect-VA-gold')).toMatchObject({ have: 1, need: 1, earned: true });
+  });
+
+  it('leave out a place with no landmarks counted', () => {
+    expect(collectionProgress({ stamps: [{ countryCode: 'XN' }], totals: new Map() })).toEqual([]);
+  });
+
+  it('come after the fixed badges, with the World Heritage tiers up to 250', () => {
+    const progress = badgeProgress({
+      continentByCode,
+      stamps: [{ countryCode: 'FR', isUnesco: true }],
+      landmarkTotals: new Map([['FR', 2]]),
+    });
+    expect(progress.slice(-2).map((b) => b.key)).toEqual(['collect-FR-silver', 'collect-FR-gold']);
+    expect(progress.filter((b) => b.key.startsWith('unesco-')).map((b) => b.need)).toEqual([5, 25, 50, 100, 250]);
+    // Travellers have none: their badges come from trips, not stamps
+    expect(TRAVELLER_BADGE_GROUPS).not.toContain('collections');
+  });
+});
+
+// Life's One Shots (24 Nov 2026): each list's ticks, and the Big Five
+describe('Life’s One Shots badges', () => {
+  it('count each list’s ticks and the Big Five', () => {
+    const progress = badgeProgress({ continentByCode, oneShots: ['lion', 'leopard', 'african-elephant', 'african-buffalo', 'rhino', 'northern-lights', 'equator'] });
+    expect(of(progress, 'oneshots-wildlife-1')).toMatchObject({ group: 'oneShots', have: 1, need: 1, earned: true });
+    expect(of(progress, 'oneshots-wildlife-10')).toMatchObject({ have: 5, need: 10, earned: false });
+    expect(of(progress, 'oneshots-wonders-1').earned).toBe(true);
+    expect(of(progress, 'oneshots-journeys-5')).toMatchObject({ have: 1, need: 5 });
+    expect(of(progress, 'big-five')).toMatchObject({ have: 5, need: 5, earned: true });
+    expect(BADGES.filter((b) => b.group === 'oneShots').map((b) => b.key)).toEqual([
+      'oneshots-wildlife-1', 'oneshots-wildlife-10', 'oneshots-wildlife-25', 'oneshots-wildlife-50',
+      'oneshots-wonders-1', 'oneshots-wonders-5', 'oneshots-wonders-15',
+      'oneshots-journeys-1', 'oneshots-journeys-5', 'oneshots-journeys-15',
+      'big-five',
+    ]);
+  });
+
+  it('never go to one traveller', () => {
+    expect(TRAVELLER_BADGE_GROUPS).not.toContain('oneShots');
   });
 });

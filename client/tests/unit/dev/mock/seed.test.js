@@ -149,8 +149,10 @@ describe('the generated data', () => {
       expect(countryExists(lm.countryCode)).toBe(true);
       expect(Math.abs(lm.latitude)).toBeLessThanOrEqual(90);
       expect(lm.matchRadiusM).toBeGreaterThan(0);
+      expect(lm.wikidataId).toMatch(/^Q\d+$/);
     }
     expect(new Set(LANDMARK_ROWS.map((l) => l.id)).size).toBe(1366);
+    expect(new Set(LANDMARK_ROWS.map((l) => l.wikidataId)).size).toBe(1366);
   });
 
   it('has the 16 test photos and the four videos', () => {

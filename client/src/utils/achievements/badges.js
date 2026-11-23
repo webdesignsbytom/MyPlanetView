@@ -5,6 +5,7 @@
 import { INHABITED_CONTINENTS, REGIONS } from '@/utils/constants/regions';
 import { CONTINENT_LABELS } from '@/utils/map/countries';
 import { listNames } from './goals';
+import { collectionWords } from './collections';
 
 // The groups, in the order the suitcase shows them
 export const BADGE_GROUPS = [
@@ -13,6 +14,10 @@ export const BADGE_GROUPS = [
   { id: 'special', label: 'Special places' },
   { id: 'regions', label: 'Regions' },
   { id: 'landmarks', label: 'Landmarks' },
+  // Bronze, silver and gold per country (24 Nov 2026; utils/achievements/collections.js)
+  { id: 'collections', label: 'Country collections' },
+  // Life's One Shots (24 Nov 2026; utils/oneShots/)
+  { id: 'oneShots', label: 'Life’s One Shots' },
   { id: 'photos', label: 'Photos' },
   { id: 'themes', label: 'Monthly themes' },
 ];
@@ -67,6 +72,20 @@ const WORDS = {
   'landmarks-50': { name: '50 stamps', short: '50', description: '50 landmarks stamped in the passport.' },
   'unesco-5': { name: 'Five World Heritage Sites', short: '5', description: '5 UNESCO World Heritage Sites stamped.' },
   'unesco-25': { name: '25 World Heritage Sites', short: '25', description: '25 UNESCO World Heritage Sites stamped.' },
+  'unesco-50': { name: '50 World Heritage Sites', short: '50', description: '50 UNESCO World Heritage Sites stamped.' },
+  'unesco-100': { name: '100 World Heritage Sites', short: '100', description: '100 UNESCO World Heritage Sites stamped.' },
+  'unesco-250': { name: '250 World Heritage Sites', short: '250', description: '250 UNESCO World Heritage Sites stamped.' },
+  'oneshots-wildlife-1': { name: 'First sighting', short: '1', description: 'A first animal ticked in Life’s One Shots.' },
+  'oneshots-wildlife-10': { name: 'Ten animals', short: '10', description: '10 animals seen, ticked in Life’s One Shots.' },
+  'oneshots-wildlife-25': { name: '25 animals', short: '25', description: '25 animals seen, ticked in Life’s One Shots.' },
+  'oneshots-wildlife-50': { name: '50 animals', short: '50', description: '50 animals seen, ticked in Life’s One Shots.' },
+  'oneshots-wonders-1': { name: 'First wonder', short: '1', description: 'A first of nature’s wonders seen: the northern lights, a volcano, a geyser…' },
+  'oneshots-wonders-5': { name: 'Five wonders', short: '5', description: '5 of nature’s wonders seen.' },
+  'oneshots-wonders-15': { name: '15 wonders', short: '15', description: '15 of nature’s wonders seen.' },
+  'oneshots-journeys-1': { name: 'First great journey', short: '1', description: 'A first great journey or feat done: a famous train, a trek, a line on the globe…' },
+  'oneshots-journeys-5': { name: 'Five journeys', short: '5', description: '5 great journeys and feats done.' },
+  'oneshots-journeys-15': { name: '15 journeys', short: '15', description: '15 great journeys and feats done.' },
+  'big-five': { name: 'The Big Five', short: '5', description: 'A lion, a leopard, an elephant, a Cape buffalo and a rhino, all seen.' },
   'photos-100': { name: '100 photos', short: '100', description: '100 photos on the map.' },
   'photos-1000': { name: '1,000 photos', short: '1k', description: '1,000 photos on the map.' },
   'themes-3': { name: 'Three themes', short: '3', description: 'Photos entered in 3 monthly themes.' },
@@ -76,7 +95,7 @@ const WORDS = {
 
 /** `{ name, description, short? }` for a badge key (`short`: the number on its sticker). */
 export function badgeWords(key) {
-  return WORDS[key] || { name: key.replace(/-/g, ' '), description: '' };
+  return WORDS[key] || collectionWords(key) || { name: key.replace(/-/g, ' '), description: '' };
 }
 
 /** The group's label ("Regions"). */

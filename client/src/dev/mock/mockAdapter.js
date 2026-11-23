@@ -99,6 +99,9 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   // Collecting (docs/API.md "Collecting")
   'PUT /api/maps/:mapId/landmarks/:landmarkId/been',
   'DELETE /api/maps/:mapId/landmarks/:landmarkId/been',
+  // Life's One Shots (docs/API.md "Life's One Shots")
+  'PUT /api/maps/:mapId/one-shots/:itemKey',
+  'DELETE /api/maps/:mapId/one-shots/:itemKey',
   // Strings between places (docs/API.md "Strings")
   'POST /api/maps/:mapId/strings',
   'POST /api/maps/:mapId/strings/auto',

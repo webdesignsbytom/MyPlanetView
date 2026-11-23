@@ -35,6 +35,7 @@ import { registerMapDesignRoutes } from './handlers/mapDesigns';
 import { registerGiftRoutes } from './handlers/gifts';
 import { registerImportRoutes } from './handlers/imports';
 import { registerCollectingRoutes } from './handlers/collecting';
+import { registerOneShotRoutes } from './handlers/oneShots';
 import { registerMapStringRoutes } from './handlers/mapStrings';
 import { registerReferralRoutes } from './handlers/referrals';
 import { registerGuessGameRoutes } from './handlers/guessGames';
@@ -69,6 +70,7 @@ export function installMock() {
   registerGiftRoutes();
   registerImportRoutes();
   registerCollectingRoutes();
+  registerOneShotRoutes();
   registerMapStringRoutes();
   registerReferralRoutes();
   registerGuessGameRoutes();

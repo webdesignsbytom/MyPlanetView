@@ -43,7 +43,7 @@ describe('MapToolbar', () => {
     useFullscreen.mockReturnValue({ supported: false, active: false, toggle: vi.fn() });
   });
 
-  it('is the map’s tools, thirteen stamps with Home on wide screens, Tips last', () => {
+  it('is the map’s tools, fourteen stamps with Home on wide screens, Tips last', () => {
     const { nav, stamps } = open();
     expect(nav.getAttribute('aria-label')).toBe('Map tools');
     expect(stamps()).toEqual([
@@ -55,6 +55,8 @@ describe('MapToolbar', () => {
       'Where to go next',
       'Timeline',
       'Badges and goals',
+      // Life's One Shots (24 Nov 2026)
+      'Life’s One Shots',
       'Play my world',
       'Photo album',
       'Share this map',
@@ -91,7 +93,7 @@ describe('MapToolbar', () => {
     expect(stamps()).not.toContain('Your maps');
     expect(stamps()).not.toContain('Share this map');
     expect(stamps()).not.toContain('Home page');
-    expect(stamps().length).toBe(10);
+    expect(stamps().length).toBe(11);
   });
 
   it('reads the map’s counts as the statistics stamp’s description', () => {
@@ -135,7 +137,7 @@ describe('the phone’s menu', () => {
     expect(toggle().getAttribute('aria-expanded')).toBe('true');
     expect(menu().hidden).toBe(false);
     const tools = [...menu().querySelectorAll('ul button')].map((b) => b.textContent);
-    expect(tools).toEqual(['Your maps', 'Country list', 'Trips', 'Where to go next', 'Timeline', 'Badges and goals', 'Play my world', 'Photo album', 'Share this map', 'Map settings', 'Tips']);
+    expect(tools).toEqual(['Your maps', 'Country list', 'Trips', 'Where to go next', 'Timeline', 'Badges and goals', 'Life’s One Shots', 'Play my world', 'Photo album', 'Share this map', 'Map settings', 'Tips']);
   });
 
   it('puts the statistics across the top, named by its label and described by the counts', () => {

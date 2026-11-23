@@ -1,0 +1,8 @@
+{
+  "name": "Summer Palace",
+  "latitude": 39.9975,
+  "longitude": 116.2689,
+  "maps": ["CN"],
+  "landmark": "Q4132",
+  "onMap": false
+}

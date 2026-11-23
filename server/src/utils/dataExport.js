@@ -187,6 +187,18 @@ export function exportMapView(rows, { userId }) {
       source: f.source,
     })),
     guessGames: (map.guessGames ?? []).map((g) => ({ code: g.code, title: g.title, photoIds: g.photoIds, made: iso(g.createdAt) })),
+    // Life's One Shots ticked (the item's key names it: utils/constants/oneShots.js)
+    oneShots: (map.oneShots ?? []).map((o) => ({
+      item: o.itemKey,
+      seenOn: day(o.seenOn),
+      datePrecision: o.datePrecision,
+      countryCode: o.countryCode,
+      notes: o.notes,
+      source: o.source,
+      photoId: o.photoId,
+      travellerIds: (o.travellers ?? []).map((t) => t.travellerId),
+      ticked: iso(o.createdAt),
+    })),
     linkAccess: map.linkAccess,
     shareCode: map.shareCode,
     graceUntil: iso(map.graceUntil),

@@ -1,8 +1,10 @@
 import React, { useId } from 'react';
 // Components
 import BadgeSticker from './BadgeSticker';
+import CountryCollections from './CountryCollections';
 // Utils
 import { BADGE_GROUPS, badgeGroupLabel } from '@/utils/achievements/badges';
+import { COLLECTION_GROUP } from '@/utils/achievements/collections';
 
 /**
  * The map's site badges as luggage stickers on an old suitcase (docs/FEATURE-PLAN.md,
@@ -12,8 +14,10 @@ import { BADGE_GROUPS, badgeGroupLabel } from '@/utils/achievements/badges';
  * doesn't know yet still shows, last, under its own name. `note` replaces the line under
  * the heading (a traveller's suitcase says where their badges come from); `children` sit
  * between the heading and the case (the panel's "whose badges" switch).
+ * The country collections (24 Nov 2026) are a row of medals per place started
+ * (CountryCollections); `onShareCollection(place)` shares a place's best medal as a picture.
  */
-function BadgeSuitcase({ badges, note = null, children = null }) {
+function BadgeSuitcase({ badges, note = null, onShareCollection = null, children = null }) {
   const headingId = useId();
   const earned = badges.filter((b) => b.earnedAt || b.earned).length;
   const known = BADGE_GROUPS.map((g) => g.id);
@@ -42,11 +46,15 @@ function BadgeSuitcase({ badges, note = null, children = null }) {
               >
                 {badgeGroupLabel(group.id)}
               </h4>
-              <ul className='grid grid-cols-3 gap-x-2 gap-y-3'>
-                {group.badges.map((badge, index) => (
-                  <BadgeSticker key={badge.key} badge={badge} index={index} />
-                ))}
-              </ul>
+              {group.id === COLLECTION_GROUP ? (
+                <CountryCollections badges={group.badges} onShare={onShareCollection} />
+              ) : (
+                <ul className='grid grid-cols-3 gap-x-2 gap-y-3'>
+                  {group.badges.map((badge, index) => (
+                    <BadgeSticker key={badge.key} badge={badge} index={index} />
+                  ))}
+                </ul>
+              )}
             </section>
           ))}
         </div>

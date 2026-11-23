@@ -7,6 +7,7 @@ import { test as base, expect } from '@playwright/test';
 import { COOKIE_POLICY_NAME } from '../../src/utils/constants/constants.js';
 import { TIPS_SHOWN_KEY } from '../../src/utils/map/mapTips.js';
 import { QUICK_FILL_SHOWN_KEY } from '../../src/utils/map/quickFill.js';
+import { MAP_SETTINGS_STORAGE_KEY } from '../../src/utils/map/mapSettings.js';
 import { REGION_CODES } from '../../src/utils/map/regionPlaces.js';
 
 // How many regions there are (Bali, the Azores…): the stats say "Regions 1 of <this>"
@@ -29,8 +30,12 @@ export const test = base.extend({
   // "Where have you been?" (QuickFillDialog) opens over a new map once, so tests start as if
   // it had shown already this visit; quickFill.spec.js turns this on to see it
   quickFill: [false, { option: true }],
+  // The celebration (CelebrationDialog) covers the map after a landmark's first tick or a
+  // country's first visit, so tests start with the viewer's setting off (this browser's copy:
+  // the mock's profile has none, so it stands); celebration.spec.js turns this on to see it
+  celebrations: [false, { option: true }],
 
-  page: async ({ page, mapTips, quickFill }, provide) => {
+  page: async ({ page, mapTips, quickFill, celebrations }, provide) => {
     // Vite's hot-reload socket, answered here and kept silent: a source file saved during
     // a run would otherwise reload the page in the middle of a test
     // (the app opens no other socket; Vite's is ws://<host>/?token=…)
@@ -56,6 +61,16 @@ export const test = base.extend({
           // Storage blocked: the tips may show
         }
       }, TIPS_SHOWN_KEY);
+    }
+    if (!celebrations) {
+      await page.addInitScript((key) => {
+        try {
+          const saved = JSON.parse(localStorage.getItem(key) || '{}') || {};
+          localStorage.setItem(key, JSON.stringify({ ...saved, showCelebrations: false }));
+        } catch {
+          // Storage blocked: a celebration may show
+        }
+      }, MAP_SETTINGS_STORAGE_KEY);
     }
     if (!quickFill) {
       await page.addInitScript((key) => {

@@ -46,6 +46,7 @@ export const LANDMARK_ROWS = LANDMARKS.map((lm) => {
     pinY: Math.round(pin.y * 10) / 10,
     matchRadiusM: lm.matchRadiusM,
     isUnesco: lm.isUnesco,
+    wikidataId: lm.wikidataId,
     // As the server's list: a UK landmark's nation, for maps that split the UK
     ...(lm.countryCode === UK ? { nation: ukNationAt(lm.latitude, lm.longitude) } : {}),
   };

@@ -298,6 +298,9 @@ describe('reference data', () => {
     const landmarks = data(await anon().get('/api/landmarks?country=FR')).landmarks;
     expect(landmarks.some((l) => l.name === 'Eiffel Tower')).toBe(true);
     expect(landmarks.every((l) => l.countryCode === 'FR')).toBe(true);
+    // Each with its Wikidata item: the client finds the landmark's 3D model by it (the
+    // celebration screen, 24 Nov 2026)
+    expect(landmarks.every((l) => /^Q\d+$/.test(l.wikidataId))).toBe(true);
   });
 });
 

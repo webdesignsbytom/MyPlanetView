@@ -1,0 +1,8 @@
+{
+  "name": "El Escorial",
+  "latitude": 40.58917,
+  "longitude": -4.14778,
+  "maps": ["ES"],
+  "landmark": "Q5821857",
+  "onMap": false
+}

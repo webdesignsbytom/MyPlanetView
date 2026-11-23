@@ -1,0 +1,8 @@
+{
+  "name": "Sanssouci",
+  "latitude": 52.4,
+  "longitude": 13.03333,
+  "maps": ["DE"],
+  "landmark": "Q852427",
+  "onMap": false
+}

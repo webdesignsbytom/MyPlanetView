@@ -236,6 +236,11 @@ export const clearStampPhoto = (mapId, landmarkId) =>
   data(client.delete(`${MAPS_API}/${enc(mapId)}/passport/stamps/${enc(landmarkId)}/photo`));
 // -> { badges, newlyEarned } (the owner and editors award as they load)
 export const getBadges = (where) => data(client.get(mapOrShared(where, 'badges')));
+// Life's One Shots (docs/API.md "Life's One Shots"): the ticks (and, for editors, what the
+// flights suggest), one ticked or changed (`{ oneShot, created, countryCode }`), one taken off
+export const getOneShots = (where) => data(client.get(mapOrShared(where, 'one-shots')));
+export const saveOneShot = (mapId, itemKey, body) => data(client.put(`${MAPS_API}/${enc(mapId)}/one-shots/${enc(itemKey)}`, body));
+export const deleteOneShot = (mapId, itemKey) => data(client.delete(`${MAPS_API}/${enc(mapId)}/one-shots/${enc(itemKey)}`));
 // -> { goals, newlyAchieved }
 export const getGoals = (where) => data(client.get(mapOrShared(where, 'goals')));
 export const createGoal = (mapId, body) => data(client.post(`${MAPS_API}/${enc(mapId)}/goals`, body));

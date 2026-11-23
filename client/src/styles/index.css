@@ -74,6 +74,14 @@
   --poster-orange: #e05a0c;
   --poster-gold-dark: #665426;
   --poster-gold-light: #ba9f0b;
+  /* The country collections' medals (components/achievements/CollectionMedal.jsx; 24 Nov
+     2026): each metal's disc and its darker rim, under poster ink */
+  --medal-bronze: #c8874f;
+  --medal-bronze-edge: #7a4520;
+  --medal-silver: #c3c8cf;
+  --medal-silver-edge: #646b74;
+  --medal-gold: #e3b53d;
+  --medal-gold-edge: #8a6a12;
   --poster-paper: #dcbc90;
   --poster-brown: #97572b;
   --poster-ink: #000000;
@@ -383,6 +391,12 @@
   --poster-orange: #717171;
   --poster-gold-dark: #555555;
   --poster-gold-light: #9a9a9a;
+  --medal-bronze: #919191;
+  --medal-bronze-edge: #4e4e4e;
+  --medal-silver: #c7c7c7;
+  --medal-silver-edge: #6a6a6a;
+  --medal-gold: #b6b6b6;
+  --medal-gold-edge: #6a6a6a;
   --poster-paper: #e4e4e4;
   --poster-brown: #000000;
   --poster-ink: #000000;
@@ -544,6 +558,12 @@
   --color-poster-orange: var(--poster-orange);
   --color-poster-gold-dark: var(--poster-gold-dark);
   --color-poster-gold-light: var(--poster-gold-light);
+  --color-medal-bronze: var(--medal-bronze);
+  --color-medal-bronze-edge: var(--medal-bronze-edge);
+  --color-medal-silver: var(--medal-silver);
+  --color-medal-silver-edge: var(--medal-silver-edge);
+  --color-medal-gold: var(--medal-gold);
+  --color-medal-gold-edge: var(--medal-gold-edge);
   --color-poster-paper: var(--poster-paper);
   --color-poster-brown: var(--poster-brown);
   --color-poster-ink: var(--poster-ink);
@@ -569,6 +589,15 @@
   --animate-stamp-in: stamp-in 0.32s cubic-bezier(0.3, 1.4, 0.5, 1) both;
   /* The next tip sliding in (MapTipsDialog; only with motion-safe) */
   --animate-tip-in: tip-in 0.24s ease-out both;
+  /* The celebration screen (components/map/celebration/; only with motion-safe): each star
+     bursts out to its place (--star-x, --star-y, after --star-delay) and then twinkles, the
+     sunburst behind turns, the model pops up and the passport stamp comes down on the ticket */
+  --animate-star-burst:
+    star-burst 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) var(--star-delay, 0ms) both,
+    star-twinkle 1.8s ease-in-out calc(var(--star-delay, 0ms) + 0.9s) infinite;
+  --animate-rays-turn: rays-turn 60s linear infinite;
+  --animate-model-pop: model-pop 0.7s cubic-bezier(0.3, 1.5, 0.5, 1) 0.15s both;
+  --animate-stamp-slam: stamp-slam 0.42s cubic-bezier(0.55, 0, 0.7, 1.35) 0.75s both;
 
   /* font sizes */
   --text-2xs: 0.6875rem; /* 11px: captions, chips, field hints */
@@ -616,6 +645,62 @@
     to {
       opacity: 1;
       transform: translateX(0);
+    }
+  }
+
+  @keyframes star-burst {
+    from {
+      opacity: 0;
+      transform: translate(0, 0) scale(0.2) rotate(0deg);
+    }
+    20% {
+      opacity: 1;
+    }
+    to {
+      opacity: 1;
+      transform: translate(var(--star-x), var(--star-y)) scale(1) rotate(var(--star-spin));
+    }
+  }
+
+  @keyframes star-twinkle {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  @keyframes rays-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes model-pop {
+    from {
+      opacity: 0;
+      transform: translateY(2rem) scale(0.5);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(-0.5rem) scale(1.08);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes stamp-slam {
+    from {
+      opacity: 0;
+      transform: scale(2.4) rotate(-14deg);
+    }
+    to {
+      opacity: 1;
+      transform: none;
     }
   }
 }
