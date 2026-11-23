@@ -42,6 +42,8 @@ function TripCountdownTag({ trips }) {
 
   if (!shown) return null;
   const when = whenWords(guide, trip.startDate);
+  const canOpen = trip.canOpen !== false;
+  const hasDesk = countries.length > 0;
   const close = () => {
     const key = `${trip.id}:${today}`;
     try {
@@ -57,16 +59,24 @@ function TripCountdownTag({ trips }) {
         <span className='grid gap-1.5'>
           <span className='font-semibold'>{countdownWords(trip.title, days)}</span>
           {when ? <span className='text-xs'>{when}</span> : null}
-          <span className='grid grid-flow-col justify-start items-center gap-3'>
-            {trip.canOpen === false ? null : (
-              <Link to={tripPath(trip.id)} className='text-xs font-semibold text-poster-red-deep underline underline-offset-2'>
-                Open the trip
-              </Link>
-            )}
-            {countries.length ? <TravelDesk inMapPanel countryCodes={countries} trip={place} /> : null}
-          </span>
         </span>
         <CloseStamp small onClick={close} label='Close: your next trip' />
+        {/* Two columns under the words, across the whole tag: the trip's link on the left, the
+            Travel Desk in the bottom right corner (23 Nov 2026, the user's wish) */}
+        {canOpen || hasDesk ? (
+          <span className='col-span-2 grid grid-cols-2 items-center gap-3' data-trip-countdown-actions>
+            {canOpen ? (
+              <Link to={tripPath(trip.id)} className='justify-self-start text-xs font-semibold text-poster-red-deep underline underline-offset-2'>
+                Open the trip
+              </Link>
+            ) : null}
+            {hasDesk ? (
+              <span className='col-start-2 justify-self-end' data-trip-countdown-desk>
+                <TravelDesk inMapPanel countryCodes={countries} trip={place} />
+              </span>
+            ) : null}
+          </span>
+        ) : null}
       </span>
     </LuggageTag>
   );

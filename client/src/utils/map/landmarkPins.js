@@ -1,5 +1,5 @@
-// Which landmark pins the map draws at each zoom. There are 1,332 landmarks (16 Nov 2026:
-// the 177 plus the UNESCO World Heritage Sites), 58 in Italy alone, so drawing them all
+// Which landmark pins the map draws at each zoom. There are 1,356 landmarks (23 Nov 2026:
+// the 201 of landmarks.js plus the UNESCO World Heritage Sites), 58 in Italy alone, so drawing them all
 // would bury the map in dots and make every zoom re-render them. Instead each landmark gets
 // the zoom it appears from, worked out once for the whole list:
 //   - in priority order (below), a pin appears once it's at least PIN_SPACING / zoom map

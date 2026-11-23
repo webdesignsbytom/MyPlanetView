@@ -4,9 +4,9 @@ import client from './client';
 
 const data = (promise) => promise.then((res) => res.data?.data ?? {});
 
-/** -> `{ onThisDay }` */
+/** -> `{ onThisDay, tripShare }` ("Welcome home", the day after a trip ends) */
 export const getEmailPreferences = () => data(client.get('/api/users/email-preferences'));
-/** `{ onThisDay }` -> `{ onThisDay }` */
+/** `{ onThisDay?, tripShare? }` (either or both) -> `{ onThisDay, tripShare }` */
 export const saveEmailPreferences = (body) => data(client.put('/api/users/email-preferences', body));
-/** An email's unsubscribe link (no sign-in): `{ u, t }` -> `{ onThisDay: false }` */
+/** An email's unsubscribe link (no sign-in): `{ u, t, l? }` -> `{ onThisDay: false }`, or `{ tripShare: false }` for `l: 'trips'` */
 export const unsubscribeFromEmails = (body) => data(client.post('/api/emails/unsubscribe', body));

@@ -26,7 +26,7 @@ const TABS = [
 // the user's wish): the owner and co-owners choose it (`onMapStyleChange`, also kept as their
 // own for maps without one) and everyone who opens the map sees it, share links too; anyone
 // else's choice is for their own maps. The rest is yours alone, on every map. The owner and
-// co-owners also set the map's own design at the top of the same tab (MapDesignSection,
+// co-owners also set the map's own design under the map style (MapDesignSection,
 // docs/API.md "Map designs"): one per map style, so the section is the map style's own; and,
 // for editors,
 // this map's travellers and its photos as a zip ("Print or download"); for the owner and
@@ -115,9 +115,6 @@ function SettingsPanel({
       {/* Both panels stay on the page (the closed one hidden), so every tab's
           aria-controls has its panel, and a half-filled map form survives a look at the other tab */}
       <div {...panelProps('view')} hidden={showTabs && tab !== 'view'} className='grid gap-5'>
-        {map && canManage && onDesignChange ? (
-          <MapDesignSection key={mapStyle} map={map} styleId={mapStyle} onDesignChange={onDesignChange} preview={designPreview} />
-        ) : null}
         {onMapStyleChange ? (
           <MapStylePicker
             value={mapStyle}
@@ -131,6 +128,10 @@ function SettingsPanel({
             onChange={(style) => onChangeSetting('style', style)}
           />
         )}
+        {/* Under the style it belongs to (23 Nov 2026, the user's wish: it was at the top) */}
+        {map && canManage && onDesignChange ? (
+          <MapDesignSection key={mapStyle} map={map} styleId={mapStyle} onDesignChange={onDesignChange} preview={designPreview} />
+        ) : null}
         <MapTypePicker value={settings.mapType} onChange={(type) => onChangeSetting('mapType', type)} />
         <LandmarkPinsPicker value={settings.landmarkPins} onChange={(mode) => onChangeSetting('landmarkPins', mode)} />
         <MapSettingsToggles settings={settings} onChange={onChangeSetting} />
@@ -143,6 +144,8 @@ function SettingsPanel({
             initial={map}
             canRename={canManage}
             splitUkNote
+            // Each traveller's optional date of birth: asked here, never at sign-up (23 Nov 2026)
+            askBirthDate
             submitLabel='Save map'
             saved={mapSaved}
             onSavedChange={setMapSaved}

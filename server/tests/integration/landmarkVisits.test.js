@@ -48,6 +48,40 @@ describe('landmarks ticked "been here"', () => {
     expect((await owner.agent.put(been(owner, '00000000-0000-4000-8000-000000000000'))).status).toBe(404);
   });
 
+  // 23 Nov 2026, the user's decision: "both methods should get a stamp in the passport"
+  it('stamps the passport, with no photo, and counts as a stamp for the stats and badges', async () => {
+    expect((await owner.agent.put(been(owner, colosseum.id))).status).toBe(200);
+    const passport = data(await owner.agent.get(`/api/maps/${map.id}/passport`)).passport;
+    const stamp = passport.pages.find((p) => p.countryCode === 'IT').stamps.find((s) => s.landmarkId === colosseum.id);
+    expect(stamp).toMatchObject({ name: 'Colosseum', ticked: true, photo: null, photoCount: 0, stampedOn: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) });
+    expect(passport.totals.landmarks).toBe(1);
+    expect(passport.totals.unesco).toBe(colosseum.isUnesco ? 1 : 0);
+    // The account each traveller is linked to stays out of the reply
+    expect(passport.travellers.every((t) => !('userId' in t))).toBe(true);
+    // A viewer's passport has it too
+    const forViewer = data(await viewer.agent.get(`/api/maps/${map.id}/passport`)).passport;
+    expect(forViewer.totals.landmarks).toBe(1);
+
+    const detail = data(await owner.agent.get(`/api/maps/${map.id}`)).map;
+    // Stamped by a photo: none; ticked: the Colosseum (the map marks both)
+    expect(detail.stampedLandmarkIds).toEqual([]);
+    expect(detail.tickedLandmarkIds).toEqual([colosseum.id]);
+    expect(detail.stats.landmarks).toBe(1);
+    const { badges } = data(await owner.agent.get(`/api/maps/${map.id}/badges`));
+    expect(badges.find((b) => b.key === 'landmarks-1')).toMatchObject({ have: 1, need: 1, earnedAt: expect.any(String) });
+  });
+
+  it('is in the passport of the traveller whose account ticked it, never another’s', async () => {
+    await owner.agent.patch(`/api/maps/${map.id}`).send({ groupType: 'FAMILY' });
+    const partner = data(await owner.agent.post(`/api/maps/${map.id}/travellers`).send({ name: 'Partner' })).traveller;
+    const { travellers } = data(await owner.agent.get(`/api/maps/${map.id}`)).map;
+    const mine = travellers.find((t) => t.userId === owner.user.id);
+    const stampsOf = async (travellerId) =>
+      data(await owner.agent.get(`/api/maps/${map.id}/passport?traveller=${travellerId}`)).passport.pages.flatMap((p) => p.stamps.map((s) => s.landmarkId));
+    expect(await stampsOf(mine.id)).toEqual([colosseum.id]);
+    expect(await stampsOf(partner.id)).toEqual([]);
+  });
+
   it('goes in "Your data"', async () => {
     await owner.agent.put(been(owner, colosseum.id));
     const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map;

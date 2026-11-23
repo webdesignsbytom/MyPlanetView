@@ -23,7 +23,9 @@ function FormField({
 
   // Inject id + aria props into the child input, keeping any description and invalid mark the
   // input was given itself (a note elsewhere on the page: the admin users page's locked role)
-  const describedBy = [ownProps.ariaDescribedBy, hintId, errorId].filter(Boolean).join(' ') || undefined;
+  // Each id once: an input may already name the field's own error (the reset password form)
+  const ids = [ownProps.ariaDescribedBy, hintId, errorId].filter(Boolean).join(' ').split(/\s+/).filter(Boolean);
+  const describedBy = [...new Set(ids)].join(' ') || undefined;
   const child = React.isValidElement(children)
     ? React.cloneElement(children, {
         id,

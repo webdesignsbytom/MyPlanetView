@@ -1,7 +1,19 @@
 // The richer travel stats (src/utils/travelStats.js), pure; and the inverse projection they
 // read the places' pins with.
 import { describe, expect, it } from 'vitest';
-import { daysAway, distanceKm, furthestFromHome, homeOf, travelExtras, tripDays, tripDistanceKm } from '../src/utils/travelStats.js';
+import {
+  daysAway,
+  daysByPlace,
+  daysByYear,
+  distanceKm,
+  furthestFromHome,
+  homeOf,
+  lifeAwayShare,
+  longestTrip,
+  travelExtras,
+  tripDays,
+  tripDistanceKm,
+} from '../src/utils/travelStats.js';
 import { positionFromMap, projectToMap } from '../src/utils/projection.js';
 
 const LONDON = { latitude: 51.5074, longitude: -0.1278 };
@@ -59,6 +71,96 @@ describe('days away', () => {
   });
 });
 
+// Time away in more detail (23 Nov 2026, the user's wish)
+describe('days away each year', () => {
+  it('splits a trip over New Year between the years, newest first, a shared day once', () => {
+    expect(
+      daysByYear([
+        { startDate: '2024-12-28', endDate: '2025-01-03' },
+        { startDate: '2025-01-02', endDate: '2025-01-05' },
+        { startDate: '2023-08-01', endDate: '2023-08-01' },
+        { title: 'undated' },
+      ]),
+    ).toEqual([
+      { year: 2025, days: 5 },
+      { year: 2024, days: 4 },
+      { year: 2023, days: 1 },
+    ]);
+    expect(daysByYear([])).toEqual([]);
+  });
+  it('counts a leap year’s whole year', () => {
+    expect(daysByYear([{ startDate: '2024-01-01', endDate: '2024-12-31' }])).toEqual([{ year: 2024, days: 366 }]);
+  });
+});
+
+describe('days in each place', () => {
+  it('gives a trip to one place all its days, however its stops are dated', () => {
+    const trip = { startDate: '2025-07-02', endDate: '2025-07-16', stops: [{ position: 0, countryCode: 'IT', arriveOn: '2025-07-02' }, { position: 1, countryCode: 'IT' }] };
+    expect(daysByPlace([trip])).toEqual([{ countryCode: 'IT', days: 15 }]);
+  });
+  it('gives each place its stops’ days on a trip to several, the travel day in both', () => {
+    const trip = {
+      startDate: '2025-05-01',
+      endDate: '2025-05-10',
+      stops: [
+        { position: 0, countryCode: 'FR', arriveOn: '2025-05-01', leaveOn: '2025-05-04' },
+        // Only its arrival: until the next stop's arrival
+        { position: 1, countryCode: 'ES', arriveOn: '2025-05-04' },
+        // Undated: left out
+        { position: 2, countryCode: 'AD' },
+        // Only its arrival, the last: until the trip ends
+        { position: 3, countryCode: 'PT', arriveOn: '2025-05-08' },
+      ],
+    };
+    expect(daysByPlace([trip])).toEqual([
+      { countryCode: 'ES', days: 5 },
+      { countryCode: 'FR', days: 4 },
+      { countryCode: 'PT', days: 3 },
+    ]);
+  });
+  it('adds up a place over several trips, a day two trips share once, most days first', () => {
+    const trips = [
+      { startDate: '2024-03-01', endDate: '2024-03-03', stops: [{ position: 0, countryCode: 'FR' }] },
+      { startDate: '2024-03-03', endDate: '2024-03-04', stops: [{ position: 0, countryCode: 'FR' }] },
+      { startDate: '2025-01-01', endDate: '2025-01-04', stops: [{ position: 0, countryCode: 'BE' }] },
+      // No stops, or no dates: nowhere to count
+      { startDate: '2025-02-01', endDate: '2025-02-02', stops: [] },
+      { stops: [{ position: 0, countryCode: 'DE' }] },
+    ];
+    expect(daysByPlace(trips)).toEqual([
+      { countryCode: 'BE', days: 4 },
+      { countryCode: 'FR', days: 4 },
+    ]);
+  });
+});
+
+describe('the share of a life spent away', () => {
+  it('is the days away over the days since birth, both included, to one decimal', () => {
+    // Born 1 Jan 2000, today 31 Dec 2009: 3,653 days alive
+    expect(lifeAwayShare(365, '2000-01-01', new Date('2009-12-31T12:00:00Z'))).toBe(10);
+    expect(lifeAwayShare(100, new Date('2000-01-01T00:00:00Z'), new Date('2009-12-31T00:00:00Z'))).toBe(2.7);
+    expect(lifeAwayShare(0, '2000-01-01', new Date('2009-12-31'))).toBe(0);
+  });
+  it('is never more than all of it, and null without a date of birth or with one after today', () => {
+    expect(lifeAwayShare(50, '2026-11-20', new Date('2026-11-23'))).toBe(100);
+    expect(lifeAwayShare(10, null, new Date('2026-11-23'))).toBeNull();
+    expect(lifeAwayShare(10, '2027-01-01', new Date('2026-11-23'))).toBeNull();
+  });
+});
+
+describe('the longest trip', () => {
+  it('is the one with the most days, the first of equals, or none', () => {
+    const trips = [
+      { id: 'a', title: 'Weekend', startDate: '2025-01-01', endDate: '2025-01-02' },
+      { id: 'b', title: 'Big one', startDate: '2025-03-01', endDate: '2025-03-20' },
+      { id: 'c', title: 'Also big', startDate: '2025-06-01', endDate: '2025-06-20' },
+      { id: 'd', title: 'Undated' },
+    ];
+    expect(longestTrip(trips)).toEqual({ tripId: 'b', title: 'Big one', days: 20 });
+    expect(longestTrip([{ id: 'd' }])).toBeNull();
+  });
+});
+
 describe('distance travelled', () => {
   const trip = {
     stops: [
@@ -101,7 +203,7 @@ describe('furthest from home', () => {
 describe('travelExtras', () => {
   it('puts them together', () => {
     const extras = travelExtras({
-      completedTrips: [{ startDate: '2025-06-01', endDate: '2025-06-07', stops: [{ position: 0, countryCode: 'FR' }] }],
+      completedTrips: [{ id: 't1', title: 'Paris', startDate: '2025-06-01', endDate: '2025-06-07', stops: [{ position: 0, countryCode: 'FR' }] }],
       visitedCodes: ['FR', 'GB'],
       positions,
       homeCountryCode: 'GB',
@@ -109,6 +211,9 @@ describe('travelExtras', () => {
     expect(extras).toEqual({
       homeCountryCode: 'GB',
       daysAway: 7,
+      daysByYear: [{ year: 2025, days: 7 }],
+      daysByPlace: [{ countryCode: 'FR', days: 7 }],
+      longestTrip: { tripId: 't1', title: 'Paris', days: 7 },
       distanceKm: Math.round(2 * distanceKm(LONDON, PARIS)),
       furthest: { countryCode: 'FR', km: Math.round(distanceKm(LONDON, PARIS)) },
     });

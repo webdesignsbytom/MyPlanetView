@@ -171,6 +171,35 @@ test.describe('Moments', () => {
     await expectStats(page, '9 countries, 2 continents, 16 photos');
   });
 
+  test('the arrow on the Moments heading folds them away, on every ticket for the visit', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    const spain = await openCountry(page, 'Spain');
+    const moments = momentsIn(spain);
+    const toggle = moments.getByRole('heading', { name: 'Moments' }).getByRole('button', { name: 'Moments' });
+    const flamenco = moments.getByRole('article', { name: 'Saw flamenco in Granada' });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(flamenco).toBeVisible();
+    await expect(moments.getByRole('button', { name: 'Add a moment' })).toBeVisible();
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(flamenco).toBeHidden();
+    await expect(moments.getByRole('button', { name: 'Add a moment' })).toBeHidden();
+    // The photos below are still there
+    await expect(spain.getByRole('heading', { name: 'Photos' })).toBeVisible();
+
+    // Another country's ticket opens folded too, and opens with the arrow
+    const france = await openCountry(page, 'France');
+    const franceMoments = momentsIn(france);
+    const franceToggle = franceMoments.getByRole('heading', { name: 'Moments' }).getByRole('button', { name: 'Moments' });
+    const engaged = franceMoments.getByRole('article', { name: 'Got engaged at the Eiffel Tower' });
+    await expect(franceToggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(engaged).toBeHidden();
+    await franceToggle.click();
+    await expect(franceToggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(engaged).toBeVisible();
+  });
+
   test('a birth offers to add the baby as a traveller born there, once the map has room', async ({ page }) => {
     await openMap(page);
     // A couple's map is two people, and has its two: no baby to add (17 Nov 2026, the user's wish)

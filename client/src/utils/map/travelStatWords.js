@@ -20,6 +20,18 @@ export const aboutKm = (km) => count(rounded(km || 0));
 /** The same in miles: "20,800 miles". */
 export const aboutMiles = (km) => `${count(rounded((km || 0) * 0.621371))} miles`;
 
+/** A number of days: "1 day", "1,200 days" (23 Nov 2026, the time away). */
+export const dayWords = (days) => `${count(days || 0)} ${days === 1 ? 'day' : 'days'}`;
+
+/**
+ * Each row's share of the biggest, as a whole percentage, for the time-away bars: at least 2
+ * so a short stay still shows. -> the rows with `share` added
+ */
+export function withShares(rows) {
+  const most = Math.max(0, ...rows.map((row) => row.days));
+  return rows.map((row) => ({ ...row, share: most ? Math.max(2, Math.round((100 * row.days) / most)) : 0 }));
+}
+
 // Country names read "from the …" (the United Kingdom, the Netherlands): the server's
 // "On this day" rule (server/src/utils/onThisDay.js inCountry)
 const THE = /^(United |Republic of |Democratic Republic of |Czech Republic$|Dominican Republic$|Central African Republic$|Netherlands$|Philippines$|Bahamas$|Gambia$|Maldives$|Seychelles$|Comoros$|Vatican)|( Islands)$/;

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 // Icons
-import { FaMapMarkedAlt, FaPlay } from 'react-icons/fa';
+import { FaChevronDown, FaMapMarkedAlt, FaPlay } from 'react-icons/fa';
 // Hooks
 import usePhotoPage from '@/hooks/usePhotoPage';
 import useMomentPage from '@/hooks/useMomentPage';
@@ -41,6 +41,19 @@ import { NOTES_MAX } from '@/utils/map/visitNotes';
 const STATUS_RANK = { WANT_TO_GO: 1, VISITED: 2, LIVED: 3 };
 
 const NO_TRIPS = [];
+
+// The Moments section folded away (23 Nov 2026, the user's wish: an arrow to close and open
+// it): every ticket opens it the same way for the rest of the visit
+const MOMENTS_CLOSED_KEY = 'mpv:momentsClosed';
+// Read as the ticket first draws: it only ever draws in the browser (the map is never
+// pre-rendered), and reading it in an effect would show the moments for a frame first
+const momentsClosedForVisit = () => {
+  try {
+    return sessionStorage.getItem(MOMENTS_CLOSED_KEY) === '1';
+  } catch {
+    return false;
+  }
+};
 
 // One country on this map, as a boarding pass (CountryTicket): its poster always on the
 // stub to the left (CountryTicketStub), then its note, its status, when you first went,
@@ -101,6 +114,17 @@ function CountryPanel({
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [deskOpened, setDeskOpened] = useState(false);
+  const [momentsOpen, setMomentsOpen] = useState(() => !momentsClosedForVisit());
+  const toggleMoments = () => {
+    const next = !momentsOpen;
+    setMomentsOpen(next);
+    try {
+      if (next) sessionStorage.removeItem(MOMENTS_CLOSED_KEY);
+      else sessionStorage.setItem(MOMENTS_CLOSED_KEY, '1');
+    } catch {
+      // Storage blocked: it stays as chosen on this ticket
+    }
+  };
   const photoFilters = useMemo(() => countryPhotoFilters(photoSource, code), [photoSource, code]);
   const photos = usePhotoPage({ ...photoFilters, enabled: Boolean(code) && !parent });
   const moments = useMomentPage({ ...photoSource, country: code, enabled: Boolean(code) && !parent });
@@ -149,6 +173,10 @@ function CountryPanel({
   const showMoments = countsAsVisited(status) || moments.moments.length > 0;
   const special = isSpecialPlace(code);
   const continent = CONTINENT_LABELS[country.continent];
+  // The buttons over the photos (a region's "Plan a trip" sits in the row under them)
+  const canPlay = !parent && Boolean(onPlay) && photos.photos.length > 0;
+  const canAddPhotos = !parent && canEdit && Boolean(onAddPhotos);
+  const canPlanTrip = canEdit && Boolean(onPlanTrip);
 
   // On a map that splits the UK, the UK itself is marked only from before the split: its
   // ticket asks which nations that means (UkNationsPrompt) instead of offering a status
@@ -202,8 +230,14 @@ function CountryPanel({
   // Marking the country, for editors (the UK on a split map asks about its nations instead).
   // Never disabled while saving (that drops focus); the saves are optimistic.
   const editsStatus = canEdit && !ukToPlace;
+  // In the stub the dropdown and the date are a step slimmer (py-1, not py-2: 23 Nov 2026,
+  // the user's wish), there only
   const statusControls = editsStatus ? (
-    <div className={`grid w-full items-start gap-3 ${controlsInStub ? '' : 'sm:grid-cols-2'}`} aria-busy={saving ? 'true' : undefined}>
+    <div
+      className={`grid w-full items-start gap-3 ${controlsInStub ? '[&_.app-select]:py-1 [&_input]:py-1' : 'sm:grid-cols-2'}`}
+      aria-busy={saving ? 'true' : undefined}
+      data-status-controls=''
+    >
       <FormField id={`visit-${code}`} label='Been there?'>
         <VisitStatusSelect
           labelled
@@ -235,14 +269,15 @@ function CountryPanel({
           </span>
         ) : null
       }
-      // The country on its own, with its states and pins (a region opens its country's)
+      // The country on its own, with its states and pins (a region opens its country's).
+      // Smaller on phones and tablets, where it shares the continent's row (CountryTicket).
       action={
         mapCode && onOpenCountryMap ? (
           <button
             type='button'
             onClick={() => onOpenCountryMap(mapCode)}
             aria-label={mapCode === code ? `Open ${country.name} on its own map` : `Open the map of ${COUNTRY_BY_CODE[mapCode]?.name ?? mapCode}`}
-            className='btn-paper grid-flow-col gap-2 [--btn-pad-x:0.75rem] [--btn-pad-y:0.375rem] [--btn-size:0.9375rem]'
+            className='btn-paper grid-flow-col gap-2 [--btn-leading:1.25rem] [--btn-pad-x:0.625rem] [--btn-pad-y:0.3125rem] [--btn-size:0.875rem] lg:[--btn-leading:1.75rem] lg:[--btn-pad-x:0.75rem] lg:[--btn-pad-y:0.375rem] lg:[--btn-size:0.9375rem]'
           >
             <FaMapMarkedAlt aria-hidden='true' className='self-center' />
             <span className='phone:sr-only'>Open country</span>
@@ -324,11 +359,28 @@ function CountryPanel({
       <section className='grid' aria-labelledby={`moments-${code}`}>
         <MomentList
           inPanel
+          // The heading is the button that folds the section: an arrow pointing down while
+          // it's open, to the side once it's closed
           header={
-            <h3 id={`moments-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
-              Moments
+            <h3 id={`moments-${code}`} className='grid justify-start font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
+              <button
+                type='button'
+                aria-expanded={momentsOpen}
+                aria-controls={`moments-body-${code}`}
+                onClick={toggleMoments}
+                data-moments-toggle=''
+                className='grid min-h-8 grid-cols-[auto_auto] items-center gap-2 text-left'
+              >
+                <span>Moments</span>
+                <FaChevronDown
+                  aria-hidden='true'
+                  className={`text-sm transition-transform motion-reduce:transition-none ${momentsOpen ? '' : '-rotate-90'}`}
+                />
+              </button>
             </h3>
           }
+          collapsed={!momentsOpen}
+          bodyId={`moments-body-${code}`}
           list={moments}
           canEdit={canEdit && Boolean(mapId)}
           travellers={travellers}
@@ -355,6 +407,21 @@ function CountryPanel({
         <h3 id={`photos-${code}`} className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
           Photos
         </h3>
+        {/* Above the photos (23 Nov 2026, the user's wish: five in the row below barely fit):
+            the slideshow, adding photos and planning a trip, side by side in equal columns
+            from lg, one to a row below */}
+        {canPlay || canAddPhotos || canPlanTrip ? (
+          <div className='grid gap-2 lg:auto-cols-fr lg:grid-flow-col' data-photo-actions=''>
+            {canPlay ? (
+              <MapActionButton quiet onClick={() => onPlay(code)}>
+                <FaPlay aria-hidden='true' className='self-center text-sm' />
+                <span>Play slideshow</span>
+              </MapActionButton>
+            ) : null}
+            {canAddPhotos ? <MapActionButton onClick={() => onAddPhotos(code)}>Add photos</MapActionButton> : null}
+            {canPlanTrip ? <MapActionButton onClick={() => onPlanTrip(code)}>Plan a trip</MapActionButton> : null}
+          </div>
+        ) : null}
         <PhotoGrid
           narrow
           photos={photos.photos}
@@ -371,23 +438,13 @@ function CountryPanel({
         </>
       )}
 
-      {/* The slideshow, adding photos, the country's photos as a zip, and partner offers for
-          it (every plan, only when asked for), before the landmarks, whose list can be long:
-          side by side from lg, in equal columns that fill the row (18 Nov 2026, the user's
-          wish: "Add photos" joined it the same day), one to a row below, evenly spaced (19
-          Nov 2026, the user's wish: the slideshow sat further off, under the photos; the
-          labels name no country) */}
+      {/* The country's photos as a zip, and partner offers for it (every plan, only when
+          asked for), before the landmarks, whose list can be long: side by side from lg, in
+          equal columns that fill the row (18 Nov 2026, the user's wish), one to a row below,
+          evenly spaced; the labels name no country. A region has no photos, so its "Plan a
+          trip" is here. */}
       <div className='grid gap-2 lg:auto-cols-fr lg:grid-flow-col'>
-        {!parent && onPlay && photos.photos.length ? (
-          <MapActionButton quiet onClick={() => onPlay(code)}>
-            <FaPlay aria-hidden='true' className='self-center text-sm' />
-            <span>Play slideshow</span>
-          </MapActionButton>
-        ) : null}
-        {!parent && canEdit && onAddPhotos ? (
-          <MapActionButton onClick={() => onAddPhotos(code)}>Add photos</MapActionButton>
-        ) : null}
-        {canEdit && onPlanTrip ? <MapActionButton onClick={() => onPlanTrip(code)}>Plan a trip</MapActionButton> : null}
+        {parent && canPlanTrip ? <MapActionButton onClick={() => onPlanTrip(code)}>Plan a trip</MapActionButton> : null}
         {!parent && (canEdit || locked) && photoSource?.mapId && photos.photos.length ? (
           <PrintDownload inMapPanel fill scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
         ) : null}

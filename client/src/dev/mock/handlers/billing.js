@@ -131,10 +131,13 @@ export function registerBillingRoutes() {
     // A promo code's free month, on a paid plan; as the webhook, it's then used. Never with
     // extra maps in the same Checkout: the month would cover them too (the server's rule)
     const trial = extraMaps > 0 ? null : promoTrialFor(me(), body.plan);
+    // The invite offer, as its coupon would (never with a free month or extra maps): decided
+    // before the subscription exists, as the server's Checkout does, since a live
+    // subscription makes it unusable
+    const inviteOffer = !trial && extraMaps === 0 && usableInviteOffer(me(), { plan: body.plan });
     subscribe(me().id, { plan: body.plan, interval: body.interval, extraMaps, trialDays: trial?.days });
     if (trial) me().promoTrialUsedAt = new Date().toISOString();
-    // The invite offer, as its coupon would: used (never with a free month or extra maps)
-    if (!trial && extraMaps === 0 && usableInviteOffer(me(), { plan: body.plan })) me().inviteOfferUsedAt = new Date().toISOString();
+    if (inviteOffer) me().inviteOfferUsedAt = new Date().toISOString();
     return ok({ url: CHECKOUT_DONE_URL });
   });
 

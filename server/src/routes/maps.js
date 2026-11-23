@@ -65,6 +65,9 @@ import {
 } from '../utils/constants/rateLimitConstants.js';
 import { getImportsHandler, importTripsHandler } from '../controllers/imports.js';
 import { tickLandmarkHandler, untickLandmarkHandler } from '../controllers/landmarkVisits.js';
+import { addAutoStringsHandler, addMapStringHandler, deleteAllMapStringsHandler, deleteMapStringHandler } from '../controllers/mapStrings.js';
+import { createGuessGameHandler, getMapGuessGamesHandler } from '../controllers/guessGames.js';
+import { addFlightsHandler, getMapFlightsHandler } from '../controllers/flights.js';
 
 // Mounted at /api/maps. Everything needs a signed-in user; roles are checked per map.
 // `verified`: adding or changing content needs a verified email address. Setting up the
@@ -103,8 +106,19 @@ router.post('/:mapId/imports/polarsteps', verified, importTripsLimiter, importTr
 // Collecting (docs/API.md "Collecting"): a landmark ticked "been here", or not
 router.put('/:mapId/landmarks/:landmarkId/been', verified, tickLandmarkHandler);
 router.delete('/:mapId/landmarks/:landmarkId/been', verified, untickLandmarkHandler);
+// Strings between places (docs/API.md "Strings"): tie one, the automatic ones, untie one or all
+router.post('/:mapId/strings', verified, addMapStringHandler);
+router.post('/:mapId/strings/auto', verified, addAutoStringsHandler);
+router.delete('/:mapId/strings/:stringId', verified, deleteMapStringHandler);
+router.delete('/:mapId/strings', verified, deleteAllMapStringsHandler);
 // Its year in travel (docs/API.md "Year in travel"): anyone on the map
 router.get('/:mapId/recap/:year', getYearRecapHandler);
+// "Guess where I was" games made from its photos (docs/API.md "Guess where I was"): editors
+router.get('/:mapId/guess-games', getMapGuessGamesHandler);
+router.post('/:mapId/guess-games', verified, createGuessGameHandler);
+// Its flight log (docs/API.md "Flights"): anyone on the map reads it, editors add flights
+router.get('/:mapId/flights', getMapFlightsHandler);
+router.post('/:mapId/flights', verified, addFlightsHandler);
 
 // Its own design (docs/API.md "Map designs"): colours like the map's settings (no verified
 // email needed); a picture upload as an avatar (verified), removing it not

@@ -26,7 +26,7 @@ export const MOMENT_MESSAGES = {
   tripNotFound: "That trip doesn't exist, or it hasn't been shared with you.",
   mapNotFound: "That map doesn't exist, or it hasn't been shared with you.",
   travellersNotOnMap: "Every traveller must be one of this map's travellers.",
-  malformed: 'Data incorrectly formatted or malformed request',
+  malformed: "Some details weren't in the right format. Please check them and try again.",
 };
 
 // As the server's sanitizeText: tags and control characters gone, trimmed, cut; null when empty

@@ -29,13 +29,13 @@ describe('TripStopList', { timeout: 20000 }, () => {
     expect(screen.queryByText('Add a stop')).toBeNull();
   });
 
-  it('says there are none, and opens the new stop form at once for an editor', async () => {
+  it('says there are none, and opens the new stop form at once for an editor', { timeout: 20000 }, async () => {
     const { container } = render(<TripStopList trip={{ id: 'trip-1', stops: [] }} canEdit onChanged={vi.fn()} />);
     expect(screen.getByText('No stops yet.')).toBeTruthy();
     expect(container.querySelector('h3').textContent).toBe('Add a stop');
     // Not asked for, so focus stays where it was
     expect(document.activeElement).toBe(document.body);
-    expect(await screen.findByLabelText(/^Country/)).toBeTruthy();
+    expect(await screen.findByLabelText(/^Country/, {}, { timeout: 10000 })).toBeTruthy();
   });
 
   it('swaps two stops when one moves, and hands back the trip', async () => {
@@ -76,19 +76,19 @@ describe('TripStopList', { timeout: 20000 }, () => {
     await waitFor(() => expect(document.activeElement.textContent).toBe('Add a stop'));
   });
 
-  it('saves an edited stop', async () => {
+  it('saves an edited stop', { timeout: 20000 }, async () => {
     const updated = { ...TRIP };
     updateStop.mockResolvedValue({ trip: updated });
     const onChanged = vi.fn();
     render(<TripStopList trip={TRIP} canEdit onChanged={onChanged} />);
     fireEvent.click(screen.getByLabelText('Edit stop 1, France'));
-    fireEvent.change(await screen.findByLabelText('Town or place'), { target: { value: 'Paris' } });
+    fireEvent.change(await screen.findByLabelText('Town or place', {}, { timeout: 10000 }), { target: { value: 'Paris' } });
     fireEvent.click(screen.getByText('Save stop'));
     await waitFor(() => expect(updateStop).toHaveBeenCalledWith('trip-1', 's1', expect.objectContaining({ countryCode: 'FR', placeName: 'Paris' })));
     expect(onChanged).toHaveBeenCalledWith(updated);
   });
 
-  it('adds a stop from its own form card, and hands focus back to the button on closing', async () => {
+  it('adds a stop from its own form card, and hands focus back to the button on closing', { timeout: 20000 }, async () => {
     const updated = { ...TRIP, stops: [...STOPS, { id: 's4', countryCode: 'PT' }] };
     createStop.mockResolvedValue({ trip: updated });
     const onChanged = vi.fn();
@@ -96,7 +96,7 @@ describe('TripStopList', { timeout: 20000 }, () => {
     fireEvent.click(screen.getByText('Add a stop'));
     // Asked for: focus on the card's title
     expect(document.activeElement).toBe(container.querySelector('h3'));
-    const country = await screen.findByLabelText(/^Country/);
+    const country = await screen.findByLabelText(/^Country/, {}, { timeout: 10000 });
     expect(country.id).toBe('new-stop-country');
     fireEvent.change(country, { target: { value: 'PT' } });
     fireEvent.click(screen.getByText('Add stop'));

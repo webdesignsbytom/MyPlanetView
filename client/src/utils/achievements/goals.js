@@ -10,7 +10,7 @@ export const GOAL_KINDS = Object.freeze(['COUNTRY_COUNT', 'COUNTRY_LIST', 'REGIO
 export const GOALS_PER_MAP = 50;
 export const GOAL_TITLE_MAX = 80;
 export const GOAL_LIST_MAX = 100;
-// A target above every country there is (226) or every landmark (1,332) can't be met
+// A target above every country there is (226) or every landmark (1,366) can't be met
 export const GOAL_TARGET_MAX = Object.freeze({ COUNTRY_COUNT: 250, LANDMARK_COUNT: 2000 });
 // A goal's region: a region (utils/constants/regions.js) or an inhabited continent
 export const GOAL_REGIONS = Object.freeze([...Object.keys(REGIONS), ...INHABITED_CONTINENTS]);

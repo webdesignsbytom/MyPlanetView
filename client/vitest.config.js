@@ -23,5 +23,7 @@ export default defineConfig({
     setupFiles: ['tests/unit/setup.js'],
     restoreMocks: true,
     unstubGlobals: true,
+    // Room for the 5 s waits in setup.js on a busy machine
+    testTimeout: 15000,
   },
 });

@@ -25,6 +25,7 @@ import ShareMemberRow, { ACCESS_ROW_CLASS } from './ShareMemberRow';
 import ShareInviteRow from './ShareInviteRow';
 import ShareGeneralAccess from './ShareGeneralAccess';
 import ShareLinkBox from './ShareLinkBox';
+import ShareEmbedBox from './ShareEmbedBox';
 import MakeOwnerDialog from './MakeOwnerDialog';
 import RemoveAccessDialog from './RemoveAccessDialog';
 // Utils
@@ -219,6 +220,16 @@ function ShareDialog({ resource, id, name, role, travellers = null, currentUserI
               onReset={() => run(() => resetShareLink(resource, id), 'A new link is ready. The old one no longer works.').catch(() => {})}
             />
           </section>
+
+          {/* A map on a blog or website, framed, with a link back to us (23 Nov 2026) */}
+          {isMap ? (
+            <section className='grid gap-3' aria-labelledby='embed-heading'>
+              <h3 id='embed-heading' className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
+                On your website
+              </h3>
+              <ShareEmbedBox shareCode={sharing.shareCode} name={name} linkOn={sharing.linkAccess === 'ANYONE_WITH_LINK'} />
+            </section>
+          ) : null}
         </div>
       )}
 

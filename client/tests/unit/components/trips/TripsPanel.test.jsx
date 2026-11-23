@@ -31,6 +31,12 @@ const show = (props = {}) => {
   return { ...view, ...handlers };
 };
 
+// Every trip has its From and To (23 Nov 2026): the form asks for both before it sends
+const giveDays = () => {
+  fireEvent.change(screen.getByLabelText(/^From/), { target: { value: '2027-04-01' } });
+  fireEvent.change(screen.getByLabelText(/^To/), { target: { value: '2027-04-10' } });
+};
+
 describe('TripsPanel', () => {
   beforeEach(() => vi.clearAllMocks());
 
@@ -82,9 +88,10 @@ describe('TripsPanel', () => {
     show({ onCreate });
     fireEvent.click(screen.getByText('Plan a new trip'));
     fireEvent.change(screen.getByLabelText(/^Title/), { target: { value: 'Lisbon' } });
+    giveDays();
     fireEvent.click(screen.getByText('Create trip'));
     expect(await screen.findByText('Trip page new-trip')).toBeTruthy();
-    expect(onCreate).toHaveBeenCalledWith(expect.objectContaining({ title: 'Lisbon', travellerIds: ['a'] }));
+    expect(onCreate).toHaveBeenCalledWith(expect.objectContaining({ title: 'Lisbon', startDate: '2027-04-01', endDate: '2027-04-10', travellerIds: ['a'] }));
     expect(createStop).not.toHaveBeenCalled();
   });
 
@@ -104,6 +111,7 @@ describe('TripsPanel', () => {
     expect(
       screen.getByText('A trip to France: it starts with France as its first stop, and you can add more on the trip’s page.'),
     ).toBeTruthy();
+    giveDays();
     fireEvent.click(screen.getByText('Create trip'));
     expect(await screen.findByText('Trip page fr-trip')).toBeTruthy();
     expect(onCreate).toHaveBeenCalledWith(expect.objectContaining({ title: 'Trip to France' }));
@@ -115,6 +123,7 @@ describe('TripsPanel', () => {
     createStop.mockResolvedValue({ trip: {} });
     show({ planCountry: 'XB', onCreate });
     expect(screen.getByLabelText(/^Title/).value).toBe('Trip to Bali');
+    giveDays();
     fireEvent.click(screen.getByText('Create trip'));
     await waitFor(() => expect(createStop).toHaveBeenCalledWith('bali-trip', { countryCode: 'ID', placeName: 'Bali' }));
   });
@@ -123,6 +132,7 @@ describe('TripsPanel', () => {
     const onCreate = vi.fn().mockResolvedValue({ id: 'trip-x' });
     createStop.mockRejectedValue(new Error('offline'));
     show({ planCountry: 'JP', onCreate });
+    giveDays();
     fireEvent.click(screen.getByText('Create trip'));
     expect(await screen.findByText('Trip page trip-x')).toBeTruthy();
   });

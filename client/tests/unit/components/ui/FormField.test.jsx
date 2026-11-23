@@ -43,6 +43,11 @@ describe('FormField', () => {
     expect(screen.getByLabelText('Your name').getAttribute('aria-describedby')).toBe('locked-note name-hint');
   });
 
+  it('names each description once, when the input already names the field’s error', () => {
+    field({ hint: 'As on your passport', error: 'Please give your name' }, { ariaDescribedBy: 'name-error' });
+    expect(screen.getByLabelText('Your name').getAttribute('aria-describedby')).toBe('name-error name-hint');
+  });
+
   it('keeps an invalid mark the input was given itself', () => {
     field({}, { ariaInvalid: true });
     expect(screen.getByLabelText('Your name').getAttribute('aria-invalid')).toBe('true');

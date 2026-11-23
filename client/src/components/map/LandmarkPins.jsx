@@ -6,7 +6,7 @@ import { landmarkPlace } from '@/utils/map/ukNations';
 // Landmark pins, at their real position on the map's projection (the API's pinX/pinY).
 // `mode` is the viewer's setting (17 Nov 2026): 'zoomed', hidden until the map is zoomed in
 // enough for them not to crowd it; 'always', at every zoom; 'stamped', only the passport's
-// stamped ones, at every zoom ('off' isn't drawn at all: WorldMap leaves this out). Not every landmark has a pin at every zoom: there are 1,332, so
+// stamped ones, at every zoom ('off' isn't drawn at all: WorldMap leaves this out). Not every landmark has a pin at every zoom: there are 1,366, so
 // utils/map/landmarkPins.js thins them out by zoom, keeping them about 30 px apart on
 // screen, more appearing as the map zooms in, all of them close up. The landmarks stamped
 // in the map's passport (`stamped`, a Set of ids: the map's stampedLandmarkIds) are gold

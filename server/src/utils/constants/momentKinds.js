@@ -18,6 +18,15 @@ export const MOMENT_KINDS = Object.freeze([
   // first trip abroad, a couple's first holiday) and an anniversary celebrated somewhere
   'FIRST_TRIP',
   'ANNIVERSARY',
+  // 23 Nov 2026 (the user's wish, "events within trips": a safari day on a trip to Kenya):
+  // what a day on a trip was for. A trip's page lists its moments day by day.
+  'SAFARI',
+  'HIKE',
+  'DIVE',
+  'TOUR',
+  'MEAL',
+  'SHOW',
+  'BEACH',
 ]);
 
 export const MOMENT_KIND_LABELS = Object.freeze({
@@ -32,6 +41,13 @@ export const MOMENT_KIND_LABELS = Object.freeze({
   SAW_OR_DID: 'Something we saw or did',
   FIRST_TRIP: 'First trip',
   ANNIVERSARY: 'Anniversary',
+  SAFARI: 'Safari',
+  HIKE: 'Hike or trek',
+  DIVE: 'Dive or snorkel',
+  TOUR: 'Tour or day trip',
+  MEAL: 'A meal to remember',
+  SHOW: 'Show, concert or festival',
+  BEACH: 'Beach day',
 });
 
 export const isMomentKind = (value) => typeof value === 'string' && MOMENT_KINDS.includes(value);

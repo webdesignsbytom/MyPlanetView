@@ -79,7 +79,7 @@ describe('country notes', () => {
   });
 
   it('survives a completed trip turning "want to go" into visited', async () => {
-    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Tokyo' })).trip;
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Tokyo' })).trip;
     await owner.agent.post(`/api/trips/${trip.id}/stops`).send({ countryCode: 'JP' });
     expect((await owner.agent.patch(`/api/trips/${trip.id}`).send({ status: 'COMPLETED' })).status).toBe(200);
     expect(await visitOf(owner.agent, 'JP')).toMatchObject({ status: 'VISITED', source: 'TRIP', notes: 'Cherry blossom is in early April' });

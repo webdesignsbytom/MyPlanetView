@@ -50,12 +50,12 @@ describe('trips', () => {
     const other = await signUp('Elsewhere');
     const otherMap = await defaultMapOf(other.agent);
     const foreign = data(await other.agent.get(`/api/maps/${otherMap.id}`)).map.travellers[0];
-    const res = await agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Mixed', travellerIds: [foreign.id] });
+    const res = await agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Mixed', travellerIds: [foreign.id] });
     expect(res.status).toBe(400);
   });
 
   it('adds, edits, reorders and removes stops', async () => {
-    const trip = data(await agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Grand tour' })).trip;
+    const trip = data(await agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Grand tour' })).trip;
     const eiffel = data(await agent.get('/api/landmarks?country=FR')).landmarks.find((l) => l.name === 'Eiffel Tower');
 
     const stops = [];
@@ -95,7 +95,7 @@ describe('trips', () => {
 
   it('completing a trip marks its countries visited and counts them per traveller', async () => {
     const [me, partner] = travellers;
-    const trip = data(await agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Nordic loop', travellerIds: [me.id] })).trip;
+    const trip = data(await agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Nordic loop', travellerIds: [me.id] })).trip;
     await agent.post(`/api/trips/${trip.id}/stops`).send({ countryCode: 'NO' });
     await agent.post(`/api/trips/${trip.id}/stops`).send({ countryCode: 'SE' });
     // Already visited by hand: completing the trip must not overwrite it
@@ -125,7 +125,7 @@ describe('trips', () => {
 
   it('turns a "want to go" country into a visited one when the trip there is completed', async () => {
     await agent.put(`/api/maps/${map.id}/visits/IS`).send({ status: 'WANT_TO_GO' });
-    const trip = data(await agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Iceland at last' })).trip;
+    const trip = data(await agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Iceland at last' })).trip;
     await agent.post(`/api/trips/${trip.id}/stops`).send({ countryCode: 'IS' });
     expect((await agent.patch(`/api/trips/${trip.id}`).send({ status: 'COMPLETED' })).status).toBe(200);
 
@@ -151,7 +151,7 @@ describe('a trip-only editor', () => {
     mapViewer = await signUp('MapViewer', { verified: true });
     mapEditor = await signUp('MapEditor', { verified: true });
     map = await defaultMapOf(owner.agent);
-    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Shared road trip' })).trip;
+    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Shared road trip' })).trip;
     for (const [who, resource, role] of [
       [guest, `trips/${trip.id}`, 'EDITOR'],
       [mapViewer, `maps/${map.id}`, 'VIEWER'],
@@ -190,7 +190,7 @@ describe('a trip-only editor', () => {
     expect(data(await owner.agent.get(`/api/trips/${trip.id}`)).trip.canDelete).toBe(true);
     expect(data(await mapEditor.agent.get(`/api/trips/${trip.id}`)).trip.canDelete).toBe(true);
     expect((await mapEditor.agent.delete(`/api/trips/${trip.id}`)).status).toBe(200);
-    const another = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Another' })).trip;
+    const another = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Another' })).trip;
     expect((await owner.agent.delete(`/api/trips/${another.id}`)).status).toBe(200);
   });
 });

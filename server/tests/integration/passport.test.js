@@ -136,7 +136,7 @@ describe('the passport', () => {
     expect(eiffelStamp(data(res).passport)).toMatchObject({ photo: { id: first.id } });
     expect(eiffelStamp(data(res).passport)).not.toHaveProperty('photoChosen');
 
-    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Paris' })).trip;
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Paris' })).trip;
     await owner.agent.patch(`/api/trips/${trip.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' });
     const tripCode = data(await owner.agent.get(`/api/trips/${trip.id}/sharing`)).shareCode;
     expect((await anon().get(`/api/shared/${tripCode}/passport`)).status).toBe(404);

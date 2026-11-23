@@ -42,7 +42,12 @@ async function travellerFacts(mapId, traveller, { includeHidden }) {
     findMapSplitUk(mapId),
     continentsByCode(),
   ]);
-  const scope = { tripIds: travel.trips.map((t) => t.id), photoIds: [...new Set(travel.moments.flatMap((m) => m.photoIds))] };
+  // Their ticks are the ones made by their own account (a child with no login has none)
+  const scope = {
+    tripIds: travel.trips.map((t) => t.id),
+    photoIds: [...new Set(travel.moments.flatMap((m) => m.photoIds))],
+    userId: traveller.userId ?? null,
+  };
   const [stampRows, firstPhotoAt] = await Promise.all([
     findStamps(mapId, { includeHidden, scope }),
     findFirstPhotoByCountry(mapId, { includeHidden, scope }),
@@ -105,9 +110,10 @@ export async function buildPassport(mapId, role, { travellerId = null } = {}) {
   // earliest confirmed one the caller can see
   const coverOf = new Map(covers.filter((c) => editor || !c.hidden).map((c) => [c.landmarkId, c.photoId]));
   const chosenOf = new Map(covers.map((c) => [c.landmarkId, c.photoId]));
+  // A landmark ticked "been here" with no photo has none (null)
   const photoOf = (stamp) => coverOf.get(stamp.landmarkId) ?? stamp.photoId;
   const [thumbKeys, moments] = await Promise.all([
-    findThumbKeys([...new Set(facts.stamps.map(photoOf))]),
+    findThumbKeys([...new Set(facts.stamps.map(photoOf).filter(Boolean))]),
     findLandmarkMoments(mapId, [...new Set(facts.stamps.map((s) => s.landmarkId))], { includeHidden: editor }),
   ]);
   // The moments that happened at each stamped landmark
@@ -155,7 +161,9 @@ export async function buildPassport(mapId, role, { travellerId = null } = {}) {
             isUnesco: stamp.isUnesco,
             stampedOn: toDateOnly(stamp.firstShotAt),
             photoCount: stamp.photoCount,
-            photo: { id: photoOf(stamp), thumbUrl: await thumbUrl(photoOf(stamp)) },
+            // Ticked "been here" with no photo (23 Nov 2026): a stamp with no picture
+            ticked: stamp.ticked,
+            photo: photoOf(stamp) ? { id: photoOf(stamp), thumbUrl: await thumbUrl(photoOf(stamp)) } : null,
             // The map's moments at this landmark (hidden ones for editors only)
             moments: momentsAt.get(stamp.landmarkId) ?? [],
             // Editors: whether someone picked the photo (else it's the earliest)
@@ -183,7 +191,8 @@ export async function buildPassport(mapId, role, { travellerId = null } = {}) {
       // Whose passport this is: one traveller's own, or null for the whole map's
       traveller: holder ? { id: holder.id, name: holder.name } : null,
     },
-    travellers,
+    // Without the account each is linked to (read only for their ticks)
+    travellers: travellers.map(({ userId: _userId, ...traveller }) => traveller),
     pages,
     totals: {
       countries: countries.length,

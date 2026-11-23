@@ -8,10 +8,17 @@ import {
   FaGlassCheers,
   FaGraduationCap,
   FaHeart,
+  FaHiking,
   FaHome,
+  FaMapSigns,
+  FaPaw,
   FaPlaneDeparture,
   FaRing,
   FaStar,
+  FaSwimmer,
+  FaTheaterMasks,
+  FaUmbrellaBeach,
+  FaUtensils,
 } from 'react-icons/fa';
 
 // Each kind of moment's mark (utils/moments/momentKinds.js): a small round rubber stamp in
@@ -28,6 +35,14 @@ const KIND_ICONS = {
   SAW_OR_DID: FaBinoculars,
   FIRST_TRIP: FaPlaneDeparture,
   ANNIVERSARY: FaStar,
+  // A day on a trip (23 Nov 2026)
+  SAFARI: FaPaw,
+  HIKE: FaHiking,
+  DIVE: FaSwimmer,
+  TOUR: FaMapSigns,
+  MEAL: FaUtensils,
+  SHOW: FaTheaterMasks,
+  BEACH: FaUmbrellaBeach,
 };
 
 // Decorative: the kind is always written beside it

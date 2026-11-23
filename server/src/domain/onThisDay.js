@@ -80,20 +80,25 @@ export const findMemoryPhotoKey = async (photoId) =>
     })
   )?.media?.key ?? null;
 
-/** An account's email preferences. */
+/** An account's email preferences: "On this day" and "Welcome home" (`tripShare`). */
 export const findEmailPreferences = async (userId) => {
-  const profile = await prisma.profile.findUnique({ where: { userId }, select: { onThisDayEmails: true } });
-  return { onThisDay: profile?.onThisDayEmails ?? true };
+  const profile = await prisma.profile.findUnique({ where: { userId }, select: { onThisDayEmails: true, tripShareEmails: true } });
+  return { onThisDay: profile?.onThisDayEmails ?? true, tripShare: profile?.tripShareEmails ?? true };
 };
 
-/** Set them (the profile made if it's missing). */
-export const saveEmailPreferences = (userId, { onThisDay }) =>
-  prisma.profile.upsert({
+/** Set the ones given (the profile made if it's missing). */
+export function saveEmailPreferences(userId, { onThisDay, tripShare }) {
+  const data = {
+    ...(onThisDay === undefined ? {} : { onThisDayEmails: onThisDay }),
+    ...(tripShare === undefined ? {} : { tripShareEmails: tripShare }),
+  };
+  return prisma.profile.upsert({
     where: { userId },
-    create: { userId, onThisDayEmails: onThisDay },
-    update: { onThisDayEmails: onThisDay },
-    select: { onThisDayEmails: true },
+    create: { userId, ...data },
+    update: data,
+    select: { onThisDayEmails: true, tripShareEmails: true },
   });
+}
 
 /** The unsubscribe link: off, if the account is there. -> whether it was */
 export async function turnOffOnThisDayInDB(userId) {

@@ -52,8 +52,8 @@ describe('countries seed', () => {
 });
 
 describe('landmarks seed', () => {
-  it('keeps all 177 monuments from the old map, one name each', () => {
-    expect(LANDMARKS).toHaveLength(177);
+  it('keeps the old map’s 177 monuments, the 24 added on 23 Nov 2026 for the places with none and the 10 famous places added for their 3D models, one name each', () => {
+    expect(LANDMARKS).toHaveLength(211);
     expect(new Set(LANDMARKS.map((l) => slugify(l.name))).size).toBe(LANDMARKS.length);
   });
 

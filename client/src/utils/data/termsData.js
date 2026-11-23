@@ -16,8 +16,8 @@ import { PROMO_TRIAL_DAYS } from '../plans/promoCodes.js';
 const PAID = `${PLANS.REGULAR.name} and ${PLANS.PREMIUM.name}`;
 
 export const LEGAL_VERSION = {
-  lastUpdated: '2026-11-21',
-  version: '1.3.0',
+  lastUpdated: '2026-11-23',
+  version: '1.3.1',
 };
 
 // Terms of use
@@ -258,7 +258,7 @@ export const PrivacySectionsArray = [
     group: 'policies',
     content: [
       'Your account: your name, email address and a securely hashed password.',
-      'Your maps: the countries you mark, your trips and their stops, and the travellers on each map (names, and optionally a birth country and favourite country).',
+      'Your maps: the countries you mark, your trips and their stops, and the travellers on each map (names, and optionally a birth country, favourite country and date of birth). A date of birth is seen only by the map’s owner and its editors, never through a share link, and is used only to show how much of that person’s life they have spent travelling.',
       'Your photos: the files you upload, their captions, the date each was taken and, where your phone saved it, the place it was taken.',
       `Your plan, if you pay: which plan and how often you pay, any extra maps, the promo code you signed up with, and the references Stripe gives your customer record and subscription. Your card details go straight to Stripe; we never see or store them.`,
       'Gifts you buy: the plan, who it’s for and your message, if you write them. Anyone with the gift’s code sees those on its page, with your name as who it’s from.',
@@ -367,7 +367,7 @@ export const PrivacySectionsArray = [
     group: 'policies',
     content: [
       'Accounts are for people aged 13 and over, and those aged 13 to 17 need a parent’s or guardian’s permission.',
-      'A parent can add younger children as travellers on a family map. A first name is all that is needed, and we keep only what the parent enters.',
+      'A parent can add younger children as travellers on a family map. A first name is all that is needed, and we keep only what the parent enters (a date of birth is optional, and seen only by the map’s owner and editors).',
       'Teenagers’ accounts get the same protections as everyone’s: everything is private until it is shared, the place a photo was taken is shown only to a map’s editors, and nothing is used for advertising or profiling.',
       `A parent or guardian can ask to see, correct or delete a child’s information: email ${CompanyEmailAddress}.`,
     ],

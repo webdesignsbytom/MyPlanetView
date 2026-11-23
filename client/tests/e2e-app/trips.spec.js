@@ -24,6 +24,11 @@ test.describe('Trips', () => {
     // Both travellers go by default
     await expect(trips.getByRole('button', { name: 'Charlie', exact: true })).toHaveAttribute('aria-pressed', 'true');
     await expect(trips.getByRole('button', { name: 'Alex', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    // Every trip has its days (23 Nov 2026): without them the form says so
+    await trips.getByRole('button', { name: 'Create trip' }).click();
+    await expect(trips.getByRole('alert')).toHaveText('Give the trip the day it starts and the day it ends.');
+    await trips.getByLabel(/^From/).fill('2027-06-01');
+    await trips.getByLabel(/^To\b/).fill('2027-06-12');
     await trips.getByRole('button', { name: 'Create trip' }).click();
 
     // The trip's own page
@@ -64,7 +69,8 @@ test.describe('Trips', () => {
     await edit.getByRole('combobox', { name: 'Status' }).selectOption('Done');
     await edit.getByRole('button', { name: 'Save trip' }).click();
     await expect(edit).toBeHidden();
-    await expect(page.getByText('Done', { exact: true })).toBeVisible();
+    // The status beside the trip's days
+    await expect(page.getByText('Done · 1 Jun 2027 – 12 Jun 2027', { exact: true })).toBeVisible();
 
     // Back on the map: Finland and Norway are visited, Sweden isn't
     await page.getByRole('link', { name: `Back to ${HOME_MAP}` }).click();
@@ -76,7 +82,7 @@ test.describe('Trips', () => {
     await expect(list.getByRole('button', { name: 'Status for Sweden: Visited' })).toHaveCount(0);
 
     const tripsAfter = await openTool(page, 'Trips', 'Trips');
-    await expect(tripsAfter.getByRole('link', { name: /Nordic loop/ })).toContainText('Done · 2 stops · 0 photos');
+    await expect(tripsAfter.getByRole('link', { name: /Nordic loop/ })).toContainText('Done · 1 Jun 2027 – 12 Jun 2027 · 2 stops · 0 photos');
   });
 
   test('a trip’s page shows its stops, travellers and photos', async ({ page }) => {
@@ -169,10 +175,11 @@ test.describe('Trips', () => {
       '0 of 5',
       `0 of ${REGION_COUNT}`,
       '16',
-      '13 of 1,332',
+      '13 of 1,366',
       '10 of 1,273',
       '2',
-      '15', 'On completed trips', '3,500 km', 'About 2,200 miles', 'United States', 'About 7,000 km from the United Kingdom',
+      // The longest trip, "Italian summer" (23 Nov 2026)
+      '15', 'On completed trips', '15 days', 'Italian summer', '3,500 km', 'About 2,200 miles', 'United States', 'About 7,000 km from the United Kingdom',
     ]);
 
     // The old address now says so

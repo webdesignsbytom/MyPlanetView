@@ -16,8 +16,9 @@ const CREDIT_LINK = 'underline underline-offset-2 hover:text-colour6';
 // first two, then how many more).
 const MOMENTS_SHOWN = 2;
 
-// `mark`: 'stamped' (the passport, from a confirmed photo), 'ticked' ("been here") or null;
-// `onToggle(landmarkId, been)` gives an editor the "Been here" tick (docs/API.md "Collecting").
+// `mark`: 'stamped' (the passport, from a confirmed photo), 'ticked' ("been here", which
+// stamps the passport too: 23 Nov 2026, the user's decision) or null; `onToggle(landmarkId,
+// been)` gives an editor the "Been here" tick (docs/API.md "Collecting").
 function LandmarkCard({ landmark, photo, moments = [], mark = null, onToggle = null }) {
   return (
     <li className='group'>
@@ -58,16 +59,23 @@ function LandmarkCard({ landmark, photo, moments = [], mark = null, onToggle = n
               Stamped in the passport
             </span>
           ) : onToggle ? (
-            <CheckboxInput
-              id={`been-${landmark.id}`}
-              checked={mark === 'ticked'}
-              onChange={(e) => onToggle(landmark.id, e.target.checked)}
-              label={<span className='text-xs font-medium'>Been here</span>}
-              ariaLabel={`Been to ${landmark.name}`}
-            />
+            <>
+              <CheckboxInput
+                id={`been-${landmark.id}`}
+                checked={mark === 'ticked'}
+                onChange={(e) => onToggle(landmark.id, e.target.checked)}
+                label={<span className='text-xs font-medium'>Been here</span>}
+                ariaLabel={`Been to ${landmark.name}`}
+              />
+              {mark === 'ticked' ? (
+                <span className='text-xs font-semibold text-poster-red-deep' data-landmark-mark='ticked'>
+                  Stamped in the passport
+                </span>
+              ) : null}
+            </>
           ) : mark === 'ticked' ? (
             <span className='text-xs font-semibold text-poster-red-deep' data-landmark-mark='ticked'>
-              Been here
+              Been here: stamped in the passport
             </span>
           ) : null}
           {photo ? (

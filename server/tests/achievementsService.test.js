@@ -96,8 +96,15 @@ describe('stampsFrom', () => {
       photoId: 'photo-lm-eiffel',
       photoCount: 2,
       confirmedAt: new Date('2025-06-02T10:00:00.000Z'),
+      ticked: false,
     });
     expect(fake.findLandmarksByIds).toHaveBeenCalledWith(['lm-eiffel']);
+  });
+
+  // 23 Nov 2026: a landmark ticked "been here" with no photo is a stamp too
+  it('marks a stamp with no photo as ticked', async () => {
+    const [stamp] = await stampsFrom([stampRow('lm-eiffel', { photoId: null, photoCount: 0 })], false);
+    expect(stamp).toMatchObject({ landmarkId: 'lm-eiffel', photoId: null, photoCount: 0, ticked: true });
   });
 
   it("puts a UK landmark in its nation on a map that splits the UK, and in GB otherwise", async () => {

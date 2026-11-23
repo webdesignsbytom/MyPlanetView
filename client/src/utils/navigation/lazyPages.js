@@ -68,6 +68,10 @@ export const MapPage = lazyPage(() => import('@/pages/map/MapPage'));
 export const TripPage = lazyPage(() => import('@/pages/trips/TripPage'));
 export const WelcomePage = lazyPage(() => import('@/pages/onboarding/WelcomePage'));
 export const SharedPage = lazyPage(() => import('@/pages/shared/SharedPage'));
+// A map framed on someone's website (23 Nov 2026)
+export const EmbedPage = lazyPage(() => import('@/pages/embed/EmbedPage'));
+// A "Guess where I was" game (23 Nov 2026)
+export const GuessPage = lazyPage(() => import('@/pages/guess/GuessPage'));
 export const InviteAcceptPage = lazyPage(() => import('@/pages/invite/InviteAcceptPage'));
 export const ChallengesPage = lazyPage(() => import('@/pages/challenges/ChallengesPage'));
 export const ChallengePage = lazyPage(() => import('@/pages/challenges/ChallengePage'));

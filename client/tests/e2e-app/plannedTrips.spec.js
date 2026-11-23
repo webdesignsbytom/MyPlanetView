@@ -31,6 +31,8 @@ test('a planned trip’s places are outlined, listed on their tickets, and a tri
   const trips = page.getByRole('dialog', { name: 'Trips', exact: true });
   await expect(trips.getByText('A trip to Germany: it starts with Germany as its first stop')).toBeVisible();
   await expect(trips.getByRole('textbox', { name: 'Title' })).toHaveValue('Trip to Germany');
+  await trips.getByLabel(/^From/).fill('2027-09-01');
+  await trips.getByLabel(/^To\b/).fill('2027-09-08');
   await trips.getByRole('button', { name: 'Create trip' }).click();
 
   await expect(page).toHaveURL(/\/trips\/[^/]+$/);

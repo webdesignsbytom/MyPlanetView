@@ -239,7 +239,7 @@ describe('group trips: leaving the organiser\'s map', () => {
     for (const who of [editor, both]) {
       expect((await owner.agent.post(`/api/maps/${ownerMap.id}/members`).send({ email: who.email, role: 'EDITOR' })).status).toBe(201);
     }
-    const reunion = data(await owner.agent.post(`/api/maps/${ownerMap.id}/trips`).send({ title: 'Family reunion' })).trip;
+    const reunion = data(await owner.agent.post(`/api/maps/${ownerMap.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Family reunion' })).trip;
     // One of them is on the trip as well as the map
     expect((await owner.agent.post(`/api/trips/${reunion.id}/members`).send({ email: both.email, role: 'VIEWER' })).status).toBe(201);
     for (const [who, map] of [[editor, editorMap], [both, bothMap]]) {

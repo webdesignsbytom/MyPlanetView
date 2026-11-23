@@ -24,7 +24,8 @@ export async function countriesByContinent() {
 /**
  * The stamps from findStamps' rows, each with its landmark's place (on a map that splits the
  * UK, a UK landmark's nation: utils/ukNations.js), name and UNESCO mark:
- * `[{ landmarkId, countryCode, isUnesco, name, firstShotAt, photoId, photoCount, confirmedAt }]`.
+ * `[{ landmarkId, countryCode, isUnesco, name, firstShotAt, photoId, photoCount, confirmedAt, ticked }]`.
+ * `ticked`: a landmark ticked "been here" with no photo (`photoId` null).
  */
 export async function stampsFrom(stampRows, splitUk) {
   const landmarks = new Map((await findLandmarksByIds(stampRows.map((s) => s.landmarkId))).map((l) => [l.id, l]));
@@ -36,9 +37,10 @@ export async function stampsFrom(stampRows, splitUk) {
       isUnesco: landmarks.get(row.landmarkId).isUnesco,
       name: landmarks.get(row.landmarkId).name,
       firstShotAt: new Date(row.shotAt),
-      photoId: row.photoId,
+      photoId: row.photoId ?? null,
       photoCount: Number(row.photoCount),
       confirmedAt: row.confirmedAt ? new Date(row.confirmedAt) : null,
+      ticked: !row.photoId,
     }));
 }
 

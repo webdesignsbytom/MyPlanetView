@@ -56,7 +56,8 @@ test.describe('The map page', () => {
     // Countries, continents (of 7), special places (of 5), regions (of every region), photos, landmarks (stamped: confirmed
     // matches, the owner counting the one on a hidden photo too), trips
     // Then how far (docs/API.md "Stats"): the share of the world, the days away on "Italian summer"
-    // (2 to 16 July 2025), the distance home and back, the furthest place from the UK
+    // (2 to 16 July 2025), the longest trip (23 Nov 2026), the distance home and back, the
+    // furthest place from the UK
     await expect(stats.getByRole('definition')).toHaveText([
       '8',
       '3.5%',
@@ -65,12 +66,15 @@ test.describe('The map page', () => {
       '0 of 5',
       `0 of ${REGION_COUNT}`,
       '16',
-      '13 of 1,332',
+      '13 of 1,366',
       '10 of 1,273',
       '3',
-      '15', 'On completed trips', '3,500 km', 'About 2,200 miles', 'United States', 'About 7,000 km from the United Kingdom',
+      '15', 'On completed trips', '15 days', 'Italian summer', '3,500 km', 'About 2,200 miles', 'United States', 'About 7,000 km from the United Kingdom',
     ]);
-    await expect(stats.getByRole('listitem')).toHaveText([/Charlie\s*1/, /Alex\s*1/]);
+    await expect(stats.getByRole('region', { name: 'Each traveller, from completed trips' }).getByRole('listitem')).toHaveText([
+      /Charlie\s*1 country · 15 days/,
+      /Alex\s*1 country · 15 days/,
+    ]);
   });
 
   test('a country pressed on the map is marked visited, then wanted, then cleared', { tag: '@phone' }, async ({ page, hasTouch }) => {
@@ -119,6 +123,24 @@ test.describe('The map page', () => {
     // Kept: a reload shows the same
     await page.reload();
     await expectStats(page, '8 countries, 2 continents, 16 photos');
+  });
+
+  test('the stub’s dropdown and date are a step slimmer than the same fields elsewhere', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    const list = await openTool(page, 'Country list', 'Countries');
+    await list.getByRole('searchbox', { name: 'Search countries' }).fill('spain');
+    await list.getByRole('button', { name: 'Spain', exact: true }).click();
+    const panel = page.getByRole('dialog', { name: 'Spain' });
+    const status = panel.getByRole('combobox', { name: 'Been there?' });
+    const date = panel.getByLabel('First went');
+    await expect(date).toBeVisible();
+    const padding = (field) => field.evaluate((el) => [getComputedStyle(el).paddingTop, getComputedStyle(el).paddingBottom]);
+    // In the stub from md up (py-1); at the head of the content on a phone, as everywhere else (py-2)
+    const inStub = (await panel.locator('aside [data-status-controls]').count()) > 0;
+    const expected = inStub ? ['4px', '4px'] : ['8px', '8px'];
+    expect(await padding(status)).toEqual(expected);
+    expect(await padding(date)).toEqual(expected);
+    expect(inStub).toBe(page.viewportSize().width >= 768);
   });
 
   test('the country list filters, searches and sets statuses', { tag: '@phone' }, async ({ page }) => {

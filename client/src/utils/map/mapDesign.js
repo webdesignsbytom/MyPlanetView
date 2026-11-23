@@ -3,7 +3,7 @@
 // has one design per map style (22 Nov 2026, the user's wish: colours chosen on Black and
 // white showed on the World map), shown to everyone who opens the map while it's in that
 // style (mapStyles.js shownStyle): its own picture for the sea, its colours for countries,
-// the names and the grid.
+// the names, the grid and the country under the pointer.
 import { REGION_PARENT } from './regionPlaces';
 import { REGION_PLACES, SPECIAL_PLACES, countriesOnMap } from './countries';
 import { isPole } from './specialPlaces';
@@ -33,7 +33,7 @@ export const designFor = (map, styleId) => map?.designs?.[styleId] ?? null;
 export const shownDesign = (design) => (design?.shown ? design : null);
 
 /** A design with nothing in it yet, as the editor starts one. */
-export const EMPTY_DESIGN = Object.freeze({ shown: true, countries: {}, names: null, grid: null, picture: null });
+export const EMPTY_DESIGN = Object.freeze({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, picture: null });
 
 /** Only well-formed colours: they go into a style sheet, so nothing else is let through. */
 export function cleanCountryColours(countries) {
@@ -46,8 +46,9 @@ export function cleanCountryColours(countries) {
 }
 
 /**
- * A design's style sheet, for the map inside [data-map-design]: the names' and the grid's
- * colours as the tokens they read (--map-names, --map-grid), and one rule per coloured
+ * A design's style sheet, for the map inside [data-map-design]: the names', the grid's and
+ * the hovered country's colours as the tokens they read (--map-names, --map-grid,
+ * --map-hover: the hover colour shows on countries, dots, states and poles alike), and one rule per coloured
  * place on the map's own shapes (CountryShape and MicroStateDot carry data-code). A region
  * (Bali, Tasmania) wears its country's colour unless it has its own, as it wears its
  * country's pastel. The country under the pointer still shows the hover colour.
@@ -59,6 +60,8 @@ export function designCss(design) {
   const vars = [];
   if (typeof design.names === 'string' && DESIGN_COLOUR.test(design.names)) vars.push(`--map-names:${design.names}`);
   if (typeof design.grid === 'string' && DESIGN_COLOUR.test(design.grid)) vars.push(`--map-grid:${design.grid}`);
+  if (typeof design.hover === 'string' && DESIGN_COLOUR.test(design.hover)) vars.push(`--map-hover:${design.hover}`);
+  if (typeof design.string === 'string' && DESIGN_COLOUR.test(design.string)) vars.push(`--map-string:${design.string}`);
   const colours = cleanCountryColours(design.countries);
   for (const [region, parent] of Object.entries(REGION_PARENT)) {
     if (!colours[region] && colours[parent]) colours[region] = colours[parent];

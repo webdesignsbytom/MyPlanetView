@@ -16,6 +16,7 @@ import {
   tripView,
 } from '../views';
 import { adsFor } from '../offers';
+import { editedTripDatesProblem } from '../tripDates';
 import { placeOnMap } from '@/utils/map/ukNations';
 
 const TRIP_STATUSES = ['PLANNED', 'ACTIVE', 'COMPLETED'];
@@ -99,6 +100,8 @@ export function registerTripRoutes() {
   route('PATCH', '/api/trips/:tripId', ({ params, body }) => {
     const { trip, role, reply } = loadTrip(params.tripId, 'EDITOR');
     if (reply) return reply;
+    const datesProblem = editedTripDatesProblem(trip, body.startDate, body.endDate);
+    if (datesProblem) return fail(400, datesProblem);
     if (body.title !== undefined) {
       const title = cleanText(body.title, 120);
       if (!title) return fail(400, 'Give the trip a title.');
@@ -110,8 +113,8 @@ export function registerTripRoutes() {
       if (!TRIP_STATUSES.includes(body.status)) return fail(400, 'Unknown trip status.');
       trip.status = body.status;
     }
-    if (body.startDate !== undefined) trip.startDate = body.startDate || null;
-    if (body.endDate !== undefined) trip.endDate = body.endDate || null;
+    if (body.startDate !== undefined) trip.startDate = body.startDate;
+    if (body.endDate !== undefined) trip.endDate = body.endDate;
     if (body.coverPhotoId !== undefined) {
       if (body.coverPhotoId && !getDb().photos.some((p) => p.id === body.coverPhotoId && p.tripId === trip.id)) {
         return fail(400, 'The cover must be one of this trip’s photos.');

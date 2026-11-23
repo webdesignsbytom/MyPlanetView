@@ -58,6 +58,7 @@ import { isKnownCountry } from './helpers/countries.js';
 import { placeOnMap } from '../utils/ukNations.js';
 import { linkedTripSummary, tripDetailView, tripSummary } from './helpers/views.js';
 import { loadUploadRules } from '../services/travel/plans.js';
+import { tripNotOverYet } from '../utils/tripShare.js';
 
 const D = DOMAINS.trips;
 
@@ -184,6 +185,9 @@ export const createTripHandler = handler(D, 'Create trip', async (req, res) => {
   const startDate = parseDateOnly(body.startDate);
   const endDate = parseDateOnly(body.endDate);
   if (!startDate.ok || !endDate.ok) return badRequest(req, res, D, EVENT_MESSAGES.invalidDate);
+  // Every new trip has its days (23 Nov 2026, the user's wish: the "Welcome home" email goes the
+  // day after it ends). Imports and copies keep what they bring.
+  if (!startDate.value || !endDate.value) return badRequest(req, res, D, EVENT_MESSAGES.tripDatesRequired);
   if (!datesInOrder(startDate.value, endDate.value)) return badRequest(req, res, D, EVENT_MESSAGES.datesOutOfOrder);
   const travellerIds = body.travellerIds ?? [];
   if (!isSubsetOf(travellerIds, await findTravellerIds(map.id))) {
@@ -196,8 +200,8 @@ export const createTripHandler = handler(D, 'Create trip', async (req, res) => {
     title,
     description: cleanText(body.description, DESCRIPTION_MAX) ?? null,
     status,
-    startDate: startDate.value ?? null,
-    endDate: endDate.value ?? null,
+    startDate: startDate.value,
+    endDate: endDate.value,
     shareCode: await newUniqueShareCode(),
     travellerIds,
   });
@@ -245,11 +249,16 @@ export const updateTripHandler = handler(D, 'Update trip', async (req, res) => {
   const startDate = parseDateOnly(body.startDate);
   const endDate = parseDateOnly(body.endDate);
   if (!startDate.ok || !endDate.ok) return badRequest(req, res, D, EVENT_MESSAGES.invalidDate);
+  // A trip's days can be changed, never taken away (an older trip without them may still lack them)
+  if (startDate.value === null || endDate.value === null) return badRequest(req, res, D, EVENT_MESSAGES.tripDatesRequired);
   if (startDate.value !== undefined) data.startDate = startDate.value;
   if (endDate.value !== undefined) data.endDate = endDate.value;
   const nextStart = data.startDate !== undefined ? data.startDate : current.startDate;
   const nextEnd = data.endDate !== undefined ? data.endDate : current.endDate;
   if (!datesInOrder(nextStart, nextEnd)) return badRequest(req, res, D, EVENT_MESSAGES.datesOutOfOrder);
+  // Ending today or later, it isn't over: its "Welcome home" email (docs/API.md "Emails") is
+  // still to come, even if an earlier end already sent one
+  const reminderAgain = data.endDate !== undefined && tripNotOverYet(data.endDate);
 
   if (body.coverPhotoId !== undefined) {
     if (body.coverPhotoId === null) data.coverPhotoId = null;
@@ -262,7 +271,7 @@ export const updateTripHandler = handler(D, 'Update trip', async (req, res) => {
     // Completing it marks its stops' countries visited on the map, in the same
     // transaction (also for a trip-only editor: the visits carry source TRIP)
     const completing = data.status === 'COMPLETED' && current.status !== 'COMPLETED';
-    await updateTripInDB(trip.id, data, { markVisited: completing });
+    await updateTripInDB(trip.id, reminderAgain ? { ...data, shareReminderSentAt: null } : data, { markVisited: completing });
     logEvent(createTripEvent({ user: req.user, action: 'Update Success', id: trip.id, detail: Object.keys(data).join(',') }));
   }
   return sendDataResponse(res, 200, { trip: await tripView(trip.id, role, mapRole, mine(req)) });

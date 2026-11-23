@@ -47,7 +47,7 @@ describe('people with access to a map', () => {
 
   it('lets a viewer look but not edit, and strangers not even look', async () => {
     expect((await friend.agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'VISITED' })).status).toBe(403);
-    expect((await friend.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Mine' })).status).toBe(403);
+    expect((await friend.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Mine' })).status).toBe(403);
     expect((await friend.agent.patch(`/api/maps/${map.id}`).send({ name: 'Renamed' })).status).toBe(403);
     expect((await stranger.agent.get(`/api/maps/${map.id}`)).status).toBe(404);
     expect((await stranger.agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'VISITED' })).status).toBe(404);
@@ -139,7 +139,7 @@ describe('invites for people without an account', () => {
   it('invites to a trip only, and refuses an expired invite', async () => {
     const owner = await signUp('TripInviter', { verified: true });
     const map = await defaultMapOf(owner.agent);
-    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Patagonia' })).trip;
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Patagonia' })).trip;
     const invitee = await signUp('TripInvitee', { verified: true });
     // An address with no account yet, so this makes an invite
     const email = testEmail('later');
@@ -208,7 +208,7 @@ describe('unverified addresses', () => {
   it('invites an unverified account to a trip the same way', async () => {
     const owner = await signUp('TripVerifiedOwner', { verified: true });
     const map = await defaultMapOf(owner.agent);
-    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Faroe Islands' })).trip;
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Faroe Islands' })).trip;
     const squatter = await signUp('TripUnverified', { verified: false });
 
     const res = await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: squatter.email, role: 'VIEWER' });
@@ -221,7 +221,7 @@ describe('unverified addresses', () => {
     // The trip is made while verified; then the address counts as unverified again
     const sharer = await signUp('UnverifiedSharer');
     const map = await defaultMapOf(sharer.agent);
-    const trip = data(await sharer.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Spam trip' })).trip;
+    const trip = data(await sharer.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Spam trip' })).trip;
     await prisma.user.update({ where: { id: sharer.user.id }, data: { emailVerified: false } });
     const target = testEmail('spam-target');
     const verifiedTarget = await signUp('SpamTarget', { verified: true });
@@ -272,7 +272,7 @@ describe('share links', () => {
     editor = await signUp('LinkEditor', { verified: true });
     map = await defaultMapOf(owner.agent);
     await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: editor.email, role: 'EDITOR' });
-    await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Visible trip' });
+    await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Visible trip' });
     visiblePhoto = data(await uploadPhoto(owner.agent, map.id, { latitude: 48.8575, longitude: 2.2952 })).photo;
     hiddenPhoto = data(await uploadPhoto(owner.agent, map.id, { countryCode: 'IT' })).photo;
     await owner.agent.patch(`/api/photos/${hiddenPhoto.id}`).send({ hidden: true });
@@ -346,8 +346,8 @@ describe('sharing one trip', () => {
     const owner = await signUp('TripOwner', { verified: true });
     const friend = await signUp('TripFriend', { verified: true });
     const map = await defaultMapOf(owner.agent);
-    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Iceland' })).trip;
-    await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Secret' });
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Iceland' })).trip;
+    await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Secret' });
     const inTrip = data(await uploadPhoto(owner.agent, map.id, { tripId: trip.id, countryCode: 'IS' })).photo;
     const notInTrip = data(await uploadPhoto(owner.agent, map.id, { countryCode: 'NO' })).photo;
 

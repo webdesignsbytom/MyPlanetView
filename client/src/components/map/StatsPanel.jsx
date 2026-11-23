@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 // Icons
-import { FaBalanceScale, FaCalendarAlt, FaPassport, FaPrint, FaShareAlt, FaSuitcase } from 'react-icons/fa';
+import { FaBalanceScale, FaCalendarAlt, FaPassport, FaPlane, FaPrint, FaQuestionCircle, FaShareAlt, FaSuitcase } from 'react-icons/fa';
 // Components
 import MapPanel from './MapPanel';
 import MapActionButton from './MapActionButton';
 import StatTile from './StatTile';
+import StatsTimeAway from './StatsTimeAway';
 import UnplacedPhotosButton from './UnplacedPhotosButton';
 // Hooks
 import useLandmarks from '@/hooks/useLandmarks';
@@ -13,7 +14,8 @@ import useLandmarks from '@/hooks/useLandmarks';
 import { CONTINENT_TOTAL, SPECIAL_PLACE_TOTAL } from '@/utils/map/specialPlaces';
 import { REGION_CODES } from '@/utils/map/regionPlaces';
 import { countryName } from '@/utils/map/countries';
-import { aboutKm, aboutMiles, withThe, worldShare } from '@/utils/map/travelStatWords';
+import { aboutKm, aboutMiles, dayWords, withThe, worldShare } from '@/utils/map/travelStatWords';
+import { lifeShareWords } from '@/utils/map/birthDates';
 
 // Travel statistics, counted by the server from what this viewer may see. Countries
 // leave out the special places (Antarctica and the poles), which have their own count;
@@ -30,8 +32,10 @@ import { aboutKm, aboutMiles, withThe, worldShare } from '@/utils/map/travelStat
 // the World Heritage Sites among them, out of all there are. Then how far they've gone
 // (docs/API.md "Stats"; 21 Nov 2026): the share of the world's countries, the days away and
 // the distance on completed trips (home, the stops, home again), and the place furthest from
-// the map's home (Settings, "This map").
-function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onPoster, compareHref, onYearRecap, collected = null, passportHref, onClose }) {
+// the map's home (Settings, "This map"). Time away in more detail (23 Nov 2026, the user's
+// wish): the longest trip, the days away each year and in each country (StatsTimeAway), and
+// each traveller's days beside their countries.
+function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onPoster, onGuessGame, onFlightLog, compareHref, onYearRecap, collected = null, passportHref, onClose }) {
   const byTraveller = stats?.byTraveller || [];
   const { landmarks } = useLandmarks(null, { enabled: Boolean(collected) });
   const collection = useMemo(() => {
@@ -72,6 +76,7 @@ function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = 
             )}
             <StatTile label='Trips' value={stats.trips} />
             <StatTile label='Days away' value={(stats.daysAway ?? 0).toLocaleString('en-GB')} note='On completed trips' />
+            {stats.longestTrip ? <StatTile label='Longest trip' value={dayWords(stats.longestTrip.days)} compact note={stats.longestTrip.title} /> : null}
             <StatTile
               label='Distance travelled'
               value={aboutKm(stats.distanceKm)}
@@ -97,6 +102,20 @@ function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = 
             <MapActionButton quiet onClick={onPoster}>
               <FaPrint aria-hidden='true' />
               <span>A poster of my map</span>
+            </MapActionButton>
+          ) : null}
+          {/* The flight log (23 Nov 2026): flights, airports and distance, from boarding passes */}
+          {onFlightLog ? (
+            <MapActionButton quiet onClick={onFlightLog}>
+              <FaPlane aria-hidden='true' />
+              <span>Flight log</span>
+            </MapActionButton>
+          ) : null}
+          {/* "Guess where I was" (23 Nov 2026): a game of the map's photos for friends */}
+          {onGuessGame ? (
+            <MapActionButton quiet onClick={onGuessGame}>
+              <FaQuestionCircle aria-hidden='true' />
+              <span>Guess where I was: a game for friends</span>
             </MapActionButton>
           ) : null}
           {onYearRecap ? (
@@ -130,16 +149,26 @@ function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = 
               <span>Passport: landmark stamps</span>
             </Link>
           ) : null}
+          <StatsTimeAway daysByYear={stats.daysByYear} daysByPlace={stats.daysByPlace} />
           {travellers.length > 1 && byTraveller.length ? (
             <section className='grid gap-2' aria-labelledby='stats-by-traveller'>
               <h3 id='stats-by-traveller' className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
-                Countries each, from completed trips
+                Each traveller, from completed trips
               </h3>
               <ul className='grid divide-y divide-dashed divide-poster-brown/40 text-sm'>
                 {byTraveller.map((row) => (
-                  <li key={row.travellerId} className='grid grid-cols-rev gap-2 py-1.5'>
+                  <li key={row.travellerId} data-traveller-stats className='grid grid-cols-rev gap-2 py-1.5'>
                     <span>{row.name}</span>
-                    <span className='font-semibold'>{row.countries}</span>
+                    <span className='font-semibold'>
+                      {[
+                        row.countries === 1 ? '1 country' : `${row.countries} countries`,
+                        dayWords(row.daysAway ?? 0),
+                        // The share of their life (editors, with a date of birth; 23 Nov 2026)
+                        row.daysAway ? lifeShareWords(row.lifeAwayShare) : null,
+                      ]
+                        .filter(Boolean)
+                        .join(' · ')}
+                    </span>
                   </li>
                 ))}
               </ul>

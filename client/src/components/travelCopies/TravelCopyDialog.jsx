@@ -267,7 +267,7 @@ function TravelCopyDialog({ toMap, onClose, onRequested }) {
                   </p>
                   {preview.alreadyCopied ? (
                     <p>
-                      {preview.alreadyCopied} of these {preview.alreadyCopied === 1 ? 'photo is' : 'photos are'} already on your map, and won’t be
+                      {preview.alreadyCopied} of these photos {preview.alreadyCopied === 1 ? 'is' : 'are'} already on your map, and won’t be
                       copied again.
                     </p>
                   ) : null}

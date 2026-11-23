@@ -1,6 +1,7 @@
 // Mock mode only: the passport (docs/API.md, "Passport"), as the server builds it
 // (server/src/services/travel/passport.js and domain/passport.js). A landmark is stamped
-// by a confirmed photo of it on the map; below editor, hidden photos neither stamp nor count.
+// by a confirmed photo of it on the map (below editor, hidden photos neither stamp nor
+// count), or by a tick "been here" with no photo (23 Nov 2026, the user's decision).
 import { COUNTRIES } from '@/utils/map/countries';
 import { landmarkPlace } from '@/utils/map/ukNations';
 import { isSpecialPlace } from '@/utils/map/specialPlaces';
@@ -18,14 +19,18 @@ const shotAt = (photo) => photo.shotAt || photo.takenAt || photo.createdAt;
 const time = (value) => (value ? new Date(value).getTime() : Infinity);
 const dateOnly = (value) => (value ? new Date(value).toISOString().slice(0, 10) : null);
 const byShot = (a, b) => time(shotAt(a)) - time(shotAt(b)) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+// When a stamp was made: its photo's day, or a tick's
+const stampAt = (stamp) => (stamp.photo ? shotAt(stamp.photo) : stamp.tickedAt);
 
 /**
  * Each stamped landmark on a map: its earliest confirmed photo (by when it was taken), how
  * many confirmed photos it has, and when it was first confirmed. `includeHidden` for the
- * owner and editors; `inScope` (one traveller's passport) a test each photo must pass.
- * -> `[{ landmark, photo, photoCount, confirmedAt }]`
+ * owner and editors; `inScope` (one traveller's passport) a test each photo must pass, with
+ * `tickedBy` the account whose ticks count (their own; none without one). A landmark ticked
+ * "been here" with no such photo is a stamp with none (`photo` null, `tickedAt`).
+ * -> `[{ landmark, photo, photoCount, confirmedAt, tickedAt }]`
  */
-export function mapStamps(mapId, { includeHidden, inScope = null }) {
+export function mapStamps(mapId, { includeHidden, inScope = null, tickedBy = null }) {
   const db = getDb();
   const photoById = new Map(db.photos.map((p) => [p.id, p]));
   const byLandmark = new Map();
@@ -41,12 +46,20 @@ export function mapStamps(mapId, { includeHidden, inScope = null }) {
     stamp.photos.push(photo);
     if (match.confirmedAt && (!stamp.confirmedAt || match.confirmedAt < stamp.confirmedAt)) stamp.confirmedAt = match.confirmedAt;
   }
-  return [...byLandmark.values()].map(({ landmark, photos, confirmedAt }) => ({
+  const stamps = [...byLandmark.values()].map(({ landmark, photos, confirmedAt }) => ({
     landmark,
     photo: photos.sort(byShot)[0],
     photoCount: photos.length,
     confirmedAt,
+    tickedAt: null,
   }));
+  for (const tick of db.landmarkVisits || []) {
+    if (tick.mapId !== mapId || byLandmark.has(tick.landmarkId)) continue;
+    if (inScope && (!tickedBy || tick.createdById !== tickedBy)) continue;
+    const landmark = landmarkById(tick.landmarkId);
+    if (landmark) stamps.push({ landmark, photo: null, photoCount: 0, confirmedAt: tick.createdAt, tickedAt: tick.createdAt });
+  }
+  return stamps;
 }
 
 /**
@@ -62,7 +75,7 @@ function travellerFacts(map, traveller, { editor, placeOf }) {
   const moments = (db.moments || []).filter((m) => m.mapId === map.id && (m.travellerIds || []).includes(traveller.id) && (editor || !m.hidden));
   const momentPhotoIds = new Set(moments.flatMap((m) => m.photoIds || []));
   const inScope = (photo) => tripIds.has(photo.tripId) || momentPhotoIds.has(photo.id);
-  const stamps = mapStamps(map.id, { includeHidden: editor, inScope });
+  const stamps = mapStamps(map.id, { includeHidden: editor, inScope, tickedBy: traveller.userId ?? null });
 
   const firstAt = new Map();
   const reach = (code, date) => {
@@ -77,7 +90,7 @@ function travellerFacts(map, traveller, { editor, placeOf }) {
   for (const photo of db.photos) {
     if (photo.mapId === map.id && photo.countryCode && (editor || !photo.hidden) && inScope(photo)) reach(photo.countryCode, shotAt(photo));
   }
-  for (const stamp of stamps) reach(placeOf(stamp.landmark), shotAt(stamp.photo));
+  for (const stamp of stamps) reach(placeOf(stamp.landmark), stampAt(stamp));
   if (traveller.birthCountryCode) reach(traveller.birthCountryCode, null);
   return { stamps, firstAt };
 }
@@ -93,7 +106,8 @@ export function buildPassport(map, role, { travellerId = null } = {}) {
     .filter((t) => t.mapId === map.id)
     .sort((a, b) => a.position - b.position)
     .map(({ id, name, birthCountryCode, favouriteCountryCode }) => ({ id, name, birthCountryCode, favouriteCountryCode }));
-  const holder = travellerId ? (travellers.find((t) => t.id === travellerId) ?? null) : null;
+  // The traveller's own row: its account decides whose ticks are theirs
+  const holder = travellerId ? (db.travellers.find((t) => t.mapId === map.id && t.id === travellerId) ?? null) : null;
   if (travellerId && !holder) return null;
   const visits = db.visits.filter((v) => v.mapId === map.id);
   const visitByCode = new Map(visits.map((v) => [v.countryCode, v]));
@@ -131,7 +145,7 @@ export function buildPassport(map, role, { travellerId = null } = {}) {
   const pages = ordered.map((code) => {
     const onPage = stamps
       .filter((s) => placeOf(s.landmark) === code)
-      .sort((a, b) => time(shotAt(a.photo)) - time(shotAt(b.photo)) || a.landmark.name.localeCompare(b.landmark.name));
+      .sort((a, b) => time(stampAt(a)) - time(stampAt(b)) || a.landmark.name.localeCompare(b.landmark.name));
     const stamped = new Set(onPage.map((s) => s.landmark.id));
     return {
       countryCode: code,
@@ -145,9 +159,11 @@ export function buildPassport(map, role, { travellerId = null } = {}) {
           landmarkId: s.landmark.id,
           name: s.landmark.name,
           isUnesco: s.landmark.isUnesco,
-          stampedOn: dateOnly(shotAt(s.photo)),
+          stampedOn: dateOnly(stampAt(s)),
           photoCount: s.photoCount,
-          photo: { id: photo.id, thumbUrl: photoThumbUrl(photo) },
+          // Ticked "been here" with no photo: a stamp with no picture
+          ticked: !photo,
+          photo: photo ? { id: photo.id, thumbUrl: photoThumbUrl(photo) } : null,
           // Editors: whether someone picked the photo (else it's the earliest)
           ...(editor ? { photoChosen: chosen.has(s.landmark.id) } : {}),
           // The map's moments at this landmark, oldest first (hidden ones for editors only)

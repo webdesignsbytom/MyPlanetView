@@ -123,6 +123,19 @@ export const CHALLENGE_CREATE_DAILY_USER_LIMIT = {
 };
 
 // Opening or joining a challenge by its link, per IP: codes would be guessed here
+// "Guess where I was" (docs/API.md), per IP: everything a player sends (a game of ten photos
+// is about 13 requests; an unknown code counts too, so codes can't be guessed), and new plays
+export const GUESS_PLAY_RATE_LIMIT = {
+  name: 'guess-play',
+  windowMs: 15 * MINUTES,
+  max: 150,
+};
+export const GUESS_START_RATE_LIMIT = {
+  name: 'guess-start',
+  windowMs: 15 * MINUTES,
+  max: 20,
+};
+
 export const CHALLENGE_LOOKUP_RATE_LIMIT = {
   name: 'challenge-lookup',
   windowMs: 15 * MINUTES,

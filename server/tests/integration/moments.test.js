@@ -56,8 +56,8 @@ describe('moments', () => {
     await owner.agent.post(`/api/maps/${map.id}/travellers`).send({ name: 'Partner' });
     travellers = data(await owner.agent.get(`/api/maps/${map.id}`)).map.travellers;
 
-    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Paris' })).trip;
-    otherTrip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Rome' })).trip;
+    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Paris' })).trip;
+    otherTrip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Rome' })).trip;
     for (const [who, resource, role] of [
       [editor, `maps/${map.id}`, 'EDITOR'],
       [viewer, `maps/${map.id}`, 'VIEWER'],
@@ -137,7 +137,7 @@ describe('moments', () => {
       [{ ...base, photoIds: [photos.off.id, photos.off.id] }, 'Choose up to 20 photos, each from this map.'],
       [{ ...base, photoIds: Array.from({ length: 21 }, () => photos.off.id) }, 'Choose up to 20 photos, each from this map.'],
       [{ ...base, photoIds: ['not-a-photo'] }, 'Choose up to 20 photos, each from this map.'],
-      [{ ...base, hidden: 'yes' }, 'Data incorrectly formatted or malformed request'],
+      [{ ...base, hidden: 'yes' }, "Some details weren't in the right format. Please check them and try again."],
     ];
     for (const [body, message] of cases) {
       const res = await create(owner, body);
@@ -249,6 +249,30 @@ describe('moments', () => {
     expect(await counts(viewer.agent)).toEqual({ FR: 1, IT: 1 });
 
     for (const m of [secret, mixed]) await owner.agent.delete(`/api/moments/${m.id}`);
+  });
+
+  // 23 Nov 2026, the user's wish: a day on a trip (a safari day on a trip to Kenya)
+  it('takes the kinds for a day on a trip, and lists them on the trip in date order', async () => {
+    const day = (kind, title, happenedOn) => ({ kind, title, countryCode: 'FR', tripId: trip.id, happenedOn, datePrecision: 'DAY' });
+    const made = [];
+    for (const body of [day('SAFARI', 'Lions at dawn', '2019-04-11'), day('MEAL', 'Dinner on the Seine', '2019-04-10'), day('HIKE', 'Up Montmartre', '2019-04-11')]) {
+      const res = await create(owner, body);
+      expect(res.status).toBe(201);
+      expect(data(res).moment).toMatchObject({ kind: body.kind, tripId: trip.id, happenedOn: body.happenedOn, datePrecision: 'DAY' });
+      made.push(data(res).moment);
+    }
+    for (const kind of ['DIVE', 'TOUR', 'SHOW', 'BEACH']) {
+      const res = await create(owner, day(kind, `A ${kind.toLowerCase()}`, '2019-04-12'));
+      expect(res.status).toBe(201);
+      made.push(data(res).moment);
+    }
+    expect((await create(owner, day('SKYDIVE', 'Not a kind', '2019-04-12'))).status).toBe(400);
+
+    const onTrip = (await listFor(tripViewer.agent, `/api/trips/${trip.id}/moments`)).filter((m) => made.some((x) => x.id === m.id));
+    // Date order (a day's own in id order)
+    expect(onTrip[0].title).toBe('Dinner on the Seine');
+    expect(onTrip.slice(1, 3).map((m) => m.title).sort()).toEqual(['Lions at dawn', 'Up Montmartre']);
+    for (const m of made) await owner.agent.delete(`/api/moments/${m.id}`);
   });
 
   describe('a trip-only editor', () => {
@@ -427,7 +451,7 @@ describe('the moments list', () => {
   beforeAll(async () => {
     user = await signUp('MomentPager');
     map = await defaultMapOf(user.agent);
-    trip = data(await user.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Lisbon' })).trip;
+    trip = data(await user.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Lisbon' })).trip;
     const add = async (label, body) => {
       const res = await user.agent.post(`/api/maps/${map.id}/moments`).send({ kind: 'SAW_OR_DID', title: label, countryCode: 'PT', ...body });
       expect(res.status).toBe(201);

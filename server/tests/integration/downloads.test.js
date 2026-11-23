@@ -25,7 +25,7 @@ describe('download lists (best=1)', () => {
     map = await defaultMapOf(owner.agent);
     await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: editor.email, role: 'EDITOR' });
     await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: viewer.email, role: 'VIEWER' });
-    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Lisbon' })).trip;
+    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Lisbon' })).trip;
     await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: tripEditor.email, role: 'EDITOR' });
     await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: tripViewer.email, role: 'VIEWER' });
     // Economy: each photo keeps a print copy

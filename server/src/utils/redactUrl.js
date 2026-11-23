@@ -7,6 +7,9 @@
 const SECRET_PATHS = [
   // A share link: /api/shared/<code>, /api/shared/<code>/photos/...
   [/^(\/api\/shared\/)[^/?#]+/i, '$1:code'],
+  // A "Guess where I was" game's link and a play's id: /api/guess/<code>/plays/<playId>/…
+  [/^(\/api\/guess\/)[^/?#]+(\/plays\/)[^/?#]+/i, '$1:code$2:token'],
+  [/^(\/api\/guess\/)[^/?#]+/i, '$1:code'],
   // A friends challenge's join link: /api/challenges/join/<code>
   [/^(\/api\/challenges\/join\/)[^/?#]+/i, '$1:code'],
   // A promo code checked at sign-up: /api/promo-codes/<code> (a code for life gives a plan)

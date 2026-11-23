@@ -32,3 +32,39 @@ export function mapCardOptions(map, design = null) {
     shareText: `My travel map: ${map.stats?.countries ?? 0} ${word(map.stats?.countries, 'country', 'countries')} so far.`,
   };
 }
+
+/** Days from a trip's first to its last ("YYYY-MM-DD"), both counted, or null without both. */
+export function tripDayCount(startDate, endDate) {
+  if (!startDate || !endDate) return null;
+  const days = Math.round((Date.parse(`${endDate}T00:00:00Z`) - Date.parse(`${startDate}T00:00:00Z`)) / 86400000) + 1;
+  return days >= 1 ? days : null;
+}
+
+/**
+ * The card of one trip (the "Welcome home" tag, 23 Nov 2026, utils/trips/tripHome.js): its
+ * countries coloured in (the map's own trips list carries them), its title, and how many
+ * countries, days and photos. `map` gives the UK's split, `design` the shown design's colours.
+ */
+export function tripCardOptions(trip, map, design = null) {
+  const codes = trip.countryCodes || [];
+  const days = tripDayCount(trip.startDate, trip.endDate);
+  const stats = [];
+  if (codes.length) stats.push({ value: codes.length, label: word(codes.length, 'country', 'countries') });
+  if (days) stats.push({ value: days, label: word(days, 'day', 'days') });
+  if (trip.photoCount) stats.push({ value: trip.photoCount, label: word(trip.photoCount, 'photo', 'photos') });
+  const counted = [
+    codes.length > 1 ? `${codes.length} countries` : '',
+    days ? `${days} ${word(days, 'day', 'days')}` : '',
+  ].filter(Boolean);
+  return {
+    kicker: 'My trip',
+    title: trip.title,
+    highlight: codes,
+    stats,
+    splitUk: Boolean(map?.splitUk),
+    colours: design?.countries ?? null,
+    fileName: 'my-planet-view-trip.png',
+    shareText: counted.length ? `Just back from ${trip.title}: ${counted.join(' in ')}.` : `Just back from ${trip.title}.`,
+    dialogTitle: 'Share a picture of your trip',
+  };
+}

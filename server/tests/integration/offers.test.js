@@ -123,7 +123,7 @@ describe('how often a viewer sees a card', () => {
     await owner.agent.patch(`/api/maps/${map.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' });
     const { shareCode } = data(await owner.agent.get(`/api/maps/${map.id}/sharing`));
     expect(data(await anon().get(`/api/shared/${shareCode}`)).map.ads).toEqual({ every: 12 });
-    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Lisbon' })).trip;
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Lisbon' })).trip;
     expect(data(await owner.agent.get(`/api/trips/${trip.id}`)).trip.ads).toEqual({ every: 12 });
   });
 });

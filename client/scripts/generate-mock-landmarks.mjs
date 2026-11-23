@@ -1,5 +1,5 @@
 // Copies the server's landmark seed data into mock mode (src/dev/mock/), so the mock API
-// answers GET /api/landmarks with the same 1,332 landmarks as the server:
+// answers GET /api/landmarks with the same 1,366 landmarks as the server:
 // server/prisma/seed/data/landmarks.js (the 177) and landmarksUnesco.js (the UNESCO World
 // Heritage Sites), combined as server/prisma/seed/landmarks.js landmarkRows() does it:
 // `isUnesco` is true for every UNESCO site, and for the 177 in UNESCO_IN_EXISTING.

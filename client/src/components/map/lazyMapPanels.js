@@ -61,11 +61,15 @@ export const ShareCardDialog = lazyPanel(() => import('@/components/shareCard/Sh
 export const QuickFillDialog = lazyPanel(() => import('./QuickFillDialog'));
 // The map as a printed poster (utils/poster/)
 export const MapPosterDialog = lazyPanel(() => import('@/components/poster/MapPosterDialog'));
+export const GuessGameDialog = lazyPanel(() => import('@/components/guess/GuessGameDialog'));
+export const FlightLogDialog = lazyPanel(() => import('@/components/flights/FlightLogDialog'));
 // "Your year in travel" (docs/API.md "Year in travel")
 export const YearRecapDialog = lazyPanel(() => import('@/components/recap/YearRecapDialog'));
 export const BadgesGoalsPanel = lazyPanel(() => import('@/components/achievements/BadgesGoalsPanel'));
 // "Where to go next": the want-to-go countries by the best time for each (utils/countries/whereNext.js)
 export const WhereNextPanel = lazyPanel(() => import('./WhereNextPanel'));
+// Strings between places: the list, the automatic ones and the way into string mode (docs/API.md "Strings")
+export const StringsPanel = lazyPanel(() => import('./StringsPanel'));
 // The slideshows: the map's ("Play my world"), a country's, and a trip's (the trip page)
 export const Slideshow = lazyPanel(() => import('@/components/slideshow/Slideshow'));
 // A country opened on its own, with its states and pins (a country's ticket's "Open country"),
@@ -81,6 +85,7 @@ const FOR_TOOL = {
   trips: [TripsPanel],
   // A place there opens its country
   next: [WhereNextPanel, CountryPanel],
+  strings: [StringsPanel],
   // A moment on the timeline opens its country
   timeline: [TimelinePanel, CountryPanel],
   upload: [PhotoUploadPanel],
@@ -91,6 +96,7 @@ const FOR_TOOL = {
   switcher: [MapSwitcher],
   badges: [BadgesGoalsPanel],
   play: [Slideshow],
+  tips: [MapTipsDialog],
 };
 
 /** Start fetching what a tool opens; errors are left for the real open to show. */

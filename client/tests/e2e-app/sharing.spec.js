@@ -80,7 +80,7 @@ test.describe('Sharing a map', () => {
     await expect(access).toHaveValue('RESTRICTED');
     await access.selectOption('Anyone with the link');
     await expect(access).toHaveValue('ANYONE_WITH_LINK');
-    await expect(dialog.getByText('Anyone with the link can view it, without signing in')).toBeVisible();
+    await expect(dialog.getByText('Anyone with the link can view it in their browser: no app or account needed')).toBeVisible();
 
     // Signed out, the link opens the map to view, without its hidden photo
     await signOut(page);

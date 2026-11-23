@@ -18,7 +18,10 @@ import StampLoading from './StampLoading';
 // `styleId`: the viewer's map style, from the settings this browser kept, so the page's own
 // screen is in the style from the start, sea and paperwork alike, not the animated sea's
 // until the map arrives (19 Nov 2026, the user's wish). The overlay takes the map page's.
-function MapStatusScreen({ loading = false, overlay = false, styleId, title, message, children }) {
+// `heading`: loading, the page's own screen has a hidden h1 saying what's opening, so the page
+// always has one (23 Nov 2026, the user's wish); the map's name takes its place once it opens.
+// The overlay has none: the map page under it already has its h1.
+function MapStatusScreen({ loading = false, overlay = false, styleId, title, message, heading = 'Opening the map', children }) {
   useMapTheme(styleId);
   const Shell = overlay ? 'div' : 'main';
   // data-map-loading: the e2e tests wait for the overlay to go before using the map
@@ -36,6 +39,7 @@ function MapStatusScreen({ loading = false, overlay = false, styleId, title, mes
         // stamps landing all over it (18 Nov 2026), with a glow of sea round them so a stamp
         // underneath never hides them
         <>
+          {overlay ? null : <h1 className='sr-only'>{heading}</h1>}
           <StampLoading />
           <div role='status' className='relative z-10 grid justify-items-center'>
             <span className='font-travel text-3xl uppercase tracking-wide text-map-sea-ink [text-shadow:0_0_6px_var(--color-map-sea),0_0_14px_var(--color-map-sea),0_0_24px_var(--color-map-sea)] sm:text-4xl'>

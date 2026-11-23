@@ -107,13 +107,15 @@ const siteServiceWorker = () => ({
       // Not the map's detailed outlines (`outline-*`, 2.7 MB), fetched as the map is zoomed in,
       // the countries' own maps (`countrymap-*`, 7 MB), fetched as one is opened, or code that
       // needs the network anyway (`online-*`: video playback and upload, and the pre-render's
-      // server renderer)
+      // server renderer; `flights-*`: the flight log's airports and barcode reader, 23 Nov 2026,
+      // as the log itself is online only)
       .filter(
         (name) =>
           name.startsWith('assets/') &&
           !name.startsWith('assets/outline-') &&
           !name.startsWith('assets/countrymap-') &&
           !name.startsWith('assets/online-') &&
+          !name.startsWith('assets/flights-') &&
           /\.(js|css|woff2?|ttf)$/.test(name),
       )
       .sort()
@@ -272,6 +274,11 @@ export default defineConfig({
           // them) or that only the build's pre-render loads (React DOM's server renderer):
           // named so the installed app doesn't keep it (19 Nov 2026, the audit: 190 KB gzip)
           // (the renderer comes through CommonJS, so it's known by its chunk's name)
+          // The flight log's airports (about 300 KB) and the barcode reader (23 Nov 2026): loaded
+          // only by the log, which needs the network to save anything, so kept online too
+          if (chunk.facadeModuleId && /[\\/]utils[\\/]flights[\\/]airportData|node_modules[\\/]@zxing[\\/]/.test(chunk.facadeModuleId)) {
+            return 'assets/flights-[name]-[hash].js';
+          }
           if ((chunk.facadeModuleId && /node_modules[\\/](hls\.js|tus-js-client)[\\/]/.test(chunk.facadeModuleId)) || chunk.name === 'server.browser') {
             return 'assets/online-[name]-[hash].js';
           }

@@ -88,6 +88,17 @@ describe('LandmarkStamp', () => {
   it('draws an empty frame when the photo has no thumbnail', () => {
     const svg = draw(stampOf({ photo: { id: 'p1', thumbUrl: null } }));
     expect(svg.querySelector('image')).toBeNull();
+    expect(svg.querySelector('[data-stamp-been-here]')).toBeNull();
+  });
+
+  // 23 Nov 2026: a landmark ticked "been here" with no photo is a stamp too
+  it('says “Been here” in the frame of a ticked landmark with no photo, in the middle of its box', () => {
+    const svg = draw(stampOf({ photo: null, ticked: true, landmarkId: idWithShape('rectangle') }));
+    expect(svg.querySelector('image')).toBeNull();
+    const words = svg.querySelector('[data-stamp-been-here]');
+    expect([...words.querySelectorAll('text')].map((t) => t.textContent)).toEqual(['BEEN', 'HERE']);
+    const frame = STAMP_GEOMETRY.rectangle.photo;
+    expect(Number(words.querySelector('text').getAttribute('x'))).toBe(frame.x + frame.width / 2);
   });
 
   it('carries the temple only for a UNESCO World Heritage Site, at each of its shape’s marks', () => {

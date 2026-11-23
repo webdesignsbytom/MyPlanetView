@@ -98,6 +98,17 @@ ErrorDocument 404 /404.html
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 </IfModule>
 
+# A map on someone's own website (/embed/:code, 23 Nov 2026): the only page that may be framed,
+# by any site. THE_REQUEST is the request line as it came (the app shell rewrite changes
+# REQUEST_URI); the edit runs after the set above. CSP's frame-ancestors overrides
+# X-Frame-Options in current browsers, and the header goes for older ones.
+<IfModule mod_headers.c>
+  <If "%{THE_REQUEST} =~ m#^[A-Z]+ /embed/#">
+    Header always edit Content-Security-Policy "frame-ancestors 'none'" "frame-ancestors *"
+    Header always unset X-Frame-Options
+  </If>
+</IfModule>
+
 # 6) Compression (Brotli, Gzip fallback) + Vary
 # The types must match what section 8 serves: .js and .mjs go out as text/javascript, and
 # TravelFont is a .ttf (font/ttf), which compresses by about a third (woff2 is already compressed).

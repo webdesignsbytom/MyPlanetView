@@ -82,13 +82,14 @@ describe('TripStopItem', { timeout: 20000 }, () => {
     expect(onRemove).toHaveBeenCalled();
   });
 
-  it('edits the stop on its own form card, then hands focus back to Edit', async () => {
+  it('edits the stop on its own form card, then hands focus back to Edit', { timeout: 20000 }, async () => {
     const onSave = vi.fn().mockResolvedValue();
     const { container } = render(item({ onSave }));
     fireEvent.click(screen.getByLabelText('Edit stop 2, France'));
     expect(container.querySelector('h3').textContent).toBe('Edit stop 2');
     expect(document.activeElement).toBe(container.querySelector('h3'));
-    const place = await screen.findByLabelText('Town or place');
+    // The form's code loads when it's first opened: slow on a busy machine
+    const place = await screen.findByLabelText('Town or place', {}, { timeout: 10000 });
     expect(place.value).toBe('Paris');
     expect(place.id).toBe('stop-s1-place');
     fireEvent.change(place, { target: { value: 'Lyon' } });

@@ -32,6 +32,8 @@ export const MAP_SETTING_FLAGS = Object.freeze([
   // Whether the map has offered "Where have you been?" (ticking countries; 22 Nov 2026): once
   // per account, the first time a map of theirs with few countries opens
   'countriesAsked',
+  // The strings tied between places (docs/API.md "Strings"; on unless turned off)
+  'showStrings',
 ]);
 
 /**

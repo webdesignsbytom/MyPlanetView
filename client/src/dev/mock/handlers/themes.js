@@ -20,7 +20,7 @@ const MESSAGES = {
   notRunning: "That theme isn't running: photos can only be entered during its month.",
   video: 'Themes are for photos, not videos.',
   entryNotFound: "That photo isn't entered in that theme.",
-  malformed: 'Data incorrectly formatted or malformed request',
+  malformed: "Some details weren't in the right format. Please check them and try again.",
 };
 const ALBUM_PAGE_DEFAULT = 30;
 const ALBUM_PAGE_MAX = 60;

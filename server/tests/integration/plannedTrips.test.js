@@ -17,7 +17,7 @@ describe('planned trips on the map', () => {
     [owner, viewer] = await Promise.all([signUp('PlannedOwner'), signUp('PlannedViewer')]);
     map = await defaultMapOf(owner.agent);
     expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: viewer.email, role: 'VIEWER' })).status).toBe(201);
-    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Japan and Korea', startDate: '2027-04-01' })).trip;
+    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Japan and Korea', startDate: '2027-04-01', endDate: '2027-04-15' })).trip;
     for (const countryCode of ['JP', 'KR', 'JP']) {
       expect((await owner.agent.post(`/api/trips/${trip.id}/stops`).send({ countryCode })).status).toBe(201);
     }
@@ -29,7 +29,7 @@ describe('planned trips on the map', () => {
     expect(await listed(owner)).toMatchObject({ status: 'PLANNED', countryCodes: ['JP', 'KR'], linked: false });
     expect((await listed(viewer)).countryCodes).toEqual(['JP', 'KR']);
     // A trip with no stops has none
-    const empty = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Somewhere' })).trip;
+    const empty = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Somewhere' })).trip;
     expect((await listed(owner)).countryCodes).toEqual(['JP', 'KR']);
     expect(data(await owner.agent.get(`/api/maps/${map.id}/trips`)).trips.find((t) => t.id === empty.id).countryCodes).toEqual([]);
   });

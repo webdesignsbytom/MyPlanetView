@@ -6,6 +6,7 @@ import { fail, ok, route } from '../mockAdapter';
 import { getDb, me } from '../store';
 import { landmarkById, photoDetail, userName } from '../views';
 import { effectivePlan, grantsOf, subscriptionOf } from '../plans';
+import { designsOf } from '../mapDesigns';
 import { PLANS } from '@/utils/constants/plans';
 
 const PAGE = 500;
@@ -105,6 +106,7 @@ function mapView(map) {
         linkedToAnAccount: Boolean(t.userId),
         birthCountryCode: t.birthCountryCode ?? null,
         favouriteCountryCode: t.favouriteCountryCode ?? null,
+        birthDate: t.birthDate ?? null,
         addedAt: iso(t.createdAt),
       })),
     countries: db.visits
@@ -192,6 +194,21 @@ function mapView(map) {
     passportStampPhotos: (db.landmarkCovers || [])
       .filter((c) => c.mapId === map.id)
       .map((c) => ({ landmarkId: c.landmarkId, landmarkName: landmarkById(c.landmarkId)?.name ?? null, photoId: c.photoId })),
+    // Its own designs, one per map style, and the landmarks ticked "been here", as the server's
+    designs: Object.entries(designsOf(map)).map(([style, d]) => ({
+      style,
+      shown: Boolean(d.shown),
+      countryColours: d.countries || {},
+      namesColour: d.names ?? null,
+      gridColour: d.grid ?? null,
+      hoverColour: d.hover ?? null,
+      stringColour: d.string ?? null,
+      hasSeaPicture: Boolean(d.pictureKey),
+    })),
+    landmarksBeenTo: (db.landmarkVisits || [])
+      .filter((v) => v.mapId === map.id)
+      .map((v) => ({ landmarkId: v.landmarkId, name: landmarkById(v.landmarkId)?.name ?? null, countryCode: landmarkById(v.landmarkId)?.countryCode ?? null, since: iso(v.createdAt) })),
+    strings: (db.mapStrings || []).filter((s) => s.mapId === map.id).map((s) => ({ from: s.from, to: s.to, since: iso(s.createdAt) })),
     photoCount: db.photos.filter((p) => p.mapId === map.id).length,
   };
 }
@@ -228,6 +245,20 @@ export function registerDataExportRoutes() {
           ? { plan: sub.plan, interval: sub.interval, status: sub.status, extraMaps: sub.extraMaps, currentPeriodEnd: iso(sub.currentPeriodEnd), cancelAtPeriodEnd: Boolean(sub.cancelAtPeriodEnd), startedAt: null }
           : null,
         complimentary: grantsOf(user.id).map((g) => ({ plan: g.plan, startsAt: iso(g.startsAt), endsAt: iso(g.endsAt), reason: g.reason ?? null })),
+        // Gifts of a year of a plan they bought, as the server's (docs/API.md "Gifts")
+        giftsBought: (db.gifts || [])
+          .filter((g) => g.buyerId === user.id && g.paidAt)
+          .map((g) => ({
+            code: g.code,
+            plan: g.plan,
+            months: g.months,
+            pricePence: g.amountPence,
+            forName: g.toName ?? null,
+            message: g.message ?? null,
+            paidAt: iso(g.paidAt),
+            redeemedAt: iso(g.redeemedAt),
+            refundedAt: iso(g.refundedAt),
+          })),
       },
       mapsYouOwn: db.maps.filter((m) => m.ownerId === user.id).map((m) => ({ id: m.id, name: m.name, isDefault: m.isDefault, createdAt: iso(m.createdAt) })),
       mapsSharedWithYou: db.mapMembers

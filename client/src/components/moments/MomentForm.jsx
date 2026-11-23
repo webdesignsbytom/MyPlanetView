@@ -23,6 +23,7 @@ import {
   MOMENT_PLACE_MAX,
   MOMENT_TEXT_MAX,
   MOMENT_TITLE_MAX,
+  TRIP_MOMENT_KIND_GROUPS,
   statusForKind,
 } from '@/utils/moments/momentKinds';
 import { momentDateBody, momentDateFields } from '@/utils/moments/momentDates';
@@ -116,7 +117,12 @@ function MomentForm({
       // country, say) links the one already added instead of adding them again, and still
       // links them on a couple's map, which has no room left to offer it (19 Nov 2026, the audit)
       if (offerBaby && form.addBaby && !babyIdRef.current) {
-        const traveller = await onAddTraveller({ name: babyName, birthCountryCode: country });
+        // A birth dated to the day is the baby's date of birth (23 Nov 2026)
+        const traveller = await onAddTraveller({
+          name: babyName,
+          birthCountryCode: country,
+          ...(date.datePrecision === 'DAY' ? { birthDate: date.happenedOn } : {}),
+        });
         babyIdRef.current = traveller?.id ?? null;
       }
       if (form.addBaby && babyIdRef.current && !travellerIds.includes(babyIdRef.current)) travellerIds.push(babyIdRef.current);
@@ -162,7 +168,12 @@ function MomentForm({
     <form onSubmit={handleSubmit} className='grid gap-4' noValidate data-ticket-form=''>
       <div className='grid gap-4 lg:grid-cols-2'>
         <FormField id={`${uid}-kind`} label='What kind' align='start'>
-          <PlainOptionSelect value={form.kind} onChange={set('kind')} options={MOMENT_KIND_OPTIONS} />
+          {/* On a trip's page, a day's kinds first (a safari, a hike; 23 Nov 2026) */}
+          {tripId ? (
+            <GroupedOptionSelect value={form.kind} onChange={set('kind')} groups={TRIP_MOMENT_KIND_GROUPS} />
+          ) : (
+            <PlainOptionSelect value={form.kind} onChange={set('kind')} options={MOMENT_KIND_OPTIONS} />
+          )}
         </FormField>
         <FormField id={`${uid}-title`} label='Title' required align='start'>
           <TextInput value={form.title} onChange={set('title')} maxLength={MOMENT_TITLE_MAX} required />

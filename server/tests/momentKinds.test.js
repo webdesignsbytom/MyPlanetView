@@ -16,6 +16,14 @@ describe('moment kinds', () => {
       // 21 Nov 2026
       'FIRST_TRIP',
       'ANNIVERSARY',
+      // 23 Nov 2026: a day on a trip
+      'SAFARI',
+      'HIKE',
+      'DIVE',
+      'TOUR',
+      'MEAL',
+      'SHOW',
+      'BEACH',
     ]);
     expect(Object.isFrozen(MOMENT_KINDS)).toBe(true);
   });
@@ -23,6 +31,8 @@ describe('moment kinds', () => {
   it('labels every kind, and nothing else', () => {
     expect(Object.keys(MOMENT_KIND_LABELS).sort()).toEqual([...MOMENT_KINDS].sort());
     expect(MOMENT_KIND_LABELS.SAW_OR_DID).toBe('Something we saw or did');
+    expect(MOMENT_KIND_LABELS.SAFARI).toBe('Safari');
+    expect(MOMENT_KIND_LABELS.MEAL).toBe('A meal to remember');
   });
 
   it('accepts only the listed kinds, exactly as written', () => {

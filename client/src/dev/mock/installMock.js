@@ -35,7 +35,10 @@ import { registerMapDesignRoutes } from './handlers/mapDesigns';
 import { registerGiftRoutes } from './handlers/gifts';
 import { registerImportRoutes } from './handlers/imports';
 import { registerCollectingRoutes } from './handlers/collecting';
+import { registerMapStringRoutes } from './handlers/mapStrings';
 import { registerReferralRoutes } from './handlers/referrals';
+import { registerGuessGameRoutes } from './handlers/guessGames';
+import { registerFlightRoutes } from './handlers/flights';
 
 export function installMock() {
   // ?mockRole=ADMIN or DEVELOPER switches the test user's role, and is remembered
@@ -66,7 +69,10 @@ export function installMock() {
   registerGiftRoutes();
   registerImportRoutes();
   registerCollectingRoutes();
+  registerMapStringRoutes();
   registerReferralRoutes();
+  registerGuessGameRoutes();
+  registerFlightRoutes();
 
   // Every request goes to the adapter: the API client, the global axios (media uploads)
   // and the photo upload XHR

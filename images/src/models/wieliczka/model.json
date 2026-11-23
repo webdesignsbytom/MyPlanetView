@@ -1,0 +1,8 @@
+{
+  "name": "Wieliczka Salt Mine",
+  "latitude": 49.98305,
+  "longitude": 20.05566,
+  "maps": ["PL"],
+  "landmark": "Q454019",
+  "onMap": false
+}

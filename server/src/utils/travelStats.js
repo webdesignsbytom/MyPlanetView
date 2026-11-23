@@ -1,5 +1,6 @@
 // The richer travel stats (docs/API.md "Stats"; 21 Nov 2026, the user's wish): how much of
-// the world, the days away, the distance travelled and the place furthest from home. Pure,
+// the world, the days away (each year's, each place's and the longest trip's too, 23 Nov
+// 2026), the distance travelled and the place furthest from home. Pure,
 // so tested on its own (tests/travelStats.test.js); the mock has a copy
 // (client/src/dev/mock/travelStats.js).
 //
@@ -56,6 +57,102 @@ export function daysAway(trips) {
   return total;
 }
 
+// Day ranges joined where they overlap or touch, in order
+function mergedDays(ranges) {
+  const merged = [];
+  for (const [first, last] of [...ranges].sort((a, b) => a[0] - b[0])) {
+    const prev = merged.at(-1);
+    if (prev && first <= prev[1] + 1) prev[1] = Math.max(prev[1], last);
+    else merged.push([first, last]);
+  }
+  return merged;
+}
+
+const yearOfDay = (day) => new Date(day * DAY_MS).getUTCFullYear();
+
+/**
+ * Days away in each calendar year (23 Nov 2026, the user's wish), newest first: a trip over
+ * New Year counts in both, a day two trips share once. -> `[{ year, days }]`
+ */
+export function daysByYear(trips) {
+  const totals = new Map();
+  for (const [first, last] of mergedDays(trips.map(tripDays).filter(Boolean))) {
+    for (let day = first; day <= last; ) {
+      const year = yearOfDay(day);
+      const end = Math.min(last, Date.UTC(year + 1, 0, 1) / DAY_MS - 1);
+      totals.set(year, (totals.get(year) ?? 0) + end - day + 1);
+      day = end + 1;
+    }
+  }
+  return [...totals].map(([year, days]) => ({ year, days })).sort((a, b) => b.year - a.year);
+}
+
+/**
+ * Each stop's days, `[first, last]`, in its trip's order: its own dates; a stop with only its
+ * arrival stays until the next stop's arrival (the day of travel counts in both places), else
+ * until the trip ends. Stops with no dates are left out.
+ */
+function stopRanges(trip) {
+  const stops = [...(trip.stops ?? [])].sort((a, b) => a.position - b.position);
+  const tripEnd = tripDays(trip)?.[1] ?? null;
+  return stops.flatMap((stop, i) => {
+    const arrive = dayOf(stop.arriveOn);
+    const leave = dayOf(stop.leaveOn);
+    const first = arrive ?? leave;
+    if (first === null) return [];
+    const nextArrive = stops.slice(i + 1).map((s) => dayOf(s.arriveOn)).find((d) => d !== null) ?? null;
+    const last = leave ?? nextArrive ?? tripEnd ?? first;
+    return [{ countryCode: stop.countryCode, range: [first, Math.max(first, last)] }];
+  });
+}
+
+/**
+ * The days spent in each place (23 Nov 2026, the user's wish): a trip to one place gives it
+ * every day of the trip; a trip to several gives each place its stops' days (stopRanges). A
+ * day in two places counts in each, a day two trips share once. Most days first, then by code.
+ * -> `[{ countryCode, days }]`
+ */
+export function daysByPlace(trips) {
+  const ranges = new Map();
+  const add = (code, range) => ranges.set(code, [...(ranges.get(code) ?? []), range]);
+  for (const trip of trips) {
+    const places = new Set((trip.stops ?? []).map((s) => s.countryCode));
+    if (places.size === 1) {
+      const days = tripDays(trip);
+      if (days) add([...places][0], days);
+      continue;
+    }
+    for (const { countryCode, range } of stopRanges(trip)) add(countryCode, range);
+  }
+  return [...ranges]
+    .map(([countryCode, list]) => ({ countryCode, days: mergedDays(list).reduce((sum, [first, last]) => sum + last - first + 1, 0) }))
+    .sort((a, b) => b.days - a.days || a.countryCode.localeCompare(b.countryCode));
+}
+
+/**
+ * The share of a life spent away (23 Nov 2026, the user's wish): `days` away over the days
+ * from `birthDate` to `today`, both included, as a percentage with one decimal (at most 100).
+ * Null without a date of birth, or one after today.
+ */
+export function lifeAwayShare(days, birthDate, today = new Date()) {
+  const born = dayOf(birthDate);
+  const now = dayOf(today);
+  if (born === null || now === null || now < born) return null;
+  return Math.min(100, Math.round((1000 * (days || 0)) / (now - born + 1)) / 10);
+}
+
+/** The longest trip with dates: `{ tripId, title, days }` (the first of equals), or null. */
+export function longestTrip(trips) {
+  let best = null;
+  for (const trip of trips) {
+    const range = tripDays(trip);
+    if (!range) continue;
+    const days = range[1] - range[0] + 1;
+    if (!best || days > best.days) best = { tripId: trip.id ?? null, title: trip.title ?? '', days };
+  }
+  return best;
+}
+
 // Where a stop is: its landmark, else its place's pin
 const stopPoint = (stop, positions) =>
   (Number.isFinite(stop.landmark?.latitude) && Number.isFinite(stop.landmark?.longitude) ? stop.landmark : positions.get(stop.countryCode)) ?? null;
@@ -103,9 +200,10 @@ export function furthestFromHome(codes, positions, homeCode) {
 }
 
 /**
- * The extra stats: `{ homeCountryCode, daysAway, distanceKm, furthest }`.
+ * The extra stats: `{ homeCountryCode, daysAway, daysByYear, daysByPlace, longestTrip,
+ * distanceKm, furthest }`.
  * @param {object} input
- * @param {{ startDate, endDate, stops: { position, countryCode, arriveOn, leaveOn, landmark }[] }[]} input.completedTrips
+ * @param {{ id, title, startDate, endDate, stops: { position, countryCode, arriveOn, leaveOn, landmark }[] }[]} input.completedTrips
  * @param {string[]} input.visitedCodes the places counted visited (visited or lived)
  * @param {Map<string, { latitude: number, longitude: number }>} input.positions each place's pin
  * @param {string|null} input.homeCountryCode the map's home (homeOf)
@@ -116,6 +214,10 @@ export function travelExtras({ completedTrips = [], visitedCodes = [], positions
   return {
     homeCountryCode,
     daysAway: daysAway(completedTrips),
+    // Time away in more detail (23 Nov 2026, the user's wish)
+    daysByYear: daysByYear(completedTrips),
+    daysByPlace: daysByPlace(completedTrips),
+    longestTrip: longestTrip(completedTrips),
     distanceKm: Math.round(km),
     furthest: furthestFromHome(visitedCodes, positions, homeCountryCode),
   };

@@ -29,6 +29,8 @@ import emailRouter from './routes/emails.js';
 import { offerClickRouter, offersRouter } from './routes/offers.js';
 import themeRouter from './routes/themes.js';
 import challengeRouter from './routes/challenges.js';
+import { guessGameRouter, guessRouter } from './routes/guessGames.js';
+import flightRouter from './routes/flights.js';
 import sharedRouter from './routes/shared.js';
 import inviteRouter from './routes/invites.js';
 // Plans and payments
@@ -153,6 +155,10 @@ app.use('/api/emails', emailRouter);
 app.use('/api/offers', offersRouter);
 app.use('/api/themes', themeRouter);
 app.use('/api/challenges', challengeRouter);
+// "Guess where I was": a game by its code (anyone), and deleting one (its map's editors)
+app.use('/api/guess', guessRouter);
+app.use('/api/guess-games', guessGameRouter);
+app.use('/api/flights', flightRouter);
 // An offer card's link (docs/API.md, "Travel offers"): counts the click and redirects
 app.use('/go', offerClickRouter);
 app.use('/api/shared', sharedRouter);

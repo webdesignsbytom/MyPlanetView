@@ -17,7 +17,9 @@ import {
   NOTES_MAX,
   VISIT_STATUSES,
   isOneOf,
+  parseBirthDate,
   parseDateOnly,
+  toDateOnly,
 } from '../utils/travelValidation.js';
 import {
   countTravellers,
@@ -51,7 +53,7 @@ import { badRequest, conflict, denyUnless, handler, loadMap, notFound, reply } f
 import { isKnownCountry, parseOptionalCountry } from './helpers/countries.js';
 import { loadMapStats, loadStatsCounts, statsFrom, visitView } from './helpers/views.js';
 import { mapDesignsView } from './mapDesigns.js';
-import { findTickedLandmarkIds } from '../domain/landmarkVisits.js';
+import { mapStringsView } from './mapStrings.js';
 
 const D = DOMAINS.maps;
 
@@ -75,6 +77,10 @@ async function parseTraveller(body, { partial = false } = {}) {
     // A traveller's places are countries: a UK nation (a birth moment in Scotland) is the UK
     if (parsed.value !== undefined) out[field] = parsed.value ? placeOnMap(parsed.value, false) : parsed.value;
   }
+  // Optional, asked when people are added to a map (23 Nov 2026): null or "" clears it
+  const birthDate = parseBirthDate(body.birthDate);
+  if (!birthDate.ok) return { error: EVENT_MESSAGES.invalidBirthDate };
+  if (birthDate.value !== undefined) out.birthDate = birthDate.value;
   if (body.position !== undefined) {
     if (!Number.isInteger(body.position) || body.position < 0 || body.position > 1000) {
       return { error: EVENT_MESSAGES.malformedData };
@@ -85,6 +91,9 @@ async function parseTraveller(body, { partial = false } = {}) {
 }
 
 // Views
+
+/** A traveller as its map's editors see it: the date of birth as "YYYY-MM-DD" (or null). */
+const travellerOut = (traveller) => ({ ...traveller, birthDate: toDateOnly(traveller.birthDate) });
 
 // `slots` (utils/mapSlots.js) is given for the maps the caller owns: only the owner sees
 // whether a map is locked and its grace period
@@ -139,7 +148,7 @@ const WITH_PLAN = { withPlan: true };
  */
 export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
   const editor = canEdit(role);
-  const [detail, counts, planFields, momentCountsByCountry, momentSpots, designs, tickedLandmarkIds] = await Promise.all([
+  const [detail, counts, planFields, momentCountsByCountry, momentSpots, designs, strings] = await Promise.all([
     findMapDetail(mapId),
     loadStatsCounts(mapId, role),
     editor && withPlan ? mapPlanView(mapId) : {},
@@ -149,11 +158,11 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     findMomentSpots(mapId, { includeHidden: editor }),
     // Its own designs, one per map style, for everyone who opens it (docs/API.md "Map designs")
     mapDesignsView(mapId),
-    // The landmarks ticked "been here" (docs/API.md "Collecting")
-    findTickedLandmarkIds(mapId),
+    // The strings tied between its places, for everyone who opens it (docs/API.md "Strings")
+    mapStringsView(mapId),
   ]);
   if (!detail) return null;
-  const stats = statsFrom(detail, counts);
+  const stats = statsFrom(detail, counts, { role });
   return {
     id: detail.id,
     name: detail.name,
@@ -173,15 +182,18 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
       position: t.position,
       birthCountryCode: t.birthCountryCode,
       favouriteCountryCode: t.favouriteCountryCode,
-      ...(editor ? { userId: t.userId } : {}),
+      // The account it's linked to, and the date of birth (23 Nov 2026), for editors only
+      ...(editor ? { userId: t.userId, birthDate: toDateOnly(t.birthDate) } : {}),
     })),
     visits: detail.visits.map(visitView),
     stats,
     momentCountsByCountry,
     momentSpots,
-    // The landmarks stamped in the passport, to mark their pins (hidden photos' for editors)
+    // The landmarks stamped in the passport by a photo (hidden photos' for editors), and those
+    // ticked "been here" (docs/API.md "Collecting"), which stamp it too: both pins are marked
     stampedLandmarkIds: counts.stampedLandmarkIds,
-    tickedLandmarkIds,
+    tickedLandmarkIds: counts.tickedLandmarkIds,
+    strings,
     designs,
     ...planFields,
   };
@@ -426,7 +438,7 @@ export const createTravellerHandler = handler(D, 'Create traveller', async (req,
 
   await markBirthplaces(map, [traveller.birthCountryCode]);
   logEvent(createMapEvent({ user: req.user, action: 'Traveller Create Success', id: map.id, detail: `traveller=${traveller.id}`, statusCode: 201 }));
-  return sendDataResponse(res, 201, { traveller });
+  return sendDataResponse(res, 201, { traveller: travellerOut(traveller) });
 });
 
 export const updateTravellerHandler = handler(D, 'Update traveller', async (req, res) => {
@@ -441,7 +453,7 @@ export const updateTravellerHandler = handler(D, 'Update traveller', async (req,
   const traveller = await updateTravellerInDB(req.params.travellerId, parsed.value);
   if (traveller.birthCountryCode !== before.birthCountryCode) await markBirthplaces(map, [traveller.birthCountryCode]);
   logEvent(createMapEvent({ user: req.user, action: 'Traveller Update Success', id: map.id, detail: `traveller=${traveller.id}` }));
-  return sendDataResponse(res, 200, { traveller });
+  return sendDataResponse(res, 200, { traveller: travellerOut(traveller) });
 });
 
 export const deleteTravellerHandler = handler(D, 'Delete traveller', async (req, res) => {

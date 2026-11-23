@@ -11,8 +11,8 @@ export const GIFT_STATUS_WORDS = Object.freeze({
   REFUNDED: 'Refunded',
 });
 
-/** "A year of First Class" */
-export const giftTitle = (gift) => `A ${gift.months === 12 ? 'year' : `${gift.months} months`} of ${gift.planName ?? gift.name}`;
+/** "A year of First Class", "6 months of Business" */
+export const giftTitle = (gift) => `${gift.months === 12 ? 'A year' : `${gift.months} months`} of ${gift.planName ?? gift.name}`;
 
 /** "£99" */
 export const giftPrice = (offer) => formatPence(offer.pence);

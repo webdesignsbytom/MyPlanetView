@@ -288,8 +288,8 @@ describe('a trip-only member', () => {
     const owner = await signUp('Host', { verified: true });
     const guest = await signUp('Guest', { verified: true });
     const map = await defaultMapOf(owner.agent);
-    const tripA = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Shared trip' })).trip;
-    const tripB = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Private trip' })).trip;
+    const tripA = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Shared trip' })).trip;
+    const tripB = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Private trip' })).trip;
     const inA = data(await uploadPhoto(owner.agent, map.id, { tripId: tripA.id, countryCode: 'PT' })).photo;
     const inB = data(await uploadPhoto(owner.agent, map.id, { tripId: tripB.id, countryCode: 'ES' })).photo;
     const loose = data(await uploadPhoto(owner.agent, map.id, { countryCode: 'GR' })).photo;
@@ -329,7 +329,7 @@ describe('a trip cover', () => {
   it('is cleared when its photo moves to another trip, and kept when another photo moves', async () => {
     const { agent } = await signUp('Cover');
     const map = await defaultMapOf(agent);
-    const newTrip = async (title) => data(await agent.post(`/api/maps/${map.id}/trips`).send({ title })).trip;
+    const newTrip = async (title) => data(await agent.post(`/api/maps/${map.id}/trips`).send({ title, startDate: '2019-04-10', endDate: '2019-04-12' })).trip;
     const [rome, lisbon] = [await newTrip('Rome'), await newTrip('Lisbon')];
     const cover = data(await uploadPhoto(agent, map.id, { tripId: rome.id, countryCode: 'IT' })).photo;
     const other = data(await uploadPhoto(agent, map.id, { tripId: rome.id, countryCode: 'IT' })).photo;

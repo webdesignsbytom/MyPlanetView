@@ -1,10 +1,13 @@
-// Emails people can stop (docs/API.md "Emails"; 21 Nov 2026): "On this day", its daily run,
-// the picture its email shows, the unsubscribe link, and the account's own settings.
+// Emails people can stop (docs/API.md "Emails"; 21 Nov 2026): "On this day" and "Welcome
+// home" (23 Nov 2026), their daily run, the picture "On this day" shows, the unsubscribe link,
+// and the account's own settings.
 import crypto from 'node:crypto';
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse, sendMessageResponse } from '../utils/responses/responses.js';
-import { photoLinkToken, tokenMatches, unsubscribeToken } from '../utils/onThisDay.js';
+import { EMAIL_LISTS, ON_THIS_DAY_BUDGET_MS, photoLinkToken, tokenMatches, unsubscribeToken } from '../utils/onThisDay.js';
 import { findEmailPreferences, findMemoryPhotoKey, saveEmailPreferences, turnOffOnThisDayInDB } from '../domain/onThisDay.js';
+import { turnOffTripShareInDB } from '../domain/tripShare.js';
 import { sendOnThisDayEmails } from '../services/memories/onThisDay.js';
+import { sendTripShareEmails } from '../services/memories/tripShare.js';
 import { signPhotoUrl } from '../services/s3/mediaService.js';
 import { badRequest, handler } from './helpers/travel.js';
 
@@ -17,11 +20,22 @@ const matchesCron = (header) => {
   return Boolean(process.env.CRON_SECRET) && given.length === expected.length && crypto.timingSafeEqual(given, expected);
 };
 
-// GET /api/emails/on-this-day/cron (Vercel's cron, with CRON_SECRET)
+// GET /api/emails/on-this-day/cron (Vercel's cron, with CRON_SECRET; one daily run for both,
+// so it needs no second cron): first the "Welcome home" emails (a few a day, in their own short
+// budget), reported as `tripShare` (null if they failed: "On this day" still goes), then "On this
+// day" in what's left of its budget, its totals at the top as before.
 export const onThisDayCronHandler = async (req, res) => {
   if (!matchesCron(req.headers.authorization)) return res.status(401).json({ status: 'fail', message: 'Unauthorized' });
+  const startedAt = Date.now();
+  let tripShare = null;
   try {
-    return res.json({ status: 'success', data: await sendOnThisDayEmails() });
+    tripShare = await sendTripShareEmails();
+  } catch (err) {
+    console.error('[emails] welcome home failed:', err);
+  }
+  try {
+    const onThisDay = await sendOnThisDayEmails({ budgetMs: Math.max(0, ON_THIS_DAY_BUDGET_MS - (Date.now() - startedAt)) });
+    return res.json({ status: 'success', data: { ...onThisDay, tripShare } });
   } catch (err) {
     console.error('[emails] on this day failed:', err);
     return res.status(500).json({ status: 'error', message: 'On this day failed.' });
@@ -38,28 +52,39 @@ export const memoryPhotoHandler = handler(D, 'Memory photo', async (req, res) =>
   return res.redirect(302, await signPhotoUrl(key));
 });
 
-// POST /api/emails/unsubscribe?u=&t= (the email's one-click header; a mail client sends
-// "List-Unsubscribe=One-Click", which isn't read) or with `{ u, t }` (the /unsubscribe page):
-// "On this day" off. No sign-in: the signed link is the proof.
+// POST /api/emails/unsubscribe?u=&t=&l= (the email's one-click header; a mail client sends
+// "List-Unsubscribe=One-Click", which isn't read) or with `{ u, t, l }` (the /unsubscribe
+// page): that email off, "On this day" (no `l`, as the first emails' links have none) or
+// "Welcome home" (`l=trips`). No sign-in: the signed link, made for that email, is the proof.
 export const unsubscribeHandler = handler(D, 'Unsubscribe', async (req, res) => {
   const u = req.query?.u ?? req.body?.u;
   const t = req.query?.t ?? req.body?.t;
-  if (typeof u !== 'string' || !u || !tokenMatches(t, unsubscribeToken(u, secret()))) {
+  const list = req.query?.l ?? req.body?.l ?? EMAIL_LISTS.onThisDay;
+  const known = list === EMAIL_LISTS.onThisDay || list === EMAIL_LISTS.tripShare;
+  if (!known || typeof u !== 'string' || !u || !tokenMatches(t, unsubscribeToken(u, secret(), list))) {
     return badRequest(req, res, D, EVENT_MESSAGES.unsubscribeInvalid);
+  }
+  if (list === EMAIL_LISTS.tripShare) {
+    await turnOffTripShareInDB(u);
+    return sendDataResponse(res, 200, { tripShare: false });
   }
   await turnOffOnThisDayInDB(u);
   return sendDataResponse(res, 200, { onThisDay: false });
 });
 
-// GET /api/users/email-preferences -> { onThisDay }
+// GET /api/users/email-preferences -> { onThisDay, tripShare }
 export const getEmailPreferencesHandler = handler(D, 'Get email preferences', async (req, res) =>
   sendDataResponse(res, 200, await findEmailPreferences(req.user.id)),
 );
 
-// PUT /api/users/email-preferences { onThisDay } -> { onThisDay }
+// PUT /api/users/email-preferences { onThisDay?, tripShare? } (at least one, each true or
+// false) -> { onThisDay, tripShare }
 export const putEmailPreferencesHandler = handler(D, 'Save email preferences', async (req, res) => {
-  const onThisDay = req.body?.onThisDay;
-  if (typeof onThisDay !== 'boolean') return badRequest(req, res, D, EVENT_MESSAGES.invalidEmailPreferences);
-  const saved = await saveEmailPreferences(req.user.id, { onThisDay });
-  return sendDataResponse(res, 200, { onThisDay: saved.onThisDayEmails });
+  const { onThisDay, tripShare } = req.body || {};
+  const fine = (value) => value === undefined || typeof value === 'boolean';
+  if (!fine(onThisDay) || !fine(tripShare) || (onThisDay === undefined && tripShare === undefined)) {
+    return badRequest(req, res, D, EVENT_MESSAGES.invalidEmailPreferences);
+  }
+  const saved = await saveEmailPreferences(req.user.id, { onThisDay, tripShare });
+  return sendDataResponse(res, 200, { onThisDay: saved.onThisDayEmails, tripShare: saved.tripShareEmails });
 });

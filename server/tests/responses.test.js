@@ -5,8 +5,6 @@ import { DOMAINS, EVENT_MESSAGES, RESPONSE_MESSAGES } from '../src/utils/respons
 import * as errors from '../src/event/errorUtils.js';
 import { ROLES } from '../src/utils/constants/userConstants.js';
 
-// Labels kept from the template: short, and with no full stop
-const TEMPLATE_LABELS = ['badRequest', 'notFound', 'missingUserIdentifier', 'missingFields', 'malformedData'];
 // Messages that start with a field's name, as the client sends it
 const STARTS_WITH_A_FIELD = ['invalidSplitUk', 'invalidPinHidden'];
 
@@ -23,10 +21,10 @@ describe('EVENT_MESSAGES', () => {
   it('are sentences: a capital first, a full stop (or ? or !) last', () => {
     for (const [key, message] of Object.entries(EVENT_MESSAGES)) {
       if (!STARTS_WITH_A_FIELD.includes(key)) expect(message, key).toMatch(/^["A-Z]/);
-      if (!TEMPLATE_LABELS.includes(key)) expect(message, key).toMatch(/[.?!]$/);
+      expect(message, key).toMatch(/[.?!]$/);
     }
-    // The exceptions are still there (drop them from the lists once reworded)
-    for (const key of [...TEMPLATE_LABELS, ...STARTS_WITH_A_FIELD]) expect(EVENT_MESSAGES[key], key).toBeTruthy();
+    // The exceptions are still there (drop them from the list once reworded)
+    for (const key of STARTS_WITH_A_FIELD) expect(EVENT_MESSAGES[key], key).toBeTruthy();
   });
 
   it('never leak a placeholder or a stack', () => {

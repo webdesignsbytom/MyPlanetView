@@ -40,6 +40,9 @@ export const DEFAULT_MAP_SETTINGS = {
   // The luggage tag under the map's title with the nearest goal's progress
   // (components/achievements/GoalTag.jsx)
   showGoalTag: true,
+  // The strings tied between places, like thread on a corkboard (components/map/MapStrings.jsx;
+  // 23 Nov 2026): the map's own, each viewer's choice to show
+  showStrings: true,
   // The tips the map opens with, once a visit (components/map/MapTipsDialog.jsx, whose box
   // turns this off)
   showTips: true,
@@ -57,6 +60,7 @@ export const MAP_SETTING_TOGGLES = [
   { key: 'showAntarctica', label: 'Antarctica', group: 'countries' },
   { key: 'showMoments', label: 'Moments', group: 'countries' },
   { key: 'showGoalTag', label: 'Goal progress tag', group: 'countries' },
+  { key: 'showStrings', label: 'Strings between countries', group: 'countries' },
   { key: 'showGrid', label: 'Latitude and longitude lines', group: 'map', detailed: true },
   { key: 'showGridLabels', label: 'Label the lines', group: 'map', detailed: true },
   { key: 'showCountryNames', label: 'Country names', group: 'map', detailed: true },

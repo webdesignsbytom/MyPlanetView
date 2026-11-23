@@ -1,5 +1,6 @@
 // Landmarks seeded into the Landmark table: the 177 monuments from the old map
-// data (one per country), cleaned up. Fixes: the UAE had Qatar's Al Zubarah
+// data (one per country), cleaned up, the 24 added on 23 Nov 2026 for the places
+// that had none, and 10 famous places added the same day for their 3D models (at the end). Fixes: the UAE had Qatar's Al Zubarah
 // (now the Burj Khalifa); "Prince", "St. Peter", "Ha" and "Banc d`Arguin" were
 // names cut short by apostrophes.
 //
@@ -206,4 +207,45 @@ export const LANDMARKS = [
   { countryCode: 'YE', name: 'Old City of Sanaa', category: 'old town', latitude: 15.3551, longitude: 44.2145, matchRadiusM: 1500, wikidataId: 'Q12220316' },
   { countryCode: 'ZM', name: 'Victoria Falls', category: 'natural', latitude: -17.92478, longitude: 25.85806, matchRadiusM: 4000, wikidataId: 'Q43278' },
   { countryCode: 'ZW', name: 'Great Zimbabwe National Monument', category: 'site', latitude: -20.27, longitude: 30.933, matchRadiusM: 1500, wikidataId: 'Q209217' },
+  // Added 23 Nov 2026: one for each of the 24 places on the map that had no landmark (territories
+  // and small islands), so each country map can show its 3D model. Points and items from
+  // Wikidata that day; Anguilla, which has no item for Shoal Bay, has Wallblake House.
+  { countryCode: 'AI', name: 'Wallblake House', category: 'building', latitude: 18.2094, longitude: -63.0547, matchRadiusM: 400, wikidataId: 'Q7963002' },
+  { countryCode: 'AS', name: 'National Park of American Samoa', category: 'park', latitude: -14.25833, longitude: -170.68333, matchRadiusM: 10000, wikidataId: 'Q843075' },
+  { countryCode: 'AW', name: 'California Lighthouse', category: 'building', latitude: 12.61337, longitude: -70.05241, matchRadiusM: 400, wikidataId: 'Q2279321' },
+  { countryCode: 'BL', name: 'Gustavia', category: 'old town', latitude: 17.89861, longitude: -62.84917, matchRadiusM: 1500, wikidataId: 'Q34112' },
+  { countryCode: 'BN', name: 'Omar Ali Saifuddien Mosque', category: 'building', latitude: 4.88958, longitude: 114.93914, matchRadiusM: 400, wikidataId: 'Q842921' },
+  { countryCode: 'BQ', name: 'Salt Pans of Bonaire (Pekelmeer)', category: 'natural', latitude: 12.03333, longitude: -68.25, matchRadiusM: 3000, wikidataId: 'Q21806587' },
+  { countryCode: 'BS', name: 'Pig Beach', category: 'island', latitude: 24.18361, longitude: -76.45639, matchRadiusM: 1500, wikidataId: 'Q7193206' },
+  { countryCode: 'BT', name: "Paro Taktsang (Tiger's Nest)", category: 'building', latitude: 27.49167, longitude: 89.36333, matchRadiusM: 800, wikidataId: 'Q2209873' },
+  { countryCode: 'EH', name: 'Dakhla Bay', category: 'natural', latitude: 23.73355, longitude: -15.86173, matchRadiusM: 15000, wikidataId: 'Q25390655' },
+  { countryCode: 'FK', name: 'Volunteer Point', category: 'natural', latitude: -51.4711, longitude: -57.845, matchRadiusM: 3000, wikidataId: 'Q431031' },
+  { countryCode: 'FO', name: 'Múlafossur', category: 'natural', latitude: 62.10748, longitude: -7.43578, matchRadiusM: 800, wikidataId: 'Q56322370' },
+  { countryCode: 'GF', name: 'Guiana Space Centre', category: 'site', latitude: 5.23722, longitude: -52.76056, matchRadiusM: 5000, wikidataId: 'Q308987' },
+  { countryCode: 'GP', name: 'Carbet Falls', category: 'natural', latitude: 16.0456, longitude: -61.6522, matchRadiusM: 1500, wikidataId: 'Q2967747' },
+  { countryCode: 'GU', name: 'Two Lovers Point', category: 'natural', latitude: 13.53499, longitude: 144.80245, matchRadiusM: 800, wikidataId: 'Q96097880' },
+  { countryCode: 'KY', name: 'Stingray City', category: 'natural', latitude: 19.3757, longitude: -81.3048, matchRadiusM: 1500, wikidataId: 'Q281265' },
+  { countryCode: 'MF', name: 'Fort Louis', category: 'building', latitude: 18.0708, longitude: -63.0854, matchRadiusM: 500, wikidataId: 'Q3077924' },
+  { countryCode: 'MP', name: 'Managaha', category: 'island', latitude: 15.24, longitude: 145.71056, matchRadiusM: 1500, wikidataId: 'Q6799175' },
+  { countryCode: 'MS', name: 'Soufrière Hills', category: 'mountain', latitude: 16.71667, longitude: -62.18333, matchRadiusM: 8000, wikidataId: 'Q845239' },
+  { countryCode: 'SX', name: 'Maho Beach', category: 'natural', latitude: 18.03917, longitude: -63.12028, matchRadiusM: 800, wikidataId: 'Q922921' },
+  { countryCode: 'TC', name: 'Grace Bay', category: 'natural', latitude: 21.80031, longitude: -72.17212, matchRadiusM: 5000, wikidataId: 'Q59163583' },
+  { countryCode: 'TL', name: 'Cristo Rei of Dili', category: 'monument', latitude: -8.52053, longitude: 125.60832, matchRadiusM: 800, wikidataId: 'Q680813' },
+  { countryCode: 'VG', name: 'The Baths', category: 'natural', latitude: 18.4294, longitude: -64.4454, matchRadiusM: 1000, wikidataId: 'Q7715805' },
+  { countryCode: 'VI', name: 'Trunk Bay', category: 'natural', latitude: 18.3525, longitude: -64.76972, matchRadiusM: 1000, wikidataId: 'Q4573739' },
+  { countryCode: 'YT', name: 'Mont Choungui', category: 'mountain', latitude: -12.95694, longitude: 45.13389, matchRadiusM: 3000, wikidataId: 'Q3321752' },
+  // Added 23 Nov 2026: 10 famous places the data lacked, for their country maps' 3D models
+  // (images/src/models/NEXT-MODELS.md). Points and items from Wikidata that day. Santorini's
+  // point is the island's middle, so 12 km reaches Oia and Akrotiri; the Matterhorn's 10 km
+  // reaches Zermatt, where most of its photos are taken; Torres del Paine's is the park's.
+  { countryCode: 'AE', name: 'Sheikh Zayed Grand Mosque', category: 'building', latitude: 24.412, longitude: 54.474, matchRadiusM: 600, wikidataId: 'Q695604' },
+  { countryCode: 'BO', name: 'Salar de Uyuni', category: 'natural', latitude: -20.33333, longitude: -67.7, matchRadiusM: 60000, wikidataId: 'Q76122' },
+  { countryCode: 'CH', name: 'Matterhorn', category: 'mountain', latitude: 45.97639, longitude: 7.65861, matchRadiusM: 10000, wikidataId: 'Q1374' },
+  { countryCode: 'CL', name: 'Torres del Paine National Park', category: 'park', latitude: -50.98306, longitude: -72.96639, matchRadiusM: 40000, wikidataId: 'Q901646' },
+  { countryCode: 'GR', name: 'Santorini', category: 'island', latitude: 36.415, longitude: 25.4325, matchRadiusM: 12000, wikidataId: 'Q129296' },
+  { countryCode: 'IN', name: 'Golden Temple', category: 'building', latitude: 31.62, longitude: 74.87667, matchRadiusM: 500, wikidataId: 'Q180422' },
+  { countryCode: 'RO', name: 'Bran Castle', category: 'building', latitude: 45.515, longitude: 25.3671, matchRadiusM: 500, wikidataId: 'Q390275' },
+  { countryCode: 'TH', name: 'Grand Palace', category: 'building', latitude: 13.75014, longitude: 100.49203, matchRadiusM: 600, wikidataId: 'Q873769' },
+  { countryCode: 'US', name: 'Golden Gate Bridge', category: 'site', latitude: 37.81972, longitude: -122.47861, matchRadiusM: 2000, wikidataId: 'Q44440' },
+  { countryCode: 'US', name: 'Mount Rushmore', category: 'monument', latitude: 43.87889, longitude: -103.45917, matchRadiusM: 1500, wikidataId: 'Q83497' },
 ];

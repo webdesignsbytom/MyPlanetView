@@ -23,6 +23,7 @@ import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
 import { ukNationAt } from '../ukNationLookup';
 import { setMapSplitUk } from '../ukNationSplit';
 import { adsFor } from '../offers';
+import { newTripDatesProblem } from '../tripDates';
 import { parseRecapYear, yearRecap } from '../recaps';
 import {
   LANDMARK_ROWS,
@@ -125,8 +126,25 @@ function travellerFields(body) {
     out[field] = place.value;
   }
   if (hasPole(body)) return { error: POLE_NOT_A_HOME };
+  // The optional date of birth, as the server's parseBirthDate (23 Nov 2026)
+  if (body.birthDate !== undefined) {
+    const born = birthDateOf(body.birthDate);
+    if (born.error) return { error: born.error };
+    out.birthDate = born.value;
+  }
   if (body.position !== undefined && Number.isInteger(body.position)) out.position = body.position;
   return { fields: out };
+}
+
+const BAD_BIRTH_DATE = 'Give a date of birth from 1 January 1900 up to today, or leave it empty.';
+/** A date of birth from a body: "YYYY-MM-DD" from 1900 to a day after today (UTC), or null. */
+function birthDateOf(value) {
+  if (value === null || value === '') return { value: null };
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return { error: BAD_BIRTH_DATE };
+  const date = new Date(`${value}T00:00:00Z`);
+  const latest = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+  if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== value || value < '1900-01-01' || value > latest) return { error: BAD_BIRTH_DATE };
+  return { value };
 }
 
 // `owner`: the signed-in user, or (a default map remade after a transfer) someone else
@@ -137,7 +155,16 @@ export function createMapRecord({ name, groupType, isDefault = false, travellers
   db.maps.push(map);
   const list = travellers.length ? travellers : [{ name: owner.name.split(' ')[0] || 'Me' }];
   list.forEach((t, i) => {
-    db.travellers.push({ id: newId(), mapId: map.id, name: cleanText(t.name, 60) || `Traveller ${i + 1}`, position: i, userId: i === 0 ? owner.id : null, birthCountryCode: travellerCountry(t.birthCountryCode ?? null).value ?? null, favouriteCountryCode: travellerCountry(t.favouriteCountryCode ?? null).value ?? null });
+    db.travellers.push({
+      id: newId(),
+      mapId: map.id,
+      name: cleanText(t.name, 60) || `Traveller ${i + 1}`,
+      position: i,
+      userId: i === 0 ? owner.id : null,
+      birthCountryCode: travellerCountry(t.birthCountryCode ?? null).value ?? null,
+      favouriteCountryCode: travellerCountry(t.favouriteCountryCode ?? null).value ?? null,
+      birthDate: birthDateOf(t.birthDate ?? null).value ?? null,
+    });
   });
   return map;
 }
@@ -207,8 +234,9 @@ export function registerMapRoutes() {
     // The body first, then a free map slot (402 with the extra map's price on the plan)
     if (!mapSlots(me().id).canCreate) return fail(402, mapSlotsMessage(effectivePlan(me().id).plan));
     const map = createMapRecord({ name, groupType: body.groupType, travellers });
-    // Born there is been there, as the server's markBirthplaces
-    for (const t of travellers) markVisited(map.id, t?.birthCountryCode, 'MANUAL');
+    // Born there is been there, as the server's markBirthplaces: the place as each traveller
+    // was saved ("de" is DE, a UK nation the UK), never the code as sent
+    for (const t of db.travellers.filter((row) => row.mapId === map.id)) markVisited(map.id, t.birthCountryCode, 'MANUAL');
     return ok({ map: mapView(map, 'OWNER', WITH_PLAN) }, 201);
   });
 
@@ -367,7 +395,7 @@ export function registerMapRoutes() {
     if (db.travellers.filter((t) => t.mapId === map.id).length >= MAX_TRAVELLERS) return fail(400, TOO_MANY_TRAVELLERS);
     if (db.travellers.filter((t) => t.mapId === map.id).length >= GROUP_MAX_TRAVELLERS[map.groupType]) return fail(409, groupFull(map.groupType));
     const position = fields.position ?? db.travellers.filter((t) => t.mapId === map.id).length;
-    const traveller = { id: newId(), mapId: map.id, userId: null, birthCountryCode: null, favouriteCountryCode: null, ...fields, position };
+    const traveller = { id: newId(), mapId: map.id, userId: null, birthCountryCode: null, favouriteCountryCode: null, birthDate: null, ...fields, position };
     db.travellers.push(traveller);
     // Born there is been there, as the server's markBirthplaces
     markVisited(map.id, traveller.birthCountryCode, 'MANUAL');
@@ -494,6 +522,8 @@ export function registerMapRoutes() {
     if (!title) return fail(400, 'Give the trip a title.');
     const status = body.status || 'PLANNED';
     if (!TRIP_STATUSES.includes(status)) return fail(400, 'Unknown trip status.');
+    const datesProblem = newTripDatesProblem(body.startDate, body.endDate);
+    if (datesProblem) return fail(400, datesProblem);
     const mapTravellers = new Set(db.travellers.filter((t) => t.mapId === map.id).map((t) => t.id));
     const trip = {
       id: newId(),
@@ -502,8 +532,8 @@ export function registerMapRoutes() {
       title,
       description: cleanText(body.description, 2000),
       status,
-      startDate: body.startDate || null,
-      endDate: body.endDate || null,
+      startDate: body.startDate,
+      endDate: body.endDate,
       coverPhotoId: null,
       linkAccess: 'RESTRICTED',
       shareCode: newShareCode(),

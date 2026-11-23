@@ -1,0 +1,8 @@
+{
+  "name": "Forbidden City",
+  "latitude": 39.91583,
+  "longitude": 116.39083,
+  "maps": ["CN"],
+  "landmark": "Q80290",
+  "onMap": false
+}

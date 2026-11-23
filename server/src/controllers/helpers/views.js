@@ -23,6 +23,7 @@ import {
   findMapTravellers,
   findMapVisitsForStats,
 } from '../../domain/maps.js';
+import { findTickedLandmarkIds } from '../../domain/landmarkVisits.js';
 import { continentsByCode, placePositions, worldCountryTotals } from './countries.js';
 import { spotView } from '../../utils/momentSpots.js';
 
@@ -331,17 +332,20 @@ export async function pinView(pin, { role }) {
  */
 export async function loadStatsCounts(mapId, role) {
   const includeHidden = canEdit(role);
-  const [photoCount, stampedLandmarkIds, tripCount, completedTrips, continentByCode, positions, worldTotals] = await Promise.all([
+  const [photoCount, stampedLandmarkIds, tickedLandmarkIds, tripCount, completedTrips, continentByCode, positions, worldTotals] = await Promise.all([
     countMapPhotos(mapId, { includeHidden }),
     findMapStampedLandmarkIds(mapId, { includeHidden }),
+    findTickedLandmarkIds(mapId),
     countMapTrips(mapId),
     findCompletedTripsForStats(mapId),
     continentsByCode(),
     placePositions(),
     worldCountryTotals(),
   ]);
-  // The ids too: the map's reply marks those landmarks' pins (mapDetailView)
-  return { photoCount, landmarkCount: stampedLandmarkIds.length, stampedLandmarkIds, tripCount, completedTrips, continentByCode, positions, worldTotals };
+  // The ids too: the map's reply marks those landmarks' pins (mapDetailView). A tick stamps
+  // the passport as a photo does (23 Nov 2026), so the stats count both, each landmark once
+  const landmarkCount = new Set([...stampedLandmarkIds, ...tickedLandmarkIds]).size;
+  return { photoCount, landmarkCount, stampedLandmarkIds, tickedLandmarkIds, tripCount, completedTrips, continentByCode, positions, worldTotals };
 }
 
 /**
@@ -349,8 +353,16 @@ export async function loadStatsCounts(mapId, role) {
  * loadStatsCounts; `splitUk`: the map counts the UK's nations one each (utils/ukNations.js);
  * `homeCountryCode` and `ownerId` find its home (utils/travelStats.js homeOf).
  */
-export const statsFrom = ({ visits, travellers, splitUk = false, homeCountryCode = null, ownerId = null }, counts) =>
-  buildMapStats({ visits, travellers, splitUk, ...counts, homeCountryCode: homeOf({ homeCountryCode, ownerId, travellers }) });
+export const statsFrom = ({ visits, travellers, splitUk = false, homeCountryCode = null, ownerId = null }, counts, { role = null } = {}) =>
+  buildMapStats({
+    visits,
+    travellers,
+    splitUk,
+    ...counts,
+    homeCountryCode: homeOf({ homeCountryCode, ownerId, travellers }),
+    // Dates of birth are the editors' (23 Nov 2026): the share of a life away is theirs too
+    showBirthDates: canEdit(role),
+  });
 
 /** Stats for a map, counting only what the caller may see (GET /maps/:mapId/stats). */
 export async function loadMapStats(mapId, role) {
@@ -360,5 +372,5 @@ export async function loadMapStats(mapId, role) {
     loadStatsCounts(mapId, role),
     findMapStatsRow(mapId),
   ]);
-  return statsFrom({ visits, travellers, splitUk: Boolean(row?.splitUk), homeCountryCode: row?.homeCountryCode, ownerId: row?.ownerId }, counts);
+  return statsFrom({ visits, travellers, splitUk: Boolean(row?.splitUk), homeCountryCode: row?.homeCountryCode, ownerId: row?.ownerId }, counts, { role });
 }

@@ -57,6 +57,28 @@ describe('AccountEmailsSection', () => {
     expect(box().checked).toBe(false);
   });
 
+  it('switches "Welcome home" (the reminder after a trip) on its own', async () => {
+    getEmailPreferences.mockResolvedValue({ onThisDay: true, tripShare: true });
+    saveEmailPreferences.mockResolvedValue({ onThisDay: true, tripShare: false });
+    render(<AccountEmailsSection />);
+    const welcome = () => screen.getByLabelText(/Welcome home/);
+    await waitFor(() => expect(welcome().checked).toBe(true));
+    expect(screen.getByText('The day after a trip ends, a reminder to share it with your friends.')).toBeTruthy();
+    fireEvent.click(welcome());
+    expect(saveEmailPreferences).toHaveBeenCalledWith({ tripShare: false });
+    expect(await screen.findByText('Saved.')).toBeTruthy();
+    expect(welcome().checked).toBe(false);
+    expect(box().checked).toBe(true);
+  });
+
+  it('counts a setting the server leaves out as on, as an account with no profile yet', async () => {
+    getEmailPreferences.mockResolvedValue({ onThisDay: false });
+    render(<AccountEmailsSection />);
+    await waitFor(() => expect(box().disabled).toBe(false));
+    expect(box().checked).toBe(false);
+    expect(screen.getByLabelText(/Welcome home/).checked).toBe(true);
+  });
+
   it('has a fallback wording for a failed save', async () => {
     getEmailPreferences.mockResolvedValue({ onThisDay: true });
     saveEmailPreferences.mockRejectedValue(new Error('no'));

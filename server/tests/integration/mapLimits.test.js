@@ -131,7 +131,7 @@ describe('map slots', () => {
 
     // Still viewable and editable: countries, trips
     expect((await owner.agent.put(`/api/maps/${extra.id}/visits/JP`).send({ status: 'VISITED' })).status).toBe(200);
-    expect((await owner.agent.post(`/api/maps/${extra.id}/trips`).send({ title: 'Still planning' })).status).toBe(201);
+    expect((await owner.agent.post(`/api/maps/${extra.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Still planning' })).status).toBe(201);
     const view = data(await owner.agent.get(`/api/maps/${extra.id}`)).map;
     expect(view).toMatchObject({ locked: true, uploadRules: { locked: true } });
     expect(view.photoCounts).toEqual({ FR: 1 });
@@ -348,7 +348,7 @@ describe('plan fields on maps and trips', () => {
     const tripEditor = await signUp('TripOnlyEditor');
     const tripViewer = await signUp('TripOnlyViewer');
     const map = await defaultMapOf(owner.agent);
-    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Stag do' })).trip;
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Stag do' })).trip;
     expect(trip.uploadRules).toEqual({ keepsOriginals: false, photosPerCountry: 30, videos: null, locked: false });
     await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: tripEditor.email, role: 'EDITOR' });
     await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: tripViewer.email, role: 'VIEWER' });
@@ -429,7 +429,7 @@ describe('caps on people', () => {
   it('a trip takes 20 people of any role, apart from the map’s editors', async () => {
     const owner = await signUp('Organiser');
     const map = await defaultMapOf(owner.agent);
-    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Big group' })).trip;
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Big group' })).trip;
     const friend = await signUp('TripFriend');
     expect((await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: friend.email, role: 'VIEWER' })).status).toBe(201);
     for (let i = 0; i < 19; i++) {

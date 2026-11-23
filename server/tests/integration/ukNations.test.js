@@ -134,7 +134,7 @@ describe('the UK’s nations', () => {
     const map = await defaultMapOf(owner.agent);
     // The UK as one country (a new map splits it)
     await split(owner.agent, map.id, false);
-    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Highlands' })).trip;
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Highlands' })).trip;
     await owner.agent.patch(`/api/trips/${trip.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' });
     const { shareCode } = data(await owner.agent.get(`/api/trips/${trip.id}/sharing`));
     const tripOf = async () => data(await owner.agent.get(`/api/trips/${trip.id}`)).trip;
