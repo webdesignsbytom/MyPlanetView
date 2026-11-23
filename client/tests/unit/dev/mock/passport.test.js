@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { buildPassport, mapStamps } from '@/dev/mock/passport';
-import { HOME_MAP, SAM_MAP, db, freshStore } from './mockApi';
+import { ALEX, HOME_MAP, SAM_MAP, USER, db, freshStore } from './mockApi';
+import { loadMapFacts } from '@/dev/mock/achievements';
+import { mapStats } from '@/dev/mock/views';
 
 beforeEach(() => freshStore());
 
@@ -21,6 +23,42 @@ describe('mapStamps', () => {
     const stamps = mapStamps(HOME_MAP, { includeHidden: false });
     expect(stamps).toHaveLength(12);
     expect(stamps.some((s) => s.landmark.id === 'lm-tower-of-belem')).toBe(false);
+  });
+});
+
+// 23 Nov 2026, the user's decision: "both methods should get a stamp in the passport"
+describe('a landmark ticked "been here"', () => {
+  const tick = (landmarkId, createdById = USER) =>
+    db().landmarkVisits.push({ mapId: HOME_MAP, landmarkId, createdById, createdAt: '2026-11-01T10:00:00.000Z' });
+
+  it('is a stamp with no photo, dated the day it was ticked, for everyone on the map', () => {
+    tick('lm-alhambra');
+    for (const role of ['OWNER', 'VIEWER']) {
+      const passport = buildPassport(map(HOME_MAP), role);
+      const stamp = passport.pages.flatMap((p) => p.stamps).find((s) => s.landmarkId === 'lm-alhambra');
+      expect(stamp).toMatchObject({ ticked: true, photo: null, photoCount: 0, stampedOn: '2026-11-01' });
+    }
+    expect(buildPassport(map(HOME_MAP), 'OWNER').totals.landmarks).toBe(14);
+    // It counts as a stamp for the badges and goals, and the stats
+    expect(loadMapFacts(HOME_MAP, { includeHidden: true }).stamps.some((s) => s.landmarkId === 'lm-alhambra')).toBe(true);
+    expect(mapStats(map(HOME_MAP), 'OWNER').landmarks).toBe(14);
+  });
+
+  it('stays the photo’s stamp when the landmark has a photo too', () => {
+    tick('lm-colosseum');
+    const stamp = mapStamps(HOME_MAP, { includeHidden: true }).find((s) => s.landmark.id === 'lm-colosseum');
+    expect(stamp.photo).not.toBeNull();
+    expect(mapStamps(HOME_MAP, { includeHidden: true })).toHaveLength(13);
+  });
+
+  it('is in the passport of the traveller whose account ticked it, never another’s', () => {
+    tick('lm-alhambra', USER);
+    tick('lm-amsterdam-canal-ring', ALEX);
+    const ids = (travellerId) => stampIds(buildPassport(map(HOME_MAP), 'OWNER', { travellerId }));
+    expect(ids('trav-test')).toContain('lm-alhambra');
+    expect(ids('trav-test')).not.toContain('lm-amsterdam-canal-ring');
+    expect(ids('trav-alex')).toContain('lm-amsterdam-canal-ring');
+    expect(ids('trav-alex')).not.toContain('lm-alhambra');
   });
 });
 

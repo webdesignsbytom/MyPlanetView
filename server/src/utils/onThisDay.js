@@ -112,7 +112,11 @@ export function anniversaryWords({ years, title, countryName = null }) {
 const sign = (purpose, value, secret) => crypto.createHmac('sha256', secret || 'on-this-day').update(`${purpose}:${value}`).digest('base64url').slice(0, 32);
 
 export const photoLinkToken = (photoId, secret) => sign('memory-photo', photoId, secret);
-export const unsubscribeToken = (userId, secret) => sign('unsubscribe:on-this-day', userId, secret);
+
+// The emails someone can stop, each its own unsubscribe link (`l`; none is "On this day", as
+// the first emails' links say): "On this day" and the "Welcome home" reminder after a trip
+export const EMAIL_LISTS = Object.freeze({ onThisDay: 'on-this-day', tripShare: 'trips' });
+export const unsubscribeToken = (userId, secret, list = EMAIL_LISTS.onThisDay) => sign(`unsubscribe:${list}`, userId, secret);
 
 /** A token checked in constant time. */
 export function tokenMatches(given, expected) {

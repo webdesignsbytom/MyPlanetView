@@ -1,28 +1,42 @@
 import { prisma } from '../prisma.js';
 
 // The passport (docs/API.md, "Passport"): stamps are confirmed landmark matches, read
-// through their own mapId (index [mapId, landmarkId]), never through every photo.
+// through their own mapId (index [mapId, landmarkId]), never through every photo, and
+// (23 Nov 2026, the user's decision: "both methods should get a stamp") landmarks ticked
+// "been here" with no photo.
 
 /**
  * Each stamped landmark on a map, with its earliest confirmed photo (by when it was
  * taken), how many confirmed photos it has, and when it was first confirmed. Below
- * editor, hidden photos neither count nor show. `scope` (one traveller's passport:
- * `{ tripIds, photoIds }`) counts only the photos on those trips or among those photos.
+ * editor, hidden photos neither count nor show. A landmark ticked "been here" with no such
+ * photo is a stamp too, with no photo (`photoId` null, `photoCount` 0), dated the day it was
+ * ticked. `scope` (one traveller's passport: `{ tripIds, photoIds, userId }`) counts only
+ * the photos on those trips or among those photos, and the ticks of the traveller's own
+ * account (`userId`; none for a traveller with no login).
  * -> `[{ landmarkId, photoId, shotAt, photoCount, confirmedAt }]`
  */
 export const findStamps = (mapId, { includeHidden, scope = null }) =>
   prisma.$queryRaw`
-    SELECT DISTINCT ON (pl."landmarkId")
-      pl."landmarkId",
-      p."id" AS "photoId",
-      p."shotAt",
-      COUNT(*) OVER (PARTITION BY pl."landmarkId")::int AS "photoCount",
-      MIN(pl."confirmedAt") OVER (PARTITION BY pl."landmarkId") AS "confirmedAt"
-    FROM "photo_landmark" AS pl
-    JOIN "photo" AS p ON p."id" = pl."photoId"
-    WHERE pl."mapId" = ${mapId} AND pl."confirmed" AND p."kind" = 'PHOTO' AND (${includeHidden} OR NOT p."hidden")
-      AND (${scope === null} OR p."tripId" = ANY(${scope?.tripIds ?? []}::text[]) OR p."id" = ANY(${scope?.photoIds ?? []}::text[]))
-    ORDER BY pl."landmarkId", p."shotAt", p."id"`;
+    WITH photo_stamps AS (
+      SELECT DISTINCT ON (pl."landmarkId")
+        pl."landmarkId",
+        p."id" AS "photoId",
+        p."shotAt",
+        COUNT(*) OVER (PARTITION BY pl."landmarkId")::int AS "photoCount",
+        MIN(pl."confirmedAt") OVER (PARTITION BY pl."landmarkId") AS "confirmedAt"
+      FROM "photo_landmark" AS pl
+      JOIN "photo" AS p ON p."id" = pl."photoId"
+      WHERE pl."mapId" = ${mapId} AND pl."confirmed" AND p."kind" = 'PHOTO' AND (${includeHidden} OR NOT p."hidden")
+        AND (${scope === null} OR p."tripId" = ANY(${scope?.tripIds ?? []}::text[]) OR p."id" = ANY(${scope?.photoIds ?? []}::text[]))
+      ORDER BY pl."landmarkId", p."shotAt", p."id"
+    )
+    SELECT * FROM photo_stamps
+    UNION ALL
+    SELECT lv."landmarkId", NULL::text AS "photoId", lv."createdAt" AS "shotAt", 0 AS "photoCount", lv."createdAt" AS "confirmedAt"
+    FROM "landmark_visit" AS lv
+    WHERE lv."mapId" = ${mapId}
+      AND (${scope === null} OR lv."createdById" = ${scope?.userId ?? null}::text)
+      AND lv."landmarkId" NOT IN (SELECT "landmarkId" FROM photo_stamps)`;
 
 /** The photos picked for a map's stamps: `[{ landmarkId, photoId, hidden }]`. */
 export const findLandmarkCovers = async (mapId) =>
@@ -100,11 +114,14 @@ export async function findTravellerTravel(mapId, travellerId, { includeHidden })
   };
 }
 
-/** The travellers on the passport's photo page. */
+/**
+ * The travellers on the passport's photo page, with the account each is linked to (whose
+ * ticks are their stamps: findStamps' scope; never sent on).
+ */
 export const findPassportTravellers = (mapId) =>
   prisma.traveller.findMany({
     where: { mapId },
-    select: { id: true, name: true, birthCountryCode: true, favouriteCountryCode: true },
+    select: { id: true, name: true, birthCountryCode: true, favouriteCountryCode: true, userId: true },
     orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
   });
 

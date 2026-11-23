@@ -3,7 +3,7 @@
 // accepts (a map never without a traveller, never more than its kind has room for). The API
 // and the map lists are mocked; every call goes into one log, in order.
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { GROUP_TYPES, MAX_TRAVELLERS, maxTravellersFor, minTravellersFor, saveMapSetup } from '@/utils/map/saveMapSetup';
+import { GROUP_TYPES, MAX_TRAVELLERS, NEEDS_A_TRAVELLER, maxTravellersFor, minTravellersFor, saveMapSetup } from '@/utils/map/saveMapSetup';
 import { createTraveller, deleteTraveller, updateMap, updateTraveller } from '@/api/travelApi';
 import { forgetMapLists } from '@/utils/map/mapListCache';
 
@@ -92,6 +92,21 @@ describe('saveMapSetup', () => {
     expect(updateTraveller).toHaveBeenCalledWith('m1', 't1', { name: 'Sam', birthCountryCode: 'GB', favouriteCountryCode: null, position: 0 });
   });
 
+  // 23 Nov 2026: each traveller's optional date of birth
+  it('sends a date of birth set, changed or cleared, and nothing when it stayed the same', async () => {
+    const original = map(loaded([person('t1', 'Sam', { birthDate: '1985-03-04' }), alex]));
+    await saveMapSetup('m1', original, { ...original, travellers: [{ ...original.travellers[0], birthDate: '1985-03-04' }, { ...alex, birthDate: '1987-07-08' }] });
+    expect(log).toEqual([['update', 't2', 'Alex']]);
+    expect(updateTraveller).toHaveBeenCalledWith('m1', 't2', { name: 'Alex', birthCountryCode: null, favouriteCountryCode: null, birthDate: '1987-07-08', position: 1 });
+    log = [];
+    await saveMapSetup('m1', original, { ...original, travellers: [{ ...original.travellers[0], birthDate: '' }, alex] });
+    expect(updateTraveller).toHaveBeenLastCalledWith('m1', 't1', { name: 'Sam', birthCountryCode: null, favouriteCountryCode: null, birthDate: null, position: 0 });
+    // A new traveller's goes with them
+    log = [];
+    await saveMapSetup('m1', map(loaded([sam]), { groupType: 'FAMILY' }), { ...map([sam], { groupType: 'FAMILY' }), travellers: [sam, { name: 'Mia', birthDate: '2026-11-01' }] });
+    expect(createTraveller).toHaveBeenLastCalledWith('m1', expect.objectContaining({ name: 'Mia', birthDate: '2026-11-01', position: 1 }));
+  });
+
   it('leaves out travellers with no name', async () => {
     const original = map(loaded([sam]), { groupType: 'FAMILY' });
     await saveMapSetup('m1', original, { ...original, travellers: [sam, { name: '   ' }, { name: 'Lily' }] });
@@ -138,10 +153,12 @@ describe('saveMapSetup', () => {
     ]);
   });
 
-  it('with every name cleared, adds nobody and takes the one held back off last', async () => {
+  it('with every name cleared, says so and sends nothing', async () => {
     const original = map(loaded([sam]), { groupType: 'SOLO' });
-    await saveMapSetup('m1', original, { ...original, travellers: [{ ...sam, name: '' }] });
-    // The server refuses to delete a map's last traveller, so this save ends in its error
-    expect(log).toEqual([['delete', 't1']]);
+    // Saving would have deleted the map's last traveller, which the server refuses
+    const saving = saveMapSetup('m1', original, { ...original, name: 'Renamed', travellers: [{ ...sam, name: '  ' }] });
+    await expect(saving).rejects.toMatchObject({ friendlyMessage: NEEDS_A_TRAVELLER });
+    expect(NEEDS_A_TRAVELLER).toBe('Add at least one traveller’s name.');
+    expect(log).toEqual([]);
   });
 });

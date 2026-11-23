@@ -45,7 +45,7 @@ describe('travel copies', () => {
     ).trip;
     expect((await mum.agent.post(`/api/trips/${italy.id}/stops`).send({ countryCode: 'IT', placeName: 'Rome', arriveOn: '2015-07-02' })).status).toBe(201);
     expect((await mum.agent.patch(`/api/trips/${italy.id}`).send({ status: 'COMPLETED' })).status).toBe(200);
-    workTrip = data(await mum.agent.post(`/api/maps/${familyMap.id}/trips`).send({ title: 'Work trip', travellerIds: [dadT.id] })).trip;
+    workTrip = data(await mum.agent.post(`/api/maps/${familyMap.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Work trip', travellerIds: [dadT.id] })).trip;
 
     colosseumId = data(await mum.agent.get('/api/landmarks?country=IT')).landmarks.find((l) => l.name === 'Colosseum').id;
     const atColosseum = data(

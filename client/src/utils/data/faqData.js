@@ -19,7 +19,7 @@ export const faqsArray = [
   {
     question: 'Do people need an account to see something I have shared?',
     answer:
-      'Not to view it. Anyone with an open link can look without signing in. Editors need an account, so we know who added what.',
+      'Not if you send them the link. Anyone with an open link sees your map, photos and trips in their web browser, on a phone or a computer: no app to download, no account and no signing in. People you add by email sign in with their own account, and so do editors, so we know who added what.',
   },
   {
     question: 'Can I share one trip without sharing my whole map?',

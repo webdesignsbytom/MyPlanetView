@@ -1,2 +1,2 @@
-1. select colour for hover country colour
-2. string
+1. string
+2. different types of share poster image

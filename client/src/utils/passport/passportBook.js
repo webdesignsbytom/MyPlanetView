@@ -69,13 +69,16 @@ export function bookLeaves(passport) {
 /** "1 photo", "3 photos". */
 export const photoCountText = (count) => `${count} photo${count === 1 ? '' : 's'}`;
 
-/** What a screen reader hears for a stamp: its name, date, UNESCO and how many photos. */
+/**
+ * What a screen reader hears for a stamp: its name, date, UNESCO and how many photos, or
+ * for a landmark ticked "been here" with no photo (23 Nov 2026), that it was ticked.
+ */
 export function stampDescription(stamp) {
   return [
     stamp.name,
     stamp.stampedOn ? `stamped ${formatDay(stamp.stampedOn)}` : 'stamped',
     stamp.isUnesco ? 'UNESCO World Heritage Site' : null,
-    photoCountText(stamp.photoCount),
+    stamp.ticked && !stamp.photo ? 'ticked as been here, no photo yet' : photoCountText(stamp.photoCount),
   ]
     .filter(Boolean)
     .join(', ');

@@ -22,9 +22,19 @@ const STATS = {
   furthest: { countryCode: 'NZ', km: 18000 },
   homeCountryCode: 'GB',
   byTraveller: [
-    { travellerId: 't1', name: 'Charlie', countries: 10 },
-    { travellerId: 't2', name: 'Alex', countries: 8 },
+    { travellerId: 't1', name: 'Charlie', countries: 10, daysAway: 1200 },
+    { travellerId: 't2', name: 'Alex', countries: 1, daysAway: 1 },
   ],
+};
+
+// Time away in more detail (23 Nov 2026)
+const TIME = {
+  longestTrip: { tripId: 'trip-1', title: 'Italian summer', days: 15 },
+  daysByYear: [
+    { year: 2026, days: 2 },
+    { year: 2025, days: 40 },
+  ],
+  daysByPlace: ['IT', 'FR', 'ES', 'PT', 'DE', 'NL', 'BE', 'JP'].map((countryCode, i) => ({ countryCode, days: 20 - i })),
 };
 
 const tiles = (container) =>
@@ -107,11 +117,58 @@ describe('StatsPanel', () => {
     expect(container.querySelector('a')).toBeNull();
   });
 
-  it('lists each traveller’s countries on a map with more than one', () => {
+  it('lists each traveller’s countries and days away on a map with more than one', () => {
     open({ travellers: [{ id: 't1' }, { id: 't2' }] });
-    expect(screen.getByText('Countries each, from completed trips')).toBeTruthy();
-    expect(screen.getByText('Charlie').nextSibling.textContent).toBe('10');
+    expect(screen.getByText('Each traveller, from completed trips')).toBeTruthy();
+    expect(screen.getByText('Charlie').nextSibling.textContent).toBe('10 countries · 1,200 days');
+    expect(screen.getByText('Alex').nextSibling.textContent).toBe('1 country · 1 day');
     const { container } = open({ travellers: [{ id: 't1' }] });
-    expect(container.textContent).not.toContain('Countries each');
+    expect(container.textContent).not.toContain('Each traveller');
+  });
+
+  // 23 Nov 2026: the share of a life away, for editors with a date of birth
+  it('adds each traveller’s share of their life away when the stats carry one', () => {
+    const byTraveller = [
+      { travellerId: 't1', name: 'Charlie', countries: 10, daysAway: 1200, lifeAwayShare: 9.4 },
+      { travellerId: 't2', name: 'Alex', countries: 2, daysAway: 3, lifeAwayShare: 0 },
+      { travellerId: 't3', name: 'Mia', countries: 0, daysAway: 0, lifeAwayShare: 0 },
+      { travellerId: 't4', name: 'Jo', countries: 1, daysAway: 5, lifeAwayShare: null },
+    ];
+    open({ stats: { ...STATS, byTraveller }, travellers: byTraveller.map((t) => ({ id: t.travellerId })) });
+    expect(screen.getByText('Charlie').nextSibling.textContent).toBe('10 countries · 1,200 days · 9.4% of their life');
+    expect(screen.getByText('Alex').nextSibling.textContent).toBe('2 countries · 3 days · under 0.1% of their life');
+    // Never away yet, or no date of birth: no share
+    expect(screen.getByText('Mia').nextSibling.textContent).toBe('0 countries · 0 days');
+    expect(screen.getByText('Jo').nextSibling.textContent).toBe('1 country · 5 days');
+  });
+
+  it('names the longest trip, and lists the days away each year and in each country, six then all', () => {
+    const { container } = open({ stats: { ...STATS, ...TIME } });
+    expect(tiles(container)['Longest trip']).toEqual(['15 days', 'Italian summer']);
+
+    const years = container.querySelector('[data-days-by-year]');
+    expect(years.querySelector('h3').textContent).toBe('Days away each year');
+    expect([...years.querySelectorAll('li')].map((li) => li.querySelector('span').textContent)).toEqual(['20262 days', '202540 days']);
+    // The bars: the biggest the full width, a short stay still showing
+    const bars = [...years.querySelectorAll('li [aria-hidden] span')].map((bar) => bar.style.width);
+    expect(bars).toEqual(['5%', '100%']);
+
+    const places = container.querySelector('[data-days-by-place]');
+    const names = () => [...places.querySelectorAll('li')].map((li) => li.querySelector('span span').textContent);
+    expect(names()).toEqual(['Italy', 'France', 'Spain', 'Portugal', 'Germany', 'Netherlands']);
+    const more = screen.getByText('Show all 8');
+    expect(more.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(more);
+    expect(names()).toHaveLength(8);
+    expect(names().at(-1)).toBe('Japan');
+    fireEvent.click(screen.getByText('Show fewer'));
+    expect(names()).toHaveLength(6);
+  });
+
+  it('shows none of the time away when no trip has dates', () => {
+    const { container } = open({ stats: { ...STATS, longestTrip: null, daysByYear: [], daysByPlace: [] } });
+    expect(tiles(container)['Longest trip']).toBeUndefined();
+    expect(container.querySelector('[data-days-by-year]')).toBeNull();
+    expect(container.querySelector('[data-days-by-place]')).toBeNull();
   });
 });

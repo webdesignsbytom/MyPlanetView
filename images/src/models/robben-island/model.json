@@ -1,0 +1,8 @@
+{
+  "name": "Robben Island",
+  "latitude": -33.805,
+  "longitude": 18.37,
+  "maps": ["ZA"],
+  "landmark": "Q192493",
+  "onMap": false
+}

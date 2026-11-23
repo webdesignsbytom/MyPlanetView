@@ -19,8 +19,8 @@ describe('TripForm', () => {
     expect(screen.getByText('Charlie').getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByText('Create trip')).toBeTruthy();
     type(/^Title/, '  Japan in spring  ');
-    type('From', '2027-04-01');
-    type('To', '2027-04-14');
+    type(/^From/, '2027-04-01');
+    type(/^To/, '2027-04-14');
     type('Notes', '  Cherry blossom ');
     submit();
     await waitFor(() => expect(onSubmit).toHaveBeenCalled());
@@ -34,10 +34,12 @@ describe('TripForm', () => {
     });
   });
 
-  it('sends empty notes and dates as null, and who was chosen', async () => {
+  it('sends empty notes as null, and who was chosen', async () => {
     const onSubmit = vi.fn().mockResolvedValue();
     render(<TripForm travellers={TRAVELLERS} onSubmit={onSubmit} />);
     type(/^Title/, 'Weekend');
+    type(/^From/, '2026-06-06');
+    type(/^To/, '2026-06-07');
     fireEvent.click(screen.getByText('Alex'));
     fireEvent.change(screen.getByLabelText('Status'), { target: { value: 'COMPLETED' } });
     submit();
@@ -46,10 +48,24 @@ describe('TripForm', () => {
       title: 'Weekend',
       description: null,
       status: 'COMPLETED',
-      startDate: null,
-      endDate: null,
+      startDate: '2026-06-06',
+      endDate: '2026-06-07',
       travellerIds: ['a'],
     });
+  });
+
+  it('asks for the day it starts and the day it ends (the "Welcome home" email goes the day after)', () => {
+    const onSubmit = vi.fn();
+    render(<TripForm onSubmit={onSubmit} />);
+    expect(screen.getByLabelText(/^From/).required).toBe(true);
+    expect(screen.getByLabelText(/^To/).required).toBe(true);
+    type(/^Title/, 'Someday');
+    submit();
+    expect(screen.getByRole('alert').textContent).toBe('Give the trip the day it starts and the day it ends.');
+    type(/^From/, '2027-05-01');
+    submit();
+    expect(screen.getByRole('alert').textContent).toBe('Give the trip the day it starts and the day it ends.');
+    expect(onSubmit).not.toHaveBeenCalled();
   });
 
   it('asks for a title first', () => {
@@ -65,9 +81,9 @@ describe('TripForm', () => {
     const onSubmit = vi.fn();
     render(<TripForm onSubmit={onSubmit} />);
     type(/^Title/, 'Backwards');
-    type('From', '2027-05-10');
-    type('To', '2027-05-01');
-    expect(screen.getByLabelText('To').getAttribute('min')).toBe('2027-05-10');
+    type(/^From/, '2027-05-10');
+    type(/^To/, '2027-05-01');
+    expect(screen.getByLabelText(/^To/).getAttribute('min')).toBe('2027-05-10');
     submit();
     expect(screen.getByRole('alert').textContent).toBe('The trip ends before it starts.');
     expect(onSubmit).not.toHaveBeenCalled();
@@ -77,6 +93,8 @@ describe('TripForm', () => {
     const onSubmit = vi.fn().mockRejectedValueOnce(Object.assign(new Error('x'), { friendlyMessage: 'The server is busy.' }));
     render(<TripForm onSubmit={onSubmit} />);
     type(/^Title/, 'Again');
+    type(/^From/, '2027-05-01');
+    type(/^To/, '2027-05-02');
     submit();
     expect((await screen.findByRole('alert')).textContent).toBe('The server is busy.');
     expect(screen.getByText('Create trip').closest('button').disabled).toBe(false);
@@ -85,6 +103,8 @@ describe('TripForm', () => {
   it('falls back to its own words when the error has none', async () => {
     render(<TripForm onSubmit={vi.fn().mockRejectedValue(new Error('x'))} />);
     type(/^Title/, 'Again');
+    type(/^From/, '2027-05-01');
+    type(/^To/, '2027-05-02');
     submit();
     expect((await screen.findByRole('alert')).textContent).toBe('The trip could not be saved.');
   });
@@ -115,7 +135,7 @@ describe('TripForm', () => {
 
   it('keeps the travellers already on the trip when editing', async () => {
     const onSubmit = vi.fn().mockResolvedValue();
-    render(<TripForm initial={{ title: 'T', travellerIds: ['b'] }} travellers={TRAVELLERS} onSubmit={onSubmit} />);
+    render(<TripForm initial={{ title: 'T', startDate: '2026-01-01', endDate: '2026-01-02', travellerIds: ['b'] }} travellers={TRAVELLERS} onSubmit={onSubmit} />);
     expect(screen.getByText('Charlie').getAttribute('aria-pressed')).toBe('false');
     submit();
     await waitFor(() => expect(onSubmit).toHaveBeenCalled());

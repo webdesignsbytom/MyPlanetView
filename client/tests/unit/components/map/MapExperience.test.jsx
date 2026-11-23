@@ -15,7 +15,12 @@ import { withProviders } from './helpers';
 const { stub, viewport, toolbar } = vi.hoisted(() => {
   const stub = (name) => {
     const Panel = (props) => (
-      <div data-panel={name} data-code={props.code ?? undefined} data-first={props.first === undefined ? undefined : String(props.first)}>
+      <div
+        data-panel={name}
+        data-code={props.code ?? undefined}
+        data-first={props.first === undefined ? undefined : String(props.first)}
+        data-share={props.share === undefined ? undefined : String(props.share)}
+      >
         {props.onClose ? (
           <button type='button' onClick={props.onClose}>
             {`close ${name}`}
@@ -69,7 +74,7 @@ vi.mock('@/components/map/MapToolbar', () => ({
     toolbar.props = props;
     return (
       <nav data-open-panel={props.openPanel ?? ''}>
-        {['stats', 'countries', 'trips', 'share', 'play', 'settings'].map((id) => (
+        {['stats', 'countries', 'trips', 'share', 'play', 'settings', 'tips'].map((id) => (
           <button key={id} type='button' onClick={() => props.onToggle(id)}>
             {`tool ${id}`}
           </button>
@@ -267,6 +272,30 @@ describe('MapExperience', () => {
       expect(panel('StatsPanel')).toBeNull();
       expect(panel('Slideshow')).not.toBeNull();
       expect(q('nav').getAttribute('data-open-panel')).toBe('play');
+    });
+
+    it('opens the tips from their tool any time, even switched off, closing what was open', async () => {
+      const { panel, click, q } = open({ settings: { ...DEFAULT_MAP_SETTINGS, showTips: false } });
+      await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
+      expect(panel('MapTipsDialog')).toBeNull();
+      click('tool stats');
+      click('tool tips');
+      expect(panel('StatsPanel')).toBeNull();
+      expect(panel('MapTipsDialog')).not.toBeNull();
+      expect(q('nav').getAttribute('data-open-panel')).toBe('tips');
+      // The owner hears about sharing; the same tool again shuts them
+      expect(panel('MapTipsDialog').getAttribute('data-share')).toBe('true');
+      click('tool tips');
+      expect(panel('MapTipsDialog')).toBeNull();
+      click('tool tips');
+      click('close MapTipsDialog');
+      expect(panel('MapTipsDialog')).toBeNull();
+    });
+
+    it('leaves sharing out of the tips through a share link', () => {
+      const { panel, click } = open({ shareCode: 'ABCD-EFGH-JKMN', role: 'VIEWER', actions: null, currentUser: null });
+      click('tool tips');
+      expect(panel('MapTipsDialog').getAttribute('data-share')).toBe('false');
     });
 
     it('opens a country picked on the map, edge to edge on phones, hiding the key', () => {

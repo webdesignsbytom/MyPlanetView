@@ -45,6 +45,7 @@ export function parseDesignChange(body) {
     ['names', 'namesColour'],
     ['grid', 'gridColour'],
     ['hover', 'hoverColour'],
+    ['string', 'stringColour'],
   ]) {
     if (input[field] === undefined) continue;
     const colour = cleanColour(input[field]);

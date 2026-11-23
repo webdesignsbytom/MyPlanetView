@@ -30,6 +30,12 @@ test('the owner colours a country, the names and the grid; the map keeps them', 
   await expect(designed(page)).toHaveCount(0);
 
   const { settings, editor } = await openDesign(page);
+  // Under the map style, above the map type (23 Nov 2026, the user's wish)
+  const top = async (locator) => (await locator.boundingBox()).y;
+  const styleTop = await top(settings.getByRole('group', { name: 'Map style' }));
+  const designTop = await top(editor);
+  expect(designTop).toBeGreaterThan(styleTop);
+  expect(await top(settings.getByRole('group', { name: 'Map type' }))).toBeGreaterThan(designTop);
   await editor.getByLabel('Country names', { exact: true }).fill('#ffffff');
   // The first change switches the design on, on the map's own style
   await expect(designed(page)).toHaveCount(1);

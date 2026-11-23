@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // Icons
 import { IoContract, IoExpand, IoHome, IoMap, IoMenu, IoSettings, IoShareSocial } from 'react-icons/io5';
 import { IoIosImages, IoIosStats } from 'react-icons/io';
-import { FaCompass, FaHistory, FaListOl, FaPlay, FaRoute, FaSuitcase } from 'react-icons/fa';
+import { FaCompass, FaHistory, FaLightbulb, FaListOl, FaPlay, FaRoute, FaSuitcase, FaThumbtack } from 'react-icons/fa';
 // Constants
 import { HOME_PAGE_URL } from '@/utils/constants/routes';
 // Hooks
@@ -219,7 +219,7 @@ function PhoneToolMenu({ items, home, extras = [] }) {
 // 2026 (the user's wish: this stamp is the way in), so `stats` (the map's) gives the stamp
 // the counts as its description, read out after its label, and written under it in the
 // phone's menu. "Play my world" opens the slideshow over the page rather than a panel.
-function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false, stats = null, showHome = true }) {
+function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false, canString = false, stats = null, showHome = true }) {
   const navigate = useNavigate();
 
   const tools = [
@@ -237,6 +237,8 @@ function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false
     { id: 'trips', label: 'Trips', icon: <FaRoute aria-hidden='true' /> },
     // The want-to-go countries by the best time for each (22 Nov 2026)
     { id: 'next', label: 'Where to go next', icon: <FaCompass aria-hidden='true' /> },
+    // Red string between places, like a corkboard map (23 Nov 2026): for those who tie them
+    ...(canString ? [{ id: 'strings', label: 'Strings', icon: <FaThumbtack aria-hidden='true' /> }] : []),
     { id: 'timeline', label: 'Timeline', icon: <FaHistory aria-hidden='true' /> },
     { id: 'badges', label: 'Badges and goals', icon: <FaSuitcase aria-hidden='true' /> },
     { id: 'play', label: 'Play my world', icon: <FaPlay aria-hidden='true' /> },
@@ -245,6 +247,9 @@ function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false
     { id: 'photos', label: 'Photo album', icon: <IoIosImages aria-hidden='true' /> },
     ...(canShare ? [{ id: 'share', label: 'Share this map', icon: <IoShareSocial aria-hidden='true' /> }] : []),
     { id: 'settings', label: 'Map settings', icon: <IoSettings aria-hidden='true' /> },
+    // The tips the map opens with, any time (23 Nov 2026, the user's wish): a dialog over the
+    // map, like the share dialog, so it closes whatever panel is open
+    { id: 'tips', label: 'Tips', icon: <FaLightbulb aria-hidden='true' /> },
   ];
   const goHome = () => navigate(HOME_PAGE_URL);
   const menuItems = tools.map((tool) => ({

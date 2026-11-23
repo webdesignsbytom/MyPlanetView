@@ -74,6 +74,34 @@ describe('TripCountdownTag', () => {
     expect(screen.queryByText('Open the trip')).toBeNull();
   });
 
+  it('puts the link and the desk in two columns across the tag, the desk in the bottom right', () => {
+    const { container, unmount } = show([trip()]);
+    const actions = container.querySelector('[data-trip-countdown-actions]');
+    expect(actions.className).toContain('grid-cols-2');
+    expect(actions.className).toContain('col-span-2');
+    // The row is the tag's last, under the close stamp
+    expect(actions.parentElement.lastElementChild).toBe(actions);
+    const [link, desk] = actions.children;
+    expect(link.textContent).toBe('Open the trip');
+    expect(desk.hasAttribute('data-trip-countdown-desk')).toBe(true);
+    expect(desk.className).toContain('col-start-2');
+    expect(desk.className).toContain('justify-self-end');
+    unmount();
+
+    // With no link, the desk keeps its corner
+    const alone = show([trip({ canOpen: false })]);
+    const onlyDesk = alone.container.querySelector('[data-trip-countdown-actions]');
+    expect(onlyDesk.children).toHaveLength(1);
+    expect(onlyDesk.firstElementChild.className).toContain('col-start-2');
+  });
+
+  it('has no row of actions with neither the link nor the desk', () => {
+    usePlannedTripPlace.mockReturnValue(null);
+    useCountryGuides.mockReturnValue([]);
+    const { container } = show([trip({ canOpen: false })]);
+    expect(container.querySelector('[data-trip-countdown-actions]')).toBeNull();
+  });
+
   it('has no desk or month line while the place is unknown', () => {
     usePlannedTripPlace.mockReturnValue(null);
     useCountryGuides.mockReturnValue([]);

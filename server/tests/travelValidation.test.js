@@ -9,7 +9,29 @@ import {
   isCountryCode,
   isEmail,
   isSubsetOf,
+  parseBirthDate,
 } from '../src/utils/travelValidation.js';
+
+// A traveller's optional date of birth (23 Nov 2026)
+describe('parseBirthDate', () => {
+  const today = new Date('2026-11-23T10:00:00Z');
+  it('takes a real day from 1900 up to today (a day ahead allowed, for time zones)', () => {
+    expect(parseBirthDate('1985-06-14', today)).toEqual({ ok: true, value: new Date('1985-06-14T00:00:00Z') });
+    expect(parseBirthDate('1900-01-01', today).ok).toBe(true);
+    expect(parseBirthDate('2026-11-23', today).ok).toBe(true);
+    expect(parseBirthDate('2026-11-24', today).ok).toBe(true);
+  });
+  it('refuses a day before 1900, one in the future, or one that doesn’t exist', () => {
+    for (const bad of ['1899-12-31', '2026-11-25', '2030-01-01', '2026-02-30', '14/06/1985', 19850614]) {
+      expect(parseBirthDate(bad, today)).toEqual({ ok: false });
+    }
+  });
+  it('leaves it as it is when missing, and clears it with null or ""', () => {
+    expect(parseBirthDate(undefined, today)).toEqual({ ok: true, value: undefined });
+    expect(parseBirthDate(null, today)).toEqual({ ok: true, value: null });
+    expect(parseBirthDate('', today)).toEqual({ ok: true, value: null });
+  });
+});
 
 describe('parseDateOnly', () => {
   it('reads a real date at UTC midnight', () => {

@@ -36,6 +36,9 @@ import {
   TRIP_PAGE_URL,
   WELCOME_PAGE_URL,
   SHARED_PAGE_URL,
+  EMBED_PAGE_URL,
+  GUESS_PAGE_URL,
+  isEmbedPath,
   INVITE_PAGE_URL,
   CHALLENGES_PAGE_URL,
   CHALLENGE_PAGE_URL,
@@ -88,6 +91,8 @@ import {
   TripPage,
   WelcomePage,
   SharedPage,
+  EmbedPage,
+  GuessPage,
   InviteAcceptPage,
   ChallengesPage,
   ChallengePage,
@@ -128,15 +133,19 @@ function App() {
   // A creator's ?code= link, kept for the visit until they sign up (in an effect)
   useRememberPromoCode();
 
+  // A map framed on someone's website (/embed/:code) never shows our cookie pop-up: it's
+  // their page, and nothing there sets a cookie or loads analytics
+  const embedded = isEmbedPath(location.pathname);
+
   // Lazy-import the cookie pop-up after the timer, until they've chosen
   useEffect(() => {
-    if (consent !== null || IS_PRERENDER) return undefined;
+    if (consent !== null || IS_PRERENDER || embedded) return undefined;
     const t = setTimeout(async () => {
       const m = await (COOKIE_POPUPS[COOKIE_CONSENT_STYLE] || COOKIE_POPUPS.banner)();
       setCookiePopup((open) => open || { Cmp: m.default, fromSettings: false });
     }, COOKIE_TIMER);
     return () => clearTimeout(t);
-  }, [consent]);
+  }, [consent, embedded]);
 
   // The footer's Cookie settings: the banner at once, showing the current choice, so a yes
   // can be withdrawn (the 'modal' style's "I Disagree" leaves the site, so it's always the banner)
@@ -317,6 +326,8 @@ function App() {
             }
           />
           <Route path={SHARED_PAGE_URL} element={<SharedPage />} />
+          <Route path={EMBED_PAGE_URL} element={<EmbedPage />} />
+          <Route path={GUESS_PAGE_URL} element={<GuessPage />} />
           <Route path={SHARED_PASSPORT_PAGE_URL} element={<PassportPage />} />
           <Route path={INVITE_PAGE_URL} element={<InviteAcceptPage />} />
 

@@ -49,6 +49,9 @@ model User {
   themeEntries      PhotoThemeEntry[]
   // Friends challenges this user started, and the ones they're in
   startedChallenges FriendChallenge[]      @relation("ChallengeCreator")
+  // "Guess where I was" games they made, and the flights they logged (docs/API.md)
+  guessGames        GuessGame[]            @relation("GuessGameCreator")
+  flightsLogged     Flight[]               @relation("FlightLogger")
   challengeEntries  FriendChallengeEntry[]
   // Taking your travels with you (docs/API.md "Travel copies"): the copies this user asked
   // for, and the ones they approved or declined as a family map's owner or co-owner
@@ -77,6 +80,8 @@ model User {
   giftsRedeemed GiftCode[] @relation("GiftRedeemer")
   // Landmarks ticked "been here" on maps (docs/API.md "Collecting")
   landmarkTicks LandmarkVisit[]
+  // Strings tied on maps (docs/API.md "Strings")
+  stringsTied   MapString[]
 
   @@unique([email])
   @@map("user")
@@ -166,6 +171,9 @@ model Profile {
   // email's unsubscribe link); `lastOnThisDayAt` is when the last one went.
   onThisDayEmails Boolean   @default(true)
   lastOnThisDayAt DateTime?
+  // "Welcome home" emails (docs/API.md "Emails"; 23 Nov 2026): the day after a trip ends, a
+  // reminder to share it. On unless switched off, like "On this day"
+  tripShareEmails Boolean   @default(true)
 
   // The invite offer (19 Nov 2026, docs/API.md "The invite offer"): an account made from an
   // invite to a Business or First Class map may have that plan, or a lower paid one, at half
@@ -236,6 +244,9 @@ model Country {
   homeMaps            TravelMap[] @relation("TravelMapHome")
   birthTravellers     Traveller[] @relation("TravellerBirthCountry")
   favouriteTravellers Traveller[] @relation("TravellerFavouriteCountry")
+  // Strings tied between places on maps (docs/API.md "Strings")
+  stringsFrom MapString[] @relation("MapStringFrom")
+  stringsTo   MapString[] @relation("MapStringTo")
 
   @@map("country")
 }
@@ -374,6 +385,8 @@ model TravelMap {
   landmarkCovers   LandmarkCover[]
   // Landmarks ticked "been here", photo or not (docs/API.md "Collecting")
   landmarkVisits   LandmarkVisit[]
+  // Strings tied between its places, like thread between pins (docs/API.md "Strings")
+  strings          MapString[]
   badges           BadgeAward[]
   goals            Goal[]
   // Its photos entered in the monthly themes (docs/API.md, "Photo themes")
@@ -387,6 +400,9 @@ model TravelMap {
   // Its own designs, one per map style: a picture for the sea, its own colours (docs/API.md
   // "Map designs")
   designs         MapDesign[]
+  // "Guess where I was" games made from its photos, and its flight log (docs/API.md)
+  guessGames      GuessGame[]
+  flights         Flight[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -419,6 +435,9 @@ model MapDesign {
   // The country under the pointer, "#rrggbb" or null (the style's usual highlight; 23 Nov
   // 2026, the user's wish); CHECK map_design_hover_colour
   hoverColour    String?
+  // The strings between places (MapString), "#rrggbb" or null (the style's usual red; 23 Nov
+  // 2026, the user's wish); CHECK map_design_string_colour
+  stringColour   String?
 
   // The sea's picture, in the private bucket (resource 'mapDesign'); unique, so a file is
   // one map's. The daily clean-up never deletes a picture a design uses.
@@ -448,6 +467,10 @@ model Traveller {
   birthCountry         Country? @relation("TravellerBirthCountry", fields: [birthCountryCode], references: [code], onDelete: SetNull)
   favouriteCountryCode String?  @db.Char(2)
   favouriteCountry     Country? @relation("TravellerFavouriteCountry", fields: [favouriteCountryCode], references: [code], onDelete: SetNull)
+  // Optional date of birth (23 Nov 2026, the user's wish: asked when people are added to a
+  // map, never at sign-up): the share of a life spent away. Seen by the map's editors only.
+  // CHECK traveller_birth_date: from 1900; not in the future is checked in code
+  birthDate DateTime? @db.Date
 
   trips   TripTraveller[]
   moments MomentTraveller[]
@@ -592,6 +615,8 @@ model Trip {
   // Other people's maps this trip is shown on (a group trip's "Add to my map")
   mapLinks   TripMap[]
   moments    Moment[]
+  // Flights logged on the trip (docs/API.md "Flights")
+  flights    Flight[]
 
   // The family map's trip this one was copied from (docs/API.md "Travel copies"). No foreign
   // key: the original may go, and the id only stops the same trip being copied twice
@@ -599,6 +624,9 @@ model Trip {
   // Brought in from another app (docs/API.md "Importing from Polarsteps"): "polarsteps:…", unique
   // per map, so an import run again adds nothing twice
   importedFrom String?
+  // When the "Welcome home" email went (docs/API.md "Emails"): claimed before it's sent, so it
+  // goes once; cleared when the trip's end moves to today or later (it isn't over yet)
+  shareReminderSentAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -606,6 +634,8 @@ model Trip {
   @@unique([mapId, copiedFromId])
   @@unique([mapId, importedFrom])
   @@index([mapId, startDate])
+  // The daily "Welcome home" run: trips that ended in the last week
+  @@index([endDate])
   // Foreign keys: without these, the SET NULL for each deleted photo or user
   // scans every trip (deleting a 20k-photo map took 148 s, 1.9 s with them)
   @@index([coverPhotoId])
@@ -1581,6 +1611,30 @@ model LandmarkVisit {
   @@map("landmark_visit")
 }
 
+// A string tied between two places on a map, like thread between pins on a corkboard
+// (docs/API.md "Strings"; 23 Nov 2026, the user's wish): tied by hand (two places
+// chosen) or added from the map's trips and first visits. The pair is kept in code order
+// (CHECK map_string_order: fromCode < toCode), so one pair of places is one string.
+// 500 a map (utils/mapStrings.js), counted with the map row locked.
+model MapString {
+  id       String    @id @default(uuid())
+  mapId    String
+  map      TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  fromCode String    @db.Char(2)
+  from     Country   @relation("MapStringFrom", fields: [fromCode], references: [code], onDelete: Restrict)
+  toCode   String    @db.Char(2)
+  to       Country   @relation("MapStringTo", fields: [toCode], references: [code], onDelete: Restrict)
+
+  createdById String?
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+
+  @@unique([mapId, fromCode, toCode])
+  // A user deleted (SET NULL); countries are never deleted, so no index on the codes
+  @@index([createdById])
+  @@map("map_string")
+}
+
 // A year of a paid plan bought as a gift (docs/API.md "Gifts"; 21 Nov 2026, the user's wish,
 // from the business review: "a year of Business or First Class as a gift, for Christmas,
 // weddings and anniversaries"). Made when the buyer starts Checkout (a one-off payment), usable
@@ -1739,4 +1793,89 @@ enum ReferralRewardKind {
   CREDIT
   GRANT
   CAPPED
+}
+
+// "Guess where I was" (23 Nov 2026, the user's wish; docs/API.md "Guess where I was"): a game
+// made from a map's photos. Anyone with its link plays: a photo a round, they pick the
+// country, the server scores it against the photo's place. `photoIds` are the rounds in
+// order (the map's own photos; one since deleted or hidden drops out)
+model GuessGame {
+  id    String    @id @default(uuid())
+  mapId String
+  map   TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
+  // The game's link (the share codes' alphabet, utils/shareCodes.js)
+  code     String   @unique
+  title    String
+  photoIds String[]
+
+  createdById String?
+  createdBy   User?   @relation("GuessGameCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  plays GuessPlay[]
+
+  createdAt DateTime @default(now())
+
+  @@index([mapId, createdAt])
+  @@index([createdById])
+  @@map("guess_game")
+}
+
+// One go at a game: each round's points as it's answered (one answer a round, in order), and
+// the name it goes on the leaderboard under once it's finished. No account: the play's id is
+// what the player holds. Never named ones go with the daily clean-up after 7 days
+model GuessPlay {
+  id     String    @id @default(uuid())
+  gameId String
+  game   GuessGame @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  points     Int[]
+  score      Int       @default(0)
+  name       String?
+  finishedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([gameId, score])
+  @@index([createdAt])
+  @@map("guess_play")
+}
+
+// A flight on a map's flight log (23 Nov 2026, the user's wish; docs/API.md "Flights"): read from
+// a boarding pass's barcode in the browser, or typed in. Airports are IATA codes checked against
+// src/data/airports.json; the distance is the great circle between them. The same flight (map,
+// day, airports, airline and number) is logged once
+model Flight {
+  id    String    @id @default(uuid())
+  mapId String
+  map   TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
+  // The trip it was part of, if any (deleting the trip keeps the flight)
+  tripId String?
+  trip   Trip?   @relation(fields: [tripId], references: [id], onDelete: SetNull)
+
+  fromAirport  String       @db.Char(3)
+  toAirport    String       @db.Char(3)
+  flownOn      DateTime     @db.Date
+  // The airline's IATA code and the flight's number, when known ("BA", "117")
+  carrier      String?
+  flightNumber String?
+  distanceKm   Int
+  source       FlightSource @default(MANUAL)
+
+  createdById String?
+  createdBy   User?   @relation("FlightLogger", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@unique([mapId, flownOn, fromAirport, toAirport, carrier, flightNumber])
+  @@index([mapId, flownOn])
+  @@index([tripId])
+  @@index([createdById])
+  @@map("flight")
+}
+
+enum FlightSource {
+  BOARDING_PASS
+  MANUAL
 }

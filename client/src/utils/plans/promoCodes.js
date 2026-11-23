@@ -19,10 +19,11 @@ export const PROMO_TRIAL_DAYS = 30;
 // First Class) gives that plan for life once the address is verified, a complimentary membership ending in
 // 9999 (isForLife), with no free month
 export const FREE_PLAN_IDS = PAID_PLAN_IDS;
-const FOR_LIFE_FROM = Date.UTC(9999, 0, 1);
+// The end a membership for life is given (the server's FOR_LIFE_ENDS_AT)
+export const FOR_LIFE_ENDS_AT = new Date('9999-12-31T00:00:00.000Z');
 
-/** Does a membership ending at `endsAt` last for life? */
-export const isForLife = (endsAt) => Boolean(endsAt) && new Date(endsAt).getTime() >= FOR_LIFE_FROM;
+/** Does a membership ending at `endsAt` last for life? As the server's isForLife. */
+export const isForLife = (endsAt) => Boolean(endsAt) && new Date(endsAt).getTime() >= FOR_LIFE_ENDS_AT.getTime();
 
 /** What a code gives, for the admin's choice when making one ('' is the usual free month). */
 export const PROMO_OFFER_CHOICES = [

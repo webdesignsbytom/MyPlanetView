@@ -27,7 +27,10 @@ import { registerMapDesignRoutes } from '@/dev/mock/handlers/mapDesigns';
 import { registerGiftRoutes } from '@/dev/mock/handlers/gifts';
 import { registerImportRoutes } from '@/dev/mock/handlers/imports';
 import { registerCollectingRoutes } from '@/dev/mock/handlers/collecting';
+import { registerMapStringRoutes } from '@/dev/mock/handlers/mapStrings';
 import { registerReferralRoutes } from '@/dev/mock/handlers/referrals';
+import { registerGuessGameRoutes } from '@/dev/mock/handlers/guessGames';
+import { registerFlightRoutes } from '@/dev/mock/handlers/flights';
 
 // The seeded people and maps (seed.js, seedFirstClass.js)
 export const USER = 'mock-user';
@@ -74,7 +77,10 @@ export function registerAllRoutes() {
   registerGiftRoutes();
   registerImportRoutes();
   registerCollectingRoutes();
+  registerMapStringRoutes();
   registerReferralRoutes();
+  registerGuessGameRoutes();
+  registerFlightRoutes();
 }
 
 /** A freshly seeded store, signed in as the test user (verified), nothing uploaded. */

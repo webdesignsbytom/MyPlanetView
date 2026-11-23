@@ -48,6 +48,16 @@ describe('themeForm', () => {
     });
   });
 
+  it('takes the years the server takes, 2000 to 2999', () => {
+    const now = new Date('2026-11-22T00:00:00Z');
+    for (const month of ['3000-01', '9999-12']) {
+      expect(themeBodyFrom({ month, title: 'Doors', blurb: '' }, { thisMonth: '2026-11' }).errors.month).toBe('Choose a month (YYYY-MM).');
+      expect(parseThemeInput({ month, title: 'Doors' }, { now }).ok).toBe(false);
+    }
+    expect(themeBodyFrom({ month: '2999-12', title: 'Doors', blurb: '' }, { thisMonth: '2026-11' }).ok).toBe(true);
+    expect(parseThemeInput({ month: '2999-12', title: 'Doors' }, { now }).ok).toBe(true);
+  });
+
   it('agrees with the server about a month that’s over', () => {
     const now = new Date('2026-11-22T00:00:00Z');
     expect(themeBodyFrom({ month: '2026-10', title: 'Doors', blurb: '' }, { thisMonth: monthOf(now) }).ok).toBe(false);

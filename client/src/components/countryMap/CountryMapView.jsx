@@ -22,6 +22,7 @@ import { badgeIdFor, badgeRadius } from '@/utils/map/badges';
 import { countryName } from '@/utils/map/countries';
 import { placeOnCountryMap, positionOnCountryMap } from '@/utils/map/countryMapGeo';
 import { LANDMARK_MODELS, LANDMARK_MODEL_HEIGHTS } from '@/utils/map/landmarkModels';
+import { modelBox, modelPx, modelsOnMap, viewWithModels } from '@/utils/map/landmarkModelSize';
 import { MAP_WIDTH, REFERENCE_PX_PER_UNIT } from '@/utils/map/projection';
 import { clearPointerFocus, markPointerFocus } from '@/utils/map/pointerFocus';
 
@@ -114,32 +115,25 @@ const StateNames = memo(function StateNames({ areas, statuses, viewport }) {
 // The little 3D landmark models (22 Nov 2026, the user's wish: on the country maps for now, not
 // the world map): toy models made in Blender, each standing with its grass tile's middle on its
 // real spot (Big Ben at Westminster). Made by images/src/tools/landmark-models.mjs, which
-// writes utils/map/landmarkModels.js. On screen MODEL_PX tall at zoom 1, growing with the
-// square root of the zoom (a thing on the map, yet never covering a city), between MODEL_MIN_PX
-// and MODEL_MAX_PX, times the model's `size` (every model at one scale: the Eiffel Tower a
-// little taller than Big Ben); the smaller picture while it's sharp enough on a 2× screen.
-// Nothing to press: a press goes through to the state under it.
-const MODEL_PX = 64;
-const MODEL_MIN_PX = 40;
-const MODEL_MAX_PX = 150;
-
+// writes utils/map/landmarkModels.js. On screen 64 px tall at zoom 1, growing with the square
+// root of the zoom (a thing on the map, yet never covering a city), between 40 and 150 px,
+// times the model's `size` (every model at one scale: the Eiffel Tower a little taller than Big
+// Ben; utils/map/landmarkModelSize.js); the smaller picture while it's sharp enough on a 2×
+// screen. Nothing to press: a press goes through to the state under it.
 const LandmarkModels = memo(function LandmarkModels({ geo, models, viewport }) {
   const zoom = useViewportZoom(viewport);
   if (!models.length) return null;
-  const px = Math.min(MODEL_MAX_PX, Math.max(MODEL_MIN_PX, MODEL_PX * Math.sqrt(zoom)));
-  const unitsPerPx = 1 / (zoom * REFERENCE_PX_PER_UNIT);
   return (
     <g aria-hidden='true' className='pointer-events-none'>
       {models.map((model) => {
         const at = placeOnCountryMap(geo, model.latitude, model.longitude);
-        const tall = px * model.size;
-        const h = tall * unitsPerPx;
-        const w = h * model.aspect;
+        const tall = modelPx(model, zoom);
+        const box = modelBox(model, at, zoom);
         const picture = LANDMARK_MODEL_HEIGHTS.find((height) => height >= tall * 2) ?? LANDMARK_MODEL_HEIGHTS.at(-1);
         // The group stands on the spot; the picture is moved so its tile's middle is there
         return (
           <g key={model.id} data-landmark-model={model.id} transform={`translate(${at.x} ${at.y})`}>
-            <image href={model.images[picture]} x={-w * model.anchor[0]} y={-h * model.anchor[1]} width={w} height={h} />
+            <image href={model.images[picture]} x={box.x - at.x} y={box.y - at.y} width={box.width} height={box.height} />
           </g>
         );
       })}
@@ -192,7 +186,7 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
   // panel in the middle (19 Nov 2026, the user's wish: its button made the header look poor)
   const [listOpen, setListOpen] = useState(false);
   const name = countryName(code);
-  const models = useMemo(() => LANDMARK_MODELS.filter((model) => model.maps.includes(code)), [code]);
+  const models = useMemo(() => modelsOnMap(LANDMARK_MODELS, code), [code]);
   const info = geo?.word;
   const many = info?.[1] || 'states';
   const listTitle = `${many[0].toUpperCase()}${many.slice(1)} and pins`;
@@ -205,20 +199,29 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
   const fitCountry = useCallback(() => {
     const box = boxRef.current?.getBoundingClientRect();
     if (!geo || !box?.width) return;
-    const [x, y, w, h] = geo.view;
     const left = 16;
     const right = box.width >= 768 ? 88 : 16;
     const top = (headerRef.current?.getBoundingClientRect().bottom ?? box.top) - box.top + 10;
     const free = Math.max(box.height - top - 12, box.height / 3);
     const across = box.width - left - right;
-    // Map units per pixel, so the country fits the free area's width and height (the canvas
-    // is MAP_WIDTH across: the generator keeps every country small enough for that)
-    const perPx = Math.min(Math.max(w / across, h / free), MAP_WIDTH / box.width);
+    // Map units per pixel, so a view fits the free area's width and height (the canvas is
+    // MAP_WIDTH across: the generator keeps every country small enough for that)
+    const fit = ([, , vw, vh]) => Math.min(Math.max(vw / across, vh / free), MAP_WIDTH / box.width);
+    // The country and its landmark models whole (23 Nov 2026: Bikini Atoll stands off the
+    // Marshall Islands' drawn atolls, Gorée's picture overhung Africa's westernmost point):
+    // each pass grows the view by the models' pictures at the zoom the last one gave
+    let view = geo.view;
+    for (let pass = 0; pass < 3 && models.length; pass += 1) {
+      const perPx = fit(view);
+      view = viewWithModels(geo, geo.view, models, 1 / (perPx * REFERENCE_PX_PER_UNIT), 8 * perPx);
+    }
+    const [x, y, w, h] = view;
+    const perPx = fit(view);
     // The view's centre: the free area's, not the screen's
     const centreX = x + w / 2 + (box.width / 2 - (left + across / 2)) * perPx;
     const centreY = y + h / 2 + (box.height / 2 - (top + free / 2)) * perPx;
     viewport.focusOn(centreX, centreY, box.width * perPx);
-  }, [geo, viewport]);
+  }, [geo, models, viewport]);
   useEffect(() => {
     if (!geo) return undefined;
     // After the viewport has taken the new extent (its own layout effect)

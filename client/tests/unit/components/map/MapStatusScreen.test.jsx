@@ -18,6 +18,10 @@ describe('MapStatusScreen', () => {
     expect(main).not.toBeNull();
     expect(screen.getByRole('status').textContent).toBe('Loading…');
     expect(main.hasAttribute('data-map-style')).toBe(false);
+    // The page's hidden h1 while it loads, named by the page
+    expect(container.querySelector('h1.sr-only').textContent).toBe('Opening the map');
+    render(withProviders(<MapStatusScreen loading heading='Opening the shared map' />));
+    expect([...document.querySelectorAll('h1')].map((h) => h.textContent)).toContain('Opening the shared map');
   });
 
   it('is a layer of its own over the map, which the tests wait on', () => {
@@ -25,6 +29,8 @@ describe('MapStatusScreen', () => {
     expect(container.querySelector('main')).toBeNull();
     expect(container.querySelector('[data-map-loading]').getAttribute('class')).toContain('fixed');
     expect(screen.getByRole('status').textContent).toBe('Opening the map…');
+    // The map page under it already has its h1
+    expect(container.querySelector('h1')).toBeNull();
   });
 
   it('says when the map can’t open, with a way home', () => {
@@ -80,9 +86,25 @@ describe('StampLoading', () => {
       vi.advanceTimersByTime(380 * 3);
     });
     first.unmount();
-    vi.setSystemTime(new Date('2026-11-23T11:00:01Z'));
+    // 0.86 s after the screen before closed (its three stamps took the clock to 11:00:01.14)
+    vi.setSystemTime(new Date('2026-11-23T11:00:02Z'));
     const { container } = render(<StampLoading />);
     expect(designs(container).length).toBe(4);
+  });
+
+  // A clock that went back since the screen before (the real clock's clean-up, a time change)
+  // starts afresh: a negative gap counted as "a moment ago" kept the old stamps for ever
+  it('starts afresh when the clock has gone back since the screen before', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-11-23T12:00:00Z'));
+    const first = render(<StampLoading />);
+    act(() => {
+      vi.advanceTimersByTime(380 * 3);
+    });
+    first.unmount();
+    vi.setSystemTime(new Date('2026-11-23T11:59:00Z'));
+    const { container } = render(<StampLoading />);
+    expect(designs(container).length).toBe(1);
   });
 });
 
@@ -109,9 +131,10 @@ describe('MapBackground', () => {
 
 describe('MapDesignStyle', () => {
   it('writes the design’s colours as a style sheet for the map', () => {
-    const { container } = render(<MapDesignStyle design={{ shown: true, names: '#112233', countries: { FR: '#aabbcc' } }} />);
+    const { container } = render(<MapDesignStyle design={{ shown: true, names: '#112233', hover: '#00ff00', countries: { FR: '#aabbcc' } }} />);
     const css = container.querySelector('style').textContent;
     expect(css).toContain('--map-names:#112233');
+    expect(css).toContain('--map-hover:#00ff00');
     expect(css).toContain('[data-map-design] svg g[data-code="FR"]:not(:hover){fill:#aabbcc}');
   });
 

@@ -68,6 +68,13 @@ export function loadStore() {
   if (!Array.isArray(db.planGrants)) db.planGrants = [];
   // Landmarks ticked "been here" (docs/API.md "Collecting"): { mapId, landmarkId, createdAt }
   if (!Array.isArray(db.landmarkVisits)) db.landmarkVisits = [];
+  // Strings between places (docs/API.md "Strings"): { id, mapId, from, to, createdAt }
+  if (!Array.isArray(db.mapStrings)) db.mapStrings = [];
+  // "Guess where I was" (docs/API.md): the seed's game in a store saved before it, and its plays
+  if (!Array.isArray(db.guessGames)) db.guessGames = buildSeed().guessGames;
+  if (!Array.isArray(db.guessPlays)) db.guessPlays = buildSeed().guessPlays;
+  // The flight log (docs/API.md "Flights")
+  if (!Array.isArray(db.flights)) db.flights = buildSeed().flights;
   if (!Array.isArray(db.moments)) db.moments = [];
   if (!Array.isArray(db.tripMaps)) db.tripMaps = [];
   if (!Array.isArray(db.landmarkCovers)) db.landmarkCovers = [];

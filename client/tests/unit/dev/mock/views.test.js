@@ -202,8 +202,8 @@ describe('maps', () => {
     const stats = mapStats(map(HOME_MAP), 'OWNER');
     expect(stats).toMatchObject({ countries: 8, specialPlaces: 0, regions: 0, continents: 2, photos: 16, landmarks: 13, trips: 3 });
     expect(stats.byTraveller).toEqual([
-      { travellerId: 'trav-test', name: 'Charlie', countries: 1 },
-      { travellerId: 'trav-alex', name: 'Alex', countries: 1 },
+      { travellerId: 'trav-test', name: 'Charlie', countries: 1, daysAway: 15, lifeAwayShare: null },
+      { travellerId: 'trav-alex', name: 'Alex', countries: 1, daysAway: 15, lifeAwayShare: null },
     ]);
     expect(stats.countriesInWorld).toBeGreaterThan(200);
     expect(mapStats(map(HOME_MAP), 'VIEWER')).toMatchObject({ photos: 15, landmarks: 12 });

@@ -146,7 +146,7 @@ export const findMapDetail = async (mapId) => {
     prisma.profile.findFirst({ where: { user: { ownedMaps: { some: { id: mapId } } } }, select: { mapSettings: true } }),
     prisma.traveller.findMany({
       where: { mapId },
-      select: { id: true, name: true, position: true, userId: true, birthCountryCode: true, favouriteCountryCode: true },
+      select: { id: true, name: true, position: true, userId: true, birthCountryCode: true, favouriteCountryCode: true, birthDate: true },
       orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
     }),
     prisma.countryVisit.findMany({
@@ -176,6 +176,7 @@ export const createMapInDB = ({ ownerId, name, groupType, isDefault = false, sha
           userId: t.userId ?? null,
           birthCountryCode: t.birthCountryCode ?? null,
           favouriteCountryCode: t.favouriteCountryCode ?? null,
+          birthDate: t.birthDate ?? null,
         })),
       },
     },
@@ -218,8 +219,9 @@ export const countTravellers = (mapId, db = prisma) => db.traveller.count({ wher
 export const findMapTravellers = (mapId) =>
   prisma.traveller.findMany({
     where: { mapId },
-    // The account and birth country find the map's home when it has none set (utils/travelStats.js homeOf)
-    select: { id: true, name: true, userId: true, birthCountryCode: true },
+    // The account and birth country find the map's home when it has none set (utils/travelStats.js
+    // homeOf); the date of birth, each traveller's share of a life away (editors' stats)
+    select: { id: true, name: true, userId: true, birthCountryCode: true, birthDate: true },
     orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
   });
 
@@ -236,6 +238,7 @@ const TRAVELLER_SELECT = {
   userId: true,
   birthCountryCode: true,
   favouriteCountryCode: true,
+  birthDate: true,
 };
 
 // A map's row locked while its travellers are counted (FOR NO KEY UPDATE), so two adds, two
@@ -358,8 +361,10 @@ export const countMapPhotos = (mapId, { includeHidden }) =>
   prisma.photo.count({ where: { mapId, ...(includeHidden ? {} : { hidden: false }) } });
 
 /**
- * The landmarks a map has stamped: those with a confirmed photo (never a video: a video
- * can't be matched). The stats count them and the map marks their pins.
+ * The landmarks a map has stamped with a photo: those with a confirmed photo (never a
+ * video: a video can't be matched). A landmark ticked "been here" is a stamp too (23 Nov
+ * 2026; landmarkVisits.js findTickedLandmarkIds): the stats count both, and the map marks
+ * both pins.
  */
 export const findMapStampedLandmarkIds = async (mapId, { includeHidden }) =>
   (
@@ -383,13 +388,14 @@ export const countMapTrips = async (mapId) => {
 
 /**
  * Each completed trip of the map's own, for the stats: who went, where it stopped (each
- * stop's place, dates, position and its landmark's position) and its dates:
- * `[{ travellerIds, countryCodes, startDate, endDate, stops }]`. Three flat queries side by side.
+ * stop's place, dates, position and its landmark's position), its dates, and its id and
+ * title (the longest trip): `[{ id, title, travellerIds, countryCodes, startDate, endDate,
+ * stops }]`. Three flat queries side by side.
  */
 export const findCompletedTripsForStats = async (mapId) => {
   const completed = { mapId, status: 'COMPLETED' };
   const [trips, travellers, stops] = await Promise.all([
-    prisma.trip.findMany({ where: completed, select: { id: true, startDate: true, endDate: true } }),
+    prisma.trip.findMany({ where: completed, select: { id: true, title: true, startDate: true, endDate: true } }),
     prisma.tripTraveller.findMany({ where: { trip: completed }, select: { tripId: true, travellerId: true } }),
     prisma.tripStop.findMany({
       where: { trip: completed },
@@ -405,7 +411,7 @@ export const findCompletedTripsForStats = async (mapId) => {
     }),
   ]);
   const byTrip = new Map(
-    trips.map((t) => [t.id, { travellerIds: [], countryCodes: [], startDate: t.startDate, endDate: t.endDate, stops: [] }]),
+    trips.map((t) => [t.id, { id: t.id, title: t.title, travellerIds: [], countryCodes: [], startDate: t.startDate, endDate: t.endDate, stops: [] }]),
   );
   for (const t of travellers) byTrip.get(t.tripId)?.travellerIds.push(t.travellerId);
   for (const { tripId, ...stop } of stops) {

@@ -30,6 +30,8 @@ import {
   TRIP_PAGE_URL,
   WELCOME_PAGE_URL,
   SHARED_PAGE_URL,
+  EMBED_PAGE_URL,
+  GUESS_PAGE_URL,
   INVITE_PAGE_URL,
   CHALLENGES_PAGE_URL,
   CHALLENGE_PAGE_URL,
@@ -48,7 +50,7 @@ export const helmetData = {
   [HOME_PAGE_URL]: {
     pageName: 'Home',
     title: `${CompanyName} | Your Private Travel Map and Photos`,
-    desc: 'A private map of every country you have been to, with your photos in their places. No followers and no public profiles: share it only with who you choose.',
+    desc: 'A private map of every country you have been to, with your photos in their places. Anyone you send the link to can see it, no app or account needed.',
     indexing: 'index,follow',
   },
 
@@ -149,6 +151,18 @@ export const helmetData = {
   [SHARED_PAGE_URL]: {
     pageName: 'Shared With You',
     desc: `A travel map or trip shared with you on ${CompanyName}.`,
+    indexing: 'noindex,nofollow',
+  },
+
+  [EMBED_PAGE_URL]: {
+    pageName: 'Travel map',
+    desc: `A travel map made with ${CompanyName}.`,
+    indexing: 'noindex,nofollow',
+  },
+
+  [GUESS_PAGE_URL]: {
+    pageName: 'Guess where I was',
+    desc: `A friend's travel photos: guess where each was taken, then make your own travel map on ${CompanyName}.`,
     indexing: 'noindex,nofollow',
   },
 

@@ -86,7 +86,7 @@ export function exportAccountView({
       homeCountryCode: profile?.homeCountryCode ?? null,
       mapSettings: profile?.mapSettings ?? null,
       // Emails people can stop (docs/API.md "Emails")
-      emails: { onThisDay: profile?.onThisDayEmails ?? true },
+      emails: { onThisDay: profile?.onThisDayEmails ?? true, tripShare: profile?.tripShareEmails ?? true },
       signedUpWithPromoCode: profile?.promoCode?.code ?? null,
       promoFreeMonthUsedAt: iso(profile?.promoTrialUsedAt),
       // Give a month, get a month: their own invite code and each month a friend brought
@@ -168,10 +168,25 @@ export function exportMapView(rows, { userId }) {
       namesColour: design.namesColour ?? null,
       gridColour: design.gridColour ?? null,
       hoverColour: design.hoverColour ?? null,
+      stringColour: design.stringColour ?? null,
       hasSeaPicture: Boolean(design.pictureId),
     })),
     // Landmarks ticked "been here" (docs/API.md "Collecting")
     landmarksBeenTo: (map.landmarkVisits ?? []).map((v) => ({ landmarkId: v.landmarkId, name: v.landmark?.name ?? null, countryCode: v.landmark?.countryCode ?? null, since: iso(v.createdAt) })),
+    // Strings tied between its places (docs/API.md "Strings")
+    strings: (map.strings ?? []).map((s) => ({ from: s.fromCode, to: s.toCode, since: iso(s.createdAt) })),
+    // Its flight log and "Guess where I was" games (their players' names aren't the owner's data)
+    flights: (map.flights ?? []).map((f) => ({
+      from: f.fromAirport,
+      to: f.toAirport,
+      flownOn: iso(f.flownOn)?.slice(0, 10) ?? null,
+      airline: f.carrier,
+      flightNumber: f.flightNumber,
+      distanceKm: f.distanceKm,
+      tripId: f.tripId,
+      source: f.source,
+    })),
+    guessGames: (map.guessGames ?? []).map((g) => ({ code: g.code, title: g.title, photoIds: g.photoIds, made: iso(g.createdAt) })),
     linkAccess: map.linkAccess,
     shareCode: map.shareCode,
     graceUntil: iso(map.graceUntil),
@@ -184,6 +199,8 @@ export function exportMapView(rows, { userId }) {
       linkedToAnAccount: Boolean(t.userId),
       birthCountryCode: t.birthCountryCode ?? null,
       favouriteCountryCode: t.favouriteCountryCode ?? null,
+      // "YYYY-MM-DD" or null (23 Nov 2026)
+      birthDate: t.birthDate ? new Date(t.birthDate).toISOString().slice(0, 10) : null,
       addedAt: iso(t.createdAt),
     })),
     countries: rows.visits.map((v) => ({

@@ -16,8 +16,8 @@ import { mapStyleById } from '@/utils/map/mapStyles';
 // (a colour picker takes "#rrggbb" only, and the tokens are the one place colours live)
 const USUAL_TOKENS = ['--map-visit-1', '--map-visit-2', '--map-visit-3', '--map-visit-4', '--map-visit-5', '--map-visit-6', '--map-visit-7', '--map-ice'];
 const readUsualColours = (styleId) => {
-  const read = readStyleColours(styleId, ['--map-ink', '--map-grid', '--map-hover', ...USUAL_TOKENS]);
-  return { names: read['--map-ink'], grid: read['--map-grid'], hover: read['--map-hover'], places: read };
+  const read = readStyleColours(styleId, ['--map-ink', '--map-grid', '--map-hover', '--map-string', ...USUAL_TOKENS]);
+  return { names: read['--map-ink'], grid: read['--map-grid'], hover: read['--map-hover'], string: read['--map-string'], places: read };
 };
 
 // Settings, "How it looks", for the owner and co-owners: this map's own design (docs/API.md
@@ -87,6 +87,14 @@ function MapDesignSection({ map, styleId, onDesignChange, preview }) {
         value={design?.hover ?? null}
         usual={usual.hover}
         onChange={(hover) => editor.change({ hover })}
+      />
+      {/* The strings between places (the Strings tool; 23 Nov 2026, the user's wish) */}
+      <DesignColourField
+        id={`${uid}-string`}
+        label='String colour'
+        value={design?.string ?? null}
+        usual={usual.string}
+        onChange={(string) => editor.change({ string })}
       />
       <DesignCountryColours
         countries={design?.countries}

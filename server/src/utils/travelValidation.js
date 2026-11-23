@@ -69,6 +69,22 @@ export const datesInOrder = (start, end) => !start || !end || end.getTime() >= s
 /** Date -> "YYYY-MM-DD" (null stays null). */
 export const toDateOnly = (date) => (date ? new Date(date).toISOString().slice(0, 10) : null);
 
+// A traveller's date of birth, from 1900 (CHECK traveller_birth_date)
+export const BIRTH_DATE_MIN = '1900-01-01';
+
+/**
+ * A traveller's optional date of birth (23 Nov 2026): parseDateOnly's rules, from
+ * BIRTH_DATE_MIN up to `today` (a baby born today is fine; anywhere in the world, so a day
+ * ahead of UTC is allowed). -> `{ ok, value }` as parseDateOnly
+ */
+export function parseBirthDate(input, today = new Date()) {
+  const parsed = parseDateOnly(input);
+  if (!parsed.ok || !parsed.value) return parsed;
+  const latest = toDateOnly(new Date(today.getTime() + 24 * 60 * 60 * 1000));
+  const day = toDateOnly(parsed.value);
+  return day >= BIRTH_DATE_MIN && day <= latest ? parsed : { ok: false };
+}
+
 /**
  * GPS from a request body: both numbers on Earth, or both absent.
  * -> { ok: true, latitude, longitude } (numbers or nulls) or { ok: false }.

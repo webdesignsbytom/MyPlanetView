@@ -7,9 +7,12 @@ import {
   PLACE_POSITIONS,
   countriesInWorld,
   daysAway,
+  daysByPlace,
+  daysByYear,
   distanceKm,
   furthestFromHome,
   homeOf,
+  longestTrip,
   travelExtras,
   tripDays,
   tripDistanceKm,
@@ -169,7 +172,50 @@ describe('travelExtras', () => {
   });
 
   it('is all zeros and nulls with nothing given', () => {
-    expect(travelExtras({})).toEqual({ homeCountryCode: null, daysAway: 0, distanceKm: 0, furthest: null });
+    expect(travelExtras({})).toEqual({
+      homeCountryCode: null,
+      daysAway: 0,
+      daysByYear: [],
+      daysByPlace: [],
+      longestTrip: null,
+      distanceKm: 0,
+      furthest: null,
+    });
+  });
+});
+
+// Time away in more detail (23 Nov 2026)
+describe('daysByYear, daysByPlace and longestTrip', () => {
+  it('split the days by year, a trip over New Year in both, newest first', () => {
+    expect(daysByYear([{ startDate: '2024-12-30', endDate: '2025-01-02' }])).toEqual([
+      { year: 2025, days: 2 },
+      { year: 2024, days: 2 },
+    ]);
+  });
+
+  it('give a trip to one place every day, and a trip to several each stop’s days', () => {
+    expect(daysByPlace([{ startDate: '2025-07-02', endDate: '2025-07-16', stops: [{ position: 0, countryCode: 'IT' }] }])).toEqual([{ countryCode: 'IT', days: 15 }]);
+    const tour = {
+      startDate: '2025-05-01',
+      endDate: '2025-05-06',
+      stops: [
+        { position: 0, countryCode: 'FR', arriveOn: '2025-05-01', leaveOn: '2025-05-03' },
+        { position: 1, countryCode: 'ES', arriveOn: '2025-05-03' },
+      ],
+    };
+    expect(daysByPlace([tour])).toEqual([
+      { countryCode: 'ES', days: 4 },
+      { countryCode: 'FR', days: 3 },
+    ]);
+  });
+
+  it('name the longest trip', () => {
+    expect(longestTrip([{ id: 'a', title: 'Short', startDate: '2025-01-01', endDate: '2025-01-01' }, { id: 'b', title: 'Long', startDate: '2025-02-01', endDate: '2025-02-10' }])).toEqual({
+      tripId: 'b',
+      title: 'Long',
+      days: 10,
+    });
+    expect(longestTrip([])).toBeNull();
   });
 });
 
@@ -187,6 +233,9 @@ describe('the same answers as the server', () => {
       expect(tripDistanceKm(trip, PLACE_POSITIONS, LONDON)).toBe(server.tripDistanceKm(trip, PLACE_POSITIONS, LONDON));
     }
     expect(daysAway(trips)).toBe(server.daysAway(trips));
+    expect(daysByYear(trips)).toEqual(server.daysByYear(trips));
+    expect(daysByPlace(trips)).toEqual(server.daysByPlace(trips));
+    expect(longestTrip(trips)).toEqual(server.longestTrip(trips));
   });
 
   it('for the home, the furthest place and the extras', () => {

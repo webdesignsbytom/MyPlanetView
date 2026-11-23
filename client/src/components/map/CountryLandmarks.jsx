@@ -74,7 +74,8 @@ function CountryLandmarks({ countryCode, moments = [] }) {
             landmark={landmark}
             photo={landmarkPhotoInfo(photos, landmark.slug)}
             moments={momentsByLandmark.get(landmark.id)}
-            mark={marks.stamped.has(landmark.id) ? 'stamped' : marks.ticked.has(landmark.id) ? 'ticked' : null}
+            // A tick first: it can be taken off (a photo's stamp stays, and shows then)
+            mark={marks.ticked.has(landmark.id) ? 'ticked' : marks.stamped.has(landmark.id) ? 'stamped' : null}
             onToggle={toggle}
           />
         ))}

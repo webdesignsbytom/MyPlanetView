@@ -58,6 +58,17 @@ describe('momentKinds', () => {
     expect(kinds.isMomentKind(null)).toBe(false);
   });
 
+  // 23 Nov 2026: a day on a trip (a safari, a hike)
+  it('puts a day’s kinds first on a trip, then every other kind once', () => {
+    const [day, life] = kinds.TRIP_MOMENT_KIND_GROUPS;
+    expect(day.label).toBe('A day on the trip');
+    expect(day.options.map((o) => o.value)).toEqual(['SAFARI', 'HIKE', 'DIVE', 'TOUR', 'MEAL', 'SHOW', 'BEACH', 'SAW_OR_DID']);
+    expect(day.options[0]).toEqual({ value: 'SAFARI', label: 'Safari' });
+    expect(life.label).toBe('Life events');
+    expect([...day.options, ...life.options].map((o) => o.value).sort()).toEqual([...kinds.MOMENT_KINDS].sort());
+    for (const kind of kinds.TRIP_DAY_KINDS) expect(kinds.isMomentKind(kind)).toBe(true);
+  });
+
   it('suggests Lived for a birth or a move, Visited for anything else', () => {
     expect(kinds.statusForKind('BORN')).toBe('LIVED');
     expect(kinds.statusForKind('MOVED_HERE')).toBe('LIVED');

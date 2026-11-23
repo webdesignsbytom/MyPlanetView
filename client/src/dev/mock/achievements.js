@@ -224,8 +224,12 @@ export function goalProgress(goal, facts, now = new Date()) {
 // The map's facts (services/travel/achievements.js loadMapFacts), as the caller may see
 // them: `includeHidden` for the owner and editors (who also award)
 
-/** Each stamped landmark on a map, with its earliest confirmed photo's shotAt (domain/passport.js findStamps). */
-function findStamps(mapPhotos) {
+/**
+ * Each stamped landmark on a map, with its earliest confirmed photo's shotAt (domain/passport.js
+ * findStamps), and each landmark ticked "been here" with no such photo, dated by its tick
+ * (23 Nov 2026: a tick stamps the passport too).
+ */
+function findStamps(mapId, mapPhotos) {
   const photoById = new Map(mapPhotos.map((p) => [p.id, p]));
   const byLandmark = new Map();
   for (const match of getDb().photoLandmarks) {
@@ -238,6 +242,12 @@ function findStamps(mapPhotos) {
     if (!seen || shot < seen.firstShotAt) {
       byLandmark.set(landmark.id, { landmarkId: landmark.id, countryCode: landmark.countryCode, isUnesco: Boolean(landmark.isUnesco), firstShotAt: shot });
     }
+  }
+  for (const tick of getDb().landmarkVisits || []) {
+    if (tick.mapId !== mapId || byLandmark.has(tick.landmarkId)) continue;
+    const landmark = landmarkById(tick.landmarkId);
+    if (!landmark) continue;
+    byLandmark.set(landmark.id, { landmarkId: landmark.id, countryCode: landmark.countryCode, isUnesco: Boolean(landmark.isUnesco), firstShotAt: new Date(tick.createdAt) });
   }
   return [...byLandmark.values()];
 }
@@ -263,7 +273,7 @@ export function loadMapFacts(mapId, { includeHidden }) {
   const shown = new Set(photos.map((p) => p.id));
   const themes = new Set((db.themeEntries || []).filter((e) => e.mapId === mapId && shown.has(e.photoId)).map((e) => e.themeId)).size;
   const splitUk = Boolean(db.maps.find((m) => m.id === mapId)?.splitUk);
-  return { visited, firstVisitAt, firstPhotoAt, stamps: findStamps(photos), photos: photos.length, themes, splitUk };
+  return { visited, firstVisitAt, firstPhotoAt, stamps: findStamps(mapId, photos), photos: photos.length, themes, splitUk };
 }
 
 /**

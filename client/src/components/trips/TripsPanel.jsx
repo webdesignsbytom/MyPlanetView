@@ -23,7 +23,8 @@ import PanelEmptyState from '@/components/map/PanelEmptyState';
 // trip does, with "Plan a new trip" on it for an editor.
 // `planCountry`: opened from a place's ticket ("Plan a trip", 22 Nov 2026, the user's wish):
 // the form is open at once, titled for it, and the new trip gets the place as its first stop.
-function TripsPanel({ trips, travellers, canEdit, locked = false, onCreate, planCountry = null, noLinks = false, onRemoveLinked = null, onClose }) {
+// `onFlights` opens the flight log (scanning a boarding pass fills in a trip; 23 Nov 2026).
+function TripsPanel({ trips, travellers, canEdit, locked = false, onCreate, planCountry = null, noLinks = false, onRemoveLinked = null, onFlights = null, onClose }) {
   const navigate = useNavigate();
   const planPlace = canEdit && planCountry ? COUNTRY_BY_CODE[planCountry] : null;
   const [creating, setCreating] = useState(Boolean(planPlace));
@@ -68,7 +69,14 @@ function TripsPanel({ trips, travellers, canEdit, locked = false, onCreate, plan
           />
         </div>
       ) : canEdit && !empty ? (
-        planButton
+        <>
+          {planButton}
+          {onFlights ? (
+            <MapActionButton quiet onClick={onFlights}>
+              Scan a boarding pass
+            </MapActionButton>
+          ) : null}
+        </>
       ) : locked ? (
         <VerifyFirstNote action='plan a trip' />
       ) : null}

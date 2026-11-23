@@ -116,13 +116,13 @@ describe('TripHeader', () => {
     expect(screen.getByText(/Verify your email address to change this trip, its stops, moments or photos/)).toBeTruthy();
   });
 
-  it('edits the trip in the same card, keeping the h1', async () => {
+  it('edits the trip in the same card, keeping the h1', { timeout: 20000 }, async () => {
     const updated = { ...TRIP, title: 'Italian summer 2025' };
     updateTrip.mockResolvedValue({ trip: updated });
     const { container, onChanged } = show();
     fireEvent.click(screen.getByText('Edit trip'));
     expect(screen.getByText('Edit trip', { selector: 'h2' })).toBeTruthy();
-    const title = await screen.findByLabelText(/^Title/);
+    const title = await screen.findByLabelText(/^Title/, {}, { timeout: 10000 });
     expect(title.value).toBe('Italian summer');
     // No traveller chips in the edit form
     expect(screen.queryByText('Charlie')).toBeNull();

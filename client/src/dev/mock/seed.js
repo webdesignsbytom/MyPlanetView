@@ -343,6 +343,28 @@ function buildBaseSeed() {
     // The photo an editor picked for a stamp (none yet: each shows its earliest photo)
     landmarkCovers: [],
     landmarkVisits: [],
+    // Strings between places (none to start with: the map is the person's to string)
+    mapStrings: [],
+    // "Guess where I was" (docs/API.md): a game of the test user's photos, played once by Sam
+    guessGames: [
+      {
+        id: 'guess-home',
+        mapId: homeMap,
+        code: 'GWHR2WAS7MAP',
+        title: 'Guess where we were',
+        photoIds: ['photo-eiffel', 'photo-colosseum', 'photo-dam', 'photo-alhambra'],
+        createdById: USER_ID,
+        createdAt: daysAgo(6),
+      },
+    ],
+    // The flight log (docs/API.md "Flights"): the Italian summer's two flights
+    flights: [
+      { id: 'flight-rome-out', mapId: homeMap, tripId: italyTrip, from: 'LHR', to: 'FCO', flownOn: '2025-07-02', carrier: 'BA', flightNumber: '548', distanceKm: 1444, source: 'BOARDING_PASS', createdById: USER_ID, createdAt: daysAgo(140) },
+      { id: 'flight-pisa-home', mapId: homeMap, tripId: italyTrip, from: 'PSA', to: 'LGW', flownOn: '2025-07-16', carrier: 'U2', flightNumber: '8148', distanceKm: 1148, source: 'MANUAL', createdById: USER_ID, createdAt: daysAgo(139) },
+    ],
+    guessPlays: [
+      { id: 'guess-play-sam', gameId: 'guess-home', points: [1000, 1000, 540, 440], score: 2980, name: 'Sam', finishedAt: daysAgo(5), createdAt: daysAgo(5) },
+    ],
     // Plans (docs/API.md, "Plans and billing"). The test user pays monthly for Business
     // and one extra map: originals kept, and room for one more map than the one they own
     // (the switcher's "New map" works). Everyone else is on Economy. The mock badge's

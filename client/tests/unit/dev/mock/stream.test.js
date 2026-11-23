@@ -19,7 +19,6 @@ vi.mock('@/dev/mock/videoThumbnail', () => ({ makeMockThumbnails: vi.fn(async ()
 const PATCH_HEADERS = (offset) => ({ 'content-type': 'application/offset+octet-stream', 'upload-offset': String(offset) });
 const clean = () => videoBlob(box('ftyp', 'isom'), box('moov', box('mvhd', new Uint8Array(8))));
 const withLocation = () => videoBlob(box('ftyp', 'isom'), box('moov', new Uint8Array([0xa9, 0x78, 0x79, 0x7a])));
-const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 let objectUrls;
 beforeEach(() => {
@@ -100,18 +99,15 @@ describe('converting', () => {
     const uid = await arrived(clean());
     convertMockVideo(uid, { seconds: 3 });
     expect(mockPlayback(uid)).toEqual({ videoUrl: null, thumb: null, display: null });
-    await flush();
-    expect(mockPlayback(uid)).toEqual({ videoUrl: 'blob:mock/1', thumb: 'blob:thumb', display: 'blob:display' });
+    // The file is read asynchronously: wait for it, not a fixed tick (a busy machine took longer)
+    await vi.waitFor(() => expect(mockPlayback(uid)).toEqual({ videoUrl: 'blob:mock/1', thumb: 'blob:thumb', display: 'blob:display' }));
   });
 
   it('serves a fragmented MP4 as a one-segment HLS playlist', async () => {
     const file = videoBlob(box('ftyp', 'isom'), box('moov', box('mvhd', new Uint8Array(8))), box('moof', new Uint8Array(4)), box('mdat', new Uint8Array(8)));
     const uid = await arrived(file);
     convertMockVideo(uid, { seconds: 2.5 });
-    await flush();
-    await flush();
-    const { videoUrl } = mockPlayback(uid);
-    expect(videoUrl).toMatch(/^blob:mock\/3#video\.m3u8$/);
+    await vi.waitFor(() => expect(mockPlayback(uid).videoUrl).toMatch(/^blob:mock\/3#video\.m3u8$/));
     const playlist = await objectUrls[2].text();
     expect(playlist.split('\n')).toEqual([
       '#EXTM3U',

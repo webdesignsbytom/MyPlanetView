@@ -162,7 +162,7 @@ describe("a co-owner's powers", () => {
   });
 
   it('is only on maps, never a trip', async () => {
-    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Lisbon' })).trip;
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Lisbon' })).trip;
     const res = await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: friend.email, role: 'CO_OWNER', travellerId: own.id });
     expect(res.status).toBe(400);
   });

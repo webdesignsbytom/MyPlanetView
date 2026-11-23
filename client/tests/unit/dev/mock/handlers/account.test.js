@@ -194,7 +194,7 @@ describe('reference data', () => {
     const { data } = await get('/api/countries');
     expect(data.countries.find((c) => c.code === 'AQ').kind).toBe('SPECIAL');
     expect(data.countries.find((c) => c.code === 'FR').kind).toBe('COUNTRY');
-    expect((await get('/api/landmarks')).data.landmarks).toHaveLength(1332);
+    expect((await get('/api/landmarks')).data.landmarks).toHaveLength(1366);
     const french = (await get('/api/landmarks', { country: 'FR' })).data.landmarks;
     expect(french.every((l) => l.countryCode === 'FR')).toBe(true);
   });

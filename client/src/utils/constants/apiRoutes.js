@@ -60,6 +60,12 @@ export const OFFERS_API = '/api/offers'; // GET: every live travel offer (docs/A
 export const THEMES_API = '/api/themes'; // GET: this month's photo theme and the recent ones (docs/API.md, "Photo themes")
 export const ADMIN_THEMES_API = '/api/users/admin/themes'; // GET, POST, PATCH|DELETE /:themeId
 export const CHALLENGES_API = '/api/challenges'; // GET, POST, /:challengeId (GET, PATCH, DELETE), /reset-link, /me, /join/:code (docs/API.md, "Friends challenges")
+// "Guess where I was" (docs/API.md): a game by its link's code (anyone): /:code, /:code/plays, /:code/plays/:playId (PATCH), /:code/plays/:playId/guesses.
+// A map's games are MAPS_API/:mapId/guess-games; deleting one GUESS_GAMES_API/:gameId
+export const GUESS_API = '/api/guess';
+export const GUESS_GAMES_API = '/api/guess-games';
+// The flight log (docs/API.md "Flights"): a map's are MAPS_API/:mapId/flights; deleting one FLIGHTS_API/:flightId
+export const FLIGHTS_API = '/api/flights';
 export const OFFER_CLICK_PATH = '/go'; // /:offerId?p=&dest=&country=&from=&to= on the API's host (a card's link)
 export const ACCEPT_INVITE_API = '/api/invites/accept'; // POST { token }
 export const inviteApi = (token) => `/api/invites/${encodeURIComponent(token)}`; // GET: what an invite is for, signed out too

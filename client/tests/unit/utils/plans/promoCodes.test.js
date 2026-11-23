@@ -10,6 +10,7 @@ import {
   PROMO_TRIAL_DAYS,
   forgetPromoCode,
   inviteLinkFor,
+  FOR_LIFE_ENDS_AT,
   isForLife,
   normalisePromoCode,
   promoCodeInSearch,
@@ -40,11 +41,11 @@ describe('the format', () => {
   });
 
   it('knows a membership for life as the server does', () => {
-    for (const endsAt of [server.FOR_LIFE_ENDS_AT.toISOString(), '9998-12-31T23:59:59.000Z', '2027-01-01', null]) {
-      expect(isForLife(endsAt)).toBe(server.isForLife(endsAt));
-    }
-    // The client reads any end in the year 9999 as for life
-    expect(isForLife('9999-01-01T00:00:00.000Z')).toBe(true);
+    const ends = [server.FOR_LIFE_ENDS_AT.toISOString(), '9999-12-31', '9999-01-01T00:00:00.000Z', '9998-12-31T23:59:59.000Z', '2027-01-01', null];
+    for (const endsAt of ends) expect(isForLife(endsAt)).toBe(server.isForLife(endsAt));
+    expect(FOR_LIFE_ENDS_AT.toISOString()).toBe(server.FOR_LIFE_ENDS_AT.toISOString());
+    // Only the server's own end date is for life, not any day in 9999
+    expect(isForLife('9999-01-01T00:00:00.000Z')).toBe(false);
     expect(isForLife('2027-01-01')).toBe(false);
   });
 });

@@ -13,6 +13,7 @@ import StopMarkers from './StopMarkers';
 import VisitBadges from './VisitBadges';
 import MomentMarks from './MomentMarks';
 import MomentSpotPins from './MomentSpotPins';
+import MapStrings from './MapStrings';
 import SkyBodies from './SkyBodies';
 import PoleNameLabels from './PoleNameLabels';
 import { StarBadgeSymbols } from './StarBadge';
@@ -87,6 +88,11 @@ function WorldMap({
   // When the landmark pins show (utils/map/mapSettings.js LANDMARK_PIN_MODES)
   landmarkPins = 'zoomed',
   stops = null,
+  // Strings between places (MapStrings): the map's own, shown unless the viewer hid them;
+  // `stringStart` and `onRemoveString` while in string mode
+  strings = null,
+  stringStart = null,
+  onRemoveString = null,
   label = 'World map',
   panZoom = true,
 }) {
@@ -156,6 +162,10 @@ function WorldMap({
         ) : null}
         {showMoments && momentSpots.length ? (
           <MomentSpotPins spots={momentSpots} zoom={zoom} showAntarctica={showAntarctica} onSelectCountry={onSelectCountry} afterTap={afterTap} />
+        ) : null}
+        {/* Strings between places, over everything else, as thread pinned to a board */}
+        {strings?.length || stringStart ? (
+          <MapStrings strings={strings} showAntarctica={showAntarctica} startCode={stringStart} onRemove={onRemoveString} afterTap={afterTap} />
         ) : null}
         {stops?.length ? <StopMarkers stops={stops} zoom={zoom} /> : null}
       </svg>

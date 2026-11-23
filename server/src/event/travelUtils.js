@@ -34,3 +34,6 @@ export const createOfferEvent = mk(DOMAINS.offers);
 export const createThemeEvent = mk(DOMAINS.themes);
 // Friends challenges: ids only, never a title or a name
 export const createChallengeEvent = mk(DOMAINS.challenges);
+// "Guess where I was" games and the flight log (23 Nov 2026)
+export const createGuessGameEvent = mk(DOMAINS.guessGames);
+export const createFlightEvent = mk(DOMAINS.flights);

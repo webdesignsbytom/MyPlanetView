@@ -55,7 +55,7 @@ describe('an account whose email is not verified yet', () => {
       () => agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'VISITED' }),
       () => agent.delete(`/api/maps/${map.id}/visits/FR`),
       () => agent.post('/api/maps').send({ name: 'Second map', groupType: 'SOLO' }),
-      () => agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Paris' }),
+      () => agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Paris' }),
       () => agent.post(`/api/maps/${map.id}/photos/presign`).send({ files: [] }),
       () => agent.post(`/api/maps/${map.id}/photos`).send({}),
       () => agent.patch(`/api/maps/${map.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' }),
@@ -88,7 +88,7 @@ describe('an account whose email is not verified yet', () => {
   it("gets the same 403 for someone else's trip or photo id, or one that doesn't exist", async () => {
     const other = await signUp('Elsewhere');
     const otherMap = await defaultMapOf(other.agent);
-    const trip = data(await other.agent.post(`/api/maps/${otherMap.id}/trips`).send({ title: 'Lisbon' })).trip;
+    const trip = data(await other.agent.post(`/api/maps/${otherMap.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Lisbon' })).trip;
     const missing = '00000000-0000-4000-8000-000000000000';
     for (const res of [
       await user.agent.patch(`/api/trips/${trip.id}`).send({ title: 'Mine now' }),
@@ -103,6 +103,6 @@ describe('an account whose email is not verified yet', () => {
   it('can add content once the address is verified', async () => {
     await prisma.user.update({ where: { id: user.user.id }, data: { emailVerified: true } });
     expect((await user.agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'VISITED' })).status).toBe(200);
-    expect((await user.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Paris' })).status).toBe(201);
+    expect((await user.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Paris' })).status).toBe(201);
   });
 });

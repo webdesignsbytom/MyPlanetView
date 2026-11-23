@@ -57,6 +57,8 @@ describe('the travel features’ events', () => {
       createOfferEvent: 'offers',
       createThemeEvent: 'themes',
       createChallengeEvent: 'challenges',
+      createGuessGameEvent: 'guessGames',
+      createFlightEvent: 'flights',
     };
     expect(builders.map(([name]) => name).sort()).toEqual(Object.keys(domains).sort());
     for (const [name, build] of builders) {

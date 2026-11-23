@@ -11,7 +11,10 @@
 //   - model.json: `name`, `latitude` and `longitude` (the spot the tile's middle stands on),
 //     `maps` (the country maps that show it, e.g. GB and England's XE), `landmark` (the
 //     Wikidata item of the landmark it belongs to, as in the seed's landmark files), and
-//     optionally `scale` (see below).
+//     optionally `scale` (see below) and `onMap`: false for a model the country maps don't
+//     draw, as its picture would overlap a more famous one's in the map's opening view (23 Nov
+//     2026, the user's decision: every landmark gets its model, for other uses, but a crowded
+//     map shows the most famous). `maps` still names its country's maps.
 //
 // Then, from the repo root: node images/src/tools/landmark-models.mjs
 // For each model it trims the render, puts a soft shadow under the tile (baked in, so the
@@ -99,6 +102,7 @@ async function buildModel(id) {
     longitude: info.longitude,
     maps: info.maps,
     landmark: info.landmark ?? null,
+    onMap: info.onMap !== false,
     aspect: Number((width / height).toFixed(4)),
     units: height * unitsPerPixel,
     size: Number(Math.max(MIN_SIZE, ((height * unitsPerPixel) / REFERENCE_UNITS) * (info.scale ?? 1)).toFixed(3)),
@@ -125,7 +129,7 @@ for (const id of ids) {
 const imports = models.flatMap((m) => HEIGHTS.map((h) => `import ${camel(m.id)}${h} from '@/assets/map/landmarkModels/${m.files[h]}';`));
 const rows = models.map(
   (m) =>
-    `  {\n    id: '${m.id}',\n    name: ${quote(m.name)},\n    latitude: ${m.latitude},\n    longitude: ${m.longitude},\n    maps: ${list(m.maps.map(quote))},\n    landmark: ${m.landmark ? quote(m.landmark) : 'null'},\n    aspect: ${m.aspect},\n    size: ${m.size},\n    anchor: [${m.anchor.join(', ')}],\n    images: { ${HEIGHTS.map((h) => `${h}: ${camel(m.id)}${h}`).join(', ')} },\n  },`,
+    `  {\n    id: '${m.id}',\n    name: ${quote(m.name)},\n    latitude: ${m.latitude},\n    longitude: ${m.longitude},\n    maps: ${list(m.maps.map(quote))},\n    landmark: ${m.landmark ? quote(m.landmark) : 'null'},\n${m.onMap ? '' : '    onMap: false,\n'}    aspect: ${m.aspect},\n    size: ${m.size},\n    anchor: [${m.anchor.join(', ')}],\n    images: { ${HEIGHTS.map((h) => `${h}: ${camel(m.id)}${h}`).join(', ')} },\n  },`,
 );
 await writeFile(
   listFile,
@@ -137,7 +141,8 @@ await writeFile(
 // on \`latitude\`/\`longitude\`, on the country maps in \`maps\`. \`aspect\` is width over height,
 // \`size\` its height against Big Ben's (every model at one scale), \`images\` the picture by
 // its height in pixels. \`landmark\` is the Wikidata item of the
-// landmark it belongs to.
+// landmark it belongs to. \`onMap: false\` (only written then) marks a model the maps don't draw:
+// a more famous one's picture would overlap it (utils/map/landmarkModelSize.js modelsOnMap).
 ${imports.join('\n')}
 
 export const LANDMARK_MODEL_HEIGHTS = ${list(HEIGHTS)};

@@ -243,6 +243,30 @@ describe('travellers', () => {
     expect((await post(`/api/maps/${JO_MAP}/travellers`, { name: 'x' })).status).toBe(404);
   });
 
+  // 23 Nov 2026: the optional date of birth, as the server keeps it
+  it('keeps a date of birth from 1900 to today, for the map’s editors to see, with the share of a life away', async () => {
+    const saved = await patch(`/api/maps/${HOME_MAP}/travellers/trav-test`, { birthDate: '2025-01-01' });
+    expect(saved.data.traveller.birthDate).toBe('2025-01-01');
+    for (const bad of ['1899-12-31', '2999-01-01', '2025-02-30', 'soon']) {
+      const res = await patch(`/api/maps/${HOME_MAP}/travellers/trav-test`, { birthDate: bad });
+      expect(res.status).toBe(400);
+      expect(res.message).toBe('Give a date of birth from 1 January 1900 up to today, or leave it empty.');
+    }
+    const forOwner = (await get(`/api/maps/${HOME_MAP}`)).data.map;
+    expect(forOwner.travellers.find((t) => t.id === 'trav-test').birthDate).toBe('2025-01-01');
+    // Charlie's 15 days in Italy over a life since 1 January 2025
+    expect(forOwner.stats.byTraveller.find((t) => t.travellerId === 'trav-test').lifeAwayShare).toBeGreaterThan(0);
+    // Cleared with null
+    expect((await patch(`/api/maps/${HOME_MAP}/travellers/trav-test`, { birthDate: null })).data.traveller.birthDate).toBeNull();
+  });
+
+  it('never shows a date of birth or a share of a life to a viewer', async () => {
+    db().travellers.find((t) => t.id === 'trav-sam').birthDate = '1990-01-01';
+    const forViewer = (await get(`/api/maps/${SAM_MAP}`)).data.map;
+    expect(forViewer.travellers.every((t) => !('birthDate' in t))).toBe(true);
+    expect(forViewer.stats.byTraveller.every((t) => !('lifeAwayShare' in t))).toBe(true);
+  });
+
   it('changes a traveller, marking a new birthplace', async () => {
     const { data } = await patch(`/api/maps/${HOME_MAP}/travellers/trav-alex`, { name: 'Alexandra', birthCountryCode: 'NZ' });
     expect(data.traveller).toMatchObject({ name: 'Alexandra', birthCountryCode: 'NZ' });
@@ -325,10 +349,18 @@ describe('the map’s trips', () => {
   });
 
   it('makes one for an editor, with only the map’s travellers', async () => {
-    const { status, data } = await post(`/api/maps/${HOME_MAP}/trips`, { title: ' Iceland ', travellerIds: ['trav-test', 'trav-sam'] });
+    const days = { startDate: '2027-08-01', endDate: '2027-08-10' };
+    const { status, data } = await post(`/api/maps/${HOME_MAP}/trips`, { title: ' Iceland ', ...days, travellerIds: ['trav-test', 'trav-sam'] });
     expect(status).toBe(201);
-    expect(data.trip).toMatchObject({ title: 'Iceland', status: 'PLANNED', travellerIds: ['trav-test'], role: 'OWNER' });
+    expect(data.trip).toMatchObject({ title: 'Iceland', status: 'PLANNED', ...days, travellerIds: ['trav-test'], role: 'OWNER' });
     expect((await post(`/api/maps/${HOME_MAP}/trips`, {})).status).toBe(400);
+    // Every new trip has its days, real ones, in order (as the server: 23 Nov 2026)
+    const noDays = await post(`/api/maps/${HOME_MAP}/trips`, { title: 'Someday' });
+    expect(noDays.status).toBe(400);
+    expect(noDays.message).toBe('Give the trip the day it starts and the day it ends.');
+    expect((await post(`/api/maps/${HOME_MAP}/trips`, { title: 'Half', startDate: '2027-08-01' })).status).toBe(400);
+    expect((await post(`/api/maps/${HOME_MAP}/trips`, { title: 'Odd', startDate: '2027-02-31', endDate: '2027-03-02' })).status).toBe(400);
+    expect((await post(`/api/maps/${HOME_MAP}/trips`, { title: 'Back', startDate: '2027-08-10', endDate: '2027-08-01' })).status).toBe(400);
     expect((await post(`/api/maps/${HOME_MAP}/trips`, { title: 'x', status: 'DREAMT' })).status).toBe(400);
     expect((await post(`/api/maps/${SAM_MAP}/trips`, { title: 'x' })).status).toBe(403);
   });

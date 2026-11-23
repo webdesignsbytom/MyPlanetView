@@ -16,7 +16,11 @@ vi.mock('@/hooks/useGalleryOffers', () => ({ default: () => null }));
 vi.mock('@/hooks/usePlannedTripPlace', () => ({ default: () => null }));
 // The ticket's big parts have tests of their own: stand-ins that say what they got
 vi.mock('@/components/moments/MomentList', () => ({
-  default: ({ canEdit, emptyText }) => <div data-moment-list data-can-edit={String(canEdit)} data-empty={emptyText} />,
+  default: ({ canEdit, emptyText, header, collapsed, bodyId }) => (
+    <div data-moment-list data-can-edit={String(canEdit)} data-empty={emptyText} data-collapsed={String(collapsed)} data-body-id={bodyId}>
+      {header}
+    </div>
+  ),
 }));
 vi.mock('@/components/photos/PhotoGrid', () => ({
   default: ({ photos, onOpen, onMove, emptyText }) => (
@@ -94,6 +98,15 @@ describe('CountryPanel', () => {
     await waitFor(() => expect(onSetVisit).toHaveBeenLastCalledWith('FR', null, undefined));
   });
 
+  it('makes the dropdown and the date a step slimmer in the stub only', () => {
+    const wide = open({ canEdit: true, visit: { status: 'VISITED' } });
+    expect(wide.stub().querySelector('[data-status-controls]').className).toContain('[&_.app-select]:py-1 [&_input]:py-1');
+    wide.unmount();
+    stubMatchMedia(() => false);
+    const { ticket } = open({ canEdit: true, visit: { status: 'VISITED' } });
+    expect(ticket.querySelector('[data-status-controls]').className).not.toContain('py-1');
+  });
+
   it('puts the controls at the head of the content on phones', () => {
     stubMatchMedia(() => false);
     const { stub, ticket } = open({ canEdit: true });
@@ -142,6 +155,36 @@ describe('CountryPanel', () => {
     expect(open().ticket.querySelector('[data-moment-list]')).not.toBeNull();
   });
 
+  it('folds the moments away with the arrow on their heading, the same on every ticket for the visit', () => {
+    sessionStorage.clear();
+    const first = open({ visit: { status: 'VISITED' } });
+    const toggle = first.ticket.querySelector('[data-moments-toggle]');
+    const momentList = first.ticket.querySelector('[data-moment-list]');
+    // The heading is the button, and still names the section
+    expect(toggle.closest('h3').id).toBe('moments-FR');
+    expect(toggle.textContent).toBe('Moments');
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(toggle.getAttribute('aria-controls')).toBe('moments-body-FR');
+    expect(momentList.getAttribute('data-body-id')).toBe('moments-body-FR');
+    expect(momentList.getAttribute('data-collapsed')).toBe('false');
+    expect(toggle.querySelector('svg').getAttribute('class')).not.toContain('-rotate-90');
+
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(momentList.getAttribute('data-collapsed')).toBe('true');
+    expect(toggle.querySelector('svg').getAttribute('class')).toContain('-rotate-90');
+    expect(sessionStorage.getItem('mpv:momentsClosed')).toBe('1');
+    first.unmount();
+
+    // Another ticket opens folded, and opening it again is remembered too
+    const second = open({ code: 'IT', visit: { status: 'VISITED' } });
+    const again = second.ticket.querySelector('[data-moments-toggle]');
+    expect(again.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(again);
+    expect(second.ticket.querySelector('[data-moment-list]').getAttribute('data-collapsed')).toBe('false');
+    expect(sessionStorage.getItem('mpv:momentsClosed')).toBeNull();
+  });
+
   it('lists the country’s photos, opening one with its gallery', () => {
     photos = list([{ id: 'p1' }]);
     const onOpenPhoto = vi.fn();
@@ -169,6 +212,24 @@ describe('CountryPanel', () => {
     expect(ticket.querySelector('[data-travel-desk]').getAttribute('data-travel-desk')).toBe('FR');
   });
 
+  it('puts the slideshow, adding photos and planning a trip above the photos, the download and desk below', () => {
+    photos = list([{ id: 'p1' }]);
+    const { ticket } = open({ canEdit: true, onPlay: vi.fn(), onAddPhotos: vi.fn(), onPlanTrip: vi.fn() });
+    const actions = ticket.querySelector('[data-photo-actions]');
+    expect([...actions.querySelectorAll('button')].map((b) => b.textContent)).toEqual(['Play slideshow', 'Add photos', 'Plan a trip']);
+    const grid = ticket.querySelector('[data-photo-grid]');
+    const before = (a, b) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(before(actions, grid)).toBe(true);
+    expect(actions.querySelector('[data-print-download], [data-travel-desk]')).toBeNull();
+    expect(before(grid, ticket.querySelector('[data-print-download]'))).toBe(true);
+    expect(before(grid, ticket.querySelector('[data-travel-desk]'))).toBe(true);
+  });
+
+  it('has no empty row over the photos when there’s nothing to press', () => {
+    const { ticket } = open({ onPlay: vi.fn() });
+    expect(ticket.querySelector('[data-photo-actions]')).toBeNull();
+  });
+
   it('offers a viewer no editing, nor a slideshow without photos', () => {
     const { ticket } = open({ onPlay: vi.fn(), onAddPhotos: vi.fn(), onPlanTrip: vi.fn() });
     expect(screen.queryByText('Play slideshow')).toBeNull();
@@ -193,13 +254,18 @@ describe('CountryPanel', () => {
   it('gives a region its own visit, and its country’s photos and moments', async () => {
     const onOpenPlace = vi.fn();
     const onOpenCountryMap = vi.fn();
-    const { ticket } = open({ code: 'XB', canEdit: true, onOpenPlace, onOpenCountryMap, onPlay: vi.fn(), onAddPhotos: vi.fn() });
+    const onPlanTrip = vi.fn();
+    const { ticket } = open({ code: 'XB', canEdit: true, onOpenPlace, onOpenCountryMap, onPlay: vi.fn(), onAddPhotos: vi.fn(), onPlanTrip });
     expect(ticket.textContent).toContain('A region of Indonesia');
     expect(screen.getByText('Part of Indonesia')).toBeTruthy();
     expect(ticket.querySelector('[data-photo-grid]')).toBeNull();
     expect(ticket.querySelector('[data-moment-list]')).toBeNull();
     expect(usePhotoPage.mock.calls[0][0].enabled).toBe(false);
     expect(screen.queryByText('Add photos')).toBeNull();
+    // No photos to sit above, so "Plan a trip" is in the row with the Travel Desk
+    expect(ticket.querySelector('[data-photo-actions]')).toBeNull();
+    fireEvent.click(screen.getByText('Plan a trip'));
+    expect(onPlanTrip).toHaveBeenCalledWith('XB');
     expect(ticket.querySelector('[data-travel-desk]').getAttribute('data-travel-desk')).toBe('ID');
     fireEvent.click(screen.getByText('Open Indonesia'));
     expect(onOpenPlace).toHaveBeenCalledWith('ID');

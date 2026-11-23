@@ -44,7 +44,7 @@ const MAP_SETTING_KEYS = {
 // `showMoments`: the marks beside countries with moments; `showGoalTag`: the goal's luggage
 // tag under the map's title; `showTips`: the tips
 // the map opens with (the server's MAP_SETTING_FLAGS need each of them too)
-const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments', 'showGoalTag', 'showTips', 'countriesAsked'];
+const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments', 'showGoalTag', 'showTips', 'countriesAsked', 'showStrings'];
 
 // The test user's password: the seeded one until changed or reset here. Sign-in isn't
 // held to the rules below (the seeded one doesn't meet them, as on the server).

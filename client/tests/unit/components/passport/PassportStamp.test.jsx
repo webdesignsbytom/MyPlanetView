@@ -42,6 +42,19 @@ describe('PassportStamp', () => {
     expect(description.textContent).toBe('Colosseum, stamped 2 Jun 2019, UNESCO World Heritage Site, 3 photos.');
   });
 
+  // 23 Nov 2026: a landmark ticked "been here" with no photo is a stamp with nothing to open
+  it('shows a ticked stamp with no photo as a picture, nothing to press or choose', () => {
+    const { container, onOpenPhoto } = show({ stamp: stampOf({ photo: null, ticked: true, photoCount: 0, photoChosen: false }), canPick: true });
+    expect(container.querySelector('button')).toBeNull();
+    const stamp = container.querySelector('[role="img"]');
+    expect(stamp.getAttribute('aria-label')).toBe('Stamp: Colosseum');
+    expect(document.getElementById(stamp.getAttribute('aria-describedby')).textContent).toBe(
+      'Colosseum, stamped 2 Jun 2019, UNESCO World Heritage Site, ticked as been here, no photo yet.',
+    );
+    expect(container.querySelector('li').hasAttribute('data-stamp-ticked')).toBe(true);
+    expect(onOpenPhoto).not.toHaveBeenCalled();
+  });
+
   it('says when its photo was chosen by hand', () => {
     show({ stamp: stampOf({ photoChosen: true, isUnesco: false, photoCount: 1, stampedOn: null }) });
     const button = screen.getByText('Open the photo of Colosseum').closest('button');

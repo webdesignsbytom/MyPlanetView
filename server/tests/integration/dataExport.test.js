@@ -24,7 +24,7 @@ describe('data export', () => {
     await friend.agent.post(`/api/maps/${friendsMap.id}/members`).send({ email: owner.email, role: 'EDITOR' });
 
     await owner.agent.put(`/api/maps/${map.id}/visits/PT`).send({ status: 'VISITED', notes: 'Pastéis de nata' });
-    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Lisbon' })).trip;
+    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Lisbon' })).trip;
     await owner.agent.post(`/api/trips/${trip.id}/stops`).send({ countryCode: 'PT', placeName: 'Alfama' });
     await owner.agent.post(`/api/maps/${map.id}/moments`).send({ kind: 'SAW_OR_DID', title: 'Tram 28', countryCode: 'PT' });
     await owner.agent.post(`/api/maps/${map.id}/goals`).send({ kind: 'COUNTRY_COUNT', target: 10 });

@@ -37,9 +37,9 @@ describe('emails people can stop', () => {
   });
 
   it('the account page reads and sets "On this day", on to start with', async () => {
-    expect(data(await traveller.agent.get('/api/users/email-preferences'))).toEqual({ onThisDay: true });
-    expect(data(await quiet.agent.put('/api/users/email-preferences').send({ onThisDay: false }))).toEqual({ onThisDay: false });
-    expect(data(await quiet.agent.get('/api/users/email-preferences'))).toEqual({ onThisDay: false });
+    expect(data(await traveller.agent.get('/api/users/email-preferences'))).toEqual({ onThisDay: true, tripShare: true });
+    expect(data(await quiet.agent.put('/api/users/email-preferences').send({ onThisDay: false }))).toEqual({ onThisDay: false, tripShare: true });
+    expect(data(await quiet.agent.get('/api/users/email-preferences'))).toEqual({ onThisDay: false, tripShare: true });
     expect((await quiet.agent.put('/api/users/email-preferences').send({ onThisDay: 'no' })).status).toBe(400);
     expect((await anon().get('/api/users/email-preferences')).status).toBe(401);
   });
@@ -82,7 +82,7 @@ describe('emails people can stop', () => {
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send('List-Unsubscribe=One-Click');
     expect(res.status).toBe(200);
-    expect(data(await traveller.agent.get('/api/users/email-preferences'))).toEqual({ onThisDay: false });
+    expect(data(await traveller.agent.get('/api/users/email-preferences'))).toEqual({ onThisDay: false, tripShare: true });
     // The page's way: the same, in the body
     expect((await anon().post('/api/emails/unsubscribe').send({ u, t: unsubscribeToken(u, process.env.BETTER_AUTH_SECRET) })).status).toBe(200);
   });

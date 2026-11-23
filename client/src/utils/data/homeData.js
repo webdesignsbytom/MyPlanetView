@@ -33,6 +33,12 @@ export const homeFeatures = [
     title: 'Plan the next trip',
     text: 'Line up countries and stops for a trip you are dreaming about, then turn it into a finished trip with its photos when you are home.',
   },
+  // 23 Nov 2026, the user's wish: say loudly that seeing a shared map takes nothing
+  {
+    id: 'share',
+    title: 'Share it with a link',
+    text: 'Send your map, or just one trip, as a link. Anyone can open it in their web browser and see your countries, photos and trips: no app to download and no account to make.',
+  },
 ];
 
 // "Who it's for": the three kinds of map
@@ -61,7 +67,7 @@ export const homePrivacy = {
   points: [
     'Your map, trips and photos are private by default.',
     'No followers, no public profiles and no feed: nobody comes across your map unless you send it to them.',
-    'Add people by email as viewers or editors, or turn on a link anyone can view.',
+    'Add people by email as viewers or editors, or turn on a link anyone can open in their browser, with no app and no account.',
     'Share one trip without sharing your whole map.',
     'Reset a link and every old copy of it stops working.',
     'The location saved inside your photos is removed from the copies other people see.',

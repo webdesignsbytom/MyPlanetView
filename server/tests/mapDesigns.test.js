@@ -37,6 +37,10 @@ describe('parseDesignChange', () => {
     // The hover colour alone, and back to the style's usual one
     expect(parseDesignChange({ hover: '#ff00ff' })).toEqual({ data: { hoverColour: '#ff00ff' }, codes: [] });
     expect(parseDesignChange({ hover: null })).toEqual({ data: { hoverColour: null }, codes: [] });
+    // The strings' colour (docs/API.md "Strings"), and back to the style's usual red
+    expect(parseDesignChange({ string: '#1D4ED8' })).toEqual({ data: { stringColour: '#1d4ed8' }, codes: [] });
+    expect(parseDesignChange({ string: null })).toEqual({ data: { stringColour: null }, codes: [] });
+    expect(parseDesignChange({ string: 'red' })).toEqual({ error: 'invalidDesignColour' });
   });
   it('empties the colours with an empty set', () => {
     expect(parseDesignChange({ countries: {} })).toEqual({ data: { countryColours: {} }, codes: [] });

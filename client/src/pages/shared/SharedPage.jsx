@@ -69,7 +69,7 @@ function SharedPage() {
     return (
       <>
         <AppPageHead route={SHARED_PAGE_URL} />
-        <MapStatusScreen loading styleId={settings.style} />
+        <MapStatusScreen loading styleId={settings.style} heading='Opening the shared link' />
       </>
     );
   }
@@ -78,7 +78,7 @@ function SharedPage() {
     return (
       <>
         <AppPageHead route={SHARED_PAGE_URL} title={shared.trip.title} />
-        <Suspense fallback={<MapStatusScreen loading styleId={settings.style} />}>
+        <Suspense fallback={<MapStatusScreen loading styleId={settings.style} heading='Opening the shared trip' />}>
           <PublicPageLayout>
             <TripView
               trip={{ ...shared.trip, role: shared.role }}
@@ -96,7 +96,7 @@ function SharedPage() {
   return (
     <>
       <AppPageHead route={SHARED_PAGE_URL} title={shared.map.name} />
-      <Suspense fallback={<MapStatusScreen loading styleId={settings.style} />}>
+      <Suspense fallback={<MapStatusScreen loading styleId={settings.style} heading='Opening the shared map' />}>
         <MapExperience
           map={shared.map}
           trips={shared.trips || []}

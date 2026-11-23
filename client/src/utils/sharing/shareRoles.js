@@ -16,7 +16,7 @@ export const ROLE_WITH_ARTICLE = { OWNER: 'the owner', CO_OWNER: 'a co-owner', E
 
 export const LINK_ACCESS_OPTIONS = [
   { value: 'RESTRICTED', label: 'Restricted', hint: 'Only people added here can open it' },
-  { value: 'ANYONE_WITH_LINK', label: 'Anyone with the link', hint: 'Anyone with the link can view it, without signing in' },
+  { value: 'ANYONE_WITH_LINK', label: 'Anyone with the link', hint: 'Anyone with the link can view it in their browser: no app or account needed' },
 ];
 
 export const canEditRole = (role) => role === 'OWNER' || role === 'CO_OWNER' || role === 'EDITOR';

@@ -65,18 +65,26 @@ describe('LandmarkCard', () => {
     expect(container.querySelector('input')).toBeNull();
   });
 
-  it('gives an editor the "Been here" tick', () => {
+  it('gives an editor the "Been here" tick, which says it stamps the passport', () => {
     const onToggle = vi.fn();
-    card({ mark: 'ticked', onToggle });
+    const { container } = card({ mark: 'ticked', onToggle });
     const box = screen.getByLabelText('Been to Louvre');
     expect(box.checked).toBe(true);
+    // A tick stamps the passport too (23 Nov 2026)
+    expect(container.querySelector('[data-landmark-mark="ticked"]').textContent).toBe('Stamped in the passport');
     fireEvent.click(box);
     expect(onToggle).toHaveBeenCalledWith('l1', false);
   });
 
+  it('says nothing of the passport for an editor’s unticked landmark', () => {
+    const { container } = card({ mark: null, onToggle: vi.fn() });
+    expect(screen.getByLabelText('Been to Louvre').checked).toBe(false);
+    expect(container.querySelector('[data-landmark-mark]')).toBeNull();
+  });
+
   it('shows a viewer a ticked landmark in words', () => {
     const { container } = card({ mark: 'ticked' });
-    expect(container.querySelector('[data-landmark-mark="ticked"]').textContent).toBe('Been here');
+    expect(container.querySelector('[data-landmark-mark="ticked"]').textContent).toBe('Been here: stamped in the passport');
   });
 
   it('lists two of its moments, then how many more', () => {
@@ -147,6 +155,17 @@ describe('CountryLandmarks', () => {
     expect(progress.getAttribute('data-landmark-progress')).toBe('3');
     expect(progress.textContent).toBe('Been to 3 of 8.');
     expect(container.querySelector('[data-landmark-mark="stamped"]')).not.toBeNull();
+  });
+
+  // 23 Nov 2026: a tick stamps the passport too, so it comes first: it can be taken off, and
+  // a photo's stamp shows once it is
+  it('marks a landmark both stamped by a photo and ticked as ticked, so an editor can untick it', () => {
+    const onToggle = vi.fn().mockResolvedValue();
+    landmarks({}, marks({ stamped: new Set(['l1']), ticked: new Set(['l1']), onToggle }));
+    const box = screen.getByLabelText('Been to Landmark 1');
+    expect(box.checked).toBe(true);
+    fireEvent.click(box);
+    expect(onToggle).toHaveBeenCalledWith('l1', false);
   });
 
   it('puts the landmarks where something happened first', () => {

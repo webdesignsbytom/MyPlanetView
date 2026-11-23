@@ -33,7 +33,7 @@ export const designFor = (map, styleId) => map?.designs?.[styleId] ?? null;
 export const shownDesign = (design) => (design?.shown ? design : null);
 
 /** A design with nothing in it yet, as the editor starts one. */
-export const EMPTY_DESIGN = Object.freeze({ shown: true, countries: {}, names: null, grid: null, hover: null, picture: null });
+export const EMPTY_DESIGN = Object.freeze({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, picture: null });
 
 /** Only well-formed colours: they go into a style sheet, so nothing else is let through. */
 export function cleanCountryColours(countries) {
@@ -61,6 +61,7 @@ export function designCss(design) {
   if (typeof design.names === 'string' && DESIGN_COLOUR.test(design.names)) vars.push(`--map-names:${design.names}`);
   if (typeof design.grid === 'string' && DESIGN_COLOUR.test(design.grid)) vars.push(`--map-grid:${design.grid}`);
   if (typeof design.hover === 'string' && DESIGN_COLOUR.test(design.hover)) vars.push(`--map-hover:${design.hover}`);
+  if (typeof design.string === 'string' && DESIGN_COLOUR.test(design.string)) vars.push(`--map-string:${design.string}`);
   const colours = cleanCountryColours(design.countries);
   for (const [region, parent] of Object.entries(REGION_PARENT)) {
     if (!colours[region] && colours[parent]) colours[region] = colours[parent];

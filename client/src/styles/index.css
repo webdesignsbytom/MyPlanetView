@@ -184,6 +184,9 @@
   /* A planned trip's places (not yet visited): a dash-dot outline in violet, apart from "want
      to go"'s brown dashes and the borders' red (22 Nov 2026, the user's wish) */
   --map-planned: #6d28d9;
+  /* Strings between places: red thread pin to pin, as on a corkboard (23 Nov 2026, the user's
+     wish; components/map/MapStrings.jsx) */
+  --map-string: #c8102e;
   --map-visit-1: #f0f038;
   --map-visit-2: #0eb4a6;
   --map-visit-3: #d8845a;
@@ -240,6 +243,8 @@
   --map-wish: #6d28d9;
   /* A planned trip's outline a bright pink, as "want to go" here is the violet */
   --map-planned: #db2777;
+  /* The strings a coral red that shows on the night sky as on the land */
+  --map-string: #ff4d5e;
   /* The country under the pointer a deep blue, not the other styles' bright green (19 Nov
      2026, the user's wish) */
   --map-hover: #1e4f94;
@@ -431,6 +436,7 @@
   --map-hover: #d3d3d3;
   --map-wish: #626262;
   --map-planned: #434343;
+  --map-string: #393939;
   --map-visit-1: #dcdcdc;
   --map-visit-2: #cdcdcd;
   --map-visit-3: #bebebe;
@@ -476,6 +482,7 @@
   --color-map-hover: var(--map-hover);
   --color-map-wish: var(--map-wish);
   --color-map-planned: var(--map-planned);
+  --color-map-string: var(--map-string);
   --color-map-visit-1: var(--map-visit-1);
   --color-map-visit-2: var(--map-visit-2);
   --color-map-visit-3: var(--map-visit-3);
@@ -560,6 +567,8 @@
   --animate-sky-drift: sky-drift 90s linear infinite;
   /* A rubber stamp pressed on: the map's loading screen (StampLoading) */
   --animate-stamp-in: stamp-in 0.32s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  /* The next tip sliding in (MapTipsDialog; only with motion-safe) */
+  --animate-tip-in: tip-in 0.24s ease-out both;
 
   /* font sizes */
   --text-2xs: 0.6875rem; /* 11px: captions, chips, field hints */
@@ -596,6 +605,17 @@
     to {
       opacity: 1;
       transform: scale(1);
+    }
+  }
+
+  @keyframes tip-in {
+    from {
+      opacity: 0;
+      transform: translateX(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 }
@@ -810,6 +830,18 @@ textarea:-webkit-autofill {
   html input[type='checkbox']:focus-visible,
   html input[type='radio']:focus-visible {
     outline-color: var(--colour6);
+  }
+
+  /* Starry night fills a ticked box with its pale blue, and the forms plugin's tick and dot
+     are always white, so a tick barely showed (23 Nov 2026, the user's report: the landmark
+     cards' "Been here"): there they're the style's navy ink (--poster-red-ink), the plugin's
+     own shapes */
+  :root[data-map-theme='starry'] input[type='checkbox']:checked {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%2308183a' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+  }
+
+  :root[data-map-theme='starry'] input[type='radio']:checked {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%2308183a' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
   }
 
   /* iOS zooms in on any control under 16px and never zooms back out. */

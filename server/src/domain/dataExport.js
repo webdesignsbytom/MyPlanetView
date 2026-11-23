@@ -9,7 +9,7 @@ export async function findAccountForExport(userId) {
     prisma.user.findUnique({ where: { id: userId }, select: { id: true, name: true, email: true, emailVerified: true, createdAt: true } }),
     prisma.profile.findUnique({
       where: { userId },
-      select: { username: true, homeCountryCode: true, mapSettings: true, onThisDayEmails: true, promoTrialUsedAt: true, promoCode: { select: { code: true } } },
+      select: { username: true, homeCountryCode: true, mapSettings: true, onThisDayEmails: true, tripShareEmails: true, promoTrialUsedAt: true, promoCode: { select: { code: true } } },
     }),
     prisma.subscription.findUnique({
       where: { userId },
@@ -82,16 +82,24 @@ export async function findMapForExport(mapId) {
           // Its own designs, one per map style (docs/API.md "Map designs"): the colours, and
           // whether each has a picture
           designs: {
-            select: { style: true, shown: true, countryColours: true, namesColour: true, gridColour: true, hoverColour: true, pictureId: true },
+            select: { style: true, shown: true, countryColours: true, namesColour: true, gridColour: true, hoverColour: true, stringColour: true, pictureId: true },
             orderBy: { style: 'asc' },
           },
           // Landmarks ticked "been here" (docs/API.md "Collecting")
           landmarkVisits: { select: { landmarkId: true, createdAt: true, landmark: { select: { name: true, countryCode: true } } }, orderBy: { createdAt: 'asc' } },
+          // Strings tied between its places (docs/API.md "Strings")
+          strings: { select: { fromCode: true, toCode: true, createdAt: true }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] },
+          // Its flight log and "Guess where I was" games (docs/API.md "Flights", "Guess where I was")
+          flights: {
+            select: { fromAirport: true, toAirport: true, flownOn: true, carrier: true, flightNumber: true, distanceKm: true, tripId: true, source: true },
+            orderBy: [{ flownOn: 'asc' }, { createdAt: 'asc' }],
+          },
+          guessGames: { select: { code: true, title: true, photoIds: true, createdAt: true }, orderBy: { createdAt: 'asc' } },
         },
       }),
       prisma.traveller.findMany({
         where: onMap,
-        select: { id: true, name: true, position: true, userId: true, birthCountryCode: true, favouriteCountryCode: true, createdAt: true },
+        select: { id: true, name: true, position: true, userId: true, birthCountryCode: true, favouriteCountryCode: true, birthDate: true, createdAt: true },
         orderBy: { position: 'asc' },
       }),
       prisma.countryVisit.findMany({

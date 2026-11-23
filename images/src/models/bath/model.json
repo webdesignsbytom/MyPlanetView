@@ -1,0 +1,8 @@
+{
+  "name": "Bath",
+  "latitude": 51.38139,
+  "longitude": -2.35972,
+  "maps": ["GB", "XE"],
+  "landmark": "Q22889",
+  "onMap": false
+}

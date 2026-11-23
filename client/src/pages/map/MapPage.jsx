@@ -129,7 +129,7 @@ function MapPage() {
     return (
       <>
         <AppPageHead route={MAP_PAGE_URL} />
-        <MapStatusScreen loading styleId={settings.style} />
+        <MapStatusScreen loading styleId={settings.style} heading='Opening your map' />
       </>
     );
   }
@@ -137,7 +137,7 @@ function MapPage() {
   return (
     <>
       <AppPageHead route={MAP_PAGE_URL} title={travelMap.map.name} />
-      <Suspense fallback={<MapStatusScreen loading styleId={settings.style} />}>
+      <Suspense fallback={<MapStatusScreen loading styleId={settings.style} heading='Opening your map' />}>
         <MapExperience
           key={travelMap.map.id}
           map={travelMap.map}

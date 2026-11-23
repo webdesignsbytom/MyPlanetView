@@ -19,7 +19,7 @@ async function seededMap(name, { plan } = {}) {
   if (plan) await givePlan(owner.user.id, { plan });
   const map = await defaultMapOf(owner.agent);
   expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: partner.email, role: 'EDITOR' })).status).toBe(201);
-  const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Paris to Rome by train' })).trip;
+  const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Paris to Rome by train' })).trip;
   return { owner, partner, map, trip };
 }
 

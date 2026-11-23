@@ -172,7 +172,7 @@ describe('termsData', () => {
 
   it('has its version and the day it changed', () => {
     expect(LEGAL_VERSION.version).toMatch(/^\d+\.\d+\.\d+$/);
-    expect(LEGAL_VERSION.version).toBe('1.3.0');
+    expect(LEGAL_VERSION.version).toBe('1.3.1');
     expect(LEGAL_VERSION.lastUpdated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(Number.isNaN(Date.parse(LEGAL_VERSION.lastUpdated))).toBe(false);
   });
@@ -219,6 +219,19 @@ describe('the page copy', () => {
     expect(homePrivacy.points.length).toBeGreaterThan(3);
     expect(homeCta.title).toBe('Start your map');
     expect(aboutIntro).toContain(CompanyName);
+  });
+
+  // 23 Nov 2026, the user's wish: say loudly that a shared map needs no app and no account
+  it('says a share link needs no app and no account, wherever sharing is explained', () => {
+    const share = homeFeatures.at(-1);
+    expect(share.id).toBe('share');
+    expect(share.text).toContain('no app to download and no account to make');
+    expect(homePrivacy.points.some((point) => point.includes('with no app and no account'))).toBe(true);
+    const faq = faqsArray.find((f) => f.question === 'Do people need an account to see something I have shared?');
+    expect(faq.answer).toMatch(/^Not if you send them the link\./);
+    expect(faq.answer).toContain('no app to download, no account and no signing in');
+    // People added by email do sign in (an invite becomes a membership): the answer says so
+    expect(faq.answer).toContain('People you add by email sign in with their own account');
   });
 
   it('starts the contact form empty, with the server’s fields', () => {

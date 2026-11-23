@@ -25,6 +25,25 @@ test.describe('Public pages', () => {
     await expect(page).toHaveURL(/\/map$/);
   });
 
+  // 23 Nov 2026, the user's wish: a shared map takes nothing to see, said wherever sharing is
+  test('every page that explains sharing says a link needs no app and no account', { tag: '@phone' }, async ({ page }) => {
+    await page.goto('/about');
+    const share = page.locator('[data-feature="share"]');
+    await expect(share.getByRole('heading', { name: 'Share it with a link' })).toBeVisible();
+    await expect(share).toContainText('no app to download and no account to make');
+    await expect(page.getByRole('region', { name: 'Private until you share it' })).toContainText('with no app and no account');
+
+    await page.goto('/faq');
+    await expect(page.locator('#main-content')).toContainText('Not if you send them the link.');
+    await expect(page.locator('#main-content')).toContainText('no app to download, no account and no signing in');
+
+    await page.goto('/pricing');
+    await expect(page.getByText('Share links anyone can open in their browser, with no app to download and no account to make.')).toBeVisible();
+
+    await page.goto('/');
+    await expect(page.locator('meta[name="description"]').first()).toHaveAttribute('content', /Anyone you send the link to can see it, no app or account needed\./);
+  });
+
   test('the country guides are listed by continent, each linking to its guide', async ({ page }) => {
     await page.goto('/countries');
     await expect(page.getByRole('heading', { level: 1, name: 'Countries' })).toBeVisible();

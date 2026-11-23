@@ -18,7 +18,7 @@ import { mockUpload } from './uploads';
 import { photoThemes } from './themes';
 import { designsView } from './mapDesigns';
 import { compareMoments } from '@/utils/moments/momentDates';
-import { PLACE_POSITIONS, countriesInWorld, homeOf, travelExtras } from './travelStats';
+import { PLACE_POSITIONS, countriesInWorld, daysAway, homeOf, lifeAwayShare, travelExtras } from './travelStats';
 
 export const slugify = (text) =>
   String(text)
@@ -31,7 +31,7 @@ export const slugify = (text) =>
 const continentByCode = new Map(COUNTRIES.map((c) => [c.code, c.continent]));
 export const countryExists = (code) => continentByCode.has(code);
 
-// GET /api/landmarks' rows, by name as the server lists them (all 1,332: data/landmarks.js)
+// GET /api/landmarks' rows, by name as the server lists them (all 1,366: data/landmarks.js)
 export const LANDMARK_ROWS = LANDMARKS.map((lm) => {
   const slug = slugify(lm.name);
   const pin = projectToMap(lm.latitude, lm.longitude);
@@ -321,7 +321,9 @@ export function mapStats(map, role) {
   const regions = [...counted].filter(isRegion);
   const continents = new Set([...counted].filter((c) => !isRegion(c)).map((c) => continentByCode.get(c)).filter(Boolean));
   const photos = visibleMapPhotos(map, role);
-  const landmarks = stampedLandmarkIds(map, role);
+  // Stamped by a photo or ticked "been here" (a tick stamps the passport too: 23 Nov 2026)
+  const ticked = (db.landmarkVisits || []).filter((v) => v.mapId === map.id).map((v) => v.landmarkId);
+  const landmarks = [...new Set([...stampedLandmarkIds(map, role), ...ticked])];
   const trips = db.trips.filter((t) => t.mapId === map.id);
   // The group trips added from other maps count too; per person, only the map's own trips
   // Each completed trip's stops (with their landmarks' positions) and dates, for the extras too
@@ -331,7 +333,7 @@ export function mapStats(map, role) {
       const stops = db.stops
         .filter((s) => s.tripId === t.id)
         .map((s) => ({ ...s, landmark: s.landmarkId ? landmarkById(s.landmarkId) : null }));
-      return { travellerIds: t.travellerIds, countryCodes: stops.map((s) => s.countryCode), startDate: t.startDate, endDate: t.endDate, stops };
+      return { id: t.id, title: t.title, travellerIds: t.travellerIds, countryCodes: stops.map((s) => s.countryCode), startDate: t.startDate, endDate: t.endDate, stops };
     });
   const travellers = db.travellers.filter((t) => t.mapId === map.id).sort((a, b) => a.position - b.position);
   const homeCountryCode = homeOf({ homeCountryCode: map.homeCountryCode ?? null, ownerId: map.ownerId, travellers });
@@ -343,11 +345,19 @@ export function mapStats(map, role) {
     photos: photos.length,
     landmarks: landmarks.length,
     trips: trips.length + linkedTrips(map.id).length,
+    // Each person's countries and days away (23 Nov 2026), from the completed trips they went on;
+    // for editors, the share of their life that is (from a date of birth, else null)
     byTraveller: travellers.map((t) => {
-      const codes = completed
-        .filter((trip) => trip.travellerIds.includes(t.id))
-        .flatMap((trip) => trip.countryCodes.filter((c) => !isSpecialPlace(c)));
-      return { travellerId: t.id, name: t.name, countries: countedCountryCodes(codes, map.splitUk).length };
+      const theirs = completed.filter((trip) => trip.travellerIds.includes(t.id));
+      const codes = theirs.flatMap((trip) => trip.countryCodes.filter((c) => !isSpecialPlace(c)));
+      const days = daysAway(theirs);
+      return {
+        travellerId: t.id,
+        name: t.name,
+        countries: countedCountryCodes(codes, map.splitUk).length,
+        daysAway: days,
+        ...(atLeast(role, 'EDITOR') ? { lifeAwayShare: lifeAwayShare(days, t.birthDate ?? null) } : {}),
+      };
     }),
     // How much of the world, the days away, the distance and the furthest place (21 Nov 2026)
     countriesInWorld: countriesInWorld(Boolean(map.splitUk)),
@@ -402,7 +412,11 @@ export function mapView(map, role, { withPlan = false } = {}) {
       .sort((a, b) => a.position - b.position)
       .map((t) => {
         const out = { id: t.id, name: t.name, position: t.position, birthCountryCode: t.birthCountryCode, favouriteCountryCode: t.favouriteCountryCode };
-        if (atLeast(role, 'EDITOR')) out.userId = t.userId;
+        // The account it's linked to, and the date of birth (23 Nov 2026), for editors only
+        if (atLeast(role, 'EDITOR')) {
+          out.userId = t.userId;
+          out.birthDate = t.birthDate ?? null;
+        }
         return out;
       }),
     visits: db.visits
@@ -418,6 +432,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
     stampedLandmarkIds: stampedLandmarkIds(map, role),
     // The landmarks ticked "been here" (docs/API.md "Collecting")
     tickedLandmarkIds: (db.landmarkVisits || []).filter((v) => v.mapId === map.id).map((v) => v.landmarkId),
+    // The strings tied between its places, for everyone who opens it (docs/API.md "Strings")
+    strings: (db.mapStrings || []).filter((s) => s.mapId === map.id).map(({ id, from, to }) => ({ id, from, to })),
     // Its own designs, one per map style, for everyone who opens it (docs/API.md "Map designs")
     designs: designsView(map),
   };

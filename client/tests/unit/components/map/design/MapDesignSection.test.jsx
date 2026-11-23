@@ -70,6 +70,16 @@ describe('MapDesignSection', () => {
     expect(e.change.mock.calls).toEqual([[{ grid: '#222222' }], [{ hover: '#333333' }], [{ names: null }]]);
   });
 
+  it('changes the strings’ colour, and puts it back (docs/API.md "Strings")', () => {
+    const e = editor({ design: { ...DESIGN, string: '#c0ffee' } });
+    useMapDesignEditor.mockReturnValue(e);
+    open();
+    expect(screen.getByLabelText('String colour').value).toBe('#c0ffee');
+    fireEvent.input(screen.getByLabelText('String colour'), { target: { value: '#1d4ed8' } });
+    fireEvent.click(screen.getByLabelText('String colour: back to the usual colour'));
+    expect(e.change.mock.calls).toEqual([[{ string: '#1d4ed8' }], [{ string: null }]]);
+  });
+
   it('colours a country, and puts every one back', () => {
     const e = editor();
     useMapDesignEditor.mockReturnValue(e);

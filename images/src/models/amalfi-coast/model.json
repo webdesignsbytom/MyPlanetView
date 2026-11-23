@@ -1,0 +1,8 @@
+{
+  "name": "Amalfi Coast",
+  "latitude": 40.63333,
+  "longitude": 14.6,
+  "maps": ["IT"],
+  "landmark": "Q212214",
+  "onMap": false
+}

@@ -65,6 +65,7 @@ describe('map designs', () => {
       names: '#ffffff',
       grid: '#ffcc00',
       hover: null,
+      string: null,
       picture: null,
     });
     expect(await designOf(viewer.agent)).toMatchObject({ countries: { FR: '#aa0000' }, names: '#ffffff' });
@@ -94,6 +95,20 @@ describe('map designs', () => {
     ).rejects.toThrow();
     // Back to the style's usual highlight
     expect(data(await patch(owner.agent, { hover: null })).design.hover).toBeNull();
+  });
+
+  it('saves the colour of the strings between places, and gives it to everyone', async () => {
+    expect(data(await patch(owner.agent, { string: '#1D4ED8' })).design).toMatchObject({ string: '#1d4ed8', names: '#ffffff' });
+    expect((await designOf(viewer.agent)).string).toBe('#1d4ed8');
+    const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.designs;
+    expect(exported.find((design) => design.style === 'animated')).toMatchObject({ stringColour: '#1d4ed8' });
+    expect((await patch(owner.agent, { string: 'blue' })).status).toBe(400);
+    // The database refuses a malformed one too (CHECK map_design_string_colour)
+    await expect(
+      prisma.mapDesign.update({ where: { mapId_style: { mapId: map.id, style: 'animated' } }, data: { stringColour: 'blue' } }),
+    ).rejects.toThrow();
+    // Back to the style's usual red
+    expect(data(await patch(owner.agent, { string: null })).design.string).toBeNull();
   });
 
   it('can be turned off and on again, keeping it', async () => {

@@ -13,7 +13,7 @@ import { slugify } from '../../src/utils/slug.js';
 const unescoInExisting = new Set(UNESCO_IN_EXISTING);
 
 /**
- * The rows as stored: the 177 of landmarks.js, then the UNESCO sites. `category`
+ * The rows as stored: the 201 of landmarks.js, then the UNESCO sites. `category`
  * documents the radius and isn't a column; `isUnesco` marks every World Heritage Site.
  */
 export const landmarkRows = () =>

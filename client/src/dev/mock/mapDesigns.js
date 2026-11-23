@@ -1,6 +1,6 @@
 // Mock mode only: a map's own designs, one per map style (docs/API.md "Map designs"), as the
 // server's utils/mapDesigns.js and controllers/mapDesigns.js. Kept on the map row
-// (`map.designs`: style -> { shown, countries, names, grid, hover, pictureKey }); the picture is the
+// (`map.designs`: style -> { shown, countries, names, grid, hover, string, pictureKey }); the picture is the
 // session's blob of the upload (a reload loses it, as every mock upload: the design then
 // shows without it).
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
@@ -61,7 +61,7 @@ export function parseDesignChange(body) {
     if (typeof input.shown !== 'boolean') return { error: 'invalidDesign' };
     change.shown = input.shown;
   }
-  for (const field of ['names', 'grid', 'hover']) {
+  for (const field of ['names', 'grid', 'hover', 'string']) {
     if (input[field] === undefined) continue;
     const colour = cleanColour(input[field]);
     if (!colour.ok) return { error: 'invalidDesignColour' };
@@ -96,7 +96,7 @@ export function checkDesignPicture({ contentType, bytes }) {
 }
 
 /** A new design, as the server makes one. */
-export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, hover: null, pictureKey: null });
+export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, pictureKey: null });
 
 /** A map's design for a style as the replies give it, or null when it has none. */
 export function designView(map, style) {
@@ -110,6 +110,7 @@ export function designView(map, style) {
     names: design.names ?? null,
     grid: design.grid ?? null,
     hover: design.hover ?? null,
+    string: design.string ?? null,
     picture: url ? { url } : null,
   };
 }

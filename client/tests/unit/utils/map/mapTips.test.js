@@ -11,8 +11,8 @@ describe('mapTips', () => {
     expect(TIPS_SHOWN_KEY).toBe('mpv:mapTipsShown');
   });
 
-  it('tells a computer about countries and moving around, by mouse', () => {
-    expect(ids({ phone: false, touch: false })).toEqual(['countries', 'moving']);
+  it('tells a computer about countries, their own maps, moving around and the tools, by mouse', () => {
+    expect(ids({ phone: false, touch: false })).toEqual(['countries', 'countryMap', 'moving', 'tools']);
     expect(tip({ touch: false }, 'countries').text).toMatch(/^Click a country/);
     expect(tip({ touch: false }, 'moving').text).toContain('scroll or double-click');
   });
@@ -29,9 +29,22 @@ describe('mapTips', () => {
   });
 
   it('starts a phone with installing the app, then full screen where it can', () => {
-    expect(ids({ phone: true, touch: true, fullscreen: true })).toEqual(['install', 'fullscreen', 'countries', 'moving']);
+    expect(ids({ phone: true, touch: true, fullscreen: true })).toEqual(['install', 'fullscreen', 'countries', 'countryMap', 'moving', 'tools']);
     // An iPhone's Safari can't go full screen: installing is the way
-    expect(ids({ phone: true, touch: true, fullscreen: false })).toEqual(['install', 'countries', 'moving']);
+    expect(ids({ phone: true, touch: true, fullscreen: false })).toEqual(['install', 'countries', 'countryMap', 'moving', 'tools']);
+  });
+
+  it('points to the Menu on a phone and the stamps elsewhere, and says Tips opens these again', () => {
+    expect(tip({ phone: true }, 'tools').text).toMatch(/^Every tool is in the Menu at the top right/);
+    expect(tip({ phone: false }, 'tools').text).toMatch(/^The stamps at the top right are the map’s tools/);
+    expect(tip({ phone: true }, 'tools').text).toContain('brings these back any time');
+  });
+
+  it('ends with sharing, no app or account needed, only for those who can share the map', () => {
+    expect(ids({ share: true }).at(-1)).toBe('share');
+    expect(tip({ share: true }, 'share').text).toContain('no app to install and no account needed');
+    expect(ids({ share: false })).not.toContain('share');
+    expect(ids({})).not.toContain('share');
   });
 
   it('says how this phone installs it, with a button only where the browser has offered', () => {
@@ -44,11 +57,11 @@ describe('mapTips', () => {
   });
 
   it('says nothing of installing or full screen in the installed app', () => {
-    expect(ids({ phone: true, touch: true, fullscreen: true, standalone: true })).toEqual(['countries', 'moving']);
+    expect(ids({ phone: true, touch: true, fullscreen: true, standalone: true })).toEqual(['countries', 'countryMap', 'moving', 'tools']);
   });
 
   it('gives every tip a title and some words', () => {
-    for (const t of mapTips({ phone: true, touch: true, fullscreen: true, posters: true, appName: 'X' })) {
+    for (const t of mapTips({ phone: true, touch: true, fullscreen: true, posters: true, share: true, appName: 'X' })) {
       expect(t.title).toBeTruthy();
       expect(t.text).toBeTruthy();
     }

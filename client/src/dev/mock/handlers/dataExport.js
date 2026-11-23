@@ -106,6 +106,7 @@ function mapView(map) {
         linkedToAnAccount: Boolean(t.userId),
         birthCountryCode: t.birthCountryCode ?? null,
         favouriteCountryCode: t.favouriteCountryCode ?? null,
+        birthDate: t.birthDate ?? null,
         addedAt: iso(t.createdAt),
       })),
     countries: db.visits
@@ -201,11 +202,13 @@ function mapView(map) {
       namesColour: d.names ?? null,
       gridColour: d.grid ?? null,
       hoverColour: d.hover ?? null,
+      stringColour: d.string ?? null,
       hasSeaPicture: Boolean(d.pictureKey),
     })),
     landmarksBeenTo: (db.landmarkVisits || [])
       .filter((v) => v.mapId === map.id)
       .map((v) => ({ landmarkId: v.landmarkId, name: landmarkById(v.landmarkId)?.name ?? null, countryCode: landmarkById(v.landmarkId)?.countryCode ?? null, since: iso(v.createdAt) })),
+    strings: (db.mapStrings || []).filter((s) => s.mapId === map.id).map((s) => ({ from: s.from, to: s.to, since: iso(s.createdAt) })),
     photoCount: db.photos.filter((p) => p.mapId === map.id).length,
   };
 }

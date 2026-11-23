@@ -43,7 +43,7 @@ describe('MapToolbar', () => {
     useFullscreen.mockReturnValue({ supported: false, active: false, toggle: vi.fn() });
   });
 
-  it('is the map’s tools, twelve stamps with Home on wide screens', () => {
+  it('is the map’s tools, thirteen stamps with Home on wide screens, Tips last', () => {
     const { nav, stamps } = open();
     expect(nav.getAttribute('aria-label')).toBe('Map tools');
     expect(stamps()).toEqual([
@@ -59,7 +59,31 @@ describe('MapToolbar', () => {
       'Photo album',
       'Share this map',
       'Map settings',
+      'Tips',
     ]);
+  });
+
+  it('opens the tips from their stamp, pressed in while they show', () => {
+    const { row, onToggle, onIntent } = open({ openPanel: 'tips' });
+    const stamp = row.querySelector('[aria-label="Tips"]');
+    expect(stamp.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(stamp);
+    expect(onToggle).toHaveBeenCalledWith('tips');
+    fireEvent.focus(stamp);
+    expect(onIntent).toHaveBeenCalledWith('tips');
+  });
+
+  it('offers Strings after "Where to go next" to those who can tie them, and opens its panel', () => {
+    const { stamps, onToggle, onIntent } = open({ canString: true });
+    expect(stamps().slice(5, 8)).toEqual(['Where to go next', 'Strings', 'Timeline']);
+    const stamp = [...document.querySelectorAll('nav button')].find((b) => b.getAttribute('aria-label') === 'Strings');
+    fireEvent.click(stamp);
+    expect(onToggle).toHaveBeenCalledWith('strings');
+    fireEvent.mouseEnter(stamp);
+    fireEvent.focus(stamp);
+    expect(onIntent.mock.calls.some(([id]) => id === 'strings')).toBe(true);
+    // Not for anyone else (the list above, without canString, has no Strings)
+    expect(open({ canString: false }).stamps()).not.toContain('Strings');
   });
 
   it('leaves out "Your maps", sharing and Home when they don’t apply', () => {
@@ -67,7 +91,7 @@ describe('MapToolbar', () => {
     expect(stamps()).not.toContain('Your maps');
     expect(stamps()).not.toContain('Share this map');
     expect(stamps()).not.toContain('Home page');
-    expect(stamps().length).toBe(9);
+    expect(stamps().length).toBe(10);
   });
 
   it('reads the map’s counts as the statistics stamp’s description', () => {
@@ -111,7 +135,7 @@ describe('the phone’s menu', () => {
     expect(toggle().getAttribute('aria-expanded')).toBe('true');
     expect(menu().hidden).toBe(false);
     const tools = [...menu().querySelectorAll('ul button')].map((b) => b.textContent);
-    expect(tools).toEqual(['Your maps', 'Country list', 'Trips', 'Where to go next', 'Timeline', 'Badges and goals', 'Play my world', 'Photo album', 'Share this map', 'Map settings']);
+    expect(tools).toEqual(['Your maps', 'Country list', 'Trips', 'Where to go next', 'Timeline', 'Badges and goals', 'Play my world', 'Photo album', 'Share this map', 'Map settings', 'Tips']);
   });
 
   it('puts the statistics across the top, named by its label and described by the counts', () => {

@@ -38,6 +38,9 @@ export const DOMAINS = {
   challenges: 'challenges',
   // Country maps: states visited and pins (docs/API.md "Country maps")
   countryMaps: 'countryMaps',
+  // "Guess where I was" games and the flight log (23 Nov 2026)
+  guessGames: 'guessGames',
+  flights: 'flights',
 };
 
 export const EVENT_MESSAGES = {
@@ -101,7 +104,14 @@ export const EVENT_MESSAGES = {
   // Ticking several countries at once (POST /maps/:mapId/visits/quick-fill)
   quickFillInvalid: `Choose between 1 and 300 countries, each one on the map.`,
   poleNotATravellerCountry: 'Choose a country or Antarctica, not a pole.',
+  // A traveller's optional date of birth (23 Nov 2026)
+  invalidBirthDate: 'Give a date of birth from 1 January 1900 up to today, or leave it empty.',
   landmarkNotFound: `That landmark doesn't exist.`,
+  // Strings between places (docs/API.md "Strings")
+  stringInvalid: `Choose two places on the map to tie a string between.`,
+  stringSamePlace: `A string needs two different places.`,
+  stringNotFound: `That string isn't on this map.`,
+  stringsFull: `This map has as many strings as it can hold (500). Take some off first.`,
   // Maps
   mapNotFound: `That map doesn't exist, or it hasn't been shared with you.`,
   defaultMapDelete: `Your first map can't be deleted. You can rename it instead.`,
@@ -128,6 +138,19 @@ export const EVENT_MESSAGES = {
   invalidTripStatus: `Status must be PLANNED, ACTIVE or COMPLETED.`,
   invalidTitle: `Give the trip a title of 1 to 120 characters.`,
   datesOutOfOrder: `The end date can't be before the start date.`,
+  tripDatesRequired: `Give the trip the day it starts and the day it ends.`,
+  // "Guess where I was" (docs/API.md "Guess where I was")
+  guessGameNotFound: `That game doesn't exist any more.`,
+  guessPhotosInvalid: `Choose 3 to 10 of this map's photos, each one placed in a country and not hidden.`,
+  guessTooManyGames: `A map can have 50 games. Delete one to make another.`,
+  guessRoundInvalid: `That isn't this game's next photo.`,
+  guessPlaceInvalid: `Choose a country on the map.`,
+  guessNameInvalid: `Give a name of 1 to 30 characters.`,
+  guessNotFinished: `Only a finished game goes on the leaderboard, and only once.`,
+  // The flight log (docs/API.md "Flights")
+  flightNotFound: `That flight isn't on this map.`,
+  flightsInvalid: `Give 1 to 10 flights, each between two different airports (IATA codes such as LHR) on a real day.`,
+  flightTripInvalid: `That trip isn't one of this map's own.`,
   travellersNotOnMap: `Every traveller must be one of this map's travellers.`,
   stopNotFound: `That stop isn't on this trip.`,
   invalidStopOrder: `Send every stop of the trip exactly once.`,
@@ -270,7 +293,7 @@ export const EVENT_MESSAGES = {
   copyRequestWithdrawn: `Request withdrawn.`,
   // Emails people can stop (docs/API.md "Emails")
   unsubscribeInvalid: `That unsubscribe link doesn't work. Change your emails on your account page instead.`,
-  invalidEmailPreferences: `Say whether you want "On this day" emails.`,
+  invalidEmailPreferences: `Say whether you want "On this day" or "Welcome home" emails (true or false).`,
   // Importing (docs/API.md "Importing from Polarsteps")
   invalidImport: `That import can't be read. Choose the download from Polarsteps again.`,
   invalidImportKey: `That import key isn't valid.`,

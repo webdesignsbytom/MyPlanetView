@@ -49,6 +49,9 @@ function LandmarkStamp({ stamp }) {
           clipPath={`url(#${id}-photo)`}
           {...photoBox(g.photo)}
         />
+      ) : stamp.ticked ? (
+        // Ticked "been here" with no photo (23 Nov 2026): the frame says so
+        <BeenHere box={photoBox(g.photo)} />
       ) : null}
       {part(g.photo, { fill: 'none', stroke: 'currentColor', strokeWidth: 2 })}
       <g fill='currentColor' className='font-main font-semibold opacity-90' letterSpacing='0.06em'>
@@ -67,6 +70,22 @@ function LandmarkStamp({ stamp }) {
       </g>
       {stamp.isUnesco ? g.marks.map(([x, y]) => <UnescoMark key={`${x}-${y}`} x={x} y={y} />) : null}
     </svg>
+  );
+}
+
+// "Been here" in the photo's frame, for a landmark ticked with no photo: two lines in the ink
+function BeenHere({ box }) {
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  return (
+    <g fill='currentColor' className='font-main font-bold opacity-90' fontSize={13} letterSpacing='0.12em' textAnchor='middle' data-stamp-been-here=''>
+      <text x={x} y={y - 2}>
+        BEEN
+      </text>
+      <text x={x} y={y + 13}>
+        HERE
+      </text>
+    </g>
   );
 }
 

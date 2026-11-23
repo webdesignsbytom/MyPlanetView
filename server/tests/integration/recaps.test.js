@@ -34,7 +34,7 @@ describe('year in travel', () => {
     const italy = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Rome', startDate: '2025-03-01', endDate: '2025-03-05' })).trip;
     expect((await owner.agent.post(`/api/trips/${italy.id}/stops`).send({ countryCode: 'IT', arriveOn: '2025-03-01' })).status).toBe(201);
     expect((await owner.agent.patch(`/api/trips/${italy.id}`).send({ status: 'COMPLETED' })).status).toBe(200);
-    const iceland = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Iceland', startDate: '2025-09-01' })).trip;
+    const iceland = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Iceland', startDate: '2025-09-01', endDate: '2025-09-08' })).trip;
     expect((await owner.agent.post(`/api/trips/${iceland.id}/stops`).send({ countryCode: 'IS' })).status).toBe(201);
 
     // Japan first visited in 2025; a moment in Portugal; a hidden one in Greece

@@ -69,7 +69,7 @@ test.describe('The tips on a phone', () => {
     await expect(tips).toBeVisible();
     // No offer yet: the browser's menu is the way
     await expect(tips).toContainText('choose Install app or Add to Home screen');
-    await expect(tips.getByRole('button', { name: 'Install the app' })).toHaveCount(0);
+    await expect(tips.getByRole('button', { name: 'Install the app', exact: true })).toHaveCount(0);
 
     // The browser makes its offer (a production build with its service worker would)
     await page.evaluate(() => {
@@ -81,11 +81,11 @@ test.describe('The tips on a phone', () => {
       window.dispatchEvent(offer);
     });
     await expect(tips).toContainText('Install it, and it opens from its own icon on your home screen');
-    await tips.getByRole('button', { name: 'Install the app' }).click();
+    await tips.getByRole('button', { name: 'Install the app', exact: true }).click();
     await expect(tips.getByText('Installed: it’s on your home screen.')).toBeVisible();
     expect(await page.evaluate(() => window.__installPrompted)).toBe(true);
     // An offer is used once
-    await expect(tips.getByRole('button', { name: 'Install the app' })).toHaveCount(0);
+    await expect(tips.getByRole('button', { name: 'Install the app', exact: true })).toHaveCount(0);
   });
 
   test.describe('on an iPhone', () => {
@@ -96,7 +96,7 @@ test.describe('The tips on a phone', () => {
       const tips = tipsDialog(page);
       await expect(tips.getByRole('heading', { name: 'Install the app', exact: true })).toBeVisible();
       await expect(tips).toContainText('Tap Share, then Add to Home Screen');
-      await expect(tips.getByRole('button', { name: 'Install the app' })).toHaveCount(0);
+      await expect(tips.getByRole('button', { name: 'Install the app', exact: true })).toHaveCount(0);
     });
   });
 });

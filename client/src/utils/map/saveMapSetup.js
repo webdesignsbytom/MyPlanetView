@@ -15,13 +15,19 @@ export const GROUP_TYPES = [
   { value: 'FAMILY', label: 'A family', hint: 'Everyone who comes on holiday', minTravellers: 2, maxTravellers: MAX_TRAVELLERS },
 ];
 
+// The set-up form's own words for a map with nobody named (MapSetupForm)
+export const NEEDS_A_TRAVELLER = 'Add at least one traveller’s name.';
+
 export const minTravellersFor = (groupType) => GROUP_TYPES.find((g) => g.value === groupType)?.minTravellers || 1;
 export const maxTravellersFor = (groupType) => GROUP_TYPES.find((g) => g.value === groupType)?.maxTravellers || MAX_TRAVELLERS;
 
+// The date of birth (23 Nov 2026) is sent only when the form had one: a traveller the map
+// lists without it (a co-owner's view of a form that never asked) keeps theirs
 const travellerBody = (t, position) => ({
   name: t.name.trim(),
   birthCountryCode: t.birthCountryCode || null,
   favouriteCountryCode: t.favouriteCountryCode || null,
+  ...(t.birthDate !== undefined ? { birthDate: t.birthDate || null } : {}),
   position,
 });
 
@@ -29,6 +35,7 @@ const changed = (before, body) =>
   before.name !== body.name ||
   (before.birthCountryCode || null) !== body.birthCountryCode ||
   (before.favouriteCountryCode || null) !== body.favouriteCountryCode ||
+  ('birthDate' in body && (before.birthDate || null) !== body.birthDate) ||
   before.position !== body.position;
 
 /**
@@ -39,6 +46,10 @@ const changed = (before, body) =>
 export async function saveMapSetup(mapId, original, form, { canRename = true } = {}) {
   const splitUk = Boolean(form.splitUk);
   const kept = form.travellers.filter((t) => t.name.trim());
+  // A map always has a traveller: with every name cleared, saving would ask the server to
+  // delete the last one, which it refuses. Say so before sending anything (the set-up form
+  // checks the same first, MapSetupForm)
+  if (!kept.length) throw Object.assign(new Error(NEEDS_A_TRAVELLER), { friendlyMessage: NEEDS_A_TRAVELLER });
   const removed = original.travellers.filter((before) => !kept.some((t) => t.id === before.id));
   // Those taken off go first, so a map becoming a smaller kind has room for it; but a map
   // keeping none of its old travellers keeps one until the last new one is added (the server

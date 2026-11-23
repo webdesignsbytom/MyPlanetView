@@ -142,15 +142,15 @@ describe('seedFirstClass', () => {
 });
 
 describe('the generated data', () => {
-  it('has the server’s 1,332 landmarks, 1,273 of them UNESCO sites, each in a country of the map', () => {
-    expect(LANDMARKS).toHaveLength(1332);
+  it('has the server’s 1,366 landmarks, 1,273 of them UNESCO sites, each in a country of the map', () => {
+    expect(LANDMARKS).toHaveLength(1366);
     expect(LANDMARKS.filter((l) => l.isUnesco)).toHaveLength(1273);
     for (const lm of LANDMARKS) {
       expect(countryExists(lm.countryCode)).toBe(true);
       expect(Math.abs(lm.latitude)).toBeLessThanOrEqual(90);
       expect(lm.matchRadiusM).toBeGreaterThan(0);
     }
-    expect(new Set(LANDMARK_ROWS.map((l) => l.id)).size).toBe(1332);
+    expect(new Set(LANDMARK_ROWS.map((l) => l.id)).size).toBe(1366);
   });
 
   it('has the 16 test photos and the four videos', () => {

@@ -11,7 +11,11 @@ import {
   putVisit,
   removeTripFromMap,
   tickLandmark,
+  tieAutoMapStrings,
+  tieMapString,
   untickLandmark,
+  untieAllMapStrings,
+  untieMapString,
   updateMap,
   updateTraveller,
 } from '@/api/travelApi';
@@ -234,6 +238,52 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     [mapId, refresh],
   );
 
+  // Strings between places (docs/API.md "Strings"): a tie waits for the server's string (its
+  // id); untying shows at once, put back if the server says no
+  const setStrings = useCallback(
+    (change) =>
+      setState((prev) => (onMap(prev, mapId) ? { ...prev, map: { ...prev.map, strings: change(prev.map.strings || []) } } : prev)),
+    [mapId],
+  );
+  const tieString = useCallback(
+    async (from, to) => {
+      const { string } = await tieMapString(mapId, from, to);
+      setStrings((strings) => (strings.some((s) => s.id === string.id) ? strings : [...strings, string]));
+      return string;
+    },
+    [mapId, setStrings],
+  );
+  const tieAutoStrings = useCallback(async () => {
+    const answer = await tieAutoMapStrings(mapId);
+    setStrings(() => answer.strings);
+    return answer;
+  }, [mapId, setStrings]);
+  const untieString = useCallback(
+    async (string) => {
+      setStrings((strings) => strings.filter((s) => s.id !== string.id));
+      try {
+        await untieMapString(mapId, string.id);
+      } catch (err) {
+        setStrings((strings) => (strings.some((s) => s.id === string.id) ? strings : [...strings, string]));
+        throw err;
+      }
+    },
+    [mapId, setStrings],
+  );
+  const untieAllStrings = useCallback(async () => {
+    let before = [];
+    setStrings((strings) => {
+      before = strings;
+      return [];
+    });
+    try {
+      await untieAllMapStrings(mapId);
+    } catch (err) {
+      setStrings(() => before);
+      throw err;
+    }
+  }, [mapId, setStrings]);
+
   const addTraveller = useCallback(
     async (body) => {
       const { traveller } = await createTraveller(mapId, body);
@@ -304,6 +354,10 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     setDesign,
     setMapStyle,
     setLandmarkBeen,
+    tieString,
+    tieAutoStrings,
+    untieString,
+    untieAllStrings,
     addTraveller,
     editTraveller,
     removeTraveller,

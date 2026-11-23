@@ -31,6 +31,12 @@ export const VERIFY_EMAIL_FIRST =
   'Verify your email address to add to your map or share it. Use the link we emailed you, or send a new one from your account page.';
 const kinds = (path) => ['maps', 'trips'].map((kind) => path.replace('{kind}', kind));
 const NEEDS_VERIFIED_EMAIL = new Set([
+  // "Guess where I was": making and deleting a game (docs/API.md)
+  'POST /api/maps/:mapId/guess-games',
+  'DELETE /api/guess-games/:gameId',
+  // The flight log (docs/API.md "Flights")
+  'POST /api/maps/:mapId/flights',
+  'DELETE /api/flights/:flightId',
   // Give a month, get a month: making a member's invite code
   'POST /api/users/referral',
   'POST /api/maps',
@@ -93,6 +99,11 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   // Collecting (docs/API.md "Collecting")
   'PUT /api/maps/:mapId/landmarks/:landmarkId/been',
   'DELETE /api/maps/:mapId/landmarks/:landmarkId/been',
+  // Strings between places (docs/API.md "Strings")
+  'POST /api/maps/:mapId/strings',
+  'POST /api/maps/:mapId/strings/auto',
+  'DELETE /api/maps/:mapId/strings/:stringId',
+  'DELETE /api/maps/:mapId/strings',
   // Importing from Polarsteps (docs/API.md "Importing from Polarsteps")
   'POST /api/maps/:mapId/imports/polarsteps',
   // Gifts (docs/API.md "Gifts"): buying and redeeming

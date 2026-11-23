@@ -27,7 +27,7 @@ describe('counts in map and trip lists', () => {
       expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: who.email, role })).status).toBe(201);
     }
 
-    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Counted trip' })).trip;
+    trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Counted trip' })).trip;
     expect((await owner.agent.post(`/api/trips/${trip.id}/stops`).send({ countryCode: 'IT' })).status).toBe(201);
     expect((await owner.agent.post(`/api/trips/${trip.id}/members`).send({ email: tripViewer.email, role: 'VIEWER' })).status).toBe(201);
 

@@ -29,7 +29,9 @@ export function themeBodyFrom(form, { existing = null, thisMonth }) {
   const month = form.month.trim();
   const title = form.title.replace(/\s+/g, ' ').trim();
   const blurb = form.blurb.trim();
-  if (!MONTH_PATTERN.test(month)) errors.month = 'Choose a month (YYYY-MM).';
+  // The years the server takes (its parseMonth: 2000 to 2999)
+  const year = Number(month.slice(0, 4));
+  if (!MONTH_PATTERN.test(month) || year < 2000 || year > 2999) errors.month = 'Choose a month (YYYY-MM).';
   else if (month < thisMonth && month !== existing?.month) errors.month = 'Choose this month or a later one.';
   if (!title) errors.title = 'Give it a title.';
   else if (title.length > THEME_TITLE_MAX) errors.title = `At most ${THEME_TITLE_MAX} characters.`;

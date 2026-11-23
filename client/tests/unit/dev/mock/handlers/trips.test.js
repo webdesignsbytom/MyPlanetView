@@ -55,6 +55,18 @@ describe('changing a trip', () => {
     expect((await patch('/api/trips/trip-sam-asia', { title: 'x' })).status).toBe(403);
   });
 
+  it('changes a trip’s days, never takes them away, and keeps them in order (as the server)', async () => {
+    expect((await patch('/api/trips/trip-italy', { endDate: '' })).message).toBe('Give the trip the day it starts and the day it ends.');
+    expect((await patch('/api/trips/trip-italy', { startDate: null })).status).toBe(400);
+    expect((await patch('/api/trips/trip-italy', { endDate: '2025-13-01' })).status).toBe(400);
+    // Against the trip's own start (2 July 2025)
+    expect((await patch('/api/trips/trip-italy', { endDate: '2025-07-01' })).status).toBe(400);
+    expect(trip('trip-italy')).toMatchObject({ startDate: '2025-07-02', endDate: '2025-07-16' });
+    expect((await patch('/api/trips/trip-italy', { endDate: '2025-07-18' })).data.trip.endDate).toBe('2025-07-18');
+    // A change that leaves them out keeps them
+    expect((await patch('/api/trips/trip-italy', { title: 'Italy' })).data.trip).toMatchObject({ startDate: '2025-07-02', endDate: '2025-07-18' });
+  });
+
   it('sets who went, only the map’s travellers', async () => {
     expect((await put('/api/trips/trip-italy/travellers', { travellerIds: ['trav-alex', 'trav-alex'] })).data.trip.travellerIds).toEqual(['trav-alex']);
     expect((await put('/api/trips/trip-italy/travellers', { travellerIds: ['trav-sam'] })).status).toBe(400);

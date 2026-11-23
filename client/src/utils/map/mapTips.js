@@ -1,7 +1,9 @@
 // The tips the map page opens with (components/map/MapTipsDialog.jsx; 17 Nov 2026, the
 // user's wish: phones can go full screen, and few would find it). They show once a visit
 // while the viewer's setting `showTips` is on; the dialog's box turns it off, Settings back
-// on. No imports: the e2e fixtures read the key.
+// on, and the toolbar's (or the phone menu's) "Tips" opens them any time (23 Nov 2026, the
+// user's wish: one tip at a time, with Previous and Next). No imports: the e2e fixtures read
+// the key.
 
 // sessionStorage: the tips have shown in this visit (on any map)
 export const TIPS_SHOWN_KEY = 'mpv:mapTipsShown';
@@ -14,9 +16,11 @@ export const TIPS_SHOWN_KEY = 'mpv:mapTipsShown';
  * postcard is switched on; `appName`: the name under the home-screen icon. `install`: how
  * this phone installs the site as an app (18 Nov 2026, the user's wish: say it can): 'prompt'
  * (the browser has offered: the tip has an Install button, `action: 'install'`), 'ios'
- * (Share, Add to Home Screen) or 'menu' (the browser's own menu).
+ * (Share, Add to Home Screen) or 'menu' (the browser's own menu). `share`: this viewer can
+ * share the map (its owner or a co-owner, never through a share link): the last tip says a
+ * link needs no app and no account to open (23 Nov 2026, the user's wish).
  */
-export function mapTips({ phone, touch, fullscreen, standalone, posters, appName, install = 'menu' }) {
+export function mapTips({ phone, touch, fullscreen, standalone, posters, appName, install = 'menu', share = false }) {
   const tips = [];
   if (phone && !standalone) {
     const how = {
@@ -47,9 +51,28 @@ export function mapTips({ phone, touch, fullscreen, standalone, posters, appName
     text: `${press} a country to open its ticket: its photos, moments and landmarks.${posters ? ` ${poster}` : ''}`,
   });
   tips.push({
+    id: 'countryMap',
+    title: 'A country’s own map',
+    text: 'In a country’s ticket, Open country shows it on its own: its states or provinces to colour in, your own pins, and a little model of a famous landmark.',
+  });
+  tips.push({
     id: 'moving',
     title: 'Moving around',
     text: touch ? 'Drag the map to move it, and pinch or double-tap to zoom in.' : 'Drag the map to move it, and scroll or double-click to zoom in.',
   });
+  tips.push({
+    id: 'tools',
+    title: 'The map’s tools',
+    text: phone
+      ? 'Every tool is in the Menu at the top right: your statistics, trips, the photo album and more. Tips, in there too, brings these back any time.'
+      : 'The stamps at the top right are the map’s tools: your statistics, trips, the photo album and more. Tips, the last of them, brings these back any time.',
+  });
+  if (share) {
+    tips.push({
+      id: 'share',
+      title: 'Share your map',
+      text: 'Share this map gives you a link to send. Anyone can open it in their browser and see your map, photos and trips: no app to install and no account needed.',
+    });
+  }
   return tips;
 }

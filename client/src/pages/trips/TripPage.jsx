@@ -62,6 +62,8 @@ function TripPage() {
         ) : null}
         {!trip && !error ? (
           <PaperCard>
+            {/* The page's heading while it loads; the trip's title takes its place (23 Nov 2026) */}
+            <h1 className='sr-only'>Opening the trip</h1>
             <div className='grid place-items-center py-10' role='status'>
               <LoadingSpinner md />
               <span className='sr-only'>Opening the trip…</span>

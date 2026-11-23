@@ -47,6 +47,7 @@ export async function designView(design) {
     names: design.namesColour,
     grid: design.gridColour,
     hover: design.hoverColour,
+    string: design.stringColour,
     // Signed as a photo is (on the hour, for two), so the browser keeps it
     picture: design.picture ? { url: await signPhotoUrl(design.picture.key) } : null,
   };
@@ -71,7 +72,7 @@ async function loadDesignableMap(req, res) {
 const logDesign = (req, map, action) =>
   logEvent(createMapEvent({ user: req.user, action, id: map.id, statusCode: 200 }));
 
-// PATCH /maps/:mapId/design: { style, shown?, countries?, names?, grid?, hover? }. `countries`
+// PATCH /maps/:mapId/design: { style, shown?, countries?, names?, grid?, hover?, string? }. `countries`
 // replaces the whole set; a colour of null is the usual one again.
 export const updateMapDesignHandler = handler(D, 'Update map design', async (req, res) => {
   const map = await loadDesignableMap(req, res);

@@ -9,11 +9,11 @@ import SavedStamp from '@/components/common/SavedStamp';
 import GroupTypePicker from './GroupTypePicker';
 import TravellerFieldset from './TravellerFieldset';
 // Utils
-import { maxTravellersFor, minTravellersFor } from '@/utils/map/saveMapSetup';
+import { NEEDS_A_TRAVELLER, maxTravellersFor, minTravellersFor } from '@/utils/map/saveMapSetup';
 
-const blankTraveller = () => ({ name: '', birthCountryCode: '', favouriteCountryCode: '' });
+const blankTraveller = () => ({ name: '', birthCountryCode: '', favouriteCountryCode: '', birthDate: '' });
 
-const isBlankNew = (t) => !t.id && !t.name.trim() && !t.birthCountryCode && !t.favouriteCountryCode;
+const isBlankNew = (t) => !t.id && !t.name.trim() && !t.birthCountryCode && !t.favouriteCountryCode && !t.birthDate;
 
 // As many rows as the kind of map needs; rows added but never filled in go when it has no
 // room for them (a family's third, empty, when it becomes a couple)
@@ -45,6 +45,8 @@ function suggestName(groupType, travellers) {
  * that has places already (the settings panel; a new map has none). `saved` and
  * `onSavedChange` keep "Saved" with the parent, as the settings panel builds the form afresh
  * after a save that changes the map (its key), which used to take the stamp away at once.
+ * `askBirthDate`: each traveller's optional date of birth (Settings; never /welcome, straight
+ * after sign-up: 23 Nov 2026, the user's wish).
  */
 function MapSetupForm({
   initial,
@@ -53,6 +55,7 @@ function MapSetupForm({
   canRename = true,
   splitUkNote = false,
   wideSubmit = false,
+  askBirthDate = false,
   saved: savedProp,
   onSavedChange,
 }) {
@@ -66,6 +69,7 @@ function MapSetupForm({
         name: t.name || '',
         birthCountryCode: t.birthCountryCode || '',
         favouriteCountryCode: t.favouriteCountryCode || '',
+        birthDate: t.birthDate || '',
       })),
       initial.groupType || 'SOLO',
     ),
@@ -98,7 +102,7 @@ function MapSetupForm({
     e.preventDefault();
     setError(null);
     if (!form.name.trim()) return setError('Give the map a name.');
-    if (!form.travellers.some((t) => t.name.trim())) return setError('Add at least one traveller’s name.');
+    if (!form.travellers.some((t) => t.name.trim())) return setError(NEEDS_A_TRAVELLER);
     if (form.travellers.filter((t) => t.name.trim()).length > maxTravellersFor(form.groupType)) return setError(tooManyFor(form.groupType));
     setSaving(true);
     try {
@@ -128,6 +132,7 @@ function MapSetupForm({
             onChange={(next) => setTraveller(index, next)}
             onRemove={() => removeTraveller(index)}
             canRemove={form.travellers.length > min}
+            askBirthDate={askBirthDate}
           />
         ))}
         {roomForMore ? (

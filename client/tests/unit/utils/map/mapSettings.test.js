@@ -109,6 +109,7 @@ describe('cleanMapSettings', () => {
       showAntarctica: false,
       showMoments: false,
       showGoalTag: false,
+      showStrings: false,
       showTips: false,
       countriesAsked: true,
     };

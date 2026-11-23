@@ -34,21 +34,37 @@ describe('buildMapStats', () => {
     expect(stats.continents).toBe(3);
   });
 
-  it('gives each traveller the countries of the completed trips they went on', () => {
+  it('gives each traveller the countries and days away of the completed trips they went on', () => {
     const stats = buildMapStats({
       travellers: [
         { id: 't1', name: 'Sarah' },
         { id: 't2', name: 'Tom' },
       ],
       completedTrips: [
-        { travellerIds: ['t1', 't2'], countryCodes: ['FR', 'IT'] },
-        { travellerIds: ['t1'], countryCodes: ['JP', 'FR'] },
+        { travellerIds: ['t1', 't2'], countryCodes: ['FR', 'IT'], startDate: '2025-04-01', endDate: '2025-04-10' },
+        { travellerIds: ['t1'], countryCodes: ['JP', 'FR'], startDate: '2025-09-01', endDate: '2025-09-05' },
       ],
     });
     expect(stats.byTraveller).toEqual([
-      { travellerId: 't1', name: 'Sarah', countries: 3 },
-      { travellerId: 't2', name: 'Tom', countries: 2 },
+      { travellerId: 't1', name: 'Sarah', countries: 3, daysAway: 15 },
+      { travellerId: 't2', name: 'Tom', countries: 2, daysAway: 10 },
     ]);
+  });
+
+  // 23 Nov 2026: the share of a life away, from a traveller's date of birth, for editors only
+  it('gives each traveller their share of a life away only to those who may see dates of birth', () => {
+    const input = {
+      travellers: [
+        { id: 't1', name: 'Sarah', birthDate: new Date('2000-01-01T00:00:00Z') },
+        { id: 't2', name: 'Tom', birthDate: null },
+      ],
+      completedTrips: [{ travellerIds: ['t1', 't2'], countryCodes: ['FR'], startDate: '2009-01-01', endDate: '2009-12-31' }],
+      today: new Date('2009-12-31T12:00:00Z'),
+    };
+    const shown = buildMapStats({ ...input, showBirthDates: true }).byTraveller;
+    expect(shown[0]).toMatchObject({ daysAway: 365, lifeAwayShare: 10 });
+    expect(shown[1]).toMatchObject({ daysAway: 365, lifeAwayShare: null });
+    for (const row of buildMapStats(input).byTraveller) expect(row).not.toHaveProperty('lifeAwayShare');
   });
 
   it('counts special places apart from countries, and Antarctica as a continent', () => {
@@ -66,7 +82,7 @@ describe('buildMapStats', () => {
     });
     expect(stats).toMatchObject({ countries: 1, specialPlaces: 3, continents: 2 });
     // A traveller's countries are countries only
-    expect(stats.byTraveller).toEqual([{ travellerId: 't1', name: 'Sam', countries: 1 }]);
+    expect(stats.byTraveller).toEqual([{ travellerId: 't1', name: 'Sam', countries: 1, daysAway: 0 }]);
   });
 
   it('passes the counts through and starts at zero', () => {
@@ -83,6 +99,9 @@ describe('buildMapStats', () => {
       countriesInWorld: null,
       homeCountryCode: null,
       daysAway: 0,
+      daysByYear: [],
+      daysByPlace: [],
+      longestTrip: null,
       distanceKm: 0,
       furthest: null,
     });
@@ -111,6 +130,6 @@ describe('buildMapStats on a map that splits the UK', () => {
       travellers: [{ id: 't1', name: 'Sam' }],
       completedTrips: [{ travellerIds: ['t1'], countryCodes: ['XE', 'XW', 'XE'] }],
     });
-    expect(stats.byTraveller).toEqual([{ travellerId: 't1', name: 'Sam', countries: 2 }]);
+    expect(stats.byTraveller).toEqual([{ travellerId: 't1', name: 'Sam', countries: 2, daysAway: 0 }]);
   });
 });

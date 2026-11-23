@@ -20,6 +20,12 @@ let pressedInRun = 0;
 let lastShownAt = 0;
 let nextKey = 0;
 const CARRY_ON_MS = 1500;
+// Whether the screen before closed a moment ago. A clock that went back (a time change, a
+// device's clock set right) starts a fresh run rather than carrying on for ever
+const carriesOn = () => {
+  const since = Date.now() - lastShownAt;
+  return since >= 0 && since <= CARRY_ON_MS;
+};
 
 const between = (low, high) => low + Math.random() * (high - low);
 
@@ -59,10 +65,10 @@ function pressOne() {
 function StampLoading() {
   const id = useId();
   // Carried on from the screen before, unless that was a while ago
-  const [stamps, setStamps] = useState(() => (Date.now() - lastShownAt > CARRY_ON_MS ? [] : pressed));
+  const [stamps, setStamps] = useState(() => (carriesOn() ? pressed : []));
 
   useEffect(() => {
-    if (Date.now() - lastShownAt > CARRY_ON_MS) startRun();
+    if (!carriesOn()) startRun();
     const press = () => {
       pressed = [...pressed, pressOne()].slice(-MOST);
       lastShownAt = Date.now();

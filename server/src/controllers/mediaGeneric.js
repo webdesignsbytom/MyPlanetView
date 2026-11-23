@@ -15,6 +15,8 @@ import { deleteOldEvents } from '../domain/events.js';
 import { deleteOldInvites } from '../domain/sharing.js';
 import { deleteExpiredSessions, deleteExpiredVerifications } from '../domain/users.js';
 import { deleteOldStripeEvents } from '../domain/billing.js';
+import { deleteUnnamedGuessPlays } from '../domain/guessGames.js';
+import { UNNAMED_PLAY_DAYS } from '../utils/guessGames.js';
 import { sanitizeText } from '../utils/sanitize.js';
 import { logEvent } from '../utils/events/logEvent.js';
 import { ServerErrorEvent, createGenericErrorEvent } from '../event/errorUtils.js';
@@ -71,8 +73,9 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
   // retries for 3 days at most), and Cloudflare Stream videos no row points at (an upload
   // never saved, a video deleted with its map or account; services/stream/videos.js). Also
   // approved travel copies nobody's browser finished (docs/API.md "Travel copies"), and gifts
-  // whose Checkout was never finished (docs/API.md "Gifts")
-  const [expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents, orphanStreamVideos, travelCopiesFinished, unpaidGifts] =
+  // whose Checkout was never finished (docs/API.md "Gifts"), and "Guess where I was" plays never
+  // put on a leaderboard (docs/API.md "Guess where I was")
+  const [expiredRateLimits, oldEvents, expiredSessions, expiredVerifications, oldInvites, oldStripeEvents, orphanStreamVideos, travelCopiesFinished, unpaidGifts, unnamedGuessPlays] =
     await Promise.all([
       purge('rate-limit', deleteExpiredRateLimits),
       purge('event', () => deleteOldEvents()),
@@ -83,6 +86,7 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
       purge('stream-video', () => deleteOrphanStreamVideos({ budgetMs: 15000 })),
       purge('travel-copy', () => continueApprovedCopies({ budgetMs: 15000 })),
       purge('gift', () => deleteUnpaidGiftsInDB(new Date(Date.now() - GIFT_UNPAID_DAYS * 24 * 60 * 60 * 1000))),
+      purge('guess-play', () => deleteUnnamedGuessPlays(new Date(Date.now() - UNNAMED_PLAY_DAYS * 24 * 60 * 60 * 1000))),
     ]);
   const purged = {
     expiredRateLimits,
@@ -94,6 +98,7 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
     orphanStreamVideos,
     travelCopiesFinished,
     unpaidGifts,
+    unnamedGuessPlays,
   };
 
   try {

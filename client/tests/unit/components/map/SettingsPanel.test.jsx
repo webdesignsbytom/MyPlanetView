@@ -122,9 +122,14 @@ describe('SettingsPanel', () => {
     expect(container.querySelector('[data-section="delete"]').getAttribute('data-locked')).toBe('true');
   });
 
-  it('puts the design of the map’s style at the top for the owner and co-owners', () => {
+  it('puts the design of the map’s style under the style for the owner and co-owners', () => {
     const { container } = open({ onDesignChange: vi.fn(), mapStyle: 'starry' });
-    expect(container.querySelector('[data-section="design"]').getAttribute('data-style')).toBe('starry');
+    const design = container.querySelector('[data-section="design"]');
+    expect(design.getAttribute('data-style')).toBe('starry');
+    // After the map style, before the map type (23 Nov 2026, the user's wish)
+    const follows = (a, b) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(follows(screen.getByText('Map style'), design)).toBe(true);
+    expect(follows(design, screen.getByText('Map type'))).toBe(true);
     const { container: editor } = open({ onDesignChange: vi.fn(), canManage: false, isOwner: false });
     expect(editor.querySelector('[data-section="design"]')).toBeNull();
   });

@@ -1,7 +1,25 @@
 // @vitest-environment node
 // The richer travel stats' words (src/utils/map/travelStatWords.js).
 import { describe, expect, it } from 'vitest';
-import { aboutKm, aboutMiles, withThe, worldShare } from '@/utils/map/travelStatWords';
+import { aboutKm, aboutMiles, dayWords, withShares, withThe, worldShare } from '@/utils/map/travelStatWords';
+
+describe('dayWords', () => {
+  it('says one day, or a number of days with thousands marked', () => {
+    expect(dayWords(1)).toBe('1 day');
+    expect(dayWords(15)).toBe('15 days');
+    expect(dayWords(1200)).toBe('1,200 days');
+    expect(dayWords(0)).toBe('0 days');
+    expect(dayWords(undefined)).toBe('0 days');
+  });
+});
+
+describe('withShares', () => {
+  it('gives each row its share of the biggest, at least 2%', () => {
+    expect(withShares([{ days: 40 }, { days: 10 }, { days: 0.1 }]).map((r) => r.share)).toEqual([100, 25, 2]);
+    expect(withShares([{ days: 0 }]).map((r) => r.share)).toEqual([0]);
+    expect(withShares([])).toEqual([]);
+  });
+});
 
 describe('worldShare', () => {
   it('gives one decimal under 10% and whole numbers above', () => {
