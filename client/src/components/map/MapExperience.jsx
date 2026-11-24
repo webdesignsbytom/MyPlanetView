@@ -38,6 +38,7 @@ import ErrorBoundary from '@/utils/error/ErrorBoundary';
 // Panels, fetched when first wanted (lazyMapPanels.js)
 import {
   BadgesGoalsPanel,
+  CelebrationDialog,
   CountryListPanel,
   CountryMapView,
   CountryPanel,
@@ -62,6 +63,7 @@ import {
   StringsPanel,
   UnplacedPhotosPanel,
   MapPhotosPanel,
+  OneShotsPanel,
   PinPanel,
   preloadTool,
   preloadWhenIdle,
@@ -80,7 +82,7 @@ import { canEditRole, canManageRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
 import { isMonoStyle, mapStyleById, shownStyle } from '@/utils/map/mapStyles';
 import { designFor, shownDesign } from '@/utils/map/mapDesign';
-import { mapCardOptions, tripCardOptions } from '@/utils/shareCard/cardOptions';
+import { collectionCardOptions, mapCardOptions, oneShotsCardOptions, tripCardOptions } from '@/utils/shareCard/cardOptions';
 import { mapPosterOptions } from '@/utils/poster/posterOptions';
 import { recapYearFor } from '@/utils/recap/recap';
 import RecapTag from '@/components/recap/RecapTag';
@@ -88,7 +90,9 @@ import AnniversaryTag from '@/components/moments/AnniversaryTag';
 import TripCountdownTag from '@/components/trips/TripCountdownTag';
 import TripHomeTag from '@/components/trips/TripHomeTag';
 import { LandmarkMarksContext } from '@/hooks/useLandmarkMarks';
+import useOneShots, { OneShotsContext } from '@/hooks/useOneShots';
 import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
+import { celebratesStamp, celebratesVisit, todayDay } from '@/utils/map/celebrations';
 import { QUICK_FILL_MAX_VISITS, QUICK_FILL_SHOWN_KEY } from '@/utils/map/quickFill';
 import { nextPlannedTrip, todayString } from '@/utils/offers/offerContext';
 import { plannedOutlineCodes, plannedTripsByPlace, plannedTripsFor } from '@/utils/trips/plannedTrips';
@@ -348,11 +352,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // uploads finished, a photo changed (a landmark confirmed, a country given). The server
   // awards as the owner and editors load them; what it says is new is announced once.
   const achievements = useAchievements({ mapId: shareCode ? null : map.id, shareCode });
+  // Life's One Shots (24 Nov 2026, the user's wish and name): the map's ticks, and for its
+  // editors what the flight log suggests, loaded with the map (docs/API.md "Life's One Shots")
+  const oneShots = useOneShots({ mapId: shareCode ? null : map.id, shareCode });
   // Whether phones show the goal flag at the top left (GoalTag: an unmet goal, the tag not switched off)
   const phoneFlag = settings.showGoalTag !== false && Boolean(achievements.goals && achievements.badges && nearestGoal(achievements.goals));
   const { check: checkAchievements, dismissNews } = achievements;
   // The loading screen lifts once the panels' data and the badges and goals are in
-  const dataReady = loadedMapId === map.id && !achievements.loading;
+  const dataReady = loadedMapId === map.id && !achievements.loading && !oneShots.loading;
   // Focus to the page once it lifts (nothing on it could take focus while it was up)
   useEffect(() => {
     if (dataReady && (document.activeElement === document.body || !document.activeElement)) {
@@ -423,6 +430,11 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   }, [dismissNews]);
 
   const visitsByCode = useMemo(() => Object.fromEntries(map.visits.map((v) => [v.countryCode, v.status])), [map.visits]);
+  // The visits as they stand, for the celebration's handlers (below) to read
+  const visitsRef = useRef(visitsByCode);
+  useEffect(() => {
+    visitsRef.current = visitsByCode;
+  }, [visitsByCode]);
   const visitFor = (code) => map.visits.find((v) => v.countryCode === code) || null;
   // The map's own trips: what a photo or a moment can be on (not the group trips added from other maps)
   const ownTrips = useMemo(() => trips.filter((t) => !t.linked), [trips]);
@@ -463,21 +475,100 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // A tick stamps the passport too (23 Nov 2026, the user's decision): both pins are gold
   const stampedLandmarks = useMemo(() => new Set([...photoStamped, ...tickedLandmarks]), [photoStamped, tickedLandmarks]);
   const setLandmarkBeen = canChange ? actions?.setLandmarkBeen : null;
+
+  // The celebration (CelebrationDialog; 24 Nov 2026, the user's wish): stars, the model and the
+  // passport's stamp, when the viewer's own tick or confirmed photo stamps a landmark for the
+  // first time, or they mark a country visited or lived in from its ticket. Never for many at
+  // once (the country list, "Where have you been?"), and not while `showCelebrations` is off.
+  // What was stamped and visited before a change is read from refs, so the handlers keep
+  // their identity.
+  const celebrationsWanted = settings.showCelebrations !== false;
+  const [celebration, setCelebration] = useState(null);
+  const celebrate = useCallback(
+    (next) => {
+      if (!celebrationsWanted) return;
+      CelebrationDialog.preload().then(
+        () => setCelebration(next),
+        () => {},
+      );
+    },
+    [celebrationsWanted],
+  );
+  const stampedRef = useRef(stampedLandmarks);
+  useEffect(() => {
+    stampedRef.current = stampedLandmarks;
+  }, [stampedLandmarks]);
+
   // A tick can earn a landmark badge or reach a goal: ask, as a visit change does
   const toggleLandmark = useMemo(
     () =>
       setLandmarkBeen
         ? async (landmarkId, been) => {
+            const firstStamp = been && celebratesStamp(landmarkId, stampedRef.current);
+            const visitsBefore = visitsRef.current || {};
             const answer = await setLandmarkBeen(landmarkId, been);
             checkAchievements();
+            if (firstStamp) {
+              // The tick marks its place visited too (docs/API.md "Collecting")
+              const place = answer?.countryCode;
+              const newPlace = place && !countsAsVisited(visitsBefore[place]) ? place : null;
+              celebrate({ kind: 'landmark', landmarkId, stampedOn: todayDay(), photoUrl: null, newPlace });
+            }
             return answer;
           }
         : null,
-    [setLandmarkBeen, checkAchievements],
+    [setLandmarkBeen, checkAchievements, celebrate],
   );
+  // A photo's landmark confirmed (or added by hand) in the photo viewer: its first stamp is
+  // celebrated with that photo, dated as the passport dates it (when it was taken)
+  const photoStampedLandmark = useCallback(
+    (landmarkId, photo) => {
+      if (!celebratesStamp(landmarkId, stampedRef.current)) return;
+      const taken = typeof photo?.takenAt === 'string' ? photo.takenAt.slice(0, 10) : null;
+      celebrate({ kind: 'landmark', landmarkId, stampedOn: taken || todayDay(), photoUrl: photo?.thumbUrl || null, newPlace: null });
+    },
+    [celebrate],
+  );
+  // Life's One Shots: a tick or a change saved (a country given is marked visited on the server,
+  // so the map is read again), the badges asked again, and a first tick celebrated
+  const { save: saveOneShotOnMap, remove: removeOneShotOnMap } = oneShots;
+  const refreshAfterTick = actions?.refresh;
+  const saveOneShot = useCallback(
+    async (itemKey, body) => {
+      const answer = await saveOneShotOnMap(itemKey, body);
+      checkAchievements();
+      if (answer?.countryCode) refreshAfterTick?.();
+      if (answer?.created) {
+        const tick = answer.oneShot || {};
+        celebrate({ kind: 'oneShot', itemKey, seenOn: tick.seenOn || null, datePrecision: tick.datePrecision || null, countryCode: tick.countryCode || null, photoUrl: tick.photo?.thumbUrl || null });
+      }
+      return answer;
+    },
+    [saveOneShotOnMap, checkAchievements, refreshAfterTick, celebrate],
+  );
+  const removeOneShot = useCallback(
+    async (itemKey) => {
+      await removeOneShotOnMap(itemKey);
+      checkAchievements();
+    },
+    [removeOneShotOnMap, checkAchievements],
+  );
+  // A country's ticket opens the panel at one item
+  const [oneShotFocus, setOneShotFocus] = useState(null);
+  const openOneShot = useCallback((itemKey) => {
+    setOneShotFocus(itemKey);
+    dispatch({ type: 'open', panel: 'oneShots' });
+  }, []);
+  const oneShotsHere = useMemo(() => ({ oneShots: oneShots.oneShots, open: openOneShot }), [oneShots.oneShots, openOneShot]);
+
   const landmarkMarks = useMemo(
-    () => ({ stamped: photoStamped, ticked: tickedLandmarks, onToggle: toggleLandmark }),
-    [photoStamped, tickedLandmarks, toggleLandmark],
+    () => ({
+      stamped: photoStamped,
+      ticked: tickedLandmarks,
+      onToggle: toggleLandmark,
+      onPhotoStamped: canChange ? photoStampedLandmark : null,
+    }),
+    [photoStamped, tickedLandmarks, toggleLandmark, canChange, photoStampedLandmark],
   );
 
   // Photos with no country: no country panel shows them, so they get their own list
@@ -551,6 +642,13 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const close = useCallback(() => dispatch({ type: 'close' }), []);
   // A visit changed by hand: then see whether it earned a badge or met a goal
   const changeVisit = actions?.setVisit;
+  // A country marked visited or lived in from its ticket (CountryPanel's own status control)
+  const visitMarked = useCallback(
+    (code, before, status, firstVisitedOn) => {
+      if (celebratesVisit(before, status)) celebrate({ kind: 'country', code, status, firstVisitedOn: firstVisitedOn || null });
+    },
+    [celebrate],
+  );
   const setVisit = useMemo(
     () =>
       changeVisit
@@ -567,6 +665,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // string mode too. "Tips" opens the tips (23 Nov 2026, the user's wish), or shuts them.
   const handleToggle = useCallback((panel) => {
     setStringMode(null);
+    setOneShotFocus(null);
     dispatch({ type: 'tool', panel });
     setTipsOpen((open) => panel === 'tips' && !open);
   }, []);
@@ -655,6 +754,22 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onClose={close}
           />
         );
+      case 'oneShots':
+        return (
+          <OneShotsPanel
+            oneShots={oneShots}
+            canEdit={canEdit}
+            locked={locked}
+            travellers={map.travellers}
+            photoSource={photoSource}
+            focusKey={oneShotFocus}
+            onSave={saveOneShot}
+            onRemove={removeOneShot}
+            // A picture of the lists to post: the map's own people, never a share link
+            onShareCard={canEdit && !shareCode ? () => setShareCard(oneShotsCardOptions(map, oneShots.oneShots)) : null}
+            onClose={close}
+          />
+        );
       case 'badges':
         return (
           <BadgesGoalsPanel
@@ -666,6 +781,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             shareCode={shareCode}
             // One person's badges only on a family's map: a couple travels together
             perPerson={map.groupType === 'FAMILY'}
+            // A country's medal as a picture to post: the map's own people, never a share link
+            onShareCollection={canEdit && !shareCode ? (collection) => setShareCard(collectionCardOptions(collection)) : null}
             onClose={close}
           />
         );
@@ -707,6 +824,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             canEdit={canChange}
             locked={locked}
             onSetVisit={setVisit}
+            onVisitMarked={visitMarked}
             photoSource={photoSource}
             photosVersion={photosVersion}
             onOpenPhoto={openPhoto}
@@ -838,6 +956,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     // (the drawing, the country list, every country picker and landmark list)
     <SplitUkProvider value={Boolean(map.splitUk)}>
     <LandmarkMarksContext.Provider value={landmarkMarks}>
+    <OneShotsContext.Provider value={oneShotsHere}>
     <div
       data-map-style={styleId}
       data-map-design={design ? '' : undefined}
@@ -1168,6 +1287,20 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         </MapOverlayBoundary>
       ) : null}
 
+      {/* Over everything, the photo viewer too (a confirmed photo is celebrated there), and
+          outside Black and white's filter, so the model keeps its colours as photos do */}
+      {celebration ? (
+        <MapOverlayBoundary onClose={() => setCelebration(null)}>
+          <CelebrationDialog
+            celebration={celebration}
+            passportHref={mapPassportPath(map.id)}
+            hideCelebrations={!celebrationsWanted}
+            onHideCelebrations={(hide) => onChangeSetting('showCelebrations', !hide)}
+            onClose={() => setCelebration(null)}
+          />
+        </MapOverlayBoundary>
+      ) : null}
+
       {ui.slideshow ? (
         <MapOverlayBoundary onClose={() => dispatch({ type: 'stopPlaying' })}>
           <Slideshow
@@ -1183,6 +1316,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
       {dataReady ? null : <MapStatusScreen loading overlay />}
     </div>
+    </OneShotsContext.Provider>
     </LandmarkMarksContext.Provider>
     </SplitUkProvider>
   );

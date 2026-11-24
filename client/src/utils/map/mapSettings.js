@@ -46,6 +46,9 @@ export const DEFAULT_MAP_SETTINGS = {
   // The tips the map opens with, once a visit (components/map/MapTipsDialog.jsx, whose box
   // turns this off)
   showTips: true,
+  // The celebration when a landmark is first stamped or a country first marked visited
+  // (components/map/celebration/CelebrationDialog.jsx, whose box turns this off; 24 Nov 2026)
+  showCelebrations: true,
   // Whether the map has offered "Where have you been?" (components/map/QuickFillDialog.jsx;
   // 22 Nov 2026): once per account. Not a switch in Settings
   countriesAsked: false,
@@ -69,6 +72,7 @@ export const MAP_SETTING_TOGGLES = [
   { key: 'sunAndMoon', label: 'Sun and moon', group: 'sky' },
   { key: 'hoverPreview', label: 'Country posters on hover', group: 'sky' },
   { key: 'showTips', label: 'Tips when the map opens', group: 'help' },
+  { key: 'showCelebrations', label: 'Celebrations for new stamps and countries', group: 'help' },
 ];
 
 export const MAP_SETTING_GROUPS = [

@@ -1,0 +1,8 @@
+{
+  "name": "Hwaseong Fortress",
+  "latitude": 37.28073,
+  "longitude": 127.0102,
+  "maps": ["KR"],
+  "landmark": "Q482423",
+  "onMap": false
+}

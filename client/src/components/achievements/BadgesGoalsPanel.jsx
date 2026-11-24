@@ -33,8 +33,20 @@ const NO_ONE = [];
  * travel badges instead, from the completed trips they were on (worked out by the server,
  * dated by those trips). A couple travels together, so a couple's map has one set (18 Nov
  * 2026, the user's wish).
+ * `onShareCollection(place)`: a country collection's best medal as a share card (the map page,
+ * never a share link); only on the map's own badges, not one traveller's.
  */
-function BadgesGoalsPanel({ achievements, canEdit = false, locked = false, wantToGo = [], mapId = null, shareCode = null, perPerson = false, onClose }) {
+function BadgesGoalsPanel({
+  achievements,
+  canEdit = false,
+  locked = false,
+  wantToGo = [],
+  mapId = null,
+  shareCode = null,
+  perPerson = false,
+  onShareCollection = null,
+  onClose,
+}) {
   const goalsId = useId();
   // null, 'new', or the goal being changed
   const [editing, setEditing] = useState(null);
@@ -128,7 +140,11 @@ function BadgesGoalsPanel({ achievements, canEdit = false, locked = false, wantT
       ) : null}
 
       {badges ? (
-        <BadgeSuitcase badges={shownBadges} note={person ? `From the completed trips ${person.name} was on.` : null}>
+        <BadgeSuitcase
+          badges={shownBadges}
+          note={person ? `From the completed trips ${person.name} was on.` : null}
+          onShareCollection={person ? null : onShareCollection}
+        >
           {travellers.length >= 2 ? <BadgeOwnerSwitch travellers={travellers} value={person ? owner : null} onChange={setOwner} /> : null}
         </BadgeSuitcase>
       ) : null}

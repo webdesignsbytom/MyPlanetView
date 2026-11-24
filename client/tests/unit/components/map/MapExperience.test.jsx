@@ -12,9 +12,15 @@ import { withProviders } from './helpers';
 
 // Everything round the map page's state is a stand-in, so what's tested is what MapExperience
 // itself decides: the loading screen, the first-load dialogs, which panel is open
-const { stub, viewport, toolbar } = vi.hoisted(() => {
+const { stub, viewport, toolbar, panelProps, oneShotsState } = vi.hoisted(() => {
+  // The map's Life's One Shots (useOneShots), as a test sets them
+  const oneShotsState = { oneShots: [], suggestions: [], loading: false, error: null, save: null, remove: null, reload: () => {} };
+  // The props each stand-in last got, so a test can call what the page handed it
+  const panelProps = {};
   const stub = (name) => {
-    const Panel = (props) => (
+    const Panel = (props) => {
+      panelProps[name] = props;
+      return (
       <div
         data-panel={name}
         data-code={props.code ?? undefined}
@@ -27,13 +33,14 @@ const { stub, viewport, toolbar } = vi.hoisted(() => {
           </button>
         ) : null}
       </div>
-    );
+      );
+    };
     Panel.preload = vi.fn(() => Promise.resolve({}));
     return Panel;
   };
   const viewport = { svgRef: () => {}, handlers: {}, afterTap: (run) => run(), focusOn: vi.fn(), zoomIn: vi.fn(), zoomOut: vi.fn(), reset: vi.fn() };
   const toolbar = { props: null };
-  return { stub, viewport, toolbar };
+  return { stub, viewport, toolbar, panelProps, oneShotsState };
 });
 
 vi.mock('@/hooks/useMapViewport', () => ({ default: () => viewport, useViewportZoom: () => false }));
@@ -44,6 +51,7 @@ vi.mock('@/hooks/usePhotoPage', () => ({
 vi.mock('@/hooks/useMomentPage', () => ({ preloadMomentPage: vi.fn(() => Promise.resolve()) }));
 vi.mock('@/hooks/useLandmarks', () => ({ default: () => ({ landmarks: [] }), preloadLandmarks: vi.fn(() => Promise.resolve()) }));
 vi.mock('@/hooks/useMustVerifyEmail', () => ({ default: vi.fn(() => false) }));
+vi.mock('@/hooks/useOneShots', async (importOriginal) => ({ ...(await importOriginal()), default: () => oneShotsState }));
 vi.mock('@/hooks/useMediaQuery', () => ({ default: () => false }));
 vi.mock('@/hooks/useAchievements', () => ({
   default: () => ({ goals: [], badges: [], loading: false, news: null, check: () => {}, dismissNews: () => {} }),
@@ -60,21 +68,27 @@ vi.mock('@/utils/map/preloadCountryLists', () => ({
   countryMomentFilters: (source, code) => ({ ...source, country: code }),
 }));
 vi.mock('@/utils/sharing/sharingCache', () => ({ preloadSharing: vi.fn(() => Promise.resolve()) }));
-vi.mock('@/components/map/WorldMap', () => ({
-  default: (props) => (
-    <div data-world-map={props.label}>
-      <button type='button' onClick={() => props.onSelectCountry('FR')}>
-        pick France
-      </button>
-    </div>
-  ),
-}));
+vi.mock('@/components/map/WorldMap', async () => {
+  // It reads the page's One Shots context too, as a country's ticket does
+  const { useOneShotsHere } = await vi.importActual('@/hooks/useOneShots');
+  const WorldMap = (props) => {
+    toolbar.oneShotsHere = useOneShotsHere();
+    return (
+      <div data-world-map={props.label}>
+        <button type='button' onClick={() => props.onSelectCountry('FR')}>
+          pick France
+        </button>
+      </div>
+    );
+  };
+  return { default: WorldMap };
+});
 vi.mock('@/components/map/MapToolbar', () => ({
   default: (props) => {
     toolbar.props = props;
     return (
       <nav data-open-panel={props.openPanel ?? ''}>
-        {['stats', 'countries', 'trips', 'share', 'play', 'settings', 'tips'].map((id) => (
+        {['stats', 'countries', 'trips', 'oneShots', 'share', 'play', 'settings', 'tips'].map((id) => (
           <button key={id} type='button' onClick={() => props.onToggle(id)}>
             {`tool ${id}`}
           </button>
@@ -94,7 +108,7 @@ vi.mock('@/components/trips/TripCountdownTag', () => ({ default: () => null }));
 vi.mock('@/components/countryMap/CountryMapLoading', () => ({ default: () => null }));
 vi.mock('@/components/map/lazyMapPanels', () => {
   const names = [
-    'BadgesGoalsPanel', 'CountryListPanel', 'CountryMapView', 'CountryPanel', 'ExtraMapDialog', 'ShareCardDialog', 'MapPosterDialog',
+    'BadgesGoalsPanel', 'CelebrationDialog', 'OneShotsPanel', 'CountryListPanel', 'CountryMapView', 'CountryPanel', 'ExtraMapDialog', 'ShareCardDialog', 'MapPosterDialog',
     'QuickFillDialog', 'YearRecapDialog', 'MapSwitcher', 'MapTipsDialog', 'PhotoUploadPanel', 'PhotoViewer', 'SettingsPanel',
     'ShareDialog', 'Slideshow', 'StatsPanel', 'TimelinePanel', 'TripsPanel', 'WhereNextPanel', 'UnplacedPhotosPanel', 'MapPhotosPanel', 'PinPanel',
   ];
@@ -364,6 +378,154 @@ describe('MapExperience', () => {
     it('says a locked map isn’t paid for', () => {
       const { container } = open({ map: { ...MAP, locked: true } });
       expect(container.querySelector('[aria-label="This map isn’t paid for"]')).not.toBeNull();
+    });
+  });
+
+  // 24 Nov 2026, the user's wish: stars, the model and the passport's stamp
+  describe('the celebration', () => {
+    // The map page with its statistics open: they carry the landmark marks (`collected`)
+    const withMarks = async (props = {}) => {
+      seenDialogs();
+      const view = open(props);
+      await waitFor(() => expect(view.q('[data-map-loading]')).toBeNull());
+      view.click('tool stats');
+      await waitFor(() => expect(panelProps.StatsPanel?.collected).toBeTruthy());
+      return view;
+    };
+    const celebration = () => panelProps.CelebrationDialog?.celebration;
+
+    beforeEach(() => {
+      delete panelProps.CelebrationDialog;
+    });
+
+    it('celebrates a landmark’s first stamp from a tick, and the place it marked', async () => {
+      const setLandmarkBeen = vi.fn().mockResolvedValue({ landmarkId: 'lm-eiffel', been: true, countryCode: 'FR' });
+      const { panel } = await withMarks({ actions: { ...actions(), setLandmarkBeen } });
+      await act(async () => {
+        await panelProps.StatsPanel.collected.onToggle('lm-eiffel', true);
+      });
+      await waitFor(() => expect(panel('CelebrationDialog')).not.toBeNull());
+      expect(celebration()).toEqual({ kind: 'landmark', landmarkId: 'lm-eiffel', stampedOn: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/), photoUrl: null, newPlace: 'FR' });
+      expect(panelProps.CelebrationDialog.passportHref).toBe('/maps/map-1/passport');
+    });
+
+    it('says nothing new of a place already on the map, nor of a landmark stamped already', async () => {
+      const setLandmarkBeen = vi.fn().mockResolvedValue({ landmarkId: 'lm-tower', been: true, countryCode: 'GB' });
+      const map = { ...MAP, stampedLandmarkIds: ['lm-big-ben'] };
+      const { panel } = await withMarks({ map, actions: { ...actions(), setLandmarkBeen } });
+      await act(async () => {
+        await panelProps.StatsPanel.collected.onToggle('lm-tower', true);
+      });
+      await waitFor(() => expect(panel('CelebrationDialog')).not.toBeNull());
+      expect(celebration().newPlace).toBeNull();
+      // Big Ben has a photo's stamp: ticking it too stamps nothing new
+      act(() => panelProps.CelebrationDialog.onClose());
+      expect(panel('CelebrationDialog')).toBeNull();
+      await act(async () => {
+        await panelProps.StatsPanel.collected.onToggle('lm-big-ben', true);
+      });
+      expect(panel('CelebrationDialog')).toBeNull();
+      // Nor does a tick taken off
+      await act(async () => {
+        await panelProps.StatsPanel.collected.onToggle('lm-tower', false);
+      });
+      expect(panel('CelebrationDialog')).toBeNull();
+    });
+
+    it('celebrates a photo’s confirmed landmark with that photo, dated when it was taken', async () => {
+      const { panel } = await withMarks({ actions: { ...actions(), setLandmarkBeen: vi.fn() } });
+      act(() => panelProps.StatsPanel.collected.onPhotoStamped('lm-eiffel', { id: 'p1', takenAt: '2019-05-02T10:00:00.000Z', thumbUrl: 'https://x/p1.webp' }));
+      await waitFor(() => expect(panel('CelebrationDialog')).not.toBeNull());
+      expect(celebration()).toEqual({ kind: 'landmark', landmarkId: 'lm-eiffel', stampedOn: '2019-05-02', photoUrl: 'https://x/p1.webp', newPlace: null });
+    });
+
+    it('celebrates a country marked visited from its ticket, never from the country list', async () => {
+      seenDialogs();
+      const { panel, click, q } = open();
+      await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
+      click('pick France');
+      await waitFor(() => expect(panelProps.CountryPanel).toBeTruthy());
+      act(() => panelProps.CountryPanel.onVisitMarked('FR', 'WANT_TO_GO', 'VISITED', '2016-08-01'));
+      await waitFor(() => expect(panel('CelebrationDialog')).not.toBeNull());
+      expect(celebration()).toEqual({ kind: 'country', code: 'FR', status: 'VISITED', firstVisitedOn: '2016-08-01' });
+      act(() => panelProps.CelebrationDialog.onClose());
+
+      // Lived in, from visited: no first visit
+      act(() => panelProps.CountryPanel.onVisitMarked('FR', 'VISITED', 'LIVED', null));
+      expect(panel('CelebrationDialog')).toBeNull();
+      // The country list saves straight through setVisit: many at once, no celebration
+      click('tool countries');
+      await waitFor(() => expect(panelProps.CountryListPanel).toBeTruthy());
+      expect(panelProps.CountryListPanel.onVisitMarked).toBeUndefined();
+    });
+
+    it('never shows while the viewer has turned it off, and its box turns it off', async () => {
+      const setLandmarkBeen = vi.fn().mockResolvedValue({ landmarkId: 'lm-eiffel', been: true, countryCode: 'FR' });
+      const view = await withMarks({ actions: { ...actions(), setLandmarkBeen } });
+      await act(async () => {
+        await panelProps.StatsPanel.collected.onToggle('lm-eiffel', true);
+      });
+      await waitFor(() => expect(view.panel('CelebrationDialog')).not.toBeNull());
+      expect(panelProps.CelebrationDialog.hideCelebrations).toBe(false);
+      act(() => panelProps.CelebrationDialog.onHideCelebrations(true));
+      expect(view.onChangeSetting).toHaveBeenCalledWith('showCelebrations', false);
+      view.unmount();
+
+      delete panelProps.CelebrationDialog;
+      const off = await withMarks({ settings: { ...DEFAULT_MAP_SETTINGS, showCelebrations: false }, actions: { ...actions(), setLandmarkBeen } });
+      await act(async () => {
+        await panelProps.StatsPanel.collected.onToggle('lm-louvre', true);
+      });
+      expect(off.panel('CelebrationDialog')).toBeNull();
+    });
+
+    // Life's One Shots (24 Nov 2026): a first tick celebrated, a change not
+    it('celebrates a first One Shot, never a change, and marks a country visited by reading the map again', async () => {
+      seenDialogs();
+      const refresh = vi.fn();
+      oneShotsState.save = vi.fn().mockResolvedValue({ oneShot: { itemKey: 'lion', seenOn: '2024-03-12', datePrecision: 'DAY', countryCode: 'KE', photo: null }, created: true, countryCode: 'KE' });
+      oneShotsState.remove = vi.fn().mockResolvedValue();
+      const { panel, click, q } = open({ actions: { ...actions(), refresh } });
+      await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
+      click('tool oneShots');
+      await waitFor(() => expect(panelProps.OneShotsPanel).toBeTruthy());
+      expect(panelProps.OneShotsPanel.canEdit).toBe(true);
+      expect(typeof panelProps.OneShotsPanel.onShareCard).toBe('function');
+      await act(async () => {
+        await panelProps.OneShotsPanel.onSave('lion', { countryCode: 'KE' });
+      });
+      expect(oneShotsState.save).toHaveBeenCalledWith('lion', { countryCode: 'KE' });
+      expect(refresh).toHaveBeenCalled();
+      await waitFor(() => expect(panel('CelebrationDialog')).not.toBeNull());
+      expect(celebration()).toEqual({ kind: 'oneShot', itemKey: 'lion', seenOn: '2024-03-12', datePrecision: 'DAY', countryCode: 'KE', photoUrl: null });
+      act(() => panelProps.CelebrationDialog.onClose());
+
+      oneShotsState.save.mockResolvedValue({ oneShot: { itemKey: 'lion' }, created: false, countryCode: null });
+      await act(async () => {
+        await panelProps.OneShotsPanel.onSave('lion', { notes: 'x' });
+      });
+      expect(panel('CelebrationDialog')).toBeNull();
+      await act(async () => {
+        await panelProps.OneShotsPanel.onRemove('lion');
+      });
+      expect(oneShotsState.remove).toHaveBeenCalledWith('lion');
+    });
+
+    it('opens the One Shots panel at an item from what the page’s context offers (a country’s ticket)', async () => {
+      seenDialogs();
+      oneShotsState.oneShots = [{ itemKey: 'puffin', countryCode: 'IE' }];
+      const { q } = open();
+      await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
+      expect(toolbar.oneShotsHere.oneShots).toEqual([{ itemKey: 'puffin', countryCode: 'IE' }]);
+      act(() => toolbar.oneShotsHere.open('northern-lights'));
+      await waitFor(() => expect(panelProps.OneShotsPanel?.focusKey).toBe('northern-lights'));
+      oneShotsState.oneShots = [];
+    });
+
+    it('gives a viewer nothing to celebrate with', async () => {
+      await withMarks({ role: 'VIEWER' });
+      expect(panelProps.StatsPanel.collected.onToggle).toBeNull();
+      expect(panelProps.StatsPanel.collected.onPhotoStamped).toBeNull();
     });
   });
 });

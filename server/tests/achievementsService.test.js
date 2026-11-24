@@ -18,7 +18,9 @@ const fake = vi.hoisted(() => ({
   findGoals: vi.fn(),
   markGoalsAchieved: vi.fn(),
   continentsByCode: vi.fn(),
+  landmarkTotals: vi.fn(),
   countMapThemesEntered: vi.fn(),
+  findOneShotKeys: vi.fn(),
   badgeProgress: vi.fn(),
   travellerBadges: vi.fn(),
   goalProgress: vi.fn(),
@@ -31,7 +33,13 @@ vi.mock('../src/domain/achievements.js', () =>
 );
 vi.mock('../src/controllers/helpers/countries.js', () => pick('continentsByCode'));
 vi.mock('../src/domain/themes.js', () => pick('countMapThemesEntered'));
-vi.mock('../src/utils/badges.js', () => pick('badgeProgress', 'travellerBadges'));
+vi.mock('../src/domain/oneShots.js', () => pick('findOneShotKeys'));
+vi.mock('../src/controllers/helpers/landmarks.js', () => pick('landmarkTotals'));
+// The rules are faked, but reading a collection's key is the real thing
+vi.mock('../src/utils/badges.js', async (importOriginal) => ({
+  ...pick('badgeProgress', 'travellerBadges'),
+  parseCollectionKey: (await importOriginal()).parseCollectionKey,
+}));
 vi.mock('../src/utils/goals.js', () => pick('goalProgress'));
 
 const { countriesByContinent, stampsFrom, loadMapFacts, mapBadges, goalView, mapGoals, oneGoalView } = await import(
@@ -130,8 +138,12 @@ describe('loadMapFacts', () => {
     fake.findMapSplitUk.mockResolvedValue(true);
     fake.countMapPhotos.mockResolvedValue(12);
     fake.countMapThemesEntered.mockResolvedValue(3);
+    fake.findOneShotKeys.mockResolvedValue(['lion', 'northern-lights']);
 
     const facts = await loadMapFacts('map-1', { includeHidden: true });
+    // Life's One Shots ticked (24 Nov 2026): the badges count them
+    expect(facts.oneShots).toEqual(['lion', 'northern-lights']);
+    expect(fake.findOneShotKeys).toHaveBeenCalledWith('map-1');
     expect(facts.visits).toHaveLength(3);
     expect([...facts.visited]).toEqual(['FR', 'JP']);
     expect(facts.firstVisitAt).toEqual(new Map([['FR', new Date('2019-04-01')], ['JP', new Date('2024-02-02')]]));
@@ -188,6 +200,28 @@ describe('mapBadges', () => {
     expect(result.newlyEarned).toEqual([]);
     expect(result.badges[0].earnedAt).toBeNull();
     expect(fake.findStamps).toHaveBeenCalledWith('map-1', { includeHidden: false });
+  });
+
+  // The country collections (24 Nov 2026): counted against the landmarks of each place, and
+  // still listed for a place whose tier was awarded though its stamps have gone
+  it('counts the collections with the map’s landmark totals, keeping places with a tier awarded', async () => {
+    const totals = new Map([['FR', 8], ['XE', 4]]);
+    fake.landmarkTotals.mockResolvedValue(totals);
+    fake.findMapSplitUk.mockResolvedValue(true);
+    const earnedAt = new Date('2026-11-01T00:00:00Z');
+    fake.findBadgeAwards.mockResolvedValue([{ badgeKey: 'collect-XE-bronze', earnedAt }, { badgeKey: 'countries-1', earnedAt }]);
+    fake.badgeProgress.mockReturnValue([
+      { key: 'collect-XE-bronze', group: 'collections', place: 'XE', tier: 'bronze', have: 0, need: 1, earned: false },
+      { key: 'collect-XE-silver', group: 'collections', place: 'XE', tier: 'silver', have: 0, need: 2, earned: false },
+    ]);
+    const result = await mapBadges('map-1', { award: true });
+    expect(fake.landmarkTotals).toHaveBeenCalledWith(true);
+    expect(fake.badgeProgress).toHaveBeenCalledWith(expect.objectContaining({ landmarkTotals: totals, keepPlaces: ['XE'] }));
+    expect(result.badges).toEqual([
+      { key: 'collect-XE-bronze', group: 'collections', place: 'XE', tier: 'bronze', have: 1, need: 1, earnedAt },
+      { key: 'collect-XE-silver', group: 'collections', place: 'XE', tier: 'silver', have: 0, need: 2, earnedAt: null },
+    ]);
+    expect(fake.createBadgeAwards).not.toHaveBeenCalled();
   });
 
   it("lists each traveller's badges from the trips they were on, dated only once earned", async () => {

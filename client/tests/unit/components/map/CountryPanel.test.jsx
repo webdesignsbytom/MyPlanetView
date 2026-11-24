@@ -124,6 +124,26 @@ describe('CountryPanel', () => {
     expect(onSetVisit).toHaveBeenLastCalledWith('FR', 'VISITED', { firstVisitedOn: null });
   });
 
+  // The map page celebrates a first visit (24 Nov 2026): it hears of each new status saved here
+  it('tells the map page of a status saved from the ticket, with what it was before', async () => {
+    const onVisitMarked = vi.fn();
+    const { ticket, onSetVisit } = open({ canEdit: true, visit: { status: 'WANT_TO_GO', firstVisitedOn: null }, onVisitMarked });
+    fireEvent.change(ticket.querySelector('aside select'), { target: { value: 'VISITED' } });
+    await waitFor(() => expect(onVisitMarked).toHaveBeenCalledWith('FR', 'WANT_TO_GO', 'VISITED', null));
+    expect(onSetVisit).toHaveBeenCalledTimes(1);
+  });
+
+  it('tells it nothing when only the date changes, or the save fails', async () => {
+    const onVisitMarked = vi.fn();
+    const { ticket, onSetVisit } = open({ canEdit: true, visit: { status: 'VISITED', firstVisitedOn: '2018-07-14' }, onVisitMarked });
+    fireEvent.click(screen.getByText('Clear date'));
+    await waitFor(() => expect(onSetVisit).toHaveBeenCalledTimes(1));
+    onSetVisit.mockRejectedValue(new Error('offline'));
+    fireEvent.change(ticket.querySelector('aside select'), { target: { value: 'LIVED' } });
+    await waitFor(() => expect(ticket.querySelector('[role="alert"]')).not.toBeNull());
+    expect(onVisitMarked).not.toHaveBeenCalled();
+  });
+
   it('says why a status didn’t save', async () => {
     const { ticket, onSetVisit } = open({ canEdit: true });
     onSetVisit.mockRejectedValue(Object.assign(new Error('x'), { friendlyMessage: 'Offline.' }));
@@ -311,6 +331,7 @@ describe('CountryPanel', () => {
     fireEvent.click(screen.getByLabelText('England'));
     fireEvent.click(screen.getByText('Save'));
     await waitFor(() => expect(onClose).toHaveBeenCalled());
+    // (Splitting an old mark is no first visit: nothing to celebrate)
     expect(onSetVisit.mock.calls).toEqual([
       // Scotland, the first ticked: lived there already (never lowered), gets the note and the earlier date
       ['XC', 'LIVED', { notes: 'Edinburgh\n\nLondon calling', firstVisitedOn: '2010-05-05' }],

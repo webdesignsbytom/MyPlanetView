@@ -358,6 +358,11 @@ function buildBaseSeed() {
       },
     ],
     // The flight log (docs/API.md "Flights"): the Italian summer's two flights
+    // Life's One Shots (24 Nov 2026): a puffin off Ireland and New England's autumn colours
+    oneShots: [
+      { id: 'oneshot-puffin', mapId: homeMap, itemKey: 'puffin', seenOn: '2013-06-01', datePrecision: 'MONTH', countryCode: 'IE', photoId: null, notes: 'On the Skelligs', source: 'MANUAL', travellerIds: ['trav-test'], createdById: USER_ID, createdAt: daysAgo(60) },
+      { id: 'oneshot-autumn', mapId: homeMap, itemKey: 'autumn-colours', seenOn: '2014-10-01', datePrecision: 'MONTH', countryCode: 'US', photoId: null, notes: null, source: 'MANUAL', travellerIds: ['trav-test', 'trav-alex'], createdById: USER_ID, createdAt: daysAgo(59) },
+    ],
     flights: [
       { id: 'flight-rome-out', mapId: homeMap, tripId: italyTrip, from: 'LHR', to: 'FCO', flownOn: '2025-07-02', carrier: 'BA', flightNumber: '548', distanceKm: 1444, source: 'BOARDING_PASS', createdById: USER_ID, createdAt: daysAgo(140) },
       { id: 'flight-pisa-home', mapId: homeMap, tripId: italyTrip, from: 'PSA', to: 'LGW', flownOn: '2025-07-16', carrier: 'U2', flightNumber: '8148', distanceKm: 1148, source: 'MANUAL', createdById: USER_ID, createdAt: daysAgo(139) },

@@ -31,6 +31,7 @@ import { registerMapStringRoutes } from '@/dev/mock/handlers/mapStrings';
 import { registerReferralRoutes } from '@/dev/mock/handlers/referrals';
 import { registerGuessGameRoutes } from '@/dev/mock/handlers/guessGames';
 import { registerFlightRoutes } from '@/dev/mock/handlers/flights';
+import { registerOneShotRoutes } from '@/dev/mock/handlers/oneShots';
 
 // The seeded people and maps (seed.js, seedFirstClass.js)
 export const USER = 'mock-user';
@@ -81,6 +82,7 @@ export function registerAllRoutes() {
   registerReferralRoutes();
   registerGuessGameRoutes();
   registerFlightRoutes();
+  registerOneShotRoutes();
 }
 
 /** A freshly seeded store, signed in as the test user (verified), nothing uploaded. */

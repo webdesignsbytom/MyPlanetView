@@ -127,6 +127,42 @@ describe('BadgesGoalsPanel', { timeout: 20000 }, () => {
     expect(container.querySelector('footer')).toBeNull();
   });
 
+  // The country collections (24 Nov 2026): their own group on the suitcase, a medal to share
+  describe('the country collections', () => {
+    const withCollections = (extra = {}) =>
+      achievementsWith({
+        badges: [
+          ...BADGES,
+          { key: 'collect-MT-bronze', group: 'collections', place: 'MT', tier: 'bronze', have: 1, need: 1, earnedAt: '2026-11-24' },
+          { key: 'collect-MT-silver', group: 'collections', place: 'MT', tier: 'silver', have: 1, need: 2, earnedAt: null },
+          { key: 'collect-MT-gold', group: 'collections', place: 'MT', tier: 'gold', have: 1, need: 3, earnedAt: null },
+        ],
+        ...extra,
+      });
+
+    it('shows a place’s medals under Country collections, and shares the best one', () => {
+      const onShareCollection = vi.fn();
+      const { container } = open({ achievements: withCollections(), onShareCollection });
+      expect(screen.getByRole('heading', { name: 'Country collections' })).toBeTruthy();
+      expect(container.querySelector('[data-collection="MT"]').textContent).toContain('1 of 3 landmarks stamped');
+      fireEvent.click(screen.getByRole('button', { name: 'Share your bronze medal for Malta' }));
+      expect(onShareCollection).toHaveBeenCalledWith(expect.objectContaining({ place: 'MT', best: 'bronze' }));
+    });
+
+    it('offers no sharing through a share link, nor on one traveller’s badges', () => {
+      const shared = open({ achievements: withCollections() });
+      expect(screen.queryByRole('button', { name: /^Share your/ })).toBeNull();
+      shared.unmount();
+      const travellers = [
+        { id: 't-1', name: 'Charlie', badges: [{ key: 'countries-1', group: 'countries', earned: true, earnedOn: '2025-07-04' }] },
+        { id: 't-2', name: 'Alex', badges: [] },
+      ];
+      open({ perPerson: true, achievements: withCollections({ travellers }), onShareCollection: vi.fn() });
+      fireEvent.click(screen.getByText('Charlie'));
+      expect(screen.queryByRole('heading', { name: 'Country collections' })).toBeNull();
+    });
+  });
+
   describe('a family’s badges per person', () => {
     const travellers = [
       { id: 't-1', name: 'Charlie', badges: [{ key: 'countries-1', group: 'countries', earned: true, earnedOn: '2025-07-04' }] },

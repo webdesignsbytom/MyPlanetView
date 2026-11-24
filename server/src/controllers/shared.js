@@ -18,6 +18,7 @@ import { adsFor } from '../services/offers.js';
 import { buildPassport } from '../services/travel/passport.js';
 import { travellerOption } from './passport.js';
 import { mapBadges, mapGoals } from '../services/travel/achievements.js';
+import { mapOneShots } from '../services/travel/oneShots.js';
 import { mapThemesView, themeAlbumPage } from './themes.js';
 import { countryMapOf, pinDetail, pinList, subdivisionStatuses } from './countryMaps.js';
 
@@ -180,6 +181,15 @@ export const getSharedPassportHandler = handler(D, 'Open share link passport', a
   if (!passport) return notFound(req, res, D, EVENT_MESSAGES.shareCodeNotFound);
   if (passport.travellerNotFound) return notFound(req, res, D, EVENT_MESSAGES.travellerNotFound);
   return sendDataResponse(res, 200, { passport });
+});
+
+// Life's One Shots through a map's link (docs/API.md "Life's One Shots"): the ticks, never
+// a hidden photo, and no suggestions (nothing to tick here)
+export const getSharedOneShotsHandler = handler(D, 'Open share link one shots', async (req, res) => {
+  const shared = await sharedMap(req, res);
+  if (!shared) return undefined;
+  const { oneShots } = await mapOneShots(shared.map.id, { editor: false });
+  return sendDataResponse(res, 200, { oneShots, suggestions: [] });
 });
 
 export const getSharedBadgesHandler = handler(D, 'Open share link badges', async (req, res) => {

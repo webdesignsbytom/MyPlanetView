@@ -1,0 +1,8 @@
+{
+  "name": "Durham Cathedral",
+  "latitude": 54.77472,
+  "longitude": -1.57611,
+  "maps": ["GB", "XE"],
+  "landmark": "Q15732525",
+  "onMap": false
+}

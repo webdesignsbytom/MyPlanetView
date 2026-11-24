@@ -29,7 +29,7 @@ export function fakeContext(canvas = null) {
     getImageData: () => ({ data: [0, 0, 0, 255] }),
   };
   const record = (name) => (...args) => calls.push({ name, args, fillStyle: ctx.fillStyle, strokeStyle: ctx.strokeStyle, font: ctx.font });
-  for (const name of ['save', 'restore', 'beginPath', 'rect', 'clip', 'fillRect', 'strokeRect', 'translate', 'scale', 'fill', 'stroke', 'arc', 'fillText', 'setLineDash', 'drawImage']) {
+  for (const name of ['save', 'restore', 'beginPath', 'rect', 'clip', 'fillRect', 'strokeRect', 'translate', 'scale', 'fill', 'stroke', 'arc', 'fillText', 'setLineDash', 'drawImage', 'moveTo', 'lineTo', 'closePath']) {
     ctx[name] = vi.fn(record(name));
   }
   return ctx;

@@ -71,6 +71,38 @@ test.describe('Badges and goals', () => {
     await expect(again.getByRole('article', { name: 'Ten countries by the end of 2027' })).toContainText('9 of 10 countries');
   });
 
+  // The country collections (24 Nov 2026, the user's wish): bronze, silver and gold for a
+  // quarter, half and all of a country's landmarks stamped, each medal shared as a picture
+  test('a country’s landmarks earn its medals, shown on the suitcase and shared as a picture', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    const list = await openTool(page, 'Country list', 'Countries');
+    await list.getByRole('button', { name: 'Malta', exact: true }).click();
+    const malta = page.getByRole('dialog', { name: 'Malta' });
+    // Malta has three landmarks: bronze at one, silver at two, gold at three
+    const boxes = malta.getByRole('checkbox', { name: /^Been to / });
+    await expect(boxes).toHaveCount(3);
+    await boxes.nth(0).check();
+    await expect(page.getByRole('status').filter({ hasText: 'Bronze for Malta' })).toBeVisible();
+    await boxes.nth(1).check();
+    const news = page.getByRole('status').filter({ hasText: 'Silver for Malta' });
+    await expect(news).toBeVisible();
+    await news.getByRole('button', { name: 'See badges and goals' }).click();
+
+    const panel = page.getByRole('dialog', { name: 'Badges and goals' });
+    await expect(panel.getByRole('heading', { name: 'Country collections' })).toBeVisible();
+    const row = panel.locator('[data-collection="MT"]');
+    await expect(row).toContainText('2 of 3 landmarks stamped');
+    await expect(row.locator('[data-medal="bronze"]')).toContainText(/Earned \d+ \w+ \d{4}/);
+    await expect(row.locator('[data-medal="silver"]')).toContainText(/Earned/);
+    await expect(row.locator('[data-medal="gold"]')).toContainText('2 of 3');
+
+    // The best medal as a picture to post
+    await row.getByRole('button', { name: 'Share your silver medal for Malta' }).click();
+    const card = page.getByRole('dialog', { name: 'Share your medal' });
+    await expect(card.locator('[data-share-card]')).toHaveAccessibleName('Your share card: Malta, 2 landmarks stamped, 3 landmarks in Malta');
+    await expect(card.getByRole('button', { name: /^(Share|Save the picture)$/ }).first()).toBeEnabled();
+  });
+
   test('a goal is changed and deleted, and a bucket list starts from the “want to go” countries', async ({ page }) => {
     await openMap(page);
     const panel = await openTool(page, 'Badges and goals', 'Badges and goals');

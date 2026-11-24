@@ -209,6 +209,20 @@ function mapView(map) {
       .filter((v) => v.mapId === map.id)
       .map((v) => ({ landmarkId: v.landmarkId, name: landmarkById(v.landmarkId)?.name ?? null, countryCode: landmarkById(v.landmarkId)?.countryCode ?? null, since: iso(v.createdAt) })),
     strings: (db.mapStrings || []).filter((s) => s.mapId === map.id).map((s) => ({ from: s.from, to: s.to, since: iso(s.createdAt) })),
+    // Life's One Shots ticked (as the server's utils/dataExport.js)
+    oneShots: (db.oneShots || [])
+      .filter((o) => o.mapId === map.id)
+      .map((o) => ({
+        item: o.itemKey,
+        seenOn: o.seenOn,
+        datePrecision: o.datePrecision,
+        countryCode: o.countryCode,
+        notes: o.notes,
+        source: o.source,
+        photoId: o.photoId,
+        travellerIds: [...(o.travellerIds || [])],
+        ticked: iso(o.createdAt),
+      })),
     photoCount: db.photos.filter((p) => p.mapId === map.id).length,
   };
 }

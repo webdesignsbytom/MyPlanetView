@@ -146,6 +146,11 @@ const CASES = [
   ['clearStampPhoto', () => travelApi.clearStampPhoto('m1', 'l1'), 'delete', ['/api/maps/m1/passport/stamps/l1/photo']],
   ['getBadges', () => travelApi.getBadges({ mapId: 'm1' }), 'get', ['/api/maps/m1/badges']],
   ['getBadges', () => travelApi.getBadges({ shareCode: 'ABC' }), 'get', ['/api/shared/ABC/badges']],
+  // Life's One Shots (24 Nov 2026)
+  ['getOneShots', () => travelApi.getOneShots({ mapId: 'm1' }), 'get', ['/api/maps/m1/one-shots']],
+  ['getOneShots', () => travelApi.getOneShots({ shareCode: 'ABC' }), 'get', ['/api/shared/ABC/one-shots']],
+  ['saveOneShot', () => travelApi.saveOneShot('m1', 'lion', { countryCode: 'KE' }), 'put', ['/api/maps/m1/one-shots/lion', { countryCode: 'KE' }]],
+  ['deleteOneShot', () => travelApi.deleteOneShot('m1', 'lion'), 'delete', ['/api/maps/m1/one-shots/lion']],
   ['getGoals', () => travelApi.getGoals({ mapId: 'm1' }), 'get', ['/api/maps/m1/goals']],
   ['getGoals', () => travelApi.getGoals({ shareCode: 'ABC' }), 'get', ['/api/shared/ABC/goals']],
   ['createGoal', () => travelApi.createGoal('m1', body), 'post', ['/api/maps/m1/goals', body]],

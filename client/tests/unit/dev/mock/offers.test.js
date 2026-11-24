@@ -76,13 +76,15 @@ describe('clickContext', () => {
 describe('offerClick', () => {
   it('counts the click in today’s tally for its placement and fills in the link', () => {
     const now = new Date('2026-11-23T10:00:00Z');
+    // The seed's example clicks are dated from the real today, so that day may have some already
+    const tally = () => db().offerClicks.find((r) => r.offerId === exampleOfferId(0) && r.day === '2026-11-23' && r.placement === 'GALLERY')?.count ?? 0;
+    const before = tally();
     const answer = offerClick(exampleOfferId(0), { p: 'GALLERY', country: 'ES', dest: 'Seville' }, now);
     expect(answer.status).toBe(302);
     expect(answer.location).toContain('country=ES');
     expect(answer.location).toContain('q=Seville');
     offerClick(exampleOfferId(0), { p: 'GALLERY' }, now);
-    const row = db().offerClicks.find((r) => r.offerId === exampleOfferId(0) && r.day === '2026-11-23' && r.placement === 'GALLERY');
-    expect(row.count).toBe(2);
+    expect(tally()).toBe(before + 2);
   });
 
   it('follows a click with no known placement without counting it', () => {

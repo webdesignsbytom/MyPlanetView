@@ -55,6 +55,11 @@ export const ShareDialog = lazyPanel(() => import('@/components/sharing/ShareDia
 export const ExtraMapDialog = lazyPanel(() => import('@/components/plans/ExtraMapDialog'));
 // The tips the map opens with, once a visit (fetched as the loading screen lifts)
 export const MapTipsDialog = lazyPanel(() => import('./MapTipsDialog'));
+// The celebration of a landmark's first stamp or a country's first visit (fetched when one
+// happens: the save it follows takes longer)
+export const CelebrationDialog = lazyPanel(() => import('./celebration/CelebrationDialog'));
+// Life's One Shots: wildlife, nature's wonders, journeys and feats (docs/API.md "Life's One Shots")
+export const OneShotsPanel = lazyPanel(() => import('@/components/oneShots/OneShotsPanel'));
 // A picture of the map to share (utils/shareCard/)
 export const ShareCardDialog = lazyPanel(() => import('@/components/shareCard/ShareCardDialog'));
 // "Where have you been?": ticking many countries at once (the first time a map loads, or the country list)
@@ -81,7 +86,8 @@ export const PinPanel = lazyPanel(() => import('@/components/countryMap/PinPanel
 // warms up the country panel, as picking a country is what it's for.
 const FOR_TOOL = {
   stats: [StatsPanel],
-  countries: [CountryListPanel, CountryPanel],
+  // A country's ticket can celebrate (a first visit, a landmark's first stamp)
+  countries: [CountryListPanel, CountryPanel, CelebrationDialog],
   trips: [TripsPanel],
   // A place there opens its country
   next: [WhereNextPanel, CountryPanel],
@@ -95,6 +101,8 @@ const FOR_TOOL = {
   settings: [SettingsPanel],
   switcher: [MapSwitcher],
   badges: [BadgesGoalsPanel],
+  // A first tick is celebrated
+  oneShots: [OneShotsPanel, CelebrationDialog],
   play: [Slideshow],
   tips: [MapTipsDialog],
 };

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // Icons
 import { IoContract, IoExpand, IoHome, IoMap, IoMenu, IoSettings, IoShareSocial } from 'react-icons/io5';
 import { IoIosImages, IoIosStats } from 'react-icons/io';
-import { FaCompass, FaHistory, FaLightbulb, FaListOl, FaPlay, FaRoute, FaSuitcase, FaThumbtack } from 'react-icons/fa';
+import { FaBinoculars, FaCompass, FaHistory, FaLightbulb, FaListOl, FaPlay, FaRoute, FaSuitcase, FaThumbtack } from 'react-icons/fa';
 // Constants
 import { HOME_PAGE_URL } from '@/utils/constants/routes';
 // Hooks
@@ -241,6 +241,8 @@ function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false
     ...(canString ? [{ id: 'strings', label: 'Strings', icon: <FaThumbtack aria-hidden='true' /> }] : []),
     { id: 'timeline', label: 'Timeline', icon: <FaHistory aria-hidden='true' /> },
     { id: 'badges', label: 'Badges and goals', icon: <FaSuitcase aria-hidden='true' /> },
+    // Wildlife seen, nature's wonders, journeys and feats (24 Nov 2026, the user's wish and name)
+    { id: 'oneShots', label: 'Life’s One Shots', icon: <FaBinoculars aria-hidden='true' /> },
     { id: 'play', label: 'Play my world', icon: <FaPlay aria-hidden='true' /> },
     // The map's photos, for everyone who can see the map (16 Nov 2026: it was "Add photos",
     // editors only); an editor adds photos from the panel's own button

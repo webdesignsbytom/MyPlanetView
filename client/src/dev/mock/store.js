@@ -68,6 +68,8 @@ export function loadStore() {
   if (!Array.isArray(db.planGrants)) db.planGrants = [];
   // Landmarks ticked "been here" (docs/API.md "Collecting"): { mapId, landmarkId, createdAt }
   if (!Array.isArray(db.landmarkVisits)) db.landmarkVisits = [];
+  // Life's One Shots (24 Nov 2026): a store from before them gets the seed's
+  if (!Array.isArray(db.oneShots)) db.oneShots = buildSeed().oneShots;
   // Strings between places (docs/API.md "Strings"): { id, mapId, from, to, createdAt }
   if (!Array.isArray(db.mapStrings)) db.mapStrings = [];
   // "Guess where I was" (docs/API.md): the seed's game in a store saved before it, and its plays

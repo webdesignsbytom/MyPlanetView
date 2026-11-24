@@ -17,6 +17,7 @@ import MapActionButton from './MapActionButton';
 import VisitStatusSelect from './VisitStatusSelect';
 import FirstVisitDateField from './FirstVisitDateField';
 import CountryLandmarks from './CountryLandmarks';
+import OneShotsHere from '@/components/oneShots/OneShotsHere';
 import { ExpeditionStampIcon, PlaceBadgeIcon } from './StarBadge';
 import VerifyFirstNote from './VerifyFirstNote';
 import UkNationsPrompt from './UkNationsPrompt';
@@ -78,6 +79,9 @@ const momentsClosedForVisit = () => {
 // Planned trips (22 Nov 2026, the user's wish): `plannedTrips` are the trips planned to it
 // (utils/trips/plannedTrips.js; none through a share link), and an editor's "Plan a trip"
 // (`onPlanTrip(code)`) starts one with it as the first stop.
+// `onVisitMarked(code, before, status, firstVisitedOn)`: the ticket's own status control
+// saved a new status (the map page celebrates a first visit; 24 Nov 2026), never the UK's
+// nations prompt.
 function CountryPanel({
   code,
   visit,
@@ -86,6 +90,7 @@ function CountryPanel({
   canEdit,
   locked = false,
   onSetVisit,
+  onVisitMarked = null,
   photoSource,
   photosVersion,
   onOpenPhoto,
@@ -209,6 +214,7 @@ function CountryPanel({
     setError(null);
     try {
       await onSetVisit(code, nextStatus, extra);
+      if (nextStatus !== status) onVisitMarked?.(code, status, nextStatus, extra?.firstVisitedOn ?? visit?.firstVisitedOn ?? null);
     } catch (err) {
       setError(err.friendlyMessage || 'That change could not be saved.');
     } finally {
@@ -459,6 +465,8 @@ function CountryPanel({
 
       {/* A region's: its country's landmarks inside it (useLandmarks) */}
       <CountryLandmarks countryCode={code} moments={parent ? [] : moments.moments} />
+      {/* Life's One Shots seen here, and still to see (24 Nov 2026) */}
+      <OneShotsHere code={code} countryName={country.name} />
     </CountryTicket>
   );
 }

@@ -226,10 +226,10 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
         });
       apply(been);
       try {
-        if (been) {
-          await tickLandmark(mapId, landmarkId);
-          refresh();
-        } else await untickLandmark(mapId, landmarkId);
+        // The server's answer: `countryCode`, the place a tick marked visited
+        const answer = been ? await tickLandmark(mapId, landmarkId) : await untickLandmark(mapId, landmarkId);
+        if (been) refresh();
+        return answer;
       } catch (err) {
         apply(!been);
         throw err;

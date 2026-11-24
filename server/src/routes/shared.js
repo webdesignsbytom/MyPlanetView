@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getSharedBadgesHandler,
+  getSharedOneShotsHandler,
   getSharedCountryListsHandler,
   getSharedGoalsHandler,
   getSharedHandler,
@@ -43,6 +44,7 @@ router.get('/:code/moments', failedLookupLimiter, shareBrowseLimiter, getSharedM
 router.get('/:code/country-lists', failedLookupLimiter, shareBrowseLimiter, getSharedCountryListsHandler);
 router.get('/:code/passport', failedLookupLimiter, shareBrowseLimiter, getSharedPassportHandler);
 router.get('/:code/badges', failedLookupLimiter, shareBrowseLimiter, getSharedBadgesHandler);
+router.get('/:code/one-shots', failedLookupLimiter, shareBrowseLimiter, getSharedOneShotsHandler);
 router.get('/:code/goals', failedLookupLimiter, shareBrowseLimiter, getSharedGoalsHandler);
 router.get('/:code/themes', failedLookupLimiter, shareBrowseLimiter, getSharedThemesHandler);
 router.get('/:code/themes/:themeId/photos', failedLookupLimiter, shareBrowseLimiter, getSharedThemeAlbumHandler);

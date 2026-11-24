@@ -1,0 +1,8 @@
+{
+  "name": "Royal Observatory, Greenwich",
+  "latitude": 51.47778,
+  "longitude": 0.0,
+  "maps": ["GB", "XE"],
+  "landmark": "Q16921416",
+  "onMap": false
+}

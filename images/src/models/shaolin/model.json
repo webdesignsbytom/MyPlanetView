@@ -1,0 +1,8 @@
+{
+  "name": "Shaolin Temple",
+  "latitude": 34.45875,
+  "longitude": 113.06772,
+  "maps": ["CN"],
+  "landmark": "Q5934942",
+  "onMap": false
+}

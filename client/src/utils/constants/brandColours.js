@@ -28,6 +28,14 @@ export const SHARE_CARD_COLOURS = Object.freeze({
   ice: '#f4f9ff',
   iceEdge: '#8fb3d1',
   visits: Object.freeze(['#f0f038', '#0eb4a6', '#d8845a', '#ff6d6a', '#73b76a', '#b1a2ca', '#da92be']),
+  // A country collection's medal (24 Nov 2026): each metal's face and rim, as the tokens'
+  // --medal-* (index.css), and the ribbon's two straps
+  medals: Object.freeze({
+    bronze: Object.freeze({ face: '#c8874f', rim: '#7a4520' }),
+    silver: Object.freeze({ face: '#c3c8cf', rim: '#646b74' }),
+    gold: Object.freeze({ face: '#e3b53d', rim: '#8a6a12' }),
+  }),
+  ribbon: Object.freeze(['#991b1b', '#ef4444']),
 });
 
 // The map poster's two looks (utils/poster/drawMapPoster.js; 22 Nov 2026), fixed for print

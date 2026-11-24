@@ -262,10 +262,13 @@ describe('useTravelMap: landmarks, travellers and trips', () => {
     expect(api.tickLandmark).toHaveBeenCalledWith('m1', 'l1');
     // A tick can mark its country visited: the map is read again
     api.getMap.mockResolvedValue({ map: mapOf('m1', { tickedLandmarkIds: ['l1'], visits: [visit('FR'), visit('IT')] }) });
+    let answer;
     await act(async () => {
-      ticking.resolve({});
-      await tick;
+      ticking.resolve({ landmarkId: 'l1', been: true, countryCode: 'IT' });
+      answer = await tick;
     });
+    // The server's answer comes back: the place it marked (the celebration's "on your map now")
+    expect(answer).toEqual({ landmarkId: 'l1', been: true, countryCode: 'IT' });
     await waitFor(() => expect(api.getMap.mock.calls.length).toBe(reads + 1));
     await waitFor(() => expect(codes(result).IT).toBe('VISITED'));
   });

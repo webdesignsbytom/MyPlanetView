@@ -8,22 +8,44 @@
 // its height in pixels. `landmark` is the Wikidata item of the
 // landmark it belongs to. `onMap: false` (only written then) marks a model the maps don't draw:
 // a more famous one's picture would overlap it (utils/map/landmarkModelSize.js modelsOnMap).
+import aachenCathedral160 from '@/assets/map/landmarkModels/aachen-cathedral-160.webp';
+import aachenCathedral320 from '@/assets/map/landmarkModels/aachen-cathedral-320.webp';
 import abomey160 from '@/assets/map/landmarkModels/abomey-160.webp';
 import abomey320 from '@/assets/map/landmarkModels/abomey-320.webp';
 import abuSimbel160 from '@/assets/map/landmarkModels/abu-simbel-160.webp';
 import abuSimbel320 from '@/assets/map/landmarkModels/abu-simbel-320.webp';
+import acre160 from '@/assets/map/landmarkModels/acre-160.webp';
+import acre320 from '@/assets/map/landmarkModels/acre-320.webp';
 import agadez160 from '@/assets/map/landmarkModels/agadez-160.webp';
 import agadez320 from '@/assets/map/landmarkModels/agadez-320.webp';
+import agraFort160 from '@/assets/map/landmarkModels/agra-fort-160.webp';
+import agraFort320 from '@/assets/map/landmarkModels/agra-fort-320.webp';
+import agrigento160 from '@/assets/map/landmarkModels/agrigento-160.webp';
+import agrigento320 from '@/assets/map/landmarkModels/agrigento-320.webp';
 import aitBenhaddou160 from '@/assets/map/landmarkModels/ait-benhaddou-160.webp';
 import aitBenhaddou320 from '@/assets/map/landmarkModels/ait-benhaddou-320.webp';
+import ajanta160 from '@/assets/map/landmarkModels/ajanta-160.webp';
+import ajanta320 from '@/assets/map/landmarkModels/ajanta-320.webp';
+import aksum160 from '@/assets/map/landmarkModels/aksum-160.webp';
+import aksum320 from '@/assets/map/landmarkModels/aksum-320.webp';
 import alZubarah160 from '@/assets/map/landmarkModels/al-zubarah-160.webp';
 import alZubarah320 from '@/assets/map/landmarkModels/al-zubarah-320.webp';
 import alaArcha160 from '@/assets/map/landmarkModels/ala-archa-160.webp';
 import alaArcha320 from '@/assets/map/landmarkModels/ala-archa-320.webp';
+import alamo160 from '@/assets/map/landmarkModels/alamo-160.webp';
+import alamo320 from '@/assets/map/landmarkModels/alamo-320.webp';
+import albi160 from '@/assets/map/landmarkModels/albi-160.webp';
+import albi320 from '@/assets/map/landmarkModels/albi-320.webp';
+import aleppoCitadel160 from '@/assets/map/landmarkModels/aleppo-citadel-160.webp';
+import aleppoCitadel320 from '@/assets/map/landmarkModels/aleppo-citadel-320.webp';
 import alhambra160 from '@/assets/map/landmarkModels/alhambra-160.webp';
 import alhambra320 from '@/assets/map/landmarkModels/alhambra-320.webp';
 import amalfiCoast160 from '@/assets/map/landmarkModels/amalfi-coast-160.webp';
 import amalfiCoast320 from '@/assets/map/landmarkModels/amalfi-coast-320.webp';
+import amberFort160 from '@/assets/map/landmarkModels/amber-fort-160.webp';
+import amberFort320 from '@/assets/map/landmarkModels/amber-fort-320.webp';
+import amiensCathedral160 from '@/assets/map/landmarkModels/amiens-cathedral-160.webp';
+import amiensCathedral320 from '@/assets/map/landmarkModels/amiens-cathedral-320.webp';
 import amsterdamCanals160 from '@/assets/map/landmarkModels/amsterdam-canals-160.webp';
 import amsterdamCanals320 from '@/assets/map/landmarkModels/amsterdam-canals-320.webp';
 import angelFalls160 from '@/assets/map/landmarkModels/angel-falls-160.webp';
@@ -32,30 +54,60 @@ import angkorWat160 from '@/assets/map/landmarkModels/angkor-wat-160.webp';
 import angkorWat320 from '@/assets/map/landmarkModels/angkor-wat-320.webp';
 import antiguaGuatemala160 from '@/assets/map/landmarkModels/antigua-guatemala-160.webp';
 import antiguaGuatemala320 from '@/assets/map/landmarkModels/antigua-guatemala-320.webp';
+import anuradhapura160 from '@/assets/map/landmarkModels/anuradhapura-160.webp';
+import anuradhapura320 from '@/assets/map/landmarkModels/anuradhapura-320.webp';
+import aphrodisias160 from '@/assets/map/landmarkModels/aphrodisias-160.webp';
+import aphrodisias320 from '@/assets/map/landmarkModels/aphrodisias-320.webp';
+import arlesArena160 from '@/assets/map/landmarkModels/arles-arena-160.webp';
+import arlesArena320 from '@/assets/map/landmarkModels/arles-arena-320.webp';
+import assisi160 from '@/assets/map/landmarkModels/assisi-160.webp';
+import assisi320 from '@/assets/map/landmarkModels/assisi-320.webp';
+import avignon160 from '@/assets/map/landmarkModels/avignon-160.webp';
+import avignon320 from '@/assets/map/landmarkModels/avignon-320.webp';
+import avila160 from '@/assets/map/landmarkModels/avila-160.webp';
+import avila320 from '@/assets/map/landmarkModels/avila-320.webp';
 import ayutthaya160 from '@/assets/map/landmarkModels/ayutthaya-160.webp';
 import ayutthaya320 from '@/assets/map/landmarkModels/ayutthaya-320.webp';
 import baalbek160 from '@/assets/map/landmarkModels/baalbek-160.webp';
 import baalbek320 from '@/assets/map/landmarkModels/baalbek-320.webp';
+import babMansour160 from '@/assets/map/landmarkModels/bab-mansour-160.webp';
+import babMansour320 from '@/assets/map/landmarkModels/bab-mansour-320.webp';
+import babylon160 from '@/assets/map/landmarkModels/babylon-160.webp';
+import babylon320 from '@/assets/map/landmarkModels/babylon-320.webp';
 import bagan160 from '@/assets/map/landmarkModels/bagan-160.webp';
 import bagan320 from '@/assets/map/landmarkModels/bagan-320.webp';
+import bagerhat160 from '@/assets/map/landmarkModels/bagerhat-160.webp';
+import bagerhat320 from '@/assets/map/landmarkModels/bagerhat-320.webp';
 import bahaiGardens160 from '@/assets/map/landmarkModels/bahai-gardens-160.webp';
 import bahaiGardens320 from '@/assets/map/landmarkModels/bahai-gardens-320.webp';
 import bahlaFort160 from '@/assets/map/landmarkModels/bahla-fort-160.webp';
 import bahlaFort320 from '@/assets/map/landmarkModels/bahla-fort-320.webp';
 import baliSubak160 from '@/assets/map/landmarkModels/bali-subak-160.webp';
 import baliSubak320 from '@/assets/map/landmarkModels/bali-subak-320.webp';
+import bamCitadel160 from '@/assets/map/landmarkModels/bam-citadel-160.webp';
+import bamCitadel320 from '@/assets/map/landmarkModels/bam-citadel-320.webp';
+import bamberg160 from '@/assets/map/landmarkModels/bamberg-160.webp';
+import bamberg320 from '@/assets/map/landmarkModels/bamberg-320.webp';
+import bamiyan160 from '@/assets/map/landmarkModels/bamiyan-160.webp';
+import bamiyan320 from '@/assets/map/landmarkModels/bamiyan-320.webp';
 import banaue160 from '@/assets/map/landmarkModels/banaue-160.webp';
 import banaue320 from '@/assets/map/landmarkModels/banaue-320.webp';
+import batalha160 from '@/assets/map/landmarkModels/batalha-160.webp';
+import batalha320 from '@/assets/map/landmarkModels/batalha-320.webp';
 import bath160 from '@/assets/map/landmarkModels/bath-160.webp';
 import bath320 from '@/assets/map/landmarkModels/bath-320.webp';
 import belemTower160 from '@/assets/map/landmarkModels/belem-tower-160.webp';
 import belemTower320 from '@/assets/map/landmarkModels/belem-tower-320.webp';
+import biertan160 from '@/assets/map/landmarkModels/biertan-160.webp';
+import biertan320 from '@/assets/map/landmarkModels/biertan-320.webp';
 import bigBen160 from '@/assets/map/landmarkModels/big-ben-160.webp';
 import bigBen320 from '@/assets/map/landmarkModels/big-ben-320.webp';
 import bijagos160 from '@/assets/map/landmarkModels/bijagos-160.webp';
 import bijagos320 from '@/assets/map/landmarkModels/bijagos-320.webp';
 import bikiniAtoll160 from '@/assets/map/landmarkModels/bikini-atoll-160.webp';
 import bikiniAtoll320 from '@/assets/map/landmarkModels/bikini-atoll-320.webp';
+import blenheim160 from '@/assets/map/landmarkModels/blenheim-160.webp';
+import blenheim320 from '@/assets/map/landmarkModels/blenheim-320.webp';
 import blueMountains160 from '@/assets/map/landmarkModels/blue-mountains-160.webp';
 import blueMountains320 from '@/assets/map/landmarkModels/blue-mountains-320.webp';
 import bockCasemates160 from '@/assets/map/landmarkModels/bock-casemates-160.webp';
@@ -66,6 +118,8 @@ import bonaireSaltPans160 from '@/assets/map/landmarkModels/bonaire-salt-pans-16
 import bonaireSaltPans320 from '@/assets/map/landmarkModels/bonaire-salt-pans-320.webp';
 import borobudur160 from '@/assets/map/landmarkModels/borobudur-160.webp';
 import borobudur320 from '@/assets/map/landmarkModels/borobudur-320.webp';
+import bosra160 from '@/assets/map/landmarkModels/bosra-160.webp';
+import bosra320 from '@/assets/map/landmarkModels/bosra-320.webp';
 import botanicGardens160 from '@/assets/map/landmarkModels/botanic-gardens-160.webp';
 import botanicGardens320 from '@/assets/map/landmarkModels/botanic-gardens-320.webp';
 import boudhanath160 from '@/assets/map/landmarkModels/boudhanath-160.webp';
@@ -76,6 +130,8 @@ import brandenburgGate160 from '@/assets/map/landmarkModels/brandenburg-gate-160
 import brandenburgGate320 from '@/assets/map/landmarkModels/brandenburg-gate-320.webp';
 import brasilia160 from '@/assets/map/landmarkModels/brasilia-160.webp';
 import brasilia320 from '@/assets/map/landmarkModels/brasilia-320.webp';
+import bremenRoland160 from '@/assets/map/landmarkModels/bremen-roland-160.webp';
+import bremenRoland320 from '@/assets/map/landmarkModels/bremen-roland-320.webp';
 import bridgetown160 from '@/assets/map/landmarkModels/bridgetown-160.webp';
 import bridgetown320 from '@/assets/map/landmarkModels/bridgetown-320.webp';
 import brimstoneHill160 from '@/assets/map/landmarkModels/brimstone-hill-160.webp';
@@ -92,14 +148,20 @@ import bulguksa160 from '@/assets/map/landmarkModels/bulguksa-160.webp';
 import bulguksa320 from '@/assets/map/landmarkModels/bulguksa-320.webp';
 import bunceIsland160 from '@/assets/map/landmarkModels/bunce-island-160.webp';
 import bunceIsland320 from '@/assets/map/landmarkModels/bunce-island-320.webp';
+import burgosCathedral160 from '@/assets/map/landmarkModels/burgos-cathedral-160.webp';
+import burgosCathedral320 from '@/assets/map/landmarkModels/burgos-cathedral-320.webp';
 import burjKhalifa160 from '@/assets/map/landmarkModels/burj-khalifa-160.webp';
 import burjKhalifa320 from '@/assets/map/landmarkModels/burj-khalifa-320.webp';
 import butrint160 from '@/assets/map/landmarkModels/butrint-160.webp';
 import butrint320 from '@/assets/map/landmarkModels/butrint-320.webp';
+import byblos160 from '@/assets/map/landmarkModels/byblos-160.webp';
+import byblos320 from '@/assets/map/landmarkModels/byblos-320.webp';
 import caernarfonCastle160 from '@/assets/map/landmarkModels/caernarfon-castle-160.webp';
 import caernarfonCastle320 from '@/assets/map/landmarkModels/caernarfon-castle-320.webp';
 import californiaLighthouse160 from '@/assets/map/landmarkModels/california-lighthouse-160.webp';
 import californiaLighthouse320 from '@/assets/map/landmarkModels/california-lighthouse-320.webp';
+import canterburyCathedral160 from '@/assets/map/landmarkModels/canterbury-cathedral-160.webp';
+import canterburyCathedral320 from '@/assets/map/landmarkModels/canterbury-cathedral-320.webp';
 import capeCoastCastle160 from '@/assets/map/landmarkModels/cape-coast-castle-160.webp';
 import capeCoastCastle320 from '@/assets/map/landmarkModels/cape-coast-castle-320.webp';
 import cappadocia160 from '@/assets/map/landmarkModels/cappadocia-160.webp';
@@ -108,18 +170,36 @@ import carbetFalls160 from '@/assets/map/landmarkModels/carbet-falls-160.webp';
 import carbetFalls320 from '@/assets/map/landmarkModels/carbet-falls-320.webp';
 import carcassonne160 from '@/assets/map/landmarkModels/carcassonne-160.webp';
 import carcassonne320 from '@/assets/map/landmarkModels/carcassonne-320.webp';
+import carnac160 from '@/assets/map/landmarkModels/carnac-160.webp';
+import carnac320 from '@/assets/map/landmarkModels/carnac-320.webp';
 import cartagena160 from '@/assets/map/landmarkModels/cartagena-160.webp';
 import cartagena320 from '@/assets/map/landmarkModels/cartagena-320.webp';
 import carthage160 from '@/assets/map/landmarkModels/carthage-160.webp';
 import carthage320 from '@/assets/map/landmarkModels/carthage-320.webp';
 import cascoViejo160 from '@/assets/map/landmarkModels/casco-viejo-160.webp';
 import cascoViejo320 from '@/assets/map/landmarkModels/casco-viejo-320.webp';
+import caserta160 from '@/assets/map/landmarkModels/caserta-160.webp';
+import caserta320 from '@/assets/map/landmarkModels/caserta-320.webp';
+import castelDelMonte160 from '@/assets/map/landmarkModels/castel-del-monte-160.webp';
+import castelDelMonte320 from '@/assets/map/landmarkModels/castel-del-monte-320.webp';
+import castelNuovo160 from '@/assets/map/landmarkModels/castel-nuovo-160.webp';
+import castelNuovo320 from '@/assets/map/landmarkModels/castel-nuovo-320.webp';
 import cedarsOfGod160 from '@/assets/map/landmarkModels/cedars-of-god-160.webp';
 import cedarsOfGod320 from '@/assets/map/landmarkModels/cedars-of-god-320.webp';
+import centennialHall160 from '@/assets/map/landmarkModels/centennial-hall-160.webp';
+import centennialHall320 from '@/assets/map/landmarkModels/centennial-hall-320.webp';
 import ceskyKrumlov160 from '@/assets/map/landmarkModels/cesky-krumlov-160.webp';
 import ceskyKrumlov320 from '@/assets/map/landmarkModels/cesky-krumlov-320.webp';
+import chaco160 from '@/assets/map/landmarkModels/chaco-160.webp';
+import chaco320 from '@/assets/map/landmarkModels/chaco-320.webp';
 import chambord160 from '@/assets/map/landmarkModels/chambord-160.webp';
 import chambord320 from '@/assets/map/landmarkModels/chambord-320.webp';
+import chanChan160 from '@/assets/map/landmarkModels/chan-chan-160.webp';
+import chanChan320 from '@/assets/map/landmarkModels/chan-chan-320.webp';
+import charlesBridge160 from '@/assets/map/landmarkModels/charles-bridge-160.webp';
+import charlesBridge320 from '@/assets/map/landmarkModels/charles-bridge-320.webp';
+import chartres160 from '@/assets/map/landmarkModels/chartres-160.webp';
+import chartres320 from '@/assets/map/landmarkModels/chartres-320.webp';
 import chateauFrontenac160 from '@/assets/map/landmarkModels/chateau-frontenac-160.webp';
 import chateauFrontenac320 from '@/assets/map/landmarkModels/chateau-frontenac-320.webp';
 import chichenItza160 from '@/assets/map/landmarkModels/chichen-itza-160.webp';
@@ -134,6 +214,8 @@ import christTheRedeemer160 from '@/assets/map/landmarkModels/christ-the-redeeme
 import christTheRedeemer320 from '@/assets/map/landmarkModels/christ-the-redeemer-320.webp';
 import churchOfTheNativity160 from '@/assets/map/landmarkModels/church-of-the-nativity-160.webp';
 import churchOfTheNativity320 from '@/assets/map/landmarkModels/church-of-the-nativity-320.webp';
+import cibeles160 from '@/assets/map/landmarkModels/cibeles-160.webp';
+import cibeles320 from '@/assets/map/landmarkModels/cibeles-320.webp';
 import cidadeVelha160 from '@/assets/map/landmarkModels/cidade-velha-160.webp';
 import cidadeVelha320 from '@/assets/map/landmarkModels/cidade-velha-320.webp';
 import cinqueTerre160 from '@/assets/map/landmarkModels/cinque-terre-160.webp';
@@ -146,6 +228,8 @@ import cliffsOfMoher160 from '@/assets/map/landmarkModels/cliffs-of-moher-160.we
 import cliffsOfMoher320 from '@/assets/map/landmarkModels/cliffs-of-moher-320.webp';
 import cnTower160 from '@/assets/map/landmarkModels/cn-tower-160.webp';
 import cnTower320 from '@/assets/map/landmarkModels/cn-tower-320.webp';
+import coimbra160 from '@/assets/map/landmarkModels/coimbra-160.webp';
+import coimbra320 from '@/assets/map/landmarkModels/coimbra-320.webp';
 import cologneCathedral160 from '@/assets/map/landmarkModels/cologne-cathedral-160.webp';
 import cologneCathedral320 from '@/assets/map/landmarkModels/cologne-cathedral-320.webp';
 import colonia160 from '@/assets/map/landmarkModels/colonia-160.webp';
@@ -156,14 +240,28 @@ import commandRidge160 from '@/assets/map/landmarkModels/command-ridge-160.webp'
 import commandRidge320 from '@/assets/map/landmarkModels/command-ridge-320.webp';
 import copan160 from '@/assets/map/landmarkModels/copan-160.webp';
 import copan320 from '@/assets/map/landmarkModels/copan-320.webp';
+import cordobaMezquita160 from '@/assets/map/landmarkModels/cordoba-mezquita-160.webp';
+import cordobaMezquita320 from '@/assets/map/landmarkModels/cordoba-mezquita-320.webp';
 import cristoReiDili160 from '@/assets/map/landmarkModels/cristo-rei-dili-160.webp';
 import cristoReiDili320 from '@/assets/map/landmarkModels/cristo-rei-dili-320.webp';
+import cstMumbai160 from '@/assets/map/landmarkModels/cst-mumbai-160.webp';
+import cstMumbai320 from '@/assets/map/landmarkModels/cst-mumbai-320.webp';
+import cuencaHangingHouses160 from '@/assets/map/landmarkModels/cuenca-hanging-houses-160.webp';
+import cuencaHangingHouses320 from '@/assets/map/landmarkModels/cuenca-hanging-houses-320.webp';
+import cusco160 from '@/assets/map/landmarkModels/cusco-160.webp';
+import cusco320 from '@/assets/map/landmarkModels/cusco-320.webp';
 import dakhla160 from '@/assets/map/landmarkModels/dakhla-160.webp';
 import dakhla320 from '@/assets/map/landmarkModels/dakhla-320.webp';
+import dambulla160 from '@/assets/map/landmarkModels/dambulla-160.webp';
+import dambulla320 from '@/assets/map/landmarkModels/dambulla-320.webp';
+import darjeelingRailway160 from '@/assets/map/landmarkModels/darjeeling-railway-160.webp';
+import darjeelingRailway320 from '@/assets/map/landmarkModels/darjeeling-railway-320.webp';
 import darvaza160 from '@/assets/map/landmarkModels/darvaza-160.webp';
 import darvaza320 from '@/assets/map/landmarkModels/darvaza-320.webp';
 import deadvlei160 from '@/assets/map/landmarkModels/deadvlei-160.webp';
 import deadvlei320 from '@/assets/map/landmarkModels/deadvlei-320.webp';
+import delos160 from '@/assets/map/landmarkModels/delos-160.webp';
+import delos320 from '@/assets/map/landmarkModels/delos-320.webp';
 import delphi160 from '@/assets/map/landmarkModels/delphi-160.webp';
 import delphi320 from '@/assets/map/landmarkModels/delphi-320.webp';
 import diocletiansPalace160 from '@/assets/map/landmarkModels/diocletians-palace-160.webp';
@@ -182,40 +280,76 @@ import drottningholm160 from '@/assets/map/landmarkModels/drottningholm-160.webp
 import drottningholm320 from '@/assets/map/landmarkModels/drottningholm-320.webp';
 import dubrovnik160 from '@/assets/map/landmarkModels/dubrovnik-160.webp';
 import dubrovnik320 from '@/assets/map/landmarkModels/dubrovnik-320.webp';
+import durham160 from '@/assets/map/landmarkModels/durham-160.webp';
+import durham320 from '@/assets/map/landmarkModels/durham-320.webp';
 import eastRennell160 from '@/assets/map/landmarkModels/east-rennell-160.webp';
 import eastRennell320 from '@/assets/map/landmarkModels/east-rennell-320.webp';
+import echmiatsin160 from '@/assets/map/landmarkModels/echmiatsin-160.webp';
+import echmiatsin320 from '@/assets/map/landmarkModels/echmiatsin-320.webp';
 import edinburghCastle160 from '@/assets/map/landmarkModels/edinburgh-castle-160.webp';
 import edinburghCastle320 from '@/assets/map/landmarkModels/edinburgh-castle-320.webp';
 import eiffelTower160 from '@/assets/map/landmarkModels/eiffel-tower-160.webp';
 import eiffelTower320 from '@/assets/map/landmarkModels/eiffel-tower-320.webp';
+import elEscorial160 from '@/assets/map/landmarkModels/el-escorial-160.webp';
+import elEscorial320 from '@/assets/map/landmarkModels/el-escorial-320.webp';
 import elJem160 from '@/assets/map/landmarkModels/el-jem-160.webp';
 import elJem320 from '@/assets/map/landmarkModels/el-jem-320.webp';
 import elMorro160 from '@/assets/map/landmarkModels/el-morro-160.webp';
 import elMorro320 from '@/assets/map/landmarkModels/el-morro-320.webp';
+import elTajin160 from '@/assets/map/landmarkModels/el-tajin-160.webp';
+import elTajin320 from '@/assets/map/landmarkModels/el-tajin-320.webp';
+import ellora160 from '@/assets/map/landmarkModels/ellora-160.webp';
+import ellora320 from '@/assets/map/landmarkModels/ellora-320.webp';
+import endlessColumn160 from '@/assets/map/landmarkModels/endless-column-160.webp';
+import endlessColumn320 from '@/assets/map/landmarkModels/endless-column-320.webp';
 import ennedi160 from '@/assets/map/landmarkModels/ennedi-160.webp';
 import ennedi320 from '@/assets/map/landmarkModels/ennedi-320.webp';
 import ephesus160 from '@/assets/map/landmarkModels/ephesus-160.webp';
 import ephesus320 from '@/assets/map/landmarkModels/ephesus-320.webp';
+import essaouira160 from '@/assets/map/landmarkModels/essaouira-160.webp';
+import essaouira320 from '@/assets/map/landmarkModels/essaouira-320.webp';
 import etosha160 from '@/assets/map/landmarkModels/etosha-160.webp';
 import etosha320 from '@/assets/map/landmarkModels/etosha-320.webp';
 import everest160 from '@/assets/map/landmarkModels/everest-160.webp';
 import everest320 from '@/assets/map/landmarkModels/everest-320.webp';
+import everglades160 from '@/assets/map/landmarkModels/everglades-160.webp';
+import everglades320 from '@/assets/map/landmarkModels/everglades-320.webp';
+import evora160 from '@/assets/map/landmarkModels/evora-160.webp';
+import evora320 from '@/assets/map/landmarkModels/evora-320.webp';
+import fallingwater160 from '@/assets/map/landmarkModels/fallingwater-160.webp';
+import fallingwater320 from '@/assets/map/landmarkModels/fallingwater-320.webp';
+import fatehpurSikri160 from '@/assets/map/landmarkModels/fatehpur-sikri-160.webp';
+import fatehpurSikri320 from '@/assets/map/landmarkModels/fatehpur-sikri-320.webp';
+import ferrara160 from '@/assets/map/landmarkModels/ferrara-160.webp';
+import ferrara320 from '@/assets/map/landmarkModels/ferrara-320.webp';
 import fezTanneries160 from '@/assets/map/landmarkModels/fez-tanneries-160.webp';
 import fezTanneries320 from '@/assets/map/landmarkModels/fez-tanneries-320.webp';
 import fiatTagliero160 from '@/assets/map/landmarkModels/fiat-tagliero-160.webp';
 import fiatTagliero320 from '@/assets/map/landmarkModels/fiat-tagliero-320.webp';
+import finlandiaHall160 from '@/assets/map/landmarkModels/finlandia-hall-160.webp';
+import finlandiaHall320 from '@/assets/map/landmarkModels/finlandia-hall-320.webp';
 import florenceDuomo160 from '@/assets/map/landmarkModels/florence-duomo-160.webp';
 import florenceDuomo320 from '@/assets/map/landmarkModels/florence-duomo-320.webp';
+import fontainebleau160 from '@/assets/map/landmarkModels/fontainebleau-160.webp';
+import fontainebleau320 from '@/assets/map/landmarkModels/fontainebleau-320.webp';
 import forbiddenCity160 from '@/assets/map/landmarkModels/forbidden-city-160.webp';
 import forbiddenCity320 from '@/assets/map/landmarkModels/forbidden-city-320.webp';
 import fortGeorge160 from '@/assets/map/landmarkModels/fort-george-160.webp';
 import fortGeorge320 from '@/assets/map/landmarkModels/fort-george-320.webp';
+import fortJesus160 from '@/assets/map/landmarkModels/fort-jesus-160.webp';
+import fortJesus320 from '@/assets/map/landmarkModels/fort-jesus-320.webp';
 import fortLouis160 from '@/assets/map/landmarkModels/fort-louis-160.webp';
 import fortLouis320 from '@/assets/map/landmarkModels/fort-louis-320.webp';
 import forthBridge160 from '@/assets/map/landmarkModels/forth-bridge-160.webp';
 import forthBridge320 from '@/assets/map/landmarkModels/forth-bridge-320.webp';
+import fountainsAbbey160 from '@/assets/map/landmarkModels/fountains-abbey-160.webp';
+import fountainsAbbey320 from '@/assets/map/landmarkModels/fountains-abbey-320.webp';
+import fourviere160 from '@/assets/map/landmarkModels/fourviere-160.webp';
+import fourviere320 from '@/assets/map/landmarkModels/fourviere-320.webp';
 import foutaDjallon160 from '@/assets/map/landmarkModels/fouta-djallon-160.webp';
 import foutaDjallon320 from '@/assets/map/landmarkModels/fouta-djallon-320.webp';
+import fujianTulou160 from '@/assets/map/landmarkModels/fujian-tulou-160.webp';
+import fujianTulou320 from '@/assets/map/landmarkModels/fujian-tulou-320.webp';
 import funafuti160 from '@/assets/map/landmarkModels/funafuti-160.webp';
 import funafuti320 from '@/assets/map/landmarkModels/funafuti-320.webp';
 import fushimiInari160 from '@/assets/map/landmarkModels/fushimi-inari-160.webp';
@@ -236,12 +370,18 @@ import ghadames160 from '@/assets/map/landmarkModels/ghadames-160.webp';
 import ghadames320 from '@/assets/map/landmarkModels/ghadames-320.webp';
 import giantsCauseway160 from '@/assets/map/landmarkModels/giants-causeway-160.webp';
 import giantsCauseway320 from '@/assets/map/landmarkModels/giants-causeway-320.webp';
+import gobekliTepe160 from '@/assets/map/landmarkModels/gobekli-tepe-160.webp';
+import gobekliTepe320 from '@/assets/map/landmarkModels/gobekli-tepe-320.webp';
 import gobustan160 from '@/assets/map/landmarkModels/gobustan-160.webp';
 import gobustan320 from '@/assets/map/landmarkModels/gobustan-320.webp';
 import goldenGateBridge160 from '@/assets/map/landmarkModels/golden-gate-bridge-160.webp';
 import goldenGateBridge320 from '@/assets/map/landmarkModels/golden-gate-bridge-320.webp';
 import goldenTemple160 from '@/assets/map/landmarkModels/golden-temple-160.webp';
 import goldenTemple320 from '@/assets/map/landmarkModels/golden-temple-320.webp';
+import golestan160 from '@/assets/map/landmarkModels/golestan-160.webp';
+import golestan320 from '@/assets/map/landmarkModels/golestan-320.webp';
+import gonbadEQabus160 from '@/assets/map/landmarkModels/gonbad-e-qabus-160.webp';
+import gonbadEQabus320 from '@/assets/map/landmarkModels/gonbad-e-qabus-320.webp';
 import gondar160 from '@/assets/map/landmarkModels/gondar-160.webp';
 import gondar320 from '@/assets/map/landmarkModels/gondar-320.webp';
 import goree160 from '@/assets/map/landmarkModels/goree-160.webp';
@@ -258,14 +398,20 @@ import grandPalaceBangkok160 from '@/assets/map/landmarkModels/grand-palace-bang
 import grandPalaceBangkok320 from '@/assets/map/landmarkModels/grand-palace-bangkok-320.webp';
 import grandPlace160 from '@/assets/map/landmarkModels/grand-place-160.webp';
 import grandPlace320 from '@/assets/map/landmarkModels/grand-place-320.webp';
+import grazClockTower160 from '@/assets/map/landmarkModels/graz-clock-tower-160.webp';
+import grazClockTower320 from '@/assets/map/landmarkModels/graz-clock-tower-320.webp';
 import greatBarrierReef160 from '@/assets/map/landmarkModels/great-barrier-reef-160.webp';
 import greatBarrierReef320 from '@/assets/map/landmarkModels/great-barrier-reef-320.webp';
 import greatBlueHole160 from '@/assets/map/landmarkModels/great-blue-hole-160.webp';
 import greatBlueHole320 from '@/assets/map/landmarkModels/great-blue-hole-320.webp';
+import greatSmokyMountains160 from '@/assets/map/landmarkModels/great-smoky-mountains-160.webp';
+import greatSmokyMountains320 from '@/assets/map/landmarkModels/great-smoky-mountains-320.webp';
 import greatWall160 from '@/assets/map/landmarkModels/great-wall-160.webp';
 import greatWall320 from '@/assets/map/landmarkModels/great-wall-320.webp';
 import greatZimbabwe160 from '@/assets/map/landmarkModels/great-zimbabwe-160.webp';
 import greatZimbabwe320 from '@/assets/map/landmarkModels/great-zimbabwe-320.webp';
+import greenwich160 from '@/assets/map/landmarkModels/greenwich-160.webp';
+import greenwich320 from '@/assets/map/landmarkModels/greenwich-320.webp';
 import guaitaTower160 from '@/assets/map/landmarkModels/guaita-tower-160.webp';
 import guaitaTower320 from '@/assets/map/landmarkModels/guaita-tower-320.webp';
 import guanajuato160 from '@/assets/map/landmarkModels/guanajuato-160.webp';
@@ -280,6 +426,10 @@ import haLongBay160 from '@/assets/map/landmarkModels/ha-long-bay-160.webp';
 import haLongBay320 from '@/assets/map/landmarkModels/ha-long-bay-320.webp';
 import haamonga160 from '@/assets/map/landmarkModels/haamonga-160.webp';
 import haamonga320 from '@/assets/map/landmarkModels/haamonga-320.webp';
+import hadriansVilla160 from '@/assets/map/landmarkModels/hadrians-villa-160.webp';
+import hadriansVilla320 from '@/assets/map/landmarkModels/hadrians-villa-320.webp';
+import hadriansWall160 from '@/assets/map/landmarkModels/hadrians-wall-160.webp';
+import hadriansWall320 from '@/assets/map/landmarkModels/hadrians-wall-320.webp';
 import haghpat160 from '@/assets/map/landmarkModels/haghpat-160.webp';
 import haghpat320 from '@/assets/map/landmarkModels/haghpat-320.webp';
 import hagiaSophia160 from '@/assets/map/landmarkModels/hagia-sophia-160.webp';
@@ -290,28 +440,62 @@ import hallstatt160 from '@/assets/map/landmarkModels/hallstatt-160.webp';
 import hallstatt320 from '@/assets/map/landmarkModels/hallstatt-320.webp';
 import hampi160 from '@/assets/map/landmarkModels/hampi-160.webp';
 import hampi320 from '@/assets/map/landmarkModels/hampi-320.webp';
+import hashima160 from '@/assets/map/landmarkModels/hashima-160.webp';
+import hashima320 from '@/assets/map/landmarkModels/hashima-320.webp';
+import hassanTower160 from '@/assets/map/landmarkModels/hassan-tower-160.webp';
+import hassanTower320 from '@/assets/map/landmarkModels/hassan-tower-320.webp';
 import hatra160 from '@/assets/map/landmarkModels/hatra-160.webp';
 import hatra320 from '@/assets/map/landmarkModels/hatra-320.webp';
+import hattusa160 from '@/assets/map/landmarkModels/hattusa-160.webp';
+import hattusa320 from '@/assets/map/landmarkModels/hattusa-320.webp';
 import hawaMahal160 from '@/assets/map/landmarkModels/hawa-mahal-160.webp';
 import hawaMahal320 from '@/assets/map/landmarkModels/hawa-mahal-320.webp';
+import hawaiiVolcanoes160 from '@/assets/map/landmarkModels/hawaii-volcanoes-160.webp';
+import hawaiiVolcanoes320 from '@/assets/map/landmarkModels/hawaii-volcanoes-320.webp';
 import hegra160 from '@/assets/map/landmarkModels/hegra-160.webp';
 import hegra320 from '@/assets/map/landmarkModels/hegra-320.webp';
+import herculesKassel160 from '@/assets/map/landmarkModels/hercules-kassel-160.webp';
+import herculesKassel320 from '@/assets/map/landmarkModels/hercules-kassel-320.webp';
 import himejiCastle160 from '@/assets/map/landmarkModels/himeji-castle-160.webp';
 import himejiCastle320 from '@/assets/map/landmarkModels/himeji-castle-320.webp';
+import hiroshimaPeaceMemorial160 from '@/assets/map/landmarkModels/hiroshima-peace-memorial-160.webp';
+import hiroshimaPeaceMemorial320 from '@/assets/map/landmarkModels/hiroshima-peace-memorial-320.webp';
+import historicCairo160 from '@/assets/map/landmarkModels/historic-cairo-160.webp';
+import historicCairo320 from '@/assets/map/landmarkModels/historic-cairo-320.webp';
+import historicJeddah160 from '@/assets/map/landmarkModels/historic-jeddah-160.webp';
+import historicJeddah320 from '@/assets/map/landmarkModels/historic-jeddah-320.webp';
 import hoiAn160 from '@/assets/map/landmarkModels/hoi-an-160.webp';
 import hoiAn320 from '@/assets/map/landmarkModels/hoi-an-320.webp';
+import holstentor160 from '@/assets/map/landmarkModels/holstentor-160.webp';
+import holstentor320 from '@/assets/map/landmarkModels/holstentor-320.webp';
+import huangshan160 from '@/assets/map/landmarkModels/huangshan-160.webp';
+import huangshan320 from '@/assets/map/landmarkModels/huangshan-320.webp';
 import hue160 from '@/assets/map/landmarkModels/hue-160.webp';
 import hue320 from '@/assets/map/landmarkModels/hue-320.webp';
 import humahuaca160 from '@/assets/map/landmarkModels/humahuaca-160.webp';
 import humahuaca320 from '@/assets/map/landmarkModels/humahuaca-320.webp';
+import humayunsTomb160 from '@/assets/map/landmarkModels/humayuns-tomb-160.webp';
+import humayunsTomb320 from '@/assets/map/landmarkModels/humayuns-tomb-320.webp';
 import hungarianParliament160 from '@/assets/map/landmarkModels/hungarian-parliament-160.webp';
 import hungarianParliament320 from '@/assets/map/landmarkModels/hungarian-parliament-320.webp';
+import hwaseong160 from '@/assets/map/landmarkModels/hwaseong-160.webp';
+import hwaseong320 from '@/assets/map/landmarkModels/hwaseong-320.webp';
 import iguazuFalls160 from '@/assets/map/landmarkModels/iguazu-falls-160.webp';
 import iguazuFalls320 from '@/assets/map/landmarkModels/iguazu-falls-320.webp';
 import ilulissat160 from '@/assets/map/landmarkModels/ilulissat-160.webp';
 import ilulissat320 from '@/assets/map/landmarkModels/ilulissat-320.webp';
+import independenceHall160 from '@/assets/map/landmarkModels/independence-hall-160.webp';
+import independenceHall320 from '@/assets/map/landmarkModels/independence-hall-320.webp';
 import itsukushima160 from '@/assets/map/landmarkModels/itsukushima-160.webp';
 import itsukushima320 from '@/assets/map/landmarkModels/itsukushima-320.webp';
+import jamehIsfahan160 from '@/assets/map/landmarkModels/jameh-isfahan-160.webp';
+import jamehIsfahan320 from '@/assets/map/landmarkModels/jameh-isfahan-320.webp';
+import jantarMantar160 from '@/assets/map/landmarkModels/jantar-mantar-160.webp';
+import jantarMantar320 from '@/assets/map/landmarkModels/jantar-mantar-320.webp';
+import jiuzhaigou160 from '@/assets/map/landmarkModels/jiuzhaigou-160.webp';
+import jiuzhaigou320 from '@/assets/map/landmarkModels/jiuzhaigou-320.webp';
+import jodrellBank160 from '@/assets/map/landmarkModels/jodrell-bank-160.webp';
+import jodrellBank320 from '@/assets/map/landmarkModels/jodrell-bank-320.webp';
 import joyaDeCeren160 from '@/assets/map/landmarkModels/joya-de-ceren-160.webp';
 import joyaDeCeren320 from '@/assets/map/landmarkModels/joya-de-ceren-320.webp';
 import jungfrau160 from '@/assets/map/landmarkModels/jungfrau-160.webp';
@@ -320,6 +504,8 @@ import kaesong160 from '@/assets/map/landmarkModels/kaesong-160.webp';
 import kaesong320 from '@/assets/map/landmarkModels/kaesong-320.webp';
 import kaieteur160 from '@/assets/map/landmarkModels/kaieteur-160.webp';
 import kaieteur320 from '@/assets/map/landmarkModels/kaieteur-320.webp';
+import kairouan160 from '@/assets/map/landmarkModels/kairouan-160.webp';
+import kairouan320 from '@/assets/map/landmarkModels/kairouan-320.webp';
 import kamchatka160 from '@/assets/map/landmarkModels/kamchatka-160.webp';
 import kamchatka320 from '@/assets/map/landmarkModels/kamchatka-320.webp';
 import karakul160 from '@/assets/map/landmarkModels/karakul-160.webp';
@@ -330,6 +516,12 @@ import karthala160 from '@/assets/map/landmarkModels/karthala-160.webp';
 import karthala320 from '@/assets/map/landmarkModels/karthala-320.webp';
 import kasubiTombs160 from '@/assets/map/landmarkModels/kasubi-tombs-160.webp';
 import kasubiTombs320 from '@/assets/map/landmarkModels/kasubi-tombs-320.webp';
+import kazanKremlin160 from '@/assets/map/landmarkModels/kazan-kremlin-160.webp';
+import kazanKremlin320 from '@/assets/map/landmarkModels/kazan-kremlin-320.webp';
+import kewGardens160 from '@/assets/map/landmarkModels/kew-gardens-160.webp';
+import kewGardens320 from '@/assets/map/landmarkModels/kew-gardens-320.webp';
+import khajuraho160 from '@/assets/map/landmarkModels/khajuraho-160.webp';
+import khajuraho320 from '@/assets/map/landmarkModels/khajuraho-320.webp';
 import khiva160 from '@/assets/map/landmarkModels/khiva-160.webp';
 import khiva320 from '@/assets/map/landmarkModels/khiva-320.webp';
 import kibira160 from '@/assets/map/landmarkModels/kibira-160.webp';
@@ -344,10 +536,16 @@ import kissama160 from '@/assets/map/landmarkModels/kissama-160.webp';
 import kissama320 from '@/assets/map/landmarkModels/kissama-320.webp';
 import kizhi160 from '@/assets/map/landmarkModels/kizhi-160.webp';
 import kizhi320 from '@/assets/map/landmarkModels/kizhi-320.webp';
+import knossos160 from '@/assets/map/landmarkModels/knossos-160.webp';
+import knossos320 from '@/assets/map/landmarkModels/knossos-320.webp';
 import kokodaTrack160 from '@/assets/map/landmarkModels/kokoda-track-160.webp';
 import kokodaTrack320 from '@/assets/map/landmarkModels/kokoda-track-320.webp';
+import kolomenskoye160 from '@/assets/map/landmarkModels/kolomenskoye-160.webp';
+import kolomenskoye320 from '@/assets/map/landmarkModels/kolomenskoye-320.webp';
 import komodo160 from '@/assets/map/landmarkModels/komodo-160.webp';
 import komodo320 from '@/assets/map/landmarkModels/komodo-320.webp';
+import konark160 from '@/assets/map/landmarkModels/konark-160.webp';
+import konark320 from '@/assets/map/landmarkModels/konark-320.webp';
 import kotor160 from '@/assets/map/landmarkModels/kotor-160.webp';
 import kotor320 from '@/assets/map/landmarkModels/kotor-320.webp';
 import kourouSpaceCentre160 from '@/assets/map/landmarkModels/kourou-space-centre-160.webp';
@@ -362,6 +560,8 @@ import kronborg160 from '@/assets/map/landmarkModels/kronborg-160.webp';
 import kronborg320 from '@/assets/map/landmarkModels/kronborg-320.webp';
 import kuntaKintehIsland160 from '@/assets/map/landmarkModels/kunta-kinteh-island-160.webp';
 import kuntaKintehIsland320 from '@/assets/map/landmarkModels/kunta-kinteh-island-320.webp';
+import kutnaHora160 from '@/assets/map/landmarkModels/kutna-hora-160.webp';
+import kutnaHora320 from '@/assets/map/landmarkModels/kutna-hora-320.webp';
 import kuwaitTowers160 from '@/assets/map/landmarkModels/kuwait-towers-160.webp';
 import kuwaitTowers320 from '@/assets/map/landmarkModels/kuwait-towers-320.webp';
 import laSoufriereSvg160 from '@/assets/map/landmarkModels/la-soufriere-svg-160.webp';
@@ -376,6 +576,8 @@ import lakeBaikal160 from '@/assets/map/landmarkModels/lake-baikal-160.webp';
 import lakeBaikal320 from '@/assets/map/landmarkModels/lake-baikal-320.webp';
 import lakeBled160 from '@/assets/map/landmarkModels/lake-bled-160.webp';
 import lakeBled320 from '@/assets/map/landmarkModels/lake-bled-320.webp';
+import lakeDistrict160 from '@/assets/map/landmarkModels/lake-district-160.webp';
+import lakeDistrict320 from '@/assets/map/landmarkModels/lake-district-320.webp';
 import lakeMalawi160 from '@/assets/map/landmarkModels/lake-malawi-160.webp';
 import lakeMalawi320 from '@/assets/map/landmarkModels/lake-malawi-320.webp';
 import lalibela160 from '@/assets/map/landmarkModels/lalibela-160.webp';
@@ -384,6 +586,10 @@ import lamu160 from '@/assets/map/landmarkModels/lamu-160.webp';
 import lamu320 from '@/assets/map/landmarkModels/lamu-320.webp';
 import landwasserViaduct160 from '@/assets/map/landmarkModels/landwasser-viaduct-160.webp';
 import landwasserViaduct320 from '@/assets/map/landmarkModels/landwasser-viaduct-320.webp';
+import lanseAuxMeadows160 from '@/assets/map/landmarkModels/lanse-aux-meadows-160.webp';
+import lanseAuxMeadows320 from '@/assets/map/landmarkModels/lanse-aux-meadows-320.webp';
+import lastSupper160 from '@/assets/map/landmarkModels/last-supper-160.webp';
+import lastSupper320 from '@/assets/map/landmarkModels/last-supper-320.webp';
 import leMorne160 from '@/assets/map/landmarkModels/le-morne-160.webp';
 import leMorne320 from '@/assets/map/landmarkModels/le-morne-320.webp';
 import leaningTower160 from '@/assets/map/landmarkModels/leaning-tower-160.webp';
@@ -394,20 +600,34 @@ import leonCathedral160 from '@/assets/map/landmarkModels/leon-cathedral-160.web
 import leonCathedral320 from '@/assets/map/landmarkModels/leon-cathedral-320.webp';
 import leptisMagna160 from '@/assets/map/landmarkModels/leptis-magna-160.webp';
 import leptisMagna320 from '@/assets/map/landmarkModels/leptis-magna-320.webp';
+import leshanBuddha160 from '@/assets/map/landmarkModels/leshan-buddha-160.webp';
+import leshanBuddha320 from '@/assets/map/landmarkModels/leshan-buddha-320.webp';
+import lijiang160 from '@/assets/map/landmarkModels/lijiang-160.webp';
+import lijiang320 from '@/assets/map/landmarkModels/lijiang-320.webp';
+import lima160 from '@/assets/map/landmarkModels/lima-160.webp';
+import lima320 from '@/assets/map/landmarkModels/lima-320.webp';
 import loango160 from '@/assets/map/landmarkModels/loango-160.webp';
 import loango320 from '@/assets/map/landmarkModels/loango-320.webp';
+import longmen160 from '@/assets/map/landmarkModels/longmen-160.webp';
+import longmen320 from '@/assets/map/landmarkModels/longmen-320.webp';
 import loropeni160 from '@/assets/map/landmarkModels/loropeni-160.webp';
 import loropeni320 from '@/assets/map/landmarkModels/loropeni-320.webp';
 import luangPrabang160 from '@/assets/map/landmarkModels/luang-prabang-160.webp';
 import luangPrabang320 from '@/assets/map/landmarkModels/luang-prabang-320.webp';
+import lumbini160 from '@/assets/map/landmarkModels/lumbini-160.webp';
+import lumbini320 from '@/assets/map/landmarkModels/lumbini-320.webp';
 import lviv160 from '@/assets/map/landmarkModels/lviv-160.webp';
 import lviv320 from '@/assets/map/landmarkModels/lviv-320.webp';
 import maasaiMara160 from '@/assets/map/landmarkModels/maasai-mara-160.webp';
 import maasaiMara320 from '@/assets/map/landmarkModels/maasai-mara-320.webp';
+import macao160 from '@/assets/map/landmarkModels/macao-160.webp';
+import macao320 from '@/assets/map/landmarkModels/macao-320.webp';
 import machuPicchu160 from '@/assets/map/landmarkModels/machu-picchu-160.webp';
 import machuPicchu320 from '@/assets/map/landmarkModels/machu-picchu-320.webp';
 import madriuValley160 from '@/assets/map/landmarkModels/madriu-valley-160.webp';
 import madriuValley320 from '@/assets/map/landmarkModels/madriu-valley-320.webp';
+import mahabodhi160 from '@/assets/map/landmarkModels/mahabodhi-160.webp';
+import mahabodhi320 from '@/assets/map/landmarkModels/mahabodhi-320.webp';
 import mahoBeach160 from '@/assets/map/landmarkModels/maho-beach-160.webp';
 import mahoBeach320 from '@/assets/map/landmarkModels/maho-beach-320.webp';
 import maidenTower160 from '@/assets/map/landmarkModels/maiden-tower-160.webp';
@@ -426,14 +646,22 @@ import marrakesh160 from '@/assets/map/landmarkModels/marrakesh-160.webp';
 import marrakesh320 from '@/assets/map/landmarkModels/marrakesh-320.webp';
 import masada160 from '@/assets/map/landmarkModels/masada-160.webp';
 import masada320 from '@/assets/map/landmarkModels/masada-320.webp';
+import matera160 from '@/assets/map/landmarkModels/matera-160.webp';
+import matera320 from '@/assets/map/landmarkModels/matera-320.webp';
 import matoboHills160 from '@/assets/map/landmarkModels/matobo-hills-160.webp';
 import matoboHills320 from '@/assets/map/landmarkModels/matobo-hills-320.webp';
 import matterhorn160 from '@/assets/map/landmarkModels/matterhorn-160.webp';
 import matterhorn320 from '@/assets/map/landmarkModels/matterhorn-320.webp';
 import melaka160 from '@/assets/map/landmarkModels/melaka-160.webp';
 import melaka320 from '@/assets/map/landmarkModels/melaka-320.webp';
+import meninGate160 from '@/assets/map/landmarkModels/menin-gate-160.webp';
+import meninGate320 from '@/assets/map/landmarkModels/menin-gate-320.webp';
+import meridaTheatre160 from '@/assets/map/landmarkModels/merida-theatre-160.webp';
+import meridaTheatre320 from '@/assets/map/landmarkModels/merida-theatre-320.webp';
 import meroe160 from '@/assets/map/landmarkModels/meroe-160.webp';
 import meroe320 from '@/assets/map/landmarkModels/meroe-320.webp';
+import mesaVerde160 from '@/assets/map/landmarkModels/mesa-verde-160.webp';
+import mesaVerde320 from '@/assets/map/landmarkModels/mesa-verde-320.webp';
 import meteora160 from '@/assets/map/landmarkModels/meteora-160.webp';
 import meteora320 from '@/assets/map/landmarkModels/meteora-320.webp';
 import milfordSound160 from '@/assets/map/landmarkModels/milford-sound-160.webp';
@@ -446,6 +674,8 @@ import mlilwane160 from '@/assets/map/landmarkModels/mlilwane-160.webp';
 import mlilwane320 from '@/assets/map/landmarkModels/mlilwane-320.webp';
 import moai160 from '@/assets/map/landmarkModels/moai-160.webp';
 import moai320 from '@/assets/map/landmarkModels/moai-320.webp';
+import mogaoCaves160 from '@/assets/map/landmarkModels/mogao-caves-160.webp';
+import mogaoCaves320 from '@/assets/map/landmarkModels/mogao-caves-320.webp';
 import mohenjoDaro160 from '@/assets/map/landmarkModels/mohenjo-daro-160.webp';
 import mohenjoDaro320 from '@/assets/map/landmarkModels/mohenjo-daro-320.webp';
 import monacoPalace160 from '@/assets/map/landmarkModels/monaco-palace-160.webp';
@@ -454,30 +684,46 @@ import montChoungui160 from '@/assets/map/landmarkModels/mont-choungui-160.webp'
 import montChoungui320 from '@/assets/map/landmarkModels/mont-choungui-320.webp';
 import montSaintMichel160 from '@/assets/map/landmarkModels/mont-saint-michel-160.webp';
 import montSaintMichel320 from '@/assets/map/landmarkModels/mont-saint-michel-320.webp';
+import monteAlban160 from '@/assets/map/landmarkModels/monte-alban-160.webp';
+import monteAlban320 from '@/assets/map/landmarkModels/monte-alban-320.webp';
+import monticello160 from '@/assets/map/landmarkModels/monticello-160.webp';
+import monticello320 from '@/assets/map/landmarkModels/monticello-320.webp';
 import moraineLake160 from '@/assets/map/landmarkModels/moraine-lake-160.webp';
 import moraineLake320 from '@/assets/map/landmarkModels/moraine-lake-320.webp';
 import morneTroisPitons160 from '@/assets/map/landmarkModels/morne-trois-pitons-160.webp';
 import morneTroisPitons320 from '@/assets/map/landmarkModels/morne-trois-pitons-320.webp';
 import mostar160 from '@/assets/map/landmarkModels/mostar-160.webp';
 import mostar320 from '@/assets/map/landmarkModels/mostar-320.webp';
+import mountAthos160 from '@/assets/map/landmarkModels/mount-athos-160.webp';
+import mountAthos320 from '@/assets/map/landmarkModels/mount-athos-320.webp';
 import mountFuji160 from '@/assets/map/landmarkModels/mount-fuji-160.webp';
 import mountFuji320 from '@/assets/map/landmarkModels/mount-fuji-320.webp';
+import mountNemrut160 from '@/assets/map/landmarkModels/mount-nemrut-160.webp';
+import mountNemrut320 from '@/assets/map/landmarkModels/mount-nemrut-320.webp';
 import mountPelee160 from '@/assets/map/landmarkModels/mount-pelee-160.webp';
 import mountPelee320 from '@/assets/map/landmarkModels/mount-pelee-320.webp';
 import mountRushmore160 from '@/assets/map/landmarkModels/mount-rushmore-160.webp';
 import mountRushmore320 from '@/assets/map/landmarkModels/mount-rushmore-320.webp';
 import mozambiqueIsland160 from '@/assets/map/landmarkModels/mozambique-island-160.webp';
 import mozambiqueIsland320 from '@/assets/map/landmarkModels/mozambique-island-320.webp';
+import mtskheta160 from '@/assets/map/landmarkModels/mtskheta-160.webp';
+import mtskheta320 from '@/assets/map/landmarkModels/mtskheta-320.webp';
 import mulafossur160 from '@/assets/map/landmarkModels/mulafossur-160.webp';
 import mulafossur320 from '@/assets/map/landmarkModels/mulafossur-320.webp';
 import muliaagePalace160 from '@/assets/map/landmarkModels/muliaage-palace-160.webp';
 import muliaagePalace320 from '@/assets/map/landmarkModels/muliaage-palace-320.webp';
+import museumIsland160 from '@/assets/map/landmarkModels/museum-island-160.webp';
+import museumIsland320 from '@/assets/map/landmarkModels/museum-island-320.webp';
+import mySon160 from '@/assets/map/landmarkModels/my-son-160.webp';
+import mySon320 from '@/assets/map/landmarkModels/my-son-320.webp';
 import mzabValley160 from '@/assets/map/landmarkModels/mzab-valley-160.webp';
 import mzabValley320 from '@/assets/map/landmarkModels/mzab-valley-320.webp';
 import nanMadol160 from '@/assets/map/landmarkModels/nan-madol-160.webp';
 import nanMadol320 from '@/assets/map/landmarkModels/nan-madol-320.webp';
 import naqshEJahan160 from '@/assets/map/landmarkModels/naqsh-e-jahan-160.webp';
 import naqshEJahan320 from '@/assets/map/landmarkModels/naqsh-e-jahan-320.webp';
+import nara160 from '@/assets/map/landmarkModels/nara-160.webp';
+import nara320 from '@/assets/map/landmarkModels/nara-320.webp';
 import nazcaLines160 from '@/assets/map/landmarkModels/nazca-lines-160.webp';
 import nazcaLines320 from '@/assets/map/landmarkModels/nazca-lines-320.webp';
 import nelsonsDockyard160 from '@/assets/map/landmarkModels/nelsons-dockyard-160.webp';
@@ -488,6 +734,18 @@ import nesvizhCastle160 from '@/assets/map/landmarkModels/nesvizh-castle-160.web
 import nesvizhCastle320 from '@/assets/map/landmarkModels/nesvizh-castle-320.webp';
 import neuschwanstein160 from '@/assets/map/landmarkModels/neuschwanstein-160.webp';
 import neuschwanstein320 from '@/assets/map/landmarkModels/neuschwanstein-320.webp';
+import newgrange160 from '@/assets/map/landmarkModels/newgrange-160.webp';
+import newgrange320 from '@/assets/map/landmarkModels/newgrange-320.webp';
+import ngorongoro160 from '@/assets/map/landmarkModels/ngorongoro-160.webp';
+import ngorongoro320 from '@/assets/map/landmarkModels/ngorongoro-320.webp';
+import nikko160 from '@/assets/map/landmarkModels/nikko-160.webp';
+import nikko320 from '@/assets/map/landmarkModels/nikko-320.webp';
+import noto160 from '@/assets/map/landmarkModels/noto-160.webp';
+import noto320 from '@/assets/map/landmarkModels/noto-320.webp';
+import notreDame160 from '@/assets/map/landmarkModels/notre-dame-160.webp';
+import notreDame320 from '@/assets/map/landmarkModels/notre-dame-320.webp';
+import novodevichy160 from '@/assets/map/landmarkModels/novodevichy-160.webp';
+import novodevichy320 from '@/assets/map/landmarkModels/novodevichy-320.webp';
 import odzala160 from '@/assets/map/landmarkModels/odzala-160.webp';
 import odzala320 from '@/assets/map/landmarkModels/odzala-320.webp';
 import ohrid160 from '@/assets/map/landmarkModels/ohrid-160.webp';
@@ -498,12 +756,20 @@ import oldFaithful160 from '@/assets/map/landmarkModels/old-faithful-160.webp';
 import oldFaithful320 from '@/assets/map/landmarkModels/old-faithful-320.webp';
 import oldHavana160 from '@/assets/map/landmarkModels/old-havana-160.webp';
 import oldHavana320 from '@/assets/map/landmarkModels/old-havana-320.webp';
+import olympia160 from '@/assets/map/landmarkModels/olympia-160.webp';
+import olympia320 from '@/assets/map/landmarkModels/olympia-320.webp';
 import omarAliSaifuddienMosque160 from '@/assets/map/landmarkModels/omar-ali-saifuddien-mosque-160.webp';
 import omarAliSaifuddienMosque320 from '@/assets/map/landmarkModels/omar-ali-saifuddien-mosque-320.webp';
+import orangeTheatre160 from '@/assets/map/landmarkModels/orange-theatre-160.webp';
+import orangeTheatre320 from '@/assets/map/landmarkModels/orange-theatre-320.webp';
 import orheiulVechi160 from '@/assets/map/landmarkModels/orheiul-vechi-160.webp';
 import orheiulVechi320 from '@/assets/map/landmarkModels/orheiul-vechi-320.webp';
 import orkhonValley160 from '@/assets/map/landmarkModels/orkhon-valley-160.webp';
 import orkhonValley320 from '@/assets/map/landmarkModels/orkhon-valley-320.webp';
+import ouroPreto160 from '@/assets/map/landmarkModels/ouro-preto-160.webp';
+import ouroPreto320 from '@/assets/map/landmarkModels/ouro-preto-320.webp';
+import palauDeLaMusica160 from '@/assets/map/landmarkModels/palau-de-la-musica-160.webp';
+import palauDeLaMusica320 from '@/assets/map/landmarkModels/palau-de-la-musica-320.webp';
 import palenque160 from '@/assets/map/landmarkModels/palenque-160.webp';
 import palenque320 from '@/assets/map/landmarkModels/palenque-320.webp';
 import palmyra160 from '@/assets/map/landmarkModels/palmyra-160.webp';
@@ -512,6 +778,8 @@ import pamukkale160 from '@/assets/map/landmarkModels/pamukkale-160.webp';
 import pamukkale320 from '@/assets/map/landmarkModels/pamukkale-320.webp';
 import panamaCanal160 from '@/assets/map/landmarkModels/panama-canal-160.webp';
 import panamaCanal320 from '@/assets/map/landmarkModels/panama-canal-320.webp';
+import pantheon160 from '@/assets/map/landmarkModels/pantheon-160.webp';
+import pantheon320 from '@/assets/map/landmarkModels/pantheon-320.webp';
 import papaseea160 from '@/assets/map/landmarkModels/papaseea-160.webp';
 import papaseea320 from '@/assets/map/landmarkModels/papaseea-320.webp';
 import paphos160 from '@/assets/map/landmarkModels/paphos-160.webp';
@@ -520,10 +788,16 @@ import paramaribo160 from '@/assets/map/landmarkModels/paramaribo-160.webp';
 import paramaribo320 from '@/assets/map/landmarkModels/paramaribo-320.webp';
 import parthenon160 from '@/assets/map/landmarkModels/parthenon-160.webp';
 import parthenon320 from '@/assets/map/landmarkModels/parthenon-320.webp';
+import pasargadae160 from '@/assets/map/landmarkModels/pasargadae-160.webp';
+import pasargadae320 from '@/assets/map/landmarkModels/pasargadae-320.webp';
+import patmos160 from '@/assets/map/landmarkModels/patmos-160.webp';
+import patmos320 from '@/assets/map/landmarkModels/patmos-320.webp';
 import pelesCastle160 from '@/assets/map/landmarkModels/peles-castle-160.webp';
 import pelesCastle320 from '@/assets/map/landmarkModels/peles-castle-320.webp';
 import penaPalace160 from '@/assets/map/landmarkModels/pena-palace-160.webp';
 import penaPalace320 from '@/assets/map/landmarkModels/pena-palace-320.webp';
+import pergamon160 from '@/assets/map/landmarkModels/pergamon-160.webp';
+import pergamon320 from '@/assets/map/landmarkModels/pergamon-320.webp';
 import peritoMoreno160 from '@/assets/map/landmarkModels/perito-moreno-160.webp';
 import peritoMoreno320 from '@/assets/map/landmarkModels/perito-moreno-320.webp';
 import persepolis160 from '@/assets/map/landmarkModels/persepolis-160.webp';
@@ -538,20 +812,28 @@ import picoCaoGrande160 from '@/assets/map/landmarkModels/pico-cao-grande-160.we
 import picoCaoGrande320 from '@/assets/map/landmarkModels/pico-cao-grande-320.webp';
 import pigBeach160 from '@/assets/map/landmarkModels/pig-beach-160.webp';
 import pigBeach320 from '@/assets/map/landmarkModels/pig-beach-320.webp';
+import pingyao160 from '@/assets/map/landmarkModels/pingyao-160.webp';
+import pingyao320 from '@/assets/map/landmarkModels/pingyao-320.webp';
 import pitchLake160 from '@/assets/map/landmarkModels/pitch-lake-160.webp';
 import pitchLake320 from '@/assets/map/landmarkModels/pitch-lake-320.webp';
 import pitonDeLaFournaise160 from '@/assets/map/landmarkModels/piton-de-la-fournaise-160.webp';
 import pitonDeLaFournaise320 from '@/assets/map/landmarkModels/piton-de-la-fournaise-320.webp';
 import pitons160 from '@/assets/map/landmarkModels/pitons-160.webp';
 import pitons320 from '@/assets/map/landmarkModels/pitons-320.webp';
+import placeStanislas160 from '@/assets/map/landmarkModels/place-stanislas-160.webp';
+import placeStanislas320 from '@/assets/map/landmarkModels/place-stanislas-320.webp';
 import plitvice160 from '@/assets/map/landmarkModels/plitvice-160.webp';
 import plitvice320 from '@/assets/map/landmarkModels/plitvice-320.webp';
 import polaIsland160 from '@/assets/map/landmarkModels/pola-island-160.webp';
 import polaIsland320 from '@/assets/map/landmarkModels/pola-island-320.webp';
+import polonnaruwa160 from '@/assets/map/landmarkModels/polonnaruwa-160.webp';
+import polonnaruwa320 from '@/assets/map/landmarkModels/polonnaruwa-320.webp';
 import pompeii160 from '@/assets/map/landmarkModels/pompeii-160.webp';
 import pompeii320 from '@/assets/map/landmarkModels/pompeii-320.webp';
 import pontDuGard160 from '@/assets/map/landmarkModels/pont-du-gard-160.webp';
 import pontDuGard320 from '@/assets/map/landmarkModels/pont-du-gard-320.webp';
+import portaNigra160 from '@/assets/map/landmarkModels/porta-nigra-160.webp';
+import portaNigra320 from '@/assets/map/landmarkModels/porta-nigra-320.webp';
 import porto160 from '@/assets/map/landmarkModels/porto-160.webp';
 import porto320 from '@/assets/map/landmarkModels/porto-320.webp';
 import potalaPalace160 from '@/assets/map/landmarkModels/potala-palace-160.webp';
@@ -566,16 +848,28 @@ import pyramidsOfGiza160 from '@/assets/map/landmarkModels/pyramids-of-giza-160.
 import pyramidsOfGiza320 from '@/assets/map/landmarkModels/pyramids-of-giza-320.webp';
 import qalatAlBahrain160 from '@/assets/map/landmarkModels/qalat-al-bahrain-160.webp';
 import qalatAlBahrain320 from '@/assets/map/landmarkModels/qalat-al-bahrain-320.webp';
+import quedlinburg160 from '@/assets/map/landmarkModels/quedlinburg-160.webp';
+import quedlinburg320 from '@/assets/map/landmarkModels/quedlinburg-320.webp';
 import quito160 from '@/assets/map/landmarkModels/quito-160.webp';
 import quito320 from '@/assets/map/landmarkModels/quito-320.webp';
 import qutbMinar160 from '@/assets/map/landmarkModels/qutb-minar-160.webp';
 import qutbMinar320 from '@/assets/map/landmarkModels/qutb-minar-320.webp';
 import redFort160 from '@/assets/map/landmarkModels/red-fort-160.webp';
 import redFort320 from '@/assets/map/landmarkModels/red-fort-320.webp';
+import regensburg160 from '@/assets/map/landmarkModels/regensburg-160.webp';
+import regensburg320 from '@/assets/map/landmarkModels/regensburg-320.webp';
 import registan160 from '@/assets/map/landmarkModels/registan-160.webp';
 import registan320 from '@/assets/map/landmarkModels/registan-320.webp';
+import reims160 from '@/assets/map/landmarkModels/reims-160.webp';
+import reims320 from '@/assets/map/landmarkModels/reims-320.webp';
+import rhodes160 from '@/assets/map/landmarkModels/rhodes-160.webp';
+import rhodes320 from '@/assets/map/landmarkModels/rhodes-320.webp';
+import rideauCanal160 from '@/assets/map/landmarkModels/rideau-canal-160.webp';
+import rideauCanal320 from '@/assets/map/landmarkModels/rideau-canal-320.webp';
 import riga160 from '@/assets/map/landmarkModels/riga-160.webp';
 import riga320 from '@/assets/map/landmarkModels/riga-320.webp';
+import rijksmuseum160 from '@/assets/map/landmarkModels/rijksmuseum-160.webp';
+import rijksmuseum320 from '@/assets/map/landmarkModels/rijksmuseum-320.webp';
 import rila160 from '@/assets/map/landmarkModels/rila-160.webp';
 import rila320 from '@/assets/map/landmarkModels/rila-320.webp';
 import robbenIsland160 from '@/assets/map/landmarkModels/robben-island-160.webp';
@@ -586,10 +880,18 @@ import rockOfGibraltar160 from '@/assets/map/landmarkModels/rock-of-gibraltar-16
 import rockOfGibraltar320 from '@/assets/map/landmarkModels/rock-of-gibraltar-320.webp';
 import roiMata160 from '@/assets/map/landmarkModels/roi-mata-160.webp';
 import roiMata320 from '@/assets/map/landmarkModels/roi-mata-320.webp';
+import roskilde160 from '@/assets/map/landmarkModels/roskilde-160.webp';
+import roskilde320 from '@/assets/map/landmarkModels/roskilde-320.webp';
+import royalExhibitionBuilding160 from '@/assets/map/landmarkModels/royal-exhibition-building-160.webp';
+import royalExhibitionBuilding320 from '@/assets/map/landmarkModels/royal-exhibition-building-320.webp';
+import safranbolu160 from '@/assets/map/landmarkModels/safranbolu-160.webp';
+import safranbolu320 from '@/assets/map/landmarkModels/safranbolu-320.webp';
 import sagradaFamilia160 from '@/assets/map/landmarkModels/sagrada-familia-160.webp';
 import sagradaFamilia320 from '@/assets/map/landmarkModels/sagrada-familia-320.webp';
 import saintBasils160 from '@/assets/map/landmarkModels/saint-basils-160.webp';
 import saintBasils320 from '@/assets/map/landmarkModels/saint-basils-320.webp';
+import saintEmilion160 from '@/assets/map/landmarkModels/saint-emilion-160.webp';
+import saintEmilion320 from '@/assets/map/landmarkModels/saint-emilion-320.webp';
 import saintLouis160 from '@/assets/map/landmarkModels/saint-louis-160.webp';
 import saintLouis320 from '@/assets/map/landmarkModels/saint-louis-320.webp';
 import saintPetersburg160 from '@/assets/map/landmarkModels/saint-petersburg-160.webp';
@@ -598,32 +900,60 @@ import saintSophia160 from '@/assets/map/landmarkModels/saint-sophia-160.webp';
 import saintSophia320 from '@/assets/map/landmarkModels/saint-sophia-320.webp';
 import salarDeUyuni160 from '@/assets/map/landmarkModels/salar-de-uyuni-160.webp';
 import salarDeUyuni320 from '@/assets/map/landmarkModels/salar-de-uyuni-320.webp';
+import salvador160 from '@/assets/map/landmarkModels/salvador-160.webp';
+import salvador320 from '@/assets/map/landmarkModels/salvador-320.webp';
 import salzburg160 from '@/assets/map/landmarkModels/salzburg-160.webp';
 import salzburg320 from '@/assets/map/landmarkModels/salzburg-320.webp';
+import samarra160 from '@/assets/map/landmarkModels/samarra-160.webp';
+import samarra320 from '@/assets/map/landmarkModels/samarra-320.webp';
+import sanGimignano160 from '@/assets/map/landmarkModels/san-gimignano-160.webp';
+import sanGimignano320 from '@/assets/map/landmarkModels/san-gimignano-320.webp';
 import sanaa160 from '@/assets/map/landmarkModels/sanaa-160.webp';
 import sanaa320 from '@/assets/map/landmarkModels/sanaa-320.webp';
+import sanchi160 from '@/assets/map/landmarkModels/sanchi-160.webp';
+import sanchi320 from '@/assets/map/landmarkModels/sanchi-320.webp';
+import sanssouci160 from '@/assets/map/landmarkModels/sanssouci-160.webp';
+import sanssouci320 from '@/assets/map/landmarkModels/sanssouci-320.webp';
+import santiagoCathedral160 from '@/assets/map/landmarkModels/santiago-cathedral-160.webp';
+import santiagoCathedral320 from '@/assets/map/landmarkModels/santiago-cathedral-320.webp';
 import santoDomingo160 from '@/assets/map/landmarkModels/santo-domingo-160.webp';
 import santoDomingo320 from '@/assets/map/landmarkModels/santo-domingo-320.webp';
 import santorini160 from '@/assets/map/landmarkModels/santorini-160.webp';
 import santorini320 from '@/assets/map/landmarkModels/santorini-320.webp';
 import schonbrunn160 from '@/assets/map/landmarkModels/schonbrunn-160.webp';
 import schonbrunn320 from '@/assets/map/landmarkModels/schonbrunn-320.webp';
+import schwerinCastle160 from '@/assets/map/landmarkModels/schwerin-castle-160.webp';
+import schwerinCastle320 from '@/assets/map/landmarkModels/schwerin-castle-320.webp';
 import segoviaAqueduct160 from '@/assets/map/landmarkModels/segovia-aqueduct-160.webp';
 import segoviaAqueduct320 from '@/assets/map/landmarkModels/segovia-aqueduct-320.webp';
+import selimiye160 from '@/assets/map/landmarkModels/selimiye-160.webp';
+import selimiye320 from '@/assets/map/landmarkModels/selimiye-320.webp';
 import seongsan160 from '@/assets/map/landmarkModels/seongsan-160.webp';
 import seongsan320 from '@/assets/map/landmarkModels/seongsan-320.webp';
 import serengeti160 from '@/assets/map/landmarkModels/serengeti-160.webp';
 import serengeti320 from '@/assets/map/landmarkModels/serengeti-320.webp';
+import sergievPosad160 from '@/assets/map/landmarkModels/sergiev-posad-160.webp';
+import sergievPosad320 from '@/assets/map/landmarkModels/sergiev-posad-320.webp';
 import sevilleGiralda160 from '@/assets/map/landmarkModels/seville-giralda-160.webp';
 import sevilleGiralda320 from '@/assets/map/landmarkModels/seville-giralda-320.webp';
+import shakhrisyabz160 from '@/assets/map/landmarkModels/shakhrisyabz-160.webp';
+import shakhrisyabz320 from '@/assets/map/landmarkModels/shakhrisyabz-320.webp';
+import shaolin160 from '@/assets/map/landmarkModels/shaolin-160.webp';
+import shaolin320 from '@/assets/map/landmarkModels/shaolin-320.webp';
 import sheikhZayedMosque160 from '@/assets/map/landmarkModels/sheikh-zayed-mosque-160.webp';
 import sheikhZayedMosque320 from '@/assets/map/landmarkModels/sheikh-zayed-mosque-320.webp';
+import sheki160 from '@/assets/map/landmarkModels/sheki-160.webp';
+import sheki320 from '@/assets/map/landmarkModels/sheki-320.webp';
 import shibam160 from '@/assets/map/landmarkModels/shibam-160.webp';
 import shibam320 from '@/assets/map/landmarkModels/shibam-320.webp';
 import shirakawaGo160 from '@/assets/map/landmarkModels/shirakawa-go-160.webp';
 import shirakawaGo320 from '@/assets/map/landmarkModels/shirakawa-go-320.webp';
+import shoreTemple160 from '@/assets/map/landmarkModels/shore-temple-160.webp';
+import shoreTemple320 from '@/assets/map/landmarkModels/shore-temple-320.webp';
 import sidiBouSaid160 from '@/assets/map/landmarkModels/sidi-bou-said-160.webp';
 import sidiBouSaid320 from '@/assets/map/landmarkModels/sidi-bou-said-320.webp';
+import siena160 from '@/assets/map/landmarkModels/siena-160.webp';
+import siena320 from '@/assets/map/landmarkModels/siena-320.webp';
 import sigatokaDunes160 from '@/assets/map/landmarkModels/sigatoka-dunes-160.webp';
 import sigatokaDunes320 from '@/assets/map/landmarkModels/sigatoka-dunes-320.webp';
 import sighisoara160 from '@/assets/map/landmarkModels/sighisoara-160.webp';
@@ -632,18 +962,28 @@ import sigiriya160 from '@/assets/map/landmarkModels/sigiriya-160.webp';
 import sigiriya320 from '@/assets/map/landmarkModels/sigiriya-320.webp';
 import simienMountains160 from '@/assets/map/landmarkModels/simien-mountains-160.webp';
 import simienMountains320 from '@/assets/map/landmarkModels/simien-mountains-320.webp';
+import skaraBrae160 from '@/assets/map/landmarkModels/skara-brae-160.webp';
+import skaraBrae320 from '@/assets/map/landmarkModels/skara-brae-320.webp';
 import skelligMichael160 from '@/assets/map/landmarkModels/skellig-michael-160.webp';
 import skelligMichael320 from '@/assets/map/landmarkModels/skellig-michael-320.webp';
 import socotra160 from '@/assets/map/landmarkModels/socotra-160.webp';
 import socotra320 from '@/assets/map/landmarkModels/socotra-320.webp';
 import soufriereHills160 from '@/assets/map/landmarkModels/soufriere-hills-160.webp';
 import soufriereHills320 from '@/assets/map/landmarkModels/soufriere-hills-320.webp';
+import speicherstadt160 from '@/assets/map/landmarkModels/speicherstadt-160.webp';
+import speicherstadt320 from '@/assets/map/landmarkModels/speicherstadt-320.webp';
+import speyerCathedral160 from '@/assets/map/landmarkModels/speyer-cathedral-160.webp';
+import speyerCathedral320 from '@/assets/map/landmarkModels/speyer-cathedral-320.webp';
 import spisCastle160 from '@/assets/map/landmarkModels/spis-castle-160.webp';
 import spisCastle320 from '@/assets/map/landmarkModels/spis-castle-320.webp';
+import stCatherines160 from '@/assets/map/landmarkModels/st-catherines-160.webp';
+import stCatherines320 from '@/assets/map/landmarkModels/st-catherines-320.webp';
 import stGeorgeBermuda160 from '@/assets/map/landmarkModels/st-george-bermuda-160.webp';
 import stGeorgeBermuda320 from '@/assets/map/landmarkModels/st-george-bermuda-320.webp';
 import stPeters160 from '@/assets/map/landmarkModels/st-peters-160.webp';
 import stPeters320 from '@/assets/map/landmarkModels/st-peters-320.webp';
+import stStephens160 from '@/assets/map/landmarkModels/st-stephens-160.webp';
+import stStephens320 from '@/assets/map/landmarkModels/st-stephens-320.webp';
 import statueOfLiberty160 from '@/assets/map/landmarkModels/statue-of-liberty-160.webp';
 import statueOfLiberty320 from '@/assets/map/landmarkModels/statue-of-liberty-320.webp';
 import stingrayCity160 from '@/assets/map/landmarkModels/stingray-city-160.webp';
@@ -654,16 +994,24 @@ import stoneTown160 from '@/assets/map/landmarkModels/stone-town-160.webp';
 import stoneTown320 from '@/assets/map/landmarkModels/stone-town-320.webp';
 import stonehenge160 from '@/assets/map/landmarkModels/stonehenge-160.webp';
 import stonehenge320 from '@/assets/map/landmarkModels/stonehenge-320.webp';
+import strasbourg160 from '@/assets/map/landmarkModels/strasbourg-160.webp';
+import strasbourg320 from '@/assets/map/landmarkModels/strasbourg-320.webp';
+import stromboli160 from '@/assets/map/landmarkModels/stromboli-160.webp';
+import stromboli320 from '@/assets/map/landmarkModels/stromboli-320.webp';
 import studenica160 from '@/assets/map/landmarkModels/studenica-160.webp';
 import studenica320 from '@/assets/map/landmarkModels/studenica-320.webp';
 import sukhothai160 from '@/assets/map/landmarkModels/sukhothai-160.webp';
 import sukhothai320 from '@/assets/map/landmarkModels/sukhothai-320.webp';
 import sukur160 from '@/assets/map/landmarkModels/sukur-160.webp';
 import sukur320 from '@/assets/map/landmarkModels/sukur-320.webp';
+import summerPalace160 from '@/assets/map/landmarkModels/summer-palace-160.webp';
+import summerPalace320 from '@/assets/map/landmarkModels/summer-palace-320.webp';
 import sundarbans160 from '@/assets/map/landmarkModels/sundarbans-160.webp';
 import sundarbans320 from '@/assets/map/landmarkModels/sundarbans-320.webp';
 import suomenlinna160 from '@/assets/map/landmarkModels/suomenlinna-160.webp';
 import suomenlinna320 from '@/assets/map/landmarkModels/suomenlinna-320.webp';
+import suzhouGardens160 from '@/assets/map/landmarkModels/suzhou-gardens-160.webp';
+import suzhouGardens320 from '@/assets/map/landmarkModels/suzhou-gardens-320.webp';
 import svanetiTowers160 from '@/assets/map/landmarkModels/svaneti-towers-160.webp';
 import svanetiTowers320 from '@/assets/map/landmarkModels/svaneti-towers-320.webp';
 import sydneyOperaHouse160 from '@/assets/map/landmarkModels/sydney-opera-house-160.webp';
@@ -674,10 +1022,14 @@ import tajMahal160 from '@/assets/map/landmarkModels/taj-mahal-160.webp';
 import tajMahal320 from '@/assets/map/landmarkModels/taj-mahal-320.webp';
 import tallinn160 from '@/assets/map/landmarkModels/tallinn-160.webp';
 import tallinn320 from '@/assets/map/landmarkModels/tallinn-320.webp';
+import taosPueblo160 from '@/assets/map/landmarkModels/taos-pueblo-160.webp';
+import taosPueblo320 from '@/assets/map/landmarkModels/taos-pueblo-320.webp';
 import taputapuatea160 from '@/assets/map/landmarkModels/taputapuatea-160.webp';
 import taputapuatea320 from '@/assets/map/landmarkModels/taputapuatea-320.webp';
 import taroko160 from '@/assets/map/landmarkModels/taroko-160.webp';
 import taroko320 from '@/assets/map/landmarkModels/taroko-320.webp';
+import tarraco160 from '@/assets/map/landmarkModels/tarraco-160.webp';
+import tarraco320 from '@/assets/map/landmarkModels/tarraco-320.webp';
 import teatroAmazonas160 from '@/assets/map/landmarkModels/teatro-amazonas-160.webp';
 import teatroAmazonas320 from '@/assets/map/landmarkModels/teatro-amazonas-320.webp';
 import teide160 from '@/assets/map/landmarkModels/teide-160.webp';
@@ -702,22 +1054,36 @@ import tikal160 from '@/assets/map/landmarkModels/tikal-160.webp';
 import tikal320 from '@/assets/map/landmarkModels/tikal-320.webp';
 import timbuktu160 from '@/assets/map/landmarkModels/timbuktu-160.webp';
 import timbuktu320 from '@/assets/map/landmarkModels/timbuktu-320.webp';
+import timgad160 from '@/assets/map/landmarkModels/timgad-160.webp';
+import timgad320 from '@/assets/map/landmarkModels/timgad-320.webp';
 import tivoli160 from '@/assets/map/landmarkModels/tivoli-160.webp';
 import tivoli320 from '@/assets/map/landmarkModels/tivoli-320.webp';
 import tiwanaku160 from '@/assets/map/landmarkModels/tiwanaku-160.webp';
 import tiwanaku320 from '@/assets/map/landmarkModels/tiwanaku-320.webp';
+import toledo160 from '@/assets/map/landmarkModels/toledo-160.webp';
+import toledo320 from '@/assets/map/landmarkModels/toledo-320.webp';
+import tomar160 from '@/assets/map/landmarkModels/tomar-160.webp';
+import tomar320 from '@/assets/map/landmarkModels/tomar-320.webp';
 import tongariro160 from '@/assets/map/landmarkModels/tongariro-160.webp';
 import tongariro320 from '@/assets/map/landmarkModels/tongariro-320.webp';
 import torresDelPaine160 from '@/assets/map/landmarkModels/torres-del-paine-160.webp';
 import torresDelPaine320 from '@/assets/map/landmarkModels/torres-del-paine-320.webp';
+import torun160 from '@/assets/map/landmarkModels/torun-160.webp';
+import torun320 from '@/assets/map/landmarkModels/torun-320.webp';
+import towerOfHercules160 from '@/assets/map/landmarkModels/tower-of-hercules-160.webp';
+import towerOfHercules320 from '@/assets/map/landmarkModels/tower-of-hercules-320.webp';
 import towerOfLondon160 from '@/assets/map/landmarkModels/tower-of-london-160.webp';
 import towerOfLondon320 from '@/assets/map/landmarkModels/tower-of-london-320.webp';
 import trakai160 from '@/assets/map/landmarkModels/trakai-160.webp';
 import trakai320 from '@/assets/map/landmarkModels/trakai-320.webp';
+import trangAn160 from '@/assets/map/landmarkModels/trang-an-160.webp';
+import trangAn320 from '@/assets/map/landmarkModels/trang-an-320.webp';
 import trinidadCuba160 from '@/assets/map/landmarkModels/trinidad-cuba-160.webp';
 import trinidadCuba320 from '@/assets/map/landmarkModels/trinidad-cuba-320.webp';
 import trinidadMission160 from '@/assets/map/landmarkModels/trinidad-mission-160.webp';
 import trinidadMission320 from '@/assets/map/landmarkModels/trinidad-mission-320.webp';
+import troy160 from '@/assets/map/landmarkModels/troy-160.webp';
+import troy320 from '@/assets/map/landmarkModels/troy-320.webp';
 import trulli160 from '@/assets/map/landmarkModels/trulli-160.webp';
 import trulli320 from '@/assets/map/landmarkModels/trulli-320.webp';
 import trunkBay160 from '@/assets/map/landmarkModels/trunk-bay-160.webp';
@@ -730,6 +1096,8 @@ import uluru160 from '@/assets/map/landmarkModels/uluru-160.webp';
 import uluru320 from '@/assets/map/landmarkModels/uluru-320.webp';
 import undergroundRiver160 from '@/assets/map/landmarkModels/underground-river-160.webp';
 import undergroundRiver320 from '@/assets/map/landmarkModels/underground-river-320.webp';
+import urbino160 from '@/assets/map/landmarkModels/urbino-160.webp';
+import urbino320 from '@/assets/map/landmarkModels/urbino-320.webp';
 import urnesStaveChurch160 from '@/assets/map/landmarkModels/urnes-stave-church-160.webp';
 import urnesStaveChurch320 from '@/assets/map/landmarkModels/urnes-stave-church-320.webp';
 import vaduzCastle160 from '@/assets/map/landmarkModels/vaduz-castle-160.webp';
@@ -738,16 +1106,24 @@ import valleeDeMai160 from '@/assets/map/landmarkModels/vallee-de-mai-160.webp';
 import valleeDeMai320 from '@/assets/map/landmarkModels/vallee-de-mai-320.webp';
 import valletta160 from '@/assets/map/landmarkModels/valletta-160.webp';
 import valletta320 from '@/assets/map/landmarkModels/valletta-320.webp';
+import valparaiso160 from '@/assets/map/landmarkModels/valparaiso-160.webp';
+import valparaiso320 from '@/assets/map/landmarkModels/valparaiso-320.webp';
 import vatnajokull160 from '@/assets/map/landmarkModels/vatnajokull-160.webp';
 import vatnajokull320 from '@/assets/map/landmarkModels/vatnajokull-320.webp';
 import venice160 from '@/assets/map/landmarkModels/venice-160.webp';
 import venice320 from '@/assets/map/landmarkModels/venice-320.webp';
+import veronaArena160 from '@/assets/map/landmarkModels/verona-arena-160.webp';
+import veronaArena320 from '@/assets/map/landmarkModels/verona-arena-320.webp';
 import versailles160 from '@/assets/map/landmarkModels/versailles-160.webp';
 import versailles320 from '@/assets/map/landmarkModels/versailles-320.webp';
 import victoriaFalls160 from '@/assets/map/landmarkModels/victoria-falls-160.webp';
 import victoriaFalls320 from '@/assets/map/landmarkModels/victoria-falls-320.webp';
 import vigan160 from '@/assets/map/landmarkModels/vigan-160.webp';
 import vigan320 from '@/assets/map/landmarkModels/vigan-320.webp';
+import villaDeste160 from '@/assets/map/landmarkModels/villa-deste-160.webp';
+import villaDeste320 from '@/assets/map/landmarkModels/villa-deste-320.webp';
+import villaSavoye160 from '@/assets/map/landmarkModels/villa-savoye-160.webp';
+import villaSavoye320 from '@/assets/map/landmarkModels/villa-savoye-320.webp';
 import vilnius160 from '@/assets/map/landmarkModels/vilnius-160.webp';
 import vilnius320 from '@/assets/map/landmarkModels/vilnius-320.webp';
 import vinales160 from '@/assets/map/landmarkModels/vinales-160.webp';
@@ -758,30 +1134,66 @@ import visby160 from '@/assets/map/landmarkModels/visby-160.webp';
 import visby320 from '@/assets/map/landmarkModels/visby-320.webp';
 import visegradBridge160 from '@/assets/map/landmarkModels/visegrad-bridge-160.webp';
 import visegradBridge320 from '@/assets/map/landmarkModels/visegrad-bridge-320.webp';
+import vizcayaBridge160 from '@/assets/map/landmarkModels/vizcaya-bridge-160.webp';
+import vizcayaBridge320 from '@/assets/map/landmarkModels/vizcaya-bridge-320.webp';
 import volcanoesNp160 from '@/assets/map/landmarkModels/volcanoes-np-160.webp';
 import volcanoesNp320 from '@/assets/map/landmarkModels/volcanoes-np-320.webp';
+import volubilis160 from '@/assets/map/landmarkModels/volubilis-160.webp';
+import volubilis320 from '@/assets/map/landmarkModels/volubilis-320.webp';
 import volunteerPoint160 from '@/assets/map/landmarkModels/volunteer-point-160.webp';
 import volunteerPoint320 from '@/assets/map/landmarkModels/volunteer-point-320.webp';
 import voronet160 from '@/assets/map/landmarkModels/voronet-160.webp';
 import voronet320 from '@/assets/map/landmarkModels/voronet-320.webp';
+import wachau160 from '@/assets/map/landmarkModels/wachau-160.webp';
+import wachau320 from '@/assets/map/landmarkModels/wachau-320.webp';
 import wadiRum160 from '@/assets/map/landmarkModels/wadi-rum-160.webp';
 import wadiRum320 from '@/assets/map/landmarkModels/wadi-rum-320.webp';
 import wallblakeHouse160 from '@/assets/map/landmarkModels/wallblake-house-160.webp';
 import wallblakeHouse320 from '@/assets/map/landmarkModels/wallblake-house-320.webp';
+import warsaw160 from '@/assets/map/landmarkModels/warsaw-160.webp';
+import warsaw320 from '@/assets/map/landmarkModels/warsaw-320.webp';
+import wartburg160 from '@/assets/map/landmarkModels/wartburg-160.webp';
+import wartburg320 from '@/assets/map/landmarkModels/wartburg-320.webp';
 import watPhou160 from '@/assets/map/landmarkModels/wat-phou-160.webp';
 import watPhou320 from '@/assets/map/landmarkModels/wat-phou-320.webp';
+import westLake160 from '@/assets/map/landmarkModels/west-lake-160.webp';
+import westLake320 from '@/assets/map/landmarkModels/west-lake-320.webp';
+import westernWall160 from '@/assets/map/landmarkModels/western-wall-160.webp';
+import westernWall320 from '@/assets/map/landmarkModels/western-wall-320.webp';
 import wieliczka160 from '@/assets/map/landmarkModels/wieliczka-160.webp';
 import wieliczka320 from '@/assets/map/landmarkModels/wieliczka-320.webp';
+import wildGoosePagoda160 from '@/assets/map/landmarkModels/wild-goose-pagoda-160.webp';
+import wildGoosePagoda320 from '@/assets/map/landmarkModels/wild-goose-pagoda-320.webp';
 import willemstad160 from '@/assets/map/landmarkModels/willemstad-160.webp';
 import willemstad320 from '@/assets/map/landmarkModels/willemstad-320.webp';
+import wurzburg160 from '@/assets/map/landmarkModels/wurzburg-160.webp';
+import wurzburg320 from '@/assets/map/landmarkModels/wurzburg-320.webp';
 import xochimilco160 from '@/assets/map/landmarkModels/xochimilco-160.webp';
 import xochimilco320 from '@/assets/map/landmarkModels/xochimilco-320.webp';
 import yasawi160 from '@/assets/map/landmarkModels/yasawi-160.webp';
 import yasawi320 from '@/assets/map/landmarkModels/yasawi-320.webp';
+import yazd160 from '@/assets/map/landmarkModels/yazd-160.webp';
+import yazd320 from '@/assets/map/landmarkModels/yazd-320.webp';
+import zhangjiajie160 from '@/assets/map/landmarkModels/zhangjiajie-160.webp';
+import zhangjiajie320 from '@/assets/map/landmarkModels/zhangjiajie-320.webp';
+import zigguratOfUr160 from '@/assets/map/landmarkModels/ziggurat-of-ur-160.webp';
+import zigguratOfUr320 from '@/assets/map/landmarkModels/ziggurat-of-ur-320.webp';
 
 export const LANDMARK_MODEL_HEIGHTS = [160, 320];
 
 export const LANDMARK_MODELS = [
+  {
+    id: 'aachen-cathedral',
+    name: 'Aachen Cathedral',
+    latitude: 50.77475,
+    longitude: 6.08392,
+    maps: ['DE'],
+    landmark: 'Q5908',
+    aspect: 1.8536,
+    size: 0.7,
+    anchor: [0.5, 0.3628],
+    images: { 160: aachenCathedral160, 320: aachenCathedral320 },
+  },
   {
     id: 'abomey',
     name: 'Royal Palaces of Abomey',
@@ -807,6 +1219,18 @@ export const LANDMARK_MODELS = [
     images: { 160: abuSimbel160, 320: abuSimbel320 },
   },
   {
+    id: 'acre',
+    name: 'Old City of Acre',
+    latitude: 32.92611,
+    longitude: 35.08389,
+    maps: ['IL'],
+    landmark: 'Q126084',
+    aspect: 1.8673,
+    size: 0.7,
+    anchor: [0.5, 0.3568],
+    images: { 160: acre160, 320: acre320 },
+  },
+  {
     id: 'agadez',
     name: 'Agadez',
     latitude: 16.9744,
@@ -819,6 +1243,31 @@ export const LANDMARK_MODELS = [
     images: { 160: agadez160, 320: agadez320 },
   },
   {
+    id: 'agra-fort',
+    name: 'Agra Fort',
+    latitude: 27.17958,
+    longitude: 78.0213,
+    maps: ['IN'],
+    landmark: 'Q171857',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: agraFort160, 320: agraFort320 },
+  },
+  {
+    id: 'agrigento',
+    name: 'Valley of the Temples',
+    latitude: 37.28972,
+    longitude: 13.59,
+    maps: ['IT'],
+    landmark: 'Q636774',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: agrigento160, 320: agrigento320 },
+  },
+  {
     id: 'ait-benhaddou',
     name: 'Aït Benhaddou',
     latitude: 31.05,
@@ -829,6 +1278,31 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3561],
     images: { 160: aitBenhaddou160, 320: aitBenhaddou320 },
+  },
+  {
+    id: 'ajanta',
+    name: 'Ajanta Caves',
+    latitude: 20.55342,
+    longitude: 75.70047,
+    maps: ['IN'],
+    landmark: 'Q184427',
+    onMap: false,
+    aspect: 1.751,
+    size: 0.7,
+    anchor: [0.5, 0.3977],
+    images: { 160: ajanta160, 320: ajanta320 },
+  },
+  {
+    id: 'aksum',
+    name: 'Stelae of Aksum',
+    latitude: 14.13019,
+    longitude: 38.71861,
+    maps: ['ET'],
+    landmark: 'Q107183452',
+    aspect: 1.6948,
+    size: 0.7,
+    anchor: [0.5, 0.4164],
+    images: { 160: aksum160, 320: aksum320 },
   },
   {
     id: 'al-zubarah',
@@ -855,6 +1329,42 @@ export const LANDMARK_MODELS = [
     images: { 160: alaArcha160, 320: alaArcha320 },
   },
   {
+    id: 'alamo',
+    name: 'The Alamo',
+    latitude: 29.3281,
+    longitude: -98.46,
+    maps: ['US'],
+    landmark: 'Q10498483',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: alamo160, 320: alamo320 },
+  },
+  {
+    id: 'albi',
+    name: 'Albi Cathedral',
+    latitude: 43.9283,
+    longitude: 2.1425,
+    maps: ['FR'],
+    landmark: 'Q1778266',
+    aspect: 1.8811,
+    size: 0.7,
+    anchor: [0.5, 0.3528],
+    images: { 160: albi160, 320: albi320 },
+  },
+  {
+    id: 'aleppo-citadel',
+    name: 'Citadel of Aleppo',
+    latitude: 36.18333,
+    longitude: 37.15,
+    maps: ['SY'],
+    landmark: 'Q4115349',
+    aspect: 1.8321,
+    size: 0.7,
+    anchor: [0.5, 0.3695],
+    images: { 160: aleppoCitadel160, 320: aleppoCitadel320 },
+  },
+  {
     id: 'alhambra',
     name: 'Alhambra',
     latitude: 37.17634,
@@ -878,6 +1388,31 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4709],
     images: { 160: amalfiCoast160, 320: amalfiCoast320 },
+  },
+  {
+    id: 'amber-fort',
+    name: 'Amber Fort',
+    latitude: 26.9859,
+    longitude: 75.8507,
+    maps: ['IN'],
+    landmark: 'Q456817',
+    onMap: false,
+    aspect: 1.7462,
+    size: 0.7,
+    anchor: [0.5, 0.399],
+    images: { 160: amberFort160, 320: amberFort320 },
+  },
+  {
+    id: 'amiens-cathedral',
+    name: 'Amiens Cathedral',
+    latitude: 49.89457,
+    longitude: 2.3021,
+    maps: ['FR'],
+    landmark: 'Q106934',
+    aspect: 1.668,
+    size: 0.7,
+    anchor: [0.5, 0.4267],
+    images: { 160: amiensCathedral160, 320: amiensCathedral320 },
   },
   {
     id: 'amsterdam-canals',
@@ -928,6 +1463,82 @@ export const LANDMARK_MODELS = [
     images: { 160: antiguaGuatemala160, 320: antiguaGuatemala320 },
   },
   {
+    id: 'anuradhapura',
+    name: 'Ruwanwelisaya, Anuradhapura',
+    latitude: 8.335,
+    longitude: 80.41083,
+    maps: ['LK'],
+    landmark: 'Q5724',
+    aspect: 1.7856,
+    size: 0.7,
+    anchor: [0.5, 0.3851],
+    images: { 160: anuradhapura160, 320: anuradhapura320 },
+  },
+  {
+    id: 'aphrodisias',
+    name: 'Tetrapylon of Aphrodisias',
+    latitude: 37.70833,
+    longitude: 28.72361,
+    maps: ['TR'],
+    landmark: 'Q64699201',
+    onMap: false,
+    aspect: 1.9269,
+    size: 0.7,
+    anchor: [0.5, 0.3377],
+    images: { 160: aphrodisias160, 320: aphrodisias320 },
+  },
+  {
+    id: 'arles-arena',
+    name: 'Arles Amphitheatre',
+    latitude: 43.67764,
+    longitude: 4.63069,
+    maps: ['FR'],
+    landmark: 'Q1279597',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: arlesArena160, 320: arlesArena320 },
+  },
+  {
+    id: 'assisi',
+    name: 'Basilica of St Francis, Assisi',
+    latitude: 43.06617,
+    longitude: 12.62244,
+    maps: ['IT'],
+    landmark: 'Q16913154',
+    aspect: 1.6272,
+    size: 0.7,
+    anchor: [0.5, 0.4398],
+    images: { 160: assisi160, 320: assisi320 },
+  },
+  {
+    id: 'avignon',
+    name: 'Palais des Papes, Avignon',
+    latitude: 43.95278,
+    longitude: 4.80611,
+    maps: ['FR'],
+    landmark: 'Q15241016',
+    onMap: false,
+    aspect: 1.8268,
+    size: 0.7,
+    anchor: [0.5, 0.3714],
+    images: { 160: avignon160, 320: avignon320 },
+  },
+  {
+    id: 'avila',
+    name: 'Walls of Ávila',
+    latitude: 40.65639,
+    longitude: -4.70011,
+    maps: ['ES'],
+    landmark: 'Q15839120',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: avila160, 320: avila320 },
+  },
+  {
     id: 'ayutthaya',
     name: 'Ayutthaya (Wat Phra Si Sanphet)',
     latitude: 14.35583,
@@ -953,6 +1564,31 @@ export const LANDMARK_MODELS = [
     images: { 160: baalbek160, 320: baalbek320 },
   },
   {
+    id: 'bab-mansour',
+    name: 'Bab Mansour',
+    latitude: 33.89486,
+    longitude: -5.56448,
+    maps: ['MA'],
+    landmark: 'Q12352436',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: babMansour160, 320: babMansour320 },
+  },
+  {
+    id: 'babylon',
+    name: 'Ishtar Gate, Babylon',
+    latitude: 32.54178,
+    longitude: 44.43164,
+    maps: ['IQ'],
+    landmark: 'Q100329356',
+    aspect: 1.9038,
+    size: 0.7,
+    anchor: [0.5, 0.3449],
+    images: { 160: babylon160, 320: babylon320 },
+  },
+  {
     id: 'bagan',
     name: 'Bagan',
     latitude: 21.1725,
@@ -963,6 +1599,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.5867],
     images: { 160: bagan160, 320: bagan320 },
+  },
+  {
+    id: 'bagerhat',
+    name: 'Sixty Dome Mosque',
+    latitude: 22.66097,
+    longitude: 89.75855,
+    maps: ['BD'],
+    landmark: 'Q799893',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: bagerhat160, 320: bagerhat320 },
   },
   {
     id: 'bahai-gardens',
@@ -1001,6 +1649,42 @@ export const LANDMARK_MODELS = [
     images: { 160: baliSubak160, 320: baliSubak320 },
   },
   {
+    id: 'bam-citadel',
+    name: 'Arg-e Bam',
+    latitude: 29.11686,
+    longitude: 58.36847,
+    maps: ['IR'],
+    landmark: 'Q43277',
+    aspect: 1.9153,
+    size: 0.7,
+    anchor: [0.5, 0.3409],
+    images: { 160: bamCitadel160, 320: bamCitadel320 },
+  },
+  {
+    id: 'bamberg',
+    name: 'Old Town Hall, Bamberg',
+    latitude: 49.89167,
+    longitude: 10.89167,
+    maps: ['DE'],
+    landmark: 'Q3936',
+    aspect: 1.7907,
+    size: 0.7,
+    anchor: [0.5, 0.3845],
+    images: { 160: bamberg160, 320: bamberg320 },
+  },
+  {
+    id: 'bamiyan',
+    name: 'Buddhas of Bamiyan',
+    latitude: 34.83204,
+    longitude: 67.8268,
+    maps: ['AF'],
+    landmark: 'Q50810144',
+    aspect: 1.5965,
+    size: 0.7,
+    anchor: [0.5, 0.4509],
+    images: { 160: bamiyan160, 320: bamiyan320 },
+  },
+  {
     id: 'banaue',
     name: 'Banaue Rice Terraces',
     latitude: 16.93472,
@@ -1011,6 +1695,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4667],
     images: { 160: banaue160, 320: banaue320 },
+  },
+  {
+    id: 'batalha',
+    name: 'Batalha Monastery',
+    latitude: 39.65917,
+    longitude: -8.82611,
+    maps: ['PT'],
+    landmark: 'Q174779',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: batalha160, 320: batalha320 },
   },
   {
     id: 'bath',
@@ -1036,6 +1732,19 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4774],
     images: { 160: belemTower160, 320: belemTower320 },
+  },
+  {
+    id: 'biertan',
+    name: 'Biertan Fortified Church',
+    latitude: 46.1352,
+    longitude: 24.5213,
+    maps: ['RO'],
+    landmark: 'Q16743875',
+    onMap: false,
+    aspect: 1.7559,
+    size: 0.7,
+    anchor: [0.5, 0.3955],
+    images: { 160: biertan160, 320: biertan320 },
   },
   {
     id: 'big-ben',
@@ -1072,6 +1781,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3284],
     images: { 160: bikiniAtoll160, 320: bikiniAtoll320 },
+  },
+  {
+    id: 'blenheim',
+    name: 'Blenheim Palace',
+    latitude: 51.84136,
+    longitude: -1.36095,
+    maps: ['GB', 'XE'],
+    landmark: 'Q208181',
+    aspect: 1.8645,
+    size: 0.7,
+    anchor: [0.5, 0.3585],
+    images: { 160: blenheim160, 320: blenheim320 },
   },
   {
     id: 'blue-mountains',
@@ -1134,6 +1855,18 @@ export const LANDMARK_MODELS = [
     images: { 160: borobudur160, 320: borobudur320 },
   },
   {
+    id: 'bosra',
+    name: 'Bosra Citadel and Theatre',
+    latitude: 32.51806,
+    longitude: 36.48167,
+    maps: ['SY'],
+    landmark: 'Q15727412',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: bosra160, 320: bosra320 },
+  },
+  {
     id: 'botanic-gardens',
     name: 'Singapore Botanic Gardens',
     latitude: 1.3151,
@@ -1192,6 +1925,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4185],
     images: { 160: brasilia160, 320: brasilia320 },
+  },
+  {
+    id: 'bremen-roland',
+    name: 'Bremen Roland',
+    latitude: 53.07597,
+    longitude: 8.80747,
+    maps: ['DE'],
+    landmark: 'Q15238169',
+    aspect: 1.5766,
+    size: 0.7,
+    anchor: [0.5, 0.4572],
+    images: { 160: bremenRoland160, 320: bremenRoland320 },
   },
   {
     id: 'bridgetown',
@@ -1291,6 +2036,18 @@ export const LANDMARK_MODELS = [
     images: { 160: bunceIsland160, 320: bunceIsland320 },
   },
   {
+    id: 'burgos-cathedral',
+    name: 'Burgos Cathedral',
+    latitude: 42.34081,
+    longitude: -3.70447,
+    maps: ['ES'],
+    landmark: 'Q744420',
+    aspect: 1.8216,
+    size: 0.7,
+    anchor: [0.5, 0.3732],
+    images: { 160: burgosCathedral160, 320: burgosCathedral320 },
+  },
+  {
     id: 'burj-khalifa',
     name: 'Burj Khalifa',
     latitude: 25.19722,
@@ -1315,6 +2072,18 @@ export const LANDMARK_MODELS = [
     images: { 160: butrint160, 320: butrint320 },
   },
   {
+    id: 'byblos',
+    name: 'Byblos Castle',
+    latitude: 34.11667,
+    longitude: 35.65,
+    maps: ['LB'],
+    landmark: 'Q173532',
+    aspect: 1.9038,
+    size: 0.7,
+    anchor: [0.5, 0.3446],
+    images: { 160: byblos160, 320: byblos320 },
+  },
+  {
     id: 'caernarfon-castle',
     name: 'Caernarfon Castle',
     latitude: 53.13972,
@@ -1337,6 +2106,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3819],
     images: { 160: californiaLighthouse160, 320: californiaLighthouse320 },
+  },
+  {
+    id: 'canterbury-cathedral',
+    name: 'Canterbury Cathedral',
+    latitude: 51.28,
+    longitude: 1.08333,
+    maps: ['GB', 'XE'],
+    landmark: 'Q15924897',
+    aspect: 1.8216,
+    size: 0.7,
+    anchor: [0.5, 0.3739],
+    images: { 160: canterburyCathedral160, 320: canterburyCathedral320 },
   },
   {
     id: 'cape-coast-castle',
@@ -1387,6 +2168,18 @@ export const LANDMARK_MODELS = [
     images: { 160: carcassonne160, 320: carcassonne320 },
   },
   {
+    id: 'carnac',
+    name: 'Carnac Stones',
+    latitude: 47.61611,
+    longitude: -3.08722,
+    maps: ['FR'],
+    landmark: 'Q135287050',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: carnac160, 320: carnac320 },
+  },
+  {
     id: 'cartagena',
     name: 'Cartagena',
     latitude: 10.41667,
@@ -1424,6 +2217,44 @@ export const LANDMARK_MODELS = [
     images: { 160: cascoViejo160, 320: cascoViejo320 },
   },
   {
+    id: 'caserta',
+    name: 'Royal Palace of Caserta',
+    latitude: 41.07333,
+    longitude: 14.32639,
+    maps: ['IT'],
+    landmark: 'Q16962666',
+    onMap: false,
+    aspect: 1.9269,
+    size: 0.7,
+    anchor: [0.5, 0.3374],
+    images: { 160: caserta160, 320: caserta320 },
+  },
+  {
+    id: 'castel-del-monte',
+    name: 'Castel del Monte',
+    latitude: 41.08475,
+    longitude: 16.27093,
+    maps: ['IT'],
+    landmark: 'Q215897',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: castelDelMonte160, 320: castelDelMonte320 },
+  },
+  {
+    id: 'castel-nuovo',
+    name: 'Castel Nuovo',
+    latitude: 40.85139,
+    longitude: 14.26278,
+    maps: ['IT'],
+    landmark: 'Q832957',
+    onMap: false,
+    aspect: 1.87,
+    size: 0.7,
+    anchor: [0.5, 0.357],
+    images: { 160: castelNuovo160, 320: castelNuovo320 },
+  },
+  {
     id: 'cedars-of-god',
     name: 'Cedars of God',
     latitude: 34.28294,
@@ -1434,6 +2265,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4121],
     images: { 160: cedarsOfGod160, 320: cedarsOfGod320 },
+  },
+  {
+    id: 'centennial-hall',
+    name: 'Centennial Hall',
+    latitude: 51.10694,
+    longitude: 17.07722,
+    maps: ['PL'],
+    landmark: 'Q155743',
+    aspect: 1.9182,
+    size: 0.7,
+    anchor: [0.5, 0.3393],
+    images: { 160: centennialHall160, 320: centennialHall320 },
   },
   {
     id: 'cesky-krumlov',
@@ -1448,6 +2291,19 @@ export const LANDMARK_MODELS = [
     images: { 160: ceskyKrumlov160, 320: ceskyKrumlov320 },
   },
   {
+    id: 'chaco',
+    name: 'Pueblo Bonito, Chaco Canyon',
+    latitude: 36.06378,
+    longitude: -107.97083,
+    maps: ['US'],
+    landmark: 'Q65648486',
+    onMap: false,
+    aspect: 1.8482,
+    size: 0.7,
+    anchor: [0.5, 0.3635],
+    images: { 160: chaco160, 320: chaco320 },
+  },
+  {
     id: 'chambord',
     name: 'Château de Chambord',
     latitude: 47.61611,
@@ -1458,6 +2314,43 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.355],
     images: { 160: chambord160, 320: chambord320 },
+  },
+  {
+    id: 'chan-chan',
+    name: 'Chan Chan',
+    latitude: -8.11056,
+    longitude: -79.075,
+    maps: ['PE'],
+    landmark: 'Q277540',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: chanChan160, 320: chanChan320 },
+  },
+  {
+    id: 'charles-bridge',
+    name: 'Charles Bridge',
+    latitude: 50,
+    longitude: 14.56,
+    maps: ['CZ'],
+    landmark: 'Q64637410',
+    onMap: false,
+    aspect: 1.9182,
+    size: 0.7,
+    anchor: [0.5, 0.3403],
+    images: { 160: charlesBridge160, 320: charlesBridge320 },
+  },
+  {
+    id: 'chartres',
+    name: 'Chartres Cathedral',
+    latitude: 48.44778,
+    longitude: 1.48778,
+    maps: ['FR'],
+    landmark: 'Q180274',
+    aspect: 1.6724,
+    size: 0.7,
+    anchor: [0.5, 0.4247],
+    images: { 160: chartres160, 320: chartres320 },
   },
   {
     id: 'chateau-frontenac',
@@ -1544,6 +2437,19 @@ export const LANDMARK_MODELS = [
     images: { 160: churchOfTheNativity160, 320: churchOfTheNativity320 },
   },
   {
+    id: 'cibeles',
+    name: 'Cibeles Fountain',
+    latitude: 40.41414,
+    longitude: -3.68653,
+    maps: ['ES'],
+    landmark: 'Q107675480',
+    onMap: false,
+    aspect: 1.7366,
+    size: 0.7,
+    anchor: [0.5, 0.4031],
+    images: { 160: cibeles160, 320: cibeles320 },
+  },
+  {
     id: 'cidade-velha',
     name: 'Cidade Velha',
     latitude: 14.91667,
@@ -1617,6 +2523,18 @@ export const LANDMARK_MODELS = [
     images: { 160: cnTower160, 320: cnTower320 },
   },
   {
+    id: 'coimbra',
+    name: 'University of Coimbra',
+    latitude: 40.20781,
+    longitude: -8.42577,
+    maps: ['PT'],
+    landmark: 'Q15229957',
+    aspect: 1.6903,
+    size: 0.7,
+    anchor: [0.5, 0.4191],
+    images: { 160: coimbra160, 320: coimbra320 },
+  },
+  {
     id: 'cologne-cathedral',
     name: 'Cologne Cathedral',
     latitude: 50.94139,
@@ -1677,6 +2595,18 @@ export const LANDMARK_MODELS = [
     images: { 160: copan160, 320: copan320 },
   },
   {
+    id: 'cordoba-mezquita',
+    name: 'Mezquita of Córdoba',
+    latitude: 37.87919,
+    longitude: -4.77972,
+    maps: ['ES'],
+    landmark: 'Q10749904',
+    aspect: 1.8839,
+    size: 0.7,
+    anchor: [0.5, 0.3511],
+    images: { 160: cordobaMezquita160, 320: cordobaMezquita320 },
+  },
+  {
     id: 'cristo-rei-dili',
     name: 'Cristo Rei of Dili',
     latitude: -8.52053,
@@ -1689,6 +2619,43 @@ export const LANDMARK_MODELS = [
     images: { 160: cristoReiDili160, 320: cristoReiDili320 },
   },
   {
+    id: 'cst-mumbai',
+    name: 'Chhatrapati Shivaji Terminus',
+    latitude: 18.9398,
+    longitude: 72.8355,
+    maps: ['IN'],
+    landmark: 'Q235884',
+    aspect: 1.688,
+    size: 0.7,
+    anchor: [0.5, 0.4187],
+    images: { 160: cstMumbai160, 320: cstMumbai320 },
+  },
+  {
+    id: 'cuenca-hanging-houses',
+    name: 'Hanging Houses of Cuenca',
+    latitude: 40.0766,
+    longitude: -2.13175,
+    maps: ['ES'],
+    landmark: 'Q15965460',
+    aspect: 1.8428,
+    size: 0.7,
+    anchor: [0.5, 0.366],
+    images: { 160: cuencaHangingHouses160, 320: cuencaHangingHouses320 },
+  },
+  {
+    id: 'cusco',
+    name: 'Cusco Cathedral',
+    latitude: -13.51833,
+    longitude: -71.97806,
+    maps: ['PE'],
+    landmark: 'Q28502997',
+    onMap: false,
+    aspect: 1.8321,
+    size: 0.7,
+    anchor: [0.5, 0.3698],
+    images: { 160: cusco160, 320: cusco320 },
+  },
+  {
     id: 'dakhla',
     name: 'Dakhla Bay',
     latitude: 23.73355,
@@ -1699,6 +2666,31 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3489],
     images: { 160: dakhla160, 320: dakhla320 },
+  },
+  {
+    id: 'dambulla',
+    name: 'Dambulla Cave Temple',
+    latitude: 7.85656,
+    longitude: 80.64834,
+    maps: ['LK'],
+    landmark: 'Q45690',
+    onMap: false,
+    aspect: 1.7131,
+    size: 0.7,
+    anchor: [0.5, 0.4105],
+    images: { 160: dambulla160, 320: dambulla320 },
+  },
+  {
+    id: 'darjeeling-railway',
+    name: 'Darjeeling Himalayan Railway',
+    latitude: 27.045,
+    longitude: 88.26722,
+    maps: ['IN'],
+    landmark: 'Q463874',
+    aspect: 1.642,
+    size: 0.7,
+    anchor: [0.5, 0.4353],
+    images: { 160: darjeelingRailway160, 320: darjeelingRailway320 },
   },
   {
     id: 'darvaza',
@@ -1723,6 +2715,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5048, 0.44],
     images: { 160: deadvlei160, 320: deadvlei320 },
+  },
+  {
+    id: 'delos',
+    name: 'Delos',
+    latitude: 37.39111,
+    longitude: 25.27111,
+    maps: ['GR'],
+    landmark: 'Q173148',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: delos160, 320: delos320 },
   },
   {
     id: 'delphi',
@@ -1833,6 +2837,19 @@ export const LANDMARK_MODELS = [
     images: { 160: dubrovnik160, 320: dubrovnik320 },
   },
   {
+    id: 'durham',
+    name: 'Durham Cathedral',
+    latitude: 54.77472,
+    longitude: -1.57611,
+    maps: ['GB', 'XE'],
+    landmark: 'Q15732525',
+    onMap: false,
+    aspect: 1.8673,
+    size: 0.7,
+    anchor: [0.5, 0.3568],
+    images: { 160: durham160, 320: durham320 },
+  },
+  {
     id: 'east-rennell',
     name: 'East Rennell',
     latitude: -11.68333,
@@ -1843,6 +2860,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3284],
     images: { 160: eastRennell160, 320: eastRennell320 },
+  },
+  {
+    id: 'echmiatsin',
+    name: 'Etchmiadzin Cathedral',
+    latitude: 40.15931,
+    longitude: 44.29514,
+    maps: ['AM'],
+    landmark: 'Q22026170',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: echmiatsin160, 320: echmiatsin320 },
   },
   {
     id: 'edinburgh-castle',
@@ -1869,6 +2898,19 @@ export const LANDMARK_MODELS = [
     images: { 160: eiffelTower160, 320: eiffelTower320 },
   },
   {
+    id: 'el-escorial',
+    name: 'El Escorial',
+    latitude: 40.58917,
+    longitude: -4.14778,
+    maps: ['ES'],
+    landmark: 'Q5821857',
+    onMap: false,
+    aspect: 1.859,
+    size: 0.7,
+    anchor: [0.5, 0.3603],
+    images: { 160: elEscorial160, 320: elEscorial320 },
+  },
+  {
     id: 'el-jem',
     name: 'Amphitheatre of El Jem',
     latitude: 35.29639,
@@ -1891,6 +2933,42 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3825],
     images: { 160: elMorro160, 320: elMorro320 },
+  },
+  {
+    id: 'el-tajin',
+    name: 'Pyramid of the Niches, El Tajín',
+    latitude: 20.44806,
+    longitude: -97.37824,
+    maps: ['MX'],
+    landmark: 'Q753895',
+    aspect: 1.9211,
+    size: 0.7,
+    anchor: [0.5, 0.3389],
+    images: { 160: elTajin160, 320: elTajin320 },
+  },
+  {
+    id: 'ellora',
+    name: 'Kailasa Temple, Ellora',
+    latitude: 20.02639,
+    longitude: 75.17917,
+    maps: ['IN'],
+    landmark: 'Q189616',
+    aspect: 1.7462,
+    size: 0.7,
+    anchor: [0.5, 0.3988],
+    images: { 160: ellora160, 320: ellora320 },
+  },
+  {
+    id: 'endless-column',
+    name: 'Endless Column',
+    latitude: 45.03743,
+    longitude: 23.28537,
+    maps: ['RO'],
+    landmark: 'Q4680630',
+    aspect: 1.6506,
+    size: 0.7,
+    anchor: [0.5, 0.4321],
+    images: { 160: endlessColumn160, 320: endlessColumn320 },
   },
   {
     id: 'ennedi',
@@ -1917,6 +2995,18 @@ export const LANDMARK_MODELS = [
     images: { 160: ephesus160, 320: ephesus320 },
   },
   {
+    id: 'essaouira',
+    name: 'Skala of Essaouira',
+    latitude: 31.51441,
+    longitude: -9.7689,
+    maps: ['MA'],
+    landmark: 'Q11858823',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: essaouira160, 320: essaouira320 },
+  },
+  {
     id: 'etosha',
     name: 'Etosha National Park',
     latitude: -18.78528,
@@ -1939,6 +3029,68 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4993],
     images: { 160: everest160, 320: everest320 },
+  },
+  {
+    id: 'everglades',
+    name: 'Everglades',
+    latitude: 25.3125,
+    longitude: -80.6875,
+    maps: ['US'],
+    landmark: 'Q274131',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: everglades160, 320: everglades320 },
+  },
+  {
+    id: 'evora',
+    name: 'Roman Temple of Évora',
+    latitude: 38.57306,
+    longitude: -7.90778,
+    maps: ['PT'],
+    landmark: 'Q8343770',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: evora160, 320: evora320 },
+  },
+  {
+    id: 'fallingwater',
+    name: 'Fallingwater',
+    latitude: 39.90639,
+    longitude: -79.46806,
+    maps: ['US'],
+    landmark: 'Q463179',
+    aspect: 1.6636,
+    size: 0.7,
+    anchor: [0.5, 0.4273],
+    images: { 160: fallingwater160, 320: fallingwater320 },
+  },
+  {
+    id: 'fatehpur-sikri',
+    name: 'Fatehpur Sikri',
+    latitude: 27.09111,
+    longitude: 77.66111,
+    maps: ['IN'],
+    landmark: 'Q179046',
+    onMap: false,
+    aspect: 1.8216,
+    size: 0.7,
+    anchor: [0.5, 0.3732],
+    images: { 160: fatehpurSikri160, 320: fatehpurSikri320 },
+  },
+  {
+    id: 'ferrara',
+    name: 'Castello Estense, Ferrara',
+    latitude: 44.83778,
+    longitude: 11.61944,
+    maps: ['IT'],
+    landmark: 'Q16735627',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: ferrara160, 320: ferrara320 },
   },
   {
     id: 'fez-tanneries',
@@ -1965,6 +3117,19 @@ export const LANDMARK_MODELS = [
     images: { 160: fiatTagliero160, 320: fiatTagliero320 },
   },
   {
+    id: 'finlandia-hall',
+    name: 'Finlandia Hall',
+    latitude: 60.17606,
+    longitude: 24.93346,
+    maps: ['FI'],
+    landmark: 'Q1142522',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: finlandiaHall160, 320: finlandiaHall320 },
+  },
+  {
     id: 'florence-duomo',
     name: 'Florence Cathedral',
     latitude: 43.77306,
@@ -1976,6 +3141,19 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3552],
     images: { 160: florenceDuomo160, 320: florenceDuomo320 },
+  },
+  {
+    id: 'fontainebleau',
+    name: 'Palace of Fontainebleau',
+    latitude: 48.40222,
+    longitude: 2.70056,
+    maps: ['FR'],
+    landmark: 'Q201428',
+    onMap: false,
+    aspect: 1.9269,
+    size: 0.7,
+    anchor: [0.5, 0.3366],
+    images: { 160: fontainebleau160, 320: fontainebleau320 },
   },
   {
     id: 'forbidden-city',
@@ -2003,6 +3181,18 @@ export const LANDMARK_MODELS = [
     images: { 160: fortGeorge160, 320: fortGeorge320 },
   },
   {
+    id: 'fort-jesus',
+    name: 'Fort Jesus',
+    latitude: -4.07117,
+    longitude: 39.68206,
+    maps: ['KE'],
+    landmark: 'Q379080',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: fortJesus160, 320: fortJesus320 },
+  },
+  {
     id: 'fort-louis',
     name: 'Fort Louis',
     latitude: 18.0708,
@@ -2028,6 +3218,30 @@ export const LANDMARK_MODELS = [
     images: { 160: forthBridge160, 320: forthBridge320 },
   },
   {
+    id: 'fountains-abbey',
+    name: 'Fountains Abbey',
+    latitude: 54.11611,
+    longitude: -1.57306,
+    maps: ['GB', 'XE'],
+    landmark: 'Q16363480',
+    aspect: 1.8268,
+    size: 0.7,
+    anchor: [0.5, 0.3719],
+    images: { 160: fountainsAbbey160, 320: fountainsAbbey320 },
+  },
+  {
+    id: 'fourviere',
+    name: 'Basilica of Notre-Dame de Fourvière',
+    latitude: 45.76306,
+    longitude: 4.82806,
+    maps: ['FR'],
+    landmark: 'Q8399',
+    aspect: 1.7657,
+    size: 0.7,
+    anchor: [0.5, 0.3924],
+    images: { 160: fourviere160, 320: fourviere320 },
+  },
+  {
     id: 'fouta-djallon',
     name: 'Fouta Djallon Highlands',
     latitude: 11.315,
@@ -2038,6 +3252,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3954],
     images: { 160: foutaDjallon160, 320: foutaDjallon320 },
+  },
+  {
+    id: 'fujian-tulou',
+    name: 'Fujian Tulou',
+    latitude: 24.6587,
+    longitude: 116.975,
+    maps: ['CN'],
+    landmark: 'Q718001',
+    aspect: 1.8867,
+    size: 0.7,
+    anchor: [0.5, 0.3509],
+    images: { 160: fujianTulou160, 320: fujianTulou320 },
   },
   {
     id: 'funafuti',
@@ -2161,6 +3387,18 @@ export const LANDMARK_MODELS = [
     images: { 160: giantsCauseway160, 320: giantsCauseway320 },
   },
   {
+    id: 'gobekli-tepe',
+    name: 'Göbekli Tepe',
+    latitude: 37.22306,
+    longitude: 38.9225,
+    maps: ['TR'],
+    landmark: 'Q214944',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: gobekliTepe160, 320: gobekliTepe320 },
+  },
+  {
     id: 'gobustan',
     name: 'Gobustan',
     latitude: 40.125,
@@ -2195,6 +3433,30 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3293],
     images: { 160: goldenTemple160, 320: goldenTemple320 },
+  },
+  {
+    id: 'golestan',
+    name: 'Golestan Palace',
+    latitude: 35.67972,
+    longitude: 51.42028,
+    maps: ['IR'],
+    landmark: 'Q210610',
+    aspect: 1.7907,
+    size: 0.7,
+    anchor: [0.5, 0.3833],
+    images: { 160: golestan160, 320: golestan320 },
+  },
+  {
+    id: 'gonbad-e-qabus',
+    name: 'Gonbad-e Qabus',
+    latitude: 37.25812,
+    longitude: 55.16899,
+    maps: ['IR'],
+    landmark: 'Q606763',
+    aspect: 1.6463,
+    size: 0.7,
+    anchor: [0.5, 0.4333],
+    images: { 160: gonbadEQabus160, 320: gonbadEQabus320 },
   },
   {
     id: 'gondar',
@@ -2293,6 +3555,18 @@ export const LANDMARK_MODELS = [
     images: { 160: grandPlace160, 320: grandPlace320 },
   },
   {
+    id: 'graz-clock-tower',
+    name: 'Graz Clock Tower',
+    latitude: 47.07417,
+    longitude: 15.39167,
+    maps: ['AT'],
+    landmark: 'Q2326418',
+    aspect: 1.8216,
+    size: 0.7,
+    anchor: [0.5, 0.3727],
+    images: { 160: grazClockTower160, 320: grazClockTower320 },
+  },
+  {
     id: 'great-barrier-reef',
     name: 'Great Barrier Reef',
     latitude: -16.4,
@@ -2317,6 +3591,18 @@ export const LANDMARK_MODELS = [
     images: { 160: greatBlueHole160, 320: greatBlueHole320 },
   },
   {
+    id: 'great-smoky-mountains',
+    name: 'Great Smoky Mountains',
+    latitude: 35.61111,
+    longitude: -83.425,
+    maps: ['US'],
+    landmark: 'Q464004',
+    aspect: 1.6993,
+    size: 0.7,
+    anchor: [0.502, 0.4174],
+    images: { 160: greatSmokyMountains160, 320: greatSmokyMountains320 },
+  },
+  {
     id: 'great-wall',
     name: 'Great Wall of China',
     latitude: 40.35428,
@@ -2339,6 +3625,19 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4038],
     images: { 160: greatZimbabwe160, 320: greatZimbabwe320 },
+  },
+  {
+    id: 'greenwich',
+    name: 'Royal Observatory, Greenwich',
+    latitude: 51.47778,
+    longitude: 0,
+    maps: ['GB', 'XE'],
+    landmark: 'Q16921416',
+    onMap: false,
+    aspect: 1.9153,
+    size: 0.7,
+    anchor: [0.5, 0.3413],
+    images: { 160: greenwich160, 320: greenwich320 },
   },
   {
     id: 'guaita-tower',
@@ -2425,6 +3724,31 @@ export const LANDMARK_MODELS = [
     images: { 160: haamonga160, 320: haamonga320 },
   },
   {
+    id: 'hadrians-villa',
+    name: 'Hadrian\'s Villa',
+    latitude: 41.94194,
+    longitude: 12.77528,
+    maps: ['IT'],
+    landmark: 'Q272777',
+    onMap: false,
+    aspect: 1.9328,
+    size: 0.7,
+    anchor: [0.5, 0.3349],
+    images: { 160: hadriansVilla160, 320: hadriansVilla320 },
+  },
+  {
+    id: 'hadrians-wall',
+    name: 'Hadrian\'s Wall',
+    latitude: 55.02417,
+    longitude: -2.2925,
+    maps: ['GB', 'XE'],
+    landmark: 'Q57357',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: hadriansWall160, 320: hadriansWall320 },
+  },
+  {
     id: 'haghpat',
     name: 'Haghpat Monastery',
     latitude: 41.095,
@@ -2485,6 +3809,30 @@ export const LANDMARK_MODELS = [
     images: { 160: hampi160, 320: hampi320 },
   },
   {
+    id: 'hashima',
+    name: 'Hashima Island',
+    latitude: 32.62778,
+    longitude: 129.73833,
+    maps: ['JP'],
+    landmark: 'Q285468',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: hashima160, 320: hashima320 },
+  },
+  {
+    id: 'hassan-tower',
+    name: 'Hassan Tower',
+    latitude: 34.0242,
+    longitude: -6.8228,
+    maps: ['MA'],
+    landmark: 'Q65926560',
+    aspect: 1.8536,
+    size: 0.7,
+    anchor: [0.5, 0.3622],
+    images: { 160: hassanTower160, 320: hassanTower320 },
+  },
+  {
     id: 'hatra',
     name: 'Hatra',
     latitude: 35.58806,
@@ -2495,6 +3843,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3427],
     images: { 160: hatra160, 320: hatra320 },
+  },
+  {
+    id: 'hattusa',
+    name: 'Lion Gate, Hattusa',
+    latitude: 40.01389,
+    longitude: 34.62056,
+    maps: ['TR'],
+    landmark: 'Q64699502',
+    aspect: 1.9387,
+    size: 0.7,
+    anchor: [0.5, 0.3336],
+    images: { 160: hattusa160, 320: hattusa320 },
   },
   {
     id: 'hawa-mahal',
@@ -2509,6 +3869,18 @@ export const LANDMARK_MODELS = [
     images: { 160: hawaMahal160, 320: hawaMahal320 },
   },
   {
+    id: 'hawaii-volcanoes',
+    name: 'Kīlauea',
+    latitude: 19.40083,
+    longitude: -155.12361,
+    maps: ['US'],
+    landmark: 'Q205952',
+    aspect: 1.7957,
+    size: 0.7,
+    anchor: [0.5, 0.3822],
+    images: { 160: hawaiiVolcanoes160, 320: hawaiiVolcanoes320 },
+  },
+  {
     id: 'hegra',
     name: 'Hegra',
     latitude: 26.81417,
@@ -2519,6 +3891,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4849],
     images: { 160: hegra160, 320: hegra320 },
+  },
+  {
+    id: 'hercules-kassel',
+    name: 'Hercules, Kassel',
+    latitude: 51.3167,
+    longitude: 9.4,
+    maps: ['DE'],
+    landmark: 'Q447441',
+    aspect: 1.5383,
+    size: 0.7,
+    anchor: [0.5, 0.4706],
+    images: { 160: herculesKassel160, 320: herculesKassel320 },
   },
   {
     id: 'himeji-castle',
@@ -2533,6 +3917,44 @@ export const LANDMARK_MODELS = [
     images: { 160: himejiCastle160, 320: himejiCastle320 },
   },
   {
+    id: 'hiroshima-peace-memorial',
+    name: 'Hiroshima Peace Memorial',
+    latitude: 34.39556,
+    longitude: 132.45361,
+    maps: ['JP'],
+    landmark: 'Q231140',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: hiroshimaPeaceMemorial160, 320: hiroshimaPeaceMemorial320 },
+  },
+  {
+    id: 'historic-cairo',
+    name: 'Citadel of Cairo',
+    latitude: 30.046,
+    longitude: 31.2627,
+    maps: ['EG'],
+    landmark: 'Q1100964',
+    onMap: false,
+    aspect: 1.6858,
+    size: 0.7,
+    anchor: [0.5, 0.4201],
+    images: { 160: historicCairo160, 320: historicCairo320 },
+  },
+  {
+    id: 'historic-jeddah',
+    name: 'Historic Jeddah',
+    latitude: 21.4833,
+    longitude: 39.2,
+    maps: ['SA'],
+    landmark: 'Q4702264',
+    aspect: 1.87,
+    size: 0.7,
+    anchor: [0.5, 0.356],
+    images: { 160: historicJeddah160, 320: historicJeddah320 },
+  },
+  {
     id: 'hoi-an',
     name: 'Hoi An',
     latitude: 15.87714,
@@ -2543,6 +3965,30 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.4969, 0.328],
     images: { 160: hoiAn160, 320: hoiAn320 },
+  },
+  {
+    id: 'holstentor',
+    name: 'Holstentor',
+    latitude: 53.86667,
+    longitude: 10.69167,
+    maps: ['DE'],
+    landmark: 'Q15813909',
+    aspect: 1.9269,
+    size: 0.7,
+    anchor: [0.5, 0.3372],
+    images: { 160: holstentor160, 320: holstentor320 },
+  },
+  {
+    id: 'huangshan',
+    name: 'Huangshan',
+    latitude: 30.125,
+    longitude: 118.16667,
+    maps: ['CN'],
+    landmark: 'Q36034',
+    aspect: 1.6046,
+    size: 0.7,
+    anchor: [0.5, 0.4485],
+    images: { 160: huangshan160, 320: huangshan320 },
   },
   {
     id: 'hue',
@@ -2570,6 +4016,19 @@ export const LANDMARK_MODELS = [
     images: { 160: humahuaca160, 320: humahuaca320 },
   },
   {
+    id: 'humayuns-tomb',
+    name: 'Humayun\'s Tomb',
+    latitude: 28.59326,
+    longitude: 77.2506,
+    maps: ['IN'],
+    landmark: 'Q189648',
+    onMap: false,
+    aspect: 1.8164,
+    size: 0.7,
+    anchor: [0.5, 0.3757],
+    images: { 160: humayunsTomb160, 320: humayunsTomb320 },
+  },
+  {
     id: 'hungarian-parliament',
     name: 'Hungarian Parliament Building',
     latitude: 47.48242,
@@ -2580,6 +4039,19 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3955],
     images: { 160: hungarianParliament160, 320: hungarianParliament320 },
+  },
+  {
+    id: 'hwaseong',
+    name: 'Hwaseong Fortress',
+    latitude: 37.28073,
+    longitude: 127.0102,
+    maps: ['KR'],
+    landmark: 'Q482423',
+    onMap: false,
+    aspect: 1.9477,
+    size: 0.7,
+    anchor: [0.5, 0.3293],
+    images: { 160: hwaseong160, 320: hwaseong320 },
   },
   {
     id: 'iguazu-falls',
@@ -2606,6 +4078,19 @@ export const LANDMARK_MODELS = [
     images: { 160: ilulissat160, 320: ilulissat320 },
   },
   {
+    id: 'independence-hall',
+    name: 'Independence Hall',
+    latitude: 39.94889,
+    longitude: -75.15,
+    maps: ['US'],
+    landmark: 'Q390028',
+    onMap: false,
+    aspect: 1.6046,
+    size: 0.7,
+    anchor: [0.5, 0.4481],
+    images: { 160: independenceHall160, 320: independenceHall320 },
+  },
+  {
     id: 'itsukushima',
     name: 'Itsukushima Shrine',
     latitude: 34.29577,
@@ -2616,6 +4101,56 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4205],
     images: { 160: itsukushima160, 320: itsukushima320 },
+  },
+  {
+    id: 'jameh-isfahan',
+    name: 'Jameh Mosque of Isfahan',
+    latitude: 32.66972,
+    longitude: 51.68528,
+    maps: ['IR'],
+    landmark: 'Q1256501',
+    onMap: false,
+    aspect: 1.6768,
+    size: 0.7,
+    anchor: [0.5, 0.4234],
+    images: { 160: jamehIsfahan160, 320: jamehIsfahan320 },
+  },
+  {
+    id: 'jantar-mantar',
+    name: 'Jantar Mantar',
+    latitude: 26.92472,
+    longitude: 75.825,
+    maps: ['IN'],
+    landmark: 'Q508634',
+    onMap: false,
+    aspect: 1.751,
+    size: 0.7,
+    anchor: [0.5, 0.3981],
+    images: { 160: jantarMantar160, 320: jantarMantar320 },
+  },
+  {
+    id: 'jiuzhaigou',
+    name: 'Jiuzhaigou',
+    latitude: 33.2,
+    longitude: 103.9,
+    maps: ['CN'],
+    landmark: 'Q4111',
+    aspect: 1.5089,
+    size: 0.7,
+    anchor: [0.5, 0.4804],
+    images: { 160: jiuzhaigou160, 320: jiuzhaigou320 },
+  },
+  {
+    id: 'jodrell-bank',
+    name: 'Jodrell Bank Observatory',
+    latitude: 53.23625,
+    longitude: -2.30714,
+    maps: ['GB', 'XE'],
+    landmark: 'Q1569783',
+    aspect: 1.7131,
+    size: 0.7,
+    anchor: [0.5, 0.4102],
+    images: { 160: jodrellBank160, 320: jodrellBank320 },
   },
   {
     id: 'joya-de-ceren',
@@ -2664,6 +4199,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4982],
     images: { 160: kaieteur160, 320: kaieteur320 },
+  },
+  {
+    id: 'kairouan',
+    name: 'Great Mosque of Kairouan',
+    latitude: 35.68333,
+    longitude: 10.1,
+    maps: ['TN'],
+    landmark: 'Q179570',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: kairouan160, 320: kairouan320 },
   },
   {
     id: 'kamchatka',
@@ -2724,6 +4271,43 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3494],
     images: { 160: kasubiTombs160, 320: kasubiTombs320 },
+  },
+  {
+    id: 'kazan-kremlin',
+    name: 'Kazan Kremlin',
+    latitude: 55.79744,
+    longitude: 49.10724,
+    maps: ['RU'],
+    landmark: 'Q603622',
+    aspect: 1.7957,
+    size: 0.7,
+    anchor: [0.5, 0.3824],
+    images: { 160: kazanKremlin160, 320: kazanKremlin320 },
+  },
+  {
+    id: 'kew-gardens',
+    name: 'Palm House, Kew Gardens',
+    latitude: 51.47869,
+    longitude: -0.29561,
+    maps: ['GB', 'XE'],
+    landmark: 'Q18748726',
+    onMap: false,
+    aspect: 1.6357,
+    size: 0.7,
+    anchor: [0.5, 0.4366],
+    images: { 160: kewGardens160, 320: kewGardens320 },
+  },
+  {
+    id: 'khajuraho',
+    name: 'Kandariya Mahadeva Temple, Khajuraho',
+    latitude: 24.85,
+    longitude: 79.93333,
+    maps: ['IN'],
+    landmark: 'Q167298',
+    aspect: 1.6813,
+    size: 0.7,
+    anchor: [0.5, 0.4221],
+    images: { 160: khajuraho160, 320: khajuraho320 },
   },
   {
     id: 'khiva',
@@ -2810,6 +4394,18 @@ export const LANDMARK_MODELS = [
     images: { 160: kizhi160, 320: kizhi320 },
   },
   {
+    id: 'knossos',
+    name: 'Knossos',
+    latitude: 35.29796,
+    longitude: 25.16316,
+    maps: ['GR'],
+    landmark: 'Q173527',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: knossos160, 320: knossos320 },
+  },
+  {
     id: 'kokoda-track',
     name: 'Kokoda Track',
     latitude: -9.15567,
@@ -2822,6 +4418,19 @@ export const LANDMARK_MODELS = [
     images: { 160: kokodaTrack160, 320: kokodaTrack320 },
   },
   {
+    id: 'kolomenskoye',
+    name: 'Church of the Ascension, Kolomenskoye',
+    latitude: 55.66722,
+    longitude: 37.67083,
+    maps: ['RU'],
+    landmark: 'Q220951',
+    onMap: false,
+    aspect: 1.6005,
+    size: 0.7,
+    anchor: [0.5, 0.4494],
+    images: { 160: kolomenskoye160, 320: kolomenskoye320 },
+  },
+  {
     id: 'komodo',
     name: 'Komodo National Park',
     latitude: -8.65162,
@@ -2832,6 +4441,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3734],
     images: { 160: komodo160, 320: komodo320 },
+  },
+  {
+    id: 'konark',
+    name: 'Konark Sun Temple',
+    latitude: 19.88744,
+    longitude: 86.0946,
+    maps: ['IN'],
+    landmark: 'Q752091',
+    aspect: 1.7856,
+    size: 0.7,
+    anchor: [0.5, 0.3857],
+    images: { 160: konark160, 320: konark320 },
   },
   {
     id: 'kotor',
@@ -2918,6 +4539,18 @@ export const LANDMARK_MODELS = [
     images: { 160: kuntaKintehIsland160, 320: kuntaKintehIsland320 },
   },
   {
+    id: 'kutna-hora',
+    name: 'St Barbara\'s Church, Kutná Hora',
+    latitude: 49.95,
+    longitude: 15.26667,
+    maps: ['CZ'],
+    landmark: 'Q17117941',
+    aspect: 1.9387,
+    size: 0.7,
+    anchor: [0.5, 0.3328],
+    images: { 160: kutnaHora160, 320: kutnaHora320 },
+  },
+  {
     id: 'kuwait-towers',
     name: 'Kuwait Towers',
     latitude: 29.39,
@@ -3002,6 +4635,18 @@ export const LANDMARK_MODELS = [
     images: { 160: lakeBled160, 320: lakeBled320 },
   },
   {
+    id: 'lake-district',
+    name: 'Lake District',
+    latitude: 54.5,
+    longitude: -3.16667,
+    maps: ['GB', 'XE'],
+    landmark: 'Q211778',
+    aspect: 1.6993,
+    size: 0.7,
+    anchor: [0.5, 0.4154],
+    images: { 160: lakeDistrict160, 320: lakeDistrict320 },
+  },
+  {
     id: 'lake-malawi',
     name: 'Lake Malawi',
     latitude: -14.03333,
@@ -3048,6 +4693,30 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4275],
     images: { 160: landwasserViaduct160, 320: landwasserViaduct320 },
+  },
+  {
+    id: 'lanse-aux-meadows',
+    name: 'L\'Anse aux Meadows',
+    latitude: 51.59527,
+    longitude: -55.53122,
+    maps: ['CA'],
+    landmark: 'Q189113',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: lanseAuxMeadows160, 320: lanseAuxMeadows320 },
+  },
+  {
+    id: 'last-supper',
+    name: 'Santa Maria delle Grazie',
+    latitude: 45.46583,
+    longitude: 9.17111,
+    maps: ['IT'],
+    landmark: 'Q244952',
+    aspect: 1.8924,
+    size: 0.7,
+    anchor: [0.5, 0.3492],
+    images: { 160: lastSupper160, 320: lastSupper320 },
   },
   {
     id: 'le-morne',
@@ -3110,6 +4779,42 @@ export const LANDMARK_MODELS = [
     images: { 160: leptisMagna160, 320: leptisMagna320 },
   },
   {
+    id: 'leshan-buddha',
+    name: 'Leshan Giant Buddha',
+    latitude: 29.5449,
+    longitude: 103.76925,
+    maps: ['CN'],
+    landmark: 'Q16914686',
+    aspect: 1.4436,
+    size: 0.7,
+    anchor: [0.5, 0.5037],
+    images: { 160: leshanBuddha160, 320: leshanBuddha320 },
+  },
+  {
+    id: 'lijiang',
+    name: 'Old Town of Lijiang',
+    latitude: 26.8667,
+    longitude: 100.2333,
+    maps: ['CN'],
+    landmark: 'Q65964838',
+    aspect: 1.7559,
+    size: 0.7,
+    anchor: [0.5, 0.3958],
+    images: { 160: lijiang160, 320: lijiang320 },
+  },
+  {
+    id: 'lima',
+    name: 'Plaza Mayor, Lima',
+    latitude: -12.05139,
+    longitude: -77.04306,
+    maps: ['PE'],
+    landmark: 'Q3320442',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: lima160, 320: lima320 },
+  },
+  {
     id: 'loango',
     name: 'Loango National Park',
     latitude: -2.16667,
@@ -3120,6 +4825,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4137],
     images: { 160: loango160, 320: loango320 },
+  },
+  {
+    id: 'longmen',
+    name: 'Longmen Grottoes',
+    latitude: 34.55556,
+    longitude: 112.46972,
+    maps: ['CN'],
+    landmark: 'Q273834',
+    aspect: 1.561,
+    size: 0.7,
+    anchor: [0.5, 0.4627],
+    images: { 160: longmen160, 320: longmen320 },
   },
   {
     id: 'loropeni',
@@ -3146,6 +4863,18 @@ export const LANDMARK_MODELS = [
     images: { 160: luangPrabang160, 320: luangPrabang320 },
   },
   {
+    id: 'lumbini',
+    name: 'Maya Devi Temple, Lumbini',
+    latitude: 27.4814,
+    longitude: 83.27583,
+    maps: ['NP'],
+    landmark: 'Q9213',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: lumbini160, 320: lumbini320 },
+  },
+  {
     id: 'lviv',
     name: 'Lviv',
     latitude: 49.84167,
@@ -3170,6 +4899,18 @@ export const LANDMARK_MODELS = [
     images: { 160: maasaiMara160, 320: maasaiMara320 },
   },
   {
+    id: 'macao',
+    name: 'Ruins of St. Paul\'s',
+    latitude: 22.191,
+    longitude: 113.536,
+    maps: ['CN'],
+    landmark: 'Q2601433',
+    aspect: 1.6993,
+    size: 0.7,
+    anchor: [0.5, 0.4155],
+    images: { 160: macao160, 320: macao320 },
+  },
+  {
     id: 'machu-picchu',
     name: 'Machu Picchu',
     latitude: -13.16333,
@@ -3192,6 +4933,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4256],
     images: { 160: madriuValley160, 320: madriuValley320 },
+  },
+  {
+    id: 'mahabodhi',
+    name: 'Mahabodhi Temple',
+    latitude: 24.696,
+    longitude: 84.99136,
+    maps: ['IN'],
+    landmark: 'Q4513',
+    aspect: 1.6858,
+    size: 0.7,
+    anchor: [0.5, 0.4194],
+    images: { 160: mahabodhi160, 320: mahabodhi320 },
   },
   {
     id: 'maho-beach',
@@ -3302,6 +5055,19 @@ export const LANDMARK_MODELS = [
     images: { 160: masada160, 320: masada320 },
   },
   {
+    id: 'matera',
+    name: 'Sassi of Matera',
+    latitude: 40.66639,
+    longitude: 16.61028,
+    maps: ['IT'],
+    landmark: 'Q55739617',
+    onMap: false,
+    aspect: 1.5572,
+    size: 0.7,
+    anchor: [0.5, 0.4642],
+    images: { 160: matera160, 320: matera320 },
+  },
+  {
     id: 'matobo-hills',
     name: 'Matobo Hills',
     latitude: -20.5,
@@ -3338,6 +5104,30 @@ export const LANDMARK_MODELS = [
     images: { 160: melaka160, 320: melaka320 },
   },
   {
+    id: 'menin-gate',
+    name: 'Menin Gate',
+    latitude: 50.85205,
+    longitude: 2.89107,
+    maps: ['BE'],
+    landmark: 'Q1822397',
+    aspect: 1.7856,
+    size: 0.7,
+    anchor: [0.5, 0.3856],
+    images: { 160: meninGate160, 320: meninGate320 },
+  },
+  {
+    id: 'merida-theatre',
+    name: 'Roman Theatre of Mérida',
+    latitude: 38.91597,
+    longitude: -6.33869,
+    maps: ['ES'],
+    landmark: 'Q15233334',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: meridaTheatre160, 320: meridaTheatre320 },
+  },
+  {
     id: 'meroe',
     name: 'Pyramids of Meroë',
     latitude: 16.93514,
@@ -3348,6 +5138,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4805],
     images: { 160: meroe160, 320: meroe320 },
+  },
+  {
+    id: 'mesa-verde',
+    name: 'Cliff Palace, Mesa Verde',
+    latitude: 37.26038,
+    longitude: -108.49444,
+    maps: ['US'],
+    landmark: 'Q237128',
+    aspect: 1.5572,
+    size: 0.7,
+    anchor: [0.5, 0.4647],
+    images: { 160: mesaVerde160, 320: mesaVerde320 },
   },
   {
     id: 'meteora',
@@ -3422,6 +5224,18 @@ export const LANDMARK_MODELS = [
     images: { 160: moai160, 320: moai320 },
   },
   {
+    id: 'mogao-caves',
+    name: 'Mogao Caves',
+    latitude: 40.03722,
+    longitude: 94.80417,
+    maps: ['CN'],
+    landmark: 'Q43286',
+    aspect: 1.6549,
+    size: 0.7,
+    anchor: [0.5, 0.4303],
+    images: { 160: mogaoCaves160, 320: mogaoCaves320 },
+  },
+  {
     id: 'mohenjo-daro',
     name: 'Mohenjo-daro',
     latitude: 27.32917,
@@ -3470,6 +5284,30 @@ export const LANDMARK_MODELS = [
     images: { 160: montSaintMichel160, 320: montSaintMichel320 },
   },
   {
+    id: 'monte-alban',
+    name: 'Monte Albán',
+    latitude: 17.06194,
+    longitude: -96.72167,
+    maps: ['MX'],
+    landmark: 'Q16743243',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: monteAlban160, 320: monteAlban320 },
+  },
+  {
+    id: 'monticello',
+    name: 'Monticello',
+    latitude: 38.03278,
+    longitude: -78.50389,
+    maps: ['US'],
+    landmark: 'Q15830656',
+    aspect: 1.8374,
+    size: 0.7,
+    anchor: [0.5, 0.3675],
+    images: { 160: monticello160, 320: monticello320 },
+  },
+  {
     id: 'moraine-lake',
     name: 'Moraine Lake',
     latitude: 51.42472,
@@ -3506,6 +5344,18 @@ export const LANDMARK_MODELS = [
     images: { 160: mostar160, 320: mostar320 },
   },
   {
+    id: 'mount-athos',
+    name: 'Mount Athos',
+    latitude: 40.15833,
+    longitude: 24.32722,
+    maps: ['GR'],
+    landmark: 'Q136100444',
+    aspect: 1.6252,
+    size: 0.7,
+    anchor: [0.5, 0.4411],
+    images: { 160: mountAthos160, 320: mountAthos320 },
+  },
+  {
     id: 'mount-fuji',
     name: 'Mount Fuji',
     latitude: 35.36056,
@@ -3516,6 +5366,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.5041],
     images: { 160: mountFuji160, 320: mountFuji320 },
+  },
+  {
+    id: 'mount-nemrut',
+    name: 'Mount Nemrut',
+    latitude: 37.98074,
+    longitude: 38.74083,
+    maps: ['TR'],
+    landmark: 'Q207917',
+    aspect: 1.8428,
+    size: 0.7,
+    anchor: [0.5, 0.3655],
+    images: { 160: mountNemrut160, 320: mountNemrut320 },
   },
   {
     id: 'mount-pelee',
@@ -3554,6 +5416,18 @@ export const LANDMARK_MODELS = [
     images: { 160: mozambiqueIsland160, 320: mozambiqueIsland320 },
   },
   {
+    id: 'mtskheta',
+    name: 'Jvari Monastery, Mtskheta',
+    latitude: 41.84389,
+    longitude: 44.71639,
+    maps: ['GE'],
+    landmark: 'Q16946829',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3293],
+    images: { 160: mtskheta160, 320: mtskheta320 },
+  },
+  {
     id: 'mulafossur',
     name: 'Múlafossur',
     latitude: 62.10748,
@@ -3576,6 +5450,32 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3284],
     images: { 160: muliaagePalace160, 320: muliaagePalace320 },
+  },
+  {
+    id: 'museum-island',
+    name: 'Museum Island',
+    latitude: 52.52139,
+    longitude: 13.39556,
+    maps: ['DE'],
+    landmark: 'Q151963',
+    onMap: false,
+    aspect: 1.8618,
+    size: 0.7,
+    anchor: [0.5, 0.3587],
+    images: { 160: museumIsland160, 320: museumIsland320 },
+  },
+  {
+    id: 'my-son',
+    name: 'My Son',
+    latitude: 15.76324,
+    longitude: 108.12445,
+    maps: ['VN'],
+    landmark: 'Q391406',
+    onMap: false,
+    aspect: 1.8112,
+    size: 0.7,
+    anchor: [0.5, 0.3765],
+    images: { 160: mySon160, 320: mySon320 },
   },
   {
     id: 'mzab-valley',
@@ -3612,6 +5512,19 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.42],
     images: { 160: naqshEJahan160, 320: naqshEJahan320 },
+  },
+  {
+    id: 'nara',
+    name: 'Tōdai-ji, Nara',
+    latitude: 34.67556,
+    longitude: 135.83944,
+    maps: ['JP'],
+    landmark: 'Q1055749',
+    onMap: false,
+    aspect: 1.7907,
+    size: 0.7,
+    anchor: [0.5, 0.3835],
+    images: { 160: nara160, 320: nara320 },
   },
   {
     id: 'nazca-lines',
@@ -3675,6 +5588,80 @@ export const LANDMARK_MODELS = [
     images: { 160: neuschwanstein160, 320: neuschwanstein320 },
   },
   {
+    id: 'newgrange',
+    name: 'Newgrange',
+    latitude: 53.69284,
+    longitude: -6.44932,
+    maps: ['IE'],
+    landmark: 'Q339489',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: newgrange160, 320: newgrange320 },
+  },
+  {
+    id: 'ngorongoro',
+    name: 'Ngorongoro Crater',
+    latitude: -3.21,
+    longitude: 35.46,
+    maps: ['TZ'],
+    landmark: 'Q1217726',
+    aspect: 1.7806,
+    size: 0.7,
+    anchor: [0.5, 0.387],
+    images: { 160: ngorongoro160, 320: ngorongoro320 },
+  },
+  {
+    id: 'nikko',
+    name: 'Tōshō-gū, Nikkō',
+    latitude: 36.7475,
+    longitude: 139.61056,
+    maps: ['JP'],
+    landmark: 'Q1063133',
+    aspect: 1.6993,
+    size: 0.7,
+    anchor: [0.5, 0.4157],
+    images: { 160: nikko160, 320: nikko320 },
+  },
+  {
+    id: 'noto',
+    name: 'Noto Cathedral',
+    latitude: 36.88333,
+    longitude: 15.08333,
+    maps: ['IT'],
+    landmark: 'Q487174',
+    aspect: 1.859,
+    size: 0.7,
+    anchor: [0.5, 0.3609],
+    images: { 160: noto160, 320: noto320 },
+  },
+  {
+    id: 'notre-dame',
+    name: 'Notre-Dame de Paris',
+    latitude: 48.85,
+    longitude: 2.35889,
+    maps: ['FR'],
+    landmark: 'Q2233532',
+    onMap: false,
+    aspect: 1.751,
+    size: 0.7,
+    anchor: [0.5, 0.3977],
+    images: { 160: notreDame160, 320: notreDame320 },
+  },
+  {
+    id: 'novodevichy',
+    name: 'Novodevichy Convent',
+    latitude: 55.72597,
+    longitude: 37.55658,
+    maps: ['RU'],
+    landmark: 'Q270725',
+    onMap: false,
+    aspect: 1.8112,
+    size: 0.7,
+    anchor: [0.5, 0.3771],
+    images: { 160: novodevichy160, 320: novodevichy320 },
+  },
+  {
     id: 'odzala',
     name: 'Odzala National Park',
     latitude: 0.8,
@@ -3735,6 +5722,18 @@ export const LANDMARK_MODELS = [
     images: { 160: oldHavana160, 320: oldHavana320 },
   },
   {
+    id: 'olympia',
+    name: 'Olympia',
+    latitude: 37.63833,
+    longitude: 21.63,
+    maps: ['GR'],
+    landmark: 'Q38888',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: olympia160, 320: olympia320 },
+  },
+  {
     id: 'omar-ali-saifuddien-mosque',
     name: 'Omar Ali Saifuddien Mosque',
     latitude: 4.88958,
@@ -3745,6 +5744,19 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4338],
     images: { 160: omarAliSaifuddienMosque160, 320: omarAliSaifuddienMosque320 },
+  },
+  {
+    id: 'orange-theatre',
+    name: 'Roman Theatre of Orange',
+    latitude: 44.13572,
+    longitude: 4.80842,
+    maps: ['FR'],
+    landmark: 'Q15726321',
+    onMap: false,
+    aspect: 1.9095,
+    size: 0.7,
+    anchor: [0.5, 0.3427],
+    images: { 160: orangeTheatre160, 320: orangeTheatre320 },
   },
   {
     id: 'orheiul-vechi',
@@ -3769,6 +5781,31 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3679],
     images: { 160: orkhonValley160, 320: orkhonValley320 },
+  },
+  {
+    id: 'ouro-preto',
+    name: 'Church of São Francisco de Assis',
+    latitude: -20.38577,
+    longitude: -43.50364,
+    maps: ['BR'],
+    landmark: 'Q3845692',
+    aspect: 1.8009,
+    size: 0.7,
+    anchor: [0.5, 0.3807],
+    images: { 160: ouroPreto160, 320: ouroPreto320 },
+  },
+  {
+    id: 'palau-de-la-musica',
+    name: 'Palau de la Música Catalana',
+    latitude: 41.38778,
+    longitude: 2.175,
+    maps: ['ES'],
+    landmark: 'Q64955212',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: palauDeLaMusica160, 320: palauDeLaMusica320 },
   },
   {
     id: 'palenque',
@@ -3819,6 +5856,19 @@ export const LANDMARK_MODELS = [
     images: { 160: panamaCanal160, 320: panamaCanal320 },
   },
   {
+    id: 'pantheon',
+    name: 'Pantheon',
+    latitude: 41.8928,
+    longitude: 12.4866,
+    maps: ['IT'],
+    landmark: 'Q18448486',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: pantheon160, 320: pantheon320 },
+  },
+  {
     id: 'papaseea',
     name: 'Papaseʻea Sliding Rocks',
     latitude: -13.87008,
@@ -3867,6 +5917,31 @@ export const LANDMARK_MODELS = [
     images: { 160: parthenon160, 320: parthenon320 },
   },
   {
+    id: 'pasargadae',
+    name: 'Tomb of Cyrus, Pasargadae',
+    latitude: 30.2,
+    longitude: 53.17944,
+    maps: ['IR'],
+    landmark: 'Q230025',
+    onMap: false,
+    aspect: 1.9447,
+    size: 0.7,
+    anchor: [0.5, 0.3311],
+    images: { 160: pasargadae160, 320: pasargadae320 },
+  },
+  {
+    id: 'patmos',
+    name: 'Monastery of St John, Patmos',
+    latitude: 37.3,
+    longitude: 26.55,
+    maps: ['GR'],
+    landmark: 'Q17132271',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: patmos160, 320: patmos320 },
+  },
+  {
     id: 'peles-castle',
     name: 'Peleș Castle',
     latitude: 45.35972,
@@ -3890,6 +5965,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3527],
     images: { 160: penaPalace160, 320: penaPalace320 },
+  },
+  {
+    id: 'pergamon',
+    name: 'Pergamon',
+    latitude: 39.12583,
+    longitude: 27.18,
+    maps: ['TR'],
+    landmark: 'Q64705007',
+    aspect: 1.6293,
+    size: 0.7,
+    anchor: [0.5, 0.4394],
+    images: { 160: pergamon160, 320: pergamon320 },
   },
   {
     id: 'perito-moreno',
@@ -3976,6 +6063,18 @@ export const LANDMARK_MODELS = [
     images: { 160: pigBeach160, 320: pigBeach320 },
   },
   {
+    id: 'pingyao',
+    name: 'Ancient City of Pingyao',
+    latitude: 37.2014,
+    longitude: 112.1544,
+    maps: ['CN'],
+    landmark: 'Q65965285',
+    aspect: 1.9038,
+    size: 0.7,
+    anchor: [0.5, 0.3444],
+    images: { 160: pingyao160, 320: pingyao320 },
+  },
+  {
     id: 'pitch-lake',
     name: 'Pitch Lake',
     latitude: 10.2325,
@@ -4012,6 +6111,18 @@ export const LANDMARK_MODELS = [
     images: { 160: pitons160, 320: pitons320 },
   },
   {
+    id: 'place-stanislas',
+    name: 'Place Stanislas',
+    latitude: 48.69361,
+    longitude: 6.18333,
+    maps: ['FR'],
+    landmark: 'Q15728409',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: placeStanislas160, 320: placeStanislas320 },
+  },
+  {
     id: 'plitvice',
     name: 'Plitvice Lakes',
     latitude: 44.88045,
@@ -4036,6 +6147,19 @@ export const LANDMARK_MODELS = [
     images: { 160: polaIsland160, 320: polaIsland320 },
   },
   {
+    id: 'polonnaruwa',
+    name: 'Gal Vihara, Polonnaruwa',
+    latitude: 7.93333,
+    longitude: 81,
+    maps: ['LK'],
+    landmark: 'Q394443',
+    onMap: false,
+    aspect: 1.8428,
+    size: 0.7,
+    anchor: [0.5, 0.3666],
+    images: { 160: polonnaruwa160, 320: polonnaruwa320 },
+  },
+  {
     id: 'pompeii',
     name: 'Pompeii',
     latitude: 40.75,
@@ -4058,6 +6182,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3529],
     images: { 160: pontDuGard160, 320: pontDuGard320 },
+  },
+  {
+    id: 'porta-nigra',
+    name: 'Porta Nigra',
+    latitude: 49.75,
+    longitude: 6.63306,
+    maps: ['DE'],
+    landmark: 'Q279968',
+    aspect: 1.7657,
+    size: 0.7,
+    anchor: [0.5, 0.3921],
+    images: { 160: portaNigra160, 320: portaNigra320 },
   },
   {
     id: 'porto',
@@ -4145,6 +6281,18 @@ export const LANDMARK_MODELS = [
     images: { 160: qalatAlBahrain160, 320: qalatAlBahrain320 },
   },
   {
+    id: 'quedlinburg',
+    name: 'Quedlinburg',
+    latitude: 51.78333,
+    longitude: 11.15,
+    maps: ['DE'],
+    landmark: 'Q10300241',
+    aspect: 1.7414,
+    size: 0.7,
+    anchor: [0.5, 0.4013],
+    images: { 160: quedlinburg160, 320: quedlinburg320 },
+  },
+  {
     id: 'quito',
     name: 'Quito',
     latitude: -0.22,
@@ -4182,6 +6330,18 @@ export const LANDMARK_MODELS = [
     images: { 160: redFort160, 320: redFort320 },
   },
   {
+    id: 'regensburg',
+    name: 'Stone Bridge, Regensburg',
+    latitude: 49.01722,
+    longitude: 12.09694,
+    maps: ['DE'],
+    landmark: 'Q1246833',
+    aspect: 1.7706,
+    size: 0.7,
+    anchor: [0.5, 0.3903],
+    images: { 160: regensburg160, 320: regensburg320 },
+  },
+  {
     id: 'registan',
     name: 'Registan',
     latitude: 39.65472,
@@ -4194,6 +6354,42 @@ export const LANDMARK_MODELS = [
     images: { 160: registan160, 320: registan320 },
   },
   {
+    id: 'reims',
+    name: 'Reims Cathedral',
+    latitude: 49.25333,
+    longitude: 4.03278,
+    maps: ['FR'],
+    landmark: 'Q16912637',
+    aspect: 1.7559,
+    size: 0.7,
+    anchor: [0.5, 0.3955],
+    images: { 160: reims160, 320: reims320 },
+  },
+  {
+    id: 'rhodes',
+    name: 'Palace of the Grand Master, Rhodes',
+    latitude: 36.44306,
+    longitude: 28.22694,
+    maps: ['GR'],
+    landmark: 'Q876685',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: rhodes160, 320: rhodes320 },
+  },
+  {
+    id: 'rideau-canal',
+    name: 'Rideau Canal',
+    latitude: 45.42639,
+    longitude: -75.69805,
+    maps: ['CA'],
+    landmark: 'Q651323',
+    aspect: 1.7062,
+    size: 0.7,
+    anchor: [0.5, 0.4123],
+    images: { 160: rideauCanal160, 320: rideauCanal320 },
+  },
+  {
     id: 'riga',
     name: 'Historic Centre of Riga',
     latitude: 56.94745,
@@ -4204,6 +6400,19 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.5591],
     images: { 160: riga160, 320: riga320 },
+  },
+  {
+    id: 'rijksmuseum',
+    name: 'Rijksmuseum',
+    latitude: 52.36,
+    longitude: 4.88528,
+    maps: ['NL'],
+    landmark: 'Q190804',
+    onMap: false,
+    aspect: 1.7131,
+    size: 0.7,
+    anchor: [0.5, 0.4105],
+    images: { 160: rijksmuseum160, 320: rijksmuseum320 },
   },
   {
     id: 'rila',
@@ -4267,6 +6476,42 @@ export const LANDMARK_MODELS = [
     images: { 160: roiMata160, 320: roiMata320 },
   },
   {
+    id: 'roskilde',
+    name: 'Roskilde Cathedral',
+    latitude: 55.64267,
+    longitude: 12.08031,
+    maps: ['DK'],
+    landmark: 'Q209705',
+    aspect: 1.8164,
+    size: 0.7,
+    anchor: [0.5, 0.3752],
+    images: { 160: roskilde160, 320: roskilde320 },
+  },
+  {
+    id: 'royal-exhibition-building',
+    name: 'Royal Exhibition Building',
+    latitude: -37.80611,
+    longitude: 144.97028,
+    maps: ['AU'],
+    landmark: 'Q15278460',
+    aspect: 1.8321,
+    size: 0.7,
+    anchor: [0.5, 0.3694],
+    images: { 160: royalExhibitionBuilding160, 320: royalExhibitionBuilding320 },
+  },
+  {
+    id: 'safranbolu',
+    name: 'Safranbolu',
+    latitude: 41.26,
+    longitude: 32.68972,
+    maps: ['TR'],
+    landmark: 'Q64705254',
+    aspect: 1.8268,
+    size: 0.7,
+    anchor: [0.5, 0.3719],
+    images: { 160: safranbolu160, 320: safranbolu320 },
+  },
+  {
     id: 'sagrada-familia',
     name: 'Sagrada Família',
     latitude: 41.40356,
@@ -4289,6 +6534,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.5377],
     images: { 160: saintBasils160, 320: saintBasils320 },
+  },
+  {
+    id: 'saint-emilion',
+    name: 'Saint-Émilion',
+    latitude: 44.89472,
+    longitude: 0.15528,
+    maps: ['FR'],
+    landmark: 'Q2987951',
+    aspect: 1.8112,
+    size: 0.7,
+    anchor: [0.5, 0.3771],
+    images: { 160: saintEmilion160, 320: saintEmilion320 },
   },
   {
     id: 'saint-louis',
@@ -4339,6 +6596,18 @@ export const LANDMARK_MODELS = [
     images: { 160: salarDeUyuni160, 320: salarDeUyuni320 },
   },
   {
+    id: 'salvador',
+    name: 'Lacerda Elevator, Salvador',
+    latitude: -12.9667,
+    longitude: -38.5,
+    maps: ['BR'],
+    landmark: 'Q5572706',
+    aspect: 1.7178,
+    size: 0.7,
+    anchor: [0.5, 0.409],
+    images: { 160: salvador160, 320: salvador320 },
+  },
+  {
     id: 'salzburg',
     name: 'Salzburg',
     latitude: 47.7997,
@@ -4351,6 +6620,31 @@ export const LANDMARK_MODELS = [
     images: { 160: salzburg160, 320: salzburg320 },
   },
   {
+    id: 'samarra',
+    name: 'Malwiya Minaret, Samarra',
+    latitude: 34.1959,
+    longitude: 43.88568,
+    maps: ['IQ'],
+    landmark: 'Q170047',
+    aspect: 1.7271,
+    size: 0.7,
+    anchor: [0.5, 0.4056],
+    images: { 160: samarra160, 320: samarra320 },
+  },
+  {
+    id: 'san-gimignano',
+    name: 'San Gimignano',
+    latitude: 43.46706,
+    longitude: 11.0428,
+    maps: ['IT'],
+    landmark: 'Q9724840',
+    onMap: false,
+    aspect: 1.6636,
+    size: 0.7,
+    anchor: [0.5, 0.4273],
+    images: { 160: sanGimignano160, 320: sanGimignano320 },
+  },
+  {
     id: 'sanaa',
     name: 'Old City of Sanaa',
     latitude: 15.3551,
@@ -4361,6 +6655,43 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4796],
     images: { 160: sanaa160, 320: sanaa320 },
+  },
+  {
+    id: 'sanchi',
+    name: 'Great Stupa of Sanchi',
+    latitude: 23.47944,
+    longitude: 77.73972,
+    maps: ['IN'],
+    landmark: 'Q181123',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: sanchi160, 320: sanchi320 },
+  },
+  {
+    id: 'sanssouci',
+    name: 'Sanssouci',
+    latitude: 52.4,
+    longitude: 13.03333,
+    maps: ['DE'],
+    landmark: 'Q852427',
+    onMap: false,
+    aspect: 1.7271,
+    size: 0.7,
+    anchor: [0.5, 0.4064],
+    images: { 160: sanssouci160, 320: sanssouci320 },
+  },
+  {
+    id: 'santiago-cathedral',
+    name: 'Santiago de Compostela Cathedral',
+    latitude: 42.88076,
+    longitude: -8.54468,
+    maps: ['ES'],
+    landmark: 'Q12386144',
+    aspect: 1.6399,
+    size: 0.7,
+    anchor: [0.5, 0.4351],
+    images: { 160: santiagoCathedral160, 320: santiagoCathedral320 },
   },
   {
     id: 'santo-domingo',
@@ -4399,6 +6730,19 @@ export const LANDMARK_MODELS = [
     images: { 160: schonbrunn160, 320: schonbrunn320 },
   },
   {
+    id: 'schwerin-castle',
+    name: 'Schwerin Castle',
+    latitude: 53.62417,
+    longitude: 11.41889,
+    maps: ['DE'],
+    landmark: 'Q47037432',
+    onMap: false,
+    aspect: 1.8981,
+    size: 0.7,
+    anchor: [0.5, 0.3464],
+    images: { 160: schwerinCastle160, 320: schwerinCastle320 },
+  },
+  {
     id: 'segovia-aqueduct',
     name: 'Aqueduct of Segovia',
     latitude: 40.94847,
@@ -4409,6 +6753,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3931],
     images: { 160: segoviaAqueduct160, 320: segoviaAqueduct320 },
+  },
+  {
+    id: 'selimiye',
+    name: 'Selimiye Mosque',
+    latitude: 41.67806,
+    longitude: 26.55944,
+    maps: ['TR'],
+    landmark: 'Q184534',
+    aspect: 1.5515,
+    size: 0.7,
+    anchor: [0.5, 0.4657],
+    images: { 160: selimiye160, 320: selimiye320 },
   },
   {
     id: 'seongsan',
@@ -4435,6 +6791,19 @@ export const LANDMARK_MODELS = [
     images: { 160: serengeti160, 320: serengeti320 },
   },
   {
+    id: 'sergiev-posad',
+    name: 'Trinity Lavra of St Sergius',
+    latitude: 56.31035,
+    longitude: 38.13065,
+    maps: ['RU'],
+    landmark: 'Q211962',
+    onMap: false,
+    aspect: 1.7657,
+    size: 0.7,
+    anchor: [0.5, 0.3922],
+    images: { 160: sergievPosad160, 320: sergievPosad320 },
+  },
+  {
     id: 'seville-giralda',
     name: 'Giralda',
     latitude: 37.38384,
@@ -4447,6 +6816,32 @@ export const LANDMARK_MODELS = [
     images: { 160: sevilleGiralda160, 320: sevilleGiralda320 },
   },
   {
+    id: 'shakhrisyabz',
+    name: 'Ak-Saray, Shakhrisyabz',
+    latitude: 39.05,
+    longitude: 66.83333,
+    maps: ['UZ'],
+    landmark: 'Q569766',
+    onMap: false,
+    aspect: 1.7806,
+    size: 0.7,
+    anchor: [0.5, 0.3876],
+    images: { 160: shakhrisyabz160, 320: shakhrisyabz320 },
+  },
+  {
+    id: 'shaolin',
+    name: 'Shaolin Temple',
+    latitude: 34.45875,
+    longitude: 113.06772,
+    maps: ['CN'],
+    landmark: 'Q5934942',
+    onMap: false,
+    aspect: 1.7806,
+    size: 0.7,
+    anchor: [0.5, 0.3875],
+    images: { 160: shaolin160, 320: shaolin320 },
+  },
+  {
     id: 'sheikh-zayed-mosque',
     name: 'Sheikh Zayed Grand Mosque',
     latitude: 24.412,
@@ -4457,6 +6852,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4854],
     images: { 160: sheikhZayedMosque160, 320: sheikhZayedMosque320 },
+  },
+  {
+    id: 'sheki',
+    name: 'Palace of Shaki Khans',
+    latitude: 41.19194,
+    longitude: 47.17056,
+    maps: ['AZ'],
+    landmark: 'Q106762537',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: sheki160, 320: sheki320 },
   },
   {
     id: 'shibam',
@@ -4483,6 +6890,18 @@ export const LANDMARK_MODELS = [
     images: { 160: shirakawaGo160, 320: shirakawaGo320 },
   },
   {
+    id: 'shore-temple',
+    name: 'Shore Temple',
+    latitude: 12.61667,
+    longitude: 80.19167,
+    maps: ['IN'],
+    landmark: 'Q3522747',
+    aspect: 1.7682,
+    size: 0.7,
+    anchor: [0.5, 0.391],
+    images: { 160: shoreTemple160, 320: shoreTemple320 },
+  },
+  {
     id: 'sidi-bou-said',
     name: 'Sidi Bou Saïd',
     latitude: 36.86976,
@@ -4494,6 +6913,19 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4492],
     images: { 160: sidiBouSaid160, 320: sidiBouSaid320 },
+  },
+  {
+    id: 'siena',
+    name: 'Piazza del Campo, Siena',
+    latitude: 43.31861,
+    longitude: 11.33167,
+    maps: ['IT'],
+    landmark: 'Q17163322',
+    onMap: false,
+    aspect: 1.5985,
+    size: 0.7,
+    anchor: [0.5, 0.4495],
+    images: { 160: siena160, 320: siena320 },
   },
   {
     id: 'sigatoka-dunes',
@@ -4544,6 +6976,18 @@ export const LANDMARK_MODELS = [
     images: { 160: simienMountains160, 320: simienMountains320 },
   },
   {
+    id: 'skara-brae',
+    name: 'Heart of Neolithic Orkney',
+    latitude: 58.9975,
+    longitude: -3.215,
+    maps: ['GB', 'XC'],
+    landmark: 'Q1334966',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: skaraBrae160, 320: skaraBrae320 },
+  },
+  {
     id: 'skellig-michael',
     name: 'Skellig Michael',
     latitude: 51.77111,
@@ -4580,6 +7024,30 @@ export const LANDMARK_MODELS = [
     images: { 160: soufriereHills160, 320: soufriereHills320 },
   },
   {
+    id: 'speicherstadt',
+    name: 'Speicherstadt',
+    latitude: 53.54333,
+    longitude: 9.99194,
+    maps: ['DE'],
+    landmark: 'Q20644172',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: speicherstadt160, 320: speicherstadt320 },
+  },
+  {
+    id: 'speyer-cathedral',
+    name: 'Speyer Cathedral',
+    latitude: 49.31722,
+    longitude: 8.4425,
+    maps: ['DE'],
+    landmark: 'Q22720',
+    aspect: 1.8563,
+    size: 0.7,
+    anchor: [0.5, 0.3607],
+    images: { 160: speyerCathedral160, 320: speyerCathedral320 },
+  },
+  {
     id: 'spis-castle',
     name: 'Spiš Castle',
     latitude: 49.00056,
@@ -4590,6 +7058,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4796],
     images: { 160: spisCastle160, 320: spisCastle320 },
+  },
+  {
+    id: 'st-catherines',
+    name: 'Saint Catherine\'s Monastery',
+    latitude: 28.55623,
+    longitude: 33.97543,
+    maps: ['EG'],
+    landmark: 'Q2468771',
+    aspect: 1.6378,
+    size: 0.7,
+    anchor: [0.5, 0.4363],
+    images: { 160: stCatherines160, 320: stCatherines320 },
   },
   {
     id: 'st-george-bermuda',
@@ -4614,6 +7094,19 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.5201],
     images: { 160: stPeters160, 320: stPeters320 },
+  },
+  {
+    id: 'st-stephens',
+    name: 'St. Stephen\'s Cathedral',
+    latitude: 48.2084,
+    longitude: 16.3722,
+    maps: ['AT'],
+    landmark: 'Q11288310',
+    onMap: false,
+    aspect: 1.7559,
+    size: 0.7,
+    anchor: [0.5, 0.3964],
+    images: { 160: stStephens160, 320: stStephens320 },
   },
   {
     id: 'statue-of-liberty',
@@ -4676,6 +7169,30 @@ export const LANDMARK_MODELS = [
     images: { 160: stonehenge160, 320: stonehenge320 },
   },
   {
+    id: 'strasbourg',
+    name: 'Strasbourg Cathedral',
+    latitude: 48.58444,
+    longitude: 7.74889,
+    maps: ['FR'],
+    landmark: 'Q55523908',
+    aspect: 1.4704,
+    size: 0.7,
+    anchor: [0.5, 0.4937],
+    images: { 160: strasbourg160, 320: strasbourg320 },
+  },
+  {
+    id: 'stromboli',
+    name: 'Stromboli',
+    latitude: 38.49667,
+    longitude: 14.93583,
+    maps: ['IT'],
+    landmark: 'Q179883',
+    aspect: 1.4051,
+    size: 0.7,
+    anchor: [0.5, 0.5165],
+    images: { 160: stromboli160, 320: stromboli320 },
+  },
+  {
     id: 'studenica',
     name: 'Studenica Monastery',
     latitude: 43.48672,
@@ -4712,6 +7229,19 @@ export const LANDMARK_MODELS = [
     images: { 160: sukur160, 320: sukur320 },
   },
   {
+    id: 'summer-palace',
+    name: 'Summer Palace',
+    latitude: 39.9975,
+    longitude: 116.2689,
+    maps: ['CN'],
+    landmark: 'Q4132',
+    onMap: false,
+    aspect: 1.4082,
+    size: 0.7,
+    anchor: [0.5, 0.5155],
+    images: { 160: summerPalace160, 320: summerPalace320 },
+  },
+  {
     id: 'sundarbans',
     name: 'Sundarbans',
     latitude: 22.03333,
@@ -4734,6 +7264,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3493],
     images: { 160: suomenlinna160, 320: suomenlinna320 },
+  },
+  {
+    id: 'suzhou-gardens',
+    name: 'Classical Gardens of Suzhou',
+    latitude: 31.32667,
+    longitude: 120.62556,
+    maps: ['CN'],
+    landmark: 'Q1144337',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: suzhouGardens160, 320: suzhouGardens320 },
   },
   {
     id: 'svaneti-towers',
@@ -4796,6 +7338,18 @@ export const LANDMARK_MODELS = [
     images: { 160: tallinn160, 320: tallinn320 },
   },
   {
+    id: 'taos-pueblo',
+    name: 'Taos Pueblo',
+    latitude: 36.43889,
+    longitude: -105.54167,
+    maps: ['US'],
+    landmark: 'Q252814',
+    aspect: 1.8811,
+    size: 0.7,
+    anchor: [0.5, 0.3529],
+    images: { 160: taosPueblo160, 320: taosPueblo320 },
+  },
+  {
     id: 'taputapuatea',
     name: 'Taputapuātea',
     latitude: -16.83611,
@@ -4818,6 +7372,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4591],
     images: { 160: taroko160, 320: taroko320 },
+  },
+  {
+    id: 'tarraco',
+    name: 'Tarraco Amphitheatre',
+    latitude: 41.11472,
+    longitude: 1.25931,
+    maps: ['ES'],
+    landmark: 'Q3119914',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: tarraco160, 320: tarraco320 },
   },
   {
     id: 'teatro-amazonas',
@@ -4965,6 +7531,18 @@ export const LANDMARK_MODELS = [
     images: { 160: timbuktu160, 320: timbuktu320 },
   },
   {
+    id: 'timgad',
+    name: 'Trajan\'s Arch, Timgad',
+    latitude: 35.48424,
+    longitude: 6.46867,
+    maps: ['DZ'],
+    landmark: 'Q459629',
+    aspect: 1.9269,
+    size: 0.7,
+    anchor: [0.5, 0.3365],
+    images: { 160: timgad160, 320: timgad320 },
+  },
+  {
     id: 'tivoli',
     name: 'Tivoli Gardens',
     latitude: 55.67361,
@@ -4989,6 +7567,31 @@ export const LANDMARK_MODELS = [
     images: { 160: tiwanaku160, 320: tiwanaku320 },
   },
   {
+    id: 'toledo',
+    name: 'Toledo',
+    latitude: 39.8569,
+    longitude: -4.02461,
+    maps: ['ES'],
+    landmark: 'Q17255635',
+    aspect: 1.8428,
+    size: 0.7,
+    anchor: [0.5, 0.3657],
+    images: { 160: toledo160, 320: toledo320 },
+  },
+  {
+    id: 'tomar',
+    name: 'Convent of Christ, Tomar',
+    latitude: 39.60364,
+    longitude: -8.41926,
+    maps: ['PT'],
+    landmark: 'Q736692',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: tomar160, 320: tomar320 },
+  },
+  {
     id: 'tongariro',
     name: 'Tongariro',
     latitude: -39.2,
@@ -5011,6 +7614,31 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.5283],
     images: { 160: torresDelPaine160, 320: torresDelPaine320 },
+  },
+  {
+    id: 'torun',
+    name: 'Toruń Old Town Hall',
+    latitude: 53.01028,
+    longitude: 18.60472,
+    maps: ['PL'],
+    landmark: 'Q9390606',
+    aspect: 1.8924,
+    size: 0.7,
+    anchor: [0.5, 0.3485],
+    images: { 160: torun160, 320: torun320 },
+  },
+  {
+    id: 'tower-of-hercules',
+    name: 'Tower of Hercules',
+    latitude: 43.38583,
+    longitude: -8.40639,
+    maps: ['ES'],
+    landmark: 'Q245151',
+    onMap: false,
+    aspect: 1.6903,
+    size: 0.7,
+    anchor: [0.5, 0.4182],
+    images: { 160: towerOfHercules160, 320: towerOfHercules320 },
   },
   {
     id: 'tower-of-london',
@@ -5038,6 +7666,18 @@ export const LANDMARK_MODELS = [
     images: { 160: trakai160, 320: trakai320 },
   },
   {
+    id: 'trang-an',
+    name: 'Tràng An',
+    latitude: 20.2557,
+    longitude: 105.9156,
+    maps: ['VN'],
+    landmark: 'Q10810559',
+    aspect: 1.6506,
+    size: 0.7,
+    anchor: [0.5, 0.4323],
+    images: { 160: trangAn160, 320: trangAn320 },
+  },
+  {
     id: 'trinidad-cuba',
     name: 'Trinidad',
     latitude: 21.80306,
@@ -5060,6 +7700,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3954],
     images: { 160: trinidadMission160, 320: trinidadMission320 },
+  },
+  {
+    id: 'troy',
+    name: 'Troy',
+    latitude: 39.9575,
+    longitude: 26.23889,
+    maps: ['TR'],
+    landmark: 'Q22647',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: troy160, 320: troy320 },
   },
   {
     id: 'trulli',
@@ -5134,6 +7786,19 @@ export const LANDMARK_MODELS = [
     images: { 160: undergroundRiver160, 320: undergroundRiver320 },
   },
   {
+    id: 'urbino',
+    name: 'Ducal Palace, Urbino',
+    latitude: 43.725,
+    longitude: 12.63333,
+    maps: ['IT'],
+    landmark: 'Q17163308',
+    onMap: false,
+    aspect: 1.7856,
+    size: 0.7,
+    anchor: [0.5, 0.3854],
+    images: { 160: urbino160, 320: urbino320 },
+  },
+  {
     id: 'urnes-stave-church',
     name: 'Urnes Stave Church',
     latitude: 61.29806,
@@ -5183,6 +7848,18 @@ export const LANDMARK_MODELS = [
     images: { 160: valletta160, 320: valletta320 },
   },
   {
+    id: 'valparaiso',
+    name: 'Valparaíso',
+    latitude: -33.04064,
+    longitude: -71.628,
+    maps: ['CL'],
+    landmark: 'Q16333721',
+    aspect: 1.7414,
+    size: 0.7,
+    anchor: [0.5, 0.4007],
+    images: { 160: valparaiso160, 320: valparaiso320 },
+  },
+  {
     id: 'vatnajokull',
     name: 'Vatnajökull',
     latitude: 64.5,
@@ -5205,6 +7882,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4227],
     images: { 160: venice160, 320: venice320 },
+  },
+  {
+    id: 'verona-arena',
+    name: 'Verona Arena',
+    latitude: 45.43861,
+    longitude: 10.99389,
+    maps: ['IT'],
+    landmark: 'Q3678423',
+    aspect: 1.8374,
+    size: 0.7,
+    anchor: [0.5, 0.3673],
+    images: { 160: veronaArena160, 320: veronaArena320 },
   },
   {
     id: 'versailles',
@@ -5242,6 +7931,32 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3284],
     images: { 160: vigan160, 320: vigan320 },
+  },
+  {
+    id: 'villa-deste',
+    name: 'Villa d\'Este',
+    latitude: 41.9625,
+    longitude: 12.79611,
+    maps: ['IT'],
+    landmark: 'Q746063',
+    onMap: false,
+    aspect: 1.7559,
+    size: 0.7,
+    anchor: [0.5, 0.3953],
+    images: { 160: villaDeste160, 320: villaDeste320 },
+  },
+  {
+    id: 'villa-savoye',
+    name: 'Villa Savoye',
+    latitude: 48.92444,
+    longitude: 2.02833,
+    maps: ['FR'],
+    landmark: 'Q940746',
+    onMap: false,
+    aspect: 1.8536,
+    size: 0.7,
+    anchor: [0.5, 0.3621],
+    images: { 160: villaSavoye160, 320: villaSavoye320 },
   },
   {
     id: 'vilnius',
@@ -5304,6 +8019,18 @@ export const LANDMARK_MODELS = [
     images: { 160: visegradBridge160, 320: visegradBridge320 },
   },
   {
+    id: 'vizcaya-bridge',
+    name: 'Vizcaya Bridge',
+    latitude: 43.32306,
+    longitude: -3.01694,
+    maps: ['ES'],
+    landmark: 'Q331996',
+    aspect: 1.9038,
+    size: 0.7,
+    anchor: [0.5, 0.3448],
+    images: { 160: vizcayaBridge160, 320: vizcayaBridge320 },
+  },
+  {
     id: 'volcanoes-np',
     name: 'Volcanoes National Park',
     latitude: -1.4675,
@@ -5314,6 +8041,19 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.5161],
     images: { 160: volcanoesNp160, 320: volcanoesNp320 },
+  },
+  {
+    id: 'volubilis',
+    name: 'Volubilis',
+    latitude: 34.03996,
+    longitude: -5.56269,
+    maps: ['MA'],
+    landmark: 'Q391215',
+    onMap: false,
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: volubilis160, 320: volubilis320 },
   },
   {
     id: 'volunteer-point',
@@ -5340,6 +8080,18 @@ export const LANDMARK_MODELS = [
     images: { 160: voronet160, 320: voronet320 },
   },
   {
+    id: 'wachau',
+    name: 'Melk Abbey',
+    latitude: 48.36444,
+    longitude: 15.43417,
+    maps: ['AT'],
+    landmark: 'Q192201',
+    aspect: 1.8428,
+    size: 0.7,
+    anchor: [0.5, 0.3655],
+    images: { 160: wachau160, 320: wachau320 },
+  },
+  {
     id: 'wadi-rum',
     name: 'Wadi Rum',
     latitude: 29.5765,
@@ -5364,6 +8116,30 @@ export const LANDMARK_MODELS = [
     images: { 160: wallblakeHouse160, 320: wallblakeHouse320 },
   },
   {
+    id: 'warsaw',
+    name: 'Warsaw Old Town',
+    latitude: 52.24972,
+    longitude: 21.01222,
+    maps: ['PL'],
+    landmark: 'Q1139084',
+    aspect: 1.668,
+    size: 0.7,
+    anchor: [0.5, 0.4256],
+    images: { 160: warsaw160, 320: warsaw320 },
+  },
+  {
+    id: 'wartburg',
+    name: 'Wartburg Castle',
+    latitude: 50.96611,
+    longitude: 10.30639,
+    maps: ['DE'],
+    landmark: 'Q151545',
+    aspect: 1.7756,
+    size: 0.7,
+    anchor: [0.5, 0.3892],
+    images: { 160: wartburg160, 320: wartburg320 },
+  },
+  {
     id: 'wat-phou',
     name: 'Wat Phou',
     latitude: 14.84892,
@@ -5374,6 +8150,31 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.5169],
     images: { 160: watPhou160, 320: watPhou320 },
+  },
+  {
+    id: 'west-lake',
+    name: 'Leifeng Pagoda, West Lake',
+    latitude: 30.2375,
+    longitude: 120.14083,
+    maps: ['CN'],
+    landmark: 'Q15660376',
+    onMap: false,
+    aspect: 1.5458,
+    size: 0.7,
+    anchor: [0.5, 0.4678],
+    images: { 160: westLake160, 320: westLake320 },
+  },
+  {
+    id: 'western-wall',
+    name: 'Western Wall',
+    latitude: 31.77695,
+    longitude: 35.23425,
+    maps: ['PS'],
+    landmark: 'Q134821',
+    aspect: 1.6046,
+    size: 0.7,
+    anchor: [0.5, 0.4479],
+    images: { 160: westernWall160, 320: westernWall320 },
   },
   {
     id: 'wieliczka',
@@ -5389,6 +8190,19 @@ export const LANDMARK_MODELS = [
     images: { 160: wieliczka160, 320: wieliczka320 },
   },
   {
+    id: 'wild-goose-pagoda',
+    name: 'Giant Wild Goose Pagoda',
+    latitude: 34.21977,
+    longitude: 108.95933,
+    maps: ['CN'],
+    landmark: 'Q1047061',
+    onMap: false,
+    aspect: 1.5885,
+    size: 0.7,
+    anchor: [0.5, 0.4537],
+    images: { 160: wildGoosePagoda160, 320: wildGoosePagoda320 },
+  },
+  {
     id: 'willemstad',
     name: 'Historic Willemstad',
     latitude: 12.10614,
@@ -5399,6 +8213,18 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.3284],
     images: { 160: willemstad160, 320: willemstad320 },
+  },
+  {
+    id: 'wurzburg',
+    name: 'Würzburg Residence',
+    latitude: 49.79278,
+    longitude: 9.93889,
+    maps: ['DE'],
+    landmark: 'Q64822967',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: wurzburg160, 320: wurzburg320 },
   },
   {
     id: 'xochimilco',
@@ -5424,5 +8250,41 @@ export const LANDMARK_MODELS = [
     size: 0.7,
     anchor: [0.5, 0.4467],
     images: { 160: yasawi160, 320: yasawi320 },
+  },
+  {
+    id: 'yazd',
+    name: 'Jameh Mosque of Yazd',
+    latitude: 31.90056,
+    longitude: 54.36958,
+    maps: ['IR'],
+    landmark: 'Q32979655',
+    aspect: 1.7039,
+    size: 0.7,
+    anchor: [0.5, 0.4139],
+    images: { 160: yazd160, 320: yazd320 },
+  },
+  {
+    id: 'zhangjiajie',
+    name: 'Zhangjiajie',
+    latitude: 29.34556,
+    longitude: 110.46667,
+    maps: ['CN'],
+    landmark: 'Q4187',
+    aspect: 1.4982,
+    size: 0.7,
+    anchor: [0.5, 0.4842],
+    images: { 160: zhangjiajie160, 320: zhangjiajie320 },
+  },
+  {
+    id: 'ziggurat-of-ur',
+    name: 'Ziggurat of Ur',
+    latitude: 30.96222,
+    longitude: 46.10444,
+    maps: ['IQ'],
+    landmark: 'Q5699',
+    aspect: 1.9507,
+    size: 0.7,
+    anchor: [0.5, 0.3284],
+    images: { 160: zigguratOfUr160, 320: zigguratOfUr320 },
   },
 ];

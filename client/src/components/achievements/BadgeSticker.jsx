@@ -1,6 +1,22 @@
 import React from 'react';
 // Icons
-import { FaCalendarAlt, FaCamera, FaCheck, FaCompass, FaGlobe, FaGlobeAfrica, FaGlobeAmericas, FaGlobeAsia, FaGlobeEurope, FaLandmark, FaMapSigns, FaSnowflake, FaUniversity } from 'react-icons/fa';
+import {
+  FaBinoculars,
+  FaCalendarAlt,
+  FaCamera,
+  FaCheck,
+  FaCompass,
+  FaGlobe,
+  FaGlobeAfrica,
+  FaGlobeAmericas,
+  FaGlobeAsia,
+  FaGlobeEurope,
+  FaLandmark,
+  FaMapSigns,
+  FaPaw,
+  FaSnowflake,
+  FaUniversity,
+} from 'react-icons/fa';
 // Utils
 import { badgeWords } from '@/utils/achievements/badges';
 import { formatDay } from '@/utils/functions/dates';
@@ -18,7 +34,8 @@ function iconFor({ key, group }) {
   if (CONTINENT_ICONS[key]) return CONTINENT_ICONS[key];
   if (key === 'antarctica') return FaSnowflake;
   if (key.startsWith('unesco-')) return FaUniversity;
-  return { countries: FaGlobe, continents: FaGlobe, special: FaCompass, regions: FaMapSigns, landmarks: FaLandmark, photos: FaCamera, themes: FaCalendarAlt }[group] || FaGlobe;
+  if (key === 'big-five' || key.startsWith('oneshots-wildlife-')) return FaPaw;
+  return { countries: FaGlobe, continents: FaGlobe, special: FaCompass, regions: FaMapSigns, landmarks: FaLandmark, oneShots: FaBinoculars, photos: FaCamera, themes: FaCalendarAlt }[group] || FaGlobe;
 }
 
 // Stickers slapped on at slightly different angles

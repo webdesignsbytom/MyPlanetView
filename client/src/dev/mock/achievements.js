@@ -10,8 +10,9 @@ import { INHABITED_CONTINENTS, REGIONS, regionCodesOnMap } from '@/utils/constan
 import { UK, UK_NATION_CODES, countedCountryCodes, isUkNation, placeOnMap } from '@/utils/map/ukNations';
 import { GOAL_KINDS, GOAL_LIST_MAX, GOAL_REGIONS, GOAL_TARGET_MAX, GOAL_TITLE_MAX } from '@/utils/achievements/goals';
 import { getDb } from './store';
-import { countryExists, landmarkById } from './views';
+import { LANDMARK_ROWS, countryExists, landmarkById } from './views';
 import { shotAtOf } from './photoOrder';
+import { oneShotCounts } from '@/utils/oneShots/oneShotRules';
 import { sanitizeText } from './moments';
 
 // The server's EVENT_MESSAGES
@@ -52,13 +53,80 @@ export const BADGES = Object.freeze([
   { key: 'south-pole', group: 'special', measure: 'place', code: 'XS', need: 1 },
   ...Object.entries(REGIONS).map(([region, { codes }]) => ({ key: `region-${region}`, group: 'regions', measure: 'region', region, need: codes.length })),
   ...[1, 10, 50].map((need) => ({ key: `landmarks-${need}`, group: 'landmarks', measure: 'landmarks', need })),
-  ...[5, 25].map((need) => ({ key: `unesco-${need}`, group: 'landmarks', measure: 'unesco', need })),
+  ...[5, 25, 50, 100, 250].map((need) => ({ key: `unesco-${need}`, group: 'landmarks', measure: 'unesco', need })),
+  // Life's One Shots (24 Nov 2026): each list's ticks, and the Big Five
+  ...[1, 10, 25, 50].map((need) => ({ key: `oneshots-wildlife-${need}`, group: 'oneShots', measure: 'oneShotsWildlife', need })),
+  ...[1, 5, 15].map((need) => ({ key: `oneshots-wonders-${need}`, group: 'oneShots', measure: 'oneShotsWonders', need })),
+  ...[1, 5, 15].map((need) => ({ key: `oneshots-journeys-${need}`, group: 'oneShots', measure: 'oneShotsJourneys', need })),
+  { key: 'big-five', group: 'oneShots', measure: 'bigFive', need: 5 },
   ...[100, 1000].map((need) => ({ key: `photos-${need}`, group: 'photos', measure: 'photos', need })),
   ...[3, 6, 12].map((need) => ({ key: `themes-${need}`, group: 'themes', measure: 'themes', need })),
 ]);
 
-// `splitUk`: the map shows the UK as its four nations (they count one each; a region holds them)
-export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, themes = 0, splitUk = false }) {
+// Country collections (the server's collectionTiers, collectionProgress and helpers/landmarks.js;
+// 24 Nov 2026): bronze, silver and gold for a quarter, half and all of a place's landmarks
+// stamped, a UK landmark in its nation on a map that splits the UK
+const COLLECTION_TIERS = [
+  { tier: 'bronze', share: 0.25 },
+  { tier: 'silver', share: 0.5 },
+  { tier: 'gold', share: 1 },
+];
+export const collectionKey = (place, tier) => `collect-${place}-${tier}`;
+const COLLECTION_KEY = /^collect-([A-Z]{2})-(bronze|silver|gold)$/;
+export function parseCollectionKey(key) {
+  const match = COLLECTION_KEY.exec(String(key));
+  return match ? { place: match[1], tier: match[2] } : null;
+}
+
+export function collectionTiers(total) {
+  if (!Number.isInteger(total) || total < 1) return [];
+  const tiers = COLLECTION_TIERS.map(({ tier, share }) => ({ tier, need: Math.max(1, Math.ceil(total * share)) }));
+  return tiers.filter((tier, index) => index === tiers.length - 1 || tier.need < tiers[index + 1].need);
+}
+
+// A landmark's place on a map (the server's landmarkPlace): a UK landmark's nation when it splits the UK
+const landmarkPlaceOf = (landmark, splitUk) => (splitUk && landmark.countryCode === UK && landmark.nation ? landmark.nation : landmark.countryCode);
+
+let totalsCache = null;
+export function landmarkTotals(splitUk) {
+  if (!totalsCache) {
+    const count = (split) => {
+      const totals = new Map();
+      for (const row of LANDMARK_ROWS) {
+        const place = landmarkPlaceOf(row, split);
+        totals.set(place, (totals.get(place) || 0) + 1);
+      }
+      return totals;
+    };
+    const whole = count(false);
+    const split = count(true);
+    if (whole.has(UK)) split.set(UK, whole.get(UK));
+    totalsCache = { whole, split };
+  }
+  return splitUk ? totalsCache.split : totalsCache.whole;
+}
+
+export function collectionProgress({ stamps = [], totals = new Map(), keep = [] }) {
+  const stamped = new Map();
+  for (const stamp of stamps) stamped.set(stamp.countryCode, (stamped.get(stamp.countryCode) || 0) + 1);
+  const places = [...new Set([...stamped.keys(), ...keep])].filter((place) => totals.get(place) > 0).sort();
+  return places.flatMap((place) => {
+    const have = stamped.get(place) || 0;
+    return collectionTiers(totals.get(place)).map(({ tier, need }) => ({
+      key: collectionKey(place, tier),
+      group: 'collections',
+      place,
+      tier,
+      have: Math.min(have, need),
+      need,
+      earned: have >= need,
+    }));
+  });
+}
+
+// `splitUk`: the map shows the UK as its four nations (they count one each; a region holds them).
+// `keepPlaces`: places with a collection tier awarded already (still listed)
+export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, themes = 0, splitUk = false, keepPlaces = [], oneShots = [] }) {
   const countries = countedCountryCodes(
     [...visited].filter((code) => !isSpecialPlace(code)),
     splitUk,
@@ -71,7 +139,12 @@ export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, th
     ),
   );
   const continents = new Set(countries.map((code) => continentByCode.get(code)).filter(Boolean));
+  const ticked = oneShotCounts(oneShots);
   const counts = {
+    oneShotsWildlife: ticked.WILDLIFE,
+    oneShotsWonders: ticked.WONDERS,
+    oneShotsJourneys: ticked.JOURNEYS,
+    bigFive: ticked.bigFive,
     countries: countries.length,
     inhabitedContinents: INHABITED_CONTINENTS.filter((c) => continents.has(c)).length,
     landmarks: stamps.length,
@@ -92,11 +165,19 @@ export function badgeProgress({ visited = new Set(), stamps = [], photos = 0, th
     if (badge.measure === 'allCountries') return Math.max(everyCountry.size, 1);
     return badge.need;
   };
-  return BADGES.map((badge) => {
-    const have = haveFor(badge);
-    const need = needFor(badge);
-    return { key: badge.key, group: badge.group, have: Math.min(have, need), need, earned: have >= need };
+  // The stamps by their place on this map (a UK landmark's nation on a split map)
+  const placed = stamps.map((stamp) => {
+    const landmark = landmarkById(stamp.landmarkId);
+    return { countryCode: landmark ? landmarkPlaceOf(landmark, splitUk) : stamp.countryCode };
   });
+  return [
+    ...BADGES.map((badge) => {
+      const have = haveFor(badge);
+      const need = needFor(badge);
+      return { key: badge.key, group: badge.group, have: Math.min(have, need), need, earned: have >= need };
+    }),
+    ...collectionProgress({ stamps: placed, totals: landmarkTotals(splitUk), keep: keepPlaces }),
+  ];
 }
 
 // Goals (utils/goals.js)
@@ -273,7 +354,9 @@ export function loadMapFacts(mapId, { includeHidden }) {
   const shown = new Set(photos.map((p) => p.id));
   const themes = new Set((db.themeEntries || []).filter((e) => e.mapId === mapId && shown.has(e.photoId)).map((e) => e.themeId)).size;
   const splitUk = Boolean(db.maps.find((m) => m.id === mapId)?.splitUk);
-  return { visited, firstVisitAt, firstPhotoAt, stamps: findStamps(mapId, photos), photos: photos.length, themes, splitUk };
+  // Life's One Shots ticked (their keys): the badges count them
+  const oneShots = (db.oneShots || []).filter((t) => t.mapId === mapId).map((t) => t.itemKey);
+  return { visited, firstVisitAt, firstPhotoAt, stamps: findStamps(mapId, photos), photos: photos.length, themes, splitUk, oneShots };
 }
 
 /**
@@ -282,8 +365,10 @@ export function loadMapFacts(mapId, { includeHidden }) {
  */
 export function mapBadges(mapId, { award }) {
   const db = getDb();
-  const progress = badgeProgress(loadMapFacts(mapId, { includeHidden: award }));
-  const earnedAt = new Map(db.badgeAwards.filter((a) => a.mapId === mapId).map((a) => [a.badgeKey, a.earnedAt]));
+  const awards = db.badgeAwards.filter((a) => a.mapId === mapId);
+  const keepPlaces = [...new Set(awards.map((a) => parseCollectionKey(a.badgeKey)?.place).filter(Boolean))];
+  const progress = badgeProgress({ ...loadMapFacts(mapId, { includeHidden: award }), keepPlaces });
+  const earnedAt = new Map(awards.map((a) => [a.badgeKey, a.earnedAt]));
   let newlyEarned = [];
   if (award) {
     newlyEarned = progress.filter((b) => b.earned && !earnedAt.has(b.key)).map((b) => b.key);
@@ -297,6 +382,8 @@ export function mapBadges(mapId, { award }) {
     badges: progress.map((b) => ({
       key: b.key,
       group: b.group,
+      // A country collection's place and tier
+      ...(b.place ? { place: b.place, tier: b.tier } : {}),
       // An award stays even if the map later has less (a country unmarked)
       have: earnedAt.has(b.key) ? b.need : b.have,
       need: b.need,

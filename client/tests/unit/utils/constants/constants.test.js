@@ -69,6 +69,11 @@ describe('brandColours', () => {
     expect(card.ice).toBe(light('map-ice'));
     expect(card.iceEdge).toBe(light('map-ice-edge'));
     expect(card.visits).toEqual([1, 2, 3, 4, 5, 6, 7].map((n) => light(`map-visit-${n}`)));
+    // A country collection's medal (24 Nov 2026): the medals' tokens, and the poster's two reds
+    for (const tier of ['bronze', 'silver', 'gold']) {
+      expect(card.medals[tier]).toEqual({ face: light(`medal-${tier}`), rim: light(`medal-${tier}-edge`) });
+    }
+    expect(card.ribbon).toEqual([light('poster-red-deep'), light('poster-red')]);
   });
 
   it('has only six-digit hex colours, fixed', () => {
@@ -76,7 +81,8 @@ describe('brandColours', () => {
       brand.BRAND_RED,
       brand.BRAND_GROUND,
       brand.BRAND_GROUND_DARK,
-      ...Object.values(brand.SHARE_CARD_COLOURS).flat(),
+      ...Object.values(brand.SHARE_CARD_COLOURS)
+        .flatMap((value) => (value && typeof value === 'object' && !Array.isArray(value) ? Object.values(value).flatMap(Object.values) : value)),
       ...Object.values(brand.POSTER_COLOURS.atlas),
       ...Object.values(brand.POSTER_COLOURS.paper),
       ...Object.values(brand.COMPARE_COLOURS),
