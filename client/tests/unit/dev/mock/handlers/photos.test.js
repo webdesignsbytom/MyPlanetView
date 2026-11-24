@@ -57,9 +57,10 @@ describe('rearranging a gallery', () => {
   });
 
   it('refuses an unknown gallery, a trip gallery for a photo on none, and a viewer', async () => {
-    expect((await post('/api/photos/photo-dam/move', { gallery: 'wall' })).status).toBe(400);
-    expect((await post('/api/photos/photo-dam/move', { gallery: 'trip' })).status).toBe(400);
-    expect((await post('/api/photos/photo-dam/move', { gallery: 'country', afterId: 'photo-dam' })).status).toBe(400);
+    // Tower Bridge is on no trip (London is home)
+    expect((await post('/api/photos/photo-tower-bridge/move', { gallery: 'wall' })).status).toBe(400);
+    expect((await post('/api/photos/photo-tower-bridge/move', { gallery: 'trip' })).status).toBe(400);
+    expect((await post('/api/photos/photo-tower-bridge/move', { gallery: 'country', afterId: 'photo-tower-bridge' })).status).toBe(400);
     expect((await post('/api/photos/photo-morgans-sagrada/move', { gallery: 'country', afterId: null })).status).toBe(403);
   });
 

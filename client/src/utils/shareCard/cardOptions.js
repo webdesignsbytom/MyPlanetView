@@ -65,6 +65,9 @@ export function tripCardOptions(trip, map, design = null) {
     stats,
     splitUk: Boolean(map?.splitUk),
     colours: design?.countries ?? null,
+    // Close up (24 Nov 2026, the user's wish): a one-country trip on that country's own map
+    // with its regions, neighbours on the world cropped round them (drawShareCard's `mapView`)
+    mapView: 'fit',
     fileName: 'my-planet-view-trip.png',
     shareText: counted.length ? `Just back from ${trip.title}: ${counted.join(' in ')}.` : `Just back from ${trip.title}.`,
     dialogTitle: 'Share a picture of your trip',

@@ -70,9 +70,16 @@ describe('recapCardOptions', () => {
       ],
       splitUk: true,
       colours: { FR: '#112233' },
+      mapView: 'world',
       fileName: 'my-planet-view-2025.png',
       shareText: 'My 2025 in travel: 2 countries.',
     });
+  });
+
+  // 24 Nov 2026, the user's wish: "offer both on the year card"
+  it('shows the whole world, or the places close up when asked', () => {
+    expect(recap.recapCardOptions(year(), { name: 'M' }).mapView).toBe('world');
+    expect(recap.recapCardOptions(year(), { name: 'M' }, null, { closeUp: true }).mapView).toBe('fit');
   });
 
   it('fills the numbers with stamps, then trips, when there are fewer', () => {

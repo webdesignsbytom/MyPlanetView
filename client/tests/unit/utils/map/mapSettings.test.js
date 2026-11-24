@@ -102,6 +102,7 @@ describe('cleanMapSettings', () => {
       style: 'old-map',
       mapType: 'detailed',
       landmarkPins: 'off',
+      distanceUnit: 'miles',
       showGrid: false,
       showGridLabels: true,
       animatedSea: false,

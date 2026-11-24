@@ -7,14 +7,15 @@ import { LOCAL_NAMES } from '../../src/utils/map/countryLocalNames.js';
 // Tower's and the Louvre's) and Mont-Saint-Michel; the Colosseum, Florence, Cinque Terre
 // and Venice; Gaudí's works; Amsterdam's canals; the Tower of London and Edinburgh; the
 // Cliffs of Moher; and Belém, on a hidden photo only. The Alhambra is still a suggestion.
-// Pages, first visited first: 1 cover, 2 travellers, 3 Netherlands, 4 Spain, 5 United
-// States, 6 France, 7 Ireland, 8 Portugal, 9 United Kingdom, 10 Italy, 11 totals.
+// Pages, in the order visited (24 Nov 2026, the user's wish: each page dated by the earlier of
+// its first visit and its first photo): 1 cover, 2 travellers, 3 United Kingdom (lived in since
+// 1990), 4 Ireland, 5 United States, 6 Netherlands, 7 Spain, 8 France, 9 Portugal, 10 Italy,
+// 11 totals.
 
 const book = (page) => page.getByRole('region', { name: 'Passport book' });
 const pageStatus = (page) => page.getByRole('status').filter({ hasText: /^Page \d+ of \d+/ });
 const pageList = (page) => page.getByRole('combobox', { name: 'Go to a page' });
 const stampButton = (page, name) => page.getByRole('button', { name: `Open the photo of ${name}`, exact: true });
-const choosePhoto = (page, name) => page.getByRole('button', { name: `Choose the photo for ${name}`, exact: true });
 
 async function openPassport(page, path = '/maps/map-home/passport') {
   await page.goto(path);
@@ -36,17 +37,27 @@ test.describe('The passport', () => {
     await page.getByRole('button', { name: 'Next page' }).click();
     await expect(book(page).getByRole('heading', { level: 2, name: 'Travellers' })).toBeVisible();
     await expect(book(page).getByRole('listitem')).toHaveText([/Charlie.*United Kingdom.*Japan/, /Alex.*Ireland.*Italy/]);
+    // Each photo box as tall as the details beside it, down to their last line (24 Nov 2026)
+    for (const card of await book(page).getByRole('listitem').all()) {
+      const [photo, details] = [await card.locator('[data-passport-photo]').boundingBox(), await card.locator('dl').boundingBox()];
+      expect(Math.abs(photo.y - details.y)).toBeLessThan(1);
+      expect(Math.abs(photo.y + photo.height - (details.y + details.height))).toBeLessThan(1);
+    }
 
-    // The arrow keys: the first visa page (the Netherlands, first photographed in 2016) and back
+    // The arrow keys: the first visa page (the United Kingdom, lived in since 1990) and back
     await page.keyboard.press('ArrowRight');
-    await expect(pageStatus(page)).toHaveText('Page 3 of 11: Netherlands');
-    await expect(book(page).getByRole('heading', { level: 2, name: 'Netherlands' })).toBeVisible();
-    await expect(book(page).getByText('Visited, first on 12 Mar 2016')).toBeVisible();
+    await expect(pageStatus(page)).toHaveText('Page 3 of 11: United Kingdom');
+    await expect(book(page).getByRole('heading', { level: 2, name: 'United Kingdom' })).toBeVisible();
+    await expect(book(page).getByText('Lived there, from 1 May 1990')).toBeVisible();
+    await page.keyboard.press('ArrowLeft');
+    await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
+
+    // The Netherlands: first visited the day before its first photo, which dates its stamp
+    await pageList(page).selectOption({ label: '6. Netherlands' });
+    await expect(book(page).getByText('Visited, first on 11 Mar 2016')).toBeVisible();
     await expect(stampButton(page, 'Amsterdam Canal Ring')).toHaveAccessibleDescription(
       'Amsterdam Canal Ring, stamped 12 Mar 2016, UNESCO World Heritage Site, 1 photo.',
     );
-    await page.keyboard.press('ArrowLeft');
-    await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
 
     // Italy, from the page list: four stamps in the order they were stamped, and the rest to collect
     await pageList(page).selectOption({ label: '10. Italy' });
@@ -81,55 +92,16 @@ test.describe('The passport', () => {
     await expect(page.getByRole('button', { name: 'Next page' })).toBeDisabled();
   });
 
-  test('an editor picks the photo a stamp shows, and goes back to the first', async ({ page }) => {
+  // 24 Nov 2026, the user's wish: nobody picks a stamp's photo in the passport
+  test('a stamp shows its earliest photo, with nothing to choose', async ({ page }) => {
     await openPassport(page);
-    await pageList(page).selectOption({ label: '6. France' });
+    await pageList(page).selectOption({ label: '8. France' });
     await expect(book(page).getByRole('heading', { level: 2, name: 'France' })).toBeVisible();
     const seine = stampButton(page, 'Paris, Banks of the Seine');
     await expect(seine.locator('image')).toHaveAttribute('href', /\/eiffel-tower\//);
-    // A stamp with one photo has nothing to choose
-    await expect(stampButton(page, 'Eiffel Tower')).toBeVisible();
-    await expect(choosePhoto(page, 'Eiffel Tower')).toHaveCount(0);
-
-    await choosePhoto(page, 'Paris, Banks of the Seine').click();
-    const picker = page.getByRole('dialog', { name: 'Photo for Paris, Banks of the Seine' });
-    await expect(picker.getByRole('button', { name: 'Evening by the Seine (on the stamp now)' })).toHaveAttribute('aria-pressed', 'true');
-    await picker.getByRole('button', { name: /Richelieu wing/ }).click();
-    await expect(picker).toBeHidden();
-    await expect(seine.locator('image')).toHaveAttribute('href', /\/louvre\//);
-    await expect(seine).toHaveAccessibleDescription(/2 photos, its photo chosen\.$/);
-
-    // Kept: the choice is the map's
-    await page.reload();
-    await pageList(page).selectOption({ label: '6. France' });
-    await expect(stampButton(page, 'Paris, Banks of the Seine').locator('image')).toHaveAttribute('href', /\/louvre\//);
-
-    // Back to the earliest
-    await choosePhoto(page, 'Paris, Banks of the Seine').click();
-    await expect(picker.getByRole('button', { name: /Richelieu wing \(on the stamp now\)/ })).toHaveAttribute('aria-pressed', 'true');
-    await picker.getByRole('button', { name: 'Use the first photo' }).click();
-    await expect(picker).toBeHidden();
-    await expect(stampButton(page, 'Paris, Banks of the Seine').locator('image')).toHaveAttribute('href', /\/eiffel-tower\//);
-    await expect(stampButton(page, 'Paris, Banks of the Seine')).toHaveAccessibleDescription(/2 photos\.$/);
-  });
-
-  test('the picker offers a landmark’s photos placed in another country', async ({ page }) => {
-    // Amsterdam's canal photo, placed in the Netherlands, matched by hand to the Eiffel Tower
-    // (a photo taken across a border would be the same)
-    await openPassport(page);
-    await page.evaluate((key) => {
-      const db = JSON.parse(localStorage.getItem(key));
-      const now = new Date().toISOString();
-      db.photoLandmarks.push({ photoId: 'photo-dam', mapId: 'map-home', landmarkId: 'lm-eiffel-tower', source: 'MANUAL', distanceM: null, confirmed: true, confirmedAt: now });
-      localStorage.setItem(key, JSON.stringify(db));
-    }, MOCK_STORE_KEY);
-    await page.reload();
-    await pageList(page).selectOption({ label: '6. France' });
-    await choosePhoto(page, 'Eiffel Tower').click();
-    const picker = page.getByRole('dialog', { name: 'Photo for Eiffel Tower' });
-    // Oldest first: the Dutch one (2016) is the stamp's now
-    await expect(picker.getByRole('button', { name: 'Canals at dusk (on the stamp now)' })).toHaveAttribute('aria-pressed', 'true');
-    await expect(picker.getByRole('button', { name: 'Evening by the Seine' })).toBeVisible();
+    await expect(seine).toHaveAccessibleDescription(/2 photos\.$/);
+    await expect(page.getByRole('button', { name: /^Choose the photo for / })).toHaveCount(0);
+    await expect(page.getByText('Choose photo', { exact: true })).toHaveCount(0);
   });
 
   test('the map marks the stamped landmarks’ pins in gold, and its key says so', async ({ page }) => {
@@ -165,12 +137,12 @@ test.describe('The passport', () => {
     await page.reload();
     await expect(pageStatus(page)).toHaveText('Page 1 of 11: Cover');
 
-    await pageList(page).selectOption({ label: '6. France' });
+    await pageList(page).selectOption({ label: '8. France' });
     await expect(stampButton(page, 'Paris, Banks of the Seine')).toBeVisible();
     await expect(page.getByRole('button', { name: /^Choose the photo for / })).toHaveCount(0);
 
     // Belém's only photo is hidden: no stamp for a viewer, and it's still to collect
-    await pageList(page).selectOption({ label: '8. Portugal' });
+    await pageList(page).selectOption({ label: '9. Portugal' });
     await expect(book(page).getByText('No landmark stamped in Portugal yet.', { exact: false })).toBeVisible();
     const toStamp = book(page).getByRole('region', { name: 'Still to stamp (17)' });
     await toStamp.getByRole('button', { name: 'Show all 17' }).click();
@@ -184,7 +156,7 @@ test.describe('The passport', () => {
     // The owner, through their own map's link: still no picker (that's on the map's own address)
     await openPassport(page, `/shared/${HOME_SHARE_CODE}/passport`);
     await expect(page.getByRole('heading', { level: 1, name: HOME_MAP })).toBeVisible();
-    await pageList(page).selectOption({ label: '6. France' });
+    await pageList(page).selectOption({ label: '8. France' });
     await expect(stampButton(page, 'Paris, Banks of the Seine')).toBeVisible();
     await expect(page.getByRole('button', { name: /^Choose the photo for / })).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Back to the map' })).toHaveAttribute('href', `/shared/${HOME_SHARE_CODE}`);
@@ -217,7 +189,7 @@ test.describe('The passport', () => {
     await swipe(-160);
     await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
     await swipe(-160);
-    await expect(pageStatus(page)).toHaveText('Page 3 of 11: Netherlands');
+    await expect(pageStatus(page)).toHaveText('Page 3 of 11: United Kingdom');
     await swipe(160);
     await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
     // A short or mostly vertical drag is a scroll, not a turn
@@ -241,12 +213,12 @@ test.describe('The passport', () => {
 
   test('a visa page gives the country’s own name beside the English one, where it differs', async ({ page }) => {
     await openPassport(page);
-    await pageList(page).selectOption({ label: '3. Netherlands' });
+    await pageList(page).selectOption({ label: '6. Netherlands' });
     await expect(book(page).getByRole('heading', { level: 2, name: 'Netherlands' })).toBeVisible();
     const own = book(page).locator('bdi[lang="nl"]');
     await expect(own).toHaveText('Nederland');
     // Portugal calls itself Portugal: nothing beside it
-    await pageList(page).selectOption({ label: '8. Portugal' });
+    await pageList(page).selectOption({ label: '9. Portugal' });
     await expect(book(page).getByRole('heading', { level: 2, name: 'Portugal' })).toBeVisible();
     await expect(book(page).locator('bdi[lang]')).toHaveCount(0);
   });
@@ -278,7 +250,7 @@ test.describe('The passport', () => {
       await page.mouse.dblclick(box.x + box.width * share, box.y + box.height * 0.8);
     };
     await doubleClickAt(0.75);
-    await expect(pageStatus(page)).toHaveText('Page 3 of 11: Netherlands');
+    await expect(pageStatus(page)).toHaveText('Page 3 of 11: United Kingdom');
     await doubleClickAt(0.25);
     await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
     expect(await page.evaluate(() => window.getSelection().toString())).toBe('');
@@ -286,7 +258,7 @@ test.describe('The passport', () => {
 
   test('a stamp’s landmark shows the moments that happened there, and so does its card on the map', async ({ page }) => {
     await openPassport(page);
-    await pageList(page).selectOption({ label: '6. France' });
+    await pageList(page).selectOption({ label: '8. France' });
     await expect(book(page).getByRole('heading', { level: 2, name: 'France' })).toBeVisible();
     await expect(book(page).getByText('Moments here')).toBeVisible();
     await expect(book(page).getByRole('listitem').filter({ hasText: 'Got engaged at the Eiffel Tower' })).toHaveText(

@@ -70,6 +70,19 @@ describe('MapSettingsToggles', () => {
     expect(container.querySelector('#setting-showVisited').checked).toBe(true);
   });
 
+  // 24 Nov 2026, the user's wish: the tips' own toolbar stamp moved here
+  it('ends Help with “Show the tips”, where it’s given', () => {
+    const onShowTips = vi.fn();
+    const { container, unmount } = render(<MapSettingsToggles settings={DEFAULT_MAP_SETTINGS} onChange={() => {}} onShowTips={onShowTips} />);
+    const help = [...container.querySelectorAll('fieldset')].find((f) => f.querySelector('legend').textContent === 'Help');
+    fireEvent.click(help.querySelector('button'));
+    expect(help.querySelector('button').textContent).toBe('Show the tips');
+    expect(onShowTips).toHaveBeenCalled();
+    unmount();
+    render(<MapSettingsToggles settings={DEFAULT_MAP_SETTINGS} onChange={() => {}} />);
+    expect(screen.queryByText('Show the tips')).toBeNull();
+  });
+
   it('says which setting changed and how', () => {
     const onChange = vi.fn();
     const { container } = render(<MapSettingsToggles settings={DEFAULT_MAP_SETTINGS} onChange={onChange} />);

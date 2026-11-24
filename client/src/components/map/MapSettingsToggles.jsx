@@ -1,6 +1,7 @@
 import React, { useId } from 'react';
 // Components
 import SwitchInput from '@/components/ui/SwitchInput';
+import Button from '@/components/common/Button';
 // Utils
 import { MAP_SETTING_GROUPS, MAP_SETTING_TOGGLES } from '@/utils/map/mapSettings';
 
@@ -8,8 +9,9 @@ import { MAP_SETTING_GROUPS, MAP_SETTING_TOGGLES } from '@/utils/map/mapSettings
 // the banner), in four groups.
 // The Detailed map type always draws the lines, their labels and the names, so those
 // switches are locked on there, with a note saying why. The banner only fits on wide
-// screens, so its switch only shows there too.
-function MapSettingsToggles({ settings, onChange }) {
+// screens, so its switch only shows there too. Help ends with "Show the tips" (`onShowTips`;
+// the toolbar's own "Tips" stamp until 24 Nov 2026, the user's wish: a shorter bar).
+function MapSettingsToggles({ settings, onChange, onShowTips = null }) {
   const detailedNoteId = useId();
   const detailed = settings.mapType === 'detailed';
 
@@ -44,6 +46,13 @@ function MapSettingsToggles({ settings, onChange }) {
                 />
               );
             })}
+            {group.id === 'help' && onShowTips ? (
+              <div className='grid justify-items-start'>
+                <Button small quiet onClick={onShowTips}>
+                  Show the tips
+                </Button>
+              </div>
+            ) : null}
           </fieldset>
         );
       })}

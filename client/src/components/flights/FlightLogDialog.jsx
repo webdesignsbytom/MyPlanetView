@@ -11,16 +11,20 @@ import FlightAddForm from './FlightAddForm';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { airportFrom, loadAirports } from '@/utils/flights/airports';
-import { aroundTheWorld, distanceWords, flightCode } from '@/utils/flights/flightLog';
+import { distanceWords, flightCode } from '@/utils/flights/flightLog';
+import { distanceLike } from '@/utils/map/distanceComparisons';
+// Hooks
+import useDistanceUnit from '@/hooks/useDistanceUnit';
 
 const dayWords = (day) => new Date(`${day}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 const word = (n, one, many) => `${n.toLocaleString('en-GB')} ${n === 1 ? one : many}`;
 
-// The log's numbers, as a strip of tiles
-function FlightTotals({ totals }) {
+// The log's numbers, as a strip of tiles; the distance flown in the map's unit and what it's
+// like ("About twice round the world": distanceComparisons.js; 24 Nov 2026)
+function FlightTotals({ totals, unit }) {
   const tiles = [
     { label: 'Flights', value: totals.flights.toLocaleString('en-GB') },
-    { label: 'Flown', value: distanceWords(totals.distanceKm), note: totals.distanceKm ? `${aroundTheWorld(totals.distanceKm)} times round the world` : null },
+    { label: 'Flown', value: distanceWords(totals.distanceKm, unit), note: totals.distanceKm ? distanceLike(totals.distanceKm) : null },
     { label: 'Airports', value: totals.airports.length.toLocaleString('en-GB') },
     { label: 'Airlines', value: totals.airlines.toLocaleString('en-GB') },
   ];
@@ -45,6 +49,7 @@ function FlightTotals({ totals }) {
  * `onSetVisit(code, status)` marks a place; `onChanged()` reloads the map's trips and visits.
  */
 function FlightLogDialog({ mapId, trips = [], visitsByCode = {}, splitUk = false, canEdit = false, canAdd = false, onSetVisit, onChanged, onClose }) {
+  const unit = useDistanceUnit();
   const [log, setLog] = useState(null);
   const [airports, setAirports] = useState(null);
   const [adding, setAdding] = useState(false);
@@ -96,7 +101,7 @@ function FlightLogDialog({ mapId, trips = [], visitsByCode = {}, splitUk = false
   return createPortal(
     <Modal title='Flight log' onClose={onClose} wide>
       <div className='grid gap-5'>
-        {log ? <FlightTotals totals={log.totals} /> : <p role='status'>Loading your flights…</p>}
+        {log ? <FlightTotals totals={log.totals} unit={unit} /> : <p role='status'>Loading your flights…</p>}
         {note ? (
           <p role='status' className='text-sm font-medium'>
             {note}
@@ -177,7 +182,7 @@ function FlightLogDialog({ mapId, trips = [], visitsByCode = {}, splitUk = false
                       {flightCode(flight) ? ` · ${flightCode(flight)}` : ''}
                     </span>
                     <span className='text-xs'>
-                      {dayWords(flight.flownOn)} · {from?.city || flight.from} to {to?.city || flight.to} · {distanceWords(flight.distanceKm)}
+                      {dayWords(flight.flownOn)} · {from?.city || flight.from} to {to?.city || flight.to} · {distanceWords(flight.distanceKm, unit)}
                     </span>
                   </span>
                   {canEdit && canAdd ? (

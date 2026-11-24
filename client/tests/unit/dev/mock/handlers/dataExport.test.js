@@ -43,7 +43,7 @@ describe('"Download my data": each owned map', () => {
     expect(map.groupTripsAdded).toEqual([expect.objectContaining({ tripId: 'trip-tom-stag', fromMap: "Tom's map" })]);
     expect(map.moments.find((m) => m.id === 'moment-born').spot).toEqual({ latitude: 53.4808, longitude: -2.2426, shared: false });
     expect(map.moments.some((m) => m.hidden)).toBe(true);
-    expect(map.statesVisited.map((s) => s.code)).toEqual(['US-NY', 'US-MA']);
+    expect(map.statesVisited.map((s) => s.code)).toEqual(['US-NY', 'US-MA', 'US-CA']);
     expect(map.pins[0].visits).toHaveLength(2);
     expect(map.goals).toHaveLength(3);
     expect(map.badges.length).toBeGreaterThan(0);
@@ -54,7 +54,9 @@ describe('"Download my data": each owned map', () => {
   it('carries the map’s designs and the landmarks ticked "been here"', async () => {
     await put(`/api/maps/${HOME_MAP}/landmarks/lm-mount-fuji/been`);
     const { data } = await get(`/api/users/export/maps/${HOME_MAP}`);
-    expect(data.map.landmarksBeenTo).toEqual([expect.objectContaining({ landmarkId: 'lm-mount-fuji' })]);
+    expect(data.map.landmarksBeenTo).toHaveLength(13);
+    expect(data.map.landmarksBeenTo).toContainEqual(expect.objectContaining({ landmarkId: 'lm-mount-fuji' }));
+    expect(data.map.landmarksBeenTo).toContainEqual(expect.objectContaining({ landmarkId: 'lm-petra', name: 'Petra' }));
     expect(Array.isArray(data.map.designs)).toBe(true);
   });
 

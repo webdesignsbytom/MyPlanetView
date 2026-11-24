@@ -3,27 +3,21 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import PassportPage from '@/pages/passport/PassportPage';
 import { getPassport } from '@/api/travelApi';
-import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 import { MAP_PASSPORT_PAGE_URL, SHARED_PASSPORT_PAGE_URL } from '@/utils/constants/routes';
 import { headings, here, onlyMain, renderPage, signedIn } from '../renderPage';
 
 vi.mock('@/api/travelApi', () => ({ getPassport: vi.fn() }));
-vi.mock('@/hooks/useMustVerifyEmail', () => ({ default: vi.fn(() => false) }));
-// The book is PassportBook's own test's: a stand-in with its two callbacks
+// The book is PassportBook's own test's: a stand-in with its callback, saying what else it got
 vi.mock('@/components/passport/PassportBook', () => ({
-  default: ({ passport, canPick, locked, onOpenPhoto, onPickPhoto }) => (
-    <div data-book={passport.map.name} data-can-pick={String(canPick)} data-locked={String(locked)}>
+  default: ({ passport, onOpenPhoto, openAt, ...rest }) => (
+    <div data-book={passport.map.name} data-open-at={openAt ?? ''} data-props={Object.keys(rest).sort().join(',')}>
       <button type='button' onClick={() => onOpenPhoto('photo-1')}>
         Open a stamp’s photo
-      </button>
-      <button type='button' onClick={() => onPickPhoto({ landmarkId: 'l1' })}>
-        Choose a stamp’s photo
       </button>
     </div>
   ),
 }));
 vi.mock('@/components/photos/PhotoViewer', () => ({ default: ({ photoId, shareCode }) => <div data-photo-viewer={photoId} data-share={shareCode ?? ''} /> }));
-vi.mock('@/components/passport/StampPhotoPicker', () => ({ default: ({ mapId, stamp }) => <div data-stamp-picker={`${mapId}:${stamp.landmarkId}`} /> }));
 
 const passport = (over = {}) => ({
   map: { name: 'Charlie & Alex’s travels', groupType: 'COUPLE', traveller: null },
@@ -39,7 +33,6 @@ const book = () => document.querySelector('[data-book]');
 
 beforeEach(() => {
   vi.clearAllMocks();
-  useMustVerifyEmail.mockReturnValue(false);
 });
 
 describe('PassportPage', () => {
@@ -63,10 +56,22 @@ describe('PassportPage', () => {
     expect(headings()).toEqual(['Charlie & Alex’s travels']);
     expect(onlyMain().main.getAttribute('aria-busy')).toBeNull();
     expect(screen.getByText('Back to the map').getAttribute('href')).toBe('/maps/map-1');
-    // The owner and editors may choose stamps' photos
-    expect(book().getAttribute('data-can-pick')).toBe('true');
-    fireEvent.click(screen.getByText('Choose a stamp’s photo'));
-    await waitFor(() => expect(document.querySelector('[data-stamp-picker="map-1:l1"]')).toBeTruthy());
+    // Nobody picks a stamp's photo here (24 Nov 2026, the user's wish)
+    expect(book().getAttribute('data-props')).toBe('');
+    expect(screen.queryByText(/choose/i)).toBeNull();
+  });
+
+  // 24 Nov 2026, the user's wish: the celebration's "Open passport" names the new place in the
+  // link's state, and the book opens from its cover straight to its page
+  it('hands the book the place a celebration’s link named, and none otherwise', async () => {
+    getPassport.mockResolvedValue({ passport: passport() });
+    const { unmount } = openOwn({ pathname: '/maps/map-1/passport', state: { openAt: 'KE' } });
+    await waitFor(() => expect(book()).toBeTruthy());
+    expect(book().getAttribute('data-open-at')).toBe('KE');
+    unmount();
+    openOwn();
+    await waitFor(() => expect(book()).toBeTruthy());
+    expect(book().getAttribute('data-open-at')).toBe('');
   });
 
   it('opens a stamp’s photo in the viewer', async () => {
@@ -81,17 +86,7 @@ describe('PassportPage', () => {
     openShared();
     await waitFor(() => expect(book()).toBeTruthy());
     expect(getPassport).toHaveBeenCalledWith({ shareCode: 'ABCD-EFGH-JKMN' }, { travellerId: null });
-    expect(book().getAttribute('data-can-pick')).toBe('false');
     expect(screen.getByText('Back to the map').getAttribute('href')).toBe('/shared/ABCD-EFGH-JKMN');
-  });
-
-  it('an unverified editor is told to verify before choosing photos', async () => {
-    useMustVerifyEmail.mockReturnValue(true);
-    getPassport.mockResolvedValue({ passport: passport() });
-    openOwn();
-    await waitFor(() => expect(book()).toBeTruthy());
-    expect(book().getAttribute('data-locked')).toBe('true');
-    expect(document.querySelector('main').textContent).toMatch(/choose the photos your stamps show/);
   });
 
   it('a family’s map offers each traveller’s own passport, linked by ?traveller=', async () => {

@@ -16,7 +16,9 @@ import { ensureThemes } from './themes';
 // v5: real names for the seeded people (17 Nov 2026): the test user is Charlie Reid
 // v6: travel copies (19 Nov 2026): Alex's family map "The Morgans", with the test user on it
 // as a viewer and as its traveller Charlie, to bring travels from
-const STORE_KEY = 'mpvMockStore.v6';
+// v7: the demo couple's travels (24 Nov 2026): 20 places in a clear order, every kind of trip,
+// birth dates, the timeline, heritage sites ticked and the strings tied (data/demoTravels.js)
+const STORE_KEY = 'mpvMockStore.v7';
 const ROLE_KEY = 'mpvMockRole';
 
 export const ROLES = ['USER', 'ADMIN', 'DEVELOPER'];

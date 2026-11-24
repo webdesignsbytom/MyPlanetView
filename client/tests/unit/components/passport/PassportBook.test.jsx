@@ -57,9 +57,8 @@ afterEach(() => {
 
 const open = (props = {}) => {
   const onOpenPhoto = vi.fn();
-  const onPickPhoto = vi.fn();
-  const view = render(<PassportBook passport={PASSPORT} onOpenPhoto={onOpenPhoto} onPickPhoto={onPickPhoto} {...props} />);
-  return { ...view, onOpenPhoto, onPickPhoto };
+  const view = render(<PassportBook passport={PASSPORT} onOpenPhoto={onOpenPhoto} {...props} />);
+  return { ...view, onOpenPhoto };
 };
 
 const status = () => screen.getByRole('status').textContent;
@@ -110,6 +109,46 @@ describe('PassportBook', () => {
     expect(next().disabled).toBe(true);
     fireEvent.click(next());
     expect(status()).toBe('Page 5 of 5: Totals');
+  });
+
+  // 24 Nov 2026, the user's wish: the celebration's "Open passport" opens the book from its cover
+  // straight to the new country's page, the pages between skipped
+  describe('opened at a place’s page (openAt)', () => {
+    beforeEach(() => vi.useFakeTimers());
+    afterEach(() => vi.useRealTimers());
+    const sheetTurns = () => animations.filter((a) => a.keyframes.some((frame) => String(frame.transform).includes('rotateY')));
+
+    it('shows the closed cover a moment, then opens it straight to the place, with the cover’s own turn', () => {
+      finishTurns = false;
+      const { container } = open({ openAt: 'FR' });
+      expect(status()).toBe('Page 1 of 5: Cover');
+      act(() => vi.advanceTimersByTime(599));
+      expect(status()).toBe('Page 1 of 5: Cover');
+      act(() => vi.advanceTimersByTime(1));
+      expect(status()).toBe('Page 4 of 5: France');
+      // One turn, the cover's (it slides, then turns), its back the new page: no page between shows
+      expect(sheetTurns().map((a) => a.options.duration)).toEqual([950]);
+      const copies = [...container.querySelectorAll('[inert]')].map((copy) => copy.textContent);
+      expect(copies.some((text) => text.includes('Travellers') || text.includes('Italy'))).toBe(false);
+      expect(copies.some((text) => text.includes('France'))).toBe(true);
+    });
+
+    it('opens only once, and not after a page was turned by hand meanwhile', () => {
+      const { rerender, onOpenPhoto } = open({ openAt: 'FR' });
+      fireEvent.click(next());
+      act(() => vi.advanceTimersByTime(1000));
+      expect(status()).toBe('Page 2 of 5: Travellers');
+      fireEvent.click(previous());
+      rerender(<PassportBook passport={{ ...PASSPORT }} onOpenPhoto={onOpenPhoto} openAt='FR' />);
+      act(() => vi.advanceTimersByTime(1000));
+      expect(status()).toBe('Page 1 of 5: Cover');
+    });
+
+    it('stays on the cover for a place the book has no page for', () => {
+      open({ openAt: 'JP' });
+      act(() => vi.advanceTimersByTime(1000));
+      expect(status()).toBe('Page 1 of 5: Cover');
+    });
   });
 
   it('goes straight to a page chosen from the list', () => {
@@ -316,13 +355,13 @@ describe('PassportBook', () => {
     expect(liveQuery('Charlie Reid')).toBeNull();
   });
 
-  it('passes the editors’ photo choice to the stamps', () => {
-    const { onOpenPhoto, onPickPhoto } = open({ canPick: true });
+  // 24 Nov 2026, the user's wish: a stamp opens its photo; nobody picks it here
+  it('opens a stamp’s photo, and offers none to choose', () => {
+    const { onOpenPhoto } = open();
     fireEvent.change(pageList(), { target: { value: '2' } });
     fireEvent.click(live('Open the photo of Colosseum').closest('button'));
     expect(onOpenPhoto).toHaveBeenCalledWith('p1');
-    fireEvent.click(screen.getAllByLabelText('Choose the photo for Colosseum').find(notCopy));
-    expect(onPickPhoto).toHaveBeenCalledWith(PASSPORT.pages[0].stamps[0]);
+    expect(screen.queryAllByText('Choose photo')).toHaveLength(0);
   });
 
   it('says on the back when there are no visa pages yet', () => {
@@ -336,7 +375,7 @@ describe('PassportBook', () => {
     const { rerender } = open();
     fireEvent.change(pageList(), { target: { value: '4' } });
     act(() => {
-      rerender(<PassportBook passport={{ ...PASSPORT, pages: [] }} onOpenPhoto={vi.fn()} onPickPhoto={vi.fn()} />);
+      rerender(<PassportBook passport={{ ...PASSPORT, pages: [] }} onOpenPhoto={vi.fn()} />);
     });
     expect(status()).toBe('Page 3 of 3: Totals');
   });

@@ -49,6 +49,7 @@ jobs:
           node scripts/generate-mono-tokens.mjs --check
           node scripts/generate-mock-landmarks.mjs --check
           node scripts/generate-mock-offers.mjs --check
+          node scripts/generate-mock-travels.mjs --check
           node scripts/generate-country-landmarks.mjs --check
       # The client's unit tests (tests/unit: utils, hooks, the API layer, the mock, components)
       - name: Unit tests

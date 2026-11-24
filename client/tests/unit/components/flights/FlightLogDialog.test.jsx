@@ -4,6 +4,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import FlightLogDialog from '@/components/flights/FlightLogDialog';
 import { addFlights, deleteFlight, getMapFlights } from '@/api/flightsApi';
 import { createStop, createTrip } from '@/api/travelApi';
+import { DistanceUnitProvider } from '@/hooks/useDistanceUnit';
 
 vi.mock('@/api/flightsApi', () => ({ getMapFlights: vi.fn(), addFlights: vi.fn(), deleteFlight: vi.fn() }));
 vi.mock('@/api/travelApi', () => ({ createTrip: vi.fn(), createStop: vi.fn() }));
@@ -38,6 +39,23 @@ describe('FlightLogDialog', () => {
     // A viewer can't add or delete
     expect(screen.queryByText('Scan a boarding pass')).toBeNull();
     expect(screen.queryByText('Delete')).toBeNull();
+  });
+
+  // 24 Nov 2026, the user's wish: what the distance is like, and miles first on a map in miles
+  it('says what the distance flown is like', async () => {
+    render(<FlightLogDialog mapId='m1' onClose={vi.fn()} />);
+    const flown = (await screen.findByText('Flown')).parentElement;
+    expect([...flown.querySelectorAll('dd')].map((d) => d.textContent)).toEqual(['1,444 km (897 miles)', 'About as far as London to Rome']);
+  });
+
+  it('puts miles first on a map shown in miles', async () => {
+    render(
+      <DistanceUnitProvider value='miles'>
+        <FlightLogDialog mapId='m1' onClose={vi.fn()} />
+      </DistanceUnitProvider>,
+    );
+    expect(await screen.findByText('897 miles (1,444 km)')).toBeTruthy();
+    expect(screen.getByText(/2 Jul 2025 · London to Rome · 897 miles \(1,444 km\)/)).toBeTruthy();
   });
 
   it('asks an unverified editor to verify first', async () => {

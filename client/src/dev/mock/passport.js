@@ -10,6 +10,7 @@ import { getDb } from './store';
 import { LANDMARK_ROWS, atLeast, landmarkById, photoThumbUrl, userName } from './views';
 import { mapPlanId } from './plans';
 import { planOf } from '@/utils/constants/plans';
+import { earliestOf, passportPageOrder } from '@/utils/passport/passportOrder';
 
 const CONTINENT_BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c.continent]));
 const COUNTED = new Set(['VISITED', 'LIVED']);
@@ -111,9 +112,8 @@ export function buildPassport(map, role, { travellerId = null } = {}) {
   if (travellerId && !holder) return null;
   const visits = db.visits.filter((v) => v.mapId === map.id);
   const visitByCode = new Map(visits.map((v) => [v.countryCode, v]));
-  // Mock visits have no creation time: the order they were added stands in for it
-  const order = new Map(visits.map((v, index) => [v.countryCode, index]));
-  const markedAt = (code) => order.get(code) ?? Infinity;
+  // When each was marked (`createdAt`, as the server's; the seed's have none)
+  const markedAt = (code) => visitByCode.get(code)?.createdAt ?? null;
   const own = holder ? travellerFacts(map, holder, { editor, placeOf: (landmark) => landmarkPlace(landmark, map.splitUk) }) : null;
   const visited = own ? new Set(own.firstAt.keys()) : new Set(visits.filter((v) => COUNTED.has(v.status)).map((v) => v.countryCode));
   const stamps = own ? own.stamps : mapStamps(map.id, { includeHidden: editor });
@@ -125,16 +125,15 @@ export function buildPassport(map, role, { travellerId = null } = {}) {
     const at = shotAt(photo);
     if (!firstPhotoAt.has(photo.countryCode) || time(at) < time(firstPhotoAt.get(photo.countryCode))) firstPhotoAt.set(photo.countryCode, at);
   }
-  const enteredOn = own ? (code) => own.firstAt.get(code) ?? null : (code) => firstPhotoAt.get(code) ?? visitByCode.get(code)?.firstVisitedOn ?? null;
+  // The earlier of its first photo and the first visit as set, as the server's
+  const enteredOn = own ? (code) => own.firstAt.get(code) ?? null : (code) => earliestOf(firstPhotoAt.get(code), visitByCode.get(code)?.firstVisitedOn);
 
   // The pages: every country marked visited or lived, plus any with a stamp, in the order
-  // they were first visited (undated last, by when they were marked)
+  // they were visited, an undated one on the day it was marked (utils/passport/passportOrder.js)
   // On a map that splits the UK, a UK landmark's page is its nation's (as the server)
   const placeOf = (landmark) => landmarkPlace(landmark, map.splitUk);
   const codes = new Set([...visited, ...stamps.map((s) => placeOf(s.landmark))]);
-  const ordered = [...codes].sort(
-    (a, b) => time(enteredOn(a)) - time(enteredOn(b)) || markedAt(a) - markedAt(b) || a.localeCompare(b),
-  );
+  const ordered = passportPageOrder(codes, { enteredOn, markedAt });
 
   // Each stamp's photo: the one picked (unless it's hidden from this caller), else the earliest
   const photoById = new Map(db.photos.map((p) => [p.id, p]));

@@ -91,8 +91,9 @@ test.describe('Photos', () => {
       // The longest trip (23 Nov 2026)
       '15 days',
       'Italian summer',
-      '3,500 km',
-      'About 2,200 miles',
+      // The trip, and home and back to each country no completed trip reached (24 Nov 2026)
+      /^[\d,]+ km$/,
+      /^About [\d,]+ miles$/,
       /.+/,
       /^About [\d,]+ km from the United Kingdom$/,
     ]);

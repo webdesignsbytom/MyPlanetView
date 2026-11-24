@@ -3,7 +3,7 @@
 // the map and takes one off with a click; the Strings panel adds them automatically, ties them
 // from two lists and takes them off; the viewer can hide them; the map design sets their
 // colour; a share link shows them.
-import { test, expect, HOME_SHARE_CODE, openMap, openTool, pressCountry, pressTool, toolbar } from './fixtures.js';
+import { test, expect, HOME_SHARE_CODE, openMap, openStringsPanel, openTool, pressCountry, pressTool, toolbar } from './fixtures.js';
 
 const string = (page, pair) => page.locator(`[data-string="${pair}"]`);
 const strings = (page) => page.locator('[data-string]');
@@ -23,9 +23,8 @@ async function pressString(page, pair) {
   await page.mouse.click(point.x, point.y);
 }
 
-async function openStrings(page) {
-  return openTool(page, 'Strings', 'Strings');
-}
+// From the country list (the toolbar's stamp until 24 Nov 2026, the user's wish)
+const openStrings = openStringsPanel;
 
 test.describe('Strings between countries', () => {
   test('string mode ties a string between two clicked countries, and a click takes it off', async ({ page }) => {
@@ -147,9 +146,20 @@ test.describe('Strings between countries', () => {
     await page.goto(`/shared/${HOME_SHARE_CODE}`);
     await expect(string(page, 'FR-JP')).toBeAttached();
     await expect(toolbar(page).getByRole('button', { name: 'Strings', exact: true })).toHaveCount(0);
+    const list = await openTool(page, 'Country list', 'Countries');
+    await expect(list.getByRole('button', { name: 'Strings', exact: true })).toHaveCount(0);
   });
 
-  test('on a phone, Strings is in the menu and string mode works by tapping', { tag: '@phone' }, async ({ page }) => {
+  test('the toolbar has no Strings stamp: the country list opens the panel', async ({ page }) => {
+    await openMap(page);
+    await expect(toolbar(page).getByRole('button', { name: 'Strings', exact: true })).toHaveCount(0);
+    const panel = await openStrings(page);
+    // The country list gave way to it
+    await expect(page.getByRole('dialog', { name: 'Countries', exact: true })).toHaveCount(0);
+    await expect(panel.getByRole('button', { name: 'Tie strings on the map' })).toBeVisible();
+  });
+
+  test('on a phone, Strings is in the country list and string mode works by tapping', { tag: '@phone' }, async ({ page }) => {
     test.skip(page.viewportSize().width >= 768, 'phone only');
     await openMap(page);
     const panel = await openStrings(page);
@@ -160,5 +170,47 @@ test.describe('Strings between countries', () => {
     await pause(page);
     await pressCountry(page, 'CD', { touch: true });
     await expect(string(page, 'CD-DZ')).toBeAttached();
+  });
+
+  // 24 Nov 2026, the user's wish: a newly visited country is tied to the one visited before it
+  test('a country marked visited is tied to the one visited before it, while the strings show', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    await expect(strings(page)).toHaveCount(0);
+
+    // From the country list: Germany, after Italy (the last visited, in July 2025)
+    const list = await openTool(page, 'Country list', 'Countries');
+    await list.getByRole('button', { name: 'Status for Germany: Not yet' }).click();
+    const germany = list.getByRole('combobox', { name: 'Status for Germany' });
+    await expect.poll(() => germany.evaluate((el) => el.contains(document.activeElement))).toBe(true);
+    await germany.selectOption('Visited');
+    await expect(string(page, 'DE-IT')).toBeAttached();
+
+    // From its ticket: Egypt, after Germany
+    await list.getByRole('heading', { name: 'Countries' }).click();
+    await list.getByRole('button', { name: 'Egypt', exact: true }).click();
+    const egypt = page.getByRole('dialog', { name: 'Egypt' });
+    await egypt.getByRole('combobox', { name: 'Been there?' }).selectOption('Visited');
+    await expect(string(page, 'DE-EG')).toBeAttached();
+    await expect(strings(page)).toHaveCount(2);
+    await egypt.getByRole('button', { name: /^Close/ }).first().click();
+
+    // With the strings switched off, none is tied
+    const settings = await openTool(page, 'Map settings', 'Settings');
+    await settings.getByText('Strings between countries', { exact: true }).click();
+    await expect(settings.getByRole('switch', { name: 'Strings between countries' })).not.toBeChecked();
+    await settings.getByRole('button', { name: 'Close Settings' }).click();
+    const again = await openTool(page, 'Country list', 'Countries');
+    await again.getByRole('button', { name: 'Status for Kenya: Not yet' }).click();
+    const kenya = again.getByRole('combobox', { name: 'Status for Kenya' });
+    await expect.poll(() => kenya.evaluate((el) => el.contains(document.activeElement))).toBe(true);
+    await kenya.selectOption('Visited');
+    await again.getByRole('heading', { name: 'Countries' }).click();
+    await expect(again.getByRole('button', { name: 'Status for Kenya: Visited' })).toBeVisible();
+    await again.getByRole('button', { name: /^Close/ }).first().click();
+    const back = await openTool(page, 'Map settings', 'Settings');
+    await back.getByText('Strings between countries', { exact: true }).click();
+    await back.getByRole('button', { name: 'Close Settings' }).click();
+    await expect(strings(page)).toHaveCount(2);
+    await expect(string(page, 'EG-KE')).toHaveCount(0);
   });
 });

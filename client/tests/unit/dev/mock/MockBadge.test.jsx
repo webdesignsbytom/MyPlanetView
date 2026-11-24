@@ -22,7 +22,7 @@ const open = () => {
   render(<MockBadge />);
   fireEvent.click(screen.getByText('Mock mode'));
 };
-const saved = () => JSON.parse(localStorage.getItem('mpvMockStore.v6'));
+const saved = () => JSON.parse(localStorage.getItem('mpvMockStore.v7'));
 
 describe('MockBadge', () => {
   it('starts closed, and opens to say it’s demo data with the sign-in details', () => {

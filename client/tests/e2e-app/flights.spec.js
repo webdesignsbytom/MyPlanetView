@@ -108,3 +108,16 @@ test('a typed flight needs real airports and a day', async ({ page }) => {
   await dialog.getByRole('button', { name: 'Add this flight' }).click();
   await expect(dialog.locator('[data-flight-leg]')).toContainText('London (LHR) → Paris');
 });
+
+// 24 Nov 2026, the user's wish: the trips panel's two buttons half the panel's gap apart
+test('the trips panel keeps its two buttons close together', async ({ page }) => {
+  await openMap(page);
+  const trips = await openTool(page, 'Trips', 'Trips');
+  const plan = await trips.getByRole('button', { name: 'Plan a new trip' }).boundingBox();
+  const scan = await trips.getByRole('button', { name: 'Scan a boarding pass' }).boundingBox();
+  const firstTrip = await trips.getByRole('listitem').first().boundingBox();
+  const between = scan.y - (plan.y + plan.height);
+  const below = firstTrip.y - (scan.y + scan.height);
+  expect(between).toBeCloseTo(8, 0);
+  expect(below).toBeCloseTo(16, 0);
+});

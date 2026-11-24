@@ -24,7 +24,6 @@ test.describe('The map page', () => {
       'Trips',
       'Timeline',
       'Badges and goals',
-      'Play my world',
       'Photo album',
       'Share this map',
       'Map settings',
@@ -69,7 +68,7 @@ test.describe('The map page', () => {
       '13 of 1,366',
       '10 of 1,273',
       '3',
-      '15', 'On completed trips', '15 days', 'Italian summer', '3,500 km', 'About 2,200 miles', 'United States', 'About 7,000 km from the United Kingdom',
+      '15', 'On completed trips', '15 days', 'Italian summer', '27,300 km', 'About 17,000 miles', 'United States', 'About 7,000 km from the United Kingdom',
     ]);
     await expect(stats.getByRole('region', { name: 'Each traveller, from completed trips' }).getByRole('listitem')).toHaveText([
       /Charlie\s*1 country · 15 days/,

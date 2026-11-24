@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, SAM_MAP, SAM_SHARE_CODE, goInApp, openMap, openTool, pressTool, signOut, toolbar } from './fixtures.js';
+import { test, expect, HOME_MAP, SAM_MAP, SAM_SHARE_CODE, goInApp, openMap, openTool, playMyWorld, signOut } from './fixtures.js';
 
 // The slideshows (docs/FEATURE-PLAN.md, "Slideshows"). The test user's map has 16 photos
 // (one hidden, which its owner sees); oldest taken first they start in the Netherlands
@@ -30,7 +30,9 @@ async function photosInOrder(page, show, count) {
 test.describe('Slideshows', () => {
   test('the whole map plays oldest first: steps, pauses, plays on and closes', async ({ page }) => {
     await openMap(page);
-    const stamp = toolbar(page).getByRole('button', { name: 'Play my world', exact: true });
+    // "Play my world" is the photo album's (24 Nov 2026), pressed with the keyboard
+    const album = await openTool(page, 'Photo album', 'Photo album');
+    const stamp = album.getByRole('button', { name: 'Play my world', exact: true });
     await stamp.focus();
     await page.keyboard.press('Enter');
     const show = page.getByRole('dialog', { name: `Slideshow: ${HOME_MAP}` });
@@ -92,8 +94,7 @@ test.describe('Slideshows', () => {
 
   test('the shuffle plays the photos in another order', async ({ page }) => {
     await openMap(page);
-    await pressTool(page, 'Play my world');
-    const show = page.getByRole('dialog', { name: `Slideshow: ${HOME_MAP}` });
+    const show = await playMyWorld(page);
     await show.getByRole('button', { name: 'Pause', exact: true }).click();
     const taken = await photosInOrder(page, show, 6);
     expect(taken).toEqual([
@@ -142,8 +143,7 @@ test.describe('Slideshows', () => {
     await signOut(page);
     await goInApp(page, `/shared/${SAM_SHARE_CODE}`);
     await expect(page.getByRole('application', { name: `${SAM_MAP}: world map` })).toBeVisible();
-    await pressTool(page, 'Play my world');
-    const show = page.getByRole('dialog', { name: `Slideshow: ${SAM_MAP}` });
+    const show = await playMyWorld(page);
     await expect(show.getByText('First stop', { exact: true })).toBeVisible();
     await show.getByRole('button', { name: 'Next', exact: true }).click();
     await expect(show.getByRole('img', { name: 'Temple roofs' })).toBeVisible();

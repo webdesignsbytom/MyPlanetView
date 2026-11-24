@@ -34,10 +34,12 @@ describe('mapTips', () => {
     expect(ids({ phone: true, touch: true, fullscreen: false })).toEqual(['install', 'countries', 'countryMap', 'moving', 'tools']);
   });
 
-  it('points to the Menu on a phone and the stamps elsewhere, and says Tips opens these again', () => {
+  it('points to the Menu on a phone and the stamps elsewhere, and says Settings opens these again', () => {
     expect(tip({ phone: true }, 'tools').text).toMatch(/^Every tool is in the Menu at the top right/);
     expect(tip({ phone: false }, 'tools').text).toMatch(/^The stamps at the top right are the map’s tools/);
-    expect(tip({ phone: true }, 'tools').text).toContain('brings these back any time');
+    // The tips' own stamp went on 24 Nov 2026 (the user's wish): Settings has them
+    expect(tip({ phone: true }, 'tools').text).toContain('Settings, in there too, brings these tips back any time');
+    expect(tip({ phone: false }, 'tools').text).toContain('Settings, near the bottom, brings these tips back any time');
   });
 
   it('ends with sharing, no app or account needed, only for those who can share the map', () => {

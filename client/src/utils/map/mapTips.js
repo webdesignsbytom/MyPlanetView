@@ -1,7 +1,7 @@
 // The tips the map page opens with (components/map/MapTipsDialog.jsx; 17 Nov 2026, the
 // user's wish: phones can go full screen, and few would find it). They show once a visit
 // while the viewer's setting `showTips` is on; the dialog's box turns it off, Settings back
-// on, and the toolbar's (or the phone menu's) "Tips" opens them any time (23 Nov 2026, the
+// on, and Settings' "Show the tips" (the toolbar's "Tips" until 24 Nov 2026) opens them any time (23 Nov 2026, the
 // user's wish: one tip at a time, with Previous and Next). No imports: the e2e fixtures read
 // the key.
 
@@ -64,8 +64,8 @@ export function mapTips({ phone, touch, fullscreen, standalone, posters, appName
     id: 'tools',
     title: 'The map’s tools',
     text: phone
-      ? 'Every tool is in the Menu at the top right: your statistics, trips, the photo album and more. Tips, in there too, brings these back any time.'
-      : 'The stamps at the top right are the map’s tools: your statistics, trips, the photo album and more. Tips, the last of them, brings these back any time.',
+      ? 'Every tool is in the Menu at the top right: your statistics, trips, the photo album and more. Settings, in there too, brings these tips back any time.'
+      : 'The stamps at the top right are the map’s tools: your statistics, trips, the photo album and more. Settings, near the bottom, brings these tips back any time.',
   });
   if (share) {
     tips.push({

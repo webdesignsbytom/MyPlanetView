@@ -37,6 +37,7 @@ import { regionParent } from '@/utils/map/regionPlaces';
 import { countryMapCodeFor, countryMapInfo } from '@/utils/map/countryMapGeo';
 import { getSubdivisions } from '@/api/travelApi';
 import { NOTES_MAX } from '@/utils/map/visitNotes';
+import { firstVisitFor } from '@/utils/map/firstVisit';
 
 // A status's weight, to raise a nation to the UK's mark and never lower it
 const STATUS_RANK = { WANT_TO_GO: 1, VISITED: 2, LIVED: 3 };
@@ -249,7 +250,8 @@ function CountryPanel({
           labelled
           countryName={country.name}
           status={status}
-          onChange={(next) => save(next, next ? { firstVisitedOn: visit?.firstVisitedOn || undefined } : undefined)}
+          // Newly visited or lived in: dated today unless it has a date (24 Nov 2026, the user's wish)
+          onChange={(next) => save(next, next ? { firstVisitedOn: firstVisitFor(visit, next) } : undefined)}
         />
       </FormField>
       {status && status !== 'WANT_TO_GO' ? (

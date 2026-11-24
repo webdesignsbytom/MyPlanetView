@@ -5,6 +5,7 @@ import StatsPanel from '@/components/map/StatsPanel';
 import useLandmarks from '@/hooks/useLandmarks';
 import { aboutKm, aboutMiles, worldShare } from '@/utils/map/travelStatWords';
 import { withProviders } from './helpers';
+import { DistanceUnitProvider } from '@/hooks/useDistanceUnit';
 
 vi.mock('@/hooks/useLandmarks', () => ({ default: vi.fn() }));
 
@@ -74,9 +75,31 @@ describe('StatsPanel', () => {
     const t = tiles(container);
     expect(t['Of the world']).toBeUndefined();
     expect(t['Furthest from home']).toBeUndefined();
-    expect(t['Distance travelled'][1]).toBe('Home and back, on completed trips');
+    expect(t['Distance travelled'][1]).toBe('Home and back, to everywhere you’ve been');
     expect(t['Days away'][0]).toBe('0');
     expect(t.Regions[0]).toMatch(/^0 of/);
+  });
+
+  // 24 Nov 2026, the user's wish: "Americans in miles always", and what the distance is like
+  it('says what the distance travelled is like, and nothing for none', () => {
+    const { container } = open();
+    expect(container.querySelector('[data-distance-comparison]').textContent).toBe('23,500 km is further than every branch of the Great Wall of China.');
+    const none = open({ stats: { ...STATS, distanceKm: 0 } });
+    expect(none.container.querySelector('[data-distance-comparison]')).toBeNull();
+  });
+
+  it('writes the distances in miles on a map shown in miles, the kilometres under them', () => {
+    const { container } = render(
+      withProviders(
+        <DistanceUnitProvider value='miles'>
+          <StatsPanel stats={STATS} onClose={() => {}} />
+        </DistanceUnitProvider>,
+      ),
+    );
+    const t = tiles(container);
+    expect(t['Distance travelled']).toEqual(['14,600 miles', 'About 23,500 km']);
+    expect(t['Furthest from home'][1]).toBe('About 11,200 miles from the United Kingdom');
+    expect(container.querySelector('[data-distance-comparison]').textContent).toBe('14,600 miles is further than every branch of the Great Wall of China.');
   });
 
   it('counts the landmarks been to and the World Heritage Sites among them', () => {

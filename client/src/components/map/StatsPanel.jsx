@@ -11,11 +11,13 @@ import CollectorCounts from './CollectorCounts';
 import UnplacedPhotosButton from './UnplacedPhotosButton';
 // Hooks
 import useLandmarks from '@/hooks/useLandmarks';
+import useDistanceUnit from '@/hooks/useDistanceUnit';
 // Utils
 import { CONTINENT_TOTAL, SPECIAL_PLACE_TOTAL } from '@/utils/map/specialPlaces';
 import { REGION_CODES } from '@/utils/map/regionPlaces';
 import { countryName } from '@/utils/map/countries';
-import { aboutKm, aboutMiles, dayWords, withThe, worldShare } from '@/utils/map/travelStatWords';
+import { aboutDistance, aboutDistanceWords, dayWords, withThe, worldShare } from '@/utils/map/travelStatWords';
+import { distanceSentence } from '@/utils/map/distanceComparisons';
 import { lifeShareWords } from '@/utils/map/birthDates';
 
 // Travel statistics, counted by the server from what this viewer may see. Countries
@@ -37,9 +39,15 @@ import { lifeShareWords } from '@/utils/map/birthDates';
 // wish): the longest trip, the days away each year and in each country (StatsTimeAway), and
 // each traveller's days beside their countries. Collector's counts (24 Nov 2026): the UN's 193
 // member states been to, from the map's `visits`, with the ones to go, each opening its ticket
-// (`onOpenCountry`).
+// (`onOpenCountry`). Distances are in the map's unit (useDistanceUnit: kilometres, or miles for
+// an American map or by choice; 24 Nov 2026, the user's wish), the other under it, and a line
+// says what the distance travelled is like ("27,300 km is nearly as far as the Pan-American
+// Highway": utils/map/distanceComparisons.js).
 function StatsPanel({ stats, travellers = [], visits = [], onOpenCountry = null, unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onPoster, onGuessGame, onFlightLog, compareHref, onYearRecap, collected = null, passportHref, onClose }) {
   const byTraveller = stats?.byTraveller || [];
+  const unit = useDistanceUnit();
+  const distance = aboutDistance(stats?.distanceKm, unit);
+  const distanceLike = stats?.distanceKm ? distanceSentence(stats.distanceKm, unit) : null;
   const { landmarks } = useLandmarks(null, { enabled: Boolean(collected) });
   const collection = useMemo(() => {
     if (!collected || !landmarks.length) return null;
@@ -82,19 +90,25 @@ function StatsPanel({ stats, travellers = [], visits = [], onOpenCountry = null,
             {stats.longestTrip ? <StatTile label='Longest trip' value={dayWords(stats.longestTrip.days)} compact note={stats.longestTrip.title} /> : null}
             <StatTile
               label='Distance travelled'
-              value={aboutKm(stats.distanceKm)}
-              unit='km'
-              note={stats.distanceKm ? `About ${aboutMiles(stats.distanceKm)}` : 'Home and back, on completed trips'}
+              value={distance.value}
+              unit={distance.unit}
+              note={stats.distanceKm ? `About ${distance.other}` : 'Home and back, to everywhere you’ve been'}
             />
             {stats.furthest ? (
               <StatTile
                 label='Furthest from home'
                 value={countryName(stats.furthest.countryCode)}
                 compact
-                note={`About ${aboutKm(stats.furthest.km)} km from ${withThe(countryName(stats.homeCountryCode))}`}
+                note={`About ${aboutDistanceWords(stats.furthest.km, unit)} from ${withThe(countryName(stats.homeCountryCode))}`}
               />
             ) : null}
           </dl>
+          {/* What the distance is like: round the world, to the Moon (24 Nov 2026, the user's wish) */}
+          {distanceLike ? (
+            <p className='text-sm text-colour9' data-distance-comparison>
+              {distanceLike}
+            </p>
+          ) : null}
           {onShareCard ? (
             <MapActionButton onClick={onShareCard}>
               <FaShareAlt aria-hidden='true' />

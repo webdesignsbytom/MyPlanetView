@@ -127,7 +127,7 @@ describe('passwords, addresses and the account', () => {
     expect(testUser().emailVerified).toBe(true);
     expect(db().planGrants.filter((g) => g.userId === USER)).toHaveLength(1);
     expect(effectivePlan(USER).plan).toBe('PREMIUM');
-    expect(JSON.parse(localStorage.getItem('mpvMockStore.v6')).users[0].emailVerified).toBe(true);
+    expect(JSON.parse(localStorage.getItem('mpvMockStore.v7')).users[0].emailVerified).toBe(true);
   });
 
   it('deletes the account only with its password, starting the demo again', async () => {
@@ -192,6 +192,9 @@ describe('map settings', () => {
     // The supporter badge's switch (24 Nov 2026)
     expect((await put('/api/users/map-settings', { mapSettings: { showSupporterBadge: false } })).data.mapSettings).toEqual({ showSupporterBadge: false });
     expect((await put('/api/users/map-settings', { mapSettings: { showSupporterBadge: 'off' } })).status).toBe(400);
+    // The distances' unit (24 Nov 2026)
+    expect((await put('/api/users/map-settings', { mapSettings: { distanceUnit: 'miles' } })).data.mapSettings).toEqual({ distanceUnit: 'miles' });
+    expect((await put('/api/users/map-settings', { mapSettings: { distanceUnit: 'furlongs' } })).status).toBe(400);
   });
 });
 

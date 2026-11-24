@@ -142,8 +142,6 @@ const CASES = [
   ['quickFillVisits', () => travelApi.quickFillVisits('m1', ['FR', 'PE']), 'post', ['/api/maps/m1/visits/quick-fill', { countryCodes: ['FR', 'PE'] }]],
   ['getPassport', () => travelApi.getPassport({ mapId: 'm1' }), 'get', ['/api/maps/m1/passport']],
   ['getPassport', () => travelApi.getPassport({ shareCode: 'ABC' }, { travellerId: 't1' }), 'get', ['/api/shared/ABC/passport?traveller=t1']],
-  ['setStampPhoto', () => travelApi.setStampPhoto('m1', 'l1', 'p1'), 'put', ['/api/maps/m1/passport/stamps/l1/photo', { photoId: 'p1' }]],
-  ['clearStampPhoto', () => travelApi.clearStampPhoto('m1', 'l1'), 'delete', ['/api/maps/m1/passport/stamps/l1/photo']],
   ['getBadges', () => travelApi.getBadges({ mapId: 'm1' }), 'get', ['/api/maps/m1/badges']],
   ['getBadges', () => travelApi.getBadges({ shareCode: 'ABC' }), 'get', ['/api/shared/ABC/badges']],
   // Life's One Shots (24 Nov 2026)

@@ -30,27 +30,20 @@ vi.mock('@/hooks/useLandmarkPhotos', () => ({
   }),
 }));
 
-const open = (celebration, { ticked = [], stamped = [], splitUk = false, hide = false } = {}) => {
+const open = (celebration, { ticked = [], stamped = [], splitUk = false } = {}) => {
   const onClose = vi.fn();
-  const onHideCelebrations = vi.fn();
   const marks = { stamped: new Set(stamped), ticked: new Set(ticked), onToggle: null, onPhotoStamped: null };
   const result = render(
     withProviders(
       <SplitUkProvider value={splitUk}>
         <LandmarkMarksContext.Provider value={marks}>
-          <CelebrationDialog
-            celebration={celebration}
-            passportHref='/maps/map-1/passport'
-            hideCelebrations={hide}
-            onHideCelebrations={onHideCelebrations}
-            onClose={onClose}
-          />
+          <CelebrationDialog celebration={celebration} passportHref='/maps/map-1/passport' onClose={onClose} />
         </LandmarkMarksContext.Provider>
       </SplitUkProvider>,
     ),
   );
   const dialog = screen.getByRole('dialog');
-  return { ...result, dialog, onClose, onHideCelebrations };
+  return { ...result, dialog, onClose };
 };
 
 const tick = (landmarkId, extra = {}) => ({ kind: 'landmark', landmarkId, stampedOn: '2026-11-24', photoUrl: null, newPlace: null, ...extra });
@@ -83,6 +76,18 @@ describe('CelebrationDialog', () => {
       expect(dialog.querySelector('[data-celebration-stars]').getAttribute('aria-hidden')).toBe('true');
     });
 
+    it('shows the model whose card the tick was on (a country’s own map), not the landmark’s own', () => {
+      const { dialog } = open(tick('lm-eiffel', { modelId: 'arc-de-triomphe' }));
+      expect(dialog.querySelector('[data-celebration-model]').getAttribute('data-celebration-model')).toBe('arc-de-triomphe');
+      // Still the landmark's celebration: its name and stamp
+      expect(screen.getByRole('heading', { level: 2, name: 'Eiffel Tower' })).toBeTruthy();
+    });
+
+    it('shows the landmark’s own model when the card’s model isn’t known', () => {
+      const { dialog } = open(tick('lm-eiffel', { modelId: 'no-such-model' }));
+      expect(dialog.querySelector('[data-celebration-model]').getAttribute('data-celebration-model')).toBe('eiffel-tower');
+    });
+
     it('shows the map’s own photo where there’s no model, in the stamp too', () => {
       const { dialog } = open(tick('lm-louvre', { photoUrl: 'https://photos.example/p1.webp', stampedOn: '2019-05-02' }));
       expect(dialog.querySelector('[data-celebration-model]')).toBeNull();
@@ -109,14 +114,15 @@ describe('CelebrationDialog', () => {
   describe('a country', () => {
     const visit = (extra = {}) => ({ kind: 'country', code: 'FR', status: 'VISITED', firstVisitedOn: null, ...extra });
 
-    it('is named by the country, with its page, entry stamp and landmarks to collect', () => {
+    // 24 Nov 2026, the user's wishes: "You visited France!", and the words name it
+    it('says you visited it, with its page, entry stamp and landmarks to collect', () => {
       const { dialog } = open(visit());
       expect(dialog.getAttribute('data-celebration')).toBe('country');
-      expect(screen.getByRole('heading', { level: 2, name: 'France' })).toBeTruthy();
-      expect(dialog.textContent).toContain('Visited!');
+      expect(screen.getByRole('heading', { level: 2, name: 'You visited France!' })).toBeTruthy();
+      expect(dialog.textContent).not.toContain('Visited!');
       const text = document.getElementById(dialog.getAttribute('aria-describedby'));
       expect(text.textContent).toBe(
-        'It has its own page in your passport now, with its entry stamp. Add the day you first went on its ticket, and the stamp is dated.',
+        'France now has its own page in your passport, with its entry stamp. Add the day you first went on its ticket, and the stamp is dated.',
       );
       const stamp = dialog.querySelector('[data-celebration-stamp]');
       expect(stamp.textContent).toContain('ADMITTED');
@@ -126,28 +132,37 @@ describe('CelebrationDialog', () => {
       );
     });
 
-    it('stands its poster up with its models in front, the tallest first', () => {
+    it('draws its outline, in its own colour, above its models, the tallest first', () => {
       const { dialog } = open(visit());
-      expect(dialog.querySelector('[data-celebration-poster]').getAttribute('data-celebration-poster')).toMatch(/^fr-/);
-      const models = [...dialog.querySelectorAll('[data-celebration-model]')].map((img) => img.getAttribute('data-celebration-model'));
-      expect(models).toHaveLength(3);
-      expect(models[0]).toBe('eiffel-tower');
+      const outline = dialog.querySelector('[data-celebration-outline="FR"]');
+      expect(outline.tagName.toLowerCase()).toBe('svg');
+      // As the map draws it: its pastel (France's is the first), and its code for a map design's colour
+      expect(outline.querySelector('g[data-code="FR"]').getAttribute('class')).toContain('fill-map-visit-1');
+      expect(outline.querySelectorAll('path').length).toBeGreaterThan(0);
+      expect(dialog.querySelector('[data-celebration-poster]')).toBeNull();
+      // The outline comes first, the models under it
+      const models = [...dialog.querySelectorAll('[data-celebration-model]')];
+      expect(models.map((img) => img.getAttribute('data-celebration-model'))).toHaveLength(3);
+      expect(models[0].getAttribute('data-celebration-model')).toBe('eiffel-tower');
+      expect(outline.compareDocumentPosition(models[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     });
 
-    it('says a residence stamp for a country lived in, dated with the first visit', () => {
+    it('says you lived in it, with a residence stamp dated with the first visit', () => {
       const { dialog } = open(visit({ status: 'LIVED', firstVisitedOn: '2016-08-01' }), { ticked: ['lm-louvre'] });
-      expect(dialog.textContent).toContain('Lived here!');
+      expect(screen.getByRole('heading', { level: 2, name: 'You lived in France!' })).toBeTruthy();
       const text = document.getElementById(dialog.getAttribute('aria-describedby'));
-      expect(text.textContent).toBe('It has its own page in your passport now, with its residence stamp.');
+      expect(text.textContent).toBe('France now has its own page in your passport, with its residence stamp.');
       const stamp = dialog.querySelector('[data-celebration-stamp]');
       expect(stamp.textContent).toContain('RESIDENT');
       expect(stamp.textContent).toContain('1 AUG 2016');
       expect(dialog.querySelector('[data-celebration-progress]').textContent).toBe('Been to 1 of its 3 landmarks: tick the others you’ve seen on its ticket.');
     });
 
-    it('gives a place with no poster or models its placeholder card', () => {
+    it('gives a place with no outline or models its placeholder card', () => {
       const { dialog } = open(visit({ code: 'XN' }));
-      expect(screen.getByRole('heading', { level: 2, name: 'North Pole' })).toBeTruthy();
+      expect(screen.getByRole('heading', { level: 2, name: 'You visited the North Pole!' })).toBeTruthy();
+      expect(dialog.querySelector('[data-celebration-outline]')).toBeNull();
+      expect(dialog.querySelector('[data-celebration-poster]')).not.toBeNull();
       expect(dialog.querySelector('[data-celebration-model]')).toBeNull();
       expect(dialog.querySelector('[data-celebration-progress]')).toBeNull();
     });
@@ -181,7 +196,7 @@ describe('CelebrationDialog', () => {
     it('opens on its close stamp, and goes to the passport or carries on', () => {
       const { dialog, onClose } = open(tick('lm-eiffel'));
       expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Close' }));
-      expect(screen.getByRole('link', { name: 'Open the passport' }).getAttribute('href')).toBe('/maps/map-1/passport');
+      expect(screen.getByRole('link', { name: 'Open passport' }).getAttribute('href')).toBe('/maps/map-1/passport');
       fireEvent.click(screen.getByRole('button', { name: 'Carry on' }));
       expect(onClose).toHaveBeenCalledTimes(1);
       fireEvent.keyDown(document, { key: 'Escape' });
@@ -193,19 +208,32 @@ describe('CelebrationDialog', () => {
       expect(onClose).toHaveBeenCalledTimes(3);
     });
 
-    it('turns itself off with its box, and shows it ticked while off', () => {
-      const { onHideCelebrations, onClose } = open(tick('lm-eiffel'));
-      const box = screen.getByLabelText('Don’t show these again');
-      expect(box.checked).toBe(false);
-      fireEvent.click(box);
-      expect(onHideCelebrations).toHaveBeenCalledWith(true);
-      // It stays until it's closed
-      expect(onClose).not.toHaveBeenCalled();
+    // 24 Nov 2026, the user's report: the stamp, waiting at 2.4× its size to come down, gave the
+    // ticket a sideways scrollbar as it opened
+    it('scrolls its words up and down only, so the stamp coming down gives it no sideways scrollbar', () => {
+      const { dialog } = open(tick('lm-eiffel'));
+      const body = dialog.querySelector('[data-celebration-body]');
+      const classes = body.getAttribute('class').split(/\s+/);
+      expect(classes).toContain('overflow-y-auto');
+      expect(classes).toContain('overflow-x-hidden');
+      expect(body.contains(dialog.querySelector('[data-celebration-stamp]'))).toBe(true);
     });
 
-    it('starts ticked when they’re off already', () => {
-      open(tick('lm-eiffel'), { hide: true });
-      expect(screen.getByLabelText('Don’t show these again').checked).toBe(true);
+    // 24 Nov 2026, the user's report: tilted, the stamp's top corner rose past the words' edge
+    it('gives the stamp room above it for its tilt', () => {
+      const { dialog } = open(tick('lm-eiffel'));
+      expect(dialog.querySelector('[data-celebration-stamp]').getAttribute('class').split(/\s+/)).toContain('pt-3');
+    });
+
+    // 24 Nov 2026, the user's wish: no box to turn them off (Settings, Help, has the switch)
+    it('has no box to turn it off, a country’s or a landmark’s', () => {
+      const { dialog, unmount } = open(tick('lm-eiffel'));
+      expect(dialog.querySelector('input[type="checkbox"]')).toBeNull();
+      expect(dialog.textContent).not.toContain('Don’t show these again');
+      unmount();
+      const country = open({ kind: 'country', code: 'FR', status: 'VISITED', firstVisitedOn: '2026-11-24' });
+      expect(country.dialog.querySelector('input[type="checkbox"]')).toBeNull();
+      expect(screen.getByRole('link', { name: 'Open passport' })).toBeTruthy();
     });
   });
 });

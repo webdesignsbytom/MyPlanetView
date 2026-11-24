@@ -37,6 +37,11 @@ describe('tripDayCount', () => {
 describe('tripCardOptions', () => {
   const trip = { id: 't', title: 'Japan and Korea', startDate: '2026-11-01', endDate: '2026-11-12', countryCodes: ['JP', 'KR'], photoCount: 30 };
 
+  // 24 Nov 2026, the user's wish: a trip's places close up, never a speck on the world
+  it('asks for its places close up', () => {
+    expect(tripCardOptions(trip, {}).mapView).toBe('fit');
+  });
+
   it('colours the trip’s countries, with its countries, days and photos', () => {
     const card = tripCardOptions(trip, { splitUk: false }, { countries: { JP: '#123456' } });
     expect(card).toMatchObject({

@@ -970,6 +970,91 @@ test('a model kept off the map (onMap: false) isn’t drawn there', async ({ pag
   await expectModelsOf(map, 'Thailand');
 });
 
+// A model's card (24 Nov 2026, the user's wish: press a model to read about it, with a tick box
+// to say you've been, which starts the celebration). Celebrations on, as celebration.spec.js has.
+test.describe('a landmark model’s card', () => {
+  test.use({ celebrations: true });
+
+  test('pressing a model opens its card, and ticking “Been here” celebrates with that model', async ({ page }) => {
+    await openMap(page);
+    const map = await openCountryMap(page, 'United Kingdom');
+    await expectModelOn(map, 'big-ben', 'GB-WSM');
+    await map.locator('[data-landmark-model="big-ben"] image').click();
+
+    const card = page.getByRole('dialog', { name: 'Big Ben' });
+    await expect(card).toBeVisible();
+    await expect(card.getByRole('heading', { level: 2, name: 'Big Ben' })).toBeFocused();
+    // A big panel in the middle of the screen (24 Nov 2026, the user's wish)
+    const [box, view] = [await card.boundingBox(), page.viewportSize()];
+    expect(box.width).toBeGreaterThan(Math.min(900, view.width - 60));
+    expect(Math.abs(box.x + box.width / 2 - view.width / 2)).toBeLessThan(4);
+    expect(box.y >= 0 && box.y + box.height <= view.height).toBe(true);
+    // The model alone on the left (24 Nov 2026, the user's wish), the place on the right
+    await expect(card.locator('[data-landmark-model-picture] img')).toBeVisible();
+    await expect(card.locator('img')).toHaveCount(1);
+    // About the place: Wikipedia's words, its facts, the tick and the article
+    const about = card.locator('[data-landmark-about]');
+    await expect(about.getByRole('heading', { level: 3, name: 'About Big Ben' })).toBeVisible();
+    await expect(about.locator('p').first()).toContainText('Big Ben');
+    await expect(about.locator('dt', { hasText: 'Where' }).locator('+ dd')).toHaveText('Westminster, United Kingdom');
+    await expect(about.locator('dt', { hasText: 'World Heritage' }).locator('+ dd')).toHaveText('Westminster Palace and Abbey');
+    await expect(about.getByRole('link', { name: 'Read more on Wikipedia (opens in a new tab)' })).toHaveAttribute('href', 'https://en.wikipedia.org/wiki/Big_Ben');
+
+    const been = card.getByRole('checkbox', { name: 'Been to Big Ben' });
+    await expect(been).not.toBeChecked();
+    await been.check();
+    const party = page.locator('[data-celebration="landmark"]');
+    await expect(party).toBeVisible();
+    await expect(party.getByText('Been here!')).toBeVisible();
+    await expect(party.locator('[data-celebration-model="big-ben"]')).toBeVisible();
+    await expect(party.locator('[data-celebration-stamp] [data-stamp-been-here]')).toBeAttached();
+
+    // Carry on: back on the card, the box ticked and focused
+    await party.getByRole('button', { name: 'Carry on' }).click();
+    await expect(party).toBeHidden();
+    await expect(card).toBeVisible();
+    await expect(been).toBeChecked();
+    await expect(been).toBeFocused();
+    await expect(card.getByText('Stamped in the passport', { exact: true })).toBeVisible();
+
+    // Escape shuts the card, the country's map still open
+    await page.keyboard.press('Escape');
+    await expect(card).toBeHidden();
+    await expect(map.getByRole('heading', { name: 'United Kingdom' })).toBeVisible();
+
+    // Taking the tick off and on again celebrates again; Escape shuts the celebration, not the card
+    await map.locator('[data-landmark-model="big-ben"] image').click();
+    await expect(been).toBeChecked();
+    await been.uncheck();
+    await expect(been).not.toBeChecked();
+    await been.check();
+    await expect(party).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(party).toBeHidden();
+    await expect(card).toBeVisible();
+  });
+
+  test('the list opens a landmark’s card too, for the keyboard', async ({ page }) => {
+    await openMap(page);
+    const map = await openCountryMap(page, 'France');
+    // From the keyboard, as its stamp is the keyboard's way in
+    await map.getByRole('button', { name: 'List the departments, landmarks and pins' }).focus();
+    await page.keyboard.press('Enter');
+    const list = page.getByRole('dialog', { name: 'Departments, landmarks and pins' });
+    const eiffel = list.getByRole('button', { name: 'Eiffel Tower', exact: true });
+    await eiffel.focus();
+    await page.keyboard.press('Enter');
+    const card = page.getByRole('dialog', { name: 'Eiffel Tower' });
+    await expect(card.getByRole('heading', { level: 2, name: 'Eiffel Tower' })).toBeFocused();
+    await expect(card.locator('dt', { hasText: 'Part of' })).toHaveCount(0);
+    // Escape shuts the card, not the list, and focus goes back to the button
+    await page.keyboard.press('Escape');
+    await expect(card).toBeHidden();
+    await expect(list).toBeVisible();
+    await expect(eiffel).toBeFocused();
+  });
+});
+
 test('marking a state colours it and brings its country', async ({ page }) => {
   await openMap(page);
   const map = await openCountryMap(page, 'Canada');

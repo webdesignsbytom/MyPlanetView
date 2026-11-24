@@ -270,6 +270,9 @@ export default defineConfig({
         chunkFileNames: (chunk) => {
           if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]detailShapes[\\/]/.test(chunk.facadeModuleId)) return 'assets/outline-[name]-[hash].js';
           if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]countryMaps[\\/]/.test(chunk.facadeModuleId)) return 'assets/countrymap-[name]-[hash].js';
+          // What the landmark models' cards say (24 Nov 2026, about 200 KB gzip): read only on a
+          // country's own map, so kept off the installed app's list with them
+          if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]landmarkModelFacts\.js$/.test(chunk.facadeModuleId)) return 'assets/countrymap-[name]-[hash].js';
           // Code that only works online (hls.js plays Stream's videos, tus-js-client sends
           // them) or that only the build's pre-render loads (React DOM's server renderer):
           // named so the installed app doesn't keep it (19 Nov 2026, the audit: 190 KB gzip)

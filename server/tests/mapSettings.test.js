@@ -61,6 +61,16 @@ describe('cleanMapSettings', () => {
     expect(cleanMapSettings({ landmarkPins: true }).ok).toBe(false);
   });
 
+  // 24 Nov 2026, the user's wish: "Americans in miles always", and a choice
+  it('accepts the three distance units and refuses any other', () => {
+    for (const unit of ['auto', 'km', 'miles']) {
+      expect(cleanMapSettings({ distanceUnit: unit })).toEqual({ ok: true, value: { distanceUnit: unit } });
+    }
+    expect(cleanMapSettings({ distanceUnit: 'nautical' }).ok).toBe(false);
+    expect(cleanMapSettings({ distanceUnit: true }).ok).toBe(false);
+    expect(cleanMapSettings({ distanceUnit: 'miles', showGrid: false })).toEqual({ ok: true, value: { distanceUnit: 'miles', showGrid: false } });
+  });
+
   it('refuses the my_planet flags with a non-boolean value', () => {
     expect(cleanMapSettings({ showVisited: 'no' }).ok).toBe(false);
     expect(cleanMapSettings({ showUserBanner: 1 }).ok).toBe(false);

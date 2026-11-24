@@ -100,7 +100,7 @@ test.describe('with the celebration on', () => {
     await expect(party).toHaveAccessibleDescription('Ticked in Life’s One Shots.');
     await expect(party.locator('[data-celebration-progress]')).toHaveText('2 of 80 animals ticked.');
     // Nothing of the passport's (24 Nov 2026, the user: not yet)
-    await expect(party.getByRole('link', { name: 'Open the passport' })).toHaveCount(0);
+    await expect(party.getByRole('link', { name: 'Open passport' })).toHaveCount(0);
     await party.getByRole('button', { name: 'Carry on' }).click();
     await expect(party).toBeHidden();
   });

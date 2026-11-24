@@ -8,6 +8,7 @@ import { myMaps } from '@/utils/map/mapListCache';
 import { DEFAULT_MAP_SETTINGS } from '@/utils/map/mapSettings';
 import { QUICK_FILL_SHOWN_KEY } from '@/utils/map/quickFill';
 import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
+import { todayDay } from '@/utils/map/celebrations';
 import { withProviders } from './helpers';
 
 // Everything round the map page's state is a stand-in, so what's tested is what MapExperience
@@ -90,7 +91,7 @@ vi.mock('@/components/map/MapToolbar', () => ({
     toolbar.props = props;
     return (
       <nav data-open-panel={props.openPanel ?? ''}>
-        {['stats', 'countries', 'trips', 'oneShots', 'share', 'play', 'settings', 'tips'].map((id) => (
+        {['stats', 'countries', 'trips', 'oneShots', 'photos', 'share', 'settings'].map((id) => (
           <button key={id} type='button' onClick={() => props.onToggle(id)}>
             {`tool ${id}`}
           </button>
@@ -98,6 +99,15 @@ vi.mock('@/components/map/MapToolbar', () => ({
       </nav>
     );
   },
+}));
+// The unit the page hands its panels (24 Nov 2026): the provider's value, as the stand-in saw it
+const { unitSeen } = vi.hoisted(() => ({ unitSeen: { value: null } }));
+vi.mock('@/hooks/useDistanceUnit', () => ({
+  DistanceUnitProvider: ({ value, children }) => {
+    unitSeen.value = value;
+    return children;
+  },
+  default: () => unitSeen.value ?? 'km',
 }));
 vi.mock('@/components/map/MapHoverLayer', () => ({ default: () => null }));
 vi.mock('@/components/map/VerifyEmailBanner', () => ({ default: () => <p data-verify-banner /> }));
@@ -112,7 +122,7 @@ vi.mock('@/components/map/lazyMapPanels', () => {
   const names = [
     'BadgesGoalsPanel', 'CelebrationDialog', 'OneShotsPanel', 'CountryListPanel', 'CountryMapView', 'CountryPanel', 'ExtraMapDialog', 'ShareCardDialog', 'MapPosterDialog',
     'QuickFillDialog', 'YearRecapDialog', 'MapSwitcher', 'MapTipsDialog', 'PhotoUploadPanel', 'PhotoViewer', 'SettingsPanel',
-    'ShareDialog', 'Slideshow', 'StatsPanel', 'TimelinePanel', 'TripsPanel', 'WhereNextPanel', 'UnplacedPhotosPanel', 'MapPhotosPanel', 'PinPanel',
+    'ShareDialog', 'Slideshow', 'StatsPanel', 'TimelinePanel', 'TripsPanel', 'WhereNextPanel', 'UnplacedPhotosPanel', 'MapPhotosPanel', 'PinPanel', 'StringsPanel',
   ];
   return { ...Object.fromEntries(names.map((name) => [name, stub(name)])), preloadTool: vi.fn(), preloadWhenIdle: vi.fn(() => () => {}) };
 });
@@ -267,6 +277,125 @@ describe('MapExperience', () => {
       expect(q('[data-map-scrim]')).toBeNull();
     });
 
+    // 24 Nov 2026, the user's wish: a country newly marked visited is dated the day it's marked
+    it('dates a country the country list marks visited today, keeping one with a date', async () => {
+      const acts = actions();
+      const map = { ...MAP, visits: [...MAP.visits, { countryCode: 'ES', status: 'WANT_TO_GO', firstVisitedOn: '2010-04-01' }] };
+      const { click } = open({ actions: acts, map });
+      click('tool countries');
+      await waitFor(() => expect(panelProps.CountryListPanel).toBeTruthy());
+      await act(async () => {
+        await panelProps.CountryListPanel.onChangeStatus('DE', 'VISITED');
+        await panelProps.CountryListPanel.onChangeStatus('ES', 'VISITED');
+        await panelProps.CountryListPanel.onChangeStatus('JP', 'WANT_TO_GO');
+        await panelProps.CountryListPanel.onChangeStatus('GB', null);
+      });
+      expect(acts.setVisit.mock.calls).toEqual([
+        ['DE', 'VISITED', { firstVisitedOn: todayDay() }],
+        ['ES', 'VISITED', { firstVisitedOn: '2010-04-01' }],
+        ['JP', 'WANT_TO_GO', { firstVisitedOn: undefined }],
+        ['GB', null, undefined],
+      ]);
+    });
+
+    // 24 Nov 2026, the user's wish: "Open passport" in the country list and Where to go next
+    it('links the statistics, the country list and Where to go next to the passport', async () => {
+      // The stand-in toolbar's onToggle, as "Where to go next" has no button of its own there
+      const toggle = (tool) => act(() => toolbar.props.onToggle(tool));
+      const own = open();
+      for (const [tool, name] of [['stats', 'StatsPanel'], ['countries', 'CountryListPanel'], ['next', 'WhereNextPanel']]) {
+        toggle(tool);
+        await waitFor(() => expect(panelProps[name]?.passportHref).toBe('/maps/map-1/passport'));
+      }
+      own.unmount();
+      for (const key of Object.keys(panelProps)) delete panelProps[key];
+      open({ shareCode: 'ABCD-EFGH-JKMN', role: 'VIEWER', actions: null, currentUser: null });
+      for (const [tool, name] of [['countries', 'CountryListPanel'], ['next', 'WhereNextPanel']]) {
+        toggle(tool);
+        await waitFor(() => expect(panelProps[name]?.passportHref).toBe('/shared/ABCD-EFGH-JKMN/passport'));
+      }
+    });
+
+    // 24 Nov 2026, the user's wish: "Americans in miles always", and a choice
+    it('gives its panels miles for a map whose home is in the United States, unless the viewer chose', () => {
+      const home = (code) => ({ ...MAP, stats: { ...MAP.stats, homeCountryCode: code } });
+      const one = open({ map: home('GB') });
+      expect(unitSeen.value).toBe('km');
+      one.unmount();
+      const two = open({ map: home('US') });
+      expect(unitSeen.value).toBe('miles');
+      two.unmount();
+      open({ map: home('US'), settings: { ...DEFAULT_MAP_SETTINGS, distanceUnit: 'km' } });
+      expect(unitSeen.value).toBe('km');
+    });
+
+    // 24 Nov 2026, the user's wish: the Strings panel opens from the country list, its stamp gone
+    it('opens the Strings panel from the country list, for editors only', async () => {
+      const toggle = (tool) => act(() => toolbar.props.onToggle(tool));
+      const own = open();
+      expect(toolbar.props.canString).toBeUndefined();
+      toggle('countries');
+      await waitFor(() => expect(panelProps.CountryListPanel?.onOpenStrings).toBeTypeOf('function'));
+      act(() => panelProps.CountryListPanel.onOpenStrings());
+      await waitFor(() => expect(own.container.querySelector('[data-panel="StringsPanel"]')).not.toBeNull());
+      expect(own.container.querySelector('[data-panel="CountryListPanel"]')).toBeNull();
+      own.unmount();
+      for (const key of Object.keys(panelProps)) delete panelProps[key];
+      open({ shareCode: 'ABCD-EFGH-JKMN', role: 'VIEWER', actions: null, currentUser: null });
+      toggle('countries');
+      await waitFor(() => expect(panelProps.CountryListPanel).toBeTruthy());
+      expect(panelProps.CountryListPanel.onOpenStrings).toBeNull();
+    });
+
+    // 24 Nov 2026, the user's wish: a newly visited country is tied to the one visited before it
+    describe('strings to a newly visited country', () => {
+      const VISITED = {
+        ...MAP,
+        visits: [
+          { countryCode: 'GB', status: 'LIVED', firstVisitedOn: '1990-05-01' },
+          { countryCode: 'FR', status: 'VISITED', firstVisitedOn: '2019-04-12' },
+        ],
+        strings: [],
+      };
+      const markFromList = async (code) => {
+        await waitFor(() => expect(panelProps.CountryListPanel).toBeTruthy());
+        await act(async () => {
+          await panelProps.CountryListPanel.onChangeStatus(code, 'VISITED');
+        });
+      };
+
+      it('ties one from the place visited just before, from the country list or the ticket', async () => {
+        const acts = { ...actions(), tieString: vi.fn().mockResolvedValue({ id: 's1' }) };
+        const { click } = open({ actions: acts, map: VISITED });
+        click('tool countries');
+        await markFromList('DE');
+        expect(acts.tieString).toHaveBeenCalledWith('FR', 'DE');
+        // From its ticket too (CountryPanel tells the page once it's saved)
+        click('pick France');
+        await waitFor(() => expect(panelProps.CountryPanel).toBeTruthy());
+        act(() => panelProps.CountryPanel.onVisitMarked('ES', null, 'VISITED', todayDay()));
+        expect(acts.tieString).toHaveBeenLastCalledWith('FR', 'ES');
+        // Nothing for a wish, or a change between visited and lived in
+        acts.tieString.mockClear();
+        act(() => panelProps.CountryPanel.onVisitMarked('JP', null, 'WANT_TO_GO', null));
+        act(() => panelProps.CountryPanel.onVisitMarked('FR', 'VISITED', 'LIVED', '2019-04-12'));
+        expect(acts.tieString).not.toHaveBeenCalled();
+      });
+
+      it('ties none while the strings are switched off, or when one joins them already', async () => {
+        const acts = { ...actions(), tieString: vi.fn().mockResolvedValue({ id: 's1' }) };
+        const off = open({ actions: acts, map: VISITED, settings: { ...DEFAULT_MAP_SETTINGS, showStrings: false } });
+        off.click('tool countries');
+        await markFromList('DE');
+        expect(acts.tieString).not.toHaveBeenCalled();
+        off.unmount();
+        const tied = open({ actions: acts, map: { ...VISITED, strings: [{ id: 's9', from: 'DE', to: 'FR' }] } });
+        tied.click('tool countries');
+        await markFromList('DE');
+        expect(acts.tieString).not.toHaveBeenCalled();
+      });
+    });
+
     it('swaps one panel for another, and the same tool again closes it', () => {
       const { panel, click } = open();
       click('tool stats');
@@ -277,41 +406,48 @@ describe('MapExperience', () => {
       expect(panel('CountryListPanel')).toBeNull();
     });
 
-    it('closes the open panel for the share dialog and the slideshow', () => {
+    it('closes the open panel for the share dialog', () => {
       const { panel, click, q } = open();
       click('tool settings');
       click('tool share');
       expect(panel('SettingsPanel')).toBeNull();
       expect(panel('ShareDialog')).not.toBeNull();
       expect(q('nav').getAttribute('data-open-panel')).toBe('share');
-      click('tool stats');
-      click('tool play');
-      expect(panel('StatsPanel')).toBeNull();
-      expect(panel('Slideshow')).not.toBeNull();
-      expect(q('nav').getAttribute('data-open-panel')).toBe('play');
     });
 
-    it('opens the tips from their tool any time, even switched off, closing what was open', async () => {
+    // 24 Nov 2026, the user's wish: "Play my world" is in the photo album, not a stamp of its own
+    it('plays the whole map’s slideshow from the photo album, over it', () => {
+      const { panel, click } = open();
+      click('tool photos');
+      act(() => panelProps.MapPhotosPanel.onPlay());
+      expect(panel('Slideshow')).not.toBeNull();
+      expect(panelProps.Slideshow.country).toBeNull();
+      // The album is still there under it
+      expect(panel('MapPhotosPanel')).not.toBeNull();
+      act(() => panelProps.Slideshow.onClose());
+      expect(panel('Slideshow')).toBeNull();
+      expect(panel('MapPhotosPanel')).not.toBeNull();
+    });
+
+    // 24 Nov 2026, the user's wish: Settings shows the tips, not a stamp of their own
+    it('opens the tips from Settings any time, even switched off, closing Settings', async () => {
       const { panel, click, q } = open({ settings: { ...DEFAULT_MAP_SETTINGS, showTips: false } });
       await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
       expect(panel('MapTipsDialog')).toBeNull();
-      click('tool stats');
-      click('tool tips');
-      expect(panel('StatsPanel')).toBeNull();
+      click('tool settings');
+      act(() => panelProps.SettingsPanel.onShowTips());
+      expect(panel('SettingsPanel')).toBeNull();
       expect(panel('MapTipsDialog')).not.toBeNull();
-      expect(q('nav').getAttribute('data-open-panel')).toBe('tips');
-      // The owner hears about sharing; the same tool again shuts them
+      // The owner hears about sharing
       expect(panel('MapTipsDialog').getAttribute('data-share')).toBe('true');
-      click('tool tips');
-      expect(panel('MapTipsDialog')).toBeNull();
-      click('tool tips');
       click('close MapTipsDialog');
       expect(panel('MapTipsDialog')).toBeNull();
     });
 
     it('leaves sharing out of the tips through a share link', () => {
       const { panel, click } = open({ shareCode: 'ABCD-EFGH-JKMN', role: 'VIEWER', actions: null, currentUser: null });
-      click('tool tips');
+      click('tool settings');
+      act(() => panelProps.SettingsPanel.onShowTips());
       expect(panel('MapTipsDialog').getAttribute('data-share')).toBe('false');
     });
 
@@ -424,15 +560,34 @@ describe('MapExperience', () => {
       delete panelProps.CelebrationDialog;
     });
 
-    it('celebrates a landmark’s first stamp from a tick, and the place it marked', async () => {
+    // 24 Nov 2026, the user's wish: a tick that marks a new country celebrates the landmark, then
+    // the country once that's closed; the country is dated today and tied to the place before it
+    it('celebrates a landmark’s first stamp from a tick, then the new country it marked', async () => {
       const setLandmarkBeen = vi.fn().mockResolvedValue({ landmarkId: 'lm-eiffel', been: true, countryCode: 'FR' });
-      const { panel } = await withMarks({ actions: { ...actions(), setLandmarkBeen } });
+      const acts = { ...actions(), setLandmarkBeen, tieString: vi.fn().mockResolvedValue({ id: 's1' }) };
+      const { panel } = await withMarks({ actions: acts });
       await act(async () => {
         await panelProps.StatsPanel.collected.onToggle('lm-eiffel', true);
       });
       await waitFor(() => expect(panel('CelebrationDialog')).not.toBeNull());
-      expect(celebration()).toEqual({ kind: 'landmark', landmarkId: 'lm-eiffel', stampedOn: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/), photoUrl: null, newPlace: 'FR' });
+      expect(celebration()).toEqual({
+        kind: 'landmark',
+        landmarkId: 'lm-eiffel',
+        stampedOn: todayDay(),
+        photoUrl: null,
+        newPlace: 'FR',
+        modelId: null,
+      });
       expect(panelProps.CelebrationDialog.passportHref).toBe('/maps/map-1/passport');
+      // France, dated today and tied to the place visited before it (the UK, lived in)
+      expect(acts.setVisit).toHaveBeenCalledWith('FR', 'VISITED', { firstVisitedOn: todayDay() });
+      expect(acts.tieString).toHaveBeenCalledWith('GB', 'FR');
+
+      // Closed: France's own celebration, straight after
+      act(() => panelProps.CelebrationDialog.onClose());
+      await waitFor(() => expect(celebration()).toEqual({ kind: 'country', code: 'FR', status: 'VISITED', firstVisitedOn: todayDay() }));
+      act(() => panelProps.CelebrationDialog.onClose());
+      expect(panel('CelebrationDialog')).toBeNull();
     });
 
     it('says nothing new of a place already on the map, nor of a landmark stamped already', async () => {
@@ -465,7 +620,7 @@ describe('MapExperience', () => {
       expect(celebration()).toEqual({ kind: 'landmark', landmarkId: 'lm-eiffel', stampedOn: '2019-05-02', photoUrl: 'https://x/p1.webp', newPlace: null });
     });
 
-    it('celebrates a country marked visited from its ticket, never from the country list', async () => {
+    it('celebrates a country marked visited from its ticket', async () => {
       seenDialogs();
       const { panel, click, q } = open();
       await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
@@ -479,22 +634,43 @@ describe('MapExperience', () => {
       // Lived in, from visited: no first visit
       act(() => panelProps.CountryPanel.onVisitMarked('FR', 'VISITED', 'LIVED', null));
       expect(panel('CelebrationDialog')).toBeNull();
-      // The country list saves straight through setVisit: many at once, no celebration
-      click('tool countries');
-      await waitFor(() => expect(panelProps.CountryListPanel).toBeTruthy());
-      expect(panelProps.CountryListPanel.onVisitMarked).toBeUndefined();
     });
 
-    it('never shows while the viewer has turned it off, and its box turns it off', async () => {
+    // 24 Nov 2026, the user's wish: the list gives the country its passport page too
+    it('celebrates a country marked visited from the country list, dated today, once saved', async () => {
+      seenDialogs();
+      const acts = actions();
+      const { panel, click, q } = open({ actions: acts });
+      await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
+      click('tool countries');
+      await waitFor(() => expect(panelProps.CountryListPanel).toBeTruthy());
+      await act(async () => {
+        await panelProps.CountryListPanel.onChangeStatus('DE', 'VISITED');
+      });
+      await waitFor(() => expect(panel('CelebrationDialog')).not.toBeNull());
+      expect(celebration()).toEqual({ kind: 'country', code: 'DE', status: 'VISITED', firstVisitedOn: todayDay() });
+      act(() => panelProps.CelebrationDialog.onClose());
+      // Not for a wish, a change between visited and lived in, or a save that failed
+      await act(async () => {
+        await panelProps.CountryListPanel.onChangeStatus('JP', 'WANT_TO_GO');
+        await panelProps.CountryListPanel.onChangeStatus('GB', 'VISITED');
+      });
+      acts.setVisit.mockRejectedValueOnce(new Error('offline'));
+      await act(async () => {
+        await panelProps.CountryListPanel.onChangeStatus('IT', 'VISITED').catch(() => {});
+      });
+      expect(panel('CelebrationDialog')).toBeNull();
+    });
+
+    it('never shows while the viewer has turned it off in Settings; it has no box of its own', async () => {
       const setLandmarkBeen = vi.fn().mockResolvedValue({ landmarkId: 'lm-eiffel', been: true, countryCode: 'FR' });
       const view = await withMarks({ actions: { ...actions(), setLandmarkBeen } });
       await act(async () => {
         await panelProps.StatsPanel.collected.onToggle('lm-eiffel', true);
       });
       await waitFor(() => expect(view.panel('CelebrationDialog')).not.toBeNull());
-      expect(panelProps.CelebrationDialog.hideCelebrations).toBe(false);
-      act(() => panelProps.CelebrationDialog.onHideCelebrations(true));
-      expect(view.onChangeSetting).toHaveBeenCalledWith('showCelebrations', false);
+      // 24 Nov 2026, the user's wish: no "Don't show these again" box
+      expect(panelProps.CelebrationDialog.onHideCelebrations).toBeUndefined();
       view.unmount();
 
       delete panelProps.CelebrationDialog;

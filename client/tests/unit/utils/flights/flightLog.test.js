@@ -1,6 +1,6 @@
 // The flight log's rules and words (utils/flights/flightLog.js, airports.js, saveFlights.js).
 import { describe, expect, it, vi } from 'vitest';
-import { aroundTheWorld, distanceWords, flightCode, flightDays, flightKm, flightPlaces, tripForDay } from '@/utils/flights/flightLog';
+import { distanceWords, flightCode, flightDays, flightKm, flightPlaces, tripForDay } from '@/utils/flights/flightLog';
 import { airportFrom, airportLabel, loadAirports, placeOfAirport } from '@/utils/flights/airports';
 import { saveFlights, tripStatusFor } from '@/utils/flights/saveFlights';
 
@@ -68,9 +68,11 @@ describe('the log’s helpers', () => {
   it('measures and words a flight', () => {
     expect(flightKm(airportOf('LHR'), airportOf('JFK'))).toBeGreaterThan(5500);
     expect(distanceWords(5555)).toBe('5,555 km (3,452 miles)');
+    // A map shown in miles puts them first (24 Nov 2026)
+    expect(distanceWords(5555, 'miles')).toBe('3,452 miles (5,555 km)');
+    expect(distanceWords(5555, 'km')).toBe('5,555 km (3,452 miles)');
     expect(flightCode({ carrier: 'BA', flightNumber: '117' })).toBe('BA 117');
     expect(flightCode({ carrier: null, flightNumber: null })).toBe('');
-    expect(aroundTheWorld(40075 * 2.34)).toBe(2.3);
   });
 });
 

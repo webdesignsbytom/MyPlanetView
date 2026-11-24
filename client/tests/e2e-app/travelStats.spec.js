@@ -80,3 +80,38 @@ test('the map’s home, set in Settings, is where the distances start', async ({
   const stats = await openTool(page, 'Travel statistics', 'Travel statistics');
   await expect(tile(stats, 'Furthest from home')).toContainText(/km from Australia/);
 });
+
+// 24 Nov 2026, the user's wish: "we need americans in miles always", a choice, and what the
+// distance is like ("40000km ... once round the world", "380000 km ... the distance to the moon")
+test('the distance travelled says what it’s like', { tag: '@phone' }, async ({ page }) => {
+  await openMap(page);
+  const stats = await openTool(page, 'Travel statistics', 'Travel statistics');
+  await expect(stats.locator('[data-distance-comparison]')).toHaveText('27,300 km is nearly as far as the Pan-American Highway, from Alaska to Argentina.');
+});
+
+test('a map whose home is in the United States shows miles; Settings can choose either', async ({ page }) => {
+  await openMap(page);
+  let settings = await openTool(page, 'Map settings', 'Settings');
+  await settings.getByRole('tab', { name: 'This map' }).click();
+  const home = settings.getByRole('region', { name: 'Home' });
+  await home.getByLabel('Where you live').selectOption({ label: 'United States' });
+  await expect(home.getByRole('status')).toContainText('Saved');
+  await settings.getByRole('button', { name: 'Close Settings' }).click();
+
+  let stats = await openTool(page, 'Travel statistics', 'Travel statistics');
+  await expect(tile(stats, 'Distance travelled')).toContainText(/[1-9][\d,]* miles/);
+  await expect(tile(stats, 'Distance travelled')).toContainText(/About [\d,]+ km/);
+  await expect(tile(stats, 'Furthest from home')).toContainText(/miles from the United States/);
+  await expect(stats.locator('[data-distance-comparison]')).toContainText(/^[\d,]+ miles is /);
+  await stats.getByRole('button', { name: /^Close/ }).first().click();
+
+  // "Always kilometres", then "Always miles": the viewer's own choice
+  settings = await openTool(page, 'Map settings', 'Settings');
+  const distances = settings.getByRole('group', { name: 'Distances' });
+  await expect(distances.getByLabel('Miles for a map whose home is in the United States, else kilometres')).toBeChecked();
+  await distances.getByText('Always kilometres', { exact: true }).click();
+  await settings.getByRole('button', { name: 'Close Settings' }).click();
+  stats = await openTool(page, 'Travel statistics', 'Travel statistics');
+  await expect(tile(stats, 'Distance travelled')).toContainText(/[1-9][\d,]* km/);
+  await expect(tile(stats, 'Furthest from home')).toContainText(/km from the United States/);
+});

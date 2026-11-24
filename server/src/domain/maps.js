@@ -151,7 +151,7 @@ export const findMapDetail = async (mapId) => {
     }),
     prisma.countryVisit.findMany({
       where: { mapId },
-      select: { countryCode: true, status: true, source: true, firstVisitedOn: true, notes: true },
+      select: { countryCode: true, status: true, source: true, firstVisitedOn: true, notes: true, createdAt: true },
       orderBy: { countryCode: 'asc' },
     }),
   ]);
@@ -287,7 +287,7 @@ export const deleteTravellerInDB = (mapId, travellerId) =>
 
 // Visits
 
-const VISIT_SELECT = { countryCode: true, status: true, source: true, firstVisitedOn: true, notes: true };
+const VISIT_SELECT = { countryCode: true, status: true, source: true, firstVisitedOn: true, notes: true, createdAt: true };
 
 /**
  * Set a visit by hand -> { visit, implied }. Visiting a place inside another (the South
@@ -303,12 +303,16 @@ export const upsertVisitInDB = async ({ mapId, countryCode, status, firstVisited
       select: { status: true },
     });
     const sameStatus = current?.status === status;
+    // A wish become a visit was marked visited now (24 Nov 2026): its row's `createdAt` is when
+    // the place joined the map as visited, which orders the passport's pages and the strings
+    const nowVisited = Boolean(current) && !COUNTED_VISIT_STATUSES.includes(current.status) && COUNTED_VISIT_STATUSES.includes(status);
     return db.countryVisit.upsert({
       where: { mapId_countryCode: { mapId, countryCode } },
       create: { mapId, countryCode, status, source: 'MANUAL', firstVisitedOn: firstVisitedOn ?? null, notes: notes ?? null },
       update: {
         status,
         ...(sameStatus ? {} : { source: 'MANUAL' }),
+        ...(nowVisited ? { createdAt: new Date() } : {}),
         ...(firstVisitedOn !== undefined ? { firstVisitedOn } : {}),
         ...(notes !== undefined ? { notes } : {}),
       },
@@ -340,9 +344,10 @@ export const createMissingVisits = async (mapId, places, source, db = prisma) =>
   // The South Pole brings Antarctica with it (utils/specialPlaces.js)
   const countryCodes = withParentPlaces(places);
   if (!countryCodes.length) return { count: 0 };
+  // A wish become a visit was marked visited now (24 Nov 2026; upsertVisitInDB)
   const upgraded = await db.countryVisit.updateMany({
     where: { mapId, countryCode: { in: countryCodes }, status: 'WANT_TO_GO' },
-    data: { status: 'VISITED', source },
+    data: { status: 'VISITED', source, createdAt: new Date() },
   });
   const created = await db.countryVisit.createMany({
     data: countryCodes.map((countryCode) => ({ mapId, countryCode, status: 'VISITED', source })),

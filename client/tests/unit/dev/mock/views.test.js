@@ -200,15 +200,22 @@ describe('photoPage', () => {
 describe('maps', () => {
   it('counts the test user’s map as the server does', () => {
     const stats = mapStats(map(HOME_MAP), 'OWNER');
-    expect(stats).toMatchObject({ countries: 8, specialPlaces: 0, regions: 0, continents: 2, photos: 16, landmarks: 13, trips: 3 });
+    // The demo couple's travels (data/demoTravels.js): 20 places on five continents, 13 stamps from
+    // photos and 12 ticks, the 14 trips of their own and Tom's stag do
+    expect(stats).toMatchObject({ countries: 20, specialPlaces: 0, regions: 0, continents: 5, photos: 16, landmarks: 25, trips: 15 });
+    // Lisbon was Charlie's alone, Vienna Alex's; both have a birth date (the share changes daily)
     expect(stats.byTraveller).toEqual([
-      { travellerId: 'trav-test', name: 'Charlie', countries: 1, daysAway: 15, lifeAwayShare: null },
-      { travellerId: 'trav-alex', name: 'Alex', countries: 1, daysAway: 15, lifeAwayShare: null },
+      { travellerId: 'trav-test', name: 'Charlie', countries: 17, daysAway: 278, lifeAwayShare: expect.any(Number) },
+      { travellerId: 'trav-alex', name: 'Alex', countries: 17, daysAway: 277, lifeAwayShare: expect.any(Number) },
     ]);
+    expect(stats.daysAway).toBe(282);
+    expect(stats.longestTrip).toEqual({ tripId: 'trip-world', title: 'A year off: around the world', days: 190 });
     expect(stats.countriesInWorld).toBeGreaterThan(200);
-    // Collector's counts (24 Nov 2026): every one of the eight a UN member state; the wishes not
-    expect(stats.unCountries).toBe(8);
-    expect(mapStats(map(HOME_MAP), 'VIEWER')).toMatchObject({ photos: 15, landmarks: 12 });
+    // Collector's counts (24 Nov 2026): every one of the 20 a UN member state; the wishes not
+    expect(stats.unCountries).toBe(20);
+    // The distance: every completed trip from home and back (around the world among them)
+    expect(stats.distanceKm).toBeGreaterThan(100000);
+    expect(mapStats(map(HOME_MAP), 'VIEWER')).toMatchObject({ photos: 15, landmarks: 24 });
   });
 
   it('counts the special places, regions and the UK’s nations apart', () => {
@@ -217,14 +224,14 @@ describe('maps', () => {
       { mapId: HOME_MAP, countryCode: 'XS', status: 'VISITED' },
       { mapId: HOME_MAP, countryCode: 'XH', status: 'VISITED' },
     );
-    expect(mapStats(map(HOME_MAP), 'OWNER')).toMatchObject({ countries: 8, specialPlaces: 2, regions: 1, continents: 3 });
+    expect(mapStats(map(HOME_MAP), 'OWNER')).toMatchObject({ countries: 20, specialPlaces: 2, regions: 1, continents: 6 });
     map(HOME_MAP).splitUk = true;
     db().visits.push({ mapId: HOME_MAP, countryCode: 'XC', status: 'VISITED' });
-    expect(mapStats(map(HOME_MAP), 'OWNER').countries).toBe(8);
+    expect(mapStats(map(HOME_MAP), 'OWNER').countries).toBe(20);
   });
 
   it('summarises a map, with the plan fields for its owner alone', () => {
-    expect(mapSummary(map(HOME_MAP), 'OWNER')).toMatchObject({ id: HOME_MAP, role: 'OWNER', counts: { countries: 8, photos: 16, trips: 3 }, locked: false, tier: 'PLAN' });
+    expect(mapSummary(map(HOME_MAP), 'OWNER')).toMatchObject({ id: HOME_MAP, role: 'OWNER', counts: { countries: 20, photos: 16, trips: 15 }, locked: false, tier: 'PLAN' });
     expect('locked' in mapSummary(map(SAM_MAP), 'VIEWER')).toBe(false);
   });
 
@@ -240,11 +247,15 @@ describe('maps', () => {
     expect(asOwner.plan.id).toBe('REGULAR');
     expect(asOwner.momentCountsByCountry.PT).toBe(1);
     expect(asOwner.momentSpots.map((s) => s.id)).toEqual(['moment-born', 'moment-engaged']);
-    expect(asOwner).toMatchObject({ splitUk: false, homeCountryCode: null, style: null, tickedLandmarkIds: [] });
+    expect(asOwner).toMatchObject({ splitUk: false, homeCountryCode: null, style: null });
+    // The heritage sites ticked "been here" (data/demoTravels.js)
+    expect(asOwner.tickedLandmarkIds).toHaveLength(12);
+    expect(asOwner.tickedLandmarkIds).toContain('lm-taj-mahal');
   });
 
   it('counts moments and pins as the server does', () => {
-    expect(momentCountsByCountry(HOME_MAP)).toEqual({ GB: 1, IE: 1, ES: 1, FR: 1, IT: 1 });
+    // Every dated moment of the demo couple's; Portugal's is hidden
+    expect(momentCountsByCountry(HOME_MAP)).toEqual({ GB: 1, IE: 4, US: 1, ES: 1, FR: 1, GR: 1, MA: 1, JO: 1, TZ: 1, ZA: 1, IN: 1, MY: 2, NZ: 1, MX: 1, IT: 2, AT: 1 });
     expect(momentSpots(SAM_MAP)).toEqual([expect.objectContaining({ id: 'moment-angkor', countryCode: 'KH' })]);
     expect(stampedLandmarkIds(map(SAM_MAP), 'VIEWER')).toEqual(['lm-historic-city-of-ayutthaya']);
   });
@@ -263,7 +274,10 @@ describe('maps', () => {
 
 describe('visits', () => {
   it('marks a missing country visited, turns "want to go" visited and leaves the rest', () => {
-    expect(markVisited(HOME_MAP, 'DE', 'PHOTO')).toEqual([{ mapId: HOME_MAP, countryCode: 'DE', status: 'VISITED', source: 'PHOTO', firstVisitedOn: null, notes: null }]);
+    // When it was marked, as the server's rows (the passport orders undated pages by it)
+    expect(markVisited(HOME_MAP, 'DE', 'PHOTO')).toEqual([
+      { mapId: HOME_MAP, countryCode: 'DE', status: 'VISITED', source: 'PHOTO', firstVisitedOn: null, notes: null, createdAt: expect.any(String) },
+    ]);
     expect(markVisited(HOME_MAP, 'JP', 'TRIP')[0]).toMatchObject({ countryCode: 'JP', status: 'VISITED', source: 'TRIP' });
     expect(markVisited(HOME_MAP, 'GB', 'PHOTO')).toEqual([]);
     expect(markVisited(HOME_MAP, null, 'PHOTO')).toEqual([]);
@@ -295,8 +309,25 @@ describe('trips', () => {
 
   it('lists a map’s own trips with their countries, and the linked stag do in brief', () => {
     const trips = mapTripsView(map(HOME_MAP), 'OWNER');
-    expect(trips.map((t) => t.id)).toEqual(['trip-tom-stag', 'trip-japan', 'trip-italy']);
-    expect(trips[0]).toEqual({
+    // An undated one first, then the newest first
+    expect(trips.map((t) => t.id)).toEqual([
+      'trip-patagonia',
+      'trip-tom-stag',
+      'trip-japan',
+      'trip-norway',
+      'trip-vienna',
+      'trip-venice',
+      'trip-italy',
+      'trip-paris-again',
+      'trip-world',
+      'trip-honeymoon',
+      'trip-lisbon',
+      'trip-paris',
+      'trip-spain',
+      'trip-amsterdam',
+      'trip-usa',
+    ]);
+    expect(trips[1]).toEqual({
       id: 'trip-tom-stag',
       title: 'Stag do in Prague',
       status: 'PLANNED',
@@ -307,8 +338,9 @@ describe('trips', () => {
       organiserMapName: "Tom's map",
       canOpen: false,
     });
-    expect(trips[2]).toMatchObject({ countryCodes: ['IT'], linked: false, canOpen: true, stopCount: 3, photoCount: 3 });
-    expect('countryCodes' in mapTripsView(map(HOME_MAP), 'VIEWER', { viaShareLink: true })[1]).toBe(false);
+    expect(trips.find((t) => t.id === 'trip-italy')).toMatchObject({ countryCodes: ['IT'], linked: false, canOpen: true, stopCount: 3, photoCount: 3 });
+    expect(trips.find((t) => t.id === 'trip-world').countryCodes).toEqual(['MA', 'JO', 'TZ', 'ZA', 'IN', 'MY', 'NZ', 'MX', 'CU']);
+    expect('countryCodes' in mapTripsView(map(HOME_MAP), 'VIEWER', { viaShareLink: true }).find((t) => t.id === 'trip-japan')).toBe(false);
     expect(linkedTrips(HOME_MAP).map((t) => t.id)).toEqual(['trip-tom-stag']);
     expect(tripMapIds(trip('trip-tom-stag'))).toEqual([TOM_MAP, HOME_MAP]);
   });

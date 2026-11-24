@@ -21,7 +21,7 @@ export const SAM_MAP = "Sam's gap year";
 export const SAM_SHARE_CODE = 'SAMG-4PYE-AR22';
 export const HOME_SHARE_CODE = 'K7QX-M2PA-9RTW';
 // Where mock mode keeps its demo data (src/dev/mock/store.js STORE_KEY)
-export const MOCK_STORE_KEY = 'mpvMockStore.v6';
+export const MOCK_STORE_KEY = 'mpvMockStore.v7';
 
 export const test = base.extend({
   // The tips the map opens with (MapTipsDialog) cover it, so every test starts as if they'd
@@ -182,6 +182,33 @@ export async function openTool(page, label, panelTitle) {
   const panel = page.getByRole('dialog', { name: panelTitle, exact: true });
   await expect(panel).toBeVisible();
   return panel;
+}
+
+/** The Strings panel, from the country list (its own stamp until 24 Nov 2026, the user's wish: a shorter bar). */
+export async function openStringsPanel(page) {
+  const list = await openTool(page, 'Country list', 'Countries');
+  await list.getByRole('button', { name: 'Strings', exact: true }).click();
+  const panel = page.getByRole('dialog', { name: 'Strings', exact: true });
+  await expect(panel).toBeVisible();
+  return panel;
+}
+
+/** "Play my world", from the photo album (its own stamp until 24 Nov 2026): the whole map's slideshow. */
+export async function playMyWorld(page) {
+  const album = await openTool(page, 'Photo album', 'Photo album');
+  await album.getByRole('button', { name: 'Play my world', exact: true }).click();
+  const show = page.getByRole('dialog', { name: /^Slideshow: / });
+  await expect(show).toBeVisible();
+  return show;
+}
+
+/** The tips, from Settings' Help ("Show the tips"; their own stamp until 24 Nov 2026). */
+export async function openTipsFromSettings(page) {
+  const settings = await openTool(page, 'Map settings', 'Settings');
+  await settings.getByRole('button', { name: 'Show the tips', exact: true }).click();
+  const tips = page.getByRole('dialog', { name: 'Tips', exact: true });
+  await expect(tips).toBeVisible();
+  return tips;
 }
 
 /**

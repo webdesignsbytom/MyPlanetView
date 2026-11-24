@@ -16,6 +16,7 @@ import {
   travelExtras,
   tripDays,
   tripDistanceKm,
+  untrippedKm,
 } from '@/dev/mock/travelStats';
 import { COUNTRIES } from '@/utils/map/countries';
 import * as server from '../../../../../server/src/utils/travelStats.js';
@@ -246,6 +247,8 @@ describe('the same answers as the server', () => {
       expect(furthestFromHome(codes, PLACE_POSITIONS, home)).toEqual(server.furthestFromHome(codes, PLACE_POSITIONS, home));
       const input = { completedTrips: trips, visitedCodes: codes, positions: PLACE_POSITIONS, homeCountryCode: home };
       expect(travelExtras(input)).toEqual(server.travelExtras(input));
+      // Home and back to the countries no completed trip reached (24 Nov 2026)
+      expect(untrippedKm(input)).toBe(server.untrippedKm(input));
     }
   });
 

@@ -8,8 +8,10 @@ beforeEach(() => freshStore());
 describe('the mock flight log', () => {
   it('reads the seeded flights with their totals', async () => {
     const { data } = await get(`/api/maps/${HOME_MAP}/flights`);
-    expect(data.flights.map((f) => `${f.from}-${f.to}`)).toEqual(['PSA-LGW', 'LHR-FCO']);
-    expect(data.totals).toMatchObject({ flights: 2, distanceKm: 2592, airports: ['FCO', 'LGW', 'LHR', 'PSA'], airlines: 2 });
+    // Every trip's flights (data/demoTravels.js), the newest first
+    expect(data.flights.map((f) => `${f.from}-${f.to}`).slice(0, 6)).toEqual(['DUB-BGO', 'DUB-VIE', 'VCE-DUB', 'DUB-VCE', 'PSA-LGW', 'LHR-FCO']);
+    expect(data.totals).toMatchObject({ flights: 26, distanceKm: 91175, airlines: 13 });
+    expect(data.totals.airports).toHaveLength(26);
     signOut();
     expect((await get(`/api/maps/${HOME_MAP}/flights`)).status).toBe(401);
   });
@@ -29,7 +31,7 @@ describe('the mock flight log', () => {
 
   it('deletes one for an editor', async () => {
     expect((await del('/api/flights/flight-rome-out')).status).toBe(200);
-    expect((await get(`/api/maps/${HOME_MAP}/flights`)).data.flights).toHaveLength(1);
+    expect((await get(`/api/maps/${HOME_MAP}/flights`)).data.flights).toHaveLength(25);
     expect((await del('/api/flights/flight-rome-out')).status).toBe(404);
   });
 });

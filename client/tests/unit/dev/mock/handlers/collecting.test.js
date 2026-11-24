@@ -13,12 +13,15 @@ describe('ticking a landmark "been here"', () => {
     await put(`/api/maps/${HOME_MAP}/landmarks/lm-mount-fuji/been`);
     expect(db().landmarkVisits.filter((v) => v.landmarkId === 'lm-mount-fuji')).toHaveLength(1);
     expect(visit('JP')).toMatchObject({ status: 'VISITED', source: 'MANUAL' });
-    expect((await get(`/api/maps/${HOME_MAP}`)).data.map.tickedLandmarkIds).toEqual(['lm-mount-fuji']);
+    // After the seed's 12 heritage sites (data/demoTravels.js)
+    const ticked = (await get(`/api/maps/${HOME_MAP}`)).data.map.tickedLandmarkIds;
+    expect(ticked).toHaveLength(13);
+    expect(ticked.at(-1)).toBe('lm-mount-fuji');
     // Who ticked it (their own traveller's passport gets the stamp), and the stamp counts
     expect(db().landmarkVisits.find((v) => v.landmarkId === 'lm-mount-fuji').createdById).toBe('mock-user');
     const { map } = (await get(`/api/maps/${HOME_MAP}`)).data;
     expect(map.stampedLandmarkIds).not.toContain('lm-mount-fuji');
-    expect(map.stats.landmarks).toBe(14);
+    expect(map.stats.landmarks).toBe(26);
     const { passport } = (await get(`/api/maps/${HOME_MAP}/passport`)).data;
     expect(passport.pages.flatMap((p) => p.stamps).find((s) => s.landmarkId === 'lm-mount-fuji')).toMatchObject({ ticked: true, photo: null });
   });
@@ -32,7 +35,8 @@ describe('ticking a landmark "been here"', () => {
   it('unticks it, leaving the visit', async () => {
     await put(`/api/maps/${HOME_MAP}/landmarks/lm-mount-fuji/been`);
     expect((await del(`/api/maps/${HOME_MAP}/landmarks/lm-mount-fuji/been`)).data).toEqual({ landmarkId: 'lm-mount-fuji', been: false });
-    expect(db().landmarkVisits).toEqual([]);
+    expect(db().landmarkVisits.some((v) => v.landmarkId === 'lm-mount-fuji')).toBe(false);
+    expect(db().landmarkVisits).toHaveLength(12);
     expect(visit('JP').status).toBe('VISITED');
   });
 

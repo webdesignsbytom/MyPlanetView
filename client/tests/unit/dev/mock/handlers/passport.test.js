@@ -7,10 +7,10 @@ beforeEach(() => freshStore());
 const stamps = (passport) => passport.pages.flatMap((p) => p.stamps);
 
 describe('the passport', () => {
-  it('gives the owner the test user’s 13 stamps in 8 countries', async () => {
+  it('gives the owner the test user’s 25 stamps in 20 countries', async () => {
     const { data } = await get(`/api/maps/${HOME_MAP}/passport`);
-    expect(data.passport.totals).toMatchObject({ countries: 8, landmarks: 13 });
-    expect(stamps(data.passport)).toHaveLength(13);
+    expect(data.passport.totals).toMatchObject({ countries: 20, landmarks: 25 });
+    expect(stamps(data.passport)).toHaveLength(25);
   });
 
   it('gives Sam’s map its one stamp, through the map or its share link, signed in or not', async () => {

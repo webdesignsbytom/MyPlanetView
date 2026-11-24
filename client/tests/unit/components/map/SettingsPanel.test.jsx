@@ -164,6 +164,17 @@ describe('SettingsPanel', () => {
     ]);
   });
 
+  // 24 Nov 2026, the user's wish: "Americans in miles always", and a choice
+  it('chooses how distances are written, automatic to start with', () => {
+    const { onChangeSetting } = open();
+    expect(screen.getByText('Distances')).toBeTruthy();
+    expect(screen.getByLabelText('Miles for a map whose home is in the United States, else kilometres').checked).toBe(true);
+    fireEvent.click(screen.getByLabelText('Always miles'));
+    expect(onChangeSetting).toHaveBeenCalledWith('distanceUnit', 'miles');
+    const { container } = open({ settings: { ...DEFAULT_MAP_SETTINGS, distanceUnit: 'km' } });
+    expect(container.querySelector('#distance-unit-km').checked).toBe(true);
+  });
+
   // The supporter badge (24 Nov 2026, the user's wish): a paying owner's, on unless turned off
   describe('the supporter badge', () => {
     const PAID = { ...MAP, supporter: { plan: 'PREMIUM', name: 'First Class', shown: true } };

@@ -326,4 +326,14 @@ describe('map settings', () => {
 
     expect((await anon().get('/api/users/map-settings')).status).toBe(401);
   });
+
+  // 24 Nov 2026, the user's wish: "Americans in miles always", and a choice
+  it('keeps the distance unit, and refuses one it doesn’t know', async () => {
+    const { agent } = await signUp('Miles');
+    const saved = await agent.put('/api/users/map-settings').send({ mapSettings: { distanceUnit: 'miles' } });
+    expect(saved.status).toBe(200);
+    expect(data(saved).mapSettings).toMatchObject({ distanceUnit: 'miles' });
+    expect((await agent.put('/api/users/map-settings').send({ mapSettings: { distanceUnit: 'furlongs' } })).status).toBe(400);
+    expect(data(await agent.get('/api/users/map-settings')).mapSettings.distanceUnit).toBe('miles');
+  });
 });

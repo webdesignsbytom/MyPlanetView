@@ -40,6 +40,8 @@ const MAP_SETTING_KEYS = {
   mapType: ['regular', 'detailed'],
   // The landmark pins (the server's LANDMARK_PIN_MODES)
   landmarkPins: ['zoomed', 'always', 'stamped', 'off'],
+  // The statistics' distances (the server's DISTANCE_UNITS)
+  distanceUnit: ['auto', 'km', 'miles'],
 };
 // `showMoments`: the marks beside countries with moments; `showGoalTag`: the goal's luggage
 // tag under the map's title; `showTips`: the tips

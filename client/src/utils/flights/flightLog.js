@@ -1,5 +1,6 @@
 // The flight log (23 Nov 2026, the user's wish; docs/API.md "Flights"): what a boarding pass's
 // flights mean for the map, and the log's words. Pure.
+import { MILES_PER_KM } from '@/utils/map/distanceUnits';
 import { placeOfAirport } from './airports';
 
 const EARTH_RADIUS_KM = 6371.0088;
@@ -51,9 +52,11 @@ export function flightDays(flights) {
 export const tripForDay = (trips, day) => (trips || []).find((t) => !t.linked && t.startDate && t.endDate && t.startDate <= day && day <= t.endDate) ?? null;
 
 const thousands = (n) => Math.round(n).toLocaleString('en-GB');
-/** "5,555 km (3,452 miles)" */
-export const distanceWords = (km) => `${thousands(km)} km (${thousands(km * 0.621371)} miles)`;
+/**
+ * "5,555 km (3,452 miles)", or in miles first, "3,452 miles (5,555 km)", for a map shown in miles
+ * (utils/map/distanceUnits.js; 24 Nov 2026).
+ */
+export const distanceWords = (km, unit = 'km') =>
+  unit === 'miles' ? `${thousands(km * MILES_PER_KM)} miles (${thousands(km)} km)` : `${thousands(km)} km (${thousands(km * MILES_PER_KM)} miles)`;
 /** "BA 117", or '' for a flight with no airline and number */
 export const flightCode = (flight) => [flight.carrier, flight.flightNumber].filter(Boolean).join(' ');
-/** Times round the world (40,075 km at the equator), to one decimal place */
-export const aroundTheWorld = (km) => Math.round((km / 40075) * 10) / 10;

@@ -4,6 +4,7 @@ import MapPanel from './MapPanel';
 import MapStylePicker from './MapStylePicker';
 import MapTypePicker from './MapTypePicker';
 import LandmarkPinsPicker from './LandmarkPinsPicker';
+import DistanceUnitPicker from './DistanceUnitPicker';
 import MapSettingsToggles from './MapSettingsToggles';
 import DeleteMapSection from './DeleteMapSection';
 import MainMapSection from './MainMapSection';
@@ -53,6 +54,7 @@ function SettingsPanel({
   designPreview,
   onMapDeleted,
   onUpgradePay,
+  onShowTips = null,
   onClose,
 }) {
   // Someone else's choice of style is what this map shows (their own applies to their maps)
@@ -144,7 +146,8 @@ function SettingsPanel({
         ) : null}
         <MapTypePicker value={settings.mapType} onChange={(type) => onChangeSetting('mapType', type)} />
         <LandmarkPinsPicker value={settings.landmarkPins} onChange={(mode) => onChangeSetting('landmarkPins', mode)} />
-        <MapSettingsToggles settings={settings} onChange={onChangeSetting} />
+        <DistanceUnitPicker value={settings.distanceUnit || 'auto'} onChange={(unit) => onChangeSetting('distanceUnit', unit)} />
+        <MapSettingsToggles settings={settings} onChange={onChangeSetting} onShowTips={onShowTips} />
       </div>
       {showTabs ? (
         <div {...panelProps('map')} hidden={tab !== 'map'} className='grid gap-5'>

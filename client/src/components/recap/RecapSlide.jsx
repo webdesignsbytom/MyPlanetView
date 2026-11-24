@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useId } from 'react';
 // Components
 import PosterImage from '@/components/map/PosterImage';
 import ShareCardPreview from '@/components/shareCard/ShareCardPreview';
+import RadioInput from '@/components/ui/RadioInput';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { postersFor } from '@/utils/map/posterData';
@@ -16,7 +17,10 @@ const MAX_POSTERS = 8;
 // recapSlides): the cover, the places (their posters), the photos (a highlight from each
 // country), the passport's stamps, the trips and moments, and the share card. The heading is
 // the slide's name for screen readers and takes focus when the slide shows (`headingRef`).
-function RecapSlide({ kind, recap, map, card, headingRef }) {
+// On the share card's slide, `closeUp` (true or false; null when a close-up would show nothing
+// more than the world) is the map's choice, "Whole world" or "Close up" (`onCloseUp(on)`).
+function RecapSlide({ kind, recap, map, card, closeUp = null, onCloseUp, headingRef }) {
+  const mapChoiceId = useId();
   const heading = (text) => (
     <h3 ref={headingRef} tabIndex={-1} className='font-travel text-3xl uppercase leading-tight tracking-wide text-poster-red-deep outline-none sm:text-4xl'>
       {text}
@@ -144,6 +148,29 @@ function RecapSlide({ kind, recap, map, card, headingRef }) {
     <div className='grid gap-3'>
       {heading(`Share your ${recap.year}`)}
       <p className='text-sm'>A picture of your year for Instagram, WhatsApp or anywhere you like: the places and counts, never your photos.</p>
+      {closeUp !== null ? (
+        <fieldset className='grid gap-2' data-recap-map-choice>
+          <legend className='text-sm font-semibold'>The map on the picture</legend>
+          <div className='grid grid-cols-[repeat(auto-fit,minmax(9rem,max-content))] gap-x-6 gap-y-2'>
+            <RadioInput
+              id={`${mapChoiceId}-world`}
+              name={`${mapChoiceId}-map`}
+              value='world'
+              checked={!closeUp}
+              onChange={() => onCloseUp(false)}
+              label={<span className='text-sm'>Whole world</span>}
+            />
+            <RadioInput
+              id={`${mapChoiceId}-close`}
+              name={`${mapChoiceId}-map`}
+              value='close'
+              checked={closeUp}
+              onChange={() => onCloseUp(true)}
+              label={<span className='text-sm'>Close up</span>}
+            />
+          </div>
+        </fieldset>
+      ) : null}
       <ShareCardPreview card={card} />
     </div>
   );

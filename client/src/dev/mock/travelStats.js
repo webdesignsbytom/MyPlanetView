@@ -4,6 +4,7 @@
 import { COUNTRIES } from '@/utils/map/countries';
 import { positionFromMap } from '@/utils/map/projection';
 import { placeOnMap } from '@/utils/map/ukNations';
+import { PARENT_PLACE } from '@/utils/map/specialPlaces';
 
 // Each place's pin as a real position, and how many countries the world has (as the server's
 // controllers/helpers/countries.js)
@@ -178,6 +179,33 @@ export function tripDistanceKm(trip, positions, home = null) {
   return km;
 }
 
+// The country a place is a journey to: a region its country's, the South Pole Antarctica's, a
+// UK nation the UK's
+const journeyOf = (code) => placeOnMap(PARENT_PLACE[code] ?? code, false);
+
+/**
+ * The places no completed trip reached, as journeys from home and back, in km (24 Nov 2026): one
+ * journey per country, to the furthest of its places visited, never to home's own country.
+ */
+export function untrippedKm({ completedTrips = [], visitedCodes = [], positions = new Map(), homeCountryCode = null }) {
+  const home = homeCountryCode ? positions.get(homeCountryCode) : null;
+  if (!home) return 0;
+  const homeJourney = journeyOf(homeCountryCode);
+  const reached = new Set(completedTrips.flatMap((trip) => [...(trip.countryCodes ?? []), ...(trip.stops ?? []).map((s) => s.countryCode)].map(journeyOf)));
+  const furthest = new Map();
+  for (const code of new Set(visitedCodes)) {
+    const journey = journeyOf(code);
+    if (journey === homeJourney || reached.has(journey)) continue;
+    const point = positions.get(code);
+    if (!point) continue;
+    const km = distanceKm(home, point);
+    if (km > (furthest.get(journey) ?? 0)) furthest.set(journey, km);
+  }
+  let total = 0;
+  for (const km of furthest.values()) total += 2 * km;
+  return total;
+}
+
 /**
  * The map's home: its own setting (`homeCountryCode`), else the birth country of the owner's
  * own traveller, else of the first traveller with one. -> a code, or null
@@ -218,7 +246,10 @@ export function furthestFromHome(codes, positions, homeCode) {
  */
 export function travelExtras({ completedTrips = [], visitedCodes = [], positions = new Map(), homeCountryCode = null }) {
   const home = homeCountryCode ? (positions.get(homeCountryCode) ?? null) : null;
-  const km = completedTrips.reduce((sum, trip) => sum + tripDistanceKm(trip, positions, home), 0);
+  // Each completed trip's route, and home and back to every other country visited (24 Nov 2026)
+  const km =
+    completedTrips.reduce((sum, trip) => sum + tripDistanceKm(trip, positions, home), 0) +
+    untrippedKm({ completedTrips, visitedCodes, positions, homeCountryCode });
   return {
     homeCountryCode,
     daysAway: daysAway(completedTrips),

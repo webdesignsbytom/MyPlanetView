@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // Icons
 import { IoContract, IoExpand, IoHome, IoMap, IoMenu, IoSettings, IoShareSocial } from 'react-icons/io5';
 import { IoIosImages, IoIosStats } from 'react-icons/io';
-import { FaBinoculars, FaCompass, FaHistory, FaLightbulb, FaListOl, FaPlay, FaRoute, FaSuitcase, FaThumbtack } from 'react-icons/fa';
+import { FaBinoculars, FaCompass, FaHistory, FaListOl, FaRoute, FaSuitcase } from 'react-icons/fa';
 // Constants
 import { HOME_PAGE_URL } from '@/utils/constants/routes';
 // Hooks
@@ -218,8 +218,10 @@ function PhoneToolMenu({ items, home, extras = [] }) {
 // (to fetch its panel's code). The map has had no stats tag under its title since 16 Nov
 // 2026 (the user's wish: this stamp is the way in), so `stats` (the map's) gives the stamp
 // the counts as its description, read out after its label, and written under it in the
-// phone's menu. "Play my world" opens the slideshow over the page rather than a panel.
-function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false, canString = false, stats = null, showHome = true }) {
+// phone's menu. "Play my world" and "Tips" went on 24 Nov 2026 (the user's wish: a shorter
+// bar): the photo album plays the slideshow, Settings shows the tips; "Strings" the same day,
+// its panel opened from the country list.
+function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false, stats = null, showHome = true }) {
   const navigate = useNavigate();
 
   const tools = [
@@ -237,21 +239,20 @@ function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false
     { id: 'trips', label: 'Trips', icon: <FaRoute aria-hidden='true' /> },
     // The want-to-go countries by the best time for each (22 Nov 2026)
     { id: 'next', label: 'Where to go next', icon: <FaCompass aria-hidden='true' /> },
-    // Red string between places, like a corkboard map (23 Nov 2026): for those who tie them
-    ...(canString ? [{ id: 'strings', label: 'Strings', icon: <FaThumbtack aria-hidden='true' /> }] : []),
+    // Strings between places (23 Nov 2026) open from the country list since 24 Nov 2026 (the
+    // user's wish: a shorter bar)
     { id: 'timeline', label: 'Timeline', icon: <FaHistory aria-hidden='true' /> },
     { id: 'badges', label: 'Badges and goals', icon: <FaSuitcase aria-hidden='true' /> },
     // Wildlife seen, nature's wonders, journeys and feats (24 Nov 2026, the user's wish and name)
     { id: 'oneShots', label: 'Life’s One Shots', icon: <FaBinoculars aria-hidden='true' /> },
-    { id: 'play', label: 'Play my world', icon: <FaPlay aria-hidden='true' /> },
     // The map's photos, for everyone who can see the map (16 Nov 2026: it was "Add photos",
-    // editors only); an editor adds photos from the panel's own button
+    // editors only); an editor adds photos from the panel's own button, and anyone plays them
+    // from it ("Play my world", its own stamp until 24 Nov 2026, the user's wish: a shorter bar)
     { id: 'photos', label: 'Photo album', icon: <IoIosImages aria-hidden='true' /> },
     ...(canShare ? [{ id: 'share', label: 'Share this map', icon: <IoShareSocial aria-hidden='true' /> }] : []),
+    // Settings, Help, also shows the tips again (their own stamp until 24 Nov 2026, the user's
+    // wish: a shorter bar)
     { id: 'settings', label: 'Map settings', icon: <IoSettings aria-hidden='true' /> },
-    // The tips the map opens with, any time (23 Nov 2026, the user's wish): a dialog over the
-    // map, like the share dialog, so it closes whatever panel is open
-    { id: 'tips', label: 'Tips', icon: <FaLightbulb aria-hidden='true' /> },
   ];
   const goHome = () => navigate(HOME_PAGE_URL);
   const menuItems = tools.map((tool) => ({

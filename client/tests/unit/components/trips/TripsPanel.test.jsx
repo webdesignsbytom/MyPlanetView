@@ -49,6 +49,15 @@ describe('TripsPanel', () => {
     expect(container.querySelector('a[href="/trips/t1"]')).toBeTruthy();
   });
 
+  // 24 Nov 2026, the user's wish: half the panel's gap between the two buttons
+  it('keeps “Plan a new trip” and “Scan a boarding pass” together, closer than the rest', () => {
+    const { container } = show({ onFlights: vi.fn() });
+    const actions = container.querySelector('[data-trip-actions]');
+    expect(actions.className).toBe('grid gap-2');
+    expect([...actions.children].map((b) => b.textContent)).toEqual(['Plan a new trip', 'Scan a boarding pass']);
+    expect(actions.parentElement.className).toContain('gap-4');
+  });
+
   it('shows no plan button to a viewer, and no links on a share link', () => {
     const { container } = show({ canEdit: false, noLinks: true });
     expect(screen.queryByText('Plan a new trip')).toBeNull();

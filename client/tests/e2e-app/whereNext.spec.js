@@ -23,3 +23,23 @@ test('lists the want-to-go countries good now, then the rest at their next best 
   await october.getByRole('button', { name: 'Japan' }).click();
   await expect(page.getByRole('dialog', { name: 'Japan' })).toBeVisible();
 });
+
+// 24 Nov 2026, the user's wish: the passport from here and from the country list
+test('opens the passport from Where to go next and from the country list', async ({ page }) => {
+  await openMap(page);
+  const next = await openTool(page, 'Where to go next', 'Where to go next');
+  await next.getByRole('link', { name: 'Open passport' }).click();
+  await expect(page).toHaveURL(/\/maps\/map-home\/passport$/);
+  await expect(page.getByRole('region', { name: 'Passport book' })).toBeVisible();
+
+  await openMap(page);
+  const list = await openTool(page, 'Country list', 'Countries');
+  // Beside "Tick several countries", the same height
+  const passport = list.getByRole('link', { name: 'Open passport' });
+  const tick = list.getByRole('button', { name: 'Tick several countries' });
+  const [a, b] = [await passport.boundingBox(), await tick.boundingBox()];
+  expect(Math.abs(a.y - b.y)).toBeLessThan(1);
+  expect(Math.abs(a.height - b.height)).toBeLessThan(1);
+  await passport.click();
+  await expect(page).toHaveURL(/\/maps\/map-home\/passport$/);
+});

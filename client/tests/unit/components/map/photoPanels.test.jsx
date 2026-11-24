@@ -83,6 +83,19 @@ describe('MapPhotosPanel', () => {
     expect(onAddPhotos).toHaveBeenCalled();
   });
 
+  // 24 Nov 2026, the user's wish: "Play my world" moved here from the toolbar
+  it('plays the whole map’s slideshow, once there are photos to play', () => {
+    usePhotoPage.mockReturnValue(page());
+    const onPlay = vi.fn();
+    const { unmount } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onPlay={onPlay} onClose={() => {}} />);
+    fireEvent.click(screen.getByText('Play my world'));
+    expect(onPlay).toHaveBeenCalled();
+    unmount();
+    usePhotoPage.mockReturnValue(page({ photos: [], nextCursor: null }));
+    render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onPlay={onPlay} onClose={() => {}} />);
+    expect(screen.queryByText('Play my world')).toBeNull();
+  });
+
   it('fetches the list again when photos change elsewhere', () => {
     const photos = page();
     usePhotoPage.mockReturnValue(photos);

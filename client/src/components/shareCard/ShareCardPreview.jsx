@@ -4,6 +4,7 @@ import Button from '@/components/common/Button';
 // Utils
 import { drawShareCard } from '@/utils/shareCard/drawShareCard';
 import { canShareImages, downloadImage, shareImage } from '@/utils/shareCard/shareImage';
+import { cardMapKind } from '@/utils/shareCard/cardMapView';
 
 // A share card, made and shown (utils/shareCard/): drawn in the browser when it's shown,
 // then handed to the share sheet (Instagram, WhatsApp…) where the browser can, or saved.
@@ -59,6 +60,8 @@ function ShareCardPreview({ card }) {
           alt={`Your share card: ${card.title}, ${(card.stats || []).map((stat) => `${stat.value} ${stat.label}`).join(', ')}`}
           className='mx-auto w-full max-w-sm border-2 border-poster-brown shadow-paper'
           data-share-card
+          // The map it shows: world, crop or country (a card's close-up, utils/shareCard/cardMapView.js)
+          data-map-view={cardMapKind(card)}
         />
       ) : picture.error ? (
         <p role='alert' className='text-sm font-medium text-status-critical'>

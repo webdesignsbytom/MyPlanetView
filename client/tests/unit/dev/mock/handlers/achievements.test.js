@@ -5,7 +5,7 @@ import { HOME_MAP, SAM_MAP, TOM_MAP, db, del, freshStore, get, patch, post, regi
 beforeAll(() => registerAllRoutes());
 beforeEach(() => freshStore());
 
-const saved = () => JSON.parse(localStorage.getItem('mpvMockStore.v6'));
+const saved = () => JSON.parse(localStorage.getItem('mpvMockStore.v7'));
 
 describe('badges', () => {
   it('lists a map’s badges for anyone on it, 404 for no role', async () => {

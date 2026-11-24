@@ -36,10 +36,11 @@ describe('countryMapOf', () => {
 });
 
 describe('states', () => {
-  it('lists the seed’s New York and Massachusetts on the US map', () => {
+  it('lists the seed’s New York, Massachusetts and California on the US map', () => {
     expect(subdivisionStatuses(HOME_MAP, 'US')).toEqual([
       { code: 'US-NY', status: 'VISITED' },
       { code: 'US-MA', status: 'VISITED' },
+      { code: 'US-CA', status: 'VISITED' },
     ]);
     expect(subdivisionStatuses(HOME_MAP, 'FR')).toEqual([]);
   });
@@ -85,7 +86,7 @@ describe('states', () => {
 
   it('clears a state', () => {
     expect(clearSubdivision(home(), 'US-NY')).toEqual({ message: 'State cleared.' });
-    expect(subdivisionStatuses(HOME_MAP, 'US').map((s) => s.code)).toEqual(['US-MA']);
+    expect(subdivisionStatuses(HOME_MAP, 'US').map((s) => s.code)).toEqual(['US-MA', 'US-CA']);
   });
 });
 

@@ -85,6 +85,18 @@ describe('PassportPhotoPage', () => {
     expect(within(alex).getAllByText('Not given').length).toBe(2);
   });
 
+  // 24 Nov 2026, the user's wish: the 3:4 box stopped a line short of the details
+  it('stretches each photo box to the full height of the details beside it', () => {
+    const { container } = render(<PassportPhotoPage travellers={travellers} pageNumber={2} headingId='travellers' />);
+    for (const card of container.querySelectorAll('li')) {
+      // Stretched in its row (no items-start), with no fixed shape, never shorter than 3:4
+      expect(card.className).not.toContain('items-start');
+      const photo = card.querySelector('[data-passport-photo]');
+      expect(photo.className).not.toContain('aspect-');
+      expect(photo.className).toContain('min-h-[6.75rem]');
+    }
+  });
+
   it('prints the machine-readable line from the names, 44 characters long', () => {
     const { container } = render(<PassportPhotoPage travellers={travellers} pageNumber={2} headingId='travellers' />);
     const line = container.querySelector('p.font-mono');

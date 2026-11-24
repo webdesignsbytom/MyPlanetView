@@ -44,7 +44,7 @@ test('a friend plays by the link: guesses on the map or the list, sees each answ
   await page.locator('[data-guess-map]').scrollIntoViewIfNeeded();
   await pressCountry(page, 'ES');
   await page.getByRole('button', { name: 'Guess Spain' }).click();
-  await expect(page.locator('[data-guess-result="wrong"]')).toContainText(/It was Colosseum, Italy: about [\d,]+ km from your guess\./);
+  await expect(page.locator('[data-guess-result="wrong"]')).toContainText(/It was Colosseum, Italy: about [\d,]+ km \([\d,]+ miles\) from your guess\./);
   await page.getByRole('button', { name: 'Next photo' }).click();
 
   for (const [round, country] of [

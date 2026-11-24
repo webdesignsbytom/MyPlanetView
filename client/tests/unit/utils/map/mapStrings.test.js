@@ -1,7 +1,7 @@
 // Strings between places (src/utils/map/mapStrings.js): where each is drawn
 import { describe, expect, it } from 'vitest';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
-import { drawnStrings, pinOf, stringEnds, stringLabel, stringPath, stringPins } from '@/utils/map/mapStrings';
+import { drawnStrings, hasString, pinOf, previousVisitedPlace, stringEnds, stringLabel, stringPath, stringPins } from '@/utils/map/mapStrings';
 
 describe('pinOf', () => {
   it('is a place’s pin on the world map', () => {
@@ -80,5 +80,53 @@ describe('words and ends', () => {
     expect(stringEnds('JP', 'FR')).toEqual(['FR', 'JP']);
     expect(stringEnds('FR', 'FR')).toBeNull();
     expect(stringEnds('FR', '')).toBeNull();
+  });
+});
+
+// 24 Nov 2026, the user's wish: a newly visited place is tied to the one visited just before it
+describe('previousVisitedPlace', () => {
+  const visit = (countryCode, firstVisitedOn = null, markedAt = null, status = 'VISITED') => ({ countryCode, status, firstVisitedOn, markedAt });
+  const VISITS = [
+    visit('GB', '1990-05-01', null, 'LIVED'),
+    visit('FR', '2019-04-12'),
+    visit('IT', '2025-07-02'),
+    visit('JP', null, null, 'WANT_TO_GO'),
+  ];
+
+  it('is the place visited just before it, in order of visit', () => {
+    expect(previousVisitedPlace([...VISITS, visit('DE', '2026-11-24', '2026-11-24T19:00:00Z')], 'DE')).toBe('IT');
+    expect(previousVisitedPlace(VISITS, 'FR')).toBe('GB');
+    // A place dated before others still goes in its place
+    expect(previousVisitedPlace([...VISITS, visit('ES', '2018-08-03', '2026-11-24T19:00:00Z')], 'ES')).toBe('GB');
+  });
+
+  it('puts places marked the same day in the order marked, undated ones by when they were marked', () => {
+    const today = [visit('DO', null, '2026-11-24T19:40:00Z'), visit('DZ', null, '2026-11-24T19:45:00Z'), visit('CN', '2026-11-24', '2026-11-24T19:55:00Z')];
+    expect(previousVisitedPlace([...VISITS, ...today], 'CN')).toBe('DZ');
+    expect(previousVisitedPlace([...VISITS, ...today], 'DO')).toBe('IT');
+  });
+
+  it('counts a place already on the map with no time known as before one marked now', () => {
+    expect(previousVisitedPlace([visit('GB', null, null, 'LIVED'), visit('DE', '2026-11-24', '2026-11-24T19:00:00Z')], 'DE')).toBe('GB');
+  });
+
+  it('is nothing for the first place, a wish, a place not on the map, or the place it’s part of', () => {
+    expect(previousVisitedPlace(VISITS, 'GB')).toBeNull();
+    expect(previousVisitedPlace(VISITS, 'JP')).toBeNull();
+    expect(previousVisitedPlace(VISITS, 'BR')).toBeNull();
+    // Hawaii brought the US with it: never Hawaii's previous
+    const hawaii = [...VISITS, visit('US', null, '2026-11-24T19:00:00Z'), visit('XH', '2026-11-24', '2026-11-24T19:00:01Z')];
+    expect(previousVisitedPlace(hawaii, 'XH')).toBe('IT');
+  });
+});
+
+describe('hasString', () => {
+  it('finds a string between two places, either way round', () => {
+    const strings = [{ id: 's1', from: 'FR', to: 'IT' }];
+    expect(hasString(strings, 'IT', 'FR')).toBe(true);
+    expect(hasString(strings, 'FR', 'IT')).toBe(true);
+    expect(hasString(strings, 'FR', 'DE')).toBe(false);
+    expect(hasString(null, 'FR', 'IT')).toBe(false);
+    expect(hasString(strings, 'FR', 'FR')).toBe(false);
   });
 });

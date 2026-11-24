@@ -12,7 +12,7 @@ const samsPin = () => {
 
 describe('states on a country map', () => {
   it('lists a country’s states for anyone on the map', async () => {
-    expect((await get(`/api/maps/${HOME_MAP}/subdivisions`, { country: 'US' })).data.subdivisions.map((s) => s.code)).toEqual(['US-NY', 'US-MA']);
+    expect((await get(`/api/maps/${HOME_MAP}/subdivisions`, { country: 'US' })).data.subdivisions.map((s) => s.code)).toEqual(['US-NY', 'US-MA', 'US-CA']);
     expect((await get(`/api/maps/${SAM_MAP}/subdivisions`, { country: 'TH' })).data.subdivisions).toEqual([]);
     expect((await get(`/api/maps/${HOME_MAP}/subdivisions`, { country: 'AQ' })).message).toBe(MESSAGES.countryMapNotFound);
     expect((await get(`/api/maps/${TOM_MAP}/subdivisions`, { country: 'GB' })).status).toBe(404);

@@ -67,6 +67,23 @@ describe('travel stats', () => {
     expect(data(await owner.agent.get(`/api/maps/${map.id}/stats`)).stats).toMatchObject({ daysAway: 20, distanceKm: stats.distanceKm });
   });
 
+  // 24 Nov 2026, the user's report: a map of 12 countries said 3,500 km, its one completed trip
+  it('adds home and back to a country visited with no completed trip there, and nothing twice', async () => {
+    const before = (await statsOf()).distanceKm;
+    expect((await owner.agent.put(`/api/maps/${map.id}/visits/JP`).send({ status: 'VISITED' })).status).toBe(200);
+    // London to Tokyo is about 9,600 km each way
+    const after = (await statsOf()).distanceKm;
+    expect(after - before).toBeGreaterThan(18_500);
+    expect(after - before).toBeLessThan(20_000);
+    // France had a completed trip already, and a wish is no journey
+    expect((await owner.agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'LIVED' })).status).toBe(200);
+    expect((await owner.agent.put(`/api/maps/${map.id}/visits/BR`).send({ status: 'WANT_TO_GO' })).status).toBe(200);
+    expect((await statsOf()).distanceKm).toBe(after);
+    await owner.agent.delete(`/api/maps/${map.id}/visits/JP`);
+    await owner.agent.delete(`/api/maps/${map.id}/visits/BR`);
+    await owner.agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'VISITED' });
+  });
+
   // Time away in more detail (23 Nov 2026, the user's wish)
   it('splits the days by year and by place, names the longest trip, and counts each traveller’s', async () => {
     const [me] = data(await owner.agent.get(`/api/maps/${map.id}`)).map.travellers;

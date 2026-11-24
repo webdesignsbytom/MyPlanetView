@@ -26,8 +26,7 @@ import { loadMapFacts, stampsFrom } from './achievements.js';
 import { landmarkPlace, placeOnMap } from '../../utils/ukNations.js';
 import { loadMapPlan } from './plans.js';
 import { planOf } from '../../utils/constants/plans.js';
-
-const time = (date) => (date ? new Date(date).getTime() : Infinity);
+import { earliestOf, passportPageOrder } from '../../utils/passportOrder.js';
 
 /**
  * One traveller's facts, in the shape the passport reads from loadMapFacts: `visited` is the
@@ -96,15 +95,13 @@ export async function buildPassport(mapId, role, { travellerId = null } = {}) {
   // traveller's: every place they've been)
   const visitByCode = new Map(visits.map((v) => [v.countryCode, v]));
   const codes = new Set([...facts.visited, ...facts.stamps.map((s) => s.countryCode)]);
+  // The first visit: the earlier of its first photo and the first visit as set (the UK lived in
+  // since 1990 enters then, not with its first photo)
   const enteredOn = holder
     ? (code) => facts.firstAt.get(code) ?? null
-    : (code) => facts.firstPhotoAt.get(code) ?? visitByCode.get(code)?.firstVisitedOn ?? null;
-  const ordered = [...codes].sort(
-    (a, b) =>
-      time(enteredOn(a)) - time(enteredOn(b)) ||
-      time(visitByCode.get(a)?.createdAt) - time(visitByCode.get(b)?.createdAt) ||
-      a.localeCompare(b)
-  );
+    : (code) => earliestOf(facts.firstPhotoAt.get(code), visitByCode.get(code)?.firstVisitedOn);
+  // In the order visited, an undated place on the day it was marked (24 Nov 2026, the user's wish)
+  const ordered = passportPageOrder(codes, { enteredOn, markedAt: (code) => visitByCode.get(code)?.createdAt ?? null });
 
   // Each stamp's photo: the chosen one (unless it's hidden from this caller), else the
   // earliest confirmed one the caller can see

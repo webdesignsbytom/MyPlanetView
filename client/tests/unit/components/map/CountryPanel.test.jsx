@@ -7,6 +7,7 @@ import useMomentPage from '@/hooks/useMomentPage';
 import { getSubdivisions } from '@/api/travelApi';
 import { SplitUkProvider } from '@/hooks/useSplitUk';
 import { formatDay } from '@/utils/functions/dates';
+import { todayDay } from '@/utils/map/celebrations';
 import { stubMatchMedia, withProviders } from './helpers';
 
 vi.mock('@/api/travelApi', () => ({ getSubdivisions: vi.fn() }));
@@ -93,9 +94,20 @@ describe('CountryPanel', () => {
     const select = stub().querySelector('select');
     expect(select).not.toBeNull();
     fireEvent.change(select, { target: { value: 'LIVED' } });
-    await waitFor(() => expect(onSetVisit).toHaveBeenCalledWith('FR', 'LIVED', { firstVisitedOn: undefined }));
+    // Newly lived in: dated today (24 Nov 2026, the user's wish)
+    await waitFor(() => expect(onSetVisit).toHaveBeenCalledWith('FR', 'LIVED', { firstVisitedOn: todayDay() }));
     fireEvent.change(select, { target: { value: '' } });
     await waitFor(() => expect(onSetVisit).toHaveBeenLastCalledWith('FR', null, undefined));
+  });
+
+  it('keeps the date a country has when it’s marked again, and dates no wish', async () => {
+    const dated = open({ canEdit: true, visit: { status: 'WANT_TO_GO', firstVisitedOn: '2010-04-01' } });
+    fireEvent.change(dated.stub().querySelector('select'), { target: { value: 'VISITED' } });
+    await waitFor(() => expect(dated.onSetVisit).toHaveBeenCalledWith('FR', 'VISITED', { firstVisitedOn: '2010-04-01' }));
+    dated.unmount();
+    const wish = open({ canEdit: true });
+    fireEvent.change(wish.stub().querySelector('select'), { target: { value: 'WANT_TO_GO' } });
+    await waitFor(() => expect(wish.onSetVisit).toHaveBeenCalledWith('FR', 'WANT_TO_GO', { firstVisitedOn: undefined }));
   });
 
   it('makes the dropdown and the date a step slimmer in the stub only', () => {
@@ -129,7 +141,8 @@ describe('CountryPanel', () => {
     const onVisitMarked = vi.fn();
     const { ticket, onSetVisit } = open({ canEdit: true, visit: { status: 'WANT_TO_GO', firstVisitedOn: null }, onVisitMarked });
     fireEvent.change(ticket.querySelector('aside select'), { target: { value: 'VISITED' } });
-    await waitFor(() => expect(onVisitMarked).toHaveBeenCalledWith('FR', 'WANT_TO_GO', 'VISITED', null));
+    // Dated the day it's marked (24 Nov 2026, the user's wish), so the stamp is dated too
+    await waitFor(() => expect(onVisitMarked).toHaveBeenCalledWith('FR', 'WANT_TO_GO', 'VISITED', todayDay()));
     expect(onSetVisit).toHaveBeenCalledTimes(1);
   });
 

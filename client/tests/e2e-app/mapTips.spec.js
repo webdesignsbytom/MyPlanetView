@@ -1,8 +1,8 @@
-import { test, expect, MOCK_STORE_KEY, openMap, openTool } from './fixtures.js';
+import { test, expect, MOCK_STORE_KEY, openMap, openTool, openTipsFromSettings } from './fixtures.js';
 
 // The tips the map opens with (MapTipsDialog, 17 Nov 2026): once a visit while the viewer's
 // `showTips` setting is on; the dialog's box turns it off, Settings back on. One tip at a
-// time with Previous and Next, and a "Tips" tool that opens them any time (23 Nov 2026). The
+// time with Previous and Next, and Settings' "Show the tips" opens them any time (23 Nov 2026; a "Tips" stamp until 24 Nov). The
 // other tests start as if the tips had shown (fixtures.js `mapTips`).
 test.use({ mapTips: true });
 
@@ -73,8 +73,8 @@ test.describe('Map tips', () => {
     await openMap(page);
     await expect(tipsDialog(page)).toHaveCount(0);
 
-    // The Tips tool still opens them, from the first
-    const again = await openTool(page, 'Tips', 'Tips');
+    // Settings still opens them, from the first ("Show the tips"; their own stamp until 24 Nov 2026)
+    const again = await openTipsFromSettings(page);
     await expect(again).toContainText('Tip 1 of');
     await page.keyboard.press('ArrowRight');
     await expect(again).toContainText('Tip 2 of');

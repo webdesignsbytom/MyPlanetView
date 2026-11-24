@@ -3,6 +3,7 @@
 // (server/src/utils/mapSettings.js).
 import { MAP_STYLE_IDS } from './mapStyles.js';
 import { MAP_TYPE_IDS } from './mapTypes.js';
+import { DISTANCE_UNIT_IDS } from './distanceUnits.js';
 
 export const MAP_SETTINGS_STORAGE_KEY = 'myPlanetViewMapSettings';
 
@@ -23,6 +24,10 @@ export const DEFAULT_MAP_SETTINGS = {
   mapType: 'regular',
   // Only the passport's landmarks, at every zoom (18 Nov 2026, the user's wish; it was 'zoomed')
   landmarkPins: 'stamped',
+  // The statistics' distances (utils/map/distanceUnits.js; 24 Nov 2026, the user's wish:
+  // "Americans in miles always"): miles for a map whose home is in the United States, else
+  // kilometres, unless one is chosen
+  distanceUnit: 'auto',
   showGrid: true,
   showGridLabels: false,
   animatedSea: true,
@@ -96,6 +101,7 @@ export function cleanMapSettings(value) {
   if (input.blackAndWhite === true && clean.style === 'animated') clean.style = 'mono';
   if (MAP_TYPE_IDS.includes(input.mapType)) clean.mapType = input.mapType;
   if (LANDMARK_PIN_MODE_IDS.includes(input.landmarkPins)) clean.landmarkPins = input.landmarkPins;
+  if (DISTANCE_UNIT_IDS.includes(input.distanceUnit)) clean.distanceUnit = input.distanceUnit;
   for (const { key } of MAP_SETTING_TOGGLES) {
     if (typeof input[key] === 'boolean') clean[key] = input[key];
   }

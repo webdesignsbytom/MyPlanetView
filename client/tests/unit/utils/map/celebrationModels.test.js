@@ -2,7 +2,7 @@
 // The celebration screen's models (src/utils/map/celebrationModels.js): a landmark's by its
 // Wikidata item, a country's from the maps that draw them.
 import { describe, expect, it } from 'vitest';
-import { modelForLandmark, modelsForPlace } from '@/utils/map/celebrationModels';
+import { modelById, modelForLandmark, modelsForPlace } from '@/utils/map/celebrationModels';
 import { LANDMARK_MODELS } from '@/utils/map/landmarkModels';
 import { LANDMARKS } from '@/dev/mock/data/landmarks';
 
@@ -22,6 +22,19 @@ describe('modelForLandmark', () => {
     const items = new Set(LANDMARKS.map((landmark) => landmark.wikidataId));
     const missing = LANDMARK_MODELS.filter((model) => !items.has(model.landmark)).map((model) => model.id);
     expect(missing).toEqual([]);
+  });
+});
+
+describe('modelById', () => {
+  it('finds the model a landmark was ticked on, one of several of the same landmark', () => {
+    const arc = modelById('arc-de-triomphe');
+    expect(arc.name).toBe('Arc de Triomphe');
+    expect(LANDMARK_MODELS.filter((model) => model.landmark === arc.landmark).length).toBeGreaterThan(1);
+  });
+
+  it('finds none for no id or an unknown one', () => {
+    expect(modelById(null)).toBeNull();
+    expect(modelById('no-such-model')).toBeNull();
   });
 });
 

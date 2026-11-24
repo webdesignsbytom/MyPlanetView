@@ -478,17 +478,20 @@ export function registerMapRoutes() {
     if (body.notes !== undefined && body.notes !== null && typeof body.notes !== 'string') return fail(400, NOTES_NOT_TEXT);
     let visit = db.visits.find((v) => v.mapId === map.id && v.countryCode === code);
     if (!visit) {
-      visit = { mapId: map.id, countryCode: code, status: body.status, source: 'MANUAL', firstVisitedOn: null, notes: null };
+      visit = { mapId: map.id, countryCode: code, status: body.status, source: 'MANUAL', firstVisitedOn: null, notes: null, createdAt: new Date().toISOString() };
       db.visits.push(visit);
     }
     // As the server: a changed status is the person's own (MANUAL); a note or date alone
     // keeps where the visit came from
+    // A wish become a visit was marked visited now, as the server's (24 Nov 2026)
+    const counted = (status) => status === 'VISITED' || status === 'LIVED';
+    if (!counted(visit.status) && counted(body.status)) visit.createdAt = new Date().toISOString();
     if (visit.status !== body.status) Object.assign(visit, { status: body.status, source: 'MANUAL' });
     if (body.firstVisitedOn !== undefined) visit.firstVisitedOn = body.firstVisitedOn || null;
     if (body.notes !== undefined) visit.notes = sanitizeText(body.notes, NOTES_MAX);
     // The South Pole visited or lived brings Antarctica with it (as the server: `implied`)
     const implied = markParentsVisited(map.id, code, body.status);
-    const view = ({ countryCode, status, source, firstVisitedOn, notes }) => ({ countryCode, status, source, firstVisitedOn, notes });
+    const view = ({ countryCode, status, source, firstVisitedOn, notes, createdAt }) => ({ countryCode, status, source, firstVisitedOn, notes, markedAt: createdAt ?? null });
     return ok({ visit: view(visit), implied: implied.map(view) });
   });
 

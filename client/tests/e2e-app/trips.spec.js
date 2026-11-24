@@ -179,7 +179,7 @@ test.describe('Trips', () => {
       '10 of 1,273',
       '2',
       // The longest trip, "Italian summer" (23 Nov 2026)
-      '15', 'On completed trips', '15 days', 'Italian summer', '3,500 km', 'About 2,200 miles', 'United States', 'About 7,000 km from the United Kingdom',
+      '15', 'On completed trips', '15 days', 'Italian summer', '27,300 km', 'About 17,000 miles', 'United States', 'About 7,000 km from the United Kingdom',
     ]);
 
     // The old address now says so

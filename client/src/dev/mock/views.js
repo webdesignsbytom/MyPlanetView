@@ -433,7 +433,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
       }),
     visits: db.visits
       .filter((v) => v.mapId === map.id)
-      .map(({ countryCode, status, source, firstVisitedOn, notes }) => ({ countryCode, status, source, firstVisitedOn, notes })),
+      // When each was marked, as the server's (the seed's have none)
+      .map(({ countryCode, status, source, firstVisitedOn, notes, createdAt }) => ({ countryCode, status, source, firstVisitedOn, notes, markedAt: createdAt ?? null })),
     stats: mapStats(map, role),
     // Everyone's: the moments per country, hidden ones for the owner and editors only
     momentCountsByCountry: momentCountsByCountry(map.id, { includeHidden: atLeast(role, 'EDITOR') }),
@@ -653,11 +654,12 @@ export function markVisited(mapId, countryCode, source) {
   for (const code of withParentPlaces([place])) {
     const visit = db.visits.find((v) => v.mapId === mapId && v.countryCode === code);
     if (!visit) {
-      const added = { mapId, countryCode: code, status: 'VISITED', source, firstVisitedOn: null, notes: null };
+      const added = { mapId, countryCode: code, status: 'VISITED', source, firstVisitedOn: null, notes: null, createdAt: new Date().toISOString() };
       db.visits.push(added);
       changed.push(added);
     } else if (visit.status === 'WANT_TO_GO') {
-      Object.assign(visit, { status: 'VISITED', source });
+      // A wish become a visit was marked visited now, as the server's (24 Nov 2026)
+      Object.assign(visit, { status: 'VISITED', source, createdAt: new Date().toISOString() });
       changed.push(visit);
     }
   }

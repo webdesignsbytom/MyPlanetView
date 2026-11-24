@@ -34,14 +34,17 @@ function PassportPhotoPage({ travellers, pageNumber, headingId }) {
         {travellers.length ? (
           <ul className='grid gap-4 md:grid-cols-2 md:gap-x-16'>
             {travellers.map((traveller) => (
-              <li key={traveller.id} className='grid grid-cols-[5rem_minmax(0,1fr)] items-start gap-4 border-2 border-colour9/50 p-3'>
+              // The photo box as tall as the details beside it, to their last line (24 Nov 2026, the
+              // user's wish: a 3:4 box stopped a line short), and never shorter than 3:4
+              <li key={traveller.id} className='grid grid-cols-[5rem_minmax(0,1fr)] gap-4 border-2 border-colour9/50 p-3'>
                 <span
                   aria-hidden='true'
-                  className='grid aspect-[3/4] place-items-center border-2 border-colour9 bg-colour8/40 font-travel text-3xl text-colour9'
+                  data-passport-photo=''
+                  className='grid min-h-[6.75rem] place-items-center border-2 border-colour9 bg-colour8/40 font-travel text-3xl text-colour9'
                 >
                   {initials(traveller.name)}
                 </span>
-                <dl className='grid min-w-0 gap-1 text-sm'>
+                <dl className='grid min-w-0 content-start gap-1 text-sm'>
                   <dt className='font-travel text-xs uppercase tracking-wide text-colour9'>Name</dt>
                   <dd className='break-words font-semibold'>{traveller.name}</dd>
                   <dt className='font-travel text-xs uppercase tracking-wide text-colour9'>Born in</dt>

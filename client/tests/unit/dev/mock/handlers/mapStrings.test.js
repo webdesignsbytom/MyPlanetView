@@ -8,7 +8,22 @@ beforeEach(() => freshStore());
 const path = (mapId = HOME_MAP, suffix = '') => `/api/maps/${mapId}/strings${suffix}`;
 const stringsOn = async (mapId = HOME_MAP) => (await get(`/api/maps/${mapId}`)).data.map.strings;
 
+// 24 Nov 2026, the user's wish: the demo map's places are tied in the order first visited
+describe('the seed’s strings', () => {
+  it('tie each place on the test user’s map to the one first visited before it', async () => {
+    const strings = await stringsOn();
+    expect(strings).toHaveLength(19);
+    expect(strings[0]).toEqual({ id: expect.any(String), from: 'GB', to: 'IE' });
+    expect(strings.at(-1)).toMatchObject({ from: 'AT', to: 'IT' });
+  });
+});
+
 describe('strings between places, in mock mode', () => {
+  // The rest start from a map with none tied
+  beforeEach(() => {
+    db().mapStrings = db().mapStrings.filter((string) => string.mapId !== HOME_MAP);
+  });
+
   it('start with none, and the map reply carries them', async () => {
     expect(await stringsOn()).toEqual([]);
     const res = await post(path(), { from: 'jp', to: 'FR' });

@@ -1,9 +1,9 @@
 import React from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import BadgeOwnerSwitch from '@/components/achievements/BadgeOwnerSwitch';
 import BadgeSticker from '@/components/achievements/BadgeSticker';
-import BadgeSuitcase from '@/components/achievements/BadgeSuitcase';
+import BadgeSuitcase, { BADGE_GROUPS_CLOSED_KEY } from '@/components/achievements/BadgeSuitcase';
 import GoalProgressBar from '@/components/achievements/GoalProgressBar';
 
 const TRAVELLERS = [
@@ -72,6 +72,8 @@ describe('BadgeSticker', () => {
 });
 
 describe('BadgeSuitcase', () => {
+  afterEach(() => sessionStorage.clear());
+
   const BADGES = [
     { key: 'photos-100', group: 'photos', have: 10, need: 100 },
     { key: 'countries-1', group: 'countries', earnedAt: '2026-01-01' },
@@ -86,6 +88,50 @@ describe('BadgeSuitcase', () => {
     const headings = [...container.querySelectorAll('h4')].map((h) => h.textContent);
     expect(headings).toEqual(['Countries', 'Photos', 'later']);
     expect(container.querySelectorAll('li').length).toBe(4);
+  });
+
+  it('folds a group away with its heading’s arrow, and opens it again', () => {
+    const { container } = render(<BadgeSuitcase badges={BADGES} />);
+    const toggle = within(container.querySelector('[data-badge-group="countries"] h4')).getByRole('button');
+    const body = document.getElementById(toggle.getAttribute('aria-controls'));
+    expect(toggle.textContent).toBe('Countries');
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(body.hidden).toBe(false);
+    expect(body.querySelectorAll('li').length).toBe(2);
+
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(body.hidden).toBe(true);
+    expect(toggle.querySelector('svg').getAttribute('class')).toContain('-rotate-90');
+    // The other groups stay as they were
+    const photos = within(container.querySelector('[data-badge-group="photos"] h4')).getByRole('button');
+    expect(photos.getAttribute('aria-expanded')).toBe('true');
+
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(body.hidden).toBe(false);
+  });
+
+  it('remembers the folded groups for the visit', () => {
+    const first = render(<BadgeSuitcase badges={BADGES} />);
+    fireEvent.click(within(first.container.querySelector('[data-badge-group="photos"] h4')).getByRole('button'));
+    expect(JSON.parse(sessionStorage.getItem(BADGE_GROUPS_CLOSED_KEY))).toEqual(['photos']);
+    first.unmount();
+
+    const { container } = render(<BadgeSuitcase badges={BADGES} />);
+    const open = (id) => within(container.querySelector(`[data-badge-group="${id}"] h4`)).getByRole('button').getAttribute('aria-expanded');
+    expect(open('photos')).toBe('false');
+    expect(open('countries')).toBe('true');
+    // Opened again, nothing is left folded
+    fireEvent.click(within(container.querySelector('[data-badge-group="photos"] h4')).getByRole('button'));
+    expect(sessionStorage.getItem(BADGE_GROUPS_CLOSED_KEY)).toBeNull();
+  });
+
+  it('opens every group when the saved list can’t be read', () => {
+    sessionStorage.setItem(BADGE_GROUPS_CLOSED_KEY, 'not json');
+    const { container } = render(<BadgeSuitcase badges={BADGES} />);
+    const toggles = [...container.querySelectorAll('h4 button')];
+    expect(toggles.map((t) => t.getAttribute('aria-expanded'))).toEqual(['true', 'true', 'true']);
   });
 
   it('puts its note and the switch above the case', () => {

@@ -230,10 +230,8 @@ const mapOrShared = ({ mapId, shareCode }, what) =>
 export const quickFillVisits = (mapId, countryCodes) => data(client.post(`${MAPS_API}/${enc(mapId)}/visits/quick-fill`, { countryCodes }));
 export const getPassport = (where, { travellerId = null } = {}) =>
   data(client.get(`${mapOrShared(where, 'passport')}${query({ traveller: travellerId || undefined })}`));
-export const setStampPhoto = (mapId, landmarkId, photoId) =>
-  data(client.put(`${MAPS_API}/${enc(mapId)}/passport/stamps/${enc(landmarkId)}/photo`, { photoId }));
-export const clearStampPhoto = (mapId, landmarkId) =>
-  data(client.delete(`${MAPS_API}/${enc(mapId)}/passport/stamps/${enc(landmarkId)}/photo`));
+// A stamp's photo isn't chosen in the passport any more (24 Nov 2026, the user's wish): the
+// server's PUT|DELETE …/passport/stamps/:landmarkId/photo stay, unused by the site
 // -> { badges, newlyEarned } (the owner and editors award as they load)
 export const getBadges = (where) => data(client.get(mapOrShared(where, 'badges')));
 // Life's One Shots (docs/API.md "Life's One Shots"): the ticks (and, for editors, what the

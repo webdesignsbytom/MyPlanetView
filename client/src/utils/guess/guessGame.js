@@ -1,5 +1,6 @@
 // "Guess where I was" (23 Nov 2026, the user's wish; docs/API.md "Guess where I was"): which of a
 // map's photos make a game, and the game's words. Pure.
+import { MILES_PER_KM } from '@/utils/map/distanceUnits';
 import { GUESS_ROUNDS_MAX, ROUND_MAX_POINTS } from './guessScoring';
 import { guessPath } from '@/utils/constants/routes';
 
@@ -26,16 +27,19 @@ export function suggestGamePhotos(photos, count = 5) {
 }
 
 const km = (n) => Math.round(n).toLocaleString('en-GB');
+// The page is anyone's, with no settings, so miles beside the km (24 Nov 2026, the user's wish:
+// "Americans in miles always")
+const miles = (n) => Math.round(n * MILES_PER_KM).toLocaleString('en-GB');
 export const points = (n) => n.toLocaleString('en-GB');
 
 /** "2,450 of 3,000 points" */
 export const scoreWords = (score, rounds) => `${points(score)} of ${points(rounds * ROUND_MAX_POINTS)} points`;
 
-/** What a round's answer says: "Yes! The Colosseum, Italy." or "It was France: about 1,100 km from your guess." */
+/** What a round's answer says: "Yes! The Colosseum, Italy." or "It was France: about 1,100 km (684 miles) from your guess." */
 export function roundResultWords({ correct, distanceKm, answer }) {
   const place = answer.landmarkName ? `${answer.landmarkName}, ${answer.countryName}` : answer.countryName;
   if (correct) return `Yes! ${place}.`;
-  return distanceKm === null || distanceKm === undefined ? `It was ${place}.` : `It was ${place}: about ${km(distanceKm)} km from your guess.`;
+  return distanceKm === null || distanceKm === undefined ? `It was ${place}.` : `It was ${place}: about ${km(distanceKm)} km (${miles(distanceKm)} miles) from your guess.`;
 }
 
 /** The game's link on this site. */

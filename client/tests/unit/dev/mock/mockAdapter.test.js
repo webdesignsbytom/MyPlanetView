@@ -125,9 +125,9 @@ describe('mockAdapter', () => {
   it('saves the store after a write but not after a read', async () => {
     localStorage.clear();
     await get('/api/maps');
-    expect(localStorage.getItem('mpvMockStore.v6')).toBeNull();
+    expect(localStorage.getItem('mpvMockStore.v7')).toBeNull();
     await patch(`/api/maps/${HOME_MAP}`, { name: 'Renamed' });
-    expect(JSON.parse(localStorage.getItem('mpvMockStore.v6')).maps.find((m) => m.id === HOME_MAP).name).toBe('Renamed');
+    expect(JSON.parse(localStorage.getItem('mpvMockStore.v7')).maps.find((m) => m.id === HOME_MAP).name).toBe('Renamed');
   });
 });
 

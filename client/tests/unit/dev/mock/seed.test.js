@@ -57,20 +57,77 @@ describe('the test user’s map', () => {
     expect(confirmed.every((pl) => pl.confirmedAt)).toBe(true);
   });
 
-  it('has its visits, the completed and planned trips, moments and goals', () => {
-    expect(home(seed.visits).filter((v) => v.status !== 'WANT_TO_GO')).toHaveLength(8);
+  // 24 Nov 2026, the user's wish: the demo couple's travels (data/demoTravels.js, the server
+  // seed's history too)
+  it('has 20 places visited or lived in, each first visited on its own day, and three wishes', () => {
+    const counted = home(seed.visits).filter((v) => v.status !== 'WANT_TO_GO');
+    expect(counted).toHaveLength(20);
+    const days = counted.map((v) => v.firstVisitedOn);
+    expect(new Set(days).size).toBe(20);
     expect(home(seed.visits).filter((v) => v.status === 'WANT_TO_GO').map((v) => v.countryCode)).toEqual(['JP', 'PE', 'IS']);
+  });
+
+  it('has every kind of trip, each on its travellers, with its stops in order', () => {
     expect(home(seed.trips).map((t) => [t.title, t.status])).toEqual([
+      ['Coast to coast: our first trip', 'COMPLETED'],
+      ['Amsterdam weekend', 'COMPLETED'],
+      ['Granada and Barcelona', 'COMPLETED'],
+      ['Paris in spring', 'COMPLETED'],
+      ['Lisbon long weekend', 'COMPLETED'],
+      ['Honeymoon: Athens and Istanbul', 'COMPLETED'],
+      ['A year off: around the world', 'COMPLETED'],
+      ['Paris again', 'COMPLETED'],
       ['Italian summer', 'COMPLETED'],
+      ['Venice for Carnival', 'COMPLETED'],
+      ['Alex’s conference in Vienna', 'COMPLETED'],
+      ['Norway in November', 'ACTIVE'],
       ['Japan in spring', 'PLANNED'],
+      ['One day: Patagonia', 'PLANNED'],
     ]);
-    expect(seed.moments).toHaveLength(11);
+    const trip = (key) => seed.trips.find((t) => t.id === `trip-${key}`);
+    expect(trip('lisbon').travellerIds).toEqual(['trav-test']);
+    expect(trip('vienna').travellerIds).toEqual(['trav-alex']);
+    expect(trip('world').linkAccess).toBe('ANYONE_WITH_LINK');
+    expect(trip('patagonia')).toMatchObject({ startDate: null, endDate: null });
+    // Nine countries, three weeks in each
+    const world = seed.stops.filter((s) => s.tripId === 'trip-world');
+    expect(world.map((s) => s.countryCode)).toEqual(['MA', 'JO', 'TZ', 'ZA', 'IN', 'MY', 'NZ', 'MX', 'CU']);
+    expect(world.every((s) => (Date.parse(s.leaveOn) - Date.parse(s.arriveOn)) / 86400000 === 21)).toBe(true);
+    // Every photo on a trip was taken during it
+    for (const photo of home(seed.photos).filter((p) => p.tripId)) {
+      const t = seed.trips.find((x) => x.id === photo.tripId);
+      expect(photo.takenAt.slice(0, 10) >= t.startDate && photo.takenAt.slice(0, 10) <= t.endDate).toBe(true);
+    }
+  });
+
+  it('has the timeline: both births, the travellers’ birth dates, the trips’ days, hidden ones too', () => {
+    const travellers = seed.travellers.filter((t) => t.mapId === HOME_MAP);
+    expect(travellers.map((t) => [t.name, t.birthDate])).toEqual([
+      ['Charlie', '1990-01-14'],
+      ['Alex', '1991-06-03'],
+    ]);
+    expect(seed.travellers.every((t) => t.birthDate)).toBe(true);
+    const moments = home(seed.moments);
+    expect(moments).toHaveLength(22);
+    expect(moments.filter((m) => m.kind === 'BORN').map((m) => m.happenedOn)).toEqual(['1990-01-14', '1991-06-03']);
+    expect(moments.filter((m) => m.tripId === 'trip-world').map((m) => m.kind)).toEqual(['MEAL', 'TOUR', 'SAFARI', 'HIKE', 'SAW_OR_DID', 'DIVE', 'BEACH', 'SAW_OR_DID', 'SHOW']);
     expect(seed.moments.filter((m) => m.hidden)).toHaveLength(2);
     expect(seed.goals).toHaveLength(4);
   });
 
-  it('has New York and Massachusetts visited and a Paris pin with two visits', () => {
-    expect(seed.subdivisionVisits.map((v) => v.code)).toEqual(['US-NY', 'US-MA']);
+  it('has heritage sites ticked, every trip’s flights, the safari’s One Shots and the strings in order', () => {
+    expect(home(seed.landmarkVisits)).toHaveLength(12);
+    expect(home(seed.flights)).toHaveLength(26);
+    expect(home(seed.oneShots).map((t) => t.itemKey)).toEqual(['puffin', 'lion', 'african-elephant', 'giraffe', 'rhino']);
+    // Each place tied to the one first visited before it
+    expect(home(seed.mapStrings).map((s) => `${s.from}-${s.to}`)).toEqual([
+      'GB-IE', 'IE-US', 'NL-US', 'ES-NL', 'ES-FR', 'FR-PT', 'GR-PT', 'GR-TR', 'MA-TR', 'JO-MA',
+      'JO-TZ', 'TZ-ZA', 'IN-ZA', 'IN-MY', 'MY-NZ', 'MX-NZ', 'CU-MX', 'CU-IT', 'AT-IT',
+    ]);
+  });
+
+  it('has New York, Massachusetts and California visited and a Paris pin with two visits', () => {
+    expect(seed.subdivisionVisits.map((v) => v.code)).toEqual(['US-NY', 'US-MA', 'US-CA']);
     expect(seed.pins).toEqual([expect.objectContaining({ id: 'pin-paris', countryCode: 'FR', hidden: false })]);
     expect(seed.pinVisits.map((v) => v.pinId)).toEqual(['pin-paris', 'pin-paris']);
   });

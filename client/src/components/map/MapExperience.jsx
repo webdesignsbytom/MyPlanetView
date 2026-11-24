@@ -8,6 +8,7 @@ import usePhotoPage, { preloadPhotoPage } from '@/hooks/usePhotoPage';
 import { preloadMomentPage } from '@/hooks/useMomentPage';
 import useLandmarks, { preloadLandmarks } from '@/hooks/useLandmarks';
 import { SplitUkProvider } from '@/hooks/useSplitUk';
+import { DistanceUnitProvider } from '@/hooks/useDistanceUnit';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 import useMapTheme from '@/hooks/useMapTheme';
@@ -74,6 +75,9 @@ import { nearestGoal } from '@/utils/achievements/goals';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { countsAsVisited } from '@/utils/map/visitStatus';
 import { shownSupporter } from '@/utils/plans/supporterBadge';
+import { firstVisitFor } from '@/utils/map/firstVisit';
+import { hasString, previousVisitedPlace } from '@/utils/map/mapStrings';
+import { distanceUnitFor } from '@/utils/map/distanceUnits';
 import { MAP_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/map/mapListCache';
 import { countryListsOf, countryMomentFilters, countryPhotoFilters, preloadCountryLists } from '@/utils/map/preloadCountryLists';
@@ -433,9 +437,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const visitsByCode = useMemo(() => Object.fromEntries(map.visits.map((v) => [v.countryCode, v.status])), [map.visits]);
   // The visits as they stand, for the celebration's handlers (below) to read
   const visitsRef = useRef(visitsByCode);
+  // ...and the rows themselves, for the country list's status stamps (their dates)
+  const visitRowsRef = useRef(map.visits);
   useEffect(() => {
     visitsRef.current = visitsByCode;
-  }, [visitsByCode]);
+    visitRowsRef.current = map.visits;
+  }, [visitsByCode, map.visits]);
   const visitFor = (code) => map.visits.find((v) => v.countryCode === code) || null;
   // The map's own trips: what a photo or a moment can be on (not the group trips added from other maps)
   const ownTrips = useMemo(() => trips.filter((t) => !t.linked), [trips]);
@@ -479,41 +486,56 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
   // The celebration (CelebrationDialog; 24 Nov 2026, the user's wish): stars, the model and the
   // passport's stamp, when the viewer's own tick or confirmed photo stamps a landmark for the
-  // first time, or they mark a country visited or lived in from its ticket. Never for many at
-  // once (the country list, "Where have you been?"), and not while `showCelebrations` is off.
+  // first time, or they mark a country visited or lived in from its ticket or the country list
+  // (24 Nov 2026, the user's wish). Never for many at once ("Where have you been?"), and not
+  // while `showCelebrations` is off.
   // What was stamped and visited before a change is read from refs, so the handlers keep
-  // their identity.
+  // their identity. They queue (24 Nov 2026, the user's wish): a tick that marks a new country
+  // plays the landmark's, then the country's once it's closed.
   const celebrationsWanted = settings.showCelebrations !== false;
-  const [celebration, setCelebration] = useState(null);
+  // Each with its own number, so the next one opens afresh
+  const [celebrations, setCelebrations] = useState([]);
+  const celebrationCount = useRef(0);
+  const celebration = celebrations[0]?.value ?? null;
   const celebrate = useCallback(
-    (next) => {
+    (...next) => {
       if (!celebrationsWanted) return;
       CelebrationDialog.preload().then(
-        () => setCelebration(next),
+        () => setCelebrations((queue) => [...queue, ...next.map((value) => ({ id: (celebrationCount.current += 1), value }))]),
         () => {},
       );
     },
     [celebrationsWanted],
   );
+  const closeCelebration = useCallback(() => setCelebrations((queue) => queue.slice(1)), []);
+  // A country a tick marked visited (24 Nov 2026, the user's wish): dated and tied as one marked
+  // by hand; set below, once those exist
+  const newPlaceMarkedRef = useRef(async () => null);
   const stampedRef = useRef(stampedLandmarks);
   useEffect(() => {
     stampedRef.current = stampedLandmarks;
   }, [stampedLandmarks]);
 
-  // A tick can earn a landmark badge or reach a goal: ask, as a visit change does
+  // A tick can earn a landmark badge or reach a goal: ask, as a visit change does. `modelId`:
+  // ticked on a landmark model's card (a country's own map), whose model the celebration shows
   const toggleLandmark = useMemo(
     () =>
       setLandmarkBeen
-        ? async (landmarkId, been) => {
+        ? async (landmarkId, been, { modelId = null } = {}) => {
             const firstStamp = been && celebratesStamp(landmarkId, stampedRef.current);
             const visitsBefore = visitsRef.current || {};
             const answer = await setLandmarkBeen(landmarkId, been);
             checkAchievements();
             if (firstStamp) {
-              // The tick marks its place visited too (docs/API.md "Collecting")
+              // The tick marks its place visited too (docs/API.md "Collecting"): a new one is dated
+              // today and tied to the place before it, and celebrated after the landmark
               const place = answer?.countryCode;
               const newPlace = place && !countsAsVisited(visitsBefore[place]) ? place : null;
-              celebrate({ kind: 'landmark', landmarkId, stampedOn: todayDay(), photoUrl: null, newPlace });
+              const firstVisitedOn = newPlace ? await newPlaceMarkedRef.current(newPlace) : null;
+              celebrate(
+                { kind: 'landmark', landmarkId, stampedOn: todayDay(), photoUrl: null, newPlace, modelId },
+                ...(newPlace ? [{ kind: 'country', code: newPlace, status: 'VISITED', firstVisitedOn }] : []),
+              );
             }
             return answer;
           }
@@ -643,12 +665,34 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const close = useCallback(() => dispatch({ type: 'close' }), []);
   // A visit changed by hand: then see whether it earned a badge or met a goal
   const changeVisit = actions?.setVisit;
-  // A country marked visited or lived in from its ticket (CountryPanel's own status control)
+  // A string from the place visited just before a newly visited one (24 Nov 2026, the user's
+  // wish: "always from country to country in order of visit"), while the viewer shows the strings
+  // and may tie them (an editor, verified); one the map has already isn't tied twice, and a
+  // failure leaves it to be tied by hand
+  const autoTie = canChange && settings.showStrings !== false ? (actions?.tieString ?? null) : null;
+  const stringsRef = useRef(map.strings);
+  useEffect(() => {
+    stringsRef.current = map.strings;
+  }, [map.strings]);
+  const tieToPrevious = useCallback(
+    (code, status, firstVisitedOn) => {
+      if (!autoTie) return;
+      const now = { countryCode: code, status, firstVisitedOn: firstVisitedOn || null, markedAt: new Date().toISOString() };
+      const previous = previousVisitedPlace([...visitRowsRef.current.filter((v) => v.countryCode !== code), now], code);
+      if (!previous || hasString(stringsRef.current, previous, code)) return;
+      autoTie(previous, code).catch(() => {});
+    },
+    [autoTie],
+  );
+  // A country marked visited or lived in from its ticket (CountryPanel's own status control) or
+  // the country list: celebrated, and tied to the place visited before it
   const visitMarked = useCallback(
     (code, before, status, firstVisitedOn) => {
-      if (celebratesVisit(before, status)) celebrate({ kind: 'country', code, status, firstVisitedOn: firstVisitedOn || null });
+      if (!celebratesVisit(before, status)) return;
+      celebrate({ kind: 'country', code, status, firstVisitedOn: firstVisitedOn || null });
+      tieToPrevious(code, status, firstVisitedOn);
     },
-    [celebrate],
+    [celebrate, tieToPrevious],
   );
   const setVisit = useMemo(
     () =>
@@ -661,9 +705,36 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         : undefined,
     [changeVisit, checkAchievements],
   );
+  // A country a landmark's tick marked visited: dated today unless it has a date, and tied to the
+  // place visited before it, as one marked by hand. -> its first visit
+  useEffect(() => {
+    newPlaceMarkedRef.current = async (code) => {
+      const firstVisitedOn = firstVisitFor(visitRowsRef.current.find((v) => v.countryCode === code) || null, 'VISITED') ?? null;
+      if (setVisit && firstVisitedOn) await setVisit(code, 'VISITED', { firstVisitedOn }).catch(() => {});
+      tieToPrevious(code, 'VISITED', firstVisitedOn);
+      return firstVisitedOn;
+    };
+  }, [setVisit, tieToPrevious]);
+  // The country list's status stamps: a place newly visited or lived in is dated today unless it
+  // has a date (utils/map/firstVisit.js; 24 Nov 2026, the user's wish), as on its ticket, and is
+  // celebrated as from its ticket once saved (24 Nov 2026, the user's wish: it gets its passport
+  // page too). Stable, so the list's memoised rows don't re-render for it
+  const setVisitFromList = useMemo(
+    () =>
+      setVisit
+        ? async (code, status) => {
+            const visit = visitRowsRef.current.find((v) => v.countryCode === code) || null;
+            const firstVisitedOn = status ? firstVisitFor(visit, status) : undefined;
+            const answer = await setVisit(code, status, status ? { firstVisitedOn } : undefined);
+            visitMarked(code, visit?.status ?? null, status, firstVisitedOn);
+            return answer;
+          }
+        : undefined,
+    [setVisit, visitMarked],
+  );
 
   // A tool from the toolbar or the phone's menu: whatever was open closes (uiReducer 'tool'),
-  // string mode too. "Tips" opens the tips (23 Nov 2026, the user's wish), or shuts them.
+  // string mode too. 'tips' (Settings' "Show the tips", 24 Nov 2026) opens the tips, or shuts them.
   const handleToggle = useCallback((panel) => {
     setStringMode(null);
     setOneShotFocus(null);
@@ -710,6 +781,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   }, [listsPhotos]);
 
   const panel = (() => {
+    // The map's passport, its own address or through the share link: the statistics, the
+    // country list and Where to go next link to it
+    const passportHref = shareCode ? sharedPassportPath(shareCode) : mapPassportPath(map.id);
     switch (ui.panel) {
       case 'settings':
         return (
@@ -731,6 +805,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               navigate(MAP_PAGE_URL, { replace: true });
             }}
             onUpgradePay={isOwner && !mustVerify ? () => setPayingForMap('upgrade') : null}
+            // The tips, any time (the toolbar's own stamp until 24 Nov 2026, the user's wish)
+            onShowTips={() => handleToggle('tips')}
             onClose={close}
           />
         );
@@ -755,7 +831,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             compareHref={shareCode ? null : comparePath(map.id)}
             onYearRecap={shareCode ? undefined : () => setRecapYear(recapYearFor())}
             collected={landmarkMarks}
-            passportHref={shareCode ? sharedPassportPath(shareCode) : mapPassportPath(map.id)}
+            passportHref={passportHref}
             onClose={close}
           />
         );
@@ -797,13 +873,16 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             visitsByCode={visitsByCode}
             canEdit={canChange}
             locked={locked}
-            onChangeStatus={setVisit}
+            onChangeStatus={setVisitFromList}
             onShowCountry={showCountry}
             // Ticking several at once: the owner and co-owners (as the first-load offer)
             onQuickFill={canManage ? () => setQuickFill('later') : null}
             unplacedCount={unplacedCount}
             unplacedMore={unplacedMore}
             onShowUnplaced={showUnplaced}
+            passportHref={passportHref}
+            // The Strings panel, an editor's (its toolbar stamp until 24 Nov 2026, the user's wish)
+            onOpenStrings={canEdit ? () => handleToggle('strings') : null}
             onClose={close}
           />
         );
@@ -816,6 +895,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             photosVersion={photosVersion}
             // An editor's "Add photos" opens the upload panel (which says why, on a locked or unverified map)
             onAddPhotos={canEdit ? () => dispatch({ type: 'upload' }) : null}
+            // The whole map's slideshow, over the album (its own stamp until 24 Nov 2026, the user's wish)
+            onPlay={() => dispatch({ type: 'play' })}
             onClose={close}
           />
         );
@@ -898,7 +979,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           />
         );
       case 'next':
-        return <WhereNextPanel visits={map.visits} onShowCountry={showCountry} onClose={close} />;
+        return <WhereNextPanel visits={map.visits} onShowCountry={showCountry} passportHref={passportHref} onClose={close} />;
       case 'strings':
         return canEdit ? (
           <StringsPanel
@@ -960,6 +1041,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     // The map's own choice to show the UK as its four nations, for everything on the page
     // (the drawing, the country list, every country picker and landmark list)
     <SplitUkProvider value={Boolean(map.splitUk)}>
+    {/* Kilometres or miles, for the statistics and the flight log: the viewer's setting, else
+        miles for a map whose home is in the United States (24 Nov 2026, the user's wish) */}
+    <DistanceUnitProvider value={distanceUnitFor(settings.distanceUnit, map.stats?.homeCountryCode)}>
     <LandmarkMarksContext.Provider value={landmarkMarks}>
     <OneShotsContext.Provider value={oneShotsHere}>
     <div
@@ -1094,7 +1178,6 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onIntent={preloadTool}
             canShare={canShare}
             canSwitch={Boolean(currentUser) && !shareCode}
-            canString={canEdit}
             stats={map.stats}
           />
         </div>
@@ -1294,14 +1377,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
       {/* Over everything, the photo viewer too (a confirmed photo is celebrated there), and
           outside Black and white's filter, so the model keeps its colours as photos do */}
+      {/* One at a time, each afresh (its own focus, stars and stamp) */}
       {celebration ? (
-        <MapOverlayBoundary onClose={() => setCelebration(null)}>
+        <MapOverlayBoundary onClose={closeCelebration}>
           <CelebrationDialog
+            key={celebrations[0].id}
             celebration={celebration}
             passportHref={mapPassportPath(map.id)}
-            hideCelebrations={!celebrationsWanted}
-            onHideCelebrations={(hide) => onChangeSetting('showCelebrations', !hide)}
-            onClose={() => setCelebration(null)}
+            onClose={closeCelebration}
           />
         </MapOverlayBoundary>
       ) : null}
@@ -1323,6 +1406,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     </div>
     </OneShotsContext.Provider>
     </LandmarkMarksContext.Provider>
+    </DistanceUnitProvider>
     </SplitUkProvider>
   );
 }

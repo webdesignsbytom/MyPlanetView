@@ -12,14 +12,15 @@ import { PHOTO_PREFIX } from '../../src/services/s3/mediaService.js';
 const uploadKey = (mapId, photoId) =>
   new RegExp(`^${PHOTO_PREFIX}${mapId}/${photoId}/(thumb|display|print|original)-[A-Za-z0-9]+\\.(webp|jpg)$`);
 
-// A map's owner and editor, its "Paris to Rome by train" trip, and the seed's photos on it
+// A map's owner and editor, its "Italian summer" trip (the demo couple's, data/demoTravels.js),
+// and the seed's photos on it
 async function seededMap(name, { plan } = {}) {
   const owner = await signUp(`${name}Owner`);
   const partner = await signUp(`${name}Partner`);
   if (plan) await givePlan(owner.user.id, { plan });
   const map = await defaultMapOf(owner.agent);
   expect((await owner.agent.post(`/api/maps/${map.id}/members`).send({ email: partner.email, role: 'EDITOR' })).status).toBe(201);
-  const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2019-04-10', endDate: '2019-04-12', title: 'Paris to Rome by train' })).trip;
+  const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ startDate: '2025-07-02', endDate: '2025-07-16', title: 'Italian summer' })).trip;
   return { owner, partner, map, trip };
 }
 
@@ -75,7 +76,8 @@ describe('the seed’s demo photos', () => {
     expect(france.every((p) => p.thumbUrl)).toBe(true);
 
     const onTrip = data(await owner.agent.get(`/api/trips/${trip.id}/photos`)).photos;
-    expect(onTrip.map((p) => p.caption)).toEqual(manifest.filter((p) => p.trip === 'paris-rome').map((p) => p.caption));
+    expect(onTrip.map((p) => p.caption)).toEqual(manifest.filter((p) => p.trip === 'italy').map((p) => p.caption));
+    expect(onTrip).toHaveLength(3);
   });
 
   it('marks their countries visited and suggests the landmarks they were taken at', async () => {

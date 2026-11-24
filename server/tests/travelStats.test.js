@@ -13,6 +13,7 @@ import {
   travelExtras,
   tripDays,
   tripDistanceKm,
+  untrippedKm,
 } from '../src/utils/travelStats.js';
 import { positionFromMap, projectToMap } from '../src/utils/projection.js';
 
@@ -217,5 +218,37 @@ describe('travelExtras', () => {
       distanceKm: Math.round(2 * distanceKm(LONDON, PARIS)),
       furthest: { countryCode: 'FR', km: Math.round(distanceKm(LONDON, PARIS)) },
     });
+  });
+
+  // 24 Nov 2026, the user's report: a map of 12 countries said 3,500 km, its one completed trip
+  it('adds home and back to each country no completed trip reached', () => {
+    const paris = { id: 't1', stops: [{ position: 0, countryCode: 'FR' }] };
+    const extras = travelExtras({ completedTrips: [paris], visitedCodes: ['FR', 'GB', 'AU'], positions, homeCountryCode: 'GB' });
+    expect(extras.distanceKm).toBe(Math.round(2 * distanceKm(LONDON, PARIS) + 2 * distanceKm(LONDON, SYDNEY)));
+  });
+});
+
+describe('untrippedKm', () => {
+  const xt = positions.get('XT');
+
+  it('is home and back to each country visited with no completed trip there, once a country', () => {
+    expect(untrippedKm({ visitedCodes: ['FR', 'AU'], positions, homeCountryCode: 'GB' })).toBeCloseTo(2 * distanceKm(LONDON, PARIS) + 2 * distanceKm(LONDON, SYDNEY), 6);
+    // Australia and Tasmania, a region of it: one journey, to the further of the two
+    const further = Math.max(distanceKm(LONDON, SYDNEY), distanceKm(LONDON, xt));
+    expect(untrippedKm({ visitedCodes: ['AU', 'XT'], positions, homeCountryCode: 'GB' })).toBeCloseTo(2 * further, 6);
+  });
+
+  it('leaves out home and its parts, and countries a completed trip reached', () => {
+    expect(untrippedKm({ visitedCodes: ['GB', 'XE'], positions, homeCountryCode: 'GB' })).toBe(0);
+    const trip = { stops: [{ position: 0, countryCode: 'XT' }] };
+    // A trip to Tasmania went to Australia: no second journey there
+    expect(untrippedKm({ completedTrips: [trip], visitedCodes: ['AU', 'FR'], positions, homeCountryCode: 'GB' })).toBeCloseTo(2 * distanceKm(LONDON, PARIS), 6);
+    // A trip's countries count too (a group trip's, with no stops given)
+    expect(untrippedKm({ completedTrips: [{ countryCodes: ['FR'] }], visitedCodes: ['FR'], positions, homeCountryCode: 'GB' })).toBe(0);
+  });
+
+  it('is nothing without a home, or a place with no pin', () => {
+    expect(untrippedKm({ visitedCodes: ['FR'], positions, homeCountryCode: null })).toBe(0);
+    expect(untrippedKm({ visitedCodes: ['ZZ'], positions, homeCountryCode: 'GB' })).toBe(0);
   });
 });

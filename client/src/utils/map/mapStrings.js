@@ -2,6 +2,9 @@
 // tied pin to pin, like a map on a corkboard. Where each string is drawn: from one place's pin
 // to the other's, hanging in a gentle curve as thread does. Pure.
 import { COUNTRY_BY_CODE, countryName } from './countries';
+import { PARENT_PLACE } from './specialPlaces';
+import { countsAsVisited } from './visitStatus';
+import { passportPageOrder } from '@/utils/passport/passportOrder';
 
 // How far a string hangs below the straight line, as a share of its length, and at most
 const SAG = 0.12;
@@ -53,3 +56,32 @@ export function stringEnds(a, b) {
   if (!a || !b || a === b) return null;
   return a < b ? [a, b] : [b, a];
 }
+
+/**
+ * The place visited just before `code` (24 Nov 2026, the user's wish: a string from the last
+ * place to each newly visited one, "always from country to country in order of visit"): the
+ * map's visited and lived-in places in the order visited (the passport's: the first visit, else
+ * the day it was marked; on one day, the order marked), `code` among them, and the one before
+ * it; null when it's the first. The place it's part of (the US for Hawaii, Antarctica for the
+ * South Pole), marked with it, is never its previous.
+ * @param {{ countryCode, status, firstVisitedOn, markedAt }[]} visits the map's, the new one included
+ */
+export function previousVisitedPlace(visits, code) {
+  const parent = PARENT_PLACE[code];
+  const rows = new Map(visits.filter((v) => countsAsVisited(v.status) && v.countryCode !== parent).map((v) => [v.countryCode, v]));
+  if (!rows.has(code)) return null;
+  // A place already on the map with no time known was marked before any that has one (the mock's
+  // seeded visits; the server's all have one)
+  const order = passportPageOrder(rows.keys(), {
+    enteredOn: (place) => rows.get(place)?.firstVisitedOn ?? null,
+    markedAt: (place) => rows.get(place)?.markedAt ?? (place === code ? null : '1970-01-01T00:00:00Z'),
+  });
+  const index = order.indexOf(code);
+  return index > 0 ? order[index - 1] : null;
+}
+
+/** Whether a string already joins these two places, whichever way round. */
+export const hasString = (strings, a, b) => {
+  const ends = stringEnds(a, b);
+  return Boolean(ends && (strings || []).some((s) => s.from === ends[0] && s.to === ends[1]));
+};

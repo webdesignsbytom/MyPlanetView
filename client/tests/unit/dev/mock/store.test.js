@@ -18,7 +18,7 @@ import {
 import { buildSeed } from '@/dev/mock/seed';
 import { FRAN_MAP, HOME_MAP, freshStore } from './mockApi';
 
-const STORE_KEY = 'mpvMockStore.v6';
+const STORE_KEY = 'mpvMockStore.v7';
 const saved = () => JSON.parse(localStorage.getItem(STORE_KEY));
 /** A store as an older version saved it: the seed, less `drop`, plus `change`. */
 function saveOld(drop = [], change = (db) => db) {
@@ -118,7 +118,7 @@ describe('loadStore', () => {
     expect(db.badgeAwards.length).toBeGreaterThan(0);
     expect(db.challenges.map((c) => c.id)).toEqual(['challenge-two-years']);
     expect(db.challengeEntries).toHaveLength(3);
-    expect(db.subdivisionVisits.map((v) => v.code)).toEqual(['US-NY', 'US-MA']);
+    expect(db.subdivisionVisits.map((v) => v.code)).toEqual(['US-NY', 'US-MA', 'US-CA']);
     expect(db.pins.map((p) => p.id)).toEqual(['pin-paris']);
     expect(db.pinVisits).toHaveLength(2);
     const month = new Date().toISOString().slice(0, 7);

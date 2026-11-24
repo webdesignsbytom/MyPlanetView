@@ -10,6 +10,10 @@ export const MAP_TYPES = Object.freeze(['regular', 'detailed']);
 // The landmark pins (17 Nov 2026): when zoomed in, at every zoom, only the passport's
 // stamped ones, or none (the client's LANDMARK_PIN_MODES)
 export const LANDMARK_PIN_MODES = Object.freeze(['zoomed', 'always', 'stamped', 'off']);
+// The statistics' distances (24 Nov 2026, the user's wish: "Americans in miles always"):
+// miles for a map whose home is in the United States, else kilometres; or always one of them
+// (the client's DISTANCE_UNITS)
+export const DISTANCE_UNITS = Object.freeze(['auto', 'km', 'miles']);
 export const MAP_SETTING_FLAGS = Object.freeze([
   'showGrid',
   'showGridLabels',
@@ -76,6 +80,10 @@ export function cleanMapSettings(input) {
   if (input.landmarkPins !== undefined) {
     if (!LANDMARK_PIN_MODES.includes(input.landmarkPins)) return { ok: false };
     value.landmarkPins = input.landmarkPins;
+  }
+  if (input.distanceUnit !== undefined) {
+    if (!DISTANCE_UNITS.includes(input.distanceUnit)) return { ok: false };
+    value.distanceUnit = input.distanceUnit;
   }
   for (const flag of MAP_SETTING_FLAGS) {
     if (input[flag] === undefined) continue;

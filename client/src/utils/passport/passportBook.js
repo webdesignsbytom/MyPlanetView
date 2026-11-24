@@ -66,6 +66,10 @@ export function bookLeaves(passport) {
   ];
 }
 
+/** The index of a place's visa page among the book's leaves, or -1 (none, or no place). */
+export const visaLeafIndex = (leaves, countryCode) =>
+  countryCode ? leaves.findIndex((leaf) => leaf.kind === 'visa' && leaf.page.countryCode === countryCode) : -1;
+
 /** "1 photo", "3 photos". */
 export const photoCountText = (count) => `${count} photo${count === 1 ? '' : 's'}`;
 

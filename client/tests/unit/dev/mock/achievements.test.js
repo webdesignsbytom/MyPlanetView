@@ -167,11 +167,13 @@ describe('the map’s facts', () => {
   it('counts the test user’s visits, photos, stamps and themes, hidden photos for editors only', () => {
     const owner = loadMapFacts(HOME_MAP, { includeHidden: true });
     const viewer = loadMapFacts(HOME_MAP, { includeHidden: false });
-    expect([...owner.visited].sort()).toEqual(['ES', 'FR', 'GB', 'IE', 'IT', 'NL', 'PT', 'US']);
+    // The demo couple's 20 places (data/demoTravels.js)
+    expect([...owner.visited].sort()).toEqual(['AT', 'CU', 'ES', 'FR', 'GB', 'GR', 'IE', 'IN', 'IT', 'JO', 'MA', 'MX', 'MY', 'NL', 'NZ', 'PT', 'TR', 'TZ', 'US', 'ZA']);
     expect(owner.photos).toBe(16);
     expect(viewer.photos).toBe(15);
-    expect(owner.stamps).toHaveLength(13);
-    expect(viewer.stamps).toHaveLength(12);
+    // 13 from photos and 12 landmarks ticked "been here"
+    expect(owner.stamps).toHaveLength(25);
+    expect(viewer.stamps).toHaveLength(24);
     expect(owner.themes).toBe(2);
     expect(owner.firstPhotoAt.get('FR').toISOString()).toBe('2019-04-12T19:40:00.000Z');
   });
@@ -211,7 +213,7 @@ describe('goals', () => {
   it('lists the map’s goals oldest first with their progress', () => {
     const { goals, newlyAchieved } = mapGoals(HOME_MAP, { award: true });
     expect(goals.map((g) => g.id)).toEqual(['goal-isles', 'goal-ten', 'goal-bucket']);
-    expect(goals[1].progress).toMatchObject({ have: 8, need: 10, met: false });
+    expect(goals[1].progress).toMatchObject({ have: 20, need: 25, met: false });
     expect(goals[2].progress).toMatchObject({ have: 0, need: 3, done: [] });
     expect(newlyAchieved).toEqual([]);
     expect(mapGoals('no-such-map', { award: true })).toEqual({ goals: [], newlyAchieved: [] });
@@ -222,8 +224,8 @@ describe('goals', () => {
     ['JP', 'PE', 'IS'].forEach((code) => (db().visits.find((v) => v.mapId === HOME_MAP && v.countryCode === code).status = 'VISITED'));
     expect(mapGoals(HOME_MAP, { award: false }).newlyAchieved).toEqual([]);
     expect(goal.achievedAt).toBeNull();
-    // Three more countries make eleven, so the ten by 2027 is met too
-    expect(mapGoals(HOME_MAP, { award: true }).newlyAchieved).toEqual(['goal-ten', 'goal-bucket']);
+    // Three more countries make 23 of the 25 by 2027: not met yet
+    expect(mapGoals(HOME_MAP, { award: true }).newlyAchieved).toEqual(['goal-bucket']);
     expect(goal.achievedAt).not.toBeNull();
   });
 

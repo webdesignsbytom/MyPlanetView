@@ -68,6 +68,34 @@ describe('the passport', () => {
     expect(pageOf(passport, 'JP')).toMatchObject({ enteredOn: '2019-03-01', stamps: [] });
   });
 
+  // 24 Nov 2026, the user's report: Japan, marked visited today (so dated today), came before
+  // places marked earlier today with no date; and a country lived in long before its first photo
+  // came after places visited since
+  it('keeps the pages in the order visited: undated ones on the day they were marked, a first visit before its photos', async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    expect((await owner.agent.put(`/api/maps/${map.id}/visits/DO`).send({ status: 'VISITED' })).status).toBe(200);
+    expect((await owner.agent.put(`/api/maps/${map.id}/visits/DZ`).send({ status: 'VISITED' })).status).toBe(200);
+    expect((await owner.agent.put(`/api/maps/${map.id}/visits/KE`).send({ status: 'VISITED', firstVisitedOn: today })).status).toBe(200);
+    // France, first visited in 2000, long before its photo
+    expect((await owner.agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'VISITED', firstVisitedOn: '2000-01-01' })).status).toBe(200);
+    // Iceland, a wish since the test before, visited today: marked now, so after Kenya
+    const iceland = await owner.agent.put(`/api/maps/${map.id}/visits/IS`).send({ status: 'VISITED', firstVisitedOn: today });
+    expect(iceland.status).toBe(200);
+    expect(Date.parse(data(iceland).visit.markedAt)).toBeGreaterThan(Date.now() - 60_000);
+    const passport = await passportOf(owner.agent);
+    expect(passport.pages.map((p) => p.countryCode)).toEqual(['FR', 'JP', 'DO', 'DZ', 'KE', 'IS']);
+    expect(pageOf(passport, 'FR').enteredOn).toBe('2000-01-01');
+    // Undated pages still say so
+    expect(pageOf(passport, 'DO').enteredOn).toBeNull();
+    // The map's reply says when each was marked
+    const visits = data(await owner.agent.get(`/api/maps/${map.id}`)).map.visits;
+    expect(visits.every((v) => typeof v.markedAt === 'string')).toBe(true);
+
+    for (const code of ['DO', 'DZ', 'KE']) await owner.agent.delete(`/api/maps/${map.id}/visits/${code}`);
+    await owner.agent.put(`/api/maps/${map.id}/visits/IS`).send({ status: 'WANT_TO_GO', firstVisitedOn: null });
+    expect((await owner.agent.put(`/api/maps/${map.id}/visits/FR`).send({ status: 'VISITED', firstVisitedOn: null })).status).toBe(200);
+  });
+
   it('shows the photo an editor picks, and never a hidden one below editor', async () => {
     second = data(await uploadPhoto(owner.agent, map.id, { ...EIFFEL, takenAt: '2026-01-05T12:00:00.000Z' })).photo;
     expect((await confirm(second.id)).status).toBe(200);

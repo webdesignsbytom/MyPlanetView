@@ -8,7 +8,7 @@ import PassportPhotoPage from './PassportPhotoPage';
 import PassportVisaPage from './PassportVisaPage';
 import PassportBackPage from './PassportBackPage';
 // Utils
-import { bookLeaves, passportCover } from '@/utils/passport/passportBook';
+import { bookLeaves, passportCover, visaLeafIndex } from '@/utils/passport/passportBook';
 
 const SWIPE_PX = 50;
 
@@ -50,6 +50,9 @@ const dims = (from, to, start) => [
   { filter: `brightness(${to})`, offset: 1 },
 ];
 
+// Opened at a place's page (`openAt`): how long the closed cover shows before it opens
+const OPEN_AT_DELAY_MS = 600;
+
 // The keys that turn the page, unless they're for a field, a dialog or the map
 const TURN_KEYS = { ArrowLeft: -1, ArrowRight: 1 };
 const KEEPS_ITS_KEYS = 'input, select, textarea, [contenteditable="true"], [role="dialog"], [role="application"]';
@@ -62,8 +65,12 @@ const KEEPS_ITS_KEYS = 'input, select, textarea, [contenteditable="true"], [role
  * above), a slide on phones, a fade with reduced motion. The book's words can't be selected,
  * like printed paper (a double-click used to highlight the cover's). Each page is a section
  * with its own h2; the page number and name are announced as it turns.
+ * `openAt` (a place's code: the celebration's "Open passport", 24 Nov 2026, the user's wish)
+ * shows the closed cover a moment, then opens the book straight to that place's page: the
+ * cover's own opening, the new page on the back of the turning sheet, the pages between
+ * skipped. A place the book has no page for leaves it on the cover.
  */
-function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, onPickPhoto }) {
+function PassportBook({ passport, onOpenPhoto, openAt = null }) {
   const bookId = useId();
   const leaves = useMemo(() => bookLeaves(passport), [passport]);
   const [index, setIndex] = useState(0);
@@ -87,9 +94,26 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
     [at, leaves],
   );
   const goRef = useRef(go);
+  const goToRef = useRef(go);
+  const atRef = useRef(at);
   useEffect(() => {
     goRef.current = (step) => go(at + step);
+    goToRef.current = go;
+    atRef.current = at;
   }, [go, at]);
+
+  // Opened at a place's page: once, from the cover, unless a page was turned meanwhile. Marked
+  // done only when it turns, so React's second run of effects in development still opens it.
+  const openAtIndex = useMemo(() => visaLeafIndex(leaves, openAt), [leaves, openAt]);
+  const openedAtRef = useRef(false);
+  useEffect(() => {
+    if (openedAtRef.current || openAtIndex <= 0) return undefined;
+    const timer = setTimeout(() => {
+      openedAtRef.current = true;
+      if (atRef.current === 0) goToRef.current(openAtIndex);
+    }, OPEN_AT_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [openAtIndex]);
 
   // The arrow keys turn the page anywhere on the page, but not in a field, a dialog (the
   // photo viewer) or while a dialog is open
@@ -185,10 +209,7 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
             page={leaf.page}
             pageNumber={pageNumber}
             headingId={headingFor(leaf)}
-            canPick={canPick}
-            locked={locked}
             onOpenPhoto={onOpenPhoto}
-            onPickPhoto={onPickPhoto}
           />
         );
       default:

@@ -8,6 +8,7 @@ import {
   stampDate,
   stampDescription,
   stampLook,
+  visaLeafIndex,
 } from '@/utils/passport/passportBook';
 import { STAMP_GEOMETRY, fitName } from '@/utils/passport/stampShapes';
 
@@ -82,6 +83,21 @@ describe('bookLeaves', () => {
       { key: 'visa-XE', kind: 'visa', label: 'England', page: pages[1] },
       { key: 'totals', kind: 'totals', label: 'Totals' },
     ]);
+  });
+});
+
+describe('visaLeafIndex', () => {
+  const leaves = bookLeaves({ pages: [{ countryCode: 'FR' }, { countryCode: 'XE' }] });
+
+  it('finds a place’s visa page among the leaves (the celebration opens the passport there)', () => {
+    expect(visaLeafIndex(leaves, 'FR')).toBe(2);
+    expect(visaLeafIndex(leaves, 'XE')).toBe(3);
+  });
+
+  it('finds none for a place with no page, or no place', () => {
+    expect(visaLeafIndex(leaves, 'JP')).toBe(-1);
+    expect(visaLeafIndex(leaves, null)).toBe(-1);
+    expect(visaLeafIndex(leaves, '')).toBe(-1);
   });
 });
 

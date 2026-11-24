@@ -55,7 +55,8 @@ test('a tick stamps the passport too: a stamp with “Been here” in its frame 
   await expect(card.locator('[data-landmark-mark="ticked"]')).toHaveText('Stamped in the passport');
 
   await page.goto('/maps/map-home/passport');
-  await page.getByRole('combobox', { name: 'Go to a page' }).selectOption({ label: '4. Spain' });
+  // Spain's page: seventh of the map's places, in the order visited (24 Nov 2026)
+  await page.getByRole('combobox', { name: 'Go to a page' }).selectOption({ label: '7. Spain' });
   const book = page.getByRole('region', { name: 'Passport book' });
   const stamps = book.getByRole('region', { name: 'Landmark stamps (2)' });
   const stamp = stamps.getByRole('img', { name: 'Stamp: Alhambra', exact: true });
@@ -86,9 +87,9 @@ test('on the starry night, a ticked box’s tick is the navy ink, so it shows on
   const ticket = await openCountry(page, 'Peru');
   const caral = ticket.getByRole('checkbox', { name: 'Been to Caral' });
   await caral.check();
-  const look = await caral.evaluate((el) => ({ fill: getComputedStyle(el).backgroundColor, tick: getComputedStyle(el).backgroundImage }));
-  expect(look.fill).toBe('rgb(191, 224, 247)');
-  expect(look.tick).toMatch(/fill='%2308183a'/i);
+  // Once the box's colour has changed (read at once, it could still be the unticked navy)
+  await expect.poll(() => caral.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(191, 224, 247)');
+  expect(await caral.evaluate((el) => getComputedStyle(el).backgroundImage)).toMatch(/fill='%2308183a'/i);
 });
 
 test('the account page switches “On this day” off and on', async ({ page }) => {

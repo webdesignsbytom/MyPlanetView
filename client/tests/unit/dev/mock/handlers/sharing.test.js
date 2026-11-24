@@ -203,7 +203,7 @@ describe('share links', () => {
     map(HOME_MAP).linkAccess = 'ANYONE_WITH_LINK';
     signOut();
     expect((await get('/api/shared/K7QXM2PA9RTW/moments')).data.moments.some((m) => m.id === 'moment-party')).toBe(false);
-    expect((await get('/api/shared/K7QXM2PA9RTW/subdivisions', { country: 'US' })).data.subdivisions).toHaveLength(2);
+    expect((await get('/api/shared/K7QXM2PA9RTW/subdivisions', { country: 'US' })).data.subdivisions).toHaveLength(3);
     expect((await get('/api/shared/K7QXM2PA9RTW/subdivisions', { country: 'AQ' })).status).toBe(400);
     expect((await get('/api/shared/K7QXM2PA9RTW/pins', { country: 'FR' })).data.pins.map((p) => p.id)).toEqual(['pin-paris']);
     expect((await get('/api/shared/K7QXM2PA9RTW/pins/pin-paris')).data.pin.visits).toHaveLength(2);

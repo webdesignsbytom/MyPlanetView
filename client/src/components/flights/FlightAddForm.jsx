@@ -15,6 +15,8 @@ import { airportFrom, airportLabel, placeOfAirport } from '@/utils/flights/airpo
 import { distanceWords, flightCode, flightDays, flightKm, flightPlaces, tripForDay } from '@/utils/flights/flightLog';
 import { saveFlights } from '@/utils/flights/saveFlights';
 import { todayString } from '@/utils/offers/offerContext';
+// Hooks
+import useDistanceUnit from '@/hooks/useDistanceUnit';
 
 const NEW_TRIP = 'new';
 const NO_TRIP = 'none';
@@ -126,6 +128,7 @@ function FlightSources({ airports, onRead }) {
  * setVisit }); `onSaved(result)` afterwards. `airports` is the loaded airport data.
  */
 function FlightAddForm({ mapId, airports, trips = [], visitsByCode = {}, splitUk = false, api, onSaved, onCancel }) {
+  const unit = useDistanceUnit();
   const uid = useId();
   const [read, setRead] = useState(null); // { flights, source }
   const [ticked, setTicked] = useState(new Set());
@@ -221,7 +224,7 @@ function FlightAddForm({ mapId, airports, trips = [], visitsByCode = {}, splitUk
                 <span>
                   <span className='font-semibold'>{dayWords(flight.flownOn)}</span> · {from ? airportLabel(from) : flight.from} → {to ? airportLabel(to) : flight.to}
                   {flightCode(flight) ? ` · ${flightCode(flight)}` : ''}
-                  {from && to ? ` · ${distanceWords(flightKm(from, to))}` : ''}
+                  {from && to ? ` · ${distanceWords(flightKm(from, to), unit)}` : ''}
                 </span>
                 <Button quiet onClick={() => removeFlight(index)}>
                   Remove

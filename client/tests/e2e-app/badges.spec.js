@@ -103,6 +103,34 @@ test.describe('Badges and goals', () => {
     await expect(card.getByRole('button', { name: /^(Share|Save the picture)$/ }).first()).toBeEnabled();
   });
 
+  // Each group of badges folds away under its heading's arrow (24 Nov 2026, the user's wish:
+  // to save space), and stays folded for the visit
+  test('a group of badges folds away and opens again, and stays as it was left', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    let panel = await openTool(page, 'Badges and goals', 'Badges and goals');
+    const continents = panel.getByRole('button', { name: 'Continents', exact: true });
+    await expect(continents).toHaveAttribute('aria-expanded', 'true');
+    await expect(sticker(panel, 'A first country in Europe.')).toBeVisible();
+
+    await continents.click();
+    await expect(continents).toHaveAttribute('aria-expanded', 'false');
+    await expect(sticker(panel, 'A first country in Europe.')).toBeHidden();
+    // The heading stays, and the other groups are still open
+    await expect(panel.getByRole('heading', { name: 'Continents' })).toBeVisible();
+    await expect(panel.getByRole('button', { name: 'Countries', exact: true })).toHaveAttribute('aria-expanded', 'true');
+
+    // Closed and opened again, the panel is as it was left
+    await panel.getByRole('button', { name: 'Close Badges and goals' }).click();
+    panel = await openTool(page, 'Badges and goals', 'Badges and goals');
+    const again = panel.getByRole('button', { name: 'Continents', exact: true });
+    await expect(again).toHaveAttribute('aria-expanded', 'false');
+    await expect(sticker(panel, 'A first country in Europe.')).toBeHidden();
+
+    await again.click();
+    await expect(again).toHaveAttribute('aria-expanded', 'true');
+    await expect(sticker(panel, 'A first country in Europe.')).toBeVisible();
+  });
+
   test('a goal is changed and deleted, and a bucket list starts from the “want to go” countries', async ({ page }) => {
     await openMap(page);
     const panel = await openTool(page, 'Badges and goals', 'Badges and goals');
