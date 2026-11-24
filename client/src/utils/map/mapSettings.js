@@ -52,6 +52,10 @@ export const DEFAULT_MAP_SETTINGS = {
   // Whether the map has offered "Where have you been?" (components/map/QuickFillDialog.jsx;
   // 22 Nov 2026): once per account. Not a switch in Settings
   countriesAsked: false,
+  // A paying member's own: their plan's badge on the banner of every map they own, for
+  // everyone who opens them (utils/plans/supporterBadge.js; 24 Nov 2026). Its switch is
+  // Settings' SupporterBadgeSection, shown to the owner of a paid account only
+  showSupporterBadge: true,
 };
 
 // Grouped as the settings panel shows them.
@@ -96,5 +100,6 @@ export function cleanMapSettings(value) {
     if (typeof input[key] === 'boolean') clean[key] = input[key];
   }
   if (typeof input.countriesAsked === 'boolean') clean.countriesAsked = input.countriesAsked;
+  if (typeof input.showSupporterBadge === 'boolean') clean.showSupporterBadge = input.showSupporterBadge;
   return clean;
 }

@@ -147,6 +147,21 @@ describe('travel stats', () => {
     await owner.agent.delete(`/api/maps/${fresh.id}`);
   });
 
+  // Collector's counts (24 Nov 2026, the user's wish): the UN's 193, a count beside the map's own
+  it('counts the UN member states been to, for everyone who opens the map', async () => {
+    const counter = await signUp('UnCounter');
+    const own = await defaultMapOf(counter.agent);
+    const mark = (code, status = 'VISITED') => counter.agent.put(`/api/maps/${own.id}/visits/${code}`).send({ status });
+    const counts = async () => (await counter.agent.get(`/api/maps/${own.id}`).then(data)).map.stats;
+    expect((await counts()).unCountries).toBe(0);
+    // A member, a part of one (the Canaries are Spain), a territory, and a wish
+    for (const [code, status] of [['FR'], ['IC'], ['GL'], ['JP', 'WANT_TO_GO'], ['XE']]) expect((await mark(code, status)).status).toBe(200);
+    const stats = await counts();
+    // France, Spain and the UK (England), never Greenland or a wish; the map's own count differs
+    expect(stats.unCountries).toBe(3);
+    expect(stats.countries).toBe(4);
+  });
+
   it('goes in "Your data"', async () => {
     await owner.agent.patch(`/api/maps/${map.id}`).send({ homeCountryCode: 'IE' });
     expect(data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.homeCountryCode).toBe('IE');

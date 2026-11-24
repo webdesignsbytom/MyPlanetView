@@ -163,6 +163,29 @@ describe('MapBanner', () => {
     expect(banner.getAttribute('aria-label')).toBe('Map banner');
     expect(banner.querySelector('p').textContent).toBe('Charlie & Alex’s travels');
     expect([...banner.querySelectorAll('span[aria-hidden="true"]')].filter((s) => s.textContent === '★').length).toBe(2);
+    expect(banner.querySelector('[data-supporter-badge]')).toBeNull();
+  });
+
+  // The supporter badge (24 Nov 2026, the user's wish): a paying member's plan under the band
+  it('hangs a paying member’s badge under it: a link to the plans, in a new tab', () => {
+    const { container } = render(<MapBanner map={{ name: 'Our travels' }} supporter={{ plan: 'PREMIUM', name: 'First Class', shown: true }} />);
+    const badge = container.querySelector('section [data-supporter-badge]');
+    expect(badge.getAttribute('data-supporter-badge')).toBe('PREMIUM');
+    expect(badge.tagName).toBe('A');
+    expect(badge.getAttribute('href')).toBe('/pricing');
+    expect(badge.getAttribute('target')).toBe('_blank');
+    expect(badge.getAttribute('rel')).toBe('noopener');
+    expect(badge.getAttribute('aria-label')).toBe('First Class member. About our plans (opens in a new tab)');
+    expect(badge.textContent).toContain('First Class member');
+    // Cut from the First Class passport's cover
+    expect(badge.getAttribute('class')).toContain('passport-first');
+  });
+
+  it('gives Business its own, cut from the navy cover', () => {
+    const { container } = render(<MapBanner map={{ name: 'Our travels' }} supporter={{ plan: 'REGULAR', name: 'Business', shown: true }} />);
+    const badge = container.querySelector('[data-supporter-badge]');
+    expect(badge.textContent).toContain('Business member');
+    expect(badge.getAttribute('class')).toContain('passport-business');
   });
 });
 

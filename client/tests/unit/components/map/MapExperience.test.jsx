@@ -52,7 +52,9 @@ vi.mock('@/hooks/useMomentPage', () => ({ preloadMomentPage: vi.fn(() => Promise
 vi.mock('@/hooks/useLandmarks', () => ({ default: () => ({ landmarks: [] }), preloadLandmarks: vi.fn(() => Promise.resolve()) }));
 vi.mock('@/hooks/useMustVerifyEmail', () => ({ default: vi.fn(() => false) }));
 vi.mock('@/hooks/useOneShots', async (importOriginal) => ({ ...(await importOriginal()), default: () => oneShotsState }));
-vi.mock('@/hooks/useMediaQuery', () => ({ default: () => false }));
+// A wide screen only where a test asks for one (the banner's query)
+const { media } = vi.hoisted(() => ({ media: { wide: false } }));
+vi.mock('@/hooks/useMediaQuery', () => ({ default: (query) => media.wide && query.startsWith('(min-width: 1024px)') }));
 vi.mock('@/hooks/useAchievements', () => ({
   default: () => ({ goals: [], badges: [], loading: false, news: null, check: () => {}, dismissNews: () => {} }),
 }));
@@ -158,6 +160,7 @@ const seenDialogs = () => {
 describe('MapExperience', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    media.wide = false;
     preloadCountryLists.mockImplementation(() => Promise.resolve());
   });
   afterEach(() => vi.useRealTimers());
@@ -356,6 +359,29 @@ describe('MapExperience', () => {
       // Another style's design isn't this one's
       const other = open({ map: { ...MAP, style: 'old-map', designs: { starry: design } } });
       expect(other.q('[data-map-design]')).toBeNull();
+    });
+
+    // The supporter badge (24 Nov 2026, the user's wish): under the banner, on wide screens
+    it('hangs a paying owner’s badge under the banner, following their switch at once', () => {
+      media.wide = true;
+      const supporter = { plan: 'PREMIUM', name: 'First Class', shown: true };
+      const on = open({ map: { ...MAP, supporter } });
+      expect(on.q('section[aria-label="Map banner"] [data-supporter-badge]').getAttribute('data-supporter-badge')).toBe('PREMIUM');
+      on.unmount();
+      // Turned off in their Settings: gone from their banner straight away
+      const off = open({ map: { ...MAP, supporter }, settings: { ...DEFAULT_MAP_SETTINGS, showSupporterBadge: false } });
+      expect(off.q('section[aria-label="Map banner"]')).not.toBeNull();
+      expect(off.q('[data-supporter-badge]')).toBeNull();
+    });
+
+    it('shows the badge through a share link as the server gives it, and none for Economy', () => {
+      media.wide = true;
+      const shared = open({ map: { ...MAP, supporter: { plan: 'REGULAR', name: 'Business', shown: true } }, role: 'VIEWER', actions: null, shareCode: 'ABCD-EFGH-JKMN' });
+      expect(shared.q('[data-supporter-badge]').getAttribute('data-supporter-badge')).toBe('REGULAR');
+      shared.unmount();
+      const economy = open({ map: { ...MAP, supporter: null } });
+      expect(economy.q('section[aria-label="Map banner"]')).not.toBeNull();
+      expect(economy.q('[data-supporter-badge]')).toBeNull();
     });
 
     it('filters only the pictures in Black and white', () => {

@@ -22,7 +22,8 @@ from bpy_extras.object_utils import world_to_camera_view
 from mathutils import Vector, Matrix
 
 __all__ = ['bpy', 'bmesh', 'math', 'Vector', 'Matrix', 'setup', 'toon', 'flat', 'M', 'finish', 'box', 'cyl',
-           'pyramid', 'ball', 'loft', 'lathe', 'bar', 'rod', 'each_side', 'tile', 'turn', 'render']
+           'pyramid', 'ball', 'loft', 'lathe', 'bar', 'rod', 'each_side', 'tile', 'turn', 'render',
+           'gable', 'hip', 'arch']
 
 ARGV = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 SIZE = int(ARGV[1]) if len(ARGV) > 1 else 1024
@@ -256,6 +257,42 @@ def each_side(fn):
         a = i * math.pi / 2
         c, s = math.cos(a), math.sin(a)
         fn(i, a, lambda dx, dy, c=c, s=s: (dx * c - dy * s, dx * s + dy * c))
+
+
+def gable(name, mat, x, y, z, w, d, h, ridge_x=False, over=0.0, outline=0.004):
+    """A pitched roof (or a pediment) on a w x d top at height z, its ridge h above along y
+    (the gable ends face the front) or, with ridge_x, along x; `over` makes it overhang."""
+    w2, d2 = w / 2 + over, d / 2 + over
+    base = [(x - w2, y - d2), (x + w2, y - d2), (x + w2, y + d2), (x - w2, y + d2)]
+    if ridge_x:
+        top = [(x - w2, y - 0.003), (x + w2, y - 0.003), (x + w2, y + 0.003), (x - w2, y + 0.003)]
+    else:
+        top = [(x - 0.003, y - d2), (x + 0.003, y - d2), (x + 0.003, y + d2), (x - 0.003, y + d2)]
+    return loft(name, mat, [[(a, b, z) for a, b in base], [(a, b, z + h) for a, b in top]], outline=outline)
+
+
+def hip(name, mat, x, y, z, w, d, h, over=0.0, outline=0.004):
+    """A hipped roof on a w x d top at height z, rising h to a ridge along its longer side
+    (a pyramid when square); `over` makes it overhang."""
+    w2, d2 = w / 2 + over, d / 2 + over
+    r = max(0.003, abs(w2 - d2))
+    top = [(x - r, y - 0.003), (x + r, y - 0.003), (x + r, y + 0.003), (x - r, y + 0.003)] if w2 >= d2 else \
+          [(x - 0.003, y - r), (x + 0.003, y - r), (x + 0.003, y + r), (x - 0.003, y + r)]
+    base = [(x - w2, y - d2), (x + w2, y - d2), (x + w2, y + d2), (x - w2, y + d2)]
+    return loft(name, mat, [[(a, b, z) for a, b in base], [(a, b, z + h) for a, b in top]], outline=outline)
+
+
+def arch(name, mat, x, y, z, w, h, face='y', depth=0.006):
+    """A round-headed opening (a door, a window, a niche) standing on z, w wide and h tall
+    to the top of its round head, on a face that looks along y (the front) or x."""
+    hh = max(0.0, h - w / 2)
+    if face == 'y':
+        box(name, mat, x, y, z, w, depth, hh, outline=0, bevel=0)
+        rot = Matrix.Rotation(math.pi / 2, 4, 'X')
+    else:
+        box(name, mat, x, y, z, depth, w, hh, outline=0, bevel=0)
+        rot = Matrix.Rotation(math.pi / 2, 4, 'Y')
+    return cyl(name + 'top', mat, w / 2, depth, segs=12, outline=0, matrix=Matrix.Translation((x, y, z + hh)) @ rot)
 
 
 def tile(top=None):

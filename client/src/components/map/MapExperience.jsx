@@ -73,6 +73,7 @@ import { maxTravellersFor } from '@/utils/map/saveMapSetup';
 import { nearestGoal } from '@/utils/achievements/goals';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { countsAsVisited } from '@/utils/map/visitStatus';
+import { shownSupporter } from '@/utils/plans/supporterBadge';
 import { MAP_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/map/mapListCache';
 import { countryListsOf, countryMomentFilters, countryPhotoFilters, preloadCountryLists } from '@/utils/map/preloadCountryLists';
@@ -738,6 +739,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           <StatsPanel
             stats={map.stats}
             travellers={map.travellers}
+            // Collector's counts: the UN members to go open their tickets (the UK's is England's
+            // on a map that splits it, where the UK has none of its own)
+            visits={map.visits}
+            onOpenCountry={(code) => showCountry(code === 'GB' && map.splitUk ? 'XE' : code)}
             unplacedCount={unplacedCount}
             unplacedMore={unplacedMore}
             onShowUnplaced={showUnplaced}
@@ -1075,7 +1080,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         {/* A country's own map has its own header there */}
         {bannerShows && !ui.countryMap ? (
           <div className='pointer-events-none absolute inset-x-0 top-3 grid justify-items-center'>
-            <MapBanner map={map} />
+            <MapBanner map={map} supporter={shownSupporter(map, settings, { role, shareCode })} />
           </div>
         ) : null}
 

@@ -163,4 +163,37 @@ describe('SettingsPanel', () => {
       ['showMoments', false],
     ]);
   });
+
+  // The supporter badge (24 Nov 2026, the user's wish): a paying owner's, on unless turned off
+  describe('the supporter badge', () => {
+    const PAID = { ...MAP, supporter: { plan: 'PREMIUM', name: 'First Class', shown: true } };
+
+    it('shows a paying owner their badge, on, with its switch', () => {
+      const { container, onChangeSetting } = open({ map: PAID });
+      const section = container.querySelector('[data-supporter-settings]');
+      expect(section.querySelector('legend').textContent).toBe('Your supporter badge');
+      // The badge as it looks, not a link here
+      const badge = section.querySelector('[data-supporter-badge]');
+      expect(badge.getAttribute('data-supporter-badge')).toBe('PREMIUM');
+      expect(badge.tagName).toBe('SPAN');
+      expect(badge.textContent).toContain('First Class member');
+      const box = screen.getByLabelText('Show my First Class badge');
+      expect(box.checked).toBe(true);
+      expect(document.getElementById(box.getAttribute('aria-describedby')).textContent).toMatch(/every map you own/);
+      fireEvent.click(box);
+      expect(onChangeSetting).toHaveBeenCalledWith('showSupporterBadge', false);
+    });
+
+    it('shows the switch off once it’s turned off', () => {
+      open({ map: PAID, settings: { ...DEFAULT_MAP_SETTINGS, showSupporterBadge: false } });
+      expect(screen.getByLabelText('Show my First Class badge').checked).toBe(false);
+    });
+
+    it('isn’t there for an owner on Economy, or for anyone but the owner', () => {
+      const { container } = open();
+      expect(container.querySelector('[data-supporter-settings]')).toBeNull();
+      const { container: coOwner } = open({ map: PAID, isOwner: false, canManage: true });
+      expect(coOwner.querySelector('[data-supporter-settings]')).toBeNull();
+    });
+  });
 });

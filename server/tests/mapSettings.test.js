@@ -42,6 +42,12 @@ describe('cleanMapSettings', () => {
     expect(cleanMapSettings({ showCelebrations: 'off' }).ok).toBe(false);
   });
 
+  // The owner's supporter badge switch (24 Nov 2026): true or false, nothing else
+  it('keeps the supporter badge switch, refusing a value that isn’t true or false', () => {
+    expect(cleanMapSettings({ showSupporterBadge: false })).toEqual({ ok: true, value: { showSupporterBadge: false } });
+    expect(cleanMapSettings({ showSupporterBadge: 'no' }).ok).toBe(false);
+  });
+
   it('accepts both map types and refuses any other', () => {
     expect(cleanMapSettings({ mapType: 'regular' })).toEqual({ ok: true, value: { mapType: 'regular' } });
     expect(cleanMapSettings({ mapType: 'satellite' }).ok).toBe(false);

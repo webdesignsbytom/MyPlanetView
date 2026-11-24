@@ -691,4 +691,111 @@ Another 200 (24 Nov 2026, the user's wish), buildings, statues and structures on
 | Libya | `sabratha` | LY | Sabratha: 32.80528, 12.485, Q15052130 | Sabratha's Roman theatre stage of three storeys of columns by the sea | Yes |
 | Mali | `tomb-of-askia` | ML | Tomb of Askia: 16.28972, -0.04444, Q503823 | The Tomb of Askia's mud-brick pyramid with its wooden spikes, the mosque | Yes |
 
+## 6. Another 100: built World Heritage Sites
+
+Another 100 (24 Nov 2026, the user's wish), buildings, statues and structures only: the best-known built World Heritage Sites with no model yet (by their number of Wikipedia editions, leaving out rock art, fossil sites, canals, vineyards and landscapes), one model each, so every one is the model of a landmark of its own (the celebration finds a landmark's model by its Wikidata item, and several models on one landmark show only one). The same overlap rule as parts 2 to 5: the models already on the map keep their place, and 73 of the 100 show, 27 are kept off: drawn with `"onMap": false` ("No"). All 100 were drawn on 24 Nov 2026 and exported to the maps the same day (the country map e2e test's `HERITAGE_MODELS`), with three new helpers in `toon.py` that most buildings need: `gable` (a pitched roof or a pediment), `hip` (a hipped roof) and `arch` (a round-headed door, window or niche). Mireuksa's pagoda stands at Iksan (36.01227, 127.03077, in North Jeolla), part of its serial site, rather than on the landmark's point at Gongju; Port Royal's spot is on the Palisadoes spit, which Jamaica's map draws coarsely, so its test checks it's within Saint Andrew's bounds.
+
+| Country | Model id | Maps | Landmark (name in the data: latitude, longitude, Wikidata) | What to draw | On the map |
+| --- | --- | --- | --- | --- | --- |
+| Canary Islands | `san-cristobal-de-la-laguna` | IC | San Cristóbal de La Laguna: 28.48528, -16.31667, Q54898 | La Laguna's colonial grid: the cathedral's twin-towered front, the Concepción church's tall Mudéjar tower and the low painted houses | Yes |
+| Bolivia | `potosi` | BO | Potosí: -19.58917, -65.75333, Q35045 | Potosí's Casa de la Moneda and the cathedral's white towers, the red cone of Cerro Rico behind | Yes |
+| Iraq | `ashur` | IQ | Ashur: 35.45667, 43.2625, Q200200 | Ashur's ziggurat mound and city walls on the cliff over the Tigris | No: Hatra shows |
+| Pakistan | `taxila` | PK | Taxila: 33.74583, 72.7875, Q156093 | Taxila's Dharmarajika stupa and the monastery cells round it | No: Takht-i-Bahi shows |
+| India | `nalanda` | IN | Nalanda Mahavihara: 25.1368, 85.44383, Q216243 | Nalanda's great brick temple of Sariputta with its corner towers and stairs, the monastery's rows of cells | No: Mahabodhi Temple shows |
+| Turkey | `catalhoyuk` | TR | Çatalhöyük: 37.6675, 32.82833, Q192522 | Çatalhöyük's mud-brick houses packed together, entered by ladders through the roofs | Yes |
+| Turkmenistan | `merv` | TM | Ancient Merv: 37.66278, 62.1925, Q193325 | Merv's Mausoleum of Sultan Sanjar: the great brick cube and its dome, the fluted walls of the Kyz Kala | Yes |
+| India | `sarnath` | IN | Sarnath: 25.38111, 83.02139, Q324394 | Sarnath's Dhamek Stupa, its great round drum with carved bands, in its park of ruins | Yes |
+| Turkmenistan | `kunya-urgench` | TM | Kunya-Urgench: 42.32613, 59.15307, Q48472 | Kunya-Urgench's tall tapering Kutlug Timur minaret and Turabek Khanum's mausoleum with its pointed dome | Yes |
+| Angola | `mbanza-kongo` | AO | Mbanza Kongo: -6.26667, 14.25, Q500189 | The ruined walls of Kulumbimbi, the old cathedral of Mbanza Kongo, and the sacred tree | Yes |
+| Yemen | `zabid` | YE | Historic Town of Zabid: 14.2, 43.31667, Q138986 | Zabid's whitewashed houses and the Great Mosque's minaret, the Asha'ir mosque's courtyard | Yes |
+| Israel | `megiddo` | IL | Biblical Tels (Megiddo): 32.58528, 35.18444, Q208379 | Tel Megiddo's mound with its city gate, the round Canaanite altar and the stables | No: Bahá'í Gardens shows |
+| Germany | `pile-dwellings` | DE | Alpine Pile Dwellings (Lake Constance): 47.6746, 9.12099, Q4580 | Unteruhldingen's thatched houses on stilts over Lake Constance, the walkways between them | Yes |
+| Hungary | `holloko` | HU | Hollókő: 47.99611, 19.59167, Q622865 | Hollókő's white village houses with wooden balconies, the little church tower, the castle on its hill | Yes |
+| Jordan | `as-salt` | JO | As-Salt: 32.03917, 35.72722, Q867586 | As-Salt's yellow stone houses stacked up its hills, the Abu Jaber house's arched windows | Yes |
+| Greece | `philippi` | GR | Philippi: 41.01207, 24.28458, Q379652 | Philippi's Basilica B with its great piers, the forum's columns and the theatre | Yes |
+| Guatemala | `quirigua` | GT | Quiriguá: 15.26944, -89.04028, Q318422 | Quiriguá's tall carved Maya stelae and the zoomorph boulders on their lawn, the forest round them | Yes |
+| Iran | `alamut` | IR | Alamut Castle: 36.44472, 50.58611, Q4706020 | Alamut Castle's ruined walls on top of its rock, the valley below | Yes |
+| Iran | `takht-e-soleyman` | IR | Takht-e Soleyman: 36.60472, 47.23417, Q115253 | Takht-e Soleyman's oval walls round the crater lake, the fire temple's arches | Yes |
+| Slovakia | `vlkolinec` | SK | Vlkolínec: 49.0397, 19.2784, Q392365 | Vlkolínec's log houses in bright colours along the brook, the wooden bell tower | Yes |
+| Cyprus | `choirokoitia` | CY | Choirokoitia: 34.79673, 33.34372, Q385086 | Choirokoitia's round stone houses with flat roofs, rebuilt on the hillside | Yes |
+| India | `pattadakal` | IN | Pattadakal: 15.95133, 75.81464, Q817250 | Pattadakal's temples: the Virupaksha temple's stepped tower and its pillared hall, the smaller shrines | Yes |
+| Malta | `ggantija` | MT | Megalithic Temples of Malta (Ġgantija): 36.04727, 14.2691, Q216862 | Ġgantija's megalithic temple: the great curved wall of huge stones and the trilithon doorway | Yes |
+| Italy | `villa-romana-del-casale` | IT | Villa Romana del Casale: 37.36472, 14.33455, Q505617 | The Villa Romana del Casale's rooms under their protective roofs, the mosaic floors seen from the walkways | No: Valley of the Temples shows |
+| India | `dholavira` | IN | Dholavira: 23.88611, 70.21667, Q9468 | Dholavira's stone citadel and the great stepped reservoir of the Harappan city | No: Rani ki Vav shows |
+| Peru | `caral` | PE | Caral: -10.89361, -77.52028, Q219279 | Caral's stepped pyramids and the sunken circular plaza in the desert valley | Yes |
+| Czechia | `holasovice` | CZ | Holašovice: 48.96667, 14.26667, Q826452 | Holašovice's baroque farmhouse gables round the village green, the chapel in the middle | Yes |
+| Belgium | `stoclet-house` | BE | Stoclet House: 50.83514, 4.41625, Q239028 | The Stoclet Palace's white marble walls edged in bronze, its stepped tower crowned by figures | No: Grand Place shows |
+| China | `dazu` | CN | Dazu Rock Carvings: 29.71333, 105.70694, Q651278 | Dazu's Baodingshan cliff with the great reclining Buddha and the painted figures carved in the rock | No: Leshan Giant Buddha shows |
+| Iran | `tabriz-bazaar` | IR | Tabriz Bazaar: 38.08077, 46.29229, Q4399 | Tabriz Bazaar's brick domes in rows over its halls, the great vaulted timcheh | Yes |
+| Jamaica | `port-royal` | JM | Port Royal: 17.9375, -76.84139, Q685357 | Port Royal's Fort Charles with its cannons, the tilted Giddy House and St Peter's church | Yes |
+| Madagascar | `ambohimanga` | MG | Royal Hill of Ambohimanga: -18.75917, 47.56278, Q458167 | The Royal Hill of Ambohimanga: the wooden palace of the kings and the gate with its stone disc | Yes |
+| Poland | `muskau` | PL | Muskau Park: 51.54756, 14.72323, Q156308 | Muskau's castle in its landscape park, the bridges over the Neisse | Yes |
+| Algeria | `kasbah-of-algiers` | DZ | Kasbah of Algiers: 36.78333, 3.06028, Q662102 | The Kasbah of Algiers' white houses tumbling down to the sea, the Ketchaoua mosque's towers | Yes |
+| Bulgaria | `ivanovo` | BG | Rock-Hewn Churches of Ivanovo: 43.69556, 25.98806, Q503387 | Ivanovo's churches cut into the cliffs of the Rusenski Lom, the river below | Yes |
+| Germany | `lorsch` | DE | Lorsch Abbey: 49.65369, 8.56858, Q157550 | Lorsch Abbey's Carolingian gatehouse with its patterned red and white stone and three arches | No: Wedding Tower, Darmstadt shows |
+| Italy | `crespi-dadda` | IT | Crespi d'Adda: 45.59667, 9.53611, Q726842 | Crespi d'Adda's cotton mill and its chimney, the workers' houses in rows | No: Santa Maria delle Grazie shows |
+| Netherlands | `schokland` | NL | Schokland: 52.63861, 5.77167, Q140869527 | Schokland's little church on its mound in the drained polder, the old harbour's posts | No: Wouda Steam Pumping Station shows |
+| Peru | `chavin` | PE | Chavín de Huántar: -9.59277, -77.17845, Q732554 | Chavín de Huántar's stone temple, the Castillo, with its carved heads and sunken plaza | Yes |
+| Bulgaria | `kazanlak` | BG | Thracian Tomb of Kazanlak: 42.62556, 25.39917, Q301815 | The Thracian Tomb of Kazanlak's grassy mound and the shelter over its painted beehive tomb | Yes |
+| India | `santiniketan` | IN | Santiniketan: 23.6776, 87.6852, Q1026431 | Santiniketan's glass prayer hall, the Upasana Griha, and Kala Bhavana's sculptures under the trees | Yes |
+| Sweden | `engelsberg` | SE | Engelsberg Ironworks: 59.96917, 16.01028, Q936884 | Engelsberg's blast furnace and the manor house by the lake | No: Falun Copper Mine shows |
+| Belgium | `spa` | BE | Great Spa Towns of Europe (Spa): 50.49222, 5.86694, Q16064866 | Spa's grand baths and the Pouhon Pierre-le-Grand's pavilion, the casino | Yes |
+| Brazil | `paraty` | BR | Paraty and Ilha Grande: -23.21944, -44.71472, Q926729 | Paraty's whitewashed colonial houses and the Santa Rita church by the water, boats at the quay | No: Christ the Redeemer + Church of São Francisco de Assis shows |
+| India | `champaner` | IN | Champaner-Pavagadh: 22.48333, 73.53333, Q844427 | Champaner's Jama Masjid with its two tall minarets and carved front | No: Rani ki Vav shows |
+| Iran | `sheikh-safi` | IR | Sheikh Safi al-Din Shrine, Ardabil: 38.24861, 48.29139, Q4243 | Sheikh Safi's shrine with its tiled Allah-Allah tower and the courtyard | Yes |
+| Mexico | `xochicalco` | MX | Xochicalco: 18.80431, -99.29664, Q797120 | Xochicalco's Pyramid of the Feathered Serpent with its carved slopes, on the hilltop | No: Teotihuacan shows |
+| France | `fontenay` | FR | Fontenay Abbey: 47.63966, 4.38933, Q464918 | Fontenay Abbey's plain Cistercian church and cloister, the forge by the stream | No: Vézelay Abbey shows |
+| Jordan | `umm-er-rasas` | JO | Umm er-Rasas: 31.49972, 35.91972, Q822842 | Umm er-Rasas' stylite tower standing alone, the walled ruins of the town | Yes |
+| Poland | `churches-of-peace` | PL | Churches of Peace in Jawor and Świdnica: 51.05391, 16.18904, Q589634 | Świdnica's Church of Peace: the great half-timbered church and its bell tower | Yes |
+| Serbia | `gamzigrad` | RS | Gamzigrad-Romuliana: 43.89931, 22.18617, Q904128 | Gamzigrad's Roman palace walls and round towers, the temple on its platform | Yes |
+| Turkey | `gordion` | TR | Gordion: 39.65048, 31.97848, Q542854 | Gordion's great Midas Mound and the citadel's gate | Yes |
+| Belgium | `plantin-moretus` | BE | Plantin-Moretus Museum: 51.21829, 4.39816, Q595802 | The Plantin-Moretus house's courtyard, the printers' workshop with its presses | Yes |
+| Germany | `corvey` | DE | Corvey Abbey: 51.77778, 9.41, Q56004 | Corvey's Carolingian westwork with its two towers, the baroque abbey beside it | No: Fagus Factory shows |
+| Russia | `ferapontov` | RU | Ferapontov Monastery: 59.95639, 38.5675, Q838256 | The Ferapontov Monastery's white churches with their domes and the gate church, by the lake | No: Kizhi Pogost shows |
+| Zimbabwe | `khami` | ZW | Khami Ruins: -20.14329, 28.42344, Q938685 | Khami's stone terraces with their chequered walls, on the hill by the river | Yes |
+| Bolivia | `samaipata` | BO | Fuerte de Samaipata: -18.17836, -63.81899, Q876451 | The great carved rock of Samaipata with its channels and niches, on its green ridge | Yes |
+| Finland | `verla` | FI | Verla Mill: 61.06199, 26.64002, Q217447 | Verla's red brick board mill with its arched windows, the rapids beside it | Yes |
+| Mexico | `tlacotalpan` | MX | Tlacotalpan: 18.61303, -95.65627, Q903792 | Tlacotalpan's colourful arcaded houses and the church by the river | Yes |
+| Ukraine | `chernivtsi` | UA | Residence of Bukovinian Metropolitans: 48.29664, 25.92491, Q156067 | The Residence of the Bukovinian Metropolitans: red brick wings with patterned tile roofs and the seminary church | Yes |
+| Finland | `old-rauma` | FI | Old Rauma: 61.12827, 21.51321, Q828417 | Old Rauma's painted wooden houses and the Church of the Holy Cross | Yes |
+| Germany | `worlitz` | DE | Dessau-Wörlitz Garden Realm: 51.8636, 12.2814, Q157543 | Wörlitz palace in its English park, the Gothic house and the bridges on the lake | No: Bauhaus Dessau shows |
+| Italy | `stupinigi` | IT | Residences of the House of Savoy: 45.0725, 7.68583, Q461272 | Stupinigi's hunting lodge with its dome topped by the bronze stag, the wings round the court | Yes |
+| South Korea | `namhansanseong` | KR | Namhansanseong: 37.47803, 127.18419, Q562529 | Namhansanseong's fortress gate and walls winding over the hills | No: Gyeongbokgung Palace shows |
+| United Kingdom | `saltaire` | GB, XE | Saltaire: 53.83717, -1.79026, Q838920 | Salts Mill with its Italianate chimney, the workers' terraces and the church | No: Fountains Abbey shows |
+| Israel | `white-city` | IL | White City of Tel Aviv: 32.07778, 34.77389, Q159070 | Tel Aviv's White City: white Bauhaus blocks with rounded balconies | Yes |
+| Mauritius | `aapravasi-ghat` | MU | Aapravasi Ghat: -20.15861, 57.50306, Q9276 | The Aapravasi Ghat's stone steps and buildings by Port Louis' harbour | Yes |
+| South Korea | `hahoe` | KR | Hahoe and Yangdong Villages (Hahoe): 36.53806, 128.52056, Q45865 | Hahoe's tiled and thatched houses in the river's bend, the cliff opposite | Yes |
+| Switzerland | `mustair` | CH | Convent of St John, Müstair: 46.62917, 10.44778, Q757067 | The Convent of St John at Müstair: the church's three apses and the tower | Yes |
+| Cyprus | `troodos` | CY | Painted Churches of Troodos: 34.92028, 33.09583, Q462702 | A Troodos painted church with its steep wooden roof down to the ground, in the mountains | Yes |
+| France | `saint-savin` | FR | Saint-Savin Abbey Church: 46.56477, 0.86597, Q1774129 | Saint-Savin's abbey church with its tall spire over the river | Yes |
+| Iraq | `erbil-citadel` | IQ | Erbil Citadel: 36.191, 44.009, Q206236 | Erbil Citadel's walls on top of its tell, the gate | Yes |
+| Chile | `sewell` | CL | Sewell Mining Town: -34.085, -70.3825, Q588417 | Sewell's colourful mining houses climbing the mountainside by stairs | No: Valparaíso shows |
+| Germany | `bayreuth-opera` | DE | Margravial Opera House, Bayreuth: 49.94434, 11.57866, Q278908 | The Margravial Opera House's front with its balcony and statues | No: Old Town Hall, Bamberg shows |
+| Ghana | `asante-shrine` | GH | Asante Traditional Buildings: 6.40111, -1.62583, Q1141003 | An Asante shrine house with its red and white relief walls and thatched roofs | Yes |
+| India | `ramappa` | IN | Ramappa Temple: 18.25944, 79.9425, Q3380656 | The Ramappa Temple's carved tower and its pillared hall, the bracket figures | Yes |
+| Chile | `humberstone` | CL | Humberstone Saltpeter Works: -20.20833, -69.79444, Q572895 | Humberstone's saltpeter works: the rusted machinery and the chimney in the desert | Yes |
+| Italy | `boboli` | IT | Medici Villas and Gardens (Boboli): 43.7618, 11.24661, Q888825 | The Boboli Gardens behind the Pitti Palace, the amphitheatre and the fountain | No: Two Towers of Bologna + Leaning Tower of Pisa shows |
+| Japan | `nachi` | JP | Kii Mountains Sacred Sites (Kumano): 33.83694, 135.77639, Q611345 | Nachi's red three-storey pagoda in front of the tall Nachi Falls | No: Himeji Castle shows |
+| Sweden | `halsingland` | SE | Decorated Farmhouses of Hälsingland: 61.70722, 16.19583, Q1642003 | A Hälsingland farmhouse painted red with white corners, its decorated porch | Yes |
+| United Kingdom | `cromford` | GB, XE | Derwent Valley Mills: 53.108, -1.556, Q646076 | Cromford Mill's stone mill buildings by the river, the mill pond | No: Jodrell Bank Observatory shows |
+| Cambodia | `sambor-prei-kuk` | KH | Sambor Prei Kuk: 12.86728, 105.04002, Q1818746 | Sambor Prei Kuk's octagonal brick temple towers in the forest | Yes |
+| China | `jiangjun-tomb` | CN | Koguryo Capital Cities and Tombs: 41.15694, 126.18722, Q134873 | The Jiangjun Tomb's stepped granite pyramid | Yes |
+| Oman | `qalhat` | OM | Ancient City of Qalhat: 22.7, 59.3699, Q680322 | Qalhat's Bibi Maryam mausoleum, its ruined dome on the shore | Yes |
+| Romania | `sarmizegetusa` | RO | Dacian Fortresses of Orăștie: 45.6231, 23.3119, Q729327 | Sarmizegetusa Regia's sanctuaries: the rows of andesite pillars and the circle in the forest | Yes |
+| Oman | `bat-tombs` | OM | Bat, Al-Khutm and Al-Ayn: 23.27, 56.745, Q25496 | Al-Ayn's beehive tombs along the ridge, Jebel Misht behind | Yes |
+| Venezuela | `caracas-university` | VE | Ciudad Universitaria de Caracas: 10.49083, -66.89056, Q1061531 | The Ciudad Universitaria's clock tower and modernist halls | Yes |
+| Greenland | `hvalsey` | GL | Kujataa: 61.16444, -45.59806, Q32904732 | Hvalsey's Norse stone church ruin by the fjord, sheep grazing | Yes |
+| Mexico | `paquime` | MX | Paquimé: 30.37583, -107.95556, Q853265 | Paquimé's maze of adobe walls and T-shaped doors | Yes |
+| Sweden | `gammelstad` | SE | Gammelstad Church Town: 65.64611, 22.02861, Q1756286 | Gammelstad's stone church with the red church cottages round it | Yes |
+| Israel | `avdat` | IL | Incense Route Desert Cities: 31.0975, 34.65778, Q477578 | Avdat's Nabataean acropolis on its hill: the churches and the Roman tower | Yes |
+| Netherlands | `eisinga` | NL | Eisinga Planetarium: 53.18738, 5.54375, Q601223 | Eisinga's house in Franeker with the planetarium in its ceiling | Yes |
+| Spain | `lugo-walls` | ES | Roman Walls of Lugo: 43.01419, -7.55989, Q2733427 | Lugo's Roman walls with their round towers ringing the old town | Yes |
+| Czechia | `litomysl` | CZ | Litomyšl Castle: 49.87344, 16.31265, Q2164885 | Litomyšl Castle's Renaissance arcades and sgraffito walls | Yes |
+| Denmark | `eremitage` | DK | Par Force Hunting Landscape: 55.9136, 12.3578, Q10620357 | The Eremitage hunting lodge on its open hill, deer on the grass | No: Kronborg Castle shows |
+| Kenya | `thimlich-ohinga` | KE | Thimlich Ohinga: -0.89134, 34.32611, Q3524629 | Thimlich Ohinga's dry-stone enclosures among the trees | Yes |
+| China | `xixia-tombs` | CN | Xixia Imperial Tombs: 38.43503, 105.98717, Q1069411 | The Xixia tombs' great earthen beehive mounds before the Helan Mountains | Yes |
+| Japan | `chusonji` | JP | Hiraizumi: 38.98861, 141.11028, Q2896261 | Chūson-ji's golden Konjikidō hall in its shelter among the cedars | Yes |
+| Lebanon | `beaufort-castle` | LB | Mount Amel Castles (Beaufort): 33.32471, 35.53215, Q476801 | Beaufort Castle's ruined walls on the cliff above the Litani | Yes |
+| South Korea | `mireuksa` | KR | Baekje Historic Areas: 36.46194, 127.12722, Q20650483 | The Mireuksa stone pagoda of the Baekje kingdom | Yes |
+
 0 of the first models and 0 of the extra ones need a landmark row added first.

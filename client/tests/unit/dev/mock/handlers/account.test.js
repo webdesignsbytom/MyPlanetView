@@ -189,6 +189,9 @@ describe('map settings', () => {
     // The celebration screen's switch (24 Nov 2026)
     expect((await put('/api/users/map-settings', { mapSettings: { showCelebrations: false } })).data.mapSettings).toEqual({ showCelebrations: false });
     expect((await put('/api/users/map-settings', { mapSettings: { showCelebrations: 'off' } })).status).toBe(400);
+    // The supporter badge's switch (24 Nov 2026)
+    expect((await put('/api/users/map-settings', { mapSettings: { showSupporterBadge: false } })).data.mapSettings).toEqual({ showSupporterBadge: false });
+    expect((await put('/api/users/map-settings', { mapSettings: { showSupporterBadge: 'off' } })).status).toBe(400);
   });
 });
 

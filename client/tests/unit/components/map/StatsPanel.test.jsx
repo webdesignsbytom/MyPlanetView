@@ -113,7 +113,9 @@ describe('StatsPanel', () => {
 
   it('offers none of them through a share link', () => {
     const { container } = open();
-    expect(container.querySelectorAll('[data-map-panel] button').length).toBe(1); // the close stamp
+    // The close stamp, and the collector's counts' "to go" list (not an action)
+    const actions = [...container.querySelectorAll('[data-map-panel] button')].filter((b) => !b.closest('[data-collector-counts]'));
+    expect(actions).toHaveLength(1);
     expect(container.querySelector('a')).toBeNull();
   });
 
@@ -163,6 +165,21 @@ describe('StatsPanel', () => {
     expect(names().at(-1)).toBe('Japan');
     fireEvent.click(screen.getByText('Show fewer'));
     expect(names()).toHaveLength(6);
+  });
+
+  // Collector's counts (24 Nov 2026, the user's wish): a counter beside the map's own
+  it('counts the UN member states been to, the ones to go opening their countries', () => {
+    const onOpenCountry = vi.fn();
+    const visits = [
+      { countryCode: 'FR', status: 'VISITED' },
+      { countryCode: 'GL', status: 'VISITED' },
+    ];
+    const { container } = open({ stats: { ...STATS, unCountries: 1 }, visits, onOpenCountry });
+    const counts = container.querySelector('[data-collector-counts]');
+    expect(counts.textContent).toContain('1 of 193');
+    fireEvent.click(screen.getByText('Show the 192 to go'));
+    fireEvent.click(counts.querySelector('[data-un-to-go="DE"] button'));
+    expect(onOpenCountry).toHaveBeenCalledWith('DE');
   });
 
   it('shows none of the time away when no trip has dates', () => {

@@ -152,6 +152,21 @@ describe('share links', () => {
     expect('uploadRules' in data.map).toBe(false);
   });
 
+  // The supporter badge (docs/API.md "The supporter badge"; 24 Nov 2026): the owner's paid plan
+  it('carries a paying owner’s supporter badge, unless they turned it off', async () => {
+    map(HOME_MAP).linkAccess = 'ANYONE_WITH_LINK';
+    // The test user pays for Business; Sam is on Economy
+    expect((await get(`/api/maps/${HOME_MAP}`)).data.map.supporter).toEqual({ plan: 'REGULAR', name: 'Business', shown: true });
+    db().mapSettings = { ...db().mapSettings, showSupporterBadge: false };
+    // The owner still has it, as not shown, for their switch
+    expect((await get(`/api/maps/${HOME_MAP}`)).data.map.supporter).toEqual({ plan: 'REGULAR', name: 'Business', shown: false });
+    signOut();
+    expect((await get('/api/shared/K7QXM2PA9RTW')).data.map.supporter).toBeNull();
+    db().mapSettings.showSupporterBadge = true;
+    expect((await get('/api/shared/K7QXM2PA9RTW')).data.map.supporter).toEqual({ plan: 'REGULAR', name: 'Business', shown: true });
+    expect((await get('/api/shared/samg-4pye-ar22')).data.map.supporter).toBeNull();
+  });
+
   it('answers 404 for a restricted link with no role, and anything that isn’t a code', async () => {
     signOut();
     for (const code of ['K7QXM2PA9RTW', 'not-a-code', 'K7QXM2PA9RT0', '']) expect((await get(`/api/shared/${code}`)).status).toBe(404);

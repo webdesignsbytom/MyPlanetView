@@ -1,0 +1,8 @@
+{
+  "name": "Cromford Mills",
+  "latitude": 53.108,
+  "longitude": -1.556,
+  "maps": ["GB", "XE"],
+  "landmark": "Q646076",
+  "onMap": false
+}

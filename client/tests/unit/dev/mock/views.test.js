@@ -206,6 +206,8 @@ describe('maps', () => {
       { travellerId: 'trav-alex', name: 'Alex', countries: 1, daysAway: 15, lifeAwayShare: null },
     ]);
     expect(stats.countriesInWorld).toBeGreaterThan(200);
+    // Collector's counts (24 Nov 2026): every one of the eight a UN member state; the wishes not
+    expect(stats.unCountries).toBe(8);
     expect(mapStats(map(HOME_MAP), 'VIEWER')).toMatchObject({ photos: 15, landmarks: 12 });
   });
 

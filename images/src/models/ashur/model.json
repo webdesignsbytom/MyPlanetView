@@ -1,0 +1,8 @@
+{
+  "name": "Ashur",
+  "latitude": 35.45667,
+  "longitude": 43.2625,
+  "maps": ["IQ"],
+  "landmark": "Q200200",
+  "onMap": false
+}

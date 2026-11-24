@@ -37,6 +37,9 @@ export const MAP_SETTING_FLAGS = Object.freeze([
   'countriesAsked',
   // The strings tied between places (docs/API.md "Strings"; on unless turned off)
   'showStrings',
+  // The owner's own: the supporter badge on the banner of every map they own, for everyone
+  // who opens them (docs/API.md "The supporter badge"; 24 Nov 2026; on unless turned off)
+  'showSupporterBadge',
 ]);
 
 /**

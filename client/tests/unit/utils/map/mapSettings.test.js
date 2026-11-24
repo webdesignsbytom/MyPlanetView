@@ -45,10 +45,10 @@ describe('the switches', () => {
     }
   });
 
-  it('are every true-or-false setting but countriesAsked, which isn’t a switch', () => {
+  it('are every true-or-false setting but countriesAsked, which isn’t a switch, and the supporter badge, which has its own section', () => {
     const booleans = Object.keys(DEFAULT_MAP_SETTINGS).filter((key) => typeof DEFAULT_MAP_SETTINGS[key] === 'boolean');
     const toggles = MAP_SETTING_TOGGLES.map((toggle) => toggle.key);
-    expect(booleans.filter((key) => !toggles.includes(key))).toEqual(['countriesAsked']);
+    expect(booleans.filter((key) => !toggles.includes(key))).toEqual(['countriesAsked', 'showSupporterBadge']);
     expect(new Set(toggles).size).toBe(toggles.length);
   });
 
@@ -118,6 +118,7 @@ describe('cleanMapSettings', () => {
       showTips: false,
       showCelebrations: false,
       countriesAsked: true,
+      showSupporterBadge: false,
     };
     expect(cleanMapSettings(input)).toEqual(input);
   });
@@ -175,6 +176,13 @@ describe('cleanMapSettings', () => {
     it('is dropped from the settings', () => {
       expect(cleanMapSettings({ blackAndWhite: true })).not.toHaveProperty('blackAndWhite');
     });
+  });
+
+  // A paying owner's supporter badge (24 Nov 2026, the user's wish): on unless turned off
+  it('keeps the supporter badge on unless it’s turned off', () => {
+    expect(DEFAULT_MAP_SETTINGS.showSupporterBadge).toBe(true);
+    expect(cleanMapSettings({ showSupporterBadge: false }).showSupporterBadge).toBe(false);
+    expect(cleanMapSettings({ showSupporterBadge: 'off' }).showSupporterBadge).toBe(true);
   });
 
   it('keeps whether “Where have you been?” has been asked', () => {

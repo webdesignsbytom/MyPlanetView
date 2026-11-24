@@ -12,7 +12,9 @@ import { LANDMARKS } from './data/landmarks';
 import { getDb, me, session } from './store';
 import { byPosition, byShotAt } from './photoOrder';
 import { pageAfter, parseShuffleSeed, shuffled } from './shuffle';
-import { mapPlanFields, mapSlots, uploadRules } from './plans';
+import { effectivePlan, mapPlanFields, mapSlots, uploadRules } from './plans';
+import { supporterBadge } from '@/utils/plans/supporterBadge';
+import { unMembersVisited } from '@/utils/map/unMembers';
 import { mockPlayback } from './stream';
 import { mockUpload } from './uploads';
 import { photoThemes } from './themes';
@@ -362,6 +364,8 @@ export function mapStats(map, role) {
     }),
     // How much of the world, the days away, the distance and the furthest place (21 Nov 2026)
     countriesInWorld: countriesInWorld(Boolean(map.splitUk)),
+    // Collector's counts (24 Nov 2026): the UN's 193 member states been to
+    unCountries: unMembersVisited([...counted]).length,
     ...travelExtras({ completedTrips: completed, visitedCodes: [...counted], positions: PLACE_POSITIONS, homeCountryCode }),
   };
 }
@@ -408,6 +412,13 @@ export function mapView(map, role, { withPlan = false } = {}) {
     style: mapStyleOf(map),
     role,
     ownerName: userName(map.ownerId),
+    // The owner's paid plan on the banner, unless they turned it off (docs/API.md "The
+    // supporter badge"): the mock keeps map settings for the test user alone
+    supporter: supporterBadge({
+      accountPlan: effectivePlan(map.ownerId).plan,
+      ownerSettings: map.ownerId === me().id ? db.mapSettings : null,
+      role,
+    }),
     travellers: db.travellers
       .filter((t) => t.mapId === map.id)
       .sort((a, b) => a.position - b.position)

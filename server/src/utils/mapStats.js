@@ -4,6 +4,7 @@ import { isSpecialPlace } from './specialPlaces.js';
 import { countedCountryCodes } from './ukNations.js';
 import { isRegion } from './regionPlaces.js';
 import { daysAway, lifeAwayShare, travelExtras } from './travelStats.js';
+import { unMembersVisited } from './unMembers.js';
 
 /**
  * @param {object} input
@@ -75,6 +76,8 @@ export function buildMapStats({
     byTraveller,
     // How much of the world, the days away, the distance and the furthest place (21 Nov 2026)
     countriesInWorld: worldTotals ? (splitUk ? worldTotals.splitUk : worldTotals.whole) : null,
+    // Collector's counts (24 Nov 2026): the UN's 193 member states been to (utils/unMembers.js)
+    unCountries: unMembersVisited(counted).length,
     ...travelExtras({ completedTrips, visitedCodes: counted, positions, homeCountryCode }),
   };
 }

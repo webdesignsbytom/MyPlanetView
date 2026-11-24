@@ -7,6 +7,7 @@ import MapPanel from './MapPanel';
 import MapActionButton from './MapActionButton';
 import StatTile from './StatTile';
 import StatsTimeAway from './StatsTimeAway';
+import CollectorCounts from './CollectorCounts';
 import UnplacedPhotosButton from './UnplacedPhotosButton';
 // Hooks
 import useLandmarks from '@/hooks/useLandmarks';
@@ -34,8 +35,10 @@ import { lifeShareWords } from '@/utils/map/birthDates';
 // the distance on completed trips (home, the stops, home again), and the place furthest from
 // the map's home (Settings, "This map"). Time away in more detail (23 Nov 2026, the user's
 // wish): the longest trip, the days away each year and in each country (StatsTimeAway), and
-// each traveller's days beside their countries.
-function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onPoster, onGuessGame, onFlightLog, compareHref, onYearRecap, collected = null, passportHref, onClose }) {
+// each traveller's days beside their countries. Collector's counts (24 Nov 2026): the UN's 193
+// member states been to, from the map's `visits`, with the ones to go, each opening its ticket
+// (`onOpenCountry`).
+function StatsPanel({ stats, travellers = [], visits = [], onOpenCountry = null, unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onPoster, onGuessGame, onFlightLog, compareHref, onYearRecap, collected = null, passportHref, onClose }) {
   const byTraveller = stats?.byTraveller || [];
   const { landmarks } = useLandmarks(null, { enabled: Boolean(collected) });
   const collection = useMemo(() => {
@@ -149,6 +152,8 @@ function StatsPanel({ stats, travellers = [], unplacedCount = 0, unplacedMore = 
               <span>Passport: landmark stamps</span>
             </Link>
           ) : null}
+          {/* The UN's 193, beside the map's own count (24 Nov 2026): a counter, the map unchanged */}
+          <CollectorCounts count={stats.unCountries ?? null} visits={visits} onOpenCountry={onOpenCountry} />
           <StatsTimeAway daysByYear={stats.daysByYear} daysByPlace={stats.daysByPlace} />
           {travellers.length > 1 && byTraveller.length ? (
             <section className='grid gap-2' aria-labelledby='stats-by-traveller'>
