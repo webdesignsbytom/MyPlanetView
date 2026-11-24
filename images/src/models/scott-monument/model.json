@@ -1,0 +1,8 @@
+{
+  "name": "Scott Monument",
+  "latitude": 55.95,
+  "longitude": -3.21667,
+  "maps": ["GB", "XC"],
+  "landmark": "Q15260680",
+  "onMap": false
+}

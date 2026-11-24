@@ -1,0 +1,8 @@
+{
+  "name": "New Lanark",
+  "latitude": 55.66361,
+  "longitude": -3.78139,
+  "maps": ["GB", "XC"],
+  "landmark": "Q743108",
+  "onMap": false
+}

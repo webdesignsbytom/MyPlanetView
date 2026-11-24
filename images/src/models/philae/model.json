@@ -1,0 +1,8 @@
+{
+  "name": "Philae",
+  "latitude": 22.33694,
+  "longitude": 31.62556,
+  "maps": ["EG"],
+  "landmark": "Q134140",
+  "onMap": false
+}

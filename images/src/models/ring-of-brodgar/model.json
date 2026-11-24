@@ -1,0 +1,8 @@
+{
+  "name": "Ring of Brodgar",
+  "latitude": 58.9975,
+  "longitude": -3.215,
+  "maps": ["GB", "XC"],
+  "landmark": "Q1334966",
+  "onMap": false
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Independence Hall",
+  "latitude": 39.94889,
+  "longitude": -75.15,
+  "maps": ["US"],
+  "landmark": "Q390028",
+  "onMap": false
+}

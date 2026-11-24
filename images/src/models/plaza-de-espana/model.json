@@ -1,0 +1,8 @@
+{
+  "name": "Plaza de España",
+  "latitude": 37.38384,
+  "longitude": -5.99155,
+  "maps": ["ES"],
+  "landmark": "Q9709444",
+  "onMap": false
+}

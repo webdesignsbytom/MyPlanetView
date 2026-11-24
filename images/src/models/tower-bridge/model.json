@@ -1,0 +1,8 @@
+{
+  "name": "Tower Bridge",
+  "latitude": 51.5082,
+  "longitude": -0.0762,
+  "maps": ["GB", "XE"],
+  "landmark": "Q62378",
+  "onMap": false
+}

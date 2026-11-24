@@ -1,0 +1,8 @@
+{
+  "name": "Prague Astronomical Clock",
+  "latitude": 50.0,
+  "longitude": 14.56,
+  "maps": ["CZ"],
+  "landmark": "Q64637410",
+  "onMap": false
+}

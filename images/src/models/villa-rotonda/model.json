@@ -1,0 +1,8 @@
+{
+  "name": "Villa La Rotonda",
+  "latitude": 45.55,
+  "longitude": 11.55,
+  "maps": ["IT"],
+  "landmark": "Q370956",
+  "onMap": false
+}
