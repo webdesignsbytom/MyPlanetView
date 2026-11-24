@@ -48,7 +48,7 @@ describe('MapStrings', () => {
     const string = svg.querySelector('[data-string="FR-IT"]');
     expect(string.getAttribute('class')).toContain('[opacity:var(--map-string-alpha,1)]');
     const thread = string.querySelector('path');
-    expect(thread.getAttribute('class')).toContain('[stroke-width:var(--map-string-width,2px)]');
+    expect(thread.getAttribute('class')).toContain('[stroke-width:var(--map-string-width,1.8px)]');
     const strands = [...string.querySelectorAll('[data-string-strand]')];
     expect(strands).toHaveLength(4);
     for (const strand of strands) {
@@ -58,7 +58,7 @@ describe('MapStrings', () => {
       expect(strand.getAttribute('stroke-dasharray')).toBe('3 3');
     }
     // Side by side across the string, each a little further along than the one before
-    expect(strands.map((s) => Number(s.getAttribute('stroke-dashoffset')))).toEqual([-1.35, -0.45, 0.45, 1.35]);
+    expect(strands.map((s) => Number(s.getAttribute('stroke-dashoffset')))).toEqual([-1.215, -0.405, 0.405, 1.215]);
     expect(strands[0].getAttribute('transform')).not.toBe(strands[3].getAttribute('transform'));
     // Pins wear the strings' opacity too
     expect(svg.querySelector('[data-string-pins]').getAttribute('class')).toContain('[opacity:var(--map-string-alpha,1)]');

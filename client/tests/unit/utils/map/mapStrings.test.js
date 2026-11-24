@@ -34,7 +34,7 @@ describe('a twined string’s strands', () => {
     expect(strands.every((s) => s.dx === 0)).toBe(true);
     expect(twistStrands(across, 4)[3].dy).toBeCloseTo(strands[3].dy / 4, 3);
     // Their dashes start a little further on across the string: the slant of the twist
-    expect(strands.map((s) => s.dashOffset)).toEqual(TWIST_STRAND_OFFSETS_PX.map((px) => Math.round(px * TWIST_SHIFT_PX * 100) / 100));
+    expect(strands.map((s) => s.dashOffset)).toEqual(TWIST_STRAND_OFFSETS_PX.map((px) => Math.round(px * TWIST_SHIFT_PX * 1000) / 1000));
   });
 
   it('come with each drawn string', () => {

@@ -36,17 +36,17 @@ describe('a second colour twisted into the strings', () => {
 
   it('shows the twine: the second colour, its width and strands', () => {
     expect(designCss({ string: '#c8102e', stringTwist: '#ffffff' })).toBe(
-      '[data-map-design]{--map-string:#c8102e;--map-string-2:#ffffff;--map-string-width:4px;--map-string-twist:inline}',
+      '[data-map-design]{--map-string:#c8102e;--map-string-2:#ffffff;--map-string-width:3.6px;--map-string-twist:inline}',
     );
     // With the style's usual first colour, only the twine's own
     expect(designCss({ string: null, stringTwist: '#ffffff' })).toBe(
-      '[data-map-design]{--map-string-2:#ffffff;--map-string-width:4px;--map-string-twist:inline}',
+      '[data-map-design]{--map-string-2:#ffffff;--map-string-width:3.6px;--map-string-twist:inline}',
     );
   });
 
   it('keeps a see-through twine’s colours opaque, its opacity on the string as a whole', () => {
     expect(designCss({ string: '#c8102e66', stringTwist: '#ffffff' })).toBe(
-      '[data-map-design]{--map-string:#c8102e;--map-string-alpha:0.4;--map-string-2:#ffffff;--map-string-width:4px;--map-string-twist:inline}',
+      '[data-map-design]{--map-string:#c8102e;--map-string-alpha:0.4;--map-string-2:#ffffff;--map-string-width:3.6px;--map-string-twist:inline}',
     );
   });
 

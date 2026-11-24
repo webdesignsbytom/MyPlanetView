@@ -145,9 +145,10 @@ ring = [(x, y) for x, y in ring if y >= 0.95]
 ring = [(ring[0][0], 0.95)] + ring + [(ring[-1][0], 0.95)]
 add_prism(bm, [bm.verts.new((x, y, G - 0.012)) for x, y in ring], [bm.verts.new((x, y, G + 0.003)) for x, y in ring])
 finish('seine', bm, M['water'], smooth_sides=False)
-box('quay', M['granite'], (0, 0.94, G + 0.01), (2.4, 0.03, 0.04), bevel=0.003)
-box('gravel', M['gravel'], (TX, TY, G - 0.001), (1.55, 1.55, 0.006), bevel=0)
-box('alleeFront', M['gravel'], (TX, -1.02, G - 0.001), (0.36, 0.6, 0.006), bevel=0)
+slab('quay', M['granite'], rect(0, 0.94, 3.0, 0.03), G - 0.01, G + 0.03, bevel=0.002, margin=0.006)
+# the gravel square and the path out of its front, as one piece (two overlapping slabs left a dark seam)
+x0, x1, y0, y1 = TX - 0.775, TX + 0.775, TY - 0.775, TY + 0.775
+slab('gravel', M['gravel'], [(x0, y0), (TX - 0.18, y0), (TX - 0.18, -1.32), (TX + 0.18, -1.32), (TX + 0.18, y0), (x1, y0), (x1, y1), (x0, y1)], G - 0.004, G + 0.002)
 for s in (-1, 1):
     for k in range(5):
         tree(f'treeRow{s}{k}', TX + s * (0.92 + 0.03 * (k % 2)), -0.75 + k * 0.33, h=0.22, r=0.085)

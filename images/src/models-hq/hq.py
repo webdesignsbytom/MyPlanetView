@@ -15,7 +15,7 @@ from bpy_extras.object_utils import world_to_camera_view
 __all__ = ['bpy', 'bmesh', 'math', 'random', 'Vector', 'Matrix', 'M', 'G', 'PLINTH_R', 'setup', 'lin', 'material', 'finish',
            'box', 'box_m', 'cylinder', 'lathe', 'annulus', 'bar', 'tube', 'arch_outline', 'add_prism', 'arcade_ring',
            'arcade_path', 'column', 'gable_roof', 'hip_roof', 'pyramid', 'paving_strip', 'tree', 'cypress', 'person', 'windows', 'banded', 'striped',
-           'parented', 'water_disc', 'render', 'multi', 'fir', 'spire']
+           'parented', 'water_disc', 'render', 'multi', 'fir', 'spire', 'clip_to_plinth', 'slab', 'rect']
 
 ARGV = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 SIZE = int(ARGV[1]) if len(ARGV) > 1 else 1024
@@ -325,16 +325,23 @@ def render(name='model'):
     dg = bpy.context.evaluated_depsgraph_get()
     inv = cam.matrix_world.inverted()
     xs, ys = [], []
+    over = {}
     for ob in scene.objects:
         if ob.type not in ('MESH', 'CURVE'):
             continue
         ev = ob.evaluated_get(dg)
         me = ev.to_mesh()
         for v in me.vertices:
-            p = inv @ (ev.matrix_world @ v.co)
+            w = ev.matrix_world @ v.co
+            p = inv @ w
             xs.append(p.x)
             ys.append(p.y)
+            # nothing may stick out over the base's edge (roads, paving, trees, boats)
+            if ob.name not in ('plinth', 'turf') and math.hypot(w.x, w.y) > PLINTH_R * 0.997:
+                over[ob.name] = max(over.get(ob.name, 0.0), math.hypot(w.x, w.y))
         ev.to_mesh_clear()
+    for name, r in sorted(over.items()):
+        print(f'OUT OF BOUNDS: {name} reaches {r:.3f} (the base is {PLINTH_R})')
     w, h = max(xs) - min(xs), max(ys) - min(ys)
     cam_data.ortho_scale = max(w, h) * 1.03
     cam_data.shift_x = (max(xs) + min(xs)) / 2 / cam_data.ortho_scale
@@ -611,6 +618,8 @@ def paving_strip(name, x0, y0, x1, y1, width, tile=0.075, gap=0.008):
             v = -width / 2 + (j + 0.5) * width / nv
             cx = (x0 + x1) / 2 + u * math.cos(ang) - v * math.sin(ang)
             cy = (y0 + y1) / 2 + u * math.sin(ang) + v * math.cos(ang)
+            if math.hypot(cx, cy) + math.hypot(length / nu, width / nv) / 2 > PLINTH_R - 0.04:
+                continue
             h = 0.012 + 0.003 * rng.random()
             key = 'paving' if rng.random() < 0.7 else 'pavingDark'
             bmesh.ops.create_cube(bms[key], size=1.0, matrix=Matrix.Translation((cx, cy, G + h / 2 - 0.004)) @ Matrix.Rotation(ang + rng.uniform(-0.02, 0.02), 4, 'Z') @ Matrix.Diagonal((length / nu - gap, width / nv - gap, h, 1)))
@@ -689,3 +698,50 @@ def spire(name, mat, x, y, z0, r, h, segs=24, finial=True):
     if finial:
         lathe(name + 'Finial', M['gold'], [(0.0, 0), (r * 0.09, h * 0.02), (r * 0.11, h * 0.05), (0.0, h * 0.08)], (x, y, z0 + h - h * 0.01), segs=12, smooth=True)
         cylinder(name + 'Spike', M['gold'], r * 0.025, h * 0.12, (x, y, z0 + h + h * 0.05), segs=6, r2=0.0)
+
+
+def clip_to_plinth(poly, margin=0.04, center=(0.0, 0.0), radius=None):
+    """A polygon of (x, y) points cut to the base's circle (`margin` inside its edge), by
+    Sutherland-Hodgman against a 160-gon: roads, squares and paving never run over the edge."""
+    R = (PLINTH_R if radius is None else radius) - margin
+    n = 160
+    circle = [(center[0] + R * math.cos(2 * math.pi * k / n), center[1] + R * math.sin(2 * math.pi * k / n)) for k in range(n)]
+    out = list(poly)
+    for k in range(n):
+        a, b = circle[k], circle[(k + 1) % n]
+        inside = lambda p: (b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0]) >= 0
+        def cut(p, q):
+            ax_, ay_ = q[0] - p[0], q[1] - p[1]
+            bx_, by_ = b[0] - a[0], b[1] - a[1]
+            den = ax_ * by_ - ay_ * bx_
+            t = ((a[0] - p[0]) * by_ - (a[1] - p[1]) * bx_) / den
+            return (p[0] + t * ax_, p[1] + t * ay_)
+        src, out = out, []
+        if not src:
+            break
+        prev = src[-1]
+        for cur in src:
+            if inside(cur):
+                if not inside(prev):
+                    out.append(cut(prev, cur))
+                out.append(cur)
+            elif inside(prev):
+                out.append(cut(prev, cur))
+            prev = cur
+    return out
+
+
+def slab(name, mat, poly, z0, z1, bevel=0.0, margin=0.04):
+    """A flat piece of ground (a road, a pavement, a square) from a polygon, cut to the base."""
+    pts = clip_to_plinth(poly, margin)
+    if len(pts) < 3:
+        return None
+    bm = bmesh.new()
+    add_prism(bm, [bm.verts.new((x, y, z0)) for x, y in pts], [bm.verts.new((x, y, z1)) for x, y in pts])
+    return finish(name, bm, mat, bevel=bevel, smooth_sides=False)
+
+
+def rect(cx, cy, w, h, rot=0.0):
+    """The corners of a w x h rectangle about (cx, cy), turned by rot (for slab)."""
+    c, s_ = math.cos(rot), math.sin(rot)
+    return [(cx + c * x - s_ * y, cy + s_ * x + c * y) for x, y in ((-w / 2, -h / 2), (w / 2, -h / 2), (w / 2, h / 2), (-w / 2, h / 2))]

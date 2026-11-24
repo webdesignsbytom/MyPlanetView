@@ -60,8 +60,8 @@ export const shownDesign = (design) => (design?.shown ? design : null);
 export const EMPTY_DESIGN = Object.freeze({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, picture: null });
 
 // A twined string's width on screen (MapStrings): wide enough for the twist to show; a
-// string of one colour is 2px
-export const TWINED_STRING_PX = 4;
+// string of one colour is 1.8px (4 and 2 until 25 Nov 2026, the user's wish: 10% thinner)
+export const TWINED_STRING_PX = 3.6;
 
 /**
  * The strings' tokens for a design: `--map-string` (one colour, see-through or not); with a

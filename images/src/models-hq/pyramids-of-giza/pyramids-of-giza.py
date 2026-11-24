@@ -10,10 +10,10 @@ from hq import *
 
 setup(top='sand')
 rng = random.Random(2560)
-M['block'] = material('block', '#d4b07a', 0.75, vary='#c49f6a', vary_scale=22, bump=0.35, bump_scale=140)
-M['blockLight'] = material('blockLight', '#e2c591', 0.7, vary='#d3b380', vary_scale=22, bump=0.3, bump_scale=140)
-M['casing'] = material('casing', '#e4d2aa', 0.55, vary='#e0d1b2', vary_scale=10, bump=0.08, bump_scale=120)
-M['sphinx'] = material('sphinx', '#c9a26c', 0.8, vary='#b58e5b', vary_scale=14, bump=0.4, bump_scale=60)
+M['block'] = material('block', '#b07d45', 0.75, vary='#9c6c3a', vary_scale=22, bump=0.35, bump_scale=140)
+M['blockLight'] = material('blockLight', '#c08d52', 0.7, vary='#ad7c45', vary_scale=22, bump=0.3, bump_scale=140)
+M['casing'] = material('casing', '#d6bf8d', 0.5, vary='#cdb482', vary_scale=10, bump=0.08, bump_scale=120)
+M['sphinx'] = material('sphinx', '#a87b45', 0.8, vary='#946a3a', vary_scale=14, bump=0.4, bump_scale=60)
 M['camel'] = material('camel', '#b8875a', 0.8, vary='#a87a50', vary_scale=20)
 M['saddle'] = material('saddle', '#b33a2e', 0.7)
 

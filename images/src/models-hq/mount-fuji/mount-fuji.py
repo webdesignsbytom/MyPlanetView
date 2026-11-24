@@ -97,9 +97,10 @@ def pagoda_roof(name, cx, cy, z0, w, h, over=0.07, lift=0.035, n=10):
     finish(name, bm, M['roofDark'], smooth_sides=False)
 
 
-PX, PY = -0.72, -0.58
+PX, PY = -0.62, -0.5
+HX, HY, HR = PX + 0.03, PY + 0.02, 0.55     # the hillside under it
 # the hillside it stands on
-lathe('hill', M['grass'], [(0.62, 0.0), (0.55, 0.035), (0.42, 0.075), (0.25, 0.1), (0.0, 0.108)], (PX + 0.05, PY + 0.02, G - 0.01), segs=64, smooth=True, sx=1.15, sy=0.95)
+lathe('hill', M['grass'], [(HR, 0.0), (HR * 0.89, 0.035), (HR * 0.67, 0.075), (HR * 0.4, 0.1), (0.0, 0.108)], (HX, HY, G - 0.01), segs=64, smooth=True, sx=1.05, sy=0.92)
 HZ = G + 0.098
 box('pagodaPlatform', M['granite'], (PX, PY, HZ + 0.02), (0.32, 0.32, 0.04), bevel=0.004)
 for k in range(5):
@@ -142,10 +143,11 @@ def cherry(name, x, y, z, s=1.0):
     finish(name, bm, M['blossom'], smooth_all=True)
 
 
-for k, (x, y, s) in enumerate(((-1.06, -0.38, 1.0), (-0.98, -0.78, 1.1), (-0.44, -0.86, 1.05), (-0.36, -0.38, 0.9), (-0.68, -0.98, 0.95),
-                               (-1.2, -0.06, 0.9), (-0.55, -0.2, 0.85), (0.72, -1.12, 0.9), (1.02, -0.78, 1.0))):
-    d = math.hypot((x - PX - 0.05) / 1.15, (y - PY - 0.02) / 0.95)
-    zz = G - 0.01 + max(0.0, 0.108 * (1 - (d / 0.62) ** 2)) if d < 0.62 else G
+# the cherry trees beside and behind the pagoda, never between it and the camera
+for k, (x, y, s) in enumerate(((-1.04, -0.45, 1.0), (-1.07, -0.08, 1.05), (-0.37, -0.2, 0.95), (-0.2, -0.55, 0.9), (-0.2, -0.92, 1.0),
+                               (-1.24, -0.35, 0.9), (0.7, -1.05, 0.9), (1.02, -0.78, 1.0))):
+    d = math.hypot((x - HX) / 1.05, (y - HY) / 0.92)
+    zz = G - 0.01 + 0.108 * (1 - (d / HR) ** 2) if d < HR else G
     cherry(f'cherry{k}', x, y, zz, s)
 
 # ------------------------------------------------------------------ Lake Kawaguchi and a torii

@@ -208,7 +208,7 @@ test.describe('Strings between countries', () => {
     await editor.getByText('Two colours twisted together', { exact: true }).click();
     await expect(editor.getByRole('checkbox', { name: 'Two colours twisted together' })).toBeChecked();
     await expect(strand).toBeVisible();
-    await expect.poll(() => thread.evaluate((el) => getComputedStyle(el).strokeWidth)).toBe('4px');
+    await expect.poll(() => thread.evaluate((el) => getComputedStyle(el).strokeWidth)).toBe('3.6px');
     // Both colours from a picker
     await editor.getByLabel('String colour', { exact: true }).fill('#1d4ed8');
     await editor.getByLabel('Second string colour', { exact: true }).fill('#ffcc00');
@@ -229,7 +229,7 @@ test.describe('Strings between countries', () => {
     await editor.getByText('Two colours twisted together', { exact: true }).click();
     await expect(editor.getByLabel('Second string colour', { exact: true })).toHaveCount(0);
     await expect(strings(page).first().locator('[data-string-strand]').first()).toBeHidden();
-    await expect.poll(() => strings(page).first().locator('path').first().evaluate((el) => getComputedStyle(el).strokeWidth)).toBe('2px');
+    await expect.poll(() => strings(page).first().locator('path').first().evaluate((el) => getComputedStyle(el).strokeWidth)).toBe('1.8px');
   });
 
   test('a share link shows the strings, with no way to change them', async ({ page }) => {

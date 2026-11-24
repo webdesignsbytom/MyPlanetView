@@ -57,8 +57,10 @@ export function drawnStrings(strings, { showAntarctica = true } = {}) {
 // little further along than the one beside it (TWIST_SHIFT_PX per pixel across): the second
 // colour's bands lie slanted across the string, as twisted plies do. Each strand is the
 // string's own path moved sideways, so all four are exactly as long and stay in step.
-export const TWIST_STRAND_OFFSETS_PX = Object.freeze([-1.5, -0.5, 0.5, 1.5]);
-export const TWIST_STRAND_PX = 1.25;
+// Sized for a 3.6px twine (mapDesign.js TWINED_STRING_PX; 10% thinner than at first, 25 Nov
+// 2026, the user's wish), the slant kept
+export const TWIST_STRAND_OFFSETS_PX = Object.freeze([-1.35, -0.45, 0.45, 1.35]);
+export const TWIST_STRAND_PX = 1.125;
 export const TWIST_DASH_PX = 3;
 export const TWIST_SHIFT_PX = 0.9;
 
@@ -73,7 +75,7 @@ export function twistStrands(across, zoom) {
   return TWIST_STRAND_OFFSETS_PX.map((px) => ({
     dx: Math.round(across.x * px * unitsPerPx * 1e4) / 1e4,
     dy: Math.round(across.y * px * unitsPerPx * 1e4) / 1e4,
-    dashOffset: Math.round(px * TWIST_SHIFT_PX * 100) / 100,
+    dashOffset: Math.round(px * TWIST_SHIFT_PX * 1000) / 1000,
   }));
 }
 

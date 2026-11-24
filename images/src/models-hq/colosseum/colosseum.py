@@ -158,9 +158,32 @@ for u in (-0.15, -0.065, 0.065, 0.15):
     for side in (-1, 1):
         p = arch_m @ Vector((u, side * 0.05, 0))
         cylinder(f'constantineCol{u}{side}', M['marbleShade'], 0.008, 0.17, (p.x, p.y, G + 0.04), segs=10)
-for k, (x, y) in enumerate(((1.05, -0.65), (1.15, -0.2), (-1.2, -0.25), (-0.55, -1.1), (0.75, -1.0))):
-    cylinder(f'pineTrunk{k}', M['trunk'], 0.012, 0.3, (x, y, G), segs=8, r2=0.008)
-    lathe(f'pineCrown{k}', M['pineCrown'], [(0.0, 0), (0.12, 0.02), (0.13, 0.05), (0.08, 0.08), (0.0, 0.09)], (x, y, G + 0.27), segs=20, smooth=True)
+
+
+def stone_pine(name, x, y, h=0.25, r=0.14, seed=0):
+    """A Roman stone pine: a leaning trunk forking into bare branches under a wide, flat-topped
+    umbrella of soft clumps."""
+    lr = random.Random(seed)
+    lean = lr.uniform(0, 2 * math.pi)
+    lx, ly = math.cos(lean) * 0.03, math.sin(lean) * 0.03
+    fork = (x + lx, y + ly, G + h * 0.62)
+    tube(name + 'Trunk', M['trunk'], [(x, y, G), (x + lx * 0.4, y + ly * 0.4, G + h * 0.3), fork], 0.011)
+    bm = bmesh.new()
+    for k in range(3):
+        a = lean + 2 * math.pi * k / 3 + lr.uniform(-0.4, 0.4)
+        end = (fork[0] + math.cos(a) * r * 0.55, fork[1] + math.sin(a) * r * 0.55, G + h * 0.9)
+        tube(f'{name}Branch{k}', M['trunk'], [fork, end], 0.006)
+        bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.0, matrix=Matrix.Translation(Vector(end) + Vector((0, 0, h * 0.06))) @ Matrix.Diagonal((r * 0.6, r * 0.6, r * 0.28, 1)))
+    for k in range(6):
+        a = 2 * math.pi * k / 6 + lr.random()
+        c = Vector((fork[0] + math.cos(a) * r * 0.62, fork[1] + math.sin(a) * r * 0.62, G + h * 0.97 + lr.uniform(-0.01, 0.01)))
+        bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.0, matrix=Matrix.Translation(c) @ Matrix.Diagonal((r * 0.48, r * 0.48, r * 0.24, 1)))
+    bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.0, matrix=Matrix.Translation((fork[0], fork[1], G + h * 1.02)) @ Matrix.Diagonal((r * 0.62, r * 0.62, r * 0.3, 1)))
+    finish(name, bm, M['pineCrown'], smooth_all=True)
+
+
+for k, (x, y) in enumerate(((1.02, -0.62), (1.12, -0.22), (-1.16, -0.22), (-0.52, -1.08), (0.72, -0.98))):
+    stone_pine(f'pine{k}', x, y, seed=k)
 for k, (x, y, shirt) in enumerate(((-0.55, -0.78, 'red'), (-0.45, -0.85, 'blue'), (0.35, -0.95, 'yellow'), (-0.2, -1.0, 'green'))):
     person(f'p{k}', x, y, 0.5 * k, shirt)
 

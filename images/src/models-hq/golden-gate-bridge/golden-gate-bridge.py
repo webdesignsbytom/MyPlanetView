@@ -70,7 +70,7 @@ def headland(name, side, X0, H, seed):
 north = headland('marin', -1, 0.9, 0.36, 1.3)
 south = headland('presidio', 1, 0.92, 0.27, 4.1)
 for k, (x, y, z) in enumerate(south):
-    if abs(y) > 0.2 and rng.random() < 0.5:
+    if abs(y) > 0.2 and math.hypot(x, y) < 1.36 and rng.random() < 0.5:
         (cypress if rng.random() < 0.5 else tree)(f'presidioTree{k}', x, y, h=0.16, r=0.06 if rng.random() < 0.5 else 0.035, z=z - 0.01)
 
 # ------------------------------------------------------------------ the towers
@@ -174,9 +174,9 @@ fogm = bmesh.new()
 for k in range(60):
     x = rng.uniform(-1.4, -0.35)
     y = rng.uniform(0.2, 1.05)
-    if math.hypot(x, y) > 1.42:
-        continue
     r = rng.uniform(0.08, 0.15)
+    if math.hypot(x, y) + r * 1.3 > 1.44:
+        continue
     bmesh.ops.create_icosphere(fogm, subdivisions=3, radius=r, matrix=Matrix.Translation((x, y, G + 0.02 + rng.uniform(0, 0.16) * (1.4 - abs(x)))) @ Matrix.Diagonal((1.25, 1.0, 0.9, 1)))
 finish('fog', fogm, M['fog'], smooth_all=True)
 

@@ -42,7 +42,7 @@ shore = [(arc[0][0], 0.78)] + arc + [(arc[-1][0], 0.78)]
 add_prism(bm, [bm.verts.new((x, y, G - 0.012)) for x, y in shore], [bm.verts.new((x, y, G + 0.006)) for x, y in shore])
 finish('forecourt', bm, M['pavingDark'], smooth_sides=False)
 box('seaWall', M['granite'], (0, 0.775, G + 0.006), (2.5, 0.02, 0.03), bevel=0.003)
-for k, (x, y, r) in enumerate(((-1.0, 0.98, 0.11), (-0.78, 1.18, 0.1), (-1.08, 0.86, 0.08), (0.86, 1.05, 0.1), (1.05, 0.88, 0.08), (-0.45, 1.32, 0.09))):
+for k, (x, y, r) in enumerate(((-0.92, 0.94, 0.11), (-0.66, 1.12, 0.1), (-1.1, 0.84, 0.08), (0.82, 1.0, 0.1), (1.02, 0.86, 0.08), (-0.4, 1.24, 0.09))):
     tree(f'garden{k}', x, y, h=0.22, r=r, z=G + 0.006)
 
 # ------------------------------------------------------------------ the podium, its harbour walk and the steps

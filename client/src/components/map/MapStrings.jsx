@@ -4,7 +4,8 @@ import { TWIST_DASH_PX, TWIST_STRAND_PX, drawnStrings, pinOf, stringPins, twistS
 
 // Sizes on screen (every path on the world map has a non-scaling stroke, so these are pixels
 // at any zoom): the thread, a pin's head and its rim, the wide invisible line a press finds
-const THREAD_PX = 2;
+// The thread 1.8px (2 until 25 Nov 2026, the user's wish: 10% thinner)
+const THREAD_PX = 1.8;
 const HEAD_PX = 7;
 const RIM_PX = 10;
 const PRESS_PX = 16;
@@ -17,7 +18,7 @@ const dot = ({ x, y }) => `M${x} ${y}h0`;
 // it in Settings shows at once: the string as wide as the twine, its opacity on each string
 // as a whole (so its two colours never show through each other), and the second colour's
 // strands, hidden unless the design twists one in
-const THREAD = 'stroke-map-string [stroke-width:var(--map-string-width,2px)]';
+const THREAD = 'stroke-map-string [stroke-width:var(--map-string-width,1.8px)]';
 const SEE_THROUGH = '[opacity:var(--map-string-alpha,1)]';
 const STRAND = 'stroke-map-string-2 [display:var(--map-string-twist,none)]';
 const TWIST_DASHES = `${TWIST_DASH_PX} ${TWIST_DASH_PX}`;
