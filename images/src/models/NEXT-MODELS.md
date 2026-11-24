@@ -484,4 +484,211 @@ The next 100 (24 Nov 2026, the user's wish), buildings, statues and structures o
 | Bangladesh | `bagerhat` | BD | Mosque City of Bagerhat: 22.66097, 89.75855, Q799893 | The Sixty Dome Mosque's rows of domes | Yes (drawn) |
 | Algeria | `timgad` | DZ | Timgad: 35.48424, 6.46867, Q459629 | Trajan's Arch over the Roman town's grid of streets | Yes (drawn) |
 
+## 5. Another 200: buildings, statues and structures
+
+Another 200 (24 Nov 2026, the user's wish), buildings, statues and structures only, the best known first, chosen by judgement as part 4 was: the famous buildings of cities that already have a model (the Arc de Triomphe, the Sacré-Cœur and the Louvre for Paris's Seine banks, Tower Bridge for the Tower of London's, the Trevi Fountain for Rome's centre), then the built World Heritage Sites still without one. The same overlap rule as parts 2 to 4: the models already on the map keep their place, and 101 of the 200 show, 99 are kept off: drawn with `"onMap": false` ("No"). All 200 were drawn on 24 Nov 2026 and exported to the maps the same day (the country map e2e test's `LATEST_MODELS`; Cordouan's lighthouse, which stands at sea off the Gironde, is checked to be in view when France's map opens instead).
+
+| Country | Model id | Maps | Landmark (name in the data: latitude, longitude, Wikidata) | What to draw | On the map |
+| --- | --- | --- | --- | --- | --- |
+| France | `arc-de-triomphe` | FR | Paris, Banks of the Seine: 48.85, 2.35889, Q2233532 | The Arc de Triomphe's great arch with its carved groups on the piers, the star of avenues round it | No: Eiffel Tower shows |
+| France | `sacre-coeur` | FR | Paris, Banks of the Seine: 48.85, 2.35889, Q2233532 | The Sacré-Cœur's white domes on top of Montmartre, the steps and the funicular up the hill | No: Eiffel Tower shows |
+| France | `louvre` | FR | Paris, Banks of the Seine: 48.85, 2.35889, Q2233532 | The Louvre's glass pyramid in the Cour Napoléon, the palace wings round it | No: Eiffel Tower shows |
+| United Kingdom | `tower-bridge` | GB, XE | Tower of London: 51.5082, -0.0762, Q62378 | Tower Bridge's two Gothic towers and blue walkways, the bascules raised over the Thames | No: Big Ben shows |
+| United Kingdom | `westminster-abbey` | GB, XE | Westminster Palace and Abbey: 51.50056, -0.12694, Q10344038 | Westminster Abbey's west towers and long Gothic nave, the lawn before it | No: Big Ben shows |
+| United Kingdom | `london-eye` | GB, XE | Westminster Palace and Abbey: 51.50056, -0.12694, Q10344038 | The London Eye's giant wheel and its glass capsules on the bank of the Thames | No: Big Ben shows |
+| United Kingdom | `buckingham-palace` | GB, XE | Westminster Palace and Abbey: 51.50056, -0.12694, Q10344038 | Buckingham Palace's front with its balcony and flag, the Victoria Memorial's gilded statue before the gates | No: Big Ben shows |
+| Italy | `trevi-fountain` | IT | Historic Centre of Rome: 41.8928, 12.4866, Q18448486 | The Trevi Fountain's palace front with Oceanus in his shell chariot, the rocks and the pool | No: Colosseum shows |
+| Italy | `rialto-bridge` | IT | Venice and its Lagoon: 45.43431, 12.33894, Q11352141 | The Rialto Bridge's white stone arch with its rows of shops, gondolas on the Grand Canal | No: Venice shows |
+| Italy | `ponte-vecchio` | IT | Historic Centre of Florence: 43.77306, 11.25611, Q2707802 | The Ponte Vecchio's three arches with the goldsmiths' shops hanging over the Arno | No: Leaning Tower of Pisa shows |
+| Italy | `milan-cathedral` | IT | Santa Maria delle Grazie (The Last Supper): 45.46583, 9.17111, Q244952 | Milan Cathedral's white marble front and its forest of spires, the golden Madonnina on top | No: Santa Maria delle Grazie shows |
+| Spain | `park-guell` | ES | Works of Gaudí (Sagrada Família): 41.40356, 2.17435, Q14468710 | Park Güell's mosaic dragon on the stairs, the gingerbread gatehouses and the serpentine bench | No: Sagrada Família shows |
+| Spain | `casa-batllo` | ES | Works of Gaudí (Sagrada Família): 41.40356, 2.17435, Q14468710 | Casa Batlló's bone-like balconies, its shimmering tiled front and dragon-back roof | No: Sagrada Família shows |
+| Spain | `plaza-de-espana` | ES | Seville Cathedral and Alcázar: 37.38384, -5.99155, Q9709444 | Seville's Plaza de España: the curved brick palace with its two towers, the canal and bridges | No: Giralda shows |
+| Turkey | `blue-mosque` | TR | Historic Areas of Istanbul: 41.00847, 28.97993, Q5773394 | The Blue Mosque's cascade of domes and its six slender minarets | No: Hagia Sophia shows |
+| Turkey | `galata-tower` | TR | Historic Areas of Istanbul: 41.00847, 28.97993, Q5773394 | The Galata Tower's round stone shaft and conical cap over the roofs of Beyoğlu | No: Hagia Sophia shows |
+| Palestine | `dome-of-the-rock` | PS | Old City of Jerusalem: 31.77821, 35.23191, Q15726304 | The Dome of the Rock's golden dome on its octagon tiled in blue, on the Temple Mount | No: Western Wall shows |
+| Palestine | `holy-sepulchre` | PS | Old City of Jerusalem: 31.77821, 35.23191, Q15726304 | The Church of the Holy Sepulchre's twin-arched front, its bell tower and grey domes | No: Western Wall shows |
+| Russia | `spasskaya-tower` | RU | Red Square: 55.75417, 37.62, Q41116 | The Kremlin's Spasskaya Tower with its clock, red star and tented spire over the red wall | No: Saint Basil's Cathedral shows |
+| China | `tiananmen` | CN | Beijing Central Axis: 39.89964, 116.39161, Q6112171 | Tiananmen, the Gate of Heavenly Peace: the red gate with its golden roofs and the marble bridges before it | No: Great Wall of China shows |
+| Japan | `kinkakuji` | JP | Historic Monuments of Ancient Kyoto: 35.06028, 135.75278, Q874027 | Kinkaku-ji, the Golden Pavilion, its gold-leafed storeys reflected in the pond, pines on the islets | No: Himeji Castle + Shirakawa-go shows |
+| Japan | `kiyomizu-dera` | JP | Historic Monuments of Ancient Kyoto: 35.06028, 135.75278, Q874027 | Kiyomizu-dera's great wooden stage on its tall pillars over the hillside, the red pagoda | No: Himeji Castle + Shirakawa-go shows |
+| India | `gateway-of-india` | IN | Victorian Gothic and Art Deco Mumbai: 18.92981, 72.83008, Q16942531 | The Gateway of India's arch of yellow basalt with its four turrets, on the harbour front | No: Chhatrapati Shivaji Terminus shows |
+| Denmark | `little-mermaid` | DK | Tivoli Gardens: 55.67361, 12.56833, Q110289 | The Little Mermaid statue on her rock by the water, Copenhagen's harbour behind | No: Tivoli Gardens shows |
+| Australia | `sydney-harbour-bridge` | AU | Sydney Opera House: -33.85706, 151.2149, Q45178 | The Sydney Harbour Bridge's steel arch and its granite pylons over the harbour | No: Sydney Opera House shows |
+| Hungary | `chain-bridge` | HU | Budapest, Banks of the Danube: 47.48242, 19.07067, Q851122 | The Chain Bridge's stone towers and hanging chains over the Danube, the lions at its ends | No: Hungarian Parliament Building shows |
+| Hungary | `fishermans-bastion` | HU | Buda Castle: 47.49611, 19.03972, Q46313 | The Fisherman's Bastion's white turrets and arcades, Matthias Church's patterned roof behind | No: Hungarian Parliament Building shows |
+| Czechia | `astronomical-clock` | CZ | Historic Centre of Prague: 50, 14.56, Q64637410 | The Old Town Hall tower with the astronomical clock's dials, the Týn Church's spires | No: Prague Castle shows |
+| Czechia | `dancing-house` | CZ | Historic Centre of Prague: 50, 14.56, Q64637410 | The Dancing House: its glass tower pinched at the waist leaning on the solid one, by the river | No: Prague Castle shows |
+| Austria | `riesenrad` | AT | Historic Centre of Vienna: 48.2084, 16.3722, Q11288310 | The Prater's Riesenrad, the old giant Ferris wheel with its red cabins | No: Schönbrunn Palace shows |
+| Mexico | `angel-of-independence` | MX | Mexico City Centre and Xochimilco: 19.41833, -99.13278, Q15924695 | The Angel of Independence: the golden winged Victory on her tall column above the roundabout | No: Teotihuacan shows |
+| Mexico | `bellas-artes` | MX | Mexico City Centre and Xochimilco: 19.41833, -99.13278, Q15924695 | The Palacio de Bellas Artes' white marble front and its orange and gold tiled domes | No: Teotihuacan shows |
+| Egypt | `colossi-of-memnon` | EG | Ancient Thebes (Luxor): 25.72056, 32.61028, Q141298543 | The Colossi of Memnon: the two great seated stone pharaohs on the plain | No: Karnak shows |
+| Egypt | `philae` | EG | Nubian Monuments (Abu Simbel): 22.33694, 31.62556, Q134140 | The Temple of Isis at Philae: its great pylon and colonnades on the island in the Nile, Trajan's Kiosk | No: Abu Simbel shows |
+| Egypt | `muhammad-ali-mosque` | EG | Historic Cairo: 30.046, 31.2627, Q1100964 | The Mosque of Muhammad Ali's domes and pencil minarets on the Citadel | No: Pyramids of Giza shows |
+| Portugal | `jeronimos` | PT | Tower of Belém: 38.69139, -9.21583, Q215003 | The Jerónimos Monastery's long white limestone front and its carved south door | No: Tower of Belém shows |
+| Greece | `white-tower` | GR | Byzantine Monuments of Thessaloniki: 40.6386, 22.9478, Q732708 | The White Tower's round tower on the seafront, its little turret on top | Yes |
+| Greece | `epidaurus` | GR | Epidaurus: 37.5986, 23.0744, Q7698713 | The theatre of Epidaurus: its great fan of stone seats round the round stage, the hills behind | Yes |
+| Greece | `mycenae` | GR | Mycenae and Tiryns: 37.73333, 22.75, Q16945635 | Mycenae's Lion Gate with its two carved lions, the Cyclopean walls | No: Epidaurus shows |
+| Thailand | `wat-arun` | TH | Grand Palace: 13.75014, 100.49203, Q873769 | Wat Arun's tall prang encrusted with porcelain, its four smaller prangs, on the river | No: Grand Palace shows |
+| South Korea | `cheomseongdae` | KR | Gyeongju Historic Areas: 35.78889, 129.22667, Q495241 | Cheomseongdae, the bottle-shaped stone observatory, and the royal tomb mounds behind | No: Bulguksa shows |
+| South Korea | `changdeokgung` | KR | Changdeokgung Palace: 37.57944, 126.99167, Q477157 | Changdeokgung's gate and throne hall, and the Buyongji pond's pavilion in the Secret Garden | No: Gyeongbokgung Palace shows |
+| Brazil | `congonhas` | BR | Bom Jesus do Congonhas: -20.50778, -43.86069, Q1595417 | The sanctuary's white church and the soapstone prophets of Aleijadinho on the stairs | No: Church of São Francisco de Assis shows |
+| Italy | `castel-sant-angelo` | IT | Historic Centre of Rome: 41.8928, 12.4866, Q18448486 | Castel Sant'Angelo's round drum and the angel on top, the Ponte Sant'Angelo with its statues | No: Colosseum shows |
+| Italy | `vittoriano` | IT | Historic Centre of Rome: 41.8928, 12.4866, Q18448486 | The Vittoriano's white marble colonnade, its bronze chariots and the equestrian statue | No: Colosseum shows |
+| Italy | `bologna-towers` | IT | Porticoes of Bologna: 44.49139, 11.33278, Q3909051 | Bologna's Two Towers, the tall Asinelli and the leaning Garisenda, over the porticoed streets | Yes |
+| Spain | `crystal-palace-retiro` | ES | Paseo del Prado and Buen Retiro: 40.41414, -3.68653, Q107675480 | The Palacio de Cristal's glass and iron hall by its lake in the Retiro, the Prado's front | No: Aqueduct of Segovia shows |
+| Spain | `salamanca` | ES | Old City of Salamanca: 40.96525, -5.6645, Q12156631 | Salamanca's old and new cathedrals with their domes and towers in golden sandstone | Yes |
+| Germany | `pfalzgrafenstein` | DE | Upper Middle Rhine Valley: 50.17361, 7.69417, Q6668852 | Pfalzgrafenstein Castle like a stone ship in the middle of the Rhine, the vineyards above | Yes |
+| Germany | `weimar` | DE | Classical Weimar: 50.98333, 11.31667, Q467763 | The Goethe and Schiller statue before the German National Theatre | Yes |
+| Germany | `bauhaus` | DE | Bauhaus Sites (Dessau): 51.8392, 12.2267, Q516770 | The Bauhaus building's glass curtain wall and the white blocks with the BAUHAUS lettering | Yes |
+| Germany | `wieskirche` | DE | Wieskirche: 47.6806, 10.90044, Q156675 | The Pilgrimage Church of the Wies: its white walls and bell tower in the green meadow, the Alps | No: Neuschwanstein Castle shows |
+| Germany | `maulbronn` | DE | Maulbronn Monastery: 49.0011, 8.8129, Q157886 | Maulbronn's Cistercian church and cloister, the half-timbered buildings of its walled court | No: Speyer Cathedral shows |
+| Germany | `zollverein` | DE | Zollverein Coal Mine: 51.4865, 7.04408, Q122026 | Zollverein's Shaft XII headframe, the red steel tower over the cubic brick buildings | Yes |
+| Japan | `horyu-ji` | JP | Hōryū-ji: 34.61427, 135.73424, Q1333799 | Hōryū-ji's five-storey wooden pagoda and Golden Hall in their cloistered court | No: Himeji Castle shows |
+| Japan | `shuri-castle` | JP | Gusuku Sites of Ryukyu: 26.2086, 127.683, Q1333330 | Shuri Castle's red main hall with its dragon pillars, the curving stone walls | Yes |
+| Japan | `oura-church` | JP | Hidden Christian Sites (Ōura Church): 32.73417, 129.87028, Q430626 | Ōura Church's white Gothic front and spire above its steps, the harbour of Nagasaki | No: Hashima Island shows |
+| India | `brihadeeswarar` | IN | Great Living Chola Temples: 10.78306, 79.1325, Q695229 | The Brihadeeswarar Temple's tall pyramid tower and the great Nandi bull in his pavilion | No: Shore Temple shows |
+| India | `rani-ki-vav` | IN | Rani ki Vav: 23.85892, 72.10162, Q7293002 | The Queen's Stepwell: its terraces of carved stone pavilions stepping down to the water | Yes |
+| India | `bom-jesus-goa` | IN | Churches and Convents of Goa: 15.5024, 73.9117, Q15726428 | The Basilica of Bom Jesus' red laterite baroque front, the white Se Cathedral beside | Yes |
+| India | `elephanta` | IN | Elephanta Caves: 18.96333, 72.93139, Q649384 | The great three-headed Trimurti carved in the cave on Elephanta island | No: Chhatrapati Shivaji Terminus shows |
+| China | `temple-of-confucius` | CN | Temple of Confucius, Qufu: 35.59651, 116.98445, Q1038473 | The Dacheng Hall with its yellow roof and carved dragon columns, the stele pavilions | Yes |
+| China | `yungang` | CN | Yungang Grottoes: 40.10972, 113.12222, Q308805 | The seated great Buddha of the Yungang Grottoes in his open cave, the cliff of niches | No: Great Wall of China shows |
+| China | `chengde` | CN | Chengde Mountain Resort: 40.9875, 117.9375, Q1046818 | The Putuo Zongcheng temple, the little Potala, its red and white walls on the hill above the lake | No: Great Wall of China shows |
+| China | `kaiping-diaolou` | CN | Kaiping Diaolou and Villages: 22.26181, 112.52078, Q16303641 | The Kaiping diaolou: tall fortified tower houses with Western domes and balconies among rice fields | No: Ruins of St. Paul's shows |
+| China | `ming-tombs` | CN | Ming and Qing Imperial Tombs (Ming Tombs): 40.25333, 116.2175, Q41135 | The Ming Tombs' Sacred Way of stone animals and officials, the Changling's red hall | No: Great Wall of China shows |
+| Russia | `nerl-church` | RU | White Monuments of Vladimir and Suzdal: 56.15, 40.4167, Q838264 | The Church of the Intercession on the Nerl, white and alone above its meadow by the river | No: Saint Basil's Cathedral shows |
+| Russia | `novgorod` | RU | Historic Monuments of Novgorod: 58.51833, 31.28556, Q1218832 | Novgorod's kremlin walls and St Sophia Cathedral's golden dome | No: Church of the Savior on Spilled Blood shows |
+| Russia | `derbent` | RU | Derbent Citadel and Old City: 42.06917, 48.29583, Q64763166 | Derbent's Naryn-Kala citadel walls climbing the hill above the Caspian | Yes |
+| Turkey | `bursa` | TR | Bursa and Cumalıkızık: 40.18473, 29.06234, Q60846866 | Bursa's Green Mosque and Green Tomb in their turquoise tiles, cypresses | Yes |
+| Turkey | `xanthos` | TR | Xanthos-Letoon: 36.335, 29.32028, Q16912661 | Xanthos' Harpy Tomb and Lycian pillar tombs on the hill, the theatre | Yes |
+| Turkey | `divrigi` | TR | Divriği Great Mosque: 39.37122, 38.12158, Q581641 | The Divriği Great Mosque's carved stone portal and its brick minaret | Yes |
+| Turkey | `ani` | TR | Ani: 40.5075, 43.57278, Q546010 | Ani's ruined red-stone cathedral and church of St Gregory on the gorge's edge | Yes |
+| Greece | `mystras` | GR | Mystras: 37.074, 22.3673, Q19053 | Mystras' Byzantine churches and the Despots' palace on the hillside below the castle | Yes |
+| Greece | `corfu` | GR | Old Town of Corfu: 39.62466, 19.92193, Q38283757 | Corfu's Old Fortress on its rocky headland, the clock tower and the bridge over the moat | Yes |
+| Greece | `hosios-loukas` | GR | Hosios Loukas, Daphni and Nea Moni: 38.39514, 22.74632, Q844841 | The monastery of Hosios Loukas' banded stone churches and domes on the mountainside | No: Delphi shows |
+| Greece | `bassae` | GR | Temple of Apollo at Bassae: 37.42965, 21.90039, Q38278862 | The Temple of Apollo at Bassae's Doric columns, high in the Arcadian mountains | No: Olympia shows |
+| Portugal | `alcobaca` | PT | Alcobaça Monastery: 39.54859, -8.97863, Q593147 | Alcobaça Monastery's baroque front with its two towers and the long Gothic church | No: Batalha Monastery shows |
+| Portugal | `bom-jesus-braga` | PT | Bom Jesus do Monte: 41.5546, -8.3775, Q2707216 | Bom Jesus do Monte's zigzag baroque stairway climbing to the church, its fountains and chapels | Yes |
+| Portugal | `mafra` | PT | Royal Building of Mafra: 38.93692, -9.32639, Q54948065 | The palace-convent of Mafra's long front with the basilica's dome and two bell towers | Yes |
+| Portugal | `elvas` | PT | Elvas Fortifications: 38.88056, -7.16333, Q5524023 | Elvas' star-shaped walls and the Amoreira Aqueduct's tall arches | Yes |
+| Spain | `lonja-valencia` | ES | Lonja de la Seda, Valencia: 39.47444, -0.37833, Q588009 | The Silk Exchange's Gothic front and tower, the twisted columns of its hall | Yes |
+| Spain | `aljaferia` | ES | Mudéjar Architecture of Aragon (Aljafería): 41.65649, -0.89708, Q1354033 | The Aljafería palace's walls and towers in brick, Teruel's Mudéjar tower | Yes |
+| Spain | `poblet` | ES | Poblet Monastery: 41.38083, 1.0825, Q645157 | Poblet Monastery's royal gate between two towers and the church's octagonal belfry | Yes |
+| Spain | `guadalupe` | ES | Guadalupe Monastery: 39.45278, -5.3275, Q750248 | The Royal Monastery of Guadalupe's battlemented towers and its Gothic-Mudéjar front | Yes |
+| Spain | `medina-azahara` | ES | Medina Azahara: 37.88608, -4.86779, Q211252 | Medina Azahara's horseshoe arches of the Hall of Abd al-Rahman III, the ruins on the slope | No: Mezquita of Córdoba shows |
+| Spain | `antequera-dolmens` | ES | Antequera Dolmens: 37.02333, -4.54806, Q97633694 | The Dolmen of Menga's great stone slabs under their mound, La Peña de los Enamorados behind | Yes |
+| Spain | `talayotic-menorca` | ES | Talayotic Menorca: 39.9975, 3.90889, Q64990632 | Menorca's Naveta d'Es Tudons and a taula, the T-shaped stone table, among olive trees | Yes |
+| Spain | `vall-de-boi` | ES | Romanesque Churches of Vall de Boí: 42.50472, 0.80361, Q1091515 | Sant Climent de Taüll's slender Romanesque bell tower and apses in the Pyrenees | Yes |
+| France | `saint-jacques-tower` | FR | Camino de Santiago, France (Saint-Jacques Tower): 48.85776, 2.34878, Q1431547 | The Saint-Jacques Tower's Flamboyant Gothic bell tower in its little square | No: Eiffel Tower shows |
+| France | `bourges-cathedral` | FR | Bourges Cathedral: 47.08222, 2.39917, Q207985 | Bourges Cathedral's five portals, its flying buttresses and its towers | No: Château de Chambord shows |
+| France | `maison-carree` | FR | Maison Carrée: 43.83819, 4.35611, Q677659 | The Maison Carrée's Roman temple on its podium with its Corinthian columns | No: Pont du Gard shows |
+| France | `cordouan` | FR | Cordouan Lighthouse: 45.58632, -1.17333, Q199234 | The Cordouan Lighthouse, a royal palace of a lighthouse on its reef in the ocean | Yes |
+| France | `bordeaux` | FR | Bordeaux, Port of the Moon: 44.83889, -0.57222, Q2249113 | Place de la Bourse's classical palaces reflected in the water mirror, the trams | No: Saint-Émilion shows |
+| France | `vezelay` | FR | Vézelay: 47.46639, 3.74833, Q64401449 | The Basilica of Sainte-Marie-Madeleine on top of Vézelay's hill, the village climbing to it | Yes |
+| France | `besancon` | FR | Fortifications of Vauban (Besançon): 47.23139, 6.0325, Q1329976 | Vauban's citadel of Besançon on its rock in the loop of the Doubs | Yes |
+| France | `le-havre` | FR | Le Havre: 49.4891, 0.11522, Q2944797 | Le Havre's St Joseph's Church: its tall concrete lantern tower over Perret's rebuilt city | Yes |
+| France | `nice` | FR | Nice, Winter Resort of the Riviera: 43.70169, 7.27231, Q108094935 | The Hôtel Negresco's pink dome on the Promenade des Anglais, the blue chairs and the bay | Yes |
+| United Kingdom | `ironbridge` | GB, XE | Ironbridge Gorge: 52.62639, -2.47278, Q647958 | The Iron Bridge's single cast-iron arch over the Severn in its wooded gorge | No: Jodrell Bank Observatory shows |
+| United Kingdom | `pontcysyllte` | GB, XW | Pontcysyllte Aqueduct and Canal: 52.97212, -3.08727, Q24677919 | The Pontcysyllte Aqueduct's tall stone piers and its iron trough carrying the canal over the valley, a narrowboat | No: Caernarfon Castle + Jodrell Bank Observatory shows |
+| United Kingdom | `scott-monument` | GB, XC | Old and New Towns of Edinburgh: 55.95, -3.21667, Q15260680 | The Scott Monument's Gothic spire with Sir Walter Scott's statue beneath it, Princes Street Gardens | No: Edinburgh Castle shows |
+| United Kingdom | `new-lanark` | GB, XC | New Lanark: 55.66361, -3.78139, Q743108 | New Lanark's long mill buildings by the River Clyde in its wooded gorge | No: Edinburgh Castle shows |
+| United Kingdom | `cornwall-mines` | GB, XE | Cornwall and West Devon Mining Landscape: 50.13611, -5.38361, Q464566 | Botallack's engine houses and chimneys on the cliffs above the sea | Yes |
+| United Kingdom | `ring-of-brodgar` | GB, XC | Heart of Neolithic Orkney: 58.9975, -3.215, Q1334966 | The Ring of Brodgar's circle of standing stones on the heath between the lochs | No: Heart of Neolithic Orkney shows |
+| Italy | `ravenna` | IT | Early Christian Monuments of Ravenna: 44.42042, 12.19625, Q16886821 | The Basilica of San Vitale's brick octagon and the round bell tower of Sant'Apollinare | No: Porticoes of Bologna shows |
+| Italy | `palermo` | IT | Arab-Norman Palermo: 38.11083, 13.35306, Q20963672 | Palermo Cathedral's long golden front and towers, San Giovanni degli Eremiti's red domes | Yes |
+| Italy | `modena` | IT | Modena Cathedral and Piazza Grande: 44.64624, 10.92568, Q15221022 | Modena Cathedral's Romanesque front and the Ghirlandina bell tower | No: Verona Arena + Porticoes of Bologna shows |
+| Italy | `villa-rotonda` | IT | Vicenza and the Palladian Villas: 45.55, 11.55, Q370956 | Palladio's Villa La Rotonda: its dome and four temple porticoes on its little hill | No: Venice + Verona Arena shows |
+| Italy | `barumini` | IT | Su Nuraxi di Barumini: 39.70286, 8.99988, Q253241 | Su Nuraxi's nuraghe: the stone tower fortress and the round huts of its village | Yes |
+| Italy | `syracuse` | IT | Syracuse and Pantalica: 37.05944, 15.29306, Q15604441 | Syracuse's Greek theatre cut into the hill and the Ear of Dionysius cave | No: Noto Cathedral shows |
+| Italy | `appian-way` | IT | Appian Way: 41.84139, 12.5325, Q189417 | The Appian Way's Roman paving lined with umbrella pines and the round Tomb of Caecilia Metella | No: Colosseum shows |
+| Germany | `stralsund` | DE | Stralsund and Wismar (Stralsund): 54.3025, 13.08528, Q64822259 | Stralsund Town Hall's brick front with its pinnacles and round windows, St Nicholas' towers | Yes |
+| Germany | `bruhl` | DE | Augustusburg and Falkenlust, Brühl: 50.8275, 6.90806, Q156292 | Augustusburg Palace's yellow rococo front and its parterre gardens | No: Aachen Cathedral + Cologne Cathedral shows |
+| Germany | `fagus-factory` | DE | Fagus Factory: 51.9837, 9.81256, Q685476 | The Fagus Factory's glass walls round the corners and its tall chimney | Yes |
+| Germany | `volklingen` | DE | Völklingen Ironworks: 49.25056, 6.84528, Q127754 | The Völklingen Ironworks' blast furnaces, pipes and gas tanks | No: Porta Nigra shows |
+| Germany | `naumburg` | DE | Naumburg Cathedral: 51.15472, 11.80389, Q5938 | Naumburg Cathedral's four towers and the statue of Uta in her niche | No: Classical Weimar shows |
+| Germany | `wittenberg` | DE | Luther Memorials (Wittenberg Castle Church): 51.86639, 12.63778, Q661752 | Wittenberg Castle Church's round tower and the Theses Door | No: Bauhaus Sites (Dessau) shows |
+| Germany | `darmstadt` | DE | Mathildenhöhe Darmstadt: 49.87543, 8.6665, Q314730 | The Wedding Tower's five rounded fingers over the Russian Chapel's golden domes | Yes |
+| Netherlands | `wouda` | NL | D.F. Wouda Steam Pumping Station: 52.84583, 5.67889, Q1121835 | The Wouda pumping station's brick hall and tall chimney by the polder water | Yes |
+| Netherlands | `rietveld-schroder` | NL | Rietveld Schröder House: 52.08533, 5.1476, Q914231 | The Rietveld Schröder House's white and grey planes and its red, blue and yellow lines | Yes |
+| Netherlands | `van-nelle` | NL | Van Nelle Factory: 51.92278, 4.43361, Q2328849 | The Van Nelle Factory's glass curtain walls and the round tea room on the roof | No: Kinderdijk windmills shows |
+| Belgium | `boat-lifts` | BE | Boat Lifts of the Canal du Centre: 50.4714, 4.0945, Q99372 | A boat lift of the Canal du Centre: its two iron caissons and the barge going up | Yes |
+| Belgium | `tournai` | BE | Tournai Cathedral: 50.6065, 3.3889, Q391229 | Tournai Cathedral's five towers over its Romanesque nave | Yes |
+| Austria | `semmering` | AT | Semmering Railway: 47.643, 15.831, Q259313 | The Semmering Railway's two-storey viaduct curving through the mountains, a train on it | Yes |
+| Austria | `eggenberg` | AT | Graz Old Town and Schloss Eggenberg: 47.07417, 15.39167, Q2326418 | Schloss Eggenberg's square palace with its four corner towers and the park | No: Graz Clock Tower shows |
+| Czechia | `telc` | CZ | Telč: 49.18333, 15.45, Q64640311 | Telč's square of colourful Renaissance gables over the arcades | Yes |
+| Czechia | `holy-trinity-column` | CZ | Holy Trinity Column, Olomouc: 49.59402, 17.25049, Q742362 | The Holy Trinity Column's tall baroque column of statues and its gilded copper group on top | Yes |
+| Czechia | `zelena-hora` | CZ | Zelená Hora Pilgrimage Church: 49.58, 15.94194, Q752318 | The Pilgrimage Church of St John of Nepomuk's star-shaped walls on the hill | Yes |
+| Czechia | `villa-tugendhat` | CZ | Villa Tugendhat: 49.20722, 16.61583, Q457453 | Villa Tugendhat's long white modernist front and its glass living room over the garden | Yes |
+| Czechia | `lednice` | CZ | Lednice-Valtice: 48.7758, 16.775, Q735278 | Lednice Castle's neo-Gothic towers and the tall minaret in the park | Yes |
+| Hungary | `pannonhalma` | HU | Pannonhalma Archabbey: 47.55278, 17.76111, Q936285 | Pannonhalma Archabbey's church tower and long buildings on top of their hill | Yes |
+| Poland | `zamosc` | PL | Old City of Zamość: 50.72056, 23.25861, Q3678597 | Zamość Town Hall's tall tower and the fan-shaped stairs, the arcaded houses | Yes |
+| Romania | `maramures` | RO | Wooden Churches of Maramureș: 47.8194, 24.0558, Q828412 | A Maramureș wooden church with its tall needle spire and shingled roofs | Yes |
+| Romania | `horezu` | RO | Horezu Monastery: 45.1686, 24.0069, Q733069 | Horezu Monastery's painted church with its Brâncovenesc porch in the walled court | Yes |
+| Bulgaria | `boyana` | BG | Boyana Church: 42.64467, 23.26617, Q276553 | The little Boyana Church with its red and white walls and its small dome, Vitosha behind | Yes |
+| Bulgaria | `madara-rider` | BG | Madara Rider: 43.27737, 27.11889, Q319296 | The Madara Rider: a horseman, his dog and a lion carved high on the cliff | Yes |
+| Ukraine | `odesa` | UA | Historic Centre of Odesa: 46.485, 30.741, Q15041608 | The Odesa Opera House's baroque front and the Potemkin Stairs to the harbour | Yes |
+| Finland | `petajavesi` | FI | Petäjävesi Old Church: 62.25014, 25.18394, Q435829 | Petäjävesi Old Church: the wooden cross-shaped church with its shingled roofs and bell tower | Yes |
+| Slovenia | `triple-bridge` | SI | Plečnik's Ljubljana: 46.04333, 14.50222, Q64494878 | Ljubljana's Triple Bridge with its balustrades, the pink Franciscan Church behind | Yes |
+| Croatia | `euphrasian` | HR | Euphrasian Basilica, Poreč: 45.22861, 13.59361, Q645105 | The Euphrasian Basilica's golden mosaic apse and bell tower by the sea | Yes |
+| Croatia | `sibenik` | HR | Šibenik Cathedral: 43.73556, 15.88917, Q391973 | Šibenik Cathedral's white stone dome and trefoil front | Yes |
+| Denmark | `jelling` | DK | Jelling Mounds and Runic Stones: 55.75651, 9.41974, Q4993586 | Jelling's two grassy royal mounds, the white church between them and the rune stones | Yes |
+| Sweden | `falun` | SE | Falun Copper Mine: 60.60472, 15.63083, Q636194 | The Falun mine's red wooden headframe and buildings by the Great Pit | Yes |
+| Sweden | `grimeton` | SE | Grimeton Radio Station: 57.11398, 12.40442, Q920206 | The Grimeton radio station's six tall steel masts in a line, the transmitter hall | Yes |
+| Sweden | `skogskyrkogarden` | SE | Skogskyrkogården: 59.27556, 18.09944, Q213988 | The Woodland Cemetery's great granite cross on the grassy hill, the chapel's portico | No: Drottningholm Palace shows |
+| Norway | `roros` | NO | Røros Mining Town: 62.57389, 11.38556, Q19387263 | Røros' white stone church with its tower, the slag heaps and the wooden houses | Yes |
+| Norway | `rjukan` | NO | Rjukan-Notodden Industrial Heritage: 59.87861, 8.59361, Q20643889 | The Vemork hydroelectric plant on its ledge above the gorge, the pipes down the mountain | Yes |
+| Switzerland | `zytglogge` | CH | Old City of Bern: 46.94806, 7.45028, Q687973 | Bern's Zytglogge clock tower with its astronomical clock over the arcaded street | Yes |
+| Switzerland | `st-gall` | CH | Abbey of St Gall: 47.42306, 9.37722, Q155699 | The Abbey of St Gall's baroque cathedral with its twin towers | Yes |
+| Switzerland | `bellinzona` | CH | Castles of Bellinzona: 46.19278, 9.02222, Q510279 | Castelgrande's towers and walls on their rock above Bellinzona | Yes |
+| Mexico | `uxmal` | MX | Uxmal: 20.3617, -89.7703, Q65455940 | Uxmal's Pyramid of the Magician with its rounded sides, the Governor's Palace | No: Chichén Itzá shows |
+| Mexico | `puebla` | MX | Historic Centre of Puebla: 19.04722, -98.20833, Q3848455 | Puebla Cathedral's tall twin towers and Talavera-tiled domes | No: Pyramid of the Niches, El Tajín + Teotihuacan shows |
+| Mexico | `san-miguel-de-allende` | MX | San Miguel de Allende and Atotonilco: 20.91444, -100.74639, Q15613314 | The Parroquia's pink neo-Gothic spires over the square | No: Guanajuato shows |
+| Mexico | `morelia` | MX | Historic Centre of Morelia: 19.7, -101.18333, Q3848089 | Morelia Cathedral's pink stone towers and the long aqueduct | No: Guanajuato shows |
+| Mexico | `hospicio-cabanas` | MX | Hospicio Cabañas: 20.6769, -103.33733, Q28416 | The Hospicio Cabañas' dome and long neoclassical front | Yes |
+| Mexico | `padre-tembleque` | MX | Aqueduct of Padre Tembleque: 19.83639, -98.66222, Q2840764 | The Aqueduct of Padre Tembleque's tall arches over the valley | No: Pyramid of the Niches, El Tajín + Teotihuacan shows |
+| Mexico | `unam` | MX | UNAM Ciudad Universitaria: 19.33222, -99.18806, Q130025 | UNAM's Central Library covered in its stone mosaic mural | No: Teotihuacan shows |
+| Brazil | `pampulha` | BR | Pampulha Modern Ensemble: -19.85194, -43.97361, Q9850285 | Niemeyer's Church of St Francis of Assisi: its wavy concrete vaults and blue tiles by the lake | No: Church of São Francisco de Assis shows |
+| Argentina | `san-ignacio-mini` | AR | Guarani Jesuit Missions (San Ignacio Miní): -27.25531, -55.5315, Q868799 | San Ignacio Miní's red sandstone church ruins carved by the Guarani | No: Iguazú Falls shows |
+| South Korea | `jongmyo` | KR | Jongmyo Shrine: 37.57472, 126.99361, Q490497 | Jongmyo's long hall of red pillars and its great grey roof over the stone court | No: Gyeongbokgung Palace shows |
+| South Korea | `haeinsa` | KR | Haeinsa Temple: 35.80161, 128.09872, Q490798 | Haeinsa's halls of the Tripitaka Koreana on the mountainside | Yes |
+| Thailand | `nakhon-si-thammarat` | TH | Wat Phra Mahathat, Nakhon Si Thammarat: 8.41139, 99.96667, Q2552354 | Wat Phra Mahathat's white bell-shaped chedi with its golden spire | Yes |
+| Vietnam | `thang-long` | VN | Imperial Citadel of Thang Long: 21.0325, 105.83972, Q206219 | The Imperial Citadel's Doan Mon gate and the Hanoi Flag Tower | Yes |
+| Morocco | `mazagan` | MA | Mazagan (El Jadida): 33.25656, -8.50248, Q555360 | El Jadida's Portuguese bastions and its cistern with its pillars reflected in the water | Yes |
+| Iran | `soltaniyeh` | IR | Soltaniyeh: 36.43472, 48.7975, Q4531 | The Dome of Soltaniyeh: its great turquoise dome on its octagon with its eight minarets | Yes |
+| Iran | `chogha-zanbil` | IR | Chogha Zanbil: 32.00833, 48.52083, Q4523 | Chogha Zanbil's stepped brick ziggurat in the plain | Yes |
+| Iran | `st-thaddeus` | IR | Armenian Monasteries of Iran (St Thaddeus): 39.09222, 44.54444, Q842826 | The Monastery of St Thaddeus: its black and white stone church in its walls | Yes |
+| Iran | `eram-garden` | IR | Persian Gardens (Eram Garden): 29.63583, 52.52556, Q127963 | The Eram Garden's palace with its tiled front behind the long pool and cypresses | No: Persepolis shows |
+| Iran | `shushtar` | IR | Shushtar Hydraulic System: 32.05372, 48.84869, Q2274974 | Shushtar's watermills and the waterfalls pouring from the cliff | No: Chogha Zanbil shows |
+| Iran | `deyr-e-gachin` | IR | Persian Caravanserai (Deyr-e Gachin): 35.05828, 51.42011, Q6394061 | A caravanserai's square walls with round towers in the desert, camels at its gate | No: Golestan Palace shows |
+| Iran | `susa` | IR | Susa: 32.18944, 48.25611, Q180773 | The Tomb of Daniel's ribbed white cone and the castle of Susa | No: Chogha Zanbil shows |
+| Iran | `veresk-bridge` | IR | Trans-Iranian Railway: 35.65831, 51.39833, Q162835 | The Veresk Bridge's tall stone arch over the gorge, a train crossing it | No: Golestan Palace shows |
+| Canada | `lunenburg` | CA | Old Town Lunenburg: 44.37611, -64.30917, Q28833066 | Lunenburg's red and colourful waterfront buildings and the schooner Bluenose II | Yes |
+| Canada | `sgang-gwaay` | CA | SGang Gwaay: 52.09889, -131.2175, Q240832 | SGang Gwaay's weathered Haida totem poles in a row by the shore | Yes |
+| Australia | `port-arthur` | AU | Australian Convict Sites (Port Arthur): -43.15639, 147.84722, Q999109 | Port Arthur's penitentiary ruins by the bay, the church | Yes |
+| United States | `cahokia` | US | Cahokia Mounds: 38.65389, -90.06444, Q333661 | Monks Mound's great earthen terraces and the woodhenge of posts | Yes |
+| United States | `liberty-bell` | US | Independence Hall: 39.94889, -75.15, Q390028 | The Liberty Bell with its crack, in its glass pavilion | No: Statue of Liberty shows |
+| Syria | `umayyad-mosque` | SY | Ancient City of Damascus: 33.51111, 36.30639, Q3678596 | The Umayyad Mosque's courtyard, its golden mosaic front and three minarets | Yes |
+| Syria | `saint-simeon` | SY | Dead Cities (Saint Simeon): 36.33417, 36.84417, Q1112125 | The Church of Saint Simeon Stylites' arches round the stump of his pillar | Yes |
+| Lebanon | `tyre` | LB | Tyre: 33.26917, 35.19583, Q3991738 | Tyre's Roman triumphal arch and colonnaded road, the hippodrome | Yes |
+| Lebanon | `anjar` | LB | Anjar: 33.72583, 35.92972, Q60977 | Anjar's Umayyad palace arches and columns at the crossing of its streets | Yes |
+| Jordan | `quseir-amra` | JO | Quseir Amra: 31.80175, 36.58731, Q499517 | Quseir Amra, the little desert castle with its three vaults and dome | Yes |
+| Peru | `arequipa` | PE | Historic Centre of Arequipa: -16.4, -71.53333, Q8343756 | Arequipa Cathedral's white sillar front and the El Misti volcano behind | Yes |
+| Colombia | `san-agustin` | CO | San Agustín Archaeological Park: 1.88444, -76.29611, Q2887224 | San Agustín's carved stone statues and their dolmen tombs | Yes |
+| Cuba | `san-pedro-de-la-roca` | CU | San Pedro de la Roca Castle: 19.96871, -75.8703, Q910189 | San Pedro de la Roca's terraced fortress on the cliffs at Santiago de Cuba's harbour | Yes |
+| Philippines | `paoay-church` | PH | Philippine Baroque Churches (San Agustin): 14.58886, 120.97535, Q1306513 | Paoay Church's massive buttresses and its coral-stone bell tower | Yes |
+| Indonesia | `yogyakarta` | ID | Cosmological Axis of Yogyakarta: -7.80139, 110.36478, Q96012243 | The Tugu monument and the Kraton's pavilions on Yogyakarta's axis | No: Borobudur shows |
+| Nepal | `kathmandu-durbar` | NP | Kathmandu Valley: 27.71, 85.32, Q3037 | Kathmandu's Durbar Square: tiered pagoda temples on their stepped plinths | No: Boudhanath Stupa shows |
+| Pakistan | `rohtas` | PK | Rohtas Fort: 32.96528, 73.57642, Q155188 | Rohtas Fort's great Sohail Gate and its walls | Yes |
+| Pakistan | `takht-i-bahi` | PK | Takht-i-Bahi: 34.32083, 71.94583, Q15240737 | Takht-i-Bahi's Buddhist monastery ruins on the hilltop, the stupa court | Yes |
+| Bangladesh | `paharpur` | BD | Paharpur Buddhist Vihara: 25.03111, 88.97694, Q305044 | Paharpur's great brick temple of terraces in the middle of its monastery square | Yes |
+| Cambodia | `preah-vihear` | KH | Preah Vihear Temple: 14.39056, 104.68028, Q45949 | Preah Vihear's temple gopuras on the cliff edge of the Dângrêk Mountains | Yes |
+| Cambodia | `koh-ker` | KH | Koh Ker: 13.74992, 104.54727, Q1778458 | Koh Ker's Prasat Thom: its seven-tiered stepped pyramid in the forest | Yes |
+| Tunisia | `dougga` | TN | Dougga: 36.42333, 9.22028, Q32378 | Dougga's Capitol, its temple front of columns on the hill among olive trees | Yes |
+| Tunisia | `sousse` | TN | Medina of Sousse: 35.8278, 10.6386, Q608100 | The Ribat of Sousse with its round watchtower and the medina walls | Yes |
+| Algeria | `djemila` | DZ | Djémila: 36.32056, 5.73667, Q457362 | Djémila's Arch of Caracalla and the Roman ruins on their ridge | Yes |
+| Algeria | `beni-hammad` | DZ | Al Qal'a of Beni Hammad: 35.81389, 4.79333, Q500367 | The Beni Hammad minaret, tall and alone in the ruins | No: Djémila shows |
+| Libya | `cyrene` | LY | Cyrene: 32.81667, 21.85, Q44112 | Cyrene's Temple of Apollo's columns above the sanctuary | Yes |
+| Libya | `sabratha` | LY | Sabratha: 32.80528, 12.485, Q15052130 | Sabratha's Roman theatre stage of three storeys of columns by the sea | Yes |
+| Mali | `tomb-of-askia` | ML | Tomb of Askia: 16.28972, -0.04444, Q503823 | The Tomb of Askia's mud-brick pyramid with its wooden spikes, the mosque | Yes |
+
 0 of the first models and 0 of the extra ones need a landmark row added first.

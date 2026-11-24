@@ -1,0 +1,8 @@
+{
+  "name": "The Iron Bridge",
+  "latitude": 52.62639,
+  "longitude": -2.47278,
+  "maps": ["GB", "XE"],
+  "landmark": "Q647958",
+  "onMap": false
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Kathmandu Valley",
+  "latitude": 27.71,
+  "longitude": 85.32,
+  "maps": ["NP"],
+  "landmark": "Q3037",
+  "onMap": false
+}

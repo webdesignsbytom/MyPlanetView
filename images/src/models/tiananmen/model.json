@@ -1,0 +1,8 @@
+{
+  "name": "Tiananmen",
+  "latitude": 39.89964,
+  "longitude": 116.39161,
+  "maps": ["CN"],
+  "landmark": "Q6112171",
+  "onMap": false
+}
