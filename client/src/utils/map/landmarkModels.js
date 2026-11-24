@@ -6940,9 +6940,9 @@ export const LANDMARK_MODELS = [
     longitude: 10.39478,
     maps: ['IT'],
     landmark: 'Q750245',
-    aspect: 1.7366,
+    aspect: 1.3038,
     size: 0.7,
-    anchor: [0.5, 0.4026],
+    anchor: [0.5, 0.5518],
     images: { 160: leaningTower160, 320: leaningTower320 },
   },
   {
@@ -10842,9 +10842,9 @@ export const LANDMARK_MODELS = [
     longitude: 7.68583,
     maps: ['IT'],
     landmark: 'Q461272',
-    aspect: 1.9507,
+    aspect: 1.7178,
     size: 0.7,
-    anchor: [0.5, 0.3284],
+    anchor: [0.5, 0.4092],
     images: { 160: stupinigi160, 320: stupinigi320 },
   },
   {

@@ -83,8 +83,21 @@ test('Black and white turns the page grey, stays after a reload, and the World m
       return getComputedStyle(box).filter;
     });
   await expect.poll(toolbarFilter).toBe('grayscale(1)');
+  // The panels are grey through the tokens, unfiltered, so the map style picker's pictures of
+  // the other styles keep their colours (25 Nov 2026, the user's wish); Black and white's own is grey
+  await expect(page.locator('[data-map-panels]')).toHaveCSS('filter', 'none');
+  for (const style of ['animated', 'old-map', 'starry']) {
+    await expect(settings.locator(`label[data-map-style="${style}"] img`)).toHaveCSS('filter', 'none');
+  }
+  await expect(settings.locator('label[data-map-style="mono"] img')).toHaveCSS('filter', 'grayscale(1)');
 
   await settings.getByRole('button', { name: /^Close/ }).first().click();
+  // Any other picture in a panel is still grey: a country's poster on its ticket
+  const list = await openTool(page, 'Country list', 'Countries');
+  await list.getByRole('button', { name: 'France', exact: true }).click();
+  const poster = page.getByRole('dialog', { name: 'France' }).locator('img').first();
+  await expect(poster).toHaveCSS('filter', 'grayscale(1)');
+  await page.keyboard.press('Escape');
   await page.reload();
   await expect(worldMap(page)).toBeVisible();
   await expect(html).toHaveAttribute('data-mono', '');

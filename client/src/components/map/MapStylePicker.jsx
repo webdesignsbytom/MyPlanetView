@@ -44,6 +44,8 @@ function MapStylePicker({ value, onChange, note = null }) {
                 alt=''
                 className={`h-16 w-full object-cover ${style.previewGrey ? 'grayscale' : ''}`}
                 loading='lazy'
+                // In its own colours on a map shown in Black and white too (index.css, data-mono-map)
+                data-keep-colour=''
               />
             ) : (
               <span aria-hidden='true' className='block h-16 w-full bg-map-sea' />

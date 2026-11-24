@@ -2,6 +2,7 @@
 // tied pin to pin, like a map on a corkboard. Where each string is drawn: from one place's pin
 // to the other's, hanging in a gentle curve as thread does. Pure.
 import { COUNTRY_BY_CODE, countryName } from './countries';
+import { REFERENCE_PX_PER_UNIT } from './projection';
 import { PARENT_PLACE } from './specialPlaces';
 import { countsAsVisited } from './visitStatus';
 import { passportPageOrder } from '@/utils/passport/passportOrder';
@@ -28,9 +29,16 @@ export function stringPath(a, b) {
   return `M${round(a.x)} ${round(a.y)}Q${round(midX)} ${round(midY)} ${round(b.x)} ${round(b.y)}`;
 }
 
+/** The unit vector across the straight line from `a` to `b`, `{ x, y }` (none for one point). */
+export function acrossOf(a, b) {
+  const length = Math.hypot(b.x - a.x, b.y - a.y);
+  return length ? { x: -(b.y - a.y) / length, y: (b.x - a.x) / length } : { x: 0, y: 0 };
+}
+
 /**
- * The strings to draw: `[{ id, from, to, d, label }]`, leaving out any whose end has no pin or
- * is hidden (the far south without Antarctica).
+ * The strings to draw: `[{ id, from, to, d, label, across }]`, leaving out any whose end has
+ * no pin or is hidden (the far south without Antarctica). `across`: acrossOf its pins, for the
+ * strands of a twined string (twistStrands).
  */
 export function drawnStrings(strings, { showAntarctica = true } = {}) {
   const shown = (code) => showAntarctica || !SOUTHERN.has(code);
@@ -38,8 +46,35 @@ export function drawnStrings(strings, { showAntarctica = true } = {}) {
     const a = pinOf(string.from);
     const b = pinOf(string.to);
     if (!a || !b || !shown(string.from) || !shown(string.to)) return [];
-    return [{ ...string, d: stringPath(a, b), label: stringLabel(string) }];
+    return [{ ...string, d: stringPath(a, b), label: stringLabel(string), across: acrossOf(a, b) }];
   });
+}
+
+// Two colours twisted together, as baker's twine (25 Nov 2026, the user's wish: "spiralled
+// together", never blocks of one colour then the other). The string is drawn in its first
+// colour, then the second over it as four thin strands side by side across it (these screen
+// pixels from its middle), each dashed (bands TWIST_DASH_PX long, as far apart) and each a
+// little further along than the one beside it (TWIST_SHIFT_PX per pixel across): the second
+// colour's bands lie slanted across the string, as twisted plies do. Each strand is the
+// string's own path moved sideways, so all four are exactly as long and stay in step.
+export const TWIST_STRAND_OFFSETS_PX = Object.freeze([-1.5, -0.5, 0.5, 1.5]);
+export const TWIST_STRAND_PX = 1.25;
+export const TWIST_DASH_PX = 3;
+export const TWIST_SHIFT_PX = 0.9;
+
+/**
+ * A twined string's strands at a zoom (pixels on screen over REFERENCE_PX_PER_UNIT, as
+ * useMapViewport's): `[{ dx, dy, dashOffset }]`, each strand's move across the string in map
+ * units (so it's the same few pixels at any zoom) and its dashes' start in pixels (the map's
+ * strokes are non-scaling, so their dashes are in pixels too).
+ */
+export function twistStrands(across, zoom) {
+  const unitsPerPx = 1 / (Math.max(zoom, 1e-3) * REFERENCE_PX_PER_UNIT);
+  return TWIST_STRAND_OFFSETS_PX.map((px) => ({
+    dx: Math.round(across.x * px * unitsPerPx * 1e4) / 1e4,
+    dy: Math.round(across.y * px * unitsPerPx * 1e4) / 1e4,
+    dashOffset: Math.round(px * TWIST_SHIFT_PX * 100) / 100,
+  }));
 }
 
 /** The pins strings are tied to, once each: `[{ code, x, y }]`. */

@@ -40,7 +40,7 @@ test.describe('Group trips', () => {
 
     // On the map: Thailand, Vietnam and Cambodia, and the trip, from Sam's map, which opens
     await openMap(page);
-    await expectStats(page, '11 countries, 3 continents, 16 photos');
+    await expectStats(page, '23 countries, 5 continents, 16 photos');
     const trips = await openTool(page, 'Trips', 'Trips');
     const link = trips.getByRole('link', { name: /South-East Asia loop/ });
     await expect(link).toContainText('Group trip');
@@ -54,7 +54,7 @@ test.describe('Group trips', () => {
     await expect(myMapsCard(page).getByText(`Taken off ${HOME_MAP}. The countries it marked there stay.`)).toBeVisible();
     await expect(myMapsCard(page).getByRole('list', { name: 'Your maps showing this trip' })).toHaveCount(0);
     await openMap(page);
-    await expectStats(page, '11 countries, 3 continents, 16 photos');
+    await expectStats(page, '23 countries, 5 continents, 16 photos');
     const after = await openTool(page, 'Trips', 'Trips');
     await expect(after.getByText('South-East Asia loop')).toHaveCount(0);
   });
@@ -91,14 +91,14 @@ test.describe('Group trips', () => {
     const trips = await openTool(page, 'Trips', 'Trips');
     await expect(trips.getByRole('link', { name: /Japan in spring/ })).toContainText(`From ${HOME_MAP}`);
     await openMap(page);
-    await expectStats(page, '9 countries, 3 continents, 16 photos');
+    await expectStats(page, '21 countries, 5 continents, 16 photos');
   });
 
   test('a group trip you aren’t on shows only its title, dates, status and countries, and its owner can take it off', async ({ page }) => {
     await openMap(page);
     await openStats(page);
-    // Trips: the map's own two and the group trip
-    await expect(tripsCount(page)).toHaveText('3');
+    // Trips: the map's own 14 (the demo couple's) and the group trip
+    await expect(tripsCount(page)).toHaveText('15');
 
     const trips = await openTool(page, 'Trips', 'Trips');
     const stag = trips.getByRole('listitem').filter({ hasText: 'Stag do in Prague' });
@@ -112,7 +112,7 @@ test.describe('Group trips', () => {
     await stag.getByRole('button', { name: 'Take Stag do in Prague off this map' }).click();
     await expect(trips.getByText('Stag do in Prague')).toHaveCount(0);
     await openStats(page);
-    await expect(tripsCount(page)).toHaveText('2');
+    await expect(tripsCount(page)).toHaveText('14');
 
     // Its page is still closed to them
     await page.goto('/trips/trip-tom-stag');

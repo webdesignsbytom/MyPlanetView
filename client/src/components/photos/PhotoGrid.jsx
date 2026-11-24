@@ -21,9 +21,9 @@ function photosAround(photos, index, reach) {
 }
 
 // A grid of photos with "Show more" paging. `narrow` for narrow places (a map panel);
-// `wide` for the map's wide Photos panel (80% of a large screen, 16 Nov 2026, the user's
-// wish): three across on phones, then as many columns of at least 9rem as fit (5 on a
-// 1024px screen, 6 at 1280, about 9 at 1920), so thousands of photos need less scrolling.
+// `wide` for the map's wide Photos panel (76% of a large screen; 16 Nov 2026, the user's
+// wish): three across on phones, then as many columns of at least 9rem as fit, so
+// thousands of photos need less scrolling.
 // With `onMove(photoId, afterId)` (editors), "Rearrange photos" lets them drag photos
 // into a new order; it returns a promise, and a failure is shown under the grid.
 // `offerSlots` (useGalleryOffers): a travel offer card after every `every` photos (docs/API.md,

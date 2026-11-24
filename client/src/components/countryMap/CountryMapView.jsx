@@ -5,11 +5,13 @@ import { FiList } from 'react-icons/fi';
 // Hooks
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import useCountryMapData from '@/hooks/useCountryMapData';
+import useMapChrome from '@/hooks/useMapChrome';
 // Components
 import MapZoomControls from '@/components/map/MapZoomControls';
 import MapRoundButton from '@/components/map/MapRoundButton';
 import MapPanel from '@/components/map/MapPanel';
 import MapKeyboardHint from '@/components/map/MapKeyboardHint';
+import SlideAway from '@/components/map/chrome/SlideAway';
 import { StarBadgeSymbols } from '@/components/map/StarBadge';
 import { MomentSpotIcon } from '@/components/map/MomentSpotPins';
 import StatePopover from './StatePopover';
@@ -258,20 +260,33 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
     headingRef.current?.focus({ preventScroll: true });
   }, []);
 
+  // The page's menus slid away (the toolbar's tab; useMapChrome): this map's header, list stamp
+  // and zoom stamps go with them, and its cards and list close. A card opened meanwhile (a state
+  // or a model pressed) brings them all back.
+  const { hidden: menusHidden, show: showMenus } = useMapChrome();
+
   // A state's card and a landmark model's, one at a time, each giving focus back to what
   // opened it (the map, or the list's button)
   const popoverOpenerRef = useRef(null);
-  const openPopover = useCallback((next, opener) => {
-    popoverOpenerRef.current = opener ?? null;
-    setStatusError(null);
-    setModelCard(null);
-    setPopover(next);
-  }, []);
-  const openModelCard = useCallback((next, opener) => {
-    popoverOpenerRef.current = opener ?? null;
-    setPopover(null);
-    setModelCard(next);
-  }, []);
+  const openPopover = useCallback(
+    (next, opener) => {
+      popoverOpenerRef.current = opener ?? null;
+      setStatusError(null);
+      setModelCard(null);
+      setPopover(next);
+      showMenus();
+    },
+    [showMenus],
+  );
+  const openModelCard = useCallback(
+    (next, opener) => {
+      popoverOpenerRef.current = opener ?? null;
+      setPopover(null);
+      setModelCard(next);
+      showMenus();
+    },
+    [showMenus],
+  );
   const closePopover = useCallback(() => {
     setPopover(null);
     setModelCard(null);
@@ -284,6 +299,11 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
     setPopover(null);
     setModelCard(null);
   }, []);
+  useEffect(() => {
+    if (!menusHidden) return;
+    dropCards();
+    setListOpen(false);
+  }, [menusHidden, dropCards]);
 
   // Escape: stop placing a pin, else close the card. Not when a dialog over the map took it
   // (the celebration a "Been here" tick opens: useModalA11y)
@@ -441,8 +461,8 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
 
       {/* The header, centred: back to the world, the country and how many of its states, a
           new pin; one slim row on wide screens, stacked on phones */}
-      <div className='pointer-events-none absolute inset-x-16 top-3 grid justify-items-center nophone:inset-x-72'>
-        <div ref={headerRef} className='ticket-edge paper-aged pointer-events-auto grid max-w-full justify-items-center gap-2 px-4 py-2 text-center text-poster-ink'>
+      <SlideAway className='pointer-events-none absolute inset-x-16 top-3 grid justify-items-center nophone:inset-x-72' measure='[data-country-map-header]'>
+        <div ref={headerRef} data-country-map-header='' className='ticket-edge paper-aged pointer-events-auto grid max-w-full justify-items-center gap-2 px-4 py-2 text-center text-poster-ink'>
           <div className='grid items-center justify-items-center gap-2 nophone:grid-cols-[auto_auto_auto] nophone:gap-4'>
             <div className='hidden nophone:grid'>{backToWorld}</div>
             {/* The flag beside the name and the count, the two lined up on the left */}
@@ -476,15 +496,15 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
             </p>
           ) : null}
         </div>
-      </div>
+      </SlideAway>
 
       {/* The list's stamp, top left on every screen (the goal tag steps aside while a country is open) */}
       {geo ? (
-        <div className='absolute left-3 top-3'>
+        <SlideAway className='absolute left-3 top-3'>
           <MapRoundButton label={`List the ${listWhat}`} pressed={listOpen} onClick={() => setListOpen((on) => !on)}>
             <FiList aria-hidden='true' />
           </MapRoundButton>
-        </div>
+        </SlideAway>
       ) : null}
 
       {/* The list, a panel in the middle of the screen (the whole screen less a margin on phones) */}
@@ -510,11 +530,11 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
       ) : null}
 
       {geo ? (
-        <div className='pointer-events-none absolute bottom-3 right-3 grid'>
+        <SlideAway className='pointer-events-none absolute bottom-3 right-3 grid'>
           <div className='pointer-events-auto'>
             <MapZoomControls viewport={viewport} resetLabel={`Show all of ${name}`} onReset={fitCountry} />
           </div>
-        </div>
+        </SlideAway>
       ) : error ? (
         <div className='absolute inset-0 grid place-items-center' role='alert'>
           <p className='ticket-edge paper-aged px-4 py-3 text-sm'>{error}</p>

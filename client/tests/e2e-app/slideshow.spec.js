@@ -1,10 +1,11 @@
 import { test, expect, HOME_MAP, SAM_MAP, SAM_SHARE_CODE, goInApp, openMap, openTool, playMyWorld, signOut } from './fixtures.js';
 
 // The slideshows (docs/FEATURE-PLAN.md, "Slideshows"). The test user's map has 16 photos
-// (one hidden, which its owner sees); oldest taken first they start in the Netherlands
-// (2016), then Spain (2018) and the United States. Its dated moments come between them in
-// date order: "Charlie was born" (1990) and "Moved to Dublin" (2012) open the show, and
-// "Saw flamenco in Granada" (August 2018) follows Spain's card.
+// (one hidden, which its owner sees); oldest taken first they start in the United States
+// (the demo couple's first trip, 2014), then the Netherlands (2016) and Spain (2018). Its dated
+// moments come between them in date order: both births (1990, 1991) and "Moved to Dublin"
+// (2012) open the show, "Our first trip together" follows the United States' card, and "Saw
+// flamenco in Granada" (August 2018) Spain's.
 
 // What's on screen in words, for screen readers: the footer shows only the controls
 // (16 Nov 2026, the user's wish), with this live region out of sight
@@ -42,7 +43,7 @@ test.describe('Slideshows', () => {
     // focus on Pause: Space pauses it
     const born = show.getByRole('article', { name: 'Moment: Charlie was born' });
     await expect(born).toBeVisible();
-    await expect(born.getByText('Born · 1990')).toBeVisible();
+    await expect(born.getByText(/^Born · 14 Jan(uary)? 1990$/)).toBeVisible();
     await expect(born.getByText('Manchester, United Kingdom')).toBeVisible();
     await expect(born.getByText('In a snowstorm, apparently.')).toBeVisible();
     await expect(show.getByRole('button', { name: 'Pause', exact: true })).toBeFocused();
@@ -50,21 +51,32 @@ test.describe('Slideshows', () => {
     const play = show.getByRole('button', { name: 'Play', exact: true });
     await expect(play).toBeVisible();
 
-    // Paused, it waits for you: the next moment, then the first country's title card (its
-    // poster and name), then the first photo (its count, place and day for screen
-    // readers only: nothing but the controls under it)
+    // Paused, it waits for you: the next moments, then the first country's title card (its
+    // poster and name), the moment there, then the first photo (its count, place and day for
+    // screen readers only: nothing but the controls under it)
     const next = show.getByRole('button', { name: 'Next', exact: true });
+    await next.click();
+    await expect(show.getByRole('article', { name: 'Moment: Alex was born' })).toBeVisible();
     await next.click();
     await expect(show.getByRole('article', { name: 'Moment: Moved to Dublin' }).getByText('Moved here · September 2012')).toBeVisible();
     await next.click();
     await expect(show.getByText('First stop', { exact: true })).toBeVisible();
-    await expect(show.getByRole('img', { name: 'Travel poster for Netherlands' })).toBeVisible();
+    await expect(show.getByRole('img', { name: 'Travel poster for United States' })).toBeVisible();
     await next.click();
-    await expect(show.getByRole('img', { name: 'Canals at dusk' })).toBeVisible();
-    await expect(saidIn(show)).toContainText('Photo 1 of 16. Netherlands · Amsterdam');
-    await expect(saidIn(show)).toContainText('12 Mar 2016');
+    await expect(show.getByRole('article', { name: 'Moment: Our first trip together' })).toBeVisible();
+    await next.click();
+    await expect(show.getByRole('img', { name: 'Lower Manhattan from Jersey City' })).toBeVisible();
+    await expect(saidIn(show)).toContainText('Photo 1 of 16. United States');
+    await expect(saidIn(show)).toContainText('21 Jun 2014');
 
-    // The arrow keys: on to Spain's card, the moment there, then its photo, and back
+    // The arrow keys: the Golden Gate, the Netherlands' card and photo, on to Spain's card,
+    // the moment there, then its photo, and back
+    await page.keyboard.press('ArrowRight');
+    await expect(show.getByRole('img', { name: 'The Golden Gate from Crissy Field' })).toBeVisible();
+    await page.keyboard.press('ArrowRight');
+    await expect(show.getByRole('img', { name: 'Travel poster for Netherlands' })).toBeVisible();
+    await page.keyboard.press('ArrowRight');
+    await expect(show.getByRole('img', { name: 'Canals at dusk' })).toBeVisible();
     await page.keyboard.press('ArrowRight');
     await expect(show.getByText('Next stop', { exact: true })).toBeVisible();
     await expect(show.getByRole('img', { name: 'Travel poster for Spain' })).toBeVisible();
@@ -98,12 +110,12 @@ test.describe('Slideshows', () => {
     await show.getByRole('button', { name: 'Pause', exact: true }).click();
     const taken = await photosInOrder(page, show, 6);
     expect(taken).toEqual([
-      'Canals at dusk',
-      'Granada',
       'Lower Manhattan from Jersey City',
       'The Golden Gate from Crissy Field',
+      'Canals at dusk',
+      'Granada',
+      'Sagrada Família',
       'Evening by the Seine',
-      'The Cliffs of Moher',
     ]);
 
     const shuffle = show.getByRole('button', { name: 'Shuffle', exact: true });

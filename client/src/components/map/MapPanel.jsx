@@ -16,15 +16,16 @@ import PaperStripHeader from '@/components/common/PaperStripHeader';
  */
 function MapPanel({ title, onClose, children, footer = null, wide = false, large = false, roomy = false, fill = false }) {
   const { titleId, headingRef, panelProps } = useMapPanel(onClose);
-  // `wide`: the map's Photos panel, 80% of a large screen (16 Nov 2026, the user's wish:
-  // five or six photos across, not three). `large`: a landmark model's card on a country's map,
+  // `wide`: the map's Photos panel and Life's One Shots, 76% of a large screen (16 Nov 2026,
+  // the user's wish: five or six photos across, not three; 80% until 25 Nov 2026, the user's
+  // wish: 5% narrower). `large`: a landmark model's card on a country's map,
   // 60rem, two columns side by side (24 Nov 2026, the user's wish). `roomy`: Settings, 37.5rem,
   // so fields side by side (a traveller's two countries) have room for long names (17 Nov 2026).
   // The rest are 28.5rem (both 10% wider on 22 Nov 2026, the user's wish: they were 34 and 26).
   // `fill`: its one child is stretched to the panel's height (an empty state filling a phone's
   // panel, PanelEmptyState); elsewhere the content keeps to the top.
   const width = wide
-    ? 'nophone:w-full lg:w-[80vw] lg:max-w-full'
+    ? 'nophone:w-full lg:w-[76vw] lg:max-w-full'
     : large
       ? 'nophone:w-[60rem] nophone:max-w-full'
       : roomy

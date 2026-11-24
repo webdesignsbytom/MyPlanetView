@@ -21,6 +21,34 @@ describe('DesignColourField', () => {
     rerender(<DesignColourField id='names' label='Country names' value='#aa0000' usual='#334455' onChange={onChange} />);
     fireEvent.click(screen.getByLabelText('Country names: back to the usual colour'));
     expect(onChange).toHaveBeenLastCalledWith(null);
+    // No opacity but the strings'
+    expect(screen.queryByLabelText('Country names opacity')).toBeNull();
+  });
+
+  // See-through strings (25 Nov 2026, the user's wish): an opacity slider under the picker
+  it('with `alpha`, sets the opacity on a slider and keeps it when the colour changes', () => {
+    const onChange = vi.fn();
+    const field = (value) => <DesignColourField id='string' label='String colour' value={value} usual='#c8102e' onChange={onChange} alpha />;
+    const { rerender } = render(field(null));
+    const slider = screen.getByLabelText('String colour opacity');
+    expect(slider.getAttribute('type')).toBe('range');
+    expect(slider.value).toBe('100');
+    expect(slider.getAttribute('aria-valuetext')).toBe('100%');
+    expect(screen.getByText('100%').tagName).toBe('OUTPUT');
+    // From the usual colour: the usual red, half see-through
+    fireEvent.change(slider, { target: { value: '50' } });
+    expect(onChange).toHaveBeenLastCalledWith('#c8102e80');
+
+    rerender(field('#1d4ed866'));
+    expect(screen.getByLabelText('String colour').value).toBe('#1d4ed8');
+    expect(slider.value).toBe('40');
+    expect(screen.getByText('40%')).toBeTruthy();
+    // A new colour keeps the opacity; fully opaque again drops its digits
+    fireEvent.input(screen.getByLabelText('String colour'), { target: { value: '#00aa00' } });
+    expect(onChange).toHaveBeenLastCalledWith('#00aa0066');
+    fireEvent.change(slider, { target: { value: '100' } });
+    expect(onChange).toHaveBeenLastCalledWith('#1d4ed8');
+    expect(slider.getAttribute('min')).toBe('10');
   });
 });
 

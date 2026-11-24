@@ -165,7 +165,16 @@ function WorldMap({
         ) : null}
         {/* Strings between places, over everything else, as thread pinned to a board */}
         {strings?.length || stringStart ? (
-          <MapStrings strings={strings} showAntarctica={showAntarctica} startCode={stringStart} onRemove={onRemoveString} afterTap={afterTap} />
+          <MapStrings
+            strings={strings}
+            // In the names' steps: a twined string's strands are a few pixels apart, which this
+            // keeps close enough while it re-renders only a few times a doubling
+            zoom={labelZoom(zoom)}
+            showAntarctica={showAntarctica}
+            startCode={stringStart}
+            onRemove={onRemoveString}
+            afterTap={afterTap}
+          />
         ) : null}
         {stops?.length ? <StopMarkers stops={stops} zoom={zoom} /> : null}
       </svg>

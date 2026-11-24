@@ -60,7 +60,7 @@ describe('MapPhotosPanel', () => {
     expect(screen.getByText('No country yet')).toBeTruthy();
     expect(container.querySelector('[data-grid]').getAttribute('data-has-more')).toBe('true');
     expect(container.querySelector('[data-grid]').getAttribute('data-empty')).toBe('No photos on this map yet.');
-    expect(document.querySelector('[data-map-panel]').getAttribute('class')).toContain('lg:w-[80vw]');
+    expect(document.querySelector('[data-map-panel]').getAttribute('class')).toContain('lg:w-[76vw]');
     expect(screen.queryByText('Add photos')).toBeNull();
   });
 

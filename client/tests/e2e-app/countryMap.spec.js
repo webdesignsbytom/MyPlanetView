@@ -14,7 +14,7 @@ const CODE_BY_NAME = new Map(COUNTRIES.map((place) => [place.name, place.code]))
 
 // A country opened on its own (docs/API.md "Country maps"; 18 Nov 2026, the user's wish): its
 // states coloured as the map stands with them, and its pins, each with a visit for every time.
-// The seeded map (src/dev/mock/seed.js) has New York and Massachusetts visited, and a pin in
+// The seeded map (src/dev/mock/seed.js) has New York, Massachusetts and California visited, and a pin in
 // Paris with two visits; it counts 8 countries on 2 continents.
 
 async function openCountryMap(page, name) {
@@ -1064,13 +1064,13 @@ test('marking a state colours it and brings its country', async ({ page }) => {
   await expect(page.locator('[data-state="CA-SK"]')).toHaveAttribute('data-status', 'VISITED');
   await expect(map.getByText('1 of 13 provinces visited')).toBeVisible();
   // Canada came with it (North America already counted, through the US)
-  await expectStats(page, '9 countries, 2 continents, 16 photos');
+  await expectStats(page, '21 countries, 5 continents, 16 photos');
 });
 
 test('an editor drops a pin and saves its first visit', async ({ page }) => {
   await openMap(page);
   const map = await openCountryMap(page, 'United States');
-  await expect(map.getByText('2 of 51 states visited')).toBeVisible();
+  await expect(map.getByText('3 of 51 states visited')).toBeVisible();
   await map.getByRole('button', { name: 'Add a pin' }).click();
   await expect(map.getByText('Press the map where the pin goes.')).toBeVisible();
   await pressState(page, 'US-TX');
@@ -1099,7 +1099,7 @@ test('an editor drops a pin and saves its first visit', async ({ page }) => {
 test('a country opens on its own on a phone too', { tag: '@phone' }, async ({ page }) => {
   await openMap(page);
   const map = await openCountryMap(page, 'United States');
-  await expect(map.getByText('2 of 51 states visited')).toBeVisible();
+  await expect(map.getByText('3 of 51 states visited')).toBeVisible();
   await expect(page.locator('[data-state="US-NY"]')).toHaveAttribute('data-status', 'VISITED');
   // A finger's drag and pinch are the map's own, as on the world map: without it the phone's
   // browser held back the touch moves, and panning was jerky (23 Nov 2026, the user's report)

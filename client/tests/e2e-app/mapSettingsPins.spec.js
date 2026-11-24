@@ -17,7 +17,8 @@ test('the landmark pins show only the passport’s, when zoomed in, always, or n
   await openMap(page);
   // The default (18 Nov 2026): only the passport's, whatever the zoom
   await expect(pins(page)).toHaveAttribute('data-landmark-pins', '0');
-  await expect(pins(page)).toHaveAttribute('data-stamped-pins', '13');
+  // The passport's 25: 13 photos' and the 12 heritage sites ticked (data/demoTravels.js)
+  await expect(pins(page)).toHaveAttribute('data-stamped-pins', '25');
 
   // When zoomed in: the whole world is too far out for them
   await choosePins(page, 'When zoomed in');

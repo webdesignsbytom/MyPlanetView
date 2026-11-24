@@ -29,7 +29,7 @@ test.describe('The passport', () => {
     await page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('link', { name: 'Passport: landmark stamps' }).click();
     await expect(page).toHaveURL(/\/maps\/map-home\/passport$/);
     await expect(page.getByRole('heading', { level: 1, name: HOME_MAP })).toBeVisible();
-    await expect(pageStatus(page)).toHaveText('Page 1 of 11: Cover');
+    await expect(pageStatus(page)).toHaveText('Page 1 of 23: Cover');
     await expect(book(page).getByRole('heading', { level: 2, name: 'Passport' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Previous page' })).toBeDisabled();
 
@@ -46,11 +46,11 @@ test.describe('The passport', () => {
 
     // The arrow keys: the first visa page (the United Kingdom, lived in since 1990) and back
     await page.keyboard.press('ArrowRight');
-    await expect(pageStatus(page)).toHaveText('Page 3 of 11: United Kingdom');
+    await expect(pageStatus(page)).toHaveText('Page 3 of 23: United Kingdom');
     await expect(book(page).getByRole('heading', { level: 2, name: 'United Kingdom' })).toBeVisible();
-    await expect(book(page).getByText('Lived there, from 1 May 1990')).toBeVisible();
+    await expect(book(page).getByText('Lived there, from 14 Jan 1990')).toBeVisible();
     await page.keyboard.press('ArrowLeft');
-    await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
+    await expect(pageStatus(page)).toHaveText('Page 2 of 23: Travellers');
 
     // The Netherlands: first visited the day before its first photo, which dates its stamp
     await pageList(page).selectOption({ label: '6. Netherlands' });
@@ -59,13 +59,14 @@ test.describe('The passport', () => {
       'Amsterdam Canal Ring, stamped 12 Mar 2016, UNESCO World Heritage Site, 1 photo.',
     );
 
-    // Italy, from the page list: four stamps in the order they were stamped, and the rest to collect
-    await pageList(page).selectOption({ label: '10. Italy' });
+    // Italy, from the page list: four stamps in the order they were stamped (Venice on the
+    // Carnival trip, 2026), and the rest to collect
+    await pageList(page).selectOption({ label: '21. Italy' });
     await expect(book(page).getByRole('heading', { level: 2, name: 'Italy' })).toBeVisible();
     const stamps = book(page).getByRole('region', { name: 'Landmark stamps (4)' });
     const opens = stamps.getByRole('button', { name: /^Open the photo of / });
     await expect(opens).toHaveCount(4);
-    const order = ['Venice and its Lagoon', 'Colosseum', 'Historic Centre of Florence', 'Portovenere and Cinque Terre'];
+    const order = ['Colosseum', 'Historic Centre of Florence', 'Portovenere and Cinque Terre', 'Venice and its Lagoon'];
     for (const [i, name] of order.entries()) await expect(opens.nth(i)).toHaveAccessibleName(`Open the photo of ${name}`);
     await expect(stampButton(page, 'Colosseum')).toHaveAccessibleDescription('Colosseum, stamped 3 Jul 2025, 1 photo.');
     const toStamp = book(page).getByRole('region', { name: 'Still to stamp (54)' });
@@ -83,12 +84,16 @@ test.describe('The passport', () => {
     await page.keyboard.press('ArrowRight');
     await page.keyboard.press('Escape');
     await expect(viewer).toBeHidden();
-    await expect(pageStatus(page)).toHaveText('Page 10 of 11: Italy');
+    await expect(pageStatus(page)).toHaveText('Page 21 of 23: Italy');
 
-    // The back page: the totals (the owner counts the stamp on the hidden photo)
+    // Austria (Alex's conference, March 2026), then the back page: the totals (the owner counts
+    // the stamp on the hidden photo)
+    await page.getByRole('button', { name: 'Next page' }).click();
+    await expect(book(page).getByRole('heading', { level: 2, name: 'Austria' })).toBeVisible();
     await page.getByRole('button', { name: 'Next page' }).click();
     await expect(book(page).getByRole('heading', { level: 2, name: 'Totals' })).toBeVisible();
-    await expect(book(page).getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '13', '10']);
+    // 20 places, 25 stamps (13 from photos, 12 heritage sites ticked), 22 of them World Heritage Sites
+    await expect(book(page).getByRole('definition')).toHaveText(['20', '5 of 7', '0 of 5', '25', '22']);
     await expect(page.getByRole('button', { name: 'Next page' })).toBeDisabled();
   });
 
@@ -118,7 +123,7 @@ test.describe('The passport', () => {
     await page.getByRole('group', { name: 'Zoom' }).getByRole('button', { name: 'Zoom in' }).click();
     const pins = page.locator('[data-landmark-pins]');
     // Every stamp on the map (the owner sees Belém's hidden one too), whatever the zoom
-    await expect(pins).toHaveAttribute('data-stamped-pins', '13');
+    await expect(pins).toHaveAttribute('data-stamped-pins', '25');
     await expect(pins.locator('[data-stamped] title').filter({ hasText: 'Eiffel Tower, stamped in the passport' })).toHaveCount(1);
     // The Alhambra is only a suggestion: a plain pin, when it shows
     await expect(pins.locator('[data-stamped] title').filter({ hasText: 'Alhambra' })).toHaveCount(0);
@@ -135,7 +140,7 @@ test.describe('The passport', () => {
       localStorage.setItem(key, JSON.stringify(db));
     }, MOCK_STORE_KEY);
     await page.reload();
-    await expect(pageStatus(page)).toHaveText('Page 1 of 11: Cover');
+    await expect(pageStatus(page)).toHaveText('Page 1 of 23: Cover');
 
     await pageList(page).selectOption({ label: '8. France' });
     await expect(stampButton(page, 'Paris, Banks of the Seine')).toBeVisible();
@@ -148,8 +153,8 @@ test.describe('The passport', () => {
     await toStamp.getByRole('button', { name: 'Show all 17' }).click();
     await expect(toStamp.getByRole('listitem').filter({ hasText: 'Tower of Belém' })).toBeVisible();
 
-    await pageList(page).selectOption({ label: '11. Totals' });
-    await expect(book(page).getByRole('definition')).toHaveText(['8', '2 of 7', '0 of 5', '12', '9']);
+    await pageList(page).selectOption({ label: '23. Totals' });
+    await expect(book(page).getByRole('definition')).toHaveText(['20', '5 of 7', '0 of 5', '24', '21']);
   });
 
   test('a share link opens the passport read only; a trip’s link has none', async ({ page }) => {
@@ -187,14 +192,14 @@ test.describe('The passport', () => {
       await leaf.dispatchEvent('pointerup', { pointerType: 'touch', pointerId: 7, isPrimary: true, clientX: x + dx, clientY: y + 6, bubbles: true });
     };
     await swipe(-160);
-    await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
+    await expect(pageStatus(page)).toHaveText('Page 2 of 23: Travellers');
     await swipe(-160);
-    await expect(pageStatus(page)).toHaveText('Page 3 of 11: United Kingdom');
+    await expect(pageStatus(page)).toHaveText('Page 3 of 23: United Kingdom');
     await swipe(160);
-    await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
+    await expect(pageStatus(page)).toHaveText('Page 2 of 23: Travellers');
     // A short or mostly vertical drag is a scroll, not a turn
     await swipe(-30);
-    await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
+    await expect(pageStatus(page)).toHaveText('Page 2 of 23: Travellers');
   });
 
   test('the cover follows the map owner’s plan: Economy, Business or First Class', async ({ page }) => {
@@ -239,7 +244,7 @@ test.describe('The passport', () => {
     await openPassport(page);
     const front = book(page).locator('[data-cover]');
     await front.dblclick();
-    await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
+    await expect(pageStatus(page)).toHaveText('Page 2 of 23: Travellers');
     // The double-click highlighted nothing
     expect(await page.evaluate(() => window.getSelection().toString())).toBe('');
 
@@ -250,9 +255,9 @@ test.describe('The passport', () => {
       await page.mouse.dblclick(box.x + box.width * share, box.y + box.height * 0.8);
     };
     await doubleClickAt(0.75);
-    await expect(pageStatus(page)).toHaveText('Page 3 of 11: United Kingdom');
+    await expect(pageStatus(page)).toHaveText('Page 3 of 23: United Kingdom');
     await doubleClickAt(0.25);
-    await expect(pageStatus(page)).toHaveText('Page 2 of 11: Travellers');
+    await expect(pageStatus(page)).toHaveText('Page 2 of 23: Travellers');
     expect(await page.evaluate(() => window.getSelection().toString())).toBe('');
   });
 

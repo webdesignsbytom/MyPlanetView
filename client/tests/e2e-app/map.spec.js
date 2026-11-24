@@ -10,7 +10,7 @@ test.describe('The map page', () => {
     if (showsBanner(page)) await expect(page.getByRole('region', { name: 'Map banner' })).toContainText(HOME_MAP);
     else await expect(page.getByRole('region', { name: 'Map banner' })).toHaveCount(0);
     await expect(page.getByRole('button', { name: /\. Switch map$/ })).toHaveCount(0);
-    await expectStats(page, '8 countries, 2 continents, 16 photos');
+    await expectStats(page, '20 countries, 5 continents, 16 photos');
 
     // The owner's tools, every one on every screen: a column of stamps on wide screens; on a
     // phone a "Menu" button at the top right that drops them all, with their names
@@ -42,7 +42,7 @@ test.describe('The map page', () => {
     // The phone's menu writes the counts under the statistics, and shuts with Escape, focus
     // back on its button
     if (!wide) {
-      await expect(toolbar(page).getByRole('button', { name: /^Travel statistics/ })).toContainText('8 countries, 2 continents, 16 photos');
+      await expect(toolbar(page).getByRole('button', { name: /^Travel statistics/ })).toContainText('20 countries, 5 continents, 16 photos');
       await page.keyboard.press('Escape');
       await expect(menu).toHaveAttribute('aria-expanded', 'false');
       await expect(menu).toBeFocused();
@@ -54,25 +54,26 @@ test.describe('The map page', () => {
     await expect(stats).toBeVisible();
     // Countries, continents (of 7), special places (of 5), regions (of every region), photos, landmarks (stamped: confirmed
     // matches, the owner counting the one on a hidden photo too), trips
-    // Then how far (docs/API.md "Stats"): the share of the world, the days away on "Italian summer"
-    // (2 to 16 July 2025), the longest trip (23 Nov 2026), the distance home and back, the
-    // furthest place from the UK
+    // Then how far (docs/API.md "Stats"): the share of the world, the days away on the demo
+    // couple's 11 completed trips, the longest trip (23 Nov 2026), the distance home and back,
+    // the furthest place from the UK
     await expect(stats.getByRole('definition')).toHaveText([
-      '8',
-      '3.5%',
-      '8 of 226 countries',
-      '2 of 7',
+      '20',
+      '8.8%',
+      '20 of 226 countries',
+      '5 of 7',
       '0 of 5',
       `0 of ${REGION_COUNT}`,
       '16',
-      '13 of 1,366',
-      '10 of 1,273',
-      '3',
-      '15', 'On completed trips', '15 days', 'Italian summer', '27,300 km', 'About 17,000 miles', 'United States', 'About 7,000 km from the United Kingdom',
+      '25 of 1,366',
+      '22 of 1,273',
+      '15',
+      '282', 'On completed trips', '190 days', 'A year off: around the world', '101,200 km', 'About 62,900 miles', 'New Zealand', 'About 18,800 km from the United Kingdom',
     ]);
+    // Charlie went to Lisbon alone, Alex to Vienna
     await expect(stats.getByRole('region', { name: 'Each traveller, from completed trips' }).getByRole('listitem')).toHaveText([
-      /Charlie\s*1 country · 15 days/,
-      /Alex\s*1 country · 15 days/,
+      /Charlie\s*17 countries · 278 days/,
+      /Alex\s*17 countries · 277 days/,
     ]);
   });
 
@@ -94,7 +95,7 @@ test.describe('The map page', () => {
     await expect(status).toHaveValue('');
 
     await status.selectOption('Visited');
-    await expectStats(page, '9 countries, 2 continents, 16 photos');
+    await expectStats(page, '21 countries, 5 continents, 16 photos');
     await expect(germany).toHaveAttribute('data-been', 'true');
     await expect(panel.getByLabel('First went')).toBeVisible();
 
@@ -107,7 +108,7 @@ test.describe('The map page', () => {
     await list.getByRole('button', { name: 'Germany', exact: true }).click();
     const again = page.getByRole('dialog', { name: 'Germany' });
     await again.getByRole('combobox', { name: 'Been there?' }).selectOption('Want to go');
-    await expectStats(page, '8 countries, 2 continents, 16 photos');
+    await expectStats(page, '20 countries, 5 continents, 16 photos');
     await expect(germany).toHaveAttribute('data-been', 'false');
     await expect(again.getByLabel('First went')).toHaveCount(0);
 
@@ -117,11 +118,11 @@ test.describe('The map page', () => {
     const listAgain = await openTool(page, 'Country list', 'Countries');
     await listAgain.getByRole('searchbox', { name: 'Search countries' }).fill('germ');
     await expect(listAgain.getByRole('button', { name: 'Status for Germany: Not yet' })).toBeVisible();
-    await expectStats(page, '8 countries, 2 continents, 16 photos');
+    await expectStats(page, '20 countries, 5 continents, 16 photos');
 
     // Kept: a reload shows the same
     await page.reload();
-    await expectStats(page, '8 countries, 2 continents, 16 photos');
+    await expectStats(page, '20 countries, 5 continents, 16 photos');
   });
 
   test('the stub’s dropdown and date are a step slimmer than the same fields elsewhere', { tag: '@phone' }, async ({ page }) => {
@@ -150,7 +151,8 @@ test.describe('The map page', () => {
 
     const show = list.getByRole('combobox', { name: 'Show' });
     await show.selectOption('Visited');
-    await expect(list.getByText(/^6 of \d+ countries, 0 of \d+ special places, 0 of \d+ regions$/)).toBeVisible();
+    // The demo couple's 18 visited (and 2 lived in)
+    await expect(list.getByText(/^18 of \d+ countries, 0 of \d+ special places, 0 of \d+ regions$/)).toBeVisible();
     for (const name of ['France', 'Spain', 'Italy', 'Portugal', 'Netherlands']) {
       await expect(list.getByRole('button', { name: `Status for ${name}: Visited` })).toBeVisible();
     }
@@ -168,7 +170,7 @@ test.describe('The map page', () => {
     const select = list.getByRole('combobox', { name: 'Status for Brazil' });
     await expect.poll(() => select.evaluate((el) => el.contains(document.activeElement))).toBe(true);
     await select.selectOption('Lived there');
-    await expectStats(page, '9 countries, 3 continents, 16 photos');
+    await expectStats(page, '21 countries, 6 continents, 16 photos');
     // Leaving it turns it back into a button showing the new status
     await list.getByRole('heading', { name: 'Countries' }).click();
     await expect(list.getByRole('button', { name: 'Status for Brazil: Lived there' })).toBeVisible();

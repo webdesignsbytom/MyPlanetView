@@ -19,8 +19,18 @@ describe('cleanColour', () => {
     expect(cleanColour(null)).toEqual({ ok: true, value: null });
   });
   it('refuses anything else', () => {
-    for (const value of ['#fff', 'red', 'rgb(0,0,0)', '#12345g', '#1234567', 12, {}, undefined, 'url(x)']) {
+    for (const value of ['#fff', 'red', 'rgb(0,0,0)', '#12345g', '#1234567', '#11223380', 12, {}, undefined, 'url(x)']) {
       expect(cleanColour(value).ok).toBe(false);
+    }
+  });
+  it('takes an opacity only when asked, kept as "#rrggbb" when fully opaque', () => {
+    expect(cleanColour('#C8102E80', { alpha: true })).toEqual({ ok: true, value: '#c8102e80' });
+    expect(cleanColour('#c8102e00', { alpha: true })).toEqual({ ok: true, value: '#c8102e00' });
+    expect(cleanColour('#c8102eFF', { alpha: true })).toEqual({ ok: true, value: '#c8102e' });
+    expect(cleanColour('#c8102e', { alpha: true })).toEqual({ ok: true, value: '#c8102e' });
+    expect(cleanColour(null, { alpha: true })).toEqual({ ok: true, value: null });
+    for (const value of ['#c8102e8', '#c8102e8g', '#c8102e800', 'rgba(0,0,0,0.5)']) {
+      expect(cleanColour(value, { alpha: true }).ok).toBe(false);
     }
   });
 });
@@ -41,6 +51,17 @@ describe('parseDesignChange', () => {
     expect(parseDesignChange({ string: '#1D4ED8' })).toEqual({ data: { stringColour: '#1d4ed8' }, codes: [] });
     expect(parseDesignChange({ string: null })).toEqual({ data: { stringColour: null }, codes: [] });
     expect(parseDesignChange({ string: 'red' })).toEqual({ error: 'invalidDesignColour' });
+    // The strings may be see-through (25 Nov 2026, the user's wish); the other colours never
+    expect(parseDesignChange({ string: '#1D4ED866' })).toEqual({ data: { stringColour: '#1d4ed866' }, codes: [] });
+    expect(parseDesignChange({ string: '#1d4ed8ff' })).toEqual({ data: { stringColour: '#1d4ed8' }, codes: [] });
+    expect(parseDesignChange({ names: '#00000080' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ hover: '#ff00ff80' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ countries: { FR: '#aa000080' } })).toEqual({ error: 'invalidDesignColour' });
+    // A second colour twisted in, as baker's twine (25 Nov 2026, the user's wish): opaque only
+    expect(parseDesignChange({ stringTwist: '#FFFFFF' })).toEqual({ data: { stringTwistColour: '#ffffff' }, codes: [] });
+    expect(parseDesignChange({ stringTwist: null })).toEqual({ data: { stringTwistColour: null }, codes: [] });
+    expect(parseDesignChange({ stringTwist: '#ffffff80' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ stringTwist: 'white' })).toEqual({ error: 'invalidDesignColour' });
   });
   it('empties the colours with an empty set', () => {
     expect(parseDesignChange({ countries: {} })).toEqual({ data: { countryColours: {} }, codes: [] });

@@ -7,6 +7,13 @@ const MB = 1024 * 1024;
 
 /** A colour as stored: "#rrggbb", lower case. */
 export const DESIGN_COLOUR = /^#[0-9a-f]{6}$/;
+/**
+ * The strings' colour may also be see-through (25 Nov 2026, the user's wish): "#rrggbbaa",
+ * the last two its opacity. A fully opaque one is kept as "#rrggbb".
+ */
+export const DESIGN_COLOUR_ALPHA = /^#[0-9a-f]{6}([0-9a-f]{2})?$/;
+// The design fields whose colour may carry an opacity
+const ALPHA_FIELDS = new Set(['string']);
 /** More than there are places on the map, so a full design always fits. */
 export const DESIGN_MAX_COLOURS = 400;
 
@@ -21,12 +28,16 @@ export const DESIGN_PICTURE_UNSAVED_LIMIT = 10;
 // Place kinds a colour can go on: the drawn ones. The poles are compass roses, never filled.
 const COLOURED_KINDS = new Set(['COUNTRY', 'SPECIAL', 'NATION', 'REGION']);
 
-/** A colour from a request: `{ ok, value }` ("#rrggbb" or null), or `{ ok: false }`. */
-export function cleanColour(value) {
+/**
+ * A colour from a request: `{ ok, value }` ("#rrggbb" or null), or `{ ok: false }`. With
+ * `alpha`, "#rrggbbaa" too, kept as "#rrggbb" when it's fully opaque.
+ */
+export function cleanColour(value, { alpha = false } = {}) {
   if (value === null) return { ok: true, value: null };
   if (typeof value !== 'string') return { ok: false };
   const colour = value.trim().toLowerCase();
-  return DESIGN_COLOUR.test(colour) ? { ok: true, value: colour } : { ok: false };
+  if (!(alpha ? DESIGN_COLOUR_ALPHA : DESIGN_COLOUR).test(colour)) return { ok: false };
+  return { ok: true, value: colour.length === 9 && colour.endsWith('ff') ? colour.slice(0, 7) : colour };
 }
 
 /**
@@ -46,9 +57,11 @@ export function parseDesignChange(body) {
     ['grid', 'gridColour'],
     ['hover', 'hoverColour'],
     ['string', 'stringColour'],
+    // A second colour twisted into the strings (25 Nov 2026, the user's wish); null: one colour
+    ['stringTwist', 'stringTwistColour'],
   ]) {
     if (input[field] === undefined) continue;
-    const colour = cleanColour(input[field]);
+    const colour = cleanColour(input[field], { alpha: ALPHA_FIELDS.has(field) });
     if (!colour.ok) return { error: 'invalidDesignColour' };
     data[column] = colour.value;
   }

@@ -13,7 +13,31 @@ const MB = 1024 * 1024;
 
 /** A colour as the server keeps it: "#rrggbb", lower case. */
 export const DESIGN_COLOUR = /^#[0-9a-f]{6}$/;
+/** The strings' colour may be see-through (25 Nov 2026, the user's wish): "#rrggbbaa" too. */
+export const DESIGN_COLOUR_ALPHA = /^#[0-9a-f]{6}([0-9a-f]{2})?$/;
 const PLACE_CODE = /^[A-Z]{2}$/;
+
+/** "#rrggbb" from three channel values (0 to 255). */
+const toHex = (channels) => `#${channels.map((n) => Math.round(Math.min(255, Math.max(0, n))).toString(16).padStart(2, '0')).join('')}`;
+
+/**
+ * A colour as a picker shows it: `{ hex: "#rrggbb", opacity }`, the opacity a whole percent
+ * (100 when the colour has none). A browser's colour picker takes no opacity, so a slider
+ * beside it sets that (DesignColourField).
+ */
+export function splitOpacity(colour) {
+  // Never met (the usual colour is read from the tokens), but a picker needs a colour
+  if (typeof colour !== 'string' || !DESIGN_COLOUR_ALPHA.test(colour)) return { hex: toHex([0, 0, 0]), opacity: 100 };
+  const hex = colour.slice(0, 7);
+  return { hex, opacity: colour.length === 9 ? Math.round((parseInt(colour.slice(7), 16) * 100) / 255) : 100 };
+}
+
+/** "#rrggbb" with an opacity (a percent): "#rrggbbaa", or "#rrggbb" when it's fully opaque. */
+export function withOpacity(hex, opacity) {
+  const percent = Math.min(100, Math.max(0, Math.round(opacity)));
+  if (percent === 100) return hex;
+  return `${hex}${Math.round((percent * 255) / 100).toString(16).padStart(2, '0')}`;
+}
 
 // The sea's picture: made in the browser from the chosen file, at most this wide or tall
 // (the map fills the screen), as WebP (JPEG where the browser can't write WebP)
@@ -33,7 +57,32 @@ export const designFor = (map, styleId) => map?.designs?.[styleId] ?? null;
 export const shownDesign = (design) => (design?.shown ? design : null);
 
 /** A design with nothing in it yet, as the editor starts one. */
-export const EMPTY_DESIGN = Object.freeze({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, picture: null });
+export const EMPTY_DESIGN = Object.freeze({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, picture: null });
+
+// A twined string's width on screen (MapStrings): wide enough for the twist to show; a
+// string of one colour is 2px
+export const TWINED_STRING_PX = 4;
+
+/**
+ * The strings' tokens for a design: `--map-string` (one colour, see-through or not); with a
+ * second colour twisted in (`stringTwist`, 25 Nov 2026, the user's wish), the twine's: its
+ * first colour opaque, its opacity apart (`--map-string-alpha`, on each string as a whole, so
+ * the two colours never show through each other), the second colour, its width, and the
+ * twist's strands shown (`--map-string-twist`; MapStrings draws them always, hidden unless
+ * this says so, so ticking the box shows the twine at once).
+ */
+function stringVars(design) {
+  const string = typeof design.string === 'string' && DESIGN_COLOUR_ALPHA.test(design.string) ? design.string : null;
+  const twist = typeof design.stringTwist === 'string' && DESIGN_COLOUR.test(design.stringTwist) ? design.stringTwist : null;
+  if (!twist) return string ? [`--map-string:${string}`] : [];
+  const vars = [];
+  if (string) {
+    vars.push(`--map-string:${string.slice(0, 7)}`);
+    if (string.length === 9) vars.push(`--map-string-alpha:${Math.round((parseInt(string.slice(7), 16) / 255) * 1000) / 1000}`);
+  }
+  vars.push(`--map-string-2:${twist}`, `--map-string-width:${TWINED_STRING_PX}px`, '--map-string-twist:inline');
+  return vars;
+}
 
 /** Only well-formed colours: they go into a style sheet, so nothing else is let through. */
 export function cleanCountryColours(countries) {
@@ -61,7 +110,7 @@ export function designCss(design) {
   if (typeof design.names === 'string' && DESIGN_COLOUR.test(design.names)) vars.push(`--map-names:${design.names}`);
   if (typeof design.grid === 'string' && DESIGN_COLOUR.test(design.grid)) vars.push(`--map-grid:${design.grid}`);
   if (typeof design.hover === 'string' && DESIGN_COLOUR.test(design.hover)) vars.push(`--map-hover:${design.hover}`);
-  if (typeof design.string === 'string' && DESIGN_COLOUR.test(design.string)) vars.push(`--map-string:${design.string}`);
+  vars.push(...stringVars(design));
   const colours = cleanCountryColours(design.countries);
   for (const [region, parent] of Object.entries(REGION_PARENT)) {
     if (!colours[region] && colours[parent]) colours[region] = colours[parent];
@@ -86,9 +135,6 @@ export const colourablePlaces = (splitUk) => [
 
 /** The CSS token of the colour a place wears on the map (Antarctica is ice). */
 export const usualColourToken = (code) => (code === 'AQ' ? '--map-ice' : `--map-visit-${pastelNumberFor(code)}`);
-
-/** "#rrggbb" from three channel values (0 to 255). */
-const toHex = (channels) => `#${channels.map((n) => Math.round(Math.min(255, Math.max(0, n))).toString(16).padStart(2, '0')).join('')}`;
 
 /**
  * A colour token's value as "#rrggbb" (a colour picker takes nothing else), read where

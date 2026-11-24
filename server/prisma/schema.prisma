@@ -440,8 +440,12 @@ model MapDesign {
   // 2026, the user's wish); CHECK map_design_hover_colour
   hoverColour    String?
   // The strings between places (MapString), "#rrggbb" or null (the style's usual red; 23 Nov
-  // 2026, the user's wish); CHECK map_design_string_colour
+  // 2026, the user's wish), or "#rrggbbaa" for see-through ones (25 Nov 2026); CHECK
+  // map_design_string_colour
   stringColour   String?
+  // A second colour twisted into the strings, as baker's twine, "#rrggbb", or null for
+  // strings of one colour (25 Nov 2026, the user's wish); CHECK map_design_string_twist_colour
+  stringTwistColour String?
 
   // The sea's picture, in the private bucket (resource 'mapDesign'); unique, so a file is
   // one map's. The daily clean-up never deletes a picture a design uses.

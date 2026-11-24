@@ -19,12 +19,14 @@ test('an item is ticked with when, where and who, and shows on its country’s t
   const panel = await oneShots(page);
   await expect(panel.getByRole('tab', { name: /Wildlife/ })).toHaveAttribute('aria-selected', 'true');
   await expect(card(panel, 'puffin')).toContainText('Seen: June 2013, in Ireland');
-  await expect(card(panel, 'lion')).toContainText('Not yet');
+  // The demo couple's safari (data/demoTravels.js)
+  await expect(card(panel, 'lion')).toContainText('Seen: 15 Oct 2023, in Tanzania');
+  await expect(card(panel, 'leopard')).toContainText('Not yet');
 
   // Nature's wonders: a volcano erupting, in Italy
   await panel.getByRole('tab', { name: /Nature’s wonders/ }).click();
   await expect(panel.getByRole('heading', { name: 'Volcanoes' })).toBeVisible();
-  await expect(panel.locator('[data-one-shot-progress="WONDERS"]')).toHaveText('1 of 32');
+  await expect(panel.locator('[data-one-shot-progress="WONDERS"]')).toHaveText('0 of 32');
   await card(panel, 'erupting-volcano').getByRole('button').click();
   const dialog = page.getByRole('dialog', { name: 'A volcano erupting' });
   await expect(dialog).toContainText('Nature’s wonders · Volcanoes');
@@ -33,7 +35,7 @@ test('an item is ticked with when, where and who, and shows on its country’s t
   await dialog.getByRole('button', { name: 'Tick it' }).click();
   await expect(dialog).toBeHidden();
   await expect(card(panel, 'erupting-volcano')).toContainText('Seen: In Italy');
-  await expect(panel.locator('[data-one-shot-progress="WONDERS"]')).toHaveText('2 of 32');
+  await expect(panel.locator('[data-one-shot-progress="WONDERS"]')).toHaveText('1 of 32');
   await panel.getByRole('button', { name: /^Close/ }).first().click();
 
   // Italy's ticket says so, and opens it in the panel
@@ -59,7 +61,8 @@ test('a tick is changed, and taken off', async ({ page }) => {
   await dialog.getByRole('button', { name: 'Take it off' }).click();
   await expect(dialog).toBeHidden();
   await expect(card(panel, 'puffin')).toContainText('Not yet');
-  await expect(panel.locator('[data-one-shot-progress="WILDLIFE"]')).toHaveText('0 of 80');
+  // The safari's four are still ticked
+  await expect(panel.locator('[data-one-shot-progress="WILDLIFE"]')).toHaveText('4 of 80');
 });
 
 test('a flight across the equator offers to tick it, with the flight’s day', async ({ page }) => {
@@ -81,7 +84,8 @@ test('a flight across the equator offers to tick it, with the flight’s day', a
   const dialog = page.getByRole('dialog', { name: 'Across the equator' });
   await dialog.getByRole('button', { name: 'Tick it' }).click();
   await expect(dialog).toBeHidden();
-  await expect(suggested).toBeHidden();
+  // The seed's world trip still offers the date line
+  await expect(suggested).not.toContainText('Across the equator');
   await panel.getByRole('tab', { name: /Journeys and feats/ }).click();
   await expect(card(panel, 'equator')).toContainText('Done: 2 Mar 2019');
 });
@@ -92,13 +96,14 @@ test.describe('with the celebration on', () => {
   test('a first tick is celebrated with its photo and how far along its list is', async ({ page }) => {
     await openMap(page);
     const panel = await oneShots(page);
-    await card(panel, 'lion').getByRole('button').click();
-    await page.getByRole('dialog', { name: 'Lion' }).getByRole('button', { name: 'Tick it' }).click();
-    const party = page.getByRole('dialog', { name: 'Lion' }).and(page.locator('[data-celebration]'));
+    // The lion is ticked already (the seed's safari)
+    await card(panel, 'leopard').getByRole('button').click();
+    await page.getByRole('dialog', { name: 'Leopard' }).getByRole('button', { name: 'Tick it' }).click();
+    const party = page.getByRole('dialog', { name: 'Leopard' }).and(page.locator('[data-celebration]'));
     await expect(party).toBeVisible();
     await expect(party.getByText('Seen it!')).toBeVisible();
     await expect(party).toHaveAccessibleDescription('Ticked in Life’s One Shots.');
-    await expect(party.locator('[data-celebration-progress]')).toHaveText('2 of 80 animals ticked.');
+    await expect(party.locator('[data-celebration-progress]')).toHaveText('6 of 80 animals ticked.');
     // Nothing of the passport's (24 Nov 2026, the user: not yet)
     await expect(party.getByRole('link', { name: 'Open passport' })).toHaveCount(0);
     await party.getByRole('button', { name: 'Carry on' }).click();

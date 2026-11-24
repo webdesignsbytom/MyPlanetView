@@ -195,6 +195,9 @@
   /* Strings between places: red thread pin to pin, as on a corkboard (23 Nov 2026, the user's
      wish; components/map/MapStrings.jsx) */
   --map-string: #c8102e;
+  /* A second colour twisted into them, as baker's twine, when a map design asks for one: the
+     cream of red-and-white twine until one is chosen (25 Nov 2026, the user's wish) */
+  --map-string-2: #faf6ec;
   --map-visit-1: #f0f038;
   --map-visit-2: #0eb4a6;
   --map-visit-3: #d8845a;
@@ -251,8 +254,9 @@
   --map-wish: #6d28d9;
   /* A planned trip's outline a bright pink, as "want to go" here is the violet */
   --map-planned: #db2777;
-  /* The strings a coral red that shows on the night sky as on the land */
+  /* The strings a coral red that shows on the night sky as on the land, twined with white */
   --map-string: #ff4d5e;
+  --map-string-2: #ffffff;
   /* The country under the pointer a deep blue, not the other styles' bright green (19 Nov
      2026, the user's wish) */
   --map-hover: #1e4f94;
@@ -451,6 +455,7 @@
   --map-wish: #626262;
   --map-planned: #434343;
   --map-string: #393939;
+  --map-string-2: #f6f6f6;
   --map-visit-1: #dcdcdc;
   --map-visit-2: #cdcdcd;
   --map-visit-3: #bebebe;
@@ -468,12 +473,19 @@
    grid, countries) show on it in colour (22 Nov 2026, the user's wish: chosen on Black and
    white, they turned grey and seemed to do nothing). Everything else on the page, and the
    pictures inside the map, are filtered to grey: HTML ones by CSS, the map's SVG pictures
-   by MonoPictureFilter's SVG filter (CSS filter functions don't reach SVG elements everywhere). */
-[data-mono-map] > :not(main),
-[data-mono-map] main :is(img, video, canvas) {
+   by MonoPictureFilter's SVG filter (CSS filter functions don't reach SVG elements everywhere).
+   The map's panels (data-map-panels) are grey through the tokens, so only their pictures are
+   filtered, and not those marked data-keep-colour: the map style and map type pickers' pictures
+   of the other styles stay in their colours (25 Nov 2026, the user's wish: "even in black and
+   white mode the images of the other map types should not be in black and white"). A filter on
+   a panel would reach everything in it, past any exception. */
+[data-mono-map] > :not(main, [data-map-panels]),
+[data-mono-map] main :is(img, video, canvas),
+[data-mono-map] [data-map-panels] :is(img, video, canvas):not([data-keep-colour]) {
   filter: grayscale(1);
 }
-[data-mono-map] main image {
+[data-mono-map] main image,
+[data-mono-map] [data-map-panels] image {
   filter: url('#mpv-mono-pictures');
 }
 
@@ -497,6 +509,7 @@
   --color-map-wish: var(--map-wish);
   --color-map-planned: var(--map-planned);
   --color-map-string: var(--map-string);
+  --color-map-string-2: var(--map-string-2);
   --color-map-visit-1: var(--map-visit-1);
   --color-map-visit-2: var(--map-visit-2);
   --color-map-visit-3: var(--map-visit-3);
@@ -1153,6 +1166,16 @@ textarea:-webkit-autofill {
 @utility paper-aged {
   background-color: var(--poster-paper);
   background-image: radial-gradient(ellipse at center, transparent 55%, var(--paper-burn) 100%);
+}
+
+/* paper-aged as it is half way down a tall card's side, flat: its vignette is about a third of
+   the way in there (the middle of a side is 1/√2 of the way to a corner, past its clear 55%).
+   For something small joined to that side, the menus tab on the toolbar
+   (components/map/chrome/MenusTab.jsx), whose own vignette left it lighter than the toolbar
+   beside it (25 Nov 2026, the user's report, in black and white). Follows every map style. */
+@utility paper-aged-side {
+  background-color: var(--poster-paper);
+  background-image: linear-gradient(color-mix(in srgb, var(--paper-burn) 35%, transparent), color-mix(in srgb, var(--paper-burn) 35%, transparent));
 }
 
 /* ── The passport (components/passport/) ──

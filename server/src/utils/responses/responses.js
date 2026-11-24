@@ -313,7 +313,7 @@ export const EVENT_MESSAGES = {
   invalidRecapYear: `Choose a year from 1900 to next year.`,
   // Map designs (docs/API.md "Map designs")
   invalidDesign: `That design can't be saved.`,
-  invalidDesignColour: `Colours must be six-digit colour codes, as a colour picker gives them.`,
+  invalidDesignColour: `Colours must be six-digit colour codes, as a colour picker gives them (the strings' may add two for their opacity).`,
   invalidDesignPlace: `That place isn't on the map, so it can't take a colour.`,
   designPictureType: `The picture must be a JPEG, PNG or WebP image.`,
   designPictureInvalid: `That picture upload isn't valid. Please try again.`,

@@ -20,7 +20,7 @@ describe('AwardNews', () => {
     const { region, onDismiss } = show([]);
     expect(region.getAttribute('aria-live')).toBe('polite');
     expect(region.textContent).toBe('');
-    act(() => vi.advanceTimersByTime(20000));
+    act(() => vi.advanceTimersByTime(40000));
     expect(onDismiss).not.toHaveBeenCalled();
   });
 
@@ -34,9 +34,9 @@ describe('AwardNews', () => {
     expect(region.textContent).toContain('Goal reached: Our bucket list.');
   });
 
-  it('goes by itself after ten seconds, not before', () => {
+  it('goes by itself after twenty seconds, not before', () => {
     const { onDismiss } = show();
-    act(() => vi.advanceTimersByTime(9999));
+    act(() => vi.advanceTimersByTime(19999));
     expect(onDismiss).not.toHaveBeenCalled();
     act(() => vi.advanceTimersByTime(1));
     expect(onDismiss).toHaveBeenCalledTimes(1);
@@ -46,7 +46,7 @@ describe('AwardNews', () => {
     const { container, onDismiss } = show();
     const tag = container.querySelector('.ticket-edge');
     fireEvent.pointerEnter(tag);
-    act(() => vi.advanceTimersByTime(30000));
+    act(() => vi.advanceTimersByTime(60000));
     expect(onDismiss).not.toHaveBeenCalled();
     fireEvent.pointerLeave(tag);
     act(() => vi.advanceTimersByTime(1500));
@@ -57,7 +57,7 @@ describe('AwardNews', () => {
     const { onDismiss } = show();
     const open = screen.getByText('See badges and goals');
     fireEvent.focus(open);
-    act(() => vi.advanceTimersByTime(15000));
+    act(() => vi.advanceTimersByTime(30000));
     expect(onDismiss).not.toHaveBeenCalled();
     fireEvent.blur(open);
     act(() => vi.advanceTimersByTime(1500));
@@ -82,11 +82,11 @@ describe('AwardNews', () => {
   it('starts the timer again for a new note', () => {
     const onDismiss = vi.fn();
     const { rerender } = render(<AwardNews news={BADGE} onOpen={vi.fn()} onDismiss={onDismiss} />);
-    act(() => vi.advanceTimersByTime(8000));
+    act(() => vi.advanceTimersByTime(16000));
     rerender(<AwardNews news={[{ type: 'badge', key: 'landmarks-1' }]} onOpen={vi.fn()} onDismiss={onDismiss} />);
-    act(() => vi.advanceTimersByTime(8000));
+    act(() => vi.advanceTimersByTime(16000));
     expect(onDismiss).not.toHaveBeenCalled();
-    act(() => vi.advanceTimersByTime(2000));
+    act(() => vi.advanceTimersByTime(4000));
     expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 });

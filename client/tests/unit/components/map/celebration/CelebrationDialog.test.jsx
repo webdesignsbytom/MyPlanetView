@@ -210,13 +210,29 @@ describe('CelebrationDialog', () => {
 
     // 24 Nov 2026, the user's report: the stamp, waiting at 2.4× its size to come down, gave the
     // ticket a sideways scrollbar as it opened
-    it('scrolls its words up and down only, so the stamp coming down gives it no sideways scrollbar', () => {
+    // 25 Nov 2026, the user's wish: "there should be no scrollbars on any of this"
+    it('never scrolls its words, so the stamp coming down gives it no scrollbar either way', () => {
       const { dialog } = open(tick('lm-eiffel'));
       const body = dialog.querySelector('[data-celebration-body]');
-      const classes = body.getAttribute('class').split(/\s+/);
-      expect(classes).toContain('overflow-y-auto');
-      expect(classes).toContain('overflow-x-hidden');
+      expect(body.getAttribute('class')).not.toMatch(/overflow-(?:[xy]-)?(?:auto|scroll)/);
       expect(body.contains(dialog.querySelector('[data-celebration-stamp]'))).toBe(true);
+      // The ticket round it cuts off what passes its edge, with no bar
+      expect(body.parentElement.getAttribute('class')).toContain('overflow-hidden');
+    });
+
+    // 25 Nov 2026, the user's wish: a country's close stamp stood on a row of its own above its words
+    it('puts the close stamp beside the words, the passport stamp under it, with no row of its own', () => {
+      for (const celebration of [{ kind: 'country', code: 'AU', status: 'VISITED', firstVisitedOn: '2026-11-25' }, tick('lm-eiffel')]) {
+        const { dialog, unmount } = open(celebration);
+        const close = screen.getByRole('button', { name: 'Close' });
+        const heading = dialog.querySelector('h2');
+        // The words' column and the close stamp's are the two columns of one row
+        const row = heading.closest('[data-celebration-body] > div');
+        expect(row.contains(close)).toBe(true);
+        expect(close.parentElement.contains(dialog.querySelector('[data-celebration-stamp]'))).toBe(true);
+        expect(close.compareDocumentPosition(dialog.querySelector('[data-celebration-stamp]')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        unmount();
+      }
     });
 
     // 24 Nov 2026, the user's report: tilted, the stamp's top corner rose past the words' edge

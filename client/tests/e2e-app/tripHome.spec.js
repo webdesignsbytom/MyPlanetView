@@ -19,6 +19,8 @@ test('the day after a trip, the map welcomes them home: a picture of the trip an
   const card = dialog.locator('img[data-share-card]');
   await expect(card).toBeVisible();
   await expect(card).toHaveAttribute('alt', /^Your share card: Italian summer, 1 country, 15 days, \d+ photos$/);
+  // One country: its own map with its regions, not a speck on the world (24 Nov 2026, the user's wish)
+  await expect(card).toHaveAttribute('data-map-view', 'country');
   const download = page.waitForEvent('download');
   await dialog.getByRole('button', { name: 'Save the picture' }).click();
   expect((await download).suggestedFilename()).toBe('my-planet-view-trip.png');

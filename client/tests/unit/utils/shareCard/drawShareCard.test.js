@@ -174,6 +174,47 @@ describe('drawShareCard', () => {
     expect(ctx.calls.filter((c) => c.name === 'fill').map((c) => c.fillStyle)).toEqual(expect.arrayContaining([C.medals.gold.face, C.medals.gold.rim, ...C.ribbon]));
   });
 
+  // 24 Nov 2026, the user's wish: a one-country trip on that country's own map with its regions
+  describe('close up (mapView: fit)', () => {
+    // The card's map box: the clip rectangle drawn for the map
+    const mapBox = (ctx) => ctx.calls.find((c) => c.name === 'rect' && c.args[0] === 70 && c.args[1] === 262)?.args;
+
+    it('draws one country on its own map: every region in its pastel, no world', async () => {
+      const { default: italy } = await import('@/utils/map/countryMaps/IT.js');
+      await drawShareCard({ title: 'Italian summer', highlight: ['IT'], mapView: 'fit' });
+      const ctx = contexts.at(-1);
+      // No world map: France's shapes aren't drawn
+      expect(fillsOf(ctx, COUNTRY_SHAPES.FR)).toEqual([]);
+      // Each province, in its own pastel
+      for (const area of italy.areas.slice(0, 5)) {
+        expect(fillsOf(ctx, area.paths)).toEqual(area.paths.map(() => C.visits[area.colour - 1]));
+      }
+      // Taller than the world map's box: Italy's shape asks for it, within the limit
+      expect(mapBox(ctx)[3]).toBeGreaterThan(400);
+      expect(mapBox(ctx)[3]).toBeLessThanOrEqual(600);
+      expect(textsDrawn(ctx)).toEqual(expect.arrayContaining(['Italy', 'myplanetview.com']));
+    });
+
+    it('crops the world round neighbours', async () => {
+      await drawShareCard({ title: 'Iberia', highlight: ['ES', 'PT'], mapView: 'fit' });
+      const ctx = contexts.at(-1);
+      // The world's shapes, Spain in its pastel, scaled up well past the whole world's
+      expect(fillsOf(ctx, COUNTRY_SHAPES.ES)[0]).toBe(C.visits[pastelNumberFor('ES') - 1]);
+      const scale = ctx.calls.find((c) => c.name === 'scale').args[0];
+      expect(scale).toBeGreaterThan(((CARD_WIDTH - 140) / MAP_WIDTH) * 4);
+    });
+
+    it('keeps the whole world for places far apart, and for a card that doesn’t ask', async () => {
+      await drawShareCard({ title: 'Far', highlight: ['US', 'JP'], mapView: 'fit' });
+      const far = contexts.at(-1);
+      expect(far.calls.find((c) => c.name === 'scale').args[0]).toBeCloseTo((CARD_WIDTH - 140) / MAP_WIDTH, 9);
+      await drawShareCard({ title: 'Italy', highlight: ['IT'] });
+      const world = contexts.at(-1);
+      expect(fillsOf(world, COUNTRY_SHAPES.IT).length).toBeGreaterThan(0);
+      expect(world.calls.find((c) => c.name === 'scale').args[0]).toBeCloseTo((CARD_WIDTH - 140) / MAP_WIDTH, 9);
+    });
+  });
+
   it('leaves out the kicker when there’s none', async () => {
     await drawShareCard({ title: '2026 in travel' });
     expect(textsDrawn(contexts.at(-1))[0]).toBe('2026 in travel');

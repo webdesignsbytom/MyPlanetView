@@ -117,6 +117,16 @@ test('marking a country visited from its ticket celebrates its page in the passp
   await expect(party.locator('[data-celebration-model]')).toHaveCount(3);
   await expect(party.getByRole('link', { name: 'Open passport' })).toBeVisible();
   await expect(party.getByRole('checkbox')).toHaveCount(0);
+  // The words start at the top, level with the close stamp beside them (25 Nov 2026, the user's
+  // wish: the close stamp stood on a row of its own above them), the passport stamp under it
+  const [close, heading, stamp] = await Promise.all([
+    party.getByRole('button', { name: 'Close', exact: true }).boundingBox(),
+    party.getByRole('heading', { name: 'You visited Egypt!' }).boundingBox(),
+    party.locator('[data-celebration-stamp]').boundingBox(),
+  ]);
+  expect(heading.y).toBeLessThan(close.y + close.height);
+  expect(close.x).toBeGreaterThan(heading.x + heading.width - 1);
+  expect(stamp.y).toBeGreaterThanOrEqual(close.y + close.height - 1);
   await page.keyboard.press('Escape');
   await expect(party).toBeHidden();
   // The ticket's "First went" has the day it was marked
@@ -204,12 +214,13 @@ test('Settings turns the celebrations off and back on; the screen has no box of 
 });
 
 // With the animations running (the suite turns motion down): the stamp waits at 2.4× its size
-// before it comes down, and the ticket gave it a sideways scrollbar as it opened (24 Nov 2026,
-// the user's report). The ticket only scrolls up and down.
+// before it comes down, which gave the ticket a sideways scrollbar (24 Nov 2026, the user's
+// report), then an up-and-down one (25 Nov 2026: "there should be no scrollbars on any of
+// this"), and it grew a little as it opened ("the container should just open the right size").
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
-  test('the ticket opens with no sideways scrollbar while its stamp comes down', { tag: '@phone' }, async ({ page }) => {
+  test('the ticket opens at its size, with no scrollbar, while its stamp comes down', { tag: '@phone' }, async ({ page }) => {
     await openMap(page);
     const ticket = await openCountry(page, 'Peru');
     await ticket.getByRole('button', { name: /^Show all \d+ landmarks$/ }).click();
@@ -218,16 +229,23 @@ test.describe('with motion', () => {
     const party = celebrationOf(page, 'Machu Picchu');
     const body = party.locator('[data-celebration-body]');
     await expect(body).toBeVisible();
-    // A sideways scrollbar takes height from the box: offsetHeight past clientHeight
-    const sideways = () => body.evaluate((el) => ({ overflowX: getComputedStyle(el).overflowX, scrollbar: el.offsetHeight - el.clientHeight }));
-    // While the stamp waits, big and see-through, and once it has come down
-    expect(await sideways()).toEqual({ overflowX: 'hidden', scrollbar: 0 });
+    // Its size and its scrollbars: a scrollbar takes width or height from the box
+    const measure = () =>
+      body.evaluate((el) => {
+        const ticketBox = el.parentElement.getBoundingClientRect();
+        const style = getComputedStyle(el);
+        return {
+          overflow: `${style.overflowX} ${style.overflowY}`,
+          bars: [el.offsetWidth - el.clientWidth, el.offsetHeight - el.clientHeight],
+          size: [Math.round(ticketBox.width), Math.round(ticketBox.height)],
+        };
+      });
+    // As it opens, while the stamp waits big and see-through, and once it has come down: the same
+    const opening = await measure();
+    expect(opening.overflow).toBe('visible visible');
+    expect(opening.bars).toEqual([0, 0]);
+    await expect(party.locator('[data-celebration-progress]')).toBeVisible();
     await expect(party.locator('[data-celebration-stamp]')).toHaveCSS('opacity', '1');
-    expect(await sideways()).toEqual({ overflowX: 'hidden', scrollbar: 0 });
-    // Nothing to scroll to either way: the body can't be moved sideways
-    await body.evaluate((el) => {
-      el.scrollLeft = 200;
-    });
-    expect(await body.evaluate((el) => el.scrollLeft)).toBe(0);
+    expect(await measure()).toEqual(opening);
   });
 });

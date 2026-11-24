@@ -36,7 +36,8 @@ function MapTypePicker({ value, onChange }) {
               onChange={() => onChange(type.id)}
               className='sr-only'
             />
-            <img src={previewUrl(type.preview)} alt='' className='h-16 w-full object-cover' loading='lazy' />
+            {/* In its own colours on a map shown in Black and white too (index.css, data-mono-map) */}
+            <img src={previewUrl(type.preview)} alt='' className='h-16 w-full object-cover' loading='lazy' data-keep-colour='' />
 
             <span className='grid gap-0.5 px-2 pb-1.5'>
               <span className='font-travel text-base uppercase tracking-wide'>{type.label}</span>

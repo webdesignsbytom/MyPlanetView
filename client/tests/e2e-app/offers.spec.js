@@ -151,8 +151,8 @@ test.describe('Travel offers', () => {
     const show = await playMyWorld(page);
     const stage = show.locator('[data-slide-id]');
     await expect(stage).not.toHaveAttribute('data-slide-id', '');
-    // Step through to the end: no card on the way
-    for (let step = 0; step < 40 && (await stage.getAttribute('data-slide-kind')) !== 'end'; step++) {
+    // Step through to the end: no card on the way (the demo couple's photos, moments and title cards)
+    for (let step = 0; step < 150 && (await stage.getAttribute('data-slide-kind')) !== 'end'; step++) {
       await expect(adLinks(show)).toHaveCount(0);
       const id = await stage.getAttribute('data-slide-id');
       await page.keyboard.press('ArrowRight');

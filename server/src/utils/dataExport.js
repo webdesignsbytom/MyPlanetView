@@ -169,6 +169,7 @@ export function exportMapView(rows, { userId }) {
       gridColour: design.gridColour ?? null,
       hoverColour: design.hoverColour ?? null,
       stringColour: design.stringColour ?? null,
+      stringTwistColour: design.stringTwistColour ?? null,
       hasSeaPicture: Boolean(design.pictureId),
     })),
     // Landmarks ticked "been here" (docs/API.md "Collecting")

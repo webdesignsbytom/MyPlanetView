@@ -3,7 +3,7 @@
 // the map and takes one off with a click; the Strings panel adds them automatically, ties them
 // from two lists and takes them off; the viewer can hide them; the map design sets their
 // colour; a share link shows them.
-import { test, expect, HOME_SHARE_CODE, openMap, openStringsPanel, openTool, pressCountry, pressTool, toolbar } from './fixtures.js';
+import { test, expect, HOME_SHARE_CODE, MOCK_STORE_KEY, mapReady, openMap, openStringsPanel, openTool, pressCountry, pressTool, toolbar } from './fixtures.js';
 
 const string = (page, pair) => page.locator(`[data-string="${pair}"]`);
 const strings = (page) => page.locator('[data-string]');
@@ -26,9 +26,29 @@ async function pressString(page, pair) {
 // From the country list (the toolbar's stamp until 24 Nov 2026, the user's wish)
 const openStrings = openStringsPanel;
 
+// The seed ties the demo couple's places in the order first visited (19 strings); the tests that
+// build strings from nothing take those off first
+async function withNoStrings(page) {
+  await page.evaluate((key) => {
+    const db = JSON.parse(localStorage.getItem(key));
+    db.mapStrings = db.mapStrings.filter((string) => string.mapId !== 'map-home');
+    localStorage.setItem(key, JSON.stringify(db));
+  }, MOCK_STORE_KEY);
+  await page.reload();
+  await mapReady(page);
+}
+
 test.describe('Strings between countries', () => {
+  // 24 Nov 2026, the user's wish: the seed's places strung in the order first visited
+  test('the seed ties each place to the one first visited before it', async ({ page }) => {
+    await openMap(page);
+    await expect(strings(page)).toHaveCount(19);
+    for (const pair of ['GB-IE', 'IE-US', 'JO-MA', 'CU-MX', 'CU-IT', 'AT-IT']) await expect(string(page, pair)).toBeAttached();
+  });
+
   test('string mode ties a string between two clicked countries, and a click takes it off', async ({ page }) => {
     await openMap(page);
+    await withNoStrings(page);
     await expect(strings(page)).toHaveCount(0);
     const panel = await openStrings(page);
     await panel.getByRole('button', { name: 'Tie strings on the map' }).click();
@@ -79,6 +99,7 @@ test.describe('Strings between countries', () => {
 
   test('the panel adds them automatically, ties one from the lists, and takes them all off', async ({ page }) => {
     await openMap(page);
+    await withNoStrings(page);
     const panel = await openStrings(page);
     await expect(panel.getByRole('heading', { name: 'No strings yet' })).toBeVisible();
     await panel.getByRole('button', { name: 'Add strings automatically' }).click();
@@ -108,6 +129,7 @@ test.describe('Strings between countries', () => {
 
   test('the viewer can hide them, and string mode shows them anyway', async ({ page }) => {
     await openMap(page);
+    await withNoStrings(page);
     const panel = await openStrings(page);
     await panel.getByRole('button', { name: 'Add strings automatically' }).click();
     await expect(panel.getByText(/^Added \d+ strings/)).toBeVisible();
@@ -126,6 +148,7 @@ test.describe('Strings between countries', () => {
 
   test('their colour is the map design’s, in Settings', async ({ page }) => {
     await openMap(page);
+    await withNoStrings(page);
     const panel = await openStrings(page);
     await panel.getByRole('button', { name: 'Add strings automatically' }).click();
     await expect(panel.getByText(/^Added \d+ strings/)).toBeVisible();
@@ -134,6 +157,79 @@ test.describe('Strings between countries', () => {
     await settings.locator('[data-map-design-editor]').getByLabel('String colour', { exact: true }).fill('#1d4ed8');
     const thread = strings(page).first().locator('path').first();
     await expect.poll(() => thread.evaluate((el) => getComputedStyle(el).stroke)).toBe('rgb(29, 78, 216)');
+  });
+
+  // See-through strings (25 Nov 2026, the user's wish): an opacity slider under the colour
+  test('their colour can be see-through, and stays so', async ({ page }) => {
+    await openMap(page);
+    await withNoStrings(page);
+    const panel = await openStrings(page);
+    await panel.getByRole('button', { name: 'Add strings automatically' }).click();
+    await expect(panel.getByText(/^Added \d+ strings/)).toBeVisible();
+    let settings = await openTool(page, 'Map settings', 'Settings');
+    let editor = settings.locator('[data-map-design-editor]');
+    const opacity = editor.getByRole('slider', { name: 'String colour opacity' });
+    await expect(opacity).toHaveValue('100');
+    await expect(editor.locator('[data-colour-opacity] output')).toHaveText('100%');
+    await editor.getByLabel('String colour', { exact: true }).fill('#1d4ed8');
+    await opacity.fill('40');
+    await expect(editor.locator('[data-colour-opacity] output')).toHaveText('40%');
+    const thread = strings(page).first().locator('path').first();
+    await expect.poll(() => thread.evaluate((el) => getComputedStyle(el).stroke)).toBe('rgba(29, 78, 216, 0.4)');
+    await expect(editor.getByText('Saved.')).toBeVisible();
+
+    // Saved with the map's design: the same after a reload
+    await page.reload();
+    await mapReady(page);
+    await expect.poll(() => strings(page).first().locator('path').first().evaluate((el) => getComputedStyle(el).stroke)).toBe('rgba(29, 78, 216, 0.4)');
+    settings = await openTool(page, 'Map settings', 'Settings');
+    editor = settings.locator('[data-map-design-editor]');
+    await expect(editor.getByRole('slider', { name: 'String colour opacity' })).toHaveValue('40');
+    await expect(editor.getByLabel('String colour', { exact: true })).toHaveValue('#1d4ed8');
+  });
+
+  // Two colours twisted together, as baker's twine (25 Nov 2026, the user's wish)
+  test('they can be two colours twisted together, each chosen, and one colour again', async ({ page }) => {
+    await openMap(page);
+    await withNoStrings(page);
+    const panel = await openStrings(page);
+    await panel.getByRole('button', { name: 'Add strings automatically' }).click();
+    await expect(panel.getByText(/^Added \d+ strings/)).toBeVisible();
+    let settings = await openTool(page, 'Map settings', 'Settings');
+    let editor = settings.locator('[data-map-design-editor]');
+    const string = strings(page).first();
+    const strand = string.locator('[data-string-strand]').first();
+    const thread = string.locator('path').first();
+    // One colour to start with: the strands are there, hidden
+    await expect(strand).toBeHidden();
+    await expect(editor.getByLabel('Second string colour', { exact: true })).toHaveCount(0);
+
+    // The box is drawn over its input: press its name
+    await editor.getByText('Two colours twisted together', { exact: true }).click();
+    await expect(editor.getByRole('checkbox', { name: 'Two colours twisted together' })).toBeChecked();
+    await expect(strand).toBeVisible();
+    await expect.poll(() => thread.evaluate((el) => getComputedStyle(el).strokeWidth)).toBe('4px');
+    // Both colours from a picker
+    await editor.getByLabel('String colour', { exact: true }).fill('#1d4ed8');
+    await editor.getByLabel('Second string colour', { exact: true }).fill('#ffcc00');
+    await expect.poll(() => strand.evaluate((el) => getComputedStyle(el).stroke)).toBe('rgb(255, 204, 0)');
+    await expect.poll(() => thread.evaluate((el) => getComputedStyle(el).stroke)).toBe('rgb(29, 78, 216)');
+    await expect(editor.getByText('Saved.')).toBeVisible();
+
+    // Saved with the map's design: the same after a reload
+    await page.reload();
+    await mapReady(page);
+    await expect(strings(page).first().locator('[data-string-strand]').first()).toBeVisible();
+    await expect.poll(() => strings(page).first().locator('[data-string-strand]').first().evaluate((el) => getComputedStyle(el).stroke)).toBe('rgb(255, 204, 0)');
+
+    // Unticked, the strings are one colour again
+    settings = await openTool(page, 'Map settings', 'Settings');
+    editor = settings.locator('[data-map-design-editor]');
+    await expect(editor.getByLabel('Second string colour', { exact: true })).toHaveValue('#ffcc00');
+    await editor.getByText('Two colours twisted together', { exact: true }).click();
+    await expect(editor.getByLabel('Second string colour', { exact: true })).toHaveCount(0);
+    await expect(strings(page).first().locator('[data-string-strand]').first()).toBeHidden();
+    await expect.poll(() => strings(page).first().locator('path').first().evaluate((el) => getComputedStyle(el).strokeWidth)).toBe('2px');
   });
 
   test('a share link shows the strings, with no way to change them', async ({ page }) => {
@@ -175,15 +271,15 @@ test.describe('Strings between countries', () => {
   // 24 Nov 2026, the user's wish: a newly visited country is tied to the one visited before it
   test('a country marked visited is tied to the one visited before it, while the strings show', { tag: '@phone' }, async ({ page }) => {
     await openMap(page);
-    await expect(strings(page)).toHaveCount(0);
+    await expect(strings(page)).toHaveCount(19);
 
-    // From the country list: Germany, after Italy (the last visited, in July 2025)
+    // From the country list: Germany, after Austria (the last visited, in March 2026)
     const list = await openTool(page, 'Country list', 'Countries');
     await list.getByRole('button', { name: 'Status for Germany: Not yet' }).click();
     const germany = list.getByRole('combobox', { name: 'Status for Germany' });
     await expect.poll(() => germany.evaluate((el) => el.contains(document.activeElement))).toBe(true);
     await germany.selectOption('Visited');
-    await expect(string(page, 'DE-IT')).toBeAttached();
+    await expect(string(page, 'AT-DE')).toBeAttached();
 
     // From its ticket: Egypt, after Germany
     await list.getByRole('heading', { name: 'Countries' }).click();
@@ -191,7 +287,7 @@ test.describe('Strings between countries', () => {
     const egypt = page.getByRole('dialog', { name: 'Egypt' });
     await egypt.getByRole('combobox', { name: 'Been there?' }).selectOption('Visited');
     await expect(string(page, 'DE-EG')).toBeAttached();
-    await expect(strings(page)).toHaveCount(2);
+    await expect(strings(page)).toHaveCount(21);
     await egypt.getByRole('button', { name: /^Close/ }).first().click();
 
     // With the strings switched off, none is tied
@@ -210,7 +306,7 @@ test.describe('Strings between countries', () => {
     const back = await openTool(page, 'Map settings', 'Settings');
     await back.getByText('Strings between countries', { exact: true }).click();
     await back.getByRole('button', { name: 'Close Settings' }).click();
-    await expect(strings(page)).toHaveCount(2);
+    await expect(strings(page)).toHaveCount(21);
     await expect(string(page, 'EG-KE')).toHaveCount(0);
   });
 });

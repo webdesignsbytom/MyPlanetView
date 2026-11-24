@@ -2,7 +2,7 @@
 
 Everything on My Planet View that turns into an image file people can share, save, download or print: where the button is, what the picture shows, and what file comes out.
 
-The pictures in this folder are the real files the site made on 24 Nov 2026, saved through its own buttons. They use the mock mode's demo map, "Charlie & Alex's travels". The `-window.png` files are screenshots of the window each one comes from.
+The pictures in this folder are the real files the site made on 24 and 25 Nov 2026, saved through its own buttons. They use the mock mode's demo map, "Charlie & Alex's travels". The `-window.png` files are screenshots of the window each one comes from.
 
 ## At a glance
 
@@ -30,6 +30,7 @@ Five of these are "share cards". They all work the same way:
 - **They show countries and numbers, never the person's photos.** The window says so.
 - **Every card has `myplanetview.com` printed at the bottom.** That's the advertising: every shared picture carries the address.
 - **The colours are fixed**, whatever map style is chosen. A map that has its own design (custom country colours) uses those colours on the card.
+- **Some cards can show their places close up** instead of the whole world. One country gets its own map with its states or provinces, each in its colour. A few countries near each other get the world cropped round them, never closer than a few countries across. Places spread far apart, or Antarctica or a pole, keep the whole world. The trip card always does this; the year card lets people choose.
 
 ---
 
@@ -86,9 +87,13 @@ In December and January a tag on the map also offers the year.
 
 **What it shows:** the map's name, "2025 in travel", the countries visited that year coloured, up to three numbers (countries, new countries, photos, else landmarks or trips), and the countries' names.
 
-**File:** `my-planet-view-<year>.png`
+**The map:** above the picture, **The map on the picture** offers **Whole world** (the default) or **Close up**. The choice only shows when a close-up would differ from the world, i.e. when the year's places are near each other.
 
-![The year in travel card](year-card.png)
+**File:** `my-planet-view-<year>.png`, either way.
+
+| Whole world | Close up |
+| --- | --- |
+| ![The year in travel card, whole world](year-card.png) | ![The year in travel card, close up](year-card-close-up.png) |
 
 <details><summary>The window it comes from</summary>
 
@@ -104,7 +109,11 @@ In December and January a tag on the map also offers the year.
 
 There's no other button for it yet. Once the 14 days are over, or the tag has been closed, the trip picture can only be made by following the email's link again (it brings the tag back).
 
-**What it shows:** "My trip", the trip's title, its countries coloured, and how many countries, days and photos.
+**What it shows:** "My trip", the trip's title, its countries coloured, and how many countries, days and photos. The map is always close up:
+
+- **One country:** that country's own map with its regions (the sample, a trip to Italy).
+- **A few neighbouring countries** (Spain and Portugal): the world cropped round them.
+- **Countries far apart:** the whole world.
 
 **File:** `my-planet-view-trip.png`
 
@@ -187,7 +196,6 @@ These hand over a link, not a file:
 
 ## Things I noticed while making these
 
-- **A one-country trip is a speck on the world.** The trip card always draws the whole world, so Italy is a small green patch on it.
 - **The medal card has a wide empty band** between the medal and its two numbers.
 - **The compare picture can't be saved or shared** (see 8), although it's the kind of picture people might want to post.
 - **The trip picture is only reachable from the Welcome home tag** (see 4): for 14 days after a trip, or from the email's link.

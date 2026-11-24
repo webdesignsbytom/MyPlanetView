@@ -82,7 +82,7 @@ export async function findMapForExport(mapId) {
           // Its own designs, one per map style (docs/API.md "Map designs"): the colours, and
           // whether each has a picture
           designs: {
-            select: { style: true, shown: true, countryColours: true, namesColour: true, gridColour: true, hoverColour: true, stringColour: true, pictureId: true },
+            select: { style: true, shown: true, countryColours: true, namesColour: true, gridColour: true, hoverColour: true, stringColour: true, stringTwistColour: true, pictureId: true },
             orderBy: { style: 'asc' },
           },
           // Landmarks ticked "been here" (docs/API.md "Collecting")

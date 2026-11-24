@@ -49,6 +49,22 @@ describe('useLandmarks', () => {
     await waitFor(() => expect(ids(result.current)).toEqual(['tanah-lot']));
   });
 
+  // 25 Nov 2026, the user's report: the celebration grew a little as it opened, its landmark
+  // details arriving a render after it drew
+  it('has them in its very first render once the list is here', async () => {
+    await preloadLandmarks();
+    const renders = [];
+    renderHook(() => {
+      const state = useLandmarks('XC');
+      renders.push(ids(state));
+      return state;
+    });
+    expect(renders[0]).toEqual(['edinburgh']);
+    // A hook told to wait still starts empty
+    const { result } = renderHook(() => useLandmarks('FR', { enabled: false }));
+    expect(result.current.landmarks).toEqual([]);
+  });
+
   it('asks once a session, and a country’s list keeps its identity', async () => {
     const first = renderHook(() => useLandmarks('FR'));
     await waitFor(() => expect(first.result.current.landmarks).toHaveLength(1));

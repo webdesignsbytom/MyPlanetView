@@ -3,7 +3,8 @@ import { test, expect, openMap, openTool } from './fixtures.js';
 
 // The flight log (23 Nov 2026, the user's wish: scan a boarding pass and the trip and its countries
 // fill in; flights, airports and distance flown to collect, like the passport's stamps). The seed
-// logs the Italian summer's two flights (LHR to Rome, Pisa to Gatwick).
+// logs every demo trip's flights (data/demoTravels.js): 26, from 26 airports, the Italian summer's
+// two among them (LHR to Rome, Pisa to Gatwick).
 
 const require = createRequire(import.meta.url);
 const { BarcodeFormat, QRCodeWriter } = require('@zxing/library');
@@ -43,8 +44,10 @@ async function qrPicture(page, text) {
 test('the flight log shows the flights, the distance and the airports collected', async ({ page }) => {
   await openMap(page);
   const dialog = await openFlightLog(page);
-  await expect(dialog.locator('[data-flight-totals]')).toContainText('2,592 km (1,611 miles)');
-  await expect(dialog.locator('[data-airport-stamps] li')).toHaveCount(4);
+  await expect(dialog.locator('[data-flight-totals]')).toContainText('91,175 km (56,654 miles)');
+  // What that's like (24 Nov 2026)
+  await expect(dialog.locator('[data-flight-totals]')).toContainText('About two and a half times round the world');
+  await expect(dialog.locator('[data-airport-stamps] li')).toHaveCount(26);
   await expect(dialog.locator('[data-flight="LHR-FCO"]')).toContainText('LHR → FCO · BA 548');
   await expect(dialog.locator('[data-flight="PSA-LGW"]')).toContainText('Pisa (PI) to London');
 });
@@ -65,7 +68,8 @@ test('a pasted boarding pass makes the trip, logs the flight and marks the count
 
   await expect(dialog.getByRole('status').filter({ hasText: '1 flight added' })).toBeVisible();
   await expect(dialog.locator('[data-flight="LHR-JFK"]')).toBeVisible();
-  await expect(dialog.locator('[data-airport-stamps] li')).toHaveCount(5);
+  // Heathrow and JFK were collected already (Rome in 2025, New York in 2014)
+  await expect(dialog.locator('[data-airport-stamps] li')).toHaveCount(26);
   await page.keyboard.press('Escape');
 
   // The trip is there, done, with New York as its stop; the US is on the map

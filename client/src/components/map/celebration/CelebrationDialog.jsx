@@ -135,18 +135,19 @@ function CelebrationDialog({ celebration, passportHref, onClose }) {
           )}
         </div>
 
-        <div className='ticket-edge paper-fields relative grid max-h-full w-full grid-rows-[auto_minmax(0,1fr)] overflow-hidden bg-paper-cream text-colour4 shadow-paper'>
-          <div className='grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 px-5 pt-4'>
-            <p className='font-travel text-lg uppercase tracking-wide text-poster-red-deep'>{kicker}</p>
-            <CloseStamp label='Close' onClick={onClose} small />
-          </div>
-          {/* Scrolls up and down only: the stamp waits to come down at 2.4× its size (stamp-slam),
-              which past the ticket's edge gave it a sideways scrollbar as it opened (24 Nov 2026,
-              the user's report) */}
-          <div className='grid min-h-0 content-start gap-4 overflow-y-auto overflow-x-hidden overscroll-contain px-5 pb-5 pt-1' data-celebration-body=''>
-            {/* A One Shot has no passport stamp (24 Nov 2026, the user: nothing in the passport yet) */}
-            <div className={`grid items-start gap-3 ${isOneShot ? '' : 'grid-cols-[minmax(0,1fr)_7.5rem]'}`}>
+        <div className='ticket-edge paper-fields relative grid max-h-full w-full grid-rows-[minmax(0,1fr)] overflow-hidden bg-paper-cream text-colour4 shadow-paper'>
+          {/* Never scrolls (25 Nov 2026, the user's wish: "there should be no scrollbars on any of
+              this"; the screen has room): the stamp waits to come down at 2.4× its size
+              (stamp-slam), which gave a scrolling box a scrollbar each way as it opened. What
+              passes the ticket's edge is cut off by the ticket (overflow-hidden), with no bar. */}
+          <div className='grid min-h-0 content-start gap-4 px-5 pb-5 pt-4' data-celebration-body=''>
+            {/* The words from the top, the close stamp in the corner beside them with the passport
+                stamp under it (25 Nov 2026, the user's wish: a country's has no kicker, and its close
+                stamp stood on a row of its own). A One Shot has no passport stamp (24 Nov 2026, the
+                user: nothing in the passport yet) */}
+            <div className={`grid items-start gap-3 ${isOneShot ? 'grid-cols-[minmax(0,1fr)_auto]' : 'grid-cols-[minmax(0,1fr)_7.5rem]'}`}>
               <div className='grid content-start gap-2'>
+                {kicker ? <p className='font-travel text-lg uppercase tracking-wide text-poster-red-deep'>{kicker}</p> : null}
                 <h2 id={titleId} className='font-travel text-2xl leading-tight text-colour6 [overflow-wrap:anywhere]'>
                   {heading}
                 </h2>
@@ -163,29 +164,32 @@ function CelebrationDialog({ celebration, passportHref, onClose }) {
                   )}
                 </p>
               </div>
-              {/* The stamp as the passport has it, pressed down onto the ticket. Room above it
-                  (pt-3): tilted up to 10°, a 7.5rem stamp's top corner rises about 10px, which
-                  the words' scrolling box cut off (24 Nov 2026, the user's report) */}
-              {isOneShot ? null : (
-              <div aria-hidden='true' className='grid pt-3 motion-safe:animate-stamp-slam' data-celebration-stamp=''>
-                {isLandmark ? (
-                  landmark ? (
-                    <LandmarkStamp
-                      stamp={{
-                        landmarkId: landmark.id,
-                        name: landmark.name,
-                        isUnesco: landmark.isUnesco,
-                        stampedOn: celebration.stampedOn,
-                        ticked: !celebration.photoUrl,
-                        photo: celebration.photoUrl ? { thumbUrl: celebration.photoUrl } : null,
-                      }}
-                    />
-                  ) : null
-                ) : (
-                  <EntryStamp countryCode={celebration.code} status={celebration.status} enteredOn={celebration.firstVisitedOn} />
+              <div className='grid justify-items-end gap-1'>
+                <CloseStamp label='Close' onClick={onClose} small />
+                {/* The stamp as the passport has it, pressed down onto the ticket. Room above it
+                    (pt-3): tilted up to 10°, a 7.5rem stamp's top corner rises about 10px (24 Nov
+                    2026, the user's report: Mongolia's was cut off) */}
+                {isOneShot ? null : (
+                <div aria-hidden='true' className='grid justify-self-stretch pt-3 motion-safe:animate-stamp-slam' data-celebration-stamp=''>
+                  {isLandmark ? (
+                    landmark ? (
+                      <LandmarkStamp
+                        stamp={{
+                          landmarkId: landmark.id,
+                          name: landmark.name,
+                          isUnesco: landmark.isUnesco,
+                          stampedOn: celebration.stampedOn,
+                          ticked: !celebration.photoUrl,
+                          photo: celebration.photoUrl ? { thumbUrl: celebration.photoUrl } : null,
+                        }}
+                      />
+                    ) : null
+                  ) : (
+                    <EntryStamp countryCode={celebration.code} status={celebration.status} enteredOn={celebration.firstVisitedOn} />
+                  )}
+                </div>
                 )}
               </div>
-              )}
             </div>
 
             {shotProgress ? (

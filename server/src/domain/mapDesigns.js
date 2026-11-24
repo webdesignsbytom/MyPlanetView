@@ -9,6 +9,7 @@ const DESIGN_SELECT = {
   gridColour: true,
   hoverColour: true,
   stringColour: true,
+  stringTwistColour: true,
   picture: { select: { key: true } },
 };
 

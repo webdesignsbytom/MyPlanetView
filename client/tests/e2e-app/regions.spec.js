@@ -55,7 +55,7 @@ test('marking a region visits its country, and only the country counts', async (
   await list.getByRole('button', { name: 'Status for Bali: Not yet' }).click();
   await list.getByRole('combobox', { name: 'Status for Bali' }).selectOption('Visited');
   // Indonesia comes with it, and Asia: one more country and continent, and a region
-  await expectStats(page, '9 countries, 3 continents, 16 photos', 0, 1);
+  await expectStats(page, '21 countries, 5 continents, 16 photos', 0, 1);
   await list.getByRole('heading', { name: 'Countries' }).click();
   await expect(list.getByRole('button', { name: 'Status for Indonesia: Visited' })).toBeVisible();
 

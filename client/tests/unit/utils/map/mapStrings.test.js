@@ -1,7 +1,48 @@
 // Strings between places (src/utils/map/mapStrings.js): where each is drawn
 import { describe, expect, it } from 'vitest';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
-import { drawnStrings, hasString, pinOf, previousVisitedPlace, stringEnds, stringLabel, stringPath, stringPins } from '@/utils/map/mapStrings';
+import {
+  TWIST_SHIFT_PX,
+  TWIST_STRAND_OFFSETS_PX,
+  acrossOf,
+  drawnStrings,
+  hasString,
+  pinOf,
+  previousVisitedPlace,
+  stringEnds,
+  stringLabel,
+  stringPath,
+  stringPins,
+  twistStrands,
+} from '@/utils/map/mapStrings';
+import { REFERENCE_PX_PER_UNIT } from '@/utils/map/projection';
+
+// Two colours twisted together, as baker's twine (25 Nov 2026, the user's wish)
+describe('a twined string’s strands', () => {
+  it('lie across the straight line between the pins', () => {
+    expect(acrossOf({ x: 0, y: 0 }, { x: 10, y: 0 })).toEqual({ x: -0, y: 1 });
+    expect(acrossOf({ x: 0, y: 0 }, { x: 0, y: 5 })).toEqual({ x: -1, y: 0 });
+    expect(acrossOf({ x: 3, y: 3 }, { x: 3, y: 3 })).toEqual({ x: 0, y: 0 });
+  });
+
+  it('are four, the same pixels apart at any zoom, each further along than the one before', () => {
+    const across = { x: 0, y: 1 };
+    const strands = twistStrands(across, 1);
+    expect(strands).toHaveLength(TWIST_STRAND_OFFSETS_PX.length);
+    // In map units: pixels over the zoom's pixels per unit
+    expect(strands.map((s) => s.dy)).toEqual(TWIST_STRAND_OFFSETS_PX.map((px) => Math.round((px / REFERENCE_PX_PER_UNIT) * 1e4) / 1e4));
+    expect(strands.every((s) => s.dx === 0)).toBe(true);
+    expect(twistStrands(across, 4)[3].dy).toBeCloseTo(strands[3].dy / 4, 3);
+    // Their dashes start a little further on across the string: the slant of the twist
+    expect(strands.map((s) => s.dashOffset)).toEqual(TWIST_STRAND_OFFSETS_PX.map((px) => Math.round(px * TWIST_SHIFT_PX * 100) / 100));
+  });
+
+  it('come with each drawn string', () => {
+    const [drawn] = drawnStrings([{ id: 's1', from: 'FR', to: 'IT' }]);
+    expect(drawn.across).toEqual(acrossOf(pinOf('FR'), pinOf('IT')));
+    expect(Math.hypot(drawn.across.x, drawn.across.y)).toBeCloseTo(1);
+  });
+});
 
 describe('pinOf', () => {
   it('is a place’s pin on the world map', () => {

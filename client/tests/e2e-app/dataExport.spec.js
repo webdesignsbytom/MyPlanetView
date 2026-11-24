@@ -25,8 +25,8 @@ test.describe('Your data', () => {
     });
     const home = file.maps.find((m) => m.name === HOME_MAP);
     expect(home.countries.map((c) => c.countryCode)).toEqual(expect.arrayContaining(['GB', 'FR', 'JP']));
-    expect(home.countries.find((c) => c.countryCode === 'US').notes).toBe('New York and Boston');
-    expect(home.trips.map((t) => t.title)).toEqual(expect.arrayContaining(['Italian summer', 'Japan in spring']));
+    expect(home.countries.find((c) => c.countryCode === 'US').notes).toBe('New York and Boston, then San Francisco');
+    expect(home.trips.map((t) => t.title)).toEqual(expect.arrayContaining(['Italian summer', 'Japan in spring', 'A year off: around the world']));
     expect(home.moments.some((m) => m.title === 'Got engaged at the Eiffel Tower')).toBe(true);
     expect(home.sharedWith).toEqual(expect.arrayContaining([expect.objectContaining({ name: 'Alex Morgan', role: 'EDITOR' })]));
     // Every photo, with its details and a link to its best copy

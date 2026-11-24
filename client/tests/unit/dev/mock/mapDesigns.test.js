@@ -17,6 +17,20 @@ describe('the design rules', () => {
     expect(parseDesignChange({ hover: 'pink' })).toEqual({ error: 'invalidDesignColour' });
   });
 
+  it('lets the strings, and only the strings, be see-through, as the server does', () => {
+    expect(parseDesignChange({ string: '#1D4ED866' })).toEqual({ change: { string: '#1d4ed866' } });
+    expect(parseDesignChange({ string: '#1d4ed8ff' })).toEqual({ change: { string: '#1d4ed8' } });
+    expect(parseDesignChange({ string: '#1d4ed8666' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ names: '#00000080' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ countries: { FR: '#aa000080' } })).toEqual({ error: 'invalidDesignColour' });
+  });
+
+  it('takes a second colour twisted into the strings, opaque only, as the server does', () => {
+    expect(parseDesignChange({ stringTwist: '#FFFFFF' })).toEqual({ change: { stringTwist: '#ffffff' } });
+    expect(parseDesignChange({ stringTwist: null })).toEqual({ change: { stringTwist: null } });
+    expect(parseDesignChange({ stringTwist: '#ffffff80' })).toEqual({ error: 'invalidDesignColour' });
+  });
+
   it('knows the map styles, and nothing else', () => {
     expect(designStyleOf('starry')).toBe('starry');
     expect(designStyleOf('mono')).toBe('mono');
@@ -25,7 +39,7 @@ describe('the design rules', () => {
   });
 
   it('starts a design with every colour usual', () => {
-    expect(newDesign()).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, pictureKey: null });
+    expect(newDesign()).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, pictureKey: null });
   });
 
   it('makes an older store’s one design the World map’s', () => {

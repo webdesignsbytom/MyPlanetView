@@ -203,6 +203,7 @@ function mapView(map) {
       gridColour: d.grid ?? null,
       hoverColour: d.hover ?? null,
       stringColour: d.string ?? null,
+      stringTwistColour: d.stringTwist ?? null,
       hasSeaPicture: Boolean(d.pictureKey),
     })),
     landmarksBeenTo: (db.landmarkVisits || [])

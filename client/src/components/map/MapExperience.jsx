@@ -20,6 +20,8 @@ import MapDesignStyle from './MapDesignStyle';
 import MonoPictureFilter from './MonoPictureFilter';
 import MapBanner from './MapBanner';
 import MapToolbar from './MapToolbar';
+import SlideAway from './chrome/SlideAway';
+import MenusTab from './chrome/MenusTab';
 import MapZoomControls from './MapZoomControls';
 import StringModeTag from './StringModeTag';
 import CountryMapLoading from '@/components/countryMap/CountryMapLoading';
@@ -90,11 +92,13 @@ import { designFor, shownDesign } from '@/utils/map/mapDesign';
 import { collectionCardOptions, mapCardOptions, oneShotsCardOptions, tripCardOptions } from '@/utils/shareCard/cardOptions';
 import { mapPosterOptions } from '@/utils/poster/posterOptions';
 import { recapYearFor } from '@/utils/recap/recap';
+import { NOT_PHONE_QUERY } from '@/utils/layout/phone';
 import RecapTag from '@/components/recap/RecapTag';
 import AnniversaryTag from '@/components/moments/AnniversaryTag';
 import TripCountdownTag from '@/components/trips/TripCountdownTag';
 import TripHomeTag from '@/components/trips/TripHomeTag';
 import { LandmarkMarksContext } from '@/hooks/useLandmarkMarks';
+import { MapChromeContext } from '@/hooks/useMapChrome';
 import useOneShots, { OneShotsContext } from '@/hooks/useOneShots';
 import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
 import { celebratesStamp, celebratesVisit, todayDay } from '@/utils/map/celebrations';
@@ -210,6 +214,24 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // Wide screens (lg) show the map's banner, while it's switched on. The map has no title tag
   // anywhere (the user's wish, 16 Nov 2026, phones too): "Your maps" opens from the toolbar.
   const bannerShows = useMediaQuery('(min-width: 1024px) and (min-height: 500px)') && settings.showUserBanner;
+  // The menus slid out of the way (25 Nov 2026, the user's wish: the tab on the toolbar's left
+  // edge, MenusTab; every menu leaves by its closest side, components/map/chrome/SlideAway).
+  // Not saved: a reload shows them. Wide screens only: phones have the Menu stamp, so a window
+  // made phone-sized shows them again.
+  const [menusAway, setMenusAway] = useState(false);
+  const wideScreen = useMediaQuery(NOT_PHONE_QUERY);
+  const menusHidden = menusAway && wideScreen;
+  const showMenus = useCallback(() => setMenusAway(false), []);
+  const toggleMenus = useCallback(() => setMenusAway((away) => !away), []);
+  const mapChrome = useMemo(() => ({ hidden: menusHidden, show: showMenus }), [menusHidden, showMenus]);
+  // Something opened while they're hidden (a country pressed on the map: its ticket) brings them
+  // back, so it doesn't open off the screen
+  const openedKey = ui.panel ? `${ui.panel}:${ui.selectedCode ?? ''}:${ui.pin?.id ?? (ui.pin?.draft ? 'new' : '')}` : '';
+  const openedKeyRef = useRef(openedKey);
+  useEffect(() => {
+    if (openedKey && openedKey !== openedKeyRef.current) setMenusAway(false);
+    openedKeyRef.current = openedKey;
+  }, [openedKey]);
 
   const canEdit = Boolean(actions) && !shareCode && canEditRole(role);
   // An unverified email address: nothing can be added or changed yet (the server refuses
@@ -500,7 +522,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const celebrate = useCallback(
     (...next) => {
       if (!celebrationsWanted) return;
-      CelebrationDialog.preload().then(
+      // The landmarks too (its name, stamp and "Been to 6 of 58"), so it opens at its size
+      // (25 Nov 2026, the user's report: it grew a little as it opened)
+      Promise.all([CelebrationDialog.preload(), preloadLandmarks()]).then(
         () => setCelebrations((queue) => [...queue, ...next.map((value) => ({ id: (celebrationCount.current += 1), value }))]),
         () => {},
       );
@@ -1046,6 +1070,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     <DistanceUnitProvider value={distanceUnitFor(settings.distanceUnit, map.stats?.homeCountryCode)}>
     <LandmarkMarksContext.Provider value={landmarkMarks}>
     <OneShotsContext.Provider value={oneShotsHere}>
+    <MapChromeContext.Provider value={mapChrome}>
     <div
       data-map-style={styleId}
       data-map-design={design ? '' : undefined}
@@ -1111,7 +1136,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           />
           )}
         </main>
-        <div className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2 phone:right-3'>
+        {/* Every piece of the page's furniture below slides off by its closest side while the
+            menus are hidden (SlideAway, MenusTab) */}
+        <SlideAway className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2 phone:right-3' data-map-tags=''>
           {mustVerify ? <VerifyEmailBanner /> : null}
           {shareCode ? null : <JoinedMapNote mapName={map.name} role={role} />}
           {planBanner ? (
@@ -1159,18 +1186,22 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             </div>
           ) : null}
           {phoneFlag ? null : <span aria-hidden='true' className='h-10 phone:order-first nophone:hidden' />}
-        </div>
+        </SlideAway>
 
         {/* A country's own map has its own header there */}
         {bannerShows && !ui.countryMap ? (
-          <div className='pointer-events-none absolute inset-x-0 top-3 grid justify-items-center'>
+          <SlideAway className='pointer-events-none absolute inset-x-0 top-3 grid justify-items-center'>
             <MapBanner map={map} supporter={shownSupporter(map, settings, { role, shareCode })} />
-          </div>
+          </SlideAway>
         ) : null}
 
         {/* The tools at the top right: a column of stamps on wide screens, the "Menu"
             button on phones (MapToolbar) */}
-        <div className='pointer-events-none absolute right-3 top-3 z-20 grid justify-items-end'>
+        {/* It leaves to the right by its own width, so the tab on its left (MenusTab) stays on the
+            screen's edge to bring the menus back */}
+        <SlideAway className='pointer-events-none absolute right-3 top-3 z-20 grid justify-items-end' toward='right' margin={0} interactive data-map-tools=''>
+          <MenusTab hidden={menusHidden} onToggle={toggleMenus} />
+          <div inert={menusHidden ? true : undefined} className='grid justify-items-end'>
           <MapToolbar
             // Adding photos is part of the Photos stamp's panel
             openPanel={tipsOpen ? 'tips' : ui.slideshow ? 'play' : ui.sharing ? 'share' : ui.panel === 'upload' ? 'photos' : ui.panel}
@@ -1180,16 +1211,17 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             canSwitch={Boolean(currentUser) && !shareCode}
             stats={map.stats}
           />
-        </div>
+          </div>
+        </SlideAway>
 
         {/* As far from the bottom as the toolbar is from the top (both 3); a country's own map
             has its own (CountryMapView) */}
         {ui.countryMap ? null : (
-          <div className='pointer-events-none absolute bottom-3 right-3 grid'>
+          <SlideAway className='pointer-events-none absolute bottom-3 right-3 grid'>
             <div className='pointer-events-auto'>
               <MapZoomControls viewport={viewport} />
             </div>
-          </div>
+          </SlideAway>
         )}
 
         {/* String mode's tag at the foot of the map, clear of the zoom stamps */}
@@ -1201,14 +1233,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
         {/* The key hides while a panel is open: the panel covers that corner */}
         {panel || ui.countryMap ? null : (
-          <div className='pointer-events-none absolute bottom-3 left-3 hidden nophone:grid'>
+          <SlideAway className='pointer-events-none absolute bottom-3 left-3 hidden nophone:grid'>
             <MapLegend
               showMoments={settings.showMoments}
               showSpots={Boolean(map.momentSpots?.length)}
               showStamps={stampedLandmarks.size > 0}
               showPlanned={plannedCodes.size > 0}
             />
-          </div>
+          </SlideAway>
         )}
 
         {/* Wide screens centre every panel on the screen, the map switcher too: the same space
@@ -1223,10 +1255,17 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             wish), and a press on it closes the panel. On wide screens it sits under the toolbar
             (z-20), which stays bright and works, so another tool is one press away. */}
         {panel ? (
-          <div aria-hidden='true' data-map-scrim='' onClick={close} className='absolute inset-0 z-30 bg-scrim nophone:z-10' />
+          <div
+            aria-hidden='true'
+            data-map-scrim=''
+            onClick={close}
+            // Fades while the menus are hidden, the panel sliding away over it
+            className={`absolute inset-0 z-30 bg-scrim motion-safe:transition-opacity motion-safe:duration-500 nophone:z-10 ${menusHidden ? 'pointer-events-none opacity-0' : ''}`}
+          />
         ) : null}
         {panel ? (
-          <div
+          <SlideAway
+            measure='[data-map-panel]'
             data-map-panels=''
             className={`pointer-events-none absolute z-30 grid grid-rows-[minmax(0,1fr)] nophone:inset-x-24 nophone:z-10 nophone:place-items-center ${
               ui.panel === 'country' ? 'inset-0' : 'inset-3'
@@ -1238,7 +1277,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             <ErrorBoundary key={ui.panel} fallback={<MapPanelFallback failed onClose={close} />}>
               <Suspense fallback={<MapPanelFallback />}>{panel}</Suspense>
             </ErrorBoundary>
-          </div>
+          </SlideAway>
         ) : null}
 
         {/* A badge earned or a goal reached: said once, politely */}
@@ -1404,6 +1443,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
       {dataReady ? null : <MapStatusScreen loading overlay />}
     </div>
+    </MapChromeContext.Provider>
     </OneShotsContext.Provider>
     </LandmarkMarksContext.Provider>
     </DistanceUnitProvider>

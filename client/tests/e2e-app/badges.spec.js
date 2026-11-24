@@ -1,7 +1,8 @@
 import { test, expect, SAM_MAP, openMap, openTool, toolButton } from './fixtures.js';
 
 // Badges and goals (docs/API.md, "Badges and goals"). The seed (src/dev/mock/seed.js) gives
-// the test user's map three goals: ten countries by the end of 2027 (8 of 10), a bucket
+// the test user's map three goals: twenty-five countries by the end of 2027 (20 of 25: the
+// demo couple's travels, on every continent but South America and Antarctica), a bucket
 // list of its "want to go" countries (Japan, Peru, Iceland: 0 of 3) and the British Isles
 // (reached). What the demo data has already earned is awarded quietly, so nothing is
 // announced on the first visit. Sam's map (the test user views it) has one goal.
@@ -23,7 +24,7 @@ test.describe('Badges and goals', () => {
       await expect(flag).toHaveAttribute('aria-pressed', 'true');
     }
     await expect(goalTag(page)).toHaveAccessibleName(
-      'Next goal: Ten countries by the end of 2027, 8 of 10 countries. Open badges and goals',
+      'Next goal: Twenty-five countries by the end of 2027, 20 of 25 countries. Open badges and goals',
     );
 
     // The goal tag opens the panel (on a phone, the toolbar has no stamp for it)
@@ -31,12 +32,13 @@ test.describe('Badges and goals', () => {
     const panel = page.getByRole('dialog', { name: 'Badges and goals' });
     await expect(panel).toBeVisible();
     // The goals, with their progress
-    await expect(panel.getByRole('article', { name: 'Ten countries by the end of 2027' })).toContainText('8 of 10 countries');
+    await expect(panel.getByRole('article', { name: 'Twenty-five countries by the end of 2027' })).toContainText('20 of 25 countries');
     await expect(panel.getByRole('article', { name: 'Our bucket list' })).toContainText('Still to go: Japan, Peru and Iceland');
     await expect(panel.getByRole('article', { name: 'Every country in the British Isles' })).toContainText('Reached');
     // Badges: earned ones say so with a date; the others how far along they are (words, not colour)
     await expect(sticker(panel, 'A first country in Europe.')).toContainText(/Earned \d+ \w+ \d{4}/);
-    await expect(sticker(panel, 'A first country in Asia.')).toContainText('0 of 1');
+    await expect(sticker(panel, 'A first country in Asia.')).toContainText(/Earned/);
+    await expect(sticker(panel, 'A first country in South America.')).toContainText('0 of 1');
     await expect(sticker(panel, 'A first landmark stamped')).toContainText(/Earned/);
 
     // A new goal: every country in Benelux (the Netherlands is done)
@@ -54,21 +56,22 @@ test.describe('Badges and goals', () => {
     await expect(benelux).toContainText('Still to go: Belgium and Luxembourg');
     await panel.getByRole('button', { name: 'Close Badges and goals' }).click();
 
-    // Japan visited: Asia's badge is announced once, and the bucket list moves on
+    // Peru visited: South America's badge, and with it six continents, announced once; the
+    // bucket list moves on
     const list = await openTool(page, 'Country list', 'Countries');
-    await list.getByRole('searchbox', { name: 'Search countries' }).fill('japan');
-    await list.getByRole('button', { name: 'Status for Japan: Want to go' }).click();
-    await list.getByRole('combobox', { name: 'Status for Japan' }).selectOption('Visited');
-    const news = page.getByRole('status').filter({ hasText: 'New badge: Asia.' });
+    await list.getByRole('searchbox', { name: 'Search countries' }).fill('peru');
+    await list.getByRole('button', { name: 'Status for Peru: Want to go' }).click();
+    await list.getByRole('combobox', { name: 'Status for Peru' }).selectOption('Visited');
+    const news = page.getByRole('status').filter({ hasText: 'New badges: South America and Six continents.' });
     await expect(news).toBeVisible();
     await news.getByRole('button', { name: 'See badges and goals' }).click();
     const again = page.getByRole('dialog', { name: 'Badges and goals' });
     await expect(news).toBeHidden();
-    await expect(sticker(again, 'A first country in Asia.')).toContainText(/Earned/);
+    await expect(sticker(again, 'A first country in South America.')).toContainText(/Earned/);
     await expect(again.getByRole('article', { name: 'Our bucket list' })).toContainText('1 of 3 places');
     // A deadline counts the day a country was marked too (19 Nov 2026, the user's decision):
-    // Japan, ticked by hand today, moves this one
-    await expect(again.getByRole('article', { name: 'Ten countries by the end of 2027' })).toContainText('9 of 10 countries');
+    // Peru, ticked by hand today, moves this one
+    await expect(again.getByRole('article', { name: 'Twenty-five countries by the end of 2027' })).toContainText('21 of 25 countries');
   });
 
   // The country collections (24 Nov 2026, the user's wish): bronze, silver and gold for a
@@ -135,7 +138,7 @@ test.describe('Badges and goals', () => {
     await openMap(page);
     const panel = await openTool(page, 'Badges and goals', 'Badges and goals');
 
-    await panel.getByRole('button', { name: 'Edit Ten countries by the end of 2027' }).click();
+    await panel.getByRole('button', { name: 'Edit Twenty-five countries by the end of 2027' }).click();
     const edit = panel.getByRole('form', { name: 'Change the goal' });
     await edit.getByRole('spinbutton', { name: 'How many countries' }).fill('8');
     await edit.getByRole('textbox', { name: 'Name it (optional)' }).fill('');
@@ -202,12 +205,13 @@ test.describe('Badges and goals', () => {
     const whose = panel.getByRole('group', { name: 'Whose badges' });
     await expect(whose.getByRole('button', { name: 'Everyone' })).toHaveAttribute('aria-pressed', 'true');
 
-    // Alex was only on the Italian summer (completed, ending 16 July 2025): Italy, Europe
+    // Alex's first completed trip in Europe was the Amsterdam weekend (ending 14 March 2016);
+    // Alex was on none in South America
     await whose.getByRole('button', { name: 'Alex' }).click();
     await expect(whose.getByRole('button', { name: 'Alex' })).toHaveAttribute('aria-pressed', 'true');
     await expect(panel.getByText(/From the completed trips Alex was on\./)).toBeVisible();
-    await expect(sticker(panel, 'A first country in Europe.')).toContainText('Earned 16 Jul 2025');
-    await expect(sticker(panel, 'A first country in Asia.')).toContainText('0 of 1');
+    await expect(sticker(panel, 'A first country in Europe.')).toContainText('Earned 14 Mar 2016');
+    await expect(sticker(panel, 'A first country in South America.')).toContainText('0 of 1');
     // Travel badges only: no landmarks or photos for one person
     await expect(sticker(panel, 'A first landmark stamped')).toHaveCount(0);
 

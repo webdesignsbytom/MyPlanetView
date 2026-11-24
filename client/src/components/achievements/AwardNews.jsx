@@ -6,14 +6,15 @@ import CloseStamp from '@/components/common/CloseStamp';
 // Utils
 import { newsText } from '@/utils/achievements/news';
 
-// Long enough to read twice; hovering or focusing one of its buttons holds it there
-const SHOW_MS = 10000;
+// Long enough to read twice and look at the map; hovering or focusing one of its buttons
+// holds it there (10 s until 25 Nov 2026, the user's wish: it went too fast)
+const SHOW_MS = 20000;
 
 /**
  * A short, polite note when the server says the map has earned a badge or reached a goal
  * (useAchievements' `news`): a paper tag at the top of the map, read out by screen
  * readers (a status region that's always there, so the words are announced as they
- * arrive). It goes by itself after ten seconds (later while one of its buttons is hovered
+ * arrive). It goes by itself after twenty seconds (later while one of its buttons is hovered
  * or focused), or with its close stamp; "See badges and goals" opens the panel. Only its
  * buttons take the pointer, so it never stops a press on the map or a panel under its words.
  */
