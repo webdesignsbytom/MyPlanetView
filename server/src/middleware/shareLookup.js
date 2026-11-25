@@ -6,6 +6,13 @@
 import { prisma } from '../prisma.js';
 import { normaliseShareCode } from '../utils/shareCodes.js';
 
+/** True when the code can't be a share code, or no slideshow has it (routes/photoShows.js). */
+export async function showCodeMatchesNothing(rawCode) {
+  const code = normaliseShareCode(rawCode);
+  if (!code) return true;
+  return !(await prisma.photoShow.findUnique({ where: { code }, select: { id: true } }));
+}
+
 /** True when the code can't be a share code, or no map or trip has it. */
 export async function shareCodeMatchesNothing(rawCode) {
   const code = normaliseShareCode(rawCode);

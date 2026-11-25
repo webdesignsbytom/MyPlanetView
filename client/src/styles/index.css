@@ -583,6 +583,9 @@
   /* The passport cover's foil lettering: a book serif, as real passports use (system
      fonts only, nothing to download) */
   --font-passport: 'Palatino Linotype', Palatino, 'Book Antiqua', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  /* A traveller's name signed on their passport page when they haven't drawn a signature (25
+     Nov 2026): a handwriting face, system fonts only */
+  --font-signature: 'Segoe Script', 'Snell Roundhand', 'Bradley Hand', 'Lucida Handwriting', 'Brush Script MT', cursive;
 
   --color-colour1: var(--colour1);
   --color-colour2: var(--colour2);

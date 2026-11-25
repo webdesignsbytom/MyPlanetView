@@ -58,6 +58,7 @@ describe('the travel features’ events', () => {
       createThemeEvent: 'themes',
       createChallengeEvent: 'challenges',
       createGuessGameEvent: 'guessGames',
+      createPhotoShowEvent: 'photoShows',
       createFlightEvent: 'flights',
       createFeedbackEvent: 'feedback',
     };

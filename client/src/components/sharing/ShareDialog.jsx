@@ -28,8 +28,9 @@ import ShareLinkBox from './ShareLinkBox';
 import ShareEmbedBox from './ShareEmbedBox';
 import MakeOwnerDialog from './MakeOwnerDialog';
 import RemoveAccessDialog from './RemoveAccessDialog';
+import MapShowsSection from '@/components/shows/MapShowsSection';
 // Utils
-import { MAP_SHARE_ROLE_OPTIONS, ROLE_WITH_ARTICLE, SHARE_ROLE_OPTIONS, canManageRole, coOwnerChoices } from '@/utils/sharing/shareRoles';
+import { MAP_SHARE_ROLE_OPTIONS, ROLE_WITH_ARTICLE, SHARE_ROLE_OPTIONS, canEditRole, canManageRole, coOwnerChoices } from '@/utils/sharing/shareRoles';
 import { forgetMapLists } from '@/utils/map/mapListCache';
 import { inFlight, recall, remember } from '@/utils/data/panelCache';
 import { sharingKey } from '@/utils/sharing/sharingCache';
@@ -41,7 +42,8 @@ import { sharingKey } from '@/utils/sharing/sharingCache';
 // and can leave. `resource` is 'maps' or 'trips'. Every change here
 // (adding, changing or removing people, link access, a new link, leaving) needs a verified
 // email address: the server refuses otherwise (403, shown as the error), so until then
-// those controls are locked and the dialog says why; the link can still be copied.
+// those controls are locked and the dialog says why; the link can still be copied. A map's
+// editors also see its slideshows of chosen photos (MapShowsSection; 25 Nov 2026).
 // The plan's caps on people (5 editors a map, co-owners by travellers, 20 people a trip) come back as 409s,
 // shown as the error. A map's owner can make a member the owner (`onTransferred` gets
 // `{ stayed, map }` once it's done; the map lists are forgotten first). A bin (removing a
@@ -232,6 +234,9 @@ function ShareDialog({ resource, id, name, role, travellers = null, currentUserI
           ) : null}
         </div>
       )}
+
+      {/* A map's slideshows of chosen photos, each with its own link (25 Nov 2026): its editors' */}
+      {isMap && canEditRole(role) ? <MapShowsSection mapId={id} locked={mustVerifyEmail} /> : null}
 
       <div className='grid justify-end'>
         <Button onClick={onClose}>Done</Button>

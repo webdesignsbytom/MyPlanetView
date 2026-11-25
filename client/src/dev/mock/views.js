@@ -177,6 +177,10 @@ const videoLinks = (photo) => {
   return { displayUrl: urls.display, videoUrl: urls.video ?? urls.original ?? null };
 };
 
+/** A photo in a slideshow's list: its list item with its display copy, or a ready video's links. */
+export const displayListItem = (photo, role) =>
+  isVideo(photo) ? { ...photoListItem(photo, role), ...videoLinks(photo) } : { ...photoListItem(photo, role), displayUrl: photoUrls(photo).display };
+
 // The best copy for a download list (`best=1`, docs/API.md "Downloads"), as the server's
 // views.js bestFile: `{ copy, url, contentType, bytes, width, height }`, or null (a video,
 // or a photo with neither). The demo photos' sizes aren't known (`bytes` null), as an old
@@ -283,8 +287,7 @@ export function photoPage(
   const item = (p) => {
     if (withBest) return { ...photoListItem(p, role), best: bestFile(p) };
     if (!withDisplay) return photoListItem(p, role);
-    if (isVideo(p)) return { ...photoListItem(p, role), ...videoLinks(p) };
-    return { ...photoListItem(p, role), displayUrl: photoUrls(p).display };
+    return displayListItem(p, role);
   };
   if (order === 'shuffle') {
     // Every id in the list, shuffled the same way for the same seed, then this page of it

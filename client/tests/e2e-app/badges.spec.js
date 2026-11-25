@@ -74,6 +74,45 @@ test.describe('Badges and goals', () => {
     await expect(again.getByRole('article', { name: 'Twenty-five countries by the end of 2027' })).toContainText('21 of 25 countries');
   });
 
+  // 25 Nov 2026, the user's wish: "when you earn a badge have the popup modal have a share
+  // button. Share modal needs a preview of the post."
+  test('a new badge is shared as a picture from its pop-up, the post previewed with its words', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    const list = await openTool(page, 'Country list', 'Countries');
+    await list.getByRole('searchbox', { name: 'Search countries' }).fill('peru');
+    await list.getByRole('button', { name: 'Status for Peru: Want to go' }).click();
+    await list.getByRole('combobox', { name: 'Status for Peru' }).selectOption('Visited');
+    const news = page.getByRole('status').filter({ hasText: 'New badges: South America and Six continents.' });
+    await news.getByRole('button', { name: 'Share a picture' }).click();
+    await expect(news).toBeHidden();
+
+    // Two at once: the first to start with, the other a press away
+    const dialog = page.getByRole('dialog', { name: 'Share what you earned' });
+    const choice = dialog.getByRole('group', { name: 'Which one to share' });
+    await expect(choice.getByRole('button', { name: 'South America' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(choice.getByRole('button', { name: 'Six continents' })).toHaveAttribute('aria-pressed', 'false');
+    // The post: the badge's picture, its words under it
+    const post = dialog.getByRole('region', { name: 'Preview of your post' });
+    const card = post.locator('img[data-share-card]');
+    await expect(card).toHaveAccessibleName(/^Your share card: South America, \d+ countries, \d+ continents/);
+    await expect.poll(() => card.evaluate((img) => [img.naturalWidth, img.naturalHeight].join('×'))).toBe('1080×1350');
+    const words = post.getByRole('textbox', { name: 'Words to go with it' });
+    await expect(words).toHaveValue(/^New badge on my travel map: South America! \d+ countries so far\.$/);
+
+    await choice.getByRole('button', { name: 'Six continents' }).click();
+    await expect(card).toHaveAccessibleName(/^Your share card: Six continents,/);
+    await expect(words).toHaveValue(/^New badge on my travel map: Six continents! /);
+    await words.fill('Every continent people live on!');
+    await expect(dialog.getByRole('button', { name: 'Copy the words' })).toBeEnabled();
+
+    const download = page.waitForEvent('download');
+    await dialog.getByRole('button', { name: 'Save the picture' }).click();
+    expect((await download).suggestedFilename()).toBe('my-planet-view-badge-continents-all.png');
+    await expect(dialog.getByText('Saved to your downloads.')).toBeVisible();
+    await dialog.getByRole('button', { name: 'Close' }).click();
+    await expect(dialog).toBeHidden();
+  });
+
   // The country collections (24 Nov 2026, the user's wish): bronze, silver and gold for a
   // quarter, half and all of a country's landmarks stamped, each medal shared as a picture
   test('a country’s landmarks earn its medals, shown on the suitcase and shared as a picture', { tag: '@phone' }, async ({ page }) => {

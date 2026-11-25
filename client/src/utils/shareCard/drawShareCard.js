@@ -29,6 +29,9 @@ export { MAP_BOTTOM_NO_ANTARCTICA, MAP_BOTTOM_WITH_ANTARCTICA, MAP_TOP, MAP_WIDT
 // leaves room for the numbers and a line of names
 const CLOSE_UP_MIN = 380;
 const CLOSE_UP_MAX = 600;
+// A badge's sticker stands taller than a world map's box, so the card has no empty band
+// between it and the numbers
+const BADGE_BOX_HEIGHT = 520;
 
 const SHAPED = COUNTRIES.filter((c) => COUNTRY_SHAPES[c.code]);
 const SHAPED_SPLIT_UK = [...SHAPED.filter((c) => c.code !== 'GB'), ...COUNTRIES.filter((c) => c.kind === 'NATION')];
@@ -109,6 +112,32 @@ export function nameLines(ctx, names, width, maxLines) {
   }
   if (line) lines.push(line);
   return lines;
+}
+
+/**
+ * `text` as lines of at most `width` (whole words; a word wider than that on a line of its
+ * own), at most `maxLines`, the last cut short with an ellipsis when the rest doesn't fit.
+ */
+export function textLines(ctx, text, width, maxLines) {
+  const words = String(text || '').split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = '';
+  for (const word of words) {
+    const next = line ? `${line} ${word}` : word;
+    if (!line || ctx.measureText(next).width <= width) {
+      line = next;
+      continue;
+    }
+    lines.push(line);
+    line = word;
+  }
+  if (line) lines.push(line);
+  if (lines.length <= maxLines) return lines;
+  const shown = lines.slice(0, maxLines);
+  let last = `${shown[maxLines - 1]}…`;
+  while (last.includes(' ') && ctx.measureText(last).width > width) last = `${last.slice(0, last.lastIndexOf(' '))}…`;
+  shown[maxLines - 1] = last;
+  return shown;
 }
 
 /** The colour a highlighted place wears: the design's (a region its country's), else its pastel. */
@@ -303,16 +332,101 @@ export function drawMedal(ctx, { box, tier }) {
 }
 
 /**
+ * A badge's luggage sticker (25 Nov 2026, the user's wish: share a badge when it's earned),
+ * standing in `box` where a card's map goes, as the badge suitcase shows it (BadgeSticker):
+ * a parchment disc in a double poster-red ring, slapped on at a slight tilt, its icon
+ * (`badge.icon`: iconShape.js's viewBox and paths) and number (`badge.short`) in the deep
+ * red, and the red tick of an earned badge at its top right.
+ */
+export function drawBadgeSticker(ctx, { box, badge }) {
+  const S = C.sticker;
+  const cx = box.x + box.width / 2;
+  const cy = box.y + box.height / 2;
+  const r = Math.min(box.height * 0.44, box.width * 0.34);
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate((-5 * Math.PI) / 180);
+  // The disc, then the double ring: a thick outer band, a gap, a thin inner one
+  ctx.fillStyle = S.face;
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = S.ring;
+  ctx.lineWidth = r * 0.07;
+  ctx.beginPath();
+  ctx.arc(0, 0, r - r * 0.035, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.lineWidth = r * 0.035;
+  ctx.beginPath();
+  ctx.arc(0, 0, r * 0.84, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // The icon, fitted in a square above the middle (in the middle when there's no number)
+  const short = badge?.short ? String(badge.short) : '';
+  const icon = badge?.icon;
+  const side = r * (short ? 0.72 : 0.95);
+  const iconMiddle = short ? -r * 0.18 : 0;
+  if (icon) {
+    const [vx, vy, vw, vh] = icon.viewBox;
+    const scale = side / Math.max(vw, vh);
+    ctx.save();
+    ctx.translate(-(vw * scale) / 2 - vx * scale, iconMiddle - (vh * scale) / 2 - vy * scale);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = S.ink;
+    for (const d of icon.paths) ctx.fill(new Path2D(d));
+    ctx.restore();
+  }
+  if (short) {
+    ctx.fillStyle = S.ink;
+    fittedText(ctx, short, { x: 0, y: r * 0.62, width: r * 1.1, max: Math.round(r * 0.36), min: 20, family: 'TravelFont' });
+  }
+
+  // The tick of an earned badge, on its disc at the top right
+  const tx = r * 0.72;
+  const ty = -r * 0.72;
+  const tr = r * 0.2;
+  ctx.fillStyle = S.tick;
+  ctx.beginPath();
+  ctx.arc(tx, ty, tr, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = S.tickInk;
+  ctx.lineWidth = tr * 0.22;
+  ctx.stroke();
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = tr * 0.26;
+  ctx.beginPath();
+  ctx.moveTo(tx - tr * 0.45, ty + tr * 0.02);
+  ctx.lineTo(tx - tr * 0.1, ty + tr * 0.38);
+  ctx.lineTo(tx + tr * 0.48, ty - tr * 0.36);
+  ctx.stroke();
+  ctx.restore();
+}
+
+/**
  * The card as a PNG blob. `title` (the map's name, or "2026 in travel"), `kicker` (a small
  * line above it), `highlight` (place codes to colour in), `stats` ([{ value, label }], at
  * most three, drawn big under the map), `splitUk` (the UK as its four nations, as the map
  * shows it), `colours` (a map design's country colours, or null). `medal` (bronze, silver or
- * gold: a country collection's card) draws that medal where the map goes. `mapView`: 'world'
- * (the whole world), or 'fit' (the places close up: a country's own map, or the world cropped
- * round them; the world when they're spread far apart).
+ * gold: a country collection's card) draws that medal where the map goes, and `badge`
+ * (`{ icon, short }`: a badge's card) its sticker. `note` (a sentence: what a badge is for) is
+ * drawn under the numbers on a card with no places to name. `mapView`: 'world' (the whole
+ * world), or 'fit' (the places close up: a country's own map, or the world cropped round
+ * them; the world when they're spread far apart).
  */
-export async function drawShareCard({ title, kicker = '', highlight = [], stats = [], splitUk = false, colours = null, medal = null, mapView = 'world' }) {
-  const [, shownMap] = await Promise.all([loadFonts(), medal ? WORLD_VIEW : cardMap(highlight, mapView)]);
+export async function drawShareCard({
+  title,
+  kicker = '',
+  highlight = [],
+  stats = [],
+  splitUk = false,
+  colours = null,
+  medal = null,
+  badge = null,
+  note = '',
+  mapView = 'world',
+}) {
+  const [, shownMap] = await Promise.all([loadFonts(), medal || badge ? WORLD_VIEW : cardMap(highlight, mapView)]);
   const canvas = document.createElement('canvas');
   canvas.width = CARD_WIDTH;
   canvas.height = CARD_HEIGHT;
@@ -350,8 +464,10 @@ export async function drawShareCard({ title, kicker = '', highlight = [], stats 
   box.height = ((withAntarctica ? MAP_BOTTOM_WITH_ANTARCTICA : MAP_BOTTOM_NO_ANTARCTICA) - MAP_TOP) * (box.width / MAP_WIDTH);
   if (shownMap.kind === 'crop') box.height = clamp((box.width * shownMap.view[3]) / shownMap.view[2], CLOSE_UP_MIN, CLOSE_UP_MAX);
   if (shownMap.kind === 'country') box.height = clamp((box.width * shownMap.geo.view[3]) / shownMap.geo.view[2], CLOSE_UP_MIN, CLOSE_UP_MAX);
+  if (badge) box.height = BADGE_BOX_HEIGHT;
   let mapHeight = box.height;
   if (medal) drawMedal(ctx, { box, tier: medal });
+  else if (badge) drawBadgeSticker(ctx, { box, badge });
   else if (shownMap.kind === 'country') mapHeight = drawCountryMap(ctx, { box, geo: shownMap.geo });
   else mapHeight = drawMap(ctx, { box, highlight: marked, splitUk, colours: ownColours, withAntarctica, view: shownMap.kind === 'crop' ? shownMap.view : null });
 
@@ -363,7 +479,12 @@ export async function drawShareCard({ title, kicker = '', highlight = [], stats 
   const statsHeight = shown.length ? 190 : 0;
   ctx.font = font(28, 'Poppins', '500');
   const names = namesOf(marked);
-  const lines = names.length ? nameLines(ctx, names, CARD_WIDTH - 180, Math.max(1, Math.floor((roomBottom - roomTop - statsHeight - 20) / 40))) : [];
+  const roomForLines = Math.max(1, Math.floor((roomBottom - roomTop - statsHeight - 20) / 40));
+  const lines = names.length
+    ? nameLines(ctx, names, CARD_WIDTH - 180, roomForLines)
+    : note
+      ? textLines(ctx, note, CARD_WIDTH - 180, Math.min(3, roomForLines))
+      : [];
   const blockHeight = statsHeight + (lines.length ? 20 + lines.length * 40 : 0);
   const blockTop = roomTop + Math.max(0, (roomBottom - roomTop - blockHeight) / 2);
 

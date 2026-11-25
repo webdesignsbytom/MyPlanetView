@@ -55,6 +55,14 @@ describe('buildSlides', () => {
     expect(slides[0].id).toBe('card-a');
   });
 
+  // A shared slideshow (25 Nov 2026; docs/API.md "Photo slideshows"): its title first
+  it('opens a shared slideshow with its title card, only once it has photos', () => {
+    const slides = buildSlides([photo('a', 'FR'), photo('b', 'IT')], { intro: 'Our summer', complete: true });
+    expect(slides[0]).toEqual({ id: 'intro', type: 'intro', title: 'Our summer' });
+    expect(slides.map((s) => s.id)).toEqual(['intro', 'a', 'b', 'end']);
+    expect(buildSlides([], { intro: 'Our summer', complete: true })).toEqual([]);
+  });
+
   it('ends with the end card only once every page is in, and never for no photos', () => {
     expect(shape(buildSlides([photo('a', 'FR')], { complete: true }))).toEqual(['a', 'end']);
     expect(buildSlides([], { complete: true })).toEqual([]);

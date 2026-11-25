@@ -7,7 +7,9 @@ import { landmarkPlace } from '@/utils/map/ukNations';
 import { isSpecialPlace } from '@/utils/map/specialPlaces';
 import { isRegion } from '@/utils/map/regionPlaces';
 import { getDb } from './store';
-import { LANDMARK_ROWS, atLeast, landmarkById, photoThumbUrl, userName } from './views';
+import { LANDMARK_ROWS, atLeast, landmarkById, photoThumbUrl, photoUrls, userName } from './views';
+import { homeOf } from './travelStats';
+import { travellingSince } from '@/utils/passport/travellerDetails';
 import { mapPlanId } from './plans';
 import { planOf } from '@/utils/constants/plans';
 import { earliestOf, passportPageOrder } from '@/utils/passport/passportOrder';
@@ -97,16 +99,54 @@ function travellerFacts(map, traveller, { editor, placeOf }) {
 }
 
 /**
+ * A traveller as their passport page shows them (the server's passportTravellerView; 25 Nov
+ * 2026): the map photo chosen for it with its crop (a hidden one for editors only), else their
+ * account's picture, else none; the date of birth for editors only; the day of issue (when they
+ * were added: the map's day for the seed's, which have none); their first trip that isn't still
+ * planned; their signature.
+ */
+export function passportTravellerView(traveller, map, { editor }) {
+  const db = getDb();
+  const photo = traveller.portraitPhotoId ? db.photos.find((p) => p.id === traveller.portraitPhotoId && p.mapId === map.id) : null;
+  const account = traveller.userId ? db.users.find((u) => u.id === traveller.userId) : null;
+  let shown = null;
+  if (photo && (photo.kind || 'PHOTO') === 'PHOTO' && (editor || !photo.hidden)) {
+    shown = {
+      source: 'MAP',
+      photoId: photo.id,
+      url: photoUrls(photo).display,
+      width: photo.width ?? null,
+      height: photo.height ?? null,
+      focusX: traveller.portraitFocusX ?? 0.5,
+      focusY: traveller.portraitFocusY ?? 0.5,
+      zoom: traveller.portraitZoom ?? 1,
+    };
+  } else if (account?.image) {
+    shown = { source: 'ACCOUNT', photoId: null, url: account.image, width: null, height: null, focusX: 0.5, focusY: 0.5, zoom: 1 };
+  }
+  const trips = db.trips.filter((t) => t.mapId === map.id && (t.travellerIds || []).includes(traveller.id));
+  return {
+    id: traveller.id,
+    name: traveller.name,
+    birthCountryCode: traveller.birthCountryCode ?? null,
+    favouriteCountryCode: traveller.favouriteCountryCode ?? null,
+    ...(editor ? { birthDate: traveller.birthDate ?? null } : {}),
+    issuedOn: String(traveller.createdAt ?? map.createdAt ?? '').slice(0, 10) || null,
+    travellingSince: travellingSince(trips),
+    photo: shown,
+    signature: traveller.signature ?? null,
+  };
+}
+
+/**
  * The whole passport, as `role` may see it (the server's buildPassport); `travellerId`: that
  * traveller's own. -> null for a traveller not on the map
  */
 export function buildPassport(map, role, { travellerId = null } = {}) {
   const db = getDb();
   const editor = atLeast(role, 'EDITOR');
-  const travellers = db.travellers
-    .filter((t) => t.mapId === map.id)
-    .sort((a, b) => a.position - b.position)
-    .map(({ id, name, birthCountryCode, favouriteCountryCode }) => ({ id, name, birthCountryCode, favouriteCountryCode }));
+  const rows = db.travellers.filter((t) => t.mapId === map.id).sort((a, b) => a.position - b.position);
+  const travellers = rows.map((traveller) => passportTravellerView(traveller, map, { editor }));
   // The traveller's own row: its account decides whose ticks are theirs
   const holder = travellerId ? (db.travellers.find((t) => t.mapId === map.id && t.id === travellerId) ?? null) : null;
   if (travellerId && !holder) return null;
@@ -192,6 +232,9 @@ export function buildPassport(map, role, { travellerId = null } = {}) {
       plan: { id: planOf(mapPlanId(map)).id, name: planOf(mapPlanId(map)).name },
       // Whose passport this is: one traveller's own, or null for the whole map's
       traveller: holder ? { id: holder.id, name: holder.name } : null,
+      // Home, on every traveller's page; whether the caller may change their photos and signatures
+      homeCountryCode: homeOf({ homeCountryCode: map.homeCountryCode ?? null, ownerId: map.ownerId, travellers: rows }),
+      canEdit: editor,
     },
     travellers,
     pages,

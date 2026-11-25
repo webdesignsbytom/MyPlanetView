@@ -5,11 +5,12 @@ import AwardNews from '@/components/achievements/AwardNews';
 
 const BADGE = [{ type: 'badge', key: 'countries-10' }];
 
-const show = (news = BADGE) => {
+const show = (news = BADGE, { share = false } = {}) => {
   const onOpen = vi.fn();
   const onDismiss = vi.fn();
-  const view = render(<AwardNews news={news} onOpen={onOpen} onDismiss={onDismiss} />);
-  return { ...view, onOpen, onDismiss, region: view.container.querySelector('[role="status"]') };
+  const onShare = share ? vi.fn() : null;
+  const view = render(<AwardNews news={news} onOpen={onOpen} onDismiss={onDismiss} onShare={onShare} />);
+  return { ...view, onOpen, onDismiss, onShare, region: view.container.querySelector('[role="status"]') };
 };
 
 describe('AwardNews', () => {
@@ -70,6 +71,22 @@ describe('AwardNews', () => {
     expect(onOpen).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByLabelText('Dismiss'));
     expect(onDismiss).toHaveBeenCalledTimes(1);
+  });
+
+  // 25 Nov 2026, the user's wish: share a badge when it's earned
+  it('offers a picture to share only when it can, and hands over what it said', () => {
+    expect(show().container.textContent).not.toContain('Share a picture');
+    const news = [
+      { type: 'badge', key: 'countries-10' },
+      { type: 'goal', goal: { kind: 'COUNTRY_COUNT', target: 5, title: 'Five' } },
+    ];
+    const { onShare, onOpen } = show(news, { share: true });
+    const button = screen.getByText('Share a picture');
+    expect(button.tagName).toBe('BUTTON');
+    expect(button.className).toContain('pointer-events-auto');
+    fireEvent.click(button);
+    expect(onShare).toHaveBeenCalledWith(news);
+    expect(onOpen).not.toHaveBeenCalled();
   });
 
   it('takes the pointer only with its buttons', () => {

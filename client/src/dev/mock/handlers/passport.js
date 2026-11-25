@@ -3,12 +3,15 @@
 import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb, normaliseShareCode } from '../store';
 import { higherRole, landmarkById, mapRole } from '../views';
-import { buildPassport } from '../passport';
+import { buildPassport, passportTravellerView } from '../passport';
+import { parsePortrait, parseSignature } from '@/utils/passport/travellerDetails';
 
 const MAP_NOT_FOUND = "That map doesn't exist, or it hasn't been shared with you.";
 const LINK_NOT_FOUND = "That share link doesn't exist or has been turned off.";
 const TRAVELLER_NOT_FOUND = "That traveller isn't on this map.";
 const STAMP_PHOTO_INVALID = "Pick a photo of this landmark that's confirmed on this map.";
+const PASSPORT_PHOTO_INVALID = 'Choose one of this map’s photos (not a video or a hidden one), cropped inside the photo.';
+const SIGNATURE_INVALID = 'That signature couldn’t be saved. Please draw it again.';
 
 const findMap = (id) => getDb().maps.find((m) => m.id === id) || null;
 
@@ -38,6 +41,39 @@ export function registerPassportRoutes() {
   route('GET', '/api/shared/:code/passport', ({ params, query }) => {
     const shared = sharedMap(params.code);
     return shared ? answer(shared.map, shared.role, query) : fail(404, LINK_NOT_FOUND);
+  });
+
+  // A traveller's passport photo and signature (25 Nov 2026), as the server's: the map's editors
+  route('PATCH', '/api/maps/:mapId/travellers/:travellerId/passport', ({ params, body }) => {
+    const db = getDb();
+    const map = findMap(params.mapId);
+    const role = mapRole(map);
+    const denied = deny(role, 'EDITOR', MAP_NOT_FOUND);
+    if (denied) return denied;
+    const traveller = db.travellers.find((t) => t.id === params.travellerId && t.mapId === map.id);
+    if (!traveller) return fail(404, TRAVELLER_NOT_FOUND);
+    const changes = {};
+    if (body?.photo !== undefined) {
+      // The seed's photos have names for ids (the server's are UUIDs)
+      const portrait = parsePortrait(body.photo, { isId: (id) => id.length > 0 && id.length <= 64 });
+      if (portrait.error) return fail(400, PASSPORT_PHOTO_INVALID);
+      if (portrait.value) {
+        const photo = db.photos.find((p) => p.id === portrait.value.photoId && p.mapId === map.id);
+        if (!photo || (photo.kind || 'PHOTO') !== 'PHOTO' || photo.hidden) return fail(400, PASSPORT_PHOTO_INVALID);
+        const { photoId, focusX, focusY, zoom } = portrait.value;
+        Object.assign(changes, { portraitPhotoId: photoId, portraitFocusX: focusX, portraitFocusY: focusY, portraitZoom: zoom });
+      } else {
+        Object.assign(changes, { portraitPhotoId: null, portraitFocusX: null, portraitFocusY: null, portraitZoom: null });
+      }
+    }
+    if (body?.signature !== undefined) {
+      const signature = parseSignature(body.signature);
+      if (signature.error) return fail(400, SIGNATURE_INVALID);
+      changes.signature = signature.value;
+    }
+    if (!Object.keys(changes).length) return fail(400, 'Malformed data.');
+    Object.assign(traveller, changes);
+    return ok({ traveller: passportTravellerView(traveller, map, { editor: true }) });
   });
 
   // `{ photoId }`: one of the landmark's confirmed photos on this map

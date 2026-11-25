@@ -66,6 +66,11 @@ export const CHALLENGES_API = '/api/challenges'; // GET, POST, /:challengeId (GE
 // A map's games are MAPS_API/:mapId/guess-games; deleting one GUESS_GAMES_API/:gameId
 export const GUESS_API = '/api/guess';
 export const GUESS_GAMES_API = '/api/guess-games';
+// Slideshows of chosen photos (docs/API.md "Photo slideshows"): one by its link's code
+// (SHOW_API/:code, /:code/photos), and changing one (PHOTO_SHOWS_API/:showId, /reset-link);
+// a map's are MAPS_API/:mapId/photo-shows
+export const SHOW_API = '/api/show';
+export const PHOTO_SHOWS_API = '/api/photo-shows';
 // The flight log (docs/API.md "Flights"): a map's are MAPS_API/:mapId/flights; deleting one FLIGHTS_API/:flightId
 export const FLIGHTS_API = '/api/flights';
 export const OFFER_CLICK_PATH = '/go'; // /:offerId?p=&dest=&country=&from=&to= on the API's host (a card's link)

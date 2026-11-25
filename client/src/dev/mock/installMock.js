@@ -40,6 +40,7 @@ import { registerOneShotRoutes } from './handlers/oneShots';
 import { registerMapStringRoutes } from './handlers/mapStrings';
 import { registerReferralRoutes } from './handlers/referrals';
 import { registerGuessGameRoutes } from './handlers/guessGames';
+import { registerPhotoShowRoutes } from './handlers/photoShows';
 import { registerFlightRoutes } from './handlers/flights';
 
 export function installMock() {
@@ -76,6 +77,7 @@ export function installMock() {
   registerMapStringRoutes();
   registerReferralRoutes();
   registerGuessGameRoutes();
+  registerPhotoShowRoutes();
   registerFlightRoutes();
 
   // Every request goes to the adapter: the API client, the global axios (media uploads)

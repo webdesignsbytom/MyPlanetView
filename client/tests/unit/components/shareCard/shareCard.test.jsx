@@ -113,6 +113,52 @@ describe('ShareCardPreview', () => {
     expect(screen.getByText('Save the picture').closest('button').disabled).toBe(true);
   });
 
+  // 25 Nov 2026, the user's wish: "a preview of the post"
+  it('shows the post: the picture with its words under it, together', async () => {
+    render(<ShareCardPreview card={CARD} />);
+    const post = document.querySelector('[data-post-preview]');
+    expect(post.getAttribute('aria-label')).toBe('Preview of your post');
+    await waitFor(() => expect(post.querySelector('[data-share-card]')).toBeTruthy());
+    const words = screen.getByLabelText('Words to go with it');
+    expect(post.contains(words)).toBe(true);
+    expect(words.value).toBe('My 2026 in travel: 12 countries.');
+  });
+
+  it('sends the words as they were changed', async () => {
+    setNavigator('canShare', vi.fn(() => true));
+    setNavigator('share', vi.fn().mockResolvedValue());
+    render(<ShareCardPreview card={CARD} />);
+    fireEvent.change(screen.getByLabelText('Words to go with it'), { target: { value: '  Twelve and counting!  ' } });
+    const share = screen.getByText('Share').closest('button');
+    await waitFor(() => expect(share.disabled).toBe(false));
+    fireEvent.click(share);
+    await waitFor(() => expect(navigator.share).toHaveBeenCalled());
+    expect(navigator.share.mock.calls[0][0].text).toBe('Twelve and counting!');
+  });
+
+  it('copies the words, for apps that leave them out, and says so', async () => {
+    const writeText = vi.fn().mockResolvedValue();
+    setNavigator('clipboard', { writeText });
+    render(<ShareCardPreview card={CARD} />);
+    fireEvent.click(screen.getByText('Copy the words').closest('button'));
+    expect(await screen.findByText('The words are copied: paste them under your post.')).toBeTruthy();
+    expect(writeText).toHaveBeenCalledWith('My 2026 in travel: 12 countries.');
+
+    writeText.mockRejectedValue(new Error('denied'));
+    fireEvent.click(screen.getByText('Copy the words').closest('button'));
+    expect(await screen.findByText(/couldn’t be copied here/)).toBeTruthy();
+    delete navigator.clipboard;
+  });
+
+  it('has nothing to copy with no words, and a new card starts with its own', () => {
+    const { rerender } = render(<ShareCardPreview card={CARD} />);
+    fireEvent.change(screen.getByLabelText('Words to go with it'), { target: { value: '   ' } });
+    expect(screen.getByText('Copy the words').closest('button').disabled).toBe(true);
+    rerender(<ShareCardPreview card={{ ...CARD, shareText: 'Another card.' }} />);
+    expect(screen.getByLabelText('Words to go with it').value).toBe('Another card.');
+    expect(screen.getByText('Copy the words').closest('button').disabled).toBe(false);
+  });
+
   it('lets the old picture go when it unmounts', async () => {
     const { unmount } = render(<ShareCardPreview card={CARD} />);
     await waitFor(() => expect(document.querySelector('[data-share-card]')).toBeTruthy());

@@ -77,6 +77,8 @@ export function loadStore() {
   // "Guess where I was" (docs/API.md): the seed's game in a store saved before it, and its plays
   if (!Array.isArray(db.guessGames)) db.guessGames = buildSeed().guessGames;
   if (!Array.isArray(db.guessPlays)) db.guessPlays = buildSeed().guessPlays;
+  // Slideshows of chosen photos (docs/API.md "Photo slideshows"): the seed's in an older store
+  if (!Array.isArray(db.photoShows)) db.photoShows = buildSeed().photoShows;
   // The flight log (docs/API.md "Flights")
   if (!Array.isArray(db.flights)) db.flights = buildSeed().flights;
   if (!Array.isArray(db.moments)) db.moments = [];

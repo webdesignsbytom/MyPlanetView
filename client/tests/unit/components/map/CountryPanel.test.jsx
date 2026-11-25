@@ -35,6 +35,7 @@ vi.mock('@/components/photos/PhotoGrid', () => ({
   ),
 }));
 vi.mock('@/components/photos/PrintDownload', () => ({ default: () => <span data-print-download /> }));
+vi.mock('@/components/shows/ShareShow', () => ({ default: ({ mapId, source, defaultTitle }) => <span data-share-show={mapId} data-country={source.country} data-title={defaultTitle} /> }));
 vi.mock('@/components/offers/TravelDesk', () => ({ default: ({ countryCodes }) => <span data-travel-desk={countryCodes.join(',')} /> }));
 vi.mock('@/components/map/CountryLandmarks', () => ({ default: ({ countryCode }) => <span data-landmarks={countryCode} /> }));
 
@@ -253,8 +254,13 @@ describe('CountryPanel', () => {
     const grid = ticket.querySelector('[data-photo-grid]');
     const before = (a, b) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
     expect(before(actions, grid)).toBe(true);
-    expect(actions.querySelector('[data-print-download], [data-travel-desk]')).toBeNull();
+    expect(actions.querySelector('[data-print-download], [data-travel-desk], [data-share-show]')).toBeNull();
     expect(before(grid, ticket.querySelector('[data-print-download]'))).toBe(true);
+    // A slideshow of some of the country's photos, with its own link (25 Nov 2026), beside the download
+    const share = ticket.querySelector('[data-share-show]');
+    expect(before(grid, share)).toBe(true);
+    expect(share.getAttribute('data-country')).toBe('FR');
+    expect(share.getAttribute('data-title')).toBe('France');
     expect(before(grid, ticket.querySelector('[data-travel-desk]'))).toBe(true);
   });
 
@@ -269,6 +275,7 @@ describe('CountryPanel', () => {
     expect(screen.queryByText('Add photos')).toBeNull();
     expect(screen.queryByText('Plan a trip')).toBeNull();
     expect(ticket.querySelector('[data-print-download]')).toBeNull();
+    expect(ticket.querySelector('[data-share-show]')).toBeNull();
   });
 
   it('opens the country on its own map, counting the states visited', async () => {

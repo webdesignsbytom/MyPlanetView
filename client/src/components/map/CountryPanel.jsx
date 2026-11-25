@@ -25,6 +25,7 @@ import CountryPlannedTrips from './CountryPlannedTrips';
 import MomentList from '@/components/moments/MomentList';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import PrintDownload from '@/components/photos/PrintDownload';
+import ShareShow from '@/components/shows/ShareShow';
 import TravelDesk from '@/components/offers/TravelDesk';
 import FormField from '@/components/ui/FormField';
 // Utils
@@ -455,6 +456,10 @@ function CountryPanel({
         {parent && canPlanTrip ? <MapActionButton onClick={() => onPlanTrip(code)}>Plan a trip</MapActionButton> : null}
         {!parent && (canEdit || locked) && photoSource?.mapId && photos.photos.length ? (
           <PrintDownload inMapPanel fill scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
+        ) : null}
+        {/* Some of its photos as a slideshow with its own link (25 Nov 2026): editors, verified */}
+        {!parent && canEdit && photoSource?.mapId && photos.photos.length ? (
+          <ShareShow inMapPanel fill mapId={photoSource.mapId} source={photoFilters} defaultTitle={country.name} />
         ) : null}
         <TravelDesk
           inMapPanel

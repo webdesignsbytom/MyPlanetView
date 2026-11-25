@@ -144,6 +144,13 @@ const CASES = [
   ['quickFillVisits', () => travelApi.quickFillVisits('m1', ['FR', 'PE']), 'post', ['/api/maps/m1/visits/quick-fill', { countryCodes: ['FR', 'PE'] }]],
   ['getPassport', () => travelApi.getPassport({ mapId: 'm1' }), 'get', ['/api/maps/m1/passport']],
   ['getPassport', () => travelApi.getPassport({ shareCode: 'ABC' }, { travellerId: 't1' }), 'get', ['/api/shared/ABC/passport?traveller=t1']],
+  // A traveller's passport photo and signature (25 Nov 2026)
+  [
+    'updateTravellerPassport',
+    () => travelApi.updateTravellerPassport('m 1', 't1', { signature: 'M1 1L2 2' }),
+    'patch',
+    ['/api/maps/m%201/travellers/t1/passport', { signature: 'M1 1L2 2' }],
+  ],
   ['getBadges', () => travelApi.getBadges({ mapId: 'm1' }), 'get', ['/api/maps/m1/badges']],
   ['getBadges', () => travelApi.getBadges({ shareCode: 'ABC' }), 'get', ['/api/shared/ABC/badges']],
   // Life's One Shots (24 Nov 2026)

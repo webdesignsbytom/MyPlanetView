@@ -123,6 +123,42 @@ describe('Slideshow', () => {
     expect(useWakeLock).toHaveBeenLastCalledWith(false);
   });
 
+  // A shared slideshow (25 Nov 2026; docs/API.md "Photo slideshows")
+  describe('a shared slideshow', () => {
+    const openShow = (props = {}) =>
+      open({ source: { showCode: 'SPN2-SHW8-TRP5' }, title: 'Our summer', intro: 'Our summer', photoCount: 3, startSpeed: 8, endNote: <a href='/sign-up'>Make your own</a>, ...props });
+
+    it('opens on its title card, plays its own photos with no moments, and ends with its note', () => {
+      openShow();
+      expect(kind()).toBe('intro');
+      expect(stage().textContent).toContain('Our summer');
+      expect(stage().textContent).toContain('3 photos');
+      expect(useSlideshowPhotos.mock.calls[0][0]).toMatchObject({ showCode: 'SPN2-SHW8-TRP5', order: 'taken' });
+      expect(useSlideshowMoments.mock.calls[0][0]).toMatchObject({ enabled: false });
+      for (let i = 0; i < 4; i++) fireEvent.keyDown(document, { key: 'ArrowRight' });
+      expect(kind()).toBe('end');
+      expect(screen.getByText('Make your own').getAttribute('href')).toBe('/sign-up');
+    });
+
+    it('starts at its own speed, unless this browser has one of its own', () => {
+      openShow();
+      expect(screen.getByLabelText('8 seconds a photo').getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('keeps the viewer’s own speed', () => {
+      localStorage.setItem('mpv:slideshowSpeed', '3');
+      openShow();
+      expect(screen.getByLabelText('3 seconds a photo').getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('moves on from its title card after at most 3 s', () => {
+      vi.useFakeTimers();
+      openShow();
+      act(() => vi.advanceTimersByTime(3100));
+      expect(slideId()).toBe('p1');
+    });
+  });
+
   it('remembers the chosen speed in this browser', () => {
     open();
     expect(screen.getByLabelText('5 seconds a photo').getAttribute('aria-pressed')).toBe('true');

@@ -51,6 +51,9 @@ export const embedPath = (code) => `/embed/${encodeURIComponent(code)}`;
 // A "Guess where I was" game (23 Nov 2026): anyone with its link plays, no sign-in
 export const GUESS_PAGE_URL = '/guess/:code';
 export const guessPath = (code) => `/guess/${encodeURIComponent(code)}`;
+// A slideshow of chosen photos (25 Nov 2026): anyone with its link watches it, no sign-in
+export const SHOW_PAGE_URL = '/show/:code';
+export const showPath = (code) => `/show/${encodeURIComponent(code)}`;
 /** Is this address a framed map? (App shows no cookie pop-up there: it's someone else's page.) */
 export const isEmbedPath = (pathname) => String(pathname).toLowerCase().startsWith(`${EMBED_PAGE_URL.split('/:')[0]}/`);
 export const INVITE_PAGE_URL = '/invite/:token'; // accept an emailed invite
@@ -125,6 +128,7 @@ export const CLIENT_ONLY_ROUTE_PREFIXES = [
   SHARED_PAGE_URL.split('/:')[0],
   EMBED_PAGE_URL.split('/:')[0],
   GUESS_PAGE_URL.split('/:')[0],
+  SHOW_PAGE_URL.split('/:')[0],
   INVITE_PAGE_URL.split('/:')[0],
   CHALLENGES_PAGE_URL,
   GIFTS_PAGE_URL,
@@ -142,6 +146,8 @@ export const ANALYTICS_EXCLUDED_PREFIXES = [
   EMBED_PAGE_URL.split('/:')[0],
   // A game's code: its players' guesses and names
   GUESS_PAGE_URL.split('/:')[0],
+  // A slideshow's code: someone's own photos
+  SHOW_PAGE_URL.split('/:')[0],
   CHALLENGE_JOIN_PAGE_URL.split('/:')[0],
   // A gift's code is worth a year of a plan
   GIFT_PAGE_URL.split('/:')[0],
@@ -164,6 +170,7 @@ export const ANALYTICS_REDACTED_ROUTES = [
   SHARED_PAGE_URL,
   EMBED_PAGE_URL,
   GUESS_PAGE_URL,
+  SHOW_PAGE_URL,
   INVITE_PAGE_URL,
   RESET_PASS_PAGE_URL,
   VERIFY_EMAIL_PAGE_URL,

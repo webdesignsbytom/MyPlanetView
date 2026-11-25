@@ -39,6 +39,7 @@ import {
   SHARED_PAGE_URL,
   EMBED_PAGE_URL,
   GUESS_PAGE_URL,
+  SHOW_PAGE_URL,
   isEmbedPath,
   INVITE_PAGE_URL,
   CHALLENGES_PAGE_URL,
@@ -95,6 +96,7 @@ import {
   SharedPage,
   EmbedPage,
   GuessPage,
+  ShowPage,
   InviteAcceptPage,
   ChallengesPage,
   ChallengePage,
@@ -338,6 +340,7 @@ function App() {
           <Route path={SHARED_PAGE_URL} element={<SharedPage />} />
           <Route path={EMBED_PAGE_URL} element={<EmbedPage />} />
           <Route path={GUESS_PAGE_URL} element={<GuessPage />} />
+          <Route path={SHOW_PAGE_URL} element={<ShowPage />} />
           <Route path={SHARED_PASSPORT_PAGE_URL} element={<PassportPage />} />
           <Route path={INVITE_PAGE_URL} element={<InviteAcceptPage />} />
 

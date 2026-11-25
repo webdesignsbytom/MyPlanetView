@@ -7,9 +7,17 @@ import { createMapEvent } from '../event/travelUtils.js';
 import { canEdit, canView } from '../utils/access.js';
 import { isUuid } from '../utils/travelValidation.js';
 import { GOALS_PER_MAP, changesWhatsAsked, parseGoalInput } from '../utils/goals.js';
-import { buildPassport } from '../services/travel/passport.js';
+import { buildPassport, passportTravellerView, travellingSinceByTraveller } from '../services/travel/passport.js';
 import { mapBadges, mapGoals, oneGoalView } from '../services/travel/achievements.js';
-import { deleteLandmarkCover, findConfirmedMatch, upsertLandmarkCover } from '../domain/passport.js';
+import {
+  deleteLandmarkCover,
+  findConfirmedMatch,
+  findPassportTraveller,
+  findPortraitCandidate,
+  updateTravellerPassportInDB,
+  upsertLandmarkCover,
+} from '../domain/passport.js';
+import { parsePortrait, parseSignature } from '../utils/travellerPassport.js';
 import { createGoalInDB, deleteGoalInDB, findGoal, updateGoalInDB } from '../domain/achievements.js';
 import { continentsByCode } from './helpers/countries.js';
 import { badRequest, conflict, forbidden, handler, loadMap, notFound } from './helpers/travel.js';
@@ -82,6 +90,45 @@ export const clearStampPhotoHandler = handler(D, 'Clear stamp photo', async (req
 });
 
 // Badges
+
+// A traveller's passport page (25 Nov 2026, the user's wish; docs/API.md "Passport"): their
+// photo, one of the map's own photos (not a video, not hidden) with its crop, and their drawn
+// signature; null takes either off. The map's editors, verified (it's content).
+// PATCH /maps/:mapId/travellers/:travellerId/passport { photo?, signature? } -> { traveller }
+export const updateTravellerPassportHandler = handler(D, 'Update traveller passport', async (req, res) => {
+  const loaded = await editableMap(req, res);
+  if (!loaded) return undefined;
+  const { map } = loaded;
+  const { travellerId } = req.params;
+  if (!isUuid(travellerId) || !(await findPassportTraveller(map.id, travellerId))) {
+    return notFound(req, res, D, EVENT_MESSAGES.travellerNotFound);
+  }
+  const body = req.body || {};
+  const data = {};
+  if (body.photo !== undefined) {
+    const portrait = parsePortrait(body.photo);
+    if (portrait.error) return badRequest(req, res, D, EVENT_MESSAGES.passportPhotoInvalid);
+    if (portrait.value) {
+      const photo = await findPortraitCandidate(map.id, portrait.value.photoId);
+      if (!photo || photo.kind !== 'PHOTO' || photo.hidden) return badRequest(req, res, D, EVENT_MESSAGES.passportPhotoInvalid);
+      const { photoId, focusX, focusY, zoom } = portrait.value;
+      Object.assign(data, { portraitPhotoId: photoId, portraitFocusX: focusX, portraitFocusY: focusY, portraitZoom: zoom });
+    } else {
+      Object.assign(data, { portraitPhotoId: null, portraitFocusX: null, portraitFocusY: null, portraitZoom: null });
+    }
+  }
+  if (body.signature !== undefined) {
+    const signature = parseSignature(body.signature);
+    if (signature.error) return badRequest(req, res, D, EVENT_MESSAGES.signatureInvalid);
+    data.signature = signature.value;
+  }
+  if (!Object.keys(data).length) return badRequest(req, res, D, EVENT_MESSAGES.malformedData);
+
+  await updateTravellerPassportInDB(travellerId, data);
+  const [row, since] = await Promise.all([findPassportTraveller(map.id, travellerId), travellingSinceByTraveller(map.id)]);
+  logEvent(createMapEvent({ user: req.user, action: 'Traveller Passport Update Success', id: map.id, detail: `traveller=${travellerId}` }));
+  return sendDataResponse(res, 200, { traveller: await passportTravellerView(row, { editor: true, since: since.get(travellerId) ?? null }) });
+});
 
 export const getBadgesHandler = handler(D, 'Get badges', async (req, res) => {
   const loaded = await viewableMap(req, res);

@@ -36,6 +36,7 @@ export const createThemeEvent = mk(DOMAINS.themes);
 export const createChallengeEvent = mk(DOMAINS.challenges);
 // "Guess where I was" games and the flight log (23 Nov 2026)
 export const createGuessGameEvent = mk(DOMAINS.guessGames);
+export const createPhotoShowEvent = mk(DOMAINS.photoShows);
 export const createFlightEvent = mk(DOMAINS.flights);
 // Feedback (docs/API.md "Feedback"): ids, kinds and statuses only, never what was written
 export const createFeedbackEvent = mk(DOMAINS.feedback);

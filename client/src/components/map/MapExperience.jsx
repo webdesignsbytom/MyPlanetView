@@ -40,6 +40,7 @@ import { LANDMARK_MIN_ZOOM } from './LandmarkPins';
 import ErrorBoundary from '@/utils/error/ErrorBoundary';
 // Panels, fetched when first wanted (lazyMapPanels.js)
 import {
+  AwardShareDialog,
   BadgesGoalsPanel,
   CelebrationDialog,
   CountryListPanel,
@@ -257,6 +258,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const [payingForMap, setPayingForMap] = useState(false);
   // A share card being made (the stats panel's "Share a picture of my map"): its options
   const [shareCard, setShareCard] = useState(null);
+  // What the award pop-up announced, while its "Share a picture" dialog is open (25 Nov 2026)
+  const [awardShare, setAwardShare] = useState(null);
   // The poster dialog's options (mapPosterOptions), while it's open
   const [poster, setPoster] = useState(null);
   // "Guess where I was": the map's games for friends (23 Nov 2026)
@@ -467,6 +470,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     dismissNews();
     dispatch({ type: 'open', panel: 'badges' });
   }, [dismissNews]);
+  // The pop-up's news as a picture to post: it goes, and the dialog keeps what it said
+  const shareAward = useCallback(
+    (news) => {
+      setAwardShare(news);
+      dismissNews();
+    },
+    [dismissNews],
+  );
 
   const visitsByCode = useMemo(() => Object.fromEntries(map.visits.map((v) => [v.countryCode, v.status])), [map.visits]);
   // The visits as they stand, for the celebration's handlers (below) to read
@@ -958,6 +969,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onAddPhotos={canEdit ? () => dispatch({ type: 'upload' }) : null}
             // The whole map's slideshow, over the album (its own stamp until 24 Nov 2026, the user's wish)
             onPlay={() => dispatch({ type: 'play' })}
+            // "Share a slideshow" of photos chosen from the album, with its own link (25 Nov 2026): editors
+            showMapId={canEdit ? map.id : null}
             onClose={close}
           />
         );
@@ -1342,7 +1355,13 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         ) : null}
 
         {/* A badge earned or a goal reached: said once, politely */}
-        <AwardNews news={achievements.news} onOpen={openBadges} onDismiss={dismissNews} />
+        <AwardNews
+          news={achievements.news}
+          onOpen={openBadges}
+          onDismiss={dismissNews}
+          // A picture to post: the map's own people, never a share link
+          onShare={canEdit && !shareCode ? shareAward : null}
+        />
 
         <MapHoverLayer
           hover={hover}
@@ -1407,6 +1426,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         {recapYear ? (
           <MapOverlayBoundary onClose={() => setRecapYear(null)}>
             <YearRecapDialog map={map} design={design} year={recapYear} onClose={() => setRecapYear(null)} />
+          </MapOverlayBoundary>
+        ) : null}
+
+        {awardShare ? (
+          <MapOverlayBoundary onClose={() => setAwardShare(null)}>
+            <AwardShareDialog news={awardShare} badges={achievements.badges || []} map={map} design={design} onClose={() => setAwardShare(null)} />
           </MapOverlayBoundary>
         ) : null}
 

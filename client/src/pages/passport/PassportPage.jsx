@@ -1,7 +1,9 @@
-import React, { Suspense, lazy, useCallback, useEffect, useId, useState } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { Link, generatePath, useLocation, useParams, useSearchParams } from 'react-router-dom';
 // Api
 import { getPassport } from '@/api/travelApi';
+// Hooks
+import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 // Constants
 import { MAP_PASSPORT_PAGE_URL, SHARED_PAGE_URL, SHARED_PASSPORT_PAGE_URL, mapPath } from '@/utils/constants/routes';
 // Components
@@ -16,6 +18,9 @@ import BadgeOwnerSwitch from '@/components/achievements/BadgeOwnerSwitch';
 
 // Opened from a stamp, and only then fetched
 const PhotoViewer = lazy(() => import('@/components/photos/PhotoViewer'));
+// A traveller's photo and signature (25 Nov 2026), fetched when one is opened
+const TravellerPhotoDialog = lazy(() => import('@/components/passport/TravellerPhotoDialog'));
+const TravellerSignatureDialog = lazy(() => import('@/components/passport/TravellerSignatureDialog'));
 
 /**
  * A map's passport (docs/API.md, "Passport"): /maps/:mapId/passport for anyone with a role
@@ -27,6 +32,9 @@ const PhotoViewer = lazy(() => import('@/components/photos/PhotoViewer'));
  * linked), and the book has only their places and stamps, their name on its cover.
  * Opened from a celebration's "Open passport" (24 Nov 2026, the user's wish), the link's state
  * names the place (`openAt`): the book opens from its cover straight to that place's page.
+ * The map's editors give each traveller a passport photo and a signature on the travellers page
+ * (25 Nov 2026, the user's wish: TravellerPhotoDialog, TravellerSignatureDialog); never through
+ * a share link, and an unverified address is told why it can't yet.
  */
 function PassportPage() {
   const { mapId, code } = useParams();
@@ -40,6 +48,9 @@ function PassportPage() {
   const [travellers, setTravellers] = useState([]);
   const [error, setError] = useState(null);
   const [photoId, setPhotoId] = useState(null);
+  // A traveller's photo or signature being changed: { kind: 'photo'|'signature', traveller }
+  const [editing, setEditing] = useState(null);
+  const mustVerifyEmail = useMustVerifyEmail();
 
   // Another map: start afresh (another traveller keeps the book on show while theirs loads)
   useEffect(() => {
@@ -75,6 +86,24 @@ function PassportPage() {
   const chooseHolder = (id) => setSearchParams(id ? { traveller: id } : {}, { replace: true });
 
   const openPhoto = useCallback((id) => setPhotoId(id), []);
+  const canEditTravellers = Boolean(passport?.map.canEdit) && !shareCode;
+  const travellerEdit = useMemo(
+    () =>
+      canEditTravellers
+        ? {
+            onEditPhoto: (traveller) => setEditing({ kind: 'photo', traveller }),
+            onEditSignature: (traveller) => setEditing({ kind: 'signature', traveller }),
+            locked: mustVerifyEmail,
+          }
+        : null,
+    [canEditTravellers, mustVerifyEmail],
+  );
+  // The traveller as saved, in the book and the switch at once
+  const travellerSaved = useCallback((saved) => {
+    const merge = (list) => list.map((t) => (t.id === saved.id ? { ...t, ...saved } : t));
+    setPassport((current) => (current ? { ...current, travellers: merge(current.travellers) } : current));
+    setTravellers(merge);
+  }, []);
   const backTo = shareCode ? generatePath(SHARED_PAGE_URL, { code: shareCode }) : mapPath(mapId);
 
   return (
@@ -117,13 +146,22 @@ function PassportPage() {
           </PaperCard>
         ) : null}
         {passport ? (
-          <PassportBook passport={passport} onOpenPhoto={openPhoto} openAt={typeof openAt === 'string' ? openAt : null} />
+          <PassportBook passport={passport} onOpenPhoto={openPhoto} openAt={typeof openAt === 'string' ? openAt : null} travellerEdit={travellerEdit} />
         ) : null}
       </AppPageShell>
 
       {photoId ? (
         <Suspense fallback={null}>
           <PhotoViewer photoId={photoId} shareCode={shareCode} onClose={() => setPhotoId(null)} />
+        </Suspense>
+      ) : null}
+      {editing && passport ? (
+        <Suspense fallback={null}>
+          {editing.kind === 'photo' ? (
+            <TravellerPhotoDialog mapId={passport.map.id} traveller={editing.traveller} onSaved={travellerSaved} onClose={() => setEditing(null)} />
+          ) : (
+            <TravellerSignatureDialog mapId={passport.map.id} traveller={editing.traveller} onSaved={travellerSaved} onClose={() => setEditing(null)} />
+          )}
         </Suspense>
       ) : null}
     </>

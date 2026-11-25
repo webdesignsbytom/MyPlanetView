@@ -36,6 +36,9 @@ export const SHARE_CARD_COLOURS = Object.freeze({
     gold: Object.freeze({ face: '#e3b53d', rim: '#8a6a12' }),
   }),
   ribbon: Object.freeze(['#991b1b', '#ef4444']),
+  // A badge's luggage sticker (25 Nov 2026; BadgeSticker's look): the double ring in poster
+  // red on parchment, the icon and number in the deep red, the tick's disc and its mark
+  sticker: Object.freeze({ ring: '#ef4444', face: '#dcbc90', ink: '#991b1b', tick: '#ef4444', tickInk: '#ffffff' }),
 });
 
 // The map poster's two looks (utils/poster/drawMapPoster.js; 22 Nov 2026), fixed for print

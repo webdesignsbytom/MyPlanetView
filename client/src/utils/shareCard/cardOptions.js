@@ -1,7 +1,12 @@
 // What goes on a share card (drawShareCard.js): a map's, from what the map page already has.
 import { countsAsVisited } from '@/utils/map/visitStatus';
-import { COLLECTION_TIER_LABELS } from '@/utils/achievements/collections';
+import { COLLECTION_TIER_LABELS, collectionPlaces, parseCollectionKey } from '@/utils/achievements/collections';
+import { badgeWords } from '@/utils/achievements/badges';
+import { badgeIcon } from '@/utils/achievements/badgeIcons';
+import { goalName, regionCountryCodes, regionName } from '@/utils/achievements/goals';
 import { oneShotCounts } from '@/utils/oneShots/oneShotRules';
+import { formatDay } from '@/utils/functions/dates';
+import { iconShape } from './iconShape';
 
 const word = (n, one, many) => (n === 1 ? one : many);
 
@@ -123,4 +128,84 @@ export function oneShotsCardOptions(map, ticks = []) {
     shareText: `Life’s One Shots so far: ${counts.WILDLIFE} ${word(counts.WILDLIFE, 'animal', 'animals')}, ${counts.WONDERS} ${word(counts.WONDERS, 'wonder', 'wonders')} and ${counts.JOURNEYS} ${word(counts.JOURNEYS, 'journey', 'journeys')}.`,
     dialogTitle: 'Share Life’s One Shots',
   };
+}
+
+/** A badge's first sentence: what it's for, without the small print ("Antarctica and the poles count apart."). */
+const firstSentence = (text) => /^.*?[.!?](?=\s|$)/.exec(String(text || '').trim())?.[0] ?? String(text || '').trim();
+
+/**
+ * The card of a badge just earned (25 Nov 2026, the user's wish: share it from the award
+ * pop-up): its sticker drawn big where a map card's map goes, its name, what it's for, the
+ * day it was earned and the map's numbers. `badge` is the badges reply's (`key`, `group`,
+ * `earnedAt`), or `{ key }` alone.
+ */
+export function badgeCardOptions(badge, map = null) {
+  const words = badgeWords(badge.key);
+  const countries = map?.stats?.countries ?? 0;
+  return {
+    kicker: badge.earnedAt ? `Badge earned ${formatDay(badge.earnedAt)}` : 'New badge',
+    title: words.name,
+    badge: { icon: iconShape(badgeIcon(badge)), short: words.short || '' },
+    note: firstSentence(words.description),
+    highlight: [],
+    stats: mapCardStats(map?.stats),
+    fileName: `my-planet-view-badge-${String(badge.key).toLowerCase().replace(/[^a-z0-9]+/g, '-')}.png`,
+    shareText: `New badge on my travel map: ${words.name}! ${countries} ${word(countries, 'country', 'countries')} so far.`,
+    dialogTitle: 'Share your badge',
+  };
+}
+
+/**
+ * The card of a goal just reached (25 Nov 2026): its places coloured in (a list's places, a
+ * region's countries been to, else every place visited or lived in), close up for a list or a
+ * region, its name, the day and its numbers. `map` gives the visits, numbers and the UK's
+ * split, `design` the shown design's colours.
+ */
+export function goalCardOptions(goal, map = null, design = null) {
+  const { have = 0, need = 0 } = goal.progress || {};
+  const splitUk = Boolean(map?.splitUk);
+  const visited = (map?.visits || []).filter((visit) => countsAsVisited(visit.status)).map((visit) => visit.countryCode);
+  const [countries, continents] = mapCardStats(map?.stats);
+  const counts = [countries, continents].filter(Boolean);
+  let highlight = visited;
+  let stats = mapCardStats(map?.stats);
+  if (goal.kind === 'COUNTRY_LIST') {
+    highlight = goal.countryCodes || [];
+    stats = [{ value: need, label: word(need, 'place on the list', 'places on the list') }, ...counts];
+  } else if (goal.kind === 'REGION') {
+    const been = new Set(visited);
+    highlight = goal.progress?.done || regionCountryCodes(goal.region, splitUk).filter((code) => been.has(code));
+    stats = [{ value: need, label: `${word(need, 'country', 'countries')} in ${regionName(goal.region).replace(/^The /, 'the ')}` }, ...counts];
+  } else if (goal.kind === 'LANDMARK_COUNT') {
+    stats = [{ value: have, label: word(have, 'landmark stamped', 'landmarks stamped') }, ...counts];
+  }
+  const name = goalName(goal);
+  return {
+    kicker: goal.achievedAt ? `Goal reached ${formatDay(goal.achievedAt)}` : 'Goal reached',
+    title: name,
+    highlight,
+    stats,
+    splitUk,
+    colours: design?.countries ?? null,
+    // A list's or a region's places close up; a count is the whole world's
+    mapView: goal.kind === 'COUNTRY_LIST' || goal.kind === 'REGION' ? 'fit' : 'world',
+    fileName: 'my-planet-view-goal.png',
+    shareText: `Goal reached on my travel map: ${name}!`,
+    dialogTitle: 'Share your goal',
+  };
+}
+
+/**
+ * The card of one item of the award pop-up's news (useAchievements: `{ type: 'badge', key }`
+ * or `{ type: 'goal', goal }`): a goal's, a country collection's medal (from the place's
+ * tiers in `badges`, the badges reply), else the badge's sticker.
+ */
+export function awardCardOptions(item, { badges = [], map = null, design = null } = {}) {
+  if (item.type === 'goal') return goalCardOptions(item.goal, map, design);
+  const collection = parseCollectionKey(item.key);
+  if (collection) {
+    const place = collectionPlaces(badges).find((entry) => entry.place === collection.place);
+    if (place) return collectionCardOptions({ ...place, best: collection.tier });
+  }
+  return badgeCardOptions((badges || []).find((badge) => badge.key === item.key) || { key: item.key }, map);
 }

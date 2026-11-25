@@ -28,7 +28,7 @@ describe('CLIENT_ONLY_ROUTE_PREFIXES', () => {
       [
         '/admin', '/account', '/login', '/sign-up', '/forgot-password', '/verify-email-address', '/reset-password',
         '/down-for-maintenance', '/map', '/maps', '/trips', '/welcome', '/shared', '/invite', '/challenges', '/gifts',
-        '/gift', '/import', '/unsubscribe', '/compare', '/embed', '/guess',
+        '/gift', '/import', '/unsubscribe', '/compare', '/embed', '/guess', '/show',
       ].sort(),
     );
   });
@@ -49,7 +49,7 @@ describe('CLIENT_ONLY_ROUTE_PREFIXES', () => {
 describe('the analytics lists', () => {
   it('pauses analytics on the pages whose address holds a secret', () => {
     expect([...ANALYTICS_EXCLUDED_PREFIXES].sort()).toEqual(
-      ['/shared', '/embed', '/guess', '/challenges/join', '/gift', '/unsubscribe', '/invite', '/reset-password', '/verify-email-address'].sort(),
+      ['/shared', '/embed', '/guess', '/show', '/challenges/join', '/gift', '/unsubscribe', '/invite', '/reset-password', '/verify-email-address'].sort(),
     );
   });
 
@@ -77,6 +77,7 @@ describe('the path helpers', () => {
     expect(routes.sharedPath('K7QX M2PA')).toBe('/shared/K7QX%20M2PA');
     expect(routes.embedPath('K7QX-M2PA')).toBe('/embed/K7QX-M2PA');
     expect(routes.guessPath('GWHR-2WAS')).toBe('/guess/GWHR-2WAS');
+    expect(routes.showPath('SPN2-SHW8')).toBe('/show/SPN2-SHW8');
     expect(routes.isEmbedPath('/embed/K7QX-M2PA')).toBe(true);
     expect(routes.isEmbedPath('/EMBED/K7QX-M2PA')).toBe(true);
     expect(routes.isEmbedPath('/embedded')).toBe(false);

@@ -15,3 +15,6 @@ export function newsText(news) {
     .filter(Boolean)
     .join(' ');
 }
+
+/** One item's name: the badge's ("Asia", "Silver for Malta") or the goal's ("Our bucket list"). */
+export const newsItemName = (item) => (item.type === 'goal' ? goalName(item.goal) : badgeWords(item.key).name);

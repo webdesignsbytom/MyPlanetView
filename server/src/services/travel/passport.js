@@ -18,6 +18,7 @@ import {
   findStamps,
   findThumbKeys,
   findTravellerTravel,
+  findTravellerTrips,
   findVisitsForPassport,
 } from '../../domain/passport.js';
 import { findMapSplitUk } from '../../domain/maps.js';
@@ -27,6 +28,65 @@ import { landmarkPlace, placeOnMap } from '../../utils/ukNations.js';
 import { loadMapPlan } from './plans.js';
 import { planOf } from '../../utils/constants/plans.js';
 import { earliestOf, passportPageOrder } from '../../utils/passportOrder.js';
+import { travellingSince } from '../../utils/travellerPassport.js';
+import { homeOf } from '../../utils/travelStats.js';
+
+/**
+ * The passport photo a traveller's page shows (25 Nov 2026): the map photo chosen for it, with
+ * its crop (the DISPLAY copy signed, as a photo's; a hidden one for editors only), else the
+ * picture on their own account (a linked traveller's), else null (their initials).
+ * -> `{ source: 'MAP'|'ACCOUNT', photoId, url, width, height, focusX, focusY, zoom }` or null
+ */
+async function portraitOf(row, editor) {
+  const photo = row.portraitPhoto;
+  const key = photo?.variants?.[0]?.media?.key;
+  if (photo && key && photo.kind === 'PHOTO' && (editor || !photo.hidden)) {
+    return {
+      source: 'MAP',
+      photoId: photo.id,
+      url: await signPhotoUrl(key),
+      width: photo.width ?? null,
+      height: photo.height ?? null,
+      focusX: row.portraitFocusX ?? 0.5,
+      focusY: row.portraitFocusY ?? 0.5,
+      zoom: row.portraitZoom ?? 1,
+    };
+  }
+  if (row.user?.image) return { source: 'ACCOUNT', photoId: null, url: row.user.image, width: null, height: null, focusX: 0.5, focusY: 0.5, zoom: 1 };
+  return null;
+}
+
+/**
+ * A traveller as their passport page shows them (docs/API.md "Passport"; 25 Nov 2026, the
+ * user's wish: "improve passport page for user avatars and info"): their photo (portraitOf),
+ * where they were born and their favourite country, the date of birth for editors only (as the
+ * map's reply), the day they were added to the map (the "date of issue"), when they started
+ * travelling (`since`: their first trip that isn't still planned) and their signature. Never
+ * the account they're linked to.
+ */
+export async function passportTravellerView(row, { editor, since = null }) {
+  return {
+    id: row.id,
+    name: row.name,
+    birthCountryCode: row.birthCountryCode ?? null,
+    favouriteCountryCode: row.favouriteCountryCode ?? null,
+    ...(editor ? { birthDate: toDateOnly(row.birthDate) } : {}),
+    issuedOn: toDateOnly(row.createdAt),
+    travellingSince: toDateOnly(since),
+    photo: await portraitOf(row, editor),
+    signature: row.signature ?? null,
+  };
+}
+
+/** Each traveller's first trip that isn't still planned: Map travellerId -> Date. */
+export async function travellingSinceByTraveller(mapId) {
+  const byTraveller = new Map();
+  for (const row of await findTravellerTrips(mapId)) {
+    if (!byTraveller.has(row.travellerId)) byTraveller.set(row.travellerId, []);
+    byTraveller.get(row.travellerId).push(row.trip);
+  }
+  return new Map([...byTraveller].map(([id, trips]) => [id, travellingSince(trips)]));
+}
 
 /**
  * One traveller's facts, in the shape the passport reads from loadMapFacts: `visited` is the
@@ -79,12 +139,13 @@ async function travellerFacts(mapId, traveller, { includeHidden }) {
  */
 export async function buildPassport(mapId, role, { travellerId = null } = {}) {
   const editor = canEdit(role);
-  const [map, travellers, visits, covers, mapPlan] = await Promise.all([
+  const [map, travellers, visits, covers, mapPlan, since] = await Promise.all([
     findPassportMap(mapId),
     findPassportTravellers(mapId),
     findVisitsForPassport(mapId),
     findLandmarkCovers(mapId),
     loadMapPlan(mapId),
+    travellingSinceByTraveller(mapId),
   ]);
   if (!map) return null;
   const holder = travellerId ? (travellers.find((t) => t.id === travellerId) ?? null) : null;
@@ -187,9 +248,13 @@ export async function buildPassport(mapId, role, { travellerId = null } = {}) {
       plan: { id: planOf(mapPlan?.plan).id, name: planOf(mapPlan?.plan).name },
       // Whose passport this is: one traveller's own, or null for the whole map's
       traveller: holder ? { id: holder.id, name: holder.name } : null,
+      // Home, on every traveller's page (the map's, else the owner's birthplace: utils/travelStats.js)
+      homeCountryCode: homeOf({ homeCountryCode: map.homeCountryCode, ownerId: map.ownerId, travellers }),
+      // Whether the caller may change the travellers' photos and signatures (the map's editors)
+      canEdit: editor,
     },
-    // Without the account each is linked to (read only for their ticks)
-    travellers: travellers.map(({ userId: _userId, ...traveller }) => traveller),
+    // Each traveller's page (passportTravellerView), never the account they're linked to
+    travellers: await Promise.all(travellers.map((row) => passportTravellerView(row, { editor, since: since.get(row.id) ?? null }))),
     pages,
     totals: {
       countries: countries.length,

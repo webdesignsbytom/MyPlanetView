@@ -32,11 +32,12 @@ export const MOMENT_CARD_SECONDS = 6;
  * first; a show in date order) come as cards of their own before the first photo taken
  * after them: after the title card when the moment is in that photo's country, before it
  * otherwise. Photos with no date place none. `complete`: every page is in, so the moments
- * still to come go before the end card.
- * -> `[{ id, type: 'card', countryCode } | { id, type: 'moment', moment } | { id, type: 'photo', photo } | { id: 'end', type: 'end' }]`
+ * still to come go before the end card. `intro` (a shared slideshow's title; 25 Nov 2026)
+ * opens the show with a card of its own.
+ * -> `[{ id: 'intro', type: 'intro', title } | { id, type: 'card', countryCode } | { id, type: 'moment', moment } | { id, type: 'photo', photo } | { id: 'end', type: 'end' }]`
  */
-export function buildSlides(photos, { titleCards = false, complete = false, moments = [] } = {}) {
-  const slides = [];
+export function buildSlides(photos, { titleCards = false, complete = false, moments = [], intro = null } = {}) {
+  const slides = intro && photos.length ? [{ id: 'intro', type: 'intro', title: intro }] : [];
   const queue = [...moments];
   const takeDue = (day) => {
     const due = [];

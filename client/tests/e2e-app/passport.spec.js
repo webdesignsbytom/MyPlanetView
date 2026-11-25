@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, HOME_SHARE_CODE, MOCK_STORE_KEY, SAM_MAP, SAM_SHARE_CODE, openMap, openStats, openTool } from './fixtures.js';
+import { test, expect, HOME_MAP, HOME_SHARE_CODE, MOCK_STORE_KEY, SAM_MAP, SAM_SHARE_CODE, goInApp, openMap, openStats, openTool, signOut } from './fixtures.js';
 import { COUNTRIES } from '../../src/utils/map/countries.js';
 import { LOCAL_NAMES } from '../../src/utils/map/countryLocalNames.js';
 
@@ -39,7 +39,7 @@ test.describe('The passport', () => {
     await expect(book(page).getByRole('listitem')).toHaveText([/Charlie.*United Kingdom.*Japan/, /Alex.*Ireland.*Italy/]);
     // Each photo box as tall as the details beside it, down to their last line (24 Nov 2026)
     for (const card of await book(page).getByRole('listitem').all()) {
-      const [photo, details] = [await card.locator('[data-passport-photo]').boundingBox(), await card.locator('dl').boundingBox()];
+      const [photo, details] = [await card.locator('[data-passport-photo]').boundingBox(), await card.locator('[data-beside-photo]').boundingBox()];
       expect(Math.abs(photo.y - details.y)).toBeLessThan(1);
       expect(Math.abs(photo.y + photo.height - (details.y + details.height))).toBeLessThan(1);
     }
@@ -155,6 +155,79 @@ test.describe('The passport', () => {
 
     await pageList(page).selectOption({ label: '23. Totals' });
     await expect(book(page).getByRole('definition')).toHaveText(['20', '5 of 7', '0 of 5', '24', '21']);
+  });
+
+  // 25 Nov 2026, the user's wish: "improve passport page for user avatars and info"
+  test('an editor gives a traveller a passport photo and a signature, which the share link shows', { tag: '@phone' }, async ({ page }) => {
+    await openPassport(page);
+    // The map's link open to anyone, for the end (the seed's is for the people on it)
+    await page.evaluate((key) => {
+      const db = JSON.parse(localStorage.getItem(key));
+      db.maps.find((m) => m.id === 'map-home').linkAccess = 'ANYONE_WITH_LINK';
+      localStorage.setItem(key, JSON.stringify(db));
+    }, MOCK_STORE_KEY);
+    await page.reload();
+    await expect(pageStatus(page)).toHaveText(/^Page 1 of \d+: Cover$/);
+    await page.getByRole('button', { name: 'Next page' }).click();
+    const charlie = book(page).locator('[data-passport-traveller="trav-test"]');
+    // The details: home, when they started travelling, the day of issue, a passport number
+    await expect(charlie).toContainText('Date of birth14 Jan 1990');
+    await expect(charlie).toContainText('HomeUnited Kingdom');
+    await expect(charlie).toContainText(/Travelling since\d{4}/);
+    await expect(charlie).toContainText(/Passport no\.MP\d{7}/);
+    // No signature drawn yet: the name in handwriting
+    await expect(charlie.locator('[data-signature="name"]')).toHaveText('Charlie');
+
+    // A photo from the map's own, placed in the box
+    await charlie.getByRole('button', { name: 'Choose a photo of Charlie' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Charlie’s passport photo' });
+    await dialog.getByRole('button', { name: 'First morning in Rome' }).click();
+    await dialog.getByLabel('Zoom').fill('2');
+    await dialog.getByRole('group', { name: /passport photo: drag it/ }).press('ArrowLeft');
+    await dialog.getByRole('button', { name: 'Save the photo' }).click();
+    await expect(dialog).toBeHidden();
+    const photo = charlie.locator('[data-passport-photo="MAP"] img');
+    await expect(photo).toBeVisible();
+    await expect(photo).toHaveAttribute('style', /scale\(2\)/);
+    await expect(charlie.getByRole('button', { name: 'Change the photo of Charlie' })).toBeVisible();
+
+    // A signature drawn with the mouse (or a finger)
+    await charlie.getByRole('button', { name: 'Sign as Charlie' }).click();
+    const sign = page.getByRole('dialog', { name: 'Charlie’s signature' });
+    const pad = await sign.locator('[data-signature-pad]').boundingBox();
+    await page.mouse.move(pad.x + pad.width * 0.1, pad.y + pad.height * 0.7);
+    await page.mouse.down();
+    for (const [x, y] of [[0.2, 0.3], [0.3, 0.7], [0.45, 0.35], [0.6, 0.6], [0.85, 0.4]]) {
+      await page.mouse.move(pad.x + pad.width * x, pad.y + pad.height * y, { steps: 4 });
+    }
+    await page.mouse.up();
+    await sign.getByRole('button', { name: 'Save the signature' }).click();
+    await expect(sign).toBeHidden();
+    await expect(charlie.getByRole('img', { name: 'Charlie’s signature' })).toBeVisible();
+    await expect(charlie.getByRole('button', { name: 'Sign again as Charlie' })).toBeVisible();
+
+    // Through the map's share link: the photo and the signature, nothing to change (the owner
+    // keeps their role there, so still sees the date of birth)
+    const sharedTraveller = async (inApp = false) => {
+      if (inApp) {
+        await goInApp(page, `/shared/${HOME_SHARE_CODE}/passport`);
+        await expect(pageStatus(page)).toHaveText(/^Page 1 of \d+: Cover$/);
+      } else await openPassport(page, `/shared/${HOME_SHARE_CODE}/passport`);
+      await page.getByRole('button', { name: 'Next page' }).click();
+      return book(page).locator('[data-passport-traveller="trav-test"]');
+    };
+    let shared = await sharedTraveller();
+    await expect(shared.locator('[data-passport-photo="MAP"] img')).toBeVisible();
+    await expect(shared.getByRole('img', { name: 'Charlie’s signature' })).toBeVisible();
+    await expect(shared.getByRole('button')).toHaveCount(0);
+    // Anyone else with the link: the same, never the date of birth (a page load would sign the
+    // mock in again: move within the app)
+    await signOut(page);
+    shared = await sharedTraveller(true);
+    await expect(shared.locator('[data-passport-photo="MAP"] img')).toBeVisible();
+    await expect(shared.getByRole('img', { name: 'Charlie’s signature' })).toBeVisible();
+    await expect(shared).not.toContainText('Date of birth');
+    await expect(shared.getByRole('button')).toHaveCount(0);
   });
 
   test('a share link opens the passport read only; a trip’s link has none', async ({ page }) => {

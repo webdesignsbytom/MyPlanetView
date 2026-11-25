@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 // Api
 import { getPhotoPage } from '@/api/travelApi';
+import { getPhotoShowPage } from '@/api/photoShowsApi';
 // Utils
 import { SLIDE_PAGE_SIZE } from '@/utils/photos/slideshow';
 
@@ -13,11 +14,12 @@ const playable = (photo) => photo.kind !== 'VIDEO' || Boolean(photo.videoUrl);
  * The photos a slideshow plays (docs/API.md, "Slideshows"): a map's (`mapId`), a trip's
  * (`tripId`) or a share link's (`shareCode`), optionally one `country`'s, oldest taken
  * first (`order: 'taken'`) or shuffled by `seed` (`order: 'shuffle'`), each with its
- * display copy, a page at a time. `run` starts it again from the first page. `stale`: the
+ * display copy, a page at a time. A shared slideshow's (`showCode`, docs/API.md "Photo
+ * slideshows") plays in its own order where the others play oldest first. `run` starts it again from the first page. `stale`: the
  * server no longer had the last photo in its shuffled order (deleted or hidden meanwhile),
  * so the show has to start again.
  */
-export default function useSlideshowPhotos({ mapId, tripId, shareCode, country, order, seed, run = 0 }) {
+export default function useSlideshowPhotos({ mapId, tripId, shareCode, showCode, country, order, seed, run = 0 }) {
   const [state, setState] = useState(START);
   const generationRef = useRef(0);
 
@@ -26,7 +28,9 @@ export default function useSlideshowPhotos({ mapId, tripId, shareCode, country, 
       const generation = generationRef.current;
       setState((prev) => ({ ...prev, loading: true, error: null }));
       try {
-        const page = await getPhotoPage({ mapId, tripId, shareCode, country, order, seed, display: true, limit: SLIDE_PAGE_SIZE, cursor });
+        const page = showCode
+          ? await getPhotoShowPage(showCode, { order: order === 'shuffle' ? 'shuffle' : 'show', seed, cursor, limit: SLIDE_PAGE_SIZE })
+          : await getPhotoPage({ mapId, tripId, shareCode, country, order, seed, display: true, limit: SLIDE_PAGE_SIZE, cursor });
         if (generation !== generationRef.current) return;
         const photos = (page.photos || []).filter(playable);
         setState((prev) => ({
@@ -42,7 +46,7 @@ export default function useSlideshowPhotos({ mapId, tripId, shareCode, country, 
         setState((prev) => ({ ...prev, loading: false, stale, error: stale ? null : err.friendlyMessage || 'The photos could not be loaded.' }));
       }
     },
-    [mapId, tripId, shareCode, country, order, seed],
+    [mapId, tripId, shareCode, showCode, country, order, seed],
   );
 
   useEffect(() => {

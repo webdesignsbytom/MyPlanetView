@@ -16,17 +16,19 @@ The pictures in this folder are the real files the site made on 24 and 25 Nov 20
 | [Life's One Shots](#6-lifes-one-shots) | Life's One Shots → **Share a picture** | 1080 × 1350 PNG | Editors |
 | [Print or download photos](#7-print-or-download-the-photos) | A country's ticket → **Print or download** (also on trips and in Settings) | A zip of the original photos | Editors |
 | [Compare maps](#8-compare-two-maps) | Statistics → **Compare with another map** | Shown on the page only, no download | Signed-in people |
+| [A new badge or goal](#9-a-new-badge-or-goal) | The pop-up when a badge is earned or a goal reached → **Share a picture** | 1080 × 1350 PNG | Editors |
 
 None of these buttons appear on a share link (`/shared/...`), so someone viewing a shared map can't make pictures of it.
 
-## How the share pictures work (1, 3, 4, 5 and 6)
+## How the share pictures work (1, 3, 4, 5, 6 and 9)
 
-Five of these are "share cards". They all work the same way:
+Six of these are "share cards". They all work the same way:
 
 - **The size is 1080 × 1350 pixels**, a portrait 4:5 shape. That's Instagram's tallest feed post, and it suits WhatsApp and Stories too.
 - **The window draws it in the browser** and shows it straight away. Nothing is sent to our server.
 - **Where the browser can hand a file to other apps, there's a "Share" button.** That means phones, and some computers (Chrome and Edge on Windows). It opens the device's own share sheet (Instagram, WhatsApp, Messages and so on) with the picture attached.
 - **There's always "Save the picture"**, which downloads the PNG. On a computer that can't share files, it's the only button.
+- **The window shows the post as it will look** (since 25 Nov 2026): the picture with its words under it in a box ("Words to go with it"). People can change the words; **Share** sends them with the picture, and **Copy the words** copies them, because Instagram leaves out words handed to it, so they're pasted there instead.
 - **They show countries and numbers, never the person's photos.** The window says so.
 - **Every card has `myplanetview.com` printed at the bottom.** That's the advertising: every shared picture carries the address.
 - **The colours are fixed**, whatever map style is chosen. A map that has its own design (custom country colours) uses those colours on the card.
@@ -183,6 +185,26 @@ It's shown on the page only: there's no Share or Save button, so people would ha
 
 ![Compare picture](compare-picture.png)
 
+## 9. A new badge or goal
+
+**How:** when a badge is earned or a goal reached, a pop-up says so at the top of the map for 20 seconds → **Share a picture**. When several arrive at once ("New badges: South America and Six continents."), buttons at the top of the window choose which one to share.
+
+**What it shows:** for a badge, "Badge earned" and the day, its name, its sticker drawn big (the same sticker as in the badge suitcase: its icon, its number if it has one, and the tick), the map's three numbers, and what the badge is for. A country collection's medal shows the medal card (see 5). A goal shows its places on the map (close up for a list or a region, the whole world for a count) with "Goal reached" and its numbers.
+
+**Words to go with it:** "New badge on my travel map: South America! 21 countries so far." or "Goal reached on my travel map: Our bucket list!"
+
+**File:** `my-planet-view-badge-<badge>.png` (for example `my-planet-view-badge-continent-south-america.png`), `my-planet-view-goal.png`, or the medal's name.
+
+The sample: Peru marked visited on the demo map, which earned South America and Six continents at once.
+
+![The badge card](badge-card.png)
+
+<details><summary>The window it comes from</summary>
+
+![Share what you earned](badge-card-window.png)
+
+</details>
+
 ---
 
 ## Not pictures, but also ways to share
@@ -192,6 +214,7 @@ These hand over a link, not a file:
 - **The map's share link:** the Share stamp → sharing dialog → copy the link (`/shared/<code>`).
 - **A map on your website:** the sharing dialog → **On your website**, an `<iframe>` code for the person's own site or blog (`/embed/<code>`).
 - **Guess where I was:** Statistics → **Guess where I was: a game for friends**, a link to a photo-guessing game (`/guess/<code>`).
+- **A slideshow of chosen photos:** **Share a slideshow** in the photo album, a country's ticket or a trip's photos, a link that plays just the photos picked, starting with its title (`/show/<code>`). The map's share dialog lists them, to rename, give a new link or delete. Editors only.
 - **Welcome home → Send my map's link:** opens the sharing dialog.
 
 ## Things I noticed while making these

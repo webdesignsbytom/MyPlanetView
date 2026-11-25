@@ -462,6 +462,21 @@ function buildBaseSeed() {
         createdAt: daysAgo(6),
       },
     ],
+    // Slideshows of chosen photos (docs/API.md "Photo slideshows"): three of the test user's
+    // photos, shared by their own link
+    photoShows: [
+      {
+        id: 'show-home',
+        mapId: homeMap,
+        code: 'SPN2SHW8TRP5',
+        title: 'Our favourite photos',
+        photoIds: ['photo-colosseum', 'photo-eiffel', 'photo-dam'],
+        seconds: 5,
+        createdById: USER_ID,
+        createdAt: daysAgo(3),
+        updatedAt: daysAgo(3),
+      },
+    ],
     // Life's One Shots (24 Nov 2026): a puffin off Ireland, and the safari's
     oneShots: home.oneShots,
     // The flight log (docs/API.md "Flights"): every trip's flights

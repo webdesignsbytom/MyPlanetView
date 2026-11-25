@@ -33,6 +33,7 @@ import {
   SHARED_PAGE_URL,
   EMBED_PAGE_URL,
   GUESS_PAGE_URL,
+  SHOW_PAGE_URL,
   INVITE_PAGE_URL,
   CHALLENGES_PAGE_URL,
   CHALLENGE_PAGE_URL,
@@ -164,6 +165,12 @@ export const helmetData = {
   [GUESS_PAGE_URL]: {
     pageName: 'Guess where I was',
     desc: `A friend's travel photos: guess where each was taken, then make your own travel map on ${CompanyName}.`,
+    indexing: 'noindex,nofollow',
+  },
+
+  [SHOW_PAGE_URL]: {
+    pageName: 'A slideshow',
+    desc: `A slideshow of travel photos shared with you, made with ${CompanyName}.`,
     indexing: 'noindex,nofollow',
   },
 

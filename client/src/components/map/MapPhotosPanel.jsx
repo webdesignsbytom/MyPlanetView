@@ -8,6 +8,7 @@ import MapPanel from './MapPanel';
 import MapActionButton from './MapActionButton';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import PhotoAlbumViewer from '@/components/photos/PhotoAlbumViewer';
+import ShareShow from '@/components/shows/ShareShow';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { MAP_PHOTOS } from '@/utils/map/mapPhotoLists';
@@ -25,9 +26,10 @@ const countryOf = (photo) => (photo.countryCode ? countryName(photo.countryCode)
  * (`onAddPhotos`), and "Play my world" (`onPlay`, once there are photos; the toolbar's own stamp
  * until 24 Nov 2026, the user's wish: a shorter bar) plays the whole map's slideshow over it.
  * `photosVersion` goes up when photos change elsewhere (an upload, an edit, a delete), and the
- * list is fetched again.
+ * list is fetched again. `showMapId` (the map's editors) adds "Share a slideshow" of photos
+ * chosen from the album (ShareShow; 25 Nov 2026).
  */
-function MapPhotosPanel({ photoSource, photosVersion = 0, onAddPhotos = null, onPlay = null, onClose }) {
+function MapPhotosPanel({ photoSource, photosVersion = 0, onAddPhotos = null, onPlay = null, showMapId = null, onClose }) {
   const photos = usePhotoPage({ ...photoSource, ...MAP_PHOTOS });
   const { reload } = photos;
   // The photo showing in the viewer, by id (its place moves if the list reloads)
@@ -39,11 +41,12 @@ function MapPhotosPanel({ photoSource, photosVersion = 0, onAddPhotos = null, on
   }, [photosVersion, reload]);
   // Something to play: the slideshow of an empty map would show nothing
   const canPlay = Boolean(onPlay) && photos.photos.length > 0;
+  const canShareShow = Boolean(showMapId) && photos.photos.length > 0;
 
   return (
     <MapPanel wide title='Photo album' onClose={onClose}>
       {/* Full width on phones; side by side at the start of the wide panel elsewhere, not long red bars */}
-      {canPlay || onAddPhotos ? (
+      {canPlay || onAddPhotos || canShareShow ? (
         <div className='grid gap-2 md:grid-flow-col md:justify-start' data-album-actions=''>
           {canPlay ? (
             <MapActionButton onClick={onPlay}>
@@ -52,6 +55,7 @@ function MapPhotosPanel({ photoSource, photosVersion = 0, onAddPhotos = null, on
             </MapActionButton>
           ) : null}
           {onAddPhotos ? <MapActionButton onClick={onAddPhotos}>Add photos</MapActionButton> : null}
+          {canShareShow ? <ShareShow inMapPanel mapId={showMapId} source={{ ...photoSource, ...MAP_PHOTOS }} /> : null}
         </div>
       ) : null}
       <PhotoGrid

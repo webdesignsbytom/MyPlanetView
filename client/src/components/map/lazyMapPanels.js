@@ -62,6 +62,8 @@ export const CelebrationDialog = lazyPanel(() => import('./celebration/Celebrati
 export const OneShotsPanel = lazyPanel(() => import('@/components/oneShots/OneShotsPanel'));
 // A picture of the map to share (utils/shareCard/)
 export const ShareCardDialog = lazyPanel(() => import('@/components/shareCard/ShareCardDialog'));
+// A badge earned or a goal reached, as a picture to post (25 Nov 2026), from the award pop-up
+export const AwardShareDialog = lazyPanel(() => import('@/components/achievements/AwardShareDialog'));
 // "Where have you been?": ticking many countries at once (the first time a map loads, or the country list)
 export const QuickFillDialog = lazyPanel(() => import('./QuickFillDialog'));
 // The map as a printed poster (utils/poster/)

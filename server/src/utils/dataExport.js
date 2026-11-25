@@ -194,6 +194,8 @@ export function exportMapView(rows, { userId }) {
       source: f.source,
     })),
     guessGames: (map.guessGames ?? []).map((g) => ({ code: g.code, title: g.title, photoIds: g.photoIds, made: iso(g.createdAt) })),
+    // Slideshows shared by their own link (docs/API.md "Photo slideshows")
+    photoShows: (map.photoShows ?? []).map((s) => ({ code: s.code, title: s.title, photoIds: s.photoIds, seconds: s.seconds, made: iso(s.createdAt) })),
     // Life's One Shots ticked (the item's key names it: utils/constants/oneShots.js)
     oneShots: (map.oneShots ?? []).map((o) => ({
       item: o.itemKey,
@@ -220,6 +222,11 @@ export function exportMapView(rows, { userId }) {
       favouriteCountryCode: t.favouriteCountryCode ?? null,
       // "YYYY-MM-DD" or null (23 Nov 2026)
       birthDate: t.birthDate ? new Date(t.birthDate).toISOString().slice(0, 10) : null,
+      // Their passport page (25 Nov 2026): the map photo chosen for it, with its crop, and their signature
+      passportPhoto: t.portraitPhotoId
+        ? { photoId: t.portraitPhotoId, focusX: t.portraitFocusX ?? null, focusY: t.portraitFocusY ?? null, zoom: t.portraitZoom ?? null }
+        : null,
+      signature: t.signature ?? null,
       addedAt: iso(t.createdAt),
     })),
     countries: rows.visits.map((v) => ({

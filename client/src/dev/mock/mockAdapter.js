@@ -34,6 +34,11 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   // "Guess where I was": making and deleting a game (docs/API.md)
   'POST /api/maps/:mapId/guess-games',
   'DELETE /api/guess-games/:gameId',
+  'POST /api/maps/:mapId/photo-shows',
+  'PATCH /api/maps/:mapId/travellers/:travellerId/passport',
+  'PATCH /api/photo-shows/:showId',
+  'POST /api/photo-shows/:showId/reset-link',
+  'DELETE /api/photo-shows/:showId',
   // The flight log (docs/API.md "Flights")
   'POST /api/maps/:mapId/flights',
   'DELETE /api/flights/:flightId',

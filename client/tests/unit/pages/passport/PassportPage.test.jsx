@@ -9,10 +9,54 @@ import { headings, here, onlyMain, renderPage, signedIn } from '../renderPage';
 vi.mock('@/api/travelApi', () => ({ getPassport: vi.fn() }));
 // The book is PassportBook's own test's: a stand-in with its callback, saying what else it got
 vi.mock('@/components/passport/PassportBook', () => ({
-  default: ({ passport, onOpenPhoto, openAt, ...rest }) => (
-    <div data-book={passport.map.name} data-open-at={openAt ?? ''} data-props={Object.keys(rest).sort().join(',')}>
+  default: ({ passport, onOpenPhoto, openAt, travellerEdit, ...rest }) => (
+    <div
+      data-book={passport.map.name}
+      data-open-at={openAt ?? ''}
+      data-props={Object.keys(rest).sort().join(',')}
+      data-edit={travellerEdit ? (travellerEdit.locked ? 'locked' : 'on') : 'off'}
+      data-travellers={passport.travellers.map((t) => `${t.id}:${t.signature ?? ''}`).join(',')}
+    >
       <button type='button' onClick={() => onOpenPhoto('photo-1')}>
         Open a stamp’s photo
+      </button>
+      {travellerEdit ? (
+        <>
+          <button type='button' onClick={() => travellerEdit.onEditPhoto(passport.travellers[0])}>
+            Edit a photo
+          </button>
+          <button type='button' onClick={() => travellerEdit.onEditSignature(passport.travellers[0])}>
+            Edit a signature
+          </button>
+        </>
+      ) : null}
+    </div>
+  ),
+}));
+// A traveller's photo and signature dialogs (their own tests): stand-ins that save
+vi.mock('@/components/passport/TravellerPhotoDialog', () => ({
+  default: ({ mapId, traveller, onSaved, onClose }) => (
+    <div role='dialog' data-photo-dialog={`${mapId}:${traveller.id}`}>
+      <button type='button' onClick={() => onSaved({ ...traveller, photo: { source: 'MAP' } })}>
+        Save it
+      </button>
+      <button type='button' onClick={onClose}>
+        Close it
+      </button>
+    </div>
+  ),
+}));
+vi.mock('@/components/passport/TravellerSignatureDialog', () => ({
+  default: ({ traveller, onSaved, onClose }) => (
+    <div role='dialog' data-signature-dialog={traveller.id}>
+      <button
+        type='button'
+        onClick={() => {
+          onSaved({ ...traveller, signature: 'M1 1L2 2' });
+          onClose();
+        }}
+      >
+        Sign it
       </button>
     </div>
   ),
@@ -113,6 +157,46 @@ describe('PassportPage', () => {
     await waitFor(() => expect(here()).toBe('/maps/map-1/passport'));
     fireEvent.click(buttons[1]);
     await waitFor(() => expect(here()).toBe('/maps/map-1/passport?traveller=t1'));
+  });
+
+  // 25 Nov 2026, the user's wish: a traveller's passport photo and signature
+  describe('a traveller’s photo and signature', () => {
+    const editable = () => passport({ map: { id: 'map-1', name: 'Our map', groupType: 'COUPLE', traveller: null, canEdit: true }, travellers: [{ id: 'trav-1', name: 'Charlie' }] });
+
+    it('lets the map’s editors change them, saved into the book at once', async () => {
+      getPassport.mockResolvedValue({ passport: editable() });
+      openOwn();
+      await waitFor(() => expect(book().getAttribute('data-edit')).toBe('on'));
+      fireEvent.click(screen.getByText('Edit a photo'));
+      await screen.findByText('Save it');
+      expect(document.querySelector('[data-photo-dialog]').getAttribute('data-photo-dialog')).toBe('map-1:trav-1');
+      fireEvent.click(screen.getByText('Close it'));
+      expect(document.querySelector('[data-photo-dialog]')).toBeNull();
+      fireEvent.click(screen.getByText('Edit a signature'));
+      fireEvent.click(await screen.findByText('Sign it'));
+      await waitFor(() => expect(book().getAttribute('data-travellers')).toBe('trav-1:M1 1L2 2'));
+      expect(document.querySelector('[data-signature-dialog]')).toBeNull();
+    });
+
+    it('locks them for an unverified address', async () => {
+      getPassport.mockResolvedValue({ passport: editable() });
+      renderPage(<PassportPage />, { path: MAP_PASSPORT_PAGE_URL, at: '/maps/map-1/passport', auth: signedIn({ emailVerified: false }) });
+      await waitFor(() => expect(book().getAttribute('data-edit')).toBe('locked'));
+    });
+
+    it('never through a share link, nor for a viewer', async () => {
+      getPassport.mockResolvedValue({ passport: editable() });
+      openShared();
+      await waitFor(() => expect(book()).toBeTruthy());
+      expect(book().getAttribute('data-edit')).toBe('off');
+    });
+
+    it('not for someone who only views the map', async () => {
+      getPassport.mockResolvedValue({ passport: { ...editable(), map: { ...editable().map, canEdit: false } } });
+      openOwn();
+      await waitFor(() => expect(book()).toBeTruthy());
+      expect(book().getAttribute('data-edit')).toBe('off');
+    });
   });
 
   it('says why a passport couldn’t be opened', async () => {

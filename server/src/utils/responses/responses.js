@@ -41,6 +41,8 @@ export const DOMAINS = {
   // "Guess where I was" games and the flight log (23 Nov 2026)
   guessGames: 'guessGames',
   flights: 'flights',
+  // Slideshows of chosen photos, shared by their own link (docs/API.md "Photo slideshows")
+  photoShows: 'photoShows',
   // Feedback sent from the map (docs/API.md "Feedback")
   feedback: 'feedback',
 };
@@ -124,6 +126,9 @@ export const EVENT_MESSAGES = {
   invalidVisitedLook: `Places you've been show as a badge, a colour, or both, and a metal is gold, silver or bronze.`,
   invalidName: `Give it a name of 1 to 80 characters.`,
   travellerNotFound: `That traveller isn't on this map.`,
+  // A traveller's passport page (docs/API.md "Passport")
+  passportPhotoInvalid: `Choose one of this map's photos (not a video or a hidden one), cropped inside the photo.`,
+  signatureInvalid: `That signature couldn't be saved. Please draw it again.`,
   lastTraveller: `A map needs at least one traveller.`,
   travellerIsCoOwner: `This traveller is a co-owner, or invited as one. Take that away in Share first.`,
   coOwnersNeedTravellers: `Every co-owner is one of the map's travellers, and the owner needs one too.`,
@@ -151,6 +156,12 @@ export const EVENT_MESSAGES = {
   guessPlaceInvalid: `Choose a country on the map.`,
   guessNameInvalid: `Give a name of 1 to 30 characters.`,
   guessNotFinished: `Only a finished game goes on the leaderboard, and only once.`,
+  // Slideshows of chosen photos (docs/API.md "Photo slideshows")
+  showNotFound: `That slideshow isn't there any more. Ask whoever sent it for a new link.`,
+  showPhotosInvalid: `Choose 1 to 500 of this map's photos or videos, none of them hidden.`,
+  showSecondsInvalid: `Each photo stays up for 3, 5 or 8 seconds.`,
+  showTitleInvalid: `Give the slideshow a title of 1 to 80 characters.`,
+  showTooMany: `A map can have 100 slideshows. Delete one to make another.`,
   // The flight log (docs/API.md "Flights")
   flightNotFound: `That flight isn't on this map.`,
   flightsInvalid: `Give 1 to 10 flights, each between two different airports (IATA codes such as LHR) on a real day.`,

@@ -70,7 +70,7 @@ const KEEPS_ITS_KEYS = 'input, select, textarea, [contenteditable="true"], [role
  * cover's own opening, the new page on the back of the turning sheet, the pages between
  * skipped. A place the book has no page for leaves it on the cover.
  */
-function PassportBook({ passport, onOpenPhoto, openAt = null }) {
+function PassportBook({ passport, onOpenPhoto, openAt = null, travellerEdit = null }) {
   const bookId = useId();
   const leaves = useMemo(() => bookLeaves(passport), [passport]);
   const [index, setIndex] = useState(0);
@@ -199,8 +199,11 @@ function PassportBook({ passport, onOpenPhoto, openAt = null }) {
         return (
           <PassportPhotoPage
             travellers={passport.map.traveller ? passport.travellers.filter((t) => t.id === passport.map.traveller.id) : passport.travellers}
+            home={passport.map.homeCountryCode ?? null}
             pageNumber={pageNumber}
             headingId={headingFor(leaf)}
+            // The map's editors change each traveller's photo and signature here (25 Nov 2026)
+            {...(travellerEdit || {})}
           />
         );
       case 'visa':

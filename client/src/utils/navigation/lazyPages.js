@@ -74,6 +74,7 @@ export const SharedPage = lazyPage(() => import('@/pages/shared/SharedPage'));
 export const EmbedPage = lazyPage(() => import('@/pages/embed/EmbedPage'));
 // A "Guess where I was" game (23 Nov 2026)
 export const GuessPage = lazyPage(() => import('@/pages/guess/GuessPage'));
+export const ShowPage = lazyPage(() => import('@/pages/show/ShowPage'));
 export const InviteAcceptPage = lazyPage(() => import('@/pages/invite/InviteAcceptPage'));
 export const ChallengesPage = lazyPage(() => import('@/pages/challenges/ChallengesPage'));
 export const ChallengePage = lazyPage(() => import('@/pages/challenges/ChallengePage'));

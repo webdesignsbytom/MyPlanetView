@@ -231,6 +231,10 @@ const mapOrShared = ({ mapId, shareCode }, what) =>
 export const quickFillVisits = (mapId, countryCodes) => data(client.post(`${MAPS_API}/${enc(mapId)}/visits/quick-fill`, { countryCodes }));
 export const getPassport = (where, { travellerId = null } = {}) =>
   data(client.get(`${mapOrShared(where, 'passport')}${query({ traveller: travellerId || undefined })}`));
+// A traveller's passport photo and signature (25 Nov 2026; docs/API.md "Passport"): any of
+// `{ photo: { photoId, focusX, focusY, zoom } | null, signature: path | null }` -> `{ traveller }`
+export const updateTravellerPassport = (mapId, travellerId, body) =>
+  data(client.patch(`${MAPS_API}/${enc(mapId)}/travellers/${enc(travellerId)}/passport`, body));
 // A stamp's photo isn't chosen in the passport any more (24 Nov 2026, the user's wish): the
 // server's PUT|DELETE …/passport/stamps/:landmarkId/photo stay, unused by the site
 // -> { badges, newlyEarned } (the owner and editors award as they load)

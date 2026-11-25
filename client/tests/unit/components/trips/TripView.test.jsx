@@ -41,6 +41,9 @@ vi.mock('@/components/photos/PhotoViewer', () => ({
   ),
 }));
 vi.mock('@/components/photos/PrintDownload', () => ({ default: ({ scope }) => <div data-print-download={scope.tripId} /> }));
+vi.mock('@/components/shows/ShareShow', () => ({
+  default: ({ mapId, source, defaultTitle }) => <div data-share-show={mapId} data-source={JSON.stringify(source)} data-title={defaultTitle} />,
+}));
 vi.mock('@/components/photos/PhotoUploader', () => ({ default: ({ tripId, defaultCountryCode }) => <div data-uploader={tripId} data-country={defaultCountryCode} /> }));
 vi.mock('@/components/map/lazyMapPanels', () => ({
   Slideshow: ({ title, adEvery }) => <div data-slideshow={title} data-ad-every={adEvery} />,
@@ -221,11 +224,26 @@ describe('TripPhotosSection', () => {
     expect(document.querySelector('[data-print-download="t1"]')).toBeTruthy();
   });
 
+  // A slideshow of some of its photos, with its own link (25 Nov 2026): the map's editors
+  it('offers the map’s editors a slideshow of its photos to share', () => {
+    section();
+    const share = document.querySelector('[data-share-show]');
+    expect(share.getAttribute('data-share-show')).toBe('m1');
+    expect(JSON.parse(share.getAttribute('data-source'))).toEqual({ tripId: 't1', display: true });
+    expect(share.getAttribute('data-title')).toBe('Italian summer');
+  });
+
+  it('not to a trip-only editor, who can’t delete it either', () => {
+    section({ trip: { ...TRIP, role: 'EDITOR', canDelete: false } });
+    expect(document.querySelector('[data-share-show]')).toBeNull();
+  });
+
   it('lets an unverified editor download but not change anything', () => {
     section({ canEdit: false, locked: true });
     expect(screen.queryByText('Add photos')).toBeNull();
     expect(screen.queryByText('Rearrange photos')).toBeNull();
     expect(document.querySelector('[data-print-download]')).toBeTruthy();
+    expect(document.querySelector('[data-share-show]')).toBeNull();
     fireEvent.click(screen.getByLabelText('Open Rome'));
     expect(document.querySelector('[data-photo-viewer]').getAttribute('data-locked')).toBe('true');
   });
@@ -235,6 +253,7 @@ describe('TripPhotosSection', () => {
     expect(usePhotoPage).toHaveBeenCalledWith({ shareCode: 'ABCD', display: true });
     expect(screen.queryByText('Add photos')).toBeNull();
     expect(document.querySelector('[data-print-download]')).toBeNull();
+    expect(document.querySelector('[data-share-show]')).toBeNull();
     fireEvent.click(screen.getByLabelText('Open Rome'));
     expect(document.querySelector('[data-photo-viewer]').getAttribute('data-can-edit')).toBe('false');
   });

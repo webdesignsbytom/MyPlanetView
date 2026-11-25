@@ -55,7 +55,8 @@ function YearRecapDialog({ map, design = null, year: firstYear, onClose }) {
     setIndex(Math.min(Math.max(0, at + step), slides.length - 1));
   };
   const onKeyDown = (e) => {
-    if (e.target.closest?.('select, input, button')) return;
+    // Never from a field: the share slide's words move their caret with the arrows
+    if (e.target.closest?.('select, input, textarea, button')) return;
     if (e.key === 'ArrowRight') go(1);
     else if (e.key === 'ArrowLeft') go(-1);
   };

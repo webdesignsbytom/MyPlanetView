@@ -1,6 +1,6 @@
 import React from 'react';
-import { describe, expect, it } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import PassportLeaf from '@/components/passport/PassportLeaf';
 import PassportBackPage from '@/components/passport/PassportBackPage';
 import PassportPhotoPage from '@/components/passport/PassportPhotoPage';
@@ -78,7 +78,9 @@ describe('PassportPhotoPage', () => {
     expect(screen.getByText('Travellers').id).toBe('travellers');
     const [charlie, alex] = container.querySelectorAll('li');
     expect(within(charlie).getByText('CR').getAttribute('aria-hidden')).toBe('true');
-    expect(within(charlie).getByText('Charlie Reid')).toBeTruthy();
+    expect(within(charlie).getByText('Charlie Reid', { selector: 'dd' })).toBeTruthy();
+    // No drawn signature yet: the name, in handwriting
+    expect(within(charlie).getByText('Charlie Reid', { selector: '[data-signature]' })).toBeTruthy();
     expect(within(charlie).getByText('United Kingdom')).toBeTruthy();
     expect(within(charlie).getByText('Japan')).toBeTruthy();
     expect(within(alex).getByText('A')).toBeTruthy();
@@ -93,7 +95,7 @@ describe('PassportPhotoPage', () => {
       expect(card.className).not.toContain('items-start');
       const photo = card.querySelector('[data-passport-photo]');
       expect(photo.className).not.toContain('aspect-');
-      expect(photo.className).toContain('min-h-[6.75rem]');
+      expect(photo.className).toContain('min-h-[8rem]');
     }
   });
 
@@ -103,6 +105,75 @@ describe('PassportPhotoPage', () => {
     expect(line.getAttribute('aria-hidden')).toBe('true');
     expect(line.textContent).toBe('P<MPV<<CHARLIE<REID<<ALEX'.padEnd(44, '<'));
     expect(line.textContent.length).toBe(44);
+  });
+
+  // 25 Nov 2026, the user's wish: "improve passport page for user avatars and info"
+  describe('photos, details and signatures', () => {
+    const CHARLIE = {
+      id: 'trav-test',
+      name: 'Charlie Reid',
+      birthCountryCode: 'GB',
+      favouriteCountryCode: 'JP',
+      birthDate: '1990-01-14',
+      issuedOn: '2026-08-27',
+      travellingSince: '2014-05-01',
+      photo: { source: 'MAP', photoId: 'p1', url: '/me.jpg', focusX: 0.25, focusY: 0.4, zoom: 2 },
+      signature: 'M10 50L40 30L70 60',
+    };
+    const card = (container) => container.querySelector('[data-passport-traveller="trav-test"]');
+    const detail = (root, label) => [...root.querySelectorAll('dt')].find((dt) => dt.textContent === label)?.nextElementSibling?.textContent;
+
+    it('shows the photo cropped, every detail, and the signature drawn', () => {
+      const { container } = render(<PassportPhotoPage travellers={[CHARLIE]} home='GB' pageNumber={2} headingId='travellers' />);
+      const img = card(container).querySelector('[data-passport-photo="MAP"] img');
+      expect(img.getAttribute('src')).toBe('/me.jpg');
+      expect(img.style.objectPosition).toBe('25% 40%');
+      expect(img.style.transform).toBe('scale(2)');
+      expect(detail(card(container), 'Date of birth')).toBe('14 Jan 1990');
+      expect(detail(card(container), 'Born in')).toBe('United Kingdom');
+      expect(detail(card(container), 'Home')).toBe('United Kingdom');
+      expect(detail(card(container), 'Favourite country')).toBe('Japan');
+      expect(detail(card(container), 'Travelling since')).toBe('2014');
+      expect(detail(card(container), 'Date of issue')).toBe('27 Aug 2026');
+      expect(detail(card(container), 'Passport no.')).toMatch(/^MP\d{7}$/);
+      expect(screen.getByRole('img', { name: 'Charlie Reid’s signature' }).querySelector('path').getAttribute('d')).toBe('M10 50L40 30L70 60');
+    });
+
+    it('leaves out what it doesn’t know, writes the name for a signature, and shows an account’s picture as it is', () => {
+      const plain = { id: 'trav-alex', name: 'Alex', birthCountryCode: null, favouriteCountryCode: null, photo: { source: 'ACCOUNT', url: '/alex.webp', focusX: 0.5, focusY: 0.5, zoom: 1 }, signature: null };
+      const { container } = render(<PassportPhotoPage travellers={[plain]} pageNumber={2} headingId='travellers' />);
+      const li = container.querySelector('li');
+      expect([...li.querySelectorAll('dt')].map((dt) => dt.textContent)).toEqual(['Name', 'Born in', 'Favourite country', 'Passport no.']);
+      expect(li.querySelector('[data-passport-photo="ACCOUNT"] img').getAttribute('src')).toBe('/alex.webp');
+      expect(li.querySelector('[data-signature="name"]').textContent).toBe('Alex');
+      expect(li.querySelector('[data-signature="name"]').className).toContain('font-signature');
+    });
+
+    it('offers an editor the photo and the signature, locked until the address is verified', () => {
+      const onEditPhoto = vi.fn();
+      const onEditSignature = vi.fn();
+      const { rerender } = render(
+        <PassportPhotoPage travellers={[CHARLIE, travellers[1]]} pageNumber={2} headingId='travellers' onEditPhoto={onEditPhoto} onEditSignature={onEditSignature} />,
+      );
+      fireEvent.click(screen.getByText('Change the photo').closest('button'));
+      expect(onEditPhoto).toHaveBeenCalledWith(CHARLIE);
+      fireEvent.click(screen.getByText('Sign again').closest('button'));
+      expect(onEditSignature).toHaveBeenCalledWith(CHARLIE);
+      // Alex has neither yet; each button names who it's for
+      expect(screen.getByText('Choose a photo').closest('button').textContent).toBe('Choose a photo of Alex');
+      expect(screen.getByText('Sign').closest('button').textContent).toBe('Sign as Alex');
+      rerender(
+        <PassportPhotoPage travellers={[CHARLIE]} pageNumber={2} headingId='travellers' onEditPhoto={onEditPhoto} onEditSignature={onEditSignature} locked />,
+      );
+      expect(screen.getByText('Change the photo').closest('button').disabled).toBe(true);
+      expect(screen.getByText('Verify your email address to add photos and signatures.')).toBeTruthy();
+    });
+
+    it('offers nothing to change without the editors’ handlers (viewers, share links)', () => {
+      render(<PassportPhotoPage travellers={[CHARLIE]} pageNumber={2} headingId='travellers' />);
+      expect(screen.queryByText('Change the photo')).toBeNull();
+      expect(screen.queryByText('Sign again')).toBeNull();
+    });
   });
 
   it('says when the map has no travellers yet', () => {

@@ -96,6 +96,20 @@ describe('MapPhotosPanel', () => {
     expect(screen.queryByText('Play my world')).toBeNull();
   });
 
+  // 25 Nov 2026: a slideshow of some of the album's photos, with its own link (editors)
+  it('offers its editors a slideshow to share, once there are photos', () => {
+    usePhotoPage.mockReturnValue(page());
+    const { unmount } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} showMapId='map-1' onClose={() => {}} />);
+    expect(screen.getByText('Share a slideshow')).toBeTruthy();
+    unmount();
+    const { unmount: again } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onClose={() => {}} />);
+    expect(screen.queryByText('Share a slideshow')).toBeNull();
+    again();
+    usePhotoPage.mockReturnValue(page({ photos: [], nextCursor: null }));
+    render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} showMapId='map-1' onClose={() => {}} />);
+    expect(screen.queryByText('Share a slideshow')).toBeNull();
+  });
+
   it('fetches the list again when photos change elsewhere', () => {
     const photos = page();
     usePhotoPage.mockReturnValue(photos);

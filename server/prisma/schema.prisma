@@ -51,6 +51,8 @@ model User {
   startedChallenges FriendChallenge[]      @relation("ChallengeCreator")
   // "Guess where I was" games they made, and the flights they logged (docs/API.md)
   guessGames        GuessGame[]            @relation("GuessGameCreator")
+  // Slideshows of chosen photos they shared by a link (docs/API.md "Photo slideshows")
+  photoShows        PhotoShow[]            @relation("PhotoShowCreator")
   flightsLogged     Flight[]               @relation("FlightLogger")
   oneShotsTicked    OneShot[]              @relation("OneShotTicker")
   challengeEntries  FriendChallengeEntry[]
@@ -416,6 +418,8 @@ model TravelMap {
   // "Guess where I was" games made from its photos, and its flight log (docs/API.md)
   guessGames      GuessGame[]
   flights         Flight[]
+  // Slideshows of chosen photos, each shared by its own link (docs/API.md "Photo slideshows")
+  photoShows      PhotoShow[]
   // Life's One Shots ticked on it (docs/API.md "Life's One Shots")
   oneShots        OneShot[]
 
@@ -496,6 +500,19 @@ model Traveller {
   // CHECK traveller_birth_date: from 1900; not in the future is checked in code
   birthDate DateTime? @db.Date
 
+  // Their passport page (25 Nov 2026, the user's wish: "improve passport page for user avatars
+  // and info"; docs/API.md "Passport"): a photo of them, one of the map's own photos cropped to
+  // the passport's photo box (its focus, 0 to 1 across and down, stays put as it's zoomed, 1 to
+  // 4: CHECK traveller_portrait), and a signature drawn with a finger or a mouse, an SVG path in
+  // a 300 x 100 box (utils/travellerPassport.js; CHECK traveller_signature). Deleting the
+  // photo clears it
+  portraitPhotoId String?
+  portraitPhoto   Photo?  @relation("TravellerPortrait", fields: [portraitPhotoId], references: [id], onDelete: SetNull)
+  portraitFocusX  Float?
+  portraitFocusY  Float?
+  portraitZoom    Float?
+  signature       String?
+
   trips   TripTraveller[]
   moments MomentTraveller[]
   oneShots OneShotTraveller[]
@@ -511,6 +528,7 @@ model Traveller {
   @@unique([mapId, userId])
   @@index([mapId, position])
   @@index([userId])
+  @@index([portraitPhotoId])
   @@map("traveller")
 }
 
@@ -822,6 +840,8 @@ model Photo {
   stampCovers  LandmarkCover[]
   // The monthly themes it's entered in
   themeEntries PhotoThemeEntry[]
+  // Travellers whose passport photo it is (docs/API.md "Passport")
+  portraitOf   Traveller[]       @relation("TravellerPortrait")
 
   // The family map's photo this one was copied from (docs/API.md "Travel copies"): no
   // foreign key, as for trips. A copy has files of its own
@@ -1918,6 +1938,34 @@ model GuessGame {
   @@index([mapId, createdAt])
   @@index([createdById])
   @@map("guess_game")
+}
+
+// A slideshow of chosen photos and videos, shared by a link of its own (25 Nov 2026, the
+// user's wish; docs/API.md "Photo slideshows"): anyone with the link watches those photos,
+// in their order, and nothing else of the map. The photos are the map's own, in order
+// (no foreign key: one deleted or hidden later is left out when it's watched). `seconds` is
+// how long each photo stays up to start with (3, 5 or 8: CHECK photo_show_seconds); the
+// list holds 1 to 500 (CHECK photo_show_photos). A new link is a new code.
+model PhotoShow {
+  id    String    @id @default(uuid())
+  mapId String
+  map   TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
+  // The show's link (the share codes' alphabet, utils/shareCodes.js)
+  code     String   @unique
+  title    String
+  photoIds String[]
+  seconds  Int      @default(5)
+
+  createdById String?
+  createdBy   User?   @relation("PhotoShowCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([mapId, createdAt])
+  @@index([createdById])
+  @@map("photo_show")
 }
 
 // One go at a game: each round's points as it's answered (one answer a round, in order), and

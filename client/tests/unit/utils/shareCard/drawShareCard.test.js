@@ -13,7 +13,10 @@ import {
   loadFonts,
   nameLines,
   namesOf,
+  textLines,
 } from '@/utils/shareCard/drawShareCard';
+import { FaGlobeAsia } from 'react-icons/fa';
+import { iconShape } from '@/utils/shareCard/iconShape';
 import { mapCardOptions, mapCardStats } from '@/utils/shareCard/cardOptions';
 import { SHARE_CARD_COLOURS as C } from '@/utils/constants/brandColours';
 import { COUNTRY_SHAPES } from '@/utils/map/countryShapes';
@@ -103,6 +106,30 @@ describe('nameLines', () => {
   });
 });
 
+describe('textLines', () => {
+  // The fake canvas measures half the font size a character: 10 characters at 20px is 100
+  const ctx = fakeContext();
+  ctx.font = '20px Poppins';
+
+  it('wraps whole words to the room', () => {
+    expect(textLines(ctx, 'one two three four', 100, 3)).toEqual(['one two', 'three four']);
+    expect(textLines(ctx, '  spaced   out  ', 100, 3)).toEqual(['spaced out']);
+    expect(textLines(ctx, '', 100, 3)).toEqual([]);
+  });
+
+  it('puts a word too long for the room on a line of its own', () => {
+    expect(textLines(ctx, 'a Llanfairpwllgwyngyll b', 100, 3)).toEqual(['a', 'Llanfairpwllgwyngyll', 'b']);
+  });
+
+  it('cuts the last line short with an ellipsis when the rest doesn’t fit', () => {
+    const lines = textLines(ctx, 'one two three four five six seven', 100, 2);
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toBe('one two');
+    expect(lines[1].endsWith('…')).toBe(true);
+    expect(ctx.measureText(lines[1]).width).toBeLessThanOrEqual(100);
+  });
+});
+
 describe('drawMap', () => {
   const box = { x: 70, y: 262, width: 1000, height: 0 };
 
@@ -172,6 +199,42 @@ describe('drawShareCard', () => {
     const arcs = ctx.calls.filter((c) => c.name === 'arc');
     expect(arcs).toHaveLength(2);
     expect(ctx.calls.filter((c) => c.name === 'fill').map((c) => c.fillStyle)).toEqual(expect.arrayContaining([C.medals.gold.face, C.medals.gold.rim, ...C.ribbon]));
+  });
+
+  // A badge's card (25 Nov 2026): its sticker where the map goes, and what it's for under the numbers
+  it('draws a badge’s sticker instead of the map, its icon and number in the deep red, and its note', async () => {
+    const icon = iconShape(FaGlobeAsia);
+    await drawShareCard({
+      kicker: 'New badge',
+      title: 'Ten countries',
+      badge: { icon, short: '10' },
+      note: '10 countries visited or lived in.',
+      stats: [{ value: 12, label: 'countries' }],
+    });
+    const ctx = contexts.at(-1);
+    const texts = textsDrawn(ctx);
+    expect(texts).toEqual(expect.arrayContaining(['NEW BADGE', 'Ten countries', '10', '12', 'countries', '10 countries visited or lived in.', 'myplanetview.com']));
+    // No map
+    expect(fillsOf(ctx, COUNTRY_SHAPES.FR)).toEqual([]);
+    // The parchment disc in its red rings, the tick's disc, tilted
+    expect(ctx.calls.filter((c) => c.name === 'arc')).toHaveLength(4);
+    expect(ctx.calls.some((c) => c.name === 'rotate')).toBe(true);
+    const fills = ctx.calls.filter((c) => c.name === 'fill');
+    expect(fills.map((c) => c.fillStyle)).toEqual(expect.arrayContaining([C.sticker.face, C.sticker.tick]));
+    expect(ctx.calls.filter((c) => c.name === 'stroke').map((c) => c.strokeStyle)).toEqual(expect.arrayContaining([C.sticker.ring, C.sticker.tickInk]));
+    // The icon's own paths, in the deep red
+    expect(fillsOf(ctx, icon.paths)).toEqual(icon.paths.map(() => C.sticker.ink));
+    // The number, in the deep red too
+    expect(ctx.calls.find((c) => c.name === 'fillText' && c.args[0] === '10').fillStyle).toBe(C.sticker.ink);
+  });
+
+  it('draws a sticker with no icon or number, and names a card’s places rather than its note', async () => {
+    await drawShareCard({ title: 'A badge', badge: { icon: null, short: '' } });
+    expect(textsDrawn(contexts.at(-1))).toEqual(['A badge', 'myplanetview.com']);
+    await drawShareCard({ title: 'Map', highlight: ['FR'], note: 'Never drawn with places' });
+    const texts = textsDrawn(contexts.at(-1));
+    expect(texts).toContain('France');
+    expect(texts).not.toContain('Never drawn with places');
   });
 
   // 24 Nov 2026, the user's wish: a one-country trip on that country's own map with its regions

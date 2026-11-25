@@ -42,6 +42,7 @@ import {
   getGoalsHandler,
   getPassportHandler,
   setStampPhotoHandler,
+  updateTravellerPassportHandler,
 } from '../controllers/passport.js';
 import { sharingHandlers } from '../controllers/sharing.js';
 import {
@@ -67,6 +68,7 @@ import { getImportsHandler, importTripsHandler } from '../controllers/imports.js
 import { tickLandmarkHandler, untickLandmarkHandler } from '../controllers/landmarkVisits.js';
 import { addAutoStringsHandler, addMapStringHandler, deleteAllMapStringsHandler, deleteMapStringHandler } from '../controllers/mapStrings.js';
 import { createGuessGameHandler, getMapGuessGamesHandler } from '../controllers/guessGames.js';
+import { createPhotoShowHandler, getMapPhotoShowsHandler } from '../controllers/photoShows.js';
 import { addFlightsHandler, getMapFlightsHandler } from '../controllers/flights.js';
 import { deleteOneShotHandler, getOneShotsHandler, saveOneShotHandler } from '../controllers/oneShots.js';
 
@@ -122,6 +124,9 @@ router.get('/:mapId/recap/:year', getYearRecapHandler);
 // "Guess where I was" games made from its photos (docs/API.md "Guess where I was"): editors
 router.get('/:mapId/guess-games', getMapGuessGamesHandler);
 router.post('/:mapId/guess-games', verified, createGuessGameHandler);
+// Slideshows of chosen photos, each shared by its own link (docs/API.md "Photo slideshows"): editors
+router.get('/:mapId/photo-shows', getMapPhotoShowsHandler);
+router.post('/:mapId/photo-shows', verified, createPhotoShowHandler);
 // Its flight log (docs/API.md "Flights"): anyone on the map reads it, editors add flights
 router.get('/:mapId/flights', getMapFlightsHandler);
 router.post('/:mapId/flights', verified, addFlightsHandler);
@@ -184,6 +189,8 @@ router.post('/:mapId/pins', verified, createPinHandler);
 router.get('/:mapId/passport', getPassportHandler);
 router.put('/:mapId/passport/stamps/:landmarkId/photo', verified, setStampPhotoHandler);
 router.delete('/:mapId/passport/stamps/:landmarkId/photo', verified, clearStampPhotoHandler);
+// A traveller's passport photo and signature (docs/API.md "Passport"): editors, verified
+router.patch('/:mapId/travellers/:travellerId/passport', verified, updateTravellerPassportHandler);
 router.get('/:mapId/badges', getBadgesHandler);
 router.get('/:mapId/goals', getGoalsHandler);
 router.post('/:mapId/goals', verified, createGoalHandler);
