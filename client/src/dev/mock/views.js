@@ -410,6 +410,10 @@ export function mapView(map, role, { withPlan = false } = {}) {
     homeCountryCode: map.homeCountryCode ?? null,
     // The style everyone sees it in: its own, else the owner's (null: each viewer's own)
     style: mapStyleOf(map),
+    // How the places been to show, in every style (docs/API.md "The visited look")
+    visitedLook: map.visitedLook ?? 'BADGE',
+    visitedColour: map.visitedColour ?? null,
+    visitedFinish: map.visitedFinish ?? null,
     role,
     ownerName: userName(map.ownerId),
     // The owner's paid plan on the banner, unless they turned it off (docs/API.md "The

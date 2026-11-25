@@ -89,7 +89,7 @@ import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole, canManageRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
 import { isMonoStyle, mapStyleById, shownStyle } from '@/utils/map/mapStyles';
-import { designFor, shownDesign, visitedLookOf } from '@/utils/map/mapDesign';
+import { designFor, shownDesign, visitedLookFrom, visitedLookOf } from '@/utils/map/mapDesign';
 import { collectionCardOptions, mapCardOptions, oneShotsCardOptions, tripCardOptions } from '@/utils/shareCard/cardOptions';
 import { mapPosterOptions } from '@/utils/poster/posterOptions';
 import { recapYearFor } from '@/utils/recap/recap';
@@ -373,6 +373,13 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   );
   // The design as Settings changes it, before it's saved (MapDesignStyle follows it alone)
   const [designPreview] = useState(() => createValueStore(null));
+  // How the places been to show: the map's own, in every style (docs/API.md "The visited look";
+  // 25 Nov 2026, the user's wish), and Settings' changes to it before they're saved
+  const visited = useMemo(
+    () => visitedLookFrom({ visitedLook: map.visitedLook, visitedColour: map.visitedColour, visitedFinish: map.visitedFinish }),
+    [map.visitedLook, map.visitedColour, map.visitedFinish],
+  );
+  const [visitedPreview] = useState(() => createValueStore(null));
 
   // The containers over the map follow its style (19 Nov 2026, the user's wish); Black and
   // white puts the grey tokens on <html> (useMapTheme)
@@ -852,6 +859,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onMapSaved={actions?.reload}
             onDesignChange={actions?.setDesign}
             designPreview={designPreview}
+            onVisitedLookChange={canManage ? actions?.setVisitedLook : null}
+            visitedPreview={visitedPreview}
             onMapDeleted={() => {
               forgetMapLists();
               navigate(MAP_PAGE_URL, { replace: true });
@@ -1109,9 +1118,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     <div
       data-map-style={styleId}
       data-map-design={design ? '' : undefined}
+      // The map page's own wrapper: the visited look's rules apply under it (utils/map/mapDesign.js
+      // visitedCss), never in Settings' pictures of the styles
+      data-map-page=''
       className='relative h-dvh w-full overflow-hidden bg-map-sea text-map-ink'
     >
-      {design ? <MapDesignStyle design={design} preview={designPreview} /> : null}
+      <MapDesignStyle design={design} preview={designPreview} visited={visited} visitedPreview={visitedPreview} />
       {/* Black and white (a map style): everything here in greys (data-mono-map in index.css):
           the map's drawing through the grey tokens, so a design's own colours show on it (22 Nov
           2026, the user's wish: they turned grey), and a greyscale filter over the rest and the
@@ -1169,8 +1181,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             stampedLandmarks={stampedLandmarks}
             landmarkPins={pinMode}
             label={`${map.name}: world map`}
-            design={design}
-            designPreview={designPreview}
+            visited={visited}
+            visitedPreview={visitedPreview}
           />
           )}
         </main>
@@ -1286,8 +1298,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               showSpots={Boolean(map.momentSpots?.length)}
               showStamps={stampedLandmarks.size > 0}
               showPlanned={plannedCodes.size > 0}
-              // How the map's design shows the places been to (25 Nov 2026): badges, a colour or both
-              visitedLook={visitedLookOf(design)}
+              // How the map shows the places been to (25 Nov 2026): badges, a colour or both
+              visitedLook={visitedLookOf(visited)}
             />
           </SlideAway>
         )}

@@ -17,7 +17,7 @@ import MapZoomControls from '@/components/map/MapZoomControls';
 // Utils
 import { mapExtent } from '@/utils/map/projection';
 import { mapStyleById, shownStyle } from '@/utils/map/mapStyles';
-import { designFor, shownDesign } from '@/utils/map/mapDesign';
+import { designFor, shownDesign, visitedLookFrom } from '@/utils/map/mapDesign';
 import { MADE_WITH_TEXT, madeWithPath } from '@/utils/sharing/embedCode';
 
 const word = (n, one, many) => `${n.toLocaleString('en-GB')} ${n === 1 ? one : many}`;
@@ -39,6 +39,8 @@ function EmbeddedMap({ map, code }) {
   const styleId = shownStyle(map, 'animated');
   const style = mapStyleById(styleId);
   const design = shownDesign(designFor(map, styleId));
+  // How the places been to show, the map's own in every style (docs/API.md "The visited look")
+  const visited = useMemo(() => visitedLookFrom(map), [map]);
   useMapTheme(styleId);
   const extent = useMemo(() => mapExtent(true), []);
   const viewport = useMapViewport({ extent, wheelZoom: false });
@@ -50,9 +52,10 @@ function EmbeddedMap({ map, code }) {
       <div
         data-map-style={styleId}
         {...(design ? { 'data-map-design': '' } : {})}
+        data-map-page=''
         className='relative grid h-dvh grid-rows-[minmax(0,1fr)_auto] overflow-hidden bg-map-sea'
       >
-        {design ? <MapDesignStyle design={design} /> : null}
+        <MapDesignStyle design={design} visited={visited} />
         <main id='main-content' tabIndex={-1} aria-labelledby='embed-title' className='relative min-h-0 outline-none'>
           <h1 id='embed-title' className='sr-only'>
             {map.name}
@@ -66,7 +69,7 @@ function EmbeddedMap({ map, code }) {
               showGrid
               gridColoured={Boolean(design?.grid)}
               label={`${map.name}: world map`}
-              design={design}
+              visited={visited}
             />
           </div>
           <div className='pointer-events-none absolute bottom-3 right-3 grid'>

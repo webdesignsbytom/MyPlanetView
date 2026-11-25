@@ -92,6 +92,10 @@ function mapView(map) {
     homeCountryCode: map.homeCountryCode ?? null,
     // The style chosen for it (null: the owner's own)
     style: map.style ?? null,
+    // How the places been to show, in every style (docs/API.md "The visited look")
+    visitedLook: map.visitedLook ?? 'BADGE',
+    visitedColour: map.visitedColour ?? null,
+    visitedFinish: map.visitedFinish ?? null,
     linkAccess: map.linkAccess,
     shareCode: map.shareCode,
     graceUntil: iso(map.graceUntil),
@@ -207,9 +211,6 @@ function mapView(map) {
       stringTwistColour: d.stringTwist ?? null,
       plannedStringColour: d.plannedString ?? null,
       plannedStringTwistColour: d.plannedStringTwist ?? null,
-      visitedLook: d.visitedLook ?? 'BADGE',
-      visitedColour: d.visited ?? null,
-      visitedFinish: d.visitedFinish ?? null,
       hasSeaPicture: Boolean(d.pictureKey),
     })),
     landmarksBeenTo: (db.landmarkVisits || [])

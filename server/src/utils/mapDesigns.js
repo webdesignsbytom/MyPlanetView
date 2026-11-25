@@ -18,12 +18,12 @@ const ALPHA_FIELDS = new Set(['string', 'plannedString']);
 export const DESIGN_MAX_COLOURS = 400;
 /**
  * How the places visited or lived in show (25 Nov 2026, the user's wish): their badge (as
- * always), the design's visited colour over each one's own, or both.
+ * always), the map's visited colour over each one's own, or both. The map's, in every style.
  */
 export const VISITED_LOOKS = Object.freeze(['BADGE', 'COLOUR', 'BOTH']);
 /**
  * A metallic finish in place of the visited colour (25 Nov 2026, the user's wish: "shiny colours
- * like gold and silver"): the client draws it as foil across the map.
+ * like gold and silver"): the client draws it as a sheet of metal under the places been to.
  */
 export const VISITED_FINISHES = Object.freeze(['GOLD', 'SILVER', 'BRONZE']);
 
@@ -72,27 +72,11 @@ export function parseDesignChange(body) {
     // The planned strings' own, the same two (25 Nov 2026, the user's wish)
     ['plannedString', 'plannedStringColour'],
     ['plannedStringTwist', 'plannedStringTwistColour'],
-    // The colour the places visited or lived in take (25 Nov 2026, the user's wish)
-    ['visited', 'visitedColour'],
   ]) {
     if (input[field] === undefined) continue;
     const colour = cleanColour(input[field], { alpha: ALPHA_FIELDS.has(field) });
     if (!colour.ok) return { error: 'invalidDesignColour' };
     data[column] = colour.value;
-  }
-  if (input.visitedLook !== undefined) {
-    const look = typeof input.visitedLook === 'string' ? input.visitedLook.trim().toUpperCase() : '';
-    if (!VISITED_LOOKS.includes(look)) return { error: 'invalidDesign' };
-    data.visitedLook = look;
-  }
-  // A metallic finish, in any case, or null for the plain colour
-  if (input.visitedFinish !== undefined) {
-    if (input.visitedFinish === null) data.visitedFinish = null;
-    else {
-      const finish = typeof input.visitedFinish === 'string' ? input.visitedFinish.trim().toUpperCase() : '';
-      if (!VISITED_FINISHES.includes(finish)) return { error: 'invalidDesign' };
-      data.visitedFinish = finish;
-    }
   }
   let codes = [];
   if (input.countries !== undefined) {
@@ -113,6 +97,37 @@ export function parseDesignChange(body) {
   }
   if (!Object.keys(data).length) return { error: 'invalidDesign' };
   return { data, codes };
+}
+
+/**
+ * The visited look a map PATCH asks for (docs/API.md "The visited look"; the map's, in every map
+ * style: 25 Nov 2026, the user's wish): `{ data }`, the TravelMap columns to write (none when the
+ * body names none), or `{ error }` (a responses.js message key). `visitedLook` and
+ * `visitedFinish` in any case; `visitedColour` "#rrggbb", opaque; null for the style's own
+ * colour, or no metal.
+ */
+export function parseVisitedLook(body) {
+  const input = body && typeof body === 'object' ? body : {};
+  const data = {};
+  if (input.visitedLook !== undefined) {
+    const look = typeof input.visitedLook === 'string' ? input.visitedLook.trim().toUpperCase() : '';
+    if (!VISITED_LOOKS.includes(look)) return { error: 'invalidVisitedLook' };
+    data.visitedLook = look;
+  }
+  if (input.visitedColour !== undefined) {
+    const colour = cleanColour(input.visitedColour);
+    if (!colour.ok) return { error: 'invalidDesignColour' };
+    data.visitedColour = colour.value;
+  }
+  if (input.visitedFinish !== undefined) {
+    if (input.visitedFinish === null) data.visitedFinish = null;
+    else {
+      const finish = typeof input.visitedFinish === 'string' ? input.visitedFinish.trim().toUpperCase() : '';
+      if (!VISITED_FINISHES.includes(finish)) return { error: 'invalidVisitedLook' };
+      data.visitedFinish = finish;
+    }
+  }
+  return { data };
 }
 
 /** Whether a place (`{ code, kind }` from the Country table) can take a colour. */

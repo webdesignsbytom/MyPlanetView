@@ -20,6 +20,17 @@ async function openDesign(page) {
   return { settings, editor };
 }
 
+// How the places been to show: the map's own, in every style (docs/API.md "The visited look")
+async function openVisitedLook(page) {
+  const settings = await openTool(page, 'Map settings', 'Settings');
+  const look = settings.locator('[data-visited-look-editor]');
+  await expect(look.getByRole('heading', { name: 'Places you’ve been' })).toBeVisible();
+  return { settings, look };
+}
+// A place's fill on the map page, whatever its style and whether or not it has a design
+const placeFill = (page, code) =>
+  page.locator(`[data-map-page] svg g[data-code="${code}"]`).first().evaluate((el) => getComputedStyle(el).fill);
+
 async function closeSettings(settings) {
   await settings.getByRole('button', { name: 'Close Settings' }).click();
   await expect(settings).toBeHidden();
@@ -235,7 +246,7 @@ test('the design sets the colour a country turns under the pointer', async ({ pa
 // 25 Nov 2026 (the user's wish: "all the countries I have visited or lived in turn the colour I
 // selected"): the places been to filled with one colour, over a colour of their own; the badges,
 // the hover colour and the outlines as they were
-test('the owner shows the places been to in one colour, over their own, everyone seeing it', async ({ page }) => {
+test('the owner shows the places been to in one colour, over their own, in every style, everyone seeing it', async ({ page }) => {
   await openMap(page);
   const { settings, editor } = await openDesign(page);
   // Portugal (been to) and Germany (not yet) red by hand
@@ -245,28 +256,33 @@ test('the owner shows the places been to in one colour, over their own, everyone
   await editor.getByLabel('Colour of Portugal', { exact: true }).fill('#ff0000');
   await find.fill('germany');
   await editor.getByLabel('Colour of Germany', { exact: true }).fill('#ff0000');
-  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(255, 0, 0)');
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgb(255, 0, 0)');
+  // The style's design says nothing of the places been to: the map's own section, above it
+  await expect(editor.locator('[data-visited-look]')).toHaveCount(0);
+  const look = settings.locator('[data-visited-look-editor]');
+  expect((await look.boundingBox()).y).toBeLessThan((await editor.boundingBox()).y);
 
   // Badges to start with; then a colour, the map style's own purple until one is chosen
-  const looks = editor.getByRole('group', { name: 'Places you’ve been show as' });
+  const looks = look.getByRole('group', { name: 'Places you’ve been show as' });
   await expect(looks.getByLabel('A badge', { exact: true })).toBeChecked();
-  await expect(editor.getByLabel('Visited country colour', { exact: true })).toHaveCount(0);
+  await expect(look.getByLabel('Visited country colour', { exact: true })).toHaveCount(0);
   await looks.getByLabel('A colour', { exact: true }).check();
-  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(124, 58, 237)');
-  await expect.poll(() => fillOf(page, 'DE')).toBe('rgb(255, 0, 0)');
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgb(124, 58, 237)');
+  await expect.poll(() => placeFill(page, 'DE')).toBe('rgb(255, 0, 0)');
   // The badges of the places it fills go
   await expect(page.locator('[data-visit-badge="fill"]').first()).toBeHidden();
-  await editor.getByLabel('Visited country colour', { exact: true }).fill('#aa00aa');
-  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
-  await expect.poll(() => fillOf(page, 'NZ')).toBe('rgb(170, 0, 170)');
-  await expect(editor.getByText('Saved.')).toBeVisible();
+  await look.getByLabel('Visited country colour', { exact: true }).fill('#aa00aa');
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgb(170, 0, 170)');
+  await expect.poll(() => placeFill(page, 'NZ')).toBe('rgb(170, 0, 170)');
+  // No "Saved.": only a failure is said
+  await expect(look.getByText('Saved.')).toHaveCount(0);
   await closeSettings(settings);
   // The map key says so
   await expect(page.getByRole('list', { name: 'Map key' }).getByText('Visited or lived there')).toBeVisible();
 
   // The hover colour as it was, on a place been to too: the middle of India's mainland (clear of
   // the tags at the top left)
-  const india = page.locator('[data-map-design] svg g[data-code="IN"]').first();
+  const india = page.locator('[data-map-page] svg g[data-code="IN"]').first();
   const shapes = india.locator('path');
   const sizes = await shapes.evaluateAll((paths) => paths.map((path) => path.getBBox().width * path.getBBox().height));
   await shapes.nth(sizes.indexOf(Math.max(...sizes))).hover();
@@ -274,46 +290,53 @@ test('the owner shows the places been to in one colour, over their own, everyone
   await page.mouse.move(5, 5);
   await expect.poll(() => india.evaluate((el) => getComputedStyle(el).fill)).toBe('rgb(170, 0, 170)');
 
+  // In every style (25 Nov 2026, the user's wish): the starry night, with no design of its own
+  const again = await openVisitedLook(page);
+  await again.settings.getByText('Starry night', { exact: true }).click();
+  await expect(mapFrame(page)).toHaveAttribute('data-map-style', 'starry');
+  await expect(designed(page)).toHaveCount(0);
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgb(170, 0, 170)');
   // A colour and a badge: the badges back, the colour kept
-  const again = await openDesign(page);
-  await again.editor.getByRole('group', { name: 'Places you’ve been show as' }).getByLabel('A colour and a badge', { exact: true }).check();
+  await again.look.getByRole('group', { name: 'Places you’ve been show as' }).getByLabel('A colour and a badge', { exact: true }).check();
   await expect(page.locator('[data-visit-badge="fill"]').first()).toBeVisible();
-  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
-  await expect(again.editor.getByText('Saved.')).toBeVisible();
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgb(170, 0, 170)');
   await closeSettings(again.settings);
 
   // Kept, and the same through a share link
   await page.reload();
-  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgb(170, 0, 170)');
   await goInApp(page, `/shared/${HOME_SHARE_CODE}`);
-  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
-  await expect.poll(() => fillOf(page, 'DE')).toBe('rgb(255, 0, 0)');
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgb(170, 0, 170)');
+  await expect.poll(() => placeFill(page, 'NZ')).toBe('rgb(170, 0, 170)');
 });
 
 // A metallic finish (25 Nov 2026, the user's wish: "shiny colours like gold and silver", "a few
 // options next to the colour selector for visited country, like gold silver bronze")
-test('the places been to can wear gold, silver or bronze foil, kept, and a colour again', async ({ page }) => {
+test('the places been to can wear gold, silver or bronze foil, in every style, kept, and a colour again', async ({ page }) => {
   await openMap(page);
-  const { settings, editor } = await openDesign(page);
-  await editor.getByRole('group', { name: 'Places you’ve been show as' }).getByLabel('A colour', { exact: true }).check();
-  const finishes = editor.getByRole('group', { name: 'Or a metallic finish' });
+  const { settings, look } = await openVisitedLook(page);
+  await look.getByRole('group', { name: 'Places you’ve been show as' }).getByLabel('A colour', { exact: true }).check();
+  const finishes = look.getByRole('group', { name: 'Or a metallic finish' });
   await expect(finishes.getByRole('button')).toHaveText(['Gold', 'Silver', 'Bronze']);
 
   // Gold: a sheet of polished gold under the map, showing through the places been to (their own
   // fill see-through), its edges lit while the map is still
-  const foil = page.locator('[data-map-design] svg [data-visited-foil]');
+  const foil = page.locator('[data-map-page] svg [data-visited-foil]');
   await finishes.getByRole('button', { name: 'Gold' }).click();
   await expect(finishes.getByRole('button', { name: 'Gold' })).toHaveAttribute('aria-pressed', 'true');
   await expect(foil).toHaveAttribute('data-visited-foil', 'GOLD');
   await expect(foil.locator('image')).toHaveAttribute('href', /foil-gold/);
-  await expect.poll(() => fillOf(page, 'PT')).toBe('rgba(0, 0, 0, 0)');
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgba(0, 0, 0, 0)');
   await expect.poll(() => foil.evaluate((el) => getComputedStyle(el).filter)).toContain('mpv-foil-edge');
   // Silver in its place
   await finishes.getByRole('button', { name: 'Silver' }).click();
   await expect(foil).toHaveAttribute('data-visited-foil', 'SILVER');
   await expect(foil.locator('image')).toHaveAttribute('href', /foil-silver/);
   await expect(finishes.getByRole('button', { name: 'Gold' })).toHaveAttribute('aria-pressed', 'false');
-  await expect(editor.getByText('Saved.')).toBeVisible();
+  // In another style too: the old map
+  await settings.getByText('Old map', { exact: true }).click();
+  await expect(mapFrame(page)).toHaveAttribute('data-map-style', 'old-map');
+  await expect(foil).toHaveAttribute('data-visited-foil', 'SILVER');
   await closeSettings(settings);
   // The map key's swatch is the metal too
   await expect
@@ -335,15 +358,15 @@ test('the places been to can wear gold, silver or bronze foil, kept, and a colou
   // Kept after a reload, and for anyone with the link
   await page.reload();
   await expect(foil).toHaveAttribute('data-visited-foil', 'SILVER');
-  await expect.poll(() => fillOf(page, 'PT')).toBe('rgba(0, 0, 0, 0)');
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgba(0, 0, 0, 0)');
   await goInApp(page, `/shared/${HOME_SHARE_CODE}`);
   await expect(foil).toHaveAttribute('data-visited-foil', 'SILVER');
 
   // Back on the map, a colour chosen leaves the metal
   await openMap(page);
-  const again = await openDesign(page);
-  await again.editor.getByLabel('Visited country colour', { exact: true }).fill('#aa00aa');
-  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
-  await expect(again.editor.getByRole('group', { name: 'Or a metallic finish' }).getByRole('button', { name: 'Silver' })).toHaveAttribute('aria-pressed', 'false');
+  const again = await openVisitedLook(page);
+  await again.look.getByLabel('Visited country colour', { exact: true }).fill('#aa00aa');
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgb(170, 0, 170)');
+  await expect(again.look.getByRole('group', { name: 'Or a metallic finish' }).getByRole('button', { name: 'Silver' })).toHaveAttribute('aria-pressed', 'false');
   await expect(foil).toHaveCount(0);
 });

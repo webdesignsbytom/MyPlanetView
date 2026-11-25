@@ -8,6 +8,7 @@ import { logEvent } from '../utils/events/logEvent.js';
 import { createMapEvent } from '../event/travelUtils.js';
 import { sanitizeText } from '../utils/sanitize.js';
 import { MAP_STYLES, mapStyleOf } from '../utils/mapSettings.js';
+import { parseVisitedLook } from '../utils/mapDesigns.js';
 import { supporterBadge } from '../utils/supporterBadge.js';
 import { canEdit, canManage, canView, isOwner } from '../utils/access.js';
 import {
@@ -179,6 +180,11 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     homeCountryCode: detail.homeCountryCode ?? null,
     // The style everyone sees it in: its own, else the owner's (null: each viewer's own)
     style: mapStyleOf(detail.style, detail.ownerSettings),
+    // How the places been to show, in every style, for everyone who opens it (docs/API.md "The
+    // visited look"; 25 Nov 2026, the user's wish)
+    visitedLook: detail.visitedLook ?? 'BADGE',
+    visitedColour: detail.visitedColour ?? null,
+    visitedFinish: detail.visitedFinish ?? null,
     role,
     ownerName: detail.owner?.name ?? null,
     // The owner's paid plan on the banner, for everyone who opens it, share links too, unless
@@ -305,6 +311,10 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
     if (!MAP_STYLES.includes(body.style)) return badRequest(req, res, D, EVENT_MESSAGES.invalidMapStyle);
     data.style = body.style;
   }
+  // How the places been to show, in every style (docs/API.md "The visited look")
+  const visited = parseVisitedLook(body);
+  if (visited.error) return badRequest(req, res, D, EVENT_MESSAGES[visited.error]);
+  Object.assign(data, visited.data);
   // The UK as its four nations: changing it moves the map's UK data (services/travel/ukNations.js)
   if (body.splitUk !== undefined && typeof body.splitUk !== 'boolean') {
     return badRequest(req, res, D, EVENT_MESSAGES.invalidSplitUk);

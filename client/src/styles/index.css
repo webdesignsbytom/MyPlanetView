@@ -512,13 +512,14 @@
    filtered, and not those marked data-keep-colour: the map style and map type pickers' pictures
    of the other styles stay in their colours (25 Nov 2026, the user's wish: "even in black and
    white mode the images of the other map types should not be in black and white"). A filter on
-   a panel would reach everything in it, past any exception. */
+   a panel would reach everything in it, past any exception. Nor the sheet of metal under the
+   places been to (VisitedFoil, data-keep-colour): gold stays gold, as a design's colours do. */
 [data-mono-map] > :not(main, [data-map-panels]),
 [data-mono-map] main :is(img, video, canvas),
 [data-mono-map] [data-map-panels] :is(img, video, canvas):not([data-keep-colour]) {
   filter: grayscale(1);
 }
-[data-mono-map] main image,
+[data-mono-map] main image:not([data-keep-colour]),
 [data-mono-map] [data-map-panels] image {
   filter: url('#mpv-mono-pictures');
 }

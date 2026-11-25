@@ -245,6 +245,25 @@ describe('useTravelMap: the map’s details, style and design', () => {
     await waitFor(() => expect(result.current.map.style).toBe('old-map'));
   });
 
+  // How the places been to show: the map's own, in every style (25 Nov 2026, the user's wish)
+  it('shows a new visited look at once and saves it with the map', async () => {
+    const { result } = await open();
+    api.updateMap.mockResolvedValue({});
+    await act(async () => result.current.setVisitedLook({ visitedLook: 'COLOUR', visitedFinish: 'GOLD' }));
+    expect(result.current.map).toMatchObject({ visitedLook: 'COLOUR', visitedFinish: 'GOLD' });
+    expect(api.updateMap).toHaveBeenCalledWith('m1', { visitedLook: 'COLOUR', visitedFinish: 'GOLD' });
+  });
+
+  it('reads the map again when the visited look couldn’t be saved, and says so', async () => {
+    const { result } = await open();
+    api.updateMap.mockRejectedValue(new Error('Forbidden'));
+    api.getMap.mockResolvedValue({ map: mapOf('m1', { visitedLook: 'BADGE' }) });
+    let thrown = null;
+    await act(async () => result.current.setVisitedLook({ visitedLook: 'BOTH' }).catch((err) => (thrown = err)));
+    expect(thrown?.message).toBe('Forbidden');
+    await waitFor(() => expect(result.current.map.visitedLook).toBe('BADGE'));
+  });
+
   it('keeps one design per style', async () => {
     const { result } = await open();
     const design = { shown: true, countries: { FR: '#112233' } };

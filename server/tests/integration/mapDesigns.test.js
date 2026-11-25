@@ -69,9 +69,6 @@ describe('map designs', () => {
       stringTwist: null,
       plannedString: null,
       plannedStringTwist: null,
-      visitedLook: 'BADGE',
-      visited: null,
-      visitedFinish: null,
       picture: null,
     });
     expect(await designOf(viewer.agent)).toMatchObject({ countries: { FR: '#aa0000' }, names: '#ffffff' });
@@ -162,35 +159,6 @@ describe('map designs', () => {
     await expect(prisma.mapDesign.update({ where, data: { plannedStringColour: 'blue' } })).rejects.toThrow();
     await expect(prisma.mapDesign.update({ where, data: { plannedStringTwistColour: '#ffffff80' } })).rejects.toThrow();
     expect(data(await patch(owner.agent, { plannedString: null, plannedStringTwist: null })).design).toMatchObject({ plannedString: null, plannedStringTwist: null });
-  });
-
-  // How visited places show (25 Nov 2026, the user's wish): the owner's choice, everyone's view
-  it('saves how visited places show and their colour, and gives them to everyone', async () => {
-    const design = data(await patch(owner.agent, { visitedLook: 'colour', visited: '#7C3AED' })).design;
-    expect(design).toMatchObject({ visitedLook: 'COLOUR', visited: '#7c3aed' });
-    expect(await designOf(viewer.agent)).toMatchObject({ visitedLook: 'COLOUR', visited: '#7c3aed' });
-    const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.designs;
-    expect(exported.find((d) => d.style === 'animated')).toMatchObject({ visitedLook: 'COLOUR', visitedColour: '#7c3aed' });
-    expect((await patch(owner.agent, { visitedLook: 'STICKER' })).status).toBe(400);
-    expect((await patch(owner.agent, { visited: '#7c3aed80' })).status).toBe(400);
-    // Only the owner and co-owners choose it
-    expect((await patch(viewer.agent, { visitedLook: 'BADGE' })).status).toBe(403);
-    // The database refuses a malformed colour too (CHECK map_design_visited_colour)
-    const where = { mapId_style: { mapId: map.id, style: 'animated' } };
-    await expect(prisma.mapDesign.update({ where, data: { visitedColour: 'purple' } })).rejects.toThrow();
-    expect(data(await patch(owner.agent, { visitedLook: 'BADGE', visited: null })).design).toMatchObject({ visitedLook: 'BADGE', visited: null });
-  });
-
-  // A metallic finish (25 Nov 2026, the user's wish: "shiny colours like gold and silver")
-  it('saves a metallic finish for the places been to, gives it to everyone, and takes it off', async () => {
-    const design = data(await patch(owner.agent, { visitedLook: 'COLOUR', visitedFinish: 'gold' })).design;
-    expect(design).toMatchObject({ visitedLook: 'COLOUR', visitedFinish: 'GOLD' });
-    expect(await designOf(viewer.agent)).toMatchObject({ visitedFinish: 'GOLD' });
-    const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.designs;
-    expect(exported.find((d) => d.style === 'animated')).toMatchObject({ visitedFinish: 'GOLD' });
-    expect((await patch(owner.agent, { visitedFinish: 'PLATINUM' })).status).toBe(400);
-    expect(data(await patch(owner.agent, { visitedFinish: 'SILVER' })).design.visitedFinish).toBe('SILVER');
-    expect(data(await patch(owner.agent, { visitedLook: 'BADGE', visitedFinish: null })).design).toMatchObject({ visitedLook: 'BADGE', visitedFinish: null });
   });
 
   it('can be turned off and on again, keeping it', async () => {

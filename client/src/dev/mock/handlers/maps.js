@@ -20,6 +20,7 @@ import {
 import { isPole } from '@/utils/map/specialPlaces';
 import { UK, isUkNation, placeOnMap } from '@/utils/map/ukNations';
 import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
+import { DESIGN_MESSAGES, parseVisitedLook } from '../mapDesigns';
 import { ukNationAt } from '../ukNationLookup';
 import { setMapSplitUk } from '../ukNationSplit';
 import { adsFor } from '../offers';
@@ -321,6 +322,10 @@ export function registerMapRoutes() {
     }
     // The style everyone who opens the map sees it in (docs/API.md "Map styles")
     if (body.style !== undefined && !MAP_STYLE_IDS.includes(body.style)) return fail(400, 'Choose one of the map styles.');
+    // How the places been to show, in every style (docs/API.md "The visited look")
+    const visited = parseVisitedLook(body);
+    if (visited.error) return fail(400, DESIGN_MESSAGES[visited.error]);
+    Object.assign(map, visited.change);
     if (name) map.name = name;
     if (home !== undefined) map.homeCountryCode = home ? placeOnMap(home, false) : null;
     if (body.style !== undefined) map.style = body.style;

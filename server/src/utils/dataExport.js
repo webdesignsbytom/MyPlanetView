@@ -159,6 +159,10 @@ export function exportMapView(rows, { userId }) {
     homeCountryCode: map.homeCountryCode ?? null,
     // The style chosen for it, shown to everyone who opens it (null: the owner's own)
     style: map.style ?? null,
+    // How the places been to show, in every style (docs/API.md "The visited look")
+    visitedLook: map.visitedLook ?? 'BADGE',
+    visitedColour: map.visitedColour ?? null,
+    visitedFinish: map.visitedFinish ?? null,
     // Its own designs, one per map style (docs/API.md "Map designs"): a picture for the sea
     // and its colours
     designs: (map.designs ?? []).map((design) => ({
@@ -172,9 +176,6 @@ export function exportMapView(rows, { userId }) {
       stringTwistColour: design.stringTwistColour ?? null,
       plannedStringColour: design.plannedStringColour ?? null,
       plannedStringTwistColour: design.plannedStringTwistColour ?? null,
-      visitedLook: design.visitedLook ?? 'BADGE',
-      visitedColour: design.visitedColour ?? null,
-      visitedFinish: design.visitedFinish ?? null,
       hasSeaPicture: Boolean(design.pictureId),
     })),
     // Landmarks ticked "been here" (docs/API.md "Collecting")

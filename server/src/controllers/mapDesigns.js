@@ -51,10 +51,6 @@ export async function designView(design) {
     stringTwist: design.stringTwistColour ?? null,
     plannedString: design.plannedStringColour ?? null,
     plannedStringTwist: design.plannedStringTwistColour ?? null,
-    // How the places visited or lived in show, and their colour (25 Nov 2026)
-    visitedLook: design.visitedLook ?? 'BADGE',
-    visited: design.visitedColour ?? null,
-    visitedFinish: design.visitedFinish ?? null,
     // Signed as a photo is (on the hour, for two), so the browser keeps it
     picture: design.picture ? { url: await signPhotoUrl(design.picture.key) } : null,
   };

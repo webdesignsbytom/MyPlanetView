@@ -70,39 +70,13 @@ describe('MapDesignSection', () => {
     expect(e.change.mock.calls).toEqual([[{ grid: '#222222' }], [{ hover: '#333333' }], [{ names: null }]]);
   });
 
-  // How the places been to show (25 Nov 2026, the user's wish): a badge, a colour, or both
-  it('chooses how the places been to show, and their colour once there’s one to show', () => {
-    const e = editor();
-    useMapDesignEditor.mockReturnValue(e);
-    const { rerender } = open();
-    expect(screen.getByLabelText('A badge').checked).toBe(true);
+  // How the places been to show is the map's, in every style (25 Nov 2026, the user's wish):
+  // VisitedLookSection, above this one
+  it('leaves how the places been to show to the map’s own section', () => {
+    useMapDesignEditor.mockReturnValue(editor());
+    const { container } = open();
+    expect(container.querySelector('[data-visited-look]')).toBeNull();
     expect(screen.queryByLabelText('Visited country colour')).toBeNull();
-    fireEvent.click(screen.getByLabelText('A colour'));
-    expect(e.change).toHaveBeenLastCalledWith({ visitedLook: 'COLOUR' });
-
-    const coloured = editor({ design: { ...DESIGN, visitedLook: 'BOTH', visited: '#7c3aed' } });
-    useMapDesignEditor.mockReturnValue(coloured);
-    rerender(<MapDesignSection map={MAP} styleId='starry' onDesignChange={() => {}} />);
-    expect(screen.getByLabelText('A colour and a badge').checked).toBe(true);
-    const colour = screen.getByLabelText('Visited country colour');
-    expect(colour.value).toBe('#7c3aed');
-    // Choosing a colour leaves a metallic finish
-    fireEvent.input(colour, { target: { value: '#aa00aa' } });
-    expect(coloured.change).toHaveBeenLastCalledWith({ visited: '#aa00aa', visitedFinish: null });
-    fireEvent.click(screen.getByLabelText('Visited country colour: back to the usual colour'));
-    expect(coloured.change).toHaveBeenLastCalledWith({ visited: null, visitedFinish: null });
-  });
-
-  // A metallic finish beside the colour (25 Nov 2026, the user's wish: gold, silver, bronze)
-  it('offers gold, silver and bronze beside the visited colour, the chosen one pressed', () => {
-    const e = editor({ design: { ...DESIGN, visitedLook: 'COLOUR', visitedFinish: 'SILVER' } });
-    useMapDesignEditor.mockReturnValue(e);
-    open();
-    expect(screen.getByText('Silver').closest('button').getAttribute('aria-pressed')).toBe('true');
-    fireEvent.click(screen.getByText('Gold').closest('button'));
-    expect(e.change).toHaveBeenLastCalledWith({ visitedFinish: 'GOLD' });
-    fireEvent.click(screen.getByText('Silver').closest('button'));
-    expect(e.change).toHaveBeenLastCalledWith({ visitedFinish: null });
   });
 
   // 25 Nov 2026, the user's wish: the strings' colours "all in one place", the Strings panel

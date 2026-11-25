@@ -70,15 +70,14 @@ export const EMPTY_DESIGN = Object.freeze({
   stringTwist: null,
   plannedString: null,
   plannedStringTwist: null,
-  visitedLook: 'BADGE',
-  visited: null,
-  visitedFinish: null,
   picture: null,
 });
 
 /**
  * How the places visited or lived in show (25 Nov 2026, the user's wish), as the server's
- * VISITED_LOOKS: their badge (as always), the design's visited colour, or both.
+ * VISITED_LOOKS: their badge (as always), the map's visited colour, or both. The map's own, in
+ * every map style (the same day, the user: it showed only in the style whose design set it):
+ * the map reply's visitedLook, visitedColour and visitedFinish (docs/API.md "The visited look").
  */
 export const VISITED_LOOKS = Object.freeze([
   { id: 'BADGE', label: 'A badge' },
@@ -87,8 +86,8 @@ export const VISITED_LOOKS = Object.freeze([
 ]);
 export const VISITED_LOOK_IDS = VISITED_LOOKS.map((look) => look.id);
 
-/** A design's visited look: BADGE for none, an older design, or anything unknown. */
-export const visitedLookOf = (design) => (VISITED_LOOK_IDS.includes(design?.visitedLook) ? design.visitedLook : 'BADGE');
+/** A map's (or Settings' change's) visited look: BADGE for none, or anything unknown. */
+export const visitedLookOf = (visited) => (VISITED_LOOK_IDS.includes(visited?.visitedLook) ? visited.visitedLook : 'BADGE');
 
 /**
  * The metallic finishes the places been to can take in place of a colour (25 Nov 2026, the user's
@@ -109,44 +108,57 @@ export const VISITED_FINISHES = Object.freeze([
 /** The lit edge's filter, in the world map (components/map/FoilEdgeFilter.jsx). */
 export const FOIL_EDGE_ID = 'mpv-foil-edge';
 
-/** A design's metallic finish (one of VISITED_FINISHES), or null for its plain colour. */
-export const visitedFinishOf = (design) => VISITED_FINISHES.find((finish) => finish.id === design?.visitedFinish) ?? null;
+/** A map's metallic finish (one of VISITED_FINISHES), or null for its plain colour. */
+export const visitedFinishOf = (visited) => VISITED_FINISHES.find((finish) => finish.id === visited?.visitedFinish) ?? null;
+
+/** A map's visited look, only what's well formed: `{ visitedLook, visitedColour, visitedFinish }`. */
+export const visitedLookFrom = (map) => ({
+  visitedLook: visitedLookOf(map),
+  visitedColour: typeof map?.visitedColour === 'string' && DESIGN_COLOUR.test(map.visitedColour) ? map.visitedColour : null,
+  visitedFinish: visitedFinishOf(map)?.id ?? null,
+});
 
 // The places the visited colour fills: every place been to (CountryShape and MicroStateDot carry
 // data-been) but the poles, whose compass roses are never filled. More particular than a place's
 // own colour's rule, so it wins over it, and never on the place under the pointer (its hover
-// colour stays), nor on the borders: a fill alone.
-const beenTo = (svg) => `[data-map-design] ${svg} [data-been="true"]${POLE_CODES.map((code) => `:not([data-code="${code}"])`).join('')}:not(:hover)`;
+// colour stays), nor on the borders: a fill alone. Under [data-map-page], the map page's own
+// wrapper (MapExperience, the embed page), whatever its style, never Settings' pictures of the
+// styles, which carry data-map-style too.
+const beenTo = (svg) => `[data-map-page] ${svg} [data-been="true"]${POLE_CODES.map((code) => `:not([data-code="${code}"])`).join('')}:not(:hover)`;
 const VISITED_FILL = beenTo('svg');
 // The same on a map with a metallic finish's sheet of metal under its places (VisitedFoil): more
 // particular, so they're see-through there and the metal shows
 const VISITED_OVER_FOIL = beenTo('svg:has([data-visited-foil])');
 
 /**
- * The visited look's rules (25 Nov 2026, the user's wish: "all the countries I have visited or
- * lived in turn the colour I selected", over a colour of their own): with a colour, every place
- * been to filled with `--map-visited` (the design's `visited`, else the map style's own); with the
- * colour alone, their badges hidden, the poles' stamps kept (VisitBadges marks which). A metallic
- * finish (25 Nov 2026) shows its sheet of metal through them instead (VisitedFoil; on a map without
- * one, the metal's flat colour), lights its edges while the map is still (a lit edge on every frame
- * of a pan doubled its cost: useMapViewport's data-moving), and puts the same metal on the map key's
- * swatch.
+ * The map's visited look as a style sheet (25 Nov 2026, the user's wish: "all the countries I have
+ * visited or lived in turn the colour I selected", over a colour of their own, in every map style):
+ * with a colour, every place been to filled with `--map-visited` (the map's `visitedColour`, else
+ * the map style's own); with the colour alone, their badges hidden, the poles' stamps kept
+ * (VisitBadges marks which). A metallic finish shows its sheet of metal through them instead
+ * (VisitedFoil; on a map without one, the metal's flat colour), lights its edges while the map is
+ * still (a lit edge on every frame of a pan doubled its cost: useMapViewport's data-moving), and
+ * puts the same metal on the map key's swatch. Nothing while they show as badges.
  */
-function visitedRules(design) {
-  const look = visitedLookOf(design);
-  if (look === 'BADGE') return [];
-  const finish = visitedFinishOf(design);
+export function visitedCss(visited) {
+  const look = visitedLookOf(visited);
+  if (look === 'BADGE') return '';
+  const { visitedColour } = visitedLookFrom(visited);
+  const finish = visitedFinishOf(visited);
   return [
+    visitedColour ? `[data-map-page]{--map-visited:${visitedColour}}` : '',
     `${VISITED_FILL}{fill:${finish ? `var(${finish.colour})` : 'var(--map-visited)'}}`,
-    ...(look === 'COLOUR' ? ['[data-map-design] svg [data-visit-badge="fill"]{display:none}'] : []),
+    ...(look === 'COLOUR' ? ['[data-map-page] svg [data-visit-badge="fill"]{display:none}'] : []),
     ...(finish
       ? [
           `${VISITED_OVER_FOIL}{fill:transparent}`,
-          `[data-map-design] svg:not([data-moving]) [data-visited-foil]{filter:url(#${FOIL_EDGE_ID})}`,
-          `[data-map-design] [data-key-visited-colour] [aria-hidden]{background:url("${finish.texture}") center/cover}`,
+          `[data-map-page] svg:not([data-moving]) [data-visited-foil]{filter:url(#${FOIL_EDGE_ID})}`,
+          `[data-map-page] [data-key-visited-colour] [aria-hidden]{background:url("${finish.texture}") center/cover}`,
         ]
       : []),
-  ];
+  ]
+    .filter(Boolean)
+    .join(' ');
 }
 
 // A twined string's width on screen (MapStrings): wide enough for the twist to show; a
@@ -212,7 +224,6 @@ export function designCss(design) {
   if (typeof design.grid === 'string' && DESIGN_COLOUR.test(design.grid)) vars.push(`--map-grid:${design.grid}`);
   if (typeof design.hover === 'string' && DESIGN_COLOUR.test(design.hover)) vars.push(`--map-hover:${design.hover}`);
   vars.push(...stringVars(design, STRING_DESIGNS.VISITED), ...stringVars(design, STRING_DESIGNS.PLANNED));
-  if (typeof design.visited === 'string' && DESIGN_COLOUR.test(design.visited)) vars.push(`--map-visited:${design.visited}`);
   const colours = cleanCountryColours(design.countries);
   for (const [region, parent] of Object.entries(REGION_PARENT)) {
     if (!colours[region] && colours[parent]) colours[region] = colours[parent];
@@ -220,7 +231,6 @@ export function designCss(design) {
   return [
     vars.length ? `[data-map-design]{${vars.join(';')}}` : '',
     ...Object.entries(colours).map(([code, colour]) => `[data-map-design] svg g[data-code="${code}"]:not(:hover){fill:${colour}}`),
-    ...visitedRules(design),
   ]
     .filter(Boolean)
     .join(' ');

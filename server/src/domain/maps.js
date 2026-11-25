@@ -140,7 +140,7 @@ export const findMapDetail = async (mapId) => {
   const [map, owner, ownerProfile, travellers, visits] = await Promise.all([
     prisma.travelMap.findUnique({
       where: { id: mapId },
-      select: { id: true, name: true, groupType: true, isDefault: true, ownerId: true, splitUk: true, homeCountryCode: true, style: true },
+      select: { id: true, name: true, groupType: true, isDefault: true, ownerId: true, splitUk: true, homeCountryCode: true, style: true, visitedLook: true, visitedColour: true, visitedFinish: true },
     }),
     prisma.user.findFirst({ where: { ownedMaps: { some: { id: mapId } } }, select: { name: true } }),
     prisma.profile.findFirst({ where: { user: { ownedMaps: { some: { id: mapId } } } }, select: { mapSettings: true } }),

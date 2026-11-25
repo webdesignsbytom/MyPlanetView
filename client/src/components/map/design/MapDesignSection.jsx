@@ -1,16 +1,14 @@
 import React, { useEffect, useId, useState } from 'react';
 // Components
 import CheckboxInput from '@/components/ui/CheckboxInput';
-import RadioInput from '@/components/ui/RadioInput';
 import DesignColourField from './DesignColourField';
 import DesignCountryColours from './DesignCountryColours';
 import DesignPictureField from './DesignPictureField';
-import VisitedFinishPicker from './VisitedFinishPicker';
 // Hooks
 import useMapDesignEditor from '@/hooks/useMapDesignEditor';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 // Utils
-import { VISITED_LOOKS, designFor, readStyleColours, visitedLookOf } from '@/utils/map/mapDesign';
+import { designFor, readStyleColours } from '@/utils/map/mapDesign';
 import { mapStyleById } from '@/utils/map/mapStyles';
 
 // The map style's own colours, as the pickers start from them (22 Nov 2026, the user's wish:
@@ -18,8 +16,8 @@ import { mapStyleById } from '@/utils/map/mapStyles';
 // (a colour picker takes "#rrggbb" only, and the tokens are the one place colours live)
 const USUAL_TOKENS = ['--map-visit-1', '--map-visit-2', '--map-visit-3', '--map-visit-4', '--map-visit-5', '--map-visit-6', '--map-visit-7', '--map-ice'];
 const readUsualColours = (styleId) => {
-  const read = readStyleColours(styleId, ['--map-ink', '--map-grid', '--map-hover', '--map-visited', ...USUAL_TOKENS]);
-  return { names: read['--map-ink'], grid: read['--map-grid'], hover: read['--map-hover'], visited: read['--map-visited'], places: read };
+  const read = readStyleColours(styleId, ['--map-ink', '--map-grid', '--map-hover', ...USUAL_TOKENS]);
+  return { names: read['--map-ink'], grid: read['--map-grid'], hover: read['--map-hover'], places: read };
 };
 
 // Settings, "How it looks", for the owner and co-owners: this map's own design (docs/API.md
@@ -90,36 +88,8 @@ function MapDesignSection({ map, styleId, onDesignChange, preview }) {
         usual={usual.hover}
         onChange={(hover) => editor.change({ hover })}
       />
-      {/* How the places visited or lived in show (25 Nov 2026, the user's wish): a badge, as
-          always, one colour over each one's own, or both; the colour once there's one to show */}
-      <fieldset className='grid gap-2' data-visited-look>
-        <legend className='pb-2 text-sm font-medium'>Places you’ve been show as</legend>
-        {VISITED_LOOKS.map((look) => (
-          <RadioInput
-            key={look.id}
-            id={`${uid}-visited-${look.id}`}
-            name={`${uid}-visited-look`}
-            value={look.id}
-            checked={visitedLookOf(design) === look.id}
-            onChange={() => editor.change({ visitedLook: look.id })}
-            label={look.label}
-          />
-        ))}
-        {/* A colour of their choosing, or a metallic finish beside it (25 Nov 2026, the user's
-            wish: gold, silver, bronze); choosing a colour leaves the metal */}
-        {visitedLookOf(design) !== 'BADGE' ? (
-          <>
-            <DesignColourField
-              id={`${uid}-visited`}
-              label='Visited country colour'
-              value={design?.visited ?? null}
-              usual={usual.visited}
-              onChange={(visited) => editor.change({ visited, visitedFinish: null })}
-            />
-            <VisitedFinishPicker id={`${uid}-finish`} value={design?.visitedFinish ?? null} onChange={(visitedFinish) => editor.change({ visitedFinish })} />
-          </>
-        ) : null}
-      </fieldset>
+      {/* How the places been to show is the map's, in every style: VisitedLookSection, above
+          (25 Nov 2026, the user's wish) */}
       {/* The strings' colours are in the Strings panel, each kind's in its tab (25 Nov 2026, the
           user's wish: "all in one place") */}
       <p className='text-sm' data-string-colours-moved>

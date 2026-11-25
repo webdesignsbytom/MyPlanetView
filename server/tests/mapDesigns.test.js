@@ -10,6 +10,7 @@ import {
   storedColours,
   VISITED_FINISHES,
   VISITED_LOOKS,
+  parseVisitedLook,
 } from '../src/utils/mapDesigns.js';
 
 describe('cleanColour', () => {
@@ -76,24 +77,10 @@ describe('parseDesignChange', () => {
     expect(parseDesignChange({ plannedStringTwist: '#ffffff80' })).toEqual({ error: 'invalidDesignColour' });
     expect(parseDesignChange({ plannedString: 'blue' })).toEqual({ error: 'invalidDesignColour' });
   });
-  // How visited places show, and their colour (25 Nov 2026, the user's wish)
-  it('reads how visited places show, in any case, and their colour', () => {
-    expect(VISITED_LOOKS).toEqual(['BADGE', 'COLOUR', 'BOTH']);
-    expect(parseDesignChange({ visitedLook: 'colour', visited: '#7C3AED' })).toEqual({ data: { visitedColour: '#7c3aed', visitedLook: 'COLOUR' }, codes: [] });
-    expect(parseDesignChange({ visitedLook: 'BOTH' })).toEqual({ data: { visitedLook: 'BOTH' }, codes: [] });
-    expect(parseDesignChange({ visited: null })).toEqual({ data: { visitedColour: null }, codes: [] });
-    expect(parseDesignChange({ visitedLook: 'STICKER' })).toEqual({ error: 'invalidDesign' });
-    expect(parseDesignChange({ visitedLook: 1 })).toEqual({ error: 'invalidDesign' });
-    // Opaque only
-    expect(parseDesignChange({ visited: '#7c3aed80' })).toEqual({ error: 'invalidDesignColour' });
-  });
-  // A metallic finish (25 Nov 2026, the user's wish: "shiny colours like gold and silver")
-  it('reads a metallic finish for the places been to, in any case, or none', () => {
-    expect(VISITED_FINISHES).toEqual(['GOLD', 'SILVER', 'BRONZE']);
-    expect(parseDesignChange({ visitedFinish: 'gold' })).toEqual({ data: { visitedFinish: 'GOLD' }, codes: [] });
-    expect(parseDesignChange({ visitedFinish: null })).toEqual({ data: { visitedFinish: null }, codes: [] });
-    expect(parseDesignChange({ visitedFinish: 'PLATINUM' })).toEqual({ error: 'invalidDesign' });
-    expect(parseDesignChange({ visitedFinish: 2 })).toEqual({ error: 'invalidDesign' });
+  // The visited look is the map's, in every style (25 Nov 2026), never a design's
+  it('leaves how visited places show to the map', () => {
+    expect(parseDesignChange({ visitedLook: 'COLOUR' })).toEqual({ error: 'invalidDesign' });
+    expect(parseDesignChange({ visited: '#7c3aed', names: '#000000' })).toEqual({ data: { namesColour: '#000000' }, codes: [] });
   });
   it('empties the colours with an empty set', () => {
     expect(parseDesignChange({ countries: {} })).toEqual({ data: { countryColours: {} }, codes: [] });
@@ -153,5 +140,32 @@ describe('checkDesignPicture', () => {
     expect(checkDesignPicture({ contentType: 'image/png', bytes: 0 })).toBe('designPictureInvalid');
     expect(checkDesignPicture({ contentType: 'image/png', bytes: 1.5 })).toBe('designPictureInvalid');
     expect(checkDesignPicture({ contentType: 'image/png', bytes: DESIGN_PICTURE_MAX_BYTES + 1 })).toBe('designPictureTooLarge');
+  });
+});
+
+// How the places visited or lived in show, the map's in every style (docs/API.md "The visited
+// look"; 25 Nov 2026, the user's wish)
+describe('parseVisitedLook', () => {
+  it('reads how visited places show, in any case, and their colour', () => {
+    expect(VISITED_LOOKS).toEqual(['BADGE', 'COLOUR', 'BOTH']);
+    expect(parseVisitedLook({ visitedLook: 'colour', visitedColour: '#7C3AED' })).toEqual({ data: { visitedLook: 'COLOUR', visitedColour: '#7c3aed' } });
+    expect(parseVisitedLook({ visitedColour: null })).toEqual({ data: { visitedColour: null } });
+    expect(parseVisitedLook({ visitedLook: 'STICKER' })).toEqual({ error: 'invalidVisitedLook' });
+    expect(parseVisitedLook({ visitedLook: 1 })).toEqual({ error: 'invalidVisitedLook' });
+    // Opaque only
+    expect(parseVisitedLook({ visitedColour: '#7c3aed80' })).toEqual({ error: 'invalidDesignColour' });
+  });
+
+  it('reads a metallic finish, in any case, or none', () => {
+    expect(VISITED_FINISHES).toEqual(['GOLD', 'SILVER', 'BRONZE']);
+    expect(parseVisitedLook({ visitedFinish: 'gold' })).toEqual({ data: { visitedFinish: 'GOLD' } });
+    expect(parseVisitedLook({ visitedFinish: null })).toEqual({ data: { visitedFinish: null } });
+    expect(parseVisitedLook({ visitedFinish: 'PLATINUM' })).toEqual({ error: 'invalidVisitedLook' });
+    expect(parseVisitedLook({ visitedFinish: 2 })).toEqual({ error: 'invalidVisitedLook' });
+  });
+
+  it('asks for nothing when the request names none of them', () => {
+    expect(parseVisitedLook({ name: 'Our trips' })).toEqual({ data: {} });
+    expect(parseVisitedLook(null)).toEqual({ data: {} });
   });
 });

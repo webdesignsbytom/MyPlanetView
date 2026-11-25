@@ -210,6 +210,23 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     [mapId, refresh],
   );
 
+  // How the places been to show: the map's own, in every style (docs/API.md "The visited look";
+  // 25 Nov 2026, the user's wish; the owner and co-owners): `{ visitedLook?, visitedColour?,
+  // visitedFinish? }` shown at once, then saved. If the save fails, the map is read again, so it
+  // shows what it really has, and the failure is thrown for Settings to say so.
+  const setVisitedLook = useCallback(
+    async (change) => {
+      setState((prev) => (onMap(prev, mapId) ? { ...prev, map: { ...prev.map, ...change } } : prev));
+      try {
+        await updateMap(mapId, change);
+      } catch (err) {
+        refresh();
+        throw err;
+      }
+    },
+    [mapId, refresh],
+  );
+
   // The map's own design for a map style as it now stands (docs/API.md "Map designs"; one per
   // style): shown at once while it's edited, and with the server's answer after each save
   const setDesign = useCallback(
@@ -371,6 +388,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     saveMapDetails,
     setDesign,
     setMapStyle,
+    setVisitedLook,
     setLandmarkBeen,
     tieString,
     tieAutoStrings,

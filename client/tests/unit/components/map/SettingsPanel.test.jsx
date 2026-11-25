@@ -18,6 +18,7 @@ vi.mock('@/components/map/MainMapSection', () => section('main'));
 vi.mock('@/components/map/DeleteMapSection', () => section('delete'));
 vi.mock('@/components/travelCopies/TravelCopySection', () => section('copies'));
 vi.mock('@/components/map/design/MapDesignSection', () => ({ default: ({ styleId }) => <div data-section='design' data-style={styleId} /> }));
+vi.mock('@/components/map/design/VisitedLookSection', () => ({ default: ({ styleId }) => <div data-section='visited' data-style={styleId} /> }));
 vi.mock('@/components/onboarding/MapSetupForm', () => ({
   default: ({ onSubmit, canRename, submitLabel }) => (
     <button type='button' data-section='setup' data-can-rename={String(canRename)} onClick={() => onSubmit({ name: 'New name' })}>
@@ -132,6 +133,19 @@ describe('SettingsPanel', () => {
     expect(follows(design, screen.getByText('Map type'))).toBe(true);
     const { container: editor } = open({ onDesignChange: vi.fn(), canManage: false, isOwner: false });
     expect(editor.querySelector('[data-section="design"]')).toBeNull();
+  });
+
+  // How the places been to show is the map's, in every style (25 Nov 2026, the user's wish): its
+  // own section, above the style's design
+  it('puts how the places been to show above the style’s design, for the owner and co-owners', () => {
+    const { container } = open({ onDesignChange: vi.fn(), onVisitedLookChange: vi.fn(), mapStyle: 'old-map' });
+    const visited = container.querySelector('[data-section="visited"]');
+    expect(visited.getAttribute('data-style')).toBe('old-map');
+    const follows = (a, b) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(follows(screen.getByText('Map style'), visited)).toBe(true);
+    expect(follows(visited, container.querySelector('[data-section="design"]'))).toBe(true);
+    const { container: editor } = open({ onVisitedLookChange: vi.fn(), canManage: false, isOwner: false });
+    expect(editor.querySelector('[data-section="visited"]')).toBeNull();
   });
 
   it('sets the map’s style for everyone when the viewer can, saying so', () => {

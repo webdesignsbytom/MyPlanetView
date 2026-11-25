@@ -56,7 +56,7 @@ export function mapTips({ phone, touch, fullscreen, standalone, posters, appName
     tips.push({
       id: 'visitedLook',
       title: 'Where you’ve been',
-      text: 'Each place you’ve been wears a star badge. In Settings, under This map’s design, you can fill them all with one colour of your choosing instead, or have both: everyone who opens the map sees it that way.',
+      text: 'Each place you’ve been wears a star badge. In Settings, under Places you’ve been, you can fill them all with one colour of your choosing, or gold, silver or bronze, instead, or have both, in every map style: everyone who opens the map sees it that way.',
     });
   }
   tips.push({

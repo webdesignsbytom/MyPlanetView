@@ -50,12 +50,12 @@ describe('mapTips', () => {
   });
 
   // 25 Nov 2026, the user's wish: a page on how the places been to can show, for those who choose it
-  it('says the places been to can show as a colour, after the countries, only for the owner and co-owners', () => {
+  it('says the places been to can show as a colour or a metal, after the countries, only for the owner and co-owners', () => {
     expect(ids({ design: true }).slice(0, 2)).toEqual(['countries', 'visitedLook']);
     const words = tip({ design: true }, 'visitedLook');
     expect(words.title).toBe('Where you’ve been');
-    expect(words.text).toContain('fill them all with one colour of your choosing instead, or have both');
-    expect(words.text).toContain('In Settings, under This map’s design');
+    expect(words.text).toContain('fill them all with one colour of your choosing, or gold, silver or bronze, instead, or have both, in every map style');
+    expect(words.text).toContain('In Settings, under Places you’ve been');
     expect(ids({ design: false })).not.toContain('visitedLook');
     expect(ids({})).not.toContain('visitedLook');
   });

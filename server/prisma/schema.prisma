@@ -371,6 +371,14 @@ model TravelMap {
   // in Settings; null means the owner's own style (Profile.mapSettings.style). Checked in
   // code, not by a CHECK, as styles come and go
   style String?
+  // How the places visited or lived in show, in every map style (docs/API.md "The visited look";
+  // 25 Nov 2026, the user's wish: on all the map's styles, not one style's design): their badge
+  // (as always), one colour over each one's own, or both; `visitedColour` "#rrggbb", or null for
+  // the map style's usual one (CHECK travel_map_visited_colour); `visitedFinish` gold, silver
+  // or bronze metal in place of that colour, or null for the plain colour
+  visitedLook   VisitedLook    @default(BADGE)
+  visitedColour String?
+  visitedFinish VisitedFinish?
 
   travellers Traveller[]
   members    MapMember[]
@@ -454,14 +462,6 @@ model MapDesign {
   // map_design_planned_string_twist_colour
   plannedStringColour      String?
   plannedStringTwistColour String?
-  // How the places visited or lived in show (25 Nov 2026, the user's wish): their badge (as
-  // always), one colour of the owner's choosing over each one's own, or both; `visitedColour`
-  // "#rrggbb", or null for the map style's usual one (CHECK map_design_visited_colour)
-  visitedLook   VisitedLook @default(BADGE)
-  visitedColour String?
-  // A metallic finish in place of that colour (25 Nov 2026, the user's wish: "shiny colours
-  // like gold and silver"): a foil gradient across the map, or null for the plain colour
-  visitedFinish VisitedFinish?
 
   // The sea's picture, in the private bucket (resource 'mapDesign'); unique, so a file is
   // one map's. The daily clean-up never deletes a picture a design uses.
@@ -2043,15 +2043,15 @@ enum StringKind {
   PLANNED
 }
 
-// How a map design shows the places visited or lived in (MapDesign; 25 Nov 2026, the user's
-// wish): a badge, a colour, or both
+// How a map shows the places visited or lived in (TravelMap; 25 Nov 2026, the user's wish): a
+// badge, a colour, or both
 enum VisitedLook {
   BADGE
   COLOUR
   BOTH
 }
 
-// A metallic finish for the places visited or lived in (MapDesign; 25 Nov 2026, the user's wish)
+// A metallic finish for the places visited or lived in (TravelMap; 25 Nov 2026, the user's wish)
 enum VisitedFinish {
   GOLD
   SILVER

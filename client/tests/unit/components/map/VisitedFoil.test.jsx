@@ -18,7 +18,7 @@ const MONACO = COUNTRIES.find((c) => c.code === 'MC');
 const draw = (props) =>
   render(
     <svg>
-      <VisitedFoil design={GOLD} visitsByCode={VISITS} {...props} />
+      <VisitedFoil visited={GOLD} visitsByCode={VISITS} {...props} />
     </svg>,
   );
 const clipPathsOf = (container) => [...container.querySelectorAll('clipPath path')].map((path) => path.getAttribute('d'));
@@ -31,6 +31,8 @@ describe('VisitedFoil', () => {
     expect(foil.getAttribute('class')).toContain('pointer-events-none');
     const image = foil.querySelector('image');
     expect(image.getAttribute('href')).toBe(VISITED_FINISHES[0].texture);
+    // Gold stays gold on Black and white
+    expect(image.hasAttribute('data-keep-colour')).toBe(true);
     expect([image.getAttribute('x'), image.getAttribute('y'), image.getAttribute('width')]).toEqual(['0', String(MAP_TOP), '2000']);
     expect(Number(image.getAttribute('height'))).toBeCloseTo(MAP_BOTTOM - MAP_TOP);
     expect(foil.querySelector('rect').style.fill).toBe('var(--medal-gold)');
@@ -59,16 +61,16 @@ describe('VisitedFoil', () => {
   });
 
   it('draws nothing while the places been to show as badges, or in a plain colour', () => {
-    expect(draw({ design: { ...GOLD, visitedLook: 'BADGE' } }).container.querySelector('[data-visited-foil]')).toBeNull();
-    expect(draw({ design: { visitedLook: 'COLOUR', visited: '#7c3aed' } }).container.querySelector('[data-visited-foil]')).toBeNull();
-    expect(draw({ design: null }).container.querySelector('[data-visited-foil]')).toBeNull();
+    expect(draw({ visited: { ...GOLD, visitedLook: 'BADGE' } }).container.querySelector('[data-visited-foil]')).toBeNull();
+    expect(draw({ visited: { visitedLook: 'COLOUR', visitedColour: '#7c3aed' } }).container.querySelector('[data-visited-foil]')).toBeNull();
+    expect(draw({ visited: null }).container.querySelector('[data-visited-foil]')).toBeNull();
   });
 
   it('follows the design as Settings changes it, before it’s saved', () => {
     let previewed = null;
     const listeners = new Set();
     const preview = { get: () => previewed, subscribe: (fn) => (listeners.add(fn), () => listeners.delete(fn)) };
-    const { container } = draw({ design: { visitedLook: 'BADGE' }, preview });
+    const { container } = draw({ visited: { visitedLook: 'BADGE' }, preview });
     expect(container.querySelector('[data-visited-foil]')).toBeNull();
     previewed = { visitedLook: 'BOTH', visitedFinish: 'BRONZE' };
     act(() => listeners.forEach((fn) => fn()));

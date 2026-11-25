@@ -65,8 +65,9 @@ const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[da
  * `seaDepths`: the sea tinted by depth (SeaDepths), for the styles whose sea is plain
  * (mapStyles.js `background: null`, the animated sea).
  * `gridColoured`: a map design gave the grid its own colour, so it's drawn stronger.
- * `design` (the map design shown) and `designPreview` (Settings' value store, MapDesignStyle's):
- * a metallic finish for the places been to draws its sheet of metal under them (VisitedFoil).
+ * `visited` (the map's visited look, utils/map/mapDesign.js visitedLookFrom) and `visitedPreview`
+ * (Settings' value store of it): a metallic finish for the places been to draws its sheet of metal
+ * under them (VisitedFoil), in every map style.
  */
 function WorldMap({
   viewport,
@@ -100,8 +101,8 @@ function WorldMap({
   onRemoveString = null,
   label = 'World map',
   panZoom = true,
-  design = null,
-  designPreview = null,
+  visited = null,
+  visitedPreview = null,
 }) {
   const hintId = useId();
   const zoom = useViewportZoom(viewport);
@@ -138,10 +139,10 @@ function WorldMap({
         <FoilEdgeFilter zoom={labelZoom(zoom)} />
         {seaDepths ? DEPTHS : null}
         {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} showAntarctica={showAntarctica} coloured={gridColoured} /> : null}
-        {design || designPreview ? (
+        {visited || visitedPreview ? (
           <VisitedFoil
-            design={design}
-            preview={designPreview}
+            visited={visited}
+            preview={visitedPreview}
             visitsByCode={visitsByCode}
             detail={detail}
             splitUk={splitUk}

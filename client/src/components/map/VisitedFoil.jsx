@@ -21,14 +21,17 @@ const noSubscribe = () => () => {};
  *
  * The places and their outlines are the ones CountryLayer draws (utils/map/drawnPlaces.js): the
  * detailed outlines when zoomed in (`detail`), a micro-state's dot at its size for the zoom.
- * `design` and `preview` as MapDesignStyle's: Settings' changes show before they're saved.
+ * `visited` is the map's visited look (utils/map/mapDesign.js visitedLookFrom), and `preview`
+ * Settings' value store of it, as MapDesignStyle's `visitedPreview`: changes show before they're
+ * saved. The picture keeps its colours on Black and white (`data-keep-colour`), as the map's own
+ * choice, like a design's colours.
  * `faded` fades it with the places been to (the visited filter off).
  */
-function VisitedFoil({ design, preview, visitsByCode, detail = null, splitUk = false, showAntarctica = true, zoom = 1, faded = false }) {
+function VisitedFoil({ visited, preview, visitsByCode, detail = null, splitUk = false, showAntarctica = true, zoom = 1, faded = false }) {
   // React's ids carry characters a url(#…) reference may not match: letters and digits only
   const clipId = `foil-${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   const previewed = useSyncExternalStore(preview?.subscribe ?? noSubscribe, preview?.get ?? NO_PREVIEW, NO_PREVIEW);
-  const shown = previewed ?? design;
+  const shown = previewed ?? visited;
   const finish = visitedLookOf(shown) === 'BADGE' ? null : visitedFinishOf(shown);
   if (!finish) return null;
   const { shaped, dotted } = drawnPlaces({ splitUk, showAntarctica });
@@ -44,7 +47,7 @@ function VisitedFoil({ design, preview, visitsByCode, detail = null, splitUk = f
       </clipPath>
       <g clipPath={`url(#${clipId})`}>
         <rect x={0} y={MAP_TOP} width={MAP_WIDTH} height={MAP_BOTTOM - MAP_TOP} style={{ fill: `var(${finish.colour})` }} />
-        <image href={finish.texture} x={0} y={MAP_TOP} width={MAP_WIDTH} height={MAP_BOTTOM - MAP_TOP} preserveAspectRatio='none' />
+        <image href={finish.texture} x={0} y={MAP_TOP} width={MAP_WIDTH} height={MAP_BOTTOM - MAP_TOP} preserveAspectRatio='none' data-keep-colour />
       </g>
     </g>
   );
