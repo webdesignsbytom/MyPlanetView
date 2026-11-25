@@ -1,10 +1,11 @@
 // The metallic finishes' foil (a map design's gold, silver or bronze for the places been to;
 // 25 Nov 2026, the user's wish: "shiny colours like gold and silver" that look like real metal,
-// not a diagonal gradient). Polished metal shows the room it reflects, never bumps (lit bumps
-// read as a hill-shaded relief map): broad, flowing bands of light and dark (domain-warped
-// noise through a sine), most of it the metal's own colour, narrow pale highlights, deep
-// shadows, and a fine grain. Each brightness goes through the metal's ramp, dark to near white,
-// as a photograph of gold has (a ramp, not a tint, is what makes it read as metal).
+// not a diagonal gradient). One even shade of the metal everywhere (the same day, the user: "it
+// should all be the same shade of gold": broad bands of light and dark left Greenland dark,
+// Australia patchy and South Africa pale), with only a fine grain and the faintest ripple in it:
+// the shine is the edges' lighting, which every place gets alike. Never lit bumps, which read as a
+// hill-shaded relief map. Each brightness goes through the metal's ramp, dark to near white, so
+// the grain shimmers as metal does rather than as a tint.
 //
 // From the repo root (reads no env file):
 //   node images/src/tools/foil-textures.mjs
@@ -30,10 +31,9 @@ const HEIGHT = 1328;
 const SHEET = [8, 16, 32];
 const FLOW = [8, 16];
 const GRAIN = [640, 1280];
-// The look: how much the bands flow, how many there are, how narrow the highlights are
-// (a higher gamma keeps more of it the metal's colour), the brightness range through the ramp,
-// and the grain
-const LOOK = { warp: 0.22, bands: 7, phase: 0.6, gamma: 2.4, low: 0.45, high: 0.87, grain: 0.02 };
+// The look: the metal's shade (its brightness through the ramp), how far the ripple strays from it
+// either way, how its few bands flow, and the grain
+const LOOK = { shade: 0.66, ripple: 0.025, warp: 0.22, bands: 7, phase: 0.6, grain: 0.04 };
 // Each metal from its deepest shadow to a highlight's white (brightness 0 to 1)
 const RAMPS = {
   gold: [
@@ -139,8 +139,7 @@ function brightness() {
     for (let x = 0; x < WIDTH; x++) {
       const wx = fbm(warpX, x, y) * reach;
       const wy = fbm(warpY, x, y) * reach;
-      const band = 0.5 + 0.5 * Math.sin(fbm(sheet, x + wx, y + wy) * LOOK.bands + LOOK.phase);
-      const b = LOOK.low + (LOOK.high - LOOK.low) * band ** LOOK.gamma;
+      const b = LOOK.shade + LOOK.ripple * Math.sin(fbm(sheet, x + wx, y + wy) * LOOK.bands + LOOK.phase);
       values[y * WIDTH + x] = b + (grain[0](x, y) + 0.6 * grain[1](x, y)) * LOOK.grain;
     }
   }
