@@ -201,6 +201,9 @@
   /* The planned strings (25 Nov 2026, the user's wish): blue, apart from the visited ones' red */
   --map-plan-string: #1d4ed8;
   --map-plan-string-2: #faf6ec;
+  /* The places been to, filled when a map design shows them by colour (25 Nov 2026, the user's
+     wish: "so it's obvious where they have been"): purple unless the design chooses */
+  --map-visited: #7c3aed;
   --map-visit-1: #f0f038;
   --map-visit-2: #0eb4a6;
   --map-visit-3: #d8845a;
@@ -263,6 +266,8 @@
   /* The planned ones a brighter blue than the land's, so they show on it and on the sky */
   --map-plan-string: #3b82f6;
   --map-plan-string-2: #ffffff;
+  /* A lighter purple, that shows on the pale blue land */
+  --map-visited: #c084fc;
   /* The country under the pointer a deep blue, not the other styles' bright green (19 Nov
      2026, the user's wish) */
   --map-hover: #1e4f94;
@@ -484,6 +489,7 @@
   --map-string-2: #f6f6f6;
   --map-plan-string: #8c8c8c;
   --map-plan-string-2: #f6f6f6;
+  --map-visited: #3c3c3c;
   --map-visit-1: #dcdcdc;
   --map-visit-2: #cdcdcd;
   --map-visit-3: #bebebe;
@@ -540,6 +546,7 @@
   --color-map-string-2: var(--map-string-2);
   --color-map-plan-string: var(--map-plan-string);
   --color-map-plan-string-2: var(--map-plan-string-2);
+  --color-map-visited: var(--map-visited);
   --color-map-visit-1: var(--map-visit-1);
   --color-map-visit-2: var(--map-visit-2);
   --color-map-visit-3: var(--map-visit-3);

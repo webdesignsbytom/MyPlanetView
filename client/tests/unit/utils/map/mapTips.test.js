@@ -49,6 +49,17 @@ describe('mapTips', () => {
     expect(ids({})).not.toContain('share');
   });
 
+  // 25 Nov 2026, the user's wish: a page on how the places been to can show, for those who choose it
+  it('says the places been to can show as a colour, after the countries, only for the owner and co-owners', () => {
+    expect(ids({ design: true }).slice(0, 2)).toEqual(['countries', 'visitedLook']);
+    const words = tip({ design: true }, 'visitedLook');
+    expect(words.title).toBe('Where you’ve been');
+    expect(words.text).toContain('fill them all with one colour of your choosing instead, or have both');
+    expect(words.text).toContain('In Settings, under This map’s design');
+    expect(ids({ design: false })).not.toContain('visitedLook');
+    expect(ids({})).not.toContain('visitedLook');
+  });
+
   it('says how this phone installs it, with a button only where the browser has offered', () => {
     const prompt = tip({ phone: true, install: 'prompt' }, 'install');
     expect(prompt.action).toBe('install');
@@ -63,7 +74,7 @@ describe('mapTips', () => {
   });
 
   it('gives every tip a title and some words', () => {
-    for (const t of mapTips({ phone: true, touch: true, fullscreen: true, posters: true, share: true, appName: 'X' })) {
+    for (const t of mapTips({ phone: true, touch: true, fullscreen: true, posters: true, share: true, design: true, appName: 'X' })) {
       expect(t.title).toBeTruthy();
       expect(t.text).toBeTruthy();
     }

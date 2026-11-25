@@ -20,7 +20,7 @@ async function uploadPicture(style = 'animated') {
 describe('a map’s design, one per style', () => {
   it('saves colours for one style, leaving the others alone', async () => {
     const { data } = await design({ style: 'mono', countries: { FR: '#AA0000', IT: null }, names: '#112233' });
-    expect(data.design).toEqual({ style: 'mono', shown: true, countries: { FR: '#aa0000' }, names: '#112233', grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, picture: null });
+    expect(data.design).toEqual({ style: 'mono', shown: true, countries: { FR: '#aa0000' }, names: '#112233', grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, visitedLook: 'BADGE', visited: null, picture: null });
     const map = (await get(`/api/maps/${HOME_MAP}`)).data.map;
     expect(Object.keys(map.designs)).toEqual(['mono']);
     await design({ style: 'animated', grid: '#000000' });

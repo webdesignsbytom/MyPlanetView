@@ -17,6 +17,21 @@ describe('the design rules', () => {
     expect(parseDesignChange({ hover: 'pink' })).toEqual({ error: 'invalidDesignColour' });
   });
 
+  // How the places been to show (25 Nov 2026, the user's wish), as the server reads it
+  it('reads how the places been to show, and their colour, as the server does', () => {
+    expect(parseDesignChange({ visitedLook: 'colour', visited: '#7C3AED' })).toEqual({ change: { visited: '#7c3aed', visitedLook: 'COLOUR' } });
+    expect(parseDesignChange({ visitedLook: 'STICKER' })).toEqual({ error: 'invalidDesign' });
+    expect(parseDesignChange({ visited: '#7c3aed80' })).toEqual({ error: 'invalidDesignColour' });
+  });
+
+  it('gives the map reply the look and colour, a badge to start with', async () => {
+    expect((await patch(`/api/maps/${HOME_MAP}/design`, { style: 'animated', visitedLook: 'BOTH', visited: '#7c3aed' })).data.design).toMatchObject({
+      visitedLook: 'BOTH',
+      visited: '#7c3aed',
+    });
+    expect((await designs()).animated).toMatchObject({ visitedLook: 'BOTH', visited: '#7c3aed' });
+  });
+
   it('lets the strings, and only the strings, be see-through, as the server does', () => {
     expect(parseDesignChange({ string: '#1D4ED866' })).toEqual({ change: { string: '#1d4ed866' } });
     expect(parseDesignChange({ string: '#1d4ed8ff' })).toEqual({ change: { string: '#1d4ed8' } });
@@ -39,7 +54,7 @@ describe('the design rules', () => {
   });
 
   it('starts a design with every colour usual', () => {
-    expect(newDesign()).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, pictureKey: null });
+    expect(newDesign()).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, visitedLook: 'BADGE', visited: null, pictureKey: null });
   });
 
   it('makes an older store’s one design the World map’s', () => {

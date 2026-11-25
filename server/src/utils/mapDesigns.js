@@ -16,6 +16,11 @@ export const DESIGN_COLOUR_ALPHA = /^#[0-9a-f]{6}([0-9a-f]{2})?$/;
 const ALPHA_FIELDS = new Set(['string', 'plannedString']);
 /** More than there are places on the map, so a full design always fits. */
 export const DESIGN_MAX_COLOURS = 400;
+/**
+ * How the places visited or lived in show (25 Nov 2026, the user's wish): their badge (as
+ * always), the design's visited colour over each one's own, or both.
+ */
+export const VISITED_LOOKS = Object.freeze(['BADGE', 'COLOUR', 'BOTH']);
 
 // The sea's picture: made in the browser (at most 2,560 px wide), a plain web image
 export const DESIGN_PICTURE_TYPES = Object.freeze(['image/jpeg', 'image/webp', 'image/png']);
@@ -62,11 +67,18 @@ export function parseDesignChange(body) {
     // The planned strings' own, the same two (25 Nov 2026, the user's wish)
     ['plannedString', 'plannedStringColour'],
     ['plannedStringTwist', 'plannedStringTwistColour'],
+    // The colour the places visited or lived in take (25 Nov 2026, the user's wish)
+    ['visited', 'visitedColour'],
   ]) {
     if (input[field] === undefined) continue;
     const colour = cleanColour(input[field], { alpha: ALPHA_FIELDS.has(field) });
     if (!colour.ok) return { error: 'invalidDesignColour' };
     data[column] = colour.value;
+  }
+  if (input.visitedLook !== undefined) {
+    const look = typeof input.visitedLook === 'string' ? input.visitedLook.trim().toUpperCase() : '';
+    if (!VISITED_LOOKS.includes(look)) return { error: 'invalidDesign' };
+    data.visitedLook = look;
   }
   let codes = [];
   if (input.countries !== undefined) {

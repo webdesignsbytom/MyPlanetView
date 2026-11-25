@@ -33,8 +33,17 @@ describe('MapLegend', () => {
     expect(rows().words).not.toContain('Stamped landmark');
   });
 
+  // How the map's design shows the places been to (25 Nov 2026, the user's wish)
+  it('shows the visited colour in the badges’ place, or beside them', () => {
+    const colour = rows({ visitedLook: 'COLOUR' });
+    expect(colour.words).toEqual(['Visited or lived there', 'Special place', 'Want to go', 'Moments']);
+    expect(colour.list.querySelector('[data-key-visited-colour] span').getAttribute('class')).toContain('bg-map-visited');
+    expect(rows({ visitedLook: 'BOTH' }).words).toEqual(['Visited or lived there', 'Visited', 'Lived there', 'Special place', 'Want to go', 'Moments']);
+    expect(rows({ visitedLook: 'BADGE' }).words).toEqual(['Visited', 'Lived there', 'Special place', 'Want to go', 'Moments']);
+  });
+
   it('draws every mark hidden from screen readers (the words say it)', () => {
-    const { list } = rows({ showPlanned: true, showSpots: true, showStamps: true });
+    const { list } = rows({ showPlanned: true, showSpots: true, showStamps: true, visitedLook: 'BOTH' });
     for (const li of list.querySelectorAll('li')) {
       expect(li.firstElementChild.getAttribute('aria-hidden')).toBe('true');
     }

@@ -5,7 +5,7 @@
 // shows without it).
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { isPole } from '@/utils/map/specialPlaces';
-import { DESIGN_COLOUR, DESIGN_COLOUR_ALPHA } from '@/utils/map/mapDesign';
+import { DESIGN_COLOUR, DESIGN_COLOUR_ALPHA, VISITED_LOOK_IDS } from '@/utils/map/mapDesign';
 import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
 import { session } from './store';
 
@@ -66,11 +66,18 @@ export function parseDesignChange(body) {
   }
   // `stringTwist`: a second colour twisted into the strings (25 Nov 2026), opaque only
   // The planned strings' colour and twist too (25 Nov 2026)
-  for (const field of ['names', 'grid', 'hover', 'string', 'stringTwist', 'plannedString', 'plannedStringTwist']) {
+  // `visited`: the colour the places been to take (25 Nov 2026), opaque only
+  for (const field of ['names', 'grid', 'hover', 'string', 'stringTwist', 'plannedString', 'plannedStringTwist', 'visited']) {
     if (input[field] === undefined) continue;
     const colour = cleanColour(input[field], { alpha: field === 'string' || field === 'plannedString' });
     if (!colour.ok) return { error: 'invalidDesignColour' };
     change[field] = colour.value;
+  }
+  // How the places been to show (25 Nov 2026): BADGE, COLOUR or BOTH, any case
+  if (input.visitedLook !== undefined) {
+    const look = typeof input.visitedLook === 'string' ? input.visitedLook.trim().toUpperCase() : '';
+    if (!VISITED_LOOK_IDS.includes(look)) return { error: 'invalidDesign' };
+    change.visitedLook = look;
   }
   if (input.countries !== undefined) {
     const raw = input.countries;
@@ -101,7 +108,7 @@ export function checkDesignPicture({ contentType, bytes }) {
 }
 
 /** A new design, as the server makes one. */
-export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, pictureKey: null });
+export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, visitedLook: 'BADGE', visited: null, pictureKey: null });
 
 /** A map's design for a style as the replies give it, or null when it has none. */
 export function designView(map, style) {
@@ -119,6 +126,8 @@ export function designView(map, style) {
     stringTwist: design.stringTwist ?? null,
     plannedString: design.plannedString ?? null,
     plannedStringTwist: design.plannedStringTwist ?? null,
+    visitedLook: design.visitedLook ?? 'BADGE',
+    visited: design.visited ?? null,
     picture: url ? { url } : null,
   };
 }

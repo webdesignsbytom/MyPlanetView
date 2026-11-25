@@ -8,6 +8,7 @@ import {
   isColourablePlace,
   parseDesignChange,
   storedColours,
+  VISITED_LOOKS,
 } from '../src/utils/mapDesigns.js';
 
 describe('cleanColour', () => {
@@ -73,6 +74,17 @@ describe('parseDesignChange', () => {
     });
     expect(parseDesignChange({ plannedStringTwist: '#ffffff80' })).toEqual({ error: 'invalidDesignColour' });
     expect(parseDesignChange({ plannedString: 'blue' })).toEqual({ error: 'invalidDesignColour' });
+  });
+  // How visited places show, and their colour (25 Nov 2026, the user's wish)
+  it('reads how visited places show, in any case, and their colour', () => {
+    expect(VISITED_LOOKS).toEqual(['BADGE', 'COLOUR', 'BOTH']);
+    expect(parseDesignChange({ visitedLook: 'colour', visited: '#7C3AED' })).toEqual({ data: { visitedColour: '#7c3aed', visitedLook: 'COLOUR' }, codes: [] });
+    expect(parseDesignChange({ visitedLook: 'BOTH' })).toEqual({ data: { visitedLook: 'BOTH' }, codes: [] });
+    expect(parseDesignChange({ visited: null })).toEqual({ data: { visitedColour: null }, codes: [] });
+    expect(parseDesignChange({ visitedLook: 'STICKER' })).toEqual({ error: 'invalidDesign' });
+    expect(parseDesignChange({ visitedLook: 1 })).toEqual({ error: 'invalidDesign' });
+    // Opaque only
+    expect(parseDesignChange({ visited: '#7c3aed80' })).toEqual({ error: 'invalidDesignColour' });
   });
   it('empties the colours with an empty set', () => {
     expect(parseDesignChange({ countries: {} })).toEqual({ data: { countryColours: {} }, codes: [] });

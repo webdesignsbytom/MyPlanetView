@@ -63,6 +63,8 @@ const CHOSEN = {
   // The planned strings a lighter grey than the visited ones' (by brightness they came out
   // almost the same: 25 Nov 2026), so the two kinds still tell apart
   '--map-plan-string': '#8c8c8c',
+  // The places been to, filled by a design: a dark grey, plain against the near-white land
+  '--map-visited': '#3c3c3c',
 };
 const hex2 = (n) => n.toString(16).padStart(2, '0');
 

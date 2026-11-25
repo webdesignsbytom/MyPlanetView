@@ -172,6 +172,8 @@ export function exportMapView(rows, { userId }) {
       stringTwistColour: design.stringTwistColour ?? null,
       plannedStringColour: design.plannedStringColour ?? null,
       plannedStringTwistColour: design.plannedStringTwistColour ?? null,
+      visitedLook: design.visitedLook ?? 'BADGE',
+      visitedColour: design.visitedColour ?? null,
       hasSeaPicture: Boolean(design.pictureId),
     })),
     // Landmarks ticked "been here" (docs/API.md "Collecting")

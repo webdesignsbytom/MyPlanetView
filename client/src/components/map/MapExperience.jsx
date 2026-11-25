@@ -89,7 +89,7 @@ import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole, canManageRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
 import { isMonoStyle, mapStyleById, shownStyle } from '@/utils/map/mapStyles';
-import { designFor, shownDesign } from '@/utils/map/mapDesign';
+import { designFor, shownDesign, visitedLookOf } from '@/utils/map/mapDesign';
 import { collectionCardOptions, mapCardOptions, oneShotsCardOptions, tripCardOptions } from '@/utils/shareCard/cardOptions';
 import { mapPosterOptions } from '@/utils/poster/posterOptions';
 import { recapYearFor } from '@/utils/recap/recap';
@@ -1284,6 +1284,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               showSpots={Boolean(map.momentSpots?.length)}
               showStamps={stampedLandmarks.size > 0}
               showPlanned={plannedCodes.size > 0}
+              // How the map's design shows the places been to (25 Nov 2026): badges, a colour or both
+              visitedLook={visitedLookOf(design)}
             />
           </SlideAway>
         )}
@@ -1382,6 +1384,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               onHideTips={(hide) => onChangeSetting('showTips', !hide)}
               posters={settings.hoverPreview}
               share={canShare}
+              design={canManage}
               onClose={() => setTipsOpen(false)}
             />
           </MapOverlayBoundary>

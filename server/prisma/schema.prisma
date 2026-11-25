@@ -454,6 +454,11 @@ model MapDesign {
   // map_design_planned_string_twist_colour
   plannedStringColour      String?
   plannedStringTwistColour String?
+  // How the places visited or lived in show (25 Nov 2026, the user's wish): their badge (as
+  // always), one colour of the owner's choosing over each one's own, or both; `visitedColour`
+  // "#rrggbb", or null for the map style's usual one (CHECK map_design_visited_colour)
+  visitedLook   VisitedLook @default(BADGE)
+  visitedColour String?
 
   // The sea's picture, in the private bucket (resource 'mapDesign'); unique, so a file is
   // one map's. The daily clean-up never deletes a picture a design uses.
@@ -2033,4 +2038,12 @@ enum OneShotSource {
 enum StringKind {
   VISITED
   PLANNED
+}
+
+// How a map design shows the places visited or lived in (MapDesign; 25 Nov 2026, the user's
+// wish): a badge, a colour, or both
+enum VisitedLook {
+  BADGE
+  COLOUR
+  BOTH
 }

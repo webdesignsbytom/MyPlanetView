@@ -55,7 +55,7 @@ describe('designFor and shownDesign', () => {
   });
 
   it('start an empty design switched on, with nothing in it', () => {
-    expect(EMPTY_DESIGN).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, picture: null });
+    expect(EMPTY_DESIGN).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, visitedLook: 'BADGE', visited: null, picture: null });
     expect(Object.isFrozen(EMPTY_DESIGN)).toBe(true);
   });
 });

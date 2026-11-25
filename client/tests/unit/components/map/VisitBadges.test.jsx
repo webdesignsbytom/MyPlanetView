@@ -41,6 +41,15 @@ describe('VisitBadges', () => {
     expect(Number(use.getAttribute('height'))).toBeCloseTo(2 * r);
   });
 
+  // A design showing the places been to by colour alone hides the badges of the places it fills,
+  // never a pole's (25 Nov 2026): each badge says which it is
+  it('marks each badge as a filled place’s or a pole’s', () => {
+    const group = draw({ visitsByCode: { FR: 'VISITED', AQ: 'VISITED', XN: 'VISITED', XS: 'LIVED' } });
+    const kinds = Object.fromEntries([...group.querySelectorAll('use')].map((use) => [use.getAttribute('href'), use.getAttribute('data-visit-badge')]));
+    expect([...group.querySelectorAll('use')].map((use) => use.getAttribute('data-visit-badge')).sort()).toEqual(['fill', 'fill', 'pole', 'pole']);
+    expect(kinds[`#${BADGE_IDS.VISITED}`]).toBe('fill');
+  });
+
   it('draws a region a little smaller than a country', () => {
     const use = draw({ visitsByCode: { XB: 'VISITED' } }).querySelector('use');
     expect(Number(use.getAttribute('width'))).toBeCloseTo(badgeRadius(1) * 2 * 0.75);

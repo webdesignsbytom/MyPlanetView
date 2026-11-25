@@ -231,3 +231,61 @@ test('the design sets the colour a country turns under the pointer', async ({ pa
   await expect(again.editor.getByText('Saved.')).toBeVisible();
   await expect(again.editor.getByLabel('Country highlight when hovered', { exact: true })).toHaveValue('#66ff66');
 });
+
+// 25 Nov 2026 (the user's wish: "all the countries I have visited or lived in turn the colour I
+// selected"): the places been to filled with one colour, over a colour of their own; the badges,
+// the hover colour and the outlines as they were
+test('the owner shows the places been to in one colour, over their own, everyone seeing it', async ({ page }) => {
+  await openMap(page);
+  const { settings, editor } = await openDesign(page);
+  // Portugal (been to) and Germany (not yet) red by hand
+  await editor.getByRole('button', { name: 'Choose colours' }).click();
+  const find = editor.getByRole('searchbox', { name: 'Find a country' });
+  await find.fill('portugal');
+  await editor.getByLabel('Colour of Portugal', { exact: true }).fill('#ff0000');
+  await find.fill('germany');
+  await editor.getByLabel('Colour of Germany', { exact: true }).fill('#ff0000');
+  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(255, 0, 0)');
+
+  // Badges to start with; then a colour, the map style's own purple until one is chosen
+  const looks = editor.getByRole('group', { name: 'Places you’ve been show as' });
+  await expect(looks.getByLabel('A badge', { exact: true })).toBeChecked();
+  await expect(editor.getByLabel('Visited country colour', { exact: true })).toHaveCount(0);
+  await looks.getByLabel('A colour', { exact: true }).check();
+  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(124, 58, 237)');
+  await expect.poll(() => fillOf(page, 'DE')).toBe('rgb(255, 0, 0)');
+  // The badges of the places it fills go
+  await expect(page.locator('[data-visit-badge="fill"]').first()).toBeHidden();
+  await editor.getByLabel('Visited country colour', { exact: true }).fill('#aa00aa');
+  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
+  await expect.poll(() => fillOf(page, 'NZ')).toBe('rgb(170, 0, 170)');
+  await expect(editor.getByText('Saved.')).toBeVisible();
+  await closeSettings(settings);
+  // The map key says so
+  await expect(page.getByRole('list', { name: 'Map key' }).getByText('Visited or lived there')).toBeVisible();
+
+  // The hover colour as it was, on a place been to too: the middle of India's mainland (clear of
+  // the tags at the top left)
+  const india = page.locator('[data-map-design] svg g[data-code="IN"]').first();
+  const shapes = india.locator('path');
+  const sizes = await shapes.evaluateAll((paths) => paths.map((path) => path.getBBox().width * path.getBBox().height));
+  await shapes.nth(sizes.indexOf(Math.max(...sizes))).hover();
+  await expect.poll(() => india.evaluate((el) => getComputedStyle(el).fill)).toBe('rgb(102, 255, 102)');
+  await page.mouse.move(5, 5);
+  await expect.poll(() => india.evaluate((el) => getComputedStyle(el).fill)).toBe('rgb(170, 0, 170)');
+
+  // A colour and a badge: the badges back, the colour kept
+  const again = await openDesign(page);
+  await again.editor.getByRole('group', { name: 'Places you’ve been show as' }).getByLabel('A colour and a badge', { exact: true }).check();
+  await expect(page.locator('[data-visit-badge="fill"]').first()).toBeVisible();
+  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
+  await expect(again.editor.getByText('Saved.')).toBeVisible();
+  await closeSettings(again.settings);
+
+  // Kept, and the same through a share link
+  await page.reload();
+  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
+  await goInApp(page, `/shared/${HOME_SHARE_CODE}`);
+  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
+  await expect.poll(() => fillOf(page, 'DE')).toBe('rgb(255, 0, 0)');
+});

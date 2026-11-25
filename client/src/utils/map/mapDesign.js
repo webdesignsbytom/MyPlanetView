@@ -6,7 +6,7 @@
 // the names, the grid and the country under the pointer.
 import { REGION_PARENT } from './regionPlaces';
 import { REGION_PLACES, SPECIAL_PLACES, countriesOnMap } from './countries';
-import { isPole } from './specialPlaces';
+import { POLE_CODES, isPole } from './specialPlaces';
 import { pastelNumberFor } from './visitStatus';
 
 const MB = 1024 * 1024;
@@ -67,8 +67,42 @@ export const EMPTY_DESIGN = Object.freeze({
   stringTwist: null,
   plannedString: null,
   plannedStringTwist: null,
+  visitedLook: 'BADGE',
+  visited: null,
   picture: null,
 });
+
+/**
+ * How the places visited or lived in show (25 Nov 2026, the user's wish), as the server's
+ * VISITED_LOOKS: their badge (as always), the design's visited colour, or both.
+ */
+export const VISITED_LOOKS = Object.freeze([
+  { id: 'BADGE', label: 'A badge' },
+  { id: 'COLOUR', label: 'A colour' },
+  { id: 'BOTH', label: 'A colour and a badge' },
+]);
+export const VISITED_LOOK_IDS = VISITED_LOOKS.map((look) => look.id);
+
+/** A design's visited look: BADGE for none, an older design, or anything unknown. */
+export const visitedLookOf = (design) => (VISITED_LOOK_IDS.includes(design?.visitedLook) ? design.visitedLook : 'BADGE');
+
+// The places the visited colour fills: every place been to (CountryShape and MicroStateDot carry
+// data-been) but the poles, whose compass roses are never filled. More particular than a place's
+// own colour's rule, so it wins over it, and never on the place under the pointer (its hover
+// colour stays), nor on the borders: a fill alone.
+const VISITED_FILL = `[data-map-design] svg [data-been="true"]${POLE_CODES.map((code) => `:not([data-code="${code}"])`).join('')}:not(:hover)`;
+
+/**
+ * The visited look's rules (25 Nov 2026, the user's wish: "all the countries I have visited or
+ * lived in turn the colour I selected", over a colour of their own): with a colour, every place
+ * been to filled with `--map-visited` (the design's `visited`, else the map style's own); with the
+ * colour alone, their badges hidden, the poles' stamps kept (VisitBadges marks which).
+ */
+function visitedRules(design) {
+  const look = visitedLookOf(design);
+  if (look === 'BADGE') return [];
+  return [`${VISITED_FILL}{fill:var(--map-visited)}`, ...(look === 'COLOUR' ? ['[data-map-design] svg [data-visit-badge="fill"]{display:none}'] : [])];
+}
 
 // A twined string's width on screen (MapStrings): wide enough for the twist to show; a
 // string of one colour is 1.8px (4 and 2 until 25 Nov 2026, the user's wish: 10% thinner)
@@ -133,6 +167,7 @@ export function designCss(design) {
   if (typeof design.grid === 'string' && DESIGN_COLOUR.test(design.grid)) vars.push(`--map-grid:${design.grid}`);
   if (typeof design.hover === 'string' && DESIGN_COLOUR.test(design.hover)) vars.push(`--map-hover:${design.hover}`);
   vars.push(...stringVars(design, STRING_DESIGNS.VISITED), ...stringVars(design, STRING_DESIGNS.PLANNED));
+  if (typeof design.visited === 'string' && DESIGN_COLOUR.test(design.visited)) vars.push(`--map-visited:${design.visited}`);
   const colours = cleanCountryColours(design.countries);
   for (const [region, parent] of Object.entries(REGION_PARENT)) {
     if (!colours[region] && colours[parent]) colours[region] = colours[parent];
@@ -140,6 +175,7 @@ export function designCss(design) {
   return [
     vars.length ? `[data-map-design]{${vars.join(';')}}` : '',
     ...Object.entries(colours).map(([code, colour]) => `[data-map-design] svg g[data-code="${code}"]:not(:hover){fill:${colour}}`),
+    ...visitedRules(design),
   ]
     .filter(Boolean)
     .join(' ');

@@ -13,18 +13,30 @@ import { PLANNED_OUTLINE } from '@/utils/map/visitStatus';
 // there are moments (while `showMoments`, the viewer's setting, is on), the gold pin of
 // a landmark stamped in the passport (once the map has one; pins show zoomed in), and a
 // planned trip's dash-dot outline (once one goes somewhere not yet visited: `showPlanned`).
-function MapLegend({ showMoments = true, showSpots = false, showStamps = false, showPlanned = false }) {
+// `visitedLook`: how the map's design shows the places been to (25 Nov 2026, the user's wish):
+// their badges, a colour (`--map-visited`, the design's) in their place, or both.
+function MapLegend({ showMoments = true, showSpots = false, showStamps = false, showPlanned = false, visitedLook = 'BADGE' }) {
   return (
     <LuggageTag className='text-xs'>
       <ul aria-label='Map key' className='grid gap-1'>
-        <li className='grid grid-cols-reg items-center gap-2'>
-          <StarBadgeIcon />
-          Visited
-        </li>
-        <li className='grid grid-cols-reg items-center gap-2'>
-          <StarBadgeIcon lived />
-          Lived there
-        </li>
+        {visitedLook !== 'BADGE' ? (
+          <li className='grid grid-cols-reg items-center gap-2' data-key-visited-colour>
+            <span aria-hidden='true' className='h-3 w-5 rounded-sm border border-map-land-edge bg-map-visited' />
+            Visited or lived there
+          </li>
+        ) : null}
+        {visitedLook !== 'COLOUR' ? (
+          <>
+            <li className='grid grid-cols-reg items-center gap-2'>
+              <StarBadgeIcon />
+              Visited
+            </li>
+            <li className='grid grid-cols-reg items-center gap-2'>
+              <StarBadgeIcon lived />
+              Lived there
+            </li>
+          </>
+        ) : null}
         <li className='grid grid-cols-reg items-center gap-2'>
           <ExpeditionStampIcon />
           Special place
