@@ -74,7 +74,7 @@ export const everyPlanFeatures = [
   { text: 'One trip shared on its own, so friends from one holiday see only that holiday.' },
   { text: 'Trips with their stops, dates and route drawn on the map.' },
   { text: 'Landmarks suggested from where each photo was taken.' },
-  { text: 'Four looks for the map, or a design of your own: your picture on the sea and your colours on the countries.' },
+  { text: 'Five looks for the map, or a design of your own: your picture on the sea and your colours on the countries.' },
   { text: 'Every map other people share with you, free: they never count as yours.' },
   { text: 'A passport with a stamp for every landmark you photograph.' },
   { text: 'Slideshows of your whole map, one country or one trip.' },
