@@ -71,6 +71,7 @@ describe('map designs', () => {
       plannedStringTwist: null,
       visitedLook: 'BADGE',
       visited: null,
+      visitedFinish: null,
       picture: null,
     });
     expect(await designOf(viewer.agent)).toMatchObject({ countries: { FR: '#aa0000' }, names: '#ffffff' });
@@ -178,6 +179,18 @@ describe('map designs', () => {
     const where = { mapId_style: { mapId: map.id, style: 'animated' } };
     await expect(prisma.mapDesign.update({ where, data: { visitedColour: 'purple' } })).rejects.toThrow();
     expect(data(await patch(owner.agent, { visitedLook: 'BADGE', visited: null })).design).toMatchObject({ visitedLook: 'BADGE', visited: null });
+  });
+
+  // A metallic finish (25 Nov 2026, the user's wish: "shiny colours like gold and silver")
+  it('saves a metallic finish for the places been to, gives it to everyone, and takes it off', async () => {
+    const design = data(await patch(owner.agent, { visitedLook: 'COLOUR', visitedFinish: 'gold' })).design;
+    expect(design).toMatchObject({ visitedLook: 'COLOUR', visitedFinish: 'GOLD' });
+    expect(await designOf(viewer.agent)).toMatchObject({ visitedFinish: 'GOLD' });
+    const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.designs;
+    expect(exported.find((d) => d.style === 'animated')).toMatchObject({ visitedFinish: 'GOLD' });
+    expect((await patch(owner.agent, { visitedFinish: 'PLATINUM' })).status).toBe(400);
+    expect(data(await patch(owner.agent, { visitedFinish: 'SILVER' })).design.visitedFinish).toBe('SILVER');
+    expect(data(await patch(owner.agent, { visitedLook: 'BADGE', visitedFinish: null })).design).toMatchObject({ visitedLook: 'BADGE', visitedFinish: null });
   });
 
   it('can be turned off and on again, keeping it', async () => {

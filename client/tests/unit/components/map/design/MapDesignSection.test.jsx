@@ -86,10 +86,23 @@ describe('MapDesignSection', () => {
     expect(screen.getByLabelText('A colour and a badge').checked).toBe(true);
     const colour = screen.getByLabelText('Visited country colour');
     expect(colour.value).toBe('#7c3aed');
+    // Choosing a colour leaves a metallic finish
     fireEvent.input(colour, { target: { value: '#aa00aa' } });
-    expect(coloured.change).toHaveBeenLastCalledWith({ visited: '#aa00aa' });
+    expect(coloured.change).toHaveBeenLastCalledWith({ visited: '#aa00aa', visitedFinish: null });
     fireEvent.click(screen.getByLabelText('Visited country colour: back to the usual colour'));
-    expect(coloured.change).toHaveBeenLastCalledWith({ visited: null });
+    expect(coloured.change).toHaveBeenLastCalledWith({ visited: null, visitedFinish: null });
+  });
+
+  // A metallic finish beside the colour (25 Nov 2026, the user's wish: gold, silver, bronze)
+  it('offers gold, silver and bronze beside the visited colour, the chosen one pressed', () => {
+    const e = editor({ design: { ...DESIGN, visitedLook: 'COLOUR', visitedFinish: 'SILVER' } });
+    useMapDesignEditor.mockReturnValue(e);
+    open();
+    expect(screen.getByText('Silver').closest('button').getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(screen.getByText('Gold').closest('button'));
+    expect(e.change).toHaveBeenLastCalledWith({ visitedFinish: 'GOLD' });
+    fireEvent.click(screen.getByText('Silver').closest('button'));
+    expect(e.change).toHaveBeenLastCalledWith({ visitedFinish: null });
   });
 
   // 25 Nov 2026, the user's wish: the strings' colours "all in one place", the Strings panel

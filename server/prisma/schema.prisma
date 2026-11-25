@@ -459,6 +459,9 @@ model MapDesign {
   // "#rrggbb", or null for the map style's usual one (CHECK map_design_visited_colour)
   visitedLook   VisitedLook @default(BADGE)
   visitedColour String?
+  // A metallic finish in place of that colour (25 Nov 2026, the user's wish: "shiny colours
+  // like gold and silver"): a foil gradient across the map, or null for the plain colour
+  visitedFinish VisitedFinish?
 
   // The sea's picture, in the private bucket (resource 'mapDesign'); unique, so a file is
   // one map's. The daily clean-up never deletes a picture a design uses.
@@ -2046,4 +2049,11 @@ enum VisitedLook {
   BADGE
   COLOUR
   BOTH
+}
+
+// A metallic finish for the places visited or lived in (MapDesign; 25 Nov 2026, the user's wish)
+enum VisitedFinish {
+  GOLD
+  SILVER
+  BRONZE
 }

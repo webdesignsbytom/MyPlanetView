@@ -8,6 +8,7 @@ import {
   isColourablePlace,
   parseDesignChange,
   storedColours,
+  VISITED_FINISHES,
   VISITED_LOOKS,
 } from '../src/utils/mapDesigns.js';
 
@@ -85,6 +86,14 @@ describe('parseDesignChange', () => {
     expect(parseDesignChange({ visitedLook: 1 })).toEqual({ error: 'invalidDesign' });
     // Opaque only
     expect(parseDesignChange({ visited: '#7c3aed80' })).toEqual({ error: 'invalidDesignColour' });
+  });
+  // A metallic finish (25 Nov 2026, the user's wish: "shiny colours like gold and silver")
+  it('reads a metallic finish for the places been to, in any case, or none', () => {
+    expect(VISITED_FINISHES).toEqual(['GOLD', 'SILVER', 'BRONZE']);
+    expect(parseDesignChange({ visitedFinish: 'gold' })).toEqual({ data: { visitedFinish: 'GOLD' }, codes: [] });
+    expect(parseDesignChange({ visitedFinish: null })).toEqual({ data: { visitedFinish: null }, codes: [] });
+    expect(parseDesignChange({ visitedFinish: 'PLATINUM' })).toEqual({ error: 'invalidDesign' });
+    expect(parseDesignChange({ visitedFinish: 2 })).toEqual({ error: 'invalidDesign' });
   });
   it('empties the colours with an empty set', () => {
     expect(parseDesignChange({ countries: {} })).toEqual({ data: { countryColours: {} }, codes: [] });

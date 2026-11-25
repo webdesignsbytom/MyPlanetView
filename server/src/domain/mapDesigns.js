@@ -14,6 +14,7 @@ const DESIGN_SELECT = {
   plannedStringTwistColour: true,
   visitedLook: true,
   visitedColour: true,
+  visitedFinish: true,
   picture: { select: { key: true } },
 };
 

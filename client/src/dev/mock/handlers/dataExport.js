@@ -209,6 +209,7 @@ function mapView(map) {
       plannedStringTwistColour: d.plannedStringTwist ?? null,
       visitedLook: d.visitedLook ?? 'BADGE',
       visitedColour: d.visited ?? null,
+      visitedFinish: d.visitedFinish ?? null,
       hasSeaPicture: Boolean(d.pictureKey),
     })),
     landmarksBeenTo: (db.landmarkVisits || [])

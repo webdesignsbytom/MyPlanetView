@@ -82,6 +82,11 @@
   --medal-silver-edge: #646b74;
   --medal-gold: #e3b53d;
   --medal-gold-edge: #8a6a12;
+  /* Each metal's shine: the pale highlight of a metallic finish (a map design's visited
+     places, 25 Nov 2026), run edge, colour, shine and back as foil */
+  --medal-bronze-shine: #f6d3b0;
+  --medal-silver-shine: #f7f9fc;
+  --medal-gold-shine: #fff1b8;
   --poster-paper: #dcbc90;
   --poster-brown: #97572b;
   --poster-ink: #000000;
@@ -432,6 +437,9 @@
   --medal-silver-edge: #6a6a6a;
   --medal-gold: #b6b6b6;
   --medal-gold-edge: #6a6a6a;
+  --medal-bronze-shine: #d8d8d8;
+  --medal-silver-shine: #f9f9f9;
+  --medal-gold-shine: #f0f0f0;
   --poster-paper: #e4e4e4;
   --poster-brown: #000000;
   --poster-ink: #000000;
@@ -614,6 +622,9 @@
   --color-medal-silver-edge: var(--medal-silver-edge);
   --color-medal-gold: var(--medal-gold);
   --color-medal-gold-edge: var(--medal-gold-edge);
+  --color-medal-bronze-shine: var(--medal-bronze-shine);
+  --color-medal-silver-shine: var(--medal-silver-shine);
+  --color-medal-gold-shine: var(--medal-gold-shine);
   --color-poster-paper: var(--poster-paper);
   --color-poster-brown: var(--poster-brown);
   --color-poster-ink: var(--poster-ink);

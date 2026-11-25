@@ -5,6 +5,7 @@ import RadioInput from '@/components/ui/RadioInput';
 import DesignColourField from './DesignColourField';
 import DesignCountryColours from './DesignCountryColours';
 import DesignPictureField from './DesignPictureField';
+import VisitedFinishPicker from './VisitedFinishPicker';
 // Hooks
 import useMapDesignEditor from '@/hooks/useMapDesignEditor';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
@@ -104,14 +105,19 @@ function MapDesignSection({ map, styleId, onDesignChange, preview }) {
             label={look.label}
           />
         ))}
+        {/* A colour of their choosing, or a metallic finish beside it (25 Nov 2026, the user's
+            wish: gold, silver, bronze); choosing a colour leaves the metal */}
         {visitedLookOf(design) !== 'BADGE' ? (
-          <DesignColourField
-            id={`${uid}-visited`}
-            label='Visited country colour'
-            value={design?.visited ?? null}
-            usual={usual.visited}
-            onChange={(visited) => editor.change({ visited })}
-          />
+          <>
+            <DesignColourField
+              id={`${uid}-visited`}
+              label='Visited country colour'
+              value={design?.visited ?? null}
+              usual={usual.visited}
+              onChange={(visited) => editor.change({ visited, visitedFinish: null })}
+            />
+            <VisitedFinishPicker id={`${uid}-finish`} value={design?.visitedFinish ?? null} onChange={(visitedFinish) => editor.change({ visitedFinish })} />
+          </>
         ) : null}
       </fieldset>
       {/* The strings' colours are in the Strings panel, each kind's in its tab (25 Nov 2026, the

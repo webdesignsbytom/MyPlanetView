@@ -5,7 +5,7 @@
 // shows without it).
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { isPole } from '@/utils/map/specialPlaces';
-import { DESIGN_COLOUR, DESIGN_COLOUR_ALPHA, VISITED_LOOK_IDS } from '@/utils/map/mapDesign';
+import { DESIGN_COLOUR, DESIGN_COLOUR_ALPHA, VISITED_FINISHES, VISITED_LOOK_IDS } from '@/utils/map/mapDesign';
 import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
 import { session } from './store';
 
@@ -79,6 +79,15 @@ export function parseDesignChange(body) {
     if (!VISITED_LOOK_IDS.includes(look)) return { error: 'invalidDesign' };
     change.visitedLook = look;
   }
+  // A metallic finish (25 Nov 2026): GOLD, SILVER or BRONZE, any case, or null for the plain colour
+  if (input.visitedFinish !== undefined) {
+    if (input.visitedFinish === null) change.visitedFinish = null;
+    else {
+      const finish = typeof input.visitedFinish === 'string' ? input.visitedFinish.trim().toUpperCase() : '';
+      if (!VISITED_FINISHES.some((f) => f.id === finish)) return { error: 'invalidDesign' };
+      change.visitedFinish = finish;
+    }
+  }
   if (input.countries !== undefined) {
     const raw = input.countries;
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return { error: 'invalidDesign' };
@@ -108,7 +117,7 @@ export function checkDesignPicture({ contentType, bytes }) {
 }
 
 /** A new design, as the server makes one. */
-export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, visitedLook: 'BADGE', visited: null, pictureKey: null });
+export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, visitedLook: 'BADGE', visited: null, visitedFinish: null, pictureKey: null });
 
 /** A map's design for a style as the replies give it, or null when it has none. */
 export function designView(map, style) {
@@ -128,6 +137,7 @@ export function designView(map, style) {
     plannedStringTwist: design.plannedStringTwist ?? null,
     visitedLook: design.visitedLook ?? 'BADGE',
     visited: design.visited ?? null,
+    visitedFinish: design.visitedFinish ?? null,
     picture: url ? { url } : null,
   };
 }

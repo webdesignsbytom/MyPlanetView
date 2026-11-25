@@ -289,3 +289,42 @@ test('the owner shows the places been to in one colour, over their own, everyone
   await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
   await expect.poll(() => fillOf(page, 'DE')).toBe('rgb(255, 0, 0)');
 });
+
+// A metallic finish (25 Nov 2026, the user's wish: "shiny colours like gold and silver", "a few
+// options next to the colour selector for visited country, like gold silver bronze")
+test('the places been to can wear gold, silver or bronze foil, kept, and a colour again', async ({ page }) => {
+  await openMap(page);
+  const { settings, editor } = await openDesign(page);
+  await editor.getByRole('group', { name: 'Places you’ve been show as' }).getByLabel('A colour', { exact: true }).check();
+  const finishes = editor.getByRole('group', { name: 'Or a metallic finish' });
+  await expect(finishes.getByRole('button')).toHaveText(['Gold', 'Silver', 'Bronze']);
+
+  // Gold: the foil gradient fills the places been to, the metal's own colour behind it
+  await finishes.getByRole('button', { name: 'Gold' }).click();
+  await expect(finishes.getByRole('button', { name: 'Gold' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#mpv-visited-gold')).toBeAttached();
+  await expect.poll(() => fillOf(page, 'PT')).toContain('url("#mpv-visited-gold")');
+  // Silver in its place
+  await finishes.getByRole('button', { name: 'Silver' }).click();
+  await expect.poll(() => fillOf(page, 'PT')).toContain('url("#mpv-visited-silver")');
+  await expect(finishes.getByRole('button', { name: 'Gold' })).toHaveAttribute('aria-pressed', 'false');
+  await expect(editor.getByText('Saved.')).toBeVisible();
+  await closeSettings(settings);
+  // The map key's swatch is the metal too
+  await expect
+    .poll(() => page.locator('[data-key-visited-colour] [aria-hidden]').evaluate((el) => getComputedStyle(el).backgroundImage))
+    .toContain('linear-gradient');
+
+  // Kept after a reload, and for anyone with the link
+  await page.reload();
+  await expect.poll(() => fillOf(page, 'PT')).toContain('url("#mpv-visited-silver")');
+  await goInApp(page, `/shared/${HOME_SHARE_CODE}`);
+  await expect.poll(() => fillOf(page, 'PT')).toContain('url("#mpv-visited-silver")');
+
+  // Back on the map, a colour chosen leaves the metal
+  await openMap(page);
+  const again = await openDesign(page);
+  await again.editor.getByLabel('Visited country colour', { exact: true }).fill('#aa00aa');
+  await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
+  await expect(again.editor.getByRole('group', { name: 'Or a metallic finish' }).getByRole('button', { name: 'Silver' })).toHaveAttribute('aria-pressed', 'false');
+});

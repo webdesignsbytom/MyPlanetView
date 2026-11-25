@@ -22,6 +22,10 @@ describe('the design rules', () => {
     expect(parseDesignChange({ visitedLook: 'colour', visited: '#7C3AED' })).toEqual({ change: { visited: '#7c3aed', visitedLook: 'COLOUR' } });
     expect(parseDesignChange({ visitedLook: 'STICKER' })).toEqual({ error: 'invalidDesign' });
     expect(parseDesignChange({ visited: '#7c3aed80' })).toEqual({ error: 'invalidDesignColour' });
+    // A metallic finish (25 Nov 2026), in any case, or none
+    expect(parseDesignChange({ visitedFinish: 'gold' })).toEqual({ change: { visitedFinish: 'GOLD' } });
+    expect(parseDesignChange({ visitedFinish: null })).toEqual({ change: { visitedFinish: null } });
+    expect(parseDesignChange({ visitedFinish: 'PLATINUM' })).toEqual({ error: 'invalidDesign' });
   });
 
   it('gives the map reply the look and colour, a badge to start with', async () => {
@@ -54,7 +58,7 @@ describe('the design rules', () => {
   });
 
   it('starts a design with every colour usual', () => {
-    expect(newDesign()).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, visitedLook: 'BADGE', visited: null, pictureKey: null });
+    expect(newDesign()).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, visitedLook: 'BADGE', visited: null, visitedFinish: null, pictureKey: null });
   });
 
   it('makes an older store’s one design the World map’s', () => {

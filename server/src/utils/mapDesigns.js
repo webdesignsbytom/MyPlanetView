@@ -21,6 +21,11 @@ export const DESIGN_MAX_COLOURS = 400;
  * always), the design's visited colour over each one's own, or both.
  */
 export const VISITED_LOOKS = Object.freeze(['BADGE', 'COLOUR', 'BOTH']);
+/**
+ * A metallic finish in place of the visited colour (25 Nov 2026, the user's wish: "shiny colours
+ * like gold and silver"): the client draws it as foil across the map.
+ */
+export const VISITED_FINISHES = Object.freeze(['GOLD', 'SILVER', 'BRONZE']);
 
 // The sea's picture: made in the browser (at most 2,560 px wide), a plain web image
 export const DESIGN_PICTURE_TYPES = Object.freeze(['image/jpeg', 'image/webp', 'image/png']);
@@ -79,6 +84,15 @@ export function parseDesignChange(body) {
     const look = typeof input.visitedLook === 'string' ? input.visitedLook.trim().toUpperCase() : '';
     if (!VISITED_LOOKS.includes(look)) return { error: 'invalidDesign' };
     data.visitedLook = look;
+  }
+  // A metallic finish, in any case, or null for the plain colour
+  if (input.visitedFinish !== undefined) {
+    if (input.visitedFinish === null) data.visitedFinish = null;
+    else {
+      const finish = typeof input.visitedFinish === 'string' ? input.visitedFinish.trim().toUpperCase() : '';
+      if (!VISITED_FINISHES.includes(finish)) return { error: 'invalidDesign' };
+      data.visitedFinish = finish;
+    }
   }
   let codes = [];
   if (input.countries !== undefined) {

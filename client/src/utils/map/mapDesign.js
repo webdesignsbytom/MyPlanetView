@@ -69,6 +69,7 @@ export const EMPTY_DESIGN = Object.freeze({
   plannedStringTwist: null,
   visitedLook: 'BADGE',
   visited: null,
+  visitedFinish: null,
   picture: null,
 });
 
@@ -86,6 +87,40 @@ export const VISITED_LOOK_IDS = VISITED_LOOKS.map((look) => look.id);
 /** A design's visited look: BADGE for none, an older design, or anything unknown. */
 export const visitedLookOf = (design) => (VISITED_LOOK_IDS.includes(design?.visitedLook) ? design.visitedLook : 'BADGE');
 
+/**
+ * The metallic finishes the places been to can take in place of a colour (25 Nov 2026, the user's
+ * wish: "shiny colours like gold and silver"), as the server's VISITED_FINISHES: foil drawn as one
+ * gradient across the map (VisitedFinishDefs, `gradientId`), from each metal's medal tokens (its
+ * edge, colour and shine), so it reads as a sheet of metal showing through every place. `swatch`:
+ * the same metal as a small CSS gradient, for the buttons and the map key.
+ */
+export const VISITED_FINISHES = Object.freeze([
+  {
+    id: 'GOLD',
+    label: 'Gold',
+    gradientId: 'mpv-visited-gold',
+    tokens: { edge: '--medal-gold-edge', colour: '--medal-gold', shine: '--medal-gold-shine' },
+    swatch: 'bg-[linear-gradient(135deg,var(--medal-gold-edge),var(--medal-gold),var(--medal-gold-shine),var(--medal-gold),var(--medal-gold-edge))]',
+  },
+  {
+    id: 'SILVER',
+    label: 'Silver',
+    gradientId: 'mpv-visited-silver',
+    tokens: { edge: '--medal-silver-edge', colour: '--medal-silver', shine: '--medal-silver-shine' },
+    swatch: 'bg-[linear-gradient(135deg,var(--medal-silver-edge),var(--medal-silver),var(--medal-silver-shine),var(--medal-silver),var(--medal-silver-edge))]',
+  },
+  {
+    id: 'BRONZE',
+    label: 'Bronze',
+    gradientId: 'mpv-visited-bronze',
+    tokens: { edge: '--medal-bronze-edge', colour: '--medal-bronze', shine: '--medal-bronze-shine' },
+    swatch: 'bg-[linear-gradient(135deg,var(--medal-bronze-edge),var(--medal-bronze),var(--medal-bronze-shine),var(--medal-bronze),var(--medal-bronze-edge))]',
+  },
+]);
+
+/** A design's metallic finish (one of VISITED_FINISHES), or null for its plain colour. */
+export const visitedFinishOf = (design) => VISITED_FINISHES.find((finish) => finish.id === design?.visitedFinish) ?? null;
+
 // The places the visited colour fills: every place been to (CountryShape and MicroStateDot carry
 // data-been) but the poles, whose compass roses are never filled. More particular than a place's
 // own colour's rule, so it wins over it, and never on the place under the pointer (its hover
@@ -96,12 +131,23 @@ const VISITED_FILL = `[data-map-design] svg [data-been="true"]${POLE_CODES.map((
  * The visited look's rules (25 Nov 2026, the user's wish: "all the countries I have visited or
  * lived in turn the colour I selected", over a colour of their own): with a colour, every place
  * been to filled with `--map-visited` (the design's `visited`, else the map style's own); with the
- * colour alone, their badges hidden, the poles' stamps kept (VisitBadges marks which).
+ * colour alone, their badges hidden, the poles' stamps kept (VisitBadges marks which). A metallic
+ * finish (25 Nov 2026) fills them with its foil gradient instead, the metal's own colour behind it
+ * for where the gradient isn't drawn, and puts the same metal on the map key's swatch.
  */
 function visitedRules(design) {
   const look = visitedLookOf(design);
   if (look === 'BADGE') return [];
-  return [`${VISITED_FILL}{fill:var(--map-visited)}`, ...(look === 'COLOUR' ? ['[data-map-design] svg [data-visit-badge="fill"]{display:none}'] : [])];
+  const finish = visitedFinishOf(design);
+  const fill = finish ? `url(#${finish.gradientId}) var(${finish.tokens.colour})` : 'var(--map-visited)';
+  const { edge, colour, shine } = finish?.tokens ?? {};
+  return [
+    `${VISITED_FILL}{fill:${fill}}`,
+    ...(look === 'COLOUR' ? ['[data-map-design] svg [data-visit-badge="fill"]{display:none}'] : []),
+    ...(finish
+      ? [`[data-map-design] [data-key-visited-colour] [aria-hidden]{background-image:linear-gradient(135deg,var(${edge}),var(${colour}),var(${shine}),var(${colour}),var(${edge}))}`]
+      : []),
+  ];
 }
 
 // A twined string's width on screen (MapStrings): wide enough for the twist to show; a
