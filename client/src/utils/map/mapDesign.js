@@ -8,6 +8,9 @@ import { REGION_PARENT } from './regionPlaces';
 import { REGION_PLACES, SPECIAL_PLACES, countriesOnMap } from './countries';
 import { POLE_CODES, isPole } from './specialPlaces';
 import { pastelNumberFor } from './visitStatus';
+import foilBronze from '@/assets/map/foil-bronze.webp';
+import foilGold from '@/assets/map/foil-gold.webp';
+import foilSilver from '@/assets/map/foil-silver.webp';
 
 const MB = 1024 * 1024;
 
@@ -89,34 +92,22 @@ export const visitedLookOf = (design) => (VISITED_LOOK_IDS.includes(design?.visi
 
 /**
  * The metallic finishes the places been to can take in place of a colour (25 Nov 2026, the user's
- * wish: "shiny colours like gold and silver"), as the server's VISITED_FINISHES: foil drawn as one
- * gradient across the map (VisitedFinishDefs, `gradientId`), from each metal's medal tokens (its
- * edge, colour and shine), so it reads as a sheet of metal showing through every place. `swatch`:
- * the same metal as a small CSS gradient, for the buttons and the map key.
+ * wish: "shiny colours like gold and silver"), as the server's VISITED_FINISHES. Real metal, not a
+ * gradient (the same day, the user: "you just used a diagonal gradient"): each is a picture of
+ * polished metal the size of the map, flowing bands of light and dark through the metal's ramp
+ * (`texture`, made by images/src/tools/foil-textures.mjs), under the countries and cut to the
+ * places been to (VisitedFoil), its medal token (`colour`) there until the picture loads; their
+ * edges lit as raised metal once the map is still (FoilEdgeFilter, FOIL_EDGE_ID). The buttons and
+ * the map key show the same picture.
  */
 export const VISITED_FINISHES = Object.freeze([
-  {
-    id: 'GOLD',
-    label: 'Gold',
-    gradientId: 'mpv-visited-gold',
-    tokens: { edge: '--medal-gold-edge', colour: '--medal-gold', shine: '--medal-gold-shine' },
-    swatch: 'bg-[linear-gradient(135deg,var(--medal-gold-edge),var(--medal-gold),var(--medal-gold-shine),var(--medal-gold),var(--medal-gold-edge))]',
-  },
-  {
-    id: 'SILVER',
-    label: 'Silver',
-    gradientId: 'mpv-visited-silver',
-    tokens: { edge: '--medal-silver-edge', colour: '--medal-silver', shine: '--medal-silver-shine' },
-    swatch: 'bg-[linear-gradient(135deg,var(--medal-silver-edge),var(--medal-silver),var(--medal-silver-shine),var(--medal-silver),var(--medal-silver-edge))]',
-  },
-  {
-    id: 'BRONZE',
-    label: 'Bronze',
-    gradientId: 'mpv-visited-bronze',
-    tokens: { edge: '--medal-bronze-edge', colour: '--medal-bronze', shine: '--medal-bronze-shine' },
-    swatch: 'bg-[linear-gradient(135deg,var(--medal-bronze-edge),var(--medal-bronze),var(--medal-bronze-shine),var(--medal-bronze),var(--medal-bronze-edge))]',
-  },
+  { id: 'GOLD', label: 'Gold', texture: foilGold, colour: '--medal-gold' },
+  { id: 'SILVER', label: 'Silver', texture: foilSilver, colour: '--medal-silver' },
+  { id: 'BRONZE', label: 'Bronze', texture: foilBronze, colour: '--medal-bronze' },
 ]);
+
+/** The lit edge's filter, in the world map (components/map/FoilEdgeFilter.jsx). */
+export const FOIL_EDGE_ID = 'mpv-foil-edge';
 
 /** A design's metallic finish (one of VISITED_FINISHES), or null for its plain colour. */
 export const visitedFinishOf = (design) => VISITED_FINISHES.find((finish) => finish.id === design?.visitedFinish) ?? null;
@@ -125,27 +116,35 @@ export const visitedFinishOf = (design) => VISITED_FINISHES.find((finish) => fin
 // data-been) but the poles, whose compass roses are never filled. More particular than a place's
 // own colour's rule, so it wins over it, and never on the place under the pointer (its hover
 // colour stays), nor on the borders: a fill alone.
-const VISITED_FILL = `[data-map-design] svg [data-been="true"]${POLE_CODES.map((code) => `:not([data-code="${code}"])`).join('')}:not(:hover)`;
+const beenTo = (svg) => `[data-map-design] ${svg} [data-been="true"]${POLE_CODES.map((code) => `:not([data-code="${code}"])`).join('')}:not(:hover)`;
+const VISITED_FILL = beenTo('svg');
+// The same on a map with a metallic finish's sheet of metal under its places (VisitedFoil): more
+// particular, so they're see-through there and the metal shows
+const VISITED_OVER_FOIL = beenTo('svg:has([data-visited-foil])');
 
 /**
  * The visited look's rules (25 Nov 2026, the user's wish: "all the countries I have visited or
  * lived in turn the colour I selected", over a colour of their own): with a colour, every place
  * been to filled with `--map-visited` (the design's `visited`, else the map style's own); with the
  * colour alone, their badges hidden, the poles' stamps kept (VisitBadges marks which). A metallic
- * finish (25 Nov 2026) fills them with its foil gradient instead, the metal's own colour behind it
- * for where the gradient isn't drawn, and puts the same metal on the map key's swatch.
+ * finish (25 Nov 2026) shows its sheet of metal through them instead (VisitedFoil; on a map without
+ * one, the metal's flat colour), lights its edges while the map is still (a lit edge on every frame
+ * of a pan doubled its cost: useMapViewport's data-moving), and puts the same metal on the map key's
+ * swatch.
  */
 function visitedRules(design) {
   const look = visitedLookOf(design);
   if (look === 'BADGE') return [];
   const finish = visitedFinishOf(design);
-  const fill = finish ? `url(#${finish.gradientId}) var(${finish.tokens.colour})` : 'var(--map-visited)';
-  const { edge, colour, shine } = finish?.tokens ?? {};
   return [
-    `${VISITED_FILL}{fill:${fill}}`,
+    `${VISITED_FILL}{fill:${finish ? `var(${finish.colour})` : 'var(--map-visited)'}}`,
     ...(look === 'COLOUR' ? ['[data-map-design] svg [data-visit-badge="fill"]{display:none}'] : []),
     ...(finish
-      ? [`[data-map-design] [data-key-visited-colour] [aria-hidden]{background-image:linear-gradient(135deg,var(${edge}),var(${colour}),var(${shine}),var(${colour}),var(${edge}))}`]
+      ? [
+          `${VISITED_OVER_FOIL}{fill:transparent}`,
+          `[data-map-design] svg:not([data-moving]) [data-visited-foil]{filter:url(#${FOIL_EDGE_ID})}`,
+          `[data-map-design] [data-key-visited-colour] [aria-hidden]{background:url("${finish.texture}") center/cover}`,
+        ]
       : []),
   ];
 }

@@ -66,6 +66,7 @@ function EmbeddedMap({ map, code }) {
               showGrid
               gridColoured={Boolean(design?.grid)}
               label={`${map.name}: world map`}
+              design={design}
             />
           </div>
           <div className='pointer-events-none absolute bottom-3 right-3 grid'>

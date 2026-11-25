@@ -1169,6 +1169,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             stampedLandmarks={stampedLandmarks}
             landmarkPins={pinMode}
             label={`${map.name}: world map`}
+            design={design}
+            designPreview={designPreview}
           />
           )}
         </main>

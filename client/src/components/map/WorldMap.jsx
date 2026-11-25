@@ -20,6 +20,8 @@ import { StarBadgeSymbols } from './StarBadge';
 import { PoleMarkerSymbols } from './PoleMarker';
 import { MomentMarkSymbol } from './MomentMark';
 import MapKeyboardHint from './MapKeyboardHint';
+import FoilEdgeFilter from './FoilEdgeFilter';
+import VisitedFoil from './VisitedFoil';
 // Utils
 import { clearPointerFocus, markPointerFocus } from '@/utils/map/pointerFocus';
 
@@ -63,6 +65,8 @@ const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[da
  * `seaDepths`: the sea tinted by depth (SeaDepths), for the styles whose sea is plain
  * (mapStyles.js `background: null`, the animated sea).
  * `gridColoured`: a map design gave the grid its own colour, so it's drawn stronger.
+ * `design` (the map design shown) and `designPreview` (Settings' value store, MapDesignStyle's):
+ * a metallic finish for the places been to draws its sheet of metal under them (VisitedFoil).
  */
 function WorldMap({
   viewport,
@@ -96,6 +100,8 @@ function WorldMap({
   onRemoveString = null,
   label = 'World map',
   panZoom = true,
+  design = null,
+  designPreview = null,
 }) {
   const hintId = useId();
   const zoom = useViewportZoom(viewport);
@@ -127,8 +133,23 @@ function WorldMap({
         {BADGE_SYMBOLS}
         {POLE_SYMBOLS}
         {MOMENT_SYMBOL}
+        {/* A map design's metallic finish lights the places been to's edges with this, a few
+            pixels wide at every zoom (in the names' steps), once the map is still */}
+        <FoilEdgeFilter zoom={labelZoom(zoom)} />
         {seaDepths ? DEPTHS : null}
         {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} showAntarctica={showAntarctica} coloured={gridColoured} /> : null}
+        {design || designPreview ? (
+          <VisitedFoil
+            design={design}
+            preview={designPreview}
+            visitsByCode={visitsByCode}
+            detail={detail}
+            splitUk={splitUk}
+            showAntarctica={showAntarctica}
+            zoom={zoom}
+            faded={!showVisited}
+          />
+        ) : null}
         <CountryLayer
           visitsByCode={visitsByCode}
           plannedCodes={plannedCodes}

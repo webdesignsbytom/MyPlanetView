@@ -299,27 +299,45 @@ test('the places been to can wear gold, silver or bronze foil, kept, and a colou
   const finishes = editor.getByRole('group', { name: 'Or a metallic finish' });
   await expect(finishes.getByRole('button')).toHaveText(['Gold', 'Silver', 'Bronze']);
 
-  // Gold: the foil gradient fills the places been to, the metal's own colour behind it
+  // Gold: a sheet of polished gold under the map, showing through the places been to (their own
+  // fill see-through), its edges lit while the map is still
+  const foil = page.locator('[data-map-design] svg [data-visited-foil]');
   await finishes.getByRole('button', { name: 'Gold' }).click();
   await expect(finishes.getByRole('button', { name: 'Gold' })).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('#mpv-visited-gold')).toBeAttached();
-  await expect.poll(() => fillOf(page, 'PT')).toContain('url("#mpv-visited-gold")');
+  await expect(foil).toHaveAttribute('data-visited-foil', 'GOLD');
+  await expect(foil.locator('image')).toHaveAttribute('href', /foil-gold/);
+  await expect.poll(() => fillOf(page, 'PT')).toBe('rgba(0, 0, 0, 0)');
+  await expect.poll(() => foil.evaluate((el) => getComputedStyle(el).filter)).toContain('mpv-foil-edge');
   // Silver in its place
   await finishes.getByRole('button', { name: 'Silver' }).click();
-  await expect.poll(() => fillOf(page, 'PT')).toContain('url("#mpv-visited-silver")');
+  await expect(foil).toHaveAttribute('data-visited-foil', 'SILVER');
+  await expect(foil.locator('image')).toHaveAttribute('href', /foil-silver/);
   await expect(finishes.getByRole('button', { name: 'Gold' })).toHaveAttribute('aria-pressed', 'false');
   await expect(editor.getByText('Saved.')).toBeVisible();
   await closeSettings(settings);
   // The map key's swatch is the metal too
   await expect
     .poll(() => page.locator('[data-key-visited-colour] [aria-hidden]').evaluate((el) => getComputedStyle(el).backgroundImage))
-    .toContain('linear-gradient');
+    .toContain('foil-silver');
+
+  // While the map is dragged, the lit edge waits for it to be still (it doubled each frame's cost)
+  const map = page.getByRole('application', { name: /: world map$/ });
+  const box = await map.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 - 60, box.y + box.height / 2, { steps: 4 });
+  await expect(map).toHaveAttribute('data-moving', '');
+  await expect.poll(() => foil.evaluate((el) => getComputedStyle(el).filter)).toBe('none');
+  await page.mouse.up();
+  await expect(map).not.toHaveAttribute('data-moving');
+  await expect.poll(() => foil.evaluate((el) => getComputedStyle(el).filter)).toContain('mpv-foil-edge');
 
   // Kept after a reload, and for anyone with the link
   await page.reload();
-  await expect.poll(() => fillOf(page, 'PT')).toContain('url("#mpv-visited-silver")');
+  await expect(foil).toHaveAttribute('data-visited-foil', 'SILVER');
+  await expect.poll(() => fillOf(page, 'PT')).toBe('rgba(0, 0, 0, 0)');
   await goInApp(page, `/shared/${HOME_SHARE_CODE}`);
-  await expect.poll(() => fillOf(page, 'PT')).toContain('url("#mpv-visited-silver")');
+  await expect(foil).toHaveAttribute('data-visited-foil', 'SILVER');
 
   // Back on the map, a colour chosen leaves the metal
   await openMap(page);
@@ -327,4 +345,5 @@ test('the places been to can wear gold, silver or bronze foil, kept, and a colou
   await again.editor.getByLabel('Visited country colour', { exact: true }).fill('#aa00aa');
   await expect.poll(() => fillOf(page, 'PT')).toBe('rgb(170, 0, 170)');
   await expect(again.editor.getByRole('group', { name: 'Or a metallic finish' }).getByRole('button', { name: 'Silver' })).toHaveAttribute('aria-pressed', 'false');
+  await expect(foil).toHaveCount(0);
 });
