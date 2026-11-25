@@ -8,14 +8,14 @@
 # A model's script: `from hq import *`, `setup()`, build round the origin with the helpers below
 # (the plinth's top is G), then `render()`.
 # Run: blender -b --factory-startup -P <id>.py -- <id>-1024.png 1024 <id>.blend [samples]
-import bpy, bmesh, math, random, sys, json
+import bpy, bmesh, math, random, sys, json, os
 from mathutils import Vector, Matrix
 from bpy_extras.object_utils import world_to_camera_view
 
 __all__ = ['bpy', 'bmesh', 'math', 'random', 'Vector', 'Matrix', 'M', 'G', 'PLINTH_R', 'setup', 'lin', 'material', 'finish',
            'box', 'box_m', 'cylinder', 'lathe', 'annulus', 'bar', 'tube', 'arch_outline', 'add_prism', 'arcade_ring',
            'arcade_path', 'column', 'gable_roof', 'hip_roof', 'pyramid', 'paving_strip', 'tree', 'cypress', 'person', 'windows', 'banded', 'striped',
-           'parented', 'water_disc', 'render', 'multi', 'fir', 'spire', 'clip_to_plinth', 'slab', 'rect']
+           'parented', 'water_disc', 'render', 'multi', 'fir', 'spire', 'clip_to_plinth', 'slab', 'rect', 'layered', 'terrain', 'loft', 'subsurf', 'masonry', 'import_model', 'SOURCES', 'stand_sourced']
 
 ARGV = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 SIZE = int(ARGV[1]) if len(ARGV) > 1 else 1024
@@ -327,10 +327,12 @@ def render(name='model'):
     xs, ys = [], []
     over = {}
     for ob in scene.objects:
-        if ob.type not in ('MESH', 'CURVE'):
+        if ob.type not in ('MESH', 'CURVE', 'META'):
             continue
         ev = ob.evaluated_get(dg)
         me = ev.to_mesh()
+        if me is None:
+            continue
         for v in me.vertices:
             w = ev.matrix_world @ v.co
             p = inv @ w
@@ -529,6 +531,8 @@ def arcade_path(name, mat, pts, thick, z0, height, arch_a, matrix=None, pointed=
 def window_outline(w, h, shape, steps=8):
     if shape == 'rect':
         return [(-w / 2, 0), (w / 2, 0), (w / 2, h), (-w / 2, h)]
+    if shape == 'trap':
+        return [(-w / 2, 0), (w / 2, 0), (w * 0.34, h), (-w * 0.34, h)]
     if shape == 'pointed':
         return [(-w / 2, 0), (w / 2, 0), (w / 2, h - w * 0.62), (w * 0.3, h - w * 0.2), (0, h), (-w * 0.3, h - w * 0.2), (-w / 2, h - w * 0.62)]
     pts = [(-w / 2, 0), (w / 2, 0)]
@@ -647,8 +651,8 @@ def cypress(name, x, y, h=0.3, r=0.04, z=None):
     return lathe(name, M['leafDark'], [(0.0, 0), (r * 0.9, h * 0.08), (r, h * 0.3), (r * 0.8, h * 0.65), (r * 0.35, h * 0.9), (0.0, h)], (x, y, z), segs=16, smooth=True)
 
 
-def person(name, x, y, rot, shirt, pose='stand', scale=1.0):
-    m = Matrix.Translation((x, y, G)) @ Matrix.Rotation(rot, 4, 'Z') @ Matrix.Scale(scale, 4)
+def person(name, x, y, rot, shirt, pose='stand', scale=1.0, z=None):
+    m = Matrix.Translation((x, y, G if z is None else z)) @ Matrix.Rotation(rot, 4, 'Z') @ Matrix.Scale(scale, 4)
     cylinder(name + 'legs', M['denim'], 0.0085, 0.032, (0, 0, 0), segs=10, r2=0.0095, matrix=m)
     cylinder(name + 'body', M[shirt], 0.011, 0.026, (0, 0, 0.032), segs=12, r2=0.009, matrix=m)
     cylinder(name + 'head', M['skin'], 0.0075, 0.012, (0, 0, 0.059), segs=12, r2=0.007, matrix=m)
@@ -745,3 +749,211 @@ def rect(cx, cy, w, h, rot=0.0):
     """The corners of a w x h rectangle about (cx, cy), turned by rot (for slab)."""
     c, s_ = math.cos(rot), math.sin(rot)
     return [(cx + c * x - s_ * y, cy + s_ * x + c * y) for x, y in ((-w / 2, -h / 2), (w / 2, -h / 2), (w / 2, h / 2), (-w / 2, h / 2))]
+
+
+def layered(name, colours, scale=6.0, distortion=2.0, rough=0.8, bump=0.3, bump_scale=60.0, axis='Z', detail=3.0):
+    """Rock in soft layers of colour (sandstone strata): a wave texture's bands along `axis`, made
+    wavy by `distortion`, through a ramp of the colours, and a noise bump."""
+    mat = material(name, colours[0], rough, bump=bump, bump_scale=bump_scale)
+    nt = mat.node_tree
+    n, l = nt.nodes, nt.links
+    coord = [x for x in n if x.bl_idname == 'ShaderNodeTexCoord'][0]
+    wave = n.new('ShaderNodeTexWave')
+    wave.wave_type = 'BANDS'
+    wave.bands_direction = axis
+    wave.inputs['Scale'].default_value = scale
+    wave.inputs['Distortion'].default_value = distortion
+    wave.inputs['Detail'].default_value = detail
+    l.new(coord.outputs['Object'], wave.inputs['Vector'])
+    ramp = n.new('ShaderNodeValToRGB')
+    els = ramp.color_ramp.elements
+    els[0].position, els[0].color = 0.0, lin(colours[0])
+    els[1].position, els[1].color = 1.0, lin(colours[-1])
+    for i, c in enumerate(colours[1:-1], 1):
+        e = els.new(i / (len(colours) - 1))
+        e.color = lin(c)
+    l.new(wave.outputs['Fac'], ramp.inputs['Fac'])
+    l.new(ramp.outputs['Color'], n['Principled BSDF'].inputs['Base Color'])
+    return mat
+
+
+def terrain(name, height, mats, pick, rings=60, segs=192, r_max=None):
+    """A ground surface over the whole base: height(x, y) above the turf (bring it to 0 at the edge),
+    each face's material mats[pick(z, nz, x, y)] (z above the turf; nz how level the face is, 1 flat,
+    0 a cliff)."""
+    R = PLINTH_R * 0.995 if r_max is None else r_max
+    bm = bmesh.new()
+    centre = bm.verts.new((0, 0, G + height(0.0, 0.0)))
+    ringv = []
+    for i in range(1, rings + 1):
+        r = R * i / rings
+        ring = []
+        for k in range(segs):
+            x, y = r * math.cos(2 * math.pi * k / segs), r * math.sin(2 * math.pi * k / segs)
+            ring.append(bm.verts.new((x, y, G + height(x, y))))
+        ringv.append(ring)
+    faces = [bm.faces.new((centre, ringv[0][k], ringv[0][(k + 1) % segs])) for k in range(segs)]
+    for a, b in zip(ringv, ringv[1:]):
+        for k in range(segs):
+            j = (k + 1) % segs
+            faces.append(bm.faces.new((a[k], b[k], b[j], a[j])))
+    for f in faces:
+        f.normal_update()
+        c = f.calc_center_median()
+        f.material_index = pick(c.z - G, abs(f.normal.z), c.x, c.y)
+    return multi(name, bm, mats)
+
+
+def loft(name, mat, rings, cap=True, smooth=True):
+    """A surface through rings of points (each a list of (x, y, z), all the same length, going round):
+    robes, drapery, bodies; the first and last rings capped."""
+    bm = bmesh.new()
+    vs = [[bm.verts.new(p) for p in ring] for ring in rings]
+    n = len(rings[0])
+    for a, b in zip(vs, vs[1:]):
+        for k in range(n):
+            j = (k + 1) % n
+            bm.faces.new((a[k], a[j], b[j], b[k]))
+    if cap:
+        bm.faces.new(list(reversed(vs[0])))
+        bm.faces.new(vs[-1])
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-6)
+    return finish(name, bm, mat, smooth_all=smooth)
+
+
+def subsurf(ob, levels=2):
+    """Smooths an object with a subdivision surface (organic forms from a few faces)."""
+    mod = ob.modifiers.new('subsurf', 'SUBSURF')
+    mod.levels = levels
+    mod.render_levels = levels
+    for p in ob.data.polygons:
+        p.use_smooth = True
+    return ob
+
+
+def masonry(name, base, mortar, scale=40.0, rough=0.85, vary=None):
+    """Fitted stone walls: Voronoi cells for the stones, their edges dark and pressed in."""
+    mat = material(name, base, rough, vary=vary or base, vary_scale=scale * 0.3)
+    nt = mat.node_tree
+    n, l = nt.nodes, nt.links
+    coord = [x for x in n if x.bl_idname == 'ShaderNodeTexCoord'][0]
+    vor = n.new('ShaderNodeTexVoronoi')
+    vor.feature = 'DISTANCE_TO_EDGE'
+    vor.inputs['Scale'].default_value = scale
+    l.new(coord.outputs['Object'], vor.inputs['Vector'])
+    ramp = n.new('ShaderNodeValToRGB')
+    els = ramp.color_ramp.elements
+    els[0].position, els[0].color = 0.0, lin(mortar)
+    els[1].position, els[1].color = 0.06, (1, 1, 1, 1)
+    mix = n.new('ShaderNodeMix')
+    mix.data_type = 'RGBA'
+    mix.blend_type = 'MULTIPLY'
+    mix.inputs['Factor'].default_value = 1.0
+    bsdf = n['Principled BSDF']
+    src = bsdf.inputs['Base Color'].links[0].from_socket if bsdf.inputs['Base Color'].links else None
+    if src is not None:
+        l.new(src, mix.inputs['A'])
+    else:
+        mix.inputs['A'].default_value = lin(base)
+    l.new(ramp.outputs['Color'], mix.inputs['B'])
+    l.new(vor.outputs['Distance'], ramp.inputs['Fac'])
+    l.new(mix.outputs['Result'], bsdf.inputs['Base Color'])
+    bump = n.new('ShaderNodeBump')
+    bump.inputs['Strength'].default_value = 0.6
+    bump.inputs['Distance'].default_value = 0.002
+    l.new(vor.outputs['Distance'], bump.inputs['Height'])
+    l.new(bump.outputs['Normal'], bsdf.inputs['Normal'])
+    return mat
+
+
+SOURCES = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_sources')
+
+
+def import_model(folder, name='sourced'):
+    """A sourced model (_sources/<folder>/, as downloaded: glb, gltf, fbx, obj or stl) brought in as
+    one mesh object, its parts' transforms baked in, Z up; None when nothing is there yet."""
+    root = os.path.join(SOURCES, folder)
+    found = []
+    for base, _, files in os.walk(root):
+        for f in files:
+            ext = os.path.splitext(f)[1].lower()
+            if ext in ('.glb', '.gltf', '.fbx', '.obj', '.stl'):
+                found.append((('.glb', '.gltf', '.fbx', '.obj', '.stl').index(ext), os.path.join(base, f)))
+    if not found:
+        return None
+    path = sorted(found)[0][1]
+    ext = os.path.splitext(path)[1].lower()
+    before = set(bpy.data.objects)
+    if ext in ('.glb', '.gltf'):
+        bpy.ops.import_scene.gltf(filepath=path)
+    elif ext == '.fbx':
+        bpy.ops.import_scene.fbx(filepath=path)
+    elif ext == '.obj':
+        bpy.ops.wm.obj_import(filepath=path)
+    else:
+        bpy.ops.wm.stl_import(filepath=path)
+    new = [o for o in bpy.data.objects if o not in before]
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    bm = bmesh.new()
+    for o in new:
+        if o.type != 'MESH':
+            continue
+        ev = o.evaluated_get(dg)
+        tmp = ev.to_mesh()
+        part = bmesh.new()
+        part.from_mesh(tmp)
+        bmesh.ops.transform(part, matrix=o.matrix_world, verts=part.verts)
+        me = bpy.data.meshes.new('tmp')
+        part.to_mesh(me)
+        part.free()
+        bm.from_mesh(me)
+        bpy.data.meshes.remove(me)
+        ev.to_mesh_clear()
+    for o in new:
+        bpy.data.objects.remove(o, do_unlink=True)
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    ob = bpy.data.objects.new(name, me)
+    COL.objects.link(ob)
+    print('IMPORTED', path, len(me.vertices), 'vertices')
+    return ob
+
+
+def stand_sourced(ob, cut=0.0, turn=0.0, height=1.0, z=None, mat=None, report=True):
+    """Stands an imported model on a pedestal: everything below `cut` (a share of its height: its own
+    base) cut away, centred on the foot of what's left, turned by `turn` degrees about Z, scaled to
+    `height` and stood at `z`, with `mat` for every face. `report` prints its size by slices, to
+    choose the cut and the turn."""
+    z = G if z is None else z
+    me = ob.data
+    zs = [v.co.z for v in me.vertices]
+    zmin, zmax = min(zs), max(zs)
+    if report:
+        xs, ys = [v.co.x for v in me.vertices], [v.co.y for v in me.vertices]
+        print('SOURCE BOUNDS x', round(min(xs), 3), round(max(xs), 3), 'y', round(min(ys), 3), round(max(ys), 3), 'z', round(zmin, 3), round(zmax, 3))
+        for k in range(20):
+            z0, z1 = zmin + (zmax - zmin) * k / 20, zmin + (zmax - zmin) * (k + 1) / 20
+            sl = [v.co for v in me.vertices if z0 <= v.co.z < z1]
+            if sl:
+                print('SLICE', k, 'x', round(min(c.x for c in sl), 3), round(max(c.x for c in sl), 3), 'y', round(min(c.y for c in sl), 3), round(max(c.y for c in sl), 3))
+    c = zmin + cut * (zmax - zmin)
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    if cut > 0:
+        bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=(0, 0, c), plane_no=(0, 0, 1), clear_inner=True)
+    low = [v.co for v in bm.verts if v.co.z < c + (zmax - c) * 0.05]
+    cx = (min(p.x for p in low) + max(p.x for p in low)) / 2 if low else 0.0
+    cy = (min(p.y for p in low) + max(p.y for p in low)) / 2 if low else 0.0
+    bm.to_mesh(me)
+    bm.free()
+    k_ = height / (zmax - c)
+    me.transform(Matrix.Translation((0, 0, z)) @ Matrix.Rotation(math.radians(turn), 4, 'Z') @ Matrix.Scale(k_, 4) @ Matrix.Translation((-cx, -cy, -c)))
+    if mat is not None:
+        me.materials.clear()
+        me.materials.append(mat)
+        for poly in me.polygons:
+            poly.material_index = 0
+            poly.use_smooth = True
+    return ob
