@@ -32,6 +32,7 @@ import { registerThemeRoutes } from './handlers/themes';
 import { registerChallengeRoutes } from './handlers/challenges';
 import { registerTravelCopyRoutes } from './handlers/travelCopies';
 import { registerMapDesignRoutes } from './handlers/mapDesigns';
+import { registerFeedbackRoutes } from './handlers/feedback';
 import { registerGiftRoutes } from './handlers/gifts';
 import { registerImportRoutes } from './handlers/imports';
 import { registerCollectingRoutes } from './handlers/collecting';
@@ -67,6 +68,7 @@ export function installMock() {
   registerChallengeRoutes();
   registerTravelCopyRoutes();
   registerMapDesignRoutes();
+  registerFeedbackRoutes();
   registerGiftRoutes();
   registerImportRoutes();
   registerCollectingRoutes();

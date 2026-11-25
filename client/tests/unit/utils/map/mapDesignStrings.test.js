@@ -57,6 +57,26 @@ describe('a second colour twisted into the strings', () => {
   });
 });
 
+// The planned strings' own colours (25 Nov 2026, the user's wish), as the visited ones' under
+// their own tokens
+describe('the planned strings’ colours in a design', () => {
+  it('start as the style’s usual ones', () => {
+    expect(EMPTY_DESIGN.plannedString).toBeNull();
+    expect(EMPTY_DESIGN.plannedStringTwist).toBeNull();
+  });
+
+  it('set the planned tokens, apart from the visited ones', () => {
+    expect(designCss({ string: '#c8102e', plannedString: '#1d4ed866' })).toBe('[data-map-design]{--map-string:#c8102e;--map-plan-string:#1d4ed866}');
+    expect(designCss({ plannedString: '#1d4ed866', plannedStringTwist: '#ffffff' })).toBe(
+      '[data-map-design]{--map-plan-string:#1d4ed8;--map-plan-string-alpha:0.4;--map-plan-string-2:#ffffff;--map-plan-string-width:3.6px;--map-plan-string-twist:inline}',
+    );
+  });
+
+  it('let nothing but colours in', () => {
+    expect(designCss({ plannedString: 'blue', plannedStringTwist: '#ffffff80' })).toBe('');
+  });
+});
+
 describe('a colour’s opacity', () => {
   it('splits into the picker’s colour and a whole percent, 100 with none', () => {
     expect(splitOpacity('#1d4ed8')).toEqual({ hex: '#1d4ed8', opacity: 100 });

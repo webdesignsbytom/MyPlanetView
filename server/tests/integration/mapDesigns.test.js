@@ -67,6 +67,8 @@ describe('map designs', () => {
       hover: null,
       string: null,
       stringTwist: null,
+      plannedString: null,
+      plannedStringTwist: null,
       picture: null,
     });
     expect(await designOf(viewer.agent)).toMatchObject({ countries: { FR: '#aa0000' }, names: '#ffffff' });
@@ -142,6 +144,21 @@ describe('map designs', () => {
     // Back to one colour; the first is kept
     expect(data(await patch(owner.agent, { stringTwist: null })).design).toMatchObject({ string: '#c8102e', stringTwist: null });
     await patch(owner.agent, { string: null });
+  });
+
+  // The planned strings' own colours (25 Nov 2026, the user's wish), apart from the visited ones'
+  it('saves the planned strings’ colour and twist, and gives them to everyone', async () => {
+    const design = data(await patch(owner.agent, { plannedString: '#1D4ED880', plannedStringTwist: '#FFFFFF' })).design;
+    expect(design).toMatchObject({ plannedString: '#1d4ed880', plannedStringTwist: '#ffffff', string: null });
+    expect(await designOf(viewer.agent)).toMatchObject({ plannedString: '#1d4ed880', plannedStringTwist: '#ffffff' });
+    const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.designs;
+    expect(exported.find((d) => d.style === 'animated')).toMatchObject({ plannedStringColour: '#1d4ed880', plannedStringTwistColour: '#ffffff' });
+    expect((await patch(owner.agent, { plannedStringTwist: '#ffffff80' })).status).toBe(400);
+    // The database says so too (CHECKs map_design_planned_string_colour, _twist_colour)
+    const where = { mapId_style: { mapId: map.id, style: 'animated' } };
+    await expect(prisma.mapDesign.update({ where, data: { plannedStringColour: 'blue' } })).rejects.toThrow();
+    await expect(prisma.mapDesign.update({ where, data: { plannedStringTwistColour: '#ffffff80' } })).rejects.toThrow();
+    expect(data(await patch(owner.agent, { plannedString: null, plannedStringTwist: null })).design).toMatchObject({ plannedString: null, plannedStringTwist: null });
   });
 
   it('can be turned off and on again, keeping it', async () => {

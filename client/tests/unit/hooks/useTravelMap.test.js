@@ -125,6 +125,14 @@ describe('useTravelMap: visits', () => {
     expect(result.current.map.visits[0]).toMatchObject({ countryCode: 'FR', status: 'LIVED', source: 'PHOTO', notes: 'Paris' });
   });
 
+  // A place's strings follow the order places were marked (25 Nov 2026): the server's time for it
+  it('keeps when the server says a place was marked', async () => {
+    const { result } = await open();
+    api.putVisit.mockResolvedValueOnce({ visit: { countryCode: 'CA', status: 'WANT_TO_GO', markedAt: '2026-11-25T10:00:00.000Z' }, implied: [] });
+    await act(async () => result.current.setVisit('CA', 'WANT_TO_GO'));
+    expect(result.current.map.visits.find((v) => v.countryCode === 'CA')).toMatchObject({ status: 'WANT_TO_GO', markedAt: '2026-11-25T10:00:00.000Z' });
+  });
+
   it('clears a country', async () => {
     const { result } = await open();
     await act(async () => result.current.setVisit('JP', null));

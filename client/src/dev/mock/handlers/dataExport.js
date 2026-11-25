@@ -3,6 +3,7 @@
 // owns (anyone else's is a 404), its photos a page at a time with a link to each one's
 // best copy, and their photos on other people's maps. The links are the mock's own files.
 import { fail, ok, route } from '../mockAdapter';
+import { feedbackExportItem } from '../feedback';
 import { getDb, me } from '../store';
 import { landmarkById, photoDetail, userName } from '../views';
 import { effectivePlan, grantsOf, subscriptionOf } from '../plans';
@@ -204,12 +205,14 @@ function mapView(map) {
       hoverColour: d.hover ?? null,
       stringColour: d.string ?? null,
       stringTwistColour: d.stringTwist ?? null,
+      plannedStringColour: d.plannedString ?? null,
+      plannedStringTwistColour: d.plannedStringTwist ?? null,
       hasSeaPicture: Boolean(d.pictureKey),
     })),
     landmarksBeenTo: (db.landmarkVisits || [])
       .filter((v) => v.mapId === map.id)
       .map((v) => ({ landmarkId: v.landmarkId, name: landmarkById(v.landmarkId)?.name ?? null, countryCode: landmarkById(v.landmarkId)?.countryCode ?? null, since: iso(v.createdAt) })),
-    strings: (db.mapStrings || []).filter((s) => s.mapId === map.id).map((s) => ({ from: s.from, to: s.to, since: iso(s.createdAt) })),
+    strings: (db.mapStrings || []).filter((s) => s.mapId === map.id).map((s) => ({ kind: s.kind === 'PLANNED' ? 'PLANNED' : 'VISITED', from: s.from, to: s.to, since: iso(s.createdAt) })),
     // Life's One Shots ticked (as the server's utils/dataExport.js)
     oneShots: (db.oneShots || [])
       .filter((o) => o.mapId === map.id)
@@ -290,6 +293,8 @@ export function registerDataExportRoutes() {
           return { id: m.tripId, title: trip?.title ?? null, map: map?.name ?? null, owner: userName(map?.ownerId), role: m.role, since: iso(m.createdAt) };
         }),
       photosOnOtherMaps: db.photos.filter((p) => isUploadElsewhere(db, p, user.id)).length,
+      // The feedback they sent (docs/API.md "Feedback"): their words and where each stands
+      feedback: (db.feedback || []).filter((f) => f.userId === user.id).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).map(feedbackExportItem),
     });
   });
 

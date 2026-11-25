@@ -91,6 +91,8 @@ export const ADMIN_EVENTS_PAGE_URL = `${ADMIN_PAGE_URL}/events`;
 export const ADMIN_PROMO_CODES_PAGE_URL = `${ADMIN_PAGE_URL}/promo-codes`;
 export const ADMIN_OFFERS_PAGE_URL = `${ADMIN_PAGE_URL}/offers`;
 export const ADMIN_THEMES_PAGE_URL = `${ADMIN_PAGE_URL}/themes`;
+// Feedback sent from the map (docs/API.md "Feedback")
+export const ADMIN_FEEDBACK_PAGE_URL = `${ADMIN_PAGE_URL}/feedback`;
 
 // Dev server only (not routed in production builds)
 export const DEV_SELECT_LAB_PAGE_URL = '/dev/select-lab';

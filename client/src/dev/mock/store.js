@@ -123,6 +123,8 @@ export function loadStore() {
   if (!Array.isArray(db.pinVisits)) db.pinVisits = buildSeed().pinVisits;
   // ...and before travel copies (19 Nov 2026): none asked for
   if (!Array.isArray(db.travelCopyRequests)) db.travelCopyRequests = [];
+  // ...and before feedback (25 Nov 2026): the seed's examples
+  if (!Array.isArray(db.feedback)) db.feedback = buildSeed().feedback;
   db.users[0].role = getMockRole();
   saveStore();
   return db;

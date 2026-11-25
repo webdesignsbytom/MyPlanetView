@@ -82,13 +82,13 @@ export async function findMapForExport(mapId) {
           // Its own designs, one per map style (docs/API.md "Map designs"): the colours, and
           // whether each has a picture
           designs: {
-            select: { style: true, shown: true, countryColours: true, namesColour: true, gridColour: true, hoverColour: true, stringColour: true, stringTwistColour: true, pictureId: true },
+            select: { style: true, shown: true, countryColours: true, namesColour: true, gridColour: true, hoverColour: true, stringColour: true, stringTwistColour: true, plannedStringColour: true, plannedStringTwistColour: true, pictureId: true },
             orderBy: { style: 'asc' },
           },
           // Landmarks ticked "been here" (docs/API.md "Collecting")
           landmarkVisits: { select: { landmarkId: true, createdAt: true, landmark: { select: { name: true, countryCode: true } } }, orderBy: { createdAt: 'asc' } },
           // Strings tied between its places (docs/API.md "Strings")
-          strings: { select: { fromCode: true, toCode: true, createdAt: true }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] },
+          strings: { select: { kind: true, fromCode: true, toCode: true, createdAt: true }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] },
           // Its flight log and "Guess where I was" games (docs/API.md "Flights", "Guess where I was")
           flights: {
             select: { fromAirport: true, toAirport: true, flownOn: true, carrier: true, flightNumber: true, distanceKm: true, tripId: true, source: true },

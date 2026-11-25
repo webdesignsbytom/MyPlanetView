@@ -6,6 +6,7 @@ Last updated: 19 November 2026.
 
 ## Build status
 
+- **Built (25 Nov 2026, the user's wish):** feedback from the map: a Feedback stamp in the toolbar for anyone signed in, a plain form (something not working, an idea, a question, something else) with an optional screenshot into the private bucket, and the admin's `/admin/feedback` page to read, move along, note and delete reports (docs/API.md "Feedback").
 - **Built (23 Nov 2026, from the competition review's ideas, the user's choice):**
   - a map on your website: the share dialog's code for an `<iframe>` of `/embed/<code>`, with a "Made with My Planet View" link back (docs/API.md "A map on your website");
   - "Guess where I was": a game of a map's photos for friends, played by its link with no sign-in, scored by the server, with a leaderboard and a sign-up link (docs/API.md "Guess where I was");
@@ -814,6 +815,7 @@ The lists from "what else can we do to compete" (21 and 22 Nov 2026) and the use
 - **A calendar feed** (23 Nov 2026, from a look at the competition and thinking wider): planned trips in Google or Apple Calendar through a private ICS link, so the countdown lives where people look.
 - **Collector's counts** (23 Nov 2026, from a look at the competition and thinking wider): for serious travellers, the count against other lists too: the UN's 193, the Travelers' Century Club's 330 places, NomadMania's regions (check what each list allows us to use). **The UN's 193 built 24 Nov 2026** (Build status, "Collector's counts"); the TCC's and NomadMania's wait on permission.
 - **A country's photos grouped by trip** (23 Nov 2026, the user's question about going somewhere twice): the country's gallery in sections per trip, by date ("Spain at Easter 2010", "Spain 2019", "Other photos"), and "3 trips to Spain" on the ticket.
+- **The hidden landmark models when zoomed in** (25 Nov 2026, from the user's question "why are 211 hidden?"): the models kept off a country map (`onMap: false`, as their picture overlaps a more famous one's in the opening view) drawn once the map is zoomed in far enough that they no longer overlap, as small places' names appear by zoom. Check the overlaps again after the HQ remake: its pictures are shaped differently.
 
 **Medium**
 - **A cities checklist:** Visited sells cities as a paid add-on; we could give it free.

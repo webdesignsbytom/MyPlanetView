@@ -24,6 +24,7 @@ import { registerThemeRoutes } from '@/dev/mock/handlers/themes';
 import { registerChallengeRoutes } from '@/dev/mock/handlers/challenges';
 import { registerTravelCopyRoutes } from '@/dev/mock/handlers/travelCopies';
 import { registerMapDesignRoutes } from '@/dev/mock/handlers/mapDesigns';
+import { registerFeedbackRoutes } from '@/dev/mock/handlers/feedback';
 import { registerGiftRoutes } from '@/dev/mock/handlers/gifts';
 import { registerImportRoutes } from '@/dev/mock/handlers/imports';
 import { registerCollectingRoutes } from '@/dev/mock/handlers/collecting';
@@ -75,6 +76,7 @@ export function registerAllRoutes() {
   registerChallengeRoutes();
   registerTravelCopyRoutes();
   registerMapDesignRoutes();
+  registerFeedbackRoutes();
   registerGiftRoutes();
   registerImportRoutes();
   registerCollectingRoutes();

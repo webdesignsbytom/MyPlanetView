@@ -25,6 +25,8 @@ import {
   findMapPhotosForExport,
   findUploadsElsewhereForExport,
 } from '../domain/dataExport.js';
+import { findFeedbackSentBy } from '../domain/feedback.js';
+import { feedbackExportItem } from '../utils/feedback.js';
 import { badRequest, handler, notFound } from './helpers/travel.js';
 
 const D = DOMAINS.users;
@@ -56,9 +58,13 @@ async function photoPage(rows, view, userId) {
 
 // GET /api/users/export: the account, its plan, and the maps and trips it's on
 export const getExportHandler = handler(D, 'Export account', async (req, res) => {
-  const rows = await findAccountForExport(req.user.id);
+  const [rows, feedback] = await Promise.all([findAccountForExport(req.user.id), findFeedbackSentBy(req.user.id)]);
   noStore(res);
-  return sendDataResponse(res, 200, exportAccountView({ ...rows, avatarUrl: rows.avatarKey ? publicMediaUrlFrom(rows.avatarKey) : null }));
+  return sendDataResponse(res, 200, {
+    ...exportAccountView({ ...rows, avatarUrl: rows.avatarKey ? publicMediaUrlFrom(rows.avatarKey) : null }),
+    // The feedback they sent (docs/API.md "Feedback"): their words and where each stands
+    feedback: feedback.map(feedbackExportItem),
+  });
 });
 
 // GET /api/users/export/maps/:mapId: one map you own, apart from its photos

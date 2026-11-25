@@ -14,9 +14,10 @@ test('the statistics say how much of the world, the days away, the distance and 
   await expect(tile(stats, 'Of the world')).toContainText(/\d+(\.\d)?%/);
   await expect(tile(stats, 'Of the world')).toContainText(/of 22[69] countries/);
   await expect(tile(stats, 'Days away')).toContainText('282');
-  await expect(tile(stats, 'Distance travelled')).toContainText(/[1-9][\d,]* km/);
-  await expect(tile(stats, 'Distance travelled')).toContainText(/About [\d,]+ miles/);
-  await expect(tile(stats, 'Furthest from home')).toContainText(/km from the United Kingdom/);
+  // In miles, the map's home being in the UK (25 Nov 2026, the user's wish), kilometres beside
+  await expect(tile(stats, 'Distance travelled')).toContainText(/[1-9][\d,]* miles/);
+  await expect(tile(stats, 'Distance travelled')).toContainText(/About [\d,]+ km/);
+  await expect(tile(stats, 'Furthest from home')).toContainText(/miles from the United Kingdom/);
 });
 
 // Time away in more detail (23 Nov 2026, the user's wish): the longest trip, the days each
@@ -91,7 +92,7 @@ test('the distance travelled says what it’s like', { tag: '@phone' }, async ({
   await openMap(page);
   const stats = await openTool(page, 'Travel statistics', 'Travel statistics');
   // Every completed trip from home and back, around the world among them
-  await expect(stats.locator('[data-distance-comparison]')).toHaveText('101,200 km is about two and a half times round the world.');
+  await expect(stats.locator('[data-distance-comparison]')).toHaveText('62,900 miles is about two and a half times round the world.');
 });
 
 test('a map whose home is in the United States shows miles; Settings can choose either', async ({ page }) => {
@@ -110,11 +111,13 @@ test('a map whose home is in the United States shows miles; Settings can choose 
   await expect(stats.locator('[data-distance-comparison]')).toContainText(/^[\d,]+ miles is /);
   await stats.getByRole('button', { name: /^Close/ }).first().click();
 
-  // "Always kilometres", then "Always miles": the viewer's own choice
+  // Just kilometres or miles (25 Nov 2026, the user's wish), the home's ticked until one's chosen
   settings = await openTool(page, 'Map settings', 'Settings');
   const distances = settings.getByRole('group', { name: 'Distances' });
-  await expect(distances.getByLabel('Miles for a map whose home is in the United States, else kilometres')).toBeChecked();
-  await distances.getByText('Always kilometres', { exact: true }).click();
+  await expect(distances.getByRole('radio')).toHaveCount(2);
+  await expect(distances.getByLabel('Miles', { exact: true })).toBeChecked();
+  await distances.getByText('Kilometres', { exact: true }).click();
+  await expect(distances.getByLabel('Kilometres', { exact: true })).toBeChecked();
   await settings.getByRole('button', { name: 'Close Settings' }).click();
   stats = await openTool(page, 'Travel statistics', 'Travel statistics');
   await expect(tile(stats, 'Distance travelled')).toContainText(/[1-9][\d,]* km/);

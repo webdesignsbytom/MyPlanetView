@@ -172,9 +172,14 @@ describe('termsData', () => {
 
   it('has its version and the day it changed', () => {
     expect(LEGAL_VERSION.version).toMatch(/^\d+\.\d+\.\d+$/);
-    expect(LEGAL_VERSION.version).toBe('1.3.1');
+    expect(LEGAL_VERSION.version).toBe('1.3.2');
     expect(LEGAL_VERSION.lastUpdated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(Number.isNaN(Date.parse(LEGAL_VERSION.lastUpdated))).toBe(false);
+  });
+
+  // Feedback from the map (25 Nov 2026): what it keeps, and who sees it
+  it('says what feedback keeps', () => {
+    expect(text('data-we-collect')).toContain('feedback you send from the map: your words, any screenshot you add, the page you were on, your browser and the size of your screen');
   });
 
   it('gives every section its own id, a title and paragraphs', () => {
@@ -281,7 +286,7 @@ describe('navData', () => {
 
   it('gives an admin the admin pages, and only a developer the audit log', () => {
     const adminMenu = (role) => getNavLinkItemsArray({ role }).find((item) => item.label === 'Admin').subpages.map((page) => page.path);
-    expect(adminMenu('ADMIN')).toEqual(['/admin', '/admin/contact-forms', '/admin/users', '/admin/promo-codes', '/admin/offers', '/admin/themes']);
+    expect(adminMenu('ADMIN')).toEqual(['/admin', '/admin/contact-forms', '/admin/users', '/admin/promo-codes', '/admin/offers', '/admin/themes', '/admin/feedback']);
     expect(adminMenu('DEVELOPER')).toEqual([...adminMenu('ADMIN'), '/admin/events']);
   });
 });

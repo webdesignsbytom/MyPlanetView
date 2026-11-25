@@ -90,6 +90,18 @@ describe('BadgeSuitcase', () => {
     expect(container.querySelectorAll('li').length).toBe(4);
   });
 
+  // 25 Nov 2026, the user's wish: the arrow at the far right of the suitcase
+  it('puts each group’s arrow at the far right, the heading’s words filling the rest', () => {
+    const { container } = render(<BadgeSuitcase badges={BADGES} />);
+    for (const toggle of container.querySelectorAll('[data-badge-group-toggle]')) {
+      const classes = toggle.getAttribute('class').split(/\s+/);
+      expect(classes).toContain('grid-cols-[minmax(0,1fr)_auto]');
+      expect(classes).toContain('w-full');
+      expect(classes).not.toContain('justify-start');
+      expect(toggle.lastElementChild.tagName.toLowerCase()).toBe('svg');
+    }
+  });
+
   it('folds a group away with its heading’s arrow, and opens it again', () => {
     const { container } = render(<BadgeSuitcase badges={BADGES} />);
     const toggle = within(container.querySelector('[data-badge-group="countries"] h4')).getByRole('button');

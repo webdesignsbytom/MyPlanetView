@@ -6,8 +6,8 @@ import { MAP_STYLES, MAP_STYLE_IDS, MONO_STYLE, isMonoStyle, mapStyleById, shown
 import { MAP_TYPES, MAP_TYPE_IDS } from '@/utils/map/mapTypes';
 
 describe('MAP_STYLES', () => {
-  it('are the World map first, then Black and white, Old map and Starry night', () => {
-    expect(MAP_STYLE_IDS).toEqual(['animated', 'mono', 'old-map', 'starry']);
+  it('are the World map first, then Black and white, Old map, Starry night and the Engraved ocean', () => {
+    expect(MAP_STYLE_IDS).toEqual(['animated', 'mono', 'old-map', 'starry', 'engraved']);
     expect(MAP_STYLES[0].label).toBe('World map');
   });
 
@@ -16,6 +16,8 @@ describe('MAP_STYLES', () => {
     expect(mapStyleById('mono').background).toBeNull();
     expect(mapStyleById('old-map').background).toBe('old-map');
     expect(mapStyleById('starry').background).toBe('starry-night');
+    // 25 Nov 2026, the user's wish and artwork
+    expect(mapStyleById('engraved')).toMatchObject({ label: 'Engraved ocean', background: 'engraved-ocean' });
   });
 });
 

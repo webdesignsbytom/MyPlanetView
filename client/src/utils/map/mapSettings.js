@@ -45,9 +45,17 @@ export const DEFAULT_MAP_SETTINGS = {
   // The luggage tag under the map's title with the nearest goal's progress
   // (components/achievements/GoalTag.jsx)
   showGoalTag: true,
+  // The countdown to the next planned trip, at the map's top left
+  // (components/trips/TripCountdownTag.jsx; its switch 25 Nov 2026, the user's wish)
+  showTripCountdown: true,
+  // The map's key, at the bottom left on wide screens (components/map/MapLegend.jsx; its
+  // switch 25 Nov 2026, the user's wish)
+  showMapKey: true,
   // The strings tied between places, like thread on a corkboard (components/map/MapStrings.jsx;
-  // 23 Nov 2026): the map's own, each viewer's choice to show
+  // 23 Nov 2026): the map's own, each viewer's choice to show; the places visited, and apart the
+  // places planned (25 Nov 2026)
   showStrings: true,
+  showPlannedStrings: true,
   // The tips the map opens with, once a visit (components/map/MapTipsDialog.jsx, whose box
   // turns this off)
   showTips: true,
@@ -66,16 +74,20 @@ export const DEFAULT_MAP_SETTINGS = {
 // Grouped as the settings panel shows them.
 // `detailed`: the Detailed map type always shows it, so its switch is locked on there.
 // `wideOnly`: only drawn on wide screens (lg and up), so its switch is hidden elsewhere.
+// `notOnPhones`: never drawn on phones (the `phone:` variant), so its switch isn't there.
 export const MAP_SETTING_TOGGLES = [
   { key: 'showVisited', label: 'Countries you have been to', group: 'countries' },
   { key: 'showUnvisited', label: 'Countries you have not been to', group: 'countries' },
   { key: 'showAntarctica', label: 'Antarctica', group: 'countries' },
   { key: 'showMoments', label: 'Moments', group: 'countries' },
   { key: 'showGoalTag', label: 'Goal progress tag', group: 'countries' },
-  { key: 'showStrings', label: 'Strings between countries', group: 'countries' },
+  { key: 'showTripCountdown', label: 'Countdown to your next trip', group: 'countries' },
+  { key: 'showStrings', label: 'Strings between places visited', group: 'countries' },
+  { key: 'showPlannedStrings', label: 'Strings between places planned', group: 'countries' },
   { key: 'showGrid', label: 'Latitude and longitude lines', group: 'map', detailed: true },
   { key: 'showGridLabels', label: 'Label the lines', group: 'map', detailed: true },
   { key: 'showCountryNames', label: 'Country names', group: 'map', detailed: true },
+  { key: 'showMapKey', label: 'Map key', group: 'map', notOnPhones: true },
   { key: 'showUserBanner', label: 'Banner with your names along the top', group: 'map', wideOnly: true },
   { key: 'animatedSea', label: 'Animated sea', group: 'sky' },
   { key: 'sunAndMoon', label: 'Sun and moon', group: 'sky' },

@@ -1,6 +1,6 @@
 // The flight log's rules and words (utils/flights/flightLog.js, airports.js, saveFlights.js).
 import { describe, expect, it, vi } from 'vitest';
-import { distanceWords, flightCode, flightDays, flightKm, flightPlaces, tripForDay } from '@/utils/flights/flightLog';
+import { distanceWords, firstFlownByAirport, flightCode, flightDays, flightKm, flightPlaces, stampCity, stampDay, tripForDay } from '@/utils/flights/flightLog';
 import { airportFrom, airportLabel, loadAirports, placeOfAirport } from '@/utils/flights/airports';
 import { saveFlights, tripStatusFor } from '@/utils/flights/saveFlights';
 
@@ -73,6 +73,31 @@ describe('the log’s helpers', () => {
     expect(distanceWords(5555, 'km')).toBe('5,555 km (3,452 miles)');
     expect(flightCode({ carrier: 'BA', flightNumber: '117' })).toBe('BA 117');
     expect(flightCode({ carrier: null, flightNumber: null })).toBe('');
+  });
+});
+
+// 25 Nov 2026, the user's wish: the airport stamps carry the city and the first day flown
+describe('the airport stamps’ words', () => {
+  it('finds each airport’s first flight, from it or to it', () => {
+    const first = firstFlownByAirport([
+      { from: 'DUB', to: 'BGO', flownOn: '2026-11-18' },
+      { from: 'LHR', to: 'DUB', flownOn: '2014-06-20' },
+      { from: 'DUB', to: 'LHR', flownOn: '2015-01-02' },
+      { from: 'LHR', to: 'FCO', flownOn: null },
+    ]);
+    expect(Object.fromEntries(first)).toEqual({ DUB: '2014-06-20', BGO: '2026-11-18', LHR: '2014-06-20' });
+    expect(firstFlownByAirport(null).size).toBe(0);
+  });
+
+  it('prints the city without its brackets, in capitals, and the day as a rubber stamp does', () => {
+    expect(stampCity('Venezia (VE)')).toBe('VENEZIA');
+    expect(stampCity('Paris (Roissy-en-France, Val-d’Oise)')).toBe('PARIS');
+    expect(stampCity('San Francisco')).toBe('SAN FRANCISCO');
+    expect(stampCity(undefined)).toBe('');
+    expect(stampDay('2026-02-13')).toBe('13 FEB 2026');
+    expect(stampDay('2014-06-02T00:00:00Z')).toBe('2 JUN 2014');
+    expect(stampDay('')).toBe('');
+    expect(stampDay('soon')).toBe('');
   });
 });
 

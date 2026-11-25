@@ -7,7 +7,7 @@ import { uploadDesignPicture } from '@/utils/map/uploadDesignPicture';
 vi.mock('@/api/travelApi', () => ({ updateMapDesign: vi.fn(), removeDesignPicture: vi.fn() }));
 vi.mock('@/utils/map/uploadDesignPicture', () => ({ uploadDesignPicture: vi.fn() }));
 
-const SHOWN = { shown: true, countries: { FR: '#112233' }, names: null, grid: null, hover: null, string: null, stringTwist: null, picture: null };
+const SHOWN = { shown: true, countries: { FR: '#112233' }, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, picture: null };
 const flush = () => act(async () => {});
 const wait = (ms) => act(async () => vi.advanceTimersByTimeAsync(ms));
 

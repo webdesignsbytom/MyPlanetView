@@ -3,7 +3,7 @@ import React, { useId } from 'react';
 import SwitchInput from '@/components/ui/SwitchInput';
 import SupporterBadge from '@/components/plans/SupporterBadge';
 // Utils
-import { planOf } from '@/utils/constants/plans';
+import { supporterClass } from '@/utils/plans/supporterBadge';
 
 /**
  * Settings' supporter badge (docs/API.md "The supporter badge"; 24 Nov 2026, the user's wish):
@@ -13,7 +13,8 @@ import { planOf } from '@/utils/constants/plans';
  */
 function SupporterBadgeSection({ supporter, checked, onChange }) {
   const noteId = useId();
-  const name = planOf(supporter.plan).name;
+  // "Business Class", "First Class", as the badge says it
+  const name = supporterClass(supporter);
 
   return (
     <fieldset data-supporter-settings className='grid gap-3'>

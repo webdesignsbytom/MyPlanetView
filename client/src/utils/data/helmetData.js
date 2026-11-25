@@ -19,6 +19,7 @@ import {
   ADMIN_PROMO_CODES_PAGE_URL,
   ADMIN_OFFERS_PAGE_URL,
   ADMIN_THEMES_PAGE_URL,
+  ADMIN_FEEDBACK_PAGE_URL,
   LEGAL_AGREEMENTS_PAGE_URL,
   TERMS_AND_CONDITIONS_PAGE_URL,
   PRIVACY_POLICIES_PAGE_URL,
@@ -276,6 +277,12 @@ export const helmetData = {
   },
   [ADMIN_THEMES_PAGE_URL]: {
     pageName: 'Photo Themes',
+    additionalMeta: [],
+    structuredData: [],
+    indexing: 'noindex,nofollow',
+  },
+  [ADMIN_FEEDBACK_PAGE_URL]: {
+    pageName: 'Feedback',
     additionalMeta: [],
     structuredData: [],
     indexing: 'noindex,nofollow',

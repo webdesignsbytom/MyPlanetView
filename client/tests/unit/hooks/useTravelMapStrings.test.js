@@ -51,7 +51,7 @@ describe('useTravelMap: strings', () => {
     await act(async () => {
       string = await result.current.tieString('IT', 'DE');
     });
-    expect(api.tieMapString).toHaveBeenCalledWith('m1', 'IT', 'DE');
+    expect(api.tieMapString).toHaveBeenCalledWith('m1', 'IT', 'DE', 'VISITED');
     expect(string).toEqual({ id: 's3', from: 'DE', to: 'IT' });
     expect(ids(result)).toEqual(['s1', 's2', 's3']);
     // The server gives back one already tied
@@ -107,6 +107,26 @@ describe('useTravelMap: strings', () => {
     api.untieAllMapStrings.mockResolvedValue({ removed: 2 });
     await act(() => result.current.untieAllStrings());
     expect(result.current.map.strings).toEqual([]);
-    expect(api.untieAllMapStrings).toHaveBeenCalledWith('m1');
+    expect(api.untieAllMapStrings).toHaveBeenCalledWith('m1', 'VISITED');
+  });
+
+  // Planned strings (25 Nov 2026, the user's wish): their own kind, in their own set
+  it('ties a planned string, and takes off every one of a kind, leaving the other kind', async () => {
+    const planned = { id: 'p1', kind: 'PLANNED', from: 'IS', to: 'JP' };
+    const { result } = await loaded([...STRINGS, planned]);
+    api.tieMapString.mockResolvedValue({ string: { id: 'p2', kind: 'PLANNED', from: 'JP', to: 'PE' } });
+    await act(() => result.current.tieString('PE', 'JP', 'PLANNED'));
+    expect(api.tieMapString).toHaveBeenCalledWith('m1', 'PE', 'JP', 'PLANNED');
+    expect(ids(result)).toEqual(['s1', 's2', 'p1', 'p2']);
+
+    api.untieAllMapStrings.mockResolvedValue({ removed: 2 });
+    await act(() => result.current.untieAllStrings('PLANNED'));
+    expect(api.untieAllMapStrings).toHaveBeenCalledWith('m1', 'PLANNED');
+    expect(ids(result)).toEqual(['s1', 's2']);
+
+    api.tieAutoMapStrings.mockResolvedValue({ strings: [...STRINGS, planned], added: 1, full: false });
+    await act(() => result.current.tieAutoStrings('PLANNED'));
+    expect(api.tieAutoMapStrings).toHaveBeenCalledWith('m1', 'PLANNED');
+    expect(ids(result)).toEqual(['s1', 's2', 'p1']);
   });
 });

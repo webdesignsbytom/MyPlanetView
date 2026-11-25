@@ -30,8 +30,17 @@ export function shownSupporter(map, settings, { role = map?.role, shareCode = nu
   return supporter.shown === false ? null : supporter;
 }
 
-/** What the badge says: "First Class member". */
-export const supporterWords = (supporter) => `${planOf(supporter.plan).name} member`;
+/**
+ * The plan as a class of travel: "Business Class", "First Class" (25 Nov 2026, the user's
+ * wish: the badge said "Business member").
+ */
+export const supporterClass = (supporter) => {
+  const name = planOf(supporter.plan).name;
+  return /\bClass$/.test(name) ? name : `${name} Class`;
+};
+
+/** What the badge says: "Business Class member", "First Class member". */
+export const supporterWords = (supporter) => `${supporterClass(supporter)} member`;
 
 /** Its link's name: where it goes, and that it opens a new tab. */
 export const supporterLinkLabel = (supporter) => `${supporterWords(supporter)}. About our plans (opens in a new tab)`;

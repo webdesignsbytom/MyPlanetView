@@ -41,6 +41,46 @@ describe('FlightLogDialog', () => {
     expect(screen.queryByText('Delete')).toBeNull();
   });
 
+  // 25 Nov 2026, the user's wishes: each section folds under an arrow on the far right, kept for
+  // the visit; the list is "Flights taken"; the stamps have more style (AirportStamp)
+  it('folds the airports and the flights taken away, and remembers it for the visit', async () => {
+    sessionStorage.clear();
+    const { unmount } = render(<FlightLogDialog mapId='m1' onClose={vi.fn()} />);
+    await screen.findByText('LHR → FCO · BA 548');
+    const airports = screen.getByRole('button', { name: 'Airports collected' });
+    const flights = screen.getByRole('button', { name: 'Flights taken' });
+    expect(airports.getAttribute('aria-expanded')).toBe('true');
+    expect(flights.getAttribute('aria-expanded')).toBe('true');
+    // The name, then the arrow last, on the far right
+    expect(airports.lastElementChild.tagName.toLowerCase()).toBe('svg');
+    expect(airports.className).toContain('grid-cols-[minmax(0,1fr)_auto]');
+
+    fireEvent.click(flights);
+    expect(flights.getAttribute('aria-expanded')).toBe('false');
+    expect(document.getElementById(flights.getAttribute('aria-controls')).hidden).toBe(true);
+    expect(document.getElementById(airports.getAttribute('aria-controls')).hidden).toBe(false);
+    expect(JSON.parse(sessionStorage.getItem('mpv:flightLogClosed'))).toEqual(['flights']);
+    unmount();
+
+    render(<FlightLogDialog mapId='m1' onClose={vi.fn()} />);
+    await screen.findByText('LHR → FCO · BA 548');
+    const again = screen.getByRole('button', { name: 'Flights taken' });
+    expect(again.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(again);
+    expect(again.getAttribute('aria-expanded')).toBe('true');
+    expect(sessionStorage.getItem('mpv:flightLogClosed')).toBeNull();
+  });
+
+  it('draws each airport as a stamp with its city and first day flown, and says so in words', async () => {
+    render(<FlightLogDialog mapId='m1' onClose={vi.fn()} />);
+    await screen.findByText('LHR → FCO · BA 548');
+    const items = [...document.querySelectorAll('[data-airport-stamps] li')];
+    const rome = items.find((li) => li.textContent.includes('Rome Fiumicino'));
+    expect(rome.querySelector('svg[data-airport-stamp]').getAttribute('aria-hidden')).toBe('true');
+    expect([...rome.querySelectorAll('textPath')].map((t) => t.textContent)).toEqual(['ROME', '2 JUL 2025']);
+    expect(rome.querySelector('.sr-only').textContent).toBe('Rome Fiumicino (FCO), first flown 2 Jul 2025');
+  });
+
   // 24 Nov 2026, the user's wish: what the distance is like, and miles first on a map in miles
   it('says what the distance flown is like', async () => {
     render(<FlightLogDialog mapId='m1' onClose={vi.fn()} />);

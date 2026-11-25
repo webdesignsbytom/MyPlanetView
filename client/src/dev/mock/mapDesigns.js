@@ -65,9 +65,10 @@ export function parseDesignChange(body) {
     change.shown = input.shown;
   }
   // `stringTwist`: a second colour twisted into the strings (25 Nov 2026), opaque only
-  for (const field of ['names', 'grid', 'hover', 'string', 'stringTwist']) {
+  // The planned strings' colour and twist too (25 Nov 2026)
+  for (const field of ['names', 'grid', 'hover', 'string', 'stringTwist', 'plannedString', 'plannedStringTwist']) {
     if (input[field] === undefined) continue;
-    const colour = cleanColour(input[field], { alpha: field === 'string' });
+    const colour = cleanColour(input[field], { alpha: field === 'string' || field === 'plannedString' });
     if (!colour.ok) return { error: 'invalidDesignColour' };
     change[field] = colour.value;
   }
@@ -100,7 +101,7 @@ export function checkDesignPicture({ contentType, bytes }) {
 }
 
 /** A new design, as the server makes one. */
-export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, pictureKey: null });
+export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, pictureKey: null });
 
 /** A map's design for a style as the replies give it, or null when it has none. */
 export function designView(map, style) {
@@ -116,6 +117,8 @@ export function designView(map, style) {
     hover: design.hover ?? null,
     string: design.string ?? null,
     stringTwist: design.stringTwist ?? null,
+    plannedString: design.plannedString ?? null,
+    plannedStringTwist: design.plannedStringTwist ?? null,
     picture: url ? { url } : null,
   };
 }

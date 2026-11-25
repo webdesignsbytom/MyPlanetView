@@ -184,7 +184,7 @@ describe('MapBanner', () => {
   it('gives Business its own, cut from the navy cover', () => {
     const { container } = render(<MapBanner map={{ name: 'Our travels' }} supporter={{ plan: 'REGULAR', name: 'Business', shown: true }} />);
     const badge = container.querySelector('[data-supporter-badge]');
-    expect(badge.textContent).toContain('Business member');
+    expect(badge.textContent).toContain('Business Class member');
     expect(badge.getAttribute('class')).toContain('passport-business');
   });
 });

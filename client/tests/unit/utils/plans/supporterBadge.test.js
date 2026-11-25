@@ -3,7 +3,7 @@
 // paying member's plan on the banner of their maps, on unless they turn it off.
 import { describe, expect, it } from 'vitest';
 import * as server from '../../../../../server/src/utils/supporterBadge.js';
-import { shownSupporter, supporterBadge, supporterCover, supporterLinkLabel, supporterWords } from '@/utils/plans/supporterBadge';
+import { shownSupporter, supporterBadge, supporterClass, supporterCover, supporterLinkLabel, supporterWords } from '@/utils/plans/supporterBadge';
 
 const FIRST = { plan: 'PREMIUM', name: 'First Class', shown: true };
 
@@ -49,9 +49,12 @@ describe('shownSupporter', () => {
 });
 
 describe('its words and look', () => {
-  it('says the plan, and where its link goes', () => {
+  it('says the plan as a class of travel, and where its link goes', () => {
     expect(supporterWords(FIRST)).toBe('First Class member');
-    expect(supporterWords({ plan: 'REGULAR' })).toBe('Business member');
+    // "Business Class", never "Business member" (25 Nov 2026, the user's wish)
+    expect(supporterWords({ plan: 'REGULAR' })).toBe('Business Class member');
+    expect(supporterClass({ plan: 'REGULAR' })).toBe('Business Class');
+    expect(supporterClass(FIRST)).toBe('First Class');
     expect(supporterLinkLabel(FIRST)).toBe('First Class member. About our plans (opens in a new tab)');
   });
 

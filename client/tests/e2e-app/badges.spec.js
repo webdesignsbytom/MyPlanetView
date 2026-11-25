@@ -114,6 +114,10 @@ test.describe('Badges and goals', () => {
     const continents = panel.getByRole('button', { name: 'Continents', exact: true });
     await expect(continents).toHaveAttribute('aria-expanded', 'true');
     await expect(sticker(panel, 'A first country in Europe.')).toBeVisible();
+    // Its arrow at the far right of the suitcase, the words at the left (25 Nov 2026, the user's wish)
+    const [arrow, heading] = await Promise.all([continents.locator('svg').boundingBox(), continents.boundingBox()]);
+    expect(heading.x + heading.width - (arrow.x + arrow.width)).toBeLessThan(2);
+    expect(arrow.x).toBeGreaterThan(heading.x + heading.width / 2);
 
     await continents.click();
     await expect(continents).toHaveAttribute('aria-expanded', 'false');

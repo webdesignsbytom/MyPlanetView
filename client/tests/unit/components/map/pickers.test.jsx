@@ -13,16 +13,19 @@ import { DEFAULT_MAP_SETTINGS } from '@/utils/map/mapSettings';
 // Settings' pickers and the visit status controls
 
 describe('MapStylePicker', () => {
-  it('offers the four styles as cards, each in its own colours', () => {
+  it('offers the five styles as cards, each in its own colours', () => {
     const { container } = render(<MapStylePicker value='starry' onChange={() => {}} />);
     const cards = [...container.querySelectorAll('label[data-map-style]')];
-    expect(cards.map((c) => c.getAttribute('data-map-style'))).toEqual(['animated', 'mono', 'old-map', 'starry']);
+    expect(cards.map((c) => c.getAttribute('data-map-style'))).toEqual(['animated', 'mono', 'old-map', 'starry', 'engraved']);
     expect(screen.getByLabelText('Starry night').checked).toBe(true);
     // The hidden radio stays inside its card (a far ancestor scrolled the page)
     for (const card of cards) expect(card.getAttribute('class')).toContain('relative');
     // Each previewed by its picture, or the plain sea where it has none
     for (const card of cards) expect(card.querySelector('img') || card.querySelector('span.bg-map-sea')).not.toBeNull();
     expect(cards[3].querySelector('img')).not.toBeNull();
+    // The engraved ocean's card shows its waves (25 Nov 2026)
+    expect(cards[4].querySelector('img').getAttribute('src')).toContain('engraved-ocean');
+    expect(screen.getByLabelText('Engraved ocean')).toBeTruthy();
   });
 
   it('calls back with the style picked, and shows a note when given one', () => {
@@ -110,6 +113,23 @@ describe('MapSettingsToggles', () => {
   it('hides the banner’s switch below wide screens', () => {
     const { container } = render(<MapSettingsToggles settings={DEFAULT_MAP_SETTINGS} onChange={() => {}} />);
     expect(container.querySelector('#setting-showUserBanner').closest('.max-lg\\:hidden')).not.toBeNull();
+  });
+
+  // 25 Nov 2026, the user's wish: switches for the next trip's countdown and the map key,
+  // which phones never show, so its switch isn't there either
+  it('switches the next trip’s countdown and the map key, the key’s hidden on phones', () => {
+    const onChange = vi.fn();
+    const { container } = render(<MapSettingsToggles settings={{ ...DEFAULT_MAP_SETTINGS, showMapKey: false }} onChange={onChange} />);
+    const countdown = container.querySelector('#setting-showTripCountdown');
+    const key = container.querySelector('#setting-showMapKey');
+    expect(countdown.checked).toBe(true);
+    expect(key.checked).toBe(false);
+    expect(countdown.closest('.phone\\:hidden')).toBeNull();
+    expect(key.closest('.phone\\:hidden')).not.toBeNull();
+    fireEvent.click(countdown);
+    expect(onChange).toHaveBeenCalledWith('showTripCountdown', false);
+    fireEvent.click(key);
+    expect(onChange).toHaveBeenCalledWith('showMapKey', true);
   });
 });
 

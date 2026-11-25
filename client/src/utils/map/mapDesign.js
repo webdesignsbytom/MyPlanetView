@@ -57,30 +57,52 @@ export const designFor = (map, styleId) => map?.designs?.[styleId] ?? null;
 export const shownDesign = (design) => (design?.shown ? design : null);
 
 /** A design with nothing in it yet, as the editor starts one. */
-export const EMPTY_DESIGN = Object.freeze({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, picture: null });
+export const EMPTY_DESIGN = Object.freeze({
+  shown: true,
+  countries: {},
+  names: null,
+  grid: null,
+  hover: null,
+  string: null,
+  stringTwist: null,
+  plannedString: null,
+  plannedStringTwist: null,
+  picture: null,
+});
 
 // A twined string's width on screen (MapStrings): wide enough for the twist to show; a
 // string of one colour is 1.8px (4 and 2 until 25 Nov 2026, the user's wish: 10% thinner)
 export const TWINED_STRING_PX = 3.6;
 
 /**
- * The strings' tokens for a design: `--map-string` (one colour, see-through or not); with a
- * second colour twisted in (`stringTwist`, 25 Nov 2026, the user's wish), the twine's: its
+ * Each kind of string's design fields and tokens (25 Nov 2026, the user's wish: the planned
+ * strings in their own colours): the colour, the second colour twisted in, and the tokens'
+ * prefix (MapStrings reads `<prefix>`, `-2`, `-width`, `-alpha` and `-twist`).
+ */
+export const STRING_DESIGNS = Object.freeze({
+  VISITED: { colour: 'string', twist: 'stringTwist', tokens: '--map-string' },
+  PLANNED: { colour: 'plannedString', twist: 'plannedStringTwist', tokens: '--map-plan-string' },
+});
+
+/**
+ * A kind of string's tokens for a design: `--map-string` (one colour, see-through or not); with
+ * a second colour twisted in (`stringTwist`, 25 Nov 2026, the user's wish), the twine's: its
  * first colour opaque, its opacity apart (`--map-string-alpha`, on each string as a whole, so
  * the two colours never show through each other), the second colour, its width, and the
  * twist's strands shown (`--map-string-twist`; MapStrings draws them always, hidden unless
- * this says so, so ticking the box shows the twine at once).
+ * this says so, so ticking the box shows the twine at once). The planned strings' are the same
+ * under `--map-plan-string`.
  */
-function stringVars(design) {
-  const string = typeof design.string === 'string' && DESIGN_COLOUR_ALPHA.test(design.string) ? design.string : null;
-  const twist = typeof design.stringTwist === 'string' && DESIGN_COLOUR.test(design.stringTwist) ? design.stringTwist : null;
-  if (!twist) return string ? [`--map-string:${string}`] : [];
+function stringVars(design, { colour, twist: twistField, tokens }) {
+  const string = typeof design[colour] === 'string' && DESIGN_COLOUR_ALPHA.test(design[colour]) ? design[colour] : null;
+  const twist = typeof design[twistField] === 'string' && DESIGN_COLOUR.test(design[twistField]) ? design[twistField] : null;
+  if (!twist) return string ? [`${tokens}:${string}`] : [];
   const vars = [];
   if (string) {
-    vars.push(`--map-string:${string.slice(0, 7)}`);
-    if (string.length === 9) vars.push(`--map-string-alpha:${Math.round((parseInt(string.slice(7), 16) / 255) * 1000) / 1000}`);
+    vars.push(`${tokens}:${string.slice(0, 7)}`);
+    if (string.length === 9) vars.push(`${tokens}-alpha:${Math.round((parseInt(string.slice(7), 16) / 255) * 1000) / 1000}`);
   }
-  vars.push(`--map-string-2:${twist}`, `--map-string-width:${TWINED_STRING_PX}px`, '--map-string-twist:inline');
+  vars.push(`${tokens}-2:${twist}`, `${tokens}-width:${TWINED_STRING_PX}px`, `${tokens}-twist:inline`);
   return vars;
 }
 
@@ -110,7 +132,7 @@ export function designCss(design) {
   if (typeof design.names === 'string' && DESIGN_COLOUR.test(design.names)) vars.push(`--map-names:${design.names}`);
   if (typeof design.grid === 'string' && DESIGN_COLOUR.test(design.grid)) vars.push(`--map-grid:${design.grid}`);
   if (typeof design.hover === 'string' && DESIGN_COLOUR.test(design.hover)) vars.push(`--map-hover:${design.hover}`);
-  vars.push(...stringVars(design));
+  vars.push(...stringVars(design, STRING_DESIGNS.VISITED), ...stringVars(design, STRING_DESIGNS.PLANNED));
   const colours = cleanCountryColours(design.countries);
   for (const [region, parent] of Object.entries(REGION_PARENT)) {
     if (!colours[region] && colours[parent]) colours[region] = colours[parent];

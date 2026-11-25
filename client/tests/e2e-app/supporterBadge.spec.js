@@ -5,7 +5,7 @@ import { test, expect, HOME_MAP, HOME_SHARE_CODE, goInApp, mapReady, openMap, op
 // their Settings turn it off. The test user pays for Business. The banner is wide screens' only.
 
 const banner = (page) => page.getByRole('region', { name: 'Map banner' });
-const badgeIn = (where) => where.getByRole('link', { name: 'Business member. About our plans (opens in a new tab)' });
+const badgeIn = (where) => where.getByRole('link', { name: 'Business Class member. About our plans (opens in a new tab)' });
 
 test('a paying member’s badge hangs under their banner, for everyone, until Settings turns it off', async ({ page }) => {
   await openMap(page);
@@ -28,10 +28,10 @@ test('a paying member’s badge hangs under their banner, for everyone, until Se
   await goInApp(page, '/map');
   await mapReady(page);
   const settings = await openTool(page, 'Map settings', 'Settings');
-  await expect(settings.locator('[data-supporter-settings] [data-supporter-badge]')).toHaveText(/Business member/);
-  const box = settings.getByRole('switch', { name: 'Show my Business badge' });
+  await expect(settings.locator('[data-supporter-settings] [data-supporter-badge]')).toHaveText(/Business Class member/);
+  const box = settings.getByRole('switch', { name: 'Show my Business Class badge' });
   await expect(box).toBeChecked();
-  await settings.getByText('Show my Business badge', { exact: true }).click();
+  await settings.getByText('Show my Business Class badge', { exact: true }).click();
   await expect(box).not.toBeChecked();
   await expect(banner(page).locator('[data-supporter-badge]')).toHaveCount(0);
   await settings.getByRole('button', { name: 'Close Settings' }).click();

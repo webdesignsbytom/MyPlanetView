@@ -65,6 +65,17 @@ describe('the switches', () => {
     const detailed = MAP_SETTING_TOGGLES.filter((toggle) => toggle.detailed).map((toggle) => toggle.key);
     expect(detailed).toEqual(['showGrid', 'showGridLabels', 'showCountryNames']);
     expect(MAP_SETTING_TOGGLES.filter((toggle) => toggle.wideOnly).map((toggle) => toggle.key)).toEqual(['showUserBanner']);
+    // Phones have no map key
+    expect(MAP_SETTING_TOGGLES.filter((toggle) => toggle.notOnPhones).map((toggle) => toggle.key)).toEqual(['showMapKey']);
+  });
+
+  // 25 Nov 2026, the user's wish: the next trip's countdown and the map key can be turned off
+  it('switch the next trip’s countdown and the map key, both on to start with', () => {
+    const byKey = Object.fromEntries(MAP_SETTING_TOGGLES.map((toggle) => [toggle.key, toggle]));
+    expect(byKey.showTripCountdown).toMatchObject({ label: 'Countdown to your next trip', group: 'countries' });
+    expect(byKey.showMapKey).toMatchObject({ label: 'Map key', group: 'map' });
+    expect(DEFAULT_MAP_SETTINGS.showTripCountdown).toBe(true);
+    expect(DEFAULT_MAP_SETTINGS.showMapKey).toBe(true);
   });
 
   it('offer four landmark pin modes', () => {
@@ -115,7 +126,10 @@ describe('cleanMapSettings', () => {
       showAntarctica: false,
       showMoments: false,
       showGoalTag: false,
+      showTripCountdown: false,
+      showMapKey: false,
       showStrings: false,
+      showPlannedStrings: false,
       showTips: false,
       showCelebrations: false,
       countriesAsked: true,

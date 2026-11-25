@@ -117,8 +117,36 @@ export function previousVisitedPlace(visits, code) {
   return index > 0 ? order[index - 1] : null;
 }
 
-/** Whether a string already joins these two places, whichever way round. */
-export const hasString = (strings, a, b) => {
+/** Whether a string of a kind already joins these two places, whichever way round. */
+export const hasString = (strings, a, b, kind = 'VISITED') => {
   const ends = stringEnds(a, b);
-  return Boolean(ends && (strings || []).some((s) => s.from === ends[0] && s.to === ends[1]));
+  return Boolean(ends && (strings || []).some((s) => stringKindOf(s) === kind && s.from === ends[0] && s.to === ends[1]));
 };
+
+/**
+ * A string's kind (25 Nov 2026, the user's wish): VISITED, between places been to, or PLANNED,
+ * between places planned, each in its own colour. Strings from before kinds are VISITED.
+ */
+export const STRING_KINDS = Object.freeze(['VISITED', 'PLANNED']);
+export const stringKindOf = (string) => (string?.kind === 'PLANNED' ? 'PLANNED' : 'VISITED');
+
+/** A map's strings of one kind. */
+export const stringsOfKind = (strings, kind) => (strings || []).filter((s) => stringKindOf(s) === kind);
+
+/**
+ * The place marked "want to go" just before `code` (25 Nov 2026, the user's wish: a planned
+ * string "in the order of when you select a place you want to visit"): the map's wanted places
+ * in the order they were marked (`markedAt`; one with none, as the mock's seeded visits, was
+ * marked before any that has one), `code` among them, and the one before it; null when it's the
+ * first. The place it's part of is never its previous.
+ * @param {{ countryCode, status, markedAt }[]} visits the map's, the new one included
+ */
+export function previousPlannedPlace(visits, code) {
+  const parent = PARENT_PLACE[code];
+  const wanted = visits.filter((v) => v.status === 'WANT_TO_GO' && v.countryCode !== parent);
+  if (!wanted.some((v) => v.countryCode === code)) return null;
+  const time = (v) => (v.markedAt ? Date.parse(v.markedAt) || 0 : v.countryCode === code ? Number.POSITIVE_INFINITY : 0);
+  const order = [...wanted].sort((a, b) => time(a) - time(b) || (a.countryCode === code) - (b.countryCode === code));
+  const index = order.findIndex((v) => v.countryCode === code);
+  return index > 0 ? order[index - 1].countryCode : null;
+}

@@ -170,12 +170,14 @@ export function exportMapView(rows, { userId }) {
       hoverColour: design.hoverColour ?? null,
       stringColour: design.stringColour ?? null,
       stringTwistColour: design.stringTwistColour ?? null,
+      plannedStringColour: design.plannedStringColour ?? null,
+      plannedStringTwistColour: design.plannedStringTwistColour ?? null,
       hasSeaPicture: Boolean(design.pictureId),
     })),
     // Landmarks ticked "been here" (docs/API.md "Collecting")
     landmarksBeenTo: (map.landmarkVisits ?? []).map((v) => ({ landmarkId: v.landmarkId, name: v.landmark?.name ?? null, countryCode: v.landmark?.countryCode ?? null, since: iso(v.createdAt) })),
     // Strings tied between its places (docs/API.md "Strings")
-    strings: (map.strings ?? []).map((s) => ({ from: s.fromCode, to: s.toCode, since: iso(s.createdAt) })),
+    strings: (map.strings ?? []).map((s) => ({ kind: s.kind ?? 'VISITED', from: s.fromCode, to: s.toCode, since: iso(s.createdAt) })),
     // Its flight log and "Guess where I was" games (their players' names aren't the owner's data)
     flights: (map.flights ?? []).map((f) => ({
       from: f.fromAirport,

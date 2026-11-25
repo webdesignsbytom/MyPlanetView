@@ -327,6 +327,16 @@ describe('map settings', () => {
     expect((await anon().get('/api/users/map-settings')).status).toBe(401);
   });
 
+  // 25 Nov 2026, the user's wish: Settings turns off the next trip's countdown and the map key
+  it('keeps the countdown and map key switches', async () => {
+    const { agent } = await signUp('Switches');
+    const saved = await agent.put('/api/users/map-settings').send({ mapSettings: { showTripCountdown: false, showMapKey: false } });
+    expect(saved.status).toBe(200);
+    expect(data(saved).mapSettings).toMatchObject({ showTripCountdown: false, showMapKey: false });
+    expect((await agent.put('/api/users/map-settings').send({ mapSettings: { showMapKey: 'no' } })).status).toBe(400);
+    expect(data(await agent.get('/api/users/map-settings')).mapSettings).toMatchObject({ showTripCountdown: false, showMapKey: false });
+  });
+
   // 24 Nov 2026, the user's wish: "Americans in miles always", and a choice
   it('keeps the distance unit, and refuses one it doesn’t know', async () => {
     const { agent } = await signUp('Miles');

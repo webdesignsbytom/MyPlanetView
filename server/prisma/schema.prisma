@@ -83,6 +83,9 @@ model User {
   landmarkTicks LandmarkVisit[]
   // Strings tied on maps (docs/API.md "Strings")
   stringsTied   MapString[]
+  // Feedback sent from the map, and the reports an admin last changed (docs/API.md "Feedback")
+  feedbackSent    FeedbackReport[] @relation("FeedbackSender")
+  feedbackHandled FeedbackReport[] @relation("FeedbackUpdater")
 
   @@unique([email])
   @@map("user")
@@ -446,6 +449,11 @@ model MapDesign {
   // A second colour twisted into the strings, as baker's twine, "#rrggbb", or null for
   // strings of one colour (25 Nov 2026, the user's wish); CHECK map_design_string_twist_colour
   stringTwistColour String?
+  // The planned strings' own colour and twist (MapString kind PLANNED; 25 Nov 2026, the user's
+  // wish), as the two above: CHECKs map_design_planned_string_colour and
+  // map_design_planned_string_twist_colour
+  plannedStringColour      String?
+  plannedStringTwistColour String?
 
   // The sea's picture, in the private bucket (resource 'mapDesign'); unique, so a file is
   // one map's. The daily clean-up never deletes a picture a design uses.
@@ -1193,6 +1201,8 @@ model MediaItem {
   photoVariant    PhotoVariant?
   // The sea's picture of a map's design (docs/API.md "Map designs")
   usedAsMapDesign MapDesign?
+  // A feedback report's screenshot (docs/API.md "Feedback")
+  usedAsFeedbackScreenshot FeedbackReport?
 
   createdAt DateTime @default(now())
 
@@ -1221,6 +1231,73 @@ model AvatarMediaItem {
 }
 
 // ── Contact (trimmed: no phone or postal address) ────────────────────────────
+
+// Feedback sent from the map (docs/API.md "Feedback"; 25 Nov 2026, the user's wish): a problem, an
+// idea, a question or anything else, in the sender's own words, with an optional screenshot in the
+// private bucket and a few details of where they were; read and acted on at /admin/feedback.
+enum FeedbackKind {
+  PROBLEM
+  IDEA
+  QUESTION
+  OTHER
+}
+
+// How much a problem gets in the way: it stops them, it's annoying, or just so we know
+enum FeedbackImpact {
+  BLOCKING
+  ANNOYING
+  MINOR
+}
+
+enum FeedbackStatus {
+  NEW
+  IN_PROGRESS
+  DONE
+  WONT_DO
+}
+
+model FeedbackReport {
+  id     String @id @default(uuid())
+  // Deleted with the sender's account: their words and screenshot are theirs
+  userId String
+  user   User   @relation("FeedbackSender", fields: [userId], references: [id], onDelete: Cascade)
+
+  kind     FeedbackKind
+  // What happened, what they'd like, or their message
+  details  String
+  // A problem's: what they expected to happen
+  expected String?
+  // Why it matters to them (a problem's or an idea's)
+  why      String?
+  impact   FeedbackImpact?
+
+  // Where they were: the page (its path, secrets taken out), the map (no foreign key: a map
+  // deleted keeps the report) and their browser
+  page      String?
+  mapId     String?
+  userAgent String?
+  // A few small details: screen and window size, map style, phone or not, the site's build
+  context   Json?
+
+  screenshotId String?    @unique
+  screenshot   MediaItem? @relation(fields: [screenshotId], references: [id], onDelete: SetNull)
+
+  status      FeedbackStatus @default(NEW)
+  adminNotes  String?
+  // Set while done or won't do (CHECK feedback_report_closed)
+  closedAt    DateTime?
+  updatedById String?
+  updatedBy   User?          @relation("FeedbackUpdater", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // The admin's list: by status, newest first
+  @@index([status, createdAt])
+  @@index([userId])
+  @@index([updatedById])
+  @@map("feedback_report")
+}
 
 model ContactForm {
   id      String @id @default(uuid())
@@ -1625,22 +1702,25 @@ model LandmarkVisit {
 // A string tied between two places on a map, like thread between pins on a corkboard
 // (docs/API.md "Strings"; 23 Nov 2026, the user's wish): tied by hand (two places
 // chosen) or added from the map's trips and first visits. The pair is kept in code order
-// (CHECK map_string_order: fromCode < toCode), so one pair of places is one string.
-// 500 a map (utils/mapStrings.js), counted with the map row locked.
+// (CHECK map_string_order: fromCode < toCode), so one pair of places is one string of a kind.
+// Its `kind` (25 Nov 2026, the user's wish): VISITED, between places been to, or PLANNED,
+// between places planned (want to go, planned trips), each kind in its own colour.
+// 500 a map of each kind (utils/mapStrings.js), counted with the map row locked.
 model MapString {
-  id       String    @id @default(uuid())
+  id       String     @id @default(uuid())
   mapId    String
-  map      TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
-  fromCode String    @db.Char(2)
-  from     Country   @relation("MapStringFrom", fields: [fromCode], references: [code], onDelete: Restrict)
-  toCode   String    @db.Char(2)
-  to       Country   @relation("MapStringTo", fields: [toCode], references: [code], onDelete: Restrict)
+  map      TravelMap  @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  kind     StringKind @default(VISITED)
+  fromCode String     @db.Char(2)
+  from     Country    @relation("MapStringFrom", fields: [fromCode], references: [code], onDelete: Restrict)
+  toCode   String     @db.Char(2)
+  to       Country    @relation("MapStringTo", fields: [toCode], references: [code], onDelete: Restrict)
 
   createdById String?
   createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
   createdAt   DateTime @default(now())
 
-  @@unique([mapId, fromCode, toCode])
+  @@unique([mapId, kind, fromCode, toCode])
   // A user deleted (SET NULL); countries are never deleted, so no index on the codes
   @@index([createdById])
   @@map("map_string")
@@ -1947,4 +2027,10 @@ model OneShotTraveller {
 enum OneShotSource {
   MANUAL
   FLIGHT
+}
+
+// A string's kind (MapString; 25 Nov 2026, the user's wish): between places been to, or planned
+enum StringKind {
+  VISITED
+  PLANNED
 }

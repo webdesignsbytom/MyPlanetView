@@ -41,6 +41,8 @@ export const DOMAINS = {
   // "Guess where I was" games and the flight log (23 Nov 2026)
   guessGames: 'guessGames',
   flights: 'flights',
+  // Feedback sent from the map (docs/API.md "Feedback")
+  feedback: 'feedback',
 };
 
 export const EVENT_MESSAGES = {
@@ -111,7 +113,8 @@ export const EVENT_MESSAGES = {
   stringInvalid: `Choose two places on the map to tie a string between.`,
   stringSamePlace: `A string needs two different places.`,
   stringNotFound: `That string isn't on this map.`,
-  stringsFull: `This map has as many strings as it can hold (500). Take some off first.`,
+  stringsFull: `This map has as many strings of this kind as it can hold (500). Take some off first.`,
+  stringKindInvalid: `A string is either visited or planned.`,
   // Maps
   mapNotFound: `That map doesn't exist, or it hasn't been shared with you.`,
   defaultMapDelete: `Your first map can't be deleted. You can rename it instead.`,
@@ -320,6 +323,18 @@ export const EVENT_MESSAGES = {
   designPictureTooLarge: `That picture is too big. Please choose a smaller one.`,
   designPictureExpired: `That upload took too long. Please choose the picture again.`,
   designPictureRemoved: `Picture removed.`,
+  // Feedback (docs/API.md "Feedback")
+  feedbackKindInvalid: `Choose what your message is about.`,
+  feedbackDetailsRequired: `Please tell us a little about it in the first box.`,
+  feedbackTooLong: `That's a bit long. Please shorten it and try again.`,
+  feedbackImpactInvalid: `Choose how much it gets in your way.`,
+  feedbackScreenshotType: `The screenshot must be a JPEG, PNG or WebP picture.`,
+  feedbackScreenshotInvalid: `That screenshot upload isn't valid. Please add it again.`,
+  feedbackScreenshotTooLarge: `That screenshot is too big. Please choose a smaller one.`,
+  feedbackScreenshotExpired: `That screenshot took too long to send. Please add it again.`,
+  feedbackStatusInvalid: `Choose one of the statuses.`,
+  feedbackNotFound: `That report couldn't be found. It may have been deleted.`,
+  feedbackDeleted: `Report deleted.`,
   // Verification
   verificationTag: `Verification database.`,
   verificationNotFound: `Failed to find verification.`,

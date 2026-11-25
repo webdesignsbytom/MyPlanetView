@@ -90,6 +90,16 @@ export const MEDIA_CFG = {
     maxBytes: 0,
     generic: false,
   },
+  // A feedback report's screenshot (docs/API.md "Feedback"): private bucket, only through the
+  // feedback routes (the sender uploads; admins see it)
+  feedback: {
+    prefix: `${BucketNamespace}/feedback/`,
+    visibility: 'private',
+    requiresAuth: true,
+    allowedTypes: [],
+    maxBytes: 0,
+    generic: false,
+  },
 };
 
 /** An error the generic media handlers answer with as it is (4xx). */
@@ -597,6 +607,26 @@ export const designPictureFolder = (mapId) => `${MAP_DESIGN_PREFIX}${mapId}/`;
 export async function presignDesignPicture({ key, contentType, bytes, userId, limit }) {
   await assertUnconfirmedUploadsUnder({ userId, resources: ['mapDesign'], limit });
   return presignPrivateUpload({ key, resource: 'mapDesign', contentType, bytes, userId });
+}
+
+// ── A feedback report's screenshot (docs/API.md "Feedback") ─────────────────
+
+export const FEEDBACK_PREFIX = MEDIA_CFG.feedback.prefix;
+
+/** `<namespace>/feedback/<userId>/shot-<random>.<ext>`: a new name for every screenshot. */
+export const buildFeedbackScreenshotKey = ({ userId, contentType }) =>
+  `${FEEDBACK_PREFIX}${userId}/shot-${randomBase32(12)}.${PHOTO_EXTENSIONS[contentType] || 'bin'}`;
+
+/** The folder a person's screenshots sit in (used to check a sent key). */
+export const feedbackScreenshotFolder = (userId) => `${FEEDBACK_PREFIX}${userId}/`;
+
+/**
+ * Presign a screenshot's upload, after refusing (429) one that would leave the user more than
+ * `limit` unsent ones. -> `{ url, expiresIn }`
+ */
+export async function presignFeedbackScreenshot({ key, contentType, bytes, userId, limit }) {
+  await assertUnconfirmedUploadsUnder({ userId, resources: ['feedback'], limit });
+  return presignPrivateUpload({ key, resource: 'feedback', contentType, bytes, userId });
 }
 
 /** Refuse (429) a photo presign that would leave the user more than the cap of unconfirmed photo files. */

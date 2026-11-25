@@ -31,6 +31,7 @@ import themeRouter from './routes/themes.js';
 import challengeRouter from './routes/challenges.js';
 import { guessGameRouter, guessRouter } from './routes/guessGames.js';
 import flightRouter from './routes/flights.js';
+import feedbackRouter from './routes/feedback.js';
 import sharedRouter from './routes/shared.js';
 import inviteRouter from './routes/invites.js';
 // Plans and payments
@@ -159,6 +160,8 @@ app.use('/api/challenges', challengeRouter);
 app.use('/api/guess', guessRouter);
 app.use('/api/guess-games', guessGameRouter);
 app.use('/api/flights', flightRouter);
+// Feedback sent from the map (docs/API.md "Feedback"); the admin's are under /api/users
+app.use('/api/feedback', feedbackRouter);
 // An offer card's link (docs/API.md, "Travel offers"): counts the click and redirects
 app.use('/go', offerClickRouter);
 app.use('/api/shared', sharedRouter);

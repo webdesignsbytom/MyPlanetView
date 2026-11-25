@@ -70,41 +70,12 @@ describe('MapDesignSection', () => {
     expect(e.change.mock.calls).toEqual([[{ grid: '#222222' }], [{ hover: '#333333' }], [{ names: null }]]);
   });
 
-  it('changes the strings’ colour, and puts it back (docs/API.md "Strings")', () => {
-    const e = editor({ design: { ...DESIGN, string: '#c0ffee' } });
-    useMapDesignEditor.mockReturnValue(e);
-    open();
-    expect(screen.getByLabelText('String colour').value).toBe('#c0ffee');
-    fireEvent.input(screen.getByLabelText('String colour'), { target: { value: '#1d4ed8' } });
-    fireEvent.click(screen.getByLabelText('String colour: back to the usual colour'));
-    expect(e.change.mock.calls).toEqual([[{ string: '#1d4ed8' }], [{ string: null }]]);
-  });
-
-  // Two colours twisted together, as baker's twine (25 Nov 2026, the user's wish)
-  it('twists a second colour into the strings, from the style’s usual one, and back to one colour', () => {
-    const e = editor({ design: { ...DESIGN, string: '#c8102e', stringTwist: null } });
-    useMapDesignEditor.mockReturnValue(e);
-    const { rerender } = open();
-    const box = screen.getByLabelText('Two colours twisted together');
-    expect(box.checked).toBe(false);
-    expect(screen.queryByLabelText('Second string colour')).toBeNull();
-    fireEvent.click(box);
-    // The style's usual second colour, as its tokens give it
-    expect(e.change).toHaveBeenLastCalledWith({ stringTwist: expect.stringMatching(/^#[0-9a-f]{6}$/) });
-
-    const twined = editor({ design: { ...DESIGN, string: '#c8102e', stringTwist: '#123456' } });
-    useMapDesignEditor.mockReturnValue(twined);
-    rerender(<MapDesignSection map={MAP} styleId='starry' onDesignChange={() => {}} />);
-    expect(screen.getByLabelText('Two colours twisted together').checked).toBe(true);
-    const second = screen.getByLabelText('Second string colour');
-    expect(second.value).toBe('#123456');
-    fireEvent.input(second, { target: { value: '#00aa00' } });
-    expect(twined.change).toHaveBeenLastCalledWith({ stringTwist: '#00aa00' });
-    // "Usual" is the style's usual second colour, never one colour again
-    fireEvent.click(screen.getByLabelText('Second string colour: back to the usual colour'));
-    expect(twined.change).toHaveBeenLastCalledWith({ stringTwist: expect.stringMatching(/^#[0-9a-f]{6}$/) });
-    fireEvent.click(screen.getByLabelText('Two colours twisted together'));
-    expect(twined.change).toHaveBeenLastCalledWith({ stringTwist: null });
+  // 25 Nov 2026, the user's wish: the strings' colours "all in one place", the Strings panel
+  it('leaves the strings’ colours to the Strings panel, and says so', () => {
+    useMapDesignEditor.mockReturnValue(editor({ design: { ...DESIGN, string: '#c0ffee' } }));
+    const { container } = open();
+    expect(screen.queryByLabelText('String colour')).toBeNull();
+    expect(container.querySelector('[data-string-colours-moved]').textContent).toBe('The strings’ colours are in the Strings panel, opened from the country list.');
   });
 
   it('colours a country, and puts every one back', () => {

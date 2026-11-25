@@ -446,7 +446,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
     // The landmarks ticked "been here" (docs/API.md "Collecting")
     tickedLandmarkIds: (db.landmarkVisits || []).filter((v) => v.mapId === map.id).map((v) => v.landmarkId),
     // The strings tied between its places, for everyone who opens it (docs/API.md "Strings")
-    strings: (db.mapStrings || []).filter((s) => s.mapId === map.id).map(({ id, from, to }) => ({ id, from, to })),
+    // Each with its kind (25 Nov 2026): one from before kinds is VISITED
+    strings: (db.mapStrings || []).filter((s) => s.mapId === map.id).map(({ id, kind, from, to }) => ({ id, kind: kind === 'PLANNED' ? 'PLANNED' : 'VISITED', from, to })),
     // Its own designs, one per map style, for everyone who opens it (docs/API.md "Map designs")
     designs: designsView(map),
   };

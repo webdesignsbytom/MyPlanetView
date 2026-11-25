@@ -44,12 +44,49 @@ async function qrPicture(page, text) {
 test('the flight log shows the flights, the distance and the airports collected', async ({ page }) => {
   await openMap(page);
   const dialog = await openFlightLog(page);
-  await expect(dialog.locator('[data-flight-totals]')).toContainText('91,175 km (56,654 miles)');
+  await expect(dialog.locator('[data-flight-totals]')).toContainText('56,654 miles (91,175 km)');
   // What that's like (24 Nov 2026)
   await expect(dialog.locator('[data-flight-totals]')).toContainText('About two and a half times round the world');
   await expect(dialog.locator('[data-airport-stamps] li')).toHaveCount(26);
   await expect(dialog.locator('[data-flight="LHR-FCO"]')).toContainText('LHR → FCO · BA 548');
   await expect(dialog.locator('[data-flight="PSA-LGW"]')).toContainText('Pisa (PI) to London');
+});
+
+// 25 Nov 2026, the user's wishes: the airports and the flights taken each fold under an arrow on
+// the far right, kept for the visit; and the stamps have more style (AirportStamp)
+test('the airports and the flights taken fold away, and the stamps name the city and the first day flown', async ({ page }) => {
+  await openMap(page);
+  let dialog = await openFlightLog(page);
+  const airports = dialog.getByRole('button', { name: 'Airports collected' });
+  const flights = dialog.getByRole('button', { name: 'Flights taken' });
+  await expect(airports).toHaveAttribute('aria-expanded', 'true');
+  await expect(flights).toHaveAttribute('aria-expanded', 'true');
+
+  // Each stamp: the city on a curve, the code, the day first flown there; Venice loses its "(VE)"
+  const venice = dialog.locator('[data-airport-stamps] li', { hasText: '(VCE)' });
+  await expect(venice.locator('svg[data-airport-stamp] text').first()).toHaveText('VCE');
+  await expect(venice.locator('textPath')).toHaveText(['VENEZIA', '13 FEB 2026']);
+  // The arrow sits at the far right of its heading, past the stamps' right edge
+  const arrow = await airports.locator('svg').boundingBox();
+  const list = await dialog.locator('[data-airport-stamps]').boundingBox();
+  expect(arrow.x + arrow.width).toBeGreaterThan(list.x + list.width - 24);
+
+  await airports.click();
+  await expect(airports).toHaveAttribute('aria-expanded', 'false');
+  await expect(dialog.locator('[data-airport-stamps]')).toBeHidden();
+  await expect(dialog.locator('[data-flight="LHR-FCO"]')).toBeVisible();
+  await flights.click();
+  await expect(dialog.locator('[data-flight="LHR-FCO"]')).toBeHidden();
+
+  // Closed and opened again (from the statistics, still open under it), it's as it was left
+  await dialog.getByRole('button', { name: /^Close/ }).first().click();
+  await expect(dialog).toHaveCount(0);
+  await page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('button', { name: 'Flight log' }).click();
+  dialog = page.getByRole('dialog', { name: 'Flight log' });
+  await expect(dialog.getByRole('button', { name: 'Airports collected' })).toHaveAttribute('aria-expanded', 'false');
+  await expect(dialog.getByRole('button', { name: 'Flights taken' })).toHaveAttribute('aria-expanded', 'false');
+  await dialog.getByRole('button', { name: 'Airports collected' }).click();
+  await expect(dialog.locator('[data-airport-stamps] li')).toHaveCount(26);
 });
 
 test('a pasted boarding pass makes the trip, logs the flight and marks the country', async ({ page }) => {

@@ -60,3 +60,28 @@ export const distanceWords = (km, unit = 'km') =>
   unit === 'miles' ? `${thousands(km * MILES_PER_KM)} miles (${thousands(km)} km)` : `${thousands(km)} km (${thousands(km * MILES_PER_KM)} miles)`;
 /** "BA 117", or '' for a flight with no airline and number */
 export const flightCode = (flight) => [flight.carrier, flight.flightNumber].filter(Boolean).join(' ');
+
+// The airport stamps (components/flights/AirportStamp.jsx; 25 Nov 2026, the user's wish: "a bit
+// more style on the stamps")
+
+/** Each airport's first flight there or from there: code -> "YYYY-MM-DD". */
+export function firstFlownByAirport(flights) {
+  const first = new Map();
+  for (const flight of flights || []) {
+    if (!flight.flownOn) continue;
+    for (const code of [flight.from, flight.to]) {
+      if (code && (!first.has(code) || flight.flownOn < first.get(code))) first.set(code, flight.flownOn);
+    }
+  }
+  return first;
+}
+
+/** The city as a stamp prints it: "Venezia (VE)" and "Paris (Roissy-en-France, …)" lose the brackets. */
+export const stampCity = (city) => String(city || '').replace(/\s*\(.*$/, '').trim().toUpperCase();
+
+const SHORT_MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+/** "2026-02-13" -> "13 FEB 2026", as a rubber stamp's date; '' for anything else. */
+export function stampDay(day) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(day || ''));
+  return match ? `${Number(match[3])} ${SHORT_MONTHS[Number(match[2]) - 1]} ${match[1]}` : '';
+}

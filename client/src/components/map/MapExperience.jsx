@@ -64,6 +64,7 @@ import {
   TripsPanel,
   WhereNextPanel,
   StringsPanel,
+  FeedbackPanel,
   UnplacedPhotosPanel,
   MapPhotosPanel,
   OneShotsPanel,
@@ -78,7 +79,7 @@ import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { countsAsVisited } from '@/utils/map/visitStatus';
 import { shownSupporter } from '@/utils/plans/supporterBadge';
 import { firstVisitFor } from '@/utils/map/firstVisit';
-import { hasString, previousVisitedPlace } from '@/utils/map/mapStrings';
+import { hasString, previousPlannedPlace, previousVisitedPlace, stringKindOf } from '@/utils/map/mapStrings';
 import { distanceUnitFor } from '@/utils/map/distanceUnits';
 import { MAP_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/map/mapListCache';
@@ -243,6 +244,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // The map's settings and sharing: the owner or a co-owner (19 Nov 2026)
   const canManage = !shareCode && canManageRole(role);
   const canShare = Boolean(currentUser) && !shareCode;
+  // Feedback is for anyone signed in, on a share link too (FeedbackPanel)
+  const signedIn = Boolean(currentUser);
   const photoSource = useMemo(() => (shareCode ? { shareCode } : { mapId: map.id }), [shareCode, map.id]);
   // The map's plan (the owner and editors get it; docs/API.md, "Map limits"): a locked map
   // (an extra map that isn't paid for) takes no photos, and says so on a tag under the
@@ -263,7 +266,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // "Your year in travel" open on this year (docs/API.md "Year in travel"), or null
   const [recapYear, setRecapYear] = useState(null);
   // String mode (docs/API.md "Strings"; 23 Nov 2026, the user's wish): a press on a country
-  // picks a string's end instead of opening its ticket. `{ start, message, error }`, or null
+  // picks a string's end instead of opening its ticket. `{ kind, start, message, error }` (the
+  // kind being tied, VISITED or PLANNED: 25 Nov 2026), or null
   const [stringMode, setStringMode] = useState(null);
 
   // The panels are separate downloads (lazyMapPanels.js): once the map has drawn, fetch
@@ -284,8 +288,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         'photos',
         ...(canEdit ? ['upload'] : []),
         ...(canShare ? ['share', 'switcher'] : []),
+        ...(signedIn ? ['feedback'] : []),
       ]),
-    [canEdit, canShare],
+    [canEdit, canShare, signedIn],
   );
 
   // Every panel's data, fetched behind the loading screen before the map shows (17 Nov 2026,
@@ -703,20 +708,36 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       if (!autoTie) return;
       const now = { countryCode: code, status, firstVisitedOn: firstVisitedOn || null, markedAt: new Date().toISOString() };
       const previous = previousVisitedPlace([...visitRowsRef.current.filter((v) => v.countryCode !== code), now], code);
-      if (!previous || hasString(stringsRef.current, previous, code)) return;
-      autoTie(previous, code).catch(() => {});
+      if (!previous || hasString(stringsRef.current, previous, code, 'VISITED')) return;
+      autoTie(previous, code, 'VISITED').catch(() => {});
     },
     [autoTie],
   );
+  // The planned strings the same way (25 Nov 2026, the user's wish): a place newly marked "want to
+  // go" is tied to the one marked before it, in the order they were marked, while the viewer shows
+  // the planned strings
+  const autoTiePlanned = canChange && settings.showPlannedStrings !== false ? (actions?.tieString ?? null) : null;
+  const tieToPreviousPlanned = useCallback(
+    (code) => {
+      if (!autoTiePlanned) return;
+      const now = { countryCode: code, status: 'WANT_TO_GO', markedAt: new Date().toISOString() };
+      const previous = previousPlannedPlace([...visitRowsRef.current.filter((v) => v.countryCode !== code), now], code);
+      if (!previous || hasString(stringsRef.current, previous, code, 'PLANNED')) return;
+      autoTiePlanned(previous, code, 'PLANNED').catch(() => {});
+    },
+    [autoTiePlanned],
+  );
   // A country marked visited or lived in from its ticket (CountryPanel's own status control) or
-  // the country list: celebrated, and tied to the place visited before it
+  // the country list: celebrated, and tied to the place visited before it; one newly wanted is
+  // tied to the place wanted before it with a planned string
   const visitMarked = useCallback(
     (code, before, status, firstVisitedOn) => {
+      if (status === 'WANT_TO_GO' && before !== 'WANT_TO_GO') tieToPreviousPlanned(code);
       if (!celebratesVisit(before, status)) return;
       celebrate({ kind: 'country', code, status, firstVisitedOn: firstVisitedOn || null });
       tieToPrevious(code, status, firstVisitedOn);
     },
-    [celebrate, tieToPrevious],
+    [celebrate, tieToPrevious, tieToPreviousPlanned],
   );
   const setVisit = useMemo(
     () =>
@@ -773,10 +794,11 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const pickStringEnd = useCallback(
     (code) => {
       const start = stringMode?.start;
-      if (!start) return setStringMode({ start: code, message: '', error: false });
-      if (start === code) return setStringMode({ start: null, message: `${COUNTRY_BY_CODE[code]?.name ?? code} let go.`, error: false });
-      setStringMode({ start: null, message: 'Tying…', error: false });
-      return tieString(start, code).then(
+      const kind = stringMode?.kind ?? 'VISITED';
+      if (!start) return setStringMode({ kind, start: code, message: '', error: false });
+      if (start === code) return setStringMode({ kind, start: null, message: `${COUNTRY_BY_CODE[code]?.name ?? code} let go.`, error: false });
+      setStringMode({ kind, start: null, message: 'Tying…', error: false });
+      return tieString(start, code, kind).then(
         (string) =>
           setStringMode((mode) =>
             mode ? { ...mode, message: `Tied ${COUNTRY_BY_CODE[string.from]?.name ?? string.from} to ${COUNTRY_BY_CODE[string.to]?.name ?? string.to}.`, error: false } : mode,
@@ -795,7 +817,13 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     [untieString],
   );
   const endStringMode = useCallback(() => setStringMode(null), []);
-  const showStrings = Boolean(stringMode) || settings.showStrings !== false;
+  // The strings drawn: each kind unless the viewer hid it, and always the kind being tied
+  const showVisitedStrings = stringMode?.kind === 'VISITED' || settings.showStrings !== false;
+  const showPlannedStrings = stringMode?.kind === 'PLANNED' || settings.showPlannedStrings !== false;
+  const shownStrings = useMemo(
+    () => (map.strings || []).filter((string) => (stringKindOf(string) === 'PLANNED' ? showPlannedStrings : showVisitedStrings)),
+    [map.strings, showVisitedStrings, showPlannedStrings],
+  );
   const playCountry = useCallback((code) => dispatch({ type: 'play', country: code }), []);
 
   // A panel listing photos is open: the viewer is probably next
@@ -1004,21 +1032,28 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         );
       case 'next':
         return <WhereNextPanel visits={map.visits} onShowCountry={showCountry} passportHref={passportHref} onClose={close} />;
+      case 'feedback':
+        // A problem, an idea or a question (docs/API.md "Feedback"), for anyone signed in
+        return currentUser ? <FeedbackPanel mapId={map.id} styleId={styleId} phone={!wideScreen} onClose={close} /> : null;
       case 'strings':
         return canEdit ? (
           <StringsPanel
+            map={map}
             strings={map.strings || []}
-            showStrings={settings.showStrings !== false}
-            onShowStrings={(on) => onChangeSetting('showStrings', on)}
+            shown={{ VISITED: settings.showStrings !== false, PLANNED: settings.showPlannedStrings !== false }}
+            onShowStrings={(kind, on) => onChangeSetting(kind === 'PLANNED' ? 'showPlannedStrings' : 'showStrings', on)}
             locked={locked}
-            canDesign={canManage}
+            // Their colours are the map design's, for the map's style (as Settings' "How it looks")
+            styleId={styleId}
+            onDesignChange={canManage ? actions?.setDesign : null}
+            designPreview={designPreview}
             onTie={actions.tieString}
             onTieAuto={actions.tieAutoStrings}
             onUntie={actions.untieString}
             onUntieAll={actions.untieAllStrings}
-            onStringMode={() => {
+            onStringMode={(kind) => {
               close();
-              setStringMode({ start: null, message: '', error: false });
+              setStringMode({ kind, start: null, message: '', error: false });
             }}
             onClose={close}
           />
@@ -1118,8 +1153,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             showMoments={settings.showMoments}
             selectedCode={ui.panel === 'country' ? ui.selectedCode : null}
             onSelectCountry={stringMode ? pickStringEnd : selectCountry}
-            strings={showStrings ? map.strings : null}
+            strings={shownStrings}
             stringStart={stringMode?.start ?? null}
+            stringKind={stringMode?.kind ?? 'VISITED'}
             onRemoveString={stringMode ? removeString : null}
             onHoverCountry={hoverCountry}
             showGrid={settings.showGrid || detailed}
@@ -1157,8 +1193,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           {shareCode ? null : <RecapTag mapId={map.id} onOpen={setRecapYear} />}
           {/* A moment's day come round: "10 years ago today: Our wedding" (21 Nov 2026) */}
           {shareCode ? null : <AnniversaryTag mapId={map.id} onOpenCountry={selectCountry} />}
-          {/* The countdown to the next planned trip: "12 days until Japan in spring" (22 Nov 2026) */}
-          {shareCode ? null : <TripCountdownTag trips={trips} />}
+          {/* The countdown to the next planned trip: "12 days until Japan in spring" (22 Nov 2026);
+              the viewer can switch it off (`showTripCountdown`, 25 Nov 2026) */}
+          {shareCode || settings.showTripCountdown === false ? null : <TripCountdownTag trips={trips} />}
           {/* The day after a trip ends, for two weeks: "Welcome home", share it (23 Nov 2026,
               the user's wish: word of mouth). Its editors only; the map's link for those who
               can open the sharing dialog */}
@@ -1209,6 +1246,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onIntent={preloadTool}
             canShare={canShare}
             canSwitch={Boolean(currentUser) && !shareCode}
+            canFeedback={signedIn}
             stats={map.stats}
           />
           </div>
@@ -1227,12 +1265,19 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         {/* String mode's tag at the foot of the map, clear of the zoom stamps */}
         {stringMode && !ui.countryMap ? (
           <div className='pointer-events-none absolute inset-x-3 bottom-20 grid justify-items-center nophone:bottom-3'>
-            <StringModeTag startCode={stringMode.start} message={stringMode.message} error={stringMode.error} onDone={endStringMode} />
+            <StringModeTag
+              kind={stringMode.kind}
+              startCode={stringMode.start}
+              message={stringMode.message}
+              error={stringMode.error}
+              onDone={endStringMode}
+            />
           </div>
         ) : null}
 
-        {/* The key hides while a panel is open: the panel covers that corner */}
-        {panel || ui.countryMap ? null : (
+        {/* The key hides while a panel is open: the panel covers that corner. The viewer can
+            switch it off (`showMapKey`, 25 Nov 2026) */}
+        {panel || ui.countryMap || settings.showMapKey === false ? null : (
           <SlideAway className='pointer-events-none absolute bottom-3 left-3 hidden nophone:grid'>
             <MapLegend
               showMoments={settings.showMoments}

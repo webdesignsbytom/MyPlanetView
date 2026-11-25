@@ -26,6 +26,7 @@ vi.mock('@/utils/navigation/lazyPages', async () => {
     'AdminPromoCodesPage',
     'AdminOffersPage',
     'AdminThemesPage',
+    'AdminFeedbackPage',
     'ContactPage',
     'PricingPage',
     'TermAndPoliciesPage',
@@ -137,6 +138,7 @@ const ADMIN = [
   ['/admin/promo-codes', 'AdminPromoCodesPage'],
   ['/admin/offers', 'AdminOffersPage'],
   ['/admin/themes', 'AdminThemesPage'],
+  ['/admin/feedback', 'AdminFeedbackPage'],
 ];
 
 describe('App: the route table', () => {

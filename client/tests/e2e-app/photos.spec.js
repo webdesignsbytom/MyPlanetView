@@ -91,11 +91,12 @@ test.describe('Photos', () => {
       // The longest trip (23 Nov 2026)
       '190 days',
       'A year off: around the world',
-      // The trip, and home and back to each country no completed trip reached (24 Nov 2026)
-      /^[\d,]+ km$/,
-      /^About [\d,]+ miles$/,
+      // The trip, and home and back to each country no completed trip reached (24 Nov 2026);
+      // in miles, as the map's home is in the UK (25 Nov 2026)
+      /^[\d,]+ miles$/,
+      /^About [\d,]+ km$/,
       /.+/,
-      /^About [\d,]+ km from the United Kingdom$/,
+      /^About [\d,]+ miles from the United Kingdom$/,
     ]);
   });
 

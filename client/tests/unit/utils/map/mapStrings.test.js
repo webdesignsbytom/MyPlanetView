@@ -7,12 +7,16 @@ import {
   acrossOf,
   drawnStrings,
   hasString,
+  STRING_KINDS,
   pinOf,
+  previousPlannedPlace,
   previousVisitedPlace,
   stringEnds,
+  stringKindOf,
   stringLabel,
   stringPath,
   stringPins,
+  stringsOfKind,
   twistStrands,
 } from '@/utils/map/mapStrings';
 import { REFERENCE_PX_PER_UNIT } from '@/utils/map/projection';
@@ -169,5 +173,53 @@ describe('hasString', () => {
     expect(hasString(strings, 'FR', 'DE')).toBe(false);
     expect(hasString(null, 'FR', 'IT')).toBe(false);
     expect(hasString(strings, 'FR', 'FR')).toBe(false);
+  });
+
+  it('finds only a string of the kind asked for (a string from before kinds is a visited one)', () => {
+    const strings = [
+      { id: 's1', from: 'FR', to: 'IT' },
+      { id: 'p1', kind: 'PLANNED', from: 'IS', to: 'JP' },
+    ];
+    expect(hasString(strings, 'FR', 'IT', 'VISITED')).toBe(true);
+    expect(hasString(strings, 'FR', 'IT', 'PLANNED')).toBe(false);
+    expect(hasString(strings, 'JP', 'IS', 'PLANNED')).toBe(true);
+    expect(hasString(strings, 'JP', 'IS')).toBe(false);
+  });
+});
+
+// Planned strings (25 Nov 2026, the user's wish)
+describe('a string’s kind', () => {
+  it('is VISITED or PLANNED, VISITED for one from before kinds', () => {
+    expect(STRING_KINDS).toEqual(['VISITED', 'PLANNED']);
+    expect(stringKindOf({ kind: 'PLANNED' })).toBe('PLANNED');
+    expect(stringKindOf({ kind: 'VISITED' })).toBe('VISITED');
+    expect(stringKindOf({})).toBe('VISITED');
+    expect(stringKindOf(null)).toBe('VISITED');
+  });
+
+  it('picks a map’s strings of one kind', () => {
+    const strings = [{ id: 's1' }, { id: 'p1', kind: 'PLANNED' }, { id: 's2', kind: 'VISITED' }];
+    expect(stringsOfKind(strings, 'VISITED').map((s) => s.id)).toEqual(['s1', 's2']);
+    expect(stringsOfKind(strings, 'PLANNED').map((s) => s.id)).toEqual(['p1']);
+    expect(stringsOfKind(null, 'PLANNED')).toEqual([]);
+  });
+});
+
+describe('previousPlannedPlace', () => {
+  const wish = (countryCode, markedAt) => ({ countryCode, status: 'WANT_TO_GO', markedAt });
+
+  it('is the place wanted just before, in the order they were marked', () => {
+    const visits = [wish('PE', '2026-05-01T00:00:00Z'), wish('IS', '2026-03-01T00:00:00Z'), { countryCode: 'FR', status: 'VISITED', markedAt: '2026-06-01T00:00:00Z' }, wish('JP', '2026-07-01T00:00:00Z')];
+    expect(previousPlannedPlace(visits, 'JP')).toBe('PE');
+    expect(previousPlannedPlace(visits, 'PE')).toBe('IS');
+    // The first wanted has none, and a place not wanted none either
+    expect(previousPlannedPlace(visits, 'IS')).toBeNull();
+    expect(previousPlannedPlace(visits, 'FR')).toBeNull();
+  });
+
+  it('takes a wish with no time (the mock’s seeded ones) as marked before any with one', () => {
+    const visits = [wish('IS', undefined), wish('PE', '2026-05-01T00:00:00Z'), wish('JP', undefined)];
+    // JP is the new one, with no time yet: the last
+    expect(previousPlannedPlace(visits, 'JP')).toBe('PE');
   });
 });

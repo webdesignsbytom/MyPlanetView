@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // Icons
 import { IoContract, IoExpand, IoHome, IoMap, IoMenu, IoSettings, IoShareSocial } from 'react-icons/io5';
 import { IoIosImages, IoIosStats } from 'react-icons/io';
-import { FaBinoculars, FaCompass, FaHistory, FaListOl, FaRoute, FaSuitcase } from 'react-icons/fa';
+import { FaBinoculars, FaCommentDots, FaCompass, FaHistory, FaListOl, FaRoute, FaSuitcase } from 'react-icons/fa';
 // Constants
 import { HOME_PAGE_URL } from '@/utils/constants/routes';
 // Hooks
@@ -220,8 +220,9 @@ function PhoneToolMenu({ items, home, extras = [] }) {
 // the counts as its description, read out after its label, and written under it in the
 // phone's menu. "Play my world" and "Tips" went on 24 Nov 2026 (the user's wish: a shorter
 // bar): the photo album plays the slideshow, Settings shows the tips; "Strings" the same day,
-// its panel opened from the country list.
-function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false, stats = null, showHome = true }) {
+// its panel opened from the country list. `canFeedback`: a signed-in viewer's "Feedback" stamp,
+// before Settings (25 Nov 2026, the user's wish: report a problem, an idea or a question).
+function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false, canFeedback = false, stats = null, showHome = true }) {
   const navigate = useNavigate();
 
   const tools = [
@@ -250,6 +251,7 @@ function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false
     // from it ("Play my world", its own stamp until 24 Nov 2026, the user's wish: a shorter bar)
     { id: 'photos', label: 'Photo album', icon: <IoIosImages aria-hidden='true' /> },
     ...(canShare ? [{ id: 'share', label: 'Share this map', icon: <IoShareSocial aria-hidden='true' /> }] : []),
+    ...(canFeedback ? [{ id: 'feedback', label: 'Feedback', icon: <FaCommentDots aria-hidden='true' /> }] : []),
     // Settings, Help, also shows the tips again (their own stamp until 24 Nov 2026, the user's
     // wish: a shorter bar)
     { id: 'settings', label: 'Map settings', icon: <IoSettings aria-hidden='true' /> },

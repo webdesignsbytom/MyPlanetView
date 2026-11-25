@@ -108,6 +108,59 @@ test('Black and white turns the page grey, stays after a reload, and the World m
   await expect(page.locator('[data-map-style]:has(#main-content)')).toHaveAttribute('data-map-style', 'animated');
 });
 
+// 25 Nov 2026, the user's wish and artwork: a fifth style, the World map's countries on an
+// engraving of swirling waves
+test('the Engraved ocean draws the World map’s countries on its waves, and stays after a reload', async ({ page }) => {
+  await openMap(page);
+  const frame = page.locator('[data-map-style]:has(#main-content)');
+  const settings = await openTool(page, 'Map settings', 'Settings');
+  await expect(settings.locator('label[data-map-style]')).toHaveCount(5);
+  await settings.getByText('Engraved ocean', { exact: true }).click();
+  await expect(settings.getByRole('radio', { name: 'Engraved ocean' })).toBeChecked();
+  await expect(frame).toHaveAttribute('data-map-style', 'engraved');
+  await settings.getByRole('button', { name: /^Close/ }).first().click();
+
+  const waves = frame.locator('picture img').first();
+  await expect.poll(() => waves.evaluate((img) => img.complete && img.currentSrc)).toContain('engraved-ocean');
+  // The countries keep the World map's colours; the paperwork keeps its own
+  const tokens = () =>
+    frame.evaluate((el) => ['--map-land', '--map-visit-1', '--map-visit-7', '--map-land-edge'].map((name) => getComputedStyle(el).getPropertyValue(name).trim()));
+  expect(await tokens()).toEqual(['#f4f1e8', '#f0f038', '#da92be', '#b91c1c']);
+  await expect(page.locator('html')).not.toHaveAttribute('data-mono', /.*/);
+
+  await page.reload();
+  await expect(worldMap(page)).toBeVisible();
+  await expect(frame).toHaveAttribute('data-map-style', 'engraved');
+});
+
+// 25 Nov 2026, the user's wish: Settings turns the map key off. Phones show no key, so no switch
+test('the map key can be switched off in the map settings; phones have neither', { tag: '@phone' }, async ({ page }) => {
+  await openMap(page);
+  const key = page.getByRole('list', { name: 'Map key' });
+  const settings = await openTool(page, 'Map settings', 'Settings');
+  const keySwitch = settings.getByRole('switch', { name: 'Map key' });
+  if (page.viewportSize().width < 768) {
+    await expect(key).toBeHidden();
+    await expect(keySwitch).toBeHidden();
+    return;
+  }
+  await expect(keySwitch).toBeChecked();
+  // The switch is drawn over its input: press its name
+  await settings.getByText('Map key', { exact: true }).click();
+  await expect(keySwitch).not.toBeChecked();
+  await settings.getByRole('button', { name: /^Close/ }).first().click();
+  await expect(worldMap(page)).toBeVisible();
+  await expect(key).toHaveCount(0);
+  await page.reload();
+  await expect(worldMap(page)).toBeVisible();
+  await expect(key).toHaveCount(0);
+
+  const again = await openTool(page, 'Map settings', 'Settings');
+  await again.getByText('Map key', { exact: true }).click();
+  await again.getByRole('button', { name: /^Close/ }).first().click();
+  await expect(key).toBeVisible();
+});
+
 test('the country list runs A to Z under index letters, and its stamp jumps to the special places', { tag: '@phone' }, async ({ page }) => {
   await openMap(page);
   const list = await openTool(page, 'Country list', 'Countries');

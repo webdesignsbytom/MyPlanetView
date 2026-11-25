@@ -45,11 +45,12 @@ export const getMapStats = (mapId) => data(client.get(`${MAPS_API}/${enc(mapId)}
 export const tickLandmark = (mapId, landmarkId) => data(client.put(`${MAPS_API}/${enc(mapId)}/landmarks/${enc(landmarkId)}/been`, {}));
 export const untickLandmark = (mapId, landmarkId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/landmarks/${enc(landmarkId)}/been`));
 // Strings between places (docs/API.md "Strings"): tie one -> { string }; the automatic ones
-// -> { strings, added, full }; untie one -> { removed: id }; untie them all -> { removed: count }
-export const tieMapString = (mapId, from, to) => data(client.post(`${MAPS_API}/${enc(mapId)}/strings`, { from, to }));
-export const tieAutoMapStrings = (mapId) => data(client.post(`${MAPS_API}/${enc(mapId)}/strings/auto`, {}));
+// -> { strings, added, full }; untie one -> { removed: id }; untie them all -> { removed: count }.
+// Each of a `kind`, VISITED or PLANNED (25 Nov 2026)
+export const tieMapString = (mapId, from, to, kind = 'VISITED') => data(client.post(`${MAPS_API}/${enc(mapId)}/strings`, { from, to, kind }));
+export const tieAutoMapStrings = (mapId, kind = 'VISITED') => data(client.post(`${MAPS_API}/${enc(mapId)}/strings/auto`, { kind }));
 export const untieMapString = (mapId, stringId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/strings/${enc(stringId)}`));
-export const untieAllMapStrings = (mapId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/strings`));
+export const untieAllMapStrings = (mapId, kind = 'VISITED') => data(client.delete(`${MAPS_API}/${enc(mapId)}/strings`, { params: { kind } }));
 // One year of a map (docs/API.md "Year in travel") -> { recap }
 export const getYearRecap = (mapId, year) => data(client.get(`${MAPS_API}/${enc(mapId)}/recap/${enc(year)}`));
 // A map's own design for a map style (docs/API.md "Map designs"):

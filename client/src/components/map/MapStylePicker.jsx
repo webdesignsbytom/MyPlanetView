@@ -9,7 +9,7 @@ const previewUrl = (name) => {
   return sets.pick('avif', 800) || sets.pick('webp', 800) || sets.pick('jpg', 800);
 };
 
-// The four looks of the map, each previewed by its picture (`preview`, else its background;
+// The five looks of the map, each previewed by its picture (`preview`, else its background;
 // Black and white's in greys), else in its own colours (the card carries the style's
 // data-map-style, so its sea colour applies to a plain block), as paper cards: the chosen
 // one is parchment with a red edge. `note` says whose style it is (SettingsPanel). Each card is

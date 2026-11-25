@@ -68,7 +68,7 @@ test.describe('The map page', () => {
       '25 of 1,366',
       '22 of 1,273',
       '15',
-      '282', 'On completed trips', '190 days', 'A year off: around the world', '101,200 km', 'About 62,900 miles', 'New Zealand', 'About 18,800 km from the United Kingdom',
+      '282', 'On completed trips', '190 days', 'A year off: around the world', '62,900 miles', 'About 101,200 km', 'New Zealand', 'About 11,700 miles from the United Kingdom',
     ]);
     // Charlie went to Lisbon alone, Alex to Vienna
     await expect(stats.getByRole('region', { name: 'Each traveller, from completed trips' }).getByRole('listitem')).toHaveText([

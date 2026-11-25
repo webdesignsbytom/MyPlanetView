@@ -1,17 +1,19 @@
 // @vitest-environment node
 // Kilometres or miles (24 Nov 2026, the user's wish: "we need americans in miles always", and a choice)
 import { describe, expect, it } from 'vitest';
-import { DISTANCE_UNIT_IDS, MILES_PLACES, distanceUnitFor } from '@/utils/map/distanceUnits';
+import { DISTANCE_CHOICES, DISTANCE_UNIT_IDS, MILES_PLACES, distanceUnitFor } from '@/utils/map/distanceUnits';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { DEFAULT_MAP_SETTINGS, cleanMapSettings } from '@/utils/map/mapSettings';
 import { aboutDistance, aboutDistanceWords } from '@/utils/map/travelStatWords';
 
 describe('distanceUnitFor', () => {
-  it('is miles for a map whose home is in the United States, else kilometres', () => {
+  it('is miles for a map whose home is in the United States or the UK, else kilometres', () => {
     expect(distanceUnitFor('auto', 'US')).toBe('miles');
     expect(distanceUnitFor('auto', 'XH')).toBe('miles');
     expect(distanceUnitFor('auto', 'PR')).toBe('miles');
-    expect(distanceUnitFor('auto', 'GB')).toBe('km');
+    // The UK and each of its nations (25 Nov 2026, the user's wish)
+    for (const code of ['GB', 'XE', 'XC', 'XW', 'XI']) expect(distanceUnitFor('auto', code)).toBe('miles');
+    expect(distanceUnitFor('auto', 'IE')).toBe('km');
     expect(distanceUnitFor('auto', 'CA')).toBe('km');
     expect(distanceUnitFor('auto', null)).toBe('km');
     expect(distanceUnitFor(undefined, 'US')).toBe('miles');
@@ -34,6 +36,13 @@ describe('the distanceUnit setting', () => {
     expect(DISTANCE_UNIT_IDS).toEqual(['auto', 'km', 'miles']);
     expect(cleanMapSettings({ distanceUnit: 'miles' }).distanceUnit).toBe('miles');
     expect(cleanMapSettings({ distanceUnit: 'furlongs' }).distanceUnit).toBe('auto');
+  });
+
+  it('offers just the two units to choose from', () => {
+    expect(DISTANCE_CHOICES).toEqual([
+      { id: 'km', label: 'Kilometres' },
+      { id: 'miles', label: 'Miles' },
+    ]);
   });
 });
 

@@ -16,8 +16,8 @@ import { PROMO_TRIAL_DAYS } from '../plans/promoCodes.js';
 const PAID = `${PLANS.REGULAR.name} and ${PLANS.PREMIUM.name}`;
 
 export const LEGAL_VERSION = {
-  lastUpdated: '2026-11-23',
-  version: '1.3.1',
+  lastUpdated: '2026-11-25',
+  version: '1.3.2',
 };
 
 // Terms of use
@@ -263,7 +263,7 @@ export const PrivacySectionsArray = [
       `Your plan, if you pay: which plan and how often you pay, any extra maps, the promo code you signed up with, and the references Stripe gives your customer record and subscription. Your card details go straight to Stripe; we never see or store them.`,
       'Gifts you buy: the plan, who it’s for and your message, if you write them. Anyone with the gift’s code sees those on its page, with your name as who it’s from.',
       'Your invite code, if you ask for one: the friends who create accounts with it and the free months they bring you. Anyone with the code sees your first name.',
-      'Messages you send through the contact form.',
+      'Messages you send through the contact form, and feedback you send from the map: your words, any screenshot you add, the page you were on, your browser and the size of your screen. Only our team sees it, and it goes when you delete your account.',
       'Security records: sign-in sessions, the device and IP address they came from, and a log of important actions, used to protect accounts and investigate problems.',
     ],
   },
@@ -286,7 +286,7 @@ export const PrivacySectionsArray = [
       `To run ${CompanyName}: show your map, place and match your photos, and share what you choose with the people you choose.`,
       'To send the emails the service needs: confirming your address, resetting your password and telling you when someone shares something with you.',
       'Now and then, at most once a week, an “On this day” email with one of your own photos from that day in an earlier year. It’s on to start with; switch it off on your account page, or with the link in any of them.',
-      'To keep the site secure and working, and to answer you when you contact us.',
+      'To keep the site secure and working, to answer you when you contact us, and to fix what you tell us about in your feedback.',
     ],
   },
   {

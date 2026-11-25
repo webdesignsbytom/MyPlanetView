@@ -62,6 +62,17 @@ describe('parseDesignChange', () => {
     expect(parseDesignChange({ stringTwist: null })).toEqual({ data: { stringTwistColour: null }, codes: [] });
     expect(parseDesignChange({ stringTwist: '#ffffff80' })).toEqual({ error: 'invalidDesignColour' });
     expect(parseDesignChange({ stringTwist: 'white' })).toEqual({ error: 'invalidDesignColour' });
+    // The planned strings' own colour and twist, as the visited ones' (25 Nov 2026, the user's wish)
+    expect(parseDesignChange({ plannedString: '#1D4ED880', plannedStringTwist: '#FFFFFF' })).toEqual({
+      data: { plannedStringColour: '#1d4ed880', plannedStringTwistColour: '#ffffff' },
+      codes: [],
+    });
+    expect(parseDesignChange({ plannedString: null, plannedStringTwist: null })).toEqual({
+      data: { plannedStringColour: null, plannedStringTwistColour: null },
+      codes: [],
+    });
+    expect(parseDesignChange({ plannedStringTwist: '#ffffff80' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ plannedString: 'blue' })).toEqual({ error: 'invalidDesignColour' });
   });
   it('empties the colours with an empty set', () => {
     expect(parseDesignChange({ countries: {} })).toEqual({ data: { countryColours: {} }, codes: [] });

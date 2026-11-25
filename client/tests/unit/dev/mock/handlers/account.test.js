@@ -184,6 +184,8 @@ describe('map settings', () => {
     expect(data.mapSettings).toEqual({ style: 'starry', showGrid: false, countriesAsked: true });
     expect((await get('/api/users/map-settings')).data.mapSettings).toEqual(data.mapSettings);
     expect((await put('/api/users/map-settings', { mapSettings: { style: 'jupiter' } })).status).toBe(400);
+    // The engraved ocean (25 Nov 2026)
+    expect((await put('/api/users/map-settings', { mapSettings: { style: 'engraved' } })).data.mapSettings).toEqual({ style: 'engraved' });
     expect((await put('/api/users/map-settings', { mapSettings: { showGrid: 'yes' } })).status).toBe(400);
     expect((await put('/api/users/map-settings', { mapSettings: { landmarkPins: 'stamped' } })).data.mapSettings).toEqual({ landmarkPins: 'stamped' });
     // The celebration screen's switch (24 Nov 2026)

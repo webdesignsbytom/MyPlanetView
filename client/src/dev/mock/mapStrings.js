@@ -1,13 +1,28 @@
 // Mock mode only: strings between places (docs/API.md "Strings"), the server's rules
 // (server/src/utils/mapStrings.js) copied: a pair in code order, a UK nation as the UK on a map
-// that doesn't split it, and the strings a map's travels suggest.
+// that doesn't split it, the strings a map's travels (or its plans) suggest, and each string's
+// kind, VISITED or PLANNED (25 Nov 2026).
 
 export const MAP_STRINGS_MAX = 500;
 
 const UK_NATIONS = new Set(['XE', 'XC', 'XW', 'XI']);
 const COUNTED_VISITS = new Set(['VISITED', 'LIVED']);
 const TRAVELLED_TRIPS = new Set(['COMPLETED', 'ACTIVE']);
+const PLANNED_VISITS = new Set(['WANT_TO_GO']);
+const PLANNED_TRIPS = new Set(['PLANNED']);
 const CODE = /^[A-Z]{2}$/;
+
+export const STRING_KINDS = Object.freeze(['VISITED', 'PLANNED']);
+
+/** A kind from a request: VISITED when none is given, null for one that isn't a kind. */
+export function parseStringKind(value) {
+  if (value === undefined || value === null || value === '') return 'VISITED';
+  const kind = typeof value === 'string' ? value.trim().toUpperCase() : '';
+  return STRING_KINDS.includes(kind) ? kind : null;
+}
+
+/** A stored string's kind: one from before kinds is VISITED. */
+export const kindOf = (row) => (row?.kind === 'PLANNED' ? 'PLANNED' : 'VISITED');
 
 export function stringPair(a, b) {
   if (!a || !b || a === b) return null;
@@ -31,13 +46,20 @@ export const STRING_MESSAGES = Object.freeze({
   stringInvalid: 'Choose two places on the map to tie a string between.',
   stringSamePlace: 'A string needs two different places.',
   stringNotFound: 'That string isn’t on this map.',
-  stringsFull: 'This map has as many strings as it can hold (500). Take some off first.',
+  stringsFull: 'This map has as many strings of this kind as it can hold (500). Take some off first.',
+  stringKindInvalid: 'A string is either visited or planned.',
 });
 
 const dayOf = (value) => (value ? new Date(value).getTime() : Number.POSITIVE_INFINITY);
 
-/** The strings a map's travels suggest: each travelled trip's route, then the rest by first visit. */
-export function autoStringPairs({ trips = [], visits = [], splitUk = false }) {
+/**
+ * The strings a map's travels suggest: each travelled trip's route, then the rest by first visit;
+ * for PLANNED, each planned trip's route, then the places wanted in the order they were marked.
+ */
+export function autoStringPairs({ trips = [], visits = [], splitUk = false, kind = 'VISITED' }) {
+  const planned = kind === 'PLANNED';
+  const tripStatuses = planned ? PLANNED_TRIPS : TRAVELLED_TRIPS;
+  const visitStatuses = planned ? PLANNED_VISITS : COUNTED_VISITS;
   const pairs = [];
   const seen = new Set();
   const add = (a, b) => {
@@ -47,7 +69,7 @@ export function autoStringPairs({ trips = [], visits = [], splitUk = false }) {
     pairs.push(pair);
   };
   const reached = new Set();
-  const travelled = trips.filter((trip) => TRAVELLED_TRIPS.has(trip.status)).sort((a, b) => dayOf(a.startDate) - dayOf(b.startDate));
+  const travelled = trips.filter((trip) => tripStatuses.has(trip.status)).sort((a, b) => dayOf(a.startDate) - dayOf(b.startDate));
   for (const trip of travelled) {
     const places = (trip.countryCodes || []).map((code) => stringPlace(code, splitUk));
     places.forEach((place, i) => {
@@ -56,10 +78,10 @@ export function autoStringPairs({ trips = [], visits = [], splitUk = false }) {
     });
   }
   const rest = visits
-    .filter((visit) => COUNTED_VISITS.has(visit.status))
+    .filter((visit) => visitStatuses.has(visit.status))
     .map((visit) => ({ ...visit, place: stringPlace(visit.countryCode, splitUk) }))
     .filter((visit) => !reached.has(visit.place))
-    .sort((a, b) => dayOf(a.firstVisitedOn) - dayOf(b.firstVisitedOn) || dayOf(a.createdAt) - dayOf(b.createdAt));
+    .sort((a, b) => (planned ? 0 : dayOf(a.firstVisitedOn) - dayOf(b.firstVisitedOn)) || dayOf(a.createdAt) - dayOf(b.createdAt));
   const order = [...new Set(rest.map((visit) => visit.place))];
   order.forEach((place, i) => {
     if (i > 0) add(order[i - 1], place);
@@ -67,4 +89,4 @@ export function autoStringPairs({ trips = [], visits = [], splitUk = false }) {
   return pairs;
 }
 
-export const stringView = (row) => ({ id: row.id, from: row.from, to: row.to });
+export const stringView = (row) => ({ id: row.id, kind: kindOf(row), from: row.from, to: row.to });

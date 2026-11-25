@@ -16,15 +16,8 @@ import { mapStyleById } from '@/utils/map/mapStyles';
 // (a colour picker takes "#rrggbb" only, and the tokens are the one place colours live)
 const USUAL_TOKENS = ['--map-visit-1', '--map-visit-2', '--map-visit-3', '--map-visit-4', '--map-visit-5', '--map-visit-6', '--map-visit-7', '--map-ice'];
 const readUsualColours = (styleId) => {
-  const read = readStyleColours(styleId, ['--map-ink', '--map-grid', '--map-hover', '--map-string', '--map-string-2', ...USUAL_TOKENS]);
-  return {
-    names: read['--map-ink'],
-    grid: read['--map-grid'],
-    hover: read['--map-hover'],
-    string: read['--map-string'],
-    stringTwist: read['--map-string-2'],
-    places: read,
-  };
+  const read = readStyleColours(styleId, ['--map-ink', '--map-grid', '--map-hover', ...USUAL_TOKENS]);
+  return { names: read['--map-ink'], grid: read['--map-grid'], hover: read['--map-hover'], places: read };
 };
 
 // Settings, "How it looks", for the owner and co-owners: this map's own design (docs/API.md
@@ -95,34 +88,11 @@ function MapDesignSection({ map, styleId, onDesignChange, preview }) {
         usual={usual.hover}
         onChange={(hover) => editor.change({ hover })}
       />
-      {/* The strings between places (the Strings tool; 23 Nov 2026, the user's wish), with an
-          opacity for see-through ones (25 Nov 2026, the user's wish) */}
-      <DesignColourField
-        id={`${uid}-string`}
-        label='String colour'
-        value={design?.string ?? null}
-        usual={usual.string}
-        onChange={(string) => editor.change({ string })}
-        alpha
-      />
-      {/* A second colour twisted in, as baker's twine (25 Nov 2026, the user's wish): ticked, it
-          starts as the style's usual one (the cream of red-and-white twine); its "Usual" goes
-          back to that, and unticking makes the strings one colour again */}
-      <CheckboxInput
-        id={`${uid}-twist`}
-        checked={Boolean(design?.stringTwist)}
-        onChange={(e) => editor.change({ stringTwist: e.target.checked ? usual.stringTwist : null })}
-        label='Two colours twisted together'
-      />
-      {design?.stringTwist ? (
-        <DesignColourField
-          id={`${uid}-twist-colour`}
-          label='Second string colour'
-          value={design.stringTwist === usual.stringTwist ? null : design.stringTwist}
-          usual={usual.stringTwist}
-          onChange={(colour) => editor.change({ stringTwist: colour ?? usual.stringTwist })}
-        />
-      ) : null}
+      {/* The strings' colours are in the Strings panel, each kind's in its tab (25 Nov 2026, the
+          user's wish: "all in one place") */}
+      <p className='text-sm' data-string-colours-moved>
+        The strings’ colours are in the Strings panel, opened from the country list.
+      </p>
       <DesignCountryColours
         countries={design?.countries}
         usual={usual.places}

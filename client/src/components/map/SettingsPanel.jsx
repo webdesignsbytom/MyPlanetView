@@ -18,6 +18,7 @@ import SupporterBadgeSection from './SupporterBadgeSection';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
 // Utils
 import { saveMapSetup } from '@/utils/map/saveMapSetup';
+import { distanceUnitFor } from '@/utils/map/distanceUnits';
 
 const TABS = [
   { id: 'view', label: 'How it looks' },
@@ -146,7 +147,10 @@ function SettingsPanel({
         ) : null}
         <MapTypePicker value={settings.mapType} onChange={(type) => onChangeSetting('mapType', type)} />
         <LandmarkPinsPicker value={settings.landmarkPins} onChange={(mode) => onChangeSetting('landmarkPins', mode)} />
-        <DistanceUnitPicker value={settings.distanceUnit || 'auto'} onChange={(unit) => onChangeSetting('distanceUnit', unit)} />
+        <DistanceUnitPicker
+          value={distanceUnitFor(settings.distanceUnit, map?.stats?.homeCountryCode)}
+          onChange={(unit) => onChangeSetting('distanceUnit', unit)}
+        />
         <MapSettingsToggles settings={settings} onChange={onChangeSetting} onShowTips={onShowTips} />
       </div>
       {showTabs ? (

@@ -29,6 +29,7 @@ import {
 } from '../controllers/planAdmin.js';
 import { createPromoCodeHandler, listPromoCodesHandler, updatePromoCodeHandler } from '../controllers/promoCodes.js';
 import { createThemeHandler, deleteThemeHandler, listThemesHandler, updateThemeHandler } from '../controllers/themes.js';
+import { deleteFeedbackHandler, getFeedbackHandler, listFeedbackHandler, updateFeedbackHandler } from '../controllers/feedback.js';
 import {
   createOfferHandler,
   deleteOfferHandler,
@@ -153,5 +154,11 @@ router.get('/admin/themes', validateAuthentication, validateAdminRole, listTheme
 router.post('/admin/themes', validateAuthentication, validateAdminRole, createThemeHandler);
 router.patch('/admin/themes/:themeId', validateAuthentication, validateAdminRole, updateThemeHandler);
 router.delete('/admin/themes/:themeId', validateAuthentication, validateAdminRole, deleteThemeHandler);
+
+// Feedback sent from the map (docs/API.md "Feedback"): read, act on, delete
+router.get('/admin/feedback', validateAuthentication, validateAdminRole, listFeedbackHandler);
+router.get('/admin/feedback/:feedbackId', validateAuthentication, validateAdminRole, getFeedbackHandler);
+router.patch('/admin/feedback/:feedbackId', validateAuthentication, validateAdminRole, updateFeedbackHandler);
+router.delete('/admin/feedback/:feedbackId', validateAuthentication, validateAdminRole, deleteFeedbackHandler);
 
 export default router;

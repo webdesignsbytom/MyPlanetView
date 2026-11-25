@@ -13,7 +13,7 @@ export const DESIGN_COLOUR = /^#[0-9a-f]{6}$/;
  */
 export const DESIGN_COLOUR_ALPHA = /^#[0-9a-f]{6}([0-9a-f]{2})?$/;
 // The design fields whose colour may carry an opacity
-const ALPHA_FIELDS = new Set(['string']);
+const ALPHA_FIELDS = new Set(['string', 'plannedString']);
 /** More than there are places on the map, so a full design always fits. */
 export const DESIGN_MAX_COLOURS = 400;
 
@@ -59,6 +59,9 @@ export function parseDesignChange(body) {
     ['string', 'stringColour'],
     // A second colour twisted into the strings (25 Nov 2026, the user's wish); null: one colour
     ['stringTwist', 'stringTwistColour'],
+    // The planned strings' own, the same two (25 Nov 2026, the user's wish)
+    ['plannedString', 'plannedStringColour'],
+    ['plannedStringTwist', 'plannedStringTwistColour'],
   ]) {
     if (input[field] === undefined) continue;
     const colour = cleanColour(input[field], { alpha: ALPHA_FIELDS.has(field) });

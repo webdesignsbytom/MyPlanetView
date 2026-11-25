@@ -36,7 +36,7 @@ const cleanName = (value) =>
 const NAME_REQUIRED = 'Enter your name.';
 
 const MAP_SETTING_KEYS = {
-  style: ['animated', 'mono', 'old-map', 'starry'],
+  style: ['animated', 'mono', 'old-map', 'starry', 'engraved'],
   mapType: ['regular', 'detailed'],
   // The landmark pins (the server's LANDMARK_PIN_MODES)
   landmarkPins: ['zoomed', 'always', 'stamped', 'off'],
@@ -44,9 +44,10 @@ const MAP_SETTING_KEYS = {
   distanceUnit: ['auto', 'km', 'miles'],
 };
 // `showMoments`: the marks beside countries with moments; `showGoalTag`: the goal's luggage
-// tag under the map's title; `showTips`: the tips
+// tag under the map's title; `showTripCountdown`: the next trip's countdown; `showMapKey`: the
+// map's key; `showTips`: the tips
 // the map opens with (the server's MAP_SETTING_FLAGS need each of them too)
-const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments', 'showGoalTag', 'showTips', 'showCelebrations', 'countriesAsked', 'showStrings', 'showSupporterBadge'];
+const MAP_SETTING_BOOLEANS = ['showGrid', 'showGridLabels', 'animatedSea', 'sunAndMoon', 'showCountryNames', 'hoverPreview', 'showVisited', 'showUnvisited', 'showUserBanner', 'showAntarctica', 'showMoments', 'showGoalTag', 'showTripCountdown', 'showMapKey', 'showTips', 'showCelebrations', 'countriesAsked', 'showStrings', 'showPlannedStrings', 'showSupporterBadge'];
 
 // The test user's password: the seeded one until changed or reset here. Sign-in isn't
 // held to the rules below (the seeded one doesn't meet them, as on the server).

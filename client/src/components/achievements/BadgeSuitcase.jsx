@@ -81,7 +81,9 @@ function BadgeSuitcase({ badges, note = null, onShareCollection = null, children
                     aria-expanded={open}
                     aria-controls={bodyId}
                     onClick={() => toggle(group.id)}
-                    className='grid min-h-8 w-full grid-cols-[auto_auto] items-center justify-start gap-2 pb-1 text-left uppercase'
+                    // The arrow at the far right, the words filling the rest (25 Nov 2026, the user's wish)
+                    className='grid min-h-8 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 pb-1 text-left uppercase'
+                    data-badge-group-toggle=''
                   >
                     <span>{badgeGroupLabel(group.id)}</span>
                     <FaChevronDown

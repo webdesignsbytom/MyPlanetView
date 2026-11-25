@@ -48,6 +48,13 @@ describe('map styles', () => {
     expect(await styleFor(owner)).toBe('mono');
   });
 
+  // The engraved ocean (25 Nov 2026, the user's wish): a style like the rest
+  it('takes the engraved ocean, as the map’s own style and as anyone’s own', async () => {
+    expect(data(await owner.agent.patch(`/api/maps/${map.id}`).send({ style: 'engraved' })).map.style).toBe('engraved');
+    expect(await styleFor(viewer)).toBe('engraved');
+    expect((await viewer.agent.put('/api/users/map-settings').send({ mapSettings: { style: 'engraved' } })).status).toBe(200);
+  });
+
   it('shows on a share link', async () => {
     expect((await owner.agent.patch(`/api/maps/${map.id}`).send({ style: 'starry' })).status).toBe(200);
     expect((await owner.agent.patch(`/api/maps/${map.id}/sharing`).send({ linkAccess: 'ANYONE_WITH_LINK' })).status).toBe(200);

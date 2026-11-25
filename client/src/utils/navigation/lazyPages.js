@@ -7,6 +7,7 @@ import {
   ADMIN_EVENTS_PAGE_URL,
   ADMIN_OFFERS_PAGE_URL,
   ADMIN_THEMES_PAGE_URL,
+  ADMIN_FEEDBACK_PAGE_URL,
   CHALLENGES_PAGE_URL,
   GIFTS_PAGE_URL,
   COMPARE_PAGE_URL,
@@ -56,6 +57,7 @@ export const AdminEventsPage = lazyPage(() => import('@/pages/admin/AdminEventsP
 export const AdminPromoCodesPage = lazyPage(() => import('@/pages/admin/AdminPromoCodesPage'));
 export const AdminOffersPage = lazyPage(() => import('@/pages/admin/AdminOffersPage'));
 export const AdminThemesPage = lazyPage(() => import('@/pages/admin/AdminThemesPage'));
+export const AdminFeedbackPage = lazyPage(() => import('@/pages/admin/AdminFeedbackPage'));
 // Users
 export const AccountPage = lazyPage(() => import('@/pages/account/AccountPage'));
 export const LoginPage = lazyPage(() => import('@/users/login/LoginPage'));
@@ -134,6 +136,7 @@ const PAGES_BY_PATH = {
   [ADMIN_PROMO_CODES_PAGE_URL]: AdminPromoCodesPage,
   [ADMIN_OFFERS_PAGE_URL]: AdminOffersPage,
   [ADMIN_THEMES_PAGE_URL]: AdminThemesPage,
+  [ADMIN_FEEDBACK_PAGE_URL]: AdminFeedbackPage,
   [CHALLENGES_PAGE_URL]: ChallengesPage,
   [GIFTS_PAGE_URL]: GiftsPage,
   [COMPARE_PAGE_URL]: ComparePage,

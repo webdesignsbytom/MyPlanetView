@@ -91,7 +91,7 @@ vi.mock('@/components/map/MapToolbar', () => ({
     toolbar.props = props;
     return (
       <nav data-open-panel={props.openPanel ?? ''}>
-        {['stats', 'countries', 'trips', 'oneShots', 'photos', 'share', 'settings'].map((id) => (
+        {['stats', 'countries', 'trips', 'oneShots', 'photos', 'share', 'feedback', 'settings'].map((id) => (
           <button key={id} type='button' onClick={() => props.onToggle(id)}>
             {`tool ${id}`}
           </button>
@@ -116,13 +116,14 @@ vi.mock('@/components/achievements/AwardNews', () => ({ default: () => null }));
 vi.mock('@/components/travelCopies/TravelCopyBanner', () => ({ default: () => null }));
 vi.mock('@/components/recap/RecapTag', () => ({ default: () => null }));
 vi.mock('@/components/moments/AnniversaryTag', () => ({ default: () => null }));
-vi.mock('@/components/trips/TripCountdownTag', () => ({ default: () => null }));
+vi.mock('@/components/trips/TripCountdownTag', () => ({ default: () => <p data-countdown-tag /> }));
 vi.mock('@/components/countryMap/CountryMapLoading', () => ({ default: () => null }));
 vi.mock('@/components/map/lazyMapPanels', () => {
   const names = [
     'BadgesGoalsPanel', 'CelebrationDialog', 'OneShotsPanel', 'CountryListPanel', 'CountryMapView', 'CountryPanel', 'ExtraMapDialog', 'ShareCardDialog', 'MapPosterDialog',
     'QuickFillDialog', 'YearRecapDialog', 'MapSwitcher', 'MapTipsDialog', 'PhotoUploadPanel', 'PhotoViewer', 'SettingsPanel',
     'ShareDialog', 'Slideshow', 'StatsPanel', 'TimelinePanel', 'TripsPanel', 'WhereNextPanel', 'UnplacedPhotosPanel', 'MapPhotosPanel', 'PinPanel', 'StringsPanel',
+    'FeedbackPanel',
   ];
   return { ...Object.fromEntries(names.map((name) => [name, stub(name)])), preloadTool: vi.fn(), preloadWhenIdle: vi.fn(() => () => {}) };
 });
@@ -316,12 +317,15 @@ describe('MapExperience', () => {
       }
     });
 
-    // 24 Nov 2026, the user's wish: "Americans in miles always", and a choice
-    it('gives its panels miles for a map whose home is in the United States, unless the viewer chose', () => {
+    // 24 Nov 2026, the user's wish: "Americans in miles always", and a choice; 25 Nov 2026: the UK too
+    it('gives its panels miles for a map whose home is in the United States or the UK, unless the viewer chose', () => {
       const home = (code) => ({ ...MAP, stats: { ...MAP.stats, homeCountryCode: code } });
-      const one = open({ map: home('GB') });
+      const one = open({ map: home('FR') });
       expect(unitSeen.value).toBe('km');
       one.unmount();
+      const uk = open({ map: home('GB') });
+      expect(unitSeen.value).toBe('miles');
+      uk.unmount();
       const two = open({ map: home('US') });
       expect(unitSeen.value).toBe('miles');
       two.unmount();
@@ -369,13 +373,13 @@ describe('MapExperience', () => {
         const { click } = open({ actions: acts, map: VISITED });
         click('tool countries');
         await markFromList('DE');
-        expect(acts.tieString).toHaveBeenCalledWith('FR', 'DE');
+        expect(acts.tieString).toHaveBeenCalledWith('FR', 'DE', 'VISITED');
         // From its ticket too (CountryPanel tells the page once it's saved)
         click('pick France');
         await waitFor(() => expect(panelProps.CountryPanel).toBeTruthy());
         act(() => panelProps.CountryPanel.onVisitMarked('ES', null, 'VISITED', todayDay()));
-        expect(acts.tieString).toHaveBeenLastCalledWith('FR', 'ES');
-        // Nothing for a wish, or a change between visited and lived in
+        expect(acts.tieString).toHaveBeenLastCalledWith('FR', 'ES', 'VISITED');
+        // Nothing for the map's first wish, or a change between visited and lived in
         acts.tieString.mockClear();
         act(() => panelProps.CountryPanel.onVisitMarked('JP', null, 'WANT_TO_GO', null));
         act(() => panelProps.CountryPanel.onVisitMarked('FR', 'VISITED', 'LIVED', '2019-04-12'));
@@ -392,6 +396,45 @@ describe('MapExperience', () => {
         const tied = open({ actions: acts, map: { ...VISITED, strings: [{ id: 's9', from: 'DE', to: 'FR' }] } });
         tied.click('tool countries');
         await markFromList('DE');
+        expect(acts.tieString).not.toHaveBeenCalled();
+      });
+
+      // Planned strings (25 Nov 2026, the user's wish): a place newly wanted is tied to the one
+      // wanted just before it, in the order they were marked
+      const WANTED = {
+        ...VISITED,
+        visits: [
+          ...VISITED.visits,
+          { countryCode: 'IS', status: 'WANT_TO_GO', firstVisitedOn: null, markedAt: '2026-03-01T10:00:00Z' },
+          { countryCode: 'PE', status: 'WANT_TO_GO', firstVisitedOn: null, markedAt: '2026-05-01T10:00:00Z' },
+        ],
+      };
+
+      it('ties a planned string from the place wanted just before a newly wanted one', async () => {
+        const acts = { ...actions(), tieString: vi.fn().mockResolvedValue({ id: 'p1' }) };
+        const { click } = open({ actions: acts, map: WANTED });
+        click('pick France');
+        await waitFor(() => expect(panelProps.CountryPanel).toBeTruthy());
+        act(() => panelProps.CountryPanel.onVisitMarked('JP', null, 'WANT_TO_GO', null));
+        expect(acts.tieString).toHaveBeenCalledWith('PE', 'JP', 'PLANNED');
+        // Not again for one wanted already
+        acts.tieString.mockClear();
+        act(() => panelProps.CountryPanel.onVisitMarked('PE', 'WANT_TO_GO', 'WANT_TO_GO', null));
+        expect(acts.tieString).not.toHaveBeenCalled();
+      });
+
+      it('ties no planned string while they’re switched off, or when one joins them already', async () => {
+        const acts = { ...actions(), tieString: vi.fn().mockResolvedValue({ id: 'p1' }) };
+        const off = open({ actions: acts, map: WANTED, settings: { ...DEFAULT_MAP_SETTINGS, showPlannedStrings: false } });
+        off.click('pick France');
+        await waitFor(() => expect(panelProps.CountryPanel).toBeTruthy());
+        act(() => panelProps.CountryPanel.onVisitMarked('JP', null, 'WANT_TO_GO', null));
+        expect(acts.tieString).not.toHaveBeenCalled();
+        off.unmount();
+        const tied = open({ actions: acts, map: { ...WANTED, strings: [{ id: 'p9', kind: 'PLANNED', from: 'JP', to: 'PE' }] } });
+        tied.click('pick France');
+        await waitFor(() => expect(panelProps.CountryPanel).toBeTruthy());
+        act(() => panelProps.CountryPanel.onVisitMarked('JP', null, 'WANT_TO_GO', null));
         expect(acts.tieString).not.toHaveBeenCalled();
       });
     });
@@ -460,6 +503,17 @@ describe('MapExperience', () => {
       expect(q('ul[aria-label="Map key"]')).toBeNull();
       click('close CountryPanel');
       expect(panel('CountryPanel')).toBeNull();
+    });
+
+    // 25 Nov 2026, the user's wish: Settings turns these off
+    it('leaves out the next trip’s countdown and the map key when the viewer switches them off', () => {
+      const shown = open();
+      expect(shown.q('[data-countdown-tag]')).not.toBeNull();
+      expect(shown.q('ul[aria-label="Map key"]')).not.toBeNull();
+      shown.unmount();
+      const off = open({ settings: { ...DEFAULT_MAP_SETTINGS, showTripCountdown: false, showMapKey: false } });
+      expect(off.q('[data-countdown-tag]')).toBeNull();
+      expect(off.q('ul[aria-label="Map key"]')).toBeNull();
     });
 
     it('fetches the country panel’s code on the first press on the map', async () => {
@@ -581,7 +635,7 @@ describe('MapExperience', () => {
       expect(panelProps.CelebrationDialog.passportHref).toBe('/maps/map-1/passport');
       // France, dated today and tied to the place visited before it (the UK, lived in)
       expect(acts.setVisit).toHaveBeenCalledWith('FR', 'VISITED', { firstVisitedOn: todayDay() });
-      expect(acts.tieString).toHaveBeenCalledWith('GB', 'FR');
+      expect(acts.tieString).toHaveBeenCalledWith('GB', 'FR', 'VISITED');
 
       // Closed: France's own celebration, straight after
       act(() => panelProps.CelebrationDialog.onClose());
@@ -679,6 +733,24 @@ describe('MapExperience', () => {
         await panelProps.StatsPanel.collected.onToggle('lm-louvre', true);
       });
       expect(off.panel('CelebrationDialog')).toBeNull();
+    });
+
+    // Feedback (25 Nov 2026, the user's wish): for anyone signed in, with the map and its style
+    it('offers Feedback to a signed-in viewer and opens it with the map, its style and the screen', async () => {
+      seenDialogs();
+      const { panel, click, q } = open();
+      await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
+      expect(toolbar.props.canFeedback).toBe(true);
+      click('tool feedback');
+      await waitFor(() => expect(panel('FeedbackPanel')).not.toBeNull());
+      expect(panelProps.FeedbackPanel).toMatchObject({ mapId: 'map-1', styleId: expect.any(String), phone: true });
+      act(() => panelProps.FeedbackPanel.onClose());
+      expect(panel('FeedbackPanel')).toBeNull();
+    });
+
+    it('offers no Feedback to someone signed out on a share link', () => {
+      open({ shareCode: 'ABCD-EFGH-JKMN', role: 'VIEWER', actions: null, currentUser: null });
+      expect(toolbar.props.canFeedback).toBe(false);
     });
 
     // Life's One Shots (24 Nov 2026): a first tick celebrated, a change not

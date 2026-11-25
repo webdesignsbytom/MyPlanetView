@@ -77,6 +77,35 @@ describe('MapStrings', () => {
     expect(across(4)).toBeCloseTo(across(2) / 2, 3);
   });
 
+  // Planned strings (25 Nov 2026, the user's wish): their own colours, under the visited ones
+  it('draws the planned strings in their own colours, under the visited ones, with their own pins', () => {
+    const svg = render(
+      <svg>
+        <MapStrings strings={[...STRINGS, { id: 'p1', kind: 'PLANNED', from: 'IS', to: 'JP' }]} />
+      </svg>,
+    ).container;
+    const groups = [...svg.querySelectorAll('[data-string]')];
+    expect(groups.map((g) => g.getAttribute('data-string-kind'))).toEqual(['PLANNED', 'VISITED', 'VISITED', 'VISITED']);
+    const planned = groups[0];
+    expect(planned.getAttribute('data-string')).toBe('IS-JP');
+    expect(planned.getAttribute('class')).toContain('[opacity:var(--map-plan-string-alpha,1)]');
+    expect(planned.querySelector('path').getAttribute('class')).toContain('stroke-map-plan-string');
+    expect(planned.querySelector('[data-string-strand]').getAttribute('class')).toContain('stroke-map-plan-string-2 [display:var(--map-plan-string-twist,none)]');
+    // Each kind's pins in its colour, the planned first
+    expect([...svg.querySelectorAll('[data-string-pins]')].map((g) => g.getAttribute('data-string-pins'))).toEqual(['PLANNED', 'VISITED']);
+    expect(svg.querySelector('[data-string-pins="PLANNED"] path:last-child').getAttribute('class')).toContain('stroke-map-plan-string');
+  });
+
+  it('in string mode, lets only the strings of the kind being tied be taken off', () => {
+    const svg = render(
+      <svg>
+        <MapStrings strings={[...STRINGS, { id: 'p1', kind: 'PLANNED', from: 'IS', to: 'JP' }]} onRemove={vi.fn()} removeKind='PLANNED' startCode='BR' startKind='PLANNED' />
+      </svg>,
+    ).container;
+    expect([...svg.querySelectorAll('[data-string-press]')].map((p) => p.closest('[data-string]').getAttribute('data-string'))).toEqual(['IS-JP']);
+    expect(svg.querySelector('[data-string-start]').getAttribute('class')).toContain('stroke-map-plan-string');
+  });
+
   it('leaves out the far south while Antarctica is hidden', () => {
     const svg = draw({ showAntarctica: false });
     expect(svg.querySelector('[data-string="AQ-AR"]')).toBeNull();

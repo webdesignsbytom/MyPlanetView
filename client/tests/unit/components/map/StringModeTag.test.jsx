@@ -18,6 +18,16 @@ describe('StringModeTag', () => {
     expect(screen.getByText('Click a country to start a string. Click a string to take it off.')).toBeTruthy();
   });
 
+  // Planned strings (25 Nov 2026, the user's wish): the tag says which kind is being tied
+  it('says when it’s the planned strings being tied', () => {
+    const { container, rerender } = render(<StringModeTag onDone={vi.fn()} />);
+    expect(container.querySelector('[data-string-mode]').getAttribute('data-string-mode')).toBe('VISITED');
+    expect(screen.getByText('String mode')).toBeTruthy();
+    rerender(<StringModeTag kind='PLANNED' onDone={vi.fn()} />);
+    expect(container.querySelector('[data-string-mode]').getAttribute('data-string-mode')).toBe('PLANNED');
+    expect(screen.getByText('String mode: planned strings')).toBeTruthy();
+  });
+
   it('marks a failure', () => {
     render(<StringModeTag message='That string didn’t tie.' error onDone={vi.fn()} />);
     expect(screen.getByRole('status').className).toContain('text-status-critical');

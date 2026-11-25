@@ -180,7 +180,7 @@ test.describe('Trips', () => {
       // Japan in spring gone: the other 13 and the stag do
       '14',
       // The longest trip (23 Nov 2026)
-      '282', 'On completed trips', '190 days', 'A year off: around the world', '101,200 km', 'About 62,900 miles', 'New Zealand', 'About 18,800 km from the United Kingdom',
+      '282', 'On completed trips', '190 days', 'A year off: around the world', '62,900 miles', 'About 101,200 km', 'New Zealand', 'About 11,700 miles from the United Kingdom',
     ]);
 
     // The old address now says so

@@ -17,6 +17,7 @@ import {
   ADMIN_PROMO_CODES_PAGE_URL,
   ADMIN_OFFERS_PAGE_URL,
   ADMIN_THEMES_PAGE_URL,
+  ADMIN_FEEDBACK_PAGE_URL,
   ADMIN_USERS_PAGE_URL,
   CONTACT_PAGE_URL,
   COUNTRIES_PAGE_URL,
@@ -75,6 +76,7 @@ import {
   AdminPromoCodesPage,
   AdminOffersPage,
   AdminThemesPage,
+  AdminFeedbackPage,
   ContactPage,
   PricingPage,
   TermAndPoliciesPage,
@@ -272,6 +274,14 @@ function App() {
             element={
               <AuthenticateAdmin>
                 <AdminThemesPage />
+              </AuthenticateAdmin>
+            }
+          />
+          <Route
+            path={ADMIN_FEEDBACK_PAGE_URL}
+            element={
+              <AuthenticateAdmin>
+                <AdminFeedbackPage />
               </AuthenticateAdmin>
             }
           />

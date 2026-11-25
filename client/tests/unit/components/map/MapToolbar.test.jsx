@@ -78,6 +78,16 @@ describe('MapToolbar', () => {
     expect(row.querySelector('[aria-label="Strings"]')).toBeNull();
   });
 
+  // 25 Nov 2026, the user's wish: a problem, an idea or a question, for anyone signed in
+  it('has a Feedback stamp before Settings, only when asked for', () => {
+    const { stamps, row, onToggle } = open({ canFeedback: true });
+    expect(stamps().slice(-2)).toEqual(['Feedback', 'Map settings']);
+    fireEvent.click(row.querySelector('[aria-label="Feedback"]'));
+    expect(onToggle).toHaveBeenCalledWith('feedback');
+    const { stamps: without } = open({ canFeedback: false });
+    expect(without()).not.toContain('Feedback');
+  });
+
   it('leaves out "Your maps", sharing and Home when they don’t apply', () => {
     const { stamps } = open({ canShare: false, canSwitch: false, showHome: false });
     expect(stamps()).not.toContain('Your maps');

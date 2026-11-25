@@ -1,157 +1,123 @@
-import React, { useId, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 // Components
 import MapPanel from './MapPanel';
-import MapActionButton from './MapActionButton';
-import VerifyFirstNote from './VerifyFirstNote';
-import FormField from '@/components/ui/FormField';
-import GroupedOptionSelect from '@/components/ui/GroupedOptionSelect';
-import CheckboxInput from '@/components/ui/CheckboxInput';
-import ConfirmModal from '@/components/modals/ConfirmModal';
+import StringsTab from './StringsTab';
 // Hooks
-import useSplitUk from '@/hooks/useSplitUk';
-import useConfirmAction from '@/hooks/useConfirmAction';
+import useMapDesignEditor from '@/hooks/useMapDesignEditor';
 // Utils
-import { countryOptionGroupsFor } from '@/utils/map/countries';
-import { stringEnds, stringLabel } from '@/utils/map/mapStrings';
+import { designFor, readStyleColours } from '@/utils/map/mapDesign';
+import { stringsOfKind } from '@/utils/map/mapStrings';
 
-const failed = (err, fallback) => err?.friendlyMessage || fallback;
+// The tabs (25 Nov 2026, the user's wish: the visited and the planned strings apart)
+const TABS = [
+  { id: 'VISITED', label: 'Visited' },
+  { id: 'PLANNED', label: 'Planned' },
+];
+
+// The map style's own string colours, as the pickers start from them (the tokens are the one
+// place colours live; a colour picker takes "#rrggbb" only)
+const readUsualColours = (styleId) => {
+  const read = readStyleColours(styleId, ['--map-string', '--map-string-2', '--map-plan-string', '--map-plan-string-2']);
+  return {
+    VISITED: { colour: read['--map-string'], twist: read['--map-string-2'] },
+    PLANNED: { colour: read['--map-plan-string'], twist: read['--map-plan-string-2'] },
+  };
+};
 
 /**
- * The Strings tool (docs/API.md "Strings"; 23 Nov 2026, the user's wish): red thread between
- * places, as on a corkboard. String mode (`onStringMode`: click two countries on the map, click
- * a string to take it off), the automatic ones (each trip's route, then the other places in
- * the order first visited), and the list: every string with "Take off", and two places to tie
- * from the keyboard. `showStrings` and `onShowStrings` are the viewer's own setting. Editors
- * only; `locked` while the email isn't verified (the server refuses). Their colour is the
- * map design's (Settings, "How it looks"), which `canDesign` (the owner or a co-owner) can change.
+ * The Strings tool (docs/API.md "Strings"; 23 Nov 2026, the user's wish): thread between places,
+ * as on a corkboard, in two tabs (25 Nov 2026, the user's wish): "Visited", between the places
+ * been to, and "Planned", between the places planned, in a colour of its own (StringsTab). Each
+ * tab has its strings, its switch on the map (`shown[kind]`, `onShowStrings(kind, on)`: the
+ * viewer's own settings), string mode for it (`onStringMode(kind)`), the automatic ones, and
+ * its colours in the map's design for the map's style (`styleId`), here so they're "all in one
+ * place": the owner and co-owners (`onDesignChange`, useTravelMap's setDesign) change them as
+ * Settings' "How it looks" changes the rest, shown at once through `designPreview`. Editors
+ * only; `locked` while the email isn't verified (the server refuses). The tabs follow the ARIA
+ * tabs pattern, as Settings' do.
  */
-function StringsPanel({ strings = [], showStrings = true, onShowStrings, locked = false, canDesign = false, onTie, onTieAuto, onUntie, onUntieAll, onStringMode, onClose }) {
+function StringsPanel({
+  map,
+  strings = [],
+  shown = { VISITED: true, PLANNED: true },
+  onShowStrings,
+  locked = false,
+  styleId,
+  onDesignChange = null,
+  designPreview,
+  onTie,
+  onTieAuto,
+  onUntie,
+  onUntieAll,
+  onStringMode,
+  onClose,
+}) {
   const uid = useId();
-  const splitUk = useSplitUk();
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [note, setNote] = useState({ text: '', error: false });
+  const [tab, setTab] = useState('VISITED');
+  const tabsRef = useRef(null);
+  const tabId = (id) => `${uid}-tab-${id}`;
+  const panelId = (id) => `${uid}-panel-${id}`;
 
-  const run = async (work, done) => {
-    setBusy(true);
-    setNote({ text: '', error: false });
-    try {
-      const answer = await work();
-      setNote({ text: done(answer), error: false });
-    } catch (err) {
-      setNote({ text: failed(err, 'That didn’t save. Please try again.'), error: true });
-    } finally {
-      setBusy(false);
-    }
-  };
+  // One editor for both kinds' colours, as Settings has one for the rest of the design
+  const editor = useMapDesignEditor({ mapId: map.id, style: styleId, design: designFor(map, styleId), onDesignChange, preview: designPreview });
+  const [usual, setUsual] = useState(() => readUsualColours(styleId));
+  // Read again once the page has the style (Black and white's greys reach <html> in an effect)
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setUsual(readUsualColours(styleId)));
+    return () => window.cancelAnimationFrame(frame);
+  }, [styleId]);
+  const byKind = useMemo(() => Object.fromEntries(TABS.map((t) => [t.id, stringsOfKind(strings, t.id)])), [strings]);
 
-  const tie = (e) => {
+  const handleTabKeys = (e) => {
+    const index = TABS.findIndex((t) => t.id === tab);
+    const next = { ArrowRight: (index + 1) % TABS.length, ArrowLeft: (index - 1 + TABS.length) % TABS.length, Home: 0, End: TABS.length - 1 }[e.key];
+    if (next === undefined) return;
     e.preventDefault();
-    if (!stringEnds(from, to)) {
-      setNote({ text: 'Choose two different places.', error: true });
-      return;
-    }
-    run(
-      () => onTie(from, to),
-      (string) => `Tied: ${stringLabel(string)}.`,
-    );
+    setTab(TABS[next].id);
+    tabsRef.current?.querySelectorAll('[role="tab"]')[next]?.focus();
   };
-  const tieAuto = () =>
-    run(onTieAuto, ({ added, full }) =>
-      full
-        ? `Added ${added} — the map holds no more strings.`
-        : added
-          ? `Added ${added} ${added === 1 ? 'string' : 'strings'} from your trips and first visits.`
-          : 'Nothing new to add: your trips and first visits are already strung.',
-    );
-  const { confirmAction, modalOpen, modalContent, handleModalConfirm, setModalOpen } = useConfirmAction();
-  const untieAll = () =>
-    confirmAction({
-      header: 'Take every string off?',
-      message: `All ${strings.length} strings on this map come off. You can tie them again any time.`,
-      action: () => run(onUntieAll, () => 'Every string is off.'),
-    });
 
-  const groups = countryOptionGroupsFor(splitUk);
   return (
     <MapPanel title='Strings' onClose={onClose}>
       <div className='grid gap-4' data-strings-panel>
-        <p className='text-sm'>
-          Tie red string between the places you’ve been, like pins and thread on a corkboard map.
-        </p>
-        <CheckboxInput
-          id={`${uid}-show`}
-          checked={showStrings}
-          onChange={(e) => onShowStrings(e.target.checked)}
-          label='Show strings on the map'
-        />
-        {locked ? <VerifyFirstNote action='tie strings' /> : null}
-        <div className='grid grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] gap-2'>
-          <MapActionButton onClick={onStringMode} disabled={locked || busy}>
-            Tie strings on the map
-          </MapActionButton>
-          <MapActionButton quiet onClick={tieAuto} disabled={locked} busy={busy}>
-            Add strings automatically
-          </MapActionButton>
+        <div ref={tabsRef} role='tablist' aria-label='Strings' onKeyDown={handleTabKeys} className='grid grid-cols-2 gap-2 border-b-2 border-poster-brown px-1'>
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              id={tabId(t.id)}
+              type='button'
+              role='tab'
+              aria-selected={tab === t.id}
+              aria-controls={panelId(t.id)}
+              tabIndex={tab === t.id ? 0 : -1}
+              onClick={() => setTab(t.id)}
+              className={`border-2 border-b-0 border-poster-brown px-3 pb-1.5 pt-2 font-travel text-base uppercase leading-tight tracking-wide transition ${
+                tab === t.id ? 'paper-aged translate-y-0.5 text-poster-red-deep' : 'border-dashed bg-paper-cream text-colour9 hover:brightness-95'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
-        <p className='text-xs'>
-          On the map, click two countries to tie a string between them; click a string to take it off. Automatically follows each
-          trip’s route, then joins the other places in the order you first went.
-        </p>
-        <p className='text-xs' data-string-colour-note>
-          {canDesign
-            ? 'Choose their colour in Map settings, under How it looks: “String colour”.'
-            : 'Their colour is the map owner’s choice, in its settings.'}
-        </p>
-
-        <form onSubmit={tie} className='grid gap-3 border-t-2 border-dashed border-poster-brown/50 pt-3' aria-label='Tie a string'>
-          <div className='grid gap-3 sm:grid-cols-2'>
-            <FormField id={`${uid}-from`} label='From' align='start'>
-              <GroupedOptionSelect value={from} onChange={(e) => setFrom(e.target.value)} groups={groups} placeholder='Choose a place' disabled={locked} />
-            </FormField>
-            <FormField id={`${uid}-to`} label='To' align='start'>
-              <GroupedOptionSelect value={to} onChange={(e) => setTo(e.target.value)} groups={groups} placeholder='Choose a place' disabled={locked} />
-            </FormField>
+        {/* Both stay on the page (the closed one hidden), so each tab's aria-controls has its panel */}
+        {TABS.map((t) => (
+          <div key={t.id} role='tabpanel' id={panelId(t.id)} aria-labelledby={tabId(t.id)} tabIndex={0} hidden={tab !== t.id}>
+            <StringsTab
+              kind={t.id}
+              strings={byKind[t.id]}
+              shown={shown[t.id] !== false}
+              onShow={(on) => onShowStrings(t.id, on)}
+              locked={locked}
+              colours={onDesignChange ? { design: editor.design, usual: usual[t.id], onChange: editor.change, status: editor.status } : null}
+              onTie={onTie}
+              onTieAuto={onTieAuto}
+              onUntie={onUntie}
+              onUntieAll={onUntieAll}
+              onStringMode={onStringMode}
+            />
           </div>
-          <MapActionButton type='submit' disabled={locked || !from || !to} busy={busy}>
-            Tie this string
-          </MapActionButton>
-        </form>
-
-        {note.text ? (
-          <p role={note.error ? 'alert' : 'status'} className={`text-sm ${note.error ? 'font-medium text-status-critical' : ''}`}>
-            {note.text}
-          </p>
-        ) : null}
-
-        <section className='grid gap-2' aria-labelledby={`${uid}-list`}>
-          <h3 id={`${uid}-list`} className='font-travel text-lg uppercase tracking-wide'>
-            {strings.length ? `${strings.length} ${strings.length === 1 ? 'string' : 'strings'}` : 'No strings yet'}
-          </h3>
-          {strings.length ? (
-            <ul className='grid gap-1.5' data-strings-list>
-              {strings.map((string) => (
-                <li key={string.id} className='grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 text-sm' data-string-item={`${string.from}-${string.to}`}>
-                  <span>{stringLabel(string)}</span>
-                  <MapActionButton quiet onClick={() => run(() => onUntie(string), () => `Taken off: ${stringLabel(string)}.`)} disabled={locked}>
-                    <span className='sr-only'>{`Take off the string from ${stringLabel(string)}`}</span>
-                    <span aria-hidden='true'>Take off</span>
-                  </MapActionButton>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-          {strings.length ? (
-            <MapActionButton danger onClick={untieAll} disabled={locked} busy={busy}>
-              Take every string off
-            </MapActionButton>
-          ) : null}
-        </section>
+        ))}
       </div>
-      {modalOpen ? (
-        <ConfirmModal header={modalContent.header} message={modalContent.message} onConfirm={handleModalConfirm} onClose={() => setModalOpen(false)} />
-      ) : null}
     </MapPanel>
   );
 }

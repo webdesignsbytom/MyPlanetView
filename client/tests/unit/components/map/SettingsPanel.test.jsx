@@ -165,14 +165,23 @@ describe('SettingsPanel', () => {
   });
 
   // 24 Nov 2026, the user's wish: "Americans in miles always", and a choice
-  it('chooses how distances are written, automatic to start with', () => {
-    const { onChangeSetting } = open();
+  // 25 Nov 2026, the user's wish: just kilometres or miles, the home's ticked until one's chosen
+  it('chooses kilometres or miles, the map home’s unit ticked to start with', () => {
+    const { onChangeSetting, unmount } = open({ map: { ...MAP, stats: { homeCountryCode: 'FR' } } });
     expect(screen.getByText('Distances')).toBeTruthy();
-    expect(screen.getByLabelText('Miles for a map whose home is in the United States, else kilometres').checked).toBe(true);
-    fireEvent.click(screen.getByLabelText('Always miles'));
+    expect([...document.querySelectorAll('input[name="distanceUnit"]')].map((r) => r.value)).toEqual(['km', 'miles']);
+    expect(screen.getByLabelText('Kilometres').checked).toBe(true);
+    fireEvent.click(screen.getByLabelText('Miles'));
     expect(onChangeSetting).toHaveBeenCalledWith('distanceUnit', 'miles');
-    const { container } = open({ settings: { ...DEFAULT_MAP_SETTINGS, distanceUnit: 'km' } });
-    expect(container.querySelector('#distance-unit-km').checked).toBe(true);
+    unmount();
+    // A home in the UK (or the United States) is in miles until the viewer chooses
+    open({ map: { ...MAP, stats: { homeCountryCode: 'GB' } } });
+    expect(screen.getByLabelText('Miles').checked).toBe(true);
+  });
+
+  it('ticks the unit the viewer chose, whatever the home', () => {
+    open({ map: { ...MAP, stats: { homeCountryCode: 'US' } }, settings: { ...DEFAULT_MAP_SETTINGS, distanceUnit: 'km' } });
+    expect(screen.getByLabelText('Kilometres').checked).toBe(true);
   });
 
   // The supporter badge (24 Nov 2026, the user's wish): a paying owner's, on unless turned off

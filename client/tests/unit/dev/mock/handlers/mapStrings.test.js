@@ -13,7 +13,7 @@ describe('the seed’s strings', () => {
   it('tie each place on the test user’s map to the one first visited before it', async () => {
     const strings = await stringsOn();
     expect(strings).toHaveLength(19);
-    expect(strings[0]).toEqual({ id: expect.any(String), from: 'GB', to: 'IE' });
+    expect(strings[0]).toEqual({ id: expect.any(String), kind: 'VISITED', from: 'GB', to: 'IE' });
     expect(strings.at(-1)).toMatchObject({ from: 'AT', to: 'IT' });
   });
 });
@@ -28,7 +28,7 @@ describe('strings between places, in mock mode', () => {
     expect(await stringsOn()).toEqual([]);
     const res = await post(path(), { from: 'jp', to: 'FR' });
     expect(res.status).toBe(201);
-    expect(res.data.string).toEqual({ id: expect.any(String), from: 'FR', to: 'JP' });
+    expect(res.data.string).toEqual({ id: expect.any(String), kind: 'VISITED', from: 'FR', to: 'JP' });
     expect(await stringsOn()).toEqual([res.data.string]);
   });
 
@@ -104,6 +104,25 @@ describe('strings between places, in mock mode', () => {
   it('go into "Download my data" with the map', async () => {
     await post(path(), { from: 'FR', to: 'JP' });
     const exported = (await get(`/api/users/export/maps/${HOME_MAP}`)).data.map;
-    expect(exported.strings).toEqual([{ from: 'FR', to: 'JP', since: expect.any(String) }]);
+    expect(exported.strings).toEqual([{ kind: 'VISITED', from: 'FR', to: 'JP', since: expect.any(String) }]);
+  });
+
+  // Planned strings (25 Nov 2026, the user's wish): their own kind and set, as the server's
+  it('tie planned strings apart from the visited ones, add the plans’ own, and take them off by kind', async () => {
+    await post(path(), { from: 'FR', to: 'JP' });
+    const res = await post(path(), { from: 'JP', to: 'FR', kind: 'planned' });
+    expect(res.status).toBe(201);
+    expect(res.data.string).toMatchObject({ kind: 'PLANNED', from: 'FR', to: 'JP' });
+    expect((await post(path(), { from: 'FR', to: 'DE', kind: 'WANTED' })).status).toBe(400);
+
+    // The seed's wishes: Japan, Peru and Iceland, and its planned trips
+    const auto = await post(path(HOME_MAP, '/auto'), { kind: 'PLANNED' });
+    expect(auto.data.added).toBeGreaterThan(0);
+    const planned = auto.data.strings.filter((s) => s.kind === 'PLANNED');
+    expect(planned.length).toBe(auto.data.added + 1);
+    expect(auto.data.strings.filter((s) => s.kind === 'VISITED')).toHaveLength(1);
+
+    expect((await del(`${path()}?kind=PLANNED`)).data).toEqual({ removed: planned.length });
+    expect((await stringsOn()).map((s) => s.kind)).toEqual(['VISITED']);
   });
 });

@@ -1,4 +1,4 @@
-import { test, expect, openMap } from './fixtures.js';
+import { test, expect, openMap, openTool } from './fixtures.js';
 
 // The countdown to the next trip (22 Nov 2026, the user's wish): the seeded map's next planned
 // trip is "Japan in spring", from 1 April 2027; April is Japan's best time in its guide.
@@ -7,7 +7,7 @@ test('the map counts down to the next trip, says if it’s a good time, and open
   await page.clock.setFixedTime(new Date('2027-03-20T12:00:00'));
   await openMap(page);
   const tag = page.getByRole('region', { name: 'Your next trip' });
-  await expect(tag).toContainText('12 days until Japan in spring');
+  await expect(tag).toContainText('12 days until Japan In Spring');
   await expect(tag).toContainText('April is the best time for Japan.');
   await expect(tag.getByRole('link', { name: 'Open the trip' })).toHaveAttribute('href', /\/trips\/.+/);
 
@@ -37,5 +37,21 @@ test('the map counts down to the next trip, says if it’s a good time, and open
 test('the day before, and on the day', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2027-03-31T12:00:00'));
   await openMap(page);
-  await expect(page.getByRole('region', { name: 'Your next trip' })).toContainText('1 day until Japan in spring');
+  await expect(page.getByRole('region', { name: 'Your next trip' })).toContainText('1 day until Japan In Spring');
+});
+
+// 25 Nov 2026, the user's wish: Settings turns it off, and it stays off after a reload
+test('the countdown can be switched off in the map settings', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2027-03-20T12:00:00'));
+  await openMap(page);
+  const tag = page.getByRole('region', { name: 'Your next trip' });
+  await expect(tag).toBeVisible();
+  const settings = await openTool(page, 'Map settings', 'Settings');
+  // The switch is drawn over its input: press its name
+  await settings.getByText('Countdown to your next trip', { exact: true }).click();
+  await expect(settings.getByRole('switch', { name: 'Countdown to your next trip' })).not.toBeChecked();
+  await expect(tag).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByRole('application', { name: /: world map$/ })).toBeVisible();
+  await expect(tag).toHaveCount(0);
 });

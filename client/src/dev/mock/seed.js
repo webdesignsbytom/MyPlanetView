@@ -24,6 +24,7 @@ import { EXAMPLE_OFFERS } from './data/offers';
 import { addFirstClassMap } from './seedFirstClass';
 // The example monthly photo themes (the server's seed/themes.js)
 import { exampleThemeEntries, exampleThemes } from './themes';
+import { exampleFeedback } from './feedback';
 
 // Every mock user's password: the one the server's seed gives its users (CLAUDE.md, "Seed")
 export const MOCK_PASSWORD = '12345678';
@@ -528,6 +529,9 @@ function buildBaseSeed() {
       last: ['photo-alhambra'],
     }),
     mapSettings: null,
+    // Feedback sent from the map (docs/API.md "Feedback"): a problem with a screenshot, an idea
+    // in progress and a question answered, for the admin page
+    feedback: exampleFeedback({ userId: USER_ID, otherId: SAM_ID, mapId: homeMap, daysAgo }),
     contactForms: [
       { id: 'contact-1', name: 'Priya Shah', email: 'priya@example.test', message: 'Can I share one trip without sharing my whole map?', imageKey: null, createdAt: daysAgo(3) },
       { id: 'contact-2', name: 'Tom Lee', email: 'tom.lee@example.test', message: 'Love the posters. Will there be one for Peru?', imageKey: null, createdAt: daysAgo(9) },

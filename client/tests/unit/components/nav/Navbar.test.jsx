@@ -65,7 +65,7 @@ describe('Navbar', () => {
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
     const submenu = document.getElementById(toggle.getAttribute('aria-controls'));
     const items = [...submenu.querySelectorAll('li')].map((li) => li.textContent);
-    expect(items).toEqual(['Dashboard', 'Contact Forms', 'Users', 'Promo Codes', 'Travel Offers', 'Photo Themes']);
+    expect(items).toEqual(['Dashboard', 'Contact Forms', 'Users', 'Promo Codes', 'Travel Offers', 'Photo Themes', 'Feedback']);
     fireEvent.keyDown(toggle, { key: 'Escape' });
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
     fireEvent.click(toggle);

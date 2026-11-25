@@ -39,7 +39,7 @@ describe('the design rules', () => {
   });
 
   it('starts a design with every colour usual', () => {
-    expect(newDesign()).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, pictureKey: null });
+    expect(newDesign()).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, pictureKey: null });
   });
 
   it('makes an older store’s one design the World map’s', () => {

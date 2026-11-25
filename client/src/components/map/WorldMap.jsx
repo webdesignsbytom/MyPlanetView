@@ -89,9 +89,10 @@ function WorldMap({
   landmarkPins = 'zoomed',
   stops = null,
   // Strings between places (MapStrings): the map's own, shown unless the viewer hid them;
-  // `stringStart` and `onRemoveString` while in string mode
+  // `stringStart`, `onRemoveString` and the kind being tied (`stringKind`) while in string mode
   strings = null,
   stringStart = null,
+  stringKind = 'VISITED',
   onRemoveString = null,
   label = 'World map',
   panZoom = true,
@@ -172,7 +173,9 @@ function WorldMap({
             zoom={labelZoom(zoom)}
             showAntarctica={showAntarctica}
             startCode={stringStart}
+            startKind={stringKind}
             onRemove={onRemoveString}
+            removeKind={stringKind}
             afterTap={afterTap}
           />
         ) : null}

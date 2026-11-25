@@ -18,7 +18,7 @@ export const countUnconfirmedUploads = ({ ownerId, resources, since }) =>
 
 /**
  * The next uploads nothing uses, oldest first: no PhotoVariant, no avatar, no map design's
- * picture, and no contact form names the key (a form refers to its image by key, not by a relation,
+ * picture, no feedback report's screenshot, and no contact form names the key (a form refers to its image by key, not by a relation,
  * hence the raw query). Photo files are taken once older than `photoCutoff`, everything
  * else once older than `cutoff`. `after` (`{ createdAt, id }` of the previous batch's
  * last row) moves on past rows that couldn't be deleted. -> `[{ id, key, createdAt }]`
@@ -34,16 +34,24 @@ export const findOrphanUploads = ({ cutoff, photoCutoff, after = null, take }) =
       AND NOT EXISTS (SELECT 1 FROM "photo_variant" v WHERE v."mediaId" = m."id")
       AND NOT EXISTS (SELECT 1 FROM "avatar_media_item" a WHERE a."mediaId" = m."id")
       AND NOT EXISTS (SELECT 1 FROM "map_design" d WHERE d."pictureId" = m."id")
+      AND NOT EXISTS (SELECT 1 FROM "feedback_report" f WHERE f."screenshotId" = m."id")
       AND NOT EXISTS (SELECT 1 FROM "contact_form" c WHERE c."imageKey" = m."key")
     ORDER BY m."createdAt" ASC, m."id" ASC
     LIMIT ${take}`;
 };
 
 /**
- * Delete the MediaItem rows of these keys, but never one a photo, an avatar or a map design uses
+ * Delete the MediaItem rows of these keys, but never one a photo, an avatar, a map design or a
+ * feedback report uses
  * (a row that became used meanwhile stays). -> `{ count }`
  */
 export const deleteUnusedMediaItems = (keys) =>
   prisma.mediaItem.deleteMany({
-    where: { key: { in: keys }, photoVariant: { is: null }, usedAsAvatarBy: { is: null }, usedAsMapDesign: { is: null } },
+    where: {
+      key: { in: keys },
+      photoVariant: { is: null },
+      usedAsAvatarBy: { is: null },
+      usedAsMapDesign: { is: null },
+      usedAsFeedbackScreenshot: { is: null },
+    },
   });

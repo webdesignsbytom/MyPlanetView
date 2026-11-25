@@ -198,6 +198,9 @@
   /* A second colour twisted into them, as baker's twine, when a map design asks for one: the
      cream of red-and-white twine until one is chosen (25 Nov 2026, the user's wish) */
   --map-string-2: #faf6ec;
+  /* The planned strings (25 Nov 2026, the user's wish): blue, apart from the visited ones' red */
+  --map-plan-string: #1d4ed8;
+  --map-plan-string-2: #faf6ec;
   --map-visit-1: #f0f038;
   --map-visit-2: #0eb4a6;
   --map-visit-3: #d8845a;
@@ -257,6 +260,9 @@
   /* The strings a coral red that shows on the night sky as on the land, twined with white */
   --map-string: #ff4d5e;
   --map-string-2: #ffffff;
+  /* The planned ones a brighter blue than the land's, so they show on it and on the sky */
+  --map-plan-string: #3b82f6;
+  --map-plan-string-2: #ffffff;
   /* The country under the pointer a deep blue, not the other styles' bright green (19 Nov
      2026, the user's wish) */
   --map-hover: #1e4f94;
@@ -271,6 +277,26 @@
   --map-visit-7: var(--map-land);
   --map-ice: var(--map-land);
   --map-ice-edge: var(--map-land-edge);
+}
+
+/* The engraved ocean (25 Nov 2026, the user's wish and artwork): the World map's countries on
+   an engraving of swirling waves (engraved-ocean-*). The sea colours are the engraving's deep
+   blue, for while the image loads; the grid and the words on the sea in its crests' cream. */
+[data-map-style='engraved'] {
+  --map-sea: #164a6b;
+  --map-sea-mid: #164a6b;
+  --map-sea-deep: #0b2d45;
+  --map-sea-ink: #f3ead2;
+  --map-grid: #f3ead2;
+}
+
+/* Its words, black as the World map's, wear a halo of the land's colour, so a name drawn on
+   the dark waves (a small island's, under it, or the grid's degrees) reads there too */
+[data-map-style='engraved'] g.fill-map-names {
+  stroke: var(--map-land);
+  stroke-width: 0.3em;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
 }
 
 /* Its words (country, pole and state names, the grid's degrees) are the ink on the land,
@@ -456,6 +482,8 @@
   --map-planned: #434343;
   --map-string: #393939;
   --map-string-2: #f6f6f6;
+  --map-plan-string: #8c8c8c;
+  --map-plan-string-2: #f6f6f6;
   --map-visit-1: #dcdcdc;
   --map-visit-2: #cdcdcd;
   --map-visit-3: #bebebe;
@@ -510,6 +538,8 @@
   --color-map-planned: var(--map-planned);
   --color-map-string: var(--map-string);
   --color-map-string-2: var(--map-string-2);
+  --color-map-plan-string: var(--map-plan-string);
+  --color-map-plan-string-2: var(--map-plan-string-2);
   --color-map-visit-1: var(--map-visit-1);
   --color-map-visit-2: var(--map-visit-2);
   --color-map-visit-3: var(--map-visit-3);

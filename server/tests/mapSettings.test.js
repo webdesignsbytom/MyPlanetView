@@ -42,10 +42,26 @@ describe('cleanMapSettings', () => {
     expect(cleanMapSettings({ showCelebrations: 'off' }).ok).toBe(false);
   });
 
+  // The next trip's countdown and the map key (25 Nov 2026, the user's wish): true or false
+  it('keeps the countdown and map key switches, refusing a value that isn’t true or false', () => {
+    expect(cleanMapSettings({ showTripCountdown: false, showMapKey: false })).toEqual({
+      ok: true,
+      value: { showTripCountdown: false, showMapKey: false },
+    });
+    expect(cleanMapSettings({ showTripCountdown: 'off' }).ok).toBe(false);
+    expect(cleanMapSettings({ showMapKey: 0 }).ok).toBe(false);
+  });
+
   // The owner's supporter badge switch (24 Nov 2026): true or false, nothing else
   it('keeps the supporter badge switch, refusing a value that isn’t true or false', () => {
     expect(cleanMapSettings({ showSupporterBadge: false })).toEqual({ ok: true, value: { showSupporterBadge: false } });
     expect(cleanMapSettings({ showSupporterBadge: 'no' }).ok).toBe(false);
+  });
+
+  // The planned strings shown or hidden apart from the visited ones (25 Nov 2026)
+  it('keeps the planned strings’ switch beside the strings’ own', () => {
+    expect(cleanMapSettings({ showStrings: true, showPlannedStrings: false })).toEqual({ ok: true, value: { showStrings: true, showPlannedStrings: false } });
+    expect(cleanMapSettings({ showPlannedStrings: 'yes' }).ok).toBe(false);
   });
 
   it('accepts both map types and refuses any other', () => {
@@ -93,7 +109,7 @@ describe('cleanMapSettings', () => {
   });
 
   it('accepts every style, Black and white among them, and drops the old switch for it', () => {
-    for (const style of ['animated', 'mono', 'old-map', 'starry']) {
+    for (const style of ['animated', 'mono', 'old-map', 'starry', 'engraved']) {
       expect(cleanMapSettings({ style })).toEqual({ ok: true, value: { style } });
     }
     expect(cleanMapSettings({ style: 'animated', blackAndWhite: true })).toEqual({ ok: true, value: { style: 'animated' } });

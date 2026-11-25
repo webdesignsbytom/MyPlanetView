@@ -166,6 +166,13 @@ export const BILLING_RATE_LIMIT = {
 
 // "Download my data" per signed-in user: the account, each map, and each page of 500
 // photos (with their signed links) is a request, so a big account makes a hundred or so
+// Feedback reports sent per user per hour (docs/API.md "Feedback"), keyed by user
+export const FEEDBACK_RATE_LIMIT = {
+  name: 'feedback-user',
+  windowMs: 60 * MINUTES,
+  max: 10,
+};
+
 export const DATA_EXPORT_RATE_LIMIT = {
   name: 'data-export',
   windowMs: 60 * MINUTES,

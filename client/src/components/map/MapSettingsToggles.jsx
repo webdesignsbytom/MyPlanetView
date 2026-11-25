@@ -9,7 +9,8 @@ import { MAP_SETTING_GROUPS, MAP_SETTING_TOGGLES } from '@/utils/map/mapSettings
 // the banner), in four groups.
 // The Detailed map type always draws the lines, their labels and the names, so those
 // switches are locked on there, with a note saying why. The banner only fits on wide
-// screens, so its switch only shows there too. Help ends with "Show the tips" (`onShowTips`;
+// screens, so its switch only shows there too; phones have no map key, so no switch for it
+// either. Help ends with "Show the tips" (`onShowTips`;
 // the toolbar's own "Tips" stamp until 24 Nov 2026, the user's wish: a shorter bar).
 function MapSettingsToggles({ settings, onChange, onShowTips = null }) {
   const detailedNoteId = useId();
@@ -42,7 +43,7 @@ function MapSettingsToggles({ settings, onChange, onShowTips = null }) {
                   onChange={(e) => onChange(toggle.key, e.target.checked)}
                   disabled={locked || (toggle.key === 'showGridLabels' && !settings.showGrid)}
                   ariaDescribedBy={locked ? detailedNoteId : undefined}
-                  wrapperClassName={toggle.wideOnly ? 'max-lg:hidden' : ''}
+                  wrapperClassName={toggle.wideOnly ? 'max-lg:hidden' : toggle.notOnPhones ? 'phone:hidden' : ''}
                 />
               );
             })}
