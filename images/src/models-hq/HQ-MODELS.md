@@ -45,5 +45,5 @@ card and the celebration. `[x]` is done (rendered at 1024 px, 256 samples).
 11. [x] cartagena, [x] teatro-amazonas, [x] fallingwater, [x] terracotta-army, [x] potala-palace, [x] borobudur, [x] petronas-towers, [x] marina-bay-sands, [x] sheikh-zayed-mosque, [x] golden-temple
 12. [x] hawa-mahal, [x] red-fort, [x] gateway-of-india*, [x] humayuns-tomb*, [x] qutb-minar*, [x] himeji-castle, [x] itsukushima, [x] kinkakuji*, [x] fushimi-inari*, [x] hiroshima-peace-memorial*
 13. [x] gyeongbokgung, [x] grand-palace-bangkok, [x] wat-arun*, [x] bagan, [x] ha-long-bay, [x] tigers-nest, [x] leshan-buddha, [x] registan, [x] dome-of-the-rock*, [x] western-wall
-14. [ ] persepolis, [ ] naqsh-e-jahan, [ ] karnak, [ ] victoria-falls, [ ] kilimanjaro, [ ] lalibela, [ ] djenne, [ ] hassan-tower, [ ] ait-benhaddou, [ ] cappadocia
+14. [x] persepolis, [x] naqsh-e-jahan, [x] karnak, [x] victoria-falls, [x] kilimanjaro, [x] lalibela, [x] djenne, [x] hassan-tower, [x] ait-benhaddou, [x] cappadocia
 15. [ ] mostar, [ ] fishermans-bastion*, [ ] forth-bridge*, [ ] kiyomizu-dera*, [ ] summer-palace*, [ ] rila, [ ] sigiriya, [ ] konark, [ ] verona-arena, [ ] delphi

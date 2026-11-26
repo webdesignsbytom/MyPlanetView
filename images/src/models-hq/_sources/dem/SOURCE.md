@@ -20,3 +20,4 @@ EU-DEM layers".
 - `sierra_12_*`: the Sierra Nevada, behind the Alhambra (zoom 12, x 2008–2012, y 1591–1594).
 - `matterhorn_13_*`: the Matterhorn (zoom 13, x 4269–4271, y 2914–2916).
 - `canyon_13_*`: the Grand Canyon at Grand Canyon Village (zoom 13, x 1543–1546, y 3212–3215).
+- `kilimanjaro_11_*`: Kilimanjaro, Kibo and Mawenzi (zoom 11, x 1235–1238, y 1040–1042).
