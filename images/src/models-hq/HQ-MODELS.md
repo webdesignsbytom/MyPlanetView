@@ -32,10 +32,10 @@ A `*` marks a model the country maps don't draw (`onMap: false`); it still shows
 card and the celebration. `[x]` is done (rendered at 1024 px, 256 samples).
 
 1. [x] sagrada-familia, [x] parthenon, [x] statue-of-liberty, [x] great-wall, [x] christ-the-redeemer, [x] machu-picchu, [x] chichen-itza, [x] angkor-wat, [x] petra, [x] stonehenge
-2. [ ] mont-saint-michel, [ ] tower-bridge*, [ ] louvre*, [ ] notre-dame*, [ ] arc-de-triomphe*, [ ] brandenburg-gate, [ ] st-peters, [ ] trevi-fountain*, [ ] pantheon*, [ ] hagia-sophia
-3. [ ] burj-khalifa, [ ] forbidden-city*, [ ] temple-of-heaven*, [ ] cn-tower, [ ] mount-rushmore, [ ] moai, [ ] abu-simbel, [ ] table-mountain, [ ] sydney-harbour-bridge*, [ ] uluru
-4. [ ] alhambra, [ ] florence-duomo*, [ ] ponte-vecchio*, [ ] rialto-bridge*, [ ] venice, [ ] pompeii, [ ] milan-cathedral*, [ ] cologne-cathedral, [ ] charles-bridge*, [ ] prague-castle
-5. [ ] hungarian-parliament, [ ] schonbrunn, [ ] blue-mosque*, [ ] galata-tower*, [ ] edinburgh-castle, [ ] buckingham-palace*, [ ] westminster-abbey*, [ ] tower-of-london*, [ ] london-eye*, [ ] versailles*
+2. [x] mont-saint-michel, [x] tower-bridge*, [x] louvre*, [x] notre-dame*, [x] arc-de-triomphe*, [x] brandenburg-gate, [x] st-peters, [x] trevi-fountain*, [x] pantheon*, [x] hagia-sophia
+3. [x] burj-khalifa, [x] forbidden-city*, [x] temple-of-heaven*, [x] cn-tower, [x] mount-rushmore, [x] moai, [x] abu-simbel, [x] table-mountain, [x] sydney-harbour-bridge*, [x] uluru
+4. [x] alhambra, [x] florence-duomo*, [x] ponte-vecchio*, [x] rialto-bridge*, [x] venice, [x] pompeii, [x] milan-cathedral*, [x] cologne-cathedral, [x] charles-bridge*, [x] prague-castle
+5. [x] hungarian-parliament, [x] schonbrunn, [x] blue-mosque*, [x] galata-tower*, [x] edinburgh-castle, [x] buckingham-palace*, [x] westminster-abbey*, [x] tower-of-london*, [x] london-eye*, [x] versailles*
 6. [ ] sacre-coeur*, [ ] chambord, [ ] carcassonne, [ ] kinderdijk, [ ] bryggen, [ ] dubrovnik, [ ] meteora, [ ] santorini, [ ] hallstatt, [ ] lake-bled
 7. [ ] peles-castle, [ ] bran-castle, [ ] spasskaya-tower*, [ ] saint-petersburg, [ ] grand-place, [ ] amsterdam-canals, [ ] rijksmuseum*, [ ] park-guell*, [ ] casa-batllo*, [ ] plaza-de-espana*
 8. [ ] segovia-aqueduct, [ ] pont-du-gard, [ ] belem-tower, [ ] pena-palace*, [ ] cordoba-mezquita, [ ] seville-giralda, [ ] krakow, [ ] strasbourg, [ ] ephesus, [ ] st-stephens*

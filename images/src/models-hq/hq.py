@@ -12,7 +12,7 @@ import bpy, bmesh, math, random, sys, json, os
 from mathutils import Vector, Matrix
 from bpy_extras.object_utils import world_to_camera_view
 
-__all__ = ['bpy', 'bmesh', 'math', 'random', 'Vector', 'Matrix', 'M', 'G', 'PLINTH_R', 'setup', 'lin', 'material', 'finish',
+__all__ = ['glazed', 'elevation', 'geo', 'blob_cloud', 'scatter_on', 'bpy', 'bmesh', 'math', 'random', 'Vector', 'Matrix', 'M', 'G', 'PLINTH_R', 'setup', 'lin', 'material', 'finish',
            'box', 'box_m', 'cylinder', 'lathe', 'annulus', 'bar', 'tube', 'arch_outline', 'add_prism', 'arcade_ring',
            'arcade_path', 'column', 'gable_roof', 'hip_roof', 'pyramid', 'paving_strip', 'tree', 'cypress', 'person', 'windows', 'banded', 'striped',
            'parented', 'water_disc', 'render', 'multi', 'fir', 'spire', 'clip_to_plinth', 'slab', 'rect', 'layered', 'terrain', 'loft', 'subsurf', 'masonry', 'import_model', 'SOURCES', 'stand_sourced']
@@ -195,6 +195,8 @@ def build_materials():
         'rock': material('rock', '#8f8778', 0.85, vary='#6f685c', vary_scale=4, bump=0.5, bump_scale=30),
         'rockLight': material('rockLight', '#a99f8c', 0.85, vary='#8d8473', vary_scale=4, bump=0.45, bump_scale=30),
         'shadow': material('shadow', '#2b2622', 0.8),
+        # window glass: matte, as a glossy pane mirrors the white sky at the camera's angle and reads as a white or black hole
+        'window': material('window', '#4f6779', 0.45, vary='#5d7689', vary_scale=4),
         'glass': material('glass', '#3b4a56', 0.08, metallic=0.4, coat=0.6),
         'glassBronze': material('glassBronze', '#4a3e30', 0.1, metallic=0.5, coat=0.6),
         # roofs and metal
@@ -559,6 +561,25 @@ def windows(name, mat, specs, depth=0.006, matrix=None):
     return finish(name, bm, mat, smooth_sides=False)
 
 
+def glazed(name, specs, frame, glass=None, depth=0.006, bars=True):
+    """Windows that read as windows, never black holes: for each opening (as windows() takes them) a
+    frame of `frame` round a pane of slate-blue glass (or `glass`: a door's wood), with a mullion and a
+    transom on the square ones."""
+    glass = M['window'] if glass is None else glass
+    rims, panes, cross = [], [], []
+    for x, y, z0, w, h, normal, shape in specs:
+        m = min(w, h) * 0.16
+        rims.append((x, y, z0 - m * 0.5, w + 2 * m, h + 1.5 * m, normal, shape))
+        panes.append((x, y, z0, w, h, normal, shape))
+        if bars and shape == 'rect' and glass is M['window']:
+            cross.append((x, y, z0, w * 0.1, h, normal, 'rect'))
+            cross.append((x, y, z0 + h * 0.62, w, h * 0.07, normal, 'rect'))
+    windows(name + 'Frames', frame, rims, depth=depth)
+    windows(name, glass, panes, depth=depth + 0.003)
+    if cross:
+        windows(name + 'Bars', frame, cross, depth=depth + 0.005)
+
+
 def column(name, mat, x, y, z0, h, r, matrix=None, cap_mat=None, segs=12):
     objs = [cylinder(name, mat, r, h * 0.9, (x, y, z0 + h * 0.05), segs=segs, r2=r * 0.88, matrix=matrix)]
     m = matrix if matrix is not None else Matrix.Identity(4)
@@ -668,6 +689,48 @@ def person(name, x, y, rot, shirt, pose='stand', scale=1.0, z=None):
 def parented(objs, parent):
     for ob in objs:
         ob.parent = parent
+
+
+def blob_cloud(name, mat, blobs, subdivisions=2):
+    """Many little spheres as one mesh (a wood's crowns, a hedge, rocks), built in a single pass: adding
+    them one by one to a bmesh slows with every one (thousands took minutes). blobs: (centre, radius,
+    how squat)."""
+    tmpl = bmesh.new()
+    bmesh.ops.create_icosphere(tmpl, subdivisions=subdivisions, radius=1.0)
+    tv = [v.co.copy() for v in tmpl.verts]
+    tf = [[v.index for v in f.verts] for f in tmpl.faces]
+    tmpl.free()
+    verts, faces = [], []
+    for c, r, squat in blobs:
+        base = len(verts)
+        verts += [(c[0] + v.x * r, c[1] + v.y * r, c[2] + v.z * r * squat) for v in tv]
+        faces += [[base + i for i in f] for f in tf]
+    me = bpy.data.meshes.new(name)
+    me.from_pydata(verts, [], faces)
+    me.polygons.foreach_set('use_smooth', [True] * len(me.polygons))
+    me.materials.append(mat)
+    ob = bpy.data.objects.new(name, me)
+    COL.objects.link(ob)
+    return ob
+
+
+def scatter_on(ground, tries, area, keep, seed=7):
+    """Points on a ground mesh (as terrain() makes it): `tries` random (x, y) in area (x0, x1, y0, y1),
+    each kept when keep(point, face's material index) says so; returns the kept points."""
+    from mathutils.bvhtree import BVHTree
+    r_ = random.Random(seed)
+    bm = bmesh.new()
+    bm.from_mesh(ground.data)
+    bm.faces.ensure_lookup_table()
+    hits = BVHTree.FromBMesh(bm)
+    out = []
+    for _ in range(tries):
+        x, y = r_.uniform(area[0], area[1]), r_.uniform(area[2], area[3])
+        hit = hits.ray_cast(Vector((x, y, 3.0)), Vector((0, 0, -1)), 5.0)
+        if hit[0] is not None and keep(hit[0], bm.faces[hit[2]].material_index):
+            out.append(hit[0].copy())
+    bm.free()
+    return out
 
 
 def multi(name, bm, mats, smooth=True):
@@ -804,6 +867,51 @@ def terrain(name, height, mats, pick, rings=60, segs=192, r_max=None):
     return multi(name, bm, mats)
 
 
+def elevation(prefix, zoom):
+    """Real ground heights from the open terrain tiles kept in _sources/dem/ (Mapzen's terrarium
+    tiles on AWS: <prefix>_<zoom>_<x>_<y>.png, a height in each pixel's red, green and blue): a
+    function (lat, lon) -> metres above sea level, read bilinearly; 0 off the tiles."""
+    import numpy as np
+    folder = os.path.join(SOURCES, 'dem')
+    tiles = {}
+    for f in os.listdir(folder):
+        bits = f[:-4].split('_')
+        if f.endswith('.png') and len(bits) == 4 and bits[0] == prefix and bits[1] == str(zoom):
+            im = bpy.data.images.load(os.path.join(folder, f))
+            w, h = im.size
+            px = np.empty(w * h * 4, dtype=np.float32)
+            im.pixels.foreach_get(px)
+            rgb = np.round(px.reshape(h, w, 4)[::-1, :, :3] * 255.0)       # Blender's rows start at the bottom
+            tiles[(int(bits[2]), int(bits[3]))] = rgb[:, :, 0] * 256.0 + rgb[:, :, 1] + rgb[:, :, 2] / 256.0 - 32768.0
+            bpy.data.images.remove(im)
+    n = 2 ** zoom * 256
+
+    def pixel(ix, iy):
+        t = tiles.get((ix // 256, iy // 256))
+        return float(t[iy % 256, ix % 256]) if t is not None else 0.0
+
+    def at(lat, lon):
+        gx = (lon + 180.0) / 360.0 * n - 0.5
+        gy = (1.0 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2.0 * n - 0.5
+        ix, iy = int(math.floor(gx)), int(math.floor(gy))
+        fx, fy = gx - ix, gy - iy
+        return (pixel(ix, iy) * (1 - fx) * (1 - fy) + pixel(ix + 1, iy) * fx * (1 - fy)
+                + pixel(ix, iy + 1) * (1 - fx) * fy + pixel(ix + 1, iy + 1) * fx * fy)
+    return at
+
+
+def geo(lat0, lon0, metres_per_unit, turn=0.0):
+    """The tile's (x, y) -> (lat, lon) round (lat0, lon0): north up, or turned by `turn` degrees (180
+    puts north towards the camera)."""
+    c, s_ = math.cos(math.radians(turn)), math.sin(math.radians(turn))
+
+    def to(x, y):
+        east = (x * c + y * s_) * metres_per_unit
+        north = (-x * s_ + y * c) * metres_per_unit
+        return lat0 + north / 111320.0, lon0 + east / (111320.0 * math.cos(math.radians(lat0)))
+    return to
+
+
 def loft(name, mat, rings, cap=True, smooth=True):
     """A surface through rings of points (each a list of (x, y, z), all the same length, going round):
     robes, drapery, bodies; the first and last rings capped."""
@@ -869,9 +977,11 @@ def masonry(name, base, mortar, scale=40.0, rough=0.85, vary=None):
 SOURCES = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_sources')
 
 
-def import_model(folder, name='sourced'):
+def import_model(folder, name='sourced', skip=None, group=None):
     """A sourced model (_sources/<folder>/, as downloaded: glb, gltf, fbx, obj or stl) brought in as
-    one mesh object, its parts' transforms baked in, Z up; None when nothing is there yet."""
+    one mesh object, its parts' transforms baked in, Z up; None when nothing is there yet. `skip(names)`,
+    given a part's material names, leaves that part out (a figure standing in for scale); `group(names)`
+    gives each kept part's faces a material index (rock, stone, lettering), for the caller's slots."""
     root = os.path.join(SOURCES, folder)
     found = []
     for base, _, files in os.walk(root):
@@ -899,11 +1009,18 @@ def import_model(folder, name='sourced'):
     for o in new:
         if o.type != 'MESH':
             continue
+        names = [m.name for m in o.data.materials if m is not None]
+        if skip is not None and skip(names):
+            continue
         ev = o.evaluated_get(dg)
         tmp = ev.to_mesh()
         part = bmesh.new()
         part.from_mesh(tmp)
         bmesh.ops.transform(part, matrix=o.matrix_world, verts=part.verts)
+        if group is not None:
+            index = group(names)
+            for f in part.faces:
+                f.material_index = index
         me = bpy.data.meshes.new('tmp')
         part.to_mesh(me)
         part.free()
