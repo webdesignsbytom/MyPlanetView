@@ -108,5 +108,5 @@ for k, (x, y) in enumerate(((0.82, 0.15), (0.78, -0.2))):
 for k, (x, y, shirt) in enumerate(((-0.2, -0.55, 'red'), (0.1, -0.6, 'blue'), (0.3, -0.7, 'yellow'), (-0.4, -0.75, 'green'), (0.0, -0.95, 'red'), (-0.6, -0.6, 'blue'))):
     person(f'p{k}', x, y, rng.random() * 6, shirt, z=G + 0.005)
 
-windows('openings', M['shadow'], OPEN, depth=0.01)
+glazed('openings', OPEN, M['roseDark'], depth=0.008)
 render('hagia-sophia')

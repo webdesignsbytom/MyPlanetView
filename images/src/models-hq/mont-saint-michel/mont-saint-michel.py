@@ -55,7 +55,7 @@ for k, ang in enumerate((-160, -120, -85, -50, -15, 10)):
     x, y = 0.5 * math.cos(a), 0.05 + 0.47 * math.sin(a)
     cylinder(f'rampartTower{k}', M['msmWall'], 0.045, WZ - G + 0.04, (x, y, G), segs=24)
     spire(f'rampartCap{k}', M['slate'], x, y, WZ + 0.04, 0.05, 0.08, finial=False)
-windows('kingsGate', M['shadow'], [(0.0, -0.44, G, 0.05, 0.08, (0, -1), 'round')], depth=0.04)
+glazed('kingsGate', [(0.0, -0.44, G, 0.05, 0.08, (0, -1), 'round')], M['msmStone'], glass=M['door'], depth=0.04)
 
 # ------------------------------------------------------------------ the village climbing the slope
 k = 0
@@ -74,14 +74,14 @@ for ring, (rad, n, a0, a1) in enumerate(((0.4, 9, -150, -20), (0.32, 7, -140, -3
         add_prism(bm, [bm.verts.new(m @ Vector(q)) for q in quad], [bm.verts.new(m @ Vector(q)) for q in ridge])
         finish(f'houseRoof{k}', bm, M['slate'], smooth_sides=False)
         nrm = Vector((math.cos(a), math.sin(a)))
-        windows(f'houseWin{k}', M['shadow'], [(x + nrm.x * 0.028, y + nrm.y * 0.028, z + 0.025, 0.015, 0.022, (nrm.x, nrm.y), 'rect')], depth=0.004)
+        glazed(f'houseWin{k}', [(x + nrm.x * 0.028, y + nrm.y * 0.028, z + 0.025, 0.015, 0.022, (nrm.x, nrm.y), 'rect')], M['whiteStone'], depth=0.004, bars=False)
         k += 1
 
 # ------------------------------------------------------------------ La Merveille and the abbey
 Z = G + TZ
 box('merveille', M['msmWall'], (-0.02, 0.36, G + 0.3), (0.42, 0.12, 0.36), bevel=0.003)
 specs = [(x, 0.42, G + z, 0.025, 0.07, (0, 1), 'pointed') for x in (-0.18, -0.1, -0.02, 0.06, 0.14) for z in (0.22, 0.34)]
-windows('merveilleWindows', M['shadow'], specs, depth=0.008)
+glazed('merveilleWindows', specs, M['msmStone'], depth=0.008)
 for x in (-0.22, -0.13, -0.04, 0.05, 0.14, 0.2):
     box(f'merveilleButtress{x}', M['msmWall'], (x, 0.43, G + 0.28), (0.022, 0.03, 0.34), bevel=0.003)
 gable_roof('merveilleRoof', M['slate'], -0.23, 0.19, 0.3, 0.42, G + 0.48, 0.07, over=0.008)
@@ -93,13 +93,13 @@ gable_roof('lodgingRoof', M['slate'], -0.03, 0.27, -0.16, -0.08, Z + 0.03, 0.05,
 CX0, CX1, CY = -0.24, 0.24, 0.1
 box('nave', M['msmWall'], ((CX0 + CX1) / 2, CY, Z + 0.09), (CX1 - CX0, 0.12, 0.18), bevel=0.003)
 gable_roof('naveRoof', M['slate'], CX0, CX1, CY - 0.06, CY + 0.06, Z + 0.18, 0.07, over=0.008)
-windows('naveWindows', M['shadow'], [(x, CY - 0.061, Z + 0.07, 0.022, 0.08, (0, -1), 'pointed') for x in (-0.18, -0.1, 0.1, 0.18)], depth=0.008)
+glazed('naveWindows', [(x, CY - 0.061, Z + 0.07, 0.022, 0.08, (0, -1), 'pointed') for x in (-0.18, -0.1, 0.1, 0.18)], M['msmStone'], depth=0.008)
 for x in (0.1, 0.16, 0.22):
     for s in (-1, 1):
         box(f'pier{x}{s}', M['msmWall'], (x, CY + s * 0.11, Z + 0.06), (0.02, 0.025, 0.12), bevel=0.002)
         bar(f'flyer{x}{s}', M['msmWall'], (x, CY + s * 0.11, Z + 0.12), (x, CY + s * 0.06, Z + 0.17), 0.014)
 box('tower', M['msmWall'], (0.0, CY, Z + 0.24), (0.1, 0.1, 0.13), bevel=0.003)
-windows('towerWindows', M['shadow'], [(nx * 0.05, CY + ny * 0.05, Z + 0.22, 0.02, 0.06, (nx, ny), 'pointed') for nx, ny in ((0, -1), (-1, 0), (1, 0))], depth=0.006)
+glazed('towerWindows', [(nx * 0.05, CY + ny * 0.05, Z + 0.22, 0.02, 0.06, (nx, ny), 'pointed') for nx, ny in ((0, -1), (-1, 0), (1, 0))], M['msmStone'], depth=0.006)
 for sx in (-1, 1):
     for sy in (-1, 1):
         spire(f'towerPinnacle{sx}{sy}', M['msmWall'], sx * 0.045, CY + sy * 0.045, Z + 0.305, 0.012, 0.06, finial=False)

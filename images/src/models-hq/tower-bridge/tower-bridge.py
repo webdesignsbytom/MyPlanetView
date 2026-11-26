@@ -48,8 +48,16 @@ for s in (-1, 1):
 for s in (-1, 1):
     x = s * TX
     lathe(f'pier{s}', M['granite3'], [(0.2, 0), (0.2, 0.1), (0.17, 0.12)], (x, 0, G - 0.01), segs=40, sx=0.75, sy=1.0)
-    box(f'tower{s}', M['portland'], (x, 0, (G + 0.1 + ZW + 0.06) / 2), (TW, TD, ZW + 0.06 - G - 0.1), bevel=0.003)
-    for zz in (ZD + 0.12, ZW - 0.12, ZW + 0.06):
+    # the tower: solid below the road, the road's pointed arch right through it, solid above
+    ZT = ZD + 0.2
+    box(f'towerFoot{s}', M['portland'], (x, 0, (G + 0.1 + ZD) / 2), (TW, TD, ZD - G - 0.1), bevel=0.003)
+    prof = [(-TD / 2, ZD - 0.005), (-0.068, ZD - 0.005)] + [(0.068 * math.cos(t), ZD + 0.1 + 0.068 * math.sin(t) + 0.035 * (1 - abs(math.cos(t)))) for t in (math.pi * (1 - k / 12) for k in range(13))] + [(0.068, ZD - 0.005), (TD / 2, ZD - 0.005), (TD / 2, ZT), (-TD / 2, ZT)]
+    bm = bmesh.new()
+    add_prism(bm, [bm.verts.new((x - TW / 2, u, z)) for u, z in prof], [bm.verts.new((x + TW / 2, u, z)) for u, z in prof])
+    finish(f'towerArch{s}', bm, M['portland'], bevel=0.002, smooth_sides=False)
+    box(f'tower{s}', M['portland'], (x, 0, (ZT - 0.005 + ZW + 0.06) / 2), (TW, TD, ZW + 0.06 - ZT + 0.005), bevel=0.003)
+    box(f'tunnelRoad{s}', M['asphalt'], (x, 0, ZD - 0.001), (TW + 0.01, 0.12, 0.006), bevel=0)
+    for zz in (ZT + 0.012, ZW - 0.12, ZW + 0.06):
         box(f'towerCourse{s}{zz:.2f}', M['granite3'], (x, 0, zz), (TW + 0.012, TD + 0.012, 0.014), bevel=0.002)
     # the road's arch through the tower, and windows
     for ny in (-1, 1):
@@ -58,7 +66,6 @@ for s in (-1, 1):
             for zz in (ZD + 0.22, ZD + 0.36, ZD + 0.5):
                 OPEN.append((x + u, ny * TD / 2, zz, 0.032, 0.09, (0, ny), 'pointed'))
     for nx in (-1, 1):
-        OPEN.append((x + nx * TW / 2, 0, ZD, 0.09, 0.15, (nx, 0), 'pointed'))
         for zz in (ZD + 0.3, ZD + 0.48):
             OPEN.append((x + nx * TW / 2, 0, zz, 0.04, 0.1, (nx, 0), 'pointed'))
     # the turrets, the pavilion roof and its spirelet
@@ -138,6 +145,6 @@ for k, (mx, mh) in enumerate(((-0.11, 0.42), (0.0, 0.5), (0.1, 0.44))):
 for k, (x, y, shirt) in enumerate(((-0.95, -0.05, 'red'), (-0.8, 0.05, 'blue'), (0.95, 0.04, 'yellow'), (-1.3, -0.5, 'green'), (1.3, 0.5, 'red'))):
     person(f'p{k}', x, y, rng.random() * 6, shirt, z=ZD + 0.004 if abs(x) < 1.12 else G + 0.11)
 
-windows('openings', M['shadow'], OPEN, depth=0.01)
+glazed('openings', OPEN, M['granite3'], depth=0.008)
 finish('steelwork', BARS, M['steelBlue'], smooth_sides=False)
 render('tower-bridge')

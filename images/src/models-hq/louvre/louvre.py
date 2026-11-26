@@ -109,7 +109,7 @@ for k, tri in enumerate((((-0.36, -0.45), (-0.06, -0.45), (-0.36, -0.75)), ((0.0
 for k, (x, y, shirt) in enumerate(((-0.15, -0.55, 'red'), (0.12, -0.6, 'blue'), (0.3, -0.35, 'yellow'), (-0.4, -0.3, 'green'), (0.0, -0.72, 'red'), (-0.55, 0.15, 'blue'), (0.55, 0.2, 'yellow'), (0.2, -0.85, 'green'))):
     person(f'p{k}', x, y, rng.random() * 6, shirt, z=G + 0.006)
 
-windows('openings', M['shadow'], OPEN, depth=0.008)
+glazed('openings', OPEN, M['whiteStone'], depth=0.007)
 windows('dormers', M['lutetian'], DORM, depth=0.03)
 finish('pyramidFrame', BARS, M['frame'], smooth_sides=False)
 render('louvre')

@@ -16,7 +16,7 @@ M['trav'] = material('travertineSP', '#e3d7bd', 0.6, vary='#d3c5a6', vary_scale=
 M['travShade'] = material('travertineShade', '#cdbf9f', 0.65, vary='#bdae8e', vary_scale=22, bump=0.14, bump_scale=150)
 M['domeLead'] = banded(material('domeLead', '#9aa2a6', 0.45, vary='#8c9498', vary_scale=14, metallic=0.4), 'Z', 40.0, strength=0.15)
 M['sampietrini'] = material('sampietrini', '#a49d92', 0.85, vary='#918a80', vary_scale=60, bump=0.35, bump_scale=300)
-OPEN, STATUES = [], bmesh.new()
+OPEN, DOORS, STATUES = [], [], bmesh.new()
 COLS = bmesh.new()
 FY = -0.18           # the basilica's front
 
@@ -73,7 +73,7 @@ for s in (-1, 1):
 
 # ------------------------------------------------------------------ the basilica's front
 FW, FH = 0.82, 0.36
-box('nave', M['trav'], (0, FY + 0.5, G + 0.2), (0.5, 1.0, 0.4), bevel=0.004)
+box('nave', M['trav'], (0, FY + 0.515, G + 0.2), (0.5, 0.97, 0.4), bevel=0.004)   # its front a hair behind the facade's: faces lying on each other render black
 gable_roof('naveRoof', M['domeLead'], -0.25, 0.25, FY + 0.06, FY + 0.95, G + 0.4, 0.08, over=0.008, along='y')
 box('front', M['trav'], (0, FY + 0.04, G + FH / 2), (FW, 0.08, FH), bevel=0.003)
 box('frontStep', M['travShade'], (0, FY - 0.04, G + 0.012), (FW + 0.06, 0.1, 0.024), bevel=0.002)
@@ -90,14 +90,14 @@ finish('pediment', bm, M['trav'], smooth_sides=False)
 for k in range(13):
     statue(-0.36 + k * 0.06, FY + 0.03, G + 0.38, 1.25)
 for u in (-0.33, -0.245, -0.16, 0.16, 0.245, 0.33):
-    OPEN.append((u, FY - 0.001, G + 0.035, 0.035, 0.1, (0, -1), 'round'))
+    DOORS.append((u, FY - 0.001, G + 0.035, 0.035, 0.1, (0, -1), 'round'))
     OPEN.append((u, FY - 0.001, G + 0.17, 0.03, 0.06, (0, -1), 'rect'))
     OPEN.append((u, FY - 0.001, G + 0.25, 0.024, 0.035, (0, -1), 'rect'))
 for u in (-0.08, 0.0, 0.08):
-    OPEN.append((u, FY - 0.001, G + 0.035, 0.05, 0.12, (0, -1), 'round'))
+    DOORS.append((u, FY - 0.001, G + 0.035, 0.05, 0.12, (0, -1), 'round'))
 OPEN.append((0, FY - 0.001, G + 0.18, 0.06, 0.08, (0, -1), 'round'))
 for s in (-1, 1):
-    box(f'clockTower{s}', M['trav'], (s * 0.44, FY + 0.06, G + 0.38), (0.08, 0.08, 0.08), bevel=0.003)
+    box(f'clockTower{s}', M['trav'], (s * 0.44, FY + 0.06, G + 0.36), (0.08, 0.08, 0.12), bevel=0.003)   # down into the attic: no gap under it
     cylinder(f'clock{s}', M['white'], 0.026, 0.006, (0, 0, 0), segs=24, matrix=Matrix.Translation((s * 0.44, FY + 0.018, G + 0.385)) @ Matrix.Rotation(math.pi / 2, 4, 'X'))
     lathe(f'cupola{s}', M['domeLead'], [(0.045, 0), (0.035, 0.03), (0.0, 0.05)], (s * 0.44, FY + 0.06, G + 0.42), segs=16, smooth=True)
 
@@ -142,6 +142,7 @@ box('apse', M['trav'], (0, DY + 0.3, G + 0.2), (0.4, 0.3, 0.4), bevel=0.004)
 for k, (x, y, shirt) in enumerate(((-0.15, -0.55, 'red'), (0.1, -0.6, 'blue'), (0.3, -0.75, 'yellow'), (-0.35, -0.8, 'green'), (0.05, -1.05, 'red'), (-0.2, -1.1, 'blue'), (0.45, -1.0, 'yellow'), (-0.05, -0.4, 'green'))):
     person(f'p{k}', x, y, rng.random() * 6, shirt, z=G + 0.004)
 
-windows('openings', M['shadow'], OPEN, depth=0.01)
+glazed('openings', OPEN, M['travShade'], depth=0.008)
+glazed('doors', DOORS, M['travShade'], glass=M['door'], depth=0.008)
 finish('statues', STATUES, M['trav'], smooth_all=True)
 render('st-peters')

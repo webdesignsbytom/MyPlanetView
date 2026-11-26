@@ -1,10 +1,11 @@
 # The Trevi Fountain in the high-quality look (hq.py): the Palazzo Poli's front made into a triumphal
-# arch, its giant Corinthian columns and pilasters, the great niche where Oceanus stands, the side
-# niches with Abundance and Health, the attic with its inscription, balustrade, statues and the papal
-# arms, the palace's wings with their rows of windows; in front the fountain's sculpture: Oceanus on
-# his shell chariot, the sea horses and tritons on the travertine rocks (the scanned sculpture in
-# _sources/trevi-fountain/, RaizVR, CC BY 4.0, taken from its piazza and given the travertine); the
-# great basin of blue water with its rim, the piazza's steps, the houses round it, and people.
+# arch, its giant Corinthian columns, the great niche where Oceanus stands on his shell chariot, the
+# side niches with Abundance and Health, the attic with its inscription, statues and the papal arms,
+# the palace's wings with their windows and balustrades, the sea horses and tritons on the travertine
+# rocks spilling into the basin (the modelled fountain in _sources/trevi-fountain-yalta/, Yalta, CC BY
+# 4.0: its right wing mirrored for the left, which the model leaves out, and given the diorama's
+# travertine); the wide basin of turquoise water, a rounded rectangle, inside its rim; the palace's
+# body and tiled roof behind; the piazza's cobbles, and people.
 # Run: blender -b --factory-startup -P trevi-fountain.py -- trevi-fountain-1024.png 1024 trevi-fountain.blend [samples]
 import os, sys
 sys.dont_write_bytecode = True
@@ -13,108 +14,116 @@ from hq import *
 
 setup()
 rng = random.Random(1762)
-M['trav'] = material('travertineT', '#e9dfc9', 0.6, vary='#dacfb5', vary_scale=22, bump=0.18, bump_scale=150)
-M['travShade'] = material('travertineShadeT', '#d3c7ad', 0.65, vary='#c3b79d', vary_scale=22, bump=0.18, bump_scale=150)
-M['travRock'] = material('travertineRock', '#e6dccb', 0.7, vary='#cfc3ad', vary_scale=9, bump=0.35, bump_scale=90)
-M['trevi'] = material('treviWater', '#3fa8c8', 0.05, vary='#56b8d4', vary_scale=4, coat=0.9)
-M['sampietrini'] = material('sampietrini', '#a49d92', 0.85, vary='#918a80', vary_scale=60, bump=0.35, bump_scale=300)
-M['ochre'] = material('ochre', '#d9a25a', 0.8, vary='#c8924d', vary_scale=24, bump=0.12, bump_scale=200)
-M['ochreRed'] = material('ochreRed', '#c76f45', 0.8, vary='#b5613b', vary_scale=24, bump=0.12, bump_scale=200)
-OPEN = []
-FY = 0.28            # the palace's front
-PZ = G + 0.07        # the piazza's level; the basin's water is below it
-WZ = G + 0.012
+M['trav'] = material('travertineT', '#ece3cf', 0.6, vary='#ded3bc', vary_scale=22, bump=0.15, bump_scale=150)
+M['travRock'] = material('travertineRock', '#ddd0b6', 0.7, vary='#cbbd9f', vary_scale=9, bump=0.35, bump_scale=90)
+M['travShade'] = material('travertineShadeT', '#bdb099', 0.65, vary='#ad9f87', vary_scale=22, bump=0.15, bump_scale=150)
+M['trevi'] = material('treviWater', '#1593ad', 0.08, vary='#27abc2', vary_scale=3, coat=0.25)
+M['sampietrini'] = masonry('sampietrini', '#8e8880', '#625d57', scale=120, rough=0.85, vary='#827c74')
+M['paneGlass'] = material('paneGlass', '#4f6779', 0.45, vary='#5d7689', vary_scale=4)   # matte: a glossy pane mirrors the white sky at this camera's angle
+M['stucco'] = material('stuccoPoli', '#e9ddc4', 0.7, vary='#dccfb3', vary_scale=20, bump=0.1, bump_scale=180)
 
-# ------------------------------------------------------------------ the piazza, the houses round it
-# the piazza round the basin (never over it): in front, and either side
-slab('piazzaFront', M['sampietrini'], [(-1.6, -1.6), (1.6, -1.6), (1.6, -0.3), (-1.6, -0.3)], G - 0.004, PZ, margin=0.05)
-for s_ in (-1, 1):
-    slab(f'piazzaSide{s_}', M['sampietrini'], [(s_ * 0.86, -0.3), (s_ * 1.6, -0.3), (s_ * 1.6, 0.6), (s_ * 0.86, 0.6)], G - 0.004, PZ, margin=0.05)
-for k, (x, y, w, d, h, mat) in enumerate(((-1.05, -0.35, 0.3, 0.8, 0.5, 'ochre'), (1.05, -0.35, 0.3, 0.8, 0.48, 'ochreRed'))):
-    box(f'house{k}', M[mat], (x, y, PZ + h / 2), (w, d, h), bevel=0.004)
-    hip_roof(f'houseRoof{k}', M['terracotta'], x, y, PZ + h, w, d, 0.07, over=0.015)
-    nx = 1 if x < 0 else -1
-    for j in range(5):
-        for zz in (0.06, 0.18, 0.3, 0.4):
-            OPEN.append((x + nx * w / 2, y - d / 2 + (j + 0.5) * d / 5, PZ + zz, 0.035, 0.07, (nx, 0), 'rect'))
+# The model is in its own units (about 4.8 cm each): the front faces -y, the ground is z 0, and the
+# central arch's axis is x = AXIS. Everything here is laid out in those units and placed by TO().
+AXIS = 201.05           # the central arch's axis
+EDGE = 393.65           # where the central arch ends and the right wing begins
+K = 0.0028              # the model's units to the tile's
+MID = 109.0             # the model's y that goes to the tile's middle
+ZB = G + 0.006          # the piazza's top: the model's ground
 
-# ------------------------------------------------------------------ the basin
-BW, BD = 0.78, 0.52
-basin = [(BW * math.cos(a), FY - 0.02 + BD * 1.0 * math.sin(a) * (1.0 if math.sin(a) < 0 else 0.0)) for a in [math.pi + math.pi * k / 40 for k in range(41)]]
-rim = [(x * 1.06, FY - 0.02 + (y - FY + 0.02) * 1.08) for x, y in basin]
-slab('basinFloor', M['travShade'], basin, G - 0.004, WZ - 0.004, margin=0.05)
-slab('water', M['trevi'], basin, WZ - 0.004, WZ, margin=0.05)
-bm = bmesh.new()
-ring_out = rim
-ring_in = list(reversed(basin))
-add_prism(bm, [bm.verts.new((x, y, G - 0.004)) for x, y in ring_out + ring_in], [bm.verts.new((x, y, PZ + 0.025)) for x, y in ring_out + ring_in])
-finish('basinRim', bm, M['trav'], bevel=0.004, smooth_sides=False)
-# the piazza cut down to the basin: the steps between
-for k in range(3):
-    pts = [(x * (1.1 + 0.05 * k), FY - 0.02 + (y - FY + 0.02) * (1.13 + 0.06 * k)) for x, y in basin]
-    bm = bmesh.new()
-    ring_out = pts
-    ring_in = list(reversed([(x * (1.07 + 0.05 * k), FY - 0.02 + (y - FY + 0.02) * (1.1 + 0.06 * k)) for x, y in basin]))
-    add_prism(bm, [bm.verts.new((x, y, PZ - 0.004)) for x, y in ring_out + ring_in], [bm.verts.new((x, y, PZ + 0.004)) for x, y in ring_out + ring_in])
-    finish(f'step{k}', bm, M['travShade'], smooth_sides=False)
 
-# ------------------------------------------------------------------ the Palazzo Poli's front
-PH = 0.86
-box('palace', M['trav'], (0.0, FY + 0.25, PZ + PH / 2), (1.62, 0.5, PH), bevel=0.004)
-box('arch', M['trav'], (0.0, FY - 0.015, PZ + 0.45), (0.56, 0.05, 0.9), bevel=0.004)
-COLS = bmesh.new()
-for u in (-0.24, -0.08, 0.08, 0.24):
-    x = u
-    bmesh.ops.create_cone(COLS, cap_ends=True, segments=16, radius1=0.022, radius2=0.019, depth=0.6, matrix=Matrix.Translation((x, FY - 0.05, PZ + 0.2 + 0.3)))
-    bmesh.ops.create_cube(COLS, size=1.0, matrix=Matrix.Translation((x, FY - 0.05, PZ + 0.19)) @ Matrix.Diagonal((0.06, 0.06, 0.02, 1)))
-    bmesh.ops.create_cone(COLS, cap_ends=True, segments=16, radius1=0.02, radius2=0.03, depth=0.04, matrix=Matrix.Translation((x, FY - 0.05, PZ + 0.82)))
-for u in (-0.72, -0.56, -0.4, 0.4, 0.56, 0.72):
-    bmesh.ops.create_cube(COLS, size=1.0, matrix=Matrix.Translation((u, FY - 0.004, PZ + 0.5)) @ Matrix.Diagonal((0.03, 0.012, 0.62, 1)))
-finish('orders', COLS, M['trav'], smooth_sides=False)
-box('ground', M['travShade'], (0.0, FY - 0.006, PZ + 0.09), (1.64, 0.03, 0.18), bevel=0.002)
-box('entablature', M['trav'], (0.0, FY - 0.03, PZ + 0.86), (1.66, 0.08, 0.05), bevel=0.003)
-box('attic', M['trav'], (0.0, FY - 0.02, PZ + 0.95), (0.6, 0.07, 0.14), bevel=0.003)
-box('inscription', M['travShade'], (0.0, FY - 0.056, PZ + 0.94), (0.4, 0.004, 0.05))
-box('balustrade', M['trav'], (0.0, FY + 0.1, PZ + PH + 0.02), (1.62, 0.04, 0.04), bevel=0.002)
-lathe('arms', M['trav'], [(0.0, 0), (0.07, 0.03), (0.075, 0.08), (0.04, 0.12), (0.0, 0.13)], (0.0, FY - 0.02, PZ + 1.0), segs=20, smooth=True, sy=0.35)
-STAT = bmesh.new()
-for u in (-0.22, -0.08, 0.08, 0.22):
-    bmesh.ops.create_cone(STAT, cap_ends=True, segments=8, radius1=0.017, radius2=0.013, depth=0.07, matrix=Matrix.Translation((u, FY - 0.03, PZ + 1.055)))
-    bmesh.ops.create_icosphere(STAT, subdivisions=1, radius=0.012, matrix=Matrix.Translation((u, FY - 0.03, PZ + 1.1)))
-for u in (-0.16, 0.16):
-    bmesh.ops.create_cone(STAT, cap_ends=True, segments=8, radius1=0.022, radius2=0.016, depth=0.11, matrix=Matrix.Translation((u, FY - 0.05, PZ + 0.31)))
-    bmesh.ops.create_icosphere(STAT, subdivisions=1, radius=0.015, matrix=Matrix.Translation((u, FY - 0.05, PZ + 0.38)))
-finish('statues', STAT, M['trav'], smooth_all=True)
-OPEN.append((0.0, FY - 0.041, PZ + 0.18, 0.2, 0.46, (0, -1), 'round'))
-for u in (-0.16, 0.16):
-    OPEN.append((u, FY - 0.041, PZ + 0.24, 0.07, 0.18, (0, -1), 'round'))
-    OPEN.append((u, FY - 0.041, PZ + 0.5, 0.07, 0.08, (0, -1), 'rect'))
-for u in (-0.64, -0.48, -0.32, 0.32, 0.48, 0.64):
-    for zz, hh in ((0.24, 0.12), (0.46, 0.12), (0.68, 0.08)):
-        OPEN.append((u, FY - 0.001, PZ + zz, 0.06, hh, (0, -1), 'rect'))
+def TO(x, y, z=0.0):
+    """A point in the model's units, on the tile."""
+    return ((x - AXIS) * K, (y - MID) * K, ZB + z * K)
 
-# ------------------------------------------------------------------ the sculpture: Oceanus, the sea horses, the tritons and the rocks
-CROP = (60.0, 74.0, -184.0, -154.0, 10.7, 29.0)     # the scan's box round them (its metres)
-K = 0.0327                                          # the scan's metres to the tile's units
-src = import_model('trevi-fountain', 'sculpture')
+
+def flat(pts):
+    return [TO(x, y)[:2] for x, y in pts]
+
+
+# ------------------------------------------------------------------ the fountain and the palace front
+STONE, ROCK, LETTERS, PANE = 0, 1, 2, 3
+GROUPS = {'material_7': ROCK, 'Mat.1': LETTERS, 'material_3': LETTERS, 'material_0': LETTERS, 'material_6': PANE}
+src = import_model('trevi-fountain-yalta', 'fountain',
+                   # the scale figure, and the model's own ground slab (the basin and piazza are ours)
+                   skip=lambda names: any('sophia' in n or n == 'material_5' for n in names),
+                   group=lambda names: next((GROUPS[n] for n in names if n in GROUPS), STONE))
 if src is not None:
     me = src.data
     bm = bmesh.new()
     bm.from_mesh(me)
-    x0, x1, y0, y1, z0, z1 = CROP
-    for co, no in (((x0, 0, 0), (-1, 0, 0)), ((x1, 0, 0), (1, 0, 0)), ((0, y0, 0), (0, -1, 0)), ((0, y1, 0), (0, 1, 0)), ((0, 0, z0), (0, 0, -1)), ((0, 0, z1), (0, 0, 1))):
-        bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no, clear_outer=True)
+    # the left wing: the right wing (and its rocks) mirrored about the arch's axis
+    bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=(EDGE, 0, 0), plane_no=(1, 0, 0))
+    right = [f for f in bm.faces if all(v.co.x >= EDGE - 1e-3 for v in f.verts)]
+    dup = bmesh.ops.duplicate(bm, geom=right)['geom']
+    for v in (e for e in dup if isinstance(e, bmesh.types.BMVert)):
+        v.co.x = 2 * AXIS - v.co.x
+    bmesh.ops.reverse_faces(bm, faces=[e for e in dup if isinstance(e, bmesh.types.BMFace)])
     bm.to_mesh(me)
     bm.free()
-    # the scan's front faces -x: turned to face -y, the palace's side against our palace's front
-    me.transform(Matrix.Translation((0.0, FY - 0.04, WZ - 0.004)) @ Matrix.Rotation(math.radians(90), 4, 'Z') @ Matrix.Scale(K, 4) @ Matrix.Translation((-x1, -(y0 + y1) / 2, -z0)))
-    me.materials.clear()
-    me.materials.append(M['travRock'])
+    me.transform(Matrix.Translation((0, 0, ZB - 0.002)) @ Matrix.Scale(K, 4) @ Matrix.Translation((-AXIS, -MID, 0)))
+    # (no materials.clear(): it resets every face's material index to 0; the imported mesh has no slots)
+    for m in (M['trav'], M['travRock'], M['travShade'], M['paneGlass']):
+        me.materials.append(m)
     for p in me.polygons:
         p.use_smooth = True
+    xs = [v.co.x for v in me.vertices]
+    print('FOUNTAIN x', round(min(xs), 3), round(max(xs), 3), 'faces', len(me.polygons), 'by material', [sum(1 for p in me.polygons if p.material_index == i) for i in range(4)])
 
-for k, (x, y, shirt) in enumerate(((-0.5, -0.32, 'red'), (-0.35, -0.42, 'blue'), (0.3, -0.42, 'yellow'), (0.55, -0.3, 'green'), (0.0, -0.65, 'red'), (-0.2, -0.7, 'blue'), (0.2, -0.72, 'yellow'), (-0.7, -0.15, 'green'))):
-    person(f'p{k}', x, y, rng.random() * 6, shirt, z=PZ)
+# ------------------------------------------------------------------ the basin: a rounded rectangle, its rim and water
+BW, BF, BB, BR = 350.0, -230.0, 150.0, 150.0     # half its width, its front, its back (under the rocks), its corners' radius
+RIM, RIMZ, WATERZ = 18.0, 18.0, 10.0              # the rim's width and top, the water's level
 
-windows('openings', M['shadow'], OPEN, depth=0.01)
+
+def basin_path(grow):
+    """The basin's sides and front, from back left round to back right, `grow` outwards."""
+    w, f, r = BW + grow, BF - grow, BR + grow
+    pts = [(-w, BB)]
+    for j in range(13):
+        a = math.pi + math.pi / 2 * j / 12
+        pts.append((-w + r + r * math.cos(a), f + r + r * math.sin(a)))
+    for j in range(13):
+        a = 1.5 * math.pi + math.pi / 2 * j / 12
+        pts.append((w - r + r * math.cos(a), f + r + r * math.sin(a)))
+    pts.append((w, BB))
+    return [(AXIS + x, y) for x, y in pts]
+
+
+inner, outer = basin_path(0.0), basin_path(RIM)
+slab('water', M['trevi'], flat(inner), G - 0.004, ZB + WATERZ * K, margin=0.03)
+bm = bmesh.new()
+band = flat(inner + list(reversed(outer)))
+add_prism(bm, [bm.verts.new((x, y, G - 0.003)) for x, y in band], [bm.verts.new((x, y, ZB + RIMZ * K)) for x, y in band])
+finish('rim', bm, M['trav'], bevel=0.006, smooth_sides=False)
+
+# ------------------------------------------------------------------ the piazza round the basin, and behind
+front = [(-2.0, -2.0), (2.0, -2.0), (2.0, TO(0, BB)[1])] + list(reversed(flat(outer))) + [(-2.0, TO(0, BB)[1])]
+slab('piazza', M['sampietrini'], front, G - 0.004, ZB, margin=0.03)
+slab('piazzaBack', M['sampietrini'], [(-2.0, TO(0, BB)[1]), (2.0, TO(0, BB)[1]), (2.0, 2.0), (-2.0, 2.0)], G - 0.004, ZB - 0.0006, margin=0.03)
+
+# ------------------------------------------------------------------ the palace's body and roof behind its front
+WING = 2 * AXIS - 630.0          # the mirrored wing's outer edge
+TOP = 370.0                      # the wings' top (their balustrade stands on it)
+body = clip_to_plinth([TO(WING + 2, 221)[:2], TO(628, 221)[:2], TO(628, 430)[:2], TO(WING + 2, 430)[:2]], 0.05)
+bm = bmesh.new()
+add_prism(bm, [bm.verts.new((x, y, ZB - 0.002)) for x, y in body], [bm.verts.new((x, y, ZB + TOP * K)) for x, y in body])
+finish('palace', bm, M['stucco'], smooth_sides=False)
+for z0, z1 in ((0, 12), (TOP - 14, TOP - 2)):
+    band_ = clip_to_plinth([TO(WING - 1, 223)[:2], TO(631, 223)[:2], TO(631, 433)[:2], TO(WING - 1, 433)[:2]], 0.045)
+    bm = bmesh.new()
+    add_prism(bm, [bm.verts.new((x, y, ZB + z0 * K)) for x, y in band_], [bm.verts.new((x, y, ZB + z1 * K)) for x, y in band_])
+    finish(f'palaceBand{z0}', bm, M['trav'], smooth_sides=False)
+# the roof: tiles sloping up from every side to the ridge
+M['roofTiles'] = banded(material('roofTiles', '#b4562f', 0.65, vary='#9f4a28', vary_scale=10, bump=0.1, bump_scale=200), 'Z', 40.0, strength=0.5)
+lo = clip_to_plinth([TO(WING - 4, 214)[:2], TO(634, 214)[:2], TO(634, 436)[:2], TO(WING - 4, 436)[:2]], 0.04)
+cx, cy = sum(p[0] for p in lo) / len(lo), sum(p[1] for p in lo) / len(lo)
+hi = [(cx + (x - cx) * 0.86, cy + (y - cy) * 0.25) for x, y in lo]
+bm = bmesh.new()
+add_prism(bm, [bm.verts.new((x, y, ZB + TOP * K)) for x, y in lo], [bm.verts.new((x, y, ZB + (TOP + 62) * K)) for x, y in hi])
+finish('palaceRoof', bm, M['roofTiles'], smooth_sides=False)
+
+# ------------------------------------------------------------------ people at the rim
+for k, (x, y, shirt) in enumerate(((-0.75, -1.08, 'red'), (-0.45, -1.15, 'blue'), (-0.1, -1.12, 'yellow'), (0.2, -1.16, 'green'), (0.55, -1.1, 'red'),
+                                     (0.85, -1.0, 'blue'), (-1.05, -0.75, 'green'), (1.12, -0.7, 'yellow'), (0.0, -1.3, 'blue'), (-0.3, -1.33, 'red'))):
+    person(f'p{k}', x, y, rng.random() * 6, shirt, z=ZB)
+
 render('trevi-fountain')
