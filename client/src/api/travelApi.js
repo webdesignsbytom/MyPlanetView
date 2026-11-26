@@ -45,11 +45,12 @@ export const getMapStats = (mapId) => data(client.get(`${MAPS_API}/${enc(mapId)}
 export const tickLandmark = (mapId, landmarkId) => data(client.put(`${MAPS_API}/${enc(mapId)}/landmarks/${enc(landmarkId)}/been`, {}));
 export const untickLandmark = (mapId, landmarkId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/landmarks/${enc(landmarkId)}/been`));
 // Strings between places (docs/API.md "Strings"): tie one -> { string }; the automatic ones
-// -> { strings, added, full }; untie one -> { removed: id }; untie them all -> { removed: count }
-export const tieMapString = (mapId, from, to) => data(client.post(`${MAPS_API}/${enc(mapId)}/strings`, { from, to }));
-export const tieAutoMapStrings = (mapId) => data(client.post(`${MAPS_API}/${enc(mapId)}/strings/auto`, {}));
+// -> { strings, added, full }; untie one -> { removed: id }; untie them all -> { removed: count }.
+// Each of a `kind`, VISITED or PLANNED (25 Nov 2026)
+export const tieMapString = (mapId, from, to, kind = 'VISITED') => data(client.post(`${MAPS_API}/${enc(mapId)}/strings`, { from, to, kind }));
+export const tieAutoMapStrings = (mapId, kind = 'VISITED') => data(client.post(`${MAPS_API}/${enc(mapId)}/strings/auto`, { kind }));
 export const untieMapString = (mapId, stringId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/strings/${enc(stringId)}`));
-export const untieAllMapStrings = (mapId) => data(client.delete(`${MAPS_API}/${enc(mapId)}/strings`));
+export const untieAllMapStrings = (mapId, kind = 'VISITED') => data(client.delete(`${MAPS_API}/${enc(mapId)}/strings`, { params: { kind } }));
 // One year of a map (docs/API.md "Year in travel") -> { recap }
 export const getYearRecap = (mapId, year) => data(client.get(`${MAPS_API}/${enc(mapId)}/recap/${enc(year)}`));
 // A map's own design for a map style (docs/API.md "Map designs"):
@@ -230,10 +231,12 @@ const mapOrShared = ({ mapId, shareCode }, what) =>
 export const quickFillVisits = (mapId, countryCodes) => data(client.post(`${MAPS_API}/${enc(mapId)}/visits/quick-fill`, { countryCodes }));
 export const getPassport = (where, { travellerId = null } = {}) =>
   data(client.get(`${mapOrShared(where, 'passport')}${query({ traveller: travellerId || undefined })}`));
-export const setStampPhoto = (mapId, landmarkId, photoId) =>
-  data(client.put(`${MAPS_API}/${enc(mapId)}/passport/stamps/${enc(landmarkId)}/photo`, { photoId }));
-export const clearStampPhoto = (mapId, landmarkId) =>
-  data(client.delete(`${MAPS_API}/${enc(mapId)}/passport/stamps/${enc(landmarkId)}/photo`));
+// A traveller's passport photo and signature (25 Nov 2026; docs/API.md "Passport"): any of
+// `{ photo: { photoId, focusX, focusY, zoom } | null, signature: path | null }` -> `{ traveller }`
+export const updateTravellerPassport = (mapId, travellerId, body) =>
+  data(client.patch(`${MAPS_API}/${enc(mapId)}/travellers/${enc(travellerId)}/passport`, body));
+// A stamp's photo isn't chosen in the passport any more (24 Nov 2026, the user's wish): the
+// server's PUT|DELETE …/passport/stamps/:landmarkId/photo stay, unused by the site
 // -> { badges, newlyEarned } (the owner and editors award as they load)
 export const getBadges = (where) => data(client.get(mapOrShared(where, 'badges')));
 // Life's One Shots (docs/API.md "Life's One Shots"): the ticks (and, for editors, what the

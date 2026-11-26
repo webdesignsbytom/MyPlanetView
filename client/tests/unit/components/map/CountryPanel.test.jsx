@@ -7,6 +7,7 @@ import useMomentPage from '@/hooks/useMomentPage';
 import { getSubdivisions } from '@/api/travelApi';
 import { SplitUkProvider } from '@/hooks/useSplitUk';
 import { formatDay } from '@/utils/functions/dates';
+import { todayDay } from '@/utils/map/celebrations';
 import { stubMatchMedia, withProviders } from './helpers';
 
 vi.mock('@/api/travelApi', () => ({ getSubdivisions: vi.fn() }));
@@ -34,7 +35,11 @@ vi.mock('@/components/photos/PhotoGrid', () => ({
   ),
 }));
 vi.mock('@/components/photos/PrintDownload', () => ({ default: () => <span data-print-download /> }));
+vi.mock('@/components/shows/ShareShow', () => ({ default: ({ mapId, source, defaultTitle }) => <span data-share-show={mapId} data-country={source.country} data-title={defaultTitle} /> }));
 vi.mock('@/components/offers/TravelDesk', () => ({ default: ({ countryCodes }) => <span data-travel-desk={countryCodes.join(',')} /> }));
+vi.mock('@/components/postcards/SendPostcard', () => ({
+  default: ({ countryCode, placeName, photoFilters }) => <span data-send-postcard={countryCode} data-place={placeName} data-photos={photoFilters ? photoFilters.country : ''} />,
+}));
 vi.mock('@/components/map/CountryLandmarks', () => ({ default: ({ countryCode }) => <span data-landmarks={countryCode} /> }));
 
 const list = (items = []) => ({ photos: items, moments: items, loading: false, error: null, nextCursor: null, loadMore: vi.fn(), reload: vi.fn(), movePhoto: vi.fn() });
@@ -93,9 +98,20 @@ describe('CountryPanel', () => {
     const select = stub().querySelector('select');
     expect(select).not.toBeNull();
     fireEvent.change(select, { target: { value: 'LIVED' } });
-    await waitFor(() => expect(onSetVisit).toHaveBeenCalledWith('FR', 'LIVED', { firstVisitedOn: undefined }));
+    // Newly lived in: dated today (24 Nov 2026, the user's wish)
+    await waitFor(() => expect(onSetVisit).toHaveBeenCalledWith('FR', 'LIVED', { firstVisitedOn: todayDay() }));
     fireEvent.change(select, { target: { value: '' } });
     await waitFor(() => expect(onSetVisit).toHaveBeenLastCalledWith('FR', null, undefined));
+  });
+
+  it('keeps the date a country has when it’s marked again, and dates no wish', async () => {
+    const dated = open({ canEdit: true, visit: { status: 'WANT_TO_GO', firstVisitedOn: '2010-04-01' } });
+    fireEvent.change(dated.stub().querySelector('select'), { target: { value: 'VISITED' } });
+    await waitFor(() => expect(dated.onSetVisit).toHaveBeenCalledWith('FR', 'VISITED', { firstVisitedOn: '2010-04-01' }));
+    dated.unmount();
+    const wish = open({ canEdit: true });
+    fireEvent.change(wish.stub().querySelector('select'), { target: { value: 'WANT_TO_GO' } });
+    await waitFor(() => expect(wish.onSetVisit).toHaveBeenCalledWith('FR', 'WANT_TO_GO', { firstVisitedOn: undefined }));
   });
 
   it('makes the dropdown and the date a step slimmer in the stub only', () => {
@@ -129,7 +145,8 @@ describe('CountryPanel', () => {
     const onVisitMarked = vi.fn();
     const { ticket, onSetVisit } = open({ canEdit: true, visit: { status: 'WANT_TO_GO', firstVisitedOn: null }, onVisitMarked });
     fireEvent.change(ticket.querySelector('aside select'), { target: { value: 'VISITED' } });
-    await waitFor(() => expect(onVisitMarked).toHaveBeenCalledWith('FR', 'WANT_TO_GO', 'VISITED', null));
+    // Dated the day it's marked (24 Nov 2026, the user's wish), so the stamp is dated too
+    await waitFor(() => expect(onVisitMarked).toHaveBeenCalledWith('FR', 'WANT_TO_GO', 'VISITED', todayDay()));
     expect(onSetVisit).toHaveBeenCalledTimes(1);
   });
 
@@ -240,9 +257,20 @@ describe('CountryPanel', () => {
     const grid = ticket.querySelector('[data-photo-grid]');
     const before = (a, b) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
     expect(before(actions, grid)).toBe(true);
-    expect(actions.querySelector('[data-print-download], [data-travel-desk]')).toBeNull();
+    expect(actions.querySelector('[data-print-download], [data-travel-desk], [data-share-show]')).toBeNull();
     expect(before(grid, ticket.querySelector('[data-print-download]'))).toBe(true);
+    // A slideshow of some of the country's photos, with its own link (25 Nov 2026), beside the download
+    const share = ticket.querySelector('[data-share-show]');
+    expect(before(grid, share)).toBe(true);
+    expect(share.getAttribute('data-country')).toBe('FR');
+    expect(share.getAttribute('data-title')).toBe('France');
     expect(before(grid, ticket.querySelector('[data-travel-desk]'))).toBe(true);
+    // A postcard from here (26 Nov 2026), with the place's photos to choose from
+    const postcard = ticket.querySelector('[data-send-postcard]');
+    expect(before(grid, postcard)).toBe(true);
+    expect(postcard.getAttribute('data-send-postcard')).toBe('FR');
+    expect(postcard.getAttribute('data-place')).toBe('France');
+    expect(postcard.getAttribute('data-photos')).toBe('FR');
   });
 
   it('has no empty row over the photos when there’s nothing to press', () => {
@@ -256,6 +284,8 @@ describe('CountryPanel', () => {
     expect(screen.queryByText('Add photos')).toBeNull();
     expect(screen.queryByText('Plan a trip')).toBeNull();
     expect(ticket.querySelector('[data-print-download]')).toBeNull();
+    expect(ticket.querySelector('[data-share-show]')).toBeNull();
+    expect(ticket.querySelector('[data-send-postcard]')).toBeNull();
   });
 
   it('opens the country on its own map, counting the states visited', async () => {
@@ -287,6 +317,9 @@ describe('CountryPanel', () => {
     fireEvent.click(screen.getByText('Plan a trip'));
     expect(onPlanTrip).toHaveBeenCalledWith('XB');
     expect(ticket.querySelector('[data-travel-desk]').getAttribute('data-travel-desk')).toBe('ID');
+    // A postcard from Bali itself, with no photos of its own to choose from (they're Indonesia's)
+    expect(ticket.querySelector('[data-send-postcard]').getAttribute('data-send-postcard')).toBe('XB');
+    expect(ticket.querySelector('[data-send-postcard]').getAttribute('data-photos')).toBe('');
     fireEvent.click(screen.getByText('Open Indonesia'));
     expect(onOpenPlace).toHaveBeenCalledWith('ID');
     fireEvent.click(screen.getByLabelText('Open the map of Indonesia'));

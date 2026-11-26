@@ -5,13 +5,14 @@ import AdminThemesMainContainer from '@/components/admin/themes/AdminThemesMainC
 import ThemeEditDialog from '@/components/admin/themes/ThemeEditDialog';
 import ThemeDeleteDialog from '@/components/admin/themes/ThemeDeleteDialog';
 import ThemeItem from '@/components/admin/themes/ThemeItem';
-import { createTheme, deleteTheme, forgetThemes, getAdminThemes, updateTheme } from '@/api/themesApi';
+import { createTheme, deleteTheme, fillSuggestedThemes, forgetThemes, getAdminThemes, updateTheme } from '@/api/themesApi';
 
 vi.mock('@/api/themesApi', () => ({
   getAdminThemes: vi.fn(),
   createTheme: vi.fn(),
   updateTheme: vi.fn(),
   deleteTheme: vi.fn(),
+  fillSuggestedThemes: vi.fn(),
   forgetThemes: vi.fn(),
 }));
 
@@ -23,7 +24,7 @@ beforeEach(() => {
   // Only the date is fake: 15 November 2026
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date('2026-11-15T12:00:00Z'));
-  for (const fn of [getAdminThemes, createTheme, updateTheme, deleteTheme, forgetThemes]) fn.mockReset();
+  for (const fn of [getAdminThemes, createTheme, updateTheme, deleteTheme, fillSuggestedThemes, forgetThemes]) fn.mockReset();
 });
 
 afterEach(() => {
@@ -175,6 +176,29 @@ describe('AdminThemesMainContainer', () => {
     getAdminThemes.mockResolvedValue({ themes: year });
     render(<AdminThemesMainContainer />);
     expect(await screen.findByText('Every month of the coming year has a theme.')).toBeTruthy();
+  });
+
+  it('fills the empty months with suggested themes in one press, saying how many', async () => {
+    getAdminThemes.mockResolvedValue({ themes: [NOV] });
+    const filled = [NOV, ...Array.from({ length: 11 }, (_, i) => ({ id: `s${i}`, month: new Date(Date.UTC(2026, 11 + i, 1)).toISOString().slice(0, 7), title: `Idea ${i}`, blurb: 'Words.', entryCount: 0 }))];
+    fillSuggestedThemes.mockResolvedValue({ themes: filled, added: 11 });
+    render(<AdminThemesMainContainer />);
+    await press(await screen.findByLabelText('Fill the empty months with suggested themes'));
+    expect(fillSuggestedThemes).toHaveBeenCalledTimes(1);
+    expect(forgetThemes).toHaveBeenCalled();
+    expect(screen.getByText('11 suggested themes added. Change or delete any before its month starts.')).toBeTruthy();
+    expect(screen.queryByLabelText('Months with no theme')).toBeNull();
+    expect(screen.getAllByText('Every month of the coming year has a theme.').length).toBeGreaterThan(0);
+    expect(screen.getByLabelText('December 2026: Idea 0')).toBeTruthy();
+  });
+
+  it('says when the suggested themes couldn’t be added', async () => {
+    getAdminThemes.mockResolvedValue({ themes: [NOV] });
+    fillSuggestedThemes.mockRejectedValue({ friendlyMessage: 'Server down.' });
+    render(<AdminThemesMainContainer />);
+    await press(await screen.findByLabelText('Fill the empty months with suggested themes'));
+    expect(screen.getByText('Server down.').getAttribute('role')).toBe('alert');
+    expect(screen.getByLabelText('Months with no theme')).toBeTruthy();
   });
 
   it('says why when the themes can’t be loaded, and reloads', async () => {

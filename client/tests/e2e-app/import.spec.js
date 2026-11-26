@@ -166,6 +166,13 @@ test('Settings links a map to the import', async ({ page }) => {
   await openMap(page);
   const settings = await openTool(page, 'Map settings', 'Settings');
   await settings.getByRole('tab', { name: 'This map' }).click();
-  await settings.getByRole('link', { name: 'Bring trips from Polarsteps' }).click();
+  const link = settings.getByRole('link', { name: 'Bring trips from Polarsteps' });
+  // The same size as the buttons around it (24 Nov 2026, the user's report: it was bigger)
+  const height = async (control) => (await control.boundingBox()).height;
+  const download = settings.getByRole('button', { name: 'Download or print photos' });
+  const bring = settings.getByRole('button', { name: 'Choose travels to bring' });
+  expect(Math.abs((await height(link)) - (await height(download)))).toBeLessThan(1);
+  expect(Math.abs((await height(link)) - (await height(bring)))).toBeLessThan(1);
+  await link.click();
   await expect(page).toHaveURL(/\/import\?map=map-home$/);
 });

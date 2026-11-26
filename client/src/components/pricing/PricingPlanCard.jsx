@@ -4,22 +4,27 @@ import { useAuth } from '@/auth/AuthContext';
 // Constants
 import { ACCOUNT_PAGE_URL, SIGN_UP_PAGE_URL } from '@/utils/constants/routes';
 import { formatPence, planOf } from '@/utils/constants/plans';
+// Utils
+import { planCardLabel } from '@/utils/plans/billing';
 // Components
 import AppLink from '@/components/common/AppLink';
 import PricingFeature from '@/components/pricing/PricingFeature';
 
 // One plan as a boarding pass: the class on a parchment strip, its fare monthly and
 // yearly, what it adds, and a way aboard (sign up; once signed in, the plan on the
-// account page). The first render is signed out, as the pre-rendered page is.
-function PricingPlanCard({ ticket }) {
+// account page, the account's own plan saying so once `currentPlan` is known). The first
+// render is signed out, as the pre-rendered page is.
+function PricingPlanCard({ ticket, currentPlan = null }) {
   const { user } = useAuth();
   const plan = planOf(ticket.id);
   const free = plan.price.MONTH === 0;
   const headingId = `plan-${plan.id.toLowerCase()}-heading`;
+  const isCurrent = Boolean(user) && Boolean(currentPlan) && planOf(currentPlan).id === plan.id;
 
   return (
     <article
       aria-labelledby={headingId}
+      data-current-plan={isCurrent || undefined}
       className='ticket-edge grid min-w-0 grid-rows-[auto_1fr] overflow-hidden rounded-lg bg-paper-cream text-colour4'
     >
       <header className='paper-aged grid gap-1 border-b-2 border-dashed border-poster-brown px-6 pb-4 pt-5 text-poster-ink'>
@@ -54,8 +59,8 @@ function PricingPlanCard({ ticket }) {
 
         <AppLink
           to={user ? ACCOUNT_PAGE_URL : SIGN_UP_PAGE_URL}
-          label={user ? (free ? 'Your plan' : `Choose ${plan.name}`) : free ? 'Start your map' : `Start with ${plan.name}`}
-          className={`${free ? 'btn-paper' : 'btn-poster'} justify-self-stretch text-center`}
+          label={planCardLabel({ planId: plan.id, signedIn: Boolean(user), currentPlan })}
+          className={`${free || isCurrent ? 'btn-paper' : 'btn-poster'} justify-self-stretch text-center`}
         />
       </div>
     </article>

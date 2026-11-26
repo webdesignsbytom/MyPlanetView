@@ -16,7 +16,7 @@ function MonthNav({ months, current }) {
         {months.map(({ month, slug }) => (
           <li key={slug}>
             {month === current ? (
-              <span aria-current='page' className='block border-2 border-poster-red px-2 py-1.5 text-center font-travel uppercase tracking-wide text-poster-red'>
+              <span aria-current='page' className='block border-2 border-poster-red-deep px-2 py-1.5 text-center font-travel uppercase tracking-wide text-poster-red-deep'>
                 {MONTH_LABELS[month - 1]}
               </span>
             ) : (

@@ -1,9 +1,12 @@
 import React from 'react';
+// Utils
+import { mapActionClass } from '@/utils/map/mapActionClass';
 
 // A button inside a map panel, in the travel-paperwork style (a compact btn-poster), the
 // same in every map style. `quiet` for secondary actions (parchment), `danger` for
 // removing things (btn-danger: a delete button's red, white lettering). A long label wraps inside the
-// button instead of widening the panel.
+// button instead of widening the panel. The classes are utils/map/mapActionClass.js, which a
+// link that should look like one uses too.
 function MapActionButton({ children, onClick, type = 'button', disabled = false, quiet = false, danger = false, busy = false }) {
   return (
     <button
@@ -11,9 +14,7 @@ function MapActionButton({ children, onClick, type = 'button', disabled = false,
       onClick={onClick}
       disabled={disabled || busy}
       aria-busy={busy ? 'true' : undefined}
-      className={`grid-flow-col justify-center gap-2 text-center [grid-auto-columns:minmax(0,max-content)] [--btn-leading:1.5rem] [--btn-pad-x:1rem] [--btn-pad-y:0.25rem] [--btn-size:1.0625rem] ${
-        danger ? 'btn-danger' : quiet ? 'btn-paper' : 'btn-poster'
-      }`}
+      className={mapActionClass({ quiet, danger })}
     >
       {children}
     </button>

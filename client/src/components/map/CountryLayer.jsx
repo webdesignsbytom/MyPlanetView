@@ -1,35 +1,16 @@
 import React, { memo, useCallback, useEffect, useRef } from 'react';
-// Data
-import { COUNTRIES, POLE_PLACES } from '@/utils/map/countries';
-import { COUNTRY_SHAPES } from '@/utils/map/countryShapes';
-import { UK_NATION_SHAPES } from '@/utils/map/ukNationShapes';
 // Components
 import CountryShape from './CountryShape';
 import MicroStateDot from './MicroStateDot';
 import PoleMarker from './PoleMarker';
 // Utils
-import { isAntarctic, isPole } from '@/utils/map/specialPlaces';
+import { drawnPlaces, shapesOf } from '@/utils/map/drawnPlaces';
 import { setHoverPoint } from '@/utils/map/hoverPoint';
 
-// The shapes (countries and Antarctica), the micro-states' dots, and the poles' markers;
-// each list also without Antarctica's places, for when that's hidden, and with the UK's
-// four nations drawn in its place, for a map that splits the UK (ukNationShapes.js). Regions
-// (regionPlaces.js) are shapes and a dot like any place, in their country's colour.
-const shapesOf = (code) => COUNTRY_SHAPES[code] ?? UK_NATION_SHAPES[code];
+// The shapes (countries and Antarctica), the micro-states' dots, and the poles' markers, as the
+// map is drawn (utils/map/drawnPlaces.js): regions are shapes and a dot like any place, in their
+// country's colour
 const NO_PLANS = new Set();
-const SHAPED = COUNTRIES.filter((c) => COUNTRY_SHAPES[c.code]);
-const SHAPED_SPLIT_UK = [...SHAPED.filter((c) => c.code !== 'GB'), ...COUNTRIES.filter((c) => c.kind === 'NATION')];
-const DOTTED = COUNTRIES.filter((c) => !COUNTRY_SHAPES[c.code] && !isPole(c.code) && c.kind !== 'NATION');
-const notAntarctic = (c) => !isAntarctic(c.code);
-const layerOf = (shaped) => ({
-  withAntarctica: { shaped, dotted: DOTTED, poles: POLE_PLACES },
-  withoutAntarctica: {
-    shaped: shaped.filter(notAntarctic),
-    dotted: DOTTED.filter(notAntarctic),
-    poles: POLE_PLACES.filter(notAntarctic),
-  },
-});
-const LAYERS = { whole: layerOf(SHAPED), splitUk: layerOf(SHAPED_SPLIT_UK) };
 
 // A finger held still on a country this long shows its postcard (17 Nov 2026, the user's
 // wish: phones have no hover); moving it further than this first is a pan, and hides it
@@ -66,8 +47,7 @@ function CountryLayer({
   const hoveredRef = useRef(null);
   // Set by a long press (below), so the click it ends with opens nothing
   const longPressedRef = useRef(false);
-  const layers = splitUk ? LAYERS.splitUk : LAYERS.whole;
-  const layer = showAntarctica ? layers.withAntarctica : layers.withoutAntarctica;
+  const layer = drawnPlaces({ splitUk, showAntarctica });
 
   // With pan and zoom on, the viewport's afterTap skips drags and double-taps (which zoom)
   const handleClick = useCallback(

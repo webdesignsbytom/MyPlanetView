@@ -74,7 +74,7 @@ test.describe('Trips', () => {
 
     // Back on the map: Finland and Norway are visited, Sweden isn't
     await page.getByRole('link', { name: `Back to ${HOME_MAP}` }).click();
-    await expectStats(page, '10 countries, 2 continents, 16 photos');
+    await expectStats(page, '22 countries, 5 continents, 16 photos');
     const list = await openTool(page, 'Country list', 'Countries');
     await list.getByRole('combobox', { name: 'Show' }).selectOption('Visited');
     await expect(list.getByRole('button', { name: 'Status for Finland: Visited' })).toBeVisible();
@@ -168,18 +168,19 @@ test.describe('Trips', () => {
     await openStats(page);
     // Countries, continents, special places, photos, landmarks, trips
     await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText([
-      '8',
-      '3.5%',
-      '8 of 226 countries',
-      '2 of 7',
+      '20',
+      '8.8%',
+      '20 of 226 countries',
+      '5 of 7',
       '0 of 5',
       `0 of ${REGION_COUNT}`,
       '16',
-      '13 of 1,366',
-      '10 of 1,273',
-      '2',
-      // The longest trip, "Italian summer" (23 Nov 2026)
-      '15', 'On completed trips', '15 days', 'Italian summer', '3,500 km', 'About 2,200 miles', 'United States', 'About 7,000 km from the United Kingdom',
+      '25 of 1,366',
+      '22 of 1,273',
+      // Japan in spring gone: the other 13 and the stag do
+      '14',
+      // The longest trip (23 Nov 2026)
+      '282', 'On completed trips', '190 days', 'A year off: around the world', '62,900 miles', 'About 101,200 km', 'New Zealand', 'About 11,700 miles from the United Kingdom',
     ]);
 
     // The old address now says so

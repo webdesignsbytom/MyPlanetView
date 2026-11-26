@@ -18,8 +18,8 @@ const RIBBON = 'px-8 [clip-path:polygon(0_0,100%_0,calc(100%-0.75rem)_50%,100%_1
 export const NAV_TRIAL_STYLES = [
   {
     name: 'Cream on red',
-    base: 'rounded-sm border-2 border-poster-brown bg-poster-red text-poster-cream shadow-paper hover:brightness-110',
-    active: 'rounded-sm border-2 border-poster-brown bg-poster-red-deep text-poster-gold-light shadow-paper',
+    base: 'rounded-sm border-2 border-poster-brown bg-poster-red-strong text-poster-cream shadow-paper hover:brightness-110',
+    active: 'rounded-sm border-2 border-poster-brown bg-poster-red-deep text-poster-gold-bright shadow-paper',
   },
   {
     name: 'Paper ticket',
@@ -28,18 +28,18 @@ export const NAV_TRIAL_STYLES = [
   },
   {
     name: 'Rubber stamp',
-    base: '-rotate-1 rounded-md border-4 border-double border-poster-red uppercase text-poster-red hover:rotate-0 hover:bg-poster-red/10',
-    active: 'rounded-md border-4 border-double border-poster-cream bg-poster-red uppercase text-poster-cream',
+    base: '-rotate-1 rounded-md border-4 border-double border-poster-red uppercase text-poster-red-deep hover:rotate-0 hover:bg-poster-red/10',
+    active: 'rounded-md border-4 border-double border-poster-cream bg-poster-red-strong uppercase text-poster-cream',
   },
   {
     name: 'Red and gold',
-    base: 'rounded-sm border-2 border-poster-gold-dark bg-poster-red-deep text-poster-gold-light shadow-paper hover:brightness-125',
-    active: 'rounded-sm border-2 border-poster-gold-dark bg-poster-gold-light text-poster-red-deep shadow-paper',
+    base: 'rounded-sm border-2 border-poster-gold-dark bg-poster-red-deep text-poster-gold-bright shadow-paper hover:brightness-125',
+    active: 'rounded-sm border-2 border-poster-gold-dark bg-poster-gold-bright text-poster-red-deep shadow-paper',
   },
   {
     name: 'Luggage tag',
     base: `${TAG} bg-poster-brown text-poster-cream hover:brightness-110`,
-    active: `${TAG} bg-poster-red-deep text-poster-gold-light`,
+    active: `${TAG} bg-poster-red-deep text-poster-gold-bright`,
   },
   {
     name: 'Enamel sign',

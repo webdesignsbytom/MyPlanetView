@@ -7,6 +7,8 @@ import { serverText } from '@/utils/regex/regex';
 
 export const ONE_SHOT_NOTES_MAX = 500;
 export const ONE_SHOT_TRAVELLERS_MAX = 20;
+// Photos of you with it, the first on its card (26 Nov 2026, the user's wish)
+export const ONE_SHOT_PHOTOS_MAX = 5;
 export const ONE_SHOT_SOURCES = Object.freeze(['MANUAL', 'FLIGHT']);
 export const POLAR_CIRCLE_LATITUDE = 66.5634;
 
@@ -34,10 +36,16 @@ export function parseOneShotInput(itemKey, body = {}) {
     else if (isCountryCode(body.countryCode)) value.countryCode = body.countryCode;
     else return { ok: false, field: 'countryCode' };
   }
-  if (body.photoId !== undefined) {
-    if (body.photoId === null || body.photoId === '') value.photoId = null;
-    else if (isId(body.photoId)) value.photoId = body.photoId;
-    else return { ok: false, field: 'photoId' };
+  if (body.photoIds !== undefined) {
+    const ids = body.photoIds;
+    if (!Array.isArray(ids) || ids.length > ONE_SHOT_PHOTOS_MAX || !ids.every(isId) || new Set(ids).size !== ids.length) {
+      return { ok: false, field: 'photoIds' };
+    }
+    value.photoIds = ids;
+  } else if (body.photoId !== undefined) {
+    if (body.photoId === null || body.photoId === '') value.photoIds = [];
+    else if (isId(body.photoId)) value.photoIds = [body.photoId];
+    else return { ok: false, field: 'photoIds' };
   }
   if (body.notes !== undefined) {
     if (body.notes !== null && typeof body.notes !== 'string') return { ok: false, field: 'notes' };

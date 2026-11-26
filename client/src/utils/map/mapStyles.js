@@ -11,11 +11,14 @@
 // `preview` is the picture on a style's card in Settings when it isn't its background: the
 // World map's is the Regular map type's screenshot, and Black and white's the same in greys
 // (`previewGrey`; 22 Nov 2026, the user's wish: they were plain blocks of sea).
+// The engraved ocean (25 Nov 2026, the user's wish and artwork, "Engraved Ocean of Endless
+// Swirls"): the World map's countries on an engraving of swirling waves.
 export const MAP_STYLES = [
   { id: 'animated', label: 'World map', background: null, preview: 'regular' },
   { id: 'mono', label: 'Black and white', background: null, preview: 'regular', previewGrey: true },
   { id: 'old-map', label: 'Old map', background: 'old-map' },
   { id: 'starry', label: 'Starry night', background: 'starry-night' },
+  { id: 'engraved', label: 'Engraved ocean', background: 'engraved-ocean' },
 ];
 
 export const MAP_STYLE_IDS = MAP_STYLES.map((style) => style.id);

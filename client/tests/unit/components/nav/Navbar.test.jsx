@@ -65,7 +65,7 @@ describe('Navbar', () => {
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
     const submenu = document.getElementById(toggle.getAttribute('aria-controls'));
     const items = [...submenu.querySelectorAll('li')].map((li) => li.textContent);
-    expect(items).toEqual(['Dashboard', 'Contact Forms', 'Users', 'Promo Codes', 'Travel Offers', 'Photo Themes']);
+    expect(items).toEqual(['Dashboard', 'Contact Forms', 'Users', 'Promo Codes', 'Travel Offers', 'Photo Themes', 'Feedback']);
     fireEvent.keyDown(toggle, { key: 'Escape' });
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
     fireEvent.click(toggle);
@@ -184,5 +184,17 @@ describe('navTrialClass', () => {
     expect(navTrialClass(0, true)).toContain(NAV_TRIAL_STYLES[0].active);
     expect(navTrialClass(12)).toBe(navTrialClass(2));
     expect(navTrialClass(3)).toContain('font-travel');
+  });
+
+  it('never puts cream lettering on the poster red, or the dark gold with the deep red (contrast under 4.5:1)', () => {
+    for (const style of NAV_TRIAL_STYLES) {
+      for (const classes of [style.base, style.active]) {
+        const list = classes.split(/s+/);
+        if (list.includes('text-poster-cream')) expect(list).not.toContain('bg-poster-red');
+        if (list.includes('bg-poster-red-deep')) expect(list).not.toContain('text-poster-gold-light');
+        if (list.includes('text-poster-red-deep')) expect(list).not.toContain('bg-poster-gold-light');
+        expect(list).not.toContain('text-poster-red');
+      }
+    }
   });
 });

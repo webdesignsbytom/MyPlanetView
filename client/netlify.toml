@@ -24,7 +24,7 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com data: blob:; connect-src 'self' https://my-planet-view.vercel.app https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com https://upload.videodelivery.net https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; media-src 'self' https://*.cloudflarestream.com https://*.eu.r2.cloudflarestorage.com blob: data:; worker-src 'self' blob:; form-action 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com https://*.google-analytics.com https://*.googletagmanager.com data: blob:; connect-src 'self' https://my-planet-view.vercel.app https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com https://upload.videodelivery.net https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; media-src 'self' https://*.cloudflarestream.com https://*.eu.r2.cloudflarestorage.com blob: data:; worker-src 'self' blob:; form-action 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "0"
@@ -40,7 +40,7 @@
 [[headers]]
   for = "/embed/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com data: blob:; connect-src 'self' https://my-planet-view.vercel.app https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com https://upload.videodelivery.net https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; media-src 'self' https://*.cloudflarestream.com https://*.eu.r2.cloudflarestorage.com blob: data:; worker-src 'self' blob:; form-action 'self'; frame-ancestors *; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com https://*.google-analytics.com https://*.googletagmanager.com data: blob:; connect-src 'self' https://my-planet-view.vercel.app https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com https://upload.videodelivery.net https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; media-src 'self' https://*.cloudflarestream.com https://*.eu.r2.cloudflarestorage.com blob: data:; worker-src 'self' blob:; form-action 'self'; frame-ancestors *; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
 
 # Only Vite's hashed build output is cached for good
 [[headers]]

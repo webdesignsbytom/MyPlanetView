@@ -1,6 +1,7 @@
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import CountryListPanel from '@/components/map/CountryListPanel';
 import { SplitUkProvider } from '@/hooks/useSplitUk';
 import { REGION_PLACES, SPECIAL_PLACES, countriesOnMap } from '@/utils/map/countries';
@@ -10,9 +11,11 @@ const open = (props = {}, splitUk = false) => {
   const onChangeStatus = vi.fn().mockResolvedValue();
   const onShowCountry = vi.fn();
   const result = render(
-    <SplitUkProvider value={splitUk}>
-      <CountryListPanel visitsByCode={{}} canEdit={false} onChangeStatus={onChangeStatus} onShowCountry={onShowCountry} onClose={() => {}} {...props} />
-    </SplitUkProvider>,
+    <MemoryRouter>
+      <SplitUkProvider value={splitUk}>
+        <CountryListPanel visitsByCode={{}} canEdit={false} onChangeStatus={onChangeStatus} onShowCountry={onShowCountry} onClose={() => {}} {...props} />
+      </SplitUkProvider>
+    </MemoryRouter>,
   );
   const panel = document.querySelector('[data-map-panel]');
   const names = () => [...panel.querySelectorAll('li > button:first-child')].map((b) => b.textContent);
@@ -111,5 +114,39 @@ describe('CountryListPanel', { timeout: 30000 }, () => {
     expect(onShowUnplaced).toHaveBeenCalled();
     expect(onQuickFill).toHaveBeenCalled();
     expect(screen.getByText(/to tick off countries/)).toBeTruthy();
+  });
+
+  // 24 Nov 2026, the user's wish
+  it('links to the passport, beside "Tick several countries" or on its own', () => {
+    const both = open({ onQuickFill: vi.fn(), passportHref: '/maps/m1/passport' });
+    const link = both.panel.querySelector('[data-passport-link]');
+    expect(link.textContent).toBe('Open passport');
+    expect(link.getAttribute('href')).toBe('/maps/m1/passport');
+    // One row, the two side by side from sm
+    const row = link.parentElement;
+    expect(row.className).toContain('sm:grid-flow-col');
+    expect(row.textContent).toBe('Tick several countriesOpen passport');
+    both.unmount();
+    const alone = open({ passportHref: '/shared/ABCD-EFGH-JKMN/passport' });
+    expect(alone.panel.querySelector('[data-passport-link]').parentElement.children).toHaveLength(1);
+    expect(screen.queryByText('Tick several countries')).toBeNull();
+    alone.unmount();
+    expect(open().panel.querySelector('[data-passport-link]')).toBeNull();
+  });
+
+  // 24 Nov 2026, the user's wish: the Strings panel opens from here, its toolbar stamp gone
+  it('opens the Strings panel, in the row between ticking several and the passport', () => {
+    const onOpenStrings = vi.fn();
+    const all = open({ onQuickFill: vi.fn(), onOpenStrings, passportHref: '/maps/m1/passport' });
+    const row = all.panel.querySelector('[data-passport-link]').parentElement;
+    expect(row.textContent).toBe('Tick several countriesStringsOpen passport');
+    const strings = [...row.querySelectorAll('button')].find((b) => b.textContent === 'Strings');
+    expect(strings.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
+    fireEvent.click(strings);
+    expect(onOpenStrings).toHaveBeenCalledTimes(1);
+    all.unmount();
+    // Not for viewers
+    const viewer = open({ passportHref: '/maps/m1/passport' });
+    expect([...viewer.panel.querySelectorAll('button')].some((b) => b.textContent === 'Strings')).toBe(false);
   });
 });

@@ -153,6 +153,17 @@ describe('HelmetItem', () => {
     expect(meta('twitter:card')).toBe('summary_large_image');
   });
 
+  it('a page with no description gets the home page’s, never the starter template’s', () => {
+    render(
+      <HeadProvider>
+        <HelmetItem PageName='New page' canonicalPath='/new/' />
+      </HeadProvider>,
+    );
+    expect(meta('description')).toBe(helmetData[HOME_PAGE_URL].desc);
+    expect(meta('og:description')).toBe(helmetData[HOME_PAGE_URL].desc);
+    expect(meta('description')).not.toMatch(/web development/i);
+  });
+
   it('lets a full title, noindex, an image and its own social tags win, and adds structured data', () => {
     const { container } = render(
       <HeadProvider>

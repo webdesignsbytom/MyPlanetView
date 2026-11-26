@@ -1,42 +1,10 @@
 import React from 'react';
 // Icons
-import {
-  FaBinoculars,
-  FaCalendarAlt,
-  FaCamera,
-  FaCheck,
-  FaCompass,
-  FaGlobe,
-  FaGlobeAfrica,
-  FaGlobeAmericas,
-  FaGlobeAsia,
-  FaGlobeEurope,
-  FaLandmark,
-  FaMapSigns,
-  FaPaw,
-  FaSnowflake,
-  FaUniversity,
-} from 'react-icons/fa';
+import { FaCheck } from 'react-icons/fa';
 // Utils
 import { badgeWords } from '@/utils/achievements/badges';
+import { badgeIcon } from '@/utils/achievements/badgeIcons';
 import { formatDay } from '@/utils/functions/dates';
-
-const CONTINENT_ICONS = {
-  'continent-africa': FaGlobeAfrica,
-  'continent-asia': FaGlobeAsia,
-  'continent-europe': FaGlobeEurope,
-  'continent-north-america': FaGlobeAmericas,
-  'continent-south-america': FaGlobeAmericas,
-  'continent-oceania': FaGlobeAsia,
-};
-
-function iconFor({ key, group }) {
-  if (CONTINENT_ICONS[key]) return CONTINENT_ICONS[key];
-  if (key === 'antarctica') return FaSnowflake;
-  if (key.startsWith('unesco-')) return FaUniversity;
-  if (key === 'big-five' || key.startsWith('oneshots-wildlife-')) return FaPaw;
-  return { countries: FaGlobe, continents: FaGlobe, special: FaCompass, regions: FaMapSigns, landmarks: FaLandmark, oneShots: FaBinoculars, photos: FaCamera, themes: FaCalendarAlt }[group] || FaGlobe;
-}
 
 // Stickers slapped on at slightly different angles
 const TILTS = ['-rotate-6', 'rotate-3', '-rotate-2', 'rotate-6', '-rotate-3', 'rotate-2'];
@@ -52,7 +20,7 @@ const TILTS = ['-rotate-6', 'rotate-3', '-rotate-2', 'rotate-6', '-rotate-3', 'r
 function BadgeSticker({ badge, index = 0 }) {
   const words = badgeWords(badge.key);
   const earned = Boolean(badge.earnedAt) || Boolean(badge.earned);
-  const Icon = iconFor(badge);
+  const Icon = badgeIcon(badge);
 
   return (
     <li className='grid content-start justify-items-center gap-1 text-center' title={words.description || undefined}>
@@ -67,7 +35,7 @@ function BadgeSticker({ badge, index = 0 }) {
         <Icon className='text-xl' />
         {words.short ? <span className='font-travel text-sm leading-none'>{words.short}</span> : null}
         {earned ? (
-          <span className='absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full border-2 border-poster-cream bg-poster-red text-2xs text-poster-cream'>
+          <span className='absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full border-2 border-poster-cream bg-poster-red-strong text-2xs text-poster-cream'>
             <FaCheck />
           </span>
         ) : null}

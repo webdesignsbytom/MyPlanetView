@@ -117,7 +117,13 @@ deciding what to build: it explains why the rules in section 3 exist.
   be the point to look (section 9).
 - **What it will do on request.** "Request indexing" in URL Inspection has "a
   daily limit" that Google does not publish; about 10 to 12 a day per property
-  was observed. The URL Inspection API only reads (2,000 a day per property).
+  was observed, over a rolling day (some requests are refused with "Quota
+  exceeded" while the ones either side go through). A request gets the page
+  crawled within minutes; it does not change the verdict. Of 70 pages
+  requested across three sites on 12 to 16 November 2026, 68 were crawled
+  within minutes of the request and all 68 stayed "Crawled - currently not
+  indexed": under a site-level judgement, a request gets the new version read
+  and nothing more. The URL Inspection API only reads (2,000 a day per property).
   The Indexing API is for job postings and livestreams only. A sitemap
   resubmission prompts a re-read of the sitemap, not of the pages.
 - **What reliably brings it back** is outside evidence that people value the
@@ -249,8 +255,12 @@ render.** In Next.js, `useSearchParams` on a statically rendered page makes
 everything up to the nearest `Suspense` boundary render in the browser only
 (Next's own documentation). Read the address in an effect (`window.location`)
 if only behaviour depends on it, or use the page's `searchParams` prop if the
-content does (which makes the route dynamic). *Why:* two of Astra's main tools
-shipped with no form in their HTML for three weeks (8.6).
+content does (which makes the route dynamic). In a pre-rendered React app
+(6.22), anything set in a `useEffect` is empty in the saved HTML: work out what
+the page shows while it renders. *Why:* two of Astra's main tools shipped with
+no form in their HTML for three weeks (8.6), and ByteToast's pre-rendered
+pages had an empty menu and empty blog posts until both moved out of effects
+(November 2026).
 
 **R3. No `Suspense` boundary around indexable content unless something in it
 really suspends, and never `fallback={null}` around content.** A boundary whose
@@ -1715,27 +1725,95 @@ returns the same title and the body is one empty `<div>`, the site is
 client-rendered.
 
 **The fix: pre-render every URL at build time.** The build renders each page
-once and saves it as its own file, `dist/<route>/index.html`. A static host
-serves it directly (Apache's `DirectoryIndex` maps `/about` to
-`dist/about/index.html` with no rewrite rule), the crawler gets finished HTML
-with that page's own head tags, and React takes over in the browser. No server
-is needed, so cPanel or any static host keeps working.
+once and saves it as its own file, `<route>/index.html`. The crawler gets
+finished HTML with that page's own head tags, and React takes over in the
+browser. No server is needed, so cPanel or any static host keeps working. On
+Apache, serving `/about` from `about/index.html` takes the two rules in the
+`.htaccess` below: left to itself Apache answers `/about` with a redirect to
+`/about/`, and behind nginx that looped on every page but the home page.
 
-**Option A, recommended when you are reworking the site anyway: React Router 7
-framework mode.** Turn server rendering off and list the URLs to pre-render.
-React renders each one to HTML inside the build, with no browser involved.
+**Option A, recommended: React Router framework mode.** Done on ByteToast
+(React 19.3, React Router 8.5, Vite 7) on 21 and 22 November 2026, and the
+example to copy: `Byte Toast Studio/bytetoast_studio/web/client`, from commit
+`4acc38d`. Before, 41 of its 42 pages sent Google's first read an empty
+`<div>`, and WorkerSEO's site scanner scored it 38. After, all 42 arrive
+finished, with 27,030 words in the raw HTML, and it scored 100 once the
+scanner's findings were fixed. Two days, most of it the fixes under "What
+broke"; the components stay as they are.
 
-- Generate the URL list from the route table plus every data-driven page (blog
-  posts and portfolio items held in arrays), so a new post is pre-rendered and
-  added to the sitemap automatically.
-- Give each route a `meta` export for its title, description and canonical.
-  That replaces `react-head` and removes the duplicate-title class of bug,
-  because one function owns each page's head.
-- Use `hydrateRoot`, not `createRoot`, so React adopts the pre-rendered HTML
-  instead of replacing it, and keep render output deterministic (no
-  `Date.now()` or random values during render) so hydration matches.
-- Effort: a few days, mostly restructuring how routes are declared; the
-  components stay as they are.
+| File | What it does |
+| --- | --- |
+| `react-router.config.js` | `appDirectory: 'src'`, `buildDirectory: 'dist'`, `ssr: false`, and `prerender()` returning the public page list plus `/404` |
+| `src/utils/seo/publicPaths.js` | The one list of public pages: the fixed routes plus every blog post and portfolio item from the data arrays. The sitemap is built from the same list, so a new post is pre-rendered and listed with no extra step |
+| `scripts/loadAppModule.mjs` | The config is read by a bare loader with no `@` alias and no JSX, and the data files use both. This loads them through Vite's `ssrLoadModule` |
+| `src/root.jsx` | Replaces `index.html` and `main.jsx`: the `<html>` shell (`Layout`), the site-wide providers and analytics (`App`), the loading screen for browser-only pages (`HydrateFallback`, marked `noindex`) and an `ErrorBoundary`. Framework mode hydrates the saved HTML itself |
+| `src/routes.js` | The route table, replacing `<Routes>` in `App.jsx`. Relative imports only, for the same loader reason |
+| Each page | Its title, description, canonical, social tags and JSON-LD as React 19's own `<title>`, `<meta>`, `<link>` and `<script>` elements, rendered in the page. React Router's docs recommend these over its route `meta` export since React 19. `react-head` and `react-helmet` go |
+| `scripts/finish-build.mjs` | Runs as `postbuild`. Moves the pre-rendered `/404` to `404.html` (React Router only pre-renders pages that answer 200), and fails the build if any page has other than one `<title>` and one canonical. Critical CSS is inlined and the sitemap written after it |
+| `scripts/serve-build.mjs` | `npm run preview`: serves `dist/client` with the same rules as `.htaccess`, to check a build before uploading it |
+
+Login, admin and signed-in pages are not pre-rendered: React Router writes
+`__spa-fallback.html` for them, and `.htaccess` sends those paths to it. Upload
+the contents of `dist/client`, not `dist`. The page rules, for Apache:
+
+```apache
+# One address per page: the canonicals name /blog, not /blog/.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)/$ https://example.com/$1 [L,R=301]
+
+# A real file is served as it is.
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# /blog is blog/index.html. With DirectorySlash on, Apache answers /blog with a
+# redirect to /blog/ and the rule above sends it back: a loop.
+DirectorySlash Off
+RewriteCond %{REQUEST_FILENAME}/index.html -f
+RewriteRule ^(.+)$ /$1/index.html [L]
+
+# A folder with no page in it is a 404, not a listing. ^. spares the root.
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^. - [R=404,L]
+
+# Pages drawn only in the browser share one shell, kept out of search.
+RewriteCond %{REQUEST_URI} ^/(login|admin)(/|$) [NC]
+RewriteRule ^ /__spa-fallback.html [L]
+
+ErrorDocument 404 /404.html
+```
+
+**What broke, and the rule behind each.** The build runs every page in Node,
+so code that assumed a browser either crashes it or is saved wrong:
+
+- **Browser APIs at import.** `ReactGA.initialize` ran as its file was
+  imported and failed the build with a 500. Nothing may touch `window`,
+  `document` or `localStorage` while a page draws. Start analytics in an
+  effect; react-ga4 queues events until then.
+- **Content filled in by an effect is saved empty (R2).** Blog posts were
+  looked up in a `useEffect`, and the menu was `useState([])` filled by one, so
+  both were empty in every saved page, and the blog was linked from nowhere in
+  the HTML Google reads first. Work out anything a page shows while it renders
+  (`useMemo`, or inline). Signed-in state starts `null` in Node and in the
+  browser alike, so links shown only after sign-in can still be added then.
+- **Loading effects are saved in their first frame.** An image component that
+  started blurred and sharpened in `onLoad` was saved blurred, and stayed
+  blurred until every script had arrived, ten seconds on a slow host, though
+  the picture itself had long loaded. Drop the effect: declared width and
+  height already hold the space.
+- **Render output must not depend on the moment.** No `Date.now()` or random
+  values while rendering, or the browser's first render differs from the saved
+  HTML and React redraws the page. A copyright year from `new Date()` is the
+  easy one to miss: it mismatches from the first of January until the next
+  build. Put `suppressHydrationWarning` on that element.
+- **Share images that do not exist** (6.3). Nine preview names pointed at files
+  never uploaded, so every link was shared without a picture. Check every
+  `og:image` in the build is a file.
+
+**Pre-rendering changes what arrives, not how fast.** On ByteToast's shared
+host a 230 KB image took five seconds and a first visit over twenty, while
+PageSpeed reported 98: it runs on Google's own network and simulates the
+connection rather than downloading over your visitors'. Time real downloads
+(`curl -w`) from where the customers are.
 
 **Option B, quickest: a post-build headless prerender script.** This is what
 the Princess Rose site does (`client/scripts/prerender.mjs`, run from
@@ -1790,10 +1868,13 @@ page.** All found on the ByteToast site on 4 October 2026:
   `constants.js`). They work on Windows and fail on a Linux build server.
 - **Declared image sizes that do not match the files** (6.9).
 
-**Done means:** for every public URL, `curl` returns its own title,
-description, canonical, `h1` and body text; the sitemap lists every
-data-driven page; an unknown URL returns a 404 status with the real 404 page;
-and the `.htaccess` sends only real routes to `index.html`.
+**Done means:** the build passes its own head check. With scripts blocked, or
+with `curl`, every public URL returns its own title, description, canonical,
+one `h1`, its body text and the menu. `npm run preview` loads each template
+with no hydration errors in the console. The sitemap lists every data-driven
+page. After upload, every sitemap address answers 200, an unknown one 404 with
+the real 404 page, `/page/` a single 301 to `/page`, and a real folder such as
+`/assets` 404.
 
 ---
 
@@ -2145,6 +2226,7 @@ a GA4 `runReport` with two date ranges); keep the result beside the pull.
 | `similarity.py <sitemap> [regex]` | Template similarity per family (C2): a dozen random pages, `<main>` only, with scripts, styles, SVG and React's hidden streaming blocks removed; 5-word shingles; median pairwise Jaccard, and the median share of each page's shingles found on at least half the others ("shared text") |
 | `breadcrumbs.py` | Every page against the breadcrumb rules in 6.23 |
 | `release-check.sh <Site> <db> <port>` | Before a production merge (O8): a fresh clone of the branch (no env files), a throwaway Postgres, then install, seed from nothing, lint, the whole suite, the production build, and the built site started and checked by `release-smoke.py`. The setup for the throwaway database is in its header |
+| `requested-check.mjs <plan.json>` | URL Inspection on every page of a request-indexing plan: crawled since the requests, indexed, coverage state, per site and day. Run a few days after the requests and at each review |
 | `release-smoke.py <Site> <url>` | Key pages per site (any 5xx fails, a 404 warns), the tool forms in the server HTML (R1), every sitemap and a random sample of its URLs. Run against the local build and again against the live site after the deploy |
 | Sitemap date spread | For each child sitemap, the number of distinct `lastmod` dates and how many say today (S2). A few lines of any language; parse each `<url>` block on its own (5.1, trap 12) |
 | Crawler access | `curl -s -o /dev/null -w '%{http_code}' -A '<user agent>' <url>` for each of the six crawlers in A3, on the home page and one tool |
@@ -2389,12 +2471,20 @@ than trusting the date. The breadcrumb sources are listed with 6.23.
 | `useSearchParams` in a prerendered route renders up to the nearest `Suspense` in the browser only | `node_modules/next/dist/docs/01-app/03-api-reference/04-functions/use-search-params.md` |
 | `permanentRedirect()` answers 308; `redirect()` answers 307 | `.../04-functions/permanentRedirect.md` and `redirect.md` in the same folder |
 
+### React Router (8.5), checked 24 November 2026
+
+| Fact | Source |
+| --- | --- |
+| Since React 19, the built-in `<meta>` element is recommended over the route module's `meta` export | `node_modules/react-router/docs/start/framework/route-module.md`, under `meta` |
+| With `ssr: false` and `/` pre-rendered, paths not pre-rendered are served `__spa-fallback.html`, which the host has to be configured to send | `node_modules/react-router/docs/how-to/pre-rendering.md` |
+
 ---
 
 ## Changelog
 
 | Date | Change |
 | --- | --- |
-| 12 Nov 2026 | **Restructured for use on any site**: the rules first, with IDs, then checklists, build reference, tools, evidence and sources. **Added** section 2 (how the engines behaved, August to November), rules R2, R3, R6, R7, U2, U3, L3, A5 to A7, X3, X5, the deploy and monitoring checklists, traps 2, 4, 6, 7 and 12, and section 9. **Replaced** "keep newly noindexed pages in the sitemap until Google has seen the tag" with S1: Google had stopped crawling, so it never came to see it. **Replaced** "topic pages `noindex` below three articles" with C10 and "filters canonical to the base page" with Google's faceted navigation guidance (6.19). **Corrected** the `SearchAction` and FAQ advice (6.4, 6.19), the claim that recovery waits for a core update (section 2), and 6.18, which said `fallback={null}` leaves the crawler an empty page (the content is usually sent, after the footer; `useSearchParams` is what removes it). Every outside fact re-checked. The previous version is `docs/seo/archive/SEO-PLAYBOOK-2026-10-08.md`. Later the same day: the ChatGPT fall re-dated to 23:00 UTC on 22 October from hourly data, which cleared the 23 October deploy; trap 17 added; Bing's AI Performance report added to A5 and 4.4; rule O7 (shared cache for third-party calls during render), rule X8 (conversion events) and the `weekly.mjs` and `aiwatch.mjs` tools added; IndexNow automated in `weekly.mjs`. At the deploy: rule O8 (a test gate protects production only if releases pass through it) and, in X8, how GA4 now marks key events; `release-check.sh` and `release-smoke.py` added to 7.3 |
+| 24 Nov 2026 | **6.22 Option A rewritten** from the ByteToast move to React Router 8 on 21 and 22 November: the files, the `.htaccess` that serves `/page` from `page/index.html`, what broke and why, a slow host, and a wider "Done means". **Corrected** two things Option A said before it had been done: React Router 7 with route `meta` exports, which React Router's docs advise against since React 19; and that Apache serves `/about` with no rewrite rule, which looped behind nginx. R2 extended to content filled in by an effect. React Router added to section 9. Kept in this copy only: it is for React sites built with Vite, and the Next.js projects' copies do not need it |
+| 12 Nov 2026 | **Restructured for use on any site**: the rules first, with IDs, then checklists, build reference, tools, evidence and sources. **Added** section 2 (how the engines behaved, August to November), rules R2, R3, R6, R7, U2, U3, L3, A5 to A7, X3, X5, the deploy and monitoring checklists, traps 2, 4, 6, 7 and 12, and section 9. **Replaced** "keep newly noindexed pages in the sitemap until Google has seen the tag" with S1: Google had stopped crawling, so it never came to see it. **Replaced** "topic pages `noindex` below three articles" with C10 and "filters canonical to the base page" with Google's faceted navigation guidance (6.19). **Corrected** the `SearchAction` and FAQ advice (6.4, 6.19), the claim that recovery waits for a core update (section 2), and 6.18, which said `fallback={null}` leaves the crawler an empty page (the content is usually sent, after the footer; `useSearchParams` is what removes it). Every outside fact re-checked. The previous version is `docs/seo/archive/SEO-PLAYBOOK-2026-10-08.md`. Later the same day: the ChatGPT fall re-dated to 23:00 UTC on 22 October from hourly data, which cleared the 23 October deploy; trap 17 added; Bing's AI Performance report added to A5 and 4.4; rule O7 (shared cache for third-party calls during render), rule X8 (conversion events) and the `weekly.mjs` and `aiwatch.mjs` tools added; IndexNow automated in `weekly.mjs`. At the deploy: rule O8 (a test gate protects production only if releases pass through it) and, in X8, how GA4 now marks key events; `release-check.sh` and `release-smoke.py` added to section 7. 16 Nov: what a request for indexing does and does not do (section 2, from 70 requests), and `requested-check.mjs` |
 | 8 Oct 2026 | Breadcrumbs researched from Google's, Bing's and the W3C's own pages (6.23); "two breadcrumb lists are worse than none" corrected |
 | 4 to 5 Oct 2026 | First version, written after the September drop: Part 1 (the drop, 32 rules, the pre-launch checklist) and Part 2 (how to build it) |

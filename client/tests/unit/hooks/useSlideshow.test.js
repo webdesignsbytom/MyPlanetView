@@ -4,8 +4,10 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import useSlideshowMoments from '@/hooks/useSlideshowMoments';
 import useSlideshowPhotos from '@/hooks/useSlideshowPhotos';
 import { getMomentPage, getPhotoPage } from '@/api/travelApi';
+import { getPhotoShowPage } from '@/api/photoShowsApi';
 
 vi.mock('@/api/travelApi', () => ({ getMomentPage: vi.fn(), getPhotoPage: vi.fn() }));
+vi.mock('@/api/photoShowsApi', () => ({ getPhotoShowPage: vi.fn() }));
 
 const photo = (id, extra = {}) => ({ id, ...extra });
 const ids = (list) => list.map((item) => item.id);
@@ -39,6 +41,20 @@ describe('useSlideshowPhotos', () => {
     await waitFor(() => expect(result.current.complete).toBe(true));
     expect(ids(result.current.photos)).toEqual(['p1', 'v2', 'p2']);
     expect(getPhotoPage.mock.calls[1][0].cursor).toBe('c1');
+  });
+
+  // A shared slideshow (25 Nov 2026): its own photos, in its own order where the others go by date
+  it('plays a shared slideshow’s photos by its code, in its order or shuffled', async () => {
+    getPhotoShowPage.mockResolvedValue({ photos: [photo('p2'), photo('p1')], nextCursor: null });
+    const { result, rerender } = renderHook((props) => useSlideshowPhotos(props), {
+      initialProps: { showCode: 'SPN2-SHW8-TRP5', order: 'taken', seed: 4 },
+    });
+    await waitFor(() => expect(result.current.complete).toBe(true));
+    expect(ids(result.current.photos)).toEqual(['p2', 'p1']);
+    expect(getPhotoShowPage).toHaveBeenCalledWith('SPN2-SHW8-TRP5', { order: 'show', seed: 4, cursor: null, limit: 30 });
+    expect(getPhotoPage).not.toHaveBeenCalled();
+    rerender({ showCode: 'SPN2-SHW8-TRP5', order: 'shuffle', seed: 4 });
+    await waitFor(() => expect(getPhotoShowPage).toHaveBeenLastCalledWith('SPN2-SHW8-TRP5', { order: 'shuffle', seed: 4, cursor: null, limit: 30 }));
   });
 
   it('asks for one page at a time', async () => {

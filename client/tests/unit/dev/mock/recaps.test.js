@@ -17,7 +17,7 @@ describe('parseRecapYear', () => {
 });
 
 describe('yearRecap', () => {
-  it('gives the test user’s 2025: France and Italy, 4 photos, 4 stamps, the Italian trip and a moment', () => {
+  it('gives the test user’s 2025: France and Italy, 4 photos, 4 stamps, Paris again and the Italian trip, and a moment', () => {
     const recap = yearRecap(home(), 'OWNER', 2025);
     expect(recap.places).toEqual(['FR', 'IT']);
     expect(recap.countries).toBe(2);
@@ -25,7 +25,7 @@ describe('yearRecap', () => {
     expect(recap.photos).toBe(4);
     expect(recap.videos).toBe(0);
     expect(recap.stamps.count).toBe(4);
-    expect(recap.trips.map((t) => t.title)).toEqual(['Italian summer']);
+    expect(recap.trips.map((t) => t.title)).toEqual(['Paris again', 'Italian summer']);
     expect(recap.moments).toBe(1);
     expect(recap.continents).toBe(1);
     expect(recap.topCountries[0]).toEqual({ countryCode: 'IT', photos: 3 });
@@ -35,7 +35,9 @@ describe('yearRecap', () => {
 
   it('lists the years with something in them, newest first, never a planned trip’s', () => {
     const { years } = yearRecap(home(), 'OWNER', 2025);
-    expect(years[0]).toBe(2025);
+    // Venice and Vienna in 2026; Japan, planned for 2027, isn't one
+    expect(years[0]).toBe(2026);
+    expect(years).toContain(2014);
     expect(years).not.toContain(2027);
     expect(years).toEqual([...years].sort((a, b) => b - a));
   });

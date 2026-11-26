@@ -28,11 +28,8 @@ const pageOf = (over = {}) => ({
 
 const show = (page = pageOf(), props = {}) => {
   const onOpenPhoto = vi.fn();
-  const onPickPhoto = vi.fn();
-  const view = render(
-    <PassportVisaPage page={page} pageNumber={3} headingId='visa-it' canPick={false} locked={false} onOpenPhoto={onOpenPhoto} onPickPhoto={onPickPhoto} {...props} />,
-  );
-  return { ...view, onOpenPhoto, onPickPhoto };
+  const view = render(<PassportVisaPage page={page} pageNumber={3} headingId='visa-it' onOpenPhoto={onOpenPhoto} {...props} />);
+  return { ...view, onOpenPhoto };
 };
 
 describe('PassportVisaPage', () => {
@@ -85,13 +82,11 @@ describe('PassportVisaPage', () => {
     expect(container.querySelector('[aria-label^="Choose the photo"]')).toBeNull();
   });
 
-  it('lets editors choose a stamp’s photo, locked until they verify', () => {
-    const { onPickPhoto, unmount } = show(pageOf(), { canPick: true });
-    fireEvent.click(screen.getByLabelText('Choose the photo for Colosseum'));
-    expect(onPickPhoto).toHaveBeenCalledWith(expect.objectContaining({ landmarkId: 'lm-col' }));
-    unmount();
-    show(pageOf(), { canPick: true, locked: true });
-    expect(screen.getByLabelText('Choose the photo for Colosseum').disabled).toBe(true);
+  // 24 Nov 2026, the user's wish: nobody picks a stamp's photo in the passport
+  it('offers no stamp’s photo to choose', () => {
+    show(pageOf());
+    expect(screen.queryByText('Choose photo')).toBeNull();
+    expect(document.querySelector('[aria-label^="Choose the photo"]')).toBeNull();
   });
 
   it('says how to get a stamp when there are none', () => {

@@ -5,7 +5,7 @@
 // A photo per landmark from Wikimedia Commons, credited as its licence asks. The files are
 // in the public bucket (copied in the repo's media/ folder) as
 // landmarkPhotos/<slug>-<width>.avif and .webp.
-// 1364 of 1366 landmarks have one.
+// 1366 of 1366 landmarks have one.
 
 // [licence name, licence URL ('' when it has none, as for public domain)]
 export const LICENCES = [
@@ -344,6 +344,7 @@ export const LANDMARK_PHOTOS = {
   "diocletian-s-palace-split": [480,318,"Following Hadrian",6,"Peristyle of Diocletian's Palace, Split (11908116224).jpg"],
   "discovery-coast-atlantic-forest": [480,322,"Daniele Longui",0,"Parque Botânico em Sooretama, Linhares-ES, Brasil.jpg"],
   "divrigi-great-mosque": [480,322,"Bertramz",0,"Divrigi,Moschee-Kale.jpg"],
+  "diy-gid-biy-of-the-mandara-mountains": [480,360,"BANGA E. SADRACK",2,"Mont Mandara 01.jpg"],
   "diyarbak-r-fortress-and-hevsel-gardens": [480,304,"Brian Dell",5,"Diyarbakir walls.JPG"],
   "dja-faunal-reserve": [480,363,"Amcaja",8,"Dja River and pirogue.JPG"],
   "djemila": [480,319,"Alioueche Mokhtar",2,"Roman Ruins of Djemila in Sétif, Algeria.jpg"],
@@ -1265,6 +1266,7 @@ export const LANDMARK_PHOTOS = {
   "tequila-agave-landscape": [480,360,"YdelaT",9,"Plaza principal de Tequila.jpg"],
   "terracotta-army-and-qin-mausoleum": [480,320,"Legolas1024",2,"秦始皇帝陵·秦始皇陵·西安臨潼·（封土正北側）.jpg"],
   "thaba-bosiu": [480,360,"Marduk",9,"685 Thaba Bosiu.jpg"],
+  "the-baths": [480,360,"Jaro Nemčok",0,"TheBaths VirginGorda BVI.jpg"],
   "thimlich-ohinga": [480,360,"Wycondi",0,"Thimlich Ohinga Cultural Landscape- Kenya.JPG"],
   "thracian-tomb-of-kazanlak": [480,336,"Roweromaniak",0,"Kazanłyk H17-35.jpg"],
   "thracian-tomb-of-sveshtari": [480,360,"Unknown author",1,"Sveshtari Thracian tomb Bulgaria IFB.JPG"],

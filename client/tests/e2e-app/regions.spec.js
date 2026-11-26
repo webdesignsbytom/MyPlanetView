@@ -24,6 +24,9 @@ async function pointOn(page, code) {
 }
 
 test('a region is drawn in its country’s colour, with a card of its own', async ({ page }) => {
+  // A day with no anniversary in the demo travels: on one (26 Nov, the Taj Mahal at dawn) the
+  // "N years ago today" tag joins the tags column, which then covers Hawaii (audit, 26 Nov 2026)
+  await page.clock.setFixedTime(new Date('2026-11-20T12:00:00'));
   await openMap(page);
   // Hawaii wears the United States' pastel
   const fill = (code) => page.locator(`[data-code="${code}"]`).first().evaluate((el) => getComputedStyle(el).fill);
@@ -55,7 +58,7 @@ test('marking a region visits its country, and only the country counts', async (
   await list.getByRole('button', { name: 'Status for Bali: Not yet' }).click();
   await list.getByRole('combobox', { name: 'Status for Bali' }).selectOption('Visited');
   // Indonesia comes with it, and Asia: one more country and continent, and a region
-  await expectStats(page, '9 countries, 3 continents, 16 photos', 0, 1);
+  await expectStats(page, '21 countries, 5 continents, 16 photos', 0, 1);
   await list.getByRole('heading', { name: 'Countries' }).click();
   await expect(list.getByRole('button', { name: 'Status for Indonesia: Visited' })).toBeVisible();
 

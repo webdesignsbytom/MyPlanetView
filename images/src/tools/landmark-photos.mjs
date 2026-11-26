@@ -50,8 +50,12 @@ const only = new Set((argValue('--only') || '').split(',').filter(Boolean));
 const refresh = args.includes('--refresh');
 
 // Hand-picked files (slug -> Commons file name), where the automatic pick was a poor
-// photo of the place
-const OVERRIDES = {};
+// photo of the place, or there was none
+const OVERRIDES = {
+  // Commons has no photo of the Diy-Gid-Biy sites themselves (26 Nov 2026): a rocky hill of the
+  // Mandara Mountains they stand in
+  'diy-gid-biy-of-the-mandara-mountains': 'Mont Mandara 01.jpg',
+};
 
 // Files never to pick: looked at on contact sheets (16 Nov 2026) and found to be maps,
 // plans, diagrams, signboards, a logo or a painting rather than a photo of the place

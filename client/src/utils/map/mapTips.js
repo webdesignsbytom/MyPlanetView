@@ -1,7 +1,7 @@
 // The tips the map page opens with (components/map/MapTipsDialog.jsx; 17 Nov 2026, the
 // user's wish: phones can go full screen, and few would find it). They show once a visit
 // while the viewer's setting `showTips` is on; the dialog's box turns it off, Settings back
-// on, and the toolbar's (or the phone menu's) "Tips" opens them any time (23 Nov 2026, the
+// on, and Settings' "Show the tips" (the toolbar's "Tips" until 24 Nov 2026) opens them any time (23 Nov 2026, the
 // user's wish: one tip at a time, with Previous and Next). No imports: the e2e fixtures read
 // the key.
 
@@ -18,9 +18,11 @@ export const TIPS_SHOWN_KEY = 'mpv:mapTipsShown';
  * (the browser has offered: the tip has an Install button, `action: 'install'`), 'ios'
  * (Share, Add to Home Screen) or 'menu' (the browser's own menu). `share`: this viewer can
  * share the map (its owner or a co-owner, never through a share link): the last tip says a
- * link needs no app and no account to open (23 Nov 2026, the user's wish).
+ * link needs no app and no account to open (23 Nov 2026, the user's wish). `design`: this viewer
+ * can change the map's design (its owner or a co-owner): a tip says the places been to can show
+ * as a colour of their choosing, a badge, or both (25 Nov 2026, the user's wish).
  */
-export function mapTips({ phone, touch, fullscreen, standalone, posters, appName, install = 'menu', share = false }) {
+export function mapTips({ phone, touch, fullscreen, standalone, posters, appName, install = 'menu', share = false, design = false }) {
   const tips = [];
   if (phone && !standalone) {
     const how = {
@@ -50,6 +52,13 @@ export function mapTips({ phone, touch, fullscreen, standalone, posters, appName
     title: 'Countries',
     text: `${press} a country to open its ticket: its photos, moments and landmarks.${posters ? ` ${poster}` : ''}`,
   });
+  if (design) {
+    tips.push({
+      id: 'visitedLook',
+      title: 'Where you’ve been',
+      text: 'Each place you’ve been wears a star badge. In Settings, under Places you’ve been, you can fill them all with one colour of your choosing, or gold, silver or bronze, instead, or have both, in every map style: everyone who opens the map sees it that way.',
+    });
+  }
   tips.push({
     id: 'countryMap',
     title: 'A country’s own map',
@@ -64,8 +73,8 @@ export function mapTips({ phone, touch, fullscreen, standalone, posters, appName
     id: 'tools',
     title: 'The map’s tools',
     text: phone
-      ? 'Every tool is in the Menu at the top right: your statistics, trips, the photo album and more. Tips, in there too, brings these back any time.'
-      : 'The stamps at the top right are the map’s tools: your statistics, trips, the photo album and more. Tips, the last of them, brings these back any time.',
+      ? 'Every tool is in the Menu at the top right: your statistics, trips, the photo album and more. Settings, in there too, brings these tips back any time.'
+      : 'The stamps at the top right are the map’s tools: your statistics, trips, the photo album and more. Settings, near the bottom, brings these tips back any time.',
   });
   if (share) {
     tips.push({

@@ -201,11 +201,13 @@ describe('DELETE /api/maps/:mapId', () => {
     const { data } = await post('/api/maps', { name: 'Spare', groupType: 'SOLO', travellers: [{ name: 'Me', birthCountryCode: 'FR' }] });
     const id = data.map.id;
     db().challengeEntries[1].mapId = id;
+    db().vsMembers[0].mapId = id;
     expect((await del(`/api/maps/${id}`)).status).toBe(200);
     expect(db().maps.some((m) => m.id === id)).toBe(false);
     expect(db().visits.some((v) => v.mapId === id)).toBe(false);
     expect(db().travellers.some((t) => t.mapId === id)).toBe(false);
     expect(db().challengeEntries[1].mapId).toBeNull();
+    expect(db().vsMembers[0].mapId).toBeNull();
   });
 });
 
@@ -317,13 +319,29 @@ describe('POST /api/maps/:mapId/visits/quick-fill', () => {
 describe('PUT and DELETE /api/maps/:mapId/visits/:countryCode', () => {
   it('sets a status by hand, cleaning its note, and says what came with it', async () => {
     const { data } = await put(`/api/maps/${HOME_MAP}/visits/xs`, { status: 'VISITED', notes: ' <b>Cold</b> ', firstVisitedOn: '2020-01-01' });
-    expect(data.visit).toEqual({ countryCode: 'XS', status: 'VISITED', source: 'MANUAL', firstVisitedOn: '2020-01-01', notes: 'Cold' });
+    expect(data.visit).toEqual({ countryCode: 'XS', status: 'VISITED', source: 'MANUAL', firstVisitedOn: '2020-01-01', notes: 'Cold', markedAt: expect.any(String) });
     expect(data.implied.map((v) => v.countryCode)).toEqual(['AQ']);
   });
 
   it('keeps a visit’s source when only its note changes', async () => {
     const { data } = await put(`/api/maps/${HOME_MAP}/visits/FR`, { status: 'VISITED', notes: 'Paris' });
     expect(data.visit).toMatchObject({ source: 'PHOTO', notes: 'Paris' });
+  });
+
+  // 24 Nov 2026: when each was marked, for the order visited (the passport, the strings)
+  it('says when a visit was marked: a new one now, and a wish turned visit now too', async () => {
+    const before = Date.now();
+    const de = (await put(`/api/maps/${HOME_MAP}/visits/DE`, { status: 'VISITED' })).data.visit;
+    expect(Date.parse(de.markedAt)).toBeGreaterThanOrEqual(before);
+    // Japan was a wish (the seed's, with no time): visited, it's marked now
+    const jp = (await put(`/api/maps/${HOME_MAP}/visits/JP`, { status: 'VISITED' })).data.visit;
+    expect(Date.parse(jp.markedAt)).toBeGreaterThanOrEqual(before);
+    // A note alone changes nothing; the map's reply carries them
+    const again = (await put(`/api/maps/${HOME_MAP}/visits/JP`, { status: 'VISITED', notes: 'Tokyo' })).data.visit;
+    expect(again.markedAt).toBe(jp.markedAt);
+    const visits = (await get(`/api/maps/${HOME_MAP}`)).data.map.visits;
+    expect(visits.find((v) => v.countryCode === 'JP').markedAt).toBe(jp.markedAt);
+    expect(visits.find((v) => v.countryCode === 'GB')).toHaveProperty('markedAt', null);
   });
 
   it('refuses no such place, a nation on an unsplit map, a bad status or note, and a viewer', async () => {
@@ -344,7 +362,10 @@ describe('PUT and DELETE /api/maps/:mapId/visits/:countryCode', () => {
 
 describe('the map’s trips', () => {
   it('lists them for anyone on the map', async () => {
-    expect((await get(`/api/maps/${HOME_MAP}/trips`)).data.trips.map((t) => t.id)).toEqual(['trip-tom-stag', 'trip-japan', 'trip-italy']);
+    const ids = (await get(`/api/maps/${HOME_MAP}/trips`)).data.trips.map((t) => t.id);
+    expect(ids).toHaveLength(15);
+    expect(ids.slice(0, 4)).toEqual(['trip-patagonia', 'trip-tom-stag', 'trip-japan', 'trip-norway']);
+    expect(ids.at(-1)).toBe('trip-usa');
     expect((await get(`/api/maps/${TOM_MAP}/trips`)).status).toBe(404);
   });
 

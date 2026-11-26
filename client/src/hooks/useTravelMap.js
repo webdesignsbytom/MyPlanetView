@@ -22,6 +22,8 @@ import {
 // Utils
 import { forgetMapLists } from '@/utils/map/mapListCache';
 import { impliedVisits } from '@/utils/map/specialPlaces';
+import { stringKindOf } from '@/utils/map/mapStrings';
+import { trackCountriesMarked } from '@/utils/analytics/events';
 
 const EMPTY = { map: null, trips: [], loading: true, error: null };
 
@@ -152,6 +154,14 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
         setState((prev) =>
           onMap(prev, mapId) && implied?.length ? { ...prev, map: { ...prev.map, visits: withVisits(prev.map.visits, implied) } } : prev,
         );
+      // And when the place was marked (`markedAt`: a new place, or a wish become a visit, is
+      // marked now): the order a newly visited or wanted place is strung in (25 Nov 2026)
+      const showMarked = (saved) =>
+        setState((prev) =>
+          onMap(prev, mapId) && saved?.markedAt
+            ? { ...prev, map: { ...prev.map, visits: prev.map.visits.map((v) => (v.countryCode === saved.countryCode ? { ...v, markedAt: saved.markedAt } : v)) } }
+            : prev,
+        );
       const optimisticNow = optimisticRef.current;
       editsRef.current.started += 1;
       editsRef.current.pending += 1;
@@ -160,6 +170,8 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
         const answer = status ? await putVisit(mapId, countryCode, { status, ...extra }) : await deleteVisit(mapId, countryCode);
         if (!optimisticNow) show();
         showImplied(answer?.implied);
+        if (status) showMarked(answer?.visit);
+        if (status) trackCountriesMarked({ status });
         refreshStats();
       } catch (err) {
         setState((prev) => (onMap(prev, mapId) && restore ? { ...prev, map: { ...prev.map, visits: restore(prev.map.visits) } } : prev));
@@ -195,6 +207,23 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
         await updateMap(mapId, { style });
       } catch {
         refresh();
+      }
+    },
+    [mapId, refresh],
+  );
+
+  // How the places been to show: the map's own, in every style (docs/API.md "The visited look";
+  // 25 Nov 2026, the user's wish; the owner and co-owners): `{ visitedLook?, visitedColour?,
+  // visitedFinish? }` shown at once, then saved. If the save fails, the map is read again, so it
+  // shows what it really has, and the failure is thrown for Settings to say so.
+  const setVisitedLook = useCallback(
+    async (change) => {
+      setState((prev) => (onMap(prev, mapId) ? { ...prev, map: { ...prev.map, ...change } } : prev));
+      try {
+        await updateMap(mapId, change);
+      } catch (err) {
+        refresh();
+        throw err;
       }
     },
     [mapId, refresh],
@@ -239,25 +268,29 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
   );
 
   // Strings between places (docs/API.md "Strings"): a tie waits for the server's string (its
-  // id); untying shows at once, put back if the server says no
+  // id); untying shows at once, put back if the server says no. Each of a kind, VISITED or
+  // PLANNED (25 Nov 2026; utils/map/mapStrings.js stringKindOf)
   const setStrings = useCallback(
     (change) =>
       setState((prev) => (onMap(prev, mapId) ? { ...prev, map: { ...prev.map, strings: change(prev.map.strings || []) } } : prev)),
     [mapId],
   );
   const tieString = useCallback(
-    async (from, to) => {
-      const { string } = await tieMapString(mapId, from, to);
+    async (from, to, kind = 'VISITED') => {
+      const { string } = await tieMapString(mapId, from, to, kind);
       setStrings((strings) => (strings.some((s) => s.id === string.id) ? strings : [...strings, string]));
       return string;
     },
     [mapId, setStrings],
   );
-  const tieAutoStrings = useCallback(async () => {
-    const answer = await tieAutoMapStrings(mapId);
-    setStrings(() => answer.strings);
-    return answer;
-  }, [mapId, setStrings]);
+  const tieAutoStrings = useCallback(
+    async (kind = 'VISITED') => {
+      const answer = await tieAutoMapStrings(mapId, kind);
+      setStrings(() => answer.strings);
+      return answer;
+    },
+    [mapId, setStrings],
+  );
   const untieString = useCallback(
     async (string) => {
       setStrings((strings) => strings.filter((s) => s.id !== string.id));
@@ -270,19 +303,23 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     },
     [mapId, setStrings],
   );
-  const untieAllStrings = useCallback(async () => {
-    let before = [];
-    setStrings((strings) => {
-      before = strings;
-      return [];
-    });
-    try {
-      await untieAllMapStrings(mapId);
-    } catch (err) {
-      setStrings(() => before);
-      throw err;
-    }
-  }, [mapId, setStrings]);
+  // Every string of a kind; the other kind's stay
+  const untieAllStrings = useCallback(
+    async (kind = 'VISITED') => {
+      let before = [];
+      setStrings((strings) => {
+        before = strings;
+        return strings.filter((s) => stringKindOf(s) !== kind);
+      });
+      try {
+        await untieAllMapStrings(mapId, kind);
+      } catch (err) {
+        setStrings(() => before);
+        throw err;
+      }
+    },
+    [mapId, setStrings],
+  );
 
   const addTraveller = useCallback(
     async (body) => {
@@ -353,6 +390,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
     saveMapDetails,
     setDesign,
     setMapStyle,
+    setVisitedLook,
     setLandmarkBeen,
     tieString,
     tieAutoStrings,

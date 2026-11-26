@@ -1,7 +1,7 @@
 // Mock mode only: Life's One Shots (docs/API.md "Life's One Shots"), as the server's
 // controllers/oneShots.js and the share link's route answer them. `db.oneShots`: { id, mapId,
-// itemKey, seenOn, datePrecision, countryCode, photoId, notes, source, travellerIds,
-// createdById, createdAt }. Ticking or changing one needs editor on the map and a verified
+// itemKey, seenOn, datePrecision, countryCode, photoIds (up to 5, the first on its card),
+// notes, source, travellerIds, createdById, createdAt }. Ticking or changing one needs editor on the map and a verified
 // email (mockAdapter.js NEEDS_VERIFIED_EMAIL); a country given is marked visited.
 import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb, me, newId, normaliseShareCode } from '../store';
@@ -18,7 +18,7 @@ const SHARE_NOT_FOUND = 'This link has expired or was never shared with you.';
 export const ONE_SHOT_MESSAGES = {
   notFound: "That isn't one of Life's One Shots.",
   invalid: "Check the tick: a real date, a country on the map, a note of up to 500 characters and the map's own travellers.",
-  photo: "The picture must be one of this map's photos.",
+  photo: "Choose up to 5 of this map's own photos (not videos).",
   travellers: "Every traveller must be one of this map's travellers.",
   country: "That country isn't on the map.",
 };
@@ -26,10 +26,19 @@ export const ONE_SHOT_MESSAGES = {
 const findMap = (id) => getDb().maps.find((m) => m.id === id) || null;
 const day = (date) => (date ? new Date(date).toISOString().slice(0, 10) : null);
 
-/** A tick as the server sends it (a hidden photo to editors only). */
+/** A tick's photos (an older store's one `photoId` as a list of one). */
+export const tickPhotoIds = (tick) => tick.photoIds ?? (tick.photoId ? [tick.photoId] : []);
+
+/** A tick as the server sends it: its photos in order, the first its card's (hidden ones to editors only). */
 function view(tick, editor) {
-  const photo = tick.photoId ? getDb().photos.find((p) => p.id === tick.photoId) : null;
-  const shown = photo && (editor || !photo.hidden) ? photo : null;
+  const db = getDb();
+  const photos = tickPhotoIds(tick)
+    .map((id) => db.photos.find((p) => p.id === id))
+    .filter((photo) => photo && (editor || !photo.hidden))
+    .map((photo) => {
+      const urls = photoUrls(photo);
+      return { id: photo.id, thumbUrl: urls.thumb, displayUrl: urls.display || urls.thumb };
+    });
   return {
     id: tick.id,
     itemKey: tick.itemKey,
@@ -39,7 +48,8 @@ function view(tick, editor) {
     notes: tick.notes,
     source: tick.source,
     travellerIds: [...(tick.travellerIds || [])],
-    photo: shown ? { id: shown.id, thumbUrl: photoUrls(shown).thumb } : null,
+    photos,
+    photo: photos[0] ?? null,
     createdAt: tick.createdAt,
   };
 }
@@ -82,7 +92,7 @@ export function registerOneShotRoutes() {
     if (reply) return reply;
     const parsed = parseOneShotInput(params.itemKey, body || {});
     if (!parsed.ok) return fail(400, ONE_SHOT_MESSAGES.invalid);
-    const { travellerIds, ...fields } = parsed.value;
+    const { travellerIds, photoIds, ...fields } = parsed.value;
     const db = getDb();
     let place = null;
     if (fields.countryCode) {
@@ -90,7 +100,7 @@ export function registerOneShotRoutes() {
       place = placeOnMap(fields.countryCode, Boolean(map.splitUk));
       fields.countryCode = place;
     }
-    if (fields.photoId && !db.photos.some((p) => p.id === fields.photoId && p.mapId === map.id)) return fail(400, ONE_SHOT_MESSAGES.photo);
+    if (photoIds && !photoIds.every((id) => db.photos.some((p) => p.id === id && p.mapId === map.id && p.kind !== 'VIDEO'))) return fail(400, ONE_SHOT_MESSAGES.photo);
     if (travellerIds && !travellerIds.every((id) => db.travellers.some((t) => t.id === id && t.mapId === map.id))) return fail(400, ONE_SHOT_MESSAGES.travellers);
     if (fields.seenOn !== undefined) fields.seenOn = day(fields.seenOn);
 
@@ -98,11 +108,15 @@ export function registerOneShotRoutes() {
     let tick = db.oneShots.find((t) => t.mapId === map.id && t.itemKey === params.itemKey);
     const created = !tick;
     if (!tick) {
-      tick = { id: newId(), mapId: map.id, itemKey: params.itemKey, seenOn: null, datePrecision: null, countryCode: null, photoId: null, notes: null, source: 'MANUAL', travellerIds: [], createdById: me()?.id ?? null, createdAt: new Date().toISOString() };
+      tick = { id: newId(), mapId: map.id, itemKey: params.itemKey, seenOn: null, datePrecision: null, countryCode: null, photoIds: [], notes: null, source: 'MANUAL', travellerIds: [], createdById: me()?.id ?? null, createdAt: new Date().toISOString() };
       db.oneShots.push(tick);
     }
     Object.assign(tick, fields);
     if (travellerIds) tick.travellerIds = travellerIds;
+    if (photoIds) {
+      tick.photoIds = photoIds;
+      delete tick.photoId;
+    }
     if (place) markVisited(map.id, place, 'MANUAL');
     return ok({ oneShot: view(tick, true), created, countryCode: place }, created ? 201 : 200);
   });

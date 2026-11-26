@@ -1,7 +1,52 @@
 // Strings between places (src/utils/map/mapStrings.js): where each is drawn
 import { describe, expect, it } from 'vitest';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
-import { drawnStrings, pinOf, stringEnds, stringLabel, stringPath, stringPins } from '@/utils/map/mapStrings';
+import {
+  TWIST_SHIFT_PX,
+  TWIST_STRAND_OFFSETS_PX,
+  acrossOf,
+  drawnStrings,
+  hasString,
+  STRING_KINDS,
+  pinOf,
+  previousPlannedPlace,
+  previousVisitedPlace,
+  stringEnds,
+  stringKindOf,
+  stringLabel,
+  stringPath,
+  stringPins,
+  stringsOfKind,
+  twistStrands,
+} from '@/utils/map/mapStrings';
+import { REFERENCE_PX_PER_UNIT } from '@/utils/map/projection';
+
+// Two colours twisted together, as baker's twine (25 Nov 2026, the user's wish)
+describe('a twined string’s strands', () => {
+  it('lie across the straight line between the pins', () => {
+    expect(acrossOf({ x: 0, y: 0 }, { x: 10, y: 0 })).toEqual({ x: -0, y: 1 });
+    expect(acrossOf({ x: 0, y: 0 }, { x: 0, y: 5 })).toEqual({ x: -1, y: 0 });
+    expect(acrossOf({ x: 3, y: 3 }, { x: 3, y: 3 })).toEqual({ x: 0, y: 0 });
+  });
+
+  it('are four, the same pixels apart at any zoom, each further along than the one before', () => {
+    const across = { x: 0, y: 1 };
+    const strands = twistStrands(across, 1);
+    expect(strands).toHaveLength(TWIST_STRAND_OFFSETS_PX.length);
+    // In map units: pixels over the zoom's pixels per unit
+    expect(strands.map((s) => s.dy)).toEqual(TWIST_STRAND_OFFSETS_PX.map((px) => Math.round((px / REFERENCE_PX_PER_UNIT) * 1e4) / 1e4));
+    expect(strands.every((s) => s.dx === 0)).toBe(true);
+    expect(twistStrands(across, 4)[3].dy).toBeCloseTo(strands[3].dy / 4, 3);
+    // Their dashes start a little further on across the string: the slant of the twist
+    expect(strands.map((s) => s.dashOffset)).toEqual(TWIST_STRAND_OFFSETS_PX.map((px) => Math.round(px * TWIST_SHIFT_PX * 1000) / 1000));
+  });
+
+  it('come with each drawn string', () => {
+    const [drawn] = drawnStrings([{ id: 's1', from: 'FR', to: 'IT' }]);
+    expect(drawn.across).toEqual(acrossOf(pinOf('FR'), pinOf('IT')));
+    expect(Math.hypot(drawn.across.x, drawn.across.y)).toBeCloseTo(1);
+  });
+});
 
 describe('pinOf', () => {
   it('is a place’s pin on the world map', () => {
@@ -80,5 +125,101 @@ describe('words and ends', () => {
     expect(stringEnds('JP', 'FR')).toEqual(['FR', 'JP']);
     expect(stringEnds('FR', 'FR')).toBeNull();
     expect(stringEnds('FR', '')).toBeNull();
+  });
+});
+
+// 24 Nov 2026, the user's wish: a newly visited place is tied to the one visited just before it
+describe('previousVisitedPlace', () => {
+  const visit = (countryCode, firstVisitedOn = null, markedAt = null, status = 'VISITED') => ({ countryCode, status, firstVisitedOn, markedAt });
+  const VISITS = [
+    visit('GB', '1990-05-01', null, 'LIVED'),
+    visit('FR', '2019-04-12'),
+    visit('IT', '2025-07-02'),
+    visit('JP', null, null, 'WANT_TO_GO'),
+  ];
+
+  it('is the place visited just before it, in order of visit', () => {
+    expect(previousVisitedPlace([...VISITS, visit('DE', '2026-11-24', '2026-11-24T19:00:00Z')], 'DE')).toBe('IT');
+    expect(previousVisitedPlace(VISITS, 'FR')).toBe('GB');
+    // A place dated before others still goes in its place
+    expect(previousVisitedPlace([...VISITS, visit('ES', '2018-08-03', '2026-11-24T19:00:00Z')], 'ES')).toBe('GB');
+  });
+
+  it('puts places marked the same day in the order marked, undated ones by when they were marked', () => {
+    const today = [visit('DO', null, '2026-11-24T19:40:00Z'), visit('DZ', null, '2026-11-24T19:45:00Z'), visit('CN', '2026-11-24', '2026-11-24T19:55:00Z')];
+    expect(previousVisitedPlace([...VISITS, ...today], 'CN')).toBe('DZ');
+    expect(previousVisitedPlace([...VISITS, ...today], 'DO')).toBe('IT');
+  });
+
+  it('counts a place already on the map with no time known as before one marked now', () => {
+    expect(previousVisitedPlace([visit('GB', null, null, 'LIVED'), visit('DE', '2026-11-24', '2026-11-24T19:00:00Z')], 'DE')).toBe('GB');
+  });
+
+  it('is nothing for the first place, a wish, a place not on the map, or the place it’s part of', () => {
+    expect(previousVisitedPlace(VISITS, 'GB')).toBeNull();
+    expect(previousVisitedPlace(VISITS, 'JP')).toBeNull();
+    expect(previousVisitedPlace(VISITS, 'BR')).toBeNull();
+    // Hawaii brought the US with it: never Hawaii's previous
+    const hawaii = [...VISITS, visit('US', null, '2026-11-24T19:00:00Z'), visit('XH', '2026-11-24', '2026-11-24T19:00:01Z')];
+    expect(previousVisitedPlace(hawaii, 'XH')).toBe('IT');
+  });
+});
+
+describe('hasString', () => {
+  it('finds a string between two places, either way round', () => {
+    const strings = [{ id: 's1', from: 'FR', to: 'IT' }];
+    expect(hasString(strings, 'IT', 'FR')).toBe(true);
+    expect(hasString(strings, 'FR', 'IT')).toBe(true);
+    expect(hasString(strings, 'FR', 'DE')).toBe(false);
+    expect(hasString(null, 'FR', 'IT')).toBe(false);
+    expect(hasString(strings, 'FR', 'FR')).toBe(false);
+  });
+
+  it('finds only a string of the kind asked for (a string from before kinds is a visited one)', () => {
+    const strings = [
+      { id: 's1', from: 'FR', to: 'IT' },
+      { id: 'p1', kind: 'PLANNED', from: 'IS', to: 'JP' },
+    ];
+    expect(hasString(strings, 'FR', 'IT', 'VISITED')).toBe(true);
+    expect(hasString(strings, 'FR', 'IT', 'PLANNED')).toBe(false);
+    expect(hasString(strings, 'JP', 'IS', 'PLANNED')).toBe(true);
+    expect(hasString(strings, 'JP', 'IS')).toBe(false);
+  });
+});
+
+// Planned strings (25 Nov 2026, the user's wish)
+describe('a string’s kind', () => {
+  it('is VISITED or PLANNED, VISITED for one from before kinds', () => {
+    expect(STRING_KINDS).toEqual(['VISITED', 'PLANNED']);
+    expect(stringKindOf({ kind: 'PLANNED' })).toBe('PLANNED');
+    expect(stringKindOf({ kind: 'VISITED' })).toBe('VISITED');
+    expect(stringKindOf({})).toBe('VISITED');
+    expect(stringKindOf(null)).toBe('VISITED');
+  });
+
+  it('picks a map’s strings of one kind', () => {
+    const strings = [{ id: 's1' }, { id: 'p1', kind: 'PLANNED' }, { id: 's2', kind: 'VISITED' }];
+    expect(stringsOfKind(strings, 'VISITED').map((s) => s.id)).toEqual(['s1', 's2']);
+    expect(stringsOfKind(strings, 'PLANNED').map((s) => s.id)).toEqual(['p1']);
+    expect(stringsOfKind(null, 'PLANNED')).toEqual([]);
+  });
+});
+
+describe('previousPlannedPlace', () => {
+  const wish = (countryCode, markedAt) => ({ countryCode, status: 'WANT_TO_GO', markedAt });
+
+  it('is the place wanted just before, in the order they were marked', () => {
+    const visits = [wish('PE', '2026-05-01T00:00:00Z'), wish('IS', '2026-03-01T00:00:00Z'), { countryCode: 'FR', status: 'VISITED', markedAt: '2026-06-01T00:00:00Z' }, wish('JP', '2026-07-01T00:00:00Z')];
+    expect(previousPlannedPlace(visits, 'JP')).toBe('PE');
+    expect(previousPlannedPlace(visits, 'PE')).toBe('IS');
+    // The first wanted has none, and a place not wanted none either
+    expect(previousPlannedPlace(visits, 'IS')).toBeNull();
+    expect(previousPlannedPlace(visits, 'FR')).toBeNull();
+  });
+
+  it('takes a wish with no time (the mock’s seeded ones) as marked before any with one', () => {
+    const visits = [wish('IS', undefined), wish('PE', '2026-05-01T00:00:00Z'), wish('JP', undefined)];
+    // JP is the new one, with no time yet: the last
+    expect(previousPlannedPlace(visits, 'JP')).toBe('PE');
   });
 });

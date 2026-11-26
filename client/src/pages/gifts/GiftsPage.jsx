@@ -14,6 +14,8 @@ import InlineAlert from '@/components/common/InlineAlert';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import GiftBuyCard from '@/components/gifts/GiftBuyCard';
 import GiftListCard from '@/components/gifts/GiftListCard';
+// Utils
+import { trackCheckoutPaid } from '@/utils/analytics/events';
 
 // Gifts (docs/API.md "Gifts"; signed in): give a year of Business or First Class, and the
 // gifts you've bought with their codes. Back from Checkout (`?bought=1`) it says so and reads
@@ -32,6 +34,11 @@ function GiftsPage() {
         .catch((err) => setState((was) => ({ ...was, loaded: true, error: err.friendlyMessage || 'Your gifts couldn’t be loaded.' }))),
     [],
   );
+
+  // Back from a paid Checkout: the purchase, counted once (utils/analytics/events.js)
+  useEffect(() => {
+    if (bought) trackCheckoutPaid('gift');
+  }, [bought]);
 
   useEffect(() => {
     load();

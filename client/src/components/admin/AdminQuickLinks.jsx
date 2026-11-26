@@ -11,6 +11,8 @@ import {
   ADMIN_PROMO_CODES_PAGE_URL,
   ADMIN_OFFERS_PAGE_URL,
   ADMIN_THEMES_PAGE_URL,
+  ADMIN_FEEDBACK_PAGE_URL,
+  ADMIN_GIFTS_PAGE_URL,
 } from '@/utils/constants/routes';
 // Components
 import PaperCard from '@/components/common/PaperCard';
@@ -21,6 +23,8 @@ const ADMIN_LINKS = [
   { path: ADMIN_PROMO_CODES_PAGE_URL, label: 'Promo Codes', desc: 'Creators’ sign-up codes, their offers and who they brought' },
   { path: ADMIN_OFFERS_PAGE_URL, label: 'Travel Offers', desc: 'Partner cards and the Travel Desk: clicks, changes and the import file' },
   { path: ADMIN_THEMES_PAGE_URL, label: 'Photo Themes', desc: 'One theme a month: write the year ahead, see how many photos each drew' },
+  { path: ADMIN_FEEDBACK_PAGE_URL, label: 'Feedback', desc: 'Problems, ideas and questions sent from the map, with their screenshots' },
+  { path: ADMIN_GIFTS_PAGE_URL, label: 'Gifts and Referrals', desc: 'Look up a gift code, the gifts bought lately, and referral rewards earned' },
 ];
 
 const DEVELOPER_LINKS = [

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { firstStopFor, plannedOutlineCodes, plannedTripsByPlace, plannedTripsFor } from '@/utils/trips/plannedTrips';
-import { COUNTDOWN_DAYS, countdownWords, daysUntil, whenWords } from '@/utils/trips/tripCountdown';
+import { COUNTDOWN_DAYS, countdownWords, daysUntil, titleWords, whenWords } from '@/utils/trips/tripCountdown';
 import { TRIP_STATUSES, TRIP_STATUS_LABELS } from '@/utils/trips/tripStatus';
 
 const trip = (id, status, startDate, countryCodes, title = id) => ({ id, status, startDate, countryCodes, title });
@@ -66,11 +66,24 @@ describe('tripCountdown', () => {
   });
 
   it('words the countdown', () => {
-    expect(countdownWords('Japan in spring', 12)).toBe('12 days until Japan in spring');
-    expect(countdownWords('Japan in spring', 1)).toBe('1 day until Japan in spring');
-    expect(countdownWords('Japan in spring', 1200)).toBe('1,200 days until Japan in spring');
-    expect(countdownWords('Japan in spring', 0)).toBe('Japan in spring starts today');
-    expect(countdownWords('Japan in spring', -3)).toBe('Japan in spring starts today');
+    expect(countdownWords('Japan in spring', 12)).toBe('12 days until Japan In Spring');
+    expect(countdownWords('Japan in spring', 1)).toBe('1 day until Japan In Spring');
+    expect(countdownWords('Japan in spring', 1200)).toBe('1,200 days until Japan In Spring');
+    expect(countdownWords('Japan in spring', 0)).toBe('Japan In Spring starts today');
+    expect(countdownWords('Japan in spring', -3)).toBe('Japan In Spring starts today');
+  });
+
+  // 25 Nov 2026, the user's wish: each word of the trip's name starting with a capital
+  it('starts each word of the trip’s name with a capital, leaving the rest as typed', () => {
+    expect(titleWords('trip test')).toBe('Trip Test');
+    expect(countdownWords('trip test', 0)).toBe('Trip Test starts today');
+    expect(titleWords('USA road trip')).toBe('USA Road Trip');
+    expect(titleWords('  two  spaces')).toBe('  Two  Spaces');
+    expect(titleWords('south-east asia')).toBe('South-East Asia');
+    expect(titleWords('île de ré')).toBe('Île De Ré');
+    expect(titleWords('3 weeks in italy')).toBe('3 Weeks In Italy');
+    expect(titleWords('')).toBe('');
+    expect(titleWords(null)).toBe('');
   });
 
   const japan = {

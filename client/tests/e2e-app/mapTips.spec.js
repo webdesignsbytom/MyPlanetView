@@ -1,8 +1,9 @@
-import { test, expect, MOCK_STORE_KEY, openMap, openTool } from './fixtures.js';
+import { test, expect, MOCK_STORE_KEY, openMap, openTool, openTipsFromSettings } from './fixtures.js';
+import { COOKIE_POLICY_NAME, COOKIE_TIMER } from '../../src/utils/constants/constants.js';
 
 // The tips the map opens with (MapTipsDialog, 17 Nov 2026): once a visit while the viewer's
 // `showTips` setting is on; the dialog's box turns it off, Settings back on. One tip at a
-// time with Previous and Next, and a "Tips" tool that opens them any time (23 Nov 2026). The
+// time with Previous and Next, and Settings' "Show the tips" opens them any time (23 Nov 2026; a "Tips" stamp until 24 Nov). The
 // other tests start as if the tips had shown (fixtures.js `mapTips`).
 test.use({ mapTips: true });
 
@@ -73,8 +74,8 @@ test.describe('Map tips', () => {
     await openMap(page);
     await expect(tipsDialog(page)).toHaveCount(0);
 
-    // The Tips tool still opens them, from the first
-    const again = await openTool(page, 'Tips', 'Tips');
+    // Settings still opens them, from the first ("Show the tips"; their own stamp until 24 Nov 2026)
+    const again = await openTipsFromSettings(page);
     await expect(again).toContainText('Tip 1 of');
     await page.keyboard.press('ArrowRight');
     await expect(again).toContainText('Tip 2 of');
@@ -87,5 +88,25 @@ test.describe('Map tips', () => {
     await expect(tipsSwitch).not.toBeChecked();
     await settings.getByText('Tips when the map opens', { exact: true }).click();
     await expect(tipsSwitch).toBeChecked();
+  });
+
+  // 26 Nov 2026, the audit: on a phone's first visit the cookie pop-up covered the tips and
+  // their Next button. The tips now wait until it's answered.
+  test('on a first visit they wait for the cookie pop-up to be answered', { tag: '@phone' }, async ({ page }) => {
+    await page.addInitScript((key) => {
+      if (!sessionStorage.getItem('e2e-cookies-cleared')) {
+        sessionStorage.setItem('e2e-cookies-cleared', '1');
+        localStorage.removeItem(key);
+      }
+    }, COOKIE_POLICY_NAME);
+    await page.route(/googletagmanager\.com|google-analytics\.com/, (route) => route.abort());
+    await openMap(page);
+    const banner = page.getByRole('dialog', { name: 'Cookie choices' });
+    await expect(banner).toBeVisible({ timeout: COOKIE_TIMER + 10000 });
+    await expect(tipsDialog(page)).toHaveCount(0);
+    await banner.getByRole('button', { name: 'No thanks' }).click();
+    await expect(banner).toBeHidden();
+    await expect(tipsDialog(page)).toBeVisible();
+    await expect(tipsDialog(page).getByRole('button', { name: 'Next tip', exact: true })).toBeInViewport();
   });
 });

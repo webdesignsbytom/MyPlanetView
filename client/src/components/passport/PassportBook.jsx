@@ -8,7 +8,7 @@ import PassportPhotoPage from './PassportPhotoPage';
 import PassportVisaPage from './PassportVisaPage';
 import PassportBackPage from './PassportBackPage';
 // Utils
-import { bookLeaves, passportCover } from '@/utils/passport/passportBook';
+import { bookFitHeight, bookLeaves, coverBoard, passportCover, visaLeafIndex } from '@/utils/passport/passportBook';
 
 const SWIPE_PX = 50;
 
@@ -50,6 +50,9 @@ const dims = (from, to, start) => [
   { filter: `brightness(${to})`, offset: 1 },
 ];
 
+// Opened at a place's page (`openAt`): how long the closed cover shows before it opens
+const OPEN_AT_DELAY_MS = 600;
+
 // The keys that turn the page, unless they're for a field, a dialog or the map
 const TURN_KEYS = { ArrowLeft: -1, ArrowRight: 1 };
 const KEEPS_ITS_KEYS = 'input, select, textarea, [contenteditable="true"], [role="dialog"], [role="application"]';
@@ -62,8 +65,14 @@ const KEEPS_ITS_KEYS = 'input, select, textarea, [contenteditable="true"], [role
  * above), a slide on phones, a fade with reduced motion. The book's words can't be selected,
  * like printed paper (a double-click used to highlight the cover's). Each page is a section
  * with its own h2; the page number and name are announced as it turns.
+ * `openAt` (a place's code: the celebration's "Open passport", 24 Nov 2026, the user's wish)
+ * shows the closed cover a moment, then opens the book straight to that place's page: the
+ * cover's own opening, the new page on the back of the turning sheet, the pages between
+ * skipped. A place the book has no page for leaves it on the cover.
+ * The leather is the owner's plan's, or the colour chosen for the cover (`map.passportColour`,
+ * 26 Nov 2026: coverBoard); the foil lettering is always the plan's.
  */
-function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, onPickPhoto }) {
+function PassportBook({ passport, onOpenPhoto, openAt = null, travellerEdit = null }) {
   const bookId = useId();
   const leaves = useMemo(() => bookLeaves(passport), [passport]);
   const [index, setIndex] = useState(0);
@@ -77,6 +86,29 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
   const frontRef = useRef(null);
   const backRef = useRef(null);
   const swipeRef = useRef(null);
+  const bookRef = useRef(null);
+  const barRef = useRef(null);
+
+  // Wide screens: the book as tall as fits between its top and its page bar (bookFitHeight),
+  // measured again when the window or anything above it changes size. Phones keep a page's
+  // shape, as wide as the screen.
+  const [fitHeight, setFitHeight] = useState(null);
+  useLayoutEffect(() => {
+    const book = bookRef.current;
+    const bar = barRef.current;
+    if (!book || !bar) return undefined;
+    const measure = () =>
+      setFitHeight(bookFitHeight({ viewport: window.innerHeight, top: book.getBoundingClientRect().top + window.scrollY, bar: bar.offsetHeight }));
+    measure();
+    window.addEventListener('resize', measure);
+    const watcher = typeof ResizeObserver === 'function' ? new ResizeObserver(measure) : null;
+    watcher?.observe(document.body);
+    watcher?.observe(bar);
+    return () => {
+      window.removeEventListener('resize', measure);
+      watcher?.disconnect();
+    };
+  }, []);
 
   const go = useCallback(
     (to) => {
@@ -87,9 +119,26 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
     [at, leaves],
   );
   const goRef = useRef(go);
+  const goToRef = useRef(go);
+  const atRef = useRef(at);
   useEffect(() => {
     goRef.current = (step) => go(at + step);
+    goToRef.current = go;
+    atRef.current = at;
   }, [go, at]);
+
+  // Opened at a place's page: once, from the cover, unless a page was turned meanwhile. Marked
+  // done only when it turns, so React's second run of effects in development still opens it.
+  const openAtIndex = useMemo(() => visaLeafIndex(leaves, openAt), [leaves, openAt]);
+  const openedAtRef = useRef(false);
+  useEffect(() => {
+    if (openedAtRef.current || openAtIndex <= 0) return undefined;
+    const timer = setTimeout(() => {
+      openedAtRef.current = true;
+      if (atRef.current === 0) goToRef.current(openAtIndex);
+    }, OPEN_AT_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [openAtIndex]);
 
   // The arrow keys turn the page anywhere on the page, but not in a field, a dialog (the
   // photo viewer) or while a dialog is open
@@ -175,8 +224,11 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
         return (
           <PassportPhotoPage
             travellers={passport.map.traveller ? passport.travellers.filter((t) => t.id === passport.map.traveller.id) : passport.travellers}
+            home={passport.map.homeCountryCode ?? null}
             pageNumber={pageNumber}
             headingId={headingFor(leaf)}
+            // The map's editors change each traveller's photo and signature here (25 Nov 2026)
+            {...(travellerEdit || {})}
           />
         );
       case 'visa':
@@ -185,10 +237,7 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
             page={leaf.page}
             pageNumber={pageNumber}
             headingId={headingFor(leaf)}
-            canPick={canPick}
-            locked={locked}
             onOpenPhoto={onOpenPhoto}
-            onPickPhoto={onPickPhoto}
           />
         );
       default:
@@ -221,9 +270,12 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
   const under = !sheet ? null : turn.dir > 0 ? (turn.cover ? null : { leaf: sheet.early, clip: LEFT_HALF }) : { leaf: sheet.late, clip: RIGHT_HALF };
 
   return (
-    <section aria-label='Passport book' className={`grid gap-4 ${passportCover(passport.map.plan).look}`}>
+    <section aria-label='Passport book' className={`grid gap-4 ${passportCover(passport.map.plan).look}`} style={coverBoard(passport.map.passportColour)}>
       <div
-        className={`relative grid aspect-[88/125] min-h-0 touch-pan-y select-none grid-rows-[minmax(0,1fr)] perspective-[2200px] md:aspect-auto md:h-[40rem] ${turn?.style === 'slide' ? 'overflow-hidden' : ''}`}
+        ref={bookRef}
+        data-book-height={fitHeight ?? undefined}
+        style={fitHeight ? { '--book-h': `${fitHeight}px` } : undefined}
+        className={`relative grid aspect-[88/125] min-h-0 touch-pan-y select-none grid-rows-[minmax(0,1fr)] perspective-[2200px] md:aspect-auto md:h-[var(--book-h,40rem)] ${turn?.style === 'slide' ? 'overflow-hidden' : ''}`}
         onPointerDown={(e) => {
           if (e.pointerType !== 'mouse') swipeRef.current = { x: e.clientX, y: e.clientY };
         }}
@@ -278,11 +330,15 @@ function PassportBook({ passport, canPick = false, locked = false, onOpenPhoto, 
       {/* The page list between the two buttons, in one row on every screen; on phones the
           buttons are arrows alone (17 Nov 2026, the user's wish), named "Previous page" and
           "Next page" all the same, and as tall as the list (items-stretch) */}
-      {/* Kept at the bottom of the window while the book is in view: under a 40rem book it
-          was below the fold on a 1440×900 screen, a scroll for every page (19 Nov 2026, the audit) */}
+      {/* Kept at the bottom of the window while the book is in view on wide screens: under a
+          40rem book it was below the fold on a 1440×900 screen, a scroll for every page (19 Nov
+          2026, the audit); the book is now sized to fit above it. On phones it sits under the
+          book, which it covered the foot of on the first view (26 Nov 2026, the audit): the
+          book and bar fit once scrolled to, and pages are swiped there too. */}
       <nav
+        ref={barRef}
         aria-label='Passport pages'
-        className='paper-aged paper-fields ticket-edge sticky bottom-2 z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-stretch gap-3 rounded-lg px-3 py-3 text-poster-ink sm:px-4'
+        className='paper-aged paper-fields ticket-edge z-10 md:sticky md:bottom-2 grid grid-cols-[auto_minmax(0,1fr)_auto] items-stretch gap-3 rounded-lg px-3 py-3 text-poster-ink sm:px-4'
       >
         <Button quiet onClick={() => go(at - 1)} disabled={at === 0}>
           <IoChevronBack aria-hidden='true' />

@@ -9,7 +9,7 @@ const SMALL = '[--btn-leading:1.25rem] [--btn-pad-x:0.75rem] [--btn-pad-y:0.25re
 
 const badgeClass = (tone) =>
   ({
-    good: 'bg-status-good/20 text-status-good',
+    good: 'tone-good',
     warn: 'tone-warn',
     bad: 'tone-danger',
     info: 'bg-colour6/15 text-colour6',

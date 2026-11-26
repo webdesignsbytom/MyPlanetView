@@ -106,4 +106,19 @@ describe('the admin’s themes', () => {
     expect((await del(`/api/users/admin/themes/${id}`)).body.message).toBe('Theme deleted.');
     expect((await del('/api/users/admin/themes/nope')).status).toBe(404);
   });
+
+  it('fill the coming year’s empty months with suggested themes, for admins only', async () => {
+    const fill = () => post('/api/users/admin/themes/suggested', {});
+    expect((await fill()).status).toBe(403);
+    testUser().role = 'ADMIN';
+    const months = Array.from({ length: 12 }, (_, i) => addMonths(monthOf(), i));
+    db().themes = db().themes.filter((t) => !months.slice(1).includes(t.month));
+    const res = await fill();
+    expect(res.status).toBe(201);
+    expect(res.data.added).toBe(11);
+    for (const month of months) expect(res.data.themes.some((t) => t.month === month)).toBe(true);
+    const again = await fill();
+    expect(again.status).toBe(200);
+    expect(again.data.added).toBe(0);
+  });
 });

@@ -7,6 +7,7 @@ import MapUpgradeSection from '@/components/map/MapUpgradeSection';
 import MapHomeSection from '@/components/map/MapHomeSection';
 import MapDownloadSection from '@/components/map/MapDownloadSection';
 import MapImportSection from '@/components/map/MapImportSection';
+import { mapActionClass } from '@/utils/map/mapActionClass';
 import { cancelMapUpgrade, deleteMap, makeMainMap, updateMap, upgradeMap } from '@/api/travelApi';
 import { forgetMapLists } from '@/utils/map/mapListCache';
 import { withProviders } from './helpers';
@@ -204,5 +205,11 @@ describe('MapDownloadSection and MapImportSection', () => {
     const { container } = render(withProviders(<MapImportSection map={MAP} />));
     expect(container.querySelector('a').getAttribute('href')).toBe('/import?map=map-1');
     expect(screen.getByText(/onto “Our trips”/)).toBeTruthy();
+  });
+
+  it('draws the import link the size of the panel’s other buttons', () => {
+    const { container } = render(withProviders(<MapImportSection map={MAP} />));
+    expect(container.querySelector('a').className).toBe(mapActionClass({ quiet: true }));
+    expect(container.querySelector('a').className).toContain('[--btn-size:1.0625rem]');
   });
 });

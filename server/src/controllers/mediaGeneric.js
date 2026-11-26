@@ -17,6 +17,9 @@ import { deleteExpiredSessions, deleteExpiredVerifications } from '../domain/use
 import { deleteOldStripeEvents } from '../domain/billing.js';
 import { deleteUnnamedGuessPlays } from '../domain/guessGames.js';
 import { UNNAMED_PLAY_DAYS } from '../utils/guessGames.js';
+import { cleanupProblems } from '../utils/cronRuns.js';
+import { recordCronRun } from '../services/system/cronRuns.js';
+import { sendDueReminders } from '../services/system/reminders.js';
 import { sanitizeText } from '../utils/sanitize.js';
 import { logEvent } from '../utils/events/logEvent.js';
 import { ServerErrorEvent, createGenericErrorEvent } from '../event/errorUtils.js';
@@ -101,14 +104,30 @@ export const cleanupOrphanUploadsHandler = async (req, res) => {
     unnamedGuessPlays,
   };
 
+  // Each run recorded, and a failure emails the admins (services/system/cronRuns.js; the audit,
+  // 26 Nov 2026)
+  let result = null;
   try {
-    const result = await deleteOrphanUploads({ deadline: startedAt + CRON_BUDGET_MS });
-    return res.json({ status: 'success', data: { ...result, ...purged } });
+    result = await deleteOrphanUploads({ deadline: startedAt + CRON_BUDGET_MS });
   } catch (err) {
     console.error('[media] orphan cleanup failed:', err);
-    return res.status(500).json({ status: 'error', message: 'Orphan cleanup failed.', data: purged });
   }
+  // The yearly reminders to the admins (the magnetic poles: utils/reminders.js), once a year
+  // each while due; never fails the run
+  const remindersSent = await sendDueReminders();
+  await recordCronRun({
+    job: 'cleanup',
+    startedAt,
+    problems: cleanupProblems(purged, { uploadsFailed: !result }),
+    summary: { ...purged, ...(result && typeof result === 'object' ? flatNumbers(result) : {}), remindersSent },
+  });
+  if (!result) return res.status(500).json({ status: 'error', message: 'Orphan cleanup failed.', data: { ...purged, remindersSent } });
+  return res.json({ status: 'success', data: { ...result, ...purged, remindersSent } });
 };
+
+// A result's plain numbers and flags only (the run's summary)
+const flatNumbers = (object) =>
+  Object.fromEntries(Object.entries(object).filter(([, value]) => typeof value === 'number' || typeof value === 'boolean'));
 
 // Body: { resource, contentType, bytes, filename?, cache? }. The URL is signed for that
 // exact Content-Type and byte size (docs/API.md, "Generic uploads").

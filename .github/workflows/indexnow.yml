@@ -1,0 +1,36 @@
+# IndexNow (the SEO playbook's A2; docs/AUDIT-2026-11-26.md, D1): every Monday the live site's
+# pages changed in the last 8 days (its sitemap's lastmod) go to Bing and the other IndexNow
+# engines (client/scripts/indexnow.mjs). Until the domain is live it notes that and stops, so it
+# starts working by itself at launch. Run it by hand after a deploy (Actions, "IndexNow", Run
+# workflow), with "every page" ticked for the first send after launch. It needs no install and no
+# secrets: the key is public by design (client/public/<key>.txt).
+name: IndexNow
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      all:
+        description: 'Send every page in the sitemap (the first send after launch)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    name: Send the changed pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Send to IndexNow
+        run: node scripts/indexnow.mjs --quiet-if-not-live ${{ inputs.all && '--all' || '' }}

@@ -13,6 +13,7 @@ import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import SlidePhoto from './SlidePhoto';
 import SlideVideo from './SlideVideo';
 import SlideTitleCard from './SlideTitleCard';
+import SlideIntroCard from './SlideIntroCard';
 import SlideMomentCard from './SlideMomentCard';
 import SlideCaption from './SlideCaption';
 import SlideshowControls from './SlideshowControls';
@@ -35,9 +36,11 @@ import { formatDay } from '@/utils/functions/dates';
 const SWIPE_PX = 40;
 const PRELOAD_AHEAD = 2;
 
-function storedSpeed() {
+// The viewer's own speed, kept from an earlier show; else `fallback` (a shared slideshow's own)
+function storedSpeed(fallback = DEFAULT_SLIDE_SPEED) {
   const value = Number(getStoredItem(SLIDE_SPEED_STORAGE_KEY));
-  return SLIDE_SPEEDS.includes(value) ? value : DEFAULT_SLIDE_SPEED;
+  if (SLIDE_SPEEDS.includes(value)) return value;
+  return SLIDE_SPEEDS.includes(fallback) ? fallback : DEFAULT_SLIDE_SPEED;
 }
 
 // What a photo is, for its alt text: its caption, else its place and day
@@ -69,8 +72,26 @@ const ownsKey = (target) => Boolean(target?.closest?.('input, textarea, select, 
  * - **A travel offer** (docs/API.md, "Travel offers"): where the map's galleries show
  *   cards (`adEvery` set), one comes on the end card, never mid-show (SlideshowOffer).
  *   `nextTrip`, `canFetchTrips` and `mapKey` are as for CountryPanel's.
+ * - **A shared slideshow** (`source` `{ showCode }`, docs/API.md "Photo slideshows"; 25 Nov
+ *   2026): its own photos in its own order, no moments, opening on a card with its title
+ *   (`intro`, and `photoCount`), each photo up for `startSpeed` seconds unless this browser
+ *   has a speed of its own; `endNote` goes on the end card (the page's "Make your own map").
  */
-function Slideshow({ source, country = null, title, titleCards = false, adEvery = null, nextTrip = null, canFetchTrips = true, mapKey = '', onClose }) {
+function Slideshow({
+  source,
+  country = null,
+  title,
+  titleCards = false,
+  adEvery = null,
+  nextTrip = null,
+  canFetchTrips = true,
+  mapKey = '',
+  intro = null,
+  photoCount = null,
+  startSpeed = DEFAULT_SLIDE_SPEED,
+  endNote = null,
+  onClose,
+}) {
   const titleId = useId();
   const dialogRef = useModalA11y(onClose);
   const playRef = useRef(null);
@@ -81,7 +102,7 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
   const [run, setRun] = useState(0);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(true);
-  const [speed, setSpeed] = useState(storedSpeed);
+  const [speed, setSpeed] = useState(() => storedSpeed(startSpeed));
   const [readyId, setReadyId] = useState(null);
   const [fullscreen, setFullscreen] = useState(false);
   const [notice, setNotice] = useState(null);
@@ -95,6 +116,7 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
     mapId: source.mapId,
     tripId: source.tripId,
     shareCode: source.shareCode,
+    showCode: source.showCode,
     country: country || undefined,
     order: shuffle ? 'shuffle' : 'taken',
     seed,
@@ -102,10 +124,11 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
   });
   // The map's (or trip's, or country's) dated moments, as cards between the photos of a
   // show in date order (none when shuffled); the show waits for them, so its slides don't move
-  const moments = useSlideshowMoments({ source, country, enabled: !shuffle });
+  // A shared slideshow has none: only the photos chosen for it
+  const moments = useSlideshowMoments({ source, country, enabled: !shuffle && !source.showCode });
   const slides = useMemo(
-    () => (moments.ready ? buildSlides(list.photos, { titleCards, complete: list.complete, moments: moments.moments }) : []),
-    [list.photos, titleCards, list.complete, moments],
+    () => (moments.ready ? buildSlides(list.photos, { titleCards, complete: list.complete, moments: moments.moments, intro }) : []),
+    [list.photos, titleCards, list.complete, moments, intro],
   );
   const slide = slides[index] || null;
   const photoNumber = useMemo(() => slides.slice(0, index + 1).filter((s) => s.type === 'photo').length, [slides, index]);
@@ -167,7 +190,7 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
     if (playsThrough && videoEndedId !== slideId) return undefined;
     const seconds = playsThrough
       ? 0
-      : slideType === 'card'
+      : slideType === 'card' || slideType === 'intro'
         ? Math.min(speed, TITLE_CARD_SECONDS)
         : slideType === 'moment'
           ? Math.max(speed, MOMENT_CARD_SECONDS)
@@ -330,6 +353,8 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
             />
           ) : slide.type === 'photo' ? (
             <SlidePhoto key={slide.id} photo={slide.photo} alt={altFor(slide.photo)} reducedMotion={reducedMotion} onReady={setReadyId} />
+          ) : slide.type === 'intro' ? (
+            <SlideIntroCard key={slide.id} title={slide.title} photoCount={photoCount} />
           ) : slide.type === 'card' ? (
             <SlideTitleCard key={slide.id} countryCode={slide.countryCode} first={!slides.slice(0, index).some((s) => s.type === 'card')} />
           ) : slide.type === 'moment' ? (
@@ -344,6 +369,7 @@ function Slideshow({ source, country = null, title, titleCards = false, adEvery 
                   Shuffle and play
                 </Button>
               </div>
+              {endNote}
               {adEvery ? (
                 <SlideshowOffer
                   every={adEvery}

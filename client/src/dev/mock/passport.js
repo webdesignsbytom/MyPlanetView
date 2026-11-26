@@ -7,9 +7,12 @@ import { landmarkPlace } from '@/utils/map/ukNations';
 import { isSpecialPlace } from '@/utils/map/specialPlaces';
 import { isRegion } from '@/utils/map/regionPlaces';
 import { getDb } from './store';
-import { LANDMARK_ROWS, atLeast, landmarkById, photoThumbUrl, userName } from './views';
+import { LANDMARK_ROWS, atLeast, landmarkById, photoThumbUrl, photoUrls, userName } from './views';
+import { homeOf } from './travelStats';
+import { travellingSince } from '@/utils/passport/travellerDetails';
 import { mapPlanId } from './plans';
 import { planOf } from '@/utils/constants/plans';
+import { earliestOf, passportPageOrder } from '@/utils/passport/passportOrder';
 
 const CONTINENT_BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c.continent]));
 const COUNTED = new Set(['VISITED', 'LIVED']);
@@ -96,24 +99,61 @@ function travellerFacts(map, traveller, { editor, placeOf }) {
 }
 
 /**
+ * A traveller as their passport page shows them (the server's passportTravellerView; 25 Nov
+ * 2026): the map photo chosen for it with its crop (a hidden one for editors only), else their
+ * account's picture, else none; the date of birth for editors only; the day of issue (when they
+ * were added: the map's day for the seed's, which have none); their first trip that isn't still
+ * planned; their signature.
+ */
+export function passportTravellerView(traveller, map, { editor }) {
+  const db = getDb();
+  const photo = traveller.portraitPhotoId ? db.photos.find((p) => p.id === traveller.portraitPhotoId && p.mapId === map.id) : null;
+  const account = traveller.userId ? db.users.find((u) => u.id === traveller.userId) : null;
+  let shown = null;
+  if (photo && (photo.kind || 'PHOTO') === 'PHOTO' && (editor || !photo.hidden)) {
+    shown = {
+      source: 'MAP',
+      photoId: photo.id,
+      url: photoUrls(photo).display,
+      width: photo.width ?? null,
+      height: photo.height ?? null,
+      focusX: traveller.portraitFocusX ?? 0.5,
+      focusY: traveller.portraitFocusY ?? 0.5,
+      zoom: traveller.portraitZoom ?? 1,
+    };
+  } else if (account?.image) {
+    shown = { source: 'ACCOUNT', photoId: null, url: account.image, width: null, height: null, focusX: 0.5, focusY: 0.5, zoom: 1 };
+  }
+  const trips = db.trips.filter((t) => t.mapId === map.id && (t.travellerIds || []).includes(traveller.id));
+  return {
+    id: traveller.id,
+    name: traveller.name,
+    birthCountryCode: traveller.birthCountryCode ?? null,
+    favouriteCountryCode: traveller.favouriteCountryCode ?? null,
+    ...(editor ? { birthDate: traveller.birthDate ?? null } : {}),
+    issuedOn: String(traveller.createdAt ?? map.createdAt ?? '').slice(0, 10) || null,
+    travellingSince: travellingSince(trips),
+    photo: shown,
+    signature: traveller.signature ?? null,
+  };
+}
+
+/**
  * The whole passport, as `role` may see it (the server's buildPassport); `travellerId`: that
  * traveller's own. -> null for a traveller not on the map
  */
 export function buildPassport(map, role, { travellerId = null } = {}) {
   const db = getDb();
   const editor = atLeast(role, 'EDITOR');
-  const travellers = db.travellers
-    .filter((t) => t.mapId === map.id)
-    .sort((a, b) => a.position - b.position)
-    .map(({ id, name, birthCountryCode, favouriteCountryCode }) => ({ id, name, birthCountryCode, favouriteCountryCode }));
+  const rows = db.travellers.filter((t) => t.mapId === map.id).sort((a, b) => a.position - b.position);
+  const travellers = rows.map((traveller) => passportTravellerView(traveller, map, { editor }));
   // The traveller's own row: its account decides whose ticks are theirs
   const holder = travellerId ? (db.travellers.find((t) => t.mapId === map.id && t.id === travellerId) ?? null) : null;
   if (travellerId && !holder) return null;
   const visits = db.visits.filter((v) => v.mapId === map.id);
   const visitByCode = new Map(visits.map((v) => [v.countryCode, v]));
-  // Mock visits have no creation time: the order they were added stands in for it
-  const order = new Map(visits.map((v, index) => [v.countryCode, index]));
-  const markedAt = (code) => order.get(code) ?? Infinity;
+  // When each was marked (`createdAt`, as the server's; the seed's have none)
+  const markedAt = (code) => visitByCode.get(code)?.createdAt ?? null;
   const own = holder ? travellerFacts(map, holder, { editor, placeOf: (landmark) => landmarkPlace(landmark, map.splitUk) }) : null;
   const visited = own ? new Set(own.firstAt.keys()) : new Set(visits.filter((v) => COUNTED.has(v.status)).map((v) => v.countryCode));
   const stamps = own ? own.stamps : mapStamps(map.id, { includeHidden: editor });
@@ -125,16 +165,15 @@ export function buildPassport(map, role, { travellerId = null } = {}) {
     const at = shotAt(photo);
     if (!firstPhotoAt.has(photo.countryCode) || time(at) < time(firstPhotoAt.get(photo.countryCode))) firstPhotoAt.set(photo.countryCode, at);
   }
-  const enteredOn = own ? (code) => own.firstAt.get(code) ?? null : (code) => firstPhotoAt.get(code) ?? visitByCode.get(code)?.firstVisitedOn ?? null;
+  // The earlier of its first photo and the first visit as set, as the server's
+  const enteredOn = own ? (code) => own.firstAt.get(code) ?? null : (code) => earliestOf(firstPhotoAt.get(code), visitByCode.get(code)?.firstVisitedOn);
 
   // The pages: every country marked visited or lived, plus any with a stamp, in the order
-  // they were first visited (undated last, by when they were marked)
+  // they were visited, an undated one on the day it was marked (utils/passport/passportOrder.js)
   // On a map that splits the UK, a UK landmark's page is its nation's (as the server)
   const placeOf = (landmark) => landmarkPlace(landmark, map.splitUk);
   const codes = new Set([...visited, ...stamps.map((s) => placeOf(s.landmark))]);
-  const ordered = [...codes].sort(
-    (a, b) => time(enteredOn(a)) - time(enteredOn(b)) || markedAt(a) - markedAt(b) || a.localeCompare(b),
-  );
+  const ordered = passportPageOrder(codes, { enteredOn, markedAt });
 
   // Each stamp's photo: the one picked (unless it's hidden from this caller), else the earliest
   const photoById = new Map(db.photos.map((p) => [p.id, p]));
@@ -193,6 +232,12 @@ export function buildPassport(map, role, { travellerId = null } = {}) {
       plan: { id: planOf(mapPlanId(map)).id, name: planOf(mapPlanId(map)).name },
       // Whose passport this is: one traveller's own, or null for the whole map's
       traveller: holder ? { id: holder.id, name: holder.name } : null,
+      // Home, on every traveller's page; whether the caller may change their photos and signatures
+      homeCountryCode: homeOf({ homeCountryCode: map.homeCountryCode ?? null, ownerId: map.ownerId, travellers: rows }),
+      canEdit: editor,
+      // The cover's colour (26 Nov 2026; null: the plan's own) and whether the caller may choose it
+      passportColour: map.passportColour ?? null,
+      canChooseCover: atLeast(role, 'CO_OWNER'),
     },
     travellers,
     pages,

@@ -2,7 +2,16 @@
 // The celebration screen's rules (src/utils/map/celebrations.js; 24 Nov 2026, the user's wish):
 // when it shows, and its stars.
 import { describe, expect, it } from 'vitest';
-import { CELEBRATION_KICKERS, STAR_INKS, burstStars, celebratesStamp, celebratesVisit, todayDay } from '@/utils/map/celebrations';
+import {
+  CELEBRATION_KICKERS,
+  STAR_INKS,
+  burstStars,
+  celebratesStamp,
+  celebratesVisit,
+  countryCelebrationText,
+  countryCelebrationTitle,
+  todayDay,
+} from '@/utils/map/celebrations';
 
 describe('celebratesVisit', () => {
   it('is a country going to visited or lived in from neither', () => {
@@ -37,8 +46,27 @@ describe('todayDay', () => {
 });
 
 describe('the words over the name', () => {
-  it('say been here, visited or lived here, and seen it or done it (Life’s One Shots)', () => {
-    expect(CELEBRATION_KICKERS).toEqual({ landmark: 'Been here!', VISITED: 'Visited!', LIVED: 'Lived here!', seen: 'Seen it!', done: 'Done it!' });
+  it('say been here, and seen it or done it (Life’s One Shots); a country’s heading says it itself', () => {
+    expect(CELEBRATION_KICKERS).toEqual({ landmark: 'Been here!', seen: 'Seen it!', done: 'Done it!' });
+  });
+});
+
+// 24 Nov 2026, the user's wishes: "You visited France!", and the words name the country
+describe('a country’s heading and words', () => {
+  it('say you visited it or lived in it, with “the” where a name takes it', () => {
+    expect(countryCelebrationTitle('France', 'VISITED')).toBe('You visited France!');
+    expect(countryCelebrationTitle('United Kingdom', 'LIVED')).toBe('You lived in the United Kingdom!');
+    expect(countryCelebrationTitle('North Pole', 'VISITED')).toBe('You visited the North Pole!');
+    expect(countryCelebrationTitle('Azores', 'VISITED')).toBe('You visited the Azores!');
+    expect(countryCelebrationTitle('Antarctica', 'VISITED')).toBe('You visited Antarctica!');
+  });
+
+  it('name it at the start, with its stamp, and how to date it when it has no date', () => {
+    expect(countryCelebrationText('Algeria', 'VISITED', true)).toBe('Algeria now has its own page in your passport, with its entry stamp.');
+    expect(countryCelebrationText('Netherlands', 'LIVED', true)).toBe('The Netherlands now has its own page in your passport, with its residence stamp.');
+    expect(countryCelebrationText('Algeria', 'VISITED', false)).toBe(
+      'Algeria now has its own page in your passport, with its entry stamp. Add the day you first went on its ticket, and the stamp is dated.',
+    );
   });
 });
 

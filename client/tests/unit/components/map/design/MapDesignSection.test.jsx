@@ -70,14 +70,21 @@ describe('MapDesignSection', () => {
     expect(e.change.mock.calls).toEqual([[{ grid: '#222222' }], [{ hover: '#333333' }], [{ names: null }]]);
   });
 
-  it('changes the strings’ colour, and puts it back (docs/API.md "Strings")', () => {
-    const e = editor({ design: { ...DESIGN, string: '#c0ffee' } });
-    useMapDesignEditor.mockReturnValue(e);
-    open();
-    expect(screen.getByLabelText('String colour').value).toBe('#c0ffee');
-    fireEvent.input(screen.getByLabelText('String colour'), { target: { value: '#1d4ed8' } });
-    fireEvent.click(screen.getByLabelText('String colour: back to the usual colour'));
-    expect(e.change.mock.calls).toEqual([[{ string: '#1d4ed8' }], [{ string: null }]]);
+  // How the places been to show is the map's, in every style (25 Nov 2026, the user's wish):
+  // VisitedLookSection, above this one
+  it('leaves how the places been to show to the map’s own section', () => {
+    useMapDesignEditor.mockReturnValue(editor());
+    const { container } = open();
+    expect(container.querySelector('[data-visited-look]')).toBeNull();
+    expect(screen.queryByLabelText('Visited country colour')).toBeNull();
+  });
+
+  // 25 Nov 2026, the user's wish: the strings' colours "all in one place", the Strings panel
+  it('leaves the strings’ colours to the Strings panel, and says so', () => {
+    useMapDesignEditor.mockReturnValue(editor({ design: { ...DESIGN, string: '#c0ffee' } }));
+    const { container } = open();
+    expect(screen.queryByLabelText('String colour')).toBeNull();
+    expect(container.querySelector('[data-string-colours-moved]').textContent).toBe('The strings’ colours are in the Strings panel, opened from the country list.');
   });
 
   it('colours a country, and puts every one back', () => {

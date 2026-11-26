@@ -5,7 +5,7 @@
 // shows without it).
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { isPole } from '@/utils/map/specialPlaces';
-import { DESIGN_COLOUR } from '@/utils/map/mapDesign';
+import { DESIGN_COLOUR, DESIGN_COLOUR_ALPHA, VISITED_FINISHES, VISITED_LOOK_IDS } from '@/utils/map/mapDesign';
 import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
 import { session } from './store';
 
@@ -17,7 +17,8 @@ export const DESIGN_PICTURE_MAX_BYTES = 8 * MB;
 // The server's responses.js wording
 export const DESIGN_MESSAGES = {
   invalidDesign: 'That design can’t be saved.',
-  invalidDesignColour: 'Colours must be six-digit colour codes, as a colour picker gives them.',
+  invalidDesignColour: "Colours must be six-digit colour codes, as a colour picker gives them (the strings' may add two for their opacity).",
+  invalidVisitedLook: "Places you've been show as a badge, a colour, or both, and a metal is gold, silver or bronze.",
   invalidDesignPlace: 'That place isn’t on the map, so it can’t take a colour.',
   designPictureType: 'The picture must be a JPEG, PNG or WebP image.',
   designPictureInvalid: 'That picture upload isn’t valid. Please try again.',
@@ -43,11 +44,14 @@ export function designsOf(map) {
   return map.designs;
 }
 
-function cleanColour(value) {
+// The server's: with `alpha` (the strings' colour, 25 Nov 2026), "#rrggbbaa" too, kept as
+// "#rrggbb" when fully opaque
+function cleanColour(value, { alpha = false } = {}) {
   if (value === null) return { ok: true, value: null };
   if (typeof value !== 'string') return { ok: false };
   const colour = value.trim().toLowerCase();
-  return DESIGN_COLOUR.test(colour) ? { ok: true, value: colour } : { ok: false };
+  if (!(alpha ? DESIGN_COLOUR_ALPHA : DESIGN_COLOUR).test(colour)) return { ok: false };
+  return { ok: true, value: colour.length === 9 && colour.endsWith('ff') ? colour.slice(0, 7) : colour };
 }
 
 // The drawn places: countries, Antarctica, the UK's nations and regions; never a pole
@@ -61,9 +65,11 @@ export function parseDesignChange(body) {
     if (typeof input.shown !== 'boolean') return { error: 'invalidDesign' };
     change.shown = input.shown;
   }
-  for (const field of ['names', 'grid', 'hover', 'string']) {
+  // `stringTwist`: a second colour twisted into the strings (25 Nov 2026), opaque only
+  // The planned strings' colour and twist too (25 Nov 2026)
+  for (const field of ['names', 'grid', 'hover', 'string', 'stringTwist', 'plannedString', 'plannedStringTwist']) {
     if (input[field] === undefined) continue;
-    const colour = cleanColour(input[field]);
+    const colour = cleanColour(input[field], { alpha: field === 'string' || field === 'plannedString' });
     if (!colour.ok) return { error: 'invalidDesignColour' };
     change[field] = colour.value;
   }
@@ -87,6 +93,35 @@ export function parseDesignChange(body) {
   return { change };
 }
 
+/**
+ * How the map shows the places been to, the map's own in every style (docs/API.md "The visited
+ * look"; the server's utils/mapDesigns.js parseVisitedLook): a map PATCH body -> `{ change }` (the
+ * map row's fields, none when the body names none) or `{ error }` (a DESIGN_MESSAGES key).
+ */
+export function parseVisitedLook(body) {
+  const input = body && typeof body === 'object' ? body : {};
+  const change = {};
+  if (input.visitedLook !== undefined) {
+    const look = typeof input.visitedLook === 'string' ? input.visitedLook.trim().toUpperCase() : '';
+    if (!VISITED_LOOK_IDS.includes(look)) return { error: 'invalidVisitedLook' };
+    change.visitedLook = look;
+  }
+  if (input.visitedColour !== undefined) {
+    const colour = cleanColour(input.visitedColour);
+    if (!colour.ok) return { error: 'invalidDesignColour' };
+    change.visitedColour = colour.value;
+  }
+  if (input.visitedFinish !== undefined) {
+    if (input.visitedFinish === null) change.visitedFinish = null;
+    else {
+      const finish = typeof input.visitedFinish === 'string' ? input.visitedFinish.trim().toUpperCase() : '';
+      if (!VISITED_FINISHES.some((f) => f.id === finish)) return { error: 'invalidVisitedLook' };
+      change.visitedFinish = finish;
+    }
+  }
+  return { change };
+}
+
 /** A picture's declared type and size: null when fine, else a DESIGN_MESSAGES key. */
 export function checkDesignPicture({ contentType, bytes }) {
   if (!DESIGN_PICTURE_TYPES.includes(contentType)) return 'designPictureType';
@@ -96,7 +131,7 @@ export function checkDesignPicture({ contentType, bytes }) {
 }
 
 /** A new design, as the server makes one. */
-export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, pictureKey: null });
+export const newDesign = () => ({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, pictureKey: null });
 
 /** A map's design for a style as the replies give it, or null when it has none. */
 export function designView(map, style) {
@@ -111,6 +146,9 @@ export function designView(map, style) {
     grid: design.grid ?? null,
     hover: design.hover ?? null,
     string: design.string ?? null,
+    stringTwist: design.stringTwist ?? null,
+    plannedString: design.plannedString ?? null,
+    plannedStringTwist: design.plannedStringTwist ?? null,
     picture: url ? { url } : null,
   };
 }

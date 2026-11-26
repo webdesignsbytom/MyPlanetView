@@ -74,6 +74,14 @@ describe('brandColours', () => {
       expect(card.medals[tier]).toEqual({ face: light(`medal-${tier}`), rim: light(`medal-${tier}-edge`) });
     }
     expect(card.ribbon).toEqual([light('poster-red-deep'), light('poster-red')]);
+    // A badge's sticker (25 Nov 2026): BadgeSticker's poster colours
+    expect(card.sticker).toEqual({
+      ring: light('poster-red'),
+      face: light('poster-paper'),
+      ink: light('poster-red-deep'),
+      tick: light('poster-red'),
+      tickInk: light('poster-cream'),
+    });
   });
 
   it('has only six-digit hex colours, fixed', () => {
@@ -81,8 +89,10 @@ describe('brandColours', () => {
       brand.BRAND_RED,
       brand.BRAND_GROUND,
       brand.BRAND_GROUND_DARK,
-      ...Object.values(brand.SHARE_CARD_COLOURS)
-        .flatMap((value) => (value && typeof value === 'object' && !Array.isArray(value) ? Object.values(value).flatMap(Object.values) : value)),
+      // Every colour however deep it's kept (the medals' metals, the sticker's parts)
+      ...[brand.SHARE_CARD_COLOURS].flatMap(function colours(value) {
+        return value && typeof value === 'object' ? Object.values(value).flatMap(colours) : [value];
+      }),
       ...Object.values(brand.POSTER_COLOURS.atlas),
       ...Object.values(brand.POSTER_COLOURS.paper),
       ...Object.values(brand.COMPARE_COLOURS),

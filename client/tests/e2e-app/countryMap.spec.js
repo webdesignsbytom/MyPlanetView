@@ -14,7 +14,7 @@ const CODE_BY_NAME = new Map(COUNTRIES.map((place) => [place.name, place.code]))
 
 // A country opened on its own (docs/API.md "Country maps"; 18 Nov 2026, the user's wish): its
 // states coloured as the map stands with them, and its pins, each with a visit for every time.
-// The seeded map (src/dev/mock/seed.js) has New York and Massachusetts visited, and a pin in
+// The seeded map (src/dev/mock/seed.js) has New York, Massachusetts and California visited, and a pin in
 // Paris with two visits; it counts 8 countries on 2 continents.
 
 async function openCountryMap(page, name) {
@@ -137,13 +137,30 @@ test('the United Kingdom’s own map has Edinburgh Castle, the Giant’s Causewa
   await expectModelOn(map, 'caernarfon-castle', 'GB-GWN');
 });
 
-test('the Eiffel Tower stands on Paris on France’s own map, a little taller than Big Ben', async ({ page }) => {
+// The models remade in the high-quality look (26 Nov 2026, the user's wish): dioramas on a round
+// base, drawn at one scale of their own, every base the same width; the rest still toon models
+test('the models remade in the high-quality look are drawn as dioramas, each base the same width', async ({ page }) => {
+  await openMap(page);
+  const map = await openCountryMap(page, 'United Kingdom');
+  const bigBen = await expectModelOn(map, 'big-ben', 'GB-WSM');
+  const castle = await expectModelOn(map, 'edinburgh-castle', 'GB-EDH');
+  const caernarfon = await expectModelOn(map, 'caernarfon-castle', 'GB-GWN');
+  await expect(bigBen).toHaveAttribute('data-landmark-model-hq', '');
+  await expect(castle).toHaveAttribute('data-landmark-model-hq', '');
+  await expect(caernarfon).not.toHaveAttribute('data-landmark-model-hq');
+  const [tower, fortress] = await Promise.all([bigBen.locator('image').boundingBox(), castle.locator('image').boundingBox()]);
+  expect(Math.abs(tower.width - fortress.width) / fortress.width).toBeLessThan(0.05);
+  // Big Ben's clock tower stands taller than the castle on its rock
+  expect(tower.height).toBeGreaterThan(fortress.height);
+});
+
+test('the Eiffel Tower stands on Paris on France’s own map, taller than the map’s model height', async ({ page }) => {
   await openMap(page);
   const map = await openCountryMap(page, 'France');
   const tower = await expectModelOn(map, 'eiffel-tower', 'FR-75');
   await expectModelsOf(map, 'France');
-  // Every model is drawn at one scale: at the same zoom the tower is taller than Big Ben (64 px
-  // at zoom 1), and the pin in Paris is still drawn over it
+  // Every diorama is drawn at one scale: at the same zoom the tower stands taller than the map's
+  // model height (64 px at zoom 1), and the pin in Paris is still drawn over it
   const height = await tower.locator('image').evaluate((image) => image.getBoundingClientRect().height);
   const zoom = await map.locator('svg[role="application"]').evaluate((svg) => svg.getBoundingClientRect().width / svg.viewBox.baseVal.width / 0.96);
   expect(height).toBeGreaterThan(Math.min(150, Math.max(40, 64 * Math.sqrt(zoom))) * 1.02);
@@ -156,7 +173,7 @@ test('the Colosseum stands on Rome on Italy’s own map, low and wide', async ({
   const map = await openCountryMap(page, 'Italy');
   const colosseum = await expectModelOn(map, 'colosseum', 'IT-RM');
   await expectModelsOf(map, 'Italy');
-  // Low and wide (drawn at least 0.7 of Big Ben's height, bigger than the one scale, so it reads at a glance)
+  // Low and wide: its diorama's base as wide as every other's, the arena lower than that
   const box = await colosseum.locator('image').boundingBox();
   expect(box.width).toBeGreaterThan(box.height);
 });
@@ -213,7 +230,7 @@ for (const [country, id, area, place] of [
   ['Cuba', 'old-havana', 'CU-03', 'Havana'],
   ['Norway', 'bryggen', 'NO-12', 'Hordaland'],
 ]) {
-  test(`${country}’s own map has its landmark model, in ${place}`, async ({ page }) => {
+  test(`${country}’s own map has its landmark model, in ${place}`, { tag: '@models' }, async ({ page }) => {
     await openMap(page);
     const map = await openCountryMap(page, country);
     await expectModelOn(map, id, area);
@@ -230,7 +247,7 @@ for (const [country, id, area, place] of [
   // the Cliffs of Moher are Clare's very edge, the sea's side of its coastline at the map's detail
   ['Ireland', 'cliffs-of-moher', 'IE-CE', 'Clare'],
 ]) {
-  test(`${country}’s own map has its landmark model, by ${place}`, async ({ page }) => {
+  test(`${country}’s own map has its landmark model, by ${place}`, { tag: '@models' }, async ({ page }) => {
     await openMap(page);
     const map = await openCountryMap(page, country);
     await expectModelOn(map, id, area, { inBounds: true });
@@ -834,9 +851,88 @@ const LATEST_MODELS = [
   ['United States', 'cahokia', 'US-IL', 'Illinois'],
   ['Vietnam', 'thang-long', 'VN-HN', 'Ha Noi'],
 ];
-for (const models of [MORE_MODELS, LAST_MODELS, EXTRA_MODELS, NEWEST_MODELS, LATEST_MODELS]) for (let i = 0; i < models.length; i += 10) {
+// Then another 100 (24 Nov 2026, NEXT-MODELS.md part 6, built World Heritage Sites, one a landmark):
+// the 73 on the map, the other 27 kept off it by a model already there. Within the bounds (true):
+// Port Royal, on the Palisadoes spit, which Jamaica's map draws coarsely. Mireuksa's pagoda stands
+// at Iksan, in its serial site, not on the landmark's point at Gongju.
+const HERITAGE_MODELS = [
+  ['Algeria', 'kasbah-of-algiers', 'DZ-16', 'Alger'],
+  ['Angola', 'mbanza-kongo', 'AO-ZAI', 'Zaire'],
+  ['Belgium', 'plantin-moretus', 'BE-VAN', 'Antwerp'],
+  ['Belgium', 'spa', 'BE-WLG', 'Liege'],
+  ['Bolivia', 'potosi', 'BO-P', 'Potosí'],
+  ['Bolivia', 'samaipata', 'BO-S', 'Santa Cruz'],
+  ['Bulgaria', 'ivanovo', 'BG-18', 'Ruse'],
+  ['Bulgaria', 'kazanlak', 'BG-24', 'Stara Zagora'],
+  ['Cambodia', 'sambor-prei-kuk', 'KH-6', 'Kâmpóng Thum'],
+  ['Canary Islands', 'san-cristobal-de-la-laguna', 'ES-TF', 'Santa Cruz de Tenerife'],
+  ['Chile', 'humberstone', 'CL-TA', 'Tarapacá'],
+  ['China', 'jiangjun-tomb', 'CN-JL', 'Jilin'],
+  ['China', 'xixia-tombs', 'CN-NX', 'Ningxia'],
+  ['Cyprus', 'choirokoitia', 'CY-03', 'Larnaca'],
+  ['Cyprus', 'troodos', 'CY-01', 'Nicosia'],
+  ['Czechia', 'holasovice', 'CZ-JC', 'Jihočeský'],
+  ['Czechia', 'litomysl', 'CZ-PA', 'Pardubický'],
+  ['Finland', 'old-rauma', 'FI-17', 'Satakunta'],
+  ['Finland', 'verla', 'FI-09', 'Kymenlaakso'],
+  ['France', 'saint-savin', 'FR-86', 'Vienne'],
+  ['Germany', 'pile-dwellings', 'DE-BW', 'Baden-Württemberg'],
+  ['Ghana', 'asante-shrine', 'GH-AH', 'Ashanti'],
+  ['Greece', 'philippi', 'GR-A', 'Anatoliki Makedonia kai Thraki'],
+  ['Greenland', 'hvalsey', 'GL-KU', 'Kommune Kujalleq'],
+  ['Guatemala', 'quirigua', 'GT-IZ', 'Izabal'],
+  ['Hungary', 'holloko', 'HU-NO', 'Nógrád'],
+  ['India', 'pattadakal', 'IN-KA', 'Karnataka'],
+  ['India', 'ramappa', 'IN-TG', 'Telangana'],
+  ['India', 'santiniketan', 'IN-WB', 'West Bengal'],
+  ['India', 'sarnath', 'IN-UP', 'Uttar Pradesh'],
+  ['Iran', 'alamut', 'IR-28', 'Qazvin'],
+  ['Iran', 'sheikh-safi', 'IR-03', 'Ardebil'],
+  ['Iran', 'tabriz-bazaar', 'IR-01', 'East Azarbaijan'],
+  ['Iran', 'takht-e-soleyman', 'IR-02', 'West Azarbaijan'],
+  ['Iraq', 'erbil-citadel', 'IQ-AR', 'Arbil'],
+  ['Israel', 'avdat', 'IL-D', 'HaDarom'],
+  ['Israel', 'white-city', 'IL-TA', 'Tel Aviv'],
+  ['Italy', 'stupinigi', 'IT-TO', 'Turin'],
+  ['Jamaica', 'port-royal', 'JM-02', 'Saint Andrew', true],
+  ['Japan', 'chusonji', 'JP-03', 'Iwate'],
+  ['Jordan', 'as-salt', 'JO-BA', 'Balqa'],
+  ['Jordan', 'umm-er-rasas', 'JO-AM', 'Amman'],
+  ['Kenya', 'thimlich-ohinga', 'KE-600', 'Nyanza'],
+  ['Lebanon', 'beaufort-castle', 'LB-NA', 'An Nabatiyah'],
+  ['Madagascar', 'ambohimanga', 'MDG-5862', 'Analamanga'],
+  ['Malta', 'ggantija', 'MT-61', 'Xagħra'],
+  ['Mauritius', 'aapravasi-ghat', 'MUS-5190', 'Port Louis city'],
+  ['Mexico', 'paquime', 'MX-CHH', 'Chihuahua'],
+  ['Mexico', 'tlacotalpan', 'MX-VER', 'Veracruz'],
+  ['Netherlands', 'eisinga', 'NL-FR', 'Friesland'],
+  ['Oman', 'bat-tombs', 'OM-ZA', 'Al Dhahira'],
+  ['Oman', 'qalhat', 'OM-SS', 'Ash Sharqiyah North'],
+  ['Peru', 'caral', 'PER-591', 'Lima'],
+  ['Peru', 'chavin', 'PE-ANC', 'Áncash'],
+  ['Poland', 'churches-of-peace', 'PL-DS', 'Lower Silesian'],
+  ['Poland', 'muskau', 'PL-LB', 'Lubusz'],
+  ['Romania', 'sarmizegetusa', 'RO-HD', 'Hunedoara'],
+  ['Serbia', 'gamzigrad', 'RS-15', 'Zajecarski'],
+  ['Slovakia', 'vlkolinec', 'SK-ZI', 'Žilinský'],
+  ['South Korea', 'hahoe', 'KR-47', 'North Gyeongsang'],
+  ['South Korea', 'mireuksa', 'KR-45', 'North Jeolla'],
+  ['Spain', 'lugo-walls', 'ES-LU', 'Lugo'],
+  ['Sweden', 'gammelstad', 'SE-BD', 'Norrbotten'],
+  ['Sweden', 'halsingland', 'SE-X', 'Gävleborg'],
+  ['Switzerland', 'mustair', 'CH-GR', 'Graubünden'],
+  ['Turkey', 'catalhoyuk', 'TR-42', 'Konya'],
+  ['Turkey', 'gordion', 'TR-06', 'Ankara'],
+  ['Turkmenistan', 'kunya-urgench', 'TM-D', 'Tashauz'],
+  ['Turkmenistan', 'merv', 'TM-M', 'Mary'],
+  ['Ukraine', 'chernivtsi', 'UA-77', 'Chernivtsi'],
+  ['Venezuela', 'caracas-university', 'VE-A', 'Distrito Capital'],
+  ['Yemen', 'zabid', 'YE-HU', 'Al Hudaydah'],
+  ['Zimbabwe', 'khami', 'ZW-BU', 'Bulawayo'],
+];
+for (const models of [MORE_MODELS, LAST_MODELS, EXTRA_MODELS, NEWEST_MODELS, LATEST_MODELS, HERITAGE_MODELS]) for (let i = 0; i < models.length; i += 10) {
   const group = models.slice(i, i + 10);
-  test(`the landmark models from ${group[0][0]} (${group[0][1]}) to ${group.at(-1)[0]} (${group.at(-1)[1]}), each on its own country’s map`, async ({ page }) => {
+  test(`the landmark models from ${group[0][0]} (${group[0][1]}) to ${group.at(-1)[0]} (${group.at(-1)[1]}), each on its own country’s map`, { tag: '@models' }, async ({ page }) => {
     test.setTimeout(240_000);
     await openMap(page);
     for (const [country, id, area, place, inBounds = false] of group) {
@@ -891,6 +987,91 @@ test('a model kept off the map (onMap: false) isn’t drawn there', async ({ pag
   await expectModelsOf(map, 'Thailand');
 });
 
+// A model's card (24 Nov 2026, the user's wish: press a model to read about it, with a tick box
+// to say you've been, which starts the celebration). Celebrations on, as celebration.spec.js has.
+test.describe('a landmark model’s card', () => {
+  test.use({ celebrations: true });
+
+  test('pressing a model opens its card, and ticking “Been here” celebrates with that model', async ({ page }) => {
+    await openMap(page);
+    const map = await openCountryMap(page, 'United Kingdom');
+    await expectModelOn(map, 'big-ben', 'GB-WSM');
+    await map.locator('[data-landmark-model="big-ben"] image').click();
+
+    const card = page.getByRole('dialog', { name: 'Big Ben' });
+    await expect(card).toBeVisible();
+    await expect(card.getByRole('heading', { level: 2, name: 'Big Ben' })).toBeFocused();
+    // A big panel in the middle of the screen (24 Nov 2026, the user's wish)
+    const [box, view] = [await card.boundingBox(), page.viewportSize()];
+    expect(box.width).toBeGreaterThan(Math.min(900, view.width - 60));
+    expect(Math.abs(box.x + box.width / 2 - view.width / 2)).toBeLessThan(4);
+    expect(box.y >= 0 && box.y + box.height <= view.height).toBe(true);
+    // The model alone on the left (24 Nov 2026, the user's wish), the place on the right
+    await expect(card.locator('[data-landmark-model-picture] img')).toBeVisible();
+    await expect(card.locator('img')).toHaveCount(1);
+    // About the place: Wikipedia's words, its facts, the tick and the article
+    const about = card.locator('[data-landmark-about]');
+    await expect(about.getByRole('heading', { level: 3, name: 'About Big Ben' })).toBeVisible();
+    await expect(about.locator('p').first()).toContainText('Big Ben');
+    await expect(about.locator('dt', { hasText: 'Where' }).locator('+ dd')).toHaveText('Westminster, United Kingdom');
+    await expect(about.locator('dt', { hasText: 'World Heritage' }).locator('+ dd')).toHaveText('Westminster Palace and Abbey');
+    await expect(about.getByRole('link', { name: 'Read more on Wikipedia (opens in a new tab)' })).toHaveAttribute('href', 'https://en.wikipedia.org/wiki/Big_Ben');
+
+    const been = card.getByRole('checkbox', { name: 'Been to Big Ben' });
+    await expect(been).not.toBeChecked();
+    await been.check();
+    const party = page.locator('[data-celebration="landmark"]');
+    await expect(party).toBeVisible();
+    await expect(party.getByText('Been here!')).toBeVisible();
+    await expect(party.locator('[data-celebration-model="big-ben"]')).toBeVisible();
+    await expect(party.locator('[data-celebration-stamp] [data-stamp-been-here]')).toBeAttached();
+
+    // Carry on: back on the card, the box ticked and focused
+    await party.getByRole('button', { name: 'Carry on' }).click();
+    await expect(party).toBeHidden();
+    await expect(card).toBeVisible();
+    await expect(been).toBeChecked();
+    await expect(been).toBeFocused();
+    await expect(card.getByText('Stamped in the passport', { exact: true })).toBeVisible();
+
+    // Escape shuts the card, the country's map still open
+    await page.keyboard.press('Escape');
+    await expect(card).toBeHidden();
+    await expect(map.getByRole('heading', { name: 'United Kingdom' })).toBeVisible();
+
+    // Taking the tick off and on again celebrates again; Escape shuts the celebration, not the card
+    await map.locator('[data-landmark-model="big-ben"] image').click();
+    await expect(been).toBeChecked();
+    await been.uncheck();
+    await expect(been).not.toBeChecked();
+    await been.check();
+    await expect(party).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(party).toBeHidden();
+    await expect(card).toBeVisible();
+  });
+
+  test('the list opens a landmark’s card too, for the keyboard', async ({ page }) => {
+    await openMap(page);
+    const map = await openCountryMap(page, 'France');
+    // From the keyboard, as its stamp is the keyboard's way in
+    await map.getByRole('button', { name: 'List the departments, landmarks and pins' }).focus();
+    await page.keyboard.press('Enter');
+    const list = page.getByRole('dialog', { name: 'Departments, landmarks and pins' });
+    const eiffel = list.getByRole('button', { name: 'Eiffel Tower', exact: true });
+    await eiffel.focus();
+    await page.keyboard.press('Enter');
+    const card = page.getByRole('dialog', { name: 'Eiffel Tower' });
+    await expect(card.getByRole('heading', { level: 2, name: 'Eiffel Tower' })).toBeFocused();
+    await expect(card.locator('dt', { hasText: 'Part of' })).toHaveCount(0);
+    // Escape shuts the card, not the list, and focus goes back to the button
+    await page.keyboard.press('Escape');
+    await expect(card).toBeHidden();
+    await expect(list).toBeVisible();
+    await expect(eiffel).toBeFocused();
+  });
+});
+
 test('marking a state colours it and brings its country', async ({ page }) => {
   await openMap(page);
   const map = await openCountryMap(page, 'Canada');
@@ -900,13 +1081,13 @@ test('marking a state colours it and brings its country', async ({ page }) => {
   await expect(page.locator('[data-state="CA-SK"]')).toHaveAttribute('data-status', 'VISITED');
   await expect(map.getByText('1 of 13 provinces visited')).toBeVisible();
   // Canada came with it (North America already counted, through the US)
-  await expectStats(page, '9 countries, 2 continents, 16 photos');
+  await expectStats(page, '21 countries, 5 continents, 16 photos');
 });
 
 test('an editor drops a pin and saves its first visit', async ({ page }) => {
   await openMap(page);
   const map = await openCountryMap(page, 'United States');
-  await expect(map.getByText('2 of 51 states visited')).toBeVisible();
+  await expect(map.getByText('3 of 51 states visited')).toBeVisible();
   await map.getByRole('button', { name: 'Add a pin' }).click();
   await expect(map.getByText('Press the map where the pin goes.')).toBeVisible();
   await pressState(page, 'US-TX');
@@ -935,7 +1116,7 @@ test('an editor drops a pin and saves its first visit', async ({ page }) => {
 test('a country opens on its own on a phone too', { tag: '@phone' }, async ({ page }) => {
   await openMap(page);
   const map = await openCountryMap(page, 'United States');
-  await expect(map.getByText('2 of 51 states visited')).toBeVisible();
+  await expect(map.getByText('3 of 51 states visited')).toBeVisible();
   await expect(page.locator('[data-state="US-NY"]')).toHaveAttribute('data-status', 'VISITED');
   // A finger's drag and pinch are the map's own, as on the world map: without it the phone's
   // browser held back the touch moves, and panning was jerky (23 Nov 2026, the user's report)

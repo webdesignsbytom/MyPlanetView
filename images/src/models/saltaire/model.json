@@ -1,0 +1,8 @@
+{
+  "name": "Saltaire",
+  "latitude": 53.83717,
+  "longitude": -1.79026,
+  "maps": ["GB", "XE"],
+  "landmark": "Q838920",
+  "onMap": false
+}

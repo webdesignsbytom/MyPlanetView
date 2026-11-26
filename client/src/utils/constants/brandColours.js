@@ -36,6 +36,9 @@ export const SHARE_CARD_COLOURS = Object.freeze({
     gold: Object.freeze({ face: '#e3b53d', rim: '#8a6a12' }),
   }),
   ribbon: Object.freeze(['#991b1b', '#ef4444']),
+  // A badge's luggage sticker (25 Nov 2026; BadgeSticker's look): the double ring in poster
+  // red on parchment, the icon and number in the deep red, the tick's disc and its mark
+  sticker: Object.freeze({ ring: '#ef4444', face: '#dcbc90', ink: '#991b1b', tick: '#ef4444', tickInk: '#ffffff' }),
 });
 
 // The map poster's two looks (utils/poster/drawMapPoster.js; 22 Nov 2026), fixed for print
@@ -66,6 +69,60 @@ export const POSTER_COLOURS = Object.freeze({
     landEdge: '#8a5a33',
     ice: '#fdf9f0',
     iceEdge: '#b89a74',
+  }),
+});
+
+// A postcard's four styles (utils/postcards/drawPostcard.js; 26 Nov 2026), drawn on a canvas so
+// fixed here, as the share card's are: the card's paper and edge, the message's ink, the
+// "Greetings from" lettering, the rules and address lines, the stamp's paper, the postmark's
+// ink and the sky behind a little 3D model. Airmail's edge is red and blue stripes; vintage's
+// paper a faint linen weave.
+export const POSTCARD_COLOURS = Object.freeze({
+  classic: Object.freeze({
+    paper: '#fdf8ee',
+    edge: '#ffffff',
+    ink: '#2b2118',
+    lettering: '#991b1b',
+    shadow: '#3b2a1a',
+    rule: '#97572b',
+    stamp: '#ffffff',
+    postmark: '#33416b',
+    sky: '#dcecf7',
+  }),
+  vintage: Object.freeze({
+    paper: '#efe0bf',
+    edge: '#e2cc9f',
+    ink: '#4a3320',
+    lettering: '#7a2e1a',
+    shadow: '#3b2a1a',
+    rule: '#8a5a33',
+    weave: '#d9c193',
+    stamp: '#f8efd9',
+    postmark: '#5a3a22',
+    sky: '#e9dcc0',
+  }),
+  airmail: Object.freeze({
+    paper: '#ffffff',
+    edge: '#ffffff',
+    ink: '#1d2a4d',
+    lettering: '#c8102e',
+    shadow: '#1d2a4d',
+    rule: '#1d3f8f',
+    stripes: Object.freeze(['#c8102e', '#1d3f8f']),
+    stamp: '#ffffff',
+    postmark: '#1d2a4d',
+    sky: '#dcecf7',
+  }),
+  night: Object.freeze({
+    paper: '#14213d',
+    edge: '#0b1630',
+    ink: '#f3ead2',
+    lettering: '#e3b53d',
+    shadow: '#05091a',
+    rule: '#8fb3d1',
+    stamp: '#f3ead2',
+    postmark: '#e3b53d',
+    sky: '#22345c',
   }),
 });
 

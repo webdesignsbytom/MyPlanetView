@@ -40,6 +40,10 @@ export async function listThemesWithCounts() {
 
 export const createThemeInDB = (data) => prisma.photoTheme.create({ data, select: THEME_SELECT });
 
+/** Themes for months that have none (a month taken meanwhile is skipped) -> how many were added. */
+export const createThemesInDB = (rows) =>
+  rows.length ? prisma.photoTheme.createMany({ data: rows, skipDuplicates: true }).then((result) => result.count) : Promise.resolve(0);
+
 export const updateThemeInDB = (id, data) => prisma.photoTheme.update({ where: { id }, data, select: THEME_SELECT });
 
 export const deleteThemeInDB = (id) => prisma.photoTheme.delete({ where: { id } });

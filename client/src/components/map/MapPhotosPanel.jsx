@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+// Icons
+import { FaPlay } from 'react-icons/fa';
 // Hooks
 import usePhotoPage from '@/hooks/usePhotoPage';
 // Components
@@ -6,6 +8,7 @@ import MapPanel from './MapPanel';
 import MapActionButton from './MapActionButton';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import PhotoAlbumViewer from '@/components/photos/PhotoAlbumViewer';
+import ShareShow from '@/components/shows/ShareShow';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { MAP_PHOTOS } from '@/utils/map/mapPhotoLists';
@@ -20,10 +23,13 @@ const countryOf = (photo) => (photo.countryCode ? countryName(photo.countryCode)
  * just the picture and its title, stepping through the album (PhotoAlbumViewer): "a fun
  * album", with nothing to edit (that's the country panels and the trip pages). Viewers see
  * what they may (no hidden ones). An editor's "Add photos" at the top opens the upload panel
- * (`onAddPhotos`). `photosVersion` goes up when photos change elsewhere (an upload, an edit,
- * a delete), and the list is fetched again.
+ * (`onAddPhotos`), and "Play my world" (`onPlay`, once there are photos; the toolbar's own stamp
+ * until 24 Nov 2026, the user's wish: a shorter bar) plays the whole map's slideshow over it.
+ * `photosVersion` goes up when photos change elsewhere (an upload, an edit, a delete), and the
+ * list is fetched again. `showMapId` (the map's editors) adds "Share a slideshow" of photos
+ * chosen from the album (ShareShow; 25 Nov 2026).
  */
-function MapPhotosPanel({ photoSource, photosVersion = 0, onAddPhotos = null, onClose }) {
+function MapPhotosPanel({ photoSource, photosVersion = 0, onAddPhotos = null, onPlay = null, showMapId = null, onClose }) {
   const photos = usePhotoPage({ ...photoSource, ...MAP_PHOTOS });
   const { reload } = photos;
   // The photo showing in the viewer, by id (its place moves if the list reloads)
@@ -33,13 +39,23 @@ function MapPhotosPanel({ photoSource, photosVersion = 0, onAddPhotos = null, on
   useEffect(() => {
     if (photosVersion) reload();
   }, [photosVersion, reload]);
+  // Something to play: the slideshow of an empty map would show nothing
+  const canPlay = Boolean(onPlay) && photos.photos.length > 0;
+  const canShareShow = Boolean(showMapId) && photos.photos.length > 0;
 
   return (
     <MapPanel wide title='Photo album' onClose={onClose}>
-      {/* Full width on phones; at the start of the wide panel elsewhere, not a long red bar */}
-      {onAddPhotos ? (
-        <div className='grid md:justify-items-start'>
-          <MapActionButton onClick={onAddPhotos}>Add photos</MapActionButton>
+      {/* Full width on phones; side by side at the start of the wide panel elsewhere, not long red bars */}
+      {canPlay || onAddPhotos || canShareShow ? (
+        <div className='grid gap-2 md:grid-flow-col md:justify-start' data-album-actions=''>
+          {canPlay ? (
+            <MapActionButton onClick={onPlay}>
+              <FaPlay aria-hidden='true' />
+              <span>Play my world</span>
+            </MapActionButton>
+          ) : null}
+          {onAddPhotos ? <MapActionButton onClick={onAddPhotos}>Add photos</MapActionButton> : null}
+          {canShareShow ? <ShareShow inMapPanel mapId={showMapId} source={{ ...photoSource, ...MAP_PHOTOS }} /> : null}
         </div>
       ) : null}
       <PhotoGrid

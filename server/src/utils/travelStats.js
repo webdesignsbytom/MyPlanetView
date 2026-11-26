@@ -6,8 +6,10 @@
 //
 // Places are where their pins are (each place's pin turned back into a position:
 // utils/projection.js positionFromMap), and a stop at a landmark is at the landmark, so the
-// distances are "about": home, then each completed trip's stops in order, then home again.
+// distances are "about": home, then each completed trip's stops in order, then home again; and
+// each visited country no completed trip reached, home and back (24 Nov 2026).
 import { placeOnMap } from './ukNations.js';
+import { PARENT_PLACE } from './specialPlaces.js';
 
 const EARTH_RADIUS_KM = 6371.0088;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -170,6 +172,35 @@ export function tripDistanceKm(trip, positions, home = null) {
   return km;
 }
 
+// The country a place is a journey to: a region its country's, the South Pole Antarctica's, a
+// UK nation the UK's
+const journeyOf = (code) => placeOnMap(PARENT_PLACE[code] ?? code, false);
+
+/**
+ * The places no completed trip reached, as journeys from home and back, in km (24 Nov 2026, the
+ * user's report: a map with 12 countries said 3,500 km, its one completed trip): one journey per
+ * country, to the furthest of its places visited (Hawaii for the US when both are), never to
+ * home's own country. Nothing without a home.
+ */
+export function untrippedKm({ completedTrips = [], visitedCodes = [], positions = new Map(), homeCountryCode = null }) {
+  const home = homeCountryCode ? positions.get(homeCountryCode) : null;
+  if (!home) return 0;
+  const homeJourney = journeyOf(homeCountryCode);
+  const reached = new Set(completedTrips.flatMap((trip) => [...(trip.countryCodes ?? []), ...(trip.stops ?? []).map((s) => s.countryCode)].map(journeyOf)));
+  const furthest = new Map();
+  for (const code of new Set(visitedCodes)) {
+    const journey = journeyOf(code);
+    if (journey === homeJourney || reached.has(journey)) continue;
+    const point = positions.get(code);
+    if (!point) continue;
+    const km = distanceKm(home, point);
+    if (km > (furthest.get(journey) ?? 0)) furthest.set(journey, km);
+  }
+  let total = 0;
+  for (const km of furthest.values()) total += 2 * km;
+  return total;
+}
+
 /**
  * The map's home: its own setting (`homeCountryCode`), else the birth country of the owner's
  * own traveller, else of the first traveller with one. -> a code, or null
@@ -210,7 +241,10 @@ export function furthestFromHome(codes, positions, homeCode) {
  */
 export function travelExtras({ completedTrips = [], visitedCodes = [], positions = new Map(), homeCountryCode = null }) {
   const home = homeCountryCode ? (positions.get(homeCountryCode) ?? null) : null;
-  const km = completedTrips.reduce((sum, trip) => sum + tripDistanceKm(trip, positions, home), 0);
+  // Each completed trip's route, and home and back to every other country visited (24 Nov 2026)
+  const km =
+    completedTrips.reduce((sum, trip) => sum + tripDistanceKm(trip, positions, home), 0) +
+    untrippedKm({ completedTrips, visitedCodes, positions, homeCountryCode });
   return {
     homeCountryCode,
     daysAway: daysAway(completedTrips),

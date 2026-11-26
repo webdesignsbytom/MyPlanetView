@@ -116,3 +116,27 @@ describe('anniversaries (moments dated to the day)', () => {
     expect(anniversaryWords({ years: 1, title: 'Mia was born', countryName: 'United Kingdom' }).headline).toBe('A year ago today, in the United Kingdom');
   });
 });
+
+describe('the day’s memory emails (the audit, 26 Nov 2026)', () => {
+  it('reads MEMORY_EMAILS_PER_DAY: a whole number from 0, else 60', async () => {
+    const { memoryEmailsPerDay, MEMORY_EMAILS_PER_DAY_DEFAULT } = await import('../src/utils/onThisDay.js');
+    expect(MEMORY_EMAILS_PER_DAY_DEFAULT).toBe(60);
+    expect(memoryEmailsPerDay(undefined)).toBe(60);
+    expect(memoryEmailsPerDay('')).toBe(60);
+    expect(memoryEmailsPerDay('  ')).toBe(60);
+    expect(memoryEmailsPerDay('0')).toBe(0);
+    expect(memoryEmailsPerDay('250')).toBe(250);
+    expect(memoryEmailsPerDay('-5')).toBe(60);
+    expect(memoryEmailsPerDay('12.5')).toBe(60);
+    expect(memoryEmailsPerDay('lots')).toBe(60);
+  });
+
+  it('knows Resend’s quota errors', async () => {
+    const { isQuotaError } = await import('../src/utils/onThisDay.js');
+    expect(isQuotaError('daily_quota_exceeded')).toBe(true);
+    expect(isQuotaError('monthly_quota_exceeded')).toBe(true);
+    expect(isQuotaError('rate_limit_exceeded')).toBe(false);
+    expect(isQuotaError('validation_error')).toBe(false);
+    expect(isQuotaError(undefined)).toBe(false);
+  });
+});

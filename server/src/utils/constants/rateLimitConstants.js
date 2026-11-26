@@ -136,6 +136,19 @@ export const GUESS_START_RATE_LIMIT = {
   max: 20,
 };
 
+// Vs mode (docs/API.md "Vs mode"): comparisons started per user a day, and its join links
+// looked up per IP (codes would be guessed there)
+export const VS_CREATE_DAILY_USER_LIMIT = {
+  name: 'vs-create-user-day',
+  windowMs: DAY,
+  max: 10,
+};
+export const VS_LOOKUP_RATE_LIMIT = {
+  name: 'vs-lookup',
+  windowMs: 15 * MINUTES,
+  max: 30,
+};
+
 export const CHALLENGE_LOOKUP_RATE_LIMIT = {
   name: 'challenge-lookup',
   windowMs: 15 * MINUTES,
@@ -166,6 +179,26 @@ export const BILLING_RATE_LIMIT = {
 
 // "Download my data" per signed-in user: the account, each map, and each page of 500
 // photos (with their signed links) is a request, so a big account makes a hundred or so
+// Feedback reports sent per user per hour (docs/API.md "Feedback"), keyed by user
+export const FEEDBACK_RATE_LIMIT = {
+  name: 'feedback-user',
+  windowMs: 60 * MINUTES,
+  max: 10,
+};
+
+// Postcards sent per user a day (docs/API.md "Postcards"), and their links looked up per IP
+// (codes would be guessed there, as a share link's)
+export const POSTCARD_CREATE_DAILY_USER_LIMIT = {
+  name: 'postcard-create-user-day',
+  windowMs: DAY,
+  max: 30,
+};
+export const POSTCARD_LOOKUP_RATE_LIMIT = {
+  name: 'postcard-lookup',
+  windowMs: 15 * MINUTES,
+  max: 30,
+};
+
 export const DATA_EXPORT_RATE_LIMIT = {
   name: 'data-export',
   windowMs: 60 * MINUTES,

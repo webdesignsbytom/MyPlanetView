@@ -103,4 +103,20 @@ test.describe('Monthly photo themes', () => {
     await expect(item('Night markets')).toHaveCount(0);
     await expect(page.getByRole('button', { name: `Write a theme for ${gap}` })).toBeVisible();
   });
+
+  // 26 Nov 2026, the user's wish: production had no themes until a year was written. One press
+  // gives each empty month a suggested one, never one used in the year before or ahead
+  test('an admin fills the empty months with suggested themes in one press', async ({ page }) => {
+    await page.goto('/admin/themes?mockRole=ADMIN');
+    await expect(page.getByRole('heading', { level: 1, name: 'Photo Themes' })).toBeVisible();
+    const list = page.getByRole('region', { name: 'List of themes' });
+    // The seed covers eleven months ahead: the twelfth is empty
+    const gap = monthLabel(11);
+    await expect(page.getByRole('button', { name: `Write a theme for ${gap}` })).toBeVisible();
+    await page.getByRole('button', { name: 'Fill the empty months with suggested themes' }).click();
+    await expect(page.getByText('1 suggested theme added. Change or delete any before its month starts.')).toBeVisible();
+    await expect(page.getByText('Every month of the coming year has a theme.')).toBeVisible();
+    // The first idea the seed's year hasn't used: Markets
+    await expect(list.getByRole('article', { name: `${gap}: Markets` })).toBeVisible();
+  });
 });

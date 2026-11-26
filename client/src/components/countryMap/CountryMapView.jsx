@@ -5,14 +5,17 @@ import { FiList } from 'react-icons/fi';
 // Hooks
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import useCountryMapData from '@/hooks/useCountryMapData';
+import useMapChrome from '@/hooks/useMapChrome';
 // Components
 import MapZoomControls from '@/components/map/MapZoomControls';
 import MapRoundButton from '@/components/map/MapRoundButton';
 import MapPanel from '@/components/map/MapPanel';
 import MapKeyboardHint from '@/components/map/MapKeyboardHint';
+import SlideAway from '@/components/map/chrome/SlideAway';
 import { StarBadgeSymbols } from '@/components/map/StarBadge';
 import { MomentSpotIcon } from '@/components/map/MomentSpotPins';
 import StatePopover from './StatePopover';
+import LandmarkModelCard from './LandmarkModelCard';
 import CountryMapList from './CountryMapList';
 import CountryMapLoading from './CountryMapLoading';
 import CountryFlag from './CountryFlag';
@@ -119,12 +122,14 @@ const StateNames = memo(function StateNames({ areas, statuses, viewport }) {
 // root of the zoom (a thing on the map, yet never covering a city), between 40 and 150 px,
 // times the model's `size` (every model at one scale: the Eiffel Tower a little taller than Big
 // Ben; utils/map/landmarkModelSize.js); the smaller picture while it's sharp enough on a 2×
-// screen. Nothing to press: a press goes through to the state under it.
+// screen. The ones remade in the high-quality look (`hq`, dioramas on a round base, 26 Nov 2026)
+// carry `data-landmark-model-hq`. A press on one opens its card (LandmarkModelCard; 24 Nov 2026, the user's wish); the
+// keyboard's and screen readers' way to them is the list, as for the states and pins.
 const LandmarkModels = memo(function LandmarkModels({ geo, models, viewport }) {
   const zoom = useViewportZoom(viewport);
   if (!models.length) return null;
   return (
-    <g aria-hidden='true' className='pointer-events-none'>
+    <g aria-hidden='true'>
       {models.map((model) => {
         const at = placeOnCountryMap(geo, model.latitude, model.longitude);
         const tall = modelPx(model, zoom);
@@ -132,7 +137,14 @@ const LandmarkModels = memo(function LandmarkModels({ geo, models, viewport }) {
         const picture = LANDMARK_MODEL_HEIGHTS.find((height) => height >= tall * 2) ?? LANDMARK_MODEL_HEIGHTS.at(-1);
         // The group stands on the spot; the picture is moved so its tile's middle is there
         return (
-          <g key={model.id} data-landmark-model={model.id} transform={`translate(${at.x} ${at.y})`}>
+          <g
+            key={model.id}
+            data-landmark-model={model.id}
+            data-landmark-model-hq={model.hq ? '' : undefined}
+            transform={`translate(${at.x} ${at.y})`}
+            className='cursor-pointer'
+          >
+            <title>{model.name}</title>
             <image href={model.images[picture]} x={box.x - at.x} y={box.y - at.y} width={box.width} height={box.height} />
           </g>
         );
@@ -158,12 +170,26 @@ const Pins = memo(function Pins({ geo, pins, viewport, selectedId }) {
   });
 });
 
+// The state a spot on the canvas is in (the one a landmark model stands on), or null: off the
+// shore (Liberty Island), or where the browser can't test a point against a shape
+function stateAt(svg, x, y) {
+  if (!svg || typeof DOMPoint === 'undefined') return null;
+  const point = new DOMPoint(x, y);
+  for (const group of svg.querySelectorAll('[data-state]')) {
+    for (const path of group.querySelectorAll('path')) {
+      if (typeof path.isPointInFill === 'function' && path.isPointInFill(point)) return group.getAttribute('data-state');
+    }
+  }
+  return null;
+}
+
 /**
  * A country opened on its own (18 Nov 2026, the user's wish; docs/API.md "Country maps"): the
  * country alone, as big as the screen allows, on its own projection, its far-off parts in
  * insets, its states or provinces drawn and coloured as the map stands with them, and its
  * pins. It takes the world map's place on the page (MapExperience), with its own pan and
- * zoom. A press on a state opens StatePopover (editors mark it); on a pin, `onOpenPin(id)`.
+ * zoom. A press on a state opens StatePopover (editors mark it); on a landmark model,
+ * LandmarkModelCard (editors tick "Been here"); on a pin, `onOpenPin(id)`.
  * "Add a pin" (editors; `locked` while the email isn't verified) waits for a press on the
  * map, then `onNewPin({ latitude, longitude, countryCode })`. `pinsVersion` going up reloads
  * the pins; `onVisitsChanged` runs after a state's change brought its country's visit.
@@ -181,15 +207,20 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
   const headerRef = useRef(null);
   const [placing, setPlacing] = useState(false);
   const [popover, setPopover] = useState(null); // { code, name, x, y }
+  const [modelCard, setModelCard] = useState(null); // { id, stateName }
   const [statusError, setStatusError] = useState(null);
   // The states and pins as a list: a round stamp at the top left on every screen, the list a
   // panel in the middle (19 Nov 2026, the user's wish: its button made the header look poor)
   const [listOpen, setListOpen] = useState(false);
   const name = countryName(code);
   const models = useMemo(() => modelsOnMap(LANDMARK_MODELS, code), [code]);
+  const modelsById = useMemo(() => new Map(models.map((model) => [model.id, model])), [models]);
   const info = geo?.word;
   const many = info?.[1] || 'states';
-  const listTitle = `${many[0].toUpperCase()}${many.slice(1)} and pins`;
+  // What the list holds: the states, the landmark models drawn (every country map has one or
+  // more) and the pins
+  const listWhat = `${many}${models.length ? ', landmarks' : ''} and pins`;
+  const listTitle = `${listWhat[0].toUpperCase()}${listWhat.slice(1)}`;
   const marked = geo ? geo.areas.filter((a) => a.code && ['VISITED', 'LIVED'].includes(statuses.get(a.code))).length : 0;
   const total = geo ? geo.areas.filter((a) => a.code).length : 0;
 
@@ -236,36 +267,81 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
     headingRef.current?.focus({ preventScroll: true });
   }, []);
 
-  // A state's card gives focus back to what opened it (the map, or the list's button)
+  // The page's menus slid away (the toolbar's tab; useMapChrome): this map's header, list stamp
+  // and zoom stamps go with them, and its cards and list close. A card opened meanwhile (a state
+  // or a model pressed) brings them all back.
+  const { hidden: menusHidden, show: showMenus } = useMapChrome();
+
+  // A state's card and a landmark model's, one at a time, each giving focus back to what
+  // opened it (the map, or the list's button)
   const popoverOpenerRef = useRef(null);
-  const openPopover = useCallback((next, opener) => {
-    popoverOpenerRef.current = opener ?? null;
-    setStatusError(null);
-    setPopover(next);
-  }, []);
+  const openPopover = useCallback(
+    (next, opener) => {
+      popoverOpenerRef.current = opener ?? null;
+      setStatusError(null);
+      setModelCard(null);
+      setPopover(next);
+      showMenus();
+    },
+    [showMenus],
+  );
+  const openModelCard = useCallback(
+    (next, opener) => {
+      popoverOpenerRef.current = opener ?? null;
+      setPopover(null);
+      setModelCard(next);
+      showMenus();
+    },
+    [showMenus],
+  );
   const closePopover = useCallback(() => {
     setPopover(null);
+    setModelCard(null);
     const opener = popoverOpenerRef.current;
     popoverOpenerRef.current = null;
     if (opener?.isConnected) opener.focus({ preventScroll: true });
   }, []);
+  // Both cards gone, focus left where it is (a pin opening, "Add a pin", a press on the sea)
+  const dropCards = useCallback(() => {
+    setPopover(null);
+    setModelCard(null);
+  }, []);
+  useEffect(() => {
+    if (!menusHidden) return;
+    dropCards();
+    setListOpen(false);
+  }, [menusHidden, dropCards]);
 
-  // Escape: stop placing a pin, else close the popover
+  // Escape: stop placing a pin, else close the card. Not when a dialog over the map took it
+  // (the celebration a "Been here" tick opens: useModalA11y)
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key !== 'Escape') return;
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
       if (placing) setPlacing(false);
-      else if (popover) closePopover();
+      else if (popover || modelCard) closePopover();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [placing, popover, closePopover]);
+  }, [placing, popover, modelCard, closePopover]);
 
   // A state from the list: its card beside the list's button
   const openStateFromList = (stateCode, button) => {
     const area = geo?.areas.find((a) => a.code === stateCode);
     const rect = button.getBoundingClientRect();
     openPopover({ code: stateCode, name: area?.name ?? stateCode, x: rect.right, y: rect.top }, button);
+  };
+
+  // The name of the state a model stands in, for its card
+  const modelStateName = (model) => {
+    const at = placeOnCountryMap(geo, model.latitude, model.longitude);
+    const stateCode = stateAt(boxRef.current?.querySelector('svg[role="application"]'), at.x, at.y);
+    return stateCode ? (geo.areas.find((a) => a.code === stateCode)?.name ?? null) : null;
+  };
+  // A model from the list: its card, focus going back to the list's button after
+  const openModelFromList = (modelId, button) => {
+    const model = modelsById.get(modelId);
+    if (!model || !geo) return;
+    openModelCard({ id: modelId, stateName: modelStateName(model) }, button);
   };
 
   const svgPoint = (e) => {
@@ -279,6 +355,7 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
   const handleClick = (e) => {
     if (!geo) return;
     const pinId = e.target.closest?.('[data-pin]')?.getAttribute('data-pin');
+    const model = modelsById.get(e.target.closest?.('[data-landmark-model]')?.getAttribute('data-landmark-model'));
     const stateCode = e.target.closest?.('[data-state]')?.getAttribute('data-state');
     const point = svgPoint(e);
     const at = { x: e.clientX, y: e.clientY };
@@ -290,14 +367,18 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
         return;
       }
       if (pinId) {
-        setPopover(null);
+        dropCards();
         onOpenPin?.(pinId);
+        return;
+      }
+      if (model) {
+        openModelCard({ id: model.id, stateName: modelStateName(model) }, document.activeElement);
         return;
       }
       if (stateCode) {
         const area = geo.areas.find((a) => a.code === stateCode);
         openPopover({ code: stateCode, name: area?.name ?? stateCode, ...at }, document.activeElement);
-      } else setPopover(null);
+      } else dropCards();
     });
   };
 
@@ -320,7 +401,7 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
       aria-pressed={placing}
       disabled={locked || !geo}
       onClick={() => {
-        setPopover(null);
+        dropCards();
         setPlacing((on) => !on);
       }}
       className={`${placing ? 'btn-poster' : 'btn-paper'} grid-flow-col gap-2 [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:0.875rem] disabled:opacity-50`}
@@ -381,14 +462,14 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
         ) : null}
       </svg>
       <MapKeyboardHint id={hintId}>
-        Drag, or use the arrow keys, to move the map. Plus and minus zoom; 0 shows all of it. Every {info?.[0] || 'state'} and
-        pin is also in the list, top left.
+        Drag, or use the arrow keys, to move the map. Plus and minus zoom; 0 shows all of it. Every {info?.[0] || 'state'}
+        {models.length ? ', landmark' : ''} and pin is also in the list, top left.
       </MapKeyboardHint>
 
       {/* The header, centred: back to the world, the country and how many of its states, a
           new pin; one slim row on wide screens, stacked on phones */}
-      <div className='pointer-events-none absolute inset-x-16 top-3 grid justify-items-center nophone:inset-x-72'>
-        <div ref={headerRef} className='ticket-edge paper-aged pointer-events-auto grid max-w-full justify-items-center gap-2 px-4 py-2 text-center text-poster-ink'>
+      <SlideAway className='pointer-events-none absolute inset-x-16 top-3 grid justify-items-center nophone:inset-x-72' measure='[data-country-map-header]'>
+        <div ref={headerRef} data-country-map-header='' className='ticket-edge paper-aged pointer-events-auto grid max-w-full justify-items-center gap-2 px-4 py-2 text-center text-poster-ink'>
           <div className='grid items-center justify-items-center gap-2 nophone:grid-cols-[auto_auto_auto] nophone:gap-4'>
             <div className='hidden nophone:grid'>{backToWorld}</div>
             {/* The flag beside the name and the count, the two lined up on the left */}
@@ -422,15 +503,15 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
             </p>
           ) : null}
         </div>
-      </div>
+      </SlideAway>
 
       {/* The list's stamp, top left on every screen (the goal tag steps aside while a country is open) */}
       {geo ? (
-        <div className='absolute left-3 top-3'>
-          <MapRoundButton label={`List the ${many} and pins`} pressed={listOpen} onClick={() => setListOpen((on) => !on)}>
+        <SlideAway className='absolute left-3 top-3'>
+          <MapRoundButton label={`List the ${listWhat}`} pressed={listOpen} onClick={() => setListOpen((on) => !on)}>
             <FiList aria-hidden='true' />
           </MapRoundButton>
-        </div>
+        </SlideAway>
       ) : null}
 
       {/* The list, a panel in the middle of the screen (the whole screen less a margin on phones) */}
@@ -442,9 +523,11 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
               statuses={statuses}
               pins={pins}
               word={info}
+              models={models}
               onOpenState={openStateFromList}
+              onOpenModel={openModelFromList}
               onOpenPin={(id) => {
-                setPopover(null);
+                dropCards();
                 setListOpen(false);
                 onOpenPin?.(id);
               }}
@@ -454,11 +537,11 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
       ) : null}
 
       {geo ? (
-        <div className='pointer-events-none absolute bottom-3 right-3 grid'>
+        <SlideAway className='pointer-events-none absolute bottom-3 right-3 grid'>
           <div className='pointer-events-auto'>
             <MapZoomControls viewport={viewport} resetLabel={`Show all of ${name}`} onReset={fitCountry} />
           </div>
-        </div>
+        </SlideAway>
       ) : error ? (
         <div className='absolute inset-0 grid place-items-center' role='alert'>
           <p className='ticket-edge paper-aged px-4 py-3 text-sm'>{error}</p>
@@ -475,6 +558,15 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
           y={popover.y}
           canEdit={canEdit && !locked}
           onChange={(status) => changeStatus(popover.code, status)}
+          onClose={closePopover}
+        />
+      ) : null}
+      {modelCard && modelsById.has(modelCard.id) ? (
+        <LandmarkModelCard
+          key={modelCard.id}
+          model={modelsById.get(modelCard.id)}
+          stateName={modelCard.stateName}
+          countryName={name}
           onClose={closePopover}
         />
       ) : null}

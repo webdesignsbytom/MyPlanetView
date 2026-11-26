@@ -2,8 +2,9 @@
 // user's wish): stars, the place's little 3D model and its passport stamp, when a landmark is
 // newly stamped in the map's passport (ticked "been here", or a photo's match confirmed) or a
 // country is newly marked visited or lived in from its ticket. The viewer's setting
-// `showCelebrations` (on unless turned off; the screen's box turns it off) says whether it shows.
+// `showCelebrations` (on unless turned off, in Settings, Help) says whether it shows.
 import { countsAsVisited } from './visitStatus';
+import { withThe } from './travelStatWords';
 
 /** A country's status change worth celebrating: into visited or lived in, from neither. */
 export const celebratesVisit = (before, after) => countsAsVisited(after) && !countsAsVisited(before);
@@ -15,8 +16,25 @@ export const celebratesStamp = (landmarkId, stamped) => Boolean(landmarkId) && !
 export const todayDay = (date = new Date()) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
-// The words over the name
-export const CELEBRATION_KICKERS = { landmark: 'Been here!', VISITED: 'Visited!', LIVED: 'Lived here!', seen: 'Seen it!', done: 'Done it!' };
+// The words over the name (a country's are in its heading: countryCelebrationTitle)
+export const CELEBRATION_KICKERS = { landmark: 'Been here!', seen: 'Seen it!', done: 'Done it!' };
+
+const STAMP_WORDS = { LIVED: 'residence stamp', VISITED: 'entry stamp' };
+const capitalised = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+// "the United Kingdom" (the stats' and emails' rule), and the places only the map has: the
+// poles and the Azores
+const placeWithThe = (name) => (/(^Azores| Pole)$/.test(name) ? `the ${name}` : withThe(name));
+
+/** A country's heading (24 Nov 2026, the user's wish): "You visited France!", "You lived in the United Kingdom!". */
+export const countryCelebrationTitle = (name, status) => `${status === 'LIVED' ? 'You lived in' : 'You visited'} ${placeWithThe(name)}!`;
+
+/**
+ * A country's words, named (24 Nov 2026, the user's wish): "France now has its own page in your
+ * passport, with its entry stamp." Undated, how to date the stamp too.
+ */
+export const countryCelebrationText = (name, status, dated) =>
+  `${capitalised(placeWithThe(name))} now has its own page in your passport, with its ${STAMP_WORDS[status] || STAMP_WORDS.VISITED}.` +
+  (dated ? '' : ' Add the day you first went on its ticket, and the stamp is dated.');
 
 // A small string hash (FNV-1a): the stars are the same each time for the same place
 function hashOf(text) {

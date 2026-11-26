@@ -23,7 +23,7 @@ test.describe('Photos', () => {
     const { panel, item } = await upload(page, await makeJpeg(page, { name: 'harbour.jpg' }), { country: 'Germany' });
     await expect(item).toContainText('No location in the file, so it went in Germany.');
     // A photo from a country you hadn't marked makes it visited
-    await expectStats(page, '9 countries, 2 continents, 17 photos');
+    await expectStats(page, '21 countries, 5 continents, 17 photos');
     await panel.getByRole('button', { name: 'Close Add photos' }).click();
 
     const list = await openTool(page, 'Country list', 'Countries');
@@ -50,7 +50,7 @@ test.describe('Photos', () => {
     const file = await makeJpeg(page, { name: 'gate.jpg', gps: { latitude: 52.51627, longitude: 13.37772 } });
     const { panel, item } = await upload(page, file);
     await expect(item).toContainText('Placed in Germany from its location.');
-    await expectStats(page, '9 countries, 2 continents, 17 photos');
+    await expectStats(page, '21 countries, 5 continents, 17 photos');
     await panel.getByRole('button', { name: 'Close Add photos' }).click();
 
     const list = await openTool(page, 'Country list', 'Countries');
@@ -73,28 +73,30 @@ test.describe('Photos', () => {
     await expect(germany).toBeVisible();
     await expect(thumb).toBeFocused();
 
-    // A confirmed landmark counts (the seeded map has 13 stamps)
+    // A confirmed landmark counts (the seeded map has 25 stamps)
     await openStats(page);
     await expect(page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('definition')).toHaveText([
-      '9',
-      '4.0%',
-      '9 of 226 countries',
-      '2 of 7',
+      '21',
+      '9.3%',
+      '21 of 226 countries',
+      '5 of 7',
       '0 of 5',
       `0 of ${REGION_COUNT}`,
       '17',
-      '14 of 1,366',
-      /^1[01] of 1,273$/,
-      '3',
+      '26 of 1,366',
+      /^2[23] of 1,273$/,
       '15',
+      '282',
       'On completed trips',
       // The longest trip (23 Nov 2026)
-      '15 days',
-      'Italian summer',
-      '3,500 km',
-      'About 2,200 miles',
+      '190 days',
+      'A year off: around the world',
+      // The trip, and home and back to each country no completed trip reached (24 Nov 2026);
+      // in miles, as the map's home is in the UK (25 Nov 2026)
+      /^[\d,]+ miles$/,
+      /^About [\d,]+ km$/,
       /.+/,
-      /^About [\d,]+ km from the United Kingdom$/,
+      /^About [\d,]+ miles from the United Kingdom$/,
     ]);
   });
 
@@ -102,7 +104,7 @@ test.describe('Photos', () => {
     await openMap(page);
     const { panel, item } = await upload(page, await makeJpeg(page, { name: 'somewhere.jpg' }));
     await expect(item).toContainText('under Unplaced photos until you choose a country');
-    await expectStats(page, '8 countries, 2 continents, 17 photos');
+    await expectStats(page, '20 countries, 5 continents, 17 photos');
     await panel.getByRole('button', { name: 'Close Add photos' }).click();
 
     // From the country list (the stats panel has the same button, on wide screens)
@@ -114,16 +116,17 @@ test.describe('Photos', () => {
     const viewer = page.getByRole('dialog', { name: 'Photo' });
     await expectPictureLoaded(viewer);
     await viewer.getByRole('button', { name: 'Edit' }).click();
-    await viewer.getByRole('combobox', { name: 'Country' }).selectOption({ label: 'Greece' });
+    // A country not on the map yet (Greece was the honeymoon)
+    await viewer.getByRole('combobox', { name: 'Country' }).selectOption({ label: 'Croatia' });
     await viewer.getByRole('textbox', { name: 'Caption' }).fill('Somewhere sunny');
     await viewer.getByRole('button', { name: 'Save', exact: true }).click();
 
     // Now it has a country (and a caption, so a new title), and it leaves the list
     const saved = page.getByRole('dialog', { name: 'Somewhere sunny' });
-    await expect(saved.getByText('Greece', { exact: true })).toBeVisible();
+    await expect(saved.getByText('Croatia', { exact: true })).toBeVisible();
     await saved.getByRole('button', { name: 'Close' }).click();
     await expect(unplaced.getByText('Every photo has a country now.')).toBeVisible();
-    await expectStats(page, '9 countries, 2 continents, 17 photos');
+    await expectStats(page, '21 countries, 5 continents, 17 photos');
   });
 
   // 17 Nov 2026, the user's wishes: no wait for a photo already on screen, Previous and
@@ -180,7 +183,7 @@ test.describe('Photos', () => {
     await expect(viewer).toBeHidden();
 
     await expect(panel.getByText('No photos from Netherlands yet.')).toBeVisible();
-    await expectStats(page, '8 countries, 2 continents, 15 photos');
+    await expectStats(page, '20 countries, 5 continents, 15 photos');
   });
 
   test('the photo album shows every photo, newest first, each with its country, and adds more', async ({ page }) => {

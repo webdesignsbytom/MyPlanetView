@@ -16,7 +16,9 @@ import { ensureThemes } from './themes';
 // v5: real names for the seeded people (17 Nov 2026): the test user is Charlie Reid
 // v6: travel copies (19 Nov 2026): Alex's family map "The Morgans", with the test user on it
 // as a viewer and as its traveller Charlie, to bring travels from
-const STORE_KEY = 'mpvMockStore.v6';
+// v7: the demo couple's travels (24 Nov 2026): 20 places in a clear order, every kind of trip,
+// birth dates, the timeline, heritage sites ticked and the strings tied (data/demoTravels.js)
+const STORE_KEY = 'mpvMockStore.v7';
 const ROLE_KEY = 'mpvMockRole';
 
 export const ROLES = ['USER', 'ADMIN', 'DEVELOPER'];
@@ -75,6 +77,8 @@ export function loadStore() {
   // "Guess where I was" (docs/API.md): the seed's game in a store saved before it, and its plays
   if (!Array.isArray(db.guessGames)) db.guessGames = buildSeed().guessGames;
   if (!Array.isArray(db.guessPlays)) db.guessPlays = buildSeed().guessPlays;
+  // Slideshows of chosen photos (docs/API.md "Photo slideshows"): the seed's in an older store
+  if (!Array.isArray(db.photoShows)) db.photoShows = buildSeed().photoShows;
   // The flight log (docs/API.md "Flights")
   if (!Array.isArray(db.flights)) db.flights = buildSeed().flights;
   if (!Array.isArray(db.moments)) db.moments = [];
@@ -115,12 +119,19 @@ export function loadStore() {
   // ...and before friends challenges (16 Nov 2026): none, unless the seed has them
   if (!Array.isArray(db.challenges)) db.challenges = buildSeed().challenges;
   if (!Array.isArray(db.challengeEntries)) db.challengeEntries = buildSeed().challengeEntries;
+  // ...and before Vs mode (26 Nov 2026): the seed's comparisons
+  if (!Array.isArray(db.vsGroups)) db.vsGroups = buildSeed().vsGroups;
+  if (!Array.isArray(db.vsMembers)) db.vsMembers = buildSeed().vsMembers;
   // ...and before country maps (18 Nov 2026): the seed's states and pin
   if (!Array.isArray(db.subdivisionVisits)) db.subdivisionVisits = buildSeed().subdivisionVisits;
   if (!Array.isArray(db.pins)) db.pins = buildSeed().pins;
   if (!Array.isArray(db.pinVisits)) db.pinVisits = buildSeed().pinVisits;
   // ...and before travel copies (19 Nov 2026): none asked for
   if (!Array.isArray(db.travelCopyRequests)) db.travelCopyRequests = [];
+  // ...and before feedback (25 Nov 2026): the seed's examples
+  if (!Array.isArray(db.feedback)) db.feedback = buildSeed().feedback;
+  // ...and before postcards (26 Nov 2026): the seed's two
+  if (!Array.isArray(db.postcards)) db.postcards = buildSeed().postcards;
   db.users[0].role = getMockRole();
   saveStore();
   return db;

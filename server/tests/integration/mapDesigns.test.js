@@ -66,6 +66,9 @@ describe('map designs', () => {
       grid: '#ffcc00',
       hover: null,
       string: null,
+      stringTwist: null,
+      plannedString: null,
+      plannedStringTwist: null,
       picture: null,
     });
     expect(await designOf(viewer.agent)).toMatchObject({ countries: { FR: '#aa0000' }, names: '#ffffff' });
@@ -109,6 +112,53 @@ describe('map designs', () => {
     ).rejects.toThrow();
     // Back to the style's usual red
     expect(data(await patch(owner.agent, { string: null })).design.string).toBeNull();
+  });
+
+  // See-through strings (25 Nov 2026, the user's wish): "#rrggbbaa", for the strings only
+  it('saves a see-through string colour, and keeps a fully opaque one as six digits', async () => {
+    expect(data(await patch(owner.agent, { string: '#1D4ED866' })).design.string).toBe('#1d4ed866');
+    expect((await designOf(viewer.agent)).string).toBe('#1d4ed866');
+    const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.designs;
+    expect(exported.find((design) => design.style === 'animated')).toMatchObject({ stringColour: '#1d4ed866' });
+    expect(data(await patch(owner.agent, { string: '#1d4ed8ff' })).design.string).toBe('#1d4ed8');
+    // Never the other colours
+    expect((await patch(owner.agent, { names: '#ffffff80' })).status).toBe(400);
+    // The database takes the eight digits and refuses anything longer (CHECK map_design_string_colour)
+    const where = { mapId_style: { mapId: map.id, style: 'animated' } };
+    await expect(prisma.mapDesign.update({ where, data: { stringColour: '#1d4ed800' } })).resolves.toBeTruthy();
+    await expect(prisma.mapDesign.update({ where, data: { stringColour: '#1d4ed8000' } })).rejects.toThrow();
+    expect(data(await patch(owner.agent, { string: null })).design.string).toBeNull();
+  });
+
+  // Two colours twisted together, as baker's twine (25 Nov 2026, the user's wish)
+  it('saves a second colour twisted into the strings, and takes it off again', async () => {
+    const twined = data(await patch(owner.agent, { string: '#C8102E', stringTwist: '#FFFFFF' })).design;
+    expect(twined).toMatchObject({ string: '#c8102e', stringTwist: '#ffffff' });
+    expect(await designOf(viewer.agent)).toMatchObject({ string: '#c8102e', stringTwist: '#ffffff' });
+    const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.designs;
+    expect(exported.find((design) => design.style === 'animated')).toMatchObject({ stringColour: '#c8102e', stringTwistColour: '#ffffff' });
+    // Opaque only, and the database says so too (CHECK map_design_string_twist_colour)
+    expect((await patch(owner.agent, { stringTwist: '#ffffff80' })).status).toBe(400);
+    const where = { mapId_style: { mapId: map.id, style: 'animated' } };
+    await expect(prisma.mapDesign.update({ where, data: { stringTwistColour: 'white' } })).rejects.toThrow();
+    // Back to one colour; the first is kept
+    expect(data(await patch(owner.agent, { stringTwist: null })).design).toMatchObject({ string: '#c8102e', stringTwist: null });
+    await patch(owner.agent, { string: null });
+  });
+
+  // The planned strings' own colours (25 Nov 2026, the user's wish), apart from the visited ones'
+  it('saves the planned strings’ colour and twist, and gives them to everyone', async () => {
+    const design = data(await patch(owner.agent, { plannedString: '#1D4ED880', plannedStringTwist: '#FFFFFF' })).design;
+    expect(design).toMatchObject({ plannedString: '#1d4ed880', plannedStringTwist: '#ffffff', string: null });
+    expect(await designOf(viewer.agent)).toMatchObject({ plannedString: '#1d4ed880', plannedStringTwist: '#ffffff' });
+    const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.designs;
+    expect(exported.find((d) => d.style === 'animated')).toMatchObject({ plannedStringColour: '#1d4ed880', plannedStringTwistColour: '#ffffff' });
+    expect((await patch(owner.agent, { plannedStringTwist: '#ffffff80' })).status).toBe(400);
+    // The database says so too (CHECKs map_design_planned_string_colour, _twist_colour)
+    const where = { mapId_style: { mapId: map.id, style: 'animated' } };
+    await expect(prisma.mapDesign.update({ where, data: { plannedStringColour: 'blue' } })).rejects.toThrow();
+    await expect(prisma.mapDesign.update({ where, data: { plannedStringTwistColour: '#ffffff80' } })).rejects.toThrow();
+    expect(data(await patch(owner.agent, { plannedString: null, plannedStringTwist: null })).design).toMatchObject({ plannedString: null, plannedStringTwist: null });
   });
 
   it('can be turned off and on again, keeping it', async () => {

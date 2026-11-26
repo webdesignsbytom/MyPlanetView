@@ -38,7 +38,23 @@ const only = new Set((argValue('--only') || '').split(',').filter(Boolean));
 const refresh = args.includes('--refresh');
 
 // key -> a Commons file chosen by hand
-const OVERRIDES = {};
+const OVERRIDES = {
+  // The published guides' festivals with none, found by hand on Commons and checked by eye (26 Nov 2026)
+  "ca-canada-day": "Canada Day at Parliament Hill, Ottawa - 2016 (27435232193).jpg",
+  "ca-toronto-international-film-festival": "Cameron Bailey and Franklin Leonard at the 2024 Toronto International Film Festival 3.jpg",
+  "es-los-reyes-three-kings": "Cabalgata de Reyes Magos 2022-JErez-IMG 20220105 173809.jpg",
+  "gr-apokries-carnival-and-clean-monday": "Kites on clean monday at the south coast of Piraeus (Greece) (cropped).jpg",
+  "hr-advent-in-zagreb": "Christmas Market in Zagreb1.JPG",
+  "is-national-day": "The day of the nation's celebration), 17 June (5844983173).jpg",
+  "ma-eid-al-adha": "Eid in Morocco.JPG",
+  "mx-carnaval": "Carnaval de Huayacocotla Veracruz 2009 01.jpg",
+  "mx-semana-santa-holy-week": "Procesión de Semana Santa Ozumba.jpg",
+  "nl-pride-amsterdam": "Amsterdam Gay Pride 2013 boat no9 pic2.JPG",
+  "pt-santo-antonio": "Altar de Sto António - Alfama.jpg",
+  "pt-sao-joao": "Festa de Sao Joao (Porto).jpg",
+  "tr-kurban-bayram-eid-al-adha": "Muslims perform the Eid Al-Adha prayer at Eyup Sultan Mosque 2019-08-11 08.jpg",
+  "us-halloween": "Halloween Jack-o'-lantern.jpg",
+};
 // Files found that aren't a photo of the festival (checked on the contact sheets)
 const REJECT = new Set([]);
 // key -> files that are wrong for that festival only (a photo of Nuremberg's market is
@@ -117,37 +133,24 @@ const REJECT_FOR = {
 // Festivals left without a photo: two rounds found nothing right on Commons (17 Nov 2026).
 // Their cards show text only. To try again, take one out and give it a SEARCH_AS.
 const LEAVE_OUT = new Set([
-  "ca-toronto-international-film-festival",
-  "ca-canada-day",
   "cy-green-monday-kathara-deftera",
   "cz-karlovy-vary-international-film-festival",
   "cz-masopust-carnival",
   "dk-aarhus-festuge",
-  "es-los-reyes-three-kings",
   "fi-helsinki-festival",
   "fi-juhannus-midsummer",
   "fi-vappu-may-day",
-  "hr-advent-in-zagreb",
   "hu-christmas-markets",
   "ie-cork-jazz-festival",
   "is-culture-night-menningarnott",
-  "is-national-day",
   "ke-mashujaa-day-heroes-day",
   "ke-the-great-migration",
   "kr-busan-international-film-festival",
-  "ma-eid-al-adha",
   "mt-l-imnarja",
   "mt-village-festas",
-  "mx-carnaval",
-  "mx-semana-santa-holy-week",
-  "nl-pride-amsterdam",
   "pl-all-saints-day-wszystkich-swietych",
-  "pt-santo-antonio",
-  "pt-sao-joao",
   "se-jokkmokk-winter-market",
   "se-lucia",
-  "tr-kurban-bayram-eid-al-adha",
-  "us-halloween",
   "za-cape-town-minstrel-carnival",
   "za-durban-july",
   "za-national-arts-festival",
@@ -408,13 +411,16 @@ async function main() {
   const kept = new Map();
   for (const festival of festivals) {
     const entry = manifest.FESTIVAL_PHOTOS[festival.key];
-    if (!entry || refresh || only.has(festival.key) || OVERRIDES[festival.key]) continue;
+    // A hand pick is redone only when it isn't the file already made
+    if (!entry || refresh || only.has(festival.key) || (OVERRIDES[festival.key] && OVERRIDES[festival.key] !== entry[4])) continue;
     const name = `${festival.key}-${entry[0]}`;
     if (existsSync(join(outDir, `${name}.avif`)) && existsSync(join(outDir, `${name}.webp`))) {
       kept.set(festival.key, { entry, licence: manifest.LICENCES[entry[3]] });
     }
   }
-  const todo = festivals.filter((f) => !kept.has(f.key));
+  // With --only, just those: the draft guides have hundreds of festivals with no photo yet,
+  // and searching them all took more than 15 minutes (26 Nov 2026)
+  const todo = festivals.filter((f) => !kept.has(f.key) && (!only.size || only.has(f.key)));
   console.log(`${festivals.length} festivals: ${kept.size} kept, ${todo.length} to find`);
   await mkdir(cacheDir, { recursive: true });
 

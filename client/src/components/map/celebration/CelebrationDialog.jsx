@@ -10,7 +10,6 @@ import { useOneShotsHere } from '@/hooks/useOneShots';
 // Components
 import Button from '@/components/common/Button';
 import CloseStamp from '@/components/common/CloseStamp';
-import CheckboxInput from '@/components/ui/CheckboxInput';
 import EntryStamp from '@/components/passport/EntryStamp';
 import LandmarkStamp from '@/components/passport/LandmarkStamp';
 import CelebrationStars from './CelebrationStars';
@@ -20,36 +19,36 @@ import LandmarkPhotoPrint from './LandmarkPhotoPrint';
 import OneShotPicture from '@/components/oneShots/OneShotPicture';
 // Utils
 import { countryName } from '@/utils/map/countries';
-import { CELEBRATION_KICKERS } from '@/utils/map/celebrations';
-import { modelForLandmark, modelsForPlace } from '@/utils/map/celebrationModels';
+import { CELEBRATION_KICKERS, countryCelebrationText, countryCelebrationTitle } from '@/utils/map/celebrations';
+import { modelById, modelForLandmark, modelsForPlace } from '@/utils/map/celebrationModels';
 import { ONE_SHOT_BY_KEY } from '@/utils/oneShots/oneShotItems';
 import { ONE_SHOTS_NAME, oneShotProgress, progressWords } from '@/utils/oneShots/oneShotWords';
 import { oneShotPhotoInfo } from '@/utils/oneShots/oneShotPhotoInfo';
-
-const STAMP_WORDS = { LIVED: 'residence stamp', VISITED: 'entry stamp' };
 
 /**
  * The celebration (24 Nov 2026, the user's wish): stars bursting out, the place's little 3D
  * model popping up, and its passport stamp coming down on a ticket that says so. MapExperience
  * opens it when the passport gains something by the viewer's own hand:
- *   - `{ kind: 'landmark', landmarkId, stampedOn, photoUrl, newPlace }`: a landmark stamped
- *     for the first time, ticked "been here" (`photoUrl` null) or a photo's match confirmed
- *     (that photo's picture). `newPlace`: the country (or nation) the tick marked visited too;
+ *   - `{ kind: 'landmark', landmarkId, stampedOn, photoUrl, newPlace, modelId }`: a landmark
+ *     stamped for the first time, ticked "been here" (`photoUrl` null) or a photo's match
+ *     confirmed (that photo's picture). `newPlace`: the country (or nation) the tick marked
+ *     visited too; `modelId`: ticked on that landmark model's card (a country's own map), so
+ *     the celebration shows that model;
  *   - `{ kind: 'country', code, status, firstVisitedOn }`: a country (or a special place, a
  *     region, a UK nation) marked visited or lived in from its ticket: its page in the passport;
  *   - `{ kind: 'oneShot', itemKey, seenOn, datePrecision, countryCode, photoUrl }`: an item of
  *     Life's One Shots ticked for the first time (24 Nov 2026): its photo, and how far along its
  *     list is; no stamp and no passport button (the user: nothing in the passport yet).
  * The picture is the landmark's model, else the map's own photo, else its photo from Wikimedia
- * Commons; a country's is its poster with its models in front. The stamp is the very one the
- * passport shows (LandmarkStamp, EntryStamp). "Open the passport" goes there; the box turns
- * the viewer's `showCelebrations` setting off at once (Settings, Help, turns it back on). It
- * closes with its stamp, "Carry on", Escape or a press outside it.
+ * Commons; a country's is its outline above its models. A country's heading says it: "You
+ * visited France!", and its words name it (24 Nov 2026, the user's wishes). The stamp is the
+ * very one the passport shows (LandmarkStamp, EntryStamp). "Open passport" goes there. It
+ * closes with its stamp, "Carry on", Escape or a press outside it. It has no box to turn it off
+ * (24 Nov 2026, the user's wish): Settings, Help, has the switch (`showCelebrations`).
  */
-function CelebrationDialog({ celebration, passportHref, hideCelebrations, onHideCelebrations, onClose }) {
+function CelebrationDialog({ celebration, passportHref, onClose }) {
   const titleId = useId();
   const textId = useId();
-  const boxId = useId();
   const dialogRef = useModalA11y(onClose);
   const splitUk = useSplitUk();
   const marks = useLandmarkMarks();
@@ -77,14 +76,13 @@ function CelebrationDialog({ celebration, passportHref, hideCelebrations, onHide
   }, [marks, placeLandmarks, isLandmark, celebration.landmarkId]);
 
   const name = isOneShot ? shot?.name || '' : isLandmark ? landmark?.name || '' : countryName(celebration.code);
-  const kicker = isOneShot
-    ? CELEBRATION_KICKERS[shot?.list === 'JOURNEYS' ? 'done' : 'seen']
-    : isLandmark
-      ? CELEBRATION_KICKERS.landmark
-      : CELEBRATION_KICKERS[celebration.status] || CELEBRATION_KICKERS.VISITED;
+  // A country's heading says it all ("You visited France!"): no words over it
+  const kicker = isOneShot ? CELEBRATION_KICKERS[shot?.list === 'JOURNEYS' ? 'done' : 'seen'] : isLandmark ? CELEBRATION_KICKERS.landmark : '';
+  const heading = isOneShot || isLandmark ? name : countryCelebrationTitle(name, celebration.status);
   // Life's One Shots: how far along its list is (this one included)
   const shotProgress = shot ? oneShotProgress(ticks.some((t) => t.itemKey === shot.key) ? ticks : [...ticks, { itemKey: shot.key }])[shot.list] : null;
-  const model = isLandmark ? modelForLandmark(landmark) : null;
+  // The model whose card the tick was on (a country's own map), else the landmark's own
+  const model = isLandmark ? modelById(celebration.modelId) || modelForLandmark(landmark) : null;
   const countryModels = useMemo(() => (isLandmark ? [] : modelsForPlace(celebration.code)), [isLandmark, celebration.code]);
   const placeName = place ? countryName(place) : '';
   const total = placeLandmarks.length;
@@ -137,17 +135,21 @@ function CelebrationDialog({ celebration, passportHref, hideCelebrations, onHide
           )}
         </div>
 
-        <div className='ticket-edge paper-fields relative grid max-h-full w-full grid-rows-[auto_minmax(0,1fr)] overflow-hidden bg-paper-cream text-colour4 shadow-paper'>
-          <div className='grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 px-5 pt-4'>
-            <p className='font-travel text-lg uppercase tracking-wide text-poster-red-deep'>{kicker}</p>
-            <CloseStamp label='Close' onClick={onClose} small />
-          </div>
-          <div className='grid min-h-0 content-start gap-4 overflow-y-auto overscroll-contain px-5 pb-5 pt-1'>
-            {/* A One Shot has no passport stamp (24 Nov 2026, the user: nothing in the passport yet) */}
-            <div className={`grid items-start gap-3 ${isOneShot ? '' : 'grid-cols-[minmax(0,1fr)_7.5rem]'}`}>
+        <div className='ticket-edge paper-fields relative grid max-h-full w-full grid-rows-[minmax(0,1fr)] overflow-hidden bg-paper-cream text-colour4 shadow-paper'>
+          {/* Never scrolls (25 Nov 2026, the user's wish: "there should be no scrollbars on any of
+              this"; the screen has room): the stamp waits to come down at 2.4× its size
+              (stamp-slam), which gave a scrolling box a scrollbar each way as it opened. What
+              passes the ticket's edge is cut off by the ticket (overflow-hidden), with no bar. */}
+          <div className='grid min-h-0 content-start gap-4 px-5 pb-5 pt-4' data-celebration-body=''>
+            {/* The words from the top, the close stamp in the corner beside them with the passport
+                stamp under it (25 Nov 2026, the user's wish: a country's has no kicker, and its close
+                stamp stood on a row of its own). A One Shot has no passport stamp (24 Nov 2026, the
+                user: nothing in the passport yet) */}
+            <div className={`grid items-start gap-3 ${isOneShot ? 'grid-cols-[minmax(0,1fr)_auto]' : 'grid-cols-[minmax(0,1fr)_7.5rem]'}`}>
               <div className='grid content-start gap-2'>
+                {kicker ? <p className='font-travel text-lg uppercase tracking-wide text-poster-red-deep'>{kicker}</p> : null}
                 <h2 id={titleId} className='font-travel text-2xl leading-tight text-colour6 [overflow-wrap:anywhere]'>
-                  {name}
+                  {heading}
                 </h2>
                 <p id={textId} className='text-sm'>
                   {isOneShot ? (
@@ -158,34 +160,36 @@ function CelebrationDialog({ celebration, passportHref, hideCelebrations, onHide
                       {celebration.newPlace ? ` ${countryName(celebration.newPlace)} is on your map now, with its own page.` : ''}
                     </>
                   ) : (
-                    <>
-                      It has its own page in your passport now, with its {STAMP_WORDS[celebration.status] || STAMP_WORDS.VISITED}.
-                      {celebration.firstVisitedOn ? '' : ' Add the day you first went on its ticket, and the stamp is dated.'}
-                    </>
+                    countryCelebrationText(name, celebration.status, Boolean(celebration.firstVisitedOn))
                   )}
                 </p>
               </div>
-              {/* The stamp as the passport has it, pressed down onto the ticket */}
-              {isOneShot ? null : (
-              <div aria-hidden='true' className='grid motion-safe:animate-stamp-slam' data-celebration-stamp=''>
-                {isLandmark ? (
-                  landmark ? (
-                    <LandmarkStamp
-                      stamp={{
-                        landmarkId: landmark.id,
-                        name: landmark.name,
-                        isUnesco: landmark.isUnesco,
-                        stampedOn: celebration.stampedOn,
-                        ticked: !celebration.photoUrl,
-                        photo: celebration.photoUrl ? { thumbUrl: celebration.photoUrl } : null,
-                      }}
-                    />
-                  ) : null
-                ) : (
-                  <EntryStamp countryCode={celebration.code} status={celebration.status} enteredOn={celebration.firstVisitedOn} />
+              <div className='grid justify-items-end gap-1'>
+                <CloseStamp label='Close' onClick={onClose} small />
+                {/* The stamp as the passport has it, pressed down onto the ticket. Room above it
+                    (pt-3): tilted up to 10°, a 7.5rem stamp's top corner rises about 10px (24 Nov
+                    2026, the user's report: Mongolia's was cut off) */}
+                {isOneShot ? null : (
+                <div aria-hidden='true' className='grid justify-self-stretch pt-3 motion-safe:animate-stamp-slam' data-celebration-stamp=''>
+                  {isLandmark ? (
+                    landmark ? (
+                      <LandmarkStamp
+                        stamp={{
+                          landmarkId: landmark.id,
+                          name: landmark.name,
+                          isUnesco: landmark.isUnesco,
+                          stampedOn: celebration.stampedOn,
+                          ticked: !celebration.photoUrl,
+                          photo: celebration.photoUrl ? { thumbUrl: celebration.photoUrl } : null,
+                        }}
+                      />
+                    ) : null
+                  ) : (
+                    <EntryStamp countryCode={celebration.code} status={celebration.status} enteredOn={celebration.firstVisitedOn} />
+                  )}
+                </div>
                 )}
               </div>
-              )}
             </div>
 
             {shotProgress ? (
@@ -205,24 +209,19 @@ function CelebrationDialog({ celebration, passportHref, hideCelebrations, onHide
 
             {/* A One Shot isn't in the passport (yet): "Carry on" alone */}
             <div className={`grid gap-2 ${isOneShot ? '' : 'grid-cols-[minmax(0,1fr)_auto]'}`}>
+              {/* To the place's own page: the passport opens from its cover straight to it
+                  (24 Nov 2026, the user's wish), a landmark's the page its stamp is on */}
               {isOneShot ? null : (
                 <Link
                   to={passportHref}
+                  state={place ? { openAt: place } : undefined}
                   className='btn-paper grid-flow-col justify-center gap-2 text-center [--btn-leading:1.25rem] [--btn-pad-x:0.75rem] [--btn-pad-y:0.375rem] [--btn-size:1rem]'
                 >
-                  Open the passport
+                  Open passport
                 </Link>
               )}
               <Button onClick={onClose}>Carry on</Button>
             </div>
-
-            <CheckboxInput
-              id={boxId}
-              name='hideCelebrations'
-              checked={hideCelebrations}
-              onChange={(e) => onHideCelebrations(e.target.checked)}
-              label='Don’t show these again'
-            />
           </div>
         </div>
       </div>

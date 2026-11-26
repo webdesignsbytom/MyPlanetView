@@ -60,7 +60,7 @@ describe('MapPhotosPanel', () => {
     expect(screen.getByText('No country yet')).toBeTruthy();
     expect(container.querySelector('[data-grid]').getAttribute('data-has-more')).toBe('true');
     expect(container.querySelector('[data-grid]').getAttribute('data-empty')).toBe('No photos on this map yet.');
-    expect(document.querySelector('[data-map-panel]').getAttribute('class')).toContain('lg:w-[80vw]');
+    expect(document.querySelector('[data-map-panel]').getAttribute('class')).toContain('lg:w-[76vw]');
     expect(screen.queryByText('Add photos')).toBeNull();
   });
 
@@ -81,6 +81,33 @@ describe('MapPhotosPanel', () => {
     render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onAddPhotos={onAddPhotos} onClose={() => {}} />);
     fireEvent.click(screen.getByText('Add photos'));
     expect(onAddPhotos).toHaveBeenCalled();
+  });
+
+  // 24 Nov 2026, the user's wish: "Play my world" moved here from the toolbar
+  it('plays the whole map’s slideshow, once there are photos to play', () => {
+    usePhotoPage.mockReturnValue(page());
+    const onPlay = vi.fn();
+    const { unmount } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onPlay={onPlay} onClose={() => {}} />);
+    fireEvent.click(screen.getByText('Play my world'));
+    expect(onPlay).toHaveBeenCalled();
+    unmount();
+    usePhotoPage.mockReturnValue(page({ photos: [], nextCursor: null }));
+    render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onPlay={onPlay} onClose={() => {}} />);
+    expect(screen.queryByText('Play my world')).toBeNull();
+  });
+
+  // 25 Nov 2026: a slideshow of some of the album's photos, with its own link (editors)
+  it('offers its editors a slideshow to share, once there are photos', () => {
+    usePhotoPage.mockReturnValue(page());
+    const { unmount } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} showMapId='map-1' onClose={() => {}} />);
+    expect(screen.getByText('Share a slideshow')).toBeTruthy();
+    unmount();
+    const { unmount: again } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onClose={() => {}} />);
+    expect(screen.queryByText('Share a slideshow')).toBeNull();
+    again();
+    usePhotoPage.mockReturnValue(page({ photos: [], nextCursor: null }));
+    render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} showMapId='map-1' onClose={() => {}} />);
+    expect(screen.queryByText('Share a slideshow')).toBeNull();
   });
 
   it('fetches the list again when photos change elsewhere', () => {

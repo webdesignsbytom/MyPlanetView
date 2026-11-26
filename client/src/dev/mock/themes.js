@@ -4,8 +4,9 @@
 // `{ id, month: 'YYYY-MM', title, blurb }`, entries as `{ themeId, photoId, mapId, enteredById, enteredAt }`.
 export const THEME_LIMITS = Object.freeze({ title: 60, blurb: 300, entriesPerMap: 20, recent: 12 });
 
-// The server's example themes (prisma/seed/themes.js): last month's, this month's and ten more
-export const EXAMPLE_THEMES = Object.freeze([
+// The server's suggested themes (src/utils/themeIdeas.js; a test compares them): the admin page's
+// "Fill the empty months" gives them out, and the seed's example year is the first twelve
+export const THEME_IDEAS = Object.freeze([
   { title: 'Doors', blurb: 'Front doors, gates, hatches and arches: the ones you stopped to photograph.' },
   { title: 'Worst weather', blurb: 'Rain on the lens, fog on the view, the beach day that never was.' },
   { title: 'Street food', blurb: 'Whatever you ate standing up, from a stall, a van or a window.' },
@@ -18,7 +19,22 @@ export const EXAMPLE_THEMES = Object.freeze([
   { title: 'Water', blurb: 'Seas, lakes, fountains, puddles and the rain itself.' },
   { title: 'Animals', blurb: 'Cats on walls, cows on roads, gulls after your chips.' },
   { title: 'Night', blurb: 'After dark: lit streets, night markets and the stars from somewhere new.' },
+  { title: 'Markets', blurb: 'Stalls, crates, scales and haggling: the markets you wandered through.' },
+  { title: 'Up high', blurb: 'Rooftops, towers, mountain tops and the view from the top of the stairs.' },
+  { title: 'One colour', blurb: 'A blue door, a red tram, a yellow wall: one colour everywhere you looked.' },
+  { title: 'Bridges', blurb: 'Rope, stone and steel, and the ones you weren’t sure about crossing.' },
+  { title: 'Souvenirs', blurb: 'What came home with you, from the fridge magnet to the rug in the hall.' },
+  { title: 'Coffee and tea', blurb: 'Cups, pots and the café you went back to every morning.' },
+  { title: 'First and last light', blurb: 'The early start or the end of the day: the sky doing its best.' },
+  { title: 'Reflections', blurb: 'Puddles, lakes, shop windows and somebody’s sunglasses.' },
+  { title: 'Up close', blurb: 'A shell, a tile, a stamp, a leaf: the small things on the way.' },
+  { title: 'Steps', blurb: 'Up to temples, down to beaches, and round and round inside towers.' },
+  { title: 'A seat at last', blurb: 'Benches, hammocks and station waiting rooms: where you finally sat down.' },
+  { title: 'Old and new', blurb: 'A glass tower beside a church, a tram past a castle: two ages in one picture.' },
 ]);
+
+// The server's example themes (prisma/seed/themes.js): last month's, this month's and ten more
+export const EXAMPLE_THEMES = Object.freeze(THEME_IDEAS.slice(0, 12));
 
 const MONTH_PATTERN = /^(\d{4})-(0[1-9]|1[0-2])$/;
 
@@ -109,4 +125,31 @@ export function photoThemes(db, photoId) {
     .filter((theme) => ids.has(theme.id))
     .sort((a, b) => (a.month < b.month ? 1 : -1))
     .map((theme) => themeView(theme));
+}
+
+const titleKey = (title) => String(title || '').trim().toLowerCase();
+
+/**
+ * The server's suggestThemes (utils/themeIdeas.js), with months as 'YYYY-MM': `[{ month, title,
+ * blurb }]` for each month of `now`'s and the 11 after with no theme in `existing`, from the
+ * ideas not used in the year before or ahead, then any not set ahead.
+ */
+export function suggestThemes(existing, now = new Date(), ideas = THEME_IDEAS) {
+  const thisMonth = monthOf(now);
+  const ahead = Array.from({ length: 12 }, (_, i) => addMonths(thisMonth, i));
+  const from = addMonths(thisMonth, -11);
+  const until = addMonths(thisMonth, 12);
+  const taken = new Set(existing.map((theme) => theme.month));
+  const near = existing.filter((theme) => theme.month >= from && theme.month < until);
+  const usedNear = new Set(near.map((theme) => titleKey(theme.title)));
+  const usedAhead = new Set(near.filter((theme) => theme.month >= thisMonth).map((theme) => titleKey(theme.title)));
+  const pool = [...ideas.filter((idea) => !usedNear.has(titleKey(idea.title))), ...ideas.filter((idea) => usedNear.has(titleKey(idea.title)) && !usedAhead.has(titleKey(idea.title)))];
+  const out = [];
+  for (const month of ahead) {
+    if (taken.has(month)) continue;
+    const idea = pool.shift();
+    if (!idea) break;
+    out.push({ month, title: idea.title, blurb: idea.blurb });
+  }
+  return out;
 }

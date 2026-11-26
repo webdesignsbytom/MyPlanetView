@@ -46,21 +46,31 @@ vi.mock('@/hooks/useMapViewport', async (importOriginal) => {
   return { ...actual, default: () => viewport };
 });
 
-// One model on Luxembourg's map (and one on France's, which mustn't show), at a known size
+// A toon model and a diorama (the high-quality look) on Luxembourg's map (and one on France's,
+// which mustn't show), at a known size
 vi.mock('@/utils/map/landmarkModels', () => ({
   LANDMARK_MODEL_HEIGHTS: [160, 320],
   LANDMARK_MODELS: [
-    { id: 'test-tower', maps: ['LU'], latitude: 49.61, longitude: 6.13, size: 1.2, aspect: 0.5, anchor: [0.5, 0.9], images: { 160: '/m-160.webp', 320: '/m-320.webp' } },
-    { id: 'elsewhere', maps: ['FR'], latitude: 48.86, longitude: 2.29, size: 1, aspect: 1, anchor: [0.5, 0.5], images: { 160: '/e.webp', 320: '/e.webp' } },
+    { id: 'test-tower', name: 'Test Tower', landmark: 'Q99', maps: ['LU'], latitude: 49.61, longitude: 6.13, size: 1.2, aspect: 0.5, anchor: [0.5, 0.9], images: { 160: '/m-160.webp', 320: '/m-320.webp' } },
+    { id: 'test-diorama', hq: true, name: 'Test Diorama', landmark: 'Q97', maps: ['LU'], latitude: 49.8, longitude: 6.1, size: 0.6, aspect: 1.6, anchor: [0.5, 0.8], images: { 160: '/d-160.webp', 320: '/d-320.webp' } },
+    { id: 'elsewhere', name: 'Elsewhere', landmark: 'Q98', maps: ['FR'], latitude: 48.86, longitude: 2.29, size: 1, aspect: 1, anchor: [0.5, 0.5], images: { 160: '/e.webp', 320: '/e.webp' } },
   ],
 }));
+// The landmark the test tower belongs to (its card's "World Heritage" row)
+vi.mock('@/hooks/useLandmarks', () => ({
+  default: () => ({ landmarks: [{ id: 'lm-old-town', name: 'Old Town of Luxembourg', slug: 'old-town', countryCode: 'LU', isUnesco: true, wikidataId: 'Q99' }], loading: false, error: null }),
+}));
+vi.mock('@/hooks/useModelFacts', () => ({ default: () => null }));
+// Where the card says the model stands: its facts' first row
+const whereOnCard = () => document.querySelector('[data-landmark-about] dd')?.textContent;
 
 const mapData = vi.hoisted(() => ({ value: null }));
 vi.mock('@/hooks/useCountryMapData', () => ({ default: () => mapData.value }));
 vi.mock('@/components/map/MapPanel', () => ({
-  default: ({ title, children }) => (
-    <section data-map-panel={title}>
+  default: ({ title, onClose, children }) => (
+    <section role='dialog' aria-label={title} data-map-panel={title}>
       <h2>{title}</h2>
+      <button type='button' aria-label={`Close ${title}`} onClick={onClose} />
       {children}
     </section>
   ),
@@ -110,12 +120,71 @@ describe('CountryMapView: the landmark models', () => {
   const screenHeight = (image) => Number(image.getAttribute('height')) * zoomStore.get() * REFERENCE_PX_PER_UNIT;
   const model = (container) => container.querySelector('[data-landmark-model="test-tower"]');
 
-  it('draws only the models on this country’s map, standing on their spot, never taking a press', () => {
+  it('draws only the models on this country’s map, standing on their spot, named for the pointer', () => {
     const { container } = draw();
     expect(container.querySelector('[data-landmark-model="elsewhere"]')).toBeNull();
     const at = placeOnCountryMap(LU, 49.61, 6.13);
     expect(model(container).getAttribute('transform')).toBe(`translate(${at.x} ${at.y})`);
-    expect(model(container).parentElement.getAttribute('class')).toContain('pointer-events-none');
+    expect(model(container).querySelector('title').textContent).toBe('Test Tower');
+    expect(model(container).getAttribute('class')).toContain('cursor-pointer');
+    // The list is the keyboard's and screen readers' way to them
+    expect(model(container).parentElement.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('marks the models remade in the high-quality look, drawn from their own pictures', () => {
+    const { container } = draw();
+    expect(model(container).hasAttribute('data-landmark-model-hq')).toBe(false);
+    const diorama = container.querySelector('[data-landmark-model="test-diorama"]');
+    expect(diorama.hasAttribute('data-landmark-model-hq')).toBe(true);
+    expect(diorama.querySelector('image').getAttribute('href')).toBe('/d-160.webp');
+    // Its base's width on screen: 64 px times its size times its aspect at zoom 1
+    const image = diorama.querySelector('image');
+    expect(Number(image.getAttribute('width')) * zoomStore.get() * REFERENCE_PX_PER_UNIT).toBeCloseTo(64 * 0.6 * 1.6, 6);
+  });
+
+  it('opens its card on a press (24 Nov 2026, the user’s wish), with the state it stands in', () => {
+    const { container, onOpenPin } = draw();
+    // jsdom can't test a point against a shape: Luxembourg's district stands in for the browser's answer
+    const inFill = vi.fn(function inFill() {
+      return this.closest('[data-state]')?.getAttribute('data-state') === 'LU-L';
+    });
+    SVGElement.prototype.isPointInFill = inFill;
+    try {
+      fireEvent.click(model(container).querySelector('image'));
+      const card = document.querySelector('[data-landmark-card="test-tower"]');
+      expect(card.querySelector('[role="dialog"]').getAttribute('aria-label')).toBe('Test Tower');
+      expect(screen.getByRole('heading', { level: 2, name: 'Test Tower' })).toBeTruthy();
+      expect(card.textContent).toContain('Old Town of Luxembourg');
+      // The district it stands in, then the country
+      expect(whereOnCard()).toBe('Luxembourg, Luxembourg');
+      expect(document.querySelector('[data-state-popover]')).toBeNull();
+      expect(onOpenPin).not.toHaveBeenCalled();
+    } finally {
+      delete SVGElement.prototype.isPointInFill;
+    }
+  });
+
+  it('closes its card with Escape, or a state’s card takes its place', () => {
+    const { container } = draw();
+    fireEvent.click(model(container).querySelector('image'));
+    expect(document.querySelector('[data-landmark-card]')).toBeTruthy();
+    // No state found where the browser can't test a point: the country alone
+    expect(whereOnCard()).toBe('Luxembourg');
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(document.querySelector('[data-landmark-card]')).toBeNull();
+    fireEvent.click(model(container).querySelector('image'));
+    fireEvent.click(container.querySelector('[data-state="LU-D"] path'));
+    expect(document.querySelector('[data-landmark-card]')).toBeNull();
+    expect(document.querySelector('[data-state-popover]')).toBeTruthy();
+  });
+
+  it('leaves its card open when a dialog over the map took Escape (the celebration)', () => {
+    const { container } = draw();
+    fireEvent.click(model(container).querySelector('image'));
+    const taken = new KeyboardEvent('keydown', { key: 'Escape', cancelable: true, bubbles: true });
+    taken.preventDefault();
+    window.dispatchEvent(taken);
+    expect(document.querySelector('[data-landmark-card]')).toBeTruthy();
   });
 
   it('is 64 px tall times its size at zoom 1, its tile’s middle on the spot', () => {
@@ -223,12 +292,20 @@ describe('CountryMapView', () => {
     expect(screen.getAllByText('Add a pin')[0].closest('button').disabled).toBe(true);
   });
 
-  it('lists the states and pins in a panel from the list stamp', () => {
+  it('lists the states, landmarks and pins in a panel from the list stamp', () => {
     const { onOpenPin } = draw();
-    fireEvent.click(screen.getByLabelText('List the districts and pins'));
-    expect(document.querySelector('[data-map-panel]').getAttribute('data-map-panel')).toBe('Districts and pins');
+    fireEvent.click(screen.getByLabelText('List the districts, landmarks and pins'));
+    expect(document.querySelector('[data-map-panel]').getAttribute('data-map-panel')).toBe('Districts, landmarks and pins');
     fireEvent.click(screen.getByText('Diekirch', { selector: 'button span' }));
     expect(document.querySelector('[data-state-popover]').getAttribute('aria-label')).toBe('Diekirch');
+    // A landmark's card beside its button, in the state's place
+    const tower = document.querySelector('[data-list-model="test-tower"]');
+    fireEvent.click(tower);
+    expect(document.querySelector('[data-state-popover]')).toBeNull();
+    expect(document.querySelector('[data-landmark-card="test-tower"]')).toBeTruthy();
+    // Closed, focus goes back to its button
+    fireEvent.click(screen.getByLabelText('Close Test Tower'));
+    expect(document.activeElement).toBe(tower);
     fireEvent.click(screen.getByText('Our café', { selector: 'button span' }));
     expect(onOpenPin).toHaveBeenCalledWith('pin1');
     expect(document.querySelector('[data-map-panel]')).toBeNull();

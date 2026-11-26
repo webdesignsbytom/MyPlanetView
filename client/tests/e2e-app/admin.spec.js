@@ -1,4 +1,5 @@
 import { test, expect } from './fixtures.js';
+import { MAGNETIC_POLES_YEAR } from '../../src/utils/map/specialPlaces.js';
 
 // The admin pages against mock mode's few fake rows (src/dev/mock/seed.js, handlers/admin.js
 // and handlers/billing.js): the dashboard, users (roles, status, memberships, moving a map),
@@ -17,15 +18,82 @@ test.describe('Admin pages', () => {
   test('the dashboard links the admin pages, and the audit log only for a developer', async ({ page }) => {
     await openAs(page, '/admin', 'ADMIN', 'Admin Dashboard');
     const manage = page.getByRole('region', { name: 'Manage' });
-    await expect(manage.getByRole('link')).toHaveText([/^Contact Forms/, /^Users/, /^Promo Codes/, /^Travel Offers/, /^Photo Themes/]);
+    await expect(manage.getByRole('link')).toHaveText([
+      /^Contact Forms/,
+      /^Users/,
+      /^Promo Codes/,
+      /^Travel Offers/,
+      /^Photo Themes/,
+      /^Feedback/,
+      /^Gifts and Referrals/,
+    ]);
     // The latest contact forms are on it too
     await expect(page.getByRole('region', { name: 'Contact Forms' }).getByRole('article')).toHaveCount(2);
 
     await openAs(page, '/admin', 'DEVELOPER', 'Admin Dashboard');
-    await expect(page.getByRole('region', { name: 'Manage' }).getByRole('link')).toHaveCount(6);
+    await expect(page.getByRole('region', { name: 'Manage' }).getByRole('link')).toHaveCount(8);
     await page.getByRole('region', { name: 'Manage' }).getByRole('link', { name: /^Audit Log/ }).click();
     await expect(page).toHaveURL(/\/admin\/events$/);
     await expect(page.getByRole('heading', { level: 1, name: 'Audit Log' })).toBeVisible();
+  });
+
+  // The overview (the audit, 26 Nov 2026): the site's numbers and each daily job's last run
+  // (mock mode's are pretend runs at their times, fine)
+  test('the dashboard opens with the overview and the daily jobs', async ({ page }) => {
+    await openAs(page, '/admin', 'ADMIN', 'Admin Dashboard');
+    const overview = page.getByRole('region', { name: 'Overview' });
+    await expect(overview.locator('[data-overview-tile="Accounts"]')).toContainText('verified');
+    await expect(overview.locator('[data-overview-tile="Paying members"]')).toContainText('Business 1');
+    await expect(overview.locator('[data-overview-job]')).toHaveCount(2);
+    await expect(overview.locator('[data-overview-job="cleanup"]')).toContainText('Ran fine');
+    await expect(overview.locator('[data-overview-job="emails"]')).toContainText('Daily emails (08:00 UTC each day)');
+    await overview.getByRole('link', { name: 'Look up a gift code' }).click();
+    await expect(page.getByRole('heading', { level: 1, name: 'Gifts and Referrals' })).toBeVisible();
+  });
+
+  // The yearly reminders (26 Nov 2026, the user's wish): from the January after the magnetic
+  // poles' pins' year, the overview says to move them, first, under To do
+  test('the overview says when the magnetic poles are due a move, and not before', async ({ page }) => {
+    await page.clock.setFixedTime(new Date(Date.UTC(MAGNETIC_POLES_YEAR + 1, 0, 2, 12)));
+    await openAs(page, '/admin', 'ADMIN', 'Admin Dashboard');
+    const overview = page.getByRole('region', { name: 'Overview' });
+    const reminder = overview.locator('[data-overview-reminder="magneticPoles"]');
+    await expect(overview.getByRole('heading', { name: 'To do' })).toBeVisible();
+    await expect(reminder).toContainText('Move the magnetic poles');
+    await expect(reminder).toContainText(`Move them to ${MAGNETIC_POLES_YEAR + 1}'s`);
+
+    await page.clock.setFixedTime(new Date(Date.UTC(MAGNETIC_POLES_YEAR, 11, 30, 12)));
+    await overview.getByRole('button', { name: 'Reload the overview' }).click();
+    await expect(overview.locator('[data-overview-tile="Accounts"]')).toBeVisible();
+    await expect(reminder).toHaveCount(0);
+  });
+
+  // Support's "my gift code doesn't work": a gift bought (mock mode's Checkout is paid at once),
+  // then found on the admin page however its code is typed
+  test('a gift is found by its code, with who bought it', async ({ page }) => {
+    await page.goto('/gifts');
+    await expect(page.getByRole('heading', { level: 1, name: 'Give a year of travel' })).toBeVisible();
+    await page.getByRole('radio', { name: /A year of First Class/ }).check();
+    await page.getByLabel('Who it’s for (optional)').fill('Gran');
+    await page.getByRole('button', { name: 'Pay £99 for the gift' }).click();
+    await expect(page).toHaveURL(/\/gifts\?bought=1$/);
+    const code = await page.locator('[data-gift-code]').first().getAttribute('data-gift-code');
+
+    await openAs(page, '/admin/gifts', 'ADMIN', 'Gifts and Referrals');
+    await expect(page.getByRole('list', { name: 'Gifts bought lately' }).locator(`[data-admin-gift="${code}"]`)).toBeVisible();
+    await expect(page.getByText('No referral rewards yet.')).toBeVisible();
+
+    const find = page.getByRole('region', { name: 'Find a gift' });
+    await find.getByLabel(/^Gift code/).fill(code.toLowerCase());
+    await find.getByRole('button', { name: 'Find' }).click();
+    const found = page.getByRole('region', { name: 'The gift found' }).locator(`[data-admin-gift="${code}"]`);
+    await expect(found).toContainText('A year of First Class, £99');
+    await expect(found).toContainText('Paid, not redeemed yet');
+    await expect(found).toContainText('Charlie Reid (test@myplanetview.local), for Gran');
+
+    await find.getByLabel(/^Gift code/).fill('2222-3333-4444');
+    await find.getByRole('button', { name: 'Find' }).click();
+    await expect(page.getByRole('region', { name: 'The gift found' })).toHaveText('No gift has that code.');
   });
 
   test('users: search, filters, a role saved, and an account deactivated and back', async ({ page }) => {

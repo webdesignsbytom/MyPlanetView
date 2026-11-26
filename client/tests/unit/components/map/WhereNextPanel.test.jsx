@@ -70,6 +70,24 @@ describe('WhereNextPanel', () => {
     expect(onShowCountry).toHaveBeenCalledWith('JP');
   });
 
+  // 24 Nov 2026, the user's wish
+  it('opens with "Open passport", the list or not', () => {
+    const { container, unmount } = open({ visits: visits(['JP']), passportHref: '/maps/m1/passport' });
+    const link = container.querySelector('[data-passport-link]');
+    expect(link.textContent).toBe('Open passport');
+    expect(link.getAttribute('href')).toBe('/maps/m1/passport');
+    expect(container.querySelector('[data-map-panel] a')).toBe(link);
+    unmount();
+    useCountryGuides.mockReturnValue([]);
+    const empty = open({ visits: [], passportHref: '/shared/ABCD-EFGH-JKMN/passport' });
+    expect(empty.container.querySelector('[data-passport-link]').getAttribute('href')).toBe('/shared/ABCD-EFGH-JKMN/passport');
+  });
+
+  it('has no passport link without one to go to', () => {
+    const { container } = open({ visits: visits(['JP']) });
+    expect(container.querySelector('[data-passport-link]')).toBeNull();
+  });
+
   it('says when none is at its best this month', () => {
     open({ visits: visits(['IS']) });
     expect(screen.getByText('None of them is at its best this month.')).toBeTruthy();

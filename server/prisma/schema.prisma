@@ -51,9 +51,14 @@ model User {
   startedChallenges FriendChallenge[]      @relation("ChallengeCreator")
   // "Guess where I was" games they made, and the flights they logged (docs/API.md)
   guessGames        GuessGame[]            @relation("GuessGameCreator")
+  // Slideshows of chosen photos they shared by a link (docs/API.md "Photo slideshows")
+  photoShows        PhotoShow[]            @relation("PhotoShowCreator")
   flightsLogged     Flight[]               @relation("FlightLogger")
   oneShotsTicked    OneShot[]              @relation("OneShotTicker")
   challengeEntries  FriendChallengeEntry[]
+  // Vs mode: the comparisons they started, and the ones they're in (docs/API.md "Vs mode")
+  startedVsGroups   VsGroup[]              @relation("VsGroupCreator")
+  vsMemberships     VsMember[]
   // Taking your travels with you (docs/API.md "Travel copies"): the copies this user asked
   // for, and the ones they approved or declined as a family map's owner or co-owner
   travelCopyRequests  TravelCopyRequest[] @relation("TravelCopyRequester")
@@ -83,6 +88,11 @@ model User {
   landmarkTicks LandmarkVisit[]
   // Strings tied on maps (docs/API.md "Strings")
   stringsTied   MapString[]
+  // Feedback sent from the map, and the reports an admin last changed (docs/API.md "Feedback")
+  feedbackSent    FeedbackReport[] @relation("FeedbackSender")
+  feedbackHandled FeedbackReport[] @relation("FeedbackUpdater")
+  // Postcards they sent by a link (docs/API.md "Postcards")
+  postcardsSent   Postcard[]       @relation("PostcardSender")
 
   @@unique([email])
   @@map("user")
@@ -249,6 +259,8 @@ model Country {
   // Strings tied between places on maps (docs/API.md "Strings")
   stringsFrom MapString[] @relation("MapStringFrom")
   stringsTo   MapString[] @relation("MapStringTo")
+  // Postcards sent from it (docs/API.md "Postcards")
+  postcards   Postcard[]
 
   @@map("country")
 }
@@ -287,6 +299,8 @@ model Landmark {
   covers       LandmarkCover[]
   // Maps that ticked it "been here" (docs/API.md "Collecting")
   visits       LandmarkVisit[]
+  // Postcards with its picture on them (docs/API.md "Postcards")
+  postcards    Postcard[]
 
   @@index([countryCode])
   @@index([latitude, longitude])
@@ -368,6 +382,19 @@ model TravelMap {
   // in Settings; null means the owner's own style (Profile.mapSettings.style). Checked in
   // code, not by a CHECK, as styles come and go
   style String?
+  // How the places visited or lived in show, in every map style (docs/API.md "The visited look";
+  // 25 Nov 2026, the user's wish: on all the map's styles, not one style's design): their badge
+  // (as always), one colour over each one's own, or both; `visitedColour` "#rrggbb", or null for
+  // the map style's usual one (CHECK travel_map_visited_colour); `visitedFinish` gold, silver
+  // or bronze metal in place of that colour, or null for the plain colour
+  visitedLook   VisitedLook    @default(BADGE)
+  visitedColour String?
+  visitedFinish VisitedFinish?
+  // The passport's cover colour (26 Nov 2026, the user's wish: "just the cover colour"): one of
+  // utils/passportCovers.js PASSPORT_COLOURS, chosen by the owner or a co-owner; null is the
+  // owner's plan's own (Economy burgundy, Business navy, First Class black). The lettering stays
+  // the plan's, gold or silver. Checked in code, as the map style is
+  passportColour String?
 
   travellers Traveller[]
   members    MapMember[]
@@ -395,6 +422,8 @@ model TravelMap {
   themeEntries     PhotoThemeEntry[]
   // Friends challenges it counts for (docs/API.md, "Friends challenges")
   challengeEntries FriendChallengeEntry[]
+  // The Vs mode comparisons it counts in (docs/API.md "Vs mode")
+  vsMemberships    VsMember[]
   // Travel copied from this map to a traveller's own map, and copied onto this one
   // (docs/API.md "Travel copies")
   travelCopiesOut TravelCopyRequest[] @relation("TravelCopyFrom")
@@ -405,6 +434,8 @@ model TravelMap {
   // "Guess where I was" games made from its photos, and its flight log (docs/API.md)
   guessGames      GuessGame[]
   flights         Flight[]
+  // Slideshows of chosen photos, each shared by its own link (docs/API.md "Photo slideshows")
+  photoShows      PhotoShow[]
   // Life's One Shots ticked on it (docs/API.md "Life's One Shots")
   oneShots        OneShot[]
 
@@ -440,8 +471,17 @@ model MapDesign {
   // 2026, the user's wish); CHECK map_design_hover_colour
   hoverColour    String?
   // The strings between places (MapString), "#rrggbb" or null (the style's usual red; 23 Nov
-  // 2026, the user's wish); CHECK map_design_string_colour
+  // 2026, the user's wish), or "#rrggbbaa" for see-through ones (25 Nov 2026); CHECK
+  // map_design_string_colour
   stringColour   String?
+  // A second colour twisted into the strings, as baker's twine, "#rrggbb", or null for
+  // strings of one colour (25 Nov 2026, the user's wish); CHECK map_design_string_twist_colour
+  stringTwistColour String?
+  // The planned strings' own colour and twist (MapString kind PLANNED; 25 Nov 2026, the user's
+  // wish), as the two above: CHECKs map_design_planned_string_colour and
+  // map_design_planned_string_twist_colour
+  plannedStringColour      String?
+  plannedStringTwistColour String?
 
   // The sea's picture, in the private bucket (resource 'mapDesign'); unique, so a file is
   // one map's. The daily clean-up never deletes a picture a design uses.
@@ -476,6 +516,19 @@ model Traveller {
   // CHECK traveller_birth_date: from 1900; not in the future is checked in code
   birthDate DateTime? @db.Date
 
+  // Their passport page (25 Nov 2026, the user's wish: "improve passport page for user avatars
+  // and info"; docs/API.md "Passport"): a photo of them, one of the map's own photos cropped to
+  // the passport's photo box (its focus, 0 to 1 across and down, stays put as it's zoomed, 1 to
+  // 4: CHECK traveller_portrait), and a signature drawn with a finger or a mouse, an SVG path in
+  // a 300 x 100 box (utils/travellerPassport.js; CHECK traveller_signature). Deleting the
+  // photo clears it
+  portraitPhotoId String?
+  portraitPhoto   Photo?  @relation("TravellerPortrait", fields: [portraitPhotoId], references: [id], onDelete: SetNull)
+  portraitFocusX  Float?
+  portraitFocusY  Float?
+  portraitZoom    Float?
+  signature       String?
+
   trips   TripTraveller[]
   moments MomentTraveller[]
   oneShots OneShotTraveller[]
@@ -491,6 +544,7 @@ model Traveller {
   @@unique([mapId, userId])
   @@index([mapId, position])
   @@index([userId])
+  @@index([portraitPhotoId])
   @@map("traveller")
 }
 
@@ -794,14 +848,16 @@ model Photo {
   landmarks    PhotoLandmark[]
   coverOf      Trip[]            @relation("TripCover")
   moments      MomentPhoto[]
-  // Life's One Shots it's the picture of
-  oneShots     OneShot[]
+  // Life's One Shots it's a picture of
+  oneShots     OneShotPhoto[]
   // The pins' visits it's in (a country map's pins: docs/API.md "Country maps")
   pinVisits    MapPinVisitPhoto[]
   // Passport stamps showing this photo
   stampCovers  LandmarkCover[]
   // The monthly themes it's entered in
   themeEntries PhotoThemeEntry[]
+  // Travellers whose passport photo it is (docs/API.md "Passport")
+  portraitOf   Traveller[]       @relation("TravellerPortrait")
 
   // The family map's photo this one was copied from (docs/API.md "Travel copies"): no
   // foreign key, as for trips. A copy has files of its own
@@ -1189,6 +1245,10 @@ model MediaItem {
   photoVariant    PhotoVariant?
   // The sea's picture of a map's design (docs/API.md "Map designs")
   usedAsMapDesign MapDesign?
+  // A feedback report's screenshot (docs/API.md "Feedback")
+  usedAsFeedbackScreenshot FeedbackReport?
+  // A postcard's own photo (docs/API.md "Postcards")
+  usedAsPostcardPicture    Postcard?
 
   createdAt DateTime @default(now())
 
@@ -1217,6 +1277,73 @@ model AvatarMediaItem {
 }
 
 // ── Contact (trimmed: no phone or postal address) ────────────────────────────
+
+// Feedback sent from the map (docs/API.md "Feedback"; 25 Nov 2026, the user's wish): a problem, an
+// idea, a question or anything else, in the sender's own words, with an optional screenshot in the
+// private bucket and a few details of where they were; read and acted on at /admin/feedback.
+enum FeedbackKind {
+  PROBLEM
+  IDEA
+  QUESTION
+  OTHER
+}
+
+// How much a problem gets in the way: it stops them, it's annoying, or just so we know
+enum FeedbackImpact {
+  BLOCKING
+  ANNOYING
+  MINOR
+}
+
+enum FeedbackStatus {
+  NEW
+  IN_PROGRESS
+  DONE
+  WONT_DO
+}
+
+model FeedbackReport {
+  id     String @id @default(uuid())
+  // Deleted with the sender's account: their words and screenshot are theirs
+  userId String
+  user   User   @relation("FeedbackSender", fields: [userId], references: [id], onDelete: Cascade)
+
+  kind     FeedbackKind
+  // What happened, what they'd like, or their message
+  details  String
+  // A problem's: what they expected to happen
+  expected String?
+  // Why it matters to them (a problem's or an idea's)
+  why      String?
+  impact   FeedbackImpact?
+
+  // Where they were: the page (its path, secrets taken out), the map (no foreign key: a map
+  // deleted keeps the report) and their browser
+  page      String?
+  mapId     String?
+  userAgent String?
+  // A few small details: screen and window size, map style, phone or not, the site's build
+  context   Json?
+
+  screenshotId String?    @unique
+  screenshot   MediaItem? @relation(fields: [screenshotId], references: [id], onDelete: SetNull)
+
+  status      FeedbackStatus @default(NEW)
+  adminNotes  String?
+  // Set while done or won't do (CHECK feedback_report_closed)
+  closedAt    DateTime?
+  updatedById String?
+  updatedBy   User?          @relation("FeedbackUpdater", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // The admin's list: by status, newest first
+  @@index([status, createdAt])
+  @@index([userId])
+  @@index([updatedById])
+  @@map("feedback_report")
+}
 
 model ContactForm {
   id      String @id @default(uuid())
@@ -1350,6 +1477,44 @@ model FriendChallengeEntry {
   @@index([userId])
   @@index([mapId])
   @@map("friend_challenge_entry")
+}
+
+// Vs mode (26 Nov 2026, the user's wish: "connect to another account and have all your stats and
+// badges compared. Able to add multiple people. Gold silver bronze ratings for top people";
+// docs/API.md "Vs mode"): friends joined by a link, each with the map that counts for them,
+// compared on everything all-time, at most 8 people (the user's decision). Numbers and badge
+// names only, never a map, a photo or a place
+model VsGroup {
+  id          String     @id @default(uuid())
+  title       String
+  // The join link's code (utils/shareCodes.js); a reset gives a new one
+  joinCode    String     @unique
+  createdById String?
+  createdBy   User?      @relation("VsGroupCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  members     VsMember[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@map("vs_group")
+}
+
+// Someone in a comparison, and the map that counts for them (one they own or edit; null once
+// that map is gone, until they pick another)
+model VsMember {
+  groupId  String
+  group    VsGroup    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mapId    String?
+  map      TravelMap? @relation(fields: [mapId], references: [id], onDelete: SetNull)
+  joinedAt DateTime   @default(now())
+
+  @@id([groupId, userId])
+  @@index([userId])
+  @@index([mapId])
+  @@map("vs_member")
 }
 
 // Badges and goals (docs/API.md, "Badges and goals")
@@ -1621,22 +1786,25 @@ model LandmarkVisit {
 // A string tied between two places on a map, like thread between pins on a corkboard
 // (docs/API.md "Strings"; 23 Nov 2026, the user's wish): tied by hand (two places
 // chosen) or added from the map's trips and first visits. The pair is kept in code order
-// (CHECK map_string_order: fromCode < toCode), so one pair of places is one string.
-// 500 a map (utils/mapStrings.js), counted with the map row locked.
+// (CHECK map_string_order: fromCode < toCode), so one pair of places is one string of a kind.
+// Its `kind` (25 Nov 2026, the user's wish): VISITED, between places been to, or PLANNED,
+// between places planned (want to go, planned trips), each kind in its own colour.
+// 500 a map of each kind (utils/mapStrings.js), counted with the map row locked.
 model MapString {
-  id       String    @id @default(uuid())
+  id       String     @id @default(uuid())
   mapId    String
-  map      TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
-  fromCode String    @db.Char(2)
-  from     Country   @relation("MapStringFrom", fields: [fromCode], references: [code], onDelete: Restrict)
-  toCode   String    @db.Char(2)
-  to       Country   @relation("MapStringTo", fields: [toCode], references: [code], onDelete: Restrict)
+  map      TravelMap  @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  kind     StringKind @default(VISITED)
+  fromCode String     @db.Char(2)
+  from     Country    @relation("MapStringFrom", fields: [fromCode], references: [code], onDelete: Restrict)
+  toCode   String     @db.Char(2)
+  to       Country    @relation("MapStringTo", fields: [toCode], references: [code], onDelete: Restrict)
 
   createdById String?
   createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
   createdAt   DateTime @default(now())
 
-  @@unique([mapId, fromCode, toCode])
+  @@unique([mapId, kind, fromCode, toCode])
   // A user deleted (SET NULL); countries are never deleted, so no index on the codes
   @@index([createdById])
   @@map("map_string")
@@ -1828,6 +1996,79 @@ model GuessGame {
   @@map("guess_game")
 }
 
+// A slideshow of chosen photos and videos, shared by a link of its own (25 Nov 2026, the
+// user's wish; docs/API.md "Photo slideshows"): anyone with the link watches those photos,
+// in their order, and nothing else of the map. The photos are the map's own, in order
+// (no foreign key: one deleted or hidden later is left out when it's watched). `seconds` is
+// how long each photo stays up to start with (3, 5 or 8: CHECK photo_show_seconds); the
+// list holds 1 to 500 (CHECK photo_show_photos). A new link is a new code.
+model PhotoShow {
+  id    String    @id @default(uuid())
+  mapId String
+  map   TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
+  // The show's link (the share codes' alphabet, utils/shareCodes.js)
+  code     String   @unique
+  title    String
+  photoIds String[]
+  seconds  Int      @default(5)
+
+  createdById String?
+  createdBy   User?   @relation("PhotoShowCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([mapId, createdAt])
+  @@index([createdById])
+  @@map("photo_show")
+}
+
+// A postcard (26 Nov 2026, the user's wish; docs/API.md "Postcards"): sent by a link of its own
+// from a place on someone's map, and never part of the map: nothing of it shows there, and it
+// stays when the map goes. Its sender's, deleted with their account. The picture on its front
+// is the place's own art (COUNTRY, free on every plan), a landmark's photo and model (LANDMARK)
+// or a photo the sender uploaded for it (PHOTO, in the private bucket), both on a paid plan;
+// `style` is the card's look (utils/postcards.js POSTCARD_STYLES, checked in code). The address
+// is only for show: `toName` on its lines, never an address. A landmark taken out of the data
+// or a picture gone leaves the place's own picture (`shownKind`). A new link is a new code.
+enum PostcardKind {
+  COUNTRY
+  LANDMARK
+  PHOTO
+}
+
+model Postcard {
+  id   String @id @default(uuid())
+  // The card's link (the share codes' alphabet, utils/shareCodes.js)
+  code String @unique
+
+  senderId String
+  sender   User   @relation("PostcardSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  kind        PostcardKind
+  // The place it's from (the postmark's): a country, a UK nation, a region or a special place
+  countryCode String       @db.Char(2)
+  country     Country      @relation(fields: [countryCode], references: [code], onDelete: Restrict)
+  landmarkId  String?
+  landmark    Landmark?    @relation(fields: [landmarkId], references: [id], onDelete: SetNull)
+  pictureId   String?      @unique
+  picture     MediaItem?   @relation(fields: [pictureId], references: [id], onDelete: SetNull)
+
+  style    String
+  message  String
+  toName   String?
+  fromName String?
+
+  createdAt DateTime @default(now())
+
+  // The sender's list, newest first (it also serves the sender's foreign key)
+  @@index([senderId, createdAt])
+  @@index([landmarkId])
+  @@index([countryCode])
+  @@map("postcard")
+}
+
 // One go at a game: each round's points as it's answered (one answer a round, in order), and
 // the name it goes on the leaderboard under once it's finished. No account: the play's id is
 // what the player holds. Never named ones go with the daily clean-up after 7 days
@@ -1905,9 +2146,8 @@ model OneShot {
   countryCode String?  @db.Char(2)
   country     Country? @relation(fields: [countryCode], references: [code], onDelete: Restrict)
 
-  // One of the map's photos to show with it (deleting the photo keeps the tick)
-  photoId String?
-  photo   Photo?  @relation(fields: [photoId], references: [id], onDelete: SetNull)
+  // Photos of you with it (OneShotPhoto, the first on its card; 26 Nov 2026, the user's wish)
+  photos OneShotPhoto[]
 
   notes String?
 
@@ -1923,9 +2163,24 @@ model OneShot {
 
   @@unique([mapId, itemKey])
   @@index([countryCode])
-  @@index([photoId])
   @@index([createdById])
   @@map("one_shot")
+}
+
+// A tick's photos (26 Nov 2026, the user's wish: "a photo/multiple photos of you with" it):
+// up to 5 of the map's own photos, in order, the first on its card. Deleting a photo takes it
+// off the tick and keeps the tick.
+model OneShotPhoto {
+  oneShotId String
+  oneShot   OneShot @relation(fields: [oneShotId], references: [id], onDelete: Cascade)
+  photoId   String
+  photo     Photo   @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  position  Int     @default(0)
+
+  @@id([oneShotId, photoId])
+  // Foreign key: deleting a photo (or a whole map's) finds its ticks
+  @@index([photoId])
+  @@map("one_shot_photo")
 }
 
 // Who on the map saw it or did it (a child's own list on a family's map)
@@ -1943,4 +2198,25 @@ model OneShotTraveller {
 enum OneShotSource {
   MANUAL
   FLIGHT
+}
+
+// A string's kind (MapString; 25 Nov 2026, the user's wish): between places been to, or planned
+enum StringKind {
+  VISITED
+  PLANNED
+}
+
+// How a map shows the places visited or lived in (TravelMap; 25 Nov 2026, the user's wish): a
+// badge, a colour, or both
+enum VisitedLook {
+  BADGE
+  COLOUR
+  BOTH
+}
+
+// A metallic finish for the places visited or lived in (TravelMap; 25 Nov 2026, the user's wish)
+enum VisitedFinish {
+  GOLD
+  SILVER
+  BRONZE
 }

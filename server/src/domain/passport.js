@@ -118,12 +118,58 @@ export async function findTravellerTravel(mapId, travellerId, { includeHidden })
  * The travellers on the passport's photo page, with the account each is linked to (whose
  * ticks are their stamps: findStamps' scope; never sent on).
  */
+// A traveller as their passport page shows them (25 Nov 2026): the passport photo with its
+// crop and its DISPLAY file's key, the account's own picture (`user.image`) when there's none,
+// the signature, and when they joined the map (the passport's "date of issue")
+const PASSPORT_TRAVELLER_SELECT = {
+  id: true,
+  name: true,
+  birthCountryCode: true,
+  favouriteCountryCode: true,
+  birthDate: true,
+  userId: true,
+  createdAt: true,
+  portraitFocusX: true,
+  portraitFocusY: true,
+  portraitZoom: true,
+  signature: true,
+  portraitPhoto: {
+    select: {
+      id: true,
+      kind: true,
+      hidden: true,
+      width: true,
+      height: true,
+      variants: { where: { size: 'DISPLAY' }, select: { media: { select: { key: true } } } },
+    },
+  },
+  user: { select: { image: true } },
+};
+
 export const findPassportTravellers = (mapId) =>
   prisma.traveller.findMany({
     where: { mapId },
-    select: { id: true, name: true, birthCountryCode: true, favouriteCountryCode: true, userId: true },
+    select: PASSPORT_TRAVELLER_SELECT,
     orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
   });
+
+/** One of the map's travellers as their passport page shows them, or null. */
+export const findPassportTraveller = (mapId, travellerId) =>
+  prisma.traveller.findFirst({ where: { id: travellerId, mapId }, select: PASSPORT_TRAVELLER_SELECT });
+
+/** The trips each of the map's travellers was on (their status and start), for "Travelling since". */
+export const findTravellerTrips = (mapId) =>
+  prisma.tripTraveller.findMany({
+    where: { trip: { mapId } },
+    select: { travellerId: true, trip: { select: { status: true, startDate: true } } },
+  });
+
+/** A photo of the map's that could be a passport photo (it's checked by the caller). */
+export const findPortraitCandidate = (mapId, photoId) =>
+  prisma.photo.findFirst({ where: { id: photoId, mapId }, select: { id: true, kind: true, hidden: true } });
+
+/** A traveller's passport photo and signature changed (only what `data` has). */
+export const updateTravellerPassportInDB = (travellerId, data) => prisma.traveller.update({ where: { id: travellerId }, data, select: { id: true } });
 
 /** A confirmed match of this photo to this landmark, on this map (a cover must be one). */
 export const findConfirmedMatch = (mapId, photoId, landmarkId) =>
@@ -144,7 +190,7 @@ export const deleteLandmarkCover = (mapId, landmarkId) =>
 export const findPassportMap = (mapId) =>
   prisma.travelMap.findUnique({
     where: { id: mapId },
-    select: { id: true, name: true, groupType: true, owner: { select: { name: true } } },
+    select: { id: true, name: true, groupType: true, homeCountryCode: true, passportColour: true, ownerId: true, owner: { select: { name: true } } },
   });
 
 /** Each photo's thumbnail key: Map photoId -> key. */

@@ -11,6 +11,7 @@ import TextInput from '@/components/ui/TextInput';
 // Utils
 import { CONTINENT_LABELS, COUNTRY_BY_CODE, countriesOnMap } from '@/utils/map/countries';
 import { countsAsVisited } from '@/utils/map/visitStatus';
+import { trackCountriesMarked } from '@/utils/analytics/events';
 
 const CONTINENT_ORDER = ['EUROPE', 'ASIA', 'AFRICA', 'NORTH_AMERICA', 'SOUTH_AMERICA', 'OCEANIA', 'ANTARCTICA'];
 const plain = (text) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -57,6 +58,7 @@ function QuickFillDialog({ mapId, splitUk = false, visitsByCode, first = false, 
     setError('');
     try {
       const { added } = await quickFillVisits(mapId, [...chosen]);
+      trackCountriesMarked({ status: 'VISITED', count: chosen.size, method: 'quick_fill' });
       await onSaved?.(added);
       onClose();
     } catch (err) {

@@ -1,14 +1,14 @@
 import { test, expect } from './fixtures.js';
 
-// "Where to go in <month>" (FEATURE-PLAN.md, "Country pages": "Where to go in <month>").
-// On the dev server every month file is a draft page (with a banner, never indexed), filled
-// from the country guides; links into the section wait for a checked month.
+// "Where to go in <month>" (FEATURE-PLAN.md, "Country pages": "Where to go in <month>"), filled
+// from the country guides. Every month is checked since 26 Nov 2026 (the audit), so each is
+// indexed, and the guides and the country index link to them.
 
 test.describe('Where to go, month by month', () => {
-  test('a draft month lists the guides’ countries at their best, and the other months', async ({ page }) => {
+  test('a month lists the guides’ countries at their best, and the other months', async ({ page }) => {
     await page.goto('/where-to-go/january');
     await expect(page.getByRole('heading', { level: 1, name: 'Where to go in January' })).toBeVisible();
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /^index/);
     await expect(page.getByRole('region', { name: 'January around the world' })).toContainText('height of summer');
 
     // From the guides: Egypt is at its best in January, with its season and a festival
@@ -25,9 +25,15 @@ test.describe('Where to go, month by month', () => {
     await expect(page).toHaveURL(/\/where-to-go\/may$/);
   });
 
-  test('guides link only to checked months, so none yet', async ({ page }) => {
+  test('a guide links to its best months, and the country index to every month', async ({ page }) => {
     await page.goto('/countries/japan');
     await expect(page.getByRole('heading', { level: 1, name: 'Japan' })).toBeVisible();
-    await expect(page.getByRole('navigation', { name: 'Where to go, month by month' })).toHaveCount(0);
+    const months = page.getByRole('navigation', { name: 'Where to go, month by month' });
+    await expect(months.getByRole('link')).toHaveText(['March', 'April', 'May', 'October', 'November']);
+    await months.getByRole('link', { name: 'October' }).click();
+    await expect(page.getByRole('heading', { level: 1, name: 'Where to go in October' })).toBeVisible();
+
+    await page.goto('/countries');
+    await expect(page.getByRole('navigation', { name: 'Where to go, month by month' }).getByRole('link')).toHaveCount(12);
   });
 });

@@ -4,12 +4,28 @@
 // and the mock copies these (client/src/dev/mock/mapStrings.js).
 import { UK, isUkNation } from './ukNations.js';
 
-/** At most this many strings on a map. */
+/** At most this many strings of each kind on a map. */
 export const MAP_STRINGS_MAX = 500;
+
+/**
+ * A string's kind (25 Nov 2026, the user's wish): VISITED, between places been to (every string
+ * until then), or PLANNED, between places planned, each in its own colour.
+ */
+export const STRING_KINDS = Object.freeze(['VISITED', 'PLANNED']);
+
+/** A kind from a request: VISITED when none is given, null for one that isn't a kind. */
+export function parseStringKind(value) {
+  if (value === undefined || value === null || value === '') return 'VISITED';
+  const kind = typeof value === 'string' ? value.trim().toUpperCase() : '';
+  return STRING_KINDS.includes(kind) ? kind : null;
+}
 
 // The visits a string can join on its own, and the trips that have been travelled
 const COUNTED_VISITS = new Set(['VISITED', 'LIVED']);
 const TRAVELLED_TRIPS = new Set(['COMPLETED', 'ACTIVE']);
+// For the planned strings: the places wanted, and the trips planned
+const PLANNED_VISITS = new Set(['WANT_TO_GO']);
+const PLANNED_TRIPS = new Set(['PLANNED']);
 
 /** Two places as one string, `[fromCode, toCode]` in code order; null for a place and itself. */
 export function stringPair(a, b) {
@@ -49,8 +65,14 @@ const dayOf = (value) => (value ? new Date(value).getTime() : Number.POSITIVE_IN
  *    order first visited (undated ones last, in the order they were marked).
  * `trips`: `[{ status, startDate, countryCodes: [...] }]`; `visits`:
  * `[{ countryCode, status, firstVisitedOn, createdAt }]`.
+ * The PLANNED kind's (25 Nov 2026, the user's wish) are the same from the plans: each planned
+ * trip, soonest first (undated last), its stops in order; then the "want to go" places no
+ * planned trip goes to, in the order they were marked.
  */
-export function autoStringPairs({ trips = [], visits = [], splitUk = false }) {
+export function autoStringPairs({ trips = [], visits = [], splitUk = false, kind = 'VISITED' }) {
+  const planned = kind === 'PLANNED';
+  const tripStatuses = planned ? PLANNED_TRIPS : TRAVELLED_TRIPS;
+  const visitStatuses = planned ? PLANNED_VISITS : COUNTED_VISITS;
   const pairs = [];
   const seen = new Set();
   const add = (a, b) => {
@@ -63,7 +85,7 @@ export function autoStringPairs({ trips = [], visits = [], splitUk = false }) {
   };
 
   const reached = new Set();
-  const travelled = trips.filter((trip) => TRAVELLED_TRIPS.has(trip.status)).sort((a, b) => dayOf(a.startDate) - dayOf(b.startDate));
+  const travelled = trips.filter((trip) => tripStatuses.has(trip.status)).sort((a, b) => dayOf(a.startDate) - dayOf(b.startDate));
   for (const trip of travelled) {
     const places = (trip.countryCodes || []).map((code) => stringPlace(code, splitUk));
     places.forEach((place, i) => {
@@ -73,10 +95,11 @@ export function autoStringPairs({ trips = [], visits = [], splitUk = false }) {
   }
 
   const rest = visits
-    .filter((visit) => COUNTED_VISITS.has(visit.status))
+    .filter((visit) => visitStatuses.has(visit.status))
     .map((visit) => ({ ...visit, place: stringPlace(visit.countryCode, splitUk) }))
     .filter((visit) => !reached.has(visit.place))
-    .sort((a, b) => dayOf(a.firstVisitedOn) - dayOf(b.firstVisitedOn) || dayOf(a.createdAt) - dayOf(b.createdAt));
+    // Places wanted have no first visit: the order they were marked
+    .sort((a, b) => (planned ? 0 : dayOf(a.firstVisitedOn) - dayOf(b.firstVisitedOn)) || dayOf(a.createdAt) - dayOf(b.createdAt));
   const order = [...new Set(rest.map((visit) => visit.place))];
   order.forEach((place, i) => {
     if (i > 0) add(order[i - 1], place);
@@ -85,4 +108,4 @@ export function autoStringPairs({ trips = [], visits = [], splitUk = false }) {
 }
 
 /** What the map reply carries for a string. */
-export const stringView = (row) => ({ id: row.id, from: row.fromCode, to: row.toCode });
+export const stringView = (row) => ({ id: row.id, kind: row.kind ?? 'VISITED', from: row.fromCode, to: row.toCode });

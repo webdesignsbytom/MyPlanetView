@@ -1,7 +1,7 @@
 // Life's One Shots (docs/API.md "Life's One Shots"; 24 Nov 2026, the user's wish and name):
 // ticks of the catalogue on a map, seen by everyone who can see it, ticked by its editors.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { anon, cleanUp, data, defaultMapOf, signUp, uploadPhoto } from './helpers.js';
+import { anon, cleanUp, data, defaultMapOf, givePlan, prisma, signUp, uploadPhoto, uploadVideo } from './helpers.js';
 
 afterAll(cleanUp);
 
@@ -50,10 +50,51 @@ describe('Life’s One Shots', () => {
     const photo = data(await uploadPhoto(owner.agent, map.id, { countryCode: 'IS' })).photo;
     expect((await owner.agent.put(url('puffin')).send({ photoId: photo.id, countryCode: 'IS' })).status).toBe(201);
     const mine = (await listOf(owner)).oneShots.find((o) => o.itemKey === 'puffin');
-    expect(mine.photo).toMatchObject({ id: photo.id, thumbUrl: expect.any(String) });
+    // The older single photo still works: a list of one
+    expect(mine.photo).toMatchObject({ id: photo.id, thumbUrl: expect.any(String), displayUrl: expect.any(String) });
+    expect(mine.photos.map((p) => p.id)).toEqual([photo.id]);
     await owner.agent.patch(`/api/photos/${photo.id}`).send({ hidden: true });
     expect((await listOf(owner)).oneShots.find((o) => o.itemKey === 'puffin').photo?.id).toBe(photo.id);
     expect((await listOf(viewer)).oneShots.find((o) => o.itemKey === 'puffin').photo).toBeNull();
+    await owner.agent.patch(`/api/photos/${photo.id}`).send({ hidden: false });
+  });
+
+  // 26 Nov 2026, the user's wish: "a photo/multiple photos of you with" it
+  it('keeps up to 5 photos in order, the first on its card; a hidden one only for editors; a deleted one goes', async () => {
+    const upload = async () => data(await uploadPhoto(owner.agent, map.id, { countryCode: 'KE' })).photo.id;
+    const ids = [];
+    for (let i = 0; i < 6; i += 1) ids.push(await upload());
+    const put = (photoIds) => owner.agent.put(url('giraffe')).send({ countryCode: 'KE', photoIds });
+    expect((await put(ids)).status).toBe(400);
+    const saved = await put([ids[2], ids[0], ids[1]]);
+    expect(saved.status).toBe(201);
+    expect(data(saved).oneShot.photos.map((p) => p.id)).toEqual([ids[2], ids[0], ids[1]]);
+    expect(data(saved).oneShot.photo.id).toBe(ids[2]);
+    expect(data(saved).oneShot.photos.every((p) => p.thumbUrl && p.displayUrl)).toBe(true);
+
+    // Another one first: the card's photo changes
+    expect(data(await put([ids[1], ids[2]])).oneShot.photos.map((p) => p.id)).toEqual([ids[1], ids[2]]);
+    await owner.agent.patch(`/api/photos/${ids[1]}`).send({ hidden: true });
+    const forViewer = (await listOf(viewer)).oneShots.find((o) => o.itemKey === 'giraffe');
+    expect(forViewer.photos.map((p) => p.id)).toEqual([ids[2]]);
+    expect(forViewer.photo.id).toBe(ids[2]);
+    expect((await listOf(owner)).oneShots.find((o) => o.itemKey === 'giraffe').photos).toHaveLength(2);
+
+    // Deleting a photo takes it off the tick, and the tick stays
+    expect((await owner.agent.delete(`/api/photos/${ids[1]}`)).status).toBe(200);
+    expect((await listOf(owner)).oneShots.find((o) => o.itemKey === 'giraffe').photos.map((p) => p.id)).toEqual([ids[2]]);
+    // An empty list takes them all off; leaving it out keeps them
+    expect(data(await owner.agent.put(url('giraffe')).send({ notes: 'Huge' })).oneShot.photos).toHaveLength(1);
+    expect(data(await put([])).oneShot).toMatchObject({ photos: [], photo: null });
+
+    // Never a video, even the map's own
+    await givePlan(owner.user.id, { plan: 'PREMIUM' });
+    const video = data(await uploadVideo(owner.agent, map.id, { countryCode: 'KE', ready: true })).photo.id;
+    const refused = await put([ids[2], video]);
+    expect(refused.status).toBe(400);
+    expect(refused.body.message).toBe("Choose up to 5 of this map's own photos (not videos).");
+    await owner.agent.put(url('giraffe')).send({ photoIds: [ids[2], ids[0]] });
+    expect(await prisma.oneShotPhoto.count({ where: { photoId: { in: [ids[2], ids[0]] } } })).toBe(2);
   });
 
   it('refuses an item that isn’t one, a bad field, another map’s photo, a stranger as traveller', async () => {
@@ -64,7 +105,7 @@ describe('Life’s One Shots', () => {
     const theirs = data(await uploadPhoto(viewer.agent, otherMap.id, { countryCode: 'FR' })).photo;
     const wrongPhoto = await owner.agent.put(url('lion')).send({ photoId: theirs.id });
     expect(wrongPhoto.status).toBe(400);
-    expect(wrongPhoto.body.message).toBe("The picture must be one of this map's photos.");
+    expect(wrongPhoto.body.message).toBe("Choose up to 5 of this map's own photos (not videos).");
     expect((await owner.agent.put(url('lion')).send({ travellerIds: ['11111111-1111-4111-8111-111111111111'] })).status).toBe(400);
     // A flight as the source only for a line a flight crosses
     expect((await owner.agent.put(url('lion')).send({ source: 'FLIGHT' })).status).toBe(400);
@@ -106,18 +147,19 @@ describe('Life’s One Shots', () => {
     const res = await anon().get(`/api/shared/${code}/one-shots`);
     expect(res.status).toBe(200);
     expect(data(res).suggestions).toEqual([]);
-    expect(data(res).oneShots.map((o) => o.itemKey).sort()).toEqual(['equator', 'lion', 'puffin']);
+    expect(data(res).oneShots.map((o) => o.itemKey).sort()).toEqual(['equator', 'giraffe', 'lion', 'puffin']);
   });
 
   it('takes one off, leaving the country visited, and carries the rest in "Your data"', async () => {
     const res = await owner.agent.delete(url('puffin'));
     expect(data(res)).toEqual({ itemKey: 'puffin', ticked: false });
-    expect((await listOf(owner)).oneShots.map((o) => o.itemKey).sort()).toEqual(['equator', 'lion']);
+    expect((await listOf(owner)).oneShots.map((o) => o.itemKey).sort()).toEqual(['equator', 'giraffe', 'lion']);
     const visits = data(await owner.agent.get(`/api/maps/${map.id}`)).map.visits;
     expect(visits.find((v) => v.countryCode === 'IS')).toBeTruthy();
     const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map;
     expect(exported.oneShots).toEqual([
-      expect.objectContaining({ item: 'lion', seenOn: '2024-01-01', datePrecision: 'YEAR', countryCode: 'KE', travellerIds: [traveller.id] }),
+      expect.objectContaining({ item: 'lion', seenOn: '2024-01-01', datePrecision: 'YEAR', countryCode: 'KE', travellerIds: [traveller.id], photoIds: [] }),
+      expect.objectContaining({ item: 'giraffe', photoIds: [expect.any(String), expect.any(String)] }),
       expect.objectContaining({ item: 'equator', source: 'FLIGHT' }),
     ]);
   });

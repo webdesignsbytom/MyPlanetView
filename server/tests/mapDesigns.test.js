@@ -8,6 +8,9 @@ import {
   isColourablePlace,
   parseDesignChange,
   storedColours,
+  VISITED_FINISHES,
+  VISITED_LOOKS,
+  parseVisitedLook,
 } from '../src/utils/mapDesigns.js';
 
 describe('cleanColour', () => {
@@ -19,8 +22,18 @@ describe('cleanColour', () => {
     expect(cleanColour(null)).toEqual({ ok: true, value: null });
   });
   it('refuses anything else', () => {
-    for (const value of ['#fff', 'red', 'rgb(0,0,0)', '#12345g', '#1234567', 12, {}, undefined, 'url(x)']) {
+    for (const value of ['#fff', 'red', 'rgb(0,0,0)', '#12345g', '#1234567', '#11223380', 12, {}, undefined, 'url(x)']) {
       expect(cleanColour(value).ok).toBe(false);
+    }
+  });
+  it('takes an opacity only when asked, kept as "#rrggbb" when fully opaque', () => {
+    expect(cleanColour('#C8102E80', { alpha: true })).toEqual({ ok: true, value: '#c8102e80' });
+    expect(cleanColour('#c8102e00', { alpha: true })).toEqual({ ok: true, value: '#c8102e00' });
+    expect(cleanColour('#c8102eFF', { alpha: true })).toEqual({ ok: true, value: '#c8102e' });
+    expect(cleanColour('#c8102e', { alpha: true })).toEqual({ ok: true, value: '#c8102e' });
+    expect(cleanColour(null, { alpha: true })).toEqual({ ok: true, value: null });
+    for (const value of ['#c8102e8', '#c8102e8g', '#c8102e800', 'rgba(0,0,0,0.5)']) {
+      expect(cleanColour(value, { alpha: true }).ok).toBe(false);
     }
   });
 });
@@ -41,6 +54,33 @@ describe('parseDesignChange', () => {
     expect(parseDesignChange({ string: '#1D4ED8' })).toEqual({ data: { stringColour: '#1d4ed8' }, codes: [] });
     expect(parseDesignChange({ string: null })).toEqual({ data: { stringColour: null }, codes: [] });
     expect(parseDesignChange({ string: 'red' })).toEqual({ error: 'invalidDesignColour' });
+    // The strings may be see-through (25 Nov 2026, the user's wish); the other colours never
+    expect(parseDesignChange({ string: '#1D4ED866' })).toEqual({ data: { stringColour: '#1d4ed866' }, codes: [] });
+    expect(parseDesignChange({ string: '#1d4ed8ff' })).toEqual({ data: { stringColour: '#1d4ed8' }, codes: [] });
+    expect(parseDesignChange({ names: '#00000080' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ hover: '#ff00ff80' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ countries: { FR: '#aa000080' } })).toEqual({ error: 'invalidDesignColour' });
+    // A second colour twisted in, as baker's twine (25 Nov 2026, the user's wish): opaque only
+    expect(parseDesignChange({ stringTwist: '#FFFFFF' })).toEqual({ data: { stringTwistColour: '#ffffff' }, codes: [] });
+    expect(parseDesignChange({ stringTwist: null })).toEqual({ data: { stringTwistColour: null }, codes: [] });
+    expect(parseDesignChange({ stringTwist: '#ffffff80' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ stringTwist: 'white' })).toEqual({ error: 'invalidDesignColour' });
+    // The planned strings' own colour and twist, as the visited ones' (25 Nov 2026, the user's wish)
+    expect(parseDesignChange({ plannedString: '#1D4ED880', plannedStringTwist: '#FFFFFF' })).toEqual({
+      data: { plannedStringColour: '#1d4ed880', plannedStringTwistColour: '#ffffff' },
+      codes: [],
+    });
+    expect(parseDesignChange({ plannedString: null, plannedStringTwist: null })).toEqual({
+      data: { plannedStringColour: null, plannedStringTwistColour: null },
+      codes: [],
+    });
+    expect(parseDesignChange({ plannedStringTwist: '#ffffff80' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ plannedString: 'blue' })).toEqual({ error: 'invalidDesignColour' });
+  });
+  // The visited look is the map's, in every style (25 Nov 2026), never a design's
+  it('leaves how visited places show to the map', () => {
+    expect(parseDesignChange({ visitedLook: 'COLOUR' })).toEqual({ error: 'invalidDesign' });
+    expect(parseDesignChange({ visited: '#7c3aed', names: '#000000' })).toEqual({ data: { namesColour: '#000000' }, codes: [] });
   });
   it('empties the colours with an empty set', () => {
     expect(parseDesignChange({ countries: {} })).toEqual({ data: { countryColours: {} }, codes: [] });
@@ -100,5 +140,32 @@ describe('checkDesignPicture', () => {
     expect(checkDesignPicture({ contentType: 'image/png', bytes: 0 })).toBe('designPictureInvalid');
     expect(checkDesignPicture({ contentType: 'image/png', bytes: 1.5 })).toBe('designPictureInvalid');
     expect(checkDesignPicture({ contentType: 'image/png', bytes: DESIGN_PICTURE_MAX_BYTES + 1 })).toBe('designPictureTooLarge');
+  });
+});
+
+// How the places visited or lived in show, the map's in every style (docs/API.md "The visited
+// look"; 25 Nov 2026, the user's wish)
+describe('parseVisitedLook', () => {
+  it('reads how visited places show, in any case, and their colour', () => {
+    expect(VISITED_LOOKS).toEqual(['BADGE', 'COLOUR', 'BOTH']);
+    expect(parseVisitedLook({ visitedLook: 'colour', visitedColour: '#7C3AED' })).toEqual({ data: { visitedLook: 'COLOUR', visitedColour: '#7c3aed' } });
+    expect(parseVisitedLook({ visitedColour: null })).toEqual({ data: { visitedColour: null } });
+    expect(parseVisitedLook({ visitedLook: 'STICKER' })).toEqual({ error: 'invalidVisitedLook' });
+    expect(parseVisitedLook({ visitedLook: 1 })).toEqual({ error: 'invalidVisitedLook' });
+    // Opaque only
+    expect(parseVisitedLook({ visitedColour: '#7c3aed80' })).toEqual({ error: 'invalidDesignColour' });
+  });
+
+  it('reads a metallic finish, in any case, or none', () => {
+    expect(VISITED_FINISHES).toEqual(['GOLD', 'SILVER', 'BRONZE']);
+    expect(parseVisitedLook({ visitedFinish: 'gold' })).toEqual({ data: { visitedFinish: 'GOLD' } });
+    expect(parseVisitedLook({ visitedFinish: null })).toEqual({ data: { visitedFinish: null } });
+    expect(parseVisitedLook({ visitedFinish: 'PLATINUM' })).toEqual({ error: 'invalidVisitedLook' });
+    expect(parseVisitedLook({ visitedFinish: 2 })).toEqual({ error: 'invalidVisitedLook' });
+  });
+
+  it('asks for nothing when the request names none of them', () => {
+    expect(parseVisitedLook({ name: 'Our trips' })).toEqual({ data: {} });
+    expect(parseVisitedLook(null)).toEqual({ data: {} });
   });
 });

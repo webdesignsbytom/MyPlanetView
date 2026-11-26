@@ -125,6 +125,14 @@ describe('useTravelMap: visits', () => {
     expect(result.current.map.visits[0]).toMatchObject({ countryCode: 'FR', status: 'LIVED', source: 'PHOTO', notes: 'Paris' });
   });
 
+  // A place's strings follow the order places were marked (25 Nov 2026): the server's time for it
+  it('keeps when the server says a place was marked', async () => {
+    const { result } = await open();
+    api.putVisit.mockResolvedValueOnce({ visit: { countryCode: 'CA', status: 'WANT_TO_GO', markedAt: '2026-11-25T10:00:00.000Z' }, implied: [] });
+    await act(async () => result.current.setVisit('CA', 'WANT_TO_GO'));
+    expect(result.current.map.visits.find((v) => v.countryCode === 'CA')).toMatchObject({ status: 'WANT_TO_GO', markedAt: '2026-11-25T10:00:00.000Z' });
+  });
+
   it('clears a country', async () => {
     const { result } = await open();
     await act(async () => result.current.setVisit('JP', null));
@@ -235,6 +243,25 @@ describe('useTravelMap: the map’s details, style and design', () => {
     api.getMap.mockResolvedValue({ map: mapOf('m1', { style: 'old-map' }) });
     await act(async () => result.current.setMapStyle('starry'));
     await waitFor(() => expect(result.current.map.style).toBe('old-map'));
+  });
+
+  // How the places been to show: the map's own, in every style (25 Nov 2026, the user's wish)
+  it('shows a new visited look at once and saves it with the map', async () => {
+    const { result } = await open();
+    api.updateMap.mockResolvedValue({});
+    await act(async () => result.current.setVisitedLook({ visitedLook: 'COLOUR', visitedFinish: 'GOLD' }));
+    expect(result.current.map).toMatchObject({ visitedLook: 'COLOUR', visitedFinish: 'GOLD' });
+    expect(api.updateMap).toHaveBeenCalledWith('m1', { visitedLook: 'COLOUR', visitedFinish: 'GOLD' });
+  });
+
+  it('reads the map again when the visited look couldn’t be saved, and says so', async () => {
+    const { result } = await open();
+    api.updateMap.mockRejectedValue(new Error('Forbidden'));
+    api.getMap.mockResolvedValue({ map: mapOf('m1', { visitedLook: 'BADGE' }) });
+    let thrown = null;
+    await act(async () => result.current.setVisitedLook({ visitedLook: 'BOTH' }).catch((err) => (thrown = err)));
+    expect(thrown?.message).toBe('Forbidden');
+    await waitFor(() => expect(result.current.map.visitedLook).toBe('BADGE'));
   });
 
   it('keeps one design per style', async () => {

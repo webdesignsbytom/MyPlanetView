@@ -76,11 +76,11 @@ function markPlaces(mapId, places) {
   for (const code of withParentPlaces(places)) {
     const visit = db.visits.find((v) => v.mapId === mapId && v.countryCode === code);
     if (!visit) {
-      const added = { mapId, countryCode: code, status: 'VISITED', source: 'MANUAL', firstVisitedOn: null, notes: null };
+      const added = { mapId, countryCode: code, status: 'VISITED', source: 'MANUAL', firstVisitedOn: null, notes: null, createdAt: new Date().toISOString() };
       db.visits.push(added);
       changed.push(added);
     } else if (visit.status === 'WANT_TO_GO') {
-      Object.assign(visit, { status: 'VISITED', source: 'MANUAL' });
+      Object.assign(visit, { status: 'VISITED', source: 'MANUAL', createdAt: new Date().toISOString() });
       changed.push(visit);
     }
   }
@@ -99,7 +99,7 @@ export function setSubdivision(map, code, status) {
   if (s.same) {
     let visit = db.visits.find((v) => v.mapId === map.id && v.countryCode === s.r);
     if (!visit) {
-      visit = { mapId: map.id, countryCode: s.r, status, source: 'MANUAL', firstVisitedOn: null, notes: null };
+      visit = { mapId: map.id, countryCode: s.r, status, source: 'MANUAL', firstVisitedOn: null, notes: null, createdAt: new Date().toISOString() };
       db.visits.push(visit);
     } else if (visit.status !== status) Object.assign(visit, { status, source: 'MANUAL' });
     const implied = COUNTED.includes(status) ? markPlaces(map.id, [s.m]) : [];

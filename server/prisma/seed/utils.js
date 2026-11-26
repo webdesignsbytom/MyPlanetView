@@ -61,6 +61,8 @@ export async function wipeDatabase() {
     prisma.mapMember.deleteMany(),
     prisma.traveller.deleteMany(),
     prisma.travelMap.deleteMany(),
+    // Postcards point at a country and a landmark (docs/API.md "Postcards"), so they go first
+    prisma.postcard.deleteMany(),
     prisma.landmark.deleteMany(),
     prisma.country.deleteMany(),
     prisma.rateLimit.deleteMany(),

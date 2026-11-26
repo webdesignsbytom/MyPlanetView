@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
+  BOOK_MAX_PX,
+  BOOK_MIN_PX,
   STAMP_SHAPES,
+  bookFitHeight,
   bookLeaves,
   hashOf,
   passportCover,
@@ -8,6 +11,7 @@ import {
   stampDate,
   stampDescription,
   stampLook,
+  visaLeafIndex,
 } from '@/utils/passport/passportBook';
 import { STAMP_GEOMETRY, fitName } from '@/utils/passport/stampShapes';
 
@@ -85,6 +89,21 @@ describe('bookLeaves', () => {
   });
 });
 
+describe('visaLeafIndex', () => {
+  const leaves = bookLeaves({ pages: [{ countryCode: 'FR' }, { countryCode: 'XE' }] });
+
+  it('finds a place’s visa page among the leaves (the celebration opens the passport there)', () => {
+    expect(visaLeafIndex(leaves, 'FR')).toBe(2);
+    expect(visaLeafIndex(leaves, 'XE')).toBe(3);
+  });
+
+  it('finds none for a place with no page, or no place', () => {
+    expect(visaLeafIndex(leaves, 'JP')).toBe(-1);
+    expect(visaLeafIndex(leaves, null)).toBe(-1);
+    expect(visaLeafIndex(leaves, '')).toBe(-1);
+  });
+});
+
 describe('STAMP_GEOMETRY', () => {
   it('draws every stamp shape, with its name curve, date curve and marks', () => {
     expect(Object.keys(STAMP_GEOMETRY).sort()).toEqual([...STAMP_SHAPES].sort());
@@ -122,5 +141,27 @@ describe('fitName', () => {
     expect(text.endsWith('…')).toBe(true);
     expect(text.length).toBeLessThanOrEqual(Math.floor(230 / (7.5 * 0.74)));
     expect(name.toUpperCase().startsWith(text.slice(0, -1))).toBe(true);
+  });
+});
+
+describe('bookFitHeight', () => {
+  it('fits the book between its top and its page bar on the first view (1440×900, under the title card)', () => {
+    // 900 less the bar (72), the gap above it (16) and its own from the foot (8), less the book's top
+    expect(bookFitHeight({ viewport: 900, top: 265, bar: 72 })).toBe(539);
+  });
+
+  it('stays 40rem where there’s room', () => {
+    expect(bookFitHeight({ viewport: 1080, top: 265, bar: 72 })).toBe(BOOK_MAX_PX);
+    expect(bookFitHeight({ viewport: 2000, top: 0, bar: 72 })).toBe(BOOK_MAX_PX);
+  });
+
+  it('never below 28rem, so a spread’s pages aren’t cramped, while book and bar still fit once scrolled to', () => {
+    expect(bookFitHeight({ viewport: 720, top: 265, bar: 72 })).toBe(BOOK_MIN_PX);
+    expect(BOOK_MIN_PX + 72 + 16 + 8).toBeLessThanOrEqual(720);
+  });
+
+  it('on a very short screen, as tall as fits with the bar, and never under 240 pixels', () => {
+    expect(bookFitHeight({ viewport: 500, top: 265, bar: 72 })).toBe(396);
+    expect(bookFitHeight({ viewport: 200, top: 100, bar: 72 })).toBe(240);
   });
 });

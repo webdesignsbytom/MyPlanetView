@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 // Utils
 import { importPath } from '@/utils/constants/routes';
+import { mapActionClass } from '@/utils/map/mapActionClass';
 
 // Settings, "This map" (editors): bringing trips, photos and stories from Polarsteps to this
 // map (docs/API.md "Importing from Polarsteps"), on its own page, as it runs a while.
@@ -12,7 +13,8 @@ function MapImportSection({ map }) {
         Bring trips from Polarsteps
       </h3>
       <p className='text-sm opacity-80'>Your Polarsteps trips, their photos and each step’s story, onto “{map.name}”. Nothing is brought twice.</p>
-      <Link to={importPath(map.id)} className='btn-paper text-center'>
+      {/* The same size as the panel's other buttons (MapActionButton), not a full-size btn-paper */}
+      <Link to={importPath(map.id)} className={mapActionClass({ quiet: true })}>
         Bring trips from Polarsteps
       </Link>
     </section>

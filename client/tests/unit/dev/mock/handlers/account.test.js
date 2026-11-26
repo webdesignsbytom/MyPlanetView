@@ -127,7 +127,7 @@ describe('passwords, addresses and the account', () => {
     expect(testUser().emailVerified).toBe(true);
     expect(db().planGrants.filter((g) => g.userId === USER)).toHaveLength(1);
     expect(effectivePlan(USER).plan).toBe('PREMIUM');
-    expect(JSON.parse(localStorage.getItem('mpvMockStore.v6')).users[0].emailVerified).toBe(true);
+    expect(JSON.parse(localStorage.getItem('mpvMockStore.v7')).users[0].emailVerified).toBe(true);
   });
 
   it('deletes the account only with its password, starting the demo again', async () => {
@@ -184,11 +184,19 @@ describe('map settings', () => {
     expect(data.mapSettings).toEqual({ style: 'starry', showGrid: false, countriesAsked: true });
     expect((await get('/api/users/map-settings')).data.mapSettings).toEqual(data.mapSettings);
     expect((await put('/api/users/map-settings', { mapSettings: { style: 'jupiter' } })).status).toBe(400);
+    // The engraved ocean (25 Nov 2026)
+    expect((await put('/api/users/map-settings', { mapSettings: { style: 'engraved' } })).data.mapSettings).toEqual({ style: 'engraved' });
     expect((await put('/api/users/map-settings', { mapSettings: { showGrid: 'yes' } })).status).toBe(400);
     expect((await put('/api/users/map-settings', { mapSettings: { landmarkPins: 'stamped' } })).data.mapSettings).toEqual({ landmarkPins: 'stamped' });
     // The celebration screen's switch (24 Nov 2026)
     expect((await put('/api/users/map-settings', { mapSettings: { showCelebrations: false } })).data.mapSettings).toEqual({ showCelebrations: false });
     expect((await put('/api/users/map-settings', { mapSettings: { showCelebrations: 'off' } })).status).toBe(400);
+    // The supporter badge's switch (24 Nov 2026)
+    expect((await put('/api/users/map-settings', { mapSettings: { showSupporterBadge: false } })).data.mapSettings).toEqual({ showSupporterBadge: false });
+    expect((await put('/api/users/map-settings', { mapSettings: { showSupporterBadge: 'off' } })).status).toBe(400);
+    // The distances' unit (24 Nov 2026)
+    expect((await put('/api/users/map-settings', { mapSettings: { distanceUnit: 'miles' } })).data.mapSettings).toEqual({ distanceUnit: 'miles' });
+    expect((await put('/api/users/map-settings', { mapSettings: { distanceUnit: 'furlongs' } })).status).toBe(400);
   });
 });
 

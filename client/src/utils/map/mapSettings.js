@@ -3,6 +3,7 @@
 // (server/src/utils/mapSettings.js).
 import { MAP_STYLE_IDS } from './mapStyles.js';
 import { MAP_TYPE_IDS } from './mapTypes.js';
+import { DISTANCE_UNIT_IDS } from './distanceUnits.js';
 
 export const MAP_SETTINGS_STORAGE_KEY = 'myPlanetViewMapSettings';
 
@@ -23,6 +24,10 @@ export const DEFAULT_MAP_SETTINGS = {
   mapType: 'regular',
   // Only the passport's landmarks, at every zoom (18 Nov 2026, the user's wish; it was 'zoomed')
   landmarkPins: 'stamped',
+  // The statistics' distances (utils/map/distanceUnits.js; 24 Nov 2026, the user's wish:
+  // "Americans in miles always"): miles for a map whose home is in the United States, else
+  // kilometres, unless one is chosen
+  distanceUnit: 'auto',
   showGrid: true,
   showGridLabels: false,
   animatedSea: true,
@@ -40,9 +45,17 @@ export const DEFAULT_MAP_SETTINGS = {
   // The luggage tag under the map's title with the nearest goal's progress
   // (components/achievements/GoalTag.jsx)
   showGoalTag: true,
+  // The countdown to the next planned trip, at the map's top left
+  // (components/trips/TripCountdownTag.jsx; its switch 25 Nov 2026, the user's wish)
+  showTripCountdown: true,
+  // The map's key, at the bottom left on wide screens (components/map/MapLegend.jsx; its
+  // switch 25 Nov 2026, the user's wish)
+  showMapKey: true,
   // The strings tied between places, like thread on a corkboard (components/map/MapStrings.jsx;
-  // 23 Nov 2026): the map's own, each viewer's choice to show
+  // 23 Nov 2026): the map's own, each viewer's choice to show; the places visited, and apart the
+  // places planned (25 Nov 2026)
   showStrings: true,
+  showPlannedStrings: true,
   // The tips the map opens with, once a visit (components/map/MapTipsDialog.jsx, whose box
   // turns this off)
   showTips: true,
@@ -52,21 +65,29 @@ export const DEFAULT_MAP_SETTINGS = {
   // Whether the map has offered "Where have you been?" (components/map/QuickFillDialog.jsx;
   // 22 Nov 2026): once per account. Not a switch in Settings
   countriesAsked: false,
+  // A paying member's own: their plan's badge on the banner of every map they own, for
+  // everyone who opens them (utils/plans/supporterBadge.js; 24 Nov 2026). Its switch is
+  // Settings' SupporterBadgeSection, shown to the owner of a paid account only
+  showSupporterBadge: true,
 };
 
 // Grouped as the settings panel shows them.
 // `detailed`: the Detailed map type always shows it, so its switch is locked on there.
 // `wideOnly`: only drawn on wide screens (lg and up), so its switch is hidden elsewhere.
+// `notOnPhones`: never drawn on phones (the `phone:` variant), so its switch isn't there.
 export const MAP_SETTING_TOGGLES = [
   { key: 'showVisited', label: 'Countries you have been to', group: 'countries' },
   { key: 'showUnvisited', label: 'Countries you have not been to', group: 'countries' },
   { key: 'showAntarctica', label: 'Antarctica', group: 'countries' },
   { key: 'showMoments', label: 'Moments', group: 'countries' },
   { key: 'showGoalTag', label: 'Goal progress tag', group: 'countries' },
-  { key: 'showStrings', label: 'Strings between countries', group: 'countries' },
+  { key: 'showTripCountdown', label: 'Countdown to your next trip', group: 'countries' },
+  { key: 'showStrings', label: 'Strings between places visited', group: 'countries' },
+  { key: 'showPlannedStrings', label: 'Strings between places planned', group: 'countries' },
   { key: 'showGrid', label: 'Latitude and longitude lines', group: 'map', detailed: true },
   { key: 'showGridLabels', label: 'Label the lines', group: 'map', detailed: true },
   { key: 'showCountryNames', label: 'Country names', group: 'map', detailed: true },
+  { key: 'showMapKey', label: 'Map key', group: 'map', notOnPhones: true },
   { key: 'showUserBanner', label: 'Banner with your names along the top', group: 'map', wideOnly: true },
   { key: 'animatedSea', label: 'Animated sea', group: 'sky' },
   { key: 'sunAndMoon', label: 'Sun and moon', group: 'sky' },
@@ -92,9 +113,11 @@ export function cleanMapSettings(value) {
   if (input.blackAndWhite === true && clean.style === 'animated') clean.style = 'mono';
   if (MAP_TYPE_IDS.includes(input.mapType)) clean.mapType = input.mapType;
   if (LANDMARK_PIN_MODE_IDS.includes(input.landmarkPins)) clean.landmarkPins = input.landmarkPins;
+  if (DISTANCE_UNIT_IDS.includes(input.distanceUnit)) clean.distanceUnit = input.distanceUnit;
   for (const { key } of MAP_SETTING_TOGGLES) {
     if (typeof input[key] === 'boolean') clean[key] = input[key];
   }
   if (typeof input.countriesAsked === 'boolean') clean.countriesAsked = input.countriesAsked;
+  if (typeof input.showSupporterBadge === 'boolean') clean.showSupporterBadge = input.showSupporterBadge;
   return clean;
 }

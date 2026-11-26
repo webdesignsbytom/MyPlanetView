@@ -65,7 +65,7 @@ export function addFirstClassMap(db) {
   );
   addMissing(
     db.travellers,
-    { id: 'trav-fran', mapId: FRAN_MAP_ID, name: 'Fran', position: 0, userId: FRAN_ID, birthCountryCode: 'NG', favouriteCountryCode: 'IS' },
+    { id: 'trav-fran', mapId: FRAN_MAP_ID, name: 'Fran', position: 0, userId: FRAN_ID, birthCountryCode: 'NG', favouriteCountryCode: 'IS', birthDate: '1987-08-09' },
     (t) => t.id === 'trav-fran',
   );
   // The test user watches as a viewer: the videos play, nothing can be changed

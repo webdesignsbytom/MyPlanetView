@@ -1,6 +1,6 @@
 import React from 'react';
-import { describe, expect, it } from 'vitest';
-import { render } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { render, waitFor } from '@testing-library/react';
 import PricingCta from '@/components/pricing/PricingCta';
 import PricingEveryPlan from '@/components/pricing/PricingEveryPlan';
 import PricingExtraMaps from '@/components/pricing/PricingExtraMaps';
@@ -12,6 +12,14 @@ import PricingPlans from '@/components/pricing/PricingPlans';
 import { EDITORS_PER_MAP, FREE_MAPS, PLANS, formatPence } from '@/utils/constants/plans';
 import { adsLine, everyPlanFeatures, planTickets, pricingCta, pricingNotes } from '@/utils/data/pricingData';
 import { renderPage, signedIn } from '../../pages/renderPage';
+
+const { getBilling } = vi.hoisted(() => ({ getBilling: vi.fn() }));
+vi.mock('@/api/plansApi', () => ({ getBilling }));
+
+beforeEach(() => {
+  getBilling.mockReset();
+  getBilling.mockResolvedValue({ plan: 'REGULAR' });
+});
 
 const ticket = (id) => planTickets.find((t) => t.id === id);
 const linkText = (container) => container.querySelector('a').textContent;
@@ -55,14 +63,35 @@ describe('PricingPlanCard', () => {
     expect(linkText(container)).toBe(`Start with ${PLANS.REGULAR.name}`);
   });
 
-  it('signed in, every plan goes to the account page', () => {
+  it('signed in, every plan goes to the account page, and "Choose" until the plan is known', () => {
     const premium = renderPage(<PricingPlanCard ticket={ticket('PREMIUM')} />, { auth: signedIn() });
     expect(linkText(premium.container)).toBe(`Choose ${PLANS.PREMIUM.name}`);
     expect(premium.container.querySelector('a').getAttribute('href')).toBe('/account');
     expect(premium.container.textContent).toContain(formatPence(PLANS.PREMIUM.price.MONTH));
     premium.unmount();
     const free = renderPage(<PricingPlanCard ticket={ticket('FREE')} />, { auth: signedIn() });
-    expect(linkText(free.container)).toBe('Your plan');
+    expect(linkText(free.container)).toBe(`Choose ${PLANS.FREE.name}`);
+    expect(free.container.querySelector('article').hasAttribute('data-current-plan')).toBe(false);
+  });
+
+  it('the account’s own plan says "Your plan", a lower one "Move to"', () => {
+    const own = renderPage(<PricingPlanCard ticket={ticket('REGULAR')} currentPlan='REGULAR' />, { auth: signedIn() });
+    expect(linkText(own.container)).toBe('Your plan');
+    expect(own.container.querySelector('article').getAttribute('data-current-plan')).toBe('true');
+    expect(own.container.querySelector('a').className).toContain('btn-paper');
+    own.unmount();
+    const lower = renderPage(<PricingPlanCard ticket={ticket('FREE')} currentPlan='REGULAR' />, { auth: signedIn() });
+    expect(linkText(lower.container)).toBe(`Move to ${PLANS.FREE.name}`);
+    lower.unmount();
+    const higher = renderPage(<PricingPlanCard ticket={ticket('PREMIUM')} currentPlan='REGULAR' />, { auth: signedIn() });
+    expect(linkText(higher.container)).toBe(`Choose ${PLANS.PREMIUM.name}`);
+    expect(higher.container.querySelector('a').className).toContain('btn-poster');
+  });
+
+  it('signed out, a plan passed in changes nothing', () => {
+    const { container } = renderPage(<PricingPlanCard ticket={ticket('FREE')} currentPlan='FREE' />);
+    expect(linkText(container)).toBe('Start your map');
+    expect(container.querySelector('article').hasAttribute('data-current-plan')).toBe(false);
   });
 
   it('an unknown plan id is shown as Economy', () => {
@@ -78,6 +107,32 @@ describe('PricingPlans', () => {
     expect(container.querySelector('#pricing-plans-heading').textContent).toBe('The plans');
     expect(container.textContent).toContain(adsLine.lead);
     expect(container.textContent).toContain(formatPence(PLANS.PREMIUM.price.YEAR));
+    expect(getBilling).not.toHaveBeenCalled();
+  });
+
+  it('signed in, asks for the account’s plan and marks that card', async () => {
+    const { container } = renderPage(<PricingPlans />, { auth: signedIn() });
+    await waitFor(() => expect(container.querySelector('[data-current-plan] h3')?.textContent).toBe(PLANS.REGULAR.name));
+    expect(getBilling).toHaveBeenCalledTimes(1);
+    const labels = [...container.querySelectorAll('article a')].map((a) => a.textContent);
+    expect(labels).toEqual([`Move to ${PLANS.FREE.name}`, 'Your plan', `Choose ${PLANS.PREMIUM.name}`]);
+  });
+
+  it('signed in, a failed read leaves every card on "Choose"', async () => {
+    getBilling.mockRejectedValue(new Error('offline'));
+    const { container } = renderPage(<PricingPlans />, { auth: signedIn() });
+    await waitFor(() => expect(getBilling).toHaveBeenCalled());
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(container.querySelector('[data-current-plan]')).toBe(null);
+    expect([...container.querySelectorAll('article a')].map((a) => a.textContent)).toEqual(Object.values(PLANS).map((p) => `Choose ${p.name}`));
+  });
+});
+
+describe('the plans’ postcards', () => {
+  it('sells landmark and own-photo postcards from Business up, never on Economy', () => {
+    const texts = (id) => planTickets.find((t) => t.id === id).features.map((f) => f.text);
+    expect(texts('REGULAR')).toContain('Postcards of landmarks, and of your own photos');
+    expect(texts('FREE').some((text) => /postcard/i.test(text))).toBe(false);
   });
 });
 
@@ -87,6 +142,8 @@ describe('PricingEveryPlan', () => {
     const lists = container.querySelectorAll('ul');
     expect(lists[0].querySelectorAll('li').length).toBe(everyPlanFeatures.length);
     expect(lists[0].textContent).toContain(`up to ${EDITORS_PER_MAP} editors on each map`);
+    // Postcards (26 Nov 2026): a country's on every plan, a landmark's or your own photo's on Business up
+    expect(lists[0].textContent).toContain('Postcards from the places on your map, sent by a link');
     expect([...lists[1].querySelectorAll('li')].map((li) => li.textContent)).toEqual(pricingNotes.map((note) => note.text));
     expect(container.querySelector('#pricing-notes-heading').textContent).toBe('The small print');
     expect(lists[1].textContent).toContain(formatPence(PLANS.REGULAR.price.YEAR));

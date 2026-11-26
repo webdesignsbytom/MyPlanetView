@@ -53,7 +53,7 @@ describe('GuessPage', () => {
     fireEvent.click(screen.getByText('Press Italy'));
     fireEvent.click(screen.getByText('Guess Italy'));
     await waitFor(() => expect(sendGuess).toHaveBeenCalledWith(CODE, 'p1', { round: 0, countryCode: 'IT' }));
-    expect(await screen.findByText('It was France: about 1,104 km from your guess.')).toBeTruthy();
+    expect(await screen.findByText('It was France: about 1,104 km (686 miles) from your guess.')).toBeTruthy();
     expect(document.querySelector('[data-guess-map]').getAttribute('data-answer')).toBe('FR');
     expect(screen.getByText(/\+460 points · 460 of 2,000 points so far/)).toBeTruthy();
 

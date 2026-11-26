@@ -3,6 +3,7 @@ import React from 'react';
 import AccountCard from './AccountCard';
 import AccountProfileSection from './AccountProfileSection';
 import AccountGiftsSection from './AccountGiftsSection';
+import AccountPostcardsSection from './AccountPostcardsSection';
 import AccountReferralSection from './AccountReferralSection';
 import AccountImportSection from './AccountImportSection';
 import AccountEmailsSection from './AccountEmailsSection';
@@ -27,6 +28,11 @@ function AccountPageMainContainer() {
 
       <AccountCard id='account-gifts' title='Gifts'>
         <AccountGiftsSection />
+      </AccountCard>
+
+      {/* The postcards sent from the map, each by its own link (docs/API.md "Postcards") */}
+      <AccountCard id='account-postcards' title='Postcards you sent'>
+        <AccountPostcardsSection />
       </AccountCard>
 
       {/* Give a month, get a month (docs/API.md) */}

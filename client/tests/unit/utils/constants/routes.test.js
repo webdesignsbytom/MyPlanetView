@@ -28,7 +28,7 @@ describe('CLIENT_ONLY_ROUTE_PREFIXES', () => {
       [
         '/admin', '/account', '/login', '/sign-up', '/forgot-password', '/verify-email-address', '/reset-password',
         '/down-for-maintenance', '/map', '/maps', '/trips', '/welcome', '/shared', '/invite', '/challenges', '/gifts',
-        '/gift', '/import', '/unsubscribe', '/compare', '/embed', '/guess',
+        '/gift', '/import', '/unsubscribe', '/compare', '/embed', '/guess', '/show', '/postcard', '/vs',
       ].sort(),
     );
   });
@@ -49,7 +49,7 @@ describe('CLIENT_ONLY_ROUTE_PREFIXES', () => {
 describe('the analytics lists', () => {
   it('pauses analytics on the pages whose address holds a secret', () => {
     expect([...ANALYTICS_EXCLUDED_PREFIXES].sort()).toEqual(
-      ['/shared', '/embed', '/guess', '/challenges/join', '/gift', '/unsubscribe', '/invite', '/reset-password', '/verify-email-address'].sort(),
+      ['/shared', '/embed', '/guess', '/show', '/postcard', '/challenges/join', '/vs/join', '/gift', '/unsubscribe', '/invite', '/reset-password', '/verify-email-address'].sort(),
     );
   });
 
@@ -66,6 +66,7 @@ describe('the analytics lists', () => {
 
   it('puts the challenge join link before the challenge page, so a join code is never read as an id', () => {
     expect(ANALYTICS_REDACTED_ROUTES.indexOf('/challenges/join/:code')).toBeLessThan(ANALYTICS_REDACTED_ROUTES.indexOf('/challenges/:challengeId'));
+    expect(ANALYTICS_REDACTED_ROUTES.indexOf('/vs/join/:code')).toBeLessThan(ANALYTICS_REDACTED_ROUTES.indexOf('/vs/:groupId'));
   });
 });
 
@@ -77,6 +78,8 @@ describe('the path helpers', () => {
     expect(routes.sharedPath('K7QX M2PA')).toBe('/shared/K7QX%20M2PA');
     expect(routes.embedPath('K7QX-M2PA')).toBe('/embed/K7QX-M2PA');
     expect(routes.guessPath('GWHR-2WAS')).toBe('/guess/GWHR-2WAS');
+    expect(routes.showPath('SPN2-SHW8')).toBe('/show/SPN2-SHW8');
+    expect(routes.postcardPath('PST2-CRD8')).toBe('/postcard/PST2-CRD8');
     expect(routes.isEmbedPath('/embed/K7QX-M2PA')).toBe(true);
     expect(routes.isEmbedPath('/EMBED/K7QX-M2PA')).toBe(true);
     expect(routes.isEmbedPath('/embedded')).toBe(false);
@@ -84,6 +87,8 @@ describe('the path helpers', () => {
     expect(routes.tripPath('t/1')).toBe('/trips/t%2F1');
     expect(routes.challengePath('c1')).toBe('/challenges/c1');
     expect(routes.challengeJoinPath('CHA2-YR5R')).toBe('/challenges/join/CHA2-YR5R');
+    expect(routes.vsPath('g/1')).toBe('/vs/g%2F1');
+    expect(routes.vsJoinPath('VS22-FRND')).toBe('/vs/join/VS22-FRND');
     expect(routes.giftPath('ABCD EFGH')).toBe('/gift/ABCD%20EFGH');
     expect(routes.comparePath('m&1')).toBe('/compare?a=m%261');
     expect(routes.countryPagePath('spain')).toBe('/countries/spain');

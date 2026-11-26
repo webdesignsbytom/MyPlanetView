@@ -7,8 +7,25 @@ const MB = 1024 * 1024;
 
 /** A colour as stored: "#rrggbb", lower case. */
 export const DESIGN_COLOUR = /^#[0-9a-f]{6}$/;
+/**
+ * The strings' colour may also be see-through (25 Nov 2026, the user's wish): "#rrggbbaa",
+ * the last two its opacity. A fully opaque one is kept as "#rrggbb".
+ */
+export const DESIGN_COLOUR_ALPHA = /^#[0-9a-f]{6}([0-9a-f]{2})?$/;
+// The design fields whose colour may carry an opacity
+const ALPHA_FIELDS = new Set(['string', 'plannedString']);
 /** More than there are places on the map, so a full design always fits. */
 export const DESIGN_MAX_COLOURS = 400;
+/**
+ * How the places visited or lived in show (25 Nov 2026, the user's wish): their badge (as
+ * always), the map's visited colour over each one's own, or both. The map's, in every style.
+ */
+export const VISITED_LOOKS = Object.freeze(['BADGE', 'COLOUR', 'BOTH']);
+/**
+ * A metallic finish in place of the visited colour (25 Nov 2026, the user's wish: "shiny colours
+ * like gold and silver"): the client draws it as a sheet of metal under the places been to.
+ */
+export const VISITED_FINISHES = Object.freeze(['GOLD', 'SILVER', 'BRONZE']);
 
 // The sea's picture: made in the browser (at most 2,560 px wide), a plain web image
 export const DESIGN_PICTURE_TYPES = Object.freeze(['image/jpeg', 'image/webp', 'image/png']);
@@ -21,12 +38,16 @@ export const DESIGN_PICTURE_UNSAVED_LIMIT = 10;
 // Place kinds a colour can go on: the drawn ones. The poles are compass roses, never filled.
 const COLOURED_KINDS = new Set(['COUNTRY', 'SPECIAL', 'NATION', 'REGION']);
 
-/** A colour from a request: `{ ok, value }` ("#rrggbb" or null), or `{ ok: false }`. */
-export function cleanColour(value) {
+/**
+ * A colour from a request: `{ ok, value }` ("#rrggbb" or null), or `{ ok: false }`. With
+ * `alpha`, "#rrggbbaa" too, kept as "#rrggbb" when it's fully opaque.
+ */
+export function cleanColour(value, { alpha = false } = {}) {
   if (value === null) return { ok: true, value: null };
   if (typeof value !== 'string') return { ok: false };
   const colour = value.trim().toLowerCase();
-  return DESIGN_COLOUR.test(colour) ? { ok: true, value: colour } : { ok: false };
+  if (!(alpha ? DESIGN_COLOUR_ALPHA : DESIGN_COLOUR).test(colour)) return { ok: false };
+  return { ok: true, value: colour.length === 9 && colour.endsWith('ff') ? colour.slice(0, 7) : colour };
 }
 
 /**
@@ -46,9 +67,14 @@ export function parseDesignChange(body) {
     ['grid', 'gridColour'],
     ['hover', 'hoverColour'],
     ['string', 'stringColour'],
+    // A second colour twisted into the strings (25 Nov 2026, the user's wish); null: one colour
+    ['stringTwist', 'stringTwistColour'],
+    // The planned strings' own, the same two (25 Nov 2026, the user's wish)
+    ['plannedString', 'plannedStringColour'],
+    ['plannedStringTwist', 'plannedStringTwistColour'],
   ]) {
     if (input[field] === undefined) continue;
-    const colour = cleanColour(input[field]);
+    const colour = cleanColour(input[field], { alpha: ALPHA_FIELDS.has(field) });
     if (!colour.ok) return { error: 'invalidDesignColour' };
     data[column] = colour.value;
   }
@@ -71,6 +97,37 @@ export function parseDesignChange(body) {
   }
   if (!Object.keys(data).length) return { error: 'invalidDesign' };
   return { data, codes };
+}
+
+/**
+ * The visited look a map PATCH asks for (docs/API.md "The visited look"; the map's, in every map
+ * style: 25 Nov 2026, the user's wish): `{ data }`, the TravelMap columns to write (none when the
+ * body names none), or `{ error }` (a responses.js message key). `visitedLook` and
+ * `visitedFinish` in any case; `visitedColour` "#rrggbb", opaque; null for the style's own
+ * colour, or no metal.
+ */
+export function parseVisitedLook(body) {
+  const input = body && typeof body === 'object' ? body : {};
+  const data = {};
+  if (input.visitedLook !== undefined) {
+    const look = typeof input.visitedLook === 'string' ? input.visitedLook.trim().toUpperCase() : '';
+    if (!VISITED_LOOKS.includes(look)) return { error: 'invalidVisitedLook' };
+    data.visitedLook = look;
+  }
+  if (input.visitedColour !== undefined) {
+    const colour = cleanColour(input.visitedColour);
+    if (!colour.ok) return { error: 'invalidDesignColour' };
+    data.visitedColour = colour.value;
+  }
+  if (input.visitedFinish !== undefined) {
+    if (input.visitedFinish === null) data.visitedFinish = null;
+    else {
+      const finish = typeof input.visitedFinish === 'string' ? input.visitedFinish.trim().toUpperCase() : '';
+      if (!VISITED_FINISHES.includes(finish)) return { error: 'invalidVisitedLook' };
+      data.visitedFinish = finish;
+    }
+  }
+  return { data };
 }
 
 /** Whether a place (`{ code, kind }` from the Country table) can take a colour. */

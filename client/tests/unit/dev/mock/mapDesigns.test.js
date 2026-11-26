@@ -2,7 +2,7 @@
 // server's: one design per map style (22 Nov 2026), and the hovered country's colour
 // (23 Nov 2026, the user's wish).
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { designStyleOf, designView, designsOf, designsView, newDesign, parseDesignChange } from '@/dev/mock/mapDesigns';
+import { designStyleOf, designView, designsOf, designsView, newDesign, parseDesignChange, parseVisitedLook } from '@/dev/mock/mapDesigns';
 import { HOME_MAP, SAM_MAP, db, del, freshStore, get, patch, registerAllRoutes } from './mockApi';
 
 beforeAll(() => registerAllRoutes());
@@ -17,6 +17,43 @@ describe('the design rules', () => {
     expect(parseDesignChange({ hover: 'pink' })).toEqual({ error: 'invalidDesignColour' });
   });
 
+  // How the places been to show is the map's, in every style (25 Nov 2026, the user's wish), as
+  // the server reads it: never a design's
+  it('reads how the places been to show, their colour and metal, as the server does', () => {
+    expect(parseVisitedLook({ visitedLook: 'colour', visitedColour: '#7C3AED' })).toEqual({ change: { visitedLook: 'COLOUR', visitedColour: '#7c3aed' } });
+    expect(parseVisitedLook({ visitedLook: 'STICKER' })).toEqual({ error: 'invalidVisitedLook' });
+    expect(parseVisitedLook({ visitedColour: '#7c3aed80' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseVisitedLook({ visitedFinish: 'gold' })).toEqual({ change: { visitedFinish: 'GOLD' } });
+    expect(parseVisitedLook({ visitedFinish: null })).toEqual({ change: { visitedFinish: null } });
+    expect(parseVisitedLook({ visitedFinish: 'PLATINUM' })).toEqual({ error: 'invalidVisitedLook' });
+    expect(parseVisitedLook({ name: 'Ours' })).toEqual({ change: {} });
+    expect(parseDesignChange({ visitedLook: 'COLOUR' })).toEqual({ error: 'invalidDesign' });
+  });
+
+  it('saves it with the map, for every style, a badge to start with', async () => {
+    expect((await get(`/api/maps/${HOME_MAP}`)).data.map).toMatchObject({ visitedLook: 'BADGE', visitedColour: null, visitedFinish: null });
+    const saved = await patch(`/api/maps/${HOME_MAP}`, { visitedLook: 'BOTH', visitedColour: '#7c3aed', visitedFinish: 'silver' });
+    expect(saved.data.map).toMatchObject({ visitedLook: 'BOTH', visitedColour: '#7c3aed', visitedFinish: 'SILVER' });
+    expect((await patch(`/api/maps/${HOME_MAP}`, { style: 'starry' })).data.map).toMatchObject({ visitedLook: 'BOTH', visitedFinish: 'SILVER' });
+    expect((await patch(`/api/maps/${HOME_MAP}`, { visitedFinish: 'PLATINUM' })).status).toBe(400);
+    expect((await patch(`/api/maps/${SAM_MAP}`, { visitedLook: 'COLOUR' })).status).toBe(403);
+    expect(await designs()).toEqual({});
+  });
+
+  it('lets the strings, and only the strings, be see-through, as the server does', () => {
+    expect(parseDesignChange({ string: '#1D4ED866' })).toEqual({ change: { string: '#1d4ed866' } });
+    expect(parseDesignChange({ string: '#1d4ed8ff' })).toEqual({ change: { string: '#1d4ed8' } });
+    expect(parseDesignChange({ string: '#1d4ed8666' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ names: '#00000080' })).toEqual({ error: 'invalidDesignColour' });
+    expect(parseDesignChange({ countries: { FR: '#aa000080' } })).toEqual({ error: 'invalidDesignColour' });
+  });
+
+  it('takes a second colour twisted into the strings, opaque only, as the server does', () => {
+    expect(parseDesignChange({ stringTwist: '#FFFFFF' })).toEqual({ change: { stringTwist: '#ffffff' } });
+    expect(parseDesignChange({ stringTwist: null })).toEqual({ change: { stringTwist: null } });
+    expect(parseDesignChange({ stringTwist: '#ffffff80' })).toEqual({ error: 'invalidDesignColour' });
+  });
+
   it('knows the map styles, and nothing else', () => {
     expect(designStyleOf('starry')).toBe('starry');
     expect(designStyleOf('mono')).toBe('mono');
@@ -25,7 +62,7 @@ describe('the design rules', () => {
   });
 
   it('starts a design with every colour usual', () => {
-    expect(newDesign()).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, pictureKey: null });
+    expect(newDesign()).toEqual({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, stringTwist: null, plannedString: null, plannedStringTwist: null, pictureKey: null });
   });
 
   it('makes an older store’s one design the World map’s', () => {

@@ -133,7 +133,7 @@ test.describe('Moments', () => {
     await expect(card).toContainText('Mulled wine and gingerbread.');
     await expect(card).toContainText('With Alex');
     await expect(germany.getByRole('combobox', { name: 'Been there?' })).toHaveValue('VISITED');
-    await expectStats(page, '9 countries, 2 continents, 16 photos');
+    await expectStats(page, '21 countries, 5 continents, 16 photos');
     await expect(page.locator('[data-moment-mark="DE"]')).toBeAttached();
 
     // Edited: a new title, the day, a photo from elsewhere on the map, and hidden
@@ -168,7 +168,7 @@ test.describe('Moments', () => {
     await expect(moments.getByText('No moments in Germany yet.')).toBeVisible();
     await expect(page.locator('[data-moment-mark="DE"]')).toHaveCount(0);
     // The country stays visited
-    await expectStats(page, '9 countries, 2 continents, 16 photos');
+    await expectStats(page, '21 countries, 5 continents, 16 photos');
   });
 
   test('the arrow on the Moments heading folds them away, on every ticket for the visit', { tag: '@phone' }, async ({ page }) => {
@@ -242,7 +242,7 @@ test.describe('Moments', () => {
     await expect(card).toContainText('Born · 2026');
     await expect(card).toContainText('With Robin');
     await expect(canada.getByRole('combobox', { name: 'Been there?' })).toHaveValue('LIVED');
-    await expectStats(page, '9 countries, 2 continents, 16 photos');
+    await expectStats(page, '21 countries, 5 continents, 16 photos');
 
     // Robin is the map's third traveller, born in Canada
     const settings = await openTool(page, 'Map settings', 'Settings');
@@ -255,31 +255,87 @@ test.describe('Moments', () => {
   test('the timeline tells the map’s story in date order, for everyone or one traveller', async ({ page }) => {
     await openMap(page);
     const timeline = await openTool(page, 'Timeline', 'Timeline');
-    await expect(timeline.getByRole('heading', { level: 3 })).toHaveText(['1990', '2012', '2018', '2019', '2025', '2027', 'Undated']);
+    // The demo couple's travels (data/demoTravels.js): a trip comes before the moments of its first day
+    await expect(timeline.getByRole('heading', { level: 3 })).toHaveText(['1990', '1991', '2012', '2014', '2016', '2018', '2019', '2021', '2022', '2023', '2024', '2025', '2026', '2027', 'Undated']);
     await expect(timeline.getByRole('listitem')).toHaveText([
       /^Charlie was born/,
+      /^Alex was born/,
       /^Moved to Dublin/,
+      /^Coast to coast: our first trip/,
+      /^Our first trip together/,
+      /^Amsterdam weekend/,
+      /^Granada and Barcelona/,
       /^Saw flamenco in Granada/,
+      /^Paris in spring/,
       /^Got engaged at the Eiffel Tower/,
+      /^Lisbon long weekend/,
+      /^Our wedding/,
+      /^Honeymoon: Athens and Istanbul/,
+      /^Sunset at the Acropolis/,
+      /^A year off: around the world/,
+      /^Tagine in the Jemaa el-Fnaa/,
+      /^Petra by candlelight/,
+      /^Lions on the second morning/,
+      /^Up Table Mountain the hard way/,
+      /^The Taj Mahal at dawn/,
+      /^Charlie’s first dive/,
+      /^Christmas Day on the beach/,
+      /^Milford Sound in the rain/,
+      /^Lucha libre in Mexico City/,
+      /^Ten years since our first trip/,
+      /^Paris again/,
       /^Italian summer/,
       /^Best gelato of the trip/,
+      /^Venice for Carnival/,
+      /^Masks at the Carnival/,
+      /^Alex’s conference in Vienna/,
+      /^Alex skipped a session for Schönbrunn/,
+      /^Norway in November/,
       /^Japan in spring/,
       /^Stag do in Prague.*Group trip from Tom's map/,
+      /^One day: Patagonia/,
       /^Planning a surprise party.*Hidden from viewers/,
     ]);
     // The group trip the test user isn't on doesn't open; their own trips do
     await expect(timeline.getByRole('link', { name: /Stag do in Prague/ })).toHaveCount(0);
     await expect(timeline.getByRole('link', { name: /Japan in spring/ })).toBeVisible();
 
-    // Alex's story: their moments and the trips they went on
+    // Alex's story: their moments and the trips they went on (not Charlie's Lisbon weekend or
+    // first dive, nor the group trip)
     await timeline.getByRole('combobox', { name: 'Whose story' }).selectOption({ label: 'Alex' });
     await expect(timeline.getByRole('listitem')).toHaveText([
+      /^Alex was born/,
       /^Moved to Dublin/,
+      /^Coast to coast: our first trip/,
+      /^Our first trip together/,
+      /^Amsterdam weekend/,
+      /^Granada and Barcelona/,
       /^Saw flamenco in Granada/,
+      /^Paris in spring/,
       /^Got engaged at the Eiffel Tower/,
+      /^Our wedding/,
+      /^Honeymoon: Athens and Istanbul/,
+      /^Sunset at the Acropolis/,
+      /^A year off: around the world/,
+      /^Tagine in the Jemaa el-Fnaa/,
+      /^Petra by candlelight/,
+      /^Lions on the second morning/,
+      /^Up Table Mountain the hard way/,
+      /^The Taj Mahal at dawn/,
+      /^Christmas Day on the beach/,
+      /^Milford Sound in the rain/,
+      /^Lucha libre in Mexico City/,
+      /^Ten years since our first trip/,
+      /^Paris again/,
       /^Italian summer/,
       /^Best gelato of the trip/,
+      /^Venice for Carnival/,
+      /^Masks at the Carnival/,
+      /^Alex’s conference in Vienna/,
+      /^Alex skipped a session for Schönbrunn/,
+      /^Norway in November/,
       /^Japan in spring/,
+      /^One day: Patagonia/,
     ]);
 
     // A moment opens its country
@@ -298,14 +354,14 @@ test.describe('Moments', () => {
     await openMap(page);
     await addMoments(page, 35);
     const timeline = await openTool(page, 'Timeline', 'Timeline');
-    // The first 30 moments: the 1990 birth and 29 days out in 2000; no trip comes after them yet
+    // The first 30 moments: the 1990 and 1991 births and 28 days out in 2000; no trip comes after them yet
     await expect(timeline.getByRole('listitem')).toHaveCount(30);
-    await expect(timeline.getByRole('listitem').last()).toHaveText(/^Day out 29/);
+    await expect(timeline.getByRole('listitem').last()).toHaveText(/^Day out 28/);
     await expect(timeline.getByRole('link', { name: /Italian summer/ })).toHaveCount(0);
 
     await timeline.getByRole('button', { name: 'Show more of the story' }).click();
-    // 41 moments and 3 trips
-    await expect(timeline.getByRole('listitem')).toHaveCount(44);
+    // 57 moments (the demo couple's 22 and these 35) and 15 trips
+    await expect(timeline.getByRole('listitem')).toHaveCount(72);
     await expect(timeline.getByRole('link', { name: /^Italian summer/ })).toBeVisible();
     await expect(timeline.getByRole('button', { name: 'Show more of the story' })).toHaveCount(0);
     await expect(timeline.getByRole('listitem').last()).toHaveText(/^Planning a surprise party/);

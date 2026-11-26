@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 // Components
 import MapPanel from './MapPanel';
+import PassportLink from './PassportLink';
 import MonthLinks from '@/components/months/MonthLinks';
 import AppLink from '@/components/common/AppLink';
 // Hooks
@@ -50,8 +51,9 @@ const Heading = ({ id, children }) => (
  * "want to go" places matched to the best time for each, from the country guides: those good
  * this month, then the rest at their next best month, then the ones with no guide yet. A
  * place opens its ticket on the map. For everyone who can see the map (share links too).
+ * `passportHref` puts "Open passport" at the top (24 Nov 2026, the user's wish).
  */
-function WhereNextPanel({ visits = [], onShowCountry, onClose }) {
+function WhereNextPanel({ visits = [], onShowCountry, passportHref = null, onClose }) {
   // This month, read once as the panel opens (the map page is never pre-rendered)
   const [month] = useState(() => new Date().getMonth());
   const codes = useMemo(() => visits.filter((v) => v.status === 'WANT_TO_GO').map((v) => v.countryCode), [visits]);
@@ -62,6 +64,7 @@ function WhereNextPanel({ visits = [], onShowCountry, onClose }) {
 
   return (
     <MapPanel title='Where to go next' onClose={onClose}>
+      {passportHref ? <PassportLink href={passportHref} /> : null}
       {!codes.length ? (
         <p className='text-sm'>
           Nothing is marked “Want to go” yet. Mark the countries you’d like to visit, on the map or in the country list, and this shows the

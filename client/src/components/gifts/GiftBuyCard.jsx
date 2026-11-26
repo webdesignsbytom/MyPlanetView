@@ -1,6 +1,8 @@
 import React, { useId, useState } from 'react';
 // Api
 import { startGiftCheckout } from '@/api/giftsApi';
+// Utils
+import { trackCheckoutStarted } from '@/utils/analytics/events';
 // Components
 import PaperCard from '@/components/common/PaperCard';
 import Button from '@/components/common/Button';
@@ -29,6 +31,7 @@ function GiftBuyCard({ offers, paymentsEnabled, locked }) {
     setError('');
     try {
       const { url } = await startGiftCheckout({ plan: chosen.plan, toName: toName.trim() || null, message: message.trim() || null });
+      trackCheckoutStarted({ item: 'gift', plan: chosen.plan, interval: 'YEAR', pence: chosen.pence });
       window.location.assign(url);
     } catch (err) {
       setError(err.friendlyMessage || 'The payment page couldn’t be opened. Please try again.');

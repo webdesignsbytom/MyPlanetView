@@ -61,6 +61,8 @@ describe('AppLink', () => {
     expect(link.getAttribute('aria-label')).toBe('Go to the questions page');
     expect(link.getAttribute('title')).toBe('the questions page');
     expect(link.className).toContain('text-colour6');
+    // Underlined, so a link in a sentence isn't told apart by colour alone
+    expect(link.className).toContain('underline');
   });
 
   it('prefers its own label and title, and has neither without', () => {

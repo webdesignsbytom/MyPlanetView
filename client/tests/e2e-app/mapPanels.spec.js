@@ -1,20 +1,22 @@
 import { test, expect, HOME_MAP, openMap, openTool, pressTool } from './fixtures.js';
 
 // The map's panels (22 Nov 2026, the user's wishes): a tool from the toolbar closes whatever is
-// open (the photo album stayed under "Play my world"), every panel opens over the dimmed map,
+// open, every panel opens over the dimmed map,
 // a press on which closes it, and the panels are 10% wider than they were (26 and 34rem).
 
 const scrim = (page) => page.locator('[data-map-scrim]');
 
-test('a tool from the toolbar closes the open panel, the slideshow and sharing included', async ({ page }) => {
+test('a tool from the toolbar closes the open panel, sharing included; the album’s slideshow plays over it', async ({ page }) => {
   await openMap(page);
+  // "Play my world" is the album's own button (24 Nov 2026): the album is still there after
   const album = await openTool(page, 'Photo album', 'Photo album');
-  await pressTool(page, 'Play my world');
+  await album.getByRole('button', { name: 'Play my world', exact: true }).click();
   const show = page.getByRole('dialog', { name: `Slideshow: ${HOME_MAP}` });
   await expect(show).toBeVisible();
-  await expect(album).toBeHidden();
   await show.getByRole('button', { name: /^Close/ }).first().click();
   await expect(show).toBeHidden();
+  await expect(album).toBeVisible();
+  await pressTool(page, 'Travel statistics');
   await expect(album).toBeHidden();
 
   const settings = await openTool(page, 'Map settings', 'Settings');

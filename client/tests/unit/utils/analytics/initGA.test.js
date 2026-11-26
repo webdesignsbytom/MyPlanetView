@@ -170,4 +170,30 @@ describe('stopGA', () => {
     expect(window[DISABLE]).toBe(true);
     expect(document.cookie).not.toContain('_gat');
   });
+
+  // Events (utils/analytics/events.js; the audit, 26 Nov 2026)
+  it('sends an event only once consent is given, with plain values only', async () => {
+    const { initGA, trackEvent } = await freshGA();
+    // No consent yet: nothing kept for later
+    trackEvent('sign_up', { method: 'email' });
+    initGA(ID);
+    // Queued while GA loads, then sent
+    trackEvent('upload_photos', { count: 3, who: { id: 'u1' }, note: 'x'.repeat(41), ok: true, bad: NaN });
+    await vi.waitFor(() => expect(gtagCalls()).toContainEqual(['event', 'upload_photos', { count: 3, ok: true }]));
+    expect(gtagCalls().some(([, name]) => name === 'sign_up')).toBe(false);
+    trackEvent('share', { method: 'link', content_type: 'map' });
+    expect(gtagCalls()).toContainEqual(['event', 'share', { method: 'link', content_type: 'map' }]);
+  });
+
+  it('sends no event on a secret page, or once consent is withdrawn', async () => {
+    const { initGA, stopGA, trackEvent } = await freshGA();
+    initGA(ID);
+    await vi.waitFor(() => expect(initialize).toHaveBeenCalled());
+    go('/shared/ABCD-EFGH-JKMN');
+    trackEvent('share', { method: 'link' });
+    go('/map');
+    stopGA(ID);
+    trackEvent('mark_country', { status: 'visited' });
+    expect(gtagCalls().filter(([kind]) => kind === 'event')).toEqual([]);
+  });
 });

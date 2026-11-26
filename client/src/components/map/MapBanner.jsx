@@ -1,4 +1,6 @@
 import React from 'react';
+// Components
+import SupporterBadge from '@/components/plans/SupporterBadge';
 
 // The ribbon's parts behind the band, as a vintage banner draws them. The tails hang a
 // little lower than the band (top-3, -bottom-3) and reach under it; the folds are the
@@ -17,12 +19,14 @@ const FOLD = 'absolute top-full h-3 w-3 bg-[var(--banner-fold)]';
  * shape. The map's name alone, in cream travel lettering between two stars (the user's
  * wish, 16 Nov 2026: the travellers' names over the map's name said the same thing twice,
  * and a second line wasn't needed at all). Hidden with its switch in the map settings, and
- * the title tag shows instead.
+ * the title tag shows instead. A paying member's supporter badge (`supporter`, 24 Nov 2026,
+ * the user's wish) hangs under the band's middle, for everyone who opens the map, share
+ * links too.
  */
-function MapBanner({ map }) {
+function MapBanner({ map, supporter = null }) {
 
   return (
-    <section aria-label='Map banner' className='pointer-events-auto grid px-12 pb-3 [filter:drop-shadow(0_4px_5px_var(--cover-shade))]'>
+    <section aria-label='Map banner' className='pointer-events-auto grid gap-4 px-12 pb-3 [filter:drop-shadow(0_4px_5px_var(--cover-shade))]'>
       <div className='relative grid'>
         <span aria-hidden='true' className={LEFT_TAIL} />
         <span aria-hidden='true' className={RIGHT_TAIL} />
@@ -40,6 +44,13 @@ function MapBanner({ map }) {
           </div>
         </div>
       </div>
+      {/* The section's gap keeps it clear of the tails, which hang 0.75rem below the band; the
+          map either side of it still takes presses */}
+      {supporter ? (
+        <div className='pointer-events-none grid justify-items-center'>
+          <SupporterBadge supporter={supporter} />
+        </div>
+      ) : null}
     </section>
   );
 }

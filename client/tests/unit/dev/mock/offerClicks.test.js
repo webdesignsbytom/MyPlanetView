@@ -31,7 +31,7 @@ describe('offer link clicks in mock mode', () => {
     expect(event.defaultPrevented).toBe(true);
     expect(open).toHaveBeenCalledWith(expect.stringContaining('country=ES'), '_blank', 'noopener,noreferrer');
     expect(clicks('TRAVEL_DESK')).toBe(before + 1);
-    expect(JSON.parse(localStorage.getItem('mpvMockStore.v6')).offerClicks).toEqual(db().offerClicks);
+    expect(JSON.parse(localStorage.getItem('mpvMockStore.v7')).offerClicks).toEqual(db().offerClicks);
   });
 
   it('takes a middle-button click, but not another button’s', () => {

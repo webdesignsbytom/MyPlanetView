@@ -29,11 +29,14 @@ import { findLandmarksInBox } from '../../src/domain/places.js';
 import { mediaKindFromContentType } from '../../src/domain/mediaGeneric.js';
 import { boundingBox, matchLandmarks } from '../../src/utils/landmarkMatch.js';
 import { countryAtPosition } from '../../src/utils/countryLookup.js';
+import { DEMO_TRIPS } from './data/demoTravels.js';
+import { named } from './travel.js';
 
 export const SEED_PHOTOS_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../seed-photos');
 
-// The trips the manifest's `trip` names, by their title in travel.js
-const TRIP_TITLES = { 'paris-rome': 'Paris to Rome by train' };
+// The trips the manifest's `trip` names (the demo couple's trips' keys, data/demoTravels.js),
+// by the title travel.js gives them
+const TRIP_TITLES = Object.fromEntries(DEMO_TRIPS.map((trip) => [trip.key, named(trip.title)]));
 
 const emailOf = (role) => seedAccounts.find((a) => a.role === role).email;
 

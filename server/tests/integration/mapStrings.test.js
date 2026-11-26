@@ -34,7 +34,7 @@ describe('strings between places', () => {
     const res = await owner.agent.post(path()).send({ from: 'jp', to: 'FR' });
     expect(res.status).toBe(201);
     const { string } = data(res);
-    expect(string).toEqual({ id: expect.any(String), from: 'FR', to: 'JP' });
+    expect(string).toEqual({ id: expect.any(String), kind: 'VISITED', from: 'FR', to: 'JP' });
     expect(await stringsOf(owner)).toEqual([string]);
     expect(await stringsOf(viewer)).toEqual([string]);
   });
@@ -124,7 +124,43 @@ describe('strings between places', () => {
     expect(shared.map.strings).toEqual(await stringsOf(owner));
     const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map;
     expect(exported.strings.map((s) => `${s.from}-${s.to}`)).toEqual(expect.arrayContaining(['FR-IT', 'BR-JP']));
-    expect(exported.strings[0]).toEqual({ from: expect.any(String), to: expect.any(String), since: expect.any(String) });
+    expect(exported.strings[0]).toEqual({ kind: 'VISITED', from: expect.any(String), to: expect.any(String), since: expect.any(String) });
+  });
+
+  // Planned strings (25 Nov 2026, the user's wish): their own set, from the plans
+  it('ties planned strings apart from the visited ones, and adds the ones the plans suggest', async () => {
+    await owner.agent.post(path()).send({ from: 'FR', to: 'JP' });
+    const res = await owner.agent.post(path()).send({ from: 'JP', to: 'FR', kind: 'planned' });
+    expect(res.status).toBe(201);
+    expect(data(res).string).toMatchObject({ kind: 'PLANNED', from: 'FR', to: 'JP' });
+    // The same pair is one string of each kind
+    expect(await prisma.mapString.count({ where: { mapId: map.id, fromCode: 'FR', toCode: 'JP' } })).toBe(2);
+    expect((await owner.agent.post(path()).send({ from: 'FR', to: 'DE', kind: 'WANTED' })).status).toBe(400);
+    expect((await viewer.agent.post(path()).send({ from: 'FR', to: 'DE', kind: 'PLANNED' })).status).toBe(403);
+
+    // A planned trip, and two places wanted, in the order they were marked
+    const trip = data(await owner.agent.post(`/api/maps/${map.id}/trips`).send({ title: 'Spring in Asia', startDate: '2027-04-01', endDate: '2027-04-20' })).trip;
+    for (const countryCode of ['JP', 'KR']) expect((await owner.agent.post(`/api/trips/${trip.id}/stops`).send({ countryCode })).status).toBe(201);
+    for (const [countryCode, createdAt] of [
+      ['IS', '2026-03-01'],
+      ['PE', '2026-04-01'],
+    ]) {
+      await prisma.countryVisit.create({ data: { mapId: map.id, countryCode, status: 'WANT_TO_GO', createdAt: new Date(createdAt) } });
+    }
+    const visitedBefore = (await stringsOf(owner)).filter((s) => s.kind === 'VISITED');
+    const auto = data(await owner.agent.post(path('/auto')).send({ kind: 'PLANNED' }));
+    const planned = auto.strings.filter((s) => s.kind === 'PLANNED').map((s) => `${s.from}-${s.to}`);
+    expect(planned).toEqual(expect.arrayContaining(['FR-JP', 'JP-KR', 'IS-PE']));
+    expect(auto.added).toBe(2);
+    // The visited ones are untouched
+    expect(auto.strings.filter((s) => s.kind === 'VISITED')).toEqual(visitedBefore);
+
+    // Every planned string off, the visited ones staying
+    const off = data(await owner.agent.delete(`${path()}?kind=PLANNED`));
+    expect(off).toEqual({ removed: 3 });
+    expect((await stringsOf(owner)).every((s) => s.kind === 'VISITED')).toBe(true);
+    expect((await owner.agent.delete(`${path()}?kind=wanted`)).status).toBe(400);
+    await owner.agent.delete(`/api/trips/${trip.id}`);
   });
 
   it('holds 500 a map: past that a tie is a 409, and the automatic ones add what fits', async () => {

@@ -70,7 +70,7 @@ test.describe('Print or download', () => {
     expect(
       zipHolds(zip, [
         '2019-04-12 Evening by the Seine.jpg',
-        '2023-07-18 Mont Saint-Michel at low tide.jpg',
+        '2019-04-15 Mont Saint-Michel at low tide.jpg',
         '2025-05-05 The Louvre’s Richelieu wing.jpg',
       ])
     ).toEqual([true, true, true]);
@@ -126,7 +126,7 @@ test.describe('Print or download', () => {
         'France/2019-04-12 Evening by the Seine.jpg',
         'Italy/2025-07-03 First morning in Rome.jpg',
         'Portugal/2021-10-21 Hidden from viewers (editors only).jpg',
-        'United States/2018-10-21 Lower Manhattan from Jersey City.jpg',
+        'United States/2014-06-21 Lower Manhattan from Jersey City.jpg',
       ])
     ).toEqual([true, true, true, true]);
   });

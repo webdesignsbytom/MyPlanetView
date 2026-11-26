@@ -6,7 +6,8 @@ import OneShotPicture from './OneShotPicture';
 import { ONE_SHOT_TICK_WORDS, seenWords } from '@/utils/oneShots/oneShotWords';
 
 /**
- * One item of Life's One Shots in its list (OneShotsPanel): its photo as a print, its name,
+ * One item of Life's One Shots in its list (OneShotsPanel): its photo as a print (the map's
+ * own photo of it once its tick has one, else the Commons photo), its name,
  * and whether the map has it ("Seen: March 2024, in Kenya", "Done", "Not yet"). Pressing it opens
  * the item (OneShotDialog). A ticked one wears a red check stamp; the words say so too.
  */
@@ -24,6 +25,7 @@ function OneShotCard({ item, photo, tick, onOpen }) {
         <span className='relative block'>
           <OneShotPicture
             photo={photo}
+            ownUrl={tick?.photo?.thumbUrl || null}
             className={`aspect-[4/3] w-full border-4 border-poster-cream shadow-paper transition-transform group-odd:-rotate-1 group-even:rotate-1 ${ticked ? '' : 'opacity-75 grayscale-[40%]'}`}
           />
           {ticked ? (

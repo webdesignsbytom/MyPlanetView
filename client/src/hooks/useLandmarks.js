@@ -43,9 +43,16 @@ export function preloadLandmarks() {
   return loadAll().catch(() => {});
 }
 
-/** Landmarks in one country, or every landmark when `countryCode` is empty. */
+/**
+ * Landmarks in one country, or every landmark when `countryCode` is empty. Once the list has
+ * arrived (this visit), the first render already has them: a dialog drawn with them opens at
+ * its size rather than growing a frame later (25 Nov 2026, the user's report: the celebration
+ * grew a little as it opened).
+ */
 export default function useLandmarks(countryCode, { enabled = true } = {}) {
-  const [state, setState] = useState({ landmarks: [], loading: false, error: null });
+  const [state, setState] = useState(() =>
+    enabled && allLoaded ? { landmarks: pick(allLoaded, countryCode), loading: false, error: null } : { landmarks: [], loading: false, error: null },
+  );
 
   useEffect(() => {
     if (!enabled) return undefined;

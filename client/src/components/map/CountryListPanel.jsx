@@ -1,4 +1,5 @@
 import React, { memo, useCallback, useId, useMemo, useRef, useState } from 'react';
+import { FaThumbtack } from 'react-icons/fa';
 // Data
 import { COUNTRY_BY_CODE, REGION_PLACES, SPECIAL_PLACES, countriesOnMap } from '@/utils/map/countries';
 // Hooks
@@ -9,6 +10,7 @@ import CountryListItem from './CountryListItem';
 import { ExpeditionStampIcon } from './StarBadge';
 import UnplacedPhotosButton from './UnplacedPhotosButton';
 import MapActionButton from './MapActionButton';
+import PassportLink from './PassportLink';
 import VerifyFirstNote from './VerifyFirstNote';
 import TextInput from '@/components/ui/TextInput';
 import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
@@ -72,6 +74,11 @@ function CountryListPanel({
   // "Where have you been?": tick several countries at once (QuickFillDialog; the owner and
   // co-owners; 22 Nov 2026)
   onQuickFill = null,
+  // The map's passport ("Open passport"; 24 Nov 2026, the user's wish)
+  passportHref = null,
+  // The Strings panel (an editor's; docs/API.md "Strings"): its stamp on the toolbar until 24
+  // Nov 2026, the user's wish: a shorter bar, the panel itself unchanged
+  onOpenStrings = null,
   onClose,
 }) {
   const [search, setSearch] = useState('');
@@ -138,10 +145,22 @@ function CountryListPanel({
     <CountryTicket title='Countries' kicker='Travel log, A to Z' onClose={onClose}>
       {onShowUnplaced ? <UnplacedPhotosButton count={unplacedCount} more={unplacedMore} onOpen={onShowUnplaced} /> : null}
       {locked ? <VerifyFirstNote action='tick off countries' /> : null}
-      {onQuickFill ? (
-        <MapActionButton quiet onClick={onQuickFill}>
-          Tick several countries
-        </MapActionButton>
+      {/* Side by side from sm, each as wide as the other; one alone takes the whole row */}
+      {onQuickFill || onOpenStrings || passportHref ? (
+        <div className='grid gap-2 sm:auto-cols-fr sm:grid-flow-col'>
+          {onQuickFill ? (
+            <MapActionButton quiet onClick={onQuickFill}>
+              Tick several countries
+            </MapActionButton>
+          ) : null}
+          {onOpenStrings ? (
+            <MapActionButton quiet onClick={onOpenStrings}>
+              <FaThumbtack aria-hidden='true' className='self-center' />
+              <span>Strings</span>
+            </MapActionButton>
+          ) : null}
+          {passportHref ? <PassportLink href={passportHref} /> : null}
+        </div>
       ) : null}
       <div className='grid gap-2 sm:grid-cols-[minmax(0,1fr)_12rem]'>
         {/* The placeholder isn't a name: it goes as soon as you type */}

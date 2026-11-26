@@ -8,6 +8,9 @@ import { logEvent } from '../utils/events/logEvent.js';
 import { createMapEvent } from '../event/travelUtils.js';
 import { sanitizeText } from '../utils/sanitize.js';
 import { MAP_STYLES, mapStyleOf } from '../utils/mapSettings.js';
+import { isPassportColour } from '../utils/passportCovers.js';
+import { parseVisitedLook } from '../utils/mapDesigns.js';
+import { supporterBadge } from '../utils/supporterBadge.js';
 import { canEdit, canManage, canView, isOwner } from '../utils/access.js';
 import {
   GROUP_TYPES,
@@ -114,11 +117,12 @@ const summaryView = (map, role, slots = null) => ({
  * What the owner and editors see of a map's plan (never viewers or share links): the
  * owner's plan and its limits, whether the map is locked, its grace period, its photos
  * per country (hidden ones included: they count towards the cap), and `uploadRules`
- * (the shape GET /trips/:tripId also has).
+ * (the shape GET /trips/:tripId also has). `mapPlanLoad`: loadMapPlan's promise, shared with
+ * the supporter badge.
  */
-async function mapPlanView(mapId) {
+async function mapPlanView(mapId, mapPlanLoad) {
   const [mapPlan, photoCounts, videoCounts] = await Promise.all([
-    loadMapPlan(mapId),
+    mapPlanLoad,
     countPhotosByCountry(mapId),
     countPhotosByCountry(mapId, { kind: 'VIDEO' }),
   ]);
@@ -148,10 +152,13 @@ const WITH_PLAN = { withPlan: true };
  */
 export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
   const editor = canEdit(role);
-  const [detail, counts, planFields, momentCountsByCountry, momentSpots, designs, strings] = await Promise.all([
+  // The owner's plan, read once: the plan fields' and the supporter badge's
+  const mapPlanLoad = loadMapPlan(mapId);
+  const [detail, counts, mapPlan, planFields, momentCountsByCountry, momentSpots, designs, strings] = await Promise.all([
     findMapDetail(mapId),
     loadStatsCounts(mapId, role),
-    editor && withPlan ? mapPlanView(mapId) : {},
+    mapPlanLoad,
+    editor && withPlan ? mapPlanView(mapId, mapPlanLoad) : {},
     // Which countries have moments, to mark them on the map (hidden ones for editors)
     countMomentsByCountry(mapId, { includeHidden: editor }),
     // The moments pinned to a spot: every pin for editors, the shared ones for anyone else
@@ -174,8 +181,16 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     homeCountryCode: detail.homeCountryCode ?? null,
     // The style everyone sees it in: its own, else the owner's (null: each viewer's own)
     style: mapStyleOf(detail.style, detail.ownerSettings),
+    // How the places been to show, in every style, for everyone who opens it (docs/API.md "The
+    // visited look"; 25 Nov 2026, the user's wish)
+    visitedLook: detail.visitedLook ?? 'BADGE',
+    visitedColour: detail.visitedColour ?? null,
+    visitedFinish: detail.visitedFinish ?? null,
     role,
     ownerName: detail.owner?.name ?? null,
+    // The owner's paid plan on the banner, for everyone who opens it, share links too, unless
+    // the owner turned it off (docs/API.md "The supporter badge"; null when they don't pay)
+    supporter: supporterBadge({ accountPlan: mapPlan?.accountPlan, ownerSettings: detail.ownerSettings, role }),
     travellers: detail.travellers.map((t) => ({
       id: t.id,
       name: t.name,
@@ -297,6 +312,15 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
     if (!MAP_STYLES.includes(body.style)) return badRequest(req, res, D, EVENT_MESSAGES.invalidMapStyle);
     data.style = body.style;
   }
+  // The passport's cover colour, for everyone who opens it (docs/API.md "Passport"): null is the plan's own
+  if (body.passportColour !== undefined) {
+    if (!isPassportColour(body.passportColour)) return badRequest(req, res, D, EVENT_MESSAGES.invalidPassportColour);
+    data.passportColour = body.passportColour;
+  }
+  // How the places been to show, in every style (docs/API.md "The visited look")
+  const visited = parseVisitedLook(body);
+  if (visited.error) return badRequest(req, res, D, EVENT_MESSAGES[visited.error]);
+  Object.assign(data, visited.data);
   // The UK as its four nations: changing it moves the map's UK data (services/travel/ukNations.js)
   if (body.splitUk !== undefined && typeof body.splitUk !== 'boolean') {
     return badRequest(req, res, D, EVENT_MESSAGES.invalidSplitUk);

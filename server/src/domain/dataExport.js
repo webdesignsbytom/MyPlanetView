@@ -78,23 +78,24 @@ export async function findMapForExport(mapId) {
       prisma.travelMap.findUnique({
         where: { id: mapId },
         select: {
-          id: true, name: true, groupType: true, isDefault: true, splitUk: true, homeCountryCode: true, style: true, linkAccess: true, shareCode: true, graceUntil: true, createdAt: true, updatedAt: true,
+          id: true, name: true, groupType: true, isDefault: true, splitUk: true, homeCountryCode: true, style: true, passportColour: true, visitedLook: true, visitedColour: true, visitedFinish: true, linkAccess: true, shareCode: true, graceUntil: true, createdAt: true, updatedAt: true,
           // Its own designs, one per map style (docs/API.md "Map designs"): the colours, and
           // whether each has a picture
           designs: {
-            select: { style: true, shown: true, countryColours: true, namesColour: true, gridColour: true, hoverColour: true, stringColour: true, pictureId: true },
+            select: { style: true, shown: true, countryColours: true, namesColour: true, gridColour: true, hoverColour: true, stringColour: true, stringTwistColour: true, plannedStringColour: true, plannedStringTwistColour: true, pictureId: true },
             orderBy: { style: 'asc' },
           },
           // Landmarks ticked "been here" (docs/API.md "Collecting")
           landmarkVisits: { select: { landmarkId: true, createdAt: true, landmark: { select: { name: true, countryCode: true } } }, orderBy: { createdAt: 'asc' } },
           // Strings tied between its places (docs/API.md "Strings")
-          strings: { select: { fromCode: true, toCode: true, createdAt: true }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] },
+          strings: { select: { kind: true, fromCode: true, toCode: true, createdAt: true }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] },
           // Its flight log and "Guess where I was" games (docs/API.md "Flights", "Guess where I was")
           flights: {
             select: { fromAirport: true, toAirport: true, flownOn: true, carrier: true, flightNumber: true, distanceKm: true, tripId: true, source: true },
             orderBy: [{ flownOn: 'asc' }, { createdAt: 'asc' }],
           },
           guessGames: { select: { code: true, title: true, photoIds: true, createdAt: true }, orderBy: { createdAt: 'asc' } },
+          photoShows: { select: { code: true, title: true, photoIds: true, seconds: true, createdAt: true }, orderBy: { createdAt: 'asc' } },
           // Life's One Shots ticked (docs/API.md "Life's One Shots")
           oneShots: {
             select: {
@@ -104,7 +105,7 @@ export async function findMapForExport(mapId) {
               countryCode: true,
               notes: true,
               source: true,
-              photoId: true,
+              photos: { select: { photoId: true }, orderBy: [{ position: 'asc' }, { photoId: 'asc' }] },
               createdAt: true,
               travellers: { select: { travellerId: true } },
             },
@@ -114,7 +115,21 @@ export async function findMapForExport(mapId) {
       }),
       prisma.traveller.findMany({
         where: onMap,
-        select: { id: true, name: true, position: true, userId: true, birthCountryCode: true, favouriteCountryCode: true, birthDate: true, createdAt: true },
+        select: {
+          id: true,
+          name: true,
+          position: true,
+          userId: true,
+          birthCountryCode: true,
+          favouriteCountryCode: true,
+          birthDate: true,
+          createdAt: true,
+          portraitPhotoId: true,
+          portraitFocusX: true,
+          portraitFocusY: true,
+          portraitZoom: true,
+          signature: true,
+        },
         orderBy: { position: 'asc' },
       }),
       prisma.countryVisit.findMany({

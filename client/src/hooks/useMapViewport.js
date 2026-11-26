@@ -20,6 +20,10 @@ const DRAG_THRESHOLD_PX = 5;
 const DOUBLE_TAP_MS = 300;
 const DOUBLE_TAP_PX = 30;
 const DOUBLE_TAP_ZOOM = 2;
+// How long the view must stay still before the SVG loses `data-moving`: longer than the gap
+// between a mouse wheel's notches, so slow wheeling doesn't bring the costly drawing back
+// between each one
+export const MOVING_MS = 250;
 
 // Runs `fn` in a task of its own, after the current one, as React's scheduler does: the
 // view goes onto the SVG, and what's drawn by zoom re-renders, together and outside the
@@ -100,7 +104,9 @@ function homeView(aspect, extent, closest = MIN_WIDTH) {
  * task that moves the viewBox).
  *
  * While a mouse button is held on the map, the SVG carries `data-grabbing` (for the
- * grabbing-hand cursor).
+ * grabbing-hand cursor). While the view changes, and for MOVING_MS after, it carries
+ * `data-moving`: what's too costly to draw on every frame of a pan or a pinch waits for it to go
+ * (a metallic finish's lit edges: FoilEdgeFilter, utils/map/mapDesign.js visitedRules).
  * `afterTap(action)` is for click handlers on the map (opening a country): it ignores the
  * click that ends a drag or a double-tap, and holds the action back until no second tap
  * can follow, so a double-tap only zooms.
@@ -138,15 +144,23 @@ export default function useMapViewport({ wheelZoom = true, extent = FULL_EXTENT,
   const screenWidthRef = useRef(0);
   const closestRef = useRef(closestWidthFor(0, maxZoom));
   const movedRef = useRef(false);
+  const movingTimerRef = useRef(null);
 
   useEffect(() => () => clearTimeout(pendingTapRef.current), []);
+  useEffect(() => () => clearTimeout(movingTimerRef.current), []);
 
   // The live view onto the SVG, and the zoom to its subscribers, together (so the badges
   // never lag the map by a frame)
   const flush = useCallback(() => {
     pendingRef.current = false;
     const view = viewRef.current;
-    svgNodeRef.current?.setAttribute('viewBox', viewBoxOf(view));
+    const node = svgNodeRef.current;
+    if (node) {
+      node.setAttribute('viewBox', viewBoxOf(view));
+      if (!node.hasAttribute('data-moving')) node.setAttribute('data-moving', '');
+      clearTimeout(movingTimerRef.current);
+      movingTimerRef.current = setTimeout(() => node.removeAttribute('data-moving'), MOVING_MS);
+    }
     viewListenersRef.current.forEach((listener) => listener());
     const zoom = zoomFor(view.w, screenWidthRef.current);
     if (zoom === zoomRef.current) return;

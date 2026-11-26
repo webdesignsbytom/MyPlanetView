@@ -12,6 +12,7 @@ import { photoPlace } from '@/utils/photos/slideshow';
  */
 function SlideCaption({ slide, photoCount, counter = '' }) {
   if (!slide) return null;
+  if (slide.type === 'intro') return slide.title;
   if (slide.type === 'card') return countryName(slide.countryCode);
   if (slide.type === 'moment') return slide.moment.title;
   if (slide.type === 'end') return `That’s all ${photoCount} ${photoCount === 1 ? 'photo' : 'photos'}.`;

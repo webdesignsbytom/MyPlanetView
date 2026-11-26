@@ -10,6 +10,12 @@ const SECRET_PATHS = [
   // A "Guess where I was" game's link and a play's id: /api/guess/<code>/plays/<playId>/…
   [/^(\/api\/guess\/)[^/?#]+(\/plays\/)[^/?#]+/i, '$1:code$2:token'],
   [/^(\/api\/guess\/)[^/?#]+/i, '$1:code'],
+  // A slideshow's link: /api/show/<code>, /api/show/<code>/photos
+  [/^(\/api\/show\/)[^/?#]+/i, '$1:code'],
+  // A postcard's link: /api/postcard/<code>
+  [/^(\/api\/postcard\/)[^/?#]+/i, '$1:code'],
+  // A Vs mode comparison's join link: /api/vs/join/<code>
+  [/^(\/api\/vs\/join\/)[^/?#]+/i, '$1:code'],
   // A friends challenge's join link: /api/challenges/join/<code>
   [/^(\/api\/challenges\/join\/)[^/?#]+/i, '$1:code'],
   // A promo code checked at sign-up: /api/promo-codes/<code> (a code for life gives a plan)

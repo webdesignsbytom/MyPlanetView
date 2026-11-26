@@ -1,5 +1,6 @@
 // Mock mode only: maps, travellers, visits, stats, and the map's trips and photos.
 import { deny, fail, ok, route } from '../mockAdapter';
+import { COVER_COLOURS } from '@/utils/passport/passportBook';
 import { countryListPages } from '../countryLists';
 import { getDb, me, newId, newShareCode, session } from '../store';
 import { declaredSizeProblem, mockUpload, presignMockUpload } from '../uploads';
@@ -20,6 +21,7 @@ import {
 import { isPole } from '@/utils/map/specialPlaces';
 import { UK, isUkNation, placeOnMap } from '@/utils/map/ukNations';
 import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
+import { DESIGN_MESSAGES, parseVisitedLook } from '../mapDesigns';
 import { ukNationAt } from '../ukNationLookup';
 import { setMapSplitUk } from '../ukNationSplit';
 import { adsFor } from '../offers';
@@ -321,9 +323,19 @@ export function registerMapRoutes() {
     }
     // The style everyone who opens the map sees it in (docs/API.md "Map styles")
     if (body.style !== undefined && !MAP_STYLE_IDS.includes(body.style)) return fail(400, 'Choose one of the map styles.');
+    // The passport's cover colour (26 Nov 2026; null: the plan's own)
+    const coverIds = COVER_COLOURS.map((c) => c.id);
+    if (body.passportColour !== undefined && body.passportColour !== null && !coverIds.includes(body.passportColour)) {
+      return fail(400, 'Choose one of the passport’s cover colours.');
+    }
+    // How the places been to show, in every style (docs/API.md "The visited look")
+    const visited = parseVisitedLook(body);
+    if (visited.error) return fail(400, DESIGN_MESSAGES[visited.error]);
+    Object.assign(map, visited.change);
     if (name) map.name = name;
     if (home !== undefined) map.homeCountryCode = home ? placeOnMap(home, false) : null;
     if (body.style !== undefined) map.style = body.style;
+    if (body.passportColour !== undefined) map.passportColour = body.passportColour;
     if (body.groupType !== undefined) map.groupType = body.groupType;
     // The UK as its four nations: changing it moves the map's UK data (as the server)
     if (body.splitUk !== undefined) {
@@ -362,6 +374,10 @@ export function registerMapRoutes() {
     // A challenge it counted in counts no map for that person until they pick another
     (db.challengeEntries || []).forEach((e) => {
       if (e.mapId === map.id) e.mapId = null;
+    });
+    // ...and so does a Vs mode comparison (26 Nov 2026)
+    (db.vsMembers || []).forEach((m) => {
+      if (m.mapId === map.id) m.mapId = null;
     });
     return ok({ message: 'Map deleted.' });
   });
@@ -478,17 +494,20 @@ export function registerMapRoutes() {
     if (body.notes !== undefined && body.notes !== null && typeof body.notes !== 'string') return fail(400, NOTES_NOT_TEXT);
     let visit = db.visits.find((v) => v.mapId === map.id && v.countryCode === code);
     if (!visit) {
-      visit = { mapId: map.id, countryCode: code, status: body.status, source: 'MANUAL', firstVisitedOn: null, notes: null };
+      visit = { mapId: map.id, countryCode: code, status: body.status, source: 'MANUAL', firstVisitedOn: null, notes: null, createdAt: new Date().toISOString() };
       db.visits.push(visit);
     }
     // As the server: a changed status is the person's own (MANUAL); a note or date alone
     // keeps where the visit came from
+    // A wish become a visit was marked visited now, as the server's (24 Nov 2026)
+    const counted = (status) => status === 'VISITED' || status === 'LIVED';
+    if (!counted(visit.status) && counted(body.status)) visit.createdAt = new Date().toISOString();
     if (visit.status !== body.status) Object.assign(visit, { status: body.status, source: 'MANUAL' });
     if (body.firstVisitedOn !== undefined) visit.firstVisitedOn = body.firstVisitedOn || null;
     if (body.notes !== undefined) visit.notes = sanitizeText(body.notes, NOTES_MAX);
     // The South Pole visited or lived brings Antarctica with it (as the server: `implied`)
     const implied = markParentsVisited(map.id, code, body.status);
-    const view = ({ countryCode, status, source, firstVisitedOn, notes }) => ({ countryCode, status, source, firstVisitedOn, notes });
+    const view = ({ countryCode, status, source, firstVisitedOn, notes, createdAt }) => ({ countryCode, status, source, firstVisitedOn, notes, markedAt: createdAt ?? null });
     return ok({ visit: view(visit), implied: implied.map(view) });
   });
 

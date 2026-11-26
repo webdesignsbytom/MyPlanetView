@@ -36,7 +36,7 @@ describe('TripCountdownTag', () => {
     const tag = container.querySelector('[data-trip-countdown]');
     expect(tag.getAttribute('aria-label')).toBe('Your next trip');
     expect(tag.tagName).toBe('SECTION');
-    expect(screen.getByText('12 days until Japan in spring')).toBeTruthy();
+    expect(screen.getByText('12 days until Japan In Spring')).toBeTruthy();
     expect(screen.getByText('March is a good time for Japan; the best is April to May.')).toBeTruthy();
     expect(screen.getByText('Open the trip').getAttribute('href')).toBe('/trips/trip-jp');
     expect(container.querySelector('[data-travel-desk]').getAttribute('data-travel-desk')).toBe('JP');
@@ -47,10 +47,10 @@ describe('TripCountdownTag', () => {
 
   it('says a trip starting today starts today, and one day ahead in the singular', () => {
     const { unmount } = show([trip({ startDate: '2027-03-01' })]);
-    expect(screen.getByText('Japan in spring starts today')).toBeTruthy();
+    expect(screen.getByText('Japan In Spring starts today')).toBeTruthy();
     unmount();
     show([trip({ startDate: '2027-03-02' })]);
-    expect(screen.getByText('1 day until Japan in spring')).toBeTruthy();
+    expect(screen.getByText('1 day until Japan In Spring')).toBeTruthy();
   });
 
   it('shows nothing with no planned trip, a past one or one over a year away', () => {
@@ -66,7 +66,7 @@ describe('TripCountdownTag', () => {
 
   it('shows a trip a whole year ahead', () => {
     show([trip({ startDate: '2028-02-29' })]);
-    expect(screen.getByText('365 days until Japan in spring')).toBeTruthy();
+    expect(screen.getByText('365 days until Japan In Spring')).toBeTruthy();
   });
 
   it('leaves out the link to a group trip the viewer cannot open', () => {
@@ -133,6 +133,6 @@ describe('TripCountdownTag', () => {
     // The next day
     vi.setSystemTime(new Date(2027, 2, 2, 9));
     show([trip()]);
-    expect(screen.getByText('11 days until Japan in spring')).toBeTruthy();
+    expect(screen.getByText('11 days until Japan In Spring')).toBeTruthy();
   });
 });

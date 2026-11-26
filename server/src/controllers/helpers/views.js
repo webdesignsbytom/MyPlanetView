@@ -249,6 +249,9 @@ export const visitView = (v) => ({
   firstVisitedOn: toDateOnly(v.firstVisitedOn),
   // The country's one note ("I want to visit here"), for everyone who can see the map
   notes: v.notes,
+  // When it was marked (24 Nov 2026): with the first visit, the order the places were visited in
+  // (the strings tied to a newly visited place, as the passport's pages)
+  markedAt: v.createdAt ? new Date(v.createdAt).toISOString() : null,
 });
 
 /**

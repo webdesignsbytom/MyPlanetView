@@ -56,6 +56,25 @@ describe('CountryMapList', () => {
     expect(screen.getByText('No pins yet.')).toBeTruthy();
   });
 
+  it('lists the landmark models A to Z between the states and the pins, each opening its card', () => {
+    const onOpenModel = vi.fn();
+    const models = [
+      { id: 'tower', name: 'Tower' },
+      { id: 'abbey', name: 'Abbey' },
+    ];
+    render(<CountryMapList areas={AREAS} statuses={statuses} pins={[]} models={models} onOpenState={() => {}} onOpenModel={onOpenModel} onOpenPin={() => {}} />);
+    expect([...document.querySelectorAll('h3')].map((h) => h.textContent)).toEqual(['States', 'Landmarks', 'Pins']);
+    const buttons = [...document.querySelectorAll('[data-list-model]')];
+    expect(buttons.map((b) => b.textContent)).toEqual(['Abbey', 'Tower']);
+    fireEvent.click(buttons[1]);
+    expect(onOpenModel).toHaveBeenCalledWith('tower', buttons[1]);
+  });
+
+  it('has no landmarks section on a map with no models', () => {
+    render(<CountryMapList areas={AREAS} statuses={statuses} pins={[]} onOpenState={() => {}} onOpenPin={() => {}} />);
+    expect(screen.queryByText('Landmarks')).toBeNull();
+  });
+
   it('lists the pins, each opening its panel', () => {
     const onOpenPin = vi.fn();
     render(<CountryMapList areas={[]} statuses={new Map()} pins={[{ id: 'pin1', name: 'Our café' }]} onOpenState={() => {}} onOpenPin={onOpenPin} />);

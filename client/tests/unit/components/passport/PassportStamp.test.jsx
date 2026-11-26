@@ -16,14 +16,13 @@ const stampOf = (over = {}) => ({
 
 const show = (props = {}) => {
   const onOpenPhoto = vi.fn();
-  const onPickPhoto = vi.fn();
   const stamp = props.stamp || stampOf();
   const view = render(
     <ul>
-      <PassportStamp stamp={stamp} onOpenPhoto={onOpenPhoto} onPickPhoto={onPickPhoto} {...props} />
+      <PassportStamp stamp={stamp} onOpenPhoto={onOpenPhoto} {...props} />
     </ul>,
   );
-  return { ...view, stamp, onOpenPhoto, onPickPhoto };
+  return { ...view, stamp, onOpenPhoto };
 };
 
 describe('PassportStamp', () => {
@@ -44,7 +43,7 @@ describe('PassportStamp', () => {
 
   // 23 Nov 2026: a landmark ticked "been here" with no photo is a stamp with nothing to open
   it('shows a ticked stamp with no photo as a picture, nothing to press or choose', () => {
-    const { container, onOpenPhoto } = show({ stamp: stampOf({ photo: null, ticked: true, photoCount: 0, photoChosen: false }), canPick: true });
+    const { container, onOpenPhoto } = show({ stamp: stampOf({ photo: null, ticked: true, photoCount: 0, photoChosen: false }) });
     expect(container.querySelector('button')).toBeNull();
     const stamp = container.querySelector('[role="img"]');
     expect(stamp.getAttribute('aria-label')).toBe('Stamp: Colosseum');
@@ -55,37 +54,12 @@ describe('PassportStamp', () => {
     expect(onOpenPhoto).not.toHaveBeenCalled();
   });
 
-  it('says when its photo was chosen by hand', () => {
-    show({ stamp: stampOf({ photoChosen: true, isUnesco: false, photoCount: 1, stampedOn: null }) });
-    const button = screen.getByText('Open the photo of Colosseum').closest('button');
-    expect(document.getElementById(button.getAttribute('aria-describedby')).textContent).toBe('Colosseum, stamped, 1 photo, its photo chosen.');
-  });
-
-  it('offers editors “Choose photo” when the landmark has more than one photo', () => {
-    const { stamp, onPickPhoto } = show({ canPick: true });
-    const choose = screen.getByLabelText('Choose the photo for Colosseum');
-    expect(choose.textContent).toBe('Choose photo');
-    fireEvent.click(choose);
-    expect(onPickPhoto).toHaveBeenCalledWith(stamp);
-  });
-
-  it('offers it with one photo only when a photo was picked (to go back to the first)', () => {
-    show({ canPick: true, stamp: stampOf({ photoCount: 1 }) });
-    expect(screen.queryByLabelText('Choose the photo for Colosseum')).toBeNull();
-    show({ canPick: true, stamp: stampOf({ photoCount: 1, photoChosen: true, name: 'Pantheon' }) });
-    expect(screen.getByLabelText('Choose the photo for Pantheon')).toBeTruthy();
-  });
-
-  it('never offers it to viewers', () => {
-    show({ canPick: false });
+  // 24 Nov 2026, the user's wish: nobody picks a stamp's photo in the passport
+  it('has no “Choose photo”, whatever the stamp, and doesn’t mention a photo picked before', () => {
+    const { container } = show({ stamp: stampOf({ photoChosen: true, isUnesco: false, photoCount: 4, stampedOn: null }) });
     expect(screen.queryByText('Choose photo')).toBeNull();
-  });
-
-  it('locks it for an editor who must verify their email first', () => {
-    const { onPickPhoto } = show({ canPick: true, locked: true });
-    const choose = screen.getByLabelText('Choose the photo for Colosseum');
-    expect(choose.disabled).toBe(true);
-    fireEvent.click(choose);
-    expect(onPickPhoto).not.toHaveBeenCalled();
+    expect(container.querySelectorAll('button')).toHaveLength(1);
+    const button = screen.getByText('Open the photo of Colosseum').closest('button');
+    expect(document.getElementById(button.getAttribute('aria-describedby')).textContent).toBe('Colosseum, stamped, 4 photos.');
   });
 });

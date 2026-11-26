@@ -10,6 +10,22 @@ export const ON_THIS_DAY_GAP_MS = 7 * DAY_MS - 3 * 60 * 60 * 1000;
 export const ON_THIS_DAY_MAX_EMAILS = 300;
 export const ON_THIS_DAY_BUDGET_MS = 45_000;
 
+// Both memory emails together ("Welcome home", then "On this day") in one daily run: at most
+// the env setting MEMORY_EMAILS_PER_DAY, or this when it's unset. They go through the same
+// Resend account as sign-up, password and share emails, so they must leave room under the
+// plan's daily limit (Resend's free plan: about 100 a day) for those (the audit, 26 Nov 2026).
+export const MEMORY_EMAILS_PER_DAY_DEFAULT = 60;
+
+/** The day's memory emails from the env setting: a whole number from 0, else the default. */
+export function memoryEmailsPerDay(value) {
+  if (value === undefined || value === null || String(value).trim() === '') return MEMORY_EMAILS_PER_DAY_DEFAULT;
+  const n = Number(value);
+  return Number.isInteger(n) && n >= 0 ? n : MEMORY_EMAILS_PER_DAY_DEFAULT;
+}
+
+/** Is this Resend's answer that the account's sending quota is used up (daily_quota_exceeded, monthly_quota_exceeded)? */
+export const isQuotaError = (name) => typeof name === 'string' && name.includes('quota');
+
 const isLeap = (year) => (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 
 /**

@@ -20,6 +20,8 @@ import { StarBadgeSymbols } from './StarBadge';
 import { PoleMarkerSymbols } from './PoleMarker';
 import { MomentMarkSymbol } from './MomentMark';
 import MapKeyboardHint from './MapKeyboardHint';
+import FoilEdgeFilter from './FoilEdgeFilter';
+import VisitedFoil from './VisitedFoil';
 // Utils
 import { clearPointerFocus, markPointerFocus } from '@/utils/map/pointerFocus';
 
@@ -63,6 +65,9 @@ const GRAB_CURSORS = 'touch-none cursor-grab data-grabbing:cursor-grabbing [&[da
  * `seaDepths`: the sea tinted by depth (SeaDepths), for the styles whose sea is plain
  * (mapStyles.js `background: null`, the animated sea).
  * `gridColoured`: a map design gave the grid its own colour, so it's drawn stronger.
+ * `visited` (the map's visited look, utils/map/mapDesign.js visitedLookFrom) and `visitedPreview`
+ * (Settings' value store of it): a metallic finish for the places been to draws its sheet of metal
+ * under them (VisitedFoil), in every map style.
  */
 function WorldMap({
   viewport,
@@ -89,12 +94,15 @@ function WorldMap({
   landmarkPins = 'zoomed',
   stops = null,
   // Strings between places (MapStrings): the map's own, shown unless the viewer hid them;
-  // `stringStart` and `onRemoveString` while in string mode
+  // `stringStart`, `onRemoveString` and the kind being tied (`stringKind`) while in string mode
   strings = null,
   stringStart = null,
+  stringKind = 'VISITED',
   onRemoveString = null,
   label = 'World map',
   panZoom = true,
+  visited = null,
+  visitedPreview = null,
 }) {
   const hintId = useId();
   const zoom = useViewportZoom(viewport);
@@ -126,8 +134,23 @@ function WorldMap({
         {BADGE_SYMBOLS}
         {POLE_SYMBOLS}
         {MOMENT_SYMBOL}
+        {/* A map design's metallic finish lights the places been to's edges with this, a few
+            pixels wide at every zoom (in the names' steps), once the map is still */}
+        <FoilEdgeFilter zoom={labelZoom(zoom)} />
         {seaDepths ? DEPTHS : null}
         {showGrid ? <MapGridLines showLabels={showGridLabels} zoom={zoom} showAntarctica={showAntarctica} coloured={gridColoured} /> : null}
+        {visited || visitedPreview ? (
+          <VisitedFoil
+            visited={visited}
+            preview={visitedPreview}
+            visitsByCode={visitsByCode}
+            detail={detail}
+            splitUk={splitUk}
+            showAntarctica={showAntarctica}
+            zoom={zoom}
+            faded={!showVisited}
+          />
+        ) : null}
         <CountryLayer
           visitsByCode={visitsByCode}
           plannedCodes={plannedCodes}
@@ -165,7 +188,18 @@ function WorldMap({
         ) : null}
         {/* Strings between places, over everything else, as thread pinned to a board */}
         {strings?.length || stringStart ? (
-          <MapStrings strings={strings} showAntarctica={showAntarctica} startCode={stringStart} onRemove={onRemoveString} afterTap={afterTap} />
+          <MapStrings
+            strings={strings}
+            // In the names' steps: a twined string's strands are a few pixels apart, which this
+            // keeps close enough while it re-renders only a few times a doubling
+            zoom={labelZoom(zoom)}
+            showAntarctica={showAntarctica}
+            startCode={stringStart}
+            startKind={stringKind}
+            onRemove={onRemoveString}
+            removeKind={stringKind}
+            afterTap={afterTap}
+          />
         ) : null}
         {stops?.length ? <StopMarkers stops={stops} zoom={zoom} /> : null}
       </svg>

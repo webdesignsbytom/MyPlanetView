@@ -124,3 +124,28 @@ describe('photoThemes', () => {
     expect(photoThemes({}, 'p')).toEqual([]);
   });
 });
+
+// The suggested themes (26 Nov 2026, the user's wish): the server's, word for word
+describe('THEME_IDEAS and suggestThemes', () => {
+  it('are the server’s ideas, the example year their first twelve', async () => {
+    const ideas = await import('../../../../../server/src/utils/themeIdeas.js');
+    const mock = await import('@/dev/mock/themes');
+    expect(mock.THEME_IDEAS).toEqual(ideas.THEME_IDEAS);
+    expect(EXAMPLE_THEMES).toEqual(ideas.THEME_IDEAS.slice(0, 12));
+  });
+
+  it('suggests what the server would, months as YYYY-MM', async () => {
+    const ideas = await import('../../../../../server/src/utils/themeIdeas.js');
+    const { suggestThemes } = await import('@/dev/mock/themes');
+    const now = new Date('2026-11-26T12:00:00Z');
+    const existing = [
+      { month: '2026-03', title: 'Doors' },
+      { month: '2026-12', title: 'Lost' },
+      { month: '2027-05', title: 'Night' },
+      { month: '2025-06', title: 'Signs' },
+    ];
+    const serverOut = ideas.suggestThemes(existing.map((t) => ({ ...t, month: new Date(`${t.month}-01T00:00:00Z`) })), now);
+    expect(suggestThemes(existing, now)).toEqual(serverOut.map((t) => ({ ...t, month: t.month.toISOString().slice(0, 7) })));
+    expect(suggestThemes([], now)).toHaveLength(12);
+  });
+});

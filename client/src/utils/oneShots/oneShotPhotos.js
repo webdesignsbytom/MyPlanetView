@@ -5,7 +5,7 @@
 // A photo per item of Life's One Shots from Wikimedia Commons, credited as its licence asks.
 // The files are in the public bucket (copied in the repo's media/ folder) as
 // oneShotPhotos/<key>-<width>.avif and .webp.
-// 153 of 155 items have one.
+// 155 of 155 items have one.
 
 // [licence name, licence URL ('' when it has none, as for public domain)]
 export const ONE_SHOT_LICENCES = [
@@ -34,6 +34,7 @@ export const ONE_SHOT_PHOTOS = {
   "alligator": [480,640,"User:Postdlf",2,"American Alligator.jpg"],
   "amazon-river": [480,320,"James Martins",3,"Amazon boat in Rio Negro River Manaus AM) - panoramio.jpg"],
   "andean-condor": [480,601,"Greg Hume",1,"AndeanCondorMale.jpg"],
+  "antarctic-circle": [480,277,"Lewnwdc77",1,"Antarctic Circle Icberg.JPG"],
   "appalachian-trail": [480,360,"Smithh05",0,"Appalachian Trail, Peter's Mountain WV-VA.jpg"],
   "arctic-circle": [480,385,"BLM Alaska",4,"Arctic Circle sign (29650507696).jpg"],
   "arctic-fox": [480,594,"Jonatan Pie ( unsplash.com/@r3dmax )",5,"Vulpes lagopus in Iceland (cropped 3).jpg"],
@@ -99,6 +100,7 @@ export const ONE_SHOT_PHOTOS = {
   "ice-hotel": [427,640,"Laplandish",1,"Icehotel entre ms.jpg"],
   "icebergs": [480,270,"AWeith",0,"Iceberg in the Arctic with its underside exposed.jpg"],
   "iceland-ring-road": [480,280,"Borvan53",1,"Cap Vestrahorn from Vikurfjall Ring Road.JPG"],
+  "inca-trail": [443,640,"Unknown author",4,"Incatrail in Peru.jpg"],
   "jaguar": [480,331,"USFWS",4,"Standing jaguar.jpg"],
   "kangaroo": [480,320,"Charles J. Sharp",0,"Forester kangaroo (Macropus giganteus tasmaniensis) juvenile hopping Esk Valley.jpg"],
   "karakoram-highway": [478,640,"Axaqamer3",0,"Karakoram highway in hunza.jpg"],

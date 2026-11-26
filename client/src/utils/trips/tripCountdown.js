@@ -14,10 +14,18 @@ const dayNumber = (ymd) => {
 /** Whole days from `today` to `startDate` (both "YYYY-MM-DD"). */
 export const daysUntil = (startDate, today) => dayNumber(startDate) - dayNumber(today);
 
-/** "12 days until Japan in spring", "1 day until …", "Japan in spring starts today". */
+/**
+ * Every word of a trip's title starting with a capital, the rest as typed: "trip test" →
+ * "Trip Test", "Japan in spring" → "Japan In Spring" (25 Nov 2026, the user's wish), "USA
+ * road trip" → "USA Road Trip". A word is what follows a space or a hyphen.
+ */
+export const titleWords = (title) => String(title ?? '').replace(/(^|[\s-])(\p{Ll})/gu, (_, before, letter) => before + letter.toUpperCase());
+
+/** "12 days until Japan In Spring", "1 day until …", "Japan In Spring starts today". */
 export function countdownWords(title, days) {
-  if (days <= 0) return `${title} starts today`;
-  return `${days.toLocaleString('en-GB')} ${days === 1 ? 'day' : 'days'} until ${title}`;
+  const name = titleWords(title);
+  if (days <= 0) return `${name} starts today`;
+  return `${days.toLocaleString('en-GB')} ${days === 1 ? 'day' : 'days'} until ${name}`;
 }
 
 /**

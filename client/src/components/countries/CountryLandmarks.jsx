@@ -31,7 +31,7 @@ function CountryLandmarks({ named, landmarks }) {
             >
               {photo ? <GuidePhoto photo={photo} tilt={index % 2 ? 'rotate-1' : '-rotate-1'} /> : null}
               <div className='grid gap-2'>
-                <p className='font-travel text-xs uppercase tracking-xl text-poster-red'>{landmark.category}</p>
+                <p className='font-travel text-xs uppercase tracking-xl text-poster-red-deep'>{landmark.category}</p>
                 <h3 className='-rotate-1 font-travel text-2xl uppercase leading-tight tracking-wide text-poster-red-deep'>{landmark.name}</h3>
                 <p className='grid grid-cols-[auto_minmax(0,1fr)] items-start gap-2 text-sm leading-relaxed'>
                   <FaCamera aria-hidden='true' className='translate-y-1 text-poster-brown' />

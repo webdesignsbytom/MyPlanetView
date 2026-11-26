@@ -4,6 +4,7 @@ import MapPanel from './MapPanel';
 import MapStylePicker from './MapStylePicker';
 import MapTypePicker from './MapTypePicker';
 import LandmarkPinsPicker from './LandmarkPinsPicker';
+import DistanceUnitPicker from './DistanceUnitPicker';
 import MapSettingsToggles from './MapSettingsToggles';
 import DeleteMapSection from './DeleteMapSection';
 import MainMapSection from './MainMapSection';
@@ -13,9 +14,12 @@ import MapImportSection from './MapImportSection';
 import MapHomeSection from './MapHomeSection';
 import TravelCopySection from '@/components/travelCopies/TravelCopySection';
 import MapDesignSection from './design/MapDesignSection';
+import VisitedLookSection from './design/VisitedLookSection';
+import SupporterBadgeSection from './SupporterBadgeSection';
 import MapSetupForm from '@/components/onboarding/MapSetupForm';
 // Utils
 import { saveMapSetup } from '@/utils/map/saveMapSetup';
+import { distanceUnitFor } from '@/utils/map/distanceUnits';
 
 const TABS = [
   { id: 'view', label: 'How it looks' },
@@ -26,8 +30,11 @@ const TABS = [
 // the user's wish): the owner and co-owners choose it (`onMapStyleChange`, also kept as their
 // own for maps without one) and everyone who opens the map sees it, share links too; anyone
 // else's choice is for their own maps. The rest is yours alone, on every map. The owner and
-// co-owners also set the map's own design under the map style (MapDesignSection,
-// docs/API.md "Map designs"): one per map style, so the section is the map style's own; and,
+// co-owners also set how the places been to show, the map's own in every style
+// (VisitedLookSection, docs/API.md "The visited look"), and the map's own design under the map
+// style (MapDesignSection,
+// docs/API.md "Map designs"): one per map style, so the section is the map style's own; the
+// owner of a paid account, their supporter badge's switch (SupporterBadgeSection); and,
 // for editors,
 // this map's travellers and its photos as a zip ("Print or download"); for the owner and
 // co-owners, bringing travels from another map and the requests to copy from this one
@@ -49,8 +56,11 @@ function SettingsPanel({
   onMapSaved,
   onDesignChange,
   designPreview,
+  onVisitedLookChange = null,
+  visitedPreview,
   onMapDeleted,
   onUpgradePay,
+  onShowTips = null,
   onClose,
 }) {
   // Someone else's choice of style is what this map shows (their own applies to their maps)
@@ -128,13 +138,30 @@ function SettingsPanel({
             onChange={(style) => onChangeSetting('style', style)}
           />
         )}
+        {/* How the places been to show, in every style (25 Nov 2026, the user's wish), so above the
+            style's own design */}
+        {map && canManage && onVisitedLookChange ? (
+          <VisitedLookSection map={map} styleId={mapStyle} onSave={onVisitedLookChange} preview={visitedPreview} />
+        ) : null}
         {/* Under the style it belongs to (23 Nov 2026, the user's wish: it was at the top) */}
         {map && canManage && onDesignChange ? (
           <MapDesignSection key={mapStyle} map={map} styleId={mapStyle} onDesignChange={onDesignChange} preview={designPreview} />
         ) : null}
+        {/* A paying owner's badge on their maps' banner, and its switch (24 Nov 2026, the user's wish) */}
+        {map?.supporter && isOwner ? (
+          <SupporterBadgeSection
+            supporter={map.supporter}
+            checked={settings.showSupporterBadge !== false}
+            onChange={(on) => onChangeSetting('showSupporterBadge', on)}
+          />
+        ) : null}
         <MapTypePicker value={settings.mapType} onChange={(type) => onChangeSetting('mapType', type)} />
         <LandmarkPinsPicker value={settings.landmarkPins} onChange={(mode) => onChangeSetting('landmarkPins', mode)} />
-        <MapSettingsToggles settings={settings} onChange={onChangeSetting} />
+        <DistanceUnitPicker
+          value={distanceUnitFor(settings.distanceUnit, map?.stats?.homeCountryCode)}
+          onChange={(unit) => onChangeSetting('distanceUnit', unit)}
+        />
+        <MapSettingsToggles settings={settings} onChange={onChangeSetting} onShowTips={onShowTips} />
       </div>
       {showTabs ? (
         <div {...panelProps('map')} hidden={tab !== 'map'} className='grid gap-5'>

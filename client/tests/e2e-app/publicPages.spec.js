@@ -64,6 +64,24 @@ test.describe('Public pages', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'France' })).toBeVisible();
   });
 
+  // 26 Nov 2026, the user's wish: the published guides' festivals with no photo were found one
+  // by hand on Commons (images/src/tools/festival-photos.mjs OVERRIDES)
+  test('a guide’s festivals show their photos, credited', async ({ page }) => {
+    await page.goto('/countries/mexico');
+    const festivals = page.locator('section[aria-labelledby="country-festivals-heading"]');
+    const carnaval = festivals.locator('li').filter({ hasText: 'Carnaval' }).first();
+    await carnaval.scrollIntoViewIfNeeded();
+    const photo = carnaval.locator('img');
+    await expect(photo).toHaveAttribute('src', /mx-carnaval-\d+\.webp/);
+    await expect.poll(() => photo.evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
+    await expect(carnaval.locator('figcaption')).toContainText('Photo: ANGELOUX');
+
+    await page.goto('/countries/portugal');
+    const saoJoao = page.locator('section[aria-labelledby="country-festivals-heading"] li').filter({ hasText: 'São João' }).first();
+    await saoJoao.scrollIntoViewIfNeeded();
+    await expect(saoJoao.locator('img')).toHaveAttribute('src', /pt-sao-joao-\d+\.webp/);
+  });
+
   test('the terms and the privacy policy, with a contents card that jumps to each', async ({ page }) => {
     await page.goto('/user-agreements');
     await expect(page.getByRole('heading', { level: 1, name: 'Terms and privacy' })).toBeVisible();

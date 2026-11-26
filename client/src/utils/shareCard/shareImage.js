@@ -1,5 +1,6 @@
 // Handing a picture on (the share card): the phone's or computer's own share sheet where it
 // takes files (Instagram, WhatsApp, Messages…), else a download.
+import { trackShare } from '@/utils/analytics/events';
 
 /** Can this browser share an image file? */
 export function canShareImages() {
@@ -16,6 +17,7 @@ export async function shareImage(blob, { fileName, title, text }) {
   const file = new File([blob], fileName, { type: blob.type || 'image/png' });
   try {
     await navigator.share({ files: [file], title, text });
+    trackShare({ method: 'picture', contentType: 'card' });
     return true;
   } catch (err) {
     if (err?.name === 'AbortError') return false;

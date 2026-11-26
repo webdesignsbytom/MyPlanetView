@@ -34,6 +34,16 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   // "Guess where I was": making and deleting a game (docs/API.md)
   'POST /api/maps/:mapId/guess-games',
   'DELETE /api/guess-games/:gameId',
+  'POST /api/maps/:mapId/photo-shows',
+  'PATCH /api/maps/:mapId/travellers/:travellerId/passport',
+  'PATCH /api/photo-shows/:showId',
+  'POST /api/photo-shows/:showId/reset-link',
+  'DELETE /api/photo-shows/:showId',
+  // Postcards (docs/API.md "Postcards"): sending one, its photo, a new link and deleting
+  'POST /api/postcards/picture/presign',
+  'POST /api/postcards',
+  'POST /api/postcards/:postcardId/reset-link',
+  'DELETE /api/postcards/:postcardId',
   // The flight log (docs/API.md "Flights")
   'POST /api/maps/:mapId/flights',
   'DELETE /api/flights/:flightId',
@@ -93,6 +103,13 @@ const NEEDS_VERIFIED_EMAIL = new Set([
   'DELETE /api/challenges/:challengeId',
   'POST /api/challenges/:challengeId/reset-link',
   'PATCH /api/challenges/:challengeId/me',
+  // Vs mode (26 Nov 2026)
+  'POST /api/vs',
+  'POST /api/vs/join/:code',
+  'PATCH /api/vs/:groupId',
+  'DELETE /api/vs/:groupId',
+  'POST /api/vs/:groupId/reset-link',
+  'PATCH /api/vs/:groupId/me',
   'PUT /api/maps/:mapId/passport/stamps/:landmarkId/photo',
   'DELETE /api/maps/:mapId/passport/stamps/:landmarkId/photo',
   // Taking your travels with you (docs/API.md "Travel copies")

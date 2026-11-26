@@ -28,7 +28,9 @@ import {
   listGrantsHandler,
 } from '../controllers/planAdmin.js';
 import { createPromoCodeHandler, listPromoCodesHandler, updatePromoCodeHandler } from '../controllers/promoCodes.js';
-import { createThemeHandler, deleteThemeHandler, listThemesHandler, updateThemeHandler } from '../controllers/themes.js';
+import { createThemeHandler, deleteThemeHandler, fillSuggestedThemesHandler, listThemesHandler, updateThemeHandler } from '../controllers/themes.js';
+import { deleteFeedbackHandler, getFeedbackHandler, listFeedbackHandler, updateFeedbackHandler } from '../controllers/feedback.js';
+import { getAdminGiftsHandler, getAdminOverviewHandler, getAdminReferralsHandler } from '../controllers/admin.js';
 import {
   createOfferHandler,
   deleteOfferHandler,
@@ -151,7 +153,19 @@ router.delete('/admin/offers/:offerId', validateAuthentication, validateAdminRol
 // Monthly photo themes (docs/API.md, "Photo themes"): one a month, set in advance
 router.get('/admin/themes', validateAuthentication, validateAdminRole, listThemesHandler);
 router.post('/admin/themes', validateAuthentication, validateAdminRole, createThemeHandler);
+router.post('/admin/themes/suggested', validateAuthentication, validateAdminRole, fillSuggestedThemesHandler);
 router.patch('/admin/themes/:themeId', validateAuthentication, validateAdminRole, updateThemeHandler);
 router.delete('/admin/themes/:themeId', validateAuthentication, validateAdminRole, deleteThemeHandler);
+
+// Feedback sent from the map (docs/API.md "Feedback"): read, act on, delete
+router.get('/admin/feedback', validateAuthentication, validateAdminRole, listFeedbackHandler);
+router.get('/admin/feedback/:feedbackId', validateAuthentication, validateAdminRole, getFeedbackHandler);
+router.patch('/admin/feedback/:feedbackId', validateAuthentication, validateAdminRole, updateFeedbackHandler);
+router.delete('/admin/feedback/:feedbackId', validateAuthentication, validateAdminRole, deleteFeedbackHandler);
+
+// The overview, gifts by code and referral rewards (docs/API.md "Admin"; the audit, 26 Nov 2026)
+router.get('/admin/overview', validateAuthentication, validateAdminRole, getAdminOverviewHandler);
+router.get('/admin/gifts', validateAuthentication, validateAdminRole, getAdminGiftsHandler);
+router.get('/admin/referrals', validateAuthentication, validateAdminRole, getAdminReferralsHandler);
 
 export default router;

@@ -47,6 +47,23 @@ describe('WorldMap', { timeout: 20000 }, () => {
     expect(container.querySelector('symbol#mpv-moment-mark')).not.toBeNull();
   });
 
+  // A metallic finish (25 Nov 2026, the user's wish: gold, silver and bronze that look like real
+  // metal): its sheet of metal under the countries, and the filter its lit edge uses
+  it('draws a metallic finish’s sheet of metal under the countries, cut to the places been to', () => {
+    const visited = { visitedLook: 'COLOUR', visitedColour: null, visitedFinish: 'SILVER' };
+    const { container } = draw({ visited, visitsByCode: { FR: 'VISITED' }, showVisited: false });
+    const foil = container.querySelector('[data-visited-foil]');
+    expect(foil.getAttribute('data-visited-foil')).toBe('SILVER');
+    // Under the countries
+    const countries = container.querySelector('g[data-code="FR"]').parentElement;
+    expect(foil.compareDocumentPosition(countries) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // Faded with the places been to
+    expect(foil.getAttribute('class')).toContain('opacity-15');
+    expect(container.querySelector('filter#mpv-foil-edge')).not.toBeNull();
+    // None without a look, or in its plain colour
+    expect(draw({ visitsByCode: { FR: 'VISITED' } }).container.querySelector('[data-visited-foil]')).toBeNull();
+  });
+
   it('marks a pointer’s focus, so the hint shows for the keyboard only', () => {
     const { svg } = draw();
     fireEvent.pointerDown(svg);

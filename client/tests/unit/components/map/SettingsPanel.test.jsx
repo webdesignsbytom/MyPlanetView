@@ -18,6 +18,7 @@ vi.mock('@/components/map/MainMapSection', () => section('main'));
 vi.mock('@/components/map/DeleteMapSection', () => section('delete'));
 vi.mock('@/components/travelCopies/TravelCopySection', () => section('copies'));
 vi.mock('@/components/map/design/MapDesignSection', () => ({ default: ({ styleId }) => <div data-section='design' data-style={styleId} /> }));
+vi.mock('@/components/map/design/VisitedLookSection', () => ({ default: ({ styleId }) => <div data-section='visited' data-style={styleId} /> }));
 vi.mock('@/components/onboarding/MapSetupForm', () => ({
   default: ({ onSubmit, canRename, submitLabel }) => (
     <button type='button' data-section='setup' data-can-rename={String(canRename)} onClick={() => onSubmit({ name: 'New name' })}>
@@ -134,6 +135,19 @@ describe('SettingsPanel', () => {
     expect(editor.querySelector('[data-section="design"]')).toBeNull();
   });
 
+  // How the places been to show is the map's, in every style (25 Nov 2026, the user's wish): its
+  // own section, above the style's design
+  it('puts how the places been to show above the style’s design, for the owner and co-owners', () => {
+    const { container } = open({ onDesignChange: vi.fn(), onVisitedLookChange: vi.fn(), mapStyle: 'old-map' });
+    const visited = container.querySelector('[data-section="visited"]');
+    expect(visited.getAttribute('data-style')).toBe('old-map');
+    const follows = (a, b) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(follows(screen.getByText('Map style'), visited)).toBe(true);
+    expect(follows(visited, container.querySelector('[data-section="design"]'))).toBe(true);
+    const { container: editor } = open({ onVisitedLookChange: vi.fn(), canManage: false, isOwner: false });
+    expect(editor.querySelector('[data-section="visited"]')).toBeNull();
+  });
+
   it('sets the map’s style for everyone when the viewer can, saying so', () => {
     const onMapStyleChange = vi.fn();
     open({ mapStyle: 'old-map', onMapStyleChange });
@@ -162,5 +176,58 @@ describe('SettingsPanel', () => {
       ['landmarkPins', 'always'],
       ['showMoments', false],
     ]);
+  });
+
+  // 24 Nov 2026, the user's wish: "Americans in miles always", and a choice
+  // 25 Nov 2026, the user's wish: just kilometres or miles, the home's ticked until one's chosen
+  it('chooses kilometres or miles, the map home’s unit ticked to start with', () => {
+    const { onChangeSetting, unmount } = open({ map: { ...MAP, stats: { homeCountryCode: 'FR' } } });
+    expect(screen.getByText('Distances')).toBeTruthy();
+    expect([...document.querySelectorAll('input[name="distanceUnit"]')].map((r) => r.value)).toEqual(['km', 'miles']);
+    expect(screen.getByLabelText('Kilometres').checked).toBe(true);
+    fireEvent.click(screen.getByLabelText('Miles'));
+    expect(onChangeSetting).toHaveBeenCalledWith('distanceUnit', 'miles');
+    unmount();
+    // A home in the UK (or the United States) is in miles until the viewer chooses
+    open({ map: { ...MAP, stats: { homeCountryCode: 'GB' } } });
+    expect(screen.getByLabelText('Miles').checked).toBe(true);
+  });
+
+  it('ticks the unit the viewer chose, whatever the home', () => {
+    open({ map: { ...MAP, stats: { homeCountryCode: 'US' } }, settings: { ...DEFAULT_MAP_SETTINGS, distanceUnit: 'km' } });
+    expect(screen.getByLabelText('Kilometres').checked).toBe(true);
+  });
+
+  // The supporter badge (24 Nov 2026, the user's wish): a paying owner's, on unless turned off
+  describe('the supporter badge', () => {
+    const PAID = { ...MAP, supporter: { plan: 'PREMIUM', name: 'First Class', shown: true } };
+
+    it('shows a paying owner their badge, on, with its switch', () => {
+      const { container, onChangeSetting } = open({ map: PAID });
+      const section = container.querySelector('[data-supporter-settings]');
+      expect(section.querySelector('legend').textContent).toBe('Your supporter badge');
+      // The badge as it looks, not a link here
+      const badge = section.querySelector('[data-supporter-badge]');
+      expect(badge.getAttribute('data-supporter-badge')).toBe('PREMIUM');
+      expect(badge.tagName).toBe('SPAN');
+      expect(badge.textContent).toContain('First Class member');
+      const box = screen.getByLabelText('Show my First Class badge');
+      expect(box.checked).toBe(true);
+      expect(document.getElementById(box.getAttribute('aria-describedby')).textContent).toMatch(/every map you own/);
+      fireEvent.click(box);
+      expect(onChangeSetting).toHaveBeenCalledWith('showSupporterBadge', false);
+    });
+
+    it('shows the switch off once it’s turned off', () => {
+      open({ map: PAID, settings: { ...DEFAULT_MAP_SETTINGS, showSupporterBadge: false } });
+      expect(screen.getByLabelText('Show my First Class badge').checked).toBe(false);
+    });
+
+    it('isn’t there for an owner on Economy, or for anyone but the owner', () => {
+      const { container } = open();
+      expect(container.querySelector('[data-supporter-settings]')).toBeNull();
+      const { container: coOwner } = open({ map: PAID, isOwner: false, canManage: true });
+      expect(coOwner.querySelector('[data-supporter-settings]')).toBeNull();
+    });
   });
 });

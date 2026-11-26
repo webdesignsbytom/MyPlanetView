@@ -12,6 +12,7 @@ import { seedUsers } from './seed/users.js';
 import { seedOwnerAccount } from './seed/owner.js';
 import { seedTravelDemo } from './seed/travel.js';
 import { seedDemoPhotos } from './seed/photos.js';
+import { seedDemoMoments } from './seed/moments.js';
 import { seedContactForms } from './seed/contact.js';
 import { seedExampleOffers } from './seed/offers.js';
 import { seedPlans } from './seed/plans.js';
@@ -45,6 +46,8 @@ async function seed() {
   await seedTravelDemo();
   // The demo photos go into the private bucket (skipped without one)
   await seedDemoPhotos();
+  // The demo couple's timeline, holding those photos, and the trips' covers
+  await seedDemoMoments();
   // The First Class account's sample videos (seed-videos/; skipped where a file is missing)
   await seedDemoVideos();
   await seedContactForms();

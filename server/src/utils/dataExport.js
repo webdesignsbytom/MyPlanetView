@@ -159,6 +159,12 @@ export function exportMapView(rows, { userId }) {
     homeCountryCode: map.homeCountryCode ?? null,
     // The style chosen for it, shown to everyone who opens it (null: the owner's own)
     style: map.style ?? null,
+    // Its passport's cover colour (null: the plan's own)
+    passportColour: map.passportColour ?? null,
+    // How the places been to show, in every style (docs/API.md "The visited look")
+    visitedLook: map.visitedLook ?? 'BADGE',
+    visitedColour: map.visitedColour ?? null,
+    visitedFinish: map.visitedFinish ?? null,
     // Its own designs, one per map style (docs/API.md "Map designs"): a picture for the sea
     // and its colours
     designs: (map.designs ?? []).map((design) => ({
@@ -169,12 +175,15 @@ export function exportMapView(rows, { userId }) {
       gridColour: design.gridColour ?? null,
       hoverColour: design.hoverColour ?? null,
       stringColour: design.stringColour ?? null,
+      stringTwistColour: design.stringTwistColour ?? null,
+      plannedStringColour: design.plannedStringColour ?? null,
+      plannedStringTwistColour: design.plannedStringTwistColour ?? null,
       hasSeaPicture: Boolean(design.pictureId),
     })),
     // Landmarks ticked "been here" (docs/API.md "Collecting")
     landmarksBeenTo: (map.landmarkVisits ?? []).map((v) => ({ landmarkId: v.landmarkId, name: v.landmark?.name ?? null, countryCode: v.landmark?.countryCode ?? null, since: iso(v.createdAt) })),
     // Strings tied between its places (docs/API.md "Strings")
-    strings: (map.strings ?? []).map((s) => ({ from: s.fromCode, to: s.toCode, since: iso(s.createdAt) })),
+    strings: (map.strings ?? []).map((s) => ({ kind: s.kind ?? 'VISITED', from: s.fromCode, to: s.toCode, since: iso(s.createdAt) })),
     // Its flight log and "Guess where I was" games (their players' names aren't the owner's data)
     flights: (map.flights ?? []).map((f) => ({
       from: f.fromAirport,
@@ -187,6 +196,8 @@ export function exportMapView(rows, { userId }) {
       source: f.source,
     })),
     guessGames: (map.guessGames ?? []).map((g) => ({ code: g.code, title: g.title, photoIds: g.photoIds, made: iso(g.createdAt) })),
+    // Slideshows shared by their own link (docs/API.md "Photo slideshows")
+    photoShows: (map.photoShows ?? []).map((s) => ({ code: s.code, title: s.title, photoIds: s.photoIds, seconds: s.seconds, made: iso(s.createdAt) })),
     // Life's One Shots ticked (the item's key names it: utils/constants/oneShots.js)
     oneShots: (map.oneShots ?? []).map((o) => ({
       item: o.itemKey,
@@ -195,7 +206,8 @@ export function exportMapView(rows, { userId }) {
       countryCode: o.countryCode,
       notes: o.notes,
       source: o.source,
-      photoId: o.photoId,
+      // Its photos in order, the first on its card
+      photoIds: (o.photos ?? []).map((p) => p.photoId),
       travellerIds: (o.travellers ?? []).map((t) => t.travellerId),
       ticked: iso(o.createdAt),
     })),
@@ -213,6 +225,11 @@ export function exportMapView(rows, { userId }) {
       favouriteCountryCode: t.favouriteCountryCode ?? null,
       // "YYYY-MM-DD" or null (23 Nov 2026)
       birthDate: t.birthDate ? new Date(t.birthDate).toISOString().slice(0, 10) : null,
+      // Their passport page (25 Nov 2026): the map photo chosen for it, with its crop, and their signature
+      passportPhoto: t.portraitPhotoId
+        ? { photoId: t.portraitPhotoId, focusX: t.portraitFocusX ?? null, focusY: t.portraitFocusY ?? null, zoom: t.portraitZoom ?? null }
+        : null,
+      signature: t.signature ?? null,
       addedAt: iso(t.createdAt),
     })),
     countries: rows.visits.map((v) => ({

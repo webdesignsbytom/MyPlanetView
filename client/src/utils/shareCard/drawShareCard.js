@@ -4,6 +4,9 @@
 // (Instagram's 4:5; WhatsApp and stories show it whole). The places in `highlight` wear
 // their pastel (or the map design's colour), the rest plain land; under the map, up to three
 // big numbers. It never shows a photo, a pin or a name other than the title.
+// A card can ask for its places close up (`mapView: 'fit'`, cardMapView.js; 24 Nov 2026, the
+// user's wish): one country's own map with its states or provinces, or the world cropped round
+// places near each other. The trip card always does; the year's card when its owner chooses.
 import { COUNTRIES, COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { COUNTRY_SHAPES } from '@/utils/map/countryShapes';
 import { UK_NATION_SHAPES } from '@/utils/map/ukNationShapes';
@@ -13,15 +16,22 @@ import { pastelNumberFor } from '@/utils/map/visitStatus';
 import { cleanCountryColours } from '@/utils/map/mapDesign';
 import { SHARE_CARD_COLOURS as C } from '@/utils/constants/brandColours';
 import { DISPLAY_BUSINESS_URL } from '@/utils/constants/constants';
+import { loadCountryMap } from '@/utils/map/countryMapGeo';
+import { MAP_BOTTOM_NO_ANTARCTICA, MAP_BOTTOM_WITH_ANTARCTICA, MAP_TOP, MAP_WIDTH, WORLD_VIEW, cardMapView } from './cardMapView';
 
 export const CARD_WIDTH = 1080;
 export const CARD_HEIGHT = 1350;
 
-// The map's drawing is shared with the map poster (utils/poster/drawMapPoster.js)
-export const MAP_WIDTH = 2000; // the projection's width (utils/map/projection.js)
-export const MAP_TOP = -5; // just above the northernmost land
-export const MAP_BOTTOM_NO_ANTARCTICA = 860;
-export const MAP_BOTTOM_WITH_ANTARCTICA = 1022;
+// The map's drawing is shared with the map poster (utils/poster/drawMapPoster.js); its edges
+// live with the close-up views (cardMapView.js)
+export { MAP_BOTTOM_NO_ANTARCTICA, MAP_BOTTOM_WITH_ANTARCTICA, MAP_TOP, MAP_WIDTH };
+// A close-up map's height on the card, in pixels: at least a world map's, and no more than
+// leaves room for the numbers and a line of names
+const CLOSE_UP_MIN = 380;
+const CLOSE_UP_MAX = 600;
+// A badge's sticker stands taller than a world map's box, so the card has no empty band
+// between it and the numbers
+const BADGE_BOX_HEIGHT = 520;
 
 const SHAPED = COUNTRIES.filter((c) => COUNTRY_SHAPES[c.code]);
 const SHAPED_SPLIT_UK = [...SHAPED.filter((c) => c.code !== 'GB'), ...COUNTRIES.filter((c) => c.kind === 'NATION')];
@@ -104,6 +114,32 @@ export function nameLines(ctx, names, width, maxLines) {
   return lines;
 }
 
+/**
+ * `text` as lines of at most `width` (whole words; a word wider than that on a line of its
+ * own), at most `maxLines`, the last cut short with an ellipsis when the rest doesn't fit.
+ */
+export function textLines(ctx, text, width, maxLines) {
+  const words = String(text || '').split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = '';
+  for (const word of words) {
+    const next = line ? `${line} ${word}` : word;
+    if (!line || ctx.measureText(next).width <= width) {
+      line = next;
+      continue;
+    }
+    lines.push(line);
+    line = word;
+  }
+  if (line) lines.push(line);
+  if (lines.length <= maxLines) return lines;
+  const shown = lines.slice(0, maxLines);
+  let last = `${shown[maxLines - 1]}…`;
+  while (last.includes(' ') && ctx.measureText(last).width > width) last = `${last.slice(0, last.lastIndexOf(' '))}…`;
+  shown[maxLines - 1] = last;
+  return shown;
+}
+
 /** The colour a highlighted place wears: the design's (a region its country's), else its pastel. */
 function fillFor(code, colours) {
   if (colours[code]) return colours[code];
@@ -116,11 +152,13 @@ function fillFor(code, colours) {
 /**
  * The world map in `box` (its height follows the width). `palette` (sea, land, edges, ice,
  * frame) and the line widths and dot radius, in canvas pixels, default to the share card's;
- * the poster draws it bigger in its own colours. -> the map's height in pixels
+ * the poster draws it bigger in its own colours. `view` (`[x, y, width, height]` in map units:
+ * a card's close-up crop) fits that part of the world in the box, whose height then stays as
+ * given, centred, the land round it showing. -> the map's height in pixels
  */
-export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica, palette = C, edgeWidth = 0.8, dotRadius = 5, frameWidth = 3 }) {
+export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica, view = null, palette = C, edgeWidth = 0.8, dotRadius = 5, frameWidth = 3 }) {
   const bottom = withAntarctica ? MAP_BOTTOM_WITH_ANTARCTICA : MAP_BOTTOM_NO_ANTARCTICA;
-  const scale = box.width / MAP_WIDTH;
+  const scale = view ? Math.min(box.width / view[2], box.height / view[3]) : box.width / MAP_WIDTH;
   ctx.save();
   ctx.beginPath();
   ctx.rect(box.x, box.y, box.width, box.height);
@@ -128,7 +166,11 @@ export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica,
   ctx.fillStyle = palette.sea;
   ctx.fillRect(box.x, box.y, box.width, box.height);
 
-  ctx.translate(box.x, box.y - MAP_TOP * scale);
+  if (view) {
+    ctx.translate(box.x + box.width / 2 - (view[0] + view[2] / 2) * scale, box.y + box.height / 2 - (view[1] + view[3] / 2) * scale);
+  } else {
+    ctx.translate(box.x, box.y - MAP_TOP * scale);
+  }
   ctx.scale(scale, scale);
   ctx.lineJoin = 'round';
   ctx.lineWidth = edgeWidth / scale;
@@ -157,8 +199,78 @@ export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica,
   ctx.strokeStyle = palette.brown;
   ctx.lineWidth = frameWidth;
   ctx.strokeRect(box.x, box.y, box.width, box.height);
-  return (bottom - MAP_TOP) * scale;
+  return view ? box.height : (bottom - MAP_TOP) * scale;
 }
+
+// A country map's areas as Path2D objects, made once per map a session
+const countryPathCache = new WeakMap();
+function countryPathsOf(geo) {
+  if (!countryPathCache.has(geo)) countryPathCache.set(geo, geo.areas.map((area) => area.paths.map((d) => new Path2D(d))));
+  return countryPathCache.get(geo);
+}
+
+/**
+ * One country's own map (utils/map/countryMaps/, as a country's own map on the site draws it)
+ * in `box`, its opening view (`geo.view`, the insets with it) fitted in the middle with a
+ * little sea round it: every state or province in its pastel (`colour`, no two neighbours
+ * alike), their borders, and each inset's dashed frame.
+ */
+export function drawCountryMap(ctx, { box, geo, palette = C, edgeWidth = 1.2, frameWidth = 3 }) {
+  const [vx, vy, vw, vh] = geo.view;
+  const scale = Math.min(box.width / (vw * 1.12), box.height / (vh * 1.12));
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(box.x, box.y, box.width, box.height);
+  ctx.clip();
+  ctx.fillStyle = palette.sea;
+  ctx.fillRect(box.x, box.y, box.width, box.height);
+  ctx.translate(box.x + box.width / 2 - (vx + vw / 2) * scale, box.y + box.height / 2 - (vy + vh / 2) * scale);
+  ctx.scale(scale, scale);
+  ctx.lineJoin = 'round';
+
+  // The insets' frames, as a printed atlas has them
+  ctx.strokeStyle = palette.brown;
+  ctx.lineWidth = 2 / scale;
+  ctx.setLineDash([8 / scale, 5 / scale]);
+  for (const frame of geo.frames.slice(1)) {
+    if (frame.box) ctx.strokeRect(frame.box[0], frame.box[1], frame.box[2], frame.box[3]);
+  }
+  ctx.setLineDash([]);
+
+  ctx.lineWidth = edgeWidth / scale;
+  ctx.strokeStyle = palette.landEdge;
+  const paths = countryPathsOf(geo);
+  geo.areas.forEach((area, i) => {
+    ctx.fillStyle = palette.visits[(area.colour || 1) - 1] ?? palette.visits[0];
+    for (const path of paths[i]) {
+      ctx.fill(path);
+      ctx.stroke(path);
+    }
+  });
+  ctx.restore();
+
+  ctx.strokeStyle = palette.brown;
+  ctx.lineWidth = frameWidth;
+  ctx.strokeRect(box.x, box.y, box.width, box.height);
+  return box.height;
+}
+
+/**
+ * The map a card shows (`mapView`: 'world', or 'fit' for its places close up, cardMapView.js),
+ * with a country's own map loaded when that's the close-up: `{ kind, view?, geo? }`. A country
+ * map that can't be loaded (offline) gives the world.
+ */
+async function cardMap(highlight, mapView) {
+  const view = mapView === 'fit' ? cardMapView(highlight) : WORLD_VIEW;
+  if (view.kind !== 'country') return view;
+  try {
+    return { ...view, geo: await loadCountryMap(view.code) };
+  } catch {
+    return WORLD_VIEW;
+  }
+}
+
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
 // A five-pointed star's corners round (cx, cy), the outer ones `r` out
 function starPath(ctx, cx, cy, r) {
@@ -220,14 +332,101 @@ export function drawMedal(ctx, { box, tier }) {
 }
 
 /**
+ * A badge's luggage sticker (25 Nov 2026, the user's wish: share a badge when it's earned),
+ * standing in `box` where a card's map goes, as the badge suitcase shows it (BadgeSticker):
+ * a parchment disc in a double poster-red ring, slapped on at a slight tilt, its icon
+ * (`badge.icon`: iconShape.js's viewBox and paths) and number (`badge.short`) in the deep
+ * red, and the red tick of an earned badge at its top right.
+ */
+export function drawBadgeSticker(ctx, { box, badge }) {
+  const S = C.sticker;
+  const cx = box.x + box.width / 2;
+  const cy = box.y + box.height / 2;
+  const r = Math.min(box.height * 0.44, box.width * 0.34);
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate((-5 * Math.PI) / 180);
+  // The disc, then the double ring: a thick outer band, a gap, a thin inner one
+  ctx.fillStyle = S.face;
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = S.ring;
+  ctx.lineWidth = r * 0.07;
+  ctx.beginPath();
+  ctx.arc(0, 0, r - r * 0.035, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.lineWidth = r * 0.035;
+  ctx.beginPath();
+  ctx.arc(0, 0, r * 0.84, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // The icon, fitted in a square above the middle (in the middle when there's no number)
+  const short = badge?.short ? String(badge.short) : '';
+  const icon = badge?.icon;
+  const side = r * (short ? 0.72 : 0.95);
+  const iconMiddle = short ? -r * 0.18 : 0;
+  if (icon) {
+    const [vx, vy, vw, vh] = icon.viewBox;
+    const scale = side / Math.max(vw, vh);
+    ctx.save();
+    ctx.translate(-(vw * scale) / 2 - vx * scale, iconMiddle - (vh * scale) / 2 - vy * scale);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = S.ink;
+    for (const d of icon.paths) ctx.fill(new Path2D(d));
+    ctx.restore();
+  }
+  if (short) {
+    ctx.fillStyle = S.ink;
+    fittedText(ctx, short, { x: 0, y: r * 0.62, width: r * 1.1, max: Math.round(r * 0.36), min: 20, family: 'TravelFont' });
+  }
+
+  // The tick of an earned badge, on its disc at the top right
+  const tx = r * 0.72;
+  const ty = -r * 0.72;
+  const tr = r * 0.2;
+  ctx.fillStyle = S.tick;
+  ctx.beginPath();
+  ctx.arc(tx, ty, tr, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = S.tickInk;
+  ctx.lineWidth = tr * 0.22;
+  ctx.stroke();
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = tr * 0.26;
+  ctx.beginPath();
+  ctx.moveTo(tx - tr * 0.45, ty + tr * 0.02);
+  ctx.lineTo(tx - tr * 0.1, ty + tr * 0.38);
+  ctx.lineTo(tx + tr * 0.48, ty - tr * 0.36);
+  ctx.stroke();
+  ctx.restore();
+}
+
+/**
  * The card as a PNG blob. `title` (the map's name, or "2026 in travel"), `kicker` (a small
  * line above it), `highlight` (place codes to colour in), `stats` ([{ value, label }], at
  * most three, drawn big under the map), `splitUk` (the UK as its four nations, as the map
  * shows it), `colours` (a map design's country colours, or null). `medal` (bronze, silver or
- * gold: a country collection's card) draws that medal where the map goes.
+ * gold: a country collection's card) draws that medal where the map goes, and `badge`
+ * (`{ icon, short }`: a badge's card) its sticker. `note` (a sentence: what a badge is for) is
+ * drawn under the numbers on a card with no places to name. `mapView`: 'world' (the whole
+ * world), or 'fit' (the places close up: a country's own map, or the world cropped round
+ * them; the world when they're spread far apart).
  */
-export async function drawShareCard({ title, kicker = '', highlight = [], stats = [], splitUk = false, colours = null, medal = null }) {
-  await loadFonts();
+export async function drawShareCard({
+  title,
+  kicker = '',
+  highlight = [],
+  stats = [],
+  splitUk = false,
+  colours = null,
+  medal = null,
+  badge = null,
+  note = '',
+  mapView = 'world',
+}) {
+  const [, shownMap] = await Promise.all([loadFonts(), medal || badge ? WORLD_VIEW : cardMap(highlight, mapView)]);
   const canvas = document.createElement('canvas');
   canvas.width = CARD_WIDTH;
   canvas.height = CARD_HEIGHT;
@@ -258,13 +457,19 @@ export async function drawShareCard({ title, kicker = '', highlight = [], stats 
   ctx.fillStyle = C.title;
   fittedText(ctx, title, { x: middle, y: 214, width: 920, max: 84, min: 44, family: 'TravelFont' });
 
-  // The map, Antarctica only when it's one of the places
+  // The map, Antarctica only when it's one of the places; a close-up as tall as its places'
+  // shape asks, within limits
   const withAntarctica = marked.has('AQ') || marked.has('XS');
   const box = { x: 70, y: 262, width: CARD_WIDTH - 140, height: 0 };
   box.height = ((withAntarctica ? MAP_BOTTOM_WITH_ANTARCTICA : MAP_BOTTOM_NO_ANTARCTICA) - MAP_TOP) * (box.width / MAP_WIDTH);
+  if (shownMap.kind === 'crop') box.height = clamp((box.width * shownMap.view[3]) / shownMap.view[2], CLOSE_UP_MIN, CLOSE_UP_MAX);
+  if (shownMap.kind === 'country') box.height = clamp((box.width * shownMap.geo.view[3]) / shownMap.geo.view[2], CLOSE_UP_MIN, CLOSE_UP_MAX);
+  if (badge) box.height = BADGE_BOX_HEIGHT;
   let mapHeight = box.height;
   if (medal) drawMedal(ctx, { box, tier: medal });
-  else mapHeight = drawMap(ctx, { box, highlight: marked, splitUk, colours: ownColours, withAntarctica });
+  else if (badge) drawBadgeSticker(ctx, { box, badge });
+  else if (shownMap.kind === 'country') mapHeight = drawCountryMap(ctx, { box, geo: shownMap.geo });
+  else mapHeight = drawMap(ctx, { box, highlight: marked, splitUk, colours: ownColours, withAntarctica, view: shownMap.kind === 'crop' ? shownMap.view : null });
 
   // Up to three big numbers, evenly across, then the places' names: together, centred in
   // the room between the map and the foot
@@ -274,7 +479,12 @@ export async function drawShareCard({ title, kicker = '', highlight = [], stats 
   const statsHeight = shown.length ? 190 : 0;
   ctx.font = font(28, 'Poppins', '500');
   const names = namesOf(marked);
-  const lines = names.length ? nameLines(ctx, names, CARD_WIDTH - 180, Math.max(1, Math.floor((roomBottom - roomTop - statsHeight - 20) / 40))) : [];
+  const roomForLines = Math.max(1, Math.floor((roomBottom - roomTop - statsHeight - 20) / 40));
+  const lines = names.length
+    ? nameLines(ctx, names, CARD_WIDTH - 180, roomForLines)
+    : note
+      ? textLines(ctx, note, CARD_WIDTH - 180, Math.min(3, roomForLines))
+      : [];
   const blockHeight = statsHeight + (lines.length ? 20 + lines.length * 40 : 0);
   const blockTop = roomTop + Math.max(0, (roomBottom - roomTop - blockHeight) / 2);
 

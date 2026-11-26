@@ -160,6 +160,31 @@ export function initGA(measurementId) {
   });
 }
 
+// An event's parameters: plain numbers, booleans and short words only, so nothing that says who
+// someone is or where (no ids, names, places, codes or addresses) can be sent by mistake
+const EVENT_TEXT_MAX = 40;
+const cleanEventParams = (params) =>
+  Object.fromEntries(
+    Object.entries(params || {}).filter(
+      ([, value]) => typeof value === 'boolean' || (typeof value === 'number' && Number.isFinite(value)) || (typeof value === 'string' && value.length <= EVENT_TEXT_MAX),
+    ),
+  );
+
+/**
+ * Send an event (utils/analytics/events.js names them; the audit, 26 Nov 2026): only once consent
+ * is given and GA has started (an event from before isn't kept for after), never on a secret page,
+ * with the redacted address trackAddress set as every event's page_location.
+ */
+export function trackEvent(name, params = {}) {
+  if (!started || stopped || isAnalyticsExcluded(window.location.pathname)) return;
+  const clean = cleanEventParams(params);
+  const run = () => {
+    if (typeof window.gtag === 'function') window.gtag('event', name, clean);
+  };
+  if (gaReady) run();
+  else queue.push(run);
+}
+
 /** Queue-safe pageview for the address trackAddress last saw; never for a secret page */
 export function sendPageView() {
   if (stopped || isAnalyticsExcluded(window.location.pathname)) return;

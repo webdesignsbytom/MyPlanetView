@@ -41,6 +41,16 @@ export const DOMAINS = {
   // "Guess where I was" games and the flight log (23 Nov 2026)
   guessGames: 'guessGames',
   flights: 'flights',
+  // Slideshows of chosen photos, shared by their own link (docs/API.md "Photo slideshows")
+  photoShows: 'photoShows',
+  // Vs mode: friends compared on everything (docs/API.md "Vs mode")
+  vs: 'vs',
+  // Feedback sent from the map (docs/API.md "Feedback")
+  feedback: 'feedback',
+  // Postcards sent by a link (docs/API.md "Postcards")
+  postcards: 'postcards',
+  // The two daily jobs' runs (utils/cronRuns.js)
+  cron: 'cron',
 };
 
 export const EVENT_MESSAGES = {
@@ -111,15 +121,21 @@ export const EVENT_MESSAGES = {
   stringInvalid: `Choose two places on the map to tie a string between.`,
   stringSamePlace: `A string needs two different places.`,
   stringNotFound: `That string isn't on this map.`,
-  stringsFull: `This map has as many strings as it can hold (500). Take some off first.`,
+  stringsFull: `This map has as many strings of this kind as it can hold (500). Take some off first.`,
+  stringKindInvalid: `A string is either visited or planned.`,
   // Maps
   mapNotFound: `That map doesn't exist, or it hasn't been shared with you.`,
   defaultMapDelete: `Your first map can't be deleted. You can rename it instead.`,
   invalidGroupType: `Who the map is for must be SOLO, COUPLE or FAMILY.`,
   invalidSplitUk: `splitUk must be true or false.`,
   invalidMapStyle: `Choose one of the map styles.`,
+  invalidPassportColour: `Choose one of the passport's cover colours.`,
+  invalidVisitedLook: `Places you've been show as a badge, a colour, or both, and a metal is gold, silver or bronze.`,
   invalidName: `Give it a name of 1 to 80 characters.`,
   travellerNotFound: `That traveller isn't on this map.`,
+  // A traveller's passport page (docs/API.md "Passport")
+  passportPhotoInvalid: `Choose one of this map's photos (not a video or a hidden one), cropped inside the photo.`,
+  signatureInvalid: `That signature couldn't be saved. Please draw it again.`,
   lastTraveller: `A map needs at least one traveller.`,
   travellerIsCoOwner: `This traveller is a co-owner, or invited as one. Take that away in Share first.`,
   coOwnersNeedTravellers: `Every co-owner is one of the map's travellers, and the owner needs one too.`,
@@ -147,6 +163,19 @@ export const EVENT_MESSAGES = {
   guessPlaceInvalid: `Choose a country on the map.`,
   guessNameInvalid: `Give a name of 1 to 30 characters.`,
   guessNotFinished: `Only a finished game goes on the leaderboard, and only once.`,
+  // Slideshows of chosen photos (docs/API.md "Photo slideshows")
+  showNotFound: `That slideshow isn't there any more. Ask whoever sent it for a new link.`,
+  showPhotosInvalid: `Choose 1 to 500 of this map's photos or videos, none of them hidden.`,
+  showSecondsInvalid: `Each photo stays up for 3, 5 or 8 seconds.`,
+  showTitleInvalid: `Give the slideshow a title of 1 to 80 characters.`,
+  showTooMany: `A map can have 100 slideshows. Delete one to make another.`,
+  // Vs mode (docs/API.md "Vs mode")
+  vsNotFound: `That comparison doesn't exist, or you're not in it.`,
+  vsLinkNotFound: `That link doesn't work. Ask for a new one.`,
+  vsMapInvalid: `Choose one of your maps: one you own or edit.`,
+  vsFull: `That comparison already has 8 people, the most it can have.`,
+  vsPerUserFull: `You're in 30 comparisons, the most at once. Leave one to join another.`,
+  vsStarterLeaves: `You started this comparison, so you can't leave it: delete it instead.`,
   // The flight log (docs/API.md "Flights")
   flightNotFound: `That flight isn't on this map.`,
   flightsInvalid: `Give 1 to 10 flights, each between two different airports (IATA codes such as LHR) on a real day.`,
@@ -154,7 +183,7 @@ export const EVENT_MESSAGES = {
   // Life's One Shots (docs/API.md "Life's One Shots")
   oneShotNotFound: `That isn't one of Life's One Shots.`,
   oneShotInvalid: `Check the tick: a real date, a country on the map, a note of up to 500 characters and the map's own travellers.`,
-  oneShotPhotoInvalid: `The picture must be one of this map's photos.`,
+  oneShotPhotoInvalid: `Choose up to 5 of this map's own photos (not videos).`,
   travellersNotOnMap: `Every traveller must be one of this map's travellers.`,
   stopNotFound: `That stop isn't on this trip.`,
   invalidStopOrder: `Send every stop of the trip exactly once.`,
@@ -313,13 +342,39 @@ export const EVENT_MESSAGES = {
   invalidRecapYear: `Choose a year from 1900 to next year.`,
   // Map designs (docs/API.md "Map designs")
   invalidDesign: `That design can't be saved.`,
-  invalidDesignColour: `Colours must be six-digit colour codes, as a colour picker gives them.`,
+  invalidDesignColour: `Colours must be six-digit colour codes, as a colour picker gives them (the strings' may add two for their opacity).`,
   invalidDesignPlace: `That place isn't on the map, so it can't take a colour.`,
   designPictureType: `The picture must be a JPEG, PNG or WebP image.`,
   designPictureInvalid: `That picture upload isn't valid. Please try again.`,
   designPictureTooLarge: `That picture is too big. Please choose a smaller one.`,
   designPictureExpired: `That upload took too long. Please choose the picture again.`,
   designPictureRemoved: `Picture removed.`,
+  // Feedback (docs/API.md "Feedback")
+  feedbackKindInvalid: `Choose what your message is about.`,
+  feedbackDetailsRequired: `Please tell us a little about it in the first box.`,
+  feedbackTooLong: `That's a bit long. Please shorten it and try again.`,
+  feedbackImpactInvalid: `Choose how much it gets in your way.`,
+  feedbackScreenshotType: `The screenshot must be a JPEG, PNG or WebP picture.`,
+  feedbackScreenshotInvalid: `That screenshot upload isn't valid. Please add it again.`,
+  feedbackScreenshotTooLarge: `That screenshot is too big. Please choose a smaller one.`,
+  feedbackScreenshotExpired: `That screenshot took too long to send. Please add it again.`,
+  feedbackStatusInvalid: `Choose one of the statuses.`,
+  feedbackNotFound: `That report couldn't be found. It may have been deleted.`,
+  feedbackDeleted: `Report deleted.`,
+  // Postcards (docs/API.md "Postcards")
+  postcardKindInvalid: `Choose the picture for the front of your postcard.`,
+  postcardStyleInvalid: `Choose one of the postcard styles.`,
+  postcardMessageRequired: `Write a message on the back of your postcard.`,
+  postcardMessageTooLong: `That message is too long for a postcard: 400 characters at most.`,
+  postcardNameInvalid: `Names on a postcard are 40 characters at most.`,
+  postcardLandmarkInvalid: `Choose one of this place's landmarks.`,
+  postcardNeedsPlan: `Postcards of landmarks and of your own photos come with Business and First Class. A country's postcard is free.`,
+  postcardPictureType: `The photo must be a JPEG, PNG or WebP picture.`,
+  postcardPictureInvalid: `That photo upload isn't valid. Please add it again.`,
+  postcardPictureTooLarge: `That photo is too big. Please choose a smaller one.`,
+  postcardPictureExpired: `That photo took too long to send. Please add it again.`,
+  postcardTooMany: `You have 1,000 postcards, the most at once. Delete some to send more.`,
+  postcardNotFound: `That postcard isn't there any more. Ask whoever sent it for a new link.`,
   // Verification
   verificationTag: `Verification database.`,
   verificationNotFound: `Failed to find verification.`,

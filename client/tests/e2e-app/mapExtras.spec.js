@@ -83,8 +83,21 @@ test('Black and white turns the page grey, stays after a reload, and the World m
       return getComputedStyle(box).filter;
     });
   await expect.poll(toolbarFilter).toBe('grayscale(1)');
+  // The panels are grey through the tokens, unfiltered, so the map style picker's pictures of
+  // the other styles keep their colours (25 Nov 2026, the user's wish); Black and white's own is grey
+  await expect(page.locator('[data-map-panels]')).toHaveCSS('filter', 'none');
+  for (const style of ['animated', 'old-map', 'starry']) {
+    await expect(settings.locator(`label[data-map-style="${style}"] img`)).toHaveCSS('filter', 'none');
+  }
+  await expect(settings.locator('label[data-map-style="mono"] img')).toHaveCSS('filter', 'grayscale(1)');
 
   await settings.getByRole('button', { name: /^Close/ }).first().click();
+  // Any other picture in a panel is still grey: a country's poster on its ticket
+  const list = await openTool(page, 'Country list', 'Countries');
+  await list.getByRole('button', { name: 'France', exact: true }).click();
+  const poster = page.getByRole('dialog', { name: 'France' }).locator('img').first();
+  await expect(poster).toHaveCSS('filter', 'grayscale(1)');
+  await page.keyboard.press('Escape');
   await page.reload();
   await expect(worldMap(page)).toBeVisible();
   await expect(html).toHaveAttribute('data-mono', '');
@@ -93,6 +106,59 @@ test('Black and white turns the page grey, stays after a reload, and the World m
   await again.getByText('World map', { exact: true }).click();
   await expect(html).not.toHaveAttribute('data-mono', /.*/);
   await expect(page.locator('[data-map-style]:has(#main-content)')).toHaveAttribute('data-map-style', 'animated');
+});
+
+// 25 Nov 2026, the user's wish and artwork: a fifth style, the World map's countries on an
+// engraving of swirling waves
+test('the Engraved ocean draws the World map’s countries on its waves, and stays after a reload', async ({ page }) => {
+  await openMap(page);
+  const frame = page.locator('[data-map-style]:has(#main-content)');
+  const settings = await openTool(page, 'Map settings', 'Settings');
+  await expect(settings.locator('label[data-map-style]')).toHaveCount(5);
+  await settings.getByText('Engraved ocean', { exact: true }).click();
+  await expect(settings.getByRole('radio', { name: 'Engraved ocean' })).toBeChecked();
+  await expect(frame).toHaveAttribute('data-map-style', 'engraved');
+  await settings.getByRole('button', { name: /^Close/ }).first().click();
+
+  const waves = frame.locator('picture img').first();
+  await expect.poll(() => waves.evaluate((img) => img.complete && img.currentSrc)).toContain('engraved-ocean');
+  // The countries keep the World map's colours; the paperwork keeps its own
+  const tokens = () =>
+    frame.evaluate((el) => ['--map-land', '--map-visit-1', '--map-visit-7', '--map-land-edge'].map((name) => getComputedStyle(el).getPropertyValue(name).trim()));
+  expect(await tokens()).toEqual(['#f4f1e8', '#f0f038', '#da92be', '#b91c1c']);
+  await expect(page.locator('html')).not.toHaveAttribute('data-mono', /.*/);
+
+  await page.reload();
+  await expect(worldMap(page)).toBeVisible();
+  await expect(frame).toHaveAttribute('data-map-style', 'engraved');
+});
+
+// 25 Nov 2026, the user's wish: Settings turns the map key off. Phones show no key, so no switch
+test('the map key can be switched off in the map settings; phones have neither', { tag: '@phone' }, async ({ page }) => {
+  await openMap(page);
+  const key = page.getByRole('list', { name: 'Map key' });
+  const settings = await openTool(page, 'Map settings', 'Settings');
+  const keySwitch = settings.getByRole('switch', { name: 'Map key' });
+  if (page.viewportSize().width < 768) {
+    await expect(key).toBeHidden();
+    await expect(keySwitch).toBeHidden();
+    return;
+  }
+  await expect(keySwitch).toBeChecked();
+  // The switch is drawn over its input: press its name
+  await settings.getByText('Map key', { exact: true }).click();
+  await expect(keySwitch).not.toBeChecked();
+  await settings.getByRole('button', { name: /^Close/ }).first().click();
+  await expect(worldMap(page)).toBeVisible();
+  await expect(key).toHaveCount(0);
+  await page.reload();
+  await expect(worldMap(page)).toBeVisible();
+  await expect(key).toHaveCount(0);
+
+  const again = await openTool(page, 'Map settings', 'Settings');
+  await again.getByText('Map key', { exact: true }).click();
+  await again.getByRole('button', { name: /^Close/ }).first().click();
+  await expect(key).toBeVisible();
 });
 
 test('the country list runs A to Z under index letters, and its stamp jumps to the special places', { tag: '@phone' }, async ({ page }) => {
@@ -168,4 +234,23 @@ test('the uploader’s “Upgrade to First Class” opens the plan on the accoun
   const heading = page.getByRole('heading', { name: 'Your plan', exact: true });
   await expect(heading).toBeInViewport();
   await expect(page.getByRole('region', { name: 'Your plan' }).getByRole('button', { name: 'Upgrade to First Class' })).toBeVisible();
+});
+
+// 26 Nov 2026, the audit: Settings' style and type cards loaded each style's 800 to 949 pixel
+// picture for a card 64 pixels tall; they load the strips cut for them (style-previews.mjs)
+test('Settings’ style and type cards load small strips, never the styles’ full pictures', { tag: '@phone' }, async ({ page }) => {
+  const loaded = [];
+  // Pictures only: on the dev server the image manifest's own `?url` module requests name every file
+  page.on('request', (request) => {
+    if (request.resourceType() === 'image' && /\/map-styles\//.test(request.url())) loaded.push(request.url().split('/').pop().split('?')[0]);
+  });
+  await openMap(page);
+  const settings = await openTool(page, 'Map settings', 'Settings');
+  for (const name of ['World map', 'Old map', 'Starry night', 'Engraved ocean', 'Regular', 'Detailed']) {
+    const card = settings.locator('label:has(picture)').filter({ hasText: name }).first();
+    await card.scrollIntoViewIfNeeded();
+    await expect.poll(() => card.locator('img').evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
+  }
+  expect(loaded.length).toBeGreaterThan(0);
+  for (const file of loaded) expect(file).toMatch(/^preview-[a-z-]+-(320|640)\.(avif|webp)$/);
 });

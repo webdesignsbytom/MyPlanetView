@@ -6,14 +6,41 @@
 // the names, the grid and the country under the pointer.
 import { REGION_PARENT } from './regionPlaces';
 import { REGION_PLACES, SPECIAL_PLACES, countriesOnMap } from './countries';
-import { isPole } from './specialPlaces';
+import { POLE_CODES, isPole } from './specialPlaces';
 import { pastelNumberFor } from './visitStatus';
+import foilBronze from '@/assets/map/foil-bronze.webp';
+import foilGold from '@/assets/map/foil-gold.webp';
+import foilSilver from '@/assets/map/foil-silver.webp';
 
 const MB = 1024 * 1024;
 
 /** A colour as the server keeps it: "#rrggbb", lower case. */
 export const DESIGN_COLOUR = /^#[0-9a-f]{6}$/;
+/** The strings' colour may be see-through (25 Nov 2026, the user's wish): "#rrggbbaa" too. */
+export const DESIGN_COLOUR_ALPHA = /^#[0-9a-f]{6}([0-9a-f]{2})?$/;
 const PLACE_CODE = /^[A-Z]{2}$/;
+
+/** "#rrggbb" from three channel values (0 to 255). */
+const toHex = (channels) => `#${channels.map((n) => Math.round(Math.min(255, Math.max(0, n))).toString(16).padStart(2, '0')).join('')}`;
+
+/**
+ * A colour as a picker shows it: `{ hex: "#rrggbb", opacity }`, the opacity a whole percent
+ * (100 when the colour has none). A browser's colour picker takes no opacity, so a slider
+ * beside it sets that (DesignColourField).
+ */
+export function splitOpacity(colour) {
+  // Never met (the usual colour is read from the tokens), but a picker needs a colour
+  if (typeof colour !== 'string' || !DESIGN_COLOUR_ALPHA.test(colour)) return { hex: toHex([0, 0, 0]), opacity: 100 };
+  const hex = colour.slice(0, 7);
+  return { hex, opacity: colour.length === 9 ? Math.round((parseInt(colour.slice(7), 16) * 100) / 255) : 100 };
+}
+
+/** "#rrggbb" with an opacity (a percent): "#rrggbbaa", or "#rrggbb" when it's fully opaque. */
+export function withOpacity(hex, opacity) {
+  const percent = Math.min(100, Math.max(0, Math.round(opacity)));
+  if (percent === 100) return hex;
+  return `${hex}${Math.round((percent * 255) / 100).toString(16).padStart(2, '0')}`;
+}
 
 // The sea's picture: made in the browser from the chosen file, at most this wide or tall
 // (the map fills the screen), as WebP (JPEG where the browser can't write WebP)
@@ -33,7 +60,142 @@ export const designFor = (map, styleId) => map?.designs?.[styleId] ?? null;
 export const shownDesign = (design) => (design?.shown ? design : null);
 
 /** A design with nothing in it yet, as the editor starts one. */
-export const EMPTY_DESIGN = Object.freeze({ shown: true, countries: {}, names: null, grid: null, hover: null, string: null, picture: null });
+export const EMPTY_DESIGN = Object.freeze({
+  shown: true,
+  countries: {},
+  names: null,
+  grid: null,
+  hover: null,
+  string: null,
+  stringTwist: null,
+  plannedString: null,
+  plannedStringTwist: null,
+  picture: null,
+});
+
+/**
+ * How the places visited or lived in show (25 Nov 2026, the user's wish), as the server's
+ * VISITED_LOOKS: their badge (as always), the map's visited colour, or both. The map's own, in
+ * every map style (the same day, the user: it showed only in the style whose design set it):
+ * the map reply's visitedLook, visitedColour and visitedFinish (docs/API.md "The visited look").
+ */
+export const VISITED_LOOKS = Object.freeze([
+  { id: 'BADGE', label: 'A badge' },
+  { id: 'COLOUR', label: 'A colour' },
+  { id: 'BOTH', label: 'A colour and a badge' },
+]);
+export const VISITED_LOOK_IDS = VISITED_LOOKS.map((look) => look.id);
+
+/** A map's (or Settings' change's) visited look: BADGE for none, or anything unknown. */
+export const visitedLookOf = (visited) => (VISITED_LOOK_IDS.includes(visited?.visitedLook) ? visited.visitedLook : 'BADGE');
+
+/**
+ * The metallic finishes the places been to can take in place of a colour (25 Nov 2026, the user's
+ * wish: "shiny colours like gold and silver"), as the server's VISITED_FINISHES. Real metal, not a
+ * gradient (the same day, the user: "you just used a diagonal gradient"): each is a picture of
+ * polished metal the size of the map, flowing bands of light and dark through the metal's ramp
+ * (`texture`, made by images/src/tools/foil-textures.mjs), under the countries and cut to the
+ * places been to (VisitedFoil), its medal token (`colour`) there until the picture loads; their
+ * edges lit as raised metal once the map is still (FoilEdgeFilter, FOIL_EDGE_ID). The buttons and
+ * the map key show the same picture.
+ */
+export const VISITED_FINISHES = Object.freeze([
+  { id: 'GOLD', label: 'Gold', texture: foilGold, colour: '--medal-gold' },
+  { id: 'SILVER', label: 'Silver', texture: foilSilver, colour: '--medal-silver' },
+  { id: 'BRONZE', label: 'Bronze', texture: foilBronze, colour: '--medal-bronze' },
+]);
+
+/** The lit edge's filter, in the world map (components/map/FoilEdgeFilter.jsx). */
+export const FOIL_EDGE_ID = 'mpv-foil-edge';
+
+/** A map's metallic finish (one of VISITED_FINISHES), or null for its plain colour. */
+export const visitedFinishOf = (visited) => VISITED_FINISHES.find((finish) => finish.id === visited?.visitedFinish) ?? null;
+
+/** A map's visited look, only what's well formed: `{ visitedLook, visitedColour, visitedFinish }`. */
+export const visitedLookFrom = (map) => ({
+  visitedLook: visitedLookOf(map),
+  visitedColour: typeof map?.visitedColour === 'string' && DESIGN_COLOUR.test(map.visitedColour) ? map.visitedColour : null,
+  visitedFinish: visitedFinishOf(map)?.id ?? null,
+});
+
+// The places the visited colour fills: every place been to (CountryShape and MicroStateDot carry
+// data-been) but the poles, whose compass roses are never filled. More particular than a place's
+// own colour's rule, so it wins over it, and never on the place under the pointer (its hover
+// colour stays), nor on the borders: a fill alone. Under [data-map-page], the map page's own
+// wrapper (MapExperience, the embed page), whatever its style, never Settings' pictures of the
+// styles, which carry data-map-style too.
+const beenTo = (svg) => `[data-map-page] ${svg} [data-been="true"]${POLE_CODES.map((code) => `:not([data-code="${code}"])`).join('')}:not(:hover)`;
+const VISITED_FILL = beenTo('svg');
+// The same on a map with a metallic finish's sheet of metal under its places (VisitedFoil): more
+// particular, so they're see-through there and the metal shows
+const VISITED_OVER_FOIL = beenTo('svg:has([data-visited-foil])');
+
+/**
+ * The map's visited look as a style sheet (25 Nov 2026, the user's wish: "all the countries I have
+ * visited or lived in turn the colour I selected", over a colour of their own, in every map style):
+ * with a colour, every place been to filled with `--map-visited` (the map's `visitedColour`, else
+ * the map style's own); with the colour alone, their badges hidden, the poles' stamps kept
+ * (VisitBadges marks which). A metallic finish shows its sheet of metal through them instead
+ * (VisitedFoil; on a map without one, the metal's flat colour), lights its edges while the map is
+ * still (a lit edge on every frame of a pan doubled its cost: useMapViewport's data-moving), and
+ * puts the same metal on the map key's swatch. Nothing while they show as badges.
+ */
+export function visitedCss(visited) {
+  const look = visitedLookOf(visited);
+  if (look === 'BADGE') return '';
+  const { visitedColour } = visitedLookFrom(visited);
+  const finish = visitedFinishOf(visited);
+  return [
+    visitedColour ? `[data-map-page]{--map-visited:${visitedColour}}` : '',
+    `${VISITED_FILL}{fill:${finish ? `var(${finish.colour})` : 'var(--map-visited)'}}`,
+    ...(look === 'COLOUR' ? ['[data-map-page] svg [data-visit-badge="fill"]{display:none}'] : []),
+    ...(finish
+      ? [
+          `${VISITED_OVER_FOIL}{fill:transparent}`,
+          `[data-map-page] svg:not([data-moving]) [data-visited-foil]{filter:url(#${FOIL_EDGE_ID})}`,
+          `[data-map-page] [data-key-visited-colour] [aria-hidden]{background:url("${finish.texture}") center/cover}`,
+        ]
+      : []),
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
+// A twined string's width on screen (MapStrings): wide enough for the twist to show; a
+// string of one colour is 1.8px (4 and 2 until 25 Nov 2026, the user's wish: 10% thinner)
+export const TWINED_STRING_PX = 3.6;
+
+/**
+ * Each kind of string's design fields and tokens (25 Nov 2026, the user's wish: the planned
+ * strings in their own colours): the colour, the second colour twisted in, and the tokens'
+ * prefix (MapStrings reads `<prefix>`, `-2`, `-width`, `-alpha` and `-twist`).
+ */
+export const STRING_DESIGNS = Object.freeze({
+  VISITED: { colour: 'string', twist: 'stringTwist', tokens: '--map-string' },
+  PLANNED: { colour: 'plannedString', twist: 'plannedStringTwist', tokens: '--map-plan-string' },
+});
+
+/**
+ * A kind of string's tokens for a design: `--map-string` (one colour, see-through or not); with
+ * a second colour twisted in (`stringTwist`, 25 Nov 2026, the user's wish), the twine's: its
+ * first colour opaque, its opacity apart (`--map-string-alpha`, on each string as a whole, so
+ * the two colours never show through each other), the second colour, its width, and the
+ * twist's strands shown (`--map-string-twist`; MapStrings draws them always, hidden unless
+ * this says so, so ticking the box shows the twine at once). The planned strings' are the same
+ * under `--map-plan-string`.
+ */
+function stringVars(design, { colour, twist: twistField, tokens }) {
+  const string = typeof design[colour] === 'string' && DESIGN_COLOUR_ALPHA.test(design[colour]) ? design[colour] : null;
+  const twist = typeof design[twistField] === 'string' && DESIGN_COLOUR.test(design[twistField]) ? design[twistField] : null;
+  if (!twist) return string ? [`${tokens}:${string}`] : [];
+  const vars = [];
+  if (string) {
+    vars.push(`${tokens}:${string.slice(0, 7)}`);
+    if (string.length === 9) vars.push(`${tokens}-alpha:${Math.round((parseInt(string.slice(7), 16) / 255) * 1000) / 1000}`);
+  }
+  vars.push(`${tokens}-2:${twist}`, `${tokens}-width:${TWINED_STRING_PX}px`, `${tokens}-twist:inline`);
+  return vars;
+}
 
 /** Only well-formed colours: they go into a style sheet, so nothing else is let through. */
 export function cleanCountryColours(countries) {
@@ -61,7 +223,7 @@ export function designCss(design) {
   if (typeof design.names === 'string' && DESIGN_COLOUR.test(design.names)) vars.push(`--map-names:${design.names}`);
   if (typeof design.grid === 'string' && DESIGN_COLOUR.test(design.grid)) vars.push(`--map-grid:${design.grid}`);
   if (typeof design.hover === 'string' && DESIGN_COLOUR.test(design.hover)) vars.push(`--map-hover:${design.hover}`);
-  if (typeof design.string === 'string' && DESIGN_COLOUR.test(design.string)) vars.push(`--map-string:${design.string}`);
+  vars.push(...stringVars(design, STRING_DESIGNS.VISITED), ...stringVars(design, STRING_DESIGNS.PLANNED));
   const colours = cleanCountryColours(design.countries);
   for (const [region, parent] of Object.entries(REGION_PARENT)) {
     if (!colours[region] && colours[parent]) colours[region] = colours[parent];
@@ -86,9 +248,6 @@ export const colourablePlaces = (splitUk) => [
 
 /** The CSS token of the colour a place wears on the map (Antarctica is ice). */
 export const usualColourToken = (code) => (code === 'AQ' ? '--map-ice' : `--map-visit-${pastelNumberFor(code)}`);
-
-/** "#rrggbb" from three channel values (0 to 255). */
-const toHex = (channels) => `#${channels.map((n) => Math.round(Math.min(255, Math.max(0, n))).toString(16).padStart(2, '0')).join('')}`;
 
 /**
  * A colour token's value as "#rrggbb" (a colour picker takes nothing else), read where

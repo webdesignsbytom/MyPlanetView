@@ -1,0 +1,4 @@
+# The .blend files render() saves are working copies, rebuilt by each model's script: kept
+# locally, never committed (the user's decision, 26 Nov 2026).
+*.blend
+*.blend1

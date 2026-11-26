@@ -7,7 +7,7 @@ import { airportByCode } from '../../../../../server/src/utils/flights.js';
 import { AIRPORT_DATA } from '@/utils/flights/airportData';
 import { airportFrom } from '@/utils/flights/airports';
 
-const T1 = '11111111-1111-4111-8111-111111111111';
+const [T1, T2, T3, T4, T5, T6] = [1, 2, 3, 4, 5, 6].map((n) => `${String(n).repeat(8)}-1111-4111-8111-111111111111`);
 
 describe('parseOneShotInput', () => {
   it('answers as the server does', () => {
@@ -15,6 +15,12 @@ describe('parseOneShotInput', () => {
       ['lion', {}],
       ['lion', { seenOn: '2024-03', countryCode: 'KE', photoId: T1, notes: '  At dawn ', travellerIds: [T1] }],
       ['lion', { seenOn: null, countryCode: '', photoId: null, notes: '' }],
+      ['lion', { photoIds: [T1, T2] }],
+      ['lion', { photoIds: [T1, T1] }],
+      ['lion', { photoIds: [T1, T2, T3, T4, T5, T6] }],
+      ['lion', { photoIds: T1 }],
+      ['lion', { photoId: T1, photoIds: [] }],
+      ['lion', { photoId: 'not an id' }],
       ['lion', { seenOn: '2024-02-31' }],
       ['lion', { countryCode: 'kenya' }],
       ['lion', { notes: 5 }],
@@ -30,7 +36,8 @@ describe('parseOneShotInput', () => {
   });
 
   it('takes the mock’s own ids for photos and travellers', () => {
-    expect(client.parseOneShotInput('lion', { photoId: 'photo-eiffel', travellerIds: ['trav-test'] }).ok).toBe(true);
+    expect(client.parseOneShotInput('lion', { photoIds: ['photo-eiffel'], travellerIds: ['trav-test'] }).ok).toBe(true);
+    expect(client.ONE_SHOT_PHOTOS_MAX).toBe(server.ONE_SHOT_PHOTOS_MAX);
   });
 });
 

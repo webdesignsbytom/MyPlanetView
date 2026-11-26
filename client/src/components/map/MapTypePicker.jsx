@@ -1,13 +1,8 @@
 import React from 'react';
-// Media
-import { getImageSets } from '@/lib/media/imageManifest';
+// Components
+import StylePreviewImage from './StylePreviewImage';
 // Utils
 import { MAP_TYPES } from '@/utils/map/mapTypes';
-
-const previewUrl = (name) => {
-  const sets = getImageSets(name, { dir: '/src/assets/images/map-styles' });
-  return sets.pick('avif', 949) || sets.pick('webp', 949) || sets.pick('jpg', 949);
-};
 
 const DESCRIPTIONS = {
   regular: 'Names and lines as you set them',
@@ -36,7 +31,7 @@ function MapTypePicker({ value, onChange }) {
               onChange={() => onChange(type.id)}
               className='sr-only'
             />
-            <img src={previewUrl(type.preview)} alt='' className='h-16 w-full object-cover' loading='lazy' />
+            <StylePreviewImage name={type.preview} />
 
             <span className='grid gap-0.5 px-2 pb-1.5'>
               <span className='font-travel text-base uppercase tracking-wide'>{type.label}</span>

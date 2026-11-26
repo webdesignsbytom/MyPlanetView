@@ -1,7 +1,7 @@
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render } from '@testing-library/react';
-import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
+import useMapViewport, { MOVING_MS, useViewportZoom } from '@/hooks/useMapViewport';
 import { MAP_WIDTH, REFERENCE_PX_PER_UNIT, mapExtent } from '@/utils/map/projection';
 
 const FULL = mapExtent(true); // -16.6 to 1020.6
@@ -233,6 +233,25 @@ describe('useMapViewport: panning', () => {
     expect(onView).toHaveBeenCalledTimes(2);
     expect(onZoom).toHaveBeenCalledTimes(1);
     expect(svg().getAttribute('viewBox')).toBe(`${view().x} ${view().y} ${view().w} ${view().h}`);
+  });
+
+  // What's too costly for every frame of a pan waits for the map to be still (25 Nov 2026: a
+  // metallic finish's lit edges)
+  it('marks the map as moving while its view changes, until it has been still for a moment', async () => {
+    render(<Map />);
+    await new Promise((resolve) => setTimeout(resolve, MOVING_MS + 50));
+    expect(svg().hasAttribute('data-moving')).toBe(false);
+    act(() => viewport.zoomIn());
+    await settle();
+    expect(svg().getAttribute('data-moving')).toBe('');
+    // Another move before it's still keeps it moving
+    await new Promise((resolve) => setTimeout(resolve, MOVING_MS / 2));
+    act(() => viewport.handlers.onKeyDown({ key: 'ArrowRight', preventDefault() {} }));
+    await settle();
+    await new Promise((resolve) => setTimeout(resolve, MOVING_MS / 2 + 20));
+    expect(svg().hasAttribute('data-moving')).toBe(true);
+    await act(() => new Promise((resolve) => setTimeout(resolve, MOVING_MS)));
+    expect(svg().hasAttribute('data-moving')).toBe(false);
   });
 });
 

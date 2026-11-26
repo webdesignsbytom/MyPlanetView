@@ -32,6 +32,18 @@ export const extraMapSentence = (billing) =>
 /** A change-plan or extra-maps answer: the new billing state, else null (a URL to go to instead). */
 export const billingFrom = (answer) => answer?.billing ?? null;
 
+// The words on a Pricing card's button. Signed out, each starts a map; signed in, each
+// goes to the account page: the plan the account is on says "Your plan", one below it
+// "Move to …", the rest "Choose …" (and every card "Choose …" until the plan is known).
+export function planCardLabel({ planId, signedIn, currentPlan = null }) {
+  const plan = planOf(planId);
+  const free = plan.price.MONTH === 0;
+  if (!signedIn) return free ? 'Start your map' : `Start with ${plan.name}`;
+  if (!currentPlan) return `Choose ${plan.name}`;
+  if (planOf(currentPlan).id === plan.id) return 'Your plan';
+  return plan.rank < planOf(currentPlan).rank ? `Move to ${plan.name}` : `Choose ${plan.name}`;
+}
+
 /** Off to Stripe (Checkout or the portal), or, in mock mode, straight back to the account page. */
 export function goToUrl(url) {
   window.location.assign(url);

@@ -97,6 +97,7 @@ describe('buildMapStats', () => {
       byTraveller: [],
       // The travel extras (tests/travelStats.test.js): nothing to count yet
       countriesInWorld: null,
+      unCountries: 0,
       homeCountryCode: null,
       daysAway: 0,
       daysByYear: [],
@@ -111,6 +112,16 @@ describe('buildMapStats', () => {
     const worldTotals = { whole: 226, splitUk: 229 };
     expect(buildMapStats({ worldTotals }).countriesInWorld).toBe(226);
     expect(buildMapStats({ worldTotals, splitUk: true }).countriesInWorld).toBe(229);
+  });
+
+  // Collector's counts (24 Nov 2026): the UN's 193 (tests/unMembers.test.js has the rules)
+  it('counts the UN member states been to, apart from the map’s own count', () => {
+    const visits = ['FR', 'GL', 'TW', 'IC', 'XE', 'XC', 'AQ'].map((countryCode) => ({ countryCode, status: 'VISITED' }));
+    visits.push({ countryCode: 'JP', status: 'WANT_TO_GO' }, { countryCode: 'DE', status: 'LIVED' });
+    const stats = buildMapStats({ visits, splitUk: true });
+    // France, Spain (the Canaries), the UK (its nations) and Germany; never a wish
+    expect(stats.unCountries).toBe(4);
+    expect(stats.countries).toBe(7);
   });
 });
 

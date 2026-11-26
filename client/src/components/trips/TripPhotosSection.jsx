@@ -11,6 +11,7 @@ import PhotoGrid from '@/components/photos/PhotoGrid';
 import PhotoViewer from '@/components/photos/PhotoViewer';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import PrintDownload from '@/components/photos/PrintDownload';
+import ShareShow from '@/components/shows/ShareShow';
 import Modal from '@/components/common/Modal';
 import Button from '@/components/common/Button';
 import PaperCard from '@/components/common/PaperCard';
@@ -55,6 +56,9 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
   const uploadRules = trip.uploadRules || null;
   const isOwner = trip.role === 'OWNER';
   const canDownload = (canEdit || locked) && !shareCode && photos.photos.length > 0;
+  // Some of its photos as a slideshow with its own link (25 Nov 2026; docs/API.md "Photo
+  // slideshows"): the map's editors (`canDelete`: an editor role on the map, or owning it)
+  const canShareShow = canEdit && Boolean(trip.canDelete) && !shareCode && photos.photos.length > 0;
 
   return (
     <PaperCard title='Photos' titleId='trip-photos-heading' action={play}>
@@ -65,7 +69,12 @@ function TripPhotosSection({ trip, canEdit, locked = false, shareCode }) {
           <Button onClick={() => setUploading(true)}>Add photos</Button>
         </div>
       ) : null}
-      {canDownload ? <PrintDownload scope={{ tripId: trip.id }} title={trip.title} /> : null}
+      {canDownload || canShareShow ? (
+        <div className='grid justify-start gap-2 sm:grid-flow-col'>
+          {canDownload ? <PrintDownload scope={{ tripId: trip.id }} title={trip.title} /> : null}
+          {canShareShow ? <ShareShow mapId={trip.mapId} source={source} defaultTitle={trip.title} /> : null}
+        </div>
+      ) : null}
       <PhotoGrid
         photos={photos.photos}
         loading={photos.loading}

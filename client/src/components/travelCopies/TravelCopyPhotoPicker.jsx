@@ -53,7 +53,7 @@ function TravelCopyPhotoPicker({ mapId, chosenIds, onChange }) {
                       {photo.thumbUrl ? <img src={photo.thumbUrl} alt='' loading='lazy' draggable={false} className='h-full w-full object-cover' /> : null}
                       <span className='sr-only'>{photoLabel(photo)}</span>
                       {on ? (
-                        <span className='absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full border-2 border-poster-cream bg-poster-red text-xs text-poster-cream'>
+                        <span className='absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full border-2 border-poster-cream bg-poster-red-strong text-xs text-poster-cream'>
                           <FaCheck aria-hidden='true' />
                         </span>
                       ) : null}

@@ -28,6 +28,11 @@ describe('ChallengesPage', () => {
     expect(document.querySelector('[data-card="create"]').getAttribute('data-locked')).toBe('false');
   });
 
+  it('points to Vs mode, for everything compared at once', () => {
+    renderPage(<ChallengesPage />, { path: CHALLENGES_PAGE_URL, auth: signedIn() });
+    expect(document.querySelector('main a[href="/vs"]').textContent).toBe('Open Vs mode');
+  });
+
   it('locks starting one until the email address is verified', () => {
     renderPage(<ChallengesPage />, { path: CHALLENGES_PAGE_URL, auth: signedIn({ emailVerified: false }) });
     expect(document.querySelector('[data-card="create"]').getAttribute('data-locked')).toBe('true');

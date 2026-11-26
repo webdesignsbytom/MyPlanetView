@@ -1,0 +1,8 @@
+{
+  "name": "Rijksmuseum",
+  "latitude": 52.36,
+  "longitude": 4.88528,
+  "maps": ["NL"],
+  "landmark": "Q190804",
+  "onMap": false
+}

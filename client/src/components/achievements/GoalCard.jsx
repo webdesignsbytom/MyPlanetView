@@ -45,7 +45,7 @@ function GoalCard({ goal, onEdit, onDelete }) {
             {goalName(goal)}
           </h4>
           {state === 'reached' ? (
-            <span className='-rotate-6 border-2 border-double border-poster-red px-1.5 font-travel text-xs uppercase tracking-wide text-poster-red'>
+            <span className='-rotate-6 border-2 border-double border-poster-red-deep px-1.5 font-travel text-xs uppercase tracking-wide text-poster-red-deep'>
               Reached
             </span>
           ) : state === 'missed' ? (

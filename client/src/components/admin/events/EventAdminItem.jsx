@@ -14,7 +14,7 @@ const LEVEL_BADGES = {
 const STATUS_BADGES = {
   OPEN: 'tone-warn',
   ACKNOWLEDGED: 'bg-colour6/15 text-colour6',
-  RESOLVED: 'bg-status-good/20 text-status-good',
+  RESOLVED: 'tone-good',
   IGNORED: 'tone-muted',
 };
 

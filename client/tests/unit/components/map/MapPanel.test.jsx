@@ -29,7 +29,7 @@ describe('MapPanel', () => {
     expect(onClose).toHaveBeenCalledTimes(2);
   });
 
-  it('is 28.5rem wide, Settings 37.5rem and the photo album 80% of a large screen', () => {
+  it('is 28.5rem wide, Settings 37.5rem and the photo album 76% of a large screen', () => {
     const width = (props) => {
       const { unmount } = render(<MapPanel title='X' onClose={() => {}} {...props} />);
       const cls = document.querySelector('[data-map-panel]').getAttribute('class');
@@ -38,7 +38,7 @@ describe('MapPanel', () => {
     };
     expect(width({})).toContain('nophone:w-[28.5rem]');
     expect(width({ roomy: true })).toContain('nophone:w-[37.5rem]');
-    expect(width({ wide: true })).toContain('lg:w-[80vw]');
+    expect(width({ wide: true })).toContain('lg:w-[76vw]');
   });
 
   it('puts a footer under a perforation, and stretches one child with `fill`', () => {

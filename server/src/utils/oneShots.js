@@ -9,6 +9,8 @@ import { sanitizeText } from './sanitize.js';
 
 export const ONE_SHOT_NOTES_MAX = 500;
 export const ONE_SHOT_TRAVELLERS_MAX = 20;
+// Photos of you with it, the first on its card (26 Nov 2026, the user's wish)
+export const ONE_SHOT_PHOTOS_MAX = 5;
 export const ONE_SHOT_SOURCES = Object.freeze(['MANUAL', 'FLIGHT']);
 
 // The polar circles' latitude (2024; it drifts a little each year)
@@ -17,10 +19,12 @@ export const POLAR_CIRCLE_LATITUDE = 66.5634;
 /**
  * A tick's fields from a request body, each optional (left out: kept as it is; null or "":
  * cleared): `seenOn` with `datePrecision` (as a moment's date: "2024", "2024-03" or
- * "2024-03-12", the precision what's written unless given), `countryCode`, `photoId`,
+ * "2024-03-12", the precision what's written unless given), `countryCode`, `photoIds`
+ * (distinct ids in order, the first on its card, at most ONE_SHOT_PHOTOS_MAX; the older
+ * `photoId`, one id or null, is read as a list of one or none when `photoIds` isn't sent),
  * `notes` (cleaned, cut to ONE_SHOT_NOTES_MAX), `travellerIds` (distinct ids, at most
  * ONE_SHOT_TRAVELLERS_MAX) and `source` (FLIGHT only for an item a flight can tick).
- * Whether the country, photo and travellers are the map's is the caller's to check.
+ * Whether the country, photos and travellers are the map's is the caller's to check.
  * -> `{ ok: true, value }` or `{ ok: false, field }`
  */
 export function parseOneShotInput(itemKey, body = {}) {
@@ -41,10 +45,16 @@ export function parseOneShotInput(itemKey, body = {}) {
     else return { ok: false, field: 'countryCode' };
   }
 
-  if (body.photoId !== undefined) {
-    if (body.photoId === null || body.photoId === '') value.photoId = null;
-    else if (isUuid(body.photoId)) value.photoId = body.photoId;
-    else return { ok: false, field: 'photoId' };
+  if (body.photoIds !== undefined) {
+    const ids = body.photoIds;
+    if (!Array.isArray(ids) || ids.length > ONE_SHOT_PHOTOS_MAX || !ids.every(isUuid) || new Set(ids).size !== ids.length) {
+      return { ok: false, field: 'photoIds' };
+    }
+    value.photoIds = ids;
+  } else if (body.photoId !== undefined) {
+    if (body.photoId === null || body.photoId === '') value.photoIds = [];
+    else if (isUuid(body.photoId)) value.photoIds = [body.photoId];
+    else return { ok: false, field: 'photoIds' };
   }
 
   if (body.notes !== undefined) {

@@ -127,6 +127,34 @@ describe('YearRecapDialog', () => {
     expect(stage().getAttribute('aria-label')).toBe('1 of 6');
   });
 
+  // 24 Nov 2026, the user's wish: "offer both on the year card"
+  it('offers the card’s map as the whole world or close up, the whole world first', async () => {
+    loadYearRecap.mockResolvedValue(recap());
+    open();
+    await waitFor(() => expect(stage()).toBeTruthy());
+    for (let i = 0; i < 5; i += 1) fireEvent.click(screen.getByText('Next'));
+    expect(stage().querySelector('h3').textContent).toBe('Share your 2025');
+    const world = screen.getByLabelText('Whole world');
+    const close = screen.getByLabelText('Close up');
+    expect(world.checked).toBe(true);
+    expect(drawShareCard).toHaveBeenLastCalledWith(expect.objectContaining({ highlight: ['FR', 'IT'], mapView: 'world' }));
+    fireEvent.click(close);
+    expect(close.checked).toBe(true);
+    expect(drawShareCard).toHaveBeenLastCalledWith(expect.objectContaining({ mapView: 'fit' }));
+    fireEvent.click(world);
+    expect(drawShareCard).toHaveBeenLastCalledWith(expect.objectContaining({ mapView: 'world' }));
+  });
+
+  it('offers no close-up when it would show the whole world anyway', async () => {
+    loadYearRecap.mockResolvedValue(recap({ places: ['US', 'JP'] }));
+    open();
+    await waitFor(() => expect(stage()).toBeTruthy());
+    for (let i = 0; i < 5; i += 1) fireEvent.click(screen.getByText('Next'));
+    expect(stage().querySelector('h3').textContent).toBe('Share your 2025');
+    expect(screen.queryByLabelText('Close up')).toBeNull();
+    expect(document.querySelector('[data-recap-map-choice]')).toBeNull();
+  });
+
   it('ends with Done on the share slide', async () => {
     loadYearRecap.mockResolvedValue(recap({ places: [], countries: 0, newCountries: [], stamps: { count: 0, landmarks: [] }, trips: [], moments: 0 }));
     const onClose = vi.fn();

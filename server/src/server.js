@@ -30,7 +30,11 @@ import { offerClickRouter, offersRouter } from './routes/offers.js';
 import themeRouter from './routes/themes.js';
 import challengeRouter from './routes/challenges.js';
 import { guessGameRouter, guessRouter } from './routes/guessGames.js';
+import { photoShowRouter, showRouter } from './routes/photoShows.js';
+import vsRouter from './routes/vs.js';
 import flightRouter from './routes/flights.js';
+import feedbackRouter from './routes/feedback.js';
+import { postcardRouter, postcardsRouter } from './routes/postcards.js';
 import sharedRouter from './routes/shared.js';
 import inviteRouter from './routes/invites.js';
 // Plans and payments
@@ -158,7 +162,17 @@ app.use('/api/challenges', challengeRouter);
 // "Guess where I was": a game by its code (anyone), and deleting one (its map's editors)
 app.use('/api/guess', guessRouter);
 app.use('/api/guess-games', guessGameRouter);
+// Slideshows of chosen photos: one by its link's code (anyone), and changing one (its map's editors)
+app.use('/api/show', showRouter);
+app.use('/api/photo-shows', photoShowRouter);
+// Vs mode: friends compared on everything (docs/API.md "Vs mode")
+app.use('/api/vs', vsRouter);
 app.use('/api/flights', flightRouter);
+// Feedback sent from the map (docs/API.md "Feedback"); the admin's are under /api/users
+app.use('/api/feedback', feedbackRouter);
+// Postcards: the sender's own, and one by its link's code (anyone; docs/API.md "Postcards")
+app.use('/api/postcards', postcardsRouter);
+app.use('/api/postcard', postcardRouter);
 // An offer card's link (docs/API.md, "Travel offers"): counts the click and redirects
 app.use('/go', offerClickRouter);
 app.use('/api/shared', sharedRouter);

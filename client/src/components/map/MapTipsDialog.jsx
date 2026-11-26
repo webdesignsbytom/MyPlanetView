@@ -22,8 +22,9 @@ const isIos = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.p
 // stamp per tip to jump to it, and the arrow keys; the last tip's Next is "Got it". Ticking
 // the box turns the viewer's `showTips` setting off at once (Settings, Help, turns it back
 // on); the dialog stays until it's closed. `share`: the viewer can share the map (its last
-// tip says a link needs no app or account).
-function MapTipsDialog({ hideTips, onHideTips, posters, share = false, onClose }) {
+// tip says a link needs no app or account). `design`: the viewer can change the map's design (its
+// owner or a co-owner): a tip says the places been to can show as a colour (25 Nov 2026).
+function MapTipsDialog({ hideTips, onHideTips, posters, share = false, design = false, onClose }) {
   const boxId = useId();
   const noteId = useId();
   const tipId = useId();
@@ -39,7 +40,7 @@ function MapTipsDialog({ hideTips, onHideTips, posters, share = false, onClose }
   const [ios] = useState(isIos);
   const [installed, setInstalled] = useState(false);
   const install = offered ? 'prompt' : ios ? 'ios' : 'menu';
-  const tips = mapTips({ phone, touch, fullscreen, standalone, posters, appName: CompanyShortName, install, share });
+  const tips = mapTips({ phone, touch, fullscreen, standalone, posters, appName: CompanyShortName, install, share, design });
   const [index, setIndex] = useState(0);
   // The list can shorten while open (the app installed, the screen turned): stay inside it
   const at = Math.min(index, tips.length - 1);

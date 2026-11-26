@@ -26,7 +26,7 @@ function statusLine({ status, enteredOn }) {
  * so the book is also a checklist); on the right, a stamp for each landmark photographed,
  * in the order they were stamped.
  */
-function PassportVisaPage({ page, pageNumber, headingId, canPick, locked, onOpenPhoto, onPickPhoto }) {
+function PassportVisaPage({ page, pageNumber, headingId, onOpenPhoto }) {
   const [allToStamp, setAllToStamp] = useState(false);
   const name = countryName(page.countryCode);
   const localNames = localNamesBeside(page.countryCode, name);
@@ -76,14 +76,7 @@ function PassportVisaPage({ page, pageNumber, headingId, canPick, locked, onOpen
           {page.stamps.length ? (
             <ul className='grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-x-4 gap-y-6'>
               {page.stamps.map((stamp) => (
-                <PassportStamp
-                  key={stamp.landmarkId}
-                  stamp={stamp}
-                  canPick={canPick}
-                  locked={locked}
-                  onOpenPhoto={onOpenPhoto}
-                  onPickPhoto={onPickPhoto}
-                />
+                <PassportStamp key={stamp.landmarkId} stamp={stamp} onOpenPhoto={onOpenPhoto} />
               ))}
             </ul>
           ) : (

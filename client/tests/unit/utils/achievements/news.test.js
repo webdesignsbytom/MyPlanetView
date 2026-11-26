@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { newsText } from '@/utils/achievements/news';
+import { newsItemName, newsText } from '@/utils/achievements/news';
 
 describe('newsText', () => {
   it('says nothing with no news', () => {
@@ -38,5 +38,14 @@ describe('newsText', () => {
 
   it('ignores news of a kind it doesn’t know', () => {
     expect(newsText([{ type: 'confetti' }, { type: 'badge', key: 'photos-100' }])).toBe('New badge: 100 photos.');
+  });
+});
+
+describe('newsItemName', () => {
+  it('names a badge, a collection’s medal and a goal', () => {
+    expect(newsItemName({ type: 'badge', key: 'continent-asia' })).toBe('Asia');
+    expect(newsItemName({ type: 'badge', key: 'collect-MT-silver' })).toBe('Silver for Malta');
+    expect(newsItemName({ type: 'goal', goal: { kind: 'COUNTRY_COUNT', target: 30, title: 'Thirty by thirty' } })).toBe('Thirty by thirty');
+    expect(newsItemName({ type: 'goal', goal: { kind: 'COUNTRY_COUNT', target: 30, title: '' } })).toBe('30 countries');
   });
 });

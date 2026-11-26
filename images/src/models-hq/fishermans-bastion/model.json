@@ -1,0 +1,8 @@
+{
+  "name": "Fisherman's Bastion",
+  "latitude": 47.49611,
+  "longitude": 19.03972,
+  "maps": ["HU"],
+  "landmark": "Q46313",
+  "onMap": false
+}

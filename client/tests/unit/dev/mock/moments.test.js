@@ -67,7 +67,31 @@ describe('who sees what', () => {
 
 describe('momentPage', () => {
   it('lists the map’s moments oldest first, undated last, hidden ones for editors', () => {
-    expect(ids(page({}))).toEqual(['moment-born', 'moment-dublin', 'moment-flamenco', 'moment-engaged', 'moment-gelato', 'moment-party']);
+    // The demo couple's timeline (data/demoTravels.js), the hidden note with no date last
+    expect(ids(page({}))).toEqual([
+      'moment-born',
+      'moment-partner-born',
+      'moment-dublin',
+      'moment-first-trip',
+      'moment-flamenco',
+      'moment-engaged',
+      'moment-wedding',
+      'moment-acropolis',
+      'moment-tagine',
+      'moment-petra',
+      'moment-safari',
+      'moment-table-mountain',
+      'moment-taj',
+      'moment-dive',
+      'moment-beach',
+      'moment-milford',
+      'moment-lucha',
+      'moment-anniversary',
+      'moment-gelato',
+      'moment-carnival',
+      'moment-schonbrunn',
+      'moment-party',
+    ]);
     expect(ids(page({}, viewer))).not.toContain('moment-party');
     expect(page({}).moments.find((m) => m.id === 'moment-party').hidden).toBe(true);
     expect('hidden' in page({}, viewer).moments[0]).toBe(false);
@@ -75,9 +99,9 @@ describe('momentPage', () => {
 
   it('pages with an opaque cursor', () => {
     const first = page({ limit: '2' });
-    expect(ids(first)).toEqual(['moment-born', 'moment-dublin']);
+    expect(ids(first)).toEqual(['moment-born', 'moment-partner-born']);
     const second = page({ limit: '2', cursor: first.nextCursor });
-    expect(ids(second)).toEqual(['moment-flamenco', 'moment-engaged']);
+    expect(ids(second)).toEqual(['moment-dublin', 'moment-first-trip']);
     const last = page({ limit: '60', cursor: second.nextCursor });
     expect(last.nextCursor).toBeNull();
     expect(page({ cursor: 'not-a-cursor' })).toEqual({ error: MOMENT_MESSAGES.malformed });

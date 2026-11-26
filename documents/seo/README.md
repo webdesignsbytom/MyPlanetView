@@ -4,12 +4,12 @@ Search and AI search for Project World. The rules are in [`documents/SEO-PLAYBOO
 
 | Path | What it is |
 | --- | --- |
-| [`../SEO-PLAYBOOK.md`](../SEO-PLAYBOOK.md) | **The rules.** The twelve that matter most (section 1), how the engines behave (2), every rule with an ID (3), the checklists (4), traps (5), how to build each piece (6), the tools (7), the evidence (8) and the sources (9). Copied from Memento on 12 November 2026 |
+| [`../SEO-PLAYBOOK.md`](../SEO-PLAYBOOK.md) | **The rules.** The twelve that matter most (section 1), how the engines behave (2), every rule with an ID (3), the checklists (4), traps (5), how to build each piece (6), the tools (7), the evidence (8) and the sources (9). Copied from DummyFullstack's, the main copy for Vite and React sites, on 24 November 2026 |
 | [`archive/SEO-PLAYBOOK-2026-10-08.md`](archive/SEO-PLAYBOOK-2026-10-08.md) | The previous version. Anything citing "Part 1" or "Part 2" by section number means this one |
 
 ## Where the rules come from
 
-The master copy of the playbook is `Memento/docs/seo/SEO-PLAYBOOK.md` (`C:\Users\User\Documents\WorkTop\Memento`). The same copy is in TheBoredUser, MistressMapWeb, WorkerSEO and other projects. When this project learns something about search, add it to the master as a rule with an ID and its evidence, then copy the file here again. Do not edit this copy on its own.
+This site is built with Vite and React, so this copy is refreshed from the main copy for those sites, DummyFullstack's (`Dummys/DummyFullstack/documents/SEO-PLAYBOOK.md`). The main copy for Next.js sites is NextDummy's (`Dummys/NextDummy/docs/SEO-PLAYBOOK.md`). Most lessons are learned on Memento's live sites and on WorkerSEO. When this project learns something about search, add it to DummyFullstack's copy as a rule with an ID and its evidence, and to NextDummy's unless it depends on the stack, then copy DummyFullstack's here again. Do not edit this copy on its own.
 
 The Memento record is not kept in this repository. It lives in the Memento project, under `docs/seo/`:
 - the 12 November 2026 review (the best worked example);

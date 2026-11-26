@@ -4,12 +4,17 @@
 // that saved one keeps it until the next save, and the client opens it as the animated sea
 // 'mono' is Black and white, the world map in greys (19 Nov 2026: it was the switch
 // blackAndWhite, which is now dropped like any unknown key)
-export const MAP_STYLES = Object.freeze(['animated', 'mono', 'old-map', 'starry']);
+// 'engraved' is the World map's countries on an engraved ocean (25 Nov 2026, the user's wish)
+export const MAP_STYLES = Object.freeze(['animated', 'mono', 'old-map', 'starry', 'engraved']);
 // 'detailed' shows country names, grid lines and landmarks at every zoom
 export const MAP_TYPES = Object.freeze(['regular', 'detailed']);
 // The landmark pins (17 Nov 2026): when zoomed in, at every zoom, only the passport's
 // stamped ones, or none (the client's LANDMARK_PIN_MODES)
 export const LANDMARK_PIN_MODES = Object.freeze(['zoomed', 'always', 'stamped', 'off']);
+// The statistics' distances (24 Nov 2026, the user's wish: "Americans in miles always"):
+// miles for a map whose home is in the United States, else kilometres; or always one of them
+// (the client's DISTANCE_UNITS)
+export const DISTANCE_UNITS = Object.freeze(['auto', 'km', 'miles']);
 export const MAP_SETTING_FLAGS = Object.freeze([
   'showGrid',
   'showGridLabels',
@@ -27,6 +32,10 @@ export const MAP_SETTING_FLAGS = Object.freeze([
   'showMoments',
   // The luggage tag under the map's title with the nearest unmet goal (on unless turned off)
   'showGoalTag',
+  // The countdown to the next planned trip, and the map's key (25 Nov 2026, the user's wish;
+  // both on unless turned off)
+  'showTripCountdown',
+  'showMapKey',
   // The tips the map opens with, once a visit (on unless turned off)
   'showTips',
   // The celebration screen for a landmark's first stamp or a country's first visit (24 Nov
@@ -35,8 +44,13 @@ export const MAP_SETTING_FLAGS = Object.freeze([
   // Whether the map has offered "Where have you been?" (ticking countries; 22 Nov 2026): once
   // per account, the first time a map of theirs with few countries opens
   'countriesAsked',
-  // The strings tied between places (docs/API.md "Strings"; on unless turned off)
+  // The strings tied between places (docs/API.md "Strings"; on unless turned off): the visited
+  // places' and, apart, the planned ones' (25 Nov 2026)
   'showStrings',
+  'showPlannedStrings',
+  // The owner's own: the supporter badge on the banner of every map they own, for everyone
+  // who opens them (docs/API.md "The supporter badge"; 24 Nov 2026; on unless turned off)
+  'showSupporterBadge',
 ]);
 
 /**
@@ -73,6 +87,10 @@ export function cleanMapSettings(input) {
   if (input.landmarkPins !== undefined) {
     if (!LANDMARK_PIN_MODES.includes(input.landmarkPins)) return { ok: false };
     value.landmarkPins = input.landmarkPins;
+  }
+  if (input.distanceUnit !== undefined) {
+    if (!DISTANCE_UNITS.includes(input.distanceUnit)) return { ok: false };
+    value.distanceUnit = input.distanceUnit;
   }
   for (const flag of MAP_SETTING_FLAGS) {
     if (input[flag] === undefined) continue;

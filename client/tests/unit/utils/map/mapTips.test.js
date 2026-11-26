@@ -34,10 +34,12 @@ describe('mapTips', () => {
     expect(ids({ phone: true, touch: true, fullscreen: false })).toEqual(['install', 'countries', 'countryMap', 'moving', 'tools']);
   });
 
-  it('points to the Menu on a phone and the stamps elsewhere, and says Tips opens these again', () => {
+  it('points to the Menu on a phone and the stamps elsewhere, and says Settings opens these again', () => {
     expect(tip({ phone: true }, 'tools').text).toMatch(/^Every tool is in the Menu at the top right/);
     expect(tip({ phone: false }, 'tools').text).toMatch(/^The stamps at the top right are the map’s tools/);
-    expect(tip({ phone: true }, 'tools').text).toContain('brings these back any time');
+    // The tips' own stamp went on 24 Nov 2026 (the user's wish): Settings has them
+    expect(tip({ phone: true }, 'tools').text).toContain('Settings, in there too, brings these tips back any time');
+    expect(tip({ phone: false }, 'tools').text).toContain('Settings, near the bottom, brings these tips back any time');
   });
 
   it('ends with sharing, no app or account needed, only for those who can share the map', () => {
@@ -45,6 +47,17 @@ describe('mapTips', () => {
     expect(tip({ share: true }, 'share').text).toContain('no app to install and no account needed');
     expect(ids({ share: false })).not.toContain('share');
     expect(ids({})).not.toContain('share');
+  });
+
+  // 25 Nov 2026, the user's wish: a page on how the places been to can show, for those who choose it
+  it('says the places been to can show as a colour or a metal, after the countries, only for the owner and co-owners', () => {
+    expect(ids({ design: true }).slice(0, 2)).toEqual(['countries', 'visitedLook']);
+    const words = tip({ design: true }, 'visitedLook');
+    expect(words.title).toBe('Where you’ve been');
+    expect(words.text).toContain('fill them all with one colour of your choosing, or gold, silver or bronze, instead, or have both, in every map style');
+    expect(words.text).toContain('In Settings, under Places you’ve been');
+    expect(ids({ design: false })).not.toContain('visitedLook');
+    expect(ids({})).not.toContain('visitedLook');
   });
 
   it('says how this phone installs it, with a button only where the browser has offered', () => {
@@ -61,7 +74,7 @@ describe('mapTips', () => {
   });
 
   it('gives every tip a title and some words', () => {
-    for (const t of mapTips({ phone: true, touch: true, fullscreen: true, posters: true, share: true, appName: 'X' })) {
+    for (const t of mapTips({ phone: true, touch: true, fullscreen: true, posters: true, share: true, design: true, appName: 'X' })) {
       expect(t.title).toBeTruthy();
       expect(t.text).toBeTruthy();
     }

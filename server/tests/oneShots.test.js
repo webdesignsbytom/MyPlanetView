@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { BIG_FIVE, ONE_SHOTS, ONE_SHOT_AUTO, ONE_SHOT_BY_KEY, ONE_SHOT_GROUPS, ONE_SHOT_LISTS, isOneShotKey } from '../src/utils/constants/oneShots.js';
 import {
   ONE_SHOT_NOTES_MAX,
+  ONE_SHOT_PHOTOS_MAX,
   POLAR_CIRCLE_LATITUDE,
   flightCrossings,
   greatCirclePoints,
@@ -54,11 +55,11 @@ describe('the catalogue', () => {
 });
 
 describe('parseOneShotInput', () => {
-  it('takes a date as a moment’s, a country, a photo, a note and the travellers', () => {
+  it('takes a date as a moment’s, a country, photos, a note and the travellers', () => {
     const parsed = parseOneShotInput('lion', {
       seenOn: '2024-03',
       countryCode: 'KE',
-      photoId: T1,
+      photoIds: [T2, T1],
       notes: '  Two cubs, at dawn \u0000 ',
       travellerIds: [T1, T2],
     });
@@ -67,7 +68,7 @@ describe('parseOneShotInput', () => {
       seenOn: new Date(Date.UTC(2024, 2, 1)),
       datePrecision: 'MONTH',
       countryCode: 'KE',
-      photoId: T1,
+      photoIds: [T2, T1],
       notes: 'Two cubs, at dawn',
       travellerIds: [T1, T2],
     });
@@ -75,13 +76,27 @@ describe('parseOneShotInput', () => {
 
   it('leaves out what isn’t given, and clears what’s null', () => {
     expect(parseOneShotInput('lion', {})).toEqual({ ok: true, value: {} });
-    expect(parseOneShotInput('lion', { seenOn: null, countryCode: '', photoId: null, notes: '' }).value).toEqual({
+    expect(parseOneShotInput('lion', { seenOn: null, countryCode: '', photoIds: [], notes: '' }).value).toEqual({
       seenOn: null,
       datePrecision: null,
       countryCode: null,
-      photoId: null,
+      photoIds: [],
       notes: null,
     });
+  });
+
+  // 26 Nov 2026, the user's wish: "a photo/multiple photos of you with" it
+  it('takes up to 5 photos in order, the first for its card, and reads the older single photo as a list', () => {
+    expect(ONE_SHOT_PHOTOS_MAX).toBe(5);
+    const five = ['a', 'b', 'c', 'd', 'e'].map((c) => `${c.repeat(8)}-1111-4111-8111-111111111111`);
+    expect(parseOneShotInput('lion', { photoIds: five }).value.photoIds).toEqual(five);
+    expect(parseOneShotInput('lion', { photoIds: [...five, T1] })).toEqual({ ok: false, field: 'photoIds' });
+    expect(parseOneShotInput('lion', { photoIds: [T1, T1] })).toEqual({ ok: false, field: 'photoIds' });
+    expect(parseOneShotInput('lion', { photoIds: T1 })).toEqual({ ok: false, field: 'photoIds' });
+    expect(parseOneShotInput('lion', { photoId: T1 }).value).toEqual({ photoIds: [T1] });
+    expect(parseOneShotInput('lion', { photoId: null }).value).toEqual({ photoIds: [] });
+    // The list wins over the older field
+    expect(parseOneShotInput('lion', { photoId: T1, photoIds: [T2] }).value).toEqual({ photoIds: [T2] });
   });
 
   it('cuts a long note', () => {
@@ -93,7 +108,8 @@ describe('parseOneShotInput', () => {
     expect(parseOneShotInput('lion', { seenOn: '2024-02-31' })).toEqual({ ok: false, field: 'seenOn' });
     expect(parseOneShotInput('lion', { seenOn: '2024', datePrecision: 'DAY' })).toEqual({ ok: false, field: 'seenOn' });
     expect(parseOneShotInput('lion', { countryCode: 'kenya' })).toEqual({ ok: false, field: 'countryCode' });
-    expect(parseOneShotInput('lion', { photoId: 'photo-1' })).toEqual({ ok: false, field: 'photoId' });
+    expect(parseOneShotInput('lion', { photoId: 'photo-1' })).toEqual({ ok: false, field: 'photoIds' });
+    expect(parseOneShotInput('lion', { photoIds: ['photo-1'] })).toEqual({ ok: false, field: 'photoIds' });
     expect(parseOneShotInput('lion', { notes: 5 })).toEqual({ ok: false, field: 'notes' });
     expect(parseOneShotInput('lion', { travellerIds: [T1, T1] })).toEqual({ ok: false, field: 'travellerIds' });
     expect(parseOneShotInput('lion', { travellerIds: 'T1' })).toEqual({ ok: false, field: 'travellerIds' });

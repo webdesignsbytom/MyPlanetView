@@ -12,7 +12,9 @@ import { LANDMARKS } from './data/landmarks';
 import { getDb, me, session } from './store';
 import { byPosition, byShotAt } from './photoOrder';
 import { pageAfter, parseShuffleSeed, shuffled } from './shuffle';
-import { mapPlanFields, mapSlots, uploadRules } from './plans';
+import { effectivePlan, mapPlanFields, mapSlots, uploadRules } from './plans';
+import { supporterBadge } from '@/utils/plans/supporterBadge';
+import { unMembersVisited } from '@/utils/map/unMembers';
 import { mockPlayback } from './stream';
 import { mockUpload } from './uploads';
 import { photoThemes } from './themes';
@@ -175,6 +177,10 @@ const videoLinks = (photo) => {
   return { displayUrl: urls.display, videoUrl: urls.video ?? urls.original ?? null };
 };
 
+/** A photo in a slideshow's list: its list item with its display copy, or a ready video's links. */
+export const displayListItem = (photo, role) =>
+  isVideo(photo) ? { ...photoListItem(photo, role), ...videoLinks(photo) } : { ...photoListItem(photo, role), displayUrl: photoUrls(photo).display };
+
 // The best copy for a download list (`best=1`, docs/API.md "Downloads"), as the server's
 // views.js bestFile: `{ copy, url, contentType, bytes, width, height }`, or null (a video,
 // or a photo with neither). The demo photos' sizes aren't known (`bytes` null), as an old
@@ -281,8 +287,7 @@ export function photoPage(
   const item = (p) => {
     if (withBest) return { ...photoListItem(p, role), best: bestFile(p) };
     if (!withDisplay) return photoListItem(p, role);
-    if (isVideo(p)) return { ...photoListItem(p, role), ...videoLinks(p) };
-    return { ...photoListItem(p, role), displayUrl: photoUrls(p).display };
+    return displayListItem(p, role);
   };
   if (order === 'shuffle') {
     // Every id in the list, shuffled the same way for the same seed, then this page of it
@@ -362,6 +367,8 @@ export function mapStats(map, role) {
     }),
     // How much of the world, the days away, the distance and the furthest place (21 Nov 2026)
     countriesInWorld: countriesInWorld(Boolean(map.splitUk)),
+    // Collector's counts (24 Nov 2026): the UN's 193 member states been to
+    unCountries: unMembersVisited([...counted]).length,
     ...travelExtras({ completedTrips: completed, visitedCodes: [...counted], positions: PLACE_POSITIONS, homeCountryCode }),
   };
 }
@@ -406,8 +413,19 @@ export function mapView(map, role, { withPlan = false } = {}) {
     homeCountryCode: map.homeCountryCode ?? null,
     // The style everyone sees it in: its own, else the owner's (null: each viewer's own)
     style: mapStyleOf(map),
+    // How the places been to show, in every style (docs/API.md "The visited look")
+    visitedLook: map.visitedLook ?? 'BADGE',
+    visitedColour: map.visitedColour ?? null,
+    visitedFinish: map.visitedFinish ?? null,
     role,
     ownerName: userName(map.ownerId),
+    // The owner's paid plan on the banner, unless they turned it off (docs/API.md "The
+    // supporter badge"): the mock keeps map settings for the test user alone
+    supporter: supporterBadge({
+      accountPlan: effectivePlan(map.ownerId).plan,
+      ownerSettings: map.ownerId === me().id ? db.mapSettings : null,
+      role,
+    }),
     travellers: db.travellers
       .filter((t) => t.mapId === map.id)
       .sort((a, b) => a.position - b.position)
@@ -422,7 +440,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
       }),
     visits: db.visits
       .filter((v) => v.mapId === map.id)
-      .map(({ countryCode, status, source, firstVisitedOn, notes }) => ({ countryCode, status, source, firstVisitedOn, notes })),
+      // When each was marked, as the server's (the seed's have none)
+      .map(({ countryCode, status, source, firstVisitedOn, notes, createdAt }) => ({ countryCode, status, source, firstVisitedOn, notes, markedAt: createdAt ?? null })),
     stats: mapStats(map, role),
     // Everyone's: the moments per country, hidden ones for the owner and editors only
     momentCountsByCountry: momentCountsByCountry(map.id, { includeHidden: atLeast(role, 'EDITOR') }),
@@ -434,7 +453,8 @@ export function mapView(map, role, { withPlan = false } = {}) {
     // The landmarks ticked "been here" (docs/API.md "Collecting")
     tickedLandmarkIds: (db.landmarkVisits || []).filter((v) => v.mapId === map.id).map((v) => v.landmarkId),
     // The strings tied between its places, for everyone who opens it (docs/API.md "Strings")
-    strings: (db.mapStrings || []).filter((s) => s.mapId === map.id).map(({ id, from, to }) => ({ id, from, to })),
+    // Each with its kind (25 Nov 2026): one from before kinds is VISITED
+    strings: (db.mapStrings || []).filter((s) => s.mapId === map.id).map(({ id, kind, from, to }) => ({ id, kind: kind === 'PLANNED' ? 'PLANNED' : 'VISITED', from, to })),
     // Its own designs, one per map style, for everyone who opens it (docs/API.md "Map designs")
     designs: designsView(map),
   };
@@ -642,11 +662,12 @@ export function markVisited(mapId, countryCode, source) {
   for (const code of withParentPlaces([place])) {
     const visit = db.visits.find((v) => v.mapId === mapId && v.countryCode === code);
     if (!visit) {
-      const added = { mapId, countryCode: code, status: 'VISITED', source, firstVisitedOn: null, notes: null };
+      const added = { mapId, countryCode: code, status: 'VISITED', source, firstVisitedOn: null, notes: null, createdAt: new Date().toISOString() };
       db.visits.push(added);
       changed.push(added);
     } else if (visit.status === 'WANT_TO_GO') {
-      Object.assign(visit, { status: 'VISITED', source });
+      // A wish become a visit was marked visited now, as the server's (24 Nov 2026)
+      Object.assign(visit, { status: 'VISITED', source, createdAt: new Date().toISOString() });
       changed.push(visit);
     }
   }

@@ -13,16 +13,35 @@ import { DEFAULT_MAP_SETTINGS } from '@/utils/map/mapSettings';
 // Settings' pickers and the visit status controls
 
 describe('MapStylePicker', () => {
-  it('offers the four styles as cards, each in its own colours', () => {
+  it('offers the five styles as cards, each in its own colours', () => {
     const { container } = render(<MapStylePicker value='starry' onChange={() => {}} />);
     const cards = [...container.querySelectorAll('label[data-map-style]')];
-    expect(cards.map((c) => c.getAttribute('data-map-style'))).toEqual(['animated', 'mono', 'old-map', 'starry']);
+    expect(cards.map((c) => c.getAttribute('data-map-style'))).toEqual(['animated', 'mono', 'old-map', 'starry', 'engraved']);
     expect(screen.getByLabelText('Starry night').checked).toBe(true);
     // The hidden radio stays inside its card (a far ancestor scrolled the page)
     for (const card of cards) expect(card.getAttribute('class')).toContain('relative');
     // Each previewed by its picture, or the plain sea where it has none
     for (const card of cards) expect(card.querySelector('img') || card.querySelector('span.bg-map-sea')).not.toBeNull();
     expect(cards[3].querySelector('img')).not.toBeNull();
+    // The engraved ocean's card shows its waves (25 Nov 2026)
+    expect(cards[4].querySelector('img').getAttribute('src')).toContain('engraved-ocean');
+    expect(screen.getByLabelText('Engraved ocean')).toBeTruthy();
+  });
+
+  it('loads each card’s strip, 320 or 640 wide, never the style’s full picture (26 Nov 2026, the audit)', () => {
+    const { container } = render(<MapStylePicker value='animated' onChange={() => {}} />);
+    for (const picture of container.querySelectorAll('picture')) {
+      const img = picture.querySelector('img');
+      const avif = picture.querySelector('source[type="image/avif"]');
+      expect(img.getAttribute('src')).toMatch(/preview-[a-z-]+-320\.webp/);
+      expect(img.getAttribute('srcset')).toMatch(/-320\.webp 320w, .*-640\.webp 640w/);
+      expect(avif.getAttribute('srcset')).toMatch(/-320\.avif 320w, .*-640\.avif 640w/);
+      expect(`${img.getAttribute('srcset')} ${avif.getAttribute('srcset')}`).not.toMatch(/-(800|949|1200|1774|1792|2560)\./);
+      expect(img.getAttribute('sizes')).toBe('(min-width: 640px) 17rem, 45vw');
+      expect(img.hasAttribute('data-keep-colour')).toBe(true);
+    }
+    // Black and white's card is the World map's strip in greys
+    expect(container.querySelector('label[data-map-style="mono"] img').getAttribute('class')).toContain('grayscale');
   });
 
   it('calls back with the style picked, and shows a note when given one', () => {
@@ -43,6 +62,14 @@ describe('MapTypePicker', () => {
     for (const card of container.querySelectorAll('label')) expect(card.getAttribute('class')).toContain('relative');
     fireEvent.click(screen.getByLabelText(/Detailed/));
     expect(onChange).toHaveBeenCalledWith('detailed');
+  });
+
+  it('loads each card’s strip, never the 949-pixel picture', () => {
+    const { container } = render(<MapTypePicker value='regular' onChange={() => {}} />);
+    const sources = [...container.querySelectorAll('img')].map((img) => img.getAttribute('src'));
+    expect(sources).toHaveLength(2);
+    expect(sources[0]).toMatch(/preview-regular-320\.webp/);
+    expect(sources[1]).toMatch(/preview-detailed-320\.webp/);
   });
 });
 
@@ -68,6 +95,19 @@ describe('MapSettingsToggles', () => {
     ]);
     expect(container.querySelector('#setting-showMoments').checked).toBe(false);
     expect(container.querySelector('#setting-showVisited').checked).toBe(true);
+  });
+
+  // 24 Nov 2026, the user's wish: the tips' own toolbar stamp moved here
+  it('ends Help with “Show the tips”, where it’s given', () => {
+    const onShowTips = vi.fn();
+    const { container, unmount } = render(<MapSettingsToggles settings={DEFAULT_MAP_SETTINGS} onChange={() => {}} onShowTips={onShowTips} />);
+    const help = [...container.querySelectorAll('fieldset')].find((f) => f.querySelector('legend').textContent === 'Help');
+    fireEvent.click(help.querySelector('button'));
+    expect(help.querySelector('button').textContent).toBe('Show the tips');
+    expect(onShowTips).toHaveBeenCalled();
+    unmount();
+    render(<MapSettingsToggles settings={DEFAULT_MAP_SETTINGS} onChange={() => {}} />);
+    expect(screen.queryByText('Show the tips')).toBeNull();
   });
 
   it('says which setting changed and how', () => {
@@ -97,6 +137,23 @@ describe('MapSettingsToggles', () => {
   it('hides the banner’s switch below wide screens', () => {
     const { container } = render(<MapSettingsToggles settings={DEFAULT_MAP_SETTINGS} onChange={() => {}} />);
     expect(container.querySelector('#setting-showUserBanner').closest('.max-lg\\:hidden')).not.toBeNull();
+  });
+
+  // 25 Nov 2026, the user's wish: switches for the next trip's countdown and the map key,
+  // which phones never show, so its switch isn't there either
+  it('switches the next trip’s countdown and the map key, the key’s hidden on phones', () => {
+    const onChange = vi.fn();
+    const { container } = render(<MapSettingsToggles settings={{ ...DEFAULT_MAP_SETTINGS, showMapKey: false }} onChange={onChange} />);
+    const countdown = container.querySelector('#setting-showTripCountdown');
+    const key = container.querySelector('#setting-showMapKey');
+    expect(countdown.checked).toBe(true);
+    expect(key.checked).toBe(false);
+    expect(countdown.closest('.phone\\:hidden')).toBeNull();
+    expect(key.closest('.phone\\:hidden')).not.toBeNull();
+    fireEvent.click(countdown);
+    expect(onChange).toHaveBeenCalledWith('showTripCountdown', false);
+    fireEvent.click(key);
+    expect(onChange).toHaveBeenCalledWith('showMapKey', true);
   });
 });
 

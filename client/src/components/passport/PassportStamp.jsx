@@ -1,18 +1,16 @@
 import React, { useId } from 'react';
 // Components
-import Button from '@/components/common/Button';
 import LandmarkStamp from './LandmarkStamp';
 // Utils
 import { stampDescription } from '@/utils/passport/passportBook';
 
 /**
- * One stamp on a visa page: the stamp itself (pressing it opens its photo), what it says in
- * words for screen readers, and for editors "Choose photo" when it has more than one (or
- * one was picked, to go back to the first). A landmark ticked "been here" with no photo
- * (23 Nov 2026) is a stamp with nothing to open. `locked`: an editor who must verify their
- * email address first.
+ * One stamp on a visa page: the stamp itself (pressing it opens its photo) and what it says
+ * in words for screen readers. A landmark ticked "been here" with no photo (23 Nov 2026) is a
+ * stamp with nothing to open. No "Choose photo" (24 Nov 2026, the user's wish): a stamp shows
+ * its earliest photo, or one picked before then.
  */
-function PassportStamp({ stamp, canPick = false, locked = false, onOpenPhoto, onPickPhoto }) {
+function PassportStamp({ stamp, onOpenPhoto }) {
   const descriptionId = useId();
   return (
     <li className='grid content-start justify-items-center gap-2' data-stamp={stamp.landmarkId} data-stamp-ticked={stamp.photo ? undefined : ''}>
@@ -33,14 +31,8 @@ function PassportStamp({ stamp, canPick = false, locked = false, onOpenPhoto, on
         </div>
       )}
       <p id={descriptionId} className='sr-only'>
-        {stampDescription(stamp)}
-        {stamp.photoChosen ? ', its photo chosen' : ''}.
+        {stampDescription(stamp)}.
       </p>
-      {canPick && (stamp.photoCount > 1 || stamp.photoChosen) ? (
-        <Button small quiet disabled={locked} onClick={() => onPickPhoto(stamp)} ariaLabel={`Choose the photo for ${stamp.name}`}>
-          Choose photo
-        </Button>
-      ) : null}
     </li>
   );
 }

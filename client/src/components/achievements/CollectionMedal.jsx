@@ -35,7 +35,7 @@ function CollectionMedal({ badge }) {
       >
         <FaMedal className='text-lg' />
         {earned ? (
-          <span className='absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full border-2 border-poster-cream bg-poster-red text-[0.5rem] text-poster-cream'>
+          <span className='absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full border-2 border-poster-cream bg-poster-red-strong text-[0.5rem] text-poster-cream'>
             <FaCheck />
           </span>
         ) : null}

@@ -67,6 +67,13 @@
      like a printed poster. Text on poster-red is poster-ink (5.6:1). */
   --poster-red: #ef4444;
   --poster-red-deep: #991b1b;
+  /* The poster red behind cream lettering (26 Nov 2026, the audit: cream on the poster red
+     is 3.8:1, under the 4.5:1 text needs; this is 4.8:1): the nav's red buttons, the photo
+     pickers' order numbers. Text in red on paper is the deep red. */
+  --poster-red-strong: #dc2626;
+  /* The poster's gold as lettering on the deep red, or the deep red on it (5.5:1; the
+     darker poster gold is 3.2:1 there) */
+  --poster-gold-bright: #f2cf5b;
   /* Stamp inks besides cream and deep red, on the loading screen (StampLoading): green (18
      Nov 2026; as dark as the deep red so it reads on the sea) and orange (19 Nov 2026, the
      user's wish: too many red and white stamps) */
@@ -107,6 +114,11 @@
   --cover-burgundy: #5a1621;
   --cover-navy: #14294b;
   --cover-black: #171513;
+  /* The other leathers a cover can be chosen in (26 Nov 2026, the user's wish: the cover's
+     colour only, the foil stays the plan's; utils/passport/passportBook.js COVER_COLOURS) */
+  --cover-green: #1e3b2a;
+  --cover-blue: #1b3f86;
+  --cover-tan: #6a4528;
   --foil-gold-light: #fff0c2;
   --foil-gold: #d6aa4c;
   --foil-gold-dark: #85601a;
@@ -195,6 +207,15 @@
   /* Strings between places: red thread pin to pin, as on a corkboard (23 Nov 2026, the user's
      wish; components/map/MapStrings.jsx) */
   --map-string: #c8102e;
+  /* A second colour twisted into them, as baker's twine, when a map design asks for one: the
+     cream of red-and-white twine until one is chosen (25 Nov 2026, the user's wish) */
+  --map-string-2: #faf6ec;
+  /* The planned strings (25 Nov 2026, the user's wish): blue, apart from the visited ones' red */
+  --map-plan-string: #1d4ed8;
+  --map-plan-string-2: #faf6ec;
+  /* The places been to, filled when a map design shows them by colour (25 Nov 2026, the user's
+     wish: "so it's obvious where they have been"): purple unless the design chooses */
+  --map-visited: #7c3aed;
   --map-visit-1: #f0f038;
   --map-visit-2: #0eb4a6;
   --map-visit-3: #d8845a;
@@ -251,8 +272,14 @@
   --map-wish: #6d28d9;
   /* A planned trip's outline a bright pink, as "want to go" here is the violet */
   --map-planned: #db2777;
-  /* The strings a coral red that shows on the night sky as on the land */
+  /* The strings a coral red that shows on the night sky as on the land, twined with white */
   --map-string: #ff4d5e;
+  --map-string-2: #ffffff;
+  /* The planned ones a brighter blue than the land's, so they show on it and on the sky */
+  --map-plan-string: #3b82f6;
+  --map-plan-string-2: #ffffff;
+  /* A lighter purple, that shows on the pale blue land */
+  --map-visited: #c084fc;
   /* The country under the pointer a deep blue, not the other styles' bright green (19 Nov
      2026, the user's wish) */
   --map-hover: #1e4f94;
@@ -267,6 +294,26 @@
   --map-visit-7: var(--map-land);
   --map-ice: var(--map-land);
   --map-ice-edge: var(--map-land-edge);
+}
+
+/* The engraved ocean (25 Nov 2026, the user's wish and artwork): the World map's countries on
+   an engraving of swirling waves (engraved-ocean-*). The sea colours are the engraving's deep
+   blue, for while the image loads; the grid and the words on the sea in its crests' cream. */
+[data-map-style='engraved'] {
+  --map-sea: #164a6b;
+  --map-sea-mid: #164a6b;
+  --map-sea-deep: #0b2d45;
+  --map-sea-ink: #f3ead2;
+  --map-grid: #f3ead2;
+}
+
+/* Its words, black as the World map's, wear a halo of the land's colour, so a name drawn on
+   the dark waves (a small island's, under it, or the grid's degrees) reads there too */
+[data-map-style='engraved'] g.fill-map-names {
+  stroke: var(--map-land);
+  stroke-width: 0.3em;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
 }
 
 /* Its words (country, pole and state names, the grid's degrees) are the ink on the land,
@@ -299,6 +346,7 @@
   --poster-red: #8ec3e6;
   --poster-red-ink: #08183a;
   --poster-red-deep: #bfe0f7;
+  --poster-red-strong: var(--poster-red);
   --poster-cream: #08183a;
   --poster-wash: rgb(8 24 58 / 0.65);
   --paper-shadow: 0 2px 0 rgb(0 0 0 / 0.4), 0 10px 24px rgb(0 0 0 / 0.5);
@@ -335,6 +383,7 @@
   --poster-red: #9a3324;
   --poster-red-ink: #f6ead0;
   --poster-red-deep: #6e2318;
+  --poster-red-strong: var(--poster-red);
   --poster-cream: #f6ead0;
   --paper-shadow: 0 2px 0 rgb(107 68 35 / 0.4), 0 10px 24px rgb(60 35 10 / 0.3);
   --colour1: #f4e8cc;
@@ -387,6 +436,8 @@
   --colour9: light-dark(#2b2b2b, #d0d0d0);
   --poster-red: #000000;
   --poster-red-deep: #000000;
+  --poster-red-strong: #000000;
+  --poster-gold-bright: #cecece;
   --poster-green: #515151;
   --poster-orange: #717171;
   --poster-gold-dark: #555555;
@@ -410,6 +461,9 @@
   --cover-burgundy: #252525;
   --cover-navy: #272727;
   --cover-black: #151515;
+  --cover-green: #343434;
+  --cover-blue: #3c3c3c;
+  --cover-tan: #4b4b4b;
   --foil-gold-light: #f0f0f0;
   --foil-gold: #adadad;
   --foil-gold-dark: #636363;
@@ -451,6 +505,10 @@
   --map-wish: #626262;
   --map-planned: #434343;
   --map-string: #393939;
+  --map-string-2: #f6f6f6;
+  --map-plan-string: #8c8c8c;
+  --map-plan-string-2: #f6f6f6;
+  --map-visited: #3c3c3c;
   --map-visit-1: #dcdcdc;
   --map-visit-2: #cdcdcd;
   --map-visit-3: #bebebe;
@@ -468,12 +526,20 @@
    grid, countries) show on it in colour (22 Nov 2026, the user's wish: chosen on Black and
    white, they turned grey and seemed to do nothing). Everything else on the page, and the
    pictures inside the map, are filtered to grey: HTML ones by CSS, the map's SVG pictures
-   by MonoPictureFilter's SVG filter (CSS filter functions don't reach SVG elements everywhere). */
-[data-mono-map] > :not(main),
-[data-mono-map] main :is(img, video, canvas) {
+   by MonoPictureFilter's SVG filter (CSS filter functions don't reach SVG elements everywhere).
+   The map's panels (data-map-panels) are grey through the tokens, so only their pictures are
+   filtered, and not those marked data-keep-colour: the map style and map type pickers' pictures
+   of the other styles stay in their colours (25 Nov 2026, the user's wish: "even in black and
+   white mode the images of the other map types should not be in black and white"). A filter on
+   a panel would reach everything in it, past any exception. Nor the sheet of metal under the
+   places been to (VisitedFoil, data-keep-colour): gold stays gold, as a design's colours do. */
+[data-mono-map] > :not(main, [data-map-panels]),
+[data-mono-map] main :is(img, video, canvas),
+[data-mono-map] [data-map-panels] :is(img, video, canvas):not([data-keep-colour]) {
   filter: grayscale(1);
 }
-[data-mono-map] main image {
+[data-mono-map] main image:not([data-keep-colour]),
+[data-mono-map] [data-map-panels] image {
   filter: url('#mpv-mono-pictures');
 }
 
@@ -497,6 +563,10 @@
   --color-map-wish: var(--map-wish);
   --color-map-planned: var(--map-planned);
   --color-map-string: var(--map-string);
+  --color-map-string-2: var(--map-string-2);
+  --color-map-plan-string: var(--map-plan-string);
+  --color-map-plan-string-2: var(--map-plan-string-2);
+  --color-map-visited: var(--map-visited);
   --color-map-visit-1: var(--map-visit-1);
   --color-map-visit-2: var(--map-visit-2);
   --color-map-visit-3: var(--map-visit-3);
@@ -532,6 +602,9 @@
   /* The passport cover's foil lettering: a book serif, as real passports use (system
      fonts only, nothing to download) */
   --font-passport: 'Palatino Linotype', Palatino, 'Book Antiqua', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  /* A traveller's name signed on their passport page when they haven't drawn a signature (25
+     Nov 2026): a handwriting face, system fonts only */
+  --font-signature: 'Segoe Script', 'Snell Roundhand', 'Bradley Hand', 'Lucida Handwriting', 'Brush Script MT', cursive;
 
   --color-colour1: var(--colour1);
   --color-colour2: var(--colour2);
@@ -554,6 +627,8 @@
 
   --color-poster-red: var(--poster-red);
   --color-poster-red-deep: var(--poster-red-deep);
+  --color-poster-red-strong: var(--poster-red-strong);
+  --color-poster-gold-bright: var(--poster-gold-bright);
   --color-poster-green: var(--poster-green);
   --color-poster-orange: var(--poster-orange);
   --color-poster-gold-dark: var(--poster-gold-dark);
@@ -1153,6 +1228,16 @@ textarea:-webkit-autofill {
 @utility paper-aged {
   background-color: var(--poster-paper);
   background-image: radial-gradient(ellipse at center, transparent 55%, var(--paper-burn) 100%);
+}
+
+/* paper-aged as it is half way down a tall card's side, flat: its vignette is about a third of
+   the way in there (the middle of a side is 1/√2 of the way to a corner, past its clear 55%).
+   For something small joined to that side, the menus tab on the toolbar
+   (components/map/chrome/MenusTab.jsx), whose own vignette left it lighter than the toolbar
+   beside it (25 Nov 2026, the user's report, in black and white). Follows every map style. */
+@utility paper-aged-side {
+  background-color: var(--poster-paper);
+  background-image: linear-gradient(color-mix(in srgb, var(--paper-burn) 35%, transparent), color-mix(in srgb, var(--paper-burn) 35%, transparent));
 }
 
 /* ── The passport (components/passport/) ──

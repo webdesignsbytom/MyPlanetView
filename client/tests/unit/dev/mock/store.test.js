@@ -18,7 +18,7 @@ import {
 import { buildSeed } from '@/dev/mock/seed';
 import { FRAN_MAP, HOME_MAP, freshStore } from './mockApi';
 
-const STORE_KEY = 'mpvMockStore.v6';
+const STORE_KEY = 'mpvMockStore.v7';
 const saved = () => JSON.parse(localStorage.getItem(STORE_KEY));
 /** A store as an older version saved it: the seed, less `drop`, plus `change`. */
 function saveOld(drop = [], change = (db) => db) {
@@ -106,8 +106,8 @@ describe('loadStore', () => {
     expect(db.users[3].promoTrialUsedAt).toBeNull();
   });
 
-  it('adds the travel offers, themes, challenges, goals, badges and country maps a store lacks', () => {
-    saveOld(['offers', 'offerClicks', 'goals', 'badgeAwards', 'challenges', 'challengeEntries', 'subdivisionVisits', 'pins', 'pinVisits'], (db) => {
+  it('adds the travel offers, themes, challenges, Vs comparisons, goals, badges and country maps a store lacks', () => {
+    saveOld(['offers', 'offerClicks', 'goals', 'badgeAwards', 'challenges', 'challengeEntries', 'vsGroups', 'vsMembers', 'subdivisionVisits', 'pins', 'pinVisits'], (db) => {
       db.themes = [];
       return db;
     });
@@ -118,11 +118,20 @@ describe('loadStore', () => {
     expect(db.badgeAwards.length).toBeGreaterThan(0);
     expect(db.challenges.map((c) => c.id)).toEqual(['challenge-two-years']);
     expect(db.challengeEntries).toHaveLength(3);
-    expect(db.subdivisionVisits.map((v) => v.code)).toEqual(['US-NY', 'US-MA']);
+    expect(db.vsGroups.map((g) => g.id)).toEqual(['vs-friends', 'vs-sams-crew']);
+    expect(db.vsMembers).toHaveLength(5);
+    expect(db.subdivisionVisits.map((v) => v.code)).toEqual(['US-NY', 'US-MA', 'US-CA']);
     expect(db.pins.map((p) => p.id)).toEqual(['pin-paris']);
     expect(db.pinVisits).toHaveLength(2);
     const month = new Date().toISOString().slice(0, 7);
     expect(db.themes.some((t) => String(t.month).slice(0, 7) === month)).toBe(true);
+  });
+
+  it('adds the seed’s postcards to a store from before them, and keeps a store’s own', () => {
+    saveOld(['postcards']);
+    expect(loadStore().postcards.map((c) => c.code)).toEqual(['PST2CRD8FRNC', 'PST2CRD8RMEC']);
+    saveOld([], (db) => ({ ...db, postcards: [] }));
+    expect(loadStore().postcards).toEqual([]);
   });
 
   it('awards what an older store has already earned three days back, so no pop-up greets it', () => {

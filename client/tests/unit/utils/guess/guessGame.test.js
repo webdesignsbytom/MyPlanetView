@@ -26,7 +26,7 @@ describe('the game’s words', () => {
   it('says what a round’s answer was', () => {
     expect(roundResultWords({ correct: true, distanceKm: 0, answer: { countryName: 'Italy', landmarkName: 'Colosseum' } })).toBe('Yes! Colosseum, Italy.');
     expect(roundResultWords({ correct: false, distanceKm: 1104, answer: { countryName: 'France', landmarkName: null } })).toBe(
-      'It was France: about 1,104 km from your guess.',
+      'It was France: about 1,104 km (686 miles) from your guess.',
     );
     expect(roundResultWords({ correct: false, distanceKm: null, answer: { countryName: 'Antarctica', landmarkName: null } })).toBe('It was Antarctica.');
   });

@@ -179,3 +179,54 @@ describe('monthly photo themes', () => {
     expect(album.photos).toEqual([]);
   });
 });
+
+// A year of suggested themes in one press (utils/themeIdeas.js; 26 Nov 2026, the user's wish:
+// production had none until someone wrote them)
+describe('suggested themes', () => {
+  const year = Array.from({ length: 12 }, (_, i) => addMonths(THIS_MONTH, i));
+  let admin;
+  let member;
+
+  beforeAll(async () => {
+    admin = await signUp('ThemeSuggestAdmin');
+    await prisma.user.update({ where: { id: admin.user.id }, data: { role: 'ADMIN' } });
+    member = await signUp('ThemeSuggestMember');
+    // This month keeps a theme of its own; the rest of the year starts empty
+    await prisma.photoTheme.deleteMany({ where: { month: { in: year.slice(1) } } });
+    await prisma.photoTheme.upsert({
+      where: { month: THIS_MONTH },
+      update: {},
+      create: { month: THIS_MONTH, title: 'Breakfast', blurb: 'Written by hand.' },
+    });
+  });
+
+  afterAll(async () => {
+    await prisma.photoTheme.deleteMany({ where: { month: { in: year } } });
+  });
+
+  it('fills each empty month of the coming year, never a month that has one, and only for admins', async () => {
+    const fill = (agent) => agent.post('/api/users/admin/themes/suggested').send({});
+    expect((await fill(member.agent)).status).toBe(403);
+    expect((await fill(anon())).status).toBe(401);
+    const before = await prisma.photoTheme.findUnique({ where: { month: THIS_MONTH } });
+
+    const res = await fill(admin.agent);
+    expect(res.status).toBe(201);
+    const { themes, added } = data(res);
+    expect(added).toBe(11);
+    const inYear = themes.filter((theme) => year.some((month) => monthKey(month) === theme.month));
+    expect(inYear.map((theme) => theme.month).sort()).toEqual(year.map(monthKey));
+    // The month that had one keeps it, word for word
+    expect(await prisma.photoTheme.findUnique({ where: { month: THIS_MONTH } })).toEqual(before);
+    // No title twice in the year, and not the one already set
+    const titles = inYear.map((theme) => theme.title.toLowerCase());
+    expect(new Set(titles).size).toBe(12);
+    expect(titles.filter((title) => title === 'breakfast')).toHaveLength(1);
+    for (const theme of inYear) expect(theme.blurb).toBeTruthy();
+
+    // Again: nothing to add
+    const again = await fill(admin.agent);
+    expect(again.status).toBe(200);
+    expect(data(again).added).toBe(0);
+  });
+});

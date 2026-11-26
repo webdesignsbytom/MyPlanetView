@@ -10,6 +10,7 @@ import {
   ON_THIS_DAY_MAX_EMAILS,
   anniversaryOf,
   anniversaryWords,
+  isQuotaError,
   memoryWords,
   photoLinkToken,
   pickAnniversary,
@@ -68,7 +69,11 @@ export function onThisDayEmail(memory, now = new Date()) {
   };
 }
 
-/** Send today's. -> `{ accounts, sent, skipped, complete }` */
+/**
+ * Send today's. -> `{ accounts, sent, skipped, complete, quotaReached }`: it stops at
+ * `maxEmails`, at its time budget, or once Resend says the account's quota is used up
+ * (`quotaReached`), as sending more would only fail.
+ */
 export async function sendOnThisDayEmails({ now = new Date(), budgetMs = ON_THIS_DAY_BUDGET_MS, maxEmails = ON_THIS_DAY_MAX_EMAILS } = {}) {
   const startedAt = Date.now();
   const sentBefore = new Date(now.getTime() - ON_THIS_DAY_GAP_MS);
@@ -86,7 +91,7 @@ export async function sendOnThisDayEmails({ now = new Date(), budgetMs = ON_THIS
   }
 
   const seed = now.toISOString().slice(0, 10);
-  const totals = { accounts: byUser.size, sent: 0, skipped: 0, complete: true };
+  const totals = { accounts: byUser.size, sent: 0, skipped: 0, complete: true, quotaReached: false };
   for (const [userId, photos] of byUser) {
     if (Date.now() - startedAt > budgetMs || totals.sent >= maxEmails) {
       totals.complete = false;
@@ -99,9 +104,15 @@ export async function sendOnThisDayEmails({ now = new Date(), budgetMs = ON_THIS
     // A moment's anniversary first, else a photo
     const memory = pickAnniversary(momentsOf.get(userId), `${seed}:${userId}`) ?? pickMemory(photos, `${seed}:${userId}`);
     const email = onThisDayEmail(memory, now);
-    const sent = await sendMemoryEmail(memory.email, email.subject, 'onThisDayEmail', email.context, { headers: email.headers });
+    const report = {};
+    const sent = await sendMemoryEmail(memory.email, email.subject, 'onThisDayEmail', email.context, { headers: email.headers, report });
     if (sent) totals.sent += 1;
     else totals.skipped += 1;
+    if (!sent && isQuotaError(report.error)) {
+      totals.quotaReached = true;
+      totals.complete = false;
+      break;
+    }
   }
   return totals;
 }

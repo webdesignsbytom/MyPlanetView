@@ -41,6 +41,7 @@ const CHOSEN = {
   '--poster-red': '#000000',
   '--poster-red-ink': '#ffffff',
   '--poster-red-deep': '#000000',
+  '--poster-red-strong': '#000000',
   '--danger-red': '#000000',
   '--danger-ink': '#ffffff',
   '--poster-brown': '#000000',
@@ -60,6 +61,11 @@ const CHOSEN = {
   '--map-visit-5': '#a0a0a0',
   '--map-visit-6': '#919191',
   '--map-visit-7': '#c6c6c6',
+  // The planned strings a lighter grey than the visited ones' (by brightness they came out
+  // almost the same: 25 Nov 2026), so the two kinds still tell apart
+  '--map-plan-string': '#8c8c8c',
+  // The places been to, filled by a design: a dark grey, plain against the near-white land
+  '--map-visited': '#3c3c3c',
 };
 const hex2 = (n) => n.toString(16).padStart(2, '0');
 

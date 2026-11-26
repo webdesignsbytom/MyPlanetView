@@ -1,0 +1,61 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>{{title}}</title>
+    <style>
+      body, table, td, a { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+      body { margin:0; padding:0; width:100% !important; background-color:#f4f4f4;
+      font-family:'Poppins', Arial, sans-serif; color:#333; }
+      .wrapper { width:100%; background-color:#f4f4f4; padding:24px 12px; }
+      .container { max-width:640px; margin:0 auto; background-color:#ffffff; border-radius:12px;
+      box-shadow:0 4px 14px rgba(0,0,0,0.08); padding:32px 28px; }
+      .logo img { max-width:160px; height:auto; display:block; margin:0 auto 16px auto; }
+      h1 { font-size:24px; line-height:1.25; margin:0 0 8px 0; color:#333; font-weight:700; text-align:center; }
+      p, li { font-size:16px; line-height:1.6; color:#333; }
+      p { margin:12px 0; }
+      ul { margin:8px 0; padding-left:22px; }
+      a { color:#32931D; text-decoration:underline; font-weight:600; }
+      .btn { display:inline-block; padding:14px 28px; background-color:#32931D; color:#ffffff !important;
+      text-decoration:none; border-radius:8px; font-weight:700; font-size:16px; line-height:1.2; margin:12px 0 4px 0; }
+      .centre { text-align:center; }
+      footer { max-width:640px; margin:14px auto 0 auto; text-align:center; font-size:14px; color:#999; }
+    </style>
+  </head>
+  <body>
+    <div class='wrapper'>
+      <div class='container'>
+        <div class='logo'>
+          <img src='{{logoUrl}}' alt='{{businessName}} logo' />
+        </div>
+
+        <h1>{{jobName}} had a problem</h1>
+        <p>It ran at {{when}} ({{jobTime}} each day). What went wrong:</p>
+        <ul>
+          {{#each problems}}<li>{{this}}</li>{{/each}}
+        </ul>
+        {{#if summary.length}}
+          <p>What it did:</p>
+          <ul>
+            {{#each summary}}<li>{{this}}</li>{{/each}}
+          </ul>
+        {{/if}}
+        <p>
+          The details are in the audit log, and the overview shows each job's last run. Vercel's
+          logs for the function have the error itself.
+        </p>
+        <p class='centre'>
+          <a class='btn' href='{{adminUrl}}' target='_blank' rel='noreferrer'>Open the admin pages</a>
+        </p>
+      </div>
+
+      <footer>
+        <p>
+          Sent to the admins of {{businessName}} when a daily job goes wrong.<br />
+          &copy; {{year}} {{businessName}}.
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

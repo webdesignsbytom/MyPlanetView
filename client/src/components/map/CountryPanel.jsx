@@ -25,6 +25,8 @@ import CountryPlannedTrips from './CountryPlannedTrips';
 import MomentList from '@/components/moments/MomentList';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import PrintDownload from '@/components/photos/PrintDownload';
+import ShareShow from '@/components/shows/ShareShow';
+import SendPostcard from '@/components/postcards/SendPostcard';
 import TravelDesk from '@/components/offers/TravelDesk';
 import FormField from '@/components/ui/FormField';
 // Utils
@@ -37,6 +39,7 @@ import { regionParent } from '@/utils/map/regionPlaces';
 import { countryMapCodeFor, countryMapInfo } from '@/utils/map/countryMapGeo';
 import { getSubdivisions } from '@/api/travelApi';
 import { NOTES_MAX } from '@/utils/map/visitNotes';
+import { firstVisitFor } from '@/utils/map/firstVisit';
 
 // A status's weight, to raise a nation to the UK's mark and never lower it
 const STATUS_RANK = { WANT_TO_GO: 1, VISITED: 2, LIVED: 3 };
@@ -73,6 +76,8 @@ const momentsClosedForVisit = () => {
 // through a share link). `mapKey` names the map in each card slot's seed.
 // "Print or download" (docs/API.md, "Downloads"): the country's photos as a zip, for the
 // map's editors (verified or not), never through a share link.
+// "Send a postcard" (docs/API.md "Postcards"; 26 Nov 2026): a card from this place by a link of
+// its own, never part of the map, for the map's editors with a verified email.
 // A region (Bali, Tasmania: regionPlaces.js) has its own ticket, with its poster, status, first
 // visit, note and the landmarks inside it; its photos and moments are its country's, which
 // `onOpenPlace(code)` opens from here (18 Nov 2026, the user's wish).
@@ -249,7 +254,8 @@ function CountryPanel({
           labelled
           countryName={country.name}
           status={status}
-          onChange={(next) => save(next, next ? { firstVisitedOn: visit?.firstVisitedOn || undefined } : undefined)}
+          // Newly visited or lived in: dated today unless it has a date (24 Nov 2026, the user's wish)
+          onChange={(next) => save(next, next ? { firstVisitedOn: firstVisitFor(visit, next) } : undefined)}
         />
       </FormField>
       {status && status !== 'WANT_TO_GO' ? (
@@ -454,6 +460,13 @@ function CountryPanel({
         {!parent && (canEdit || locked) && photoSource?.mapId && photos.photos.length ? (
           <PrintDownload inMapPanel fill scope={{ mapId: photoSource.mapId, country: code }} title={country.name} />
         ) : null}
+        {/* Some of its photos as a slideshow with its own link (25 Nov 2026): editors, verified */}
+        {!parent && canEdit && photoSource?.mapId && photos.photos.length ? (
+          <ShareShow inMapPanel fill mapId={photoSource.mapId} source={photoFilters} defaultTitle={country.name} />
+        ) : null}
+        {/* A postcard from here, sent by its own link, never part of the map (26 Nov 2026, the
+            user's wish): editors, verified; a region's photos are its country's */}
+        {canEdit ? <SendPostcard countryCode={code} placeName={country.name} photoFilters={parent || !photoSource?.mapId ? null : photoFilters} /> : null}
         <TravelDesk
           inMapPanel
           fill

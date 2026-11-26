@@ -26,10 +26,12 @@ const CASES = [
   ['getMapStats', () => travelApi.getMapStats('m1'), 'get', ['/api/maps/m1/stats']],
   ['tickLandmark', () => travelApi.tickLandmark('m1', 'l1'), 'put', ['/api/maps/m1/landmarks/l1/been', {}]],
   ['untickLandmark', () => travelApi.untickLandmark('m1', 'l1'), 'delete', ['/api/maps/m1/landmarks/l1/been']],
-  ['tieMapString', () => travelApi.tieMapString('m1', 'FR', 'JP'), 'post', ['/api/maps/m1/strings', { from: 'FR', to: 'JP' }]],
-  ['tieAutoMapStrings', () => travelApi.tieAutoMapStrings('m1'), 'post', ['/api/maps/m1/strings/auto', {}]],
+  // Each of a kind (25 Nov 2026): VISITED unless asked
+  ['tieMapString', () => travelApi.tieMapString('m1', 'FR', 'JP'), 'post', ['/api/maps/m1/strings', { from: 'FR', to: 'JP', kind: 'VISITED' }]],
+  ['tieMapString', () => travelApi.tieMapString('m1', 'FR', 'JP', 'PLANNED'), 'post', ['/api/maps/m1/strings', { from: 'FR', to: 'JP', kind: 'PLANNED' }]],
+  ['tieAutoMapStrings', () => travelApi.tieAutoMapStrings('m1', 'PLANNED'), 'post', ['/api/maps/m1/strings/auto', { kind: 'PLANNED' }]],
   ['untieMapString', () => travelApi.untieMapString('m1', 's 1'), 'delete', ['/api/maps/m1/strings/s%201']],
-  ['untieAllMapStrings', () => travelApi.untieAllMapStrings('m1'), 'delete', ['/api/maps/m1/strings']],
+  ['untieAllMapStrings', () => travelApi.untieAllMapStrings('m1', 'PLANNED'), 'delete', ['/api/maps/m1/strings', { params: { kind: 'PLANNED' } }]],
   ['getYearRecap', () => travelApi.getYearRecap('m1', 2025), 'get', ['/api/maps/m1/recap/2025']],
   ['updateMapDesign', () => travelApi.updateMapDesign('m1', body), 'patch', ['/api/maps/m1/design', body]],
   ['presignDesignPicture', () => travelApi.presignDesignPicture('m1', body), 'post', ['/api/maps/m1/design/picture/presign', body]],
@@ -142,8 +144,13 @@ const CASES = [
   ['quickFillVisits', () => travelApi.quickFillVisits('m1', ['FR', 'PE']), 'post', ['/api/maps/m1/visits/quick-fill', { countryCodes: ['FR', 'PE'] }]],
   ['getPassport', () => travelApi.getPassport({ mapId: 'm1' }), 'get', ['/api/maps/m1/passport']],
   ['getPassport', () => travelApi.getPassport({ shareCode: 'ABC' }, { travellerId: 't1' }), 'get', ['/api/shared/ABC/passport?traveller=t1']],
-  ['setStampPhoto', () => travelApi.setStampPhoto('m1', 'l1', 'p1'), 'put', ['/api/maps/m1/passport/stamps/l1/photo', { photoId: 'p1' }]],
-  ['clearStampPhoto', () => travelApi.clearStampPhoto('m1', 'l1'), 'delete', ['/api/maps/m1/passport/stamps/l1/photo']],
+  // A traveller's passport photo and signature (25 Nov 2026)
+  [
+    'updateTravellerPassport',
+    () => travelApi.updateTravellerPassport('m 1', 't1', { signature: 'M1 1L2 2' }),
+    'patch',
+    ['/api/maps/m%201/travellers/t1/passport', { signature: 'M1 1L2 2' }],
+  ],
   ['getBadges', () => travelApi.getBadges({ mapId: 'm1' }), 'get', ['/api/maps/m1/badges']],
   ['getBadges', () => travelApi.getBadges({ shareCode: 'ABC' }), 'get', ['/api/shared/ABC/badges']],
   // Life's One Shots (24 Nov 2026)

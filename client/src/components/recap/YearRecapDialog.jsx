@@ -8,17 +8,21 @@ import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 import RecapSlide from './RecapSlide';
 // Utils
 import { loadYearRecap, recapCardOptions, recapSlides } from '@/utils/recap/recap';
+import { cardMapView } from '@/utils/shareCard/cardMapView';
 
 // "Your year in travel" (docs/API.md "Year in travel"; 21 Nov 2026, the user's wish): one year
 // of the map as a few slides (RecapSlide), Back and Next (or the arrow keys), ending on its
 // share card, in `design`'s colours (the design the map is shown in, or null). Any year the
-// map has something in can be chosen. Portalled over the page.
+// map has something in can be chosen. Portalled over the page. The card's map is the whole
+// world, or the year's places close up, by the owner's choice on its slide (24 Nov 2026, the
+// user's wish: "offer both on the year card").
 function YearRecapDialog({ map, design = null, year: firstYear, onClose }) {
   const uid = useId();
   const [year, setYear] = useState(firstYear);
   // Each year's answer as it arrives (`{ recap }` or `{ error }`), so a year comes back at once
   const [loaded, setLoaded] = useState({});
   const [index, setIndex] = useState(0);
+  const [closeUp, setCloseUp] = useState(false);
   const headingRef = useRef(null);
   const movedRef = useRef(false);
 
@@ -35,7 +39,9 @@ function YearRecapDialog({ map, design = null, year: firstYear, onClose }) {
   const answer = loaded[year];
   const recap = answer?.recap ?? null;
   const slides = useMemo(() => recapSlides(recap), [recap]);
-  const card = useMemo(() => (recap ? recapCardOptions(recap, map, design) : null), [recap, map, design]);
+  const card = useMemo(() => (recap ? recapCardOptions(recap, map, design, { closeUp }) : null), [recap, map, design, closeUp]);
+  // A close-up only when it shows something the whole world doesn't (places near each other)
+  const canCloseUp = useMemo(() => Boolean(recap) && cardMapView(recap.places).kind !== 'world', [recap]);
   const at = Math.min(index, Math.max(0, slides.length - 1));
   const years = recap?.years?.length ? [...new Set([year, ...recap.years])].sort((a, b) => b - a) : [year];
 
@@ -49,7 +55,8 @@ function YearRecapDialog({ map, design = null, year: firstYear, onClose }) {
     setIndex(Math.min(Math.max(0, at + step), slides.length - 1));
   };
   const onKeyDown = (e) => {
-    if (e.target.closest?.('select, input, button')) return;
+    // Never from a field: the share slide's words move their caret with the arrows
+    if (e.target.closest?.('select, input, textarea, button')) return;
     if (e.key === 'ArrowRight') go(1);
     else if (e.key === 'ArrowLeft') go(-1);
   };
@@ -89,7 +96,16 @@ function YearRecapDialog({ map, design = null, year: firstYear, onClose }) {
           </p>
         ) : (
           <section aria-roledescription='slide' aria-label={`${at + 1} of ${slides.length}`} className='paper-aged grid min-h-72 content-start border-2 border-poster-brown p-4 sm:p-6'>
-            <RecapSlide key={`${year}-${slides[at]}`} kind={slides[at]} recap={recap} map={map} card={card} headingRef={headingRef} />
+            <RecapSlide
+              key={`${year}-${slides[at]}`}
+              kind={slides[at]}
+              recap={recap}
+              map={map}
+              card={card}
+              closeUp={canCloseUp ? closeUp : null}
+              onCloseUp={setCloseUp}
+              headingRef={headingRef}
+            />
           </section>
         )}
 

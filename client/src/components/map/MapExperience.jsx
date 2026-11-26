@@ -1,17 +1,19 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Constants
-import { MAP_PAGE_URL, comparePath, mapPassportPath, mapPath, sharedPassportPath } from '@/utils/constants/routes';
+import { MAP_PAGE_URL, VS_PAGE_URL, comparePath, mapPassportPath, mapPath, sharedPassportPath } from '@/utils/constants/routes';
 // Hooks
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import usePhotoPage, { preloadPhotoPage } from '@/hooks/usePhotoPage';
 import { preloadMomentPage } from '@/hooks/useMomentPage';
 import useLandmarks, { preloadLandmarks } from '@/hooks/useLandmarks';
 import { SplitUkProvider } from '@/hooks/useSplitUk';
+import { DistanceUnitProvider } from '@/hooks/useDistanceUnit';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 import useMapTheme from '@/hooks/useMapTheme';
 import useAchievements from '@/hooks/useAchievements';
+import useCookieChoiceMade from '@/hooks/useCookieChoiceMade';
 // Components
 import WorldMap from './WorldMap';
 import MapBackground from './MapBackground';
@@ -19,6 +21,8 @@ import MapDesignStyle from './MapDesignStyle';
 import MonoPictureFilter from './MonoPictureFilter';
 import MapBanner from './MapBanner';
 import MapToolbar from './MapToolbar';
+import SlideAway from './chrome/SlideAway';
+import MenusTab from './chrome/MenusTab';
 import MapZoomControls from './MapZoomControls';
 import StringModeTag from './StringModeTag';
 import CountryMapLoading from '@/components/countryMap/CountryMapLoading';
@@ -37,6 +41,7 @@ import { LANDMARK_MIN_ZOOM } from './LandmarkPins';
 import ErrorBoundary from '@/utils/error/ErrorBoundary';
 // Panels, fetched when first wanted (lazyMapPanels.js)
 import {
+  AwardShareDialog,
   BadgesGoalsPanel,
   CelebrationDialog,
   CountryListPanel,
@@ -61,6 +66,7 @@ import {
   TripsPanel,
   WhereNextPanel,
   StringsPanel,
+  FeedbackPanel,
   UnplacedPhotosPanel,
   MapPhotosPanel,
   OneShotsPanel,
@@ -73,6 +79,10 @@ import { maxTravellersFor } from '@/utils/map/saveMapSetup';
 import { nearestGoal } from '@/utils/achievements/goals';
 import { COUNTRY_BY_CODE } from '@/utils/map/countries';
 import { countsAsVisited } from '@/utils/map/visitStatus';
+import { shownSupporter } from '@/utils/plans/supporterBadge';
+import { firstVisitFor } from '@/utils/map/firstVisit';
+import { hasString, previousPlannedPlace, previousVisitedPlace, stringKindOf } from '@/utils/map/mapStrings';
+import { distanceUnitFor } from '@/utils/map/distanceUnits';
 import { MAP_PHOTOS, UNPLACED_PHOTOS } from '@/utils/map/mapPhotoLists';
 import { forgetMapLists, myMaps, sharedTrips as sharedTripList } from '@/utils/map/mapListCache';
 import { countryListsOf, countryMomentFilters, countryPhotoFilters, preloadCountryLists } from '@/utils/map/preloadCountryLists';
@@ -81,15 +91,18 @@ import { createValueStore } from '@/utils/map/valueStore';
 import { canEditRole, canManageRole } from '@/utils/sharing/shareRoles';
 import { mapExtent } from '@/utils/map/projection';
 import { isMonoStyle, mapStyleById, shownStyle } from '@/utils/map/mapStyles';
-import { designFor, shownDesign } from '@/utils/map/mapDesign';
+import { designFor, shownDesign, visitedLookFrom, visitedLookOf } from '@/utils/map/mapDesign';
 import { collectionCardOptions, mapCardOptions, oneShotsCardOptions, tripCardOptions } from '@/utils/shareCard/cardOptions';
 import { mapPosterOptions } from '@/utils/poster/posterOptions';
 import { recapYearFor } from '@/utils/recap/recap';
+import { NOT_PHONE_QUERY } from '@/utils/layout/phone';
 import RecapTag from '@/components/recap/RecapTag';
 import AnniversaryTag from '@/components/moments/AnniversaryTag';
 import TripCountdownTag from '@/components/trips/TripCountdownTag';
 import TripHomeTag from '@/components/trips/TripHomeTag';
+import MapTagStack from './MapTagStack';
 import { LandmarkMarksContext } from '@/hooks/useLandmarkMarks';
+import { MapChromeContext } from '@/hooks/useMapChrome';
 import useOneShots, { OneShotsContext } from '@/hooks/useOneShots';
 import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
 import { celebratesStamp, celebratesVisit, todayDay } from '@/utils/map/celebrations';
@@ -205,6 +218,24 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // Wide screens (lg) show the map's banner, while it's switched on. The map has no title tag
   // anywhere (the user's wish, 16 Nov 2026, phones too): "Your maps" opens from the toolbar.
   const bannerShows = useMediaQuery('(min-width: 1024px) and (min-height: 500px)') && settings.showUserBanner;
+  // The menus slid out of the way (25 Nov 2026, the user's wish: the tab on the toolbar's left
+  // edge, MenusTab; every menu leaves by its closest side, components/map/chrome/SlideAway).
+  // Not saved: a reload shows them. Wide screens only: phones have the Menu stamp, so a window
+  // made phone-sized shows them again.
+  const [menusAway, setMenusAway] = useState(false);
+  const wideScreen = useMediaQuery(NOT_PHONE_QUERY);
+  const menusHidden = menusAway && wideScreen;
+  const showMenus = useCallback(() => setMenusAway(false), []);
+  const toggleMenus = useCallback(() => setMenusAway((away) => !away), []);
+  const mapChrome = useMemo(() => ({ hidden: menusHidden, show: showMenus }), [menusHidden, showMenus]);
+  // Something opened while they're hidden (a country pressed on the map: its ticket) brings them
+  // back, so it doesn't open off the screen
+  const openedKey = ui.panel ? `${ui.panel}:${ui.selectedCode ?? ''}:${ui.pin?.id ?? (ui.pin?.draft ? 'new' : '')}` : '';
+  const openedKeyRef = useRef(openedKey);
+  useEffect(() => {
+    if (openedKey && openedKey !== openedKeyRef.current) setMenusAway(false);
+    openedKeyRef.current = openedKey;
+  }, [openedKey]);
 
   const canEdit = Boolean(actions) && !shareCode && canEditRole(role);
   // An unverified email address: nothing can be added or changed yet (the server refuses
@@ -216,6 +247,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // The map's settings and sharing: the owner or a co-owner (19 Nov 2026)
   const canManage = !shareCode && canManageRole(role);
   const canShare = Boolean(currentUser) && !shareCode;
+  // Feedback is for anyone signed in, on a share link too (FeedbackPanel)
+  const signedIn = Boolean(currentUser);
   const photoSource = useMemo(() => (shareCode ? { shareCode } : { mapId: map.id }), [shareCode, map.id]);
   // The map's plan (the owner and editors get it; docs/API.md, "Map limits"): a locked map
   // (an extra map that isn't paid for) takes no photos, and says so on a tag under the
@@ -227,6 +260,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const [payingForMap, setPayingForMap] = useState(false);
   // A share card being made (the stats panel's "Share a picture of my map"): its options
   const [shareCard, setShareCard] = useState(null);
+  // What the award pop-up announced, while its "Share a picture" dialog is open (25 Nov 2026)
+  const [awardShare, setAwardShare] = useState(null);
   // The poster dialog's options (mapPosterOptions), while it's open
   const [poster, setPoster] = useState(null);
   // "Guess where I was": the map's games for friends (23 Nov 2026)
@@ -236,7 +271,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   // "Your year in travel" open on this year (docs/API.md "Year in travel"), or null
   const [recapYear, setRecapYear] = useState(null);
   // String mode (docs/API.md "Strings"; 23 Nov 2026, the user's wish): a press on a country
-  // picks a string's end instead of opening its ticket. `{ start, message, error }`, or null
+  // picks a string's end instead of opening its ticket. `{ kind, start, message, error }` (the
+  // kind being tied, VISITED or PLANNED: 25 Nov 2026), or null
   const [stringMode, setStringMode] = useState(null);
 
   // The panels are separate downloads (lazyMapPanels.js): once the map has drawn, fetch
@@ -252,13 +288,15 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         ...(canEdit ? ['strings'] : []),
         'timeline',
         'badges',
+        'oneShots',
         'settings',
         'play',
         'photos',
         ...(canEdit ? ['upload'] : []),
         ...(canShare ? ['share', 'switcher'] : []),
+        ...(signedIn ? ['feedback'] : []),
       ]),
-    [canEdit, canShare],
+    [canEdit, canShare, signedIn],
   );
 
   // Every panel's data, fetched behind the loading screen before the map shows (17 Nov 2026,
@@ -341,6 +379,13 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   );
   // The design as Settings changes it, before it's saved (MapDesignStyle follows it alone)
   const [designPreview] = useState(() => createValueStore(null));
+  // How the places been to show: the map's own, in every style (docs/API.md "The visited look";
+  // 25 Nov 2026, the user's wish), and Settings' changes to it before they're saved
+  const visited = useMemo(
+    () => visitedLookFrom({ visitedLook: map.visitedLook, visitedColour: map.visitedColour, visitedFinish: map.visitedFinish }),
+    [map.visitedLook, map.visitedColour, map.visitedFinish],
+  );
+  const [visitedPreview] = useState(() => createValueStore(null));
 
   // The containers over the map follow its style (19 Nov 2026, the user's wish); Black and
   // white puts the grey tokens on <html> (useMapTheme)
@@ -407,11 +452,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
   // The tips (MapTipsDialog; 17 Nov 2026, the user's wish), once the loading screen lifts:
   // once a visit, on whichever map opens first, while the viewer's `showTips` is on. Its box
-  // turns the setting off without closing it. After "Where have you been?" when that opens.
+  // turns the setting off without closing it. After "Where have you been?" when that opens,
+  // and once the cookie pop-up is answered, which would otherwise cover them on a phone
+  // (26 Nov 2026, the audit).
   const tipsWanted = settings.showTips !== false;
+  const cookiesAnswered = useCookieChoiceMade();
   const [tipsOpen, setTipsOpen] = useState(false);
   useEffect(() => {
-    if (!dataReady || !tipsWanted || !quickFillChecked || quickFill) return;
+    if (!dataReady || !tipsWanted || !quickFillChecked || quickFill || !cookiesAnswered) return;
     try {
       if (sessionStorage.getItem(TIPS_SHOWN_KEY) === '1') return;
       sessionStorage.setItem(TIPS_SHOWN_KEY, '1');
@@ -422,19 +470,30 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       () => setTipsOpen(true),
       () => {},
     );
-  }, [dataReady, tipsWanted, quickFillChecked, quickFill]);
+  }, [dataReady, tipsWanted, quickFillChecked, quickFill, cookiesAnswered]);
   const wantToGo = useMemo(() => map.visits.filter((v) => v.status === 'WANT_TO_GO').map((v) => v.countryCode), [map.visits]);
   const openBadges = useCallback(() => {
     dismissNews();
     dispatch({ type: 'open', panel: 'badges' });
   }, [dismissNews]);
+  // The pop-up's news as a picture to post: it goes, and the dialog keeps what it said
+  const shareAward = useCallback(
+    (news) => {
+      setAwardShare(news);
+      dismissNews();
+    },
+    [dismissNews],
+  );
 
   const visitsByCode = useMemo(() => Object.fromEntries(map.visits.map((v) => [v.countryCode, v.status])), [map.visits]);
   // The visits as they stand, for the celebration's handlers (below) to read
   const visitsRef = useRef(visitsByCode);
+  // ...and the rows themselves, for the country list's status stamps (their dates)
+  const visitRowsRef = useRef(map.visits);
   useEffect(() => {
     visitsRef.current = visitsByCode;
-  }, [visitsByCode]);
+    visitRowsRef.current = map.visits;
+  }, [visitsByCode, map.visits]);
   const visitFor = (code) => map.visits.find((v) => v.countryCode === code) || null;
   // The map's own trips: what a photo or a moment can be on (not the group trips added from other maps)
   const ownTrips = useMemo(() => trips.filter((t) => !t.linked), [trips]);
@@ -478,41 +537,58 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
   // The celebration (CelebrationDialog; 24 Nov 2026, the user's wish): stars, the model and the
   // passport's stamp, when the viewer's own tick or confirmed photo stamps a landmark for the
-  // first time, or they mark a country visited or lived in from its ticket. Never for many at
-  // once (the country list, "Where have you been?"), and not while `showCelebrations` is off.
+  // first time, or they mark a country visited or lived in from its ticket or the country list
+  // (24 Nov 2026, the user's wish). Never for many at once ("Where have you been?"), and not
+  // while `showCelebrations` is off.
   // What was stamped and visited before a change is read from refs, so the handlers keep
-  // their identity.
+  // their identity. They queue (24 Nov 2026, the user's wish): a tick that marks a new country
+  // plays the landmark's, then the country's once it's closed.
   const celebrationsWanted = settings.showCelebrations !== false;
-  const [celebration, setCelebration] = useState(null);
+  // Each with its own number, so the next one opens afresh
+  const [celebrations, setCelebrations] = useState([]);
+  const celebrationCount = useRef(0);
+  const celebration = celebrations[0]?.value ?? null;
   const celebrate = useCallback(
-    (next) => {
+    (...next) => {
       if (!celebrationsWanted) return;
-      CelebrationDialog.preload().then(
-        () => setCelebration(next),
+      // The landmarks too (its name, stamp and "Been to 6 of 58"), so it opens at its size
+      // (25 Nov 2026, the user's report: it grew a little as it opened)
+      Promise.all([CelebrationDialog.preload(), preloadLandmarks()]).then(
+        () => setCelebrations((queue) => [...queue, ...next.map((value) => ({ id: (celebrationCount.current += 1), value }))]),
         () => {},
       );
     },
     [celebrationsWanted],
   );
+  const closeCelebration = useCallback(() => setCelebrations((queue) => queue.slice(1)), []);
+  // A country a tick marked visited (24 Nov 2026, the user's wish): dated and tied as one marked
+  // by hand; set below, once those exist
+  const newPlaceMarkedRef = useRef(async () => null);
   const stampedRef = useRef(stampedLandmarks);
   useEffect(() => {
     stampedRef.current = stampedLandmarks;
   }, [stampedLandmarks]);
 
-  // A tick can earn a landmark badge or reach a goal: ask, as a visit change does
+  // A tick can earn a landmark badge or reach a goal: ask, as a visit change does. `modelId`:
+  // ticked on a landmark model's card (a country's own map), whose model the celebration shows
   const toggleLandmark = useMemo(
     () =>
       setLandmarkBeen
-        ? async (landmarkId, been) => {
+        ? async (landmarkId, been, { modelId = null } = {}) => {
             const firstStamp = been && celebratesStamp(landmarkId, stampedRef.current);
             const visitsBefore = visitsRef.current || {};
             const answer = await setLandmarkBeen(landmarkId, been);
             checkAchievements();
             if (firstStamp) {
-              // The tick marks its place visited too (docs/API.md "Collecting")
+              // The tick marks its place visited too (docs/API.md "Collecting"): a new one is dated
+              // today and tied to the place before it, and celebrated after the landmark
               const place = answer?.countryCode;
               const newPlace = place && !countsAsVisited(visitsBefore[place]) ? place : null;
-              celebrate({ kind: 'landmark', landmarkId, stampedOn: todayDay(), photoUrl: null, newPlace });
+              const firstVisitedOn = newPlace ? await newPlaceMarkedRef.current(newPlace) : null;
+              celebrate(
+                { kind: 'landmark', landmarkId, stampedOn: todayDay(), photoUrl: null, newPlace, modelId },
+                ...(newPlace ? [{ kind: 'country', code: newPlace, status: 'VISITED', firstVisitedOn }] : []),
+              );
             }
             return answer;
           }
@@ -540,7 +616,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       if (answer?.countryCode) refreshAfterTick?.();
       if (answer?.created) {
         const tick = answer.oneShot || {};
-        celebrate({ kind: 'oneShot', itemKey, seenOn: tick.seenOn || null, datePrecision: tick.datePrecision || null, countryCode: tick.countryCode || null, photoUrl: tick.photo?.thumbUrl || null });
+        // Your own photo of it on the celebration, its display copy (26 Nov 2026)
+        const photoUrl = tick.photo?.displayUrl || tick.photo?.thumbUrl || null;
+        celebrate({ kind: 'oneShot', itemKey, seenOn: tick.seenOn || null, datePrecision: tick.datePrecision || null, countryCode: tick.countryCode || null, photoUrl });
       }
       return answer;
     },
@@ -642,12 +720,50 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const close = useCallback(() => dispatch({ type: 'close' }), []);
   // A visit changed by hand: then see whether it earned a badge or met a goal
   const changeVisit = actions?.setVisit;
-  // A country marked visited or lived in from its ticket (CountryPanel's own status control)
+  // A string from the place visited just before a newly visited one (24 Nov 2026, the user's
+  // wish: "always from country to country in order of visit"), while the viewer shows the strings
+  // and may tie them (an editor, verified); one the map has already isn't tied twice, and a
+  // failure leaves it to be tied by hand
+  const autoTie = canChange && settings.showStrings !== false ? (actions?.tieString ?? null) : null;
+  const stringsRef = useRef(map.strings);
+  useEffect(() => {
+    stringsRef.current = map.strings;
+  }, [map.strings]);
+  const tieToPrevious = useCallback(
+    (code, status, firstVisitedOn) => {
+      if (!autoTie) return;
+      const now = { countryCode: code, status, firstVisitedOn: firstVisitedOn || null, markedAt: new Date().toISOString() };
+      const previous = previousVisitedPlace([...visitRowsRef.current.filter((v) => v.countryCode !== code), now], code);
+      if (!previous || hasString(stringsRef.current, previous, code, 'VISITED')) return;
+      autoTie(previous, code, 'VISITED').catch(() => {});
+    },
+    [autoTie],
+  );
+  // The planned strings the same way (25 Nov 2026, the user's wish): a place newly marked "want to
+  // go" is tied to the one marked before it, in the order they were marked, while the viewer shows
+  // the planned strings
+  const autoTiePlanned = canChange && settings.showPlannedStrings !== false ? (actions?.tieString ?? null) : null;
+  const tieToPreviousPlanned = useCallback(
+    (code) => {
+      if (!autoTiePlanned) return;
+      const now = { countryCode: code, status: 'WANT_TO_GO', markedAt: new Date().toISOString() };
+      const previous = previousPlannedPlace([...visitRowsRef.current.filter((v) => v.countryCode !== code), now], code);
+      if (!previous || hasString(stringsRef.current, previous, code, 'PLANNED')) return;
+      autoTiePlanned(previous, code, 'PLANNED').catch(() => {});
+    },
+    [autoTiePlanned],
+  );
+  // A country marked visited or lived in from its ticket (CountryPanel's own status control) or
+  // the country list: celebrated, and tied to the place visited before it; one newly wanted is
+  // tied to the place wanted before it with a planned string
   const visitMarked = useCallback(
     (code, before, status, firstVisitedOn) => {
-      if (celebratesVisit(before, status)) celebrate({ kind: 'country', code, status, firstVisitedOn: firstVisitedOn || null });
+      if (status === 'WANT_TO_GO' && before !== 'WANT_TO_GO') tieToPreviousPlanned(code);
+      if (!celebratesVisit(before, status)) return;
+      celebrate({ kind: 'country', code, status, firstVisitedOn: firstVisitedOn || null });
+      tieToPrevious(code, status, firstVisitedOn);
     },
-    [celebrate],
+    [celebrate, tieToPrevious, tieToPreviousPlanned],
   );
   const setVisit = useMemo(
     () =>
@@ -660,9 +776,36 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         : undefined,
     [changeVisit, checkAchievements],
   );
+  // A country a landmark's tick marked visited: dated today unless it has a date, and tied to the
+  // place visited before it, as one marked by hand. -> its first visit
+  useEffect(() => {
+    newPlaceMarkedRef.current = async (code) => {
+      const firstVisitedOn = firstVisitFor(visitRowsRef.current.find((v) => v.countryCode === code) || null, 'VISITED') ?? null;
+      if (setVisit && firstVisitedOn) await setVisit(code, 'VISITED', { firstVisitedOn }).catch(() => {});
+      tieToPrevious(code, 'VISITED', firstVisitedOn);
+      return firstVisitedOn;
+    };
+  }, [setVisit, tieToPrevious]);
+  // The country list's status stamps: a place newly visited or lived in is dated today unless it
+  // has a date (utils/map/firstVisit.js; 24 Nov 2026, the user's wish), as on its ticket, and is
+  // celebrated as from its ticket once saved (24 Nov 2026, the user's wish: it gets its passport
+  // page too). Stable, so the list's memoised rows don't re-render for it
+  const setVisitFromList = useMemo(
+    () =>
+      setVisit
+        ? async (code, status) => {
+            const visit = visitRowsRef.current.find((v) => v.countryCode === code) || null;
+            const firstVisitedOn = status ? firstVisitFor(visit, status) : undefined;
+            const answer = await setVisit(code, status, status ? { firstVisitedOn } : undefined);
+            visitMarked(code, visit?.status ?? null, status, firstVisitedOn);
+            return answer;
+          }
+        : undefined,
+    [setVisit, visitMarked],
+  );
 
   // A tool from the toolbar or the phone's menu: whatever was open closes (uiReducer 'tool'),
-  // string mode too. "Tips" opens the tips (23 Nov 2026, the user's wish), or shuts them.
+  // string mode too. 'tips' (Settings' "Show the tips", 24 Nov 2026) opens the tips, or shuts them.
   const handleToggle = useCallback((panel) => {
     setStringMode(null);
     setOneShotFocus(null);
@@ -677,10 +820,11 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   const pickStringEnd = useCallback(
     (code) => {
       const start = stringMode?.start;
-      if (!start) return setStringMode({ start: code, message: '', error: false });
-      if (start === code) return setStringMode({ start: null, message: `${COUNTRY_BY_CODE[code]?.name ?? code} let go.`, error: false });
-      setStringMode({ start: null, message: 'Tying…', error: false });
-      return tieString(start, code).then(
+      const kind = stringMode?.kind ?? 'VISITED';
+      if (!start) return setStringMode({ kind, start: code, message: '', error: false });
+      if (start === code) return setStringMode({ kind, start: null, message: `${COUNTRY_BY_CODE[code]?.name ?? code} let go.`, error: false });
+      setStringMode({ kind, start: null, message: 'Tying…', error: false });
+      return tieString(start, code, kind).then(
         (string) =>
           setStringMode((mode) =>
             mode ? { ...mode, message: `Tied ${COUNTRY_BY_CODE[string.from]?.name ?? string.from} to ${COUNTRY_BY_CODE[string.to]?.name ?? string.to}.`, error: false } : mode,
@@ -699,7 +843,13 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     [untieString],
   );
   const endStringMode = useCallback(() => setStringMode(null), []);
-  const showStrings = Boolean(stringMode) || settings.showStrings !== false;
+  // The strings drawn: each kind unless the viewer hid it, and always the kind being tied
+  const showVisitedStrings = stringMode?.kind === 'VISITED' || settings.showStrings !== false;
+  const showPlannedStrings = stringMode?.kind === 'PLANNED' || settings.showPlannedStrings !== false;
+  const shownStrings = useMemo(
+    () => (map.strings || []).filter((string) => (stringKindOf(string) === 'PLANNED' ? showPlannedStrings : showVisitedStrings)),
+    [map.strings, showVisitedStrings, showPlannedStrings],
+  );
   const playCountry = useCallback((code) => dispatch({ type: 'play', country: code }), []);
 
   // A panel listing photos is open: the viewer is probably next
@@ -709,6 +859,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
   }, [listsPhotos]);
 
   const panel = (() => {
+    // The map's passport, its own address or through the share link: the statistics, the
+    // country list and Where to go next link to it
+    const passportHref = shareCode ? sharedPassportPath(shareCode) : mapPassportPath(map.id);
     switch (ui.panel) {
       case 'settings':
         return (
@@ -725,11 +878,15 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onMapSaved={actions?.reload}
             onDesignChange={actions?.setDesign}
             designPreview={designPreview}
+            onVisitedLookChange={canManage ? actions?.setVisitedLook : null}
+            visitedPreview={visitedPreview}
             onMapDeleted={() => {
               forgetMapLists();
               navigate(MAP_PAGE_URL, { replace: true });
             }}
             onUpgradePay={isOwner && !mustVerify ? () => setPayingForMap('upgrade') : null}
+            // The tips, any time (the toolbar's own stamp until 24 Nov 2026, the user's wish)
+            onShowTips={() => handleToggle('tips')}
             onClose={close}
           />
         );
@@ -738,6 +895,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           <StatsPanel
             stats={map.stats}
             travellers={map.travellers}
+            // Collector's counts: the UN members to go open their tickets (the UK's is England's
+            // on a map that splits it, where the UK has none of its own)
+            visits={map.visits}
+            onOpenCountry={(code) => showCountry(code === 'GB' && map.splitUk ? 'XE' : code)}
             unplacedCount={unplacedCount}
             unplacedMore={unplacedMore}
             onShowUnplaced={showUnplaced}
@@ -748,9 +909,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onGuessGame={canEdit ? () => setGuessGameOpen(true) : undefined}
             onFlightLog={shareCode || !currentUser ? undefined : () => setFlightLogOpen(true)}
             compareHref={shareCode ? null : comparePath(map.id)}
+            vsHref={shareCode || !currentUser ? null : VS_PAGE_URL}
             onYearRecap={shareCode ? undefined : () => setRecapYear(recapYearFor())}
             collected={landmarkMarks}
-            passportHref={shareCode ? sharedPassportPath(shareCode) : mapPassportPath(map.id)}
+            passportHref={passportHref}
             onClose={close}
           />
         );
@@ -762,6 +924,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             locked={locked}
             travellers={map.travellers}
             photoSource={photoSource}
+            // A tick's new photos, uploaded from its dialog (editors who may add photos)
+            uploader={
+              canChange && !mapLocked
+                ? { mapId: map.id, uploadRules, photoCounts: map.photoCounts || null, videoCounts: map.videoCounts || null, isOwner, onUploaded: photosChanged }
+                : null
+            }
             focusKey={oneShotFocus}
             onSave={saveOneShot}
             onRemove={removeOneShot}
@@ -792,13 +960,16 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             visitsByCode={visitsByCode}
             canEdit={canChange}
             locked={locked}
-            onChangeStatus={setVisit}
+            onChangeStatus={setVisitFromList}
             onShowCountry={showCountry}
             // Ticking several at once: the owner and co-owners (as the first-load offer)
             onQuickFill={canManage ? () => setQuickFill('later') : null}
             unplacedCount={unplacedCount}
             unplacedMore={unplacedMore}
             onShowUnplaced={showUnplaced}
+            passportHref={passportHref}
+            // The Strings panel, an editor's (its toolbar stamp until 24 Nov 2026, the user's wish)
+            onOpenStrings={canEdit ? () => handleToggle('strings') : null}
             onClose={close}
           />
         );
@@ -811,6 +982,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             photosVersion={photosVersion}
             // An editor's "Add photos" opens the upload panel (which says why, on a locked or unverified map)
             onAddPhotos={canEdit ? () => dispatch({ type: 'upload' }) : null}
+            // The whole map's slideshow, over the album (its own stamp until 24 Nov 2026, the user's wish)
+            onPlay={() => dispatch({ type: 'play' })}
+            // "Share a slideshow" of photos chosen from the album, with its own link (25 Nov 2026): editors
+            showMapId={canEdit ? map.id : null}
             onClose={close}
           />
         );
@@ -893,22 +1068,29 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           />
         );
       case 'next':
-        return <WhereNextPanel visits={map.visits} onShowCountry={showCountry} onClose={close} />;
+        return <WhereNextPanel visits={map.visits} onShowCountry={showCountry} passportHref={passportHref} onClose={close} />;
+      case 'feedback':
+        // A problem, an idea or a question (docs/API.md "Feedback"), for anyone signed in
+        return currentUser ? <FeedbackPanel mapId={map.id} styleId={styleId} phone={!wideScreen} onClose={close} /> : null;
       case 'strings':
         return canEdit ? (
           <StringsPanel
+            map={map}
             strings={map.strings || []}
-            showStrings={settings.showStrings !== false}
-            onShowStrings={(on) => onChangeSetting('showStrings', on)}
+            shown={{ VISITED: settings.showStrings !== false, PLANNED: settings.showPlannedStrings !== false }}
+            onShowStrings={(kind, on) => onChangeSetting(kind === 'PLANNED' ? 'showPlannedStrings' : 'showStrings', on)}
             locked={locked}
-            canDesign={canManage}
+            // Their colours are the map design's, for the map's style (as Settings' "How it looks")
+            styleId={styleId}
+            onDesignChange={canManage ? actions?.setDesign : null}
+            designPreview={designPreview}
             onTie={actions.tieString}
             onTieAuto={actions.tieAutoStrings}
             onUntie={actions.untieString}
             onUntieAll={actions.untieAllStrings}
-            onStringMode={() => {
+            onStringMode={(kind) => {
               close();
-              setStringMode({ start: null, message: '', error: false });
+              setStringMode({ kind, start: null, message: '', error: false });
             }}
             onClose={close}
           />
@@ -955,14 +1137,21 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     // The map's own choice to show the UK as its four nations, for everything on the page
     // (the drawing, the country list, every country picker and landmark list)
     <SplitUkProvider value={Boolean(map.splitUk)}>
+    {/* Kilometres or miles, for the statistics and the flight log: the viewer's setting, else
+        miles for a map whose home is in the United States (24 Nov 2026, the user's wish) */}
+    <DistanceUnitProvider value={distanceUnitFor(settings.distanceUnit, map.stats?.homeCountryCode)}>
     <LandmarkMarksContext.Provider value={landmarkMarks}>
     <OneShotsContext.Provider value={oneShotsHere}>
+    <MapChromeContext.Provider value={mapChrome}>
     <div
       data-map-style={styleId}
       data-map-design={design ? '' : undefined}
+      // The map page's own wrapper: the visited look's rules apply under it (utils/map/mapDesign.js
+      // visitedCss), never in Settings' pictures of the styles
+      data-map-page=''
       className='relative h-dvh w-full overflow-hidden bg-map-sea text-map-ink'
     >
-      {design ? <MapDesignStyle design={design} preview={designPreview} /> : null}
+      <MapDesignStyle design={design} preview={designPreview} visited={visited} visitedPreview={visitedPreview} />
       {/* Black and white (a map style): everything here in greys (data-mono-map in index.css):
           the map's drawing through the grey tokens, so a design's own colours show on it (22 Nov
           2026, the user's wish: they turned grey), and a greyscale filter over the rest and the
@@ -1004,8 +1193,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             showMoments={settings.showMoments}
             selectedCode={ui.panel === 'country' ? ui.selectedCode : null}
             onSelectCountry={stringMode ? pickStringEnd : selectCountry}
-            strings={showStrings ? map.strings : null}
+            strings={shownStrings}
             stringStart={stringMode?.start ?? null}
+            stringKind={stringMode?.kind ?? 'VISITED'}
             onRemoveString={stringMode ? removeString : null}
             onHoverCountry={hoverCountry}
             showGrid={settings.showGrid || detailed}
@@ -1019,10 +1209,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             stampedLandmarks={stampedLandmarks}
             landmarkPins={pinMode}
             label={`${map.name}: world map`}
+            visited={visited}
+            visitedPreview={visitedPreview}
           />
           )}
         </main>
-        <div className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2 phone:right-3'>
+        {/* Every piece of the page's furniture below slides off by its closest side while the
+            menus are hidden (SlideAway, MenusTab) */}
+        <SlideAway className='pointer-events-none absolute left-3 top-3 grid justify-items-start gap-2 phone:right-3' data-map-tags=''>
           {mustVerify ? <VerifyEmailBanner /> : null}
           {shareCode ? null : <JoinedMapNote mapName={map.name} role={role} />}
           {planBanner ? (
@@ -1037,22 +1231,31 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           ) : null}
           {/* Someone asks for copies of their travels from this map (docs/API.md, "Travel copies") */}
           {canManage ? <TravelCopyBanner mapId={map.id} /> : null}
-          {/* In December and January, the year's recap (docs/API.md "Year in travel") */}
-          {shareCode ? null : <RecapTag mapId={map.id} onOpen={setRecapYear} />}
-          {/* A moment's day come round: "10 years ago today: Our wedding" (21 Nov 2026) */}
-          {shareCode ? null : <AnniversaryTag mapId={map.id} onOpenCountry={selectCountry} />}
-          {/* The countdown to the next planned trip: "12 days until Japan in spring" (22 Nov 2026) */}
-          {shareCode ? null : <TripCountdownTag trips={trips} />}
-          {/* The day after a trip ends, for two weeks: "Welcome home", share it (23 Nov 2026,
-              the user's wish: word of mouth). Its editors only; the map's link for those who
-              can open the sharing dialog */}
-          {canEdit ? (
-            <TripHomeTag
-              trips={trips}
-              onSharePicture={(trip) => setShareCard(tripCardOptions(trip, map, design))}
-              onShareLink={canShare ? () => dispatch({ type: 'share', open: true }) : null}
-            />
-          ) : null}
+          {/* The notes that come and go, one at a time with arrows between them (MapTagStack;
+              26 Nov 2026, the audit: stacked, they covered a third of the map), the most
+              pressing first */}
+          {shareCode ? null : (
+            <MapTagStack>
+              {/* The day after a trip ends, for two weeks: "Welcome home", share it (23 Nov
+                  2026, the user's wish: word of mouth). Its editors only; the map's link for
+                  those who can open the sharing dialog */}
+              {canEdit ? (
+                <TripHomeTag
+                  key='home'
+                  trips={trips}
+                  onSharePicture={(trip) => setShareCard(tripCardOptions(trip, map, design))}
+                  onShareLink={canShare ? () => dispatch({ type: 'share', open: true }) : null}
+                />
+              ) : null}
+              {/* A moment's day come round: "10 years ago today: Our wedding" (21 Nov 2026) */}
+              <AnniversaryTag key='anniversary' mapId={map.id} onOpenCountry={selectCountry} />
+              {/* In December and January, the year's recap (docs/API.md "Year in travel") */}
+              <RecapTag key='recap' mapId={map.id} onOpen={setRecapYear} />
+              {/* The countdown to the next planned trip: "12 days until Japan in spring" (22 Nov
+                  2026); the viewer can switch it off (`showTripCountdown`, 25 Nov 2026) */}
+              {settings.showTripCountdown === false ? null : <TripCountdownTag key='countdown' trips={trips} />}
+            </MapTagStack>
+          )}
           {/* Last in the column, so the banners above keep their place (the map switcher opens
               below them). On phones first (17 Nov 2026): its flag sits level with the Menu
               stamp, and the banners come below them both, or below an empty row as tall as
@@ -1070,18 +1273,22 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             </div>
           ) : null}
           {phoneFlag ? null : <span aria-hidden='true' className='h-10 phone:order-first nophone:hidden' />}
-        </div>
+        </SlideAway>
 
         {/* A country's own map has its own header there */}
         {bannerShows && !ui.countryMap ? (
-          <div className='pointer-events-none absolute inset-x-0 top-3 grid justify-items-center'>
-            <MapBanner map={map} />
-          </div>
+          <SlideAway className='pointer-events-none absolute inset-x-0 top-3 grid justify-items-center'>
+            <MapBanner map={map} supporter={shownSupporter(map, settings, { role, shareCode })} />
+          </SlideAway>
         ) : null}
 
         {/* The tools at the top right: a column of stamps on wide screens, the "Menu"
             button on phones (MapToolbar) */}
-        <div className='pointer-events-none absolute right-3 top-3 z-20 grid justify-items-end'>
+        {/* It leaves to the right by its own width, so the tab on its left (MenusTab) stays on the
+            screen's edge to bring the menus back */}
+        <SlideAway className='pointer-events-none absolute right-3 top-3 z-20 grid justify-items-end' toward='right' margin={0} interactive data-map-tools=''>
+          <MenusTab hidden={menusHidden} onToggle={toggleMenus} />
+          <div inert={menusHidden ? true : undefined} className='grid justify-items-end'>
           <MapToolbar
             // Adding photos is part of the Photos stamp's panel
             openPanel={tipsOpen ? 'tips' : ui.slideshow ? 'play' : ui.sharing ? 'share' : ui.panel === 'upload' ? 'photos' : ui.panel}
@@ -1089,38 +1296,48 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onIntent={preloadTool}
             canShare={canShare}
             canSwitch={Boolean(currentUser) && !shareCode}
-            canString={canEdit}
+            canFeedback={signedIn}
             stats={map.stats}
           />
-        </div>
+          </div>
+        </SlideAway>
 
         {/* As far from the bottom as the toolbar is from the top (both 3); a country's own map
             has its own (CountryMapView) */}
         {ui.countryMap ? null : (
-          <div className='pointer-events-none absolute bottom-3 right-3 grid'>
+          <SlideAway className='pointer-events-none absolute bottom-3 right-3 grid'>
             <div className='pointer-events-auto'>
               <MapZoomControls viewport={viewport} />
             </div>
-          </div>
+          </SlideAway>
         )}
 
         {/* String mode's tag at the foot of the map, clear of the zoom stamps */}
         {stringMode && !ui.countryMap ? (
           <div className='pointer-events-none absolute inset-x-3 bottom-20 grid justify-items-center nophone:bottom-3'>
-            <StringModeTag startCode={stringMode.start} message={stringMode.message} error={stringMode.error} onDone={endStringMode} />
+            <StringModeTag
+              kind={stringMode.kind}
+              startCode={stringMode.start}
+              message={stringMode.message}
+              error={stringMode.error}
+              onDone={endStringMode}
+            />
           </div>
         ) : null}
 
-        {/* The key hides while a panel is open: the panel covers that corner */}
-        {panel || ui.countryMap ? null : (
-          <div className='pointer-events-none absolute bottom-3 left-3 hidden nophone:grid'>
+        {/* The key hides while a panel is open: the panel covers that corner. The viewer can
+            switch it off (`showMapKey`, 25 Nov 2026) */}
+        {panel || ui.countryMap || settings.showMapKey === false ? null : (
+          <SlideAway className='pointer-events-none absolute bottom-3 left-3 hidden nophone:grid'>
             <MapLegend
               showMoments={settings.showMoments}
               showSpots={Boolean(map.momentSpots?.length)}
               showStamps={stampedLandmarks.size > 0}
               showPlanned={plannedCodes.size > 0}
+              // How the map shows the places been to (25 Nov 2026): badges, a colour or both
+              visitedLook={visitedLookOf(visited)}
             />
-          </div>
+          </SlideAway>
         )}
 
         {/* Wide screens centre every panel on the screen, the map switcher too: the same space
@@ -1135,10 +1352,17 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             wish), and a press on it closes the panel. On wide screens it sits under the toolbar
             (z-20), which stays bright and works, so another tool is one press away. */}
         {panel ? (
-          <div aria-hidden='true' data-map-scrim='' onClick={close} className='absolute inset-0 z-30 bg-scrim nophone:z-10' />
+          <div
+            aria-hidden='true'
+            data-map-scrim=''
+            onClick={close}
+            // Fades while the menus are hidden, the panel sliding away over it
+            className={`absolute inset-0 z-30 bg-scrim motion-safe:transition-opacity motion-safe:duration-500 nophone:z-10 ${menusHidden ? 'pointer-events-none opacity-0' : ''}`}
+          />
         ) : null}
         {panel ? (
-          <div
+          <SlideAway
+            measure='[data-map-panel]'
             data-map-panels=''
             className={`pointer-events-none absolute z-30 grid grid-rows-[minmax(0,1fr)] nophone:inset-x-24 nophone:z-10 nophone:place-items-center ${
               ui.panel === 'country' ? 'inset-0' : 'inset-3'
@@ -1150,11 +1374,17 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             <ErrorBoundary key={ui.panel} fallback={<MapPanelFallback failed onClose={close} />}>
               <Suspense fallback={<MapPanelFallback />}>{panel}</Suspense>
             </ErrorBoundary>
-          </div>
+          </SlideAway>
         ) : null}
 
         {/* A badge earned or a goal reached: said once, politely */}
-        <AwardNews news={achievements.news} onOpen={openBadges} onDismiss={dismissNews} />
+        <AwardNews
+          news={achievements.news}
+          onOpen={openBadges}
+          onDismiss={dismissNews}
+          // A picture to post: the map's own people, never a share link
+          onShare={canEdit && !shareCode ? shareAward : null}
+        />
 
         <MapHoverLayer
           hover={hover}
@@ -1210,6 +1440,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
               onHideTips={(hide) => onChangeSetting('showTips', !hide)}
               posters={settings.hoverPreview}
               share={canShare}
+              design={canManage}
               onClose={() => setTipsOpen(false)}
             />
           </MapOverlayBoundary>
@@ -1218,6 +1449,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         {recapYear ? (
           <MapOverlayBoundary onClose={() => setRecapYear(null)}>
             <YearRecapDialog map={map} design={design} year={recapYear} onClose={() => setRecapYear(null)} />
+          </MapOverlayBoundary>
+        ) : null}
+
+        {awardShare ? (
+          <MapOverlayBoundary onClose={() => setAwardShare(null)}>
+            <AwardShareDialog news={awardShare} badges={achievements.badges || []} map={map} design={design} onClose={() => setAwardShare(null)} />
           </MapOverlayBoundary>
         ) : null}
 
@@ -1289,14 +1526,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
       {/* Over everything, the photo viewer too (a confirmed photo is celebrated there), and
           outside Black and white's filter, so the model keeps its colours as photos do */}
+      {/* One at a time, each afresh (its own focus, stars and stamp) */}
       {celebration ? (
-        <MapOverlayBoundary onClose={() => setCelebration(null)}>
+        <MapOverlayBoundary onClose={closeCelebration}>
           <CelebrationDialog
+            key={celebrations[0].id}
             celebration={celebration}
             passportHref={mapPassportPath(map.id)}
-            hideCelebrations={!celebrationsWanted}
-            onHideCelebrations={(hide) => onChangeSetting('showCelebrations', !hide)}
-            onClose={() => setCelebration(null)}
+            onClose={closeCelebration}
           />
         </MapOverlayBoundary>
       ) : null}
@@ -1316,8 +1553,10 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
       {dataReady ? null : <MapStatusScreen loading overlay />}
     </div>
+    </MapChromeContext.Provider>
     </OneShotsContext.Provider>
     </LandmarkMarksContext.Provider>
+    </DistanceUnitProvider>
     </SplitUkProvider>
   );
 }

@@ -5,7 +5,7 @@
 import { deny, fail, ok, route } from '../mockAdapter';
 import { getDb, me, normaliseShareCode, session } from '../store';
 import { atLeast, canSeePhoto, higherRole, mapRole, photoListItem, photoRole } from '../views';
-import { THEME_LIMITS, addMonths, monthOf, parseThemeInput, photoThemes, themeView } from '../themes';
+import { THEME_LIMITS, addMonths, monthOf, parseThemeInput, photoThemes, suggestThemes, themeView } from '../themes';
 
 // The server's words (utils/responses/responses.js)
 const MESSAGES = {
@@ -197,6 +197,16 @@ export function registerThemeRoutes() {
     const theme = { id: `theme-${parsed.data.month}-${Date.now().toString(36)}`, ...parsed.data, createdAt: now, updatedAt: now };
     getDb().themes.push(theme);
     return ok({ theme: adminView(theme) }, 201);
+  });
+
+  // A year of suggested themes for the empty months (the server's fillSuggestedThemesHandler)
+  route('POST', '/api/users/admin/themes/suggested', () => {
+    if (!isAdmin()) return notAdmin();
+    const now = new Date().toISOString();
+    const rows = suggestThemes(themes(), new Date()).map((row) => ({ id: `theme-${row.month}-${Date.now().toString(36)}`, ...row, createdAt: now, updatedAt: now }));
+    getDb().themes.push(...rows);
+    const list = [...themes()].sort((a, b) => (a.month < b.month ? 1 : -1)).map(adminView);
+    return ok({ themes: list, entriesPerMap: THEME_LIMITS.entriesPerMap, added: rows.length }, rows.length ? 201 : 200);
   });
 
   route('PATCH', '/api/users/admin/themes/:themeId', ({ params, body }) => {

@@ -15,6 +15,7 @@ import {
   ADMIN_PROMO_CODES_PAGE_URL,
   ADMIN_OFFERS_PAGE_URL,
   ADMIN_THEMES_PAGE_URL,
+  ADMIN_FEEDBACK_PAGE_URL,
   MAP_PAGE_URL,
   CHALLENGES_PAGE_URL,
 } from '../constants/routes';
@@ -54,6 +55,7 @@ export const getNavLinkItemsArray = (user) => [
             { path: ADMIN_PROMO_CODES_PAGE_URL, label: 'Promo Codes' },
             { path: ADMIN_OFFERS_PAGE_URL, label: 'Travel Offers' },
             { path: ADMIN_THEMES_PAGE_URL, label: 'Photo Themes' },
+            { path: ADMIN_FEEDBACK_PAGE_URL, label: 'Feedback' },
             ...(hasRole(user, ROLES.DEVELOPER)
               ? [{ path: ADMIN_EVENTS_PAGE_URL, label: 'Audit Log' }]
               : []),

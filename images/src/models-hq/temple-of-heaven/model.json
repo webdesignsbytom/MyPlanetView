@@ -1,0 +1,8 @@
+{
+  "name": "Temple of Heaven",
+  "latitude": 39.8822,
+  "longitude": 116.4066,
+  "maps": ["CN"],
+  "landmark": "Q125445",
+  "onMap": false
+}

@@ -1,6 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { presignMockUpload, confirmMockUpload } from '@/dev/mock/uploads';
-import { ALEX, PAUSED, USER, db, del, freshStore, get, patch, post, registerAllRoutes, signOut, testUser } from '../mockApi';
+import { ALEX, PAUSED, USER, db, del, freshStore, get, patch, post, registerAllRoutes, signIn, signOut, testUser } from '../mockApi';
+import { dueReminders } from '@/utils/admin/reminders';
 
 beforeAll(() => registerAllRoutes());
 beforeEach(() => freshStore());
@@ -119,5 +120,62 @@ describe('the audit log', () => {
     expect((await patch('/api/events/update-event-status/nope', {})).status).toBe(404);
     expect((await del('/api/events/delete-event/event-1')).data).toEqual({ message: 'Event deleted.', id: 'event-1' });
     expect((await del('/api/events/delete-all-events')).data.count).toBe(3);
+  });
+});
+
+// The overview, gifts by code and referral rewards (docs/API.md "Admin"; the audit, 26 Nov 2026)
+describe('the admin overview, gifts and referral rewards', () => {
+  it('only admins open them', async () => {
+    for (const path of ['/api/users/admin/overview', '/api/users/admin/gifts', '/api/users/admin/referrals']) {
+      as('USER');
+      expect((await get(path)).status).toBe(403);
+      as('ADMIN');
+      expect((await get(path)).status).toBe(200);
+      signOut();
+      expect((await get(path)).status).toBe(401);
+      signIn();
+    }
+  });
+
+  it('counts the store, with each daily job’s pretend run', async () => {
+    as('ADMIN');
+    const { overview } = (await get('/api/users/admin/overview')).data;
+    expect(overview.accounts.total).toBe(db().users.length);
+    expect(overview.maps).toBe(db().maps.length);
+    expect(overview.photos.photos).toBeGreaterThan(0);
+    // The seed's test user pays monthly for Business
+    expect(overview.members.paying.REGULAR).toBeGreaterThanOrEqual(1);
+    expect(overview.jobs.map((job) => [job.job, job.level, job.late])).toEqual([
+      ['cleanup', 'INFO', false],
+      ['emails', 'INFO', false],
+    ]);
+    // The yearly reminders due, as the server's rule says (utils/admin/reminders.js)
+    expect(overview.reminders).toEqual(dueReminders(new Date()));
+  });
+
+  it('finds a gift by its code, as the server does', async () => {
+    as('ADMIN');
+    db().gifts = [
+      { id: 'g1', code: 'GFT2AD3MN4QR', plan: 'REGULAR', months: 12, amountPence: 4900, buyerId: USER, toName: 'Gran', paidAt: '2026-11-01T10:00:00.000Z', refundedAt: null, redeemedById: null, redeemedAt: null, createdAt: '2026-11-01T10:00:00.000Z' },
+    ];
+    const found = (await get('/api/users/admin/gifts', { code: 'gft2-ad3m-n4qr' })).data.gifts;
+    expect(found).toHaveLength(1);
+    expect(found[0]).toMatchObject({ code: 'GFT2-AD3M-N4QR', planName: 'Business', status: 'READY', buyer: { name: 'Charlie Reid', email: 'test@myplanetview.local' } });
+    expect((await get('/api/users/admin/gifts', { code: '2222-3333-4444' })).data.gifts).toEqual([]);
+    expect((await get('/api/users/admin/gifts', { code: '!!' })).status).toBe(400);
+    expect((await get('/api/users/admin/gifts')).data.gifts.map((g) => g.code)).toEqual(['GFT2-AD3M-N4QR']);
+    expect((await get('/api/users/admin/overview')).data.overview.gifts).toEqual({ paid: 1, redeemed: 0, refunded: 0, waiting: 1 });
+  });
+
+  it('lists the referral rewards, newest first', async () => {
+    as('ADMIN');
+    db().referralRewards = [
+      { id: 'r1', referrerId: USER, friendId: ALEX, kind: 'CAPPED', amountPence: null, createdAt: '2026-11-01T00:00:00.000Z' },
+      { id: 'r2', referrerId: USER, friendId: 'gone', kind: 'CREDIT', amountPence: 499, createdAt: '2026-11-05T00:00:00.000Z' },
+    ];
+    const { rewards } = (await get('/api/users/admin/referrals')).data;
+    expect(rewards.map((r) => r.id)).toEqual(['r2', 'r1']);
+    expect(rewards[0]).toMatchObject({ kind: 'CREDIT', amountPence: 499, friend: null, referrer: { email: 'test@myplanetview.local' } });
+    expect(rewards[1].friend).toEqual({ name: db().users.find((u) => u.id === ALEX).name });
   });
 });

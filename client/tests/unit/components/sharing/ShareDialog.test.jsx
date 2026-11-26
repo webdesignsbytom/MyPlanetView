@@ -20,6 +20,10 @@ vi.mock('@/api/travelApi', () => ({
 }));
 vi.mock('@/auth/AuthContext', () => ({ useAuth: vi.fn() }));
 vi.mock('@/utils/map/mapListCache', () => ({ forgetMapLists: vi.fn() }));
+// A map's slideshows are their own test's (MapShowsSection.test.jsx): here, where they show
+vi.mock('@/components/shows/MapShowsSection', () => ({
+  default: ({ mapId, locked }) => <section data-test-shows={mapId} data-locked={String(locked)} />,
+}));
 
 const SHARING = {
   owner: { name: 'Charlie', email: 'charlie@example.com' },
@@ -262,5 +266,32 @@ describe('ShareDialog', () => {
     const { onClose } = open({ role: 'VIEWER' });
     fireEvent.click(screen.getByText('Done'));
     expect(onClose).toHaveBeenCalled();
+  });
+});
+
+// A map's slideshows of chosen photos, each with its own link (25 Nov 2026): its editors'
+describe('ShareDialog: the map’s slideshows', () => {
+  const shows = () => document.querySelector('[data-test-shows]');
+
+  it('lists them for the owner and an editor of a map, locked until the email is verified', async () => {
+    open();
+    await loaded();
+    expect(shows().getAttribute('data-test-shows')).toBe('m1');
+    expect(shows().getAttribute('data-locked')).toBe('false');
+  });
+
+  it('lists them for an editor, who can’t change who has access', () => {
+    useAuth.mockReturnValue({ user: { id: 'u2', emailVerified: false } });
+    open({ role: 'EDITOR', currentUserId: 'u2' });
+    expect(shows().getAttribute('data-locked')).toBe('true');
+  });
+
+  it('not for a viewer, nor on a trip', async () => {
+    const { unmount } = render(<ShareDialog resource='maps' id='m1' name='Our map' role='VIEWER' currentUserId='u1' onClose={() => {}} />, { wrapper: MemoryRouter });
+    expect(shows()).toBeNull();
+    unmount();
+    render(<ShareDialog resource='trips' id='t1' name='Lisbon' role='OWNER' currentUserId='u1' onClose={() => {}} />, { wrapper: MemoryRouter });
+    await loaded();
+    expect(shows()).toBeNull();
   });
 });

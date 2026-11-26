@@ -8,6 +8,13 @@ import { REGION_PARENT } from './regionPlaces.js';
 // user-assigned range: X = geographic, Q = magnetic)
 export const SPECIAL_PLACE_CODES = Object.freeze(['AQ', 'XN', 'QN', 'XS', 'QS']);
 export const POLE_CODES = Object.freeze(['XN', 'QN', 'XS', 'QS']);
+
+// The year the magnetic poles' pins are for: NOAA's World Magnetic Model positions (WMM2025),
+// in both country lists (server/prisma/seed/data/countries.js, client/src/utils/map/countries.js).
+// The poles drift 40 to 50 km a year; from the January after this year the admin overview says
+// to move them, and the nightly job emails the admins once a year (utils/reminders.js). Change
+// it with the pins.
+export const MAGNETIC_POLES_YEAR = 2025;
 const MAGNETIC_POLE_CODES = Object.freeze(['QN', 'QS']);
 
 export const SPECIAL_PLACE_TOTAL = SPECIAL_PLACE_CODES.length;

@@ -16,8 +16,8 @@ import { PROMO_TRIAL_DAYS } from '../plans/promoCodes.js';
 const PAID = `${PLANS.REGULAR.name} and ${PLANS.PREMIUM.name}`;
 
 export const LEGAL_VERSION = {
-  lastUpdated: '2026-11-23',
-  version: '1.3.1',
+  lastUpdated: '2026-11-26',
+  version: '1.5.0',
 };
 
 // Terms of use
@@ -260,10 +260,15 @@ export const PrivacySectionsArray = [
       'Your account: your name, email address and a securely hashed password.',
       'Your maps: the countries you mark, your trips and their stops, and the travellers on each map (names, and optionally a birth country, favourite country and date of birth). A date of birth is seen only by the map’s owner and its editors, never through a share link, and is used only to show how much of that person’s life they have spent travelling.',
       'Your photos: the files you upload, their captions, the date each was taken and, where your phone saved it, the place it was taken.',
+      'Flights you log: the two airports, the day, the airline and the flight number. A boarding pass’s barcode is read in your own browser and only those details are sent to us, never the pass itself or the name on it.',
+      'Your passport’s travellers page: a photo you choose from your map’s photos for each traveller, how it is cropped, and a signature drawn with a finger or mouse. Everyone who can open the map’s passport sees them, people with its share link included.',
+      'What you bring from Polarsteps: your browser reads the download you choose and sends us only the trips, photos and stories you pick from it.',
+      'Games, slideshows and comparisons you make: a “Guess where I was” game or a shared slideshow shows the photos you chose to anyone with its link until you delete it. A player’s name stays on a game’s leaderboard; plays never given a name are deleted after 7 days. In a friends challenge or a Vs comparison, the others in it see your name, the counts from the map you chose and your badges’ names, never your map, photos or places. A map you put on your own website shows what its share link shows.',
       `Your plan, if you pay: which plan and how often you pay, any extra maps, the promo code you signed up with, and the references Stripe gives your customer record and subscription. Your card details go straight to Stripe; we never see or store them.`,
       'Gifts you buy: the plan, who it’s for and your message, if you write them. Anyone with the gift’s code sees those on its page, with your name as who it’s from.',
+      'Postcards you send: the place, the picture on the front (a photo of your own is kept for the card, apart from your map), the style, your message and the names you write on it. Anyone with its link sees the card and can download it, until you delete it or your account; a copy someone downloaded stays theirs.',
       'Your invite code, if you ask for one: the friends who create accounts with it and the free months they bring you. Anyone with the code sees your first name.',
-      'Messages you send through the contact form.',
+      'Messages you send through the contact form, and feedback you send from the map: your words, any screenshot you add, the page you were on, your browser and the size of your screen. Only our team sees it, and it goes when you delete your account.',
       'Security records: sign-in sessions, the device and IP address they came from, and a log of important actions, used to protect accounts and investigate problems.',
     ],
   },
@@ -286,7 +291,7 @@ export const PrivacySectionsArray = [
       `To run ${CompanyName}: show your map, place and match your photos, and share what you choose with the people you choose.`,
       'To send the emails the service needs: confirming your address, resetting your password and telling you when someone shares something with you.',
       'Now and then, at most once a week, an “On this day” email with one of your own photos from that day in an earlier year. It’s on to start with; switch it off on your account page, or with the link in any of them.',
-      'To keep the site secure and working, and to answer you when you contact us.',
+      'To keep the site secure and working, to answer you when you contact us, and to fix what you tell us about in your feedback.',
     ],
   },
   {
@@ -306,7 +311,7 @@ export const PrivacySectionsArray = [
     group: 'policies',
     content: [
       'We use a small number of providers to run the site, each bound to use your data only on our instructions: Cloudflare (photo storage, R2, and First Class videos, Stream), Vercel (the server), InMotion Hosting (the website), Stripe (payments), our database host and our email provider.',
-      'Google Analytics runs only if you accept analytics cookies.',
+      'Google Analytics runs only if you accept analytics cookies. Besides the pages viewed, it then counts a few things done on the site, so we can see where people get stuck: creating an account, marking countries, uploading photos, sharing a map or trip, and starting and completing a payment (the plan and its price). Never your name, email address, map, photos, places, or any link or code.',
       'We never sell your data or share it with advertisers. We would only disclose it if the law required us to.',
       'Some providers may process data outside the UK. Where they do, they use approved safeguards such as standard contractual clauses.',
     ],

@@ -62,6 +62,8 @@ export const CelebrationDialog = lazyPanel(() => import('./celebration/Celebrati
 export const OneShotsPanel = lazyPanel(() => import('@/components/oneShots/OneShotsPanel'));
 // A picture of the map to share (utils/shareCard/)
 export const ShareCardDialog = lazyPanel(() => import('@/components/shareCard/ShareCardDialog'));
+// A badge earned or a goal reached, as a picture to post (25 Nov 2026), from the award pop-up
+export const AwardShareDialog = lazyPanel(() => import('@/components/achievements/AwardShareDialog'));
 // "Where have you been?": ticking many countries at once (the first time a map loads, or the country list)
 export const QuickFillDialog = lazyPanel(() => import('./QuickFillDialog'));
 // The map as a printed poster (utils/poster/)
@@ -75,6 +77,8 @@ export const BadgesGoalsPanel = lazyPanel(() => import('@/components/achievement
 export const WhereNextPanel = lazyPanel(() => import('./WhereNextPanel'));
 // Strings between places: the list, the automatic ones and the way into string mode (docs/API.md "Strings")
 export const StringsPanel = lazyPanel(() => import('./StringsPanel'));
+// Feedback: a problem, an idea or a question, with a screenshot if they like (docs/API.md "Feedback")
+export const FeedbackPanel = lazyPanel(() => import('@/components/feedback/FeedbackPanel'));
 // The slideshows: the map's ("Play my world"), a country's, and a trip's (the trip page)
 export const Slideshow = lazyPanel(() => import('@/components/slideshow/Slideshow'));
 // A country opened on its own, with its states and pins (a country's ticket's "Open country"),
@@ -105,6 +109,7 @@ const FOR_TOOL = {
   oneShots: [OneShotsPanel, CelebrationDialog],
   play: [Slideshow],
   tips: [MapTipsDialog],
+  feedback: [FeedbackPanel],
 };
 
 /** Start fetching what a tool opens; errors are left for the real open to show. */

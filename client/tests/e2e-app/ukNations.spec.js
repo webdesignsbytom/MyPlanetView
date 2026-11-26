@@ -27,7 +27,7 @@ test.describe('The UK’s nations', () => {
     await openMap(page);
     await expect(page.locator('[data-code="GB"]')).toHaveCount(1);
     await expect(page.locator('[data-code="XC"]')).toHaveCount(0);
-    await expectStats(page, '8 countries, 2 continents, 16 photos');
+    await expectStats(page, '20 countries, 5 continents, 16 photos');
 
     // Split: the four nations are drawn instead, and the photos with a position went to
     // England and Scotland; the UK, marked by hand, waits for its nations
@@ -38,7 +38,7 @@ test.describe('The UK’s nations', () => {
     await expect(page.locator('[data-code="XC"]')).toHaveAttribute('data-been', 'true');
     await expect(page.locator('[data-code="XW"]')).toHaveAttribute('data-been', 'false');
     // England and Scotland count as two; the UK no longer counts as well
-    await expectStats(page, '9 countries, 2 continents, 16 photos');
+    await expectStats(page, '21 countries, 5 continents, 16 photos');
 
     // The country list has the nations, and the UK while it waits; its ticket asks
     const list = await openTool(page, 'Country list', 'Countries');
@@ -54,14 +54,14 @@ test.describe('The UK’s nations', () => {
     await ask.getByRole('button', { name: 'Save' }).click();
     await expect(uk).toHaveCount(0);
     await expect(page.locator('[data-code="XW"]')).toHaveAttribute('data-been', 'true');
-    await expectStats(page, '10 countries, 2 continents, 16 photos');
+    await expectStats(page, '22 countries, 5 continents, 16 photos');
 
     // Joined again: one UK, counted once
     await setSplit(page, false);
     await expect(page.locator('[data-code="GB"]')).toHaveCount(1);
     await expect(page.locator('[data-code="XC"]')).toHaveCount(0);
     await expect(page.locator('[data-code="GB"]')).toHaveAttribute('data-been', 'true');
-    await expectStats(page, '8 countries, 2 continents, 16 photos');
+    await expectStats(page, '20 countries, 5 continents, 16 photos');
   });
 
   test('on a split map each nation has its own landmarks, the pickers offer the nations, and a share link draws them', async ({ page }) => {

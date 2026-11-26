@@ -5,6 +5,7 @@ import StatsPanel from '@/components/map/StatsPanel';
 import useLandmarks from '@/hooks/useLandmarks';
 import { aboutKm, aboutMiles, worldShare } from '@/utils/map/travelStatWords';
 import { withProviders } from './helpers';
+import { DistanceUnitProvider } from '@/hooks/useDistanceUnit';
 
 vi.mock('@/hooks/useLandmarks', () => ({ default: vi.fn() }));
 
@@ -74,9 +75,31 @@ describe('StatsPanel', () => {
     const t = tiles(container);
     expect(t['Of the world']).toBeUndefined();
     expect(t['Furthest from home']).toBeUndefined();
-    expect(t['Distance travelled'][1]).toBe('Home and back, on completed trips');
+    expect(t['Distance travelled'][1]).toBe('Home and back, to everywhere you’ve been');
     expect(t['Days away'][0]).toBe('0');
     expect(t.Regions[0]).toMatch(/^0 of/);
+  });
+
+  // 24 Nov 2026, the user's wish: "Americans in miles always", and what the distance is like
+  it('says what the distance travelled is like, and nothing for none', () => {
+    const { container } = open();
+    expect(container.querySelector('[data-distance-comparison]').textContent).toBe('23,500 km is further than every branch of the Great Wall of China.');
+    const none = open({ stats: { ...STATS, distanceKm: 0 } });
+    expect(none.container.querySelector('[data-distance-comparison]')).toBeNull();
+  });
+
+  it('writes the distances in miles on a map shown in miles, the kilometres under them', () => {
+    const { container } = render(
+      withProviders(
+        <DistanceUnitProvider value='miles'>
+          <StatsPanel stats={STATS} onClose={() => {}} />
+        </DistanceUnitProvider>,
+      ),
+    );
+    const t = tiles(container);
+    expect(t['Distance travelled']).toEqual(['14,600 miles', 'About 23,500 km']);
+    expect(t['Furthest from home'][1]).toBe('About 11,200 miles from the United Kingdom');
+    expect(container.querySelector('[data-distance-comparison]').textContent).toBe('14,600 miles is further than every branch of the Great Wall of China.');
   });
 
   it('counts the landmarks been to and the World Heritage Sites among them', () => {
@@ -97,7 +120,7 @@ describe('StatsPanel', () => {
 
   it('offers each way on that it is given', () => {
     const calls = { onShareCard: vi.fn(), onPoster: vi.fn(), onYearRecap: vi.fn(), onShowBadges: vi.fn(), onShowUnplaced: vi.fn() };
-    const { container } = open({ ...calls, unplacedCount: 3, compareHref: '/compare?a=m1', passportHref: '/maps/m1/passport' });
+    const { container } = open({ ...calls, unplacedCount: 3, compareHref: '/compare?a=m1', vsHref: '/vs', passportHref: '/maps/m1/passport' });
     fireEvent.click(screen.getByText('Share a picture of my map'));
     fireEvent.click(screen.getByText('A poster of my map'));
     fireEvent.click(screen.getByText('Your year in travel'));
@@ -107,13 +130,16 @@ describe('StatsPanel', () => {
     const links = [...container.querySelectorAll('a')].map((a) => [a.textContent, a.getAttribute('href')]);
     expect(links).toEqual([
       ['Compare with another map', '/compare?a=m1'],
+      ['Vs mode: compare with friends', '/vs'],
       ['Passport: landmark stamps', '/maps/m1/passport'],
     ]);
   });
 
   it('offers none of them through a share link', () => {
     const { container } = open();
-    expect(container.querySelectorAll('[data-map-panel] button').length).toBe(1); // the close stamp
+    // The close stamp, and the collector's counts' "to go" list (not an action)
+    const actions = [...container.querySelectorAll('[data-map-panel] button')].filter((b) => !b.closest('[data-collector-counts]'));
+    expect(actions).toHaveLength(1);
     expect(container.querySelector('a')).toBeNull();
   });
 
@@ -163,6 +189,21 @@ describe('StatsPanel', () => {
     expect(names().at(-1)).toBe('Japan');
     fireEvent.click(screen.getByText('Show fewer'));
     expect(names()).toHaveLength(6);
+  });
+
+  // Collector's counts (24 Nov 2026, the user's wish): a counter beside the map's own
+  it('counts the UN member states been to, the ones to go opening their countries', () => {
+    const onOpenCountry = vi.fn();
+    const visits = [
+      { countryCode: 'FR', status: 'VISITED' },
+      { countryCode: 'GL', status: 'VISITED' },
+    ];
+    const { container } = open({ stats: { ...STATS, unCountries: 1 }, visits, onOpenCountry });
+    const counts = container.querySelector('[data-collector-counts]');
+    expect(counts.textContent).toContain('1 of 193');
+    fireEvent.click(screen.getByText('Show the 192 to go'));
+    fireEvent.click(counts.querySelector('[data-un-to-go="DE"] button'));
+    expect(onOpenCountry).toHaveBeenCalledWith('DE');
   });
 
   it('shows none of the time away when no trip has dates', () => {

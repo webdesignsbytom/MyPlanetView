@@ -48,6 +48,9 @@ export async function designView(design) {
     grid: design.gridColour,
     hover: design.hoverColour,
     string: design.stringColour,
+    stringTwist: design.stringTwistColour ?? null,
+    plannedString: design.plannedStringColour ?? null,
+    plannedStringTwist: design.plannedStringTwistColour ?? null,
     // Signed as a photo is (on the hour, for two), so the browser keeps it
     picture: design.picture ? { url: await signPhotoUrl(design.picture.key) } : null,
   };
