@@ -48,3 +48,7 @@ card and the celebration. `[x]` is done (rendered at 1024 px, 256 samples).
 13. [x] gyeongbokgung, [x] grand-palace-bangkok, [x] wat-arun*, [x] bagan, [x] ha-long-bay, [x] tigers-nest, [x] leshan-buddha, [x] registan, [x] dome-of-the-rock*, [x] western-wall
 14. [x] persepolis, [x] naqsh-e-jahan, [x] karnak, [x] victoria-falls, [x] kilimanjaro, [x] lalibela, [x] djenne, [x] hassan-tower, [x] ait-benhaddou, [x] cappadocia
 15. [x] mostar, [x] fishermans-bastion*, [x] forth-bridge*, [x] kiyomizu-dera*, [x] summer-palace*, [x] rila, [x] sigiriya, [x] konark, [x] verona-arena, [x] delphi
+
+## The next 10 (picked 27 Nov 2026: the most famous still in the toon look, buildings and structures, one natural sight)
+
+16. [x] tiananmen*, [x] castel-sant-angelo*, [x] agra-fort*, [x] prambanan*, [x] krak-des-chevaliers, [x] pamukkale, [x] toledo, [x] salzburg, [x] bruges, [x] tallinn
