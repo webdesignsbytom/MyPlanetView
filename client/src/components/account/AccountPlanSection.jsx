@@ -21,6 +21,7 @@ import { planOf } from '@/utils/constants/plans';
 import { forgetMapLists, myMaps } from '@/utils/map/mapListCache';
 import { plural } from '@/utils/functions/plural';
 import { INTERVAL_NAMES, billingFrom, forgetPendingMap, goToUrl, hasSubscription, readPendingMap } from '@/utils/plans/billing';
+import { trackCheckoutPaid, trackCheckoutStarted } from '@/utils/analytics/events';
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // After Stripe's checkout the plan arrives with its webhook: read it again a little later
@@ -68,6 +69,11 @@ function AccountPlanSection() {
       })
       .catch((err) => alive.current && setLoadError(err.friendlyMessage || 'Your plan could not be loaded.'));
   }, []);
+
+  // Back from a paid Checkout: the purchase, counted once (utils/analytics/events.js)
+  useEffect(() => {
+    if (billingReturn === 'success') trackCheckoutPaid('plan');
+  }, [billingReturn]);
 
   // Back from a paid Checkout: Stripe's webhook may land a moment after the person does
   useEffect(() => {
@@ -155,7 +161,12 @@ function AccountPlanSection() {
 
   const choosePlan = (planId) =>
     act(
-      () => (subscribed ? changePlan({ plan: planId, interval }) : startCheckout({ plan: planId, interval })),
+      async () => {
+        if (subscribed) return changePlan({ plan: planId, interval });
+        const answer = await startCheckout({ plan: planId, interval });
+        if (answer?.url) trackCheckoutStarted({ item: 'plan', plan: planId, interval, pence: planOf(planId).price[interval] });
+        return answer;
+      },
       `Done: you’re on ${planOf(planId).name}, paid ${INTERVAL_NAMES[interval]}.`,
     );
 

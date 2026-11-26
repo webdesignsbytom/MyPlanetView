@@ -4,10 +4,12 @@
 // best copy, and their photos on other people's maps. The links are the mock's own files.
 import { fail, ok, route } from '../mockAdapter';
 import { feedbackExportItem } from '../feedback';
+import { postcardExportItem } from './postcards';
 import { getDb, me } from '../store';
 import { landmarkById, photoDetail, userName } from '../views';
 import { effectivePlan, grantsOf, subscriptionOf } from '../plans';
 import { designsOf } from '../mapDesigns';
+import { tickPhotoIds } from './oneShots';
 import { PLANS } from '@/utils/constants/plans';
 
 const PAGE = 500;
@@ -227,7 +229,7 @@ function mapView(map) {
         countryCode: o.countryCode,
         notes: o.notes,
         source: o.source,
-        photoId: o.photoId,
+        photoIds: tickPhotoIds(o),
         travellerIds: [...(o.travellerIds || [])],
         ticked: iso(o.createdAt),
       })),
@@ -299,6 +301,8 @@ export function registerDataExportRoutes() {
       photosOnOtherMaps: db.photos.filter((p) => isUploadElsewhere(db, p, user.id)).length,
       // The feedback they sent (docs/API.md "Feedback"): their words and where each stands
       feedback: (db.feedback || []).filter((f) => f.userId === user.id).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).map(feedbackExportItem),
+      // The postcards they sent (docs/API.md "Postcards"), newest first
+      postcards: (db.postcards || []).filter((c) => c.senderId === user.id).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)).map(postcardExportItem),
     });
   });
 

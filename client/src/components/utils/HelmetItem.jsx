@@ -11,12 +11,14 @@ import {
   SITE_LANGUAGE,
 } from '../../utils/constants/constants';
 import { HOME_PAGE_URL } from '../../utils/constants/routes';
+import { helmetData } from '../../utils/data/helmetData';
 // SEO
 import getCanonical from '../../utils/seo/getCanonical';
 import { metaTitle } from '../../utils/seo/metaText';
 
-// Default desc for pages without their own
-const DEFAULT_DESC = `${CompanyName} provides professional web development, design, and digital solutions.`;
+// A page without a description of its own gets the home page's (so check-meta's duplicate
+// check flags an indexed one), never the starter template's
+const DEFAULT_DESC = helmetData[HOME_PAGE_URL].desc;
 
 export const HelmetItem = ({
   PageName,

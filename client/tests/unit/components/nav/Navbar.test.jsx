@@ -185,4 +185,16 @@ describe('navTrialClass', () => {
     expect(navTrialClass(12)).toBe(navTrialClass(2));
     expect(navTrialClass(3)).toContain('font-travel');
   });
+
+  it('never puts cream lettering on the poster red, or the dark gold with the deep red (contrast under 4.5:1)', () => {
+    for (const style of NAV_TRIAL_STYLES) {
+      for (const classes of [style.base, style.active]) {
+        const list = classes.split(/s+/);
+        if (list.includes('text-poster-cream')) expect(list).not.toContain('bg-poster-red');
+        if (list.includes('bg-poster-red-deep')) expect(list).not.toContain('text-poster-gold-light');
+        if (list.includes('text-poster-red-deep')) expect(list).not.toContain('bg-poster-gold-light');
+        expect(list).not.toContain('text-poster-red');
+      }
+    }
+  });
 });

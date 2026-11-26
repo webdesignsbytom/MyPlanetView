@@ -8,7 +8,9 @@ import {
   ADMIN_OFFERS_PAGE_URL,
   ADMIN_THEMES_PAGE_URL,
   ADMIN_FEEDBACK_PAGE_URL,
+  ADMIN_GIFTS_PAGE_URL,
   CHALLENGES_PAGE_URL,
+  VS_PAGE_URL,
   GIFTS_PAGE_URL,
   COMPARE_PAGE_URL,
   IMPORT_PAGE_URL,
@@ -58,6 +60,7 @@ export const AdminPromoCodesPage = lazyPage(() => import('@/pages/admin/AdminPro
 export const AdminOffersPage = lazyPage(() => import('@/pages/admin/AdminOffersPage'));
 export const AdminThemesPage = lazyPage(() => import('@/pages/admin/AdminThemesPage'));
 export const AdminFeedbackPage = lazyPage(() => import('@/pages/admin/AdminFeedbackPage'));
+export const AdminGiftsPage = lazyPage(() => import('@/pages/admin/AdminGiftsPage'));
 // Users
 export const AccountPage = lazyPage(() => import('@/pages/account/AccountPage'));
 export const LoginPage = lazyPage(() => import('@/users/login/LoginPage'));
@@ -75,10 +78,14 @@ export const EmbedPage = lazyPage(() => import('@/pages/embed/EmbedPage'));
 // A "Guess where I was" game (23 Nov 2026)
 export const GuessPage = lazyPage(() => import('@/pages/guess/GuessPage'));
 export const ShowPage = lazyPage(() => import('@/pages/show/ShowPage'));
+export const PostcardPage = lazyPage(() => import('@/pages/postcard/PostcardPage'));
 export const InviteAcceptPage = lazyPage(() => import('@/pages/invite/InviteAcceptPage'));
 export const ChallengesPage = lazyPage(() => import('@/pages/challenges/ChallengesPage'));
 export const ChallengePage = lazyPage(() => import('@/pages/challenges/ChallengePage'));
 export const ChallengeJoinPage = lazyPage(() => import('@/pages/challenges/ChallengeJoinPage'));
+export const VsPage = lazyPage(() => import('@/pages/vs/VsPage'));
+export const VsGroupPage = lazyPage(() => import('@/pages/vs/VsGroupPage'));
+export const VsJoinPage = lazyPage(() => import('@/pages/vs/VsJoinPage'));
 // Gifts of a year of a plan (docs/API.md "Gifts")
 export const GiftsPage = lazyPage(() => import('@/pages/gifts/GiftsPage'));
 export const ComparePage = lazyPage(() => import('@/pages/compare/ComparePage'));
@@ -138,7 +145,9 @@ const PAGES_BY_PATH = {
   [ADMIN_OFFERS_PAGE_URL]: AdminOffersPage,
   [ADMIN_THEMES_PAGE_URL]: AdminThemesPage,
   [ADMIN_FEEDBACK_PAGE_URL]: AdminFeedbackPage,
+  [ADMIN_GIFTS_PAGE_URL]: AdminGiftsPage,
   [CHALLENGES_PAGE_URL]: ChallengesPage,
+  [VS_PAGE_URL]: VsPage,
   [GIFTS_PAGE_URL]: GiftsPage,
   [COMPARE_PAGE_URL]: ComparePage,
   [IMPORT_PAGE_URL]: ImportPage,

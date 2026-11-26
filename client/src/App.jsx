@@ -18,6 +18,7 @@ import {
   ADMIN_OFFERS_PAGE_URL,
   ADMIN_THEMES_PAGE_URL,
   ADMIN_FEEDBACK_PAGE_URL,
+  ADMIN_GIFTS_PAGE_URL,
   ADMIN_USERS_PAGE_URL,
   CONTACT_PAGE_URL,
   COUNTRIES_PAGE_URL,
@@ -40,11 +41,15 @@ import {
   EMBED_PAGE_URL,
   GUESS_PAGE_URL,
   SHOW_PAGE_URL,
+  POSTCARD_PAGE_URL,
   isEmbedPath,
   INVITE_PAGE_URL,
   CHALLENGES_PAGE_URL,
   CHALLENGE_PAGE_URL,
   CHALLENGE_JOIN_PAGE_URL,
+  VS_PAGE_URL,
+  VS_GROUP_PAGE_URL,
+  VS_JOIN_PAGE_URL,
   GIFTS_PAGE_URL,
   COMPARE_PAGE_URL,
   GIFT_PAGE_URL,
@@ -78,6 +83,7 @@ import {
   AdminOffersPage,
   AdminThemesPage,
   AdminFeedbackPage,
+  AdminGiftsPage,
   ContactPage,
   PricingPage,
   TermAndPoliciesPage,
@@ -97,10 +103,14 @@ import {
   EmbedPage,
   GuessPage,
   ShowPage,
+  PostcardPage,
   InviteAcceptPage,
   ChallengesPage,
   ChallengePage,
   ChallengeJoinPage,
+  VsPage,
+  VsGroupPage,
+  VsJoinPage,
   GiftsPage,
   ComparePage,
   GiftPage,
@@ -288,6 +298,14 @@ function App() {
             }
           />
           <Route
+            path={ADMIN_GIFTS_PAGE_URL}
+            element={
+              <AuthenticateAdmin>
+                <AdminGiftsPage />
+              </AuthenticateAdmin>
+            }
+          />
+          <Route
             path={ADMIN_EVENTS_PAGE_URL}
             element={
               <AuthenticateDeveloper>
@@ -341,6 +359,7 @@ function App() {
           <Route path={EMBED_PAGE_URL} element={<EmbedPage />} />
           <Route path={GUESS_PAGE_URL} element={<GuessPage />} />
           <Route path={SHOW_PAGE_URL} element={<ShowPage />} />
+          <Route path={POSTCARD_PAGE_URL} element={<PostcardPage />} />
           <Route path={SHARED_PASSPORT_PAGE_URL} element={<PassportPage />} />
           <Route path={INVITE_PAGE_URL} element={<InviteAcceptPage />} />
 
@@ -359,6 +378,25 @@ function App() {
             element={
               <AuthenticateUser>
                 <ChallengePage />
+              </AuthenticateUser>
+            }
+          />
+
+          {/* Vs mode: your comparisons and one compared (signed in), and a join link (anyone) */}
+          <Route
+            path={VS_PAGE_URL}
+            element={
+              <AuthenticateUser>
+                <VsPage />
+              </AuthenticateUser>
+            }
+          />
+          <Route path={VS_JOIN_PAGE_URL} element={<VsJoinPage />} />
+          <Route
+            path={VS_GROUP_PAGE_URL}
+            element={
+              <AuthenticateUser>
+                <VsGroupPage />
               </AuthenticateUser>
             }
           />

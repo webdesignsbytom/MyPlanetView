@@ -23,6 +23,7 @@ import {
 import { forgetMapLists } from '@/utils/map/mapListCache';
 import { impliedVisits } from '@/utils/map/specialPlaces';
 import { stringKindOf } from '@/utils/map/mapStrings';
+import { trackCountriesMarked } from '@/utils/analytics/events';
 
 const EMPTY = { map: null, trips: [], loading: true, error: null };
 
@@ -170,6 +171,7 @@ export default function useTravelMap(mapId, { optimistic = true } = {}) {
         if (!optimisticNow) show();
         showImplied(answer?.implied);
         if (status) showMarked(answer?.visit);
+        if (status) trackCountriesMarked({ status });
         refreshStats();
       } catch (err) {
         setState((prev) => (onMap(prev, mapId) && restore ? { ...prev, map: { ...prev.map, visits: restore(prev.map.visits) } } : prev));

@@ -1,7 +1,7 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Constants
-import { MAP_PAGE_URL, comparePath, mapPassportPath, mapPath, sharedPassportPath } from '@/utils/constants/routes';
+import { MAP_PAGE_URL, VS_PAGE_URL, comparePath, mapPassportPath, mapPath, sharedPassportPath } from '@/utils/constants/routes';
 // Hooks
 import useMapViewport, { useViewportZoom } from '@/hooks/useMapViewport';
 import usePhotoPage, { preloadPhotoPage } from '@/hooks/usePhotoPage';
@@ -13,6 +13,7 @@ import useMediaQuery from '@/hooks/useMediaQuery';
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 import useMapTheme from '@/hooks/useMapTheme';
 import useAchievements from '@/hooks/useAchievements';
+import useCookieChoiceMade from '@/hooks/useCookieChoiceMade';
 // Components
 import WorldMap from './WorldMap';
 import MapBackground from './MapBackground';
@@ -99,6 +100,7 @@ import RecapTag from '@/components/recap/RecapTag';
 import AnniversaryTag from '@/components/moments/AnniversaryTag';
 import TripCountdownTag from '@/components/trips/TripCountdownTag';
 import TripHomeTag from '@/components/trips/TripHomeTag';
+import MapTagStack from './MapTagStack';
 import { LandmarkMarksContext } from '@/hooks/useLandmarkMarks';
 import { MapChromeContext } from '@/hooks/useMapChrome';
 import useOneShots, { OneShotsContext } from '@/hooks/useOneShots';
@@ -286,6 +288,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         ...(canEdit ? ['strings'] : []),
         'timeline',
         'badges',
+        'oneShots',
         'settings',
         'play',
         'photos',
@@ -449,11 +452,14 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
 
   // The tips (MapTipsDialog; 17 Nov 2026, the user's wish), once the loading screen lifts:
   // once a visit, on whichever map opens first, while the viewer's `showTips` is on. Its box
-  // turns the setting off without closing it. After "Where have you been?" when that opens.
+  // turns the setting off without closing it. After "Where have you been?" when that opens,
+  // and once the cookie pop-up is answered, which would otherwise cover them on a phone
+  // (26 Nov 2026, the audit).
   const tipsWanted = settings.showTips !== false;
+  const cookiesAnswered = useCookieChoiceMade();
   const [tipsOpen, setTipsOpen] = useState(false);
   useEffect(() => {
-    if (!dataReady || !tipsWanted || !quickFillChecked || quickFill) return;
+    if (!dataReady || !tipsWanted || !quickFillChecked || quickFill || !cookiesAnswered) return;
     try {
       if (sessionStorage.getItem(TIPS_SHOWN_KEY) === '1') return;
       sessionStorage.setItem(TIPS_SHOWN_KEY, '1');
@@ -464,7 +470,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       () => setTipsOpen(true),
       () => {},
     );
-  }, [dataReady, tipsWanted, quickFillChecked, quickFill]);
+  }, [dataReady, tipsWanted, quickFillChecked, quickFill, cookiesAnswered]);
   const wantToGo = useMemo(() => map.visits.filter((v) => v.status === 'WANT_TO_GO').map((v) => v.countryCode), [map.visits]);
   const openBadges = useCallback(() => {
     dismissNews();
@@ -610,7 +616,9 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
       if (answer?.countryCode) refreshAfterTick?.();
       if (answer?.created) {
         const tick = answer.oneShot || {};
-        celebrate({ kind: 'oneShot', itemKey, seenOn: tick.seenOn || null, datePrecision: tick.datePrecision || null, countryCode: tick.countryCode || null, photoUrl: tick.photo?.thumbUrl || null });
+        // Your own photo of it on the celebration, its display copy (26 Nov 2026)
+        const photoUrl = tick.photo?.displayUrl || tick.photo?.thumbUrl || null;
+        celebrate({ kind: 'oneShot', itemKey, seenOn: tick.seenOn || null, datePrecision: tick.datePrecision || null, countryCode: tick.countryCode || null, photoUrl });
       }
       return answer;
     },
@@ -901,6 +909,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onGuessGame={canEdit ? () => setGuessGameOpen(true) : undefined}
             onFlightLog={shareCode || !currentUser ? undefined : () => setFlightLogOpen(true)}
             compareHref={shareCode ? null : comparePath(map.id)}
+            vsHref={shareCode || !currentUser ? null : VS_PAGE_URL}
             onYearRecap={shareCode ? undefined : () => setRecapYear(recapYearFor())}
             collected={landmarkMarks}
             passportHref={passportHref}
@@ -915,6 +924,12 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             locked={locked}
             travellers={map.travellers}
             photoSource={photoSource}
+            // A tick's new photos, uploaded from its dialog (editors who may add photos)
+            uploader={
+              canChange && !mapLocked
+                ? { mapId: map.id, uploadRules, photoCounts: map.photoCounts || null, videoCounts: map.videoCounts || null, isOwner, onUploaded: photosChanged }
+                : null
+            }
             focusKey={oneShotFocus}
             onSave={saveOneShot}
             onRemove={removeOneShot}
@@ -1216,23 +1231,31 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           ) : null}
           {/* Someone asks for copies of their travels from this map (docs/API.md, "Travel copies") */}
           {canManage ? <TravelCopyBanner mapId={map.id} /> : null}
-          {/* In December and January, the year's recap (docs/API.md "Year in travel") */}
-          {shareCode ? null : <RecapTag mapId={map.id} onOpen={setRecapYear} />}
-          {/* A moment's day come round: "10 years ago today: Our wedding" (21 Nov 2026) */}
-          {shareCode ? null : <AnniversaryTag mapId={map.id} onOpenCountry={selectCountry} />}
-          {/* The countdown to the next planned trip: "12 days until Japan in spring" (22 Nov 2026);
-              the viewer can switch it off (`showTripCountdown`, 25 Nov 2026) */}
-          {shareCode || settings.showTripCountdown === false ? null : <TripCountdownTag trips={trips} />}
-          {/* The day after a trip ends, for two weeks: "Welcome home", share it (23 Nov 2026,
-              the user's wish: word of mouth). Its editors only; the map's link for those who
-              can open the sharing dialog */}
-          {canEdit ? (
-            <TripHomeTag
-              trips={trips}
-              onSharePicture={(trip) => setShareCard(tripCardOptions(trip, map, design))}
-              onShareLink={canShare ? () => dispatch({ type: 'share', open: true }) : null}
-            />
-          ) : null}
+          {/* The notes that come and go, one at a time with arrows between them (MapTagStack;
+              26 Nov 2026, the audit: stacked, they covered a third of the map), the most
+              pressing first */}
+          {shareCode ? null : (
+            <MapTagStack>
+              {/* The day after a trip ends, for two weeks: "Welcome home", share it (23 Nov
+                  2026, the user's wish: word of mouth). Its editors only; the map's link for
+                  those who can open the sharing dialog */}
+              {canEdit ? (
+                <TripHomeTag
+                  key='home'
+                  trips={trips}
+                  onSharePicture={(trip) => setShareCard(tripCardOptions(trip, map, design))}
+                  onShareLink={canShare ? () => dispatch({ type: 'share', open: true }) : null}
+                />
+              ) : null}
+              {/* A moment's day come round: "10 years ago today: Our wedding" (21 Nov 2026) */}
+              <AnniversaryTag key='anniversary' mapId={map.id} onOpenCountry={selectCountry} />
+              {/* In December and January, the year's recap (docs/API.md "Year in travel") */}
+              <RecapTag key='recap' mapId={map.id} onOpen={setRecapYear} />
+              {/* The countdown to the next planned trip: "12 days until Japan in spring" (22 Nov
+                  2026); the viewer can switch it off (`showTripCountdown`, 25 Nov 2026) */}
+              {settings.showTripCountdown === false ? null : <TripCountdownTag key='countdown' trips={trips} />}
+            </MapTagStack>
+          )}
           {/* Last in the column, so the banners above keep their place (the map switcher opens
               below them). On phones first (17 Nov 2026): its flag sits level with the Menu
               stamp, and the banners come below them both, or below an empty row as tall as

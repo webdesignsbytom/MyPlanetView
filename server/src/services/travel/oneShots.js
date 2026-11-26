@@ -1,7 +1,6 @@
 // Life's One Shots (docs/API.md "Life's One Shots"): a map's ticks as sent, and what its
 // flights and poles suggest ticking. The rules are utils/oneShots.js.
 import { signPhotoUrl } from '../s3/mediaService.js';
-import { findThumbKeys } from '../../domain/passport.js';
 import { findOneShots } from '../../domain/oneShots.js';
 import { findFlightsForMap } from '../../domain/flights.js';
 import { findMapVisitsForStats } from '../../domain/maps.js';
@@ -9,17 +8,23 @@ import { airportByCode } from '../../utils/flights.js';
 import { oneShotSuggestions } from '../../utils/oneShots.js';
 import { COUNTED_VISIT_STATUSES, toDateOnly } from '../../utils/travelValidation.js';
 
+// One photo as sent: its id and its thumbnail and display copy, signed
+async function photoView(photo) {
+  const keyOf = (size) => photo.variants.find((v) => v.size === size)?.media.key;
+  const [thumbUrl, displayUrl] = await Promise.all(['THUMB', 'DISPLAY'].map((size) => (keyOf(size) ? signPhotoUrl(keyOf(size)) : null)));
+  return { id: photo.id, thumbUrl, displayUrl: displayUrl || thumbUrl };
+}
+
 /**
  * Ticks as sent: `{ id, itemKey, seenOn, datePrecision, countryCode, notes, source,
- * travellerIds, photo: { id, thumbUrl } | null, createdAt }`. A hidden photo shows only to
- * the owner and editors (`editor`); anyone else gets the tick without it.
+ * travellerIds, photos: [{ id, thumbUrl, displayUrl }], photo, createdAt }`: its photos in
+ * order, `photo` the first (the one on its card) or null. A hidden photo shows only to the
+ * owner and editors (`editor`); anyone else gets the tick without it.
  */
 export async function oneShotViews(rows, { editor }) {
-  const shown = (row) => (row.photo && (editor || !row.photo.hidden) ? row.photo.id : null);
-  const thumbKeys = await findThumbKeys([...new Set(rows.map(shown).filter(Boolean))]);
   return Promise.all(
     rows.map(async (row) => {
-      const photoId = shown(row);
+      const photos = await Promise.all(row.photos.map((p) => p.photo).filter((photo) => editor || !photo.hidden).map(photoView));
       return {
         id: row.id,
         itemKey: row.itemKey,
@@ -29,7 +34,8 @@ export async function oneShotViews(rows, { editor }) {
         notes: row.notes,
         source: row.source,
         travellerIds: row.travellers.map((t) => t.travellerId),
-        photo: photoId ? { id: photoId, thumbUrl: thumbKeys.has(photoId) ? await signPhotoUrl(thumbKeys.get(photoId)) : null } : null,
+        photos,
+        photo: photos[0] ?? null,
         createdAt: row.createdAt,
       };
     }),

@@ -230,6 +230,29 @@ test.describe('The passport', () => {
     await expect(shared.getByRole('button')).toHaveCount(0);
   });
 
+  // 26 Nov 2026, the user's wish: "add choosing passport colour, just the cover colour, and
+  // gold or silver lettering stays tied to the plan"
+  test('the owner chooses the cover’s colour, kept for the map and shown through its link', { tag: '@phone' }, async ({ page }) => {
+    await openPassport(page);
+    const picker = page.getByRole('group', { name: 'Cover colour' });
+    // The test user's plan is Business: navy, with silver lettering
+    await expect(picker.getByRole('radio', { name: /Navy/ })).toBeChecked();
+    await expect(picker).toContainText('The lettering stays your plan’s, silver');
+    const board = () => book(page).evaluate((el) => el.style.getPropertyValue('--board'));
+    expect(await board()).toBe('');
+    await picker.getByText('Green', { exact: true }).click();
+    await expect(picker.getByRole('radio', { name: /Green/ })).toBeChecked();
+    await expect.poll(board).toBe('var(--cover-green)');
+
+    // Kept: after a reload, and through the map's link (which offers no choice)
+    await page.reload();
+    await expect(page.getByRole('group', { name: 'Cover colour' }).getByRole('radio', { name: /Green/ })).toBeChecked();
+    await expect.poll(board).toBe('var(--cover-green)');
+    await openPassport(page, `/shared/${HOME_SHARE_CODE}/passport`);
+    await expect.poll(board).toBe('var(--cover-green)');
+    await expect(page.getByRole('group', { name: 'Cover colour' })).toHaveCount(0);
+  });
+
   test('a share link opens the passport read only; a trip’s link has none', async ({ page }) => {
     // The owner, through their own map's link: still no picker (that's on the map's own address)
     await openPassport(page, `/shared/${HOME_SHARE_CODE}/passport`);
@@ -254,6 +277,41 @@ test.describe('The passport', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Passport' })).toBeVisible();
   });
 
+  // 26 Nov 2026, the audit: under the page's title, the page bar covered the closed cover's
+  // foot on a 1440×900 screen, and on a 720-pixel one the book and bar never both fitted
+  test('the book fits above its page bar: the whole cover on a 1440×900 screen, and book and bar together once scrolled to on a smaller one', async ({ page }) => {
+    const bar = page.getByRole('navigation', { name: 'Passport pages' });
+    const leaves = page.locator('[data-book-height]');
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await openPassport(page);
+    await expect(book(page).locator('[data-cover]')).toBeVisible();
+    let bookBox = await leaves.boundingBox();
+    let barBox = await bar.boundingBox();
+    expect(bookBox.y + bookBox.height).toBeLessThanOrEqual(barBox.y);
+    expect(barBox.y + barBox.height).toBeLessThanOrEqual(900);
+
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await expect.poll(async () => Number(await leaves.getAttribute('data-book-height'))).toBe(448);
+    await leaves.evaluate((el) => el.scrollIntoView({ block: 'start' }));
+    bookBox = await leaves.boundingBox();
+    barBox = await bar.boundingBox();
+    expect(bookBox.y).toBeGreaterThanOrEqual(0);
+    expect(bookBox.y + bookBox.height).toBeLessThanOrEqual(barBox.y);
+    expect(barBox.y + barBox.height).toBeLessThanOrEqual(720);
+  });
+
+  test('on a phone the page bar sits under the book, never over its foot', { tag: '@phone' }, async ({ page }) => {
+    await openPassport(page);
+    const bar = page.getByRole('navigation', { name: 'Passport pages' });
+    if (page.viewportSize().width >= 768) {
+      await expect(bar).toHaveCSS('position', 'sticky');
+      return;
+    }
+    await expect(bar).toHaveCSS('position', 'static');
+    const bookBox = await page.locator('[data-book-height]').boundingBox();
+    const barBox = await bar.boundingBox();
+    expect(bookBox.y + bookBox.height).toBeLessThanOrEqual(barBox.y);
+  });
   test('on a phone the pages swipe', { tag: '@phone' }, async ({ page }) => {
     await openPassport(page);
     const swipe = async (dx) => {

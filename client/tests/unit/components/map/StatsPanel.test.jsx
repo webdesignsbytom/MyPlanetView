@@ -120,7 +120,7 @@ describe('StatsPanel', () => {
 
   it('offers each way on that it is given', () => {
     const calls = { onShareCard: vi.fn(), onPoster: vi.fn(), onYearRecap: vi.fn(), onShowBadges: vi.fn(), onShowUnplaced: vi.fn() };
-    const { container } = open({ ...calls, unplacedCount: 3, compareHref: '/compare?a=m1', passportHref: '/maps/m1/passport' });
+    const { container } = open({ ...calls, unplacedCount: 3, compareHref: '/compare?a=m1', vsHref: '/vs', passportHref: '/maps/m1/passport' });
     fireEvent.click(screen.getByText('Share a picture of my map'));
     fireEvent.click(screen.getByText('A poster of my map'));
     fireEvent.click(screen.getByText('Your year in travel'));
@@ -130,6 +130,7 @@ describe('StatsPanel', () => {
     const links = [...container.querySelectorAll('a')].map((a) => [a.textContent, a.getAttribute('href')]);
     expect(links).toEqual([
       ['Compare with another map', '/compare?a=m1'],
+      ['Vs mode: compare with friends', '/vs'],
       ['Passport: landmark stamps', '/maps/m1/passport'],
     ]);
   });

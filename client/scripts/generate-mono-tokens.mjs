@@ -41,6 +41,7 @@ const CHOSEN = {
   '--poster-red': '#000000',
   '--poster-red-ink': '#ffffff',
   '--poster-red-deep': '#000000',
+  '--poster-red-strong': '#000000',
   '--danger-red': '#000000',
   '--danger-ink': '#ffffff',
   '--poster-brown': '#000000',

@@ -51,6 +51,8 @@ export const takePhotoOutOfTheme = (photoId, themeId) => data(client.delete(`${P
 export const getAdminThemes = () => data(client.get(ADMIN_THEMES_API));
 /** `{ month: 'YYYY-MM', title, blurb? }` -> 201 `{ theme }`; 409 for a month that has one */
 export const createTheme = (body) => data(client.post(ADMIN_THEMES_API, body));
+/** A suggested theme for each empty month of the coming year -> the list as getAdminThemes, and `added` */
+export const fillSuggestedThemes = () => data(client.post(`${ADMIN_THEMES_API}/suggested`, {}));
 /** `{ month?, title?, blurb? }` -> `{ theme }`; the month only while no photo is entered */
 export const updateTheme = (themeId, body) => data(client.patch(`${ADMIN_THEMES_API}/${enc(themeId)}`, body));
 /** Only a theme with no photos entered -> `{ message }` */

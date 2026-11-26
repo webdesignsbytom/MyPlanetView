@@ -21,7 +21,7 @@ describe('AdminQuickLinks', () => {
     const { container, hrefs } = links('ADMIN');
     expect(container.querySelector('section').getAttribute('aria-labelledby')).toBe('admin-quick-links-heading');
     expect(container.querySelector('#admin-quick-links-heading').textContent).toBe('Manage');
-    expect(hrefs).toEqual(['/admin/contact-forms', '/admin/users', '/admin/promo-codes', '/admin/offers', '/admin/themes', '/admin/feedback']);
+    expect(hrefs).toEqual(['/admin/contact-forms', '/admin/users', '/admin/promo-codes', '/admin/offers', '/admin/themes', '/admin/feedback', '/admin/gifts']);
     expect(container.textContent).toContain('Roles, account status, memberships and moving maps');
   });
 

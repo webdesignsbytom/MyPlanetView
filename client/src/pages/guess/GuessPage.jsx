@@ -191,7 +191,7 @@ function GuessPage() {
         ) : (
           <PaperCard title='Your score' titleId='guess-score' data-guess-done>
             <div className='grid gap-4 px-6 py-5 sm:px-8'>
-              <p className='font-travel text-3xl uppercase text-poster-red' data-guess-total={play.score}>
+              <p className='font-travel text-3xl uppercase text-poster-red-deep' data-guess-total={play.score}>
                 {scoreWords(play.score, rounds)}
               </p>
               {board ? (

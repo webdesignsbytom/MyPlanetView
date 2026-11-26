@@ -8,6 +8,7 @@ import { logEvent } from '../utils/events/logEvent.js';
 import { createMapEvent } from '../event/travelUtils.js';
 import { sanitizeText } from '../utils/sanitize.js';
 import { MAP_STYLES, mapStyleOf } from '../utils/mapSettings.js';
+import { isPassportColour } from '../utils/passportCovers.js';
 import { parseVisitedLook } from '../utils/mapDesigns.js';
 import { supporterBadge } from '../utils/supporterBadge.js';
 import { canEdit, canManage, canView, isOwner } from '../utils/access.js';
@@ -310,6 +311,11 @@ export const updateMapHandler = handler(D, 'Update map', async (req, res) => {
   if (body.style !== undefined) {
     if (!MAP_STYLES.includes(body.style)) return badRequest(req, res, D, EVENT_MESSAGES.invalidMapStyle);
     data.style = body.style;
+  }
+  // The passport's cover colour, for everyone who opens it (docs/API.md "Passport"): null is the plan's own
+  if (body.passportColour !== undefined) {
+    if (!isPassportColour(body.passportColour)) return badRequest(req, res, D, EVENT_MESSAGES.invalidPassportColour);
+    data.passportColour = body.passportColour;
   }
   // How the places been to show, in every style (docs/API.md "The visited look")
   const visited = parseVisitedLook(body);

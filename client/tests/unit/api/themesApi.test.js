@@ -71,4 +71,10 @@ describe('the admin’s themes', () => {
     expect(client.patch).toHaveBeenCalledWith('/api/users/admin/themes/th%201', { title: 'Ice' });
     expect(client.delete).toHaveBeenCalledWith('/api/users/admin/themes/th%201');
   });
+
+  it('fills the empty months with suggested themes', async () => {
+    client.answerWith({ themes: [], added: 11 });
+    await expect(api.fillSuggestedThemes()).resolves.toEqual({ themes: [], added: 11 });
+    expect(client.post).toHaveBeenCalledWith('/api/users/admin/themes/suggested', {});
+  });
 });

@@ -54,6 +54,9 @@ export const guessPath = (code) => `/guess/${encodeURIComponent(code)}`;
 // A slideshow of chosen photos (25 Nov 2026): anyone with its link watches it, no sign-in
 export const SHOW_PAGE_URL = '/show/:code';
 export const showPath = (code) => `/show/${encodeURIComponent(code)}`;
+// A postcard (26 Nov 2026): anyone with its link sees it and downloads it, no sign-in
+export const POSTCARD_PAGE_URL = '/postcard/:code';
+export const postcardPath = (code) => `/postcard/${encodeURIComponent(code)}`;
 /** Is this address a framed map? (App shows no cookie pop-up there: it's someone else's page.) */
 export const isEmbedPath = (pathname) => String(pathname).toLowerCase().startsWith(`${EMBED_PAGE_URL.split('/:')[0]}/`);
 export const INVITE_PAGE_URL = '/invite/:token'; // accept an emailed invite
@@ -70,6 +73,13 @@ export const tripPath = (tripId) => `/trips/${encodeURIComponent(tripId)}`;
 export const CHALLENGES_PAGE_URL = '/challenges';
 export const CHALLENGE_PAGE_URL = '/challenges/:challengeId';
 export const CHALLENGE_JOIN_PAGE_URL = '/challenges/join/:code';
+// Vs mode (26 Nov 2026; docs/API.md "Vs mode"): your comparisons and one compared (signed in),
+// and a comparison's join link (anyone; the code is a secret)
+export const VS_PAGE_URL = '/vs';
+export const VS_GROUP_PAGE_URL = '/vs/:groupId';
+export const VS_JOIN_PAGE_URL = '/vs/join/:code';
+export const vsPath = (groupId) => `/vs/${encodeURIComponent(groupId)}`;
+export const vsJoinPath = (code) => `/vs/join/${encodeURIComponent(code)}`;
 // Gifts of a year of a plan (docs/API.md "Gifts"): buying and yours (signed in), and a
 // gift's own page (anyone with its code)
 export const GIFTS_PAGE_URL = '/gifts';
@@ -96,6 +106,8 @@ export const ADMIN_OFFERS_PAGE_URL = `${ADMIN_PAGE_URL}/offers`;
 export const ADMIN_THEMES_PAGE_URL = `${ADMIN_PAGE_URL}/themes`;
 // Feedback sent from the map (docs/API.md "Feedback")
 export const ADMIN_FEEDBACK_PAGE_URL = `${ADMIN_PAGE_URL}/feedback`;
+// Gift codes and referral rewards (docs/API.md "Admin")
+export const ADMIN_GIFTS_PAGE_URL = `${ADMIN_PAGE_URL}/gifts`;
 
 // Dev server only (not routed in production builds)
 export const DEV_SELECT_LAB_PAGE_URL = '/dev/select-lab';
@@ -129,8 +141,10 @@ export const CLIENT_ONLY_ROUTE_PREFIXES = [
   EMBED_PAGE_URL.split('/:')[0],
   GUESS_PAGE_URL.split('/:')[0],
   SHOW_PAGE_URL.split('/:')[0],
+  POSTCARD_PAGE_URL.split('/:')[0],
   INVITE_PAGE_URL.split('/:')[0],
   CHALLENGES_PAGE_URL,
+  VS_PAGE_URL,
   GIFTS_PAGE_URL,
   GIFT_PAGE_URL.split('/:')[0],
   IMPORT_PAGE_URL,
@@ -148,7 +162,11 @@ export const ANALYTICS_EXCLUDED_PREFIXES = [
   GUESS_PAGE_URL.split('/:')[0],
   // A slideshow's code: someone's own photos
   SHOW_PAGE_URL.split('/:')[0],
+  // A postcard's code: someone's message, and perhaps their photo
+  POSTCARD_PAGE_URL.split('/:')[0],
   CHALLENGE_JOIN_PAGE_URL.split('/:')[0],
+  // A Vs mode comparison's join code
+  VS_JOIN_PAGE_URL.split('/:')[0],
   // A gift's code is worth a year of a plan
   GIFT_PAGE_URL.split('/:')[0],
   // Its query is a signed link to someone's account
@@ -163,6 +181,9 @@ export const ANALYTICS_EXCLUDED_PREFIXES = [
 // anything under their prefix (utils/analytics/privacy.js)
 export const ANALYTICS_REDACTED_ROUTES = [
   CHALLENGE_JOIN_PAGE_URL,
+  // Before the comparison's page, so a join code is never read as an id
+  VS_JOIN_PAGE_URL,
+  VS_GROUP_PAGE_URL,
   GIFT_PAGE_URL,
   CHALLENGE_PAGE_URL,
   MAP_PASSPORT_PAGE_URL,
@@ -171,6 +192,7 @@ export const ANALYTICS_REDACTED_ROUTES = [
   EMBED_PAGE_URL,
   GUESS_PAGE_URL,
   SHOW_PAGE_URL,
+  POSTCARD_PAGE_URL,
   INVITE_PAGE_URL,
   RESET_PASS_PAGE_URL,
   VERIFY_EMAIL_PAGE_URL,

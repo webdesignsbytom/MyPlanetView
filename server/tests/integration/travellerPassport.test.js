@@ -156,6 +156,24 @@ describe('a traveller’s passport page', () => {
     });
   });
 
+  // 26 Nov 2026, the user's wish: "add choosing passport colour, just the cover colour"
+  it('lets the owner choose the cover’s colour, for everyone who opens it', async () => {
+    expect((await passportOf(owner.agent)).map).toMatchObject({ passportColour: null, canChooseCover: true });
+    expect((await passportOf(editor.agent)).map.canChooseCover).toBe(false);
+    const choose = (passportColour, agent = owner.agent) => agent.patch(`/api/maps/${map.id}`).send({ passportColour });
+    expect((await choose('PINK')).status).toBe(400);
+    expect((await choose('green')).status).toBe(400);
+    expect((await choose('GREEN', editor.agent)).status).toBe(403);
+    expect((await choose('GREEN')).status).toBe(200);
+    expect((await passportOf(viewer.agent)).map.passportColour).toBe('GREEN');
+    const { shareCode } = data(await owner.agent.get(`/api/maps/${map.id}/sharing`));
+    expect(data(await anon().get(`/api/shared/${shareCode}/passport`)).passport.map).toMatchObject({ passportColour: 'GREEN', canChooseCover: false });
+    expect(data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.passportColour).toBe('GREEN');
+    // Back to the plan's own
+    expect((await choose(null)).status).toBe(200);
+    expect((await passportOf(owner.agent)).map.passportColour).toBeNull();
+  });
+
   it('keeps a crop and a signature in shape, by the database’s own checks too', async () => {
     await expect(prisma.traveller.update({ where: { id: me.id }, data: { portraitZoom: 5 } })).rejects.toThrow();
     await expect(prisma.traveller.update({ where: { id: me.id }, data: { portraitPhotoId: other.id, portraitFocusX: null } })).rejects.toThrow();

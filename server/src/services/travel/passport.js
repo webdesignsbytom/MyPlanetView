@@ -3,7 +3,7 @@
 // the landmarks still to stamp, and the totals. One traveller's own passport (21 Nov 2026,
 // the user's wish: each child's own passport, from the family map) has only their places
 // and stamps: travellerFacts.
-import { canEdit } from '../../utils/access.js';
+import { canEdit, canManage } from '../../utils/access.js';
 import { isSpecialPlace } from '../../utils/specialPlaces.js';
 import { isRegion } from '../../utils/regionPlaces.js';
 import { COUNTED_VISIT_STATUSES, toDateOnly } from '../../utils/travelValidation.js';
@@ -29,6 +29,7 @@ import { loadMapPlan } from './plans.js';
 import { planOf } from '../../utils/constants/plans.js';
 import { earliestOf, passportPageOrder } from '../../utils/passportOrder.js';
 import { travellingSince } from '../../utils/travellerPassport.js';
+import { isPassportColour } from '../../utils/passportCovers.js';
 import { homeOf } from '../../utils/travelStats.js';
 
 /**
@@ -252,6 +253,10 @@ export async function buildPassport(mapId, role, { travellerId = null } = {}) {
       homeCountryCode: homeOf({ homeCountryCode: map.homeCountryCode, ownerId: map.ownerId, travellers }),
       // Whether the caller may change the travellers' photos and signatures (the map's editors)
       canEdit: editor,
+      // The cover's colour (26 Nov 2026; null: the plan's own), and whether the caller may
+      // choose it (the owner and co-owners, as the map's style)
+      passportColour: isPassportColour(map.passportColour) ? map.passportColour : null,
+      canChooseCover: canManage(role),
     },
     // Each traveller's page (passportTravellerView), never the account they're linked to
     travellers: await Promise.all(travellers.map((row) => passportTravellerView(row, { editor, since: since.get(row.id) ?? null }))),

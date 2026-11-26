@@ -41,6 +41,42 @@ describe('Life’s One Shots in mock mode', () => {
     expect((await get(url())).data.oneShots.map((t) => t.itemKey)).not.toContain('northern-lights');
   });
 
+  // 26 Nov 2026, the user's wish: "a photo/multiple photos of you with" it
+  it('keeps up to 5 of the map’s photos in order, the first on its card, never a video', async () => {
+    const ids = ['photo-dam', 'photo-eiffel', 'photo-colosseum'];
+    const saved = await put(url(HOME_MAP, 'lion'), { photoIds: ids });
+    expect(saved.status).toBe(200);
+    expect(saved.data.oneShot.photos.map((p) => p.id)).toEqual(ids);
+    expect(saved.data.oneShot.photo).toMatchObject({ id: 'photo-dam', thumbUrl: expect.any(String), displayUrl: expect.any(String) });
+    expect(db().oneShots.find((t) => t.itemKey === 'lion').photoIds).toEqual(ids);
+    // Leaving them out keeps them; an empty list takes them off
+    expect((await put(url(HOME_MAP, 'lion'), { notes: 'Big mane' })).data.oneShot.photos).toHaveLength(3);
+    expect((await put(url(HOME_MAP, 'lion'), { photoIds: [] })).data.oneShot).toMatchObject({ photos: [], photo: null });
+
+    expect((await put(url(HOME_MAP, 'lion'), { photoIds: ['photo-bangkok'] })).message).toBe("Choose up to 5 of this map's own photos (not videos).");
+    const photo = db().photos.find((p) => p.mapId === HOME_MAP);
+    db().photos.push({ ...photo, id: 'video-safari', kind: 'VIDEO' });
+    expect((await put(url(HOME_MAP, 'lion'), { photoIds: ['video-safari'] })).status).toBe(400);
+    expect((await put(url(HOME_MAP, 'lion'), { photoIds: ['a', 'b', 'c', 'd', 'e', 'f'].map((c) => `photo-${c}`) })).status).toBe(400);
+  });
+
+  it('shows a hidden photo to editors only, and reads an older store’s single photo', async () => {
+    await put(url(HOME_MAP, 'lion'), { photoIds: ['photo-hidden', 'photo-dam'] });
+    expect((await get(url())).data.oneShots.find((t) => t.itemKey === 'lion').photos.map((p) => p.id)).toEqual(['photo-hidden', 'photo-dam']);
+    // Through the map's link, a viewer's view: the hidden one left out, the next on the card
+    db().maps.find((m) => m.id === HOME_MAP).linkAccess = 'ANYONE_WITH_LINK';
+    const shared = (await get('/api/shared/K7QX-M2PA-9RTW/one-shots')).data.oneShots.find((t) => t.itemKey === 'lion');
+    expect(shared.photos.map((p) => p.id)).toEqual(['photo-dam']);
+    expect(shared.photo.id).toBe('photo-dam');
+    const tick = db().oneShots.find((t) => t.itemKey === 'puffin');
+    delete tick.photoIds;
+    tick.photoId = 'photo-eiffel';
+    expect((await get(url())).data.oneShots.find((t) => t.itemKey === 'puffin').photo.id).toBe('photo-eiffel');
+    const exported = (await get(`/api/users/export/maps/${HOME_MAP}`)).data.map.oneShots;
+    expect(exported.find((t) => t.item === 'lion').photoIds).toEqual(['photo-hidden', 'photo-dam']);
+    expect(exported.find((t) => t.item === 'puffin').photoIds).toEqual(['photo-eiffel']);
+  });
+
   it('refuses what the server refuses', async () => {
     expect((await put(url(HOME_MAP, 'unicorn'), {})).status).toBe(404);
     expect((await put(url(HOME_MAP, 'lion'), { seenOn: '2024-02-31' })).status).toBe(400);

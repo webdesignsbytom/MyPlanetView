@@ -11,7 +11,9 @@ export default function AppLink({
   state,
   replace,
 }) {
-  const defaultClass = 'text-colour6 hover:brightness-75';
+  // Underlined, so a link inside a sentence isn't told apart by colour alone (WCAG 1.4.1;
+  // 26 Nov 2026, the audit: the sign-up and forgot-password pages' links)
+  const defaultClass = 'text-colour6 underline underline-offset-2 hover:brightness-75';
 
   // Compute fallback values
   const computedAria =

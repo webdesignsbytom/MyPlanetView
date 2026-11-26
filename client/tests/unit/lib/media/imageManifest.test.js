@@ -45,6 +45,15 @@ describe('getImageSets', () => {
     expect(getImageSets('old-map', { dir: '/src/assets/images/brand' }).webpSet).toBeUndefined();
   });
 
+  it('keeps a background’s set apart from the Settings cards’ strips cut from it (preview-<name>)', () => {
+    const background = getImageSets('old-map', { dir: '/src/assets/images/map-styles' });
+    expect(background.byFormat.webp.map((item) => item.width)).toEqual([800, 1200, 1792]);
+    expect(background.webpSet).not.toMatch(/preview-/);
+    const strip = getImageSets('preview-old-map', { dir: '/src/assets/images/map-styles' });
+    expect(strip.byFormat.avif.map((item) => item.width)).toEqual([320, 640]);
+    expect(strip.byFormat.webp.map((item) => item.width)).toEqual([320, 640]);
+  });
+
   it('never lists the home hero’s sets', () => {
     expect(getImageSets('home-hero-desktop').avifSet).toBeUndefined();
   });

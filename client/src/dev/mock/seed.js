@@ -256,7 +256,7 @@ function homeHistory(mapId) {
       seenOn: shot.seenOn,
       datePrecision: shot.datePrecision,
       countryCode: shot.countryCode,
-      photoId: null,
+      photoIds: [],
       notes: shot.notes,
       source: 'MANUAL',
       travellerIds: travellerIdsOf(shot.travellers),
@@ -477,6 +477,38 @@ function buildBaseSeed() {
         updatedAt: daysAgo(3),
       },
     ],
+    // Postcards (docs/API.md "Postcards"): two the test user sent, each by its own link, never
+    // part of a map: a country's card from France, and the Colosseum's from Italy
+    postcards: [
+      {
+        id: 'postcard-france',
+        code: 'PST2CRD8FRNC',
+        senderId: USER_ID,
+        kind: 'COUNTRY',
+        countryCode: 'FR',
+        landmarkId: null,
+        pictureKey: null,
+        style: 'classic',
+        message: 'Bonjour Gran!\nParis is lovely in the rain. We climbed the Eiffel Tower and ate far too many croissants.',
+        toName: 'Gran',
+        fromName: 'Charlie',
+        createdAt: daysAgo(4),
+      },
+      {
+        id: 'postcard-rome',
+        code: 'PST2CRD8RMEC',
+        senderId: USER_ID,
+        kind: 'LANDMARK',
+        countryCode: 'IT',
+        landmarkId: 'lm-colosseum',
+        pictureKey: null,
+        style: 'airmail',
+        message: 'Ciao! The Colosseum is even bigger than in the films.',
+        toName: 'Sam',
+        fromName: 'Charlie & Alex',
+        createdAt: daysAgo(2),
+      },
+    ],
     // Life's One Shots (24 Nov 2026): a puffin off Ireland, and the safari's
     oneShots: home.oneShots,
     // The flight log (docs/API.md "Flights"): every trip's flights
@@ -526,6 +558,19 @@ function buildBaseSeed() {
       { challengeId: 'challenge-two-years', userId: SAM_ID, mapId: samMap, joinedAt: daysAgo(60) },
       { challengeId: 'challenge-two-years', userId: USER_ID, mapId: homeMap, joinedAt: daysAgo(50) },
       { challengeId: 'challenge-two-years', userId: JO_ID, mapId: joMap, joinedAt: daysAgo(40) },
+    ],
+    // Vs mode (docs/API.md "Vs mode", 26 Nov 2026): the test user's comparison with Sam and Jo,
+    // and one of Sam's the test user isn't in yet (its link opens the join page)
+    vsGroups: [
+      { id: 'vs-friends', title: 'Who has travelled most?', joinCode: 'VS22FRND8MAX', createdById: USER_ID, createdAt: daysAgo(30) },
+      { id: 'vs-sams-crew', title: 'Sam’s crew', joinCode: 'SAMCRW22VS88', createdById: SAM_ID, createdAt: daysAgo(20) },
+    ],
+    vsMembers: [
+      { groupId: 'vs-friends', userId: USER_ID, mapId: homeMap, joinedAt: daysAgo(30) },
+      { groupId: 'vs-friends', userId: SAM_ID, mapId: samMap, joinedAt: daysAgo(28) },
+      { groupId: 'vs-friends', userId: JO_ID, mapId: joMap, joinedAt: daysAgo(25) },
+      { groupId: 'vs-sams-crew', userId: SAM_ID, mapId: samMap, joinedAt: daysAgo(20) },
+      { groupId: 'vs-sams-crew', userId: TOM_ID, mapId: tomMap, joinedAt: daysAgo(19) },
     ],
     // Country maps (18 Nov 2026): the US's New York, Massachusetts and California (the first trip),
     // and a pin in Paris gone back to twice, each visit with its own photos

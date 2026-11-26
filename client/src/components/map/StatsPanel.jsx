@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 // Icons
-import { FaBalanceScale, FaCalendarAlt, FaPassport, FaPlane, FaPrint, FaQuestionCircle, FaShareAlt, FaSuitcase } from 'react-icons/fa';
+import { FaBalanceScale, FaCalendarAlt, FaMedal, FaPassport, FaPlane, FaPrint, FaQuestionCircle, FaShareAlt, FaSuitcase } from 'react-icons/fa';
 // Components
 import MapPanel from './MapPanel';
 import MapActionButton from './MapActionButton';
@@ -29,7 +29,8 @@ import { lifeShareWords } from '@/utils/map/birthDates';
 // passport (its own address, or through the share link).
 // `onShareCard` makes a picture of the map to share (ShareCardDialog), `onPoster` the map as a
 // printed poster (MapPosterDialog, 22 Nov 2026); `compareHref` the compare page with this
-// map first (22 Nov 2026); `onYearRecap` opens
+// map first (22 Nov 2026); `vsHref` Vs mode, you and friends compared with medals (26 Nov
+// 2026); `onYearRecap` opens
 // "Your year in travel" (YearRecapDialog). `collected` (the map's landmark marks: stamped and
 // ticked Sets) counts the collection (docs/API.md "Collecting"): the landmarks been to, and
 // the World Heritage Sites among them, out of all there are. Then how far they've gone
@@ -43,7 +44,7 @@ import { lifeShareWords } from '@/utils/map/birthDates';
 // an American map or by choice; 24 Nov 2026, the user's wish), the other under it, and a line
 // says what the distance travelled is like ("27,300 km is nearly as far as the Pan-American
 // Highway": utils/map/distanceComparisons.js).
-function StatsPanel({ stats, travellers = [], visits = [], onOpenCountry = null, unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onPoster, onGuessGame, onFlightLog, compareHref, onYearRecap, collected = null, passportHref, onClose }) {
+function StatsPanel({ stats, travellers = [], visits = [], onOpenCountry = null, unplacedCount = 0, unplacedMore = false, onShowUnplaced, onShowBadges, onShareCard, onPoster, onGuessGame, onFlightLog, compareHref, vsHref, onYearRecap, collected = null, passportHref, onClose }) {
   const byTraveller = stats?.byTraveller || [];
   const unit = useDistanceUnit();
   const distance = aboutDistance(stats?.distanceKm, unit);
@@ -155,6 +156,16 @@ function StatsPanel({ stats, travellers = [], visits = [], onOpenCountry = null,
             >
               <FaBalanceScale aria-hidden='true' />
               <span>Compare with another map</span>
+            </Link>
+          ) : null}
+          {/* Vs mode (26 Nov 2026, the user's wish): you and up to seven friends, with medals */}
+          {vsHref ? (
+            <Link
+              to={vsHref}
+              className='btn-paper grid-flow-col justify-center gap-2 text-center [grid-auto-columns:minmax(0,max-content)] [--btn-leading:1.5rem] [--btn-pad-x:1rem] [--btn-pad-y:0.25rem] [--btn-size:1.0625rem]'
+            >
+              <FaMedal aria-hidden='true' />
+              <span>Vs mode: compare with friends</span>
             </Link>
           ) : null}
           {passportHref ? (

@@ -1,4 +1,4 @@
-import { test, expect, MOCK_STORE_KEY, mapReady, openMap, openTool } from './fixtures.js';
+import { test, expect, MOCK_STORE_KEY, makeJpeg, mapReady, openMap, openTool } from './fixtures.js';
 
 // Life's One Shots (24 Nov 2026, the user's wish and name; docs/API.md "Life's One Shots"):
 // wildlife seen, nature's wonders (volcanoes too) and great journeys, ticked on the map. The
@@ -44,6 +44,39 @@ test('an item is ticked with when, where and who, and shows on its country’s t
   await expect(seen).toContainText('A volcano erupting');
   await seen.getByRole('button', { name: 'A volcano erupting' }).click();
   await expect(page.getByRole('dialog', { name: 'A volcano erupting' })).toContainText('Seen: In Italy');
+});
+
+// 26 Nov 2026, the user's wish: "a photo/multiple photos of you with" it, up to 5, the first on its card
+test('a tick takes photos of you with it: chosen, one put on the card, one uploaded from its dialog', async ({ page }) => {
+  await openMap(page);
+  const panel = await oneShots(page);
+  await expect(card(panel, 'lion').locator('[data-own-photo]')).toHaveCount(0);
+  await card(panel, 'lion').getByRole('button').click();
+  const dialog = page.getByRole('dialog', { name: 'Lion' });
+  const photos = dialog.getByRole('group', { name: 'Photos of you with it' });
+  await photos.getByRole('button', { name: 'Choose photos' }).click();
+  const offered = photos.locator('button[aria-pressed]');
+  await offered.nth(0).click();
+  await offered.nth(1).click();
+  await photos.getByRole('button', { name: 'Done choosing photos' }).click();
+  await photos.getByRole('button', { name: 'Put photo 2 on the card' }).click();
+  const onCard = await photos.locator('[data-cover-photo] img').getAttribute('src');
+
+  // One more, uploaded here, joins it
+  await dialog.getByRole('button', { name: 'Upload new photos' }).click();
+  await dialog.getByLabel(/choose photos/i).setInputFiles(await makeJpeg(page, { name: 'with-the-lion.jpg' }));
+  await expect(dialog.getByRole('listitem').filter({ hasText: 'with-the-lion.jpg' })).toContainText('Added');
+  await expect(photos.getByRole('list', { name: 'Chosen photos' }).getByRole('listitem')).toHaveCount(3);
+  await dialog.getByRole('button', { name: 'Save' }).click();
+  await expect(dialog).toBeHidden();
+
+  // Your photo on its card, and all three in its dialog
+  await expect(card(panel, 'lion').locator('[data-own-photo] img')).toHaveAttribute('src', onCard);
+  await card(panel, 'lion').getByRole('button').click();
+  await expect(dialog.locator('[data-one-shot-own-photos="3"]')).toBeVisible();
+  await expect(dialog.getByRole('img', { name: 'Photo 1 of 3: Lion' })).toBeVisible();
+  await dialog.getByRole('button', { name: 'Show photo 3' }).click();
+  await expect(dialog.getByRole('img', { name: 'Photo 3 of 3: Lion' })).toBeVisible();
 });
 
 test('a tick is changed, and taken off', async ({ page }) => {

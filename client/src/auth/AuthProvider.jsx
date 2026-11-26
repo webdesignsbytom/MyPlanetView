@@ -29,6 +29,7 @@ import { AuthContext } from './AuthContext';
 import { IS_LOGGED_IN_KEY, takeSessionRequest } from './bootSession';
 import { getStoredItem, removeStoredItem, setStoredItem } from '@/utils/functions/safeStorage';
 import { clearPanelCache } from '@/utils/data/panelCache';
+import { trackSignUp } from '@/utils/analytics/events';
 
 const fail = (e, fallback) => ({ ok: false, error: e?.friendlyMessage || fallback });
 
@@ -123,6 +124,8 @@ export function AuthProvider({ children }) {
         },
         true,
       );
+      // Counted after consent only, nothing about who (utils/analytics/events.js)
+      trackSignUp();
       await refresh();
       return { ok: true };
     } catch (e) {

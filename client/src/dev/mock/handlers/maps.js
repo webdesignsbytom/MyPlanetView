@@ -1,5 +1,6 @@
 // Mock mode only: maps, travellers, visits, stats, and the map's trips and photos.
 import { deny, fail, ok, route } from '../mockAdapter';
+import { COVER_COLOURS } from '@/utils/passport/passportBook';
 import { countryListPages } from '../countryLists';
 import { getDb, me, newId, newShareCode, session } from '../store';
 import { declaredSizeProblem, mockUpload, presignMockUpload } from '../uploads';
@@ -322,6 +323,11 @@ export function registerMapRoutes() {
     }
     // The style everyone who opens the map sees it in (docs/API.md "Map styles")
     if (body.style !== undefined && !MAP_STYLE_IDS.includes(body.style)) return fail(400, 'Choose one of the map styles.');
+    // The passport's cover colour (26 Nov 2026; null: the plan's own)
+    const coverIds = COVER_COLOURS.map((c) => c.id);
+    if (body.passportColour !== undefined && body.passportColour !== null && !coverIds.includes(body.passportColour)) {
+      return fail(400, 'Choose one of the passport’s cover colours.');
+    }
     // How the places been to show, in every style (docs/API.md "The visited look")
     const visited = parseVisitedLook(body);
     if (visited.error) return fail(400, DESIGN_MESSAGES[visited.error]);
@@ -329,6 +335,7 @@ export function registerMapRoutes() {
     if (name) map.name = name;
     if (home !== undefined) map.homeCountryCode = home ? placeOnMap(home, false) : null;
     if (body.style !== undefined) map.style = body.style;
+    if (body.passportColour !== undefined) map.passportColour = body.passportColour;
     if (body.groupType !== undefined) map.groupType = body.groupType;
     // The UK as its four nations: changing it moves the map's UK data (as the server)
     if (body.splitUk !== undefined) {
@@ -367,6 +374,10 @@ export function registerMapRoutes() {
     // A challenge it counted in counts no map for that person until they pick another
     (db.challengeEntries || []).forEach((e) => {
       if (e.mapId === map.id) e.mapId = null;
+    });
+    // ...and so does a Vs mode comparison (26 Nov 2026)
+    (db.vsMembers || []).forEach((m) => {
+      if (m.mapId === map.id) m.mapId = null;
     });
     return ok({ message: 'Map deleted.' });
   });

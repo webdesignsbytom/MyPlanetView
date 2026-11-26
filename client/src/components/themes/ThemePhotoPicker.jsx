@@ -104,7 +104,7 @@ function ThemePhotoPicker({ theme, mapId, onEntered, onClose }) {
                     {already ? ' (already in the theme)' : ''}
                   </span>
                   {already || on ? (
-                    <span className='absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full border-2 border-poster-cream bg-poster-red text-xs text-poster-cream'>
+                    <span className='absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full border-2 border-poster-cream bg-poster-red-strong text-xs text-poster-cream'>
                       <FaCheck aria-hidden='true' />
                     </span>
                   ) : null}

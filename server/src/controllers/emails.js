@@ -3,7 +3,18 @@
 // and the account's own settings.
 import crypto from 'node:crypto';
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse, sendMessageResponse } from '../utils/responses/responses.js';
-import { EMAIL_LISTS, ON_THIS_DAY_BUDGET_MS, photoLinkToken, tokenMatches, unsubscribeToken } from '../utils/onThisDay.js';
+import {
+  EMAIL_LISTS,
+  ON_THIS_DAY_BUDGET_MS,
+  ON_THIS_DAY_MAX_EMAILS,
+  memoryEmailsPerDay,
+  photoLinkToken,
+  tokenMatches,
+  unsubscribeToken,
+} from '../utils/onThisDay.js';
+import { TRIP_SHARE_MAX_EMAILS } from '../utils/tripShare.js';
+import { emailRunProblems } from '../utils/cronRuns.js';
+import { recordCronRun } from '../services/system/cronRuns.js';
 import { findEmailPreferences, findMemoryPhotoKey, saveEmailPreferences, turnOffOnThisDayInDB } from '../domain/onThisDay.js';
 import { turnOffTripShareInDB } from '../domain/tripShare.js';
 import { sendOnThisDayEmails } from '../services/memories/onThisDay.js';
@@ -23,23 +34,48 @@ const matchesCron = (header) => {
 // GET /api/emails/on-this-day/cron (Vercel's cron, with CRON_SECRET; one daily run for both,
 // so it needs no second cron): first the "Welcome home" emails (a few a day, in their own short
 // budget), reported as `tripShare` (null if they failed: "On this day" still goes), then "On this
-// day" in what's left of its budget, its totals at the top as before.
+// day" in what's left of its budget, its totals at the top as before. Both together send at most
+// MEMORY_EMAILS_PER_DAY (`limit`; 60 unset), so Resend's daily limit keeps room for sign-up and
+// password emails, and a run stops once Resend says the quota is used up (the audit, 26 Nov
+// 2026). Each run is recorded, and a failure emails the admins (services/system/cronRuns.js).
 export const onThisDayCronHandler = async (req, res) => {
   if (!matchesCron(req.headers.authorization)) return res.status(401).json({ status: 'fail', message: 'Unauthorized' });
   const startedAt = Date.now();
+  const limit = memoryEmailsPerDay(process.env.MEMORY_EMAILS_PER_DAY);
   let tripShare = null;
   try {
-    tripShare = await sendTripShareEmails();
+    tripShare = await sendTripShareEmails({ maxEmails: Math.min(TRIP_SHARE_MAX_EMAILS, limit) });
   } catch (err) {
     console.error('[emails] welcome home failed:', err);
   }
+  // What "Welcome home" sent comes off the day's limit; none once the quota's reached
+  const left = tripShare?.quotaReached ? 0 : Math.max(0, limit - (tripShare?.sent ?? 0));
+  let onThisDay = null;
   try {
-    const onThisDay = await sendOnThisDayEmails({ budgetMs: Math.max(0, ON_THIS_DAY_BUDGET_MS - (Date.now() - startedAt)) });
-    return res.json({ status: 'success', data: { ...onThisDay, tripShare } });
+    onThisDay = await sendOnThisDayEmails({
+      budgetMs: Math.max(0, ON_THIS_DAY_BUDGET_MS - (Date.now() - startedAt)),
+      maxEmails: Math.min(ON_THIS_DAY_MAX_EMAILS, left),
+    });
   } catch (err) {
     console.error('[emails] on this day failed:', err);
-    return res.status(500).json({ status: 'error', message: 'On this day failed.' });
   }
+  const { problems, warnings } = emailRunProblems({ tripShare, onThisDay });
+  await recordCronRun({
+    job: 'emails',
+    startedAt,
+    problems,
+    warnings,
+    summary: {
+      limit,
+      welcomeHomeSent: tripShare?.sent ?? null,
+      welcomeHomeAccounts: tripShare?.accounts ?? null,
+      onThisDaySent: onThisDay?.sent ?? null,
+      onThisDayAccounts: onThisDay?.accounts ?? null,
+      quotaReached: Boolean(tripShare?.quotaReached || onThisDay?.quotaReached),
+    },
+  });
+  if (!onThisDay) return res.status(500).json({ status: 'error', message: 'On this day failed.' });
+  return res.json({ status: 'success', data: { ...onThisDay, tripShare, limit } });
 };
 
 // GET /api/emails/photos/:photoId?t= : the email's picture, a fresh signed link to its DISPLAY

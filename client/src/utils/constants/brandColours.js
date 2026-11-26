@@ -72,6 +72,60 @@ export const POSTER_COLOURS = Object.freeze({
   }),
 });
 
+// A postcard's four styles (utils/postcards/drawPostcard.js; 26 Nov 2026), drawn on a canvas so
+// fixed here, as the share card's are: the card's paper and edge, the message's ink, the
+// "Greetings from" lettering, the rules and address lines, the stamp's paper, the postmark's
+// ink and the sky behind a little 3D model. Airmail's edge is red and blue stripes; vintage's
+// paper a faint linen weave.
+export const POSTCARD_COLOURS = Object.freeze({
+  classic: Object.freeze({
+    paper: '#fdf8ee',
+    edge: '#ffffff',
+    ink: '#2b2118',
+    lettering: '#991b1b',
+    shadow: '#3b2a1a',
+    rule: '#97572b',
+    stamp: '#ffffff',
+    postmark: '#33416b',
+    sky: '#dcecf7',
+  }),
+  vintage: Object.freeze({
+    paper: '#efe0bf',
+    edge: '#e2cc9f',
+    ink: '#4a3320',
+    lettering: '#7a2e1a',
+    shadow: '#3b2a1a',
+    rule: '#8a5a33',
+    weave: '#d9c193',
+    stamp: '#f8efd9',
+    postmark: '#5a3a22',
+    sky: '#e9dcc0',
+  }),
+  airmail: Object.freeze({
+    paper: '#ffffff',
+    edge: '#ffffff',
+    ink: '#1d2a4d',
+    lettering: '#c8102e',
+    shadow: '#1d2a4d',
+    rule: '#1d3f8f',
+    stripes: Object.freeze(['#c8102e', '#1d3f8f']),
+    stamp: '#ffffff',
+    postmark: '#1d2a4d',
+    sky: '#dcecf7',
+  }),
+  night: Object.freeze({
+    paper: '#14213d',
+    edge: '#0b1630',
+    ink: '#f3ead2',
+    lettering: '#e3b53d',
+    shadow: '#05091a',
+    rule: '#8fb3d1',
+    stamp: '#f3ead2',
+    postmark: '#e3b53d',
+    sky: '#22345c',
+  }),
+});
+
 // Comparing two maps (utils/compare/drawCompareMap.js; 22 Nov 2026): the countries on both,
 // only on the first, only on the second, on the share card's sea and land. Three hues told
 // apart without colour vision too (purple, amber, teal), and the page lists each group in words.

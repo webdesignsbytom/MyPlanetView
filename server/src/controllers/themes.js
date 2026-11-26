@@ -7,10 +7,12 @@ import { canEdit, canSeePhoto, canView } from '../utils/access.js';
 import { clampInt } from '../utils/sanitize.js';
 import { isUuid } from '../utils/travelValidation.js';
 import { THEME_LIMITS, isRunning, monthStart, parseThemeInput, themeView } from '../utils/themes.js';
+import { suggestThemes } from '../utils/themeIdeas.js';
 import {
   countThemeEntries,
   countThemeMaps,
   createThemeInDB,
+  createThemesInDB,
   deleteThemeInDB,
   enterPhotoInTheme,
   findMapThemeAlbums,
@@ -196,6 +198,17 @@ export const createThemeHandler = handler(D, 'Create theme', async (req, res) =>
   const theme = await createThemeInDB(parsed.data);
   logEvent(createThemeEvent({ user: req.user, action: 'Create Success', id: theme.id, detail: `month=${themeView(theme).month}`, statusCode: 201 }));
   return sendDataResponse(res, 201, { theme: adminView(theme) });
+});
+
+// POST /users/admin/themes/suggested (26 Nov 2026, the user's wish: production had no themes
+// until a year was written): each month of this one and the 11 after with no theme gets a
+// suggested one (utils/themeIdeas.js), which the admin can change or delete before it starts.
+// -> the list as GET answers it, and `added`.
+export const fillSuggestedThemesHandler = handler(D, 'Suggest themes', async (req, res) => {
+  const added = await createThemesInDB(suggestThemes(await listThemesWithCounts()));
+  if (added) logEvent(createThemeEvent({ user: req.user, action: 'Suggested Create Success', detail: `added=${added}`, statusCode: 201 }));
+  const themes = await listThemesWithCounts();
+  return sendDataResponse(res, added ? 201 : 200, { themes: themes.map((theme) => adminView(theme)), entriesPerMap: THEME_LIMITS.entriesPerMap, added });
 });
 
 /**

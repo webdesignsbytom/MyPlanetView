@@ -1,4 +1,5 @@
 import { test, expect, MOCK_STORE_KEY, openMap, openTool, openTipsFromSettings } from './fixtures.js';
+import { COOKIE_POLICY_NAME, COOKIE_TIMER } from '../../src/utils/constants/constants.js';
 
 // The tips the map opens with (MapTipsDialog, 17 Nov 2026): once a visit while the viewer's
 // `showTips` setting is on; the dialog's box turns it off, Settings back on. One tip at a
@@ -87,5 +88,25 @@ test.describe('Map tips', () => {
     await expect(tipsSwitch).not.toBeChecked();
     await settings.getByText('Tips when the map opens', { exact: true }).click();
     await expect(tipsSwitch).toBeChecked();
+  });
+
+  // 26 Nov 2026, the audit: on a phone's first visit the cookie pop-up covered the tips and
+  // their Next button. The tips now wait until it's answered.
+  test('on a first visit they wait for the cookie pop-up to be answered', { tag: '@phone' }, async ({ page }) => {
+    await page.addInitScript((key) => {
+      if (!sessionStorage.getItem('e2e-cookies-cleared')) {
+        sessionStorage.setItem('e2e-cookies-cleared', '1');
+        localStorage.removeItem(key);
+      }
+    }, COOKIE_POLICY_NAME);
+    await page.route(/googletagmanager\.com|google-analytics\.com/, (route) => route.abort());
+    await openMap(page);
+    const banner = page.getByRole('dialog', { name: 'Cookie choices' });
+    await expect(banner).toBeVisible({ timeout: COOKIE_TIMER + 10000 });
+    await expect(tipsDialog(page)).toHaveCount(0);
+    await banner.getByRole('button', { name: 'No thanks' }).click();
+    await expect(banner).toBeHidden();
+    await expect(tipsDialog(page)).toBeVisible();
+    await expect(tipsDialog(page).getByRole('button', { name: 'Next tip', exact: true })).toBeInViewport();
   });
 });

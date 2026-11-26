@@ -22,6 +22,7 @@ import { registerPassportRoutes } from '@/dev/mock/handlers/passport';
 import { registerAchievementRoutes } from '@/dev/mock/handlers/achievements';
 import { registerThemeRoutes } from '@/dev/mock/handlers/themes';
 import { registerChallengeRoutes } from '@/dev/mock/handlers/challenges';
+import { registerVsRoutes } from '@/dev/mock/handlers/vs';
 import { registerTravelCopyRoutes } from '@/dev/mock/handlers/travelCopies';
 import { registerMapDesignRoutes } from '@/dev/mock/handlers/mapDesigns';
 import { registerFeedbackRoutes } from '@/dev/mock/handlers/feedback';
@@ -34,6 +35,7 @@ import { registerGuessGameRoutes } from '@/dev/mock/handlers/guessGames';
 import { registerFlightRoutes } from '@/dev/mock/handlers/flights';
 import { registerOneShotRoutes } from '@/dev/mock/handlers/oneShots';
 import { registerPhotoShowRoutes } from '@/dev/mock/handlers/photoShows';
+import { registerPostcardRoutes } from '@/dev/mock/handlers/postcards';
 
 // The seeded people and maps (seed.js, seedFirstClass.js)
 export const USER = 'mock-user';
@@ -75,6 +77,7 @@ export function registerAllRoutes() {
   registerAchievementRoutes();
   registerThemeRoutes();
   registerChallengeRoutes();
+  registerVsRoutes();
   registerTravelCopyRoutes();
   registerMapDesignRoutes();
   registerFeedbackRoutes();
@@ -87,6 +90,7 @@ export function registerAllRoutes() {
   registerFlightRoutes();
   registerOneShotRoutes();
   registerPhotoShowRoutes();
+  registerPostcardRoutes();
 }
 
 /** A freshly seeded store, signed in as the test user (verified), nothing uploaded. */

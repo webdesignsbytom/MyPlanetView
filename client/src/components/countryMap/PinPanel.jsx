@@ -119,7 +119,7 @@ function PinVisit({ visit, index, total, canEdit, editing, onEdit, onDelete, onO
           </button>
           {confirming ? (
             <>
-              <button type='button' onClick={onDelete} className='font-medium text-poster-red underline underline-offset-2'>
+              <button type='button' onClick={onDelete} className='font-medium text-poster-red-deep underline underline-offset-2'>
                 Delete it for good
               </button>
               <button type='button' onClick={() => setConfirming(false)} className='underline underline-offset-2'>
@@ -227,7 +227,7 @@ function PinPanel({ pinId = null, draft = null, source, mapId, canEdit = false, 
                           await deletePin(pin.id);
                           onDeleted?.();
                         }}
-                        className='font-medium text-poster-red underline underline-offset-2'
+                        className='font-medium text-poster-red-deep underline underline-offset-2'
                       >
                         Delete the pin and its visits
                       </button>

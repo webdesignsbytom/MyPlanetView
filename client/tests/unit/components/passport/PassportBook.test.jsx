@@ -83,6 +83,18 @@ describe('PassportBook', () => {
     expect(next().disabled).toBe(false);
   });
 
+  it('sizes the book to fit above its page bar, which keeps to the window’s foot on wide screens only', () => {
+    const { container } = open();
+    const leaves = container.querySelector('[data-book-height]');
+    // jsdom: a 768-pixel window, nothing above the book, a bar of no height
+    expect(leaves.getAttribute('data-book-height')).toBe('640');
+    expect(leaves.style.getPropertyValue('--book-h')).toBe('640px');
+    expect(leaves.className).toContain('md:h-[var(--book-h,40rem)]');
+    const bar = container.querySelector('nav[aria-label="Passport pages"]');
+    expect(bar.className).toContain('md:sticky');
+    expect(bar.className.split(/\s+/)).not.toContain('sticky');
+  });
+
   it('lists every page: the cover, the travellers, a visa page per country and the totals', () => {
     open();
     expect([...pageList().querySelectorAll('option')].map((o) => o.textContent)).toEqual([

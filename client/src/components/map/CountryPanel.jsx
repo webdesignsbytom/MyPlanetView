@@ -26,6 +26,7 @@ import MomentList from '@/components/moments/MomentList';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import PrintDownload from '@/components/photos/PrintDownload';
 import ShareShow from '@/components/shows/ShareShow';
+import SendPostcard from '@/components/postcards/SendPostcard';
 import TravelDesk from '@/components/offers/TravelDesk';
 import FormField from '@/components/ui/FormField';
 // Utils
@@ -75,6 +76,8 @@ const momentsClosedForVisit = () => {
 // through a share link). `mapKey` names the map in each card slot's seed.
 // "Print or download" (docs/API.md, "Downloads"): the country's photos as a zip, for the
 // map's editors (verified or not), never through a share link.
+// "Send a postcard" (docs/API.md "Postcards"; 26 Nov 2026): a card from this place by a link of
+// its own, never part of the map, for the map's editors with a verified email.
 // A region (Bali, Tasmania: regionPlaces.js) has its own ticket, with its poster, status, first
 // visit, note and the landmarks inside it; its photos and moments are its country's, which
 // `onOpenPlace(code)` opens from here (18 Nov 2026, the user's wish).
@@ -461,6 +464,9 @@ function CountryPanel({
         {!parent && canEdit && photoSource?.mapId && photos.photos.length ? (
           <ShareShow inMapPanel fill mapId={photoSource.mapId} source={photoFilters} defaultTitle={country.name} />
         ) : null}
+        {/* A postcard from here, sent by its own link, never part of the map (26 Nov 2026, the
+            user's wish): editors, verified; a region's photos are its country's */}
+        {canEdit ? <SendPostcard countryCode={code} placeName={country.name} photoFilters={parent || !photoSource?.mapId ? null : photoFilters} /> : null}
         <TravelDesk
           inMapPanel
           fill

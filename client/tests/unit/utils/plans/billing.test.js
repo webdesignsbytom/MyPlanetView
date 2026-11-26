@@ -7,6 +7,7 @@ import {
   forgetPendingMap,
   goToUrl,
   hasSubscription,
+  planCardLabel,
   planPrice,
   priceText,
   readPendingMap,
@@ -85,5 +86,25 @@ describe('the new map waiting for its payment', () => {
     expect(readPendingMap('u1')).toBeNull();
     sessionStorage.setItem('mpv:pendingNewMap', '{oops');
     expect(readPendingMap('u1')).toBeNull();
+  });
+});
+
+describe('planCardLabel', () => {
+  it('signed out, each card starts a map', () => {
+    expect(planCardLabel({ planId: 'FREE', signedIn: false })).toBe('Start your map');
+    expect(planCardLabel({ planId: 'REGULAR', signedIn: false, currentPlan: 'REGULAR' })).toBe('Start with Business');
+  });
+
+  it('signed in, the account’s plan is "Your plan", a lower one "Move to", a higher one "Choose"', () => {
+    expect(planCardLabel({ planId: 'REGULAR', signedIn: true, currentPlan: 'REGULAR' })).toBe('Your plan');
+    expect(planCardLabel({ planId: 'FREE', signedIn: true, currentPlan: 'PREMIUM' })).toBe('Move to Economy');
+    expect(planCardLabel({ planId: 'REGULAR', signedIn: true, currentPlan: 'PREMIUM' })).toBe('Move to Business');
+    expect(planCardLabel({ planId: 'PREMIUM', signedIn: true, currentPlan: 'FREE' })).toBe('Choose First Class');
+    expect(planCardLabel({ planId: 'FREE', signedIn: true, currentPlan: 'FREE' })).toBe('Your plan');
+  });
+
+  it('signed in with the plan not known yet, every card is "Choose"', () => {
+    expect(planCardLabel({ planId: 'FREE', signedIn: true })).toBe('Choose Economy');
+    expect(planCardLabel({ planId: 'PREMIUM', signedIn: true, currentPlan: null })).toBe('Choose First Class');
   });
 });

@@ -230,7 +230,7 @@ for (const [country, id, area, place] of [
   ['Cuba', 'old-havana', 'CU-03', 'Havana'],
   ['Norway', 'bryggen', 'NO-12', 'Hordaland'],
 ]) {
-  test(`${country}’s own map has its landmark model, in ${place}`, async ({ page }) => {
+  test(`${country}’s own map has its landmark model, in ${place}`, { tag: '@models' }, async ({ page }) => {
     await openMap(page);
     const map = await openCountryMap(page, country);
     await expectModelOn(map, id, area);
@@ -247,7 +247,7 @@ for (const [country, id, area, place] of [
   // the Cliffs of Moher are Clare's very edge, the sea's side of its coastline at the map's detail
   ['Ireland', 'cliffs-of-moher', 'IE-CE', 'Clare'],
 ]) {
-  test(`${country}’s own map has its landmark model, by ${place}`, async ({ page }) => {
+  test(`${country}’s own map has its landmark model, by ${place}`, { tag: '@models' }, async ({ page }) => {
     await openMap(page);
     const map = await openCountryMap(page, country);
     await expectModelOn(map, id, area, { inBounds: true });
@@ -932,7 +932,7 @@ const HERITAGE_MODELS = [
 ];
 for (const models of [MORE_MODELS, LAST_MODELS, EXTRA_MODELS, NEWEST_MODELS, LATEST_MODELS, HERITAGE_MODELS]) for (let i = 0; i < models.length; i += 10) {
   const group = models.slice(i, i + 10);
-  test(`the landmark models from ${group[0][0]} (${group[0][1]}) to ${group.at(-1)[0]} (${group.at(-1)[1]}), each on its own country’s map`, async ({ page }) => {
+  test(`the landmark models from ${group[0][0]} (${group[0][1]}) to ${group.at(-1)[0]} (${group.at(-1)[1]}), each on its own country’s map`, { tag: '@models' }, async ({ page }) => {
     test.setTimeout(240_000);
     await openMap(page);
     for (const [country, id, area, place, inBounds = false] of group) {

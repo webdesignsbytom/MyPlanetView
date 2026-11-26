@@ -2,11 +2,11 @@ import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import PassportPage from '@/pages/passport/PassportPage';
-import { getPassport } from '@/api/travelApi';
+import { getPassport, updateMap } from '@/api/travelApi';
 import { MAP_PASSPORT_PAGE_URL, SHARED_PASSPORT_PAGE_URL } from '@/utils/constants/routes';
 import { headings, here, onlyMain, renderPage, signedIn } from '../renderPage';
 
-vi.mock('@/api/travelApi', () => ({ getPassport: vi.fn() }));
+vi.mock('@/api/travelApi', () => ({ getPassport: vi.fn(), updateMap: vi.fn() }));
 // The book is PassportBook's own test's: a stand-in with its callback, saying what else it got
 vi.mock('@/components/passport/PassportBook', () => ({
   default: ({ passport, onOpenPhoto, openAt, travellerEdit, ...rest }) => (
@@ -16,6 +16,7 @@ vi.mock('@/components/passport/PassportBook', () => ({
       data-props={Object.keys(rest).sort().join(',')}
       data-edit={travellerEdit ? (travellerEdit.locked ? 'locked' : 'on') : 'off'}
       data-travellers={passport.travellers.map((t) => `${t.id}:${t.signature ?? ''}`).join(',')}
+      data-cover={passport.map.passportColour ?? ''}
     >
       <button type='button' onClick={() => onOpenPhoto('photo-1')}>
         Open a stamp’s photo
@@ -196,6 +197,47 @@ describe('PassportPage', () => {
       openOwn();
       await waitFor(() => expect(book()).toBeTruthy());
       expect(book().getAttribute('data-edit')).toBe('off');
+    });
+  });
+
+  // 26 Nov 2026, the user's wish: "add choosing passport colour, just the cover colour"
+  describe('the cover’s colour', () => {
+    const ownable = (over = {}) =>
+      passport({ map: { id: 'map-1', name: 'Our map', groupType: 'COUPLE', traveller: null, plan: { id: 'FREE' }, passportColour: null, canChooseCover: true, ...over } });
+    const swatch = (id) => document.querySelector(`[data-cover-colour="${id}"] input`);
+
+    it('lets the owner choose it under the book, shown at once and saved on the map', async () => {
+      getPassport.mockResolvedValue({ passport: ownable() });
+      updateMap.mockResolvedValue({ map: {} });
+      openOwn();
+      await waitFor(() => expect(swatch('BURGUNDY').checked).toBe(true));
+      fireEvent.click(swatch('GREEN'));
+      expect(book().getAttribute('data-cover')).toBe('GREEN');
+      expect(updateMap).toHaveBeenCalledWith('map-1', { passportColour: 'GREEN' });
+      await waitFor(() => expect(swatch('GREEN').disabled).toBe(false));
+    });
+
+    it('puts it back, saying why, when it can’t be saved', async () => {
+      getPassport.mockResolvedValue({ passport: ownable({ passportColour: 'TAN' }) });
+      updateMap.mockRejectedValue(Object.assign(new Error('x'), { friendlyMessage: 'Offline.' }));
+      openOwn();
+      await waitFor(() => expect(book().getAttribute('data-cover')).toBe('TAN'));
+      fireEvent.click(swatch('BLUE'));
+      expect(await screen.findByRole('alert')).toBeTruthy();
+      expect(screen.getByRole('alert').textContent).toBe('Offline.');
+      expect(book().getAttribute('data-cover')).toBe('TAN');
+    });
+
+    it('isn’t offered to anyone else, nor through a share link', async () => {
+      getPassport.mockResolvedValue({ passport: ownable({ canChooseCover: false }) });
+      const { unmount } = openOwn();
+      await waitFor(() => expect(book()).toBeTruthy());
+      expect(document.querySelector('[data-cover-colour]')).toBeNull();
+      unmount();
+      getPassport.mockResolvedValue({ passport: ownable() });
+      openShared();
+      await waitFor(() => expect(book()).toBeTruthy());
+      expect(document.querySelector('[data-cover-colour]')).toBeNull();
     });
   });
 

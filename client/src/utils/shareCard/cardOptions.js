@@ -7,6 +7,7 @@ import { goalName, regionCountryCodes, regionName } from '@/utils/achievements/g
 import { oneShotCounts } from '@/utils/oneShots/oneShotRules';
 import { formatDay } from '@/utils/functions/dates';
 import { iconShape } from './iconShape';
+import { medalsWords, placeWords } from '@/utils/vs/vsWords';
 
 const word = (n, one, many) => (n === 1 ? one : many);
 
@@ -208,4 +209,31 @@ export function awardCardOptions(item, { badges = [], map = null, design = null 
     if (place) return collectionCardOptions({ ...place, best: collection.tier });
   }
   return badgeCardOptions((badges || []).find((badge) => badge.key === item.key) || { key: item.key }, map);
+}
+
+/**
+ * The card of your medals in a Vs mode comparison (26 Nov 2026): your best medal drawn big, the
+ * comparison's title, how many golds, silvers and bronzes, and your place. `group` as the page has
+ * it (the caller's row is `isYou`). Only offered once you have a medal.
+ */
+export function vsCardOptions(group) {
+  const me = group.members.find((m) => m.isYou) || { gold: 0, silver: 0, bronze: 0, place: null };
+  const counted = group.members.filter((m) => m.counting).length;
+  const best = me.gold ? 'gold' : me.silver ? 'silver' : 'bronze';
+  const ordinal = placeWords(me.place);
+  return {
+    kicker: 'Vs mode',
+    title: group.title,
+    medal: best,
+    highlight: [],
+    stats: [
+      { value: me.gold, label: 'gold' },
+      { value: me.silver, label: 'silver' },
+      { value: me.bronze, label: 'bronze' },
+    ],
+    note: ordinal ? `${ordinal} of ${counted} in the medal table, comparing our travels.` : '',
+    fileName: 'my-planet-view-vs.png',
+    shareText: `${ordinal ? `${ordinal} place` : 'Medals'} in “${group.title}”: ${medalsWords(me)}. Compare your travels with mine on My Planet View.`,
+    dialogTitle: 'Share your medals',
+  };
 }

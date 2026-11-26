@@ -3,9 +3,18 @@ import { FaBinoculars } from 'react-icons/fa';
 
 /**
  * An item's photo (utils/oneShots/oneShotPhotoInfo.js) filling its box, or a pair of
- * binoculars where it has none (or before the credits load). Decorative: its name is beside it.
+ * binoculars where it has none (or before the credits load). `ownUrl`, the map's own photo of
+ * it (a tick's first, 26 Nov 2026), takes the Commons photo's place. Decorative: its name is
+ * beside it.
  */
-function OneShotPicture({ photo, className = '' }) {
+function OneShotPicture({ photo, ownUrl = null, className = '' }) {
+  if (ownUrl) {
+    return (
+      <span className={`block overflow-hidden ${className}`} data-own-photo=''>
+        <img src={ownUrl} alt='' loading='lazy' decoding='async' className='block h-full w-full object-cover' />
+      </span>
+    );
+  }
   return photo ? (
     <picture className={`block overflow-hidden ${className}`}>
       <source type='image/avif' srcSet={photo.avif} />

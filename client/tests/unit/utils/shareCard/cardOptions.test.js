@@ -12,6 +12,7 @@ import {
   mapCardStats,
   tripCardOptions,
   tripDayCount,
+  vsCardOptions,
 } from '@/utils/shareCard/cardOptions';
 import { iconShape } from '@/utils/shareCard/iconShape';
 import { formatDay } from '@/utils/functions/dates';
@@ -116,6 +117,41 @@ describe('collectionCardOptions', () => {
     expect(vatican.shareText).toBe('Gold for Vatican City: its landmark, stamped in my travel passport.');
     const japan = collectionCardOptions({ place: 'JP', name: 'Japan', have: 26, total: 26, best: 'gold' });
     expect(japan.shareText).toBe('Every one of Japan’s 26 landmarks, stamped in my travel passport.');
+  });
+});
+
+// Vs mode (26 Nov 2026): your medals in a comparison, the best drawn big
+describe('vsCardOptions', () => {
+  const group = (me) => ({
+    title: 'The gang',
+    members: [
+      { isYou: false, counting: true, gold: 6, silver: 1, bronze: 0, place: 1 },
+      { isYou: true, counting: true, place: 2, ...me },
+      { isYou: false, counting: false, gold: 0, silver: 0, bronze: 0, place: null },
+    ],
+  });
+
+  it('draws your best medal, the counts and your place of those counted', () => {
+    expect(vsCardOptions(group({ gold: 2, silver: 3, bronze: 1 }))).toEqual({
+      kicker: 'Vs mode',
+      title: 'The gang',
+      medal: 'gold',
+      highlight: [],
+      stats: [
+        { value: 2, label: 'gold' },
+        { value: 3, label: 'silver' },
+        { value: 1, label: 'bronze' },
+      ],
+      note: '2nd of 2 in the medal table, comparing our travels.',
+      fileName: 'my-planet-view-vs.png',
+      shareText: '2nd place in “The gang”: 2 gold, 3 silver, 1 bronze. Compare your travels with mine on My Planet View.',
+      dialogTitle: 'Share your medals',
+    });
+  });
+
+  it('draws silver or bronze when that is the best', () => {
+    expect(vsCardOptions(group({ gold: 0, silver: 1, bronze: 4 })).medal).toBe('silver');
+    expect(vsCardOptions(group({ gold: 0, silver: 0, bronze: 4 })).medal).toBe('bronze');
   });
 });
 

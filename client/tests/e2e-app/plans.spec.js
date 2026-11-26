@@ -52,6 +52,10 @@ test.describe('Plans', () => {
     await expect(business).toContainText('or £49 a year: two months free');
     await expect(business).toContainText('200 photos of each country, on each map');
     await expect(page.getByRole('article', { name: 'First Class' })).toContainText('£9.99');
+    // Signed in, the account's own plan says so (the test user pays for Business)
+    await expect(business.getByRole('link', { name: 'Your plan' })).toBeVisible();
+    await expect(page.getByRole('article', { name: 'Economy' }).getByRole('link', { name: 'Move to Economy' })).toBeVisible();
+    await expect(page.getByRole('article', { name: 'First Class' }).getByRole('link', { name: 'Choose First Class' })).toBeVisible();
     await expect(page.getByText('Business and First Class members never see ad cards on a map.')).toBeVisible();
     await expect(page.getByRole('region', { name: 'More than one map' })).toContainText('£5.99 a month');
     await expect(page.getByRole('region', { name: 'On every plan' })).toBeVisible();

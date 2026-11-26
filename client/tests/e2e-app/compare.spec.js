@@ -5,13 +5,17 @@ import { test, expect, openMap, openStats, SAM_SHARE_CODE } from './fixtures.js'
 // they can view (Thailand, Vietnam, Cambodia, and Australia lived in): nothing in common.
 
 const group = (page, id) => page.locator(`[data-compare-group="${id}"]`);
+// Leaving the map: on the dev server the next page's code waits behind the map's idle
+// preloads (each landmark model's picture is a module of its own there, about 1,770), which
+// took 7 to 10 s (26 Nov 2026). A build bundles them, so only the tests wait longer.
+const AFTER_THE_MAP = { timeout: 30_000 };
 
 test('the statistics open the comparison, which lists both, only one and only the other', async ({ page }) => {
   await openMap(page);
   await openStats(page);
   await page.getByRole('dialog', { name: 'Travel statistics' }).getByRole('link', { name: 'Compare with another map' }).click();
   await expect(page).toHaveURL(/\/compare\?a=map-home$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Compare two maps' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Compare two maps' })).toBeVisible(AFTER_THE_MAP);
 
   await page.getByLabel('Compare with').selectOption({ label: "Sam's gap year (Sam Rivers)" });
   await expect(page).toHaveURL(/\/compare\?a=map-home&b=map-sam$/);

@@ -8,6 +8,8 @@ import { myMaps } from '@/utils/map/mapListCache';
 import { DEFAULT_MAP_SETTINGS } from '@/utils/map/mapSettings';
 import { QUICK_FILL_SHOWN_KEY } from '@/utils/map/quickFill';
 import { TIPS_SHOWN_KEY } from '@/utils/map/mapTips';
+import { saveConsent } from '@/utils/analytics/consent';
+import { COOKIE_POLICY_NAME } from '@/utils/constants/constants';
 import { todayDay } from '@/utils/map/celebrations';
 import { withProviders } from './helpers';
 
@@ -220,6 +222,22 @@ describe('MapExperience', () => {
   });
 
   describe('the first-load dialogs', () => {
+    // The cookie pop-up answered on an earlier visit (the tips wait for it)
+    beforeEach(() => localStorage.setItem(COOKIE_POLICY_NAME, JSON.stringify({ analytics: 'denied', version: '1.1.0' })));
+
+    it('waits for the cookie pop-up to be answered before showing the tips, which it would cover on a phone', async () => {
+      localStorage.removeItem(COOKIE_POLICY_NAME);
+      sessionStorage.setItem(QUICK_FILL_SHOWN_KEY, '1');
+      const { q, panel } = open();
+      await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
+      await act(async () => {});
+      expect(panel('MapTipsDialog')).toBeNull();
+      expect(sessionStorage.getItem(TIPS_SHOWN_KEY)).toBeNull();
+      act(() => saveConsent('denied'));
+      await waitFor(() => expect(panel('MapTipsDialog')).not.toBeNull());
+      expect(sessionStorage.getItem(TIPS_SHOWN_KEY)).toBe('1');
+    });
+
     it('asks "Where have you been?" once for a new map’s owner, and the tips wait for it', async () => {
       const { panel, onChangeSetting, click } = open();
       await waitFor(() => expect(panel('QuickFillDialog')).not.toBeNull());
@@ -265,6 +283,24 @@ describe('MapExperience', () => {
 
   describe('the panels', () => {
     beforeEach(() => seenDialogs());
+
+    it('fetches every toolbar panel while the browser is idle, One Shots too', async () => {
+      const { preloadWhenIdle } = await import('@/components/map/lazyMapPanels');
+      open();
+      const ids = preloadWhenIdle.mock.calls.at(-1)[0];
+      expect(ids[0]).toBe('countries');
+      for (const id of ['stats', 'trips', 'next', 'strings', 'timeline', 'badges', 'oneShots', 'settings', 'play', 'photos', 'upload', 'share', 'switcher', 'feedback']) {
+        expect(ids).toContain(id);
+      }
+    });
+
+    it('fetches only what a share link’s viewer can open', async () => {
+      const { preloadWhenIdle } = await import('@/components/map/lazyMapPanels');
+      open({ shareCode: 'ABCD-EFGH-JKMN', role: 'VIEWER', actions: null, currentUser: null });
+      const ids = preloadWhenIdle.mock.calls.at(-1)[0];
+      expect(ids).toContain('oneShots');
+      for (const id of ['strings', 'upload', 'share', 'switcher', 'feedback']) expect(ids).not.toContain(id);
+    });
 
     it('opens a tool’s panel over the dimmed map, and a press on the map closes it', async () => {
       const { q, panel, click } = open();

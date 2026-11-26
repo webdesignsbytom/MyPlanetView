@@ -88,8 +88,17 @@ vi.mock('../../src/services/s3/s3private.js', async (importOriginal) => {
 });
 
 vi.mock('../../src/services/email/emailHandler.js', () => {
-  // `options` carries an email's headers (List-Unsubscribe on "On this day")
+  // `options` carries an email's headers (List-Unsubscribe on "On this day"). Memory emails
+  // stand in for Resend's quota too: with `globalThis.__memoryQuotaLeft` a number, that many
+  // more go, then each answers daily_quota_exceeded through its `report`, as Resend would.
   const record = (kind) => async (to, subject, template, context, options) => {
+    if (kind === 'memory' && typeof globalThis.__memoryQuotaLeft === 'number') {
+      if (globalThis.__memoryQuotaLeft <= 0) {
+        if (options?.report) options.report.error = 'daily_quota_exceeded';
+        return false;
+      }
+      globalThis.__memoryQuotaLeft -= 1;
+    }
     globalThis.__sentEmails.push({ kind, to, subject, template, context, headers: options?.headers ?? null });
     return true;
   };
@@ -100,6 +109,7 @@ vi.mock('../../src/services/email/emailHandler.js', () => {
     sendUserChangeEmailConfirmation: record('change-email'),
     sendContactEmail: record('contact'),
     sendMemoryEmail: record('memory'),
+    sendAlertEmail: record('alert'),
   };
 });
 

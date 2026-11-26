@@ -159,6 +159,8 @@ export function exportMapView(rows, { userId }) {
     homeCountryCode: map.homeCountryCode ?? null,
     // The style chosen for it, shown to everyone who opens it (null: the owner's own)
     style: map.style ?? null,
+    // Its passport's cover colour (null: the plan's own)
+    passportColour: map.passportColour ?? null,
     // How the places been to show, in every style (docs/API.md "The visited look")
     visitedLook: map.visitedLook ?? 'BADGE',
     visitedColour: map.visitedColour ?? null,
@@ -204,7 +206,8 @@ export function exportMapView(rows, { userId }) {
       countryCode: o.countryCode,
       notes: o.notes,
       source: o.source,
-      photoId: o.photoId,
+      // Its photos in order, the first on its card
+      photoIds: (o.photos ?? []).map((p) => p.photoId),
       travellerIds: (o.travellers ?? []).map((t) => t.travellerId),
       ticked: iso(o.createdAt),
     })),

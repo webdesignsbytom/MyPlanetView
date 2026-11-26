@@ -91,10 +91,25 @@ jobs:
             exit 1
           fi
 
-  client-e2e:
-    name: Client end-to-end tests
+  # The travel pages against mock mode (playwright.app.config.js starts its own Vite), in three
+  # parts side by side (26 Nov 2026, the audit: one job took 28.5 of its 30 minutes): the
+  # desktop and phone tests in two halves, and the landmark model sweeps (`models`, a third of
+  # the time on their own) as the third. Playwright's shards split by count, which put every
+  # model sweep in the last part.
+  client-e2e-part:
+    name: Client end-to-end tests (part ${{ matrix.part }} of 3)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - part: 1
+            tests: --project desktop --project phone --shard=1/2
+          - part: 2
+            tests: --project desktop --project phone --shard=2/2
+          - part: 3
+            tests: --project models
     defaults:
       run:
         working-directory: client
@@ -108,16 +123,31 @@ jobs:
       - run: npm ci
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
-      # The travel pages against mock mode (playwright.app.config.js starts its own Vite)
       - name: Playwright
-        run: npm run test:e2e:app
+        run: npx playwright test --config playwright.app.config.js ${{ matrix.tests }}
       - name: Keep the traces of failed tests
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-test-results
+          name: playwright-test-results-part-${{ matrix.part }}
           path: client/test-results/
           retention-days: 7
+
+  # The check master's branch protection requires, under its old name: it passes only when
+  # every part has
+  client-e2e:
+    name: Client end-to-end tests
+    runs-on: ubuntu-latest
+    needs: client-e2e-part
+    if: always()
+    timeout-minutes: 5
+    steps:
+      - name: Every part passed
+        run: |
+          if [ "${{ needs.client-e2e-part.result }}" != "success" ]; then
+            echo "The end-to-end parts ended: ${{ needs.client-e2e-part.result }}"
+            exit 1
+          fi
 
   server-unit:
     name: Server unit tests

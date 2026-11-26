@@ -58,9 +58,13 @@ export const SHARED_API = '/api/shared'; // /:code, /:code/photos, /:code/photos
 export const PROMO_CODES_API = '/api/promo-codes'; // GET /:code (before signing up)
 export const OFFERS_API = '/api/offers'; // GET: every live travel offer (docs/API.md, "Travel offers")
 export const THEMES_API = '/api/themes'; // GET: this month's photo theme and the recent ones (docs/API.md, "Photo themes")
-export const ADMIN_THEMES_API = '/api/users/admin/themes'; // GET, POST, PATCH|DELETE /:themeId
+export const ADMIN_THEMES_API = '/api/users/admin/themes'; // GET, POST, POST /suggested, PATCH|DELETE /:themeId
 export const FEEDBACK_API = '/api/feedback'; // POST a report; POST /screenshot/presign (docs/API.md, "Feedback")
 export const ADMIN_FEEDBACK_API = '/api/users/admin/feedback'; // GET ?status=&kind=&cursor=; GET, PATCH, DELETE /:feedbackId
+// The admin's overview, gifts by code and referral rewards (docs/API.md, "Admin")
+export const ADMIN_OVERVIEW_API = '/api/users/admin/overview'; // GET
+export const ADMIN_GIFTS_API = '/api/users/admin/gifts'; // GET ?code=
+export const ADMIN_REFERRALS_API = '/api/users/admin/referrals'; // GET
 export const CHALLENGES_API = '/api/challenges'; // GET, POST, /:challengeId (GET, PATCH, DELETE), /reset-link, /me, /join/:code (docs/API.md, "Friends challenges")
 // "Guess where I was" (docs/API.md): a game by its link's code (anyone): /:code, /:code/plays, /:code/plays/:playId (PATCH), /:code/plays/:playId/guesses.
 // A map's games are MAPS_API/:mapId/guess-games; deleting one GUESS_GAMES_API/:gameId
@@ -71,6 +75,12 @@ export const GUESS_GAMES_API = '/api/guess-games';
 // a map's are MAPS_API/:mapId/photo-shows
 export const SHOW_API = '/api/show';
 export const PHOTO_SHOWS_API = '/api/photo-shows';
+// Postcards (docs/API.md "Postcards"): the sender's own (POSTCARDS_API, /picture/presign,
+// /:postcardId/reset-link), and one by its link's code (POSTCARD_API/:code, anyone)
+export const POSTCARDS_API = '/api/postcards';
+export const POSTCARD_API = '/api/postcard';
+// Vs mode (docs/API.md "Vs mode"): mine, one, its link (/join/:code)
+export const VS_API = '/api/vs';
 // The flight log (docs/API.md "Flights"): a map's are MAPS_API/:mapId/flights; deleting one FLIGHTS_API/:flightId
 export const FLIGHTS_API = '/api/flights';
 export const OFFER_CLICK_PATH = '/go'; // /:offerId?p=&dest=&country=&from=&to= on the API's host (a card's link)

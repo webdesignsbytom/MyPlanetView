@@ -62,3 +62,19 @@ describe('a traveller’s passport page in the mock', () => {
     expect(await charlie()).toMatchObject({ photo: { source: 'ACCOUNT' }, signature: null });
   });
 });
+
+// 26 Nov 2026, the user's wish: the passport's cover colour
+describe('the passport’s cover colour in the mock', () => {
+  it('is the owner’s to choose, for everyone who opens it, and null goes back to the plan’s', async () => {
+    let passport = (await get(`/api/maps/${HOME_MAP}/passport`)).data.passport;
+    expect(passport.map).toMatchObject({ passportColour: null, canChooseCover: true });
+    expect((await patch(`/api/maps/${HOME_MAP}`, { passportColour: 'PINK' })).status).toBe(400);
+    expect((await patch(`/api/maps/${HOME_MAP}`, { passportColour: 'GREEN' })).status).toBe(200);
+    passport = (await get(`/api/maps/${HOME_MAP}/passport`)).data.passport;
+    expect(passport.map.passportColour).toBe('GREEN');
+    expect((await patch(`/api/maps/${HOME_MAP}`, { passportColour: null })).status).toBe(200);
+    expect((await get(`/api/maps/${HOME_MAP}/passport`)).data.passport.map.passportColour).toBeNull();
+    // Sam's map, which the test user only views
+    expect((await get(`/api/maps/${SAM_MAP}/passport`)).data.passport.map.canChooseCover).toBe(false);
+  });
+});

@@ -24,6 +24,9 @@ async function pointOn(page, code) {
 }
 
 test('a region is drawn in its country’s colour, with a card of its own', async ({ page }) => {
+  // A day with no anniversary in the demo travels: on one (26 Nov, the Taj Mahal at dawn) the
+  // "N years ago today" tag joins the tags column, which then covers Hawaii (audit, 26 Nov 2026)
+  await page.clock.setFixedTime(new Date('2026-11-20T12:00:00'));
   await openMap(page);
   // Hawaii wears the United States' pastel
   const fill = (code) => page.locator(`[data-code="${code}"]`).first().evaluate((el) => getComputedStyle(el).fill);

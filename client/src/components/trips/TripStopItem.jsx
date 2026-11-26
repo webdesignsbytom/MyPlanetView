@@ -77,7 +77,7 @@ function TripStopItem({ stop, index, count, canEdit, busy, onMove, onSave, onRem
           aria-hidden='true'
           className='grid h-full content-start border-r-2 border-dashed border-poster-brown/60 pr-3'
         >
-          <span className='grid h-10 w-10 -rotate-6 place-items-center rounded-full border-4 border-double border-poster-red bg-poster-paper font-travel text-lg text-poster-red'>
+          <span className='grid h-10 w-10 -rotate-6 place-items-center rounded-full border-4 border-double border-poster-red bg-poster-paper font-travel text-lg text-poster-red-deep'>
             {index + 1}
           </span>
         </span>

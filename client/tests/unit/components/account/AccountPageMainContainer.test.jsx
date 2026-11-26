@@ -8,6 +8,7 @@ const { stub } = vi.hoisted(() => ({ stub: (name) => ({ default: () => <p data-s
 vi.mock('@/components/account/AccountProfileSection', () => stub('profile'));
 vi.mock('@/components/account/AccountPlanSection', () => stub('plan'));
 vi.mock('@/components/account/AccountGiftsSection', () => stub('gifts'));
+vi.mock('@/components/account/AccountPostcardsSection', () => stub('postcards'));
 vi.mock('@/components/account/AccountReferralSection', () => stub('referral'));
 vi.mock('@/components/account/AccountImportSection', () => stub('import'));
 vi.mock('@/components/account/AccountEmailsSection', () => stub('emails'));
@@ -25,6 +26,7 @@ describe('AccountPageMainContainer', () => {
       ['account-profile-heading', 'Profile', 'profile'],
       ['account-plan-heading', 'Your plan', 'plan'],
       ['account-gifts-heading', 'Gifts', 'gifts'],
+      ['account-postcards-heading', 'Postcards you sent', 'postcards'],
       ['account-invite-heading', 'Invite a friend', 'referral'],
       ['account-import-heading', 'Bring your travels', 'import'],
       ['account-emails-heading', 'Emails we send', 'emails'],

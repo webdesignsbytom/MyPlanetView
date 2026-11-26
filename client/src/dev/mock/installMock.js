@@ -30,6 +30,7 @@ import { registerPassportRoutes } from './handlers/passport';
 import { registerAchievementRoutes } from './handlers/achievements';
 import { registerThemeRoutes } from './handlers/themes';
 import { registerChallengeRoutes } from './handlers/challenges';
+import { registerVsRoutes } from './handlers/vs';
 import { registerTravelCopyRoutes } from './handlers/travelCopies';
 import { registerMapDesignRoutes } from './handlers/mapDesigns';
 import { registerFeedbackRoutes } from './handlers/feedback';
@@ -41,6 +42,7 @@ import { registerMapStringRoutes } from './handlers/mapStrings';
 import { registerReferralRoutes } from './handlers/referrals';
 import { registerGuessGameRoutes } from './handlers/guessGames';
 import { registerPhotoShowRoutes } from './handlers/photoShows';
+import { registerPostcardRoutes } from './handlers/postcards';
 import { registerFlightRoutes } from './handlers/flights';
 
 export function installMock() {
@@ -67,6 +69,7 @@ export function installMock() {
   registerAchievementRoutes();
   registerThemeRoutes();
   registerChallengeRoutes();
+  registerVsRoutes();
   registerTravelCopyRoutes();
   registerMapDesignRoutes();
   registerFeedbackRoutes();
@@ -78,6 +81,7 @@ export function installMock() {
   registerReferralRoutes();
   registerGuessGameRoutes();
   registerPhotoShowRoutes();
+  registerPostcardRoutes();
   registerFlightRoutes();
 
   // Every request goes to the adapter: the API client, the global axios (media uploads)

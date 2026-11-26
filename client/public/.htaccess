@@ -68,18 +68,20 @@ ErrorDocument 404 /404.html
 # photo links and presigned uploads); Cloudflare Stream (video playback, thumbnails, tus
 # uploads). The bucket and Stream hosts are whole Cloudflare domains, as their exact names
 # live in the env files: narrow them to the real ones, and add a custom media domain if
-# VITE_MEDIA_CDN becomes one (docs/AUDIT.md, D1). worker-src allows blob: for hls.js.
+# VITE_MEDIA_CDN becomes one (docs/AUDIT.md, D1). worker-src allows blob: for hls.js. Google
+# Analytics' hosts are the ones Google's CSP guide lists for GA4, *.analytics.google.com included:
+# GA4 sends some regions' page views there (docs/AUDIT-2026-11-26.md, A8).
 <IfModule mod_headers.c>
   Header always set Content-Security-Policy "default-src 'self'; \
     script-src 'self' https://www.googletagmanager.com; \
     style-src  'self' 'unsafe-inline'; \
     font-src   'self'; \
-    img-src    'self' https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com data: blob:; \
+    img-src    'self' https://*.r2.dev https://*.eu.r2.cloudflarestorage.com https://*.cloudflarestream.com https://*.google-analytics.com https://*.googletagmanager.com data: blob:; \
     connect-src 'self' \
       https://my-planet-view.vercel.app \
       https://*.r2.dev https://*.eu.r2.cloudflarestorage.com \
       https://*.cloudflarestream.com https://upload.videodelivery.net \
-      https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; \
+      https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; \
     media-src  'self' https://*.cloudflarestream.com https://*.eu.r2.cloudflarestorage.com blob: data:; \
     worker-src 'self' blob:; \
     form-action 'self'; \

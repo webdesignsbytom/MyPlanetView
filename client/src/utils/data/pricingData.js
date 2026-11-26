@@ -37,7 +37,11 @@ export const planTickets = [
       { text: perCountry('REGULAR') },
       { text: 'Your full-size originals, untouched: for posters, canvases, cropping and re-editing' },
       { text: 'No ad cards for you, on any map; fewer for the people you share with' },
-      { text: 'A navy Business Class passport cover' },
+      // Postcards (26 Nov 2026, the user's decision): a country's card is free, these are paid
+      { text: 'Postcards of landmarks, and of your own photos' },
+      // Every plan picks its passport's leather (26 Nov 2026); the lettering and the frame stay
+      // the plan's, so they're what's sold (the audit, 26 Nov 2026)
+      { text: 'Silver lettering and a pressed frame on your passport’s cover' },
     ],
   },
   {
@@ -47,9 +51,10 @@ export const planTickets = [
       { text: 'Everything in Business' },
       { text: perCountry('PREMIUM') },
       { text: 'Videos of your trips, beside the photos' },
-      // Each plan has its own passport cover (16 Nov). "Extra map styles" (never built) gave
-      // way to every map's own design, free (21 Nov 2026, the user's wish)
-      { text: 'A black and gold First Class passport cover' },
+      // Each plan has its own passport cover (16 Nov); since 26 Nov 2026 every plan picks the
+      // leather, so it's the foil frame and gilt edges that are First Class's. "Extra map
+      // styles" (never built) gave way to every map's own design, free (21 Nov 2026, the user's wish)
+      { text: 'A gold foil frame and gilt page edges on your passport' },
       { text: 'No ad cards on your maps, for anyone who looks' },
     ],
   },
@@ -76,8 +81,10 @@ export const everyPlanFeatures = [
   { text: 'Landmarks suggested from where each photo was taken.' },
   { text: 'Five looks for the map, or a design of your own: your picture on the sea and your colours on the countries.' },
   { text: 'Every map other people share with you, free: they never count as yours.' },
-  { text: 'A passport with a stamp for every landmark you photograph.' },
+  { text: 'A passport with a stamp for every landmark you photograph or tick, its cover in the colour you choose.' },
   { text: 'Slideshows of your whole map, one country or one trip.' },
+  // Postcards (26 Nov 2026): a country's card on every plan; a landmark's or your own photo's on Business and First Class
+  { text: 'Postcards from the places on your map, sent by a link for whoever you like to turn over and keep.' },
   { text: 'The Travel Desk: places to stay, tours and flights for a trip or a country, from our travel partners, only when you ask.' },
   { text: 'Badges as your map fills up, and goals of your own: a number of countries, a bucket list, a whole region.' },
   // Friends challenges, monthly photo themes and the first 20 country guides (checked 16 Nov)

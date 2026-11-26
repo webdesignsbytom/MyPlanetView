@@ -5,7 +5,7 @@
 // ended last; its trips are claimed before it's sent, so two runs never both send it, and a
 // trip is never in two emails. The button opens the map with the trip's "Welcome home" tag
 // (?home=), which offers a picture of the trip for social media and the map's share link.
-import { EMAIL_LISTS, unsubscribeToken } from '../../utils/onThisDay.js';
+import { EMAIL_LISTS, isQuotaError, unsubscribeToken } from '../../utils/onThisDay.js';
 import {
   TRIP_SHARE_BUDGET_MS,
   TRIP_SHARE_MAX_EMAILS,
@@ -56,14 +56,17 @@ export function tripShareEmail(trip, now = new Date()) {
   };
 }
 
-/** Send today's. -> `{ accounts, sent, skipped, complete }` */
+/**
+ * Send today's. -> `{ accounts, sent, skipped, complete, quotaReached }`: it stops at
+ * `maxEmails`, at its time budget, or once Resend says the account's quota is used up.
+ */
 export async function sendTripShareEmails({ now = new Date(), budgetMs = TRIP_SHARE_BUDGET_MS, maxEmails = TRIP_SHARE_MAX_EMAILS } = {}) {
   const startedAt = Date.now();
   const rows = await findTripShareCandidates(tripShareWindow(now));
   const byUser = new Map();
   for (const row of rows) byUser.set(row.userId, [...(byUser.get(row.userId) ?? []), row]);
 
-  const totals = { accounts: byUser.size, sent: 0, skipped: 0, complete: true };
+  const totals = { accounts: byUser.size, sent: 0, skipped: 0, complete: true, quotaReached: false };
   for (const [, trips] of byUser) {
     if (Date.now() - startedAt > budgetMs || totals.sent >= maxEmails) {
       totals.complete = false;
@@ -75,9 +78,15 @@ export async function sendTripShareEmails({ now = new Date(), budgetMs = TRIP_SH
     }
     const trip = pickTripToShare(trips);
     const email = tripShareEmail(trip, now);
-    const sent = await sendMemoryEmail(trip.email, email.subject, 'tripShareEmail', email.context, { headers: email.headers });
+    const report = {};
+    const sent = await sendMemoryEmail(trip.email, email.subject, 'tripShareEmail', email.context, { headers: email.headers, report });
     if (sent) totals.sent += 1;
     else totals.skipped += 1;
+    if (!sent && isQuotaError(report.error)) {
+      totals.quotaReached = true;
+      totals.complete = false;
+      break;
+    }
   }
   return totals;
 }

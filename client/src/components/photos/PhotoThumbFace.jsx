@@ -32,7 +32,7 @@ function PhotoThumbFace({ photo }) {
         <>
           <span
             aria-hidden='true'
-            className='absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2 border-poster-cream bg-poster-red text-sm text-poster-cream shadow-paper'
+            className='absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2 border-poster-cream bg-poster-red-strong text-sm text-poster-cream shadow-paper'
           >
             <FaPlay className='translate-x-px' />
           </span>

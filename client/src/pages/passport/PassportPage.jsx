@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { Link, generatePath, useLocation, useParams, useSearchParams } from 'react-router-dom';
 // Api
-import { getPassport } from '@/api/travelApi';
+import { getPassport, updateMap } from '@/api/travelApi';
 // Hooks
 import useMustVerifyEmail from '@/hooks/useMustVerifyEmail';
 // Constants
@@ -15,6 +15,7 @@ import InlineAlert from '@/components/common/InlineAlert';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import PassportBook from '@/components/passport/PassportBook';
 import BadgeOwnerSwitch from '@/components/achievements/BadgeOwnerSwitch';
+import PassportCoverPicker from '@/components/passport/PassportCoverPicker';
 
 // Opened from a stamp, and only then fetched
 const PhotoViewer = lazy(() => import('@/components/photos/PhotoViewer'));
@@ -34,7 +35,9 @@ const TravellerSignatureDialog = lazy(() => import('@/components/passport/Travel
  * names the place (`openAt`): the book opens from its cover straight to that place's page.
  * The map's editors give each traveller a passport photo and a signature on the travellers page
  * (25 Nov 2026, the user's wish: TravellerPhotoDialog, TravellerSignatureDialog); never through
- * a share link, and an unverified address is told why it can't yet.
+ * a share link, and an unverified address is told why it can't yet. The owner and co-owners
+ * choose the cover's colour under the book (26 Nov 2026, the user's wish: PassportCoverPicker),
+ * shown at once and put back if it can't be saved; never through a share link.
  */
 function PassportPage() {
   const { mapId, code } = useParams();
@@ -51,6 +54,7 @@ function PassportPage() {
   // A traveller's photo or signature being changed: { kind: 'photo'|'signature', traveller }
   const [editing, setEditing] = useState(null);
   const mustVerifyEmail = useMustVerifyEmail();
+  const [cover, setCover] = useState({ busy: false, error: '' });
 
   // Another map: start afresh (another traveller keeps the book on show while theirs loads)
   useEffect(() => {
@@ -98,6 +102,24 @@ function PassportPage() {
         : null,
     [canEditTravellers, mustVerifyEmail],
   );
+  // The cover's colour: on the book at once, saved on the map, put back if it can't be
+  const chooseCover = useCallback(
+    async (colour) => {
+      const before = passport?.map.passportColour ?? null;
+      const setColour = (value) => setPassport((current) => (current ? { ...current, map: { ...current.map, passportColour: value } } : current));
+      setColour(colour);
+      setCover({ busy: true, error: '' });
+      try {
+        await updateMap(passport.map.id, { passportColour: colour });
+        setCover({ busy: false, error: '' });
+      } catch (err) {
+        setColour(before);
+        setCover({ busy: false, error: err?.friendlyMessage || 'The colour couldn’t be saved.' });
+      }
+    },
+    [passport],
+  );
+
   // The traveller as saved, in the book and the switch at once
   const travellerSaved = useCallback((saved) => {
     const merge = (list) => list.map((t) => (t.id === saved.id ? { ...t, ...saved } : t));
@@ -147,6 +169,13 @@ function PassportPage() {
         ) : null}
         {passport ? (
           <PassportBook passport={passport} onOpenPhoto={openPhoto} openAt={typeof openAt === 'string' ? openAt : null} travellerEdit={travellerEdit} />
+        ) : null}
+        {passport?.map.canChooseCover && !shareCode ? (
+          <PaperCard>
+            <div className='px-6 py-5 sm:px-8'>
+              <PassportCoverPicker value={passport.map.passportColour ?? null} plan={passport.map.plan} onChange={chooseCover} busy={cover.busy} error={cover.error} />
+            </div>
+          </PaperCard>
         ) : null}
       </AppPageShell>
 

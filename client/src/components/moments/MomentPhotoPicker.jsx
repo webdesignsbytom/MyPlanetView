@@ -15,7 +15,7 @@ const TILE = 'relative grid aspect-square overflow-hidden border-4 bg-poster-cre
 // A chosen photo's tile: its thumbnail, and a red check stamp in the corner
 function ChosenMark() {
   return (
-    <span className='absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full border-2 border-poster-cream bg-poster-red text-xs text-poster-cream'>
+    <span className='absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full border-2 border-poster-cream bg-poster-red-strong text-xs text-poster-cream'>
       <FaCheck aria-hidden='true' />
     </span>
   );
@@ -26,7 +26,9 @@ function ChosenMark() {
  * `[{ id, thumbUrl }]` in order. The photos offered come from `source` (a country's on
  * the map, or a trip's); `wholeMap` (a map editor's) adds a switch for every photo on
  * the map. Chosen photos stay chosen whatever is listed. `max` is a pin's visit's 50
- * (components/countryMap/PinVisitForm.jsx), with `fullText` saying so.
+ * (components/countryMap/PinVisitForm.jsx), with `fullText` saying so. `photosOnly` leaves
+ * videos out; `coverLabel` ("On the card": Life's One Shots, 26 Nov 2026) marks the first
+ * chosen photo so, every other one a button that puts it first. `legend` names the set.
  */
 function MomentPhotoPicker({
   idPrefix,
@@ -36,32 +38,49 @@ function MomentPhotoPicker({
   onChange,
   max = MOMENT_PHOTOS_MAX,
   fullText = 'That’s the most a moment can have. Untick one to choose another.',
+  photosOnly = false,
+  coverLabel = null,
+  legend = 'Photos',
 }) {
   const [open, setOpen] = useState(false);
   const [everywhere, setEverywhere] = useState(false);
   const photos = usePhotoPage({ ...(everywhere && wholeMap ? wholeMap : source), enabled: open });
   const chosenIds = new Set(chosen.map((p) => p.id));
   const full = chosen.length >= max;
-  const listedIds = new Set(photos.photos.map((p) => p.id));
+  const listed = photosOnly ? photos.photos.filter((p) => p.kind !== 'VIDEO') : photos.photos;
+  const listedIds = new Set(listed.map((p) => p.id));
   // Chosen photos the list doesn't show (another country, say) come first
-  const offered = open ? [...chosen.filter((p) => !listedIds.has(p.id)), ...photos.photos] : [];
+  const offered = open ? [...chosen.filter((p) => !listedIds.has(p.id)), ...listed] : [];
+  const putFirst = (photo) => onChange([photo, ...chosen.filter((p) => p.id !== photo.id)]);
 
   const toggle = (photo) =>
     onChange(chosenIds.has(photo.id) ? chosen.filter((p) => p.id !== photo.id) : [...chosen, { id: photo.id, thumbUrl: photo.thumbUrl }]);
 
   return (
     <fieldset className='grid gap-2'>
-      <legend className='font-travel text-base uppercase tracking-wide text-poster-brown'>Photos</legend>
+      <legend className='font-travel text-base uppercase tracking-wide text-poster-brown'>{legend}</legend>
       <p className='text-sm' aria-live='polite'>
         {chosen.length} of {max} chosen
       </p>
       {!open && chosen.length ? (
         <ul className='grid grid-cols-5 gap-1.5' aria-label='Chosen photos'>
-          {chosen.map((photo) => (
-            <li key={photo.id} className={`${TILE} border-poster-cream`}>
-              {photo.thumbUrl ? <img src={photo.thumbUrl} alt='' loading='lazy' className='h-full w-full object-cover' /> : null}
-            </li>
-          ))}
+          {chosen.map((photo, i) =>
+            coverLabel && i > 0 ? (
+              <li key={photo.id}>
+                <button type='button' onClick={() => putFirst(photo)} title={`Put it ${coverLabel.toLowerCase()}`} className={`${TILE} w-full border-poster-cream hover:border-poster-red`}>
+                  {photo.thumbUrl ? <img src={photo.thumbUrl} alt='' loading='lazy' draggable={false} className='h-full w-full object-cover' /> : null}
+                  <span className='sr-only'>{`Put photo ${i + 1} ${coverLabel.toLowerCase()}`}</span>
+                </button>
+              </li>
+            ) : (
+              <li key={photo.id} className={`${TILE} ${coverLabel ? 'border-poster-red' : 'border-poster-cream'}`} data-cover-photo={coverLabel ? '' : undefined}>
+                {photo.thumbUrl ? <img src={photo.thumbUrl} alt='' loading='lazy' className='h-full w-full object-cover' /> : null}
+                {coverLabel ? (
+                  <span className='absolute inset-x-0 bottom-0 bg-poster-red px-1 text-center text-2xs font-semibold leading-tight text-poster-red-ink'>{coverLabel}</span>
+                ) : null}
+              </li>
+            ),
+          )}
         </ul>
       ) : null}
       <button

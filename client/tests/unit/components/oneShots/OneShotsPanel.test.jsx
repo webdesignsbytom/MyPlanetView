@@ -3,9 +3,19 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import OneShotsPanel from '@/components/oneShots/OneShotsPanel';
 import { withProviders } from '../map/helpers';
+import usePhotoPage from '@/hooks/usePhotoPage';
 
 // The photos' credits are their own chunk: none here, so the items show their binoculars
 vi.mock('@/hooks/useOneShotPhotos', () => ({ default: () => null }));
+// The map's photos to choose from, and an uploader that saves one photo when pressed
+vi.mock('@/hooks/usePhotoPage', () => ({ default: vi.fn() }));
+vi.mock('@/components/photos/PhotoUploader', () => ({
+  default: ({ onUploaded, defaultCountryCode }) => (
+    <button type='button' onClick={() => onUploaded({ id: 'new-1', kind: 'PHOTO', thumbUrl: '/new.webp' })}>
+      {`Upload (${defaultCountryCode || 'no country'})`}
+    </button>
+  ),
+}));
 
 const TRAVELLERS = [
   { id: 'trav-test', name: 'Charlie' },
@@ -28,7 +38,12 @@ const open = (props = {}) => {
 };
 const card = (container, key) => container.querySelector(`[data-one-shot="${key}"]`);
 
-beforeEach(() => vi.clearAllMocks());
+const MAP_PHOTOS = [1, 2, 3, 4, 5, 6].map((n) => ({ id: `p${n}`, kind: 'PHOTO', caption: `Photo ${n}`, thumbUrl: `/p${n}.webp` }));
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  usePhotoPage.mockReturnValue({ photos: MAP_PHOTOS, loading: false, error: null, nextCursor: null, loadMore: vi.fn() });
+});
 
 describe('OneShotsPanel', { timeout: 20000 }, () => {
   it('is a map panel with the three lists as tabs, each with how far along it is', () => {
@@ -68,7 +83,7 @@ describe('OneShotsPanel', { timeout: 20000 }, () => {
     fireEvent.click(within(dialog).getByRole('button', { name: 'Charlie' }));
     fireEvent.click(within(dialog).getByRole('button', { name: 'Tick it' }));
     await waitFor(() => expect(onSave).toHaveBeenCalled());
-    expect(onSave).toHaveBeenCalledWith('lion', { seenOn: null, datePrecision: null, countryCode: 'KE', travellerIds: ['trav-test'], photoId: null, notes: null });
+    expect(onSave).toHaveBeenCalledWith('lion', { seenOn: null, datePrecision: null, countryCode: 'KE', travellerIds: ['trav-test'], photoIds: [], notes: null });
     await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Lion' })).toBeNull());
   });
 
@@ -127,6 +142,59 @@ describe('OneShotsPanel', { timeout: 20000 }, () => {
     open({ onShareCard });
     fireEvent.click(screen.getByRole('button', { name: 'Share a picture' }));
     expect(onShareCard).toHaveBeenCalled();
+  });
+
+  // 26 Nov 2026, the user's wish: "a photo/multiple photos of you with" it
+  it('shows your own photo on the card and in the dialog, the others a press away', () => {
+    const photos = [
+      { id: 'p1', thumbUrl: '/t1.webp', displayUrl: '/d1.webp' },
+      { id: 'p2', thumbUrl: '/t2.webp', displayUrl: '/d2.webp' },
+    ];
+    const { container } = open({ oneShots: { oneShots: [{ ...PUFFIN, photos, photo: photos[0] }], suggestions: [] } });
+    expect(card(container, 'puffin').querySelector('[data-own-photo] img').getAttribute('src')).toBe('/t1.webp');
+    expect(card(container, 'lion').querySelector('[data-own-photo]')).toBeNull();
+    fireEvent.click(within(card(container, 'puffin')).getByRole('button'));
+    const dialog = screen.getByRole('dialog', { name: 'Atlantic puffin' });
+    const shown = within(dialog).getByRole('img', { name: 'Photo 1 of 2: Atlantic puffin' });
+    expect(shown.getAttribute('src')).toBe('/d1.webp');
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Show photo 2' }));
+    expect(within(dialog).getByRole('img', { name: 'Photo 2 of 2: Atlantic puffin' }).getAttribute('src')).toBe('/d2.webp');
+    // Not the Commons photo's credit: it isn't shown
+    expect(dialog.textContent).not.toContain('Photo:');
+  });
+
+  it('lets an editor choose up to 5 photos, put another on the card and upload new ones', async () => {
+    const uploaded = vi.fn();
+    const { container, onSave } = open({ canEdit: true, photoSource: { mapId: 'm1' }, uploader: { mapId: 'm1', onUploaded: uploaded } });
+    fireEvent.click(within(card(container, 'lion')).getByRole('button'));
+    const dialog = screen.getByRole('dialog', { name: 'Lion' });
+    expect(within(dialog).getByRole('group', { name: 'Photos of you with it' })).toBeTruthy();
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Choose photos' }));
+    for (const n of [1, 2, 3, 4, 5]) fireEvent.click(within(dialog).getByRole('button', { name: `Photo ${n}` }));
+    expect(within(dialog).getByRole('button', { name: 'Photo 6' }).disabled).toBe(true);
+    expect(dialog.textContent).toContain('That’s the most: 5.');
+    for (const n of [3, 4, 5]) fireEvent.click(within(dialog).getByRole('button', { name: `Photo ${n}` }));
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Done choosing photos' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Put photo 2 on the card' }));
+    expect(dialog.textContent).toContain('The first is on its card');
+
+    // A new photo uploaded here joins the tick, never a video
+    fireEvent.change(within(dialog).getByRole('combobox', { name: /Where/ }), { target: { value: 'KE' } });
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Upload new photos' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Upload (KE)' }));
+    expect(uploaded).toHaveBeenCalledWith(expect.objectContaining({ id: 'new-1' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Tick it' }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledWith('lion', expect.objectContaining({ countryCode: 'KE', photoIds: ['p2', 'p1', 'new-1'] })));
+  });
+
+  it('keeps a tick’s photos when it’s changed, and offers no upload without the uploader', async () => {
+    const photos = [{ id: 'p4', thumbUrl: '/p4.webp', displayUrl: '/p4d.webp' }];
+    const { container, onSave } = open({ canEdit: true, photoSource: { mapId: 'm1' }, oneShots: { oneShots: [{ ...PUFFIN, photos, photo: photos[0] }], suggestions: [] } });
+    fireEvent.click(within(card(container, 'puffin')).getByRole('button'));
+    const dialog = screen.getByRole('dialog', { name: 'Atlantic puffin' });
+    expect(within(dialog).queryByRole('button', { name: 'Upload new photos' })).toBeNull();
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Save' }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledWith('puffin', expect.objectContaining({ photoIds: ['p4'] })));
   });
 
   it('opens one item at once, on its own list', () => {

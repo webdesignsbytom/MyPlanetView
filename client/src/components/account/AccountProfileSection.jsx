@@ -105,6 +105,9 @@ function AccountProfileSection() {
             accept={AVATAR_ACCEPT}
             className='sr-only'
             id='avatar-file'
+            // The button beside it opens it, so Tab skips it; named for anything that finds it
+            tabIndex={-1}
+            aria-label='Choose an avatar picture'
             onChange={onPickFile}
             disabled={busy === 'avatar' || uploadLocked}
           />

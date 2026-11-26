@@ -4,6 +4,7 @@ import useSplitUk from '@/hooks/useSplitUk';
 // Components
 import MomentDateFields from '@/components/moments/MomentDateFields';
 import MomentPhotoPicker from '@/components/moments/MomentPhotoPicker';
+import PhotoUploader from '@/components/photos/PhotoUploader';
 import TripTravellerChips from '@/components/trips/TripTravellerChips';
 import FormField from '@/components/ui/FormField';
 import TextAreaInput from '@/components/ui/TextAreaInput';
@@ -13,17 +14,20 @@ import InlineAlert from '@/components/common/InlineAlert';
 // Utils
 import { momentDateBody, momentDateFields } from '@/utils/moments/momentDates';
 import { countryName, countryOptionGroupsFor } from '@/utils/map/countries';
-import { ONE_SHOT_NOTES_MAX } from '@/utils/oneShots/oneShotRules';
-import { ONE_SHOT_WHO_LEGENDS } from '@/utils/oneShots/oneShotWords';
+import { ONE_SHOT_NOTES_MAX, ONE_SHOT_PHOTOS_MAX } from '@/utils/oneShots/oneShotRules';
+import { ONE_SHOT_PHOTO_LEGENDS, ONE_SHOT_WHO_LEGENDS } from '@/utils/oneShots/oneShotWords';
 
 /**
  * Ticking an item of Life's One Shots, or changing its tick (OneShotDialog): when (a day, a
  * month, a year or not known, as a moment's date), where (the places it's usually seen first),
- * who on the map was there, one of the map's photos and a note. `onSave(body)` sends it (the
- * caller says what went wrong by throwing); `onRemove` takes the tick off. `start` fills a
- * new tick in (a flight's day, from a suggestion).
+ * who on the map was there, up to 5 photos of you with it (26 Nov 2026, the user's wish: the
+ * map's own, never videos; the first on its card, any other put first with a press) and a
+ * note. `uploader` (the map page's upload settings, for editors who may add photos; null hides
+ * it) uploads new ones here, each chosen as it's saved. `onSave(body)` sends it (the caller
+ * says what went wrong by throwing); `onRemove` takes the tick off. `start` fills a new tick
+ * in (a flight's day, from a suggestion).
  */
-function OneShotForm({ item, tick = null, start = null, travellers = [], photoSource = null, onSave, onRemove = null }) {
+function OneShotForm({ item, tick = null, start = null, travellers = [], photoSource = null, uploader = null, onSave, onRemove = null }) {
   const uid = useId();
   const splitUk = useSplitUk();
   const from = tick || start || {};
@@ -31,11 +35,13 @@ function OneShotForm({ item, tick = null, start = null, travellers = [], photoSo
     date: momentDateFields({ happenedOn: from.seenOn || '', datePrecision: from.datePrecision || (from.seenOn ? 'DAY' : null) }),
     countryCode: from.countryCode || '',
     travellerIds: tick?.travellerIds || (travellers.length === 1 ? [travellers[0].id] : []),
-    photos: tick?.photo ? [{ id: tick.photo.id, thumbUrl: tick.photo.thumbUrl }] : [],
+    photos: (tick?.photos || (tick?.photo ? [tick.photo] : [])).map((photo) => ({ id: photo.id, thumbUrl: photo.thumbUrl })),
     notes: tick?.notes || '',
   }));
   const [busy, setBusy] = useState(null);
   const [error, setError] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const setPhotos = (photos) => setForm((prev) => ({ ...prev, photos }));
 
   // Where it's usually seen first, then every place on the map
   const groups = useMemo(() => {
@@ -66,7 +72,7 @@ function OneShotForm({ item, tick = null, start = null, travellers = [], photoSo
         datePrecision: date.datePrecision,
         countryCode: form.countryCode || null,
         travellerIds: form.travellerIds,
-        photoId: form.photos[0]?.id || null,
+        photoIds: form.photos.map((photo) => photo.id),
         notes: form.notes.trim() || null,
         ...(start?.source && !tick ? { source: start.source } : {}),
       });
@@ -101,14 +107,49 @@ function OneShotForm({ item, tick = null, start = null, travellers = [], photoSo
         onChange={(travellerIds) => setForm((prev) => ({ ...prev, travellerIds }))}
       />
       {photoSource ? (
-        <MomentPhotoPicker
-          idPrefix={`${uid}-photo`}
-          source={photoSource}
-          chosen={form.photos}
-          onChange={(photos) => setForm((prev) => ({ ...prev, photos: photos.slice(-1) }))}
-          max={1}
-          fullText='One photo for each: untick it to choose another.'
-        />
+        <div className='grid gap-2' data-one-shot-photos=''>
+          <MomentPhotoPicker
+            idPrefix={`${uid}-photo`}
+            source={photoSource}
+            chosen={form.photos}
+            onChange={setPhotos}
+            max={ONE_SHOT_PHOTOS_MAX}
+            photosOnly
+            coverLabel='On the card'
+            legend={ONE_SHOT_PHOTO_LEGENDS[item.list]}
+            fullText={`That’s the most: ${ONE_SHOT_PHOTOS_MAX}. Untick one to choose another.`}
+          />
+          {form.photos.length > 1 ? <p className='text-xs opacity-80'>The first is on its card: press another to put it there.</p> : null}
+          {uploader ? (
+            <>
+              <button
+                type='button'
+                aria-expanded={uploading}
+                onClick={() => setUploading((on) => !on)}
+                className='justify-self-start text-sm font-medium underline underline-offset-2'
+              >
+                {uploading ? 'Done uploading' : 'Upload new photos'}
+              </button>
+              {uploading ? (
+                <PhotoUploader
+                  {...uploader}
+                  defaultCountryCode={form.countryCode}
+                  // Each new photo (never a video) joins the tick as it's saved, up to the 5
+                  onUploaded={(photo) => {
+                    if (photo && photo.kind !== 'VIDEO') {
+                      setForm((prev) =>
+                        prev.photos.length >= ONE_SHOT_PHOTOS_MAX || prev.photos.some((p) => p.id === photo.id)
+                          ? prev
+                          : { ...prev, photos: [...prev.photos, { id: photo.id, thumbUrl: photo.thumbUrl }] },
+                      );
+                    }
+                    uploader.onUploaded?.(photo);
+                  }}
+                />
+              ) : null}
+            </>
+          ) : null}
+        </div>
       ) : null}
       <FormField id={`${uid}-notes`} label='A note' align='start'>
         <TextAreaInput value={form.notes} onChange={set('notes')} maxLength={ONE_SHOT_NOTES_MAX} rows={2} />

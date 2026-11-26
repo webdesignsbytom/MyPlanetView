@@ -125,6 +125,16 @@ describe('pricingData', () => {
     }
   });
 
+  // Every plan picks its passport's leather (26 Nov 2026): the paid plans sell what stays theirs,
+  // the lettering, frame and edges, never a colour (the audit, 26 Nov 2026)
+  it('sells the passport’s lettering and frame on the paid plans, never a cover colour', () => {
+    const features = (id) => pricing.planTickets.find((ticket) => ticket.id === id).features.map((f) => f.text).join(' ');
+    expect(features('REGULAR')).toContain('Silver lettering and a pressed frame');
+    expect(features('PREMIUM')).toContain('gold foil frame and gilt page edges');
+    expect(allText).not.toMatch(/navy Business Class passport cover|black and gold First Class passport cover/);
+    expect(pricing.everyPlanFeatures.map((f) => f.text).join(' ')).toContain('its cover in the colour you choose');
+  });
+
   it('takes the extra maps’ prices and the free maps from the constants', () => {
     expect(pricing.extraMaps.prices).toEqual([
       expect.objectContaining({ month: formatPence(PLANS.REGULAR.extraMap.MONTH), year: formatPence(PLANS.REGULAR.extraMap.YEAR) }),
@@ -172,9 +182,26 @@ describe('termsData', () => {
 
   it('has its version and the day it changed', () => {
     expect(LEGAL_VERSION.version).toMatch(/^\d+\.\d+\.\d+$/);
-    expect(LEGAL_VERSION.version).toBe('1.3.2');
+    expect(LEGAL_VERSION.version).toBe('1.5.0');
     expect(LEGAL_VERSION.lastUpdated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(Number.isNaN(Date.parse(LEGAL_VERSION.lastUpdated))).toBe(false);
+  });
+
+  // The newer kinds of data (the audit, 26 Nov 2026): flights, the passport's photos and
+  // signatures, imports, games, slideshows, comparisons; and what analytics counts
+  it('says what the newer features keep, and what analytics counts', () => {
+    const stored = text('data-we-collect');
+    expect(stored).toContain('never the pass itself or the name on it');
+    expect(stored).toContain('a signature drawn with a finger or mouse');
+    expect(stored).toContain('Polarsteps');
+    expect(stored).toContain('plays never given a name are deleted after 7 days');
+    expect(stored).toContain('never your map, photos or places');
+    // Postcards (26 Nov 2026)
+    expect(stored).toContain('Postcards you send');
+    expect(stored).toContain('a copy someone downloaded stays theirs');
+    const others = text('data-sharing');
+    expect(others).toContain('creating an account, marking countries, uploading photos, sharing a map or trip, and starting and completing a payment');
+    expect(others).toContain('Never your name, email address, map, photos, places, or any link or code.');
   });
 
   // Feedback from the map (25 Nov 2026): what it keeps, and who sees it

@@ -35,7 +35,7 @@ function BadgeSticker({ badge, index = 0 }) {
         <Icon className='text-xl' />
         {words.short ? <span className='font-travel text-sm leading-none'>{words.short}</span> : null}
         {earned ? (
-          <span className='absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full border-2 border-poster-cream bg-poster-red text-2xs text-poster-cream'>
+          <span className='absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full border-2 border-poster-cream bg-poster-red-strong text-2xs text-poster-cream'>
             <FaCheck />
           </span>
         ) : null}

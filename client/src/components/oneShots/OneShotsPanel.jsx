@@ -33,11 +33,12 @@ function suggestionWords(suggestion) {
  * their groups (OneShotCard), any item opening over it (OneShotDialog). For the owner and
  * editors (`canEdit`), what the flight log and the poles suggest ticking comes first, each a
  * press away; "Share a picture" (`onShareCard`, never on a share link) makes a share card.
+ * `uploader` (the map page's upload settings) lets a tick's dialog upload its photos.
  * `oneShots` is the page's useOneShots; `onSave(itemKey, body)` and `onRemove(itemKey)` are
  * its, wrapped by the map page (a first tick is celebrated). `focusKey` opens one item at once
  * (a country's ticket's "seen here").
  */
-function OneShotsPanel({ oneShots, canEdit = false, locked = false, travellers = [], photoSource = null, focusKey = null, onSave, onRemove, onShareCard = null, onClose }) {
+function OneShotsPanel({ oneShots, canEdit = false, locked = false, travellers = [], photoSource = null, uploader = null, focusKey = null, onSave, onRemove, onShareCard = null, onClose }) {
   const tabsId = useId();
   const photos = useOneShotPhotos();
   const focused = focusKey ? ONE_SHOT_BY_KEY.get(focusKey) : null;
@@ -165,6 +166,7 @@ function OneShotsPanel({ oneShots, canEdit = false, locked = false, travellers =
           locked={locked}
           travellers={travellers}
           photoSource={photoSource}
+          uploader={uploader}
           onSave={async (body) => {
             await onSave(openItem.key, body);
             setOpen(null);

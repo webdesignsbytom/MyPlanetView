@@ -235,6 +235,9 @@ export function buildPassport(map, role, { travellerId = null } = {}) {
       // Home, on every traveller's page; whether the caller may change their photos and signatures
       homeCountryCode: homeOf({ homeCountryCode: map.homeCountryCode ?? null, ownerId: map.ownerId, travellers: rows }),
       canEdit: editor,
+      // The cover's colour (26 Nov 2026; null: the plan's own) and whether the caller may choose it
+      passportColour: map.passportColour ?? null,
+      canChooseCover: atLeast(role, 'CO_OWNER'),
     },
     travellers,
     pages,

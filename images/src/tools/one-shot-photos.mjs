@@ -45,7 +45,11 @@ const only = new Set((argValue('--only') || '').split(',').filter(Boolean));
 const refresh = args.includes('--refresh');
 
 // Hand-picked files (key -> Commons file name)
-const OVERRIDES = {};
+const OVERRIDES = {
+  // A line on the map, so no search found a picture (26 Nov 2026): an iceberg just north of it,
+  // by Detaille Island, from a ship crossing it
+  'antarctic-circle': 'Antarctic Circle Icberg.JPG',
+};
 
 // Files never to pick (found wrong on the contact sheet, 24 Nov 2026): maps, a painting, a
 // firefly for glowing water, a roller coaster for a bullet train, a station for a coast road

@@ -1,6 +1,6 @@
 // The rate limits, counted in Postgres, with the limiters turned on for this file
 // only (they're off under test otherwise): better-auth's own, the contact form,
-// generic uploads, share-code lookups, map creation, and the counter itself.
+// generic uploads, share-code lookups, map creation, postcards, and the counter itself.
 // Each run uses its own made-up client addresses (X-Forwarded-For, which Vercel
 // sets and `trust proxy` 1 reads), so runs don't share counts.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -176,6 +176,24 @@ describe('creating maps', () => {
     expect(blocked.status).toBe(429);
     expect(await prisma.travelMap.count({ where: { ownerId: user.id } })).toBe(21); // + the default map
     usedKey(`map-create-user-day:user:${user.id}`);
+  });
+});
+
+describe('postcards', () => {
+  it('count a card’s link looked up, 30 per 15 minutes per address, found or not', async () => {
+    const ip = ipv4(60);
+    for (let i = 0; i < 30; i++) expect((await from(ip).get(`/api/postcard/${generateShareCode()}`)).status).toBe(404);
+    expect((await from(ip).get(`/api/postcard/${generateShareCode()}`)).status).toBe(429);
+    expect(await prisma.rateLimit.findUnique({ where: { key: usedKey(`postcard-lookup:${ip}`) } })).toMatchObject({ count: 31 });
+  });
+
+  it('allow 30 sent a day per user', async () => {
+    const { agent, user } = await signUpFrom(ipv4(61), 'PostcardSender');
+    const card = { kind: 'COUNTRY', countryCode: 'FR', message: 'Wish you were here!' };
+    for (let i = 0; i < 30; i++) expect((await agent.post('/api/postcards').send(card)).status).toBe(201);
+    expect((await agent.post('/api/postcards').send(card)).status).toBe(429);
+    expect(await prisma.postcard.count({ where: { senderId: user.id } })).toBe(30);
+    usedKey(`postcard-create-user-day:user:${user.id}`);
   });
 });
 

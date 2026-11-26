@@ -16,6 +16,7 @@ import { VIDEO_MAX_SECONDS } from '@/utils/constants/plans';
 import { VIDEO_MAX_BYTES, uploadPhoto } from '@/utils/photos/uploadPhoto';
 import { VIDEOS_ARE_FIRST_CLASS, uploadVideo } from '@/utils/photos/uploadVideo';
 import { isVideoFile } from '@/utils/photos/videoFile';
+import { trackPhotosUploaded } from '@/utils/analytics/events';
 
 const AT_ONCE = 2;
 const MB = 1024 * 1024;
@@ -151,7 +152,10 @@ function PhotoUploader({
         update(item.id, { stage: 'failed', error: err.friendlyMessage || err.message || 'Something went wrong.', file: null });
       }
     });
-    if (saved) onBatchDone?.();
+    if (saved) {
+      trackPhotosUploaded(saved);
+      onBatchDone?.();
+    }
   };
 
   if (uploadRules?.locked) return <LockedMapNote isOwner={isOwner} />;

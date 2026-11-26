@@ -40,10 +40,16 @@ export default defineConfig({
     contextOptions: { reducedMotion: 'reduce' },
   },
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
+    { name: 'desktop', use: { ...devices['Desktop Chrome'] }, grepInvert: /@models/ },
     // The flows that differ on a phone (the map opens zoomed in, panels are sheets above
     // the toolbar along the bottom): the tests tagged @phone
     { name: 'phone', use: { ...devices['Pixel 7'] }, grep: /@phone/ },
+    // Every country map's landmark models, each on its map where its model.json puts it
+    // (countryMap.spec.js, the tests tagged @models): a third of a whole run's time (26 Nov
+    // 2026, the audit: 39 of 112 test-minutes in CI), so a run on a laptop leaves them out
+    // (`npm run test:e2e:app` names the other two projects) and `npm run test:e2e:models`
+    // runs them alone. CI runs all three, in three parts (.github/workflows/ci.yml).
+    { name: 'models', use: { ...devices['Desktop Chrome'] }, grep: /@models/ },
   ],
   webServer: {
     // vite.e2e-app.config.js is the site's Vite config with its own dependency cache, every

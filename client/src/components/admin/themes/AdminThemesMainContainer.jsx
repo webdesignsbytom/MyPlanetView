@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 // Api
-import { forgetThemes, getAdminThemes } from '@/api/themesApi';
+import { fillSuggestedThemes, forgetThemes, getAdminThemes } from '@/api/themesApi';
 // Components
 import PaperCard from '@/components/common/PaperCard';
 import Button from '@/components/common/Button';
@@ -24,6 +24,8 @@ function AdminThemesMainContainer() {
   // { theme } to change one, { month } for a new one
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
+  const [filling, setFilling] = useState(false);
+  const [fillError, setFillError] = useState('');
   // Read once: the page is client-only (an admin page), so the month can be read here
   const thisMonth = useMemo(() => monthOf(new Date()), []);
 
@@ -50,6 +52,22 @@ function AdminThemesMainContainer() {
     setResult(`${theme.title} is saved for ${monthLabel(theme.month)}.`);
     setEditing(null);
   };
+  // A suggested theme for each empty month of the coming year (the server's utils/themeIdeas.js;
+  // 26 Nov 2026, the user's wish), each one to change or delete before its month starts
+  const fill = async () => {
+    setFilling(true);
+    setFillError('');
+    try {
+      const { themes: list, added } = await fillSuggestedThemes();
+      forgetThemes();
+      setThemes(list || []);
+      setResult(added ? `${added} suggested theme${added === 1 ? '' : 's'} added. Change or delete any before its month starts.` : 'Every month of the coming year has a theme.');
+    } catch (err) {
+      setFillError(err.friendlyMessage || 'The suggested themes couldn’t be added.');
+    } finally {
+      setFilling(false);
+    }
+  };
   const deleted = (theme) => {
     forgetThemes();
     setThemes((prev) => prev.filter((t) => t.id !== theme.id));
@@ -71,6 +89,17 @@ function AdminThemesMainContainer() {
         {themes === null ? null : gaps.length ? (
           <div className='grid gap-2'>
             <p className='text-sm'>These months have no theme yet. Members see a month’s theme only once it starts.</p>
+            <p className='grid gap-2 text-sm sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center'>
+              <span>Or give each a ready-written theme (Doors, Street food, Lost…), never one used in the year before or ahead, to change or delete before its month starts.</span>
+              <Button small onClick={fill} disabled={filling} ariaLabel='Fill the empty months with suggested themes'>
+                {filling ? 'Adding…' : 'Fill the empty months'}
+              </Button>
+            </p>
+            {fillError ? (
+              <p className='text-sm text-status-critical' role='alert'>
+                {fillError}
+              </p>
+            ) : null}
             <ul className='grid grid-row-wrap gap-2' aria-label='Months with no theme'>
               {gaps.map((month) => (
                 <li key={month}>

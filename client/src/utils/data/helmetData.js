@@ -20,6 +20,7 @@ import {
   ADMIN_OFFERS_PAGE_URL,
   ADMIN_THEMES_PAGE_URL,
   ADMIN_FEEDBACK_PAGE_URL,
+  ADMIN_GIFTS_PAGE_URL,
   LEGAL_AGREEMENTS_PAGE_URL,
   TERMS_AND_CONDITIONS_PAGE_URL,
   PRIVACY_POLICIES_PAGE_URL,
@@ -34,10 +35,14 @@ import {
   EMBED_PAGE_URL,
   GUESS_PAGE_URL,
   SHOW_PAGE_URL,
+  POSTCARD_PAGE_URL,
   INVITE_PAGE_URL,
   CHALLENGES_PAGE_URL,
   CHALLENGE_PAGE_URL,
   CHALLENGE_JOIN_PAGE_URL,
+  VS_PAGE_URL,
+  VS_GROUP_PAGE_URL,
+  VS_JOIN_PAGE_URL,
   GIFTS_PAGE_URL,
   COMPARE_PAGE_URL,
   GIFT_PAGE_URL,
@@ -174,6 +179,12 @@ export const helmetData = {
     indexing: 'noindex,nofollow',
   },
 
+  [POSTCARD_PAGE_URL]: {
+    pageName: 'A postcard for you',
+    desc: `A postcard sent to you from someone's travels, made with ${CompanyName}: turn it over, and download it to keep.`,
+    indexing: 'noindex,nofollow',
+  },
+
   [INVITE_PAGE_URL]: {
     pageName: 'Invitation',
     desc: `Accept an invitation to a ${CompanyName} travel map or trip.`,
@@ -194,6 +205,23 @@ export const helmetData = {
   [CHALLENGE_JOIN_PAGE_URL]: {
     pageName: 'Join a challenge',
     desc: `A friend has challenged you on ${CompanyName}. Join with your travel map.`,
+    indexing: 'noindex,nofollow',
+  },
+
+  // Vs mode (26 Nov 2026)
+  [VS_PAGE_URL]: {
+    pageName: 'Vs mode',
+    desc: `Compare your travels with friends on ${CompanyName}: countries, landmarks, badges and more, with medals.`,
+    indexing: 'noindex,nofollow',
+  },
+  [VS_GROUP_PAGE_URL]: {
+    pageName: 'Vs mode',
+    desc: `Friends compared on ${CompanyName}: numbers and medals only, never a map.`,
+    indexing: 'noindex,nofollow',
+  },
+  [VS_JOIN_PAGE_URL]: {
+    pageName: 'Join a comparison',
+    desc: `A friend wants to compare travels with you on ${CompanyName}. Join with your travel map.`,
     indexing: 'noindex,nofollow',
   },
 
@@ -290,6 +318,12 @@ export const helmetData = {
   },
   [ADMIN_FEEDBACK_PAGE_URL]: {
     pageName: 'Feedback',
+    additionalMeta: [],
+    structuredData: [],
+    indexing: 'noindex,nofollow',
+  },
+  [ADMIN_GIFTS_PAGE_URL]: {
+    pageName: 'Gifts and Referrals',
     additionalMeta: [],
     structuredData: [],
     indexing: 'noindex,nofollow',

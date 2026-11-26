@@ -201,11 +201,13 @@ describe('DELETE /api/maps/:mapId', () => {
     const { data } = await post('/api/maps', { name: 'Spare', groupType: 'SOLO', travellers: [{ name: 'Me', birthCountryCode: 'FR' }] });
     const id = data.map.id;
     db().challengeEntries[1].mapId = id;
+    db().vsMembers[0].mapId = id;
     expect((await del(`/api/maps/${id}`)).status).toBe(200);
     expect(db().maps.some((m) => m.id === id)).toBe(false);
     expect(db().visits.some((v) => v.mapId === id)).toBe(false);
     expect(db().travellers.some((t) => t.mapId === id)).toBe(false);
     expect(db().challengeEntries[1].mapId).toBeNull();
+    expect(db().vsMembers[0].mapId).toBeNull();
   });
 });
 

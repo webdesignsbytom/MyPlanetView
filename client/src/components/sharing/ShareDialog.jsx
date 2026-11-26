@@ -32,6 +32,7 @@ import MapShowsSection from '@/components/shows/MapShowsSection';
 // Utils
 import { MAP_SHARE_ROLE_OPTIONS, ROLE_WITH_ARTICLE, SHARE_ROLE_OPTIONS, canEditRole, canManageRole, coOwnerChoices } from '@/utils/sharing/shareRoles';
 import { forgetMapLists } from '@/utils/map/mapListCache';
+import { trackShare } from '@/utils/analytics/events';
 import { inFlight, recall, remember } from '@/utils/data/panelCache';
 import { sharingKey } from '@/utils/sharing/sharingCache';
 
@@ -163,6 +164,7 @@ function ShareDialog({ resource, id, name, role, travellers = null, currentUserI
               onAdd={(body) =>
                 run(async () => {
                   const result = await addMember(resource, id, body);
+                  trackShare({ method: 'invite', contentType: kind });
                   return result;
                 }, `Shared with ${body.email}. They’ve been emailed.`)
               }
@@ -212,7 +214,13 @@ function ShareDialog({ resource, id, name, role, travellers = null, currentUserI
             <ShareGeneralAccess
               value={sharing.linkAccess}
               busy={busy || mustVerifyEmail}
-              onChange={(linkAccess) => run(() => updateSharing(resource, id, linkAccess)).catch(() => {})}
+              onChange={(linkAccess) =>
+                run(async () => {
+                  const result = await updateSharing(resource, id, linkAccess);
+                  if (linkAccess === 'ANYONE_WITH_LINK') trackShare({ method: 'link', contentType: kind });
+                  return result;
+                }).catch(() => {})
+              }
             />
             <ShareLinkBox
               shareUrl={sharing.shareUrl}

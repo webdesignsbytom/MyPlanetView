@@ -29,6 +29,7 @@ const EMAIL_PROFILES = {
   userChangeEmail: { templatesDir: 'users' }, // to the current address before an email change
   memories: { templatesDir: 'users' }, // "On this day" (docs/API.md "Emails"), with an unsubscribe link
   contact: { templatesDir: 'contact' },
+  alerts: { templatesDir: 'admin' }, // to the site's admins: a daily job went wrong
 };
 
 // The Resend SDK and Handlebars load on the first email, not at start-up: most requests
@@ -88,8 +89,10 @@ const isRetryable = (error) =>
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Send one email. Never throws: returns true once Resend accepts it, false otherwise.
-async function sendEmail(profileKey, recipient, subject, template, context = {}, { replyTo, headers } = {}) {
+// Send one email. Never throws: returns true once Resend accepts it, false otherwise. A
+// `report` object, when given, is told why it wasn't sent (`report.error`: Resend's error name,
+// such as daily_quota_exceeded), so a run of many can stop at the quota.
+async function sendEmail(profileKey, recipient, subject, template, context = {}, { replyTo, headers, report } = {}) {
   let html;
   try {
     const profile = EMAIL_PROFILES[profileKey];
@@ -98,6 +101,7 @@ async function sendEmail(profileKey, recipient, subject, template, context = {},
     html = await renderTemplate(profile.templatesDir, template, context);
   } catch (err) {
     console.error(`[email:${profileKey}] failed to send "${template}" to ${recipient}:`, err);
+    if (report) report.error = 'not_rendered';
     return false;
   }
 
@@ -137,7 +141,10 @@ async function sendEmail(profileKey, recipient, subject, template, context = {},
         ` (attempt ${attempt}/${MAX_SEND_ATTEMPTS}${willRetry ? ', retrying...' : ''}):`,
       `${error.name} ${error.statusCode ?? ''} ${error.message}`.trim()
     );
-    if (!willRetry) return false;
+    if (!willRetry) {
+      if (report) report.error = error.name || 'application_error';
+      return false;
+    }
     await sleep(RETRY_DELAY_MS[attempt - 1]);
   }
 
@@ -157,9 +164,14 @@ export const sendUserPasswordResetEmail = (recipient, subject, template, context
 export const sendUserChangeEmailConfirmation = (recipient, subject, template, context) =>
   sendEmail('userChangeEmail', recipient, subject, template, context);
 
-// "On this day" (docs/API.md "Emails"): `headers` carries List-Unsubscribe
-export const sendMemoryEmail = (recipient, subject, template, context, { headers } = {}) =>
-  sendEmail('memories', recipient, subject, template, context, { headers });
+// "On this day" and "Welcome home" (docs/API.md "Emails"): `headers` carries List-Unsubscribe;
+// `report` hears why one wasn't sent (sendEmail)
+export const sendMemoryEmail = (recipient, subject, template, context, { headers, report } = {}) =>
+  sendEmail('memories', recipient, subject, template, context, { headers, report });
+
+// To an admin: a daily job went wrong (services/system/cronRuns.js)
+export const sendAlertEmail = (recipient, subject, template, context = {}) =>
+  sendEmail('alerts', recipient, subject, template, context);
 
 // Replying to a contact-form notification goes to the person who sent the form
 export const sendContactEmail = (recipient, subject, template, context = {}) =>

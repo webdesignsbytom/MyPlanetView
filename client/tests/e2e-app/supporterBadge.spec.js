@@ -1,4 +1,4 @@
-import { test, expect, HOME_MAP, HOME_SHARE_CODE, goInApp, mapReady, openMap, openTool, pressTool } from './fixtures.js';
+import { test, expect, HOME_MAP, HOME_SHARE_CODE, goInApp, mapReady, openMap, openTool, pressTool, toolbar } from './fixtures.js';
 
 // The supporter badge (docs/API.md "The supporter badge"; 24 Nov 2026, the user's wish): a paying
 // member's plan hangs under their map's banner, for everyone who opens it, share links too, and
@@ -51,6 +51,10 @@ test('through a share link, Settings has no badge switch, even for the owner', a
   await dialog.getByRole('button', { name: 'Done' }).click();
   await goInApp(page, `/shared/${HOME_SHARE_CODE}`);
   await expect(page).toHaveURL(new RegExp(`/shared/${HOME_SHARE_CODE}$`));
+  // The same map's page stays on screen while the share page's code loads, so Settings could be
+  // opened on it and go with it (CI, 24-26 Nov 2026): wait for the share page, which has no
+  // sharing, as grouptrips.spec.js does
+  await expect(toolbar(page).getByRole('button', { name: 'Share this map', exact: true })).toHaveCount(0);
   await mapReady(page);
   await expect(badgeIn(banner(page))).toBeVisible();
   const settings = await openTool(page, 'Map settings', 'Settings');

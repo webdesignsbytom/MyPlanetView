@@ -28,6 +28,22 @@ describe('MapStylePicker', () => {
     expect(screen.getByLabelText('Engraved ocean')).toBeTruthy();
   });
 
+  it('loads each card’s strip, 320 or 640 wide, never the style’s full picture (26 Nov 2026, the audit)', () => {
+    const { container } = render(<MapStylePicker value='animated' onChange={() => {}} />);
+    for (const picture of container.querySelectorAll('picture')) {
+      const img = picture.querySelector('img');
+      const avif = picture.querySelector('source[type="image/avif"]');
+      expect(img.getAttribute('src')).toMatch(/preview-[a-z-]+-320\.webp/);
+      expect(img.getAttribute('srcset')).toMatch(/-320\.webp 320w, .*-640\.webp 640w/);
+      expect(avif.getAttribute('srcset')).toMatch(/-320\.avif 320w, .*-640\.avif 640w/);
+      expect(`${img.getAttribute('srcset')} ${avif.getAttribute('srcset')}`).not.toMatch(/-(800|949|1200|1774|1792|2560)\./);
+      expect(img.getAttribute('sizes')).toBe('(min-width: 640px) 17rem, 45vw');
+      expect(img.hasAttribute('data-keep-colour')).toBe(true);
+    }
+    // Black and white's card is the World map's strip in greys
+    expect(container.querySelector('label[data-map-style="mono"] img').getAttribute('class')).toContain('grayscale');
+  });
+
   it('calls back with the style picked, and shows a note when given one', () => {
     const onChange = vi.fn();
     render(<MapStylePicker value='animated' onChange={onChange} note='Everyone sees this style.' />);
@@ -46,6 +62,14 @@ describe('MapTypePicker', () => {
     for (const card of container.querySelectorAll('label')) expect(card.getAttribute('class')).toContain('relative');
     fireEvent.click(screen.getByLabelText(/Detailed/));
     expect(onChange).toHaveBeenCalledWith('detailed');
+  });
+
+  it('loads each card’s strip, never the 949-pixel picture', () => {
+    const { container } = render(<MapTypePicker value='regular' onChange={() => {}} />);
+    const sources = [...container.querySelectorAll('img')].map((img) => img.getAttribute('src'));
+    expect(sources).toHaveLength(2);
+    expect(sources[0]).toMatch(/preview-regular-320\.webp/);
+    expect(sources[1]).toMatch(/preview-detailed-320\.webp/);
   });
 });
 

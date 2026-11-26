@@ -11,7 +11,7 @@ import { placeOnMap } from '../utils/ukNations.js';
 import { isOneShotKey } from '../utils/constants/oneShots.js';
 import { parseOneShotInput } from '../utils/oneShots.js';
 import { findTravellerIds } from '../domain/maps.js';
-import { deleteOneShotInDB, findMapPhotoForOneShot, saveOneShotInDB } from '../domain/oneShots.js';
+import { countMapPhotosForOneShot, deleteOneShotInDB, saveOneShotInDB } from '../domain/oneShots.js';
 import { mapOneShots, oneShotViews } from '../services/travel/oneShots.js';
 import { isKnownCountry } from './helpers/countries.js';
 import { badRequest, denyUnless, handler, loadMap, notFound } from './helpers/travel.js';
@@ -36,15 +36,16 @@ async function loadForChange(req, res) {
   return map;
 }
 
-// PUT /maps/:mapId/one-shots/:itemKey { seenOn?, datePrecision?, countryCode?, photoId?,
+// PUT /maps/:mapId/one-shots/:itemKey { seenOn?, datePrecision?, countryCode?, photoIds?,
 // notes?, travellerIds?, source? } -> { oneShot, created, countryCode }. Ticks it, or
 // changes its tick; a country given is marked visited too (as a "been here" landmark's).
+// `photoIds`: up to 5 of the map's own photos (never videos), the first on its card.
 export const saveOneShotHandler = handler(D, 'Tick one shot', async (req, res) => {
   const map = await loadForChange(req, res);
   if (!map) return undefined;
   const parsed = parseOneShotInput(req.params.itemKey, req.body || {});
   if (!parsed.ok) return badRequest(req, res, D, EVENT_MESSAGES.oneShotInvalid);
-  const { travellerIds, ...data } = parsed.value;
+  const { travellerIds, photoIds, ...data } = parsed.value;
 
   let place = null;
   if (data.countryCode) {
@@ -53,14 +54,14 @@ export const saveOneShotHandler = handler(D, 'Tick one shot', async (req, res) =
     place = placeOnMap(data.countryCode, Boolean(map.splitUk));
     data.countryCode = place;
   }
-  if (data.photoId && !(await findMapPhotoForOneShot(map.id, data.photoId))) {
+  if (photoIds?.length && (await countMapPhotosForOneShot(map.id, photoIds)) !== photoIds.length) {
     return badRequest(req, res, D, EVENT_MESSAGES.oneShotPhotoInvalid);
   }
   if (travellerIds && !isSubsetOf(travellerIds, await findTravellerIds(map.id))) {
     return badRequest(req, res, D, EVENT_MESSAGES.travellersNotOnMap);
   }
 
-  const { oneShot, created } = await saveOneShotInDB({ mapId: map.id, itemKey: req.params.itemKey, data, travellerIds, userId: req.user.id, place });
+  const { oneShot, created } = await saveOneShotInDB({ mapId: map.id, itemKey: req.params.itemKey, data, travellerIds, photoIds, userId: req.user.id, place });
   logEvent(
     createMapEvent({ user: req.user, action: created ? 'One Shot Ticked' : 'One Shot Changed', id: map.id, detail: `item=${req.params.itemKey}`, statusCode: created ? 201 : 200 }),
   );

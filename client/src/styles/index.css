@@ -67,6 +67,13 @@
      like a printed poster. Text on poster-red is poster-ink (5.6:1). */
   --poster-red: #ef4444;
   --poster-red-deep: #991b1b;
+  /* The poster red behind cream lettering (26 Nov 2026, the audit: cream on the poster red
+     is 3.8:1, under the 4.5:1 text needs; this is 4.8:1): the nav's red buttons, the photo
+     pickers' order numbers. Text in red on paper is the deep red. */
+  --poster-red-strong: #dc2626;
+  /* The poster's gold as lettering on the deep red, or the deep red on it (5.5:1; the
+     darker poster gold is 3.2:1 there) */
+  --poster-gold-bright: #f2cf5b;
   /* Stamp inks besides cream and deep red, on the loading screen (StampLoading): green (18
      Nov 2026; as dark as the deep red so it reads on the sea) and orange (19 Nov 2026, the
      user's wish: too many red and white stamps) */
@@ -107,6 +114,11 @@
   --cover-burgundy: #5a1621;
   --cover-navy: #14294b;
   --cover-black: #171513;
+  /* The other leathers a cover can be chosen in (26 Nov 2026, the user's wish: the cover's
+     colour only, the foil stays the plan's; utils/passport/passportBook.js COVER_COLOURS) */
+  --cover-green: #1e3b2a;
+  --cover-blue: #1b3f86;
+  --cover-tan: #6a4528;
   --foil-gold-light: #fff0c2;
   --foil-gold: #d6aa4c;
   --foil-gold-dark: #85601a;
@@ -334,6 +346,7 @@
   --poster-red: #8ec3e6;
   --poster-red-ink: #08183a;
   --poster-red-deep: #bfe0f7;
+  --poster-red-strong: var(--poster-red);
   --poster-cream: #08183a;
   --poster-wash: rgb(8 24 58 / 0.65);
   --paper-shadow: 0 2px 0 rgb(0 0 0 / 0.4), 0 10px 24px rgb(0 0 0 / 0.5);
@@ -370,6 +383,7 @@
   --poster-red: #9a3324;
   --poster-red-ink: #f6ead0;
   --poster-red-deep: #6e2318;
+  --poster-red-strong: var(--poster-red);
   --poster-cream: #f6ead0;
   --paper-shadow: 0 2px 0 rgb(107 68 35 / 0.4), 0 10px 24px rgb(60 35 10 / 0.3);
   --colour1: #f4e8cc;
@@ -422,6 +436,8 @@
   --colour9: light-dark(#2b2b2b, #d0d0d0);
   --poster-red: #000000;
   --poster-red-deep: #000000;
+  --poster-red-strong: #000000;
+  --poster-gold-bright: #cecece;
   --poster-green: #515151;
   --poster-orange: #717171;
   --poster-gold-dark: #555555;
@@ -445,6 +461,9 @@
   --cover-burgundy: #252525;
   --cover-navy: #272727;
   --cover-black: #151515;
+  --cover-green: #343434;
+  --cover-blue: #3c3c3c;
+  --cover-tan: #4b4b4b;
   --foil-gold-light: #f0f0f0;
   --foil-gold: #adadad;
   --foil-gold-dark: #636363;
@@ -608,6 +627,8 @@
 
   --color-poster-red: var(--poster-red);
   --color-poster-red-deep: var(--poster-red-deep);
+  --color-poster-red-strong: var(--poster-red-strong);
+  --color-poster-gold-bright: var(--poster-gold-bright);
   --color-poster-green: var(--poster-green);
   --color-poster-orange: var(--poster-orange);
   --color-poster-gold-dark: var(--poster-gold-dark);

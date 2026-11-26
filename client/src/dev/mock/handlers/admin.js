@@ -1,8 +1,9 @@
 // Mock mode only: the contact form, and the admin pages (users, contact forms, and the
 // developer audit log) with a few fake rows. Switch roles from the mock badge.
 import { fail, ok, route } from '../mockAdapter';
-import { getDb, me, newId, session } from '../store';
+import { getDb, me, newId, normaliseShareCode, session } from '../store';
 import { CONTACT_IMAGE_MAX_AGE_MS, UPLOAD_IMAGE_EXTENSIONS, mockUpload } from '../uploads';
+import { mockGiftView, mockOverview, mockReferralView } from '../adminOverview';
 
 // As the server's normalizeEmail (utils/sanitize.js): one plain address, at most 254
 const EMAIL_ADDRESS = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:".]+$/;
@@ -148,5 +149,26 @@ export function registerAdminRoutes() {
     const count = getDb().events.length;
     getDb().events = [];
     return ok({ message: 'All events deleted.', count });
+  });
+
+  // The overview, gifts by code and referral rewards (docs/API.md "Admin"; ../adminOverview.js)
+  route('GET', '/api/users/admin/overview', () => (isAdmin() ? ok({ overview: mockOverview(getDb()) }) : forbidden()));
+  route('GET', '/api/users/admin/gifts', ({ query }) => {
+    if (!isAdmin()) return forbidden();
+    const db = getDb();
+    const typed = typeof query.code === 'string' ? query.code.trim() : '';
+    if (typed) {
+      const code = normaliseShareCode(typed);
+      if (!code) return fail(400, 'That gift code doesn’t exist. Check it and try again.');
+      return ok({ gifts: (db.gifts || []).filter((gift) => gift.code === code).map((gift) => mockGiftView(db, gift)) });
+    }
+    const bought = (db.gifts || []).filter((gift) => gift.paidAt).sort((a, b) => String(b.paidAt).localeCompare(String(a.paidAt)));
+    return ok({ gifts: bought.slice(0, 30).map((gift) => mockGiftView(db, gift)) });
+  });
+  route('GET', '/api/users/admin/referrals', () => {
+    if (!isAdmin()) return forbidden();
+    const db = getDb();
+    const rewards = [...(db.referralRewards || [])].sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+    return ok({ rewards: rewards.slice(0, 50).map((reward) => mockReferralView(db, reward)) });
   });
 }

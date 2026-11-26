@@ -53,3 +53,6 @@ archive/
 # Sample videos for the First Class demo account: downloaded by hand (seed-videos/README.md)
 seed-videos/**/*.mp4
 seed-videos/**/*.mov
+
+# Python bytecode (the Blender model scripts)
+__pycache__/

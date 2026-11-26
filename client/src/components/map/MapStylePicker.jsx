@@ -1,13 +1,8 @@
 import React from 'react';
-// Media
-import { getImageSets } from '@/lib/media/imageManifest';
+// Components
+import StylePreviewImage from './StylePreviewImage';
 // Utils
 import { MAP_STYLES } from '@/utils/map/mapStyles';
-
-const previewUrl = (name) => {
-  const sets = getImageSets(name, { dir: '/src/assets/images/map-styles' });
-  return sets.pick('avif', 800) || sets.pick('webp', 800) || sets.pick('jpg', 800);
-};
 
 // The five looks of the map, each previewed by its picture (`preview`, else its background;
 // Black and white's in greys), else in its own colours (the card carries the style's
@@ -39,14 +34,7 @@ function MapStylePicker({ value, onChange, note = null }) {
               className='sr-only'
             />
             {style.preview || style.background ? (
-              <img
-                src={previewUrl(style.preview || style.background)}
-                alt=''
-                className={`h-16 w-full object-cover ${style.previewGrey ? 'grayscale' : ''}`}
-                loading='lazy'
-                // In its own colours on a map shown in Black and white too (index.css, data-mono-map)
-                data-keep-colour=''
-              />
+              <StylePreviewImage name={style.preview || style.background} className={style.previewGrey ? 'grayscale' : ''} />
             ) : (
               <span aria-hidden='true' className='block h-16 w-full bg-map-sea' />
             )}

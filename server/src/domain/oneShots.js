@@ -11,13 +11,25 @@ const ONE_SHOT_SELECT = {
   notes: true,
   source: true,
   createdAt: true,
-  photo: { select: { id: true, hidden: true, mapId: true } },
+  // Its photos in order, each with its thumbnail's and display copy's keys
+  photos: {
+    select: {
+      photo: {
+        select: {
+          id: true,
+          hidden: true,
+          variants: { where: { size: { in: ['THUMB', 'DISPLAY'] } }, select: { size: true, media: { select: { key: true } } } },
+        },
+      },
+    },
+    orderBy: [{ position: 'asc' }, { photoId: 'asc' }],
+  },
   travellers: { select: { travellerId: true } },
 };
 
 /**
- * A map's ticks, the latest seen first (undated last), each with its photo (`{ id, hidden }`)
- * and the travellers on it.
+ * A map's ticks, the latest seen first (undated last), each with its photos in order
+ * (`[{ photo: { id, hidden, variants } }]`) and the travellers on it.
  */
 export const findOneShots = (mapId) =>
   prisma.oneShot.findMany({
@@ -29,16 +41,18 @@ export const findOneShots = (mapId) =>
 /** The item keys ticked on a map (the badges count them). */
 export const findOneShotKeys = async (mapId) => (await prisma.oneShot.findMany({ where: { mapId }, select: { itemKey: true } })).map((row) => row.itemKey);
 
-/** One photo of a map, if it's there (a tick's picture must be the map's own). */
-export const findMapPhotoForOneShot = (mapId, photoId) => prisma.photo.findFirst({ where: { id: photoId, mapId }, select: { id: true } });
+/** How many of `photoIds` are photos (never videos) of the map: a tick's pictures must be its own. */
+export const countMapPhotosForOneShot = (mapId, photoIds) =>
+  photoIds.length ? prisma.photo.count({ where: { id: { in: photoIds }, mapId, kind: 'PHOTO' } }) : 0;
 
 /**
  * Tick an item, or change its tick, in one transaction: the fields given (`data`), the
- * travellers named (all of them, when `travellerIds` is given), and the place it was seen
- * marked visited (MANUAL; `place` null for none), as a "been here" landmark's is.
+ * travellers named (all of them, when `travellerIds` is given), its photos in order (all of
+ * them, when `photoIds` is given), and the place it was seen marked visited (MANUAL; `place`
+ * null for none), as a "been here" landmark's is.
  * -> `{ oneShot, created }`
  */
-export const saveOneShotInDB = ({ mapId, itemKey, data, travellerIds, userId, place }) =>
+export const saveOneShotInDB = ({ mapId, itemKey, data, travellerIds, photoIds, userId, place }) =>
   prisma.$transaction(async (tx) => {
     const existing = await tx.oneShot.findUnique({ where: { mapId_itemKey: { mapId, itemKey } }, select: { id: true } });
     const row = existing
@@ -47,6 +61,10 @@ export const saveOneShotInDB = ({ mapId, itemKey, data, travellerIds, userId, pl
     if (travellerIds) {
       await tx.oneShotTraveller.deleteMany({ where: { oneShotId: row.id } });
       if (travellerIds.length) await tx.oneShotTraveller.createMany({ data: travellerIds.map((travellerId) => ({ oneShotId: row.id, travellerId })) });
+    }
+    if (photoIds) {
+      await tx.oneShotPhoto.deleteMany({ where: { oneShotId: row.id } });
+      if (photoIds.length) await tx.oneShotPhoto.createMany({ data: photoIds.map((photoId, position) => ({ oneShotId: row.id, photoId, position })) });
     }
     if (place) await createMissingVisits(mapId, [place], 'MANUAL', tx);
     const oneShot = await tx.oneShot.findUnique({ where: { id: row.id }, select: ONE_SHOT_SELECT });
@@ -60,6 +78,16 @@ export const deleteOneShotInDB = async (mapId, itemKey) => (await prisma.oneShot
 export const findOneShotsForExport = (mapId) =>
   prisma.oneShot.findMany({
     where: { mapId },
-    select: { itemKey: true, seenOn: true, datePrecision: true, countryCode: true, notes: true, source: true, photoId: true, createdAt: true, travellers: { select: { travellerId: true } } },
+    select: {
+      itemKey: true,
+      seenOn: true,
+      datePrecision: true,
+      countryCode: true,
+      notes: true,
+      source: true,
+      createdAt: true,
+      photos: { select: { photoId: true }, orderBy: [{ position: 'asc' }, { photoId: 'asc' }] },
+      travellers: { select: { travellerId: true } },
+    },
     orderBy: { createdAt: 'asc' },
   });

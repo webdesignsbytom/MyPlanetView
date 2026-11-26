@@ -100,6 +100,16 @@ export const MEDIA_CFG = {
     maxBytes: 0,
     generic: false,
   },
+  // A postcard's own photo (docs/API.md "Postcards"): private bucket, only through the postcard
+  // routes (the sender uploads; anyone with the card's link sees it, signed)
+  postcard: {
+    prefix: `${BucketNamespace}/postcards/`,
+    visibility: 'private',
+    requiresAuth: true,
+    allowedTypes: [],
+    maxBytes: 0,
+    generic: false,
+  },
 };
 
 /** An error the generic media handlers answer with as it is (4xx). */
@@ -627,6 +637,26 @@ export const feedbackScreenshotFolder = (userId) => `${FEEDBACK_PREFIX}${userId}
 export async function presignFeedbackScreenshot({ key, contentType, bytes, userId, limit }) {
   await assertUnconfirmedUploadsUnder({ userId, resources: ['feedback'], limit });
   return presignPrivateUpload({ key, resource: 'feedback', contentType, bytes, userId });
+}
+
+// ── A postcard's own photo (docs/API.md "Postcards") ─────────────────────────
+
+export const POSTCARD_PREFIX = MEDIA_CFG.postcard.prefix;
+
+/** `<namespace>/postcards/<userId>/card-<random>.<ext>`: a new name for every picture. */
+export const buildPostcardPictureKey = ({ userId, contentType }) =>
+  `${POSTCARD_PREFIX}${userId}/card-${randomBase32(12)}.${PHOTO_EXTENSIONS[contentType] || 'bin'}`;
+
+/** The folder a person's postcard pictures sit in (used to check a sent key). */
+export const postcardPictureFolder = (userId) => `${POSTCARD_PREFIX}${userId}/`;
+
+/**
+ * Presign a postcard picture's upload, after refusing (429) one that would leave the user more
+ * than `limit` unsent ones. -> `{ url, expiresIn }`
+ */
+export async function presignPostcardPicture({ key, contentType, bytes, userId, limit }) {
+  await assertUnconfirmedUploadsUnder({ userId, resources: ['postcard'], limit });
+  return presignPrivateUpload({ key, resource: 'postcard', contentType, bytes, userId });
 }
 
 /** Refuse (429) a photo presign that would leave the user more than the cap of unconfirmed photo files. */

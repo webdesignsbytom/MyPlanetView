@@ -175,6 +175,13 @@ describe('AccountProfileSection', () => {
     expect(screen.getByText('Your avatar has been removed.')).toBeTruthy();
   });
 
+  it('names the hidden file input and leaves it out of the Tab order (the button opens it)', () => {
+    open({ name: 'Sam', email: 's@example.com', emailVerified: true });
+    const file = document.getElementById('avatar-file');
+    expect(file.getAttribute('aria-label')).toBe('Choose an avatar picture');
+    expect(file.getAttribute('tabindex')).toBe('-1');
+  });
+
   it('uploads an image of an allowed type and size, refusing others', async () => {
     const auth = open({ name: 'Sam', email: 's@example.com', emailVerified: true });
     const file = document.getElementById('avatar-file');

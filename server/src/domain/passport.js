@@ -190,7 +190,7 @@ export const deleteLandmarkCover = (mapId, landmarkId) =>
 export const findPassportMap = (mapId) =>
   prisma.travelMap.findUnique({
     where: { id: mapId },
-    select: { id: true, name: true, groupType: true, homeCountryCode: true, ownerId: true, owner: { select: { name: true } } },
+    select: { id: true, name: true, groupType: true, homeCountryCode: true, passportColour: true, ownerId: true, owner: { select: { name: true } } },
   });
 
 /** Each photo's thumbnail key: Map photoId -> key. */

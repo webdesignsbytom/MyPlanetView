@@ -13,6 +13,9 @@ export const ONE_SHOT_LIST_LABELS = Object.freeze({ WILDLIFE: 'Wildlife', WONDER
 export const ONE_SHOT_TICK_WORDS = Object.freeze({ WILDLIFE: 'Seen', WONDERS: 'Seen', JOURNEYS: 'Done' });
 export const ONE_SHOT_WHO_LEGENDS = Object.freeze({ WILDLIFE: 'Who saw it', WONDERS: 'Who saw it', JOURNEYS: 'Who did it' });
 
+// The photos of you with it (26 Nov 2026, the user's wish: "a photo/multiple photos of you with" it)
+export const ONE_SHOT_PHOTO_LEGENDS = Object.freeze({ WILDLIFE: 'Photos of you with it', WONDERS: 'Photos of you there', JOURNEYS: 'Photos of you doing it' });
+
 // "12 of 80 animals"
 export const ONE_SHOT_LIST_NOUNS = Object.freeze({ WILDLIFE: ['animal', 'animals'], WONDERS: ['wonder', 'wonders'], JOURNEYS: ['journey or feat', 'journeys and feats'] });
 

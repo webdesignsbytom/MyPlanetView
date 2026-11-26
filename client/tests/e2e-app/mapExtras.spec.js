@@ -235,3 +235,22 @@ test('the uploader’s “Upgrade to First Class” opens the plan on the accoun
   await expect(heading).toBeInViewport();
   await expect(page.getByRole('region', { name: 'Your plan' }).getByRole('button', { name: 'Upgrade to First Class' })).toBeVisible();
 });
+
+// 26 Nov 2026, the audit: Settings' style and type cards loaded each style's 800 to 949 pixel
+// picture for a card 64 pixels tall; they load the strips cut for them (style-previews.mjs)
+test('Settings’ style and type cards load small strips, never the styles’ full pictures', { tag: '@phone' }, async ({ page }) => {
+  const loaded = [];
+  // Pictures only: on the dev server the image manifest's own `?url` module requests name every file
+  page.on('request', (request) => {
+    if (request.resourceType() === 'image' && /\/map-styles\//.test(request.url())) loaded.push(request.url().split('/').pop().split('?')[0]);
+  });
+  await openMap(page);
+  const settings = await openTool(page, 'Map settings', 'Settings');
+  for (const name of ['World map', 'Old map', 'Starry night', 'Engraved ocean', 'Regular', 'Detailed']) {
+    const card = settings.locator('label:has(picture)').filter({ hasText: name }).first();
+    await card.scrollIntoViewIfNeeded();
+    await expect.poll(() => card.locator('img').evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
+  }
+  expect(loaded.length).toBeGreaterThan(0);
+  for (const file of loaded) expect(file).toMatch(/^preview-[a-z-]+-(320|640)\.(avif|webp)$/);
+});
