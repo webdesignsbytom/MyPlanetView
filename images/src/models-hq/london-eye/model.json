@@ -1,0 +1,8 @@
+{
+  "name": "London Eye",
+  "latitude": 51.50056,
+  "longitude": -0.12694,
+  "maps": ["GB", "XE"],
+  "landmark": "Q10344038",
+  "onMap": false
+}
