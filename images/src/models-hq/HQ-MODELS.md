@@ -3,7 +3,8 @@
 The landmark models remade in the high-quality look (`hq.py`, the Pisa diorama the user approved
 on 25 Nov 2026). Nothing here is on the site yet: the user will put them all on together once they
 are all made (25 Nov 2026). Each folder is `<id>/` with `<id>.py`, `model.json` (copied from
-`../models/<id>/`), `<id>-1024.png`, `<id>-1024.json` and `<id>.blend`.
+`../models/<id>/`), `<id>-1024.png` and `<id>-1024.json`; the `<id>.blend` a render saves stays on this
+machine (`.gitignore`: the scripts rebuild it; the user's decision, 26 Nov 2026).
 
 Run one (from its folder): `blender -b --factory-startup -P <id>.py -- <id>-1024.png 1024 <id>.blend 256`
 (the last number is the samples; a preview: a smaller size and 32 samples, no `.blend`).
