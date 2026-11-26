@@ -15,7 +15,7 @@ from bpy_extras.object_utils import world_to_camera_view
 __all__ = ['glazed', 'elevation', 'geo', 'blob_cloud', 'scatter_on', 'bpy', 'bmesh', 'math', 'random', 'Vector', 'Matrix', 'M', 'G', 'PLINTH_R', 'setup', 'lin', 'material', 'finish',
            'box', 'box_m', 'cylinder', 'lathe', 'annulus', 'bar', 'tube', 'arch_outline', 'add_prism', 'arcade_ring',
            'arcade_path', 'column', 'gable_roof', 'hip_roof', 'pyramid', 'paving_strip', 'tree', 'cypress', 'person', 'windows', 'banded', 'striped',
-           'parented', 'water_disc', 'render', 'multi', 'fir', 'spire', 'clip_to_plinth', 'slab', 'rect', 'layered', 'terrain', 'loft', 'subsurf', 'masonry', 'import_model', 'SOURCES', 'stand_sourced']
+           'parented', 'water_disc', 'render', 'multi', 'fir', 'spire', 'clip_to_plinth', 'slab', 'rect', 'layered', 'terrain', 'loft', 'subsurf', 'masonry', 'mosaic', 'chequer', 'import_model', 'SOURCES', 'stand_sourced']
 
 ARGV = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 SIZE = int(ARGV[1]) if len(ARGV) > 1 else 1024
@@ -971,6 +971,63 @@ def masonry(name, base, mortar, scale=40.0, rough=0.85, vary=None):
     bump.inputs['Distance'].default_value = 0.002
     l.new(vor.outputs['Distance'], bump.inputs['Height'])
     l.new(bump.outputs['Normal'], bsdf.inputs['Normal'])
+    return mat
+
+
+def mosaic(name, palette, scale=70.0, mortar='#d8d3c6', rough=0.3):
+    """Trencadís: broken tiles as Voronoi cells, each a colour from `palette` ((share, hex), ...), pale mortar between."""
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    n, l = mat.node_tree.nodes, mat.node_tree.links
+    bsdf = n['Principled BSDF']
+    bsdf.inputs['Roughness'].default_value = rough
+    tc = n.new('ShaderNodeTexCoord')
+    cells = n.new('ShaderNodeTexVoronoi')
+    cells.inputs['Scale'].default_value = scale
+    l.new(tc.outputs['Object'], cells.inputs['Vector'])
+    edges = n.new('ShaderNodeTexVoronoi')
+    edges.feature = 'DISTANCE_TO_EDGE'
+    edges.inputs['Scale'].default_value = scale
+    l.new(tc.outputs['Object'], edges.inputs['Vector'])
+    sep = n.new('ShaderNodeSeparateColor')
+    l.new(cells.outputs['Color'], sep.inputs['Color'])
+    ramp = n.new('ShaderNodeValToRGB')
+    ramp.color_ramp.interpolation = 'CONSTANT'
+    els = ramp.color_ramp.elements
+    total, at = sum(s for s, _ in palette), 0.0
+    for k, (share, colour) in enumerate(palette):
+        el = els[k] if k < 2 else els.new(at)
+        el.position, el.color = at, lin(colour)
+        at += share / total
+    l.new(sep.outputs['Red'], ramp.inputs['Fac'])
+    grout = n.new('ShaderNodeMath')
+    grout.operation = 'LESS_THAN'
+    grout.inputs[1].default_value = 0.07
+    l.new(edges.outputs['Distance'], grout.inputs[0])
+    mix = n.new('ShaderNodeMix')
+    mix.data_type = 'RGBA'
+    l.new(grout.outputs['Value'], mix.inputs['Factor'])
+    l.new(ramp.outputs['Color'], mix.inputs['A'])
+    mix.inputs['B'].default_value = lin(mortar)
+    l.new(mix.outputs['Result'], bsdf.inputs['Base Color'])
+    bump = n.new('ShaderNodeBump')
+    bump.inputs['Strength'].default_value = 0.5
+    bump.inputs['Distance'].default_value = 0.001
+    l.new(edges.outputs['Distance'], bump.inputs['Height'])
+    l.new(bump.outputs['Normal'], bsdf.inputs['Normal'])
+    return mat
+
+
+def chequer(name, colour1, colour2, scale=50.0, rough=0.35):
+    """Square glazed tiles in two colours (Object space): azulejo bands, chequered towers."""
+    mat = material(name, colour1, rough)
+    n, l = mat.node_tree.nodes, mat.node_tree.links
+    ch = n.new('ShaderNodeTexChecker')
+    ch.inputs['Scale'].default_value = scale
+    ch.inputs['Color1'].default_value = lin(colour1)
+    ch.inputs['Color2'].default_value = lin(colour2)
+    l.new(n.new('ShaderNodeTexCoord').outputs['Object'], ch.inputs['Vector'])
+    l.new(ch.outputs['Color'], n['Principled BSDF'].inputs['Base Color'])
     return mat
 
 

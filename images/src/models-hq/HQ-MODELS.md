@@ -37,11 +37,11 @@ card and the celebration. `[x]` is done (rendered at 1024 px, 256 samples).
 3. [x] burj-khalifa, [x] forbidden-city*, [x] temple-of-heaven*, [x] cn-tower, [x] mount-rushmore, [x] moai, [x] abu-simbel, [x] table-mountain, [x] sydney-harbour-bridge*, [x] uluru
 4. [x] alhambra, [x] florence-duomo*, [x] ponte-vecchio*, [x] rialto-bridge*, [x] venice, [x] pompeii, [x] milan-cathedral*, [x] cologne-cathedral, [x] charles-bridge*, [x] prague-castle
 5. [x] hungarian-parliament, [x] schonbrunn, [x] blue-mosque*, [x] galata-tower*, [x] edinburgh-castle, [x] buckingham-palace*, [x] westminster-abbey*, [x] tower-of-london*, [x] london-eye*, [x] versailles*
-6. [ ] sacre-coeur*, [ ] chambord, [ ] carcassonne, [ ] kinderdijk, [ ] bryggen, [ ] dubrovnik, [ ] meteora, [ ] santorini, [ ] hallstatt, [ ] lake-bled
-7. [ ] peles-castle, [ ] bran-castle, [ ] spasskaya-tower*, [ ] saint-petersburg, [ ] grand-place, [ ] amsterdam-canals, [ ] rijksmuseum*, [ ] park-guell*, [ ] casa-batllo*, [ ] plaza-de-espana*
-8. [ ] segovia-aqueduct, [ ] pont-du-gard, [ ] belem-tower, [ ] pena-palace*, [ ] cordoba-mezquita, [ ] seville-giralda, [ ] krakow, [ ] strasbourg, [ ] ephesus, [ ] st-stephens*
-9. [ ] riesenrad*, [ ] trulli, [ ] valletta, [ ] cesky-krumlov, [ ] malbork, [ ] giants-causeway, [ ] cliffs-of-moher, [ ] matterhorn, [ ] teotihuacan, [ ] tikal
-10. [ ] chateau-frontenac, [ ] independence-hall*, [ ] alamo, [ ] old-havana, [ ] panama-canal, [ ] iguazu-falls, [ ] grand-canyon, [ ] bellas-artes*, [ ] angel-of-independence*, [ ] palenque
+6. [x] sacre-coeur*, [x] chambord, [x] carcassonne, [x] kinderdijk, [x] bryggen, [x] dubrovnik, [x] meteora, [x] santorini, [x] hallstatt, [x] lake-bled
+7. [x] peles-castle, [x] bran-castle, [x] spasskaya-tower*, [x] saint-petersburg, [x] grand-place, [x] amsterdam-canals, [x] rijksmuseum*, [x] park-guell*, [x] casa-batllo*, [x] plaza-de-espana*
+8. [x] segovia-aqueduct, [x] pont-du-gard, [x] belem-tower, [x] pena-palace*, [x] cordoba-mezquita, [x] seville-giralda, [x] krakow, [x] strasbourg, [x] ephesus, [x] st-stephens*
+9. [x] riesenrad*, [x] trulli, [x] valletta, [x] cesky-krumlov, [x] malbork, [x] giants-causeway, [x] cliffs-of-moher, [x] matterhorn, [x] teotihuacan, [x] tikal
+10. [x] chateau-frontenac, [x] independence-hall*, [x] alamo, [x] old-havana, [x] panama-canal, [x] iguazu-falls, [x] grand-canyon, [x] bellas-artes*, [x] angel-of-independence*, [x] palenque
 11. [ ] cartagena, [ ] teatro-amazonas, [ ] fallingwater, [ ] terracotta-army, [ ] potala-palace, [ ] borobudur, [ ] petronas-towers, [ ] marina-bay-sands, [ ] sheikh-zayed-mosque, [ ] golden-temple
 12. [ ] hawa-mahal, [ ] red-fort, [ ] gateway-of-india*, [ ] humayuns-tomb*, [ ] qutb-minar*, [ ] himeji-castle, [ ] itsukushima, [ ] kinkakuji*, [ ] fushimi-inari*, [ ] hiroshima-peace-memorial*
 13. [ ] gyeongbokgung, [ ] grand-palace-bangkok, [ ] wat-arun*, [ ] bagan, [ ] ha-long-bay, [ ] tigers-nest, [ ] leshan-buddha, [ ] registan, [ ] dome-of-the-rock*, [ ] western-wall

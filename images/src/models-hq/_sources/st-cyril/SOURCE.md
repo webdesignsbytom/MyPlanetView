@@ -4,5 +4,6 @@
 - Author: matousekfoto, https://sketchfab.com/matousekfoto
 - Licence: CC BY 4.0, http://creativecommons.org/licenses/by/4.0/
 - Downloaded 26 Nov 2026 as glb (st-cyril.glb), unchanged.
-- Used in ../../charles-bridge/: a saint on the bridge's parapets, cut from its plinth, thinned and
-  given the diorama's blackened sandstone. Credit it wherever the model's picture is shown.
+- Used in ../../charles-bridge/ (a saint on the bridge's parapets, cut from its plinth, thinned and
+  given the diorama's blackened sandstone) and ../../angel-of-independence/ (in white marble, standing
+  in for Hidalgo in the heroes' group). Credit it wherever the model's picture is shown.
