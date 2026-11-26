@@ -1,0 +1,8 @@
+{
+  "name": "Sydney Harbour Bridge",
+  "latitude": -33.85706,
+  "longitude": 151.2149,
+  "maps": ["AU"],
+  "landmark": "Q45178",
+  "onMap": false
+}
