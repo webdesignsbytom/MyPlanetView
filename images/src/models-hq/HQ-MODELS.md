@@ -46,4 +46,4 @@ card and the celebration. `[x]` is done (rendered at 1024 px, 256 samples).
 12. [x] hawa-mahal, [x] red-fort, [x] gateway-of-india*, [x] humayuns-tomb*, [x] qutb-minar*, [x] himeji-castle, [x] itsukushima, [x] kinkakuji*, [x] fushimi-inari*, [x] hiroshima-peace-memorial*
 13. [x] gyeongbokgung, [x] grand-palace-bangkok, [x] wat-arun*, [x] bagan, [x] ha-long-bay, [x] tigers-nest, [x] leshan-buddha, [x] registan, [x] dome-of-the-rock*, [x] western-wall
 14. [x] persepolis, [x] naqsh-e-jahan, [x] karnak, [x] victoria-falls, [x] kilimanjaro, [x] lalibela, [x] djenne, [x] hassan-tower, [x] ait-benhaddou, [x] cappadocia
-15. [ ] mostar, [ ] fishermans-bastion*, [ ] forth-bridge*, [ ] kiyomizu-dera*, [ ] summer-palace*, [ ] rila, [ ] sigiriya, [ ] konark, [ ] verona-arena, [ ] delphi
+15. [x] mostar, [x] fishermans-bastion*, [x] forth-bridge*, [x] kiyomizu-dera*, [x] summer-palace*, [x] rila, [x] sigiriya, [x] konark, [x] verona-arena, [x] delphi

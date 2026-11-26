@@ -1,0 +1,8 @@
+{
+  "name": "Forth Bridge",
+  "latitude": 55.9984,
+  "longitude": -3.3876,
+  "maps": ["GB", "XC"],
+  "landmark": "Q275",
+  "onMap": false
+}
