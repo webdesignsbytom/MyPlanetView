@@ -122,7 +122,8 @@ const StateNames = memo(function StateNames({ areas, statuses, viewport }) {
 // root of the zoom (a thing on the map, yet never covering a city), between 40 and 150 px,
 // times the model's `size` (every model at one scale: the Eiffel Tower a little taller than Big
 // Ben; utils/map/landmarkModelSize.js); the smaller picture while it's sharp enough on a 2×
-// screen. A press on one opens its card (LandmarkModelCard; 24 Nov 2026, the user's wish); the
+// screen. The ones remade in the high-quality look (`hq`, dioramas on a round base, 26 Nov 2026)
+// carry `data-landmark-model-hq`. A press on one opens its card (LandmarkModelCard; 24 Nov 2026, the user's wish); the
 // keyboard's and screen readers' way to them is the list, as for the states and pins.
 const LandmarkModels = memo(function LandmarkModels({ geo, models, viewport }) {
   const zoom = useViewportZoom(viewport);
@@ -136,7 +137,13 @@ const LandmarkModels = memo(function LandmarkModels({ geo, models, viewport }) {
         const picture = LANDMARK_MODEL_HEIGHTS.find((height) => height >= tall * 2) ?? LANDMARK_MODEL_HEIGHTS.at(-1);
         // The group stands on the spot; the picture is moved so its tile's middle is there
         return (
-          <g key={model.id} data-landmark-model={model.id} transform={`translate(${at.x} ${at.y})`} className='cursor-pointer'>
+          <g
+            key={model.id}
+            data-landmark-model={model.id}
+            data-landmark-model-hq={model.hq ? '' : undefined}
+            transform={`translate(${at.x} ${at.y})`}
+            className='cursor-pointer'
+          >
             <title>{model.name}</title>
             <image href={model.images[picture]} x={box.x - at.x} y={box.y - at.y} width={box.width} height={box.height} />
           </g>

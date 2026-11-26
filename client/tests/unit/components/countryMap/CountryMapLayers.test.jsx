@@ -46,11 +46,13 @@ vi.mock('@/hooks/useMapViewport', async (importOriginal) => {
   return { ...actual, default: () => viewport };
 });
 
-// One model on Luxembourg's map (and one on France's, which mustn't show), at a known size
+// A toon model and a diorama (the high-quality look) on Luxembourg's map (and one on France's,
+// which mustn't show), at a known size
 vi.mock('@/utils/map/landmarkModels', () => ({
   LANDMARK_MODEL_HEIGHTS: [160, 320],
   LANDMARK_MODELS: [
     { id: 'test-tower', name: 'Test Tower', landmark: 'Q99', maps: ['LU'], latitude: 49.61, longitude: 6.13, size: 1.2, aspect: 0.5, anchor: [0.5, 0.9], images: { 160: '/m-160.webp', 320: '/m-320.webp' } },
+    { id: 'test-diorama', hq: true, name: 'Test Diorama', landmark: 'Q97', maps: ['LU'], latitude: 49.8, longitude: 6.1, size: 0.6, aspect: 1.6, anchor: [0.5, 0.8], images: { 160: '/d-160.webp', 320: '/d-320.webp' } },
     { id: 'elsewhere', name: 'Elsewhere', landmark: 'Q98', maps: ['FR'], latitude: 48.86, longitude: 2.29, size: 1, aspect: 1, anchor: [0.5, 0.5], images: { 160: '/e.webp', 320: '/e.webp' } },
   ],
 }));
@@ -127,6 +129,17 @@ describe('CountryMapView: the landmark models', () => {
     expect(model(container).getAttribute('class')).toContain('cursor-pointer');
     // The list is the keyboard's and screen readers' way to them
     expect(model(container).parentElement.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('marks the models remade in the high-quality look, drawn from their own pictures', () => {
+    const { container } = draw();
+    expect(model(container).hasAttribute('data-landmark-model-hq')).toBe(false);
+    const diorama = container.querySelector('[data-landmark-model="test-diorama"]');
+    expect(diorama.hasAttribute('data-landmark-model-hq')).toBe(true);
+    expect(diorama.querySelector('image').getAttribute('href')).toBe('/d-160.webp');
+    // Its base's width on screen: 64 px times its size times its aspect at zoom 1
+    const image = diorama.querySelector('image');
+    expect(Number(image.getAttribute('width')) * zoomStore.get() * REFERENCE_PX_PER_UNIT).toBeCloseTo(64 * 0.6 * 1.6, 6);
   });
 
   it('opens its card on a press (24 Nov 2026, the user’s wish), with the state it stands in', () => {

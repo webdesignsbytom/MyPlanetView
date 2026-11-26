@@ -1,8 +1,9 @@
 # The high-quality landmark models
 
 The landmark models remade in the high-quality look (`hq.py`, the Pisa diorama the user approved
-on 25 Nov 2026). Nothing here is on the site yet: the user will put them all on together once they
-are all made (25 Nov 2026). Each folder is `<id>/` with `<id>.py`, `model.json` (copied from
+on 25 Nov 2026). They're on the site since 26 Nov 2026 (the user's wish, once the first 150 were
+made): `node images/src/tools/landmark-models.mjs` draws a model from its render here wherever
+one exists, instead of its toon one in `../models/`; run it again after each new render. Each folder is `<id>/` with `<id>.py`, `model.json` (copied from
 `../models/<id>/`), `<id>-1024.png` and `<id>-1024.json`; the `<id>.blend` a render saves stays on this
 machine (`.gitignore`: the scripts rebuild it; the user's decision, 26 Nov 2026).
 

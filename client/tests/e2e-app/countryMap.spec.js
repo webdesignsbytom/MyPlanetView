@@ -137,13 +137,30 @@ test('the United Kingdom’s own map has Edinburgh Castle, the Giant’s Causewa
   await expectModelOn(map, 'caernarfon-castle', 'GB-GWN');
 });
 
-test('the Eiffel Tower stands on Paris on France’s own map, a little taller than Big Ben', async ({ page }) => {
+// The models remade in the high-quality look (26 Nov 2026, the user's wish): dioramas on a round
+// base, drawn at one scale of their own, every base the same width; the rest still toon models
+test('the models remade in the high-quality look are drawn as dioramas, each base the same width', async ({ page }) => {
+  await openMap(page);
+  const map = await openCountryMap(page, 'United Kingdom');
+  const bigBen = await expectModelOn(map, 'big-ben', 'GB-WSM');
+  const castle = await expectModelOn(map, 'edinburgh-castle', 'GB-EDH');
+  const caernarfon = await expectModelOn(map, 'caernarfon-castle', 'GB-GWN');
+  await expect(bigBen).toHaveAttribute('data-landmark-model-hq', '');
+  await expect(castle).toHaveAttribute('data-landmark-model-hq', '');
+  await expect(caernarfon).not.toHaveAttribute('data-landmark-model-hq');
+  const [tower, fortress] = await Promise.all([bigBen.locator('image').boundingBox(), castle.locator('image').boundingBox()]);
+  expect(Math.abs(tower.width - fortress.width) / fortress.width).toBeLessThan(0.05);
+  // Big Ben's clock tower stands taller than the castle on its rock
+  expect(tower.height).toBeGreaterThan(fortress.height);
+});
+
+test('the Eiffel Tower stands on Paris on France’s own map, taller than the map’s model height', async ({ page }) => {
   await openMap(page);
   const map = await openCountryMap(page, 'France');
   const tower = await expectModelOn(map, 'eiffel-tower', 'FR-75');
   await expectModelsOf(map, 'France');
-  // Every model is drawn at one scale: at the same zoom the tower is taller than Big Ben (64 px
-  // at zoom 1), and the pin in Paris is still drawn over it
+  // Every diorama is drawn at one scale: at the same zoom the tower stands taller than the map's
+  // model height (64 px at zoom 1), and the pin in Paris is still drawn over it
   const height = await tower.locator('image').evaluate((image) => image.getBoundingClientRect().height);
   const zoom = await map.locator('svg[role="application"]').evaluate((svg) => svg.getBoundingClientRect().width / svg.viewBox.baseVal.width / 0.96);
   expect(height).toBeGreaterThan(Math.min(150, Math.max(40, 64 * Math.sqrt(zoom))) * 1.02);
@@ -156,7 +173,7 @@ test('the Colosseum stands on Rome on Italy’s own map, low and wide', async ({
   const map = await openCountryMap(page, 'Italy');
   const colosseum = await expectModelOn(map, 'colosseum', 'IT-RM');
   await expectModelsOf(map, 'Italy');
-  // Low and wide (drawn at least 0.7 of Big Ben's height, bigger than the one scale, so it reads at a glance)
+  // Low and wide: its diorama's base as wide as every other's, the arena lower than that
   const box = await colosseum.locator('image').boundingBox();
   expect(box.width).toBeGreaterThan(box.height);
 });
