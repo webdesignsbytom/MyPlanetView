@@ -1,9 +1,9 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // Icons
 import { IoContract, IoExpand, IoHome, IoMap, IoMenu, IoSettings, IoShareSocial } from 'react-icons/io5';
 import { IoIosImages, IoIosStats } from 'react-icons/io';
-import { FaBinoculars, FaCommentDots, FaCompass, FaHistory, FaListOl, FaRoute, FaSuitcase } from 'react-icons/fa';
+import { FaBinoculars, FaCommentDots, FaCompass, FaHistory, FaListOl, FaPassport, FaRoute, FaSuitcase } from 'react-icons/fa';
 // Constants
 import { HOME_PAGE_URL } from '@/utils/constants/routes';
 // Hooks
@@ -12,7 +12,9 @@ import useFullscreen from '@/hooks/useFullscreen';
 import { plural } from '@/utils/functions/plural';
 import { SPECIAL_PLACE_TOTAL } from '@/utils/map/specialPlaces';
 import { REGION_CODES } from '@/utils/map/regionPlaces';
+import { NOT_PHONE_QUERY } from '@/utils/layout/phone';
 // Components
+import CloseStamp from '@/components/common/CloseStamp';
 import MapRoundButton from './MapRoundButton';
 
 // "8 countries, 2 continents, 16 photos. Special places 0 of 5" (special places: Antarctica
@@ -54,34 +56,65 @@ function MenuStamp({ pressed, size = 'h-11 w-11 text-lg', children }) {
   );
 }
 
+// Open and shut a dialog as a modal one: in the top layer, over the whole screen whatever the
+// map page's own layers and filters (Black and white's greyscale filter on the toolbar would
+// hold a fixed box inside it), the rest of the page out of reach. A browser without modal
+// dialogs (and the unit tests' jsdom) shows it open where it is.
+function showDialog(node) {
+  if (!node || node.open) return;
+  if (typeof node.showModal === 'function') node.showModal();
+  else node.setAttribute('open', '');
+}
+function shutDialog(node) {
+  if (!node?.hasAttribute('open')) return;
+  if (typeof node.close === 'function') node.close();
+  else node.removeAttribute('open');
+}
+
+// A tool in the phone's menu: its round stamp, its name under it
+const TOOL_CLASS = 'group grid content-start justify-items-center gap-1.5 rounded-sm px-1 pb-1.5 pt-2 text-center transition';
+const TOOL_NAME_CLASS = 'font-travel text-sm uppercase leading-tight tracking-wide text-poster-red-deep';
+
 /**
  * The phone's map menu (16 Nov 2026, the user's design): one round "Menu" stamp at the top
  * right (a menu icon in the toolbar's round stamp, like the goal flag at the left; 17 Nov
- * 2026, it was a "Menu" ticket with a down arrow), pressed in while open, that drops every tool, restyled the same day as a travel ticket: the
- * statistics across the top as a parchment strip of figures (its counts, as a sentence, are
- * its description, so its name is just "Travel statistics", as on the stamp), then the
- * tools as round stamps with their names under them, three to a row (on a phone on its side,
- * 17 Nov 2026, a wider menu: the statistics beside their name, the tools in one row), and below a perforation the home page and, where the browser allows
- * it, "Full screen", which hides the browser's bars (the user's wish: on its side a phone
- * lost a third of its height to them). A disclosure, not an ARIA menu: Tab moves through it, choosing a
- * tool closes it, and so do Escape (focus back on the button) and a press outside. The open
- * panel's tool is pressed in.
+ * 2026, it was a "Menu" ticket with a down arrow), pressed in while open. It opens over the
+ * whole screen (27 Nov 2026, the user's wish; it dropped from the stamp until then), as a
+ * travel ticket: its name and a close stamp at the top right, where the Menu stamp is; the
+ * statistics as a parchment strip of figures (its counts, as a sentence, are its description,
+ * so its name is just "Travel statistics", as on the stamp), then the tools as round stamps
+ * with their names under them, three to a row (on a phone on its side, 17 Nov 2026: the
+ * statistics beside their name, the tools in rows as wide as fit), "View passport" among them
+ * (27 Nov 2026, the user's wish: `passport`, a link), and below a perforation the home page
+ * and, where the browser allows it, "Full screen", which hides the browser's bars (the user's
+ * wish: on its side a phone lost a third of its height to them). A modal dialog: focus starts
+ * on the close stamp and stays inside; choosing a tool closes it, and so do the close stamp
+ * and Escape (focus back on the Menu button), and a phone's back button. The open panel's
+ * tool is pressed in.
  */
-function PhoneToolMenu({ items, home, extras = [] }) {
+function PhoneToolMenu({ items, home, extras = [], passport = null }) {
   const [open, setOpen] = useState(false);
   const listId = useId();
   const statsId = useId();
-  const wrapRef = useRef(null);
+  const titleId = useId();
+  const dialogRef = useRef(null);
   const toggleRef = useRef(null);
   const summary = items.find((item) => item.id === 'stats');
   const tools = items.filter((item) => item !== summary);
+  // "View passport" after the photo album, the last of the things collected
+  const photosAt = tools.findIndex((item) => item.id === 'photos');
+  if (passport) tools.splice(photosAt < 0 ? tools.length : photosAt + 1, 0, passport);
   const footerItems = [home, ...extras].filter(Boolean);
 
-  const choose = (item) => {
+  // Shut at once (so the Menu button is no longer out of reach), focus back on that button
+  const shut = () => {
+    shutDialog(dialogRef.current);
     setOpen(false);
-    // Focus to the Menu button first: the panel hands it back there when it closes (this
-    // item is hidden by then)
     toggleRef.current?.focus();
+  };
+  const choose = (item) => {
+    // Focus to the Menu button first: the panel hands it back there when it closes
+    shut();
     item.onSelect();
   };
   const itemProps = (item) => ({
@@ -93,29 +126,37 @@ function PhoneToolMenu({ items, home, extras = [] }) {
   });
 
   useEffect(() => {
-    if (!open) return undefined;
-    const onPointerDown = (e) => {
-      if (!wrapRef.current?.contains(e.target)) setOpen(false);
+    const node = dialogRef.current;
+    if (!open) {
+      shutDialog(node);
+      return undefined;
+    }
+    showDialog(node);
+    node?.querySelector('[data-menu-close] button')?.focus();
+    // Turned into a wide screen (a tablet on its side), the menu is no longer there to see: shut it
+    const wide = window.matchMedia?.(NOT_PHONE_QUERY);
+    const onChange = () => {
+      if (wide.matches) shut();
     };
-    document.addEventListener('pointerdown', onPointerDown);
-    return () => document.removeEventListener('pointerdown', onPointerDown);
+    wide?.addEventListener?.('change', onChange);
+    return () => wide?.removeEventListener?.('change', onChange);
   }, [open]);
 
   return (
     <div
-      ref={wrapRef}
       className='relative grid justify-items-end nophone:hidden'
       onKeyDown={(e) => {
         if (e.key !== 'Escape' || !open) return;
         // The menu closes first; the map's own Escape (closing a panel) waits for the next press
         e.stopPropagation();
-        setOpen(false);
-        toggleRef.current?.focus();
+        e.preventDefault();
+        shut();
       }}
     >
       <button
         ref={toggleRef}
         type='button'
+        aria-haspopup='dialog'
         aria-expanded={open}
         aria-controls={listId}
         onClick={() => setOpen((now) => !now)}
@@ -127,11 +168,28 @@ function PhoneToolMenu({ items, home, extras = [] }) {
       >
         <IoMenu aria-hidden='true' />
       </button>
-      <div
+      <dialog
+        ref={dialogRef}
         id={listId}
-        hidden={!open}
-        className='ticket-edge absolute right-0 top-[calc(100%+0.5rem)] grid max-h-[calc(100svh-4.5rem)] w-[min(22rem,calc(100vw-1.5rem))] grid-rows-[auto_minmax(0,1fr)_auto] sideways:w-[min(52rem,calc(100vw-1.5rem))] overflow-hidden bg-paper-cream text-poster-ink'
+        aria-labelledby={titleId}
+        // Escape, or a phone's back button: shut as the close stamp does
+        onCancel={(e) => {
+          e.preventDefault();
+          shut();
+        }}
+        data-phone-menu=''
+        className='fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-hidden border-0 bg-paper-cream p-0 text-poster-ink'
       >
+        <div className='ticket-edge grid h-full grid-rows-[auto_auto_minmax(0,1fr)_auto] overflow-hidden bg-paper-cream pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)]'>
+        {/* The close stamp exactly where the Menu stamp is (the screen's top right, 0.75rem in) */}
+        <div className='paper-aged grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b-2 border-dashed border-poster-brown py-2.5 pl-4 pr-2.5'>
+          <h2 id={titleId} className='font-travel text-2xl uppercase leading-tight tracking-wide text-poster-red-deep'>
+            Menu
+          </h2>
+          <span className='grid' data-menu-close=''>
+            <CloseStamp label='Close the menu' onClick={shut} />
+          </span>
+        </div>
         {summary ? (
           <button
             {...itemProps(summary)}
@@ -174,18 +232,21 @@ function PhoneToolMenu({ items, home, extras = [] }) {
         ) : (
           <span />
         )}
-        <ul className='grid grid-cols-3 content-start gap-x-1 gap-y-2 overflow-y-auto px-3 py-3 sideways:grid-cols-[repeat(auto-fit,minmax(5.25rem,1fr))] sideways:py-2'>
+        <ul className='grid grid-cols-3 content-start gap-x-1 gap-y-3 overflow-y-auto px-3 py-4 sideways:grid-cols-[repeat(auto-fit,minmax(5.25rem,1fr))] sideways:gap-y-2 sideways:py-2'>
           {tools.map((item) => (
             <li key={item.id} className='grid'>
-              <button
-                {...itemProps(item)}
-                className={`group grid content-start justify-items-center gap-1.5 rounded-sm px-1 pb-1.5 pt-2 text-center transition ${
-                  item.pressed ? 'bg-poster-paper' : 'hover:bg-poster-paper/70'
-                }`}
-              >
-                <MenuStamp pressed={item.pressed}>{item.icon}</MenuStamp>
-                <span className='font-travel text-sm uppercase leading-tight tracking-wide text-poster-red-deep'>{item.label}</span>
-              </button>
+              {/* A link (the passport) leaves the map: the menu shuts first */}
+              {item.href ? (
+                <Link to={item.href} onClick={shut} className={`${TOOL_CLASS} hover:bg-poster-paper/70`}>
+                  <MenuStamp>{item.icon}</MenuStamp>
+                  <span className={TOOL_NAME_CLASS}>{item.label}</span>
+                </Link>
+              ) : (
+                <button {...itemProps(item)} className={`${TOOL_CLASS} ${item.pressed ? 'bg-poster-paper' : 'hover:bg-poster-paper/70'}`}>
+                  <MenuStamp pressed={item.pressed}>{item.icon}</MenuStamp>
+                  <span className={TOOL_NAME_CLASS}>{item.label}</span>
+                </button>
+              )}
             </li>
           ))}
         </ul>
@@ -205,7 +266,8 @@ function PhoneToolMenu({ items, home, extras = [] }) {
         ) : (
           <span />
         )}
-      </div>
+        </div>
+      </dialog>
     </div>
   );
 }
@@ -222,7 +284,9 @@ function PhoneToolMenu({ items, home, extras = [] }) {
 // bar): the photo album plays the slideshow, Settings shows the tips; "Strings" the same day,
 // its panel opened from the country list. `canFeedback`: a signed-in viewer's "Feedback" stamp,
 // before Settings (25 Nov 2026, the user's wish: report a problem, an idea or a question).
-function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false, canFeedback = false, stats = null, showHome = true }) {
+// `passportHref`: the map's passport, "View passport" in the phone's menu (27 Nov 2026, the
+// user's wish: its full-screen menu has the room; the wide bar keeps its length).
+function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false, canFeedback = false, stats = null, showHome = true, passportHref = null }) {
   const navigate = useNavigate();
 
   const tools = [
@@ -264,6 +328,7 @@ function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false
     onIntent: onIntent ? () => onIntent(tool.id) : undefined,
   }));
   const menuHome = showHome ? { id: 'home', label: 'Home page', icon: <IoHome aria-hidden='true' />, onSelect: goHome } : null;
+  const menuPassport = passportHref ? { id: 'passport', label: 'View passport', icon: <FaPassport aria-hidden='true' />, href: passportHref } : null;
   const fullscreen = useFullscreen();
   const menuExtras = fullscreen.supported
     ? [
@@ -297,7 +362,7 @@ function MapToolbar({ openPanel, onToggle, onIntent, canShare, canSwitch = false
           </MapRoundButton>
         ))}
       </div>
-      <PhoneToolMenu items={menuItems} home={menuHome} extras={menuExtras} />
+      <PhoneToolMenu items={menuItems} home={menuHome} extras={menuExtras} passport={menuPassport} />
     </nav>
   );
 }

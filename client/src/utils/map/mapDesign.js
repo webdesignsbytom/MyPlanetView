@@ -129,6 +129,8 @@ const VISITED_FILL = beenTo('svg');
 // The same on a map with a metallic finish's sheet of metal under its places (VisitedFoil): more
 // particular, so they're see-through there and the metal shows
 const VISITED_OVER_FOIL = beenTo('svg:has([data-visited-foil])');
+// ...and while that map moves: more particular again, so they wear the metal's flat colour
+const VISITED_OVER_MOVING_FOIL = beenTo('svg[data-moving]:has([data-visited-foil])');
 
 /**
  * The map's visited look as a style sheet (25 Nov 2026, the user's wish: "all the countries I have
@@ -138,7 +140,11 @@ const VISITED_OVER_FOIL = beenTo('svg:has([data-visited-foil])');
  * (VisitBadges marks which). A metallic finish shows its sheet of metal through them instead
  * (VisitedFoil; on a map without one, the metal's flat colour), lights its edges while the map is
  * still (a lit edge on every frame of a pan doubled its cost: useMapViewport's data-moving), and
- * puts the same metal on the map key's swatch. Nothing while they show as badges.
+ * puts the same metal on the map key's swatch. While the map moves, the places wear the metal's
+ * flat colour and the sheet waits, hidden, for it to be still (27 Nov 2026, the user's report: on
+ * a phone the foil vanished while the map was dragged and came back once it stopped; a place's
+ * own fill always draws, and the pictures are one even shade of their medal colour). Nothing
+ * while they show as badges.
  */
 export function visitedCss(visited) {
   const look = visitedLookOf(visited);
@@ -152,6 +158,8 @@ export function visitedCss(visited) {
     ...(finish
       ? [
           `${VISITED_OVER_FOIL}{fill:transparent}`,
+          `${VISITED_OVER_MOVING_FOIL}{fill:var(${finish.colour})}`,
+          '[data-map-page] svg[data-moving] [data-visited-foil]{visibility:hidden}',
           `[data-map-page] svg:not([data-moving]) [data-visited-foil]{filter:url(#${FOIL_EDGE_ID})}`,
           `[data-map-page] [data-key-visited-colour] [aria-hidden]{background:url("${finish.texture}") center/cover}`,
         ]

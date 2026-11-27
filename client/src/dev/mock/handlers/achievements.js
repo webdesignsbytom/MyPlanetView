@@ -9,6 +9,7 @@ import { atLeast, higherRole, mapRole } from '../views';
 import { GOALS_PER_MAP } from '@/utils/achievements/goals';
 import { GOAL_MESSAGES, changesWhatsAsked, mapBadges, mapGoals, oneGoalView, parseGoalInput } from '../achievements';
 import { MOMENT_MESSAGES } from '../moments';
+import { mapBadgeStory } from '../badgeStories';
 
 const SHARE_NOT_FOUND = 'This link has expired or was never shared with you.';
 
@@ -31,6 +32,17 @@ const badgesFor = (map, role) => {
   const result = mapBadges(map.id, { award: atLeast(role, 'EDITOR') });
   return answer(result, result.newlyEarned.length > 0);
 };
+// What earned a badge (the server's sendBadgeStory): never awards; `?traveller=` one person's
+const storyFor = (map, role, key, query = {}) => {
+  const traveller = query.traveller;
+  const result = mapBadgeStory(map.id, String(key), {
+    includeHidden: atLeast(role, 'EDITOR'),
+    ...(traveller ? { travellerId: String(traveller) } : {}),
+  });
+  if (result.badgeNotFound) return fail(404, "That badge doesn't exist.");
+  if (result.travellerNotFound) return fail(404, "That traveller isn't on this map.");
+  return ok({ story: result.story });
+};
 const goalsFor = (map, role) => {
   const result = mapGoals(map.id, { award: atLeast(role, 'EDITOR') });
   return answer(result, result.newlyAchieved.length > 0);
@@ -49,6 +61,12 @@ export function registerAchievementRoutes() {
     const map = findMap(params.mapId);
     const role = mapRole(map);
     return deny(role, 'VIEWER', MOMENT_MESSAGES.mapNotFound) || badgesFor(map, role);
+  });
+
+  route('GET', '/api/maps/:mapId/badges/:badgeKey', ({ params, query }) => {
+    const map = findMap(params.mapId);
+    const role = mapRole(map);
+    return deny(role, 'VIEWER', MOMENT_MESSAGES.mapNotFound) || storyFor(map, role, params.badgeKey, query);
   });
 
   route('GET', '/api/maps/:mapId/goals', ({ params }) => {
@@ -109,6 +127,11 @@ export function registerAchievementRoutes() {
   route('GET', '/api/shared/:code/badges', ({ params }) => {
     const shared = sharedMap(params.code);
     return shared ? badgesFor(shared.map, shared.role) : fail(404, SHARE_NOT_FOUND);
+  });
+
+  route('GET', '/api/shared/:code/badges/:badgeKey', ({ params, query }) => {
+    const shared = sharedMap(params.code);
+    return shared ? storyFor(shared.map, shared.role, params.badgeKey, query) : fail(404, SHARE_NOT_FOUND);
   });
 
   route('GET', '/api/shared/:code/goals', ({ params }) => {

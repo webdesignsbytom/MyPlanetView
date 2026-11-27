@@ -9,11 +9,12 @@ import SavedStamp from '@/components/common/SavedStamp';
 import GroupTypePicker from './GroupTypePicker';
 import TravellerFieldset from './TravellerFieldset';
 // Utils
-import { NEEDS_A_TRAVELLER, maxTravellersFor, minTravellersFor } from '@/utils/map/saveMapSetup';
+import { GROUP_TYPES, NEEDS_A_TRAVELLER, maxTravellersFor, minTravellersFor } from '@/utils/map/saveMapSetup';
 
-const blankTraveller = () => ({ name: '', birthCountryCode: '', favouriteCountryCode: '', birthDate: '' });
+const blankTraveller = () => ({ name: '', lastName: '', nationalityCode: '', birthCountryCode: '', favouriteCountryCode: '', birthDate: '' });
 
-const isBlankNew = (t) => !t.id && !t.name.trim() && !t.birthCountryCode && !t.favouriteCountryCode && !t.birthDate;
+const isBlankNew = (t) =>
+  !t.id && !t.name.trim() && !t.lastName?.trim() && !t.nationalityCode && !t.birthCountryCode && !t.favouriteCountryCode && !t.birthDate;
 
 // As many rows as the kind of map needs; rows added but never filled in go when it has no
 // room for them (a family's third, empty, when it becomes a couple)
@@ -47,6 +48,9 @@ function suggestName(groupType, travellers) {
  * after a save that changes the map (its key), which used to take the stamp away at once.
  * `askBirthDate`: each traveller's optional date of birth (Settings; never /welcome, straight
  * after sign-up: 23 Nov 2026, the user's wish).
+ * `typeBehindButton`: who the map is for shows as a line saying so, the choices behind "Change
+ * map type" (Settings, where it's set already; 27 Nov 2026, the user's wish), until the form
+ * starts afresh after a save.
  */
 function MapSetupForm({
   initial,
@@ -56,9 +60,11 @@ function MapSetupForm({
   splitUkNote = false,
   wideSubmit = false,
   askBirthDate = false,
+  typeBehindButton = false,
   saved: savedProp,
   onSavedChange,
 }) {
+  const [typeOpen, setTypeOpen] = useState(!typeBehindButton);
   const [form, setForm] = useState(() => ({
     name: initial.name || '',
     groupType: initial.groupType || 'SOLO',
@@ -67,6 +73,8 @@ function MapSetupForm({
       (initial.travellers || []).map((t) => ({
         id: t.id,
         name: t.name || '',
+        lastName: t.lastName || '',
+        nationalityCode: t.nationalityCode || '',
         birthCountryCode: t.birthCountryCode || '',
         favouriteCountryCode: t.favouriteCountryCode || '',
         birthDate: t.birthDate || '',
@@ -121,7 +129,28 @@ function MapSetupForm({
 
   return (
     <form onSubmit={handleSubmit} className='grid gap-5' noValidate>
-      {canRename ? <GroupTypePicker value={form.groupType} onChange={(groupType) => update({ groupType })} /> : null}
+      {canRename && typeBehindButton ? (
+        <div className='grid gap-2' data-map-type=''>
+          <p className='text-sm'>
+            <span className='font-medium'>This map is for: </span>
+            {GROUP_TYPES.find((type) => type.value === form.groupType)?.label}
+          </p>
+          <button
+            type='button'
+            aria-expanded={typeOpen}
+            aria-controls='map-type-choices'
+            onClick={() => setTypeOpen((open) => !open)}
+            className='btn-paper justify-self-start [--btn-leading:1.25rem] [--btn-pad-x:1rem] [--btn-pad-y:0.375rem] [--btn-size:1rem]'
+          >
+            Change map type
+          </button>
+        </div>
+      ) : null}
+      {canRename && typeOpen ? (
+        <div id='map-type-choices' className='grid'>
+          <GroupTypePicker value={form.groupType} onChange={(groupType) => update({ groupType })} />
+        </div>
+      ) : null}
 
       <div className='grid gap-3'>
         {form.travellers.map((traveller, index) => (

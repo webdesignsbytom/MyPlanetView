@@ -17,6 +17,7 @@ import {
   CountriesIndexPage,
   MONTH_GUIDE_PAGES,
   SelectLabPage,
+  HomeDraftPage,
   preloadPage,
 } from '@/utils/navigation/lazyPages';
 import { COUNTRY_PAGES } from '@/utils/countries/countryPages';
@@ -77,5 +78,9 @@ describe('lazyPages', () => {
 
   it('has the dropdown lab in development only', () => {
     expect(SelectLabPage === null).toBe(!import.meta.env.DEV);
+  });
+
+  it('has the home page draft in development only', () => {
+    expect(HomeDraftPage === null).toBe(!import.meta.env.DEV);
   });
 });

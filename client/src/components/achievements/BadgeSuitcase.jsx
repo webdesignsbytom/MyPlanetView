@@ -34,8 +34,10 @@ const closedForVisit = () => {
  * (CountryCollections); `onShareCollection(place)` shares a place's best medal as a picture.
  * Each group's heading is the button that folds it: an arrow pointing down while it's open,
  * to the side once it's closed (24 Nov 2026, the user's wish), remembered for the visit.
+ * `onOpenBadge(badge)` (27 Nov 2026, the user's wish): an earned sticker or medal opens its own
+ * card, the badge and what earned it.
  */
-function BadgeSuitcase({ badges, note = null, onShareCollection = null, children = null }) {
+function BadgeSuitcase({ badges, note = null, onShareCollection = null, onOpenBadge = null, children = null }) {
   const headingId = useId();
   const [closed, setClosed] = useState(closedForVisit);
   const toggle = (id) => {
@@ -86,19 +88,20 @@ function BadgeSuitcase({ badges, note = null, onShareCollection = null, children
                     data-badge-group-toggle=''
                   >
                     <span>{badgeGroupLabel(group.id)}</span>
+                    {/* Down to open, up to close (27 Nov 2026, the user's wish: it pointed right when closed) */}
                     <FaChevronDown
                       aria-hidden='true'
-                      className={`text-xs transition-transform motion-reduce:transition-none ${open ? '' : '-rotate-90'}`}
+                      className={`text-xs transition-transform motion-reduce:transition-none ${open ? 'rotate-180' : ''}`}
                     />
                   </button>
                 </h4>
                 <div id={bodyId} hidden={!open}>
                   {group.id === COLLECTION_GROUP ? (
-                    <CountryCollections badges={group.badges} onShare={onShareCollection} />
+                    <CountryCollections badges={group.badges} onShare={onShareCollection} onOpen={onOpenBadge} />
                   ) : (
                     <ul className='grid grid-cols-3 gap-x-2 gap-y-3'>
                       {group.badges.map((badge, index) => (
-                        <BadgeSticker key={badge.key} badge={badge} index={index} />
+                        <BadgeSticker key={badge.key} badge={badge} index={index} onOpen={onOpenBadge} />
                       ))}
                     </ul>
                   )}

@@ -17,6 +17,14 @@ describe('AwardNews', () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
+  // 27 Nov 2026, the user's wish: on phones at the very top, over the Menu stamp (z-20)
+  it('sits at the top of a phone’s screen, over the Menu stamp', () => {
+    const { region } = show();
+    const classes = region.className.split(/\s+/);
+    expect(classes).toEqual(expect.arrayContaining(['top-3', 'right-3', 'z-40']));
+    expect(classes).not.toContain('top-16');
+  });
+
   it('keeps an empty polite status region when there is no news', () => {
     const { region, onDismiss } = show([]);
     expect(region.getAttribute('aria-live')).toBe('polite');

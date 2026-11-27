@@ -1,10 +1,12 @@
 // Postcards (26 Nov 2026, the user's wish; docs/API.md "Postcards"): sent by a link of their own,
-// never part of a map. A country's card is free on every plan; a landmark's or one from your own
-// photo (in the private bucket) needs a paid plan. Anyone with the link sees the card; its sender
+// never part of a map. A country's card is free on every plan, with a city's or the wilderness's
+// photo on its front; a landmark's photo or one from your own (in the private bucket) needs a
+// paid plan. Anyone with the link sees the card; its sender
 // lists them, gives one a new link or deletes it; they go with the sender's account, and the
 // daily clean-up keeps a sent card's photo.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { anon, cleanUp, data, givePlan, inBucket, prisma, signUp } from './helpers.js';
+import POSTCARD_PHOTOS from '../../src/data/postcardPhotos.json' with { type: 'json' };
 
 const { deleteOrphanUploads } = await import('../../src/services/s3/mediaService.js');
 const { createPostcardInDB } = await import('../../src/domain/postcards.js');
@@ -103,6 +105,34 @@ describe('postcards', () => {
       landmark: { id: eiffel.id, name: 'Eiffel Tower', slug: eiffel.slug, wikidataId: eiffel.wikidataId, countryCode: 'FR' },
     });
     expect(data(await paid.agent.get('/api/postcards')).paidCards).toBe(true);
+  });
+
+  it('puts a city’s or the wilderness’s photo on a country’s card for everyone, a landmark’s for paid plans only', async () => {
+    const france = data(await free.agent.get('/api/landmarks?country=FR')).landmarks;
+    const seine = france.find((l) => l.name === 'Paris, Banks of the Seine');
+    const porto = france.find((l) => l.name === 'Gulf of Porto');
+    expect(POSTCARD_PHOTOS[seine.wikidataId]).toBe('c');
+    expect(POSTCARD_PHOTOS[porto.wikidataId]).toBe('w');
+
+    const city = await free.agent.post('/api/postcards').send({ ...CARD, landmarkId: seine.id });
+    expect(city.status).toBe(201);
+    expect(data(city).postcard).toMatchObject({ kind: 'COUNTRY', landmark: { id: seine.id, slug: seine.slug } });
+    const opened = data(await anon().get(`/api/postcard/${data(city).postcard.code}`)).postcard;
+    expect(opened).toMatchObject({ kind: 'COUNTRY', landmark: { id: seine.id, wikidataId: seine.wikidataId } });
+    expect((await free.agent.post('/api/postcards').send({ ...CARD, landmarkId: porto.id })).status).toBe(201);
+
+    // A landmark's own photo on a country's card is a paid plan's, as a landmark's card is
+    const onCountryCard = { ...CARD, landmarkId: eiffel.id };
+    const refused = await free.agent.post('/api/postcards').send(onCountryCard);
+    expect(refused.status).toBe(403);
+    expect(refused.body.message).toMatch(/Business and First Class/);
+    expect((await paid.agent.post('/api/postcards').send(onCountryCard)).status).toBe(201);
+
+    // A landmark with no postcard photo, or another place's, is never a country card's
+    const noPhoto = france.find((l) => !POSTCARD_PHOTOS[l.wikidataId]);
+    expect(noPhoto).toBeTruthy();
+    expect((await paid.agent.post('/api/postcards').send({ ...CARD, landmarkId: noPhoto.id })).status).toBe(400);
+    expect((await free.agent.post('/api/postcards').send({ ...CARD, landmarkId: colosseum.id })).status).toBe(400);
   });
 
   it('takes a landmark of the place only, a UK nation’s from the UK', async () => {

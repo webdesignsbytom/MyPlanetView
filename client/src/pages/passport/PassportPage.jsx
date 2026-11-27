@@ -16,6 +16,7 @@ import LoadingSpinner from '@/components/utils/LoadingSpinner';
 import PassportBook from '@/components/passport/PassportBook';
 import BadgeOwnerSwitch from '@/components/achievements/BadgeOwnerSwitch';
 import PassportCoverPicker from '@/components/passport/PassportCoverPicker';
+import PassportDetailsCard from '@/components/passport/PassportDetailsCard';
 
 // Opened from a stamp, and only then fetched
 const PhotoViewer = lazy(() => import('@/components/photos/PhotoViewer'));
@@ -37,7 +38,9 @@ const TravellerSignatureDialog = lazy(() => import('@/components/passport/Travel
  * (25 Nov 2026, the user's wish: TravellerPhotoDialog, TravellerSignatureDialog); never through
  * a share link, and an unverified address is told why it can't yet. The owner and co-owners
  * choose the cover's colour under the book (26 Nov 2026, the user's wish: PassportCoverPicker),
- * shown at once and put back if it can't be saved; never through a share link.
+ * shown at once and put back if it can't be saved; never through a share link. The map's editors
+ * change each traveller's details under the book (27 Nov 2026, the user's wish: PassportDetailsCard):
+ * shown at once, and the passport read again when a birthplace changed (it can bring a page).
  */
 function PassportPage() {
   const { mapId, code } = useParams();
@@ -55,6 +58,8 @@ function PassportPage() {
   const [editing, setEditing] = useState(null);
   const mustVerifyEmail = useMustVerifyEmail();
   const [cover, setCover] = useState({ busy: false, error: '' });
+  // Goes up to read the passport again (a traveller's new birthplace can bring a page)
+  const [version, setVersion] = useState(0);
 
   // Another map: start afresh (another traveller keeps the book on show while theirs loads)
   useEffect(() => {
@@ -82,7 +87,7 @@ function PassportPage() {
     return () => {
       cancelled = true;
     };
-  }, [mapId, shareCode, holderId]);
+  }, [mapId, shareCode, holderId, version]);
 
   // A family's map: a passport each (as its badges are: a couple travels together)
   const perPerson = passport?.map.groupType === 'FAMILY' && travellers.length > 1;
@@ -126,6 +131,14 @@ function PassportPage() {
     setPassport((current) => (current ? { ...current, travellers: merge(current.travellers) } : current));
     setTravellers(merge);
   }, []);
+  // The details card's saves: in the book at once; a new birthplace, the passport read again
+  const detailsSaved = useCallback(
+    (saved, { birthplaceChanged }) => {
+      for (const traveller of saved) travellerSaved(traveller);
+      if (birthplaceChanged) setVersion((v) => v + 1);
+    },
+    [travellerSaved],
+  );
   const backTo = shareCode ? generatePath(SHARED_PAGE_URL, { code: shareCode }) : mapPath(mapId);
 
   return (
@@ -169,6 +182,9 @@ function PassportPage() {
         ) : null}
         {passport ? (
           <PassportBook passport={passport} onOpenPhoto={openPhoto} openAt={typeof openAt === 'string' ? openAt : null} travellerEdit={travellerEdit} />
+        ) : null}
+        {passport && canEditTravellers ? (
+          <PassportDetailsCard key={passport.map.id} mapId={passport.map.id} travellers={passport.travellers} locked={mustVerifyEmail} onSaved={detailsSaved} />
         ) : null}
         {passport?.map.canChooseCover && !shareCode ? (
           <PaperCard>

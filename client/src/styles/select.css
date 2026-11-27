@@ -89,10 +89,14 @@
     }
 
     /* The open list is as wide as its box (17 Nov 2026, the user's wish: a long country name
-       made it wider, past the panel's edge on a phone); a long name wraps instead */
+       made it wider, past the panel's edge on a phone); a long name wraps instead. At most
+       20rem tall, and never taller than the room on the side it opens (100% is that room: the
+       browser's own list is `max-block-size: stretch`, which a plain 20rem replaced, so on a
+       phone a long list ran past the screen's edge or slid up over its box; 27 Nov 2026, the
+       user's report) */
     .app-select::picker(select) {
       width: anchor-size(width);
-      max-height: 20rem;
+      max-height: min(20rem, calc(100% - 2 * var(--select-gap)));
       margin-block: var(--select-gap);
       padding: var(--select-padding);
       border: 2px solid var(--select-border);

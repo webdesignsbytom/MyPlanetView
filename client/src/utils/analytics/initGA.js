@@ -171,7 +171,7 @@ const cleanEventParams = (params) =>
   );
 
 /**
- * Send an event (utils/analytics/events.js names them; the audit, 26 Nov 2026): only once consent
+ * Send an event (utils/analytics/siteActions.js names them; the audit, 26 Nov 2026): only once consent
  * is given and GA has started (an event from before isn't kept for after), never on a secret page,
  * with the redacted address trackAddress set as every event's page_location.
  */

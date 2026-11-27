@@ -51,6 +51,21 @@ export function passportNumber(id) {
   return `MP${String(hash % 10000000).padStart(7, '0')}`;
 }
 
+/** A traveller's whole name, first then last (27 Nov 2026: the last name is optional): "Tom Brock", "Gigie". */
+export const fullName = (traveller) => [traveller?.name, traveller?.lastName].map((part) => (part || '').trim()).filter(Boolean).join(' ');
+
+/**
+ * The machine-readable line at the foot of a real photo page, from the travellers' names, each
+ * surname first as a passport writes it ("P<MPV<<BROCK<<TOM<<GIGIE<<<…", 44 characters):
+ * decoration only.
+ */
+export const machineLine = (travellers) =>
+  `P<MPV<<${travellers
+    .map((t) => [t.lastName, t.name].map((part) => (part || '').toUpperCase().replace(/[^A-Z]+/g, '<')).filter((part) => part.replace(/</g, '')).join('<<'))
+    .join('<<')}`
+    .padEnd(44, '<')
+    .slice(0, 44);
+
 /**
  * Strokes drawn on the signature pad (each a list of `{ x, y }` in the 300 × 100 box) as the
  * path the server keeps: "M x y L x y …", to tenths, inside the box, points closer than a unit

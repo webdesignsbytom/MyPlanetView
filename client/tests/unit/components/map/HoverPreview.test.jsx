@@ -49,6 +49,41 @@ describe('HoverPreview', () => {
     expect(card().style.left).toBe(`${300 - 128}px`);
   });
 
+  // 27 Nov 2026, the user's report: on a phone it ran off the bottom of the screen
+  it('keeps a finger’s card on the screen, smaller when it fits neither above nor below the finger', () => {
+    const height = vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(430);
+    const screen = vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(839);
+    try {
+      setHoverPoint({ x: 200, y: 380 });
+      render(<HoverPreview code='FR' showPoster={false} />);
+      const scale = Number(card().getAttribute('data-hover-scale'));
+      expect(scale).toBeLessThan(1);
+      expect(card().style.transform).toBe(`scale(${scale})`);
+      expect(card().style.transformOrigin).toBe('top center');
+      const top = parseFloat(card().style.top);
+      expect(top).toBe(380 + 36);
+      expect(top + 430 * scale).toBeLessThanOrEqual(839 - 8);
+    } finally {
+      height.mockRestore();
+      screen.mockRestore();
+    }
+  });
+
+  it('draws a finger’s card whole where it fits', () => {
+    const height = vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(430);
+    const screen = vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(839);
+    try {
+      setHoverPoint({ x: 200, y: 700 });
+      render(<HoverPreview code='FR' showPoster={false} />);
+      expect(card().getAttribute('data-hover-scale')).toBe('1');
+      expect(card().style.transform).toBe('');
+      expect(card().style.top).toBe(`${700 - 36 - 430}px`);
+    } finally {
+      height.mockRestore();
+      screen.mockRestore();
+    }
+  });
+
   it('names the place and stamps its status, with the badge on the corner once visited', () => {
     setHoverPoint({ x: 300, y: 400 });
     const { container } = render(<HoverPreview code='JP' status='LIVED' showPoster={false} />);

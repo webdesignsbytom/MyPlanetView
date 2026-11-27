@@ -1,4 +1,7 @@
-import React, { useCallback, useEffect, useId, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useId, useState } from 'react';
+import { createPortal } from 'react-dom';
+// Icons
+import { FaPlay } from 'react-icons/fa';
 // Api
 import { deletePhotoShow, getMapPhotoShows, resetPhotoShowLink, updatePhotoShow } from '@/api/photoShowsApi';
 // Components
@@ -7,12 +10,13 @@ import InlineAlert from '@/components/common/InlineAlert';
 import FormField from '@/components/ui/FormField';
 import TextInput from '@/components/ui/TextInput';
 import LoadingSpinner from '@/components/utils/LoadingSpinner';
+import { Slideshow } from '@/components/map/lazyMapPanels';
 import ShowLinkBox from './ShowLinkBox';
 // Utils
-import { SHOW_TITLE_MAX, photoCountWords } from '@/utils/shows/showRules';
+import { SHOW_TITLE_MAX, photoCountWords, showsSavedWords } from '@/utils/shows/showRules';
 import { formatDay } from '@/utils/functions/dates';
 
-// One show: its title and size, its link, and Rename, New link and Delete (each of the last two asked first)
+// One show: its title and size, Play, its link, and Rename, New link and Delete (each of the last two asked first)
 function ShowRow({ show, locked, onChanged, onDeleted }) {
   const uid = useId();
   const [renaming, setRenaming] = useState(false);
@@ -21,6 +25,7 @@ function ShowRow({ show, locked, onChanged, onDeleted }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [note, setNote] = useState('');
+  const [playing, setPlaying] = useState(false);
 
   const run = async (work, done) => {
     setBusy(true);
@@ -54,12 +59,19 @@ function ShowRow({ show, locked, onChanged, onDeleted }) {
 
   return (
     <li className='grid gap-2 border-b border-dashed border-poster-brown/40 pb-4' data-photo-show={show.id}>
-      <p className='grid'>
-        <span className='font-semibold'>{show.title}</span>
-        <span className='text-xs'>
-          {photoCountWords(show.photoCount)} · made {formatDay(show.createdAt)}
-        </span>
-      </p>
+      <div className='grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center'>
+        <p className='grid'>
+          <span className='font-semibold'>{show.title}</span>
+          <span className='text-xs'>
+            {photoCountWords(show.photoCount)} · made {formatDay(show.createdAt)}
+          </span>
+        </p>
+        {/* As whoever has the link watches it: its photos in its order, at its speed */}
+        <Button onClick={() => setPlaying(true)} ariaLabel={`Play ${show.title}`}>
+          <FaPlay aria-hidden='true' className='self-center text-sm' />
+          <span>Play</span>
+        </Button>
+      </div>
       <ShowLinkBox show={show} />
       {renaming ? (
         <form onSubmit={rename} className='grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-end' noValidate>
@@ -114,24 +126,48 @@ function ShowRow({ show, locked, onChanged, onDeleted }) {
           {note}
         </p>
       ) : null}
+      {/* Over the whole page, the dialog it's listed in too */}
+      {playing
+        ? createPortal(
+            <Suspense fallback={null}>
+              <Slideshow
+                source={{ showCode: show.code }}
+                title={show.title}
+                intro={show.title}
+                photoCount={show.photoCount}
+                startSpeed={show.seconds}
+                onClose={() => setPlaying(false)}
+              />
+            </Suspense>,
+            document.body,
+          )
+        : null}
     </li>
   );
 }
 
 /**
- * A map's slideshows of chosen photos, each with its own link (25 Nov 2026; docs/API.md "Photo
- * slideshows"), in its share dialog for its editors: each one's link to copy, share or open,
- * and Rename, New link (the old one stops working) and Delete. They're made from the photo
- * album, a country's ticket or a trip's photos ("Share a slideshow"). `locked`: an unverified
- * email address, so the changes wait (the server refuses them).
+ * A map's saved slideshows of chosen photos, each with its own link (25 Nov 2026; saved, 2, 10
+ * or 25 by the map's plan, since 27 Nov 2026, the user's wish; docs/API.md "Photo slideshows"),
+ * for its editors, in the photo album's "Saved slideshows" (SavedShowsDialog) and the map's
+ * share dialog: how many are saved of what the map keeps, then each one's Play (the slideshow
+ * over the page, as its link plays it), its link to copy, share or open, and Rename, New link
+ * (the old one stops working) and Delete. They're made from the photo album, a country's ticket
+ * or a trip's photos ("Make a slideshow"). `locked`: an unverified email address, so the changes
+ * wait (the server refuses them). `headed`: its own "Slideshows" heading (not in a dialog that
+ * has one).
  */
-function MapShowsSection({ mapId, locked = false }) {
+function MapShowsSection({ mapId, locked = false, headed = true }) {
   const [shows, setShows] = useState(null);
+  const [limit, setLimit] = useState(null);
   const [error, setError] = useState('');
 
   const load = useCallback(() => {
     getMapPhotoShows(mapId)
-      .then((reply) => setShows(reply.shows || []))
+      .then((reply) => {
+        setShows(reply.shows || []);
+        setLimit(Number.isInteger(reply.limit) ? reply.limit : null);
+      })
       .catch((err) => setError(err?.friendlyMessage || 'The slideshows couldn’t be loaded.'));
   }, [mapId]);
   useEffect(load, [load]);
@@ -140,10 +176,21 @@ function MapShowsSection({ mapId, locked = false }) {
   const deleted = (id) => setShows((list) => list.filter((s) => s.id !== id));
 
   return (
-    <section className='grid gap-3' aria-labelledby='photo-shows-heading' data-map-shows>
-      <h3 id='photo-shows-heading' className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
-        Slideshows
-      </h3>
+    <section
+      className='grid gap-3'
+      {...(headed ? { 'aria-labelledby': 'photo-shows-heading' } : { 'aria-label': 'Saved slideshows' })}
+      data-map-shows
+    >
+      {headed ? (
+        <h3 id='photo-shows-heading' className='font-travel text-lg uppercase leading-tight tracking-wide text-colour9'>
+          Slideshows
+        </h3>
+      ) : null}
+      {shows && limit !== null ? (
+        <p className='text-sm' data-shows-count=''>
+          {showsSavedWords(shows.length, limit)}
+        </p>
+      ) : null}
       {error ? (
         <InlineAlert>{error}</InlineAlert>
       ) : !shows ? (
@@ -159,7 +206,8 @@ function MapShowsSection({ mapId, locked = false }) {
         </ul>
       ) : (
         <p className='text-sm'>
-          No slideshows yet. To share some photos on their own, choose “Share a slideshow” in the photo album, a country’s photos or a trip’s.
+          No slideshows saved yet. To make one of some of your photos, choose “Make a slideshow” in the photo album, a country’s photos or a
+          trip’s.
         </p>
       )}
     </section>

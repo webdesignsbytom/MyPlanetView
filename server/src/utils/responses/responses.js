@@ -114,6 +114,7 @@ export const EVENT_MESSAGES = {
   // Ticking several countries at once (POST /maps/:mapId/visits/quick-fill)
   quickFillInvalid: `Choose between 1 and 300 countries, each one on the map.`,
   poleNotATravellerCountry: 'Choose a country or Antarctica, not a pole.',
+  nationalityNotACountry: 'Choose a country for a nationality.',
   // A traveller's optional date of birth (23 Nov 2026)
   invalidBirthDate: 'Give a date of birth from 1 January 1900 up to today, or leave it empty.',
   landmarkNotFound: `That landmark doesn't exist.`,
@@ -168,7 +169,6 @@ export const EVENT_MESSAGES = {
   showPhotosInvalid: `Choose 1 to 500 of this map's photos or videos, none of them hidden.`,
   showSecondsInvalid: `Each photo stays up for 3, 5 or 8 seconds.`,
   showTitleInvalid: `Give the slideshow a title of 1 to 80 characters.`,
-  showTooMany: `A map can have 100 slideshows. Delete one to make another.`,
   // Vs mode (docs/API.md "Vs mode")
   vsNotFound: `That comparison doesn't exist, or you're not in it.`,
   vsLinkNotFound: `That link doesn't work. Ask for a new one.`,
@@ -198,6 +198,7 @@ export const EVENT_MESSAGES = {
   momentNotFound: `That moment doesn't exist, or it hasn't been shared with you.`,
   // Passport, badges and goals
   stampPhotoInvalid: `Pick a photo of this landmark that's confirmed on this map.`,
+  badgeNotFound: `That badge doesn't exist.`,
   goalNotFound: `That goal doesn't exist, or it hasn't been shared with you.`,
   goalInvalid: `That goal isn't complete: check what it asks for.`,
   goalsFull: `A map can have up to 50 goals. Delete one to add another.`,

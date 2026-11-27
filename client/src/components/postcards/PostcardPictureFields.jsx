@@ -1,37 +1,23 @@
 import React, { useId, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 // Icons
-import { FaCamera, FaCheck, FaGlobeEurope, FaLandmark, FaLock } from 'react-icons/fa';
+import { FaCheck, FaLock } from 'react-icons/fa';
 // Hooks
-import useLandmarks from '@/hooks/useLandmarks';
 import useLandmarkPhotos from '@/hooks/useLandmarkPhotos';
 import usePhotoPage from '@/hooks/usePhotoPage';
 // Components
 import Button from '@/components/common/Button';
-import FormField from '@/components/ui/FormField';
-import PlainOptionSelect from '@/components/ui/PlainOptionSelect';
 // Constants
 import { PRICING_PAGE_URL } from '@/utils/constants/routes';
 // Utils
-import { POSTCARD_KIND_CHOICES } from '@/utils/postcards/postcardRules';
+import { POSTCARD_PHOTO_TABS, isFreePhotoGroup } from '@/utils/postcards/postcardRules';
 import { landmarkPhotoInfo } from '@/utils/map/landmarkPhotoInfo';
-import { modelForLandmark } from '@/utils/map/celebrationModels';
 import { isPictureFile, photoAsBlob, uploadPostcardPicture } from '@/utils/postcards/uploadPostcardPicture';
 import { photoLabel } from '@/utils/photos/photoLabel';
 
-const KIND_ICONS = { COUNTRY: FaGlobeEurope, LANDMARK: FaLandmark, PHOTO: FaCamera };
 const PICTURE_ACCEPT = 'image/jpeg,image/png,image/webp,image/gif,image/avif,.jpg,.jpeg,.png,.webp';
-const TILE = 'relative grid aspect-square w-full overflow-hidden border-4 bg-poster-cream shadow-paper';
-
-// The place's landmarks a card can show: those with a Commons photo or a little 3D model
-function useCardLandmarks(code) {
-  const { landmarks } = useLandmarks(code);
-  const photos = useLandmarkPhotos();
-  return useMemo(
-    () => landmarks.filter((l) => landmarkPhotoInfo(photos, l.slug) || modelForLandmark(l)).sort((a, b) => a.name.localeCompare(b.name)),
-    [landmarks, photos],
-  );
-}
+const TILE = 'relative grid aspect-[3/2] w-full overflow-hidden border-4 bg-poster-cream shadow-paper';
+const OWN_TILE = 'relative grid aspect-square w-full overflow-hidden border-4 bg-poster-cream shadow-paper';
 
 // One of the place's photos on the map, or one from the device, sent for the card's front
 function OwnPhotoField({ photoFilters, picture, onPicture, disabled }) {
@@ -73,7 +59,7 @@ function OwnPhotoField({ photoFilters, picture, onPicture, disabled }) {
                   disabled={disabled || state.busy}
                   onClick={() => send(() => photoAsBlob(photo.displayUrl || photo.thumbUrl), photo.id)}
                   data-postcard-photo={photo.id}
-                  className={`${TILE} disabled:cursor-wait ${on ? 'border-poster-red' : 'border-poster-cream'}`}
+                  className={`${OWN_TILE} disabled:cursor-wait ${on ? 'border-poster-red' : 'border-poster-cream'}`}
                 >
                   <img src={photo.thumbUrl || photo.displayUrl} alt='' loading='lazy' draggable={false} className='h-full w-full object-cover' />
                   <span className='sr-only'>Use {photoLabel(photo)}</span>
@@ -117,80 +103,142 @@ function OwnPhotoField({ photoFilters, picture, onPicture, disabled }) {
   );
 }
 
+// One photo to choose: the landmark's small copy as its picture, its name under it
+function PhotoTile({ item, photos, chosen, locked, disabled, onChoose }) {
+  const info = landmarkPhotoInfo(photos, item.landmark.slug);
+  return (
+    <li className='grid gap-1'>
+      <button
+        type='button'
+        aria-pressed={chosen}
+        disabled={disabled || locked}
+        onClick={() => onChoose(item)}
+        data-postcard-pick={item.landmark.slug}
+        className={`${TILE} disabled:cursor-not-allowed ${chosen ? 'border-poster-red' : 'border-poster-cream'} ${locked ? 'opacity-60' : ''}`}
+      >
+        {info ? <img src={info.webp} alt='' loading='lazy' draggable={false} className='h-full w-full object-cover' /> : null}
+        <span className='sr-only'>
+          {item.landmark.name}
+          {locked ? ' (with Business and First Class)' : ''}
+        </span>
+        {chosen ? (
+          <span className='absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full border-2 border-poster-cream bg-poster-red-strong text-xs text-poster-cream'>
+            <FaCheck aria-hidden='true' />
+          </span>
+        ) : null}
+        {locked ? (
+          <span className='absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full bg-poster-ink/70 text-xs text-poster-cream'>
+            <FaLock aria-hidden='true' />
+          </span>
+        ) : null}
+      </button>
+      <span aria-hidden='true' className='line-clamp-2 text-center text-2xs leading-tight'>
+        {item.landmark.name}
+      </span>
+    </li>
+  );
+}
+
 /**
- * What goes on the postcard's front (26 Nov 2026, the user's decisions): the place's own card
- * (its poster and outline, free on every plan), a landmark's (its photo and 3D model) or your
- * own photo (one of the place's photos on the map, or one from the device), both on a paid plan:
- * `paidCards` false locks them, saying which plans have them. Radio cards, then the landmark's
- * dropdown or the photo's chooser.
+ * The photo across the postcard's front (27 Nov 2026, the user's wish: "a cool city photo, or a
+ * wilderness photo, or a famous landmark photo"): the place's own photos in tabs, City,
+ * Wilderness and Landmarks (each landmark's Commons photo, as big as a card: postcardPhotos.js),
+ * and Your photo (one of the place's photos on the map, or one from the device). A city's and the
+ * wilderness's are on every plan; a landmark's and your own on a paid one (`paidCards` false
+ * locks them, saying which plans have them). A place with no city or wilderness photo offers its
+ * travel poster. `landmarks` are the place's (useLandmarks), `items` those with a postcard photo
+ * (`{ landmark, group }`); `choice` is `{ kind, landmarkId }`.
  */
-function PostcardPictureFields({ code, kind, onKind, landmarkId, onLandmark, picture, onPicture, paidCards, photoFilters, disabled = false }) {
+function PostcardPictureFields({ items, choice, onChoose, picture, onPicture, paidCards, photoFilters, disabled = false }) {
   const uid = useId();
-  const landmarks = useCardLandmarks(code);
-  const choices = POSTCARD_KIND_CHOICES.filter((choice) => choice.value !== 'LANDMARK' || landmarks.length);
+  const photos = useLandmarkPhotos();
+  const byGroup = useMemo(() => {
+    const groups = { c: [], w: [], l: [] };
+    for (const item of items) groups[item.group]?.push(item);
+    return groups;
+  }, [items]);
+  const hasFree = byGroup.c.length + byGroup.w.length > 0;
+  const tabs = POSTCARD_PHOTO_TABS.filter((tab) => tab.value === 'own' || byGroup[tab.value].length || (tab.value === 'c' && !hasFree));
+  const openFirst = () => {
+    const picked = items.find((item) => item.landmark.id === choice.landmarkId);
+    if (choice.kind === 'PHOTO') return 'own';
+    return picked?.group ?? tabs[0]?.value ?? 'c';
+  };
+  const [tab, setTab] = useState(openFirst);
+  const locked = (group) => !paidCards && !isFreePhotoGroup(group);
+  const pick = (item) => onChoose({ kind: isFreePhotoGroup(item.group) ? 'COUNTRY' : 'LANDMARK', landmarkId: item.landmark.id, landmark: item.landmark });
 
   return (
-    <div className='grid gap-4'>
-      <fieldset className='grid gap-2'>
-        <legend className='text-sm font-medium'>On the front</legend>
-        {/* One to a row, the icon beside the words: the maker's column is narrow beside the card */}
-        <div className='grid gap-2'>
-          {choices.map((choice) => {
-            const Icon = KIND_ICONS[choice.value];
-            const locked = choice.value !== 'COUNTRY' && !paidCards;
-            const chosen = kind === choice.value;
-            return (
-              <label
-                key={choice.value}
-                data-postcard-kind={choice.value}
-                className={`relative grid grid-cols-[auto_minmax(0,1fr)] content-start items-center gap-x-3 gap-y-0.5 border-2 px-3 py-2 transition has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-colour6 ${
-                  locked ? 'cursor-not-allowed border-dashed border-poster-brown/40 opacity-70' : 'cursor-pointer'
-                } ${chosen ? 'paper-aged border-poster-red text-poster-ink shadow-paper' : locked ? '' : 'border-dashed border-poster-brown/60 hover:border-solid hover:border-poster-brown'}`}
-              >
-                <input
-                  type='radio'
-                  name={`${uid}-kind`}
-                  value={choice.value}
-                  checked={chosen}
-                  disabled={disabled || locked}
-                  onChange={() => onKind(choice.value)}
-                  className='sr-only'
-                />
-                <span
-                  aria-hidden='true'
-                  className={`row-span-2 grid h-10 w-10 place-items-center rounded-full border-2 text-lg ${
-                    chosen ? 'border-poster-red bg-poster-red-deep text-poster-paper' : 'border-poster-brown/60 bg-paper-cream text-poster-brown'
-                  }`}
-                >
-                  {locked ? <FaLock /> : <Icon />}
-                </span>
-                <span className='font-travel text-base uppercase leading-tight tracking-wide'>{choice.label}</span>
-                <span className='text-xs opacity-80'>{locked ? 'With Business and First Class.' : choice.hint}</span>
-              </label>
-            );
-          })}
-        </div>
-        {!paidCards ? (
-          <p className='text-sm'>
-            Postcards of landmarks and of your own photos come with Business and First Class.{' '}
-            <Link to={PRICING_PAGE_URL} target='_blank' rel='noopener noreferrer' className='font-semibold text-poster-red-deep underline underline-offset-2'>
-              See the plans
-            </Link>
-          </p>
-        ) : null}
-      </fieldset>
+    <div className='grid gap-3'>
+      <p id={`${uid}-label`} className='text-sm font-medium'>
+        The photo on the front
+      </p>
+      <div role='group' aria-labelledby={`${uid}-label`} className='grid grid-cols-2 gap-2'>
+        {tabs.map((t) => {
+          const count = t.value === 'own' ? null : byGroup[t.value].length;
+          const isLocked = !paidCards && !t.free;
+          return (
+            <button
+              key={t.value}
+              type='button'
+              aria-pressed={tab === t.value}
+              onClick={() => setTab(t.value)}
+              data-postcard-tab={t.value}
+              className={`grid grid-flow-col items-center justify-center gap-1.5 border-2 px-2 py-1.5 text-sm font-semibold ${
+                tab === t.value ? 'paper-aged border-poster-red text-poster-ink' : 'border-dashed border-poster-brown/60'
+              }`}
+            >
+              {isLocked ? <FaLock aria-hidden='true' className='text-xs' /> : null}
+              <span>{t.label}</span>
+              {count ? <span className='text-xs font-normal'>({count})</span> : null}
+            </button>
+          );
+        })}
+      </div>
 
-      {kind === 'LANDMARK' ? (
-        <FormField id={`${uid}-landmark`} label='Which landmark?' align='start'>
-          <PlainOptionSelect
-            value={landmarkId || ''}
-            onChange={(e) => onLandmark(e.target.value || null)}
-            disabled={disabled}
-            options={[{ value: '', label: 'Choose a landmark' }, ...landmarks.map((l) => ({ value: l.id, label: l.name }))]}
-          />
-        </FormField>
+      {tab === 'own' ? (
+        paidCards ? (
+          <OwnPhotoField photoFilters={photoFilters} picture={picture} onPicture={onPicture} disabled={disabled} />
+        ) : null
+      ) : (
+        <ul className='grid grid-cols-2 gap-2 sm:grid-cols-3' aria-label={`${tabs.find((t) => t.value === tab)?.label ?? ''} photos`}>
+          {tab === 'c' && !hasFree ? (
+            <li className='grid gap-1'>
+              <button
+                type='button'
+                aria-pressed={choice.kind === 'COUNTRY' && !choice.landmarkId}
+                disabled={disabled}
+                onClick={() => onChoose({ kind: 'COUNTRY', landmarkId: null, landmark: null })}
+                data-postcard-pick='poster'
+                className={`${TILE} place-items-center px-2 text-center font-travel text-sm uppercase ${
+                  choice.kind === 'COUNTRY' && !choice.landmarkId ? 'border-poster-red' : 'border-poster-cream'
+                }`}
+              >
+                Its travel poster
+              </button>
+            </li>
+          ) : null}
+          {(byGroup[tab] || []).map((item) => (
+            <PhotoTile
+              key={item.landmark.id}
+              item={item}
+              photos={photos}
+              chosen={choice.landmarkId === item.landmark.id}
+              locked={locked(item.group)}
+              disabled={disabled}
+              onChoose={pick}
+            />
+          ))}
+        </ul>
+      )}
+      {!paidCards && (tab === 'l' || tab === 'own') ? (
+        <p className='text-sm' data-postcard-locked=''>
+          Postcards of landmarks and of your own photos come with Business and First Class.{' '}
+          <Link to={PRICING_PAGE_URL} target='_blank' rel='noopener noreferrer' className='font-semibold text-poster-red-deep underline underline-offset-2'>
+            See the plans
+          </Link>
+        </p>
       ) : null}
-      {kind === 'PHOTO' ? <OwnPhotoField photoFilters={photoFilters} picture={picture} onPicture={onPicture} disabled={disabled} /> : null}
     </div>
   );
 }

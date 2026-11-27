@@ -1,0 +1,32 @@
+# Ad blockers (27 Nov 2026, the user's wish: "the site should always load even with adblockers"):
+# the blockers' lists change every day, so every Monday, and by hand, the site's files, folders,
+# pages, API routes and media are checked against today's lists (client/scripts/check-blocker-names.mjs),
+# as CI does on every push. A failed run (GitHub emails it) names each address and the rule that
+# would block it: rename it. The live site's own scripts and styles have names no rule can target
+# (client/vite.config.js), so this guards the pages, the API, the media and the dev server.
+# It needs no install and no secrets: the check uses only Node and the lists.
+name: Ad blockers
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Ad blockers block none of the site's addresses
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check against today's lists
+        run: node scripts/check-blocker-names.mjs --refresh --require-lists

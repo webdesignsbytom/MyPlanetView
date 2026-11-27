@@ -20,6 +20,7 @@ import {
   CONTACT_PAGE_URL,
   COUNTRIES_PAGE_URL,
   DEV_SELECT_LAB_PAGE_URL,
+  DEV_HOME_DRAFT_PAGE_URL,
   FORGOT_PASS_PAGE_URL,
   LEGAL_AGREEMENTS_PAGE_URL,
   LOGIN_PAGE_URL,
@@ -98,6 +99,7 @@ export const UnsubscribePage = lazyPage(() => import('@/pages/unsubscribe/Unsubs
 export const PassportPage = lazyPage(() => import('@/pages/passport/PassportPage'));
 // Dev server only: null in production builds, so the page isn't bundled
 export const SelectLabPage = import.meta.env.DEV ? lazyPage(() => import('@/pages/dev/SelectLabPage')) : null;
+export const HomeDraftPage = import.meta.env.DEV ? lazyPage(() => import('@/pages/dev/HomeDraftPage')) : null;
 
 // Country guides (src/content/countries/): a page's code and its content load together, so
 // its first render is complete, as the pre-render needs. One page per guide, from the
@@ -158,6 +160,7 @@ const PAGES_BY_PATH = {
   [MAP_PAGE_URL]: MapPage,
   [WELCOME_PAGE_URL]: WelcomePage,
   ...(SelectLabPage ? { [DEV_SELECT_LAB_PAGE_URL]: SelectLabPage } : {}),
+  ...(HomeDraftPage ? { [DEV_HOME_DRAFT_PAGE_URL]: HomeDraftPage } : {}),
   ...(CountriesIndexPage ? { [COUNTRIES_PAGE_URL]: CountriesIndexPage } : {}),
   ...Object.fromEntries(COUNTRY_GUIDE_PAGES.map(({ path, Page }) => [path, Page])),
   ...Object.fromEntries(MONTH_GUIDE_PAGES.map(({ path, Page }) => [path, Page])),

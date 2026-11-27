@@ -69,8 +69,10 @@ describe('Photo slideshows', () => {
     const plain = data(await make({ photoIds: [tokyo.id] }, editor.agent)).show;
     expect(plain).toMatchObject({ title: 'A slideshow', seconds: 5, photoCount: 1 });
 
-    const listed = data(await owner.agent.get(`/api/maps/${map.id}/photo-shows`)).shows;
-    expect(listed.map((s) => s.id)).toEqual([plain.id, show.id]);
+    const listed = data(await owner.agent.get(`/api/maps/${map.id}/photo-shows`));
+    expect(listed.shows.map((s) => s.id)).toEqual([plain.id, show.id]);
+    // A First Class map keeps 25 saved
+    expect(listed).toMatchObject({ limit: 25, plan: 'PREMIUM' });
     expect((await viewer.agent.get(`/api/maps/${map.id}/photo-shows`)).status).toBe(403);
     expect((await stranger.agent.get(`/api/maps/${map.id}/photo-shows`)).status).toBe(404);
   });
@@ -188,6 +190,38 @@ describe('Photo slideshows', () => {
     const spareShow = data(await owner.agent.post(`/api/maps/${spare.id}/photo-shows`).send({ photoIds: [sparePhoto.id] })).show;
     expect((await owner.agent.delete(`/api/maps/${spare.id}`)).status).toBe(200);
     expect(await prisma.photoShow.findUnique({ where: { id: spareShow.id } })).toBeNull();
+  });
+
+  // 27 Nov 2026, the user's wish: "2, 10, 25 is the amount per tier", each a list of photo ids
+  it('saves as many as the map’s plan keeps: 2 on Economy, 10 on Business, and keeps them when it goes down', async () => {
+    const saver = await signUp('ShowSaver');
+    const own = await defaultMapOf(saver.agent);
+    const photo = data(await uploadPhoto(saver.agent, own.id, { countryCode: 'PT' })).photo;
+    const list = async () => data(await saver.agent.get(`/api/maps/${own.id}/photo-shows`));
+    const save = () => saver.agent.post(`/api/maps/${own.id}/photo-shows`).send({ photoIds: [photo.id] });
+
+    expect(await list()).toEqual({ shows: [], limit: 2, plan: 'FREE' });
+    const first = data(await save()).show;
+    expect((await save()).status).toBe(201);
+    const full = await save();
+    expect(full.status).toBe(409);
+    expect(full.body.message).toBe('2 of 2 slideshows saved on this map. Delete one, or upgrade to save more.');
+    // Nothing copied: a show is its photos' ids
+    expect(await prisma.mediaItem.count({ where: { ownerId: saver.user.id } })).toBe(3);
+
+    // Business keeps 10
+    await givePlan(saver.user.id, { plan: 'REGULAR' });
+    expect(await list()).toMatchObject({ limit: 10, plan: 'REGULAR' });
+    expect((await save()).status).toBe(201);
+
+    // Back on Economy: the three saved stay and still play, and no more until there's room
+    await givePlan(saver.user.id, { plan: 'REGULAR', status: 'canceled' });
+    expect(await list()).toMatchObject({ limit: 2, plan: 'FREE' });
+    expect((await list()).shows).toHaveLength(3);
+    expect((await anon().get(`/api/show/${first.code}`)).status).toBe(200);
+    expect((await save()).body.message).toBe('2 of 2 slideshows saved on this map. Delete one, or upgrade to save more.');
+    for (const s of (await list()).shows.slice(0, 2)) expect((await saver.agent.delete(`/api/photo-shows/${s.id}`)).status).toBe(200);
+    expect((await save()).status).toBe(201);
   });
 
   it('holds 1 to 500 photos and 3, 5 or 8 seconds, by the database’s own checks too', async () => {

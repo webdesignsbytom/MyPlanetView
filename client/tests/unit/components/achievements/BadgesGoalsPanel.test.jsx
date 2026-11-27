@@ -7,6 +7,16 @@ import ThemeSection from '@/components/themes/ThemeSection';
 
 // The theme section has its own tests; here it only records what it's given
 vi.mock('@/components/themes/ThemeSection', () => ({ default: vi.fn(() => <div data-theme-section='' />) }));
+// A badge's card has its own tests too: here it says what it was opened with
+vi.mock('@/components/achievements/BadgeStoryDialog', () => ({
+  default: ({ badge, where, traveller, onClose }) => (
+    <div role='dialog' aria-label='Badge card' data-key={badge.key} data-where={JSON.stringify(where)} data-traveller={traveller ? JSON.stringify(traveller) : ''}>
+      <button type='button' onClick={onClose}>
+        Carry on
+      </button>
+    </div>
+  ),
+}));
 
 const GOALS = [{ id: 'g-1', kind: 'COUNTRY_COUNT', target: 10, progress: { have: 4, need: 10 } }];
 const BADGES = [
@@ -128,6 +138,42 @@ describe('BadgesGoalsPanel', { timeout: 20000 }, () => {
   });
 
   // The country collections (24 Nov 2026): their own group on the suitcase, a medal to share
+  // 27 Nov 2026, the user's wish: an earned badge opens its own card, over the page
+  describe('a badge’s card', () => {
+    const card = () => screen.findByRole('dialog', { name: 'Badge card' });
+
+    it('opens from an earned sticker with the map, and closes', async () => {
+      const { container } = open();
+      expect(container.querySelectorAll('[data-badge-open]')).toHaveLength(1);
+      fireEvent.click(container.querySelector('[data-badge-open="countries-1"]'));
+      const dialog = await card();
+      expect(dialog.dataset.key).toBe('countries-1');
+      expect(JSON.parse(dialog.dataset.where)).toEqual({ mapId: 'map-1' });
+      expect(dialog.dataset.traveller).toBe('');
+      // Over the page, not inside the panel
+      expect(container.contains(dialog)).toBe(false);
+      fireEvent.click(screen.getByText('Carry on'));
+      await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Badge card' })).toBeNull());
+    });
+
+    it('asks through a share link’s code on a share link', async () => {
+      const { container } = open({ mapId: null, shareCode: 'ABCD-EFGH-JKMN' });
+      fireEvent.click(container.querySelector('[data-badge-open="countries-1"]'));
+      expect(JSON.parse((await card()).dataset.where)).toEqual({ shareCode: 'ABCD-EFGH-JKMN' });
+    });
+
+    it('opens one traveller’s badge as theirs', async () => {
+      const travellers = [
+        { id: 't-1', name: 'Charlie', badges: [{ key: 'countries-1', group: 'countries', earned: true, earnedOn: '2025-07-04' }] },
+        { id: 't-2', name: 'Alex', badges: [] },
+      ];
+      const { container } = open({ perPerson: true, achievements: achievementsWith({ travellers }) });
+      fireEvent.click(screen.getByText('Charlie'));
+      fireEvent.click(container.querySelector('[data-badge-open="countries-1"]'));
+      expect(JSON.parse((await card()).dataset.traveller)).toEqual({ id: 't-1', name: 'Charlie' });
+    });
+  });
+
   describe('the country collections', () => {
     const withCollections = (extra = {}) =>
       achievementsWith({

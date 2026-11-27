@@ -256,6 +256,7 @@ model Country {
   homeMaps            TravelMap[] @relation("TravelMapHome")
   birthTravellers     Traveller[] @relation("TravellerBirthCountry")
   favouriteTravellers Traveller[] @relation("TravellerFavouriteCountry")
+  nationalTravellers  Traveller[] @relation("TravellerNationality")
   // Strings tied between places on maps (docs/API.md "Strings")
   stringsFrom MapString[] @relation("MapStringFrom")
   stringsTo   MapString[] @relation("MapStringTo")
@@ -501,7 +502,10 @@ model Traveller {
   id       String    @id @default(uuid())
   mapId    String
   map      TravelMap @relation(fields: [mapId], references: [id], onDelete: Cascade)
-  name     String // the name to show, e.g. "Sarah"
+  name     String // the name to show, e.g. "Sarah": the first name
+  // Their last name, optional (27 Nov 2026, the user's wish: "Passport needs first name last
+  // name"): the passport's Surname; everywhere else shows the first name alone
+  lastName String?
   position Int       @default(0) // order on the map's traveller list
 
   userId String?
@@ -511,6 +515,10 @@ model Traveller {
   birthCountry         Country? @relation("TravellerBirthCountry", fields: [birthCountryCode], references: [code], onDelete: SetNull)
   favouriteCountryCode String?  @db.Char(2)
   favouriteCountry     Country? @relation("TravellerFavouriteCountry", fields: [favouriteCountryCode], references: [code], onDelete: SetNull)
+  // Their nationality, optional (27 Nov 2026, the user's wish: "Passport also needs
+  // nationality"): a country, never a special place; the passport's Nationality. Marks no visit
+  nationalityCode      String?  @db.Char(2)
+  nationality          Country? @relation("TravellerNationality", fields: [nationalityCode], references: [code], onDelete: SetNull)
   // Optional date of birth (23 Nov 2026, the user's wish: asked when people are added to a
   // map, never at sign-up): the share of a life spent away. Seen by the map's editors only.
   // CHECK traveller_birth_date: from 1900; not in the future is checked in code

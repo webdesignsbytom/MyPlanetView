@@ -16,7 +16,7 @@ import { VIDEO_MAX_SECONDS } from '@/utils/constants/plans';
 import { VIDEO_MAX_BYTES, uploadPhoto } from '@/utils/photos/uploadPhoto';
 import { VIDEOS_ARE_FIRST_CLASS, uploadVideo } from '@/utils/photos/uploadVideo';
 import { isVideoFile } from '@/utils/photos/videoFile';
-import { trackPhotosUploaded } from '@/utils/analytics/events';
+import { trackPhotosUploaded } from '@/utils/analytics/siteActions';
 
 const AT_ONCE = 2;
 const MB = 1024 * 1024;

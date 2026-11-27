@@ -106,7 +106,9 @@ const NAME_OF = Object.fromEntries(COUNTRIES.map((c) => [c.code, c.name]));
 const NATION_CODES = new Set(Object.values(NATIONS));
 
 // ── The world map's shapes, for which place a state's label point is in ─────────────────
-const parsePath = (d) => d.replace(/[MZ]/g, ' ').trim().split(/\s+/).map(Number).reduce((pts, v, i, all) => (i % 2 ? pts : [...pts, [v, all[i + 1]]]), []);
+// One string may hold a ring and its holes ("M … Z M … Z": an enclave, lib/outlinePaths.mjs)
+const parseRing = (d) => d.replace(/[MZ]/g, ' ').trim().split(/\s+/).map(Number).reduce((pts, v, i, all) => (i % 2 ? pts : [...pts, [v, all[i + 1]]]), []);
+const parsePath = (d) => d.split(/(?=M)/).map(parseRing);
 const boundsOf = (pts) => {
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   for (const [x, y] of pts) { minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
@@ -114,12 +116,16 @@ const boundsOf = (pts) => {
 };
 const WORLD = Object.entries(COUNTRY_SHAPES).map(([code, paths]) => ({
   code,
-  rings: paths.map(parsePath).map((pts) => ({ pts, b: boundsOf(pts) })),
+  rings: paths.flatMap(parsePath).map((pts) => ({ pts, b: boundsOf(pts) })),
 }));
-const inWorldShape = (code, x, y) =>
-  WORLD.find((p) => p.code === code)?.rings.some(({ pts, b }) => x >= b.minX && x <= b.maxX && y >= b.minY && y <= b.maxY && insideRing(x, y, pts)) ?? false;
-const worldPlaceAt = (x, y) =>
-  WORLD.find((p) => p.rings.some(({ pts, b }) => x >= b.minX && x <= b.maxX && y >= b.minY && y <= b.maxY && insideRing(x, y, pts)))?.code ?? null;
+// Inside a place: an odd number of its rings round the point, so Lesotho isn't South Africa's
+const insidePlace = (place, x, y) =>
+  place.rings.filter(({ pts, b }) => x >= b.minX && x <= b.maxX && y >= b.minY && y <= b.maxY && insideRing(x, y, pts)).length % 2 === 1;
+const inWorldShape = (code, x, y) => {
+  const place = WORLD.find((p) => p.code === code);
+  return place ? insidePlace(place, x, y) : false;
+};
+const worldPlaceAt = (x, y) => WORLD.find((p) => insidePlace(p, x, y))?.code ?? null;
 const inBox = (box, lat, lon) => lat > box.south && lat < box.north && lon > box.west && lon < box.east;
 
 // ── Which place each Natural Earth unit is ───────────────────────────────────────────────

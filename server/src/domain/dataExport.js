@@ -118,6 +118,8 @@ export async function findMapForExport(mapId) {
         select: {
           id: true,
           name: true,
+          lastName: true,
+          nationalityCode: true,
           position: true,
           userId: true,
           birthCountryCode: true,

@@ -16,10 +16,12 @@ import {
   POSTCARD_MESSAGES as M,
   canSendPostcardKind,
   checkPostcardPicture,
+  isFreePhotoGroup,
   landmarkFitsPlace,
   parsePostcardInput,
   shownKind,
 } from '@/utils/postcards/postcardRules';
+import { POSTCARD_PHOTOS } from '@/utils/postcards/postcardPhotos';
 
 const signedOut = () => fail(401, 'No valid session. Please sign in.');
 const cards = () => (getDb().postcards ||= []);
@@ -92,9 +94,14 @@ export function registerPostcardRoutes() {
     const { pictureKey, ...card } = parsed.value;
     if (!COUNTRY_BY_CODE[card.countryCode]) return fail(400, M.countryNotFound);
     if (card.kind !== 'COUNTRY' && !paidCards()) return fail(403, M.postcardNeedsPlan);
-    if (card.kind === 'LANDMARK') {
+    if (card.landmarkId) {
       const landmark = landmarkView(card.landmarkId);
       if (!landmark || !landmarkFitsPlace(landmark.countryCode, card.countryCode)) return fail(400, M.postcardLandmarkInvalid);
+      // A country's card carries a city's or the wilderness's photo, never a landmark's
+      if (card.kind === 'COUNTRY' && !isFreePhotoGroup(POSTCARD_PHOTOS[landmark.slug])) {
+        if (POSTCARD_PHOTOS[landmark.slug] !== 'l') return fail(400, M.postcardLandmarkInvalid);
+        if (!paidCards()) return fail(403, M.postcardNeedsPlan);
+      }
     }
     if (card.kind === 'PHOTO') {
       const signed = pictureKey.startsWith(folderOf(me().id)) ? mockUpload(pictureKey) : null;

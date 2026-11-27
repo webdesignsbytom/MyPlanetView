@@ -91,3 +91,11 @@ export const findOneShotsForExport = (mapId) =>
     },
     orderBy: { createdAt: 'asc' },
   });
+
+/** A map's ticks with when and where (a badge's story): `[{ itemKey, seenOn, datePrecision, countryCode, createdAt }]`. */
+export const findOneShotDates = (mapId) =>
+  prisma.oneShot.findMany({
+    where: { mapId },
+    select: { itemKey: true, seenOn: true, datePrecision: true, countryCode: true, createdAt: true },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+  });

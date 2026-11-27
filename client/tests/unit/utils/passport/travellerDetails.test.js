@@ -8,6 +8,8 @@ import {
   SIGNATURE_MAX_LENGTH,
   SIGNATURE_WIDTH,
   dragFocus,
+  fullName,
+  machineLine,
   parsePortrait,
   parseSignature,
   passportNumber,
@@ -106,5 +108,27 @@ describe('strokesToPath', () => {
   it('draws what the server keeps as it is', () => {
     const path = strokesToPath([[{ x: 12.34, y: 56.78 }, { x: 99.99, y: 1 }, { x: 150, y: 60 }]]);
     expect(server.parseSignature(path)).toEqual({ value: path });
+  });
+});
+
+// 27 Nov 2026, the user's wish: "Passport needs first name last name"
+describe('fullName', () => {
+  it('is the first name, then the last when there is one', () => {
+    expect(fullName({ name: 'Tom', lastName: 'Brock' })).toBe('Tom Brock');
+    expect(fullName({ name: 'Gigie', lastName: null })).toBe('Gigie');
+    expect(fullName({ name: ' Gigie ', lastName: '  ' })).toBe('Gigie');
+    expect(fullName(null)).toBe('');
+  });
+});
+
+describe('machineLine', () => {
+  it('writes each traveller surname first, in 44 characters', () => {
+    const line = machineLine([
+      { name: 'Tom', lastName: 'Brock' },
+      { name: 'Gigie', lastName: null },
+    ]);
+    expect(line).toBe('P<MPV<<BROCK<<TOM<<GIGIE'.padEnd(44, '<'));
+    expect(machineLine([{ name: 'Jean-Luc Marie', lastName: "O'Neil" }])).toBe('P<MPV<<O<NEIL<<JEAN<LUC<MARIE'.padEnd(44, '<'));
+    expect(machineLine(Array.from({ length: 9 }, () => ({ name: 'Alexandra' }))).length).toBe(44);
   });
 });

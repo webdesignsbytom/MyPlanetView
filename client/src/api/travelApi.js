@@ -239,6 +239,10 @@ export const updateTravellerPassport = (mapId, travellerId, body) =>
 // server's PUT|DELETE …/passport/stamps/:landmarkId/photo stay, unused by the site
 // -> { badges, newlyEarned } (the owner and editors award as they load)
 export const getBadges = (where) => data(client.get(mapOrShared(where, 'badges')));
+// What earned a badge (27 Nov 2026): `{ story }`, the things it counts in order and the one that
+// earned it; `travellerId`: one traveller's travel badge, from their trips
+export const getBadgeStory = (where, key, { travellerId = null } = {}) =>
+  data(client.get(`${mapOrShared(where, `badges/${enc(key)}`)}${query({ traveller: travellerId || undefined })}`));
 // Life's One Shots (docs/API.md "Life's One Shots"): the ticks (and, for editors, what the
 // flights suggest), one ticked or changed (`{ oneShot, created, countryCode }`), one taken off
 export const getOneShots = (where) => data(client.get(mapOrShared(where, 'one-shots')));

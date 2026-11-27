@@ -54,9 +54,12 @@ describe('FlightLogDialog', () => {
     // The name, then the arrow last, on the far right
     expect(airports.lastElementChild.tagName.toLowerCase()).toBe('svg');
     expect(airports.className).toContain('grid-cols-[minmax(0,1fr)_auto]');
+    // Up to close, down to open (27 Nov 2026, the user's wish)
+    expect(flights.querySelector('svg').getAttribute('class')).toContain('rotate-180');
 
     fireEvent.click(flights);
     expect(flights.getAttribute('aria-expanded')).toBe('false');
+    expect(flights.querySelector('svg').getAttribute('class')).not.toContain('rotate-');
     expect(document.getElementById(flights.getAttribute('aria-controls')).hidden).toBe(true);
     expect(document.getElementById(airports.getAttribute('aria-controls')).hidden).toBe(false);
     expect(JSON.parse(sessionStorage.getItem('mpv:flightLogClosed'))).toEqual(['flights']);

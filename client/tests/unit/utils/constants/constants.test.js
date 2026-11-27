@@ -93,17 +93,22 @@ describe('brandColours', () => {
       ...[brand.SHARE_CARD_COLOURS].flatMap(function colours(value) {
         return value && typeof value === 'object' ? Object.values(value).flatMap(colours) : [value];
       }),
-      ...Object.values(brand.POSTER_COLOURS.atlas),
-      ...Object.values(brand.POSTER_COLOURS.paper),
+      // Every poster look's colours, its visits' too
+      ...Object.values(brand.POSTER_COLOURS).flatMap((look) => Object.values(look).flat()),
       ...Object.values(brand.COMPARE_COLOURS),
     ];
     for (const colour of all) expect(colour).toMatch(HEX);
     expect(Object.isFrozen(brand.SHARE_CARD_COLOURS)).toBe(true);
-    expect(Object.isFrozen(brand.POSTER_COLOURS.paper)).toBe(true);
+    for (const look of Object.values(brand.POSTER_COLOURS)) expect(Object.isFrozen(look)).toBe(true);
   });
 
-  it('gives the two poster looks the same keys, and the compare groups three different hues', () => {
-    expect(Object.keys(brand.POSTER_COLOURS.paper).sort()).toEqual(Object.keys(brand.POSTER_COLOURS.atlas).sort());
+  it('gives every poster look the same keys and seven visit colours, and the compare groups three different hues', () => {
+    // A look per map style (27 Nov 2026, the user's wish), and Old paper
+    expect(Object.keys(brand.POSTER_COLOURS)).toEqual(['animated', 'mono', 'old-map', 'starry', 'engraved', 'paper']);
+    for (const look of Object.values(brand.POSTER_COLOURS)) {
+      expect(Object.keys(look).sort()).toEqual(Object.keys(brand.POSTER_COLOURS.animated).sort());
+      expect(look.visits).toHaveLength(7);
+    }
     expect(new Set(Object.values(brand.COMPARE_COLOURS)).size).toBe(3);
   });
 });

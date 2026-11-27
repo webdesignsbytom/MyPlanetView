@@ -2,6 +2,7 @@
 // and their codes kept out of the logs.
 import { describe, expect, it } from 'vitest';
 import {
+  FREE_PHOTO_GROUPS,
   PAID_POSTCARD_KINDS,
   POSTCARD_DEFAULT_STYLE,
   POSTCARD_KINDS,
@@ -10,15 +11,18 @@ import {
   POSTCARD_STYLES,
   canSendPostcardKind,
   checkPostcardPicture,
+  isFreePostcardPhoto,
   landmarkFitsPlace,
   messageFrom,
   parsePostcardInput,
   postcardExportItem,
   postcardListItem,
+  postcardPhotoGroup,
   postcardView,
   shownKind,
 } from '../src/utils/postcards.js';
 import { redactUrl } from '../src/utils/redactUrl.js';
+import POSTCARD_PHOTOS from '../src/data/postcardPhotos.json' with { type: 'json' };
 
 const LANDMARK_ID = '00000000-0000-4000-8000-000000000001';
 const card = (over = {}) => ({ kind: 'COUNTRY', countryCode: 'FR', message: 'Wish you were here!', ...over });
@@ -38,6 +42,24 @@ describe('the kinds and the plans', () => {
     expect(canSendPostcardKind('PREMIUM', 'PHOTO')).toBe(true);
     expect(canSendPostcardKind(null, 'PHOTO')).toBe(false);
     expect(canSendPostcardKind('PREMIUM', 'POSTER')).toBe(false);
+  });
+});
+
+describe('the photos on a card’s front', () => {
+  it('knows each landmark’s photo by its Wikidata item: a city, the wilderness or a landmark', () => {
+    const groups = Object.values(POSTCARD_PHOTOS);
+    expect(groups.length).toBeGreaterThan(1000);
+    expect(new Set(groups)).toEqual(new Set(['c', 'w', 'l']));
+    expect(postcardPhotoGroup('Q243')).toBe('l'); // the Eiffel Tower
+    expect(postcardPhotoGroup('Q39231')).toBe('w'); // Mount Fuji
+    expect(postcardPhotoGroup('Q0')).toBeNull();
+  });
+
+  it('puts a city’s and the wilderness’s on every plan’s cards, never a landmark’s (the user, 26 Nov 2026)', () => {
+    expect([...FREE_PHOTO_GROUPS]).toEqual(['c', 'w']);
+    expect(isFreePostcardPhoto('Q39231')).toBe(true);
+    expect(isFreePostcardPhoto('Q243')).toBe(false);
+    expect(isFreePostcardPhoto('Q0')).toBe(false);
   });
 });
 
@@ -96,7 +118,10 @@ describe('parsePostcardInput', () => {
       landmarkId: null,
       pictureKey: 'myplanetview/postcards/u/card-a.jpg',
     });
-    expect(parsePostcardInput(card({ kind: 'COUNTRY', landmarkId: LANDMARK_ID })).value.landmarkId).toBeNull();
+    // A country's card may name its photo's landmark (a city or the wilderness)
+    expect(parsePostcardInput(card({ kind: 'COUNTRY', landmarkId: LANDMARK_ID })).value.landmarkId).toBe(LANDMARK_ID);
+    expect(parsePostcardInput(card({ kind: 'COUNTRY', landmarkId: null })).value.landmarkId).toBeNull();
+    expect(parsePostcardInput(card({ kind: 'COUNTRY', landmarkId: 'paris' })).error).toBe('postcardLandmarkInvalid');
   });
 
   it('refuses what isn’t right, naming why', () => {

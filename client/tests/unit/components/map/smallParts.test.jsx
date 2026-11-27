@@ -112,14 +112,29 @@ describe('PanelEmptyState', () => {
     expect(container.querySelectorAll('ol li').length).toBe(1);
     expect(screen.getByText('Open Trips.')).toBeTruthy();
     expect(screen.getByText('Go')).toBeTruthy();
-    expect(container.querySelector('[data-icon]').parentElement.getAttribute('aria-hidden')).toBe('true');
+    expect(container.querySelector('[data-icon]').closest('[aria-hidden]').getAttribute('aria-hidden')).toBe('true');
     expect(container.querySelector('svg').getAttribute('aria-hidden')).toBe('true');
+    // Not loading: no status, no turning ring
+    expect(container.querySelector('[role="status"]')).toBeNull();
+    expect(container.querySelector('[data-busy-ring]')).toBeNull();
   });
 
   it('leaves out the steps and buttons when there are none', () => {
     const { container } = render(<PanelEmptyState icon={null} title='T' text='X' />);
     expect(container.querySelector('ol')).toBeNull();
     expect(container.querySelector('button')).toBeNull();
+  });
+
+  // 27 Nov 2026, the user's wish: the photo album's first load, centred, not a small spinner
+  it('while busy, is a status with a ring turning round its stamp and no heading', () => {
+    const { container } = render(<PanelEmptyState busy icon={<i data-icon='' />} title='Opening the album…' />);
+    const status = container.querySelector('[role="status"]');
+    expect(status.hasAttribute('data-panel-busy')).toBe(true);
+    expect(status.querySelector('p').textContent).toBe('Opening the album…');
+    expect(container.querySelector('h3')).toBeNull();
+    const ring = container.querySelector('[data-busy-ring]');
+    expect(ring.className).toContain('motion-safe:animate-[spin_5s_linear_infinite]');
+    expect(ring.closest('[aria-hidden]').contains(container.querySelector('[data-icon]'))).toBe(true);
   });
 });
 

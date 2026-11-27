@@ -217,6 +217,8 @@ test.describe('Moments', () => {
     await setup.getByRole('tab', { name: 'This map' }).click();
     const thisMap = setup.getByRole('tabpanel', { name: 'This map' });
     await expect(thisMap.getByRole('button', { name: 'Add another traveller' })).toHaveCount(0);
+    // Who it's for is behind "Change map type" (27 Nov 2026, the user's wish)
+    await thisMap.getByRole('button', { name: 'Change map type' }).click();
     await thisMap.getByText('A family', { exact: true }).click();
     await expect(thisMap.getByRole('button', { name: 'Add another traveller' })).toBeVisible();
     await thisMap.getByRole('button', { name: 'Save map' }).click();
@@ -248,7 +250,7 @@ test.describe('Moments', () => {
     const settings = await openTool(page, 'Map settings', 'Settings');
     await settings.getByRole('tab', { name: 'This map' }).click();
     const robin = settings.getByRole('group', { name: 'Traveller 3' });
-    await expect(robin.getByRole('textbox', { name: 'Name' })).toHaveValue('Robin');
+    await expect(robin.getByRole('textbox', { name: 'First name' })).toHaveValue('Robin');
     await expect(robin.getByRole('combobox', { name: 'Born in' })).toHaveValue('CA');
   });
 

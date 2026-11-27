@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 // Icons
-import { FaPlay } from 'react-icons/fa';
+import { FaCameraRetro, FaPlay } from 'react-icons/fa';
 // Hooks
 import usePhotoPage from '@/hooks/usePhotoPage';
 // Components
 import MapPanel from './MapPanel';
 import MapActionButton from './MapActionButton';
+import PanelEmptyState from './PanelEmptyState';
 import PhotoGrid from '@/components/photos/PhotoGrid';
 import PhotoAlbumViewer from '@/components/photos/PhotoAlbumViewer';
 import ShareShow from '@/components/shows/ShareShow';
+import SavedShows from '@/components/shows/SavedShows';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { MAP_PHOTOS } from '@/utils/map/mapPhotoLists';
@@ -26,8 +28,9 @@ const countryOf = (photo) => (photo.countryCode ? countryName(photo.countryCode)
  * (`onAddPhotos`), and "Play my world" (`onPlay`, once there are photos; the toolbar's own stamp
  * until 24 Nov 2026, the user's wish: a shorter bar) plays the whole map's slideshow over it.
  * `photosVersion` goes up when photos change elsewhere (an upload, an edit, a delete), and the
- * list is fetched again. `showMapId` (the map's editors) adds "Share a slideshow" of photos
- * chosen from the album (ShareShow; 25 Nov 2026).
+ * list is fetched again. `showMapId` (the map's editors) adds "Make a slideshow" of photos
+ * chosen from the album (ShareShow; 25 Nov 2026), and "Saved slideshows", the map's saved ones
+ * to play again or share (SavedShows; 27 Nov 2026, the user's wish).
  */
 function MapPhotosPanel({ photoSource, photosVersion = 0, onAddPhotos = null, onPlay = null, showMapId = null, onClose }) {
   const photos = usePhotoPage({ ...photoSource, ...MAP_PHOTOS });
@@ -42,11 +45,16 @@ function MapPhotosPanel({ photoSource, photosVersion = 0, onAddPhotos = null, on
   // Something to play: the slideshow of an empty map would show nothing
   const canPlay = Boolean(onPlay) && photos.photos.length > 0;
   const canShareShow = Boolean(showMapId) && photos.photos.length > 0;
+  const hasActions = canPlay || Boolean(onAddPhotos) || canShareShow;
+  // The first page on its way: a passport page in the middle of the panel says so (27 Nov 2026,
+  // the user's wish: a small spinner at the top looked bad); the grid's own spinner is for more
+  const firstLoad = photos.loading && !photos.photos.length && !photos.error;
 
   return (
-    <MapPanel wide title='Photo album' onClose={onClose}>
+    <MapPanel wide title='Photo album' onClose={onClose} fill={firstLoad}>
+      <div className={`grid gap-4 ${firstLoad ? (hasActions ? 'grid-rows-[auto_minmax(0,1fr)]' : 'grid-rows-[minmax(0,1fr)]') : 'content-start'}`}>
       {/* Full width on phones; side by side at the start of the wide panel elsewhere, not long red bars */}
-      {canPlay || onAddPhotos || canShareShow ? (
+      {hasActions ? (
         <div className='grid gap-2 md:grid-flow-col md:justify-start' data-album-actions=''>
           {canPlay ? (
             <MapActionButton onClick={onPlay}>
@@ -56,19 +64,25 @@ function MapPhotosPanel({ photoSource, photosVersion = 0, onAddPhotos = null, on
           ) : null}
           {onAddPhotos ? <MapActionButton onClick={onAddPhotos}>Add photos</MapActionButton> : null}
           {canShareShow ? <ShareShow inMapPanel mapId={showMapId} source={{ ...photoSource, ...MAP_PHOTOS }} /> : null}
+          {canShareShow ? <SavedShows mapId={showMapId} /> : null}
         </div>
       ) : null}
-      <PhotoGrid
-        wide
-        photos={photos.photos}
-        loading={photos.loading}
-        error={photos.error}
-        hasMore={Boolean(photos.nextCursor)}
-        onLoadMore={photos.loadMore}
-        onOpen={(photo) => setViewingId(photo.id)}
-        caption={countryOf}
-        emptyText='No photos on this map yet.'
-      />
+      {firstLoad ? (
+        <PanelEmptyState busy icon={<FaCameraRetro />} title='Opening the album…' />
+      ) : (
+        <PhotoGrid
+          wide
+          photos={photos.photos}
+          loading={photos.loading}
+          error={photos.error}
+          hasMore={Boolean(photos.nextCursor)}
+          onLoadMore={photos.loadMore}
+          onOpen={(photo) => setViewingId(photo.id)}
+          caption={countryOf}
+          emptyText='No photos on this map yet.'
+        />
+      )}
+      </div>
       {viewing >= 0 ? (
         <PhotoAlbumViewer
           photos={photos.photos}

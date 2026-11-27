@@ -112,6 +112,26 @@ export function collectionProgress({ stamps = [], totals = new Map(), keep = [] 
   });
 }
 
+/** Every country a map shows (the UK's nations instead of the UK on one that splits it). */
+export const everyCountryOn = (continentByCode, splitUk) =>
+  new Set(
+    countedCountryCodes(
+      [...continentByCode.keys()].filter((code) => !isSpecialPlace(code)),
+      splitUk
+    )
+  );
+
+/**
+ * A badge's `need` on a map: a region's is its places on this map, "every country"'s the
+ * map's own count (`everyCountry`, from everyCountryOn); the rest their fixed number.
+ */
+export function badgeNeed(badge, { splitUk = false, everyCountry = new Set() } = {}) {
+  if (badge.measure === 'region') return regionCodesOnMap(badge.region, splitUk).length;
+  // Never 0 (no country table to hand): nothing is earned for an empty list
+  if (badge.measure === 'allCountries') return Math.max(everyCountry.size, 1);
+  return badge.need;
+}
+
 /**
  * How far a map is towards each badge.
  * @param {object} facts
@@ -143,12 +163,7 @@ export function badgeProgress({
     splitUk
   );
   // Every country this map shows (the UK's nations instead of the UK on a split map)
-  const everyCountry = new Set(
-    countedCountryCodes(
-      [...continentByCode.keys()].filter((code) => !isSpecialPlace(code)),
-      splitUk
-    )
-  );
+  const everyCountry = everyCountryOn(continentByCode, splitUk);
   // Continents with a country on them (special places don't open one)
   const continents = new Set(countries.map((code) => continentByCode.get(code)).filter(Boolean));
   const ticked = oneShotCounts(oneShots);
@@ -171,16 +186,10 @@ export function badgeProgress({
     if (badge.measure === 'region') return regionCodesOnMap(badge.region, splitUk).filter((code) => visited.has(code)).length;
     return counts[badge.measure];
   };
-  const needFor = (badge) => {
-    if (badge.measure === 'region') return regionCodesOnMap(badge.region, splitUk).length;
-    // Never 0 (no country table to hand): nothing is earned for an empty list
-    if (badge.measure === 'allCountries') return Math.max(everyCountry.size, 1);
-    return badge.need;
-  };
   return [
     ...BADGES.map((badge) => {
       const have = haveFor(badge);
-      const need = needFor(badge);
+      const need = badgeNeed(badge, { splitUk, everyCountry });
       return { key: badge.key, group: badge.group, have: Math.min(have, need), need, earned: have >= need };
     }),
     // The country collections, after the fixed list
@@ -194,7 +203,17 @@ export function badgeProgress({
 export const TRAVELLER_BADGE_GROUPS = Object.freeze(['countries', 'continents', 'special', 'regions']);
 
 // A trip's date for the order: its last day, else its first; undated trips come last
-const tripDay = (trip) => trip.endDate ?? trip.startDate ?? null;
+export const tripDay = (trip) => trip.endDate ?? trip.startDate ?? null;
+
+/** The trips `travellerId` was on, in the order they earn badges: by their day, undated last. */
+export const travellerTripsInOrder = (trips, travellerId) =>
+  trips
+    .filter((trip) => trip.travellerIds.includes(travellerId))
+    .sort((a, b) => {
+      const [x, y] = [tripDay(a), tripDay(b)];
+      if (x && y) return new Date(x) - new Date(y);
+      return x ? -1 : y ? 1 : 0;
+    });
 
 /**
  * One traveller's travel badges. `trips`: the map's completed trips, `[{ travellerIds,
@@ -204,13 +223,7 @@ const tripDay = (trip) => trip.endDate ?? trip.startDate ?? null;
  * -> `[{ key, group, have, need, earned, earnedOn }]`
  */
 export function travellerBadges({ trips, travellerId, continentByCode = new Map(), splitUk = false }) {
-  const own = trips
-    .filter((trip) => trip.travellerIds.includes(travellerId))
-    .sort((a, b) => {
-      const [x, y] = [tripDay(a), tripDay(b)];
-      if (x && y) return new Date(x) - new Date(y);
-      return x ? -1 : y ? 1 : 0;
-    });
+  const own = travellerTripsInOrder(trips, travellerId);
   const visited = new Set();
   const earnedOn = new Map();
   for (const trip of own) {

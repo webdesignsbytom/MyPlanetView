@@ -319,5 +319,8 @@ export const countryOptionGroupsFor = (splitUk) => (splitUk ? SPLIT_UK_OPTION_GR
 // Where someone was born or likes best: the countries and Antarctica, never a pole (the
 // server refuses one there) or a region (its country stands for it)
 export const HOME_COUNTRY_OPTIONS = COUNTRIES.filter((country) => !isPole(country.code) && !country.kind?.match(/^(NATION|REGION)$/)).map(toOption);
+// A traveller's nationality (27 Nov 2026, the passport's): the countries alone, never Antarctica
+// or a pole (the server refuses a special place there)
+export const NATIONALITY_OPTIONS = PLAIN_COUNTRIES.map(toOption);
 
 export const countryName = (code) => COUNTRY_BY_CODE[code]?.name ?? code;

@@ -49,7 +49,9 @@ function AwardNews({ news, onOpen, onDismiss, onShare = null }) {
     <div
       role='status'
       aria-live='polite'
-      className='pointer-events-none absolute right-3 top-16 z-40 grid nophone:z-20 w-[min(17rem,calc(100vw-1.5rem))] nophone:top-3 nophone:right-20 nophone:w-[min(22rem,calc(100vw-30rem))]'
+      // On phones at the very top, over the Menu stamp (27 Nov 2026, the user's wish: it sat below
+      // it, over the map); it goes by itself, or with its close stamp
+      className='pointer-events-none absolute right-3 top-3 z-40 grid nophone:z-20 w-[min(17rem,calc(100vw-1.5rem))] nophone:right-20 nophone:w-[min(22rem,calc(100vw-30rem))]'
     >
       {text ? (
         <div

@@ -84,7 +84,37 @@ describe('PassportPhotoPage', () => {
     expect(within(charlie).getByText('United Kingdom')).toBeTruthy();
     expect(within(charlie).getByText('Japan')).toBeTruthy();
     expect(within(alex).getByText('A')).toBeTruthy();
-    expect(within(alex).getAllByText('Not given').length).toBe(2);
+    // No last name, nationality, birthplace or favourite country
+    expect(within(alex).getAllByText('Not given').length).toBe(4);
+  });
+
+  // 27 Nov 2026, the user's wish: "Passport needs first name last name"
+  it('names each traveller as a passport does: surname, then given names', () => {
+    const named = [{ ...travellers[0], name: 'Charlie', lastName: 'Reid' }, travellers[1]];
+    const { container } = render(<PassportPhotoPage travellers={named} pageNumber={2} headingId='travellers' />);
+    const [charlie, alex] = container.querySelectorAll('li');
+    const labels = [...charlie.querySelectorAll('[data-beside-photo] dt')].map((dt) => dt.textContent);
+    expect(labels.slice(0, 2)).toEqual(['Surname', 'Given names']);
+    expect(charlie.querySelector('[data-passport-surname]').textContent).toBe('Reid');
+    expect(charlie.querySelector('[data-passport-given-names]').textContent).toBe('Charlie');
+    // The initials and the handwritten signature take the whole name
+    expect(within(charlie).getByText('CR').getAttribute('aria-hidden')).toBe('true');
+    expect(within(charlie).getByText('Charlie Reid', { selector: '[data-signature]' })).toBeTruthy();
+    expect(alex.querySelector('[data-passport-surname]').textContent).toBe('Not given');
+    expect(alex.querySelector('[data-passport-given-names]').textContent).toBe('Alex');
+    // The machine-readable line, surname first
+    expect(container.querySelector('p.font-mono').textContent).toBe('P<MPV<<REID<<CHARLIE<<ALEX'.padEnd(44, '<'));
+  });
+
+  // 27 Nov 2026, the user's wish: "Passport also needs nationality"
+  it('gives each traveller’s nationality after their names, or "Not given"', () => {
+    const withNationality = [{ ...travellers[0], nationalityCode: 'IE' }, travellers[1]];
+    const { container } = render(<PassportPhotoPage travellers={withNationality} pageNumber={2} headingId='travellers' />);
+    const [charlie, alex] = container.querySelectorAll('li');
+    const labels = [...charlie.querySelectorAll('[data-beside-photo] dt')].map((dt) => dt.textContent);
+    expect(labels.slice(0, 3)).toEqual(['Surname', 'Given names', 'Nationality']);
+    expect(charlie.querySelector('[data-passport-nationality]').textContent).toBe('Ireland');
+    expect(alex.querySelector('[data-passport-nationality]').textContent).toBe('Not given');
   });
 
   // 24 Nov 2026, the user's wish: the 3:4 box stopped a line short of the details
@@ -143,7 +173,7 @@ describe('PassportPhotoPage', () => {
       const plain = { id: 'trav-alex', name: 'Alex', birthCountryCode: null, favouriteCountryCode: null, photo: { source: 'ACCOUNT', url: '/alex.webp', focusX: 0.5, focusY: 0.5, zoom: 1 }, signature: null };
       const { container } = render(<PassportPhotoPage travellers={[plain]} pageNumber={2} headingId='travellers' />);
       const li = container.querySelector('li');
-      expect([...li.querySelectorAll('dt')].map((dt) => dt.textContent)).toEqual(['Name', 'Born in', 'Favourite country', 'Passport no.']);
+      expect([...li.querySelectorAll('dt')].map((dt) => dt.textContent)).toEqual(['Surname', 'Given names', 'Nationality', 'Born in', 'Favourite country', 'Passport no.']);
       expect(li.querySelector('[data-passport-photo="ACCOUNT"] img').getAttribute('src')).toBe('/alex.webp');
       expect(li.querySelector('[data-signature="name"]').textContent).toBe('Alex');
       expect(li.querySelector('[data-signature="name"]').className).toContain('font-signature');

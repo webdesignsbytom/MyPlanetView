@@ -1,4 +1,5 @@
-import React, { useId, useMemo, useState } from 'react';
+import React, { Suspense, lazy, useId, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 // Icons
 import { FaPassport } from 'react-icons/fa';
@@ -18,6 +19,9 @@ import ThemeSection from '@/components/themes/ThemeSection';
 // Utils
 import { GOALS_PER_MAP } from '@/utils/achievements/goals';
 
+// A badge's own card, loaded when one is first opened
+const BadgeStoryDialog = lazy(() => import('./BadgeStoryDialog'));
+
 const NO_ONE = [];
 
 /**
@@ -35,6 +39,8 @@ const NO_ONE = [];
  * 2026, the user's wish).
  * `onShareCollection(place)`: a country collection's best medal as a share card (the map page,
  * never a share link); only on the map's own badges, not one traveller's.
+ * An earned badge opens its own card (BadgeStoryDialog; 27 Nov 2026, the user's wish): the badge
+ * and what earned it, one traveller's from their trips while their badges show.
  */
 function BadgesGoalsPanel({
   achievements,
@@ -53,6 +59,8 @@ function BadgesGoalsPanel({
   const { badges, goals, loading, error, travellers: everyone = [] } = achievements;
   const travellers = perPerson ? everyone : NO_ONE;
   const [owner, setOwner] = useState(null);
+  // The badge whose card is open
+  const [openBadge, setOpenBadge] = useState(null);
   const person = travellers.length >= 2 ? travellers.find((t) => t.id === owner) : null;
   // A traveller's badges in the suitcase's shape: earned on the trip's day, when it has one
   const shownBadges = useMemo(
@@ -144,10 +152,25 @@ function BadgesGoalsPanel({
           badges={shownBadges}
           note={person ? `From the completed trips ${person.name} was on.` : null}
           onShareCollection={person ? null : onShareCollection}
+          onOpenBadge={mapId || shareCode ? setOpenBadge : null}
         >
           {travellers.length >= 2 ? <BadgeOwnerSwitch travellers={travellers} value={person ? owner : null} onChange={setOwner} /> : null}
         </BadgeSuitcase>
       ) : null}
+
+      {openBadge
+        ? createPortal(
+            <Suspense fallback={null}>
+              <BadgeStoryDialog
+                badge={openBadge}
+                where={shareCode ? { shareCode } : { mapId }}
+                traveller={person ? { id: person.id, name: person.name } : null}
+                onClose={() => setOpenBadge(null)}
+              />
+            </Suspense>,
+            document.body,
+          )
+        : null}
     </MapPanel>
   );
 }

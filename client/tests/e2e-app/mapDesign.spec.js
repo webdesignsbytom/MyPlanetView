@@ -343,17 +343,38 @@ test('the places been to can wear gold, silver or bronze foil, in every style, k
     .poll(() => page.locator('[data-key-visited-colour] [aria-hidden]').evaluate((el) => getComputedStyle(el).backgroundImage))
     .toContain('foil-silver');
 
-  // While the map is dragged, the lit edge waits for it to be still (it doubled each frame's cost)
+  // While the map is dragged, the lit edge waits for it to be still (it doubled each frame's
+  // cost), and so does the sheet of metal: the places wear the metal's flat colour meanwhile (27
+  // Nov 2026, the user's report: on a phone the foil vanished while the map moved)
   const map = page.getByRole('application', { name: /: world map$/ });
   const box = await map.boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
   await page.mouse.move(box.x + box.width / 2 - 60, box.y + box.height / 2, { steps: 4 });
   await expect(map).toHaveAttribute('data-moving', '');
-  await expect.poll(() => foil.evaluate((el) => getComputedStyle(el).filter)).toBe('none');
+  const silver = await page.evaluate(() => {
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--medal-silver)';
+    document.body.append(probe);
+    const colour = getComputedStyle(probe).color;
+    probe.remove();
+    return colour;
+  });
+  // Read while it still moves: each read nudges the map a pixel first
+  let nudge = 0;
+  const whileMoving = async (read) => {
+    nudge += 1;
+    await page.mouse.move(box.x + box.width / 2 - 60 - nudge, box.y + box.height / 2);
+    return read();
+  };
+  await expect.poll(() => whileMoving(() => foil.evaluate((el) => getComputedStyle(el).filter))).toBe('none');
+  await expect.poll(() => whileMoving(() => foil.evaluate((el) => getComputedStyle(el).visibility))).toBe('hidden');
+  await expect.poll(() => whileMoving(() => placeFill(page, 'PT'))).toBe(silver);
   await page.mouse.up();
   await expect(map).not.toHaveAttribute('data-moving');
   await expect.poll(() => foil.evaluate((el) => getComputedStyle(el).filter)).toContain('mpv-foil-edge');
+  await expect.poll(() => foil.evaluate((el) => getComputedStyle(el).visibility)).toBe('visible');
+  await expect.poll(() => placeFill(page, 'PT')).toBe('rgba(0, 0, 0, 0)');
 
   // Kept after a reload, and for anyone with the link
   await page.reload();

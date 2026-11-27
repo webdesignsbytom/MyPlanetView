@@ -114,13 +114,15 @@ describe('CountryPanel', () => {
     await waitFor(() => expect(wish.onSetVisit).toHaveBeenCalledWith('FR', 'WANT_TO_GO', { firstVisitedOn: undefined }));
   });
 
-  it('makes the dropdown and the date a step slimmer in the stub only', () => {
+  // In the stub (23 Nov 2026), and on phones as well (27 Nov 2026, the user's wish: it was taller there)
+  it('makes the dropdown and the date a step slimmer, in the stub and on phones alike', () => {
     const wide = open({ canEdit: true, visit: { status: 'VISITED' } });
     expect(wide.stub().querySelector('[data-status-controls]').className).toContain('[&_.app-select]:py-1 [&_input]:py-1');
     wide.unmount();
     stubMatchMedia(() => false);
-    const { ticket } = open({ canEdit: true, visit: { status: 'VISITED' } });
-    expect(ticket.querySelector('[data-status-controls]').className).not.toContain('py-1');
+    const { ticket, stub } = open({ canEdit: true, visit: { status: 'VISITED' } });
+    expect(stub().querySelector('[data-status-controls]')).toBeNull();
+    expect(ticket.querySelector('[data-status-controls]').className).toContain('[&_.app-select]:py-1 [&_input]:py-1');
   });
 
   it('puts the controls at the head of the content on phones', () => {
@@ -204,12 +206,13 @@ describe('CountryPanel', () => {
     expect(toggle.getAttribute('aria-controls')).toBe('moments-body-FR');
     expect(momentList.getAttribute('data-body-id')).toBe('moments-body-FR');
     expect(momentList.getAttribute('data-collapsed')).toBe('false');
-    expect(toggle.querySelector('svg').getAttribute('class')).not.toContain('-rotate-90');
+    // Up to close, down to open (27 Nov 2026, the user's wish)
+    expect(toggle.querySelector('svg').getAttribute('class')).toContain('rotate-180');
 
     fireEvent.click(toggle);
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
     expect(momentList.getAttribute('data-collapsed')).toBe('true');
-    expect(toggle.querySelector('svg').getAttribute('class')).toContain('-rotate-90');
+    expect(toggle.querySelector('svg').getAttribute('class')).not.toContain('rotate-');
     expect(sessionStorage.getItem('mpv:momentsClosed')).toBe('1');
     first.unmount();
 
@@ -251,7 +254,7 @@ describe('CountryPanel', () => {
 
   it('puts the slideshow, adding photos and planning a trip above the photos, the download and desk below', () => {
     photos = list([{ id: 'p1' }]);
-    const { ticket } = open({ canEdit: true, onPlay: vi.fn(), onAddPhotos: vi.fn(), onPlanTrip: vi.fn() });
+    const { ticket } = open({ canEdit: true, visit: { status: 'VISITED' }, onPlay: vi.fn(), onAddPhotos: vi.fn(), onPlanTrip: vi.fn() });
     const actions = ticket.querySelector('[data-photo-actions]');
     expect([...actions.querySelectorAll('button')].map((b) => b.textContent)).toEqual(['Play slideshow', 'Add photos', 'Plan a trip']);
     const grid = ticket.querySelector('[data-photo-grid]');
@@ -271,6 +274,37 @@ describe('CountryPanel', () => {
     expect(postcard.getAttribute('data-send-postcard')).toBe('FR');
     expect(postcard.getAttribute('data-place')).toBe('France');
     expect(postcard.getAttribute('data-photos')).toBe('FR');
+  });
+
+  // 27 Nov 2026, the user's wish: a place not been to loaded its photos behind a spinner, for nothing
+  it('fetches no photos or moments where the map says there are none', () => {
+    open({ canEdit: true, lists: { photos: 'none', moments: 'none' } });
+    expect(usePhotoPage.mock.calls.at(-1)[0].enabled).toBe(false);
+    expect(useMomentPage.mock.calls.at(-1)[0].enabled).toBe(false);
+  });
+
+  it('fetches them where the map says there are some, or may be (a viewer’s visited place)', () => {
+    open({ lists: { photos: 'maybe', moments: 'some' } });
+    expect(usePhotoPage.mock.calls.at(-1)[0].enabled).toBe(true);
+    expect(useMomentPage.mock.calls.at(-1)[0].enabled).toBe(true);
+    vi.clearAllMocks();
+    // Without the map's word, as before
+    open();
+    expect(usePhotoPage.mock.calls.at(-1)[0].enabled).toBe(true);
+    expect(useMomentPage.mock.calls.at(-1)[0].enabled).toBe(true);
+  });
+
+  it('offers a postcard only from a place visited or lived in', () => {
+    for (const visit of [null, { status: 'WANT_TO_GO' }]) {
+      const { ticket, unmount } = open({ canEdit: true, visit });
+      expect(ticket.querySelector('[data-send-postcard]')).toBeNull();
+      unmount();
+    }
+    for (const status of ['VISITED', 'LIVED']) {
+      const { ticket, unmount } = open({ canEdit: true, visit: { status } });
+      expect(ticket.querySelector('[data-send-postcard]').getAttribute('data-send-postcard')).toBe('FR');
+      unmount();
+    }
   });
 
   it('has no empty row over the photos when there’s nothing to press', () => {
@@ -305,7 +339,7 @@ describe('CountryPanel', () => {
     const onOpenPlace = vi.fn();
     const onOpenCountryMap = vi.fn();
     const onPlanTrip = vi.fn();
-    const { ticket } = open({ code: 'XB', canEdit: true, onOpenPlace, onOpenCountryMap, onPlay: vi.fn(), onAddPhotos: vi.fn(), onPlanTrip });
+    const { ticket } = open({ code: 'XB', canEdit: true, visit: { status: 'VISITED' }, onOpenPlace, onOpenCountryMap, onPlay: vi.fn(), onAddPhotos: vi.fn(), onPlanTrip });
     expect(ticket.textContent).toContain('A region of Indonesia');
     expect(screen.getByText('Part of Indonesia')).toBeTruthy();
     expect(ticket.querySelector('[data-photo-grid]')).toBeNull();

@@ -1,6 +1,10 @@
 import React, { useMemo, useState } from 'react';
+// Icons
+import { FaCalendarCheck, FaMapMarkedAlt, FaPlaneDeparture, FaSuitcaseRolling } from 'react-icons/fa';
 // Components
 import MapPanel from './MapPanel';
+import MapActionButton from './MapActionButton';
+import PanelEmptyState from './PanelEmptyState';
 import PassportLink from './PassportLink';
 import MonthLinks from '@/components/months/MonthLinks';
 import AppLink from '@/components/common/AppLink';
@@ -52,8 +56,12 @@ const Heading = ({ id, children }) => (
  * this month, then the rest at their next best month, then the ones with no guide yet. A
  * place opens its ticket on the map. For everyone who can see the map (share links too).
  * `passportHref` puts "Open passport" at the top (24 Nov 2026, the user's wish).
+ * With nothing marked "want to go", a passport page waiting for its first stamp fills the panel
+ * (PanelEmptyState, as the trips' and the timeline's; 27 Nov 2026, the user's wish: a line of
+ * text at the top looked bare): a plane, what the panel does, and for an editor (`canEdit`) how
+ * to start, with "Open the country list" (`onOpenCountries`).
  */
-function WhereNextPanel({ visits = [], onShowCountry, passportHref = null, onClose }) {
+function WhereNextPanel({ visits = [], onShowCountry, passportHref = null, canEdit = false, onOpenCountries = null, onClose }) {
   // This month, read once as the panel opens (the map page is never pre-rendered)
   const [month] = useState(() => new Date().getMonth());
   const codes = useMemo(() => visits.filter((v) => v.status === 'WANT_TO_GO').map((v) => v.countryCode), [visits]);
@@ -61,15 +69,34 @@ function WhereNextPanel({ visits = [], onShowCountry, passportHref = null, onClo
   // Some have a guide in this build, and they haven't arrived yet
   const waiting = !guides.length && codes.some((code) => COUNTRY_PAGES.some((page) => page.code === countryOf(code)));
   const plan = useMemo(() => whereNext({ codes, guides, month }), [codes, guides, month]);
+  const empty = !codes.length;
 
   return (
-    <MapPanel title='Where to go next' onClose={onClose}>
+    <MapPanel title='Where to go next' onClose={onClose} fill={empty}>
+      {/* Empty, one cell that fills the panel: the passport link on top, the empty page below it */}
+      <div className={`grid gap-4 ${empty ? (passportHref ? 'grid-rows-[auto_minmax(0,1fr)]' : 'grid-rows-[minmax(0,1fr)]') : 'content-start'}`}>
       {passportHref ? <PassportLink href={passportHref} /> : null}
-      {!codes.length ? (
-        <p className='text-sm'>
-          Nothing is marked “Want to go” yet. Mark the countries you’d like to visit, on the map or in the country list, and this shows the
-          best time to go to each.
-        </p>
+      {empty ? (
+        <PanelEmptyState
+          icon={<FaPlaneDeparture />}
+          title='Where will you go?'
+          text={
+            canEdit
+              ? 'Nothing is marked “Want to go” yet. Mark the countries you’d like to visit, and this shows the best time to go to each.'
+              : 'Nothing on this map is marked “Want to go” yet. When it is, this shows the best time to go to each.'
+          }
+          steps={
+            canEdit
+              ? [
+                  { icon: <FaMapMarkedAlt />, text: 'Mark a country “Want to go”, on the map or in the country list.' },
+                  { icon: <FaCalendarCheck />, text: 'See the best month for each, from our country guides.' },
+                  { icon: <FaSuitcaseRolling />, text: 'Plan the trip, and count down the days.' },
+                ]
+              : []
+          }
+        >
+          {canEdit && onOpenCountries ? <MapActionButton onClick={onOpenCountries}>Open the country list</MapActionButton> : null}
+        </PanelEmptyState>
       ) : waiting ? (
         <p className='text-sm' role='status'>
           Reading the country guides…
@@ -133,6 +160,7 @@ function WhereNextPanel({ visits = [], onShowCountry, passportHref = null, onClo
           <MonthLinks months={[month + 1]} lead='More ideas for this month:' />
         </div>
       )}
+      </div>
     </MapPanel>
   );
 }

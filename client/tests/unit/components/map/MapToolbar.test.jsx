@@ -1,10 +1,10 @@
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 import MapToolbar from '@/components/map/MapToolbar';
 import useFullscreen from '@/hooks/useFullscreen';
-import { withProviders } from './helpers';
+import { stubMatchMedia, withProviders } from './helpers';
 
 vi.mock('@/hooks/useFullscreen', () => ({ default: vi.fn() }));
 
@@ -32,7 +32,7 @@ const open = (props = {}) => {
   const stamps = () => [...row.querySelectorAll('button')].map((b) => b.getAttribute('aria-label'));
   const toggle = () => phone.querySelector('button[aria-expanded]');
   const menu = () => document.getElementById(toggle().getAttribute('aria-controls'));
-  const item = (label) => [...menu().querySelectorAll('button')].find((b) => b.textContent.includes(label));
+  const item = (label) => [...menu().querySelectorAll('button, a')].find((b) => b.textContent.includes(label));
   const where = () => result.container.querySelector('[data-where]').getAttribute('data-where');
   return { ...result, nav, row, phone, stamps, toggle, menu, item, where, onToggle, onIntent };
 };
@@ -128,22 +128,115 @@ describe('the phone’s menu', () => {
     useFullscreen.mockReturnValue({ supported: false, active: false, toggle: vi.fn() });
   });
 
-  it('is a disclosure: a round Menu stamp that shows and hides every tool', () => {
+  // Over the whole screen since 27 Nov 2026 (the user's wish), as a modal dialog
+  it('is a round Menu stamp that opens every tool over the whole screen, as a dialog named Menu', () => {
     const { toggle, menu } = open();
     expect(toggle().getAttribute('aria-label')).toBe('Menu');
+    expect(toggle().getAttribute('aria-haspopup')).toBe('dialog');
     expect(toggle().getAttribute('aria-expanded')).toBe('false');
-    expect(menu().hidden).toBe(true);
+    expect(menu().tagName).toBe('DIALOG');
+    expect(menu().hasAttribute('open')).toBe(false);
+    expect(menu().className).toContain('fixed inset-0');
+    expect(menu().className).toContain('h-dvh');
+    expect(document.getElementById(menu().getAttribute('aria-labelledby')).textContent).toBe('Menu');
     fireEvent.click(toggle());
     expect(toggle().getAttribute('aria-expanded')).toBe('true');
-    expect(menu().hidden).toBe(false);
+    expect(menu().hasAttribute('open')).toBe(true);
     const tools = [...menu().querySelectorAll('ul button')].map((b) => b.textContent);
     expect(tools).toEqual(['Your maps', 'Country list', 'Trips', 'Where to go next', 'Timeline', 'Badges and goals', 'Life’s One Shots', 'Photo album', 'Share this map', 'Map settings']);
+  });
+
+  it('opens as a modal dialog where the browser has them, and shuts it again', () => {
+    const showModal = vi.fn(function showModal() {
+      this.setAttribute('open', '');
+    });
+    const close = vi.fn(function close() {
+      this.removeAttribute('open');
+    });
+    const proto = window.HTMLDialogElement.prototype;
+    proto.showModal = showModal;
+    proto.close = close;
+    try {
+      const { toggle, menu } = open();
+      fireEvent.click(toggle());
+      expect(showModal).toHaveBeenCalledTimes(1);
+      expect(menu().hasAttribute('open')).toBe(true);
+      fireEvent.click(menu().querySelector('[aria-label="Close the menu"]'));
+      expect(close).toHaveBeenCalled();
+      expect(menu().hasAttribute('open')).toBe(false);
+    } finally {
+      delete proto.showModal;
+      delete proto.close;
+    }
+  });
+
+  it('has a close stamp at the top right, where focus starts, and shuts with focus back on Menu', () => {
+    const { toggle, menu } = open();
+    fireEvent.click(toggle());
+    const close = menu().querySelector('[data-menu-close] button');
+    expect(close.getAttribute('aria-label')).toBe('Close the menu');
+    expect(document.activeElement).toBe(close);
+    // The header's last cell: after the menu's name, before the statistics and the tools
+    const header = close.closest('[data-menu-close]').parentElement;
+    expect(header.firstElementChild.textContent).toBe('Menu');
+    expect(header.lastElementChild.contains(close)).toBe(true);
+    expect(header.className).toContain('pr-2.5');
+    fireEvent.click(close);
+    expect(menu().hasAttribute('open')).toBe(false);
+    expect(toggle().getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(toggle());
+  });
+
+  it('shuts on a close request (a phone’s back button)', () => {
+    const { toggle, menu } = open();
+    fireEvent.click(toggle());
+    const cancel = new Event('cancel', { cancelable: true });
+    act(() => {
+      menu().dispatchEvent(cancel);
+    });
+    expect(cancel.defaultPrevented).toBe(true);
+    expect(menu().hasAttribute('open')).toBe(false);
+    expect(toggle().getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('shuts when the screen turns wide, where the menu isn’t shown', () => {
+    const media = stubMatchMedia(() => false);
+    const { toggle, menu } = open();
+    fireEvent.click(toggle());
+    expect(menu().hasAttribute('open')).toBe(true);
+    act(() => media.change((query) => query.includes('min-width')));
+    expect(menu().hasAttribute('open')).toBe(false);
+    expect(toggle().getAttribute('aria-expanded')).toBe('false');
+  });
+
+  // 27 Nov 2026, the user's wish: the full-screen menu has the room
+  it('has “View passport” after the photo album, a link to the map’s passport that shuts the menu', () => {
+    const { toggle, menu, item, where } = open({ passportHref: '/maps/m1/passport' });
+    fireEvent.click(toggle());
+    const names = [...menu().querySelectorAll('ul li')].map((li) => li.textContent);
+    expect(names.slice(names.indexOf('Photo album'), names.indexOf('Photo album') + 2)).toEqual(['Photo album', 'View passport']);
+    const passport = item('View passport');
+    expect(passport.tagName).toBe('A');
+    expect(passport.getAttribute('href')).toBe('/maps/m1/passport');
+    fireEvent.click(passport);
+    expect(menu().hasAttribute('open')).toBe(false);
+    expect(where()).toBe('/maps/m1/passport');
+  });
+
+  it('has no passport without one, and none on the wide bar', () => {
+    const { toggle, menu, stamps } = open();
+    fireEvent.click(toggle());
+    expect(menu().textContent).not.toContain('View passport');
+    const { stamps: withPassport } = open({ passportHref: '/maps/m1/passport' });
+    expect(withPassport()).not.toContain('View passport');
+    expect(stamps()).not.toContain('View passport');
   });
 
   it('puts the statistics across the top, named by its label and described by the counts', () => {
     const { toggle, menu } = open();
     fireEvent.click(toggle());
-    const stats = menu().firstElementChild;
+    const stats = menu().querySelector('[aria-labelledby$="-label"]');
+    expect(stats.tagName).toBe('BUTTON');
     expect(stats.hasAttribute('aria-label')).toBe(false);
     expect(document.getElementById(stats.getAttribute('aria-labelledby')).textContent).toBe('Travel statistics');
     expect(document.getElementById(stats.getAttribute('aria-describedby')).textContent).toContain('8 countries');
@@ -155,7 +248,7 @@ describe('the phone’s menu', () => {
     fireEvent.click(toggle());
     fireEvent.click(item('Photo album'));
     expect(onToggle).toHaveBeenCalledWith('photos');
-    expect(menu().hidden).toBe(true);
+    expect(menu().hasAttribute('open')).toBe(false);
     expect(document.activeElement).toBe(toggle());
   });
 
@@ -173,7 +266,7 @@ describe('the phone’s menu', () => {
     try {
       fireEvent.click(toggle());
       fireEvent.keyDown(item('Trips'), { key: 'Escape' });
-      expect(menu().hidden).toBe(true);
+      expect(menu().hasAttribute('open')).toBe(false);
       expect(document.activeElement).toBe(toggle());
       expect(outer).not.toHaveBeenCalled();
       // Closed, Escape is the map's again
@@ -182,15 +275,6 @@ describe('the phone’s menu', () => {
     } finally {
       document.removeEventListener('keydown', outer);
     }
-  });
-
-  it('closes on a press outside it', () => {
-    const { toggle, menu, item } = open();
-    fireEvent.click(toggle());
-    fireEvent.pointerDown(item('Trips'));
-    expect(menu().hidden).toBe(false);
-    fireEvent.pointerDown(document.body);
-    expect(menu().hidden).toBe(true);
   });
 
   it('has Home below the tools, and Full screen where the browser has it', () => {

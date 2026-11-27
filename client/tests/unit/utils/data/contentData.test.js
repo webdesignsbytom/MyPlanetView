@@ -121,6 +121,8 @@ describe('pricingData', () => {
     expect(pricing.planTickets.map((ticket) => ticket.id)).toEqual([...PLAN_IDS]);
     for (const ticket of pricing.planTickets) {
       expect(ticket.features.map((f) => f.text)).toContain(`${count(PLANS[ticket.id].limits.photosPerCountry)} photos of each country, on each map`);
+      // Saved slideshows: 2, 10 and 25 a map (27 Nov 2026)
+      expect(ticket.features.map((f) => f.text)).toContain(`${count(PLANS[ticket.id].limits.photoShows)} saved slideshows of your photos on each map, each with a link to share`);
       expect(ticket.features.some((f) => f.soon)).toBe(false);
     }
   });

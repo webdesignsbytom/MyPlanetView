@@ -11,22 +11,28 @@ import { countryName } from '@/utils/map/countries';
 import { regionParent } from '@/utils/map/regionPlaces';
 import { VISIT_STATUS_LABELS, countsAsVisited } from '@/utils/map/visitStatus';
 import { takeHoverPoint } from '@/utils/map/hoverPoint';
+import { MARGIN, fingerPlace } from '@/utils/map/hoverCardPlace';
 
 const OFFSET = 18;
 // The card's top sits this far above the pointer, so the pointer is beside its header
 const LIFT = 40;
-// Kept clear of the screen's top and bottom edges
-const MARGIN = 8;
-// A finger's card (a long press: CountryLayer) clears the fingertip by this much
-const FINGER = 36;
 const CARD_WIDTH = 256; // w-64
 // How long the pointer rests on a country before its poster is fetched
 const POSTER_DELAY_MS = 180;
 
-// A finger's card: above the finger, centred on it, or below when there's no room above
-function fingerTop(y, height) {
-  const above = y - FINGER - height;
-  return above >= MARGIN ? above : y + FINGER;
+// Put the card where it goes: a finger's (a long press: CountryLayer) above or below the
+// finger, smaller when it fits on neither side (utils/map/hoverCardPlace.js); a mouse's beside
+// the pointer
+function placeCard(box, at) {
+  if (at.touch) {
+    const { top, scale } = fingerPlace(at.y, box.offsetHeight, window.innerHeight);
+    box.style.top = `${top}px`;
+    box.style.transform = scale < 1 ? `scale(${scale})` : '';
+    box.style.transformOrigin = 'top center';
+    box.dataset.hoverScale = String(scale);
+    return;
+  }
+  box.style.top = `${cardTop(at.y, box.offsetHeight, window.innerHeight)}px`;
 }
 
 // Where the card's top goes: beside the pointer, or, when the card wouldn't fit below
@@ -74,7 +80,7 @@ function HoverPreview({ code, status, showPoster }) {
     positionRef.current = position;
     const box = boxRef.current;
     if (!box || !position) return;
-    box.style.top = `${position.touch ? fingerTop(position.y, box.offsetHeight) : cardTop(position.y, box.offsetHeight, window.innerHeight)}px`;
+    placeCard(box, position);
   });
 
   // ...and again whenever its size changes: a poster's box is drawn square until its image
@@ -86,7 +92,7 @@ function HoverPreview({ code, status, showPoster }) {
     if (!shown || !box || typeof ResizeObserver === 'undefined') return undefined;
     const observer = new ResizeObserver(() => {
       const at = positionRef.current;
-      if (at) box.style.top = `${at.touch ? fingerTop(at.y, box.offsetHeight) : cardTop(at.y, box.offsetHeight, window.innerHeight)}px`;
+      if (at) placeCard(box, at);
     });
     observer.observe(box);
     return () => observer.disconnect();

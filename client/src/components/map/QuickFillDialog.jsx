@@ -11,7 +11,7 @@ import TextInput from '@/components/ui/TextInput';
 // Utils
 import { CONTINENT_LABELS, COUNTRY_BY_CODE, countriesOnMap } from '@/utils/map/countries';
 import { countsAsVisited } from '@/utils/map/visitStatus';
-import { trackCountriesMarked } from '@/utils/analytics/events';
+import { trackCountriesMarked } from '@/utils/analytics/siteActions';
 
 const CONTINENT_ORDER = ['EUROPE', 'ASIA', 'AFRICA', 'NORTH_AMERICA', 'SOUTH_AMERICA', 'OCEANIA', 'ANTARCTICA'];
 const plain = (text) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();

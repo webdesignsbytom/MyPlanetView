@@ -137,6 +137,66 @@ describe('a traveller’s passport page', () => {
     expect((await owner.agent.patch(`/api/photos/${photo.id}`).send({ hidden: false })).status).toBe(200);
   });
 
+  // 27 Nov 2026, the user's wish: "Passport needs first name last name"
+  it('takes a last name, the passport’s surname, shown to everyone the first name is, and clears it', async () => {
+    const setLast = (lastName, agent = owner.agent) => agent.patch(`/api/maps/${map.id}/travellers/${me.id}`).send({ lastName });
+    expect((await setLast(42)).status).toBe(400);
+    expect((await setLast('Brock', viewer.agent)).status).toBe(403);
+    const saved = await setLast('  Brock <b>Smith</b> ');
+    expect(saved.status).toBe(200);
+    expect(data(saved).traveller).toMatchObject({ name: me.name, lastName: 'Brock Smith' });
+    expect(data(await owner.agent.get(`/api/maps/${map.id}`)).map.travellers.find((t) => t.id === me.id)).toMatchObject({ lastName: 'Brock Smith' });
+    expect(travellerIn(await passportOf(owner.agent)).lastName).toBe('Brock Smith');
+    expect(travellerIn(await passportOf(viewer.agent)).lastName).toBe('Brock Smith');
+    expect(data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.travellers.find((t) => t.id === me.id).lastName).toBe('Brock Smith');
+    // Changing anything else keeps it; "" or null clears it
+    await owner.agent.patch(`/api/maps/${map.id}/travellers/${me.id}`).send({ favouriteCountryCode: 'IT' });
+    expect(travellerIn(await passportOf(owner.agent)).lastName).toBe('Brock Smith');
+    expect(data(await setLast('')).traveller.lastName).toBeNull();
+    expect(data(await setLast('Brock')).traveller.lastName).toBe('Brock');
+    expect(data(await setLast(null)).traveller.lastName).toBeNull();
+    // A new map's travellers come with theirs, or none
+    const made = await owner.agent.post('/api/maps').send({
+      name: 'Our travels',
+      groupType: 'COUPLE',
+      travellers: [{ name: 'Tom', lastName: 'Brock' }, { name: 'Gigie' }],
+    });
+    expect(made.status).toBe(201);
+    const travellers = data(await owner.agent.get(`/api/maps/${data(made).map.id}`)).map.travellers;
+    expect(travellers.map((t) => [t.name, t.lastName])).toEqual([
+      ['Tom', 'Brock'],
+      ['Gigie', null],
+    ]);
+    expect((await owner.agent.delete(`/api/maps/${data(made).map.id}`)).status).toBe(200);
+  });
+
+  // 27 Nov 2026, the user's wish: "Passport also needs nationality"
+  it('takes a nationality, a country, shown to everyone, marking no visit, and clears it', async () => {
+    const setNationality = (nationalityCode, agent = owner.agent) =>
+      agent.patch(`/api/maps/${map.id}/travellers/${me.id}`).send({ nationalityCode });
+    expect((await setNationality('ZZ')).status).toBe(400);
+    for (const special of ['AQ', 'XN', 'XS']) {
+      const refused = await setNationality(special);
+      expect(refused.status).toBe(400);
+      expect(refused.body.message).toBe('Choose a country for a nationality.');
+    }
+    expect((await setNationality('IE', viewer.agent)).status).toBe(403);
+    const visitsBefore = data(await owner.agent.get(`/api/maps/${map.id}`)).map.visits.map((v) => v.countryCode);
+    expect(visitsBefore).not.toContain('PH');
+    expect(data(await setNationality('PH')).traveller.nationalityCode).toBe('PH');
+    const mapNow = data(await owner.agent.get(`/api/maps/${map.id}`)).map;
+    expect(mapNow.travellers.find((t) => t.id === me.id).nationalityCode).toBe('PH');
+    // Never a visit: a nationality isn't somewhere they've been
+    expect(mapNow.visits.map((v) => v.countryCode)).not.toContain('PH');
+    expect(travellerIn(await passportOf(viewer.agent)).nationalityCode).toBe('PH');
+    expect(data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map.travellers.find((t) => t.id === me.id).nationalityCode).toBe('PH');
+    // A UK nation is the UK's, as a traveller's other places
+    expect(data(await setNationality('XC')).traveller.nationalityCode).toBe('GB');
+    expect(data(await setNationality('')).traveller.nationalityCode).toBeNull();
+    expect(data(await setNationality('PH')).traveller.nationalityCode).toBe('PH');
+    expect(data(await setNationality(null)).traveller.nationalityCode).toBeNull();
+  });
+
   it('comes with the owner’s data', async () => {
     const exported = data(await owner.agent.get(`/api/users/export/maps/${map.id}`)).map;
     expect(exported.travellers.find((t) => t.id === me.id)).toMatchObject({

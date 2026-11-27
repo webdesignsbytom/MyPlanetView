@@ -52,7 +52,8 @@ function FoldSection({ id, title, open, onToggle, children }) {
           className='grid min-h-9 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 pb-1 text-left uppercase'
         >
           <span>{title}</span>
-          <FaChevronDown aria-hidden='true' className={`text-sm transition-transform motion-reduce:transition-none ${open ? '' : 'rotate-90'}`} />
+          {/* Down to open, up to close (27 Nov 2026, the user's wish, as the badges' groups) */}
+          <FaChevronDown aria-hidden='true' className={`text-sm transition-transform motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} />
         </button>
       </h3>
       <div id={bodyId} hidden={!open} className='grid gap-2'>

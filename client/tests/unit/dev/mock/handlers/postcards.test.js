@@ -72,6 +72,23 @@ describe('sending one', () => {
     expect((await get('/api/postcards')).data.paidCards).toBe(false);
   });
 
+  it('puts a city’s or the wilderness’s photo on a country’s card for everyone, a landmark’s for paid plans only', async () => {
+    const city = { ...CARD, landmarkId: 'lm-paris-banks-of-the-seine' };
+    const landmarkPhoto = { ...CARD, landmarkId: 'lm-eiffel-tower' };
+    expect((await post('/api/postcards', landmarkPhoto)).status).toBe(201);
+    economy();
+    const sent = await post('/api/postcards', city);
+    expect(sent.status).toBe(201);
+    expect(sent.data.postcard).toMatchObject({ kind: 'COUNTRY', landmark: { id: 'lm-paris-banks-of-the-seine', slug: 'paris-banks-of-the-seine' } });
+    expect((await post('/api/postcards', { ...CARD, countryCode: 'JP', landmarkId: 'lm-mount-fuji' })).status).toBe(201);
+    const refused = await post('/api/postcards', landmarkPhoto);
+    expect(refused.status).toBe(403);
+    expect(refused.body.message).toBe(M.postcardNeedsPlan);
+    // Another place's, or one that isn't there
+    expect((await post('/api/postcards', { ...CARD, landmarkId: 'lm-colosseum' })).body.message).toBe(M.postcardLandmarkInvalid);
+    expect((await post('/api/postcards', { ...CARD, landmarkId: 'lm-nowhere' })).status).toBe(400);
+  });
+
   it('carries the sender’s own photo, presigned and put in the mock bucket, once', async () => {
     const key = await pictureKey();
     expect(key).toMatch(new RegExp(`^myplanetview/postcards/${USER}/card-`));

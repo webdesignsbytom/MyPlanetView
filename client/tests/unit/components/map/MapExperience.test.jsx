@@ -726,6 +726,56 @@ describe('MapExperience', () => {
       expect(panel('CelebrationDialog')).toBeNull();
     });
 
+    // 27 Nov 2026, the user's report: "I clicked visited Iowa ... The country visited animation
+    // did not play": a state that brings its country (and a region: Hawaii) celebrates each
+    // newly visited, dated today, the first tied to the place before it; the map read again
+    it('celebrates the country a state brought from its own map, dated today', async () => {
+      seenDialogs();
+      const acts = { ...actions(), tieString: vi.fn().mockResolvedValue({ id: 's1' }) };
+      const { panel, click, q } = open({ actions: acts });
+      await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
+      click('pick France');
+      await waitFor(() => expect(panelProps.CountryPanel).toBeTruthy());
+      act(() => panelProps.CountryPanel.onOpenCountryMap('US'));
+      await waitFor(() => expect(panelProps.CountryMapView?.onVisitsChanged).toBeTruthy());
+      await act(async () => {
+        await panelProps.CountryMapView.onVisitsChanged([
+          { countryCode: 'XH', status: 'VISITED', firstVisitedOn: null },
+          { countryCode: 'US', status: 'VISITED', firstVisitedOn: null },
+        ]);
+      });
+      await waitFor(() => expect(panel('CelebrationDialog')).not.toBeNull());
+      expect(celebration()).toEqual({ kind: 'country', code: 'XH', status: 'VISITED', firstVisitedOn: todayDay() });
+      expect(acts.setVisit).toHaveBeenCalledWith('XH', 'VISITED', { firstVisitedOn: todayDay() });
+      expect(acts.setVisit).toHaveBeenCalledWith('US', 'VISITED', { firstVisitedOn: todayDay() });
+      // The first tied to the place visited before it (GB), the country it brought not
+      expect(acts.tieString).toHaveBeenCalledTimes(1);
+      expect(acts.tieString).toHaveBeenCalledWith('GB', 'XH', 'VISITED');
+      expect(acts.refresh).toHaveBeenCalled();
+      // Then the US
+      act(() => panelProps.CelebrationDialog.onClose());
+      await waitFor(() => expect(celebration()).toEqual({ kind: 'country', code: 'US', status: 'VISITED', firstVisitedOn: todayDay() }));
+    });
+
+    it('celebrates nothing for a state whose country was visited already, or a clear', async () => {
+      seenDialogs();
+      const acts = actions();
+      const { panel, click, q } = open({ actions: acts });
+      await waitFor(() => expect(q('[data-map-loading]')).toBeNull());
+      click('pick France');
+      await waitFor(() => expect(panelProps.CountryPanel).toBeTruthy());
+      act(() => panelProps.CountryPanel.onOpenCountryMap('GB'));
+      await waitFor(() => expect(panelProps.CountryMapView?.onVisitsChanged).toBeTruthy());
+      await act(async () => {
+        await panelProps.CountryMapView.onVisitsChanged([{ countryCode: 'GB', status: 'VISITED' }]);
+        await panelProps.CountryMapView.onVisitsChanged([]);
+        await panelProps.CountryMapView.onVisitsChanged();
+      });
+      expect(acts.refresh).toHaveBeenCalledTimes(3);
+      expect(acts.setVisit).not.toHaveBeenCalled();
+      expect(panel('CelebrationDialog')).toBeNull();
+    });
+
     // 24 Nov 2026, the user's wish: the list gives the country its passport page too
     it('celebrates a country marked visited from the country list, dated today, once saved', async () => {
       seenDialogs();

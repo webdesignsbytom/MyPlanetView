@@ -39,6 +39,7 @@ import {
   clearStampPhotoHandler,
   createGoalHandler,
   getBadgesHandler,
+  getBadgeStoryHandler,
   getGoalsHandler,
   getPassportHandler,
   setStampPhotoHandler,
@@ -192,6 +193,8 @@ router.delete('/:mapId/passport/stamps/:landmarkId/photo', verified, clearStampP
 // A traveller's passport photo and signature (docs/API.md "Passport"): editors, verified
 router.patch('/:mapId/travellers/:travellerId/passport', verified, updateTravellerPassportHandler);
 router.get('/:mapId/badges', getBadgesHandler);
+// What earned a badge (27 Nov 2026): never awards
+router.get('/:mapId/badges/:badgeKey', getBadgeStoryHandler);
 router.get('/:mapId/goals', getGoalsHandler);
 router.post('/:mapId/goals', verified, createGoalHandler);
 

@@ -25,6 +25,10 @@ export const maxTravellersFor = (groupType) => GROUP_TYPES.find((g) => g.value =
 // lists without it (a co-owner's view of a form that never asked) keeps theirs
 const travellerBody = (t, position) => ({
   name: t.name.trim(),
+  // Optional (27 Nov 2026): the passport's surname; empty clears it
+  lastName: (t.lastName || '').trim() || null,
+  // Optional (27 Nov 2026): the passport's nationality
+  nationalityCode: t.nationalityCode || null,
   birthCountryCode: t.birthCountryCode || null,
   favouriteCountryCode: t.favouriteCountryCode || null,
   ...(t.birthDate !== undefined ? { birthDate: t.birthDate || null } : {}),
@@ -33,6 +37,8 @@ const travellerBody = (t, position) => ({
 
 const changed = (before, body) =>
   before.name !== body.name ||
+  (before.lastName || null) !== body.lastName ||
+  (before.nationalityCode || null) !== body.nationalityCode ||
   (before.birthCountryCode || null) !== body.birthCountryCode ||
   (before.favouriteCountryCode || null) !== body.favouriteCountryCode ||
   ('birthDate' in body && (before.birthDate || null) !== body.birthDate) ||
@@ -91,4 +97,26 @@ export async function saveMapSetup(mapId, original, form, { canRename = true } =
     }
   }
   if (!heldBackGone) for (const before of later) await deleteTraveller(mapId, before.id);
+}
+
+// Every traveller needs a first name (the passport's details card)
+export const NEEDS_EVERY_NAME = 'Give every traveller a first name.';
+
+/**
+ * The travellers' own details, saved from the passport page's "Travellers’ details" (27 Nov
+ * 2026, the user's wish: "below the passport we should have a edit data container for the
+ * peoples info"): each traveller in `form` whose names, nationality, places or date of birth
+ * differ from `before` (the passport's travellers, as loaded) is PATCHed, never moved in the
+ * list, added or taken off (Settings does those). -> the travellers as saved
+ */
+export async function saveTravellerDetails(mapId, before, form) {
+  if (form.some((t) => !t.name.trim())) throw Object.assign(new Error(NEEDS_EVERY_NAME), { friendlyMessage: NEEDS_EVERY_NAME });
+  const saved = [];
+  for (const t of form) {
+    const was = before.find((b) => b.id === t.id);
+    const { position: _position, ...body } = travellerBody(t, 0);
+    if (was && !changed({ ...was, position: 0 }, { ...body, position: 0 })) continue;
+    saved.push((await updateTraveller(mapId, t.id, body)).traveller);
+  }
+  return saved;
 }

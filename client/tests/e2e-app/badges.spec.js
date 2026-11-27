@@ -1,4 +1,4 @@
-import { test, expect, SAM_MAP, openMap, openTool, toolButton } from './fixtures.js';
+import { test, expect, SAM_MAP, openMap, openTool, toolButton, toolbar } from './fixtures.js';
 
 // Badges and goals (docs/API.md, "Badges and goals"). The seed (src/dev/mock/seed.js) gives
 // the test user's map three goals: twenty-five countries by the end of 2027 (20 of 25: the
@@ -64,6 +64,16 @@ test.describe('Badges and goals', () => {
     await list.getByRole('combobox', { name: 'Status for Peru' }).selectOption('Visited');
     const news = page.getByRole('status').filter({ hasText: 'New badges: South America and Six continents.' });
     await expect(news).toBeVisible();
+    // On a phone it's at the very top, over the Menu stamp (27 Nov 2026, the user's wish)
+    if (test.info().project.name === 'phone') {
+      const [box, menu] = await Promise.all([news.boundingBox(), toolbar(page).getByRole('button', { name: 'Menu', exact: true }).boundingBox()]);
+      // It covers the stamp's middle (the stamp's ring stands a little proud of the top edge)
+      const [middleX, middleY] = [menu.x + menu.width / 2, menu.y + menu.height / 2];
+      expect(box.y).toBeLessThan(middleY);
+      expect(box.y + box.height).toBeGreaterThan(middleY);
+      expect(box.x).toBeLessThan(middleX);
+      expect(box.x + box.width).toBeGreaterThan(middleX);
+    }
     await news.getByRole('button', { name: 'See badges and goals' }).click();
     const again = page.getByRole('dialog', { name: 'Badges and goals' });
     await expect(news).toBeHidden();
@@ -72,6 +82,42 @@ test.describe('Badges and goals', () => {
     // A deadline counts the day a country was marked too (19 Nov 2026, the user's decision):
     // Peru, ticked by hand today, moves this one
     await expect(again.getByRole('article', { name: 'Twenty-five countries by the end of 2027' })).toContainText('21 of 25 countries');
+  });
+
+  // 27 Nov 2026, the user's wish: "click on a achieved badge and see a cool looking container
+  // with the badge and what they did to earn it"
+  test('an earned badge opens its own card: what earned it, in order, the one that did marked', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    const panel = await openTool(page, 'Badges and goals', 'Badges and goals');
+    // Only earned badges open: the demo couple has ten countries, not 25
+    await expect(panel.locator('[data-badge-open="countries-25"]')).toHaveCount(0);
+    await panel.locator('[data-badge-open="countries-10"]').click();
+
+    const card = page.getByRole('dialog', { name: 'Ten countries' });
+    await expect(card).toBeVisible();
+    await expect(card).toContainText(/Earned \d+ \w+ \d{4}/);
+    await expect(card).toContainText('10 countries visited or lived in');
+    // The tenth country first visited: Morocco, on the year off round the world
+    const earned = card.locator('[data-badge-earned-with]');
+    await expect(earned).toContainText('Your tenth country');
+    await expect(earned).toContainText('Morocco');
+    const rows = card.locator('[data-badge-story-list] li');
+    await expect(rows).toHaveCount(10);
+    await expect(rows.first()).toContainText('United Kingdom');
+    await expect(card.locator('[data-earned-it]')).toContainText('Morocco');
+
+    // Escape closes the card, leaving the panel open
+    await page.keyboard.press('Escape');
+    await expect(card).toBeHidden();
+    await expect(panel).toBeVisible();
+
+    // A country collection's medal opens its card too: Ireland's bronze, by the Cliffs of Moher
+    await panel.locator('[data-badge-open="collect-IE-bronze"]').click();
+    const medal = page.getByRole('dialog', { name: 'Bronze for Ireland' });
+    await expect(medal.locator('[data-badge-earned-with]')).toContainText('Won Ireland’s bronze');
+    await expect(medal.locator('[data-badge-earned-with]')).toContainText('Cliffs of Moher');
+    await medal.getByRole('button', { name: 'Carry on' }).click();
+    await expect(medal).toBeHidden();
   });
 
   // 25 Nov 2026, the user's wish: "when you earn a badge have the popup modal have a share
@@ -240,6 +286,8 @@ test.describe('Badges and goals', () => {
     const settings = await openTool(page, 'Map settings', 'Settings');
     await settings.getByRole('tab', { name: 'This map' }).click();
     const thisMap = settings.getByRole('tabpanel', { name: 'This map' });
+    // Who it's for is behind "Change map type" (27 Nov 2026, the user's wish)
+    await thisMap.getByRole('button', { name: 'Change map type' }).click();
     await thisMap.getByText('A family', { exact: true }).click();
     await thisMap.getByRole('button', { name: 'Save map' }).click();
     await expect(thisMap.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();

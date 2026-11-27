@@ -234,13 +234,15 @@ describe('CountryMapView', () => {
 
   it('opens a state’s card on a press, where an editor marks it', async () => {
     const { container, onVisitsChanged } = draw();
-    mapData.value.setStatus.mockResolvedValue(['LU']);
+    const implied = [{ countryCode: 'LU', status: 'VISITED', firstVisitedOn: null }];
+    mapData.value.setStatus.mockResolvedValue(implied);
     fireEvent.click(container.querySelector('[data-state="LU-L"] path'));
     const card = document.querySelector('[data-state-popover]');
     expect(card.getAttribute('aria-label')).toBe('Luxembourg');
     fireEvent.click(screen.getByText('Lived there'));
     await waitFor(() => expect(mapData.value.setStatus).toHaveBeenCalledWith('LU-L', 'LIVED'));
-    await waitFor(() => expect(onVisitsChanged).toHaveBeenCalled());
+    // With the places it brought, so the map page celebrates a country newly visited (27 Nov 2026)
+    await waitFor(() => expect(onVisitsChanged).toHaveBeenCalledWith(implied));
   });
 
   it('says why a state’s change wasn’t saved', async () => {

@@ -16,9 +16,11 @@ import {
   POSTCARD_PICTURE_UNSAVED_LIMIT,
   canSendPostcardKind,
   checkPostcardPicture,
+  isFreePostcardPhoto,
   landmarkFitsPlace,
   parsePostcardInput,
   postcardListItem,
+  postcardPhotoGroup,
   postcardView,
 } from '../utils/postcards.js';
 import {
@@ -117,10 +119,16 @@ export const sendPostcardHandler = handler(D, 'Send postcard', async (req, res) 
   if (!(await findCountryByCode(card.countryCode))) return badRequest(req, res, D, EVENT_MESSAGES.countryNotFound);
   if (card.kind !== 'COUNTRY' && !(await paidCardsFor(req.user.id))) return forbidden(req, res, D, EVENT_MESSAGES.postcardNeedsPlan);
 
-  if (card.kind === 'LANDMARK') {
+  if (card.landmarkId) {
     const landmark = await findLandmarkById(card.landmarkId);
     if (!landmark || !landmarkFitsPlace(landmark.countryCode, card.countryCode)) {
       return badRequest(req, res, D, EVENT_MESSAGES.postcardLandmarkInvalid);
+    }
+    // A country's card (every plan's) carries a city's or the wilderness's photo; a landmark's is
+    // a paid plan's; a landmark with no postcard photo, none
+    if (card.kind === 'COUNTRY' && !isFreePostcardPhoto(landmark.wikidataId)) {
+      if (postcardPhotoGroup(landmark.wikidataId) !== 'l') return badRequest(req, res, D, EVENT_MESSAGES.postcardLandmarkInvalid);
+      if (!(await paidCardsFor(req.user.id))) return forbidden(req, res, D, EVENT_MESSAGES.postcardNeedsPlan);
     }
   }
   let picture = null;

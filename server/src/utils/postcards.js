@@ -13,6 +13,9 @@ import { sanitizeText } from './sanitize.js';
 import { isCountryCode, isUuid } from './travelValidation.js';
 import { UK, isUkNation } from './ukNations.js';
 import { regionParent } from './regionPlaces.js';
+// Each landmark with a photo big enough to cover a card, and what it's of (images/src/tools/
+// postcard-photos.mjs): c a city, w the wilderness, l a landmark
+import POSTCARD_PHOTOS from '../data/postcardPhotos.json' with { type: 'json' };
 
 const MB = 1024 * 1024;
 
@@ -39,6 +42,17 @@ export const POSTCARD_PICTURE_MAX_BYTES = 8 * MB;
 export const POSTCARD_PICTURE_SAVE_WINDOW_MINUTES = 50;
 // Pictures presigned and never sent, per user over the last day (429 above)
 export const POSTCARD_PICTURE_UNSAVED_LIMIT = 10;
+
+// The photos on every plan's cards: a city's and the wilderness's (27 Nov 2026, the user's wish:
+// "a cool city photo, or a wilderness photo, or a famous landmark photo"; country postcards free,
+// landmark ones on a paid plan)
+export const FREE_PHOTO_GROUPS = Object.freeze(['c', 'w']);
+
+/** What a landmark's postcard photo is of (`c`, `w` or `l`), by its Wikidata item; null when it has none. */
+export const postcardPhotoGroup = (wikidataId) => POSTCARD_PHOTOS[wikidataId] ?? null;
+
+/** Can a country's card (every plan's) carry this landmark's photo? Only a city's or the wilderness's. */
+export const isFreePostcardPhoto = (wikidataId) => FREE_PHOTO_GROUPS.includes(postcardPhotoGroup(wikidataId));
 
 /** Can someone on `plan` (FREE, REGULAR, PREMIUM) send a card of `kind`? */
 export const canSendPostcardKind = (plan, kind) => POSTCARD_KINDS.includes(kind) && (!PAID_POSTCARD_KINDS.includes(kind) || (Boolean(plan) && plan !== 'FREE'));
@@ -68,8 +82,9 @@ export function messageFrom(value) {
 
 /**
  * A card as sent: `{ kind, countryCode, landmarkId?, pictureKey?, style?, message, toName?,
- * fromName? }`. A landmark's card names its landmark, a photo card its picture's key; the
- * place is a code (whether it exists is the database's to say).
+ * fromName? }`. A landmark's card names its landmark, a country's may (a city's or the
+ * wilderness's photo on its front), a photo card names its picture's key; the place is a code
+ * (whether it exists is the database's to say).
  * -> `{ ok: true, value }`, or `{ ok: false, error }` (an EVENT_MESSAGES key)
  */
 export function parsePostcardInput(body) {
@@ -92,7 +107,8 @@ export function parsePostcardInput(body) {
   }
 
   let landmarkId = null;
-  if (kind === 'LANDMARK') {
+  const named = input.landmarkId !== undefined && input.landmarkId !== null && input.landmarkId !== '';
+  if (kind === 'LANDMARK' || (kind === 'COUNTRY' && named)) {
     if (!isUuid(input.landmarkId)) return { ok: false, error: 'postcardLandmarkInvalid' };
     landmarkId = input.landmarkId;
   }

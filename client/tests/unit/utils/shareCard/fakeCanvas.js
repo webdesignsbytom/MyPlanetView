@@ -29,9 +29,11 @@ export function fakeContext(canvas = null) {
     getImageData: () => ({ data: [0, 0, 0, 255] }),
   };
   const record = (name) => (...args) => calls.push({ name, args, fillStyle: ctx.fillStyle, strokeStyle: ctx.strokeStyle, font: ctx.font });
-  for (const name of ['save', 'restore', 'beginPath', 'rect', 'clip', 'fillRect', 'strokeRect', 'translate', 'rotate', 'scale', 'fill', 'stroke', 'arc', 'fillText', 'setLineDash', 'drawImage', 'moveTo', 'lineTo', 'closePath']) {
+  for (const name of ['save', 'restore', 'beginPath', 'rect', 'clip', 'fillRect', 'strokeRect', 'translate', 'rotate', 'scale', 'fill', 'stroke', 'arc', 'fillText', 'strokeText', 'setLineDash', 'drawImage', 'moveTo', 'lineTo', 'closePath']) {
     ctx[name] = vi.fn(record(name));
   }
+  // A gradient records its stops (the postcard's shade)
+  ctx.createRadialGradient = vi.fn((...args) => ({ kind: 'radial', args, stops: [], addColorStop(at, colour) { this.stops.push([at, colour]); } }));
   return ctx;
 }
 

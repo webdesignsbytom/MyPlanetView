@@ -5,8 +5,9 @@ import { test, expect, MOCK_STORE_KEY, makeJpeg, openMap, openTool, signOut } fr
 // a message, selection of images, and a selection of styles. Or upload your own photo. Cool stamps
 // and address area. You send them with a share link. They are not part of the map. And people can
 // download them so they keep them forever"; docs/API.md "Postcards"). From a place's ticket, an
-// editor sends a card by a link of its own; a country's card is free, a landmark's or one from your
-// own photo on a paid plan (the seeded test user pays for Business). Whoever opens the link sees
+// editor sends a card by a link of its own, a photo across its front (27 Nov 2026, the user's
+// wish): a city's or the wilderness's on every plan, a landmark's or one from your own photo on a
+// paid plan (the seeded test user pays for Business). Whoever opens the link sees
 // the card, turns it over and downloads both sides. The seed has two: France's (PST2-CRD8-FRNC, to
 // Gran) and the Colosseum's (PST2-CRD8-RMEC, to Sam).
 
@@ -19,6 +20,20 @@ const DRAWN = { timeout: 45_000 };
 async function choose(maker, attribute, value) {
   await maker.locator(`[data-postcard-${attribute}="${value}"]`).click();
   await expect(maker.locator(`[data-postcard-${attribute}="${value}"] input`)).toBeChecked();
+}
+
+/** Open one of the front's photo tabs (c a city, w the wilderness, l landmarks, own your photo). */
+async function photoTab(maker, value) {
+  await maker.locator(`[data-postcard-tab="${value}"]`).click();
+  await expect(maker.locator(`[data-postcard-tab="${value}"]`)).toHaveAttribute('aria-pressed', 'true');
+}
+
+/** Choose a photo for the front. -> its tile */
+async function pickPhoto(maker, slug) {
+  const tile = slug ? maker.locator(`[data-postcard-pick="${slug}"]`) : maker.locator('[data-postcard-pick]').first();
+  await tile.click();
+  await expect(tile).toHaveAttribute('aria-pressed', 'true');
+  return tile;
 }
 
 /** The card's page has opened, and its card is drawn. */
@@ -57,8 +72,13 @@ async function sendIt(page, maker, { message, to }) {
 test.describe('Postcards', () => {
   test('an editor sends a country’s card from its ticket, and whoever has the link turns it over and keeps it', { tag: '@phone' }, async ({ page }) => {
     const maker = await openMaker(page, 'France');
-    // The country's own card to start with, and a preview of it, drawn
-    await expect(maker.locator('[data-postcard-kind="COUNTRY"] input')).toBeChecked();
+    // One of its city photos to start with, and a preview of it, drawn
+    await expect(maker.locator('[data-postcard-tab="c"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(maker.locator('[data-postcard-pick]').first()).toHaveAttribute('aria-pressed', 'true');
+    await expect(maker.locator('[data-postcard-drawn="true"]')).toBeVisible(DRAWN);
+    // ...or the wilderness's
+    await photoTab(maker, 'w');
+    await pickPhoto(maker);
     await expect(maker.locator('[data-postcard-drawn="true"]')).toBeVisible(DRAWN);
     await choose(maker, 'style', 'airmail');
     // Writing turns the preview over to its back
@@ -94,17 +114,35 @@ test.describe('Postcards', () => {
     await expect(page.getByRole('link', { name: 'Make your own travel map, free' })).toBeVisible();
   });
 
+  test('a postcard is offered only from a place visited or lived in', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    const list = await openTool(page, 'Country list', 'Countries');
+    await list.getByRole('searchbox', { name: 'Search countries' }).fill('germany');
+    await list.getByRole('button', { name: 'Germany', exact: true }).click();
+    const ticket = page.getByRole('dialog', { name: 'Germany' });
+    const send = ticket.getByRole('button', { name: 'Send a postcard' });
+    const status = ticket.getByRole('combobox', { name: 'Been there?' });
+    await expect(status).toHaveValue('');
+    await expect(send).toHaveCount(0);
+    await status.selectOption('Want to go');
+    await expect(send).toHaveCount(0);
+    await status.selectOption('Visited');
+    await expect(send).toBeVisible();
+    await status.selectOption('Lived there');
+    await expect(send).toBeVisible();
+  });
+
   test('on a paid plan, a landmark’s card and one from your own photo', async ({ page }) => {
     let maker = await openMaker(page, 'France');
-    await choose(maker, 'kind', 'LANDMARK');
-    await maker.getByRole('combobox', { name: 'Which landmark?' }).selectOption({ label: 'Eiffel Tower' });
+    await photoTab(maker, 'l');
+    await pickPhoto(maker, 'eiffel-tower');
     let link = await sendIt(page, maker, { message: 'We went up to the very top.', to: 'Sam' });
     await page.goto(new URL(link).pathname);
     await cardOpened(page, 'A postcard from Eiffel Tower');
 
     // One of the place's photos on the map
     maker = await openMaker(page, 'France');
-    await choose(maker, 'kind', 'PHOTO');
+    await photoTab(maker, 'own');
     await maker.locator('[data-postcard-photo="photo-eiffel"]').click();
     await expect(maker.locator('[data-postcard-own-photo]')).toBeVisible();
     await expect(maker.locator('[data-postcard-photo="photo-eiffel"]')).toHaveAttribute('aria-pressed', 'true');
@@ -112,7 +150,7 @@ test.describe('Postcards', () => {
     await maker.getByRole('button', { name: 'Send another' }).click();
 
     // ...or one from the device
-    await choose(maker, 'kind', 'PHOTO');
+    await photoTab(maker, 'own');
     await maker.locator('[data-postcard-file]').setInputFiles(await makeJpeg(page, { name: 'holiday.jpg' }));
     await expect(maker.locator('[data-postcard-own-photo]')).toBeVisible();
     await sendIt(page, maker, { message: 'One from my phone.' });
@@ -122,7 +160,7 @@ test.describe('Postcards', () => {
     await cardOpened(page, 'A postcard from France');
   });
 
-  test('on Economy, a landmark’s card and your own photo’s are locked, and say which plans have them', async ({ page }) => {
+  test('on Economy, a landmark’s photo and your own are locked, saying which plans have them, and a city’s or the wilderness’s free', async ({ page }) => {
     // The store is saved once mock mode has started on a page
     await openMap(page);
     await page.evaluate((key) => {
@@ -131,11 +169,18 @@ test.describe('Postcards', () => {
       localStorage.setItem(key, JSON.stringify(db));
     }, MOCK_STORE_KEY);
     const maker = await openMaker(page, 'France');
-    await expect(maker.locator('[data-postcard-kind="LANDMARK"] input')).toBeDisabled();
-    await expect(maker.locator('[data-postcard-kind="PHOTO"] input')).toBeDisabled();
-    await expect(maker.getByText('Postcards of landmarks and of your own photos come with Business and First Class.')).toBeVisible();
+    const note = maker.getByText('Postcards of landmarks and of your own photos come with Business and First Class.');
+    await expect(note).toHaveCount(0);
+    await photoTab(maker, 'l');
+    await expect(maker.locator('[data-postcard-pick="eiffel-tower"]')).toBeDisabled();
+    await expect(note).toBeVisible();
     await expect(maker.getByRole('link', { name: 'See the plans' })).toBeVisible();
-    // A country's card is still free
+    await photoTab(maker, 'own');
+    await expect(maker.locator('[data-postcard-file]')).toHaveCount(0);
+    await expect(note).toBeVisible();
+    // A city's and the wilderness's photos are still free
+    await photoTab(maker, 'w');
+    await pickPhoto(maker);
     await sendIt(page, maker, { message: 'Free postcards for everyone.' });
   });
 

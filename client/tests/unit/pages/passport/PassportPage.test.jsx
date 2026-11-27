@@ -16,6 +16,7 @@ vi.mock('@/components/passport/PassportBook', () => ({
       data-props={Object.keys(rest).sort().join(',')}
       data-edit={travellerEdit ? (travellerEdit.locked ? 'locked' : 'on') : 'off'}
       data-travellers={passport.travellers.map((t) => `${t.id}:${t.signature ?? ''}`).join(',')}
+      data-traveller-names={passport.travellers.map((t) => `${t.id}:${[t.name, t.lastName].filter(Boolean).join(' ')}`).join(',')}
       data-cover={passport.map.passportColour ?? ''}
     >
       <button type='button' onClick={() => onOpenPhoto('photo-1')}>
@@ -58,6 +59,19 @@ vi.mock('@/components/passport/TravellerSignatureDialog', () => ({
         }}
       >
         Sign it
+      </button>
+    </div>
+  ),
+}));
+// The details card under the book (tested on its own): where it shows, and what its saves do
+vi.mock('@/components/passport/PassportDetailsCard', () => ({
+  default: ({ mapId, travellers, locked, onSaved }) => (
+    <div data-details-card={`${mapId}:${travellers.map((t) => t.id).join(',')}`} data-locked={String(locked)}>
+      <button type='button' onClick={() => onSaved([{ id: 'trav-1', name: 'Charles', lastName: 'Reid' }], { birthplaceChanged: false })}>
+        Save a name
+      </button>
+      <button type='button' onClick={() => onSaved([{ id: 'trav-1', birthCountryCode: 'IE' }], { birthplaceChanged: true })}>
+        Save a birthplace
       </button>
     </div>
   ),
@@ -197,6 +211,50 @@ describe('PassportPage', () => {
       openOwn();
       await waitFor(() => expect(book()).toBeTruthy());
       expect(book().getAttribute('data-edit')).toBe('off');
+    });
+  });
+
+  // 27 Nov 2026, the user's wish: "below the passport we should have a edit data container for
+  // the peoples info"
+  describe('the travellers’ details', () => {
+    const editable = () => passport({ map: { id: 'map-1', name: 'Our map', groupType: 'COUPLE', traveller: null, canEdit: true }, travellers: [{ id: 'trav-1', name: 'Charlie' }] });
+    const card = () => document.querySelector('[data-details-card]');
+
+    it('are under the book for the map’s editors, every traveller, locked for an unverified address', async () => {
+      getPassport.mockResolvedValue({ passport: editable() });
+      const { unmount } = openOwn();
+      await waitFor(() => expect(card()).toBeTruthy());
+      expect(card().getAttribute('data-details-card')).toBe('map-1:trav-1');
+      expect(card().getAttribute('data-locked')).toBe('false');
+      // Below the book
+      expect(book().compareDocumentPosition(card()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      unmount();
+      renderPage(<PassportPage />, { path: MAP_PASSPORT_PAGE_URL, at: '/maps/map-1/passport', auth: signedIn({ emailVerified: false }) });
+      await waitFor(() => expect(card()?.getAttribute('data-locked')).toBe('true'));
+    });
+
+    it('aren’t offered through a share link or to a viewer', async () => {
+      getPassport.mockResolvedValue({ passport: editable() });
+      const { unmount } = openShared();
+      await waitFor(() => expect(book()).toBeTruthy());
+      expect(card()).toBeNull();
+      unmount();
+      getPassport.mockResolvedValue({ passport: { ...editable(), map: { ...editable().map, canEdit: false } } });
+      openOwn();
+      await waitFor(() => expect(book()).toBeTruthy());
+      expect(card()).toBeNull();
+    });
+
+    it('go into the book at once when saved, and a new birthplace reads the passport again', async () => {
+      getPassport.mockResolvedValue({ passport: editable() });
+      openOwn();
+      await waitFor(() => expect(card()).toBeTruthy());
+      fireEvent.click(screen.getByText('Save a name'));
+      await waitFor(() => expect(book().getAttribute('data-traveller-names')).toBe('trav-1:Charles Reid'));
+      expect(getPassport).toHaveBeenCalledTimes(1);
+      fireEvent.click(screen.getByText('Save a birthplace'));
+      await waitFor(() => expect(getPassport).toHaveBeenCalledTimes(2));
+      expect(getPassport).toHaveBeenLastCalledWith({ mapId: 'map-1' }, { travellerId: null });
     });
   });
 

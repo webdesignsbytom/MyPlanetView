@@ -1,8 +1,9 @@
 // Slideshows of chosen photos, shared by a link of their own (25 Nov 2026, the user's wish;
-// docs/API.md "Photo slideshows"). A map's editors make, rename, re-link and delete them; anyone
-// with the link watches the photos and videos it holds, as a share link's viewer sees them
-// (never a hidden one, a video still converting, a position or an original), and nothing else
-// of the map: not its name, its places or its other photos.
+// docs/API.md "Photo slideshows"), saved on the map: 2, 10 or 25 by its plan (27 Nov 2026, the
+// user's wish), each a list of photo ids, never copies. A map's editors make, rename, re-link
+// and delete them; anyone with the link watches the photos and videos it holds, as a share
+// link's viewer sees them (never a hidden one, a video still converting, a position or an
+// original), and nothing else of the map: not its name, its places or its other photos.
 import { DOMAINS, EVENT_MESSAGES, sendDataResponse } from '../utils/responses/responses.js';
 import { logEvent } from '../utils/events/logEvent.js';
 import { createPhotoShowEvent } from '../event/travelUtils.js';
@@ -12,13 +13,14 @@ import { isUuid } from '../utils/travelValidation.js';
 import { formatShareCode, normaliseShareCode } from '../utils/shareCodes.js';
 import { pageAfter, parseShuffleSeed, shuffled } from '../utils/shuffle.js';
 import {
-  SHOWS_PER_MAP,
   SHOW_DEFAULT_TITLE,
   SHOW_ORDERS,
   SHOW_TITLE_MAX,
   parseShowPhotoIds,
   parseShowSeconds,
   showablePhotoIds,
+  showsAllowed,
+  showsFullMessage,
 } from '../utils/photoShows.js';
 import {
   countChoosablePhotos,
@@ -32,6 +34,7 @@ import {
   updatePhotoShowInDB,
 } from '../domain/photoShows.js';
 import { findPhotosByIds } from '../domain/photos.js';
+import { loadMapPlan } from '../services/travel/plans.js';
 import { photoListItem } from './helpers/views.js';
 import { badRequest, conflict, denyUnless, handler, loadMap, notFound } from './helpers/travel.js';
 
@@ -73,14 +76,20 @@ async function editableShow(req) {
   return show && canView(role) ? { show, role } : null;
 }
 
-// GET /api/maps/:mapId/photo-shows (editors) -> { shows }
+// The map's plan, for its cap on saved shows (Economy's when the map is one of the free ones)
+const mapPlanId = async (mapId) => (await loadMapPlan(mapId))?.plan ?? 'FREE';
+
+// GET /api/maps/:mapId/photo-shows (editors) -> { shows, limit, plan }: `limit` the shows the
+// map keeps saved on `plan`, the map's plan (a map whose plan went down may have more)
 export const getMapPhotoShowsHandler = handler(D, 'Get photo shows', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.mapNotFound)) return undefined;
-  return sendDataResponse(res, 200, { shows: (await findPhotoShowsForMap(map.id)).map(showView) });
+  const [shows, plan] = await Promise.all([findPhotoShowsForMap(map.id), mapPlanId(map.id)]);
+  return sendDataResponse(res, 200, { shows: shows.map(showView), limit: showsAllowed(plan), plan });
 });
 
-// POST /api/maps/:mapId/photo-shows { title?, photoIds, seconds? } (editors, verified) -> 201 { show }
+// POST /api/maps/:mapId/photo-shows { title?, photoIds, seconds? } (editors, verified) -> 201 { show },
+// or 409 once the map has as many saved as its plan keeps
 export const createPhotoShowHandler = handler(D, 'Create photo show', async (req, res) => {
   const { map, role } = await loadMap(req, req.params.mapId);
   if (denyUnless(req, res, D, role, canEdit, EVENT_MESSAGES.mapNotFound)) return undefined;
@@ -93,8 +102,10 @@ export const createPhotoShowHandler = handler(D, 'Create photo show', async (req
   if (seconds === null) return badRequest(req, res, D, EVENT_MESSAGES.showSecondsInvalid);
   const title = titleFrom(body.title) || SHOW_DEFAULT_TITLE;
 
-  const made = await createPhotoShowInDB({ mapId: map.id, title, photoIds, seconds, createdById: req.user.id, cap: SHOWS_PER_MAP });
-  if (made.tooMany) return conflict(req, res, D, EVENT_MESSAGES.showTooMany);
+  const plan = await mapPlanId(map.id);
+  const cap = showsAllowed(plan);
+  const made = await createPhotoShowInDB({ mapId: map.id, title, photoIds, seconds, createdById: req.user.id, cap });
+  if (made.tooMany) return conflict(req, res, D, showsFullMessage({ count: made.count, cap, planId: plan }));
   logEvent(createPhotoShowEvent({ user: req.user, action: 'Create Success', id: made.show.id, statusCode: 201 }));
   return sendDataResponse(res, 201, { show: showView(made.show) });
 });

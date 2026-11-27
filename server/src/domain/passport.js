@@ -124,6 +124,8 @@ export async function findTravellerTravel(mapId, travellerId, { includeHidden })
 const PASSPORT_TRAVELLER_SELECT = {
   id: true,
   name: true,
+  lastName: true,
+  nationalityCode: true,
   birthCountryCode: true,
   favouriteCountryCode: true,
   birthDate: true,

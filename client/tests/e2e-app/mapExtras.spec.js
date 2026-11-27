@@ -254,3 +254,25 @@ test('Settings’ style and type cards load small strips, never the styles’ fu
   expect(loaded.length).toBeGreaterThan(0);
   for (const file of loaded) expect(file).toMatch(/^preview-[a-z-]+-(320|640)\.(avif|webp)$/);
 });
+
+// 27 Nov 2026, the user's wish: Settings says who the map is for, the choices behind a button
+test('Settings keeps who the map is for behind “Change map type”', async ({ page }) => {
+  await openMap(page);
+  const thisMap = await openThisMapSettings(page);
+  await expect(thisMap.locator('[data-map-type] p')).toContainText('A couple');
+  await expect(thisMap.getByRole('group', { name: 'Who is this map for?' })).toHaveCount(0);
+  const change = thisMap.getByRole('button', { name: 'Change map type' });
+  await expect(change).toHaveAttribute('aria-expanded', 'false');
+  await change.click();
+  await expect(change).toHaveAttribute('aria-expanded', 'true');
+  const choices = thisMap.getByRole('group', { name: 'Who is this map for?' });
+  await expect(choices).toBeVisible();
+  await expect(choices.getByRole('radio', { name: /^A couple/ })).toBeChecked();
+  await choices.getByText('A family', { exact: true }).click();
+  await expect(thisMap.locator('[data-map-type] p')).toContainText('A family');
+  await thisMap.getByRole('button', { name: 'Save map' }).click();
+  await expect(thisMap.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
+  // Saved, the form starts afresh with the choices put away again
+  await expect(thisMap.getByRole('group', { name: 'Who is this map for?' })).toHaveCount(0);
+  await expect(thisMap.locator('[data-map-type] p')).toContainText('A family');
+});

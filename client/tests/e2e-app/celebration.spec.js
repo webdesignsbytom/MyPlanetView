@@ -249,3 +249,31 @@ test.describe('with motion', () => {
     expect(await measure()).toEqual(opening);
   });
 });
+
+// 27 Nov 2026, the user's report: "I clicked visited Iowa and said I had been there, when I had
+// not set USA to visited. The country visited animation did not play." A state marked on a
+// country's own map brings its country, and the country is celebrated as one marked by hand
+test('a state marked on a country’s own map celebrates the country it brought, dated today', async ({ page }) => {
+  await openMap(page);
+  const ticket = await openCountry(page, 'Canada');
+  await ticket.getByRole('button', { name: 'Open Canada on its own map' }).click();
+  const map = page.locator('[data-country-map]');
+  await expect(map.locator('[data-state]').first()).toBeVisible({ timeout: 15000 });
+  const box = await page.locator('[data-state="CA-SK"] path').first().boundingBox();
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  await page.getByRole('dialog', { name: 'Saskatchewan' }).getByRole('button', { name: 'Visited' }).click();
+
+  const party = celebrationOf(page, 'You visited Canada!');
+  await expect(party).toBeVisible();
+  await expect(party.locator('[data-celebration-stamp]')).toContainText(/\d{1,2} [A-Z]{3} \d{4}/);
+  await party.getByRole('button', { name: 'Close', exact: true }).click();
+  await expect(page.locator('[data-celebration]')).toHaveCount(0);
+  await expect(page.locator('[data-state="CA-SK"]')).toHaveAttribute('data-status', 'VISITED');
+
+  // Another province: Canada is visited now, so nothing more to celebrate
+  const second = await page.locator('[data-state="CA-MB"] path').first().boundingBox();
+  await page.mouse.click(second.x + second.width / 2, second.y + second.height / 2);
+  await page.getByRole('dialog', { name: 'Manitoba' }).getByRole('button', { name: 'Visited' }).click();
+  await expect(page.locator('[data-state="CA-MB"]')).toHaveAttribute('data-status', 'VISITED');
+  await expect(page.locator('[data-celebration]')).toHaveCount(0);
+});

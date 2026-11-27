@@ -23,7 +23,7 @@ import {
 import { forgetMapLists } from '@/utils/map/mapListCache';
 import { impliedVisits } from '@/utils/map/specialPlaces';
 import { stringKindOf } from '@/utils/map/mapStrings';
-import { trackCountriesMarked } from '@/utils/analytics/events';
+import { trackCountriesMarked } from '@/utils/analytics/siteActions';
 
 const EMPTY = { map: null, trips: [], loading: true, error: null };
 

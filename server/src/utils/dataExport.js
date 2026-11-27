@@ -219,6 +219,8 @@ export function exportMapView(rows, { userId }) {
     travellers: rows.travellers.map((t) => ({
       id: t.id,
       name: t.name,
+      lastName: t.lastName ?? null,
+      nationalityCode: t.nationalityCode ?? null,
       isYou: t.userId === userId,
       linkedToAnAccount: Boolean(t.userId),
       birthCountryCode: t.birthCountryCode ?? null,

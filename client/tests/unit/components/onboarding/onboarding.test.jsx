@@ -42,6 +42,41 @@ describe('TravellerFieldset', () => {
     expect(screen.queryByText(/^Remove/)).toBeNull();
   });
 
+  // 27 Nov 2026, the user's wish: "Passport needs first name last name"
+  it('asks for a first name and an optional last name, side by side', () => {
+    const onChange = vi.fn();
+    render(<TravellerFieldset index={0} traveller={traveller} onChange={onChange} onRemove={() => {}} canRemove={false} />);
+    expect(screen.getByLabelText(/^First name/).value).toBe('Sam');
+    const last = screen.getByLabelText('Last name (optional)');
+    expect(last.value).toBe('');
+    expect(last.required).toBe(false);
+    fireEvent.change(last, { target: { value: 'Carter' } });
+    expect(onChange).toHaveBeenCalledWith({ ...traveller, lastName: 'Carter' });
+    // Side by side in one row from small screens up
+    const row = byId('traveller-0-name').closest('[class~="sm:grid-cols-2"]');
+    expect(row).toBeTruthy();
+    expect(row.contains(last)).toBe(true);
+  });
+
+  // 27 Nov 2026, the user's wish: "Passport also needs nationality"; asked with the date of birth
+  it('asks for an optional nationality, a country, only with the date of birth', () => {
+    const first = render(<TravellerFieldset index={0} traveller={traveller} onChange={() => {}} onRemove={() => {}} canRemove={false} />);
+    expect(byId('traveller-0-nationality')).toBeNull();
+    first.unmount();
+    const onChange = vi.fn();
+    render(<TravellerFieldset index={0} traveller={{ ...traveller, nationalityCode: 'IE' }} onChange={onChange} onRemove={() => {}} canRemove={false} askBirthDate />);
+    const select = byId('traveller-0-nationality');
+    expect(select.value).toBe('IE');
+    expect(screen.getByText('Nationality (optional)')).toBeTruthy();
+    const values = [...select.querySelectorAll('option')].map((o) => o.value);
+    expect(values[0]).toBe('');
+    expect(values).toContain('PH');
+    // Countries alone: never Antarctica, a pole, a UK nation or a region
+    for (const code of ['AQ', 'XN', 'XS', 'XC', 'XH']) expect(values).not.toContain(code);
+    fireEvent.change(select, { target: { value: 'PH' } });
+    expect(onChange).toHaveBeenCalledWith({ ...traveller, nationalityCode: 'PH' });
+  });
+
   // 23 Nov 2026, the user's wish: asked when people are added to a map, never at sign-up
   it('asks for an optional date of birth only when told to, from 1900 to today', () => {
     const first = render(<TravellerFieldset index={0} traveller={traveller} onChange={() => {}} onRemove={() => {}} canRemove={false} />);
@@ -148,7 +183,7 @@ describe('MapSetupForm', { timeout: 20000 }, () => {
       name: 'Sam\'s travels',
       groupType: 'SOLO',
       splitUk: false,
-      travellers: [{ id: undefined, name: 'Sam', birthCountryCode: 'GB', favouriteCountryCode: '', birthDate: '' }],
+      travellers: [{ id: undefined, name: 'Sam', lastName: '', nationalityCode: '', birthCountryCode: 'GB', favouriteCountryCode: '', birthDate: '' }],
     });
     await waitFor(() => expect(onSavedChange).toHaveBeenLastCalledWith(true));
     expect(screen.getByText(/Saved/)).toBeTruthy();
@@ -179,6 +214,32 @@ describe('MapSetupForm', { timeout: 20000 }, () => {
     type('traveller-0-name', 'Sam');
     fireEvent.click(screen.getByText('Save'));
     expect(await screen.findByText('A couple’s map is two people.')).toBeTruthy();
+  });
+
+  // Settings (27 Nov 2026, the user's wish): the choices behind a button
+  it('with `typeBehindButton`, says who the map is for and keeps the choices behind "Change map type"', async () => {
+    const onSubmit = setUp({ typeBehindButton: true, initial: { name: 'Ours', groupType: 'COUPLE', travellers: [{ id: 't1', name: 'Sam' }, { id: 't2', name: 'Alex' }] } });
+    expect(radio('COUPLE')).toBeNull();
+    expect(document.querySelector('[data-map-type]').textContent).toContain('This map is for: A couple');
+    const change = screen.getByText('Change map type');
+    expect(change.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(change);
+    expect(change.getAttribute('aria-expanded')).toBe('true');
+    expect(change.getAttribute('aria-controls')).toBe('map-type-choices');
+    expect(radio('COUPLE').checked).toBe(true);
+    fireEvent.click(radio('FAMILY'));
+    expect(document.querySelector('[data-map-type]').textContent).toContain('This map is for: A family');
+    fireEvent.click(screen.getByText('Save'));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ groupType: 'FAMILY' })));
+    // Shut again
+    fireEvent.click(change);
+    expect(radio('FAMILY')).toBeNull();
+  });
+
+  it('shows the choices at once without it (the welcome page)', () => {
+    setUp();
+    expect(screen.queryByText('Change map type')).toBeNull();
+    expect(radio('SOLO')).not.toBeNull();
   });
 
   it('an editor sees only the travellers: no kind, name or UK switch', () => {

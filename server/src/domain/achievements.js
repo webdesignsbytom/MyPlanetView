@@ -60,18 +60,21 @@ export const markGoalsAchieved = async (goalIds, now = new Date()) => {
 };
 
 /**
- * The map's completed trips for the travellers' badges: `[{ travellerIds, countryCodes,
- * startDate, endDate }]` (dates "YYYY-MM-DD" or null). Three flat reads, merged here.
+ * The map's completed trips for the travellers' badges: `[{ id, title, travellerIds,
+ * countryCodes, startDate, endDate }]` (dates "YYYY-MM-DD" or null; the stops' places in their
+ * order, so a badge's story names the first). Three flat reads, merged here.
  */
 export async function findCompletedTripsForTravellers(mapId) {
   const completed = { mapId, status: 'COMPLETED' };
   const [trips, travellers, stops] = await Promise.all([
-    prisma.trip.findMany({ where: completed, select: { id: true, startDate: true, endDate: true } }),
+    prisma.trip.findMany({ where: completed, select: { id: true, title: true, startDate: true, endDate: true } }),
     prisma.tripTraveller.findMany({ where: { trip: completed }, select: { tripId: true, travellerId: true } }),
-    prisma.tripStop.findMany({ where: { trip: completed }, select: { tripId: true, countryCode: true } }),
+    prisma.tripStop.findMany({ where: { trip: completed }, select: { tripId: true, countryCode: true }, orderBy: [{ position: 'asc' }, { id: 'asc' }] }),
   ]);
   const day = (date) => (date ? new Date(date).toISOString().slice(0, 10) : null);
-  const byTrip = new Map(trips.map((t) => [t.id, { travellerIds: [], countryCodes: [], startDate: day(t.startDate), endDate: day(t.endDate) }]));
+  const byTrip = new Map(
+    trips.map((t) => [t.id, { id: t.id, title: t.title, travellerIds: [], countryCodes: [], startDate: day(t.startDate), endDate: day(t.endDate) }])
+  );
   for (const t of travellers) byTrip.get(t.tripId)?.travellerIds.push(t.travellerId);
   for (const s of stops) byTrip.get(s.tripId)?.countryCodes.push(s.countryCode);
   return [...byTrip.values()];

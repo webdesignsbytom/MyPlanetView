@@ -146,7 +146,7 @@ export const findMapDetail = async (mapId) => {
     prisma.profile.findFirst({ where: { user: { ownedMaps: { some: { id: mapId } } } }, select: { mapSettings: true } }),
     prisma.traveller.findMany({
       where: { mapId },
-      select: { id: true, name: true, position: true, userId: true, birthCountryCode: true, favouriteCountryCode: true, birthDate: true },
+      select: { id: true, name: true, lastName: true, position: true, userId: true, nationalityCode: true, birthCountryCode: true, favouriteCountryCode: true, birthDate: true },
       orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
     }),
     prisma.countryVisit.findMany({
@@ -172,6 +172,8 @@ export const createMapInDB = ({ ownerId, name, groupType, isDefault = false, sha
       travellers: {
         create: travellers.map((t, index) => ({
           name: t.name,
+          lastName: t.lastName ?? null,
+          nationalityCode: t.nationalityCode ?? null,
           position: index,
           userId: t.userId ?? null,
           birthCountryCode: t.birthCountryCode ?? null,
@@ -234,6 +236,8 @@ export const findTraveller = (mapId, travellerId) =>
 const TRAVELLER_SELECT = {
   id: true,
   name: true,
+  lastName: true,
+  nationalityCode: true,
   position: true,
   userId: true,
   birthCountryCode: true,
@@ -364,6 +368,19 @@ export const findMapVisitsForStats = (mapId) =>
 
 export const countMapPhotos = (mapId, { includeHidden }) =>
   prisma.photo.count({ where: { mapId, ...(includeHidden ? {} : { hidden: false }) } });
+
+/**
+ * The `n`th photo (or video) put on the map, as countMapPhotos counts them (a photo badge's
+ * story: the one that reached its count), or null. Oldest upload first, on the
+ * `[mapId, createdAt, id]` index.
+ */
+export const findNthPhoto = (mapId, n, { includeHidden }) =>
+  prisma.photo.findFirst({
+    where: { mapId, ...(includeHidden ? {} : { hidden: false }) },
+    select: { id: true, kind: true, countryCode: true, takenAt: true, createdAt: true },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    skip: Math.max(0, n - 1),
+  });
 
 /**
  * The landmarks a map has stamped with a photo: those with a confirmed photo (never a

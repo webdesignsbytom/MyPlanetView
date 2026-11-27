@@ -39,13 +39,14 @@ export const findVisibleShowPhotoIds = async (mapId, photoIds) =>
 
 /**
  * A show made, unless the map has `cap` already (counted with the map's row locked, as every
- * cap is). -> `{ show }`, or `{ tooMany: true }`
+ * cap is). -> `{ show }`, or `{ tooMany: true, count }`
  */
 export const createPhotoShowInDB = ({ mapId, title, photoIds, seconds, createdById, cap }) =>
   withFreshCode((code) =>
     prisma.$transaction(async (tx) => {
       await tx.$queryRaw`SELECT 1 FROM "travel_map" WHERE "id" = ${mapId} FOR NO KEY UPDATE`;
-      if ((await tx.photoShow.count({ where: { mapId } })) >= cap) return { tooMany: true };
+      const count = await tx.photoShow.count({ where: { mapId } });
+      if (count >= cap) return { tooMany: true, count };
       return { show: await tx.photoShow.create({ data: { mapId, code, title, photoIds, seconds, createdById }, select: SHOW_SELECT }) };
     }),
   );

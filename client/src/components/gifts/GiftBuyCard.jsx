@@ -2,7 +2,7 @@ import React, { useId, useState } from 'react';
 // Api
 import { startGiftCheckout } from '@/api/giftsApi';
 // Utils
-import { trackCheckoutStarted } from '@/utils/analytics/events';
+import { trackCheckoutStarted } from '@/utils/analytics/siteActions';
 // Components
 import PaperCard from '@/components/common/PaperCard';
 import Button from '@/components/common/Button';

@@ -681,12 +681,6 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     },
     [hoverCountry],
   );
-  // A state's change on a country's map moved the map's visits: the world map and the badges
-  // catch up (19 Nov 2026, the audit: badges were never checked after one)
-  const stateVisitsChanged = useCallback(() => {
-    refreshMap?.();
-    checkAchievements();
-  }, [refreshMap, checkAchievements]);
   // Back from a country's map, focus goes to the world map: the "Open country" button that
   // opened it went with its ticket, and focus was left on the page (19 Nov 2026, the audit)
   const backToWorldRef = useRef(false);
@@ -803,6 +797,29 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
         : undefined,
     [setVisit, visitMarked],
   );
+  // A state's change on a country's map moved the map's visits: the world map and the badges
+  // catch up (19 Nov 2026, the audit: badges were never checked after one). Each place it brought
+  // that's newly visited or lived in (the country, and first a region: Hawaii) is dated today, as
+  // one marked by hand, and celebrated (27 Nov 2026, the user's report: "I clicked visited Iowa
+  // ... The country visited animation did not play"); the first is tied to the place visited
+  // before it, as a region marked from its ticket is (its country comes untied)
+  const stateVisitsChanged = useCallback(
+    async (implied = []) => {
+      const before = visitsRef.current || {};
+      const fresh = (implied || []).filter((v) => v?.countryCode && celebratesVisit(before[v.countryCode] ?? null, v.status));
+      const marked = [];
+      for (const v of fresh) {
+        const firstVisitedOn = v.firstVisitedOn || firstVisitFor(null, v.status) || null;
+        if (setVisit && !v.firstVisitedOn && firstVisitedOn) await setVisit(v.countryCode, v.status, { firstVisitedOn }).catch(() => {});
+        if (!marked.length) tieToPrevious(v.countryCode, v.status, firstVisitedOn);
+        marked.push({ kind: 'country', code: v.countryCode, status: v.status, firstVisitedOn });
+      }
+      refreshMap?.();
+      checkAchievements();
+      if (marked.length) celebrate(...marked);
+    },
+    [setVisit, tieToPrevious, refreshMap, checkAchievements, celebrate],
+  );
 
   // A tool from the toolbar or the phone's menu: whatever was open closes (uiReducer 'tool'),
   // string mode too. 'tips' (Settings' "Show the tips", 24 Nov 2026) opens the tips, or shuts them.
@@ -858,10 +875,11 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
     if (listsPhotos) PhotoViewer.preload().catch(() => {});
   }, [listsPhotos]);
 
+  // The map's passport, its own address or through the share link: the statistics, the
+  // country list, Where to go next and the phone's menu link to it
+  const passportHref = shareCode ? sharedPassportPath(shareCode) : mapPassportPath(map.id);
+
   const panel = (() => {
-    // The map's passport, its own address or through the share link: the statistics, the
-    // country list and Where to go next link to it
-    const passportHref = shareCode ? sharedPassportPath(shareCode) : mapPassportPath(map.id);
     switch (ui.panel) {
       case 'settings':
         return (
@@ -905,7 +923,7 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onShowBadges={openBadges}
             // Not through a share link: the card is the map of someone who's on it
             onShareCard={shareCode ? undefined : () => setShareCard(mapCardOptions(map, design))}
-            onPoster={shareCode ? undefined : () => setPoster(mapPosterOptions(map, design))}
+            onPoster={shareCode ? undefined : () => setPoster(mapPosterOptions(map, design, styleId))}
             onGuessGame={canEdit ? () => setGuessGameOpen(true) : undefined}
             onFlightLog={shareCode || !currentUser ? undefined : () => setFlightLogOpen(true)}
             compareHref={shareCode ? null : comparePath(map.id)}
@@ -1002,6 +1020,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             onVisitMarked={visitMarked}
             photoSource={photoSource}
             photosVersion={photosVersion}
+            // Nothing fetched where the map says there's nothing (27 Nov 2026, the user's wish)
+            lists={countryListsOf(map, ui.selectedCode)}
             onOpenPhoto={openPhoto}
             onPlay={playCountry}
             onAddPhotos={canChange && !mapLocked ? (code) => dispatch({ type: 'upload', code }) : null}
@@ -1068,7 +1088,16 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
           />
         );
       case 'next':
-        return <WhereNextPanel visits={map.visits} onShowCountry={showCountry} passportHref={passportHref} onClose={close} />;
+        return (
+          <WhereNextPanel
+            visits={map.visits}
+            onShowCountry={showCountry}
+            passportHref={passportHref}
+            canEdit={canEdit}
+            onOpenCountries={() => handleToggle('countries')}
+            onClose={close}
+          />
+        );
       case 'feedback':
         // A problem, an idea or a question (docs/API.md "Feedback"), for anyone signed in
         return currentUser ? <FeedbackPanel mapId={map.id} styleId={styleId} phone={!wideScreen} onClose={close} /> : null;
@@ -1298,6 +1327,8 @@ function MapExperience({ map, trips, role, actions = null, shareCode = null, cur
             canSwitch={Boolean(currentUser) && !shareCode}
             canFeedback={signedIn}
             stats={map.stats}
+            // "View passport" in the phone's menu (27 Nov 2026, the user's wish)
+            passportHref={passportHref}
           />
           </div>
         </SlideAway>

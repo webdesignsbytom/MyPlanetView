@@ -10,7 +10,8 @@ const loadDialog = () => import('./ShowMakerDialog');
 const ShowMakerDialog = lazy(loadDialog);
 
 /**
- * "Share a slideshow" (25 Nov 2026; docs/API.md "Photo slideshows"): the button and the
+ * "Make a slideshow" (25 Nov 2026, "Share a slideshow" until it was saved, 27 Nov 2026;
+ * docs/API.md "Photo slideshows"): the button and the
  * dialog it opens (ShowMakerDialog), for a map's editors, in the photo album, a country's
  * ticket and a trip's Photos card. `source` is the list to choose from (the gallery's own
  * filters), `defaultTitle` the show's title to start with. `inMapPanel` for a map panel's
@@ -29,7 +30,7 @@ function ShareShow({ mapId, source, defaultTitle = '', inMapPanel = false, fill 
       >
         <ButtonKind quiet onClick={() => setOpen(true)}>
           <FaFilm aria-hidden='true' className='self-center text-sm' />
-          <span>Share a slideshow</span>
+          <span>Make a slideshow</span>
         </ButtonKind>
       </span>
       {open ? (

@@ -18,8 +18,8 @@ test.describe('Account, welcome and invite pages', () => {
     await expect(page.getByRole('radio', { name: /^A couple/ })).toBeChecked();
     const name = page.getByRole('textbox', { name: 'Map name' });
     await expect(name).toHaveValue(HOME_MAP);
-    await expect(page.getByRole('group', { name: 'Traveller 1' }).getByRole('textbox', { name: 'Name' })).toHaveValue('Charlie');
-    await expect(page.getByRole('group', { name: 'Traveller 2' }).getByRole('textbox', { name: 'Name' })).toHaveValue('Alex');
+    await expect(page.getByRole('group', { name: 'Traveller 1' }).getByRole('textbox', { name: 'First name' })).toHaveValue('Charlie');
+    await expect(page.getByRole('group', { name: 'Traveller 2' }).getByRole('textbox', { name: 'First name' })).toHaveValue('Alex');
 
     await name.fill('Charlie and Alex abroad');
     await page.getByRole('button', { name: 'Start my map' }).click();

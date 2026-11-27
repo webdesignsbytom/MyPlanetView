@@ -1,0 +1,65 @@
+The home page draft's pictures (dev only, /dev/home), from the user's design in main-home/.
+
+earth.jpg: Earth textures by Solar System Scope, https://www.solarsystemscope.com/textures/ (CC BY 4.0, https://creativecommons.org/licenses/by/4.0/), composited and colour graded. Country outlines on the globe: world-atlas / Natural Earth (public domain).
+
+Destination photographs, resized for this demo. Original files and licensing details follow.
+
+Los_Cuernos_de_Torres_del_Paine.jpg — Natalia Reyes Escobar — CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+https://commons.wikimedia.org/wiki/File:Los_Cuernos_de_Torres_del_Paine.jpg
+
+Amazon_jungle_from_above.jpg — David Evers — CC BY 2.0 https://creativecommons.org/licenses/by/2.0
+https://commons.wikimedia.org/wiki/File:Amazon_jungle_from_above.jpg
+
+Pyramids_of_the_Giza_Necropolis.jpg — KennyOMG — CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+https://commons.wikimedia.org/wiki/File:Pyramids_of_the_Giza_Necropolis.jpg
+
+Mont-Saint-Michel_vu_du_ciel.jpg — attribution and licence: https://commons.wikimedia.org/wiki/File:Mont-Saint-Michel_vu_du_ciel.jpg
+
+Карпатский_05.jpg — Balkhovitin — CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0
+https://commons.wikimedia.org/wiki/File:%D0%9A%D0%B0%D1%80%D0%BF%D0%B0%D1%82%D1%81%D0%BA%D0%B8%D0%B9_05.jpg
+
+East_facade_Hawa_Mahal_Jaipur_from_ground_level_(July_2022)_-_img_01.jpg — Chainwit. — CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+https://commons.wikimedia.org/wiki/File:East_facade_Hawa_Mahal_Jaipur_from_ground_level_%28July_2022%29_-_img_01.jpg
+
+Railay_Beach_5.jpg — kallerna — CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0
+https://commons.wikimedia.org/wiki/File:Railay_Beach_5.jpg
+
+View_of_Mount_Fuji_from_Ōwakudani_20211202.jpg — Suicasmo — CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+https://commons.wikimedia.org/wiki/File:View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg
+
+Chichen_Itza_3.jpg — Daniel Schwen — CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+https://commons.wikimedia.org/wiki/File:Chichen_Itza_3.jpg
+
+Aoraki_Mount_Cook.JPG — C.M. Lynch (talk · contribs) — CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
+https://commons.wikimedia.org/wiki/File:Aoraki_Mount_Cook.JPG
+
+Al_Alam_Palace.jpg — Tristan — CC BY 2.0 https://creativecommons.org/licenses/by/2.0
+https://commons.wikimedia.org/wiki/File:Al_Alam_Palace.jpg
+
+Destination photographs, resized for this demo. Original files and licensing details follow.
+
+Haleakala_crater_(1).jpg — Navin75 — CC BY-SA 2.0 https://creativecommons.org/licenses/by-sa/2.0
+https://commons.wikimedia.org/wiki/File:Haleakala_crater_%281%29.jpg
+
+Mamanuca.jpg — American at German Wikipedia — CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
+https://commons.wikimedia.org/wiki/File:Mamanuca.jpg
+
+WS-apia-regierg.jpg — attribution and licence: https://commons.wikimedia.org/wiki/File:WS-apia-regierg.jpg
+
+Machu_Picchu,_2023_(012).jpg — Draceane — CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+https://commons.wikimedia.org/wiki/File:Machu_Picchu%2C_2023_%28012%29.jpg
+
+Aerial_Foz_de_Iguaçu_26_Nov_2005.jpg — Mariordo (Mario Roberto Durán Ortiz) — CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+https://commons.wikimedia.org/wiki/File:Aerial_Foz_de_Igua%C3%A7u_26_Nov_2005.jpg
+
+Ksar_Aït_Benhaddou,_Marocco_(أيت_بن_حدو،_المغرب,_ⴰⵢⵜ_ⵃⴰⴷⴷⵓ).jpg — Petar Milošević — CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+https://commons.wikimedia.org/wiki/File:Ksar_A%C3%AFt_Benhaddou%2C_Marocco_%28%D8%A3%D9%8A%D8%AA_%D8%A8%D9%86_%D8%AD%D8%AF%D9%88%D8%8C_%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8%2C_%E2%B4%B0%E2%B5%A2%E2%B5%9C_%E2%B5%83%E2%B4%B0%E2%B4%B7%E2%B4%B7%E2%B5%93%29.jpg
+
+Bromo-Semeru-Batok-Widodaren.jpg — Riza Nugraha ? from Utrecht, The Netherlands — CC BY 2.0 https://creativecommons.org/licenses/by/2.0
+https://commons.wikimedia.org/wiki/File:Bromo-Semeru-Batok-Widodaren.jpg
+
+Seongsan_Ilchulbong_from_the_air.jpg — Korea.net / Korean Culture and Information Service — CC BY-SA 2.0 https://creativecommons.org/licenses/by-sa/2.0
+https://commons.wikimedia.org/wiki/File:Seongsan_Ilchulbong_from_the_air.jpg
+
+ULURU.jpg — Ek2030372672 — CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+https://commons.wikimedia.org/wiki/File:ULURU.jpg

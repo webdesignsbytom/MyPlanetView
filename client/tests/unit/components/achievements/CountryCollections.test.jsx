@@ -51,6 +51,16 @@ describe('CountryCollections', () => {
     expect(screen.queryByRole('button', { name: /medal for France/ })).toBeNull();
   });
 
+  // 27 Nov 2026: an earned medal opens its own card, as a sticker does
+  it('makes each earned medal a button opening its card, and none before it is earned', () => {
+    const onOpen = vi.fn();
+    const { container } = render(<CountryCollections badges={BADGES} onOpen={onOpen} />);
+    expect([...container.querySelectorAll('[data-badge-open]')].map((b) => b.dataset.badgeOpen)).toEqual(['collect-VA-gold', 'collect-IT-bronze']);
+    fireEvent.click(container.querySelector('[data-badge-open="collect-IT-bronze"]'));
+    expect(onOpen).toHaveBeenCalledWith(expect.objectContaining({ key: 'collect-IT-bronze', tier: 'bronze' }));
+    expect(render(<CountryCollections badges={BADGES} />).container.querySelector('[data-badge-open]')).toBeNull();
+  });
+
   it('offers no sharing without a way to share, and shows nothing with no places', () => {
     render(<CountryCollections badges={BADGES} />);
     expect(screen.queryByRole('button')).toBeNull();

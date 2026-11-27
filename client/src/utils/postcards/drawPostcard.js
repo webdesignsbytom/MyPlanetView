@@ -2,16 +2,17 @@
 // images, and a selection of styles ... cool stamps and address area ... people can download them
 // so they keep them forever"; docs/SITE-DESIGN.md "Postcards"). Landscape, 1200 × 800 (a 6 × 4
 // inch card's shape). What's shown on screen is what's downloaded: both are these pictures.
-// The front by its kind (postcardArt.js): a country's poster with "Greetings from" in big
-// lettering and its 3D model; a landmark's photo as a print beside its model; or the sender's
-// own photo across the whole card with the place's name on a strip. The back as a real
-// postcard's: the message in a handwriting face on the left, a perforated stamp of the place
-// with a round postmark (the place and the day) and wavy cancellation lines on the right, and
-// "To:" over decorative address lines (a name only: never an address, the user's decision).
+// The front (27 Nov 2026, the user's wish: "a photo that covers the postcard ... a cool city
+// photo, or a wilderness photo, or a famous landmark photo", after an old "Greetings from" card):
+// the photo across the whole card, "Greetings from" on a ribbon, and the place's name in big 3D
+// letters with the photo showing through them (postcardArt.js picks the photo). The back as a
+// real postcard's: the message in a handwriting face on the left, a perforated stamp of the
+// place with a round postmark (the place and the day) and wavy cancellation lines on the right,
+// and "To:" over decorative address lines (a name only: never an address, the user's decision).
 // The colours are the style's (brandColours.js POSTCARD_COLOURS): a canvas can't read the tokens.
 import { POSTCARD_COLOURS, SHARE_CARD_COLOURS } from '@/utils/constants/brandColours';
 import { DISPLAY_BUSINESS_URL } from '@/utils/constants/constants';
-import { fittedText, font, loadFonts, textLines } from '@/utils/shareCard/drawShareCard';
+import { fittedText, font, loadFonts as loadCardFonts, textLines } from '@/utils/shareCard/drawShareCard';
 import { POSTCARD_DEFAULT_STYLE } from './postcardRules';
 
 export const POSTCARD_WIDTH = 1200;
@@ -55,16 +56,13 @@ export function loadImage(src) {
   });
 }
 
-/** Every picture a card's art names, loaded side by side: `{ poster, landmarkPhoto, model, photo, stampModel }`. */
+/** Every picture a card's art names, loaded side by side: `{ cover, poster, stampModel }` (one load for one address). */
 export async function loadPostcardImages(art, load = loadImage) {
-  const [poster, landmarkPhoto, model, photo, stampModel] = await Promise.all([
-    load(art.poster?.url),
-    load(art.landmarkPhoto?.url),
-    load(art.model?.url),
-    load(art.photoUrl),
-    art.stampModel && art.stampModel.url !== art.model?.url ? load(art.stampModel.url) : null,
-  ]);
-  return { poster, landmarkPhoto, model, photo, stampModel: stampModel ?? (art.stampModel ? model : null) };
+  const urls = [art.cover?.url, art.poster?.url, art.stampModel?.url];
+  const loaded = await Promise.all([...new Set(urls.filter(Boolean))].map(async (url) => [url, await load(url)]));
+  const byUrl = new Map(loaded);
+  const of = (url) => (url ? byUrl.get(url) ?? null : null);
+  return { cover: of(urls[0]), poster: of(urls[1]), stampModel: of(urls[2]) };
 }
 
 const sizeOf = (img) => ({ w: img?.naturalWidth || img?.width || 1, h: img?.naturalHeight || img?.height || 1 });
@@ -130,30 +128,6 @@ export function messageLayout(ctx, message, { w, h, max = 40, min = 22, family =
     }
   }
   return { size: min, lineHeight: Math.round(min * 1.4), lines: [] };
-}
-
-/**
- * A name in big lettering, on one or two lines: the largest size from `max` down whose lines all
- * fit `width` (two only when one won't do). -> `{ size, lines }`
- */
-export function letteringLines(ctx, text, { width, max, min, family = 'TravelFont', maxLines = 2 }) {
-  for (let size = max; size >= min; size -= 4) {
-    ctx.font = font(size, family);
-    for (let count = 1; count <= maxLines; count++) {
-      const lines = textLines(ctx, text, width, count);
-      if (lines.length <= count && lines.every((line) => ctx.measureText(line).width <= width) && !lines.at(-1).endsWith('…')) return { size, lines };
-    }
-  }
-  ctx.font = font(min, family);
-  return { size: min, lines: textLines(ctx, text, width, maxLines) };
-}
-
-/** Lettering with a printed shadow under it, as on an old "Greetings from" card. */
-function shadowedText(ctx, text, x, y, { fill, shadow, offset = 4 }) {
-  ctx.fillStyle = shadow;
-  ctx.fillText(text, x + offset, y + offset);
-  ctx.fillStyle = fill;
-  ctx.fillText(text, x, y);
 }
 
 /** `text` round the top of a circle (centre `cx`, `cy`, radius `r`), centred on its top. */
@@ -225,134 +199,235 @@ export function paintCard(ctx, style) {
   }
 }
 
-// The poster in a white frame, or the place's outline on the sea when it has none
-function drawPosterPanel(ctx, art, images, box, p) {
-  ctx.fillStyle = p.stamp;
-  ctx.fillRect(box.x - 10, box.y - 10, box.w + 20, box.h + 20);
-  if (images.poster) {
-    drawCover(ctx, images.poster, box, { focusY: 0.35 });
-    return;
+const makeCanvas = (width, height) => {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  return canvas;
+};
+
+// The photo over the whole card inside its edge; a place with none has its poster, else its
+// outline on the sea
+function drawCoverPicture(ctx, art, images, box, p) {
+  if (images.cover) {
+    drawCover(ctx, images.cover, box, { focusY: art.cover?.isPoster ? 0.42 : 0.5 });
+  } else {
+    ctx.fillStyle = SHARE_CARD_COLOURS.sea;
+    ctx.fillRect(box.x, box.y, box.w, box.h);
+    drawOutline(ctx, art.outline, { x: box.x + 60, y: box.y + 60, w: box.w - 120, h: box.h - 120 }, { fill: art.colour, edge: SHARE_CARD_COLOURS.ink, edgeWidth: 3 });
   }
-  ctx.fillStyle = SHARE_CARD_COLOURS.sea;
+  // The style's wash (vintage's old brown, night's navy), then the whole photo a little darker
+  // and more so towards the edges, so the letters (the photo brighter) stand out
+  if (p.tint) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'color';
+    ctx.globalAlpha = 0.55;
+    ctx.fillStyle = p.tint;
+    ctx.fillRect(box.x, box.y, box.w, box.h);
+    ctx.restore();
+  }
+  ctx.save();
+  ctx.globalAlpha = 0.24;
+  ctx.fillStyle = p.shadow;
   ctx.fillRect(box.x, box.y, box.w, box.h);
-  drawOutline(ctx, art.outline, { x: box.x + 30, y: box.y + 30, w: box.w - 60, h: box.h - 60 }, { fill: art.colour, edge: SHARE_CARD_COLOURS.ink, edgeWidth: 2.5 });
+  ctx.restore();
+  ctx.save();
+  if (typeof ctx.createRadialGradient === 'function') {
+    const shade = ctx.createRadialGradient(W / 2, H / 2, H * 0.25, W / 2, H / 2, W * 0.7);
+    shade.addColorStop(0, `${p.shadow}00`);
+    shade.addColorStop(1, `${p.shadow}8c`);
+    ctx.fillStyle = shade;
+  } else {
+    ctx.globalAlpha = 0.25;
+    ctx.fillStyle = p.shadow;
+  }
+  ctx.fillRect(box.x, box.y, box.w, box.h);
+  ctx.restore();
 }
 
-// "Greetings from" over a name in big lettering, centred on `cx` from `top`. -> the bottom of the name
-function drawGreetings(ctx, name, { cx, top, width, max, p }) {
+/**
+ * The place's name in big block capitals: one line when it fits, else two or three, at the
+ * largest size from `max` down whose lines fit `width`. -> `{ size, lines }`
+ */
+export function blockLetterLines(ctx, name, { width, max = 250, min = 56, maxLines = 3 }) {
+  const text = String(name || '').toUpperCase();
+  for (let size = max; size >= min; size -= 6) {
+    ctx.font = font(size, 'Poppins', '700');
+    for (let count = 1; count <= maxLines; count++) {
+      const lines = textLines(ctx, text, width, count);
+      if (lines.length <= count && lines.every((line) => ctx.measureText(line).width <= width) && !lines.at(-1).endsWith('…')) {
+        // Two short lines read better than one tiny one; a one-line name stays big
+        if (count === 1 || size >= 90) return { size, lines };
+      }
+    }
+  }
+  ctx.font = font(min, 'Poppins', '700');
+  return { size: min, lines: textLines(ctx, text, width, maxLines) };
+}
+
+/**
+ * The big letters as an old "Greetings from" card has them: a deep 3D side, a thick outline, and
+ * the card's own photo showing through their faces (brighter, a little closer up).
+ */
+function drawBlockLetters(ctx, lines, size, { cx, top, lineGap }, images, art, box, p) {
+  const depth = Math.max(7, Math.round(size * 0.1));
+  const baseline = (i) => top + size * 0.82 + i * lineGap;
+  ctx.save();
+  ctx.font = font(size, 'Poppins', '700');
   ctx.textAlign = 'center';
   ctx.textBaseline = 'alphabetic';
-  ctx.fillStyle = p.lettering;
-  fittedText(ctx, 'Greetings from', { x: cx, y: top + 50, width, max: 54, min: 30, family: 'TravelFont' });
-  const { size, lines } = letteringLines(ctx, name, { width, max, min: 48 });
-  ctx.font = font(size, 'TravelFont');
-  let y = top + 70 + size;
-  for (const line of lines) {
-    shadowedText(ctx, line, cx, y, { fill: p.lettering, shadow: p.shadow, offset: Math.max(3, Math.round(size / 28)) });
-    y += Math.round(size * 1.02);
-  }
-  return y - Math.round(size * 1.02);
-}
-
-function drawCountryFront(ctx, art, images, p, inset) {
-  const box = { x: inset + 40, y: inset + 40, w: 0, h: H - (inset + 40) * 2 };
-  box.w = Math.round(box.h * (2 / 3));
-  drawPosterPanel(ctx, art, images, box, p);
-
-  const left = box.x + box.w + 40;
-  const right = W - inset - 40;
-  const cx = (left + right) / 2;
-  const bottom = drawGreetings(ctx, art.placeName, { cx, top: inset + 60, width: right - left, max: 130, p });
-  // Under the name: its 3D model, else its outline (once: the poster's panel has it when there's no poster)
-  const room = { x: left + 20, y: bottom + 40, w: right - left - 40, h: H - inset - 50 - (bottom + 40) };
-  if (images.model && room.h > 80) {
-    drawModel(ctx, images.model, art.model.aspect, { cx, bottom: room.y + room.h, height: room.h, maxWidth: room.w });
-  } else if (images.poster && room.h > 80) {
-    drawOutline(ctx, art.outline, room, { fill: art.colour, edge: p.shadow, edgeWidth: 2.5 });
-  }
-}
-
-function drawLandmarkFront(ctx, art, images, p, inset) {
-  const band = { top: H - inset - 190 };
-  // The landmark's photo as a print, a little askew; else its model on the sky; else the poster
-  const print = { x: inset + 46, y: inset + 46, w: 640, h: band.top - inset - 76 };
-  if (images.landmarkPhoto) {
-    ctx.save();
-    ctx.translate(print.x + print.w / 2, print.y + print.h / 2);
-    ctx.rotate(-0.03);
-    ctx.fillStyle = p.shadow;
-    ctx.globalAlpha = 0.25;
-    ctx.fillRect(-print.w / 2 - 8, -print.h / 2 - 2, print.w + 28, print.h + 28);
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = p.stamp;
-    ctx.fillRect(-print.w / 2 - 14, -print.h / 2 - 14, print.w + 28, print.h + 28);
-    drawCover(ctx, images.landmarkPhoto, { x: -print.w / 2, y: -print.h / 2, w: print.w, h: print.h });
-    ctx.restore();
-  } else if (images.model) {
-    ctx.fillStyle = p.sky;
-    ctx.fillRect(print.x, print.y, print.w, print.h);
-    drawModel(ctx, images.model, art.model.aspect, { cx: print.x + print.w / 2, bottom: print.y + print.h - 20, height: print.h - 50, maxWidth: print.w - 60 });
-  } else {
-    drawPosterPanel(ctx, art, images, { ...print, w: Math.round(print.h * (2 / 3)) }, p);
-  }
-
-  // Beside it: the model (when the photo took the print), else the place's outline
-  const side = { x: print.x + print.w + 50, y: inset + 56, w: W - inset - 40 - (print.x + print.w + 50), h: band.top - inset - 76 };
-  if (images.landmarkPhoto && images.model) {
-    drawModel(ctx, images.model, art.model.aspect, { cx: side.x + side.w / 2, bottom: side.y + side.h, height: side.h, maxWidth: side.w });
-  } else {
-    drawOutline(ctx, art.outline, side, { fill: art.colour, edge: p.shadow, edgeWidth: 2.5 });
-  }
-
-  // The band: "Greetings from" and the place, then the landmark's name in big lettering
-  ctx.textBaseline = 'alphabetic';
-  ctx.textAlign = 'left';
-  ctx.fillStyle = p.lettering;
-  ctx.font = font(40, 'TravelFont');
-  ctx.fillText('Greetings from', inset + 46, band.top + 52);
-  ctx.textAlign = 'right';
-  ctx.fillStyle = p.rule;
-  if ('letterSpacing' in ctx) ctx.letterSpacing = '4px';
-  fittedText(ctx, art.placeName.toUpperCase(), { x: W - inset - 46, y: band.top + 50, width: 420, max: 26, min: 16, family: 'Poppins', weight: '600' });
-  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
-  ctx.textAlign = 'left';
-  const { size, lines } = letteringLines(ctx, art.landmarkName, { width: W - (inset + 46) * 2, max: 104, min: 44, maxLines: 1 });
-  ctx.font = font(size, 'TravelFont');
-  shadowedText(ctx, lines[0] ?? '', inset + 46, band.top + 70 + size * 0.85, { fill: p.lettering, shadow: p.shadow, offset: Math.max(3, Math.round(size / 28)) });
-}
-
-function drawPhotoFront(ctx, art, images, p, inset) {
-  const box = { x: inset, y: inset, w: W - inset * 2, h: H - inset * 2 };
-  if (images.photo) drawCover(ctx, images.photo, box);
-  else drawPosterPanel(ctx, art, images, box, p);
-  // A strip of the card's paper across the foot, with the place's name on it
-  const strip = { x: box.x, y: box.y + box.h - 150, w: box.w, h: 150 };
-  ctx.save();
-  ctx.globalAlpha = 0.9;
-  ctx.fillStyle = p.paper;
-  ctx.fillRect(strip.x, strip.y, strip.w, strip.h);
+  ctx.lineJoin = 'round';
+  // The side, stepped down and to the right
+  ctx.fillStyle = p.extrude;
+  lines.forEach((line, i) => {
+    for (let d = depth; d >= 1; d -= 1) ctx.fillText(line, cx + d * 0.8, baseline(i) + d);
+  });
+  // The outline
+  ctx.strokeStyle = p.outline;
+  ctx.lineWidth = Math.max(8, size * 0.1);
+  lines.forEach((line, i) => ctx.strokeText(line, cx, baseline(i)));
   ctx.restore();
-  ctx.fillStyle = p.rule;
-  ctx.fillRect(strip.x, strip.y, strip.w, 3);
+
+  // The faces: the photo, closer up, brighter and more vivid, cut to the letters (with the
+  // style's wash, lighter)
+  const faces = makeCanvas(W, H);
+  const f = faces.getContext('2d');
+  if (images.cover) {
+    const zoom = 1.18;
+    const zw = box.w * zoom;
+    const zh = box.h * zoom;
+    if ('filter' in f) f.filter = 'saturate(1.35) brightness(1.12) contrast(1.05)';
+    drawCover(f, images.cover, { x: cx - zw / 2, y: top + (lines.length * lineGap) / 2 - zh / 2, w: zw, h: zh });
+    if ('filter' in f) f.filter = 'none';
+    if (p.tint) {
+      f.globalCompositeOperation = 'color';
+      f.globalAlpha = 0.3;
+      f.fillStyle = p.tint;
+      f.fillRect(0, 0, W, H);
+    }
+    f.globalCompositeOperation = 'screen';
+    f.globalAlpha = 0.16;
+    f.fillStyle = p.outline;
+    f.fillRect(0, 0, W, H);
+    f.globalAlpha = 1;
+  } else {
+    f.fillStyle = p.ribbonInk;
+    f.fillRect(0, 0, W, H);
+  }
+  // Cut to every line at once (a mask of them all): cut one line at a time, each would wipe the
+  // lines before it
+  const mask = makeCanvas(W, H);
+  const m = mask.getContext('2d');
+  m.font = font(size, 'Poppins', '700');
+  m.textAlign = 'center';
+  m.textBaseline = 'alphabetic';
+  m.fillStyle = p.outline;
+  lines.forEach((line, i) => m.fillText(line, cx, baseline(i)));
+  f.globalCompositeOperation = 'destination-in';
+  f.drawImage(mask, 0, 0);
+  ctx.drawImage(faces, 0, 0);
+  // A thin dark line inside the outline, as printed
+  ctx.save();
+  ctx.font = font(size, 'Poppins', '700');
+  ctx.textAlign = 'center';
   ctx.textBaseline = 'alphabetic';
-  ctx.textAlign = 'left';
-  ctx.fillStyle = p.lettering;
-  ctx.font = font(38, 'TravelFont');
-  ctx.fillText('Greetings from', strip.x + 34, strip.y + 50);
-  const { size, lines } = letteringLines(ctx, art.placeName, { width: strip.w - 68, max: 84, min: 40, maxLines: 1 });
-  ctx.font = font(size, 'TravelFont');
-  shadowedText(ctx, lines[0] ?? '', strip.x + 34, strip.y + 56 + size * 0.85, { fill: p.lettering, shadow: p.shadow, offset: 3 });
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = p.extrude;
+  ctx.lineWidth = Math.max(1.5, size * 0.012);
+  lines.forEach((line, i) => ctx.strokeText(line, cx, baseline(i)));
+  ctx.restore();
 }
 
-/** The front of `card` (`style`) from its art and pictures. */
+/** A ribbon with notched ends, its words in the travel face: "Greetings from" over the letters. */
+function drawRibbon(ctx, text, { x, y, size }, p) {
+  ctx.save();
+  ctx.font = font(size, 'TravelFont');
+  const width = ctx.measureText(text).width + size * 1.2;
+  const height = size * 1.35;
+  const notch = height * 0.35;
+  ctx.translate(x, y);
+  ctx.rotate(-0.05);
+  // The tails behind, a shade darker
+  ctx.fillStyle = p.extrude;
+  for (const side of [-1, 1]) {
+    const from = side < 0 ? -notch * 1.4 : width - notch * 0.2;
+    ctx.beginPath();
+    ctx.moveTo(from, height * 0.2);
+    ctx.lineTo(from + notch * 1.6, height * 0.2);
+    ctx.lineTo(from + notch * 1.6, height * 1.15);
+    ctx.lineTo(from, height * 1.15);
+    ctx.lineTo(from + (side < 0 ? notch * 0.7 : notch * 0.9), height * 0.68);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.fillStyle = p.ribbon;
+  ctx.fillRect(0, 0, width, height);
+  ctx.strokeStyle = p.ribbonInk;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(5, 5, width - 10, height - 10);
+  ctx.fillStyle = p.ribbonInk;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, width / 2, height / 2 + size * 0.06);
+  ctx.restore();
+  return { width, height };
+}
+
+/** Words written over the photo, with a dark edge so they read on any picture. */
+function outlinedText(ctx, text, x, y, { size, family = 'TravelFont', fill, edge }) {
+  ctx.save();
+  ctx.font = font(size, family);
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = edge;
+  ctx.lineWidth = Math.max(4, size * 0.16);
+  ctx.strokeText(text, x, y);
+  ctx.fillStyle = fill;
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+/**
+ * The front of `card` (`style`) from its art and pictures: its photo over the whole card (a city,
+ * the wilderness, a landmark or the sender's own; 27 Nov 2026, the user's wish, after an old
+ * "Greetings from" card), "Greetings from" on a ribbon, the place's name in big 3D letters with
+ * the photo through them, and under them what the photo is of (a landmark's name).
+ */
 export function drawFront(ctx, card, art, images) {
   const style = card.style || POSTCARD_DEFAULT_STYLE;
   const p = paletteFor(style);
   const inset = insetFor(style);
   paintCard(ctx, style);
-  if (art.kind === 'PHOTO') drawPhotoFront(ctx, art, images, p, inset);
-  else if (art.kind === 'LANDMARK') drawLandmarkFront(ctx, art, images, p, inset);
-  else drawCountryFront(ctx, art, images, p, inset);
+  const box = { x: inset, y: inset, w: W - inset * 2, h: H - inset * 2 };
+  drawCoverPicture(ctx, art, images, box, p);
+
+  const width = box.w - 140;
+  const { size, lines } = blockLetterLines(ctx, art.placeName, { width });
+  const lineGap = Math.round(size * 0.98);
+  const blockHeight = lines.length * lineGap;
+  const ribbonSize = Math.round(Math.min(58, Math.max(38, size * 0.3)));
+  const subtitleSize = art.subtitle ? Math.round(Math.min(56, Math.max(34, size * 0.26))) : 0;
+  const total = ribbonSize * 1.6 + blockHeight + (subtitleSize ? subtitleSize * 1.5 : 0);
+  const top = Math.max(box.y + 40, (H - total) / 2) + ribbonSize * 1.6;
+
+  // The widest line's left edge: the ribbon starts above it
+  ctx.font = font(size, 'Poppins', '700');
+  const widest = Math.max(...lines.map((line) => ctx.measureText(line).width));
+  const left = W / 2 - widest / 2;
+  drawRibbon(ctx, 'Greetings from', { x: Math.max(box.x + 30, left - 10), y: top - ribbonSize * 1.75, size: ribbonSize }, p);
+  drawBlockLetters(ctx, lines, size, { cx: W / 2, top, lineGap }, images, art, box, p);
+
+  if (art.subtitle) {
+    ctx.save();
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'alphabetic';
+    const right = Math.min(box.x + box.w - 30, W / 2 + widest / 2 + 10);
+    ctx.font = font(subtitleSize, 'TravelFont');
+    let shown = art.subtitle;
+    const room = box.w - 80;
+    while (shown.length > 3 && ctx.measureText(shown).width > room) shown = `${shown.slice(0, -2).trimEnd()}…`;
+    outlinedText(ctx, shown, right, top + blockHeight + subtitleSize * 0.95, { size: subtitleSize, fill: p.ribbonInk, edge: p.ribbon });
+    ctx.restore();
+  }
 }
 
 // The stamp: a perforated paper stamp with the place's picture and name
@@ -526,6 +601,17 @@ export function drawBack(ctx, card, art, images) {
     family: 'Poppins',
     weight: '500',
   });
+}
+
+/** The faces the card uses: the share card's, and the bold of the big letters. */
+export async function loadFonts() {
+  await loadCardFonts();
+  if (typeof document === 'undefined' || !document.fonts?.load) return;
+  try {
+    await document.fonts.load('700 200px Poppins');
+  } catch {
+    // Drawn in the browser's own bold
+  }
 }
 
 const canvasOf = () => {

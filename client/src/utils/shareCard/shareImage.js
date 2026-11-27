@@ -1,6 +1,6 @@
 // Handing a picture on (the share card): the phone's or computer's own share sheet where it
 // takes files (Instagram, WhatsApp, Messages…), else a download.
-import { trackShare } from '@/utils/analytics/events';
+import { trackShare } from '@/utils/analytics/siteActions';
 
 /** Can this browser share an image file? */
 export function canShareImages() {

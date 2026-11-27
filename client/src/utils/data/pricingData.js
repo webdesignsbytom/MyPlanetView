@@ -11,6 +11,8 @@ import { REFUND_DAYS } from '../plans/billing.js';
 
 const count = (n) => n.toLocaleString('en-GB');
 const perCountry = (planId) => `${count(PLANS[planId].limits.photosPerCountry)} photos of each country, on each map`;
+// Saved slideshows (27 Nov 2026, the user's wish: 2, 10 and 25 a map)
+const slideshows = (planId) => `${count(PLANS[planId].limits.photoShows)} saved slideshows of your photos on each map, each with a link to share`;
 const GB = 1000 ** 3;
 
 export const pricingIntro = `Every map starts in Economy, free. Business and First Class keep your full-size originals and far more photos of each country. Your private map, its looks and its sharing come with every plan.`;
@@ -25,6 +27,7 @@ export const planTickets = [
       // A map's own design (docs/API.md "Map designs"; 21 Nov 2026): free on every plan
       { text: 'Your own map design: a picture of yours on the sea, and your colours for every country' },
       { text: perCountry('FREE') },
+      { text: slideshows('FREE') },
       { text: 'A print-quality copy of every photo, good up to A4' },
       { text: 'Travel offer cards in your photo galleries keep it free' },
     ],
@@ -35,6 +38,7 @@ export const planTickets = [
     features: [
       { text: 'Everything in Economy' },
       { text: perCountry('REGULAR') },
+      { text: slideshows('REGULAR') },
       { text: 'Your full-size originals, untouched: for posters, canvases, cropping and re-editing' },
       { text: 'No ad cards for you, on any map; fewer for the people you share with' },
       // Postcards (26 Nov 2026, the user's decision): a country's card is free, these are paid
@@ -50,6 +54,7 @@ export const planTickets = [
     features: [
       { text: 'Everything in Business' },
       { text: perCountry('PREMIUM') },
+      { text: slideshows('PREMIUM') },
       { text: 'Videos of your trips, beside the photos' },
       // Each plan has its own passport cover (16 Nov); since 26 Nov 2026 every plan picks the
       // leather, so it's the foil frame and gilt edges that are First Class's. "Extra map

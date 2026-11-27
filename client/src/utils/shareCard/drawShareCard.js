@@ -140,13 +140,28 @@ export function textLines(ctx, text, width, maxLines) {
   return shown;
 }
 
-/** The colour a highlighted place wears: the design's (a region its country's), else its pastel. */
-function fillFor(code, colours) {
+/**
+ * The colour a highlighted place wears: the design's (a region its country's), else its pastel
+ * in `palette` (a poster's look has its own: Black and white's greys; 27 Nov 2026).
+ */
+function fillFor(code, colours, palette = C) {
   if (colours[code]) return colours[code];
   const parent = REGION_PARENT[code];
   if (parent && colours[parent]) return colours[parent];
-  if (code === 'AQ') return C.ice;
-  return C.visits[pastelNumberFor(code) - 1] ?? C.visits[0];
+  if (code === 'AQ') return palette.ice ?? C.ice;
+  const visits = palette.visits ?? C.visits;
+  return visits[pastelNumberFor(code) - 1] ?? visits[0];
+}
+
+/** `picture` drawn over `box` as CSS's `cover` does: filling it, centred, cut to its shape. */
+function drawCover(ctx, picture, box) {
+  const width = picture.naturalWidth || picture.width;
+  const height = picture.naturalHeight || picture.height;
+  if (!width || !height) return;
+  const scale = Math.max(box.width / width, box.height / height);
+  const drawnWidth = width * scale;
+  const drawnHeight = height * scale;
+  ctx.drawImage(picture, box.x + (box.width - drawnWidth) / 2, box.y + (box.height - drawnHeight) / 2, drawnWidth, drawnHeight);
 }
 
 /**
@@ -154,9 +169,10 @@ function fillFor(code, colours) {
  * frame) and the line widths and dot radius, in canvas pixels, default to the share card's;
  * the poster draws it bigger in its own colours. `view` (`[x, y, width, height]` in map units:
  * a card's close-up crop) fits that part of the world in the box, whose height then stays as
- * given, centred, the land round it showing. -> the map's height in pixels
+ * given, centred, the land round it showing. `seaPicture` (a loaded image: a poster's map
+ * style's own sea, 27 Nov 2026) covers the sea, under the land. -> the map's height in pixels
  */
-export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica, view = null, palette = C, edgeWidth = 0.8, dotRadius = 5, frameWidth = 3 }) {
+export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica, view = null, palette = C, seaPicture = null, edgeWidth = 0.8, dotRadius = 5, frameWidth = 3 }) {
   const bottom = withAntarctica ? MAP_BOTTOM_WITH_ANTARCTICA : MAP_BOTTOM_NO_ANTARCTICA;
   const scale = view ? Math.min(box.width / view[2], box.height / view[3]) : box.width / MAP_WIDTH;
   ctx.save();
@@ -165,6 +181,7 @@ export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica,
   ctx.clip();
   ctx.fillStyle = palette.sea;
   ctx.fillRect(box.x, box.y, box.width, box.height);
+  if (seaPicture) drawCover(ctx, seaPicture, box);
 
   if (view) {
     ctx.translate(box.x + box.width / 2 - (view[0] + view[2] / 2) * scale, box.y + box.height / 2 - (view[1] + view[3] / 2) * scale);
@@ -178,7 +195,7 @@ export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica,
     const antarctic = isAntarctic(place.code);
     if (antarctic && !withAntarctica) continue;
     const marked = highlight.has(place.code);
-    ctx.fillStyle = marked ? fillFor(place.code, colours) : antarctic ? palette.ice : palette.land;
+    ctx.fillStyle = marked ? fillFor(place.code, colours, palette) : antarctic ? palette.ice : palette.land;
     ctx.strokeStyle = antarctic ? palette.iceEdge : palette.landEdge;
     for (const path of pathsOf(place.code)) {
       ctx.fill(path);
@@ -190,7 +207,7 @@ export function drawMap(ctx, { box, highlight, splitUk, colours, withAntarctica,
     if (!highlight.has(place.code) || place.pinY > bottom) continue;
     ctx.beginPath();
     ctx.arc(place.pinX, place.pinY, dotRadius / scale, 0, Math.PI * 2);
-    ctx.fillStyle = fillFor(place.code, colours);
+    ctx.fillStyle = fillFor(place.code, colours, palette);
     ctx.fill();
     ctx.stroke();
   }

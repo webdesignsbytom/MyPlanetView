@@ -1,14 +1,16 @@
-// "Share a slideshow" (components/shows/; 25 Nov 2026, the user's wish; docs/API.md "Photo
-// slideshows"): choose photos, a title, the order and the speed, then get the link
+// "Make a slideshow" (components/shows/; 25 Nov 2026, the user's wish; saved since 27 Nov
+// 2026; docs/API.md "Photo slideshows"): choose photos, a title, the order and the speed, then
+// save it with its link, as many as the map's plan keeps
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import ShowMakerDialog from '@/components/shows/ShowMakerDialog';
 import ShareShow from '@/components/shows/ShareShow';
-import { createPhotoShow } from '@/api/photoShowsApi';
+import { createPhotoShow, getMapPhotoShows } from '@/api/photoShowsApi';
 import usePhotoPage from '@/hooks/usePhotoPage';
 
-vi.mock('@/api/photoShowsApi', () => ({ createPhotoShow: vi.fn() }));
+vi.mock('@/api/photoShowsApi', () => ({ createPhotoShow: vi.fn(), getMapPhotoShows: vi.fn() }));
 vi.mock('@/hooks/usePhotoPage', () => ({ default: vi.fn() }));
 
 const PHOTOS = [
@@ -20,7 +22,8 @@ const PHOTOS = [
 const SHOW = { id: 's1', code: 'SPN2-SHW8-TRP5', title: 'Portugal', seconds: 8, photoIds: ['p-old', 'p-new'], photoCount: 2 };
 
 const tile = (id) => document.querySelector(`[data-show-photo="${id}"]`);
-const makeButton = () => screen.getByText('Make the link').closest('button');
+const makeButton = () => screen.getByText('Save the slideshow').closest('button');
+const saved = (n, limit = 10, plan = 'REGULAR') => ({ shows: Array.from({ length: n }, (_, i) => ({ id: `s${i}` })), limit, plan });
 
 let more;
 beforeEach(() => {
@@ -28,18 +31,23 @@ beforeEach(() => {
   more = vi.fn();
   usePhotoPage.mockReturnValue({ photos: PHOTOS, loading: false, error: null, nextCursor: 'c1', loadMore: more });
   createPhotoShow.mockResolvedValue({ show: SHOW });
+  getMapPhotoShows.mockResolvedValue(saved(1));
 });
 
 const open = (props = {}) => {
   const onClose = vi.fn();
-  render(<ShowMakerDialog mapId='map-1' source={{ mapId: 'map-1', country: 'PT', display: true }} defaultTitle='Portugal' onClose={onClose} {...props} />);
+  render(
+    <MemoryRouter>
+      <ShowMakerDialog mapId='map-1' source={{ mapId: 'map-1', country: 'PT', display: true }} defaultTitle='Portugal' onClose={onClose} {...props} />
+    </MemoryRouter>,
+  );
   return { onClose };
 };
 
 describe('ShowMakerDialog', () => {
   it('lists the photos to choose from the gallery it was opened from, its title filled in', () => {
     open();
-    expect(document.querySelector('[role="dialog"]').textContent).toContain('Share a slideshow');
+    expect(document.querySelector('[role="dialog"]').textContent).toContain('Make a slideshow');
     expect(usePhotoPage).toHaveBeenCalledWith({ mapId: 'map-1', country: 'PT', display: true });
     expect(screen.getByLabelText('Title').value).toBe('Portugal');
     expect(screen.getByText('None chosen yet')).toBeTruthy();
@@ -53,7 +61,7 @@ describe('ShowMakerDialog', () => {
     expect(more).toHaveBeenCalled();
   });
 
-  it('ticks photos and makes the link, oldest first by default, at the speed chosen', async () => {
+  it('ticks photos and saves it with its link, oldest first by default, at the speed chosen', async () => {
     open();
     fireEvent.click(tile('p-new'));
     fireEvent.click(tile('p-old'));
@@ -63,8 +71,9 @@ describe('ShowMakerDialog', () => {
     fireEvent.click(makeButton());
     await waitFor(() => expect(createPhotoShow).toHaveBeenCalled());
     expect(createPhotoShow).toHaveBeenCalledWith('map-1', { title: 'Portugal', photoIds: ['p-old', 'p-new'], seconds: 8 });
-    // Made: its link to copy or open
-    expect(await screen.findByText(/“Portugal” is ready: 2 photos/)).toBeTruthy();
+    // Saved: its link to copy or open, and where it's kept
+    expect(await screen.findByText(/“Portugal” is saved: 2 photos/)).toBeTruthy();
+    expect(screen.getByText(/kept in the photo album’s “Saved slideshows”/)).toBeTruthy();
     expect(screen.getByLabelText('Link to Portugal').value).toBe(`${window.location.origin}/show/SPN2-SHW8-TRP5`);
     const openIt = screen.getByLabelText('Open Portugal (opens in a new tab)');
     expect(openIt.textContent).toBe('Open it');
@@ -92,12 +101,59 @@ describe('ShowMakerDialog', () => {
   });
 
   it('says why it couldn’t be made, and stays open', async () => {
-    createPhotoShow.mockRejectedValue(Object.assign(new Error('no'), { friendlyMessage: 'A map can have 100 slideshows.' }));
+    createPhotoShow.mockRejectedValue(Object.assign(new Error('no'), { friendlyMessage: 'Offline.' }));
     open();
     fireEvent.click(tile('p-old'));
     fireEvent.click(makeButton());
-    expect(await screen.findByText('A map can have 100 slideshows.')).toBeTruthy();
+    expect(await screen.findByText('Offline.')).toBeTruthy();
     expect(screen.getByLabelText('Title')).toBeTruthy();
+  });
+
+  // 27 Nov 2026, the user's wish: 2, 10 or 25 saved a map, by its plan
+  it('says how many the map has saved of what its plan keeps', async () => {
+    open();
+    expect((await screen.findByText('1 of 10 saved on this map')).hasAttribute('data-shows-saved')).toBe(true);
+    expect(getMapPhotoShows).toHaveBeenCalledWith('map-1');
+    // Saving one counts it
+    fireEvent.click(tile('p-old'));
+    fireEvent.click(makeButton());
+    await screen.findByText('Make another');
+    fireEvent.click(screen.getByText('Make another'));
+    expect(screen.getByText('2 of 10 saved on this map')).toBeTruthy();
+  });
+
+  it('says so before anything is chosen once the map is full, and offers the plans below First Class', async () => {
+    getMapPhotoShows.mockResolvedValue(saved(2, 2, 'FREE'));
+    const { unmount } = render(
+      <MemoryRouter>
+        <ShowMakerDialog mapId='map-1' source={{ mapId: 'map-1' }} onClose={() => {}} />
+      </MemoryRouter>,
+    );
+    const note = await waitFor(() => {
+      const found = document.querySelector('[data-shows-full]');
+      expect(found).toBeTruthy();
+      return found;
+    });
+    expect(note.textContent).toContain('2 of 2 slideshows saved on this map. Delete one, or upgrade to save more.');
+    expect(note.textContent).toContain('They’re in the photo album, under “Saved slideshows”.');
+    expect(screen.getByText('See the plans').getAttribute('href')).toBe('/pricing');
+    fireEvent.click(tile('p-old'));
+    expect(makeButton().disabled).toBe(true);
+    unmount();
+
+    getMapPhotoShows.mockResolvedValue(saved(25, 25, 'PREMIUM'));
+    open();
+    await waitFor(() => expect(document.querySelector('[data-shows-full]')?.textContent).toContain('Delete one to save another.'));
+    expect(screen.queryByText('See the plans')).toBeNull();
+  });
+
+  it('lets the server decide when the count can’t be read', async () => {
+    getMapPhotoShows.mockRejectedValue(new Error('offline'));
+    open();
+    fireEvent.click(tile('p-old'));
+    await waitFor(() => expect(getMapPhotoShows).toHaveBeenCalled());
+    expect(document.querySelector('[data-shows-saved], [data-shows-full]')).toBeNull();
+    expect(makeButton().disabled).toBe(false);
   });
 
   it('makes another, or closes', async () => {
@@ -126,9 +182,13 @@ describe('ShowMakerDialog', () => {
 
 describe('ShareShow', () => {
   it('is a button that opens the maker over the page', async () => {
-    render(<ShareShow mapId='map-1' source={{ tripId: 't1', display: true }} defaultTitle='Lisbon' />);
+    render(
+      <MemoryRouter>
+        <ShareShow mapId='map-1' source={{ tripId: 't1', display: true }} defaultTitle='Lisbon' />
+      </MemoryRouter>,
+    );
     expect(document.querySelector('[role="dialog"]')).toBeNull();
-    fireEvent.click(screen.getByText('Share a slideshow').closest('button'));
+    fireEvent.click(screen.getByText('Make a slideshow').closest('button'));
     expect(await screen.findByLabelText('Title')).toBeTruthy();
     expect(screen.getByLabelText('Title').value).toBe('Lisbon');
   });

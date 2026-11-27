@@ -1,7 +1,9 @@
 // Mock mode's slideshows of chosen photos (dev/mock/handlers/photoShows.js): the server's rules over the store.
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { HOME_MAP, SAM_MAP, db, del, freshStore, get, patch, post, registerAllRoutes, setVerified, signOut } from '../mockApi';
+import { HOME_MAP, SAM_MAP, USER, db, del, freshStore, get, patch, post, registerAllRoutes, setVerified, signOut } from '../mockApi';
+import { setMockPlan } from '@/dev/mock/plans';
 import { EVENT_MESSAGES } from '../../../../../../server/src/utils/responses/responses.js';
+import { showsFullMessage } from '../../../../../../server/src/utils/photoShows.js';
 
 beforeAll(() => registerAllRoutes());
 beforeEach(() => freshStore());
@@ -11,8 +13,9 @@ const CODE_SHAPE = /^[2-9A-Z]{4}-[2-9A-Z]{4}-[2-9A-Z]{4}$/;
 const curly = (text) => text.replace(/'/g, '’');
 
 describe('a map’s shows', () => {
-  it('lists the seeded one for its editors', async () => {
+  it('lists the seeded one for its editors, with what the map keeps on its plan (Business)', async () => {
     const { data } = await get(`/api/maps/${HOME_MAP}/photo-shows`);
+    expect(data).toMatchObject({ limit: 10, plan: 'REGULAR' });
     expect(data.shows).toEqual([
       expect.objectContaining({ code: CODE, title: 'Our favourite photos', seconds: 5, photoCount: 3, photoIds: ['photo-colosseum', 'photo-eiffel', 'photo-dam'] }),
     ]);
@@ -33,6 +36,20 @@ describe('a map’s shows', () => {
     expect(made.data.show.code).toMatch(CODE_SHAPE);
     setVerified(false);
     expect((await make({ photoIds: ['photo-dam'] })).status).toBe(403);
+  });
+
+  // 27 Nov 2026, the user's wish: 2, 10 or 25 saved a map, by its plan, as the server's
+  it('saves as many as the map’s plan keeps, and says so in the server’s words', async () => {
+    const make = () => post(`/api/maps/${HOME_MAP}/photo-shows`, { photoIds: ['photo-dam'] });
+    setMockPlan(USER, 'FREE', 0);
+    expect((await get(`/api/maps/${HOME_MAP}/photo-shows`)).data).toMatchObject({ limit: 2, plan: 'FREE' });
+    expect((await make()).status).toBe(201);
+    const full = await make();
+    expect(full.status).toBe(409);
+    expect(full.body.message).toBe(showsFullMessage({ count: 2, cap: 2, planId: 'FREE' }));
+    setMockPlan(USER, 'PREMIUM', 0);
+    expect((await get(`/api/maps/${HOME_MAP}/photo-shows`)).data).toMatchObject({ limit: 25, plan: 'PREMIUM' });
+    expect((await make()).status).toBe(201);
   });
 
   it('is renamed, changed, given a new link and deleted by its editors', async () => {

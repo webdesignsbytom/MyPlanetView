@@ -430,7 +430,7 @@ export function mapView(map, role, { withPlan = false } = {}) {
       .filter((t) => t.mapId === map.id)
       .sort((a, b) => a.position - b.position)
       .map((t) => {
-        const out = { id: t.id, name: t.name, position: t.position, birthCountryCode: t.birthCountryCode, favouriteCountryCode: t.favouriteCountryCode };
+        const out = { id: t.id, name: t.name, lastName: t.lastName ?? null, nationalityCode: t.nationalityCode ?? null, position: t.position, birthCountryCode: t.birthCountryCode, favouriteCountryCode: t.favouriteCountryCode };
         // The account it's linked to, and the date of birth (23 Nov 2026), for editors only
         if (atLeast(role, 'EDITOR')) {
           out.userId = t.userId;

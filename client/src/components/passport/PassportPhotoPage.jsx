@@ -6,12 +6,7 @@ import PassportSignature from './PassportSignature';
 // Utils
 import { countryName } from '@/utils/map/countries';
 import { formatDay } from '@/utils/functions/dates';
-import { passportNumber } from '@/utils/passport/travellerDetails';
-
-// The machine-readable line at the foot of a real photo page, made from the travellers'
-// names (decoration only)
-const machineLine = (travellers) =>
-  `P<MPV<<${travellers.map((t) => t.name.toUpperCase().replace(/[^A-Z]+/g, '<')).join('<<')}`.padEnd(44, '<').slice(0, 44);
+import { fullName, machineLine, passportNumber } from '@/utils/passport/travellerDetails';
 
 const LABEL = 'font-travel text-xs uppercase tracking-wide text-colour9';
 const ACTION = 'underline underline-offset-2 disabled:no-underline disabled:opacity-50';
@@ -34,13 +29,16 @@ const placeName = (code) => (code ? countryName(code) : 'Not given');
  * The passport's photo page: each traveller on the map laid out as a passport's holder (25 Nov
  * 2026, the user's wish: "improve passport page for user avatars and info"): their photo
  * (PassportPortrait: one of the map's photos cropped to the box, else their account's picture,
- * else their initials) with their name, date of birth (the map's editors only: the passport
- * reply has it for no one else) and where they were born beside it; under them, in two columns,
- * home (`home`, the map's), their favourite country, when they started travelling (the year of
- * their first trip), the date of issue (when they were added to the map) and a made-up passport
- * number; then their signature (drawn, else their name in a handwriting face). The photo keeps a
- * passport photo's shape: with every detail beside it, it stretched into a thin strip. An editor (`onEditPhoto`, `onEditSignature`) changes the
- * photo and the signature here; `locked` (an unverified address) says why they can't yet.
+ * else their initials) with their surname and given names (27 Nov 2026, the user's wish:
+ * "Passport needs first name last name"; "Not given" with no last name), nationality (27 Nov
+ * 2026, the user's wish), date of birth (the map's editors only: the passport reply has it for
+ * no one else) and where they were born beside it; under them, in two columns, home (`home`, the
+ * map's), their favourite country, when they started travelling (the year of their first trip),
+ * the date of issue (when they were added to the map) and a made-up passport number; then their
+ * signature (drawn, else their whole name in a handwriting face). The photo keeps a passport
+ * photo's shape: with every detail beside it, it stretched into a thin strip. An editor
+ * (`onEditPhoto`, `onEditSignature`) changes the photo and the signature here; `locked` (an
+ * unverified address) says why they can't yet.
  */
 function PassportPhotoPage({ travellers, home = null, pageNumber, headingId, onEditPhoto = null, onEditSignature = null, locked = false }) {
   const editable = Boolean(onEditPhoto || onEditSignature);
@@ -60,10 +58,21 @@ function PassportPhotoPage({ travellers, home = null, pageNumber, headingId, onE
                 {/* The photo box as tall as the details beside it, to their last line (24 Nov 2026,
                     the user's wish: a 3:4 box stopped a line short), and never shorter than 3:4 */}
                 <div className='grid grid-cols-[6rem_minmax(0,1fr)] gap-4'>
-                  <PassportPortrait name={traveller.name} photo={traveller.photo} className='min-h-[8rem]' />
+                  <PassportPortrait name={fullName(traveller)} photo={traveller.photo} className='min-h-[8rem]' />
                   <dl className='grid min-w-0 content-start gap-1 text-sm' data-beside-photo=''>
-                    <dt className={LABEL}>Name</dt>
-                    <dd className='break-words font-semibold'>{traveller.name}</dd>
+                    <dt className={LABEL}>Surname</dt>
+                    <dd className='break-words font-semibold' data-passport-surname=''>
+                      {traveller.lastName || 'Not given'}
+                    </dd>
+                    <dt className={LABEL}>Given names</dt>
+                    <dd className='break-words font-semibold' data-passport-given-names=''>
+                      {traveller.name}
+                    </dd>
+                    {/* 27 Nov 2026, the user's wish: "Passport also needs nationality" */}
+                    <dt className={LABEL}>Nationality</dt>
+                    <dd className='break-words' data-passport-nationality=''>
+                      {placeName(traveller.nationalityCode)}
+                    </dd>
                     {traveller.birthDate ? <Detail label='Date of birth'>{formatDay(traveller.birthDate)}</Detail> : null}
                     <Detail label='Born in'>{placeName(traveller.birthCountryCode)}</Detail>
                   </dl>
@@ -93,7 +102,7 @@ function PassportPhotoPage({ travellers, home = null, pageNumber, headingId, onE
                 </dl>
                 <div className='grid gap-1 border-t border-dashed border-colour9/50 pt-2'>
                   <p className={LABEL}>Signature</p>
-                  <PassportSignature name={traveller.name} signature={traveller.signature} />
+                  <PassportSignature name={fullName(traveller)} signature={traveller.signature} />
                 </div>
                 {editable ? (
                   <div className='grid grid-row justify-start gap-4 text-sm'>

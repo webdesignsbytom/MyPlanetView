@@ -1,21 +1,30 @@
 // Mock mode only: slideshows of chosen photos, shared by a link of their own (docs/API.md
 // "Photo slideshows"; 25 Nov 2026), as the server's controllers/photoShows.js: a map's editors
 // make, change, re-link and delete them; anyone with the code watches the photos and videos
-// it holds that a share link's viewer could see, in its order or shuffled by a seed. The
+// it holds that a share link's viewer could see, in its order or shuffled by a seed. A map keeps
+// 2, 10 or 25 saved by its plan (27 Nov 2026), as the server's. The
 // store keeps `db.photoShows` ({ id, mapId, code, title, photoIds, seconds, createdById,
 // createdAt, updatedAt }).
 import { deny, fail, ok, route } from '../mockAdapter';
 import { formatShareCode, getDb, me, newId, newShareCode, session } from '../store';
 import { canSeePhoto, displayListItem, mapRole } from '../views';
 import { pageAfter, parseShuffleSeed, shuffled } from '../shuffle';
-import { SHOW_DEFAULT_SECONDS, SHOW_DEFAULT_TITLE, SHOW_PHOTOS_MAX, SHOW_SECONDS, SHOW_TITLE_MAX } from '@/utils/shows/showRules';
+import { mapPlanId } from '../plans';
+import {
+  SHOW_DEFAULT_SECONDS,
+  SHOW_DEFAULT_TITLE,
+  SHOW_PHOTOS_MAX,
+  SHOW_SECONDS,
+  SHOW_TITLE_MAX,
+  showsAllowed,
+  showsFullMessage,
+} from '@/utils/shows/showRules';
 
 const NOT_FOUND = 'That slideshow isn’t there any more. Ask whoever sent it for a new link.';
 const MAP_NOT_FOUND = 'This map could not be found.';
 const PHOTOS_INVALID = 'Choose 1 to 500 of this map’s photos or videos, none of them hidden.';
 const SECONDS_INVALID = 'Each photo stays up for 3, 5 or 8 seconds.';
 const BAD = 'Malformed data.';
-const SHOWS_PER_MAP = 100;
 const clean = (text, max) => String(text ?? '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim().slice(0, max);
 const normal = (code) => String(code || '').toUpperCase().replace(/[^0-9A-Z]/g, '');
 
@@ -59,7 +68,8 @@ export function registerPhotoShowRoutes() {
     const shows = getDb()
       .photoShows.filter((s) => s.mapId === map.id)
       .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-    return ok({ shows: shows.map(showView) });
+    const plan = mapPlanId(map);
+    return ok({ shows: shows.map(showView), limit: showsAllowed(plan), plan });
   });
 
   route('POST', '/api/maps/:mapId/photo-shows', ({ params, body }) => {
@@ -70,9 +80,9 @@ export function registerPhotoShowRoutes() {
     if (!validPhotoIds(body?.photoIds, map.id)) return fail(400, PHOTOS_INVALID);
     const seconds = secondsFrom(body?.seconds);
     if (seconds === null) return fail(400, SECONDS_INVALID);
-    if (db.photoShows.filter((s) => s.mapId === map.id).length >= SHOWS_PER_MAP) {
-      return fail(409, 'A map can have 100 slideshows. Delete one to make another.');
-    }
+    const plan = mapPlanId(map);
+    const saved = db.photoShows.filter((s) => s.mapId === map.id).length;
+    if (saved >= showsAllowed(plan)) return fail(409, showsFullMessage({ count: saved, cap: showsAllowed(plan), planId: plan }));
     const now = new Date().toISOString();
     const show = {
       id: newId(),

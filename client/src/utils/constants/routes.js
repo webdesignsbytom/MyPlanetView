@@ -111,6 +111,8 @@ export const ADMIN_GIFTS_PAGE_URL = `${ADMIN_PAGE_URL}/gifts`;
 
 // Dev server only (not routed in production builds)
 export const DEV_SELECT_LAB_PAGE_URL = '/dev/select-lab';
+// A draft of a new home page, to design with (the user's design in the repo's main-home/)
+export const DEV_HOME_DRAFT_PAGE_URL = '/dev/home';
 
 // For site map
 export const PUBLIC_STATIC_ROUTES = [

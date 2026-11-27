@@ -64,6 +64,30 @@ describe('BadgeSticker', () => {
     expect(li.querySelector('[aria-hidden="true"]').className).toContain('border-dashed');
   });
 
+  // 27 Nov 2026, the user's wish: an earned badge opens its own card
+  it('is a button opening its card once earned, and only then', () => {
+    const onOpen = vi.fn();
+    const earned = { key: 'countries-10', group: 'countries', earnedAt: '2026-03-12T10:00:00Z' };
+    const { container, unmount } = render(
+      <ul>
+        <BadgeSticker badge={earned} onOpen={onOpen} />
+        <BadgeSticker badge={{ key: 'countries-25', group: 'countries', have: 3, need: 25 }} onOpen={onOpen} />
+      </ul>,
+    );
+    const [button, ...others] = container.querySelectorAll('button');
+    expect(others).toEqual([]);
+    expect(button.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(button.dataset.badgeOpen).toBe('countries-10');
+    // Its name: the badge, when, and what it means
+    expect(button.textContent).toContain('Ten countries');
+    expect(button.textContent).toContain('Earned 12 Mar 2026');
+    fireEvent.click(button);
+    expect(onOpen).toHaveBeenCalledWith(earned);
+    unmount();
+    // Without a way to open it, a plain sticker
+    expect(sticker(earned).querySelector('button')).toBeNull();
+  });
+
   it('names a badge the client doesn’t know from its key', () => {
     const li = sticker({ key: 'secret-new-badge', group: 'countries', have: 0, need: 1 });
     expect(li.textContent).toContain('secret new badge');
@@ -110,11 +134,13 @@ describe('BadgeSuitcase', () => {
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
     expect(body.hidden).toBe(false);
     expect(body.querySelectorAll('li').length).toBe(2);
+    // Up to close, down to open (27 Nov 2026, the user's wish: it pointed right when closed)
+    expect(toggle.querySelector('svg').getAttribute('class')).toContain('rotate-180');
 
     fireEvent.click(toggle);
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
     expect(body.hidden).toBe(true);
-    expect(toggle.querySelector('svg').getAttribute('class')).toContain('-rotate-90');
+    expect(toggle.querySelector('svg').getAttribute('class')).not.toContain('rotate-');
     // The other groups stay as they were
     const photos = within(container.querySelector('[data-badge-group="photos"] h4')).getByRole('button');
     expect(photos.getAttribute('aria-expanded')).toBe('true');

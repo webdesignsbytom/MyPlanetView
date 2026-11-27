@@ -21,7 +21,7 @@ import { planOf } from '@/utils/constants/plans';
 import { forgetMapLists, myMaps } from '@/utils/map/mapListCache';
 import { plural } from '@/utils/functions/plural';
 import { INTERVAL_NAMES, billingFrom, forgetPendingMap, goToUrl, hasSubscription, readPendingMap } from '@/utils/plans/billing';
-import { trackCheckoutPaid, trackCheckoutStarted } from '@/utils/analytics/events';
+import { trackCheckoutPaid, trackCheckoutStarted } from '@/utils/analytics/siteActions';
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // After Stripe's checkout the plan arrives with its webhook: read it again a little later
@@ -70,7 +70,7 @@ function AccountPlanSection() {
       .catch((err) => alive.current && setLoadError(err.friendlyMessage || 'Your plan could not be loaded.'));
   }, []);
 
-  // Back from a paid Checkout: the purchase, counted once (utils/analytics/events.js)
+  // Back from a paid Checkout: the purchase, counted once (utils/analytics/siteActions.js)
   useEffect(() => {
     if (billingReturn === 'success') trackCheckoutPaid('plan');
   }, [billingReturn]);

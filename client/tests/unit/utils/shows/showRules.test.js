@@ -10,6 +10,9 @@ import {
   photoCountWords,
   showLink,
   showOrder,
+  showsAllowed,
+  showsFullMessage,
+  showsSavedWords,
 } from '@/utils/shows/showRules';
 import * as server from '../../../../../server/src/utils/photoShows.js';
 
@@ -20,6 +23,24 @@ describe('the server’s rules, copied', () => {
     expect([...SHOW_SECONDS]).toEqual([...server.SHOW_SECONDS]);
     expect(SHOW_DEFAULT_SECONDS).toBe(server.SHOW_DEFAULT_SECONDS);
     expect(SHOW_DEFAULT_TITLE).toBe(server.SHOW_DEFAULT_TITLE);
+  });
+
+  // 27 Nov 2026, the user's wish: 2, 10 and 25 saved a map
+  it('keeps as many saved on each plan, and says so in the same words', () => {
+    for (const planId of ['FREE', 'REGULAR', 'PREMIUM']) {
+      expect(showsAllowed(planId)).toBe(server.showsAllowed(planId));
+      const cap = showsAllowed(planId);
+      for (const count of [cap, cap + 3]) expect(showsFullMessage({ count, cap, planId })).toBe(server.showsFullMessage({ count, cap, planId }));
+    }
+    expect([showsAllowed('FREE'), showsAllowed('REGULAR'), showsAllowed('PREMIUM')]).toEqual([2, 10, 25]);
+  });
+});
+
+describe('showsSavedWords', () => {
+  it('counts what the map has saved against what it keeps', () => {
+    expect(showsSavedWords(1, 10)).toBe('1 of 10 saved on this map');
+    expect(showsSavedWords(2, 2)).toBe('2 of 2 saved on this map');
+    expect(showsSavedWords(3, 2)).toBe('3 saved on this map, more than the 2 it keeps now');
   });
 });
 

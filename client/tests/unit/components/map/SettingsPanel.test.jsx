@@ -20,8 +20,14 @@ vi.mock('@/components/travelCopies/TravelCopySection', () => section('copies'));
 vi.mock('@/components/map/design/MapDesignSection', () => ({ default: ({ styleId }) => <div data-section='design' data-style={styleId} /> }));
 vi.mock('@/components/map/design/VisitedLookSection', () => ({ default: ({ styleId }) => <div data-section='visited' data-style={styleId} /> }));
 vi.mock('@/components/onboarding/MapSetupForm', () => ({
-  default: ({ onSubmit, canRename, submitLabel }) => (
-    <button type='button' data-section='setup' data-can-rename={String(canRename)} onClick={() => onSubmit({ name: 'New name' })}>
+  default: ({ onSubmit, canRename, submitLabel, typeBehindButton }) => (
+    <button
+      type='button'
+      data-section='setup'
+      data-can-rename={String(canRename)}
+      data-type-behind-button={String(Boolean(typeBehindButton))}
+      onClick={() => onSubmit({ name: 'New name' })}
+    >
       {submitLabel}
     </button>
   ),
@@ -81,9 +87,11 @@ describe('SettingsPanel', () => {
   });
 
   it('shows the owner every section of "This map"', () => {
-    const { sections } = open();
+    const { sections, container } = open();
     fireEvent.click(screen.getByText('This map'));
     expect(sections()).toEqual(['setup', 'home', 'download', 'import', 'copies', 'upgrade', 'main', 'delete']);
+    // Who the map is for behind "Change map type" (27 Nov 2026, the user's wish)
+    expect(container.querySelector('[data-section="setup"]').getAttribute('data-type-behind-button')).toBe('true');
   });
 
   it('gives an editor the travellers, downloads and imports only', () => {

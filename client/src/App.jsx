@@ -33,6 +33,7 @@ import {
   SIGN_UP_PAGE_URL,
   VERIFY_EMAIL_PAGE_URL,
   DEV_SELECT_LAB_PAGE_URL,
+  DEV_HOME_DRAFT_PAGE_URL,
   MAP_PAGE_URL,
   MAP_BY_ID_PAGE_URL,
   TRIP_PAGE_URL,
@@ -96,6 +97,7 @@ import {
   MaintenancePage,
   Error404,
   SelectLabPage,
+  HomeDraftPage,
   MapPage,
   TripPage,
   WelcomePage,
@@ -467,6 +469,7 @@ function App() {
 
           {/* Dev server only */}
           {SelectLabPage ? <Route path={DEV_SELECT_LAB_PAGE_URL} element={<SelectLabPage />} /> : null}
+          {HomeDraftPage ? <Route path={DEV_HOME_DRAFT_PAGE_URL} element={<HomeDraftPage />} /> : null}
 
           {/* Error */}
           <Route path='*' element={<Error404 />} />

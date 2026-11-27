@@ -81,6 +81,8 @@ describe('the visited look', () => {
 // not a gradient: a sheet of polished metal under the places been to, VisitedFoil)
 describe('a metallic finish for the places been to', () => {
   const OVER_FOIL = `[data-map-page] svg:has([data-visited-foil]) [data-been="true"]${NOT_POLES}`;
+  const OVER_MOVING_FOIL = `[data-map-page] svg[data-moving]:has([data-visited-foil]) [data-been="true"]${NOT_POLES}`;
+  const MOVING = '[data-map-page] svg[data-moving] [data-visited-foil]{visibility:hidden}';
   const STILL = `[data-map-page] svg:not([data-moving]) [data-visited-foil]{filter:url(#${FOIL_EDGE_ID})}`;
 
   it('is gold, silver or bronze, each its picture of metal and its medal colour, or none', () => {
@@ -104,10 +106,24 @@ describe('a metallic finish for the places been to', () => {
         // The metal's flat colour on a map with no sheet of metal; see-through over one
         `${PLACES}{fill:var(--medal-gold)}`,
         `${OVER_FOIL}{fill:transparent}`,
+        // While the map moves, the metal's flat colour in the places, the sheet hidden (27 Nov
+        // 2026, the user's report: on a phone it vanished while the map was dragged)
+        `${OVER_MOVING_FOIL}{fill:var(--medal-gold)}`,
+        MOVING,
         STILL,
         `[data-map-page] [data-key-visited-colour] [aria-hidden]{background:url("${gold.texture}") center/cover}`,
       ].join(' '),
     );
+  });
+
+  it('fills the places with the flat metal while the map moves, winning over the see-through rule', () => {
+    const css = visitedCss({ visitedLook: 'COLOUR', visitedFinish: 'SILVER' });
+    expect(css).toContain(`${OVER_MOVING_FOIL}{fill:var(--medal-silver)}`);
+    expect(css).toContain(MOVING);
+    const specificity = (selector) => (selector.match(/\[|:not\(/g) || []).length;
+    expect(specificity(OVER_MOVING_FOIL)).toBeGreaterThan(specificity(OVER_FOIL));
+    // Nothing of the kind without a finish
+    expect(visitedCss({ visitedLook: 'COLOUR' })).not.toContain('data-moving');
   });
 
   it('hides the badges with the colour alone, as a plain colour does', () => {

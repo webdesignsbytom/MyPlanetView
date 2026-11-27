@@ -21,6 +21,8 @@ const COLOUR_EXEMPT = new Set([
   'utils/constants/brandColours.js',
   // Dev-only dropdown tuner: <input type="color"> only takes hex.
   'pages/dev/SelectLabPage.jsx',
+  // Dev-only home page draft: its globe is drawn on a canvas, which can't read the tokens.
+  'utils/homeDraft/globeColours.js',
 ]);
 
 function sourceFiles(dir = SRC, out = []) {

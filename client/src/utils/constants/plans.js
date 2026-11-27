@@ -12,6 +12,8 @@ export const CURRENCY = 'GBP';
 const GB = 1000 ** 3;
 
 // Prices in pence. `extraMap` is what each map beyond the included one costs on that plan.
+// `photoShows`: the slideshows a map keeps saved (27 Nov 2026, the user's wish: 2, 10 and 25),
+// each a list of its photos' ids with a link of its own, never copies of them
 export const PLANS = Object.freeze({
   FREE: Object.freeze({
     id: 'FREE',
@@ -21,7 +23,7 @@ export const PLANS = Object.freeze({
     extraMap: Object.freeze({ MONTH: 399, YEAR: 3900 }),
     // An offer card every this many photo tiles, for viewers who don't pay (FEATURE-PLAN.md, "Ads by tier")
     adEvery: 12,
-    limits: Object.freeze({ photosPerCountry: 30, keepsOriginals: false, videos: false, videosPerCountry: 0, storageCapBytes: null }),
+    limits: Object.freeze({ photosPerCountry: 30, keepsOriginals: false, videos: false, videosPerCountry: 0, storageCapBytes: null, photoShows: 2 }),
   }),
   REGULAR: Object.freeze({
     id: 'REGULAR',
@@ -30,7 +32,7 @@ export const PLANS = Object.freeze({
     price: Object.freeze({ MONTH: 499, YEAR: 4900 }),
     extraMap: Object.freeze({ MONTH: 399, YEAR: 3900 }),
     adEvery: 24,
-    limits: Object.freeze({ photosPerCountry: 200, keepsOriginals: true, videos: false, videosPerCountry: 0, storageCapBytes: 50 * GB }),
+    limits: Object.freeze({ photosPerCountry: 200, keepsOriginals: true, videos: false, videosPerCountry: 0, storageCapBytes: 50 * GB, photoShows: 10 }),
   }),
   PREMIUM: Object.freeze({
     id: 'PREMIUM',
@@ -40,7 +42,7 @@ export const PLANS = Object.freeze({
     extraMap: Object.freeze({ MONTH: 599, YEAR: 5900 }),
     // A First Class map shows no cards to anyone
     adEvery: null,
-    limits: Object.freeze({ photosPerCountry: 1000, keepsOriginals: true, videos: true, videosPerCountry: 20, storageCapBytes: 200 * GB }),
+    limits: Object.freeze({ photosPerCountry: 1000, keepsOriginals: true, videos: true, videosPerCountry: 20, storageCapBytes: 200 * GB, photoShows: 25 }),
   }),
 });
 

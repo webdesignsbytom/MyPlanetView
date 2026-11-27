@@ -41,12 +41,18 @@ export const SHARE_CARD_COLOURS = Object.freeze({
   sticker: Object.freeze({ ring: '#ef4444', face: '#dcbc90', ink: '#991b1b', tick: '#ef4444', tickInk: '#ffffff' }),
 });
 
-// The map poster's two looks (utils/poster/drawMapPoster.js; 22 Nov 2026), fixed for print
-// as the share card's are: "Blue sea" (the share card's map on cream paper) and "Old paper"
-// (an atlas in sepia: a parchment sea, pale land, brown edges). Visited places wear the
-// share card's pastels (or the map design's colours) in both.
+// The map poster's looks (utils/poster/drawMapPoster.js), fixed for print as the share card's
+// are: one per map style (27 Nov 2026, the user's wish: "all the map types as the look
+// options"), keyed by its id, each the style's own map colours (index.css's [data-map-style]
+// blocks and Black and white's grey tokens) on its own paperwork (the style's paper, frame and
+// lettering), and "Old paper" (22 Nov 2026: an atlas in sepia, a parchment sea, pale land,
+// brown edges). The pictured seas (Old map, Starry night, Engraved ocean) are the style's own
+// picture over `sea`. Visited places wear `visits` (the pastels; Black and white's greys; on
+// the starry night, where the site shows visits by their badges alone, its "visited" purple),
+// or the map design's colours.
+const POSTER_PASTELS = SHARE_CARD_COLOURS.visits;
 export const POSTER_COLOURS = Object.freeze({
-  atlas: Object.freeze({
+  animated: Object.freeze({
     paper: '#fdf8ee',
     frame: '#991b1b',
     title: '#991b1b',
@@ -57,6 +63,59 @@ export const POSTER_COLOURS = Object.freeze({
     landEdge: '#b91c1c',
     ice: '#f4f9ff',
     iceEdge: '#8fb3d1',
+    visits: POSTER_PASTELS,
+  }),
+  mono: Object.freeze({
+    paper: '#ffffff',
+    frame: '#000000',
+    title: '#000000',
+    ink: '#000000',
+    brown: '#404040',
+    sea: '#262626',
+    land: '#f7f7f7',
+    landEdge: '#000000',
+    ice: '#ffffff',
+    iceEdge: '#000000',
+    visits: Object.freeze(['#dcdcdc', '#cdcdcd', '#bebebe', '#afafaf', '#a0a0a0', '#919191', '#c6c6c6']),
+  }),
+  'old-map': Object.freeze({
+    paper: '#f4e8cc',
+    frame: '#6b4423',
+    title: '#6e2318',
+    ink: '#2a1a0c',
+    brown: '#6b4423',
+    sea: '#c9a86a',
+    land: '#ecd9b4',
+    landEdge: '#7c2d12',
+    ice: '#eef1ea',
+    iceEdge: '#8c9a96',
+    visits: POSTER_PASTELS,
+  }),
+  starry: Object.freeze({
+    paper: '#0c1c40',
+    frame: '#6fa8d8',
+    title: '#9fd0f2',
+    ink: '#e3f0fb',
+    brown: '#9fbad6',
+    sea: '#06102b',
+    land: '#8ec3e6',
+    landEdge: '#34689e',
+    ice: '#8ec3e6',
+    iceEdge: '#34689e',
+    visits: Object.freeze(Array(7).fill('#c084fc')),
+  }),
+  engraved: Object.freeze({
+    paper: '#fdf8ee',
+    frame: '#991b1b',
+    title: '#991b1b',
+    ink: '#3b2a1a',
+    brown: '#97572b',
+    sea: '#164a6b',
+    land: '#f4f1e8',
+    landEdge: '#b91c1c',
+    ice: '#f4f9ff',
+    iceEdge: '#8fb3d1',
+    visits: POSTER_PASTELS,
   }),
   paper: Object.freeze({
     paper: '#f6ecd6',
@@ -69,14 +128,15 @@ export const POSTER_COLOURS = Object.freeze({
     landEdge: '#8a5a33',
     ice: '#fdf9f0',
     iceEdge: '#b89a74',
+    visits: POSTER_PASTELS,
   }),
 });
 
 // A postcard's four styles (utils/postcards/drawPostcard.js; 26 Nov 2026), drawn on a canvas so
 // fixed here, as the share card's are: the card's paper and edge, the message's ink, the
-// "Greetings from" lettering, the rules and address lines, the stamp's paper, the postmark's
-// ink and the sky behind a little 3D model. Airmail's edge is red and blue stripes; vintage's
-// paper a faint linen weave.
+// lettering, the rules and address lines, the stamp's paper, the postmark's ink, the sky behind
+// a little 3D model, and the front's ribbon and big letters. Airmail's edge is red and blue
+// stripes; vintage's paper a faint linen weave and its photo a brown wash, night's a navy one.
 export const POSTCARD_COLOURS = Object.freeze({
   classic: Object.freeze({
     paper: '#fdf8ee',
@@ -88,6 +148,12 @@ export const POSTCARD_COLOURS = Object.freeze({
     stamp: '#ffffff',
     postmark: '#33416b',
     sky: '#dcecf7',
+    // The front's lettering (27 Nov 2026): the "Greetings from" ribbon and its words, the big
+    // letters' outline and their 3D side
+    ribbon: '#1f1a17',
+    ribbonInk: '#f6c445',
+    outline: '#fdf8ee',
+    extrude: '#991b1b',
   }),
   vintage: Object.freeze({
     paper: '#efe0bf',
@@ -100,6 +166,12 @@ export const POSTCARD_COLOURS = Object.freeze({
     stamp: '#f8efd9',
     postmark: '#5a3a22',
     sky: '#e9dcc0',
+    ribbon: '#5a3a22',
+    ribbonInk: '#f8efd9',
+    outline: '#f8efd9',
+    extrude: '#7a2e1a',
+    // The photo washed with old brown
+    tint: '#8a6236',
   }),
   airmail: Object.freeze({
     paper: '#ffffff',
@@ -112,6 +184,10 @@ export const POSTCARD_COLOURS = Object.freeze({
     stamp: '#ffffff',
     postmark: '#1d2a4d',
     sky: '#dcecf7',
+    ribbon: '#1d3f8f',
+    ribbonInk: '#ffffff',
+    outline: '#ffffff',
+    extrude: '#c8102e',
   }),
   night: Object.freeze({
     paper: '#14213d',
@@ -123,6 +199,12 @@ export const POSTCARD_COLOURS = Object.freeze({
     stamp: '#f3ead2',
     postmark: '#e3b53d',
     sky: '#22345c',
+    ribbon: '#0b1630',
+    ribbonInk: '#e3b53d',
+    outline: '#e3b53d',
+    extrude: '#0b1630',
+    // The photo washed with the night's navy
+    tint: '#14213d',
   }),
 });
 

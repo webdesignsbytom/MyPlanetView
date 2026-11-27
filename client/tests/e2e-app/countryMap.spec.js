@@ -1121,4 +1121,16 @@ test('a country opens on its own on a phone too', { tag: '@phone' }, async ({ pa
   // A finger's drag and pinch are the map's own, as on the world map: without it the phone's
   // browser held back the touch moves, and panning was jerky (23 Nov 2026, the user's report)
   await expect(map.getByRole('application')).toHaveCSS('touch-action', 'none');
+  // The header, a third less tall than it was (27 Nov 2026, the user's wish: 118px here, 148
+  // with a name on two lines), as wide: the name, the count and both buttons on a phone's screen.
+  // On a phone only: the desktop project runs this test too, with the wide header's buttons
+  if (test.info().project.name !== 'phone') return;
+  const header = map.locator('[data-country-map-header]');
+  const box = await header.boundingBox();
+  expect(box.height).toBeLessThanOrEqual(100);
+  expect(box.width).toBeGreaterThan(260);
+  for (const name of ['World map', 'Add a pin']) {
+    const button = await header.getByRole('button', { name }).boundingBox();
+    expect(button.height).toBeLessThanOrEqual(30);
+  }
 });

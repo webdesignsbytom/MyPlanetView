@@ -153,6 +153,10 @@ const CASES = [
   ],
   ['getBadges', () => travelApi.getBadges({ mapId: 'm1' }), 'get', ['/api/maps/m1/badges']],
   ['getBadges', () => travelApi.getBadges({ shareCode: 'ABC' }), 'get', ['/api/shared/ABC/badges']],
+  // What earned a badge (27 Nov 2026), one traveller's with ?traveller=
+  ['getBadgeStory', () => travelApi.getBadgeStory({ mapId: 'm1' }, 'countries-10'), 'get', ['/api/maps/m1/badges/countries-10']],
+  ['getBadgeStory', () => travelApi.getBadgeStory({ shareCode: 'ABC' }, 'collect-IE-bronze'), 'get', ['/api/shared/ABC/badges/collect-IE-bronze']],
+  ['getBadgeStory', () => travelApi.getBadgeStory({ mapId: 'm1' }, 'countries-1', { travellerId: 't-1' }), 'get', ['/api/maps/m1/badges/countries-1?traveller=t-1']],
   // Life's One Shots (24 Nov 2026)
   ['getOneShots', () => travelApi.getOneShots({ mapId: 'm1' }), 'get', ['/api/maps/m1/one-shots']],
   ['getOneShots', () => travelApi.getOneShots({ shareCode: 'ABC' }), 'get', ['/api/shared/ABC/one-shots']],

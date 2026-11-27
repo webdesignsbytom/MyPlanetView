@@ -18,6 +18,7 @@ import PostcardView from './PostcardView';
 import PostcardLinkBox from './PostcardLinkBox';
 // Utils
 import { POSTCARD_DEFAULT_STYLE, POSTCARD_LIMITS } from '@/utils/postcards/postcardRules';
+import { photoItems } from '@/utils/postcards/postcardPhotoItems';
 
 // The preview waits this long after the last key before it's drawn again
 const PREVIEW_DELAY_MS = 400;
@@ -38,9 +39,10 @@ function useSettled(value, ms) {
  * "Send a postcard" (26 Nov 2026, the user's wish: "while you're on a trip you can send a post
  * card. With a message, selection of images, and a selection of styles. Or upload your own photo.
  * Cool stamps and address area. You send them with a share link. They are not part of the map";
- * docs/API.md "Postcards"). From a place's ticket (`countryCode`, `placeName`): what goes on the
- * front (PostcardPictureFields; a landmark's or your own photo on a paid plan, `paidCards` from
- * the server), the style, the message, who it's to and from, and the card itself as it will
+ * docs/API.md "Postcards"). From a place's ticket (`countryCode`, `placeName`): the photo across
+ * the front (PostcardPictureFields: a city's or the wilderness's on every plan, a landmark's or
+ * your own on a paid one, `paidCards` from the server; the first city photo, else wilderness, to
+ * start with), the style, the message, who it's to and from, and the card itself as it will
  * look, turned over to see the back. Sending makes its link (PostcardLinkBox). Nothing of it goes
  * on the map. Portalled, so it sits over the whole page.
  */
@@ -49,8 +51,9 @@ function PostcardMakerDialog({ countryCode, placeName, photoFilters = null, onCl
   const { user } = useAuth();
   const { landmarks } = useLandmarks(countryCode);
   const [paidCards, setPaidCards] = useState(false);
-  const [kind, setKind] = useState('COUNTRY');
-  const [landmarkId, setLandmarkId] = useState(null);
+  // What's on the front: `{ kind, landmarkId, landmark }` (a country's card with no landmark is
+  // the place's poster); `picked` once the sender has chosen, so the first photo isn't put back
+  const [choice, setChoice] = useState({ kind: 'COUNTRY', landmarkId: null, landmark: null, picked: false });
   const [picture, setPicture] = useState(null);
   const [style, setStyle] = useState(POSTCARD_DEFAULT_STYLE);
   const [message, setMessage] = useState('');
@@ -71,7 +74,14 @@ function PostcardMakerDialog({ countryCode, placeName, photoFilters = null, onCl
     };
   }, []);
 
-  const landmark = useMemo(() => landmarks.find((l) => l.id === landmarkId) || null, [landmarks, landmarkId]);
+  const items = useMemo(() => photoItems(landmarks, countryCode), [landmarks, countryCode]);
+  // The first city photo (else the wilderness's) to start with, once the place's are here
+  useEffect(() => {
+    if (choice.picked || choice.landmarkId) return;
+    const first = items.find((item) => item.group === 'c') || items.find((item) => item.group === 'w');
+    if (first) setChoice({ kind: 'COUNTRY', landmarkId: first.landmark.id, landmark: first.landmark, picked: false });
+  }, [items, choice.picked, choice.landmarkId]);
+  const { kind } = choice;
   // Each its own value, so a settled one stays the same between renders
   const words = {
     message: useSettled(message, PREVIEW_DELAY_MS),
@@ -82,7 +92,7 @@ function PostcardMakerDialog({ countryCode, placeName, photoFilters = null, onCl
     () => ({
       kind,
       countryCode,
-      landmark: kind === 'LANDMARK' ? landmark : null,
+      landmark: kind === 'PHOTO' ? null : choice.landmark,
       pictureUrl: kind === 'PHOTO' ? picture?.previewUrl || null : null,
       style,
       message: words.message.trim() || 'Your message goes here.',
@@ -90,16 +100,21 @@ function PostcardMakerDialog({ countryCode, placeName, photoFilters = null, onCl
       fromName: words.fromName.trim() || null,
       sentAt: new Date().toISOString().slice(0, 10),
     }),
-    [kind, countryCode, landmark, picture, style, words.message, words.toName, words.fromName],
+    [kind, countryCode, choice.landmark, picture, style, words.message, words.toName, words.fromName],
   );
 
-  const chooseKind = (next) => {
-    setKind(next);
+  const choose = (next) => {
+    setChoice({ ...next, picked: true });
+    setError('');
+  };
+  const choosePicture = (sent) => {
+    setPicture(sent);
+    setChoice({ kind: 'PHOTO', landmarkId: null, landmark: null, picked: true });
     setError('');
   };
   const send = async (e) => {
     e.preventDefault();
-    if (kind === 'LANDMARK' && !landmarkId) return setError('Choose the landmark for the front.');
+    if (kind === 'LANDMARK' && !choice.landmarkId) return setError('Choose the photo for the front.');
     if (kind === 'PHOTO' && !picture?.key) return setError('Choose the photo for the front.');
     if (!message.trim()) return setError('Write a message on the back of your postcard.');
     setBusy(true);
@@ -108,7 +123,7 @@ function PostcardMakerDialog({ countryCode, placeName, photoFilters = null, onCl
       const { postcard } = await sendPostcard({
         kind,
         countryCode,
-        landmarkId: kind === 'LANDMARK' ? landmarkId : undefined,
+        landmarkId: kind !== 'PHOTO' && choice.landmarkId ? choice.landmarkId : undefined,
         pictureKey: kind === 'PHOTO' ? picture.key : undefined,
         style,
         message,
@@ -150,16 +165,18 @@ function PostcardMakerDialog({ countryCode, placeName, photoFilters = null, onCl
           </div>
         </div>
       ) : (
-        <form onSubmit={send} className='grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start' noValidate aria-label='New postcard'>
+        // No scroll anchoring: on a phone, with the message box focused, Chrome held it as the
+        // anchor after the dialog was scrolled down to the card, and the next restyle (a button's
+        // hover) scrolled back to it, so a press on "Turn it over" landed in the message (every
+        // photo tile and the card keep their shape, so nothing here needs anchoring)
+        <form onSubmit={send} className='grid gap-5 [overflow-anchor:none] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start' noValidate aria-label='New postcard'>
           <div className='grid gap-5'>
             <PostcardPictureFields
-              code={countryCode}
-              kind={kind}
-              onKind={chooseKind}
-              landmarkId={landmarkId}
-              onLandmark={setLandmarkId}
-              picture={picture}
-              onPicture={setPicture}
+              items={items}
+              choice={choice}
+              onChoose={choose}
+              picture={kind === 'PHOTO' ? picture : null}
+              onPicture={choosePicture}
               paidCards={paidCards}
               photoFilters={photoFilters}
               disabled={busy}

@@ -158,6 +158,56 @@ test.describe('The passport', () => {
   });
 
   // 25 Nov 2026, the user's wish: "improve passport page for user avatars and info"
+  // 27 Nov 2026, the user's wishes: "Passport needs first name last name", "Passport also needs nationality"
+  test('a traveller’s last name and nationality, set in Settings, are their surname and nationality in the passport', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    const settings = await openTool(page, 'Map settings', 'Settings');
+    await settings.getByRole('tab', { name: 'This map' }).click();
+    const thisMap = settings.getByRole('tabpanel', { name: 'This map' });
+    const charlieForm = thisMap.getByRole('group', { name: 'Traveller 1' });
+    await expect(charlieForm.getByRole('textbox', { name: 'First name' })).toHaveValue('Charlie');
+    await charlieForm.getByRole('textbox', { name: 'Last name (optional)' }).fill('Reid');
+    await charlieForm.getByRole('combobox', { name: 'Nationality (optional)' }).selectOption('Ireland');
+    await thisMap.getByRole('button', { name: 'Save map' }).click();
+    await expect(thisMap.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
+
+    await openPassport(page);
+    await page.getByRole('button', { name: 'Next page' }).click();
+    const charlie = book(page).locator('[data-passport-traveller="trav-test"]');
+    await expect(charlie.locator('[data-passport-surname]')).toHaveText('Reid');
+    await expect(charlie.locator('[data-passport-given-names]')).toHaveText('Charlie');
+    await expect(charlie.locator('[data-passport-nationality]')).toHaveText('Ireland');
+    // No signature drawn: the whole name, in handwriting
+    await expect(charlie.locator('[data-signature="name"]')).toHaveText('Charlie Reid');
+    // Alex has given none
+    const alex = book(page).locator('[data-passport-traveller]').nth(1);
+    await expect(alex.locator('[data-passport-surname]')).toHaveText('Not given');
+    await expect(alex.locator('[data-passport-nationality]')).toHaveText('Not given');
+  });
+
+  // 27 Nov 2026, the user's wish: "below the passport we should have a edit data container for
+  // the peoples info"
+  test('the travellers’ details are changed under the book, and the book shows them', { tag: '@phone' }, async ({ page }) => {
+    await openPassport(page);
+    const details = page.getByRole('form', { name: 'Travellers’ details' });
+    await expect(details).toBeVisible();
+    const alexForm = details.getByRole('group', { name: 'Alex' });
+    await expect(alexForm.getByRole('textbox', { name: 'First name' })).toHaveValue('Alex');
+    await alexForm.getByRole('textbox', { name: 'Last name (optional)' }).fill('Byrne');
+    await alexForm.getByRole('combobox', { name: 'Nationality (optional)' }).selectOption('Ireland');
+    await details.getByRole('button', { name: 'Save details' }).click();
+    await expect(details.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Next page' }).click();
+    const alex = book(page).locator('[data-passport-traveller]').nth(1);
+    await expect(alex.locator('[data-passport-surname]')).toHaveText('Byrne');
+    await expect(alex.locator('[data-passport-given-names]')).toHaveText('Alex');
+    await expect(alex.locator('[data-passport-nationality]')).toHaveText('Ireland');
+    // Kept: still there after a reload
+    await page.reload();
+    await expect(page.getByRole('form', { name: 'Travellers’ details' }).getByRole('group', { name: 'Alex' }).getByRole('textbox', { name: 'Last name (optional)' })).toHaveValue('Byrne');
+  });
+
   test('an editor gives a traveller a passport photo and a signature, which the share link shows', { tag: '@phone' }, async ({ page }) => {
     await openPassport(page);
     // The map's link open to anyone, for the end (the seed's is for the people on it)

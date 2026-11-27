@@ -173,6 +173,8 @@ function SettingsPanel({
             splitUkNote
             // Each traveller's optional date of birth: asked here, never at sign-up (23 Nov 2026)
             askBirthDate
+            // Who it's for behind "Change map type" (27 Nov 2026, the user's wish)
+            typeBehindButton
             submitLabel='Save map'
             saved={mapSaved}
             onSavedChange={setMapSaved}

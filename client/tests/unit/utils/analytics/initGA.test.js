@@ -171,7 +171,7 @@ describe('stopGA', () => {
     expect(document.cookie).not.toContain('_gat');
   });
 
-  // Events (utils/analytics/events.js; the audit, 26 Nov 2026)
+  // Events (utils/analytics/siteActions.js; the audit, 26 Nov 2026)
   it('sends an event only once consent is given, with plain values only', async () => {
     const { initGA, trackEvent } = await freshGA();
     // No consent yet: nothing kept for later

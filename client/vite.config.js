@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import crypto from 'crypto';
+import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -231,6 +232,28 @@ const requireProductionBuild = () => ({
   },
 });
 
+// On the dev server every file is fetched at its own path, so a file whose name an ad blocker
+// matches stops the whole site (27 Nov 2026: /src/utils/analytics/events.js, a blank page).
+// As the dev server starts, scripts/check-blocker-names.mjs runs on the side (the blockers'
+// lists cached for a week) and any file it would block is shouted in the terminal. Never in CI,
+// whose own step runs the check.
+const blockerNamesWarning = () => ({
+  name: 'blocker-names-warning',
+  apply: 'serve',
+  configureServer() {
+    if (process.env.CI) return;
+    const check = spawn(process.execPath, [path.join(__dirname, 'scripts/check-blocker-names.mjs')], { stdio: ['ignore', 'ignore', 'pipe'] });
+    let report = '';
+    check.stderr.on('data', (chunk) => {
+      report += chunk;
+    });
+    check.on('close', (code) => {
+      if (code) console.error(`\n\x1b[41m\x1b[37m AD BLOCKERS WOULD BREAK THIS SITE \x1b[0m\n\x1b[31m${report.trim()}\x1b[0m\n`);
+    });
+    check.on('error', () => {});
+  },
+});
+
 // ANALYZE=true writes dist/stats.html
 export default defineConfig({
   plugins: [
@@ -244,6 +267,7 @@ export default defineConfig({
     siteServiceWorker(),
     localMedia(),
     hostLikePreview(),
+    blockerNamesWarning(),
     process.env.ANALYZE &&
       visualizer({
         filename: 'dist/stats.html',
@@ -264,15 +288,22 @@ export default defineConfig({
     modulePreload: { polyfill: false },
     rollupOptions: {
       output: {
+        // No chunk is named after its code (27 Nov 2026, the user's wish: "the site should always
+        // load even with adblockers"): a blocker's rule matches words in an address, so a file
+        // called after its module (analytics, events, consent...) could be blocked and the page
+        // with it. Only a hash, after a neutral word that sorts them: `c-` for the site's code,
+        // and the prefixes below, which the service worker's list goes by. The entry stays
+        // `index-`; CSS is `s-` (assetFileNames). scripts/check-blocker-names.mjs --dist checks
+        // every file of a build against the blockers' lists.
         // The map's detailed outlines, one chunk per place (hooks/useDetailedShapes.js), named
         // so the service worker's list can leave them out
         // and each country's own map (utils/map/countryMapGeo.js), likewise
         chunkFileNames: (chunk) => {
-          if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]detailShapes[\\/]/.test(chunk.facadeModuleId)) return 'assets/outline-[name]-[hash].js';
-          if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]countryMaps[\\/]/.test(chunk.facadeModuleId)) return 'assets/countrymap-[name]-[hash].js';
+          if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]detailShapes[\\/]/.test(chunk.facadeModuleId)) return 'assets/outline-[hash].js';
+          if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]countryMaps[\\/]/.test(chunk.facadeModuleId)) return 'assets/countrymap-[hash].js';
           // What the landmark models' cards say (24 Nov 2026, about 200 KB gzip): read only on a
           // country's own map, so kept off the installed app's list with them
-          if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]landmarkModelFacts\.js$/.test(chunk.facadeModuleId)) return 'assets/countrymap-[name]-[hash].js';
+          if (chunk.facadeModuleId && /[\\/]utils[\\/]map[\\/]landmarkModelFacts\.js$/.test(chunk.facadeModuleId)) return 'assets/countrymap-[hash].js';
           // Code that only works online (hls.js plays Stream's videos, tus-js-client sends
           // them) or that only the build's pre-render loads (React DOM's server renderer):
           // named so the installed app doesn't keep it (19 Nov 2026, the audit: 190 KB gzip)
@@ -280,13 +311,15 @@ export default defineConfig({
           // The flight log's airports (about 300 KB) and the barcode reader (23 Nov 2026): loaded
           // only by the log, which needs the network to save anything, so kept online too
           if (chunk.facadeModuleId && /[\\/]utils[\\/]flights[\\/]airportData|node_modules[\\/]@zxing[\\/]/.test(chunk.facadeModuleId)) {
-            return 'assets/flights-[name]-[hash].js';
+            return 'assets/flights-[hash].js';
           }
           if ((chunk.facadeModuleId && /node_modules[\\/](hls\.js|tus-js-client)[\\/]/.test(chunk.facadeModuleId)) || chunk.name === 'server.browser') {
-            return 'assets/online-[name]-[hash].js';
+            return 'assets/online-[hash].js';
           }
-          return 'assets/[name]-[hash].js';
+          return 'assets/c-[hash].js';
         },
+        // Style sheets the same way (a page's own CSS was named after its component)
+        assetFileNames: (asset) => ((asset.names?.[0] ?? asset.name ?? '').endsWith('.css') ? 'assets/s-[hash][extname]' : 'assets/[name]-[hash][extname]'),
         manualChunks(id) {
           // React, React DOM and the router: every page needs them and they change rarely,
           // so they are one chunk that stays cached when the app's own code changes. Not

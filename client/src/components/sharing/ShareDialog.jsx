@@ -32,7 +32,7 @@ import MapShowsSection from '@/components/shows/MapShowsSection';
 // Utils
 import { MAP_SHARE_ROLE_OPTIONS, ROLE_WITH_ARTICLE, SHARE_ROLE_OPTIONS, canEditRole, canManageRole, coOwnerChoices } from '@/utils/sharing/shareRoles';
 import { forgetMapLists } from '@/utils/map/mapListCache';
-import { trackShare } from '@/utils/analytics/events';
+import { trackShare } from '@/utils/analytics/siteActions';
 import { inFlight, recall, remember } from '@/utils/data/panelCache';
 import { sharingKey } from '@/utils/sharing/sharingCache';
 

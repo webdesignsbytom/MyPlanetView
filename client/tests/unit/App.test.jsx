@@ -40,6 +40,7 @@ vi.mock('@/utils/navigation/lazyPages', async () => {
     'MaintenancePage',
     'Error404',
     'SelectLabPage',
+    'HomeDraftPage',
     'MapPage',
     'TripPage',
     'WelcomePage',
@@ -122,6 +123,7 @@ const PUBLIC = [
   ['/gift/AAAA-BBBB-CCCC', 'GiftPage'],
   ['/unsubscribe?u=1&t=2', 'UnsubscribePage'],
   ['/dev/select-lab', 'SelectLabPage'],
+  ['/dev/home', 'HomeDraftPage'],
   ['/no-such-page', 'Error404'],
   ['/countries/atlantis', 'Error404'],
 ];

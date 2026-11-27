@@ -17,7 +17,9 @@ const noSubscribe = () => () => {};
  * on across neighbours as printed foil does, and a plain picture, which costs next to nothing to
  * pan or zoom: a pattern of it was redrawn on every frame once zoomed in. The metal's medal token
  * fills the cut until the picture has loaded. Its edges are lit while the map is still
- * (FoilEdgeFilter, `data-visited-foil`).
+ * (FoilEdgeFilter, `data-visited-foil`); while the map moves it's hidden, and the places wear the
+ * metal's flat colour instead (utils/map/mapDesign.js visitedCss; 27 Nov 2026: on a phone it
+ * vanished while the map was dragged).
  *
  * The places and their outlines are the ones CountryLayer draws (utils/map/drawnPlaces.js): the
  * detailed outlines when zoomed in (`detail`), a micro-state's dot at its size for the zoom.

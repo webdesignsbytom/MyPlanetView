@@ -1,5 +1,5 @@
 // Maps, their travellers and countries visited
-import { isPole } from '../utils/specialPlaces.js';
+import { isPole, isSpecialPlace } from '../utils/specialPlaces.js';
 import { isUkNation, placeOnMap } from '../utils/ukNations.js';
 import { setMapSplitUk } from '../services/travel/ukNations.js';
 import { adsFor } from '../services/offers.js';
@@ -72,6 +72,11 @@ async function parseTraveller(body, { partial = false } = {}) {
     if (!name) return { error: EVENT_MESSAGES.invalidName };
     out.name = name;
   }
+  // A last name, optional (27 Nov 2026, the passport's Surname): null or "" clears it
+  if (body.lastName !== undefined) {
+    if (body.lastName !== null && typeof body.lastName !== 'string') return { error: EVENT_MESSAGES.invalidName };
+    out.lastName = body.lastName === null ? null : cleanName(body.lastName) || null;
+  }
   for (const field of ['birthCountryCode', 'favouriteCountryCode']) {
     const parsed = await parseOptionalCountry(body[field]);
     if (!parsed.ok) return { error: EVENT_MESSAGES.countryNotFound };
@@ -80,6 +85,12 @@ async function parseTraveller(body, { partial = false } = {}) {
     // A traveller's places are countries: a UK nation (a birth moment in Scotland) is the UK
     if (parsed.value !== undefined) out[field] = parsed.value ? placeOnMap(parsed.value, false) : parsed.value;
   }
+  // A nationality, optional (27 Nov 2026, the passport's): a country, never Antarctica or a pole;
+  // a UK nation is the UK, a region its country, as a traveller's other places. It marks no visit
+  const nationality = await parseOptionalCountry(body.nationalityCode);
+  if (!nationality.ok) return { error: EVENT_MESSAGES.countryNotFound };
+  if (nationality.value && isSpecialPlace(nationality.value)) return { error: EVENT_MESSAGES.nationalityNotACountry };
+  if (nationality.value !== undefined) out.nationalityCode = nationality.value ? placeOnMap(nationality.value, false) : null;
   // Optional, asked when people are added to a map (23 Nov 2026): null or "" clears it
   const birthDate = parseBirthDate(body.birthDate);
   if (!birthDate.ok) return { error: EVENT_MESSAGES.invalidBirthDate };
@@ -194,7 +205,9 @@ export async function mapDetailView(mapId, role, { withPlan = false } = {}) {
     travellers: detail.travellers.map((t) => ({
       id: t.id,
       name: t.name,
+      lastName: t.lastName ?? null,
       position: t.position,
+      nationalityCode: t.nationalityCode ?? null,
       birthCountryCode: t.birthCountryCode,
       favouriteCountryCode: t.favouriteCountryCode,
       // The account it's linked to, and the date of birth (23 Nov 2026), for editors only

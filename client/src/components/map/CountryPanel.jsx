@@ -98,6 +98,8 @@ function CountryPanel({
   onVisitMarked = null,
   photoSource,
   photosVersion,
+  // What the map reply says is there: { photos, moments }, each 'some', 'none' or 'maybe'
+  lists = null,
   onOpenPhoto,
   onPlay,
   onAddPhotos,
@@ -136,8 +138,11 @@ function CountryPanel({
     }
   };
   const photoFilters = useMemo(() => countryPhotoFilters(photoSource, code), [photoSource, code]);
-  const photos = usePhotoPage({ ...photoFilters, enabled: Boolean(code) && !parent });
-  const moments = useMomentPage({ ...photoSource, country: code, enabled: Boolean(code) && !parent });
+  // Nothing is fetched where the map says there's nothing (`lists`, utils/map/preloadCountryLists.js
+  // countryListsOf: a place not been to, for a viewer, or one with no photos or moments by the
+  // map's counts): the empty line shows at once, never a spinner (27 Nov 2026, the user's wish)
+  const photos = usePhotoPage({ ...photoFilters, enabled: Boolean(code) && !parent && lists?.photos !== 'none' });
+  const moments = useMomentPage({ ...photoSource, country: code, enabled: Boolean(code) && !parent && lists?.moments !== 'none' });
   const cardsDue = Boolean(adEvery) && photos.photos.length >= adEvery;
   const plannedTrip = usePlannedTripPlace(nextTrip, { enabled: cardsDue || deskOpened, canFetch: canFetchTrips });
   const offerSlots = useGalleryOffers({ every: adEvery, slotKey: `${mapKey}:${code}`, country: code, plannedTrip });
@@ -241,11 +246,12 @@ function CountryPanel({
   // Marking the country, for editors (the UK on a split map asks about its nations instead).
   // Never disabled while saving (that drops focus); the saves are optimistic.
   const editsStatus = canEdit && !ukToPlace;
-  // In the stub the dropdown and the date are a step slimmer (py-1, not py-2: 23 Nov 2026,
-  // the user's wish), there only
+  // The dropdown and the date are a step slimmer than other fields (py-1, not py-2: 23 Nov
+  // 2026, the user's wish, in the stub), on phones too (27 Nov 2026, the user's wish: there
+  // "Been there?" was taller than on wide screens)
   const statusControls = editsStatus ? (
     <div
-      className={`grid w-full items-start gap-3 ${controlsInStub ? '[&_.app-select]:py-1 [&_input]:py-1' : 'sm:grid-cols-2'}`}
+      className={`grid w-full items-start gap-3 [&_.app-select]:py-1 [&_input]:py-1 ${controlsInStub ? '' : 'sm:grid-cols-2'}`}
       aria-busy={saving ? 'true' : undefined}
       data-status-controls=''
     >
@@ -384,9 +390,10 @@ function CountryPanel({
                 className='grid min-h-8 grid-cols-[auto_auto] items-center gap-2 text-left'
               >
                 <span>Moments</span>
+                {/* Down to open, up to close (27 Nov 2026, the user's wish, as the badges' groups) */}
                 <FaChevronDown
                   aria-hidden='true'
-                  className={`text-sm transition-transform motion-reduce:transition-none ${momentsOpen ? '' : '-rotate-90'}`}
+                  className={`text-sm transition-transform motion-reduce:transition-none ${momentsOpen ? 'rotate-180' : ''}`}
                 />
               </button>
             </h3>
@@ -465,8 +472,9 @@ function CountryPanel({
           <ShareShow inMapPanel fill mapId={photoSource.mapId} source={photoFilters} defaultTitle={country.name} />
         ) : null}
         {/* A postcard from here, sent by its own link, never part of the map (26 Nov 2026, the
-            user's wish): editors, verified; a region's photos are its country's */}
-        {canEdit ? <SendPostcard countryCode={code} placeName={country.name} photoFilters={parent || !photoSource?.mapId ? null : photoFilters} /> : null}
+            user's wish): editors, verified, once the place is visited or lived in (27 Nov 2026,
+            the user's wish); a region's photos are its country's */}
+        {canEdit && countsAsVisited(status) ? <SendPostcard countryCode={code} placeName={country.name} photoFilters={parent || !photoSource?.mapId ? null : photoFilters} /> : null}
         <TravelDesk
           inMapPanel
           fill

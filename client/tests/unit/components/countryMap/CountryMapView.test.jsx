@@ -93,4 +93,25 @@ describe('CountryMapView', () => {
     expect(container.querySelector('[data-state="LU-D"]').getAttribute('data-status')).toBe('VISITED');
     expect(container.querySelectorAll('[data-state]').length).toBe(LU.areas.filter((area) => area.code).length);
   });
+
+  // 27 Nov 2026, the user's wish: on phones the header was too tall; a third less, as wide
+  it('makes its header smaller on phones only, its buttons shorter but as wide', () => {
+    const { container } = draw();
+    const header = container.querySelector('[data-country-map-header]');
+    const classes = (el) => el.getAttribute('class').split(/\s+/);
+    const title = classes(header.querySelector('h2'));
+    expect(title).toEqual(expect.arrayContaining(['text-2xl', 'phone:text-lg']));
+    expect(classes(header.querySelector('[data-state-count]'))).toEqual(expect.arrayContaining(['text-sm', 'phone:text-xs']));
+    expect(classes(header.querySelector('img'))).toEqual(expect.arrayContaining(['h-10', 'w-[3.25rem]', 'phone:h-6', 'phone:w-8']));
+    // Both buttons (each drawn twice: the wide row and the phone's stacked one)
+    const buttons = [...header.querySelectorAll('button')];
+    expect(buttons.map((button) => button.textContent)).toEqual(['World map', 'Add a pin', 'World map', 'Add a pin']);
+    for (const button of buttons) {
+      // Shorter on phones…
+      expect(classes(button)).toEqual(expect.arrayContaining(['phone:[--btn-pad-y:0.125rem]', 'phone:[--btn-leading:1.25rem]']));
+      // …with the same words and sides everywhere, so the header keeps its width
+      expect(classes(button)).toEqual(expect.arrayContaining(['[--btn-pad-x:0.75rem]', '[--btn-size:0.875rem]']));
+      expect(classes(button).some((name) => /^phone:\[--btn-(pad-x|size)/.test(name))).toBe(false);
+    }
+  });
 });

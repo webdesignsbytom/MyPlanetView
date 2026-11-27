@@ -128,6 +128,8 @@ export function passportTravellerView(traveller, map, { editor }) {
   return {
     id: traveller.id,
     name: traveller.name,
+    lastName: traveller.lastName ?? null,
+    nationalityCode: traveller.nationalityCode ?? null,
     birthCountryCode: traveller.birthCountryCode ?? null,
     favouriteCountryCode: traveller.favouriteCountryCode ?? null,
     ...(editor ? { birthDate: traveller.birthDate ?? null } : {}),

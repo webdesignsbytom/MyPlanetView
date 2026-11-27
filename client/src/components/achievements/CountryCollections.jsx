@@ -11,9 +11,10 @@ import { COLLECTION_TIER_LABELS, collectionPlaces } from '@/utils/achievements/c
  * row per place the map has started, its name and how many of its landmarks are stamped, then
  * its medals (bronze, silver, gold; a small place has fewer). `onShare(place)` (the map's
  * owner and editors, never a share link) puts a "Share" button by a place with a medal: a
- * picture of it to post (the share card), for word of mouth.
+ * picture of it to post (the share card), for word of mouth. `onOpen(badge)`: an earned medal
+ * opens its own card (BadgeStoryDialog; 27 Nov 2026).
  */
-function CountryCollections({ badges, onShare = null }) {
+function CountryCollections({ badges, onShare = null, onOpen = null }) {
   const places = collectionPlaces(badges);
   if (!places.length) return null;
   return (
@@ -41,7 +42,7 @@ function CountryCollections({ badges, onShare = null }) {
           </div>
           <ul className='grid grid-cols-3 gap-x-2 gap-y-3' aria-label={`Medals for ${place.name}`}>
             {place.tiers.map((badge) => (
-              <CollectionMedal key={badge.key} badge={badge} />
+              <CollectionMedal key={badge.key} badge={badge} onOpen={onOpen} />
             ))}
           </ul>
         </li>

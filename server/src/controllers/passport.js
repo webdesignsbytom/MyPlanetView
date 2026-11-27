@@ -9,6 +9,7 @@ import { isUuid } from '../utils/travelValidation.js';
 import { GOALS_PER_MAP, changesWhatsAsked, parseGoalInput } from '../utils/goals.js';
 import { buildPassport, passportTravellerView, travellingSinceByTraveller } from '../services/travel/passport.js';
 import { mapBadges, mapGoals, oneGoalView } from '../services/travel/achievements.js';
+import { mapBadgeStory } from '../services/travel/badgeStories.js';
 import {
   deleteLandmarkCover,
   findConfirmedMatch,
@@ -134,6 +135,24 @@ export const getBadgesHandler = handler(D, 'Get badges', async (req, res) => {
   const loaded = await viewableMap(req, res);
   if (!loaded) return undefined;
   return sendDataResponse(res, 200, await mapBadges(loaded.map.id, { award: canEdit(loaded.role) }));
+});
+
+/**
+ * A badge's story (docs/API.md "Badges and goals"): what it counts, in order, and the one that
+ * earned it, as `role` may see the map; `?traveller=<id>` for one traveller's travel badge.
+ * Shared with the share link's route (controllers/shared.js). Never awards anything.
+ */
+export async function sendBadgeStory(req, res, domain, mapId, role) {
+  const result = await mapBadgeStory(mapId, String(req.params.badgeKey), { includeHidden: canEdit(role), ...travellerOption(req) });
+  if (result.badgeNotFound) return notFound(req, res, domain, EVENT_MESSAGES.badgeNotFound);
+  if (result.travellerNotFound) return notFound(req, res, domain, EVENT_MESSAGES.travellerNotFound);
+  return sendDataResponse(res, 200, { story: result.story });
+}
+
+export const getBadgeStoryHandler = handler(D, 'Get badge story', async (req, res) => {
+  const loaded = await viewableMap(req, res);
+  if (!loaded) return undefined;
+  return sendBadgeStory(req, res, D, loaded.map.id, loaded.role);
 });
 
 // Goals

@@ -51,6 +51,11 @@ jobs:
           node scripts/generate-mock-offers.mjs --check
           node scripts/generate-mock-travels.mjs --check
           node scripts/generate-country-landmarks.mjs --check
+      # No file, folder, page or API route of the site's is one an ad or tracker blocker blocks,
+      # by the lists the blockers use, fetched fresh (27 Nov 2026: a blocked file left the dev
+      # site blank). The build's own files are checked after the build below.
+      - name: Ad blockers block none of the site's addresses
+        run: node scripts/check-blocker-names.mjs --refresh --require-lists
       # The client's unit tests (tests/unit: utils, hooks, the API layer, the mock, components)
       - name: Unit tests
         run: npm run test:unit
@@ -58,6 +63,8 @@ jobs:
       # pre-render and the SEO checks, is the client-build job below)
       - name: Build
         run: npx vite build --mode verify --outDir ../ci-dist --emptyOutDir
+      - name: Ad blockers block none of the build's files
+        run: node scripts/check-blocker-names.mjs --dist ../ci-dist --require-lists
 
   # The production build as `npm run build` makes it: the pre-build checks, Vite, then the
   # pre-render (headless Chromium), the critical CSS, sitemap, robots.txt and the SEO checks.

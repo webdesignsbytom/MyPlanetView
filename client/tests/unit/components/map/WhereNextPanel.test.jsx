@@ -32,10 +32,34 @@ describe('WhereNextPanel', () => {
   });
   afterEach(() => vi.useRealTimers());
 
-  it('says what to do with nothing marked "Want to go"', () => {
+  // 27 Nov 2026, the user's wish: centred in the panel, and nicer than a line of text
+  it('with nothing marked "Want to go", fills the panel with a passport page saying what to do', () => {
     useCountryGuides.mockReturnValue([]);
-    open({ visits: [{ countryCode: 'FR', status: 'VISITED' }] });
-    expect(screen.getByText(/Nothing is marked “Want to go” yet/)).toBeTruthy();
+    const onOpenCountries = vi.fn();
+    open({ visits: [{ countryCode: 'FR', status: 'VISITED' }], canEdit: true, onOpenCountries, passportHref: '/maps/m1/passport' });
+    const page = screen.getByText('Where will you go?').closest('section');
+    expect(page.querySelector('h3').textContent).toBe('Where will you go?');
+    expect(page.textContent).toContain('Nothing is marked “Want to go” yet.');
+    expect([...page.querySelectorAll('ol li')].map((li) => li.textContent)).toEqual([
+      'Mark a country “Want to go”, on the map or in the country list.',
+      'See the best month for each, from our country guides.',
+      'Plan the trip, and count down the days.',
+    ]);
+    // The passport link on top, the page below, the two filling the panel
+    expect(page.parentElement.className).toContain('grid-rows-[auto_minmax(0,1fr)]');
+    expect(page.parentElement.parentElement.className).toContain('content-stretch');
+    fireEvent.click(screen.getByText('Open the country list'));
+    expect(onOpenCountries).toHaveBeenCalled();
+  });
+
+  it('tells someone who can’t edit only that nothing is marked yet', () => {
+    useCountryGuides.mockReturnValue([]);
+    open({ visits: [], onOpenCountries: vi.fn() });
+    const page = screen.getByText('Where will you go?').closest('section');
+    expect(page.textContent).toContain('Nothing on this map is marked “Want to go” yet.');
+    expect(page.querySelector('ol')).toBeNull();
+    expect(screen.queryByText('Open the country list')).toBeNull();
+    expect(page.parentElement.className).toContain('grid-rows-[minmax(0,1fr)]');
   });
 
   it('waits for the guides it knows are coming', () => {

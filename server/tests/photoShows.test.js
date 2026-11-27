@@ -2,13 +2,14 @@
 // (src/utils/photoShows.js), pure, and their codes kept out of the logs.
 import { describe, expect, it } from 'vitest';
 import {
-  SHOWS_PER_MAP,
   SHOW_DEFAULT_SECONDS,
   SHOW_PHOTOS_MAX,
   SHOW_SECONDS,
   parseShowPhotoIds,
   parseShowSeconds,
   showablePhotoIds,
+  showsAllowed,
+  showsFullMessage,
 } from '../src/utils/photoShows.js';
 import { redactUrl } from '../src/utils/redactUrl.js';
 
@@ -52,8 +53,22 @@ describe('showablePhotoIds', () => {
   });
 });
 
-it('guards a map against a runaway script, well beyond what a person makes', () => {
-  expect(SHOWS_PER_MAP).toBeGreaterThanOrEqual(100);
+// 27 Nov 2026, the user's wish: "2, 10, 25 is the amount per tier"
+describe('saved shows per map', () => {
+  it('keeps 2 on Economy, 10 on Business and 25 on First Class; anything unknown is Economy', () => {
+    expect(showsAllowed('FREE')).toBe(2);
+    expect(showsAllowed('REGULAR')).toBe(10);
+    expect(showsAllowed('PREMIUM')).toBe(25);
+    expect(showsAllowed(undefined)).toBe(2);
+  });
+
+  it('says the map is full, and offers an upgrade below the top plan', () => {
+    expect(showsFullMessage({ count: 2, cap: 2, planId: 'FREE' })).toBe('2 of 2 slideshows saved on this map. Delete one, or upgrade to save more.');
+    expect(showsFullMessage({ count: 10, cap: 10, planId: 'REGULAR' })).toBe('10 of 10 slideshows saved on this map. Delete one, or upgrade to save more.');
+    expect(showsFullMessage({ count: 25, cap: 25, planId: 'PREMIUM' })).toBe('25 of 25 slideshows saved on this map. Delete one to save another.');
+    // A map whose owner's plan went down keeps its shows, and is counted at its cap
+    expect(showsFullMessage({ count: 7, cap: 2, planId: 'FREE' })).toMatch(/^2 of 2 slideshows/);
+  });
 });
 
 it('keeps a show’s code out of the logs', () => {

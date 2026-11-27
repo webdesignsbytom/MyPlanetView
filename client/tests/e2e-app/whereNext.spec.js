@@ -1,4 +1,4 @@
-import { test, expect, openMap, openTool } from './fixtures.js';
+import { test, expect, MOCK_STORE_KEY, openMap, openTool } from './fixtures.js';
 
 // Where to go next (22 Nov 2026, the user's wish): the map's "want to go" countries by the
 // best time for each, from the country guides. The seeded map wants Japan, Peru and Iceland;
@@ -42,4 +42,38 @@ test('opens the passport from Where to go next and from the country list', async
   expect(Math.abs(a.height - b.height)).toBeLessThan(1);
   await passport.click();
   await expect(page).toHaveURL(/\/maps\/map-home\/passport$/);
+});
+
+// 27 Nov 2026, the user's wish: with nothing marked "want to go", a page in the middle of the
+// panel (as the trips' empty one), not a line of text at the top
+test('with nothing wanted, fills the panel with what to do, and opens the country list', async ({ page }) => {
+  // The store is saved once mock mode has started on a page
+  await openMap(page);
+  await page.evaluate((key) => {
+    const db = JSON.parse(localStorage.getItem(key));
+    db.visits = db.visits.filter((v) => !(v.mapId === 'map-home' && v.status === 'WANT_TO_GO'));
+    localStorage.setItem(key, JSON.stringify(db));
+  }, MOCK_STORE_KEY);
+  await openMap(page);
+  const panel = await openTool(page, 'Where to go next', 'Where to go next');
+  const empty = panel.getByRole('heading', { name: 'Where will you go?' });
+  await expect(empty).toBeVisible();
+  await expect(panel.getByText('Nothing is marked “Want to go” yet.', { exact: false })).toBeVisible();
+  await expect(panel.getByRole('listitem')).toHaveText([
+    'Mark a country “Want to go”, on the map or in the country list.',
+    'See the best month for each, from our country guides.',
+    'Plan the trip, and count down the days.',
+  ]);
+  // Centred in the panel, under the passport link
+  const sheet = panel.locator('section:has(h3)');
+  const [box, link, body] = await Promise.all([
+    sheet.boundingBox(),
+    panel.getByRole('link', { name: 'Open passport' }).boundingBox(),
+    panel.boundingBox(),
+  ]);
+  expect(box.y).toBeGreaterThan(link.y + link.height - 1);
+  expect(box.y + box.height).toBeGreaterThan(body.y + body.height - 60);
+  await panel.getByRole('button', { name: 'Open the country list' }).click();
+  await expect(page.getByRole('dialog', { name: 'Countries', exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Where to go next', exact: true })).toHaveCount(0);
 });

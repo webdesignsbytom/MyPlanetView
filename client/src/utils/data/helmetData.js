@@ -28,6 +28,7 @@ import {
   ERROR_404_PAGE_URL,
   FAQ_PAGE_URL,
   DEV_SELECT_LAB_PAGE_URL,
+  DEV_HOME_DRAFT_PAGE_URL,
   MAP_PAGE_URL,
   TRIP_PAGE_URL,
   WELCOME_PAGE_URL,
@@ -370,5 +371,10 @@ export const helmetData = {
     pageName: 'Dropdown Lab',
     indexing: 'noindex,nofollow',
     desc: 'Trials for fully styled dropdowns (customizable select).',
+  },
+  [DEV_HOME_DRAFT_PAGE_URL]: {
+    pageName: 'New Home Page (Draft)',
+    indexing: 'noindex,nofollow',
+    desc: 'A draft of a new home page: a turning globe with destination photos.',
   },
 };

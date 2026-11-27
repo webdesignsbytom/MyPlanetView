@@ -131,3 +131,23 @@ export async function countMapThemesEntered(mapId, { includeHidden }) {
   const rows = await prisma.photoThemeEntry.groupBy({ by: ['themeId'], where: { mapId, ...visiblePhoto(includeHidden) } });
   return rows.length;
 }
+
+/**
+ * The themes a map has entered (a badge's story), each with the day its first photo went in,
+ * in that order. -> `[{ title, month, firstEnteredAt }]`
+ */
+export async function findThemesEnteredByMap(mapId, { includeHidden }) {
+  const rows = await prisma.photoThemeEntry.groupBy({
+    by: ['themeId'],
+    where: { mapId, ...visiblePhoto(includeHidden) },
+    _min: { enteredAt: true },
+  });
+  if (!rows.length) return [];
+  const themes = new Map(
+    (await prisma.photoTheme.findMany({ where: { id: { in: rows.map((row) => row.themeId) } }, select: { id: true, title: true, month: true } })).map((t) => [t.id, t])
+  );
+  return rows
+    .filter((row) => themes.has(row.themeId))
+    .map((row) => ({ title: themes.get(row.themeId).title, month: themes.get(row.themeId).month, firstEnteredAt: row._min.enteredAt }))
+    .sort((a, b) => a.firstEnteredAt - b.firstEnteredAt || a.month - b.month);
+}

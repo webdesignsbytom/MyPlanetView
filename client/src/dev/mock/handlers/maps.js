@@ -18,7 +18,7 @@ import {
   effectivePlan,
   VIDEO_MESSAGES,
 } from '../plans';
-import { isPole } from '@/utils/map/specialPlaces';
+import { isPole, isSpecialPlace } from '@/utils/map/specialPlaces';
 import { UK, isUkNation, placeOnMap } from '@/utils/map/ukNations';
 import { MAP_STYLE_IDS } from '@/utils/map/mapStyles';
 import { DESIGN_MESSAGES, parseVisitedLook } from '../mapDesigns';
@@ -121,6 +121,18 @@ const travellerCountry = (value) =>
 function travellerFields(body) {
   const out = {};
   if (body.name !== undefined) out.name = cleanText(body.name, 60);
+  // The optional last name, as the server's (27 Nov 2026): null or "" clears it
+  if (body.lastName !== undefined) {
+    if (body.lastName !== null && typeof body.lastName !== 'string') return { error: 'Give it a name of 1 to 80 characters.' };
+    out.lastName = body.lastName === null ? null : cleanText(body.lastName, 60) || null;
+  }
+  // The optional nationality, as the server's (27 Nov 2026): a country, never a special place
+  if (body.nationalityCode !== undefined) {
+    const place = travellerCountry(body.nationalityCode);
+    if (place.error) return { error: place.error };
+    if (place.value && isSpecialPlace(place.value)) return { error: 'Choose a country for a nationality.' };
+    out.nationalityCode = place.value;
+  }
   for (const field of TRAVELLER_COUNTRY_FIELDS) {
     if (body[field] === undefined) continue;
     const place = travellerCountry(body[field]);
@@ -161,6 +173,8 @@ export function createMapRecord({ name, groupType, isDefault = false, travellers
       id: newId(),
       mapId: map.id,
       name: cleanText(t.name, 60) || `Traveller ${i + 1}`,
+      lastName: cleanText(t.lastName ?? '', 60) || null,
+      nationalityCode: travellerCountry(t.nationalityCode ?? null).value ?? null,
       position: i,
       userId: i === 0 ? owner.id : null,
       birthCountryCode: travellerCountry(t.birthCountryCode ?? null).value ?? null,
@@ -411,7 +425,7 @@ export function registerMapRoutes() {
     if (db.travellers.filter((t) => t.mapId === map.id).length >= MAX_TRAVELLERS) return fail(400, TOO_MANY_TRAVELLERS);
     if (db.travellers.filter((t) => t.mapId === map.id).length >= GROUP_MAX_TRAVELLERS[map.groupType]) return fail(409, groupFull(map.groupType));
     const position = fields.position ?? db.travellers.filter((t) => t.mapId === map.id).length;
-    const traveller = { id: newId(), mapId: map.id, userId: null, birthCountryCode: null, favouriteCountryCode: null, birthDate: null, ...fields, position };
+    const traveller = { id: newId(), mapId: map.id, userId: null, lastName: null, nationalityCode: null, birthCountryCode: null, favouriteCountryCode: null, birthDate: null, ...fields, position };
     db.travellers.push(traveller);
     // Born there is been there, as the server's markBirthplaces
     markVisited(map.id, traveller.birthCountryCode, 'MANUAL');

@@ -64,6 +64,27 @@ describe('MapPhotosPanel', () => {
     expect(screen.queryByText('Add photos')).toBeNull();
   });
 
+  // 27 Nov 2026, the user's wish: centred and better looking than a small spinner at the top
+  it('while its first page loads, fills the panel with a passport page saying so, under its buttons', () => {
+    usePhotoPage.mockReturnValue(page({ photos: [], loading: true, nextCursor: null }));
+    const { container } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onAddPhotos={() => {}} onClose={() => {}} />);
+    const busy = container.querySelector('[data-panel-busy]');
+    expect(busy.getAttribute('role')).toBe('status');
+    expect(busy.textContent).toContain('Opening the album…');
+    expect(container.querySelector('[data-grid]')).toBeNull();
+    // The panel's one child stretches to its height: the buttons on top, the page below them
+    expect(busy.parentElement.className).toContain('grid-rows-[auto_minmax(0,1fr)]');
+    expect(busy.parentElement.parentElement.className).toContain('content-stretch');
+    expect(screen.getByText('Add photos')).toBeTruthy();
+  });
+
+  it('keeps the grid, with its own spinner, while more photos load', () => {
+    usePhotoPage.mockReturnValue(page({ loading: true }));
+    const { container } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onClose={() => {}} />);
+    expect(container.querySelector('[data-panel-busy]')).toBeNull();
+    expect(container.querySelector('[data-grid]')).not.toBeNull();
+  });
+
   it('opens a photo in the album viewer and steps through it', () => {
     usePhotoPage.mockReturnValue(page());
     const { container } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onClose={() => {}} />);
@@ -96,18 +117,22 @@ describe('MapPhotosPanel', () => {
     expect(screen.queryByText('Play my world')).toBeNull();
   });
 
-  // 25 Nov 2026: a slideshow of some of the album's photos, with its own link (editors)
-  it('offers its editors a slideshow to share, once there are photos', () => {
+  // 25 Nov 2026: a slideshow of some of the album's photos, with its own link (editors); saved,
+  // and listed under "Saved slideshows" since 27 Nov 2026, the user's wish
+  it('offers its editors a slideshow to make and their saved ones, once there are photos', () => {
     usePhotoPage.mockReturnValue(page());
     const { unmount } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} showMapId='map-1' onClose={() => {}} />);
-    expect(screen.getByText('Share a slideshow')).toBeTruthy();
+    expect(screen.getByText('Make a slideshow')).toBeTruthy();
+    expect(screen.getByText('Saved slideshows')).toBeTruthy();
     unmount();
     const { unmount: again } = render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} onClose={() => {}} />);
-    expect(screen.queryByText('Share a slideshow')).toBeNull();
+    expect(screen.queryByText('Make a slideshow')).toBeNull();
+    expect(screen.queryByText('Saved slideshows')).toBeNull();
     again();
     usePhotoPage.mockReturnValue(page({ photos: [], nextCursor: null }));
     render(<MapPhotosPanel photoSource={{ mapId: 'map-1' }} showMapId='map-1' onClose={() => {}} />);
-    expect(screen.queryByText('Share a slideshow')).toBeNull();
+    expect(screen.queryByText('Make a slideshow')).toBeNull();
+    expect(screen.queryByText('Saved slideshows')).toBeNull();
   });
 
   it('fetches the list again when photos change elsewhere', () => {

@@ -40,6 +40,9 @@ const CHAR_WIDTH = 0.55;
 // stamps' steps (×1.6) past the old 25 (22 Nov 2026, the user's wish: on the UK's map London's
 // boroughs were as close as it went)
 const COUNTRY_MAX_ZOOM = 64;
+// The header's buttons on phones: 28px tall instead of 40, their words and sides as before
+// (27 Nov 2026, the user's wish: the header a third less tall, as wide)
+const PHONE_HEADER_BUTTON = 'phone:[--btn-pad-y:0.125rem] phone:[--btn-leading:1.25rem]';
 
 // A state's look, as a country's on the world map (18 Nov 2026, the user's wish): every one
 // wears one of the seven pastels (`colour`, no two neighbours alike), a visited or lived-in
@@ -192,7 +195,8 @@ function stateAt(svg, x, y) {
  * LandmarkModelCard (editors tick "Been here"); on a pin, `onOpenPin(id)`.
  * "Add a pin" (editors; `locked` while the email isn't verified) waits for a press on the
  * map, then `onNewPin({ latitude, longitude, countryCode })`. `pinsVersion` going up reloads
- * the pins; `onVisitsChanged` runs after a state's change brought its country's visit.
+ * the pins; `onVisitsChanged(implied)` runs after a state's change brought its country's visit
+ * (`implied`: the visits it brought, as the server answers them; none after a clear).
  */
 function CountryMapView({ code, source, canEdit = false, locked = false, pinsVersion = 0, selectedPinId = null, onOpenPin, onNewPin, onVisitsChanged, onClose }) {
   const headingId = useId();
@@ -388,13 +392,17 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
       const implied = await setStatus(stateCode, status);
       // The world map and the badges catch up after a change that brought visits, and after
       // a clear: a state that is a region's own visit (Hawaii's) takes that visit with it
-      // (19 Nov 2026, the audit)
-      if (implied.length || status === null) onVisitsChanged?.();
+      // (19 Nov 2026, the audit). The places it brought go with it, so a country newly visited
+      // is celebrated (27 Nov 2026, the user's report: Iowa brought the US, with no celebration)
+      if (implied.length || status === null) onVisitsChanged?.(implied);
     } catch (err) {
       setStatusError(err.friendlyMessage || 'That change could not be saved.');
     }
   };
 
+  // The header's buttons: on phones a third less tall, the same width (27 Nov 2026, the user's
+  // wish: the header took too much of a phone's screen)
+  const headerButton = `grid-flow-col gap-2 [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:0.875rem] ${PHONE_HEADER_BUTTON}`;
   const addPin = canEdit ? (
     <button
       type='button'
@@ -404,15 +412,15 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
         dropCards();
         setPlacing((on) => !on);
       }}
-      className={`${placing ? 'btn-poster' : 'btn-paper'} grid-flow-col gap-2 [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:0.875rem] disabled:opacity-50`}
+      className={`${placing ? 'btn-poster' : 'btn-paper'} ${headerButton} disabled:opacity-50`}
     >
       {/* The pin as the map draws it: red, outlined in black */}
-      <MomentSpotIcon className='h-5 w-5 self-center' />
+      <MomentSpotIcon className='h-5 w-5 self-center phone:h-4 phone:w-4' />
       {placing ? 'Cancel' : 'Add a pin'}
     </button>
   ) : null;
   const backToWorld = (
-    <button type='button' onClick={onClose} className='btn-paper grid-flow-col gap-2 [--btn-pad-x:0.75rem] [--btn-pad-y:0.25rem] [--btn-size:0.875rem]'>
+    <button type='button' onClick={onClose} className={`btn-paper ${headerButton}`}>
       <FaArrowLeft aria-hidden='true' className='self-center' />
       World map
     </button>
@@ -467,20 +475,25 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
       </MapKeyboardHint>
 
       {/* The header, centred: back to the world, the country and how many of its states, a
-          new pin; one slim row on wide screens, stacked on phones */}
+          new pin; one slim row on wide screens, stacked on phones, where everything in it is
+          a size smaller (27 Nov 2026, the user's wish: a third less tall, as wide) */}
       <SlideAway className='pointer-events-none absolute inset-x-16 top-3 grid justify-items-center nophone:inset-x-72' measure='[data-country-map-header]'>
-        <div ref={headerRef} data-country-map-header='' className='ticket-edge paper-aged pointer-events-auto grid max-w-full justify-items-center gap-2 px-4 py-2 text-center text-poster-ink'>
-          <div className='grid items-center justify-items-center gap-2 nophone:grid-cols-[auto_auto_auto] nophone:gap-4'>
+        <div
+          ref={headerRef}
+          data-country-map-header=''
+          className='ticket-edge paper-aged pointer-events-auto grid max-w-full justify-items-center gap-2 px-4 py-2 text-center text-poster-ink phone:gap-1.5'
+        >
+          <div className='grid items-center justify-items-center gap-2 phone:gap-1.5 nophone:grid-cols-[auto_auto_auto] nophone:gap-4'>
             <div className='hidden nophone:grid'>{backToWorld}</div>
             {/* The flag beside the name and the count, the two lined up on the left */}
-            <div className='grid grid-flow-col items-center gap-3'>
-              <CountryFlag code={code} name={name} />
+            <div className='grid grid-flow-col items-center gap-3 phone:gap-2'>
+              <CountryFlag code={code} name={name} className='h-10 w-[3.25rem] phone:h-6 phone:w-8' />
               <div className='grid justify-items-start text-left'>
-                <h2 id={headingId} ref={headingRef} tabIndex={-1} className='font-travel text-2xl uppercase leading-tight tracking-wide text-colour6 outline-none'>
+                <h2 id={headingId} ref={headingRef} tabIndex={-1} className='font-travel text-2xl uppercase leading-tight tracking-wide text-colour6 outline-none phone:text-lg'>
                   {name}
                 </h2>
                 {geo && info ? (
-                  <p className='text-sm font-medium' data-state-count=''>
+                  <p className='text-sm font-medium phone:text-xs' data-state-count=''>
                     {marked} of {total} {total === 1 ? info[0] : info[1]} visited
                   </p>
                 ) : null}
@@ -493,12 +506,12 @@ function CountryMapView({ code, source, canEdit = false, locked = false, pinsVer
             </div>
           </div>
           {placing ? (
-            <p role='status' className='text-sm'>
+            <p role='status' className='text-sm phone:text-xs'>
               Press the map where the pin goes.
             </p>
           ) : null}
           {statusError ? (
-            <p role='alert' className='rounded-lg border px-3 py-1 text-sm tone-danger'>
+            <p role='alert' className='rounded-lg border px-3 py-1 text-sm tone-danger phone:text-xs'>
               {statusError}
             </p>
           ) : null}

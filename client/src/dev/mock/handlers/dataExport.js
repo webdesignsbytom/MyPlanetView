@@ -109,6 +109,8 @@ function mapView(map) {
       .map((t) => ({
         id: t.id,
         name: t.name,
+        lastName: t.lastName ?? null,
+        nationalityCode: t.nationalityCode ?? null,
         isYou: t.userId === me().id,
         linkedToAnAccount: Boolean(t.userId),
         birthCountryCode: t.birthCountryCode ?? null,

@@ -35,6 +35,11 @@ export const POSTCARD_MESSAGES = Object.freeze({
   countryNotFound: 'That country isn’t on the map.',
 });
 
+// The photos on every plan's cards: a city's (c) and the wilderness's (w); a landmark's (l) is a
+// paid plan's (27 Nov 2026, the user's wish)
+export const FREE_PHOTO_GROUPS = Object.freeze(['c', 'w']);
+export const isFreePhotoGroup = (group) => FREE_PHOTO_GROUPS.includes(group);
+
 /** Can someone on `plan` (FREE, REGULAR, PREMIUM) send a card of `kind`? */
 export const canSendPostcardKind = (plan, kind) =>
   POSTCARD_KINDS.includes(kind) && (!PAID_POSTCARD_KINDS.includes(kind) || (Boolean(plan) && plan !== 'FREE'));
@@ -69,9 +74,13 @@ export function parsePostcardInput(body) {
       return { ok: false, error: 'postcardNameInvalid' };
     }
   }
-  // The server wants a UUID; the mock's landmarks' ids are `lm-<slug>`, so any id here
-  const landmarkId = kind === 'LANDMARK' ? input.landmarkId : null;
-  if (kind === 'LANDMARK' && (typeof landmarkId !== 'string' || !landmarkId)) return { ok: false, error: 'postcardLandmarkInvalid' };
+  // A landmark's card names its landmark, a country's may (its photo). The server wants a UUID;
+  // the mock's landmarks' ids are `lm-<slug>`, so any id here
+  const named = input.landmarkId !== undefined && input.landmarkId !== null && input.landmarkId !== '';
+  const landmarkId = kind === 'LANDMARK' || (kind === 'COUNTRY' && named) ? input.landmarkId : null;
+  if ((kind === 'LANDMARK' || (kind === 'COUNTRY' && named)) && (typeof landmarkId !== 'string' || !landmarkId)) {
+    return { ok: false, error: 'postcardLandmarkInvalid' };
+  }
   const pictureKey = kind === 'PHOTO' ? input.pictureKey : null;
   if (kind === 'PHOTO' && (typeof pictureKey !== 'string' || !pictureKey)) return { ok: false, error: 'postcardPictureInvalid' };
   return {
@@ -108,10 +117,13 @@ export function shownKind({ kind, landmark, hasPicture }) {
 export const postcardLink = (origin, code) => `${origin}${postcardPath(code)}`;
 
 // What the maker offers, in its order: the front's picture, and the card's look
-export const POSTCARD_KIND_CHOICES = Object.freeze([
-  { value: 'COUNTRY', label: 'The country', hint: 'Its travel poster and its outline. Free on every plan.' },
-  { value: 'LANDMARK', label: 'A landmark', hint: 'Its photo and its little 3D model.' },
-  { value: 'PHOTO', label: 'Your own photo', hint: 'One of your map’s photos, or one from your device.' },
+// The photos to choose from, by what they're of: a city and the wilderness on every plan, a
+// landmark and your own photo on a paid one
+export const POSTCARD_PHOTO_TABS = Object.freeze([
+  { value: 'c', label: 'City', free: true },
+  { value: 'w', label: 'Wilderness', free: true },
+  { value: 'l', label: 'Landmarks', free: false },
+  { value: 'own', label: 'Your photo', free: false },
 ]);
 export const POSTCARD_STYLE_CHOICES = Object.freeze([
   { value: 'classic', label: 'Classic', hint: 'Cream card, red lettering' },

@@ -2,19 +2,21 @@
 // words the maker and the page use
 import { describe, expect, it } from 'vitest';
 import {
+  FREE_PHOTO_GROUPS,
   PAID_POSTCARD_KINDS,
   POSTCARDS_PER_PERSON,
   POSTCARD_DEFAULT_STYLE,
   POSTCARD_KINDS,
-  POSTCARD_KIND_CHOICES,
   POSTCARD_LIMITS,
   POSTCARD_MESSAGES,
   POSTCARD_PICTURE_MAX_BYTES,
+  POSTCARD_PHOTO_TABS,
   POSTCARD_PICTURE_TYPES,
   POSTCARD_STYLES,
   POSTCARD_STYLE_CHOICES,
   canSendPostcardKind,
   checkPostcardPicture,
+  isFreePhotoGroup,
   landmarkFitsPlace,
   messageFrom,
   parsePostcardInput,
@@ -39,6 +41,7 @@ describe('the server’s rules, copied', () => {
     expect(POSTCARDS_PER_PERSON).toBe(server.POSTCARDS_PER_PERSON);
     expect([...POSTCARD_PICTURE_TYPES]).toEqual([...server.POSTCARD_PICTURE_TYPES]);
     expect(POSTCARD_PICTURE_MAX_BYTES).toBe(server.POSTCARD_PICTURE_MAX_BYTES);
+    expect([...FREE_PHOTO_GROUPS]).toEqual([...server.FREE_PHOTO_GROUPS]);
   });
 
   it('words its refusals as the server does', () => {
@@ -74,6 +77,11 @@ describe('the server’s rules, copied', () => {
       { kind: 'COUNTRY', countryCode: 'FR', message: 'x'.repeat(401) },
       { kind: 'COUNTRY', countryCode: 'FR', message: 'Hi', toName: 'x'.repeat(41) },
       { kind: 'LANDMARK', countryCode: 'FR', message: 'Hi' },
+      // A country's card with its photo's landmark (a city or the wilderness), or none
+      { kind: 'COUNTRY', countryCode: 'FR', landmarkId, message: 'Hi' },
+      { kind: 'COUNTRY', countryCode: 'FR', landmarkId: null, message: 'Hi' },
+      { kind: 'COUNTRY', countryCode: 'FR', landmarkId: '', message: 'Hi' },
+      { kind: 'COUNTRY', countryCode: 'FR', landmarkId: 7, message: 'Hi' },
       null,
     ];
     for (const body of bodies) {
@@ -100,6 +108,9 @@ describe('the server’s rules, copied', () => {
 describe('the mock’s landmarks', () => {
   it('take any id, as the mock’s are `lm-<slug>`', () => {
     expect(parsePostcardInput({ kind: 'LANDMARK', countryCode: 'FR', landmarkId: 'lm-eiffel-tower', message: 'Hi' }).value.landmarkId).toBe('lm-eiffel-tower');
+    expect(parsePostcardInput({ kind: 'COUNTRY', countryCode: 'FR', landmarkId: 'lm-paris-banks-of-the-seine', message: 'Hi' }).value.landmarkId).toBe(
+      'lm-paris-banks-of-the-seine',
+    );
   });
 });
 
@@ -112,9 +123,15 @@ describe('the words', () => {
     expect(sentOnWords('2026-11-26T22:30:00.000Z')).toBe('26 November 2026');
   });
 
-  it('offers the three kinds and four styles, in order', () => {
-    expect(POSTCARD_KIND_CHOICES.map((c) => c.value)).toEqual([...POSTCARD_KINDS]);
+  it('offers the front’s photos in four tabs, a city’s and the wilderness’s free, and the four styles in order', () => {
+    expect(POSTCARD_PHOTO_TABS.map((t) => [t.value, t.label, t.free])).toEqual([
+      ['c', 'City', true],
+      ['w', 'Wilderness', true],
+      ['l', 'Landmarks', false],
+      ['own', 'Your photo', false],
+    ]);
+    for (const tab of POSTCARD_PHOTO_TABS) expect(isFreePhotoGroup(tab.value)).toBe(tab.free);
+    expect(isFreePhotoGroup(undefined)).toBe(false);
     expect(POSTCARD_STYLE_CHOICES.map((c) => c.value)).toEqual([...POSTCARD_STYLES]);
-    expect(POSTCARD_KIND_CHOICES[0].hint).toContain('Free on every plan');
   });
 });

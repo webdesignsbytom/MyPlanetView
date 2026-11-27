@@ -1,0 +1,586 @@
+/* The new home page draft (dev only, /dev/home), as the user designed it in the repo's
+   main-home/ folder: its own colours and type for now, every rule scoped to
+   [data-home-draft] so it touches nothing else. A real home page would move onto the site's
+   tokens (src/styles/index.css). Imported by components/homeDraft/HomeDraft.jsx. */
+
+[data-home-draft] {
+  --gold: #edbd64;
+  --cream: #ffedc9;
+  --green: #03120e;
+  --header: clamp(54px, 4.1vw, 82px);
+  /* Measured (27 Nov 2026): the introduction ends about 37vw down, "TRAVEL" is 5.04 times its
+     size wide (in a 35.8vw column), and "Your Photos" 6.4 times its size (in a 8.8vw cell) */
+  --hero-min: 39vw;
+  --travel-size: 6.8vw;
+  --feature-size: 1.2vw;
+  --feature-pad: 0.3vw;
+  color-scheme: dark;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--green);
+  color: var(--cream);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+[data-home-draft] :is(button, a) {
+  font: inherit;
+  color: inherit;
+}
+[data-home-draft] button {
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+[data-home-draft] a {
+  text-decoration: none;
+}
+[data-home-draft] :is(button, a):focus-visible {
+  outline: 3px solid #fff4ca;
+  outline-offset: 3px;
+}
+[data-home-draft] main:focus {
+  outline: none;
+}
+
+/* The bar: the wordmark, and the site's links in a row (a Menu button below 1200px) */
+[data-home-draft] header {
+  position: relative;
+  z-index: 20;
+  height: var(--header);
+  border-bottom: 1px solid #b9944f;
+  background: linear-gradient(120deg, #070e09, #00110f);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2vw;
+  padding: 0 3.25vw;
+}
+[data-home-draft] .skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0.5rem;
+}
+[data-home-draft] .skip-link:focus {
+  left: 1rem;
+  z-index: 40;
+  padding: 0.5em 1em;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  background: #071b15;
+}
+[data-home-draft] .wordmark {
+  display: flex;
+  align-items: center;
+  gap: 0.33em;
+  font-size: clamp(18px, 1.72vw, 34px);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+[data-home-draft] .wordmark img {
+  width: clamp(40px, 3.8vw, 70px);
+}
+[data-home-draft] nav {
+  font-size: clamp(15px, 1.12vw, 24px);
+}
+[data-home-draft] nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.7vw, 40px);
+}
+[data-home-draft] nav :is(a, button, summary) {
+  position: relative;
+  display: block;
+  padding: 0.45em 0;
+  white-space: nowrap;
+  cursor: pointer;
+}
+[data-home-draft] nav :is(a, button, summary):hover,
+[data-home-draft] nav a.current {
+  color: #ffda84;
+}
+[data-home-draft] nav a.current::after {
+  content: '';
+  position: absolute;
+  bottom: -0.12em;
+  left: -15%;
+  width: 130%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #fff1b1, transparent);
+  filter: drop-shadow(0 0 4px #ffb335);
+}
+/* Admin's pages, for admins */
+[data-home-draft] nav details {
+  position: relative;
+}
+[data-home-draft] nav summary {
+  list-style: none;
+}
+[data-home-draft] nav summary::-webkit-details-marker {
+  display: none;
+}
+[data-home-draft] nav summary::after {
+  content: ' ▾';
+}
+[data-home-draft] nav details ul {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: grid;
+  gap: 0.2em;
+  min-width: 12em;
+  padding: 0.6em 1.1em;
+  background: #071b15;
+  border: 1px solid var(--gold);
+  border-radius: 10px;
+}
+[data-home-draft] .nav-error {
+  margin: 0.4em 0 0;
+  font-size: 0.85em;
+  color: #ffb6a3;
+}
+[data-home-draft] .menu-toggle {
+  display: none;
+  padding: 0.35em 1.1em;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  color: #ffda84;
+  font-size: clamp(15px, 2vw, 20px);
+}
+@media (max-width: 1199px) {
+  [data-home-draft] .menu-toggle {
+    display: block;
+  }
+  [data-home-draft] nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 3.25vw;
+    min-width: 14em;
+    padding: 0.8em 1.6em 1em;
+    font-size: 18px;
+    background: #071b15;
+    border: 1px solid var(--gold);
+    border-top: 0;
+    border-radius: 0 0 14px 14px;
+    box-shadow: 0 10px 24px #0009;
+  }
+  [data-home-draft] nav[data-open] {
+    display: block;
+  }
+  [data-home-draft] nav ul {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.1em;
+  }
+  [data-home-draft] nav details ul {
+    position: static;
+    min-width: 0;
+    padding: 0 0 0 1em;
+    background: none;
+    border: 0;
+  }
+  [data-home-draft] nav a.current::after {
+    left: 0;
+    width: 100%;
+  }
+}
+
+/* The hero: the explorer's desk on the left, the globe on the right */
+[data-home-draft] .hero {
+  position: relative;
+  display: block;
+  /* The window's height below the bar, so the page never scrolls on a wide screen; never so
+     short that the introduction runs off its foot */
+  height: max(calc(100svh - var(--header)), var(--hero-min));
+  background: #05130f url('../assets/homeDraft/explorer.webp') left bottom / 88% 100% no-repeat;
+}
+[data-home-draft] .intro {
+  position: absolute;
+  left: 14.55%;
+  top: 10.7%;
+  width: 35.8%;
+  text-align: center;
+  transform: scale(0.88);
+  transform-origin: center top;
+}
+[data-home-draft] h1 {
+  /* A grid, so a word wider than the column (a wider fallback font) spills evenly both sides */
+  display: grid;
+  justify-items: center;
+  margin: 0;
+  color: #ffdc98;
+  text-transform: uppercase;
+  text-shadow: 0 2px 8px #0008;
+}
+[data-home-draft] h1 span {
+  justify-self: stretch;
+  white-space: nowrap;
+  font-size: 2.36vw;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+}
+[data-home-draft] h1 span::before,
+[data-home-draft] h1 span::after {
+  content: '';
+  width: 8%;
+  height: 2px;
+  background: var(--gold);
+}
+[data-home-draft] h1 strong {
+  display: block;
+  /* One word on one line, sized to fit the introduction's width */
+  white-space: nowrap;
+  font-size: var(--travel-size);
+  font-weight: bold;
+  line-height: 0.97;
+  letter-spacing: 0.09em;
+  text-indent: 0.09em;
+}
+[data-home-draft] .tagline {
+  margin: 1vw 0 0;
+  padding: 1.2vw 0 0;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 0.27em;
+  font-size: 1.4vw;
+  font-weight: 600;
+}
+[data-home-draft] .tagline::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #e6ab4e 15%, #fff2bc 52%, #dfad56 80%, transparent);
+}
+/* What the site is, in a sentence */
+[data-home-draft] .lede {
+  margin: 1.3vw auto 0;
+  max-width: 30em;
+  font-size: 1.36vw;
+  font-style: italic;
+  line-height: 1.35;
+  text-wrap: balance;
+  text-shadow: 0 1px 6px #000a;
+}
+[data-home-draft] .features {
+  list-style: none;
+  display: flex;
+  margin: 2.2vw 0 0;
+  padding: 1.3vw 0.25vw;
+  background: #00120ddb;
+  border: 1px solid var(--gold);
+  border-radius: 1.2vw;
+  box-shadow: 0 6px 19px #0006;
+}
+[data-home-draft] .features li {
+  flex: 1;
+  min-width: 0;
+  padding: 0 var(--feature-pad);
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.4vw;
+  border-right: 1px solid var(--gold);
+}
+[data-home-draft] .features li:last-child {
+  border: 0;
+}
+[data-home-draft] .features svg {
+  width: 4.3vw;
+  height: 3.6vw;
+  fill: none;
+  stroke: #f6c875;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.35;
+}
+[data-home-draft] .features span {
+  font-size: var(--feature-size);
+  font-weight: bold;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+[data-home-draft] .cta {
+  display: inline-block;
+  white-space: nowrap;
+  margin: 2.2vw auto 0;
+  background: linear-gradient(#742015, #4c0b09 65%, #330707);
+  border: 2px solid #ffc975;
+  border-radius: 80px;
+  box-shadow:
+    inset 0 0 0 2px #472509,
+    inset 0 0 0 3px #b57238,
+    0 5px 14px #0009;
+  padding: 0.92vw 2.65vw;
+  font-size: 1.95vw;
+  font-weight: bold;
+}
+[data-home-draft] .cta:hover {
+  filter: brightness(1.15);
+}
+
+/* The globe and its cards */
+[data-home-draft] .planet {
+  position: absolute;
+  inset: 0 0 0 51%;
+}
+[data-home-draft] .planet canvas,
+[data-home-draft] .cards {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+[data-home-draft] .cards {
+  pointer-events: none;
+}
+[data-home-draft] .slot {
+  position: absolute;
+  width: 35.3%;
+  height: 23%;
+}
+[data-home-draft] .slot:nth-child(1) {
+  top: 8.8%;
+  left: 15.8%;
+}
+[data-home-draft] .slot:nth-child(2) {
+  top: 35.7%;
+  left: 3.6%;
+  width: 34.3%;
+  height: 24%;
+}
+[data-home-draft] .slot:nth-child(3) {
+  top: 64%;
+  left: 11%;
+  width: 36.3%;
+}
+[data-home-draft] .card {
+  pointer-events: auto;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid var(--gold);
+  border-radius: 1.1vw;
+  background: linear-gradient(120deg, #0c1c13, #00100c);
+  box-shadow: 0 4px 12px #0009;
+  position: absolute;
+  inset: 0;
+}
+[data-home-draft] .card img {
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  object-fit: cover;
+  border-bottom: 1px solid #e8b861;
+}
+[data-home-draft] .cardtext {
+  display: grid;
+  padding: 0.3vw 1vw 0.55vw;
+  line-height: 1.13;
+}
+[data-home-draft] .cardtext strong {
+  font-size: 1.85vw;
+}
+[data-home-draft] .cardtext > span {
+  font-size: 1.22vw;
+}
+[data-home-draft] .card.departing {
+  pointer-events: none;
+}
+[data-home-draft] .card.arriving {
+  animation: home-draft-appear 1.25s ease-in-out;
+}
+@keyframes home-draft-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* The dialog (a destination, Countries, My map) */
+[data-home-draft] dialog {
+  width: min(510px, 92vw);
+  max-height: 85svh;
+  margin: auto;
+  overflow: auto;
+  color: var(--cream);
+  background: #071b15;
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  padding: 22px;
+}
+[data-home-draft] dialog::backdrop {
+  background: #000b;
+}
+[data-home-draft] dialog p {
+  margin: 1em 0;
+}
+[data-home-draft] .dialoghead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+[data-home-draft] .dialoghead h2 {
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+[data-home-draft] .dialoghead button {
+  font-size: 28px;
+}
+[data-home-draft] dialog h3 {
+  margin: 1em 0 0;
+  font-size: 1.17em;
+  font-weight: bold;
+}
+[data-home-draft] .detailphoto {
+  width: 100%;
+  max-height: 40vh;
+  object-fit: cover;
+  margin-top: 12px;
+  border-radius: 5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-home-draft] .card.arriving {
+    animation-duration: 1ms;
+  }
+}
+
+/* Stacked, the globe under the introduction: phones, and tablets held upright */
+@media (max-width: 760px), (orientation: portrait) and (max-width: 1199px) {
+  [data-home-draft] {
+    --travel-size: min(15vw, 90px);
+    --feature-size: clamp(12px, 3.1vw, 16px);
+    --feature-pad: 0;
+  }
+  [data-home-draft] header {
+    height: 56px;
+    padding: 0 3vw;
+  }
+  [data-home-draft] .wordmark {
+    font-size: clamp(13px, 3.25vw, 21px);
+  }
+  [data-home-draft] .wordmark img {
+    width: 32px;
+  }
+  [data-home-draft] .hero {
+    height: auto;
+    /* At least the screen's width, so a tablet never sees where the picture ends */
+    background-size: max(615px, 100%) auto;
+    background-position: left top;
+  }
+  [data-home-draft] .intro {
+    transform: none;
+    position: relative;
+    left: auto;
+    top: auto;
+    width: auto;
+    margin: 0;
+    padding: 32px 4vw 26px 17vw;
+    background: linear-gradient(0deg, #05130f, transparent 20%);
+  }
+  [data-home-draft] h1 span {
+    font-size: clamp(22px, 6vw, 34px);
+  }
+  [data-home-draft] .tagline {
+    font-size: clamp(10px, 2.8vw, 17px);
+    padding-top: 12px;
+    margin-top: 8px;
+    letter-spacing: 0.19em;
+  }
+  [data-home-draft] .lede {
+    margin-top: 12px;
+    font-size: clamp(14px, 3.9vw, 19px);
+  }
+  [data-home-draft] .features {
+    margin: 20px 0 0;
+    padding: 12px 0;
+    border-radius: 12px;
+  }
+  [data-home-draft] .features svg {
+    width: 36px;
+    height: 30px;
+  }
+  [data-home-draft] .features li {
+    gap: 5px;
+  }
+  [data-home-draft] .cta {
+    font-size: clamp(18px, 4.5vw, 25px);
+    margin-top: 19px;
+    padding: 10px 18px;
+  }
+  [data-home-draft] .planet {
+    position: relative;
+    inset: auto;
+    height: clamp(390px, 91vw, 760px);
+    background: radial-gradient(ellipse at right, #062224, #04130f 75%);
+  }
+  [data-home-draft] .slot {
+    width: 36%;
+    height: 25%;
+  }
+  [data-home-draft] .slot:nth-child(1) {
+    left: 9%;
+    top: 6%;
+  }
+  [data-home-draft] .slot:nth-child(2) {
+    left: 2%;
+    top: 37%;
+    width: 36%;
+    height: 25%;
+  }
+  [data-home-draft] .slot:nth-child(3) {
+    left: 7%;
+    top: 68%;
+    width: 36%;
+  }
+  [data-home-draft] .card {
+    border-radius: 11px;
+  }
+  [data-home-draft] .cardtext {
+    padding: 3px 8px 5px;
+  }
+  [data-home-draft] .cardtext strong {
+    font-size: 18px;
+  }
+  [data-home-draft] .cardtext > span {
+    font-size: 14px;
+  }
+}
+
+/* Narrow phones: four features don't fit in a row, so two by two */
+@media (max-width: 480px) {
+  [data-home-draft] .features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 12px;
+  }
+  [data-home-draft] .features li:nth-child(odd) {
+    border-right: 1px solid var(--gold);
+  }
+  [data-home-draft] .features li:nth-child(even) {
+    border-right: 0;
+  }
+}
+
+@media (min-width: 761px) and (orientation: landscape), (min-width: 1200px) {
+  [data-home-draft] .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 53%, #03120e 89%);
+  }
+}

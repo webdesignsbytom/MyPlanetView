@@ -29,6 +29,8 @@ export const FOLDERS = {
   festivalPhotos: 'public, max-age=604800',
   // images/src/tools/one-shot-photos.mjs (Life's One Shots, 24 Nov 2026): the same
   oneShotPhotos: 'public, max-age=604800',
+  // images/src/tools/postcard-photos.mjs (postcards' fronts, 27 Nov 2026): the same
+  postcardPhotos: 'public, max-age=604800',
 };
 
 const CONTENT_TYPES = {

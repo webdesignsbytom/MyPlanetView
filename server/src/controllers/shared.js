@@ -16,7 +16,7 @@ import { momentPage } from './moments.js';
 import { countryListPages } from './countryLists.js';
 import { adsFor } from '../services/offers.js';
 import { buildPassport } from '../services/travel/passport.js';
-import { travellerOption } from './passport.js';
+import { sendBadgeStory, travellerOption } from './passport.js';
 import { mapBadges, mapGoals } from '../services/travel/achievements.js';
 import { mapOneShots } from '../services/travel/oneShots.js';
 import { mapThemesView, themeAlbumPage } from './themes.js';
@@ -196,6 +196,13 @@ export const getSharedBadgesHandler = handler(D, 'Open share link badges', async
   const shared = await sharedMap(req, res);
   if (!shared) return undefined;
   return sendDataResponse(res, 200, await mapBadges(shared.map.id, { award: canEdit(shared.role) }));
+});
+
+// What earned a badge, through the map's link (as the link's role sees the map)
+export const getSharedBadgeStoryHandler = handler(D, 'Open share link badge story', async (req, res) => {
+  const shared = await sharedMap(req, res);
+  if (!shared) return undefined;
+  return sendBadgeStory(req, res, D, shared.map.id, shared.role);
 });
 
 // A map's theme albums through its link (docs/API.md, "Photo themes"): as its viewers see

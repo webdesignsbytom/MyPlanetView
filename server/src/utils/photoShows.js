@@ -3,11 +3,24 @@
 // editors choose some of its photos and videos, a title and how long each stays up; anyone
 // with the link watches them, in that order, and nothing else of the map. Pure, so tested on
 // its own (tests/photoShows.test.js). The client's copy is client/src/utils/shows/showRules.js.
+import { isTopPlan, planOf } from './constants/plans.js';
 
 export const SHOW_TITLE_MAX = 80;
 export const SHOW_PHOTOS_MAX = 500;
-// A guard against a runaway script, not a plan limit
-export const SHOWS_PER_MAP = 100;
+
+/**
+ * How many slideshows a map keeps saved: its plan's (27 Nov 2026, the user's wish: Economy 2,
+ * Business 10, First Class 25), the map's plan being its owner's as for every rule. A show is
+ * its photos' ids, never copies of them, so a saved one costs no storage.
+ */
+export const showsAllowed = (planId) => planOf(planId).limits.photoShows;
+
+/**
+ * "2 of 2 slideshows saved on this map. Delete one, or upgrade to save more." (no upgrade on
+ * the top plan). `count` may be over the cap: a map whose owner's plan went down keeps its shows.
+ */
+export const showsFullMessage = ({ count, cap, planId }) =>
+  `${Math.min(count, cap)} of ${cap} slideshows saved on this map. ${isTopPlan(planId) ? 'Delete one to save another.' : 'Delete one, or upgrade to save more.'}`;
 // Seconds a photo stays up to start with (the watcher can change it, as in every slideshow)
 export const SHOW_SECONDS = Object.freeze([3, 5, 8]);
 export const SHOW_DEFAULT_SECONDS = 5;

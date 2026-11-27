@@ -8,9 +8,12 @@ import { MAP_HOME_BOTTOM, MAP_WIDTH, REFERENCE_PX_PER_UNIT, mapExtent } from '@/
 // shows a narrow strip of the map at the same size, counted as zoomed in five times and
 // drew every landmark pin and the smallest badges, 16 Nov 2026.) The closest zoom is
 // MAX_ZOOM on every screen, unless the caller gives its own (`maxZoom`: a country's own map
-// has its own); MIN_WIDTH is that view's width before the screen is measured. 64 is two of
-// the zoom stamps' steps (×1.6) past the old 25 (22 Nov 2026, the user's wish).
-const MAX_ZOOM = 64;
+// has its own); MIN_WIDTH is that view's width before the screen is measured. 256 (27 Nov
+// 2026, the user's wish: "I need to be able to zoom in further. Some of the islands are always
+// too small"; 64 since 22 Nov 2026, 25 before): three more of the zoom stamps' steps (×1.6),
+// Saint Barthélemy about 100 pixels across on a phone, the detailed outlines keeping each
+// island's points to 0.01 map units (images/src/tools/country-outlines.mjs).
+const MAX_ZOOM = 256;
 const MIN_WIDTH = MAP_WIDTH / MAX_ZOOM;
 const closestWidthFor = (screenPx, maxZoom) => (screenPx ? screenPx / (maxZoom * REFERENCE_PX_PER_UNIT) : MAP_WIDTH / maxZoom);
 const zoomFor = (viewWidth, screenPx) => (screenPx ? screenPx / viewWidth / REFERENCE_PX_PER_UNIT : MAP_WIDTH / viewWidth);
@@ -106,7 +109,8 @@ function homeView(aspect, extent, closest = MIN_WIDTH) {
  * While a mouse button is held on the map, the SVG carries `data-grabbing` (for the
  * grabbing-hand cursor). While the view changes, and for MOVING_MS after, it carries
  * `data-moving`: what's too costly to draw on every frame of a pan or a pinch waits for it to go
- * (a metallic finish's lit edges: FoilEdgeFilter, utils/map/mapDesign.js visitedRules).
+ * (a metallic finish's lit edges and its sheet of metal: FoilEdgeFilter, VisitedFoil,
+ * utils/map/mapDesign.js visitedCss).
  * `afterTap(action)` is for click handlers on the map (opening a country): it ignores the
  * click that ends a drag or a double-tap, and holds the action back until no second tap
  * can follow, so a double-tap only zooms.

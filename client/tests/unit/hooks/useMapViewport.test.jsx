@@ -103,12 +103,16 @@ describe('useMapViewport: zooming', () => {
     expect(view().y + view().h).toBeLessThanOrEqual(FULL.bottom + 0.01);
   });
 
-  it('stops at zoom 64 on every screen', async () => {
+  // 27 Nov 2026, the user's wish: "I need to be able to zoom in further" (64 until then)
+  it('stops at zoom 256 on every screen, past the old 64', async () => {
     render(<Map />);
+    for (let i = 0; i < 10; i += 1) act(() => viewport.zoomIn());
+    await settle();
+    expect(viewport.getZoom()).toBeGreaterThan(64);
     for (let i = 0; i < 20; i += 1) act(() => viewport.zoomIn());
     await settle();
-    close(viewport.getZoom(), 64);
-    close(view().w, 1920 / (64 * REFERENCE_PX_PER_UNIT));
+    close(viewport.getZoom(), 256);
+    close(view().w, 1920 / (256 * REFERENCE_PX_PER_UNIT));
   });
 
   it('stops at the caller’s own closest zoom', async () => {

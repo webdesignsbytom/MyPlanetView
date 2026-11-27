@@ -478,7 +478,8 @@ function buildBaseSeed() {
       },
     ],
     // Postcards (docs/API.md "Postcards"): two the test user sent, each by its own link, never
-    // part of a map: a country's card from France, and the Colosseum's from Italy
+    // part of a map: a country's card from France (a city photo of Paris), and the Colosseum's
+    // from Italy
     postcards: [
       {
         id: 'postcard-france',
@@ -486,7 +487,8 @@ function buildBaseSeed() {
         senderId: USER_ID,
         kind: 'COUNTRY',
         countryCode: 'FR',
-        landmarkId: null,
+        // A city photo on the front: Paris, the banks of the Seine
+        landmarkId: 'lm-paris-banks-of-the-seine',
         pictureKey: null,
         style: 'classic',
         message: 'Bonjour Gran!\nParis is lovely in the rain. We climbed the Eiffel Tower and ate far too many croissants.',

@@ -262,6 +262,33 @@ describe('travellers', () => {
     expect((await patch(`/api/maps/${HOME_MAP}/travellers/trav-test`, { birthDate: null })).data.traveller.birthDate).toBeNull();
   });
 
+  // 27 Nov 2026, the user's wish: "Passport needs first name last name", as the server keeps it
+  it('keeps an optional last name, trimmed, shown with the first, and cleared with "" or null', async () => {
+    const set = (lastName) => patch(`/api/maps/${HOME_MAP}/travellers/trav-test`, { lastName });
+    expect((await set(42)).status).toBe(400);
+    expect((await set('  Reid Jones ')).data.traveller.lastName).toBe('Reid Jones');
+    expect((await get(`/api/maps/${HOME_MAP}`)).data.map.travellers.find((t) => t.id === 'trav-test').lastName).toBe('Reid Jones');
+    expect((await get(`/api/maps/${HOME_MAP}/passport`)).data.passport.travellers.find((t) => t.id === 'trav-test').lastName).toBe('Reid Jones');
+    expect((await set('')).data.traveller.lastName).toBeNull();
+    expect((await set(null)).data.traveller.lastName).toBeNull();
+  });
+
+  // 27 Nov 2026, the user's wish: "Passport also needs nationality", as the server keeps it
+  it('keeps an optional nationality, a country, marking no visit, and clears it', async () => {
+    const set = (nationalityCode) => patch(`/api/maps/${HOME_MAP}/travellers/trav-test`, { nationalityCode });
+    expect((await set('ZZ')).status).toBe(400);
+    const antarctica = await set('AQ');
+    expect(antarctica.status).toBe(400);
+    expect(antarctica.message).toBe('Choose a country for a nationality.');
+    expect((await set('PH')).data.traveller.nationalityCode).toBe('PH');
+    const map = (await get(`/api/maps/${HOME_MAP}`)).data.map;
+    expect(map.travellers.find((t) => t.id === 'trav-test').nationalityCode).toBe('PH');
+    expect(map.visits.map((v) => v.countryCode)).not.toContain('PH');
+    expect((await get(`/api/maps/${HOME_MAP}/passport`)).data.passport.travellers.find((t) => t.id === 'trav-test').nationalityCode).toBe('PH');
+    expect((await set('XC')).data.traveller.nationalityCode).toBe('GB');
+    expect((await set('')).data.traveller.nationalityCode).toBeNull();
+  });
+
   it('never shows a date of birth or a share of a life to a viewer', async () => {
     db().travellers.find((t) => t.id === 'trav-sam').birthDate = '1990-01-01';
     const forViewer = (await get(`/api/maps/${SAM_MAP}`)).data.map;

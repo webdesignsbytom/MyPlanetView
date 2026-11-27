@@ -125,7 +125,7 @@ test.describe('The map page', () => {
     await expectStats(page, '20 countries, 5 continents, 16 photos');
   });
 
-  test('the stub’s dropdown and date are a step slimmer than the same fields elsewhere', { tag: '@phone' }, async ({ page }) => {
+  test('the ticket’s dropdown and date are a step slimmer than the same fields elsewhere, on every screen', { tag: '@phone' }, async ({ page }) => {
     await openMap(page);
     const list = await openTool(page, 'Country list', 'Countries');
     await list.getByRole('searchbox', { name: 'Search countries' }).fill('spain');
@@ -135,12 +135,33 @@ test.describe('The map page', () => {
     const date = panel.getByLabel('First went');
     await expect(date).toBeVisible();
     const padding = (field) => field.evaluate((el) => [getComputedStyle(el).paddingTop, getComputedStyle(el).paddingBottom]);
-    // In the stub from md up (py-1); at the head of the content on a phone, as everywhere else (py-2)
+    // In the stub from md up, at the head of the content on a phone: py-1 on both (27 Nov 2026,
+    // the user's wish: on a phone "Been there?" was taller, py-2 as other fields are)
     const inStub = (await panel.locator('aside [data-status-controls]').count()) > 0;
-    const expected = inStub ? ['4px', '4px'] : ['8px', '8px'];
-    expect(await padding(status)).toEqual(expected);
-    expect(await padding(date)).toEqual(expected);
+    expect(await padding(status)).toEqual(['4px', '4px']);
+    expect(await padding(date)).toEqual(['4px', '4px']);
     expect(inStub).toBe(page.viewportSize().width >= 768);
+    // ...so the dropdown is as tall on a phone as on a wide screen
+    const height = await status.evaluate((el) => el.getBoundingClientRect().height);
+    expect(height).toBeLessThan(40);
+  });
+
+  // 27 Nov 2026, the user's wish: a place not been to waited on a spinner for photos it can't have
+  test('a place not been to opens with no photos to wait for', { tag: '@phone' }, async ({ page }) => {
+    await openMap(page);
+    // Watch for the photos' spinner from before the ticket opens
+    await page.evaluate(() => {
+      window.__photosSpinner = false;
+      new MutationObserver(() => {
+        if ([...document.querySelectorAll('[role="status"]')].some((el) => el.textContent.includes('Loading photos'))) window.__photosSpinner = true;
+      }).observe(document.body, { childList: true, subtree: true, characterData: true });
+    });
+    const list = await openTool(page, 'Country list', 'Countries');
+    await list.getByRole('searchbox', { name: 'Search countries' }).fill('germany');
+    await list.getByRole('button', { name: 'Germany', exact: true }).click();
+    const ticket = page.getByRole('dialog', { name: 'Germany' });
+    await expect(ticket.getByText('No photos from Germany yet.')).toBeVisible();
+    expect(await page.evaluate(() => window.__photosSpinner)).toBe(false);
   });
 
   test('the country list filters, searches and sets statuses', { tag: '@phone' }, async ({ page }) => {

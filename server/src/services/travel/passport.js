@@ -69,6 +69,10 @@ export async function passportTravellerView(row, { editor, since = null }) {
   return {
     id: row.id,
     name: row.name,
+    // The passport's Surname (27 Nov 2026)
+    lastName: row.lastName ?? null,
+    // The passport's Nationality (27 Nov 2026)
+    nationalityCode: row.nationalityCode ?? null,
     birthCountryCode: row.birthCountryCode ?? null,
     favouriteCountryCode: row.favouriteCountryCode ?? null,
     ...(editor ? { birthDate: toDateOnly(row.birthDate) } : {}),
