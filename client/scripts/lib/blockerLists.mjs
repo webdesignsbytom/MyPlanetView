@@ -3,6 +3,7 @@
 // kept for a week, then made into one matcher (lib/blockerRules.mjs). For
 // scripts/check-blocker-names.mjs and tests/e2e-app/adBlockers.spec.js.
 import fs from 'node:fs';
+import https from 'node:https';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { makeMatcher, parseList } from './blockerRules.mjs';
@@ -29,10 +30,42 @@ export const BLOCKER_LISTS = Object.freeze({
 // Where the site's requests go: the dev server, the sites and the API, the media bucket, the domain
 export const OUR_HOSTS = Object.freeze(['localhost', 'myplanetview.netlify.app', 'my-planet-view.vercel.app', 'r2.dev', 'myplanetview.com', 'www.myplanetview.com', 'api.myplanetview.com']);
 
-async function download(url) {
-  const res = await fetch(url, { signal: AbortSignal.timeout(60_000) });
-  if (!res.ok) throw new Error(`${res.status} from ${url}`);
-  return res.text();
+// One list, with node:https rather than fetch: twelve big downloads at once through fetch
+// (undici) killed the process on CI with an assertion inside it that nothing can catch (27 Nov
+// 2026). Redirects followed; a minute at most.
+function download(url, redirects = 5) {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, { headers: { 'user-agent': 'site-check' }, timeout: 60_000 }, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location && redirects > 0) {
+        res.resume();
+        resolve(download(new URL(res.headers.location, url).href, redirects - 1));
+        return;
+      }
+      if (res.statusCode !== 200) {
+        res.resume();
+        reject(new Error(`${res.statusCode} from ${url}`));
+        return;
+      }
+      res.setEncoding('utf8');
+      let text = '';
+      res.on('data', (chunk) => {
+        text += chunk;
+      });
+      res.on('end', () => resolve(text));
+      res.on('error', reject);
+    });
+    req.on('timeout', () => req.destroy(new Error(`no answer from ${url} in a minute`)));
+    req.on('error', reject);
+  });
+}
+
+// Tried twice before giving up on it
+async function downloadWithRetry(url) {
+  try {
+    return await download(url);
+  } catch {
+    return download(url);
+  }
 }
 
 /**
@@ -43,24 +76,25 @@ export async function loadBlockerMatcher({ refresh = false, log = () => {} } = {
   fs.mkdirSync(LIST_CACHE, { recursive: true });
   const rules = [];
   const missing = [];
-  await Promise.all(
-    Object.entries(BLOCKER_LISTS).map(async ([name, url]) => {
-      const file = path.join(LIST_CACHE, `${name}.txt`);
-      const age = fs.existsSync(file) ? Date.now() - fs.statSync(file).mtimeMs : Infinity;
-      let text = null;
-      if (refresh || age > MAX_AGE_MS) {
-        try {
-          text = await download(url);
-          fs.writeFileSync(file, text);
-        } catch (err) {
-          log(`Couldn't download ${name} (${err.message})${age < Infinity ? ': using the copy from before' : ''}`);
-        }
+  // One list after another (see download)
+  for (const [name, url] of Object.entries(BLOCKER_LISTS)) {
+    const file = path.join(LIST_CACHE, `${name}.txt`);
+    const age = fs.existsSync(file) ? Date.now() - fs.statSync(file).mtimeMs : Infinity;
+    let text = null;
+    if (refresh || age > MAX_AGE_MS) {
+      try {
+        text = await downloadWithRetry(url);
+        // Written whole, so a broken download never leaves half a list in the cache
+        fs.writeFileSync(`${file}.part`, text);
+        fs.renameSync(`${file}.part`, file);
+      } catch (err) {
+        log(`Couldn't download ${name} (${err.message})${age < Infinity ? ': using the copy from before' : ''}`);
       }
-      if (text === null && fs.existsSync(file)) text = fs.readFileSync(file, 'utf8');
-      if (text === null) missing.push(name);
-      // One at a time: hundreds of thousands spread into push() overflow the stack
-      else for (const rule of parseList(text, { list: name, ourHosts: OUR_HOSTS })) rules.push(rule);
-    }),
-  );
+    }
+    if (text === null && fs.existsSync(file)) text = fs.readFileSync(file, 'utf8');
+    if (text === null) missing.push(name);
+    // One at a time: hundreds of thousands spread into push() overflow the stack
+    else for (const rule of parseList(text, { list: name, ourHosts: OUR_HOSTS })) rules.push(rule);
+  }
   return { matcher: makeMatcher(rules), missing };
 }

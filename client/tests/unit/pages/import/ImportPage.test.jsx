@@ -82,6 +82,9 @@ describe('ImportPage', () => {
     open();
     pickZip();
     await waitFor(() => expect(document.querySelectorAll('[data-import-trip]').length).toBe(2));
+    // The map's upload rules in first, as a person sees them before starting (on a slow machine
+    // the run started before they arrived: CI, 27 Nov 2026)
+    await waitFor(() => expect(document.querySelector('main').textContent).toContain('This map keeps 30 photos of each country'));
     fireEvent.click(document.querySelector('[data-import-trip="Weekend in Rome"] input'));
     fireEvent.click(screen.getByText('Bring 1 trip to the map'));
     await waitFor(() => expect(document.querySelector('[data-import-stage]')?.getAttribute('data-import-stage')).toBe('done'));

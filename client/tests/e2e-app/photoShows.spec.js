@@ -179,6 +179,8 @@ test.describe('Shared slideshows', () => {
     await saved.getByRole('button', { name: 'Play Our favourite photos' }).click();
     const { show, stage } = await pausedShow(page, 'Our favourite photos');
     await expect(stage).toHaveAttribute('data-slide-kind', 'intro');
+    // Its photos in first: until then there's no next slide, and the key did nothing (CI, 27 Nov 2026)
+    await expect(show.getByRole('button', { name: 'Next', exact: true })).toBeEnabled();
     await page.keyboard.press('ArrowRight');
     await expect(stage).toHaveAttribute('data-slide-id', 'photo-colosseum');
     await show.getByRole('button', { name: 'Close the slideshow' }).click();

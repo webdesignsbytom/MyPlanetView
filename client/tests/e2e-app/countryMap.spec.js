@@ -1046,6 +1046,9 @@ test.describe('a landmark model’s card', () => {
     await expect(been).not.toBeChecked();
     await been.check();
     await expect(party).toBeVisible();
+    // Focus inside it first: its Escape is listened for once it has taken focus (on a slow
+    // machine the key came first and went to the card; CI, 27 Nov 2026)
+    await expect.poll(() => party.evaluate((el) => el.contains(document.activeElement))).toBe(true);
     await page.keyboard.press('Escape');
     await expect(party).toBeHidden();
     await expect(card).toBeVisible();
