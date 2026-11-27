@@ -24,7 +24,7 @@ const PAGES = [
 
 /** Every WCAG A and AA problem axe finds on the page, one line each. */
 async function problems(page) {
-  await page.addScriptTag({ path: AXE_SCRIPT });
+  if (!(await page.evaluate(() => Boolean(window.axe)))) await page.addScriptTag({ path: AXE_SCRIPT });
   return page.evaluate(async () => {
     // eslint-disable-next-line no-undef
     const result = await axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] }, resultTypes: ['violations'] });
@@ -38,7 +38,9 @@ test.describe('Accessibility', () => {
       await page.goto(path);
       await expect(page.locator(ready).first()).toBeVisible();
       await page.waitForLoadState('networkidle');
-      expect(await problems(page)).toEqual([]);
+      // Checked again until the page has settled: a lasting problem still fails, a moment of
+      // one doesn't (CI, 27 Nov 2026: a nav tab measured over the frame's red as it drew)
+      await expect.poll(() => problems(page), { timeout: 15_000 }).toEqual([]);
     });
   }
 
